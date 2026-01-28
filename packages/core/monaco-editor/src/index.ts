@@ -1,6 +1,10 @@
 import MonacoEditor from './components/MonacoEditor.vue'
+import MonacoEditorStatusOverlay from './components/MonacoEditorStatusOverlay.vue'
 
-export { MonacoEditor }
+export {
+  MonacoEditor,
+  MonacoEditorStatusOverlay,
+}
 
 export * from './types'
 

@@ -12,6 +12,9 @@ A kong UI Monaco Editor wrapper for Vue 3 with syntax highlighting powered by Sh
     - [v-model](#v-model)
     - [Slots](#slots)
     - [Usage Example](#usage-example)
+  - [MonacoEditorStatusOverlay Component](#monacoeditorstatusoverlay-component)
+    - [Props](#props-1)
+    - [Usage Example](#usage-example-1)
   - [useMonacoEditor Composable](#usemonacoeditor-composable)
   - [Vite Plugin](#vite-plugin)
 
@@ -264,6 +267,102 @@ const isDark = ref(false)
   width: 100%;
 }
 </style>
+```
+
+## MonacoEditorStatusOverlay Component
+
+The `MonacoEditorStatusOverlay` component displays a centered overlay message within the Monaco Editor, typically used for status messages like loading, empty states, or error messages.
+
+> [!NOTE]
+> The `MonacoEditor` component uses `MonacoEditorStatusOverlay` internally for two built-in states:
+> - **Loading state** (`state-loading` slot): Shown while the editor is initializing or when the `loading` prop is `true`
+> - **Empty state** (`state-empty` slot): Shown when the editor is ready but has no content
+>
+> You can customize these by providing your own content in the respective slots, or use `MonacoEditorStatusOverlay` with custom props for consistent styling.
+
+### Props
+
+#### `title`
+
+- type: `string`
+- required: `true`
+
+The title to display in the overlay.
+
+#### `message`
+
+- type: `string`
+- required: `true`
+
+The message to display in the overlay.
+
+#### `icon`
+
+- type: `Component`
+- required: `false`
+- default: `undefined`
+
+An optional icon component to display above the title. Can be any Vue component, typically an icon from `@kong/icons`.
+
+### Usage Example
+
+```vue
+<template>
+  <div class="editor-wrapper">
+    <MonacoEditor
+      v-model="code"
+      language="json"
+    >
+      <template #state-loading>
+        <MonacoEditorStatusOverlay
+          title="Loading"
+          message="Please wait while the editor is initializing..."
+          :icon="SpinnerIcon"
+        />
+      </template>
+    </MonacoEditor>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { MonacoEditor, MonacoEditorStatusOverlay } from '@kong-ui-public/monaco-editor'
+import { SpinnerIcon } from '@kong/icons'
+
+const code = ref('')
+</script>
+
+<style scoped>
+.editor-wrapper {
+  height: 500px;
+  width: 100%;
+  position: relative;
+}
+</style>
+```
+
+You can also use it for custom empty states:
+
+```vue
+<template>
+  <MonacoEditor v-model="code">
+    <template #state-empty>
+      <MonacoEditorStatusOverlay
+        title="No Content"
+        message="Start typing to add content to the editor"
+        :icon="DocumentIcon"
+      />
+    </template>
+  </MonacoEditor>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { MonacoEditor, MonacoEditorStatusOverlay } from '@kong-ui-public/monaco-editor'
+import { DocumentIcon } from '@kong/icons'
+
+const code = ref('')
+</script>
 ```
 
 ## useMonacoEditor Composable
