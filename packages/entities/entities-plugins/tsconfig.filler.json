@@ -24,6 +24,7 @@
   ],
   "exclude": [
     "src/components/free-form/filler/**/*.cy.ts",
-    "src/components/free-form/filler/**/*.spec.ts"
+    "src/components/free-form/filler/**/*.spec.ts",
+    "src/components/free-form/filler/**/*.pw.ts"
   ]
 }
