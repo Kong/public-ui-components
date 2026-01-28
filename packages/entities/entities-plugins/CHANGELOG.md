@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.150.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.149.3...@kong-ui-public/entities-plugins@9.150.0) (2026-01-28)
+
+
+### Features
+
+* **free-form:** add bundle rule for upstream-oauth ([#2883](https://github.com/Kong/public-ui-components/issues/2883)) ([fc3d210](https://github.com/Kong/public-ui-components/commit/fc3d210ba406e917a48e2df46afd0e40983a70f1))
+
+
+
+
+
 ## [9.149.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.149.2...@kong-ui-public/entities-plugins@9.149.3) (2026-01-27)
 
 
