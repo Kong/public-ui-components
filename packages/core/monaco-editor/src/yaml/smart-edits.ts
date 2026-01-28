@@ -1,0 +1,314 @@
+import type * as monaco from 'monaco-editor'
+import { getCursorContext } from './context'
+import { getYamlDoc } from './doc-cache'
+import type { JsonSchema, YamlCompletionOptions, YamlStyleOptions } from './types'
+import { getSchemaAtPath, getSchemaKind } from './schema'
+
+const DEFAULT_COMPLETION_OPTIONS: Required<YamlCompletionOptions> = {
+  enabled: true,
+  triggerOnAccept: true,
+  triggerOnEnter: true,
+  triggerOnColon: true,
+  hideSchemaTemplates: true,
+  discriminatedUnion: 'intersection-until-narrowed',
+}
+
+function getEnumValues(schema: JsonSchema): Array<string | number | boolean | null> {
+  if (Array.isArray(schema.enum)) {
+    return schema.enum as Array<string | number | boolean | null>
+  }
+  if (Object.prototype.hasOwnProperty.call(schema, 'const')) {
+    return [schema.const as any]
+  }
+  if (schema.type === 'boolean') {
+    return [true, false]
+  }
+  if (Array.isArray(schema.type) && schema.type.includes('boolean')) {
+    return [true, false]
+  }
+  if (schema.type === 'null') {
+    return [null]
+  }
+  if (Array.isArray(schema.type) && schema.type.includes('null')) {
+    return [null]
+  }
+  return []
+}
+
+function formatYamlScalar(value: string | number | boolean | null): string {
+  if (typeof value === 'string') return value
+  if (typeof value === 'boolean') return value ? 'true' : 'false'
+  if (value === null) return 'null'
+  return String(value)
+}
+
+function getInlineScalarToken(lineText: string, column: number): string | null {
+  const prefix = lineText.slice(0, Math.max(0, column - 1))
+  const noComment = prefix.split('#')[0] ?? prefix
+  const match = noComment.match(/:\s*([^\s#]+)$/)
+  return match ? match[1] : null
+}
+
+function getIndentUnit(model: monaco.editor.ITextModel): string {
+  const options = model.getOptions()
+  if (!options.insertSpaces) return '\t'
+  return ' '.repeat(options.tabSize)
+}
+
+function getKeyColumnIndent(lineText: string): string {
+  const length = lineText.length
+  let index = 0
+  while (index < length) {
+    const ch = lineText[index]
+    if (ch === ' ' || ch === '\t') {
+      index += 1
+      continue
+    }
+    if (ch === '-' && lineText[index + 1] === ' ') {
+      return `${lineText.slice(0, index)}  `
+    }
+    return lineText.slice(0, index)
+  }
+  return lineText
+}
+
+function replaceLineContent(
+  monacoApi: typeof monaco,
+  editor: monaco.editor.IStandaloneCodeEditor,
+  lineNumber: number,
+  text: string,
+) {
+  const model = editor.getModel()
+  if (!model) return
+  const lineLength = model.getLineLength(lineNumber)
+  editor.executeEdits('yaml-smart-edit', [
+    {
+      range: new monacoApi.Range(lineNumber, 1, lineNumber, lineLength + 1),
+      text,
+    },
+  ])
+  editor.setPosition(new monacoApi.Position(lineNumber, text.length + 1))
+}
+
+function handleColon(
+  monacoApi: typeof monaco,
+  editor: monaco.editor.IStandaloneCodeEditor,
+  schema: JsonSchema,
+  yamlVersion: '1.1',
+  options: Required<YamlCompletionOptions>,
+) {
+  if (!options.triggerOnColon) return
+  const model = editor.getModel()
+  const position = editor.getPosition()
+  if (!model || !position) return
+
+  const doc = getYamlDoc(model, yamlVersion)
+  const ctx = getCursorContext(model, position, doc)
+  if (!ctx.path) return
+
+  const schemaKind = getSchemaKind(
+    getSchemaAtPath(schema, ctx.path, doc.data, { discriminatedUnion: options.discriminatedUnion }),
+  )
+
+  const lineText = model.getLineContent(position.lineNumber)
+  const colonIndex = position.column - 1
+  const after = lineText.slice(colonIndex)
+
+  if (schemaKind === 'scalar') {
+    if (after.length === 0) {
+      editor.executeEdits('yaml-smart-edit', [
+        {
+          range: new monacoApi.Range(position.lineNumber, position.column, position.lineNumber, position.column),
+          text: ' ',
+        },
+      ])
+      editor.setPosition(new monacoApi.Position(position.lineNumber, position.column + 1))
+    }
+    editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
+    return
+  }
+
+  if (after.trim().length === 0 && after.length > 0) {
+    editor.executeEdits('yaml-smart-edit', [
+      {
+        range: new monacoApi.Range(
+          position.lineNumber,
+          position.column,
+          position.lineNumber,
+          position.column + after.length,
+        ),
+        text: '',
+      },
+    ])
+  }
+  editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
+}
+
+function handleEnter(
+  monacoApi: typeof monaco,
+  editor: monaco.editor.IStandaloneCodeEditor,
+  position: monaco.Position,
+  schema: JsonSchema,
+  yamlVersion: '1.1',
+  options: Required<YamlCompletionOptions>,
+  style: YamlStyleOptions,
+) {
+  if (!options.triggerOnEnter) return
+  const model = editor.getModel()
+  if (!model) return
+
+  const doc = getYamlDoc(model, yamlVersion)
+  const ctx = getCursorContext(model, position, doc)
+  if (!ctx.isEmptyLine) {
+    return
+  }
+
+  const prevLine = position.lineNumber - 1
+  if (prevLine < 1) return
+
+  const prevLineText = model.getLineContent(prevLine)
+  const inlineValue = /:\s*[^#\s]/.test(prevLineText)
+  if (inlineValue) {
+    const keyIndent = getKeyColumnIndent(prevLineText)
+    replaceLineContent(monacoApi, editor, position.lineNumber, `${keyIndent}`)
+    editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
+    return
+  }
+
+  if (!/:\s*$/.test(prevLineText)) {
+    return
+  }
+
+  const prevCtx = getCursorContext(
+    model,
+    new monacoApi.Position(prevLine, prevLineText.length + 1),
+    doc,
+  )
+  const targetPath =
+    prevCtx.valuePath ??
+    (prevCtx.inValue ? prevCtx.path : null) ??
+    ctx.valuePath ??
+    (ctx.inValue ? ctx.path : null)
+  if (!targetPath) {
+    return
+  }
+
+  const schemaKind = getSchemaKind(
+    getSchemaAtPath(schema, targetPath, doc.data, { discriminatedUnion: options.discriminatedUnion }),
+  )
+
+  const indentUnit = getIndentUnit(model)
+  const keyIndent = getKeyColumnIndent(prevLineText)
+  const childIndent = keyIndent + indentUnit
+  const arrayIndent = style.arrayItemStyle === 'indentless' ? keyIndent : childIndent
+
+  if (schemaKind === 'array') {
+    replaceLineContent(monacoApi, editor, position.lineNumber, `${arrayIndent}- `)
+    editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
+    return
+  }
+
+  if (schemaKind === 'object') {
+    replaceLineContent(monacoApi, editor, position.lineNumber, `${childIndent}`)
+    editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
+  }
+}
+
+export function registerYamlSmartEdits(
+  monacoApi: typeof monaco,
+  editor: monaco.editor.IStandaloneCodeEditor,
+  schema: JsonSchema,
+  yamlVersion: '1.1',
+  completion: YamlCompletionOptions | undefined,
+  style: YamlStyleOptions,
+): monaco.IDisposable {
+  const options = { ...DEFAULT_COMPLETION_OPTIONS, ...completion }
+  let isApplying = false
+  const model = editor.getModel()
+  const disposables: monaco.IDisposable[] = []
+  const onDidType = (editor as unknown as {
+    onDidType?: (listener: (text: string) => void) => monaco.IDisposable
+  }).onDidType
+  let pendingEnterIndent = false
+  let pendingEnterScheduled = false
+
+  if (onDidType) {
+    disposables.push(onDidType((text) => {
+      if (isApplying) return
+      if (text !== ':') return
+      isApplying = true
+      try {
+        handleColon(monacoApi, editor, schema, yamlVersion, options)
+      } finally {
+        isApplying = false
+      }
+    }))
+  }
+
+  if (model) {
+    disposables.push(model.onDidChangeContent((event) => {
+      if (!options.triggerOnEnter) return
+      const changes = event.changes.filter((change) => /[\r\n]/.test(change.text))
+      if (changes.length === 0) return
+      const change = changes[changes.length - 1]
+      if (!/^\r?\n[ \t]*$/.test(change.text)) return
+      pendingEnterIndent = true
+      if (pendingEnterScheduled) return
+      pendingEnterScheduled = true
+      queueMicrotask(() => {
+        pendingEnterScheduled = false
+        if (!pendingEnterIndent || isApplying) return
+        const position = editor.getPosition()
+        if (!position) return
+        pendingEnterIndent = false
+        isApplying = true
+        try {
+          handleEnter(monacoApi, editor, position, schema, yamlVersion, options, style)
+        } finally {
+          isApplying = false
+        }
+      })
+    }))
+
+    disposables.push(model.onDidChangeContent((event) => {
+      if (!options.enabled) return
+      if (isApplying) return
+      const change = event.changes[event.changes.length - 1]
+      if (!change) return
+      if (/[\r\n]/.test(change.text)) return
+      if (!/^[A-Za-z0-9_-]+$/.test(change.text)) return
+      const model = editor.getModel()
+      if (!model) return
+      const changeEndOffset = change.rangeOffset + change.text.length
+      queueMicrotask(() => {
+        if (isApplying) return
+        const position = model.getPositionAt(changeEndOffset)
+        if (!position) return
+        const doc = getYamlDoc(model, yamlVersion)
+        const ctx = getCursorContext(model, position, doc)
+        if (!ctx.inValue) return
+        const valuePath = ctx.valuePath ?? (ctx.inValue ? ctx.path : null)
+        if (!valuePath) return
+        const valueSchema = getSchemaAtPath(
+          schema,
+          valuePath,
+          doc.data,
+          { discriminatedUnion: options.discriminatedUnion },
+        )
+        const enumValues = getEnumValues(valueSchema)
+        const currentToken = getInlineScalarToken(ctx.lineText, position.column)
+        if (currentToken && enumValues.some((value) => formatYamlScalar(value) === currentToken)) {
+          return
+        }
+        if (!enumValues.some((value) => value !== null)) return
+        editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
+      })
+    }))
+  }
+
+  return {
+    dispose: () => {
+      disposables.forEach((disposable) => disposable.dispose())
+    },
+  }
+}

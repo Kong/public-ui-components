@@ -1,12 +1,14 @@
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type {
+  ConfigNode,
   EditorState,
   EdgeInstance,
   EdgeData,
   FieldId,
   NodeInstance,
   NodeId,
+  DatakitConfig,
 } from '../../types'
 import { hasInputField, hasOutputField } from './helpers'
 import { IMPLICIT_NODE_NAMES } from '../../constants'
@@ -16,6 +18,7 @@ import {
   getCombinedEdges,
   hasCycle,
 } from './graph'
+import { validateGraph as validateConfigGraph } from '../../schema/graph-validation'
 
 export type ValidationResult = { ok: true } | { ok: false, errors: string[] }
 
@@ -23,7 +26,10 @@ export type ValidationResult = { ok: true } | { ok: false, errors: string[] }
  * Validators bound to a reactive EditorState.
  * Always reads the latest state through computed getters.
  */
-export function useValidators(stateRef: Ref<EditorState>) {
+export function useValidators(
+  stateRef: Ref<EditorState>,
+  getConfigNodes?: () => ConfigNode[],
+) {
   /** reactive maps for O(1) look-up */
   const nodesById = computed(() => {
     const m = new Map<NodeId, NodeInstance>()
@@ -131,6 +137,17 @@ export function useValidators(stateRef: Ref<EditorState>) {
 
   function validateGraph(): ValidationResult {
     const errors: string[] = []
+
+    if (getConfigNodes) {
+      const config: DatakitConfig = {
+        nodes: getConfigNodes(),
+      }
+      const issues = validateConfigGraph(config, { mode: 'compat' })
+      issues.forEach((issue) => {
+        errors.push(issue.message)
+      })
+    }
+
     for (const n of IMPLICIT_NODE_NAMES)
       if (![...nodesById.value.values()].some((node) => node.name === n))
         errors.push(`missing implicit node "${n}"`)

@@ -83,6 +83,7 @@
   "dependencies": {
     "@shikijs/monaco": "^3.21.0",
     "@vueuse/core": "^14.1.0",
-    "shiki-codegen": "^3.21.0"
+    "shiki-codegen": "^3.21.0",
+    "yaml": "^2.8.2"
   }
 }

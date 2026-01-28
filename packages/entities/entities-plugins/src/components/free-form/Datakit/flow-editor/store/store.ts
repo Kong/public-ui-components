@@ -154,7 +154,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       validateGraph,
       isValidConnection,
       isValidVueFlowConnection,
-    } = useValidators(state)
+    } = useValidators(state, () => toConfigNodes())
 
     // O(1) getters
     function getNodeById(id: NodeId) {

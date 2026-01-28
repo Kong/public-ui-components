@@ -6,11 +6,8 @@ import {
   isImplicitName,
   ConfigNodeTypeSchema,
 } from './strict'
-import {
-  validateInputOutputExclusivity,
-  validateNamesAndConnections,
-} from './shared'
-import { IMPLICIT_NODE_NAMES } from '../constants'
+import { validateInputOutputExclusivity } from './shared'
+import { validateGraph } from './graph-validation'
 
 const KNOWN_NODE_TYPES = ConfigNodeTypeSchema.options
 
@@ -253,7 +250,16 @@ export const DatakitConfigSchema = z
   })
   .strict()
   .superRefine((config, ctx) => {
-    if (!config || !Array.isArray(config.nodes)) return
-    validateNamesAndConnections(config as DatakitConfig, IMPLICIT_NODE_NAMES, ctx)
+    if (!config || !Array.isArray(config.nodes)) {
+      return
+    }
+    const issues = validateGraph(config as DatakitConfig, { mode: 'compat' })
+    for (const issue of issues) {
+      ctx.addIssue({
+        code: 'custom',
+        message: issue.message,
+        path: issue.path,
+      })
+    }
   })
   .nullish()

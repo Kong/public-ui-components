@@ -1,0 +1,555 @@
+import { z } from 'zod'
+import { CONFIG_NODE_TYPES, HTTP_METHODS, IMPLICIT_NODE_NAMES, IMPLICIT_NODE_TYPES } from '../constants'
+import { validateInputOutputExclusivity } from './shared'
+
+export const ImplicitNodeTypeSchema = z.enum(IMPLICIT_NODE_TYPES)
+
+/** Runtime-reserved implicit node types. */
+export type ImplicitNodeType = z.infer<typeof ImplicitNodeTypeSchema>
+
+export const ImplicitNodeNameSchema = z.enum(IMPLICIT_NODE_NAMES)
+
+/** Runtime-reserved implicit node names that must not be reused. */
+export type ImplicitNodeName = z.infer<typeof ImplicitNodeNameSchema>
+
+export const isImplicitName = (s: string) =>
+  (IMPLICIT_NODE_NAMES as readonly string[]).includes(s)
+
+export const ConfigNodeTypeSchema = z.enum(CONFIG_NODE_TYPES)
+const KNOWN_NODE_TYPES = ConfigNodeTypeSchema.options
+
+/** All explicit node types recognized by Datakit. */
+export type ConfigNodeType = z.infer<typeof ConfigNodeTypeSchema>
+
+export const NodeTypeSchema = z.union([
+  ConfigNodeTypeSchema,
+  ImplicitNodeTypeSchema,
+])
+export type NodeType = z.infer<typeof NodeTypeSchema>
+
+const CONFIG_NODE_NAME_RE = /^[A-Za-z_][A-Za-z0-9_-]{0,254}$/
+export const ConfigNodeNameSchema = z
+  .string()
+  .min(1)
+  .max(255)
+  .regex(
+    CONFIG_NODE_NAME_RE,
+    'Invalid node name (snake_case / kebab-case only)',
+  )
+  .refine((s) => !isImplicitName(s), 'Name clashes with reserved implicit node')
+  .brand<'ConfigNodeName'>()
+export type ConfigNodeName = z.infer<typeof ConfigNodeNameSchema>
+
+export const NodeNameSchema = z.union([
+  ImplicitNodeNameSchema,
+  ConfigNodeNameSchema,
+])
+export type NodeName = z.infer<typeof NodeNameSchema>
+
+export const FieldNameSchema = z.string().min(1).brand<'FieldName'>()
+export type FieldName = z.infer<typeof FieldNameSchema>
+
+export const BRANCH_NAMES = ['then', 'else'] as const
+export const BranchNameSchema = z.enum(BRANCH_NAMES)
+export type BranchName = z.infer<typeof BranchNameSchema>
+
+export const NameConnectionSchema = z
+  .string()
+  .min(1)
+  .max(255)
+  .refine((s) => {
+    if (NodeNameSchema.safeParse(s).success) return true
+    const m = s.match(/^([^.]+)\.([^.]+)$/)
+    if (!m) return false
+    const [, node, field] = m
+    return (
+      NodeNameSchema.safeParse(node).success &&
+      FieldNameSchema.safeParse(field).success
+    )
+  }, 'Invalid connection, expected "NODE" or "NODE.FIELD"')
+export type NameConnection = z.infer<typeof NameConnectionSchema>
+
+export const NullishNameConnectionSchema = NameConnectionSchema.nullish()
+
+const CallInputsSchema = z
+  .object({
+    body: NullishNameConnectionSchema,
+    headers: NullishNameConnectionSchema,
+    http_proxy: NullishNameConnectionSchema,
+    https_proxy: NullishNameConnectionSchema,
+    proxy_auth_password: NullishNameConnectionSchema,
+    proxy_auth_username: NullishNameConnectionSchema,
+    query: NullishNameConnectionSchema,
+    url: NullishNameConnectionSchema,
+  })
+  .partial()
+  .strict()
+
+const ExitInputsSchema = z
+  .object({
+    headers: NullishNameConnectionSchema,
+    body: NullishNameConnectionSchema,
+  })
+  .partial()
+  .strict()
+
+const CacheInputsSchema = z
+  .object({
+    data: NullishNameConnectionSchema,
+    key: NullishNameConnectionSchema,
+    ttl: NullishNameConnectionSchema,
+  })
+  .partial()
+  .strict()
+
+export const HttpMethodSchema = z.enum(HTTP_METHODS)
+
+/**
+ * Standard HTTP/1.1 verbs accepted by the `call` node.
+ * The string must contain only uppercase letters.
+ */
+export type HttpMethod = z.infer<typeof HttpMethodSchema>
+
+export const ConfigNodeBaseSchema = z
+  .object({
+    type: z.string(),
+    name: ConfigNodeNameSchema,
+    input: NullishNameConnectionSchema,
+    inputs: z
+      .record(z.string().min(1).max(255), NullishNameConnectionSchema)
+      .nullish(),
+    output: NullishNameConnectionSchema,
+    outputs: z
+      .record(z.string().min(1).max(255), NullishNameConnectionSchema)
+      .nullish(),
+  })
+  .loose()
+  .superRefine((node, ctx) => {
+    validateInputOutputExclusivity(node, ctx)
+  })
+
+export const ConfigNodeBaseGuard = z
+  .object({ type: z.string(), name: z.string() })
+  .loose()
+  .superRefine((obj, ctx) => {
+    const t = obj.type
+    const nm = obj.name
+    if (typeof nm !== 'string' || nm.length === 0 || nm.includes('.')) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['name'],
+        message: 'invalid node name',
+        fatal: false,
+      })
+    }
+    if (!KNOWN_NODE_TYPES.includes(t as any)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['type'],
+        message: `unknown node type "${t}", expected one of: ${KNOWN_NODE_TYPES.join(
+          ', ',
+        )}`,
+      })
+    }
+  })
+
+export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('call'),
+  /**
+   * A string representing an HTTP method, such as GET, POST, PUT, or DELETE.
+   * The string must contain only uppercase letters.
+   */
+  method: HttpMethodSchema.default('GET').nullish(),
+  /** A string representing an SNI (server name indication) value for TLS. */
+  ssl_server_name: z.string().min(1).nullish(),
+  /** Whether to verify the TLS certificate when making HTTPS requests. */
+  ssl_verify: z.boolean().nullish(),
+  /**
+   * An integer representing a timeout in milliseconds.
+   * Must be between 0 and 2^31-2.
+   */
+  timeout: z.number().int().min(0).max(2147483646).nullish(),
+  /**
+   * A string representing a URL, such as
+   * https://example.com/path/to/resource?q=search
+   */
+  url: z.url().nullish(),
+  inputs: CallInputsSchema.nullish(),
+  outputs: z
+    .object({
+      body: NullishNameConnectionSchema,
+      headers: NullishNameConnectionSchema,
+      raw_body: NullishNameConnectionSchema,
+      status: NullishNameConnectionSchema,
+    })
+    .partial()
+    .nullish(),
+}).strict()
+
+/** Make an external HTTP request. */
+export type CallNode = z.infer<typeof CallNodeSchema>
+
+export const ExitNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('exit'),
+  /**
+   * HTTP status code.
+   * 200–599
+   */
+  status: z.number().int().min(200).max(599).default(200).nullish(),
+  /** When true, warn if headers have been sent already. */
+  warn_headers_sent: z.boolean().nullish(),
+  inputs: ExitInputsSchema.nullish(),
+  output: z.never().nullish(),
+  outputs: z.never().nullish(),
+}).strict()
+
+/** Terminate the request and send a response to the client. */
+export type ExitNode = z.infer<typeof ExitNodeSchema>
+
+export const JqNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('jq'),
+  /**
+   * The jq filter text. Refer to https://jqlang.org/manual/ for full documentation.
+   * 1–10240 characters
+   */
+  jq: z.string().min(1).max(10240),
+  outputs: z.never().nullish(),
+}).strict()
+
+/** Process data using `jq` syntax. */
+export type JqNode = z.infer<typeof JqNodeSchema>
+
+export const XmlToJsonNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('xml_to_json'),
+  /**
+   * Automatically detect primitive types (numbers, booleans) when converting.
+   */
+  recognize_type: z.boolean().nullish().default(true),
+  /**
+   * JSON block name to store XML attributes. Optional when attributes_name_prefix is set.
+   */
+  attributes_block_name: z.string().min(1).max(32).nullish(),
+  /**
+   * Prefix for XML attribute names. Optional when attributes_block_name is set.
+   */
+  attributes_name_prefix: z.string().min(1).max(32).nullish(),
+  /** JSON property name for XML text content. */
+  text_block_name: z.string().min(1).max(32).nullish().default('#text'),
+  /** Emit text as a property instead of array item when true. */
+  text_as_property: z.boolean().nullish().default(false),
+  /** Optional XPath selector for filtering. */
+  xpath: z.string().min(1).max(256).nullish(),
+  inputs: z.never().nullish(),
+  outputs: z.never().nullish(),
+})
+  .strict()
+  .superRefine((val, ctx) => {
+    if (!val.attributes_block_name && !val.attributes_name_prefix) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['attributes_block_name'],
+        message:
+          'At least one of attributes_block_name or attributes_name_prefix is required',
+      })
+      ctx.addIssue({
+        code: 'custom',
+        path: ['attributes_name_prefix'],
+        message:
+          'At least one of attributes_block_name or attributes_name_prefix is required',
+      })
+    }
+  })
+
+/** Transform XML to JSON. */
+export type XmlToJsonNode = z.infer<typeof XmlToJsonNodeSchema>
+
+export const JsonToXmlNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('json_to_xml'),
+  attributes_block_name: z.string().min(1).max(32).nullish(),
+  attributes_name_prefix: z.string().min(1).max(32).nullish(),
+  root_element_name: z.string().min(1).max(64).nullish(),
+  text_block_name: z.string().min(1).max(32).nullish().default('#text'),
+  inputs: z
+    .record(z.string().min(1).max(255), NullishNameConnectionSchema)
+    .nullish(),
+  outputs: z.never().nullish(),
+})
+  .strict()
+  .superRefine((val, ctx) => {
+    if (!val.attributes_block_name && !val.attributes_name_prefix) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['attributes_block_name'],
+        message:
+          'At least one of attributes_block_name or attributes_name_prefix is required',
+      })
+      ctx.addIssue({
+        code: 'custom',
+        path: ['attributes_name_prefix'],
+        message:
+          'At least one of attributes_block_name or attributes_name_prefix is required',
+      })
+    }
+  })
+
+/** Transform JSON to XML. */
+export type JsonToXmlNode = z.infer<typeof JsonToXmlNodeSchema>
+
+export const PropertyNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('property'),
+  /**
+   * The expected MIME type of the property value. When set to `application/json`,
+   * SET operations JSON-encode input data before writing it, and GET operations
+   * JSON-decode output data after reading it. Otherwise, this setting has no effect.
+   */
+  content_type: z
+    .enum(['application/json', 'text/plain', 'application/octet-stream'])
+    .nullish(),
+  /** The property name to get/set. */
+  property: z.string().min(1),
+  inputs: z.never().nullish(),
+  outputs: z.never().nullish(),
+}).strict()
+
+/** Get or set a property. */
+export type PropertyNode = z.infer<typeof PropertyNodeSchema>
+
+export const StaticNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('static'),
+  /** An object with string keys and free-form values. */
+  values: z.record(z.string(), z.unknown()),
+  input: z.never().nullish(),
+  inputs: z.never().nullish(),
+}).strict()
+
+/** Produce reusable outputs from statically-configured values. */
+export type StaticNode = z.infer<typeof StaticNodeSchema>
+
+export const CacheNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('cache'),
+  /** When true, skip cache errors and continue execution. */
+  bypass_on_error: z.boolean().nullish(),
+  inputs: CacheInputsSchema.nullish(),
+  outputs: z
+    .object({
+      data: NullishNameConnectionSchema,
+      hit: NullishNameConnectionSchema,
+      miss: NullishNameConnectionSchema,
+      stored: NullishNameConnectionSchema,
+    })
+    .partial()
+    .nullish(),
+  /** Cache entry time-to-live in seconds. */
+  ttl: z.number().int().gt(0).nullish(),
+}).strict()
+
+/** Fetch data from configured cache resources. */
+export type CacheNode = z.infer<typeof CacheNodeSchema>
+
+export const BranchNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('branch'),
+  then: z.array(NodeNameSchema).nullish(),
+  else: z.array(NodeNameSchema).nullish(),
+}).strict()
+
+/** Conditionally route execution to `then` or `else` logical branches. */
+export type BranchNode = z.infer<typeof BranchNodeSchema>
+
+export const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
+  z.discriminatedUnion('type', [
+    CallNodeSchema,
+    ExitNodeSchema,
+    JqNodeSchema,
+    XmlToJsonNodeSchema,
+    JsonToXmlNodeSchema,
+    PropertyNodeSchema,
+    StaticNodeSchema,
+    CacheNodeSchema,
+    BranchNodeSchema,
+  ]),
+)
+
+/** Discriminated union of all node types. */
+export type ConfigNode = z.infer<typeof ConfigNodeSchema>
+
+export const VaultSchema = z
+  .record(
+    z.string().regex(/^[A-Za-z_][A-Za-z0-9_-]*$/).min(1).max(255),
+    z.string().min(1).max(4095),
+  )
+
+export type Vault = z.infer<typeof VaultSchema>
+
+/** cache.memory */
+const CacheMemorySchema = z.object({
+  dictionary_name: z.string().nullish().default('kong_db_cache'),
+})
+
+/** cache.redis.sentinel_nodes / cluster_nodes */
+const SentinelNodeSchema = z.object({
+  host: z.string().default('127.0.0.1'),
+  port: z.number().int().min(0).max(65535).default(6379),
+})
+
+const ClusterNodeSchema = z.object({
+  ip: z.string().default('127.0.0.1'),
+  port: z.number().int().min(0).max(65535).default(6379),
+})
+
+/** cache.redis */
+const CacheRedisSchema = z
+  .object({
+    host: z.string().nullish().default('127.0.0.1'),
+    port: z.number().int().min(0).max(65535).nullish().default(6379),
+
+    connect_timeout: z
+      .number()
+      .int()
+      .min(0)
+      .max(2147483646)
+      .nullish()
+      .default(2000),
+    send_timeout: z
+      .number()
+      .int()
+      .min(0)
+      .max(2147483646)
+      .nullish()
+      .default(2000),
+    read_timeout: z
+      .number()
+      .int()
+      .min(0)
+      .max(2147483646)
+      .nullish()
+      .default(2000),
+
+    username: z.string().nullish(),
+    password: z.string().nullish(),
+
+    sentinel_username: z.string().nullish(),
+    sentinel_password: z.string().nullish(),
+
+    database: z.number().int().nullish().default(0),
+
+    keepalive_pool_size: z
+      .number()
+      .int()
+      .min(1)
+      .max(2147483646)
+      .nullish()
+      .default(256),
+    keepalive_backlog: z
+      .number()
+      .int()
+      .min(0)
+      .max(2147483646)
+      .nullish(),
+
+    sentinel_master: z.string().nullish(),
+    sentinel_role: z.enum(['master', 'slave', 'any']).nullish(),
+    sentinel_nodes: z
+      .array(SentinelNodeSchema)
+      .min(1, { message: 'sentinel_nodes must contain at least 1 item' })
+      .nullish(),
+
+    cluster_nodes: z
+      .array(ClusterNodeSchema)
+      .min(1, { message: 'cluster_nodes must contain at least 1 item' })
+      .nullish(),
+
+    ssl: z.boolean().default(false).nullish(),
+    ssl_verify: z.boolean().default(false).nullish(),
+    server_name: z.string().nullish(),
+    cluster_max_redirections: z.number().int().default(5).nullish(),
+    connection_is_proxied: z.boolean().default(false).nullish(),
+
+    cloud_authentication: z
+      .object({
+        auth_provider: z.enum(['aws', 'azure', 'gcp']).nullish(),
+        aws_access_key_id: z.string().nullish(),
+        aws_assume_role_arn: z.string().nullish(),
+        aws_cache_name: z.string().nullish(),
+        aws_is_serverless: z.boolean().default(true).nullish(),
+        aws_region: z.string().nullish(),
+        aws_role_session_name: z.string().nullish(),
+        aws_secret_access_key: z.string().nullish(),
+        azure_client_id: z.string().nullish(),
+        azure_client_secret: z.string().nullish(),
+        azure_tenant_id: z.string().nullish(),
+        gcp_service_account_json: z.string().nullish(),
+      })
+      .nullish(),
+
+    /** Compatibility for deprecated fields (optional) */
+    timeout: z.number().int().nullish(), // deprecated: use connect_timeout, send_timeout and read_timeout instead
+    sentinel_addresses: z.array(z.string()).min(1).nullish(), // deprecated
+    cluster_addresses: z.array(z.string()).min(1).nullish(), // deprecated
+  })
+  .superRefine((val, ctx) => {
+    // host & port are mutually required
+    const hasHost = val.host !== undefined && val.host !== null
+    const hasPort = val.port !== undefined && val.port !== null
+    if ((hasHost && !hasPort) || (!hasHost && hasPort)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'host and port must be specified together',
+        path: hasHost ? ['port'] : ['host'],
+      })
+    }
+
+    // sentinel_master & sentinel_role & sentinel_nodes must appear together or all be missing
+    const hasSentinelMaster = !!val.sentinel_master
+    const hasSentinelRole = !!val.sentinel_role
+    const hasSentinelNodes = !!val.sentinel_nodes?.length
+    const count = [hasSentinelMaster, hasSentinelRole, hasSentinelNodes].filter(
+      Boolean,
+    ).length
+    if (count > 0 && count < 3) {
+      ctx.addIssue({
+        code: 'custom',
+        message:
+          'sentinel_master, sentinel_role and sentinel_nodes must be provided together',
+      })
+    }
+
+    // host is required when connection_is_proxied === true
+    if (val.connection_is_proxied === true && !hasHost) {
+      ctx.addIssue({
+        code: 'custom',
+        message:
+          'host is required when connection_is_proxied is true (host/port should point to the proxy)',
+        path: ['host'],
+      })
+    }
+  })
+
+export const CacheSchema = z.object({
+  strategy: z.enum(['memory', 'redis']).nullish(),
+  memory: CacheMemorySchema,
+  redis: CacheRedisSchema,
+})
+
+export const ResourcesSchema = z.object({
+  vault: VaultSchema.nullish(),
+  cache: CacheSchema.nullish(),
+})
+
+export type Resources = z.infer<typeof ResourcesSchema>
+export type CacheConfig = z.infer<typeof CacheSchema>
+
+export const PartialsSchema = z.array(z.object({ id: z.string() }))
+
+export const DatakitConfigSchemaBase = z
+  .object({
+    nodes: z
+      .array(ConfigNodeSchema)
+      .min(1, 'At least one node is required')
+      .max(64),
+    debug: z.boolean().default(false).nullish(),
+    resources: ResourcesSchema.nullish(),
+  })
+  .strict()
+
+/** Datakit plugin configuration. */
+export type DatakitConfig = z.infer<typeof DatakitConfigSchemaBase>

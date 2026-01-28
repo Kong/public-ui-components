@@ -712,6 +712,9 @@ importers:
       shiki-codegen:
         specifier: ^3.21.0
         version: 3.21.0
+      yaml:
+        specifier: ^2.8.2
+        version: 2.8.2
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^

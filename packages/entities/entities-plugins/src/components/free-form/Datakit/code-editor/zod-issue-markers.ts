@@ -165,6 +165,23 @@ function issueToMarkers(issue: ZodIssue, ctx: MarkerContext): IssueMarker[] {
   }
 
   const path = issuePathWithPrefix(issue, ctx.prefixPath)
+  const last = path[path.length - 1]
+
+  // For graph validation errors that refer to an object field name, highlight the YAML key.
+  if (
+    issue.code === 'custom' &&
+    typeof last === 'string' &&
+    (
+      issue.message.startsWith('Unknown input field "') ||
+      issue.message.startsWith('Unknown output field "')
+    )
+  ) {
+    const keyNode = getKeyNode(ctx.index, path)
+    const keyRange = keyNode ? rangeFromNode(keyNode, ctx.lineCounter) : null
+    if (keyRange) {
+      return [createMarker(keyRange, formatIssueMessage(issue, path, ctx))]
+    }
+  }
   const range =
     rangeForPath(path, ctx) ??
     rangeForMissingPath(path, ctx) ??

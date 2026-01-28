@@ -25,6 +25,7 @@
       appearance="standalone"
       class="editor"
       language="yaml"
+      :model-uri="modelUri"
       :options="monacoOptions"
       theme="light"
       @ready="handleEditorReady"
@@ -43,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, toRaw } from 'vue'
+import { onBeforeUnmount, shallowRef, toRaw } from 'vue'
 import { isEqual, omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
 import { LineCounter, parseDocument, stringify } from 'yaml'
@@ -51,7 +52,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton, KModal } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
 import { useErrors } from '@kong-ui-public/entities-shared'
-import { MonacoEditor } from '@kong-ui-public/monaco-editor'
+import { MonacoEditor, attachYamlJsonSchema } from '@kong-ui-public/monaco-editor'
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 import english from '../../../locales/en.json'
 import { useFormShared } from '../shared/composables'
@@ -61,6 +62,8 @@ import { DatakitConfigSchema as DatakitConfigCompatSchema } from './schema/compa
 import { DatakitConfigSchema as DatakitConfigStrictSchema } from './schema/strict'
 import { buildPathIndex } from './code-editor/yaml-path-index'
 import { zodIssuesToMarkers } from './code-editor/zod-issue-markers'
+import { getDatakitYamlSchema } from './code-editor/yaml-schema'
+import { createDatakitRefCompletionExtension } from './code-editor/datakit-ref-completions'
 
 import type { ZodError } from 'zod'
 import type { DatakitPluginData } from './types'
@@ -87,10 +90,11 @@ const emit = defineEmits<{
 const { getMessageFromError } = useErrors()
 
 const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
+const yamlDisposable = shallowRef<{ dispose: () => void } | null>(null)
 
 const LINT_SOURCE = 'YAML Syntax'
-const COMPAT_SCHEMA_SOURCE = 'Datakit Schema (Compat)'
-const STRICT_SCHEMA_SOURCE = 'Datakit Schema (Strict)'
+const COMPAT_SCHEMA_SOURCE = 'Datakit schema (compat)'
+const STRICT_SCHEMA_SOURCE = 'Datakit schema'
 
 function dumpYaml(config: unknown): string {
   return stringify(toRaw(config), {
@@ -106,6 +110,10 @@ function formDataToCode(): string {
 }
 
 const code = shallowRef(formDataToCode())
+const modelSuffix = typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+  ? crypto.randomUUID()
+  : Math.random().toString(36).slice(2)
+const modelUri = `inmemory://model/datakit-${modelSuffix}.yaml`
 const monacoOptions = {
   scrollbar: {
     alwaysConsumeMouseWheel: false,
@@ -122,8 +130,16 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
 
   editorRef.value = editor
 
-  editor.onDidChangeModelContent(() => {
-    const codeText = editor.getValue() || ''
+  yamlDisposable.value?.dispose()
+  const yamlSchema = getDatakitYamlSchema()
+  yamlDisposable.value = attachYamlJsonSchema(monaco, editor, {
+    yamlVersion: '1.1',
+    schema: yamlSchema,
+    style: { arrayItemStyle: 'indentless' },
+    extensions: [createDatakitRefCompletionExtension(monaco)],
+  })
+
+  const validateCodeText = (codeText: string, opts?: { updateFormData?: boolean }) => {
     const lineCounter = new LineCounter()
     const doc = parseDocument(codeText, {
       lineCounter,
@@ -169,7 +185,7 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
 
     const parsed = doc.toJS()
 
-    if (typeof parsed === 'object' && parsed !== null) {
+    if (opts?.updateFormData && typeof parsed === 'object' && parsed !== null) {
       setValue(parsed as DatakitPluginData)
       emit('change', parsed)
     }
@@ -187,10 +203,10 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
 
     const index = buildPathIndex(doc.contents)
 
-    if (compatResult.success) {
+    if (!strictResult.success) {
       monaco.editor.setModelMarkers(model, COMPAT_SCHEMA_SOURCE, [])
-    } else {
-      const issueMarkers = zodIssuesToMarkers(compatResult.error.issues, {
+
+      const issueMarkers = zodIssuesToMarkers(strictResult.error.issues, {
         index,
         lineCounter,
         prefixPath: ['config'],
@@ -200,19 +216,22 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
       const markers: monaco.editor.IMarkerData[] = issueMarkers.map((marker) => ({
         ...marker.range,
         message: marker.message,
-        severity: monaco.MarkerSeverity.Warning,
-        source: COMPAT_SCHEMA_SOURCE,
+        severity: monaco.MarkerSeverity.Error,
+        source: STRICT_SCHEMA_SOURCE,
       }))
 
-      monaco.editor.setModelMarkers(model, COMPAT_SCHEMA_SOURCE, markers)
-    }
-
-    if (strictResult.success) {
-      monaco.editor.setModelMarkers(model, STRICT_SCHEMA_SOURCE, [])
+      monaco.editor.setModelMarkers(model, STRICT_SCHEMA_SOURCE, markers)
       return
     }
 
-    const issueMarkers = zodIssuesToMarkers(strictResult.error.issues, {
+    monaco.editor.setModelMarkers(model, STRICT_SCHEMA_SOURCE, [])
+
+    if (compatResult.success) {
+      monaco.editor.setModelMarkers(model, COMPAT_SCHEMA_SOURCE, [])
+      return
+    }
+
+    const issueMarkers = zodIssuesToMarkers(compatResult.error.issues, {
       index,
       lineCounter,
       prefixPath: ['config'],
@@ -222,12 +241,19 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
     const markers: monaco.editor.IMarkerData[] = issueMarkers.map((marker) => ({
       ...marker.range,
       message: marker.message,
-      severity: monaco.MarkerSeverity.Error,
-      source: STRICT_SCHEMA_SOURCE,
+      severity: monaco.MarkerSeverity.Warning,
+      source: COMPAT_SCHEMA_SOURCE,
     }))
 
-    monaco.editor.setModelMarkers(model, STRICT_SCHEMA_SOURCE, markers)
+    monaco.editor.setModelMarkers(model, COMPAT_SCHEMA_SOURCE, markers)
+  }
+
+  editor.onDidChangeModelContent(() => {
+    validateCodeText(editor.getValue() || '', { updateFormData: true })
   })
+
+  // Run initial validation so the form validity and markers match the initial editor content.
+  validateCodeText(editor.getValue() || '', { updateFormData: false })
 
   editor.onDidPaste((e) => {
     const model = editor.getModel()
@@ -248,6 +274,10 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
 
   focusEnd()
 }
+
+onBeforeUnmount(() => {
+  yamlDisposable.value?.dispose()
+})
 
 const showConvertModal = shallowRef(false)
 const pendingConfig = shallowRef<unknown | null>(null)

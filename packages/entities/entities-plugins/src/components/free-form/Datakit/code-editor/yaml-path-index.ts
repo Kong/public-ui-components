@@ -19,7 +19,7 @@ export type PathIndex = {
 
 const pathKey = (path: YamlPath) => JSON.stringify(path)
 
-function getPathKeyValue(keyNode: Node): string | number | null {
+export function getPathKeyValue(keyNode: Node): string | number | null {
   if (isScalar(keyNode)) {
     const value = keyNode.value
     if (typeof value === 'string' || typeof value === 'number') {
