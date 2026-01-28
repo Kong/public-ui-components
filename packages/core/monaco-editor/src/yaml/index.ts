@@ -3,21 +3,19 @@ import { getYamlDoc } from './doc-cache'
 import { getCursorContext } from './context'
 import { provideYamlCompletions } from './completion'
 import { registerYamlSmartEdits } from './smart-edits'
+import { ensureYamlSuggestCommand } from './suggest'
+import {
+  deleteModelConfig,
+  deleteModelEditor,
+  getModelConfig,
+  setModelConfig,
+  setModelEditor,
+} from './registry'
 import type {
   AttachYamlJsonSchemaOptions,
-  JsonSchema,
   YamlCompletionOptions,
-  YamlCompletionExtension,
   YamlStyleOptions,
 } from './types'
-
-type ModelConfig = {
-  schema: JsonSchema
-  yamlVersion: '1.1'
-  completion: Required<YamlCompletionOptions>
-  style: YamlStyleOptions
-  extensions: YamlCompletionExtension[]
-}
 
 const DEFAULT_COMPLETION_OPTIONS: Required<YamlCompletionOptions> = {
   enabled: true,
@@ -26,13 +24,13 @@ const DEFAULT_COMPLETION_OPTIONS: Required<YamlCompletionOptions> = {
   triggerOnColon: true,
   hideSchemaTemplates: true,
   discriminatedUnion: 'intersection-until-narrowed',
+  includeNullValue: false,
 }
 
 const DEFAULT_STYLE: Required<YamlStyleOptions> = {
   arrayItemStyle: 'indentless',
 }
 
-const modelRegistry = new Map<string, ModelConfig>()
 let completionProvider: monaco.IDisposable | null = null
 
 function ensureCompletionProvider(monacoApi: typeof monaco) {
@@ -43,7 +41,7 @@ function ensureCompletionProvider(monacoApi: typeof monaco) {
   completionProvider = monacoApi.languages.registerCompletionItemProvider('yaml', {
     triggerCharacters: ['.'],
     provideCompletionItems(model, position) {
-      const config = modelRegistry.get(model.uri.toString())
+      const config = getModelConfig(model)
       if (!config) {
         return { suggestions: [] }
       }
@@ -82,29 +80,25 @@ export function attachYamlJsonSchema(
   const style = { ...DEFAULT_STYLE, ...options.style }
   const extensions = options.extensions ?? []
 
-  modelRegistry.set(model.uri.toString(), {
+  setModelConfig(model, {
     schema: options.schema,
     yamlVersion,
     completion,
     style,
     extensions,
   })
+  setModelEditor(model, editor)
 
   ensureCompletionProvider(monacoApi)
+  ensureYamlSuggestCommand(monacoApi)
 
-  const smartEditsDisposable = registerYamlSmartEdits(
-    monacoApi,
-    editor,
-    options.schema,
-    yamlVersion,
-    completion,
-    style,
-  )
+  const smartEditsDisposable = registerYamlSmartEdits(monacoApi, editor)
 
   return {
     dispose: () => {
       smartEditsDisposable.dispose()
-      modelRegistry.delete(model.uri.toString())
+      deleteModelEditor(model)
+      deleteModelConfig(model)
     },
   }
 }

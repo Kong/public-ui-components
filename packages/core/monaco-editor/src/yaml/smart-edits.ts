@@ -1,53 +1,9 @@
 import type * as monaco from 'monaco-editor'
 import { getCursorContext } from './context'
 import { getYamlDoc } from './doc-cache'
-import type { JsonSchema, YamlCompletionOptions, YamlStyleOptions } from './types'
 import { getSchemaAtPath, getSchemaKind } from './schema'
-
-const DEFAULT_COMPLETION_OPTIONS: Required<YamlCompletionOptions> = {
-  enabled: true,
-  triggerOnAccept: true,
-  triggerOnEnter: true,
-  triggerOnColon: true,
-  hideSchemaTemplates: true,
-  discriminatedUnion: 'intersection-until-narrowed',
-}
-
-function getEnumValues(schema: JsonSchema): Array<string | number | boolean | null> {
-  if (Array.isArray(schema.enum)) {
-    return schema.enum as Array<string | number | boolean | null>
-  }
-  if (Object.prototype.hasOwnProperty.call(schema, 'const')) {
-    return [schema.const as any]
-  }
-  if (schema.type === 'boolean') {
-    return [true, false]
-  }
-  if (Array.isArray(schema.type) && schema.type.includes('boolean')) {
-    return [true, false]
-  }
-  if (schema.type === 'null') {
-    return [null]
-  }
-  if (Array.isArray(schema.type) && schema.type.includes('null')) {
-    return [null]
-  }
-  return []
-}
-
-function formatYamlScalar(value: string | number | boolean | null): string {
-  if (typeof value === 'string') return value
-  if (typeof value === 'boolean') return value ? 'true' : 'false'
-  if (value === null) return 'null'
-  return String(value)
-}
-
-function getInlineScalarToken(lineText: string, column: number): string | null {
-  const prefix = lineText.slice(0, Math.max(0, column - 1))
-  const noComment = prefix.split('#')[0] ?? prefix
-  const match = noComment.match(/:\s*([^\s#]+)$/)
-  return match ? match[1] : null
-}
+import { getModelConfig } from './registry'
+import { triggerSuggestIfAvailable } from './suggest'
 
 function getIndentUnit(model: monaco.editor.ITextModel): string {
   const options = model.getOptions()
@@ -93,33 +49,32 @@ function replaceLineContent(
 function handleColon(
   monacoApi: typeof monaco,
   editor: monaco.editor.IStandaloneCodeEditor,
-  schema: JsonSchema,
-  yamlVersion: '1.1',
-  options: Required<YamlCompletionOptions>,
+  config: ReturnType<typeof getModelConfig>,
 ) {
-  if (!options.triggerOnColon) return
+  if (!config || !config.completion.triggerOnColon) return
   const model = editor.getModel()
   const position = editor.getPosition()
   if (!model || !position) return
 
-  const doc = getYamlDoc(model, yamlVersion)
+  const doc = getYamlDoc(model, config.yamlVersion)
   const ctx = getCursorContext(model, position, doc)
   if (!ctx.path) return
 
-  const schemaKind = getSchemaKind(
-    getSchemaAtPath(schema, ctx.path, doc.data, { discriminatedUnion: options.discriminatedUnion }),
-  )
-  const valueSchema = getSchemaAtPath(
-    schema,
-    ctx.path,
-    doc.data,
-    { discriminatedUnion: options.discriminatedUnion },
-  )
-  const enumValues = getEnumValues(valueSchema)
-  const hasValueSuggestions = enumValues.some((value) => value !== null)
-
   const lineText = model.getLineContent(position.lineNumber)
   const colonIndex = position.column - 1
+  const linePrefix = lineText.slice(0, colonIndex)
+  const commentIndex = linePrefix.indexOf('#')
+  const searchablePrefix = commentIndex === -1 ? linePrefix : linePrefix.slice(0, commentIndex)
+  const firstColonIndex = searchablePrefix.indexOf(':')
+  if (firstColonIndex !== colonIndex) {
+    return
+  }
+
+  const schemaKind = getSchemaKind(
+    getSchemaAtPath(config.schema, ctx.path, doc.data, { discriminatedUnion: config.completion.discriminatedUnion }),
+    config.schema,
+  )
+
   const after = lineText.slice(colonIndex)
 
   if (schemaKind === 'scalar') {
@@ -132,9 +87,7 @@ function handleColon(
       ])
       editor.setPosition(new monacoApi.Position(position.lineNumber, position.column + 1))
     }
-    if (hasValueSuggestions) {
-      editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
-    }
+    triggerSuggestIfAvailable(monacoApi, editor)
     return
   }
 
@@ -158,35 +111,31 @@ function handleEnter(
   monacoApi: typeof monaco,
   editor: monaco.editor.IStandaloneCodeEditor,
   position: monaco.Position,
-  schema: JsonSchema,
-  yamlVersion: '1.1',
-  options: Required<YamlCompletionOptions>,
-  style: YamlStyleOptions,
-) {
-  if (!options.triggerOnEnter) return
+  config: ReturnType<typeof getModelConfig>,
+): boolean {
+  if (!config || !config.completion.triggerOnEnter) return false
   const model = editor.getModel()
-  if (!model) return
+  if (!model) return false
 
-  const doc = getYamlDoc(model, yamlVersion)
+  const doc = getYamlDoc(model, config.yamlVersion)
   const ctx = getCursorContext(model, position, doc)
   if (!ctx.isEmptyLine) {
-    return
+    return false
   }
 
   const prevLine = position.lineNumber - 1
-  if (prevLine < 1) return
+  if (prevLine < 1) return false
 
   const prevLineText = model.getLineContent(prevLine)
   const inlineValue = /:\s*[^#\s]/.test(prevLineText)
   if (inlineValue) {
     const keyIndent = getKeyColumnIndent(prevLineText)
     replaceLineContent(monacoApi, editor, position.lineNumber, `${keyIndent}`)
-    editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
-    return
+    return true
   }
 
   if (!/:\s*$/.test(prevLineText)) {
-    return
+    return false
   }
 
   const prevCtx = getCursorContext(
@@ -200,39 +149,36 @@ function handleEnter(
     ctx.valuePath ??
     (ctx.inValue ? ctx.path : null)
   if (!targetPath) {
-    return
+    return false
   }
 
   const schemaKind = getSchemaKind(
-    getSchemaAtPath(schema, targetPath, doc.data, { discriminatedUnion: options.discriminatedUnion }),
+    getSchemaAtPath(config.schema, targetPath, doc.data, { discriminatedUnion: config.completion.discriminatedUnion }),
+    config.schema,
   )
 
   const indentUnit = getIndentUnit(model)
   const keyIndent = getKeyColumnIndent(prevLineText)
   const childIndent = keyIndent + indentUnit
-  const arrayIndent = style.arrayItemStyle === 'indentless' ? keyIndent : childIndent
+  const arrayIndent = config.style.arrayItemStyle === 'indentless' ? keyIndent : childIndent
 
   if (schemaKind === 'array') {
     replaceLineContent(monacoApi, editor, position.lineNumber, `${arrayIndent}- `)
-    editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
-    return
+    return true
   }
 
   if (schemaKind === 'object') {
     replaceLineContent(monacoApi, editor, position.lineNumber, `${childIndent}`)
-    editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
+    return true
   }
+
+  return false
 }
 
 export function registerYamlSmartEdits(
   monacoApi: typeof monaco,
   editor: monaco.editor.IStandaloneCodeEditor,
-  schema: JsonSchema,
-  yamlVersion: '1.1',
-  completion: YamlCompletionOptions | undefined,
-  style: YamlStyleOptions,
 ): monaco.IDisposable {
-  const options = { ...DEFAULT_COMPLETION_OPTIONS, ...completion }
   let isApplying = false
   const model = editor.getModel()
   const disposables: monaco.IDisposable[] = []
@@ -246,9 +192,11 @@ export function registerYamlSmartEdits(
     disposables.push(onDidType((text) => {
       if (isApplying) return
       if (text !== ':') return
+      const config = model ? getModelConfig(model) : null
+      if (!config) return
       isApplying = true
       try {
-        handleColon(monacoApi, editor, schema, yamlVersion, options)
+        handleColon(monacoApi, editor, config)
       } finally {
         isApplying = false
       }
@@ -257,7 +205,8 @@ export function registerYamlSmartEdits(
 
   if (model) {
     disposables.push(model.onDidChangeContent((event) => {
-      if (!options.triggerOnEnter) return
+      const config = model ? getModelConfig(model) : null
+      if (!config || !config.completion.triggerOnEnter) return
       const changes = event.changes.filter((change) => /[\r\n]/.test(change.text))
       if (changes.length === 0) return
       const change = changes[changes.length - 1]
@@ -270,12 +219,18 @@ export function registerYamlSmartEdits(
         if (!pendingEnterIndent || isApplying) return
         const position = editor.getPosition()
         if (!position) return
+        const config = model ? getModelConfig(model) : null
+        if (!config) return
         pendingEnterIndent = false
         isApplying = true
+        let didEdit = false
         try {
-          handleEnter(monacoApi, editor, position, schema, yamlVersion, options, style)
+          didEdit = handleEnter(monacoApi, editor, position, config)
         } finally {
           isApplying = false
+        }
+        if (didEdit || config.completion.triggerOnEnter) {
+          triggerSuggestIfAvailable(monacoApi, editor)
         }
       })
     }))
@@ -311,37 +266,27 @@ export function registerYamlSmartEdits(
     }))
 
     disposables.push(model.onDidChangeContent((event) => {
-      if (!options.enabled) return
+      const config = model ? getModelConfig(model) : null
+      if (!config || !config.completion.enabled) return
       if (isApplying) return
       const change = event.changes[event.changes.length - 1]
       if (!change) return
       if (/[\r\n]/.test(change.text)) return
       if (!/^[A-Za-z0-9_-]+$/.test(change.text)) return
-      const model = editor.getModel()
-      if (!model) return
+      if (change.text.length !== 1) return
+      const currentModel = editor.getModel()
+      if (!currentModel) return
       const changeEndOffset = change.rangeOffset + change.text.length
       queueMicrotask(() => {
         if (isApplying) return
-        const position = model.getPositionAt(changeEndOffset)
+        const config = currentModel ? getModelConfig(currentModel) : null
+        if (!config) return
+        const position = currentModel.getPositionAt(changeEndOffset)
         if (!position) return
-        const doc = getYamlDoc(model, yamlVersion)
-        const ctx = getCursorContext(model, position, doc)
+        const doc = getYamlDoc(currentModel, config.yamlVersion)
+        const ctx = getCursorContext(currentModel, position, doc)
         if (!ctx.inValue) return
-        const valuePath = ctx.valuePath ?? (ctx.inValue ? ctx.path : null)
-        if (!valuePath) return
-        const valueSchema = getSchemaAtPath(
-          schema,
-          valuePath,
-          doc.data,
-          { discriminatedUnion: options.discriminatedUnion },
-        )
-        const enumValues = getEnumValues(valueSchema)
-        const currentToken = getInlineScalarToken(ctx.lineText, position.column)
-        if (currentToken && enumValues.some((value) => formatYamlScalar(value) === currentToken)) {
-          return
-        }
-        if (!enumValues.some((value) => value !== null)) return
-        editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
+        triggerSuggestIfAvailable(monacoApi, editor, position)
       })
     }))
   }

@@ -320,6 +320,26 @@ export function getCursorContext(
     const indexes = buildLineIndexes(doc.doc.contents as Node, doc.lineCounter)
     const prevLine = prevNonEmptyLine
     const keyPathAtLine = indexes.keyLineIndex.get(position.lineNumber)
+    const seqPathAtLine = indexes.seqLineIndex.get(position.lineNumber)
+
+    if (!isEmptyLine) {
+      const inlineMatch = lineText.match(/^\s*(?:-\s+)?([A-Za-z0-9_.-]+)\s*:\s*[^#]*$/)
+      const colonIndex = lineText.indexOf(':')
+      const cursorAfterColon = colonIndex !== -1 && position.column - 1 > colonIndex
+      if (inlineMatch && cursorAfterColon) {
+        const key = inlineMatch[1]
+        if (keyPathAtLine && keyPathAtLine[keyPathAtLine.length - 1] === key) {
+          valuePath = keyPathAtLine
+        } else if (seqPathAtLine) {
+          valuePath = [...seqPathAtLine, key]
+        }
+        if (valuePath) {
+          containerPath = valuePath
+          inValue = true
+          slot = 'value'
+        }
+      }
+    }
 
     if (keyPathAtLine && afterColon) {
       valuePath = keyPathAtLine

@@ -11,6 +11,7 @@ import type {
   YamlPath,
 } from './types'
 import { getSchemaAtPath, getSchemaView } from './schema'
+import { YAML_SUGGEST_COMMAND_ID } from './constants'
 
 function getNodeAtPath(root: Node | null | undefined, path: YamlPath | null): Node | null {
   if (!root || !path || path.length === 0) return root ?? null
@@ -175,6 +176,7 @@ function makeCompletionItem(
   kind: monaco.languages.CompletionItemKind,
   options: YamlCompletionOptions,
   triggerSuggest: boolean,
+  modelUri: string,
 ): monaco.languages.CompletionItem {
   return {
     label,
@@ -183,31 +185,9 @@ function makeCompletionItem(
     range,
     insertTextRules: monacoApi.languages.CompletionItemInsertTextRule.InsertAsSnippet,
     command: options.triggerOnAccept && triggerSuggest
-      ? { id: 'editor.action.triggerSuggest', title: 'Trigger Suggest' }
+      ? { id: YAML_SUGGEST_COMMAND_ID, title: 'Trigger Suggest', arguments: [modelUri] }
       : undefined,
   }
-}
-
-function getEnumValues(schema: JsonSchema): Array<string | number | boolean | null> {
-  if (Array.isArray(schema.enum)) {
-    return schema.enum as Array<string | number | boolean | null>
-  }
-  if (Object.prototype.hasOwnProperty.call(schema, 'const')) {
-    return [schema.const as any]
-  }
-  if (schema.type === 'boolean') {
-    return [true, false]
-  }
-  if (Array.isArray(schema.type) && schema.type.includes('boolean')) {
-    return [true, false]
-  }
-  if (schema.type === 'null') {
-    return [null]
-  }
-  if (Array.isArray(schema.type) && schema.type.includes('null')) {
-    return [null]
-  }
-  return []
 }
 
 export function provideYamlCompletions(
@@ -294,15 +274,23 @@ export function provideYamlCompletions(
             monacoApi.languages.CompletionItemKind.Property,
             options,
             true,
+            model.uri.toString(),
           ),
         )
       }
     }
   } else if (ctx.inValue) {
-    const enumValues = getEnumValues(valueSchema)
+    const enumValues = schemaView.enumValues ?? []
     if (enumValues.length) {
+      const orderedValues = [
+        ...enumValues.filter((value) => value !== null),
+        ...(options.includeNullValue ? enumValues.filter((value) => value === null) : []),
+      ]
+      if (!options.includeNullValue && orderedValues.length === 0) {
+        return { suggestions }
+      }
       const currentToken = getInlineScalarToken(ctx.lineText, position.column)
-      for (const value of enumValues) {
+      for (const value of orderedValues) {
         const label = formatYamlScalar(value)
         if (currentToken && currentToken === label) continue
         suggestions.push(
@@ -314,6 +302,7 @@ export function provideYamlCompletions(
             monacoApi.languages.CompletionItemKind.Value,
             options,
             false,
+            model.uri.toString(),
           ),
         )
       }

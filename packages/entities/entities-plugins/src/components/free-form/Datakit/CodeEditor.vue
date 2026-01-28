@@ -64,6 +64,7 @@ import { buildPathIndex } from './code-editor/yaml-path-index'
 import { zodIssuesToMarkers } from './code-editor/zod-issue-markers'
 import { getDatakitYamlSchema } from './code-editor/yaml-schema'
 import { createDatakitRefCompletionExtension } from './code-editor/datakit-ref-completions'
+import { createDatakitPropertyCompletionExtension } from './code-editor/datakit-property-completions'
 
 import type { ZodError } from 'zod'
 import type { DatakitPluginData } from './types'
@@ -136,7 +137,10 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
     yamlVersion: '1.1',
     schema: yamlSchema,
     style: { arrayItemStyle: 'indentless' },
-    extensions: [createDatakitRefCompletionExtension(monaco)],
+    extensions: [
+      createDatakitRefCompletionExtension(monaco),
+      createDatakitPropertyCompletionExtension(monaco),
+    ],
   })
 
   const validateCodeText = (codeText: string, opts?: { updateFormData?: boolean }) => {

@@ -17,6 +17,29 @@ function getTypeSet(schema: JsonSchema): Set<string> | null {
   return null
 }
 
+function hasPrimitiveType(schema: JsonSchema, root: JsonSchema): boolean {
+  const resolved = deref(schema, root)
+  const typeSet = getTypeSet(resolved)
+  if (typeSet) {
+    for (const entry of typeSet) {
+      if (entry !== 'object' && entry !== 'array') {
+        return true
+      }
+    }
+  }
+
+  const unions = [
+    ...(Array.isArray(resolved.anyOf) ? resolved.anyOf : []),
+    ...(Array.isArray(resolved.oneOf) ? resolved.oneOf : []),
+    ...(Array.isArray(resolved.allOf) ? resolved.allOf : []),
+  ]
+  for (const entry of unions) {
+    if (!isObject(entry)) continue
+    if (hasPrimitiveType(entry as JsonSchema, root)) return true
+  }
+  return false
+}
+
 function isObjectSchema(schema: JsonSchema): boolean {
   const typeSet = getTypeSet(schema)
   if (typeSet?.has('object')) return true
@@ -112,6 +135,14 @@ function getAllowedValues(schema: JsonSchema, root: JsonSchema): Array<string | 
   }
   if (Array.isArray(resolved.enum)) {
     direct.push(...(resolved.enum as Array<string | number | boolean | null>))
+  }
+
+  const typeSet = getTypeSet(resolved)
+  if (typeSet?.has('boolean')) {
+    direct.push(true, false)
+  }
+  if (typeSet?.has('null')) {
+    direct.push(null)
   }
 
   const union = [
@@ -353,15 +384,13 @@ export function getSchemaView(
     }
   }
 
-  const enumValues = Array.isArray(resolved.enum) ? (resolved.enum as Array<string | number | boolean | null>) : undefined
-
-  const typeSet = getTypeSet(resolved)
-  const kind: SchemaKind = typeSet ? 'scalar' : enumValues ? 'scalar' : 'unknown'
+  const enumValues = getAllowedValues(resolved, root)
+  const kind: SchemaKind = hasPrimitiveType(resolved, root) || enumValues.length > 0 ? 'scalar' : 'unknown'
 
   return {
     schema: resolved,
     kind,
-    enumValues,
+    enumValues: enumValues.length ? enumValues : undefined,
   }
 }
 
@@ -412,16 +441,15 @@ export function getSchemaAtPath(
   return deref(schema, root)
 }
 
-export function getSchemaKind(schema: JsonSchema): SchemaKind {
+export function getSchemaKind(schema: JsonSchema, root?: JsonSchema): SchemaKind {
+  const resolvedRoot = root ?? schema
   if (isObjectSchema(schema)) {
     return 'object'
   }
   if (isArraySchema(schema)) {
     return 'array'
   }
-  const typeSet = getTypeSet(schema)
-  if (typeSet || Array.isArray(schema.enum) || Object.prototype.hasOwnProperty.call(schema, 'const')) {
-    return 'scalar'
-  }
-  return 'unknown'
+  return hasPrimitiveType(schema, resolvedRoot) || getAllowedValues(schema, resolvedRoot).length > 0
+    ? 'scalar'
+    : 'unknown'
 }

@@ -15,6 +15,7 @@ export type YamlCompletionOptions = {
   triggerOnColon?: boolean
   hideSchemaTemplates?: boolean
   discriminatedUnion?: 'intersection-until-narrowed'
+  includeNullValue?: boolean
 }
 
 export type YamlSchemaRegistration = {
