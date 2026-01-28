@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.10.1...@kong-ui-public/monaco-editor@0.11.0) (2026-01-28)
+
+
+### Features
+
+* **monaco-editor:** export MonacoEditorStatusOverlay ([#2887](https://github.com/Kong/public-ui-components/issues/2887)) ([dd26373](https://github.com/Kong/public-ui-components/commit/dd26373937e3154d094c992013116840d7e69334))
+
+
+
+
+
 ## [0.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.10.0...@kong-ui-public/monaco-editor@0.10.1) (2026-01-26)
 
 
