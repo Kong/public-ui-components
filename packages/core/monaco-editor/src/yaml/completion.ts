@@ -10,7 +10,7 @@ import type {
   YamlStyleOptions,
   YamlPath,
 } from './types'
-import { getSchemaAtPath, getSchemaView } from './schema'
+import { getSchemaAtPath, getSchemaKind, getSchemaView } from './schema'
 import { YAML_SUGGEST_COMMAND_ID } from './constants'
 
 function getNodeAtPath(root: Node | null | undefined, path: YamlPath | null): Node | null {
@@ -162,9 +162,14 @@ function getValueKind(
   data: unknown,
   opts: { discriminatedUnion: 'intersection-until-narrowed' },
 ): 'scalar' | 'object' | 'array' {
-  const view = getSchemaView(schema, rootSchema, data, opts)
-  if (view.kind === 'array') return 'array'
-  if (view.kind === 'object') return 'object'
+  const kind = getSchemaKind(schema, rootSchema)
+  if (kind === 'array') return 'array'
+  if (kind === 'object') return 'object'
+  if (kind === 'unknown') {
+    const view = getSchemaView(schema, rootSchema, data, opts)
+    if (view.kind === 'array') return 'array'
+    if (view.kind === 'object') return 'object'
+  }
   return 'scalar'
 }
 
@@ -261,6 +266,8 @@ export function provideYamlCompletions(
     const keySchemaView = (ctx.inKey || ctx.atLineStart) ? containerView : schemaView
     if (keySchemaView.kind === 'object' && keySchemaView.properties) {
       const existingKeys = getMapKeys(getNodeAtPath(doc.contents as Node, keyPath))
+      const hasAdditionalProperties =
+        !!(keySchemaView.schema && (keySchemaView.schema as { additionalProperties?: unknown }).additionalProperties)
       for (const [key, valueSchema] of Object.entries(keySchemaView.properties)) {
         if (existingKeys.has(key)) continue
         const kind = getValueKind(valueSchema, rootSchema, data, schemaOpts)
@@ -270,6 +277,20 @@ export function provideYamlCompletions(
             monacoApi,
             key,
             insertText,
+            range,
+            monacoApi.languages.CompletionItemKind.Property,
+            options,
+            true,
+            model.uri.toString(),
+          ),
+        )
+      }
+      if (hasAdditionalProperties) {
+        suggestions.push(
+          makeCompletionItem(
+            monacoApi,
+            '${1:key}',
+            '${1:key}: $0',
             range,
             monacoApi.languages.CompletionItemKind.Property,
             options,

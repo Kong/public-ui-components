@@ -368,6 +368,16 @@ export function getCursorContext(
       const keyPathAtPrev = indexes.keyLineIndex.get(prevLine)
       const seqPathAtPrev = indexes.seqLineIndex.get(prevLine)
 
+      if (!keyPath && !valuePath && prevIndent > lineIndent.length) {
+        const anchor = findNearestKeyAnchorLine(model, position.lineNumber, Math.max(0, lineIndent.length - 1), indexes)
+        if (anchor) {
+          keyPath = anchor.path
+          containerPath = keyPath
+          inKey = true
+          slot = 'key'
+        }
+      }
+
       if (seqPathAtPrev && isSeqItemLine(prevLineText) && lineIndent.length >= prevIndent && !endsWithColon) {
         valuePath = seqPathAtPrev
         containerPath = valuePath

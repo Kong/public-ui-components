@@ -40,49 +40,66 @@ function hasPrimitiveType(schema: JsonSchema, root: JsonSchema): boolean {
   return false
 }
 
-function isObjectSchema(schema: JsonSchema): boolean {
-  const typeSet = getTypeSet(schema)
+function isObjectSchema(schema: JsonSchema, root?: JsonSchema): boolean {
+  const resolvedRoot = root ?? schema
+  const resolved = deref(schema, resolvedRoot)
+  const typeSet = getTypeSet(resolved)
   if (typeSet?.has('object')) return true
-  if (isObject(schema.properties) || isObject(schema.additionalProperties)) return true
+  if (isObject(resolved.properties) || isObject(resolved.additionalProperties)) return true
 
   const unions = [
-    ...(Array.isArray(schema.anyOf) ? schema.anyOf : []),
-    ...(Array.isArray(schema.oneOf) ? schema.oneOf : []),
-    ...(Array.isArray(schema.allOf) ? schema.allOf : []),
+    ...(Array.isArray(resolved.anyOf) ? resolved.anyOf : []),
+    ...(Array.isArray(resolved.oneOf) ? resolved.oneOf : []),
+    ...(Array.isArray(resolved.allOf) ? resolved.allOf : []),
   ]
   for (const entry of unions) {
     if (!isObject(entry)) continue
-    if (isObjectSchema(entry as JsonSchema)) return true
+    if (isObjectSchema(entry as JsonSchema, resolvedRoot)) return true
   }
   return false
 }
 
-function isArraySchema(schema: JsonSchema): boolean {
-  const typeSet = getTypeSet(schema)
+function isArraySchema(schema: JsonSchema, root?: JsonSchema): boolean {
+  const resolvedRoot = root ?? schema
+  const resolved = deref(schema, resolvedRoot)
+  const typeSet = getTypeSet(resolved)
   if (typeSet?.has('array')) return true
-  if (schema.items) return true
+  if (resolved.items) return true
 
   const unions = [
-    ...(Array.isArray(schema.anyOf) ? schema.anyOf : []),
-    ...(Array.isArray(schema.oneOf) ? schema.oneOf : []),
-    ...(Array.isArray(schema.allOf) ? schema.allOf : []),
+    ...(Array.isArray(resolved.anyOf) ? resolved.anyOf : []),
+    ...(Array.isArray(resolved.oneOf) ? resolved.oneOf : []),
+    ...(Array.isArray(resolved.allOf) ? resolved.allOf : []),
   ]
   for (const entry of unions) {
     if (!isObject(entry)) continue
-    if (isArraySchema(entry as JsonSchema)) return true
+    if (isArraySchema(entry as JsonSchema, resolvedRoot)) return true
   }
   return false
 }
 
 function resolveRef(root: JsonSchema, ref: string): JsonSchema | null {
-  if (!ref.startsWith('#/')) return null
-  const path = ref.slice(2).split('/')
-  let current: unknown = root
-  for (const part of path) {
-    if (!isObject(current)) return null
-    current = current[part]
+  const resolvePath = (path: string): JsonSchema | null => {
+    const parts = path.slice(2).split('/')
+    let current: unknown = root
+    for (const part of parts) {
+      if (!isObject(current)) return null
+      current = current[part]
+    }
+    return isObject(current) ? (current as JsonSchema) : null
   }
-  return isObject(current) ? (current as JsonSchema) : null
+
+  if (ref.startsWith('#/')) {
+    return resolvePath(ref)
+  }
+
+  const hashIndex = ref.indexOf('#/')
+  if (hashIndex !== -1) {
+    const fragment = ref.slice(hashIndex)
+    return resolvePath(fragment)
+  }
+
+  return null
 }
 
 function deref(schema: JsonSchema, root: JsonSchema, seen = new Set<JsonSchema>()): ResolvedSchema {
@@ -287,6 +304,18 @@ function getPropertyAllowedValues(
   return getAllowedValues(prop as JsonSchema, root)
 }
 
+function getPropertySchema(
+  schema: JsonSchema,
+  root: JsonSchema,
+  key: string,
+): JsonSchema | null {
+  const resolved = deref(schema, root)
+  const props = isObject(resolved.properties) ? (resolved.properties as Record<string, JsonSchema>) : {}
+  const prop = props[key]
+  if (!prop || !isObject(prop)) return null
+  return prop as JsonSchema
+}
+
 function inferEnumType(values: Array<string | number | boolean | null>): string | undefined {
   const types = new Set(values.map((value) => (value === null ? 'null' : typeof value)))
   if (types.size !== 1) return undefined
@@ -307,7 +336,7 @@ function collectObjectSchema(
   const union = Array.isArray(resolved.oneOf) ? resolved.oneOf : Array.isArray(resolved.anyOf) ? resolved.anyOf : null
   if (union && union.length > 0 && opts.discriminatedUnion === 'intersection-until-narrowed') {
     const branches = union.filter(isObject) as JsonSchema[]
-    const objectBranches = branches.filter((branch) => isObjectSchema(deref(branch, root)))
+    const objectBranches = branches.filter((branch) => isObjectSchema(deref(branch, root), root))
     if (objectBranches.length === 0) {
       return { properties: baseProps, required: baseRequired }
     }
@@ -341,6 +370,12 @@ function collectObjectSchema(
     const mergedProps: Record<string, JsonSchema> = { ...baseProps, ...intersected }
 
     intersectionKeys.forEach((key) => {
+      const branchKinds = objectBranches
+        .map((branch) => getPropertySchema(branch, root, key))
+        .map((propSchema) => (propSchema ? getSchemaKind(propSchema, root) : 'unknown'))
+      if (branchKinds.some((kind) => kind === 'object' || kind === 'array')) {
+        return
+      }
       const allowed = Array.from(new Set(
         objectBranches.flatMap((branch) => getPropertyAllowedValues(branch, root, key)),
       ))
@@ -366,7 +401,7 @@ export function getSchemaView(
 ): SchemaView {
   const resolved = deref(schema, root)
 
-  if (isObjectSchema(resolved)) {
+  if (isObjectSchema(resolved, root)) {
     const { properties, required } = collectObjectSchema(resolved, root, data, opts)
     return {
       schema: resolved,
@@ -376,7 +411,7 @@ export function getSchemaView(
     }
   }
 
-  if (isArraySchema(resolved)) {
+  if (isArraySchema(resolved, root)) {
     return {
       schema: resolved,
       kind: 'array',
@@ -443,10 +478,10 @@ export function getSchemaAtPath(
 
 export function getSchemaKind(schema: JsonSchema, root?: JsonSchema): SchemaKind {
   const resolvedRoot = root ?? schema
-  if (isObjectSchema(schema)) {
+  if (isObjectSchema(schema, resolvedRoot)) {
     return 'object'
   }
-  if (isArraySchema(schema)) {
+  if (isArraySchema(schema, resolvedRoot)) {
     return 'array'
   }
   return hasPrimitiveType(schema, resolvedRoot) || getAllowedValues(schema, resolvedRoot).length > 0

@@ -28,6 +28,80 @@ function getKeyColumnIndent(lineText: string): string {
   return lineText
 }
 
+function isKeyValueSeparator(lineText: string, column: number): boolean {
+  const colonIndex = column - 1
+  if (colonIndex < 0 || colonIndex >= lineText.length) return false
+
+  let inSingle = false
+  let inDouble = false
+  let escape = false
+  let flowDepth = 0
+  let firstSeparator = -1
+
+  for (let i = 0; i <= colonIndex; i += 1) {
+    const ch = lineText[i]
+
+    if (inSingle) {
+      if (ch === "'") {
+        if (lineText[i + 1] === "'") {
+          i += 1
+        } else {
+          inSingle = false
+        }
+      }
+      continue
+    }
+
+    if (inDouble) {
+      if (escape) {
+        escape = false
+        continue
+      }
+      if (ch === '\\') {
+        escape = true
+        continue
+      }
+      if (ch === '"') {
+        inDouble = false
+      }
+      continue
+    }
+
+    if (ch === "'") {
+      inSingle = true
+      continue
+    }
+    if (ch === '"') {
+      inDouble = true
+      continue
+    }
+
+    if (ch === '#' && flowDepth === 0) {
+      return false
+    }
+
+    if (ch === '{' || ch === '[') {
+      flowDepth += 1
+      continue
+    }
+    if (ch === '}' || ch === ']') {
+      flowDepth = Math.max(0, flowDepth - 1)
+      continue
+    }
+
+    if (ch === ':' && flowDepth === 0 && firstSeparator === -1) {
+      firstSeparator = i
+    }
+  }
+
+  if (firstSeparator !== colonIndex) {
+    return false
+  }
+
+  const prefix = lineText.slice(0, colonIndex)
+  return /^\s*(?:-\s+)?[A-Za-z0-9_.-]+\s*$/.test(prefix)
+}
+
 function replaceLineContent(
   monacoApi: typeof monaco,
   editor: monaco.editor.IStandaloneCodeEditor,
@@ -61,21 +135,14 @@ function handleColon(
   if (!ctx.path) return
 
   const lineText = model.getLineContent(position.lineNumber)
-  const colonIndex = position.column - 1
-  const linePrefix = lineText.slice(0, colonIndex)
-  const commentIndex = linePrefix.indexOf('#')
-  const searchablePrefix = commentIndex === -1 ? linePrefix : linePrefix.slice(0, commentIndex)
-  const firstColonIndex = searchablePrefix.indexOf(':')
-  if (firstColonIndex !== colonIndex) {
-    return
-  }
+  if (!isKeyValueSeparator(lineText, position.column)) return
 
   const schemaKind = getSchemaKind(
     getSchemaAtPath(config.schema, ctx.path, doc.data, { discriminatedUnion: config.completion.discriminatedUnion }),
     config.schema,
   )
 
-  const after = lineText.slice(colonIndex)
+  const after = lineText.slice(position.column - 1)
 
   if (schemaKind === 'scalar') {
     if (after.length === 0) {
