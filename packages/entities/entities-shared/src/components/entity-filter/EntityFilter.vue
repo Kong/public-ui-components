@@ -183,7 +183,7 @@ const searchableFields = computed<Array<{ label: string, value: string, expanded
     .keys(fields)
     .filter((key: string) => fields?.[key]?.searchable)
     .map((key: string) => ({
-      label: fields[key].label || key,
+      label: fields[key]?.label || key,
       value: key,
       expanded: false,
     })) as Array<{ label: string, value: string, expanded: boolean }>

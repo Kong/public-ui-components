@@ -328,7 +328,10 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   }
 
   const { prefix, name } = fields
-  const filterFields: FilterFields = { name, prefix }
+  const filterFields: FilterFields = {
+    ...(name && { name }),
+    ...(prefix && { prefix }),
+  }
 
   return {
     isExactMatch: false,

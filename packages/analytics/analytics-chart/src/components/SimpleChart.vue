@@ -106,7 +106,7 @@ const computedMetricUnit = computed<string>(() => {
     return ''
   }
 
-  return Object.values(props.chartData.meta.metric_units)[0]
+  return Object.values(props.chartData.meta.metric_units)[0] ?? ''
 })
 
 const isGaugeChart = computed<boolean>(() => props.chartOptions.type === 'gauge')
@@ -121,11 +121,11 @@ const hasValidChartData = computed(() => {
     const metricName = props.chartData.meta?.metric_names?.[0]
     if (props.chartOptions.showTrend) {
       // For trend, expect exactly 2 records, and check current (last) is not null
-      return hasChartData && props.chartData.data.length >= 2 && props.chartData.data[1].event[metricName!] !== null
+      return hasChartData && props.chartData.data.length >= 2 && props.chartData.data[1]?.event[metricName!] !== null
     }
 
     // ignore the scenario where the metric name is undefined or metric value is not a number, the chart will handle it (display error message)
-    return hasChartData && props.chartData.data[0].event[metricName!] !== null
+    return hasChartData && props.chartData.data[0]?.event[metricName!] !== null
   }
 
   return hasChartData
