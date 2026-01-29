@@ -507,10 +507,6 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', debouncedResizeHandler)
   window.removeEventListener('resize', disableTransitions)
 })
-
-watch(() => props.groupConfig, (newConfig) => {
-  console.log('groupConfig updated', newConfig)
-})
 </script>
 
 <style lang="scss" scoped>
