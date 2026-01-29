@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.0.29...@kong-ui-public/entities-vaults@4.0.30) (2026-01-29)
+
+
+### Bug Fixes
+
+* **entities-vaults:** remove secret textarea char limit ([#2890](https://github.com/Kong/public-ui-components/issues/2890)) ([ed1e753](https://github.com/Kong/public-ui-components/commit/ed1e75366290fea41cb6aa4c71d2e2163f72f6ce))
+
+
+
+
+
 ## [4.0.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.0.28...@kong-ui-public/entities-vaults@4.0.29) (2026-01-26)
 
 
