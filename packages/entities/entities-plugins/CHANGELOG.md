@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.151.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.150.2...@kong-ui-public/entities-plugins@9.151.0) (2026-01-29)
+
+
+### Features
+
+* **entities-plugins:** freeform auto-fill test utils ([#2843](https://github.com/Kong/public-ui-components/issues/2843)) ([e785b2e](https://github.com/Kong/public-ui-components/commit/e785b2eab7ab6f7d9ab5c33fa2bcc1f43ac6a75e))
+
+
+
+
+
 ## [9.150.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.150.1...@kong-ui-public/entities-plugins@9.150.2) (2026-01-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
