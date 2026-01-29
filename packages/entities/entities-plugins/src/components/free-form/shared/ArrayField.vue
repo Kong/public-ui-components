@@ -15,6 +15,7 @@
       [`ff-array-field-${realAppearance ?? 'default'}`]: true,
       'ff-array-field-sticky-tabs': stickyTabs,
     }"
+    :data-appearance="realAppearance"
     :data-testid="`ff-array-${field.path.value}`"
   >
     <header

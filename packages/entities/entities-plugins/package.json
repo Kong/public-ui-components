@@ -17,8 +17,16 @@
     "./package.json": "./package.json",
     "./dist/*": "./dist/*",
     "./endpoints": {
-      "require": "./dist/endpoints/plugins-endpoints.js",
-      "types": "./dist/endpoints/plugins-endpoints.d.ts"
+      "types": "./dist/endpoints/plugins-endpoints.d.ts",
+      "require": "./dist/endpoints/plugins-endpoints.js"
+    },
+    "./filler/cypress": {
+      "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/filler/cypress/index.d.ts",
+      "import": "./dist/filler/cypress/index.js"
+    },
+    "./filler/playwright": {
+      "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/filler/playwright/index.d.ts",
+      "import": "./dist/filler/playwright/index.js"
     }
   },
   "publishConfig": {
@@ -29,6 +37,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.42.0",
     "@kong/kongponents": "^9.50.0",
+    "@playwright/test": ">= 1.0.0 < 2.0.0",
     "@shikijs/core": ">= 3.0.0 < 4.0.0",
     "@shikijs/engine-javascript": ">= 3.0.0 < 4.0.0",
     "@shikijs/langs": ">= 3.0.0 < 4.0.0",
@@ -44,6 +53,14 @@
     "vue-router": "^4.6.4",
     "zod": ">= 4.1.3 < 5"
   },
+  "peerDependenciesMeta": {
+    "@playwright/test": {
+      "optional": true
+    },
+    "cypress": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@dagrejs/dagre": "^1.1.8",
     "@kong-ui-public/entities-shared": "workspace:^",
@@ -53,6 +70,8 @@
     "@kong/design-tokens": "1.18.2",
     "@kong/icons": "^1.42.0",
     "@kong/kongponents": "9.50.0",
+    "@playwright/experimental-ct-vue": "^1.58.0",
+    "@playwright/test": "^1.58.0",
     "@shikijs/core": "^3.21.0",
     "@shikijs/engine-javascript": "^3.21.0",
     "@shikijs/langs": "^3.21.0",
@@ -70,11 +89,12 @@
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
-    "build": "run-s typecheck build:package build:types build:endpoints",
+    "build": "run-s typecheck build:package build:types build:endpoints build:filler",
     "build:package": "vite build -m production",
     "build:analyzer": "BUILD_VISUALIZER='entities/entities-plugins' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:endpoints": "tsc -p './tsconfig.endpoints.json'",
+    "build:filler": "vite build -c vite.config.filler.ts && tsc -p './tsconfig.filler.json' --emitDeclarationOnly",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
     "preview": "cross-env USE_SANDBOX=true vite preview",
     "lint": "eslint",
@@ -85,7 +105,10 @@
     "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
     "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
-    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui",
+    "install:pw": "playwright install chromium",
+    "test:pw": "cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts",
+    "test:pw:open": "cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts --ui"
   },
   "repository": {
     "type": "git",
