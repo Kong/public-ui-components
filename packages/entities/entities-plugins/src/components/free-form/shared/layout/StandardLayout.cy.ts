@@ -77,6 +77,7 @@ describe('<StandardLayout />', () => {
     isEditing?: boolean
     onFormChange?: any
     provide?: any
+    renderRules?: any
   } = {}) => {
     const {
       schema = createBaseSchema(),
@@ -87,6 +88,7 @@ describe('<StandardLayout />', () => {
       isEditing = false,
       onFormChange = cy.spy().as('onFormChange'),
       provide,
+      renderRules,
     } = overrides
 
     const mountOptions: any = {
@@ -100,6 +102,7 @@ describe('<StandardLayout />', () => {
         onModelUpdated: cy.spy().as('onModelUpdated'),
         onFormChange,
         pluginName: 'test-plugin',
+        renderRules,
       },
     }
 
@@ -169,6 +172,227 @@ describe('<StandardLayout />', () => {
       const call = (spy as any).getCall(0)
       expect(call.args[0]).to.have.property('service')
       expect(call.args[0].service).to.deep.equal({ id: 'test-service-123' })
+    })
+  })
+
+  describe('fieldOverrides', () => {
+    describe('StringFieldOverride', () => {
+      it('should render a string field as textarea when multiline is true', () => {
+        const schema = {
+          type: 'record',
+          fields: [
+            {
+              config: {
+                type: 'record',
+                fields: [
+                  { body_template: { type: 'string' } },
+                  { other_field: { type: 'string' } },
+                ],
+              },
+            },
+          ],
+        }
+
+        mountStandardLayout({
+          schema,
+          model: { enabled: true, config: {} },
+          renderRules: {
+            fieldOverrides: {
+              'config.body_template': { multiline: true },
+            },
+          },
+        })
+
+        cy.getTestId('ff-object-switch-config').check({ force: true })
+
+        // Verify body_template is rendered as textarea
+        cy.getTestId('ff-config.body_template').find('textarea').should('exist')
+
+        // Verify other_field is rendered as regular input
+        cy.getTestId('ff-config.other_field').find('input').should('exist')
+        cy.getTestId('ff-config.other_field').find('textarea').should('not.exist')
+      })
+
+      it('should apply rows prop to textarea', () => {
+        const schema = {
+          type: 'record',
+          fields: [
+            {
+              config: {
+                type: 'record',
+                fields: [
+                  { body_template: { type: 'string' } },
+                ],
+              },
+            },
+          ],
+        }
+
+        mountStandardLayout({
+          schema,
+          model: { enabled: true, config: {} },
+          renderRules: {
+            fieldOverrides: {
+              'config.body_template': { multiline: true, rows: 6 },
+            },
+          },
+        })
+
+        cy.getTestId('ff-object-switch-config').check({ force: true })
+        cy.getTestId('ff-config.body_template').find('textarea').should('have.attr', 'rows', '6')
+      })
+
+      it('should apply placeholder override', () => {
+        const schema = {
+          type: 'record',
+          fields: [
+            {
+              config: {
+                type: 'record',
+                fields: [
+                  { api_key: { type: 'string' } },
+                ],
+              },
+            },
+          ],
+        }
+
+        mountStandardLayout({
+          schema,
+          model: { enabled: true, config: {} },
+          renderRules: {
+            fieldOverrides: {
+              'config.api_key': { placeholder: 'Enter your API key here' },
+            },
+          },
+        })
+
+        cy.getTestId('ff-object-switch-config').check({ force: true })
+        cy.getTestId('ff-config.api_key').find('input').should('have.attr', 'placeholder', 'Enter your API key here')
+      })
+
+      it('should render password field with mask toggle when showPasswordMaskToggle is true', () => {
+        const schema = {
+          type: 'record',
+          fields: [
+            {
+              config: {
+                type: 'record',
+                fields: [
+                  { secret_key: { type: 'string' } },
+                ],
+              },
+            },
+          ],
+        }
+
+        mountStandardLayout({
+          schema,
+          model: { enabled: true, config: {} },
+          renderRules: {
+            fieldOverrides: {
+              'config.secret_key': { showPasswordMaskToggle: true },
+            },
+          },
+        })
+
+        cy.getTestId('ff-object-switch-config').check({ force: true })
+        // Password field should have type="password"
+        cy.getTestId('ff-config.secret_key').find('input').should('have.attr', 'type', 'password')
+        // Should have a visibility toggle button
+        cy.getTestId('ff-config.secret_key').find('button').should('exist')
+      })
+    })
+
+    describe('multiple fieldOverrides', () => {
+      it('should apply multiple overrides to different fields', () => {
+        const schema = {
+          type: 'record',
+          fields: [
+            {
+              config: {
+                type: 'record',
+                fields: [
+                  { template: { type: 'string' } },
+                  { description: { type: 'string' } },
+                  { api_key: { type: 'string' } },
+                ],
+              },
+            },
+          ],
+        }
+
+        mountStandardLayout({
+          schema,
+          model: { enabled: true, config: {} },
+          renderRules: {
+            fieldOverrides: {
+              'config.template': { multiline: true, rows: 4 },
+              'config.description': { multiline: true, rows: 2 },
+              'config.api_key': { placeholder: 'Your API key' },
+            },
+          },
+        })
+
+        cy.getTestId('ff-object-switch-config').check({ force: true })
+
+        // Verify template is textarea with rows=4
+        cy.getTestId('ff-config.template').find('textarea').should('have.attr', 'rows', '4')
+
+        // Verify description is textarea with rows=2
+        cy.getTestId('ff-config.description').find('textarea').should('have.attr', 'rows', '2')
+
+        // Verify api_key is input with placeholder
+        cy.getTestId('ff-config.api_key').find('input').should('have.attr', 'placeholder', 'Your API key')
+      })
+    })
+
+    describe('fieldOverrides combined with other renderRules', () => {
+      it('should work alongside bundles and dependencies', () => {
+        const schema = {
+          type: 'record',
+          fields: [
+            {
+              config: {
+                type: 'record',
+                fields: [
+                  { strategy: { type: 'string' } },
+                  { redis_host: { type: 'string' } },
+                  { template: { type: 'string' } },
+                ],
+              },
+            },
+          ],
+        }
+
+        mountStandardLayout({
+          schema,
+          model: { enabled: true, config: {} },
+          renderRules: {
+            bundles: [
+              ['config.strategy', 'config.redis_host'],
+            ],
+            dependencies: {
+              'config.redis_host': ['config.strategy', 'redis'],
+            },
+            fieldOverrides: {
+              'config.template': { multiline: true, rows: 5 },
+            },
+          },
+        })
+
+        cy.getTestId('ff-object-switch-config').check({ force: true })
+
+        // Verify template is rendered as textarea despite other rules
+        cy.getTestId('ff-config.template').find('textarea').should('have.attr', 'rows', '5')
+
+        // Verify redis_host is hidden (dependency not met)
+        cy.getTestId('ff-config.redis_host').should('not.be.visible')
+
+        // Set strategy to 'redis' to show redis_host
+        cy.getTestId('ff-config.strategy').type('redis')
+        cy.getTestId('ff-config.redis_host').should('be.visible')
+      })
     })
   })
 })

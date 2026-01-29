@@ -122,6 +122,109 @@ export type PartialNotification = {
 export type GlobalAction = 'notify'
 
 /**
+ * Override options for string fields.
+ */
+export interface StringFieldOverride {
+  /** Render as textarea instead of single-line input */
+  multiline?: boolean
+  /** Number of rows for textarea (only applies when multiline is true) */
+  rows?: number
+  /** Show vault secret picker */
+  showVaultSecretPicker?: boolean
+  /** Show password mask toggle */
+  showPasswordMaskToggle?: boolean
+  /** Input type (e.g., 'password', 'text') */
+  inputType?: string
+  /** Custom placeholder text */
+  placeholder?: string
+}
+
+/**
+ * Override options for number fields.
+ */
+export interface NumberFieldOverride {
+  /** Show vault secret picker */
+  showVaultSecretPicker?: boolean
+  /** Minimum value */
+  min?: number | string
+  /** Maximum value */
+  max?: number | string
+}
+
+/**
+ * Override options for array fields.
+ */
+export interface ArrayFieldOverride {
+  /** Display appearance: 'default', 'card', or 'tabs' */
+  appearance?: 'default' | 'card' | 'tabs'
+  /** Make tabs sticky (for 'tabs' appearance) */
+  stickyTabs?: boolean | string | number
+  /** Custom item label */
+  itemLabel?: string
+}
+
+/**
+ * Override options for object/record fields.
+ */
+export interface ObjectFieldOverride {
+  /** Whether the object is added by default */
+  defaultAdded?: boolean
+  /** Whether the object is collapsible */
+  collapsible?: boolean
+  /** Display appearance: 'card' or 'default' */
+  appearance?: 'card' | 'default'
+  /** Fields to omit from rendering */
+  omit?: string[]
+  /** Render as child without wrapper */
+  asChild?: boolean
+  /** Custom field order */
+  fieldsOrder?: string[]
+}
+
+/**
+ * Override options for enum/select fields.
+ */
+export interface EnumFieldOverride {
+  /** Allow multiple selection */
+  multiple?: boolean
+  /** Custom placeholder text */
+  placeholder?: string
+}
+
+/**
+ * Override options for key-value/map fields.
+ */
+export interface KeyValueFieldOverride {
+  /** Show vault secret picker for values */
+  showVaultSecretPicker?: boolean
+  /** Placeholder for key input */
+  keyPlaceholder?: string
+  /** Placeholder for value input */
+  valuePlaceholder?: string
+}
+
+/**
+ * Override options for string array fields (tag input).
+ */
+export interface StringArrayFieldOverride {
+  /** Render as multiline textarea */
+  multiline?: boolean
+}
+
+/**
+ * Union type of all field override options.
+ * Use the appropriate interface based on the field's schema type.
+ */
+export type FieldOverride =
+  | StringFieldOverride
+  | NumberFieldOverride
+  | ArrayFieldOverride
+  | ObjectFieldOverride
+  | EnumFieldOverride
+  | KeyValueFieldOverride
+  | StringArrayFieldOverride
+
+/**
  * Rules to control the rendering of form fields.
  * Only `Form` and `ObjectField` components can accept these rules
  */
@@ -160,6 +263,21 @@ export interface RenderRules {
    */
   dependencies?: {
     [fieldPath: string]: [fieldPath: string, fieldValue: any]
+  }
+
+  /**
+   * Override rendering options for specific fields.
+   * @example
+   * ```ts
+   * {
+   *   'config.body_template': { multiline: true, rows: 4 },
+   *   'config.headers': { appearance: 'card' },
+   *   'config.strategy': { placeholder: 'Select a strategy' },
+   * }
+   * ```
+   */
+  fieldOverrides?: {
+    [fieldPath: string]: FieldOverride
   }
 }
 

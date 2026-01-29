@@ -575,6 +575,9 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
       dependencies: {
         'config.cache.redis': ['config.cache.strategy', 'redis'],
       },
+      fieldOverrides: {
+        'config.behavior.idp_error_response_body_template': { multiline: true, rows: 4 },
+      },
     },
   },
   'confluent': {

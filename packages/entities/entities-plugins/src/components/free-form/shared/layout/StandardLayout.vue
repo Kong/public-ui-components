@@ -23,6 +23,24 @@
       >
         <IdentityRealmsField v-bind="slotProps" />
       </FieldRenderer>
+
+      <!-- Dynamic field overrides from metadata -->
+      <FieldRenderer
+        v-for="[fieldPath, override] in fieldOverrideEntries"
+        :key="fieldPath"
+        v-slot="slotProps"
+        :match="({ path }) => path === fieldPath"
+      >
+        <StringField
+          v-bind="slotProps"
+          :multiline="override.multiline"
+          :placeholder="override.placeholder"
+          :rows="override.rows"
+          :show-password-mask-toggle="override.showPasswordMaskToggle"
+          :show-vault-secret-picker="override.showVaultSecretPicker"
+          :type="override.inputType"
+        />
+      </FieldRenderer>
     </template>
 
     <template v-if="editorMode === 'form'">
@@ -208,7 +226,7 @@ import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import type { PluginValidityChangeEvent } from '../../../../types'
 import VFGField from '../VFGField.vue'
-import type { FormConfig, RenderRules } from '../types'
+import type { FormConfig, RenderRules, StringFieldOverride } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
@@ -242,6 +260,12 @@ const { t } = createI18n<typeof english>('en-us', english)
 const { editorMode = 'form', ...props } = defineProps<Props<T>>()
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
+
+const fieldOverrideEntries = computed(() => {
+  const overrides = props.renderRules?.fieldOverrides
+  if (!overrides) return []
+  return Object.entries(overrides) as Array<[string, StringFieldOverride]>
+})
 
 const slots = defineSlots<{
   default: () => any
