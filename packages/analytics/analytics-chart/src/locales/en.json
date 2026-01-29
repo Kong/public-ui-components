@@ -58,6 +58,7 @@
     "ai_provider": "Provider",
     "ai_request_model": "Request model",
     "ai_response_model": "Response model",
+    "error_rate": "Error rate",
     "request_count": "Request count",
     "request_per_minute": "Requests per minute",
     "requests_per_minute": "Requests per minute",
@@ -184,6 +185,7 @@
     "vulnerability_count": "Vulnerability count"
   },
   "metricAxisTitles": {
+    "error_rate": "Error rate",
     "request_count": "Request count",
     "requests_per_minute": "Requests per minute",
     "latency_in": "Latency in {unit}",
