@@ -73,7 +73,7 @@ function formatYamlString(value: string): string {
   const needsQuotes =
     value.trim() !== value ||
     value === '' ||
-    /[:#{}\[\],&*!|>'"%@`?]/.test(value) ||
+    /[:#{}[\],&*!|>'"%@`?]/.test(value) ||
     /^(?:~|null|true|false|yes|no|on|off)$/i.test(lower)
   if (!needsQuotes) {
     return value

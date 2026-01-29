@@ -225,10 +225,10 @@ function getAllowedValues(schema: JsonSchema, root: JsonSchema): Array<string | 
 function getDiscriminatorCandidates(
   schema: JsonSchema,
   root: JsonSchema,
-): Array<{ key: string; allowed: Array<string | number | boolean | null> }> {
+): Array<{ key: string, allowed: Array<string | number | boolean | null> }> {
   const resolved = deref(schema, root)
   const props = isObject(resolved.properties) ? resolved.properties : {}
-  const entries: Array<{ key: string; allowed: Array<string | number | boolean | null> }> = []
+  const entries: Array<{ key: string, allowed: Array<string | number | boolean | null> }> = []
   for (const [key, value] of Object.entries(props)) {
     if (!isObject(value)) continue
     const allowed = getAllowedValues(value as JsonSchema, root)
@@ -253,10 +253,10 @@ function pickDiscriminatorKey(
 ): string | null {
   const total = branches.length
   const stats = new Map<string, {
-    present: number,
-    required: number,
-    totalValues: number,
-    distinct: Set<string | number | boolean | null>,
+    present: number
+    required: number
+    totalValues: number
+    distinct: Set<string | number | boolean | null>
   }>()
 
   for (const branch of branches) {

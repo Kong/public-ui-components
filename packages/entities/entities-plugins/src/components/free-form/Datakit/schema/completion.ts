@@ -7,7 +7,6 @@ import {
   ExitNodeSchema,
   JqNodeSchema,
   JsonToXmlNodeSchema,
-  NodeNameSchema,
   NullishNameConnectionSchema,
   PropertyNodeSchema,
   StaticNodeSchema,

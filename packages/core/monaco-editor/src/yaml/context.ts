@@ -31,8 +31,8 @@ function nodeContains(node: Node, offset: number): boolean {
 function findPathAtOffset(
   root: Node | null | undefined,
   offset: number,
-): { path: YamlPath; inKey: boolean; inValue: boolean } | null {
-  const visit = (node: Node, path: YamlPath): { path: YamlPath; inKey: boolean; inValue: boolean } | null => {
+): { path: YamlPath, inKey: boolean, inValue: boolean } | null {
+  const visit = (node: Node, path: YamlPath): { path: YamlPath, inKey: boolean, inValue: boolean } | null => {
     if (!nodeContains(node, offset)) {
       return null
     }
@@ -86,8 +86,8 @@ function findPathAtOffset(
 }
 
 type LineIndexes = {
-  keyLineIndex: Map<number, YamlPath>,
-  seqLineIndex: Map<number, YamlPath>,
+  keyLineIndex: Map<number, YamlPath>
+  seqLineIndex: Map<number, YamlPath>
 }
 
 function buildLineIndexes(
@@ -224,11 +224,11 @@ function findPreviousNonEmptyLine(model: monaco.editor.ITextModel, lineNumber: n
 }
 
 type AnchorLine = {
-  line: number,
-  indent: number,
-  text: string,
-  path: YamlPath,
-  kind: 'key' | 'seq',
+  line: number
+  indent: number
+  text: string
+  path: YamlPath
+  kind: 'key' | 'seq'
 }
 
 function findNearestAnchorLine(
