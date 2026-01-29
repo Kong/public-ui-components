@@ -1,5 +1,5 @@
 import type * as monaco from 'monaco-editor'
-import type { Node } from 'yaml'
+import type { Document, Node } from 'yaml'
 import { isMap, isNode, isScalar, isSeq } from 'yaml'
 import type {
   CursorContext,
@@ -63,7 +63,7 @@ function getIndentUnit(model: monaco.editor.ITextModel): string {
 }
 
 function getKeyColumnIndent(lineText: string): string {
-  const leading = lineText.match(/^\\s*/)?.[0] ?? ''
+  const leading = lineText.match(/^\s*/)?.[0] ?? ''
   const rest = lineText.slice(leading.length)
   if (rest.startsWith('- ')) {
     return `${leading}  `
@@ -202,7 +202,7 @@ export function provideYamlCompletions(
   ctx: CursorContext,
   rootSchema: JsonSchema,
   data: unknown,
-  doc: import('yaml').Document.Parsed,
+  doc: Document.Parsed,
   options: Required<YamlCompletionOptions>,
   style: YamlStyleOptions,
   extensions: YamlCompletionExtension[],

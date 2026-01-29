@@ -206,10 +206,10 @@ function pickDiscriminatorKey(
 ): string | null {
   const total = branches.length
   const stats = new Map<string, {
-    present: number
-    required: number
-    totalValues: number
-    distinct: Set<string | number | boolean | null>
+    present: number,
+    required: number,
+    totalValues: number,
+    distinct: Set<string | number | boolean | null>,
   }>()
 
   for (const branch of branches) {
@@ -328,7 +328,7 @@ function collectObjectSchema(
   root: JsonSchema,
   data: unknown,
   opts: { discriminatedUnion: 'intersection-until-narrowed' },
-): { properties: Record<string, JsonSchema>; required: Set<string> } {
+): { properties: Record<string, JsonSchema>, required: Set<string> } {
   const resolved = deref(schema, root)
   const baseProps = isObject(resolved.properties) ? (resolved.properties as Record<string, JsonSchema>) : {}
   const baseRequired = new Set(Array.isArray(resolved.required) ? resolved.required.filter((r): r is string => typeof r === 'string') : [])

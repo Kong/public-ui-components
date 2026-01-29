@@ -1,4 +1,5 @@
 import type * as monaco from 'monaco-editor'
+import type { Document } from 'yaml'
 
 export type YamlArrayItemStyle = 'indentless' | 'nested'
 
@@ -65,7 +66,7 @@ export type CursorContext = {
 export type YamlCompletionExtensionContext = {
   model: monaco.editor.ITextModel
   position: monaco.Position
-  doc: import('yaml').Document.Parsed
+  doc: Document.Parsed
   data: unknown
   cursor: CursorContext
   schema: SchemaView | null

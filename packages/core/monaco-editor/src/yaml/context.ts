@@ -86,8 +86,8 @@ function findPathAtOffset(
 }
 
 type LineIndexes = {
-  keyLineIndex: Map<number, YamlPath>
-  seqLineIndex: Map<number, YamlPath>
+  keyLineIndex: Map<number, YamlPath>,
+  seqLineIndex: Map<number, YamlPath>,
 }
 
 function buildLineIndexes(
@@ -210,11 +210,11 @@ function findPreviousNonEmptyLine(model: monaco.editor.ITextModel, lineNumber: n
 }
 
 type AnchorLine = {
-  line: number
-  indent: number
-  text: string
-  path: YamlPath
-  kind: 'key' | 'seq'
+  line: number,
+  indent: number,
+  text: string,
+  path: YamlPath,
+  kind: 'key' | 'seq',
 }
 
 function findNearestAnchorLine(

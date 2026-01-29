@@ -211,6 +211,7 @@ function handleConfigChange() {
  * @param newUIData The new UI data to set.
  */
 function handleFlowChange(config: DatakitConfig, _uiData: DatakitUIData) {
+  void _uiData
   const strictResult = DatakitConfigStrictSchema.safeParse(config)
   strictValid.value = strictResult.success
   strictErrorMessage.value = strictResult.success ? '' : getSchemaErrorMessage(strictResult.error)
@@ -244,7 +245,9 @@ function getSchemaErrorMessage(error: ZodError): string {
     .join('; ')
 }
 
-function handleCodeChange(_newConfig: unknown) {}
+function handleCodeChange(_newConfig: unknown) {
+  void _newConfig
+}
 
 function handleCodeError(msg: string) {
   flowUnavailableReason.value = msg
