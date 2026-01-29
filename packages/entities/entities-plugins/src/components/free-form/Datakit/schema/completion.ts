@@ -19,11 +19,8 @@ const BranchNodeCompletionSchema = z
     type: z.literal('branch'),
     name: ConfigNodeNameSchema,
     input: NullishNameConnectionSchema,
-    inputs: z
-      .record(z.string().min(1).max(255), NullishNameConnectionSchema)
-      .nullish(),
-    then: z.array(NodeNameSchema).nullish(),
-    else: z.array(NodeNameSchema).nullish(),
+    then: z.array(ConfigNodeNameSchema).nullish(),
+    else: z.array(ConfigNodeNameSchema).nullish(),
   })
   .strict()
 

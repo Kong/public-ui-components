@@ -92,6 +92,7 @@ function mergeKeys(
   if (current === null || next === null) return null
   if (!current) return next
   if (!next) return current
+  if (current.includes('*') || next.includes('*')) return ['*']
   return Array.from(new Set([...current, ...next]))
 }
 
@@ -123,7 +124,7 @@ function extractObjectKeys(
 
   const additional = resolved.additionalProperties
   if (additional && additional !== false) {
-    return null
+    return ['*']
   }
 
   if (resolved.properties && typeof resolved.properties === 'object') {
@@ -138,6 +139,53 @@ function isObjectSchema(schema: JsonSchema): boolean {
   if (schema.type === 'object') return true
   if (schema.properties && typeof schema.properties === 'object') return true
   return false
+}
+
+function isNullSchema(schema: JsonSchema | undefined, definitions: Record<string, JsonSchema>): boolean {
+  if (!schema) return false
+  const resolved = resolveRef(schema, definitions)
+  const t = resolved?.type
+  if (t === 'null') return true
+  if (Array.isArray(t) && t.includes('null')) return true
+  return false
+}
+
+function isNeverSchema(schema: JsonSchema | undefined, definitions: Record<string, JsonSchema>): boolean {
+  if (!schema) return false
+  const resolved = resolveRef(schema, definitions)
+  if (!resolved || typeof resolved !== 'object') return false
+  if (resolved.not && typeof resolved.not === 'object' && Object.keys(resolved.not).length === 0) {
+    return true
+  }
+  const union = Array.isArray(resolved.anyOf)
+    ? resolved.anyOf
+    : Array.isArray(resolved.oneOf)
+      ? resolved.oneOf
+      : null
+  if (!union) return false
+  let hasNever = false
+  const nonNull: JsonSchema[] = []
+  for (const entry of union) {
+    const sub = resolveRef(entry as JsonSchema, definitions)
+    if (!sub || typeof sub !== 'object') continue
+    if (sub.not && typeof sub.not === 'object' && Object.keys(sub.not).length === 0) {
+      hasNever = true
+      continue
+    }
+    if (isNullSchema(sub as JsonSchema, definitions)) {
+      continue
+    }
+    nonNull.push(sub as JsonSchema)
+  }
+  return hasNever && nonNull.length === 0
+}
+
+function supportsWhole(
+  schema: JsonSchema | undefined,
+  definitions: Record<string, JsonSchema>,
+): boolean {
+  if (!schema) return false
+  return !isNeverSchema(schema, definitions)
 }
 
 function walkSchema(
@@ -161,12 +209,20 @@ function walkSchema(
       if (nodeTypes.length) {
         const inputs = extractObjectKeys(props.inputs, definitions)
         const outputs = extractObjectKeys(props.outputs, definitions)
+        const hasInput = supportsWhole(props.input, definitions)
+        const hasOutput = supportsWhole(props.output, definitions)
 
         for (const t of nodeTypes) {
           const existing = index.get(t) ?? {}
           index.set(t, {
-            inputs: mergeKeys(existing.inputs, inputs),
-            outputs: mergeKeys(existing.outputs, outputs),
+            inputs: mergeKeys(
+              existing.inputs,
+              inputs ?? (hasInput ? null : undefined),
+            ),
+            outputs: mergeKeys(
+              existing.outputs,
+              outputs ?? (hasOutput ? null : undefined),
+            ),
           })
         }
       }

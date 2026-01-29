@@ -17,6 +17,7 @@ export type YamlCompletionOptions = {
   hideSchemaTemplates?: boolean
   discriminatedUnion?: 'intersection-until-narrowed'
   includeNullValue?: boolean
+  suggestAdditionalPropertiesKey?: boolean
 }
 
 export type YamlSchemaRegistration = {

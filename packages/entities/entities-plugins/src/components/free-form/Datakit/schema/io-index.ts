@@ -3,17 +3,17 @@ import { getNodeIo, type NodeIO, type GraphValidationMode } from './node-io'
 
 type ParsedConfig = {
   config?: {
-    nodes?: Array<{ name?: unknown; type?: unknown; values?: Record<string, unknown> }>,
-    resources?: { vault?: Record<string, unknown> | null },
-  },
+    nodes?: Array<{ name?: unknown, type?: unknown, values?: Record<string, unknown> }>
+    resources?: { vault?: Record<string, unknown> | null }
+  }
 }
 
 type DatakitIoIndex = {
-  nodeNames: string[],
-  implicitNames: string[],
-  nodeTypeByName: Map<string, string>,
-  getNodeIoByName: (name: string) => NodeIO | undefined,
-  getDynamicOutputFields: (nodeName: string, nodeType: string) => string[],
+  nodeNames: string[]
+  implicitNames: string[]
+  nodeTypeByName: Map<string, string>
+  getNodeIoByName: (name: string) => NodeIO | undefined
+  getDynamicOutputFields: (nodeName: string, nodeType: string) => string[]
 }
 
 const IMPLICIT_NAME_SET = new Set<string>(IMPLICIT_NODE_NAMES)

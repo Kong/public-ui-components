@@ -144,6 +144,53 @@ function deref(schema: JsonSchema, root: JsonSchema, seen = new Set<JsonSchema>(
   return schema
 }
 
+function isNullSchema(schema: JsonSchema, root: JsonSchema): boolean {
+  const resolved = deref(schema, root)
+  const typeSet = getTypeSet(resolved)
+  return typeSet?.has('null') ?? false
+}
+
+function isNeverSchema(schema: JsonSchema, root: JsonSchema): boolean {
+  const resolved = deref(schema, root)
+  if (isObject(resolved.not) && Object.keys(resolved.not).length === 0) {
+    return true
+  }
+
+  const union = [
+    ...(Array.isArray(resolved.anyOf) ? resolved.anyOf : []),
+    ...(Array.isArray(resolved.oneOf) ? resolved.oneOf : []),
+  ]
+  if (union.length === 0) return false
+
+  let hasNever = false
+  let hasOther = false
+  for (const entry of union) {
+    if (!isObject(entry)) continue
+    const sub = deref(entry as JsonSchema, root)
+    if (isObject(sub.not) && Object.keys(sub.not).length === 0) {
+      hasNever = true
+      continue
+    }
+    if (isNullSchema(sub as JsonSchema, root)) {
+      continue
+    }
+    hasOther = true
+  }
+  return hasNever && !hasOther
+}
+
+function filterNeverProps(
+  props: Record<string, JsonSchema>,
+  root: JsonSchema,
+): Record<string, JsonSchema> {
+  const filtered: Record<string, JsonSchema> = {}
+  for (const [key, value] of Object.entries(props)) {
+    if (isNeverSchema(value, root)) continue
+    filtered[key] = value
+  }
+  return filtered
+}
+
 function getAllowedValues(schema: JsonSchema, root: JsonSchema): Array<string | number | boolean | null> {
   const resolved = deref(schema, root)
   const direct: Array<string | number | boolean | null> = []
@@ -330,7 +377,9 @@ function collectObjectSchema(
   opts: { discriminatedUnion: 'intersection-until-narrowed' },
 ): { properties: Record<string, JsonSchema>, required: Set<string> } {
   const resolved = deref(schema, root)
-  const baseProps = isObject(resolved.properties) ? (resolved.properties as Record<string, JsonSchema>) : {}
+  const baseProps = isObject(resolved.properties)
+    ? filterNeverProps(resolved.properties as Record<string, JsonSchema>, root)
+    : {}
   const baseRequired = new Set(Array.isArray(resolved.required) ? resolved.required.filter((r): r is string => typeof r === 'string') : [])
 
   const union = Array.isArray(resolved.oneOf) ? resolved.oneOf : Array.isArray(resolved.anyOf) ? resolved.anyOf : null

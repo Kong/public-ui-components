@@ -339,6 +339,55 @@ export function registerYamlSmartEdits(
       const change = event.changes[event.changes.length - 1]
       if (!change) return
       if (/[\r\n]/.test(change.text)) return
+      if (change.text === '-') {
+        const currentModel = editor.getModel()
+        if (!currentModel) return
+        const changeEndOffset = change.rangeOffset + change.text.length
+        const position = currentModel.getPositionAt(changeEndOffset)
+        const lineText = currentModel.getLineContent(position.lineNumber)
+        if (!/^\s*-\s*$/.test(lineText)) return
+        const doc = getYamlDoc(currentModel, config.yamlVersion)
+        const ctx = getCursorContext(currentModel, position, doc)
+        const parentPath =
+          ctx.valuePath && typeof ctx.valuePath[ctx.valuePath.length - 1] === 'number'
+            ? ctx.valuePath.slice(0, -1)
+            : null
+        if (!parentPath) return
+        const parentKind = getSchemaKind(
+          getSchemaAtPath(config.schema, parentPath, doc.data, {
+            discriminatedUnion: config.completion.discriminatedUnion,
+          }),
+          config.schema,
+        )
+        if (parentKind !== 'array') return
+        queueMicrotask(() => {
+          if (isApplying) return
+          const model = editor.getModel()
+          if (!model) return
+          const currentLine = model.getLineContent(position.lineNumber)
+          if (!/^\s*-\s*$/.test(currentLine)) return
+          isApplying = true
+          try {
+            editor.executeEdits('yaml-smart-edit', [
+              {
+                range: new monacoApi.Range(
+                  position.lineNumber,
+                  position.column,
+                  position.lineNumber,
+                  position.column,
+                ),
+                text: ' ',
+              },
+            ])
+            const nextPos = new monacoApi.Position(position.lineNumber, position.column + 1)
+            editor.setPosition(nextPos)
+            triggerSuggestIfAvailable(monacoApi, editor, nextPos)
+          } finally {
+            isApplying = false
+          }
+        })
+        return
+      }
       if (!/^[A-Za-z0-9_-]+$/.test(change.text)) return
       if (change.text.length !== 1) return
       const currentModel = editor.getModel()

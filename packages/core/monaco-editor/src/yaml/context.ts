@@ -149,7 +149,7 @@ function getKeyColumnIndent(lineText: string): string {
       index += 1
       continue
     }
-    if (ch === '-' && lineText[index + 1] === ' ') {
+    if (ch === '-' && (lineText[index + 1] === ' ' || lineText[index + 1] === undefined)) {
       return `${lineText.slice(0, index)}  `
     }
     return lineText.slice(0, index)
@@ -166,6 +166,20 @@ function getPrefix(lineText: string, column: number): string {
   return left.slice(start)
 }
 
+function getInlineValuePrefix(lineText: string, column: number): string {
+  const left = lineText.slice(0, Math.max(0, column - 1))
+  const colonIndex = left.lastIndexOf(':')
+  if (colonIndex === -1) {
+    return getPrefix(lineText, column)
+  }
+  const valuePart = left.slice(colonIndex + 1)
+  let start = valuePart.length
+  while (start > 0 && KEY_CHARS.test(valuePart[start - 1])) {
+    start -= 1
+  }
+  return valuePart.slice(start)
+}
+
 function isAfterColon(lineText: string, column: number): boolean {
   const left = lineText.slice(0, Math.max(0, column - 1))
   const colonIndex = left.lastIndexOf(':')
@@ -175,7 +189,7 @@ function isAfterColon(lineText: string, column: number): boolean {
 }
 
 function isSeqItemLine(lineText: string): boolean {
-  return /^\s*-\s/.test(lineText)
+  return /^\s*-(\s|$)/.test(lineText)
 }
 
 function getLineIndentSize(lineText: string): number {
@@ -274,7 +288,7 @@ export function getCursorContext(
   const lineText = model.getLineContent(position.lineNumber)
   const lineIndent = getLineIndent(lineText)
   const isEmptyLine = lineText.trim().length === 0
-  const prefix = getPrefix(lineText, position.column)
+  const prefix = getInlineValuePrefix(lineText, position.column)
   const afterColon = isAfterColon(lineText, position.column)
   const atLineStart = lineText.slice(0, Math.max(0, position.column - 1)).trim().length === 0
   const prevNonEmptyLine = isEmptyLine ? findPreviousNonEmptyLine(model, position.lineNumber) : null
@@ -332,11 +346,41 @@ export function getCursorContext(
           valuePath = keyPathAtLine
         } else if (seqPathAtLine) {
           valuePath = [...seqPathAtLine, key]
+        } else if (isSeqItemLine(lineText)) {
+          const dashIndent = getLineIndentSize(lineText)
+          const anchor = findNearestKeyAnchorLine(model, position.lineNumber, dashIndent, indexes)
+          if (anchor) {
+            const count = countSeqItemsAtIndent(model, anchor.line + 1, position.lineNumber, dashIndent)
+            const index = Math.max(0, count - 1)
+            valuePath = [...anchor.path, index, key]
+          }
         }
         if (valuePath) {
           containerPath = valuePath
           inValue = true
           slot = 'value'
+        }
+      }
+
+      if (!valuePath && cursorAfterColon) {
+        const key = parseSimpleKeyFromLine(lineText)
+        if (key) {
+          if (seqPathAtLine) {
+            valuePath = [...seqPathAtLine, key]
+          } else if (isSeqItemLine(lineText)) {
+            const dashIndent = getLineIndentSize(lineText)
+            const anchor = findNearestKeyAnchorLine(model, position.lineNumber, dashIndent, indexes)
+            if (anchor) {
+              const count = countSeqItemsAtIndent(model, anchor.line + 1, position.lineNumber, dashIndent)
+              const index = Math.max(0, count - 1)
+              valuePath = [...anchor.path, index, key]
+            }
+          }
+          if (valuePath) {
+            containerPath = valuePath
+            inValue = true
+            slot = 'value'
+          }
         }
       }
     }
@@ -485,6 +529,31 @@ export function getCursorContext(
         valuePath = [...basePath, key]
         if (path) {
           path = valuePath
+        }
+      }
+    }
+  }
+
+  if (isSeqItemLine(lineText)) {
+    const indexes = buildLineIndexes(doc.doc.contents as Node, doc.lineCounter)
+    const dashIndent = getLineIndentSize(lineText)
+    const anchor = findNearestKeyAnchorLine(model, position.lineNumber, dashIndent, indexes)
+    if (anchor) {
+      const count = countSeqItemsAtIndent(model, anchor.line + 1, position.lineNumber, dashIndent)
+      const index = Math.max(0, count - 1)
+      const seqPath = [...anchor.path, index]
+      if (!valuePath) {
+        valuePath = seqPath
+        containerPath = valuePath
+        inValue = true
+        slot = 'value'
+      } else {
+        const rest = valuePath.slice(anchor.path.length)
+        if (rest.length === 0 || typeof rest[0] !== 'number') {
+          valuePath = [...anchor.path, index, ...rest]
+          if (path) {
+            path = valuePath
+          }
         }
       }
     }

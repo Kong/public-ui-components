@@ -31,18 +31,17 @@
     v-bind="props"
     class="dk-form"
     :editor-mode="layoutEditorMode"
+    :on-form-change="handleLayoutFormChange"
   >
     <FlowEditor
       v-if="realEditorMode === 'flow'"
       :is-editing="props.isEditing"
-      @change="handleFlowChange"
     />
 
     <template #code-editor>
       <CodeEditor
         class="code-editor"
         :editing="props.isEditing"
-        @change="handleCodeChange"
         @error="handleCodeError"
         @validation="handleCodeValidation"
       />
@@ -65,7 +64,7 @@ import type { Component } from 'vue'
 import type { ZodError } from 'zod'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
-import type { EditorMode, DatakitPluginData, DatakitConfig, DatakitUIData } from './types'
+import type { EditorMode, DatakitPluginData } from './types'
 
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { escape } from 'lodash-es'
@@ -194,29 +193,19 @@ watch(realEditorMode, () => {
   emitStrictValidity()
 })
 
-/**
- * Handle changes to the config and UI data.
- *
- * @param newConfig The new config to set.
- * @param newUIData The new UI data to set.
- */
-function handleConfigChange() {
-  emitStrictValidity()
-}
+function handleLayoutFormChange(value: Partial<DatakitPluginData>, fields?: string[]) {
+  props.onFormChange(value, fields)
 
-/**
- * Handle changes from the flow editor.
- *
- * @param newConfig The new config to set.
- * @param newUIData The new UI data to set.
- */
-function handleFlowChange(config: DatakitConfig, _uiData: DatakitUIData) {
-  void _uiData
-  const strictResult = DatakitConfigStrictSchema.safeParse(config)
+  // In flow mode, strict validation is driven by the form data changes coming from the flow editor.
+  // In code mode, strict validation is driven by the code editor's @validation event (to avoid double parsing).
+  if (realEditorMode.value !== 'flow') {
+    return
+  }
+
+  const strictResult = DatakitConfigStrictSchema.safeParse(value?.config)
   strictValid.value = strictResult.success
   strictErrorMessage.value = strictResult.success ? '' : getSchemaErrorMessage(strictResult.error)
-
-  handleConfigChange()
+  emitStrictValidity()
 }
 
 // Code editor
@@ -243,10 +232,6 @@ function getSchemaErrorMessage(error: ZodError): string {
         }`,
     )
     .join('; ')
-}
-
-function handleCodeChange(_newConfig: unknown) {
-  void _newConfig
 }
 
 function handleCodeError(msg: string) {

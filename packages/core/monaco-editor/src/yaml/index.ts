@@ -25,6 +25,7 @@ const DEFAULT_COMPLETION_OPTIONS: Required<YamlCompletionOptions> = {
   hideSchemaTemplates: true,
   discriminatedUnion: 'intersection-until-narrowed',
   includeNullValue: false,
+  suggestAdditionalPropertiesKey: true,
 }
 
 const DEFAULT_STYLE: Required<YamlStyleOptions> = {

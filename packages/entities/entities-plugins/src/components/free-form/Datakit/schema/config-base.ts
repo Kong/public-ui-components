@@ -179,7 +179,6 @@ export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
     .object({
       body: NullishNameConnectionSchema,
       headers: NullishNameConnectionSchema,
-      raw_body: NullishNameConnectionSchema,
       status: NullishNameConnectionSchema,
     })
     .partial()
@@ -348,9 +347,29 @@ export type CacheNode = z.infer<typeof CacheNodeSchema>
 
 export const BranchNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('branch'),
-  then: z.array(NodeNameSchema).nullish(),
-  else: z.array(NodeNameSchema).nullish(),
-}).strict()
+  then: z.array(ConfigNodeNameSchema).nullish(),
+  else: z.array(ConfigNodeNameSchema).nullish(),
+  inputs: z.never().nullish(),
+  output: z.never().nullish(),
+  outputs: z.never().nullish(),
+})
+  .strict()
+  .superRefine((node, ctx) => {
+    const hasThen = Array.isArray(node.then) && node.then.length > 0
+    const hasElse = Array.isArray(node.else) && node.else.length > 0
+    if (!hasThen && !hasElse) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'At least one of "then" or "else" is required.',
+        path: ['then'],
+      })
+      ctx.addIssue({
+        code: 'custom',
+        message: 'At least one of "then" or "else" is required.',
+        path: ['else'],
+      })
+    }
+  })
 
 /** Conditionally route execution to `then` or `else` logical branches. */
 export type BranchNode = z.infer<typeof BranchNodeSchema>

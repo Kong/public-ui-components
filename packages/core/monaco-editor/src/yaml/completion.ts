@@ -36,8 +36,14 @@ function getNodeAtPath(root: Node | null | undefined, path: YamlPath | null): No
     if (typeof part === 'number') {
       if (isSeq(node)) {
         const item = node.items[part]
-        node = item && isNode(item) ? item : null
-        continue
+        if (item && isNode(item)) {
+          node = item
+          continue
+        }
+        if (item == null) {
+          return node
+        }
+        return null
       }
       return null
     }
@@ -60,15 +66,6 @@ function getIndentUnit(model: monaco.editor.ITextModel): string {
   const options = model.getOptions()
   if (!options.insertSpaces) return '\t'
   return ' '.repeat(options.tabSize)
-}
-
-function getKeyColumnIndent(lineText: string): string {
-  const leading = lineText.match(/^\s*/)?.[0] ?? ''
-  const rest = lineText.slice(leading.length)
-  if (rest.startsWith('- ')) {
-    return `${leading}  `
-  }
-  return leading
 }
 
 function formatYamlString(value: string): string {
@@ -98,6 +95,11 @@ function getInlineScalarToken(
   const prefix = lineText.slice(0, Math.max(0, column - 1))
   const noComment = prefix.split('#')[0] ?? prefix
   const match = noComment.match(/:\s*([^\s#]+)$/)
+  return match ? match[1] : null
+}
+
+function getInlineKey(lineText: string): string | null {
+  const match = lineText.match(/^\s*(?:-\s+)?([A-Za-z0-9_.-]+)\s*:\s*[^#]*$/)
   return match ? match[1] : null
 }
 
@@ -141,9 +143,7 @@ function buildKeyInsertText(
   style: YamlStyleOptions,
 ): string {
   const indentUnit = getIndentUnit(model)
-  const keyIndent = getKeyColumnIndent(ctx.lineText)
-  const childIndent = keyIndent + indentUnit
-  const arrayIndent = style.arrayItemStyle === 'indentless' ? keyIndent : childIndent
+  const arrayIndent = style.arrayItemStyle === 'indentless' ? '' : indentUnit
 
   if (valueKind === 'scalar') {
     return `${key}: `
@@ -153,7 +153,7 @@ function buildKeyInsertText(
     return `${key}:\n${arrayIndent}- $0`
   }
 
-  return `${key}:\n${childIndent}$0`
+  return `${key}:\n${indentUnit}$0`
 }
 
 function getValueKind(
@@ -212,15 +212,24 @@ export function provideYamlCompletions(
   }
 
   const schemaOpts = { discriminatedUnion: options.discriminatedUnion }
-  const valuePath = ctx.valuePath ?? (ctx.inValue ? ctx.path : null)
+  let valuePath = ctx.valuePath ?? (ctx.inValue ? ctx.path : null)
   const keyPath = ctx.keyPath ?? (ctx.inKey ? ctx.containerPath : null)
+  if (ctx.inValue && valuePath) {
+    const inlineKey = getInlineKey(ctx.lineText)
+    const last = valuePath[valuePath.length - 1]
+    if (inlineKey && last !== inlineKey) {
+      if (typeof last === 'number' || last === undefined) {
+        valuePath = [...valuePath, inlineKey]
+      }
+    }
+  }
+
   const valueSchema = getSchemaAtPath(rootSchema, valuePath, data, schemaOpts)
   const containerSchema = getSchemaAtPath(rootSchema, keyPath, data, schemaOpts)
   const valueData = getDataAtPath(data, valuePath)
   const containerData = getDataAtPath(data, keyPath)
   const schemaView = getSchemaView(valueSchema, rootSchema, valueData, schemaOpts)
   const containerView = getSchemaView(containerSchema, rootSchema, containerData, schemaOpts)
-
 
   const extensionContext: YamlCompletionExtensionContext = {
     model,
@@ -285,7 +294,7 @@ export function provideYamlCompletions(
           ),
         )
       }
-      if (hasAdditionalProperties) {
+      if (hasAdditionalProperties && options.suggestAdditionalPropertiesKey) {
         suggestions.push(
           makeCompletionItem(
             monacoApi,

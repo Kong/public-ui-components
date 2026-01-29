@@ -42,15 +42,31 @@ function parseRef(value: string): { nodeName: string, fieldName?: string } | nul
   return fieldName ? { nodeName, fieldName } : { nodeName }
 }
 
+function canUseWhole(
+  io: NodeIO | undefined,
+  direction: 'input' | 'output',
+): boolean {
+  if (!io) return true
+  const side = direction === 'input' ? io.inputs : io.outputs
+  return side !== undefined
+}
+
 function isFieldAllowed(
   io: NodeIO | undefined,
   direction: 'input' | 'output',
   fieldName?: string,
+  dynamicFields?: string[],
 ): boolean {
-  if (!fieldName) return true
+  if (!fieldName) return canUseWhole(io, direction)
   const side = direction === 'input' ? io?.inputs : io?.outputs
-  if (side === null) return true
+  if (side === null) return false
   if (!side) return false
+  if (side.includes('*')) {
+    if (dynamicFields && dynamicFields.length > 0) {
+      return dynamicFields.includes(fieldName)
+    }
+    return true
+  }
   return side.includes(fieldName as FieldName)
 }
 
@@ -133,6 +149,16 @@ export function validateGraph(
   const edges: Array<{ source: string, target: string, targetField?: string }> = []
   const targetWholeKey = new Map<string, Array<string | number>>()
   const targetFieldKey = new Map<string, Array<string | number>>()
+  const dynamicOutputs = new Map<string, string[]>()
+
+  for (const node of config.nodes) {
+    if (node.type === 'static' && node.values && typeof node.values === 'object') {
+      dynamicOutputs.set(node.name, Object.keys(node.values))
+    }
+  }
+  if (config.resources?.vault && typeof config.resources.vault === 'object') {
+    dynamicOutputs.set('vault', Object.keys(config.resources.vault))
+  }
 
   const addEdge = (
     source: string,
@@ -188,6 +214,7 @@ export function validateGraph(
 
   config.nodes.forEach((node, index) => {
     const nodeIo = getNodeIo(node.type, options.mode)
+    const nodeDynamicOutputs = dynamicOutputs.get(node.name) ?? []
 
     for (const ref of collectConnectionRefs(node, index)) {
       const parsed = parseRef(ref.value)
@@ -246,21 +273,24 @@ export function validateGraph(
       if (isOutputs) {
         const sourceField = pathSlot === 'outputs' ? String(ref.path[3]) : undefined
 
-        if (!isFieldAllowed(nodeIo, 'output', sourceField)) {
+        if (!isFieldAllowed(nodeIo, 'output', sourceField, nodeDynamicOutputs)) {
           issues.push({
             code: 'UNKNOWN_FIELD',
-            message: `Unknown output field "${sourceField ?? ''}" on node "${node.name}"`,
+            message: sourceField
+              ? `Unknown output field "${sourceField}" on node "${node.name}"`
+              : `Node "${node.name}" does not allow whole outputs`,
             path: ref.path,
           })
         }
 
         const otherType = nodeTypeByName.get(otherName) ?? (isImplicitName(otherName) ? otherName as NodeType : undefined)
         const otherIo = otherType ? getNodeIo(otherType, options.mode) : undefined
-
         if (!isFieldAllowed(otherIo, 'input', otherField)) {
           issues.push({
             code: 'UNKNOWN_FIELD',
-            message: `Unknown input field "${otherField ?? ''}" on node "${otherName}"`,
+            message: otherField
+              ? `Unknown input field "${otherField}" on node "${otherName}"`
+              : `Node "${otherName}" does not allow whole inputs`,
             path: ref.path,
           })
         }
@@ -286,18 +316,22 @@ export function validateGraph(
         if (!isFieldAllowed(nodeIo, 'input', targetField)) {
           issues.push({
             code: 'UNKNOWN_FIELD',
-            message: `Unknown input field "${targetField ?? ''}" on node "${node.name}"`,
+            message: targetField
+              ? `Unknown input field "${targetField}" on node "${node.name}"`
+              : `Node "${node.name}" does not allow whole inputs`,
             path: ref.path,
           })
         }
 
         const otherType = nodeTypeByName.get(otherName) ?? (isImplicitName(otherName) ? otherName as NodeType : undefined)
         const otherIo = otherType ? getNodeIo(otherType, options.mode) : undefined
-
-        if (!isFieldAllowed(otherIo, 'output', otherField)) {
+        const otherDynamicOutputs = dynamicOutputs.get(otherName) ?? []
+        if (!isFieldAllowed(otherIo, 'output', otherField, otherDynamicOutputs)) {
           issues.push({
             code: 'UNKNOWN_FIELD',
-            message: `Unknown output field "${otherField ?? ''}" on node "${otherName}"`,
+            message: otherField
+              ? `Unknown output field "${otherField}" on node "${otherName}"`
+              : `Node "${otherName}" does not allow whole outputs`,
             path: ref.path,
           })
         }

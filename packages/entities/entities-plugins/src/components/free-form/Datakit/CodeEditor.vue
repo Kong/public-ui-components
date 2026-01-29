@@ -78,7 +78,7 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  change: [config: unknown]
+  change: [config: DatakitPluginData]
   error: [msg: string]
   validation: [{
     compatSuccess: boolean
@@ -137,6 +137,7 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
     yamlVersion: '1.1',
     schema: yamlSchema,
     style: { arrayItemStyle: 'indentless' },
+    completion: { suggestAdditionalPropertiesKey: false },
     extensions: [
       createDatakitRefCompletionExtension(monaco),
       createDatakitPropertyCompletionExtension(monaco),
@@ -191,7 +192,7 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
 
     if (opts?.updateFormData && typeof parsed === 'object' && parsed !== null) {
       setValue(parsed as DatakitPluginData)
-      emit('change', parsed)
+      emit('change', parsed as DatakitPluginData)
     }
 
     const configValue = (parsed as DatakitPluginData | undefined)?.config

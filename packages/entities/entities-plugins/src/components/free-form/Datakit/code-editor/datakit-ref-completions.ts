@@ -137,9 +137,11 @@ export function getDatakitRefSuggestions(
 
       let fields: string[] = []
       if (Array.isArray(side)) {
-        fields = side
-      } else if (side === null && wantsSource) {
-        fields = ioIndex.getDynamicOutputFields(fieldTarget.nodeName, nodeType)
+        if (side.includes('*') && wantsSource) {
+          fields = ioIndex.getDynamicOutputFields(fieldTarget.nodeName, nodeType)
+        } else {
+          fields = side
+        }
       }
 
       const filtered = fields.filter((field) => field.startsWith(fieldTarget.fieldPrefix))
@@ -159,10 +161,15 @@ export function getDatakitRefSuggestions(
     }
 
     const implicit = ioIndex.implicitNames
-      .filter((name) => (wantsSource ? name !== 'response' : name !== 'request'))
 
-    const names = [...nodeNames, ...implicit]
-      .filter((name) => !currentNodeName || name !== currentNodeName)
+    const names = [...nodeNames, ...implicit].filter((name) => {
+      if (currentNodeName && name === currentNodeName) return false
+      const nodeIo = ioIndex.getNodeIoByName(name)
+      const allowed = wantsSource
+        ? nodeIo?.outputs !== undefined
+        : nodeIo?.inputs !== undefined
+      return allowed
+    })
 
     if (!names.length) return null
     return buildValueSuggestions(monacoApi, model, position, names, insertTextPrefix)

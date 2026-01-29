@@ -69,4 +69,14 @@ export function validateInputOutputExclusivity(
       path: ['inputs'],
     })
   }
+
+  const hasOutput = node.output !== undefined && node.output !== null
+  const hasOutputs = hasAnyNonNullEntry(node.outputs)
+  if (hasOutput && hasOutputs) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'A node cannot use both "output" and "outputs". Use one or the other.',
+      path: ['outputs'],
+    })
+  }
 }

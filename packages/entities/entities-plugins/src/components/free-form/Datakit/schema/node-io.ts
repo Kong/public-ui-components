@@ -19,7 +19,7 @@ const IMPLICIT_NODE_IO: Record<string, NodeIO> = {
     inputs: ['headers', 'body'],
   },
   vault: {
-    outputs: null,
+    outputs: ['*'],
   },
 }
 
