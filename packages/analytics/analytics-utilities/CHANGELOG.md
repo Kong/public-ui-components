@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.10.2...@kong-ui-public/analytics-utilities@12.10.3) (2026-01-29)
+
+
+### Bug Fixes
+
+* **analytics:** add mcp_usage to dashboard schema [MA-4767] ([#2886](https://github.com/Kong/public-ui-components/issues/2886)) ([08aafad](https://github.com/Kong/public-ui-components/commit/08aafad97aab72c21019243e31945250f6a02c8d))
+
+
+
+
+
 ## [12.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.10.1...@kong-ui-public/analytics-utilities@12.10.2) (2026-01-26)
 
 
