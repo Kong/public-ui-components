@@ -20,8 +20,6 @@ export const DatakitPluginDataSchema = z
     instance_name: z.string().nullish(),
     partials: z.array(PartialSchema).nullish(),
     protocols: z.array(z.string()).nullish(),
-    consumer_group: IdRefSchema.nullish(),
-    consumer: IdRefSchema.nullish(),
     enabled: z.boolean().nullish(),
     name: z.string().nullish(),
     route: IdRefSchema.nullish(),
