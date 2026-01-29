@@ -35,6 +35,7 @@
         <KTextArea
           v-model.trim="state.fields.value"
           autocomplete="off"
+          :character-limit="false"
           data-testid="secret-form-value"
           :label="t('secrets.form.fields.value.label')"
           :placeholder="t('secrets.form.fields.value.placeholder')"
