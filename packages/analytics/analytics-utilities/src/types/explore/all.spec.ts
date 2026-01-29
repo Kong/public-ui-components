@@ -29,13 +29,21 @@ describe('stripUnknownFilters', () => {
     value: ['foo'],
   }
 
+  // a filter that's only in the mcp_usage datasource
+  const mcpFilter = {
+    operator: 'in',
+    field: 'mcp_tool_name',
+    value: ['foo'],
+  }
+
   it.each([
     ['basic', [basicFilter]],
     ['api_usage', [basicFilter, advancedFilter]],
     ['llm_usage', [llmFilter]],
+    ['mcp_usage', [basicFilter, advancedFilter, mcpFilter]],
   ])('Strips only unknown filters for datasource "%s"', (datasource, expected) => {
     // @ts-ignore these are the correct strings to use
-    const result = stripUnknownFilters(datasource, [unknownFilter, basicFilter, advancedFilter, llmFilter])
+    const result = stripUnknownFilters(datasource, [unknownFilter, basicFilter, advancedFilter, llmFilter, mcpFilter])
     expect(result).toEqual(expected)
   })
 

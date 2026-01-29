@@ -7,10 +7,13 @@ import {
   filterableAiExploreDimensions,
   filterableBasicExploreDimensions,
   filterableExploreDimensions,
+  filterableMcpExploreDimensions,
   granularityValues,
+  mcpExploreAggregations,
   queryableAiExploreDimensions,
   queryableBasicExploreDimensions,
   queryableExploreDimensions,
+  queryableMcpExploreDimensions,
   relativeTimeRangeValuesV4,
   requestFilterTypeEmptyV2,
 } from './types'
@@ -500,8 +503,27 @@ export const llmUsageSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
+export const mcpUsageSchema = {
+  type: 'object',
+  description: 'A query to launch at the MCP explore API',
+  properties: {
+    datasource: {
+      type: 'string',
+      enum: [
+        'mcp_usage',
+      ],
+    },
+    metrics: metricsFn(mcpExploreAggregations),
+    dimensions: dimensionsFn(queryableMcpExploreDimensions),
+    filters: filtersFn(filterableMcpExploreDimensions),
+    ...baseQueryProperties,
+  },
+  required: ['datasource'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
 export const validDashboardQuery = {
-  anyOf: [apiUsageQuerySchema, basicQuerySchema, llmUsageSchema],
+  anyOf: [apiUsageQuerySchema, basicQuerySchema, llmUsageSchema, mcpUsageSchema],
 } as const satisfies JSONSchema
 
 export type ValidDashboardQuery = FromSchemaWithOptions<typeof validDashboardQuery>
@@ -604,7 +626,14 @@ export const dashboardConfigSchema = {
       type: 'number',
       description: 'Height of each tile in pixels.',
     },
-    preset_filters: filtersFn([...new Set([...filterableExploreDimensions, ...filterableBasicExploreDimensions, ...filterableAiExploreDimensions])]),
+    preset_filters: filtersFn([
+      ...new Set([
+        ...filterableExploreDimensions,
+        ...filterableBasicExploreDimensions,
+        ...filterableAiExploreDimensions,
+        ...filterableMcpExploreDimensions,
+      ]),
+    ]),
     template_id: {
       type: ['string', 'null'],
       description: 'Template id which was used to instantiate this dashboard.',
