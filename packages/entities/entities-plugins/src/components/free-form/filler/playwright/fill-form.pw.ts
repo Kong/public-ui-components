@@ -103,7 +103,6 @@ test.describe('Filler - Playwright', () => {
                 type: 'string',
                 one_of: ['http', 'https', 'grpc', 'grpcs'],
               },
-              default: ['http'],
             },
           },
         ],

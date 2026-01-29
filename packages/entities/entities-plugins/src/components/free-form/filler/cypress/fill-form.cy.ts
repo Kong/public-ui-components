@@ -117,7 +117,6 @@ describe('Filler - Cypress', () => {
                 type: 'string',
                 one_of: ['http', 'https', 'grpc', 'grpcs'],
               },
-              default: ['http'], // fixme: 为什么去掉会报错？
             },
           },
         ],

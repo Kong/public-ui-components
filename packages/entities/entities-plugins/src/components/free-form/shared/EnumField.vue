@@ -10,7 +10,7 @@
     v-else
     v-show="!hide"
     v-bind="{ ...props, ...fieldAttrs }"
-    v-model="fieldValue"
+    v-model="fieldModel"
     class="ff-enum-field"
     :clearable="!fieldAttrs.required"
     :data-testid="`ff-${field.path.value}`"
@@ -73,9 +73,16 @@ const {
   ...props
 } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
-const { value: fieldValue, hide, ...field } = useField<number | string>(
+const { value: fieldValue, hide, ...field } = useField<number | string | string[]>(
   toRef(() => name),
 )
+
+const fieldModel = defineModel({
+  get: () => fieldValue!.value || [],
+  set: (val) => {
+    fieldValue!.value = val as any
+  },
+})
 
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
