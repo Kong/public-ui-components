@@ -78,7 +78,8 @@ const { value: fieldValue, hide, ...field } = useField<number | string | string[
 )
 
 const fieldModel = defineModel({
-  get: () => fieldValue!.value || [],
+  // If multiple and value is null/undefined, return empty array for v-model
+  get: () => isMultiple.value && fieldValue?.value == null ? [] : fieldValue!.value,
   set: (val) => {
     fieldValue!.value = val as any
   },
