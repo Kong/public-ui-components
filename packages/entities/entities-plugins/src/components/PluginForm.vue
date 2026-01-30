@@ -24,6 +24,7 @@
     <EntityBaseForm
       v-else
       :can-submit="canSubmit"
+      class="plugin-form"
       :config="config"
       :edit-id="pluginId"
       :entity-type="SupportedEntityType.Plugin"
@@ -1509,6 +1510,11 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .kong-ui-entities-plugin-form-container {
   width: 100%;
+
+  .plugin-form {
+    border: none;
+    padding: 0;
+  }
 
   .form-action-button {
     margin-left: $kui-space-60;

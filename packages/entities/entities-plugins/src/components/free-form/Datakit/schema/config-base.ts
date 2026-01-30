@@ -179,6 +179,7 @@ export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
     .object({
       body: NullishNameConnectionSchema,
       headers: NullishNameConnectionSchema,
+      raw_body: NullishNameConnectionSchema,
       status: NullishNameConnectionSchema,
     })
     .partial()
