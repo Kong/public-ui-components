@@ -265,20 +265,7 @@ export interface RenderRules {
     [fieldPath: string]: [fieldPath: string, fieldValue: any]
   }
 
-  /**
-   * Override rendering options for specific fields.
-   * @example
-   * ```ts
-   * {
-   *   'config.body_template': { multiline: true, rows: 4 },
-   *   'config.headers': { appearance: 'card' },
-   *   'config.strategy': { placeholder: 'Select a strategy' },
-   * }
-   * ```
-   */
-  fieldOverrides?: {
-    [fieldPath: string]: FieldOverride
-  }
+
 }
 
 export interface BaseFieldProps {

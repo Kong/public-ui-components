@@ -16,31 +16,8 @@
         <RedisSelector />
       </FieldRenderer>
 
-      <!-- Identity Realms field (key-auth plugin only) -->
-      <FieldRenderer
-        v-slot="slotProps"
-        :match="({ path }) => pluginName === 'key-auth' && path === 'config.identity_realms'"
-      >
-        <IdentityRealmsField v-bind="slotProps" />
-      </FieldRenderer>
-
-      <!-- Dynamic field overrides from metadata -->
-      <FieldRenderer
-        v-for="[fieldPath, override] in fieldOverrideEntries"
-        :key="fieldPath"
-        v-slot="slotProps"
-        :match="({ path }) => path === fieldPath"
-      >
-        <StringField
-          v-bind="slotProps"
-          :multiline="override.multiline"
-          :placeholder="override.placeholder"
-          :rows="override.rows"
-          :show-password-mask-toggle="override.showPasswordMaskToggle"
-          :show-vault-secret-picker="override.showVaultSecretPicker"
-          :type="override.inputType"
-        />
-      </FieldRenderer>
+      <!-- Custom field renderers from consuming components -->
+      <slot name="field-renderers" />
     </template>
 
     <template v-if="editorMode === 'form'">
@@ -226,12 +203,11 @@ import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import type { PluginValidityChangeEvent } from '../../../../types'
 import VFGField from '../VFGField.vue'
-import type { FormConfig, RenderRules, StringFieldOverride } from '../types'
+import type { FormConfig, RenderRules } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
 import { FIELD_RENDERERS } from '../composables'
-import IdentityRealmsField from '../../../fields/key-auth-identity-realms/FreeFormAdapter.vue'
 import Field from '../Field.vue'
 import StringArrayField from '../StringArrayField.vue'
 import StringField from '../StringField.vue'
@@ -260,13 +236,6 @@ const { t } = createI18n<typeof english>('en-us', english)
 const { editorMode = 'form', ...props } = defineProps<Props<T>>()
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
-
-const fieldOverrideEntries = computed(() => {
-  const overrides = props.renderRules?.fieldOverrides
-  if (!overrides) return []
-  return Object.entries(overrides) as Array<[string, StringFieldOverride]>
-})
-
 const slots = defineSlots<{
   default: () => any
   'code-editor'?: () => any
@@ -276,6 +245,7 @@ const slots = defineSlots<{
   'plugin-config-title'?: () => any
   'plugin-config-description'?: () => any
   'plugin-config-extra'?: () => any
+  'field-renderers'?: () => any
 }>()
 
 const realFormConfig = computed(() => {
