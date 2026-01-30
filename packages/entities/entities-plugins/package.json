@@ -2,7 +2,7 @@
   "name": "@kong-ui-public/entities-plugins",
   "version": "9.151.0",
   "type": "module",
-  "main": "./dist/entities-plugins.umd.js",
+  "main": "./dist/entities-plugins.cjs.js",
   "module": "./dist/entities-plugins.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
@@ -12,7 +12,7 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-plugins.es.js",
-      "require": "./dist/entities-plugins.umd.js"
+      "require": "./dist/entities-plugins.cjs.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*",
@@ -27,6 +27,11 @@
     "./filler/playwright": {
       "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/filler/playwright/index.d.ts",
       "import": "./dist/filler/playwright/index.js"
+    },
+    "./freeform": {
+      "types": "./dist/types/freeform.d.ts",
+      "import": "./dist/freeform.es.js",
+      "require": "./dist/freeform.cjs.js"
     }
   },
   "publishConfig": {
