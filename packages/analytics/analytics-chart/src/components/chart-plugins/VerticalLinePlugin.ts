@@ -102,7 +102,7 @@ export class VerticalLinePlugin implements Plugin {
         && chart.tooltip.getActiveElements().length
 
       if (hasActiveTooltip) {
-        brushingState.x = chart.tooltip.dataPoints[0].element.x
+        brushingState.x = chart.tooltip.dataPoints[0]?.element?.x
         redrawOthers()
       }
     } else if (type === 'mouseout') {
@@ -114,7 +114,7 @@ export class VerticalLinePlugin implements Plugin {
   }
 
   afterDatasetsDraw(chart: Chart) {
-    if (this.isPaused) {
+    if (this.isPaused || !chart.scales.y) {
       // we don't draw any vertical lines for any reason when we're paused
       return
     }
@@ -131,7 +131,7 @@ export class VerticalLinePlugin implements Plugin {
       drawLine(ctx, x, chart.scales.y.top, chart.scales.y.bottom)
     } else if (this._useBrushingState) {
       this.drawByBrush(chart)
-    } else if (hasActiveTooltip) {
+    } else if (hasActiveTooltip && chart.tooltip.dataPoints[0]) {
       // otherwise, only draw if we have an active tooltip
       const { x } = chart.tooltip.dataPoints[0].element
       drawLine(ctx, x, chart.scales.y.top, chart.scales.y.bottom)
@@ -145,7 +145,7 @@ export class VerticalLinePlugin implements Plugin {
     // same color but only at 30% opacity
     const color = brushingState.chart === chart ? '#0275d8' : 'rgba(2, 117, 216, 0.3)'
 
-    if (this._brushStrategy === 'group' && brushingState.group === this._brushGroup) {
+    if (this._brushStrategy === 'group' && brushingState.group === this._brushGroup && chart.scales.y) {
       drawLine(chart.ctx, brushingState.x, chart.scales.y.top, chart.scales.y.bottom, color)
     }
   }
