@@ -111,7 +111,7 @@
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExternalLinkIcon, RedoIcon, UndoIcon } from '@kong/icons'
 import { KButton, KDropdown, KTooltip, KDropdownItem } from '@kong/kongponents'
-import yaml, { JSON_SCHEMA } from 'js-yaml'
+import { parseDocument } from 'yaml'
 
 import english from '../../../../../locales/en.json'
 import BooleanField from '../../../shared/BooleanField.vue'
@@ -135,14 +135,16 @@ const { modalOpen, undo, redo, canUndo, canRedo, load } = useEditorStore()
 
 function selectExample(key: keyof typeof examples) {
   const example = examples[key]
-  const maybeConfig = yaml.load(example, {
-    schema: JSON_SCHEMA,
-    json: true,
-  })
 
-  if (typeof maybeConfig !== 'object' || maybeConfig === null)
+  const doc = parseDocument(example, { schema: 'yaml-1.1' })
+  if (doc.errors.length) {
     return
+  }
 
+  const maybeConfig = doc.toJS()
+  if (typeof maybeConfig !== 'object' || maybeConfig === null) {
+    return
+  }
   const partialConfig = maybeConfig as Partial<DatakitConfig>
   // todo(zehao): the scope of example should be expanded to include `partials`
   const pluginData: DatakitPluginData = {

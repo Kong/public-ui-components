@@ -31,19 +31,19 @@
     v-bind="props"
     class="dk-form"
     :editor-mode="layoutEditorMode"
+    :on-form-change="handleLayoutFormChange"
   >
     <FlowEditor
       v-if="realEditorMode === 'flow'"
       :is-editing="props.isEditing"
-      @change="handleFlowChange"
     />
 
     <template #code-editor>
       <CodeEditor
         class="code-editor"
         :editing="props.isEditing"
-        @change="handleCodeChange"
         @error="handleCodeError"
+        @validation="handleCodeValidation"
       />
     </template>
 
@@ -79,10 +79,8 @@ import StandardLayout from '../shared/layout/StandardLayout.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
 import FlowEditor from './flow-editor/FlowEditor.vue'
-// import { DatakitConfigSchema } from './schema/strict'
-import {
-  DatakitConfigSchema as DatakitConfigCompatSchema,
-} from './schema/compat'
+import { DatakitConfigSchema as DatakitConfigStrictSchema } from './schema/strict'
+import { DatakitConfigSchema as DatakitConfigCompatSchema } from './schema/compat'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -95,6 +93,19 @@ const formConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>
 const hasTeleportTarget = ref(false)
 onMounted(() => {
   hasTeleportTarget.value = !!document.querySelector('#plugin-form-page-actions')
+
+  const uncheckedConfig = props.model?.config
+
+  const strictResult = DatakitConfigStrictSchema.safeParse(uncheckedConfig)
+  strictValid.value = strictResult.success
+  strictErrorMessage.value = strictResult.success ? '' : getSchemaErrorMessage(strictResult.error)
+  emitStrictValidity()
+
+  if (formConfig.app === 'konnect') {
+    const compatResult = DatakitConfigCompatSchema.safeParse(uncheckedConfig)
+    flowUnavailableReason.value = compatResult.success || !compatResult.error ? '' : getSchemaErrorMessage(compatResult.error)
+    flowAvailable.value = compatResult.success
+  }
 })
 
 // Editor mode selection
@@ -123,6 +134,24 @@ const icons: Record<EditorMode, Component> = {
 
 const flowAvailable = ref<boolean>(true)
 const flowUnavailableReason = ref<string>('')
+const strictValid = ref<boolean>(true)
+const strictErrorMessage = ref<string>('')
+
+function emitStrictValidity() {
+  if (strictValid.value) {
+    props.onValidityChange?.({
+      model: 'config',
+      valid: true,
+    })
+    return
+  }
+
+  props.onValidityChange?.({
+    model: 'config',
+    valid: false,
+    error: strictErrorMessage.value,
+  })
+}
 
 const editorModes = computed<Array<SegmentedControlOption<EditorMode>>>(() => {
   const modes: Array<SegmentedControlOption<EditorMode>> = [
@@ -161,33 +190,22 @@ const flowDisabledTooltip = computed(() => {
 })
 
 watch(realEditorMode, () => {
-  props.onValidityChange?.({
-    model: 'config',
-    valid: true,
-  })
+  emitStrictValidity()
 })
 
-/**
- * Handle changes to the config and UI data.
- *
- * @param newConfig The new config to set.
- * @param newUIData The new UI data to set.
- */
-function handleConfigChange() {
-  props.onValidityChange?.({
-    model: 'config',
-    valid: true,
-  })
-}
+function handleLayoutFormChange(value: Partial<DatakitPluginData>, fields?: string[]) {
+  props.onFormChange(value, fields)
 
-/**
- * Handle changes from the flow editor.
- *
- * @param newConfig The new config to set.
- * @param newUIData The new UI data to set.
- */
-function handleFlowChange() {
-  handleConfigChange()
+  // In flow mode, strict validation is driven by the form data changes coming from the flow editor.
+  // In code mode, strict validation is driven by the code editor's @validation event (to avoid double parsing).
+  if (realEditorMode.value !== 'flow') {
+    return
+  }
+
+  const strictResult = DatakitConfigStrictSchema.safeParse(value?.config)
+  strictValid.value = strictResult.success
+  strictErrorMessage.value = strictResult.success ? '' : getSchemaErrorMessage(strictResult.error)
+  emitStrictValidity()
 }
 
 // Code editor
@@ -216,38 +234,41 @@ function getSchemaErrorMessage(error: ZodError): string {
     .join('; ')
 }
 
-function handleCodeChange(newConfig: unknown) {
-  handleConfigChange()
-
-  if (formConfig.app !== 'konnect') {
-    return
-  }
-
-  const uncheckedConfig = (newConfig as DatakitPluginData)?.config
-
-  // TODO: use strict validation and map back to the exact location of schema validation errors
-  // const { success, error } = DatakitConfigSchema.safeParse(uncheckedConfig)
-
-  const { success: compatSuccess, error: compatError } = DatakitConfigCompatSchema.safeParse(uncheckedConfig)
-  flowUnavailableReason.value = compatSuccess || !compatError ? '' : getSchemaErrorMessage(compatError)
-  flowAvailable.value = compatSuccess
-
-  // props.onValidityChange?.({
-  //   model: 'config',
-  //   valid: success,
-  //   error: success ? '' : getSchemaErrorMessage(error),
-  // })
-}
-
 function handleCodeError(msg: string) {
   flowUnavailableReason.value = msg
   flowAvailable.value = false
 
-  props.onValidityChange?.({
-    model: 'config',
-    valid: false,
-    error: msg,
-  })
+  strictValid.value = false
+  strictErrorMessage.value = msg
+  emitStrictValidity()
+}
+
+function handleCodeValidation(payload: {
+  compatSuccess: boolean
+  compatError: ZodError | null
+  strictSuccess: boolean
+  strictError: ZodError | null
+}) {
+  if (formConfig.app === 'konnect') {
+    flowUnavailableReason.value = payload.compatSuccess || !payload.compatError
+      ? ''
+      : getSchemaErrorMessage(payload.compatError)
+    flowAvailable.value = payload.compatSuccess
+  }
+
+  if (payload.strictSuccess) {
+    strictValid.value = true
+    strictErrorMessage.value = ''
+    emitStrictValidity()
+    return
+  }
+
+  strictValid.value = false
+  strictErrorMessage.value = payload.strictError
+    ? getSchemaErrorMessage(payload.strictError)
+    : ''
+
+  emitStrictValidity()
 }
 
 // Flow editor

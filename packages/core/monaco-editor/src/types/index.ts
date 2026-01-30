@@ -14,6 +14,11 @@ export interface UseMonacoEditorOptions {
    */
   language: string
   /**
+   * Optional model URI to use for the editor model.
+   * When provided, schemas can target the model precisely via fileMatch.
+   */
+  modelUri?: string
+  /**
    * Whether the editor is read-only
   */
   readOnly?: boolean

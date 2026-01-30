@@ -39,6 +39,7 @@
       <KAlert
         v-if="errorMessage"
         appearance="danger"
+        class="form-error"
         data-testid="form-error"
         :message="errorMessage"
       />
@@ -460,6 +461,10 @@ defineExpose({
       justify-content: flex-start;
       margin-top: $kui-space-70;
     }
+  }
+
+  &:has(.kong-ui-entity-form-block) .form-error {
+    margin-top: $kui-space-80;
   }
 }
 
