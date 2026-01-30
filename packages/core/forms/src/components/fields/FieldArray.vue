@@ -9,9 +9,30 @@
       :key="index"
       :class="schema.fieldItemsClasses"
     >
+      <!-- String Array type: render comma-separated input field (check first to take priority) -->
+      <div
+        v-if="isStringArrayItems()"
+        class="string-array-item"
+      >
+        <FieldStringArray
+          :form-options="formOptions"
+          :model="value"
+          :schema="generateStringArraySchema(index)"
+          @model-updated="(val) => handleStringArrayUpdate(val, index)"
+        />
+        <KButton
+          appearance="tertiary"
+          class="string-array-remove-btn"
+          icon
+          @click="removeElement(index)"
+        >
+          <TrashIcon decorative />
+        </KButton>
+      </div>
+
       <component
         :is="schema.itemContainerComponent"
-        v-if="schema.items && schema.itemContainerComponent"
+        v-else-if="schema.items && schema.itemContainerComponent"
         :index="index"
         :model="item"
         :schema="generateSchema(value, schema.items, index)"
@@ -122,6 +143,7 @@
 </template>
 
 <script>
+import { TrashIcon } from '@kong/icons'
 import isNumber from 'lodash-es/isNumber'
 import { AUTOFILL_SLOT } from '../../const'
 import FieldArrayCardContainer from './FieldArrayCardContainer.vue'
@@ -135,6 +157,7 @@ import FieldObject from './FieldObject.vue'
 import FieldObjectAdvanced from './FieldObjectAdvanced.vue'
 import FieldRadio from './FieldRadio.vue'
 import FieldSelect from './FieldSelect.vue'
+import FieldStringArray from './FieldStringArray.vue'
 import abstractField from './abstractField'
 
 export default {
@@ -151,6 +174,8 @@ export default {
     FieldRadio,
     FieldArrayCardContainer,
     FieldInput,
+    FieldStringArray,
+    TrashIcon,
   },
   mixins: [abstractField],
   inject: {
@@ -244,6 +269,30 @@ export default {
       }
       this.value = this.value.map((item, i) => i === index ? formattedVal : item)
     },
+
+    isStringArrayItems() {
+      const elements = this.schema?.elements
+      if (!elements) return false
+      // Array of String Arrays: elements.type === 'array' and elements.elements.type === 'string'
+      return elements.type === 'array' &&
+        elements.elements?.type === 'string'
+    },
+
+    generateStringArraySchema(index) {
+      return {
+        model: String(index),
+        id: `${this.schema.id || this.schema.model}-${index}`,
+        placeholder: this.schema.placeholder,
+        help: this.schema.help,
+        fieldClasses: this.schema.inputAttributes?.class,
+        get: () => this.value[index],
+      }
+    },
+
+    handleStringArrayUpdate(val, index) {
+      this.value = this.value.map((item, i) => i === index ? val : item)
+      this.$emit('refreshModel')
+    },
   },
 }
 </script>
@@ -255,6 +304,21 @@ export default {
 
   input.form-control {
     width: 200px;
+  }
+}
+
+.string-array-item {
+  align-items: start;
+  display: flex;
+  gap: $kui-space-70;
+
+  .field-string-array {
+    flex: 1;
+  }
+
+  .string-array-remove-btn {
+    flex-shrink: 0;
+    margin-top: $kui-space-20;
   }
 }
 </style>

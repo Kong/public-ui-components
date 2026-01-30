@@ -805,6 +805,15 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
         inputAttributes.type = elements.type === 'string' ? 'text' : 'number'
         initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, inputAttributes, ...overrides }
+      } else if (elements.type === 'array') { // Array of Arrays
+        const { id, help, label, hint, values, referenceable, model, elements: schemaElements } = initialFormSchema[field]
+        const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
+        initialFormSchema[field] = {
+          id, help, label, hint, values, referenceable, model,
+          elements: schemaElements, // Preserve elements so FieldArray can check the original schema structure
+          inputAttributes,
+          ...overrides,
+        }
       }
     }
 
