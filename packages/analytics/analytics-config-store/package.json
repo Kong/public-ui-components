@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-config-store",
-  "version": "1.2.24",
+  "version": "1.2.25",
   "type": "module",
   "main": "./dist/vitals-config-store.umd.js",
   "module": "./dist/vitals-config-store.es.js",
