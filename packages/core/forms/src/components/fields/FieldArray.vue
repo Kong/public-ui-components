@@ -308,7 +308,7 @@ export default {
 }
 
 .string-array-item {
-  align-items: start;
+  align-items: flex-start;
   display: flex;
   gap: $kui-space-70;
 
