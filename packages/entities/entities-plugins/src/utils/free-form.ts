@@ -7,6 +7,8 @@ const mapping = {
   'datakit': 'DatakitForm',
   'ai-mcp-proxy': 'AIMcpProxyForm',
   'jwt-signer': 'CommonForm',
+  'upstream-oauth': 'UpstreamOauthForm',
+  'key-auth': 'KeyAuthForm',
 } as const
 
 export type FreeFormName = keyof typeof mapping
