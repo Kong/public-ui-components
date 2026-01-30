@@ -19,5 +19,6 @@ export { default as FieldObjectAdvanced } from '../components/fields/FieldObject
 export { default as FieldRadio } from '../components/fields/FieldRadio.vue'
 export { default as FieldSelect } from '../components/fields/FieldSelect.vue'
 export { default as FieldSelectionGroup } from '../components/fields/FieldSelectionGroup.vue'
+export { default as FieldStringArray } from '../components/fields/FieldStringArray.vue'
 export { default as FieldSwitch } from '../components/fields/FieldSwitch.vue'
 export { default as FieldTextArea } from '../components/fields/FieldTextArea.vue'
