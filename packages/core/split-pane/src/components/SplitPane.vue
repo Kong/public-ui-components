@@ -340,6 +340,7 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
   }
 
   .split-pane-center {
+    flex: 1;
     max-width: v-bind('centerMaxWidth');
     min-width: $inner-panes-min-width; // Do not allow resizing below the minimum
     width: $inner-panes-min-width;
