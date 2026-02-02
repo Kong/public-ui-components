@@ -311,6 +311,7 @@ export default {
   align-items: flex-start;
   display: flex;
   gap: $kui-space-70;
+  width: 100%;
 
   .field-string-array {
     flex: 1;
