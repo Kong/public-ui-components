@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, useTemplateRef, watch } from 'vue'
 import { PANE_LEFT_MAX_WIDTH, PANE_CENTER_DEFAULT_MAX_WIDTH, PANE_RIGHT_DEFAULT_MAX_WIDTH } from '../constants/split-pane'
 import { useElementSize, useElementHover } from '@vueuse/core'
 import VerticalNavigation from './VerticalNavigation.vue'
@@ -210,6 +210,7 @@ const { width: paneLeftWidth } = useElementSize(paneLeftRef)
 // This ensures proper layout recalculation when the right pane is shown/hidden
 watch(() => paneRight.visible, async () => {
   if (resizable) {
+    await nextTick()
     refreshInnerPaneSizes()
   }
 }, { flush: 'post' })
@@ -339,6 +340,7 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
   }
 
   .split-pane-center {
+    flex: 1;
     max-width: v-bind('centerMaxWidth');
     min-width: $inner-panes-min-width; // Do not allow resizing below the minimum
     width: $inner-panes-min-width;
