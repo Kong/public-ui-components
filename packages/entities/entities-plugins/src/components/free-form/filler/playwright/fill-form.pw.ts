@@ -116,6 +116,61 @@ test.describe('Filler - Playwright', () => {
       await expect(page.getByTestId('selection-badges-container')).toHaveText('httpgrpc')
     })
 
+    test('should add item before filling multi-enum field when empty', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            protocols: {
+              type: 'set',
+              elements: {
+                type: 'string',
+                one_of: ['http', 'https', 'grpc', 'grpcs'],
+              },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      await page.getByTestId('ff-protocols').evaluate((el) => el.remove())
+
+      await page.evaluate(() => {
+        const addBtn = document.createElement('button')
+        addBtn.setAttribute('data-testid', 'ff-add-item-btn-protocols')
+        addBtn.addEventListener('click', () => {
+          if (!document.querySelector('[data-testid="ff-protocols.0"]')) {
+            const input = document.createElement('input')
+            input.setAttribute('data-testid', 'ff-protocols.0')
+            document.body.appendChild(input)
+          }
+        })
+        document.body.appendChild(addBtn)
+
+        const createItem = (value: string) => {
+          const item = document.createElement('div')
+          item.setAttribute('data-testid', `multiselect-item-${value}`)
+          const button = document.createElement('button')
+          item.appendChild(button)
+          item.addEventListener('click', () => {
+            item.setAttribute('data-clicked', 'true')
+          })
+          document.body.appendChild(item)
+        }
+
+        createItem('http')
+        createItem('grpc')
+      })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('protocols', ['http', 'grpc'])
+
+      await expect(page.getByTestId('ff-protocols.0')).toBeVisible()
+      await expect(page.getByTestId('multiselect-item-http')).toHaveAttribute('data-clicked', 'true')
+      await expect(page.getByTestId('multiselect-item-grpc')).toHaveAttribute('data-clicked', 'true')
+    })
+
     test('should fill tag field (set without one_of)', async ({ mount, page }) => {
       const schema: FormSchema = {
         type: 'record',

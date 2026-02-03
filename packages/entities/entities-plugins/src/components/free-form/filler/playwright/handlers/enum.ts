@@ -9,8 +9,19 @@ export async function fillEnum(option: HandlerOption<StringFieldSchema | NumberL
   const isMulti = isMultiEnumField(fieldSchema)
   const values = isMulti ? (Array.isArray(value) ? value : [value]) : [value]
 
+  // make sure at least one field exists for array multi-enum
+  if (isMulti) {
+    const fieldCount = await page.locator(selectors.field(`${fieldKey}.0`)).count()
+    if (fieldCount === 0) {
+      const addBtnSelector = selectors.arrayAddBtn(fieldKey)
+      const addBtnCount = await page.locator(addBtnSelector).count()
+      if (addBtnCount > 0) {
+        await page.locator(addBtnSelector).click()
+      }
+    }
+  }
   // Click to open dropdown
-  const fieldSelector = selectors.field(fieldKey)
+  const fieldSelector = isMulti ? selectors.field(`${fieldKey}.0`) : selectors.field(fieldKey)
   await page.locator(fieldSelector).click()
 
   // Select each value
