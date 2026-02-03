@@ -470,6 +470,9 @@ importers:
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
+      '@kong/kongponents':
+        specifier: ^9.50.0
+        version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       '@vueuse/core':
         specifier: ^13.9.0
         version: 13.9.0(vue@3.5.27(typescript@5.9.3))
@@ -486,9 +489,6 @@ importers:
       '@kong/design-tokens':
         specifier: 1.18.2
         version: 1.18.2
-      '@kong/kongponents':
-        specifier: 9.50.0
-        version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
