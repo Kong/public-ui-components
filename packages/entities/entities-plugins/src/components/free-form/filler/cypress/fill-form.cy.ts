@@ -130,6 +130,94 @@ describe('Filler - Cypress', () => {
       cy.getTestId('selection-badges-container').should('have.text', 'httpgrpc')
     })
 
+    it('should add item before filling multi-enum field when empty', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            protocols: {
+              type: 'set',
+              elements: {
+                type: 'string',
+                one_of: ['http', 'https', 'grpc', 'grpcs'],
+              },
+            },
+          },
+        ],
+      }
+
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
+
+      cy.getTestId('ff-protocols').invoke('remove')
+
+      cy.document().then((doc) => {
+        const addBtn = doc.createElement('button')
+        addBtn.setAttribute('data-testid', 'ff-add-item-btn-protocols')
+        addBtn.addEventListener('click', () => {
+          if (!doc.querySelector('[data-testid="ff-protocols.0"]')) {
+            const input = doc.createElement('input')
+            input.setAttribute('data-testid', 'ff-protocols.0')
+            doc.body.appendChild(input)
+          }
+        })
+        doc.body.appendChild(addBtn)
+
+        const createItem = (value: string) => {
+          const item = doc.createElement('div')
+          item.setAttribute('data-testid', `multiselect-item-${value}`)
+          const button = doc.createElement('button')
+          item.appendChild(button)
+          item.addEventListener('click', () => {
+            item.setAttribute('data-clicked', 'true')
+          })
+          doc.body.appendChild(item)
+        }
+
+        createItem('http')
+        createItem('grpc')
+      })
+
+      const filler = createFiller(schema)
+      filler.fillField('protocols', ['http', 'grpc'])
+
+      cy.get('[data-testid="ff-protocols.0"]').should('exist')
+      cy.get('[data-testid="multiselect-item-http"]').should('have.attr', 'data-clicked', 'true')
+      cy.get('[data-testid="multiselect-item-grpc"]').should('have.attr', 'data-clicked', 'true')
+    })
+
+    it('should fill multi-enum field using tag input when present', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            protocols: {
+              type: 'set',
+              elements: {
+                type: 'string',
+                one_of: ['http', 'https', 'grpc', 'grpcs'],
+              },
+            },
+          },
+        ],
+      }
+
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
+
+      // Add a tag input to simulate StringArrayField rendering for this path
+      cy.document().then((doc) => {
+        const wrapper = doc.createElement('div')
+        wrapper.setAttribute('data-testid', 'ff-tag-protocols')
+        const input = doc.createElement('input')
+        wrapper.appendChild(input)
+        doc.body.appendChild(wrapper)
+      })
+
+      const filler = createFiller(schema)
+      filler.fillField('protocols', ['http', 'grpc'])
+
+      cy.get('[data-testid="ff-tag-protocols"] input').should('have.value', 'http,grpc')
+    })
+
     it('should fill tag field (set without one_of)', () => {
       const schema: FormSchema = {
         type: 'record',
