@@ -200,7 +200,7 @@ export type Props<T extends FreeFormPluginData = any> = {
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, inject, nextTick, ref, useTemplateRef, toRaw, useId, watch } from 'vue'
+import { computed, inject, nextTick, ref, useTemplateRef, toRaw, useId, watch, onUnmounted } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
 import { KRadio, KTooltip } from '@kong/kongponents'
@@ -432,14 +432,6 @@ const freeFormSchema = computed(() => {
   return result
 })
 
-// Sync the freeform schema to window
-watch(freeFormSchema, (newSchema) => {
-  if (!(window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
-    (window as any)[FREE_FORM_SCHEMA_MAP_KEY] = {}
-  }
-  ;(window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId] = toRaw(newSchema)
-}, { immediate: true, deep: true })
-
 /**
  * Avoid passing freeform data that it can't handle. e.g. `scope`, `update_time`
  * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
@@ -544,6 +536,24 @@ function getScopesFromFormModel(): Partial<T> {
   })
   return data
 }
+
+/**
+ * This watch is used to expose the plugin schema for auto-filler.
+ * The auto-filler script requires the **final** schema to be used in the freeform.
+ */
+watch(freeFormSchema, (newSchema) => {
+  if (!(window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
+    (window as any)[FREE_FORM_SCHEMA_MAP_KEY] = {}
+  }
+  ;(window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId] = toRaw(newSchema)
+}, { immediate: true, deep: true })
+
+// Clean up the schema on unmount
+onUnmounted(() => {
+  if ((window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
+    delete (window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId]
+  }
+})
 </script>
 
 <style lang="scss" scoped>
