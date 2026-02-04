@@ -4,6 +4,9 @@
     class="ff-standard-layout"
     :config="realFormConfig"
     :data="(prunedData as T)"
+    :data-instance-id="instanceId"
+    :data-plugin-name="pluginName"
+    data-testid="ff-standard-layout-form"
     :render-rules="renderRules"
     :schema="freeFormSchema"
     tag="div"
@@ -197,7 +200,7 @@ export type Props<T extends FreeFormPluginData = any> = {
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, inject, nextTick, ref, useTemplateRef } from 'vue'
+import { computed, inject, nextTick, ref, useTemplateRef, toRaw, useId, watch } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
 import { KRadio, KTooltip } from '@kong/kongponents'
@@ -217,6 +220,7 @@ import IdentityRealmsField from '../../../fields/key-auth-identity-realms/FreeFo
 import Field from '../Field.vue'
 import StringArrayField from '../StringArrayField.vue'
 import StringField from '../StringField.vue'
+import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../../constants'
 
 const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   // plugin specific config
@@ -236,6 +240,8 @@ const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   'route',
   'service',
 ]
+
+const instanceId = useId()
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -425,6 +431,14 @@ const freeFormSchema = computed(() => {
   })
   return result
 })
+
+// Sync the freeform schema to window
+watch(freeFormSchema, (newSchema) => {
+  if (!(window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
+    (window as any)[FREE_FORM_SCHEMA_MAP_KEY] = {}
+  }
+  ;(window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId] = toRaw(newSchema)
+}, { immediate: true, deep: true })
 
 /**
  * Avoid passing freeform data that it can't handle. e.g. `scope`, `update_time`
