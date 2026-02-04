@@ -332,7 +332,7 @@ const props = defineProps({
    * Force the engine type for the form.
    */
   engine: {
-    type: String as PropType<'vfg' | 'freeform'>,
+    type: String as PropType<'vfg' | 'free-form'>,
     required: false,
     default: undefined,
   },
@@ -631,7 +631,8 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
   Object.keys(schema).sort().forEach(key => {
     const scheme = schema[key]
     // If the field type is 'set', convert it to 'array'
-    if (scheme.type === 'set') {
+    // Freeform can handle 'set' type, so only convert it when the engine is not 'freeform'
+    if (props.engine !== 'free-form' && scheme.type === 'set') {
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
