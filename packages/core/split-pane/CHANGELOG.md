@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.5...@kong-ui-public/split-pane@0.3.6) (2026-02-04)
+
+
+### Bug Fixes
+
+* **split-pane:** adjust flex properties so right pane can moves easily ([#2903](https://github.com/Kong/public-ui-components/issues/2903)) ([4446fa9](https://github.com/Kong/public-ui-components/commit/4446fa9462a642c0b61a02fd6211806915c1342f))
+
+
+
+
+
 ## [0.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.4...@kong-ui-public/split-pane@0.3.5) (2026-02-03)
 
 
