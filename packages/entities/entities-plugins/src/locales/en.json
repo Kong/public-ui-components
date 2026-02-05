@@ -600,7 +600,7 @@
         "title": "Filter Plugins",
         "featured": "Featured",
         "type": "Type",
-        "clear_selection": "Clear Selection"
+        "clear": "Clear"
       },
       "list": {
         "table_headers": {

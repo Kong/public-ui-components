@@ -16,7 +16,7 @@
           :disabled="!Object.values(typeFilter).some(v => v)"
           @click="clearTypeFilter"
         >
-          {{ t('plugins.select.filter.clear_selection') }}
+          {{ t('plugins.select.filter.clear') }}
         </KButton>
       </div>
       <KCollapse v-model="featuredFilterCollapse">
