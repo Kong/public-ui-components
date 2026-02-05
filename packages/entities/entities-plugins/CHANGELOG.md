@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.153.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.152.2...@kong-ui-public/entities-plugins@9.153.0) (2026-02-05)
+
+
+### Features
+
+* **entities-plugins:** expose freeform schema to window ([#2907](https://github.com/Kong/public-ui-components/issues/2907)) ([e864f14](https://github.com/Kong/public-ui-components/commit/e864f14b5f63d40140ba5f9cfb88642454d53921))
+
+
+
+
+
 ## [9.152.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.152.1...@kong-ui-public/entities-plugins@9.152.2) (2026-02-04)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
