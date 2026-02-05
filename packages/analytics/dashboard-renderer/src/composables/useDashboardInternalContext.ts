@@ -87,7 +87,7 @@ export default function useDashboardInternalContext({
     }
 
     if (showTileActions === undefined) {
-      showTileActions = false
+      showTileActions = true
     }
 
     // Check if the host app has provided an event handler for zooming.
