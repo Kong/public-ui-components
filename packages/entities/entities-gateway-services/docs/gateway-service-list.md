@@ -166,6 +166,14 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 Indicates that the user is in the onboarding Serverless control plane and should use explanatory text.
 
+#### `canImportSpecs`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Indicates whether the gateway service can be created via importing Open API specs. If true, the create button will be rendered into `KDropdown` 
+
 ### Events
 
 #### error
