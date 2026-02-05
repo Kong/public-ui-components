@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/swagger-ui-web-component",
-  "version": "0.12.13",
+  "version": "0.12.14",
   "main": "dist/main.js",
   "files": [
     "dist"
@@ -44,6 +44,6 @@
     "webpack": "^5.104.1",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.2.2"
+    "webpack-dev-server": "^5.2.3"
   }
 }

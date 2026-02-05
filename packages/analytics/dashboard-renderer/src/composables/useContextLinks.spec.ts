@@ -50,8 +50,8 @@ const mockChartData = (granularityMs = ONE_HOUR_MS) => computed(() => ({
   data: [],
   meta: {
     granularity_ms: granularityMs,
-    start_ms: 1111,
-    end_ms: 2222,
+    start: '1970-01-01T00:00:01.111Z',
+    end: '1970-01-01T00:00:02.222Z',
   },
 })) as any
 
@@ -65,6 +65,7 @@ function mountComposable({
   contextFilters = [],
   timeRange,
   chartDataGranularityMs = ONE_HOUR_MS,
+  editable = false,
 }: {
   exploreBase?: string
   requestsBase?: string
@@ -75,6 +76,7 @@ function mountComposable({
   contextFilters?: any[]
   timeRange?: any
   chartDataGranularityMs?: number
+  editable?: boolean
 }) {
   const queryBridge = {
     exploreBaseUrl: vi.fn(async () => exploreBase),
@@ -84,6 +86,7 @@ function mountComposable({
   const context = computed(() => ({
     filters: contextFilters,
     timeSpec: relativeTimeRange,
+    editable,
   }))
 
   const definition = computed(() => ({
@@ -114,6 +117,7 @@ function mountComposable({
   })
 
   return {
+    chartData,
     wrapper,
     queryBridge,
   }
@@ -203,14 +207,36 @@ describe('useContextLinks', () => {
     expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
   })
 
-  it('hides kebab for golden_signals/top_n/gauge chart types', async () => {
-    for (const type of ['golden_signals', 'top_n', 'gauge']) {
-      const { wrapper } = mountComposable({ chartType: type })
+  it('hides kebab for golden_signals/gauge chart types regardless of editable state', async () => {
+    for (const type of ['golden_signals', 'gauge']) {
+      // Not editable
+      const { wrapper } = mountComposable({ chartType: type, editable: false })
       await flushPromises()
       expect(wrapper.vm.canShowKebabMenu).toBe(false)
       expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
       expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+
+      // Editable, should still hide
+      const { wrapper: editableWrapper } = mountComposable({ chartType: type, editable: true })
+      await flushPromises()
+      expect(editableWrapper.vm.canShowKebabMenu).toBe(false)
     }
+  })
+
+  it('hides kebab for top_n chart when context is not editable', async () => {
+    const { wrapper } = mountComposable({ chartType: 'top_n', editable: false })
+    await flushPromises()
+    expect(wrapper.vm.canShowKebabMenu).toBe(false)
+    expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
+    expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+  })
+
+  it('shows kebab for top_n chart when context is editable', async () => {
+    const { wrapper } = mountComposable({ chartType: 'top_n', editable: true })
+    await flushPromises()
+    expect(wrapper.vm.canShowKebabMenu).toBe(true)
+    expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')
+    expect(wrapper.vm.requestsLinkKebabMenu).toContain('#requests?')
   })
 
   it('prevents requests link for llm_usage datasource', async () => {
@@ -222,7 +248,7 @@ describe('useContextLinks', () => {
   })
 
   it('builds requests link for kebab menu (absolute time range uses chartData.meta start/end)', async () => {
-    const { wrapper } = mountComposable({
+    const { wrapper, chartData } = mountComposable({
       timeRange: absoluteTimeRange,
       contextFilters: [makeFilter('gateway_service')],
     })
@@ -235,9 +261,8 @@ describe('useContextLinks', () => {
 
     expect(parsed.filter.length).toBe(1)
     expect(parsed.timeframe.timePeriodsKey).toBe('custom')
-    // Should use chartData.meta values, not the raw timeRange.start/end
-    expect(parsed.timeframe.start).toBe(1111)
-    expect(parsed.timeframe.end).toBe(2222)
+    expect(parsed.timeframe.start).toBe(chartData.value.meta.start)
+    expect(parsed.timeframe.end).toBe(chartData.value.meta.end)
   })
 
   it('builds requests link with relative time range', async () => {

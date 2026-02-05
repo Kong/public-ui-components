@@ -3,6 +3,194 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.14...@kong-ui-public/entities-redis-configurations@1.9.15) (2026-02-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.9.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.13...@kong-ui-public/entities-redis-configurations@1.9.14) (2026-02-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.9.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.12...@kong-ui-public/entities-redis-configurations@1.9.13) (2026-02-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.9.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.11...@kong-ui-public/entities-redis-configurations@1.9.12) (2026-01-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.9.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.10...@kong-ui-public/entities-redis-configurations@1.9.11) (2026-01-26)
+
+
+### Bug Fixes
+
+* update exports field order in package.json files ([#2856](https://github.com/Kong/public-ui-components/issues/2856)) ([2ffc4ee](https://github.com/Kong/public-ui-components/commit/2ffc4ee18597ff0d19afd037a8679e0791dfbd03))
+
+
+
+
+
+## [1.9.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.9...@kong-ui-public/entities-redis-configurations@1.9.10) (2026-01-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.9.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.8...@kong-ui-public/entities-redis-configurations@1.9.9) (2026-01-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.9.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.7...@kong-ui-public/entities-redis-configurations@1.9.8) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2854](https://github.com/Kong/public-ui-components/issues/2854)) ([8db6a9b](https://github.com/Kong/public-ui-components/commit/8db6a9bfffb91a72a5c436cf2cfb8e2c5fdb66a2))
+
+
+
+
+
+## [1.9.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.6...@kong-ui-public/entities-redis-configurations@1.9.7) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.42.0 ([#2857](https://github.com/Kong/public-ui-components/issues/2857)) ([bb65b9e](https://github.com/Kong/public-ui-components/commit/bb65b9eea7489142268aee86d5cdb6de338762f9))
+
+
+
+
+
+## [1.9.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.5...@kong-ui-public/entities-redis-configurations@1.9.6) (2026-01-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.9.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.4...@kong-ui-public/entities-redis-configurations@1.9.5) (2026-01-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.3...@kong-ui-public/entities-redis-configurations@1.9.4) (2026-01-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.2...@kong-ui-public/entities-redis-configurations@1.9.3) (2026-01-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.1...@kong-ui-public/entities-redis-configurations@1.9.2) (2026-01-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.0...@kong-ui-public/entities-redis-configurations@1.9.1) (2026-01-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+# [1.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.8.25...@kong-ui-public/entities-redis-configurations@1.9.0) (2026-01-14)
+
+
+### Features
+
+* **redis:** referenceable fields in ce ([#2741](https://github.com/Kong/public-ui-components/issues/2741)) ([f7c733e](https://github.com/Kong/public-ui-components/commit/f7c733e94f2be39778b8d5e4351ed2c591bdd3d9))
+
+
+
+
+
+## [1.8.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.8.24...@kong-ui-public/entities-redis-configurations@1.8.25) (2026-01-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.8.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.8.23...@kong-ui-public/entities-redis-configurations@1.8.24) (2026-01-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.8.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.8.22...@kong-ui-public/entities-redis-configurations@1.8.23) (2026-01-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.8.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.8.21...@kong-ui-public/entities-redis-configurations@1.8.22) (2026-01-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.8.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.8.20...@kong-ui-public/entities-redis-configurations@1.8.21) (2026-01-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.8.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.8.19...@kong-ui-public/entities-redis-configurations@1.8.20) (2026-01-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
 ## [1.8.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.8.18...@kong-ui-public/entities-redis-configurations@1.8.19) (2026-01-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations

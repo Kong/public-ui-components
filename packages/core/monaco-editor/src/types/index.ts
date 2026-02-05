@@ -7,7 +7,7 @@ import type { MarkdownActionIds } from '../utils/actions'
  */
 export interface UseMonacoEditorOptions {
   /**
-   * The initial content of the editor
+   * The content of the editor
    */
   code: Ref<string>
   /**
@@ -23,13 +23,9 @@ export interface UseMonacoEditorOptions {
    */
   theme?: EditorThemes
   /**
-   * Callback function triggered when the content changes
+   * Callback function triggered when the editor is ready
    */
-  onChanged?: (content: string) => void
-  /**
-   * Callback function triggered when the editor is created
-   */
-  onCreated?: () => void
+  onReady?: (editor: editor.IStandaloneCodeEditor) => void
   /**
    * Additional actions to be added to the editor
    */

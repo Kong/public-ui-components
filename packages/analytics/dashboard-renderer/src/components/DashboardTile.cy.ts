@@ -5,8 +5,8 @@ import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefi
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
-const start = Date.now() - 6 * 60 * 60 * 1000
-const end = Date.now()
+const start = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
+const end = new Date().toISOString()
 
 describe('<DashboardTile />', () => {
   const mockTileDefinition: TileDefinition = {
@@ -16,6 +16,18 @@ describe('<DashboardTile />', () => {
     },
     query: {
       datasource: 'api_usage',
+      metrics: [],
+      filters: [],
+    },
+  }
+
+  const mockGoapTileDefinition: TileDefinition = {
+    chart: {
+      type: 'timeseries_line',
+      chart_title: 'Test Chart',
+    },
+    query: {
+      datasource: 'goap_event_gateway',
       metrics: [],
       filters: [],
     },
@@ -76,7 +88,7 @@ describe('<DashboardTile />', () => {
         generateSingleMetricTimeSeriesData(
           { name: 'TotalRequests', unit: 'count' },
           { status_code: ['request_count'] as string[] },
-          { start_ms: start, end_ms: end },
+          { start, end },
         ) as ExploreResultV4,
       )
     },
@@ -394,7 +406,7 @@ describe('<DashboardTile />', () => {
     cy.getTestId('kebab-action-menu-1').click()
     // generateSingleMetricTimeSeriesData creates data from "6 hours ago" to "now", so the link should reflect that,
     // not the time range in the query definition.
-    cy.getTestId('chart-jump-to-requests-1').invoke('attr', 'href').should('have.string', `"start":${start},"end":${end}`)
+    cy.getTestId('chart-jump-to-requests-1').invoke('attr', 'href').should('have.string', `"start":"${start}","end":"${end}"`)
   })
 
   it('should not show explore if datasource is unsupported', () => {
@@ -525,7 +537,7 @@ describe('<DashboardTile />', () => {
         generateSingleMetricTimeSeriesData(
           { name: 'TotalRequests', unit: 'count' },
           { status_code: ['request_count'] as string[] },
-          { start_ms: start, end_ms: end, truncated: true, limit: 50 },
+          { start, end, truncated: true, limit: 50 },
         ) as ExploreResultV4,
       )
     })
@@ -602,14 +614,14 @@ describe('<DashboardTile />', () => {
           generateSingleMetricTimeSeriesData(
             { name: 'TotalRequests', unit: 'count' },
             { status_code: ['request_count'] as string[] },
-            { start_ms: start, end_ms: end },
+            { start, end },
           ) as ExploreResultV4,
         )
       })
 
       cy.mount(DashboardTile, {
         props: {
-          definition: mockTileDefinition,
+          definition: cacheBustTile(mockTileDefinition),
           context: mockContext,
           tileId: 1,
           queryReady: true,
@@ -620,6 +632,11 @@ describe('<DashboardTile />', () => {
             [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
           },
         },
+      })
+
+      // Wait for initial chart render, then reset the spy to count CSV export call
+      cy.get('@queryFn').should('have.been.called').then(() => {
+        queryFn.resetHistory()
       })
 
       cy.getTestId('kebab-action-menu-1').click()
@@ -642,7 +659,7 @@ describe('<DashboardTile />', () => {
           generateSingleMetricTimeSeriesData(
             { name: 'TotalRequests', unit: 'count' },
             { status_code: ['request_count'] as string[] },
-            { start_ms: start, end_ms: end },
+            { start, end },
           ) as ExploreResultV4,
         )
       })
@@ -677,13 +694,55 @@ describe('<DashboardTile />', () => {
         })
     })
 
+    it("doesn't call queryFn with increased limit when using goap datasource", () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start, end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: cacheBustTile(mockGoapTileDefinition),
+          context: mockContext,
+          queryReady: true,
+          refreshCounter: 0,
+          tileId: 1,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+          },
+        },
+      })
+
+      cy.getTestId('kebab-action-menu-1').click()
+      cy.getTestId('chart-csv-export-1').click()
+      cy.getTestId('csv-export-modal').find('.vitals-table').should('exist')
+
+      cy.get('@queryFn').should('have.been.calledOnce')
+        .then((stub) => {
+          // @ts-ignore getCall does exist. cypress being cypress
+          const payload = stub.getCall(0).args[0]
+
+          expect(payload).to.have.property('datasource', 'goap_event_gateway')
+          expect(payload).to.have.property('query')
+          expect(payload.query.limit).to.equal(undefined)
+        })
+    })
+
+
     it('handles deferred loading', () => {
       const queryFn = cy.stub().as('queryFn').callsFake(() => {
         return Promise.resolve(
           generateSingleMetricTimeSeriesData(
             { name: 'TotalRequests', unit: 'count' },
             { status_code: ['request_count'] as string[] },
-            { start_ms: start, end_ms: end },
+            { start, end },
           ) as ExploreResultV4,
         )
       })

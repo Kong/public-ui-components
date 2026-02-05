@@ -5,6 +5,7 @@ export * from './ai'
 export * from './requests'
 export * from './result'
 export * from './all'
+export * from './mcp'
 
 // To add a new datasource:
 // - Create a new file for the datasource and export it from this file.

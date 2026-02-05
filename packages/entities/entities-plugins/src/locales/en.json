@@ -4,6 +4,7 @@
     "view_configuration": "View Configuration",
     "create": "New plugin",
     "create_custom": "Create",
+    "configure": "Configure",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
@@ -57,7 +58,8 @@
       "konnect": "Filter by name",
       "exact": "Filter by exact instance name or ID",
       "kongManager": "Filter by exact instance name or ID",
-      "select": "Filter plugins"
+      "select": "Filter plugins",
+      "search_plugins": "Search plugins"
     },
     "filter": {
       "field": {
@@ -65,6 +67,9 @@
       }
     },
     "no_results": "No results found for \"{filter}\""
+  },
+  "labels": {
+    "new": "New"
   },
   "plugins": {
     "title": "Plugins",
@@ -588,8 +593,20 @@
       "unavailable_tooltip": "This plugin is not available",
       "already_exists": "This plugin is already applied to this resource",
       "misc_plugins": "Other Plugins",
+      "show_all": "Show all",
       "view_more": "View more",
       "view_less": "View less",
+      "filter": {
+        "title": "Filter Plugins",
+        "featured": "Featured",
+        "type": "Type"
+      },
+      "list": {
+        "table_headers": {
+          "name": "Plugin",
+          "description": "Description"
+        }
+      },
       "tabs": {
         "kong": {
           "title": "Kong Plugins",
@@ -623,9 +640,15 @@
           "on_text": "This plugin is Enabled",
           "off_text": "This plugin is Disabled"
         },
+        "plugin_status": {
+          "label": "Plugin status",
+          "text_on": "Enabled",
+          "text_off": "Disabled"
+        },
         "instance_name": {
-          "label": "Instance Name",
-          "help": "A custom name for this plugin instance to help identifying from the list view."
+          "label": "Name",
+          "placeholder": "Enter a unique name",
+          "help": "A custom name for this plugin instance to help with identifying from the list view."
         },
         "protocols": {
           "label": "Protocols",
@@ -634,8 +657,9 @@
           "help": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type."
         },
         "tags": {
+          "label": "Tags",
           "help": "An optional set of strings for grouping and filtering, separated by commas.",
-          "placeholder": "Enter list of tags"
+          "placeholder": "Tag1, Tag2, Tag3"
         }
       },
       "scoping": {
@@ -678,8 +702,8 @@
           "empty": "This plugin does not have required parameters."
         },
         "advanced_parameters": {
-          "view": "View advanced parameters",
-          "hide": "Hide advanced parameters"
+          "view": "Show additional settings",
+          "hide": "Hide additional settings"
         }
       },
       "field_rules": {
@@ -690,6 +714,10 @@
         "only_one_of_mutually_required": "Exactly one of the following parameter combinations is required (all parameters within a chosen combination are required):"
       },
       "sections": {
+        "plugin_scope": {
+          "title": "Plugin scope",
+          "description": "Choose whether this plugin applies to all traffic (global) or is scoped to a specific service, route, or consumer."
+        },
         "general_info": {
           "title": "General information",
           "description": "Add details to help identify and manage your plugin."
@@ -697,6 +725,13 @@
         "plugin_config": {
           "title": "Plugin configuration",
           "description": "Set the plugin's behavior by defining its configuration settings."
+        },
+        "plugin_general_info": {
+          "description": "Add a name or tags to help you identify and manage this plugin later."
+        },
+        "code_mode": {
+          "title": "Code editor",
+          "description": "Configure this plugin by using YAML configuration."
         }
       }
     },
@@ -730,7 +765,7 @@
           "mode": "Flow editor",
           "name": "Datakit flow editor",
           "cta": "Go to flow editor",
-          "disabled_tooltip": "The flow editor is unavailable. To switch, fix configuration errors or remove unsupported nodes.",
+          "disabled_tooltip": "The flow editor is unavailable due to critical configuration errors or features not supported in the flow editor:<br/><code>{reason}</code>",
           "expand_panel": "Expand panel",
           "collapse_panel": "Collapse panel",
           "return_to_config": "Return to plugin configuration",

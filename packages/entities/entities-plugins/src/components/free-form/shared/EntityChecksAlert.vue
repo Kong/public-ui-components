@@ -75,7 +75,8 @@ function fieldsNotOmitted(fields: string[]): boolean {
 
 <style scoped lang="scss">
 .ff-entity-checks-list {
+  list-style: disc;
   margin: 0;
-  padding-left: $kui-space-70
+  padding-left: $kui-space-70;
 }
 </style>

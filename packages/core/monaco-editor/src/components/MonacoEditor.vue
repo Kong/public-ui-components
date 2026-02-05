@@ -2,8 +2,9 @@
   <div
     class="monaco-editor-container"
     :class="[
+      appearance,
       editorTheme,
-      { 'loading': monacoEditor.editorStates.editorStatus === 'loading' },
+      { 'loading': isLoadingVisible },
     ]"
     data-testid="monaco-editor-container"
   >
@@ -18,13 +19,14 @@
       data-testid="monaco-editor-target"
     />
     <slot
-      :is-loading="monacoEditor.editorStates.editorStatus === 'loading'"
+      v-if="showLoadingState"
+      :is-loading="isLoadingVisible"
       name="state-loading"
     >
       <Transition name="fade">
         <!-- TODO: use https://github.com/antfu/v-lazy-show -->
         <MonacoEditorStatusOverlay
-          v-if="monacoEditor.editorStates.editorStatus === 'loading'"
+          v-if="isLoadingVisible"
           data-testid="monaco-editor-status-overlay-loading"
           :icon="ProgressIcon"
           :message="i18n.t('editor.messages.loading_message', { type: language })"
@@ -33,12 +35,13 @@
       </Transition>
     </slot>
     <slot
-      :is-empty="isEditorEmpty"
+      v-if="showEmptyState"
+      :is-empty="isEmptyVisible"
       name="state-empty"
     >
       <Transition name="fade">
         <MonacoEditorStatusOverlay
-          v-if="isEditorEmpty"
+          v-if="isEmptyVisible"
           data-testid="monaco-editor-status-overlay-empty"
           :icon="CodeblockIcon"
           :message="i18n.t('editor.messages.empty_message')"
@@ -50,20 +53,33 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue'
+import { watch, computed, useTemplateRef } from 'vue'
+import { KUI_SPACE_40 } from '@kong/design-tokens'
 import { CodeblockIcon, ProgressIcon } from '@kong/icons'
 import { useMonacoEditor } from '../composables/useMonacoEditor'
 import useI18n from '../composables/useI18n'
 import MonacoEditorStatusOverlay from './MonacoEditorStatusOverlay.vue'
+import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import type { editor } from 'monaco-editor'
 import type { EditorThemes, MonacoEditorToolbarOptions } from '../types'
 import MonacoEditorToolbar from './MonacoEditorToolbar.vue'
 
+const PADDING_Y = parseInt(KUI_SPACE_40, 10)
+
 const {
+  appearance = 'embedded',
   theme = 'light',
   language = 'markdown',
   options = undefined,
+  loading = false,
+  showLoadingState = true,
+  showEmptyState = true,
 } = defineProps<{
+  /**
+   * The appearance style of the Monaco Editor.
+   * @default 'embedded'
+   */
+  appearance?: 'embedded' | 'standalone'
   /**
    * The theme of the Monaco Editor instance.
    * @default 'light'
@@ -77,10 +93,33 @@ const {
   // TODO: add comment
   toolbar?: boolean | MonacoEditorToolbarOptions
   /**
+   * Whether the editor is in a loading state.
+   * @default false
+   */
+  loading?: boolean
+  /**
    * Additional Monaco Editor options to customize the editor further.
    * @default undefined
   */
   options?: Partial<editor.IStandaloneEditorConstructionOptions> | undefined
+  /**
+   * Whether to show the loading state overlay.
+   * @default true
+   */
+  showLoadingState?: boolean
+  /**
+   * Whether to show the empty state overlay.
+   * @default true
+   */
+  showEmptyState?: boolean
+}>()
+
+const emit = defineEmits<{
+  /**
+   * Emitted when the Monaco editor instance is ready.
+   * @param editor The Monaco editor instance
+   */
+  (e: 'ready', editor: editor.IStandaloneCodeEditor): void
 }>()
 
 /**
@@ -97,20 +136,69 @@ const editorRef = useTemplateRef('editorRef')
 
 const editorTheme = computed<EditorThemes>(() => theme === 'dark' ? 'dark' : 'light')
 
-/**
- * Computed property to determine if the editor is empty.
- * @returns {boolean}
- */
-const isEditorEmpty = computed<boolean>(() => monacoEditor.editorStates.editorStatus === 'ready' && !monacoEditor.editorStates.hasContent)
+const realMonacoOptions = computed(() => {
+  if (appearance === 'standalone') {
+    const lineCountDigits = String(model.value.split('\n').length).length
+
+    return {
+      ...options,
+      // Standalone uses fixed layout values so user overrides are intentionally ignored.
+      // Monaco editor only supports vertical paddings.
+      padding: { top: PADDING_Y, bottom: PADDING_Y },
+      // Horizontal padding is not supported, so we increase the minimum chars for line numbers
+      // to create some space on the left when standalone.
+      lineNumbersMinChars: Math.max(DEFAULT_MONACO_OPTIONS.lineNumbersMinChars, lineCountDigits) + 2,
+    }
+  }
+
+  return {
+    // Ensure standalone padding is cleared when switching back to embedded.
+    padding: { ...DEFAULT_MONACO_OPTIONS.padding },
+    lineNumbersMinChars: DEFAULT_MONACO_OPTIONS.lineNumbersMinChars,
+    // Embedded allows user overrides.
+    ...options,
+  }
+})
 
 const monacoEditor = useMonacoEditor(editorRef, {
   language,
   code: model,
   theme: editorTheme.value,
-  monacoOptions: options,
-  onChanged: (content: string): void => {
-    model.value = content
+  monacoOptions: realMonacoOptions.value,
+  onReady: (editor) => {
+    emit('ready', editor)
   },
+})
+
+/**
+ * Computed property to determine if the loading overlay should be visible.
+ * @returns {boolean}
+ */
+const isLoadingVisible = computed<boolean>(() => loading || monacoEditor.editorStates.editorStatus === 'loading')
+
+/**
+* Computed property to determine if the editor is empty.
+* @returns {boolean}
+*/
+const isEmptyVisible = computed<boolean>(() => !isLoadingVisible.value && monacoEditor.editorStates.editorStatus === 'ready' && !monacoEditor.editorStates.hasContent)
+
+defineExpose({
+  monacoEditor,
+})
+
+// update the editor language when the prop changes so the highlighting updates
+watch(() => language, (newLang, oldLang) => {
+  if (newLang === oldLang) return
+  monacoEditor.setLanguage(newLang)
+})
+
+// update the editor options when the prop changes
+watch([monacoEditor.editor, realMonacoOptions], ([editor, options]) => {
+  if (editor && options) {
+    editor.updateOptions(options)
+  }
+}, {
+  deep: true,
 })
 </script>
 
@@ -129,7 +217,6 @@ const monacoEditor = useMonacoEditor(editorRef, {
     user-select: none;
 
     .monaco-editor-target {
-      filter: blur(2px);
       opacity: 0;
       pointer-events: none;
       user-select: none;
@@ -137,6 +224,20 @@ const monacoEditor = useMonacoEditor(editorRef, {
 
   }
 
+  &.standalone {
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    transition: border-color var(--kui-animation-duration-20, .2s) ease-in-out, box-shadow var(--kui-animation-duration-20, .2s) ease-in-out;
+
+    &:hover {
+      border-color: var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
+    }
+
+    &:focus-within {
+      border-color: var(--kui-color-border-primary, $kui-color-border-primary);
+      box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
+    }
+  }
 }
 
 .monaco-editor-target {

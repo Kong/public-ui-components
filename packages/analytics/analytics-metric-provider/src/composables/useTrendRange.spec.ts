@@ -129,8 +129,6 @@ describe('useTrendRange', () => {
     it('calculates hours correctly from meta when timeRange is not provided (1 day halved)', () => {
       const withTrend = ref(true)
       const meta = ref<ExploreResultV4['meta']>({
-        start_ms: new Date('2024-01-01T00:00:00Z').getTime(),
-        end_ms: new Date('2024-01-02T00:00:00Z').getTime(),
         start: '2024-01-01T00:00:00Z',
         end: '2024-01-02T00:00:00Z',
         granularity_ms: 86400000,
@@ -154,8 +152,6 @@ describe('useTrendRange', () => {
       })
       const withTrend = ref(true)
       const meta = ref<ExploreResultV4['meta']>({
-        start_ms: new Date('2024-01-01T00:00:00Z').getTime(),
-        end_ms: new Date('2024-01-02T00:00:00Z').getTime(),
         start: '2024-01-01T00:00:00Z',
         end: '2024-01-02T00:00:00Z',
         granularity_ms: 86400000,
@@ -174,8 +170,6 @@ describe('useTrendRange', () => {
     it('calculates hours correctly from meta with trend', () => {
       const withTrend = ref(true)
       const meta = ref<ExploreResultV4['meta']>({
-        start_ms: new Date('2024-01-01T00:00:00Z').getTime(),
-        end_ms: new Date('2024-01-01T12:00:00Z').getTime(),
         start: '2024-01-01T00:00:00Z',
         end: '2024-01-01T12:00:00Z',
         granularity_ms: 3600000,
@@ -190,11 +184,9 @@ describe('useTrendRange', () => {
       expect(result.value).toBe('vs previous 6 hours')
     })
 
-    it('returns empty string when meta is missing start_ms or end_ms', () => {
+    it('returns empty string when meta is missing start or end', () => {
       const withTrend = ref(true)
       const meta = ref<ExploreResultV4['meta']>({
-        start_ms: undefined as any,
-        end_ms: undefined as any,
         start: undefined as any,
         end: undefined as any,
         granularity_ms: 86400000,

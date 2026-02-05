@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins-icon",
-  "version": "1.5.3",
+  "version": "1.5.7",
   "type": "module",
   "main": "./dist/entities-plugins-icon.umd.js",
   "module": "./dist/entities-plugins-icon.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-plugins-icon.es.js",
-      "require": "./dist/entities-plugins-icon.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-plugins-icon.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/entities-plugins-metadata": "workspace:^",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   },
   "repository": {
     "type": "git",
@@ -61,6 +61,6 @@
   },
   "peerDependencies": {
     "@kong-ui-public/entities-plugins-metadata": "workspace:^",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   }
 }

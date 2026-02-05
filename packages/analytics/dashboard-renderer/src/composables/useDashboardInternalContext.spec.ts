@@ -70,7 +70,6 @@ describe('useContextLinks', () => {
     })
 
     ;(getCurrentInstance as Mock).mockImplementation(() => {
-      console.log('got here')
       return {
         vnode: {
           props: {

@@ -1,4 +1,6 @@
-import { PLUGIN_GROUP_AND_SCOPE_MAP } from '@kong-ui-public/entities-plugins-metadata'
+import {
+  PLUGIN_GROUP_AND_SCOPE_MAP,
+} from '@kong-ui-public/entities-plugins-metadata'
 import { type PluginMetaData } from '../types'
 import { type MessageSource as I18nMessageSource } from '../composables/useI18n'
 import { getColumnFields } from './schemas/typedefs'
@@ -566,6 +568,14 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.upstream-oauth.description',
     nameKey: 'plugins.meta.upstream-oauth.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['upstream-oauth'],
+    freeformRenderRules: {
+      bundles: [
+        ['config.cache.strategy', 'config.cache.redis'],
+      ],
+      dependencies: {
+        'config.cache.redis': ['config.cache.strategy', 'redis'],
+      },
+    },
   },
   'confluent': {
     descriptionKey: 'plugins.meta.confluent.description',

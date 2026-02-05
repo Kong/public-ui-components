@@ -59,5 +59,16 @@ describe('<ConfigCardDisplay />', () => {
 
       cy.get('.yaml-config').should('be.visible')
     })
+
+    it('renders the decK content correctly', () => {
+      cy.mount(ConfigCardDisplay, {
+        props: {
+          format: 'deck',
+          record,
+        },
+      })
+
+      cy.get('.deck-config').should('be.visible')
+    })
   })
 })

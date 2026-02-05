@@ -13,10 +13,10 @@ export interface DisplayBlob {
 }
 
 export interface QueryResponseMeta {
-  start_ms: number
-  end_ms: number
   start: string
   end: string
+  start_ms?: number
+  end_ms?: number
   display: DisplayBlob
   metric_names?: AllAggregations[]
   metric_units?: MetricUnit

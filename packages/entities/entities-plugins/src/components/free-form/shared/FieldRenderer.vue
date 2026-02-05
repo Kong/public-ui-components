@@ -4,15 +4,8 @@
 
 <script lang="ts" setup>
 import type { Slot } from 'vue'
-import type { UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { useFormShared } from './composables'
-
-export type Match = (opt: {
-  path: string
-  schema: UnionFieldSchema
-}) => boolean
-
-export type MatchMap = Map<Match, Slot<{ name: string }>>
+import type { Match } from './types'
 
 const props = defineProps<{
   match: Match

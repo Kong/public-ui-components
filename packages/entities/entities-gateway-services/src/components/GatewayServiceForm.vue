@@ -951,19 +951,6 @@ const submitUrl = computed<string>(() => {
   return url
 })
 
-const saveTlsVerify = (gatewayService: Record<string, any>) => {
-  let protocol = ''
-  if (gatewayService.url) {
-    protocol = new URL(gatewayService.url).protocol
-  }
-
-  if (['https', 'wss', 'tls'].includes(gatewayService.protocol) || ['https', 'wss', 'tls'].includes(protocol)) {
-    gatewayService.tls_verify = gatewayService.tls_verify_enabled ? gatewayService.tls_verify_value : null
-  }
-  delete gatewayService.tls_verify_enabled
-  delete gatewayService.tls_verify_value
-}
-
 const getPayload = computed((): Record<string, any> => {
   const requestBody: Record<string, any> = {
     name: form.fields.name || null,
@@ -974,8 +961,6 @@ const getPayload = computed((): Record<string, any> => {
     retries: form.fields.retries,
     host: form.fields.host,
     connect_timeout: form.fields.connect_timeout,
-    tls_verify_value: form.fields.tls_verify_value,
-    tls_verify_enabled: form.fields.tls_verify_enabled,
     ca_certificates: form.fields.ca_certificates ? form.fields.ca_certificates?.split(',').filter(caCert => caCert !== '') : null,
     client_certificate: form.fields.client_certificate ? { id: form.fields.client_certificate } : null,
     write_timeout: form.fields.write_timeout,
@@ -1021,7 +1006,6 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
     form.isReadonly = true
 
     const payload = getPayload.value
-    saveTlsVerify(payload)
 
     let response: AxiosResponse | undefined
 

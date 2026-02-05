@@ -3,6 +3,168 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.21.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.21.1...@kong-ui-public/forms@4.21.2) (2026-02-04)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.21.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.21.0...@kong-ui-public/forms@4.21.1) (2026-02-02)
+
+
+### Bug Fixes
+
+* **form:** set width to 100% for string array items ([#2899](https://github.com/Kong/public-ui-components/issues/2899)) ([6d3ea01](https://github.com/Kong/public-ui-components/commit/6d3ea018d4a43f94a1311c4f841e1edf4f4577e2))
+
+
+
+
+
+# [4.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.34...@kong-ui-public/forms@4.21.0) (2026-02-02)
+
+
+### Features
+
+* support array of arrays field in vfg ([#2897](https://github.com/Kong/public-ui-components/issues/2897)) ([5aa3009](https://github.com/Kong/public-ui-components/commit/5aa30094f6a2b5f65dcd2f49ddd6629db4dc1078))
+
+
+
+
+
+## [4.20.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.33...@kong-ui-public/forms@4.20.34) (2026-01-26)
+
+
+### Bug Fixes
+
+* update exports field order in package.json files ([#2856](https://github.com/Kong/public-ui-components/issues/2856)) ([2ffc4ee](https://github.com/Kong/public-ui-components/commit/2ffc4ee18597ff0d19afd037a8679e0791dfbd03))
+
+
+
+
+
+## [4.20.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.32...@kong-ui-public/forms@4.20.33) (2026-01-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2863](https://github.com/Kong/public-ui-components/issues/2863)) ([21b16f7](https://github.com/Kong/public-ui-components/commit/21b16f7e606c235bf2b307be839c5c507b969291))
+
+
+
+
+
+## [4.20.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.31...@kong-ui-public/forms@4.20.32) (2026-01-24)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.20.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.30...@kong-ui-public/forms@4.20.31) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2854](https://github.com/Kong/public-ui-components/issues/2854)) ([8db6a9b](https://github.com/Kong/public-ui-components/commit/8db6a9bfffb91a72a5c436cf2cfb8e2c5fdb66a2))
+
+
+
+
+
+## [4.20.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.29...@kong-ui-public/forms@4.20.30) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.42.0 ([#2857](https://github.com/Kong/public-ui-components/issues/2857)) ([bb65b9e](https://github.com/Kong/public-ui-components/commit/bb65b9eea7489142268aee86d5cdb6de338762f9))
+
+
+
+
+
+## [4.20.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.28...@kong-ui-public/forms@4.20.29) (2026-01-21)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.20.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.27...@kong-ui-public/forms@4.20.28) (2026-01-21)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.20.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.26...@kong-ui-public/forms@4.20.27) (2026-01-20)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.20.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.25...@kong-ui-public/forms@4.20.26) (2026-01-19)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.20.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.24...@kong-ui-public/forms@4.20.25) (2026-01-16)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.20.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.23...@kong-ui-public/forms@4.20.24) (2026-01-15)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.20.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.22...@kong-ui-public/forms@4.20.23) (2026-01-09)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.20.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.21...@kong-ui-public/forms@4.20.22) (2026-01-09)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.20.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.20...@kong-ui-public/forms@4.20.21) (2026-01-07)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.20.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.19...@kong-ui-public/forms@4.20.20) (2026-01-07)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.20.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.18...@kong-ui-public/forms@4.20.19) (2026-01-05)
 
 **Note:** Version bump only for package @kong-ui-public/forms

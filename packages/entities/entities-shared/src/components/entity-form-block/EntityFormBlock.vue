@@ -1,14 +1,25 @@
 <template>
-  <div class="ff-form-section">
+  <div
+    class="kong-ui-entity-form-block"
+    :class="{
+      'stepped': step !== undefined || slots.step,
+    }"
+  >
     <header class="header">
       <div
-        v-if="step != null"
+        v-if="step !== undefined || slots.step"
         class="step"
+        data-testid="form-block-step"
       >
-        {{ step }}
+        <slot name="step">
+          {{ step }}
+        </slot>
       </div>
       <div class="header-content">
-        <h2 class="header-title">
+        <h2
+          class="header-title"
+          data-testid="header-title"
+        >
           <slot name="title">
             {{ title }}
           </slot>
@@ -16,6 +27,7 @@
         <div
           v-if="description || slots.description"
           class="header-description"
+          data-testid="header-description"
         >
           <slot name="description">
             {{ description }}
@@ -25,18 +37,22 @@
       <div
         v-if="slots.extra"
         class="header-extra"
+        data-testid="header-extra"
       >
         <slot name="extra" />
       </div>
     </header>
-    <div class="content">
+    <div
+      class="content"
+      data-testid="form-block-content"
+    >
       <slot />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { step, title = '', description = '' } = defineProps<{
+const { step = undefined, title = '', description = '' } = defineProps<{
   step?: number
   title?: string
   description?: string
@@ -44,6 +60,7 @@ const { step, title = '', description = '' } = defineProps<{
 
 const slots = defineSlots<{
   default?: () => any
+  step?: () => any
   title?: () => any
   description?: () => any
   extra?: () => any
@@ -51,7 +68,7 @@ const slots = defineSlots<{
 </script>
 
 <style lang="scss" scoped>
-.ff-form-section {
+.kong-ui-entity-form-block {
   .header {
     align-items: flex-start;
     display: flex;
@@ -110,9 +127,14 @@ const slots = defineSlots<{
     display: flex;
     flex-direction: column;
     gap: $kui-space-70;
-    margin-left: $kui-space-60;
     margin-top: $kui-space-70;
     padding: $kui-space-70 $kui-space-80;
+  }
+
+  &.stepped {
+    .content {
+      margin-left: $kui-space-60;
+    }
   }
 }
 </style>

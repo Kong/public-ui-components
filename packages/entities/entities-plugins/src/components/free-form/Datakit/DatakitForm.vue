@@ -13,8 +13,11 @@
       <template #option-label="{ option }">
         <KTooltip
           :disabled="flowAvailable || option.value !== 'flow'"
-          :text="t('plugins.free-form.datakit.flow_editor.disabled_tooltip')"
         >
+          <template #content>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="flowDisabledTooltip" />
+          </template>
           <div class="dk-option-label">
             <component :is="icons[option.value]" />
             {{ option.label }}
@@ -45,7 +48,7 @@
     </template>
 
     <template #plugin-config-title>
-      {{ t('plugins.free-form.datakit.plugin_config.title') }}
+      {{ t('plugins.free-form.datakit.flow_editor.mode') }}
     </template>
 
     <template #plugin-config-description>
@@ -58,12 +61,13 @@
 <script setup lang="ts">
 import type { SegmentedControlOption } from '@kong/kongponents'
 import type { Component } from 'vue'
-// import type { ZodError } from 'zod'
+import type { ZodError } from 'zod'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
 import type { EditorMode, DatakitPluginData } from './types'
 
 import { computed, inject, onMounted, ref, watch } from 'vue'
+import { escape } from 'lodash-es'
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
 import { KSegmentedControl, KTooltip } from '@kong/kongponents'
@@ -105,6 +109,9 @@ const realEditorMode = computed<EditorMode>(() => {
   return editorMode.value
 })
 const layoutEditorMode = computed<'form' | 'code'>(() => {
+  if (formConfig.app === 'kongManager') {
+    return 'code'
+  }
   return realEditorMode.value === 'flow' ? 'form' : 'code'
 })
 
@@ -115,6 +122,7 @@ const icons: Record<EditorMode, Component> = {
 }
 
 const flowAvailable = ref<boolean>(true)
+const flowUnavailableReason = ref<string>('')
 
 const editorModes = computed<Array<SegmentedControlOption<EditorMode>>>(() => {
   const modes: Array<SegmentedControlOption<EditorMode>> = [
@@ -141,6 +149,15 @@ const description = computed(() => {
     default:
       return ''
   }
+})
+
+const flowDisabledTooltip = computed(() => {
+  if (flowAvailable.value) return ''
+  return t('plugins.free-form.datakit.flow_editor.disabled_tooltip', {
+    reason: flowUnavailableReason.value,
+    // @ts-ignore MessageFormatPrimitiveValue should have function type
+    code: (chunks: string) => `<code>${escape(chunks)}</code>`,
+  })
 })
 
 watch(realEditorMode, () => {
@@ -175,29 +192,29 @@ function handleFlowChange() {
 
 // Code editor
 
-// function stringifyPath(path: Array<string | number>): string {
-//   return path
-//     .map((k) =>
-//       typeof k === 'number'
-//         ? `[${k}]`
-//         : path.length && typeof k === 'string' && k.includes('.')
-//           ? `["${k}"]`
-//           : `.${k}`,
-//     )
-//     .join('')
-//     .replace(/^\./, '')
-// }
+function stringifyPath(path: Array<string | number>): string {
+  return path
+    .map((k) =>
+      typeof k === 'number'
+        ? `[${k}]`
+        : path.length && typeof k === 'string' && k.includes('.')
+          ? `["${k}"]`
+          : `.${k}`,
+    )
+    .join('')
+    .replace(/^\./, '')
+}
 
-// function getSchemaErrorMessage(error: ZodError): string {
-//   return error.issues
-//     .map(
-//       (issue) =>
-//         `${stringifyPath(issue.path as Array<string | number>)} - ${
-//           issue.message
-//         }`,
-//     )
-//     .join('; ')
-// }
+function getSchemaErrorMessage(error: ZodError): string {
+  return error.issues
+    .map(
+      (issue) =>
+        `${stringifyPath(issue.path as Array<string | number>)} - ${
+          issue.message
+        }`,
+    )
+    .join('; ')
+}
 
 function handleCodeChange(newConfig: unknown) {
   handleConfigChange()
@@ -211,7 +228,8 @@ function handleCodeChange(newConfig: unknown) {
   // TODO: use strict validation and map back to the exact location of schema validation errors
   // const { success, error } = DatakitConfigSchema.safeParse(uncheckedConfig)
 
-  const { success: compatSuccess } = DatakitConfigCompatSchema.safeParse(uncheckedConfig)
+  const { success: compatSuccess, error: compatError } = DatakitConfigCompatSchema.safeParse(uncheckedConfig)
+  flowUnavailableReason.value = compatSuccess || !compatError ? '' : getSchemaErrorMessage(compatError)
   flowAvailable.value = compatSuccess
 
   // props.onValidityChange?.({
@@ -222,6 +240,7 @@ function handleCodeChange(newConfig: unknown) {
 }
 
 function handleCodeError(msg: string) {
+  flowUnavailableReason.value = msg
   flowAvailable.value = false
 
   props.onValidityChange?.({

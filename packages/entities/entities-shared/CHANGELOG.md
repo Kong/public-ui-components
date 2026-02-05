@@ -3,6 +3,153 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.39.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.9...@kong-ui-public/entities-shared@3.39.10) (2026-02-04)
+
+
+### Bug Fixes
+
+* **entities-shared:** add styling for form error message ([#2905](https://github.com/Kong/public-ui-components/issues/2905)) ([2ca9aba](https://github.com/Kong/public-ui-components/commit/2ca9aba0d16ce64ca194067611b39738df179359))
+
+
+
+
+
+## [3.39.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.8...@kong-ui-public/entities-shared@3.39.9) (2026-01-26)
+
+
+### Bug Fixes
+
+* update exports field order in package.json files ([#2856](https://github.com/Kong/public-ui-components/issues/2856)) ([2ffc4ee](https://github.com/Kong/public-ui-components/commit/2ffc4ee18597ff0d19afd037a8679e0791dfbd03))
+
+
+
+
+
+## [3.39.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.7...@kong-ui-public/entities-shared@3.39.8) (2026-01-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.39.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.6...@kong-ui-public/entities-shared@3.39.7) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2854](https://github.com/Kong/public-ui-components/issues/2854)) ([8db6a9b](https://github.com/Kong/public-ui-components/commit/8db6a9bfffb91a72a5c436cf2cfb8e2c5fdb66a2))
+
+
+
+
+
+## [3.39.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.5...@kong-ui-public/entities-shared@3.39.6) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.42.0 ([#2857](https://github.com/Kong/public-ui-components/issues/2857)) ([bb65b9e](https://github.com/Kong/public-ui-components/commit/bb65b9eea7489142268aee86d5cdb6de338762f9))
+
+
+
+
+
+## [3.39.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.4...@kong-ui-public/entities-shared@3.39.5) (2026-01-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.39.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.3...@kong-ui-public/entities-shared@3.39.4) (2026-01-21)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2760](https://github.com/Kong/public-ui-components/issues/2760)) ([bf9e70f](https://github.com/Kong/public-ui-components/commit/bf9e70ff7cb0dbbf141deccd2578c9c62f5fea48))
+
+
+
+
+
+## [3.39.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.2...@kong-ui-public/entities-shared@3.39.3) (2026-01-20)
+
+
+### Bug Fixes
+
+* **entities-shared:** fix styles for stepless EntityFormBlock ([#2836](https://github.com/Kong/public-ui-components/issues/2836)) ([a507bb0](https://github.com/Kong/public-ui-components/commit/a507bb00dca9d66305401818284179d8a2f5a775))
+
+
+
+
+
+## [3.39.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.1...@kong-ui-public/entities-shared@3.39.2) (2026-01-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.39.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.0...@kong-ui-public/entities-shared@3.39.1) (2026-01-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+# [3.39.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.38.0...@kong-ui-public/entities-shared@3.39.0) (2026-01-15)
+
+
+### Features
+
+* **entities-plugin, entities-shared:** implement new plugin form layout ([#2814](https://github.com/Kong/public-ui-components/issues/2814)) ([7bce311](https://github.com/Kong/public-ui-components/commit/7bce311ed1cb98cbfd2b3df008041e3f7c993886))
+
+
+
+
+
+# [3.38.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.37.0...@kong-ui-public/entities-shared@3.38.0) (2026-01-09)
+
+
+### Features
+
+* **entity-form-block:** add step slot [khcp-18937] ([#2806](https://github.com/Kong/public-ui-components/issues/2806)) ([9dcc864](https://github.com/Kong/public-ui-components/commit/9dcc864fe138f8e7b68f0461eaacb259ae2f563a))
+
+
+
+
+
+# [3.37.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.14...@kong-ui-public/entities-shared@3.37.0) (2026-01-09)
+
+
+### Features
+
+* **entities-shared:** add deck in configuration view of entity ([#2792](https://github.com/Kong/public-ui-components/issues/2792)) ([22d0348](https://github.com/Kong/public-ui-components/commit/22d03485653f6c217af99b9064c9e9960a10210b))
+
+
+
+
+
+## [3.36.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.13...@kong-ui-public/entities-shared@3.36.14) (2026-01-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.36.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.12...@kong-ui-public/entities-shared@3.36.13) (2026-01-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
 ## [3.36.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.11...@kong-ui-public/entities-shared@3.36.12) (2026-01-05)
 
 

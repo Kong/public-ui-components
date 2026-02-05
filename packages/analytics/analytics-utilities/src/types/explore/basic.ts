@@ -35,6 +35,7 @@ export interface BasicExploreEmptyFilterV2 {
 }
 export const basicExploreAggregations = [
   'active_services',
+  'error_rate',
   'request_count',
   'request_per_minute',
   'response_latency_average',

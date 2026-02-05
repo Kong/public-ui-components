@@ -21,8 +21,8 @@ const exploreResultTruncated = {
     },
   ],
   meta: {
-    start_ms: 1685452140.987,
-    end_ms: 1685473740.987,
+    start: '2023-05-30T13:09:00.987Z',
+    end: '2023-05-30T19:09:00.987Z',
     query_id: '12346',
     display: {
       StatusCode: { 200: { name: '200' }, 300: { name: '300' } },

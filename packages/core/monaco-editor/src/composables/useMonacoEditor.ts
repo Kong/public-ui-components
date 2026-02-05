@@ -1,13 +1,14 @@
-import { onActivated, onBeforeUnmount, onMounted, reactive, toValue, watch, ref } from 'vue'
+import { onActivated, onBeforeUnmount, onMounted, onWatcherCleanup, reactive, ref, shallowRef, toValue, watch } from 'vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
-import { unrefElement, useDebounceFn } from '@vueuse/core'
+import { useDebounceFn } from '@vueuse/core'
 
 import * as monaco from 'monaco-editor'
 import { shikiToMonaco } from '@shikijs/monaco'
 import { getSingletonHighlighter, bundledLanguages, bundledThemes } from 'shiki'
 
-import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
+import type { MaybeRefOrGetter } from 'vue'
 import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
+import type { editor as Editor } from 'monaco-editor'
 
 // Flag if monaco loaded
 const isMonacoLoaded = ref(false)
@@ -49,23 +50,29 @@ async function loadMonaco() {
 
 /**
  * Composable for integrating the Monaco Editor into Vue components.
- * @param {MaybeComputedElementRef} target - The target DOM element or Vue component ref where the editor will be mounted.
+ * @param {MaybeRefOrGetter<HTMLElement | null>} target - The target DOM element/ref/getter where the editor will be mounted.
  * @param {UseMonacoEditorOptions} options - Configuration options for the Monaco editor.
  * @returns {object} An object containing the editor instance and utility methods.
 */
-export function useMonacoEditor<T extends MaybeElement>(
-  target: MaybeComputedElementRef<T>,
+export function useMonacoEditor<T extends HTMLElement>(
+  target: MaybeRefOrGetter<T | null>,
   options: UseMonacoEditorOptions,
 ) {
   /**
    * The Monaco editor instance.
-   * @type {monaco.editor.IStandaloneCodeEditor | undefined}
    * @default undefined
   */
-  let editor: monaco.editor.IStandaloneCodeEditor | undefined
+  const editor = shallowRef<Editor.IStandaloneCodeEditor>()
+
+  /** The Monaco text model associated with the editor. */
+  let model: monaco.editor.ITextModel | undefined
 
   // Internal flag to prevent multiple setups
   let _isSetup = false
+
+  // Flag to prevent feedback loops when updating editor from external Vue state
+  // without triggering the editor → Vue onChanged callback
+  let _isApplyingExternalUpdate = false
 
   /** Reactive state for the Monaco editor instance. */
   const editorStates = reactive<MonacoEditorStates>({
@@ -77,16 +84,23 @@ export function useMonacoEditor<T extends MaybeElement>(
 
   /** Replace the editor content. */
   const setContent = (content: string): void => {
-    if (!_isSetup || !editor) return
+    if (!_isSetup || !editor.value) return
     // TODO: update this so we can preserve undo/redo stack
-    editor.setValue(content)
+    editor.value.setValue(content)
   }
 
   /** Toggle read-only mode. */
-  const setReadOnly = (readOnly: boolean): void => editor?.updateOptions({ readOnly })
+  const setReadOnly = (readOnly: boolean): void => editor.value?.updateOptions({ readOnly })
 
   /** Focus the editor programmatically. */
-  const focus = (): void => editor?.focus()
+  const focus = (): void => editor.value?.focus()
+
+  const setLanguage = (language: string): void => {
+    const model = editor.value?.getModel()
+    if (model) {
+      monaco.editor.setModelLanguage(model, language)
+    }
+  }
 
   /**
    * Triggers a keyboard command in the Monaco editor.
@@ -95,9 +109,9 @@ export function useMonacoEditor<T extends MaybeElement>(
    */
   const triggerKeyboardCommand = (id: string): void => {
     try {
-      if (!editor || !id) return
-      editor.focus()
-      editor.trigger('keyboard', id, null)
+      if (!editor.value || !id) return
+      editor.value.focus()
+      editor.value.trigger('keyboard', id, null)
     } catch (error) {
       console.error(`useMonacoEditor: Failed to trigger command: ${id}`, error)
     }
@@ -106,12 +120,12 @@ export function useMonacoEditor<T extends MaybeElement>(
   /** Toggle the status of findController widget */
   const toggleSearchWidget = (): void => {
     try {
-      if (!editor) return
+      if (!editor.value) return
 
       // close the widget
       if (editorStates.searchBoxIsRevealed) {
         // @ts-ignore - property exists
-        return editor!.getContribution('editor.contrib.findController')?.closeFindWidget()
+        return editor.value.getContribution('editor.contrib.findController')?.closeFindWidget()
       }
 
       triggerKeyboardCommand('actions.find')
@@ -127,28 +141,29 @@ export function useMonacoEditor<T extends MaybeElement>(
   const init = (): void => {
     loadMonaco()
 
-    let model: monaco.editor.ITextModel | undefined
-
     // `toValue()` safely unwraps refs, getters, or plain elements
-    watch([isMonacoLoaded, () => toValue(target)], ([_isLoaded, _target]) => {
+    watch([isMonacoLoaded, () => toValue(target)], ([_isLoaded, _target], [, previousTarget]) => {
 
-      // This ensures we skip setup if it's null, undefined, or an SVG element (as unrefElement can return SVGElement)
-      const el = unrefElement(_target)
+      // Ensure the target is specifically a non-null HTMLElement and that Monaco is loaded before setting up
+      const el = toValue(_target)
+      const previousEl = toValue(previousTarget)
       if (!(el instanceof HTMLElement) || !_isLoaded) {
         _isSetup = false
         return
       }
 
-      // prevent multiple setups
-      if (_isSetup) return
+      // Only set up when not already set up or target element changed
+      if (_isSetup && previousEl === el) return
 
       if (!model) {
         // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
         const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
         model = monaco.editor.createModel(options.code.value, options.language, uri)
+      } else {
+        model.setValue(options.code.value)
       }
 
-      editor = monaco.editor.create(el, {
+      editor.value = monaco.editor.create(el, {
         ...DEFAULT_MONACO_OPTIONS,
         readOnly: options.readOnly || false,
         language: options.language,
@@ -163,38 +178,40 @@ export function useMonacoEditor<T extends MaybeElement>(
       editorStates.hasContent = !!options.code.value
 
       // Watch content changes and trigger callbacks efficiently
-      editor.onDidChangeModelContent(() => {
-        const content = editor!.getValue()
+      editor.value.onDidChangeModelContent(() => {
+        if (_isApplyingExternalUpdate) return
+        const content = editor.value!.getValue()
         editorStates.hasContent = !!content.length
-        options.onChanged?.(content)
+        options.code.value = content
       })
 
       // TODO: register editor actions
 
-      options.onCreated?.()
+      options.onReady?.(editor.value)
 
       // we need to remeasure fonts after the editor is created to ensure proper layout and rendering
       remeasureFonts()
 
-
       try {
         // Access the internal "FindController" contribution
-        const findController = editor.getContribution('editor.contrib.findController')
+        const findController = editor.value.getContribution('editor.contrib.findController')
 
-        if (findController) {
-          // Get the state object from the FindController
-          // @ts-ignore - getState exists
-          const findState = findController.getState()
+        // Get the state object from the FindController
+        // @ts-ignore - getState exists
+        const state = findController?.getState()
 
-          // Listen for changes to the state of the "find" panel
-          findState.onFindReplaceStateChange(() => {
-            editorStates.searchBoxIsRevealed = findState.isRevealed
-          })
-        }
+        // Listen for changes to the state of the "find" panel
+        state?.onFindReplaceStateChange(() => {
+          editorStates.searchBoxIsRevealed = state.isRevealed
+        })
       } catch (error) {
         console.error('useMonacoEditor: Failed to get the state of findController', error)
       }
 
+      // Dispose the editor if any
+      onWatcherCleanup(() => {
+        editor.value?.dispose()
+      })
     }, {
       immediate: true,
       flush: 'post',
@@ -204,16 +221,46 @@ export function useMonacoEditor<T extends MaybeElement>(
   // Start the initialization process
   init()
 
+  // Watch for external code changes to update the editor content
+  watch(options.code, (newValue) => {
+    if (!editor.value || !model || !_isSetup) return
+
+    const current = model.getValue()
+
+    // skip if the value hasn't changed
+    if (newValue === current) return
+
+    // Temporarily prevent editor → Vue updates to avoid infinite loops
+    _isApplyingExternalUpdate = true
+
+    // Update the Monaco model with the new value from Vue
+    // Using executeEdits preserves undo/redo stack better than setValue
+    editor.value.executeEdits('external', [
+      {
+        range: model.getFullModelRange(),
+        text: newValue,
+      },
+    ])
+
+    editor.value.pushUndoStop()
+
+    // Update internal state
+    editorStates.hasContent = !!newValue.length
+
+    // Re-enable editor → Vue updates
+    _isApplyingExternalUpdate = false
+  })
+
   // Lifecycle hooks
   onMounted(remeasureFonts)
 
   onActivated(remeasureFonts)
 
   onBeforeUnmount(() => {
-    if (!editor) return
+    if (!editor.value) return
 
-    const model = editor.getModel()
-    editor.dispose()
+    const model = editor.value.getModel()
+    editor.value.dispose()
     if (model) {
       model.dispose()
     }
@@ -225,6 +272,7 @@ export function useMonacoEditor<T extends MaybeElement>(
     setContent,
     setReadOnly,
     focus,
+    setLanguage,
     remeasureFonts,
     toggleSearchWidget,
     triggerKeyboardCommand,

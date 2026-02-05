@@ -103,6 +103,7 @@ describe('<KeyForm />', () => {
       // form fields
       cy.getTestId('key-form-id').should('be.visible')
       cy.getTestId('key-form-name').should('be.visible')
+      cy.getTestId('key-form-name').invoke('val').should('match', /^new-key-\d+$/)
       cy.getTestId('key-form-tags').should('be.visible')
       cy.getTestId('key-form-key-set').should('be.visible')
       cy.getTestId('key-form-x5t').should('not.exist')
@@ -652,6 +653,7 @@ describe('<KeyForm />', () => {
       // form fields
       cy.getTestId('key-form-id').should('be.visible')
       cy.getTestId('key-form-name').should('be.visible')
+      cy.getTestId('key-form-name').invoke('val').should('match', /^new-key-\d+$/)
       cy.getTestId('key-form-tags').should('be.visible')
       cy.getTestId('key-form-key-set').should('be.visible')
       cy.getTestId('key-form-x5t').should('not.exist')

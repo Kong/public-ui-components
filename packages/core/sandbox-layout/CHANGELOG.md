@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.3.25...@kong-ui-public/sandbox-layout@2.3.26) (2026-01-26)
+
+
+### Bug Fixes
+
+* update exports field order in package.json files ([#2856](https://github.com/Kong/public-ui-components/issues/2856)) ([2ffc4ee](https://github.com/Kong/public-ui-components/commit/2ffc4ee18597ff0d19afd037a8679e0791dfbd03))
+
+
+
+
+
+## [2.3.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.3.24...@kong-ui-public/sandbox-layout@2.3.25) (2026-01-24)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.3.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.3.23...@kong-ui-public/sandbox-layout@2.3.24) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2854](https://github.com/Kong/public-ui-components/issues/2854)) ([8db6a9b](https://github.com/Kong/public-ui-components/commit/8db6a9bfffb91a72a5c436cf2cfb8e2c5fdb66a2))
+
+
+
+
+
+## [2.3.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.3.22...@kong-ui-public/sandbox-layout@2.3.23) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.42.0 ([#2857](https://github.com/Kong/public-ui-components/issues/2857)) ([bb65b9e](https://github.com/Kong/public-ui-components/commit/bb65b9eea7489142268aee86d5cdb6de338762f9))
+
+
+
+
+
+## [2.3.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.3.21...@kong-ui-public/sandbox-layout@2.3.22) (2026-01-21)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.3.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.3.20...@kong-ui-public/sandbox-layout@2.3.21) (2026-01-19)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.3.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.3.19...@kong-ui-public/sandbox-layout@2.3.20) (2026-01-16)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.3.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.3.18...@kong-ui-public/sandbox-layout@2.3.19) (2026-01-07)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.3.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.3.17...@kong-ui-public/sandbox-layout@2.3.18) (2026-01-07)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
 ## [2.3.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.3.16...@kong-ui-public/sandbox-layout@2.3.17) (2025-12-27)
 
 **Note:** Version bump only for package @kong-ui-public/sandbox-layout

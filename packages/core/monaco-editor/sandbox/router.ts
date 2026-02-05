@@ -21,6 +21,16 @@ const routes = [
     name: 'Toolbar',
     component: () => import('./pages/ToolbarPage.vue'),
   },
+  {
+    path: '/dynamic-lang',
+    name: 'DynamicLang',
+    component: () => import('./pages/DynamicLangPage.vue'),
+  },
+  {
+    path: '/composable',
+    name: 'Composable',
+    component: () => import('./pages/ComposablePage.vue'),
+  },
 ]
 
 export const router = createRouter({

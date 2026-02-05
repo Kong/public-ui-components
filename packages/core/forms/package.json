@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/forms",
-  "version": "4.20.19",
+  "version": "4.21.2",
   "type": "module",
   "main": "./dist/forms.umd.js",
   "module": "./dist/forms.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/forms.es.js",
-      "require": "./dist/forms.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/forms.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -51,23 +51,23 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong/icons": "^1.41.0",
+    "@kong/icons": "^1.42.0",
     "dompurify": "^3.3.1",
     "fecha": "^4.2.3",
-    "lodash-es": "^4.17.22"
+    "lodash-es": "^4.17.23"
   },
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.48.8",
+    "@kong/kongponents": "^9.50.0",
     "axios": "^1.13.2",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   },
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.2",
-    "@kong/kongponents": "9.48.8",
+    "@kong/kongponents": "9.50.0",
     "@types/lodash-es": "^4.17.12",
     "axios": "^1.13.2",
     "pug": "^3.0.3"

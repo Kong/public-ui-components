@@ -408,12 +408,12 @@ const topNTableData = computed<ExploreResultV4>(() => {
 
     const meta: QueryResponseMeta = {
       display,
-      end_ms: 1692295253000,
+      end: '2023-08-17T18:00:53.000Z',
       granularity_ms: 300000,
       limit: 50,
       metric_names: [scenario.metricKey],
       query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
-      start_ms: 1692294953000,
+      start: '2023-08-17T17:55:53.000Z',
     } as unknown as QueryResponseMeta
 
     const routeIds = Object.keys(display.route)
@@ -491,14 +491,14 @@ const topNTableData = computed<ExploreResultV4>(() => {
 
   const meta: QueryResponseMeta = {
     display,
-    end_ms: 1692295253000,
+    end: '2023-08-17T18:00:53.000Z',
     granularity_ms: 300000,
     limit: 50,
     metric_names: selectedScenarios.map((scenario) => {
       return scenario.metricKey
     }),
     query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
-    start_ms: 1692294953000,
+    start: '2023-08-17T17:55:53.000Z',
   } as unknown as QueryResponseMeta
 
   const metricUnits: Record<string, string> = {}

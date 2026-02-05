@@ -33,9 +33,10 @@
 </template>
 
 <script setup lang="ts">
-import { provide, ref } from 'vue'
+import { computed, provide, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
+import { FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
 
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
 import { ToastManager } from '@kong/kongponents'
@@ -61,6 +62,7 @@ defineProps({
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefined
+provide(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => pluginFormEngine === 'free-form'))
 
 useProvideExperimentalFreeForms([
   'service-protection',

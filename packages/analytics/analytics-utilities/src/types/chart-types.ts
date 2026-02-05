@@ -6,6 +6,7 @@ export const reportChartTypes = [
   'timeseries_bar',
   'donut',
   'single_value',
+  'top_n',
 ] as const
 
 export type ReportChartTypes = typeof reportChartTypes[number]

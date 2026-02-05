@@ -1,4 +1,5 @@
 import StandardLayout from './StandardLayout.vue'
+import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../../constants'
 
 describe('<StandardLayout />', () => {
   const createBaseSchema = () => ({
@@ -107,7 +108,7 @@ describe('<StandardLayout />', () => {
       mountOptions.global = { provide }
     }
 
-    cy.mount(StandardLayout as any, mountOptions)
+    return cy.mount(StandardLayout as any, mountOptions)
   }
 
   it('should render with minimal required props', () => {
@@ -115,9 +116,10 @@ describe('<StandardLayout />', () => {
 
     cy.get('.ff-standard-layout').should('exist')
 
-    // Verify both EntityFormBlock sections render
-    cy.get('[data-testid="form-section-general-info"]').should('exist')
+    // Verify all sections render
+    cy.get('[data-testid="form-section-plugin-scope"]').should('exist')
     cy.get('[data-testid="form-section-plugin-config"]').should('exist')
+    cy.get('[data-testid="form-section-general-info"]').should('exist')
 
     // Verify scope radio group renders
     cy.get('.radio-group').should('exist')
@@ -168,6 +170,36 @@ describe('<StandardLayout />', () => {
       const call = (spy as any).getCall(0)
       expect(call.args[0]).to.have.property('service')
       expect(call.args[0].service).to.deep.equal({ id: 'test-service-123' })
+    })
+  })
+
+  it('should expose freeform schema on window and clean up on unmount', () => {
+    mountStandardLayout()
+      .then(({ wrapper }) => wrapper)
+      .as('vueWrapper')
+
+    cy.get('[data-testid="ff-standard-layout-form"]')
+      .invoke('attr', 'data-instance-id')
+      .as('instanceId')
+
+    cy.get('@instanceId').then((instanceId) => {
+      cy.window().then((win) => {
+        const map = (win as any)[FREE_FORM_SCHEMA_MAP_KEY]
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        expect(map).to.exist
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        expect(map[instanceId as unknown as string]).to.exist
+      })
+    })
+
+    cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+
+    cy.get('@instanceId').then((instanceId) => {
+      cy.window().then((win) => {
+        const map = (win as any)[FREE_FORM_SCHEMA_MAP_KEY]
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        expect(map?.[instanceId as unknown as string]).to.be.undefined
+      })
     })
   })
 })

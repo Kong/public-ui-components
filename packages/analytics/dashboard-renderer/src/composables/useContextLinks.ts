@@ -35,7 +35,20 @@ export default function useContextLinks(
   })
 
   const isAdvancedAnalytics = computed(() => analyticsConfigStore.analytics && analyticsConfigStore.percentiles)
-  const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(definition.value.chart.type))
+  const canShowKebabMenu = computed(() => {
+    const chartType = definition.value.chart.type
+    // Always hide for golden_signals and gauge
+    if (['golden_signals', 'gauge'].includes(chartType)) {
+      return false
+    }
+
+    // For top_n, only show if context is editable
+    if (chartType === 'top_n') {
+      return context.value.editable ?? false
+    }
+
+    return true
+  })
 
   const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && isAdvancedAnalytics.value)
   const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['basic', 'api_usage', 'llm_usage', undefined].includes(definition.value.query.datasource) && isAdvancedAnalytics.value)
@@ -93,12 +106,15 @@ export default function useContextLinks(
   }
 
   const buildRequestsQueryKebabMenu = (timeRange: TimeRangeV4, filters: DeepReadonly<AllFilters[]>) => {
+    const start = chartData.value?.meta?.start ? new Date(chartData.value.meta.start) : undefined
+    const end = chartData.value?.meta?.end ? new Date(chartData.value.meta.end) : undefined
+
     return {
       filter: filters,
       timeframe: {
         timePeriodsKey: timeRange.type === 'relative' ? timeRange.time_range : 'custom',
-        start: timeRange.type === 'absolute' ? chartData.value?.meta.start_ms : undefined,
-        end: timeRange.type === 'absolute' ? chartData.value?.meta.end_ms : undefined,
+        start: timeRange.type === 'absolute' ? start : undefined,
+        end: timeRange.type === 'absolute' ? end : undefined,
       },
     }
   }

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-geo-map",
-  "version": "1.4.40",
+  "version": "1.4.59",
   "type": "module",
   "main": "./dist/vitals-geo-map.umd.js",
   "module": "./dist/vitals-geo-map.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/vitals-geo-map.es.js",
-      "require": "./dist/vitals-geo-map.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/vitals-geo-map.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -41,11 +41,11 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.2",
-    "@kong/kongponents": "9.48.8",
+    "@kong/kongponents": "9.50.0",
     "@types/geobuf": "^3.0.4",
     "@types/geojson": "^7946.0.16",
-    "maplibre-gl": "^4.7.1",
-    "vue": "^3.5.26"
+    "maplibre-gl": "^5.16.0",
+    "vue": "^3.5.27"
   },
   "repository": {
     "type": "git",
@@ -66,13 +66,13 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.48.8",
+    "@kong/kongponents": "9.50.0",
     "maplibre-gl": "workspace:^",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   },
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "@kong/icons": "^1.41.0",
+    "@kong/icons": "^1.42.0",
     "geobuf": "^3.0.2"
   }
 }

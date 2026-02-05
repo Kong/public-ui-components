@@ -50,6 +50,7 @@
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
       :items="inputOptions"
+      node-type="json_to_xml"
       @add:field="handleAddField"
       @change:input="setInput"
       @change:inputs="setInputs"

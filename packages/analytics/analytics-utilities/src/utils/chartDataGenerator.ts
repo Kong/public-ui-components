@@ -75,8 +75,6 @@ export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?
   }
 
   const meta: QueryResponseMeta = {
-    start_ms: start,
-    end_ms: end,
     start: new Date(start).toISOString(),
     end: new Date(end).toISOString(),
     query_id: '12345',
@@ -125,8 +123,6 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[], metaOver
   }
 
   const meta: QueryResponseMeta = {
-    start_ms: start,
-    end_ms: end,
     start: new Date(start).toISOString(),
     end: new Date(end).toISOString(),
     query_id: '12345',
@@ -211,8 +207,6 @@ export const generateCrossSectionalData = (metrics: Metric[], dimensionMap?: Dim
   }
 
   const meta: QueryResponseMeta = {
-    start_ms: start,
-    end_ms: end,
     start: new Date(start).toISOString(),
     end: new Date(end).toISOString(),
     query_id: '12345',

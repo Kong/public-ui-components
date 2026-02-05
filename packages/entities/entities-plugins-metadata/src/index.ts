@@ -1,5 +1,7 @@
 import { PluginGroup, PluginScope } from './types'
 
+// gatewayVersion marks the version when the plugin was introduced.
+// For plugins introduced before 3.12, gatewayVersion is omitted
 export const PLUGIN_GROUP_AND_SCOPE_MAP = {
   'basic-auth': {
     name: 'Basic Authentication',
@@ -648,61 +650,77 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     description: 'Enable Developer Self-Service for Konnect Dev Portals.',
     group: PluginGroup.AUTHENTICATION,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    gatewayVersion: '3.12',
   },
   'solace-consume': {
     name: 'Solace Consume',
     description: 'Consume messages from Solace and make them available through HTTP endpoints.',
     group: PluginGroup.TRAFFIC_CONTROL,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    gatewayVersion: '3.12',
   },
   'solace-log': {
     name: 'Solace Log',
     description: 'Publish request and response logs to a Solace topic.',
     group: PluginGroup.LOGGING,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    gatewayVersion: '3.12',
   },
   'ai-llm-as-judge': {
     name: 'AI LLM Judge',
     description: 'Evaluate LLM responses with an external LLM service and use accuracy scores to drive dynamic load balancing for `llm/v1/chat` requests.',
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    gatewayVersion: '3.12',
   },
   'ai-mcp-proxy': {
     name: 'AI MCP Proxy',
     description: 'Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools, and observe MCP traffic in real time.',
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    gatewayVersion: '3.12',
   },
   'ai-gcp-model-armor': {
     name: 'AI GCP Model Armor',
     description: 'Audit and validate AI Proxy messages with Google Cloud Model Armor before forwarding them to an upstream LLM.',
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    gatewayVersion: '3.12',
   },
   'ai-mcp-oauth2': {
     name: 'AI MCP OAuth2',
     description: 'Secure MCP server access with OAuth2 authentication.',
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    gatewayVersion: '3.12',
   },
   'ai-semantic-response-guard': {
     name: 'AI Semantic Response Guard',
     description: 'Permit or block prompts based on semantic similarity to known LLM responses, preventing misuse of `llm/v1/chat` or `llm/v1/completions` requests.',
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    gatewayVersion: '3.12',
   },
   'ai-lakera-guard': {
     name: 'AI Lakera Guard',
     description: 'Audit and enforce safety policies on LLM requests and responses using the AI AWS Lakera plugin before they reach upstream LLMs.',
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    gatewayVersion: '3.13',
   },
 } satisfies Record<string, {
   name: string
   description: string
   group: PluginGroup
   scope: PluginScope[]
+  gatewayVersion?: string
 }>
+
+export const GATEWAY_VERSION_TIMESTAMP_MAP: Record<string, number> = {
+  '3.11': 1751571180000,
+  '3.12': 1759519200000,
+  '3.13': 1766156460000,
+}
 
 export type PluginName = keyof typeof PLUGIN_GROUP_AND_SCOPE_MAP
 

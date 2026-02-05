@@ -4,6 +4,9 @@
     class="ff-standard-layout"
     :config="realFormConfig"
     :data="(prunedData as T)"
+    :data-instance-id="instanceId"
+    :data-plugin-name="pluginName"
+    data-testid="ff-standard-layout-form"
     :render-rules="renderRules"
     :schema="freeFormSchema"
     tag="div"
@@ -18,26 +21,21 @@
 
       <!-- Identity Realms field (key-auth plugin only) -->
       <FieldRenderer
-        v-slot="props"
+        v-slot="slotProps"
         :match="({ path }) => pluginName === 'key-auth' && path === 'config.identity_realms'"
       >
-        <IdentityRealmsField v-bind="props" />
+        <IdentityRealmsField v-bind="slotProps" />
       </FieldRenderer>
     </template>
 
     <template v-if="editorMode === 'form'">
+      <!-- Plugin scope -->
       <EntityFormBlock
-        data-testid="form-section-general-info"
-        :description="generalInfoDescription ?? t('plugins.form.sections.general_info.description')"
+        data-testid="form-section-plugin-scope"
+        :description="generalInfoDescription ?? t('plugins.form.sections.plugin_scope.description')"
         :step="1"
-        :title="generalInfoTitle ?? t('plugins.form.sections.general_info.title')"
+        :title="generalInfoTitle ?? t('plugins.form.sections.plugin_scope.title')"
       >
-        <div class="enabled">
-          <VFGField
-            :form-options="formOptions"
-            :vfg-schema="enabledSchema"
-          />
-        </div>
         <component
           :is="scopeSchema?.disabled ? KTooltip : 'div'"
           v-bind="scopeWrapperAttrs"
@@ -74,15 +72,6 @@
             :vfg-schema="scopeEntitiesSchema"
           />
         </div>
-        <KCollapse
-          v-model="moreCollapsed"
-          trigger-label="Show more"
-        >
-          <VFGField
-            :form-options="formOptions"
-            :vfg-schema="moreFieldsSchema"
-          />
-        </KCollapse>
 
         <template
           v-if="slots['general-info-title']"
@@ -105,6 +94,8 @@
           <slot name="general-info-extra" />
         </template>
       </EntityFormBlock>
+
+      <!-- Plugin configuration -->
       <EntityFormBlock
         data-testid="form-section-plugin-config"
         :description="pluginConfigDescription ?? t('plugins.form.sections.plugin_config.description')"
@@ -134,10 +125,48 @@
           <slot name="plugin-config-extra" />
         </template>
       </EntityFormBlock>
+
+      <!-- General information -->
+      <EntityFormBlock
+        data-testid="form-section-general-info"
+        :description="t('plugins.form.sections.plugin_general_info.description')"
+        :step="3"
+        :title="t('plugins.form.sections.general_info.title')"
+      >
+        <VFGField
+          :form-options="formOptions"
+          :vfg-schema="enabledSchema"
+        />
+
+        <StringField
+          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'instance_name')"
+          :label="t('plugins.form.fields.instance_name.label')"
+          name="instance_name"
+          :placeholder="t('plugins.form.fields.instance_name.placeholder')"
+        />
+
+        <StringArrayField
+          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'tags')"
+          :help="t('plugins.form.fields.tags.help')"
+          name="tags"
+          :placeholder="t('plugins.form.fields.tags.placeholder')"
+        />
+
+        <Field
+          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'protocols')"
+          name="protocols"
+        />
+      </EntityFormBlock>
     </template>
+
     <template v-else>
-      <!-- TODO: Implement default code editor -->
-      <slot name="code-editor" />
+      <EntityFormBlock
+        :description="t('plugins.form.sections.code_mode.description')"
+        :title="t('plugins.form.sections.code_mode.title')"
+      >
+        <!-- TODO: Implement default code editor -->
+        <slot name="code-editor" />
+      </EntityFormBlock>
     </template>
   </Form>
 </template>
@@ -171,7 +200,7 @@ export type Props<T extends FreeFormPluginData = any> = {
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, inject, nextTick, ref, useTemplateRef } from 'vue'
+import { computed, inject, nextTick, ref, useTemplateRef, toRaw, useId, watch, onUnmounted } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
 import { KRadio, KTooltip } from '@kong/kongponents'
@@ -188,6 +217,10 @@ import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
 import { FIELD_RENDERERS } from '../composables'
 import IdentityRealmsField from '../../../fields/key-auth-identity-realms/FreeFormAdapter.vue'
+import Field from '../Field.vue'
+import StringArrayField from '../StringArrayField.vue'
+import StringField from '../StringField.vue'
+import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../../constants'
 
 const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   // plugin specific config
@@ -207,6 +240,8 @@ const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   'route',
   'service',
 ]
+
+const instanceId = useId()
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -287,7 +322,17 @@ const flattenFormSchemaFields = computed<LegacyFormSchemaField[]>(() => {
 
 const enabledSchema = computed(() => {
   return {
-    fields: flattenFormSchemaFields.value.filter(field => field.model === 'enabled'),
+    fields: flattenFormSchemaFields.value
+      .filter(field => field.model === 'enabled')
+      .map(field => {
+        return {
+          ...field,
+          styleClasses: 'ff-enabled-field',
+          label: t('plugins.form.fields.plugin_status.label'),
+          textOn: t('plugins.form.fields.plugin_status.text_on'),
+          textOff: t('plugins.form.fields.plugin_status.text_off'),
+        }
+      }),
   }
 })
 
@@ -360,6 +405,13 @@ const freeFormSchema = computed(() => {
             one_of: field.values.map((v: any) => v.value),
           },
           default: [...field.default],
+          required: field.required,
+          description: field.help,
+          help: field.default
+            ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
+              protocols: field.default.join(', '),
+            })
+            : t('plugins.form.fields.protocols.placeholder'),
         },
       })
     } else if (field.model === 'tags') {
@@ -369,6 +421,8 @@ const freeFormSchema = computed(() => {
           elements: {
             type: 'string',
           },
+          description: field.help,
+          default: field.default || [],
         },
       })
     } else {
@@ -404,7 +458,6 @@ const scopesCache = ref(
 
 // `scopeIds` is not reactive. Initialize `scoped` in one shot.
 const scoped = ref(Object.values(scopesCache.value).some(hasScopeId))
-const moreCollapsed = ref(true)
 
 const formRef = useTemplateRef('form')
 let skipUpdateScopeCache = false
@@ -483,6 +536,24 @@ function getScopesFromFormModel(): Partial<T> {
   })
   return data
 }
+
+/**
+ * This watch is used to expose the plugin schema for auto-filler.
+ * The auto-filler script requires the **final** schema to be used in the freeform.
+ */
+watch(freeFormSchema, (newSchema) => {
+  if (!(window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
+    (window as any)[FREE_FORM_SCHEMA_MAP_KEY] = {}
+  }
+  ;(window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId] = toRaw(newSchema)
+}, { immediate: true, deep: true })
+
+// Clean up the schema on unmount
+onUnmounted(() => {
+  if ((window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
+    delete (window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId]
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -490,7 +561,6 @@ function getScopesFromFormModel(): Partial<T> {
   display: flex;
   flex-direction: column;
   gap: $kui-space-80;
-  padding-bottom: $kui-space-80;
 
   .radio-group {
     width: 100%;
@@ -505,6 +575,16 @@ function getScopesFromFormModel(): Partial<T> {
 
   :deep(.form-group) {
     margin-bottom: $kui-space-70;
+  }
+
+  :deep(.ff-enabled-field) {
+    & > .field-wrap label {
+      font-weight: unset;
+    }
+
+    & > label > .icon-wrapper {
+      font-weight: $kui-font-weight-semibold;
+    }
   }
 }
 </style>

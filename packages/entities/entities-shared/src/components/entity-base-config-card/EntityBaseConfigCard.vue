@@ -73,6 +73,7 @@
 
     <!-- Properties Content -->
     <div
+      v-else
       class="config-card-details-section"
     >
       <ConfigCardDisplay
@@ -117,7 +118,7 @@ import type {
   SupportedEntityType,
   PolicyConfigurationSchema,
 } from '../../types'
-import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray } from '../../types'
+import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray, SupportedEntityDeckArray } from '../../types'
 import composables from '../../composables'
 import ConfigCardDisplay, { type CodeFormat, type Format } from './ConfigCardDisplay.vue'
 import { BookIcon } from '@kong/icons'
@@ -287,6 +288,16 @@ if (props.config.app === 'konnect') {
   configFormatItems.splice(2, 0, {
     label: t('baseForm.configuration.terraform'),
     value: 'terraform',
+  })
+}
+// decK is only available for certain entity types
+// https://developer.konghq.com/deck/reference/entities/
+const isSupportedEntity = SupportedEntityDeckArray.includes(props.entityType as any)
+const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckConfig
+if (isDeckEnabled && isSupportedEntity) {
+  configFormatItems.push({
+    label: t('baseForm.configuration.deck'),
+    value: 'deck',
   })
 }
 
