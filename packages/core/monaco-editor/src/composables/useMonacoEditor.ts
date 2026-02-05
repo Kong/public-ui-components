@@ -1,5 +1,6 @@
 import { onActivated, onBeforeUnmount, onMounted, onWatcherCleanup, reactive, ref, shallowRef, toValue, watch } from 'vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
+import { parseKeybinding } from '../utils/commands'
 import { useDebounceFn } from '@vueuse/core'
 
 import * as monaco from 'monaco-editor'
@@ -7,8 +8,8 @@ import { shikiToMonaco } from '@shikijs/monaco'
 import { getSingletonHighlighter, bundledLanguages, bundledThemes } from 'shiki'
 
 import type { MaybeRefOrGetter } from 'vue'
-import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
 import type { editor as Editor } from 'monaco-editor'
+import type { MonacoEditorStates, UseMonacoEditorOptions, MonacoEditorActionConfig } from '../types'
 
 // Flag if monaco loaded
 const isMonacoLoaded = ref(false)
@@ -137,6 +138,60 @@ export function useMonacoEditor<T extends HTMLElement>(
   /** Remeasure fonts in the editor with debouncing to optimize performance */
   const remeasureFonts = useDebounceFn(() => monaco.editor.remeasureFonts(), 200)
 
+  /**
+   * Register custom actions with the Monaco editor
+   * @param actions Array of action configurations to register
+   */
+  const registerActions = (actions: MonacoEditorActionConfig[]): void => {
+    if (!editor.value || !actions?.length) return
+
+    actions.forEach((actionConfig) => {
+      if (!actionConfig.id || !actionConfig.action) return
+
+      try {
+        const actionDescriptor: Editor.IActionDescriptor = {
+          id: actionConfig.id,
+          label: actionConfig.label || actionConfig.id,
+          keybindings: actionConfig.keybindings
+            ? [parseKeybinding(actionConfig.keybindings)].filter((kb): kb is number => kb !== undefined)
+            : undefined,
+          contextMenuGroupId: actionConfig.showInContextMenu ? (actionConfig.contextMenuGroupId || 'basic') : undefined,
+          contextMenuOrder: actionConfig.contextMenuOrder ?? 1.5,
+          run: (editorInstance) => {
+            if (typeof actionConfig.action === 'function') {
+              // Call the action with the composable context
+              actionConfig.action({
+                editor,
+                editorStates,
+                setContent,
+                setReadOnly,
+                focus,
+                setLanguage,
+                remeasureFonts,
+                toggleSearchWidget,
+                triggerKeyboardCommand,
+                registerActions,
+              })
+            } else if (typeof actionConfig.action === 'string') {
+              // If it's a string ID, try to run the corresponding Monaco action
+              console.log('Triggering built-in action:', actionConfig.action)
+              const targetAction = editorInstance.getAction(actionConfig.action)
+              if (targetAction) {
+                targetAction.run()
+              } else {
+                // Fallback: try triggering as keyboard command
+                triggerKeyboardCommand(actionConfig.action)
+              }
+            }
+          },
+        }
+
+        editor.value?.addAction(actionDescriptor)
+      } catch (error) {
+        console.error(`useMonacoEditor: Failed to register action: ${actionConfig.id}`, error)
+      }
+    })
+  }
 
   const init = (): void => {
     loadMonaco()
@@ -185,7 +240,10 @@ export function useMonacoEditor<T extends HTMLElement>(
         options.code.value = content
       })
 
-      // TODO: register editor actions
+      // Register custom actions with the editor
+      if (options.actions?.length) {
+        registerActions(options.actions)
+      }
 
       options.onReady?.(editor.value)
 
@@ -274,6 +332,7 @@ export function useMonacoEditor<T extends HTMLElement>(
     focus,
     setLanguage,
     remeasureFonts,
+    registerActions,
     toggleSearchWidget,
     triggerKeyboardCommand,
   }

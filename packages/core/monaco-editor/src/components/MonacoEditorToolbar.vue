@@ -1,39 +1,74 @@
 <template>
   <div class="monaco-editor-ui-toolbar">
-    <div class="monaco-editor-ui-toolbar-left">
-      <!-- TODO -->
+    <div
+      v-if="leftGroups.length > 0"
+      class="monaco-editor-ui-toolbar-left"
+    >
       <div
-        v-for="group in 1"
-        :key="group"
+        v-for="(group, groupIndex) in leftGroups"
+        :key="groupIndex"
         class="monaco-editor-ui-toolbar-action-group"
       >
         <ToolbarActionButton
-          v-for="item, index in commands"
-          :key="item.id || index"
+          v-for="item in group"
+          :key="item.id!"
           :active="editor?.editorStates.editorStatus === 'ready'"
           :item="{
-            ...item,
-            action: typeof item.action === 'function'
-              ? () => item.action(editor)
-              : () => editor?.triggerKeyboardCommand(item.action as any),
+            id: item.id!,
+            label: item.label,
+            icon: item.icon!,
+            keybindings: item.keybindings,
+            action: () => executeToolbarAction(item, editor),
           }"
-          :placement="index === 0 ? 'bottom-start' : 'bottom'"
+          :placement="groupIndex === 0 ? 'bottom-start' : 'bottom'"
         />
       </div>
     </div>
-    <div class="monaco-editor-ui-toolbar-centre" />
-    <div class="monaco-editor-ui-toolbar-right">
-      <div class="monaco-editor-ui-toolbar-action-group">
+    <div
+      v-if="centerGroups.length > 0"
+      class="monaco-editor-ui-toolbar-centre"
+    >
+      <div
+        v-for="(group, groupIndex) in centerGroups"
+        :key="groupIndex"
+        class="monaco-editor-ui-toolbar-action-group"
+      >
         <ToolbarActionButton
+          v-for="item in group"
+          :key="item.id!"
           :active="editor?.editorStates.editorStatus === 'ready'"
           :item="{
-            id: 'search',
-            icon: SearchIcon,
-            label: i18n.t('editor.labels.action_search'),
-            ariaLabel: i18n.t('editor.labels.action_search_label'),
-            action: () => editor?.toggleSearchWidget(),
-            keybindings: ['Command', 'F'],
+            id: item.id!,
+            label: item.label,
+            icon: item.icon!,
+            keybindings: item.keybindings,
+            action: () => executeToolbarAction(item, editor),
           }"
+          placement="bottom"
+        />
+      </div>
+    </div>
+    <div
+      v-if="rightGroups.length > 0"
+      class="monaco-editor-ui-toolbar-right"
+    >
+      <div
+        v-for="(group, groupIndex) in rightGroups"
+        :key="groupIndex"
+        class="monaco-editor-ui-toolbar-action-group"
+      >
+        <ToolbarActionButton
+          v-for="item in group"
+          :key="item.id!"
+          :active="editor?.editorStates.editorStatus === 'ready'"
+          :item="{
+            id: item.id!,
+            label: item.label,
+            icon: item.icon!,
+            keybindings: item.keybindings,
+            action: () => executeToolbarAction(item, editor),
+          }"
+          :placement="groupIndex === rightGroups.length - 1 ? 'bottom-end' : 'bottom'"
         />
       </div>
     </div>
@@ -41,16 +76,16 @@
 </template>
 
 <script lang="ts" setup>
+import { watch } from 'vue'
 import ToolbarActionButton from './ToolbarActionButton.vue'
-import { SearchIcon } from '@kong/icons'
 import useI18n from '../composables/useI18n'
-import type { MonacoEditorActionButton, MonacoEditorToolbarOptions } from '../types'
+import { useToolbarActions } from '../composables/useToolbarActions'
+import { executeToolbarAction } from '../utils/commands'
+import type { MonacoEditorToolbarOptions } from '../types'
 import type { useMonacoEditor } from '../composables/useMonacoEditor'
-import { computed } from 'vue'
 
 const {
   editor = null,
-  items = [],
   settings,
 } = defineProps<{
   /**
@@ -60,62 +95,28 @@ const {
    */
   editor?: ReturnType<typeof useMonacoEditor> | null
   /**
-   * The items to show in the toolbar.
-   *
-   * @default []
+   * Toolbar configuration settings
    */
-  items?: MonacoEditorActionButton[][]
-  //
   settings: boolean | MonacoEditorToolbarOptions
 }>()
 
 const { i18n } = useI18n()
 
-const builtInCommands: Record<string, MonacoEditorActionButton> = {
-  // we can extend these to format, full-screen and etc.
-  search: {
-    id: 'search',
-    icon: SearchIcon,
-    label: i18n.t('editor.labels.action_search'),
-    action: (editor: ReturnType<typeof useMonacoEditor>) => editor.toggleSearchWidget(),
-    keybindings: ['Command', 'F'],
-  },
-}
+const { commands, leftGroups, centerGroups, rightGroups } = useToolbarActions(
+  settings,
+  (key: string) => i18n.t(key as any) as string,
+)
 
-const commands = computed(() => {
-  const result: MonacoEditorActionButton[] = []
-
-  const userCommands = typeof settings === 'object' ? settings?.commands || {} : {}
-
-  // Built-in
-  for (const key in builtInCommands) {
-    const userConfig = userCommands[key]
-    if (userConfig === false) continue // disable
-
-    const merged = {
-      ...builtInCommands[key],
-      ...(typeof userConfig === 'object' ? userConfig : {}),
-    }
-
-    result.push(merged)
+/**
+ * Register actions with Monaco editor when the editor becomes ready
+ */
+watch(() => editor?.editorStates.editorStatus, (status) => {
+  if (status === 'ready' && editor && commands.value.length > 0) {
+    // Register all commands as Monaco actions
+    editor.registerActions(commands.value)
   }
-
-  // Custom user commands
-  for (const key in userCommands) {
-    if (key in builtInCommands) continue
-    const cfg = userCommands[key]
-    if (cfg === false) continue
-
-    result.push({
-      id: key,
-      label: (cfg as any)?.label || key,
-      icon: (cfg as any)?.icon,
-      action: (cfg as any)?.action,
-      // order: (cfg as any)?.order || 99,
-    })
-  }
-
-  return result
+}, {
+  immediate: true,
 })
 </script>
 
@@ -149,12 +150,12 @@ $defaultHeight: 44px;
     height: 100%;
   }
 
-  &.-left,
-  &.-right {
+  &-left,
+  &-right {
     flex: 1 1 0%;
   }
 
-  &-.right {
+  &-right {
     justify-content: flex-end;
   }
 

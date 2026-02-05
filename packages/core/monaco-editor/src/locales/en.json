@@ -2,10 +2,11 @@
   "editor": {
     "labels": {
       "action_search": "Search",
-      "action_full_screen": "Full Screen",
       "action_search_label": "Search document",
       "action_format": "Format",
       "action_format_label": "Format document",
+      "action_fullscreen": "Full Screen",
+      "action_fullscreen_label": "Toggle full screen mode",
       "key": "Key: {key}"
     },
     "messages": {
