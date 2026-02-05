@@ -1107,6 +1107,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         },
       })
 
+      cy.get('[data-testid="route-form-config-type-basic"] + label').should('have.text', 'Quickly set up a route with HTTPS protocol with the essentials: path, method, and host.')
       cy.getTestId('route-form-config-type-advanced').click()
       // the value passed to KSelect is lowercase but somehow the input value is the uppercase label rather than the lowercase value.
       cy.getTestId('route-form-protocols').should('have.value', DEFAULT_PROTOCOL.toUpperCase())
