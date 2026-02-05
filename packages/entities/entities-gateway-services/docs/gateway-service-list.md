@@ -172,7 +172,7 @@ Indicates that the user is in the onboarding Serverless control plane and should
 - required: `false`
 - default: `false`
 
-Indicates whether the gateway service can be created via importing Open API specs. If true, the create button will be rendered into `KDropdown` 
+Indicates whether the gateway service can be created via importing Open API specs. If true, the create button will be rendered into `KDropdown`.
 
 ### Events
 
@@ -195,6 +195,11 @@ A `@delete:success` event is emitted when a gateway service is successfully dele
 #### toggle:success
 
 A `@toggle:success` event is emitted when a gateway service's enabled state is successfully toggled. The event payload is the gateway service item data object.
+
+#### click:import
+
+A `@click:import` event is emitted when the user clicks the "Import via Open API spec" button in the empty state. The event payload is null.
+
 
 ### Usage example
 

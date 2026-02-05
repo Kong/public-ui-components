@@ -89,10 +89,16 @@
                 width="220"
               >
                 <template #items>
-                  <KDropdownItem @click="handleCreate">
+                  <KDropdownItem
+                    data-testid="entity-create-dropdown-item"
+                    @click="handleCreate"
+                  >
                     {{ t('gateway_services.empty_state_v2.create_new') }}
                   </KDropdownItem>
-                  <KDropdownItem @click="$emit('click:import')">
+                  <KDropdownItem
+                    data-testid="entity-import-dropdown-item"
+                    @click="$emit('click:import')"
+                  >
                     {{ t('gateway_services.empty_state_v2.import_spec') }}
                   </KDropdownItem>
                 </template>

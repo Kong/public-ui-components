@@ -571,14 +571,17 @@ describe('<GatewayServiceList />', () => {
           canDelete: () => false,
           canRetrieve: () => false,
           canImportSpecs: true,
+          'onClick:import': cy.stub().as('importSpec'),
         },
       })
 
       cy.wait('@getGatewayServices')
       cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
       cy.getTestId('gateway-services-entity-empty-state').should('be.visible')
-      cy.getTestId('entity-create-dropdown').should('be.visible')
       cy.getTestId('entity-create-button').should('not.exist')
+      cy.getTestId('entity-create-dropdown').should('be.visible').click()
+      cy.getTestId('entity-import-dropdown-item').should('be.visible').click()
+      cy.get('@importSpec').should('have.been.called')
     })
 
     it('should hide empty state and create gateway service cta if user can not create', () => {
