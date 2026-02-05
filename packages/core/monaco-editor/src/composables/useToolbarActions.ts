@@ -1,6 +1,9 @@
 import { computed } from 'vue'
 import { BUILT_IN_TOOLBAR_ACTIONS } from '../constants/toolbar-actions'
-import type { MonacoEditorActionConfig, MonacoEditorToolbarOptions } from '../types'
+import type { MonacoEditorActionConfig, MonacoEditorToolbarOptions, ToolbarGroupPlacement } from '../types'
+
+const DEFAULT_PLACEMENT: ToolbarGroupPlacement = 'left'
+const DEFAULT_ORDER = 100
 
 /**
  * Composable for processing and organizing toolbar actions
@@ -12,7 +15,7 @@ export function useToolbarActions(
   /**
    * Process and merge user commands with built-in commands
    */
-  const commands = computed(() => {
+  const commands = computed<MonacoEditorActionConfig[]>(() => {
     const result: MonacoEditorActionConfig[] = []
 
     // If settings is true, show all built-in commands
@@ -46,14 +49,14 @@ export function useToolbarActions(
         icon: cfg.icon,
         action: cfg.action,
         keybindings: cfg.keybindings,
-        placement: cfg.placement || 'left',
-        order: cfg.order ?? 100,
+        placement: cfg.placement || DEFAULT_PLACEMENT,
+        order: cfg.order ?? DEFAULT_ORDER,
         group: cfg.group,
       } : {
         id: key,
         label: key,
-        placement: 'left',
-        order: 100,
+        placement: DEFAULT_PLACEMENT,
+        order: DEFAULT_ORDER,
       } as MonacoEditorActionConfig
 
       if (commandConfig.icon && commandConfig.action) {
@@ -67,7 +70,7 @@ export function useToolbarActions(
   /**
    * Group commands by placement and then by group
    */
-  const groupCommands = (placement: 'left' | 'center' | 'right'): MonacoEditorActionConfig[][] => {
+  const groupCommands = (placement: ToolbarGroupPlacement): MonacoEditorActionConfig[][] => {
     const placementCommands = commands.value
       .filter(cmd => (cmd.placement || 'left') === placement)
       .sort((a, b) => (a.order ?? 100) - (b.order ?? 100))
@@ -88,9 +91,9 @@ export function useToolbarActions(
     return Array.from(grouped.values())
   }
 
-  const leftGroups = computed(() => groupCommands('left'))
-  const centerGroups = computed(() => groupCommands('center'))
-  const rightGroups = computed(() => groupCommands('right'))
+  const leftGroups = computed<MonacoEditorActionConfig[][]>(() => groupCommands('left'))
+  const centerGroups = computed<MonacoEditorActionConfig[][]>(() => groupCommands('center'))
+  const rightGroups = computed<MonacoEditorActionConfig[][]>(() => groupCommands('right'))
 
   return {
     commands,

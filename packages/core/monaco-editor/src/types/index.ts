@@ -102,7 +102,7 @@ export interface MonacoEditorActionConfig extends Partial<MonacoEditorActionButt
    * Where the action should appear in the toolbar
    * @default 'left'
    */
-  placement?: 'left' | 'center' | 'right'
+  placement?: ToolbarGroupPlacement
   /**
    * Order of the action within its placement (lower numbers appear first)
    * @default 100
@@ -151,3 +151,5 @@ export interface MonacoEditorToolbarOptions {
     [key: string]: boolean | MonacoEditorActionConfig | undefined
   }
 }
+
+export type ToolbarGroupPlacement = 'left' | 'center' | 'right'
