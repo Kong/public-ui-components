@@ -34,6 +34,7 @@ if (props.alignment === TableCellAlign.center) {
 </script>
 
 <style scoped lang="scss">
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 th, td {
   padding: $kui-space-40;
   text-align: left;

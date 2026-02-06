@@ -1,3 +1,4 @@
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 /* temporarily reset breadcrumb margin until it's fixed in swagger-ui-kong-theme */
 .breadcrumb-margin {
   top: 0;

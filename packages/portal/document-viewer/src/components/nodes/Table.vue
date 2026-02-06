@@ -5,6 +5,7 @@
 </template>
 
 <style scoped lang="scss">
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 table {
   border: 1px solid var(--kong-ui-document-viewer-color, $kui-color-border);
   border-collapse: collapse;

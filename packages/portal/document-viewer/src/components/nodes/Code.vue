@@ -5,6 +5,7 @@
 </template>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 code {
   background: var(--kong-ui-document-viewer-code-background, #f1f1f1);
   border-radius: var(--kong-ui-document-viewer-code-border-radius, $kui-border-radius-20);

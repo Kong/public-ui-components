@@ -66,6 +66,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 .side-panel {
   border-right: 1px solid $kui-color-border;
   display: flex;

@@ -100,6 +100,7 @@ function handlePanelToggle() {
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 .dk-editor-nav {
   align-items: center;
   display: flex;

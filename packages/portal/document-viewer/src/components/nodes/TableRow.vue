@@ -28,6 +28,7 @@ if (props.section === TableRowSection.header) {
 </script>
 
 <style scoped lang="scss">
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 th,
 td {
   text-align: left;

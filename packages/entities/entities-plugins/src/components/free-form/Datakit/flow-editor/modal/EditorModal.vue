@@ -58,6 +58,7 @@ function close() {
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 .dk-editor-modal {
   background-color: $kui-color-background-inverse;
   display: flex;

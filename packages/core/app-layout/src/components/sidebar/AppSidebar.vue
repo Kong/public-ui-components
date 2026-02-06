@@ -514,6 +514,7 @@ watch(() => props.groupConfig, (newConfig) => {
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 @use "../../styles/variables" as *;
 
 .kong-ui-app-sidebar {
