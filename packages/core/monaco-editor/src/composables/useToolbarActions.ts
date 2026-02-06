@@ -5,7 +5,6 @@ import type {
   MonacoEditorToolbarOptions,
   ToolbarGroupPlacement,
 } from '../types'
-import { FreeIcon } from '@kong/icons'
 
 const DEFAULT_PLACEMENT: ToolbarGroupPlacement = 'left'
 const DEFAULT_ORDER = 100
@@ -57,8 +56,6 @@ export function useToolbarActions(
       const base: MonacoEditorActionConfig = {
         id: key,
         label: typeof cfg === 'object' && cfg.label ? cfg.label : key,
-        action: undefined as any, // Placeholder, user must provide an action function
-        icon: FreeIcon, // Default icon, user can override
         placement: DEFAULT_PLACEMENT,
         order: DEFAULT_ORDER,
       }

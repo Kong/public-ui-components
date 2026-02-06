@@ -14,9 +14,9 @@
           :key="item.id"
           :active="editor?.editorStates.editorStatus === 'ready'"
           :item="{
-            id: item.id,
+            id: item.id!,
             label: item.label,
-            icon: item.icon,
+            icon: item.icon!,
             keybindings: item.keybindings,
             action: () => executeToolbarAction(item, editor),
           }"
@@ -38,9 +38,9 @@
           :key="item.id"
           :active="editor?.editorStates.editorStatus === 'ready'"
           :item="{
-            id: item.id,
+            id: item.id!,
             label: item.label,
-            icon: item.icon,
+            icon: item.icon!,
             keybindings: item.keybindings,
             action: () => executeToolbarAction(item, editor),
           }"
@@ -62,9 +62,9 @@
           :key="item.id"
           :active="editor?.editorStates.editorStatus === 'ready'"
           :item="{
-            id: item.id,
+            id: item.id!,
             label: item.label,
-            icon: item.icon,
+            icon: item.icon!,
             keybindings: item.keybindings,
             action: () => executeToolbarAction(item, editor),
           }"

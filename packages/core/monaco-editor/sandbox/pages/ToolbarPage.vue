@@ -3,11 +3,7 @@
     <MonacoEditor
       v-model="code1"
       language="json"
-      :toolbar="{
-        actions: {
-          format: false,
-        },
-      }"
+      :toolbar="true"
     />
     <MonacoEditor
       v-model="code2"
