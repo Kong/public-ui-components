@@ -19,6 +19,7 @@
   overflow: var(--kui-operation-summary-path-overflow, visible) !important;
   text-overflow: var(--kui-operation-summary-path-text-overflow, visible) !important;
   white-space: var(--kui-operation-summary-path-white-space, wrap) !important;
+  /* stylelint-disable-next-line property-no-deprecated */
   word-wrap: var(--kui-operation-summary-path-word-wrap, break-all) !important;
 }
 
