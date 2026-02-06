@@ -80,7 +80,8 @@ export interface MonacoEditorActionButton {
   label?: string
   /**
    * Keybindings associated with the action
-   * TODO: explain ctrl vs command etc.
+   * Modifier names are flexible (e.g. `Ctrl`, `Command`, `Cmd`, `Alt`, `Option`)
+   * since they are normalized internally by `parseKeybinding`.
    */
   keybindings?: string[]
   /** Icon component for the action button */

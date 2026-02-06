@@ -74,6 +74,7 @@ const {
   loading = false,
   showLoadingState = true,
   showEmptyState = true,
+  toolbar = undefined,
 } = defineProps<{
   /**
    * The appearance style of the Monaco Editor.
@@ -90,7 +91,13 @@ const {
    * @default 'markdown'
    */
   language?: string
-  // TODO: add comment
+  /**
+   * Configure the editor toolbar.
+   * - Pass `true` to show the toolbar with default actions
+   * - Pass a configuration object to customize toolbar actions and behavior
+   * - Pass `false` or omit to hide the toolbar
+   * @default undefined
+   */
   toolbar?: boolean | MonacoEditorToolbarOptions
   /**
    * Whether the editor is in a loading state.
