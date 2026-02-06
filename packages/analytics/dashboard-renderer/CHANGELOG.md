@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.7.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.5...@kong-ui-public/dashboard-renderer@8.7.6) (2026-02-06)
+
+
+### Bug Fixes
+
+* **analytics:** add showTileActions prop to context [MA-4794] ([#2910](https://github.com/Kong/public-ui-components/issues/2910)) ([b723ae3](https://github.com/Kong/public-ui-components/commit/b723ae3b2045ce716ae9e95e78960e11df86f153))
+
+
+
+
+
 ## [8.7.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.4...@kong-ui-public/dashboard-renderer@8.7.5) (2026-02-04)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
