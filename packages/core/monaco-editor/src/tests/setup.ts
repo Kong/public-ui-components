@@ -47,10 +47,32 @@ vi.mock('monaco-editor', () => {
     },
   }
 
+  // Mock KeyCode enum
+  const KeyCode = {
+    KeyA: 31,
+    KeyB: 32,
+    KeyK: 40,
+    KeyP: 41,
+    Digit5: 15,
+    F2: 61,
+    Enter: 3,
+    LeftArrow: 15,
+  }
+
+  // Mock KeyMod enum
+  const KeyMod = {
+    CtrlCmd: 1 << 11,
+    Shift: 1 << 10,
+    Alt: 1 << 9,
+    WinCtrl: 1 << 8,
+  }
+
   return {
     Uri,
     editor,
     languages,
     json,
+    KeyCode,
+    KeyMod,
   }
 })
