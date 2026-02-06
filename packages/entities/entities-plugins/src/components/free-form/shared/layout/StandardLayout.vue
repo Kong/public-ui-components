@@ -200,7 +200,7 @@ export type Props<T extends FreeFormPluginData = any> = {
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, inject, nextTick, ref, useTemplateRef, toRaw, useId, watch, onUnmounted } from 'vue'
+import { computed, inject, nextTick, ref, useTemplateRef, useId } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
 import { KRadio, KTooltip } from '@kong/kongponents'
@@ -215,12 +215,11 @@ import type { FormConfig, RenderRules } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
-import { FIELD_RENDERERS } from '../composables'
+import { FIELD_RENDERERS, useSchemaExposer } from '../composables'
 import IdentityRealmsField from '../../../fields/key-auth-identity-realms/FreeFormAdapter.vue'
 import Field from '../Field.vue'
 import StringArrayField from '../StringArrayField.vue'
 import StringField from '../StringField.vue'
-import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../../constants'
 
 const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   // plugin specific config
@@ -537,23 +536,7 @@ function getScopesFromFormModel(): Partial<T> {
   return data
 }
 
-/**
- * This watch is used to expose the plugin schema for auto-filler.
- * The auto-filler script requires the **final** schema to be used in the freeform.
- */
-watch(freeFormSchema, (newSchema) => {
-  if (!(window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
-    (window as any)[FREE_FORM_SCHEMA_MAP_KEY] = {}
-  }
-  ;(window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId] = toRaw(newSchema)
-}, { immediate: true, deep: true })
-
-// Clean up the schema on unmount
-onUnmounted(() => {
-  if ((window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
-    delete (window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId]
-  }
-})
+useSchemaExposer(freeFormSchema, instanceId)
 </script>
 
 <style lang="scss" scoped>
