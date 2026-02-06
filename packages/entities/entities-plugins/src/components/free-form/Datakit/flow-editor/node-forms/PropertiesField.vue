@@ -154,7 +154,7 @@ watch(() => formData.property, (newProperty) => {
   }
 
   .property-type {
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral)
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
   }
 }
 </style>

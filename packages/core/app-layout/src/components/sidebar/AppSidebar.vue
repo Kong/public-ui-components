@@ -675,7 +675,7 @@ watch(() => props.groupConfig, (newConfig) => {
     display: block;
     height: $sidebar-header-spacing;
     left: 50%;
-    margin-bottom: -$sidebar-header-spacing;
+    margin-bottom: calc(-1 * #{$sidebar-header-spacing});
     position: absolute;
     transform: translateX(-50%); // center
     width: calc(100% - 16px);

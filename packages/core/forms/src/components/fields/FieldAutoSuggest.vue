@@ -268,7 +268,7 @@ export default {
 
   .autosuggest__results_message {
     color: rgba(0, 0, 0, 0.7);
-    font-size: var(--kui-font-size-30, $kui-font-size-30);;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
     padding: var(--kui-space-40, $kui-space-40) 0;
     text-align: center;
   }

@@ -194,7 +194,7 @@ const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
     }
 
     h1 {
-      margin: var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70)
+      margin: var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
     }
   }
 
