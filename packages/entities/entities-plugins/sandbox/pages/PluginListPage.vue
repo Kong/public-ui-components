@@ -66,6 +66,7 @@ const konnectConfig = ref<KonnectPluginListConfig>({
   getEditRoute: (plugin: EntityRow) => ({ name: 'edit-plugin', params: { id: plugin.id, plugin: plugin.name } }),
   getScopedEntityViewRoute: (type: ViewRouteType, id: string) => ({ name: `view-${type}`, params: { id } }),
   getConfigureDynamicOrderingRoute: (plugin: EntityRow) => ({ name: 'configure-dynamic-ordering', params: { id: plugin.id } }),
+  isPluginListM1: true,
 })
 
 const kongManagerConfig = ref<KongManagerPluginListConfig>({
