@@ -5,6 +5,7 @@
       "description": "Begin by choosing at least one metric"
     },
     "noQueryBridge": "No query bridge provided.  Unable to render dashboard.",
+    "unexpectedError": "An unexpected error has occurred.",
     "trendRange": {
       "24h": "Last 24-hour summary",
       "7d": "Last 7-day summary",
