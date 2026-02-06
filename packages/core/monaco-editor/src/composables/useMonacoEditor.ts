@@ -174,7 +174,6 @@ export function useMonacoEditor<T extends HTMLElement>(
               })
             } else if (typeof actionConfig.action === 'string') {
               // If it's a string ID, try to run the corresponding Monaco action
-              console.log('Triggering built-in action:', actionConfig.action)
               const targetAction = editorInstance.getAction(actionConfig.action)
               if (targetAction) {
                 targetAction.run()

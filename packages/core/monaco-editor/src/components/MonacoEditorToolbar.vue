@@ -3,6 +3,7 @@
     <div
       v-if="leftGroups.length > 0"
       class="monaco-editor-ui-toolbar-left"
+      :data-testid="`monaco-editor-toolbar-left`"
     >
       <div
         v-for="(group, groupIndex) in leftGroups"
@@ -27,6 +28,7 @@
     <div
       v-if="centerGroups.length > 0"
       class="monaco-editor-ui-toolbar-centre"
+      :data-testid="`monaco-editor-toolbar-centre`"
     >
       <div
         v-for="(group, groupIndex) in centerGroups"
@@ -51,6 +53,7 @@
     <div
       v-if="rightGroups.length > 0"
       class="monaco-editor-ui-toolbar-right"
+      :data-testid="`monaco-editor-toolbar-right`"
     >
       <div
         v-for="(group, groupIndex) in rightGroups"
