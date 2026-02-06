@@ -98,7 +98,7 @@ export interface MonacoEditorActionButton {
 /**
  * Configuration for a toolbar action, extending the base action button with placement and ordering
  */
-export interface MonacoEditorActionConfig extends Partial<MonacoEditorActionButton> {
+export interface MonacoEditorActionConfig extends MonacoEditorActionButton {
   /**
    * Where the action should appear in the toolbar
    * @default 'left'

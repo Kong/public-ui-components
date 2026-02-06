@@ -3,6 +3,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { MonacoEditorToolbarOptions } from '../types'
 import { CleaningIcon } from '@kong/icons'
 
+const baseActionProp = {
+  id: 'base-action',
+  icon: CleaningIcon,
+  action: vi.fn(),
+}
+
 // Mock built-in actions
 vi.mock('../constants/toolbar-actions', () => ({
   BUILT_IN_TOOLBAR_ACTIONS: {
@@ -57,6 +63,7 @@ describe('useToolbarActions', () => {
     const settings: MonacoEditorToolbarOptions = {
       actions: {
         save: {
+          ...baseActionProp,
           order: 99,
           placement: 'center',
         },
@@ -77,6 +84,7 @@ describe('useToolbarActions', () => {
     const settings: MonacoEditorToolbarOptions = {
       actions: {
         customAction: {
+          ...baseActionProp,
           label: 'My Action',
           icon: CleaningIcon,
           action: actionMock,
@@ -97,8 +105,8 @@ describe('useToolbarActions', () => {
   it('should ignore invalid custom commands (missing icon or action)', () => {
     const settings: MonacoEditorToolbarOptions = {
       actions: {
-        bad1: { label: 'No icon', action: vi.fn() },
-        bad2: { label: 'No action' },
+        bad1: { ...baseActionProp, label: 'No icon', action: vi.fn() },
+        bad2: { ...baseActionProp, label: 'No action' },
       },
     }
 
@@ -112,11 +120,11 @@ describe('useToolbarActions', () => {
     const settings: MonacoEditorToolbarOptions = {
       actions: {
         customLeft: {
-          action: vi.fn(),
+          ...baseActionProp,
           placement: 'left',
         },
         customCenter: {
-          action: vi.fn(),
+          ...baseActionProp,
           placement: 'center',
         },
       },
@@ -132,8 +140,8 @@ describe('useToolbarActions', () => {
   it('should sort commands within placement by order', () => {
     const settings: MonacoEditorToolbarOptions = {
       actions: {
-        a: { action: vi.fn(), placement: 'left', order: 50 },
-        b: { action: vi.fn(), placement: 'left', order: 10 },
+        a: { ...baseActionProp, placement: 'left', order: 50 },
+        b: { ...baseActionProp, placement: 'left', order: 10 },
       },
     }
 
@@ -147,9 +155,9 @@ describe('useToolbarActions', () => {
   it('should group commands by group id', () => {
     const settings: MonacoEditorToolbarOptions = {
       actions: {
-        a: { icon: CleaningIcon, action: vi.fn(), group: 'file' },
-        b: { icon: CleaningIcon, action: vi.fn(), group: 'file' },
-        c: { icon: CleaningIcon, action: vi.fn(), group: 'edit' },
+        a: { ...baseActionProp, group: 'file' },
+        b: { ...baseActionProp, group: 'file' },
+        c: { ...baseActionProp, group: 'edit' },
       },
     }
 

@@ -1,66 +1,77 @@
 import { computed } from 'vue'
 import { BUILT_IN_TOOLBAR_ACTIONS } from '../constants/toolbar-actions'
-import type { MonacoEditorActionConfig, MonacoEditorToolbarOptions, ToolbarGroupPlacement } from '../types'
+import type {
+  MonacoEditorActionConfig,
+  MonacoEditorToolbarOptions,
+  ToolbarGroupPlacement,
+} from '../types'
+import { FreeIcon } from '@kong/icons'
 
 const DEFAULT_PLACEMENT: ToolbarGroupPlacement = 'left'
 const DEFAULT_ORDER = 100
+const DEFAULT_GROUP = 'default'
 
 /**
- * Composable for processing and organizing toolbar actions
+ * Composable for managing toolbar actions in the Monaco editor.
+ * Merges built-in actions with user-defined custom actions and provides
+ * grouped commands organized by placement (left, center, right).
+ *
+ * @param settings - Toolbar configuration (boolean to enable defaults, or object for customization)
+ * @param i18n - Internationalization function for translating action labels
+ * @returns Object containing computed commands and grouped commands by placement
  */
 export function useToolbarActions(
   settings: boolean | MonacoEditorToolbarOptions,
   i18n: (key: string, ...args: any[]) => string,
 ) {
+  const userActions = settings && typeof settings === 'object' ? settings.actions ?? {} : {}
+
   /**
-   * Process and merge user commands with built-in commands
+   * Computed property that builds the complete list of toolbar actions.
+   * Combines built-in actions with user-defined custom actions, applying
+   * user overrides and translations.
    */
   const commands = computed<MonacoEditorActionConfig[]>(() => {
     const result: MonacoEditorActionConfig[] = []
 
-    // If settings is true, show all built-in commands
-    // If settings is an object, use the actions configuration
-    const userCommands = settings === true ? {} : (typeof settings === 'object' ? settings?.actions || {} : {})
+    // built-in actions (format, search, fullScreen, etc.)
+    for (const [key, builtIn] of Object.entries(BUILT_IN_TOOLBAR_ACTIONS)) {
+      const userConfig = userActions[key]
+      // Skip if user explicitly disabled this built-in action
+      if (userConfig === false) continue
 
-    // Process built-in commands
-    for (const key in BUILT_IN_TOOLBAR_ACTIONS) {
-      const userConfig = userCommands[key]
-      if (userConfig === false) continue // disabled by user
-
-      const builtIn = BUILT_IN_TOOLBAR_ACTIONS[key]
-      const merged: MonacoEditorActionConfig = {
+      // Merge built-in defaults with user overrides, and translate the label
+      result.push({
         ...builtIn,
         label: i18n(builtIn.labelKey),
         ...(typeof userConfig === 'object' ? userConfig : {}),
-      }
-
-      result.push(merged)
+      })
     }
 
-    // Process custom user commands
-    for (const key in userCommands) {
-      if (key in BUILT_IN_TOOLBAR_ACTIONS) continue // already processed
-      const cfg = userCommands[key]
-      if (cfg === false || cfg === undefined) continue
+    // custom user-defined actions
+    for (const [key, cfg] of Object.entries(userActions)) {
+      // Skip built-in action keys (already processed), disabled actions, and null/undefined
+      if (key in BUILT_IN_TOOLBAR_ACTIONS || cfg === false || cfg == null) continue
 
-      const commandConfig: MonacoEditorActionConfig = typeof cfg === 'object' ? {
+      // Create base configuration with defaults for custom actions
+      const base: MonacoEditorActionConfig = {
         id: key,
-        label: cfg.label || key,
-        icon: cfg.icon,
-        action: cfg.action,
-        keybindings: cfg.keybindings,
-        placement: cfg.placement || DEFAULT_PLACEMENT,
-        order: cfg.order ?? DEFAULT_ORDER,
-        group: cfg.group,
-      } : {
-        id: key,
-        label: key,
+        label: typeof cfg === 'object' && cfg.label ? cfg.label : key,
+        action: undefined as any, // Placeholder, user must provide an action function
+        icon: FreeIcon, // Default icon, user can override
         placement: DEFAULT_PLACEMENT,
         order: DEFAULT_ORDER,
-      } as MonacoEditorActionConfig
+      }
 
-      if (commandConfig.icon && commandConfig.action) {
-        result.push(commandConfig)
+      // Merge user configuration with base defaults
+      const merged =
+        typeof cfg === 'object'
+          ? { ...base, ...cfg }
+          : base
+
+      // Only add custom actions that have both an icon and action defined
+      if (merged.icon && merged.action) {
+        result.push(merged)
       }
     }
 
@@ -68,37 +79,33 @@ export function useToolbarActions(
   })
 
   /**
-   * Group commands by placement and then by group
+   * Groups commands by their group identifier for a specific placement.
+   * Commands within the same placement are sorted by order, then grouped.
+   * Visual separators can be rendered between groups.
+   *
+   * @param placement - The toolbar placement ('left', 'center', or 'right')
+   * @returns Array of command groups, where each group is an array of actions
    */
-  const groupCommands = (placement: ToolbarGroupPlacement): MonacoEditorActionConfig[][] => {
-    const placementCommands = commands.value
-      .filter(cmd => (cmd.placement || 'left') === placement)
-      .sort((a, b) => (a.order ?? 100) - (b.order ?? 100))
+  function groupCommands(placement: ToolbarGroupPlacement): MonacoEditorActionConfig[][] {
+    const groups = new Map<string, MonacoEditorActionConfig[]>()
 
-    if (placementCommands.length === 0) return []
+    // Filter commands for this placement, sort by order, then organize into groups
+    commands.value
+      .filter(cmd => (cmd.placement ?? DEFAULT_PLACEMENT) === placement)
+      .sort((a, b) => (a.order ?? DEFAULT_ORDER) - (b.order ?? DEFAULT_ORDER))
+      .forEach(cmd => {
+        const key = String(cmd.group ?? DEFAULT_GROUP)
+        if (!groups.has(key)) groups.set(key, [])
+        groups.get(key)!.push(cmd)
+      })
 
-    // Group by group identifier
-    const grouped = new Map<string | number, MonacoEditorActionConfig[]>()
-
-    placementCommands.forEach(cmd => {
-      const groupKey = cmd.group !== undefined ? String(cmd.group) : 'default'
-      if (!grouped.has(groupKey)) {
-        grouped.set(groupKey, [])
-      }
-      grouped.get(groupKey)!.push(cmd)
-    })
-
-    return Array.from(grouped.values())
+    return Array.from(groups.values())
   }
-
-  const leftGroups = computed<MonacoEditorActionConfig[][]>(() => groupCommands('left'))
-  const centerGroups = computed<MonacoEditorActionConfig[][]>(() => groupCommands('center'))
-  const rightGroups = computed<MonacoEditorActionConfig[][]>(() => groupCommands('right'))
 
   return {
     commands,
-    leftGroups,
-    centerGroups,
-    rightGroups,
+    leftGroups: computed(() => groupCommands('left')),
+    centerGroups: computed(() => groupCommands('center')),
+    rightGroups: computed(() => groupCommands('right')),
   }
 }

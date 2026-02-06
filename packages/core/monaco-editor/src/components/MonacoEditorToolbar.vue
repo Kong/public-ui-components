@@ -11,12 +11,12 @@
       >
         <ToolbarActionButton
           v-for="item in group"
-          :key="item.id!"
+          :key="item.id"
           :active="editor?.editorStates.editorStatus === 'ready'"
           :item="{
-            id: item.id!,
+            id: item.id,
             label: item.label,
-            icon: item.icon!,
+            icon: item.icon,
             keybindings: item.keybindings,
             action: () => executeToolbarAction(item, editor),
           }"
@@ -35,12 +35,12 @@
       >
         <ToolbarActionButton
           v-for="item in group"
-          :key="item.id!"
+          :key="item.id"
           :active="editor?.editorStates.editorStatus === 'ready'"
           :item="{
-            id: item.id!,
+            id: item.id,
             label: item.label,
-            icon: item.icon!,
+            icon: item.icon,
             keybindings: item.keybindings,
             action: () => executeToolbarAction(item, editor),
           }"
@@ -59,12 +59,12 @@
       >
         <ToolbarActionButton
           v-for="item in group"
-          :key="item.id!"
+          :key="item.id"
           :active="editor?.editorStates.editorStatus === 'ready'"
           :item="{
-            id: item.id!,
+            id: item.id,
             label: item.label,
-            icon: item.icon!,
+            icon: item.icon,
             keybindings: item.keybindings,
             action: () => executeToolbarAction(item, editor),
           }"
