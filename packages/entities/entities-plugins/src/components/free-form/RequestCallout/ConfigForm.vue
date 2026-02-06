@@ -173,7 +173,7 @@ function onChange(newVal?: RequestCalloutPlugin) {
 }
 
 const instanceId = useId()
-useSchemaExposer(schema, instanceId)
+useSchemaExposer(() => schema, instanceId)
 </script>
 
 <style lang="scss" scoped>

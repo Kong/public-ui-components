@@ -94,5 +94,5 @@ const onChange = (newVal: AIMcpProxyPlugin) => {
 }
 
 const instanceId = useId()
-useSchemaExposer(schema, instanceId)
+useSchemaExposer(() => schema, instanceId)
 </script>

@@ -72,5 +72,5 @@ function handleChange(value: FreeFormPluginData) {
 }
 
 const instanceId = useId()
-useSchemaExposer(schema, instanceId)
+useSchemaExposer(() => schema, instanceId)
 </script>
