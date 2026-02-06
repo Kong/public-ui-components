@@ -70,7 +70,7 @@ export default {
 .field-dropdown {
   .title {
     align-items: center;
-    background-color: $kui-color-background-neutral-weakest;
+    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     border-bottom: 1px solid #eee;
     cursor: pointer;
     display: flex;

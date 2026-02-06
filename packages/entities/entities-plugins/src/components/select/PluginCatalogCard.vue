@@ -171,18 +171,18 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
   display: flex;
 
   .plugin-select-card {
-    border: $kui-border-width-10 solid $kui-color-border;
-    border-radius: $kui-border-radius-30;
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     box-sizing: border-box;
     color: initial;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    gap: $kui-space-70;
-    line-height: $kui-line-height-40;
+    gap: var(--kui-space-70, $kui-space-70);
+    line-height: var(--kui-line-height-40, $kui-line-height-40);
     min-height: 218px;
     overflow: hidden;
-    padding: $kui-space-70;
+    padding: var(--kui-space-70, $kui-space-70);
     text-decoration: none;
     width: 100%;
 
@@ -196,12 +196,12 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
 
       .plugin-card-title {
         align-items: center;
-        color: $kui-color-text;
+        color: var(--kui-color-text, $kui-color-text);
         display: flex;
-        font-size: $kui-font-size-50;
-        font-weight: $kui-font-weight-bold;
-        gap: $kui-space-40;
-        letter-spacing: $kui-letter-spacing-minus-30;
+        font-size: var(--kui-font-size-50, $kui-font-size-50);
+        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+        gap: var(--kui-space-40, $kui-space-40);
+        letter-spacing: var(--kui-letter-spacing-minus-30, $kui-letter-spacing-minus-30);
         text-align: left;
         width: 100%;
 
@@ -216,34 +216,34 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
       }
 
       .actions-trigger {
-        color: $kui-color-text-neutral-stronger;
+        color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
       }
     }
 
     .plugin-card-icon {
-      height: $kui-icon-size-70;
-      width: $kui-icon-size-70;
+      height: var(--kui-icon-size-70, $kui-icon-size-70);
+      width: var(--kui-icon-size-70, $kui-icon-size-70);
     }
 
     .plugin-card-body {
-      background-color: $kui-color-background;
+      background-color: var(--kui-color-background, $kui-color-background);
       -webkit-box-orient: vertical;
-      color: $kui-color-text-neutral-stronger;
+      color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
       display: -webkit-box;
       flex: 1;
       flex-direction: column;
-      font-size: $kui-font-size-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
       -webkit-line-clamp: 4;
-      line-height: $kui-line-height-30;
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
       overflow: hidden;
       text-align: left;
     }
 
     .plugin-card-footer {
       align-items: center;
-      color: $kui-color-text-primary;
+      color: var(--kui-color-text-primary, $kui-color-text-primary);
       display: flex;
-      font-weight: $kui-font-weight-bold;
+      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
       justify-content: space-between;
       text-align: center;
     }

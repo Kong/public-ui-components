@@ -129,12 +129,12 @@ watch(
   }
 
   :deep(.vault-secret-picker .modal-container .modal-content) {
-    padding: $kui-space-80;
+    padding: var(--kui-space-80, $kui-space-80);
   }
 
   :deep(.k-card) {
     border: none;
-    border-radius: $kui-border-radius-0;
+    border-radius: var(--kui-border-radius-0, $kui-border-radius-0);
   }
 }
 

@@ -661,18 +661,18 @@ onBeforeMount(async () => {
 .button-row {
   align-items: center;
   display: flex;
-  gap: $kui-space-50;
+  gap: var(--kui-space-50, $kui-space-50);
 }
 
 .kong-ui-entities-routes-list {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    margin-right: $kui-space-50;
+    margin-right: var(--kui-space-50, $kui-space-50);
   }
 
   .route-list-cell-expression {
-    font-family: $kui-font-family-code;
+    font-family: var(--kui-font-family-code, $kui-font-family-code);
   }
 }
 </style>

@@ -311,7 +311,7 @@ watch(() => props.targetId, () => {
 
 <style lang="scss" scoped>
 :deep(.kong-card) {
-  padding: $kui-space-0;
+  padding: var(--kui-space-0, $kui-space-0);
 
   &.border {
     border: 0 !important;
@@ -329,29 +329,29 @@ watch(() => props.targetId, () => {
     .target-form-info,
     .target-form-info p,
     .target-form-info :deep(p) {
-      color: $kui-color-text;
-      font-size: $kui-font-size-30;
-      line-height: $kui-line-height-30;
-      margin-bottom: $kui-space-90;
+      color: var(--kui-color-text, $kui-color-text);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
+      margin-bottom: var(--kui-space-90, $kui-space-90);
     }
 
     .target-form-input {
-      margin-bottom: $kui-space-90;
+      margin-bottom: var(--kui-space-90, $kui-space-90);
 
       &:last-of-type {
-        margin-bottom: $kui-space-0;
+        margin-bottom: var(--kui-space-0, $kui-space-0);
       }
     }
 
     .failover-target {
       display: flex;
       flex-direction: column;
-      margin-bottom: $kui-space-90;
+      margin-bottom: var(--kui-space-90, $kui-space-90);
 
       .failover-target-options {
         align-items: center;
         display: flex;
-        gap: $kui-space-50;
+        gap: var(--kui-space-50, $kui-space-50);
       }
     }
   }
@@ -368,7 +368,7 @@ watch(() => props.targetId, () => {
   :deep(.k-card.kong-ui-entity-base-form) {
     background-color: transparent;
     border: none;
-    padding: $kui-space-0;
+    padding: var(--kui-space-0, $kui-space-0);
   }
 }
 </style>

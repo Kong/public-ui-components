@@ -231,7 +231,7 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 .redis-config-card {
-  margin-bottom: $kui-space-60;
+  margin-bottom: var(--kui-space-60, $kui-space-60);
 
   :deep(.form-group:last-child) {
     margin-bottom: 0;
@@ -239,19 +239,19 @@ onBeforeMount(() => {
 }
 
 .dedicated-redis-config {
-  margin-top: $kui-space-60;
+  margin-top: var(--kui-space-60, $kui-space-60);
 
   .dedicated-redis-config-title {
-    font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-30;
-    margin-bottom: $kui-space-60;
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
+    margin-bottom: var(--kui-space-60, $kui-space-60);
   }
 }
 
 .redis-config-radio-group {
   display: flex;
-  gap: $kui-space-40;
-  margin-bottom: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
+  margin-bottom: var(--kui-space-40, $kui-space-40);
 }
 </style>

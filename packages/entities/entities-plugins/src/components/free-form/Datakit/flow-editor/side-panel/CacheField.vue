@@ -209,19 +209,19 @@ async function highlight({ codeElement, language, code }: CodeBlockEventData) {
 <style lang="scss" scoped>
 .dk-cache-panel {
   .add-button {
-    margin-top: $kui-space-40;
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 
   .cache-item {
     align-items: center;
     display: flex;
     justify-content: space-between;
-    padding: 0 $kui-space-20;
+    padding: 0 var(--kui-space-20, $kui-space-20);
 
     .cache-item-key {
       align-items: center;
       display: flex;
-      gap: $kui-space-20;
+      gap: var(--kui-space-20, $kui-space-20);
       overflow: hidden;
 
       &-text {
@@ -236,7 +236,7 @@ async function highlight({ codeElement, language, code }: CodeBlockEventData) {
 .dk-resource-cache-form {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-70;
+  gap: var(--kui-space-70, $kui-space-70);
 
   &-field {
     display: flex;
@@ -246,7 +246,7 @@ async function highlight({ codeElement, language, code }: CodeBlockEventData) {
   .dk-cache-inline-redis {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-20;
+    gap: var(--kui-space-20, $kui-space-20);
   }
 }
 </style>

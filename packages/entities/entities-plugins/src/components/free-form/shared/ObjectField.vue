@@ -266,7 +266,7 @@ $indent-guide-top-offset: 20px;
     width: $indent-guide-width;
 
     &::before {
-      border-left: 1px solid $kui-color-border-neutral-weaker;
+      border-left: 1px solid var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
       bottom: 0;
       content: '';
       left: 50%;
@@ -277,14 +277,14 @@ $indent-guide-top-offset: 20px;
     }
 
     &:hover::before {
-      border-left-color: $kui-color-border-neutral-weak;
+      border-left-color: var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
     }
   }
 
   &-as-child {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-80;
+    gap: var(--kui-space-80, $kui-space-80);
   }
 
   // .k-label is required to override styles correctly in KM
@@ -296,7 +296,7 @@ $indent-guide-top-offset: 20px;
   &-header {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
 
     &-toggle {
       align-items: center;
@@ -307,13 +307,13 @@ $indent-guide-top-offset: 20px;
   &-actions {
     align-items: center;
     display: flex;
-    gap: $kui-space-20;
+    gap: var(--kui-space-20, $kui-space-20);
   }
 
   &-button-expand,
   &-button-collapse {
     .ff-object-field-button-icon {
-      transition: transform $kui-animation-duration-20 ease-in-out;
+      transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
     }
   }
 
@@ -326,9 +326,9 @@ $indent-guide-top-offset: 20px;
   &-content {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-80;
-    margin-top: $kui-space-20;
-    padding: $kui-space-60 0 $kui-space-20 $kui-space-70;
+    gap: var(--kui-space-80, $kui-space-80);
+    margin-top: var(--kui-space-20, $kui-space-20);
+    padding: var(--kui-space-60, $kui-space-60) 0 var(--kui-space-20, $kui-space-20) var(--kui-space-70, $kui-space-70);
   }
 
   :deep(.k-tooltip p) {
@@ -337,30 +337,30 @@ $indent-guide-top-offset: 20px;
 
   &-toggle-btn {
     align-items: center;
-    background-color: $kui-color-background-transparent;
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
     border: none;
-    border-radius: $kui-border-radius-20;
-    color: $kui-color-text-neutral-weak;
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
     cursor: pointer;
     display: flex;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-semibold;
-    gap: $kui-space-20;
-    line-height: $kui-line-height-30;
-    margin-left: -$kui-space-70;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    gap: var(--kui-space-20, $kui-space-20);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
+    margin-left: -var(--kui-space-70, $kui-space-70);
     outline: none;
-    padding: $kui-space-10;
+    padding: var(--kui-space-10, $kui-space-10);
 
     &:hover:not(:focus, :active, :disabled) {
-      color: $kui-color-text-neutral;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     }
 
     &:focus-visible {
-      box-shadow: $kui-shadow-focus;
+      box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
     }
 
     &-trigger-icon {
-      transition: transform $kui-animation-duration-20 ease-in-out;
+      transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
 
       &.collapse-expanded {
         transform: rotate(90deg);
@@ -368,7 +368,7 @@ $indent-guide-top-offset: 20px;
     }
 
     &:disabled {
-      color: $kui-color-text-neutral-weak;
+      color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
       cursor: not-allowed;
     }
 
@@ -378,7 +378,7 @@ $indent-guide-top-offset: 20px;
   }
 
   &-add-btn {
-    margin-left: $kui-space-20;
+    margin-left: var(--kui-space-20, $kui-space-20);
   }
 }
 </style>

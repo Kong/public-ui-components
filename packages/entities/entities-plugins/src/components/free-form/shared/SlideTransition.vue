@@ -96,7 +96,7 @@ function afterLeave(elem: Element) {
 
 <style lang="scss" scoped>
 .ff-slide-active {
-  transition-duration: $kui-animation-duration-20;
+  transition-duration: var(--kui-animation-duration-20, $kui-animation-duration-20);
   transition-property: height, padding, margin, border-width;
   transition-timing-function: ease-in-out;
 }

@@ -352,23 +352,23 @@ onMounted(() => {
   }
 
   .subtitle {
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-regular;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
   }
 
   .document-radio-group {
     display: flex;
-    margin-bottom: $kui-space-80;
+    margin-bottom: var(--kui-space-80, $kui-space-80);
 
     .empty-document-radio {
-      margin-left: $kui-space-80;
+      margin-left: var(--kui-space-80, $kui-space-80);
     }
   }
 
   .document-inputs {
     display: flex;
-    margin-bottom: $kui-space-80;
-    margin-top: $kui-space-80;
+    margin-bottom: var(--kui-space-80, $kui-space-80);
+    margin-top: var(--kui-space-80, $kui-space-80);
     width: 100%;
   }
 
@@ -377,33 +377,33 @@ onMounted(() => {
   }
 
   .url-slug {
-    margin-left: $kui-space-auto;
+    margin-left: var(--kui-space-auto, $kui-space-auto);
   }
 
   .bottom-spacing {
-    margin-bottom: $kui-space-80;
+    margin-bottom: var(--kui-space-80, $kui-space-80);
   }
 
   .documentation-status {
     display: block;
-    margin-bottom: $kui-space-80;
-    margin-top: $kui-space-80;
+    margin-bottom: var(--kui-space-80, $kui-space-80);
+    margin-top: var(--kui-space-80, $kui-space-80);
   }
 
   .document-parent-select {
-    margin-top: $kui-space-80;
+    margin-top: var(--kui-space-80, $kui-space-80);
   }
 
   .button-spacing {
-    margin-left: $kui-space-auto;
+    margin-left: var(--kui-space-auto, $kui-space-auto);
   }
 
   .edit-documentation-delete-button {
-    margin-right: $kui-space-auto;
+    margin-right: var(--kui-space-auto, $kui-space-auto);
   }
 
   .edit-documentation-cancel-button {
-    margin-right: $kui-space-40;
+    margin-right: var(--kui-space-40, $kui-space-40);
   }
 }
 </style>
@@ -413,7 +413,7 @@ onMounted(() => {
 
   // TODO: fix in kongponents
   .document-file-upload {
-    margin-bottom: $kui-space-80;
+    margin-bottom: var(--kui-space-80, $kui-space-80);
 
     .upload-input {
       height: 44px;

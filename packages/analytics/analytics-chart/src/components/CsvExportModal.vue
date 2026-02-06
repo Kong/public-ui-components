@@ -267,24 +267,24 @@ watch(tableData, () => {
     min-width: 580px;
 
     .selected-range {
-      font-size: $kui-font-size-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
     }
 
     .text-muted {
       color: rgba(0, 0, 0, 0.45) !important;
-      font-size: $kui-font-size-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
     }
 
     .vitals-table {
-      font-size: $kui-font-size-30;
-      margin-bottom: $kui-space-70;
-      margin-top: $kui-space-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      margin-bottom: var(--kui-space-70, $kui-space-70);
+      margin-top: var(--kui-space-30, $kui-space-30);
       width: 100%;
     }
 
     .k-table {
       thead {
-        border-top: $kui-border-width-10 solid $kui-color-border;
+        border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
         height: auto;   // Match KTable legacy styling
       }
     }

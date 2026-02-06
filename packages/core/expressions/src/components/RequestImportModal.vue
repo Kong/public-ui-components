@@ -137,16 +137,16 @@ const handleProceed = () => {
 <style lang="scss" scoped>
 .import-requests-modal {
   .import-requests-alert {
-    margin-bottom: $kui-space-60;
+    margin-bottom: var(--kui-space-60, $kui-space-60);
   }
 
   .import-requests-error {
-    margin-top: $kui-space-60;
+    margin-top: var(--kui-space-60, $kui-space-60);
   }
 
   .json-editor {
-    border: $kui-border-width-10 solid $kui-color-border;
-    border-radius: $kui-border-radius-20;
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 500px;
     overflow: hidden;
     width: 100%;

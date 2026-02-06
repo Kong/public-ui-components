@@ -79,11 +79,11 @@ const onChange = (v: any) => {
 .horizontal-container {
   display: flex;
   flex-wrap: wrap;
-  gap: $kui-space-60;
+  gap: var(--kui-space-60, $kui-space-60);
 }
 
 :deep(.radio-label) {
-  font-size: $kui-font-size-30;
-  font-weight: $kui-font-weight-regular;
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
 }
 </style>

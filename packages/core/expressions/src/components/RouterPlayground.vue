@@ -389,16 +389,16 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .router-playground-wrapper {
   .page-header {
-    color: $kui-color-text;
-    font-size: $kui-font-size-70;
-    font-weight: $kui-font-weight-bold;
+    color: var(--kui-color-text, $kui-color-text);
+    font-size: var(--kui-font-size-70, $kui-font-size-70);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
   }
 
   .editor-actions {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    margin-top: $kui-space-60;
+    margin-top: var(--kui-space-60, $kui-space-60);
     width: 100%;
   }
 
@@ -407,38 +407,38 @@ onUnmounted(() => {
 
     .navigate-back {
       align-items: center;
-      color: $kui-color-text-primary-strong;
+      color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
       cursor: pointer;
       display: flex;
       flex-direction: row;
-      font-size: $kui-font-size-40;
-      font-weight: $kui-font-weight-bold;
-      gap: $kui-space-40;
+      font-size: var(--kui-font-size-40, $kui-font-size-40);
+      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+      gap: var(--kui-space-40, $kui-space-40);
       justify-content: flex-start;
-      margin-bottom: $kui-space-110;
+      margin-bottom: var(--kui-space-110, $kui-space-110);
       margin-top: 10px;
 
       .material-icons {
-        font-size: $kui-font-size-30;
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
       }
     }
 
     .expression-inspirations {
-      margin-top: $kui-space-60;
+      margin-top: var(--kui-space-60, $kui-space-60);
 
       .title {
         align-items: center;
-        color: $kui-color-text-neutral;
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
         display: flex;
         flex-direction: row;
-        font-size: $kui-font-size-30;
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
         font-weight: bold;
-        gap: $kui-space-40;
+        gap: var(--kui-space-40, $kui-space-40);
         justify-content: flex-start;
         margin-top: 10px;
 
         .material-icons {
-          font-size: $kui-font-size-30;
+          font-size: var(--kui-font-size-30, $kui-font-size-30);
         }
       }
 
@@ -446,12 +446,12 @@ onUnmounted(() => {
         align-items: center;
         display: flex;
         flex-direction: row;
-        gap: $kui-space-40;
-        margin-top: $kui-space-50;
+        gap: var(--kui-space-40, $kui-space-40);
+        margin-top: var(--kui-space-50, $kui-space-50);
 
         button.expression-inspiration-item {
           border-style: solid;
-          font-family: $kui-font-family-code;
+          font-family: var(--kui-font-family-code, $kui-font-family-code);
         }
       }
     }
@@ -460,37 +460,37 @@ onUnmounted(() => {
       align-items: center;
       display: flex;
       flex-direction: row;
-      font-size: $kui-font-size-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
       justify-content: flex-start;
-      margin: $kui-space-40 $kui-space-0;
+      margin: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
       opacity: 0.7;
     }
 
     .expression-list {
       tbody tr {
-        font-family: $kui-font-family-code;
+        font-family: var(--kui-font-family-code, $kui-font-family-code);
       }
     }
 
     .routes {
-      margin-top: $kui-space-90;
+      margin-top: var(--kui-space-90, $kui-space-90);
 
       .actions {
         align-items: center;
         display: flex;
         flex-direction: row;
-        gap: $kui-space-40;
+        gap: var(--kui-space-40, $kui-space-40);
       }
     }
 
     .import-button,
     .export-button {
-      margin-right: $kui-space-50;
+      margin-right: var(--kui-space-50, $kui-space-50);
     }
 
     .route-cards {
       display: grid;
-      gap: $kui-space-60;
+      gap: var(--kui-space-60, $kui-space-60);
       grid-template-columns: 1fr 1fr 1fr;
     }
 
@@ -498,16 +498,16 @@ onUnmounted(() => {
       align-items: center;
       display: flex;
       flex-direction: row;
-      font-size: $kui-font-size-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
       justify-content: center;
-      margin: $kui-space-60 $kui-space-0 $kui-space-40;
+      margin: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40);
       opacity: 0.7;
     }
   }
 
   .link {
     cursor: pointer;
-    margin: 0 $kui-space-10;
+    margin: 0 var(--kui-space-10, $kui-space-10);
     text-decoration: underline;
   }
 }

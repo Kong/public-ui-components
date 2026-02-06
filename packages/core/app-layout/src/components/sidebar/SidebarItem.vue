@@ -169,18 +169,18 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     white-space: nowrap;
 
     &:last-of-type {
-      margin-bottom: $kui-space-0;
+      margin-bottom: var(--kui-space-0, $kui-space-0);
     }
 
     a.sidebar-item-link {
       align-items: center;
-      color: $kui-navigation-color-text;
+      color: var(--kui-navigation-color-text, $kui-navigation-color-text);
       cursor: pointer;
       display: flex;
       font-size: $sidebar-item-font-size;
-      font-weight: $kui-font-weight-medium;
+      font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
       justify-content: space-between;
-      line-height: $kui-line-height-30;
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
       min-height: 48px;
       text-decoration: none;
       transition: color .2s ease-out;
@@ -197,15 +197,15 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
       &:hover,
       &:focus-visible {
         // !important to also handle the L2 items
-        color: $kui-navigation-color-text-hover !important;
+        color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover) !important;
 
         svg {
-          color: $kui-navigation-color-text-hover;
+          color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
         }
       }
 
       &:focus-visible {
-        box-shadow: $kui-navigation-shadow-focus;
+        box-shadow: var(--kui-navigation-shadow-focus, $kui-navigation-shadow-focus);
         outline: none;
       }
 
@@ -220,30 +220,30 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     &.active > div > a,
     &.expanded > a,
     &.expanded > div > a {
-      color: $kui-navigation-color-text-selected;
+      color: var(--kui-navigation-color-text-selected, $kui-navigation-color-text-selected);
 
       &.sidebar-item-link,
       &.sidebar-item-link:hover {
-        color: $kui-navigation-color-text-selected !important;
+        color: var(--kui-navigation-color-text-selected, $kui-navigation-color-text-selected) !important;
 
         svg {
-          color: $kui-navigation-color-text-selected;
+          color: var(--kui-navigation-color-text-selected, $kui-navigation-color-text-selected);
         }
       }
 
       .sidebar-item-name {
-        font-weight: $kui-font-weight-medium !important;
+        font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium) !important;
       }
     }
 
     ul.level-secondary {
-      padding: $kui-space-0;
+      padding: var(--kui-space-0, $kui-space-0);
       position: relative;
 
       // Add a top border to the ul element, offset from the left and right to prevent overlap
       &:before {
         /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-        background-color: $kui-navigation-color-border;
+        background-color: var(--kui-navigation-color-border, $kui-navigation-color-border);
         content: '';
         height: 1px;
         left: 1px;
@@ -265,9 +265,9 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
   &.active,
   &.expanded {
-    background-color: $kui-navigation-color-background-selected;
+    background-color: var(--kui-navigation-color-background-selected, $kui-navigation-color-background-selected);
     border-radius: $sidebar-item-border-radius;
-    box-shadow: $kui-navigation-shadow-border;
+    box-shadow: var(--kui-navigation-shadow-border, $kui-navigation-shadow-border);
   }
 
   > a,
@@ -276,8 +276,8 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
     > .sidebar-item-display {
       &.has-label {
-        padding-bottom: $kui-space-50;
-        padding-top: $kui-space-50;
+        padding-bottom: var(--kui-space-50, $kui-space-50);
+        padding-top: var(--kui-space-50, $kui-space-50);
       }
 
       &.has-after-content {
@@ -293,10 +293,10 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
 // Secondary-level nav item
 .sidebar-item-secondary {
-  margin-bottom: $kui-space-20;
+  margin-bottom: var(--kui-space-20, $kui-space-20);
 
   &:last-of-type {
-    margin-bottom: $kui-space-0;
+    margin-bottom: var(--kui-space-0, $kui-space-0);
 
     a {
       border-bottom-right-radius: $sidebar-item-border-radius;
@@ -304,10 +304,10 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   }
 
   a {
-    background-color: $kui-color-background-transparent;
-    color: $kui-navigation-color-text !important;
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+    color: var(--kui-navigation-color-text, $kui-navigation-color-text) !important;
     font-size: $sidebar-item-font-size;
-    line-height: $kui-line-height-30;
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
     // Override the min-height for the secondary items
     min-height: 40px !important;
     transition: all .1s ease-in-out !important;
@@ -324,12 +324,12 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   }
 
   &.active > a {
-    box-shadow: $kui-navigation-shadow-border-child;
-    color: $kui-navigation-color-text-selected !important;
-    font-weight: $kui-font-weight-medium !important;
+    box-shadow: var(--kui-navigation-shadow-border-child, $kui-navigation-shadow-border-child);
+    color: var(--kui-navigation-color-text-selected, $kui-navigation-color-text-selected) !important;
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium) !important;
 
     &:focus-visible {
-      box-shadow: $kui-navigation-shadow-border-child, $kui-navigation-shadow-focus;
+      box-shadow: var(--kui-navigation-shadow-border-child, $kui-navigation-shadow-border-child), var(--kui-navigation-shadow-focus, $kui-navigation-shadow-focus);
     }
   }
 }
@@ -337,13 +337,13 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 .sidebar-item-display {
   align-items: center;
   display: flex;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
   height: 100%;
-  padding: $kui-space-0 $kui-space-60;
+  padding: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
   width: 100%;
 
   .sidebar-item-name-container {
-    line-height: $kui-line-height-20;
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
     -webkit-user-select: none;
     user-select: none;
 
@@ -384,9 +384,9 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   }
 
   .sidebar-item-label {
-    color: $kui-navigation-color-text;
-    font-size: $kui-font-size-20;
-    margin-top: $kui-space-20;
+    color: var(--kui-navigation-color-text, $kui-navigation-color-text);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    margin-top: var(--kui-space-20, $kui-space-20);
   }
 
   .sidebar-item-icon {

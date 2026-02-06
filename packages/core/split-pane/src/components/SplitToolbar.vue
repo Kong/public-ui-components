@@ -31,16 +31,16 @@ $toolbar-height: 44px;
 
 .kong-ui-public-split-pane-toolbar {
   align-items: center;
-  background: $kui-color-background;
-  border-bottom: $kui-border-width-10 solid $kui-color-border;
+  background: var(--kui-color-background, $kui-color-background);
+  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   display: flex;
   flex: 0 0 $toolbar-height;
   justify-content: space-between;
   min-height: $toolbar-height;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-left: $kui-space-40;
-  padding-right: $kui-space-40;
+  padding-left: var(--kui-space-40, $kui-space-40);
+  padding-right: var(--kui-space-40, $kui-space-40);
   position: sticky;
   scrollbar-width: thin;
   top: 0;
@@ -52,7 +52,7 @@ $toolbar-height: 44px;
 .center {
   align-items: center;
   display: flex;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
   height: 100%;
 }
 

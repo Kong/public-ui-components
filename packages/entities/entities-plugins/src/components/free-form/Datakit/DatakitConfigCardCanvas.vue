@@ -59,20 +59,20 @@ provideEditorStore(pluginData)
 <style lang="scss" scoped>
 .datakit-config-card-canvas {
   align-items: flex-start;
-  border-bottom: solid $kui-border-width-10 $kui-color-border;
+  border-bottom: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
   box-sizing: border-box;
   display: flex;
-  padding: $kui-space-60;
+  padding: var(--kui-space-60, $kui-space-60);
   padding-left: 0;
   width: 100%;
 
   .config-card-details-label {
     box-sizing: border-box;
-    padding-right: $kui-space-60;
+    padding-right: var(--kui-space-60, $kui-space-60);
     width: 25%;
 
     label {
-      color: $kui-color-text-neutral-stronger;
+      color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
       display: inline-flex;
       max-width: 100%;
 
@@ -99,8 +99,8 @@ provideEditorStore(pluginData)
         position: relative;
 
         .datakit-flow-panels {
-          border: solid $kui-border-width-10 $kui-color-border;
-          border-radius: $kui-border-radius-20;
+          border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+          border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
           height: 560px;
           overflow: hidden;
           width: 100%;
