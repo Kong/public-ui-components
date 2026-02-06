@@ -36,11 +36,11 @@ const navLinks: SandboxNavigationItem[] = inject(KONG_UI_SANDBOX_LAYOUT_LINKS_IN
 <style lang="scss" scoped>
 .kong-ui-sandbox-navigation {
   list-style: none;
-  margin: $kui-space-0;
-  padding: $kui-space-0;
+  margin: var(--kui-space-0, $kui-space-0);
+  padding: var(--kui-space-0, $kui-space-0);
 
   .sandbox-link {
-    margin-bottom: $kui-space-40;
+    margin-bottom: var(--kui-space-40, $kui-space-40);
 
     &:last-of-type {
       margin-bottom: 0;
@@ -48,30 +48,30 @@ const navLinks: SandboxNavigationItem[] = inject(KONG_UI_SANDBOX_LAYOUT_LINKS_IN
 
     a {
       background: #eee;
-      border-radius: $kui-border-radius-20;
-      color: $kui-color-text-primary;
+      border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+      color: var(--kui-color-text-primary, $kui-color-text-primary);
       display: block;
-      font-weight: $kui-font-weight-semibold;
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       overflow: hidden;
-      padding: $kui-space-40 $kui-space-60;
+      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-60, $kui-space-60);
       text-decoration: none;
       text-overflow: ellipsis;
-      transition: all $kui-animation-duration-20 ease-in-out;
+      transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
       white-space: nowrap;
 
       &:hover {
         background: #ccc;
-        color: $kui-color-text-primary-stronger;
+        color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
       }
 
       &.router-link-exact-active,
       &.active {
-        background: $kui-color-background-primary;
-        color: $kui-color-text-inverse;
+        background: var(--kui-color-background-primary, $kui-color-background-primary);
+        color: var(--kui-color-text-inverse, $kui-color-text-inverse);
 
         &:hover {
-          background: $kui-color-background-primary;
-          color: $kui-color-text-inverse;
+          background: var(--kui-color-background-primary, $kui-color-background-primary);
+          color: var(--kui-color-text-inverse, $kui-color-text-inverse);
         }
       }
     }

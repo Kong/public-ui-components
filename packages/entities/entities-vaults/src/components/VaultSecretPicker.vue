@@ -409,7 +409,7 @@ watch(secretsEndpoint, async () => {
   .inputs-wrapper {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-70;
+    gap: var(--kui-space-70, $kui-space-70);
   }
 
   &-vault-dropdown-item,
@@ -418,18 +418,18 @@ watch(secretsEndpoint, async () => {
     flex-direction: column;
 
     span {
-      line-height: $kui-line-height-30;
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
     }
 
     .select-item-label {
-      font-weight: $kui-font-weight-semibold;
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
   }
 
   &-vault-dropdown-item {
     .select-item-description {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-20;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
     }
   }
 

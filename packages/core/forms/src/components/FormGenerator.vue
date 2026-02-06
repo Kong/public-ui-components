@@ -482,11 +482,11 @@ export default {
     border-radius: 3px;
     box-shadow: inset 0 0 0 1px #e7e7ec;
     box-sizing: border-box;
-    color: $kui-color-text-neutral-strong;
+    color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
     display: block;
-    font-size: $kui-font-size-40;
-    line-height: $kui-line-height-40;
-    padding: $kui-space-40 $kui-space-60;
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
+    line-height: var(--kui-line-height-40, $kui-line-height-40);
+    padding: var(--kui-space-40, $kui-space-40) var(--kui-space-60, $kui-space-60);
     transition: color .1s ease, box-shadow .1s ease, border-color ease-in-out 0.15s;
     width: 100%;
 
@@ -575,8 +575,8 @@ export default {
   } // .hint
 
   .kong-form-new-element-button-label {
-    margin-bottom: $kui-space-80!important;
-    margin-top: $kui-space-80!important;
+    margin-bottom: var(--kui-space-80, $kui-space-80)!important;
+    margin-top: var(--kui-space-80, $kui-space-80)!important;
   }
 } // fieldset
 
@@ -593,18 +593,18 @@ export default {
 .vue-form-generator .field-wrap input[type=submit].danger:hover,
 .vue-form-generator .field-wrap button.danger:active,
 .vue-form-generator .field-wrap input[type=submit].danger:active {
-  background-color: $kui-color-background;
+  background-color: var(--kui-color-background, $kui-color-background);
   box-shadow: none;
-  color: $kui-color-text-inverse;
+  color: var(--kui-color-text-inverse, $kui-color-text-inverse);
 }
 
 .vue-form-generator .field-wrap button.tertiary:hover,
 .vue-form-generator .field-wrap input[type=submit].tertiary:hover,
 .vue-form-generator .field-wrap button.tertiary:active,
 .vue-form-generator .field-wrap input[type=submit].tertiary:active {
-  background-color: $kui-color-background;
+  background-color: var(--kui-color-background, $kui-color-background);
   box-shadow: none;
-  color: $kui-color-text-primary;
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
 }
 
 .vue-form-generator .field-checkbox {
@@ -635,7 +635,7 @@ export default {
   appearance: none;
   border: 2px solid currentColor;
   border-radius: 100%;
-  color: $kui-color-text-primary;
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
   display: inline-flex;
   height: 20px;
   justify-content: center;
@@ -649,8 +649,8 @@ export default {
   }
 
   &:disabled {
-    background-color: $kui-color-background-disabled;
-    border-color: $kui-color-border-neutral-weak;
+    background-color: var(--kui-color-background-disabled, $kui-color-background-disabled);
+    border-color: var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
   }
 
   &:checked:after {
@@ -658,7 +658,7 @@ export default {
   }
 
   &:checked:disabled:after {
-    background-color: $kui-color-background-neutral-weak;
+    background-color: var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak);
   }
 }
 
@@ -669,12 +669,12 @@ export default {
     }
 
     .k-collapse-visible-content {
-      color: $kui-color-text-neutral;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     }
   }
 
   .nested-collapse .k-collapse-heading {
-    margin-bottom: $kui-space-80 !important;
+    margin-bottom: var(--kui-space-80, $kui-space-80) !important;
   }
 }
 </style>

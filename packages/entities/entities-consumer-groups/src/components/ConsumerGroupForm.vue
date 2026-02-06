@@ -378,18 +378,18 @@ onBeforeMount(async () => {
 
   @media screen and (min-width: $kui-breakpoint-laptop) {
     &:deep(.form-section-wrapper) {
-      column-gap: $kui-space-130;
+      column-gap: var(--kui-space-130, $kui-space-130);
     }
   }
 
   .select-item-container {
     .select-item-label {
-      font-weight: $kui-font-weight-semibold;
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
 
     .select-item-description {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-20;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
     }
   }
 }

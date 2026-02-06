@@ -1,7 +1,7 @@
 @use "./globals" as *;
 
-$legend-height: $kui-space-110 + 1px;
-$legend-height-values: $kui-space-140;
+$legend-height: var(--kui-space-110, $kui-space-110) + 1px;
+$legend-height-values: var(--kui-space-140, $kui-space-140);
 
 .chart-parent {
   align-items: center;

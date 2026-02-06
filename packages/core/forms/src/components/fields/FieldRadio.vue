@@ -90,7 +90,7 @@ const onChange = (val: string | number | boolean | object | null) => {
 .radio-selection-group {
   align-items: center;
   display: flex;
-  gap: $kui-space-60;
+  gap: var(--kui-space-60, $kui-space-60);
 
   :deep(.k-radio) {
     align-items: baseline;

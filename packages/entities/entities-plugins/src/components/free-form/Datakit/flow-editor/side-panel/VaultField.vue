@@ -174,25 +174,25 @@ const validateName = (name: string, isEditing: boolean): string | undefined => {
 <style lang="scss" scoped>
 .dk-vault-panel {
   .add-button {
-    margin-top: $kui-space-40;
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 
   .vault-list {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-20;
+    gap: var(--kui-space-20, $kui-space-20);
     overflow: hidden;
 
     &-item {
       align-items: center;
       display: flex;
       justify-content: space-between;
-      padding: 0 $kui-space-20;
+      padding: 0 var(--kui-space-20, $kui-space-20);
 
       &-key {
         align-items: center;
         display: flex;
-        gap: $kui-space-20;
+        gap: var(--kui-space-20, $kui-space-20);
         overflow: hidden;
 
         &-text {

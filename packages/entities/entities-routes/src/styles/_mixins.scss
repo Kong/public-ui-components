@@ -3,7 +3,7 @@
 @mixin hr() {
   border: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
-  margin-bottom: $kui-space-60;
+  margin-bottom: var(--kui-space-60, $kui-space-60);
 }
 
 @mixin routing-rules() {
@@ -49,7 +49,7 @@
 @mixin routing-rule() {
   &-container {
     &:not(:first-of-type) {
-      margin-top: $kui-space-80;
+      margin-top: var(--kui-space-80, $kui-space-80);
     }
 
     hr {
@@ -59,7 +59,7 @@
 
   &-input {
     align-items: center;
-    column-gap: $kui-space-60;
+    column-gap: var(--kui-space-60, $kui-space-60);
     display: flex;
 
     .k-input {
@@ -67,14 +67,14 @@
     }
 
     &:not(:first-of-type) {
-      margin-top: $kui-space-60;
+      margin-top: var(--kui-space-60, $kui-space-60);
     }
 
     .methods-input {
       &-container {
         display: flex;
         flex-wrap: wrap;
-        gap: $kui-space-50;
+        gap: var(--kui-space-50, $kui-space-50);
       }
 
       // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
@@ -82,7 +82,7 @@
       & {
         display: flex;
         flex-wrap: wrap;
-        gap: $kui-space-20;
+        gap: var(--kui-space-20, $kui-space-20);
       }
 
       // stylelint-disable-next-line selector-pseudo-class-no-unknown
@@ -93,6 +93,6 @@
   }
 
   &-add-item-button {
-    margin-top: $kui-space-60;
+    margin-top: var(--kui-space-60, $kui-space-60);
   }
 }

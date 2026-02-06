@@ -180,18 +180,18 @@ const tooltipAttributes = {
 
   .header {
     align-items: center;
-    border-bottom: 1px solid $kui-color-border;
+    border-bottom: 1px solid var(--kui-color-border, $kui-color-border);
     display: flex;
     flex: 0 0 auto;
     /* stylelint-disable-next-line custom-property-pattern */
     height: var(--dk-header-height);
     justify-content: flex-end;
-    padding: 0px $kui-space-30 0px $kui-space-50;
+    padding: 0px var(--kui-space-30, $kui-space-30) 0px var(--kui-space-50, $kui-space-50);
   }
 
   .actions {
     display: flex;
-    gap: $kui-space-30;
+    gap: var(--kui-space-30, $kui-space-30);
   }
 
   .body {
@@ -204,11 +204,11 @@ const tooltipAttributes = {
   .settings {
     align-items: center;
     display: flex;
-    padding: 0 $kui-space-40;
+    padding: 0 var(--kui-space-40, $kui-space-40);
   }
 
   .divider {
-    border-right: $kui-border-width-10 solid $kui-color-border;
+    border-right: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   }
 }
 </style>

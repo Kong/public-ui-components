@@ -57,7 +57,7 @@ const {
   }
 
   .legend-item:not(:last-child) {
-    margin-bottom: var(--kui-space-20,$kui-space-20);
+    margin-bottom: var(--kui-space-20, $kui-space-20);
   }
 
   .legend-color {

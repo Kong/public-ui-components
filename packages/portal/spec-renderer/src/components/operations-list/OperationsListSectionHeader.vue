@@ -77,28 +77,28 @@ const collapseAriaLabel = computed((): string => {
   align-items: center;
   appearance: none;
   background: var(--kong-ui-spec-renderer-operations-list-section-background, transparent);
-  border: $kui-border-width-10 solid var(--kong-ui-spec-renderer-operations-list-section-border-color, $kui-color-border-disabled);
-  border-top-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-radius-20);
-  border-top-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-radius-20);
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-disabled, $kui-color-border-disabled);
+  border-top-left-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+  border-top-right-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   color: currentColor;
   cursor: pointer;
   display: flex;
-  padding: var(--kong-ui-spec-renderer-operations-list-section-padding, $kui-space-40);
+  padding: var(--kui-space-40, $kui-space-40);
   width: 100%;
 }
 
 .header--collapsed {
-  border-bottom-left-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-radius-20);
-  border-bottom-right-radius: var(--kong-ui-spec-renderer-operations-list-section-border-radius, $kui-border-radius-20);
+  border-bottom-left-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+  border-bottom-right-radius: var(--kui-border-radius-20, $kui-border-radius-20);
 }
 
 .label {
   color: var(--kong-ui-spec-renderer-operations-list-section-label-text-color, currentColor);
   font-family: inherit;
-  font-size: var(--kong-ui-spec-renderer-operations-list-section-label-font-size, $kui-font-size-40);
-  font-weight: $kui-font-weight-semibold;
-  line-height: $kui-line-height-40;
-  margin: $kui-space-0 $kui-space-40 $kui-space-0 $kui-space-0;
+  font-size: var(--kui-font-size-40, $kui-font-size-40);
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+  line-height: var(--kui-line-height-40, $kui-line-height-40);
+  margin: var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0);
 
   &:first-letter {
     text-transform: capitalize;
@@ -106,19 +106,19 @@ const collapseAriaLabel = computed((): string => {
 }
 
 .header--collapsed .label {
-  color: var(--kong-ui-spec-renderer-operations-list-section-label-text-color-collapsed, $kui-color-text-neutral-stronger);
+  color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
 }
 
 .description {
-  font-family: var(--kong-ui-spec-renderer-operations-list-section-description-font-family, var(--kong-ui-spec-renderer-font-monospace, $kui-font-family-code));
+  font-family: var(--kong-ui-spec-renderer-operations-list-section-description-font-family, var(--kui-font-family-code, $kui-font-family-code));
   line-height: 1;
-  margin-left: $kui-space-auto;
+  margin-left: var(--kui-space-auto, $kui-space-auto);
   max-width: 65%;
 }
 
 .icon-wrapper {
   height: 18px;
-  margin-right: $kui-space-40;
+  margin-right: var(--kui-space-40, $kui-space-40);
 }
 
 .truncated {

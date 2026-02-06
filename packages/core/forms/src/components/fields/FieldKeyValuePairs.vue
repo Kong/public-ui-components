@@ -144,11 +144,11 @@ export default {
 
   .pair-item {
     display: flex;
-    gap: $kui-space-50;
+    gap: var(--kui-space-50, $kui-space-50);
     justify-content: space-between;
 
     &:not(:first-child) {
-      margin-top: $kui-space-50;
+      margin-top: var(--kui-space-50, $kui-space-50);
     }
 
     .pair-item-cell {

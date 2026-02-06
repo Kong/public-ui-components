@@ -306,13 +306,13 @@ const handleFilter = (
 }
 
 .kong-ui-entity-filter-menu {
-  background-color: $kui-color-background;
-  border: $kui-border-width-10 solid $kui-color-border-neutral-weak;
-  border-radius: $kui-border-radius-20;
-  box-shadow: 0 4px 20px $kui-color-border;
+  background-color: var(--kui-color-background, $kui-color-background);
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+  box-shadow: 0 4px 20px var(--kui-color-border, $kui-color-border);
   left: 0;
   margin-top: 16px;
-  padding: $kui-space-40 0 $kui-space-50;
+  padding: var(--kui-space-40, $kui-space-40) 0 var(--kui-space-50, $kui-space-50);
   position: absolute;
   top: 100%;
   width: 300px;
@@ -320,14 +320,14 @@ const handleFilter = (
 }
 
 .kong-ui-entity-filter-menu-item {
-  border-bottom: $kui-border-width-10 solid $kui-color-border;
-  color: $kui-color-text-neutral;
-  font-size: $kui-font-size-20;
-  font-weight: $kui-font-weight-regular;
-  line-height: $kui-line-height-20;
+  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  line-height: var(--kui-line-height-20, $kui-line-height-20);
   list-style: none;
-  margin: $kui-space-0 $kui-space-70;
-  padding: $kui-space-60 0;
+  margin: var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
+  padding: var(--kui-space-60, $kui-space-60) 0;
   position: relative;
   white-space: nowrap;
 }
@@ -336,10 +336,10 @@ const handleFilter = (
   align-items: center;
   cursor: pointer;
   display: flex;
-  line-height: $kui-line-height-40;
+  line-height: var(--kui-line-height-40, $kui-line-height-40);
 
   &.expanded {
-    color: $kui-color-text-neutral-strongest;
+    color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
   }
 }
 
@@ -352,7 +352,7 @@ const handleFilter = (
 }
 
 .menu-item-indicator {
-  background-color: $kui-color-background-primary;
+  background-color: var(--kui-color-background-primary, $kui-color-background-primary);
   border-radius: 50%;
   height: 4px;
   margin-left: 4px;
@@ -363,7 +363,7 @@ const handleFilter = (
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin-top: $kui-space-60;
+  margin-top: var(--kui-space-60, $kui-space-60);
 
   :deep(.input) {
     padding-bottom: 4px!important;
@@ -396,6 +396,6 @@ const handleFilter = (
 }
 
 .filter-clear-button-container {
-  padding: $kui-space-50 $kui-space-70 0;
+  padding: var(--kui-space-50, $kui-space-50) var(--kui-space-70, $kui-space-70) 0;
 }
 </style>

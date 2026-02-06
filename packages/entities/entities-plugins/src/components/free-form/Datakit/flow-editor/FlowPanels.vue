@@ -326,15 +326,15 @@ watch(
 
   .label {
     align-items: center;
-    background-color: $kui-color-background;
+    background-color: var(--kui-color-background, $kui-color-background);
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
     flex-shrink: 0;
-    font-weight: $kui-font-weight-semibold;
-    gap: $kui-space-20;
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    gap: var(--kui-space-20, $kui-space-20);
     justify-content: flex-start;
-    padding: $kui-space-20 $kui-space-40;
+    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
     position: relative;
     width: 100%;
 
@@ -347,8 +347,8 @@ watch(
     }
 
     .label-content .count {
-      color: $kui-color-text-neutral-weak;
-      font-weight: $kui-font-weight-regular;
+      color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     }
 
     &.resizable {
@@ -356,17 +356,17 @@ watch(
     }
 
     &:not(.resizable) .label-content {
-      padding: 0 $kui-space-40;
+      padding: 0 var(--kui-space-40, $kui-space-40);
     }
 
     &.request:before, &.response:before {
       /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-      background-color: $kui-color-border;
+      background-color: var(--kui-color-border, $kui-color-border);
       /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-      bottom: -$kui-border-width-10;
+      bottom: -var(--kui-border-width-10, $kui-border-width-10);
       content: '';
       /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-      height: $kui-border-width-10;
+      height: var(--kui-border-width-10, $kui-border-width-10);
       left: 0;
       position: absolute;
       width: 100%;
@@ -379,7 +379,7 @@ watch(
     width: 100%;
 
     &:not(.dragging) {
-      transition: all $kui-animation-duration-20 ease-out;
+      transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) ease-out;
     }
   }
 
@@ -400,7 +400,7 @@ watch(
       &:after {
         $height: 5px;
         /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-        background-color: $kui-color-border;
+        background-color: var(--kui-color-border, $kui-color-border);
         content: '';
         display: block;
         height: $height;
@@ -408,7 +408,7 @@ watch(
         position: absolute;
         top: calc(50% - math.div($height, 2));
         transform: scaleY(0);
-        transition: transform $kui-animation-duration-20 ease-out;
+        transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease-out;
         width: 100%;
         z-index: 100;
       }
@@ -421,7 +421,7 @@ watch(
     &:before {
       $height: 1px;
       /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-      background-color: $kui-color-border;
+      background-color: var(--kui-color-border, $kui-color-border);
       content: '';
       display: block;
       height: $height;

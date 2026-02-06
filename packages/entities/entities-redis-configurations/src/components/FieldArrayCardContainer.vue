@@ -55,11 +55,11 @@ defineEmits<{
   display: flex;
 
   .card {
-    margin-bottom: $kui-space-40;
+    margin-bottom: var(--kui-space-40, $kui-space-40);
   }
 
   .array-card-remove-button {
-    margin-left: $kui-space-50;
+    margin-left: var(--kui-space-50, $kui-space-50);
   }
 }
 </style>

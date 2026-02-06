@@ -321,11 +321,11 @@ const getMetadataLabel = (propKey: string) => {
 <style lang="scss" scoped>
 .kong-ui-certificate-entity-config-card {
   :deep(.config-badge) {
-    margin-right: $kui-space-20;
+    margin-right: var(--kui-space-20, $kui-space-20);
   }
 
   .metadata-label {
-    font-size: $kui-font-size-40;
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
   }
 }
 </style>

@@ -1111,32 +1111,32 @@ defineExpose({
   }
 
   :deep(.form-section-wrapper) {
-    padding-bottom: $kui-space-110;
+    padding-bottom: var(--kui-space-110, $kui-space-110);
   }
 
   .form-error-list {
     list-style-type: disc;
-    margin: $kui-space-0;
-    padding-left: $kui-space-60;
+    margin: var(--kui-space-0, $kui-space-0);
+    padding-left: var(--kui-space-60, $kui-space-60);
   }
 
   .gateway-service-form-margin-top {
-    margin-top: $kui-space-60;
+    margin-top: var(--kui-space-60, $kui-space-60);
   }
 
   .gateway-service-form-advanced-fields {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-60;
-    margin-left: $kui-space-50;
+    gap: var(--kui-space-60, $kui-space-60);
+    margin-left: var(--kui-space-50, $kui-space-50);
   }
 
   .gateway-service-form-tags {
-    margin-left: $kui-space-50;
+    margin-left: var(--kui-space-50, $kui-space-50);
   }
 
   .gateway-service-form-traffic-label {
-    margin-bottom: $kui-space-60;
+    margin-bottom: var(--kui-space-60, $kui-space-60);
   }
 
   .gateway-service-url-input {
@@ -1150,13 +1150,13 @@ defineExpose({
   .gateway-service-form-general-info {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-80;
+    gap: var(--kui-space-80, $kui-space-80);
   }
 
   .gateway-service-form-group-selection-wrapper {
     display: flex;
     flex-direction: row;
-    gap: $kui-space-60;
+    gap: var(--kui-space-60, $kui-space-60);
 
     :deep(.radio-label-wrapper) {
       height: auto;
@@ -1164,8 +1164,8 @@ defineExpose({
   }
 
   .checkbox-aligned-radio {
-    margin: $kui-space-20;
-    padding-left: $kui-space-80;
+    margin: var(--kui-space-20, $kui-space-20);
+    padding-left: var(--kui-space-80, $kui-space-80);
   }
 }
 

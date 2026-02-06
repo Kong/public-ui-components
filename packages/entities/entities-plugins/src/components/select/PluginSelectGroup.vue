@@ -130,15 +130,15 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .plugins-collapse {
-  margin-bottom: $kui-space-90;
+  margin-bottom: var(--kui-space-90, $kui-space-90);
 }
 
 .plugin-card-container {
   display: grid;
-  gap: $kui-space-90;
+  gap: var(--kui-space-90, $kui-space-90);
   grid-template-columns: repeat(auto-fit, minmax(0, 335px)); // display as many cards as possible in a row, with a max width of 335px
   justify-content: space-around;
-  margin-top: $kui-space-90;
+  margin-top: var(--kui-space-90, $kui-space-90);
 
   @media (min-width: $kui-breakpoint-laptop) {
     justify-content: flex-start;

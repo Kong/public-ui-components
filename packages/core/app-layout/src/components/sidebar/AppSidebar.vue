@@ -517,7 +517,7 @@ watch(() => props.groupConfig, (newConfig) => {
 @use "../../styles/variables" as *;
 
 .kong-ui-app-sidebar {
-  background: $kui-color-background-inverse;
+  background: var(--kui-color-background-inverse, $kui-color-background-inverse);
   display: flex;
   flex-direction: column;
   height: v-bind('sidebarContainerStyles.mobileHeight');
@@ -588,14 +588,14 @@ watch(() => props.groupConfig, (newConfig) => {
 
   .sidebar-footer {
     align-items: center;
-    color: $kui-color-text-neutral-weak;
+    color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
     display: flex;
-    font-weight: $kui-font-weight-medium;
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
     position: relative;
     width: 100%;
 
     &:before {
-      background-image: linear-gradient(transparent, $kui-color-background-inverse);
+      background-image: linear-gradient(transparent, var(--kui-color-background-inverse, $kui-color-background-inverse));
       content: '';
       display: block;
       height: $sidebar-header-spacing;
@@ -611,7 +611,7 @@ watch(() => props.groupConfig, (newConfig) => {
 
   :deep(.k-dropdown-item) {
     font-size: $sidebar-item-font-size;
-    line-height: $kui-line-height-30;
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
   }
 }
 
@@ -619,27 +619,27 @@ watch(() => props.groupConfig, (newConfig) => {
 .mobile-header-hidden .sidebar-content-container,
 .no-sidebar-header .sidebar-content-container {
   @media (max-width: ($kui-breakpoint-tablet - 1px)) {
-    margin-top: $kui-space-0 !important;
+    margin-top: var(--kui-space-0, $kui-space-0) !important;
   }
 }
 
 .sidebar-level-divider {
   /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-  background-color: $kui-navigation-color-border-divider;
+  background-color: var(--kui-navigation-color-border-divider, $kui-navigation-color-border-divider);
   height: 1px;
-  margin: $kui-space-80 auto;
+  margin: var(--kui-space-80, $kui-space-80) auto;
   min-height: 1px; // required for when scrollbar is present
   width: calc(100% - 32px);
 }
 
 .sidebar-header {
   align-items: center;
-  background: var(--kong-ui-app-sidebar-header-background, $kui-color-background-transparent);
-  color: $kui-color-text-inverse;
+  background: var(--kui-color-background-transparent, $kui-color-background-transparent);
+  color: var(--kui-color-text-inverse, $kui-color-text-inverse);
   display: v-bind('headerContainerStyles.display');
   left: 0;
   min-height: v-bind('headerContainerStyles.minHeight');
-  padding: $kui-space-0 $kui-space-60 $kui-space-0 $kui-space-90; // should match the padding of `.header-content` in the navbar
+  padding: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0) var(--kui-space-90, $kui-space-90); // should match the padding of `.header-content` in the navbar
   position: absolute;
   right: 0;
   top: 0;
@@ -668,7 +668,7 @@ watch(() => props.groupConfig, (newConfig) => {
   }
 
   &:after {
-    background-image: linear-gradient($kui-color-background-inverse, transparent);
+    background-image: linear-gradient(var(--kui-color-background-inverse, $kui-color-background-inverse), transparent);
     bottom: 0;
     content: '';
     display: block;
@@ -684,19 +684,19 @@ watch(() => props.groupConfig, (newConfig) => {
 
 .sidebar-top {
   align-items: center;
-  color: $kui-color-text-inverse;
+  color: var(--kui-color-text-inverse, $kui-color-text-inverse);
   display: flex;
-  margin: $kui-space-0 $kui-space-0 $kui-space-60;
-  padding: $kui-space-0 $kui-space-40;
+  margin: var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
+  padding: var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40);
   user-select: none;
 }
 
 .sidebar-item-external-link {
   align-items: center;
   display: flex;
-  font-size: $kui-font-size-30;
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
   justify-content: space-between;
-  line-height: $kui-line-height-30;
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
   text-decoration: none;
 
   &:focus-visible {
@@ -733,28 +733,28 @@ watch(() => props.groupConfig, (newConfig) => {
   .level-primary,
   .level-secondary {
     list-style: none;
-    margin: $kui-space-0;
-    padding: $kui-space-0;
+    margin: var(--kui-space-0, $kui-space-0);
+    padding: var(--kui-space-0, $kui-space-0);
   }
 
   .level-primary {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    margin-bottom: $kui-space-60;
-    padding: $kui-space-0 $kui-space-10 $kui-space-0 $kui-space-50; // if changed, ensure you test in ALL browsers
+    margin-bottom: var(--kui-space-60, $kui-space-60);
+    padding: var(--kui-space-0, $kui-space-0) var(--kui-space-10, $kui-space-10) var(--kui-space-0, $kui-space-0) var(--kui-space-50, $kui-space-50); // if changed, ensure you test in ALL browsers
     width: 100%;
     // Adjust padding for Safari-only
     @supports (background: -webkit-named-image(i)) {
-      padding: $kui-space-0 $kui-space-40;
+      padding: var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40);
     }
   }
 
   .level-primary-group-name {
-    color: $kui-navigation-color-text;
-    font-size: $kui-font-size-20;
-    font-weight: $kui-font-weight-medium;
-    line-height: $kui-line-height-40;
+    color: var(--kui-navigation-color-text, $kui-navigation-color-text);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+    line-height: var(--kui-line-height-40, $kui-line-height-40);
     text-transform: uppercase;
     user-select: none;
   }
@@ -762,21 +762,21 @@ watch(() => props.groupConfig, (newConfig) => {
   // KCollapse overrides
   .level-primary-group-collapse.k-collapse {
     &:not(:last-of-type) {
-      margin-bottom: $kui-space-60;
+      margin-bottom: var(--kui-space-60, $kui-space-60);
     }
 
     .collapse-heading {
-      margin-bottom: $kui-space-0;
+      margin-bottom: var(--kui-space-0, $kui-space-0);
     }
 
     .collapse-hidden-content {
-      margin-top: $kui-space-0;
+      margin-top: var(--kui-space-0, $kui-space-0);
     }
 
     // overrides for collapsible KCollapse
     &:not(.not-collapsible) {
       .collapse-heading.has-trailing-trigger {
-        margin-bottom: $kui-space-40;
+        margin-bottom: var(--kui-space-40, $kui-space-40);
       }
     }
 
@@ -796,18 +796,18 @@ watch(() => props.groupConfig, (newConfig) => {
 
   .level-primary-group-collapse-trigger.k-button,
   div.level-primary-group-collapse-trigger {
-    margin-bottom: $kui-space-0;
-    margin-left: $kui-space-50;
-    padding: $kui-space-0 calc($kui-space-50 + $kui-space-40) $kui-space-0 $kui-space-40;
+    margin-bottom: var(--kui-space-0, $kui-space-0);
+    margin-left: var(--kui-space-50, $kui-space-50);
+    padding: var(--kui-space-0, $kui-space-0) calc(var(--kui-space-50, $kui-space-50) + var(--kui-space-40, $kui-space-40)) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40);
 
     &:focus-visible {
       border-radius: $sidebar-item-border-radius;
-      box-shadow: $kui-navigation-shadow-focus;
+      box-shadow: var(--kui-navigation-shadow-focus, $kui-navigation-shadow-focus);
     }
   }
 
   .level-primary-group-collapse-icon {
-    margin-left: $kui-space-30;
+    margin-left: var(--kui-space-30, $kui-space-30);
   }
 }
 

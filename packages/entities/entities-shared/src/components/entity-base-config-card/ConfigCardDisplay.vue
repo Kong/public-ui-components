@@ -184,10 +184,10 @@ const fetchUrlJsonBlock = computed(() => {
 
 <style lang="scss" scoped>
 .config-card-prop-section-title {
-  color: $kui-color-text;
-  font-size: $kui-font-size-40;
-  font-weight: $kui-font-weight-semibold;
-  margin-bottom: $kui-space-60;
-  margin-top: $kui-space-110;
+  color: var(--kui-color-text, $kui-color-text);
+  font-size: var(--kui-font-size-40, $kui-font-size-40);
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+  margin-bottom: var(--kui-space-60, $kui-space-60);
+  margin-top: var(--kui-space-110, $kui-space-110);
 }
 </style>
