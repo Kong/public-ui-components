@@ -74,7 +74,7 @@ const {
   loading = false,
   showLoadingState = true,
   showEmptyState = true,
-  toolbar = undefined,
+  toolbar = false,
 } = defineProps<{
   /**
    * The appearance style of the Monaco Editor.
@@ -96,7 +96,7 @@ const {
    * - Pass `true` to show the toolbar with default actions
    * - Pass a configuration object to customize toolbar actions and behavior
    * - Pass `false` or omit to hide the toolbar
-   * @default undefined
+   * @default false
    */
   toolbar?: boolean | MonacoEditorToolbarOptions
   /**
