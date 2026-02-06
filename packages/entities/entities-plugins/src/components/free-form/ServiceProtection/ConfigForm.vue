@@ -2,6 +2,9 @@
   <Form
     :config="formConfig"
     :data="data"
+    :data-instance-id="instanceId"
+    data-plugin-name="service-protection"
+    data-testid="ff-config-form"
     :schema="schema"
     tag="div"
     @change="handleChange"
@@ -41,12 +44,14 @@ import RedisField from './RedisField.vue'
 import type { FormConfig } from '../shared/types'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
+import { useSchemaExposer } from '../shared/composables'
+import { useId } from 'vue'
 
 const emit = defineEmits<{
   change: [value: FreeFormPluginData]
 }>()
 
-defineProps<{
+const { schema } = defineProps<{
   schema: FormSchema
   data?: FreeFormPluginData
 }>()
@@ -65,4 +70,7 @@ function handleChange(value: FreeFormPluginData) {
   }
   emit('change', value)
 }
+
+const instanceId = useId()
+useSchemaExposer(schema, instanceId)
 </script>

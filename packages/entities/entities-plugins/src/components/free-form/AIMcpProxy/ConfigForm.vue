@@ -2,6 +2,9 @@
   <Form
     :config="formConfig"
     :data="data"
+    :data-instance-id="instanceId"
+    data-plugin-name="ai-mcp-proxy"
+    data-testid="ff-config-form"
     :schema="schema"
     tag="div"
     @change="onChange"
@@ -44,8 +47,10 @@ import composables from '../../../composables'
 import type { AIMcpProxyPlugin } from './types'
 import type { FormConfig } from '../shared/types'
 import type { ConfigFormProps } from '../shared/PluginFormWrapper.vue'
+import { useSchemaExposer } from '../shared/composables'
+import { useId } from 'vue'
 
-defineProps<ConfigFormProps<AIMcpProxyPlugin>>()
+const { schema } = defineProps<ConfigFormProps<AIMcpProxyPlugin>>()
 
 const emit = defineEmits<{
   change: [value: AIMcpProxyPlugin]
@@ -87,4 +92,7 @@ const onChange = (newVal: AIMcpProxyPlugin) => {
 
   emit('change', pluginConfig)
 }
+
+const instanceId = useId()
+useSchemaExposer(schema, instanceId)
 </script>

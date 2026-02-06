@@ -3,6 +3,9 @@
     class="rc-config-form"
     :config="formConfig"
     :data="data"
+    :data-instance-id="instanceId"
+    data-plugin-name="request-callout"
+    data-testid="ff-config-form"
     :schema="schema"
     tag="div"
     @change="onChange"
@@ -73,7 +76,7 @@
 
 <script setup lang="ts">
 import { cloneDeep } from 'lodash-es'
-import { FIELD_RENDERERS } from '../shared/composables'
+import { FIELD_RENDERERS, useSchemaExposer } from '../shared/composables'
 import { getCalloutId } from './utils'
 import ArrayField from '../shared/ArrayField.vue'
 import CalloutsForm from './CalloutsForm.vue'
@@ -87,8 +90,9 @@ import AdvancedFields from '../shared/AdvancedFields.vue'
 import { CalloutId, type Callout, type RequestCalloutPlugin } from './types'
 import type { FormConfig } from '../shared/types'
 import type { ConfigFormProps } from '../shared/PluginFormWrapper.vue'
+import { useId } from 'vue'
 
-defineProps<ConfigFormProps<RequestCalloutPlugin>>()
+const { schema } = defineProps<ConfigFormProps<RequestCalloutPlugin>>()
 
 const emit = defineEmits<{
   change: [value: RequestCalloutPlugin]
@@ -167,6 +171,9 @@ function onChange(newVal?: RequestCalloutPlugin) {
 
   emit('change', pluginConfig)
 }
+
+const instanceId = useId()
+useSchemaExposer(schema, instanceId)
 </script>
 
 <style lang="scss" scoped>
