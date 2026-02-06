@@ -117,6 +117,7 @@ watch(() => props.activeOperation, () => {
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 .kong-public-ui-spec-details {
   color: var(--kong-ui-portal-spec-details-text-color, $kui-color-text);
   font-family: var(--kong-ui-portal-spec-details-font-family-default, $kui-font-family-text);

@@ -185,7 +185,7 @@ defineExpose({
 .ff-kv-field {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
 
   // .k-label is required to override styles correctly in KM
   &-label.k-label {
@@ -196,14 +196,14 @@ defineExpose({
   &-header {
     align-items: center;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     height: 32px;
   }
 
   &-entry {
     align-items: center;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
 
     &-key,
     &-value {

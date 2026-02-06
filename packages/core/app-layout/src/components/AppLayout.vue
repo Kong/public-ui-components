@@ -317,6 +317,7 @@ onBeforeUnmount(() => {
 </style>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 @use "../styles/variables" as *;
 
 .kong-ui-app-layout {

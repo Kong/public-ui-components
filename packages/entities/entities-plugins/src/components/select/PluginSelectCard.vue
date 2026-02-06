@@ -213,16 +213,16 @@ const handleCustomClick = (): void => {
   display: flex;
 
   .plugin-select-card {
-    border: $kui-border-width-10 solid $kui-color-border;
-    border-radius: $kui-border-radius-30;
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     box-sizing: border-box;
     color: initial;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    gap: $kui-space-70;
+    gap: var(--kui-space-70, $kui-space-70);
     overflow: hidden;
-    padding: $kui-space-70 $kui-space-70 0;
+    padding: var(--kui-space-70, $kui-space-70) var(--kui-space-70, $kui-space-70) 0;
     width: 100%;
 
     &:hover {
@@ -234,12 +234,12 @@ const handleCustomClick = (): void => {
       display: flex;
 
       .plugin-card-title {
-        color: $kui-color-text;
+        color: var(--kui-color-text, $kui-color-text);
         display: flex;
-        font-size: $kui-font-size-50;
-        font-weight: $kui-font-weight-bold;
-        letter-spacing: $kui-letter-spacing-minus-30;
-        line-height: $kui-line-height-40;
+        font-size: var(--kui-font-size-50, $kui-font-size-50);
+        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+        letter-spacing: var(--kui-letter-spacing-minus-30, $kui-letter-spacing-minus-30);
+        line-height: var(--kui-line-height-40, $kui-line-height-40);
         width: 100%;
 
         .non-custom-title {
@@ -253,32 +253,32 @@ const handleCustomClick = (): void => {
       }
 
       .actions-trigger {
-        color: $kui-color-text-neutral-stronger;
+        color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
       }
     }
 
     .plugin-card-icon {
-      margin-bottom: $kui-space-60;
+      margin-bottom: var(--kui-space-60, $kui-space-60);
     }
 
     .plugin-card-text {
       -webkit-box-orient: vertical;
-      color: $kui-color-text;
+      color: var(--kui-color-text, $kui-color-text);
       // truncate
       display: -webkit-box;
-      font-size: $kui-font-size-30;
-      font-weight: $kui-font-weight-regular;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
       -webkit-line-clamp: 3;
       overflow: hidden;
     }
 
     .plugin-card-body {
       align-items: center;
-      background-color: $kui-color-background;
+      background-color: var(--kui-color-background, $kui-color-background);
       display: flex;
       flex: 1;
       flex-direction: column;
-      padding: $kui-space-60;
+      padding: var(--kui-space-60, $kui-space-60);
 
       &.custom-plugin {
         cursor: pointer;
@@ -286,13 +286,13 @@ const handleCustomClick = (): void => {
     }
 
     .plugin-card-footer {
-      background-color: $kui-color-background-primary-weakest;
-      border-radius: $kui-border-radius-30;
-      color: $kui-color-text-primary;
-      font-size: $kui-font-size-30;
-      font-weight: $kui-font-weight-semibold;
-      margin: 0 calc(-1 * $kui-space-70);
-      padding: $kui-space-60;
+      background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
+      border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+      color: var(--kui-color-text-primary, $kui-color-text-primary);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      margin: 0 calc(-1 * var(--kui-space-70, $kui-space-70));
+      padding: var(--kui-space-60, $kui-space-60);
       text-align: center;
     }
 

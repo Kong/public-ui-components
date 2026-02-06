@@ -1,14 +1,14 @@
 @use "@kong/design-tokens/tokens/scss/variables" as *;
 
 $sidebar-width: 240px; // token set here to standardize
-$sidebar-header-spacing: $kui-space-40; // token set here to standardize
-$sidebar-item-font-size: $kui-font-size-30; // token set here to standardize
-$sidebar-item-border-radius: $kui-border-radius-30; // token set here to standardize
+$sidebar-header-spacing: var(--kui-space-40, $kui-space-40); // token set here to standardize
+$sidebar-item-font-size: var(--kui-font-size-30, $kui-font-size-30); // token set here to standardize
+$sidebar-item-border-radius: var(--kui-border-radius-30, $kui-border-radius-30); // token set here to standardize
 
 // Scrollbar
 $scrollbar-width: 8px;
-$scrollbar-foreground-color: $kui-color-background-neutral;
-$scrollbar-background-color: $kui-color-background-transparent;
+$scrollbar-foreground-color: var(--kui-color-background-neutral, $kui-color-background-neutral);
+$scrollbar-background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
 
 @mixin scrollbarBase($size: $scrollbar-width) {
   // For Chrome & Safari
@@ -19,19 +19,19 @@ $scrollbar-background-color: $kui-color-background-transparent;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: $kui-color-background-transparent; // Hide the scrollbar until hovered
-    border-radius: $kui-border-radius-40;
+    background: var(--kui-color-background-transparent, $kui-color-background-transparent); // Hide the scrollbar until hovered
+    border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   }
 
   &::-webkit-scrollbar-track {
-    background: $kui-color-background-transparent; // Hide the scrollbar until hovered
+    background: var(--kui-color-background-transparent, $kui-color-background-transparent); // Hide the scrollbar until hovered
   }
 
   // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
   // stylelint-disable-next-line no-duplicate-selectors
   & {
     // Standard version (Firefox only for now) - always include
-    scrollbar-color: $kui-color-background-transparent $kui-color-background-transparent;
+    scrollbar-color: var(--kui-color-background-transparent, $kui-color-background-transparent) var(--kui-color-background-transparent, $kui-color-background-transparent);
     scrollbar-gutter: stable;
     scrollbar-width: thin;
   }

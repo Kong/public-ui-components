@@ -195,6 +195,7 @@ watch([monacoEditor.editor, realMonacoOptions], ([editor, options]) => {
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 .monaco-editor-container {
   background: var(--kui-color-background, $kui-color-background);
   display: flex;

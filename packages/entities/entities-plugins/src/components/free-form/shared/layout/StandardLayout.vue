@@ -560,7 +560,7 @@ onUnmounted(() => {
 .ff-standard-layout {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-80;
+  gap: var(--kui-space-80, $kui-space-80);
 
   .radio-group {
     width: 100%;
@@ -569,12 +569,12 @@ onUnmounted(() => {
   .scope .radio-group,
   .disabled-scope :deep(.popover-trigger-wrapper) .radio-group {
     display: grid;
-    gap: $kui-space-50;
+    gap: var(--kui-space-50, $kui-space-50);
     grid-template-columns: repeat(2, 1fr);
   }
 
   :deep(.form-group) {
-    margin-bottom: $kui-space-70;
+    margin-bottom: var(--kui-space-70, $kui-space-70);
   }
 
   :deep(.ff-enabled-field) {
@@ -583,7 +583,7 @@ onUnmounted(() => {
     }
 
     & > label > .icon-wrapper {
-      font-weight: $kui-font-weight-semibold;
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
   }
 }

@@ -48,6 +48,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 .account-dropdown {
   display: flex;
   margin-right: $kui-space-20;

@@ -126,7 +126,7 @@ const tabs = computed<Tab[]>(() => [
 <style lang="scss" scoped>
 .route-form-config-tabs-tooltip {
   display: inline-flex;
-  margin: $kui-space-auto $kui-space-0 $kui-space-auto $kui-space-20;
+  margin: var(--kui-space-auto, $kui-space-auto) var(--kui-space-0, $kui-space-0) var(--kui-space-auto, $kui-space-auto) var(--kui-space-20, $kui-space-20);
   vertical-align: middle;
 }
 </style>

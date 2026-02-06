@@ -435,8 +435,8 @@ onBeforeMount(async () => {
   }
 
   .info-name {
-    color: $kui-color-text-neutral-stronger;
-    font-size: $kui-font-size-30;
+    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
     font-weight: 600;
     line-height: 20px;
   }

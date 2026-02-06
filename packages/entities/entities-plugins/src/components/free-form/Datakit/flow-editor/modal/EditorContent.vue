@@ -43,8 +43,8 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dk-editor-content {
-  background-color: $kui-color-background;
-  border-top-left-radius: $kui-border-radius-30;
+  background-color: var(--kui-color-background, $kui-color-background);
+  border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   display: flex;
   overflow: hidden;
   position: relative;

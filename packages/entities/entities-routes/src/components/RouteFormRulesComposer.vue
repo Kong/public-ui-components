@@ -355,7 +355,7 @@ watch(payload, (newPayload) => {
 <style lang="scss" scoped>
 .config-type-container {
   display: flex;
-  gap: $kui-space-60;
+  gap: var(--kui-space-60, $kui-space-60);
 
   :deep(.radio-card-wrapper) {
     box-sizing: border-box;

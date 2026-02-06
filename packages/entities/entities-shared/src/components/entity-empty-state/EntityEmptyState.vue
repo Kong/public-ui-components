@@ -198,79 +198,79 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
 
 .kong-ui-public-entity-empty-state {
   align-items: center;
-  background-color: $kui-color-background;
+  background-color: var(--kui-color-background, $kui-color-background);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  font-family: $kui-font-family-text;
-  gap: $kui-space-80;
-  padding: $kui-space-130 $kui-space-0;
+  font-family: var(--kui-font-family-text, $kui-font-family-text);
+  gap: var(--kui-space-80, $kui-space-80);
+  padding: var(--kui-space-130, $kui-space-130) var(--kui-space-0, $kui-space-0);
   width: 100%;
 
   @media (min-width: $kui-breakpoint-mobile) {
-    padding: $kui-space-130 $kui-space-150;
+    padding: var(--kui-space-130, $kui-space-130) var(--kui-space-150, $kui-space-150);
   }
 
   .empty-state-image {
-    margin-bottom: $kui-space-40;
+    margin-bottom: var(--kui-space-40, $kui-space-40);
   }
 
   .entity-empty-state-content {
     align-items: center;
     display: flex;
     flex-direction: column;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     text-align: center;
     width: 100%;
 
     .entity-empty-state-title h1 {
       align-items: center;
-      color: $kui-color-text;
+      color: var(--kui-color-text, $kui-color-text);
       display: flex;
-      font-size: $kui-font-size-70;
-      font-weight: $kui-font-weight-bold;
-      gap: $kui-space-40;
-      line-height: $kui-line-height-60;
-      margin: $kui-space-0;
+      font-size: var(--kui-font-size-70, $kui-font-size-70);
+      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+      gap: var(--kui-space-40, $kui-space-40);
+      line-height: var(--kui-line-height-60, $kui-line-height-60);
+      margin: var(--kui-space-0, $kui-space-0);
 
       &.secondary {
-        font-size: $kui-font-size-50;
+        font-size: var(--kui-font-size-50, $kui-font-size-50);
       }
     }
   }
 
   .entity-empty-state-description, .entity-empty-state-pricing {
-    color: $kui-color-text-neutral-strong;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-regular;
-    line-height: $kui-line-height-30;
+    color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
     max-width: 640px; // limit width so the description stays readable if it is too long
 
     p {
-      margin: $kui-space-0;
+      margin: var(--kui-space-0, $kui-space-0);
     }
   }
 
   .entity-empty-state-pricing {
-    margin-top: $kui-space-60;
+    margin-top: var(--kui-space-60, $kui-space-60);
   }
 
   .entity-empty-state-message {
-    color: $kui-color-text-neutral-strong;
+    color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
   }
 
   .entity-empty-state-action {
     align-items: center;
     display: flex;
-    gap: $kui-space-50;
+    gap: var(--kui-space-50, $kui-space-50);
   }
 
   .entity-empty-state-card-container {
     display: flex;
     flex-wrap: wrap;
-    gap: $kui-space-60;
+    gap: var(--kui-space-60, $kui-space-60);
     justify-content: space-around;
-    margin-top: $kui-space-40;
+    margin-top: var(--kui-space-40, $kui-space-40);
     /** single column on mobile */
     width: $entity-empty-state-feature-card-width;
 
@@ -279,34 +279,34 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
     }
 
     .entity-empty-state-card {
-      background-color: $kui-color-background-neutral-weakest;
-      border: $kui-border-width-10 solid $kui-color-border;
-      border-radius: $kui-border-radius-30;
-      color: $kui-color-text-neutral-weak;
-      gap: $kui-space-40;
+      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+      color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
+      gap: var(--kui-space-40, $kui-space-40);
       height: 160px;
-      padding: $kui-space-70;
+      padding: var(--kui-space-70, $kui-space-70);
       width: $entity-empty-state-feature-card-width;
 
       .feature-icon {
-        color: $kui-color-text-neutral-stronger;
+        color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
         display: flex;
-        margin-bottom: $kui-space-50;
+        margin-bottom: var(--kui-space-50, $kui-space-50);
 
         :deep(.kui-icon) {
-          height: $kui-icon-size-40 !important;
-          width: $kui-icon-size-40 !important;
+          height: var(--kui-icon-size-40, $kui-icon-size-40) !important;
+          width: var(--kui-icon-size-40, $kui-icon-size-40) !important;
         }
       }
 
       :deep(.card-title) {
-        font-size: $kui-font-size-30;
-        font-weight: $kui-font-weight-semibold;
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
+        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       }
 
       :deep(.card-content) {
         -webkit-box-orient: vertical;
-        color: $kui-color-text-neutral;
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
         display: -webkit-box;
         -webkit-line-clamp: 3;
         line-clamp: 3;
@@ -316,11 +316,11 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
   }
 
   .entity-empty-state-bottom-container {
-    border-top: $kui-border-width-10 solid $kui-color-border;
+    border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     display: flex;
     flex-direction: column;
-    gap: $kui-space-60;
-    padding-top: $kui-space-110;
+    gap: var(--kui-space-60, $kui-space-60);
+    padding-top: var(--kui-space-110, $kui-space-110);
     width: 100%;
 
     @media (min-width: $kui-breakpoint-mobile) {

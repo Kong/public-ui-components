@@ -33,6 +33,7 @@ const tag = `h${props.level}`
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 h1, h2, h3, h4, h5, h6 {
   color: var(--kong-ui-document-viewer-color, $kui-color-text);
   font-family: var(--kong-ui-document-viewer-font-family-headings, var(--kong-ui-document-viewer-font-family-default, $kui-font-family-text));

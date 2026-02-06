@@ -79,67 +79,67 @@ defineProps({
 
 <style lang="scss" scoped>
 .app-page-info-section {
-  border: $kui-border-width-10 solid $kui-color-border;
-  border-radius: $kui-border-radius-30;
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
 
   .app-page-info-section-header {
     align-items: center;
     display: flex;
-    gap: $kui-space-20;
+    gap: var(--kui-space-20, $kui-space-20);
     justify-content: space-between;
-    padding: $kui-space-70;
+    padding: var(--kui-space-70, $kui-space-70);
 
     .app-page-info-section-default-header {
       display: flex;
       flex-direction: column;
-      gap: $kui-space-40;
+      gap: var(--kui-space-40, $kui-space-40);
       max-width: 700px;
 
       .app-page-info-section-title {
-        color: $kui-color-text;
-        font-size: $kui-font-size-40;
-        font-weight: $kui-font-weight-bold;
-        line-height: $kui-line-height-30;
-        margin: $kui-space-0;
+        color: var(--kui-color-text, $kui-color-text);
+        font-size: var(--kui-font-size-40, $kui-font-size-40);
+        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+        line-height: var(--kui-line-height-30, $kui-line-height-30);
+        margin: var(--kui-space-0, $kui-space-0);
       }
 
       .app-page-info-section-description {
-        color: $kui-color-text-neutral;
-        font-size: $kui-font-size-30;
-        line-height: $kui-line-height-30;
-        margin: $kui-space-0;
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
+        line-height: var(--kui-line-height-30, $kui-line-height-30);
+        margin: var(--kui-space-0, $kui-space-0);
       }
     }
   }
 
   .app-page-info-section-content {
-    background: $kui-color-background-neutral-weakest;
-    border-bottom-left-radius: $kui-border-radius-30;
-    border-bottom-right-radius: $kui-border-radius-30;
-    border-top: $kui-border-width-10 solid $kui-color-border;
+    background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     display: flex;
     flex-direction: column;
-    gap: $kui-space-40;
-    padding: $kui-space-70;
+    gap: var(--kui-space-40, $kui-space-40);
+    padding: var(--kui-space-70, $kui-space-70);
 
     :slotted(.k-table-view) {
-      background-color: $kui-color-background-neutral-weakest;
+      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
 
       tr.is-scrolled {
-        background-color: $kui-color-background-neutral-weakest;
+        background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
       }
 
       td,
       th {
         &.sticky-column,
         &.actions-column {
-          background-color: $kui-color-background-neutral-weakest !important;
+          background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest) !important;
         }
       }
     }
 
     :slotted(.k-empty-state) {
-      background-color: $kui-color-background-neutral-weakest;
+      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     }
   }
 }
@@ -154,7 +154,7 @@ details.app-page-info-section {
   }
 
   &:has(>summary:focus-visible) {
-    box-shadow: $kui-shadow-focus;
+    box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
   }
 
   summary {
@@ -171,7 +171,7 @@ details.app-page-info-section {
     .app-page-info-section-chevron-icon {
       flex-shrink: 0;
       pointer-events: none;
-      transition: transform $kui-animation-duration-20 ease;
+      transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
     }
   }
 }

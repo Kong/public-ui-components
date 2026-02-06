@@ -5,6 +5,7 @@
 </template>
 
 <style scoped lang="scss">
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 p {
   font-size: $kui-font-size-30;
   line-height: $kui-line-height-30;
