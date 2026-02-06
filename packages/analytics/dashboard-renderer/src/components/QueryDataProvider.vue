@@ -5,19 +5,19 @@
     type="table"
   />
   <KEmptyState
-    v-else-if="hasError && queryError"
+    v-else-if="hasError"
     :action-button-visible="false"
     data-testid="chart-empty-state"
   >
     <template #icon>
-      <VisibilityOffIcon v-if="queryError.type === 'forbidden'" />
+      <VisibilityOffIcon v-if="queryError?.type === 'forbidden'" />
       <WarningOutlineIcon v-else />
     </template>
     <template #title>
-      <p>{{ queryError.message }}</p>
+      <p>{{ queryError?.message || i18n.t('renderer.unexpectedError') }}</p>
     </template>
     <template
-      v-if="queryError.details"
+      v-if="queryError?.details"
       #default
     >
       <p>{{ queryError.details }}</p>
@@ -46,10 +46,10 @@ import type {
 import type { QueryError } from '@kong-ui-public/analytics-chart'
 import type { DashboardRendererContextInternal } from '../types'
 
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, nextTick, ref, watch } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
-import { handleQueryError } from '@kong-ui-public/analytics-chart'
+import { handleQueryError, isCanceledError } from '@kong-ui-public/analytics-chart'
 
 import composables from '../composables'
 import { INJECT_QUERY_PROVIDER } from '../constants'
@@ -68,6 +68,7 @@ const emit = defineEmits<{
   (e: 'queryComplete'): void
 }>()
 
+const { i18n } = composables.useI18n()
 const { issueQuery } = composables.useIssueQuery()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
@@ -81,7 +82,7 @@ const queryKey = () => {
   return null
 }
 
-const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
+const { data: v4Data, error, isValidating, mutate } = useSWRV(queryKey, async () => {
   try {
     const result = await issueQuery(props.query, props.context, props.limitOverride)
     queryError.value = null
@@ -90,10 +91,13 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
   } catch (e: any) {
     // Note: The error object will contain a response status property at the root when the analytics bridge
     // detects a 403 or 408 status code. This allows us to provide proper error messages for impacted tiles.
-    queryError.value = handleQueryError(e)
+    if (!isCanceledError(e)) {
+      queryError.value = handleQueryError(e)
+    }
 
     throw e
   } finally {
+    isRetrying.value = false
     emit('queryComplete')
   }
 }, {
@@ -105,8 +109,30 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
 const { state, swrvState: STATE } = useSwrvState(v4Data, error, isValidating)
 
 const queryError = ref<QueryError | null>(null)
+const retriedKey = ref<string | null>(null)
+const isRetrying = ref(false)
 const hasError = computed(() => state.value === STATE.ERROR || !!queryError.value)
-const isLoading = computed(() => !props.queryReady || state.value === STATE.PENDING)
+const isLoading = computed(() => !props.queryReady || state.value === STATE.PENDING || isRetrying.value)
+
+/*
+ * This handles the case where a previous navigation canceled a
+ * request and left SWRV with an error state but no data.
+ */
+watch([error, v4Data], ([err]) => {
+  const currentKey = queryKey()
+
+  const shouldRetry = isCanceledError(err)
+    && !v4Data.value
+    && props.queryReady
+    && currentKey
+    && retriedKey.value !== currentKey
+
+  if (shouldRetry) {
+    retriedKey.value = currentKey
+    isRetrying.value = true
+    nextTick(() => mutate())
+  }
+})
 
 watch([() => v4Data.value, () => state.value], ([data, state]) => {
   if (data && (state === 'SUCCESS_HAS_DATA' || state === 'SUCCESS')) {
