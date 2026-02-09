@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.154.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.153.1...@kong-ui-public/entities-plugins@9.154.0) (2026-02-09)
+
+
+### Features
+
+* **entities-plugins:** expose config form schema ([#2912](https://github.com/Kong/public-ui-components/issues/2912)) ([4cf6843](https://github.com/Kong/public-ui-components/commit/4cf68435577af00ac8cf9f23aeabb4800b3cc740))
+
+
+
+
+
 ## [9.153.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.153.0...@kong-ui-public/entities-plugins@9.153.1) (2026-02-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
