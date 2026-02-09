@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { ConfigNode, DatakitConfig } from './strict'
+import type { ConfigNode } from './strict'
 
 export type ConnectionRef = {
   nodeName: string
@@ -79,65 +79,4 @@ export function validateInputOutputExclusivity(
       path: ['outputs'],
     })
   }
-}
-
-export function validateNamesAndConnections(
-  config: DatakitConfig,
-  implicitNames: readonly string[],
-  ctx: z.RefinementCtx,
-) {
-  if (!config.nodes) return
-
-  const names = config.nodes.map((n) => n.name)
-  const seen = new Set<string>()
-  names.forEach((name, i) => {
-    if (seen.has(name)) {
-      ctx.addIssue({
-        code: 'custom',
-        message: `Duplicate node name: "${name}"`,
-        path: ['nodes', i, 'name'],
-      })
-    }
-    seen.add(name)
-  })
-
-  const allowed = new Set<string>([...implicitNames, ...names])
-  const pairOutPath = new Map<string, Array<string | number>>()
-  const pairInPath = new Map<string, Array<string | number>>()
-
-  config.nodes.forEach((node, i) => {
-    for (const ref of collectConnectionRefs(node, i)) {
-      const other = ref.value.split('.', 1)[0]!
-      if (!allowed.has(other)) {
-        ctx.addIssue({
-          code: 'custom',
-          message: `Unknown node "${other}" in connection "${ref.value}"`,
-          path: ref.path,
-        })
-      }
-      if (isOutRef(ref)) {
-        const key = `${ref.nodeName}->${other}`
-        if (pairInPath.has(key)) {
-          ctx.addIssue({
-            code: 'custom',
-            message: `Connection specified on both sides: "${ref.nodeName}" outputs to "${other}" and "${other}" inputs from "${ref.nodeName}". Specify it on one side only.`,
-            path: ref.path,
-          })
-        } else {
-          pairOutPath.set(key, pairOutPath.get(key) ?? ref.path)
-        }
-      } else {
-        const key = `${other}->${ref.nodeName}`
-        if (pairOutPath.has(key)) {
-          ctx.addIssue({
-            code: 'custom',
-            message: `Connection specified on both sides: "${other}" outputs to "${ref.nodeName}" and "${ref.nodeName}" inputs from "${other}". Specify it on one side only.`,
-            path: ref.path,
-          })
-        } else {
-          pairInPath.set(key, pairInPath.get(key) ?? ref.path)
-        }
-      }
-    }
-  })
 }

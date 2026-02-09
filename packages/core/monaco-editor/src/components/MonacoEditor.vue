@@ -64,6 +64,7 @@ const {
   appearance = 'embedded',
   theme = 'light',
   language = 'markdown',
+  modelUri = undefined,
   options = undefined,
   loading = false,
   showLoadingState = true,
@@ -84,6 +85,11 @@ const {
    * @default 'markdown'
    */
   language?: string
+  /**
+   * Optional model URI to use for the editor model.
+   * When provided, schemas can target the model precisely via fileMatch.
+   */
+  modelUri?: string
   /**
    * Whether the editor is in a loading state.
    * @default false
@@ -154,6 +160,7 @@ const realMonacoOptions = computed(() => {
 
 const monacoEditor = useMonacoEditor(editorRef, {
   language,
+  modelUri,
   code: model,
   theme: editorTheme.value,
   monacoOptions: realMonacoOptions.value,

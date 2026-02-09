@@ -60,8 +60,8 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "warningLimit": "200KB",
-    "errorLimit": "300KB"
+    "warningLimit": "450KB",
+    "errorLimit": "500KB"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
@@ -83,6 +83,7 @@
   "dependencies": {
     "@shikijs/monaco": "^3.21.0",
     "@vueuse/core": "^14.1.0",
-    "shiki-codegen": "^3.21.0"
+    "shiki-codegen": "^3.21.0",
+    "yaml": "^2.8.2"
   }
 }

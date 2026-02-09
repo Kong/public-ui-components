@@ -32,14 +32,14 @@ type Options = {
    * @type {IFeatureDefinition[]}
    * @example
    * ```ts
-   * // Add yaml support from `monaco-yaml`
+   * // Add a custom language worker
    * customLanguages: [
    *   {
-   *     label: 'yaml',
-   *     entry: 'monaco-yaml',
+   *     label: 'myLanguage',
+   *     entry: 'my-language-package',
    *     worker: {
-   *       id: 'monaco-yaml/yamlWorker',
-   *       entry: 'monaco-yaml/yaml.worker',
+   *       id: 'my-language/worker',
+   *       entry: 'my-language/worker',
    *     },
    *   },
    * ]
@@ -254,6 +254,8 @@ export default function plugin(options?: Options): Plugin {
         const languageIds =
           options?.languages || (Object.keys(languagesDict) as EditorLanguage[])
 
+        const customLanguages = options?.customLanguages ? [...options.customLanguages] : []
+
         const languageImports = languageIds.flatMap((langId) => {
           const lang = languagesDict[langId]
           if (!lang?.entry) {
@@ -262,14 +264,14 @@ export default function plugin(options?: Options): Plugin {
           return generateImports(lang.entry)
         })
 
-        const customLanguageImports = (options?.customLanguages || []).map(
+        const customLanguageImports = customLanguages.map(
           ({ entry }) => `import '${entry}'`,
         )
 
         const workerCode = generateWorkerCode(
           languageIds,
           languagesDict,
-          options?.customLanguages,
+          customLanguages,
         )
 
         return [

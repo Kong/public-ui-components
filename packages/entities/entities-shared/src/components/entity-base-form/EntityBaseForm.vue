@@ -466,6 +466,10 @@ defineExpose({
       margin: $kui-space-70 0 0 $kui-space-60;
     }
   }
+
+  &:has(.kong-ui-entity-form-block) .form-error {
+    margin-top: $kui-space-80;
+  }
 }
 
 .form-actions {

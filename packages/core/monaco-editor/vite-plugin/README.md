@@ -31,7 +31,7 @@ Options can be passed in to `@kong-ui-public/monaco-editor/vite-plugin`. They ca
 
 - `features` (`string[]`) - include only a subset of the editor features. By default, all features shipped with the `monaco-editor` will be included. Instead of enumerating included features, it is also possible to exclude certain default features by prefixing them with an exclamation mark `!`.
 
-- `customLanguages` (`{label:string; entry:string; worker:{id:string, entry:string} }[]`) - Custom languages (outside of the ones shipped with the `monaco-editor`), e.g. [monaco-yaml](https://github.com/remcohaszing/monaco-yaml).
+- `customLanguages` (`{label:string; entry:string; worker:{id:string, entry:string} }[]`) - Custom languages (outside of the ones shipped with the `monaco-editor`).
 
 - `shiki` (`object`) - Shiki fine-grained bundle configuration:
   - `langs` (`string[]`) - Languages to include for Shiki syntax highlighting. By default, uses the same languages specified in the `languages` option above.
@@ -57,11 +57,11 @@ export default defineConfig({
       ],
       customLanguages: [
         {
-          label: 'yaml',
-          entry: 'monaco-yaml',
+          label: 'myLanguage',
+          entry: 'my-language-package',
           worker: {
-            id: 'monaco-yaml/yamlWorker',
-            entry: 'monaco-yaml/yaml.worker',
+            id: 'my-language/worker',
+            entry: 'my-language/worker',
           },
         },
       ],

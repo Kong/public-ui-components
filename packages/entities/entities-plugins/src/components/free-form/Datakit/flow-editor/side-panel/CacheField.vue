@@ -108,7 +108,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import yaml from 'js-yaml'
+import { stringify } from 'yaml'
 import { codeToHtml } from 'shiki'
 import {
   KUI_COLOR_TEXT_NEUTRAL,
@@ -157,9 +157,10 @@ const localStrategy = computed(() => field.value.value?.strategy)
 
 const redisConfigYaml = computed(() => {
   if (!field.value.value?.redis) return ''
-  return yaml.dump(field.value.value.redis, {
+  return stringify(field.value.value.redis, {
     indent: 2,
-    noRefs: true,
+    aliasDuplicateObjects: false,
+    schema: 'yaml-1.1',
   })
 })
 

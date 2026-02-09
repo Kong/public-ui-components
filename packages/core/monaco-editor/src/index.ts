@@ -9,3 +9,4 @@ export {
 export * from './types'
 
 export { useMonacoEditor } from './composables/useMonacoEditor'
+export * from './yaml'
