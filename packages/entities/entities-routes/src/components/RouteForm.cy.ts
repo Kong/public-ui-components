@@ -138,6 +138,23 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('route-form-protocols').should('have.value', DEFAULT_PROTOCOL.toUpperCase())
     })
 
+    it('should reset protocols to default when switching back to Basic config type', () => {
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKM,
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
+
+      cy.getTestId('route-form-config-type-advanced').click()
+      cy.getTestId('route-form-protocols').click({ force: true })
+      cy.get("[data-testid='select-item-tcp'] button").click({ force: true })
+
+      cy.getTestId('route-form-config-type-basic').click()
+      cy.getTestId('route-form-config-type-advanced').click()
+      cy.getTestId('route-form-protocols').should('have.value', DEFAULT_PROTOCOL.toUpperCase())
+    })
+
     it('should preserve entered path when switching to Advanced config type and remove additional paths when switching back to Basic', () => {
       cy.mount(RouteForm, {
         props: {
