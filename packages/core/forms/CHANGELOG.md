@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.21.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.21.1...@kong-ui-public/forms@4.21.2) (2026-02-04)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.21.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.21.0...@kong-ui-public/forms@4.21.1) (2026-02-02)
+
+
+### Bug Fixes
+
+* **form:** set width to 100% for string array items ([#2899](https://github.com/Kong/public-ui-components/issues/2899)) ([6d3ea01](https://github.com/Kong/public-ui-components/commit/6d3ea018d4a43f94a1311c4f841e1edf4f4577e2))
+
+
+
+
+
+# [4.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.34...@kong-ui-public/forms@4.21.0) (2026-02-02)
+
+
+### Features
+
+* support array of arrays field in vfg ([#2897](https://github.com/Kong/public-ui-components/issues/2897)) ([5aa3009](https://github.com/Kong/public-ui-components/commit/5aa30094f6a2b5f65dcd2f49ddd6629db4dc1078))
+
+
+
+
+
 ## [4.20.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.33...@kong-ui-public/forms@4.20.34) (2026-01-26)
 
 

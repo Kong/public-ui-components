@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.51](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.10.50...@kong-ui-public/entities-snis@3.10.51) (2026-02-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
 ## [3.10.50](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.10.49...@kong-ui-public/entities-snis@3.10.50) (2026-01-26)
 
 

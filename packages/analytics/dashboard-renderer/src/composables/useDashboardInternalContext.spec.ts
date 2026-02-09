@@ -114,6 +114,7 @@ describe('useContextLinks', () => {
       editable: false,
       filters: [],
       refreshInterval: DEFAULT_TILE_REFRESH_INTERVAL_MS,
+      showTileActions: true,
       timeSpec: defaultTimeSpec,
       tz: (new Intl.DateTimeFormat()).resolvedOptions().timeZone,
       zoomable: false,

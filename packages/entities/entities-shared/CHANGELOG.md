@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.39.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.9...@kong-ui-public/entities-shared@3.39.10) (2026-02-04)
+
+
+### Bug Fixes
+
+* **entities-shared:** add styling for form error message ([#2905](https://github.com/Kong/public-ui-components/issues/2905)) ([2ca9aba](https://github.com/Kong/public-ui-components/commit/2ca9aba0d16ce64ca194067611b39738df179359))
+
+
+
+
+
 ## [3.39.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.8...@kong-ui-public/entities-shared@3.39.9) (2026-01-26)
 
 

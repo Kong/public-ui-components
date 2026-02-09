@@ -4,6 +4,9 @@
     class="ff-standard-layout"
     :config="realFormConfig"
     :data="(prunedData as T)"
+    :data-instance-id="instanceId"
+    :data-plugin-name="pluginName"
+    data-testid="ff-standard-layout-form"
     :render-rules="renderRules"
     :schema="freeFormSchema"
     tag="div"
@@ -192,7 +195,7 @@ export type Props<T extends FreeFormPluginData = any> = {
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, inject, nextTick, ref, useTemplateRef } from 'vue'
+import { computed, inject, nextTick, ref, useTemplateRef, toRaw, useId, watch, onUnmounted } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
 import { KRadio, KTooltip } from '@kong/kongponents'
@@ -211,6 +214,7 @@ import { FIELD_RENDERERS } from '../composables'
 import Field from '../Field.vue'
 import StringArrayField from '../StringArrayField.vue'
 import StringField from '../StringField.vue'
+import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../../constants'
 
 const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   // plugin specific config
@@ -230,6 +234,8 @@ const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   'route',
   'service',
 ]
+
+const instanceId = useId()
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -524,6 +530,24 @@ function getScopesFromFormModel(): Partial<T> {
   })
   return data
 }
+
+/**
+ * This watch is used to expose the plugin schema for auto-filler.
+ * The auto-filler script requires the **final** schema to be used in the freeform.
+ */
+watch(freeFormSchema, (newSchema) => {
+  if (!(window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
+    (window as any)[FREE_FORM_SCHEMA_MAP_KEY] = {}
+  }
+  ;(window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId] = toRaw(newSchema)
+}, { immediate: true, deep: true })
+
+// Clean up the schema on unmount
+onUnmounted(() => {
+  if ((window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
+    delete (window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId]
+  }
+})
 </script>
 
 <style lang="scss" scoped>

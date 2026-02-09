@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.10.3...@kong-ui-public/analytics-utilities@12.10.4) (2026-01-30)
+
+
+### Bug Fixes
+
+* error_rate should also work on ai analytics ([#2898](https://github.com/Kong/public-ui-components/issues/2898)) ([667f3d8](https://github.com/Kong/public-ui-components/commit/667f3d83941e36b227252852783863454f5874a8))
+
+
+
+
+
+## [12.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.10.2...@kong-ui-public/analytics-utilities@12.10.3) (2026-01-29)
+
+
+### Bug Fixes
+
+* **analytics:** add mcp_usage to dashboard schema [MA-4767] ([#2886](https://github.com/Kong/public-ui-components/issues/2886)) ([08aafad](https://github.com/Kong/public-ui-components/commit/08aafad97aab72c21019243e31945250f6a02c8d))
+
+
+
+
+
 ## [12.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.10.1...@kong-ui-public/analytics-utilities@12.10.2) (2026-01-26)
 
 

@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.13.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.26...@kong-ui-public/analytics-chart@10.13.27) (2026-01-30)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.13.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.25...@kong-ui-public/analytics-chart@10.13.26) (2026-01-29)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.13.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.24...@kong-ui-public/analytics-chart@10.13.25) (2026-01-29)
+
+
+### Bug Fixes
+
+* add error_rate locale ([#2892](https://github.com/Kong/public-ui-components/issues/2892)) ([eb8e81f](https://github.com/Kong/public-ui-components/commit/eb8e81f937dbf3b9fc4db5f47d383586b130b8e4))
+
+
+
+
+
+## [10.13.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.23...@kong-ui-public/analytics-chart@10.13.24) (2026-01-29)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [10.13.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.22...@kong-ui-public/analytics-chart@10.13.23) (2026-01-26)
 
 
