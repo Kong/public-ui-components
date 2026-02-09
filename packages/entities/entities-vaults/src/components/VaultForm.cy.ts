@@ -15,6 +15,7 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
   hcvAppRoleMethodAvailable: true,
   hcvCertMethodAvailable: true,
   hcvJwtMethodAvailable: true,
+  hcvSslVerifyAvailable: true,
 }
 
 const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
@@ -37,6 +38,7 @@ const baseConfigKM: KongManagerVaultFormConfig = {
   hcvAppRoleMethodAvailable: true,
   hcvCertMethodAvailable: true,
   hcvJwtMethodAvailable: true,
+  hcvSslVerifyAvailable: true,
 }
 
 const baseConfigKMTurnOffTTL: KongManagerVaultFormConfig = {
@@ -131,6 +133,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-mount').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kv').should('be.visible')
       cy.getTestId('vault-form-config-hcv-namespace').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-ssl_verify').should('be.visible').should('be.checked')
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
 
@@ -212,6 +215,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-mount').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kv').should('be.visible')
       cy.getTestId('vault-form-config-hcv-namespace').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-ssl_verify').should('not.exist')
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
       cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
@@ -569,6 +573,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-mount').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kv').should('be.visible')
       cy.getTestId('vault-form-config-hcv-namespace').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-ssl_verify').should('be.visible').should('be.checked')
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
 
@@ -656,6 +661,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-mount').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kv').should('be.visible')
       cy.getTestId('vault-form-config-hcv-namespace').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-ssl_verify').should('not.exist')
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
       cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })

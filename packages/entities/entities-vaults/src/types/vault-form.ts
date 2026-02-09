@@ -31,6 +31,11 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
   hcvJwtMethodAvailable?: boolean
 
   /**
+   * Show/hide ssl_verify field for HashiCorp Vault
+   */
+  hcvSslVerifyAvailable?: boolean
+
+  /**
   * Show/hide AWS StsEndpointUrl field
   */
   awsStsEndpointUrlAvailable?: boolean
@@ -106,6 +111,7 @@ export interface HCVVaultConfig {
   mount: string
   kv: string
   namespace: string
+  ssl_verify?: boolean
   auth_method: string
   token?: string
   kube_role?: string
