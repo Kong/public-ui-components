@@ -530,7 +530,6 @@ const submitUrl = computed<string>(() => {
 })
 
 watch(() => state.fields, () => {
-  console.log(state.fields)
   emit('model-updated', payload.value)
 }, { deep: true })
 
