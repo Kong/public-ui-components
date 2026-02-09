@@ -118,7 +118,7 @@
 import { computed, reactive, watch } from 'vue'
 import { InfoIcon } from '@kong/icons'
 import composables from '../composables'
-import { INITIAL_SHARED_ROUTE_RULES_FIELDS, INITIAL_TRADITIONAL_ROUTE_RULES_VALUES, PROTOCOLS_TO_ROUTE_RULES } from '../constants'
+import { INITIAL_SHARED_ROUTE_RULES_FIELDS, INITIAL_TRADITIONAL_ROUTE_RULES_VALUES, PROTOCOLS_TO_ROUTE_RULES, DEFAULT_PROTOCOL } from '../constants'
 import {
   RouteFlavor,
   RoutingRulesEntities,
@@ -343,7 +343,7 @@ watch([() => props.recordFlavor, () => props.routeFlavors], ([newRecordFlavor, n
 watch(configType, (newConfigType) => {
   if (newConfigType === 'basic') {
     configFlavor.value = RouteFlavor.TRADITIONAL
-    emit('update:protocols', 'http,https')
+    emit('update:protocols', DEFAULT_PROTOCOL)
   }
 })
 

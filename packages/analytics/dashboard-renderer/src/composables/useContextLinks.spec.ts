@@ -66,6 +66,7 @@ function mountComposable({
   timeRange,
   chartDataGranularityMs = ONE_HOUR_MS,
   editable = false,
+  showTileActions = false,
 }: {
   exploreBase?: string
   requestsBase?: string
@@ -77,6 +78,7 @@ function mountComposable({
   timeRange?: any
   chartDataGranularityMs?: number
   editable?: boolean
+  showTileActions?: boolean
 }) {
   const queryBridge = {
     exploreBaseUrl: vi.fn(async () => exploreBase),
@@ -87,6 +89,7 @@ function mountComposable({
     filters: contextFilters,
     timeSpec: relativeTimeRange,
     editable,
+    showTileActions,
   }))
 
   const definition = computed(() => ({
@@ -233,6 +236,14 @@ describe('useContextLinks', () => {
 
   it('shows kebab for top_n chart when context is editable', async () => {
     const { wrapper } = mountComposable({ chartType: 'top_n', editable: true })
+    await flushPromises()
+    expect(wrapper.vm.canShowKebabMenu).toBe(true)
+    expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')
+    expect(wrapper.vm.requestsLinkKebabMenu).toContain('#requests?')
+  })
+
+  it('shows kebab for top_n chart when showTileActions is true even if not editable', async () => {
+    const { wrapper } = mountComposable({ chartType: 'top_n', editable: false, showTileActions: true })
     await flushPromises()
     expect(wrapper.vm.canShowKebabMenu).toBe(true)
     expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')

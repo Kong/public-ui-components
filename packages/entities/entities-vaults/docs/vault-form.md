@@ -98,6 +98,12 @@ A form component for Vaults.
     - default: `undefined`
     - Show/hide jwt option and corresponding fields. 
 
+  - `hcvSslVerifyAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide `ssl_verify` field in HCV Vault Config.
+
   - `awsStsEndpointUrlAvailable`
     - type: `boolean`
     - required: `false`

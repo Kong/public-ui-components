@@ -273,6 +273,9 @@
           "namespace": {
             "label": "Namespace"
           },
+          "ssl_verify": {
+            "label": "SSL Verify"
+          },
           "auth_method": {
             "label": "Authentication Method"
           },

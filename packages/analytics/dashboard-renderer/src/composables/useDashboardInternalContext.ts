@@ -36,7 +36,7 @@ export default function useDashboardInternalContext({
   })
 
   const internalContext = computed<DashboardRendererContextInternal>(() => {
-    let { tz, refreshInterval, editable } = context.value
+    let { tz, refreshInterval, editable, showTileActions } = context.value
     const filters = [...(context.value.filters ?? []), ...(globalFilters.value)] as AllFilters[]
 
     if (!tz) {
@@ -86,6 +86,10 @@ export default function useDashboardInternalContext({
       editable = false
     }
 
+    if (showTileActions === undefined) {
+      showTileActions = true
+    }
+
     // Check if the host app has provided an event handler for zooming.
     // If there's no handler, disable zooming -- it won't do anything.
     const zoomable = !!getCurrentInstance()?.vnode?.props?.onTileTimeRangeZoom
@@ -96,6 +100,7 @@ export default function useDashboardInternalContext({
       timeSpec: timeSpec.value,
       refreshInterval,
       editable,
+      showTileActions,
       zoomable,
     }
   })

@@ -1,9 +1,9 @@
 {
-  "name": "@kong-ui-public/dashboard-renderer",
-  "version": "8.7.6",
+  "name": "@kong-ui-public/page-layout",
+  "version": "0.1.0",
   "type": "module",
-  "main": "./dist/dashboard-renderer.umd.js",
-  "module": "./dist/dashboard-renderer.es.js",
+  "main": "./dist/page-layout.umd.js",
+  "module": "./dist/page-layout.es.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
@@ -11,8 +11,8 @@
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/dashboard-renderer.es.js",
-      "require": "./dist/dashboard-renderer.umd.js"
+      "import": "./dist/page-layout.es.js",
+      "require": "./dist/page-layout.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -24,7 +24,7 @@
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "run-s typecheck build:package build:types",
     "build:package": "vite build -m production",
-    "build:analyzer": "BUILD_VISUALIZER='analytics/dashboard-renderer' vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='core/page-layout' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
     "preview": "cross-env USE_SANDBOX=true vite preview",
@@ -39,29 +39,16 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
-    "@kong-ui-public/analytics-chart": "workspace:^",
-    "@kong-ui-public/analytics-config-store": "workspace:^",
-    "@kong-ui-public/analytics-geo-map": "workspace:^",
-    "@kong-ui-public/analytics-metric-provider": "workspace:^",
-    "@kong-ui-public/analytics-utilities": "workspace:^",
-    "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong-ui-public/i18n": "workspace:^",
-    "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.18.2",
-    "@kong/icons": "^1.42.0",
     "@kong/kongponents": "9.50.0",
-    "ajv": "^8.17.1",
-    "cypress-real-events": "^1.15.0",
-    "pinia": ">= 3.0.4 < 4",
-    "swrv": "^1.1.0",
     "vue": "^3.5.27"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/Kong/public-ui-components.git",
-    "directory": "packages/analytics/dashboard-renderer"
+    "directory": "packages/core/page-layout"
   },
-  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/analytics/dashboard-renderer",
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/core/page-layout",
   "bugs": {
     "url": "https://github.com/Kong/public-ui-components/issues"
   },
@@ -71,23 +58,10 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "800KB"
+    "errorLimit": "200KB"
   },
   "peerDependencies": {
-    "@kong-ui-public/analytics-chart": "workspace:^",
-    "@kong-ui-public/analytics-config-store": "workspace:^",
-    "@kong-ui-public/analytics-geo-map": "workspace:^",
-    "@kong-ui-public/analytics-metric-provider": "workspace:^",
-    "@kong-ui-public/analytics-utilities": "workspace:^",
-    "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.42.0",
-    "@kong/kongponents": "^9.50.0",
-    "swrv": "^1.1.0",
-    "vue": ">= 3.3.13 < 4"
-  },
-  "dependencies": {
-    "@kong-ui-public/core": "workspace:^",
-    "gridstack": "^11.5.1",
-    "p-queue": "^8.1.1"
+    "@kong/kongponents": "9.50.0",
+    "vue": "^3.5.27"
   }
 }
