@@ -80,3 +80,5 @@ export const INITIAL_ROUTE_RULES_FIELDS = {
     priority: 0,
   } satisfies Omit<ExpressionsRouteRulesFields, keyof SharedRouteRulesFields>,
 }
+
+export const DEFAULT_PROTOCOL = 'https'
