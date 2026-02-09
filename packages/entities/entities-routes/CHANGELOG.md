@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.18.8...@kong-ui-public/entities-routes@3.19.0) (2026-02-09)
+
+
+### Features
+
+* **entities-route:** apply default protocols to https ([#2909](https://github.com/Kong/public-ui-components/issues/2909)) ([c2288b4](https://github.com/Kong/public-ui-components/commit/c2288b4bca6c3883de263aac815d3ce14509f08e))
+
+
+
+
+
 ## [3.18.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.18.7...@kong-ui-public/entities-routes@3.18.8) (2026-02-04)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
