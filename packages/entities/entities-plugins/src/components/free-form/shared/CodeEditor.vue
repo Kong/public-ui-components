@@ -1,5 +1,8 @@
 <template>
-  <div class="plugin-code-editor">
+  <div
+    class="plugin-code-editor"
+    data-testid="plugin-code-editor"
+  >
     <MonacoEditor
       ref="editor"
       v-model="code"
@@ -13,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, toRaw, watch } from 'vue'
+import { shallowRef, toRaw } from 'vue'
 import { omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
