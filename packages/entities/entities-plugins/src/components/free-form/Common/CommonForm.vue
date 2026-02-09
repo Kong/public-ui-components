@@ -27,7 +27,6 @@ import ConfigForm from './ConfigForm.vue'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
-import type { Props as StandardLayoutProps } from '../shared/layout/StandardLayout.vue'
 import type { SegmentedControlOption } from '@kong/kongponents'
 import { FEATURE_FLAGS } from '../../../constants'
 import composables from '../../../composables'
@@ -45,13 +44,13 @@ const enableCodeMode = inject<boolean>(FEATURE_FLAGS.KM_2262_CODE_MODE, false)
 
 const { i18n: { t } } = composables.useI18n()
 
-const editorModePreference = useLocalStorage<StandardLayoutProps['editorMode']>('plugin-editor-mode', 'form')
+const editorModePreference = useLocalStorage<Props['editorMode']>('plugin-editor-mode', 'form')
 
-const editorMode = ref<StandardLayoutProps['editorMode']>(
+const editorMode = ref<Props['editorMode']>(
   enableCodeMode ? editorModePreference.value : 'form', // Force 'form' mode if code mode is not enabled
 )
 
-const editorModeOptions: Array<SegmentedControlOption<NonNullable<StandardLayoutProps['editorMode']>>> = [
+const editorModeOptions: Array<SegmentedControlOption<NonNullable<Props['editorMode']>>> = [
   {
     label: t('plugins.free-form.editor_mode.visual'),
     value: 'form',
@@ -62,7 +61,7 @@ const editorModeOptions: Array<SegmentedControlOption<NonNullable<StandardLayout
   },
 ]
 
-function handleEditorModeChange(newMode: StandardLayoutProps['editorMode']) {
+function handleEditorModeChange(newMode: NonNullable<Props['editorMode']>) {
   editorMode.value = newMode
   editorModePreference.value = newMode
 }

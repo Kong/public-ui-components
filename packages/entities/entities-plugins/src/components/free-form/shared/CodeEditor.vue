@@ -38,7 +38,7 @@ const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 const LINT_SOURCE = 'YAML Syntax'
 
 function formDataToCode(): string {
-  return yaml.dump(toRaw(omit(formData, ['__ui_data'])), {
+  return yaml.dump((omit(toRaw(formData), ['__ui_data'])), {
     schema: JSON_SCHEMA,
     noArrayIndent: true,
   })
