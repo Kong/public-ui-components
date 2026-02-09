@@ -8,6 +8,11 @@
     ]"
     data-testid="monaco-editor-container"
   >
+    <MonacoEditorToolbar
+      v-if="toolbar"
+      :editor="monacoEditor"
+      :settings="toolbar"
+    />
     <div
       ref="editorRef"
       class="monaco-editor-target"
@@ -56,7 +61,8 @@ import useI18n from '../composables/useI18n'
 import MonacoEditorStatusOverlay from './MonacoEditorStatusOverlay.vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import type { editor } from 'monaco-editor'
-import type { EditorThemes } from '../types'
+import type { EditorThemes, MonacoEditorToolbarOptions } from '../types'
+import MonacoEditorToolbar from './MonacoEditorToolbar.vue'
 
 const PADDING_Y = parseInt(KUI_SPACE_40, 10)
 
@@ -68,6 +74,7 @@ const {
   loading = false,
   showLoadingState = true,
   showEmptyState = true,
+  toolbar = false,
 } = defineProps<{
   /**
    * The appearance style of the Monaco Editor.
@@ -84,6 +91,14 @@ const {
    * @default 'markdown'
    */
   language?: string
+  /**
+   * Configure the editor toolbar.
+   * - Pass `true` to show the toolbar with default actions
+   * - Pass a configuration object to customize toolbar actions and behavior
+   * - Pass `false` or omit to hide the toolbar
+   * @default false
+   */
+  toolbar?: boolean | MonacoEditorToolbarOptions
   /**
    * Whether the editor is in a loading state.
    * @default false
