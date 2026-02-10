@@ -27,42 +27,56 @@
         :tabs="tabs"
       />
     </div>
+
+    <div class="page-content-wrapper">
+      <div
+        v-if="pageTitle"
+        class="page-title-container"
+      >
+        <h2 class="page-title">
+          {{ pageTitle }}
+        </h2>
+
+        <div
+          v-if="$slots.actions"
+          class="page-title-actions-container"
+        >
+          <slot name="actions" />
+        </div>
+      </div>
+
+      <slot name="default" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { KBreadcrumbs } from '@kong/kongponents'
-import type { BreadcrumbItem } from '@kong/kongponents'
-import { computed, useSlots } from 'vue'
-import type { PageLayoutNavbarTabs } from '../types'
+import { computed } from 'vue'
+import type { PageLayoutProps, PageLayoutSlots, PageLayoutBreadcrumbIconSlotName } from '../types'
 import TabsNavbar from './TabsNavbar.vue'
-
-interface PageLayoutProps {
-  /** Boolean to determine if the page should use the new Konnect layout */
-  konnectLayoutNext?: boolean
-  /** Page title */
-  title: string
-  /** Breadcrumb items */
-  breadcrumbs?: BreadcrumbItem[]
-  /** Tabs */
-  tabs?: PageLayoutNavbarTabs
-}
 
 const {
   konnectLayoutNext,
   title,
   breadcrumbs = [],
+  pageTitle = '',
 } = defineProps<PageLayoutProps>()
 
-const slots = useSlots()
+const slots = defineSlots<PageLayoutSlots>()
 
-const breadcrumbIconSlots = computed((): string[] => (Object.keys(slots).filter((slotName) => slotName.startsWith('icon-'))))
+const breadcrumbIconSlots = computed(() => Object.keys(slots).filter((slotName): slotName is PageLayoutBreadcrumbIconSlotName => slotName.startsWith('icon-')))
 </script>
 
 <style lang="scss" scoped>
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .kong-ui-public-page-layout {
   font-family: $kui-font-family-text;
-  margin-bottom: $kui-space-40;
 
   .page-header-container {
     display: flex;
@@ -86,6 +100,8 @@ const breadcrumbIconSlots = computed((): string[] => (Object.keys(slots).filter(
       }
 
       .header-title {
+        @include truncate;
+
         color: $kui-color-text;
         font-size: $kui-font-size-50;
         font-weight: $kui-font-weight-semibold;
@@ -99,6 +115,37 @@ const breadcrumbIconSlots = computed((): string[] => (Object.keys(slots).filter(
       .header-breadcrumbs-container {
         border-bottom: $kui-border-width-10 solid $kui-color-border;
         padding: $kui-space-60;
+      }
+    }
+  }
+
+  .page-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-50;
+    padding: $kui-space-60;
+
+    .page-title-container {
+      align-items: center;
+      display: flex;
+      gap: $kui-space-50;
+      justify-content: space-between;
+
+      .page-title {
+        @include truncate;
+
+        color: $kui-color-text;
+        font-size: $kui-font-size-50;
+        font-weight: $kui-font-weight-bold;
+        letter-spacing: $kui-letter-spacing-minus-30;
+        line-height: $kui-line-height-60;
+        margin: $kui-space-0;
+      }
+
+      .page-title-actions-container {
+        align-items: center;
+        display: flex;
+        gap: $kui-space-50;
       }
     }
   }

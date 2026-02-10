@@ -4,9 +4,29 @@
       <PageLayout
         :breadcrumbs="breadcrumbs"
         konnect-layout-next
+        page-title="Overview"
         :tabs="tabs"
         title="Umbrella R&D Dev"
-      />
+      >
+        <template #actions>
+          <KButton
+            appearance="secondary"
+            icon
+          >
+            <BookIcon />
+          </KButton>
+          <KButton>
+            Create
+            <ChevronDownIcon />
+          </KButton>
+        </template>
+
+        <div
+          v-for="i in 5"
+          :key="i"
+          class="page-content-block"
+        />
+      </PageLayout>
     </main>
   </div>
 </template>
@@ -14,6 +34,9 @@
 <script setup lang="ts">
 import { PageLayout } from '../src'
 import type { PageLayoutNavbarTabs } from '../src'
+import { KButton } from '@kong/kongponents'
+import { ChevronDownIcon } from '@kong/icons'
+import { BookIcon } from '@kong/icons'
 
 import '@kong/kongponents/dist/style.css'
 
@@ -70,3 +93,12 @@ const tabs: PageLayoutNavbarTabs = {
   },
 }
 </script>
+
+
+<style lang="scss" scoped>
+.page-content-block {
+  background-color: $kui-color-background-neutral-weak;
+  border-radius: $kui-border-radius-30;
+  height: 20vh;
+}
+</style>
