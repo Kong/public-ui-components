@@ -76,7 +76,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.42.0",
     "@kong/kongponents": "9.50.0",
-    "axios": "^1.13.2",
+    "axios": "^1.13.5",
     "swrv": "^1.1.0",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.6.4"
