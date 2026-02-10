@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.155.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.154.2...@kong-ui-public/entities-plugins@9.155.0) (2026-02-10)
+
+
+### Features
+
+* **free-form:** add field override rule in free form ([#2893](https://github.com/Kong/public-ui-components/issues/2893)) ([be4175c](https://github.com/Kong/public-ui-components/commit/be4175cf01cd68aeeca5dc8dd5c79e51a64f3777))
+
+
+
+
+
 ## [9.154.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.154.1...@kong-ui-public/entities-plugins@9.154.2) (2026-02-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
