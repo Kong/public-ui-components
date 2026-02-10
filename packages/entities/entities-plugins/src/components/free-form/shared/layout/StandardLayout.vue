@@ -19,13 +19,8 @@
         <RedisSelector />
       </FieldRenderer>
 
-      <!-- Identity Realms field (key-auth plugin only) -->
-      <FieldRenderer
-        v-slot="slotProps"
-        :match="({ path }) => pluginName === 'key-auth' && path === 'config.identity_realms'"
-      >
-        <IdentityRealmsField v-bind="slotProps" />
-      </FieldRenderer>
+      <!-- Custom field renderers from consuming components -->
+      <slot name="field-renderers" />
     </template>
 
     <template v-if="editorMode === 'form'">
@@ -216,7 +211,6 @@ import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
 import { FIELD_RENDERERS, useSchemaExposer } from '../composables'
-import IdentityRealmsField from '../../../fields/key-auth-identity-realms/FreeFormAdapter.vue'
 import Field from '../Field.vue'
 import StringArrayField from '../StringArrayField.vue'
 import StringField from '../StringField.vue'
@@ -248,7 +242,6 @@ const { t } = createI18n<typeof english>('en-us', english)
 const { editorMode = 'form', ...props } = defineProps<Props<T>>()
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
-
 const slots = defineSlots<{
   default: () => any
   'code-editor'?: () => any
@@ -258,6 +251,7 @@ const slots = defineSlots<{
   'plugin-config-title'?: () => any
   'plugin-config-description'?: () => any
   'plugin-config-extra'?: () => any
+  'field-renderers'?: () => any
 }>()
 
 const realFormConfig = computed(() => {

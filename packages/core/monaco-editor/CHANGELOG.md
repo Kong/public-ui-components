@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.11.0...@kong-ui-public/monaco-editor@0.12.0) (2026-02-09)
+
+
+### Features
+
+* **monaco-editor:** add support for toolbar and action buttons [KHCP-18444] ([#2791](https://github.com/Kong/public-ui-components/issues/2791)) ([3a0b761](https://github.com/Kong/public-ui-components/commit/3a0b761efdac4ea257cd3120652fa091f2a749b9))
+
+
+
+
+
 # [0.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.10.1...@kong-ui-public/monaco-editor@0.11.0) (2026-01-28)
 
 

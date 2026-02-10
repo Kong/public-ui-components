@@ -1,5 +1,14 @@
 {
   "editor": {
+    "labels": {
+      "action_search": "Search",
+      "action_search_label": "Search document",
+      "action_format": "Format",
+      "action_format_label": "Format document",
+      "action_fullscreen": "Full Screen",
+      "action_fullscreen_label": "Toggle full screen mode",
+      "key": "Key: {key}"
+    },
     "messages": {
       "empty_message": "The editor is currently empty. Start typing to add content.",
       "empty_title": "No content available",
