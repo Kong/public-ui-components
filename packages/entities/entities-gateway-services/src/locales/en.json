@@ -47,6 +47,8 @@
     },
     "empty_state_v2": {
       "create": "New gateway service",
+      "create_new": "Create new",
+      "import_spec": "Import via Open API spec",
       "title": "Configure your first gateway service",
       "group": "Services created in gateways within this group will automatically appear here.",
       "description": "Gateway services represent backend APIs or microservices that receive traffic routed through the gateway.",
