@@ -1,3 +1,5 @@
+// This file defines a mapping between plugin names and their corresponding free form component names.
+// Notice if you don't want a plugin to be automatically rendered with free form, mark it as experimental and provide it(or not) in consuming app.
 const mapping = {
   'request-callout': 'RequestCalloutForm',
   'service-protection': {
@@ -7,8 +9,14 @@ const mapping = {
   'datakit': 'DatakitForm',
   'ai-mcp-proxy': 'AIMcpProxyForm',
   'jwt-signer': 'CommonForm',
-  'upstream-oauth': 'UpstreamOauthForm',
-  'key-auth': 'KeyAuthForm',
+  'upstream-oauth': {
+    experimental: true,
+    component: 'UpstreamOauthForm',
+  },
+  'key-auth': {
+    experimental: true,
+    component: 'KeyAuthForm',
+  },
 } as const
 
 export type FreeFormName = keyof typeof mapping
