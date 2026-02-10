@@ -73,9 +73,15 @@ const breadcrumbIconSlots = computed((): string[] => (Object.keys(slots).filter(
       padding: $kui-space-60 $kui-space-60 $kui-space-0 $kui-space-60;
 
       .header-breadcrumbs {
-        // Override active (last) breadcrumb color
-        &:deep(.breadcrumbs-item.active .breadcrumbs-text) {
-          color: $kui-color-text-neutral;
+        &:deep(.breadcrumbs-item) {
+          // Override first breadcrumb padding left
+          &:first-child {
+            padding-left: $kui-space-0;
+          }
+          // Override active (last) breadcrumb color
+          &.active .breadcrumbs-text {
+            color: $kui-color-text-neutral;
+          }
         }
       }
 
