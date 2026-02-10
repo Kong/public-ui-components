@@ -2,6 +2,7 @@
   <nav
     ref="tabs-navbar-wrapper"
     class="kong-ui-public-tabs-navbar"
+    data-testid="kong-ui-public-tabs-navbar"
   >
     <ul
       ref="tabs-navbar-list"
@@ -15,17 +16,20 @@
           :is="typeof tabs[tabKey].to === 'string' ? 'a' : 'router-link'"
           class="tab-link"
           :class="{ 'active': tabs[tabKey].active }"
+          :data-testid="tabs[tabKey].testId ? tabs[tabKey].testId : `${getKeyTestIdString(tabKey)}-tab-link`"
           :href="typeof tabs[tabKey].to === 'string' ? tabs[tabKey].to : undefined"
           :to="typeof tabs[tabKey].to === 'string' ? undefined : tabs[tabKey].to"
         >
           {{ tabs[tabKey].name }}
         </component>
       </li>
+      <!-- Overflowing items dropdown -->
       <li v-if="Object.keys(tabs).length > displayedTabsCount">
         <KDropdown :kpop-attributes="{ placement: 'bottom-end' }">
           <button
             appearance="none"
             class="tab-link more-dropdown-trigger"
+            data-testid="tabs-navbar-more-dropdown-button"
           >
             {{ t('tabs_navbar.more') }}
 
@@ -38,6 +42,7 @@
             <KDropdownItem
               v-for="overflowingTabKey in Object.keys(tabs).slice(displayedTabsCount)"
               :key="`${overflowingTabKey}-dropdown-item`"
+              :data-testid="tabs[overflowingTabKey].testId ? `${tabs[overflowingTabKey].testId}-tab-dropdown-item` : `${getKeyTestIdString(overflowingTabKey)}-tab-dropdown-item`"
               :item="{ label: tabs[overflowingTabKey].name, value: overflowingTabKey, to: tabs[overflowingTabKey].to }"
               :selected="tabs[overflowingTabKey].active"
             />
@@ -45,6 +50,7 @@
         </KDropdown>
       </li>
     </ul>
+    <!-- Layout loader -->
     <div
       v-if="!displayedTabsLayoutComputed"
       class="layout-loader-container"
@@ -65,6 +71,7 @@ import type { PageLayoutTabsNavbarProps } from '../types'
 import composables from '../composables'
 import { useElementSize } from '@vueuse/core'
 import { ref, useTemplateRef, watch } from 'vue'
+import getKeyTestIdString from '../helpers/getKeyTestIdString'
 
 const { i18n: { t } } = composables.useI18n()
 

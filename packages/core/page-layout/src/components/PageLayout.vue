@@ -8,6 +8,7 @@
         <KBreadcrumbs
           v-if="breadcrumbs && breadcrumbs.length"
           class="header-breadcrumbs"
+          data-testid="kong-ui-public-page-layout-breadcrumbs"
           :items="breadcrumbs"
         >
           <template
@@ -40,7 +41,7 @@ interface PageLayoutProps {
   /** Boolean to determine if the page should use the new Konnect layout */
   konnectLayoutNext?: boolean
   /** Page title */
-  title?: string
+  title: string
   /** Breadcrumb items */
   breadcrumbs?: BreadcrumbItem[]
   /** Tabs */
