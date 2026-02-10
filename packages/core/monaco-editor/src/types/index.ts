@@ -1,9 +1,8 @@
 import type { editor } from 'monaco-editor'
 import type { Component, Ref } from 'vue'
-import type { BuiltInActionIds } from '../types/actions'
 import type { useMonacoEditor } from '../composables/useMonacoEditor'
+import type { BuiltInActionIds } from '../types/actions'
 
-export * from './json'
 export * from './model-context'
 
 /**

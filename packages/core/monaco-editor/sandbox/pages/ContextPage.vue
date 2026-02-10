@@ -19,8 +19,6 @@
         <ul class="list">
           <li>Lazy parsing without listeners (e.g., onDidChangeModelContent).</li>
           <li>Provides language-specific context based on the model's language (e.g., JSON AST for models in JSON).</li>
-          <li>Internally uses an LRU cache to cache parsed contexts per edit version.</li>
-          <li>Reuse cache across when possible across undo/redos (via alternative version ids).</li>
           <li>Automatically cleans up cached contexts when models are disposed.</li>
         </ul>
       </KCard>
@@ -40,11 +38,13 @@
 <script setup lang="ts">
 import { findNodeAtOffset } from 'jsonc-parser'
 import { computed, ref, useTemplateRef, watch } from 'vue'
+import { isMap, isScalar, isSeq, visit } from 'yaml'
 
 import { getModelContext, MonacoEditor } from '../../src'
 import GitHubSpec from '../assets/specs/Github.json?raw'
 
 import type { SelectItem } from '@kong/kongponents'
+import type { Node } from 'jsonc-parser'
 import type { editor as Editor, IRange } from 'monaco-editor'
 
 const snippetYAML = `name: Sample
@@ -163,26 +163,90 @@ const unwatchEditor = watch(editor, (editor) => {
           endLineNumber: model.getPositionAt(node.offset + node.length).lineNumber,
           endColumn: model.getPositionAt(node.offset + node.length).column,
         })
-        const info: Record<string, any> = {
-          type: node.type,
-          offset: node.offset,
-          length: node.length,
+
+        const jsonChain: Array<Record<string, unknown>> = []
+        let current: Node | undefined = node
+        while (current) {
+          const entry: Record<string, unknown> = {
+            type: current.type,
+            offset: current.offset,
+            length: current.length,
+          }
+          switch (current.type) {
+            case 'boolean':
+            case 'null':
+            case 'number':
+            case 'string':
+              entry.value = current.value
+              break
+            case 'array':
+              entry.childrenCount = current.children?.length ?? 0
+              break
+            case 'object':
+              entry.propertiesCount = current.children?.length ?? 0
+              break
+          }
+          jsonChain.push(entry)
+          current = current.parent
         }
-        switch (node.type) {
-          case 'boolean':
-          case 'null':
-          case 'number':
-          case 'string':
-            info.value = node.value
-            break
-          case 'array':
-            info.childrenCount = node.children?.length ?? 0
-            break
-          case 'object':
-            info.propertiesCount = node.children?.length ?? 0
-            break
+
+        infoContent.value = JSON.stringify({ reversedChain: jsonChain }, null, 2)
+        break
+      }
+      case 'yaml': {
+        if (!context.document) {
+          infoContent.value = 'No document available'
+          return
         }
-        infoContent.value = JSON.stringify(info, null, 2)
+
+        const offset = model.getOffsetAt(position)
+
+        const chain: Array<{ type: string, offset: number, length: number, [key: string]: unknown }> = []
+
+        visit(context.document, {
+          Node(_, node) {
+            if (node.range) {
+              const [start, , end] = node.range
+              if (offset >= start && offset <= end) {
+                const entry: Record<string, unknown> = {
+                  offset: start,
+                  length: end - start,
+                }
+
+                if (isScalar(node)) {
+                  entry.type = 'scalar'
+                  entry.value = node.value
+                } else if (isMap(node)) {
+                  entry.type = 'map'
+                  entry.itemCount = node.items.length
+                } else if (isSeq(node)) {
+                  entry.type = 'seq'
+                  entry.itemCount = node.items.length
+                }
+
+                chain.push(entry as typeof chain[number])
+              }
+            }
+          },
+        })
+
+        if (!chain.length) {
+          infoContent.value = 'No node found at cursor position'
+          return
+        }
+
+        chain.reverse()
+
+        const innermost = chain[0]
+
+        highlightRange(editor, {
+          startLineNumber: model.getPositionAt(innermost.offset).lineNumber,
+          startColumn: model.getPositionAt(innermost.offset).column,
+          endLineNumber: model.getPositionAt(innermost.offset + innermost.length).lineNumber,
+          endColumn: model.getPositionAt(innermost.offset + innermost.length).column,
+        })
+
+        infoContent.value = JSON.stringify({ reversedChain: chain }, null, 2)
         break
       }
     }
