@@ -2,29 +2,6 @@ import type { QueryError } from '../types'
 
 import composables from '../composables'
 
-/**
- * Check if an error is a canceled/aborted request.
- */
-export const isCanceledError = (error: unknown): boolean => {
-  if (!error || typeof error !== 'object') {
-    return false
-  }
-
-  const err = error as Record<string, unknown>
-
-  // Axios CanceledError
-  if (err.name === 'CanceledError' || err.code === 'ERR_CANCELED') {
-    return true
-  }
-
-  // DOMException from AbortController.abort()
-  if (err.name === 'AbortError') {
-    return true
-  }
-
-  return false
-}
-
 export const handleQueryError = (error: any): QueryError => {
   const { i18n } = composables.useI18n()
 

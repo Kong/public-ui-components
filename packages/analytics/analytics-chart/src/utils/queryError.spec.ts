@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import { handleQueryError, isCanceledError } from './queryError'
+import { handleQueryError } from './queryError'
 
 describe('handleQueryError', () => {
   it('403 to forbidden', () => {
@@ -58,33 +58,5 @@ describe('handleQueryError', () => {
     expect(res).toMatchObject({ type: 'other', status: 500 })
     expect(res.message).toBe('Bad request')
     expect(res.details).toBe('fallback details')
-  })
-})
-
-describe('isCanceledError', () => {
-  it('returns true for Axios CanceledError (by name)', () => {
-    const error = new Error('canceled')
-    error.name = 'CanceledError'
-    expect(isCanceledError(error)).toBe(true)
-  })
-
-  it('returns true for Axios CanceledError (by code)', () => {
-    expect(isCanceledError({ code: 'ERR_CANCELED' })).toBe(true)
-  })
-
-  it('returns true for DOMException AbortError', () => {
-    expect(isCanceledError(new DOMException('aborted', 'AbortError'))).toBe(true)
-  })
-
-  it('returns false for regular errors', () => {
-    expect(isCanceledError(new Error('Network error'))).toBe(false)
-    expect(isCanceledError({ status: 403 })).toBe(false)
-    expect(isCanceledError({ status: 408 })).toBe(false)
-  })
-
-  it('returns false for null/undefined/non-objects', () => {
-    expect(isCanceledError(null)).toBe(false)
-    expect(isCanceledError(undefined)).toBe(false)
-    expect(isCanceledError('string')).toBe(false)
   })
 })

@@ -35,13 +35,8 @@ const useRequestQueue = () => {
   const newQueryBridge: OverriddenAnalyticsBridge = {
     ...queryBridge,
     queryFnOverride: true,
-    queryFn: (query, abortController) => queue.add(() => {
-      if (abortController.signal.aborted) {
-        throw new DOMException('The operation was aborted.', 'AbortError')
-      }
-
-      return queryBridge.queryFn(query, abortController)
-    }, { throwOnTimeout: true }),
+    queryFn: (query, abortController) => queue.add(() =>
+      queryBridge.queryFn(query, abortController), { throwOnTimeout: true }),
   }
 
   provide(INJECT_QUERY_PROVIDER, newQueryBridge)

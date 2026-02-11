@@ -780,44 +780,4 @@ describe('<DashboardTile />', () => {
       })
     })
   })
-
-  context('canceled error recovery', () => {
-    it('recovers from canceled error with only one retry', () => {
-      let callCount = 0
-      const queryFn = cy.stub().as('queryFn').callsFake(() => {
-        callCount++
-        if (callCount === 1) {
-          const error = new Error('Request canceled')
-          error.name = 'CanceledError'
-          return Promise.reject(error)
-        }
-        return Promise.resolve(
-          generateSingleMetricTimeSeriesData(
-            { name: 'TotalRequests', unit: 'count' },
-            { status_code: ['request_count'] as string[] },
-            { start, end },
-          ) as ExploreResultV4,
-        )
-      })
-
-      cy.mount(DashboardTile, {
-        props: {
-          definition: cacheBustTile(mockTileDefinition),
-          context: mockContext,
-          tileId: '1',
-          queryReady: true,
-          refreshCounter: 0,
-        },
-        global: {
-          provide: {
-            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
-          },
-        },
-      })
-
-      // Should eventually render data, not be stuck on loading skeleton
-      cy.get('.chart-skeleton').should('not.exist')
-      cy.get('@queryFn').should('have.been.calledTwice')
-    })
-  })
 })
