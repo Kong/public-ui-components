@@ -23,7 +23,7 @@
         </h1>
       </div>
       <TabsNavbar
-        v-if="tabs && Object.keys(tabs).length"
+        v-if="hasTabs"
         :tabs="tabs"
       />
     </div>
@@ -45,7 +45,11 @@
         </div>
       </div>
 
-      <slot name="default" />
+      <router-view v-if="hasTabs" />
+      <slot
+        v-else
+        name="default"
+      />
     </div>
   </div>
 </template>
@@ -58,14 +62,17 @@ import TabsNavbar from './TabsNavbar.vue'
 
 const {
   konnectLayoutNext,
-  title,
   breadcrumbs = [],
+  title,
+  tabs = {},
   pageTitle = '',
 } = defineProps<PageLayoutProps>()
 
 const slots = defineSlots<PageLayoutSlots>()
 
 const breadcrumbIconSlots = computed(() => Object.keys(slots).filter((slotName): slotName is PageLayoutBreadcrumbIconSlotName => slotName.startsWith('icon-')))
+
+const hasTabs = computed((): boolean => !!(tabs && Object.keys(tabs).length))
 </script>
 
 <style lang="scss" scoped>

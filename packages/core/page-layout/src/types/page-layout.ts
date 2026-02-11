@@ -4,10 +4,10 @@ import type { PageLayoutNavbarTabs } from './'
 export interface PageLayoutProps {
   /** Boolean to determine if the page should use the new Konnect layout */
   konnectLayoutNext?: boolean
-  /** Page title */
-  title: string
   /** Breadcrumb items */
   breadcrumbs?: BreadcrumbItem[]
+  /** Page title */
+  title: string
   /** Tabs */
   tabs?: PageLayoutNavbarTabs
   /** Page title */
