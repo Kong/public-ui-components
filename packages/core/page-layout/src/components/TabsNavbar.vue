@@ -66,54 +66,102 @@
 </template>
 
 <script setup lang="ts">
+import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import { KDropdown, KDropdownItem, KSkeletonBox } from '@kong/kongponents'
 import type { PageLayoutTabsNavbarProps } from '../types'
 import composables from '../composables'
-import { useElementSize } from '@vueuse/core'
-import { ref, useTemplateRef, watch } from 'vue'
 import getKeyTestIdString from '../helpers/getKeyTestIdString'
-
-const { i18n: { t } } = composables.useI18n()
+import { KUI_SPACE_60 } from '@kong/design-tokens'
+import { useEventListener } from '@vueuse/core'
 
 const {
   tabs = {},
 } = defineProps<PageLayoutTabsNavbarProps>()
 
+const { i18n: { t } } = composables.useI18n()
+
+const TABS_NAVBAR_HORIZONTAL_PADDING = KUI_SPACE_60
+
 const tabsNavbarWrapperRef = useTemplateRef('tabs-navbar-wrapper')
 const tabsNavbarListRef = useTemplateRef('tabs-navbar-list')
-
-const { width: tabsNavbarWrapperWidth } = useElementSize(tabsNavbarWrapperRef)
-const { width: tabsNavbarListWidth } = useElementSize(tabsNavbarListRef)
 
 const displayedTabsCount = ref<number>(Object.keys(tabs).length)
 const displayedTabsLayoutComputed = ref<boolean>(false)
 
 /**
- * If the list is wider than the wrapper, decrement the displayed tabs count (minimum of 1).
- * While the layout is computing, the list is hidden and the loader is displayed (on screens >= tablet we skip the loader as most likely all tabs will fit).
+ * Computes the layout of the tabs navbar and updates the displayed tabs count
  */
-watch([tabsNavbarWrapperWidth, tabsNavbarListWidth], ([wrapperWidth, listWidth]) => {
-  if (wrapperWidth && listWidth) {
-    if (listWidth >= wrapperWidth && displayedTabsCount.value > 1) {
-      displayedTabsCount.value --
-    } else {
-      displayedTabsLayoutComputed.value = true
-    }
+const computeLayout = async (): Promise<void> => {
+  if (!tabsNavbarWrapperRef.value || !tabsNavbarListRef.value) {
+    return
+  }
+
+  displayedTabsLayoutComputed.value = false
+  displayedTabsCount.value = Object.keys(tabs).length
+
+  // Wait for initial render
+  await nextTick()
+
+  const containerWidth = tabsNavbarWrapperRef.value?.getBoundingClientRect().width - (parseInt(TABS_NAVBAR_HORIZONTAL_PADDING) * 2)
+  let listWidth = tabsNavbarListRef.value?.getBoundingClientRect().width
+
+  if (!containerWidth || !listWidth) {
+    displayedTabsLayoutComputed.value = true
+    return
+  }
+
+  const TABS_LIST_END_PADDING = 50 // Extra padding to the right of the list to make sure the items don't go up to the edge of the container
+  // Keep reducing displayed tabs until they fit or we're down to 1 tab
+  while ((listWidth + TABS_LIST_END_PADDING) > containerWidth && displayedTabsCount.value > 1) {
+    displayedTabsCount.value--
+
+    // Wait for Vue to re-render with the new count
+    await nextTick()
+
+    // Recalculate the list width after re-render
+    listWidth = tabsNavbarListRef.value?.getBoundingClientRect().width || 0
+  }
+
+  displayedTabsLayoutComputed.value = true
+}
+
+// Debounced resize handler to avoid excessive recalculations
+let resizeTimeout: ReturnType<typeof setTimeout> | null = null
+const handleResize = () => {
+  if (resizeTimeout) {
+    clearTimeout(resizeTimeout)
+  }
+
+  resizeTimeout = setTimeout(() => {
+    computeLayout()
+  }, 150)
+}
+
+onMounted(() => {
+  computeLayout()
+  useEventListener(window, 'resize', handleResize)
+})
+
+onBeforeUnmount(() => {
+  if (resizeTimeout) {
+    clearTimeout(resizeTimeout)
   }
 })
 </script>
 
 <style lang="scss" scoped>
 .kong-ui-public-tabs-navbar {
-  $tabs-navbar-height: 38px;
-  $tabs-navbar-horizontal-padding: $kui-space-60;
+  $tabs-navbar-height: 34px;
 
   align-items: flex-end;
   border-bottom: $kui-border-width-10 solid $kui-color-border;
+  box-sizing: border-box;
   display: flex;
   height: $tabs-navbar-height;
-  padding: $kui-space-0 $tabs-navbar-horizontal-padding;
+  overflow: hidden;
+  padding: $kui-space-0 v-bind('TABS_NAVBAR_HORIZONTAL_PADDING');
   position: relative;
+  width: 100%;
 
   // Reset default anchor and button styles
   a, button {
@@ -133,18 +181,13 @@ watch([tabsNavbarWrapperWidth, tabsNavbarListWidth], ([wrapperWidth, listWidth])
     margin: $kui-space-0;
     /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
     margin-bottom: calc(-1 * $kui-border-width-10); // Make sure the border of the active (or hovered) tab overlaps the border of the tabs navbar
+    max-width: 100%;
     padding: $kui-space-0;
-    width: fit-content;
 
-    // Hide the list when the layout is computing (on screens < tablet)
+    // Hide the list when the layout is computing
     &.layout-computing {
       height: 0;
       visibility: hidden;
-
-      @media (min-width: $kui-breakpoint-tablet) {
-        height: auto;
-        visibility: visible;
-      }
     }
 
     li {
@@ -201,13 +244,8 @@ watch([tabsNavbarWrapperWidth, tabsNavbarListWidth], ([wrapperWidth, listWidth])
     gap: $kui-space-70;
     height: $tabs-navbar-height;
     inset: 0;
-    left: $tabs-navbar-horizontal-padding;
+    left: v-bind('TABS_NAVBAR_HORIZONTAL_PADDING');
     position: absolute;
-
-    // Skip the loader on screens >= tablet (most likely all tabs will fit)
-    @media (min-width: $kui-breakpoint-tablet) {
-      display: none;
-    }
   }
 }
 </style>

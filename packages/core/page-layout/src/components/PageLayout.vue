@@ -76,6 +76,7 @@ const breadcrumbIconSlots = computed(() => Object.keys(slots).filter((slotName):
 }
 
 .kong-ui-public-page-layout {
+  box-sizing: border-box;
   font-family: $kui-font-family-text;
 
   .page-header-container {
