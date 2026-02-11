@@ -1,7 +1,6 @@
 <template>
   <div class="monaco-editor-ui-toolbar">
     <div
-      v-if="leftGroups.length > 0"
       class="monaco-editor-ui-toolbar-left"
       :data-testid="`monaco-editor-toolbar-left`"
     >
@@ -26,7 +25,6 @@
       </div>
     </div>
     <div
-      v-if="centerGroups.length > 0"
       class="monaco-editor-ui-toolbar-centre"
       :data-testid="`monaco-editor-toolbar-centre`"
     >
@@ -51,7 +49,6 @@
       </div>
     </div>
     <div
-      v-if="rightGroups.length > 0"
       class="monaco-editor-ui-toolbar-right"
       :data-testid="`monaco-editor-toolbar-right`"
     >
@@ -79,9 +76,8 @@
 </template>
 
 <script lang="ts" setup>
-import { watch } from 'vue'
+import { watch, computed } from 'vue'
 import ToolbarActionButton from './ToolbarActionButton.vue'
-import useI18n from '../composables/useI18n'
 import { useToolbarActions } from '../composables/useToolbarActions'
 import { executeToolbarAction } from '../utils/commands'
 import type { MonacoEditorToolbarOptions } from '../types'
@@ -103,12 +99,10 @@ const {
   settings: boolean | MonacoEditorToolbarOptions
 }>()
 
-const { i18n } = useI18n()
+// Track current language reactively
+const currentLanguage = computed<string>(() => editor?.editor.value?.getModel()?.getLanguageId() || '')
 
-const { commands, leftGroups, centerGroups, rightGroups } = useToolbarActions(
-  settings,
-  (key: string) => i18n.t(key as any) as string,
-)
+const { commands, leftGroups, centerGroups, rightGroups } = useToolbarActions(settings, currentLanguage)
 
 /**
  * Register actions with Monaco editor when the editor becomes ready

@@ -2,6 +2,9 @@
   "editor": {
     "labels": {
       "action_search": "Search",
+      "action_bold": "Bold",
+      "action_italic": "Italic",
+      "action_strikethrough": "Strikethrough",
       "action_search_label": "Search document",
       "action_format": "Format",
       "action_format_label": "Format document",

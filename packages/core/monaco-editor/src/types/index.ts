@@ -130,6 +130,12 @@ export interface MonacoEditorActionConfig extends Partial<MonacoEditorActionButt
    * @default 1
    */
   contextMenuOrder?: number
+  /**
+   * Languages this action should be available for
+   * If not specified, the action is available for all languages
+   * @example ['markdown', 'mdc']
+   */
+  languages?: string[]
 }
 
 /**
@@ -153,4 +159,5 @@ export interface MonacoEditorToolbarOptions {
   }
 }
 
+/** Placement options for toolbar groups */
 export type ToolbarGroupPlacement = 'left' | 'center' | 'right'

@@ -2,13 +2,14 @@ import { useToolbarActions } from './useToolbarActions'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { MonacoEditorToolbarOptions } from '../types'
 import { CleaningIcon } from '@kong/icons'
+import { ref } from 'vue'
 
 // Mock built-in actions
-vi.mock('../constants/toolbar-actions', () => ({
+vi.mock('../actions', () => ({
   BUILT_IN_TOOLBAR_ACTIONS: {
     save: {
       id: 'save',
-      labelKey: 'toolbar.save',
+      label: 'toolbar.save',
       icon: 'save-icon',
       action: vi.fn(),
       placement: 'left',
@@ -16,7 +17,7 @@ vi.mock('../constants/toolbar-actions', () => ({
     },
     format: {
       id: 'format',
-      labelKey: 'toolbar.format',
+      label: 'toolbar.format',
       icon: 'format-icon',
       action: vi.fn(),
       placement: 'right',
@@ -25,7 +26,7 @@ vi.mock('../constants/toolbar-actions', () => ({
   },
 }))
 
-const i18n = (key: string) => `translated:${key}`
+const lang = ref('javascript')
 
 describe('useToolbarActions', () => {
   beforeEach(() => {
@@ -33,7 +34,7 @@ describe('useToolbarActions', () => {
   })
 
   it('should show all built-in commands when settings = true', () => {
-    const { commands } = useToolbarActions(true, i18n)
+    const { commands } = useToolbarActions(true, lang)
 
     expect(commands.value).toHaveLength(2)
     expect(commands.value[0].label).toBe('translated:toolbar.save')
@@ -47,7 +48,7 @@ describe('useToolbarActions', () => {
       },
     }
 
-    const { commands } = useToolbarActions(settings, i18n)
+    const { commands } = useToolbarActions(settings, lang)
 
     expect(commands.value.find(c => c.id === 'save')).toBeUndefined()
     expect(commands.value.find(c => c.id === 'format')).toBeDefined()
@@ -63,7 +64,7 @@ describe('useToolbarActions', () => {
       },
     }
 
-    const { commands } = useToolbarActions(settings, i18n)
+    const { commands } = useToolbarActions(settings, lang)
     const save = commands.value.find(c => c.id === 'save')!
 
     expect(save.order).toBe(99)
@@ -86,7 +87,7 @@ describe('useToolbarActions', () => {
       },
     }
 
-    const { commands } = useToolbarActions(settings, i18n)
+    const { commands } = useToolbarActions(settings, lang)
 
     const custom = commands.value.find(c => c.id === 'customAction')
     expect(custom).toBeDefined()
@@ -102,7 +103,7 @@ describe('useToolbarActions', () => {
       },
     }
 
-    const { commands } = useToolbarActions(settings, i18n)
+    const { commands } = useToolbarActions(settings, lang)
 
     expect(commands.value.find(c => c.id === 'bad1')).toBeUndefined()
     expect(commands.value.find(c => c.id === 'bad2')).toBeUndefined()
@@ -122,7 +123,7 @@ describe('useToolbarActions', () => {
       },
     }
 
-    const { leftGroups, centerGroups, rightGroups } = useToolbarActions(settings, i18n)
+    const { leftGroups, centerGroups, rightGroups } = useToolbarActions(settings, lang)
 
     expect(leftGroups.value.flat().every(c => c.placement === 'left' || !c.placement)).toBe(true)
     expect(centerGroups.value.flat().every(c => c.placement === 'center')).toBe(true)
@@ -137,7 +138,7 @@ describe('useToolbarActions', () => {
       },
     }
 
-    const { leftGroups } = useToolbarActions(settings, i18n)
+    const { leftGroups } = useToolbarActions(settings, lang)
     const flat = leftGroups.value.flat()
 
     const orders = flat.map(c => c.order)
@@ -153,7 +154,7 @@ describe('useToolbarActions', () => {
       },
     }
 
-    const { leftGroups } = useToolbarActions(settings, i18n)
+    const { leftGroups } = useToolbarActions(settings, lang)
 
     expect(leftGroups.value.length).toBeGreaterThanOrEqual(2)
     const groupSizes = leftGroups.value.map(g => g.length)

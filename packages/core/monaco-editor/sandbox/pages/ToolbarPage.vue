@@ -2,7 +2,7 @@
   <main class="editor-grid-container">
     <MonacoEditor
       v-model="code1"
-      language="json"
+      language="markdown"
       :toolbar="true"
     />
     <MonacoEditor
@@ -83,10 +83,8 @@ import { BookIcon, CopyIcon, CodeIcon } from '@kong/icons'
 
 const code1 = ref(`// Built-in Actions with Default Placement
 
-{
-  "name": "example",
-  "version": "1.0.0"
-}`)
+# Hello World
+`)
 
 const code2 = ref(`// Built-in Actions with Custom Placement
 
