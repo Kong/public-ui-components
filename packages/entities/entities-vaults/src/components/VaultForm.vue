@@ -225,6 +225,13 @@
               required
               width="100%"
             />
+            <KCheckbox
+              v-if="config.hcvSslVerifyAvailable"
+              v-model="configFields[VaultProviders.HCV].ssl_verify!"
+              data-testid="vault-form-config-hcv-ssl_verify"
+              :label="t('form.config.hcv.fields.ssl_verify.label')"
+              :readonly="form.isReadonly"
+            />
             <KInput
               v-model.trim="configFields[VaultProviders.HCV].host"
               autocomplete="off"
@@ -370,7 +377,7 @@
                 type="text"
               />
               <KCheckbox
-                v-model="configFields[VaultProviders.HCV].approle_response_wrapping as boolean"
+                v-model="configFields[VaultProviders.HCV].approle_response_wrapping!"
                 data-testid="vault-form-config-hcv-approle_response_wrapping"
                 :label="t('form.config.hcv.fields.approle_response_wrapping.label')"
               />
@@ -902,6 +909,7 @@ const configFields = reactive<ConfigFields>({
     mount: 'secret',
     kv: 'v1',
     namespace: '',
+    ssl_verify: true,
     auth_method: VaultAuthMethods.TOKEN,
     token: '',
     kube_role: '',
@@ -962,6 +970,7 @@ const originalConfigFields = reactive<ConfigFields>({
     mount: 'secret',
     kv: 'v1',
     namespace: '',
+    ssl_verify: true,
     auth_method: VaultAuthMethods.TOKEN,
     token: '',
     kube_role: '',
@@ -1225,6 +1234,7 @@ const getPayload = computed((): Record<string, any> => {
     mount: configFields[VaultProviders.HCV].mount,
     kv: configFields[VaultProviders.HCV].kv,
     namespace: configFields[VaultProviders.HCV].namespace || null,
+    ...(props.config.hcvSslVerifyAvailable && { ssl_verify: configFields[VaultProviders.HCV].ssl_verify ?? true }),
     auth_method: configFields[VaultProviders.HCV].auth_method,
     ...(props.config.base64FieldAvailable && { base64_decode: configFields[VaultProviders.HCV].base64_decode }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN && { token: configFields[VaultProviders.HCV].token }),

@@ -19,9 +19,12 @@
       </SplitToolbar>
     </template>
     <template #pane-left>
-      left pane
+      <KButton @click="toggleRightPane">
+        toggle right pane
+      </KButton>
     </template>
     <template #pane-center>
+      <SplitToolbar />
       centre pane
     </template>
     <template #pane-right>
@@ -31,15 +34,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { ArrowLeftIcon } from '@kong/icons'
 import { SplitPane, SplitToolbar } from '../../src'
 import type { SplitPaneProps, VerticalNavigationItem } from '../../src'
 
-const props = computed((): SplitPaneProps => ({
+const showRightPane = ref<boolean>(true)
+
+const props = computed<SplitPaneProps>(() => ({
   paneLeft: { visible: true },
   paneCenter: { visible: true },
-  paneRight: { visible: true },
+  paneRight: { visible: !!showRightPane.value },
 }))
 
 const navItems = computed<VerticalNavigationItem[]>(() => [
@@ -51,4 +56,8 @@ const navItems = computed<VerticalNavigationItem[]>(() => [
     to: '/',
   },
 ])
+
+const toggleRightPane = () => {
+  showRightPane.value = !showRightPane.value
+}
 </script>

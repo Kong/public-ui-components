@@ -42,7 +42,7 @@
             >
               <BookIcon decorative />
             </KButton>
-            <PermissionsWrapper :auth-function="() => canCreate()">
+            <PermissionsWrapper :auth-function="canCreate">
               <!-- Hide Create button if table is empty -->
               <KButton
                 appearance="primary"
@@ -80,14 +80,38 @@
           </template>
 
           <template #action>
-            <KButton
-              v-if="userCanCreate"
-              data-testid="entity-create-button"
-              @click="handleCreate"
-            >
-              <AddIcon decorative />
-              {{ t('gateway_services.empty_state_v2.create') }}
-            </KButton>
+            <template v-if="userCanCreate">
+              <KDropdown
+                v-if="canImportSpecs"
+                data-testid="entity-create-dropdown"
+                show-caret
+                :trigger-text="t('gateway_services.empty_state_v2.create')"
+                width="220"
+              >
+                <template #items>
+                  <KDropdownItem
+                    data-testid="entity-create-dropdown-item"
+                    @click="handleCreate"
+                  >
+                    {{ t('gateway_services.empty_state_v2.create_new') }}
+                  </KDropdownItem>
+                  <KDropdownItem
+                    data-testid="entity-import-dropdown-item"
+                    @click="$emit('click:import')"
+                  >
+                    {{ t('gateway_services.empty_state_v2.import_spec') }}
+                  </KDropdownItem>
+                </template>
+              </KDropdown>
+              <KButton
+                v-else
+                data-testid="entity-create-button"
+                @click="handleCreate"
+              >
+                <AddIcon decorative />
+                {{ t('gateway_services.empty_state_v2.create') }}
+              </KButton>
+            </template>
 
             <KButton
               appearance="secondary"
@@ -264,6 +288,7 @@ const emit = defineEmits<{
   (e: 'copy:error', payload: CopyEventPayload): void
   (e: 'delete:success', gatewayService: EntityRow): void
   (e: 'toggle:success', gatewayService: EntityRow): void
+  (e: 'click:import'): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -321,6 +346,10 @@ const props = defineProps({
   },
   /** user is onboarding, use onboarding text */
   isServerless: {
+    type: Boolean,
+    default: false,
+  },
+  canImportSpecs: {
     type: Boolean,
     default: false,
   },

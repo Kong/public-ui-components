@@ -39,6 +39,7 @@
       <KAlert
         v-if="errorMessage"
         appearance="danger"
+        class="form-error"
         data-testid="form-error"
         :message="errorMessage"
       />
@@ -459,6 +460,10 @@ defineExpose({
     .form-actions {
       justify-content: flex-start;
       margin-top: $kui-space-70;
+    }
+
+    .form-error {
+      margin: $kui-space-70 0 0 $kui-space-60;
     }
   }
 }

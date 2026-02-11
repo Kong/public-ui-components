@@ -6,11 +6,13 @@ import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 
 // mocks
+const mockRefreshInnerPaneSizes = vi.fn()
+
 vi.mock('../composable/useSplitPane', () => ({
   default: vi.fn(() => ({
     startDraggingInnerPanes: vi.fn(),
     startDraggingPaneLeft: vi.fn(),
-    refreshInnerPaneSizes: vi.fn(),
+    refreshInnerPaneSizes: mockRefreshInnerPaneSizes,
     paneLeftExpanded: ref(true),
     isDraggingPaneLeft: ref(false),
     isDraggingInnerPanes: ref(false),
@@ -138,6 +140,19 @@ describe('<SplitPane />', () => {
       expect(paneRight.exists()).toBe(true)
       // When showPaneRight is false, it should have aria-hidden
       expect(paneRight.attributes('aria-hidden')).toBe('true')
+    })
+
+    it('should call refreshInnerPaneSizes when paneRight.visible changes and resizable is true', async () => {
+      const wrapper = createWrapper(
+        { resizable: true, paneRight: { visible: true } },
+        { 'pane-right': '<div>Right</div>' },
+      )
+
+      // Change visibility
+      await wrapper.setProps({ paneRight: { visible: false } })
+      await wrapper.vm.$nextTick()
+
+      expect(mockRefreshInnerPaneSizes).toHaveBeenCalled()
     })
   })
 

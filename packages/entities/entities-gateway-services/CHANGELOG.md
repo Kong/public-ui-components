@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.14.28...@kong-ui-public/entities-gateway-services@3.15.0) (2026-02-10)
+
+
+### Features
+
+* **service-list:** add import from OAS for gateway list ([#2908](https://github.com/Kong/public-ui-components/issues/2908)) ([f6a1af7](https://github.com/Kong/public-ui-components/commit/f6a1af7a35de2e3013efa3ef6170b4c0f3aebc98))
+
+
+
+
+
+## [3.14.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.14.27...@kong-ui-public/entities-gateway-services@3.14.28) (2026-02-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
 ## [3.14.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.14.26...@kong-ui-public/entities-gateway-services@3.14.27) (2026-01-26)
 
 

@@ -4,6 +4,7 @@ import { route, routeExpressions, services } from '../../fixtures/mockData'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 import type { RouteHandler } from 'cypress/types/net-stubbing'
 import { HTTP_BASED_PROTOCOLS, STREAM_BASED_PROTOCOLS } from '@kong-ui-public/expressions'
+import { DEFAULT_PROTOCOL } from '../constants'
 
 const cancelRoute = { name: 'route-list' }
 
@@ -123,6 +124,35 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       cy.getTestId('add-paths').should('not.exist')
       cy.getTestId('add-hosts').should('not.exist')
+    })
+
+    it('should default protocols to https when creating a route', () => {
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKM,
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
+
+      cy.getTestId('route-form-config-type-advanced').click()
+      cy.getTestId('route-form-protocols').should('have.value', DEFAULT_PROTOCOL.toUpperCase())
+    })
+
+    it('should reset protocols to default when switching back to Basic config type', () => {
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKM,
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
+
+      cy.getTestId('route-form-config-type-advanced').click()
+      cy.getTestId('route-form-protocols').click({ force: true })
+      cy.get("[data-testid='select-item-tcp'] button").click({ force: true })
+
+      cy.getTestId('route-form-config-type-basic').click()
+      cy.getTestId('route-form-config-type-advanced').click()
+      cy.getTestId('route-form-protocols').should('have.value', DEFAULT_PROTOCOL.toUpperCase())
     })
 
     it('should preserve entered path when switching to Advanced config type and remove additional paths when switching back to Basic', () => {
@@ -1084,6 +1114,20 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       cy.getTestId('add-paths').should('not.exist')
       cy.getTestId('add-hosts').should('not.exist')
+    })
+
+    it('should default protocols to https when creating a route', () => {
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKonnect,
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
+
+      cy.get('[data-testid="route-form-config-type-basic"] + label').should('contain.text', 'Quickly set up a route with HTTPS protocol with the essentials: path, method, and host.')
+      cy.getTestId('route-form-config-type-advanced').click()
+      // the value passed to KSelect is lowercase but somehow the input value is the uppercase label rather than the lowercase value.
+      cy.getTestId('route-form-protocols').should('have.value', DEFAULT_PROTOCOL.toUpperCase())
     })
 
     it('should preserve entered path when switching to Advanced config type and remove additional paths when switching back to Basic', () => {

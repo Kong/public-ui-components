@@ -1,14 +1,15 @@
-import { computed, inject, onBeforeUnmount, provide, reactive, readonly, ref, toRef, toValue, useAttrs, useSlots, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onUnmounted, provide, reactive, readonly, ref, toRaw, toRef, toValue, useAttrs, useSlots, watch } from 'vue'
 import type { ComputedRef, InjectionKey, MaybeRefOrGetter, Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { ArrayFieldSchema, ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { cloneDeep, get, isEqual, isFunction, omit, set, uniqueId } from 'lodash-es'
-import type { MatchMap } from './FieldRenderer.vue'
+import type { MatchMap } from './types'
 import type { FormConfig, RenderRules, ResetLabelPathRule } from './types'
 import { upperFirst } from 'lodash-es'
 import { createInjectionState } from '@vueuse/core'
+import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../constants'
 
 export const [provideFormShared, useOptionalFormShared] = createInjectionState(
   function createFormShared<T extends Record<string, any> = Record<string, any>>(options: {
@@ -1167,4 +1168,26 @@ function createRenderRuleRegistry(onChange: () => void) {
     hiddenPaths: readonly(hiddenPaths),
     isFieldHidden,
   }
+}
+
+/**
+ * Exposes the given schema on the global window object for use by an auto-filler script.
+ */
+export function useSchemaExposer(
+  schema: MaybeRefOrGetter<FormSchema>,
+  instanceId: string,
+) {
+  watch(schema, (newSchema) => {
+    if (!(window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
+      (window as any)[FREE_FORM_SCHEMA_MAP_KEY] = {}
+    }
+    ;(window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId] = toRaw(newSchema)
+  }, { immediate: true, deep: true })
+
+  // Clean up the schema on unmount
+  onUnmounted(() => {
+    if ((window as any)[FREE_FORM_SCHEMA_MAP_KEY]) {
+      delete (window as any)[FREE_FORM_SCHEMA_MAP_KEY][instanceId]
+    }
+  })
 }

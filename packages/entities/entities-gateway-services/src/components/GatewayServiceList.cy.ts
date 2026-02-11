@@ -559,6 +559,31 @@ describe('<GatewayServiceList />', () => {
       cy.getTestId('entity-create-button').should('be.visible')
     })
 
+    it('should show create gateway service cta with a dropdown menu when canImportSpecs is true', () => {
+      interceptKonnect()
+
+      cy.mount(GatewayServiceList, {
+        props: {
+          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => true,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canImportSpecs: true,
+          'onClick:import': cy.stub().as('importSpec'),
+        },
+      })
+
+      cy.wait('@getGatewayServices')
+      cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
+      cy.getTestId('gateway-services-entity-empty-state').should('be.visible')
+      cy.getTestId('entity-create-button').should('not.exist')
+      cy.getTestId('entity-create-dropdown').should('be.visible').click()
+      cy.getTestId('entity-import-dropdown-item').should('be.visible').click()
+      cy.get('@importSpec').should('have.been.called')
+    })
+
     it('should hide empty state and create gateway service cta if user can not create', () => {
       interceptKonnect()
 

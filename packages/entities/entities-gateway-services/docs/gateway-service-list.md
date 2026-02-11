@@ -166,6 +166,14 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 Indicates that the user is in the onboarding Serverless control plane and should use explanatory text.
 
+#### `canImportSpecs`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Indicates whether the gateway service can be created via importing Open API specs. If true, the create button will be rendered into `KDropdown`.
+
 ### Events
 
 #### error
@@ -187,6 +195,11 @@ A `@delete:success` event is emitted when a gateway service is successfully dele
 #### toggle:success
 
 A `@toggle:success` event is emitted when a gateway service's enabled state is successfully toggled. The event payload is the gateway service item data object.
+
+#### click:import
+
+A `@click:import` event is emitted when the user clicks the "Import via Open API spec" button in the empty state. The event payload is null.
+
 
 ### Usage example
 

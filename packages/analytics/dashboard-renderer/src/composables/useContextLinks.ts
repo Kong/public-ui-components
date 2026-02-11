@@ -42,9 +42,8 @@ export default function useContextLinks(
       return false
     }
 
-    // For top_n, only show if context is editable
     if (chartType === 'top_n') {
-      return context.value.editable ?? false
+      return context.value.editable || context.value.showTileActions
     }
 
     return true

@@ -4,6 +4,9 @@
     class="ff-standard-layout"
     :config="realFormConfig"
     :data="(prunedData as T)"
+    :data-instance-id="instanceId"
+    :data-plugin-name="pluginName"
+    data-testid="ff-standard-layout-form"
     :render-rules="renderRules"
     :schema="freeFormSchema"
     tag="div"
@@ -16,13 +19,8 @@
         <RedisSelector />
       </FieldRenderer>
 
-      <!-- Identity Realms field (key-auth plugin only) -->
-      <FieldRenderer
-        v-slot="slotProps"
-        :match="({ path }) => pluginName === 'key-auth' && path === 'config.identity_realms'"
-      >
-        <IdentityRealmsField v-bind="slotProps" />
-      </FieldRenderer>
+      <!-- Custom field renderers from consuming components -->
+      <slot name="field-renderers" />
     </template>
 
     <template v-if="editorMode === 'form'">
@@ -197,7 +195,7 @@ export type Props<T extends FreeFormPluginData = any> = {
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, inject, nextTick, ref, useTemplateRef } from 'vue'
+import { computed, inject, nextTick, ref, useTemplateRef, useId } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
 import { KRadio, KTooltip } from '@kong/kongponents'
@@ -212,8 +210,7 @@ import type { FormConfig, RenderRules } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
-import { FIELD_RENDERERS } from '../composables'
-import IdentityRealmsField from '../../../fields/key-auth-identity-realms/FreeFormAdapter.vue'
+import { FIELD_RENDERERS, useSchemaExposer } from '../composables'
 import Field from '../Field.vue'
 import StringArrayField from '../StringArrayField.vue'
 import StringField from '../StringField.vue'
@@ -237,12 +234,13 @@ const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   'service',
 ]
 
+const instanceId = useId()
+
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { editorMode = 'form', ...props } = defineProps<Props<T>>()
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
-
 const slots = defineSlots<{
   default: () => any
   'code-editor'?: () => any
@@ -252,6 +250,7 @@ const slots = defineSlots<{
   'plugin-config-title'?: () => any
   'plugin-config-description'?: () => any
   'plugin-config-extra'?: () => any
+  'field-renderers'?: () => any
 }>()
 
 const realFormConfig = computed(() => {
@@ -530,6 +529,8 @@ function getScopesFromFormModel(): Partial<T> {
   })
   return data
 }
+
+useSchemaExposer(freeFormSchema, instanceId)
 </script>
 
 <style lang="scss" scoped>

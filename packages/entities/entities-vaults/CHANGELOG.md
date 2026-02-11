@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.0.31...@kong-ui-public/entities-vaults@4.1.0) (2026-02-09)
+
+
+### Features
+
+* **entities-vaults:** add ssl_verify for hcv ([#2916](https://github.com/Kong/public-ui-components/issues/2916)) ([67eac73](https://github.com/Kong/public-ui-components/commit/67eac73736b7e95827eac6e68b4cf53379f1be2f))
+
+
+
+
+
+## [4.0.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.0.30...@kong-ui-public/entities-vaults@4.0.31) (2026-02-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.0.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.0.29...@kong-ui-public/entities-vaults@4.0.30) (2026-01-29)
+
+
+### Bug Fixes
+
+* **entities-vaults:** remove secret textarea char limit ([#2890](https://github.com/Kong/public-ui-components/issues/2890)) ([ed1e753](https://github.com/Kong/public-ui-components/commit/ed1e75366290fea41cb6aa4c71d2e2163f72f6ce))
+
+
+
+
+
 ## [4.0.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.0.28...@kong-ui-public/entities-vaults@4.0.29) (2026-01-26)
 
 

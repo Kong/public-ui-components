@@ -631,7 +631,9 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
   Object.keys(schema).sort().forEach(key => {
     const scheme = schema[key]
     // If the field type is 'set', convert it to 'array'
-    if (scheme.type === 'set') {
+    // Freeform can handle 'set' type with one_of elements as multiselect
+    // Todo: create suitable component for 'set' type in freeform and remove this conversion
+    if (scheme.type === 'set' && !(props.engine === 'freeform' && scheme.elements.one_of)) {
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
@@ -805,6 +807,15 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
         inputAttributes.type = elements.type === 'string' ? 'text' : 'number'
         initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, inputAttributes, ...overrides }
+      } else if (elements.type === 'array') { // array of string arrays (string[][])
+        const { id, help, label, hint, values, referenceable, model, elements: schemaElements } = initialFormSchema[field]
+        const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
+        initialFormSchema[field] = {
+          id, help, label, hint, values, referenceable, model,
+          elements: schemaElements, // Preserve elements so FieldArray can check the original schema structure
+          inputAttributes,
+          ...overrides,
+        }
       }
     }
 
