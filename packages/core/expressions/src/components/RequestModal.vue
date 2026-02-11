@@ -168,7 +168,6 @@ watch(url, (url) => {
     // Handle URLs with grpc-protocol family specially
     if (['grpc', 'grpcs'].includes(protocol)) {
       u = new URL(`http:${u.pathname}`)
-      console.log(u)
     }
 
     model.protocol = protocol
