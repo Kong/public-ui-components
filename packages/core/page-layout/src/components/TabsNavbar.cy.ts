@@ -1,8 +1,5 @@
 import TabsNavbar from './TabsNavbar.vue'
 
-// Suppress ResizeObserver errors that can occur during viewport resizing
-Cypress.on('uncaught:exception', err => !err.message.includes('ResizeObserver'))
-
 describe('<TabsNavbar />', () => {
   it('renders tabs correctly', () => {
     const tabs = {
