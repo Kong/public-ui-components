@@ -2,6 +2,9 @@ import { test, expect } from '@playwright/experimental-ct-vue'
 import { createFiller } from './create-filler'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import FormWrapper from './FormWrapper.vue'
+import FormWrapperWithTabs from './FormWrapperWithTabs.vue'
+import type { Page } from '@playwright/test'
+
 
 test.describe('Filler - Playwright', () => {
   const basicSchema: FormSchema = {
@@ -795,6 +798,318 @@ test.describe('Filler - Playwright', () => {
       })
 
       await expect(page.locator('[data-testid="ff-kv-headers"]')).toBeVisible()
+    })
+  })
+
+  test.describe('Tabs appearance array', () => {
+    /** Click the nth tab button (0-based) within a tabs array field */
+    async function clickTab(page: Page, fieldKey: string, index: number) {
+      await page.locator(`[data-testid="ff-array-tabs-${fieldKey}"] li button[role="tab"]`).nth(index).click()
+    }
+
+    test('should fill array of records with tabs appearance', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    host: {
+                      type: 'string',
+                    },
+                  },
+                  {
+                    port: {
+                      type: 'integer',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapperWithTabs, {
+        props: { schema, tabFields: ['servers'] },
+      })
+
+      // Verify tabs container is rendered
+      await expect(page.locator('[data-appearance="tabs"][data-testid="ff-array-servers"]')).toBeVisible()
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('servers', [
+        { host: 'localhost', port: 8080 },
+        { host: '127.0.0.1', port: 3000 },
+      ])
+
+      // Switch to tab 0 to verify its values
+      await clickTab(page, 'servers', 0)
+      await expect(page.locator('[data-testid="ff-servers.0.host"]')).toHaveValue('localhost')
+      await expect(page.locator('[data-testid="ff-servers.0.port"]')).toHaveValue('8080')
+
+      // Switch to tab 1 to verify its values
+      await clickTab(page, 'servers', 1)
+      await expect(page.locator('[data-testid="ff-servers.1.host"]')).toHaveValue('127.0.0.1')
+      await expect(page.locator('[data-testid="ff-servers.1.port"]')).toHaveValue('3000')
+    })
+
+    test('should fill array of primitives with tabs appearance', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            hosts: {
+              type: 'array',
+              elements: {
+                type: 'string',
+              },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapperWithTabs, {
+        props: { schema, tabFields: ['hosts'] },
+      })
+
+      await expect(page.locator('[data-appearance="tabs"][data-testid="ff-array-hosts"]')).toBeVisible()
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('hosts', ['host1.com', 'host2.com', 'host3.com'])
+
+      // Switch to each tab to verify its value
+      await clickTab(page, 'hosts', 0)
+      await expect(page.locator('[data-testid="ff-hosts.0"]')).toHaveValue('host1.com')
+
+      await clickTab(page, 'hosts', 1)
+      await expect(page.locator('[data-testid="ff-hosts.1"]')).toHaveValue('host2.com')
+
+      await clickTab(page, 'hosts', 2)
+      await expect(page.locator('[data-testid="ff-hosts.2"]')).toHaveValue('host3.com')
+    })
+
+    test('should clear existing tab items before filling', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    host: {
+                      type: 'string',
+                    },
+                  },
+                ],
+              },
+              default: [{ host: 'old-host-1' }, { host: 'old-host-2' }],
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapperWithTabs, {
+        props: { schema, tabFields: ['servers'] },
+      })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('servers', [
+        { host: 'new-host' },
+      ])
+
+      // Should only have 1 item after fill
+      await expect(page.locator('[data-testid="ff-servers.0.host"]')).toHaveValue('new-host')
+      await expect(page.locator('[data-testid="ff-array-item-servers.1"]')).not.toBeVisible()
+    })
+
+    test('should handle empty array in tabs appearance', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    host: {
+                      type: 'string',
+                    },
+                  },
+                ],
+              },
+              default: [{ host: 'existing' }],
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapperWithTabs, {
+        props: { schema, tabFields: ['servers'] },
+      })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('servers', [])
+
+      // All items should be removed
+      await expect(page.locator('[data-testid="ff-array-item-servers.0"]')).not.toBeVisible()
+    })
+
+    test('should handle null array in tabs appearance', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    host: {
+                      type: 'string',
+                    },
+                  },
+                ],
+              },
+              default: [{ host: 'existing' }],
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapperWithTabs, {
+        props: { schema, tabFields: ['servers'] },
+      })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('servers', null)
+
+      await expect(page.locator('[data-testid="ff-array-item-servers.0"]')).not.toBeVisible()
+    })
+
+    test('should fill tabs with mixed field types in records', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            endpoints: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    url: {
+                      type: 'string',
+                    },
+                  },
+                  {
+                    timeout: {
+                      type: 'integer',
+                    },
+                  },
+                  {
+                    enabled: {
+                      type: 'boolean',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapperWithTabs, {
+        props: { schema, tabFields: ['endpoints'] },
+      })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('endpoints', [
+        { url: 'https://api.example.com', timeout: 5000, enabled: true },
+        { url: 'https://backup.example.com', timeout: 10000, enabled: false },
+      ])
+
+      // Switch to tab 0 to verify its values
+      await clickTab(page, 'endpoints', 0)
+      await expect(page.locator('[data-testid="ff-endpoints.0.url"]')).toHaveValue('https://api.example.com')
+      await expect(page.locator('[data-testid="ff-endpoints.0.timeout"]')).toHaveValue('5000')
+      await expect(page.locator('[data-testid="ff-endpoints.0.enabled"]')).toBeChecked()
+
+      // Switch to tab 1 to verify its values
+      await clickTab(page, 'endpoints', 1)
+      await expect(page.locator('[data-testid="ff-endpoints.1.url"]')).toHaveValue('https://backup.example.com')
+      await expect(page.locator('[data-testid="ff-endpoints.1.timeout"]')).toHaveValue('10000')
+      await expect(page.locator('[data-testid="ff-endpoints.1.enabled"]')).not.toBeChecked()
+    })
+
+    test('should fill form with tabs array alongside other fields', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            name: {
+              type: 'string',
+            },
+          },
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    host: {
+                      type: 'string',
+                    },
+                  },
+                  {
+                    port: {
+                      type: 'integer',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          {
+            enabled: {
+              type: 'boolean',
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapperWithTabs, {
+        props: { schema, tabFields: ['servers'] },
+      })
+
+      const filler = createFiller(page, schema)
+      await filler.fill({
+        name: 'my-service',
+        servers: [
+          { host: 'primary.example.com', port: 443 },
+        ],
+        enabled: true,
+      })
+
+      await expect(page.locator('[data-testid="ff-name"]')).toHaveValue('my-service')
+
+      // Switch to the server tab to verify its values
+      await clickTab(page, 'servers', 0)
+      await expect(page.locator('[data-testid="ff-servers.0.host"]')).toHaveValue('primary.example.com')
+      await expect(page.locator('[data-testid="ff-servers.0.port"]')).toHaveValue('443')
+
+      await expect(page.locator('[data-testid="ff-enabled"]')).toBeChecked()
     })
   })
 })
