@@ -217,8 +217,8 @@ describe('<CommonForm />', () => {
         },
       })
 
-      // Click the "Code Editor" option in the segmented control
-      cy.getTestId('plugin-editor-mode-switcher').contains('Code Editor').click()
+      // Click the "Code editor" option in the segmented control
+      cy.getTestId('plugin-editor-mode-switcher').contains('Code editor').click()
 
       // Code editor should now be visible
       cy.getTestId('plugin-code-editor').should('exist')
