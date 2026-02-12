@@ -60,3 +60,30 @@ export function getFreeFormName(
     return res.component
   }
 }
+
+/**
+ * Determines if a plugin should use the freeform layout.
+ *
+ * @param pluginName - The name of the plugin
+ * @param experimentalWhitelist - List of experimental plugins enabled for freeform
+ * @param engine - Optional engine override ('vfg' | 'freeform')
+ * @returns true if the plugin should use freeform layout, false otherwise
+ */
+export function shouldUseFreeForm(
+  pluginName: string,
+  experimentalWhitelist: ExperimentalFormName[],
+  engine?: 'vfg' | 'freeform',
+): boolean {
+  // If engine is explicitly set, respect that choice
+  if (engine === 'vfg') {
+    return false
+  }
+
+  if (engine === 'freeform') {
+    return true
+  }
+
+  // No engine specified - check the mapping
+  const freeFormName = getFreeFormName(pluginName as FreeFormName, experimentalWhitelist)
+  return !!freeFormName
+}
