@@ -237,11 +237,11 @@ describe('<CommonForm />', () => {
       })
 
       // Switch to code mode
-      cy.getTestId('plugin-editor-mode-switcher').contains('Code Editor').click()
+      cy.getTestId('plugin-editor-mode-switcher').contains('Code editor').click()
       cy.getTestId('plugin-code-editor').should('exist')
 
       // Switch back to form mode
-      cy.getTestId('plugin-editor-mode-switcher').contains('Visual Editor').click()
+      cy.getTestId('plugin-editor-mode-switcher').contains('Visual editor').click()
 
       // Form sections should be visible again
       cy.getTestId('form-section-plugin-scope').should('exist')
