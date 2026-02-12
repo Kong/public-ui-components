@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.157.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.156.2...@kong-ui-public/entities-plugins@9.157.0) (2026-02-12)
+
+
+### Features
+
+* **entities-plugins:** update free-form mapping and its test ([#2923](https://github.com/Kong/public-ui-components/issues/2923)) ([7b98066](https://github.com/Kong/public-ui-components/commit/7b980664b6eef35162fca8bad48ffbf52c6b5156))
+
+
+
+
+
 ## [9.156.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.156.1...@kong-ui-public/entities-plugins@9.156.2) (2026-02-11)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
