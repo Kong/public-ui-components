@@ -154,15 +154,15 @@
       </EntityFormBlock>
     </template>
 
-    <template v-else>
-      <EntityFormBlock
-        :description="t('plugins.form.sections.code_mode.description')"
-        :title="t('plugins.form.sections.code_mode.title')"
-      >
-        <!-- TODO: Implement default code editor -->
-        <slot name="code-editor" />
-      </EntityFormBlock>
-    </template>
+    <EntityFormBlock
+      v-if="editorMode === 'code'"
+      :description="t('plugins.form.sections.code_mode.description')"
+      :title="t('plugins.form.sections.code_mode.title')"
+    >
+      <slot name="code-editor">
+        <CodeEditor />
+      </slot>
+    </EntityFormBlock>
   </Form>
 </template>
 
@@ -214,6 +214,7 @@ import { FIELD_RENDERERS, useSchemaExposer } from '../composables'
 import Field from '../Field.vue'
 import StringArrayField from '../StringArrayField.vue'
 import StringField from '../StringField.vue'
+import CodeEditor from '../CodeEditor.vue'
 
 const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   // plugin specific config
