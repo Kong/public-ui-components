@@ -84,6 +84,12 @@ import { BookIcon, CopyIcon, CodeIcon } from '@kong/icons'
 const code1 = ref(`// Built-in Actions with Default Placement
 
 # Hello World
+
+bold
+
+italic
+
+strikethrough
 `)
 
 const code2 = ref(`// Built-in Actions with Custom Placement

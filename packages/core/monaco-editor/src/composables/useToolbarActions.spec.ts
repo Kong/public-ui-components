@@ -37,8 +37,8 @@ describe('useToolbarActions', () => {
     const { commands } = useToolbarActions(true, lang)
 
     expect(commands.value).toHaveLength(2)
-    expect(commands.value[0].label).toBe('translated:toolbar.save')
-    expect(commands.value[1].label).toBe('translated:toolbar.format')
+    expect(commands.value[0].label).toBe('toolbar.save')
+    expect(commands.value[1].label).toBe('toolbar.format')
   })
 
   it('should allow disabling a built-in command', () => {
@@ -69,7 +69,7 @@ describe('useToolbarActions', () => {
 
     expect(save.order).toBe(99)
     expect(save.placement).toBe('center')
-    expect(save.label).toBe('translated:toolbar.save') // still translated
+    expect(save.label).toBe('toolbar.save') // still translated
   })
 
   it('should add custom user commands', () => {
