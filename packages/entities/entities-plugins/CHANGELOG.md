@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.158.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.157.0...@kong-ui-public/entities-plugins@9.158.0) (2026-02-12)
+
+
+### Features
+
+* **entities-plugins:** add plugin code mode ([#2917](https://github.com/Kong/public-ui-components/issues/2917)) ([6c06fda](https://github.com/Kong/public-ui-components/commit/6c06fdab275310f2ef8617501f603080a46b574b))
+
+
+
+
+
 # [9.157.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.156.2...@kong-ui-public/entities-plugins@9.157.0) (2026-02-12)
 
 
