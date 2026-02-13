@@ -1,9 +1,9 @@
 <template>
-  <div class="kong-ui-public-page-layout">
-    <div
-      v-if="konnectLayoutNext"
-      class="page-header-container"
-    >
+  <div
+    v-if="konnectLayoutNext"
+    class="kong-ui-public-page-layout"
+  >
+    <div class="page-header-container">
       <div class="header-breadcrumbs-container">
         <KBreadcrumbs
           v-if="breadcrumbs && breadcrumbs.length"
@@ -52,6 +52,8 @@
       />
     </div>
   </div>
+
+  <slot v-else />
 </template>
 
 <script setup lang="ts">
