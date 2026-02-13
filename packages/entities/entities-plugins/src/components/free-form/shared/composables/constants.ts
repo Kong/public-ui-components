@@ -8,10 +8,3 @@ export const FIELD_RESET_LABEL_PATH_SETTING = Symbol('free-form-field-reset-labe
 }>>
 
 export const FIELD_RENDERERS = 'free-form-field-renderers-slot' as const
-
-export const SHARED_LABEL_ATTRIBUTES = {
-  tooltipAttributes: {
-    maxWidth: '300px',
-    placement: 'top',
-  },
-} as const

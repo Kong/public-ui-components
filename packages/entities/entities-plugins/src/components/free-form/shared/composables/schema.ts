@@ -1,7 +1,13 @@
 import { computed, toValue } from 'vue'
 import { marked } from 'marked'
-import { SHARED_LABEL_ATTRIBUTES } from './constants'
 import * as utils from '../utils'
+
+const SHARED_LABEL_ATTRIBUTES = {
+  tooltipAttributes: {
+    maxWidth: '300px',
+    placement: 'top',
+  },
+} as const
 
 import type { ArrayFieldSchema, ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../../types/plugins/form-schema'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
