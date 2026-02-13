@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.7.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.8...@kong-ui-public/dashboard-renderer@8.7.9) (2026-02-13)
+
+
+### Bug Fixes
+
+* **analytics:** ensure empty state is shown in query data provider [MA-4715] ([#2913](https://github.com/Kong/public-ui-components/issues/2913)) ([5f9a1a4](https://github.com/Kong/public-ui-components/commit/5f9a1a4b7809b3503aedd4fcf73bbbe56ba816a5))
+
+
+
+
+
 ## [8.7.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.7...@kong-ui-public/dashboard-renderer@8.7.8) (2026-02-12)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
