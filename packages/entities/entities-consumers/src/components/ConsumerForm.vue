@@ -262,7 +262,7 @@ const submitData = async (): Promise<void> => {
 
   @media screen and (min-width: $kui-breakpoint-laptop) {
     &:deep(.form-section-wrapper) {
-      column-gap: $kui-space-130;
+      column-gap: var(--kui-space-130, $kui-space-130);
     }
   }
 
@@ -275,8 +275,8 @@ const submitData = async (): Promise<void> => {
 
 .fields-group {
   &-title {
-    color: $kui-color-text-neutral-strongest;
-    font-size: $kui-font-size-40;
+    color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
     font-weight: 600;
     line-height: 20px;
     margin-bottom: 4px;
@@ -285,7 +285,7 @@ const submitData = async (): Promise<void> => {
 
   &-text {
     color: rgba(0, 0, 0, 0.45);
-    font-size: $kui-font-size-30;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: 20px;
     margin-bottom: 0;
     margin-top: 0;

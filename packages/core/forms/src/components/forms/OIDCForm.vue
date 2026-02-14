@@ -449,7 +449,7 @@ export default {
 <style lang="scss" scoped>
 .section-header {
   color: rgba(0, 0, 0, 0.85);
-  font-size: $kui-font-size-40;
+  font-size: var(--kui-font-size-40, $kui-font-size-40);
   font-weight: 500;
   line-height: 20px;
 }

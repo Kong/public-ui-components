@@ -50,6 +50,6 @@ const advancedCollapsed = ref(true)
 .ff-advanced-fields {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-80;
+  gap: var(--kui-space-80, $kui-space-80);
 }
 </style>

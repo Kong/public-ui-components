@@ -122,7 +122,7 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
   max-height: inherit;
   overflow: auto;
   -ms-overflow-style: thin;
-  padding: $kui-space-40 calc(5% + $kui-space-20);
+  padding: var(--kui-space-40, $kui-space-40) calc(5% + var(--kui-space-20, $kui-space-20));
   width: 100%;
 
   // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
@@ -142,13 +142,13 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
     // Color bar preceding label
     .square-marker {
       height: 8px;
-      margin: $kui-space-0;
-      margin-right: $kui-space-30;
+      margin: var(--kui-space-0, $kui-space-0);
+      margin-right: var(--kui-space-30, $kui-space-30);
       width: 8px;
     }
 
     .label {
-      font-size: $kui-font-size-20;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
       white-space: nowrap;
 
       &.truncate-label {
@@ -159,8 +159,8 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
     }
 
     .sub-label {
-      font-size: $kui-font-size-20;
-      line-height: $kui-line-height-20;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      line-height: var(--kui-line-height-20, $kui-line-height-20);
       word-break: none;
     }
 

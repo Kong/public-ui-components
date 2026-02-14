@@ -178,6 +178,6 @@ useSchemaExposer(() => schema, instanceId)
 
 <style lang="scss" scoped>
 .rc-code textarea {
-  font-family: $kui-font-family-code !important;
+  font-family: var(--kui-font-family-code, $kui-font-family-code) !important;
 }
 </style>

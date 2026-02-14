@@ -76,7 +76,7 @@ watch(() => [props.start, props.end], ([newStart, newEnd]) => {
     margin: var(--kui-space-30, $kui-space-30) var(--kui-space-10, $kui-space-10);
 
     .label {
-      color: var(--kui-color-text-netural-strong, $kui-color-text-neutral-strong);
+      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
     }
   }
 }

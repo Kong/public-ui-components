@@ -133,22 +133,22 @@ const prunedData = computed(() => {
 
 <style lang="scss" scoped>
 .ff-form-config-fields {
-  border-top: $kui-border-width-10 solid $kui-color-border;
-  margin-top: $kui-space-80;
-  padding-top: $kui-space-80;
+  border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  margin-top: var(--kui-space-80, $kui-space-80);
+  padding-top: var(--kui-space-80, $kui-space-80);
 }
 
 .ff-form-config-form {
-  margin: $kui-space-100 0;
+  margin: var(--kui-space-100, $kui-space-100) 0;
 
   & > * {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-100;
+    gap: var(--kui-space-100, $kui-space-100);
   }
 }
 
 :deep(.k-label) {
-  font-weight: $kui-font-weight-medium;
+  font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
 }
 </style>

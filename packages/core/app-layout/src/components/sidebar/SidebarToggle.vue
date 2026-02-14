@@ -38,6 +38,7 @@ watch(() => props.active, (active) => {
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 @use "../../styles/variables" as *;
 
 .sidebar-menu-toggle {

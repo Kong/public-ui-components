@@ -381,8 +381,8 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .container {
   align-items: center;
-  border: 1px solid $kui-color-border-neutral-weaker;
-  border-radius: $kui-border-radius-20;
+  border: 1px solid var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   display: flex;
   height: 30px;
   justify-content: center;
@@ -391,21 +391,21 @@ onUnmounted(() => {
   position: relative;
 
   .no-data {
-    color: $kui-color-text-neutral;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     cursor: default;
-    font-size: $kui-font-size-20;
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
     user-select: none;
   }
 
   .label {
-    background-color: $kui-method-color-background-patch;
-    border-bottom: 1px solid $kui-color-border-neutral-weaker;
+    background-color: var(--kui-method-color-background-patch, $kui-method-color-background-patch);
+    border-bottom: 1px solid var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
     border-bottom-left-radius: 0;
-    border-bottom-right-radius: $kui-border-radius-20;
-    border-right: 1px solid $kui-color-border-neutral-weaker;
-    border-top-left-radius: $kui-border-radius-20;
+    border-bottom-right-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    border-right: 1px solid var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
+    border-top-left-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     border-top-right-radius: 0;
-    color: $kui-color-text-primary;
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
     cursor: default;
     font-size: 10px;
     left: 0;
