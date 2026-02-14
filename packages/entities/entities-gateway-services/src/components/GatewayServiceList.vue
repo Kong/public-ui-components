@@ -423,7 +423,14 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   }
 
   const { name, enabled, protocol, host, port, path } = fields
-  const filterFields: FilterFields = { name, enabled, protocol, host, port, path }
+  const filterFields: FilterFields = {
+    ...(name && { name }),
+    ...(enabled && { enabled }),
+    ...(protocol && { protocol }),
+    ...(host && { host }),
+    ...(port && { port }),
+    ...(path && { path }),
+  }
 
   return {
     isExactMatch,

@@ -316,10 +316,10 @@ const headers = computed<InternalHeader[]>(() => {
     const field = props.tableHeaders[key]
 
     arr.push({
-      label: field.label ?? key,
+      label: field?.label ?? key,
       key,
-      sortable: field.sortable ?? false,
-      hidable: field.hidable ?? true,
+      sortable: field?.sortable ?? false,
+      hidable: field?.hidable ?? true,
     })
   })
 

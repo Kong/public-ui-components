@@ -134,7 +134,7 @@ const previousValue = computed<number | null>(() => {
     return null
   }
 
-  const value = records.value[0].event[metricName.value]
+  const value = records.value?.[0]?.event?.[metricName.value]
 
   if (typeof value !== 'number' || isNaN(value)) {
     return null
@@ -157,7 +157,7 @@ const singleValue = computed<number | null>(() => {
     return null
   }
 
-  const value = records.value[currentIndex].event[metricName.value]
+  const value = records.value?.[currentIndex]?.event?.[metricName.value]
 
   // Check if value is actually a number
   if (typeof value !== 'number' || isNaN(value)) {

@@ -28,7 +28,7 @@ export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?
     if (dimensionMap) {
       // If dimensionMap is provided, create an event for each dimension value
       for (const dimension in dimensionMap) {
-        dimensionMap[dimension].forEach(dimensionValue => {
+        dimensionMap[dimension]?.forEach(dimensionValue => {
           totalRequests += rng.next(50, 500)
 
           const event = {
@@ -65,8 +65,8 @@ export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?
   if (dimensionMap) {
     for (const dimension in dimensionMap) {
       displayBlob[dimension] = {}
-      dimensionMap[dimension].forEach(dimensionValue => {
-        displayBlob[dimension][dimensionValue] = {
+      dimensionMap[dimension]?.forEach(dimensionValue => {
+        displayBlob[dimension]![dimensionValue] = {
           name: dimensionValue,
           deleted: false,
         }
@@ -110,8 +110,9 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[], metaOver
     const event: RecordEvent = {}
 
     metrics.forEach(metric => {
-      metricValues[metric.name] += rng.next(50, 500)
-      event[metric.name] = metricValues[metric.name]
+      // We initialize all metric value entries to 0 above
+      metricValues[metric.name]! += rng.next(50, 500)
+      event[metric.name] = metricValues[metric.name]!
     })
 
     const record = {
@@ -171,8 +172,8 @@ export const generateCrossSectionalData = (metrics: Metric[], dimensionMap?: Dim
         return
       }
 
-      dimensionValues[index].forEach(value => {
-        createRecords({ ...currentEvent, [dimensions[index]]: value }, index + 1)
+      dimensionValues[index]?.forEach(value => {
+        createRecords({ ...currentEvent, [dimensions[index]!]: value }, index + 1)
       })
     }
 
@@ -197,8 +198,8 @@ export const generateCrossSectionalData = (metrics: Metric[], dimensionMap?: Dim
   if (dimensionMap) {
     for (const dimension in dimensionMap) {
       displayBlob[dimension] = {}
-      dimensionMap[dimension].forEach(dimensionValue => {
-        displayBlob[dimension][dimensionValue] = {
+      dimensionMap[dimension]?.forEach(dimensionValue => {
+        displayBlob[dimension]![dimensionValue] = {
           name: dimensionValue,
           deleted: false,
         }
