@@ -17,8 +17,8 @@
         :class="{ 'sidebar-item-external-link': openInNewWindow, 'router-link': !useAnchorTag }"
         :href="useAnchorTag ? String(item.to || '#') : slotProps?.href"
         :target="openInNewWindow ? '_blank' : undefined"
-        @click="navigate($event, item, slotProps?.navigate)"
-        @keypress.enter="navigate($event, item, slotProps?.navigate)"
+        @click="navigate($event, item, slotProps?.href, slotProps?.navigate)"
+        @keypress.enter="navigate($event, item, slotProps?.href, slotProps?.navigate)"
       >
         <div
           class="sidebar-item-display"
@@ -96,7 +96,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, useSlots } from 'vue'
+import { computed, useSlots, inject } from 'vue'
 import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../types'
 import ItemBadge from './ItemBadge.vue'
 
@@ -145,8 +145,25 @@ const itemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem): void => {
   emit('click', item)
 }
 
-const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem, routerNavigate?: () => void): void => {
+/**
+ * A host application (e.g. `app-root`) may have injected a `navigateTo` function that
+ * handles navigation for sidebar items. If it exists, we should use it
+ * instead of the default router-link navigation.
+ */
+const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
+
+const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem, href?: string, routerNavigate?: () => void): void => {
   itemClick(item)
+
+  // If a `navigateTo` function is provided by the host app, use it for navigation instead of the default router-link behavior
+  if (typeof navigateTo === 'function' && (href || typeof item.to === 'string')) {
+    event.preventDefault()
+    const newPath = href || item.to as string
+    navigateTo(newPath)
+    return
+  }
+
+  // Otherwise, use the default router-link navigation
   if (typeof routerNavigate === 'function') {
     event.preventDefault()
     routerNavigate()
