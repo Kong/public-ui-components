@@ -154,6 +154,9 @@ const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateT
 
 const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem, href?: string, routerNavigate?: () => void): void => {
   itemClick(item)
+
+  console.log('href', href)
+
   // If a `navigateTo` function is provided by the host app, use it for navigation instead of the default router-link behavior
   if (typeof navigateTo === 'function' && (href || typeof item.to === 'string')) {
     event.preventDefault()
