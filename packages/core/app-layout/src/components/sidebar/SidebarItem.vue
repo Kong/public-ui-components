@@ -158,6 +158,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   if (typeof navigateTo === 'function' && (href || typeof item.to === 'string')) {
     event.preventDefault()
     const newPath = href || item.to as string
+    console.log('Using custom navigateTo function for sidebar navigation', newPath)
     navigateTo(newPath)
     return
   }
@@ -165,6 +166,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
   // Otherwise, use the default router-link navigation
   if (typeof routerNavigate === 'function') {
     event.preventDefault()
+    console.log('Using routerNavigate')
     routerNavigate()
   }
 }
