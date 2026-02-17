@@ -8,10 +8,10 @@ describe('<PageLayout />', () => {
       { key: 'home', text: 'Home', to: '/' },
       { key: 'current', text: 'Current Page' },
     ]
-    const tabs = {
-      overview: { name: 'Overview', to: '/overview' },
-      settings: { name: 'Settings', to: '/settings' },
-    }
+    const tabs = [
+      { key: 'overview', label: 'Overview', to: '/overview' },
+      { key: 'settings', label: 'Settings', to: '/settings' },
+    ]
 
     cy.mount(PageLayout, {
       props: {
