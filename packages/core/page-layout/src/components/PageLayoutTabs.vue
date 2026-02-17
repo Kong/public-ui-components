@@ -152,35 +152,35 @@ onBeforeUnmount(() => {
   $tabs-navbar-height: 34px;
 
   align-items: flex-end;
-  border-bottom: $kui-border-width-10 solid $kui-color-border;
+  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   box-sizing: border-box;
   display: flex;
   height: $tabs-navbar-height;
   overflow: hidden;
-  padding: $kui-space-0 v-bind('TABS_NAVBAR_HORIZONTAL_PADDING');
+  padding: var(--kui-space-0, $kui-space-0) v-bind('TABS_NAVBAR_HORIZONTAL_PADDING');
   position: relative;
   width: 100%;
 
   // Reset default anchor and button styles
   a, button {
-    background-color: $kui-color-background-transparent;
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
     border: none;
     color: inherit;
     cursor: pointer;
     outline: none;
-    padding: $kui-space-0;
+    padding: var(--kui-space-0, $kui-space-0);
     text-decoration: none;
   }
 
   ul {
     display: flex;
-    gap: $kui-space-70;
+    gap: var(--kui-space-70, $kui-space-70);
     list-style: none;
-    margin: $kui-space-0;
+    margin: var(--kui-space-0, $kui-space-0);
     /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-    margin-bottom: calc(-1 * $kui-border-width-10); // Make sure the border of the active (or hovered) tab overlaps the border of the tabs navbar
+    margin-bottom: calc(-1 * var(--kui-border-width-10, $kui-border-width-10)); // Make sure the border of the active (or hovered) tab overlaps the border of the tabs navbar
     max-width: 100%;
-    padding: $kui-space-0;
+    padding: var(--kui-space-0, $kui-space-0);
 
     // Hide the list when the layout is computing
     &.layout-computing {
@@ -193,43 +193,43 @@ onBeforeUnmount(() => {
 
       .tab-link {
         align-items: center;
-        border-bottom: $kui-border-width-20 solid $kui-color-border-transparent;
-        border-radius: $kui-border-radius-20 $kui-border-radius-20 $kui-border-radius-0 $kui-border-radius-0;
-        color: $kui-color-text-neutral-strong;
+        border-bottom: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
+        border-radius: var(--kui-border-radius-20, $kui-border-radius-20) var(--kui-border-radius-20, $kui-border-radius-20) var(--kui-border-radius-0, $kui-border-radius-0) var(--kui-border-radius-0, $kui-border-radius-0);
+        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
         cursor: pointer;
         display: flex;
-        font-size: $kui-font-size-20;
-        font-weight: $kui-font-weight-medium;
-        gap: $kui-space-30;
-        line-height: $kui-line-height-30;
-        padding: $kui-space-30 $kui-space-0;
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+        font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+        gap: var(--kui-space-30, $kui-space-30);
+        line-height: var(--kui-line-height-30, $kui-line-height-30);
+        padding: var(--kui-space-30, $kui-space-30) var(--kui-space-0, $kui-space-0);
         white-space: nowrap;
 
         &:hover {
-          border-bottom: $kui-border-width-20 solid $kui-color-border-neutral-weak;
-          color: $kui-color-text;
+          border-bottom: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
+          color: var(--kui-color-text, $kui-color-text);
         }
 
         &:focus-visible {
-          box-shadow: $kui-shadow-focus;
+          box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
         }
 
         &.active {
-          border-bottom: $kui-border-width-20 solid $kui-color-border-primary;
-          color: $kui-color-text-primary;
+          border-bottom: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-primary, $kui-color-border-primary);
+          color: var(--kui-color-text-primary, $kui-color-text-primary);
         }
 
         &.more-dropdown-trigger {
-          color: $kui-color-text;
+          color: var(--kui-color-text, $kui-color-text);
 
           .overflowing-items-count {
-            background-color: $kui-color-background-neutral-weaker;
-            border-radius: $kui-border-radius-round;
-            color: $kui-color-text-neutral-strong;
-            font-size: $kui-font-size-20;
-            font-weight: $kui-font-weight-semibold;
-            line-height: $kui-line-height-30;
-            padding: $kui-space-10 $kui-space-30;
+            background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+            border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
+            color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+            font-size: var(--kui-font-size-20, $kui-font-size-20);
+            font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+            line-height: var(--kui-line-height-30, $kui-line-height-30);
+            padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
           }
         }
       }
@@ -239,7 +239,7 @@ onBeforeUnmount(() => {
   .layout-loader-container {
     align-items: center;
     display: flex;
-    gap: $kui-space-70;
+    gap: var(--kui-space-70, $kui-space-70);
     height: $tabs-navbar-height;
     inset: 0;
     left: v-bind('TABS_NAVBAR_HORIZONTAL_PADDING');
