@@ -195,6 +195,7 @@
     "requests_per_minute": "Requests per minute",
     "latency_in": "Latency in {unit}",
     "size_in": "Size in {unit}",
+    "response_latency_average": "Response latency (avg) in {unit}",
     "response_latency_p99": "Response latency (p99) in {unit}",
     "response_latency_p95": "Response latency (p95) in {unit}",
     "response_latency_p50": "Response latency (p50) in {unit}",
