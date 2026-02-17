@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.13.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.29...@kong-ui-public/analytics-chart@10.13.30) (2026-02-17)
+
+
+### Bug Fixes
+
+* **analytics:** add missing translation string for ([#2933](https://github.com/Kong/public-ui-components/issues/2933)) ([8a9df71](https://github.com/Kong/public-ui-components/commit/8a9df71ab0810d8c7544c0d94c0ec07947fd28b4))
+
+
+
+
+
 ## [10.13.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.28...@kong-ui-public/analytics-chart@10.13.29) (2026-02-12)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
