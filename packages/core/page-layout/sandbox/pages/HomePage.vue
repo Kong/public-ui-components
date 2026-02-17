@@ -1,7 +1,6 @@
 <template>
   <PageLayout
     :breadcrumbs="breadcrumbs"
-    konnect-layout-next
     page-title="Overview"
     :tabs="tabs"
     title="Umbrella R&D Dev"
@@ -23,7 +22,7 @@
 
 <script setup lang="ts">
 import { PageLayout } from '../../src'
-import type { PageLayoutNavbarTabs } from '../../src'
+import type { PageLayoutTab } from '../../src'
 import { KButton } from '@kong/kongponents'
 import { ChevronDownIcon } from '@kong/icons'
 import { BookIcon } from '@kong/icons'
@@ -39,47 +38,57 @@ const breadcrumbs = [{
   text: 'Gateways',
 }]
 
-const tabs: PageLayoutNavbarTabs = {
-  overview: {
-    name: 'Overview',
+const tabs: PageLayoutTab[] = [
+  {
+    key: 'overview',
+    label: 'Overview',
     to: '/',
     active: true,
   },
-  gatewayServices: {
-    name: 'Gateway services',
+  {
+    key: 'gateway-services',
+    label: 'Gateway services',
     to: '/gateway-services',
   },
-  routes: {
-    name: 'Routes',
+  {
+    key: 'routes',
+    label: 'Routes',
     to: '/routes',
   },
-  plugins: {
-    name: 'Plugins',
+  {
+    key: 'plugins',
+    label: 'Plugins',
     to: '/plugins',
   },
-  redisConfigurations: {
-    name: 'Redis configurations',
+  {
+    key: 'redis-configurations',
+    label: 'Redis configurations',
     to: '/redis-configurations',
   },
-  upstreams: {
-    name: 'Upstreams',
+  {
+    key: 'upstreams',
+    label: 'Upstreams',
     to: '/upstreams',
   },
-  certificates: {
-    name: 'Certificates',
+  {
+    key: 'certificates',
+    label: 'Certificates',
     to: '/certificates',
   },
-  snis: {
-    name: 'SNIs',
+  {
+    key: 'snis',
+    label: 'SNIs',
     to: '/snis',
   },
-  vaults: {
-    name: 'Vaults',
+  {
+    key: 'vaults',
+    label: 'Vaults',
     to: '/vaults',
   },
-  keys: {
-    name: 'Keys',
+  {
+    key: 'keys',
+    label: 'Keys',
     to: '/keys',
   },
-}
+]
 </script>

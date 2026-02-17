@@ -9,42 +9,41 @@
       :class="{ 'layout-computing': !displayedTabsLayoutComputed }"
     >
       <li
-        v-for="tabKey in Object.keys(tabs).slice(0, displayedTabsCount)"
-        :key="`${tabKey}-tab`"
+        v-for="tab in tabs.slice(0, displayedTabsCount)"
+        :key="`${tab.key}-tab`"
       >
         <component
-          :is="typeof tabs[tabKey].to === 'string' ? 'a' : 'router-link'"
+          :is="typeof tab.to === 'string' ? 'a' : 'router-link'"
           class="tab-link"
-          :class="{ 'active': tabs[tabKey].active }"
-          :data-testid="tabs[tabKey].testId ? tabs[tabKey].testId : `${getKeyTestIdString(tabKey)}-tab-link`"
-          :href="typeof tabs[tabKey].to === 'string' ? tabs[tabKey].to : undefined"
-          :to="typeof tabs[tabKey].to === 'string' ? undefined : tabs[tabKey].to"
+          :class="{ 'active': tab.active }"
+          :data-testid="tab.dataTestId ? tab.dataTestId : `${tab.key}-tab-link`"
+          :href="typeof tab.to === 'string' ? tab.to : undefined"
+          :to="typeof tab.to === 'string' ? undefined : tab.to"
         >
-          {{ tabs[tabKey].name }}
+          {{ tab.label }}
         </component>
       </li>
       <!-- Overflowing items dropdown -->
-      <li v-if="Object.keys(tabs).length > displayedTabsCount">
+      <li v-if="tabs.length > displayedTabsCount">
         <KDropdown :kpop-attributes="{ placement: 'bottom-end' }">
           <button
-            appearance="none"
             class="tab-link more-dropdown-trigger"
             data-testid="tabs-navbar-more-dropdown-button"
           >
             {{ t('tabs_navbar.more') }}
 
             <span class="overflowing-items-count">
-              {{ Object.keys(tabs).length - displayedTabsCount }}
+              {{ tabs.length - displayedTabsCount }}
             </span>
           </button>
 
           <template #items>
             <KDropdownItem
-              v-for="overflowingTabKey in Object.keys(tabs).slice(displayedTabsCount)"
-              :key="`${overflowingTabKey}-dropdown-item`"
-              :data-testid="tabs[overflowingTabKey].testId ? `${tabs[overflowingTabKey].testId}-tab-dropdown-item` : `${getKeyTestIdString(overflowingTabKey)}-tab-dropdown-item`"
-              :item="{ label: tabs[overflowingTabKey].name, value: overflowingTabKey, to: tabs[overflowingTabKey].to }"
-              :selected="tabs[overflowingTabKey].active"
+              v-for="overflowingTab in tabs.slice(displayedTabsCount)"
+              :key="`${overflowingTab.key}-dropdown-item`"
+              :data-testid="overflowingTab.dataTestId ? `${overflowingTab.dataTestId}-tab-dropdown-item` : `${overflowingTab.key}-tab-dropdown-item`"
+              :item="{ label: overflowingTab.label, value: overflowingTab.key, to: overflowingTab.to }"
+              :selected="overflowingTab.active"
             />
           </template>
         </KDropdown>
@@ -68,15 +67,14 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import { KDropdown, KDropdownItem, KSkeletonBox } from '@kong/kongponents'
-import type { PageLayoutTabsNavbarProps } from '../types'
+import type { PageLayoutTabsProps } from '../types'
 import composables from '../composables'
-import getKeyTestIdString from '../helpers/getKeyTestIdString'
 import { KUI_SPACE_60 } from '@kong/design-tokens'
 import { useEventListener } from '@vueuse/core'
 
 const {
-  tabs = {},
-} = defineProps<PageLayoutTabsNavbarProps>()
+  tabs = [],
+} = defineProps<PageLayoutTabsProps>()
 
 const { i18n: { t } } = composables.useI18n()
 
@@ -85,7 +83,7 @@ const TABS_NAVBAR_HORIZONTAL_PADDING = KUI_SPACE_60
 const tabsNavbarWrapperRef = useTemplateRef('tabs-navbar-wrapper')
 const tabsNavbarListRef = useTemplateRef('tabs-navbar-list')
 
-const displayedTabsCount = ref<number>(Object.keys(tabs).length)
+const displayedTabsCount = ref<number>(tabs.length)
 const displayedTabsLayoutComputed = ref<boolean>(false)
 
 /**
@@ -97,7 +95,7 @@ const computeLayout = async (): Promise<void> => {
   }
 
   displayedTabsLayoutComputed.value = false
-  displayedTabsCount.value = Object.keys(tabs).length
+  displayedTabsCount.value = tabs.length
 
   // Wait for initial render
   await nextTick()

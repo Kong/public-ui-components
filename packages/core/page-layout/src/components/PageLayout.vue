@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="konnectLayoutNext"
-    class="kong-ui-public-page-layout"
-  >
+  <div class="kong-ui-public-page-layout">
     <div class="page-header-container">
       <div class="header-breadcrumbs-container">
         <KBreadcrumbs
@@ -22,7 +19,7 @@
           {{ title }}
         </h1>
       </div>
-      <TabsNavbar
+      <PageLayoutTabs
         v-if="hasTabs"
         :tabs="tabs"
       />
@@ -52,21 +49,18 @@
       />
     </div>
   </div>
-
-  <slot v-else />
 </template>
 
 <script setup lang="ts">
 import { KBreadcrumbs } from '@kong/kongponents'
 import { computed } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots, PageLayoutBreadcrumbIconSlotName } from '../types'
-import TabsNavbar from './TabsNavbar.vue'
+import PageLayoutTabs from './PageLayoutTabs.vue'
 
 const {
-  konnectLayoutNext,
   breadcrumbs = [],
   title,
-  tabs = {},
+  tabs = [],
   pageTitle = '',
 } = defineProps<PageLayoutProps>()
 
@@ -74,7 +68,7 @@ const slots = defineSlots<PageLayoutSlots>()
 
 const breadcrumbIconSlots = computed(() => Object.keys(slots).filter((slotName): slotName is PageLayoutBreadcrumbIconSlotName => slotName.startsWith('icon-')))
 
-const hasTabs = computed((): boolean => !!(tabs && Object.keys(tabs).length))
+const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 </script>
 
 <style lang="scss" scoped>

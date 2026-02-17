@@ -15,7 +15,6 @@ describe('<PageLayout />', () => {
 
     cy.mount(PageLayout, {
       props: {
-        konnectLayoutNext: true,
         title,
         breadcrumbs,
         tabs,
@@ -30,7 +29,6 @@ describe('<PageLayout />', () => {
   it('renders only the title when neither breadcrumbs nor tabs are passed', () => {
     cy.mount(PageLayout, {
       props: {
-        konnectLayoutNext: true,
         title,
       },
     })

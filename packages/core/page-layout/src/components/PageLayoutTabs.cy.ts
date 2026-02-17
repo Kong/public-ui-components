@@ -1,13 +1,13 @@
-import TabsNavbar from './TabsNavbar.vue'
+import PageLayoutTabs from './PageLayoutTabs.vue'
 
-describe('<TabsNavbar />', () => {
+describe('<PageLayoutTabs />', () => {
   it('renders tabs correctly', () => {
-    const tabs = {
-      overview: { name: 'Overview', to: '/overview' },
-      settings: { name: 'Settings', to: '/settings' },
-    }
+    const tabs = [
+      { key: 'overview', label: 'Overview', to: '/overview' },
+      { key: 'settings', label: 'Settings', to: '/settings' },
+    ]
 
-    cy.mount(TabsNavbar, {
+    cy.mount(PageLayoutTabs, {
       props: {
         tabs,
       },
@@ -19,21 +19,21 @@ describe('<TabsNavbar />', () => {
   })
 
   it('handles overflow correctly with overflowing tab showing in dropdown', () => {
-    const tabs = {
-      tab1: { name: 'Tab 1', to: '/tab1' },
-      tab2: { name: 'Tab 2', to: '/tab2' },
-      tab3: { name: 'Tab 3', to: '/tab3' },
-      tab4: { name: 'Tab 4', to: '/tab4' },
-      tab5: { name: 'Tab 5', to: '/tab5' },
-      tab6: { name: 'Tab 6', to: '/tab6' },
-      tab7: { name: 'Tab 7', to: '/tab7' },
-      tab8: { name: 'Tab 8', to: '/tab8' },
-    }
+    const tabs = [
+      { key: 'tab1', label: 'Tab 1', to: '/tab1' },
+      { key: 'tab2', label: 'Tab 2', to: '/tab2' },
+      { key: 'tab3', label: 'Tab 3', to: '/tab3' },
+      { key: 'tab4', label: 'Tab 4', to: '/tab4' },
+      { key: 'tab5', label: 'Tab 5', to: '/tab5' },
+      { key: 'tab6', label: 'Tab 6', to: '/tab6' },
+      { key: 'tab7', label: 'Tab 7', to: '/tab7' },
+      { key: 'tab8', label: 'Tab 8', to: '/tab8' },
+    ]
 
     // Use a narrow viewport to trigger overflow
     cy.viewport(300, 400)
 
-    cy.mount(TabsNavbar, {
+    cy.mount(PageLayoutTabs, {
       props: {
         tabs,
       },

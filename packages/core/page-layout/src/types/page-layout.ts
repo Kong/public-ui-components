@@ -1,15 +1,13 @@
 import type { BreadcrumbItem } from '@kong/kongponents'
-import type { PageLayoutNavbarTabs } from './'
+import type { PageLayoutTab } from './'
 
 export interface PageLayoutProps {
-  /** Boolean to determine if the page should use the new Konnect layout */
-  konnectLayoutNext?: boolean
   /** Breadcrumb items */
   breadcrumbs?: BreadcrumbItem[]
   /** Page title */
   title: string
   /** Tabs */
-  tabs?: PageLayoutNavbarTabs
+  tabs?: PageLayoutTab[]
   /** Page title */
   pageTitle?: string
 }
