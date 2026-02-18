@@ -14,8 +14,14 @@ describe('<PageLayoutTabs />', () => {
     })
 
     cy.getTestId('page-layout-tabs').should('be.visible')
-    cy.getTestId('overview-tab-link').should('be.visible').and('contain.text', 'Overview')
-    cy.getTestId('settings-tab-link').should('be.visible').and('contain.text', 'Settings')
+    cy.getTestId('overview-tab-link')
+      .should('be.visible')
+      .and('contain.text', 'Overview')
+      .and('have.attr', 'href', '/overview')
+    cy.getTestId('settings-tab-link')
+      .should('be.visible')
+      .and('contain.text', 'Settings')
+      .and('have.attr', 'href', '/settings')
   })
 
   it('handles overflow correctly with overflowing tab showing in dropdown', () => {
@@ -51,5 +57,52 @@ describe('<PageLayoutTabs />', () => {
     cy.getTestId('tabs-overflow-dropdown-popover')
       .findTestId('tab8-tab-link')
       .should('be.visible')
+      .and('have.attr', 'href', '/tab8')
+  })
+
+  it('uses the navigateTo injectable to navigate to the tab', () => {
+    const navigateToStub = cy.stub().as('navigateTo')
+
+    const tabs = [
+      { key: 'tab', label: 'Tab', to: '/tab' },
+    ]
+
+    cy.mount(PageLayoutTabs, {
+      props: {
+        tabs,
+      },
+      global: {
+        provide: {
+          'app:navigateTo': navigateToStub,
+        },
+      },
+    })
+
+    cy.getTestId('tab-tab-link').click()
+
+    cy.get('@navigateTo').should('have.been.calledWith', tabs[0].to)
+  })
+
+  it('does not use the navigateTo injectable if the tab.to is not a string', () => {
+    const navigateToStub = cy.stub().as('navigateTo')
+
+    const tabs = [
+      { key: 'tab', label: 'Tab', to: { name: 'tab' } },
+    ]
+
+    cy.mount(PageLayoutTabs, {
+      props: {
+        tabs,
+      },
+      global: {
+        provide: {
+          'app:navigateTo': navigateToStub,
+        },
+      },
+    })
+
+    cy.getTestId('tab-tab-link').click()
+
+    cy.get('@navigateTo').should('not.have.been.called')
   })
 })

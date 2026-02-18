@@ -19,6 +19,7 @@
           :data-testid="tab.dataTestId ? tab.dataTestId : `${tab.key}-tab-link`"
           :href="typeof tab.to === 'string' ? tab.to : undefined"
           :to="typeof tab.to === 'string' ? undefined : tab.to"
+          @click="(event: Event) => onTabClick(event, tab)"
         >
           {{ tab.label }}
         </component>
@@ -71,16 +72,28 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import { KDropdown, KDropdownItem, KSkeletonBox } from '@kong/kongponents'
-import type { PageLayoutTabsProps } from '../types'
+import type { PageLayoutTabsProps, PageLayoutTab } from '../types'
 import composables from '../composables'
 import { KUI_SPACE_60 } from '@kong/design-tokens'
 import { useEventListener } from '@vueuse/core'
+import { inject } from 'vue'
 
 const {
   tabs = [],
 } = defineProps<PageLayoutTabsProps>()
 
 const { i18n: { t } } = composables.useI18n()
+
+const navigateTo = inject<(to: string) => Promise<void>>('app:navigateTo')
+
+const onTabClick = (event: Event, tab: PageLayoutTab) => {
+  if (typeof tab.to !== 'string' || !navigateTo || typeof navigateTo !== 'function') {
+    return
+  }
+
+  event.preventDefault()
+  navigateTo(tab.to)
+}
 
 const TABS_HORIZONTAL_PADDING = KUI_SPACE_60
 
