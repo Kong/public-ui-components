@@ -21,7 +21,7 @@ describe('<PageLayout />', () => {
       },
     })
 
-    cy.getTestId('kong-ui-public-page-layout-breadcrumbs').should('be.visible')
+    cy.getTestId('page-layout-breadcrumbs').should('be.visible')
     cy.getTestId('page-layout-title').should('be.visible').and('contain.text', title)
     cy.getTestId('page-layout-tabs').should('be.visible')
   })
@@ -33,7 +33,7 @@ describe('<PageLayout />', () => {
       },
     })
 
-    cy.getTestId('kong-ui-public-page-layout-breadcrumbs').should('not.exist')
+    cy.getTestId('page-layout-breadcrumbs').should('not.exist')
     cy.getTestId('page-layout-title').should('be.visible').and('contain.text', title)
     cy.getTestId('page-layout-tabs').should('not.exist')
   })

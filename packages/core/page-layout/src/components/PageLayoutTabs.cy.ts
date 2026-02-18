@@ -42,10 +42,10 @@ describe('<PageLayoutTabs />', () => {
     cy.getTestId('page-layout-tabs').should('be.visible')
 
     // The "More" dropdown should be visible
-    cy.getTestId('tabs-navbar-more-dropdown-button').should('be.visible')
+    cy.getTestId('tabs-more-dropdown-button').should('be.visible')
 
     // Click the dropdown to reveal overflow items
-    cy.getTestId('tabs-navbar-more-dropdown-button').click()
+    cy.getTestId('tabs-more-dropdown-button').click()
 
     // The last tab should be in the dropdown
     cy.getTestId('tab8-tab-dropdown-item').should('be.visible')
