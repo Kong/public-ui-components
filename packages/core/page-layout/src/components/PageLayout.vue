@@ -5,17 +5,13 @@
         <KBreadcrumbs
           v-if="breadcrumbs && breadcrumbs.length"
           class="header-breadcrumbs"
-          data-testid="kong-ui-public-page-layout-breadcrumbs"
+          data-testid="page-layout-breadcrumbs"
           :items="breadcrumbs"
+        />
+        <h1
+          class="page-layout-title"
+          data-testid="page-layout-title"
         >
-          <template
-            v-for="breadcrumbIconSlot in breadcrumbIconSlots"
-            #[breadcrumbIconSlot]
-          >
-            <slot :name="breadcrumbIconSlot" />
-          </template>
-        </KBreadcrumbs>
-        <h1 class="header-title">
           {{ title }}
         </h1>
       </div>
@@ -26,22 +22,6 @@
     </div>
 
     <div class="page-content-wrapper">
-      <div
-        v-if="pageTitle"
-        class="page-title-container"
-      >
-        <h2 class="page-title">
-          {{ pageTitle }}
-        </h2>
-
-        <div
-          v-if="$slots.actions"
-          class="page-title-actions-container"
-        >
-          <slot name="actions" />
-        </div>
-      </div>
-
       <router-view v-if="hasTabs" />
       <slot
         v-else
@@ -54,19 +34,16 @@
 <script setup lang="ts">
 import { KBreadcrumbs } from '@kong/kongponents'
 import { computed } from 'vue'
-import type { PageLayoutProps, PageLayoutSlots, PageLayoutBreadcrumbIconSlotName } from '../types'
+import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 
 const {
   breadcrumbs = [],
   title,
   tabs = [],
-  pageTitle = '',
 } = defineProps<PageLayoutProps>()
 
-const slots = defineSlots<PageLayoutSlots>()
-
-const breadcrumbIconSlots = computed(() => Object.keys(slots).filter((slotName): slotName is PageLayoutBreadcrumbIconSlotName => slotName.startsWith('icon-')))
+defineSlots<PageLayoutSlots>()
 
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 </script>
@@ -103,7 +80,7 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
         }
       }
 
-      .header-title {
+      .page-layout-title {
         @include truncate;
 
         color: var(--kui-color-text, $kui-color-text);
@@ -115,7 +92,7 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
     }
 
     // When there are no tabs, add a border and padding to the bottom of the breadcrumbs container
-    &:not(:has(.kong-ui-public-tabs-navbar)) {
+    &:not(:has(.page-layout-tabs)) {
       .header-breadcrumbs-container {
         border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
         padding: var(--kui-space-60, $kui-space-60);
@@ -128,30 +105,6 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
     flex-direction: column;
     gap: var(--kui-space-50, $kui-space-50);
     padding: var(--kui-space-60, $kui-space-60);
-
-    .page-title-container {
-      align-items: center;
-      display: flex;
-      gap: var(--kui-space-50, $kui-space-50);
-      justify-content: space-between;
-
-      .page-title {
-        @include truncate;
-
-        color: var(--kui-color-text, $kui-color-text);
-        font-size: var(--kui-font-size-50, $kui-font-size-50);
-        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-        letter-spacing: var(--kui-letter-spacing-minus-30, $kui-letter-spacing-minus-30);
-        line-height: var(--kui-line-height-60, $kui-line-height-60);
-        margin: var(--kui-space-0, $kui-space-0);
-      }
-
-      .page-title-actions-container {
-        align-items: center;
-        display: flex;
-        gap: var(--kui-space-50, $kui-space-50);
-      }
-    }
   }
 }
 </style>

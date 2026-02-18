@@ -1,11 +1,11 @@
 <template>
   <nav
-    ref="tabs-navbar-wrapper"
-    class="kong-ui-public-tabs-navbar"
-    data-testid="kong-ui-public-tabs-navbar"
+    ref="page-layout-tabs"
+    class="page-layout-tabs"
+    data-testid="page-layout-tabs"
   >
     <ul
-      ref="tabs-navbar-list"
+      ref="page-layout-tabs-list"
       :class="{ 'layout-computing': !displayedTabsLayoutComputed }"
     >
       <li
@@ -28,7 +28,7 @@
         <KDropdown :kpop-attributes="{ placement: 'bottom-end' }">
           <button
             class="tab-link more-dropdown-trigger"
-            data-testid="tabs-navbar-more-dropdown-button"
+            data-testid="tabs-more-dropdown-button"
           >
             {{ t('tabs_navbar.more') }}
 
@@ -78,10 +78,10 @@ const {
 
 const { i18n: { t } } = composables.useI18n()
 
-const TABS_NAVBAR_HORIZONTAL_PADDING = KUI_SPACE_60
+const TABS_HORIZONTAL_PADDING = KUI_SPACE_60
 
-const tabsNavbarWrapperRef = useTemplateRef('tabs-navbar-wrapper')
-const tabsNavbarListRef = useTemplateRef('tabs-navbar-list')
+const pageLayoutTabsRef = useTemplateRef('page-layout-tabs')
+const pageLayoutTabsListRef = useTemplateRef('page-layout-tabs-list')
 
 const displayedTabsCount = ref<number>(tabs.length)
 const displayedTabsLayoutComputed = ref<boolean>(false)
@@ -90,7 +90,7 @@ const displayedTabsLayoutComputed = ref<boolean>(false)
  * Computes the layout of the tabs navbar and updates the displayed tabs count
  */
 const computeLayout = async (): Promise<void> => {
-  if (!tabsNavbarWrapperRef.value || !tabsNavbarListRef.value) {
+  if (!pageLayoutTabsRef.value || !pageLayoutTabsListRef.value) {
     return
   }
 
@@ -100,8 +100,8 @@ const computeLayout = async (): Promise<void> => {
   // Wait for initial render
   await nextTick()
 
-  const containerWidth = tabsNavbarWrapperRef.value?.getBoundingClientRect().width - (parseInt(TABS_NAVBAR_HORIZONTAL_PADDING) * 2)
-  let listWidth = tabsNavbarListRef.value?.getBoundingClientRect().width
+  const containerWidth = pageLayoutTabsRef.value?.getBoundingClientRect().width - (parseInt(TABS_HORIZONTAL_PADDING) * 2)
+  let listWidth = pageLayoutTabsListRef.value?.getBoundingClientRect().width
 
   if (!containerWidth || !listWidth) {
     displayedTabsLayoutComputed.value = true
@@ -117,7 +117,7 @@ const computeLayout = async (): Promise<void> => {
     await nextTick()
 
     // Recalculate the list width after re-render
-    listWidth = tabsNavbarListRef.value?.getBoundingClientRect().width || 0
+    listWidth = pageLayoutTabsListRef.value?.getBoundingClientRect().width || 0
   }
 
   displayedTabsLayoutComputed.value = true
@@ -148,7 +148,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-.kong-ui-public-tabs-navbar {
+.page-layout-tabs {
   $tabs-navbar-height: 34px;
 
   align-items: flex-end;
@@ -157,7 +157,7 @@ onBeforeUnmount(() => {
   display: flex;
   height: $tabs-navbar-height;
   overflow: hidden;
-  padding: var(--kui-space-0, $kui-space-0) v-bind('TABS_NAVBAR_HORIZONTAL_PADDING');
+  padding: var(--kui-space-0, $kui-space-0) v-bind('TABS_HORIZONTAL_PADDING');
   position: relative;
   width: 100%;
 
@@ -242,7 +242,7 @@ onBeforeUnmount(() => {
     gap: var(--kui-space-70, $kui-space-70);
     height: $tabs-navbar-height;
     inset: 0;
-    left: v-bind('TABS_NAVBAR_HORIZONTAL_PADDING');
+    left: v-bind('TABS_HORIZONTAL_PADDING');
     position: absolute;
   }
 }

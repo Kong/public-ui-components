@@ -8,23 +8,11 @@ export interface PageLayoutProps {
   title: string
   /** Tabs */
   tabs?: PageLayoutTab[]
-  /** Page title */
-  pageTitle?: string
 }
 
-export type PageLayoutBreadcrumbIconSlotName = `icon-${string}`
-
 export interface PageLayoutSlots {
-  /**
-   * Actions slot
-   */
-  actions?(): any
   /**
    * Default slot for page content
    */
   default?(): any
-  /**
-   * Breadcrumb icon slots, e.g., 'icon-home', 'icon-user', etc.
-   */
-  [key: PageLayoutBreadcrumbIconSlotName]: () => any
 }

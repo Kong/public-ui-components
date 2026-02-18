@@ -22,8 +22,8 @@ describe('<PageLayout />', () => {
     })
 
     cy.getTestId('kong-ui-public-page-layout-breadcrumbs').should('be.visible')
-    cy.get('.header-title').should('be.visible').and('contain.text', title)
-    cy.getTestId('kong-ui-public-tabs-navbar').should('be.visible')
+    cy.getTestId('page-layout-title').should('be.visible').and('contain.text', title)
+    cy.getTestId('page-layout-tabs').should('be.visible')
   })
 
   it('renders only the title when neither breadcrumbs nor tabs are passed', () => {
@@ -34,7 +34,7 @@ describe('<PageLayout />', () => {
     })
 
     cy.getTestId('kong-ui-public-page-layout-breadcrumbs').should('not.exist')
-    cy.get('.header-title').should('be.visible').and('contain.text', title)
-    cy.getTestId('kong-ui-public-tabs-navbar').should('not.exist')
+    cy.getTestId('page-layout-title').should('be.visible').and('contain.text', title)
+    cy.getTestId('page-layout-tabs').should('not.exist')
   })
 })

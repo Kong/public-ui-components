@@ -13,7 +13,7 @@ describe('<PageLayoutTabs />', () => {
       },
     })
 
-    cy.getTestId('kong-ui-public-tabs-navbar').should('be.visible')
+    cy.getTestId('page-layout-tabs').should('be.visible')
     cy.getTestId('overview-tab-link').should('be.visible').and('contain.text', 'Overview')
     cy.getTestId('settings-tab-link').should('be.visible').and('contain.text', 'Settings')
   })
@@ -39,7 +39,7 @@ describe('<PageLayoutTabs />', () => {
       },
     })
 
-    cy.getTestId('kong-ui-public-tabs-navbar').should('be.visible')
+    cy.getTestId('page-layout-tabs').should('be.visible')
 
     // The "More" dropdown should be visible
     cy.getTestId('tabs-navbar-more-dropdown-button').should('be.visible')

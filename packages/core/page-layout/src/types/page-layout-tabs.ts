@@ -1,4 +1,5 @@
 import type { RouteLocationRaw } from 'vue-router'
+
 export interface PageLayoutTab {
   /** The unique kebab-case key of the tab */
   key: string
