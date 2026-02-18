@@ -25,10 +25,14 @@
       </li>
       <!-- Overflowing items dropdown -->
       <li v-if="tabs.length > displayedTabsCount">
-        <KDropdown :kpop-attributes="{ placement: 'bottom-end' }">
+        <KDropdown
+          :kpop-attributes="{
+            placement: 'bottom-end',
+            popoverElementAttributes: { 'data-testid': 'tabs-overflow-dropdown-popover' } }"
+        >
           <button
-            class="tab-link more-dropdown-trigger"
-            data-testid="tabs-more-dropdown-button"
+            class="tab-link overflow-dropdown-trigger"
+            data-testid="tabs-overflow-dropdown-button"
           >
             {{ t('tabs_navbar.more') }}
 
@@ -41,7 +45,7 @@
             <KDropdownItem
               v-for="overflowingTab in tabs.slice(displayedTabsCount)"
               :key="`${overflowingTab.key}-dropdown-item`"
-              :data-testid="overflowingTab.dataTestId ? `${overflowingTab.dataTestId}-tab-dropdown-item` : `${overflowingTab.key}-tab-dropdown-item`"
+              :data-testid="overflowingTab.dataTestId ? overflowingTab.dataTestId : `${overflowingTab.key}-tab-link`"
               :item="{ label: overflowingTab.label, value: overflowingTab.key, to: overflowingTab.to }"
               :selected="overflowingTab.active"
             />
@@ -219,7 +223,7 @@ onBeforeUnmount(() => {
           color: var(--kui-color-text-primary, $kui-color-text-primary);
         }
 
-        &.more-dropdown-trigger {
+        &.overflow-dropdown-trigger {
           color: var(--kui-color-text, $kui-color-text);
 
           .overflowing-items-count {
