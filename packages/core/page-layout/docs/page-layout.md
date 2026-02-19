@@ -48,7 +48,7 @@ A Kong UI page layout component that provides a structured page header with brea
 - type: `String`
 - required: `true`
 
-The title text of the page, rendered as an `<h1>` element. Long titles are automatically truncated with an ellipsis.
+The title text of the page, rendered as an `<h1>` element.
 
 #### `breadcrumbs`
 

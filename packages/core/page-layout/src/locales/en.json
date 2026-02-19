@@ -1,5 +1,8 @@
 {
-  "tabs_navbar": {
-    "more": "More"
+  "tabs": {
+    "more_button": {
+      "label": "More",
+      "aria_label": "More tabs"
+    }
   }
 }

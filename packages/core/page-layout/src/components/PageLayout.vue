@@ -50,12 +50,6 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 </script>
 
 <style lang="scss" scoped>
-@mixin truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .kong-ui-public-page-layout {
   box-sizing: border-box;
   font-family: var(--kui-font-family-text, $kui-font-family-text);
@@ -82,8 +76,6 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
       }
 
       .page-layout-title {
-        @include truncate;
-
         color: var(--kui-color-text, $kui-color-text);
         font-size: var(--kui-font-size-50, $kui-font-size-50);
         font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);

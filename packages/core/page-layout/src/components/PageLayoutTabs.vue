@@ -9,7 +9,7 @@
       :class="{ 'layout-computing': !displayedTabsLayoutComputed }"
     >
       <li
-        v-for="tab in tabs.slice(0, displayedTabsCount)"
+        v-for="tab in visibleTabs"
         :key="`${tab.key}-tab`"
       >
         <component
@@ -32,10 +32,11 @@
             popoverElementAttributes: { 'data-testid': 'tabs-overflow-dropdown-popover' } }"
         >
           <button
+            :aria-label="t('tabs.more_button.aria_label')"
             class="tab-link overflow-dropdown-trigger"
             data-testid="tabs-overflow-dropdown-button"
           >
-            {{ t('tabs_navbar.more') }}
+            {{ t('tabs.more_button.label') }}
 
             <span class="overflowing-items-count">
               {{ tabs.length - displayedTabsCount }}
@@ -44,10 +45,14 @@
 
           <template #items>
             <KDropdownItem
-              v-for="overflowingTab in tabs.slice(displayedTabsCount)"
+              v-for="overflowingTab in overflowingTabs"
               :key="`${overflowingTab.key}-dropdown-item`"
               :data-testid="overflowingTab.dataTestId ? overflowingTab.dataTestId : `page-layout-tab-${overflowingTab.key}`"
-              :item="{ label: overflowingTab.label, value: overflowingTab.key, to: overflowingTab.to }"
+              :item="{
+                label: overflowingTab.label,
+                value: overflowingTab.key,
+                to: overflowingTab.to,
+              }"
               :selected="overflowingTab.active"
             />
           </template>
@@ -70,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import { KDropdown, KDropdownItem, KSkeletonBox } from '@kong/kongponents'
 import type { PageLayoutTabsProps, PageLayoutTab } from '../types'
 import composables from '../composables'
@@ -102,6 +107,9 @@ const pageLayoutTabsListRef = useTemplateRef('page-layout-tabs-list')
 
 const displayedTabsCount = ref<number>(tabs.length)
 const displayedTabsLayoutComputed = ref<boolean>(false)
+
+const visibleTabs = computed((): PageLayoutTab[] => tabs.slice(0, displayedTabsCount.value))
+const overflowingTabs = computed((): PageLayoutTab[] => tabs.slice(displayedTabsCount.value))
 
 /**
  * Computes the layout of the tabs navbar and updates the displayed tabs count
