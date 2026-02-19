@@ -135,7 +135,6 @@ import endpoints from '../plugins-endpoints'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import * as freeForm from './free-form'
-import { getFreeFormName } from '../utils/free-form'
 import type { GlobalAction } from './free-form/shared/types'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/shared/schema-enhancement'
 import type { FormSchema } from '../types/plugins/form-schema'
@@ -257,7 +256,7 @@ const { parseSchema } = composables.useSchemas({
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
-const experimentalFreeForms = composables.useExperimentalFreeForms()
+const { shouldUseFreeForm, getFreeFormName } = composables.useFreeFormResolver()
 
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
@@ -899,11 +898,9 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
 
-  freeformName.value = !props.engine
-    ? getFreeFormName(form.model.name, experimentalFreeForms)
-    : props.engine === 'vfg'
-      ? undefined
-      : getFreeFormName(form.model.name, experimentalFreeForms) || 'CommonForm'
+  freeformName.value = shouldUseFreeForm(form.model.name, props.engine)
+    ? getFreeFormName(form.model.name, props.engine)
+    : undefined
   sharedFormName.value = getSharedFormName(form.model.name)
 
   initFormModel()
