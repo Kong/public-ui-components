@@ -746,7 +746,7 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 .warning-alert {
-  margin-bottom: $kui-space-90;
+  margin-bottom: var(--kui-space-90, $kui-space-90);
 }
 
 .kong-ui-entities-redis-configurations-form {
@@ -754,6 +754,6 @@ onBeforeMount(async () => {
 }
 
 .secret-picker-provider {
-  margin-top: $kui-space-40 !important;
+  margin-top: var(--kui-space-40, $kui-space-40) !important;
 }
 </style>

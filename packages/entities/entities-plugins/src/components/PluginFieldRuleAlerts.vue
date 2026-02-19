@@ -75,12 +75,12 @@ const formattedSimpleAlerts = computed<string[]>(() => {
 
 <style scoped lang="scss">
 .plugin-field-rule-alerts {
-  margin-bottom: $kui-space-60;
-  margin-top: $kui-space-40;
+  margin-bottom: var(--kui-space-60, $kui-space-60);
+  margin-top: var(--kui-space-40, $kui-space-40);
 
   ul {
     margin: 0;
-    padding-inline-start: $kui-space-80;
+    padding-inline-start: var(--kui-space-80, $kui-space-80);
   }
 }
 </style>

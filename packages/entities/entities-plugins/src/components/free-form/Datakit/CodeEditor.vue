@@ -238,13 +238,13 @@ defineExpose({
 <style lang="scss" scoped>
 .dk-code-editor {
   .examples {
-    margin-bottom: $kui-space-70;
+    margin-bottom: var(--kui-space-70, $kui-space-70);
   }
 
   .examples-content {
     display: flex;
     flex-wrap: wrap;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
   }
 
   .editor {

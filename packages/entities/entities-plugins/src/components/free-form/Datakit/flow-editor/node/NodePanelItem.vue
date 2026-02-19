@@ -51,45 +51,45 @@ function handleDragStart(e: DragEvent) {
 .dk-node-panel-item {
   align-items: flex-start;
   align-self: stretch;
-  background: $kui-color-background;
-  border: 1px solid $kui-color-border;
-  border-radius: $kui-border-radius-20;
+  background: var(--kui-color-background, $kui-color-background);
+  border: 1px solid var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   cursor: grab;
   display: flex;
-  gap: $kui-space-40;
-  padding: $kui-space-40;
-  transition: border-color $kui-animation-duration-20 ease-in-out;
+  gap: var(--kui-space-40, $kui-space-40);
+  padding: var(--kui-space-40, $kui-space-40);
+  transition: border-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
 
   &:not(.unsupported):hover {
-    border-color: $kui-color-border-primary-weak;
+    border-color: var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
   }
 
   &:not(.unsupported):active {
-    border-color: $kui-color-border-primary;
+    border-color: var(--kui-color-border-primary, $kui-color-border-primary);
   }
 
   .icon {
     align-items: center;
     background: v-bind(background);
-    border-radius: $kui-border-radius-10;
+    border-radius: var(--kui-border-radius-10, $kui-border-radius-10);
     color: v-bind(foreground);
     display: flex;
-    padding: $kui-space-30;
+    padding: var(--kui-space-30, $kui-space-30);
   }
 
   .content {
-    font-size: $kui-font-size-20;
-    line-height: $kui-line-height-20;
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
   }
 
   .title {
-    color: $kui-color-text-neutral-strongest;
-    font-weight: $kui-font-weight-semibold;
+    color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   }
 
   .description {
-    color: $kui-color-text-neutral;
-    margin-top: $kui-space-10;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    margin-top: var(--kui-space-10, $kui-space-10);
   }
 
   &.unsupported {

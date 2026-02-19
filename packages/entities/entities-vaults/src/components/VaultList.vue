@@ -555,14 +555,14 @@ onBeforeMount(async () => {
 .button-row {
   align-items: center;
   display: flex;
-  gap: $kui-space-50;
+  gap: var(--kui-space-50, $kui-space-50);
 }
 
 .kong-ui-entities-vaults-list {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    margin-right: $kui-space-50;
+    margin-right: var(--kui-space-50, $kui-space-50);
   }
 
   .table-content-overflow-wrapper {

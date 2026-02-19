@@ -634,17 +634,17 @@ onBeforeMount(async () => {
     display: flex;
 
     .config-format-select-label {
-      margin-bottom: $kui-space-0;
-      margin-right: $kui-space-40;
+      margin-bottom: var(--kui-space-0, $kui-space-0);
+      margin-right: var(--kui-space-40, $kui-space-40);
     }
   }
 
   .config-card-prop-section-title {
-    color: $kui-color-text;
-    font-size: $kui-font-size-40;
+    color: var(--kui-color-text, $kui-color-text);
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
     font-weight: 600;
-    margin-bottom: $kui-space-60;
-    margin-top: $kui-space-110;
+    margin-bottom: var(--kui-space-60, $kui-space-60);
+    margin-top: var(--kui-space-110, $kui-space-110);
   }
 
   :deep(.config-card-details-row:last-of-type) {
@@ -652,8 +652,8 @@ onBeforeMount(async () => {
   }
 
   .book-icon {
-    margin-left: $kui-space-40;
-    padding: $kui-space-0;
+    margin-left: var(--kui-space-40, $kui-space-40);
+    padding: var(--kui-space-0, $kui-space-0);
   }
 }
 </style>

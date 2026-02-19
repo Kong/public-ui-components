@@ -82,6 +82,6 @@ const removeItem = (index: number) => {
 .sentinel-node-items {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-80;
+  gap: var(--kui-space-80, $kui-space-80);
 }
 </style>

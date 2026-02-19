@@ -73,6 +73,7 @@ const collapseAriaLabel = computed((): string => {
 </script>
 
 <style scoped lang="scss">
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 .header {
   align-items: center;
   appearance: none;
