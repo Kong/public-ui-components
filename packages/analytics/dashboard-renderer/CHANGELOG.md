@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.7.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.12...@kong-ui-public/dashboard-renderer@8.7.13) (2026-02-19)
+
+
+### Bug Fixes
+
+* add mcp_usage ds to explore link generation [MA-4822] ([#2934](https://github.com/Kong/public-ui-components/issues/2934)) ([00e4cca](https://github.com/Kong/public-ui-components/commit/00e4cca9226a348d97462b54e56e3fe3414f13a4))
+
+
+
+
+
 ## [8.7.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.11...@kong-ui-public/dashboard-renderer@8.7.12) (2026-02-19)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
