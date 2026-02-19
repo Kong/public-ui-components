@@ -92,7 +92,12 @@ const { i18n: { t } } = composables.useI18n()
 const navigateTo = inject<(to: string) => Promise<void>>('app:navigateTo')
 
 const onTabClick = (event: Event, tab: PageLayoutTab) => {
-  if (typeof tab.to !== 'string' || !navigateTo || typeof navigateTo !== 'function') {
+  if (
+    // If not a string (likely a RouteLocationRaw)
+    typeof tab.to !== 'string' ||
+    // or navigateTo is undefined
+    typeof navigateTo !== 'function'
+  ) {
     return
   }
 
@@ -114,7 +119,7 @@ const overflowingTabs = computed((): PageLayoutTab[] => tabs.slice(displayedTabs
 /**
  * Computes the layout of the tabs navbar and updates the displayed tabs count
  */
-const computeLayout = async (): Promise<void> => {
+const computeTabLayoutOverflow = async (): Promise<void> => {
   if (!pageLayoutTabsRef.value || !pageLayoutTabsListRef.value) {
     return
   }
@@ -156,12 +161,12 @@ const handleResize = () => {
   }
 
   resizeTimeout = setTimeout(() => {
-    computeLayout()
+    computeTabLayoutOverflow()
   }, 150)
 }
 
 onMounted(() => {
-  computeLayout()
+  computeTabLayoutOverflow()
   useEventListener(window, 'resize', handleResize)
 })
 
