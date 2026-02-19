@@ -14,11 +14,11 @@ describe('<PageLayoutTabs />', () => {
     })
 
     cy.getTestId('page-layout-tabs').should('be.visible')
-    cy.getTestId('overview-tab-link')
+    cy.getTestId('page-layout-tab-overview')
       .should('be.visible')
       .and('contain.text', 'Overview')
       .and('have.attr', 'href', '/overview')
-    cy.getTestId('settings-tab-link')
+    cy.getTestId('page-layout-tab-settings')
       .should('be.visible')
       .and('contain.text', 'Settings')
       .and('have.attr', 'href', '/settings')
@@ -55,7 +55,7 @@ describe('<PageLayoutTabs />', () => {
 
     // The last tab should be in the dropdown
     cy.getTestId('tabs-overflow-dropdown-popover')
-      .findTestId('tab8-tab-link')
+      .findTestId('page-layout-tab-tab8')
       .should('be.visible')
       .and('have.attr', 'href', '/tab8')
   })
@@ -78,7 +78,7 @@ describe('<PageLayoutTabs />', () => {
       },
     })
 
-    cy.getTestId('tab-tab-link').click()
+    cy.getTestId('page-layout-tab-tab').click()
 
     cy.get('@navigateTo').should('have.been.calledWith', tabs[0].to)
   })
@@ -101,7 +101,7 @@ describe('<PageLayoutTabs />', () => {
       },
     })
 
-    cy.getTestId('tab-tab-link').click()
+    cy.getTestId('page-layout-tab-tab').click()
 
     cy.get('@navigateTo').should('not.have.been.called')
   })

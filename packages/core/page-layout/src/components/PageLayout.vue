@@ -9,6 +9,7 @@
           :items="breadcrumbs"
         />
         <h1
+          v-if="title"
           class="page-layout-title"
           data-testid="page-layout-title"
         >

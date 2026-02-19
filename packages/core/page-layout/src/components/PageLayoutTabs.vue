@@ -16,7 +16,7 @@
           :is="typeof tab.to === 'string' ? 'a' : 'router-link'"
           class="tab-link"
           :class="{ 'active': tab.active }"
-          :data-testid="tab.dataTestId ? tab.dataTestId : `${tab.key}-tab-link`"
+          :data-testid="tab.dataTestId ? tab.dataTestId : `page-layout-tab-${tab.key}`"
           :href="typeof tab.to === 'string' ? tab.to : undefined"
           :to="typeof tab.to === 'string' ? undefined : tab.to"
           @click="(event: Event) => onTabClick(event, tab)"
@@ -46,7 +46,7 @@
             <KDropdownItem
               v-for="overflowingTab in tabs.slice(displayedTabsCount)"
               :key="`${overflowingTab.key}-dropdown-item`"
-              :data-testid="overflowingTab.dataTestId ? overflowingTab.dataTestId : `${overflowingTab.key}-tab-link`"
+              :data-testid="overflowingTab.dataTestId ? overflowingTab.dataTestId : `page-layout-tab-${overflowingTab.key}`"
               :item="{ label: overflowingTab.label, value: overflowingTab.key, to: overflowingTab.to }"
               :selected="overflowingTab.active"
             />
@@ -173,7 +173,7 @@ onBeforeUnmount(() => {
   box-sizing: border-box;
   display: flex;
   height: $tabs-navbar-height;
-  overflow: hidden;
+  overflow-x: clip;
   padding: var(--kui-space-0, $kui-space-0) v-bind('TABS_HORIZONTAL_PADDING');
   position: relative;
   width: 100%;
@@ -234,6 +234,7 @@ onBeforeUnmount(() => {
         &.active {
           border-bottom: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-primary, $kui-color-border-primary);
           color: var(--kui-color-text-primary, $kui-color-text-primary);
+          font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
         }
 
         &.overflow-dropdown-trigger {
@@ -243,9 +244,9 @@ onBeforeUnmount(() => {
             background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
             border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
             color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-            font-size: var(--kui-font-size-20, $kui-font-size-20);
+            font-size: 11px; // TODO: use token?
             font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-            line-height: var(--kui-line-height-30, $kui-line-height-30);
+            line-height: 12px; // TODO: use token?
             padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
           }
         }
