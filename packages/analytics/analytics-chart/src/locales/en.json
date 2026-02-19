@@ -14,7 +14,8 @@
     "count": "request{plural}",
     "count/minute": "rpm",
     "requests": "request{plural}",
-    "token count": "token{plural}"
+    "token count": "token{plural}",
+    "%": "%"
   },
   "csvExport" :{
     "dataError": "Error loading data",
@@ -190,8 +191,9 @@
     "mcp_response_body_size_sum": "MCP Response Size (sum)"
   },
   "metricAxisTitles": {
-    "error_rate": "Error rate",
+    "error_rate": "Error rate in {unit}",
     "request_count": "Request count",
+    "request_per_minute": "Requests per minute",
     "requests_per_minute": "Requests per minute",
     "latency_in": "Latency in {unit}",
     "size_in": "Size in {unit}",
@@ -211,6 +213,7 @@
     "request_size_p99": "Request size (p99) in {unit}",
     "request_size_p95": "Request size (p95) in {unit}",
     "request_size_p50": "Request size (p50) in {unit}",
+    "request_size_sum": "Request size (sum) in {unit}",
     "REQUEST_COUNT": "Request count",
     "REQUEST_PER_MINUTE": "Requests per minute",
     "RESPONSE_LATENCY_P99": "Response latency (p99) in {unit}",
