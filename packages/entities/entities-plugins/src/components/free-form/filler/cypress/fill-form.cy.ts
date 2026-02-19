@@ -1,7 +1,10 @@
 import { createFiller } from './create-filler'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import Form from '../../shared/Form.vue'
-import { h } from 'vue'
+import FieldRenderer from '../../shared/FieldRenderer.vue'
+import ArrayField from '../../shared/ArrayField.vue'
+import { FIELD_RENDERERS } from '../../shared/composables'
+import { h, type Component } from 'vue'
 
 describe('Filler - Cypress', () => {
   const basicSchema: FormSchema = {
@@ -809,6 +812,327 @@ describe('Filler - Cypress', () => {
       })
 
       cy.get('[data-testid="ff-kv-headers"]').should('exist')
+    })
+  })
+
+  describe('Tabs appearance array', () => {
+    /**
+     * Helper to mount a Form with specific array fields rendered as tabs.
+     * Uses FieldRenderer to override the default ArrayField rendering with appearance="tabs".
+     */
+    function mountWithTabs(schema: FormSchema, tabFields: string[]) {
+      cy.mount(() =>
+        h('div', { style: 'padding: 20px' },
+          h(Form, { schema, tag: 'div' }, {
+            [FIELD_RENDERERS]: () =>
+              tabFields.map(fieldName =>
+                h(FieldRenderer, {
+                  key: fieldName,
+                  match: ({ path }: { path: string }) => path.endsWith(fieldName),
+                }, {
+                  default: ({ name }: { name: string }) =>
+                    h(ArrayField as Component, { name, appearance: 'tabs' }),
+                }),
+              ),
+          }),
+        ),
+      )
+    }
+
+    /** Click the nth tab button (0-based) within a tabs array field */
+    function clickTab(fieldKey: string, index: number) {
+      cy.get(`[data-testid="ff-array-tabs-${fieldKey}"] li button[role="tab"]`).eq(index).click()
+    }
+
+    it('should fill array of records with tabs appearance', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    host: {
+                      type: 'string',
+                    },
+                  },
+                  {
+                    port: {
+                      type: 'integer',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      }
+
+      mountWithTabs(schema, ['servers'])
+
+      // Verify tabs container is rendered
+      cy.get('[data-appearance="tabs"][data-testid="ff-array-servers"]').should('exist')
+
+      const filler = createFiller(schema)
+      filler.fillField('servers', [
+        { host: 'localhost', port: 8080 },
+        { host: '127.0.0.1', port: 3000 },
+      ])
+
+      // Switch to tab 0 to verify its values
+      clickTab('servers', 0)
+      cy.get('[data-testid="ff-servers.0.host"]').should('have.value', 'localhost')
+      cy.get('[data-testid="ff-servers.0.port"]').should('have.value', '8080')
+
+      // Switch to tab 1 to verify its values
+      clickTab('servers', 1)
+      cy.get('[data-testid="ff-servers.1.host"]').should('have.value', '127.0.0.1')
+      cy.get('[data-testid="ff-servers.1.port"]').should('have.value', '3000')
+    })
+
+    it('should fill array of primitives with tabs appearance', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            hosts: {
+              type: 'array',
+              elements: {
+                type: 'string',
+              },
+            },
+          },
+        ],
+      }
+
+      mountWithTabs(schema, ['hosts'])
+
+      cy.get('[data-appearance="tabs"][data-testid="ff-array-hosts"]').should('exist')
+
+      const filler = createFiller(schema)
+      filler.fillField('hosts', ['host1.com', 'host2.com', 'host3.com'])
+
+      // Switch to each tab to verify its value
+      clickTab('hosts', 0)
+      cy.get('[data-testid="ff-hosts.0"]').should('have.value', 'host1.com')
+
+      clickTab('hosts', 1)
+      cy.get('[data-testid="ff-hosts.1"]').should('have.value', 'host2.com')
+
+      clickTab('hosts', 2)
+      cy.get('[data-testid="ff-hosts.2"]').should('have.value', 'host3.com')
+    })
+
+    it('should clear existing tab items before filling', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    host: {
+                      type: 'string',
+                    },
+                  },
+                ],
+              },
+              default: [{ host: 'old-host-1' }, { host: 'old-host-2' }],
+            },
+          },
+        ],
+      }
+
+      mountWithTabs(schema, ['servers'])
+
+      const filler = createFiller(schema)
+      filler.fillField('servers', [
+        { host: 'new-host' },
+      ])
+
+      // Should only have 1 item after fill
+      cy.get('[data-testid="ff-servers.0.host"]').should('have.value', 'new-host')
+      cy.get('[data-testid="ff-array-item-servers.1"]').should('not.exist')
+    })
+
+    it('should handle empty array in tabs appearance', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    host: {
+                      type: 'string',
+                    },
+                  },
+                ],
+              },
+              default: [{ host: 'existing' }],
+            },
+          },
+        ],
+      }
+
+      mountWithTabs(schema, ['servers'])
+
+      const filler = createFiller(schema)
+      filler.fillField('servers', [])
+
+      // All items should be removed
+      cy.get('[data-testid="ff-array-item-servers.0"]').should('not.exist')
+    })
+
+    it('should handle null array in tabs appearance', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    host: {
+                      type: 'string',
+                    },
+                  },
+                ],
+              },
+              default: [{ host: 'existing' }],
+            },
+          },
+        ],
+      }
+
+      mountWithTabs(schema, ['servers'])
+
+      const filler = createFiller(schema)
+      filler.fillField('servers', null)
+
+      cy.get('[data-testid="ff-array-item-servers.0"]').should('not.exist')
+    })
+
+    it('should fill tabs with mixed field types in records', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            endpoints: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    url: {
+                      type: 'string',
+                    },
+                  },
+                  {
+                    timeout: {
+                      type: 'integer',
+                    },
+                  },
+                  {
+                    enabled: {
+                      type: 'boolean',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      }
+
+      mountWithTabs(schema, ['endpoints'])
+
+      const filler = createFiller(schema)
+      filler.fillField('endpoints', [
+        { url: 'https://api.example.com', timeout: 5000, enabled: true },
+        { url: 'https://backup.example.com', timeout: 10000, enabled: false },
+      ])
+
+      // Switch to tab 0 to verify its values
+      clickTab('endpoints', 0)
+      cy.get('[data-testid="ff-endpoints.0.url"]').should('have.value', 'https://api.example.com')
+      cy.get('[data-testid="ff-endpoints.0.timeout"]').should('have.value', '5000')
+      cy.get('[data-testid="ff-endpoints.0.enabled"]').should('be.checked')
+
+      // Switch to tab 1 to verify its values
+      clickTab('endpoints', 1)
+      cy.get('[data-testid="ff-endpoints.1.url"]').should('have.value', 'https://backup.example.com')
+      cy.get('[data-testid="ff-endpoints.1.timeout"]').should('have.value', '10000')
+      cy.get('[data-testid="ff-endpoints.1.enabled"]').should('not.be.checked')
+    })
+
+    it('should fill form with tabs array alongside other fields', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            name: {
+              type: 'string',
+            },
+          },
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    host: {
+                      type: 'string',
+                    },
+                  },
+                  {
+                    port: {
+                      type: 'integer',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          {
+            enabled: {
+              type: 'boolean',
+            },
+          },
+        ],
+      }
+
+      mountWithTabs(schema, ['servers'])
+
+      const filler = createFiller(schema)
+      filler.fill({
+        name: 'my-service',
+        servers: [
+          { host: 'primary.example.com', port: 443 },
+        ],
+        enabled: true,
+      })
+
+      cy.get('[data-testid="ff-name"]').should('have.value', 'my-service')
+
+      // Switch to the server tab to verify its values
+      clickTab('servers', 0)
+      cy.get('[data-testid="ff-servers.0.host"]').should('have.value', 'primary.example.com')
+      cy.get('[data-testid="ff-servers.0.port"]').should('have.value', '443')
+
+      cy.get('[data-testid="ff-enabled"]').should('be.checked')
     })
   })
 })
