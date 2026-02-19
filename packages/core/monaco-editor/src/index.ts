@@ -6,6 +6,7 @@ export {
   MonacoEditorStatusOverlay,
 }
 
+export * from './singletons/model-contexts'
 export * from './types'
 
 export { useMonacoEditor } from './composables/useMonacoEditor'
