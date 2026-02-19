@@ -18,19 +18,21 @@ const statusCodePalette: { [label: string]: string[] } = {
 
 const colorsForCodes = (codeClass: string, codes: number[]) => {
   let i = 1
-  const palette = statusCodePalette[codeClass]
+  const palette = statusCodePalette[codeClass] ?? statusCodePalette[200]
 
   const ret: Map<number, string> = new Map()
 
   // Assign each in-spec code a color.  Skip the first color (index 0) in the palette;
   // it's reserved for out-of-spec codes.
   for (const num of codes) {
-    ret.set(num, palette[i])
-    i = i % (palette.length - 1) + 1
+    if (palette) {
+      ret.set(num, palette[i] as string)
+      i = i % (palette.length - 1) + 1
+    }
   }
 
   // Assign the color for out-of-spec codes.
-  ret.set(-1, palette[0])
+  ret.set(-1, palette?.[0] ?? lightGrey)
 
   return ret
 }

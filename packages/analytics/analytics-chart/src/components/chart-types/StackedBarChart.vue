@@ -252,13 +252,17 @@ const axesTooltipPlugin = {
       const evt = args.event
       const indexAxis = chart.options.indexAxis as ('x' | 'y')
       const scales = chart.scales
+      // @ts-ignore scales['x'] and scales['y'] exist
       const label = chart.scales[indexAxis].getLabelForValue(Number(chart.scales[indexAxis].getValueForPixel(evt[indexAxis])))
+      // @ts-ignore scales['x'] and scales['y'] exist
       const labels = chart.scales[indexAxis].getLabels()
       const indexOfLabel = labels.indexOf(label)
       const isEmptyLabel = props.chartData.isLabelEmpty?.[indexOfLabel]
       const compareByIndexAxis = (axis: string) => {
         return axis === 'x'
+          // @ts-ignore scales.x exists
           ? evt.y > scales.x.top
+          // @ts-ignore scales.y exists
           : evt.x < scales.y.right
       }
 
@@ -310,8 +314,8 @@ const baseHeight = ref<number>(0)
 
 const resizeObserver = new ResizeObserver(debounce((entries: ResizeObserverEntry[]) => {
   // Only observing one element
-  baseWidth.value = entries[0].contentRect.width
-  baseHeight.value = entries[0].contentRect.height
+  baseWidth.value = entries[0]?.contentRect.width ?? 0
+  baseHeight.value = entries[0]?.contentRect.height ?? 0
 }, 100))
 
 const chartWidth = computed<string>(() => {
@@ -410,6 +414,10 @@ const axisDimensions = computed(() => {
     const scale = window.devicePixelRatio
     const chart = chartInstance.value
 
+    if (!chart.scales.x || !chart.scales.y) {
+      return null
+    }
+
     const width = chart.scales.y.width * scale + AXIS_RIGHT_PADDING // Add 1px to prevent clipping/maintain right border
     const height = (chart.scales.y.height + chart.scales.y.top + chart.scales.x.height) * scale
 
@@ -441,6 +449,10 @@ const onScrolling = (event: Event) => {
     const height = axisDimensions.value.height
     const chart = chartInstance.value
     const sourceCanvas = chart.canvas
+
+    if (!chart.scales.x || !chart.scales.y) {
+      return
+    }
 
     targetCtx.fillStyle = 'white'
 

@@ -333,7 +333,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 
   const { name } = tableHeaders
   const filterFields: FilterFields = {
-    name,
+    ...(name && { name }),
   }
 
   return {
