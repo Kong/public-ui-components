@@ -34,6 +34,7 @@
           <button
             :aria-label="t('tabs.more_button.aria_label')"
             class="tab-link overflow-dropdown-trigger"
+            :class="{ active: overflowingTabs.find(tab => tab.active) }"
             data-testid="tabs-overflow-dropdown-button"
           >
             {{ t('tabs.more_button.label') }}
@@ -246,12 +247,13 @@ onBeforeUnmount(() => {
 
         &.active {
           border-bottom: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-primary, $kui-color-border-primary);
-          color: var(--kui-color-text-primary, $kui-color-text-primary);
+          color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
           font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
         }
 
         &.overflow-dropdown-trigger {
           color: var(--kui-color-text, $kui-color-text);
+          font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium) !important;
 
           .overflowing-items-count {
             background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
@@ -261,6 +263,13 @@ onBeforeUnmount(() => {
             font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
             line-height: 12px; // TODO: use token?
             padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
+          }
+
+          &.active {
+            .overflowing-items-count {
+              background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
+              color: var(--kui-color-text-primary, $kui-color-text-primary);
+            }
           }
         }
       }
