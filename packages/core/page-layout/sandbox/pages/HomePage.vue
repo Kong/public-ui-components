@@ -1,0 +1,94 @@
+<template>
+  <PageLayout
+    :breadcrumbs="breadcrumbs"
+    page-title="Overview"
+    :tabs="tabs"
+    title="Umbrella R&D Dev"
+  >
+    <template #actions>
+      <KButton
+        appearance="secondary"
+        icon
+      >
+        <BookIcon />
+      </KButton>
+      <KButton>
+        Create
+        <ChevronDownIcon />
+      </KButton>
+    </template>
+  </PageLayout>
+</template>
+
+<script setup lang="ts">
+import { PageLayout } from '../../src'
+import type { PageLayoutTab } from '../../src'
+import { KButton } from '@kong/kongponents'
+import { ChevronDownIcon } from '@kong/icons'
+import { BookIcon } from '@kong/icons'
+
+import '@kong/kongponents/dist/style.css'
+
+const breadcrumbs = [{
+  key: 'api-gateway',
+  text: 'API Gateway',
+},
+{
+  key: 'gateways',
+  text: 'Gateways',
+}]
+
+const tabs: PageLayoutTab[] = [
+  {
+    key: 'overview',
+    label: 'Overview',
+    to: '/',
+    active: true,
+  },
+  {
+    key: 'gateway-services',
+    label: 'Gateway services',
+    to: '/gateway-services',
+  },
+  {
+    key: 'routes',
+    label: 'Routes',
+    to: '/routes',
+  },
+  {
+    key: 'plugins',
+    label: 'Plugins',
+    to: '/plugins',
+  },
+  {
+    key: 'redis-configurations',
+    label: 'Redis configurations',
+    to: '/redis-configurations',
+  },
+  {
+    key: 'upstreams',
+    label: 'Upstreams',
+    to: '/upstreams',
+  },
+  {
+    key: 'certificates',
+    label: 'Certificates',
+    to: '/certificates',
+  },
+  {
+    key: 'snis',
+    label: 'SNIs',
+    to: '/snis',
+  },
+  {
+    key: 'vaults',
+    label: 'Vaults',
+    to: '/vaults',
+  },
+  {
+    key: 'keys',
+    label: 'Keys',
+    to: '/keys',
+  },
+]
+</script>
