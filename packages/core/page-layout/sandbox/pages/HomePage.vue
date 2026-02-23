@@ -32,10 +32,12 @@ import '@kong/kongponents/dist/style.css'
 const breadcrumbs = [{
   key: 'api-gateway',
   text: 'API Gateway',
+  to: '/',
 },
 {
   key: 'gateways',
   text: 'Gateways',
+  to: '/',
 }]
 
 const tabs: PageLayoutTab[] = [

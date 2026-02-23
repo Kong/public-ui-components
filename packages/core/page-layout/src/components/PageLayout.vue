@@ -63,13 +63,16 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
       padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 
       .header-breadcrumbs {
-        &:deep(.breadcrumbs-item) {
+        &:deep(.breadcrumbs-item-container) {
           // Override first breadcrumb padding left
           &:first-child {
-            padding-left: var(--kui-space-0, $kui-space-0);
+            .breadcrumbs-item {
+              padding-left: var(--kui-space-0, $kui-space-0);
+            }
           }
+
           // Override active (last) breadcrumb color
-          &.active .breadcrumbs-text {
+          .breadcrumbs-item.active .breadcrumbs-text {
             color: var(--kui-color-text-neutral, $kui-color-text-neutral);
           }
         }
@@ -79,7 +82,7 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
         color: var(--kui-color-text, $kui-color-text);
         font-size: var(--kui-font-size-50, $kui-font-size-50);
         font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-        line-height: var(--kui-line-height-60, $kui-line-height-60);
+        line-height: var(--kui-line-height-40, $kui-line-height-40);
         margin: var(--kui-space-0, $kui-space-0);
       }
     }
