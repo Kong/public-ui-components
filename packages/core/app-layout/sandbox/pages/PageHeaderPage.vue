@@ -2,6 +2,7 @@
   <div class="sandbox-container">
     <AppPageHeader
       :breadcrumbs="breadcrumbs"
+      :konnect-navigation-next="konnectNavigationNextEnabled"
       title="Cats are Cool"
     >
       <template #icon-app-layout>
@@ -19,9 +20,8 @@
       <template #actions>
         <div class="actions-wrapper">
           <KInputSwitch
-            v-model="enabled"
-            class="actions-switch"
-            :label="enabled ? 'Enabled' : 'Disabled'"
+            v-model="konnectNavigationNextEnabled"
+            label="Konnect navigation next"
             label-before
           />
           <KButton appearance="primary">
@@ -123,7 +123,7 @@ const breadcrumbs = computed(() => {
     },
   ]
 })
-const enabled = ref(false)
+const konnectNavigationNextEnabled = ref<boolean>(false)
 </script>
 
 <style lang="scss" scoped>
@@ -146,12 +146,9 @@ const enabled = ref(false)
 }
 
 .actions-wrapper {
-  align-items: baseline;
+  align-items: center;
   display: flex;
-}
-
-.actions-switch {
-  margin-right: 12px;
+  gap: $kui-space-50;
 }
 
 .about-action-button {

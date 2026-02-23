@@ -1,7 +1,10 @@
 <template>
-  <div class="kong-ui-app-page-header">
+  <div
+    class="kong-ui-app-page-header"
+    :class="{ 'konnect-navigation-next': konnectNavigationNext }"
+  >
     <div
-      v-if="hasBreadcrumbs"
+      v-if="hasBreadcrumbs && !konnectNavigationNext"
       class="page-header-breadcrumbs"
       data-testid="page-header-breadcrumbs"
     >
@@ -21,21 +24,22 @@
     <div class="page-header-title-section">
       <div class="page-header-title-wrapper">
         <div
-          v-if="$slots['title-before']"
+          v-if="$slots['title-before'] && !konnectNavigationNext"
           class="page-header-title-before"
           data-testid="page-header-title-before"
         >
           <slot name="title-before" />
         </div>
-        <h1
+        <component
+          :is="konnectNavigationNext ? 'h2' : 'h1'"
           class="page-header-title"
           data-testid="page-header-title"
           :title="title"
         >
           {{ title }}
-        </h1>
+        </component>
         <div
-          v-if="$slots['title-after']"
+          v-if="$slots['title-after'] && !konnectNavigationNext"
           class="page-header-title-after"
           data-testid="page-header-title-after"
         >
@@ -53,7 +57,7 @@
     </div>
 
     <div
-      v-if="$slots.below"
+      v-if="$slots.below && !konnectNavigationNext"
       class="page-header-section-below"
       data-testid="page-header-section-below"
     >
@@ -75,6 +79,11 @@ const props = defineProps({
   breadcrumbs: {
     type: Array as PropType<BreadcrumbItem[]>,
     default: () => ([]),
+  },
+  /** Temporary prop for Konnect navigation next. This will be removed when the Konnect navigation next is fully implemented. */
+  konnectNavigationNext: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -145,6 +154,15 @@ const breadcrumbIconSlots = computed((): string[] => {
 
     .page-header-section-below {
       margin-top: unset;
+    }
+  }
+
+  &.konnect-navigation-next {
+    .page-header-title-section {
+      .page-header-title {
+        font-size: $kui-font-size-50;
+        line-height: $kui-line-height-40;
+      }
     }
   }
 }
