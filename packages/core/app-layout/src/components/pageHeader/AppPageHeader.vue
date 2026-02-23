@@ -57,7 +57,7 @@
     </div>
 
     <div
-      v-if="$slots.below && !konnectNavigationNext"
+      v-if="$slots.below"
       class="page-header-section-below"
       data-testid="page-header-section-below"
     >
