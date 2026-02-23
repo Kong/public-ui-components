@@ -115,7 +115,10 @@
       data-testid="kong-ui-app-layout-main"
     >
       <div class="kong-ui-app-layout-content">
-        <div class="kong-ui-app-layout-content-inner">
+        <div
+          class="kong-ui-app-layout-content-inner"
+          :class="{ 'remove-inner-padding': removeContentInnerPadding }"
+        >
           <!-- Default host app teleport container -->
           <div id="kong-ui-app-layout-teleport-default-slot" />
           <slot name="app-error" />
@@ -181,6 +184,10 @@ const props = defineProps({
     type: String as PropType<'light' | 'dark'>,
     default: 'light',
     validator: (theme: 'light' | 'dark'): boolean => ['light', 'dark'].includes(theme),
+  },
+  removeContentInnerPadding: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -389,7 +396,7 @@ onBeforeUnmount(() => {
       width: 100%;
 
       // Apply the padding to the inner element
-      &-inner {
+      &-inner:not(.remove-inner-padding) {
         padding: var(--kong-ui-app-layout-content-padding-top, $kui-space-70) var(--kong-ui-app-layout-content-padding-x, $kui-space-70) var(--kong-ui-app-layout-content-padding-bottom, $kui-space-130);
       }
     }
