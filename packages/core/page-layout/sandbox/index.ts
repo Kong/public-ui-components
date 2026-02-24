@@ -15,6 +15,16 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: '/gateway-services',
+      component: () => import('./pages/HomePage.vue'),
+      children: [
+        {
+          path: '',
+          component: () => import('./pages/NestedPage.vue'),
+        },
+      ],
+    },
   ],
 })
 

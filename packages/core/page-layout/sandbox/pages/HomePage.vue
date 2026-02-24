@@ -50,7 +50,7 @@ const tabs: PageLayoutTab[] = [
   {
     key: 'gateway-services',
     label: 'Gateway services',
-    to: '/gateway-services',
+    to: { path: '/gateway-services' },
   },
   {
     key: 'routes',

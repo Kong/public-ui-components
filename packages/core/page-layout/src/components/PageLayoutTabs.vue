@@ -21,6 +21,8 @@
           tabindex="0"
           :to="typeof tab.to === 'string' ? undefined : tab.to"
           @click="(event: Event) => onTabClick(event, tab)"
+          @keydown.enter.prevent="onTabKeyboardNavigation(tab)"
+          @keydown.space.prevent="onTabKeyboardNavigation(tab)"
         >
           {{ tab.label }}
         </component>
@@ -78,6 +80,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { useRouter } from 'vue-router'
 import { KDropdown, KDropdownItem, KSkeletonBox } from '@kong/kongponents'
 import type { PageLayoutTabsProps, PageLayoutTab } from '../types'
 import composables from '../composables'
@@ -91,6 +94,7 @@ const {
 
 const { i18n: { t } } = composables.useI18n()
 
+const router = useRouter()
 const navigateTo = inject<(to: string) => Promise<void>>('app:navigateTo')
 
 const onTabClick = (event: Event, tab: PageLayoutTab) => {
@@ -104,6 +108,22 @@ const onTabClick = (event: Event, tab: PageLayoutTab) => {
   }
 
   event.preventDefault()
+  navigateTo(tab.to)
+}
+
+const onTabKeyboardNavigation = (tab: PageLayoutTab) => {
+  // If not a string (a RouteLocationRaw)
+  if (typeof tab.to !== 'string') {
+    router.push(tab.to)
+    return
+  }
+
+  // If navigateTo is defined
+  if (typeof navigateTo !== 'function') {
+    window.location.href = tab.to
+    return
+  }
+
   navigateTo(tab.to)
 }
 
