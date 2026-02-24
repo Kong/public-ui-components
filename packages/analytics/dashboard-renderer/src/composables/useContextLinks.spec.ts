@@ -210,6 +210,21 @@ describe('useContextLinks', () => {
     expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
   })
 
+  it('builds explore link for expected datasources', async () => {
+    const datasources = ['api_usage', 'basic', 'llm_usage', 'mcp_usage', undefined]
+
+    for (const ds of datasources) {
+      const { wrapper } = mountComposable({
+        datasource: ds,
+      })
+      await flushPromises()
+
+      const params = new URLSearchParams((wrapper.vm.exploreLinkKebabMenu as string).split('?')[1])
+      const parsed = JSON.parse(params.get('q')!)
+      expect(parsed.granularity).toBe('hourly')
+    }
+  })
+
   it('hides kebab for golden_signals/gauge chart types regardless of editable state', async () => {
     for (const type of ['golden_signals', 'gauge']) {
       // Not editable

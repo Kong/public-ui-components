@@ -36,7 +36,8 @@
 import { computed, provide, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
-import { FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
+import { FEATURE_FLAGS as ENTITIES_SHARED_FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
+import { FEATURE_FLAGS } from '../../src/constants'
 
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
 import { ToastManager } from '@kong/kongponents'
@@ -62,7 +63,8 @@ defineProps({
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefined
-provide(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => pluginFormEngine === 'freeform'))
+provide(ENTITIES_SHARED_FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => pluginFormEngine === 'free-form'))
+provide(FEATURE_FLAGS.KM_2262_CODE_MODE, true)
 
 useProvideExperimentalFreeForms([
   'service-protection',

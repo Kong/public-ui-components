@@ -3,6 +3,7 @@ import {
   filterableAiExploreDimensions,
   filterableBasicExploreDimensions,
   filterableExploreDimensions,
+  filterableMcpExploreDimensions,
   filterableRequestDimensions,
   filterableRequestMetrics,
 } from './types'
@@ -21,6 +22,9 @@ export const getFieldDataSources = (
   }
   if ((filterableAiExploreDimensions as string[]).includes(dimension)) {
     datasources.push('llm_usage')
+  }
+  if ((filterableMcpExploreDimensions as string[]).includes(dimension)) {
+    datasources.push('mcp_usage')
   }
   if ((filterableRequestDimensions as string[]).includes(dimension) || (filterableRequestMetrics as string[]).includes(dimension)) {
     datasources.push('requests')

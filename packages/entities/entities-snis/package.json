@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-snis",
-  "version": "3.10.51",
+  "version": "3.10.52",
   "type": "module",
   "main": "./dist/entities-snis.umd.js",
   "module": "./dist/entities-snis.es.js",
@@ -25,7 +25,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.42.0",
     "@kong/kongponents": "^9.50.0",
-    "axios": "^1.13.2",
+    "axios": "^1.13.5",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.6.4"
   },

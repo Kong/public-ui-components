@@ -10,11 +10,14 @@ describe('validateHost()', () => {
   const emptyMessage = t('gateway_services.form.errors.host.empty')
 
   it('should accept valid domain names', () => {
+    expect(validateHost('localhost')).toBe('')
+    expect(validateHost('a.b')).toBe('')
     expect(validateHost('example.com')).toBe('')
     expect(validateHost('sub.example.com')).toBe('')
     expect(validateHost('sub-domain.example.com')).toBe('')
     expect(validateHost('example-domain.co.uk')).toBe('')
     expect(validateHost('a-valid-domain123.org')).toBe('')
+    expect(validateHost('a-valid-domain123.org.')).toBe('') // Trailing dot is technically valid in DNS, though often omitted
   })
 
   it('should accept valid IP addresses', () => {
@@ -24,6 +27,12 @@ describe('validateHost()', () => {
     expect(validateHost('255.255.255.255')).toBe('')
     expect(validateHost('0.0.0.0')).toBe('')
     expect(validateHost('127.0.0.1')).toBe('')
+    expect(validateHost('::')).toBe('')
+    expect(validateHost('::127.0.0.1')).toBe('')
+    expect(validateHost('2001:add:aaaa:0000:0000:bbbb:ccc:dddd')).toBe('')
+    expect(validateHost('2001:add:aaaa::cccc:dddd:ee')).toBe('')
+    // it's a valid FQDN, looks like an IPv4 address but it actually is a valid domain name, so should be accepted
+    expect(validateHost('192.168.1')).toBe('')
   })
 
   it('should reject empty or whitespace-only hosts', () => {
@@ -46,9 +55,22 @@ describe('validateHost()', () => {
     expect(validateHost('example@.com')).toBe(invalidMessage)
   })
 
+  it('should reject invalid IP addresses', () => {
+    expect(validateHost('256.1.1.1')).toBe(invalidMessage)
+    expect(validateHost('127.0.0.1:53')).toBe(invalidMessage) // Invalid IPv4 with port
+    expect(validateHost(':::1')).toBe(invalidMessage) // Invalid IPv6 with triple colon
+    expect(validateHost('2001::gggg')).toBe(invalidMessage) // Invalid hex in IPv6
+    expect(validateHost('::aa::bb:1')).toBe(invalidMessage) // Invalid IPv6 with multiple '::'
+    expect(validateHost('[2001:]')).toBe(invalidMessage) // Should not have brackets
+    expect(validateHost('[2001:]:53')).toBe(invalidMessage) // Invalid IPv6 with brackets and port
+    expect(validateHost(':1::1')).toBe(invalidMessage) // Invalid IPv6 with single colon at start
+    expect(validateHost('1::1:')).toBe(invalidMessage) // Invalid IPv6 with single colon at end
+  })
+
   it('should reject URLs and other non-host strings', () => {
     expect(validateHost('http://example.com')).toBe(invalidMessage)
     expect(validateHost('https://example.com')).toBe(invalidMessage)
+    expect(validateHost('bad.cad:8080')).toBe(invalidMessage)
     expect(validateHost('example.com:8080')).toBe(invalidMessage)
     expect(validateHost('example.com/path')).toBe(invalidMessage)
     expect(validateHost('user@example.com')).toBe(invalidMessage)

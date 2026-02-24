@@ -46,7 +46,7 @@
     "eslint": "^9.39.2",
     "js-yaml": "^4.1.1",
     "jsdom": "^27.4.0",
-    "lerna": "^9.0.3",
+    "lerna": "^9.0.4",
     "npm-run-all2": "^8.0.4",
     "postcss": "^8.5.6",
     "postcss-custom-properties": "^15.0.0",
@@ -54,9 +54,9 @@
     "rimraf": "^6.1.2",
     "rollup-plugin-visualizer": "^6.0.5",
     "sass": "^1.97.3",
-    "stylelint": "^16.26.1",
+    "stylelint": "^17.1.1",
     "stylelint-config-html": "^1.1.0",
-    "stylelint-config-recommended-scss": "^16.0.2",
+    "stylelint-config-recommended-scss": "^17.0.0",
     "stylelint-config-recommended-vue": "^1.6.1",
     "stylelint-order": "^7.0.1",
     "ts-node": "^10.9.2",
@@ -75,6 +75,11 @@
     "vue-tsc": "^3.2.3"
   },
   "pnpm": {
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-3ppc-4f35-3m26"
+      ]
+    },
     "overrides": {
       "vue": "$vue",
       "glob@<11.1.0": ">=13.0.0",
@@ -96,7 +101,8 @@
       "diff@<8.0.3": ">=8.0.3",
       "tar@<7.5.7": ">=7.5.7",
       "@isaacs/brace-expansion@<=5.0.0": ">=5.0.1",
-      "axios@<=1.13.4": ">=1.13.5"
+      "axios@<=1.13.4": ">=1.13.5",
+      "tar@<7.5.8": ">=7.5.8"
     },
     "onlyBuiltDependencies": [
       "@evilmartians/lefthook",

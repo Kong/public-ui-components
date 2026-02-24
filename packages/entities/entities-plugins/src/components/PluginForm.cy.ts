@@ -13,8 +13,10 @@ import {
 import schemaAiProxy from '../../fixtures/schemas/ai-proxy'
 import schemaCors from '../../fixtures/schemas/cors'
 import schemaMocking from '../../fixtures/schemas/mocking'
+import schemaRateLimiting from '../../fixtures/schemas/rate-limiting'
 import PluginForm from './PluginForm.vue'
 import { PLUGIN_METADATA } from '../definitions/metadata'
+import { EXPERIMENTAL_FREE_FORM_PROVIDER } from '../constants'
 
 const baseConfigKonnect: KonnectPluginFormConfig = {
   app: 'konnect',
@@ -1824,6 +1826,160 @@ describe('<PluginForm />', () => {
           cy.get('@onUpdateSpy').should('have.been.calledOnce')
         })
       })
+    })
+  })
+
+  describe('Engine prop and experimental plugin mapping', () => {
+    // Create a new router instance for each test
+    let router: Router
+
+    const interceptKonnectSchema = (params?: {
+      mockData?: object
+      alias?: string
+    }) => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/schemas/core-entities/plugins/*`,
+        },
+        {
+          statusCode: 200,
+          body: params?.mockData ?? schemaRateLimiting,
+        },
+      ).as(params?.alias ?? 'getPluginSchema')
+    }
+
+    beforeEach(() => {
+      // Initialize a new router before each test
+      router = createRouter({
+        routes: [
+          { path: '/', name: 'home', component: { template: '<div>ListPage</div>' } },
+        ],
+        history: createMemoryHistory(),
+      })
+    })
+
+    it('should render VFG for experimental plugin when NOT in experimental whitelist and engine prop is not passed', () => {
+      // rate-limiting is marked as experimental in the mapping
+      const pluginType = 'rate-limiting'
+      interceptKonnectSchema()
+
+      // Mount without providing EXPERIMENTAL_FREE_FORM_PROVIDER (empty whitelist by default)
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKonnect,
+          pluginType,
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // VFG renders traditional form fields with specific selectors like #config-*, not freeform
+      // VFG uses vue-form-generator class
+      cy.get('.vue-form-generator').should('exist')
+
+      // Freeform uses data-testid="ff-*" pattern - should NOT exist when VFG is used
+      cy.get('[data-testid^="ff-"]').should('not.exist')
+    })
+
+    it('should render freeform for experimental plugin when IN experimental whitelist and engine prop is not passed', () => {
+      // rate-limiting is marked as experimental in the mapping
+      const pluginType = 'rate-limiting'
+      interceptKonnectSchema()
+
+      // Mount WITH EXPERIMENTAL_FREE_FORM_PROVIDER containing rate-limiting
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKonnect,
+          pluginType,
+        },
+        router,
+        global: {
+          provide: {
+            [EXPERIMENTAL_FREE_FORM_PROVIDER as symbol]: ['rate-limiting'],
+          },
+        },
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // Freeform renders with data-testid="ff-*" pattern
+      cy.get('[data-testid^="ff-"]').should('exist')
+    })
+
+    it('should render freeform when engine prop is set to "freeform" regardless of experimental whitelist', () => {
+      // rate-limiting is marked as experimental in the mapping
+      const pluginType = 'rate-limiting'
+      interceptKonnectSchema()
+
+      // Mount WITHOUT experimental whitelist but WITH engine='freeform'
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKonnect,
+          pluginType,
+          engine: 'freeform',
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // Freeform should be used because engine='freeform' is passed
+      cy.get('[data-testid^="ff-"]').should('exist')
+    })
+
+    it('should render VFG when engine prop is set to "vfg" even if plugin is in experimental whitelist', () => {
+      // rate-limiting is marked as experimental in the mapping
+      const pluginType = 'rate-limiting'
+      interceptKonnectSchema()
+
+      // Mount WITH experimental whitelist but WITH engine='vfg'
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKonnect,
+          pluginType,
+          engine: 'vfg',
+        },
+        router,
+        global: {
+          provide: {
+            [EXPERIMENTAL_FREE_FORM_PROVIDER as symbol]: ['rate-limiting'],
+          },
+        },
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // VFG should be used because engine='vfg' is passed
+      cy.get('.vue-form-generator').should('exist')
+
+      // Freeform should NOT exist
+      cy.get('[data-testid^="ff-"]').should('not.exist')
+    })
+
+    it('should render VFG for non-experimental plugin when engine prop is not passed', () => {
+      // cors is NOT in the free-form mapping at all
+      const pluginType = 'cors'
+      interceptKonnectSchema({ mockData: schemaCors })
+
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKonnect,
+          pluginType,
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // VFG should be used for non-freeform plugins
+      cy.get('.vue-form-generator').should('exist')
     })
   })
 })

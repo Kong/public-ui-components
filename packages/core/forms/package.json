@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/forms",
-  "version": "4.21.2",
+  "version": "4.21.3",
   "type": "module",
   "main": "./dist/forms.umd.js",
   "module": "./dist/forms.es.js",
@@ -60,7 +60,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^9.50.0",
-    "axios": "^1.13.2",
+    "axios": "^1.13.5",
     "vue": "^3.5.27"
   },
   "devDependencies": {

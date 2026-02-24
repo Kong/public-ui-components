@@ -1,6 +1,7 @@
 <template>
   <div class="kong-ui-vault-entity-config-card">
     <EntityBaseConfigCard
+      :code-block-record-formatter="codeBlockRecordFormatter"
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
@@ -17,9 +18,8 @@
           :key="propKey"
           :item="{
             key: propKey,
-            value: getPropValue(propKey, rowValue),
+            value: SENSITIVE_KEYS.includes(propKey) ? SENSITIVE_MASK : getPropValue(propKey, rowValue),
             label: getMetadataLabel(propKey),
-            type: SENSITIVE_KEYS.includes(propKey) ? ConfigurationSchemaType.Redacted : ConfigurationSchemaType.Text,
           }"
         />
       </template>
@@ -83,6 +83,7 @@ const props = defineProps({
 })
 
 const SENSITIVE_KEYS = ['token', 'approle_secret_id', 'api_key']
+const SENSITIVE_MASK = '************'
 const fetchUrl = computed((): string => endpoints.form[props.config?.app]?.edit)
 
 const { i18n: { t } } = composables.useI18n()
@@ -112,6 +113,19 @@ const configSchema = ref<VaultConfigurationSchema>({
     type: ConfigurationSchemaType.Json,
   },
 })
+
+const codeBlockRecordFormatter = (record: Record<string, any>) => {
+  const maskedConfig = { ...record.config }
+  SENSITIVE_KEYS.forEach(key => {
+    if (key in maskedConfig) {
+      maskedConfig[key] = SENSITIVE_MASK
+    }
+  })
+  return {
+    ...record,
+    config: maskedConfig,
+  }
+}
 
 const getMetadataLabel = (propKey: string) => {
   return configSchema.value?.[propKey as keyof typeof configSchema.value]?.label || convertKeyToTitle(propKey)

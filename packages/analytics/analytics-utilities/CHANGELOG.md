@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.10.4...@kong-ui-public/analytics-utilities@12.11.0) (2026-02-10)
+
+
+### Features
+
+* **analytics:** add mcp_info to requests dimensions [MA-4790] ([#2918](https://github.com/Kong/public-ui-components/issues/2918)) ([82130f6](https://github.com/Kong/public-ui-components/commit/82130f600d1f7b4fe240b74fb7e16a41dcc819bf))
+
+
+
+
+
 ## [12.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.10.3...@kong-ui-public/analytics-utilities@12.10.4) (2026-01-30)
 
 
