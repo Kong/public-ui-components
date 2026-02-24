@@ -192,7 +192,7 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .documentation {
   .doc-card-title {
-    font-size: $kui-font-size-60;
+    font-size: var(--kui-font-size-60, $kui-font-size-60);
   }
 
   .documentation-parent-container {
@@ -202,7 +202,7 @@ onBeforeMount(async () => {
 
   .document-tree-list {
     flex: 0 0 15%;
-    margin-right: $kui-space-80;
+    margin-right: var(--kui-space-80, $kui-space-80);
     position: relative;
     top: -7px;
   }

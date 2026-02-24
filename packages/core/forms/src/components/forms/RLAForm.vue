@@ -547,44 +547,44 @@ watch(() => props.formModel['config-strategy'], (strategy: string) => {
 .rla-form-basic-fields {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-80;
-  margin-bottom: $kui-space-80;
+  gap: var(--kui-space-80, $kui-space-80);
+  margin-bottom: var(--kui-space-80, $kui-space-80);
 
   .rla-form-request-limits {
     .rla-form-request-limits-content {
       display: flex;
       flex-direction: column;
-      gap: $kui-space-50;
+      gap: var(--kui-space-50, $kui-space-50);
     }
 
     .rla-form-window-type {
       &-radios {
         display: flex;
         flex-direction: row;
-        gap: $kui-space-70;
+        gap: var(--kui-space-70, $kui-space-70);
 
         :deep(.radio-label) {
-          font-size: $kui-font-size-30;
-          font-weight: $kui-font-weight-regular;
+          font-size: var(--kui-font-size-30, $kui-font-size-30);
+          font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
         }
       }
     }
 
     &-title {
-      font-size: $kui-font-size-40;
-      font-weight: $kui-font-weight-bold;
+      font-size: var(--kui-font-size-40, $kui-font-size-40);
+      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
     }
 
     &-subtitle {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-30;
-      font-weight: $kui-font-weight-regular;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     }
 
     &-items {
       display: flex;
       flex-direction: column;
-      gap: $kui-space-50;
+      gap: var(--kui-space-50, $kui-space-50);
     }
 
     &-row,
@@ -593,7 +593,7 @@ watch(() => props.formModel['config-strategy'], (strategy: string) => {
       align-items: center;
       display: flex;
       flex-direction: row;
-      gap: $kui-space-50;
+      gap: var(--kui-space-50, $kui-space-50);
       justify-content: space-between;
     }
 
@@ -613,12 +613,12 @@ watch(() => props.formModel['config-strategy'], (strategy: string) => {
       align-items: center;
       display: flex;
       flex-direction: row;
-      gap: $kui-space-40;
+      gap: var(--kui-space-40, $kui-space-40);
 
       &-badges {
         display: flex;
         flex-direction: row;
-        gap: $kui-space-40;
+        gap: var(--kui-space-40, $kui-space-40);
 
         :deep(.rla-form-request-limits-examples-badge) {
           cursor: pointer;
@@ -638,7 +638,7 @@ watch(() => props.formModel['config-strategy'], (strategy: string) => {
     align-items: center;
     display: flex;
     flex-direction: row;
-    gap: $kui-space-50;
+    gap: var(--kui-space-50, $kui-space-50);
     justify-content: space-between;
 
     .input-error-code {
@@ -650,10 +650,10 @@ watch(() => props.formModel['config-strategy'], (strategy: string) => {
 }
 
 .rla-form-redis-card {
-  margin: $kui-space-50 0;
+  margin: var(--kui-space-50, $kui-space-50) 0;
 }
 
 .rla-last-vfg {
-  margin-top: $kui-space-80;
+  margin-top: var(--kui-space-80, $kui-space-80);
 }
 </style>

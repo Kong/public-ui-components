@@ -282,7 +282,7 @@ watch(() => hide?.value, (newHide) => {
 
 <style lang="scss" scoped>
 .redis-config-card {
-  margin-bottom: $kui-space-60;
+  margin-bottom: var(--kui-space-60, $kui-space-60);
 
   :deep(.form-group:last-child) {
     margin-bottom: 0;
@@ -294,24 +294,24 @@ watch(() => hide?.value, (newHide) => {
 }
 
 .shared-redis-config-title {
-  font-weight: $kui-font-weight-semibold;
-  line-height: $kui-line-height-30;
-  margin-bottom: $kui-space-40;
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
+  margin-bottom: var(--kui-space-40, $kui-space-40);
 }
 
 .redis-config-radio-group {
   box-sizing: border-box;
   display: flex;
-  gap: $kui-space-40;
-  margin-bottom: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
+  margin-bottom: var(--kui-space-40, $kui-space-40);
 }
 
 .redis-config-select {
-  margin: $kui-space-60 0;
+  margin: var(--kui-space-60, $kui-space-60) 0;
 }
 
 .redis-shared-config-error-message {
-  color: $kui-color-text-danger;
+  color: var(--kui-color-text-danger, $kui-color-text-danger);
 }
 </style>
 

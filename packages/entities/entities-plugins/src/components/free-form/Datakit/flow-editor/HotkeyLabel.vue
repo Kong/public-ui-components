@@ -31,18 +31,18 @@ const formattedKeys = formatKeys(keys)
 .dk-hotkey-label {
   display: flex;
   flex-grow: 1;
-  gap: $kui-space-30;
+  gap: var(--kui-space-30, $kui-space-30);
   justify-content: space-between;
   white-space: nowrap;
 
   .keys {
-    color: $kui-color-text-neutral;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, Inter, sans-serif;
-    font-size: $kui-font-size-20;
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
   }
 
   &.reverse .keys {
-    color: $kui-color-text-neutral-weak;
+    color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
   }
 }
 </style>

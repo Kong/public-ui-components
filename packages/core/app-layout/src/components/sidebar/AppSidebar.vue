@@ -510,6 +510,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 @use "../../styles/variables" as *;
 
 .kong-ui-app-sidebar {
@@ -670,7 +671,7 @@ onBeforeUnmount(() => {
     display: block;
     height: $sidebar-header-spacing;
     left: 50%;
-    margin-bottom: -$sidebar-header-spacing;
+    margin-bottom: calc(-1 * #{$sidebar-header-spacing});
     position: absolute;
     transform: translateX(-50%); // center
     width: calc(100% - 16px);

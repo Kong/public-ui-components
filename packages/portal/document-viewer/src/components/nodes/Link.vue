@@ -23,6 +23,7 @@ defineProps({
 </script>
 
 <style scoped lang="scss">
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 a {
   color: var(--kong-ui-document-viewer-link-color, $kui-color-text-primary);
   text-decoration: none;

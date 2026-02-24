@@ -40,6 +40,7 @@ const Children = () => props.document?.children ? renderChildren(children) : nul
 </script>
 
 <style lang="scss">
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 :root {
   --kong-ui-document-viewer-font-family-default: #{$kui-font-family-text};
   --kong-ui-document-viewer-font-family-monospace: #{$kui-font-family-code};

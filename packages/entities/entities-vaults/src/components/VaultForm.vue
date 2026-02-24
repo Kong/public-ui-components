@@ -1423,7 +1423,7 @@ const saveFormData = async (): Promise<void> => {
       .provider-item {
         display: flex;
         flex-direction: row;
-        gap: $kui-space-60;
+        gap: var(--kui-space-60, $kui-space-60);
 
         &-title-container {
           flex: 1;
@@ -1431,34 +1431,34 @@ const saveFormData = async (): Promise<void> => {
 
         &-title {
           display: block;
-          font-weight: $kui-font-weight-bold;
+          font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
         }
 
         &-description {
           display: block;
-          font-size: $kui-font-size-20;
+          font-size: var(--kui-font-size-20, $kui-font-size-20);
         }
       }
 
       button:not(:disabled) .provider-item {
         &-title {
-          color: $kui-color-text-neutral-stronger;
+          color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
         }
 
         &-description {
-          color: $kui-color-text-neutral;
+          color: var(--kui-color-text-neutral, $kui-color-text-neutral);
         }
       }
 
       :deep(.k-tooltip .popover-container) {
-        padding: $kui-space-30 !important;
+        padding: var(--kui-space-30, $kui-space-30) !important;
       }
     }
 
     &-config-fields-container {
       > *, .vault-form-config-auth-method-container > * {
         &:not(:first-child) {
-          margin-top: $kui-space-80;
+          margin-top: var(--kui-space-80, $kui-space-80);
         }
       }
     }

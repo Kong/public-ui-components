@@ -90,6 +90,6 @@ const emitPluginData = (plugin: PluginType) => {
 .plugin-select-grid {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-110;
+  gap: var(--kui-space-110, $kui-space-110);
 }
 </style>

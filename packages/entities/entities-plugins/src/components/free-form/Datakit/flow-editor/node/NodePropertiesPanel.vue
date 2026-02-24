@@ -158,6 +158,7 @@ const Form = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 .dk-node-properties-panel {
   :deep(.slideout-container) {
     box-shadow: none;

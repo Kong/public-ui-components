@@ -204,7 +204,7 @@ const actionButtonText = computed(() => {
 <style lang="scss" scoped>
 .log-level-select,
 .explanation-wrapper {
-  margin-bottom: $kui-space-70;
+  margin-bottom: var(--kui-space-70, $kui-space-70);
 }
 
 .explanation-wrapper {
@@ -213,45 +213,45 @@ const actionButtonText = computed(() => {
   }
 
   .warning-message {
-    color: $kui-color-text-danger;
+    color: var(--kui-color-text-danger, $kui-color-text-danger);
   }
 }
 
 .revert-after-wrapper {
-  margin-bottom: $kui-space-40;
+  margin-bottom: var(--kui-space-40, $kui-space-40);
 
   .time {
     align-items: center;
     display: flex;
 
     .time-input {
-      margin-right: $kui-space-40;
+      margin-right: var(--kui-space-40, $kui-space-40);
       width: 80px;
     }
 
     .seconds {
-      color: $kui-color-text;
+      color: var(--kui-color-text, $kui-color-text);
     }
 
     .formatted-time {
-      color: $kui-color-text-neutral-strong;
+      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
       font-style: italic;
-      margin-left: $kui-space-130;
+      margin-left: var(--kui-space-130, $kui-space-130);
     }
   }
 }
 
 .data-plane-node-list {
   th, td {
-    color: $kui-color-text;
+    color: var(--kui-color-text, $kui-color-text);
   }
 
   thead {
     text-align: left;
 
     th {
-      font-weight: $kui-font-weight-bold;
-      line-height: $kui-line-height-70;
+      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+      line-height: var(--kui-line-height-70, $kui-line-height-70);
     }
   }
 }

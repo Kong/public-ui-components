@@ -79,6 +79,7 @@ const methodName = computed((): BadgeAppearance => {
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 .spec-operations-list-item {
   appearance: none;
   background: transparent;

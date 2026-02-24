@@ -112,16 +112,16 @@ watch(fieldsValue, (value) => {
   .sni-field-input {
     align-items: center;
     display: flex;
-    gap: $kui-space-80;
+    gap: var(--kui-space-80, $kui-space-80);
 
     &:not(:last-child) {
-      margin-bottom: $kui-space-60;
+      margin-bottom: var(--kui-space-60, $kui-space-60);
     }
   }
 
   .sni-field-controls-container {
     display: flex;
-    gap: $kui-space-20;
+    gap: var(--kui-space-20, $kui-space-20);
   }
 }
 </style>

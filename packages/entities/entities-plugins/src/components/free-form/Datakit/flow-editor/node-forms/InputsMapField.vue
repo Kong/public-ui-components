@@ -213,7 +213,7 @@ watch(() => entries.value, (newEntries) => {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: $kui-space-60;
+  gap: var(--kui-space-60, $kui-space-60);
 
   &-entry {
     width: 100%;
@@ -227,7 +227,7 @@ watch(() => entries.value, (newEntries) => {
       display: flex;
       flex: 1;
       flex-direction: column;
-      gap: $kui-space-40;
+      gap: var(--kui-space-40, $kui-space-40);
     }
   }
 

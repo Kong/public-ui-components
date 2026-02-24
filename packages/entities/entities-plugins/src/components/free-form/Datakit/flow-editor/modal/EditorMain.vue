@@ -173,6 +173,7 @@ const tooltipAttributes = {
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 .dk-editor-main {
   display: flex;
   flex-direction: column;

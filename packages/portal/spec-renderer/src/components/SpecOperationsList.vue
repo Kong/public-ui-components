@@ -312,6 +312,7 @@ const { getSizeFromString, hasRequiredProps } = composables.useUtilities()
 </script>
 
 <style lang="scss" scoped>
+/* stylelint-disable @kong/design-tokens/token-var-usage */
 .kong-ui-public-spec-operations-list {
   color: var(--kong-ui-kong-spec-renderer-operations-list-text-color, var(--kong-ui-spec-renderer-text-color, $kui-color-text));
   font-family: var(--kong-ui-spec-renderer-operations-list-font-family, var(--kong-ui-spec-renderer-font-family, $kui-font-family-text));

@@ -158,7 +158,7 @@ watch(tooltipEl, value => {
 }
 
 .tooltip-container {
-  background-color: $kui-color-background;
+  background-color: var(--kui-color-background, $kui-color-background);
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);
   max-width: 425px;

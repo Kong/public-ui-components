@@ -89,13 +89,13 @@ const breadcrumbIconSlots = computed((): string[] => {
 
 <style lang="scss" scoped>
 .kong-ui-app-page-header {
-  margin-bottom: $kui-space-70;
+  margin-bottom: var(--kui-space-70, $kui-space-70);
 
   .page-header-title-section {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    gap: $kui-space-80;
+    gap: var(--kui-space-80, $kui-space-80);
     justify-content: space-between;
 
     .page-header-title-wrapper {
@@ -106,21 +106,21 @@ const breadcrumbIconSlots = computed((): string[] => {
       .page-header-title-before {
         align-self: center;
         display: inline-flex;
-        margin-right: $kui-space-40;
+        margin-right: var(--kui-space-40, $kui-space-40);
       }
 
       .page-header-title-after {
         align-self: center;
         display: inline-flex;
-        margin-left: $kui-space-60;
+        margin-left: var(--kui-space-60, $kui-space-60);
       }
 
       .page-header-title {
-        color: $kui-color-text;
-        font-size: $kui-font-size-70;
-        font-weight: $kui-font-weight-bold;
-        line-height: $kui-line-height-60;
-        margin: $kui-space-0;
+        color: var(--kui-color-text, $kui-color-text);
+        font-size: var(--kui-font-size-70, $kui-font-size-70);
+        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+        line-height: var(--kui-line-height-60, $kui-line-height-60);
+        margin: var(--kui-space-0, $kui-space-0);
         /** truncation */
         overflow: hidden;
         text-overflow: ellipsis;
@@ -130,12 +130,12 @@ const breadcrumbIconSlots = computed((): string[] => {
   }
 
   .page-header-section-below {
-    margin-top: $kui-space-40;
+    margin-top: var(--kui-space-40, $kui-space-40);
     width: 100%;
   }
 
   :deep(.k-breadcrumbs) {
-    margin-bottom: $kui-space-0;
+    margin-bottom: var(--kui-space-0, $kui-space-0);
   }
 
   @media (min-width: $kui-breakpoint-mobile) {

@@ -142,14 +142,14 @@ const handleSubmit = async (): Promise<void> => {
 
 <style lang="scss" scoped>
 .error-wrapper {
-  margin-bottom: $kui-space-60;
+  margin-bottom: var(--kui-space-60, $kui-space-60);
 }
 
 .confirm-text {
-  margin-bottom: $kui-space-40;
+  margin-bottom: var(--kui-space-40, $kui-space-40);
 }
 
 .cancel-button {
-  margin-right: $kui-space-40;
+  margin-right: var(--kui-space-40, $kui-space-40);
 }
 </style>

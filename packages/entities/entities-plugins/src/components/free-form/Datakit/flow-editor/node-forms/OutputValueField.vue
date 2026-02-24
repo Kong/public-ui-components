@@ -195,7 +195,7 @@ watchEffect(() => {
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: $kui-space-60;
+  gap: var(--kui-space-60, $kui-space-60);
 
   &-entry {
     position: relative;
@@ -211,7 +211,7 @@ watchEffect(() => {
     :deep(.card-content) {
       display: flex;
       flex-direction: column;
-      gap: $kui-space-40;
+      gap: var(--kui-space-40, $kui-space-40);
       z-index: 1;
     }
   }

@@ -71,15 +71,15 @@ const heading = computed((): string => {
 
 <style lang="scss" scoped>
 .config-card-fieldset {
-  border: solid $kui-border-width-10 $kui-color-border;
+  border: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
   border-radius: 4px;
-  margin-bottom: $kui-space-40;
+  margin-bottom: var(--kui-space-40, $kui-space-40);
   margin-top: 4px;
 }
 
 .config-card-fieldset-title {
-  font-size: $kui-font-size-30;
-  padding: 0 $kui-space-40;
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  padding: 0 var(--kui-space-40, $kui-space-40);
   width: auto;
 }
 </style>
@@ -93,7 +93,7 @@ fieldset.config-card-fieldset {
 
 .config-card-json-item, fieldset.config-card-fieldset {
   .config-card-details-row {
-    margin: $kui-space-0 $kui-space-60;
+    margin: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 
     &:last-of-type {
       border-bottom: none;

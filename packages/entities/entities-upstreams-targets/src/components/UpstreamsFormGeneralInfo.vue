@@ -216,6 +216,6 @@ onBeforeMount(async () => {
 
 <style scoped lang="scss">
 .margin-bottom-6 {
-  margin-bottom: $kui-space-80;
+  margin-bottom: var(--kui-space-80, $kui-space-80);
 }
 </style>

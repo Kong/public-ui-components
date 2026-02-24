@@ -33,9 +33,9 @@ defineProps<{
 
 <style lang="scss" scoped>
 .page-header h1, h2, h3, h4, h5, h6 {
-  color: $kui-color-text;
-  font-size: $kui-font-size-70;
-  font-weight: $kui-font-weight-bold;
+  color: var(--kui-color-text, $kui-color-text);
+  font-size: var(--kui-font-size-70, $kui-font-size-70);
+  font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
 
   .title {
     word-break: break-all;
@@ -46,22 +46,22 @@ defineProps<{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-left: -$kui-space-60;
-  margin-right: -$kui-space-60;
-  padding: $kui-space-0 $kui-space-60;
+  margin-left: -var(--kui-space-60, $kui-space-60);
+  margin-right: -var(--kui-space-60, $kui-space-60);
+  padding: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 }
 
 .col {
-  line-height: $kui-line-height-70;
+  line-height: var(--kui-line-height-70, $kui-line-height-70);
 }
 
 h1, h2, h3, h4, h5, h6, nav {
-  margin-bottom: $kui-space-70;
-  margin-top: $kui-space-0;
+  margin-bottom: var(--kui-space-70, $kui-space-70);
+  margin-top: var(--kui-space-0, $kui-space-0);
 }
 
 .title-no-margin {
-  margin: $kui-space-0 !important;
+  margin: var(--kui-space-0, $kui-space-0) !important;
 }
 
 .operations {
@@ -69,7 +69,7 @@ h1, h2, h3, h4, h5, h6, nav {
   display: inline-flex;
   flex-grow: 0;
   justify-content: flex-end;
-  margin-left: $kui-space-auto;
+  margin-left: var(--kui-space-auto, $kui-space-auto);
   text-align: right;
   white-space: nowrap;
 }

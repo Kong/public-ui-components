@@ -121,21 +121,21 @@ const allConfigDetails = computed(() => configDetails.value.concat(nonStandardCo
 .partial-config-card {
   display: flex;
   flex-direction: column;
-  padding: $kui-space-70;
+  padding: var(--kui-space-70, $kui-space-70);
 
   .partial-config-card-row {
-    border-bottom: $kui-border-width-10 solid $kui-color-border-disabled;
-    color: $kui-color-text;
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-disabled, $kui-color-border-disabled);
+    color: var(--kui-color-text, $kui-color-text);
     display: flex;
 
     .config-card-row-label {
       align-items: center;
       flex: 1;
-      font-weight: $kui-font-weight-semibold;
-      padding: $kui-space-50 0 $kui-space-60;
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      padding: var(--kui-space-50, $kui-space-50) 0 var(--kui-space-60, $kui-space-60);
 
       .label-text {
-        line-height: $kui-line-height-40;
+        line-height: var(--kui-line-height-40, $kui-line-height-40);
       }
     }
 
@@ -145,10 +145,10 @@ const allConfigDetails = computed(() => configDetails.value.concat(nonStandardCo
       flex: 1;
       font-family: var(--kui-font-family-code, $kui-font-family-code);
       font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
-      padding-left: $kui-space-60;
+      padding-left: var(--kui-space-60, $kui-space-60);
 
       .value-text {
-        line-height: $kui-line-height-30;
+        line-height: var(--kui-line-height-30, $kui-line-height-30);
       }
     }
   }

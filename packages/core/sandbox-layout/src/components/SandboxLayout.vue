@@ -116,7 +116,7 @@ const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
 .kong-ui-sandbox-layout {
   .header {
     align-items: center;
-    border-bottom: $kui-border-width-10 solid $kui-color-border;
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -129,8 +129,8 @@ const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
     .header-right {
       align-items: center;
       display: flex;
-      gap: $kui-space-70;
-      padding: $kui-space-70;
+      gap: var(--kui-space-70, $kui-space-70);
+      padding: var(--kui-space-70, $kui-space-70);
       width: 100%;
     }
 
@@ -139,26 +139,26 @@ const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
     }
 
     h1 {
-      font-size: $kui-font-size-50;
-      margin: $kui-space-0;
+      font-size: var(--kui-font-size-50, $kui-font-size-50);
+      margin: var(--kui-space-0, $kui-space-0);
       white-space: nowrap;
 
       @media (min-width: $kui-breakpoint-phablet) {
-        font-size: $kui-font-size-70;
+        font-size: var(--kui-font-size-70, $kui-font-size-70);
       }
     }
   }
 
   .layout {
     display: flex;
-    gap: $kui-space-70;
-    padding: $kui-space-70;
+    gap: var(--kui-space-70, $kui-space-70);
+    padding: var(--kui-space-70, $kui-space-70);
   }
 
   .mobile-nav-container {
     align-items: center;
     display: flex;
-    gap: $kui-space-70;
+    gap: var(--kui-space-70, $kui-space-70);
   }
 
   .mobile-nav-container,
@@ -188,13 +188,13 @@ const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
     width: 100%;
 
     @media (min-width: $kui-breakpoint-laptop) {
-      border: $kui-border-width-10 solid $kui-color-border;
-      border-radius: $kui-border-radius-30;
-      padding: $kui-space-70;
+      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+      padding: var(--kui-space-70, $kui-space-70);
     }
 
     h1 {
-      margin: $kui-space-0 $kui-space-0 $kui-space-70
+      margin: var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0) var(--kui-space-70, $kui-space-70);
     }
   }
 
@@ -202,34 +202,34 @@ const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
     min-width: v-bind('controlsWidth');
 
     @media (min-width: $kui-breakpoint-laptop) {
-      border: $kui-border-width-10 solid $kui-color-border;
-      border-radius: $kui-border-radius-30;
-      padding: $kui-space-70;
+      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+      padding: var(--kui-space-70, $kui-space-70);
     }
   }
 
   .home-link {
     &,
     &:visited {
-      color: $kui-color-text-primary;
+      color: var(--kui-color-text-primary, $kui-color-text-primary);
       text-decoration: none;
     }
   }
 
   .toggle-mobile-nav,
   .toggle-mobile-controls {
-    color: $kui-color-text-primary;
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
     cursor: pointer;
-    transition: color $kui-animation-duration-20 ease-in-out;
+    transition: color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
 
     &:hover {
-      color: $kui-color-text-primary-strong;
+      color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
     }
   }
 
   :deep(.k-slideout),
   :deep(.k-card-body) {
-    font-size: $kui-font-size-40;
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
   }
 }
 </style>
