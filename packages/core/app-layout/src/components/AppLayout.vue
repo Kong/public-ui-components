@@ -396,8 +396,12 @@ onBeforeUnmount(() => {
       width: 100%;
 
       // Apply the padding to the inner element
-      &-inner:not(.remove-inner-padding) {
+      &-inner {
         padding: var(--kong-ui-app-layout-content-padding-top, $kui-space-70) var(--kong-ui-app-layout-content-padding-x, $kui-space-70) var(--kong-ui-app-layout-content-padding-bottom, $kui-space-130);
+
+        &.remove-inner-padding {
+          padding: var(--kui-space-0, $kui-space-0);
+        }
       }
     }
   }
