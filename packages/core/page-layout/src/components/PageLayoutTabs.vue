@@ -18,6 +18,7 @@
           :class="{ 'active': tab.active }"
           :data-testid="tab.dataTestId ? tab.dataTestId : `page-layout-tab-${tab.key}`"
           :href="typeof tab.to === 'string' ? tab.to : undefined"
+          tabindex="0"
           :to="typeof tab.to === 'string' ? undefined : tab.to"
           @click="(event: Event) => onTabClick(event, tab)"
         >
