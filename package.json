@@ -23,7 +23,7 @@
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^2.0.15",
+    "@evilmartians/lefthook": "^2.0.16",
     "@kong/design-tokens": "1.18.2",
     "@kong/eslint-config-kong-ui": "^1.6.0",
     "@kong/kongponents": "9.50.0",
@@ -31,7 +31,7 @@
     "@types/flat": "^5.0.5",
     "@types/js-yaml": "^4.0.9",
     "@types/jsdom": "^27.0.0",
-    "@types/node": "^24.10.9",
+    "@types/node": "^24.10.11",
     "@types/uuid": "^11.0.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
@@ -72,7 +72,7 @@
     "vitest": "^3.2.4",
     "vue": "^3.5.27",
     "vue-router": "^4.6.4",
-    "vue-tsc": "^3.2.3"
+    "vue-tsc": "^3.2.4"
   },
   "pnpm": {
     "auditConfig": {
@@ -82,7 +82,7 @@
     },
     "overrides": {
       "vue": "$vue",
-      "glob@<11.1.0": ">=13.0.0",
+      "glob@<11.1.0": ">=13.0.1",
       "dompurify@<3.2.4": ">=3.3.1",
       "form-data@>=3.0.0 <3.0.4": ">=4.0.5",
       "mermaid@>=11.1.0 <11.10.0": ">=11.12.2",
