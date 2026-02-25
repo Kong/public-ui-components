@@ -1,6 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import Kongponents from '@kong/kongponents'
 import { createRouter, createWebHistory } from 'vue-router'
+
+import '@kong/kongponents/dist/style.css'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -30,6 +33,7 @@ const router = createRouter({
 
 const app = createApp(App)
 
+app.use(Kongponents)
 app.use(router)
 
 app.mount('#app')

@@ -14,15 +14,16 @@
       >
         <component
           :is="typeof tab.to === 'string' ? 'a' : 'router-link'"
+          :aria-current="tab.active ? 'page' : undefined"
           class="tab-link"
           :class="{ 'active': tab.active }"
           :data-testid="tab.dataTestId ? tab.dataTestId : `page-layout-tab-${tab.key}`"
           :href="typeof tab.to === 'string' ? tab.to : undefined"
           tabindex="0"
           :to="typeof tab.to === 'string' ? undefined : tab.to"
-          @click="(event: Event) => onTabClick(event, tab)"
-          @keydown.enter.prevent="onTabKeyboardNavigation(tab)"
-          @keydown.space.prevent="onTabKeyboardNavigation(tab)"
+          @click.prevent="onTabNavigation(tab)"
+          @keydown.enter.prevent="onTabNavigation(tab)"
+          @keydown.space.prevent="onTabNavigation(tab)"
         >
           {{ tab.label }}
         </component>
@@ -51,6 +52,7 @@
             <KDropdownItem
               v-for="overflowingTab in overflowingTabs"
               :key="`${overflowingTab.key}-dropdown-item`"
+              :aria-current="overflowingTab.active ? 'page' : undefined"
               :data-testid="overflowingTab.dataTestId ? overflowingTab.dataTestId : `page-layout-tab-${overflowingTab.key}`"
               :item="{
                 label: overflowingTab.label,
@@ -81,7 +83,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import { useRouter } from 'vue-router'
-import { KDropdown, KDropdownItem, KSkeletonBox } from '@kong/kongponents'
 import type { PageLayoutTabsProps, PageLayoutTab } from '../types'
 import composables from '../composables'
 import { KUI_SPACE_60 } from '@kong/design-tokens'
@@ -97,28 +98,14 @@ const { i18n: { t } } = composables.useI18n()
 const router = useRouter()
 const navigateTo = inject<(to: string) => Promise<void>>('app:navigateTo')
 
-const onTabClick = (event: Event, tab: PageLayoutTab) => {
-  if (
-    // If not a string (likely a RouteLocationRaw)
-    typeof tab.to !== 'string' ||
-    // or navigateTo is undefined
-    typeof navigateTo !== 'function'
-  ) {
-    return
-  }
-
-  event.preventDefault()
-  navigateTo(tab.to)
-}
-
-const onTabKeyboardNavigation = (tab: PageLayoutTab) => {
+const onTabNavigation = (tab: PageLayoutTab) => {
   // If not a string (a RouteLocationRaw)
   if (typeof tab.to !== 'string') {
     router.push(tab.to)
     return
   }
 
-  // If navigateTo is defined
+  // If navigateTo is undefined
   if (typeof navigateTo !== 'function') {
     window.location.href = tab.to
     return

@@ -33,7 +33,6 @@
 </template>
 
 <script setup lang="ts">
-import { KBreadcrumbs } from '@kong/kongponents'
 import { computed } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'

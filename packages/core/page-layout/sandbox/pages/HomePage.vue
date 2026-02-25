@@ -23,11 +23,8 @@
 <script setup lang="ts">
 import { PageLayout } from '../../src'
 import type { PageLayoutTab } from '../../src'
-import { KButton } from '@kong/kongponents'
 import { ChevronDownIcon } from '@kong/icons'
 import { BookIcon } from '@kong/icons'
-
-import '@kong/kongponents/dist/style.css'
 
 const breadcrumbs = [{
   key: 'api-gateway',
