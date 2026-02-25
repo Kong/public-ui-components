@@ -24,7 +24,7 @@ Add your action to an existing category file (e.g., `formatting.ts`, `navigation
 ```typescript
 // Example: adding a new action to formatting.ts
 import { MyIcon } from '@kong/icons'
-import type { MonacoEditorActionConfig } from './helpers'
+import type { MonacoEditorActionConfig } from './types'
 
 export const formattingActions: Record<string, MonacoEditorActionConfig> = {
   // ... existing actions
