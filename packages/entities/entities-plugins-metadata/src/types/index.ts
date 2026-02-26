@@ -10,6 +10,7 @@ export enum PluginGroup {
   DEPLOYMENT = 'Deployment',
   WEBSOCKET = 'WebSocket Plugins',
   CUSTOM_PLUGINS = 'Custom Plugins',
+  MONETIZATION = 'Monetization',
 }
 
 export enum PluginScope {

@@ -698,6 +698,24 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-lakera-guard'],
   },
+  'ai-a2a-proxy': {
+    descriptionKey: 'plugins.meta.ai-a2a-proxy.description',
+    nameKey: 'plugins.meta.ai-a2a-proxy.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-a2a-proxy'],
+  },
+  'ai-custom-guardrail': {
+    descriptionKey: 'plugins.meta.ai-custom-guardrail.description',
+    nameKey: 'plugins.meta.ai-custom-guardrail.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-custom-guardrail'],
+  },
+  'metering-billing': {
+    descriptionKey: 'plugins.meta.metering-billing.description',
+    nameKey: 'plugins.meta.metering-billing.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['metering-billing'],
+  },
 }
 
 /**
