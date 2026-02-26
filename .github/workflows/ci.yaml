@@ -45,7 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ env.GH_TOKEN }}
 
       - name: Checkout Source Code
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
@@ -100,8 +100,15 @@ jobs:
 
           echo "lernaCommand: ${lernaCommand}"
 
+          lernaOutput=$(pnpm --silent lerna ${lernaCommand} --l --json 2>lerna_error.txt| jq -r '.[].location' || true)
+          if [[ $(cat lerna_error.txt|grep "ERR!") ]]; then
+            echo "Error executing lerna command:"
+            cat lerna_error.txt
+            exit -1
+          fi
+
           # Verify no packages exist from the `@kong-ui` scope; if yes, then exit with error
-          for packageLocation in $(pnpm --silent lerna ${lernaCommand} --l --json | jq -r '.[].location')
+          for packageLocation in ${lernaOutput}
           do
             packageName=$(jq -r '.name' "$packageLocation"/package.json)
             publishConfigAccess=$(jq -r '.publishConfig.access' "$packageLocation"/package.json)
@@ -138,8 +145,15 @@ jobs:
           componentTestFilter=""
           componentTestMatrix=""
 
+          lernaOutput=$(pnpm --silent lerna ${lernaCommand} --l --json 2>lerna_error.txt| jq -r '.[].location' || true)
+          if [[ $(cat lerna_error.txt|grep "ERR!") ]]; then
+            echo "Error executing lerna command:"
+            cat lerna_error.txt
+            exit -1
+          fi
+
           # get the list of changed packages, grab the location
-          for pkgFolder in $(pnpm --silent lerna ${lernaCommand} --l --json|jq -r '.[].location')
+          for pkgFolder in ${lernaOutput}
           do
             # remove current folder from the location path
             pkgFolder="${pkgFolder/$(pwd)\//}"
@@ -240,7 +254,13 @@ jobs:
 
           git checkout "${{ github.head_ref }}"
 
-          versions=$(pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --json --no-git-tag-version || true)
+          versions=$(pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --json --no-git-tag-version 2>lerna_error.txt || true)
+          if [[ $(cat lerna_error.txt|grep "ERR!") ]]; then
+            echo "Error executing lerna command:"
+            cat lerna_error.txt
+            exit -1
+          fi
+
           if [[ "${versions}" == "" ]]; then
             echo "no packages to version"
             exit 0
@@ -299,7 +319,7 @@ jobs:
 
       - name: Save Build Artifacts
         if: ${{ steps.changed_packages.outputs.filter != '' }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: package-dist-artifacts
           path: packages/*/*/dist
@@ -318,7 +338,7 @@ jobs:
 
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
@@ -327,13 +347,13 @@ jobs:
         run: pnpm cypress install
 
       - name: Download build artifacts
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: package-dist-artifacts
           path: packages/
 
       - name: Run Component Tests
-        uses: cypress-io/github-action@2ad32e649e4db26c07674ebae31a297601dbcbaf # v6.10.8
+        uses: cypress-io/github-action@0f330ebf0d60f87608ed72f1d6232e5644aa3171 # v7.1.1
         with:
           install: false
           command: pnpm run test:component:ci --spec ${{ matrix.container }}
@@ -348,7 +368,7 @@ jobs:
           echo "artifactName=component-test-failures-${packageName}" >> $GITHUB_OUTPUT
 
       - name: Upload Component Test Results
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         continue-on-error: true
         if: failure()
         with:
@@ -381,7 +401,7 @@ jobs:
 
       - name: Checkout Source Code
         if: ${{ github.event_name == 'push' }}
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
           token: ${{ secrets.KONGPONENTS_BOT_PAT }}
@@ -392,7 +412,7 @@ jobs:
 
       - name: Download build artifacts
         if: ${{ github.event_name == 'push' }}
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: package-dist-artifacts
           path: packages/
@@ -410,7 +430,13 @@ jobs:
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
 
-          versions=$(pnpm --silent lerna version --conventional-commits --create-release github --yes --force-git-tag --json || true)
+          versions=$(pnpm --silent lerna version --conventional-commits --create-release github --yes --force-git-tag --json 2>lerna_error.txt || true)
+          if [[ $(cat lerna_error.txt|grep "ERR!") ]]; then
+            echo "Error executing lerna command:"
+            cat lerna_error.txt
+            exit -1
+          fi
+
           if [[ "${versions}" == "" ]]; then
             echo "no packages to version"
             exit 0
@@ -436,7 +462,7 @@ jobs:
       - finish-test-and-publish
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Get aggregate Workflow status
         uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3

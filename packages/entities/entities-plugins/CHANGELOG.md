@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.158.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.158.3...@kong-ui-public/entities-plugins@9.158.4) (2026-02-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.158.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.158.2...@kong-ui-public/entities-plugins@9.158.3) (2026-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.158.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.158.1...@kong-ui-public/entities-plugins@9.158.2) (2026-02-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.158.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.158.0...@kong-ui-public/entities-plugins@9.158.1) (2026-02-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

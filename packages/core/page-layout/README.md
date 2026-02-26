@@ -1,31 +1,49 @@
 # @kong-ui-public/page-layout
 
-{A description of this package}
+A set of Kong UI page layout components that provides a structured page header with breadcrumbs, title, and responsive tabbed navigation.
 
-- [Features](#features)
 - [Requirements](#requirements)
-- [Usage](#usage)
-  - [Install](#install)
-  - [Props](#props)
-
-## Features
-
-- List of package features
+- [Included components](#included-components)
+- [Install](#install)
+  - [In-Component registration](#in-component-registration)
+- [TypeScript interfaces](#typescript-interfaces)
+- [Individual component documentation](#individual-component-documentation)
 
 ## Requirements
 
-- List of package requirements (e.g. "`vue` and must be initialized in the host application")
+- `vue` and `vue-router` must be initialized in the host application
+- `@kong/kongponents` must be available as a `dependency` in the host application, along with the package's style imports. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
 
-## Usage
+## Included components
 
-### Install
+- `PageLayout.vue`
 
-{Installation instructions}
+Reference the [individual component docs](#individual-component-documentation) for more info.
 
-### Props
+## Install
 
-#### `example`
+Install the component in your host application
 
-- type: `Boolean`
-- required: `false`
-- default: `false`
+```sh
+yarn add @kong-ui-public/page-layout
+```
+
+### In-Component registration
+
+Import the component within your application.
+
+```ts
+import { PageLayout } from '@kong-ui-public/page-layout'
+```
+
+## TypeScript interfaces
+
+TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/core/page-layout/src/types/) and can be directly imported into your host application. The following type interfaces are available for import:
+
+```ts
+import type { PageLayoutTab, PageLayoutProps, PageLayoutSlots, PageLayoutTabsProps } from '@kong-ui-public/page-layout'
+```
+
+## Individual component documentation
+
+- [`<PageLayout />`](docs/page-layout.md)

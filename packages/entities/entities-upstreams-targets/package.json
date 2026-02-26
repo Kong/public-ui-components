@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-upstreams-targets",
-  "version": "3.12.52",
+  "version": "3.12.53",
   "type": "module",
   "main": "./dist/entities-upstreams-targets.umd.js",
   "module": "./dist/entities-upstreams-targets.es.js",
@@ -25,7 +25,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.42.0",
     "@kong/kongponents": "^9.50.0",
-    "axios": "^1.13.2",
+    "axios": "^1.13.5",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.6.4"
   },

@@ -1,6 +1,19 @@
 import composables from '.'
 import type { SelectItem } from '@kong/kongponents'
 
+// originally from
+// https://github.com/kong-konnect/koko-private/blob/7ab99d8e4b/internal/gen/jsonschema/schemas/service.json#L54
+// but has been enhanced by removing the underscore character from the allowed characters in the domain name,
+// as it is not a valid character in hostnames according to RFC 952/1123
+const domainRegex = /^[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?)*(\.)?$/
+const ipv4Regex = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
+
+const looksLikeIPv6 = (host: string): boolean => {
+  // safe to assume if at least a colon is provided, as colons are not valid in
+  // both domain names and IPv4 addresses, and are required in IPv6 addresses
+  return /^[0-9A-Fa-f:.]+$/.test(host) && host.includes(':')
+}
+
 export default function useUrlValidators() {
   const { i18n: { t } } = composables.useI18n()
 
@@ -8,11 +21,17 @@ export default function useUrlValidators() {
     // check if host is empty
     if (!host || host.trim() === '') return t('gateway_services.form.errors.host.empty')
 
-    // check if a valid host (domain or ip address)
-    const domainRegex = /^(?!:\/\/)([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?))*)(\.[a-zA-Z]{1,63})?$/
-    const ipRegex = /^((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])$/
-
-    if (ipRegex.test(host) || domainRegex.test(host)) return ''
+    try {
+      if (looksLikeIPv6(host)) {
+        new URL('/', `https://[${host}]`)
+        return ''
+      } else if (domainRegex.test(host) || ipv4Regex.test(host)) {
+        new URL('/', `https://${host}`)
+        return ''
+      }
+    } catch {
+      // do nothing
+    }
 
     return t('gateway_services.form.errors.host.invalid')
   }
