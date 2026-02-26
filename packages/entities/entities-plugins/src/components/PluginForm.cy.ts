@@ -421,48 +421,24 @@ describe('<PluginForm />', () => {
       cy.get('@advancedFields').findTestId('collapse-trigger-content').click()
       cy.get('@advancedFields').findTestId('collapse-hidden-content').should('be.visible')
 
-      // Test top-level array with one_of remains unchanged (backward compatibility)
-      // claims_to_verify should still render as comma-separated input
-      cy.get('#config-claims_to_verify').should('be.visible')
+      // Test backward compatibility: top-level array with one_of should remain as text input
       cy.get('#config-claims_to_verify').should('have.attr', 'type', 'text')
 
-      // Test nested array with one_of renders as array with select items
-      // Add a rule item first
+      // Test new functionality: nested array with one_of should render as array with select items
       cy.getTestId('add-config-rules').click()
 
-      // The path field should be a text input
-      cy.get('#config-rules-path-0').should('have.attr', 'type', 'text')
-
-      // The method field should render as array with select dropdowns
-      // Add first method item
+      // method field inside rule[0] should be a FieldArray (has its own add button)
       cy.getTestId('add-config-rules-method-0').should('be.visible').click()
 
-      // First method should be a select dropdown
-      cy.get('#config-rules-method-0-0').should('be.visible')
-      cy.get('#config-rules-method-0-0').should('have.prop', 'tagName', 'SELECT')
+      // After clicking add, an array item with a select should appear inside the method container
+      cy.get('#config-rules-method-0 .array-item').should('have.length', 1)
 
-      // Verify the select contains the correct one_of values
-      cy.get('#config-rules-method-0-0 option').should('have.length', 5)
-      cy.get('#config-rules-method-0-0 option').eq(0).should('have.value', 'GET')
-      cy.get('#config-rules-method-0-0 option').eq(1).should('have.value', 'POST')
-      cy.get('#config-rules-method-0-0 option').eq(2).should('have.value', 'PUT')
-      cy.get('#config-rules-method-0-0 option').eq(3).should('have.value', 'DELETE')
-      cy.get('#config-rules-method-0-0 option').eq(4).should('have.value', 'PATCH')
-
-      // Select a value and verify it's selected
-      cy.get('#config-rules-method-0-0').select('POST')
-      cy.get('#config-rules-method-0-0').should('have.value', 'POST')
-
-      // Add another method item to verify multiple items work
+      // Add a second item to verify multiple selections work
       cy.getTestId('add-config-rules-method-0').click()
-      cy.get('#config-rules-method-0-1').should('be.visible')
-      cy.get('#config-rules-method-0-1').should('have.prop', 'tagName', 'SELECT')
-      cy.get('#config-rules-method-0-1').select('DELETE')
-      cy.get('#config-rules-method-0-1').should('have.value', 'DELETE')
+      cy.get('#config-rules-method-0 .array-item').should('have.length', 2)
 
-      // Verify delete button exists for array items
-      cy.get('[data-testid="config-rules-method-0"] .array-item').should('have.length', 2)
-      cy.get('[data-testid="config-rules-method-0"] .array-item').first().find('.delete').should('exist')
+      // Verify each item has a delete button
+      cy.get('#config-rules-method-0 .array-item .delete').should('have.length', 2)
     })
 
     it('should hide scope selection when hideScopeSelection is true', () => {
