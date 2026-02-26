@@ -164,6 +164,13 @@ const breadcrumbIconSlots = computed((): string[] => {
         line-height: var(--kui-line-height-40, $kui-line-height-40);
       }
     }
+
+    .page-header-section-below {
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
+    }
   }
 }
 </style>
