@@ -7,6 +7,7 @@
     "requests": "request{plural}"
   },
   "metrics": {
+    "error_rate": "Error rate",
     "request_count": "Request count",
     "request_per_minute": "Requests per minute",
     "response_latency_average": "Response latency (avg)",

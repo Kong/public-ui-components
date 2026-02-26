@@ -1,6 +1,7 @@
 export const EXPERIMENTAL_FREE_FORM_PROVIDER = Symbol('EXPERIMENTAL_FREE_FORM_PROVIDER')
 
 export const FEATURE_FLAGS = {
+  KM_2262_CODE_MODE: 'KM-2262-code-mode',
 }
 
 export const TOASTER_PROVIDER = Symbol('TOASTER_PROVIDER')

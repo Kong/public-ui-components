@@ -50,7 +50,7 @@ export default function useContextLinks(
   })
 
   const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && isAdvancedAnalytics.value)
-  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['basic', 'api_usage', 'llm_usage', undefined].includes(definition.value.query.datasource) && isAdvancedAnalytics.value)
+  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['basic', 'api_usage', 'llm_usage', 'mcp_usage', undefined].includes(definition.value.query.datasource) && isAdvancedAnalytics.value)
 
   const chartDataGranularity = computed(() => {
     return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
@@ -148,7 +148,7 @@ export default function useContextLinks(
     }
 
     // If the datasource is 'basic' or not provided, fallback to api_usage
-    const datasource = ['api_usage', 'llm_usage'].includes(definition.value.query.datasource) ? definition.value.query.datasource : 'api_usage'
+    const datasource = ['api_usage', 'llm_usage', 'mcp_usage'].includes(definition.value.query.datasource) ? definition.value.query.datasource : 'api_usage'
 
     return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${definition.value.chart.type}`
   }

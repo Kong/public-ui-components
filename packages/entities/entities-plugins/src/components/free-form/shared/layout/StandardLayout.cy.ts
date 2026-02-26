@@ -173,6 +173,47 @@ describe('<StandardLayout />', () => {
     })
   })
 
+  it('should show form sections and hide code editor when editorMode is form (default)', () => {
+    mountStandardLayout()
+
+    cy.get('.ff-standard-layout').should('exist')
+
+    // Form mode sections should be visible
+    cy.getTestId('form-section-plugin-scope').should('exist')
+    cy.getTestId('form-section-plugin-config').should('exist')
+    cy.getTestId('form-section-general-info').should('exist')
+
+    // Code editor section should not exist
+    cy.get('.plugin-code-editor').should('not.exist')
+  })
+
+  it('should show code editor and hide form sections when editorMode is code', () => {
+    cy.mount(StandardLayout as any, {
+      props: {
+        schema: createBaseSchema(),
+        formSchema: createFormSchema(),
+        model: createBaseModel(),
+        formModel: { enabled: true },
+        formOptions: {},
+        isEditing: false,
+        onModelUpdated: cy.spy(),
+        onFormChange: cy.spy(),
+        pluginName: 'test-plugin',
+        editorMode: 'code',
+      },
+    })
+
+    cy.get('.ff-standard-layout').should('exist')
+
+    // Form mode sections should not exist
+    cy.getTestId('form-section-plugin-scope').should('not.exist')
+    cy.getTestId('form-section-plugin-config').should('not.exist')
+    cy.getTestId('form-section-general-info').should('not.exist')
+
+    // Code editor section should exist
+    cy.get('.plugin-code-editor').should('exist')
+  })
+
   it('should expose freeform schema on window and clean up on unmount', () => {
     mountStandardLayout()
       .then(({ wrapper }) => wrapper)

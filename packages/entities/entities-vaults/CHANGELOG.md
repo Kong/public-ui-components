@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.1.1...@kong-ui-public/entities-vaults@4.1.2) (2026-02-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.1.0...@kong-ui-public/entities-vaults@4.1.1) (2026-02-12)
+
+
+### Bug Fixes
+
+* **entities-vault:** disable copy of sensitive fields and mask them with asterisks in codeblocks ([#2926](https://github.com/Kong/public-ui-components/issues/2926)) ([2410d50](https://github.com/Kong/public-ui-components/commit/2410d503a947d1f1e5425063d2610d04ceeab800))
+
+
+
+
+
 # [4.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.0.31...@kong-ui-public/entities-vaults@4.1.0) (2026-02-09)
 
 

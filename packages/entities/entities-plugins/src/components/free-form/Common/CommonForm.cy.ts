@@ -1,4 +1,5 @@
 import CommonForm from './CommonForm.vue'
+import { FEATURE_FLAGS } from '../../../constants'
 
 describe('<CommonForm />', () => {
   const createBaseSchema = () => ({
@@ -163,5 +164,92 @@ describe('<CommonForm />', () => {
     })
 
     cy.getTestId('ff-advanced-fields-container').should('exist').should('not.be.visible')
+  })
+
+  describe('Editor mode switcher', () => {
+    beforeEach(() => {
+      // Create the teleport target element for the editor mode switcher
+      const el = document.createElement('div')
+      el.id = 'plugin-form-page-actions'
+      document.body.appendChild(el)
+    })
+
+    afterEach(() => {
+      document.getElementById('plugin-form-page-actions')?.remove()
+    })
+
+    it('should not render editor mode switcher when KM_2262_CODE_MODE feature flag is not provided', () => {
+      mountCommonForm()
+
+      cy.getTestId('plugin-editor-mode-switcher').should('not.exist')
+    })
+
+    it('should render editor mode switcher when KM_2262_CODE_MODE feature flag is enabled', () => {
+      mountCommonForm({
+        provide: {
+          [FEATURE_FLAGS.KM_2262_CODE_MODE]: true,
+        },
+      })
+
+      cy.getTestId('plugin-editor-mode-switcher').should('exist')
+    })
+
+    it('should default to form mode and show form sections', () => {
+      mountCommonForm({
+        provide: {
+          [FEATURE_FLAGS.KM_2262_CODE_MODE]: true,
+        },
+      })
+
+      // Form sections should be visible
+      cy.getTestId('form-section-plugin-scope').should('exist')
+      cy.getTestId('form-section-plugin-config').should('exist')
+      cy.getTestId('form-section-general-info').should('exist')
+
+      // Code editor should not exist
+      cy.getTestId('plugin-code-editor').should('not.exist')
+    })
+
+    it('should switch to code editor when clicking code mode option', () => {
+      mountCommonForm({
+        provide: {
+          [FEATURE_FLAGS.KM_2262_CODE_MODE]: true,
+        },
+      })
+
+      // Click the "Code editor" option in the segmented control
+      cy.getTestId('plugin-editor-mode-switcher').contains('Code editor').click()
+
+      // Code editor should now be visible
+      cy.getTestId('plugin-code-editor').should('exist')
+
+      // Form sections should not exist
+      cy.getTestId('form-section-plugin-scope').should('not.exist')
+      cy.getTestId('form-section-plugin-config').should('not.exist')
+      cy.getTestId('form-section-general-info').should('not.exist')
+    })
+
+    it('should switch back to form mode from code mode', () => {
+      mountCommonForm({
+        provide: {
+          [FEATURE_FLAGS.KM_2262_CODE_MODE]: true,
+        },
+      })
+
+      // Switch to code mode
+      cy.getTestId('plugin-editor-mode-switcher').contains('Code editor').click()
+      cy.getTestId('plugin-code-editor').should('exist')
+
+      // Switch back to form mode
+      cy.getTestId('plugin-editor-mode-switcher').contains('Visual editor').click()
+
+      // Form sections should be visible again
+      cy.getTestId('form-section-plugin-scope').should('exist')
+      cy.getTestId('form-section-plugin-config').should('exist')
+      cy.getTestId('form-section-general-info').should('exist')
+
+      // Code editor should not exist
+      cy.getTestId('plugin-code-editor').should('not.exist')
+    })
   })
 })

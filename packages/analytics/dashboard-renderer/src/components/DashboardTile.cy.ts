@@ -497,6 +497,28 @@ describe('<DashboardTile />', () => {
     cy.getTestId('kebab-action-menu-1').should('not.exist')
   })
 
+  it('should show error empty state when queryFn rejects', () => {
+    const queryFn = cy.stub().rejects(new Error('request failed'))
+
+    cy.mount(DashboardTile, {
+      props: {
+        definition: cacheBustTile(mockTileDefinition),
+        context: mockContext,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+        },
+      },
+    })
+
+    cy.getTestId('chart-empty-state').should('be.visible')
+    cy.getTestId('chart-empty-state').should('contain.text', 'Bad request')
+  })
+
   it('should include limit override when chart type is choropleth', () => {
     const provider = { ...mockQueryProvider }
     cy.spy(provider, 'queryFn').as('fetcher')

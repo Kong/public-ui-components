@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.15.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.15.1...@kong-ui-public/entities-gateway-services@3.15.2) (2026-02-14)
+
+
+### Bug Fixes
+
+* **entities-gw-services:** better hostname validation ([#2930](https://github.com/Kong/public-ui-components/issues/2930)) ([fe1fd47](https://github.com/Kong/public-ui-components/commit/fe1fd474ca873bb82e9f82f06cc1672a69640dda))
+
+
+
+
+
+## [3.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.15.0...@kong-ui-public/entities-gateway-services@3.15.1) (2026-02-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
 # [3.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.14.28...@kong-ui-public/entities-gateway-services@3.15.0) (2026-02-10)
 
 
