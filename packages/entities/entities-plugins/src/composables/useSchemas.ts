@@ -43,6 +43,7 @@ import usePluginHelpers from './usePluginHelpers'
 import { getFreeFormName } from '../utils/free-form'
 import type { UnionFieldSchema } from 'src/types/plugins/form-schema'
 import { useExperimentalFreeForms } from './useExperimentalFreeForms'
+import { oidcSchema } from '../definitions/schemas/OIDC'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -271,6 +272,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'kafka-log': {
       ...kafkaLogSchema,
+    },
+
+    'openid-connect': {
+      ...oidcSchema,
     },
   }
 

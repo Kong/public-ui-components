@@ -30,6 +30,7 @@ import type { ConfluentConsumeSchema } from './plugins/confluent-consume'
 import type { KafkaConsumeSchema } from './plugins/kafka-consume'
 import type { SolaceConsumeSchema } from './plugins/solace-consume'
 import type { SolaceUpstreamSchema } from './plugins/solace-upstream'
+import type { OIDCSchema } from './plugins/oidc'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -242,6 +243,7 @@ export interface CustomSchemas {
   'confluent-consume': ConfluentConsumeSchema
   'kafka-consume': KafkaConsumeSchema
   'kafka-log': CommonSchemaFields
+  'openid-connect': OIDCSchema
 }
 
 export enum PluginPartialType {
