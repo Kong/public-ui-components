@@ -654,11 +654,24 @@ const monacoEditor = useMonacoEditor(editorRef, {
 
 // Access editor states
 console.log(monacoEditor.editorStates.hasContent)
+console.log(monacoEditor.editorStates.currentLanguage) // e.g. 'javascript'
 
 // Access editor methods
 monacoEditor.setContent('new content')
 monacoEditor.focus()
 ```
+
+### Editor States
+
+The `editorStates` object is a reactive object that provides the current state of the editor instance.
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `editorStatus` | `'loading' \| 'ready'` | `'loading'` | The current status of the editor instance. |
+| `searchBoxIsRevealed` | `boolean` | `false` | Whether the search box is currently visible. |
+| `hasContent` | `boolean` | `false` | Whether the editor currently contains any content. |
+| `theme` | `'light' \| 'dark'` | `'light'` | The current theme of the editor. |
+| `currentLanguage` | `string` | `''` | The current language ID of the editor model. Reactively updated when the language changes (e.g. via `setLanguage()`). |
 
 ### Example with Custom Actions
 
