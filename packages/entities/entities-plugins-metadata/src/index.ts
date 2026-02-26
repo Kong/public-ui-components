@@ -710,7 +710,7 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
   },
   'ai-a2a-proxy': {
     name: 'AI A2A Proxy',
-    description: 'Securely Proxy A2A Agents, with real-time RPC tracing and monitoring.',
+    description: 'Securely proxy A2A Agents, with real-time RPC tracing and monitoring.',
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
     gatewayVersion: '3.14',
