@@ -583,7 +583,7 @@
       },
       "ai-a2a-proxy": {
         "name": "AI A2A Proxy",
-        "description": "Securely Proxy A2A Agents, with real-time RPC tracing and monitoring."
+        "description": "Securely proxy A2A Agents, with real-time RPC tracing and monitoring."
       },
       "ai-custom-guardrail": {
         "name": "AI Custom Guardrail",
