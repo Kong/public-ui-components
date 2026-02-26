@@ -713,7 +713,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'metering-billing': {
     descriptionKey: 'plugins.meta.metering-billing.description',
     nameKey: 'plugins.meta.metering-billing.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['metering-billing'],
   },
 }
