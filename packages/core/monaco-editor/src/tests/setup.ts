@@ -17,7 +17,7 @@ vi.mock('monaco-editor', () => {
       focus: vi.fn(),
       trigger: vi.fn(),
       dispose: vi.fn(),
-      getModel: vi.fn(() => ({ uri: { toString: () => 'mock://model' }, dispose: vi.fn() })),
+      getModel: vi.fn(() => ({ uri: { toString: () => 'mock://model' }, dispose: vi.fn(), getLanguageId: vi.fn(() => 'javascript'), onDidChangeLanguage: vi.fn(() => createDisposable()) })),
       getContribution: vi.fn(() => ({
         getState: vi.fn(() => ({
           isRevealed: false,
@@ -31,7 +31,11 @@ vi.mock('monaco-editor', () => {
     setTheme: vi.fn(),
     createModel: vi.fn(() => ({
       setValue: vi.fn(),
+      getValue: vi.fn(() => ''),
+      getFullModelRange: vi.fn(() => ({ startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 1 })),
       dispose: vi.fn(),
+      getLanguageId: vi.fn(() => 'javascript'),
+      onDidChangeLanguage: vi.fn(() => createDisposable()),
     })),
   }
 
