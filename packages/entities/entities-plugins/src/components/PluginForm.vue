@@ -174,6 +174,7 @@ import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
 import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
+import { createArraySelectFieldSchema } from '../definitions/schemas/ArraySelectFieldSchema'
 import endpoints from '../plugins-endpoints'
 import {
   EntityTypeIdField,
@@ -811,22 +812,8 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         // Array with select items for arrays with one_of constraint
         // Only apply to nested fields (inside records) to minimize impact on existing plugins
         if (arrayNested) {
-          initialFormSchema[field].type = 'array'
-          initialFormSchema[field].newElementButtonLabelClasses = 'kong-form-new-element-button-label'
-          initialFormSchema[field].fieldClasses = 'kong-form-array-field'
-          initialFormSchema[field].fieldItemsClasses = 'kong-form-array-field-item'
-          initialFormSchema[field].itemContainerComponent = 'FieldArrayItem'
-          initialFormSchema[field].items = {
-            type: 'select',
-            values: elements.one_of,
-            selectOptions: {
-              hideNoneSelectedText: true,
-            },
-          }
-          // Set default value for new items
-          if (elements.one_of.length > 0) {
-            initialFormSchema[field].items.default = elements.one_of[0]
-          }
+          const { id, help, label, hint, values, referenceable, model } = initialFormSchema[field]
+          initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, ...createArraySelectFieldSchema(elements.one_of) }
         }
         // For non-nested fields, keep existing behavior (individual text inputs) for now
       } else if (elements.type === 'array') { // array of string arrays (string[][])
