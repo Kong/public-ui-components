@@ -669,6 +669,96 @@ export const customPluginSchema = {
   ],
 }
 
+// custom plugin with nested array fields that have one_of constraints
+// This simulates structures like JWT plugin's rules[].method field
+export const nestedArrayWithOneOfSchema = {
+  fields: [
+    {
+      consumer: {
+        description: 'Custom type for representing a foreign key with a null value allowed.',
+        eq: null,
+        reference: 'consumers',
+        type: 'foreign',
+      },
+    },
+    {
+      protocols: {
+        default: [
+          'grpc',
+          'grpcs',
+          'http',
+          'https',
+        ],
+        description: 'A set of strings representing HTTP protocols.',
+        elements: {
+          one_of: [
+            'grpc',
+            'grpcs',
+            'http',
+            'https',
+          ],
+          type: 'string',
+        },
+        required: true,
+        type: 'set',
+      },
+    },
+    {
+      config: {
+        fields: [
+          {
+            // Top-level array with one_of to test backward compatibility
+            claims_to_verify: {
+              elements: {
+                one_of: [
+                  'exp',
+                  'nbf',
+                  'iat',
+                ],
+                type: 'string',
+              },
+              type: 'set',
+            },
+          },
+          {
+            // Nested array with one_of - should render as array with select items
+            rules: {
+              elements: {
+                fields: [
+                  {
+                    path: {
+                      type: 'string',
+                    },
+                  },
+                  {
+                    method: {
+                      elements: {
+                        one_of: [
+                          'GET',
+                          'POST',
+                          'PUT',
+                          'DELETE',
+                          'PATCH',
+                        ],
+                        type: 'string',
+                      },
+                      type: 'array',
+                    },
+                  },
+                ],
+                type: 'record',
+              },
+              type: 'array',
+            },
+          },
+        ],
+        required: true,
+        type: 'record',
+      },
+    },
+  ],
+}
+
 const serviceId = '6ecce9f2-4f3e-45aa-af18-a0553d354845'
 // CORS plugin
 export const plugin1 = {

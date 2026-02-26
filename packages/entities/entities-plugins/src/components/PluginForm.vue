@@ -807,6 +807,28 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
         inputAttributes.type = elements.type === 'string' ? 'text' : 'number'
         initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, inputAttributes, ...overrides }
+      } else if (['string', 'integer', 'number'].includes(elements.type) && elements.one_of) {
+        // Array with select items for arrays with one_of constraint
+        // Only apply to nested fields (inside records) to minimize impact on existing plugins
+        if (arrayNested) {
+          initialFormSchema[field].type = 'array'
+          initialFormSchema[field].newElementButtonLabelClasses = 'kong-form-new-element-button-label'
+          initialFormSchema[field].fieldClasses = 'kong-form-array-field'
+          initialFormSchema[field].fieldItemsClasses = 'kong-form-array-field-item'
+          initialFormSchema[field].itemContainerComponent = 'FieldArrayItem'
+          initialFormSchema[field].items = {
+            type: 'select',
+            values: elements.one_of,
+            selectOptions: {
+              hideNoneSelectedText: true,
+            },
+          }
+          // Set default value for new items
+          if (elements.one_of.length > 0) {
+            initialFormSchema[field].items.default = elements.one_of[0]
+          }
+        }
+        // For non-nested fields, keep existing behavior (individual text inputs) for now
       } else if (elements.type === 'array') { // array of string arrays (string[][])
         const { id, help, label, hint, values, referenceable, model, elements: schemaElements } = initialFormSchema[field]
         const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
