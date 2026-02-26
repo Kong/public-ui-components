@@ -99,8 +99,8 @@ const {
   settings: boolean | MonacoEditorToolbarOptions
 }>()
 
-// Track current language reactively
-const currentLanguage = computed<string>(() => editor?.editor.value?.getModel()?.getLanguageId() || '')
+// Track current language reactively from the editor composable's state
+const currentLanguage = computed(() => editor?.editorStates.currentLanguage ?? '')
 
 const { commands, leftGroups, centerGroups, rightGroups } = useToolbarActions(settings, currentLanguage)
 

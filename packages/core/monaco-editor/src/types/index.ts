@@ -71,6 +71,12 @@ export interface MonacoEditorStates {
      * @default 'light'
     */
   theme: EditorThemes
+
+  /**
+     * The current language ID of the editor model.
+     * @default ''
+    */
+  currentLanguage: string
 }
 
 export interface MonacoEditorActionButton {
