@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.1.2...@kong-ui-public/entities-vaults@4.2.0) (2026-02-27)
+
+
+### Features
+
+* **entities-vaults:** replace Conjur with CyberArk Secrets Manager ([#2939](https://github.com/Kong/public-ui-components/issues/2939)) ([496a6df](https://github.com/Kong/public-ui-components/commit/496a6df0564570c4645549bd31335ba978b01547))
+
+
+
+
+
 ## [4.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.1.1...@kong-ui-public/entities-vaults@4.1.2) (2026-02-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
