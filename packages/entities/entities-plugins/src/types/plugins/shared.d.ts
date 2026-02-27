@@ -43,10 +43,10 @@ export interface PluginBasicSchema {
   schemaEndpoint: string
 }
 
-export interface CommonSchemaFields {
+export interface CommonSchemaFields<P = Record<string, any>> {
   id?: string
   overwriteDefault?: boolean
   formSchema?: Record<string, any>
   fieldsToDelete?: string[] // the fields to remove from the form schema
-  shamefullyTransformPayload?: (params: { payload: Record<string, any> } & Record<string, any>) => void
+  shamefullyTransformPayload?: (params: { payload: P } & Record<string, any>) => void
 }
