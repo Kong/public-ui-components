@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.160.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.159.2...@kong-ui-public/entities-plugins@9.160.0) (2026-02-27)
+
+
+### Features
+
+* **entities-plugin:** add data transfomation for oidc plugin ([#2944](https://github.com/Kong/public-ui-components/issues/2944)) ([f6bacd6](https://github.com/Kong/public-ui-components/commit/f6bacd62c12a543fc605656b80d66f8de6c97c75))
+
+
+
+
+
 ## [9.159.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.159.1...@kong-ui-public/entities-plugins@9.159.2) (2026-02-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
