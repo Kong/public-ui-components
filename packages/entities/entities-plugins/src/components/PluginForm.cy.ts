@@ -427,18 +427,20 @@ describe('<PluginForm />', () => {
       // Test new functionality: nested array with one_of should render as array with select items
       cy.getTestId('add-config-rules').click()
 
-      // method field inside rule[0] should be a FieldArray (has its own add button)
+      // --- method: no schema default → new items should not pre-select any value ---
       cy.getTestId('add-config-rules-method-0').should('be.visible').click()
-
-      // After clicking add, an array item with a select should appear inside the method container
       cy.get('#config-rules-method-0 .array-item').should('have.length', 1)
+      cy.get('#config-rules-method-0 .array-item').first().findTestId('select-input').should('have.value', '')
 
-      // Add a second item to verify multiple selections work
-      cy.getTestId('add-config-rules-method-0').click()
-      cy.get('#config-rules-method-0 .array-item').should('have.length', 2)
+      // --- allowed_methods: schema default ['GET'] → FieldArray pre-populated with 1 item ---
+      // The item already exists from the schema default, no need to click add first
+      cy.get('#config-rules-allowed_methods-0 .array-item').should('have.length', 1)
+      cy.get('#config-rules-allowed_methods-0 .array-item').first().findTestId('select-input').should('have.value', 'GET')
 
-      // Verify each item has a delete button
-      cy.get('#config-rules-method-0 .array-item .delete').should('have.length', 2)
+      // Adding a second item should also pre-select 'GET'
+      cy.getTestId('add-config-rules-allowed_methods-0').click()
+      cy.get('#config-rules-allowed_methods-0 .array-item').should('have.length', 2)
+      cy.get('#config-rules-allowed_methods-0 .array-item').eq(1).findTestId('select-input').should('have.value', 'GET')
     })
 
     it('should hide scope selection when hideScopeSelection is true', () => {

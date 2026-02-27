@@ -731,7 +731,25 @@ export const nestedArrayWithOneOfSchema = {
                     },
                   },
                   {
+                    // No schema default — new items should not pre-select any value
                     method: {
+                      elements: {
+                        one_of: [
+                          'GET',
+                          'POST',
+                          'PUT',
+                          'DELETE',
+                          'PATCH',
+                        ],
+                        type: 'string',
+                      },
+                      type: 'array',
+                    },
+                  },
+                  {
+                    // Has schema default — new items should pre-select 'GET'
+                    allowed_methods: {
+                      default: ['GET'],
                       elements: {
                         one_of: [
                           'GET',

@@ -813,7 +813,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         // Only apply to nested fields (inside records) to minimize impact on existing plugins
         if (arrayNested) {
           const { id, help, label, hint, values, referenceable, model } = initialFormSchema[field]
-          initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, ...createArraySelectFieldSchema(elements.one_of) }
+          initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, ...createArraySelectFieldSchema(elements.one_of, scheme.default) }
         }
         // For non-nested fields, keep existing behavior (individual text inputs) for now
       } else if (elements.type === 'array') { // array of string arrays (string[][])

@@ -1,4 +1,4 @@
-export const createArraySelectFieldSchema = (values: string[]) => ({
+export const createArraySelectFieldSchema = (values: string[], defaultValue?: string[]) => ({
   type: 'array',
   valueType: 'string',
   valueArrayType: 'array',
@@ -15,6 +15,6 @@ export const createArraySelectFieldSchema = (values: string[]) => ({
     selectOptions: {
       hideNoneSelectedText: true,
     },
-    ...(values.length > 0 ? { default: values[0] } : {}),
+    ...(defaultValue?.[0] != null ? { default: defaultValue[0] } : {}),
   },
 })
