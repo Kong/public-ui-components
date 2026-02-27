@@ -360,16 +360,16 @@
         }
       },
       "conjur": {
-        "label": "CyberArk Secrets Manager",
-        "description": "Access secrets stored in CyberArk Secrets Manager for Kong Gateway configuration.",
+        "label": "CyberArk Secrets Manager (Conjur)",
+        "description": "Access secrets stored in CyberArk Secrets Manager (Conjur) for Kong Gateway configuration.",
         "fields": {
           "endpoint_url": {
             "label": "Server",
-            "tooltip": "The CyberArk Secrets Manager backend url. Accepts http or https."
+            "tooltip": "The CyberArk Secrets Manager (Conjur) backend url. Accepts http or https."
           },
           "login": {
             "label": "Workload Identity",
-            "tooltip": "Identity of the workload or host authenticating to CyberArk Secrets Manager. In this case Kong is the workload/host."
+            "tooltip": "Identity of the workload or host authenticating to CyberArk Secrets Manager (Conjur). In this case Kong is the workload/host."
           },
           "api_key": {
             "label": "API Key",
@@ -377,7 +377,7 @@
           },
           "account": {
             "label": "Account",
-            "tooltip": "The CyberArk Secrets Manager account for which the token will be issued. This is the identifier provided during CyberArk Secrets Manager configuration."
+            "tooltip": "The CyberArk Secrets Manager (Conjur) account for which the token will be issued. This is the identifier provided during CyberArk Secrets Manager (Conjur) configuration."
           }
         }
       },
