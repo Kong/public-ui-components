@@ -75,15 +75,10 @@ export function shouldUseFreeForm(
   engine?: 'vfg' | 'freeform',
 ): boolean {
   // If engine is explicitly set, respect that choice
-  if (engine === 'vfg') {
-    return false
-  }
-
-  if (engine === 'freeform') {
-    return true
+  if (engine) {
+    return engine === 'freeform'
   }
 
   // No engine specified - check the mapping
-  const freeFormName = getFreeFormName(pluginName as FreeFormName, experimentalWhitelist)
-  return !!freeFormName
+  return !!getFreeFormName(pluginName as FreeFormName, experimentalWhitelist)
 }

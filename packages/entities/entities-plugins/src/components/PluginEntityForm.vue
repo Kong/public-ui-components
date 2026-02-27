@@ -899,7 +899,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
 
   freeformName.value = shouldUseFreeForm(form.model.name, props.engine)
-    ? getFreeFormName(form.model.name, props.engine)
+    ? getFreeFormName(form.model.name)
     : undefined
   sharedFormName.value = getSharedFormName(form.model.name)
 

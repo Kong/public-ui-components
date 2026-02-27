@@ -23,7 +23,7 @@ export function useFreeFormResolver() {
     shouldUseFreeForm: (pluginName: string, engine?: 'vfg' | 'freeform') =>
       shouldUseFreeForm(pluginName, experimentalFreeForms, engine),
 
-    getFreeFormName: (pluginName: string, engine?: 'vfg' | 'freeform') =>
-      getFreeFormName(pluginName as FreeFormName, experimentalFreeForms) || (engine === 'freeform' ? 'CommonForm' : undefined),
+    getFreeFormName: (pluginName: string) =>
+      getFreeFormName(pluginName as FreeFormName, experimentalFreeForms) || 'CommonForm',
   }
 }
