@@ -708,6 +708,27 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     gatewayVersion: '3.13',
   },
+  'ai-a2a-proxy': {
+    name: 'AI A2A Proxy',
+    description: 'Securely proxy A2A Agents, with real-time RPC tracing and monitoring.',
+    group: PluginGroup.AI,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+    gatewayVersion: '3.14',
+  },
+  'ai-custom-guardrail': {
+    name: 'AI Custom Guardrail',
+    description: 'Integrate with any 3rd-party Guardrail service, with customizable enforcement modes — choose whether violations block, log, or allow traffic to proceed.',
+    group: PluginGroup.AI,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+    gatewayVersion: '3.14',
+  },
+  'metering-billing': {
+    name: 'Metering & Billing',
+    description: 'Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with Konnect Metering & Billing.',
+    group: PluginGroup.MONETIZATION,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    gatewayVersion: '3.14',
+  },
 } satisfies Record<string, {
   name: string
   description: string
@@ -720,6 +741,7 @@ export const GATEWAY_VERSION_TIMESTAMP_MAP: Record<string, number> = {
   '3.11': 1751571180000,
   '3.12': 1759519200000,
   '3.13': 1766156460000,
+  '3.14': 1774742400000,
 }
 
 export type PluginName = keyof typeof PLUGIN_GROUP_AND_SCOPE_MAP

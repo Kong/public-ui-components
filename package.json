@@ -77,7 +77,9 @@
   "pnpm": {
     "auditConfig": {
       "ignoreGhsas": [
-        "GHSA-3ppc-4f35-3m26"
+        "GHSA-3ppc-4f35-3m26",
+        "GHSA-23c5-xmqv-rm74",
+        "GHSA-7r86-cg39-jmmj"      
       ]
     },
     "overrides": {
@@ -102,7 +104,8 @@
       "tar@<7.5.7": ">=7.5.7",
       "@isaacs/brace-expansion@<=5.0.0": ">=5.0.1",
       "axios@<=1.13.4": ">=1.13.5",
-      "tar@<7.5.8": ">=7.5.8"
+      "tar@<7.5.8": ">=7.5.8",
+      "rollup@>=4.0.0 <4.59.0": ">=4.59.0"
     },
     "onlyBuiltDependencies": [
       "@evilmartians/lefthook",

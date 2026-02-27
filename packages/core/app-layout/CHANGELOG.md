@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.10.26...@kong-ui-public/app-layout@4.10.27) (2026-02-26)
+
+
+### Bug Fixes
+
+* **app-layout:** app page header navigation next prop ([#2937](https://github.com/Kong/public-ui-components/issues/2937)) ([54ebb15](https://github.com/Kong/public-ui-components/commit/54ebb155e5c81b03be62f39f33a81ac4c5798cf6))
+
+
+
+
+
 ## [4.10.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.10.25...@kong-ui-public/app-layout@4.10.26) (2026-02-11)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout

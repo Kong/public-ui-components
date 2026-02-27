@@ -580,6 +580,18 @@
       "ai-lakera-guard": {
         "name": "AI Lakera Guard",
         "description": "Audit and enforce safety policies on LLM requests and responses using the AI AWS Lakera plugin before they reach upstream LLMs."
+      },
+      "ai-a2a-proxy": {
+        "name": "AI A2A Proxy",
+        "description": "Securely proxy A2A Agents, with real-time RPC tracing and monitoring."
+      },
+      "ai-custom-guardrail": {
+        "name": "AI Custom Guardrail",
+        "description": "Integrate with any 3rd-party Guardrail service, with customizable enforcement modes — choose whether violations block, log, or allow traffic to proceed."
+      },
+      "metering-billing": {
+        "name": "Metering & Billing",
+        "description": "Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with Konnect Metering & Billing."
       }
     },
     "fields": {
