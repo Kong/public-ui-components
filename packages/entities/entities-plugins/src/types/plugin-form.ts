@@ -71,6 +71,7 @@ export interface PluginFormFields {
   enabled: boolean
   name?: string
   instance_name?: string
+  condition?: string | null
   protocols: string[]
   tags: string[]
   [key: string]: any

@@ -4,6 +4,7 @@ export type FreeFormPluginData<
 > = {
   config?: TConfig
   instance_name?: string
+  condition?: string | null
   partials?: Array<{ id: string, path?: string }> | null
   protocols?: string[]
   __ui_data?: TUIData
