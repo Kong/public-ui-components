@@ -174,6 +174,7 @@ import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
 import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
+import { createArraySelectFieldSchema } from '../definitions/schemas/ArraySelectFieldSchema'
 import endpoints from '../plugins-endpoints'
 import {
   EntityTypeIdField,
@@ -807,6 +808,14 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
         inputAttributes.type = elements.type === 'string' ? 'text' : 'number'
         initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, inputAttributes, ...overrides }
+      } else if (['string', 'integer', 'number'].includes(elements.type) && elements.one_of) {
+        // Array with select items for arrays with one_of constraint
+        // Only apply to nested fields (inside records) to minimize impact on existing plugins
+        if (arrayNested) {
+          const { id, help, label, hint, values, referenceable, model } = initialFormSchema[field]
+          initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, ...createArraySelectFieldSchema(elements.one_of, scheme.default) }
+        }
+        // For non-nested fields, keep existing behavior (individual text inputs) for now
       } else if (elements.type === 'array') { // array of string arrays (string[][])
         const { id, help, label, hint, values, referenceable, model, elements: schemaElements } = initialFormSchema[field]
         const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
