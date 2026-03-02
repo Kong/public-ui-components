@@ -4,6 +4,7 @@ import type { DashboardRendererContextInternal } from '../types'
 import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
+import { defineComponent, h, ref } from 'vue'
 
 const start = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
 const end = new Date().toISOString()
@@ -150,6 +151,51 @@ describe('<DashboardTile />', () => {
     mount()
     cy.getTestId('tile-1').should('be.visible')
     cy.get('.title').should('contain.text', 'Test Chart')
+  })
+
+  it('increments refreshCounter and retriggers tile request when refresh is clicked', () => {
+    const updateRefreshCounterSpy = cy.spy().as('updateRefreshCounterSpy')
+    const queryFn = cy.stub().as('queryFn').callsFake(() => {
+      return Promise.resolve(
+        generateSingleMetricTimeSeriesData(
+          { name: 'TotalRequests', unit: 'count' },
+          { status_code: ['request_count'] as string[] },
+          { start, end },
+        ) as ExploreResultV4,
+      )
+    })
+
+    const Harness = defineComponent({
+      setup() {
+        const refreshCounter = ref(0)
+
+        return () => h(DashboardTile, {
+          definition: cacheBustTile(mockTileDefinition),
+          context: mockContext,
+          queryReady: true,
+          showRefresh: true,
+          tileId: '1',
+          refreshCounter: refreshCounter.value,
+          'onUpdate:refreshCounter': (value: number) => {
+            updateRefreshCounterSpy(value)
+            refreshCounter.value = value
+          },
+        })
+      },
+    })
+
+    cy.mount(Harness, {
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+        },
+      },
+    })
+
+    cy.get('@queryFn').should('have.been.calledOnce')
+    cy.getTestId('tile-refresh-button-1').should('not.be.disabled').click()
+    cy.get('@updateRefreshCounterSpy').should('have.been.calledWith', 1)
+    cy.get('@queryFn').should('have.been.calledTwice')
   })
 
   it('should emit edit-tile event when edit button is clicked', () => {
