@@ -214,4 +214,29 @@ describe('<PluginCatalog />', {
     cy.wait('@getAvailablePlugins')
     cy.getTestId('acl-card').should('have.class', 'disabled')
   })
+
+  it('should clear selected filters when clear selection clicked', () => {
+    interceptKonnect()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        customPluginSupport: 'schema',
+      },
+      router,
+    })
+
+    cy.wait('@getAvailablePlugins')
+
+    // button disabled when nothing selected
+    cy.getTestId('clear-filter-selection').should('be.disabled')
+
+    // select a group filter
+    cy.getTestId('plugin-filter-checkbox-Traffic Control').check()
+
+    // clear selection should now be enabled and clear the checkbox
+    cy.getTestId('clear-filter-selection').should('not.be.disabled').click()
+    cy.getTestId('plugin-filter-checkbox-Traffic Control').should('not.be.checked')
+    cy.getTestId('clear-filter-selection').should('be.disabled')
+  })
 })

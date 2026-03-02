@@ -9,6 +9,15 @@
     >
       <div class="plugin-filter-title">
         {{ t('plugins.select.filter.title') }}
+        <KButton
+          appearance="tertiary"
+          class="clear-selection"
+          data-testid="clear-filter-selection"
+          :disabled="!Object.values(typeFilter).some(v => v)"
+          @click="clearTypeFilter"
+        >
+          {{ t('plugins.select.filter.clear') }}
+        </KButton>
       </div>
       <KCollapse v-model="featuredFilterCollapse">
         <template #title>
@@ -317,6 +326,11 @@ const noSearchResults = computed((): boolean => {
   return (Object.keys(pluginsList.value).length > 0 && !hasFilteredResults.value)
 })
 
+const clearTypeFilter = (): void => {
+  Object.keys(typeFilter.value).forEach(key => {
+    typeFilter.value[key] = false
+  })
+}
 
 const buildPluginList = (): PluginCardList => {
   // If availableOnServer is false, we included unavailable plugins from pluginMeta in addition to available plugins
@@ -512,9 +526,12 @@ onMounted(async () => {
     }
 
     .plugin-filter-title {
+      align-items: center;
       color: $kui-color-text-neutral-strongest;
+      display: flex;
       font-size: $kui-font-size-40;
       font-weight: $kui-font-weight-bold;
+      justify-content: space-between;
       letter-spacing: $kui-letter-spacing-minus-20;
       line-height: $kui-line-height-40;
     }
