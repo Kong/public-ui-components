@@ -55,10 +55,12 @@
     "vue": "^3.5.27"
   },
   "dependencies": {
-    "date-fns": "^4.1.0"
+    "date-fns": "^4.1.0",
+    "dompurify": "^3.3.1"
   },
   "devDependencies": {
     "@kong/design-tokens": "1.18.2",
+    "@vue/test-utils": "^2.4.6",
     "axios": "^1.13.2"
   }
 }
