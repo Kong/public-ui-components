@@ -9,6 +9,7 @@ import {
   scopedService,
   scopedConsumer,
   customPluginSchema,
+  nestedArrayWithOneOfSchema,
 } from '../../fixtures/mockData'
 import schemaAiProxy from '../../fixtures/schemas/ai-proxy'
 import schemaCors from '../../fixtures/schemas/cors'
@@ -396,6 +397,50 @@ describe('<PluginForm />', () => {
       cy.get('#config-discovery_uris-requires_proxy-0').should('have.attr', 'type', 'checkbox').and('be.checked')
       cy.get('#config-discovery_uris-ssl_verify-0').should('have.attr', 'type', 'checkbox').and('not.be.checked')
       cy.get('#config-discovery_uris-timeout_ms-0').should('have.attr', 'type', 'number').and('have.value', '5000')
+    })
+
+    it('should render nested array fields with one_of as select dropdowns', () => {
+      interceptKMSchema({ mockData: nestedArrayWithOneOfSchema })
+      const pluginType = 'custom'
+
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKM,
+          pluginType,
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
+        .parents('.k-collapse.nested-collapse')
+        .first()
+        .as('advancedFields')
+      cy.get('@advancedFields').findTestId('collapse-trigger-content').click()
+      cy.get('@advancedFields').findTestId('collapse-hidden-content').should('be.visible')
+
+      // Test backward compatibility: top-level array with one_of should remain as text input
+      cy.get('#config-claims_to_verify').should('have.attr', 'type', 'text')
+
+      // Test new functionality: nested array with one_of should render as array with select items
+      cy.getTestId('add-config-rules').click()
+
+      // --- method: no schema default → new items should not pre-select any value ---
+      cy.getTestId('add-config-rules-method-0').should('be.visible').click()
+      cy.get('#config-rules-method-0 .array-item').should('have.length', 1)
+      cy.get('#config-rules-method-0 .array-item').first().findTestId('select-input').should('have.value', '')
+
+      // --- allowed_methods: schema default ['GET'] → FieldArray pre-populated with 1 item ---
+      // The item already exists from the schema default, no need to click add first
+      cy.get('#config-rules-allowed_methods-0 .array-item').should('have.length', 1)
+      cy.get('#config-rules-allowed_methods-0 .array-item').first().findTestId('select-input').should('have.value', 'GET')
+
+      // Adding a second item should also pre-select 'GET'
+      cy.getTestId('add-config-rules-allowed_methods-0').click()
+      cy.get('#config-rules-allowed_methods-0 .array-item').should('have.length', 2)
+      cy.get('#config-rules-allowed_methods-0 .array-item').eq(1).findTestId('select-input').should('have.value', 'GET')
     })
 
     it('should hide scope selection when hideScopeSelection is true', () => {
