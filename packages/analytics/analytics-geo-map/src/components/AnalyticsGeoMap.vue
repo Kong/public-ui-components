@@ -188,8 +188,8 @@ const goToCountry = (countryCode: CountryISOA2) => {
     if (!coordinates) return
     const allCoords = flattenPositions(coordinates)
 
-    const lats = allCoords.map((c: number[]) => c[1])
-    const longs = allCoords.map((c: number[]) => c[0])
+    const lats = allCoords.map<number>((c: number[]) => c[1] as number)
+    const longs = allCoords.map<number>((c: number[]) => c[0] as number)
 
     const minLat = Math.min(...lats)
     const maxLat = Math.max(...lats)
@@ -370,8 +370,11 @@ watch(() => bounds, (newVal, oldVal) => {
   if (!newVal) return
   const newFlattened = newVal?.flat()
   const oldFlattened = oldVal?.flat()
-  const equal = newFlattened && oldFlattened && newFlattened.length === oldFlattened.length &&
-    newFlattened.every((v, i) => Math.round(v * 100) / 100 === Math.round(oldFlattened[i] * 100) / 100)
+  const equal = newFlattened
+    && oldFlattened
+    && newFlattened.length === oldFlattened.length
+    // @ts-ignore length checks guarantee [i] will exist
+    && newFlattened.every((v, i) => (Math.round(v * 100) / 100) === Math.round(oldFlattened[i] * 100) / 100)
   if (!equal && map.value) {
     map.value.fitBounds(newVal as LngLatBoundsLike)
   }

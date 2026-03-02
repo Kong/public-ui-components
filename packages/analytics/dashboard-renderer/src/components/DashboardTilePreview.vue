@@ -97,6 +97,9 @@ onMounted(() => {
   height.value = parent.getBoundingClientRect().height
 
   observer = new ResizeObserver(([entry]) => {
+    if (!entry) {
+      return
+    }
     const { height: parentHeight } = entry.contentRect
     height.value = parentHeight
   })

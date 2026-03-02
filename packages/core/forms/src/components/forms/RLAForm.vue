@@ -390,10 +390,10 @@ const advancedSchema = computed(() => {
   }
 })
 
-const filteredUseCases = computed<UseCase[]>(() => {
+const filteredUseCases = computed((): UseCase[] => {
   const windowType = props.formModel['config-window_type']
   if (Object.prototype.hasOwnProperty.call(USE_CASES, windowType)) {
-    return USE_CASES[windowType]
+    return USE_CASES[windowType] || []
   }
 
   return []

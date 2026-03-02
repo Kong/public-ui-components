@@ -197,7 +197,7 @@ export default function useSparklineSync({
     for (let i = 0; i < bucketCount; i++) {
       let value = 0
       for (let j = 0; j < syncedChartDatasets.value.length; j++) {
-        value += syncedChartDatasets.value[j].data[i].y
+        value += syncedChartDatasets.value[j]?.data[i]?.y ?? 0
       }
       counts.push(value)
     }
@@ -217,7 +217,7 @@ export default function useSparklineSync({
       return [...acc, ...data.map(({ y }) => y)]
     }, [] as number[])
 
-    const firstValue = allCounts.length ? allCounts[0] : 0
+    const firstValue = allCounts.length ? allCounts[0]! : 0
     const datasetsMin = allCounts.reduce((min, count): number => {
       return Math.min(min, count)
     }, firstValue)
@@ -234,7 +234,7 @@ export default function useSparklineSync({
 
   const syncedMinCount = computed(() => {
     const values = Object.values(state.minCounts)
-    const firstValue = values.length ? values[0] : 0
+    const firstValue = values.length ? values[0]! : 0
     return values.reduce((min, count): number => {
       return Math.min(min, count)
     }, firstValue)

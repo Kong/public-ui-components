@@ -25,8 +25,8 @@ export default ({
     const bucketMax = minStamp + ((bucket + 1) * bucketSizeMs)
     let count = 0
     while (checkIndex < sorted.length
-           && sorted[checkIndex] >= bucketMin
-           && sorted[checkIndex] <= bucketMax) {
+           && sorted[checkIndex]! >= bucketMin
+           && sorted[checkIndex]! <= bucketMax) {
       count++
       checkIndex++
     }

@@ -67,10 +67,10 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
     const position = getRelativePosition(e, chart)
     const items: InteractionItem[] = []
     Interaction.evaluateInteractionItems(chart, chart.options.indexAxis || 'x', position, (element, datasetIndex, index) => {
-      if (chart.options.indexAxis === 'y' && element.inYRange(position.y, true) && chart.data.datasets[datasetIndex].data[index]) {
+      if (chart.options.indexAxis === 'y' && element.inYRange(position.y, true) && chart.data.datasets[datasetIndex]?.data[index]) {
         items.push({ element, datasetIndex, index })
       }
-      if (chart.options.indexAxis === 'x' && position.x !== null && element.inXRange(position.x, true) && chart.data.datasets[datasetIndex].data[index]) {
+      if (chart.options.indexAxis === 'x' && position.x !== null && element.inXRange(position.x, true) && chart.data.datasets[datasetIndex]?.data[index]) {
         items.push({ element, datasetIndex, index })
       }
     })

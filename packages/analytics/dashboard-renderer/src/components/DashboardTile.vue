@@ -335,7 +335,8 @@ const badgeData = computed<string | null>(() => {
   const timeRange = props.definition.query?.time_range
 
   if (timeRange?.type === 'relative') {
-    const timeframe = TimePeriods.get(TIMEFRAME_LOOKUP[timeRange.time_range])
+    const lookup = TIMEFRAME_LOOKUP[timeRange.time_range]
+    const timeframe = lookup !== undefined ? TimePeriods.get(lookup) : null
     if (timeframe) {
       return timeframe.display
     }

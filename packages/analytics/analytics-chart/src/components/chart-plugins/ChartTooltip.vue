@@ -126,7 +126,7 @@ const isInteractive = computed(() => {
 
 // Keep dragX and dragY in sync with absoluteLeft and absoluteTop when not dragging
 watch(() => [props.absoluteLeft, props.absoluteTop], ([left, top]) => {
-  if (!isDragging.value) {
+  if (!isDragging.value && left !== undefined && top !== undefined) {
     dragX.value = parseFloat(left)
     dragY.value = parseFloat(top)
   }
