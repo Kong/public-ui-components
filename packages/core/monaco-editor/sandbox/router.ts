@@ -31,6 +31,11 @@ const routes = [
     name: 'Composable',
     component: () => import('./pages/ComposablePage.vue'),
   },
+  {
+    path: '/context',
+    name: 'Context',
+    component: () => import('./pages/ContextPage.vue'),
+  },
 ]
 
 export const router = createRouter({

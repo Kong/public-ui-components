@@ -1,7 +1,9 @@
 import type { editor } from 'monaco-editor'
 import type { Component, Ref } from 'vue'
-import type { BuiltInActionIds } from '../types/actions'
 import type { useMonacoEditor } from '../composables/useMonacoEditor'
+import type { BuiltInActionIds } from '../types/actions'
+
+export * from './model-context'
 
 /**
  * Options for the Monaco editor composable
@@ -34,7 +36,7 @@ export interface UseMonacoEditorOptions {
   /**
    * Additional Monaco editor settings
    * @see https://microsoft.github.io/monaco-editor/typedoc/interfaces/editor.IStandaloneEditorConstructionOptions.html
-  */
+   */
   monacoOptions?: Partial<editor.IStandaloneEditorConstructionOptions>
 }
 
