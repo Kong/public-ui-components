@@ -151,6 +151,12 @@
           v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'protocols')"
           name="protocols"
         />
+
+        <StringField
+          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'condition')"
+          name="condition"
+          :placeholder="t('plugins.form.fields.condition.placeholder')"
+        />
       </EntityFormBlock>
     </template>
 
@@ -226,6 +232,7 @@ const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   'enabled',
   'protocols',
   'instance_name',
+  'condition',
   'tags',
 
   // scope
@@ -343,7 +350,7 @@ const scopeEntitiesSchema = computed(() => {
 })
 
 const moreFieldsSchema = computed(() => {
-  const fields = ['instance_name', 'protocols', 'tags']
+  const fields = ['instance_name', 'protocols', 'tags', 'condition']
 
   return {
     fields: flattenFormSchemaFields.value.filter(field => fields.includes(field.model!)),
@@ -384,6 +391,13 @@ const freeFormSchema = computed(() => {
       })
 
     } else if (field.model === 'instance_name') {
+      result.fields.push({
+        [field.model]: {
+          type: 'string',
+          description: field.help,
+        },
+      })
+    } else if (field.model === 'condition') {
       result.fields.push({
         [field.model]: {
           type: 'string',

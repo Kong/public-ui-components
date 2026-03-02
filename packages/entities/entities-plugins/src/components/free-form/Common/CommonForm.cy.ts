@@ -166,6 +166,37 @@ describe('<CommonForm />', () => {
     cy.getTestId('ff-advanced-fields-container').should('exist').should('not.be.visible')
   })
 
+  describe('Condition field', () => {
+    it('should not render condition field when formSchema does not include condition', () => {
+      mountCommonForm()
+
+      cy.getTestId('ff-condition').should('not.exist')
+    })
+
+    it('should render condition field when formSchema includes condition', () => {
+      const formSchemaWithCondition = {
+        ...createFormSchema(),
+        fields: [
+          ...createFormSchema().fields,
+          {
+            model: 'condition',
+            type: 'input',
+            inputType: 'text',
+            label: 'Condition',
+            help: 'An expression used for conditional control over plugin execution.',
+            placeholder: 'Enter a condition expression',
+          },
+        ],
+      }
+
+      mountCommonForm({
+        formSchema: formSchemaWithCondition,
+      })
+
+      cy.getTestId('ff-condition').should('exist')
+    })
+  })
+
   describe('Editor mode switcher', () => {
     beforeEach(() => {
       // Create the teleport target element for the editor mode switcher

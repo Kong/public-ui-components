@@ -214,6 +214,39 @@ describe('<StandardLayout />', () => {
     cy.get('.plugin-code-editor').should('exist')
   })
 
+  describe('Condition field', () => {
+    it('should not render condition field when formSchema does not include condition', () => {
+      mountStandardLayout()
+
+      cy.get('.ff-standard-layout').should('exist')
+      cy.getTestId('ff-condition').should('not.exist')
+    })
+
+    it('should render condition field when formSchema includes condition', () => {
+      const formSchemaWithCondition = {
+        ...createFormSchema(),
+        fields: [
+          ...createFormSchema().fields,
+          {
+            model: 'condition',
+            type: 'input',
+            inputType: 'text',
+            label: 'Condition',
+            help: 'An expression used for conditional control over plugin execution.',
+            placeholder: 'Enter a condition expression',
+          },
+        ],
+      }
+
+      mountStandardLayout({
+        formSchema: formSchemaWithCondition,
+      })
+
+      cy.get('.ff-standard-layout').should('exist')
+      cy.getTestId('ff-condition').should('exist')
+    })
+  })
+
   it('should expose freeform schema on window and clean up on unmount', () => {
     mountStandardLayout()
       .then(({ wrapper }) => wrapper)

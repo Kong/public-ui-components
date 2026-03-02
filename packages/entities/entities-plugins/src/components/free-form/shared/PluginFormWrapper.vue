@@ -51,15 +51,17 @@ export type ConfigFormProps<T extends FreeFormPluginData = FreeFormPluginData> =
 
 <script setup lang="ts" generic="T extends FreeFormPluginData = FreeFormPluginData">
 import { pick } from 'lodash-es'
-import { computed, ref, toValue, type MaybeRefOrGetter } from 'vue'
+import { computed, inject, ref, toValue, type MaybeRefOrGetter } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import { VueFormGenerator } from '@kong-ui-public/forms'
 import { KCollapse } from '@kong/kongponents'
 import english from '../../../locales/en.json'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
+import { FEATURE_FLAGS } from '../../../constants'
 
 const { t } = createI18n<typeof english>('en-us', english)
+const enableConditionField = inject<boolean>(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
 
 const props = defineProps<PluginFormWrapperProps<T>>()
 
@@ -109,6 +111,16 @@ const freeFormSchema = computed(() => {
       : t('plugins.form.fields.protocols.placeholder')
     protocolsField.protocols.description = t('plugins.form.fields.protocols.help')
   }
+
+  if (enableConditionField) {
+    result.fields.push({
+      condition: {
+        type: 'string',
+        description: t('plugins.form.fields.condition.help'),
+      },
+    })
+  }
+
   return result
 })
 
@@ -122,6 +134,7 @@ const prunedData = computed(() => {
   const ffDataKeys: Array<keyof PluginFormWrapperProps<T>['model']> = [
     'config',
     'instance_name',
+    ...(enableConditionField ? ['condition' as const] : []),
     'partials',
     'protocols',
     'tags',
