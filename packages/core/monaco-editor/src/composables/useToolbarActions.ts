@@ -1,5 +1,7 @@
-import { computed } from 'vue'
-import { BUILT_IN_TOOLBAR_ACTIONS } from '../constants/toolbar-actions'
+import { computed, unref } from 'vue'
+import type { Ref } from 'vue'
+import { BUILT_IN_TOOLBAR_ACTIONS } from '../actions'
+import useI18n from './useI18n'
 import type {
   MonacoEditorActionConfig,
   MonacoEditorToolbarOptions,
@@ -16,13 +18,11 @@ const DEFAULT_GROUP = 'default'
  * grouped commands organized by placement (left, center, right).
  *
  * @param settings - Toolbar configuration (boolean to enable defaults, or object for customization)
- * @param i18n - Internationalization function for translating action labels
+ * @param currentLanguage - Current editor language for filtering language-specific actions
  * @returns Object containing computed commands and grouped commands by placement
  */
-export function useToolbarActions(
-  settings: boolean | MonacoEditorToolbarOptions,
-  i18n: (key: string, ...args: any[]) => string,
-) {
+export function useToolbarActions(settings: boolean | MonacoEditorToolbarOptions, currentLanguage?: Ref<string>) {
+  const { i18n } = useI18n()
   const userActions = settings && typeof settings === 'object' ? settings.actions ?? {} : {}
 
   /**
@@ -32,6 +32,7 @@ export function useToolbarActions(
    */
   const commands = computed<MonacoEditorActionConfig[]>(() => {
     const result: MonacoEditorActionConfig[] = []
+    const language = unref(currentLanguage)
 
     // built-in actions (format, search, fullScreen, etc.)
     for (const [key, builtIn] of Object.entries(BUILT_IN_TOOLBAR_ACTIONS)) {
@@ -39,10 +40,15 @@ export function useToolbarActions(
       // Skip if user explicitly disabled this built-in action
       if (userConfig === false) continue
 
+      // Skip if action has language restrictions and current language doesn't match
+      if (builtIn.languages && language && !builtIn.languages.includes(language)) {
+        continue
+      }
+
       // Merge built-in defaults with user overrides, and translate the label
       result.push({
         ...builtIn,
-        label: i18n(builtIn.labelKey),
+        label: i18n.t(builtIn.label as any),
         ...(typeof userConfig === 'object' ? userConfig : {}),
       })
     }

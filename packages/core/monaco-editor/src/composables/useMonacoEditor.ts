@@ -81,6 +81,7 @@ export function useMonacoEditor<T extends HTMLElement>(
     searchBoxIsRevealed: false,
     hasContent: false,
     theme: options.theme || 'light',
+    currentLanguage: options.language || '',
   })
 
   /** Replace the editor content. */
@@ -230,6 +231,12 @@ export function useMonacoEditor<T extends HTMLElement>(
       _isSetup = true
       editorStates.editorStatus = 'ready'
       editorStates.hasContent = !!options.code.value
+      editorStates.currentLanguage = model.getLanguageId()
+
+      // Track language changes on the model
+      model.onDidChangeLanguage((e) => {
+        editorStates.currentLanguage = e.newLanguage
+      })
 
       // Watch content changes and trigger callbacks efficiently
       editor.value.onDidChangeModelContent(() => {
