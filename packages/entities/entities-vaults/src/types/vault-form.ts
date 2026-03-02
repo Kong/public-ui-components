@@ -31,6 +31,11 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
   hcvJwtMethodAvailable?: boolean
 
   /**
+   * Show/hide CSP auth methods and corresponding fields for HashiCorp Vault
+   */
+  hcvCspAuthMethodsAvailable?: boolean
+
+  /**
    * Show/hide ssl_verify field for HashiCorp Vault
    */
   hcvSslVerifyAvailable?: boolean
@@ -74,6 +79,11 @@ export enum VaultAuthMethods {
   APP_ROLE = 'approle',
   CERT = 'cert',
   JWT = 'jwt',
+  AWS_IAM = 'aws_iam',
+  AWS_EC2 = 'aws_ec2',
+  AZURE = 'azure',
+  GCP_GCE = 'gcp_gce',
+  GCP_IAM = 'gcp_iam',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -117,6 +127,15 @@ export interface HCVVaultConfig {
   kube_role?: string
   kube_auth_path?: string
   kube_api_token_file?: string
+  aws_auth_role?: string
+  aws_auth_region?: string
+  aws_auth_nonce?: string
+  aws_access_key_id?: string
+  aws_secret_access_key?: string
+  azure_auth_role?: string
+  gcp_auth_role?: string
+  gcp_service_account?: string
+  gcp_jwt_exp?: number
   approle_auth_path?: string
   approle_role_id?: string
   approle_secret_id?: string
