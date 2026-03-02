@@ -7,6 +7,15 @@ import type { AnalyticsBridge, TileDefinition } from '@kong-ui-public/analytics-
 import type { DashboardRendererContextInternal } from '../types'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
+const EXPLORE_DATASOURCES = [
+  'basic',
+  'api_usage',
+  'llm_usage',
+  'mcp_usage',
+  'platform',
+  undefined,
+] as const
+
 export default function useContextLinks(
   {
     queryBridge,
@@ -50,7 +59,7 @@ export default function useContextLinks(
   })
 
   const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && isAdvancedAnalytics.value)
-  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['basic', 'api_usage', 'llm_usage', 'mcp_usage', undefined].includes(definition.value.query.datasource) && isAdvancedAnalytics.value)
+  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && EXPLORE_DATASOURCES.includes(definition.value.query.datasource) && isAdvancedAnalytics.value)
 
   const chartDataGranularity = computed(() => {
     return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
