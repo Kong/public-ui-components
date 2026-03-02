@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.7.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.13...@kong-ui-public/dashboard-renderer@8.7.14) (2026-03-02)
+
+
+### Bug Fixes
+
+* add platform services support for context link generation ([#2940](https://github.com/Kong/public-ui-components/issues/2940)) ([b47c8b6](https://github.com/Kong/public-ui-components/commit/b47c8b6a026e7536cb0734c900307bf7c580b0d3))
+
+
+
+
+
 ## [8.7.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.12...@kong-ui-public/dashboard-renderer@8.7.13) (2026-02-19)
 
 
