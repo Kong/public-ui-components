@@ -154,7 +154,6 @@
 
         <StringField
           v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'condition')"
-          :label="t('plugins.form.fields.condition.label')"
           name="condition"
           :placeholder="t('plugins.form.fields.condition.placeholder')"
         />

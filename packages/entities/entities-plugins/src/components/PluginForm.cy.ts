@@ -16,7 +16,7 @@ import schemaMocking from '../../fixtures/schemas/mocking'
 import schemaRateLimiting from '../../fixtures/schemas/rate-limiting'
 import PluginForm from './PluginForm.vue'
 import { PLUGIN_METADATA } from '../definitions/metadata'
-import { EXPERIMENTAL_FREE_FORM_PROVIDER } from '../constants'
+import { EXPERIMENTAL_FREE_FORM_PROVIDER, FEATURE_FLAGS } from '../constants'
 
 const baseConfigKonnect: KonnectPluginFormConfig = {
   app: 'konnect',
@@ -940,6 +940,47 @@ describe('<PluginForm />', () => {
         cy.wait('@updatePlugin').then(() => {
           cy.get('@onUpdateSpy').should('have.been.calledOnce')
         })
+      })
+    })
+
+    describe('Condition field', () => {
+      it('should not show condition field when feature flag is disabled', () => {
+        interceptKMSchema()
+        const pluginType = 'cors'
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKM,
+            pluginType,
+          },
+          router,
+        })
+
+        cy.wait('@getPluginSchema')
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+        cy.get('#condition').should('not.exist')
+      })
+
+      it('should show condition field when feature flag is enabled', () => {
+        interceptKMSchema()
+        const pluginType = 'cors'
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKM,
+            pluginType,
+          },
+          global: {
+            provide: {
+              [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: true,
+            },
+          },
+          router,
+        })
+
+        cy.wait('@getPluginSchema')
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+        cy.get('#condition').should('exist')
       })
     })
   })
@@ -1980,6 +2021,47 @@ describe('<PluginForm />', () => {
 
       // VFG should be used for non-freeform plugins
       cy.get('.vue-form-generator').should('exist')
+    })
+
+    describe('Condition field', () => {
+      it('should not show condition field when feature flag is disabled', () => {
+        interceptKonnectSchema()
+        const pluginType = 'cors'
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKonnect,
+            pluginType,
+          },
+          router,
+        })
+
+        cy.wait('@getPluginSchema')
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+        cy.get('#condition').should('not.exist')
+      })
+
+      it('should show condition field when feature flag is enabled', () => {
+        interceptKonnectSchema()
+        const pluginType = 'cors'
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKonnect,
+            pluginType,
+          },
+          global: {
+            provide: {
+              [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: true,
+            },
+          },
+          router,
+        })
+
+        cy.wait('@getPluginSchema')
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+        cy.get('#condition').should('exist')
+      })
     })
   })
 })
