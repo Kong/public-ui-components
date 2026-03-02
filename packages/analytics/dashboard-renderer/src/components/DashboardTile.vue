@@ -48,6 +48,7 @@
         <KButton
           appearance="secondary"
           class="refresh-button"
+          :data-testid="`tile-refresh-button-${tileId}`"
           :disabled="loadingChartData"
           icon
           size="small"
