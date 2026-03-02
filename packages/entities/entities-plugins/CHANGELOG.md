@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.161.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.160.1...@kong-ui-public/entities-plugins@9.161.0) (2026-03-02)
+
+
+### Features
+
+* **entities-plugins:** experimental free form logic revamp ([#2928](https://github.com/Kong/public-ui-components/issues/2928)) ([1dc83c1](https://github.com/Kong/public-ui-components/commit/1dc83c1de57abfdaae8df155f1f166ee4fa9fe9a))
+
+
+
+
+
 ## [9.160.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.160.0...@kong-ui-public/entities-plugins@9.160.1) (2026-03-02)
 
 
