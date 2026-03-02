@@ -347,6 +347,7 @@ const { customSchemas, typedefs } = composables.useSchemas({
   experimentalRenders: props.config.app === 'konnect' ? props.config.experimentalRenders : undefined,
 })
 const { formatPluginFieldLabel } = composables.usePluginHelpers()
+const { shouldUseFreeForm: isFreeForm } = composables.useFreeFormResolver()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()
@@ -634,7 +635,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // If the field type is 'set', convert it to 'array'
     // Freeform can handle 'set' type with one_of elements as multiselect
     // Todo: create suitable component for 'set' type in freeform and remove this conversion
-    if (scheme.type === 'set' && !(props.engine === 'freeform' && scheme.elements.one_of)) {
+    if (scheme.type === 'set' && !(isFreeForm(props.pluginType, props.engine) && scheme.elements.one_of)) {
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
