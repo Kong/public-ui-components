@@ -989,43 +989,39 @@ describe('<PluginForm />', () => {
     })
 
     describe('Condition field', () => {
-      it('should not show condition field when feature flag is disabled', () => {
-        interceptKMSchema()
-        const pluginType = 'cors'
+      ;[
+        {
+          description: 'should not show condition field when feature flag is disabled',
+          flagValue: false,
+          assertion: 'not.exist',
+        },
+        {
+          description: 'should show condition field when feature flag is enabled',
+          flagValue: true,
+          assertion: 'exist',
+        },
+      ].forEach(({ description, flagValue, assertion }) => {
+        it(description, () => {
+          interceptKMSchema()
+          const pluginType = 'cors'
 
-        cy.mount(PluginForm, {
-          props: {
-            config: baseConfigKM,
-            pluginType,
-          },
-          router,
-        })
-
-        cy.wait('@getPluginSchema')
-        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
-        cy.get('#condition').should('not.exist')
-      })
-
-      it('should show condition field when feature flag is enabled', () => {
-        interceptKMSchema()
-        const pluginType = 'cors'
-
-        cy.mount(PluginForm, {
-          props: {
-            config: baseConfigKM,
-            pluginType,
-          },
-          global: {
-            provide: {
-              [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: true,
+          cy.mount(PluginForm, {
+            props: {
+              config: baseConfigKM,
+              pluginType,
             },
-          },
-          router,
-        })
+            global: {
+              provide: {
+                [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: flagValue,
+              },
+            },
+            router,
+          })
 
-        cy.wait('@getPluginSchema')
-        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
-        cy.get('#condition').should('exist')
+          cy.wait('@getPluginSchema')
+          cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+          cy.get('#condition').should(assertion)
+        })
       })
     })
   })
@@ -2069,43 +2065,39 @@ describe('<PluginForm />', () => {
     })
 
     describe('Condition field', () => {
-      it('should not show condition field when feature flag is disabled', () => {
-        interceptKonnectSchema()
-        const pluginType = 'cors'
+      ;[
+        {
+          description: 'should not show condition field when feature flag is disabled',
+          flagValue: false,
+          assertion: 'not.exist',
+        },
+        {
+          description: 'should show condition field when feature flag is enabled',
+          flagValue: true,
+          assertion: 'exist',
+        },
+      ].forEach(({ description, flagValue, assertion }) => {
+        it(description, () => {
+          interceptKonnectSchema()
+          const pluginType = 'cors'
 
-        cy.mount(PluginForm, {
-          props: {
-            config: baseConfigKonnect,
-            pluginType,
-          },
-          router,
-        })
-
-        cy.wait('@getPluginSchema')
-        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
-        cy.get('#condition').should('not.exist')
-      })
-
-      it('should show condition field when feature flag is enabled', () => {
-        interceptKonnectSchema()
-        const pluginType = 'cors'
-
-        cy.mount(PluginForm, {
-          props: {
-            config: baseConfigKonnect,
-            pluginType,
-          },
-          global: {
-            provide: {
-              [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: true,
+          cy.mount(PluginForm, {
+            props: {
+              config: baseConfigKonnect,
+              pluginType,
             },
-          },
-          router,
-        })
+            global: {
+              provide: {
+                [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: flagValue,
+              },
+            },
+            router,
+          })
 
-        cy.wait('@getPluginSchema')
-        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
-        cy.get('#condition').should('exist')
+          cy.wait('@getPluginSchema')
+          cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+          cy.get('#condition').should(assertion)
+        })
       })
     })
   })
