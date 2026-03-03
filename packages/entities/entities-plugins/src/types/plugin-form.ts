@@ -31,6 +31,7 @@ import type { KafkaConsumeSchema } from './plugins/kafka-consume'
 import type { SolaceConsumeSchema } from './plugins/solace-consume'
 import type { SolaceUpstreamSchema } from './plugins/solace-upstream'
 import type { OIDCSchema } from './plugins/oidc'
+import type { OTELSchema } from './plugins/otel'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -245,6 +246,7 @@ export interface CustomSchemas {
   'kafka-consume': KafkaConsumeSchema
   'kafka-log': CommonSchemaFields
   'openid-connect': OIDCSchema
+  'opentelemetry': OTELSchema
 }
 
 export enum PluginPartialType {
