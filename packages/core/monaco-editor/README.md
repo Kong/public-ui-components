@@ -179,6 +179,15 @@ Configuration for the editor toolbar, which displays action buttons above the ed
 The following built-in actions are available:
 
 - **`format`**: Formats the editor content using Monaco's formatter
+- **`bold`**: Toggles bold text (`**text**`) — *markdown/mdc only*
+- **`italic`**: Toggles italic text (`_text_`) — *markdown/mdc only*
+- **`strikethrough`**: Toggles strikethrough text (`~~text~~`) — *markdown/mdc only*
+- **`inlineCode`**: Toggles inline code (`` `code` ``) — *markdown/mdc only*
+- **`link`**: Inserts a link (`[text](url)`) — *markdown/mdc only*
+- **`image`**: Inserts an image (`![alt](url)`) — *markdown/mdc only*
+- **`unorderedList`**: Toggles unordered list prefix (`- `) — *markdown/mdc only*
+- **`orderedList`**: Toggles ordered list prefix (`1. `, `2. `, …) — *markdown/mdc only*
+- **`taskList`**: Toggles task list prefix (`- [ ] `) — *markdown/mdc only*
 - **`search`**: Toggles the search/find widget
 - **`fullScreen`**: Toggles full-screen mode for the editor
 
@@ -197,6 +206,12 @@ interface MonacoEditorToolbarOptions {
   }
 }
 ```
+
+##### Markdown Shortcuts
+
+When the editor language is `markdown` or `mdc`, the following keyboard shortcuts are automatically active:
+
+- **List continuation on Enter**: Pressing Enter at the end of a list item automatically continues the list on the next line with the appropriate prefix (`- `, `1. `, `- [ ] `, etc.). Pressing Enter on an empty list item removes the prefix and ends the list.
 
 ##### Action Configuration
 

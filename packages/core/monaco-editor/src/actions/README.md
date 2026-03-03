@@ -6,12 +6,14 @@ This directory contains all built-in toolbar actions for the Monaco Editor compo
 
 ```
 actions/
-├── index.ts           # Aggregates all actions
-├── helpers.ts         # Reusable utilities for creating actions
-├── formatting.ts      # Text formatting actions (bold, italic, format, etc.)
-├── insert.ts          # Insert actions (code, link, image)
-├── navigation.ts      # Navigation actions (search, goto, etc.)
-└── view.ts            # View-related actions (fullscreen, etc.)
+├── index.ts              # Aggregates all actions and exports helpers
+├── helpers.ts            # Reusable utilities for creating actions
+├── formatting.ts         # Text formatting actions (bold, italic, format, etc.)
+├── insert.ts             # Insert actions (code, link, image)
+├── list.ts               # List actions (unordered, ordered, task list)
+├── markdownShortcuts.ts  # Markdown keyboard shortcuts (e.g. list continuation on Enter)
+├── navigation.ts         # Navigation actions (search, goto, etc.)
+└── view.ts               # View-related actions (fullscreen, etc.)
 ```
 
 ## Adding a New Action
@@ -77,6 +79,8 @@ import { myNewCategory } from './my-new-category'
 
 export const BUILT_IN_TOOLBAR_ACTIONS = {
   ...formattingActions,
+  ...insertActions,
+  ...listActions,
   ...navigationActions,
   ...viewActions,
   ...myNewCategory, // Add your new category
@@ -141,6 +145,56 @@ export const insertActions = {
   },
 }
 ```
+
+### `createLinePrefixAction(prefixOrFn, actionName, detectPrefix?)`
+
+Use this helper for line-prefix toggle actions (e.g., lists). Supports both fixed prefixes and dynamic prefix functions:
+
+```typescript
+import { createLinePrefixAction } from './helpers'
+
+export const listActions = {
+  // Fixed prefix
+  unorderedList: {
+    id: 'editor.action.unorderedList',
+    icon: ListUnorderedIcon,
+    label: 'editor.labels.action_unordered_list',
+    action: createLinePrefixAction('- ', 'unorderedList'),
+    keybindings: ['Command', 'Shift', 'U'],
+    placement: 'left',
+    languages: ['markdown', 'mdc'],
+  },
+
+  // Dynamic prefix with custom detection regex
+  orderedList: {
+    id: 'editor.action.orderedList',
+    icon: ListOrderedIcon,
+    label: 'editor.labels.action_ordered_list',
+    action: createLinePrefixAction(
+      (i) => `${i}. `,   // 1-based line index
+      'orderedList',
+      /^\d+\.\s/,        // Custom regex to detect existing prefix
+    ),
+    keybindings: ['Command', 'Shift', 'O'],
+    placement: 'left',
+    languages: ['markdown', 'mdc'],
+  },
+}
+```
+
+## Markdown Shortcuts
+
+The `markdownShortcuts.ts` module registers keyboard shortcuts that enhance the markdown editing experience. These are automatically registered for every editor instance and are only active when the editor language is `markdown` or `mdc`.
+
+### List Continuation on Enter
+
+When pressing Enter at the end of a list line, the next line automatically gets the appropriate prefix:
+
+- **Unordered lists**: `- `, `* `, `+ ` → same marker
+- **Ordered lists**: `1. ` → `2. ` (auto-incremented)
+- **Task lists**: `- [ ] ` or `- [x] ` → `- [ ] ` (unchecked)
+
+Pressing Enter on an **empty** list item (prefix only, no content) removes the prefix, ending the list.
 
 ## Tips
 
