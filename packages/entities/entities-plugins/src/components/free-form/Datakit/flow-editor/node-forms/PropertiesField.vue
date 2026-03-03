@@ -150,11 +150,11 @@ watch(() => formData.property, (newProperty) => {
 
   .property-badges {
     display: flex;
-    gap: $kui-space-20;
+    gap: var(--kui-space-20, $kui-space-20);
   }
 
   .property-type {
-    color: $kui-color-text-neutral
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral)
   }
 }
 </style>

@@ -81,23 +81,23 @@ function handleCancelUpdateCache() {
 
 <style lang="scss" scoped>
 .dk-resources-panel {
-  padding: $kui-space-60 0;
+  padding: var(--kui-space-60, $kui-space-60) 0;
 
   :deep(.title) {
-    color: $kui-color-text;
+    color: var(--kui-color-text, $kui-color-text);
     display: flex;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-bold;
-    gap: $kui-space-40;
-    line-height: $kui-line-height-30;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    gap: var(--kui-space-40, $kui-space-40);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
     margin: 0;
   }
 
   .dk-resources-divider {
-    background-color: $kui-color-background-disabled;
+    background-color: var(--kui-color-background-disabled, $kui-color-background-disabled);
     border: none;
     height: 1px;
-    margin: $kui-space-60 0;
+    margin: var(--kui-space-60, $kui-space-60) 0;
   }
 }
 </style>

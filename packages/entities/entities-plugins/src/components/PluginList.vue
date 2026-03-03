@@ -842,14 +842,14 @@ onBeforeMount(async () => {
 .button-row {
   align-items: center;
   display: flex;
-  gap: $kui-space-50;
+  gap: var(--kui-space-50, $kui-space-50);
 }
 
 .kong-ui-entities-plugins-list {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    margin-right: $kui-space-50;
+    margin-right: var(--kui-space-50, $kui-space-50);
   }
 
   .table-content-overflow-wrapper {
@@ -871,15 +871,15 @@ onBeforeMount(async () => {
       flex-direction: column;
 
       .info-name {
-        color: $kui-color-text-neutral-stronger;
-        font-size: $kui-font-size-30;
+        color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
         font-weight: 600;
         line-height: 20px;
       }
 
       .info-type {
-        color: $kui-color-text-neutral;
-        font-size: $kui-font-size-30;
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
         line-height: 16px;
         margin-top: 4px;
       }
