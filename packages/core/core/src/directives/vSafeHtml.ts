@@ -28,9 +28,7 @@ export const vSafeHtml: Directive<HTMLElement, SafeHtmlValue> = {
     applySafeHtml(el, binding.value)
   },
   updated(el, binding) {
-    if (binding.value !== binding.oldValue) {
-      applySafeHtml(el, binding.value)
-    }
+    applySafeHtml(el, binding.value)
   },
 }
 
