@@ -249,9 +249,9 @@ Key props passed to free-form components:
 | Prop | Type | Description |
 |---|---|---|
 | `schema` | `FormSchema` | Raw form schema from API |
-| `model` / `record` | `Record<string, any>` | Plugin data |
+| `model` | `record` | `Record<string, any>` | Plugin data |
 | `formSchema` | `any` | Legacy VFG schema (for VFGField bridge) |
-| `formModel` / `formOptions` | `any` | VFG state |
+| `formModel` | `formOptions` | `any` | VFG state |
 | `isEditing` | `boolean` | New vs edit mode |
 | `renderRules` | `RenderRules` | From `PLUGIN_METADATA[pluginName].freeformRenderRules` |
 | `onFormChange` | `(value) => void` | Callback when free-form data changes |
