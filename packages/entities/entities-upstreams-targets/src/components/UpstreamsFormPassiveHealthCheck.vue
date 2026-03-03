@@ -249,24 +249,24 @@ watch(() => props.type, (val, oldVal) => {
 <style scoped lang="scss">
 .fields-group {
   &-title {
-    color: $kui-color-text;
-    font-size: $kui-font-size-40;
+    color: var(--kui-color-text, $kui-color-text);
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
     font-weight: 600;
     line-height: 20px;
-    margin-bottom: $kui-space-20;
+    margin-bottom: var(--kui-space-20, $kui-space-20);
     margin-top: 0;
   }
 
   &-text {
-    color: $kui-color-text-disabled;
-    font-size: $kui-font-size-30;
+    color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
     line-height: 20px;
-    margin-bottom: $kui-space-80;
+    margin-bottom: var(--kui-space-80, $kui-space-80);
     margin-top: 0;
   }
 }
 
 .margin-top-6 {
-  margin-top: $kui-space-80;
+  margin-top: var(--kui-space-80, $kui-space-80);
 }
 </style>
