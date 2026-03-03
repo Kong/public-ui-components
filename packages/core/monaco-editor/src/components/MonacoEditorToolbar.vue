@@ -122,16 +122,16 @@ $defaultHeight: 44px;
 
 .monaco-editor-ui-toolbar {
   align-items: center;
-  background: $kui-color-background;
-  border-bottom: $kui-border-width-10 solid $kui-color-border;
+  background: var(--kui-color-background, $kui-color-background);
+  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   display: flex;
   flex: 0 0 $defaultHeight;
   justify-content: space-between;
   min-height: $defaultHeight;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-left: $kui-space-40;
-  padding-right: $kui-space-40;
+  padding-left: var(--kui-space-40, $kui-space-40);
+  padding-right: var(--kui-space-40, $kui-space-40);
   position: sticky;
   scrollbar-width: thin;
   top: 0;
@@ -143,7 +143,7 @@ $defaultHeight: 44px;
   &-centre {
     align-items: center;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     height: 100%;
   }
 
@@ -158,14 +158,14 @@ $defaultHeight: 44px;
 
   &-action-group {
     display: flex;
-    gap: $kui-space-20;
-    margin-right: $kui-space-30;
+    gap: var(--kui-space-20, $kui-space-20);
+    margin-right: var(--kui-space-30, $kui-space-30);
     position: relative;
 
     // Adds a border to right between action groups, except the first one.
     &:not(:first-child) {
       &::after {
-        background: $kui-color-background-neutral-weaker;
+        background: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
         content: '';
         height: 75%;
         left: -5px;
@@ -177,19 +177,19 @@ $defaultHeight: 44px;
     }
 
     :deep(.popover-content) {
-      font-weight: $kui-font-weight-semibold !important;
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold) !important;
     }
 
     // Update dropdown styles
     :deep(.dropdown-item-trigger) {
       .dropdown-item-trigger-label {
-        color: $kui-color-text-neutral;
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
       }
 
       &:hover,
       &:focus-visible {
         .dropdown-item-trigger-label {
-          color: $kui-color-text-neutral-strongest;
+          color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
         }
       }
     }

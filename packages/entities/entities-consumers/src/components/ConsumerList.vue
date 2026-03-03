@@ -688,7 +688,7 @@ onBeforeMount(async () => {
 .button-row {
   align-items: center;
   display: flex;
-  gap: $kui-space-50;
+  gap: var(--kui-space-50, $kui-space-50);
 }
 
 .kong-ui-entities-consumers-list {
@@ -697,9 +697,9 @@ onBeforeMount(async () => {
   .empty-state-wrapper {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-20;
-    padding: $kui-space-20;
-    padding-bottom: $kui-space-0;
+    gap: var(--kui-space-20, $kui-space-20);
+    padding: var(--kui-space-20, $kui-space-20);
+    padding-bottom: var(--kui-space-0, $kui-space-0);
   }
 
   .message {
@@ -707,7 +707,7 @@ onBeforeMount(async () => {
   }
 
   .kong-ui-entity-filter-input {
-    margin-right: $kui-space-50;
+    margin-right: var(--kui-space-50, $kui-space-50);
   }
 }
 </style>

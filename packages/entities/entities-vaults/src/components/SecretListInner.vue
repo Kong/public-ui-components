@@ -316,7 +316,7 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 .kong-ui-entity-filter-input {
-  margin-right: $kui-space-50;
+  margin-right: var(--kui-space-50, $kui-space-50);
 }
 
 .table-content-overflow-wrapper {

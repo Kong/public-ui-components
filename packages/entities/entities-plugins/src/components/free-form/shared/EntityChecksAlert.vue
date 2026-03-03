@@ -77,6 +77,6 @@ function fieldsNotOmitted(fields: string[]): boolean {
 .ff-entity-checks-list {
   list-style: disc;
   margin: 0;
-  padding-left: $kui-space-70;
+  padding-left: var(--kui-space-70, $kui-space-70);
 }
 </style>

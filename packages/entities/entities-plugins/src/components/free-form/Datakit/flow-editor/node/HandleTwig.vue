@@ -76,7 +76,7 @@ const twigStyle = computed(() => ({
   &.corner::before {
     border-bottom: 1px solid v-bind(color);
     border-left: 1px solid v-bind(color);
-    border-radius: $kui-border-radius-10;
+    border-radius: var(--kui-border-radius-10, $kui-border-radius-10);
     content: '';
     height: 100%;
     left: 0;

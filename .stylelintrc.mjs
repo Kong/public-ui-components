@@ -17,6 +17,7 @@ export default {
     'unit-disallowed-list': ['rem', 'em'],
     'order/properties-alphabetical-order': true,
     '@kong/design-tokens/use-proper-token': true,
+    '@kong/design-tokens/token-var-usage': [true, { severity: 'warning' }],
     '@stylistic/indentation': [2, { baseIndentLevel: 0 }],
     // Only allow @kong/design-tokens or `--kong-ui-*` CSS custom properties
     'custom-property-pattern': [

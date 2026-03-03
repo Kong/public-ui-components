@@ -77,26 +77,26 @@ const displayedCharLength = computed((): number => {
 
 <style lang="scss">
 .json-content.k-code-block {
-  border-top-left-radius: $kui-border-radius-0;
-  border-top-right-radius: $kui-border-radius-0;
+  border-top-left-radius: var(--kui-border-radius-0, $kui-border-radius-0);
+  border-top-right-radius: var(--kui-border-radius-0, $kui-border-radius-0);
 }
 
 .json-endpoint {
   align-items: baseline;
-  background-color: $kui-color-background-inverse;
-  border-bottom: $kui-border-width-10 solid $kui-color-border-inverse;
-  border-top-left-radius: $kui-border-radius-40;
-  border-top-right-radius: $kui-border-radius-40;
+  background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
+  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-inverse, $kui-color-border-inverse);
+  border-top-left-radius: var(--kui-border-radius-40, $kui-border-radius-40);
+  border-top-right-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   display: flex;
-  padding: $kui-space-40 $kui-space-0 $kui-space-40 $kui-space-50;
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
 
   .k-code-block {
     flex: auto;
     z-index: 2;
 
     .code-block-content {
-      padding-bottom: $kui-space-0;
-      padding-top: $kui-space-0;
+      padding-bottom: var(--kui-space-0, $kui-space-0);
+      padding-top: var(--kui-space-0, $kui-space-0);
     }
 
     .code-block-secondary-actions {
