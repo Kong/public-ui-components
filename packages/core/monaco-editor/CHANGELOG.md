@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.13.0...@kong-ui-public/monaco-editor@0.14.0) (2026-03-03)
+
+
+### Features
+
+* **monaco-editor:** add insert actions group [KHCP-19534] ([#2955](https://github.com/Kong/public-ui-components/issues/2955)) ([36faa06](https://github.com/Kong/public-ui-components/commit/36faa06b1c46b9a16b296e2367f9f82e65b229b0))
+
+
+
+
+
 # [0.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.12.0...@kong-ui-public/monaco-editor@0.13.0) (2026-03-03)
 
 
