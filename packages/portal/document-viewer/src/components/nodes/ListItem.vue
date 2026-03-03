@@ -11,7 +11,7 @@ li {
   :deep(>) {
     ul, ol {
       margin-bottom: unset;
-      margin-left: $kui-space-60 !important;
+      margin-left: var(--kui-space-60, $kui-space-60) !important;
     }
 
     p {
@@ -27,7 +27,7 @@ li {
       margin-bottom: 0;
 
       > input[type="checkbox"] {
-        margin: $kui-space-0 $kui-space-20 $kui-space-0 $kui-space-0;
+        margin: var(--kui-space-0, $kui-space-0) var(--kui-space-20, $kui-space-20) var(--kui-space-0, $kui-space-0) var(--kui-space-0, $kui-space-0);
       }
     }
   }

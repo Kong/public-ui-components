@@ -42,6 +42,6 @@ td {
 }
 
 tr {
-  border-top: $kui-border-width-10 solid var(--kong-ui-document-viewer-color, #000933);
+  border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kong-ui-document-viewer-color, #000933);
 }
 </style>
