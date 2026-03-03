@@ -4,19 +4,6 @@ A schema-driven dynamic form rendering system for Kong plugin configuration. It 
 
 **Core idea**: Given a `FormSchema` (JSON-like descriptor of fields), the module auto-renders the appropriate Vue form components with correct types, labels, validation, and layout.
 
-## Table of Contents
-
-- [Directory Structure](#directory-structure)
-- [Schema System](#schema-system)
-- [Core Architecture](#core-architecture)
-- [Layout](#layout)
-- [Plugin-Specific Forms](#plugin-specific-forms)
-- [Integration with Parent System](#integration-with-parent-system)
-- [Custom Field Rendering](#custom-field-rendering)
-- [Testing Infrastructure](#testing-infrastructure)
-- [How-To Guides](#how-to-guides)
-- [Reference](#reference)
-
 ## Directory Structure
 
 ```
