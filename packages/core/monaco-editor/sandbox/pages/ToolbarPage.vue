@@ -90,6 +90,12 @@ bold
 italic
 
 strikethrough
+
+code
+
+link
+
+image
 `)
 
 const code2 = ref(`// Built-in Actions with Custom Placement

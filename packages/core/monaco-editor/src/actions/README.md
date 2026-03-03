@@ -9,6 +9,7 @@ actions/
 ├── index.ts           # Aggregates all actions
 ├── helpers.ts         # Reusable utilities for creating actions
 ├── formatting.ts      # Text formatting actions (bold, italic, format, etc.)
+├── insert.ts          # Insert actions (code, link, image)
 ├── navigation.ts      # Navigation actions (search, goto, etc.)
 └── view.ts            # View-related actions (fullscreen, etc.)
 ```
@@ -103,7 +104,7 @@ export const BUILT_IN_TOOLBAR_ACTIONS = {
 
 ### `createWrapAction(wrapper, actionName)`
 
-Use this helper for text wrapping actions (e.g., bold, italic):
+Use this helper for symmetric text wrapping actions (e.g., bold, italic, inline code):
 
 ```typescript
 import { createWrapAction } from './helpers'
@@ -115,6 +116,26 @@ export const formattingActions = {
     label: 'editor.labels.action_bold',
     action: createWrapAction('**', 'bold'), // Wraps with **text**
     keybindings: ['Command', 'B'],
+    placement: 'left',
+    languages: ['markdown', 'mdc'],
+  },
+}
+```
+
+### `createInsertAction(prefix, suffix, actionName)`
+
+Use this helper for asymmetric prefix/suffix insert actions (e.g., links, images):
+
+```typescript
+import { createInsertAction } from './helpers'
+
+export const insertActions = {
+  link: {
+    id: 'editor.action.link',
+    icon: LinkIcon,
+    label: 'editor.labels.action_link',
+    action: createInsertAction('[', '](url)', 'link'), // Wraps with [text](url)
+    keybindings: ['Command', 'K'],
     placement: 'left',
     languages: ['markdown', 'mdc'],
   },

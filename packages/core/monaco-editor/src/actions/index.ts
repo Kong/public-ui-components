@@ -1,4 +1,5 @@
 import { formattingActions } from './formatting'
+import { insertActions } from './insert'
 import { navigationActions } from './navigation'
 import { viewActions } from './view'
 
@@ -11,8 +12,9 @@ import { viewActions } from './view'
  */
 export const BUILT_IN_TOOLBAR_ACTIONS = {
   ...formattingActions,
+  ...insertActions,
   ...navigationActions,
   ...viewActions,
 }
 
-export { createWrapAction } from './helpers'
+export { createWrapAction, createInsertAction } from './helpers'

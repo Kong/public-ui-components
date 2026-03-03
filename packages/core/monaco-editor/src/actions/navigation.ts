@@ -3,6 +3,7 @@ import type { MonacoEditorActionConfig } from '../types'
 
 /**
  * Navigation-related toolbar actions
+ * last group in the toolbar, on the right
  */
 export const navigationActions: Record<string, MonacoEditorActionConfig> = {
   search: {
