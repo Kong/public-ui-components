@@ -80,8 +80,8 @@ Defined in `Field.vue`. The mapping logic:
 |---|---|---|
 | `string` | No | `StringField` |
 | `string` | Yes | `EnumField` |
-| `number` / `integer` | No | `NumberField` |
-| `number` / `integer` | Yes | `EnumField` |
+| `number` | `integer` | No | `NumberField` |
+| `number` | `integer` | Yes | `EnumField` |
 | `boolean` | No | `BooleanField` |
 | `boolean` | Yes | `EnumField` |
 | `record` | - | `ObjectField` |
