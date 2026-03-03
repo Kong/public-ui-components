@@ -2,6 +2,7 @@ export const EXPERIMENTAL_FREE_FORM_PROVIDER = Symbol('EXPERIMENTAL_FREE_FORM_PR
 
 export const FEATURE_FLAGS = {
   KM_2262_CODE_MODE: 'KM-2262-code-mode',
+  KM_2306_CONDITION_FIELD_314: 'KM-2306-condition-field-314',
 }
 
 export const TOASTER_PROVIDER = Symbol('TOASTER_PROVIDER')

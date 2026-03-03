@@ -662,6 +662,11 @@
           "placeholder": "Enter a unique name",
           "help": "A custom name for this plugin instance to help with identifying from the list view."
         },
+        "condition": {
+          "label": "Condition",
+          "placeholder": "Enter a condition expression",
+          "help": "An expression used for conditional control over plugin execution. If the expression evaluates to true during the request flow, the plugin is executed; otherwise, it is skipped."
+        },
         "protocols": {
           "label": "Protocols",
           "placeholder": "Select valid protocols for the plugin",
