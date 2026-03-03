@@ -254,7 +254,7 @@ Every plugin form follows a consistent structure:
 PluginEntityForm.vue
   |-- if freeformName   -> render free-form component (from ./free-form/index.ts)
   |-- elif sharedFormName -> render shared form (legacy)
-  \-- else               -> render VueFormGenerator (legacy)
+  |-- else               -> render VueFormGenerator (legacy)
 ```
 
 Key props passed to free-form components:
