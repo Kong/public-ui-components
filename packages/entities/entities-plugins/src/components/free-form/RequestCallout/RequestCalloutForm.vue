@@ -126,7 +126,9 @@ function handleFormChange(value: Partial<RequestCalloutPlugin>, fields?: string[
   const pluginConfig = cloneDeep(value) as RequestCalloutPlugin
 
   if (!pluginConfig.config?.callouts) {
-    throw new Error('data is not correct')
+    // If there are no callouts yet, forward the value unchanged.
+    props.onFormChange(pluginConfig, fields)
+    return
   }
 
   const nameMap = getNameMap(pluginConfig.config.callouts)
