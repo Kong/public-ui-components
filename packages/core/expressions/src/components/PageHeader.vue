@@ -46,8 +46,8 @@ defineProps<{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-left: -var(--kui-space-60, $kui-space-60);
-  margin-right: -var(--kui-space-60, $kui-space-60);
+  margin-left: calc(-1 * var(--kui-space-60, $kui-space-60));
+  margin-right: calc(-1 * var(--kui-space-60, $kui-space-60));
   padding: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 }
 
