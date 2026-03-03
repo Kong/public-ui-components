@@ -36,8 +36,10 @@ $branch-handle-size: 4px;
 $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
 
 .dk-branch-group-node {
-  background: rgba(var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak), $opacity);
-  border: 1px solid rgba(var(--kui-color-border-disabled, $kui-color-border-disabled), $opacity);
+  /* stylelint-disable-next-line @kong/design-tokens/token-var-usage */
+  background: rgba($kui-color-background-neutral-weak, $opacity);
+  /* stylelint-disable-next-line @kong/design-tokens/token-var-usage */
+  border: 1px solid rgba($kui-color-border-disabled, $opacity);
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   height: 100%;
   position: relative;
