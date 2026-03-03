@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.162.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.161.2...@kong-ui-public/entities-plugins@9.162.0) (2026-03-03)
+
+
+### Features
+
+* **entities-plugins:** add condition field to plugin forms ([#2948](https://github.com/Kong/public-ui-components/issues/2948)) ([b1373fa](https://github.com/Kong/public-ui-components/commit/b1373fa8b841793c5058eb0e79f6f6655bf89a04))
+
+
+
+
+
+## [9.161.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.161.1...@kong-ui-public/entities-plugins@9.161.2) (2026-03-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.161.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.161.0...@kong-ui-public/entities-plugins@9.161.1) (2026-03-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.161.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.160.1...@kong-ui-public/entities-plugins@9.161.0) (2026-03-02)
+
+
+### Features
+
+* **entities-plugins:** experimental free form logic revamp ([#2928](https://github.com/Kong/public-ui-components/issues/2928)) ([1dc83c1](https://github.com/Kong/public-ui-components/commit/1dc83c1de57abfdaae8df155f1f166ee4fa9fe9a))
+
+
+
+
+
+## [9.160.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.160.0...@kong-ui-public/entities-plugins@9.160.1) (2026-03-02)
+
+
+### Bug Fixes
+
+* **entities-plugins:** render nested array with one_of correctly ([#2941](https://github.com/Kong/public-ui-components/issues/2941)) ([fb610b0](https://github.com/Kong/public-ui-components/commit/fb610b0bef3e947c121d8b1bbbb934e6f0fa0d31))
+
+
+
+
+
 # [9.160.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.159.2...@kong-ui-public/entities-plugins@9.160.0) (2026-02-27)
 
 

@@ -9,3 +9,6 @@ export {
 export * from './types'
 
 export { useMonacoEditor } from './composables/useMonacoEditor'
+
+// Export action helpers for creating custom toolbar actions
+export { createWrapAction } from './actions'

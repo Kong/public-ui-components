@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.12.0...@kong-ui-public/monaco-editor@0.13.0) (2026-03-03)
+
+
+### Features
+
+* **monaco-editor:** add default formatting action buttons [KHCP-19533] ([#2925](https://github.com/Kong/public-ui-components/issues/2925)) ([b221d24](https://github.com/Kong/public-ui-components/commit/b221d24d113962022a0c6f4014915629ac50e549))
+
+
+
+
+
 # [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.11.0...@kong-ui-public/monaco-editor@0.12.0) (2026-02-09)
 
 

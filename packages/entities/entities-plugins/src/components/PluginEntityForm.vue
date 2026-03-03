@@ -127,7 +127,7 @@ import {
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
+import { computed, inject, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
@@ -135,9 +135,9 @@ import endpoints from '../plugins-endpoints'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import * as freeForm from './free-form'
-import { getFreeFormName } from '../utils/free-form'
 import type { GlobalAction } from './free-form/shared/types'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/shared/schema-enhancement'
+import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 import type { FormSchema } from '../types/plugins/form-schema'
 
 // Need to check for duplicates in sharedForms and freeForm
@@ -247,6 +247,8 @@ const props = defineProps({
   },
 })
 
+const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
+
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const { parseSchema } = composables.useSchemas({
@@ -257,7 +259,7 @@ const { parseSchema } = composables.useSchemas({
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
-const experimentalFreeForms = composables.useExperimentalFreeForms()
+const { shouldUseFreeForm, getFreeFormName } = composables.useFreeFormResolver()
 
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
@@ -805,6 +807,7 @@ const initFormModel = (): void => {
     updateModel({
       enabled: props.record.enabled ?? true,
       ...(props.record.instance_name && { instance_name: props.record.instance_name || '' }),
+      ...(enableConditionField && props.record.condition != null && { condition: props.record.condition }),
       ...(props.record.protocols && { protocols: props.record.protocols }),
       ...(props.record.tags && { tags: props.record.tags }),
     })
@@ -899,11 +902,9 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
 
-  freeformName.value = !props.engine
-    ? getFreeFormName(form.model.name, experimentalFreeForms)
-    : props.engine === 'vfg'
-      ? undefined
-      : getFreeFormName(form.model.name, experimentalFreeForms) || 'CommonForm'
+  freeformName.value = shouldUseFreeForm(form.model.name, props.engine)
+    ? getFreeFormName(form.model.name)
+    : undefined
   sharedFormName.value = getSharedFormName(form.model.name)
 
   initFormModel()

@@ -268,7 +268,7 @@
             "label": "Mount"
           },
           "kv": {
-            "label": "Kv"
+            "label": "KV"
           },
           "namespace": {
             "label": "Namespace"
@@ -290,6 +290,33 @@
           },
           "kube_api_token_file": {
             "label": "Kubernetes API Token File"
+          },
+          "aws_auth_role": {
+            "label": "AWS Auth Role"
+          },
+          "aws_auth_region": {
+            "label": "AWS Auth Region"
+          },
+          "aws_access_key_id": {
+            "label": "AWS Access Key ID"
+          },
+          "aws_secret_access_key": {
+            "label": "AWS Secret Access Key"
+          },
+          "aws_auth_nonce": {
+            "label": "AWS Auth Nonce"
+          },
+          "azure_auth_role": {
+            "label": "Azure Auth Role"
+          },
+          "gcp_auth_role": {
+            "label": "GCP Auth Role"
+          },
+          "gcp_service_account": {
+            "label": "GCP Service Account"
+          },
+          "gcp_jwt_exp": {
+            "label": "GCP JWT Exp"
           },
           "approle_auth_path": {
             "label": "App Role Auth Path"
