@@ -95,7 +95,7 @@ const id = defineModel<T>('id', { required: true })
       box-shadow: none;
 
       &:not(.selected) {
-        background-color: $kui-color-background-neutral-weakest;
+        background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
       }
     }
   }
