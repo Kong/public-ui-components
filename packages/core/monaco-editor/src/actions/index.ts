@@ -20,3 +20,4 @@ export const BUILT_IN_TOOLBAR_ACTIONS = {
 }
 
 export { createWrapAction, createInsertAction, createLinePrefixAction } from './helpers'
+export { registerMarkdownShortcuts } from './markdownShortcuts'
