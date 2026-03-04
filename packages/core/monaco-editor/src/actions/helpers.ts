@@ -315,3 +315,120 @@ export function createInsertAction(prefix: string, suffix: string, name: string,
     editor.focus()
   }
 }
+
+/**
+ * Creates a line-prefix toggle action for Monaco editor (e.g. list items).
+ *
+ * Behavior:
+ * - Applies or removes a prefix on every line in the current selection (or the cursor line).
+ * - If ALL affected lines already have the prefix, it is removed (toggle off).
+ * - Otherwise the prefix is added to every line that doesn't have it (toggle on).
+ * - For ordered lists, pass a `getPrefix` function that receives the 1-based line index
+ *   and returns the appropriate prefix (e.g. `(i) => \`${i}. \``).
+ *
+ * @param prefixOrFn  A fixed string prefix (e.g. `'- '`) **or** a function `(lineIndex: number) => string`
+ *                     that returns the prefix for the given 1-based line index.
+ * @param name        Unique edit operation name for the Monaco undo stack.
+ * @param detectPrefix Optional regex used to detect whether a line already has the prefix.
+ *                     Defaults to escaping `prefixOrFn` when it is a string.
+ */
+export function createLinePrefixAction(
+  prefixOrFn: string | ((lineIndex: number) => string),
+  name: string,
+  detectPrefix?: RegExp,
+) {
+  const getPrefix = typeof prefixOrFn === 'string'
+    ? () => prefixOrFn
+    : prefixOrFn
+
+  // Build the detection regex once
+  const detectRe = detectPrefix ??
+    (typeof prefixOrFn === 'string'
+      ? new RegExp(`^${prefixOrFn.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)
+      : null)
+
+  return (monaco: ReturnType<typeof useMonacoEditor>) => {
+    const editor = monaco.editor.value
+    if (!editor) return
+
+    const selection = editor.getSelection()
+    const model = editor.getModel()
+    if (!selection || !model) return
+
+    const startLine = selection.startLineNumber
+    const endLine = selection.endLineNumber
+
+    // Collect line contents
+    const lines: string[] = []
+    for (let i = startLine; i <= endLine; i++) {
+      lines.push(model.getLineContent(i))
+    }
+
+    // Determine if all lines already have the prefix (toggle off)
+    const allHavePrefix = lines.every((line) => {
+      if (detectRe) return detectRe.test(line)
+      // Fallback for dynamic prefixes: check if line starts with any possible prefix
+      return /^\d+\.\s/.test(line) || line.startsWith(getPrefix(1))
+    })
+
+    const edits: Array<{ range: { startLineNumber: number, startColumn: number, endLineNumber: number, endColumn: number }, text: string }> = []
+
+    if (allHavePrefix) {
+      // Remove prefixes (process from bottom to top to keep line numbers stable)
+      for (let i = lines.length - 1; i >= 0; i--) {
+        const lineNum = startLine + i
+        const line = lines[i]
+
+        let prefixLength = 0
+        if (detectRe) {
+          const match = line.match(detectRe)
+          if (match) prefixLength = match[0].length
+        } else {
+          const prefix = getPrefix(i + 1)
+          if (line.startsWith(prefix)) prefixLength = prefix.length
+        }
+
+        if (prefixLength > 0) {
+          edits.push({
+            range: {
+              startLineNumber: lineNum,
+              startColumn: 1,
+              endLineNumber: lineNum,
+              endColumn: 1 + prefixLength,
+            },
+            text: '',
+          })
+        }
+      }
+    } else {
+      // Add prefixes (process from bottom to top)
+      for (let i = lines.length - 1; i >= 0; i--) {
+        const lineNum = startLine + i
+        const line = lines[i]
+
+        const hasPrefix = detectRe
+          ? detectRe.test(line)
+          : line.startsWith(getPrefix(i + 1))
+
+        if (!hasPrefix) {
+          const prefix = getPrefix(i + 1)
+          edits.push({
+            range: {
+              startLineNumber: lineNum,
+              startColumn: 1,
+              endLineNumber: lineNum,
+              endColumn: 1,
+            },
+            text: prefix,
+          })
+        }
+      }
+    }
+
+    if (edits.length > 0) {
+      editor.executeEdits(name, edits)
+    }
+
+    editor.focus()
+  }
+}

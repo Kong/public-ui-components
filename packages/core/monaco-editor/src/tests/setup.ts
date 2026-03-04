@@ -18,6 +18,7 @@ vi.mock('monaco-editor', () => {
       trigger: vi.fn(),
       dispose: vi.fn(),
       getModel: vi.fn(() => ({ uri: { toString: () => 'mock://model' }, dispose: vi.fn(), getLanguageId: vi.fn(() => 'javascript'), onDidChangeLanguage: vi.fn(() => createDisposable()) })),
+      addAction: vi.fn(() => createDisposable()),
       getContribution: vi.fn(() => ({
         getState: vi.fn(() => ({
           isRevealed: false,
