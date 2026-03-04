@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.16.0...@kong-ui-public/monaco-editor@0.17.0) (2026-03-04)
+
+
+### Features
+
+* **monaco-editor:** add action buttons for code block, blockquote, and table [KHCP-19536] ([#2965](https://github.com/Kong/public-ui-components/issues/2965)) ([ed8612a](https://github.com/Kong/public-ui-components/commit/ed8612a390323a17aa2eec606bdbc34861ac1d52))
+
+
+
+
+
 # [0.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.15.0...@kong-ui-public/monaco-editor@0.16.0) (2026-03-04)
 
 
