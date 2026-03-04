@@ -42,6 +42,7 @@
 import { computed, ref, provide, inject } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
+import { nestedPageLayoutInjectionKey } from '../symbols'
 
 const {
   breadcrumbs = [],
@@ -50,35 +51,26 @@ const {
 } = defineProps<PageLayoutProps>()
 
 defineSlots<PageLayoutSlots>()
-// defineOptions({ inheritAttrs: false })
-
-// const attrs = useAttrs()
 
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
-// PageLayout supports nesting: when a child PageLayout is rendered inside a parent,
-// the parent hides its own header/tabs and acts as a transparent wrapper so only
-// the child's header is shown. This is achieved via provide/inject:
-//
-// 1. Every PageLayout provides a registration callback under this key.
-// 2. On mount, each PageLayout tries to inject the callback from its nearest ancestor.
-//    If found, it calls it — telling the parent "I exist, hide your header."
-const HAS_NESTED_PAGE_LAYOUT_KEY = 'page-layout:register-nested'
+/**
+ * PageLayout supports nesting: when a child PageLayout is rendered inside a parent,
+ * the parent hides its own header/tabs and acts as a transparent wrapper (rendering only
+ * the router-view, no slot) so only the child's header is shown. This is achieved via provide/inject:
+ *
+ * 1. Every PageLayout provides a registration callback under this key.
+ * 2. On mount, each PageLayout tries to inject the callback from its nearest ancestor.
+ *    If found, it calls it — telling the parent "I exist, hide your header."
+ */
 const hasNestedPageLayout = ref<boolean>(false)
-provide(HAS_NESTED_PAGE_LAYOUT_KEY, () => hasNestedPageLayout.value = true)
+provide(nestedPageLayoutInjectionKey, () => hasNestedPageLayout.value = true)
 
 // If this instance is itself nested inside another PageLayout, notify the parent.
-const setHasNestedPageLayout = inject<() => void>(HAS_NESTED_PAGE_LAYOUT_KEY)
+const setHasNestedPageLayout = inject<() => void>(nestedPageLayoutInjectionKey)
 if (setHasNestedPageLayout) {
   setHasNestedPageLayout()
 }
-
-// When nested, the parent's attrs fall through to this instance. Strip PageLayout's own
-// prop keys so they aren't applied as HTML attributes on the root element.
-// const PAGE_LAYOUT_PROP_KEYS = new Set(['breadcrumbs', 'title', 'tabs'])
-// const sanitizedAttrs = computed((): Record<string, unknown> =>
-//   Object.fromEntries(Object.entries(attrs).filter(([key]) => !PAGE_LAYOUT_PROP_KEYS.has(key))),
-// )
 </script>
 
 <style lang="scss" scoped>

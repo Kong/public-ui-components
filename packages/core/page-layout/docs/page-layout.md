@@ -13,6 +13,7 @@ A Kong UI page layout component that provides a structured page header with brea
   - [Tab Overflow](#tab-overflow)
   - [Navigation Handling](#navigation-handling)
   - [`PageLayoutTab` Interface](#pagelayouttab-interface)
+- [Nested PageLayout](#nested-pagelayout)
 - [TypeScript interfaces](#typescript-interfaces)
 
 ## Features
@@ -201,6 +202,12 @@ interface PageLayoutTab {
 | `to`         | `string \| RouteLocationRaw` | Yes      | -                  | Navigation target: a Vue Router route object or URL string |
 | `active`     | `boolean`                    | No       | `undefined`        | Whether the tab is currently active (highlighted)          |
 | `dataTestId` | `string`                     | No       | `${key}-tab-link`  | Custom `data-testid` attribute for testing                 |
+
+## Nested PageLayout
+
+`PageLayout` supports nesting: when a child `PageLayout` is rendered inside a parent (via a `<router-view>`), the parent automatically detects the child and hides its own header and tabs, acting as a transparent wrapper that renders only the `<router-view>` (no slot). This ensures only the innermost `PageLayout`'s header is visible at any given time.
+
+This behavior is automatic and requires no additional configuration — simply nest `PageLayout` components via routing and the parent will defer to the child.
 
 ## TypeScript interfaces
 
