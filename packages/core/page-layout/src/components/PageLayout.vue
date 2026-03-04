@@ -25,10 +25,7 @@
       />
     </div>
 
-    <div
-      class="page-content-wrapper"
-      :class="{ 'has-nested-page-layout': hasNestedPageLayout }"
-    >
+    <div class="page-content-wrapper">
       <router-view v-if="hasTabs || hasNestedPageLayout" />
       <slot
         v-else
@@ -125,7 +122,7 @@ if (setHasNestedPageLayout) {
     flex-direction: column;
     gap: var(--kui-space-50, $kui-space-50);
 
-    &:not(.has-nested-page-layout) {
+    &:not(:has(.kong-ui-public-page-layout)) {
       padding: var(--kui-space-60, $kui-space-60);
     }
   }
