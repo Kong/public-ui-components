@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createWrapAction, createInsertAction, createLinePrefixAction } from './helpers'
+import { createWrapAction, createInsertAction, createLinePrefixAction, createCodeblockAction, createTableAction } from './helpers'
 
 function setupMonacoMock(text: string, selection: any) {
   const getValueInRange = vi.fn((range) => {
@@ -489,5 +489,260 @@ describe('createLinePrefixAction', () => {
       expect(edits).toHaveLength(1)
       expect(editor.focus).toHaveBeenCalled()
     })
+  })
+})
+
+describe('createCodeblockAction', () => {
+  const actionName = 'codeblock'
+  const codeblockAction = createCodeblockAction(actionName)
+
+  function setupCodeblockMock(lines: string[], selection: any) {
+    const getValueInRange = vi.fn((range: any) => {
+      const result: string[] = []
+      for (let line = range.startLineNumber; line <= range.endLineNumber; line++) {
+        const content = lines[line - 1] ?? ''
+        const start = line === range.startLineNumber ? range.startColumn - 1 : 0
+        const end = line === range.endLineNumber ? range.endColumn - 1 : content.length
+        result.push(content.slice(start, end))
+      }
+      return result.join('\n')
+    })
+
+    const model = {
+      getValueInRange,
+      getLineContent: vi.fn((ln: number) => lines[ln - 1] ?? ''),
+      getLineCount: vi.fn(() => lines.length),
+    }
+
+    const editor = {
+      getSelection: vi.fn(() => selection),
+      getModel: vi.fn(() => model),
+      executeEdits: vi.fn(),
+      setSelection: vi.fn(),
+      setPosition: vi.fn(),
+      focus: vi.fn(),
+    }
+
+    return { monaco: { editor: { value: editor } } as any, editor }
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it.each([
+    {
+      name: 'inserts fenced block at empty line',
+      lines: [''],
+      selection: {
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 1,
+        isEmpty: () => true,
+      },
+      expectedText: '```markdown\n\n```',
+      expectedLine: 1,
+    },
+    {
+      name: 'adds leading newline when text exists before cursor',
+      lines: ['hello'],
+      selection: {
+        startLineNumber: 1,
+        startColumn: 6,
+        endLineNumber: 1,
+        endColumn: 6,
+        isEmpty: () => true,
+      },
+      expectedText: '\n```markdown\n\n```',
+      expectedLine: 2,
+    },
+  ])('$name', ({ lines, selection, expectedText, expectedLine }) => {
+    const { monaco, editor } = setupCodeblockMock(lines, selection)
+
+    codeblockAction(monaco)
+
+    expect(editor.executeEdits).toHaveBeenCalledWith(actionName, [
+      expect.objectContaining({ text: expectedText }),
+    ])
+
+    expect(editor.setSelection).toHaveBeenCalledWith({
+      startLineNumber: expectedLine,
+      startColumn: 4,
+      endLineNumber: expectedLine,
+      endColumn: 12,
+    })
+
+    expect(editor.focus).toHaveBeenCalled()
+  })
+
+  it.each([
+    {
+      name: 'wraps selected text',
+      lines: ['hello world'],
+      selection: {
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: 1,
+        endColumn: 12,
+        isEmpty: () => false,
+      },
+      expectedText: '```markdown\nhello world\n```',
+      expectedLine: 1,
+    },
+    {
+      name: 'wraps selection with leading newline when text precedes selection',
+      lines: ['text world'],
+      selection: {
+        startLineNumber: 1,
+        startColumn: 6,
+        endLineNumber: 1,
+        endColumn: 11,
+        isEmpty: () => false,
+      },
+      expectedText: '\n```markdown\nworld\n```',
+      expectedLine: 2,
+    },
+  ])('$name', ({ lines, selection, expectedText, expectedLine }) => {
+    const { monaco, editor } = setupCodeblockMock(lines, selection)
+
+    codeblockAction(monaco)
+
+    expect(editor.executeEdits).toHaveBeenCalledWith(actionName, [
+      expect.objectContaining({ text: expectedText }),
+    ])
+
+    expect(editor.setSelection).toHaveBeenCalledWith({
+      startLineNumber: expectedLine,
+      startColumn: 4,
+      endLineNumber: expectedLine,
+      endColumn: 12,
+    })
+  })
+
+  it('does nothing when cursor is inside a code block', () => {
+    const lines = ['```', 'inside block', '```']
+    const selection = {
+      startLineNumber: 2,
+      startColumn: 1,
+      endLineNumber: 2,
+      endColumn: 1,
+      isEmpty: () => true,
+    }
+
+    const { monaco, editor } = setupCodeblockMock(lines, selection)
+    codeblockAction(monaco)
+
+    expect(editor.executeEdits).not.toHaveBeenCalled()
+  })
+
+  it('does nothing when selection contains backticks', () => {
+    const lines = ['some ``` text']
+    const selection = {
+      startLineNumber: 1,
+      startColumn: 1,
+      endLineNumber: 1,
+      endColumn: 14,
+      isEmpty: () => false,
+    }
+
+    const { monaco, editor } = setupCodeblockMock(lines, selection)
+    codeblockAction(monaco)
+
+    expect(editor.executeEdits).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    {
+      name: 'editor is null',
+      monaco: { editor: { value: null } },
+    },
+    {
+      name: 'selection is null',
+      monaco: {
+        editor: {
+          value: {
+            getSelection: () => null,
+            getModel: () => ({}),
+            executeEdits: vi.fn(),
+            focus: vi.fn(),
+          },
+        },
+      },
+    },
+  ])('does nothing when $name', ({ monaco }) => {
+    expect(() => codeblockAction(monaco as any)).not.toThrow()
+  })
+})
+
+describe('createTableAction', () => {
+  const actionName = 'table'
+  const tableAction = createTableAction(actionName)
+
+  function setupTableMock(lines: string[], selection: any) {
+    const model = {
+      getLineContent: vi.fn((ln: number) => lines[ln - 1] ?? ''),
+      getLineCount: vi.fn(() => lines.length),
+    }
+
+    const editor = {
+      getSelection: vi.fn(() => selection),
+      getModel: vi.fn(() => model),
+      executeEdits: vi.fn(),
+      setPosition: vi.fn(),
+      focus: vi.fn(),
+    }
+
+    return { monaco: { editor: { value: editor } } as any, editor }
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it.each([
+    { startLine: 1, expectedLine: 5 },
+    { startLine: 3, expectedLine: 7 },
+  ])('inserts table at correct position (line $startLine)', ({ startLine, expectedLine }) => {
+    const selection = {
+      startLineNumber: startLine,
+      startColumn: 1,
+      endLineNumber: startLine,
+      endColumn: 1,
+      isEmpty: () => true,
+    }
+
+    const { monaco, editor } = setupTableMock(['line 1', 'line 2', ''], selection)
+
+    tableAction(monaco)
+
+    expect(editor.executeEdits).toHaveBeenCalled()
+    expect(editor.setPosition).toHaveBeenCalledWith({
+      lineNumber: expectedLine,
+      column: 1,
+    })
+    expect(editor.focus).toHaveBeenCalled()
+  })
+
+  it('does nothing when cursor is inside a code block', () => {
+    const lines = ['```', 'inside block', '```']
+    const selection = {
+      startLineNumber: 2,
+      startColumn: 1,
+      endLineNumber: 2,
+      endColumn: 1,
+      isEmpty: () => true,
+    }
+
+    const { monaco, editor } = setupTableMock(lines, selection)
+    tableAction(monaco)
+
+    expect(editor.executeEdits).not.toHaveBeenCalled()
+  })
+
+  it('does nothing when editor is null', () => {
+    expect(() =>
+      tableAction({ editor: { value: null } } as any),
+    ).not.toThrow()
   })
 })

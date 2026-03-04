@@ -2,7 +2,6 @@ import { CodeblockIcon, BlockquoteIcon, TableIcon } from '@kong/icons'
 import { createCodeblockAction, createLinePrefixAction, createTableAction } from './helpers'
 import type { MonacoEditorActionConfig } from '../types'
 
-
 /**
  * Block-level toolbar actions (code block, blockquote, table)
  * 5th group in the toolbar, after lists
