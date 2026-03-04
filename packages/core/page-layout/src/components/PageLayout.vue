@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="kong-ui-public-page-layout"
-    v-bind="hasNestedPageLayout ? sanitizedAttrs : attrs"
-  >
+  <div class="kong-ui-public-page-layout">
     <div
       v-if="!hasNestedPageLayout"
       class="page-header-container"
@@ -42,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, useAttrs } from 'vue'
+import { computed, ref, provide, inject } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 
@@ -53,9 +50,9 @@ const {
 } = defineProps<PageLayoutProps>()
 
 defineSlots<PageLayoutSlots>()
-defineOptions({ inheritAttrs: false })
+// defineOptions({ inheritAttrs: false })
 
-const attrs = useAttrs()
+// const attrs = useAttrs()
 
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
@@ -78,10 +75,10 @@ if (setHasNestedPageLayout) {
 
 // When nested, the parent's attrs fall through to this instance. Strip PageLayout's own
 // prop keys so they aren't applied as HTML attributes on the root element.
-const PAGE_LAYOUT_PROP_KEYS = new Set(['breadcrumbs', 'title', 'tabs'])
-const sanitizedAttrs = computed((): Record<string, unknown> =>
-  Object.fromEntries(Object.entries(attrs).filter(([key]) => !PAGE_LAYOUT_PROP_KEYS.has(key))),
-)
+// const PAGE_LAYOUT_PROP_KEYS = new Set(['breadcrumbs', 'title', 'tabs'])
+// const sanitizedAttrs = computed((): Record<string, unknown> =>
+//   Object.fromEntries(Object.entries(attrs).filter(([key]) => !PAGE_LAYOUT_PROP_KEYS.has(key))),
+// )
 </script>
 
 <style lang="scss" scoped>
