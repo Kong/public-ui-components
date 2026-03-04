@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.14.0...@kong-ui-public/monaco-editor@0.15.0) (2026-03-04)
+
+
+### Features
+
+* **monaco-editor:** language-aware model context helpers ([#2776](https://github.com/Kong/public-ui-components/issues/2776)) ([c6dc1ae](https://github.com/Kong/public-ui-components/commit/c6dc1ae7248e05a826707f2909913bac33fa5470))
+
+
+
+
+
 # [0.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.13.0...@kong-ui-public/monaco-editor@0.14.0) (2026-03-03)
 
 
