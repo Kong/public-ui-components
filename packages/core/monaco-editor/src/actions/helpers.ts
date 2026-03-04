@@ -1,4 +1,5 @@
 import type { useMonacoEditor } from '../composables/useMonacoEditor'
+import type { editor } from 'monaco-editor'
 
 /**
  * Creates a toggle formatting action for Monaco editor.
@@ -431,4 +432,203 @@ export function createLinePrefixAction(
 
     editor.focus()
   }
+}
+
+/**
+ * Creates a code-block toggle action (triple-backtick fences).
+ *
+ * Behaviour:
+ * - **Text selected**: wraps the selection in ``` fences on their own lines.
+ *   If the selection is already fenced, the fences are removed.
+ * - **No selection (cursor only)**: inserts a fenced block and places the
+ *   cursor on the empty line between the fences.
+ */
+export function createCodeblockAction(name: string) {
+  return (monaco: ReturnType<typeof useMonacoEditor>) => {
+    const editor = monaco.editor.value
+    if (!editor) return
+
+    const selection = editor.getSelection()
+    const model = editor.getModel()
+    if (!selection || !model) return
+
+    const startLine = selection.startLineNumber
+    const endLine = selection.endLineNumber
+    const isCursorOnly = selection.isEmpty()
+
+    // Prevent nesting: bail out if already inside a code block or on a fence line
+    if (isInsideCodeblock(model, startLine, endLine)) return
+    for (let i = startLine; i <= endLine; i++) {
+      if (model.getLineContent(i).includes('```')) return
+    }
+
+    if (!isCursorOnly) {
+      // Check if selection is already fenced
+      const lineAbove = startLine > 1 ? model.getLineContent(startLine - 1) : ''
+      const lineBelow = endLine < model.getLineCount() ? model.getLineContent(endLine + 1) : ''
+      const isFenced = lineAbove.trimEnd().startsWith('```') && lineBelow.trimEnd() === '```'
+
+      if (isFenced) {
+        // Remove the fence lines
+        editor.executeEdits(name, [
+          {
+            range: {
+              startLineNumber: endLine + 1,
+              startColumn: 1,
+              endLineNumber: endLine + 1,
+              endColumn: model.getLineContent(endLine + 1).length + 1,
+            },
+            text: null,
+          },
+          {
+            range: {
+              startLineNumber: startLine - 1,
+              startColumn: 1,
+              endLineNumber: startLine - 1,
+              endColumn: model.getLineContent(startLine - 1).length + 1,
+            },
+            text: null,
+          },
+        ])
+
+        // Select the previously-fenced content (now shifted up one line)
+        editor.setSelection({
+          startLineNumber: startLine - 1,
+          startColumn: 1,
+          endLineNumber: endLine - 1,
+          endColumn: model.getLineContent(endLine - 1).length + 1,
+        })
+      } else {
+        const selectedText = model.getValueInRange(selection)
+
+        // Ensure fences start on their own line
+        const textBeforeSelection = model.getValueInRange({
+          startLineNumber: startLine,
+          startColumn: 1,
+          endLineNumber: startLine,
+          endColumn: selection.startColumn,
+        })
+        const needsLeadingNewline = textBeforeSelection.trim().length > 0
+        const prefix = needsLeadingNewline ? '\n' : ''
+
+        // Wrap selection in fences with language identifier
+        editor.executeEdits(name, [
+          { range: selection, text: `${prefix}\`\`\`markdown\n${selectedText}\n\`\`\`` },
+        ])
+
+        // Select the language identifier so the user can change it
+        const fenceLine = needsLeadingNewline ? startLine + 1 : startLine
+        editor.setSelection({
+          startLineNumber: fenceLine,
+          startColumn: 4, // after ```
+          endLineNumber: fenceLine,
+          endColumn: 4 + 'markdown'.length,
+        })
+      }
+    } else {
+      // No selection — insert empty fenced block with language
+      // Ensure fences start on their own line
+      const textBeforeCursor = model.getValueInRange({
+        startLineNumber: startLine,
+        startColumn: 1,
+        endLineNumber: startLine,
+        endColumn: selection.startColumn,
+      })
+      const needsLeadingNewline = textBeforeCursor.trim().length > 0
+      const prefix = needsLeadingNewline ? '\n' : ''
+
+      editor.executeEdits(name, [
+        {
+          range: selection,
+          text: `${prefix}\`\`\`markdown\n\n\`\`\``,
+        },
+      ])
+
+      // Select the language identifier so the user can change it
+      const fenceLine = needsLeadingNewline ? startLine + 1 : startLine
+      editor.setSelection({
+        startLineNumber: fenceLine,
+        startColumn: 4, // after ```
+        endLineNumber: fenceLine,
+        endColumn: 4 + 'markdown'.length,
+      })
+    }
+
+    editor.focus()
+  }
+}
+
+/**
+ * Creates a table insertion action.
+ *
+ * Inserts a basic 3-column × 2-row markdown table at the cursor and selects
+ * the first header placeholder so the user can start typing immediately.
+ */
+export function createTableAction(name: string) {
+  return (monaco: ReturnType<typeof useMonacoEditor>) => {
+    const editor = monaco.editor.value
+    if (!editor) return
+
+    const selection = editor.getSelection()
+    const model = editor.getModel()
+    if (!selection || !model) return
+
+    const startLine = selection.startLineNumber
+
+    // Prevent inserting a table inside a code block
+    const endLine = selection.endLineNumber
+    if (isInsideCodeblock(model, startLine, endLine)) return
+
+    const table = [
+      '| Header | Header | Header |',
+      '| ------ | ------ | ------ |',
+      '| Cell   | Cell   | Cell   |',
+      '| Cell   | Cell   | Cell   |',
+    ].join('\n')
+
+    // Add a trailing newline so a subsequent table insert goes below
+    editor.executeEdits(name, [
+      { range: selection, text: table + '\n' },
+    ])
+
+    // Place cursor at the end of the inserted table (on the new empty line)
+    const lastTableLine = startLine + 4 // 4 table rows + 1 newline = cursor on line after table
+    editor.setPosition({
+      lineNumber: lastTableLine,
+      column: 1,
+    })
+
+    editor.focus()
+  }
+}
+
+/**
+ * Returns `true` when the given line range sits inside a fenced code block.
+ * Scans upward from `startLine` for an opening fence and downward from `endLine`
+ * for a closing fence, counting only unpaired fences.
+ */
+function isInsideCodeblock(model: editor.ITextModel, startLine: number, endLine: number): boolean {
+  let openFenceLine = 0
+
+  // Walk upward to find an unmatched opening ```
+  let fenceBalance = 0
+  for (let i = startLine - 1; i >= 1; i--) {
+    if (model.getLineContent(i).trimEnd().startsWith('```')) {
+      fenceBalance++
+      if (fenceBalance % 2 === 1) {
+        openFenceLine = i
+      }
+    }
+  }
+
+  if (openFenceLine === 0) return false
+
+  // Walk downward to find the matching closing ``` after the selection
+  for (let i = endLine + 1; i <= model.getLineCount(); i++) {
+    if (model.getLineContent(i).trimEnd().startsWith('```')) {
+      return true // found the closing fence — cursor is inside
+    }
+  }
+
+  return false
 }
