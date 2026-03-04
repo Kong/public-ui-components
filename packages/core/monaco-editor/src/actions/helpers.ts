@@ -435,13 +435,19 @@ export function createLinePrefixAction(
 }
 
 /**
- * Creates a code-block toggle action (triple-backtick fences).
+ * Creates a code-block toggle action (triple-backtick fences with a language identifier).
  *
  * Behaviour:
- * - **Text selected**: wraps the selection in ``` fences on their own lines.
+ * - **Text selected**: wraps the selection in ```markdown ... ``` fences.
  *   If the selection is already fenced, the fences are removed.
- * - **No selection (cursor only)**: inserts a fenced block and places the
- *   cursor on the empty line between the fences.
+ *   After wrapping, selects the language identifier so the user can change it.
+ * - **No selection (cursor only)**: inserts an empty fenced block with a
+ *   `markdown` language identifier and selects it for easy replacement.
+ * - Prevents nesting: does nothing if the cursor/selection is already
+ *   inside a code block or the selected lines contain triple-backtick fences.
+ * - Inserts a leading newline when text precedes the cursor/selection on the same line.
+ *
+ * @param name Unique edit operation name for the Monaco undo stack.
  */
 export function createCodeblockAction(name: string) {
   return (monaco: ReturnType<typeof useMonacoEditor>) => {
@@ -561,8 +567,11 @@ export function createCodeblockAction(name: string) {
 /**
  * Creates a table insertion action.
  *
- * Inserts a basic 3-column × 2-row markdown table at the cursor and selects
- * the first header placeholder so the user can start typing immediately.
+ * Inserts a basic 3-column × 2-row markdown table at the cursor position
+ * and places the cursor on the line after the table.
+ * Prevents insertion inside a code block.
+ *
+ * @param name Unique edit operation name for the Monaco undo stack.
  */
 export function createTableAction(name: string) {
   return (monaco: ReturnType<typeof useMonacoEditor>) => {
