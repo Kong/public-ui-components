@@ -1,6 +1,9 @@
 <template>
   <div class="kong-ui-public-page-layout">
-    <div class="page-header-container">
+    <div
+      v-if="!hasNestedPageLayout"
+      class="page-header-container"
+    >
       <div class="header-breadcrumbs-container">
         <KBreadcrumbs
           v-if="breadcrumbs && breadcrumbs.length"
@@ -22,7 +25,10 @@
       />
     </div>
 
-    <div class="page-content-wrapper">
+    <div
+      class="page-content-wrapper"
+      :class="{ 'has-nested-page-layout': hasNestedPageLayout }"
+    >
       <router-view v-if="hasTabs" />
       <slot
         v-else
@@ -33,9 +39,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, provide, inject } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
+import { nestedPageLayoutInjectionKey } from '../symbols'
 
 const {
   breadcrumbs = [],
@@ -46,22 +53,33 @@ const {
 defineSlots<PageLayoutSlots>()
 
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
+
+/**
+ * PageLayout supports nesting: when a child PageLayout is rendered inside a parent,
+ * the parent hides its own header/tabs and acts as a transparent wrapper so only
+ * the child's header is shown. This is achieved via provide/inject:
+ *
+ * 1. Every PageLayout provides a registration callback under this key.
+ * 2. On mount, each PageLayout tries to inject the callback from its nearest ancestor.
+ *    If found, it calls it — telling the parent "I exist, hide your header."
+ */
+const hasNestedPageLayout = ref<boolean>(false)
+provide(nestedPageLayoutInjectionKey, (): void => {
+  // Set the local ref to true when the callback is called
+  hasNestedPageLayout.value = true
+})
+
+// If this instance is itself nested inside another PageLayout, notify the parent.
+const setHasNestedPageLayout = inject<() => void>(nestedPageLayoutInjectionKey)
+if (setHasNestedPageLayout && typeof setHasNestedPageLayout === 'function') {
+  setHasNestedPageLayout()
+}
 </script>
 
 <style lang="scss" scoped>
 .kong-ui-public-page-layout {
   box-sizing: border-box;
   font-family: var(--kui-font-family-text, $kui-font-family-text);
-
-  /**
-   * When a child PageLayout is rendered inside this one (via router-view), hide the parent's
-   * header so only the child's header is visible.
-   */
-  &:has(.page-content-wrapper .kong-ui-public-page-layout) {
-    > .page-header-container {
-      display: none;
-    }
-  }
 
   .page-header-container {
     display: flex;
@@ -109,9 +127,10 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-50, $kui-space-50);
+    padding: var(--kui-space-60, $kui-space-60);
 
-    &:not(:has(.kong-ui-public-page-layout)) {
-      padding: var(--kui-space-60, $kui-space-60);
+    &.has-nested-page-layout {
+      padding: var(--kui-space-0, $kui-space-0);
     }
   }
 }

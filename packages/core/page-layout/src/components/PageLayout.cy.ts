@@ -1,5 +1,6 @@
-import { h } from 'vue'
+import { defineComponent, inject, h } from 'vue'
 import PageLayout from './PageLayout.vue'
+import { nestedPageLayoutInjectionKey } from '../symbols'
 
 describe('<PageLayout />', () => {
   const title = 'Test Page Title'
@@ -39,16 +40,57 @@ describe('<PageLayout />', () => {
     cy.getTestId('page-layout-tabs').should('not.exist')
   })
 
-  it('hides the parent header when a child PageLayout is rendered inside it', () => {
-    const parentTitle = 'Parent Title'
-    const childTitle = 'Child Title'
-    cy.mount(PageLayout, {
-      props: { title: parentTitle },
-      slots: { default: () => h(PageLayout, { title: childTitle }) },
+  describe('nested PageLayout detection', () => {
+    it('hides its own header when a nested PageLayout is detected', () => {
+      // Simulate a child PageLayout by injecting a component that calls the registration callback
+      const ChildNotifier = defineComponent({
+        setup() {
+          const notify = inject<() => void>(nestedPageLayoutInjectionKey)
+          notify?.()
+          return () => null
+        },
+      })
+
+      cy.mount(PageLayout, {
+        props: { title: 'Parent Title' },
+        slots: { default: () => h(ChildNotifier) },
+      })
+
+      cy.getTestId('page-layout-title').should('not.exist')
+      cy.getTestId('page-layout-breadcrumbs').should('not.exist')
+      cy.getTestId('page-layout-tabs').should('not.exist')
     })
 
-    // Parent header is hidden by the CSS :has(.page-content-wrapper .kong-ui-public-page-layout) rule
-    cy.contains('[data-testid="page-layout-title"]', parentTitle).should('not.be.visible')
-    cy.contains('[data-testid="page-layout-title"]', childTitle).should('be.visible')
+    it('calls the parent registration callback on mount when nested inside a parent PageLayout', () => {
+      let notified = false
+
+      cy.mount(PageLayout, {
+        props: { title: 'Child Title' },
+        global: {
+          provide: {
+            [nestedPageLayoutInjectionKey]: () => {
+              notified = true
+            },
+          },
+        },
+      })
+
+      // cy.wrap(null).should defers the callback so `notified` is read after mount, not at call time
+      cy.wrap(null).should(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        expect(notified).to.be.true
+      })
+    })
+
+    it('hides the parent header when a nested PageLayout is slotted', () => {
+      cy.mount(PageLayout, {
+        props: { title: 'Parent Title' },
+        slots: { default: () => h(PageLayout, { title: 'Child Title' }) },
+      })
+
+      cy.getTestId('page-layout-title').should('have.length', 1).and('contain.text', 'Child Title')
+      cy.getTestId('page-layout-breadcrumbs').should('not.exist')
+      cy.getTestId('page-layout-tabs').should('not.exist')
+    })
   })
 })
