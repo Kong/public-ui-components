@@ -39,19 +39,16 @@ describe('<PageLayout />', () => {
     cy.getTestId('page-layout-tabs').should('not.exist')
   })
 
-  describe('nested PageLayout detection', () => {
+  it('hides the parent header when a child PageLayout is rendered inside it', () => {
     const parentTitle = 'Parent Title'
     const childTitle = 'Child Title'
-
-    it('hides the parent header when a child PageLayout is rendered inside it', () => {
-      cy.mount(PageLayout, {
-        props: { title: parentTitle },
-        slots: { default: () => h(PageLayout, { title: childTitle }) },
-      })
-
-      // Parent header is hidden by the CSS :has(.page-content-wrapper .kong-ui-public-page-layout) rule
-      cy.contains('[data-testid="page-layout-title"]', parentTitle).should('not.be.visible')
-      cy.contains('[data-testid="page-layout-title"]', childTitle).should('be.visible')
+    cy.mount(PageLayout, {
+      props: { title: parentTitle },
+      slots: { default: () => h(PageLayout, { title: childTitle }) },
     })
+
+    // Parent header is hidden by the CSS :has(.page-content-wrapper .kong-ui-public-page-layout) rule
+    cy.contains('[data-testid="page-layout-title"]', parentTitle).should('not.be.visible')
+    cy.contains('[data-testid="page-layout-title"]', childTitle).should('be.visible')
   })
 })
