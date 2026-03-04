@@ -40,15 +40,18 @@ describe('<PageLayout />', () => {
   })
 
   describe('nested PageLayout detection', () => {
+    const parentTitle = 'Parent Title'
+    const childTitle = 'Child Title'
+
     it('hides the parent header via CSS :has() when a child PageLayout is rendered inside it', () => {
       cy.mount(PageLayout, {
-        props: { title: 'Parent Title' },
-        slots: { default: () => h(PageLayout, { title: 'Child Title' }) },
+        props: { title: parentTitle },
+        slots: { default: () => h(PageLayout, { title: childTitle }) },
       })
 
       // Parent header is hidden by the CSS :has(.page-content-wrapper .kong-ui-public-page-layout) rule
-      cy.contains('[data-testid="page-layout-title"]', 'Parent Title').should('not.be.visible')
-      cy.contains('[data-testid="page-layout-title"]', 'Child Title').should('be.visible')
+      cy.contains('[data-testid="page-layout-title"]', parentTitle).should('not.be.visible')
+      cy.contains('[data-testid="page-layout-title"]', childTitle).should('be.visible')
     })
   })
 })
