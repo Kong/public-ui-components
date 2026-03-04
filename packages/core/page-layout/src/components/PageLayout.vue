@@ -1,9 +1,6 @@
 <template>
   <div class="kong-ui-public-page-layout">
-    <div
-      v-if="!hasNestedPageLayout"
-      class="page-header-container"
-    >
+    <div class="page-header-container">
       <div class="header-breadcrumbs-container">
         <KBreadcrumbs
           v-if="breadcrumbs && breadcrumbs.length"
@@ -20,13 +17,13 @@
         </h1>
       </div>
       <PageLayoutTabs
-        v-if="hasTabs && !hasNestedPageLayout"
+        v-if="hasTabs"
         :tabs="tabs"
       />
     </div>
 
     <div class="page-content-wrapper">
-      <router-view v-if="hasTabs || hasNestedPageLayout" />
+      <router-view v-if="hasTabs" />
       <slot
         v-else
         name="default"
@@ -36,10 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject } from 'vue'
+import { computed } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
-import { nestedPageLayoutInjectionKey } from '../symbols'
 
 const {
   breadcrumbs = [],
@@ -50,30 +46,23 @@ const {
 defineSlots<PageLayoutSlots>()
 
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
-
-/**
- * PageLayout supports nesting: when a child PageLayout is rendered inside a parent,
- * the parent hides its own header/tabs and acts as a transparent wrapper (rendering only
- * the router-view, no slot) so only the child's header is shown. This is achieved via provide/inject:
- *
- * 1. Every PageLayout provides a registration callback under this key.
- * 2. On mount, each PageLayout tries to inject the callback from its nearest ancestor.
- *    If found, it calls it — telling the parent "I exist, hide your header."
- */
-const hasNestedPageLayout = ref<boolean>(false)
-provide(nestedPageLayoutInjectionKey, () => hasNestedPageLayout.value = true)
-
-// If this instance is itself nested inside another PageLayout, notify the parent.
-const setHasNestedPageLayout = inject<() => void>(nestedPageLayoutInjectionKey)
-if (setHasNestedPageLayout) {
-  setHasNestedPageLayout()
-}
 </script>
 
 <style lang="scss" scoped>
 .kong-ui-public-page-layout {
   box-sizing: border-box;
   font-family: var(--kui-font-family-text, $kui-font-family-text);
+
+  /**
+   * When a child PageLayout is rendered inside this one (via router-view), hide the parent's
+   * header so only the child's header is visible. Uses CSS :has() to detect the nested
+   * .kong-ui-public-page-layout without any JS/Vue provide-inject machinery.
+   */
+  &:has(.page-content-wrapper .kong-ui-public-page-layout) {
+    > .page-header-container {
+      display: none;
+    }
+  }
 
   .page-header-container {
     display: flex;
