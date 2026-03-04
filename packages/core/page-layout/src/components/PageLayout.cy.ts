@@ -43,7 +43,7 @@ describe('<PageLayout />', () => {
     const parentTitle = 'Parent Title'
     const childTitle = 'Child Title'
 
-    it('hides the parent header via CSS :has() when a child PageLayout is rendered inside it', () => {
+    it('hides the parent header when a child PageLayout is rendered inside it', () => {
       cy.mount(PageLayout, {
         props: { title: parentTitle },
         slots: { default: () => h(PageLayout, { title: childTitle }) },

@@ -55,8 +55,7 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
   /**
    * When a child PageLayout is rendered inside this one (via router-view), hide the parent's
-   * header so only the child's header is visible. Uses CSS :has() to detect the nested
-   * .kong-ui-public-page-layout without any JS/Vue provide-inject machinery.
+   * header so only the child's header is visible.
    */
   &:has(.page-content-wrapper .kong-ui-public-page-layout) {
     > .page-header-container {
