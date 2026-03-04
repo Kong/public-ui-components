@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.164.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.163.2...@kong-ui-public/entities-plugins@9.164.0) (2026-03-04)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin form wrapper to standard layout ([#2952](https://github.com/Kong/public-ui-components/issues/2952)) ([52afdae](https://github.com/Kong/public-ui-components/commit/52afdae4b7ed11b07eb57985bd12d57dfa3b388a))
+
+
+
+
+
 ## [9.163.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.163.1...@kong-ui-public/entities-plugins@9.163.2) (2026-03-04)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
