@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createWrapAction, createInsertAction } from './helpers'
+import { createWrapAction, createInsertAction, createLinePrefixAction } from './helpers'
 
 function setupMonacoMock(text: string, selection: any) {
   const getValueInRange = vi.fn((range) => {
@@ -328,6 +328,166 @@ describe('createInsertAction', () => {
         endLineNumber: 1,
         endColumn: 4,
       })
+    })
+  })
+})
+
+describe('createLinePrefixAction', () => {
+  function setupLinePrefixMock(
+    lines: string[],
+    startLine: number,
+    endLine: number,
+  ) {
+    const selection = {
+      startLineNumber: startLine,
+      startColumn: 1,
+      endLineNumber: endLine,
+      endColumn: lines[endLine - 1]?.length + 1,
+    }
+
+    const model = {
+      getLineContent: vi.fn((lineNumber: number) => lines[lineNumber - 1] ?? ''),
+    }
+
+    const editor = {
+      getSelection: vi.fn(() => selection),
+      getModel: vi.fn(() => model),
+      executeEdits: vi.fn(),
+      focus: vi.fn(),
+    }
+
+    return { monaco: { editor: { value: editor } } as any, editor }
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  describe('fixed string prefixes', () => {
+    it.each([
+      {
+        name: 'unordered list',
+        prefix: '- ',
+        id: 'unorderedList',
+        lines: ['hello'],
+        expectedText: '- ',
+      },
+      {
+        name: 'task list',
+        prefix: '- [ ] ',
+        id: 'taskList',
+        lines: ['task'],
+        expectedText: '- [ ] ',
+      },
+    ])('adds prefix for $name', ({ prefix, id, lines, expectedText }) => {
+      const action = createLinePrefixAction(prefix, id)
+      const { monaco, editor } = setupLinePrefixMock(lines, 1, 1)
+
+      action(monaco)
+
+      const edits = editor.executeEdits.mock.calls[0][1]
+      expect(edits).toHaveLength(1)
+      expect(edits[0].text).toBe(expectedText)
+      expect(editor.focus).toHaveBeenCalled()
+    })
+
+    it('toggles off when all lines already have prefix', () => {
+      const action = createLinePrefixAction('- ', 'unorderedList')
+      const lines = ['- one', '- two']
+
+      const { monaco, editor } = setupLinePrefixMock(lines, 1, 2)
+      action(monaco)
+
+      const edits = editor.executeEdits.mock.calls[0][1]
+      expect(edits).toHaveLength(2)
+      edits.forEach((edit: any) => expect(edit.text).toBe(''))
+    })
+
+    it('adds prefix only to missing lines when mixed', () => {
+      const action = createLinePrefixAction('- ', 'unorderedList')
+      const lines = ['- one', 'two', '- three']
+
+      const { monaco, editor } = setupLinePrefixMock(lines, 1, 3)
+      action(monaco)
+
+      const edits = editor.executeEdits.mock.calls[0][1]
+      expect(edits).toHaveLength(1)
+      expect(edits[0].range.startLineNumber).toBe(2)
+      expect(edits[0].text).toBe('- ')
+    })
+  })
+
+  describe('dynamic ordered prefix', () => {
+    const action = createLinePrefixAction(
+      (i) => `${i}. `,
+      'orderedList',
+      /^\d+\.\s/,
+    )
+
+    it('adds numbered prefixes', () => {
+      const lines = ['first', 'second', 'third']
+      const { monaco, editor } = setupLinePrefixMock(lines, 1, 3)
+
+      action(monaco)
+
+      const edits = editor.executeEdits.mock.calls[0][1]
+      expect(edits).toHaveLength(3)
+
+      expect(edits[0].text).toBe('3. ')
+      expect(edits[1].text).toBe('2. ')
+      expect(edits[2].text).toBe('1. ')
+    })
+
+    it('removes prefixes when all lines have them (including multi-digit)', () => {
+      const lines = ['10. ten', '11. eleven']
+      const { monaco, editor } = setupLinePrefixMock(lines, 1, 2)
+
+      action(monaco)
+
+      const edits = editor.executeEdits.mock.calls[0][1]
+      expect(edits).toHaveLength(2)
+      edits.forEach((edit: any) => expect(edit.text).toBe(''))
+    })
+
+    it('adds prefix only to missing lines when mixed', () => {
+      const lines = ['1. first', 'second', '3. third']
+      const { monaco, editor } = setupLinePrefixMock(lines, 1, 3)
+
+      action(monaco)
+
+      const edits = editor.executeEdits.mock.calls[0][1]
+      expect(edits).toHaveLength(1)
+      expect(edits[0].range.startLineNumber).toBe(2)
+      expect(edits[0].text).toBe('2. ')
+    })
+  })
+
+  describe('edge cases', () => {
+    const action = createLinePrefixAction('- ', 'unorderedList')
+
+    it('does nothing when editor/selection/model are null', () => {
+      action({ editor: { value: null } } as any)
+
+      const editor = {
+        getSelection: vi.fn(() => null),
+        getModel: vi.fn(() => null),
+        executeEdits: vi.fn(),
+        focus: vi.fn(),
+      }
+
+      action({ editor: { value: editor } } as any)
+
+      expect(editor.executeEdits).not.toHaveBeenCalled()
+    })
+
+    it('handles single-line selection', () => {
+      const { monaco, editor } = setupLinePrefixMock(['hello'], 1, 1)
+
+      action(monaco)
+
+      const edits = editor.executeEdits.mock.calls[0][1]
+      expect(edits).toHaveLength(1)
+      expect(editor.focus).toHaveBeenCalled()
     })
   })
 })
