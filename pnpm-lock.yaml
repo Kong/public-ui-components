@@ -29,6 +29,9 @@ overrides:
   tar@<7.5.8: '>=7.5.8'
   rollup@>=4.0.0 <4.59.0: '>=4.59.0'
   serialize-javascript@<=7.0.2: '>=7.0.3'
+  immutable@>=5.0.0 <5.1.5: '>=5.1.5'
+  immutable@<4.3.8: '>=4.3.8 <5'
+  tar@<=7.5.9: '>=7.5.10'
 
 importers:
 
@@ -729,6 +732,9 @@ importers:
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      jsonc-parser:
+        specifier: ^3.3.1
+        version: 3.3.1
       monaco-editor:
         specifier: ^0.55.1
         version: 0.55.1
@@ -738,6 +744,9 @@ importers:
       vue:
         specifier: ^3.5.27
         version: 3.5.27(typescript@5.9.3)
+      yaml:
+        specifier: ^2.8.2
+        version: 2.8.2
 
   packages/core/page-layout:
     dependencies:
@@ -6672,15 +6681,11 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  immutable@3.8.2:
-    resolution: {integrity: sha512-15gZoQ38eYjEjxkorfbcgBKBL6R7T459OuK+CpcWt7O3KF4uPCx2tD0uFETlUDIyo+1789crbMhTvQBSR5yBMg==}
-    engines: {node: '>=0.10.0'}
+  immutable@4.3.8:
+    resolution: {integrity: sha512-d/Ld9aLbKpNwyl0KiM2CT1WYvkitQ1TSvmRtkcV8FKStiDoA7Slzgjmb/1G2yhKM1p0XeNOieaTbFZmU1d3Xuw==}
 
-  immutable@4.3.7:
-    resolution: {integrity: sha512-1hqclzwYwjRDFLjcFxOM5AYkkG0rpFPpr1RLPMEuGczoS7YA8gLhy8SWXYRAA/XwfEHpfo3cw5JGioS32fnMRw==}
-
-  immutable@5.1.3:
-    resolution: {integrity: sha512-+chQdDfvscSF1SJqv2gn4SRO2ZyS3xL3r7IW/wWEEzrzLisnOlKiQu5ytC/BVNcS15C39WT2Hg/bjKjDMcu+zg==}
+  immutable@5.1.5:
+    resolution: {integrity: sha512-t7xcm2siw+hlUM68I+UEOK+z84RzmN59as9DZ7P1l0994DKUWV7UXBMQZVxaoMSRQ+PBZbHCOoBt7a2wxOMt+A==}
 
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
@@ -7187,6 +7192,9 @@ packages:
 
   jsonc-parser@3.2.0:
     resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
+
+  jsonc-parser@3.3.1:
+    resolution: {integrity: sha512-HUgH65KyejrUFPvHFPbqOY0rsFip3Bo5wb4ngvdi1EpCYWUQDC5V+Y7mZws+DLkr4M//zQJoanu1SP+87Dv1oQ==}
 
   jsonfile@6.2.0:
     resolution: {integrity: sha512-FGuPw30AdOIUTRMC2OMRtQV+jkVj2cfPqSeWXv1NEAJ1qZ5zb1X6z1mFhbfOB/iy3ssJCD+3KuZ8r8C3uVFlAg==}
@@ -8702,12 +8710,12 @@ packages:
   react-immutable-proptypes@2.2.0:
     resolution: {integrity: sha512-Vf4gBsePlwdGvSZoLSBfd4HAP93HDauMY4fDjXhreg/vg6F3Fj/MXDNyTbltPC/xZKmZc+cjLu3598DdYK6sgQ==}
     peerDependencies:
-      immutable: '>=3.6.2'
+      immutable: '>=5.1.5'
 
   react-immutable-pure-component@2.2.2:
     resolution: {integrity: sha512-vkgoMJUDqHZfXXnjVlG3keCxSO/U6WeDQ5/Sl0GK2cH8TOxEzQ5jXqDXHEL/jqk6fsNxV05oH5kD7VNMUE2k+A==}
     peerDependencies:
-      immutable: '>= 2 || >= 4.0.0-rc'
+      immutable: '>=5.1.5'
       react: '>= 16.6'
       react-dom: '>= 16.6'
 
@@ -8818,7 +8826,7 @@ packages:
   redux-immutable@4.0.0:
     resolution: {integrity: sha512-SchSn/DWfGb3oAejd+1hhHx01xUoxY+V7TeK0BKqpkLKiQPVFf7DYzEaKmrEVxsWxielKfSK9/Xq66YyxgR1cg==}
     peerDependencies:
-      immutable: ^3.8.1 || ^4.0.0-rc.1
+      immutable: '>=4.3.8 <5'
 
   redux@4.2.1:
     resolution: {integrity: sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==}
@@ -8928,7 +8936,7 @@ packages:
   right-pad@1.0.1:
     resolution: {integrity: sha512-bYBjgxmkvTAfgIYy328fmkwhp39v8lwVgWhhrzxPV3yHtcSqyYKe9/XOhvW48UFjATg3VuJbpsp5822ACNvkmw==}
     engines: {node: '>= 0.10'}
-    deprecated: Use String.prototype.padEnd() instead
+    deprecated: Please use String.prototype.padEnd() over this package.
 
   rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
@@ -9708,8 +9716,8 @@ packages:
   tar-stream@3.1.7:
     resolution: {integrity: sha512-qJj60CXt7IU1Ffyc3NJMjh6EkuCFej46zUqJ4J7pqYlThyd9bO0XBTmcOIhSzZJVWfsLks0+nle/j538YAW9RQ==}
 
-  tar@7.5.9:
-    resolution: {integrity: sha512-BTLcK0xsDh2+PUe9F6c2TlRp4zOOBMTkoQHQIWSIzI0R7KG46uEwq4OPk2W7bZcprBMsuaeFsqwYr7pjh6CuHg==}
+  tar@7.5.10:
+    resolution: {integrity: sha512-8mOPs1//5q/rlkNSPcCegA6hiHJYDmSLEI8aMH/CdSQJNWztHC9WHNam5zdQlfpTwB9Xp7IBEsHfV5LKMJGVAw==}
     engines: {node: '>=18'}
 
   temp-dir@1.0.0:
@@ -10084,8 +10092,8 @@ packages:
   underscore.string@3.3.6:
     resolution: {integrity: sha512-VoC83HWXmCrF6rgkyxS9GHv8W9Q5nhMKho+OadDJGzL2oDYbYEppBaCMH6pFlwLeqj2QS+hhkw2kpXkSdD1JxQ==}
 
-  underscore@1.13.6:
-    resolution: {integrity: sha512-+A5Sja4HP1M08MaXya7p5LvjuM7K6q/2EaC0+iovj/wOcMsTzMvDFbasi/oSapiwOlt252IqsKqPjCl7huKS0A==}
+  underscore@1.13.8:
+    resolution: {integrity: sha512-DXtD3ZtEQzc7M8m4cXotyHR+FAS18C64asBYY5vqZexfYryNNnDc02W4hKg3rdQuqOYas1jkseX0+nZXjTXnvQ==}
 
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
@@ -11837,7 +11845,7 @@ snapshots:
 
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   '@isaacs/string-locale-compare@1.1.0': {}
 
@@ -12010,7 +12018,7 @@ snapshots:
       classnames: 2.5.1
       curl-to-har: 1.0.1
       focus-trap-react: 10.1.4(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      immutable: 3.8.2
+      immutable: 4.3.8
       js-file-download: 0.4.12
       memoizee: 0.4.15
       react: 18.3.1
@@ -12094,7 +12102,7 @@ snapshots:
       slash: 3.0.0
       ssri: 12.0.0
       string-width: 4.2.3
-      tar: 7.5.9
+      tar: 7.5.10
       temp-dir: 1.0.0
       through: 2.3.8
       tinyglobby: 0.2.12
@@ -15243,7 +15251,7 @@ snapshots:
   curl-to-har@1.0.1:
     dependencies:
       shell-quote: 1.8.3
-      underscore: 1.13.6
+      underscore: 1.13.8
       underscore.string: 3.3.6
 
   cypress-real-events@1.15.0(cypress@13.17.0):
@@ -17016,12 +17024,9 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immutable@3.8.2: {}
+  immutable@4.3.8: {}
 
-  immutable@4.3.7:
-    optional: true
-
-  immutable@5.1.3: {}
+  immutable@5.1.5: {}
 
   import-fresh@3.3.1:
     dependencies:
@@ -17513,6 +17518,8 @@ snapshots:
 
   jsonc-parser@3.2.0: {}
 
+  jsonc-parser@3.3.1: {}
+
   jsonfile@6.2.0:
     dependencies:
       universalify: 2.0.1
@@ -17653,7 +17660,7 @@ snapshots:
       slash: 3.0.0
       ssri: 12.0.0
       string-width: 4.2.3
-      tar: 7.5.9
+      tar: 7.5.10
       temp-dir: 1.0.0
       through: 2.3.8
       tinyglobby: 0.2.12
@@ -18321,7 +18328,7 @@ snapshots:
       nopt: 9.0.0
       proc-log: 6.1.0
       semver: 7.7.2
-      tar: 7.5.9
+      tar: 7.5.10
       tinyglobby: 0.2.15
       which: 6.0.0
     transitivePeerDependencies:
@@ -18692,7 +18699,7 @@ snapshots:
       promise-retry: 2.0.1
       sigstore: 4.1.0
       ssri: 12.0.0
-      tar: 7.5.9
+      tar: 7.5.10
     transitivePeerDependencies:
       - supports-color
 
@@ -18714,7 +18721,7 @@ snapshots:
       promise-retry: 2.0.1
       sigstore: 4.1.0
       ssri: 13.0.0
-      tar: 7.5.9
+      tar: 7.5.10
     transitivePeerDependencies:
       - supports-color
 
@@ -19283,14 +19290,14 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-immutable-proptypes@2.2.0(immutable@3.8.2):
+  react-immutable-proptypes@2.2.0(immutable@4.3.8):
     dependencies:
-      immutable: 3.8.2
+      immutable: 4.3.8
       invariant: 2.2.4
 
-  react-immutable-pure-component@2.2.2(immutable@3.8.2)(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
+  react-immutable-pure-component@2.2.2(immutable@4.3.8)(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
-      immutable: 3.8.2
+      immutable: 4.3.8
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
 
@@ -19408,9 +19415,9 @@ snapshots:
       indent-string: 4.0.0
       strip-indent: 3.0.0
 
-  redux-immutable@4.0.0(immutable@3.8.2):
+  redux-immutable@4.0.0(immutable@4.3.8):
     dependencies:
-      immutable: 3.8.2
+      immutable: 4.3.8
 
   redux@4.2.1:
     dependencies:
@@ -19683,7 +19690,7 @@ snapshots:
       '@bufbuild/protobuf': 2.11.0
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
-      immutable: 4.3.7
+      immutable: 4.3.8
       rxjs: 7.8.2
       supports-color: 8.1.1
       varint: 6.0.0
@@ -19713,7 +19720,7 @@ snapshots:
   sass@1.97.3:
     dependencies:
       chokidar: 4.0.3
-      immutable: 5.1.3
+      immutable: 5.1.5
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.1
@@ -20380,7 +20387,7 @@ snapshots:
       deep-extend: 0.6.0
       dompurify: 3.3.1
       ieee754: 1.2.1
-      immutable: 3.8.2
+      immutable: 4.3.8
       js-file-download: 0.4.12
       js-yaml: 4.1.1
       lodash: 4.17.23
@@ -20392,13 +20399,13 @@ snapshots:
       react-copy-to-clipboard: 5.1.0(react@17.0.2)
       react-debounce-input: 3.3.0(react@17.0.2)
       react-dom: 17.0.2(react@17.0.2)
-      react-immutable-proptypes: 2.2.0(immutable@3.8.2)
-      react-immutable-pure-component: 2.2.2(immutable@3.8.2)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+      react-immutable-proptypes: 2.2.0(immutable@4.3.8)
+      react-immutable-pure-component: 2.2.2(immutable@4.3.8)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react-inspector: 6.0.2(react@17.0.2)
       react-redux: 8.1.3(@types/react@18.3.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(redux@4.2.1)
       react-syntax-highlighter: 15.5.0(react@17.0.2)
       redux: 4.2.1
-      redux-immutable: 4.0.0(immutable@3.8.2)
+      redux-immutable: 4.0.0(immutable@4.3.8)
       remarkable: 2.0.1
       reselect: 4.1.8
       serialize-error: 8.1.0
@@ -20485,11 +20492,11 @@ snapshots:
       - react-native-b4a
     optional: true
 
-  tar@7.5.9:
+  tar@7.5.10:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
-      minipass: 7.1.2
+      minipass: 7.1.3
       minizlib: 3.1.0
       yallist: 5.0.0
 
@@ -20863,7 +20870,7 @@ snapshots:
       sprintf-js: 1.1.3
       util-deprecate: 1.0.2
 
-  underscore@1.13.6: {}
+  underscore@1.13.8: {}
 
   undici-types@7.16.0: {}
 

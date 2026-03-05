@@ -79,7 +79,7 @@
       "ignoreGhsas": [
         "GHSA-3ppc-4f35-3m26",
         "GHSA-23c5-xmqv-rm74",
-        "GHSA-7r86-cg39-jmmj"      
+        "GHSA-7r86-cg39-jmmj"
       ]
     },
     "overrides": {
@@ -106,7 +106,10 @@
       "axios@<=1.13.4": ">=1.13.5",
       "tar@<7.5.8": ">=7.5.8",
       "rollup@>=4.0.0 <4.59.0": ">=4.59.0",
-      "serialize-javascript@<=7.0.2": ">=7.0.3"
+      "serialize-javascript@<=7.0.2": ">=7.0.3",
+      "immutable@>=5.0.0 <5.1.5": ">=5.1.5",
+      "immutable@<4.3.8": ">=4.3.8 <5",
+      "tar@<=7.5.9": ">=7.5.10"
     },
     "onlyBuiltDependencies": [
       "@evilmartians/lefthook",

@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.164.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.164.2...@kong-ui-public/entities-plugins@9.164.3) (2026-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.164.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.164.1...@kong-ui-public/entities-plugins@9.164.2) (2026-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.164.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.164.0...@kong-ui-public/entities-plugins@9.164.1) (2026-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.164.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.163.2...@kong-ui-public/entities-plugins@9.164.0) (2026-03-04)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin form wrapper to standard layout ([#2952](https://github.com/Kong/public-ui-components/issues/2952)) ([52afdae](https://github.com/Kong/public-ui-components/commit/52afdae4b7ed11b07eb57985bd12d57dfa3b388a))
+
+
+
+
+
+## [9.163.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.163.1...@kong-ui-public/entities-plugins@9.163.2) (2026-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.163.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.163.0...@kong-ui-public/entities-plugins@9.163.1) (2026-03-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.163.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.162.0...@kong-ui-public/entities-plugins@9.163.0) (2026-03-03)
+
+
+### Features
+
+* **entities-plugins:** add otel transformation ([#2957](https://github.com/Kong/public-ui-components/issues/2957)) ([e3e9c46](https://github.com/Kong/public-ui-components/commit/e3e9c46144409e8b148ea9335ae03b5a782d6a85))
+
+
+
+
+
 # [9.162.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.161.2...@kong-ui-public/entities-plugins@9.162.0) (2026-03-03)
 
 

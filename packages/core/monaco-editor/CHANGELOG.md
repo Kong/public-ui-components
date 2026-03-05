@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.16.0...@kong-ui-public/monaco-editor@0.17.0) (2026-03-04)
+
+
+### Features
+
+* **monaco-editor:** add action buttons for code block, blockquote, and table [KHCP-19536] ([#2965](https://github.com/Kong/public-ui-components/issues/2965)) ([ed8612a](https://github.com/Kong/public-ui-components/commit/ed8612a390323a17aa2eec606bdbc34861ac1d52))
+
+
+
+
+
+# [0.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.15.0...@kong-ui-public/monaco-editor@0.16.0) (2026-03-04)
+
+
+### Features
+
+* **monaco-editor:** add list actions group [KHCP-19535] ([#2960](https://github.com/Kong/public-ui-components/issues/2960)) ([5cdbf6c](https://github.com/Kong/public-ui-components/commit/5cdbf6ca11d3a5d1d8b01520f8bdab88ad02db24))
+
+
+
+
+
+# [0.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.14.0...@kong-ui-public/monaco-editor@0.15.0) (2026-03-04)
+
+
+### Features
+
+* **monaco-editor:** language-aware model context helpers ([#2776](https://github.com/Kong/public-ui-components/issues/2776)) ([c6dc1ae](https://github.com/Kong/public-ui-components/commit/c6dc1ae7248e05a826707f2909913bac33fa5470))
+
+
+
+
+
+# [0.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.13.0...@kong-ui-public/monaco-editor@0.14.0) (2026-03-03)
+
+
+### Features
+
+* **monaco-editor:** add insert actions group [KHCP-19534] ([#2955](https://github.com/Kong/public-ui-components/issues/2955)) ([36faa06](https://github.com/Kong/public-ui-components/commit/36faa06b1c46b9a16b296e2367f9f82e65b229b0))
+
+
+
+
+
 # [0.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.12.0...@kong-ui-public/monaco-editor@0.13.0) (2026-03-03)
 
 
