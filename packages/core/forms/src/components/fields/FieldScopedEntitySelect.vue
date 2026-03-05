@@ -12,43 +12,62 @@
     @change="$emit('change', $event)"
     @query-change="onQueryChange"
   >
-    <template
-      v-if="!!$slots.before"
-      #before
-    >
-      <slot name="before" />
+    <template #before>
+      <slot name="before">
+        <SearchIcon
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :size="KUI_ICON_SIZE_40"
+        />
+      </slot>
     </template>
     <template #selected-item="{ item }">
       <slot
         :item="item"
         name="selected-item"
-      />
+      >
+        <span class="selected-entity-item">
+          <span class="selected-entity-label">{{ item.label ?? item.id }}</span>
+        </span>
+      </slot>
     </template>
 
     <template #item="{ item }">
       <slot
         :item="item"
         name="item"
-      />
+      >
+        <div class="entity-suggestion-item">
+          <span class="entity-label">
+            {{ item.label ?? EMPTY_VALUE_PLACEHOLDER }}
+          </span>
+          <span class="entity-id">
+            {{ item.id }}
+          </span>
+        </div>
+      </slot>
     </template>
   </AutoSuggest>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, inject, onMounted, watch } from 'vue'
 import { debounce } from 'lodash-es'
+import { SearchIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_40, KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import AutoSuggest from './AutoSuggest.vue'
 import { isValidUuid } from '../../utils/isValidUuid'
-import { defaultItemTransformer } from '../../utils/autoSuggest'
+import { FORMS_API_KEY, EMPTY_VALUE_PLACEHOLDER } from '../../const'
 import english from '../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import { isAxiosError } from 'axios'
 
+import type { AxiosResponse } from 'axios'
 import type { SelectItem } from '@kong/kongponents'
-import type { EntityData, AutoSuggestInjection, AutoSuggestItemTransformer } from '../../types/form-autosuggest'
+import type { EntityData, EntityResponse, AutoSuggestItemTransformer } from '../../types/form-autosuggest'
 
 const DEBOUNCE_DELAY = 500
 const PEEK_SIZE = 50
+const REQUEST_RESULTS_LIMIT = 1000
 
 /**
  * How this component works
@@ -66,13 +85,17 @@ const PEEK_SIZE = 50
  *   will set `query` to `''` where triggers a `query-change` event, thus the handler in our component `onQueryChange` will be triggered, when
  *   this happens, we tend to show the `prefetched` data when this happens, when user types, we introduces `debounce` for
  *   the query input to avoid excessive API calls.
+ *
+ *  When `getAll`/`getOne`/`getPartial` props are not provided, the component falls back to injecting
+ *  `FORMS_API_KEY` and building the API adapters internally.
  */
 
 const {
-  getAll,
-  getOne,
-  getPartial,
-  transformItem = defaultItemTransformer,
+  getAll: getAllProp,
+  getOne: getOneProp,
+  getPartial: getPartialProp,
+  transformItem: transformItemProp,
+  labelField = 'name',
   fields = [],
   allowUuidSearch = false,
   id,
@@ -86,7 +109,7 @@ const {
   transformItem?: AutoSuggestItemTransformer
   allowUuidSearch?: boolean
   placeholder?: string
-  fields: string[]
+  fields?: string[]
   selectedItem?: SelectItem<string>
   selectedItemLoading?: boolean
   initialItemSelected?: boolean
@@ -96,11 +119,59 @@ const {
   disabled?: boolean
   fieldDisabled?: boolean
   error?: string | null
-} & AutoSuggestInjection>()
+  /** Field key to use as the display label in dropdown items. Default: 'name' */
+  labelField?: string
+  /** If not provided, falls back to FORMS_API_KEY injection */
+  getAll?: (query: string, signal?: AbortSignal) => Promise<EntityData[]>
+  /** If not provided, falls back to FORMS_API_KEY injection */
+  getPartial?: (size: number) => Promise<AxiosResponse<EntityResponse>>
+  /** If not provided, falls back to FORMS_API_KEY injection */
+  getOne?: (id: string) => Promise<EntityData>
+}>()
 
 defineEmits<{
   change: [item: SelectItem<string> | null]
 }>()
+
+// --- API resolution: use provided callbacks or build from injected API ---
+const api = inject<Record<string, any> | undefined>(FORMS_API_KEY, undefined)
+
+const getAll = getAllProp ?? (async (query: string, signal?: AbortSignal): Promise<EntityData[]> => {
+  if (!api) {
+    console.warn('[@kong-ui-public/forms] No API service provided')
+    return []
+  }
+  const { data } = await api.getAllV2(entity, { name: query, size: REQUEST_RESULTS_LIMIT }, signal)
+  return data.data
+})
+
+const getPartial = getPartialProp ?? ((size: number): Promise<AxiosResponse<EntityResponse>> => {
+  if (!api) {
+    console.warn('[@kong-ui-public/forms] No API service provided')
+    return Promise.resolve({ data: { data: [] } } as unknown as AxiosResponse<EntityResponse>)
+  }
+  return api.peek(entity, size)
+})
+
+const getOne = getOneProp ?? (async (id: string): Promise<EntityData> => {
+  if (!api) {
+    console.warn('[@kong-ui-public/forms] No API service provided')
+    return { id } as EntityData
+  }
+  const res = await api.getOne(entity, id, {
+    validateStatus: (status: number) => (status >= 200 && status < 300) || status === 404,
+  })
+  if (res.status === 404) {
+    throw new Error(`Entity of type ${entity} with id ${id} not found`)
+  }
+  return res.data
+})
+
+const transformItem = transformItemProp ?? ((item: EntityData): SelectItem<string> => ({
+  ...item,
+  label: item[labelField],
+  value: item.id,
+}))
 
 const message = ref('')
 
@@ -260,3 +331,31 @@ onMounted(async () => {
   suggestions.value = buildSuggestions(recentCreatedSuggestions.value)
 })
 </script>
+
+<style lang="scss" scoped>
+.entity-suggestion-item {
+  display: flex;
+  flex-direction: column;
+
+  .entity-label {
+    color: $kui-color-text-neutral-stronger;
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-medium;
+  }
+
+  .entity-id {
+    color: $kui-color-text-neutral;
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-medium;
+  }
+}
+
+.selected-entity-item {
+  padding-left: 28px;
+
+  .selected-entity-label {
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-regular;
+  }
+}
+</style>
