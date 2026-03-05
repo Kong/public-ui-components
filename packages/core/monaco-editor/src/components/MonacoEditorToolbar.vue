@@ -63,6 +63,7 @@
           />
         </KDropdown>
       </div>
+      <slot name="toolbar-left" />
     </div>
     <div
       ref="centreSlotEl"
@@ -88,6 +89,7 @@
           placement="bottom"
         />
       </div>
+      <slot name="toolbar-centre" />
     </div>
     <div
       ref="rightSlotEl"
@@ -113,6 +115,7 @@
           :placement="groupIndex === rightGroups.length - 1 ? 'bottom-end' : 'bottom'"
         />
       </div>
+      <slot name="toolbar-right" />
     </div>
   </div>
 </template>

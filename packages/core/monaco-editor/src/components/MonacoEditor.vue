@@ -12,7 +12,26 @@
       v-if="toolbar"
       :editor="monacoEditor"
       :settings="toolbar"
-    />
+    >
+      <template
+        v-if="$slots['toolbar-left']"
+        #toolbar-left
+      >
+        <slot name="toolbar-left" />
+      </template>
+      <template
+        v-if="$slots['toolbar-centre']"
+        #toolbar-centre
+      >
+        <slot name="toolbar-centre" />
+      </template>
+      <template
+        v-if="$slots['toolbar-right']"
+        #toolbar-right
+      >
+        <slot name="toolbar-right" />
+      </template>
+    </MonacoEditorToolbar>
     <div
       ref="editorRef"
       class="monaco-editor-target"
@@ -127,6 +146,31 @@ const emit = defineEmits<{
    * @param editor The Monaco editor instance
    */
   (e: 'ready', editor: editor.IStandaloneCodeEditor): void
+}>()
+
+defineSlots<{
+  /**
+   * Slot for custom content to display when the editor is in a loading state.
+   * The slot props include `isLoading` which indicates if the loading overlay is visible.
+   */
+  'state-loading'?: (props: { isLoading: boolean }) => any
+  /**
+   * Slot for custom content to display when the editor is empty.
+   * The slot props include `isEmpty` which indicates if the empty overlay is visible.
+   */
+  'state-empty'?: (props: { isEmpty: boolean }) => any
+  /**
+   * Slot for custom toolbar content on the left side of the toolbar.
+   */
+  'toolbar-left'?: () => any
+  /**
+   * Slot for custom toolbar content in the center of the toolbar.
+   */
+  'toolbar-centre'?: () => any
+  /**
+   * Slot for custom toolbar content on the right side of the toolbar.
+   */
+  'toolbar-right'?: () => any
 }>()
 
 /**
