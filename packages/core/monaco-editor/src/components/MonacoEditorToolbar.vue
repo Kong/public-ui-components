@@ -2,6 +2,7 @@
   <div
     ref="toolbarEl"
     class="monaco-editor-ui-toolbar"
+    data-testid="monaco-editor-toolbar"
   >
     <div
       ref="leftSlotEl"
@@ -30,6 +31,7 @@
       <div
         v-show="hiddenItems.length"
         class="monaco-editor-ui-toolbar-action-group"
+        data-testid="toolbar-overflow-group"
       >
         <KDropdown
           :key="dropdownKey"
@@ -39,6 +41,7 @@
             <KDropdownItem
               v-for="item of hiddenItems"
               :key="item.id"
+              :data-testid="`overflow-item-${item.id}`"
               :has-divider="item.hasDivider"
               @click="executeToolbarAction(item, editor)"
             >
