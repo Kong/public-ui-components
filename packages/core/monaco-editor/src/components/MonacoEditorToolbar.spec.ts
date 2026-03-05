@@ -1,6 +1,6 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref, reactive, nextTick } from 'vue'
+import { ref, reactive, nextTick, defineComponent } from 'vue'
 import MonacoEditorToolbar from './MonacoEditorToolbar.vue'
 import { BUILT_IN_TOOLBAR_ACTIONS } from '../actions'
 import { useElementSize as useElementSizeFn } from '@vueuse/core'
@@ -46,6 +46,12 @@ function makeEditor(status: 'loading' | 'ready' = 'ready') {
   }
 }
 
+// Lightweight KDropdown stub that renders both slots without internal async work
+const KDropdownStub = defineComponent({
+  name: 'KDropdown',
+  template: '<div class="k-dropdown-stub"><slot name="items" /><slot /></div>',
+})
+
 function mountToolbar(overrides: Record<string, any> = {}) {
   return mount(MonacoEditorToolbar, {
     props: {
@@ -56,6 +62,7 @@ function mountToolbar(overrides: Record<string, any> = {}) {
       plugins: [Kongponents],
       stubs: {
         ToolbarActionButton,
+        KDropdown: KDropdownStub,
       },
       ...overrides.global,
     },
@@ -269,9 +276,6 @@ describe('MonacoEditorToolbar', () => {
       mockToolbarWidth.value = 50
       mockLeftWidth.value = 500
       mockRightWidth.value = 50
-      await nextTick()
-      await flushPromises()
-      // Collapse more
       await nextTick()
       await flushPromises()
 
