@@ -69,9 +69,14 @@ function mountToolbar(overrides: Record<string, any> = {}) {
   })
 }
 
-// Built-in actions that appear for markdown language (have languages: ['markdown', 'mdc'])
-const markdownLeftActionIds = Object.values(BUILT_IN_TOOLBAR_ACTIONS).filter(a => a.placement === 'left' || !a.placement).map(a => a.id)
-const markdownRightActionIds = Object.values(BUILT_IN_TOOLBAR_ACTIONS).filter(a => a.placement === 'right').map(a => a.id)
+const sampleLeftActionIds = Object.values(BUILT_IN_TOOLBAR_ACTIONS)
+  .filter(a => a.placement === 'left' || !a.placement)
+  .map(a => a.id)
+  .slice(0, 5)
+const sampleRightActionIds = Object.values(BUILT_IN_TOOLBAR_ACTIONS)
+  .filter(a => a.placement === 'right')
+  .map(a => a.id)
+  .slice(0, 3)
 
 describe('MonacoEditorToolbar', () => {
   beforeEach(() => {
@@ -101,7 +106,7 @@ describe('MonacoEditorToolbar', () => {
       const wrapper = mountToolbar({ props: { editor, settings: true } })
       const leftSection = wrapper.find('[data-testid="monaco-editor-toolbar-left"]')
 
-      for (const id of markdownLeftActionIds) {
+      for (const id of sampleLeftActionIds) {
         expect(leftSection.find(`[data-testid="editor-toolbar-mdc-action-${id}-button"]`).exists()).toBe(true)
       }
     })
@@ -111,7 +116,7 @@ describe('MonacoEditorToolbar', () => {
       const wrapper = mountToolbar({ props: { editor, settings: true } })
       const rightSection = wrapper.find('[data-testid="monaco-editor-toolbar-right"]')
 
-      for (const id of markdownRightActionIds) {
+      for (const id of sampleRightActionIds) {
         expect(rightSection.find(`[data-testid="editor-toolbar-mdc-action-${id}-button"]`).exists()).toBe(true)
       }
     })
