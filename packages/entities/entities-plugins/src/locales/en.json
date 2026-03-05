@@ -11,13 +11,15 @@
     "enable": "Enable",
     "enabled": "Enabled",
     "delete": "Delete",
+    "disabled": "Disabled",
     "confirm_delete": "Yes, delete",
     "view": "View Details",
     "configure_dynamic_ordering": "Configure Dynamic Ordering",
     "go_to_plugins": "Go to Plugins",
     "save": "Save",
     "add_entity": "Add {entity}",
-    "remove_entity": "Remove {entity}"
+    "remove_entity": "Remove {entity}",
+    "loading_spinner": "Loading..."
   },
   "view_configuration": {
     "title": "Configuration",
