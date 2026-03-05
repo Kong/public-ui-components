@@ -205,7 +205,7 @@ interface PageLayoutTab {
 
 ## Nested PageLayout
 
-`PageLayout` supports nesting. A common case is a parent route wrapping its children with `PageLayout` (for top-level breadcrumbs/tabs), while a child route's component also uses `PageLayout` for its own header. When this happens, the parent automatically detects the child and hides its own header and tabs, acting as a transparent pass-through that renders only the `<router-view>`. This ensures only the child's `PageLayout` header is visible.
+`PageLayout` supports nesting. A common case is a parent route wrapping its children with `PageLayout` (for top-level breadcrumbs/tabs), while a child route's component also uses `PageLayout` for its own header. When this happens, the parent automatically detects the child and hides its own header and tabs (removing them from the DOM entirely), acting as a transparent pass-through. This ensures only the child's `PageLayout` header is visible. This is achieved via `provide` / `inject` internally.
 
 This behavior is automatic and requires no additional configuration — simply nest `PageLayout` components via routing and the parent will defer to the child.
 

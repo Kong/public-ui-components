@@ -2,9 +2,10 @@
   <div class="kong-ui-public-page-layout">
     <div
       v-if="!hasNestedPageLayout"
-      class="page-header-container"
+      class="page-layout-header"
+      data-testid="page-layout-header"
     >
-      <div class="header-breadcrumbs-container">
+      <div class="page-header-container">
         <KBreadcrumbs
           v-if="breadcrumbs && breadcrumbs.length"
           class="header-breadcrumbs"
@@ -26,7 +27,7 @@
     </div>
 
     <div
-      class="page-content-wrapper"
+      class="page-layout-content"
       :class="{ 'has-nested-page-layout': hasNestedPageLayout }"
     >
       <router-view v-if="hasTabs" />
@@ -70,8 +71,9 @@ provide(nestedPageLayoutInjectionKey, (): void => {
 })
 
 // If this instance is itself nested inside another PageLayout, notify the parent.
-const setHasNestedPageLayout = inject<() => void>(nestedPageLayoutInjectionKey)
-if (setHasNestedPageLayout && typeof setHasNestedPageLayout === 'function') {
+// Fix: Parenthesize the function type to satisfy TypeScript union type syntax.
+const setHasNestedPageLayout = inject<(() => void) | undefined>(nestedPageLayoutInjectionKey, undefined)
+if (typeof setHasNestedPageLayout === 'function') {
   setHasNestedPageLayout()
 }
 </script>
@@ -81,12 +83,12 @@ if (setHasNestedPageLayout && typeof setHasNestedPageLayout === 'function') {
   box-sizing: border-box;
   font-family: var(--kui-font-family-text, $kui-font-family-text);
 
-  .page-header-container {
+  .page-layout-header {
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-40, $kui-space-40);
 
-    .header-breadcrumbs-container {
+    .page-header-container {
       padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 
       .header-breadcrumbs {
@@ -116,14 +118,14 @@ if (setHasNestedPageLayout && typeof setHasNestedPageLayout === 'function') {
 
     // When there are no tabs, add a border and padding to the bottom of the breadcrumbs container
     &:not(:has(.page-layout-tabs)) {
-      .header-breadcrumbs-container {
+      .page-header-container {
         border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
         padding: var(--kui-space-60, $kui-space-60);
       }
     }
   }
 
-  .page-content-wrapper {
+  .page-layout-content {
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-50, $kui-space-50);
