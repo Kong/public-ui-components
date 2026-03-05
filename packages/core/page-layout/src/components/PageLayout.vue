@@ -75,7 +75,7 @@ provide(nestedPageLayoutInjectionKey, (): void => {
 
 // If this instance is itself nested inside another PageLayout, notify the parent.
 // Fix: Parenthesize the function type to satisfy TypeScript union type syntax.
-const setHasNestedPageLayout = inject<(() => void) | undefined>(nestedPageLayoutInjectionKey, undefined)
+const setHasNestedPageLayout = inject<(() => void) | null>(nestedPageLayoutInjectionKey, null)
 if (typeof setHasNestedPageLayout === 'function') {
   setHasNestedPageLayout()
 }
