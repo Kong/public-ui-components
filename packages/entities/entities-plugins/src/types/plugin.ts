@@ -19,6 +19,7 @@ export const PluginGroupArray = [
   PluginGroup.LOGGING,
   PluginGroup.DEPLOYMENT,
   PluginGroup.WEBSOCKET,
+  PluginGroup.MONETIZATION,
   PluginGroup.CUSTOM_PLUGINS,
 ]
 
