@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.165.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.164.3...@kong-ui-public/entities-plugins@9.165.0) (2026-03-05)
+
+
+### Features
+
+* **entities-plugins:** add monetization in plugin select group ([#2963](https://github.com/Kong/public-ui-components/issues/2963)) ([8692731](https://github.com/Kong/public-ui-components/commit/8692731594cbf90e6bf466e811330a8a2878da6b))
+
+
+
+
+
 ## [9.164.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.164.2...@kong-ui-public/entities-plugins@9.164.3) (2026-03-04)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
