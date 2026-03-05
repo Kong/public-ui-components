@@ -1,5 +1,8 @@
 <template>
-  <div class="kong-ui-public-page-layout">
+  <div
+    class="kong-ui-public-page-layout"
+    data-testid="kong-ui-public-page-layout"
+  >
     <div
       v-if="!hasNestedPageLayout"
       class="page-layout-header"
