@@ -120,6 +120,7 @@ onMounted(async () => {
     selectedItem.value = item
   } catch (err) {
     console.error('Failed to load selected entity:', err)
+    fieldValue.value = null
   } finally {
     loading.value = false
   }
