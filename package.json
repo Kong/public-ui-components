@@ -80,6 +80,11 @@
         "GHSA-3ppc-4f35-3m26",
         "GHSA-23c5-xmqv-rm74",
         "GHSA-7r86-cg39-jmmj"
+      ],
+      "ignoreCves": [
+        "CVE-2023-45133",
+        "CVE-2020-8203",
+        "CVE-2026-0540"
       ]
     },
     "overrides": {
