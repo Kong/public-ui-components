@@ -91,9 +91,6 @@ const REQUEST_RESULTS_LIMIT = 1000
  */
 
 const {
-  getAll: getAllProp,
-  getOne: getOneProp,
-  getPartial: getPartialProp,
   transformItem: transformItemProp,
   labelField = 'name',
   fields = [],
@@ -121,12 +118,6 @@ const {
   error?: string | null
   /** Field key to use as the display label in dropdown items. Default: 'name' */
   labelField?: string
-  /** If not provided, falls back to FORMS_API_KEY injection */
-  getAll?: (query: string, signal?: AbortSignal) => Promise<EntityData[]>
-  /** If not provided, falls back to FORMS_API_KEY injection */
-  getPartial?: (size: number) => Promise<AxiosResponse<EntityResponse>>
-  /** If not provided, falls back to FORMS_API_KEY injection */
-  getOne?: (id: string) => Promise<EntityData>
 }>()
 
 defineEmits<{
@@ -136,24 +127,24 @@ defineEmits<{
 // --- API resolution: use provided callbacks or build from injected API ---
 const api = inject<Record<string, any> | undefined>(FORMS_API_KEY, undefined)
 
-const getAll = getAllProp ?? (async (query: string, signal?: AbortSignal): Promise<EntityData[]> => {
+const getAll = async (query: string, signal?: AbortSignal): Promise<EntityData[]> => {
   if (!api) {
     console.warn('[@kong-ui-public/forms] No API service provided')
     return []
   }
   const { data } = await api.getAllV2(entity, { name: query, size: REQUEST_RESULTS_LIMIT }, signal)
   return data.data
-})
+}
 
-const getPartial = getPartialProp ?? ((size: number): Promise<AxiosResponse<EntityResponse>> => {
+const getPartial = async (size: number): Promise<AxiosResponse<EntityResponse>> => {
   if (!api) {
     console.warn('[@kong-ui-public/forms] No API service provided')
     return Promise.resolve({ data: { data: [] } } as unknown as AxiosResponse<EntityResponse>)
   }
   return api.peek(entity, size)
-})
+}
 
-const getOne = getOneProp ?? (async (id: string): Promise<EntityData> => {
+const getOne = async (id: string): Promise<EntityData> => {
   if (!api) {
     console.warn('[@kong-ui-public/forms] No API service provided')
     return { id } as EntityData
@@ -165,7 +156,7 @@ const getOne = getOneProp ?? (async (id: string): Promise<EntityData> => {
     throw new Error(`Entity of type ${entity} with id ${id} not found`)
   }
   return res.data
-})
+}
 
 const transformItem = transformItemProp ?? ((item: EntityData): SelectItem<string> => ({
   ...item,
