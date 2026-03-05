@@ -39,3 +39,7 @@ export const DEFAULT_FIELDS: Readonly<RedisConfigurationFormState['fields']['con
     aws_is_serverless: true,
   },
 }
+
+export const FEATURE_FLAGS = {
+  KHCP_19709_KONNECT_MANAGED_REDIS: 'khcp-19709-konnect-managed-redis',
+} as const

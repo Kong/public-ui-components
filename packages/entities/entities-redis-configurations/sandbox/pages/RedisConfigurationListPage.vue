@@ -31,10 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { provide, ref } from 'vue'
 import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 
 import { RedisConfigurationList } from '../../src'
+import { FEATURE_FLAGS } from '../../src/constants'
 
 import type {
   KonnectRedisConfigurationListConfig,
@@ -43,6 +44,9 @@ import type {
 import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
+const isKonnectManagedRedisEnabled = import.meta.env.VITE_KONNECT_MANAGED_REDIS_ENABLED === 'true'
+
+provide(FEATURE_FLAGS.KHCP_19709_KONNECT_MANAGED_REDIS, isKonnectManagedRedisEnabled)
 
 const konnectConfig: KonnectRedisConfigurationListConfig = {
   app: 'konnect',

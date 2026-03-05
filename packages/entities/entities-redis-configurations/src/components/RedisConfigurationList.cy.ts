@@ -3,6 +3,7 @@ import RedisConfigurationList from './RedisConfigurationList.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { partials, links } from '../../fixtures/mockData'
 import { v4 as uuidv4 } from 'uuid'
+import { FEATURE_FLAGS } from '../constants'
 
 const baseConfigKM: KongManagerRedisConfigurationListConfig = {
   app: 'kongManager',
@@ -276,4 +277,29 @@ describe('<RedisConfigurationList />', () => {
       })
     })
   }
+
+  it('should show managed redis empty state description when feature flag is enabled in Konnect', () => {
+    interceptList({ app: 'Konnect', body: [] })
+    interceptLinkedPlugins({ app: 'Konnect' })
+
+    cy.mount(RedisConfigurationList, {
+      props: {
+        config: baseConfigKonnect,
+        cacheIdentifier: uuidv4(),
+      },
+      global: {
+        provide: {
+          [FEATURE_FLAGS.KHCP_19709_KONNECT_MANAGED_REDIS]: true,
+        },
+      },
+    })
+
+    cy.wait('@getRedisConfigurations')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'Connect your own Redis instance or use a managed one from Konnect.')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'Redis')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'New Redis')
+    cy.getTestId('entity-learn-more-button').should('not.exist')
+    cy.getTestId('redis-entity-empty-state').should('not.contain.text', 'Configure a Redis Configuration')
+    cy.getTestId('redis-entity-empty-state').should('not.contain.text', 'New configuration')
+  })
 })
