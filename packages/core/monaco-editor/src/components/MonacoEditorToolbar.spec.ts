@@ -193,7 +193,7 @@ describe('MonacoEditorToolbar', () => {
     })
   })
 
-  // TODO: fix flaky tests and re-enable
+  // TODO: fix flaky tests and re-enable [TDX-7641]
   describe.skip('overflow menu', () => {
     it('should hide the overflow dropdown when all items are visible', () => {
       const editor = makeEditor('ready')
