@@ -20,10 +20,10 @@
         <slot name="toolbar-left" />
       </template>
       <template
-        v-if="$slots['toolbar-centre']"
-        #toolbar-centre
+        v-if="$slots['toolbar-center']"
+        #toolbar-center
       >
-        <slot name="toolbar-centre" />
+        <slot name="toolbar-center" />
       </template>
       <template
         v-if="$slots['toolbar-right']"
@@ -166,7 +166,7 @@ defineSlots<{
   /**
    * Slot for custom toolbar content in the center of the toolbar.
    */
-  'toolbar-centre'?: () => any
+  'toolbar-center'?: () => any
   /**
    * Slot for custom toolbar content on the right side of the toolbar.
    */
