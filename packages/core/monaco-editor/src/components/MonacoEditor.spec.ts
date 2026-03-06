@@ -1,10 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { nextTick, reactive, shallowRef } from 'vue'
+import { defineComponent, nextTick, reactive, ref, shallowRef } from 'vue'
 import MonacoEditor from './MonacoEditor.vue'
-import { KEmptyState } from '@kong/kongponents'
+import Kongponents, { KEmptyState } from '@kong/kongponents'
 import type { UseMonacoEditorOptions } from '../types'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
+import ToolbarActionButton from './ToolbarActionButton.vue'
 
 // mock i18n
 vi.mock('../composables/useI18n', () => ({
@@ -15,10 +16,16 @@ vi.mock('../composables/useI18n', () => ({
   }),
 }))
 
+// mock @vueuse/core (jsdom has no layout engine)
+vi.mock('@vueuse/core', () => ({
+  useElementSize: vi.fn(() => ({ width: ref(1000), height: ref(44) })),
+}))
+
 // mock useMonacoEditor
 const editorStates = reactive({
   editorStatus: 'loading',
   hasContent: false,
+  currentLanguage: 'markdown',
 })
 
 const mockSetLanguage = vi.fn()
@@ -40,6 +47,12 @@ vi.mock('../composables/useMonacoEditor', () => ({
         editorStates.editorStatus = 'ready'
       },
       setLanguage: mockSetLanguage,
+      registerActions: vi.fn(),
+      setReadOnly: vi.fn(),
+      focus: vi.fn(),
+      remeasureFonts: vi.fn(),
+      toggleSearchWidget: vi.fn(),
+      triggerKeyboardCommand: vi.fn(),
     }
   },
 }))
@@ -319,4 +332,83 @@ describe('MonacoEditor.vue', () => {
     expect(options?.padding?.bottom).toBe(customPadding.bottom)
   })
 
+  describe('toolbar slots', () => {
+    beforeEach(() => {
+      editorStates.editorStatus = 'ready'
+    })
+
+    const KDropdownStub = defineComponent({
+      name: 'KDropdown',
+      template: '<div class="k-dropdown-stub"><slot name="items" /><slot /></div>',
+    })
+
+    const mountWithToolbar = (options: Record<string, any> = {}) =>
+      mount(MonacoEditor, {
+        props: {
+          modelValue: '',
+          toolbar: true,
+          ...options.props,
+        },
+        slots: options.slots,
+        global: {
+          plugins: [Kongponents],
+          stubs: {
+            KEmptyState,
+            ToolbarActionButton,
+            KDropdown: false,
+            Transition: false,
+          },
+          ...options.global,
+        },
+      })
+
+    it('should not render toolbar when toolbar prop is false', () => {
+      const wrapper = mountWithToolbar({ props: { toolbar: false } })
+
+      expect(wrapper.find('[data-testid="monaco-editor-toolbar"]').exists()).toBe(false)
+    })
+
+    it('should render toolbar when toolbar prop is true', () => {
+      const wrapper = mountWithToolbar()
+
+      expect(wrapper.find('[data-testid="monaco-editor-toolbar"]').exists()).toBe(true)
+    })
+
+    describe('slot forwarding', () => {
+      const slotCases = [
+        ['toolbar-left', 'custom-left', 'Left Content'],
+        ['toolbar-center', 'custom-center', 'Center Content'],
+        ['toolbar-right', 'custom-right', 'Right Content'],
+      ]
+
+      it.each(slotCases)(
+        'forwards %s slot to the toolbar component',
+        (slotName, testId, content) => {
+          const wrapper = mountWithToolbar({
+            slots: {
+              [slotName]: `<span data-testid="${testId}">${content}</span>`,
+            },
+          })
+
+          const el = wrapper.find(`[data-testid="${testId}"]`)
+          expect(el.exists()).toBe(true)
+          expect(el.text()).toBe(content)
+        },
+      )
+
+      it('forwards all toolbar slots simultaneously', () => {
+        const wrapper = mountWithToolbar({
+          slots: {
+            'toolbar-left': '<span data-testid="custom-left">Left</span>',
+            'toolbar-center': '<span data-testid="custom-center">Center</span>',
+            'toolbar-right': '<span data-testid="custom-right">Right</span>',
+          },
+        })
+
+        expect(wrapper.find('[data-testid="custom-left"]').exists()).toBe(true)
+        expect(wrapper.find('[data-testid="custom-center"]').exists()).toBe(true)
+        expect(wrapper.find('[data-testid="custom-right"]').exists()).toBe(true)
+      })
+    })
+  })
 })
