@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.19.0...@kong-ui-public/monaco-editor@0.19.1) (2026-03-06)
+
+
+### Bug Fixes
+
+* **monaco-editor:** improve overflow handling by using direct DOM measurements for toolbar size ([#2977](https://github.com/Kong/public-ui-components/issues/2977)) ([6b4aecb](https://github.com/Kong/public-ui-components/commit/6b4aecb6b88e5e7cd9019c969b189d5d8141635a))
+
+
+
+
+
 # [0.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.18.0...@kong-ui-public/monaco-editor@0.19.0) (2026-03-06)
 
 
