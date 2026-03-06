@@ -5,7 +5,6 @@ import MonacoEditorToolbar from './MonacoEditorToolbar.vue'
 import { BUILT_IN_TOOLBAR_ACTIONS } from '../actions'
 import { useElementSize as useElementSizeFn } from '@vueuse/core'
 import Kongponents from '@kong/kongponents'
-import ToolbarActionButton from './ToolbarActionButton.vue'
 import type { MonacoEditorToolbarOptions } from '../types'
 
 // Mock @vueuse/core (jsdom has no layout engine)
