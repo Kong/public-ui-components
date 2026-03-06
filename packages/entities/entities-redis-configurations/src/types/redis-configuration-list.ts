@@ -11,7 +11,10 @@ export interface BaseRedisConfigurationListConfig {
 }
 
 /** Konnect redis configuration list config */
-export interface KonnectRedisConfigurationListConfig extends KonnectBaseTableConfig, BaseRedisConfigurationListConfig { }
+export interface KonnectRedisConfigurationListConfig extends KonnectBaseTableConfig, BaseRedisConfigurationListConfig {
+  /** Enables managed Konnect Redis copy variants in list empty-state/title/action text. */
+  isKonnectManagedRedisEnabled?: boolean
+}
 
 /** Kong Manager redis configuration list config */
 export interface KongManagerRedisConfigurationListConfig extends KongManagerBaseTableConfig, BaseRedisConfigurationListConfig {

@@ -181,7 +181,7 @@ import {
   FetcherStatus,
   TableTags,
 } from '@kong-ui-public/entities-shared'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
 
@@ -189,7 +189,6 @@ import endpoints from '../partials-endpoints'
 import composables from '../composables'
 import { getRedisType } from '../helpers'
 import { PartialType, RedisType } from '../types'
-import { FEATURE_FLAGS } from '../constants'
 import LinkedPluginsInline from './LinkedPluginsInline.vue'
 import LinkedPluginListModal from './LinkedPluginListModal.vue'
 import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
@@ -321,12 +320,13 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()
 
 const filterQuery = ref<string>('')
-// Host apps can provide this flag to switch list empty-state/title/action copy for managed Konnect Redis
-const isKonnectManagedRedisEnabled = inject<boolean>(FEATURE_FLAGS.KHCP_19709_KONNECT_MANAGED_REDIS, false)
+const isKonnectManagedRedisEnabled = computed<boolean>(() => {
+  return props.config.app === 'konnect' && !!props.config.isKonnectManagedRedisEnabled
+})
 
 const emptyStateDescription = computed<string>(() => {
   // When managed Redis is enabled in Konnect, use the expanded onboarding message
-  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled) {
+  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled.value) {
     return t('list.empty_state.description_with_managed_konnect')
   }
 
@@ -334,7 +334,7 @@ const emptyStateDescription = computed<string>(() => {
 })
 
 const emptyStateTitle = computed<string>(() => {
-  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled) {
+  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled.value) {
     return t('redis.empty_state.title_with_managed_konnect')
   }
 
@@ -342,7 +342,7 @@ const emptyStateTitle = computed<string>(() => {
 })
 
 const emptyStateActionText = computed<string>(() => {
-  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled) {
+  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled.value) {
     return t('list.action_with_managed_konnect')
   }
 

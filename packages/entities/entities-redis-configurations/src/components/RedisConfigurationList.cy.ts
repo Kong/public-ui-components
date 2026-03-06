@@ -3,7 +3,6 @@ import RedisConfigurationList from './RedisConfigurationList.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { partials, links } from '../../fixtures/mockData'
 import { v4 as uuidv4 } from 'uuid'
-import { FEATURE_FLAGS } from '../constants'
 
 const baseConfigKM: KongManagerRedisConfigurationListConfig = {
   app: 'kongManager',
@@ -284,14 +283,11 @@ describe('<RedisConfigurationList />', () => {
 
     cy.mount(RedisConfigurationList, {
       props: {
-        config: baseConfigKonnect,
-        cacheIdentifier: uuidv4(),
-      },
-      global: {
-        // Match app-level provide/inject wiring so the component reads managed-Redis copy variants
-        provide: {
-          [FEATURE_FLAGS.KHCP_19709_KONNECT_MANAGED_REDIS]: true,
+        config: {
+          ...baseConfigKonnect,
+          isKonnectManagedRedisEnabled: true,
         },
+        cacheIdentifier: uuidv4(),
       },
     })
 
