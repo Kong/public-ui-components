@@ -2,6 +2,8 @@
   <span class="referable-field-item">
     <span
       class="referable-field-link"
+      role="button"
+      tabindex="0"
       @click="scrollToField"
     >{{ fieldLabel }}</span><template v-if="!isLast">, </template>
   </span>

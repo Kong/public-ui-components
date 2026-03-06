@@ -294,7 +294,11 @@ describe('<PluginFieldRuleAlerts />', () => {
       },
     })
 
-    cy.get('.plugin-field-rule-alerts').should('have.css', 'margin-top')
-    cy.get('.plugin-field-rule-alerts').should('have.css', 'margin-bottom')
+    cy.get('.plugin-field-rule-alerts')
+      .invoke('css', 'margin-top')
+      .should('not.equal', '0px')
+    cy.get('.plugin-field-rule-alerts')
+      .invoke('css', 'margin-bottom')
+      .should('not.equal', '0px')
   })
 })

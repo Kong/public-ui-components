@@ -88,8 +88,9 @@ describe('<ReferableFieldItem />', () => {
       },
     })
 
-    cy.get('.referable-field-link').should('have.css', 'text-decoration')
-      .and('match', /underline/)
+    cy.get('.referable-field-link')
+      .invoke('css', 'text-decoration')
+      .should('match', /underline/)
   })
 
   it('should attempt to scroll when clicked', () => {
