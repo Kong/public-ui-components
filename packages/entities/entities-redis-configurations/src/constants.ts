@@ -39,8 +39,3 @@ export const DEFAULT_FIELDS: Readonly<RedisConfigurationFormState['fields']['con
     aws_is_serverless: true,
   },
 }
-
-export const FEATURE_FLAGS = {
-  // Injection key used by host apps (and sandbox) to opt into Konnect-managed Redis copy/labels
-  KHCP_19709_KONNECT_MANAGED_REDIS: 'khcp-19709-konnect-managed-redis',
-} as const
