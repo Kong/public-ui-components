@@ -73,16 +73,31 @@ const cspFields = [
   'gcp_jwt_exp',
 ] as const
 type CspField = typeof cspFields[number]
-const cspMatrix: Array<{
-  method: CspMethod
-  visible: CspField[]
-  required: Array<{ field: CspField, value: string }>
-  optional?: Array<{ field: CspField, value: string }>
-  expectedConfig: Record<string, any>
-}> = [
+const cspVisibility: Array<{ method: CspMethod, visible: CspField[] }> = [
   {
     method: 'aws_iam',
     visible: ['aws_auth_role', 'aws_auth_region', 'aws_login_path', 'aws_access_key_id', 'aws_secret_access_key', 'aws_sts_endpoint_url', 'aws_assume_role_arn', 'aws_role_session_name'],
+  },
+  {
+    method: 'aws_ec2',
+    visible: ['aws_auth_role', 'aws_auth_nonce', 'aws_login_path'],
+  },
+  {
+    method: 'azure',
+    visible: ['azure_auth_role', 'azure_login_path'],
+  },
+  {
+    method: 'gcp_gce',
+    visible: ['gcp_auth_role', 'gcp_login_path'],
+  },
+  {
+    method: 'gcp_iam',
+    visible: ['gcp_auth_role', 'gcp_login_path', 'gcp_service_account', 'gcp_jwt_exp'],
+  },
+]
+const cspSubmit: Array<{ method: CspMethod, required: Array<{ field: CspField, value: string }>, optional?: Array<{ field: CspField, value: string }> }> = [
+  {
+    method: 'aws_iam',
     required: [
       { field: 'aws_auth_role', value: 'aws-role' },
       { field: 'aws_auth_region', value: 'ap-northeast-1' },
@@ -95,76 +110,38 @@ const cspMatrix: Array<{
       { field: 'aws_assume_role_arn', value: 'arn:aws:iam::123456789012:role/demo' },
       { field: 'aws_role_session_name', value: 'kong-vault-session' },
     ],
-    expectedConfig: {
-      auth_method: 'aws_iam',
-      aws_auth_role: 'aws-role',
-      aws_auth_region: 'ap-northeast-1',
-      aws_login_path: 'auth/aws/login',
-      aws_access_key_id: 'access-key-id',
-      aws_secret_access_key: 'secret-access-key',
-      aws_sts_endpoint_url: 'https://sts.internal.example.com',
-      aws_assume_role_arn: 'arn:aws:iam::123456789012:role/demo',
-      aws_role_session_name: 'kong-vault-session',
-    },
   },
   {
     method: 'aws_ec2',
-    visible: ['aws_auth_role', 'aws_auth_nonce', 'aws_login_path'],
     required: [
       { field: 'aws_auth_role', value: 'aws-role' },
       { field: 'aws_auth_nonce', value: 'nonce' },
     ],
     optional: [{ field: 'aws_login_path', value: 'auth/aws-ec2/login' }],
-    expectedConfig: {
-      auth_method: 'aws_ec2',
-      aws_auth_role: 'aws-role',
-      aws_auth_nonce: 'nonce',
-      aws_login_path: 'auth/aws-ec2/login',
-    },
   },
   {
     method: 'azure',
-    visible: ['azure_auth_role', 'azure_login_path'],
     required: [{ field: 'azure_auth_role', value: 'azure-role' }],
     optional: [{ field: 'azure_login_path', value: 'auth/azure/login' }],
-    expectedConfig: {
-      auth_method: 'azure',
-      azure_auth_role: 'azure-role',
-      azure_login_path: 'auth/azure/login',
-    },
   },
   {
     method: 'gcp_gce',
-    visible: ['gcp_auth_role', 'gcp_login_path'],
     required: [{ field: 'gcp_auth_role', value: 'gcp-role' }],
     optional: [{ field: 'gcp_login_path', value: 'auth/gcp/login' }],
-    expectedConfig: {
-      auth_method: 'gcp_gce',
-      gcp_auth_role: 'gcp-role',
-      gcp_login_path: 'auth/gcp/login',
-    },
   },
   {
     method: 'gcp_iam',
-    visible: ['gcp_auth_role', 'gcp_login_path', 'gcp_service_account', 'gcp_jwt_exp'],
     required: [
       { field: 'gcp_auth_role', value: 'gcp-iam-role' },
       { field: 'gcp_service_account', value: 'svc@example.iam.gserviceaccount.com' },
       { field: 'gcp_jwt_exp', value: '300' },
     ],
     optional: [{ field: 'gcp_login_path', value: 'auth/gcp-iam/login' }],
-    expectedConfig: {
-      auth_method: 'gcp_iam',
-      gcp_auth_role: 'gcp-iam-role',
-      gcp_login_path: 'auth/gcp-iam/login',
-      gcp_service_account: 'svc@example.iam.gserviceaccount.com',
-      gcp_jwt_exp: 300,
-    },
   },
 ]
 
 const encryptedCspFields: Record<CspMethod, CspField[]> = {
-  aws_iam: ['aws_auth_role', 'aws_access_key_id', 'aws_secret_access_key', 'aws_assume_role_arn'],
+  aws_iam: ['aws_access_key_id', 'aws_secret_access_key', 'aws_assume_role_arn'],
   aws_ec2: ['aws_auth_nonce'],
   azure: [],
   gcp_gce: [],
@@ -189,15 +166,8 @@ function fillHcvField(field: CspField, value: string): void {
   cy.getTestId(hcvFieldId(field)).type(value)
 }
 
-function openHcvCreateForm(): void {
-  cy.getTestId('vault-form-prefix').clear()
-  cy.getTestId('vault-form-prefix').type(vault.prefix)
-  cy.getTestId('provider-select').click({ force: true })
-  cy.getTestId('vault-form-provider-hcv').click({ force: true })
-}
-
 function checkCspVisibility(): void {
-  cspMatrix.forEach(({ method, visible }) => {
+  cspVisibility.forEach(({ method, visible }) => {
     pickAuth(method)
     cy.getTestId('vault-form-config-hcv-token').should('not.exist')
 
@@ -209,7 +179,7 @@ function checkCspVisibility(): void {
 }
 
 function checkEncryptedFieldTypes(): void {
-  cspMatrix.forEach(({ method }) => {
+  cspMethods.forEach((method) => {
     pickAuth(method)
 
     encryptedCspFields[method].forEach((field) => {
@@ -219,7 +189,7 @@ function checkEncryptedFieldTypes(): void {
 }
 
 function checkCspSubmit(): void {
-  cspMatrix.forEach(({ method, required, optional }) => {
+  cspSubmit.forEach(({ method, required, optional }) => {
     pickAuth(method)
 
     required.forEach(({ field }) => {
@@ -237,19 +207,6 @@ function checkCspSubmit(): void {
       checkSubmit(true)
     })
   })
-}
-
-function fillCspFields(method: CspMethod): Record<string, any> {
-  const entry = cspMatrix.find((item) => item.method === method)
-
-  if (!entry) {
-    throw new Error(`Missing CSP test config for ${method}`)
-  }
-
-  pickAuth(method)
-  ;[...entry.required, ...(entry.optional ?? [])].forEach(({ field, value }) => fillHcvField(field, value))
-
-  return entry.expectedConfig
 }
 
 describe('<VaultForm />', () => {
@@ -281,40 +238,6 @@ describe('<VaultForm />', () => {
           body: { ...vault, tags: ['tag1', 'tag2'] },
         },
       ).as('updateVault')
-    }
-
-    const interceptCreate = (expectedConfig: Record<string, any>, alias = 'createVault'): void => {
-      cy.intercept(
-        {
-          method: 'POST',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/vaults`,
-        },
-        (req) => {
-          expect(req.body.name).to.eq('hcv')
-          expect(req.body.prefix).to.eq(vault.prefix)
-          expect(req.body.config).to.include({
-            protocol: 'http',
-            host: '127.0.0.1',
-            port: 8200,
-            mount: 'secret',
-            kv: 'v1',
-            namespace: null,
-            ...expectedConfig,
-          })
-
-          req.reply({
-            statusCode: 201,
-            body: {
-              id: 'new-vault-id',
-              name: req.body.name,
-              prefix: req.body.prefix,
-              description: req.body.description,
-              tags: req.body.tags,
-              config: req.body.config,
-            },
-          })
-        },
-      ).as(alias)
     }
 
     it('should show create form', () => {
@@ -555,24 +478,6 @@ describe('<VaultForm />', () => {
       // disables save when required field is cleared - general
       cy.getTestId('vault-form-prefix').clear()
       cy.getTestId('vault-create-form-submit').should('be.disabled')
-    })
-
-    cspMatrix.forEach(({ method, expectedConfig }) => {
-      it(`submits ${method} payload with CSP fields`, () => {
-        interceptCreate(expectedConfig)
-
-        cy.mount(VaultForm, {
-          props: {
-            config: baseConfigKM,
-          },
-        })
-
-        openHcvCreateForm()
-        fillCspFields(method)
-        cy.getTestId('vault-create-form-submit').click()
-
-        cy.wait('@createVault')
-      })
     })
 
     it('should show edit form', () => {

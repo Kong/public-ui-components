@@ -113,7 +113,7 @@ describe('<VaultConfigCard/>', () => {
 
       cy.wait('@getVault')
 
-      cy.getTestId('aws_auth_role-plain-text').should('contain.text', '************')
+      cy.getTestId('aws_auth_role-plain-text').should('contain.text', 'aws-role')
       cy.getTestId('aws_access_key_id-plain-text').should('contain.text', '************')
       cy.getTestId('aws_secret_access_key-plain-text').should('contain.text', '************')
       cy.getTestId('aws_assume_role_arn-plain-text').should('contain.text', '************')

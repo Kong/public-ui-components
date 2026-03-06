@@ -358,8 +358,7 @@
                 :label="t('form.config.hcv.fields.aws_auth_role.label')"
                 :readonly="form.isReadonly"
                 required
-                show-password-mask-toggle
-                type="password"
+                type="text"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].aws_auth_region"
