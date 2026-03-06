@@ -95,48 +95,50 @@ const cspVisibility: Array<{ method: CspMethod, visible: CspField[] }> = [
     visible: ['gcp_auth_role', 'gcp_login_path', 'gcp_service_account', 'gcp_jwt_exp'],
   },
 ]
-const cspSubmit: Array<{ method: CspMethod, required: Array<{ field: CspField, value: string }>, optional?: Array<{ field: CspField, value: string }> }> = [
+const cspSubmit: Array<{ method: CspMethod, fields: Array<{ field: CspField, value: string, required: boolean }> }> = [
   {
     method: 'aws_iam',
-    required: [
-      { field: 'aws_auth_role', value: 'aws-role' },
-      { field: 'aws_auth_region', value: 'ap-northeast-1' },
-    ],
-    optional: [
-      { field: 'aws_login_path', value: 'auth/aws/login' },
-      { field: 'aws_access_key_id', value: 'access-key-id' },
-      { field: 'aws_secret_access_key', value: 'secret-access-key' },
-      { field: 'aws_sts_endpoint_url', value: 'https://sts.internal.example.com' },
-      { field: 'aws_assume_role_arn', value: 'arn:aws:iam::123456789012:role/demo' },
-      { field: 'aws_role_session_name', value: 'kong-vault-session' },
+    fields: [
+      { field: 'aws_auth_role', value: 'aws-role', required: true },
+      { field: 'aws_auth_region', value: 'ap-northeast-1', required: true },
+      { field: 'aws_login_path', value: 'auth/aws/login', required: false },
+      { field: 'aws_access_key_id', value: 'access-key-id', required: false },
+      { field: 'aws_secret_access_key', value: 'secret-access-key', required: false },
+      { field: 'aws_sts_endpoint_url', value: 'https://sts.internal.example.com', required: false },
+      { field: 'aws_assume_role_arn', value: 'arn:aws:iam::123456789012:role/demo', required: false },
+      { field: 'aws_role_session_name', value: 'kong-vault-session', required: false },
     ],
   },
   {
     method: 'aws_ec2',
-    required: [
-      { field: 'aws_auth_role', value: 'aws-role' },
-      { field: 'aws_auth_nonce', value: 'nonce' },
+    fields: [
+      { field: 'aws_auth_role', value: 'aws-role', required: true },
+      { field: 'aws_auth_nonce', value: 'nonce', required: true },
+      { field: 'aws_login_path', value: 'auth/aws-ec2/login', required: false },
     ],
-    optional: [{ field: 'aws_login_path', value: 'auth/aws-ec2/login' }],
   },
   {
     method: 'azure',
-    required: [{ field: 'azure_auth_role', value: 'azure-role' }],
-    optional: [{ field: 'azure_login_path', value: 'auth/azure/login' }],
+    fields: [
+      { field: 'azure_auth_role', value: 'azure-role', required: true },
+      { field: 'azure_login_path', value: 'auth/azure/login', required: false },
+    ],
   },
   {
     method: 'gcp_gce',
-    required: [{ field: 'gcp_auth_role', value: 'gcp-role' }],
-    optional: [{ field: 'gcp_login_path', value: 'auth/gcp/login' }],
+    fields: [
+      { field: 'gcp_auth_role', value: 'gcp-role', required: true },
+      { field: 'gcp_login_path', value: 'auth/gcp/login', required: false },
+    ],
   },
   {
     method: 'gcp_iam',
-    required: [
-      { field: 'gcp_auth_role', value: 'gcp-iam-role' },
-      { field: 'gcp_service_account', value: 'svc@example.iam.gserviceaccount.com' },
-      { field: 'gcp_jwt_exp', value: '300' },
+    fields: [
+      { field: 'gcp_auth_role', value: 'gcp-iam-role', required: true },
+      { field: 'gcp_service_account', value: 'svc@example.iam.gserviceaccount.com', required: true },
+      { field: 'gcp_jwt_exp', value: '300', required: true },
+      { field: 'gcp_login_path', value: 'auth/gcp-iam/login', required: false },
     ],
-    optional: [{ field: 'gcp_login_path', value: 'auth/gcp-iam/login' }],
   },
 ]
 
@@ -189,20 +191,23 @@ function checkEncryptedFieldTypes(): void {
 }
 
 function checkCspSubmit(): void {
-  cspSubmit.forEach(({ method, required, optional }) => {
+  cspSubmit.forEach(({ method, fields }) => {
+    const requiredFields = fields.filter(({ required }) => required)
+    const optionalFields = fields.filter(({ required }) => !required)
+
     pickAuth(method)
 
-    required.forEach(({ field }) => {
+    requiredFields.forEach(({ field }) => {
       cy.getTestId(hcvFieldId(field)).clear()
     })
     checkSubmit(false)
 
-    required.forEach(({ field, value }, index) => {
+    requiredFields.forEach(({ field, value }, index) => {
       fillHcvField(field, value)
-      checkSubmit(index === required.length - 1)
+      checkSubmit(index === requiredFields.length - 1)
     })
 
-    optional?.forEach(({ field, value }) => {
+    optionalFields.forEach(({ field, value }) => {
       fillHcvField(field, value)
       checkSubmit(true)
     })

@@ -116,8 +116,8 @@ const configSchema = ref<VaultConfigurationSchema>({
 
 const codeBlockRecordFormatter = (record: Record<string, any>) => {
   const maskedConfig = { ...record.config }
-  Object.keys(maskedConfig).forEach(key => {
-    if (SENSITIVE_KEYS.includes(key)) {
+  SENSITIVE_KEYS.forEach(key => {
+    if (key in maskedConfig) {
       maskedConfig[key] = SENSITIVE_MASK
     }
   })
