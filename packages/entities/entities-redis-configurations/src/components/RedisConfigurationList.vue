@@ -347,14 +347,6 @@ const emptyStateActionText = computed<string>(() => {
   return t('list.action')
 })
 
-const redisEmptyStateDescription = computed<string>(() => {
-  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled) {
-    return t('list.empty_state.description_with_managed_konnect')
-  }
-
-  return t('redis.empty_state.description')
-})
-
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
   const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
 
@@ -384,7 +376,7 @@ const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)
 const emptyStateOptions = ref<EmptyStateOptions>({
   ctaPath: props.config.createRoute,
   ctaText: undefined,
-  message: `${redisEmptyStateDescription.value}${props.config.additionMessageForEmptyState ? ` ${props.config.additionMessageForEmptyState}` : ''}`,
+  message: `${emptyStateDescription.value}${props.config.additionMessageForEmptyState ? ` ${props.config.additionMessageForEmptyState}` : ''}`,
   title: emptyStateTitle.value,
 })
 
