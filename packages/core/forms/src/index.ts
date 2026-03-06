@@ -22,3 +22,5 @@ export * from './types'
 export * as abstractField from './components/fields/abstractField'
 
 export { default as composables } from './composables'
+
+export { default as FieldScopedEntitySelect } from './components/fields/FieldScopedEntitySelect.vue'
