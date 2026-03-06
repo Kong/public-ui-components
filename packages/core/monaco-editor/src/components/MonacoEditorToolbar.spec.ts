@@ -1,6 +1,6 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref, reactive, nextTick, defineComponent } from 'vue'
+import { ref, reactive, nextTick } from 'vue'
 import MonacoEditorToolbar from './MonacoEditorToolbar.vue'
 import { BUILT_IN_TOOLBAR_ACTIONS } from '../actions'
 import { useElementSize as useElementSizeFn } from '@vueuse/core'

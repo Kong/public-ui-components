@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { defineComponent, nextTick, reactive, ref, shallowRef } from 'vue'
+import { nextTick, reactive, ref, shallowRef } from 'vue'
 import MonacoEditor from './MonacoEditor.vue'
 import Kongponents, { KEmptyState } from '@kong/kongponents'
 import type { UseMonacoEditorOptions } from '../types'
