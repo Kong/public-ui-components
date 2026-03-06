@@ -160,7 +160,7 @@ const centerSlotSize = useElementSize(centerSlotEl)
 const rightSlotSize = useElementSize(rightSlotEl)
 
 // Track current language reactively from the editor composable's state
-const currentLanguage = computed(() => editor?.editorStates.currentLanguage ?? '')
+const currentLanguage = computed<string>(() => editor?.editorStates.currentLanguage ?? '')
 
 const { commands, leftGroups, centerGroups, rightGroups } = useToolbarActions(settings, currentLanguage)
 
@@ -191,16 +191,24 @@ watch(leftGroups, (groups) => {
 }, { immediate: true })
 
 function updateOverflowMenu() {
-  const toolbarWidth = toolbarSize.width.value
+  // Read DOM sizes directly for accurate, synchronous measurements.
+  // This avoids stale values from useElementSize refs that rely on async ResizeObserver callbacks,
+  // which can miss cascading changes (e.g. when collapsing a pane).
+  const toolbarWidth = toolbarEl.value?.getBoundingClientRect().width ?? 0
   if (toolbarWidth === 0) return
 
-  const contentWidth = leftSlotSize.width.value + centerSlotSize.width.value + rightSlotSize.width.value + 50
+  const leftWidth = leftSlotEl.value?.getBoundingClientRect().width ?? 0
+  const centerWidth = centerSlotEl.value?.getBoundingClientRect().width ?? 0
+  const rightWidth = rightSlotEl.value?.getBoundingClientRect().width ?? 0
+  const contentWidth = leftWidth + centerWidth + rightWidth + 50
 
   if (toolbarWidth < contentWidth && visibleLeftGroups.value.length > 0) {
     // Collapse: store the content width, then remove the last visible group
     collapseBreakpoints.push(contentWidth)
     visibleLeftGroups.value = visibleLeftGroups.value.slice(0, -1)
     dropdownKey.value++
+    // Re-check after DOM update to cascade collapse if still overflowing
+    nextTick(updateOverflowMenu)
   } else if (
     collapseBreakpoints.length > 0 &&
     visibleLeftGroups.value.length < leftGroups.value.length &&
@@ -212,6 +220,8 @@ function updateOverflowMenu() {
       ...visibleLeftGroups.value,
       leftGroups.value[visibleLeftGroups.value.length]!,
     ]
+    // Re-check after DOM update to cascade restore if more space is available
+    nextTick(updateOverflowMenu)
   }
 }
 
