@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.18.0...@kong-ui-public/monaco-editor@0.19.0) (2026-03-06)
+
+
+### Features
+
+* **monaco-editor:** add customizable toolbar slots ([#2972](https://github.com/Kong/public-ui-components/issues/2972)) ([a22642f](https://github.com/Kong/public-ui-components/commit/a22642f57cf42ad4d65926822c6a9bd8c9bcf43d))
+
+
+
+
+
 # [0.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.17.0...@kong-ui-public/monaco-editor@0.18.0) (2026-03-05)
 
 
