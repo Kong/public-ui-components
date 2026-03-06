@@ -358,7 +358,8 @@
                 :label="t('form.config.hcv.fields.aws_auth_role.label')"
                 :readonly="form.isReadonly"
                 required
-                type="text"
+                show-password-mask-toggle
+                type="password"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].aws_auth_region"
@@ -367,6 +368,14 @@
                 :label="t('form.config.hcv.fields.aws_auth_region.label')"
                 :readonly="form.isReadonly"
                 required
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_login_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_login_path"
+                :label="t('form.config.hcv.fields.aws_login_path.label')"
+                :readonly="form.isReadonly"
                 type="text"
               />
               <KInput
@@ -386,6 +395,31 @@
                 :readonly="form.isReadonly"
                 show-password-mask-toggle
                 type="password"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_sts_endpoint_url"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_sts_endpoint_url"
+                :label="t('form.config.hcv.fields.aws_sts_endpoint_url.label')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_assume_role_arn"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_assume_role_arn"
+                :label="t('form.config.hcv.fields.aws_assume_role_arn.label')"
+                :readonly="form.isReadonly"
+                show-password-mask-toggle
+                type="password"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_role_session_name"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_role_session_name"
+                :label="t('form.config.hcv.fields.aws_role_session_name.label')"
+                :readonly="form.isReadonly"
+                type="text"
               />
             </div>
             <div
@@ -408,6 +442,15 @@
                 :label="t('form.config.hcv.fields.aws_auth_nonce.label')"
                 :readonly="form.isReadonly"
                 required
+                show-password-mask-toggle
+                type="password"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_login_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_login_path"
+                :label="t('form.config.hcv.fields.aws_login_path.label')"
+                :readonly="form.isReadonly"
                 type="text"
               />
             </div>
@@ -424,6 +467,14 @@
                 required
                 type="text"
               />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].azure_login_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-azure_login_path"
+                :label="t('form.config.hcv.fields.azure_login_path.label')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
             </div>
             <div
               v-else-if="config.hcvCspAuthMethodsAvailable && configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.GCP_GCE"
@@ -438,6 +489,14 @@
                 required
                 type="text"
               />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].gcp_login_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-gcp_login_path"
+                :label="t('form.config.hcv.fields.gcp_login_path.label')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
             </div>
             <div
               v-else-if="config.hcvCspAuthMethodsAvailable && configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.GCP_IAM"
@@ -450,6 +509,14 @@
                 :label="t('form.config.hcv.fields.gcp_auth_role.label')"
                 :readonly="form.isReadonly"
                 required
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].gcp_login_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-gcp_login_path"
+                :label="t('form.config.hcv.fields.gcp_login_path.label')"
+                :readonly="form.isReadonly"
                 type="text"
               />
               <KInput
@@ -1051,10 +1118,16 @@ const configFields = reactive<ConfigFields>({
     aws_auth_role: '',
     aws_auth_region: '',
     aws_auth_nonce: '',
+    aws_login_path: '',
     aws_access_key_id: '',
     aws_secret_access_key: '',
+    aws_sts_endpoint_url: '',
+    aws_assume_role_arn: '',
+    aws_role_session_name: '',
     azure_auth_role: '',
+    azure_login_path: '',
     gcp_auth_role: '',
+    gcp_login_path: '',
     gcp_service_account: '',
     gcp_jwt_exp: undefined,
     approle_auth_path: '',
@@ -1121,10 +1194,16 @@ const originalConfigFields = reactive<ConfigFields>({
     aws_auth_role: '',
     aws_auth_region: '',
     aws_auth_nonce: '',
+    aws_login_path: '',
     aws_access_key_id: '',
     aws_secret_access_key: '',
+    aws_sts_endpoint_url: '',
+    aws_assume_role_arn: '',
+    aws_role_session_name: '',
     azure_auth_role: '',
+    azure_login_path: '',
     gcp_auth_role: '',
+    gcp_login_path: '',
     gcp_service_account: '',
     gcp_jwt_exp: undefined,
     approle_auth_path: '',
@@ -1300,6 +1379,12 @@ const isVaultConfigValid = computed((): boolean => {
           'approle_secret_id',
           'approle_secret_id_file',
           'oauth2_audiences',
+          'aws_login_path',
+          'aws_sts_endpoint_url',
+          'aws_assume_role_arn',
+          'aws_role_session_name',
+          'azure_login_path',
+          'gcp_login_path',
         ].includes(key)
       ) {
         return false
@@ -1309,7 +1394,7 @@ const isVaultConfigValid = computed((): boolean => {
         return false
       }
       // Skip CSP auth fields entirely when the CSP auth-method feature flag is off.
-      if (!props.config.hcvCspAuthMethodsAvailable && ['aws_auth_role', 'aws_auth_region', 'aws_auth_nonce', 'aws_access_key_id', 'aws_secret_access_key', 'azure_auth_role', 'gcp_auth_role', 'gcp_service_account', 'gcp_jwt_exp'].includes(key)) {
+      if (!props.config.hcvCspAuthMethodsAvailable && ['aws_auth_role', 'aws_auth_region', 'aws_auth_nonce', 'aws_access_key_id', 'aws_secret_access_key', 'aws_login_path', 'aws_sts_endpoint_url', 'aws_assume_role_arn', 'aws_role_session_name', 'azure_auth_role', 'azure_login_path', 'gcp_auth_role', 'gcp_login_path', 'gcp_service_account', 'gcp_jwt_exp'].includes(key)) {
         return false
       }
       if (![VaultAuthMethods.AWS_IAM, VaultAuthMethods.AWS_EC2].includes(configFields[VaultProviders.HCV].auth_method as VaultAuthMethods) && key === 'aws_auth_role') {
@@ -1434,21 +1519,29 @@ const getPayload = computed((): Record<string, any> => {
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.AWS_IAM && {
       aws_auth_role: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_auth_role || undefined,
       aws_auth_region: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_auth_region || undefined,
+      aws_login_path: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_login_path || undefined,
       aws_access_key_id: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_access_key_id || undefined,
       aws_secret_access_key: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_secret_access_key || undefined,
+      aws_sts_endpoint_url: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_sts_endpoint_url || undefined,
+      aws_assume_role_arn: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_assume_role_arn || undefined,
+      aws_role_session_name: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_role_session_name || undefined,
     }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.AWS_EC2 && {
       aws_auth_role: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_auth_role || undefined,
       aws_auth_nonce: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_auth_nonce || undefined,
+      aws_login_path: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_login_path || undefined,
     }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.AZURE && {
       azure_auth_role: (configFields[VaultProviders.HCV] as HCVVaultConfig).azure_auth_role || undefined,
+      azure_login_path: (configFields[VaultProviders.HCV] as HCVVaultConfig).azure_login_path || undefined,
     }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.GCP_GCE && {
       gcp_auth_role: (configFields[VaultProviders.HCV] as HCVVaultConfig).gcp_auth_role || undefined,
+      gcp_login_path: (configFields[VaultProviders.HCV] as HCVVaultConfig).gcp_login_path || undefined,
     }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.GCP_IAM && {
       gcp_auth_role: (configFields[VaultProviders.HCV] as HCVVaultConfig).gcp_auth_role || undefined,
+      gcp_login_path: (configFields[VaultProviders.HCV] as HCVVaultConfig).gcp_login_path || undefined,
       gcp_service_account: (configFields[VaultProviders.HCV] as HCVVaultConfig).gcp_service_account || undefined,
       gcp_jwt_exp: Number.isNaN(gcpJwtExp) ? undefined : gcpJwtExp,
     }),

@@ -4,7 +4,7 @@ import { EntityBaseConfigCard } from '@kong-ui-public/entities-shared'
 
 describe('<VaultConfigCard/>', () => {
   describe('Konnect', () => {
-    const interceptGetVault = (status = 200): void => {
+    const interceptGetVault = (status = 200, mockData = vault): void => {
       cy.intercept(
         {
           method: 'GET',
@@ -12,7 +12,7 @@ describe('<VaultConfigCard/>', () => {
         },
         {
           statusCode: status,
-          body: vault,
+          body: mockData,
         },
       ).as('getVault')
     }
@@ -87,6 +87,37 @@ describe('<VaultConfigCard/>', () => {
 
       // Sensitive keys should be masked
       cy.getTestId('api_key-plain-text').should('contain.text', '************')
+    })
+
+    it('masks encrypted HCV CSP fields in structured view', () => {
+      interceptGetVault(200, {
+        id: '1',
+        name: 'hcv',
+        prefix: 'hcv-1',
+        description: 'HashiCorp Vault',
+        config: {
+          auth_method: 'aws_iam',
+          aws_auth_role: 'aws-role',
+          aws_access_key_id: 'access-key-id',
+          aws_secret_access_key: 'secret-access-key',
+          aws_assume_role_arn: 'arn:aws:iam::123456789012:role/demo',
+          aws_auth_region: 'ap-northeast-1',
+        },
+      })
+
+      cy.mount(VaultConfigCard, {
+        props: {
+          config: konnectCardConfig,
+        },
+      })
+
+      cy.wait('@getVault')
+
+      cy.getTestId('aws_auth_role-plain-text').should('contain.text', '************')
+      cy.getTestId('aws_access_key_id-plain-text').should('contain.text', '************')
+      cy.getTestId('aws_secret_access_key-plain-text').should('contain.text', '************')
+      cy.getTestId('aws_assume_role_arn-plain-text').should('contain.text', '************')
+      cy.getTestId('aws_auth_region-plain-text').should('contain.text', 'ap-northeast-1')
     })
   })
 })

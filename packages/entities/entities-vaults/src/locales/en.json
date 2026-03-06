@@ -306,17 +306,35 @@
           "aws_auth_nonce": {
             "label": "AWS Auth Nonce"
           },
+          "aws_login_path": {
+            "label": "AWS Login Path"
+          },
           "azure_auth_role": {
             "label": "Azure Auth Role"
           },
+          "azure_login_path": {
+            "label": "Azure Login Path"
+          },
           "gcp_auth_role": {
             "label": "GCP Auth Role"
+          },
+          "gcp_login_path": {
+            "label": "GCP Login Path"
           },
           "gcp_service_account": {
             "label": "GCP Service Account"
           },
           "gcp_jwt_exp": {
             "label": "GCP JWT Exp"
+          },
+          "aws_sts_endpoint_url": {
+            "label": "AWS STS Endpoint URL"
+          },
+          "aws_assume_role_arn": {
+            "label": "AWS Assume Role ARN"
+          },
+          "aws_role_session_name": {
+            "label": "AWS Role Session Name"
           },
           "approle_auth_path": {
             "label": "App Role Auth Path"

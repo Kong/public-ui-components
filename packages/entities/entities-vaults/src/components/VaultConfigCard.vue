@@ -18,7 +18,7 @@
           :key="propKey"
           :item="{
             key: propKey,
-            value: SENSITIVE_KEYS.includes(propKey) ? SENSITIVE_MASK : getPropValue(propKey, rowValue),
+            value: isSensitiveKey(propKey, rowValue) ? SENSITIVE_MASK : getPropValue(propKey, rowValue),
             label: getMetadataLabel(propKey),
           }"
         />
@@ -43,6 +43,7 @@ import { computed, ref } from 'vue'
 import endpoints from '../vaults-endpoints'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { KongManagerVaultEntityConfig, KonnectVaultEntityConfig, VaultConfigurationSchema } from '../types'
+import { VaultAuthMethods } from '../types'
 import composables from '../composables'
 
 defineEmits<{
@@ -82,7 +83,7 @@ const props = defineProps({
   },
 })
 
-const SENSITIVE_KEYS = ['token', 'approle_secret_id', 'api_key']
+const SENSITIVE_KEYS = ['token', 'approle_secret_id', 'api_key', 'aws_access_key_id', 'aws_secret_access_key', 'aws_auth_nonce', 'aws_assume_role_arn']
 const SENSITIVE_MASK = '************'
 const fetchUrl = computed((): string => endpoints.form[props.config?.app]?.edit)
 
@@ -114,10 +115,14 @@ const configSchema = ref<VaultConfigurationSchema>({
   },
 })
 
+const isSensitiveKey = (key: string, config: Record<string, any>) => {
+  return SENSITIVE_KEYS.includes(key) || (key === 'aws_auth_role' && config.auth_method === VaultAuthMethods.AWS_IAM)
+}
+
 const codeBlockRecordFormatter = (record: Record<string, any>) => {
   const maskedConfig = { ...record.config }
-  SENSITIVE_KEYS.forEach(key => {
-    if (key in maskedConfig) {
+  Object.keys(maskedConfig).forEach(key => {
+    if (isSensitiveKey(key, maskedConfig)) {
       maskedConfig[key] = SENSITIVE_MASK
     }
   })
