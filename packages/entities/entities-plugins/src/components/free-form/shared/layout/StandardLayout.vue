@@ -449,11 +449,18 @@ const prunedData = computed(() => {
   return pick(props.model, FREE_FORM_CONTROLLED_FIELDS) as Partial<T>
 })
 
+/**
+ * The scope-related field keys in VFG data model, e.g. `service-id`, `route-id`, `consumer-id`, `consumer_group-id`
+ */
 const formModelScopeFields = computed<string[]>(() => {
   return scopeEntitiesSchema.value?.fields.map((field: any) => field.model) ?? []
 })
 
 type ScopeFieldName = 'service' | 'route' | 'consumer' | 'consumer_group'
+
+/**
+ * The scope-related field keys in freeform data model, e.g. `service`, `route`, `consumer`, `consumer_group`
+ */
 const scopeFields = computed<ScopeFieldName[]>(() => {
   return formModelScopeFields.value.map(field => field.split('-')[0] as ScopeFieldName)
 })
