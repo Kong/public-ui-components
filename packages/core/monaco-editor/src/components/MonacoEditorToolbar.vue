@@ -63,11 +63,12 @@
           />
         </KDropdown>
       </div>
+      <slot name="toolbar-left" />
     </div>
     <div
-      ref="centreSlotEl"
-      class="monaco-editor-ui-toolbar-centre"
-      :data-testid="`monaco-editor-toolbar-centre`"
+      ref="centerSlotEl"
+      class="monaco-editor-ui-toolbar-center"
+      :data-testid="`monaco-editor-toolbar-center`"
     >
       <div
         v-for="(group, groupIndex) in centerGroups"
@@ -88,6 +89,7 @@
           placement="bottom"
         />
       </div>
+      <slot name="toolbar-center" />
     </div>
     <div
       ref="rightSlotEl"
@@ -113,6 +115,7 @@
           :placement="groupIndex === rightGroups.length - 1 ? 'bottom-end' : 'bottom'"
         />
       </div>
+      <slot name="toolbar-right" />
     </div>
   </div>
 </template>
@@ -148,12 +151,12 @@ const { i18n } = useI18n()
 
 const toolbarEl = useTemplateRef('toolbarEl')
 const leftSlotEl = useTemplateRef('leftSlotEl')
-const centreSlotEl = useTemplateRef('centreSlotEl')
+const centerSlotEl = useTemplateRef('centerSlotEl')
 const rightSlotEl = useTemplateRef('rightSlotEl')
 
 const toolbarSize = useElementSize(toolbarEl)
 const leftSlotSize = useElementSize(leftSlotEl)
-const centreSlotSize = useElementSize(centreSlotEl)
+const centerSlotSize = useElementSize(centerSlotEl)
 const rightSlotSize = useElementSize(rightSlotEl)
 
 // Track current language reactively from the editor composable's state
@@ -191,7 +194,7 @@ function updateOverflowMenu() {
   const toolbarWidth = toolbarSize.width.value
   if (toolbarWidth === 0) return
 
-  const contentWidth = leftSlotSize.width.value + centreSlotSize.width.value + rightSlotSize.width.value + 50
+  const contentWidth = leftSlotSize.width.value + centerSlotSize.width.value + rightSlotSize.width.value + 50
 
   if (toolbarWidth < contentWidth && visibleLeftGroups.value.length > 0) {
     // Collapse: store the content width, then remove the last visible group
@@ -224,7 +227,7 @@ watch(() => editor?.editorStates.editorStatus, (status) => {
   immediate: true,
 })
 
-watch([toolbarSize.width, leftSlotSize.width, centreSlotSize.width, rightSlotSize.width], updateOverflowMenu)
+watch([toolbarSize.width, leftSlotSize.width, centerSlotSize.width, rightSlotSize.width], updateOverflowMenu)
 
 onMounted(async () => await nextTick(updateOverflowMenu))
 </script>
@@ -250,7 +253,7 @@ $defaultHeight: 44px;
 
   &-left,
   &-right,
-  &-centre {
+  &-center {
     align-items: center;
     display: flex;
     flex-shrink: 0;

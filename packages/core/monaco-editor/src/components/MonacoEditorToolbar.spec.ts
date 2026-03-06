@@ -1,6 +1,6 @@
 import { mount, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref, reactive, nextTick, defineComponent } from 'vue'
+import { ref, reactive, nextTick } from 'vue'
 import MonacoEditorToolbar from './MonacoEditorToolbar.vue'
 import { BUILT_IN_TOOLBAR_ACTIONS } from '../actions'
 import { useElementSize as useElementSizeFn } from '@vueuse/core'
@@ -46,24 +46,15 @@ function makeEditor(status: 'loading' | 'ready' = 'ready') {
   }
 }
 
-// Lightweight KDropdown stub that renders both slots without internal async work
-const KDropdownStub = defineComponent({
-  name: 'KDropdown',
-  template: '<div class="k-dropdown-stub"><slot name="items" /><slot /></div>',
-})
-
 function mountToolbar(overrides: Record<string, any> = {}) {
   return mount(MonacoEditorToolbar, {
     props: {
       settings: true as boolean | MonacoEditorToolbarOptions,
       ...overrides.props,
     },
+    slots: overrides.slots,
     global: {
       plugins: [Kongponents],
-      stubs: {
-        ToolbarActionButton,
-        KDropdown: KDropdownStub,
-      },
       ...overrides.global,
     },
   })
@@ -97,7 +88,7 @@ describe('MonacoEditorToolbar', () => {
     it('should render left, centre, and right sections', () => {
       const wrapper = mountToolbar()
       expect(wrapper.find('[data-testid="monaco-editor-toolbar-left"]').exists()).toBe(true)
-      expect(wrapper.find('[data-testid="monaco-editor-toolbar-centre"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="monaco-editor-toolbar-center"]').exists()).toBe(true)
       expect(wrapper.find('[data-testid="monaco-editor-toolbar-right"]').exists()).toBe(true)
     })
 
@@ -315,6 +306,57 @@ describe('MonacoEditorToolbar', () => {
       const moreButton = wrapper.find('[data-testid="editor-toolbar-mdc-action-more-button"]')
 
       expect(moreButton.exists()).toBe(true)
+    })
+  })
+
+  describe('slots', () => {
+    const cases = [
+      ['toolbar-left', 'monaco-editor-toolbar-left', 'custom-left', 'Custom Left'],
+      ['toolbar-center', 'monaco-editor-toolbar-center', 'custom-center', 'Custom Center'],
+      ['toolbar-right', 'monaco-editor-toolbar-right', 'custom-right', 'Custom Right'],
+    ]
+
+    it.each(cases)(
+      'renders %s slot content in the correct section',
+      (slotName, sectionTestId, customId, text) => {
+        const wrapper = mountToolbar({
+          slots: {
+            [slotName]: `<span data-testid="${customId}">${text}</span>`,
+          },
+        })
+
+        const section = wrapper.find(`[data-testid="${sectionTestId}"]`)
+        const el = section.find(`[data-testid="${customId}"]`)
+
+        expect(el.exists()).toBe(true)
+        expect(el.text()).toBe(text)
+      },
+    )
+
+    it('renders all three slot contents simultaneously', () => {
+      const wrapper = mountToolbar({
+        slots: {
+          'toolbar-left': '<span data-testid="custom-left">Left</span>',
+          'toolbar-center': '<span data-testid="custom-center">Center</span>',
+          'toolbar-right': '<span data-testid="custom-right">Right</span>',
+        },
+      })
+
+      expect(wrapper.find('[data-testid="custom-left"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="custom-center"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="custom-right"]').exists()).toBe(true)
+    })
+
+    it('does not render slot content in the wrong sections', () => {
+      const wrapper = mountToolbar({
+        slots: {
+          'toolbar-left': '<span data-testid="custom-left">Left Only</span>',
+        },
+      })
+
+      expect(wrapper.find('[data-testid="monaco-editor-toolbar-left"] [data-testid="custom-left"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="monaco-editor-toolbar-center"] [data-testid="custom-left"]').exists()).toBe(false)
+      expect(wrapper.find('[data-testid="monaco-editor-toolbar-right"] [data-testid="custom-left"]').exists()).toBe(false)
     })
   })
 })
