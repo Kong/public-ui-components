@@ -1,6 +1,7 @@
 import type { languages } from 'monaco-editor/esm/vs/editor/editor.api.js'
 
 export * from './json'
+export * from './yaml'
 
 export function collectCodeLenses(providers: languages.CodeLensProvider[]): languages.CodeLensProvider {
   return {

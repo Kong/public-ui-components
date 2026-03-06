@@ -1,25 +1,26 @@
 import { findNodeAtLocation, getNodePath, getNodeValue } from 'jsonc-parser'
+
 import { getModelContext } from '../../singletons/model-contexts'
-import { formatJSONKeyPath } from '../../utils/json'
+import {
+  createCopyUUIDCodeLens,
+  createCopyValueCodeLens,
+  createDisposableCodeLensList,
+  emptyCodeLensList,
+  uuidRe,
+} from './utils'
 
 import type { JSONPath, Node } from 'jsonc-parser'
 import type { CancellationToken, editor, IRange, languages } from 'monaco-editor'
 
 import type { ModelContext } from '../../types'
 
-const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-
-type ModelContextGetter = (model: editor.ITextModel) => ModelContext
+type ModelContextGetter = (model: editor.ITextModel) => ModelContext | Promise<ModelContext>
 
 type JSONProvideCodeLensesFn<Value = any> = (
   value: Value,
   range: IRange,
   context: { keyPath: JSONPath, node: Node },
 ) => languages.ProviderResult<languages.CodeLensList>
-
-async function defaultModelContextGetter(model: editor.ITextModel): Promise<ModelContext> {
-  return getModelContext(model)
-}
 
 export function createJSONCodeLensProvider(
   build: (root: Node, model: editor.ITextModel, token: CancellationToken) => languages.ProviderResult<languages.CodeLensList>,
@@ -28,17 +29,17 @@ export function createJSONCodeLensProvider(
   return {
     provideCodeLenses: async (model, token) => {
       if (model.getLanguageId() !== 'json') {
-        return { lenses: [], dispose: () => {} }
+        return emptyCodeLensList()
       }
 
-      const context = await (contextGetter ?? defaultModelContextGetter)(model)
+      const context = await (contextGetter ?? getModelContext)(model)
       if (context.isDefault || context.language !== 'json') {
-        return { lenses: [], dispose: () => {} }
+        return emptyCodeLensList()
       }
 
       const root = context.root
       if (!root) {
-        return { lenses: [], dispose: () => {} }
+        return emptyCodeLensList()
       }
 
       return build(root, model, token)
@@ -78,28 +79,7 @@ export function createJSONNodeCodeLensProvider(
       }
     }
 
-    return {
-      lenses,
-      ...disposeFns.length > 0
-        ? {
-          dispose: () => {
-            const errors: unknown[] = []
-
-            disposeFns.forEach((fn) => {
-              try {
-                fn()
-              } catch (e) {
-                errors.push(e)
-              }
-            })
-
-            if (errors.length > 0) {
-              throw new AggregateError(errors)
-            }
-          },
-        }
-        : undefined,
-    }
+    return createDisposableCodeLensList(lenses, disposeFns)
   }, contextGetter)
 }
 
@@ -167,25 +147,12 @@ export function createJSONCopyUUIDCodeLensProvider(
         const startPos = model.getPositionAt(node.offset)
         const endPos = model.getPositionAt(node.offset + node.length)
 
-        return {
-          range: {
-            startLineNumber: startPos.lineNumber,
-            startColumn: startPos.column,
-            endLineNumber: endPos.lineNumber,
-            endColumn: endPos.column,
-          },
-          command: {
-            id: options.copyCommandId,
-            title: typeof options?.title === 'function'
-              ? options.title(value)
-              : options?.title ?? `$(copy) Copy UUID ${value.substring(0, 8)}...`,
-            arguments: [
-              options?.formatValue
-                ? options.formatValue(value)
-                : value,
-            ],
-          },
-        }
+        return createCopyUUIDCodeLens(value, {
+          startLineNumber: startPos.lineNumber,
+          startColumn: startPos.column,
+          endLineNumber: endPos.lineNumber,
+          endColumn: endPos.column,
+        }, options)
       }),
       dispose: () => {},
     }
@@ -200,22 +167,22 @@ export function createJSONValueCodeLensProvider<Value = any>(
   return {
     provideCodeLenses: async (model) => {
       if (model.getLanguageId() !== 'json') {
-        return { lenses: [], dispose: () => {} }
+        return emptyCodeLensList()
       }
 
-      const context = await (contextGetter ?? defaultModelContextGetter)(model)
+      const context = await (contextGetter ?? getModelContext)(model)
       if (context.isDefault || context.language !== 'json') {
-        return { lenses: [], dispose: () => {} }
+        return emptyCodeLensList()
       }
 
       const root = context.root
       if (!root) {
-        return { lenses: [], dispose: () => {} }
+        return emptyCodeLensList()
       }
 
       const node = findNodeAtLocation(root, keyPath)
       if (!node) {
-        return { lenses: [], dispose: () => {} }
+        return emptyCodeLensList()
       }
 
       const startPos = model.getPositionAt(node.offset)
@@ -253,21 +220,7 @@ export function createJSONCopyValueCodeLensProvider<Value = any>(
 
     const { node } = context
     return {
-      lenses: [{
-        range,
-        command: {
-          id: options.copyCommandId,
-          title: typeof options?.title === 'function'
-            ? options.title(keyPath, value, node)
-            : options?.title ?? `$(copy) Copy ${formatJSONKeyPath(keyPath)}`,
-          arguments: [
-            options?.formatValue
-              ? options.formatValue(value)
-              : JSON.stringify(value),
-          ],
-        },
-      }],
+      lenses: [createCopyValueCodeLens(keyPath, value, node, range, options)],
     }
   }, contextGetter)
 }
-
