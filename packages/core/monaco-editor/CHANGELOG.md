@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.17.0...@kong-ui-public/monaco-editor@0.18.0) (2026-03-05)
+
+
+### Features
+
+* **monaco-editor:** add action buttons to overflow menu based on screen width [KHCP-19811] ([#2966](https://github.com/Kong/public-ui-components/issues/2966)) ([20a3eb7](https://github.com/Kong/public-ui-components/commit/20a3eb7751a595023eb47aeb72ccc2f567951a94))
+
+
+
+
+
 # [0.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.16.0...@kong-ui-public/monaco-editor@0.17.0) (2026-03-04)
 
 

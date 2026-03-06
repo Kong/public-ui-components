@@ -19,6 +19,7 @@
       "action_format_label": "Format document",
       "action_fullscreen": "Full Screen",
       "action_fullscreen_label": "Toggle full screen mode",
+      "action_more": "More",
       "key": "Key: {key}"
     },
     "messages": {
