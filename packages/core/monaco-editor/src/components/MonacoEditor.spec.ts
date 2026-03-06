@@ -5,7 +5,6 @@ import MonacoEditor from './MonacoEditor.vue'
 import Kongponents, { KEmptyState } from '@kong/kongponents'
 import type { UseMonacoEditorOptions } from '../types'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
-import ToolbarActionButton from './ToolbarActionButton.vue'
 
 // mock i18n
 vi.mock('../composables/useI18n', () => ({
@@ -347,12 +346,6 @@ describe('MonacoEditor.vue', () => {
         slots: options.slots,
         global: {
           plugins: [Kongponents],
-          stubs: {
-            KEmptyState,
-            ToolbarActionButton,
-            KDropdown: false,
-            Transition: false,
-          },
           ...options.global,
         },
       })

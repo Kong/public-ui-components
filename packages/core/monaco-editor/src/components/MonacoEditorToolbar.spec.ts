@@ -55,9 +55,6 @@ function mountToolbar(overrides: Record<string, any> = {}) {
     slots: overrides.slots,
     global: {
       plugins: [Kongponents],
-      stubs: {
-        ToolbarActionButton,
-      },
       ...overrides.global,
     },
   })
