@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.166.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.165.2...@kong-ui-public/entities-plugins@9.166.0) (2026-03-06)
+
+
+### Features
+
+* add a freeform adoption field of scope selector ([#2974](https://github.com/Kong/public-ui-components/issues/2974)) ([d1fc7da](https://github.com/Kong/public-ui-components/commit/d1fc7dad7cd1bb6dcb9aa6cb343467b70365b897))
+
+
+
+
+
 ## [9.165.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.165.1...@kong-ui-public/entities-plugins@9.165.2) (2026-03-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
