@@ -46,12 +46,6 @@ function makeEditor(status: 'loading' | 'ready' = 'ready') {
   }
 }
 
-// Lightweight KDropdown stub that renders both slots without internal async work
-const KDropdownStub = defineComponent({
-  name: 'KDropdown',
-  template: '<div class="k-dropdown-stub"><slot name="items" /><slot /></div>',
-})
-
 function mountToolbar(overrides: Record<string, any> = {}) {
   return mount(MonacoEditorToolbar, {
     props: {
@@ -63,7 +57,6 @@ function mountToolbar(overrides: Record<string, any> = {}) {
       plugins: [Kongponents],
       stubs: {
         ToolbarActionButton,
-        KDropdown: KDropdownStub,
       },
       ...overrides.global,
     },

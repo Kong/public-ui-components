@@ -337,11 +337,6 @@ describe('MonacoEditor.vue', () => {
       editorStates.editorStatus = 'ready'
     })
 
-    const KDropdownStub = defineComponent({
-      name: 'KDropdown',
-      template: '<div class="k-dropdown-stub"><slot name="items" /><slot /></div>',
-    })
-
     const mountWithToolbar = (options: Record<string, any> = {}) =>
       mount(MonacoEditor, {
         props: {
