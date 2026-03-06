@@ -46,6 +46,7 @@ import type { PermissionsActions } from '@entities-shared-sandbox/components/San
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const isKonnectManagedRedisEnabled = import.meta.env.VITE_KONNECT_MANAGED_REDIS_ENABLED === 'true'
 
+// Mirror how consuming apps gate the managed-Redis UX copy by providing the shared feature flag key
 provide(FEATURE_FLAGS.KHCP_19709_KONNECT_MANAGED_REDIS, isKonnectManagedRedisEnabled)
 
 const konnectConfig: KonnectRedisConfigurationListConfig = {

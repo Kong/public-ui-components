@@ -321,9 +321,11 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()
 
 const filterQuery = ref<string>('')
+// Host apps can provide this flag to switch list empty-state/title/action copy for managed Konnect Redis
 const isKonnectManagedRedisEnabled = inject<boolean>(FEATURE_FLAGS.KHCP_19709_KONNECT_MANAGED_REDIS, false)
 
 const emptyStateDescription = computed<string>(() => {
+  // When managed Redis is enabled in Konnect, use the expanded onboarding message
   if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled) {
     return t('list.empty_state.description_with_managed_konnect')
   }

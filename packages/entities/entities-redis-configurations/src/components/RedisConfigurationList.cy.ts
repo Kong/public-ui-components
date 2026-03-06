@@ -288,6 +288,7 @@ describe('<RedisConfigurationList />', () => {
         cacheIdentifier: uuidv4(),
       },
       global: {
+        // Match app-level provide/inject wiring so the component reads managed-Redis copy variants
         provide: {
           [FEATURE_FLAGS.KHCP_19709_KONNECT_MANAGED_REDIS]: true,
         },
