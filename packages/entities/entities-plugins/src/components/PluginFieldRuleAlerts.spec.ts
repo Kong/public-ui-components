@@ -23,87 +23,67 @@ const mountComponent = (rules: FieldRules) => {
 }
 
 describe('PluginFieldRuleAlerts', () => {
-  describe('atLeastOneOf Rules', () => {
-    it('should render atLeastOneOf rules', () => {
-      const rules: FieldRules = {
+  const assertFieldCount = (rules: FieldRules, expectedCount: number) => {
+    const wrapper = mountComponent(rules)
+    expect(wrapper.find('.plugin-field-rule-alerts').exists()).toBe(true)
+    const fields = wrapper.findAllComponents(ReferableFieldItem)
+    expect(fields).toHaveLength(expectedCount)
+    return { wrapper, fields }
+  }
+
+  ;[
+    {
+      title: 'render atLeastOneOf rules',
+      rules: {
         atLeastOneOf: [
           ['config.field_one', 'config.field_two'],
         ],
-      }
-
-      const wrapper = mountComponent(rules)
-
-      expect(wrapper.find('.plugin-field-rule-alerts').exists()).toBe(true)
-      const fields = wrapper.findAllComponents(ReferableFieldItem)
-      expect(fields).toHaveLength(2)
-    })
-
-    it('should render multiple atLeastOneOf rules', () => {
-      const rules: FieldRules = {
+      } satisfies FieldRules,
+      count: 2,
+    },
+    {
+      title: 'render multiple atLeastOneOf rules',
+      rules: {
         atLeastOneOf: [
           ['config.field_a', 'config.field_b'],
           ['config.field_c', 'config.field_d', 'config.field_e'],
         ],
-      }
-
-      const wrapper = mountComponent(rules)
-
-      const fields = wrapper.findAllComponents(ReferableFieldItem)
-      expect(fields).toHaveLength(5) // 2 + 3 fields
-    })
-  })
-
-  describe('onlyOneOf Rules', () => {
-    it('should render onlyOneOf rules', () => {
-      const rules: FieldRules = {
+      } satisfies FieldRules,
+      count: 5,
+    },
+    {
+      title: 'render onlyOneOf rules',
+      rules: {
         onlyOneOf: [
           ['config.allow', 'config.deny'],
         ],
-      }
-
-      const wrapper = mountComponent(rules)
-
-      const fields = wrapper.findAllComponents(ReferableFieldItem)
-      expect(fields).toHaveLength(2)
-    })
-  })
-
-  describe('mutuallyRequired Rules', () => {
-    it('should render mutuallyRequired rules', () => {
-      const rules: FieldRules = {
+      } satisfies FieldRules,
+      count: 2,
+    },
+    {
+      title: 'render mutuallyRequired rules',
+      rules: {
         mutuallyRequired: [
           ['config.username', 'config.password'],
         ],
-      }
-
-      const wrapper = mountComponent(rules)
-
-      const fields = wrapper.findAllComponents(ReferableFieldItem)
-      expect(fields).toHaveLength(2)
-    })
-  })
-
-  describe('onlyOneOfMutuallyRequired Rules', () => {
-    it('should render onlyOneOfMutuallyRequired rules', () => {
-      const rules: FieldRules = {
+      } satisfies FieldRules,
+      count: 2,
+    },
+    {
+      title: 'render onlyOneOfMutuallyRequired rules',
+      rules: {
         onlyOneOfMutuallyRequired: [
           [
             ['config.http_proxy_host', 'config.http_proxy_port'],
             ['config.https_proxy_host', 'config.https_proxy_port'],
           ],
         ],
-      }
-
-      const wrapper = mountComponent(rules)
-
-      const fields = wrapper.findAllComponents(ReferableFieldItem)
-      expect(fields).toHaveLength(4) // 2 combinations × 2 fields each
-    })
-  })
-
-  describe('Mixed Rules', () => {
-    it('should render multiple rule types together', () => {
-      const rules: FieldRules = {
+      } satisfies FieldRules,
+      count: 4,
+    },
+    {
+      title: 'render multiple rule types together',
+      rules: {
         atLeastOneOf: [
           ['config.field_one', 'config.field_two'],
         ],
@@ -113,24 +93,17 @@ describe('PluginFieldRuleAlerts', () => {
         mutuallyRequired: [
           ['config.username', 'config.password'],
         ],
-      }
-
-      const wrapper = mountComponent(rules)
-
-      const fields = wrapper.findAllComponents(ReferableFieldItem)
-      expect(fields).toHaveLength(6) // 2 + 2 + 2
-    })
-  })
-
-  describe('Empty Rules', () => {
-    it('should render without errors when no rules provided', () => {
-      const rules: FieldRules = {}
-
-      const wrapper = mountComponent(rules)
-
-      expect(wrapper.find('.plugin-field-rule-alerts').exists()).toBe(true)
-      const fields = wrapper.findAllComponents(ReferableFieldItem)
-      expect(fields).toHaveLength(0)
+      } satisfies FieldRules,
+      count: 6,
+    },
+    {
+      title: 'render without errors when no rules provided',
+      rules: {} satisfies FieldRules,
+      count: 0,
+    },
+  ].forEach(({ title, rules, count }) => {
+    it(`should ${title}`, () => {
+      assertFieldCount(rules, count)
     })
   })
 
@@ -142,9 +115,7 @@ describe('PluginFieldRuleAlerts', () => {
         ],
       }
 
-      const wrapper = mountComponent(rules)
-
-      const fields = wrapper.findAllComponents(ReferableFieldItem)
+      const { fields } = assertFieldCount(rules, 3)
 
       expect(fields[0].props('isLast')).toBe(false)
       expect(fields[1].props('isLast')).toBe(false)
@@ -158,10 +129,7 @@ describe('PluginFieldRuleAlerts', () => {
         atLeastOneOf: [['config.allow', 'config.deny']],
       }
 
-      const wrapper = mountComponent(rules)
-
-      const fields = wrapper.findAllComponents(ReferableFieldItem)
-      expect(fields).toHaveLength(2)
+      const { fields } = assertFieldCount(rules, 2)
       expect(fields[0].props('field')).toBe('config.allow')
       expect(fields[1].props('field')).toBe('config.deny')
     })

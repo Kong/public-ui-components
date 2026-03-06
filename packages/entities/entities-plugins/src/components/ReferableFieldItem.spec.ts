@@ -3,134 +3,130 @@ import { mount } from '@vue/test-utils'
 import ReferableFieldItem from './ReferableFieldItem.vue'
 
 describe('ReferableFieldItem', () => {
+  const mountComponent = (field: string, isLast?: boolean) => {
+    return mount(ReferableFieldItem, {
+      props: {
+        field,
+        ...(isLast !== undefined ? { isLast } : {}),
+      },
+    })
+  }
+
+  const appendLabel = (forId: string, withRect = false) => {
+    const label = document.createElement('label')
+    label.setAttribute('for', forId)
+    if (withRect) {
+      label.getBoundingClientRect = vi.fn(() => ({
+        top: 500,
+        bottom: 520,
+        left: 0,
+        right: 100,
+        width: 100,
+        height: 20,
+        x: 0,
+        y: 500,
+        toJSON: () => {},
+      }))
+    }
+    document.body.appendChild(label)
+    return label
+  }
+
   describe('Field Label Formatting', () => {
-    it('should format simple field names', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.my_field',
-        },
+    ;[
+      {
+        title: 'format simple field names',
+        field: 'config.my_field',
+        expected: ['My Field'],
+      },
+      {
+        title: 'remove config prefix',
+        field: 'config.test_value',
+        expected: ['Test Value'],
+        notExpected: ['config.'],
+      },
+      {
+        title: 'handle nested paths',
+        field: 'config.redis.host',
+        expected: ['Redis', 'Host'],
+      },
+      {
+        title: 'handle uppercase config prefix',
+        field: 'Config.uppercase_field',
+        expected: ['Uppercase Field'],
+        notExpected: ['Config.'],
+      },
+      {
+        title: 'handle fields without config prefix',
+        field: 'enabled',
+        expected: ['Enabled'],
+      },
+    ].forEach(({ title, field, expected, notExpected }) => {
+      it(`should ${title}`, () => {
+        const wrapper = mountComponent(field)
+
+        expected.forEach((value) => {
+          expect(wrapper.text()).toContain(value)
+        })
+
+        notExpected?.forEach((value) => {
+          expect(wrapper.text()).not.toContain(value)
+        })
       })
-
-      expect(wrapper.text()).toContain('My Field')
-    })
-
-    it('should remove config prefix', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.test_value',
-        },
-      })
-
-      expect(wrapper.text()).not.toContain('config.')
-      expect(wrapper.text()).toContain('Test Value')
-    })
-
-    it('should handle nested paths', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.redis.host',
-        },
-      })
-
-      // Should include both parts with proper formatting
-      expect(wrapper.text()).toContain('Redis')
-      expect(wrapper.text()).toContain('Host')
-    })
-
-    it('should handle uppercase config prefix', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'Config.uppercase_field',
-        },
-      })
-
-      expect(wrapper.text()).not.toContain('Config.')
-      expect(wrapper.text()).toContain('Uppercase Field')
-    })
-
-    it('should handle fields without config prefix', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'enabled',
-        },
-      })
-
-      expect(wrapper.text()).toContain('Enabled')
     })
   })
 
   describe('Field ID Generation', () => {
-    it('should convert dots to hyphens', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.my.field',
-        },
+    ;[
+      {
+        title: 'convert dots to hyphens',
+        field: 'config.my.field',
+      },
+      {
+        title: 'preserve underscores in ID',
+        field: 'config.my_field',
+      },
+    ].forEach(({ title, field }) => {
+      it(`should ${title}`, () => {
+        const wrapper = mountComponent(field)
+
+        const span = wrapper.find('.referable-field-link')
+        expect(span.exists()).toBe(true)
       })
-
-      const span = wrapper.find('.referable-field-link')
-      expect(span.exists()).toBe(true)
-    })
-
-    it('should preserve underscores in ID', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.my_field',
-        },
-      })
-
-      const span = wrapper.find('.referable-field-link')
-      expect(span.exists()).toBe(true)
     })
   })
 
   describe('Comma Rendering', () => {
-    it('should show comma when isLast is false', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.field',
-          isLast: false,
-        },
+    ;[
+      {
+        title: 'show comma when isLast is false',
+        isLast: false,
+        hasComma: true,
+      },
+      {
+        title: 'not show comma when isLast is true',
+        isLast: true,
+        hasComma: false,
+      },
+      {
+        title: 'show comma when isLast is undefined (default)',
+        isLast: undefined,
+        hasComma: true,
+      },
+    ].forEach(({ title, isLast, hasComma }) => {
+      it(`should ${title}`, () => {
+        const wrapper = mountComponent('config.field', isLast)
+        expect(wrapper.text().includes(',')).toBe(hasComma)
       })
-
-      expect(wrapper.text()).toContain(',')
-    })
-
-    it('should not show comma when isLast is true', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.field',
-          isLast: true,
-        },
-      })
-
-      expect(wrapper.text()).not.toContain(',')
-    })
-
-    it('should show comma when isLast is undefined (default)', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.field',
-        },
-      })
-
-      expect(wrapper.text()).toContain(',')
     })
   })
 
   describe('Click Behavior', () => {
     it('should call scrollToField when clicked', async () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.test_field',
-        },
-      })
+      const wrapper = mountComponent('config.test_field')
 
       const scrollToSpy = vi.spyOn(window, 'scrollTo')
-
-      // Create mock label element
-      const mockLabel = document.createElement('label')
-      mockLabel.setAttribute('for', 'config-test_field')
-      document.body.appendChild(mockLabel)
+      const mockLabel = appendLabel('config-test_field')
 
       await wrapper.find('.referable-field-link').trigger('click')
 
@@ -142,11 +138,7 @@ describe('ReferableFieldItem', () => {
     })
 
     it('should handle missing target element gracefully', async () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.nonexistent_field',
-        },
-      })
+      const wrapper = mountComponent('config.nonexistent_field')
 
       const scrollToSpy = vi.spyOn(window, 'scrollTo')
 
@@ -159,17 +151,10 @@ describe('ReferableFieldItem', () => {
     })
 
     it('should use smooth scroll behavior', async () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.smooth_field',
-        },
-      })
+      const wrapper = mountComponent('config.smooth_field')
 
       const scrollToSpy = vi.spyOn(window, 'scrollTo')
-
-      const mockLabel = document.createElement('label')
-      mockLabel.setAttribute('for', 'config-smooth_field')
-      document.body.appendChild(mockLabel)
+      const mockLabel = appendLabel('config-smooth_field')
 
       await wrapper.find('.referable-field-link').trigger('click')
 
@@ -184,28 +169,10 @@ describe('ReferableFieldItem', () => {
     })
 
     it('should apply scroll offset', async () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.offset_field',
-        },
-      })
+      const wrapper = mountComponent('config.offset_field')
 
       const scrollToSpy = vi.spyOn(window, 'scrollTo')
-
-      const mockLabel = document.createElement('label')
-      mockLabel.setAttribute('for', 'config-offset_field')
-      mockLabel.getBoundingClientRect = vi.fn(() => ({
-        top: 500,
-        bottom: 520,
-        left: 0,
-        right: 100,
-        width: 100,
-        height: 20,
-        x: 0,
-        y: 500,
-        toJSON: () => {},
-      }))
-      document.body.appendChild(mockLabel)
+      const mockLabel = appendLabel('config-offset_field', true)
 
       await wrapper.find('.referable-field-link').trigger('click')
 
@@ -223,21 +190,13 @@ describe('ReferableFieldItem', () => {
 
   describe('Styling', () => {
     it('should have referable-field-link class', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.field',
-        },
-      })
+      const wrapper = mountComponent('config.field')
 
       expect(wrapper.find('.referable-field-link').exists()).toBe(true)
     })
 
     it('should render as a span element', () => {
-      const wrapper = mount(ReferableFieldItem, {
-        props: {
-          field: 'config.field',
-        },
-      })
+      const wrapper = mountComponent('config.field')
 
       expect(wrapper.find('.referable-field-link').element.tagName).toBe('SPAN')
     })
