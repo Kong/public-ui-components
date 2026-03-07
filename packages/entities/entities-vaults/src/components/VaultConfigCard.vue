@@ -82,7 +82,7 @@ const props = defineProps({
   },
 })
 
-const SENSITIVE_KEYS = ['token', 'approle_secret_id', 'api_key']
+const SENSITIVE_KEYS = ['token', 'approle_secret_id', 'api_key', 'aws_access_key_id', 'aws_secret_access_key', 'aws_auth_nonce', 'aws_assume_role_arn']
 const SENSITIVE_MASK = '************'
 const fetchUrl = computed((): string => endpoints.form[props.config?.app]?.edit)
 
