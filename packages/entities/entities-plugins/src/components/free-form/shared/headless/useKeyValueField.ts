@@ -1,12 +1,13 @@
-import { uniqueId, isEqual } from 'lodash-es'
-import { toRef, ref, watch, useAttrs, toValue } from 'vue'
+import { uniqueId } from 'lodash-es'
+import { toRef, ref, watch, useAttrs, toValue, onBeforeUnmount } from 'vue'
 import { useField, useFieldAttrs } from '../composables'
+import { useFormShared } from '../composables/form-context'
 
 import type { LabelAttributes } from '@kong/kongponents'
 import type { EmitFn, Ref } from 'vue'
 import type { BaseFieldProps } from '../types'
 
-export interface KeyValueFieldProps<TKey extends string = string, TValue extends string = string> extends BaseFieldProps {
+export interface KeyValueFieldProps<TKey extends string = string, TValue = unknown> extends BaseFieldProps {
   initialValue?: Record<TKey, TValue> | null
   label?: string
   keyPlaceholder?: string
@@ -20,22 +21,34 @@ export interface KeyValueFieldProps<TKey extends string = string, TValue extends
   keyOrder?: TKey[]
 }
 
-export interface KeyValueFieldEmits<TKey extends string = string, TValue extends string = string> {
+export interface KeyValueFieldEmits<TKey extends string = string, TValue = unknown> {
   change: [Record<TKey, TValue> | null]
 }
 
-export interface KVEntry<TKey extends string = string, TValue extends string = string> {
+export interface KVEntry<TKey extends string = string, TValue = unknown> {
   id: string
   key: TKey
-  value: TValue
+  /**
+   * Only populated when `syncToFieldValue` is `false` (local-only mode).
+   * When `syncToFieldValue` is `true`, values live in formData at ID-keyed paths.
+   * Use `getEntryValue(entry.id)` / `setEntryValue(entry.id, val)` instead.
+   */
+  value?: TValue
 }
 
 /**
  * Headless composable for implementing a key-value field.
+ *
+ * When `syncToFieldValue` is `true` (default), values are stored in formData at stable
+ * ID-keyed paths. This decouples user-editable keys from internal data addressing,
+ * preventing data loss when keys are renamed or entries are added.
+ *
+ * When `syncToFieldValue` is `false`, entries carry their own `value` property
+ * and the composable does not sync to formData.
  */
 export function useKeyValueField<
   TKey extends string = string,
-  TValue extends string = string,
+  TValue = unknown,
 >(
   props: KeyValueFieldProps<TKey, TValue>,
   emit: EmitFn<KeyValueFieldEmits>,
@@ -43,15 +56,8 @@ export function useKeyValueField<
 ) {
   type KVEntries = Array<KVEntry<TKey, TValue>>
 
-  const { value: fieldValue, emptyOrDefaultValue, ...field } = useField<Record<TKey, TValue> | null>(toRef(props, 'name'))
+  const { value: rawFieldValue, emptyOrDefaultValue, ...field } = useField<Record<string, TValue> | null>(toRef(props, 'name'))
   const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
-
-  const entries = ref(getEntries(
-    props.initialValue ?? toValue(fieldValue),
-    props.keyOrder,
-  )) as Ref<KVEntries>
-  // the return type of ref(..) is not expected, it includes `UnwrapRef<TKey>` and `UnwrapRef<TValue>`
-  // fix it by using `as`
 
   function generateId() {
     return uniqueId('ff-kv-field-')
@@ -69,28 +75,180 @@ export function useKeyValueField<
     return indexA - indexB // sort by order in keyOrder
   }
 
-  function getEntries(value: Record<TKey, TValue> | null | undefined, keyOrder?: TKey[]): KVEntries {
-    if (!value) return []
+  // ─── syncToFieldValue=false: Legacy mode (entries carry their own value) ───
 
-    const entries = Object.entries(value).map(([key, value]) => ({
-      id: generateId(),
-      key: key as TKey,
-      value: value as TValue,
-    }))
-    if (keyOrder) {
-      // If keyOrder is specified, sort the entries based on it
-      entries.sort((a, b) => compareByKeyOrder(a.key, b.key, keyOrder))
+  if (!syncToFieldValue) {
+    return useLegacyMode()
+  }
+
+  // ─── syncToFieldValue=true: ID-based mode (values in formData at ID paths) ───
+
+  const { registerValueTransform, unregisterValueTransform } = useFormShared()
+
+  /**
+   * Reference to the last object we wrote to rawFieldValue.
+   * Used to distinguish our own writes from external updates (form reset, code editor).
+   * We compare by object identity (===), not deep equality.
+   */
+  let lastWrittenRef: unknown = undefined
+
+  /**
+   * Initialize entries from user-keyed data, converting to ID-keyed in formData.
+   */
+  function initFromUserKeys(userKeyed: Record<TKey, TValue> | null | undefined): KVEntries {
+    if (!userKeyed) return []
+    const newEntries: KVEntries = []
+    const idKeyed: Record<string, TValue> = {}
+
+    const keys = Object.keys(userKeyed) as TKey[]
+    const orderedKeys = props.keyOrder
+      ? [...keys].sort((a, b) => compareByKeyOrder(a, b, props.keyOrder!))
+      : keys
+
+    for (const key of orderedKeys) {
+      const id = generateId()
+      newEntries.push({ id, key })
+      idKeyed[id] = userKeyed[key]
     }
-    return entries
+
+    // Write ID-keyed data to formData
+    rawFieldValue!.value = idKeyed as Record<string, TValue>
+    lastWrittenRef = rawFieldValue!.value
+    return newEntries
+  }
+
+  const entries = ref(initFromUserKeys(
+    props.initialValue ?? toValue(rawFieldValue) as Record<TKey, TValue> | null,
+  )) as Ref<KVEntries>
+
+  /**
+   * Translate ID-keyed formData to user-keyed output.
+   * Used both for `getValue()` transform and for `emit('change')`.
+   */
+  function translateIdToUserKeys(raw: unknown): Record<TKey, TValue> | null {
+    if (raw == null || typeof raw !== 'object') return null
+    const result: Record<string, unknown> = {}
+    for (const entry of entries.value) {
+      if (entry.key && entry.id in (raw as Record<string, unknown>)) {
+        result[entry.key] = (raw as Record<string, unknown>)[entry.id]
+      }
+    }
+    if (Object.keys(result).length === 0) {
+      // No entries with keys — return schema-aware empty/default
+      return (emptyOrDefaultValue?.value ?? null) as Record<TKey, TValue> | null
+    }
+    return result as Record<TKey, TValue>
+  }
+
+  // Register transform so getValue() returns user-keyed data
+  registerValueTransform(field.path!.value, translateIdToUserKeys)
+  onBeforeUnmount(() => {
+    unregisterValueTransform(field.path!.value)
+  })
+
+  // ── Change detection: emit translated value when entries or formData changes ──
+  watch(
+    [entries, () => rawFieldValue?.value],
+    () => {
+      if (!syncToFieldValue) return
+      const translated = translateIdToUserKeys(rawFieldValue?.value)
+      emit('change', translated)
+    },
+    { deep: true },
+  )
+
+  // ── Reverse watch: detect external writes (user-keyed data from form reset, code editor) ──
+  watch(
+    () => rawFieldValue?.value,
+    (newRaw) => {
+      // Our writes mutate or set the same object reference
+      if (newRaw === lastWrittenRef) return
+      // External write: new object reference with user keys (from form reset, code editor, etc.)
+      rebuildEntriesFromUserKeys(newRaw as Record<TKey, TValue> | null)
+    },
+    { deep: true },
+  )
+
+  /**
+   * Rebuild entries and convert user-keyed data to ID-keyed format.
+   * Called when external code writes user-keyed data to formData.
+   */
+  function rebuildEntriesFromUserKeys(userKeyed: Record<TKey, TValue> | null | undefined) {
+    if (!userKeyed || typeof userKeyed !== 'object') {
+      entries.value = []
+      return
+    }
+
+    // Match user keys to existing entries where possible (preserves entry IDs for stable rendering)
+    const keyToEntry = new Map<TKey, KVEntry<TKey, TValue>>()
+    for (const entry of entries.value) {
+      if (entry.key) {
+        keyToEntry.set(entry.key, entry)
+      }
+    }
+
+    const newEntries: KVEntries = []
+    const idKeyed: Record<string, TValue> = {}
+
+    const keys = Object.keys(userKeyed) as TKey[]
+    const orderedKeys = props.keyOrder
+      ? [...keys].sort((a, b) => compareByKeyOrder(a, b, props.keyOrder!))
+      : keys
+
+    for (const key of orderedKeys) {
+      const existing = keyToEntry.get(key)
+      if (existing) {
+        // Reuse existing entry ID for stable rendering
+        newEntries.push(existing)
+        idKeyed[existing.id] = userKeyed[key]
+      } else {
+        // New key: create fresh entry
+        const id = generateId()
+        newEntries.push({ id, key })
+        idKeyed[id] = userKeyed[key]
+      }
+    }
+
+    entries.value = newEntries
+    rawFieldValue!.value = idKeyed as Record<string, TValue>
+    lastWrittenRef = rawFieldValue!.value
+  }
+
+  // ── Entry value helpers ──
+
+  /**
+   * Read an entry's value from formData (ID-keyed path).
+   */
+  function getEntryValue(entryId: string): TValue | undefined {
+    const raw = rawFieldValue?.value as Record<string, TValue> | null | undefined
+    return raw?.[entryId]
+  }
+
+  /**
+   * Write an entry's value to formData (ID-keyed path).
+   */
+  function setEntryValue(entryId: string, value: TValue) {
+    if (!rawFieldValue!.value) {
+      rawFieldValue!.value = {} as Record<string, TValue>
+      lastWrittenRef = rawFieldValue!.value
+    }
+    ;(rawFieldValue!.value as Record<string, TValue>)[entryId] = value
   }
 
   function addEntry(): KVEntry<TKey, TValue> {
-    const entry = {
+    const entry: KVEntry<TKey, TValue> = {
       id: generateId(),
       key: props.defaultKey || ('' as TKey),
-      value: props.defaultValue || ('' as TValue),
     }
     entries.value.push(entry)
+
+    // Initialize value in formData at ID path
+    if (!rawFieldValue!.value) {
+      rawFieldValue!.value = {} as Record<string, TValue>
+    }
+    ;(rawFieldValue!.value as Record<string, TValue>)[entry.id] = (props.defaultValue ?? null) as TValue
+    lastWrittenRef = rawFieldValue!.value
+
     return entry
   }
 
@@ -98,125 +256,111 @@ export function useKeyValueField<
     const index = entries.value.findIndex((entry) => entry.id === id)
     if (index !== -1) {
       entries.value.splice(index, 1)
+      // Clean up formData
+      if (rawFieldValue!.value && typeof rawFieldValue!.value === 'object') {
+        delete (rawFieldValue!.value as Record<string, TValue>)[id]
+      }
+      lastWrittenRef = rawFieldValue!.value
     }
   }
 
   function reset() {
-    entries.value = getEntries(props.initialValue, props.keyOrder)
+    const userKeyed = props.initialValue
+    entries.value = initFromUserKeys(userKeyed)
   }
 
   function setValue(value: Record<TKey, TValue> | null | undefined) {
-    entries.value = getEntries(value, props.keyOrder)
-  }
-
-  let lastUpdatedValue: Record<TKey, TValue> | null | undefined = fieldValue?.value
-
-  // Sync entries to fieldValue
-  watch(entries, (newEntries) => {
-    if (!syncToFieldValue) return
-    const newValue: Record<TKey, TValue> | null = newEntries.length
-      ? Object.fromEntries(newEntries.map(({ key, value }) => [key, value]).filter(([key]) => key))
-      : emptyOrDefaultValue?.value
-    // Avoid updating fieldValue to `null` from `{}`
-    // Currently, the UI does not distinguish between `null` and `{}` well, we'll improve it later. KM-2069
-    if (newValue === null && fieldValue!.value !== null && typeof fieldValue!.value === 'object' && Object.keys(fieldValue!.value).length === 0) {
-      return
-    }
-    fieldValue!.value = newValue
-    lastUpdatedValue = newValue
-    emit('change', newValue)
-  }, { deep: true, immediate: true })
-
-  // Sync fieldValue to entries
-  watch(() => fieldValue?.value, newValue => {
-    // avoid infinite sync loop
-    if (isEqual(newValue, lastUpdatedValue)) return
-    applyChangeToEntries(newValue)
-  }, { deep: true })
-
-  /**
-   * Apply changes to entries when the underlying data model changes.
-   * This function intelligently updates the entries array while:
-   * - Preserving existing entry IDs for stable component state/rendering
-   * - Applying the specified key ordering if provided
-   * - Adding new entries for keys that didn't exist before
-   * - Updating values for existing keys
-   * - Removing entries that no longer exist in the new value
-   */
-  function applyChangeToEntries(newValue?: Record<TKey, TValue> | null) {
-    if (!newValue) {
-      entries.value = []
-      return
-    }
-
-    // Create a map of existing entries by their keys for quick lookup
-    const currentEntriesMap = new Map<TKey, KVEntry<TKey, TValue>>()
-    entries.value.forEach(entry => {
-      if (entry.key) {
-        currentEntriesMap.set(entry.key, entry)
-      }
-    })
-
-    // Prepare array for the updated entries
-    const newEntries: KVEntries = []
-    const newKeys = Object.keys(newValue) as TKey[]
-
-    // Apply key ordering if specified, otherwise use the original key order
-    const orderedKeys = props.keyOrder
-      ? [...newKeys].sort((a, b) => compareByKeyOrder(a, b, props.keyOrder!))
-      : newKeys
-
-    // Process each key in order
-    orderedKeys.forEach(key => {
-      const value = newValue[key]
-      if (currentEntriesMap.has(key)) {
-        // For existing keys: preserve the entry object (including its ID) and just update its value
-        // This helps maintain component state and prevents unnecessary re-renders
-        const existingEntry = currentEntriesMap.get(key)!
-        existingEntry.value = value
-        newEntries.push(existingEntry)
-      } else {
-        // For new keys: create a new entry with a fresh ID
-        newEntries.push({
-          id: generateId(),
-          key,
-          value,
-        })
-      }
-    })
-
-    entries.value = newEntries
+    entries.value = initFromUserKeys(value)
   }
 
   return {
-    /**
-     * The list of key-value entries.
-     * Use `v-for` to iterate over this in the template.
-     */
     entries,
-    /**
-     * Add a empty key-value entry.
-     */
     addEntry,
-    /**
-     * Remove a key-value entry by its ID.
-     */
     removeEntry,
-    /**
-     * Reset the entries to the initial value.
-     */
     reset,
-    /**
-     * Set the entries to a specific key-value object.
-     */
     setValue,
-    /**
-     * The props for KLabel.
-     */
     labelAttrs: fieldAttrs,
-    /**
-     * The field object.
-     */
     field,
+    /**
+     * Read an entry's value from formData (ID-keyed path).
+     */
+    getEntryValue,
+    /**
+     * Write an entry's value to formData (ID-keyed path).
+     */
+    setEntryValue,
+  }
+
+  // ─── Legacy mode implementation (syncToFieldValue=false) ───
+
+  function useLegacyMode() {
+    type LegacyKVEntries = Array<KVEntry<TKey, TValue> & { value: TValue }>
+
+    function getLegacyEntries(value: Record<TKey, TValue> | null | undefined, keyOrder?: TKey[]): LegacyKVEntries {
+      if (!value) return []
+      const entries = Object.entries(value).map(([key, value]) => ({
+        id: generateId(),
+        key: key as TKey,
+        value: value as TValue,
+      }))
+      if (keyOrder) {
+        entries.sort((a, b) => compareByKeyOrder(a.key, b.key, keyOrder))
+      }
+      return entries
+    }
+
+    const legacyEntries = ref(getLegacyEntries(
+      props.initialValue ?? toValue(rawFieldValue) as Record<TKey, TValue> | null,
+      props.keyOrder,
+    )) as Ref<LegacyKVEntries>
+
+    function addEntry(): KVEntry<TKey, TValue> {
+      const entry = {
+        id: generateId(),
+        key: props.defaultKey || ('' as TKey),
+        value: (props.defaultValue ?? null) as TValue,
+      }
+      legacyEntries.value.push(entry)
+      return entry
+    }
+
+    function removeEntry(id: string) {
+      const index = legacyEntries.value.findIndex((entry) => entry.id === id)
+      if (index !== -1) {
+        legacyEntries.value.splice(index, 1)
+      }
+    }
+
+    function reset() {
+      legacyEntries.value = getLegacyEntries(props.initialValue, props.keyOrder)
+    }
+
+    function setValue(value: Record<TKey, TValue> | null | undefined) {
+      legacyEntries.value = getLegacyEntries(value, props.keyOrder)
+    }
+
+    // No-op helpers for legacy mode (values are on entries)
+    function getEntryValue(entryId: string): TValue | undefined {
+      return legacyEntries.value.find(e => e.id === entryId)?.value
+    }
+
+    function setEntryValue(entryId: string, value: TValue) {
+      const entry = legacyEntries.value.find(e => e.id === entryId)
+      if (entry) {
+        entry.value = value
+      }
+    }
+
+    return {
+      entries: legacyEntries as Ref<KVEntries>,
+      addEntry,
+      removeEntry,
+      reset,
+      setValue,
+      labelAttrs: fieldAttrs,
+      field,
+      getEntryValue,
+      setEntryValue,
+    }
   }
 }

@@ -19,7 +19,7 @@ free-form/
 │   ├── NumberField.vue      # Number/integer inputs
 │   ├── BooleanField.vue     # Checkbox inputs
 │   ├── EnumField.vue        # Select/multiselect dropdowns (for one_of fields)
-│   ├── KeyValueField.vue    # Map/dictionary key-value pairs
+│   ├── KeyValueField.vue    # Map/dictionary key-value pairs (supports all value types)
 │   ├── StringArrayField.vue # Tag-like comma-separated string sets
 │   ├── JsonField.vue        # JSON textarea editor
 │   ├── ForeignField.vue     # Foreign entity reference (stores {id: string})
@@ -92,6 +92,21 @@ Defined in `Field.vue`. The mapping logic:
 | `json` | - | `JsonField` |
 | `foreign` | - | `ForeignField` |
 
+### KeyValueField Multi-Type Values
+
+`KeyValueField` renders `map` schema types and supports all value types defined in `MapFieldSchema.values`:
+
+| Value Type | Rendering | Layout |
+|---|---|---|
+| `string` (or unspecified) | `EnhancedInput` (backwards compatible) | Side-by-side |
+| `number`, `integer`, `boolean` | Delegated to `<Field>` component | Side-by-side |
+| `set` (enum, not tag-like) | Delegated to `<Field>` → `EnumField` | Side-by-side |
+| `record`, `array`, `map`, `json`, `set` (tag-like) | Delegated to `<Field>` component | Vertical (key above, value below) |
+
+The value type is read from `mapSchema.values.type`. When the key input is empty, a placeholder hint is shown instead of the value field.
+
+The vault secret picker is only available for string values (where `referenceable` is set in the schema).
+
 ### Entity Checks
 
 Validation constraints at the schema level:
@@ -125,7 +140,7 @@ FormSchema + data props
 | `form-context.ts` | `provideFormShared()`, `useFormShared()` | Central form state: reactive data, schema, config, render rules, getValue/setValue |
 | `field.ts` | `useField(name)` | Individual field state: value, schema, path, renderer, error, ancestors |
 | `field-path.ts` | `useFieldPath()` | Calculates absolute dot-notation path from parent context via provide/inject |
-| `schema.ts` | `useSchemaHelpers()` | Schema introspection: getSchema, getDefault, getSelectItems, getLabelAttributes |
+| `schema.ts` | `useSchemaHelpers()`, `buildSchemaMap()`, `generalizePathWithSchemaMap()` | Schema introspection: getSchema, getDefault, getSelectItems, getLabelAttributes; schema-map-aware path generalization |
 | `labels.ts` | `useLabelPath()`, `useFieldAttrs()` | Label generation with dictionary lookup (IP, SSL, TTL, JWT, etc.) |
 | `render-rules.ts` | `createRenderRuleRegistry()` | Bundles (field grouping/ordering) and dependencies (conditional visibility) |
 | `ancestors.ts` | `useAncestors()` | Access parent field context for nested components |
@@ -137,12 +152,25 @@ Fields are addressed by dot-notation paths:
 
 - `$` — root symbol
 - `.` — separator
-- `*` — array wildcard (for schema lookup)
+- `*` — wildcard (represents array indices and map keys in schema lookup)
 
 ```typescript
 resolve('config', 'redis', 'host')     // -> 'config.redis.host'
 resolveRoot('config', 'redis')          // -> '$.config.redis'
 generalizePath('config.servers.0.host') // -> 'config.servers.*.host'
+```
+
+Two generalization strategies:
+
+- `generalizePath(path)` — replaces numeric segments (array indices) with `*`. Fast but cannot detect map keys.
+- `generalizePathWithSchemaMap(path, schemaMap)` — schema-map-aware. Walks the path left-to-right, consulting the schema map at each level to distinguish map keys from record field names. Used by `getSchema()`.
+
+```typescript
+// generalizePath only handles numeric indices:
+generalizePath('config.myMap.someKey')        // -> 'config.myMap.someKey' (wrong!)
+
+// generalizePathWithSchemaMap handles map keys too:
+generalizePathWithSchemaMap('config.myMap.someKey', schemaMap) // -> 'config.myMap.*' (correct)
 ```
 
 ### Render Rules
@@ -373,6 +401,11 @@ filler.fillField('config.host', 'example.com')
 | Array item | `ff-array-{path}.{index}` | `ff-array-config.servers.0` |
 | Object toggle | `ff-object-toggle-{path}` | `ff-object-toggle-config.redis` |
 | Add button | `ff-array-add-{path}` | `ff-array-add-config.servers` |
+| KV container | `ff-kv-{path}` | `ff-kv-config.headers` |
+| KV key input | `ff-key-{path}.{index}` | `ff-key-config.headers.0` |
+| KV value input | `ff-value-{path}.{index}` | `ff-value-config.headers.0` |
+| KV add button | `ff-kv-add-btn-{path}` | `ff-kv-add-btn-config.headers` |
+| KV remove button | `ff-kv-remove-btn-{path}.{index}` | `ff-kv-remove-btn-config.headers.0` |
 
 ### Feature Flags
 

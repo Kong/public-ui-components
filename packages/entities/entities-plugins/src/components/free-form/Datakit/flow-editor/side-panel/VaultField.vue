@@ -61,7 +61,7 @@
     <VaultSecretPicker
       :is-editing="!!selectedEntry && !creatingEntry"
       :secret-name="selectedEntry?.key"
-      :secret-ref="selectedEntry?.value"
+      :secret-ref="selectedEntry ? getEntryValue(selectedEntry.id) : undefined"
       :validate-name="validateName"
       @cancel="closeVaultSecretPicker"
       @proceed="handleVaultSecretSelected"
@@ -94,13 +94,15 @@ interface Emits extends KeyValueFieldEmits {
 
 type VaultKVEntry = KVEntry<FieldName, string>
 
-const props = defineProps<KeyValueFieldProps<FieldName>>()
+const props = defineProps<KeyValueFieldProps<FieldName, string>>()
 const emit = defineEmits<Emits>()
 
 const {
   entries,
   addEntry,
   removeEntry,
+  getEntryValue,
+  setEntryValue,
 } = useKeyValueField<FieldName, string>(props, emit)
 const selectedEntry = ref<VaultKVEntry | null>(null)
 const creatingEntry = ref<VaultKVEntry | null>(null)
@@ -129,10 +131,10 @@ const handleVaultSecretSelected = (data: { secretRef: string, secretName: string
   if (!selectedEntry.value) throw new Error('no selected entry')
   const oldName = selectedEntry.value.key
   const hasNameChanged = oldName !== data.secretName
-  const hasValueChanged = selectedEntry.value.value !== data.secretRef
+  const hasValueChanged = getEntryValue(selectedEntry.value.id) !== data.secretRef
   const hasChanged = hasNameChanged || hasValueChanged
 
-  selectedEntry.value!.value = data.secretRef
+  setEntryValue(selectedEntry.value!.id, data.secretRef)
   selectedEntry.value!.key = data.secretName as FieldName
 
   if (creatingEntry.value) {

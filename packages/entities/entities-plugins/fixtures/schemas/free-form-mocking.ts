@@ -279,6 +279,99 @@ export function buildMapFieldCases(): Array<{ [name: string]: MapFieldSchema }> 
         },
       },
     },
+    {
+      map_record_values: {
+        type: 'map',
+        description: 'A map with record values',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'record',
+          fields: [
+            {
+              host: {
+                type: 'string',
+              },
+            },
+            {
+              port: {
+                type: 'number',
+                default: 8080,
+              },
+            },
+          ],
+        },
+      },
+    },
+    {
+      map_boolean_values: {
+        type: 'map',
+        description: 'A map with boolean values',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'boolean',
+        },
+      },
+    },
+    {
+      map_enum_values: {
+        type: 'map',
+        description: 'A map with enum values',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'string',
+          one_of: ['allow', 'deny', 'log'],
+        },
+      },
+    },
+    {
+      map_array_values: {
+        type: 'map',
+        description: 'A map with array values',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'array',
+          elements: {
+            type: 'string',
+          },
+        },
+      },
+    },
+    {
+      map_record_values_with_default: {
+        type: 'map',
+        description: 'A map with record values and default data',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'record',
+          fields: [
+            {
+              enabled: {
+                type: 'boolean',
+                default: true,
+              },
+            },
+            {
+              threshold: {
+                type: 'number',
+              },
+            },
+          ],
+        },
+        default: {
+          rule_one: { enabled: true, threshold: 10 },
+        },
+      },
+    },
   ]
 }
 
@@ -423,16 +516,16 @@ export function buildMockingSchema(): FormSchema {
   return {
     type: 'record',
     fields: [
-      ...buildStringFieldCases(),
-      ...buildNumberFieldCases(),
-      ...buildBooleanFieldCases(),
-      ...buildRecordFieldCases(),
-      ...buildRecordWithEntityChecksCase(),
+      // ...buildStringFieldCases(),
+      // ...buildNumberFieldCases(),
+      // ...buildBooleanFieldCases(),
+      // ...buildRecordFieldCases(),
+      // ...buildRecordWithEntityChecksCase(),
       ...buildMapFieldCases(),
-      ...buildEnumFieldCases(),
-      ...buildTagFieldCases(),
-      ...buildArrayFieldCases(),
-      ...buildForeignFieldCases(),
+      // ...buildEnumFieldCases(),
+      // ...buildTagFieldCases(),
+      // ...buildArrayFieldCases(),
+      // ...buildForeignFieldCases(),
     ],
   }
 }
