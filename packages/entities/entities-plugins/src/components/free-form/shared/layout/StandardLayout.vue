@@ -62,9 +62,18 @@
           v-show="scoped"
           class="scope-detail"
         >
-          <VFGField
-            :form-options="formOptions"
-            :vfg-schema="scopeEntitiesSchema"
+          <ScopeEntityField
+            v-for="scopeField in scopeEntityFields"
+            :key="scopeField.name"
+            :disabled="scopeField.disabled"
+            :disabled-tooltip="scopeField.disabledTooltip"
+            :entity="scopeField.entity"
+            :fields="scopeField.fields"
+            :help="scopeField.help"
+            :label="scopeField.label"
+            :label-field="scopeField.labelField"
+            :name="scopeField.name"
+            :placeholder="scopeField.placeholder"
           />
         </div>
 
@@ -128,32 +137,35 @@
         :step="3"
         :title="t('plugins.form.sections.general_info.title')"
       >
-        <VFGField
-          :form-options="formOptions"
-          :vfg-schema="enabledSchema"
+        <SwitchField
+          v-if="freeFormFieldNames.has('enabled')"
+          :disabled-text="t('plugins.form.fields.plugin_status.text_off')"
+          :enabled-text="t('plugins.form.fields.plugin_status.text_on')"
+          :label="t('plugins.form.fields.plugin_status.label')"
+          name="enabled"
         />
 
         <StringField
-          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'instance_name')"
+          v-if="freeFormFieldNames.has('instance_name')"
           :label="t('plugins.form.fields.instance_name.label')"
           name="instance_name"
           :placeholder="t('plugins.form.fields.instance_name.placeholder')"
         />
 
         <StringArrayField
-          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'tags')"
+          v-if="freeFormFieldNames.has('tags')"
           :help="t('plugins.form.fields.tags.help')"
           name="tags"
           :placeholder="t('plugins.form.fields.tags.placeholder')"
         />
 
         <Field
-          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'protocols')"
+          v-if="freeFormFieldNames.has('protocols')"
           name="protocols"
         />
 
         <StringField
-          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'condition')"
+          v-if="freeFormFieldNames.has('condition')"
           name="condition"
           :placeholder="t('plugins.form.fields.condition.placeholder')"
         />
@@ -186,9 +198,7 @@ export type Props<T extends FreeFormPluginData = any> = {
   model: T
   /** VFG form model */
   formModel: Record<string, any>
-  formOptions: any
   isEditing: boolean
-  onModelUpdated: (value: any, model: string) => void
   /** Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority */
   onFormChange: (value: Partial<T>, fields?: string[]) => void
   onValidityChange?: (event: PluginValidityChangeEvent) => void
@@ -211,7 +221,8 @@ import Form from '../Form.vue'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import type { PluginValidityChangeEvent } from '../../../../types'
-import VFGField from '../VFGField.vue'
+import SwitchField from '../SwitchField.vue'
+import ScopeEntityField from '../ScopeEntityField.vue'
 import type { FormConfig, RenderRules } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
@@ -292,6 +303,7 @@ interface LegacyFormSchemaField {
   description?: string
   disabled?: boolean
   disabledTooltip?: string
+  labelField?: string
 }
 
 interface LegacyFormSchemaGroup {
@@ -321,22 +333,6 @@ const flattenFormSchemaFields = computed<LegacyFormSchemaField[]>(() => {
   return props.formSchema?.fields || []
 })
 
-const enabledSchema = computed(() => {
-  return {
-    fields: flattenFormSchemaFields.value
-      .filter(field => field.model === 'enabled')
-      .map(field => {
-        return {
-          ...field,
-          styleClasses: 'ff-enabled-field',
-          label: t('plugins.form.fields.plugin_status.label'),
-          textOn: t('plugins.form.fields.plugin_status.text_on'),
-          textOff: t('plugins.form.fields.plugin_status.text_off'),
-        }
-      }),
-  }
-})
-
 const scopeSchema = computed(() => {
   return flattenFormSchemaFields.value.find(field => field.type === 'selectionGroup')
 })
@@ -349,14 +345,21 @@ const scopeEntitiesSchema = computed(() => {
   return scopeSchema.value?.fields?.[1]
 })
 
-const moreFieldsSchema = computed(() => {
-  const fields = ['instance_name', 'protocols', 'tags', 'condition']
-
-  return {
-    fields: flattenFormSchemaFields.value.filter(field => fields.includes(field.model!)),
-  }
+const scopeEntityFields = computed(() => {
+  return (scopeEntitiesSchema.value?.fields ?? []).map((field: any) => ({
+    name: field.model.split('-')[0],
+    entity: field.entity,
+    fields: field.inputValues?.fields,
+    label: field.label,
+    placeholder: field.placeholder,
+    help: field.help,
+    disabled: field.disabled,
+    disabledTooltip: field.disabledTooltip,
+    labelField: field.labelField,
+  }))
 })
 
+const MORE_FIELDS = ['instance_name', 'protocols', 'tags', 'condition']
 const FREE_FORM_SCHEMA_KEYS = ['config']
 const freeFormSchema = computed(() => {
   const result: FormSchema = {
@@ -365,13 +368,14 @@ const freeFormSchema = computed(() => {
   }
 
   // append VFG fields to the freeform schema
+  const enabledField = flattenFormSchemaFields.value.find(field => field.model === 'enabled')
   const vfgFields = [
     // enabled field
-    ...enabledSchema.value.fields,
+    ...(enabledField ? [enabledField] : []),
     // scope fields
     ...(scopeEntitiesSchema.value?.fields ?? []),
     // general info fields
-    ...moreFieldsSchema.value.fields,
+    ...flattenFormSchemaFields.value.filter(field => MORE_FIELDS.includes(field.model!)),
   ]
   vfgFields.forEach((field: any) => {
     if (field.type === 'AutoSuggest') { // service, route, consumer, consumer_group
@@ -390,14 +394,7 @@ const freeFormSchema = computed(() => {
         },
       })
 
-    } else if (field.model === 'instance_name') {
-      result.fields.push({
-        [field.model]: {
-          type: 'string',
-          description: field.help,
-        },
-      })
-    } else if (field.model === 'condition') {
+    } else if (field.model === 'instance_name' || field.model === 'condition') {
       result.fields.push({
         [field.model]: {
           type: 'string',
@@ -440,6 +437,10 @@ const freeFormSchema = computed(() => {
   return result
 })
 
+const freeFormFieldNames = computed(() =>
+  new Set(freeFormSchema.value.fields.map(f => Object.keys(f)[0])),
+)
+
 /**
  * Avoid passing freeform data that it can't handle. e.g. `scope`, `update_time`
  * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
@@ -448,12 +449,20 @@ const prunedData = computed(() => {
   return pick(props.model, FREE_FORM_CONTROLLED_FIELDS) as Partial<T>
 })
 
+/**
+ * The scope-related field keys in VFG data model, e.g. `service-id`, `route-id`, `consumer-id`, `consumer_group-id`
+ */
 const formModelScopeFields = computed<string[]>(() => {
   return scopeEntitiesSchema.value?.fields.map((field: any) => field.model) ?? []
 })
 
-const scopeFields = computed<Array<'service' | 'route' | 'consumer' | 'consumer_group'>>(() => {
-  return formModelScopeFields.value.map((field: any) => field.split('-')[0])
+type ScopeFieldName = 'service' | 'route' | 'consumer' | 'consumer_group'
+
+/**
+ * The scope-related field keys in freeform data model, e.g. `service`, `route`, `consumer`, `consumer_group`
+ */
+const scopeFields = computed<ScopeFieldName[]>(() => {
+  return formModelScopeFields.value.map(field => field.split('-')[0] as ScopeFieldName)
 })
 
 // Cache of scope-related fields to restore when toggling scoped on/off
@@ -567,16 +576,6 @@ useSchemaExposer(freeFormSchema, instanceId)
 
   :deep(.form-group) {
     margin-bottom: $kui-space-70;
-  }
-
-  :deep(.ff-enabled-field) {
-    & > .field-wrap label {
-      font-weight: unset;
-    }
-
-    & > label > .icon-wrapper {
-      font-weight: $kui-font-weight-semibold;
-    }
   }
 }
 </style>
