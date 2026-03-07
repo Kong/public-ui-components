@@ -8,6 +8,7 @@
 - [useSwrvState](#useswrvstate)
 - [useTablePreferences](#usetablepreferences)
 - [useWindow](#usewindow)
+- [v-safe-html](#v-safe-html)
 
 ## useAxios
 
@@ -32,3 +33,7 @@
 ## useWindow
 
 [useWindow docs](./src/useWindow/README.md)
+
+## v-safe-html
+
+[v-safe-html directive docs](./src/directives/README.md)
