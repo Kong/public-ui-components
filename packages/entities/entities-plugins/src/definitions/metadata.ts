@@ -730,7 +730,7 @@ export const CREDENTIAL_METADATA: Record<string, any> = {
     schema: aclSchema,
     nameKey: 'plugins.meta.acl.credential_name',
     endpoint: '/acls',
-    schemaEndpoint: 'acls',
+    schemaEndpoint: 'acl',
     fields: getColumnFields(aclSchema),
     applyCredentialButtonText: 'Add group to consumer',
   },
@@ -740,7 +740,7 @@ export const CREDENTIAL_METADATA: Record<string, any> = {
     schema: basicAuthSchema,
     nameKey: 'plugins.meta.basic-auth.credential_name',
     endpoint: '/basic-auth',
-    schemaEndpoint: 'basicauth_credentials',
+    schemaEndpoint: 'basic_auth',
     fields: getColumnFields(basicAuthSchema),
   },
   'key-auth': {
@@ -749,7 +749,7 @@ export const CREDENTIAL_METADATA: Record<string, any> = {
     schema: keyAuthCredentialSchema,
     nameKey: 'plugins.meta.key-auth.credential_name',
     endpoint: '/key-auth',
-    schemaEndpoint: 'keyauth_credentials',
+    schemaEndpoint: 'key_auth',
     fields: getColumnFields(keyAuthCredentialSchema),
   },
   'key-auth-enc': {
@@ -776,7 +776,7 @@ export const CREDENTIAL_METADATA: Record<string, any> = {
     schema: hmacAuthSchema,
     nameKey: 'plugins.meta.hmac-auth.credential_name',
     endpoint: '/hmac-auth',
-    schemaEndpoint: 'hmacauth_credentials',
+    schemaEndpoint: 'hmac_auth',
     fields: getColumnFields(hmacAuthSchema),
   },
   jwt: {
@@ -785,7 +785,7 @@ export const CREDENTIAL_METADATA: Record<string, any> = {
     schema: jwtSecretSchema,
     nameKey: 'plugins.meta.jwt.credential_name',
     endpoint: '/jwt',
-    schemaEndpoint: 'jwt_secrets',
+    schemaEndpoint: 'jwt',
     fields: {
       id: {},
       key: {},
