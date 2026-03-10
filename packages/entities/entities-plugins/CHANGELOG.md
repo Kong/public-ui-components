@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.167.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.5...@kong-ui-public/entities-plugins@9.167.0) (2026-03-10)
+
+
+### Features
+
+* **entities-plugins:** enhance condition field styles ([#2980](https://github.com/Kong/public-ui-components/issues/2980)) ([c7fe552](https://github.com/Kong/public-ui-components/commit/c7fe552d17affb1d458dd18782c06945325e46dd))
+
+
+
+
+
 ## [9.166.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.4...@kong-ui-public/entities-plugins@9.166.5) (2026-03-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
