@@ -1,13 +1,12 @@
 import DashboardTilePreview from './DashboardTilePreview.vue'
 import DashboardTile from './DashboardTile.vue'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, onMounted } from 'vue'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContext } from '../types'
 import type {
   AllFilters,
   TileDefinition,
-  TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
@@ -181,5 +180,76 @@ ${JSON.stringify(props, null, 2)}`,
     setup({ metrics: [] })
     cy.getTestId('chart-not-configured-empty-state').should('exist')
     cy.getTestId('test-stub').should('not.exist')
+  })
+
+  it('forwards chart-data emit from DashboardTile', () => {
+    const chartDataSpy = cy.spy().as('chartDataSpy')
+    const mockChartData = {
+      data: [{ event: { request_count: 100 }, timestamp: '2024-01-01T00:00:00Z' }],
+      meta: {
+        start_ms: 1704067200000,
+        end_ms: 1704153600000,
+        granularity_ms: 3600000,
+        metric_names: ['request_count'],
+        metric_units: { request_count: 'count' },
+        display: {},
+        query_id: '',
+      },
+    }
+
+    const context: DashboardRendererContext = {
+      filters: [],
+    }
+
+    const definition: TileDefinition = {
+      chart: {
+        type: 'horizontal_bar',
+      },
+      query: {
+        datasource: 'api_usage',
+        metrics: ['request_count'],
+        dimensions: ['control_plane'],
+        filters: [],
+      },
+    }
+
+    cy.mount(DashboardTilePreview, {
+      attachTo: document.body,
+      props: {
+        globalFilters: [],
+        context,
+        definition,
+      },
+      attrs: {
+        onChartData: chartDataSpy,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: {
+            configFn: () => Promise.resolve(),
+          },
+        },
+        stubs: {
+          DashboardTile: defineComponent({
+            name: 'DashboardTile',
+            props: Object.keys(DashboardTile.props ?? {}),
+            emits: ['update:refreshCounter', 'chart-data'],
+            setup(_props, { emit }) {
+              onMounted(() => {
+                emit('chart-data', mockChartData)
+              })
+
+              return () => h('div', { 'data-testid': 'chart-data-stub' }, 'Stub')
+            },
+          }),
+        },
+      },
+    })
+
+    cy.get('@chartDataSpy').should('have.been.calledOnce').then(() => {
+      const emitted = chartDataSpy.getCall(0).args[0]
+      expect(emitted).to.have.property('meta')
+      expect(emitted.meta).to.have.property('granularity_ms', 3600000)
+    })
   })
 })

@@ -222,6 +222,7 @@ const refresh = () => {
 }
 
 const emit = defineEmits<{
+  (e: 'chart-data', chartData: ExploreResultV4): void
   (e: 'edit-tile', tile: TileDefinition): void
   (e: 'duplicate-tile', tile: TileDefinition): void
   (e: 'remove-tile', tile: TileDefinition): void
@@ -437,6 +438,7 @@ const removeTile = () => {
 const onChartData = (data: ExploreResultV4) => {
   chartData.value = data
   loadingChartData.value = false
+  emit('chart-data', data)
 }
 
 const hideExportModal = () => {

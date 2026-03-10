@@ -153,6 +153,44 @@ describe('<DashboardTile />', () => {
     cy.get('.title').should('contain.text', 'Test Chart')
   })
 
+  it('should emit chart-data when query resolves', () => {
+    const chartDataSpy = cy.spy().as('chartDataSpy')
+    const queryFn = cy.stub().as('queryFn').callsFake(() => {
+      return Promise.resolve(
+        generateSingleMetricTimeSeriesData(
+          { name: 'TotalRequests', unit: 'count' },
+          { status_code: ['request_count'] as string[] },
+          { start, end },
+        ) as ExploreResultV4,
+      )
+    })
+
+    cy.mount(DashboardTile, {
+      props: {
+        definition: cacheBustTile(mockTileDefinition),
+        context: mockContext,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      attrs: {
+        onChartData: chartDataSpy,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+        },
+      },
+    })
+
+    cy.get('@queryFn').should('have.been.calledOnce')
+    cy.get('@chartDataSpy').should('have.been.calledOnce').then(() => {
+      const emittedData = chartDataSpy.getCall(0).args[0]
+      expect(emittedData).to.have.property('meta')
+      expect(emittedData).to.have.property('data')
+    })
+  })
+
   it('increments refreshCounter and retriggers tile request when refresh is clicked', () => {
     const updateRefreshCounterSpy = cy.spy().as('updateRefreshCounterSpy')
     const queryFn = cy.stub().as('queryFn').callsFake(() => {
