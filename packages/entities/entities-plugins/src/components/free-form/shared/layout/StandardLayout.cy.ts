@@ -297,6 +297,9 @@ describe('<StandardLayout />', () => {
       })
 
       cy.get('.ff-standard-layout').should('exist')
+      cy.getTestId('view-general-info-additional-settings')
+        .find('[data-testid="collapse-trigger-label"]')
+        .click()
       cy.getTestId('ff-condition').should('exist')
     })
   })
