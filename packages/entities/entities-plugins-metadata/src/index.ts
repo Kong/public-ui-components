@@ -722,7 +722,7 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
     gatewayVersion: '3.14',
   },
-  'metering-billing': {
+  'metering-and-billing': {
     name: 'Metering & Billing',
     description: 'Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with Konnect Metering & Billing.',
     group: PluginGroup.MONETIZATION,
