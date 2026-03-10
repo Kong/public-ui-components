@@ -6,7 +6,8 @@ import type { CommonSchemaFields } from '../../types/plugins/shared'
 export interface OTELPluginConfig_gte_314 {
   config: {
     access_logs: {
-      custom_attributes_by_lua: Record<string, string>
+      custom_attributes_by_lua?: Record<string, string> | null
+      endpoint?: string | null
     }
   }
 }
