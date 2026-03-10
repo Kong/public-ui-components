@@ -20,7 +20,7 @@ export const DEFAULT_FIELDS: Readonly<RedisConfigurationFormState['fields']['con
   username: '',
   password: '',
   ssl: false,
-  ssl_verify: false,
+  ssl_verify: true,
   server_name: '',
   connect_timeout: 2000,
   send_timeout: 2000,
