@@ -17,6 +17,7 @@
         showPasswordMaskToggle: encrypted,
         type: encrypted ? 'password' : 'text',
       }"
+      :id="inputId"
       class="ff-string-field"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
@@ -88,6 +89,7 @@ interface StringFieldProps extends InputProps, BaseFieldProps {
   showPasswordMaskToggle?: boolean
   type?: string
   placeholder?: string
+  inputId?: string
 }
 
 const {
