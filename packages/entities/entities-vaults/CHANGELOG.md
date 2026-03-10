@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.3.0...@kong-ui-public/entities-vaults@4.4.0) (2026-03-10)
+
+
+### Features
+
+* **entities-vaults:** support new HCV CSP auth fields ([#2976](https://github.com/Kong/public-ui-components/issues/2976)) ([47573cf](https://github.com/Kong/public-ui-components/commit/47573cf7c10d99857e26d85481249de66701e29f))
+
+
+
+
+
 # [4.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.2.0...@kong-ui-public/entities-vaults@4.3.0) (2026-03-02)
 
 
