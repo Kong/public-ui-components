@@ -143,7 +143,7 @@ const cspSubmit: Array<{ method: CspMethod, fields: Array<{ field: CspField, val
 ]
 
 const encryptedCspFields: Record<CspMethod, CspField[]> = {
-  aws_iam: ['aws_access_key_id', 'aws_secret_access_key', 'aws_assume_role_arn'],
+  aws_iam: ['aws_access_key_id', 'aws_secret_access_key'],
   aws_ec2: ['aws_auth_nonce'],
   azure: [],
   gcp_gce: [],

@@ -409,8 +409,7 @@
                 data-testid="vault-form-config-hcv-aws_assume_role_arn"
                 :label="t('form.config.hcv.fields.aws_assume_role_arn.label')"
                 :readonly="form.isReadonly"
-                show-password-mask-toggle
-                type="password"
+                type="text"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].aws_role_session_name"
