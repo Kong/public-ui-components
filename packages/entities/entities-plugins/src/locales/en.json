@@ -591,7 +591,7 @@
         "name": "AI Custom Guardrail",
         "description": "Integrate with any 3rd-party Guardrail service, with customizable enforcement modes — choose whether violations block, log, or allow traffic to proceed."
       },
-      "metering-billing": {
+      "metering-and-billing": {
         "name": "Metering & Billing",
         "description": "Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with Konnect Metering & Billing."
       }

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.166.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.3...@kong-ui-public/entities-plugins@9.166.4) (2026-03-10)
+
+
+### Bug Fixes
+
+* **entities-plugins:** metering-and-billing nameKey correction ([#2979](https://github.com/Kong/public-ui-components/issues/2979)) ([85fbdc2](https://github.com/Kong/public-ui-components/commit/85fbdc2af2c8bb854bb54b7a8aad330ecede2ef7))
+
+
+
+
+
+## [9.166.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.2...@kong-ui-public/entities-plugins@9.166.3) (2026-03-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.166.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.1...@kong-ui-public/entities-plugins@9.166.2) (2026-03-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
