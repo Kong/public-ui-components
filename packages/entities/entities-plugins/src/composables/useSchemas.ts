@@ -45,6 +45,7 @@ import type { UnionFieldSchema } from 'src/types/plugins/form-schema'
 import { useExperimentalFreeForms } from './useExperimentalFreeForms'
 import { oidcSchema } from '../definitions/schemas/OIDC'
 import { otelSchema } from '../definitions/schemas/OTEL'
+import { konnectApplicationAuthSchema } from '../definitions/schemas/KonnectApplicationAuth'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -281,6 +282,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'opentelemetry': {
       ...otelSchema,
+    },
+
+    'konnect-application-auth': {
+      ...konnectApplicationAuthSchema,
     },
   }
 

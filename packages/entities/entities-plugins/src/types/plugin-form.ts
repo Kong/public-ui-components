@@ -32,6 +32,7 @@ import type { SolaceConsumeSchema } from './plugins/solace-consume'
 import type { SolaceUpstreamSchema } from './plugins/solace-upstream'
 import type { OIDCSchema } from './plugins/oidc'
 import type { OTELSchema } from './plugins/otel'
+import type { KonnectApplicationAuthSchema } from './plugins/konnect-application-auth'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -247,6 +248,7 @@ export interface CustomSchemas {
   'kafka-log': CommonSchemaFields
   'openid-connect': OIDCSchema
   'opentelemetry': OTELSchema
+  'konnect-application-auth': KonnectApplicationAuthSchema
 }
 
 export enum PluginPartialType {
