@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.10.0...@kong-ui-public/entities-redis-configurations@1.11.0) (2026-03-10)
+
+
+### Features
+
+* **redis:** empty state changes [khcp-19712] ([#2971](https://github.com/Kong/public-ui-components/issues/2971)) ([23e6ea4](https://github.com/Kong/public-ui-components/commit/23e6ea436646f24d784f5171f24933edda32e97f))
+
+
+
+
+
 # [1.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.25...@kong-ui-public/entities-redis-configurations@1.10.0) (2026-03-10)
 
 
