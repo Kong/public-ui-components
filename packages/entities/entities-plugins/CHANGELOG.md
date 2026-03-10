@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.168.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.167.1...@kong-ui-public/entities-plugins@9.168.0) (2026-03-10)
+
+
+### Bug Fixes
+
+* **entities-plugins:** increase dist size ([#2985](https://github.com/Kong/public-ui-components/issues/2985)) ([3cac257](https://github.com/Kong/public-ui-components/commit/3cac25758d713bda4327aed8b22f1f182c4dd9b1))
+* **entities-plugins:** reset empty exchange tokens ([#2984](https://github.com/Kong/public-ui-components/issues/2984)) ([9b99f4d](https://github.com/Kong/public-ui-components/commit/9b99f4d1c0e1d6d1f02d6d6e0d19f29d44f7ca67))
+
+
+### Features
+
+* **free-form:** add in page jump for rule fields ([#2975](https://github.com/Kong/public-ui-components/issues/2975)) ([4d8c9c4](https://github.com/Kong/public-ui-components/commit/4d8c9c471a383457c0af4be466cddc9c55882124))
+
+
+
+
+
 ## [9.167.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.167.0...@kong-ui-public/entities-plugins@9.167.1) (2026-03-10)
 
 
