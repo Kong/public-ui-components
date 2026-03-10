@@ -33,6 +33,7 @@ import type { SolaceUpstreamSchema } from './plugins/solace-upstream'
 import type { OIDCSchema } from './plugins/oidc'
 import type { OTELSchema } from './plugins/otel'
 import type { KonnectApplicationAuthSchema } from './plugins/konnect-application-auth'
+import type { AIMCPOauth2Schema } from './plugins/ai-mcp-oauth2'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -249,6 +250,7 @@ export interface CustomSchemas {
   'openid-connect': OIDCSchema
   'opentelemetry': OTELSchema
   'konnect-application-auth': KonnectApplicationAuthSchema
+  'ai-mcp-oauth2': AIMCPOauth2Schema
 }
 
 export enum PluginPartialType {

@@ -46,6 +46,7 @@ import { useExperimentalFreeForms } from './useExperimentalFreeForms'
 import { oidcSchema } from '../definitions/schemas/OIDC'
 import { otelSchema } from '../definitions/schemas/OTEL'
 import { konnectApplicationAuthSchema } from '../definitions/schemas/KonnectApplicationAuth'
+import { aiMCPOauth2Schema } from '../definitions/schemas/AIMCPOauth2'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -286,6 +287,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'konnect-application-auth': {
       ...konnectApplicationAuthSchema,
+    },
+
+    'ai-mcp-oauth2': {
+      ...aiMCPOauth2Schema,
     },
   }
 
