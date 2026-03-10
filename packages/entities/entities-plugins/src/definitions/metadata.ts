@@ -796,11 +796,11 @@ export const CREDENTIAL_METADATA: Record<string, any> = {
 
 // Used by Konnect, since there is currently no API endpoints to fetch credential schemas from
 export const CREDENTIAL_SCHEMAS: Record<string, any> = {
-  acls: aclsCredentialsSchema,
-  basicauth_credentials: basicAuthCredentialsSchema,
-  keyauth_credentials: keyAuthCredentialsSchema,
+  acl: aclsCredentialsSchema,
+  basic_auth: basicAuthCredentialsSchema,
+  key_auth: keyAuthCredentialsSchema,
   keyauth_enc_credentials: keyEncCredentialSchema,
   oauth2_credentials: oauthCredentialSchema,
-  hmacauth_credentials: hmacAuthCredentialsSchema,
-  jwt_secrets: jwtCredentialsSchema,
+  hmac_auth: hmacAuthCredentialsSchema,
+  jwt: jwtCredentialsSchema,
 }
