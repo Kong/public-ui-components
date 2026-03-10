@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.167.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.167.0...@kong-ui-public/entities-plugins@9.167.1) (2026-03-10)
+
+
+### Bug Fixes
+
+* **entities-plugins:** oidc data transformation ([#2983](https://github.com/Kong/public-ui-components/issues/2983)) ([f375ce9](https://github.com/Kong/public-ui-components/commit/f375ce98df02684ac4ccfc1024bb9367183a4f85))
+* **entities-plugins:** otel data transformation ([#2982](https://github.com/Kong/public-ui-components/issues/2982)) ([301bc13](https://github.com/Kong/public-ui-components/commit/301bc13bd5cb7242b4c399d73a3b91d0d8d1e8eb))
+
+
+
+
+
 # [9.167.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.5...@kong-ui-public/entities-plugins@9.167.0) (2026-03-10)
 
 
