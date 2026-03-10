@@ -276,4 +276,27 @@ describe('<RedisConfigurationList />', () => {
       })
     })
   }
+
+  it('should show managed redis empty state description when feature flag is enabled in Konnect', () => {
+    interceptList({ app: 'Konnect', body: [] })
+    interceptLinkedPlugins({ app: 'Konnect' })
+
+    cy.mount(RedisConfigurationList, {
+      props: {
+        config: {
+          ...baseConfigKonnect,
+          isKonnectManagedRedisEnabled: true,
+        },
+        cacheIdentifier: uuidv4(),
+      },
+    })
+
+    cy.wait('@getRedisConfigurations')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'Connect your own Redis instance or use a managed one from Konnect.')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'Redis')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'New Redis')
+    cy.getTestId('entity-learn-more-button').should('not.exist')
+    cy.getTestId('redis-entity-empty-state').should('not.contain.text', 'Configure a Redis Configuration')
+    cy.getTestId('redis-entity-empty-state').should('not.contain.text', 'New configuration')
+  })
 })
