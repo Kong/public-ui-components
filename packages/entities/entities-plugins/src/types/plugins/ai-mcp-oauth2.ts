@@ -15,7 +15,7 @@ export interface TokenExchange {
   enabled: boolean
 
   request: {
-    /** @default config */
+    /** @default none */
     actor_token_source: 'config' | 'header' | 'none'
 
     /** @default urn:ietf:params:oauth:token-type:access_token */

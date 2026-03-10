@@ -11,19 +11,19 @@ export const aiMCPOauth2Schema: AIMCPOauth2Schema = {
 
     const emptyTokenExchanges: TokenExchange[] = [
       {
-        'cache': {
-          'enabled': true,
-          'ttl': 3600,
+        cache: {
+          enabled: true,
+          ttl: 3600,
         },
-        'client_auth': 'client_secret_basic',
-        'enabled': false,
-        'request': {
-          'actor_token_source': 'none',
-          'actor_token_type': 'urn:ietf:params:oauth:token-type:access_token',
-          'audience': null,
-          'requested_token_type': 'urn:ietf:params:oauth:token-type:access_token',
-          'scopes': null,
-          'subject_token_type': 'urn:ietf:params:oauth:token-type:access_token',
+        client_auth: 'client_secret_basic',
+        enabled: false,
+        request: {
+          actor_token_source: 'none',
+          actor_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+          audience: null,
+          requested_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+          scopes: null,
+          subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
         },
       },
     ]
