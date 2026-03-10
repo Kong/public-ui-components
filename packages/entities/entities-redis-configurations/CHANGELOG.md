@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.25...@kong-ui-public/entities-redis-configurations@1.10.0) (2026-03-10)
+
+
+### Features
+
+* **entities-redis:** set default ssl_verify to true ([#2981](https://github.com/Kong/public-ui-components/issues/2981)) ([93b73f2](https://github.com/Kong/public-ui-components/commit/93b73f2124885ffbb24c7f962d91f2c24e3f35be))
+
+
+
+
+
 ## [1.9.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.9.24...@kong-ui-public/entities-redis-configurations@1.9.25) (2026-03-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
