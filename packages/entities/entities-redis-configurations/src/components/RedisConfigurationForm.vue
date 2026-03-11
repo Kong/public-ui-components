@@ -884,8 +884,8 @@ onBeforeMount(async () => {
 
   :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-wrapper) {
     flex-direction: column !important;
-    row-gap: $kui-space-40;
     padding-bottom: $kui-space-70;
+    row-gap: $kui-space-40;
   }
 
   :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-info) {
