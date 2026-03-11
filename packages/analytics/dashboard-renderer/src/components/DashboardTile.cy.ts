@@ -153,6 +153,31 @@ describe('<DashboardTile />', () => {
     cy.get('.title').should('contain.text', 'Test Chart')
   })
 
+  it('threads synthetics-data-key and reports chart data on window', () => {
+    const syntheticsDataKey = 'synthetics-test-key'
+
+    cy.window().then((win: any) => {
+      delete win._AnalyticsChartDataInternal
+    })
+
+    mount({
+      definition: {
+        ...mockTileDefinition,
+        chart: {
+          ...mockTileDefinition.chart,
+          synthetics_data_key: syntheticsDataKey,
+        },
+      },
+    })
+
+    cy.window().should((win: any) => {
+      // @ts-ignore - we're intentionally adding this property in the composable, so it won't be on the Window type
+      expect(win._AnalyticsChartDataInternal).to.be.instanceOf(Map)
+      expect(win._AnalyticsChartDataInternal?.has(syntheticsDataKey)).to.eq(true)
+      expect(win._AnalyticsChartDataInternal?.get(syntheticsDataKey)).to.have.property('datasets')
+    })
+  })
+
   it('increments refreshCounter and retriggers tile request when refresh is clicked', () => {
     const updateRefreshCounterSpy = cy.spy().as('updateRefreshCounterSpy')
     const queryFn = cy.stub().as('queryFn').callsFake(() => {
