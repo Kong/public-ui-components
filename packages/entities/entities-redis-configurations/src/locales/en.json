@@ -37,6 +37,15 @@
   "form": {
     "redis_partial_modal_title": "Create Redis Configuration",
     "partial_created_success_message": "Redis configuration created successfully",
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "view_configuration": "View configuration"
+    },
+    "managed_layout": {
+      "configuration": "Configuration",
+      "general_information": "General information"
+    },
     "sections": {
       "type": {
         "title": "Redis type",
