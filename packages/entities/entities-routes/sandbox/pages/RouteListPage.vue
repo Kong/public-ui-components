@@ -37,10 +37,12 @@
     :can-edit="permissions.canEdit"
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
+    copy-curl-enabled
     :has-expression-column="routeListHasExpressionColumn"
     :hide-traditional-columns="routeListHideTraditionalColumns"
     title="Routes"
     use-action-outside
+    @click:copy-as-curl="onCopyAsCurl"
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"
     @delete:success="onDeleteRouteSuccess"
@@ -125,6 +127,21 @@ const routeListHasExpressionColumn = ref<boolean>(true)
 const handlePermissionsUpdate = (newPermissions: PermissionsActions) => {
   permissions.value = newPermissions
   key.value++
+}
+
+const onCopyAsCurl = async (row: EntityRow) => {
+  const method = row.methods?.[0] ?? 'GET'
+  const host = row.hosts?.[0] ?? ''
+  const path = row.paths?.[0] ?? '/'
+  const protocol = row.protocols?.includes('https') ? 'https' : 'http'
+  const url = host ? `${protocol}://${host}${path}` : path
+  const curl = `curl -X ${method} ${url}`
+  try {
+    await navigator.clipboard.writeText(curl)
+    console.log(`Copied cURL: ${curl}`)
+  } catch {
+    console.error('Failed to copy cURL to clipboard')
+  }
 }
 
 const onCopyIdSuccess = (payload: CopyEventPayload) => {
