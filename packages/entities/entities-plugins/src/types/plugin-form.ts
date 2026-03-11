@@ -251,6 +251,7 @@ export interface CustomSchemas {
   'opentelemetry': OTELSchema
   'konnect-application-auth': KonnectApplicationAuthSchema
   'ai-mcp-oauth2': AIMCPOauth2Schema
+  'ai-custom-guardrail': CommonSchemaFields
 }
 
 export enum PluginPartialType {

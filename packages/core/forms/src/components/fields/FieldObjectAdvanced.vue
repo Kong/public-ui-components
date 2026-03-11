@@ -35,7 +35,16 @@
             />
           </div>
           <div v-else>
+            <textarea
+              v-if="schema.values?.type === 'textarea'"
+              v-model="value[index]"
+              class="form-control"
+              :placeholder="schema.fields && schema.fields[0].schema.placeholder"
+              :rows="schema.values?.rows || 4"
+              @input="updateModel(value[index], model[schema.model])"
+            />
             <input
+              v-else
               v-model="value[index]"
               class="form-control"
               :placeholder="schema.fields && schema.fields[0].schema.placeholder"

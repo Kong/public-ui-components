@@ -47,6 +47,7 @@ import { oidcSchema } from '../definitions/schemas/OIDC'
 import { otelSchema } from '../definitions/schemas/OTEL'
 import { konnectApplicationAuthSchema } from '../definitions/schemas/KonnectApplicationAuth'
 import { aiMCPOauth2Schema } from '../definitions/schemas/AIMCPOauth2'
+import { aiCustomGuardrailSchema } from '../definitions/schemas/AICustomGuardrail'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -292,6 +293,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     'ai-mcp-oauth2': {
       ...aiMCPOauth2Schema,
     },
+
+    'ai-custom-guardrail': {
+      ...aiCustomGuardrailSchema,
+    },
   }
 
   /**
@@ -313,6 +318,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     if (backendSchema || currentSchema) {
       inputSchema = backendSchema || (currentSchema.fields ? currentSchema.fields : currentSchema)
     }
+
 
     const blacklist = getBlacklist().concat(currentSchema.blacklist ? currentSchema.blacklist : [])
 
@@ -541,8 +547,13 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     } else {
       inputSchema[key] = field
       fieldSchemaHandler(field, formModel)
-      if (frontendSchema && frontendSchema[key]) {
-        mergeFrontendSchema(inputSchema[key], frontendSchema[key])
+      const pluginName = inputSchema.name?.default as keyof typeof customSchemas
+      const schemaOverride = frontendSchema?.[key]
+        ?? (pluginName && !customSchemas[pluginName]?.overwriteDefault
+          ? (customSchemas[pluginName] as Record<string, any>)?.[key]
+          : undefined)
+      if (schemaOverride) {
+        mergeFrontendSchema(inputSchema[key], schemaOverride)
       }
 
       // Set VFG form schema
