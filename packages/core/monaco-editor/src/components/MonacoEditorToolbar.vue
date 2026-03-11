@@ -63,11 +63,12 @@
           />
         </KDropdown>
       </div>
+      <slot name="toolbar-left" />
     </div>
     <div
-      ref="centreSlotEl"
-      class="monaco-editor-ui-toolbar-centre"
-      :data-testid="`monaco-editor-toolbar-centre`"
+      ref="centerSlotEl"
+      class="monaco-editor-ui-toolbar-center"
+      :data-testid="`monaco-editor-toolbar-center`"
     >
       <div
         v-for="(group, groupIndex) in centerGroups"
@@ -88,6 +89,7 @@
           placement="bottom"
         />
       </div>
+      <slot name="toolbar-center" />
     </div>
     <div
       ref="rightSlotEl"
@@ -113,6 +115,7 @@
           :placement="groupIndex === rightGroups.length - 1 ? 'bottom-end' : 'bottom'"
         />
       </div>
+      <slot name="toolbar-right" />
     </div>
   </div>
 </template>
@@ -148,16 +151,16 @@ const { i18n } = useI18n()
 
 const toolbarEl = useTemplateRef('toolbarEl')
 const leftSlotEl = useTemplateRef('leftSlotEl')
-const centreSlotEl = useTemplateRef('centreSlotEl')
+const centerSlotEl = useTemplateRef('centerSlotEl')
 const rightSlotEl = useTemplateRef('rightSlotEl')
 
 const toolbarSize = useElementSize(toolbarEl)
 const leftSlotSize = useElementSize(leftSlotEl)
-const centreSlotSize = useElementSize(centreSlotEl)
+const centerSlotSize = useElementSize(centerSlotEl)
 const rightSlotSize = useElementSize(rightSlotEl)
 
 // Track current language reactively from the editor composable's state
-const currentLanguage = computed(() => editor?.editorStates.currentLanguage ?? '')
+const currentLanguage = computed<string>(() => editor?.editorStates.currentLanguage ?? '')
 
 const { commands, leftGroups, centerGroups, rightGroups } = useToolbarActions(settings, currentLanguage)
 
@@ -188,16 +191,24 @@ watch(leftGroups, (groups) => {
 }, { immediate: true })
 
 function updateOverflowMenu() {
-  const toolbarWidth = toolbarSize.width.value
+  // Read DOM sizes directly for accurate, synchronous measurements.
+  // This avoids stale values from useElementSize refs that rely on async ResizeObserver callbacks,
+  // which can miss cascading changes (e.g. when collapsing a pane).
+  const toolbarWidth = toolbarEl.value?.getBoundingClientRect().width ?? 0
   if (toolbarWidth === 0) return
 
-  const contentWidth = leftSlotSize.width.value + centreSlotSize.width.value + rightSlotSize.width.value + 50
+  const leftWidth = leftSlotEl.value?.getBoundingClientRect().width ?? 0
+  const centerWidth = centerSlotEl.value?.getBoundingClientRect().width ?? 0
+  const rightWidth = rightSlotEl.value?.getBoundingClientRect().width ?? 0
+  const contentWidth = leftWidth + centerWidth + rightWidth + 50
 
   if (toolbarWidth < contentWidth && visibleLeftGroups.value.length > 0) {
     // Collapse: store the content width, then remove the last visible group
     collapseBreakpoints.push(contentWidth)
     visibleLeftGroups.value = visibleLeftGroups.value.slice(0, -1)
     dropdownKey.value++
+    // Re-check after DOM update to cascade collapse if still overflowing
+    nextTick(updateOverflowMenu)
   } else if (
     collapseBreakpoints.length > 0 &&
     visibleLeftGroups.value.length < leftGroups.value.length &&
@@ -209,6 +220,8 @@ function updateOverflowMenu() {
       ...visibleLeftGroups.value,
       leftGroups.value[visibleLeftGroups.value.length]!,
     ]
+    // Re-check after DOM update to cascade restore if more space is available
+    nextTick(updateOverflowMenu)
   }
 }
 
@@ -224,7 +237,7 @@ watch(() => editor?.editorStates.editorStatus, (status) => {
   immediate: true,
 })
 
-watch([toolbarSize.width, leftSlotSize.width, centreSlotSize.width, rightSlotSize.width], updateOverflowMenu)
+watch([toolbarSize.width, leftSlotSize.width, centerSlotSize.width, rightSlotSize.width], updateOverflowMenu)
 
 onMounted(async () => await nextTick(updateOverflowMenu))
 </script>
@@ -250,7 +263,7 @@ $defaultHeight: 44px;
 
   &-left,
   &-right,
-  &-centre {
+  &-center {
     align-items: center;
     display: flex;
     flex-shrink: 0;

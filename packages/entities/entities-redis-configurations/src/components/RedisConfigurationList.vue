@@ -100,7 +100,7 @@
         #empty-state
       >
         <KEmptyState
-          :action-button-text="t('list.action')"
+          :action-button-text="emptyStateActionText"
           :action-button-visible="userCanCreate"
           data-testid="redis-entity-empty-state"
           :features="[
@@ -116,8 +116,8 @@
             },
           ]"
           icon-background
-          :message="t('list.empty_state.description')"
-          :title="t('redis.title')"
+          :message="emptyStateDescription"
+          :title="emptyStateTitle"
           @click-action="handleCreate"
         >
           <template #icon>
@@ -183,8 +183,7 @@ import {
 } from '@kong-ui-public/entities-shared'
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { AddIcon } from '@kong/icons'
-import { RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
+import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
 
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
@@ -321,6 +320,35 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()
 
 const filterQuery = ref<string>('')
+const isKonnectManagedRedisEnabled = computed<boolean>(() => {
+  return props.config.app === 'konnect' && !!props.config.isKonnectManagedRedisEnabled
+})
+
+const emptyStateDescription = computed<string>(() => {
+  // When managed Redis is enabled in Konnect, use the expanded onboarding message
+  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled.value) {
+    return t('list.empty_state.description_with_managed_konnect')
+  }
+
+  return t('list.empty_state.description')
+})
+
+const emptyStateTitle = computed<string>(() => {
+  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled.value) {
+    return t('redis.empty_state.title_with_managed_konnect')
+  }
+
+  return t('redis.title')
+})
+
+const emptyStateActionText = computed<string>(() => {
+  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled.value) {
+    return t('list.action_with_managed_konnect')
+  }
+
+  return t('list.action')
+})
+
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
   const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
 
@@ -350,8 +378,8 @@ const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)
 const emptyStateOptions = ref<EmptyStateOptions>({
   ctaPath: props.config.createRoute,
   ctaText: undefined,
-  message: `${t('redis.empty_state.description')}${props.config.additionMessageForEmptyState ? ` ${props.config.additionMessageForEmptyState}` : ''}`,
-  title: t('redis.title'),
+  message: `${emptyStateDescription.value}${props.config.additionMessageForEmptyState ? ` ${props.config.additionMessageForEmptyState}` : ''}`,
+  title: emptyStateTitle.value,
 })
 
 const tableHeaders: BaseTableHeaders = {
@@ -514,7 +542,7 @@ watch(props.canCreate, async (canCreate) => {
 
   // If a user can create, we need to modify the empty state actions/messaging
   if (userCanCreate.value) {
-    emptyStateOptions.value.ctaText = t('actions.create')
+    emptyStateOptions.value.ctaText = emptyStateActionText.value
   } else {
     emptyStateOptions.value.ctaText = undefined
   }

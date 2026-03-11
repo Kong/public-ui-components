@@ -164,11 +164,14 @@
           name="protocols"
         />
 
-        <StringField
-          v-if="freeFormFieldNames.has('condition')"
-          name="condition"
-          :placeholder="t('plugins.form.fields.condition.placeholder')"
-        />
+        <KCollapse
+          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'condition')"
+          v-model="advancedCollapsed"
+          data-testid="view-general-info-additional-settings"
+          :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
+        >
+          <ConditionField />
+        </KCollapse>
       </EntityFormBlock>
     </template>
 
@@ -215,8 +218,6 @@ import { computed, inject, nextTick, ref, useTemplateRef, useId } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
 import { KRadio, KTooltip } from '@kong/kongponents'
-import english from '../../../../locales/en.json'
-import { createI18n } from '@kong-ui-public/i18n'
 import Form from '../Form.vue'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
@@ -232,6 +233,8 @@ import Field from '../Field.vue'
 import StringArrayField from '../StringArrayField.vue'
 import StringField from '../StringField.vue'
 import CodeEditor from '../CodeEditor.vue'
+import ConditionField from './ConditionField.vue'
+import useI18n from '../../../../composables/useI18n'
 
 const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   // plugin specific config
@@ -255,7 +258,7 @@ const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
 
 const instanceId = useId()
 
-const { t } = createI18n<typeof english>('en-us', english)
+const { i18n: { t } } = useI18n()
 
 const { editorMode = 'form', ...props } = defineProps<Props<T>>()
 
@@ -555,6 +558,8 @@ function getScopesFromFormModel(): Partial<T> {
 }
 
 useSchemaExposer(freeFormSchema, instanceId)
+
+const advancedCollapsed = ref(true)
 </script>
 
 <style lang="scss" scoped>

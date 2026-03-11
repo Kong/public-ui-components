@@ -15,7 +15,11 @@
           fullScreen: { placement: 'right', order: 1 },
         },
       }"
-    />
+    >
+      <template #toolbar-right>
+        <span style=" color: #888;font-size: 12px;">Custom slot content</span>
+      </template>
+    </MonacoEditor>
     <MonacoEditor
       v-model="code3"
       language="typescript"
