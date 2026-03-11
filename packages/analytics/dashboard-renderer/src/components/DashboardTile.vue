@@ -182,6 +182,7 @@ import type {
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
 import { formatTime, TimePeriods, getFieldDataSources, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
+import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -195,7 +196,6 @@ import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_ICON_SIZE_60, KUI_ICON_SI
 
 import { MoreIcon, EditIcon, WarningIcon, ProgressIcon, RefreshIcon } from '@kong/icons'
 
-import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import DonutChartRenderer from './DonutChartRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
@@ -222,6 +222,7 @@ const refresh = () => {
 }
 
 const emit = defineEmits<{
+  (e: 'chart-data', chartData: ExploreResultV4): void
   (e: 'edit-tile', tile: TileDefinition): void
   (e: 'duplicate-tile', tile: TileDefinition): void
   (e: 'remove-tile', tile: TileDefinition): void
@@ -437,16 +438,14 @@ const removeTile = () => {
 const onChartData = (data: ExploreResultV4) => {
   chartData.value = data
   loadingChartData.value = false
+  emit('chart-data', data)
 }
 
 const hideExportModal = () => {
   exportModalVisible.value = false
 }
 
-const exportCsv = async () => {
-  exportModalVisible.value = true
-  exportState.value = { status: 'loading' }
-
+const getExportData = (): Promise<ExploreResultV4> => {
   // goap datasources don't allow limit increases
   const isGoapDatasource = props.definition.query.datasource?.startsWith('goap')
 
@@ -455,22 +454,32 @@ const exportCsv = async () => {
 
   if (queryBridgeIncreases && !isGoapDatasource) {
     // If we're allowed to increase the CSV export limit, issue a new query with an expanded limit.
-    issueQuery(props.definition.query, props.context, EXPORT_RECORD_LIMIT).then(queryResult => {
-      exportState.value = { status: 'success', chartData: queryResult }
-    }).catch(error => {
-      exportState.value = { status: 'error', error: error }
-    })
+    return issueQuery(props.definition.query, props.context, EXPORT_RECORD_LIMIT)
   } else if (chartData.value) {
     // If we're not allowed to increase the limit, and results are available, use them.
-    exportState.value = { status: 'success', chartData: chartData.value }
+    return Promise.resolve(chartData.value)
   } else {
     // If results aren't available, wait until they are.
-    const stop = watch(chartData, (newValue) => {
-      if (newValue) {
-        exportState.value = { status: 'success', chartData: newValue }
-        stop()
-      }
+    return new Promise((resolve) => {
+      const stop = watch(chartData, (newValue) => {
+        if (newValue) {
+          resolve(newValue)
+          stop()
+        }
+      })
     })
+  }
+}
+
+const exportCsv = async () => {
+  exportModalVisible.value = true
+  exportState.value = { status: 'loading' }
+
+  try {
+    const result = await getExportData()
+    exportState.value = { status: 'success', chartData: result }
+  } catch (error) {
+    exportState.value = { status: 'error', error }
   }
 }
 
@@ -498,6 +507,8 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
   requestsLinkZoomActions.value = canGenerateRequestsLink.value ? { href: buildRequestLink(requestsQuery) } : undefined
   exploreLinkZoomActions.value = canGenerateExploreLink.value ? { href: buildExploreLink(exploreQuery as ExploreQuery | AiExploreQuery) } : undefined
 }
+
+defineExpose({ getExportData })
 </script>
 
 <style lang="scss" scoped>
