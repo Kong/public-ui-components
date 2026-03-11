@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.7.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.16...@kong-ui-public/dashboard-renderer@8.7.17) (2026-03-11)
+
+
+### Bug Fixes
+
+* **analytics:** emit chart data from DashboardTilePreview [MA-4846] ([#2987](https://github.com/Kong/public-ui-components/issues/2987)) ([1b5844c](https://github.com/Kong/public-ui-components/commit/1b5844c400aaaf76dceb12cdc379656f09e959e5))
+
+
+
+
+
 ## [8.7.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.15...@kong-ui-public/dashboard-renderer@8.7.16) (2026-03-10)
 
 
