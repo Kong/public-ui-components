@@ -841,6 +841,147 @@ describe('<DashboardTile />', () => {
         })
     })
 
+    it('getExportData issues query with EXPORT_RECORD_LIMIT when allowed', () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start, end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: cacheBustTile(mockTileDefinition),
+          context: mockContext,
+          tileId: 1,
+          queryReady: true,
+          refreshCounter: 0,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+          },
+        },
+      }).then(({ wrapper }) => {
+        const callCountBefore = queryFn.callCount
+        wrapper.vm.getExportData().then((result) => {
+          // a new query was issued
+          expect(queryFn.callCount).to.be.greaterThan(callCountBefore)
+          const payload = queryFn.lastCall.args[0]
+          expect(payload.query).to.have.property('limit', EXPORT_RECORD_LIMIT)
+          expect(result.meta.metric_names).to.include('TotalRequests')
+          expect(result.data).to.be.an('array').that.is('not.empty')
+        })
+      })
+    })
+
+    it('getExportData returns cached chartData when limit increase is disabled', () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start, end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: cacheBustTile(mockTileDefinition),
+          context: mockContext,
+          tileId: 1,
+          queryReady: true,
+          refreshCounter: 0,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn, staticConfig: { increaseCsvExportLimit: false } },
+          },
+        },
+      }).then(({ wrapper }) => {
+        const callCountBefore = queryFn.callCount
+        wrapper.vm.getExportData().then((result) => {
+          // cached data was used, so no new query
+          expect(queryFn.callCount).to.equal(callCountBefore)
+          expect(result.meta.metric_names).to.include('TotalRequests')
+          expect(result.data).to.be.an('array').that.is('not.empty')
+        })
+      })
+    })
+
+    it('getExportData returns cached chartData for goap datasource', () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start, end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: cacheBustTile(mockGoapTileDefinition),
+          context: mockContext,
+          tileId: 1,
+          queryReady: true,
+          refreshCounter: 0,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+          },
+        },
+      }).then(({ wrapper }) => {
+        const callCountBefore = queryFn.callCount
+        wrapper.vm.getExportData().then((result) => {
+          expect(queryFn.callCount).to.equal(callCountBefore)
+          expect(result.meta.metric_names).to.include('TotalRequests')
+          expect(result.data).to.be.an('array').that.is('not.empty')
+        })
+      })
+    })
+
+    it('getExportData rejects when queryFn fails', () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start, end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: cacheBustTile(mockTileDefinition),
+          context: mockContext,
+          tileId: 1,
+          queryReady: true,
+          refreshCounter: 0,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+          },
+        },
+      }).then(({ wrapper }) => {
+        wrapper.vm.getExportData().then(() => {
+          throw new Error('should have rejected')
+        },
+        (err: Error) => err,
+        ).then((err: any) => {
+          expect(err).to.be.instanceOf(Error)
+          expect(err.message).to.equal('export failed')
+        })
+      })
+    })
 
     it('handles deferred loading', () => {
       const queryFn = cy.stub().as('queryFn').callsFake(() => {

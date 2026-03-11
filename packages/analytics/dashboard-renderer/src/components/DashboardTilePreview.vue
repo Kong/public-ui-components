@@ -17,6 +17,7 @@
     </KEmptyState>
     <DashboardTile
       v-else
+      ref="dashboard-tile"
       v-model:refresh-counter="refreshCounter"
       :context="{
         ...internalContext,
@@ -49,6 +50,7 @@ import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
 
 const root = useTemplateRef('root')
+const tileRef = useTemplateRef('dashboard-tile')
 const randomId = crypto.randomUUID()
 
 const {
@@ -119,5 +121,6 @@ const refresh = () => {
 }
 defineExpose({
   refresh,
+  getExportData: () => tileRef.value?.getExportData(),
 })
 </script>

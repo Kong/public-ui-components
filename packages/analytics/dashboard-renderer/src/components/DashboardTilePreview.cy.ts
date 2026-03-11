@@ -182,6 +182,72 @@ ${JSON.stringify(props, null, 2)}`,
     cy.getTestId('test-stub').should('not.exist')
   })
 
+  it('forwards getExportData to child DashboardTile', () => {
+    const mockExportData = {
+      data: [{ event: { request_count: 42 }, timestamp: '2024-01-01T00:00:00Z' }],
+      meta: {
+        start_ms: 1704067200000,
+        end_ms: 1704153600000,
+        granularity_ms: 3600000,
+        metric_names: ['request_count'],
+        metric_units: { request_count: 'count' },
+        display: {},
+        query_id: '',
+      },
+    }
+
+    const context: DashboardRendererContext = {
+      filters: [],
+    }
+
+    const definition: TileDefinition = {
+      chart: {
+        type: 'horizontal_bar',
+      },
+      query: {
+        datasource: 'api_usage',
+        metrics: ['request_count'],
+        dimensions: ['control_plane'],
+        filters: [],
+      },
+    }
+
+    cy.mount(DashboardTilePreview, {
+      props: {
+        globalFilters: [],
+        context,
+        definition,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: {
+            configFn: () => Promise.resolve(),
+          },
+        },
+        stubs: {
+          DashboardTile: defineComponent({
+            name: 'DashboardTile',
+            props: Object.keys(DashboardTile.props ?? {}),
+            emits: ['update:refreshCounter', 'chart-data'],
+            setup(_props, { expose }) {
+              expose({
+                getExportData: () => Promise.resolve(mockExportData),
+              })
+
+              return () => h('div', { 'data-testid': 'export-stub' }, 'Stub')
+            },
+          }),
+        },
+      },
+    }).then(({ wrapper }) => {
+      const exposed = wrapper.vm.$.exposed
+
+      return cy.wrap(exposed?.getExportData()).then((result: any) => {
+        expect(result).to.deep.equal(mockExportData)
+      })
+    })
+  })
+
   it('forwards chart-data emit from DashboardTile', () => {
     const chartDataSpy = cy.spy().as('chartDataSpy')
     const mockChartData = {
