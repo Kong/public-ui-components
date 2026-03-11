@@ -122,7 +122,7 @@ describe('<RouteList />', () => {
       })
 
       cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
-      cy.getTestId('action-entity-copy-curl').click()
+      cy.getTestId('action-entity-copy-curl').eq(0).click()
       cy.get('@onClickCopyAsCurl').should('have.been.calledOnce')
     })
 
