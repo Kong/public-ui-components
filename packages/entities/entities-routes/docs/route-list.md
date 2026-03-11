@@ -166,6 +166,14 @@ HTML element you want title to be rendered as. Defaults to `h2`.
 
 Whether to show the "Expression" column. Defaults to `false`.
 
+#### `copyCurlEnabled`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+When `true`, a "Copy as cURL" item is shown in each row's action dropdown. Clicking it emits a `click:copy-as-curl` event with the row data instead of copying to clipboard directly, allowing the host application to generate and copy the cURL command.
+
 ### Events
 
 #### error
@@ -183,6 +191,10 @@ A `@copy:error` event is emitted when an error occurs when trying to copy a rout
 #### delete:success
 
 A `@delete:success` event is emitted when a route is successfully deleted. The event payload is the route item data object.
+
+#### click:copy-as-curl
+
+A `@click:copy-as-curl` event is emitted when the user clicks "Copy as cURL" in a row's action dropdown (requires `copyCurlEnabled` prop). The event payload is the full `EntityRow` object. The host application is responsible for generating a cURL command string from the row data and copying it to the clipboard.
 
 ### Usage example
 
