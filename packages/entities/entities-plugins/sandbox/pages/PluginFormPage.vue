@@ -69,6 +69,7 @@ provide(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, true)
 
 useProvideExperimentalFreeForms([
   'service-protection',
+  'ai-custom-guardrail',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({

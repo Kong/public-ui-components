@@ -1,6 +1,10 @@
 // This file defines a mapping between plugin names and their corresponding free form component names.
 // Notice if you don't want a plugin to be automatically rendered with free form, mark it as experimental and provide it(or not) in consuming app.
 const mapping = {
+  'ai-custom-guardrail': {
+    experimental: true,
+    component: 'AICustomGuardrailForm',
+  },
   'request-callout': 'RequestCalloutForm',
   'service-protection': {
     experimental: true,

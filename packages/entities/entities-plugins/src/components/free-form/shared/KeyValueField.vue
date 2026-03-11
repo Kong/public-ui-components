@@ -40,43 +40,66 @@
       v-for="(entry, index) of entries"
       :key="entry.id"
       class="ff-kv-field-entry"
+      :class="{ 'ff-kv-field-entry--multiline': props.inputValueMultiline }"
       :data-testid="`ff-kv-container-${field.path.value}.${index}`"
     >
-      <EnhancedInput
-        v-model.trim="entry.key"
-        class="ff-kv-field-entry-key"
-        :data-key-input="index"
-        :data-testid="`ff-key-${field.path.value}.${index}`"
-        :placeholder="keyPlaceholder || 'Key'"
-        @keydown.enter.prevent="focus(index, 'value')"
-      />
+      <div class="ff-kv-field-entry-card">
+        <div class="ff-kv-field-entry-card-row">
+          <EnhancedInput
+            v-model.trim="entry.key"
+            class="ff-kv-field-entry-key"
+            :data-key-input="index"
+            :data-testid="`ff-key-${field.path.value}.${index}`"
+            :placeholder="keyPlaceholder || 'Key'"
+            @keydown.enter.prevent="focus(index, 'value')"
+          />
 
-      <EnhancedInput
-        v-model.trim="entry.value"
-        class="ff-kv-field-entry-value"
-        :data-testid="`ff-value-${field.path.value}.${index}`"
-        :data-value-input="index"
-        :placeholder="valuePlaceholder || 'Value'"
-        @keydown.enter.prevent="handleValueEnter(index)"
-      >
-        <template #after>
-          <component
-            :is="autofillSlot"
-            v-if="autofillSlot && realShowVaultSecretPicker"
-            :schema="schema"
-            :update="value => handleAutofill(index, value)"
-            :value="entry.value"
-          />
-          <KAlert
-            v-if="realShowVaultSecretPicker && !autofillSlot"
-            appearance="warning"
-            :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
-            :message="i18n.t('plugins.free-form.vault_picker.component_error')"
-          />
-        </template>
-      </EnhancedInput>
+          <KTooltip
+            v-if="props.inputValueMultiline"
+            class="ff-array-field-item-remove-tooltip"
+            :text="i18n.t('actions.remove_entity', { entity: fieldName })"
+          >
+            <KButton
+              appearance="tertiary"
+              :aria-label="i18n.t('actions.remove_entity', { entity: fieldName })"
+              :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
+              icon
+              @click="removeEntry(entry.id)"
+            >
+              <TrashIcon />
+            </KButton>
+          </KTooltip>
+        </div>
+
+        <EnhancedInput
+          v-model.trim="entry.value"
+          class="ff-kv-field-entry-value"
+          :data-testid="`ff-value-${field.path.value}.${index}`"
+          :data-value-input="index"
+          :multiline="props.inputValueMultiline"
+          :placeholder="valuePlaceholder || 'Value'"
+          @keydown.enter.prevent="handleValueEnter(index)"
+        >
+          <template #after>
+            <component
+              :is="autofillSlot"
+              v-if="autofillSlot && realShowVaultSecretPicker"
+              :schema="schema"
+              :update="value => handleAutofill(index, value)"
+              :value="entry.value"
+            />
+            <KAlert
+              v-if="realShowVaultSecretPicker && !autofillSlot"
+              appearance="warning"
+              :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+              :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+            />
+          </template>
+        </EnhancedInput>
+      </div>
 
       <KTooltip
+        v-if="!props.inputValueMultiline"
         class="ff-array-field-item-remove-tooltip"
         :text="i18n.t('actions.remove_entity', { entity: fieldName })"
       >
@@ -107,7 +130,7 @@
 
 <script setup lang="ts">
 import { useTemplateRef, nextTick, inject, computed } from 'vue'
-import { AddIcon, CloseIcon } from '@kong/icons'
+import { AddIcon, CloseIcon, TrashIcon } from '@kong/icons'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import type { MapFieldSchema } from '../../../types/plugins/form-schema'
 import useI18n from '../../../composables/useI18n'
@@ -204,6 +227,36 @@ defineExpose({
     align-items: center;
     display: flex;
     gap: $kui-space-40;
+
+    &-card {
+      display: flex;
+      flex: 1 1 0;
+      gap: $kui-space-40;
+
+      &-row {
+        align-items: center;
+        display: flex;
+        gap: $kui-space-40;
+      }
+    }
+
+    &--multiline {
+      align-items: flex-start;
+
+      .ff-kv-field-entry-card {
+        border: $kui-border-width-10 solid $kui-color-border;
+        border-radius: $kui-border-radius-20;
+        flex-direction: column;
+        gap: $kui-space-40;
+        padding: $kui-space-50;
+
+        &-row {
+          .ff-kv-field-entry-key {
+            flex: 1 1 0;
+          }
+        }
+      }
+    }
 
     &-key,
     &-value {
