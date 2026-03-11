@@ -38,6 +38,8 @@ const konnectConfig: KonnectRedisConfigurationFormConfig = {
   app: 'konnect',
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
+  // Sandbox override for local testing: set true for managed-Redis copy, false for default copy
+  isKonnectManagedRedisEnabled: true,
   cloudAuthAvailable: true,
 }
 
