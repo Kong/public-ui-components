@@ -11,7 +11,11 @@ export interface KeyValueFieldProps<TKey extends string = string, TValue extends
   label?: string
   keyPlaceholder?: string
   valuePlaceholder?: string
-  inputValueMultiline?: boolean
+  appearance?: {
+    string?: {
+      multiline?: boolean
+    }
+  }
   defaultKey?: TKey
   defaultValue?: TValue
   labelAttributes?: LabelAttributes

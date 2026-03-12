@@ -40,66 +40,68 @@
       v-for="(entry, index) of entries"
       :key="entry.id"
       class="ff-kv-field-entry"
-      :class="{ 'ff-kv-field-entry--multiline': props.inputValueMultiline }"
+      :class="{ 'ff-kv-field-entry--multiline': props.appearance?.string?.multiline }"
       :data-testid="`ff-kv-container-${field.path.value}.${index}`"
     >
       <div class="ff-kv-field-entry-card">
-        <div class="ff-kv-field-entry-card-row">
-          <EnhancedInput
-            v-model.trim="entry.key"
-            class="ff-kv-field-entry-key"
-            :data-key-input="index"
-            :data-testid="`ff-key-${field.path.value}.${index}`"
-            :placeholder="keyPlaceholder || 'Key'"
-            @keydown.enter.prevent="focus(index, 'value')"
-          />
+        <div class="ff-kv-field-entry-card-content">
+          <div class="ff-kv-field-entry-card-row">
+            <EnhancedInput
+              v-model.trim="entry.key"
+              class="ff-kv-field-entry-key"
+              :data-key-input="index"
+              :data-testid="`ff-key-${field.path.value}.${index}`"
+              :placeholder="keyPlaceholder || 'Key'"
+              @keydown.enter.prevent="focus(index, 'value')"
+            />
+          </div>
 
-          <KTooltip
-            v-if="props.inputValueMultiline"
-            class="ff-array-field-item-remove-tooltip"
-            :text="i18n.t('actions.remove_entity', { entity: fieldName })"
+          <EnhancedInput
+            v-model.trim="entry.value"
+            class="ff-kv-field-entry-value"
+            :data-testid="`ff-value-${field.path.value}.${index}`"
+            :data-value-input="index"
+            :multiline="props.appearance?.string?.multiline"
+            :placeholder="valuePlaceholder || 'Value'"
+            @keydown.enter="handleValueKeydown($event, index)"
           >
-            <KButton
-              appearance="tertiary"
-              :aria-label="i18n.t('actions.remove_entity', { entity: fieldName })"
-              :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
-              icon
-              @click="removeEntry(entry.id)"
-            >
-              <TrashIcon />
-            </KButton>
-          </KTooltip>
+            <template #after>
+              <component
+                :is="autofillSlot"
+                v-if="autofillSlot && realShowVaultSecretPicker"
+                :schema="schema"
+                :update="value => handleAutofill(index, value)"
+                :value="entry.value"
+              />
+              <KAlert
+                v-if="realShowVaultSecretPicker && !autofillSlot"
+                appearance="warning"
+                :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+                :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+              />
+            </template>
+          </EnhancedInput>
         </div>
 
-        <EnhancedInput
-          v-model.trim="entry.value"
-          class="ff-kv-field-entry-value"
-          :data-testid="`ff-value-${field.path.value}.${index}`"
-          :data-value-input="index"
-          :multiline="props.inputValueMultiline"
-          :placeholder="valuePlaceholder || 'Value'"
-          @keydown.enter="handleValueKeydown($event, index)"
+        <KTooltip
+          v-if="props.appearance?.string?.multiline"
+          class="ff-array-field-item-remove-tooltip"
+          :text="i18n.t('actions.remove_entity', { entity: fieldName })"
         >
-          <template #after>
-            <component
-              :is="autofillSlot"
-              v-if="autofillSlot && realShowVaultSecretPicker"
-              :schema="schema"
-              :update="value => handleAutofill(index, value)"
-              :value="entry.value"
-            />
-            <KAlert
-              v-if="realShowVaultSecretPicker && !autofillSlot"
-              appearance="warning"
-              :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
-              :message="i18n.t('plugins.free-form.vault_picker.component_error')"
-            />
-          </template>
-        </EnhancedInput>
+          <KButton
+            appearance="tertiary"
+            :aria-label="i18n.t('actions.remove_entity', { entity: fieldName })"
+            :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
+            icon
+            @click="removeEntry(entry.id)"
+          >
+            <CloseIcon />
+          </KButton>
+        </KTooltip>
       </div>
 
       <KTooltip
-        v-if="!props.inputValueMultiline"
+        v-if="!props.appearance?.string?.multiline"
         class="ff-array-field-item-remove-tooltip"
         :text="i18n.t('actions.remove_entity', { entity: fieldName })"
       >
@@ -130,7 +132,7 @@
 
 <script setup lang="ts">
 import { useTemplateRef, nextTick, inject, computed } from 'vue'
-import { AddIcon, CloseIcon, TrashIcon } from '@kong/icons'
+import { AddIcon, CloseIcon } from '@kong/icons'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import type { MapFieldSchema } from '../../../types/plugins/form-schema'
 import useI18n from '../../../composables/useI18n'
@@ -180,7 +182,7 @@ function handleAddClick() {
 }
 
 function handleValueKeydown(event: KeyboardEvent, index: number) {
-  if (props.inputValueMultiline) return
+  if (props.appearance?.string?.multiline) return
   event.preventDefault()
   if (index === entries.value.length - 1) {
     addEntry()
@@ -235,9 +237,16 @@ defineExpose({
       flex: 1 1 0;
       gap: $kui-space-40;
 
+      &-content {
+        display: flex;
+        flex: 1 1 0;
+        gap: $kui-space-40;
+      }
+
       &-row {
         align-items: center;
         display: flex;
+        flex: 1 1 0;
         gap: $kui-space-40;
       }
     }
@@ -246,11 +255,19 @@ defineExpose({
       align-items: flex-start;
 
       .ff-kv-field-entry-card {
+        align-items: flex-start;
+        background-color: $kui-color-background;
         border: $kui-border-width-10 solid $kui-color-border;
-        border-radius: $kui-border-radius-20;
-        flex-direction: column;
+        border-radius: $kui-border-radius-30;
         gap: $kui-space-40;
         padding: $kui-space-50;
+
+        &-content {
+          display: flex;
+          flex: 1 1 0;
+          flex-direction: column;
+          gap: $kui-space-40;
+        }
 
         &-row {
           .ff-kv-field-entry-key {

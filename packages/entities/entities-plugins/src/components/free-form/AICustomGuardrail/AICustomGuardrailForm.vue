@@ -7,7 +7,7 @@
       >
         <KeyValueField
           v-bind="slotProps"
-          input-value-multiline
+          :appearance="{ string: { multiline: true } }"
         />
       </FieldRenderer>
     </template>
