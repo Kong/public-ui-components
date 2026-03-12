@@ -120,6 +120,7 @@ describe('<DashboardRenderer />', () => {
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
+      datasourceConfigFn: () => Promise.resolve([]),
       evaluateFeatureFlagFn,
       fetchComponent: opts?.renderEntityLink ? fetchComponentFn : undefined,
     }
