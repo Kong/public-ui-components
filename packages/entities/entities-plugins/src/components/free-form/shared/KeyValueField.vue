@@ -227,16 +227,16 @@ defineExpose({
     }
 
     &--multiline {
-      :deep(.card-content) {
-        align-items: flex-start;
-        flex-direction: row;
-        gap: $kui-space-40;
-      }
-
       .ff-kv-field-entry-fields {
         flex-direction: column;
       }
     }
+  }
+
+  & &-entry--multiline :deep(.card-content) {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: $kui-space-40;
   }
 
   :deep(.k-tooltip p) {
