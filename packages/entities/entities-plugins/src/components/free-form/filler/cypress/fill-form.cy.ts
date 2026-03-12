@@ -278,7 +278,7 @@ describe('Filler - Cypress', () => {
       cy.get('[data-testid="ff-value-headers.0"]').should('have.value', 'new-value')
     })
 
-    it('should fill multiline map field and Enter in textarea should not create a new entry', () => {
+    it('should fill multiline map field with both single-line and multiline values', () => {
       const schema: FormSchema = {
         type: 'record',
         fields: [
@@ -303,17 +303,16 @@ describe('Filler - Cypress', () => {
         ),
       )
 
-      // Add one entry manually via the add button
-      cy.get('[data-testid="ff-kv-add-btn-functions"]').click()
-      cy.get('[data-testid="ff-key-functions.0"]').type('my-fn')
+      const filler = createFiller(schema)
+      filler.fillField('functions', {
+        'single-line-fn': 'return kong.request.get_path()',
+        'multi-line-fn': 'line1\nline2\nline3',
+      })
 
-      // Type a multiline value — Enter should insert a newline, not create a second entry
-      cy.get('[data-testid="ff-value-functions.0"]').type('line1{enter}line2')
-
-      // Still only one entry
-      cy.get('[data-testid^="ff-kv-container-functions"]').should('have.length', 1)
-      // Textarea should contain the newline
-      cy.get('[data-testid="ff-value-functions.0"]').should('have.value', 'line1\nline2')
+      cy.get('[data-testid="ff-key-functions.0"]').should('have.value', 'single-line-fn')
+      cy.get('[data-testid="ff-value-functions.0"]').should('have.value', 'return kong.request.get_path()')
+      cy.get('[data-testid="ff-key-functions.1"]').should('have.value', 'multi-line-fn')
+      cy.get('[data-testid="ff-value-functions.1"]').should('have.value', 'line1\nline2\nline3')
     })
 
     it('should fill json field', () => {

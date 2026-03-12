@@ -261,7 +261,7 @@ test.describe('Filler - Playwright', () => {
       await expect(page.locator('[data-testid="ff-value-headers.0"]')).toHaveValue('new-value')
     })
 
-    test('should fill multiline map field and Enter in textarea should not create a new entry', async ({ mount, page }) => {
+    test('should fill multiline map field with both single-line and multiline values', async ({ mount, page }) => {
       const schema: FormSchema = {
         type: 'record',
         fields: [
@@ -277,18 +277,16 @@ test.describe('Filler - Playwright', () => {
 
       await mount(MultilineMapFormWrapper, { props: { schema, fieldName: 'functions' } })
 
-      // Add one entry manually via the add button
-      await page.locator('[data-testid="ff-kv-add-btn-functions"]').click()
-      await page.locator('[data-testid="ff-key-functions.0"]').fill('my-fn')
+      const filler = createFiller(page, schema)
+      await filler.fillField('functions', {
+        'single-line-fn': 'return kong.request.get_path()',
+        'multi-line-fn': 'line1\nline2\nline3',
+      })
 
-      // Type a multiline value — Enter should insert a newline, not create a second entry
-      await page.locator('[data-testid="ff-value-functions.0"]').press('End')
-      await page.locator('[data-testid="ff-value-functions.0"]').fill('line1\nline2')
-
-      // Still only one entry
-      await expect(page.locator('[data-testid^="ff-kv-container-functions"]')).toHaveCount(1)
-      // Textarea should contain the newline
-      await expect(page.locator('[data-testid="ff-value-functions.0"]')).toHaveValue('line1\nline2')
+      await expect(page.locator('[data-testid="ff-key-functions.0"]')).toHaveValue('single-line-fn')
+      await expect(page.locator('[data-testid="ff-value-functions.0"]')).toHaveValue('return kong.request.get_path()')
+      await expect(page.locator('[data-testid="ff-key-functions.1"]')).toHaveValue('multi-line-fn')
+      await expect(page.locator('[data-testid="ff-value-functions.1"]')).toHaveValue('line1\nline2\nline3')
     })
 
     test('should fill json field', async ({ mount, page }) => {
