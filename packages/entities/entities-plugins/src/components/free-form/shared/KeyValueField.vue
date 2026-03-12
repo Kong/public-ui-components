@@ -78,7 +78,7 @@
           :data-value-input="index"
           :multiline="props.inputValueMultiline"
           :placeholder="valuePlaceholder || 'Value'"
-          @keydown.enter.prevent="handleValueEnter(index)"
+          @keydown.enter="handleValueKeydown($event, index)"
         >
           <template #after>
             <component
@@ -179,7 +179,9 @@ function handleAddClick() {
   focus(index === -1 ? entries.value.length - 1 : index)
 }
 
-function handleValueEnter(index: number) {
+function handleValueKeydown(event: KeyboardEvent, index: number) {
+  if (props.inputValueMultiline) return
+  event.preventDefault()
   if (index === entries.value.length - 1) {
     addEntry()
   }
