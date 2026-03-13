@@ -1,34 +1,7 @@
-export interface OperatorIn {
-  type: 'multi-value'
+export interface Operator {
+  type: 'multi-value' | 'single-value' | 'no-value'
   ops: string[]
 }
-
-export interface OperatorEquals {
-  type: 'single-value'
-  ops: string[]
-}
-
-export interface OperatorEmpty {
-  type: 'no-value'
-  ops: string[]
-}
-
-export interface OperatorWildcard {
-  type: 'single-value'
-  ops: string[]
-}
-
-export interface OperatorInequality {
-  type: 'single-value'
-  ops: string[]
-}
-
-export type Operator =
-  | OperatorIn
-  | OperatorEquals
-  | OperatorEmpty
-  | OperatorWildcard
-  | OperatorInequality
 
 export type BaseFieldFilter = {
   valueType: string
