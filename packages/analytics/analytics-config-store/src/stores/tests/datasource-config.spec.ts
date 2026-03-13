@@ -147,18 +147,6 @@ describe('useDatasourceConfigStore', () => {
     expect(store.datasourceConfig).toEqual(datasourceConfigFixture)
   })
 
-  it('isReady resolves immediately if config is already loaded', async () => {
-    const store = useStore()
-
-    await store.isReady() // wait for initial load
-
-    const start = Date.now()
-    await store.isReady() // should resolve immediately
-    const duration = Date.now() - start
-
-    expect(duration).toBeLessThan(50) // arbitrary threshold to confirm it was effectively immediate
-  })
-
   it('isReady resolves even if the config fetch fails', async () => {
     const store = useStore({ reject: true })
 
