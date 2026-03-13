@@ -1,7 +1,11 @@
 import { createFiller } from './create-filler'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import Form from '../../shared/Form.vue'
+import FieldRenderer from '../../shared/FieldRenderer.vue'
+import KeyValueField from '../../shared/KeyValueField.vue'
 import { h } from 'vue'
+
+const FIELD_RENDERERS = 'free-form-field-renderers-slot' as const
 
 describe('Filler - Cypress', () => {
   const basicSchema: FormSchema = {
@@ -241,7 +245,74 @@ describe('Filler - Cypress', () => {
         'Authorization': 'Bearer token',
       })
 
-      cy.get('[data-testid="ff-kv-headers"]').should('exist')
+      cy.get('[data-testid="ff-key-headers.0"]').should('have.value', 'Content-Type')
+      cy.get('[data-testid="ff-value-headers.0"]').should('have.value', 'application/json')
+      cy.get('[data-testid="ff-key-headers.1"]').should('have.value', 'Authorization')
+      cy.get('[data-testid="ff-value-headers.1"]').should('have.value', 'Bearer token')
+    })
+
+    it('should clear existing map entries before refilling', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            headers: {
+              type: 'map',
+              keys: { type: 'string' },
+              values: { type: 'string' },
+            },
+          },
+        ],
+      }
+
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
+
+      const filler = createFiller(schema)
+      filler.fillField('headers', { 'X-Old': 'old-value' })
+
+      // Refill should clear previous entries first
+      filler.fillField('headers', { 'X-New': 'new-value' })
+
+      cy.get('[data-testid^="ff-kv-container-headers"]').should('have.length', 1)
+      cy.get('[data-testid="ff-key-headers.0"]').should('have.value', 'X-New')
+      cy.get('[data-testid="ff-value-headers.0"]').should('have.value', 'new-value')
+    })
+
+    it('should fill multiline map field with both single-line and multiline values', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            functions: {
+              type: 'map',
+              keys: { type: 'string' },
+              values: { type: 'string' },
+            },
+          },
+        ],
+      }
+
+      cy.mount(() =>
+        h('div', { style: 'padding: 20px' },
+          h(Form, { schema }, {
+            [FIELD_RENDERERS]: () => h(FieldRenderer,
+              { match: ({ path }: { path: string }) => path === 'functions' },
+              { default: (slotProps: any) => h(KeyValueField, { ...slotProps, appearance: { string: { multiline: true } } }) },
+            ),
+          }),
+        ),
+      )
+
+      const filler = createFiller(schema)
+      filler.fillField('functions', {
+        'single-line-fn': 'return kong.request.get_path()',
+        'multi-line-fn': 'line1\nline2\nline3',
+      })
+
+      cy.get('[data-testid="ff-key-functions.0"]').should('have.value', 'single-line-fn')
+      cy.get('[data-testid="ff-value-functions.0"]').should('have.value', 'return kong.request.get_path()')
+      cy.get('[data-testid="ff-key-functions.1"]').should('have.value', 'multi-line-fn')
+      cy.get('[data-testid="ff-value-functions.1"]').should('have.value', 'line1\nline2\nline3')
     })
 
     it('should fill json field', () => {
