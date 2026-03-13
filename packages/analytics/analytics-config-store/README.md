@@ -8,7 +8,7 @@ Cache analytics config information and conditionally render UI elements based on
 
 ## Features
 
-This package provides a cache for analytics config information (including whether an organization has analytics, its data retention for various products, etc).  It does not fetch the information itself; instead, it relies on an analytics bridge to issue the necessary API call.  The cache ensures that the API call doesn't need to be repeated for every component that needs the information.
+This package provides caches for analytics config information (including whether an organization has analytics, its data retention for various products, and datasource metadata). It does not fetch the information itself; instead, it relies on an analytics bridge to issue the necessary API calls. The cache ensures that the API calls don't need to be repeated for every component that needs the information.
 
 This package also provides a UI component, `AnalyticsConfigCheck`, which makes it easier to hide or show elements in the UI based on the analytics config stored in the cache.
 
@@ -28,7 +28,7 @@ The config store uses the host app's Pinia instance, and must only be used after
 
 ### Direct use of the store
 
-When the store is first instantiated, it makes a call to retrieve the org's analytics config (using the `configFn` from `AnalyticsBridge`).  Because the `AnalyticsBridge` is injected using Vue's `provide` / `inject` mechanism, the store must be instantiated either from a component's `setup` block or by using [`app.runWithContext`](https://vuejs.org/api/application.html#app-runwithcontext).  Until the call to retrieve analytics config resolves, the store will return `null` for `analyticsConfig` and default values for the various computed properties.
+When the store is first instantiated, it makes a call to retrieve the org's analytics config (using the `configFn` from `AnalyticsBridge`). Because the `AnalyticsBridge` is injected using Vue's `provide` / `inject` mechanism, the store must be instantiated either from a component's `setup` block or by using [`app.runWithContext`](https://vuejs.org/api/application.html#app-runwithcontext). Until the call to retrieve analytics config resolves, the store will return `null` for `analyticsConfig` and default values for the various computed properties.
 
 The store exposes several computed properties that attempt to standardize common questions asked of an org's analytics config:
 
@@ -39,6 +39,18 @@ The store exposes several computed properties that attempt to standardize common
 - `percentiles` -- a boolean value for whether the org's analytics data includes percentile metrics.
 
 Note: to avoid unnecessary API calls, no queries should be issued until `loading` is `false`.  Most analytics components support a `queryReady` property; it's a good idea to pass `queryReady: !loading`.
+
+### Direct use of the datasource config store
+
+This package also exports `useDatasourceConfigStore`, which retrieves datasource metadata using `AnalyticsBridge.datasourceConfigFn`.
+
+The datasource config store exposes:
+
+- `datasourceConfig` -- the raw datasource config response
+- `datasourceConfigMap` -- datasource config keyed by datasource name, with a `fieldsMap` for fast field lookups
+- `getFieldDataSources` -- a getter that returns all datasource names containing a field
+- `loading` -- whether the datasource config request is still pending
+- `isReady` -- a promise that resolves when datasource config loading succeeds and rejects if datasource config loading fails
 
 ### Using `AnalyticsConfigCheck`
 
