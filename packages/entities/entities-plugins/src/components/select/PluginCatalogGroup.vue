@@ -196,11 +196,20 @@ const handleClose = (revalidate?: boolean): void => {
 
 .plugin-card-container {
   display: grid;
-  gap: $kui-space-90;
-  grid-template-columns: repeat(auto-fit, minmax(0, 335px)); // display as many cards as possible in a row, with a max width of 335px
-  justify-content: start;
+  gap: $kui-space-60;
+  // Mobile: single column that fills available width
+  grid-template-columns: 1fr;
 
+  // Phablet+: auto-fit with flexible card widths
+  @media (min-width: $kui-breakpoint-phablet) {
+    gap: $kui-space-70;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  // Laptop+: restore original fixed max-width cards
   @media (min-width: $kui-breakpoint-laptop) {
+    gap: $kui-space-90;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 335px));
     justify-content: flex-start;
   }
 
