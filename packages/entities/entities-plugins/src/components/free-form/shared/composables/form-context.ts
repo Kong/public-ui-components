@@ -30,6 +30,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
 
     const innerData = reactive<T>({} as T)
     const config = toRef(() => propsConfig ?? {})
+    const valueTransforms = new Map<string, (raw: unknown) => unknown>()
 
     // Init form level field renderer slots
     const slots = useSlots()
@@ -88,6 +89,15 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       const value = toValue(innerData)
       const nextValue = cloneDeep(value)
 
+      // Apply registered value transforms (e.g., ID-keyed → user-keyed for map fields)
+      for (const [path, transform] of valueTransforms) {
+        const pathArray = utils.toArray(path)
+        const raw = get(nextValue, pathArray)
+        if (raw !== undefined) {
+          set(nextValue, pathArray, transform(raw))
+        }
+      }
+
       // Set hidden paths to default or null
       if (hiddenPaths.value.size > 0) {
         for (const path of hiddenPaths.value) {
@@ -106,6 +116,14 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       }
 
       return nextValue
+    }
+
+    function registerValueTransform(path: string, transform: (raw: unknown) => unknown) {
+      valueTransforms.set(path, transform)
+    }
+
+    function unregisterValueTransform(path: string) {
+      valueTransforms.delete(path)
     }
 
     // Emit changes when the inner data changes
@@ -133,6 +151,8 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       ...schemaHelpers,
       getValue,
       isFieldHidden,
+      registerValueTransform,
+      unregisterValueTransform,
     }
   },
 )

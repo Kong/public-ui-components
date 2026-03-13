@@ -328,6 +328,118 @@ describe('Free Form', () => {
       })
     })
 
+    // describe('KeyValueField with non-string values', () => {
+    //   it('should render NumberField for integer map values', () => {
+    //     cy.mount(Form, {
+    //       props: {
+    //         schema: {
+    //           type: 'record',
+    //           fields: [{
+    //             limits: { type: 'map', keys: { type: 'string' }, values: { type: 'integer' } },
+    //           }],
+    //         } as FormSchema,
+    //         data: { limits: { max_connections: 100 } },
+    //         onChange: cy.spy().as('onChangeSpy'),
+    //       },
+    //     })
+
+    //     // Should render the KV field
+    //     cy.getTestId('ff-kv-limits').should('exist')
+    //     // Should have the key input with the key value
+    //     cy.getTestId('ff-key-limits.0').find('input').should('have.value', 'max_connections')
+    //     // Should have a number input for the value (rendered by Field -> NumberField)
+    //     cy.getTestId('ff-field-limits.max_connections').should('exist')
+    //   })
+
+    //   it('should render BooleanField for boolean map values', () => {
+    //     cy.mount(Form, {
+    //       props: {
+    //         schema: {
+    //           type: 'record',
+    //           fields: [{
+    //             flags: { type: 'map', keys: { type: 'string' }, values: { type: 'boolean' } },
+    //           }],
+    //         } as FormSchema,
+    //         data: { flags: { enabled: true } },
+    //         onChange: cy.spy().as('onChangeSpy'),
+    //       },
+    //     })
+
+    //     cy.getTestId('ff-kv-flags').should('exist')
+    //     cy.getTestId('ff-key-flags.0').find('input').should('have.value', 'enabled')
+    //     cy.getTestId('ff-field-flags.enabled').should('exist')
+    //   })
+
+    //   it('should render ObjectField with vertical layout for record map values', () => {
+    //     cy.mount(Form, {
+    //       props: {
+    //         schema: {
+    //           type: 'record',
+    //           fields: [{
+    //             endpoints: {
+    //               type: 'map',
+    //               keys: { type: 'string' },
+    //               values: {
+    //                 type: 'record',
+    //                 fields: [
+    //                   { host: { type: 'string' } },
+    //                   { port: { type: 'integer' } },
+    //                 ],
+    //               },
+    //             },
+    //           }],
+    //         } as FormSchema,
+    //         data: { endpoints: { api: { host: 'localhost', port: 8080 } } },
+    //         onChange: cy.spy().as('onChangeSpy'),
+    //       },
+    //     })
+
+    //     cy.getTestId('ff-kv-endpoints').should('exist')
+    //     // Vertical layout should be applied
+    //     cy.get('.ff-kv-field-entry--vertical').should('exist')
+    //     // Nested record fields should render
+    //     cy.getTestId('ff-key-endpoints.0').find('input').should('have.value', 'api')
+    //   })
+
+    //   it('should show placeholder when key is empty for non-string values', () => {
+    //     cy.mount(Form, {
+    //       props: {
+    //         schema: {
+    //           type: 'record',
+    //           fields: [{
+    //             limits: { type: 'map', keys: { type: 'string' }, values: { type: 'integer' } },
+    //           }],
+    //         } as FormSchema,
+    //         onChange: cy.spy().as('onChangeSpy'),
+    //       },
+    //     })
+
+    //     // Add an entry
+    //     cy.getTestId('ff-kv-add-btn-limits').click()
+    //     // Key is empty, so the Field should not render — placeholder should show
+    //     cy.getTestId('ff-kv-placeholder-limits.0').should('exist')
+    //   })
+
+    //   it('should initialize string map values identically to before (regression)', () => {
+    //     cy.mount(Form, {
+    //       props: {
+    //         schema: {
+    //           type: 'record',
+    //           fields: [{
+    //             headers: { type: 'map', keys: { type: 'string' }, values: { type: 'string' } },
+    //           }],
+    //         } as FormSchema,
+    //         data: { headers: { 'x-api-key': 'secret' } },
+    //         onChange: cy.spy().as('onChangeSpy'),
+    //       },
+    //     })
+
+    //     cy.getTestId('ff-kv-headers').should('exist')
+    //     cy.getTestId('ff-key-headers.0').find('input').should('have.value', 'x-api-key')
+    //     cy.getTestId('ff-value-headers.0').find('input').should('have.value', 'secret')
+    //   })
+    // })
+
     /**
      * todo:
      * for every type of field, test that:

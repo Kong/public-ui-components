@@ -37,15 +37,16 @@
             @update:model-value="validateFieldName(entry)"
           />
           <KSelect
-            v-model="entry.value"
             class="ff-kv-field-entry-value"
             clearable
             :data-testid="`ff-value-${field.path.value}.${index}`"
             enable-filtering
             :items="items"
             :label="t('plugins.free-form.datakit.flow_editor.node_properties.input.source')"
+            :model-value="getEntryValue(entry.id)"
             :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
             @change="selectItem => handleInputsValueChange(entry, selectItem?.value ?? null)"
+            @update:model-value="val => setEntryValue(entry.id, (val ?? null) as IdConnection)"
           >
             <template
               v-if="$slots['item-label']"
@@ -115,6 +116,8 @@ const {
   addEntry,
   removeEntry,
   field,
+  getEntryValue,
+  setEntryValue,
 } = useKeyValueField<FieldName, IdConnection>(props, emit)
 
 const { i18n: { t } } = useI18n()
@@ -167,7 +170,7 @@ function handleInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
   if (entry.id === addingEntryId.value) {
     // add field
     if (entry.key.trim() === '') return // skip if the field name is empty
-    emit('add:field', entry.key, entry.value)
+    emit('add:field', entry.key, getEntryValue(entry.id))
     addingEntryId.value = null
   } else {
     // rename field

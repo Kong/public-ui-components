@@ -257,7 +257,7 @@ const activeTab = ref<string>(tabs.value[0]?.hash)
 
 const addItem = async () => {
 
-  const defaultItemValue = getDefault(utils.resolve(field.path!.value, utils.arraySymbol))
+  const defaultItemValue = getDefault(utils.resolve(field.path!.value, utils.wildcardSymbol))
 
   if (!Array.isArray(fieldValue!.value)) {
     fieldValue!.value = []

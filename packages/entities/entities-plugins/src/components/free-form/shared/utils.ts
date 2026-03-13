@@ -10,7 +10,7 @@ export function toSelectItems<T extends string | number>(
   return items.map((item) => ({ value: item, label: `${item}` }))
 }
 
-export const arraySymbol = '*'
+export const wildcardSymbol = '*'
 export const rootSymbol = '$'
 export const separator = '.'
 
