@@ -7,7 +7,7 @@ settings:
 overrides:
   vue: ^3.5.27
   glob@<11.1.0: '>=13.0.1'
-  dompurify@<3.2.4: '>=3.3.1'
+  dompurify@<3.2.4: '>=3.3.2'
   form-data@>=3.0.0 <3.0.4: '>=4.0.5'
   mermaid@>=11.1.0 <11.10.0: '>=11.12.2'
   mermaid@>=10.9.0-rc.1 <10.9.4: '>=11.12.2'
@@ -631,10 +631,10 @@ importers:
         version: 1.1.0(monaco-editor@0.55.1)
       vite-plugin-top-level-await:
         specifier: ^1.6.0
-        version: 1.6.0(rollup@4.59.0)(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2))
+        version: 1.6.0(rollup@4.59.0)(vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))
       vite-plugin-wasm:
         specifier: ^3.5.0
-        version: 3.5.0(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2))
+        version: 3.5.0(vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))
       vue:
         specifier: ^3.5.27
         version: 3.5.27(typescript@5.9.3)
@@ -1085,7 +1085,7 @@ importers:
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       '@playwright/experimental-ct-vue':
         specifier: ^1.58.0
-        version: 1.58.0(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2))(vue@3.5.27(typescript@5.9.3))(yaml@2.8.2)
+        version: 1.58.0(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))(vue@3.5.27(typescript@5.9.3))(yaml@2.8.2)
       '@playwright/test':
         specifier: ^1.58.0
         version: 1.58.0
@@ -1371,7 +1371,7 @@ importers:
         version: 1.26.5
       '@vitejs/plugin-vue-jsx':
         specifier: ^4.2.0
-        version: 4.2.0(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2))(vue@3.5.27(typescript@5.9.3))
+        version: 4.2.0(vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))(vue@3.5.27(typescript@5.9.3))
       vue:
         specifier: ^3.5.27
         version: 3.5.27(typescript@5.9.3)
@@ -1402,7 +1402,7 @@ importers:
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.1
-        version: 1.1.1(rollup@4.59.0)(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2))
+        version: 1.1.1(rollup@4.59.0)(vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -2625,6 +2625,7 @@ packages:
   '@lerna/create@9.0.4':
     resolution: {integrity: sha512-WxedGD98G8/a6HztCXNWquaM0x17oSvfvuqDsLxNNX1qXGyrzmMUmd1mQikF/47uy80X6qyWdaRtaAHlwkvEUA==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    deprecated: This package is an implementation detail of Lerna and is no longer published separately.
 
   '@ljharb/through@2.3.13':
     resolution: {integrity: sha512-/gKJun8NNiWGZJkGzI/Ragc53cOdcLNdzjLaIa+GEjguQs0ulsurx8WN0jijdK9yPqDvziX995sMRLyLt1uZMQ==}
@@ -6324,11 +6325,13 @@ packages:
   git-raw-commits@3.0.0:
     resolution: {integrity: sha512-b5OHmZ3vAgGrDn/X0kS+9qCfNKWe4K/jFnhwzVWWg0/k5eLa3060tZShrRg8Dja5kPc+YjS0Gc6y7cRr44Lpjw==}
     engines: {node: '>=14'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-raw-commits@4.0.0:
     resolution: {integrity: sha512-ICsMM1Wk8xSGMowkOmPrzo2Fgmfo4bMHLNX6ytHjajRJUqvHOw/TFapQ+QG75c3X/tTDDhOSRPGC52dDbNM8FQ==}
     engines: {node: '>=16'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-remote-origin-url@2.0.0:
@@ -6338,6 +6341,7 @@ packages:
   git-semver-tags@5.0.1:
     resolution: {integrity: sha512-hIvOeZwRbQ+7YEUmCkHqo8FOLQZCEn18yevLHADlFPZY02KJGsu5FZt9YW/lybfK2uhWFI7Qg/07LekJiTv7iA==}
     engines: {node: '>=14'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-up@7.0.0:
@@ -8935,7 +8939,7 @@ packages:
   right-pad@1.0.1:
     resolution: {integrity: sha512-bYBjgxmkvTAfgIYy328fmkwhp39v8lwVgWhhrzxPV3yHtcSqyYKe9/XOhvW48UFjATg3VuJbpsp5822ACNvkmw==}
     engines: {node: '>= 0.10'}
-    deprecated: Please use String.prototype.padEnd() over this package.
+    deprecated: Use String.prototype.padEnd() instead
 
   rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
@@ -12185,12 +12189,12 @@ snapshots:
     dependencies:
       langium: 3.3.1
 
-  '@modyfi/vite-plugin-yaml@1.1.1(rollup@4.59.0)(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2))':
+  '@modyfi/vite-plugin-yaml@1.1.1(rollup@4.59.0)(vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))':
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.59.0)
       js-yaml: 4.1.1
       tosource: 2.0.0-alpha.3
-      vite: 6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2)
+      vite: 5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)
     transitivePeerDependencies:
       - rollup
 
@@ -12641,10 +12645,10 @@ snapshots:
       - tsx
       - yaml
 
-  '@playwright/experimental-ct-vue@1.58.0(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2))(vue@3.5.27(typescript@5.9.3))(yaml@2.8.2)':
+  '@playwright/experimental-ct-vue@1.58.0(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))(vue@3.5.27(typescript@5.9.3))(yaml@2.8.2)':
     dependencies:
       '@playwright/experimental-ct-core': 1.58.0(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2)
-      '@vitejs/plugin-vue': 5.2.4(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2))(vue@3.5.27(typescript@5.9.3))
+      '@vitejs/plugin-vue': 5.2.4(vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))(vue@3.5.27(typescript@5.9.3))
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -13816,25 +13820,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-vue-jsx@4.2.0(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2))(vue@3.5.27(typescript@5.9.3))':
-    dependencies:
-      '@babel/core': 7.28.0
-      '@babel/plugin-transform-typescript': 7.28.0(@babel/core@7.28.0)
-      '@rolldown/pluginutils': 1.0.0-beta.32
-      '@vue/babel-plugin-jsx': 1.5.0(@babel/core@7.28.0)
-      vite: 6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2)
-      vue: 3.5.27(typescript@5.9.3)
-    transitivePeerDependencies:
-      - supports-color
-
   '@vitejs/plugin-vue@5.2.4(vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))(vue@3.5.27(typescript@5.9.3))':
     dependencies:
       vite: 5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)
-      vue: 3.5.27(typescript@5.9.3)
-
-  '@vitejs/plugin-vue@5.2.4(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2))(vue@3.5.27(typescript@5.9.3))':
-    dependencies:
-      vite: 6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2)
       vue: 3.5.27(typescript@5.9.3)
 
   '@vitest/expect@3.2.4':
@@ -21075,13 +21063,13 @@ snapshots:
     dependencies:
       monaco-editor: 0.55.1
 
-  vite-plugin-top-level-await@1.6.0(rollup@4.59.0)(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2)):
+  vite-plugin-top-level-await@1.6.0(rollup@4.59.0)(vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)):
     dependencies:
       '@rollup/plugin-virtual': 3.0.2(rollup@4.59.0)
       '@swc/core': 1.15.7
       '@swc/wasm': 1.15.7
       uuid: 10.0.0
-      vite: 6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2)
+      vite: 5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)
     transitivePeerDependencies:
       - '@swc/helpers'
       - rollup
@@ -21117,9 +21105,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-wasm@3.5.0(vite@6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2)):
+  vite-plugin-wasm@3.5.0(vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)):
     dependencies:
-      vite: 6.4.1(@types/node@24.10.13)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.2)
+      vite: 5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)
 
   vite@5.4.21(@types/node@24.10.13)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1):
     dependencies:
