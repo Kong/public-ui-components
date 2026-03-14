@@ -74,7 +74,6 @@ describe('<CommonForm />', () => {
     formSchema?: any
     model?: any
     formModel?: any
-    formOptions?: any
     isEditing?: boolean
     onFormChange?: any
     provide?: any
@@ -84,7 +83,6 @@ describe('<CommonForm />', () => {
       formSchema = createFormSchema(),
       model = createBaseModel(),
       formModel = { enabled: true },
-      formOptions = {},
       isEditing = false,
       onFormChange = cy.spy().as('onFormChange'),
       provide,
@@ -96,9 +94,7 @@ describe('<CommonForm />', () => {
         formSchema,
         model,
         formModel,
-        formOptions,
         isEditing,
-        onModelUpdated: cy.spy().as('onModelUpdated'),
         onFormChange,
         pluginName: 'test-plugin',
       },
