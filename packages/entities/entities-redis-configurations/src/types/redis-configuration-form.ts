@@ -4,6 +4,10 @@ import type { ClusterNode, Identifiable, PartialType, SentinelNode, AuthProvider
 
 export interface BaseRedisConfigurationFormConfig {
   /**
+   * Sandbox/local override for managed Konnect Redis form layout
+   */
+  isKonnectManagedRedisEnabled?: boolean
+  /**
    * Show/hide cloud authentication configuration fields
    */
   cloudAuthAvailable?: boolean
