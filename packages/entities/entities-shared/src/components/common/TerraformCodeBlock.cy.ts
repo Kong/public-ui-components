@@ -2,6 +2,18 @@ import TerraformCodeBlock from './TerraformCodeBlock.vue'
 import { SupportedEntityType } from '../../types'
 
 const records = {
+  [SupportedEntityType.Plugin]: {
+    config: {
+      anonymous: null,
+      hide_credentials: false,
+      key_names: ['apikey'],
+    },
+    enabled: true,
+    id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+    name: 'key-auth',
+    protocols: ['grpc', 'grpcs', 'http', 'https'],
+    tags: [],
+  },
   [SupportedEntityType.AuthServer]: {
     audience: 'api://default',
     created_at: new Date().toISOString(),
@@ -50,6 +62,38 @@ const records = {
 }
 
 describe('<TerraformCodeBlock />', () => {
+  describe(`entity type: ${SupportedEntityType.Plugin}`, () => {
+    it('uses konnect_gateway_plugin_ prefix when credentialType is not provided', () => {
+      cy.mount(TerraformCodeBlock, {
+        props: {
+          entityRecord: records[SupportedEntityType.Plugin],
+          entityType: SupportedEntityType.Plugin,
+        },
+      })
+
+      cy.get('.terraform-config')
+        .should('be.visible')
+        .and('contain.text', 'resource "konnect_gateway_plugin_key_auth" "my_key_auth"')
+    })
+
+    it('uses konnect_gateway_ prefix and renders consumer_id when credentialType is provided', () => {
+      cy.mount(TerraformCodeBlock, {
+        props: {
+          entityRecord: records[SupportedEntityType.Plugin],
+          entityType: SupportedEntityType.Plugin,
+          credentialType: 'key-auth',
+          entityId: 'consumer-uuid-1234',
+        },
+      })
+
+      cy.get('.terraform-config')
+        .should('be.visible')
+        .and('contain.text', 'resource "konnect_gateway_key_auth" "my_key_auth"')
+        .and('not.contain.text', 'resource "konnect_gateway_plugin_key_auth"')
+        .and('contain.text', 'consumer_id = "consumer-uuid-1234"')
+    })
+  })
+
   describe(`entity type: ${SupportedEntityType.Route}`, () => {
     it('renders the Terraform content correctly', () => {
       cy.mount(TerraformCodeBlock, {
