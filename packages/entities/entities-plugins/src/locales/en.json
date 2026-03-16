@@ -11,13 +11,15 @@
     "enable": "Enable",
     "enabled": "Enabled",
     "delete": "Delete",
+    "disabled": "Disabled",
     "confirm_delete": "Yes, delete",
     "view": "View Details",
     "configure_dynamic_ordering": "Configure Dynamic Ordering",
     "go_to_plugins": "Go to Plugins",
     "save": "Save",
     "add_entity": "Add {entity}",
-    "remove_entity": "Remove {entity}"
+    "remove_entity": "Remove {entity}",
+    "loading_spinner": "Loading..."
   },
   "view_configuration": {
     "title": "Configuration",
@@ -589,7 +591,7 @@
         "name": "AI Custom Guardrail",
         "description": "Integrate with any 3rd-party Guardrail service, with customizable enforcement modes — choose whether violations block, log, or allow traffic to proceed."
       },
-      "metering-billing": {
+      "metering-and-billing": {
         "name": "Metering & Billing",
         "description": "Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with Konnect Metering & Billing."
       }
@@ -611,7 +613,8 @@
       "filter": {
         "title": "Filter Plugins",
         "featured": "Featured",
-        "type": "Type"
+        "type": "Type",
+        "clear": "Clear"
       },
       "list": {
         "table_headers": {
@@ -663,9 +666,13 @@
           "help": "A custom name for this plugin instance to help with identifying from the list view."
         },
         "condition": {
-          "label": "Condition",
-          "placeholder": "Enter a condition expression",
-          "help": "An expression used for conditional control over plugin execution. If the expression evaluates to true during the request flow, the plugin is executed; otherwise, it is skipped."
+          "label": "Execution condition",
+          "placeholder": "Enter an expression",
+          "tooltip": "An expression used for conditional control over plugin execution. If the expression evaluates to true during the request flow, the plugin is executed; otherwise, it is skipped.",
+          "help": {
+            "learn": "Learn more",
+            "about": "{link} about plugin conditions."
+          }
         },
         "protocols": {
           "label": "Protocols",

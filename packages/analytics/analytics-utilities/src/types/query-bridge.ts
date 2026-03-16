@@ -1,5 +1,6 @@
 import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4 } from './explore'
 import type { AnalyticsConfigV2 } from './analytics-config'
+import type { DatasourceConfig } from './datasource-config'
 import type { Component } from 'vue'
 
 export interface BasicDatasourceQuery {
@@ -30,6 +31,9 @@ export interface AnalyticsBridge {
 
   // Determine the current org's analytics config
   configFn: () => Promise<AnalyticsConfigV2>
+
+  // Determine the current org's datasource config
+  datasourceConfigFn: () => Promise<DatasourceConfig[]>
 
   // Evaluate feature flags (if applicable)
   evaluateFeatureFlagFn: <T = boolean>(key: string, defaultValue: T) => T

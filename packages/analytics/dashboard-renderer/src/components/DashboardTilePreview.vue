@@ -17,6 +17,7 @@
     </KEmptyState>
     <DashboardTile
       v-else
+      ref="dashboard-tile"
       v-model:refresh-counter="refreshCounter"
       :context="{
         ...internalContext,
@@ -28,6 +29,7 @@
       :query-ready="queryReady"
       show-refresh
       :tile-id="randomId"
+      @chart-data="onChartData"
       @tile-bounds-change="onBoundsChange"
       @tile-time-range-zoom="onZoom"
     />
@@ -40,6 +42,7 @@ import type { DashboardRendererContext, TileBoundsChangeEvent, TileZoomEvent } f
 import DashboardTile from './DashboardTile.vue'
 import type {
   AllFilters,
+  ExploreResultV4,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
@@ -47,6 +50,7 @@ import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
 
 const root = useTemplateRef('root')
+const tileRef = useTemplateRef('dashboard-tile')
 const randomId = crypto.randomUUID()
 
 const {
@@ -60,12 +64,17 @@ const {
 }>()
 
 const emit = defineEmits<{
+  (e: 'chart-data', chartData: ExploreResultV4): void
   (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
   (e: 'tile-bounds-change', bounds: TileBoundsChangeEvent): void
 }>()
 
 const onZoom = (e: TileZoomEvent) => {
   emit('tile-time-range-zoom', e)
+}
+
+const onChartData = (data: ExploreResultV4) => {
+  emit('chart-data', data)
 }
 
 const onBoundsChange = (e: TileBoundsChangeEvent) => {
@@ -112,5 +121,6 @@ const refresh = () => {
 }
 defineExpose({
   refresh,
+  getExportData: () => tileRef.value?.getExportData(),
 })
 </script>

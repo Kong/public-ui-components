@@ -72,6 +72,60 @@ describe('<RouteList />', () => {
       )
     })
 
+    it('should not show the Copy as cURL action by default', () => {
+      cy.mount(RouteList, {
+        props: {
+          cacheIdentifier: `route-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
+      cy.getTestId('action-entity-copy-curl').should('not.exist')
+    })
+
+    it('should show the Copy as cURL action when copyCurlEnabled is true', () => {
+      cy.mount(RouteList, {
+        props: {
+          cacheIdentifier: `route-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          copyCurlEnabled: true,
+        },
+      })
+
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
+      cy.getTestId('action-entity-copy-curl').should('be.visible')
+    })
+
+    it('should emit click:copy-as-curl with the row data when Copy as cURL is clicked', () => {
+      const onClickCopyAsCurl = cy.spy().as('onClickCopyAsCurl')
+
+      cy.mount(RouteList, {
+        props: {
+          cacheIdentifier: `route-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          copyCurlEnabled: true,
+          'onClick:copy-as-curl': onClickCopyAsCurl,
+        },
+      })
+
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
+      cy.getTestId('action-entity-copy-curl').eq(0).click()
+      cy.get('@onClickCopyAsCurl').should('have.been.calledOnce')
+    })
+
     it('should always show the Copy ID action', () => {
       cy.mount(RouteList, {
         props: {

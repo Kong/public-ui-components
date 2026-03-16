@@ -1,4 +1,7 @@
 import { formattingActions } from './formatting'
+import { insertActions } from './insert'
+import { listActions } from './list'
+import { blockActions } from './block'
 import { navigationActions } from './navigation'
 import { viewActions } from './view'
 
@@ -11,8 +14,12 @@ import { viewActions } from './view'
  */
 export const BUILT_IN_TOOLBAR_ACTIONS = {
   ...formattingActions,
+  ...insertActions,
+  ...listActions,
+  ...blockActions,
   ...navigationActions,
   ...viewActions,
 }
 
-export { createWrapAction } from './helpers'
+export { createWrapAction, createInsertAction, createLinePrefixAction } from './helpers'
+export { registerMarkdownShortcuts } from './markdownShortcuts'

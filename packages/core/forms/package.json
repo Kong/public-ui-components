@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/forms",
-  "version": "4.21.3",
+  "version": "4.22.0",
   "type": "module",
   "main": "./dist/forms.umd.js",
   "module": "./dist/forms.es.js",
@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@kong/icons": "^1.42.0",
-    "dompurify": "^3.3.1",
+    "dompurify": "^3.3.2",
     "fecha": "^4.2.3",
     "lodash-es": "^4.17.23"
   },

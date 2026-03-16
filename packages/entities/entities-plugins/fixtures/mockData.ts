@@ -427,6 +427,10 @@ export const kmAvailablePlugins = {
         version: '3.6.0',
         priority: -1,
       },
+      'metering-and-billing': {
+        version: '3.6.0',
+        priority: 500,
+      },
     },
     disabled_on_server: {},
   },
@@ -482,6 +486,7 @@ export const kongPluginNames = [
   'ldap-auth-advanced',
   'loggly',
   'mocking',
+  'metering-and-billing',
   'mtls-auth',
   'oas-validation',
   'oauth2-introspection',

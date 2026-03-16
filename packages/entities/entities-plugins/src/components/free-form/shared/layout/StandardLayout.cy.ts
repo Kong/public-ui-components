@@ -157,6 +157,7 @@ describe('<StandardLayout />', () => {
       formModel: {
         enabled: true,
         'service-id': 'test-service-123',
+        'route-id': 'test-route-456',
       },
       onFormChange: onFormChangeSpy,
     })
@@ -170,6 +171,59 @@ describe('<StandardLayout />', () => {
       const call = (spy as any).getCall(0)
       expect(call.args[0]).to.have.property('service')
       expect(call.args[0].service).to.deep.equal({ id: 'test-service-123' })
+      expect(call.args[0]).to.have.property('route')
+      expect(call.args[0].route).to.deep.equal({ id: 'test-route-456' })
+    })
+  })
+
+  describe('Scope entity integration', () => {
+    it('should map AutoSuggest scope fields to freeform foreign fields', () => {
+      mountStandardLayout()
+
+      cy.get('[data-testid="ff-standard-layout-form"]')
+        .invoke('attr', 'data-instance-id')
+        .then((instanceId) => {
+          cy.window().then((win) => {
+            const map = (win as any)[FREE_FORM_SCHEMA_MAP_KEY]
+            const freeFormSchema = map[instanceId as string]
+
+            const serviceField = freeFormSchema.fields.find((item: any) => item.service)?.service
+            const routeField = freeFormSchema.fields.find((item: any) => item.route)?.route
+
+            expect(serviceField.type).to.equal('foreign')
+            expect(serviceField.reference).to.equal('services')
+            expect(routeField.type).to.equal('foreign')
+            expect(routeField.reference).to.equal('routes')
+          })
+        })
+    })
+
+    it('should clear and restore cached scope ids when toggling scoped mode', () => {
+      const onFormChangeSpy = cy.spy().as('onFormChange')
+
+      mountStandardLayout({
+        isEditing: true,
+        model: {
+          ...createBaseModel(),
+          service: { id: 'svc-1' },
+          route: { id: 'rt-1' },
+        },
+        onFormChange: onFormChangeSpy,
+      })
+
+      cy.contains('.k-radio', 'Global').click()
+
+      cy.get('@onFormChange').its('lastCall.args.0').should((payload: any) => {
+        expect(payload.service).to.equal(null)
+        expect(payload.route).to.equal(null)
+      })
+
+      cy.contains('.k-radio', 'Scoped').click()
+
+      cy.get('@onFormChange').its('lastCall.args.0').should((payload: any) => {
+        expect(payload.service).to.deep.equal({ id: 'svc-1' })
+        expect(payload.route).to.deep.equal({ id: 'rt-1' })
+      })
     })
   })
 
@@ -243,6 +297,9 @@ describe('<StandardLayout />', () => {
       })
 
       cy.get('.ff-standard-layout').should('exist')
+      cy.getTestId('view-general-info-additional-settings')
+        .find('[data-testid="collapse-trigger-label"]')
+        .click()
       cy.getTestId('ff-condition').should('exist')
     })
   })

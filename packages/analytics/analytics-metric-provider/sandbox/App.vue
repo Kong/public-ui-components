@@ -192,6 +192,8 @@ const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
       })
     },
 
+    datasourceConfigFn: () => Promise.resolve([]),
+
     evaluateFeatureFlagFn: () => true as any,
   }
 }

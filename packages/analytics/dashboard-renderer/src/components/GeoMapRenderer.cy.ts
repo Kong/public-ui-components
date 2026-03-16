@@ -33,6 +33,7 @@ describe('<GeoMapRenderer />', () => {
 
       return {
         queryFn: cy.spy(queryFn).as('fetcher'),
+        datasourceConfigFn: () => Promise.resolve([]),
       } as any
     }
 
@@ -124,4 +125,3 @@ describe('<GeoMapRenderer />', () => {
     })
   })
 })
-

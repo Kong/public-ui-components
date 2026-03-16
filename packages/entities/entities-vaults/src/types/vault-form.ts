@@ -130,10 +130,16 @@ export interface HCVVaultConfig {
   aws_auth_role?: string
   aws_auth_region?: string
   aws_auth_nonce?: string
+  aws_login_path?: string
   aws_access_key_id?: string
   aws_secret_access_key?: string
+  aws_sts_endpoint_url?: string
+  aws_assume_role_arn?: string
+  aws_role_session_name?: string
   azure_auth_role?: string
+  azure_login_path?: string
   gcp_auth_role?: string
+  gcp_login_path?: string
   gcp_service_account?: string
   gcp_jwt_exp?: number
   approle_auth_path?: string

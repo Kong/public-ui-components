@@ -710,10 +710,10 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-custom-guardrail'],
   },
-  'metering-billing': {
-    descriptionKey: 'plugins.meta.metering-billing.description',
-    nameKey: 'plugins.meta.metering-billing.name',
-    ...PLUGIN_GROUP_AND_SCOPE_MAP['metering-billing'],
+  'metering-and-billing': {
+    descriptionKey: 'plugins.meta.metering-and-billing.description',
+    nameKey: 'plugins.meta.metering-and-billing.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['metering-and-billing'],
   },
 }
 

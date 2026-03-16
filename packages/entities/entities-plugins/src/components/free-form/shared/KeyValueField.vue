@@ -36,48 +36,53 @@
       </KLabel>
     </header>
 
-    <div
+    <component
+      :is="CardTag"
       v-for="(entry, index) of entries"
       :key="entry.id"
       class="ff-kv-field-entry"
+      :class="{ 'ff-kv-field-entry--multiline': props.appearance?.string?.multiline }"
       :data-testid="`ff-kv-container-${field.path.value}.${index}`"
     >
-      <EnhancedInput
-        v-model.trim="entry.key"
-        class="ff-kv-field-entry-key"
-        :data-key-input="index"
-        :data-testid="`ff-key-${field.path.value}.${index}`"
-        :placeholder="keyPlaceholder || 'Key'"
-        @keydown.enter.prevent="focus(index, 'value')"
-      />
+      <div class="ff-kv-field-entry-fields">
+        <EnhancedInput
+          v-model.trim="entry.key"
+          class="ff-kv-field-entry-key"
+          :data-key-input="index"
+          :data-testid="`ff-key-${field.path.value}.${index}`"
+          :placeholder="keyPlaceholder || 'Key'"
+          @keydown.enter.prevent="focus(index, 'value')"
+        />
 
-      <EnhancedInput
-        v-model.trim="entry.value"
-        class="ff-kv-field-entry-value"
-        :data-testid="`ff-value-${field.path.value}.${index}`"
-        :data-value-input="index"
-        :placeholder="valuePlaceholder || 'Value'"
-        @keydown.enter.prevent="handleValueEnter(index)"
-      >
-        <template #after>
-          <component
-            :is="autofillSlot"
-            v-if="autofillSlot && realShowVaultSecretPicker"
-            :schema="schema"
-            :update="value => handleAutofill(index, value)"
-            :value="entry.value"
-          />
-          <KAlert
-            v-if="realShowVaultSecretPicker && !autofillSlot"
-            appearance="warning"
-            :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
-            :message="i18n.t('plugins.free-form.vault_picker.component_error')"
-          />
-        </template>
-      </EnhancedInput>
+        <EnhancedInput
+          v-model.trim="entry.value"
+          class="ff-kv-field-entry-value"
+          :data-testid="`ff-value-${field.path.value}.${index}`"
+          :data-value-input="index"
+          :multiline="props.appearance?.string?.multiline"
+          :placeholder="valuePlaceholder || 'Value'"
+          @keydown.enter="handleValueKeydown($event, index)"
+        >
+          <template #after>
+            <component
+              :is="autofillSlot"
+              v-if="autofillSlot && realShowVaultSecretPicker"
+              :schema="schema"
+              :update="value => handleAutofill(index, value)"
+              :value="entry.value"
+            />
+            <KAlert
+              v-if="realShowVaultSecretPicker && !autofillSlot"
+              appearance="warning"
+              :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+              :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+            />
+          </template>
+        </EnhancedInput>
+      </div>
 
       <KTooltip
-        class="ff-array-field-item-remove-tooltip"
+        class="ff-kv-field-entry-remove"
         :text="i18n.t('actions.remove_entity', { entity: fieldName })"
       >
         <KButton
@@ -90,7 +95,7 @@
           <CloseIcon />
         </KButton>
       </KTooltip>
-    </div>
+    </component>
 
     <KButton
       appearance="tertiary"
@@ -108,6 +113,7 @@
 <script setup lang="ts">
 import { useTemplateRef, nextTick, inject, computed } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
+import { KCard } from '@kong/kongponents'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import type { MapFieldSchema } from '../../../types/plugins/form-schema'
 import useI18n from '../../../composables/useI18n'
@@ -138,6 +144,8 @@ const fieldName = computed(() => {
   return replaceByDictionaryInFieldName(name)
 })
 
+const CardTag = computed(() => props.appearance?.string?.multiline ? KCard : 'div')
+
 const root = useTemplateRef('root')
 
 async function focus(index: number, type: 'key' | 'value' = 'key') {
@@ -156,7 +164,9 @@ function handleAddClick() {
   focus(index === -1 ? entries.value.length - 1 : index)
 }
 
-function handleValueEnter(index: number) {
+function handleValueKeydown(event: KeyboardEvent, index: number) {
+  if (props.appearance?.string?.multiline) return
+  event.preventDefault()
   if (index === entries.value.length - 1) {
     addEntry()
   }
@@ -205,10 +215,28 @@ defineExpose({
     display: flex;
     gap: var(--kui-space-40, $kui-space-40);
 
+    &-fields {
+      display: flex;
+      flex: 1 1 0;
+      gap: $kui-space-40;
+    }
+
     &-key,
     &-value {
       flex: 1 1 0;
     }
+
+    &--multiline {
+      .ff-kv-field-entry-fields {
+        flex-direction: column;
+      }
+    }
+  }
+
+  & &-entry--multiline :deep(.card-content) {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: $kui-space-40;
   }
 
   :deep(.k-tooltip p) {

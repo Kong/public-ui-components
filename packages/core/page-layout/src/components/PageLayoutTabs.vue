@@ -96,7 +96,7 @@ const {
 const { i18n: { t } } = composables.useI18n()
 
 const router = useRouter()
-const navigateTo = inject<(to: string) => Promise<void>>('app:navigateTo')
+const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
 
 const onTabNavigation = (tab: PageLayoutTab) => {
   // If not a string (a RouteLocationRaw)
@@ -242,6 +242,7 @@ onBeforeUnmount(() => {
         gap: var(--kui-space-30, $kui-space-30);
         line-height: var(--kui-line-height-30, $kui-line-height-30);
         padding: var(--kui-space-30, $kui-space-30) var(--kui-space-0, $kui-space-0);
+        transition: color 0.2s ease-in, border-color 0.2s ease-in, font-weight 0.2s ease-in;
         white-space: nowrap;
 
         &:hover {

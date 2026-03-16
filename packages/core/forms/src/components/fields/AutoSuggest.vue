@@ -70,6 +70,7 @@ const {
   loading = false,
   emptyMessage = '',
   domId,
+  error = null,
 } = defineProps<{
   placeholder?: string
   suggestions: Array<SelectItem<T>>

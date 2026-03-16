@@ -1,6 +1,7 @@
 import { onActivated, onBeforeUnmount, onMounted, onWatcherCleanup, reactive, ref, shallowRef, toValue, watch } from 'vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import { parseKeybinding } from '../utils/commands'
+import { registerMarkdownShortcuts } from '../actions/markdownShortcuts'
 import { useDebounceFn } from '@vueuse/core'
 
 import * as monaco from 'monaco-editor'
@@ -62,7 +63,7 @@ export function useMonacoEditor<T extends HTMLElement>(
   /**
    * The Monaco editor instance.
    * @default undefined
-  */
+   */
   const editor = shallowRef<Editor.IStandaloneCodeEditor>()
 
   /** The Monaco text model associated with the editor. */
@@ -250,6 +251,9 @@ export function useMonacoEditor<T extends HTMLElement>(
       if (options.actions?.length) {
         registerActions(options.actions)
       }
+
+      // Register markdown-specific keyboard shortcuts (e.g. list continuation on Enter)
+      registerMarkdownShortcuts(editor.value)
 
       options.onReady?.(editor.value)
 

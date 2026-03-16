@@ -37,6 +37,15 @@
   "form": {
     "redis_partial_modal_title": "Create Redis Configuration",
     "partial_created_success_message": "Redis configuration created successfully",
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "view_configuration": "View configuration"
+    },
+    "managed_layout": {
+      "configuration": "Configuration",
+      "general_information": "General information"
+    },
     "sections": {
       "type": {
         "title": "Redis type",
@@ -286,12 +295,14 @@
   "redis": {
     "title": "Redis Configurations",
     "empty_state": {
+      "title_with_managed_konnect": "Redis",
       "title": "Configure a Redis Configuration",
       "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing."
     }
   },
   "list": {
     "action": "New configuration",
+    "action_with_managed_konnect": "New Redis",
     "table_headers": {
       "name": "Name",
       "type": "Type",
@@ -300,6 +311,7 @@
     },
     "empty_state": {
       "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing.",
+      "description_with_managed_konnect": "Connect your own Redis instance or use a managed one from Konnect. Set up configurations for your gateway plugins to store and retrieve data, like counters or other data, needed during request processing.",
       "feature_1": {
         "title": "Store your Redis configurations",
         "description": "Define a Redis configuration once and use it across multiple plugins."

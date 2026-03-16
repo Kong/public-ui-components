@@ -54,7 +54,7 @@
     "rimraf": "^6.1.2",
     "rollup-plugin-visualizer": "^6.0.5",
     "sass": "^1.97.3",
-    "stylelint": "^17.1.1",
+    "stylelint": "^17.4.0",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-recommended-scss": "^17.0.0",
     "stylelint-config-recommended-vue": "^1.6.1",
@@ -62,7 +62,7 @@
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.16",
     "tslib": "^2.8.1",
-    "typedoc": "^0.28.16",
+    "typedoc": "^0.28.17",
     "typedoc-plugin-markdown": "^4.9.0",
     "typescript": "~5.9.3",
     "uuid": "^11.1.0",
@@ -80,12 +80,16 @@
         "GHSA-3ppc-4f35-3m26",
         "GHSA-23c5-xmqv-rm74",
         "GHSA-7r86-cg39-jmmj"
+      ],
+      "ignoreCves": [
+        "CVE-2023-45133",
+        "CVE-2020-8203"
       ]
     },
     "overrides": {
       "vue": "$vue",
       "glob@<11.1.0": ">=13.0.1",
-      "dompurify@<3.2.4": ">=3.3.1",
+      "dompurify@<3.2.4": ">=3.3.2",
       "form-data@>=3.0.0 <3.0.4": ">=4.0.5",
       "mermaid@>=11.1.0 <11.10.0": ">=11.12.2",
       "mermaid@>=10.9.0-rc.1 <10.9.4": ">=11.12.2",
@@ -94,19 +98,21 @@
       "sha.js@<=2.4.11": ">=2.4.12",
       "node-forge@<1.3.2": ">=1.3.3",
       "ws@>=7.0.0 <7.5.10": ">=8.19.0",
-      "qs@<6.14.1": ">=6.14.1",
-      "esbuild@<=0.24.2": ">=0.27.2",
+      "qs@<6.14.1": ">=6.14.2",
+      "esbuild@<=0.24.2": ">=0.27.4",
       "cookie@<0.7.0": ">=1.1.1",
       "prismjs@<1.30.0": ">=1.30.0",
       "tmp@<=0.2.3": ">=0.2.5",
       "js-yaml@>=4.0.0 <4.1.1": ">=4.1.1",
       "diff@<8.0.3": ">=8.0.3",
-      "tar@<7.5.7": ">=7.5.7",
       "@isaacs/brace-expansion@<=5.0.0": ">=5.0.1",
       "axios@<=1.13.4": ">=1.13.5",
-      "tar@<7.5.8": ">=7.5.8",
       "rollup@>=4.0.0 <4.59.0": ">=4.59.0",
-      "serialize-javascript@<=7.0.2": ">=7.0.3"
+      "serialize-javascript@<=7.0.2": ">=7.0.3",
+      "immutable@>=5.0.0 <5.1.5": ">=5.1.5",
+      "immutable@<4.3.8": ">=4.3.8 <5",
+      "tar@<=7.5.10": ">=7.5.11",
+      "flatted@<3.4.0": ">=3.4.0"
     },
     "onlyBuiltDependencies": [
       "@evilmartians/lefthook",

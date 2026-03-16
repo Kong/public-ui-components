@@ -92,6 +92,7 @@ describe('<AnalyticsMetricProvider />', () => {
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
+      datasourceConfigFn: () => Promise.resolve([]),
       evaluateFeatureFlagFn,
     }
   }

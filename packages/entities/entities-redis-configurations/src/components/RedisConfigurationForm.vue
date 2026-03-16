@@ -1,6 +1,10 @@
 <template>
-  <div class="kong-ui-entities-redis-configurations-form">
+  <div
+    class="kong-ui-entities-redis-configurations-form"
+    :class="{ 'managed-konnect-layout': isManagedKonnectLayout }"
+  >
     <EntityBaseForm
+      ref="baseFormRef"
       :action-teleport-target="actionTeleportTarget"
       :can-submit="canSubmit"
       :config="config"
@@ -11,6 +15,7 @@
       :form-fields="formField"
       :is-readonly="form.readonly"
       :slidout-top-offset="slidoutTopOffset"
+      :wrapper-component="isManagedKonnectLayout ? 'div' : 'KCard'"
       @cancel="cancelHandler"
       @code-block-tab-change="(tab: string) => codeBlockType = tab"
       @fetch:error="fetchErrorHandler"
@@ -34,418 +39,494 @@
         </i18n-t>
       </KAlert>
 
-      <!-- type section -->
-      <EntityFormSection
-        data-testid="redis-type-section"
-        :description="t('form.sections.type.description')"
-        :title="t('form.sections.type.title')"
+      <component
+        :is="isManagedKonnectLayout ? EntityFormBlock : 'div'"
+        v-bind="isManagedKonnectLayout ? { step: 2, title: t('form.managed_layout.configuration') } : {}"
       >
-        <KSelect
-          v-model="redisType"
-          data-testid="redis-type-select"
-          :disabled="isEdit && redisType === RedisType.HOST_PORT_CE"
-          :items="typeOptions"
-          :kpop-attributes="{ 'data-testid': 'redis-type-select-popover' }"
-          :label="t('form.fields.type.label')"
-          :readonly="form.readonly"
-          required
+        <!-- type section -->
+        <EntityFormSection
+          data-testid="redis-type-section"
+          :description="t('form.sections.type.description')"
+          :title="t('form.sections.type.title')"
         >
-          <template #selected-item-template="{ item }">
-            {{ getSelectedText(item) }}
-          </template>
-        </KSelect>
-      </EntityFormSection>
+          <KSelect
+            v-model="redisType"
+            data-testid="redis-type-select"
+            :disabled="isEdit && redisType === RedisType.HOST_PORT_CE"
+            :items="typeOptions"
+            :kpop-attributes="{ 'data-testid': 'redis-type-select-popover' }"
+            :label="t('form.fields.type.label')"
+            :readonly="form.readonly"
+            required
+          >
+            <template #selected-item-template="{ item }">
+              {{ getSelectedText(item) }}
+            </template>
+          </KSelect>
+        </EntityFormSection>
 
-      <!-- general section -->
-      <EntityFormSection
-        data-testid="redis-general-section"
-        :description="t('form.sections.general.description')"
-        :title="t('form.sections.general.title')"
+        <!-- general section -->
+        <EntityFormSection
+          v-if="!isManagedKonnectLayout"
+          data-testid="redis-general-section"
+          :description="t('form.sections.general.description')"
+          :title="t('form.sections.general.title')"
+        >
+          <KInput
+            v-model.trim="form.fields.name"
+            data-testid="redis-name-input"
+            :disabled="isEdit"
+            :label="t('form.fields.name.label')"
+            :placeholder="t('form.fields.name.placeholder')"
+            :readonly="form.readonly"
+            required
+          />
+          <KInput
+            v-model.trim="form.fields.tags"
+            data-testid="redis-tags-input"
+            :help="t('form.fields.tags.help')"
+            :label="t('form.fields.tags.label')"
+            :label-attributes="{
+              info: t('form.fields.tags.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :placeholder="t('form.fields.tags.placeholder')"
+            :readonly="form.readonly"
+          />
+        </EntityFormSection>
+
+        <!-- cloud auth section -->
+        <EntityFormSection
+          v-if="config.cloudAuthAvailable && redisType !== RedisType.SENTINEL"
+          data-testid="redis-cloud-auth-section"
+          :description="t('form.sections.cloud_auth.description')"
+          :title="t('form.sections.cloud_auth.title')"
+        >
+          <KSelect
+            v-model="form.fields.config.cloud_authentication!.auth_provider"
+            clearable
+            data-testid="redis-auth-provider-select"
+            :items="cloudAuthOptions"
+            :kpop-attributes="{ 'data-testid': 'redis-auth-provider-select-popover' }"
+            :label="t('form.fields.cloud_authentication.auth_provider.label')"
+            :label-attributes="{ info: t('form.fields.cloud_authentication.auth_provider.tooltip') }"
+            :readonly="form.readonly"
+          />
+          <CloudAuthFields
+            v-model="form.fields.config.cloud_authentication!"
+            :config="props.config"
+            :readonly="form.readonly"
+          />
+        </EntityFormSection>
+
+        <!-- sentinel configuration section -->
+        <EntityFormSection
+          v-if="redisType === RedisType.SENTINEL"
+          data-testid="redis-sentinel-configuration-section"
+          :description="t('form.sections.sentinel_configuration.description')"
+          :title="t('form.sections.sentinel_configuration.title')"
+        >
+          <KInput
+            v-model="form.fields.config.sentinel_master"
+            data-testid="redis-sentinel-master-input"
+            :label="t('form.fields.sentinel_master.label')"
+            :label-attributes="{
+              info: t('form.fields.sentinel_master.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            required
+          />
+          <KSelect
+            v-model="form.fields.config.sentinel_role"
+            data-testid="redis-sentinel-role-select"
+            :items="sentinelRoleOptions"
+            :kpop-attributes="{ 'data-testid': 'redis-sentinel-role-select-popover' }"
+            :label="t('form.fields.sentinel_role.label')"
+            :label-attributes="{
+              info: t('form.fields.sentinel_role.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            required
+          />
+          <SentinelNodes
+            v-model="form.fields.config.sentinel_nodes"
+            :readonly="form.readonly"
+          />
+          <KInput
+            v-model.trim="form.fields.config.sentinel_username"
+            :label="t('form.fields.sentinel_username.label')"
+            :label-attributes="{
+              info: t('form.fields.sentinel_username.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+          />
+          <VaultSecretPickerProvider
+            class="secret-picker-provider"
+            :disabled="form.readonly"
+            :update="v => form.fields.config.sentinel_username = v"
+            :value="form.fields.config.sentinel_username"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+          <KInput
+            v-model.trim="form.fields.config.sentinel_password"
+            :label="t('form.fields.sentinel_password.label')"
+            :label-attributes="{
+              info: t('form.fields.sentinel_password.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            show-password-mask-toggle
+            type="password"
+          />
+          <VaultSecretPickerProvider
+            class="secret-picker-provider"
+            :disabled="form.readonly"
+            :update="v => form.fields.config.sentinel_password = v"
+            :value="form.fields.config.sentinel_password"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+        </EntityFormSection>
+
+        <!-- cluster configuration section -->
+        <EntityFormSection
+          v-if="redisType === RedisType.CLUSTER"
+          data-testid="redis-cluster-configuration-section"
+          :description="t('form.sections.cluster.description')"
+          :title="t('form.sections.cluster.title')"
+        >
+          <ClusterNodes
+            v-model="form.fields.config.cluster_nodes"
+            :readonly="form.readonly"
+          />
+          <KInput
+            v-model="form.fields.config.cluster_max_redirections"
+            data-testid="redis-cluster-max-redirections-input"
+            :label="t('form.fields.cluster_max_redirections.label')"
+            :label-attributes="{
+              info: t('form.fields.cluster_max_redirections.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            type="number"
+          />
+        </EntityFormSection>
+
+        <!-- connection configuration section -->
+        <EntityFormSection
+          data-testid="redis-connection-configuration-section"
+          :description="t('form.sections.connection.description')"
+          :title="t('form.sections.connection.title')"
+        >
+          <KInput
+            v-if="redisType === RedisType.HOST_PORT_CE || redisType === RedisType.HOST_PORT_EE"
+            v-model.trim="form.fields.config.host"
+            data-testid="redis-host-input"
+            :label="t('form.fields.host.label')"
+            :label-attributes="{
+              info: t('form.fields.host.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+          />
+          <VaultSecretPickerProvider
+            v-if="isReferenceable.host"
+            class="secret-picker-provider"
+            data-testid="secret-picker-provider-for-host"
+            :disabled="form.readonly"
+            :update="v => form.fields.config.host = v"
+            :value="form.fields.config.host ?? ''"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+          <KInput
+            v-if="redisType === RedisType.HOST_PORT_CE || redisType === RedisType.HOST_PORT_EE"
+            v-model.trim="form.fields.config.port"
+            data-testid="redis-port-input"
+            :label="t('form.fields.port.label')"
+            :label-attributes="{
+              info: t('form.fields.port.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+          />
+          <VaultSecretPickerProvider
+            v-if="isReferenceable.port"
+            class="secret-picker-provider"
+            data-testid="secret-picker-provider-for-port"
+            :disabled="form.readonly"
+            :update="v => form.fields.config.port = v"
+            :value="String(form.fields.config.port ?? '')"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+
+          <KCheckbox
+            v-if="redisType === RedisType.HOST_PORT_EE"
+            v-model="form.fields.config.connection_is_proxied"
+            data-testid="redis-connection-is-proxied-checkbox"
+            :disabled="form.readonly"
+            :label="t('form.fields.connection_is_proxied.label')"
+            :label-attributes="{
+              info: t('form.fields.connection_is_proxied.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+          />
+
+          <KInput
+            v-if="redisType === RedisType.HOST_PORT_CE"
+            v-model.trim="form.fields.config.timeout"
+            data-testid="redis-timeout-input"
+            :label="t('form.fields.timeout.label')"
+            :label-attributes="{
+              info: t('form.fields.timeout.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            type="number"
+          />
+
+          <KInput
+            v-model.trim="form.fields.config.database"
+            data-testid="redis-database-input"
+            :label="t('form.fields.database.label')"
+            :label-attributes="{
+              info: t('form.fields.database.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            type="number"
+          />
+          <KInput
+            v-model.trim="form.fields.config.username"
+            data-testid="redis-username-input"
+            :label="t('form.fields.username.label')"
+            :label-attributes="{
+              info: t('form.fields.username.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+          />
+          <VaultSecretPickerProvider
+            class="secret-picker-provider"
+            :disabled="form.readonly"
+            :update="v => form.fields.config.username = v"
+            :value="form.fields.config.username"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+          <KInput
+            v-model.trim="form.fields.config.password"
+            data-testid="redis-password-input"
+            :label="t('form.fields.password.label')"
+            :label-attributes="{
+              info: t('form.fields.password.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            show-password-mask-toggle
+            type="password"
+          />
+          <VaultSecretPickerProvider
+            class="secret-picker-provider"
+            :disabled="form.readonly"
+            :update="v => form.fields.config.password = v"
+            :value="form.fields.config.password"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+        </EntityFormSection>
+
+        <!-- TLS configuration section -->
+        <EntityFormSection
+          data-testid="redis-tls-configuration-section"
+          :description="t('form.sections.tls.description')"
+          :title="t('form.sections.tls.title')"
+        >
+          <KCheckbox
+            v-model="form.fields.config.ssl"
+            data-testid="redis-ssl-checkbox"
+            :description="t('form.fields.ssl.description')"
+            :disabled="form.readonly"
+            :label="t('form.fields.ssl.label')"
+            :label-attributes="{
+              info: t('form.fields.ssl.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+          />
+          <KCheckbox
+            v-model="form.fields.config.ssl_verify"
+            data-testid="redis-ssl-verify-checkbox"
+            :description="t('form.fields.ssl_verify.description')"
+            :disabled="form.readonly"
+            :label="t('form.fields.ssl_verify.label')"
+            :label-attributes="{
+              info: t('form.fields.ssl_verify.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+          />
+          <KInput
+            v-model.trim="form.fields.config.server_name"
+            data-testid="redis-server_name-input"
+            :label="t('form.fields.server_name.label')"
+            :label-attributes="{
+              info: t('form.fields.server_name.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+          />
+          <VaultSecretPickerProvider
+            v-if="isReferenceable.serverName"
+            class="secret-picker-provider"
+            data-testid="secret-picker-provider-for-server_name"
+            :disabled="form.readonly"
+            :update="v => form.fields.config.server_name = v"
+            :value="form.fields.config.server_name ?? ''"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+        </EntityFormSection>
+
+        <!-- keepalive section -->
+        <EntityFormSection
+          v-if="redisType !== RedisType.HOST_PORT_CE"
+          data-testid="redis-keepalive-section"
+          :description="t('form.sections.keepalive.description')"
+          :title="t('form.sections.keepalive.title')"
+        >
+          <KInput
+            v-model="form.fields.config.keepalive_backlog"
+            data-testid="redis-keepalive-backlog-input"
+            :label="t('form.fields.keepalive_backlog.label')"
+            :label-attributes="{
+              info: t('form.fields.keepalive_backlog.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            type="number"
+          />
+          <KInput
+            v-model="form.fields.config.keepalive_pool_size"
+            data-testid="redis-keepalive-pool-size-input"
+            :label="t('form.fields.keepalive_pool_size.label')"
+            :label-attributes="{
+              info: t('form.fields.keepalive_pool_size.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            type="number"
+          />
+        </EntityFormSection>
+
+        <!-- read/write configuration section -->
+        <EntityFormSection
+          v-if="redisType !== RedisType.HOST_PORT_CE"
+          data-testid="redis-read-write-configuration-section"
+          :description="t('form.sections.read_write_configuration.description')"
+          :title="t('form.sections.read_write_configuration.title')"
+        >
+          <KInput
+            v-model="form.fields.config.read_timeout"
+            data-testid="redis-read-timeout-input"
+            :label="t('form.fields.read_timeout.label')"
+            :label-attributes="{
+              info: t('form.fields.read_timeout.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            type="number"
+          />
+          <KInput
+            v-model="form.fields.config.send_timeout"
+            data-testid="redis-send-timeout-input"
+            :label="t('form.fields.send_timeout.label')"
+            :label-attributes="{
+              info: t('form.fields.send_timeout.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            type="number"
+          />
+          <KInput
+            v-model="form.fields.config.connect_timeout"
+            data-testid="redis-connect-timeout-input"
+            :label="t('form.fields.connect_timeout.label')"
+            :label-attributes="{
+              info: t('form.fields.connect_timeout.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.readonly"
+            type="number"
+          />
+        </EntityFormSection>
+      </component>
+
+      <EntityFormBlock
+        v-if="isManagedKonnectLayout"
+        class="managed-layout-general-block"
+        :step="3"
+        :title="t('form.managed_layout.general_information')"
       >
-        <KInput
-          v-model.trim="form.fields.name"
-          data-testid="redis-name-input"
-          :disabled="isEdit"
-          :label="t('form.fields.name.label')"
-          :placeholder="t('form.fields.name.placeholder')"
-          :readonly="form.readonly"
-          required
-        />
-        <KInput
-          v-model.trim="form.fields.tags"
-          data-testid="redis-tags-input"
-          :help="t('form.fields.tags.help')"
-          :label="t('form.fields.tags.label')"
-          :label-attributes="{
-            info: t('form.fields.tags.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :placeholder="t('form.fields.tags.placeholder')"
-          :readonly="form.readonly"
-        />
-      </EntityFormSection>
+        <EntityFormSection
+          data-testid="redis-general-section"
+          hide-info-header
+        >
+          <KInput
+            v-model.trim="form.fields.name"
+            data-testid="redis-name-input"
+            :disabled="isEdit"
+            :label="t('form.fields.name.label')"
+            :placeholder="t('form.fields.name.placeholder')"
+            :readonly="form.readonly"
+            required
+          />
+          <KInput
+            v-model.trim="form.fields.tags"
+            data-testid="redis-tags-input"
+            :help="t('form.fields.tags.help')"
+            :label="t('form.fields.tags.label')"
+            :label-attributes="{
+              info: t('form.fields.tags.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :placeholder="t('form.fields.tags.placeholder')"
+            :readonly="form.readonly"
+          />
+        </EntityFormSection>
+      </EntityFormBlock>
 
-      <!-- cloud auth section -->
-      <EntityFormSection
-        v-if="config.cloudAuthAvailable && redisType !== RedisType.SENTINEL"
-        data-testid="redis-cloud-auth-section"
-        :description="t('form.sections.cloud_auth.description')"
-        :title="t('form.sections.cloud_auth.title')"
+      <template
+        v-if="isManagedKonnectLayout"
+        #form-actions
       >
-        <KSelect
-          v-model="form.fields.config.cloud_authentication!.auth_provider"
-          clearable
-          data-testid="redis-auth-provider-select"
-          :items="cloudAuthOptions"
-          :kpop-attributes="{ 'data-testid': 'redis-auth-provider-select-popover' }"
-          :label="t('form.fields.cloud_authentication.auth_provider.label')"
-          :label-attributes="{ info: t('form.fields.cloud_authentication.auth_provider.tooltip') }"
-          :readonly="form.readonly"
-        />
-        <CloudAuthFields
-          v-model="form.fields.config.cloud_authentication!"
-          :config="props.config"
-          :readonly="form.readonly"
-        />
-      </EntityFormSection>
-
-      <!-- sentinel configuration section -->
-      <EntityFormSection
-        v-if="redisType === RedisType.SENTINEL"
-        data-testid="redis-sentinel-configuration-section"
-        :description="t('form.sections.sentinel_configuration.description')"
-        :title="t('form.sections.sentinel_configuration.title')"
-      >
-        <KInput
-          v-model="form.fields.config.sentinel_master"
-          data-testid="redis-sentinel-master-input"
-          :label="t('form.fields.sentinel_master.label')"
-          :label-attributes="{
-            info: t('form.fields.sentinel_master.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          required
-        />
-        <KSelect
-          v-model="form.fields.config.sentinel_role"
-          data-testid="redis-sentinel-role-select"
-          :items="sentinelRoleOptions"
-          :kpop-attributes="{ 'data-testid': 'redis-sentinel-role-select-popover' }"
-          :label="t('form.fields.sentinel_role.label')"
-          :label-attributes="{
-            info: t('form.fields.sentinel_role.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          required
-        />
-        <SentinelNodes
-          v-model="form.fields.config.sentinel_nodes"
-          :readonly="form.readonly"
-        />
-        <KInput
-          v-model.trim="form.fields.config.sentinel_username"
-          :label="t('form.fields.sentinel_username.label')"
-          :label-attributes="{
-            info: t('form.fields.sentinel_username.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-        />
-        <VaultSecretPickerProvider
-          class="secret-picker-provider"
-          :disabled="form.readonly"
-          :update="v => form.fields.config.sentinel_username = v"
-          :value="form.fields.config.sentinel_username"
-          @open="(value, update) => setUpVaultSecretPicker(value, update)"
-        />
-        <KInput
-          v-model.trim="form.fields.config.sentinel_password"
-          :label="t('form.fields.sentinel_password.label')"
-          :label-attributes="{
-            info: t('form.fields.sentinel_password.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          show-password-mask-toggle
-          type="password"
-        />
-        <VaultSecretPickerProvider
-          class="secret-picker-provider"
-          :disabled="form.readonly"
-          :update="v => form.fields.config.sentinel_password = v"
-          :value="form.fields.config.sentinel_password"
-          @open="(value, update) => setUpVaultSecretPicker(value, update)"
-        />
-      </EntityFormSection>
-
-      <!-- cluster configuration section -->
-      <EntityFormSection
-        v-if="redisType === RedisType.CLUSTER"
-        data-testid="redis-cluster-configuration-section"
-        :description="t('form.sections.cluster.description')"
-        :title="t('form.sections.cluster.title')"
-      >
-        <ClusterNodes
-          v-model="form.fields.config.cluster_nodes"
-          :readonly="form.readonly"
-        />
-        <KInput
-          v-model="form.fields.config.cluster_max_redirections"
-          data-testid="redis-cluster-max-redirections-input"
-          :label="t('form.fields.cluster_max_redirections.label')"
-          :label-attributes="{
-            info: t('form.fields.cluster_max_redirections.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          type="number"
-        />
-      </EntityFormSection>
-
-      <!-- connection configuration section -->
-      <EntityFormSection
-        data-testid="redis-connection-configuration-section"
-        :description="t('form.sections.connection.description')"
-        :title="t('form.sections.connection.title')"
-      >
-        <KInput
-          v-if="redisType === RedisType.HOST_PORT_CE || redisType === RedisType.HOST_PORT_EE"
-          v-model.trim="form.fields.config.host"
-          data-testid="redis-host-input"
-          :label="t('form.fields.host.label')"
-          :label-attributes="{
-            info: t('form.fields.host.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-        />
-        <VaultSecretPickerProvider
-          v-if="isReferenceable.host"
-          class="secret-picker-provider"
-          data-testid="secret-picker-provider-for-host"
-          :disabled="form.readonly"
-          :update="v => form.fields.config.host = v"
-          :value="form.fields.config.host ?? ''"
-          @open="(value, update) => setUpVaultSecretPicker(value, update)"
-        />
-        <KInput
-          v-if="redisType === RedisType.HOST_PORT_CE || redisType === RedisType.HOST_PORT_EE"
-          v-model.trim="form.fields.config.port"
-          data-testid="redis-port-input"
-          :label="t('form.fields.port.label')"
-          :label-attributes="{
-            info: t('form.fields.port.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-        />
-        <VaultSecretPickerProvider
-          v-if="isReferenceable.port"
-          class="secret-picker-provider"
-          data-testid="secret-picker-provider-for-port"
-          :disabled="form.readonly"
-          :update="v => form.fields.config.port = v"
-          :value="String(form.fields.config.port ?? '')"
-          @open="(value, update) => setUpVaultSecretPicker(value, update)"
-        />
-
-        <KCheckbox
-          v-if="redisType === RedisType.HOST_PORT_EE"
-          v-model="form.fields.config.connection_is_proxied"
-          data-testid="redis-connection-is-proxied-checkbox"
-          :disabled="form.readonly"
-          :label="t('form.fields.connection_is_proxied.label')"
-          :label-attributes="{
-            info: t('form.fields.connection_is_proxied.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-        />
-
-        <KInput
-          v-if="redisType === RedisType.HOST_PORT_CE"
-          v-model.trim="form.fields.config.timeout"
-          data-testid="redis-timeout-input"
-          :label="t('form.fields.timeout.label')"
-          :label-attributes="{
-            info: t('form.fields.timeout.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          type="number"
-        />
-
-        <KInput
-          v-model.trim="form.fields.config.database"
-          data-testid="redis-database-input"
-          :label="t('form.fields.database.label')"
-          :label-attributes="{
-            info: t('form.fields.database.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          type="number"
-        />
-        <KInput
-          v-model.trim="form.fields.config.username"
-          data-testid="redis-username-input"
-          :label="t('form.fields.username.label')"
-          :label-attributes="{
-            info: t('form.fields.username.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-        />
-        <VaultSecretPickerProvider
-          class="secret-picker-provider"
-          :disabled="form.readonly"
-          :update="v => form.fields.config.username = v"
-          :value="form.fields.config.username"
-          @open="(value, update) => setUpVaultSecretPicker(value, update)"
-        />
-        <KInput
-          v-model.trim="form.fields.config.password"
-          data-testid="redis-password-input"
-          :label="t('form.fields.password.label')"
-          :label-attributes="{
-            info: t('form.fields.password.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          show-password-mask-toggle
-          type="password"
-        />
-        <VaultSecretPickerProvider
-          class="secret-picker-provider"
-          :disabled="form.readonly"
-          :update="v => form.fields.config.password = v"
-          :value="form.fields.config.password"
-          @open="(value, update) => setUpVaultSecretPicker(value, update)"
-        />
-      </EntityFormSection>
-
-      <!-- TLS configuration section -->
-      <EntityFormSection
-        data-testid="redis-tls-configuration-section"
-        :description="t('form.sections.tls.description')"
-        :title="t('form.sections.tls.title')"
-      >
-        <KCheckbox
-          v-model="form.fields.config.ssl"
-          data-testid="redis-ssl-checkbox"
-          :description="t('form.fields.ssl.description')"
-          :disabled="form.readonly"
-          :label="t('form.fields.ssl.label')"
-          :label-attributes="{
-            info: t('form.fields.ssl.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-        />
-        <KCheckbox
-          v-model="form.fields.config.ssl_verify"
-          data-testid="redis-ssl-verify-checkbox"
-          :description="t('form.fields.ssl_verify.description')"
-          :disabled="form.readonly"
-          :label="t('form.fields.ssl_verify.label')"
-          :label-attributes="{
-            info: t('form.fields.ssl_verify.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-        />
-        <KInput
-          v-model.trim="form.fields.config.server_name"
-          data-testid="redis-server_name-input"
-          :label="t('form.fields.server_name.label')"
-          :label-attributes="{
-            info: t('form.fields.server_name.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-        />
-        <VaultSecretPickerProvider
-          v-if="isReferenceable.serverName"
-          class="secret-picker-provider"
-          data-testid="secret-picker-provider-for-server_name"
-          :disabled="form.readonly"
-          :update="v => form.fields.config.server_name = v"
-          :value="form.fields.config.server_name ?? ''"
-          @open="(value, update) => setUpVaultSecretPicker(value, update)"
-        />
-      </EntityFormSection>
-
-      <!-- keepalive section -->
-      <EntityFormSection
-        v-if="redisType !== RedisType.HOST_PORT_CE"
-        data-testid="redis-keepalive-section"
-        :description="t('form.sections.keepalive.description')"
-        :title="t('form.sections.keepalive.title')"
-      >
-        <KInput
-          v-model="form.fields.config.keepalive_backlog"
-          data-testid="redis-keepalive-backlog-input"
-          :label="t('form.fields.keepalive_backlog.label')"
-          :label-attributes="{
-            info: t('form.fields.keepalive_backlog.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          type="number"
-        />
-        <KInput
-          v-model="form.fields.config.keepalive_pool_size"
-          data-testid="redis-keepalive-pool-size-input"
-          :label="t('form.fields.keepalive_pool_size.label')"
-          :label-attributes="{
-            info: t('form.fields.keepalive_pool_size.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          type="number"
-        />
-      </EntityFormSection>
-
-      <!-- read/write configuration section -->
-      <EntityFormSection
-        v-if="redisType !== RedisType.HOST_PORT_CE"
-        data-testid="redis-read-write-configuration-section"
-        :description="t('form.sections.read_write_configuration.description')"
-        :title="t('form.sections.read_write_configuration.title')"
-      >
-        <KInput
-          v-model="form.fields.config.read_timeout"
-          data-testid="redis-read-timeout-input"
-          :label="t('form.fields.read_timeout.label')"
-          :label-attributes="{
-            info: t('form.fields.read_timeout.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          type="number"
-        />
-        <KInput
-          v-model="form.fields.config.send_timeout"
-          data-testid="redis-send-timeout-input"
-          :label="t('form.fields.send_timeout.label')"
-          :label-attributes="{
-            info: t('form.fields.send_timeout.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          type="number"
-        />
-        <KInput
-          v-model="form.fields.config.connect_timeout"
-          data-testid="redis-connect-timeout-input"
-          :label="t('form.fields.connect_timeout.label')"
-          :label-attributes="{
-            info: t('form.fields.connect_timeout.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="form.readonly"
-          type="number"
-        />
-      </EntityFormSection>
+        <div
+          class="managed-form-actions"
+          data-testid="managed-form-actions"
+        >
+          <KButton
+            appearance="primary"
+            :data-testid="`partial-${isEdit ? 'edit' : 'create'}-form-submit`"
+            :disabled="disableManagedSave"
+            type="submit"
+            @click="!!actionTeleportTarget && submitHandler()"
+          >
+            {{ t('form.actions.save') }}
+          </KButton>
+          <KButton
+            appearance="secondary"
+            :data-testid="`partial-${isEdit ? 'edit' : 'create'}-form-cancel`"
+            :disabled="form.readonly"
+            type="reset"
+            @click="!!actionTeleportTarget && cancelHandler()"
+          >
+            {{ t('form.actions.cancel') }}
+          </KButton>
+          <KButton
+            appearance="tertiary"
+            :data-testid="`partial-${isEdit ? 'edit' : 'create'}-form-view-configuration`"
+            @click="handleViewConfigClick"
+          >
+            {{ t('form.actions.view_configuration') }}
+          </KButton>
+        </div>
+      </template>
     </EntityBaseForm>
   </div>
 
@@ -480,7 +561,7 @@
 <script setup lang="ts">
 import '@kong-ui-public/entities-shared/dist/style.css'
 import '@kong-ui-public/entities-vaults/dist/style.css'
-import { EntityBaseForm, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import { EntityBaseForm, EntityFormBlock, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
 import { ref, computed, onBeforeMount } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
 import { useRouter } from 'vue-router'
@@ -553,7 +634,7 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
-const { i18n: { t }, i18nT } = composables.useI18n()
+const { i18n: { t } } = composables.useI18n()
 const {
   vaultSecretPickerSetup,
   setUpVaultSecretPicker,
@@ -562,6 +643,12 @@ const {
 const router = useRouter()
 
 const codeBlockType = ref<string>('json')
+const baseFormRef = ref<InstanceType<typeof EntityBaseForm> | null>(null)
+
+// When true, show the stepped Konnect layout (Configuration + General information blocks and custom actions).
+const isManagedKonnectLayout = computed<boolean>(() => {
+  return props.config.app === 'konnect' && !!props.config.isKonnectManagedRedisEnabled
+})
 
 const isReferenceable = computed<{ host: boolean, port: boolean, serverName: boolean }>(() => {
   const canReferenceFields =
@@ -675,6 +762,10 @@ const {
   cloudAuthAvailable: props.config.cloudAuthAvailable,
 })
 
+// In Konnect managed layout we render our own Save button, so we need to disable it when the form
+// is not ready to submit either invalid or when it's readonly — same as the default form does
+const disableManagedSave = computed<boolean>(() => canSubmit.value === false || form.readonly)
+
 const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)
 
 const isEditWarningModalVisible = ref(false)
@@ -736,6 +827,13 @@ const updateFormValues = (data: Record<string, any>) => {
   setInitialFormValues(data as RedisConfigurationResponse)
 }
 
+// In managed layout View configuration button lives in the custom actions;
+// we call the base form to open its slideout JSON/YAML/etc so the user sees the same panel
+const handleViewConfigClick = () => {
+  const entityBaseForm = baseFormRef.value as unknown as { viewConfig?: () => void } | null
+  entityBaseForm?.viewConfig?.()
+}
+
 onBeforeMount(async () => {
   if (isEdit) {
     const { count } = await fetchLinks({ partialId: props.partialId })
@@ -755,5 +853,53 @@ onBeforeMount(async () => {
 
 .secret-picker-provider {
   margin-top: var(--kui-space-40, $kui-space-40) !important;
+}
+
+.managed-form-actions {
+  align-items: center;
+  display: flex;
+  gap: $kui-space-50;
+  justify-content: flex-start;
+  width: 100%;
+
+  :deep(.k-button) {
+    margin-inline-start: $kui-space-0 !important;
+  }
+}
+
+.managed-konnect-layout {
+  max-width: $kui-breakpoint-desktop;
+
+  :deep(.form-actions) {
+    justify-content: flex-start;
+  }
+
+  :deep(.managed-layout-general-block) {
+    margin-top: $kui-space-80;
+  }
+
+  :deep(.kong-ui-entity-form-block .content) {
+    gap: $kui-space-0;
+  }
+
+  :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-wrapper) {
+    flex-direction: column !important;
+    padding-bottom: $kui-space-70;
+    row-gap: $kui-space-40;
+  }
+
+  :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-info) {
+    max-width: none;
+    position: static;
+  }
+
+  :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section:not(:last-child) .form-section-wrapper) {
+    border-bottom: $kui-border-width-10 solid $kui-color-border;
+    margin-bottom: $kui-space-60;
+  }
+
+  :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-content > *:not(:first-child)) {
+    margin-top: $kui-space-60;
+  }
 }
 </style>

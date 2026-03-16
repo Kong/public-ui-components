@@ -208,30 +208,36 @@ const isSlottable = (chart: any): chart is SlottableOptions => {
 }
 
 const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
-  const chart = isSlottable(tile.meta.chart)
-    ? { ...tile.meta.chart }
-    : {
-      ...tile.meta.chart,
-      chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
+  try {
+    const chart = isSlottable(tile.meta.chart)
+      ? { ...tile.meta.chart }
+      : {
+        ...tile.meta.chart,
+        chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
+      }
+
+    const newTile: TileConfig = {
+      id: crypto.randomUUID(),
+      type: 'chart',
+      definition: {
+        ...tile.meta,
+        chart,
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: tile.layout.size,
+      },
     }
 
-  const newTile: TileConfig = {
-    id: crypto.randomUUID(),
-    type: 'chart',
-    definition: {
-      ...tile.meta,
-      chart,
-    },
-    layout: {
-      position: {
-        col: 0,
-        row: 0,
-      },
-      size: tile.layout.size,
-    },
+    // deep cloning to avoid duplicated references
+    model.value.tiles.push(JSON.parse(JSON.stringify(newTile)))
+  } catch (e) {
+    // this shouldn't happen, but we should always wrap JSON.parse/stringify in try catch
+    console.warn(e)
   }
-
-  model.value.tiles.push(newTile)
 }
 
 const onRemoveTile = (tile: GridTile<TileDefinition>) => {

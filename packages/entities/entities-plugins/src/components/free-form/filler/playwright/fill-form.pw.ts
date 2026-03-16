@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/experimental-ct-vue'
 import { createFiller } from './create-filler'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import FormWrapper from './FormWrapper.vue'
+import MultilineMapFormWrapper from './MultilineMapFormWrapper.vue'
 
 test.describe('Filler - Playwright', () => {
   const basicSchema: FormSchema = {
@@ -227,7 +228,65 @@ test.describe('Filler - Playwright', () => {
         'Authorization': 'Bearer token',
       })
 
-      await expect(page.locator('[data-testid="ff-kv-headers"]')).toBeVisible()
+      await expect(page.locator('[data-testid="ff-key-headers.0"]')).toHaveValue('Content-Type')
+      await expect(page.locator('[data-testid="ff-value-headers.0"]')).toHaveValue('application/json')
+      await expect(page.locator('[data-testid="ff-key-headers.1"]')).toHaveValue('Authorization')
+      await expect(page.locator('[data-testid="ff-value-headers.1"]')).toHaveValue('Bearer token')
+    })
+
+    test('should clear existing map entries before refilling', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            headers: {
+              type: 'map',
+              keys: { type: 'string' },
+              values: { type: 'string' },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('headers', { 'X-Old': 'old-value' })
+
+      // Refill should clear previous entries first
+      await filler.fillField('headers', { 'X-New': 'new-value' })
+
+      await expect(page.locator('[data-testid^="ff-kv-container-headers"]')).toHaveCount(1)
+      await expect(page.locator('[data-testid="ff-key-headers.0"]')).toHaveValue('X-New')
+      await expect(page.locator('[data-testid="ff-value-headers.0"]')).toHaveValue('new-value')
+    })
+
+    test('should fill multiline map field with both single-line and multiline values', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            functions: {
+              type: 'map',
+              keys: { type: 'string' },
+              values: { type: 'string' },
+            },
+          },
+        ],
+      }
+
+      await mount(MultilineMapFormWrapper, { props: { schema, fieldName: 'functions' } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('functions', {
+        'single-line-fn': 'return kong.request.get_path()',
+        'multi-line-fn': 'line1\nline2\nline3',
+      })
+
+      await expect(page.locator('[data-testid="ff-key-functions.0"]')).toHaveValue('single-line-fn')
+      await expect(page.locator('[data-testid="ff-value-functions.0"]')).toHaveValue('return kong.request.get_path()')
+      await expect(page.locator('[data-testid="ff-key-functions.1"]')).toHaveValue('multi-line-fn')
+      await expect(page.locator('[data-testid="ff-value-functions.1"]')).toHaveValue('line1\nline2\nline3')
     })
 
     test('should fill json field', async ({ mount, page }) => {

@@ -593,7 +593,7 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
         type: 'input',
         label: t('plugins.form.fields.condition.label'),
         inputType: 'text',
-        help: t('plugins.form.fields.condition.help'),
+        help: t('plugins.form.fields.condition.tooltip'),
         placeholder: t('plugins.form.fields.condition.placeholder'),
       },
     } : {}

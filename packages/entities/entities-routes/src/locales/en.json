@@ -4,6 +4,7 @@
     "debugger": "Start debugging",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
+    "copy_curl": "Copy as cURL",
     "edit": "Edit",
     "delete": "Delete",
     "clear": "Clear",

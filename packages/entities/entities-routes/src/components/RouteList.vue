@@ -196,6 +196,13 @@
             {{ t('actions.copy_json') }}
           </KDropdownItem>
         </KClipboardProvider>
+        <KDropdownItem
+          v-if="copyCurlEnabled"
+          data-testid="action-entity-copy-curl"
+          @click="emit('click:copy-as-curl', row)"
+        >
+          {{ t('actions.copy_curl') }}
+        </KDropdownItem>
         <PermissionsWrapper :auth-function="() => canRetrieve(row)">
           <KDropdownItem
             data-testid="action-entity-view"
@@ -290,6 +297,7 @@ const emit = defineEmits<{
   (e: 'copy:success', payload: CopyEventPayload): void
   (e: 'copy:error', payload: CopyEventPayload): void
   (e: 'delete:success', route: EntityRow): void
+  (e: 'click:copy-as-curl', row: EntityRow): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -358,6 +366,10 @@ const props = defineProps({
     default: false,
   },
   hasExpressionColumn: {
+    type: Boolean,
+    default: false,
+  },
+  copyCurlEnabled: {
     type: Boolean,
     default: false,
   },

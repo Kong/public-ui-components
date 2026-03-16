@@ -3,6 +3,229 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.169.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.169.1...@kong-ui-public/entities-plugins@9.169.2) (2026-03-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.169.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.169.0...@kong-ui-public/entities-plugins@9.169.1) (2026-03-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.169.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.168.3...@kong-ui-public/entities-plugins@9.169.0) (2026-03-13)
+
+
+### Features
+
+* **entities-plugins:** add ai-custom-guardrail-form ([#2990](https://github.com/Kong/public-ui-components/issues/2990)) ([6ba10a2](https://github.com/Kong/public-ui-components/commit/6ba10a217266bb9960f2a3507fb23c4b4ae0a779))
+
+
+
+
+
+## [9.168.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.168.2...@kong-ui-public/entities-plugins@9.168.3) (2026-03-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.168.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.168.1...@kong-ui-public/entities-plugins@9.168.2) (2026-03-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.168.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.168.0...@kong-ui-public/entities-plugins@9.168.1) (2026-03-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.168.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.167.1...@kong-ui-public/entities-plugins@9.168.0) (2026-03-10)
+
+
+### Bug Fixes
+
+* **entities-plugins:** increase dist size ([#2985](https://github.com/Kong/public-ui-components/issues/2985)) ([3cac257](https://github.com/Kong/public-ui-components/commit/3cac25758d713bda4327aed8b22f1f182c4dd9b1))
+* **entities-plugins:** reset empty exchange tokens ([#2984](https://github.com/Kong/public-ui-components/issues/2984)) ([9b99f4d](https://github.com/Kong/public-ui-components/commit/9b99f4d1c0e1d6d1f02d6d6e0d19f29d44f7ca67))
+
+
+### Features
+
+* **free-form:** add in page jump for rule fields ([#2975](https://github.com/Kong/public-ui-components/issues/2975)) ([4d8c9c4](https://github.com/Kong/public-ui-components/commit/4d8c9c471a383457c0af4be466cddc9c55882124))
+
+
+
+
+
+## [9.167.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.167.0...@kong-ui-public/entities-plugins@9.167.1) (2026-03-10)
+
+
+### Bug Fixes
+
+* **entities-plugins:** oidc data transformation ([#2983](https://github.com/Kong/public-ui-components/issues/2983)) ([f375ce9](https://github.com/Kong/public-ui-components/commit/f375ce98df02684ac4ccfc1024bb9367183a4f85))
+* **entities-plugins:** otel data transformation ([#2982](https://github.com/Kong/public-ui-components/issues/2982)) ([301bc13](https://github.com/Kong/public-ui-components/commit/301bc13bd5cb7242b4c399d73a3b91d0d8d1e8eb))
+
+
+
+
+
+# [9.167.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.5...@kong-ui-public/entities-plugins@9.167.0) (2026-03-10)
+
+
+### Features
+
+* **entities-plugins:** enhance condition field styles ([#2980](https://github.com/Kong/public-ui-components/issues/2980)) ([c7fe552](https://github.com/Kong/public-ui-components/commit/c7fe552d17affb1d458dd18782c06945325e46dd))
+
+
+
+
+
+## [9.166.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.4...@kong-ui-public/entities-plugins@9.166.5) (2026-03-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.166.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.3...@kong-ui-public/entities-plugins@9.166.4) (2026-03-10)
+
+
+### Bug Fixes
+
+* **entities-plugins:** metering-and-billing nameKey correction ([#2979](https://github.com/Kong/public-ui-components/issues/2979)) ([85fbdc2](https://github.com/Kong/public-ui-components/commit/85fbdc2af2c8bb854bb54b7a8aad330ecede2ef7))
+
+
+
+
+
+## [9.166.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.2...@kong-ui-public/entities-plugins@9.166.3) (2026-03-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.166.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.1...@kong-ui-public/entities-plugins@9.166.2) (2026-03-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.166.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.166.0...@kong-ui-public/entities-plugins@9.166.1) (2026-03-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.166.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.165.2...@kong-ui-public/entities-plugins@9.166.0) (2026-03-06)
+
+
+### Features
+
+* add a freeform adoption field of scope selector ([#2974](https://github.com/Kong/public-ui-components/issues/2974)) ([d1fc7da](https://github.com/Kong/public-ui-components/commit/d1fc7dad7cd1bb6dcb9aa6cb343467b70365b897))
+
+
+
+
+
+## [9.165.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.165.1...@kong-ui-public/entities-plugins@9.165.2) (2026-03-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.165.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.165.0...@kong-ui-public/entities-plugins@9.165.1) (2026-03-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.165.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.164.3...@kong-ui-public/entities-plugins@9.165.0) (2026-03-05)
+
+
+### Features
+
+* **entities-plugins:** add monetization in plugin select group ([#2963](https://github.com/Kong/public-ui-components/issues/2963)) ([8692731](https://github.com/Kong/public-ui-components/commit/8692731594cbf90e6bf466e811330a8a2878da6b))
+
+
+
+
+
+## [9.164.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.164.2...@kong-ui-public/entities-plugins@9.164.3) (2026-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.164.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.164.1...@kong-ui-public/entities-plugins@9.164.2) (2026-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.164.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.164.0...@kong-ui-public/entities-plugins@9.164.1) (2026-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.164.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.163.2...@kong-ui-public/entities-plugins@9.164.0) (2026-03-04)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin form wrapper to standard layout ([#2952](https://github.com/Kong/public-ui-components/issues/2952)) ([52afdae](https://github.com/Kong/public-ui-components/commit/52afdae4b7ed11b07eb57985bd12d57dfa3b388a))
+
+
+
+
+
+## [9.163.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.163.1...@kong-ui-public/entities-plugins@9.163.2) (2026-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.163.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.163.0...@kong-ui-public/entities-plugins@9.163.1) (2026-03-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 # [9.163.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.162.0...@kong-ui-public/entities-plugins@9.163.0) (2026-03-03)
 
 
