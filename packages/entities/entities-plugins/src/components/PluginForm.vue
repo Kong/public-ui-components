@@ -1045,38 +1045,31 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
  * Unlike buildFormSchema, this does NOT transform fields into VFG format (no labels,
  * input types, valueType, select/checkbox conversions, etc.).
  */
-const buildFreeFormSchema = (schema: Record<string, any>, parentKey: string = ''): Record<string, any> => {
+const buildFreeFormSchema = (schema: Record<string, any>): Record<string, any> => {
   if (!schema || !Array.isArray(schema.fields)) return schema
-
-  const pluginSchema = customSchemas[props.pluginType as keyof CustomSchemas]
 
   const filteredFields = schema.fields
     .filter((item: Record<string, any>) => {
       const key = Object.keys(item)[0]
       const field = item[key]
-      const fullKey = parentKey ? `${parentKey}-${key}` : key
 
       // Filter out hidden/overwrite fields
       if (Object.prototype.hasOwnProperty.call(field, 'overwrite') || field.hidden) return false
-
-      // Filter out fields marked for deletion in the frontend schema
-      if (pluginSchema?.fieldsToDelete?.includes(fullKey)) return false
 
       return true
     })
     .map((item: Record<string, any>) => {
       const key = Object.keys(item)[0]
       const field = item[key]
-      const fullKey = parentKey ? `${parentKey}-${key}` : key
 
       // Recurse into nested records
       if (Array.isArray(field.fields)) {
-        return { [key]: buildFreeFormSchema(field, fullKey) }
+        return { [key]: buildFreeFormSchema(field) }
       }
 
       // Recurse into array elements that contain nested fields
       if (field.elements && Array.isArray(field.elements.fields)) {
-        return { [key]: { ...field, elements: buildFreeFormSchema(field.elements, `${fullKey}-elements`) } }
+        return { [key]: { ...field, elements: buildFreeFormSchema(field.elements) } }
       }
 
       return item
