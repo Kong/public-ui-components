@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject } from 'vue'
+import { computed, ref, provide, inject, onUnmounted } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
@@ -67,16 +67,20 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
  * 2. On mount, each PageLayout tries to inject the callback from its nearest ancestor.
  *    If found, it calls it — telling the parent "I exist, hide your header."
  */
-const hasNestedPageLayout = ref<boolean>(false)
-provide(nestedPageLayoutInjectionKey, (): void => {
-  // Set the local ref to true when the callback is called
-  hasNestedPageLayout.value = true
+const nestedCount = ref(0)
+const hasNestedPageLayout = computed(() => nestedCount.value > 0)
+provide(nestedPageLayoutInjectionKey, (): (() => void) => {
+  nestedCount.value++
+  return () => {
+    nestedCount.value--
+  }
 })
 
 // If this instance is itself nested inside another PageLayout, notify the parent.
-const setHasNestedPageLayout = inject<(() => void) | null>(nestedPageLayoutInjectionKey, null)
-if (typeof setHasNestedPageLayout === 'function') {
-  setHasNestedPageLayout()
+const register = inject<(() => (() => void)) | null>(nestedPageLayoutInjectionKey, null)
+if (typeof register === 'function') {
+  const unregister = register()
+  onUnmounted(unregister)
 }
 </script>
 
