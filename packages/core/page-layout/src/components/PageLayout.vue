@@ -66,6 +66,11 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
  * 1. Every PageLayout provides a registration callback under this key.
  * 2. On mount, each PageLayout tries to inject the callback from its nearest ancestor.
  *    If found, it calls it — telling the parent "I exist, hide your header."
+ * 3. The registration callback returns an unregister function. On unmount, the child
+ *    calls it so the parent restores its own header (e.g. when navigating back via
+ *    router-view and the child PageLayout is destroyed). A ref-counted approach
+ *    (nestedCount) is used so the parent only restores its header when all nested
+ *    children have unmounted, not just the first one.
  */
 const nestedCount = ref(0)
 const hasNestedPageLayout = computed(() => nestedCount.value > 0)
@@ -78,10 +83,14 @@ provide(nestedPageLayoutInjectionKey, (): (() => void) => {
 
 // If this instance is itself nested inside another PageLayout, notify the parent.
 const register = inject<(() => (() => void)) | null>(nestedPageLayoutInjectionKey, null)
+const unregister = ref<(() => void) | null>(null)
 if (typeof register === 'function') {
-  const unregister = register()
-  onUnmounted(unregister)
+  unregister.value = register()
 }
+
+onUnmounted(() => {
+  unregister.value?.()
+})
 </script>
 
 <style lang="scss" scoped>
