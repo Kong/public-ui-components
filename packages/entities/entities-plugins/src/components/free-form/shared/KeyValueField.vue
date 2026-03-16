@@ -218,7 +218,7 @@ defineExpose({
     &-fields {
       display: flex;
       flex: 1 1 0;
-      gap: $kui-space-40;
+      gap: var(--kui-space-40, $kui-space-40);
     }
 
     &-key,
@@ -236,7 +236,7 @@ defineExpose({
   & &-entry--multiline :deep(.card-content) {
     align-items: flex-start;
     flex-direction: row;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
   }
 
   :deep(.k-tooltip p) {
