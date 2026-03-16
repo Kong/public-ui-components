@@ -41,8 +41,8 @@ const Children = () => props.document?.children ? renderChildren(children) : nul
 
 <style lang="scss">
 :root {
-  --kong-ui-document-viewer-font-family-default: #{$kui-font-family-text};
-  --kong-ui-document-viewer-font-family-monospace: #{$kui-font-family-code};
+  --kong-ui-document-viewer-font-family-default: var(--kui-font-family-text, #{kui-font-family-text});
+  --kong-ui-document-viewer-font-family-monospace: var(--kui-font-family-code, #{kui-font-family-code});
 }
 </style>
 <style lang="scss" scoped>

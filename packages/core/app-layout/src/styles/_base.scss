@@ -5,12 +5,14 @@
 .kong-ui-app-sidebar,
 .kong-ui-app-navbar {
   // Disabling stylelint rule here to allow for deprecated Kongponents theming variables
+  /* stylelint-disable @kong/design-tokens/token-var-usage */
   /* stylelint-disable-next-line custom-property-pattern */
   --KInputLabelWeight: #{$kui-font-weight-semibold};
   /* stylelint-disable-next-line custom-property-pattern */
   --KongAuthFontFamily: #{$kui-font-family-text};
   /* stylelint-disable-next-line custom-property-pattern */
   --KongAuthFontWeight: #{$kui-font-weight-regular};
+  /* stylelint-enable @kong/design-tokens/token-var-usage */
 }
 
 html.kong-ui-app-layout-html {

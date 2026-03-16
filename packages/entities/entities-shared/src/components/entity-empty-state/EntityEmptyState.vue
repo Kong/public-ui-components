@@ -194,7 +194,7 @@ onMounted(() => warn('EntityEmptyState is deprecated and will be removed in futu
 
 <style lang="scss" scoped>
 $entity-empty-state-feature-card-width: 312px;
-$entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width} + #{$kui-space-60}); // 2 columns per row + gap
+$entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width} + var(--kui-space-60, #{kui-space-60})); // 2 columns per row + gap
 
 .kong-ui-public-entity-empty-state {
   align-items: center;
