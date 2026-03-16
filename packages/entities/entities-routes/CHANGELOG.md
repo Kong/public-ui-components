@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.20.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.19.5...@kong-ui-public/entities-routes@3.20.0) (2026-03-11)
+
+
+### Features
+
+* **entities-routes:** add copy as curl option for route list ([#2989](https://github.com/Kong/public-ui-components/issues/2989)) ([b2d34e5](https://github.com/Kong/public-ui-components/commit/b2d34e5044182af9616332d9e825c774e6276124))
+
+
+
+
+
 ## [3.19.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.19.4...@kong-ui-public/entities-routes@3.19.5) (2026-03-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes

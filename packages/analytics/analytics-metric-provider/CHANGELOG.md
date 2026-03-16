@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.1.30...@kong-ui-public/analytics-metric-provider@11.2.0) (2026-03-13)
+
+
+### Features
+
+* datasource config store ([#2992](https://github.com/Kong/public-ui-components/issues/2992)) ([2db9601](https://github.com/Kong/public-ui-components/commit/2db960179ece42681cc07fc3e646e6ae04252c15))
+
+
+
+
+
 ## [11.1.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.1.29...@kong-ui-public/analytics-metric-provider@11.1.30) (2026-02-12)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
