@@ -3,7 +3,7 @@
     :is="wrapperComponent"
     class="kong-ui-entity-base-form"
     :class="{
-      'new-form-layout': enabledNewPluginLayout,
+      'new-form-layout': enabledNewPluginLayout && entityType === SupportedEntityType.Plugin,
     }"
   >
     <!-- Loading -->
