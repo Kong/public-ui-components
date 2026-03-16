@@ -76,6 +76,8 @@ const nestedCount = ref(0)
 const hasNestedPageLayout = computed(() => nestedCount.value > 0)
 provide(nestedPageLayoutInjectionKey, (): (() => void) => {
   nestedCount.value++
+
+  // Unregister function returned on callback to be called on unmount
   return () => {
     nestedCount.value--
   }
