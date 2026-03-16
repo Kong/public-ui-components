@@ -82,14 +82,14 @@ provide(nestedPageLayoutInjectionKey, (): (() => void) => {
 })
 
 // If this instance is itself nested inside another PageLayout, notify the parent.
-const register = inject<(() => (() => void)) | null>(nestedPageLayoutInjectionKey, null)
-const unregister = ref<(() => void) | null>(null)
-if (typeof register === 'function') {
-  unregister.value = register()
+const registerNestedPageLayout = inject<(() => (() => void)) | null>(nestedPageLayoutInjectionKey, null)
+const unregisterNestedPageLayout = ref<(() => void) | null>(null)
+if (typeof registerNestedPageLayout === 'function') {
+  unregisterNestedPageLayout.value = registerNestedPageLayout()
 }
 
 onUnmounted(() => {
-  unregister.value?.()
+  unregisterNestedPageLayout.value?.()
 })
 </script>
 
