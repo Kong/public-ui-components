@@ -52,8 +52,8 @@ importers:
         specifier: ^2.0.16
         version: 2.1.1
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/eslint-config-kong-ui':
         specifier: ^1.6.0
         version: 1.6.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.5.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.5.1))(typescript@5.9.3)
@@ -257,8 +257,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/sandbox-layout
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -312,8 +312,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -358,8 +358,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -386,8 +386,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       json-schema-to-ts:
         specifier: ^3.1.1
         version: 3.1.1
@@ -432,8 +432,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/sandbox-layout
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -490,8 +490,8 @@ importers:
         version: 4.5.0
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -536,8 +536,8 @@ importers:
         version: 3.5.27(typescript@5.9.3)
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       axios:
         specifier: '>=1.13.5'
         version: 1.13.5
@@ -558,8 +558,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -573,8 +573,8 @@ importers:
   packages/core/entities-config-editor:
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -585,8 +585,8 @@ importers:
   packages/core/error-boundary:
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -616,8 +616,8 @@ importers:
         specifier: 1.6.0-rc.1
         version: 1.6.0-rc.1
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -665,8 +665,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -723,8 +723,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -757,8 +757,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -776,8 +776,8 @@ importers:
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -801,8 +801,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -823,8 +823,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -850,8 +850,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -877,8 +877,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -904,8 +904,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -931,8 +931,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -958,8 +958,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -1009,8 +1009,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -1076,8 +1076,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/monaco-editor
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -1166,8 +1166,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -1206,8 +1206,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -1243,8 +1243,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -1279,8 +1279,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -1306,8 +1306,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/icons':
         specifier: ^1.42.0
         version: 1.42.0(vue@3.5.27(typescript@5.9.3))
@@ -1337,8 +1337,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -1362,8 +1362,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -1396,8 +1396,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.18.3-pr.613.e59423d.0
-        version: 1.18.3-pr.613.e59423d.0
+        specifier: 1.20.0
+        version: 1.20.0
       '@kong/kongponents':
         specifier: 9.50.0
         version: 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
@@ -2565,8 +2565,8 @@ packages:
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
 
-  '@kong/design-tokens@1.18.3-pr.613.e59423d.0':
-    resolution: {integrity: sha512-QjLYEdrGHqI3+1nmg1ZIhy4Yi9vlqGayAcILf7LvhRQ/oe5gRzxiyAPmSPmJHsxHbTpYBLLGQr7rl+yhJQTnMQ==}
+  '@kong/design-tokens@1.20.0':
+    resolution: {integrity: sha512-6j7A/+gxz8pY4xqUTPtqXhi5zGvEowQ1FikWR0nni13QbiOvHsNaJbXGHTG4x2+VOQt3amDs6jGpppHP9Pv95Q==}
     engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
 
   '@kong/eslint-config-kong-ui@1.6.0':
@@ -11901,7 +11901,7 @@ snapshots:
 
   '@kong/atc-router@1.6.0-rc.1': {}
 
-  '@kong/design-tokens@1.18.3-pr.613.e59423d.0': {}
+  '@kong/design-tokens@1.20.0': {}
 
   '@kong/eslint-config-kong-ui@1.6.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.5.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.5.1))(typescript@5.9.3)':
     dependencies:
