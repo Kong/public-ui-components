@@ -457,7 +457,7 @@ defineExpose({
     border: none;
     padding: 0;
 
-    .form-actions {
+    > :deep(.card-content > form > .form-actions) {
       justify-content: flex-start;
       margin-top: $kui-space-70;
     }

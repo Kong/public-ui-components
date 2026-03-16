@@ -480,8 +480,8 @@
 <script setup lang="ts">
 import '@kong-ui-public/entities-shared/dist/style.css'
 import '@kong-ui-public/entities-vaults/dist/style.css'
-import { EntityBaseForm, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
-import { ref, computed, onBeforeMount } from 'vue'
+import { EntityBaseForm, EntityFormSection, SupportedEntityType, FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
+import { ref, computed, onBeforeMount, provide } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
 import { useRouter } from 'vue-router'
 
@@ -505,6 +505,8 @@ import type {
 import type { AxiosError } from 'axios'
 import type { SelectItem } from '@kong/kongponents'
 import { omit } from 'lodash-es'
+
+provide(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => false)) // Override the plugin form layout to use the old layout for this form
 
 const props = defineProps({
   config: {
