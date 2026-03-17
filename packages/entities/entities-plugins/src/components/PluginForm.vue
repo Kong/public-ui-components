@@ -52,7 +52,7 @@
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :engine="engine"
         :entity-map="entityMap"
-        :raw-schema="filteredRawSchema"
+        :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
@@ -1040,49 +1040,6 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
   return initialFormSchema
 }
 
-/**
- * Build a filtered raw schema for free-form rendering.
- * Unlike buildFormSchema, this does NOT transform fields into VFG format (no labels,
- * input types, valueType, select/checkbox conversions, etc.).
- */
-const buildFreeFormSchema = (schema: Record<string, any>): Record<string, any> => {
-  if (!schema || !Array.isArray(schema.fields)) return schema
-
-  const filteredFields = schema.fields
-    .filter((item: Record<string, any>) => {
-      const key = Object.keys(item)[0]
-      const field = item[key]
-
-      // Filter out hidden/overwrite fields
-      if (Object.prototype.hasOwnProperty.call(field, 'overwrite') || field.hidden) return false
-
-      return true
-    })
-    .map((item: Record<string, any>) => {
-      const key = Object.keys(item)[0]
-      const field = item[key]
-
-      // Recurse into nested records
-      if (Array.isArray(field.fields)) {
-        return { [key]: buildFreeFormSchema(field) }
-      }
-
-      // Recurse into array elements that contain nested fields
-      if (field.elements && Array.isArray(field.elements.fields)) {
-        return { [key]: { ...field, elements: buildFreeFormSchema(field.elements) } }
-      }
-
-      return item
-    })
-
-  return { ...schema, fields: filteredFields }
-}
-
-const filteredRawSchema = computed(() => {
-  if (!loadedSchema.value) return undefined
-  return buildFreeFormSchema(loadedSchema.value)
-})
-
 const initScopeFields = (): void => {
   const supportServiceScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
   const supportRouteScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
@@ -1334,6 +1291,8 @@ watch([entityMap, initialized], (newData, oldData) => {
 
   // rebuild schema if its not a credential and we either just determined a new entity id, or newly initialized the data
   if (!treatAsCredential.value && formType.value === EntityBaseFormType.Edit && (newEntityData || (newinitialized && newinitialized !== oldinitialized))) {
+    // for free-form plugins, use the default schema(enabled, name, tags and etc.) without building from the config schema
+    // free-form can handle the raw configResponse
     if (isFreeForm(props.pluginType, props.engine)) {
       finalSchema.value = { ...defaultFormSchema }
     } else {
@@ -1565,6 +1524,8 @@ onBeforeMount(async () => {
 
           // if editing, wait for record to load before building schema
           if (initialized.value || formType.value === EntityBaseFormType.Create) {
+            // for free-form plugins, use the default schema(enabled, name, tags and etc.) without building from the config schema
+            // free-form can handle the raw configResponse
             if (isFreeForm(props.pluginType, props.engine)) {
               finalSchema.value = { ...defaultFormSchema }
             } else {
