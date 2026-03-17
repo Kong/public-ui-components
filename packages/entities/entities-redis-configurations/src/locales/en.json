@@ -309,6 +309,14 @@
       "plugins": "Plugins",
       "tags": "Tags"
     },
+    "source": {
+      "konnect_managed": "Konnect managed",
+      "self_managed": "Self managed"
+    },
+    "type": {
+      "konnect_managed_redis": "Konnect-managed Redis",
+      "self_managed_redis": "Self-managed Redis"
+    },
     "empty_state": {
       "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing.",
       "description_with_managed_konnect": "Connect your own Redis instance or use a managed one from Konnect. Set up configurations for your gateway plugins to store and retrieve data, like counters or other data, needed during request processing.",

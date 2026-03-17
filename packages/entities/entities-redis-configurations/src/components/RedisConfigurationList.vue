@@ -22,6 +22,20 @@
           v-model="filterQuery"
           :config="filterConfig"
         />
+        <PermissionsWrapper
+          v-if="useToolbarCreationButton"
+          :auth-function="canCreate"
+        >
+          <KButton
+            :appearance="isKonnectManagedRedisEnabled ? 'secondary' : 'primary'"
+            data-testid="toolbar-add-redis-configuration"
+            size="large"
+            :to="config.createRoute"
+          >
+            <AddIcon />
+            {{ isKonnectManagedRedisEnabled ? t('list.action') : t('actions.create') }}
+          </KButton>
+        </PermissionsWrapper>
       </template>
       <!-- Create action -->
       <template #toolbar-button>
@@ -29,7 +43,10 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <PermissionsWrapper :auth-function="canCreate">
+          <PermissionsWrapper
+            v-if="!useToolbarCreationButton"
+            :auth-function="canCreate"
+          >
             <KButton
               appearance="primary"
               data-testid="toolbar-add-redis-configuration"
@@ -50,15 +67,20 @@
       <template #type="{ row }">
         {{ renderRedisType(row) }}
       </template>
-      <template #tags="{ rowValue }">
+      <template
+        v-if="!isKonnectManagedRedisEnabled"
+        #tags="{ rowValue }"
+      >
         <TableTags :tags="rowValue" />
       </template>
       <template #plugins="{ row }">
         <LinkedPluginsInline
+          v-if="!isKonnectManagedRedisEnabled || row.partial"
           :config="config"
           :partial-id="row.id"
           @click.stop="showLinkedPlugins(row.id)"
         />
+        <span v-else>—</span>
       </template>
 
       <!-- Row actions -->
@@ -73,13 +95,15 @@
         </KClipboardProvider>
         <PermissionsWrapper :auth-function="() => canRetrieve(row)">
           <KDropdownItem
+            v-if="!isKonnectManagedRedisEnabled || row.partial"
             data-testid="action-entity-view"
             has-divider
             :item="getViewDropdownItem(row.id)"
           />
         </PermissionsWrapper>
-        <PermissionsWrapper :auth-function="() => canEdit(row)">
+        <PermissionsWrapper :auth-function="() => canEditRow(row)">
           <KDropdownItem
+            v-if="!isKonnectManagedRedisEnabled || row.partial"
             data-testid="action-entity-edit"
             :item="getEditDropdownItem(row.id)"
           />
@@ -203,7 +227,7 @@ import type {
   CopyEventPayload,
   RedisConfigurationResponse,
 } from '../types'
-import type { BaseTableHeaders, EmptyStateOptions, ExactMatchFilterConfig, FilterFields, FuzzyMatchFilterConfig, TableErrorMessage } from '@kong-ui-public/entities-shared'
+import type { BaseTableHeaders, EmptyStateOptions, ExactMatchFilterConfig, FilterFields, FuzzyMatchFilterConfig, TableErrorMessage, FetcherResponse } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
 import type { TableDataFetcherParams } from '@kong/kongponents'
 
@@ -262,6 +286,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /** default to false, setting to true will place create button on top right of list */
+  useToolbarCreationButton: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 /**
@@ -297,22 +326,141 @@ const isRemoveLinksModalVisible = ref<boolean>(false)
 
 const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 
+/** True when list shows both Koko partials and Cloud Gateways managed-cache add-ons (Konnect only) */
+const isKonnectManagedRedisEnabled = computed<boolean>(() =>
+  props.config.app === 'konnect' && !!(props.config as KonnectRedisConfigurationListConfig).isKonnectManagedRedisEnabled,
+)
+
 const fetcherCacheKey = ref<number>(1)
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 
 const { fetcher: rawFetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl)
 
 const pageSize = 1000 // the API returns all partials, so we have to set a high page size to filter them on the frontend
+
+type ManagedCacheAddOn = {
+  id: string
+  config?: {
+    state_metadata?: {
+      cache_config_id?: string
+    }
+  }
+}
+
+const isRedisPartial = (item: RedisConfigurationResponse): boolean =>
+  item.type === PartialType.REDIS_CE || item.type === PartialType.REDIS_EE
+
 /**
- * a hack to filter out non-redis configurations from the list,
- * this is needed because the API returns all partials, not just redis configurations.
- */
-async function fetcher(params: TableDataFetcherParams): ReturnType<typeof rawFetcher> {
-  const res = await rawFetcher({ ...params, pageSize })
-  res.data = res.data.filter((item: RedisConfigurationResponse) => {
-    return item.type === PartialType.REDIS_CE || item.type === PartialType.REDIS_EE
-  })
-  return res
+* a hack to filter out non-redis configurations from the list,
+* this is needed because the API returns all partials, not just redis configurations.
+*/
+const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse> => {
+  // Legacy Konnect/ KM: use the existing partials-only fetcher
+  if (!isKonnectManagedRedisEnabled.value) {
+    const res = await rawFetcher({ ...params, pageSize })
+    res.data = res.data.filter(isRedisPartial)
+    return res
+  }
+
+  // Konnect managed Redis: combine partials from Koko with managed-cache add-ons from Cloud Gateways
+  try {
+    errorMessage.value = null
+
+    // Fetch partials
+    const partialsRes = await rawFetcher({ ...params, pageSize })
+    const partials: RedisConfigurationResponse[] = partialsRes.data.filter(isRedisPartial)
+
+    // Fetch managed-cache add-ons for this CP from Cloud Gateways
+    const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+    const cloudGatewaysBase = konnectConfig.cloudGatewaysApiBaseUrl ?? props.config.apiBaseUrl
+    const addOnsUrl = `${cloudGatewaysBase}/v2/cloud-gateways/add-ons`
+
+    let addOns: ManagedCacheAddOn[] = []
+    try {
+      const addOnsResponse = await axiosInstance.get(addOnsUrl, {
+        params: {
+          'page[size]': pageSize,
+          'page[number]': 1,
+          filter: {
+            owner: {
+              kind: 'control-plane',
+              control_plane_id: konnectConfig.controlPlaneId,
+              ...(konnectConfig.controlPlaneGeo ? { control_plane_geo: konnectConfig.controlPlaneGeo } : {}),
+            },
+            config: {
+              kind: 'managed-cache.v0',
+            },
+          },
+        },
+      })
+      addOns = (addOnsResponse.data?.data ?? []) as ManagedCacheAddOn[]
+    } catch {
+      // no op - if the add-ons can't be fetched, we still show the partials self-managed Redis
+    }
+
+    // Join add-ons to partials via state_metadata.cache_config_id === partial.id
+    // Konnect managed vs self-managed is derived from BE: when partial has tags, it is Konnect-managed
+    const rows: EntityRow[] = partials.map((partial) => {
+      const matchingAddOn = addOns.find((addOn) =>
+        addOn.config?.state_metadata?.cache_config_id === partial.id,
+      )
+      const hasTags = Array.isArray(partial.tags) && partial.tags.length > 0
+      const source: EntityRow['source'] = hasTags ? 'konnect-managed' : 'self-managed'
+
+      if (matchingAddOn) {
+        return {
+          ...partial,
+          id: partial.id,
+          name: partial.name,
+          source,
+          partial,
+          addOn: {
+            id: matchingAddOn.id,
+            config: matchingAddOn.config,
+          },
+        }
+      }
+
+      return {
+        ...partial,
+        id: partial.id,
+        name: partial.name,
+        source,
+        partial,
+      }
+    })
+
+    // When a managed-cache add-on is being created, Cloud Gateways creates the add-on first and only later provisions the Redis partial in Koko. During that window
+    // state_metadata.cache_config_id is empty, so the join above won't find a match and the Redis partial will not yet exist. To avoid showing an empty list while the cache
+    // initializes, we surface a placeholder row derived from that `initializing` add-on until a real partial appears
+    const partialIds = new Set(partials.map(partial => partial.id))
+    const initializingAddOns = addOns.filter(addOn =>
+      !addOn.config?.state_metadata?.cache_config_id,
+    )
+
+    const placeholderRows: EntityRow[] = initializingAddOns
+      // Doon't create a placeholder if we already have a partial row
+      .filter(addOn => !partialIds.has(addOn.id))
+      .map((addOn) => ({
+        // Use the add-on id as a stable row id while the partial is not yet created
+        id: addOn.id,
+        name: addOn.id,
+        source: 'konnect-managed',
+        partial: undefined,
+        addOn,
+      }))
+
+    const allRows = [...rows, ...placeholderRows]
+
+    return {
+      data: allRows,
+      total: partialsRes.total ?? allRows.length,
+    }
+  } catch (error: any) {
+    errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
+    emit('error', error)
+    return { data: [], total: 0 }
+  }
 }
 
 const { i18n: { t } } = composables.useI18n()
@@ -320,9 +468,6 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()
 
 const filterQuery = ref<string>('')
-const isKonnectManagedRedisEnabled = computed<boolean>(() => {
-  return props.config.app === 'konnect' && !!props.config.isKonnectManagedRedisEnabled
-})
 
 const emptyStateDescription = computed<string>(() => {
   // When managed Redis is enabled in Konnect, use the expanded onboarding message
@@ -359,7 +504,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
     } as ExactMatchFilterConfig
   }
 
-  const { name } = tableHeaders
+  const { name } = tableHeaders.value
   const filterFields: FilterFields = {
     name,
   }
@@ -382,28 +527,38 @@ const emptyStateOptions = ref<EmptyStateOptions>({
   title: emptyStateTitle.value,
 })
 
-const tableHeaders: BaseTableHeaders = {
+const tableHeaders = computed<BaseTableHeaders>(() => ({
   name: { label: t('list.table_headers.name'), searchable: true, hidable: false, sortable: true },
   type: { label: t('list.table_headers.type') },
-  tags: { label: t('list.table_headers.tags') },
+  ...(!isKonnectManagedRedisEnabled.value && { tags: { label: t('list.table_headers.tags') } }),
   plugins: { label: t('list.table_headers.plugins') },
-}
+}))
 
-const getViewDropdownItem = (id: string) => {
-  return {
-    label: t('actions.view'),
-    to: props.config.getViewRoute(id),
-  }
-}
+const getViewDropdownItem = (id: string) => ({
+  label: t('actions.view'),
+  to: props.config.getViewRoute(id),
+})
 
-const getEditDropdownItem = (id: string) => {
-  return {
-    label: t('actions.edit'),
-    to: props.config.getEditRoute(id),
+const getEditDropdownItem = (id: string) => ({
+  label: t('actions.edit'),
+  to: props.config.getEditRoute(id),
+})
+
+// Row can not be edited for Konnect-managed otherwise follow canEdit prop
+const canEditRow = async (row: EntityRow): Promise<boolean> => {
+  if (isKonnectManagedRedisEnabled.value && row.source === 'konnect-managed') {
+    return false
   }
+  return props.canEdit(row)
 }
 
 const deleteRow = async (row: EntityRow) => {
+  // Konnect-managed: skip client-side links check; Cloud Gateways add-ons API will return error if partial still in use
+  if (isKonnectManagedRedisEnabled.value && row.source === 'konnect-managed') {
+    entityToBeDeleted.value = row
+    isDeleteModalVisible.value = true
+    return
+  }
   // check if the partial still has plugins linked to it
   const { count } = await fetchLinks({ partialId: row.id as string })
   if (count > 0) {
@@ -421,6 +576,12 @@ const clearFilter = (): void => {
 }
 
 const rowClick = async (row: EntityRow): Promise<void> => {
+  // In combined Konnect-managed mode we can only navigate to details once the underlying Redis partial exists; placeholder rows from add-ons don't yet
+  // have a valid details route.
+  if (isKonnectManagedRedisEnabled.value && !row.partial) {
+    return
+  }
+
   const isAllowed = await props.canRetrieve?.(row)
 
   if (!isAllowed) {
@@ -445,9 +606,19 @@ const confirmDelete = async (): Promise<void> => {
   }
 
   isDeletePending.value = true
+  deleteModalError.value = ''
 
   try {
-    await axiosInstance.delete(buildDeleteUrl(entityToBeDeleted.value.id))
+    if (isKonnectManagedRedisEnabled.value && entityToBeDeleted.value.source === 'konnect-managed' && entityToBeDeleted.value.addOn?.id) {
+      // Konnect-managed: delete the managed cache add-on via Cloud Gateways API
+      const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+      const cloudGatewaysBase = konnectConfig.cloudGatewaysApiBaseUrl ?? props.config.apiBaseUrl
+      const addOnDeleteUrl = `${cloudGatewaysBase}/v2/cloud-gateways/add-ons/${entityToBeDeleted.value.addOn.id}`
+      await axiosInstance.delete(addOnDeleteUrl)
+    } else {
+      // Legacy Konnect or KM: delete the underlying partial as before
+      await axiosInstance.delete(buildDeleteUrl(entityToBeDeleted.value.id))
+    }
 
     isDeletePending.value = false
     isDeleteModalVisible.value = false
@@ -472,17 +643,47 @@ const refreshList = (): void => {
   fetcherCacheKey.value++
 }
 
-const renderRedisType = (item: RedisConfigurationFields) => {
-  switch (getRedisType(item)) {
+// Type label from partial's Redis type (type + config). Used for self-managed rows in combined list
+const getRedisTypeLabelFromPartial = (fields: RedisConfigurationFields): string => {
+  const redisType = getRedisType(fields)
+  switch (redisType) {
     case RedisType.HOST_PORT_CE:
-      return `${t('form.options.type.host_port')}${t('form.options.type.suffix_open_source')}`
+      return `${t('form.options.type.host_port')} - ${t('form.options.type.open_source')}`
     case RedisType.HOST_PORT_EE:
-      return `${t('form.options.type.host_port')}${t('form.options.type.suffix_enterprise')}`
+      return `${t('form.options.type.host_port')} - ${t('form.options.type.enterprise')}`
     case RedisType.SENTINEL:
-      return `${t('form.options.type.sentinel')}${t('form.options.type.suffix_enterprise')}`
+      return `${t('form.options.type.sentinel')} - ${t('form.options.type.enterprise')}`
     case RedisType.CLUSTER:
-      return `${t('form.options.type.cluster')}${t('form.options.type.suffix_enterprise')}`
+      return `${t('form.options.type.cluster')} - ${t('form.options.type.enterprise')}`
+    default:
+      return '—'
   }
+}
+
+const renderRedisType = (item: RedisConfigurationFields | EntityRow): string => {
+  const fields = (item as EntityRow).partial ?? item
+  if (!fields || typeof (fields as Record<string, unknown>).type === 'undefined') {
+    return '—'
+  }
+  const typedFields = fields as RedisConfigurationFields
+  const redisType = getRedisType(typedFields)
+  const typeLabelFromPartial = getRedisTypeLabelFromPartial(typedFields)
+
+  if (isKonnectManagedRedisEnabled.value && (item as EntityRow).source) {
+    return (item as EntityRow).source === 'konnect-managed'
+      ? t('list.type.konnect_managed_redis')
+      : `${t('list.type.self_managed_redis')} (${typeLabelFromPartial})`
+  }
+  // Single-source list: show type with Open Source / Enterprise suffix
+  const suffix = redisType === RedisType.HOST_PORT_CE
+    ? t('form.options.type.suffix_open_source')
+    : t('form.options.type.suffix_enterprise')
+  const baseLabel = redisType === RedisType.HOST_PORT_CE || redisType === RedisType.HOST_PORT_EE
+    ? t('form.options.type.host_port')
+    : redisType === RedisType.SENTINEL
+      ? t('form.options.type.sentinel')
+      : t('form.options.type.cluster')
+  return `${baseLabel}${suffix}`
 }
 
 const handleCreate = (): void => {

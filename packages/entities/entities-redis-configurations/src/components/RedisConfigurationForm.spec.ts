@@ -25,9 +25,9 @@ const kongManager = (): KongManagerRedisConfigurationFormConfig => ({
 })
 
 // We don’t want to pull in Kongponents or other child components here.
-// So sttubing them all, and let EntityBaseForm render its default and form‑actions slots
+// So sttubing them all, and let EntityBaseForm render its own actions.
 const stubs = {
-  EntityBaseForm: { template: '<div><slot /><slot name="form-actions" /></div>' },
+  EntityBaseForm: { template: '<div><slot /></div>' },
   EntityFormBlock: true,
   EntityFormSection: true,
   KAlert: true,
@@ -57,11 +57,6 @@ describe('RedisConfigurationForm', () => {
     expect(wrapper.find('.kong-ui-entities-redis-configurations-form').classes()).toContain('managed-konnect-layout')
   })
 
-  it('shows managed form actions when Konnect + isKonnectManagedRedisEnabled', () => {
-    const wrapper = mountForm(konnect({ isKonnectManagedRedisEnabled: true }))
-    expect(wrapper.find('[data-testid="managed-form-actions"]').exists()).toBe(true)
-  })
-
   it('no managed layout when isKonnectManagedRedisEnabled is false or unset', () => {
     expect(mountForm(konnect()).find('.managed-konnect-layout').exists()).toBe(false)
     expect(mountForm(konnect({ isKonnectManagedRedisEnabled: false })).find('.managed-konnect-layout').exists()).toBe(false)
@@ -70,6 +65,5 @@ describe('RedisConfigurationForm', () => {
   it('no managed layout for Kong Manager', () => {
     const wrapper = mountForm(kongManager())
     expect(wrapper.find('.managed-konnect-layout').exists()).toBe(false)
-    expect(wrapper.find('[data-testid="managed-form-actions"]').exists()).toBe(false)
   })
 })
