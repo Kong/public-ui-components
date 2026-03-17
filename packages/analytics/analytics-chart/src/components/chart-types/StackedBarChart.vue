@@ -191,15 +191,15 @@ const unitsRef = toRef(props, 'metricUnit')
 
 const isHorizontal = computed(() => props.orientation === 'horizontal')
 
-const tooltipData = reactive<TooltipState>({
+const tooltipData: TooltipState = reactive({
   showTooltip: false,
   tooltipContext: '', // set in tooltipBehaviour
-  metricDisplay: props.tooltipMetricDisplay,
-  dimensionDisplay: props.dimensionAxesTitle,
+  metricDisplay: toRef(props, 'tooltipMetricDisplay'),
+  dimensionDisplay: toRef(props, 'dimensionAxesTitle'),
   tooltipSeries: [],
   left: '',
   top: '',
-  units: props.metricUnit,
+  units: toRef(props, 'metricUnit'),
   translateUnit,
   offsetX: 0,
   offsetY: 0,
