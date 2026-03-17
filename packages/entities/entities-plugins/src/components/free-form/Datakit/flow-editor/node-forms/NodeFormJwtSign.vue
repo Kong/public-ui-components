@@ -49,7 +49,7 @@
     <KeyValueField
       :label="t('plugins.free-form.datakit.flow_editor.node_properties.jwt.static_claims.label')"
       name="static_claims"
-      @change="handleStaticClaimsChange"
+      @change="setConfig('static_claims')"
     />
 
     <NodeFormDivider />
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef, watch } from 'vue'
+import { useTemplateRef, watch } from 'vue'
 import { KLabel } from '@kong/kongponents'
 
 import Form from '../../../shared/Form.vue'
@@ -120,9 +120,6 @@ const {
   return next
 })
 
-// KeyValueField emits an initial change while syncing its entries from form state.
-const hasInitializedStaticClaims = ref(false)
-
 const { createFieldHandler, validateAll } = useFormValidation({
   validationConfig: {
     algorithm: notEmpty({ fieldName: 'Algorithm' }),
@@ -149,14 +146,4 @@ watch(
     validateAll()
   },
 )
-
-function handleStaticClaimsChange() {
-  if (!hasInitializedStaticClaims.value) {
-    hasInitializedStaticClaims.value = true
-    return
-  }
-
-  // Only persist user edits, not the mount-time normalization event.
-  setConfig('static_claims')
-}
 </script>
