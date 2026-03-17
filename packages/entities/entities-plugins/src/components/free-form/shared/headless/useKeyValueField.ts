@@ -114,14 +114,15 @@ export function useKeyValueField<
   // Sync entries to fieldValue
   watch(entries, (newEntries) => {
     if (!syncToFieldValue) return
+    const emptyValue = emptyOrDefaultValue?.value as Record<TKey, TValue> | null | undefined
     const normalizedEntries = newEntries
       .map(({ key, value }) => [key, value] as const)
       .filter(([key]) => key)
     const newValue: Record<TKey, TValue> | null | undefined = normalizedEntries.length
-      ? Object.fromEntries(normalizedEntries)
-      : emptyOrDefaultValue?.value
+      ? Object.fromEntries(normalizedEntries) as Record<TKey, TValue>
+      : emptyValue
     const currentValue = fieldValue!.value
-    const currentOrDefaultValue = currentValue ?? emptyOrDefaultValue?.value
+    const currentOrDefaultValue = currentValue ?? emptyValue
 
     // Avoid updating fieldValue to `null` from `{}`
     // Currently, the UI does not distinguish between `null` and `{}` well, we'll improve it later. KM-2069
@@ -131,6 +132,10 @@ export function useKeyValueField<
 
     // Ignore draft-only edits until they produce a different serialized value.
     if (isEqual(newValue, currentOrDefaultValue)) {
+      return
+    }
+
+    if (newValue === undefined) {
       return
     }
 

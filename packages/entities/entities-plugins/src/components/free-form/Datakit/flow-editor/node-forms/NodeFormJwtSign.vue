@@ -75,7 +75,7 @@ import KeyValueField from '../../../shared/KeyValueField.vue'
 import NumberField from '../../../shared/NumberField.vue'
 import StringField from '../../../shared/StringField.vue'
 import useI18n from '../../../../../composables/useI18n'
-import type { NodeId } from '../../types'
+import type { IdConnection, NodeId } from '../../types'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'
@@ -85,6 +85,10 @@ import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/use
 interface JwtSignFormData extends BaseFormData {
   algorithm?: string | null
   expires_in?: number | null
+  inputs?: BaseFormData['inputs'] & {
+    claims?: IdConnection | null
+    key?: IdConnection | null
+  }
   kid?: string | null
   not_before?: number | null
   static_claims?: Record<string, string> | null

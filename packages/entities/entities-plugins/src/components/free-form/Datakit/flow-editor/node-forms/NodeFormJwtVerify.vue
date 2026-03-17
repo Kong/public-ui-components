@@ -105,7 +105,7 @@ import EnumField from '../../../shared/EnumField.vue'
 import NumberField from '../../../shared/NumberField.vue'
 import StringField from '../../../shared/StringField.vue'
 import useI18n from '../../../../../composables/useI18n'
-import type { NodeId } from '../../types'
+import type { IdConnection, NodeId } from '../../types'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'
@@ -115,6 +115,10 @@ import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/use
 interface JwtVerifyFormData extends BaseFormData {
   allowed_algorithms?: string[] | null
   audiences?: string[] | null
+  inputs?: BaseFormData['inputs'] & {
+    key?: IdConnection | null
+    token?: IdConnection | null
+  }
   issuers?: string[] | null
   leeway?: number | null
   required_claims?: string[] | null

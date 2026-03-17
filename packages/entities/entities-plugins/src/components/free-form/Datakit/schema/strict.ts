@@ -197,7 +197,7 @@ export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
    * A string representing a URL, such as
    * https://example.com/path/to/resource?q=search
    */
-  url: z.string().url().nullish(),
+  url: z.url().nullish(),
   inputs: CallInputsSchema.nullish(),
   outputs: z
     .object({
