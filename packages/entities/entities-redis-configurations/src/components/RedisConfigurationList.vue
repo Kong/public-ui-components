@@ -62,7 +62,7 @@
 
       <!-- Column Formatting -->
       <template #name="{ rowValue }">
-        <b>{{ rowValue ?? '-' }}</b>
+        <b>{{ rowValue ?? '' }}</b>
       </template>
       <template #type="{ row }">
         {{ renderRedisType(row) }}
@@ -80,7 +80,7 @@
           :partial-id="row.id"
           @click.stop="showLinkedPlugins(row.id)"
         />
-        <span v-else>—</span>
+        <span v-else />
       </template>
 
       <!-- Row actions -->
@@ -344,12 +344,15 @@ const addOnsPageSize = 100
 
 type ManagedCacheAddOn = {
   id: string
+  name?: string
+  owner?: { control_plane_id?: string, control_plane_geo?: string }
   config?: {
+    kind?: string
     state_metadata?: {
       cache_config_id?: string
-      control_plane_id?: string
     }
   }
+  state?: string
 }
 
 const isRedisPartial = (item: RedisConfigurationResponse): boolean =>
@@ -388,17 +391,22 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
           'page[number]': 1,
         },
       })
-      addOns = (addOnsResponse.data?.data ?? []) as ManagedCacheAddOn[]
+      const raw = addOnsResponse.data?.data ?? addOnsResponse.data
+      addOns = Array.isArray(raw) ? (raw as ManagedCacheAddOn[]) : []
     } catch {
       // no op - if the add-ons can't be fetched, we still show the partials self-managed Redis
     }
 
     // Join add-ons to partials via state_metadata.cache_config_id === partial.id
     // Konnect managed vs self-managed is derived from BE: when partial has tags, it is Konnect-managed
+    const getCacheConfigId = (addOn: ManagedCacheAddOn): string | undefined => {
+      const config = (addOn.config ?? (addOn as Record<string, unknown>).attributes) as Record<string, unknown> | undefined
+      const meta = config?.state_metadata ?? (addOn as Record<string, unknown>).state_metadata
+      return (meta as { cache_config_id?: string } | undefined)?.cache_config_id
+    }
+
     const rows: EntityRow[] = partials.map((partial) => {
-      const matchingAddOn = addOns.find((addOn) =>
-        addOn.config?.state_metadata?.cache_config_id === partial.id,
-      )
+      const matchingAddOn = addOns.find((addOn) => getCacheConfigId(addOn) === partial.id)
       const hasTags = Array.isArray(partial.tags) && partial.tags.length > 0
       const source: EntityRow['source'] = hasTags ? 'konnect-managed' : 'self-managed'
 
@@ -426,28 +434,34 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
     })
 
     // When a managed-cache add-on is being created, Cloud Gateways creates the add-on first and only later provisions the Redis partial in Koko. During that window
-    // state_metadata.cache_config_id is empty, so the join above won't find a match and the Redis partial will not yet exist. To avoid showing an empty list while the cache
-    // initializes, we surface a placeholder row derived from that `initializing` add-on until a real partial appears
-    const partialIds = new Set(partials.map(partial => partial.id))
-    const initializingAddOns = addOns
-      // Cloud Gateways API doesn't support filtering so filter client-side for managed-cache add-ons that belong to this CP
-      .filter(addOn =>
-        (addOn.config as any)?.kind === 'managed-cache.v0' &&
-        addOn.config?.state_metadata?.control_plane_id === konnectConfig.controlPlaneId,
-      )
-      .filter(addOn => !addOn.config?.state_metadata?.cache_config_id)
+    // state_metadata.cache_config_id is empty, so the join above won't find a match and the Redis partial will not yet exist. surface a placeholder row for every such add-on
+    const cpId = konnectConfig.controlPlaneId
+    // Cloud Gateways API: owner.control_plane_id identifies the CP; config.state_metadata.cache_config_id links to Koko partial when ready
+    // Add-ons with no cache_config_id yet: Cloud Gateways created the add-on but Koko partial not provisioned
+    const initializingAddOns = addOns.filter((addOn) => {
+      // Already linked to a partial, not initializing
+      const cacheConfigId = getCacheConfigId(addOn)
+      if (cacheConfigId != null && cacheConfigId !== '') return false
 
-    const placeholderRows: EntityRow[] = initializingAddOns
-      // Doon't create a placeholder if we already have a partial row
-      .filter(addOn => !partialIds.has(addOn.id))
-      .map((addOn) => ({
-        // Use the add-on id as a stable row id while the partial is not yet created
-        id: addOn.id,
-        name: addOn.id,
-        source: 'konnect-managed',
-        partial: undefined,
-        addOn,
-      }))
+      // Only managed-cache add-ons (or unknown kind) get a placeholder
+      const kind = addOn.config?.kind
+      const isManagedCache = kind === 'managed-cache.v0' || kind === 'managed_cache.v0' || kind == null
+      if (!isManagedCache) return false
+
+      // Must belong to this CP (or have no CP id)
+      const addOnCpId = addOn.owner?.control_plane_id
+      if (addOnCpId != null && addOnCpId !== cpId) return false
+
+      return true
+    })
+
+    const placeholderRows: EntityRow[] = initializingAddOns.map((addOn) => ({
+      id: addOn.id,
+      name: addOn.name ?? addOn.id,
+      source: 'konnect-managed',
+      partial: undefined,
+      addOn,
+    }))
 
     const allRows = [...rows, ...placeholderRows]
 
@@ -643,7 +657,7 @@ const refreshList = (): void => {
 }
 
 // Type label from partial's Redis type (type + config). Used for self-managed rows in combined list
-const getRedisTypeLabelFromPartial = (fields: RedisConfigurationFields): string => {
+const getRedisTypeLabelFromPartial = (fields: RedisConfigurationFields): string | undefined => {
   const redisType = getRedisType(fields)
   switch (redisType) {
     case RedisType.HOST_PORT_CE:
@@ -655,23 +669,31 @@ const getRedisTypeLabelFromPartial = (fields: RedisConfigurationFields): string 
     case RedisType.CLUSTER:
       return `${t('form.options.type.cluster')} - ${t('form.options.type.enterprise')}`
     default:
-      return '—'
+      return
   }
 }
 
-const renderRedisType = (item: RedisConfigurationFields | EntityRow): string => {
-  const fields = (item as EntityRow).partial ?? item
+const renderRedisType = (item: RedisConfigurationFields | EntityRow): string | undefined => {
+  const row = item as EntityRow
+  // Placeholder row: add-on exists but Koko partial not ready yet, show initializing state
+  if (isKonnectManagedRedisEnabled.value && row.source === 'konnect-managed' && !row.partial) {
+    return t('list.type.konnect_managed_redis_initializing')
+  }
+
+  const fields = row.partial ?? item
   if (!fields || typeof (fields as Record<string, unknown>).type === 'undefined') {
-    return '—'
+    return
   }
   const typedFields = fields as RedisConfigurationFields
   const redisType = getRedisType(typedFields)
   const typeLabelFromPartial = getRedisTypeLabelFromPartial(typedFields)
 
-  if (isKonnectManagedRedisEnabled.value && (item as EntityRow).source) {
-    return (item as EntityRow).source === 'konnect-managed'
+  if (isKonnectManagedRedisEnabled.value && row.source) {
+    return row.source === 'konnect-managed'
       ? t('list.type.konnect_managed_redis')
-      : `${t('list.type.self_managed_redis')} (${typeLabelFromPartial})`
+      : typeLabelFromPartial
+        ? `${t('list.type.self_managed_redis')} (${typeLabelFromPartial})`
+        : t('list.type.self_managed_redis')
   }
   // Single-source list: show type with Open Source / Enterprise suffix
   const suffix = redisType === RedisType.HOST_PORT_CE
@@ -756,7 +778,7 @@ watch(props.canCreate, async (canCreate) => {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    margin-right: $kui-space-70;
+    margin-right: $kui-space-50;
   }
 }
 </style>

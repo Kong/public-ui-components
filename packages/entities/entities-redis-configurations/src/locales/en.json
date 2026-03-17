@@ -315,6 +315,7 @@
     },
     "type": {
       "konnect_managed_redis": "Konnect-managed Redis",
+      "konnect_managed_redis_initializing": "Konnect-managed Redis (Initializing)",
       "self_managed_redis": "Self-managed Redis"
     },
     "empty_state": {
