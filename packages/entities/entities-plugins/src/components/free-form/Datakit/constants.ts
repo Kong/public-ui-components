@@ -28,6 +28,9 @@ export const CONFIG_NODE_TYPES = [
   'cache',
   'xml_to_json',
   'json_to_xml',
+  'jwt_decode',
+  'jwt_sign',
+  'jwt_verify',
 ] as const
 
 export const M2_NODE_TYPES: ConfigNodeType[] = [
@@ -47,4 +50,20 @@ export const HTTP_METHODS = [
   'OPTIONS',
   'TRACE',
   'CONNECT',
+] as const
+
+export const JWT_ALGORITHMS = [
+  'EdDSA',
+  'ES256',
+  'ES384',
+  'ES512',
+  'HS256',
+  'HS384',
+  'HS512',
+  'PS256',
+  'PS384',
+  'PS512',
+  'RS256',
+  'RS384',
+  'RS512',
 ] as const

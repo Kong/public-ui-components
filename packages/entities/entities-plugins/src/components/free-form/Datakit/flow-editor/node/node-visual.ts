@@ -19,6 +19,7 @@ import {
   ArrowSplitIcon,
   CloudIcon,
   CodeblockIcon,
+  EditSquareIcon,
   GatewayIcon,
   KeyIcon,
   NetworkIcon,
@@ -29,6 +30,8 @@ import {
   DataObjectIcon,
 } from '@kong/icons'
 import type { NodeType, NodeVisual } from '../../types'
+import JwtDecodeIcon from './icons/JwtDecodeIcon.vue'
+import JwtVerifyIcon from './icons/JwtVerifyIcon.vue'
 
 export const NODE_VISUAL: Record<NodeType, NodeVisual> = {
   call: {
@@ -92,6 +95,27 @@ export const NODE_VISUAL: Record<NodeType, NodeVisual> = {
     colors: {
       foreground: KUI_COLOR_TEXT,
       background: KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER,
+    },
+  },
+  jwt_decode: {
+    icon: JwtDecodeIcon,
+    colors: {
+      foreground: KUI_COLOR_TEXT_WARNING,
+      background: KUI_COLOR_BACKGROUND_WARNING_WEAKEST,
+    },
+  },
+  jwt_sign: {
+    icon: EditSquareIcon,
+    colors: {
+      foreground: KUI_COLOR_TEXT_PRIMARY,
+      background: KUI_COLOR_TEXT_PRIMARY_WEAKEST,
+    },
+  },
+  jwt_verify: {
+    icon: JwtVerifyIcon,
+    colors: {
+      foreground: KUI_COLOR_TEXT_SUCCESS,
+      background: KUI_COLOR_TEXT_SUCCESS_WEAKEST,
     },
   },
   vault: {

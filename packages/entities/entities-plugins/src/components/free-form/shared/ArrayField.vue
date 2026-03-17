@@ -67,18 +67,20 @@
           <div class="ff-array-field-item-content">
             <slot
               v-if="$slots.item"
-              data-autofocus
+              :autofocus="true"
               :field-name="String(index)"
               :index="index"
               name="item"
             />
             <StringArrayField
-              v-if="subSchema.type === 'array' && subSchema.elements.type === 'string'"
+              v-else-if="subSchema.type === 'array' && subSchema.elements.type === 'string'"
+              autofocus
               :help="t('plugins.free-form.tag_helper')"
               :name="String(index)"
             />
             <Field
               v-else
+              autofocus
               :name="String(index)"
             />
           </div>
@@ -133,12 +135,14 @@
           >
             <slot
               v-if="$slots.item"
+              :autofocus="true"
               :field-name="String(index)"
               :index="index"
               name="item"
             />
             <Field
               v-else
+              autofocus
               :name="String(index)"
             />
           </div>
@@ -194,10 +198,10 @@ const emit = defineEmits<{
 
 defineSlots<{
   item(props: {
+    autofocus?: boolean
     index: number
     /** for named slot, the field name use `fieldName` instead */
     fieldName: string
-    'data-autofocus'?: boolean
   }): any
   tooltip(): any
 }>()
@@ -294,10 +298,17 @@ function focus(index: number) {
   }
 
   const i = Math.max(0, Math.min(index, realItems.value.length - 1))
-  root.value
-    .querySelector<HTMLElement>(`[data-index="${i}"] [data-autofocus]`)
-    ?.focus()
+  const autofocusTarget = root.value.querySelector<HTMLElement>(`[data-index="${i}"] [data-autofocus="true"]`)
+  // Custom slot content may mark either the focusable control itself or a wrapper around it.
+  const focusTarget = autofocusTarget?.matches(FOCUSABLE_SELECTOR)
+    ? autofocusTarget
+    : autofocusTarget?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
+      ?? root.value.querySelector<HTMLElement>(`[data-index="${i}"] ${FOCUSABLE_SELECTOR}`)
+
+  focusTarget?.focus()
 }
+
+const FOCUSABLE_SELECTOR = 'input:not(:disabled), textarea:not(:disabled), select:not(:disabled), button:not(:disabled), [contenteditable="true"], [tabindex]:not([tabindex="-1"]):not(:disabled)'
 
 const stickyTop = computed(() => {
   const { appearance, stickyTabs } = props

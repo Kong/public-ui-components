@@ -904,6 +904,21 @@
               "summary": "Transform JSON to XML",
               "description": "Transform JSON to XML."
             },
+            "jwt_decode": {
+              "name": "jwt_decode",
+              "summary": "Decode JWT headers and claims",
+              "description": "Parse a JWT without verifying its signature."
+            },
+            "jwt_sign": {
+              "name": "jwt_sign",
+              "summary": "Create and sign JWTs",
+              "description": "Generate a signed JWT from configured claims and a signing key."
+            },
+            "jwt_verify": {
+              "name": "jwt_verify",
+              "summary": "Verify JWT signature and claims",
+              "description": "Verify a JWT signature and validate claims such as exp, nbf, iss, and aud."
+            },
             "request": {
               "name": "request",
               "description": "Reads incoming client request properties. You cannot specify request node input."
@@ -958,6 +973,15 @@
             },
             "branch": {
               "placeholder": "Select nodes"
+            },
+            "jwt": {
+              "static_claims": {
+                "label": "Static claims",
+                "help": "Enter a JSON object. It will be stored as the node's static claims map.",
+                "errors": {
+                  "invalid_json_object": "Static claims must be a valid JSON object"
+                }
+              }
             },
             "errors": {
               "invalid_identifier_format": "{fieldName} must start with a letter or underscore and contain only letters, numbers, underscores, or hyphens",
