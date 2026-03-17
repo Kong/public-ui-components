@@ -43,7 +43,7 @@ interface InputProps extends BaseFieldProps {
   modelValue?: boolean
 }
 
-const { autofocus = undefined, name, ...props } = defineProps<InputProps>()
+const { autofocus, name, ...props } = defineProps<InputProps>()
 const { value: fieldValue, hide, emptyOrDefaultValue, ...field } = useField<boolean>(toRef(() => name))
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]

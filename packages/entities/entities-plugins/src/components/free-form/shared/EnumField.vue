@@ -71,7 +71,7 @@ const {
   name,
   items,
   multiple = undefined,
-  autofocus = undefined,
+  autofocus,
   ...props
 } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()

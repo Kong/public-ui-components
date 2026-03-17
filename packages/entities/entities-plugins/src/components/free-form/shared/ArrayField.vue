@@ -298,17 +298,31 @@ function focus(index: number) {
   }
 
   const i = Math.max(0, Math.min(index, realItems.value.length - 1))
-  const autofocusTarget = root.value.querySelector<HTMLElement>(`[data-index="${i}"] [data-autofocus="true"]`)
-  // Custom slot content may mark either the focusable control itself or a wrapper around it.
-  const focusTarget = autofocusTarget?.matches(FOCUSABLE_SELECTOR)
-    ? autofocusTarget
-    : autofocusTarget?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
-      ?? root.value.querySelector<HTMLElement>(`[data-index="${i}"] ${FOCUSABLE_SELECTOR}`)
+  const itemRoot = root.value.querySelector<HTMLElement>(`[data-index="${i}"]`)
+  if (!itemRoot) {
+    return
+  }
+
+  const focusTarget = findFocusTarget(itemRoot)
 
   focusTarget?.focus()
 }
 
 const FOCUSABLE_SELECTOR = 'input:not(:disabled), textarea:not(:disabled), select:not(:disabled), button:not(:disabled), [contenteditable="true"], [tabindex]:not([tabindex="-1"]):not(:disabled)'
+
+function findFocusTarget(itemRoot: HTMLElement): HTMLElement | null {
+  const autofocusTarget = itemRoot.querySelector<HTMLElement>('[data-autofocus="true"]')
+  if (!autofocusTarget) {
+    return itemRoot.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
+  }
+
+  // Custom slot content may mark either the focusable control itself or a wrapper around it.
+  if (autofocusTarget.matches(FOCUSABLE_SELECTOR)) {
+    return autofocusTarget
+  }
+
+  return autofocusTarget.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
+}
 
 const stickyTop = computed(() => {
   const { appearance, stickyTabs } = props

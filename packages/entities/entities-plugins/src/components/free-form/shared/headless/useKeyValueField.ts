@@ -120,16 +120,17 @@ export function useKeyValueField<
     const newValue: Record<TKey, TValue> | null | undefined = normalizedEntries.length
       ? Object.fromEntries(normalizedEntries)
       : emptyOrDefaultValue?.value
-    const currentValue = fieldValue!.value ?? emptyOrDefaultValue?.value
+    const currentValue = fieldValue!.value
+    const currentOrDefaultValue = currentValue ?? emptyOrDefaultValue?.value
 
     // Avoid updating fieldValue to `null` from `{}`
     // Currently, the UI does not distinguish between `null` and `{}` well, we'll improve it later. KM-2069
-    if (newValue === null && fieldValue!.value !== null && typeof fieldValue!.value === 'object' && Object.keys(fieldValue!.value).length === 0) {
+    if (newValue === null && currentValue !== null && typeof currentValue === 'object' && Object.keys(currentValue).length === 0) {
       return
     }
 
     // Ignore draft-only edits until they produce a different serialized value.
-    if (isEqual(newValue, currentValue)) {
+    if (isEqual(newValue, currentOrDefaultValue)) {
       return
     }
 

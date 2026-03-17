@@ -69,9 +69,7 @@ export interface NumberFieldProps extends InputProps, BaseFieldProps {
 }
 
 const {
-  // Props of type boolean cannot distinguish between `undefined` and `false` in vue.
-  // so we need to show them declaring their default value as undefined
-  autofocus = undefined,
+  autofocus,
   showVaultSecretPicker = undefined,
   name,
   ...props

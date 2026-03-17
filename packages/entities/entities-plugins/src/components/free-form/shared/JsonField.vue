@@ -61,7 +61,7 @@ interface StringFieldProps extends BaseFieldProps {
 type ValueType = Record<string, any> | string | null
 
 const {
-  autofocus = undefined,
+  autofocus,
   name,
   ...props
 } = defineProps<StringFieldProps>()

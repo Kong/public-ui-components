@@ -51,7 +51,7 @@ interface ForeignFieldProps extends InputProps, BaseFieldProps {
 }
 
 const {
-  autofocus = undefined,
+  autofocus,
   name,
   ...props
 } = defineProps<ForeignFieldProps>()

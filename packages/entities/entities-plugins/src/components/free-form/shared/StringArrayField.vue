@@ -58,7 +58,7 @@ interface StringFieldProps extends BaseFieldProps {
 }
 
 const {
-  autofocus = undefined,
+  autofocus,
   name,
   ...props
 } = defineProps<StringFieldProps>()
