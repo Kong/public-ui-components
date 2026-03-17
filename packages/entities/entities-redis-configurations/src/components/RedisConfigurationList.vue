@@ -754,5 +754,9 @@ watch(props.canCreate, async (canCreate) => {
 <style lang="scss" scoped>
 .kong-ui-entities-partials-list {
   width: 100%;
+
+  .kong-ui-entity-filter-input {
+    margin-right: $kui-space-70;
+  }
 }
 </style>
