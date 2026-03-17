@@ -336,13 +336,18 @@ const disableSorting = computed((): boolean => props.config.app !== 'kongManager
 
 const { fetcher: rawFetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl)
 
-const pageSize = 1000 // the API returns all partials, so we have to set a high page size to filter them on the frontend
+// the API returns all partials, so we have to set a high page size to filter them on the frontend
+const partialsPageSize = 1000
+
+// Cloud Gateways add-ons API limits page size at 100
+const addOnsPageSize = 100
 
 type ManagedCacheAddOn = {
   id: string
   config?: {
     state_metadata?: {
       cache_config_id?: string
+      control_plane_id?: string
     }
   }
 }
@@ -357,7 +362,7 @@ const isRedisPartial = (item: RedisConfigurationResponse): boolean =>
 const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse> => {
   // Legacy Konnect/ KM: use the existing partials-only fetcher
   if (!isKonnectManagedRedisEnabled.value) {
-    const res = await rawFetcher({ ...params, pageSize })
+    const res = await rawFetcher({ ...params, pageSize: partialsPageSize })
     res.data = res.data.filter(isRedisPartial)
     return res
   }
@@ -367,7 +372,7 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
     errorMessage.value = null
 
     // Fetch partials
-    const partialsRes = await rawFetcher({ ...params, pageSize })
+    const partialsRes = await rawFetcher({ ...params, pageSize: partialsPageSize })
     const partials: RedisConfigurationResponse[] = partialsRes.data.filter(isRedisPartial)
 
     // Fetch managed-cache add-ons for this CP from Cloud Gateways
@@ -379,18 +384,8 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
     try {
       const addOnsResponse = await axiosInstance.get(addOnsUrl, {
         params: {
-          'page[size]': pageSize,
+          'page[size]': addOnsPageSize,
           'page[number]': 1,
-          filter: {
-            owner: {
-              kind: 'control-plane',
-              control_plane_id: konnectConfig.controlPlaneId,
-              ...(konnectConfig.controlPlaneGeo ? { control_plane_geo: konnectConfig.controlPlaneGeo } : {}),
-            },
-            config: {
-              kind: 'managed-cache.v0',
-            },
-          },
         },
       })
       addOns = (addOnsResponse.data?.data ?? []) as ManagedCacheAddOn[]
@@ -434,9 +429,13 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
     // state_metadata.cache_config_id is empty, so the join above won't find a match and the Redis partial will not yet exist. To avoid showing an empty list while the cache
     // initializes, we surface a placeholder row derived from that `initializing` add-on until a real partial appears
     const partialIds = new Set(partials.map(partial => partial.id))
-    const initializingAddOns = addOns.filter(addOn =>
-      !addOn.config?.state_metadata?.cache_config_id,
-    )
+    const initializingAddOns = addOns
+      // Cloud Gateways API doesn't support filtering so filter client-side for managed-cache add-ons that belong to this CP
+      .filter(addOn =>
+        (addOn.config as any)?.kind === 'managed-cache.v0' &&
+        addOn.config?.state_metadata?.control_plane_id === konnectConfig.controlPlaneId,
+      )
+      .filter(addOn => !addOn.config?.state_metadata?.cache_config_id)
 
     const placeholderRows: EntityRow[] = initializingAddOns
       // Doon't create a placeholder if we already have a partial row
