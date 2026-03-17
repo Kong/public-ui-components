@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.13.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.32...@kong-ui-public/analytics-chart@10.13.33) (2026-03-17)
+
+
+### Bug Fixes
+
+* chart tooltip reactivitiy issue ([#3015](https://github.com/Kong/public-ui-components/issues/3015)) ([e640c47](https://github.com/Kong/public-ui-components/commit/e640c476cd0de087d99946e463e5f1efe9f480d8))
+
+
+
+
+
 ## [10.13.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.31...@kong-ui-public/analytics-chart@10.13.32) (2026-03-13)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
