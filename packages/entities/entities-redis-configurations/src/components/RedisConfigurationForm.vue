@@ -86,6 +86,10 @@
             data-testid="redis-tags-input"
             :help="t('form.fields.tags.help')"
             :label="t('form.fields.tags.label')"
+            :label-attributes="{
+              info: t('form.fields.tags.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
             :placeholder="t('form.fields.tags.placeholder')"
             :readonly="form.readonly"
           />
