@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.11.0...@kong-ui-public/entities-redis-configurations@1.12.0) (2026-03-16)
+
+
+### Features
+
+* **self-managed-redis:** refactor existing form [khcp-91713] ([#2991](https://github.com/Kong/public-ui-components/issues/2991)) ([38649d1](https://github.com/Kong/public-ui-components/commit/38649d1d64d13232c157a9dbbbccebc3bd9fe090))
+
+
+
+
+
 # [1.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.10.0...@kong-ui-public/entities-redis-configurations@1.11.0) (2026-03-10)
 
 

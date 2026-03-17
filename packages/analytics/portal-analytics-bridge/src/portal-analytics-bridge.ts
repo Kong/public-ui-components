@@ -5,6 +5,7 @@ import type {
   AnalyticsBridge,
   AnalyticsConfigV2,
   AnalyticsRetentionMs,
+  DatasourceConfig,
 } from '@kong-ui-public/analytics-utilities'
 
 // Don't import the constant: goal is to reduce bundle size.
@@ -38,12 +39,17 @@ const portalAnalyticsBridge: Plugin<ProviderOptions> = {
       throw new Error('Failed to retrieve analytics configuration')
     }
 
+    const datasourceConfigFn = async (): Promise<DatasourceConfig[]> => {
+      return Promise.resolve([])
+    }
+
     // We don't currently use feature flags in Portal.
     const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = (_key, defaultValue) => defaultValue
 
     const analyticsBridge: AnalyticsBridge = {
       queryFn,
       configFn,
+      datasourceConfigFn,
       evaluateFeatureFlagFn,
     }
 

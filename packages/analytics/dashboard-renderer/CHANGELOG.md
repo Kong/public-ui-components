@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.17...@kong-ui-public/dashboard-renderer@8.8.0) (2026-03-13)
+
+
+### Features
+
+* datasource config store ([#2992](https://github.com/Kong/public-ui-components/issues/2992)) ([2db9601](https://github.com/Kong/public-ui-components/commit/2db960179ece42681cc07fc3e646e6ae04252c15))
+
+
+
+
+
 ## [8.7.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.16...@kong-ui-public/dashboard-renderer@8.7.17) (2026-03-11)
 
 

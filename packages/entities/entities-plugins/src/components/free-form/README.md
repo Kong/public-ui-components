@@ -26,7 +26,8 @@ free-form/
 │   ├── RadioField.vue       # Radio button groups
 │   ├── EnhancedInput.vue    # Base input wrapper (help text, errors, tooltips)
 │   ├── AdvancedFields.vue   # Collapsible advanced fields section
-│   ├── VFGField.vue         # Legacy VFG bridge (for enabled, scope, tags, protocols)
+│   ├── SwitchField.vue      # Boolean toggle switch (KInputSwitch)
+│   ├── ScopeEntityField.vue # Scope entity selector (service, route, consumer, consumer_group)
 │   ├── CodeEditor.vue       # Code editor component
 │   ├── RedisConfigCard.vue  # Redis configuration card
 │   ├── RedisSelector.vue    # Redis partial instance selector
@@ -184,7 +185,7 @@ Constraints:
 
 All plugin forms use `StandardLayout` (`shared/layout/StandardLayout.vue`) as the unified layout component. It provides a 3-step form structure:
 
-1. **Plugin Scope** — Global vs Scoped (service/route/consumer/consumer_group) via radio buttons + VFGField for entity selection
+1. **Plugin Scope** — Global vs Scoped (service/route/consumer/consumer_group) via radio buttons + ScopeEntityField for entity selection
 2. **Plugin Configuration** — Free-form rendered config fields via default slot
 3. **General Info** — enabled, instance_name, tags, protocols, condition
 
@@ -250,8 +251,8 @@ Key props passed to free-form components:
 |---|---|---|
 | `schema` | `FormSchema` | Raw form schema from API |
 | `model` | `record` | `Record<string, any>` | Plugin data |
-| `formSchema` | `any` | Legacy VFG schema (for VFGField bridge) |
-| `formModel` | `formOptions` | `any` | VFG state |
+| `formSchema` | `any` | Legacy VFG schema (for scope and general info field metadata) |
+| `formModel` | `Record<string, any>` | Legacy form model (for scope initialization) |
 | `isEditing` | `boolean` | New vs edit mode |
 | `renderRules` | `RenderRules` | From `PLUGIN_METADATA[pluginName].freeformRenderRules` |
 | `onFormChange` | `(value) => void` | Callback when free-form data changes |

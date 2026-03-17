@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "9.168.2",
+  "version": "9.170.0",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -70,8 +70,8 @@
     "@kong/design-tokens": "1.18.2",
     "@kong/icons": "^1.45.0",
     "@kong/kongponents": "9.50.0",
-    "@playwright/experimental-ct-vue": "^1.58.0",
-    "@playwright/test": "^1.58.0",
+    "@playwright/experimental-ct-vue": "^1.58.2",
+    "@playwright/test": "^1.58.2",
     "@shikijs/core": "^3.21.0",
     "@shikijs/engine-javascript": "^3.21.0",
     "@shikijs/langs": "^3.21.0",
