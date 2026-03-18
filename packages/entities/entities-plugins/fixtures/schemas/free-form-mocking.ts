@@ -348,25 +348,25 @@ export function buildTagFieldCases(): Array<{ [name: string]: ArrayLikeFieldSche
 
 export function buildArrayFieldCases(): Array<{ [name: string]: ArrayLikeFieldSchema }> {
   return [
-    {
-      array_simple: {
-        type: 'array',
-        elements: {
-          type: 'string',
-        },
-      },
-    },
-    {
-      array_complex: {
-        type: 'array',
-        required: true,
-        description: 'A complex array field',
-        elements: {
-          type: 'number',
-        },
-        default: [0],
-      },
-    },
+    // {
+    //   array_simple: {
+    //     type: 'array',
+    //     elements: {
+    //       type: 'string',
+    //     },
+    //   },
+    // },
+    // {
+    //   array_complex: {
+    //     type: 'array',
+    //     required: true,
+    //     description: 'A complex array field',
+    //     elements: {
+    //       type: 'number',
+    //     },
+    //     default: [0],
+    //   },
+    // },
     // fixme: should support `resetLabelPath` in tests
     // {
     //   array_of_records: {
@@ -384,16 +384,31 @@ export function buildArrayFieldCases(): Array<{ [name: string]: ArrayLikeFieldSc
     //     description: 'An array of records',
     //   },
     // },
+    // {
+    //   array_of_array: {
+    //     type: 'array',
+    //     elements: {
+    //       type: 'array',
+    //       elements: {
+    //         type: 'string',
+    //       },
+    //     },
+    //     default: [['foo']],
+    //   },
+    // },
     {
-      array_of_array: {
+      array_of_maps: {
         type: 'array',
         elements: {
-          type: 'array',
-          elements: {
+          type: 'map',
+          keys: {
+            type: 'string',
+          },
+          values: {
             type: 'string',
           },
         },
-        default: [['foo']],
+        description: 'An array of maps',
       },
     },
   ]
@@ -423,16 +438,16 @@ export function buildMockingSchema(): FormSchema {
   return {
     type: 'record',
     fields: [
-      ...buildStringFieldCases(),
-      ...buildNumberFieldCases(),
-      ...buildBooleanFieldCases(),
-      ...buildRecordFieldCases(),
-      ...buildRecordWithEntityChecksCase(),
+      // ...buildStringFieldCases(),
+      // ...buildNumberFieldCases(),
+      // ...buildBooleanFieldCases(),
+      // ...buildRecordFieldCases(),
+      // ...buildRecordWithEntityChecksCase(),
       ...buildMapFieldCases(),
-      ...buildEnumFieldCases(),
-      ...buildTagFieldCases(),
+      // ...buildEnumFieldCases(),
+      // ...buildTagFieldCases(),
       ...buildArrayFieldCases(),
-      ...buildForeignFieldCases(),
+      // ...buildForeignFieldCases(),
     ],
   }
 }

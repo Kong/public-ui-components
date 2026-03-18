@@ -24,26 +24,26 @@
         <div class="dk-inputs-map-field-entry-content">
           <KInput
             :id="`ff-kv-entry-key-${field.path.value}.${index}`"
-            v-model.trim="entry.key"
             class="ff-kv-field-entry-key"
             :data-key-input="index"
             :data-testid="`ff-key-${field.path.value}.${index}`"
-            :error="!!errorMap[entry.id]"
-            :error-message="errorMap[entry.id]"
+            :error="errorMap.has(entry.id)"
+            :error-message="errorMap.get(entry.id)"
+            :model-value="entry.key"
             :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input_name.placeholder')"
             @blur="handleInputsNameBlur(entry)"
             @change="handleInputsNameChange(entry)"
             @focus="handleBeforeInputsNameChange(entry)"
-            @update:model-value="validateFieldName(entry)"
+            @update:model-value="v => handleKeyInput(entry.id, v)"
           />
           <KSelect
-            v-model="entry.value"
             class="ff-kv-field-entry-value"
             clearable
             :data-testid="`ff-value-${field.path.value}.${index}`"
             enable-filtering
             :items="items"
             :label="t('plugins.free-form.datakit.flow_editor.node_properties.input.source')"
+            :model-value="(entry.value as IdConnection)"
             :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
             @change="selectItem => handleInputsValueChange(entry, selectItem?.value ?? null)"
           >
@@ -90,12 +90,12 @@ import { useKeyValueField } from '../../../shared/headless/useKeyValueField'
 import type {
   KeyValueFieldProps,
   KeyValueFieldEmits,
-  KVEntry,
 } from '../../../shared/headless/useKeyValueField'
+import type { KeyId } from '../../../shared/composables/kv'
 import type { FieldName, IdConnection } from '../../types'
 import type { InputOption, useNodeForm } from '../composables/useNodeForm'
 
-interface Props extends KeyValueFieldProps<FieldName, IdConnection> {
+interface Props extends KeyValueFieldProps<IdConnection> {
   items: InputOption[]
   fieldNameValidator: ReturnType<typeof useNodeForm>['fieldNameValidator']
 }
@@ -114,13 +114,14 @@ const {
   entries,
   addEntry,
   removeEntry,
+  updateKey,
   field,
-} = useKeyValueField<FieldName, IdConnection>(props, emit)
+} = useKeyValueField(props, emit)
 
 const { i18n: { t } } = useI18n()
 const root = useTemplateRef('root')
-const addingEntryId = ref<string | null>(null)
-const errorMap = ref<Record<string, string>>({})
+const addingEntryId = ref<KeyId | null>(null)
+const errorMap = ref(new Map<KeyId, string>())
 
 let fieldNameBeforeChange: FieldName
 
@@ -134,7 +135,7 @@ async function focus(index: number, type: 'key' | 'value' = 'key') {
 }
 
 function handleAddClick() {
-  const { id } = addEntry()
+  const id = addEntry()
 
   const index = entries.value.findIndex(({ key }) => !key)
   focus(index === -1 ? entries.value.length - 1 : index)
@@ -142,61 +143,73 @@ function handleAddClick() {
   addingEntryId.value = id
 }
 
-function handleRemoveEntry(entry: KVEntry<FieldName, IdConnection>) {
+type Entry = { id: KeyId, key: string, value: unknown }
+
+function handleRemoveEntry(entry: Entry) {
   removeEntry(entry.id)
   if (entry.id === addingEntryId.value) {
     addingEntryId.value = null
   }
   if (entry.key.trim() !== '') { // only emit remove if the field has a name
-    emit('remove:field', entry.key)
+    emit('remove:field', entry.key as FieldName)
   }
 }
 
-function handleBeforeInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
-  fieldNameBeforeChange = entry.key
+function getEntry(id: KeyId): Entry | undefined {
+  return entries.value.find(e => e.id === id)
 }
 
-function handleInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
+function handleKeyInput(id: KeyId, value: string) {
+  updateKey(id, value.trim())
+  const entry = getEntry(id)
+  if (entry) validateFieldName(entry)
+}
+
+function handleBeforeInputsNameChange(entry: Entry) {
+  fieldNameBeforeChange = entry.key as FieldName
+}
+
+function handleInputsNameChange(entry: Entry) {
   // Reset the value if the field name is invalid
   if (validateFieldName(entry)) {
-    entry.key = fieldNameBeforeChange
-    delete errorMap.value[entry.id]
+    updateKey(entry.id, fieldNameBeforeChange)
+    errorMap.value.delete(entry.id)
     return
   }
 
   if (entry.id === addingEntryId.value) {
     // add field
     if (entry.key.trim() === '') return // skip if the field name is empty
-    emit('add:field', entry.key, entry.value)
+    emit('add:field', entry.key as FieldName, entry.value as IdConnection)
     addingEntryId.value = null
   } else {
     // rename field
-    emit('rename:field', fieldNameBeforeChange, entry.key)
+    emit('rename:field', fieldNameBeforeChange, entry.key as FieldName)
   }
-  fieldNameBeforeChange = entry.key
+  fieldNameBeforeChange = entry.key as FieldName
 }
 
-function validateFieldName(entry: KVEntry<FieldName, IdConnection>) {
-  delete errorMap.value[entry.id]
+function validateFieldName(entry: Entry) {
+  errorMap.value.delete(entry.id)
   const err = props.fieldNameValidator(
     'input',
     fieldNameBeforeChange,
-    entry.key,
+    entry.key as FieldName,
   )
   if (err) {
-    errorMap.value[entry.id] = err
+    errorMap.value.set(entry.id, err)
     return err
   }
 }
 
-function handleInputsNameBlur(entry: KVEntry<FieldName, IdConnection>) {
+function handleInputsNameBlur(entry: Entry) {
   validateFieldName(entry)
 }
 
-function handleInputsValueChange(entry: KVEntry<FieldName, IdConnection>, value: IdConnection | null) {
+function handleInputsValueChange(entry: Entry, value: IdConnection | null) {
   // skip if the field hasn't been created
   if (entry.id === addingEntryId.value) return
-  emit('change:inputs', entry.key, value)
+  emit('change:inputs', entry.key as FieldName, value)
 }
 
 watch(() => entries.value, (newEntries) => {

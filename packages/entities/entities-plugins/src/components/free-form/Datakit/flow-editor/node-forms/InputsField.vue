@@ -77,6 +77,9 @@ import SourceItem from './SourceItem.vue'
 
 defineProps<{
   items: InputOption[]
+  /**
+   * @deprecated
+   */
   fieldNames: FieldName[]
   fieldNameValidator: ReturnType<typeof useNodeForm>['fieldNameValidator']
   nodeType: NodeType

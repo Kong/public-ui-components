@@ -31,7 +31,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
 
   const schema = computed(() => getSchema<TSchema>(fieldPath.value))
   const hide = computed(() => isFieldHidden(fieldPath.value))
-  const emptyOrDefaultValue = computed(() => getEmptyOrDefault(fieldPath.value))
+  const emptyOrDefaultValue = computed(() => getEmptyOrDefault<TData>(fieldPath.value))
 
   if (!schema.value) {
     return {

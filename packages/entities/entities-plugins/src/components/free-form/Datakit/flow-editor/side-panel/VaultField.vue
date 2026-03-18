@@ -59,7 +59,7 @@
     </div>
 
     <VaultSecretPicker
-      :is-editing="!!selectedEntry && !creatingEntry"
+      :is-editing="!!selectedEntry && !creatingEntryId"
       :secret-name="selectedEntry?.key"
       :secret-ref="selectedEntry?.value"
       :validate-name="validateName"
@@ -77,9 +77,9 @@ import VaultSecretPicker from '../VaultSecretPicker.vue'
 import type {
   KeyValueFieldProps,
   KeyValueFieldEmits,
-  KVEntry,
 } from '../../../shared/headless/useKeyValueField'
 import { useKeyValueField } from '../../../shared/headless/useKeyValueField'
+import type { KeyId } from '../../../shared/composables/kv'
 import {
   KUI_COLOR_TEXT_NEUTRAL,
   KUI_COLOR_TEXT,
@@ -92,8 +92,6 @@ interface Emits extends KeyValueFieldEmits {
   'remove': [name: FieldName]
 }
 
-type VaultKVEntry = KVEntry<FieldName, string>
-
 const props = defineProps<KeyValueFieldProps<FieldName>>()
 const emit = defineEmits<Emits>()
 
@@ -101,41 +99,48 @@ const {
   entries,
   addEntry,
   removeEntry,
-} = useKeyValueField<FieldName, string>(props, emit)
-const selectedEntry = ref<VaultKVEntry | null>(null)
-const creatingEntry = ref<VaultKVEntry | null>(null)
+  updateKey,
+  updateValue,
+} = useKeyValueField<string>(props, emit)
+const selectedEntryId = ref<KeyId | null>(null)
+const creatingEntryId = ref<KeyId | null>(null)
 
 const { i18n: { t } } = composables.useI18n()
+
+const selectedEntry = computed(() => {
+  if (!selectedEntryId.value) return null
+  return entries.value.find(e => e.id === selectedEntryId.value) ?? null
+})
 
 const vaultNames = computed(() => {
   return new Set(entries.value.map((e) => e.key))
 })
 
 const handleAdd = () => {
-  const newEntry = addEntry()
-  creatingEntry.value = newEntry
-  selectedEntry.value = newEntry
+  const id = addEntry()
+  creatingEntryId.value = id
+  selectedEntryId.value = id
 }
 
 const closeVaultSecretPicker = () => {
-  selectedEntry.value = null
-  if (creatingEntry.value) {
-    removeEntry(creatingEntry.value.id)
-    creatingEntry.value = null
+  selectedEntryId.value = null
+  if (creatingEntryId.value) {
+    removeEntry(creatingEntryId.value)
+    creatingEntryId.value = null
   }
 }
 
 const handleVaultSecretSelected = (data: { secretRef: string, secretName: string }) => {
   if (!selectedEntry.value) throw new Error('no selected entry')
-  const oldName = selectedEntry.value.key
+  const oldName = selectedEntry.value.key as FieldName
   const hasNameChanged = oldName !== data.secretName
   const hasValueChanged = selectedEntry.value.value !== data.secretRef
   const hasChanged = hasNameChanged || hasValueChanged
 
-  selectedEntry.value!.value = data.secretRef
-  selectedEntry.value!.key = data.secretName as FieldName
+  updateValue(selectedEntry.value.id, data.secretRef)
+  updateKey(selectedEntry.value.id, data.secretName)
 
-  if (creatingEntry.value) {
+  if (creatingEntryId.value) {
     emit('add', data.secretName as FieldName, data.secretRef)
   } else if (hasChanged) {
     emit(
@@ -146,17 +151,17 @@ const handleVaultSecretSelected = (data: { secretRef: string, secretName: string
     )
   }
 
-  creatingEntry.value = null
+  creatingEntryId.value = null
   closeVaultSecretPicker()
 }
 
-const handleEdit = (entry: VaultKVEntry) => {
-  selectedEntry.value = entry
+const handleEdit = (entry: { id: KeyId }) => {
+  selectedEntryId.value = entry.id
 }
 
-const handleRemove = (entry: VaultKVEntry) => {
+const handleRemove = (entry: { id: KeyId, key: string }) => {
   removeEntry(entry.id)
-  emit('remove', entry.key)
+  emit('remove', entry.key as FieldName)
 }
 
 const validateName = (name: string, isEditing: boolean): string | undefined => {
