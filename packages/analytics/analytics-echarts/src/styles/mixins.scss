@@ -1,5 +1,3 @@
-
-@use "@kong/design-tokens/tokens/scss/variables" as *;
 @mixin scrollbarBase() {
   -ms-overflow-style: thin;
   scrollbar-color: var(--kui-color-background-disabled, $kui-color-background-disabled) var(--kui-color-background-transparent, $kui-color-background-transparent);

@@ -63,7 +63,6 @@ const { i18n } = composables.useI18n()
 </script>
 
 <style lang="scss" scoped>
-@use "@kong/design-tokens/tokens/scss/variables" as *;
 @use "../styles/mixins.scss" as *;
 
 .legend-container {
