@@ -45,6 +45,8 @@
       @update:model-value="setConfig('ssl_verify')"
     />
 
+    <NodeFormDivider />
+
     <InputsField
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
@@ -60,6 +62,7 @@
 import Form from '../../../shared/Form.vue'
 import HttpMethodField from './HttpMethodField.vue'
 import InputsField from './InputsField.vue'
+import NodeFormDivider from './NodeFormDivider.vue'
 import useI18n from '../../../../../composables/useI18n'
 import NumberField from '../../../shared/NumberField.vue'
 import BooleanField from '../../../shared/BooleanField.vue'

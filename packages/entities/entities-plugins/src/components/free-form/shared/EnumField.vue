@@ -13,6 +13,7 @@
     v-model="fieldModel"
     class="ff-enum-field"
     :clearable="!fieldAttrs.required"
+    :data-autofocus="autofocus ? 'true' : undefined"
     :data-testid="`ff-${field.path.value}`"
     :items="realItems"
     :kpop-attributes="{ 'data-testid': `ff-enum-${field.path.value}-items` }"
@@ -70,6 +71,7 @@ const {
   name,
   items,
   multiple = undefined,
+  autofocus,
   ...props
 } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()

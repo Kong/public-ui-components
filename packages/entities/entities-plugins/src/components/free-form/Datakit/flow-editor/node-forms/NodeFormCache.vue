@@ -29,6 +29,8 @@
       @update:model-value="ttlHandler.update"
     />
 
+    <NodeFormDivider />
+
     <InputsField
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
@@ -49,6 +51,7 @@ import BooleanField from '../../../shared/BooleanField.vue'
 import NumberField from '../../../shared/NumberField.vue'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
+import NodeFormDivider from './NodeFormDivider.vue'
 import useI18n from '../../../../../composables/useI18n'
 import {
   useNodeForm,
