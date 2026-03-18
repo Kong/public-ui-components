@@ -1,7 +1,7 @@
 import DashboardTile from './DashboardTile.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
-import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
+import { generateCrossSectionalData, generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { defineComponent, h, ref } from 'vue'
@@ -69,6 +69,7 @@ describe('<DashboardTile />', () => {
   }
 
   const mockContext: DashboardRendererContextInternal = {
+    chartRenderer: 'chartjs',
     filters: [],
     timeSpec: {
       type: 'relative',
@@ -101,6 +102,7 @@ describe('<DashboardTile />', () => {
     onDuplicateTile?: sinon.SinonSpy
     definition?: TileDefinition
     context?: DashboardRendererContextInternal
+    queryFn?: () => Promise<ExploreResultV4>
     extraProps?: Record<string, any>
     isFullscreen?: boolean
   }
@@ -111,6 +113,7 @@ describe('<DashboardTile />', () => {
     onDuplicateTile = cy.spy(),
     definition = mockTileDefinition,
     context = mockContext,
+    queryFn = mockQueryProvider.queryFn,
     extraProps = {},
     isFullscreen = false,
   }: MountOptions = {}) => {
@@ -133,7 +136,7 @@ describe('<DashboardTile />', () => {
       attrs,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+          [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
         },
       },
     })
@@ -151,6 +154,80 @@ describe('<DashboardTile />', () => {
     mount()
     cy.getTestId('tile-1').should('be.visible')
     cy.get('.title').should('contain.text', 'Test Chart')
+  })
+
+  it('uses Chart.js by default for timeseries tiles', () => {
+    mount()
+    cy.get('x-vue-echarts').should('not.exist')
+    cy.get('canvas').should('exist')
+  })
+
+  it('uses the ECharts renderer for timeseries tiles when context.chartRenderer is echarts', () => {
+    mount({
+      context: {
+        ...mockContext,
+        chartRenderer: 'echarts',
+      },
+    })
+    cy.get('x-vue-echarts').should('exist')
+  })
+
+  it('uses the ECharts renderer for cross-sectional bar tiles when context.chartRenderer is echarts', () => {
+    mount({
+      definition: {
+        ...mockTileDefinition,
+        chart: {
+          type: 'horizontal_bar',
+          chart_title: 'Bar Chart',
+        },
+        query: {
+          datasource: 'api_usage',
+          metrics: ['request_count'],
+          dimensions: ['route'],
+          filters: [],
+        },
+      },
+      context: {
+        ...mockContext,
+        chartRenderer: 'echarts',
+      },
+      queryFn: () => Promise.resolve(
+        generateCrossSectionalData(
+          [{ name: 'request_count', unit: 'count' }],
+          { route: ['route-1', 'route-2'] },
+        ) as ExploreResultV4,
+      ),
+    })
+    cy.get('x-vue-echarts').should('exist')
+  })
+
+  it('uses the ECharts renderer for donut tiles when context.chartRenderer is echarts', () => {
+    mount({
+      definition: {
+        ...mockTileDefinition,
+        chart: {
+          type: 'donut',
+          chart_title: 'Donut Chart',
+        },
+        query: {
+          datasource: 'api_usage',
+          metrics: ['request_count'],
+          dimensions: ['status_code'],
+          filters: [],
+        },
+      },
+      context: {
+        ...mockContext,
+        chartRenderer: 'echarts',
+      },
+      queryFn: () => Promise.resolve(
+        generateCrossSectionalData(
+          [{ name: 'request_count', unit: 'count' }],
+          { status_code: ['200', '500'] },
+        ) as ExploreResultV4,
+      ),
+    })
+    cy.get('x-vue-echarts').should('exist')
   })
 
   it('should emit chart-data when query resolves', () => {

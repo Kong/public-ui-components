@@ -5,6 +5,8 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
+export type ChartRenderer = 'chartjs' | 'echarts'
+
 export interface DashboardRendererContext {
   filters: AllFilters[]
   timeSpec?: TimeRangeV4
@@ -12,6 +14,7 @@ export interface DashboardRendererContext {
   refreshInterval?: number
   editable?: boolean
   showTileActions?: boolean
+  chartRenderer?: ChartRenderer
 }
 
 // The DashboardRenderer component fills in optional values before passing them down to the tile renderers.

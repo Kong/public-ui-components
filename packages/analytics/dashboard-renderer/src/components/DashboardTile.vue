@@ -184,11 +184,13 @@ import { type Component, computed, defineAsyncComponent, inject, nextTick, reado
 import { formatTime, TimePeriods, getFieldDataSources, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import '@kong-ui-public/analytics-chart/dist/style.css'
+import '@kong-ui-public/analytics-echarts/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
 import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
+import AnalyticsEchartsRenderer from './AnalyticsEchartsRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
@@ -284,7 +286,7 @@ const canShowTitleActions = computed((): boolean => canShowKebabMenu.value && !p
 
 const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || ('allow_csv_export' in props.definition.chart ? props.definition.chart.allow_csv_export : true) || props.context.editable)
 
-const rendererLookup: Record<DashboardTileType, Component | undefined> = {
+const chartJsRendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
   'horizontal_bar': BarChartRenderer,
@@ -298,6 +300,22 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'choropleth_map': GeoMapRendererAsync,
 }
 
+const echartsRendererLookup: Partial<Record<DashboardTileType, Component>> = {
+  'timeseries_line': AnalyticsEchartsRenderer,
+  'timeseries_bar': AnalyticsEchartsRenderer,
+  'horizontal_bar': AnalyticsEchartsRenderer,
+  'vertical_bar': AnalyticsEchartsRenderer,
+  'donut': AnalyticsEchartsRenderer,
+}
+
+const getRenderer = (type: DashboardTileType): Component | undefined => {
+  if (props.context.chartRenderer === 'echarts') {
+    return echartsRendererLookup[type] || chartJsRendererLookup[type]
+  }
+
+  return chartJsRendererLookup[type]
+}
+
 const componentEventHandlers = computed(() => ({
   ...(componentData.value?.rendererEvents.supportsRequests ? { 'select-chart-range': onSelectChartRange } : {}),
   ...(componentData.value?.rendererEvents.supportsZoom ? { 'zoom-time-range': onZoom } : {}),
@@ -307,7 +325,7 @@ const componentEventHandlers = computed(() => ({
 const componentData = computed(() => {
   // Ideally, Typescript would ensure that the prop types of the renderers match
   // the props that they're going to receive.  Unfortunately, actually doing this seems difficult.
-  const component = rendererLookup[props.definition.chart.type]
+  const component = getRenderer(props.definition.chart.type)
 
   const supportsRequests = !!(component as any)?.emits?.includes('select-chart-range')
   const supportsZoom = !!(component as any)?.emits?.includes('zoom-time-range')
