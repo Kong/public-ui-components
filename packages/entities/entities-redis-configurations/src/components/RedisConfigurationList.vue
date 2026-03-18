@@ -662,6 +662,12 @@ const confirmDelete = async (): Promise<void> => {
 
     isDeletePending.value = false
     isDeleteModalVisible.value = false
+
+    // Konnect-managed deletions can still keep placeholders around when transitioning from`initializing` -> `terminating`
+    // Restart from the initial delay for the next refresh cycle
+    if (isKonnectManagedRedisEnabled.value && entityToBeDeleted.value.source === 'konnect-managed') {
+      clearPolling()
+    }
     refreshList()
 
     // Emit the success event for the host app
