@@ -397,16 +397,28 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
       // no op - if the add-ons can't be fetched, we still show the partials self-managed Redis
     }
 
-    // Join add-ons to partials via state_metadata.cache_config_id === partial.id
-    // Konnect managed vs self-managed is derived from BE: when partial has tags, it is Konnect-managed
+    // Cloud Gateways add-ons are the 'source of truth' for the user-facing managed-cache name
+    // Once the Koko Redis partial exists, Cloud Gateways links it through `state_metadata.cache_config_id`
+    type ManagedCacheStateMetadata = { cache_config_id?: string }
+    type ManagedCacheConfigShape = { state_metadata?: ManagedCacheStateMetadata }
+
     const getCacheConfigId = (addOn: ManagedCacheAddOn): string | undefined => {
-      const config = (addOn.config ?? (addOn as Record<string, unknown>).attributes) as Record<string, unknown> | undefined
-      const meta = config?.state_metadata ?? (addOn as Record<string, unknown>).state_metadata
-      return (meta as { cache_config_id?: string } | undefined)?.cache_config_id
+      const managedCacheConfig = (addOn.config ?? (addOn as { attributes?: ManagedCacheConfigShape }).attributes) as ManagedCacheConfigShape | undefined
+      const meta = managedCacheConfig?.state_metadata ?? (addOn as { state_metadata?: ManagedCacheStateMetadata }).state_metadata
+      return meta?.cache_config_id
+    }
+
+    // The partials list can be very large (1000s), while add-ons are usually few. Build an index once to avoid an O(partials × add-ons) join
+    const addOnByCacheConfigId = new Map<string, ManagedCacheAddOn>()
+    for (const addOn of addOns) {
+      const cacheConfigId = getCacheConfigId(addOn)
+      if (cacheConfigId) {
+        addOnByCacheConfigId.set(cacheConfigId, addOn)
+      }
     }
 
     const rows: EntityRow[] = partials.map((partial) => {
-      const matchingAddOn = addOns.find((addOn) => getCacheConfigId(addOn) === partial.id)
+      const matchingAddOn = addOnByCacheConfigId.get(partial.id)
       const hasTags = Array.isArray(partial.tags) && partial.tags.length > 0
       const source: EntityRow['source'] = hasTags ? 'konnect-managed' : 'self-managed'
 
@@ -414,7 +426,8 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
         return {
           ...partial,
           id: partial.id,
-          name: partial.name,
+          // Keep the add-on name so the row label stays stable from 'initializing' to 'ready'
+          name: matchingAddOn.name ?? partial.name,
           source,
           partial,
           addOn: {

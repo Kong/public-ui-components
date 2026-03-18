@@ -299,4 +299,67 @@ describe('<RedisConfigurationList />', () => {
     cy.getTestId('redis-entity-empty-state').should('not.contain.text', 'Configure a Redis Configuration')
     cy.getTestId('redis-entity-empty-state').should('not.contain.text', 'New configuration')
   })
+
+  describe('combined list (partials + add-ons when isKonnectManagedRedisEnabled)', () => {
+    const combinedListPartials = {
+      data: [
+        { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
+        { ...partials.data[1], id: 'partial-2', name: 'konnect-managed-config', tags: ['managed'] },
+      ],
+      next: null,
+    }
+    const addOnsResponse = {
+      data: [
+        { id: 'addon-123', name: 'test cloud', config: { kind: 'managed-cache.v0', state_metadata: { cache_config_id: 'partial-2' } } },
+      ],
+    }
+
+    function interceptCombinedList() {
+      interceptList({ app: 'Konnect', body: combinedListPartials })
+      interceptLinkedPlugins({ app: 'Konnect' })
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons*',
+      }, {
+        statusCode: 200,
+        body: addOnsResponse,
+      }).as('getAddOns')
+    }
+
+    const getCombinedListConfig = (): KonnectRedisConfigurationListConfig => ({
+      ...baseConfigKonnect,
+      isKonnectManagedRedisEnabled: true,
+    })
+
+    it('should show source (Konnect managed/Self managed) in Type column when isKonnectManagedRedisEnabled and add-ons are returned', () => {
+      interceptCombinedList()
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.getTestId('self-managed-config').should('be.visible')
+      cy.getTestId('test cloud').should('be.visible')
+      cy.get('table').should('contain.text', 'Self-managed Redis')
+      cy.get('table').should('contain.text', 'Konnect-managed Redis')
+    })
+
+    it('should hide Edit action for konnect-managed row when isKonnectManagedRedisEnabled', () => {
+      interceptCombinedList()
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+          canEdit: () => true,
+        },
+      })
+
+      cy.getTestId('test cloud').find('[data-testid="dropdown-trigger"]').click()
+      cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-edit"]').should('not.exist')
+      cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-view"]').should('exist')
+      cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').should('exist')
+    })
+  })
 })
