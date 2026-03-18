@@ -205,7 +205,7 @@ import {
   FetcherStatus,
   TableTags,
 } from '@kong-ui-public/entities-shared'
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
 
@@ -669,6 +669,88 @@ const refreshList = (): void => {
   fetcherCacheKey.value++
 }
 
+// Polling for Konnect-managed Redis:
+// Cloud Gateways creates the add-on before Koko provisions the Redis partial, so we show a placeholder row
+// Without polling, the list can stay stuck in the (Initializing) state as State transitions can take ~15-20 minutes
+// Start polling when placeholders are present, stop immediately once placeholders disappear
+
+// Starting delay before the first retry
+const POLL_INITIAL_DELAY_MS = 10000
+
+// After delay increase, we never poll more frequently than this (2 minutes)
+const POLL_MAX_DELAY_MS = 120000
+
+// Increase the delay after each unsuccessful polling
+const POLL_DELAY_MULTIPLIER = 1.8
+
+// Hard caplimit for the polling window (30 minutes)
+const POLL_MAX_TOTAL_DURATION_MS = 30 * 60 * 1000
+
+// Make retry timing slightly different so requests dont line up
+const POLL_RANDOM_DELAY_RATIO = 0.2
+
+const pollTimeoutId = ref<ReturnType<typeof setTimeout> | null>(null)
+const pollStartAt = ref<number | null>(null)
+const currentPollDelayMs = ref<number>(POLL_INITIAL_DELAY_MS)
+
+const clearPolling = (): void => {
+  if (pollTimeoutId.value) {
+    clearTimeout(pollTimeoutId.value)
+    pollTimeoutId.value = null
+  }
+  pollStartAt.value = null
+  currentPollDelayMs.value = POLL_INITIAL_DELAY_MS
+}
+
+const hasInitializingPlaceholders = (data: unknown): boolean => {
+  if (!Array.isArray(data)) return false
+
+  // Placeholder rows are created from add-ons that are not yet linked to a Koko partial
+  // Check 'source=konnect-managed && !partial' as a proxy for 'add-on still initializing state'
+  return data.some((row) => (
+    row
+    && typeof row === 'object'
+    && (row as EntityRow).source === 'konnect-managed'
+    && !(row as EntityRow).partial
+  ))
+}
+
+const scheduleNextPoll = (): void => {
+  if (!isKonnectManagedRedisEnabled.value) return
+  if (pollTimeoutId.value) return
+
+  const now = Date.now()
+
+  if (pollStartAt.value == null) {
+    pollStartAt.value = now
+    // Reset state at the beginning of a polling window
+    currentPollDelayMs.value = POLL_INITIAL_DELAY_MS
+  }
+
+  const elapsedMs = now - (pollStartAt.value ?? now)
+  if (elapsedMs >= POLL_MAX_TOTAL_DURATION_MS) {
+    clearPolling()
+    return
+  }
+
+  // Randomized delay spreads retries
+  const randomMultiplier = 1 + (Math.random() * 2 - 1) * POLL_RANDOM_DELAY_RATIO
+  const delayMs = Math.round(currentPollDelayMs.value * randomMultiplier)
+
+  pollTimeoutId.value = setTimeout(() => {
+    pollTimeoutId.value = null
+    // Trigger a new fetch by bumping the fetcher cache key to re-run the join logic
+    refreshList()
+  }, delayMs)
+
+  // Increase the interval for the next attempt
+  currentPollDelayMs.value = Math.min(POLL_MAX_DELAY_MS, currentPollDelayMs.value * POLL_DELAY_MULTIPLIER)
+}
+
+onBeforeUnmount(() => {
+  clearPolling()
+})
+
 // Type label from partial's Redis type (type + config). Used for self-managed rows in combined list
 const getRedisTypeLabelFromPartial = (fields: RedisConfigurationFields): string | undefined => {
   const redisType = getRedisType(fields)
@@ -754,6 +836,8 @@ const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<
  */
 watch(fetcherState, (state) => {
   if (state.status === FetcherStatus.Error) {
+    // Stop polling on errors to avoid repeated failing requests
+    clearPolling()
     errorMessage.value = {
       title: t('errors.general'),
     }
@@ -767,6 +851,22 @@ watch(fetcherState, (state) => {
   }
 
   errorMessage.value = null
+
+  if (!isKonnectManagedRedisEnabled.value) {
+    clearPolling()
+    return
+  }
+
+  // After each successful fetch, decide whether we still need to poll for initialization
+  if (state.status === FetcherStatus.Idle) {
+    const placeholdersExist = hasInitializingPlaceholders(state.response?.data)
+    if (!placeholdersExist) {
+      clearPolling()
+      return
+    }
+
+    scheduleNextPoll()
+  }
 })
 
 const userCanCreate = ref<boolean>(false)
