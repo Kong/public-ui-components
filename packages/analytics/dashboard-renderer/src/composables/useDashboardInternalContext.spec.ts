@@ -1,19 +1,23 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { mount } from '@vue/test-utils'
 import useDashboardInternalContext from './useDashboardInternalContext'
-import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import type { DashboardRendererContext, DashboardRendererContextInternal } from '../types'
 import type {
   AllFilters,
   TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 import {
-  INJECT_QUERY_PROVIDER,
   DEFAULT_TILE_REFRESH_INTERVAL_MS,
   FULLSCREEN_LONG_REFRESH_INTERVAL_MS,
   FULLSCREEN_SHORT_REFRESH_INTERVAL_MS,
 } from '../constants'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
+
+vi.mock('@kong-ui-public/analytics-config-store', () => ({
+  useAnalyticsConfigStore: vi.fn(() => ({
+    defaultQueryTimeForOrg: '7d',
+  })),
+}))
 
 vi.mock('vue', async (importActual) => {
   const actual = await importActual()
@@ -26,17 +30,12 @@ vi.mock('vue', async (importActual) => {
 })
 
 // need to import after the mock
-import { getCurrentInstance, nextTick, ref, type App, type Ref } from 'vue'
+import { getCurrentInstance, nextTick, ref, type Ref } from 'vue'
 
 
 describe('useContextLinks', () => {
-  let app: App | undefined
   beforeEach(() => {
     vi.clearAllMocks()
-    app = setupPiniaTestStore({ createVueApp: true })
-    if (app) {
-      app.provide(INJECT_QUERY_PROVIDER, { configFn: vi.fn(() => Promise.resolve({})) })
-    }
   })
 
   const setup = async ({
@@ -48,6 +47,7 @@ describe('useContextLinks', () => {
     contextRefreshInterval,
     contextTimeSpec,
     contextTz,
+    contextChartRenderer,
     globalFilters = [],
     hasZoomProp = false,
     isFullscreen = false,
@@ -57,6 +57,7 @@ describe('useContextLinks', () => {
     contextRefreshInterval?: number
     contextTimeSpec?: TimeRangeV4
     contextTz?: string
+    contextChartRenderer?: DashboardRendererContext['chartRenderer']
     globalFilters?: AllFilters[]
     hasZoomProp?: boolean
     isFullscreen?: boolean
@@ -67,6 +68,7 @@ describe('useContextLinks', () => {
       ...(contextTz !== undefined && { tz: contextTz }),
       ...(contextRefreshInterval !== undefined && { refreshInterval: contextRefreshInterval }),
       ...(contextEditable !== undefined && { editable: contextEditable }),
+      ...(contextChartRenderer !== undefined && { chartRenderer: contextChartRenderer }),
     })
 
     ;(getCurrentInstance as Mock).mockImplementation(() => {
@@ -112,6 +114,7 @@ describe('useContextLinks', () => {
 
     expect(internalContext.value).to.deep.eq({
       editable: false,
+      chartRenderer: 'chartjs',
       filters: [],
       refreshInterval: DEFAULT_TILE_REFRESH_INTERVAL_MS,
       showTileActions: true,
@@ -137,6 +140,11 @@ describe('useContextLinks', () => {
     const editable = true
     const { internalContext } = await setup({ contextEditable: editable })
     expect(internalContext.value).toEqual(expect.objectContaining({ editable }))
+  })
+
+  it('uses the context chartRenderer when provided', async () => {
+    const { internalContext } = await setup({ contextChartRenderer: 'echarts' })
+    expect(internalContext.value).toEqual(expect.objectContaining({ chartRenderer: 'echarts' }))
   })
 
   it.each([

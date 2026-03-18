@@ -6,7 +6,7 @@
     <VChart
       :key="`${theme}-${renderMode}`"
       ref="chart"
-      :autoresize="true"
+      :autoresize="autoresizeOptions"
       class="chart"
       manual-update
       :option="option"
@@ -87,13 +87,34 @@ provide(THEME_KEY, toRef(() => theme))
 const containerRef = useTemplateRef('container')
 const chartRef = useTemplateRef('chart')
 
+const updateOptions = {
+  notMerge: true,
+  lazyUpdate: false,
+} as const
+
+const applyOption = (nextOption: ECBasicOption) => {
+  chartRef.value?.setOption(nextOption, updateOptions)
+}
+
+const autoresizeOptions = {
+  onResize: () => {
+    applyOption(option)
+  },
+} as const
+
 watch(() => option, (newOption) => {
-  chartRef.value?.setOption(newOption, { notMerge: true, lazyUpdate: false })
+  applyOption(newOption)
 }, { deep: true })
 
+type ExposedChart = {
+  $el?: HTMLElement
+  dispatchAction: (payload: unknown) => void
+  setOption: (option: ECBasicOption, opts?: { notMerge?: boolean, lazyUpdate?: boolean }) => void
+}
+
 defineExpose({
-  chart: chartRef,
-  container: containerRef,
+  getChart: () => chartRef.value as ExposedChart | undefined,
+  getContainer: () => containerRef.value,
 })
 </script>
 
