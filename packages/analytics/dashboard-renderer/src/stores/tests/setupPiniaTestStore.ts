@@ -15,10 +15,10 @@ interface SetupPiniaTestStoreOptions {
 export const setupPiniaTestStore = (options?: SetupPiniaTestStoreOptions): App | undefined => {
   let app: App
   const pinia = createPinia()
-  setActivePinia(pinia)
   if (options?.createVueApp) {
     app = createApp({})
     app.use(pinia)
     return app
   }
+  setActivePinia(pinia)
 }

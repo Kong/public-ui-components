@@ -55,7 +55,7 @@ const { i18n } = composables.useI18n()
 
 const options = computed((): AnalyticsChartOptions => ({
   type: props.chartOptions.type,
-  stacked: props.chartOptions.stacked !== false,
+  stacked: props.chartOptions.stacked ?? false,
   chartDatasetColors: props.chartOptions.chart_dataset_colors,
   threshold: props.chartOptions.threshold,
   hideTruncationWarning: props.query.limit !== undefined && props.query.limit > 0,

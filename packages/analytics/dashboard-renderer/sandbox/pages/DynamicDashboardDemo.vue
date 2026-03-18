@@ -4,11 +4,6 @@
     title="Dashboard Renderer"
   >
     <template #controls>
-      <KSegmentedControl
-        v-model="chartRenderer"
-        class="renderer-select"
-        :options="rendererOptions"
-      />
       <h2>Definition</h2>
       <textarea v-model="definitionText" />
       <KCodeBlock
@@ -29,11 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import type { ChartRenderer, DashboardRendererContext } from '../../src'
+import type { DashboardRendererContext } from '../../src'
 import { DashboardRenderer } from '../../src'
 import { computed, ref, inject } from 'vue'
 import Ajv from 'ajv'
-import type { SegmentedControlOption } from '@kong/kongponents'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
@@ -194,47 +188,35 @@ const definition = computed<ValidationResult>(() => {
   }
 })
 
-const chartRenderer = ref<ChartRenderer>('chartjs')
-const rendererOptions: Array<SegmentedControlOption<ChartRenderer>> = [
-  { label: 'Chart.js', value: 'chartjs' },
-  { label: 'ECharts', value: 'echarts' },
-]
-
-const context = computed<DashboardRendererContext>(() => ({
-  chartRenderer: chartRenderer.value,
+const context: DashboardRendererContext = {
   filters: [],
   timeSpec: {
     type: 'relative',
     time_range: '24h',
   },
   editable: true,
-}))
+}
 
 </script>
 
 <style lang="scss" scoped>
-.renderer-select {
-  margin-bottom: 16px;
-  max-width: 320px;
-}
-
 textarea {
   background-color: $kui-color-background-neutral-weakest;
-  border: 1px solid $kui-color-border-neutral-weak;
+  border: 1px solid $kui-color-background-neutral-weak;
   border-radius: 4px;
   color: #333333;
   font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
   font-size: $kui-font-size-20;
   height: 500px;
   line-height: 1.5;
-  margin: 16px 0;
+  margin: 1rem 0;
   overflow: auto;
-  padding: 16px;
+  padding: 1rem;
   resize: vertical;
   scrollbar-color: #bbbbbb #e0e0e0;
   scrollbar-width: thin;
-  -moz-tab-size: 4;
   tab-size: 4;
+  -moz-tab-size: 4;
   width: 90%;
 }
 
@@ -255,7 +237,7 @@ textarea::-webkit-scrollbar-thumb {
 
 textarea:focus {
   border-color: white;
-  box-shadow: 0 0 0 2px $kui-color-border-neutral-weak;
+  box-shadow: 0 0 0 2px $kui-color-background-neutral-weak;
   outline: none;
 }
 </style>

@@ -44,7 +44,7 @@ Render Analytics charts on a page from a JSON definition.
 This component takes two properties:
 
 - [modelValue](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/dashboardSchema.ts): The dashboard configuration and layout are provided as a two-way binding using `v-model`. When in editable mode, changes to tiles or the layout will automatically update the reactive reference bound to `v-model`.
-- [context](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/renderer-types.ts): The time range that the dashboard should query, any additional filters that should be applied, editing configuration, and the chart renderer selection.
+- [context](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/renderer-types.ts): The time range that the dashboard should query, any additional filters that should be applied, and editing configuration.
 
 #### Context Properties
 
@@ -55,7 +55,6 @@ This component takes two properties:
 | tz | string | No | Local timezone | Timezone to include with queries, if different than the browser timezone |
 | refreshInterval | number | No | `DEFAULT_TILE_REFRESH_INTERVAL_MS` | Interval for refreshing tiles |
 | editable | boolean | No | false | Enables dashboard editing capabilities |
-| chartRenderer | `'chartjs' \| 'echarts'` | No | `'chartjs'` | Selects the renderer for supported chart tiles. ECharts currently supports timeseries, bar, and donut charts. |
 
 
 ### Events
@@ -90,7 +89,6 @@ const context: DashboardRendererContext = {
     time_range: '15M',
   },
   editable: true, // Enable editing capabilities
-  chartRenderer: 'chartjs', // Optional, defaults to chartjs. Set to 'echarts' for supported charts.
 }
 
 const config: DashboardConfig = {

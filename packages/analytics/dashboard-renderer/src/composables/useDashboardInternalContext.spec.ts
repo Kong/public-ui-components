@@ -1,23 +1,19 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { mount } from '@vue/test-utils'
 import useDashboardInternalContext from './useDashboardInternalContext'
+import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import type { DashboardRendererContext, DashboardRendererContextInternal } from '../types'
 import type {
   AllFilters,
   TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 import {
+  INJECT_QUERY_PROVIDER,
   DEFAULT_TILE_REFRESH_INTERVAL_MS,
   FULLSCREEN_LONG_REFRESH_INTERVAL_MS,
   FULLSCREEN_SHORT_REFRESH_INTERVAL_MS,
 } from '../constants'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
-
-vi.mock('@kong-ui-public/analytics-config-store', () => ({
-  useAnalyticsConfigStore: vi.fn(() => ({
-    defaultQueryTimeForOrg: '7d',
-  })),
-}))
 
 vi.mock('vue', async (importActual) => {
   const actual = await importActual()
@@ -30,12 +26,20 @@ vi.mock('vue', async (importActual) => {
 })
 
 // need to import after the mock
-import { getCurrentInstance, nextTick, ref, type Ref } from 'vue'
+import { getCurrentInstance, nextTick, ref, type App, type Ref } from 'vue'
 
 
 describe('useContextLinks', () => {
+  let app: App | undefined
+  let configFn: Mock
+
   beforeEach(() => {
     vi.clearAllMocks()
+    configFn = vi.fn(() => Promise.resolve({}))
+    app = setupPiniaTestStore({ createVueApp: true })
+    if (app) {
+      app.provide(INJECT_QUERY_PROVIDER, { configFn })
+    }
   })
 
   const setup = async ({
@@ -47,20 +51,22 @@ describe('useContextLinks', () => {
     contextRefreshInterval,
     contextTimeSpec,
     contextTz,
-    contextChartRenderer,
     globalFilters = [],
     hasZoomProp = false,
     isFullscreen = false,
+    isLoading = false,
+    preview = false,
   }: {
     contextEditable?: boolean
     contextFilters?: AllFilters[]
     contextRefreshInterval?: number
     contextTimeSpec?: TimeRangeV4
     contextTz?: string
-    contextChartRenderer?: DashboardRendererContext['chartRenderer']
     globalFilters?: AllFilters[]
     hasZoomProp?: boolean
     isFullscreen?: boolean
+    isLoading?: boolean
+    preview?: boolean
   } = {}) => {
     const context = ref<DashboardRendererContext>({
       filters: contextFilters,
@@ -68,7 +74,6 @@ describe('useContextLinks', () => {
       ...(contextTz !== undefined && { tz: contextTz }),
       ...(contextRefreshInterval !== undefined && { refreshInterval: contextRefreshInterval }),
       ...(contextEditable !== undefined && { editable: contextEditable }),
-      ...(contextChartRenderer !== undefined && { chartRenderer: contextChartRenderer }),
     })
 
     ;(getCurrentInstance as Mock).mockImplementation(() => {
@@ -81,7 +86,16 @@ describe('useContextLinks', () => {
       }
     })
 
+    configFn.mockImplementation(() => {
+      if (isLoading) {
+        return new Promise(() => {})
+      }
+
+      return Promise.resolve({})
+    })
+
     let internalContext: Ref<DashboardRendererContextInternal>
+    let queryReady: Ref<boolean>
     const wrapper = mount({
       template: '<div />',
       setup() {
@@ -89,8 +103,10 @@ describe('useContextLinks', () => {
           context,
           globalFilters: ref(globalFilters),
           isFullscreen: ref(isFullscreen),
+          preview: ref(preview),
         })
         internalContext = result.internalContext
+        queryReady = result.queryReady
       },
     })
 
@@ -100,6 +116,8 @@ describe('useContextLinks', () => {
       wrapper,
       // @ts-ignore it's defined in mount, and we await nextTick for it
       internalContext,
+      // @ts-ignore it's defined in mount, and we await nextTick for it
+      queryReady,
     }
   }
 
@@ -114,7 +132,6 @@ describe('useContextLinks', () => {
 
     expect(internalContext.value).to.deep.eq({
       editable: false,
-      chartRenderer: 'chartjs',
       filters: [],
       refreshInterval: DEFAULT_TILE_REFRESH_INTERVAL_MS,
       showTileActions: true,
@@ -126,8 +143,15 @@ describe('useContextLinks', () => {
 
   it('uses the context timeSpec when provided', async () => {
     const timeSpec: TimeRangeV4 = { type: 'relative', time_range: '1h' }
-    const { internalContext } = await setup({ contextTimeSpec: timeSpec })
+    const { internalContext, queryReady } = await setup({ contextTimeSpec: timeSpec })
     expect(internalContext.value).toEqual(expect.objectContaining({ timeSpec }))
+    expect(queryReady.value).to.eq(true)
+  })
+
+  it('sets queryReady to false when the config store is still loading and no timeSpec was provided', async () => {
+    const { queryReady } = await setup({ contextFilters: [], isLoading: true })
+
+    expect(queryReady.value).to.eq(false)
   })
 
   it('uses the context tz when provided', async () => {
@@ -140,11 +164,6 @@ describe('useContextLinks', () => {
     const editable = true
     const { internalContext } = await setup({ contextEditable: editable })
     expect(internalContext.value).toEqual(expect.objectContaining({ editable }))
-  })
-
-  it('uses the context chartRenderer when provided', async () => {
-    const { internalContext } = await setup({ contextChartRenderer: 'echarts' })
-    expect(internalContext.value).toEqual(expect.objectContaining({ chartRenderer: 'echarts' }))
   })
 
   it.each([
@@ -218,5 +237,15 @@ describe('useContextLinks', () => {
   it('sets zoomable to true if the node has the onTileTimeRangeZoom prop', async () => {
     const { internalContext } = await setup({ hasZoomProp: true })
     expect(internalContext.value.zoomable).to.eq(true)
+  })
+
+  it('forces editable to false when preview is true, even if context.editable is true', async () => {
+    const { internalContext } = await setup({ contextEditable: true, preview: true })
+    expect(internalContext.value.editable).to.eq(false)
+  })
+
+  it('forces zoomable to false when preview is true, even if the node has the onTileTimeRangeZoom prop', async () => {
+    const { internalContext } = await setup({ hasZoomProp: true, preview: true })
+    expect(internalContext.value.zoomable).to.eq(false)
   })
 })

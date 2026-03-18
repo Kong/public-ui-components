@@ -11,11 +11,6 @@
       />
 
       <h2>Dashboard Renderer Context (required)</h2>
-      <KSegmentedControl
-        v-model="chartRenderer"
-        class="renderer-select"
-        :options="rendererOptions"
-      />
       <textarea
         v-model="contextText"
         rows="10"
@@ -39,10 +34,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ChartRenderer, DashboardRendererContext } from '../../src'
+import type { DashboardRendererContext } from '../../src'
 import { DashboardTilePreview } from '../../src'
-import { computed, inject, ref, watch } from 'vue'
-import type { SegmentedControlOption } from '@kong/kongponents'
+import { computed, ref, inject } from 'vue'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
@@ -53,60 +47,24 @@ import type {
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
-const createDefaultContext = (chartRenderer: ChartRenderer): DashboardRendererContext => ({
-  chartRenderer,
-  filters: [],
-  timeSpec: {
-    type: 'relative',
-    time_range: '24h',
-  },
-  tz: 'utc',
-  refreshInterval: 0,
-  editable: true,
-})
-
-const rendererOptions: Array<SegmentedControlOption<ChartRenderer>> = [
-  { label: 'Chart.js', value: 'chartjs' },
-  { label: 'ECharts', value: 'echarts' },
-]
-
-const chartRenderer = ref<ChartRenderer>('chartjs')
 const contextText = ref(`{
-  "chartRenderer": "chartjs",
   "filters": [],
   "timeSpec": {
-    "type": "relative",
-    "time_range": "24h"
+    type": "relative",
+    time_range": "24h",
   },
   "tz": "utc",
   "refreshInterval": 0,
-  "editable": true
+  "editable": true,
 }`)
-const parsedContext = computed<DashboardRendererContext | null>(() => {
+const context = computed<DashboardRendererContext>(() => {
   try {
     return JSON.parse(contextText.value)
   } catch {
-    return null
+    return {
+      filters: [],
+    }
   }
-})
-
-const context = computed<DashboardRendererContext>(() => {
-  return parsedContext.value ?? createDefaultContext(chartRenderer.value)
-})
-
-watch(parsedContext, (value) => {
-  if (value?.chartRenderer) {
-    chartRenderer.value = value.chartRenderer
-  }
-}, { immediate: true })
-
-watch(chartRenderer, (value) => {
-  const nextContext = {
-    ...(parsedContext.value ?? createDefaultContext(value)),
-    chartRenderer: value,
-  }
-
-  contextText.value = JSON.stringify(nextContext, null, 2)
 })
 
 const definitionText = ref(`{
@@ -141,11 +99,6 @@ const globalFilters = computed<AllFilters[]>(() => {
 <style lang="scss" scoped>
 .sandbox-container {
   height: 500px;
-}
-
-.renderer-select {
-  margin-bottom: 12px;
-  max-width: 320px;
 }
 
 textarea {

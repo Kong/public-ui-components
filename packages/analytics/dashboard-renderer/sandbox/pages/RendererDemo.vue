@@ -25,11 +25,6 @@
           v-model="isToggled"
           :label="isToggled ? 'Custom styling' : 'Normal styling'"
         />
-        <KSegmentedControl
-          v-model="chartRenderer"
-          class="renderer-toggle"
-          :options="rendererOptions"
-        />
       </div>
       <DashboardRenderer
         ref="dashboardRendererRef"
@@ -65,15 +60,14 @@
 </template>
 
 <script setup lang="ts">
-import type { ChartRenderer, DashboardRendererContext } from '../../src'
+import type { DashboardRendererContext } from '../../src'
 import { DashboardRenderer } from '../../src'
-import { computed, inject, ref } from 'vue'
+import { inject, ref } from 'vue'
 import type {
   DashboardConfig,
   ExploreAggregations,
   TileConfig,
 } from '@kong-ui-public/analytics-utilities'
-import type { SegmentedControlOption } from '@kong/kongponents'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
@@ -82,17 +76,10 @@ import type { Threshold } from '@kong-ui-public/analytics-chart'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
-const chartRenderer = ref<ChartRenderer>('chartjs')
-const rendererOptions: Array<SegmentedControlOption<ChartRenderer>> = [
-  { label: 'Chart.js', value: 'chartjs' },
-  { label: 'ECharts', value: 'echarts' },
-]
-
-const context = computed<DashboardRendererContext>(() => ({
-  chartRenderer: chartRenderer.value,
+const context: DashboardRendererContext = {
   filters: [],
   refreshInterval: 0,
-}))
+}
 
 const dashboardConfig = ref<DashboardConfig>({
   tile_height: 167,
@@ -453,14 +440,10 @@ h2 {
 }
 
 .controls {
-  align-items: center;
+  align-itmes: center;
   display: flex;
   gap: $kui-space-50;
   margin: 10px 0;
-}
-
-.renderer-toggle {
-  max-width: 320px;
 }
 
 // Custom theme via CSS property overrides

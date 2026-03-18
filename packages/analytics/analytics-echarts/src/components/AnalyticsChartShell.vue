@@ -66,8 +66,6 @@ const { i18n } = composables.useI18n()
 </script>
 
 <style lang="scss" scoped>
-@use "@kong/design-tokens/tokens/scss/variables" as *;
-
 .analytics-chart-shell {
   border-radius: var(--kui-border-radius-20, 8px);
   display: flex;

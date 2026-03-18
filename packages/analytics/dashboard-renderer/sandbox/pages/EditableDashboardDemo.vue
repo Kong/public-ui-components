@@ -5,7 +5,7 @@
   >
     <div class="sandbox-container">
       <br>
-      <div class="controls">
+      <div style="display: flex; gap: 5px; margin: 5px;">
         <KButton
           appearance="primary"
           size="small"
@@ -25,13 +25,8 @@
           label="Editable"
           size="small"
         />
-        <KSegmentedControl
-          v-model="chartRenderer"
-          class="renderer-toggle"
-          :options="rendererOptions"
-        />
       </div>
-      <div class="dashboard-scroll">
+      <div style="max-height: 800px; overflow-y: auto;">
         <DashboardRenderer
           ref="dashboardRendererRef"
           v-model="dashboardConfig"
@@ -58,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ChartRenderer, DashboardRendererContext, GridTile, TileZoomEvent } from '../../src'
+import type { DashboardRendererContext, GridTile, TileZoomEvent } from '../../src'
 import { DashboardRenderer } from '../../src'
 import { computed, inject, ref } from 'vue'
 import type {
@@ -67,7 +62,6 @@ import type {
   TileConfig,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
-import type { SegmentedControlOption } from '@kong/kongponents'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
@@ -75,14 +69,8 @@ import { watchDebounced } from '@vueuse/core'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 const editableSwitch = ref(true)
-const chartRenderer = ref<ChartRenderer>('echarts')
-const rendererOptions: Array<SegmentedControlOption<ChartRenderer>> = [
-  { label: 'Chart.js', value: 'chartjs' },
-  { label: 'ECharts', value: 'echarts' },
-]
 
 const context = computed<DashboardRendererContext>(() => ({
-  chartRenderer: chartRenderer.value,
   filters: [],
   refreshInterval: 0,
   editable: editableSwitch.value,
@@ -298,21 +286,3 @@ const handleZoom = (zoomEvent: TileZoomEvent) => {
 }
 
 </script>
-
-<style lang="scss" scoped>
-.controls {
-  align-items: center;
-  display: flex;
-  gap: 5px;
-  margin: 5px;
-}
-
-.dashboard-scroll {
-  max-height: 800px;
-  overflow-y: auto;
-}
-
-.renderer-toggle {
-  max-width: 320px;
-}
-</style>
