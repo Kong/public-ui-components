@@ -381,6 +381,7 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
     // Fetch managed-cache add-ons for this CP from Cloud Gateways
     const konnectConfig = props.config as KonnectRedisConfigurationListConfig
     const cloudGatewaysBase = konnectConfig.cloudGatewaysApiBaseUrl ?? props.config.apiBaseUrl
+    console.log('konnectConfig', konnectConfig)
     const addOnsUrl = `${cloudGatewaysBase}/v2/cloud-gateways/add-ons`
 
     let addOns: ManagedCacheAddOn[] = []
@@ -478,11 +479,23 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
 
     const allRows = [...rows, ...placeholderRows]
 
+    // Dont do full table refetch on every poll only once placeholders disappear
+    managedAddOnStateById.value = initializingAddOns.reduce((acc, addOn) => {
+      acc[addOn.id] = typeof addOn.state === 'string' ? addOn.state : ''
+      return acc
+    }, {} as Record<string, string>)
+
+    const placeholdersExist = initializingAddOns.length > 0
+    if (placeholdersExist) scheduleNextPoll()
+    else clearPolling()
+
     return {
       data: allRows,
       total: partialsRes.total ?? allRows.length,
     }
   } catch (error: any) {
+    clearPolling()
+    managedAddOnStateById.value = {}
     errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
     emit('error', error)
     return { data: [], total: 0 }
@@ -671,7 +684,7 @@ const refreshList = (): void => {
 
 // Polling for Konnect-managed Redis:
 // Cloud Gateways creates the add-on before Koko provisions the Redis partial, so we show a placeholder row
-// Without polling, the list can stay stuck in the (Initializing) state as State transitions can take ~15-20 minutes
+// Without polling, the list can stay stuck in a non-ready placeholder state as state transitions can take ~15-20 minutes
 // Start polling when placeholders are present, stop immediately once placeholders disappear
 
 // Starting delay before the first retry
@@ -692,6 +705,7 @@ const POLL_RANDOM_DELAY_RATIO = 0.2
 const pollTimeoutId = ref<ReturnType<typeof setTimeout> | null>(null)
 const pollStartAt = ref<number | null>(null)
 const currentPollDelayMs = ref<number>(POLL_INITIAL_DELAY_MS)
+const managedAddOnStateById = ref<Record<string, string>>({})
 
 const clearPolling = (): void => {
   if (pollTimeoutId.value) {
@@ -700,19 +714,75 @@ const clearPolling = (): void => {
   }
   pollStartAt.value = null
   currentPollDelayMs.value = POLL_INITIAL_DELAY_MS
+  managedAddOnStateById.value = {}
 }
 
-const hasInitializingPlaceholders = (data: unknown): boolean => {
-  if (!Array.isArray(data)) return false
+const pollManagedAddOnsState = async (): Promise<void> => {
+  const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+  const cloudGatewaysBase = konnectConfig.cloudGatewaysApiBaseUrl ?? props.config.apiBaseUrl
+  const cpId = konnectConfig.controlPlaneId
+  const addOnsUrl = `${cloudGatewaysBase}/v2/cloud-gateways/add-ons`
 
-  // Placeholder rows are created from add-ons that are not yet linked to a Koko partial
-  // Check 'source=konnect-managed && !partial' as a proxy for 'add-on still initializing state'
-  return data.some((row) => (
-    row
-    && typeof row === 'object'
-    && (row as EntityRow).source === 'konnect-managed'
-    && !(row as EntityRow).partial
-  ))
+  // Starting state: only update labels while there are still placeholders - no cache_config_id yet
+  let placeholdersExist = false
+  const nextStateById: Record<string, string> = {}
+
+  try {
+    const addOnsResponse = await axiosInstance.get(addOnsUrl, {
+      params: {
+        'page[size]': addOnsPageSize,
+        'page[number]': 1,
+      },
+    })
+
+    const raw = addOnsResponse.data?.data ?? addOnsResponse.data
+    const addOns = Array.isArray(raw) ? raw as any[] : []
+
+    const getCacheConfigId = (addOn: any): string | undefined => {
+      const managedCacheConfig = addOn.config ?? addOn.attributes
+      const meta = managedCacheConfig?.state_metadata ?? addOn.state_metadata
+      return meta?.cache_config_id
+    }
+
+    const placeholderAddOns = addOns.filter((addOn) => {
+      const cacheConfigId = getCacheConfigId(addOn)
+      if (cacheConfigId != null && cacheConfigId !== '') return false
+
+      const kind = addOn.config?.kind
+      const isManagedCache = kind === 'managed-cache.v0' || kind === 'managed_cache.v0' || kind == null
+      if (!isManagedCache) return false
+
+      const addOnCpId = addOn.owner?.control_plane_id
+      if (addOnCpId != null && addOnCpId !== cpId) return false
+
+      return true
+    })
+
+    placeholdersExist = placeholderAddOns.length > 0
+
+    for (const addOn of placeholderAddOns) {
+      nextStateById[addOn.id] = typeof addOn.state === 'string' ? addOn.state : ''
+    }
+
+    managedAddOnStateById.value = nextStateById
+  } catch (error: any) {
+    // Stop polling and surface error if we can't refresh state
+    clearPolling()
+    errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
+
+    emit('error', error)
+    return
+  }
+
+  // Once placeholders disappear, do a single full refresh to swap in the linked Koko partial rows
+  if (!placeholdersExist) {
+    clearPolling()
+    refreshList()
+    return
+  }
+
+  // Placeholders still exist: schedule the next state poll.
+  scheduleNextPoll()
 }
 
 const scheduleNextPoll = (): void => {
@@ -739,8 +809,7 @@ const scheduleNextPoll = (): void => {
 
   pollTimeoutId.value = setTimeout(() => {
     pollTimeoutId.value = null
-    // Trigger a new fetch by bumping the fetcher cache key to re-run the join logic
-    refreshList()
+    void pollManagedAddOnsState()
   }, delayMs)
 
   // Increase the interval for the next attempt
@@ -768,11 +837,38 @@ const getRedisTypeLabelFromPartial = (fields: RedisConfigurationFields): string 
   }
 }
 
+const formatManagedCacheState = (state: string): string => {
+  const normalized = state.trim().replace(/[_-]+/g, ' ')
+  const words = normalized.split(/\s+/).filter(Boolean)
+  return words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
+}
+
+const isReadyManagedCacheState = (state: string): boolean => {
+  const cacheState = state.trim().toLowerCase()
+  // Managed-cache add-on states: initializing/ready/terminating
+  return cacheState === 'ready'
+}
+
 const renderRedisType = (item: RedisConfigurationFields | EntityRow): string | undefined => {
   const row = item as EntityRow
-  // Placeholder row: add-on exists but Koko partial not ready yet, show initializing state
+  // Placeholder row: add-on exists but Koko partial not ready yet
+  // Display the add-on's Cloud Gateways `state` unless it's ready, in which case we show only the base type
   if (isKonnectManagedRedisEnabled.value && row.source === 'konnect-managed' && !row.partial) {
-    return t('list.type.konnect_managed_redis_initializing')
+    const mappedState = managedAddOnStateById.value[row.id]
+    const state = (typeof mappedState === 'string' && mappedState.trim() !== '')
+      ? mappedState
+      : row.addOn?.state
+
+    // Fallback in case state is missing
+    if (typeof state !== 'string' || state.trim() === '') {
+      return t('list.type.konnect_managed_redis_initializing')
+    }
+
+    if (isReadyManagedCacheState(state)) {
+      return t('list.type.konnect_managed_redis')
+    }
+
+    return `${t('list.type.konnect_managed_redis')} (${formatManagedCacheState(state)})`
   }
 
   const fields = row.partial ?? item
@@ -855,17 +951,6 @@ watch(fetcherState, (state) => {
   if (!isKonnectManagedRedisEnabled.value) {
     clearPolling()
     return
-  }
-
-  // After each successful fetch, decide whether we still need to poll for initialization
-  if (state.status === FetcherStatus.Idle) {
-    const placeholdersExist = hasInitializingPlaceholders(state.response?.data)
-    if (!placeholdersExist) {
-      clearPolling()
-      return
-    }
-
-    scheduleNextPoll()
   }
 })
 

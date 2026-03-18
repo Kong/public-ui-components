@@ -361,5 +361,135 @@ describe('<RedisConfigurationList />', () => {
       cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-view"]').should('exist')
       cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').should('exist')
     })
+
+    it('should display Cloud Gateways add-on state for konnect-managed placeholder rows', () => {
+      const placeholderPartials = {
+        data: [
+          { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
+        ],
+        next: null,
+      }
+
+      const addOnsResponseWithState = {
+        data: [
+          {
+            id: 'addon-123',
+            name: 'initializing cloud',
+            state: 'initializing',
+            config: { kind: 'managed-cache.v0' },
+          },
+        ],
+      }
+
+      interceptList({ app: 'Konnect', body: placeholderPartials })
+      interceptLinkedPlugins({ app: 'Konnect' })
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons*',
+      }, {
+        statusCode: 200,
+        body: addOnsResponseWithState,
+      }).as('getAddOns')
+
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+
+      cy.getTestId('initializing cloud').should('be.visible')
+      cy.get('table').should('contain.text', 'Konnect-managed Redis (Initializing)')
+    })
+
+    it('should not display a state suffix when konnect-managed add-on is ready', () => {
+      const placeholderPartials = {
+        data: [
+          { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
+        ],
+        next: null,
+      }
+
+      const addOnsResponseReady = {
+        data: [
+          {
+            id: 'addon-456',
+            name: 'ready cloud',
+            state: 'ready',
+            config: { kind: 'managed-cache.v0' },
+          },
+        ],
+      }
+
+      interceptList({ app: 'Konnect', body: placeholderPartials })
+      interceptLinkedPlugins({ app: 'Konnect' })
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons*',
+      }, {
+        statusCode: 200,
+        body: addOnsResponseReady,
+      }).as('getAddOns')
+
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+
+      cy.getTestId('ready cloud').should('be.visible')
+      cy.get('table').should('contain.text', 'Konnect-managed Redis')
+      cy.get('table').should('not.contain.text', '(Ready)')
+    })
+
+    it('should display terminating state suffix for konnect-managed placeholders', () => {
+      const placeholderPartials = {
+        data: [
+          { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
+        ],
+        next: null,
+      }
+
+      const addOnsResponseTerminating = {
+        data: [
+          {
+            id: 'addon-789',
+            name: 'terminating cloud',
+            state: 'terminating',
+            config: { kind: 'managed-cache.v0' },
+          },
+        ],
+      }
+
+      interceptList({ app: 'Konnect', body: placeholderPartials })
+      interceptLinkedPlugins({ app: 'Konnect' })
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons*',
+      }, {
+        statusCode: 200,
+        body: addOnsResponseTerminating,
+      }).as('getAddOns')
+
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+
+      cy.getTestId('terminating cloud').should('be.visible')
+      cy.get('table').should('contain.text', 'Konnect-managed Redis (Terminating)')
+    })
   })
 })
