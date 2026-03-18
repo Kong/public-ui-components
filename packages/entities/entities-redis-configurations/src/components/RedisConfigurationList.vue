@@ -331,6 +331,11 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() =>
   props.config.app === 'konnect' && !!(props.config as KonnectRedisConfigurationListConfig).isKonnectManagedRedisEnabled,
 )
 
+const cloudGatewaysBase = computed<string>(() => {
+  const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+  return konnectConfig.cloudGatewaysApiBaseUrl ?? props.config.apiBaseUrl
+})
+
 const fetcherCacheKey = ref<number>(1)
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 
@@ -380,9 +385,7 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
 
     // Fetch managed-cache add-ons for this CP from Cloud Gateways
     const konnectConfig = props.config as KonnectRedisConfigurationListConfig
-    const cloudGatewaysBase = konnectConfig.cloudGatewaysApiBaseUrl ?? props.config.apiBaseUrl
-    console.log('konnectConfig', konnectConfig)
-    const addOnsUrl = `${cloudGatewaysBase}/v2/cloud-gateways/add-ons`
+    const addOnsUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons`
 
     let addOns: ManagedCacheAddOn[] = []
     try {
@@ -650,9 +653,7 @@ const confirmDelete = async (): Promise<void> => {
   try {
     if (isKonnectManagedRedisEnabled.value && entityToBeDeleted.value.source === 'konnect-managed' && entityToBeDeleted.value.addOn?.id) {
       // Konnect-managed: delete the managed cache add-on via Cloud Gateways API
-      const konnectConfig = props.config as KonnectRedisConfigurationListConfig
-      const cloudGatewaysBase = konnectConfig.cloudGatewaysApiBaseUrl ?? props.config.apiBaseUrl
-      const addOnDeleteUrl = `${cloudGatewaysBase}/v2/cloud-gateways/add-ons/${entityToBeDeleted.value.addOn.id}`
+      const addOnDeleteUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons/${entityToBeDeleted.value.addOn.id}`
       await axiosInstance.delete(addOnDeleteUrl)
     } else {
       // Legacy Konnect or KM: delete the underlying partial as before
@@ -719,9 +720,8 @@ const clearPolling = (): void => {
 
 const pollManagedAddOnsState = async (): Promise<void> => {
   const konnectConfig = props.config as KonnectRedisConfigurationListConfig
-  const cloudGatewaysBase = konnectConfig.cloudGatewaysApiBaseUrl ?? props.config.apiBaseUrl
   const cpId = konnectConfig.controlPlaneId
-  const addOnsUrl = `${cloudGatewaysBase}/v2/cloud-gateways/add-ons`
+  const addOnsUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons`
 
   // Starting state: only update labels while there are still placeholders - no cache_config_id yet
   let placeholdersExist = false
