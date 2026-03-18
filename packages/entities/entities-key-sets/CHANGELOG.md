@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.9.52...@kong-ui-public/entities-key-sets@3.10.0) (2026-03-18)
+
+
+### Features
+
+* **entities-plugins:** jwt nodes for datakit flow editor ([#3002](https://github.com/Kong/public-ui-components/issues/3002)) ([c6d1667](https://github.com/Kong/public-ui-components/commit/c6d16674bb9a18b13629f56dc898c279be9c98b8))
+
+
+
+
+
 ## [3.9.52](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.9.51...@kong-ui-public/entities-key-sets@3.9.52) (2026-03-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-key-sets

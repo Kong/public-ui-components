@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.2.14...@kong-ui-public/error-boundary@2.3.0) (2026-03-18)
+
+
+### Features
+
+* **entities-plugins:** jwt nodes for datakit flow editor ([#3002](https://github.com/Kong/public-ui-components/issues/3002)) ([c6d1667](https://github.com/Kong/public-ui-components/commit/c6d16674bb9a18b13629f56dc898c279be9c98b8))
+
+
+
+
+
 ## [2.2.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.2.13...@kong-ui-public/error-boundary@2.2.14) (2026-01-26)
 
 
