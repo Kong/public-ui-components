@@ -30,7 +30,7 @@
     "@stylistic/stylelint-plugin": "^5.0.1",
     "@types/flat": "^5.0.5",
     "@types/js-yaml": "^4.0.9",
-    "@types/jsdom": "^27.0.0",
+    "@types/jsdom": "^28.0.0",
     "@types/node": "^24.10.11",
     "@types/uuid": "^11.0.0",
     "@vitejs/plugin-vue": "^5.2.4",
