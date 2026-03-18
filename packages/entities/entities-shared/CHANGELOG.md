@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.39.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.11...@kong-ui-public/entities-shared@3.39.12) (2026-03-18)
+
+
+### Bug Fixes
+
+* **entities-shared:** only apply new layout to plugin form ([#3003](https://github.com/Kong/public-ui-components/issues/3003)) ([5f88b3d](https://github.com/Kong/public-ui-components/commit/5f88b3d59b959a3c2c80ae7534d120d6d7046d6f))
+
+
+
+
+
 ## [3.39.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.10...@kong-ui-public/entities-shared@3.39.11) (2026-02-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
