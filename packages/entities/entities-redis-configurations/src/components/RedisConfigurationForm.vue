@@ -805,8 +805,8 @@ onBeforeMount(async () => {
 .managed-konnect-layout {
   // Override shared base form constraint so managed layout spans full width
   :deep(.kong-ui-entity-base-form) {
-    width: 100%;
     max-width: 100%;
+    width: 100%;
   }
 
   :deep(.kong-ui-entity-form-block .step) {
