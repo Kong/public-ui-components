@@ -39,7 +39,7 @@ export default function useDashboardInternalContext({
   })
 
   const internalContext = computed<DashboardRendererContextInternal>(() => {
-    let { tz, refreshInterval, editable, showTileActions } = context.value
+    let { tz, refreshInterval, editable, showTileActions, chartRenderer } = context.value
     const filters = [...(context.value.filters ?? []), ...(globalFilters.value)] as AllFilters[]
 
     if (!tz) {
@@ -93,6 +93,10 @@ export default function useDashboardInternalContext({
       showTileActions = true
     }
 
+    if (chartRenderer === undefined) {
+      chartRenderer = 'chartjs'
+    }
+
     // Check if the host app has provided an event handler for zooming.
     // If there's no handler, disable zooming -- it won't do anything.
     // Preview mode also disables zooming.
@@ -105,6 +109,7 @@ export default function useDashboardInternalContext({
       refreshInterval,
       editable,
       showTileActions,
+      chartRenderer,
       zoomable,
     }
   })

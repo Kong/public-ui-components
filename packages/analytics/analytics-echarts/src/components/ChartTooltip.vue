@@ -48,7 +48,10 @@
             class="square-marker"
             :style="{ background: item.backgroundColor, 'border-color': item.borderColor }"
           />
-          <div class="tooltip-item-label">
+          <div
+            class="tooltip-item-label"
+            :class="{ empty: item.isSegmentEmpty }"
+          >
             {{ item.label }}
           </div>
           <div class="tooltip-item-value">
@@ -64,28 +67,9 @@
 import type { AbsoluteTimeRangeV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { useElementSize, useDraggable } from '@vueuse/core'
 import { computed, useTemplateRef, watch } from 'vue'
+import type { TooltipState } from '../types'
 import ZoomActions, { type ZoomActionItem } from './ZoomActions.vue'
 import ZoomTimerange from './ZoomTimerange.vue'
-
-export interface TooltipEntry {
-  backgroundColor: string
-  borderColor: string
-  label: string
-  value: string | number
-  rawValue: number
-  isSegmentEmpty?: boolean
-}
-
-export interface TooltipState {
-  interactionMode: 'idle' | 'interactive' | 'selecting-chart-area' | 'zoom-interactive'
-  entries: TooltipEntry[]
-  visible: boolean
-  top: number
-  left: number
-  title?: string
-  subtitle?: string
-  metricDisplay?: string
-}
 
 const {
   state,
@@ -226,5 +210,11 @@ defineExpose({
       }
     }
   }
+}
+</style>
+
+<style lang="css">
+.no-select {
+  user-select: none;
 }
 </style>

@@ -47,6 +47,7 @@ describe('QueryDataProvider', () => {
     const wrapper = mount(QueryDataProvider, {
       props: {
         context: {
+          chartRenderer: 'chartjs',
           filters: [],
           timeSpec: { type: 'relative', time_range: '15m' },
           editable: false,
