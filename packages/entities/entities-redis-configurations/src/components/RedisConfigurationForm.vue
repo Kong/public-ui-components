@@ -41,7 +41,7 @@
 
       <component
         :is="isManagedKonnectLayout ? EntityFormBlock : 'div'"
-        v-bind="isManagedKonnectLayout ? { step: 2, title: t('form.managed_layout.configuration') } : {}"
+        v-bind="isManagedKonnectLayout ? { step: 2 + managedLayoutStepOffset, title: t('form.managed_layout.configuration') } : {}"
       >
         <!-- type section -->
         <EntityFormSection
@@ -461,7 +461,7 @@
       <EntityFormBlock
         v-if="isManagedKonnectLayout"
         class="managed-layout-general-block"
-        :step="3"
+        :step="3 + managedLayoutStepOffset"
         :title="t('form.managed_layout.general_information')"
       >
         <EntityFormSection
@@ -616,6 +616,12 @@ const isManagedKonnectLayout = computed<boolean>(() => {
 
   return !!props.config.isKonnectManagedRedisEnabled
 })
+
+// For non-cloud gateways, the selector hides managed step 1, so compress steps down:
+// so step 2 becomes 1 and step 3 becomes 2
+const managedLayoutStepOffset = computed<number>(() => (
+  (props.config as any).isCloudGateway === false ? -1 : 0
+))
 
 const isReferenceable = computed<{ host: boolean, port: boolean, serverName: boolean }>(() => {
   const canReferenceFields =
