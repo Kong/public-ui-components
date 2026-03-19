@@ -328,7 +328,11 @@ const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 
 /** True when list shows both Koko partials and Cloud Gateways managed-cache add-ons (Konnect only) */
 const isKonnectManagedRedisEnabled = computed<boolean>(() =>
-  props.config.app === 'konnect' && !!(props.config as KonnectRedisConfigurationListConfig).isKonnectManagedRedisEnabled,
+  props.config.app === 'konnect' &&
+  !!(props.config as KonnectRedisConfigurationListConfig).isKonnectManagedRedisEnabled &&
+  // Konnect-managed Redis is only supported for Cloud Gateways
+  // Other gateway types must keep using the legacy partials flow
+  (props.config as KonnectRedisConfigurationListConfig).isCloudGateway !== false,
 )
 
 const cloudGatewaysBase = computed<string>(() => {
