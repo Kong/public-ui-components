@@ -71,7 +71,7 @@ export function* walkFields(
 
     if (fieldValue === undefined) continue
 
-    const path = generalizePath(fieldKey)
+    const path = generalizePath(fieldKey, ctx.schemaMap)
     const fieldSchema = ctx.schemaMap[path]
 
     if (!fieldSchema) {
@@ -96,7 +96,7 @@ export function getArrayItemInfo(
   ctx: FillerContext,
 ): { itemKey: string, itemSchema: UnionFieldSchema } {
   const itemKey = resolve(fieldKey, String(index))
-  const itemPath = generalizePath(itemKey)
+  const itemPath = generalizePath(itemKey, ctx.schemaMap)
   const itemSchema = ctx.schemaMap[itemPath]
 
   if (!itemSchema) {

@@ -46,7 +46,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       createComputedRules: createComputedRenderRules,
       hiddenPaths,
       isFieldHidden,
-    } = createRenderRuleRegistry(() => onChange?.(getValue()))
+    } = createRenderRuleRegistry(() => onChange?.(getValue()), schemaHelpers.getSchemaMap)
 
     const rootRenderRules = useCurrentRenderRules({
       fieldPath: utils.rootSymbol,
@@ -140,6 +140,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     }
 
     ;(window as any).innerData = innerData
+    ;(window as any).getSchemaMap = schemaHelpers.getSchemaMap
 
     return {
       /**

@@ -9,7 +9,14 @@ const SHARED_LABEL_ATTRIBUTES = {
   },
 } as const
 
-import type { ArrayFieldSchema, ArrayLikeFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '../../../../types/plugins/form-schema'
+import type {
+  ArrayFieldSchema,
+  ArrayLikeFieldSchema,
+  FormSchema,
+  RecordFieldSchema,
+  UnionFieldSchema,
+  MapFieldSchema,
+} from '../../../../types/plugins/form-schema'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { MaybeRefOrGetter } from 'vue'
 
@@ -94,52 +101,38 @@ export function buildMapSchemaMap(mapSchema: MapFieldSchema, pathPrefix: string 
   return schemaMap
 }
 
-/**
- * 'a.0.b.1.c' => 'a.*.b.*.c'
- * Only generalizes numeric segments (array indices). Use generalizePathWithSchemaMap
- * for schema-aware generalization that also handles map keys.
- */
-export function generalizePath(p: string) {
-  const parts = utils
-    .toArray(p)
-    .map(node => /^\d+$/.test(node) ? utils.arraySymbol : node)
-  return utils.resolve(...parts)
-}
 
 /**
- * Schema-map-aware path generalization that handles both array indices and map keys.
- * Walks the path left-to-right, consulting the schema map at each level to determine
- * whether a segment is a static field name or a dynamic key (array index / map key).
+ * Generalizes a concrete path to a schema-compatible path.
  *
- * Examples:
- *   'config.myMap.someKey'           => 'config.myMap.*'
- *   'config.myMap.someKey.nested'    => 'config.myMap.*.nested'
- *   'config.servers.0.host'         => 'config.servers.*.host'
+ * - Numeric segments are replaced with `*` (array index placeholder).
+ * - Map key segments are replaced with `#` (map key placeholder)
+ *   by walking the path and consulting the schema at each level.
+ *
+ * @example
+ * generalizePath('a.0.b.1.c', schemaMap) // => 'a.*.b.*.c'
+ * generalizePath('map.foo.field', schemaMap) // => 'map.#.field'
  */
-export function generalizePathWithSchemaMap(
-  fullPath: string,
-  schemaMap: Record<string, UnionFieldSchema>,
-): string {
-  const segments = utils.toArray(fullPath)
-  if (segments.length === 0) return fullPath
-
+export function generalizePath(p: string, schemaMap: Record<string, UnionFieldSchema>) {
+  const parts = utils.toArray(p)
   const result: string[] = []
 
-  for (const seg of segments) {
-    const withLiteral = result.length
-      ? utils.resolve(...result, seg)
-      : seg
-    const withWildcard = result.length
-      ? utils.resolve(...result, utils.arraySymbol)
-      : utils.arraySymbol
+  for (let i = 0; i < parts.length; i++) {
+    const node = parts[i]
 
-    if (withLiteral in schemaMap) {
-      result.push(seg)
-    } else if (withWildcard in schemaMap) {
+    if (/^\d+$/.test(node)) {
       result.push(utils.arraySymbol)
+      continue
+    }
+
+    // Check if the parent path points to a map type in the schema
+    const parentPath = result.length > 0 ? utils.resolve(...result) : ''
+    const parentSchema = parentPath ? schemaMap[parentPath] : undefined
+
+    if (parentSchema?.type === 'map') {
+      result.push(utils.mapSymbol)
     } else {
-      // Fallback: numeric segments are always wildcards (array indices)
-      result.push(/^\d+$/.test(seg) ? utils.arraySymbol : seg)
+      result.push(node)
     }
   }
 
@@ -164,7 +157,12 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
   function getSchema(): FormSchema
   function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path: string): T | undefined
   function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path?: string): T | UnionFieldSchema | undefined {
-    return path == null ? schemaValue : schemaMap.value?.[generalizePathWithSchemaMap(path, schemaMap.value)]
+    // todo(zehao): remove me
+    if (path) {
+      const p = generalizePath(path, schemaMap.value)
+      console.log(path, '->', p)
+    }
+    return path == null ? schemaValue : schemaMap.value?.[generalizePath(path, schemaMap.value)]
   }
 
   /**
