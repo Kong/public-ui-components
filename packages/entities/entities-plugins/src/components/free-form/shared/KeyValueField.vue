@@ -195,7 +195,7 @@ defineExpose({
 .ff-kv-field {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
 
   // .k-label is required to override styles correctly in KM
   &-label.k-label {
@@ -206,19 +206,19 @@ defineExpose({
   &-header {
     align-items: center;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     height: 32px;
   }
 
   &-entry {
     align-items: center;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
 
     &-fields {
       display: flex;
       flex: 1 1 0;
-      gap: $kui-space-40;
+      gap: var(--kui-space-40, $kui-space-40);
     }
 
     &-key,
@@ -236,7 +236,7 @@ defineExpose({
   & &-entry--multiline :deep(.card-content) {
     align-items: flex-start;
     flex-direction: row;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
   }
 
   :deep(.k-tooltip p) {

@@ -45,7 +45,7 @@ const { getFieldID, value: labelValue } = composables.useAbstractFields({
 <style lang="scss" scoped>
 span.field-label {
   display: block;
-  margin-left: $kui-space-50;
+  margin-left: var(--kui-space-50, $kui-space-50);
   width: 100%;
 }
 </style>

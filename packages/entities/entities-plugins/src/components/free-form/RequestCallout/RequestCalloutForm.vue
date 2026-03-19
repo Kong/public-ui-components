@@ -148,6 +148,6 @@ function handleFormChange(value: Partial<RequestCalloutPlugin>, fields?: string[
 
 <style lang="scss" scoped>
 .rc-code :deep(textarea) {
-  font-family: $kui-font-family-code !important;
+  font-family: var(--kui-font-family-code, $kui-font-family-code) !important;
 }
 </style>

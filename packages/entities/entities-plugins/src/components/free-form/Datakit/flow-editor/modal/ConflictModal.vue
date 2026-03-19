@@ -109,18 +109,18 @@ defineExpose({
 .dk-confirm-modal-body {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-80;
+  gap: var(--kui-space-80, $kui-space-80);
 
   .connections {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
   }
 
   .connection {
     align-items: center;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
   }
 }
 

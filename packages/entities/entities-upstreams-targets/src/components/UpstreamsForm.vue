@@ -519,7 +519,7 @@ const submitData = async (): Promise<void> => {
 
   @media screen and (min-width: $kui-breakpoint-laptop) {
     &:deep(.form-section-wrapper) {
-      column-gap: $kui-space-130;
+      column-gap: var(--kui-space-130, $kui-space-130);
     }
   }
 }

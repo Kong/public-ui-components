@@ -358,17 +358,17 @@ export default {
   border-bottom: v-bind('isJsonArray ? "none" : `solid ${KUI_BORDER_WIDTH_10} ${KUI_COLOR_BORDER}`');
   box-sizing: border-box;
   display: v-bind('isJson && itemHasValue ? "block" : "flex"');
-  padding: $kui-space-60;
+  padding: var(--kui-space-60, $kui-space-60);
   padding-left: 0;
   width: 100%;
 
   .config-card-details-label {
     box-sizing: border-box;
-    padding-right: $kui-space-60;
+    padding-right: var(--kui-space-60, $kui-space-60);
     width: v-bind('isJson && itemHasValue ? "100%" : props.slim ? "50%" : "25%"');
 
     label {
-      color: $kui-color-text-neutral-stronger;
+      color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
       display: inline-flex;
       max-width: 100%;
 
@@ -406,7 +406,7 @@ export default {
     .copy-uuid-array {
       :deep(.k-copy) {
         &:not(:last-of-type) {
-          margin-bottom: $kui-space-40;
+          margin-bottom: var(--kui-space-40, $kui-space-40);
         }
       }
     }
@@ -419,7 +419,7 @@ export default {
   }
 
   .config-badge {
-    margin-right: $kui-space-20;
+    margin-right: var(--kui-space-20, $kui-space-20);
   }
 
   :deep(.k-label) {

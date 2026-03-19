@@ -135,13 +135,13 @@ const statusIcon = computed(() => {
 
 <style lang="scss" scoped>
 tr, td {
-  color: $kui-color-text;
+  color: var(--kui-color-text, $kui-color-text);
 }
 
 tbody {
   tr {
-    font-weight: $kui-font-weight-semibold;
-    line-height: $kui-line-height-80;
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    line-height: var(--kui-line-height-80, $kui-line-height-80);
   }
 }
 

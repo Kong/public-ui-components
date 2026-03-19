@@ -566,7 +566,7 @@ const advancedCollapsed = ref(true)
 .ff-standard-layout {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-80;
+  gap: var(--kui-space-80, $kui-space-80);
 
   .radio-group {
     width: 100%;
@@ -575,12 +575,12 @@ const advancedCollapsed = ref(true)
   .scope .radio-group,
   .disabled-scope :deep(.popover-trigger-wrapper) .radio-group {
     display: grid;
-    gap: $kui-space-50;
+    gap: var(--kui-space-50, $kui-space-50);
     grid-template-columns: repeat(2, 1fr);
   }
 
   :deep(.form-group) {
-    margin-bottom: $kui-space-70;
+    margin-bottom: var(--kui-space-70, $kui-space-70);
   }
 }
 </style>

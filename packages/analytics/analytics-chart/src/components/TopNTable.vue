@@ -416,8 +416,8 @@ const translateChartUnit = (unit: string, value: number): string => {
   width: 100%;
 
   .top-n-card-description {
-    color: $kui-color-text-neutral;
-    font-size: $kui-font-size-20;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
     text-align: right;
   }
 
@@ -449,7 +449,7 @@ const translateChartUnit = (unit: string, value: number): string => {
     }
 
     &-header-row {
-      border-bottom: $kui-border-width-10 solid $kui-color-border;
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     }
 
     &-header-cell {
@@ -461,18 +461,18 @@ const translateChartUnit = (unit: string, value: number): string => {
       }
 
       .table-header-label {
-        color: $kui-color-text;
-        font-size: $kui-font-size-30;
-        font-weight: $kui-font-weight-semibold;
-        line-height: $kui-line-height-40;
+        color: var(--kui-color-text, $kui-color-text);
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
+        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+        line-height: var(--kui-line-height-40, $kui-line-height-40);
       }
     }
 
     &-row {
-      border-bottom: $kui-border-width-10 solid $kui-color-border;
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
 
       &:first-of-type {
-        border-top: $kui-border-width-10 solid $kui-color-border;
+        border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
       }
 
       &:last-of-type {
@@ -491,8 +491,8 @@ const translateChartUnit = (unit: string, value: number): string => {
       padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
 
       &--name {
-        color: $kui-color-text-neutral-stronger;
-        font-size: $kui-font-size-30;
+        color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
         min-width: 200px;
         padding-right: var(--kui-space-80, $kui-space-80);
       }
@@ -500,8 +500,8 @@ const translateChartUnit = (unit: string, value: number): string => {
   }
 
   :deep(a) {
-    color: $kui-color-text-primary;
-    font-weight: $kui-font-weight-bold;
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
     text-decoration: none;
   }
 }

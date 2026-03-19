@@ -524,13 +524,13 @@ $branch-handle-size: 4px;
 $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
 
 .dk-flow-node {
-  background-color: $kui-color-background;
-  border: 1px solid $kui-color-border-neutral-weak;
-  border-radius: $kui-border-radius-20;
+  background-color: var(--kui-color-background, $kui-color-background);
+  border: 1px solid var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   cursor: move;
   max-width: $node-max-width;
   min-width: $node-min-width;
-  padding: $kui-space-40 0;
+  padding: var(--kui-space-40, $kui-space-40) 0;
 
   &.readonly {
     .menu {
@@ -541,9 +541,9 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
   .body {
     align-items: flex-start;
     display: flex;
-    gap: $kui-space-40;
-    margin-bottom: $kui-space-40;
-    padding: 0 $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
+    margin-bottom: var(--kui-space-40, $kui-space-40);
+    padding: 0 var(--kui-space-40, $kui-space-40);
 
     .error-icon {
       align-self: flex-start;
@@ -553,11 +553,11 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       -webkit-box-orient: vertical;
       display: -webkit-box;
       flex: 1 1 auto;
-      font-size: $kui-font-size-20;
-      font-weight: $kui-font-weight-semibold;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       -webkit-line-clamp: 2;
       line-clamp: 2;
-      line-height: $kui-line-height-20;
+      line-height: var(--kui-line-height-20, $kui-line-height-20);
       overflow: hidden;
       overflow-wrap: break-word;
       text-overflow: ellipsis;
@@ -580,15 +580,15 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       }
 
       :global(.dk-flow-node-menu .dropdown-item-trigger) {
-        font-size: $kui-font-size-20 !important;
-        padding: $kui-space-30 $kui-space-40 !important;
+        font-size: var(--kui-font-size-20, $kui-font-size-20) !important;
+        padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40) !important;
       }
     }
   }
 
   .handles {
     display: flex;
-    gap: $kui-space-30;
+    gap: var(--kui-space-30, $kui-space-30);
 
     &.reversed {
       flex-direction: row-reverse;
@@ -619,30 +619,30 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       align-items: center;
       display: flex;
       flex-direction: row;
-      gap: $kui-space-30;
+      gap: var(--kui-space-30, $kui-space-30);
       justify-self: start;
       max-width: 100%;
       /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-      max-width: calc(100% - $kui-space-30);
+      max-width: calc(100% - var(--kui-space-30, $kui-space-30));
       position: relative;
 
       .handle-label-wrapper {
         height: 100%;
         overflow: hidden;
-        padding: $kui-space-30 0;
+        padding: var(--kui-space-30, $kui-space-30) 0;
         position: relative;
 
         .handle-label {
           align-items: center;
-          background-color: $kui-color-background-neutral-weaker;
-          border-radius: $kui-border-radius-20;
-          color: $kui-color-text-neutral-strong;
+          background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+          border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
           display: flex;
-          font-size: $kui-font-size-20;
-          font-weight: $kui-font-weight-semibold;
-          gap: $kui-space-20;
-          line-height: $kui-line-height-10;
-          padding: $kui-space-10;
+          font-size: var(--kui-font-size-20, $kui-font-size-20);
+          font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+          gap: var(--kui-space-20, $kui-space-20);
+          line-height: var(--kui-line-height-10, $kui-line-height-10);
+          padding: var(--kui-space-10, $kui-space-10);
 
           &.text {
             display: block;
@@ -660,9 +660,9 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
     }
 
     :deep(.vue-flow__handle) {
-      background-color: $kui-color-background-neutral;
+      background-color: var(--kui-color-background-neutral, $kui-color-background-neutral);
       border: none;
-      border-radius: $kui-border-radius-round;
+      border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
       bottom: unset;
       flex: 1 0 auto;
       height: $handle-height;
@@ -681,21 +681,21 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       }
 
       &::after {
-        background-color: $kui-color-background-neutral;
-        border-radius: $kui-border-radius-round;
+        background-color: var(--kui-color-background-neutral, $kui-color-background-neutral);
+        border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
         content: "";
         display: block;
         inset: 0;
         pointer-events: none;
         position: absolute;
-        transition: box-shadow $kui-animation-duration-20 ease-in-out;
+        transition: box-shadow var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
       }
 
       &.connecting::after,
       &:hover::after {
-        background-color: $kui-color-background-primary;
+        background-color: var(--kui-color-background-primary, $kui-color-background-primary);
         /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-        box-shadow: 0 0 0 1px $kui-color-background-primary;
+        box-shadow: 0 0 0 1px var(--kui-color-background-primary, $kui-color-background-primary);
       }
     }
   }
@@ -705,25 +705,25 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
-    gap: $kui-space-20;
+    gap: var(--kui-space-20, $kui-space-20);
 
     .handle {
       align-items: center;
       display: flex;
-      gap: $kui-space-30;
-      padding-right: $kui-space-40;
+      gap: var(--kui-space-30, $kui-space-30);
+      padding-right: var(--kui-space-40, $kui-space-40);
       position: relative;
 
       .handle-label-wrapper {
-        padding: $kui-space-20 0;
+        padding: var(--kui-space-20, $kui-space-20) 0;
 
         .handle-label {
           background-color: transparent;
-          color: $kui-color-text-neutral-strong;
-          font-size: $kui-font-size-20;
-          font-weight: $kui-font-weight-semibold;
-          gap: $kui-space-20;
-          line-height: $kui-line-height-10;
+          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+          font-size: var(--kui-font-size-20, $kui-font-size-20);
+          font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+          gap: var(--kui-space-20, $kui-space-20);
+          line-height: var(--kui-line-height-10, $kui-line-height-10);
         }
 
         .text {
@@ -744,7 +744,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
         width: $branch-handle-size;
 
         &::after {
-          background-color: $kui-color-background-neutral;
+          background-color: var(--kui-color-background-neutral, $kui-color-background-neutral);
           content: "";
           display: block;
           height: 100%;
@@ -762,7 +762,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
     transform: translateX(math.div($handle-width + $node-border-width, -2));
 
     .handle.indented .handle-label {
-      margin-left: $kui-space-40;
+      margin-left: var(--kui-space-40, $kui-space-40);
     }
   }
 
@@ -771,7 +771,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
     transform: translateX(math.div($handle-width + $node-border-width, 2));
 
     .handle.indented .handle-label {
-      margin-right: $kui-space-40;
+      margin-right: var(--kui-space-40, $kui-space-40);
     }
   }
 
@@ -790,7 +790,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
 
       .handle.indented .handle-label {
         margin-left: unset;
-        margin-right: $kui-space-40;
+        margin-right: var(--kui-space-40, $kui-space-40);
       }
     }
 
@@ -799,7 +799,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       transform: translateX(math.div($handle-width + $node-border-width, -2));
 
       .handle.indented .handle-label {
-        margin-left: $kui-space-40;
+        margin-left: var(--kui-space-40, $kui-space-40);
         margin-right: unset;
       }
     }
@@ -808,7 +808,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       align-items: flex-start;
 
       .handle {
-        padding-left: $kui-space-40;
+        padding-left: var(--kui-space-40, $kui-space-40);
         padding-right: 0;
       }
 
@@ -821,15 +821,15 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
   }
 
   &.implicit {
-    background-color: $kui-color-background-disabled;
+    background-color: var(--kui-color-background-disabled, $kui-color-background-disabled);
     border-color: transparent; // Visually align with nodes with visible borders
 
     // Ensure specificity
     .input-handles,
     .output-handles {
       .handle .handle-label {
-        background-color: $kui-color-background-neutral-strong;
-        color: $kui-color-text-inverse;
+        background-color: var(--kui-color-background-neutral-strong, $kui-color-background-neutral-strong);
+        color: var(--kui-color-text-inverse, $kui-color-text-inverse);
       }
     }
   }
