@@ -4,7 +4,7 @@ export interface TokenExchange {
   cache?: {
     /**@default true */
     enabled?: boolean
-    ttl?: number
+    ttl?: number | null
   } | null
 
   request?: {
