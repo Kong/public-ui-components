@@ -232,7 +232,7 @@ const Form = computed(() => {
     }
 
     :deep(.ff-object-field-as-child) {
-      gap: var(--kui-space-60, $kui-space-60)
+      gap: var(--kui-space-60, $kui-space-60);
     }
   }
 
