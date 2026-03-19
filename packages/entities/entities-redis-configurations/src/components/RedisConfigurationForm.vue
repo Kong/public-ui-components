@@ -605,7 +605,16 @@ const router = useRouter()
 const codeBlockType = ref<string>('json')
 
 const isManagedKonnectLayout = computed<boolean>(() => {
-  return props.config.app === 'konnect' && !!props.config.isKonnectManagedRedisEnabled
+  if (props.config.app !== 'konnect') {
+    return false
+  }
+
+  // Keep backward compatibility: if UI-only flag is omitted, follow behavior flag
+  if (typeof props.config.useKonnectManagedRedisUi === 'boolean') {
+    return props.config.useKonnectManagedRedisUi
+  }
+
+  return !!props.config.isKonnectManagedRedisEnabled
 })
 
 const isReferenceable = computed<{ host: boolean, port: boolean, serverName: boolean }>(() => {

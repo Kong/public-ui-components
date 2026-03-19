@@ -14,8 +14,13 @@ export interface BaseRedisConfigurationListConfig {
 
 /** Konnect redis configuration list config */
 export interface KonnectRedisConfigurationListConfig extends KonnectBaseTableConfig, BaseRedisConfigurationListConfig {
-  /** Enables managed Konnect Redis copy variants in list empty-state/title/action text. */
+  /** Enables managed Konnect Redis behavior in list flows */
   isKonnectManagedRedisEnabled?: boolean
+  /**
+   * Enables managed-Konnect UI copy styling only
+   * If omitted, list UI falls back to `isKonnectManagedRedisEnabled`
+   */
+  useKonnectManagedRedisUi?: boolean
   /** Whether the selected CP is a Cloud Gateway. When false, Redis UI falls back to legacy flow */
   isCloudGateway?: boolean
   /** Optional CP geo used when calling Konnect Cloud Gateways APIs (eg. us, eu) */

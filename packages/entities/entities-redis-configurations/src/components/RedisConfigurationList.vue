@@ -27,13 +27,13 @@
           :auth-function="canCreate"
         >
           <KButton
-            :appearance="isKonnectManagedRedisEnabled ? 'secondary' : 'primary'"
+            :appearance="useKonnectManagedRedisUi ? 'secondary' : 'primary'"
             data-testid="toolbar-add-redis-configuration"
             size="large"
             :to="config.createRoute"
           >
             <AddIcon />
-            {{ isKonnectManagedRedisEnabled ? t('list.action') : t('actions.create') }}
+            {{ useKonnectManagedRedisUi ? t('list.action') : t('actions.create') }}
           </KButton>
         </PermissionsWrapper>
       </template>
@@ -335,6 +335,21 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() =>
   (props.config as KonnectRedisConfigurationListConfig).isCloudGateway !== false,
 )
 
+const useKonnectManagedRedisUi = computed<boolean>(() => {
+  if (props.config.app !== 'konnect') {
+    return false
+  }
+
+  const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+
+  // Keep backward compatibility: if UI-only flag is omitted, follow behavior flag
+  if (typeof konnectConfig.useKonnectManagedRedisUi === 'boolean') {
+    return konnectConfig.useKonnectManagedRedisUi
+  }
+
+  return !!konnectConfig.isKonnectManagedRedisEnabled
+})
+
 const cloudGatewaysBase = computed<string>(() => {
   const konnectConfig = props.config as KonnectRedisConfigurationListConfig
   return konnectConfig.cloudGatewaysApiBaseUrl ?? props.config.apiBaseUrl
@@ -516,8 +531,8 @@ const router = useRouter()
 const filterQuery = ref<string>('')
 
 const emptyStateDescription = computed<string>(() => {
-  // When managed Redis is enabled in Konnect, use the expanded onboarding message
-  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled.value) {
+  // Use expanded onboarding copy when managed-Konnect UI is enabled
+  if (props.config.app === 'konnect' && useKonnectManagedRedisUi.value) {
     return t('list.empty_state.description_with_managed_konnect')
   }
 
@@ -525,7 +540,7 @@ const emptyStateDescription = computed<string>(() => {
 })
 
 const emptyStateTitle = computed<string>(() => {
-  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled.value) {
+  if (props.config.app === 'konnect' && useKonnectManagedRedisUi.value) {
     return t('redis.empty_state.title_with_managed_konnect')
   }
 
@@ -533,7 +548,7 @@ const emptyStateTitle = computed<string>(() => {
 })
 
 const emptyStateActionText = computed<string>(() => {
-  if (props.config.app === 'konnect' && isKonnectManagedRedisEnabled.value) {
+  if (props.config.app === 'konnect' && useKonnectManagedRedisUi.value) {
     return t('list.action_with_managed_konnect')
   }
 

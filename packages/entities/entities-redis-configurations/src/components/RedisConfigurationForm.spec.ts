@@ -57,9 +57,21 @@ describe('RedisConfigurationForm', () => {
     expect(wrapper.find('.kong-ui-entities-redis-configurations-form').classes()).toContain('managed-konnect-layout')
   })
 
+  it('adds managed-konnect-layout class when UI-only flag is enabled', () => {
+    const wrapper = mountForm(konnect({
+      isKonnectManagedRedisEnabled: false,
+      useKonnectManagedRedisUi: true,
+    }))
+    expect(wrapper.find('.kong-ui-entities-redis-configurations-form').classes()).toContain('managed-konnect-layout')
+  })
+
   it('no managed layout when isKonnectManagedRedisEnabled is false or unset', () => {
     expect(mountForm(konnect()).find('.managed-konnect-layout').exists()).toBe(false)
     expect(mountForm(konnect({ isKonnectManagedRedisEnabled: false })).find('.managed-konnect-layout').exists()).toBe(false)
+    expect(mountForm(konnect({
+      isKonnectManagedRedisEnabled: true,
+      useKonnectManagedRedisUi: false,
+    })).find('.managed-konnect-layout').exists()).toBe(false)
   })
 
   it('no managed layout for Kong Manager', () => {
