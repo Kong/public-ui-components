@@ -101,7 +101,19 @@ A table component for Redis Configurations.
     - type: `string`
     - required: `true`
     - default: `undefined`
-    - *Specific to Konnect*. Name of the current control plane.
+    - *Specific to Konnect*. ID of the current control plane.
+
+  - `controlPlaneGeo`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - *Specific to Konnect*. Optional geo (e.g. `'us'`, `'eu'`) used when calling Konnect Cloud Gateways APIs for Konnect managed Redis.
+
+  - `cloudGatewaysApiBaseUrl`:
+    - type: `string`
+    - required: `false`
+    - default: `undefined`
+    - *Specific to Konnect*. Base URL for the Cloud Gateways API (add-ons list/delete).
 
 The base konnect or kongManger config.
 
@@ -174,7 +186,7 @@ Please refer to the [sandbox](../sandbox/pages/RedisConfigurationListPage.vue).
 
 ## TypeScript interfaces
 
-TypeScript interfaces [are available here](../src/types/redis-confiugration-list.ts) and can be directly imported into your host application. The following type interfaces are available for import:
+TypeScript interfaces [are available here](../src/types/redis-configuration-list.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
 import type {
@@ -182,5 +194,6 @@ import type {
   KonnectRedisConfigurationListConfig,
   KongManagerRedisConfigurationListConfig,
   EntityRow,
+  RedisConfigurationSource,
 } from '@kong-ui-public/entities-redis-configurations'
 ```
