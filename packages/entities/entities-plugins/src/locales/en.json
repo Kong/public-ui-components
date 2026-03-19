@@ -1,7 +1,7 @@
 {
   "actions": {
     "cancel": "Cancel",
-    "view_configuration": "View Configuration",
+    "view_configuration": "View configuration",
     "create": "New plugin",
     "create_custom": "Create",
     "configure": "Configure",
@@ -13,9 +13,9 @@
     "delete": "Delete",
     "disabled": "Disabled",
     "confirm_delete": "Yes, delete",
-    "view": "View Details",
-    "configure_dynamic_ordering": "Configure Dynamic Ordering",
-    "go_to_plugins": "Go to Plugins",
+    "view": "View details",
+    "configure_dynamic_ordering": "Configure dynamic ordering",
+    "go_to_plugins": "Go to plugins",
     "save": "Save",
     "add_entity": "Add {entity}",
     "remove_entity": "Remove {entity}",
@@ -30,12 +30,12 @@
     "deck": "decK"
   },
   "delete": {
-    "title": "Delete a Plugin",
+    "title": "Delete a plugin",
     "custom_title": "Delete {name}",
-    "custom_plugin": "Custom Plugin",
+    "custom_plugin": "Custom plugin",
     "description": "This action cannot be reversed.",
     "description_custom": "Please ensure this plugin is not in use. This action cannot be reversed.",
-    "plugin_schema_in_use_title": "Unable to Delete Custom Plugin",
+    "plugin_schema_in_use_title": "Unable to delete custom plugin",
     "plugin_schema_in_use_message": "The custom plugin schema {name} is being used in this control plane, please delete any existing instances before you delete this schema.",
     "confirmModalText1": "Are you sure you want to delete",
     "confirmModalText2": "Please ensure this plugin is not in use. This delete action cannot be reversed.",
@@ -80,17 +80,17 @@
         "new_plugin": "New plugin"
       },
       "table_headers": {
-        "applied_to": "Applied To",
+        "applied_to": "Applied to",
         "applied_to_badges": {
           "consumer": "Consumer",
           "global": "Global",
           "route": "Route",
           "service": "Service",
-          "consumer_group": "Consumer Group"
+          "consumer_group": "Consumer group"
         },
         "id": "ID",
         "name": "Name",
-        "instance_name": "Instance Name",
+        "instance_name": "Instance name",
         "ordering": "Ordering",
         "ordering_badge": {
           "dynamic": "Dynamic",
@@ -100,7 +100,7 @@
         "tags": "Tags"
       },
       "empty_state": {
-        "title": "Configure a New Plugin",
+        "title": "Configure a new plugin",
         "description": "Plugins are used to extend Kong functionality."
       },
       "empty_state_v2": {
@@ -600,18 +600,18 @@
       "service": "Service ID",
       "route": "Route ID",
       "consumer": "Consumer ID",
-      "consumer_group": "Consumer Group ID"
+      "consumer_group": "Consumer group ID"
     },
     "select": {
       "custom_badge_text": "This plugin is data plane node specific",
       "unavailable_tooltip": "This plugin is not available",
       "already_exists": "This plugin is already applied to this resource",
-      "misc_plugins": "Other Plugins",
+      "misc_plugins": "Other plugins",
       "show_all": "Show all",
       "view_more": "View more",
       "view_less": "View less",
       "filter": {
-        "title": "Filter Plugins",
+        "title": "Filter plugins",
         "featured": "Featured",
         "type": "Type",
         "clear": "Clear"
@@ -624,25 +624,25 @@
       },
       "tabs": {
         "kong": {
-          "title": "Kong Plugins",
+          "title": "Kong plugins",
           "description": "Kong plugins are bundled by default with Kong Gateway and are available across all control planes.",
-          "empty_title": "No Plugins",
+          "empty_title": "No plugins",
           "empty_description": "No plugins are available."
         },
         "custom": {
-          "title": "Custom Plugins",
+          "title": "Custom plugins",
           "description": "Custom plugins will be available in this control plane only.",
-          "disabled_tooltip": "Custom Plugins are not available with this Gateway. Create a Hybrid or Dedicated Cloud Gateway to leverage Custom Plugins.",
-          "empty_title": "No Custom Plugins",
-          "empty_description": "No custom plugins have been added to this Control Plane.",
+          "disabled_tooltip": "Custom plugins are not available with this gateway. Create a hybrid or dedicated cloud gateway to leverage custom plugins.",
+          "empty_title": "No custom plugins",
+          "empty_description": "No custom plugins have been added to this control plane.",
           "create": {
-            "name": "Custom Plugin",
+            "name": "Custom plugin",
             "description": "Upload schema file to create custom plugin"
           }
         }
       },
       "highlighted_plugins": {
-        "title": "Highlighted Plugins"
+        "title": "Highlighted plugins"
       }
     },
     "form": {
@@ -652,8 +652,8 @@
       "fields": {
         "enabled": {
           "label": "Enabled",
-          "on_text": "This plugin is Enabled",
-          "off_text": "This plugin is Disabled"
+          "on_text": "This plugin is enabled",
+          "off_text": "This plugin is disabled"
         },
         "plugin_status": {
           "label": "Plugin status",
@@ -689,39 +689,39 @@
       "scoping": {
         "label": "Scoped",
         "placeholder": "Search by name or UUID",
-        "disable_global_radio": "The plugin is set to 'Scoped' by default. To apply a plugin globally, please navigate to the global plugin list page.",
+        "disable_global_radio": "The plugin is set to 'scoped' by default. To apply a plugin globally, please navigate to the global plugin list page.",
         "global": {
           "label": "Global",
           "help": "All services, routes, and consumers"
         },
         "gateway_service": {
           "label": "Select a gateway service",
-          "help": "The Gateway Service to which this plugin configuration will apply",
-          "placeholder": "Select a Gateway Service",
-          "plural": "Gateway Services"
+          "help": "The gateway service to which this plugin configuration will apply",
+          "placeholder": "Select a gateway service",
+          "plural": "Gateway services"
         },
         "route": {
           "label": "Select a route",
-          "help": "The Route that this Plugin configuration will target",
-          "placeholder": "Select a Route",
+          "help": "The route that this plugin configuration will target",
+          "placeholder": "Select a route",
           "plural": "Routes"
         },
         "consumer": {
           "label": "Select a consumer",
-          "help": "The Consumer that this plugin configuration will target",
-          "placeholder": "Select a Consumer",
+          "help": "The consumer that this plugin configuration will target",
+          "placeholder": "Select a consumer",
           "plural": "Consumers"
         },
         "consumer_group": {
           "label": "Select a consumer group",
-          "help": "The Consumer Group that this plugin configuration will target",
-          "placeholder": "Select a Consumer Group",
-          "plural": "Consumer Groups"
+          "help": "The consumer group that this plugin configuration will target",
+          "placeholder": "Select a consumer group",
+          "plural": "Consumer groups"
         }
       },
       "grouping": {
         "plugin_configuration": {
-          "title": "Plugin Configuration",
+          "title": "Plugin configuration",
           "description": "Configuration parameters for this plugin. View advanced parameters for extended configuration.",
           "empty": "This plugin does not have required parameters."
         },
@@ -905,6 +905,21 @@
               "summary": "Transform JSON to XML",
               "description": "Transform JSON to XML."
             },
+            "jwt_decode": {
+              "name": "jwt_decode",
+              "summary": "Decode JWT headers and claims",
+              "description": "Parse a JWT without verifying its signature."
+            },
+            "jwt_sign": {
+              "name": "jwt_sign",
+              "summary": "Create and sign JWTs",
+              "description": "Generate a signed JWT from configured claims and a signing key."
+            },
+            "jwt_verify": {
+              "name": "jwt_verify",
+              "summary": "Verify JWT signature and claims",
+              "description": "Verify a JWT signature and validate claims such as exp, nbf, iss, and aud."
+            },
             "request": {
               "name": "request",
               "description": "Reads incoming client request properties. You cannot specify request node input."
@@ -960,6 +975,15 @@
             "branch": {
               "placeholder": "Select nodes"
             },
+            "jwt": {
+              "static_claims": {
+                "label": "Static claims",
+                "help": "Enter a JSON object. It will be stored as the node's static claims map.",
+                "errors": {
+                  "invalid_json_object": "Static claims must be a valid JSON object"
+                }
+              }
+            },
             "errors": {
               "invalid_identifier_format": "{fieldName} must start with a letter or underscore and contain only letters, numbers, underscores, or hyphens",
               "invalid_url_format": "Not a valid URL format",
@@ -1002,11 +1026,11 @@
     }
   },
   "redis": {
-    "title": "Redis Configuration",
+    "title": "Redis configuration",
     "shared_configuration": {
       "label": "Shared configuration",
       "description": "Select an existing shared Redis configuration or create a new one. Changes to this configuration automatically apply to all associated plugins.",
-      "title": "Shared Redis Configuration",
+      "title": "Shared Redis configuration",
       "error": "Fetching shared Redis configurations failed."
     },
     "dedicated_configuration": {
@@ -1016,8 +1040,8 @@
     "config_card": {
       "common_fields": {
         "created_at_label": "Created at",
-        "updated_at_label": "Last Updated at",
-        "type_label": "Redis Type"
+        "updated_at_label": "Last updated at",
+        "type_label": "Redis type"
       }
     }
   },
@@ -1026,14 +1050,14 @@
   },
   "custom_field": {
     "key_auth_identity_realms": {
-      "cp_label": "Current Control Plane",
-      "cp_group_label": "Control Plane",
-      "realm_group_label": "Realms (Can only select one)"
+      "cp_label": "Current control plane",
+      "cp_group_label": "Control plane",
+      "realm_group_label": "Realms (can only select one)"
     }
   },
   "sp": {
     "window_type": {
-      "label": "Rate Limit Window Type",
+      "label": "Rate limit window type",
       "help": "Sets the time window type to either <code>sliding</code> (default) or <code>fixed</code>.<br><ul><li>Sliding windows apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight.</li><li>Fixed windows consist of buckets that are statically assigned to a definitive time range, each request is mapped to only one fixed window based on its timestamp and will affect only that window&#39;s counters.</li></ul>",
       "options": {
         "fixed": "Fixed",
@@ -1041,7 +1065,7 @@
       }
     },
     "request_limits": {
-      "title": "Request Limits",
+      "title": "Request limits",
       "subtitle": "Set one or more limits on the number of API requests allowed within a defined timeframe.",
       "label": "Limit",
       "label_index": "Limit {index}",

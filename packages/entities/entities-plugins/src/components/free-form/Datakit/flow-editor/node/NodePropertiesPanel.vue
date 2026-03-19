@@ -82,6 +82,9 @@ import NodeFormBranch from '../node-forms/NodeFormBranch.vue'
 import NodeFormCache from '../node-forms/NodeFormCache.vue'
 import NodeFormXmlToJson from '../node-forms/NodeFormXmlToJson.vue'
 import NodeFormJsonToXml from '../node-forms/NodeFormJsonToXml.vue'
+import NodeFormJwtDecode from '../node-forms/NodeFormJwtDecode.vue'
+import NodeFormJwtSign from '../node-forms/NodeFormJwtSign.vue'
+import NodeFormJwtVerify from '../node-forms/NodeFormJwtVerify.vue'
 import { getNodeTypeDescription } from './node'
 import NodeBadge from './NodeBadge.vue'
 
@@ -151,6 +154,12 @@ const Form = computed(() => {
       return NodeFormXmlToJson
     case 'json_to_xml':
       return NodeFormJsonToXml
+    case 'jwt_decode':
+      return NodeFormJwtDecode
+    case 'jwt_sign':
+      return NodeFormJwtSign
+    case 'jwt_verify':
+      return NodeFormJwtVerify
     default:
       return null
   }

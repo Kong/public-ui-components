@@ -15,7 +15,7 @@
       v-bind="fieldAttrs"
       class="ff-tag-field"
       :data-1p-ignore="is1pIgnore"
-      :data-autofocus="isAutoFocus"
+      :data-autofocus="autofocus ? 'true' : undefined"
       :data-testid="`ff-${field.path.value}`"
       :model-value="rawInputValue ?? ''"
       @update:model-value="handleUpdate"
@@ -39,7 +39,7 @@ import type { LabelAttributes } from '@kong/kongponents'
 import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from './utils'
-import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
+import { useField, useFieldAttrs } from './composables'
 import type { SetFieldSchema } from '../../../types/plugins/form-schema'
 import type { BaseFieldProps } from './types'
 
@@ -58,6 +58,7 @@ interface StringFieldProps extends BaseFieldProps {
 }
 
 const {
+  autofocus,
   name,
   ...props
 } = defineProps<StringFieldProps>()
@@ -86,9 +87,6 @@ function handleUpdate(value: string) {
   fieldValue!.value = finalValue
   emit('update:modelValue', finalValue)
 }
-
-const isAutoFocus = useIsAutoFocus(field.ancestors)
-
 const is1pIgnore = computed(() => {
   if (attrs['data-1p-ignore'] !== undefined) return attrs['data-1p-ignore']
   return utils.getName(name) === 'name'

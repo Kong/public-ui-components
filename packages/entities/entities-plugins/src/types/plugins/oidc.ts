@@ -8,6 +8,8 @@ export interface TokenExchange {
   } | null
 
   request?: {
+    audience?: string[] | null
+    scopes?: string[] | null
     empty_audience?: boolean
     empty_scopes?: boolean
   } | null

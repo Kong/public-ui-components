@@ -55,7 +55,7 @@
           <li v-if="state.tooltipSeries.length">
             <div
               class="square-marker"
-              :style="{ background: backgroundColor, 'border-color': borderColor }"
+              :style="{ background: String(backgroundColor), borderColor: String(borderColor) }"
             />
             <span
               class="display-label"

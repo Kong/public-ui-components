@@ -147,7 +147,7 @@ describe('<PluginList />', () => {
         .should('not.contain.text', 'Global')
         .should('contain.text', 'Route')
         .should('contain.text', 'Consumer')
-        .should('contain.text', 'Consumer Group')
+        .should('contain.text', 'Consumer group')
         .should('have.lengthOf', 3)
 
       cy.getTestId('acl').find('[data-testid="appliedTo"] .k-badge')

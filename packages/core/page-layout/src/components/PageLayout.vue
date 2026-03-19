@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject } from 'vue'
+import { computed, ref, provide, inject, onUnmounted } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
@@ -66,18 +66,33 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
  * 1. Every PageLayout provides a registration callback under this key.
  * 2. On mount, each PageLayout tries to inject the callback from its nearest ancestor.
  *    If found, it calls it — telling the parent "I exist, hide your header."
+ * 3. The registration callback returns an unregister function. On unmount, the child
+ *    calls it so the parent restores its own header (e.g. when navigating back via
+ *    router-view and the child PageLayout is destroyed). A ref-counted approach
+ *    (nestedCount) is used so the parent only restores its header when all nested
+ *    children have unmounted, not just the first one.
  */
-const hasNestedPageLayout = ref<boolean>(false)
-provide(nestedPageLayoutInjectionKey, (): void => {
-  // Set the local ref to true when the callback is called
-  hasNestedPageLayout.value = true
+const nestedCount = ref(0)
+const hasNestedPageLayout = computed(() => nestedCount.value > 0)
+provide(nestedPageLayoutInjectionKey, (): (() => void) => {
+  nestedCount.value++
+
+  // Unregister function returned on callback to be called on unmount
+  return () => {
+    nestedCount.value--
+  }
 })
 
 // If this instance is itself nested inside another PageLayout, notify the parent.
-const setHasNestedPageLayout = inject<(() => void) | null>(nestedPageLayoutInjectionKey, null)
-if (typeof setHasNestedPageLayout === 'function') {
-  setHasNestedPageLayout()
+const registerNestedPageLayout = inject<(() => (() => void)) | null>(nestedPageLayoutInjectionKey, null)
+const unregisterNestedPageLayout = ref<(() => void) | null>(null)
+if (typeof registerNestedPageLayout === 'function') {
+  unregisterNestedPageLayout.value = registerNestedPageLayout()
 }
+
+onUnmounted(() => {
+  unregisterNestedPageLayout.value?.()
+})
 </script>
 
 <style lang="scss" scoped>

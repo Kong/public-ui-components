@@ -1,6 +1,7 @@
 import type { ConfigNodeType, DatakitConfig, FieldName } from './strict'
 
 import { z } from 'zod'
+import { JWT_ALGORITHMS } from '../constants'
 import {
   HttpMethodSchema,
   isImplicitName,
@@ -59,10 +60,28 @@ const CacheInputsSchema = z
   .partial()
   .strict()
 
+const JwtSignInputsSchema = z
+  .object({
+    claims: LooseConnectionSchema.nullish(),
+    key: LooseConnectionSchema.nullish(),
+  })
+  .partial()
+  .strict()
+
+const JwtVerifyInputsSchema = z
+  .object({
+    key: LooseConnectionSchema.nullish(),
+    token: LooseConnectionSchema.nullish(),
+  })
+  .partial()
+  .strict()
+
 const COMPAT_INPUT_SCHEMAS_BY_NODE_TYPE: Partial<Record<ConfigNodeType, z.ZodObject<z.ZodRawShape>>> = {
   call: CallInputsSchema,
   exit: ExitInputsSchema,
   cache: CacheInputsSchema,
+  jwt_sign: JwtSignInputsSchema,
+  jwt_verify: JwtVerifyInputsSchema,
 }
 
 export function getCompatInputFieldsByNodeType(type: ConfigNodeType): FieldName[] | null {
@@ -198,6 +217,57 @@ const CacheNodeSchema = ConfigNodeBaseSchema.safeExtend({
   ttl: z.union([z.number(), z.string()]).nullish(),
 }).strict()
 
+const JwtDecodeNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('jwt_decode'),
+  inputs: z.never().nullish(),
+  outputs: z
+    .object({
+      header: LooseConnectionSchema.nullish(),
+      payload: LooseConnectionSchema.nullish(),
+      signature: LooseConnectionSchema.nullish(),
+    })
+    .partial()
+    .nullish(),
+}).strict()
+
+const JwtSignNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('jwt_sign'),
+  algorithm: z.enum(JWT_ALGORITHMS).nullish(),
+  expires_in: z.union([z.number(), z.string()]).nullish(),
+  inputs: JwtSignInputsSchema.nullish(),
+  kid: z.string().nullish(),
+  not_before: z.union([z.number(), z.string()]).nullish(),
+  outputs: z
+    .object({
+      claims: LooseConnectionSchema.nullish(),
+      header: LooseConnectionSchema.nullish(),
+      token: LooseConnectionSchema.nullish(),
+    })
+    .partial()
+    .nullish(),
+  static_claims: z.record(z.string(), z.string()).nullish(),
+  typ: z.string().nullish(),
+}).strict()
+
+const JwtVerifyNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('jwt_verify'),
+  allowed_algorithms: z.array(z.enum(JWT_ALGORITHMS)).nullish(),
+  audiences: z.array(z.string()).nullish(),
+  inputs: JwtVerifyInputsSchema.nullish(),
+  issuers: z.array(z.string()).nullish(),
+  leeway: z.union([z.number(), z.string()]).nullish(),
+  outputs: z
+    .object({
+      claims: LooseConnectionSchema.nullish(),
+      header: LooseConnectionSchema.nullish(),
+    })
+    .partial()
+    .nullish(),
+  required_claims: z.array(z.string()).nullish(),
+  validate_exp: z.boolean().nullish(),
+  validate_nbf: z.boolean().nullish(),
+}).strict()
+
 /**
  * Branch node schema with loose validation.
  * Supports conditional execution with `then` and `else` branches.
@@ -216,6 +286,9 @@ const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
     JqNodeSchema,
     XmlToJsonNodeSchema,
     JsonToXmlNodeSchema,
+    JwtDecodeNodeSchema,
+    JwtSignNodeSchema,
+    JwtVerifyNodeSchema,
     PropertyNodeSchema,
     StaticNodeSchema,
     CacheNodeSchema,

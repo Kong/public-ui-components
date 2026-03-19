@@ -119,14 +119,31 @@ export function useKeyValueField<
   // Sync entries to fieldValue
   watch(entries, (newEntries) => {
     if (!syncToFieldValue) return
-    const newValue: Record<TKey, TValue> | null = newEntries.length
-      ? Object.fromEntries(newEntries.map(({ key, value }) => [key, value]).filter(([key]) => key))
-      : emptyOrDefaultValue?.value
+    const emptyValue = emptyOrDefaultValue?.value as Record<TKey, TValue> | null | undefined
+    const normalizedEntries = newEntries
+      .map(({ key, value }) => [key, value] as const)
+      .filter(([key]) => key)
+    const newValue: Record<TKey, TValue> | null | undefined = normalizedEntries.length
+      ? Object.fromEntries(normalizedEntries) as Record<TKey, TValue>
+      : emptyValue
+    const currentValue = fieldValue!.value
+    const currentOrDefaultValue = currentValue ?? emptyValue
+
     // Avoid updating fieldValue to `null` from `{}`
     // Currently, the UI does not distinguish between `null` and `{}` well, we'll improve it later. KM-2069
-    if (newValue === null && fieldValue!.value !== null && typeof fieldValue!.value === 'object' && Object.keys(fieldValue!.value).length === 0) {
+    if (newValue === null && currentValue !== null && typeof currentValue === 'object' && Object.keys(currentValue).length === 0) {
       return
     }
+
+    // Ignore draft-only edits until they produce a different serialized value.
+    if (isEqual(newValue, currentOrDefaultValue)) {
+      return
+    }
+
+    if (newValue === undefined) {
+      return
+    }
+
     fieldValue!.value = newValue
     lastUpdatedValue = newValue
     emit('change', newValue)

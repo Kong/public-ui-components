@@ -11,6 +11,7 @@
     v-show="!hide"
     v-bind="fieldAttrs"
     class="ff-boolean-field"
+    :data-autofocus="autofocus ? 'true' : undefined"
     :data-testid="`ff-${field.path.value}`"
     :model-value="!!(fieldValue == null ? (emptyOrDefaultValue || false) : fieldValue)"
     @update:model-value="handleUpdate"
@@ -42,7 +43,7 @@ interface InputProps extends BaseFieldProps {
   modelValue?: boolean
 }
 
-const { name, ...props } = defineProps<InputProps>()
+const { autofocus, name, ...props } = defineProps<InputProps>()
 const { value: fieldValue, hide, emptyOrDefaultValue, ...field } = useField<boolean>(toRef(() => name))
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]

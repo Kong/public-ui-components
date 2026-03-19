@@ -12,6 +12,7 @@
   <component
     :is="field.renderer.value"
     v-else-if="field.renderer.value"
+    :autofocus="props.autofocus"
     :name="utils.resolveRoot(field.path.value)"
     @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
   />
@@ -21,6 +22,7 @@
     <component
       :is="fieldRenderer"
       v-if="fieldRenderer"
+      :autofocus="props.autofocus"
       :name="utils.resolveRoot(field.path.value)"
     />
 

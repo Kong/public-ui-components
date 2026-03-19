@@ -9,12 +9,30 @@ export function resetEmptyTokenExchange(config?: { token_exchange?: TokenExchang
     return config
   }
 
+  // Reset request.audience to null if they are empty arrays or undefined
+  if (
+    Array.isArray(config.token_exchange.request?.audience) && config.token_exchange.request.audience.length === 0
+    || config.token_exchange.request && !config.token_exchange.request.audience
+  ) {
+    config.token_exchange.request.audience = null
+  }
+
+  // Reset request.scopes to null if they are empty arrays or undefined
+  if (
+    Array.isArray(config.token_exchange.request?.scopes) && config.token_exchange.request.scopes.length === 0
+    || config.token_exchange.request && !config.token_exchange.request.scopes
+  ) {
+    config.token_exchange.request.scopes = null
+  }
+
   const emptyTokenExchanges: TokenExchange[] = [
     {
       cache: {
         enabled: true,
       },
       request: {
+        audience: null,
+        scopes: null,
         empty_audience: false,
         empty_scopes: false,
       },
@@ -25,6 +43,8 @@ export function resetEmptyTokenExchange(config?: { token_exchange?: TokenExchang
         enabled: true,
       },
       request: {
+        audience: null,
+        scopes: null,
         empty_audience: false,
         empty_scopes: false,
       },

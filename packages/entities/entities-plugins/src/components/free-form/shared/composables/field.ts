@@ -1,4 +1,4 @@
-import { computed, onUnmounted, toRaw, toValue, useAttrs, watch } from 'vue'
+import { computed, onUnmounted, toRaw, toValue, watch } from 'vue'
 import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../../constants'
 import { get, set, uniqueId } from 'lodash-es'
 import { useFieldAncestors } from './ancestors'
@@ -6,7 +6,6 @@ import { useFieldPath, useFieldRenderer } from './field-path'
 import { useFormShared } from './form-context'
 import * as utils from '../utils'
 
-import type { Ancestor } from './ancestors'
 import type { FormSchema, UnionFieldSchema } from '../../../../types/plugins/form-schema'
 import type { MaybeRefOrGetter } from 'vue'
 
@@ -52,31 +51,6 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
     emptyOrDefaultValue,
     error: null,
   }
-}
-
-
-export function useIsAutoFocus(fieldAncestors?: MaybeRefOrGetter<Ancestor>) {
-  const { getSchema } = useFormShared()
-  const attrs = useAttrs()
-
-  return computed(() => {
-    if (attrs['data-autofocus'] !== undefined) {
-      return true
-    }
-
-    if (!fieldAncestors) {
-      return false
-    }
-
-    // If is child of array then return true
-    const parent = toValue(fieldAncestors).parent
-    if (parent?.path) {
-      const parentType = getSchema(parent.path)?.type
-      return parentType === 'array'
-    }
-
-    return false
-  })
 }
 
 /**

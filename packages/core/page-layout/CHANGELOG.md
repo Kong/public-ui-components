@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.3...@kong-ui-public/page-layout@0.2.4) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+## [0.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.2...@kong-ui-public/page-layout@0.2.3) (2026-03-17)
+
+
+### Bug Fixes
+
+* **page-layout:** nested page layout detection restore state ([#3005](https://github.com/Kong/public-ui-components/issues/3005)) ([dbe6a9e](https://github.com/Kong/public-ui-components/commit/dbe6a9ead05561a3bd8d08070c06a550346ccaf8))
+
+
+
+
+
 ## [0.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.1...@kong-ui-public/page-layout@0.2.2) (2026-03-10)
 
 

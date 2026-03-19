@@ -290,7 +290,7 @@ describe('<ConfigCardItem />', () => {
 
       cy.get('.config-card-details-row').should('be.visible')
       cy.getTestId(`${item.key}-json-code`).should('be.visible')
-      cy.getTestId(`${item.key}-json-code`).should('contain.text', JSON.stringify(obj, null, 2))
+      cy.getTestId(`${item.key}-json-code`).should('contain.text', JSON.stringify(obj, null, 2).replace(/\n/g, ''))
     })
 
     it('renders a JSON Array field correctly', () => {

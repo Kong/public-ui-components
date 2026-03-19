@@ -215,7 +215,7 @@ describe('<PluginForm />', () => {
       cy.get('#route-id').should('be.visible')
 
       cy.getTestId('collapse-title')
-        .contains('Plugin Configuration')
+        .contains('Plugin configuration')
         .parents('.k-collapse')
         .first()
         .as('pluginFields')
@@ -286,7 +286,7 @@ describe('<PluginForm />', () => {
       cy.get('#route-id').should('be.visible')
 
       cy.getTestId('collapse-title')
-        .contains('Plugin Configuration')
+        .contains('Plugin configuration')
         .parents('.k-collapse')
         .first()
         .as('pluginFields')
@@ -1190,7 +1190,7 @@ describe('<PluginForm />', () => {
       cy.get('#route-id').should('be.visible')
 
       cy.getTestId('collapse-title')
-        .contains('Plugin Configuration')
+        .contains('Plugin configuration')
         .parents('.k-collapse')
         .first()
         .as('pluginFields')
@@ -1261,7 +1261,7 @@ describe('<PluginForm />', () => {
       cy.get('#route-id').should('be.visible')
 
       cy.getTestId('collapse-title')
-        .contains('Plugin Configuration')
+        .contains('Plugin configuration')
         .parents('.k-collapse')
         .first()
         .as('pluginFields')

@@ -1,5 +1,11 @@
 import { z } from 'zod'
-import { CONFIG_NODE_TYPES, HTTP_METHODS, IMPLICIT_NODE_NAMES, IMPLICIT_NODE_TYPES } from '../constants'
+import {
+  CONFIG_NODE_TYPES,
+  HTTP_METHODS,
+  IMPLICIT_NODE_NAMES,
+  IMPLICIT_NODE_TYPES,
+  JWT_ALGORITHMS,
+} from '../constants'
 import { validateInputOutputExclusivity, validateNamesAndConnections } from './shared'
 
 export const ImplicitNodeTypeSchema = z.enum(IMPLICIT_NODE_TYPES)
@@ -102,13 +108,31 @@ const CacheInputsSchema = z
   .partial()
   .strict()
 
+const JwtSignInputsSchema = z
+  .object({
+    claims: NullishNameConnectionSchema,
+    key: NullishNameConnectionSchema,
+  })
+  .partial()
+  .strict()
+
+const JwtVerifyInputsSchema = z
+  .object({
+    key: NullishNameConnectionSchema,
+    token: NullishNameConnectionSchema,
+  })
+  .partial()
+  .strict()
+
 export const HttpMethodSchema = z.enum(HTTP_METHODS)
+export const JWTAlgorithmSchema = z.enum(JWT_ALGORITHMS)
 
 /**
  * Standard HTTP/1.1 verbs accepted by the `call` node.
  * The string must contain only uppercase letters.
  */
 export type HttpMethod = z.infer<typeof HttpMethodSchema>
+export type JWTAlgorithm = z.infer<typeof JWTAlgorithmSchema>
 
 export const ConfigNodeBaseSchema = z
   .object({
@@ -161,9 +185,9 @@ export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
    */
   method: HttpMethodSchema.default('GET').nullish(),
   /** A string representing an SNI (server name indication) value for TLS. */
-  ssl_server_name: z.string().min(1).nullish(),
+  ssl_server_name: z.string().nullish(),
   /** Whether to verify the TLS certificate when making HTTPS requests. */
-  ssl_verify: z.boolean().nullish(),
+  ssl_verify: z.boolean().default(true).nullish(),
   /**
    * An integer representing a timeout in milliseconds.
    * Must be between 0 and 2^31-2.
@@ -295,6 +319,63 @@ export const JsonToXmlNodeSchema = ConfigNodeBaseSchema.safeExtend({
 /** Transform JSON to XML. */
 export type JsonToXmlNode = z.infer<typeof JsonToXmlNodeSchema>
 
+export const JwtDecodeNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('jwt_decode'),
+  inputs: z.never().nullish(),
+  outputs: z
+    .object({
+      header: NullishNameConnectionSchema,
+      payload: NullishNameConnectionSchema,
+      signature: NullishNameConnectionSchema,
+    })
+    .partial()
+    .nullish(),
+}).strict()
+
+export type JwtDecodeNode = z.infer<typeof JwtDecodeNodeSchema>
+
+export const JwtSignNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('jwt_sign'),
+  algorithm: JWTAlgorithmSchema,
+  expires_in: z.number().int().default(300).nullish(),
+  inputs: JwtSignInputsSchema.nullish(),
+  kid: z.string().nullish(),
+  not_before: z.number().int().default(0).nullish(),
+  outputs: z
+    .object({
+      claims: NullishNameConnectionSchema,
+      header: NullishNameConnectionSchema,
+      token: NullishNameConnectionSchema,
+    })
+    .partial()
+    .nullish(),
+  static_claims: z.record(z.string(), z.string()).default({}).nullish(),
+  typ: z.string().default('JWT').nullish(),
+}).strict()
+
+export type JwtSignNode = z.infer<typeof JwtSignNodeSchema>
+
+export const JwtVerifyNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('jwt_verify'),
+  allowed_algorithms: z.array(JWTAlgorithmSchema).default([]).nullish(),
+  audiences: z.array(z.string()).default([]).nullish(),
+  inputs: JwtVerifyInputsSchema.nullish(),
+  issuers: z.array(z.string()).default([]).nullish(),
+  leeway: z.number().int().default(0).nullish(),
+  outputs: z
+    .object({
+      claims: NullishNameConnectionSchema,
+      header: NullishNameConnectionSchema,
+    })
+    .partial()
+    .nullish(),
+  required_claims: z.array(z.string()).default([]).nullish(),
+  validate_exp: z.boolean().default(true).nullish(),
+  validate_nbf: z.boolean().default(true).nullish(),
+}).strict()
+
+export type JwtVerifyNode = z.infer<typeof JwtVerifyNodeSchema>
+
 export const PropertyNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('property'),
   /**
@@ -306,7 +387,7 @@ export const PropertyNodeSchema = ConfigNodeBaseSchema.safeExtend({
     .enum(['application/json', 'text/plain', 'application/octet-stream'])
     .nullish(),
   /** The property name to get/set. */
-  property: z.string().min(1),
+  property: z.string().min(1).max(255),
   inputs: z.never().nullish(),
   outputs: z.never().nullish(),
 }).strict()
@@ -348,8 +429,8 @@ export type CacheNode = z.infer<typeof CacheNodeSchema>
 
 export const BranchNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('branch'),
-  then: z.array(NodeNameSchema).nullish(),
-  else: z.array(NodeNameSchema).nullish(),
+  then: z.array(ConfigNodeNameSchema).min(1).max(64).nullish(),
+  else: z.array(ConfigNodeNameSchema).min(1).max(64).nullish(),
 }).strict()
 
 /** Conditionally route execution to `then` or `else` logical branches. */
@@ -362,6 +443,9 @@ export const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
     JqNodeSchema,
     XmlToJsonNodeSchema,
     JsonToXmlNodeSchema,
+    JwtDecodeNodeSchema,
+    JwtSignNodeSchema,
+    JwtVerifyNodeSchema,
     PropertyNodeSchema,
     StaticNodeSchema,
     CacheNodeSchema,
@@ -459,7 +543,7 @@ const CacheRedisSchema = z
       .nullish(),
 
     ssl: z.boolean().default(false).nullish(),
-    ssl_verify: z.boolean().default(false).nullish(),
+    ssl_verify: z.boolean().default(true).nullish(),
     server_name: z.string().nullish(),
     cluster_max_redirections: z.number().int().default(5).nullish(),
     connection_is_proxied: z.boolean().default(false).nullish(),

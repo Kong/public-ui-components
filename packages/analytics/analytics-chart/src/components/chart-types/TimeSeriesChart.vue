@@ -138,14 +138,14 @@ const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 const zoomTimeRange = ref<AbsoluteTimeRangeV4 | undefined>(undefined)
 const isDoingSelection = ref(false)
 
-const tooltipData = reactive<TooltipState>({
+const tooltipData: TooltipState = reactive({
   showTooltip: false,
   tooltipContext: 0, // Set in lineChartTooltipBehavior
-  metricDisplay: props.tooltipMetricDisplay,
+  metricDisplay: toRef(props, 'tooltipMetricDisplay'),
   tooltipSeries: [],
   left: '',
   top: '',
-  units: props.metricUnit,
+  units: toRef(props, 'metricUnit'),
   translateUnit,
   offsetX: 0,
   offsetY: 0,
