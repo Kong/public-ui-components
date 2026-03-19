@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.171.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.171.2...@kong-ui-public/entities-plugins@9.171.3) (2026-03-19)
+
+
+### Bug Fixes
+
+* **entities-plugins:** reset audience and scopes to null for empty arrays or undefined ([#3021](https://github.com/Kong/public-ui-components/issues/3021)) ([f3fe18f](https://github.com/Kong/public-ui-components/commit/f3fe18f057a70fb57919f1a4b6259d260025867c))
+
+
+
+
+
 ## [9.171.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.171.1...@kong-ui-public/entities-plugins@9.171.2) (2026-03-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
