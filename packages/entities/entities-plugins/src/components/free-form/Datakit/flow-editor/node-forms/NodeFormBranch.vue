@@ -38,6 +38,8 @@
       </template>
     </EnumField>
 
+    <NodeFormDivider />
+
     <InputsField
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
@@ -55,6 +57,7 @@ import { ref } from 'vue'
 import Form from '../../../shared/Form.vue'
 import NameField from './NameField.vue'
 import InputsField from './InputsField.vue'
+import NodeFormDivider from './NodeFormDivider.vue'
 import { KLabel } from '@kong/kongponents'
 import useI18n from '../../../../../composables/useI18n'
 import { useSubSchema, type BaseFormData } from '../composables/useNodeForm'

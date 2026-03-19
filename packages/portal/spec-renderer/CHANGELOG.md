@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.0...@kong-ui-public/spec-renderer@2.6.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+# [2.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.5.30...@kong-ui-public/spec-renderer@2.6.0) (2026-03-18)
+
+
+### Features
+
+* **entities-plugins:** jwt nodes for datakit flow editor ([#3002](https://github.com/Kong/public-ui-components/issues/3002)) ([c6d1667](https://github.com/Kong/public-ui-components/commit/c6d16674bb9a18b13629f56dc898c279be9c98b8))
+
+
+
+
+
 ## [2.5.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.5.29...@kong-ui-public/spec-renderer@2.5.30) (2026-02-26)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

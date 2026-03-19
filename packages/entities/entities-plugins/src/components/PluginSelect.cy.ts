@@ -121,7 +121,7 @@ describe('<PluginSelect />', {
 
       cy.wait('@getAvailablePlugins')
 
-      cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
+      cy.getTestId('Highlighted plugins-collapse').as('highlightedPlugins').should('be.visible')
 
       cy.get('@highlightedPlugins').findTestId('collapse-trigger-content').should('not.exist')
       cy.get('@highlightedPlugins').findTestId('basic-auth-card').should('be.visible')
@@ -145,7 +145,7 @@ describe('<PluginSelect />', {
 
       cy.wait('@getAvailablePlugins')
 
-      cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
+      cy.getTestId('Highlighted plugins-collapse').as('highlightedPlugins').should('be.visible')
 
       cy.get('@highlightedPlugins').findTestId('collapse-trigger-content')
         .should('be.visible')
@@ -460,7 +460,7 @@ describe('<PluginSelect />', {
 
       cy.wait('@getAvailablePlugins')
 
-      cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
+      cy.getTestId('Highlighted plugins-collapse').as('highlightedPlugins').should('be.visible')
 
       cy.get('@highlightedPlugins').findTestId('collapse-trigger-content').should('not.exist')
       cy.get('@highlightedPlugins').findTestId('basic-auth-card').should('be.visible')
@@ -484,7 +484,7 @@ describe('<PluginSelect />', {
 
       cy.wait('@getAvailablePlugins')
 
-      cy.getTestId('Highlighted Plugins-collapse').as('highlightedPlugins').should('be.visible')
+      cy.getTestId('Highlighted plugins-collapse').as('highlightedPlugins').should('be.visible')
 
       cy.get('@highlightedPlugins').findTestId('collapse-trigger-content')
         .should('be.visible')

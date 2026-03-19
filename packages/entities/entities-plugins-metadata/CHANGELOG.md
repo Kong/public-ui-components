@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.13.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.13.1...@kong-ui-public/entities-plugins-metadata@1.13.2) (2026-03-18)
+
+
+### Bug Fixes
+
+* **entities-plugins:** standardize capitalization ([#3006](https://github.com/Kong/public-ui-components/issues/3006)) ([0b39c74](https://github.com/Kong/public-ui-components/commit/0b39c7469602f993b5ba97442e5c4c882de5e101))
+
+
+
+
+
 ## [1.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.13.0...@kong-ui-public/entities-plugins-metadata@1.13.1) (2026-03-10)
 
 

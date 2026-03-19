@@ -164,6 +164,7 @@ export interface RenderRules {
 }
 
 export interface BaseFieldProps {
+  autofocus?: boolean
   name: string
 }
 

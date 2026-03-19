@@ -56,6 +56,8 @@
       @update:model-value="xpathHandler.update"
     />
 
+    <NodeFormDivider />
+
     <InputsField
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
@@ -76,6 +78,7 @@ import BooleanField from '../../../shared/BooleanField.vue'
 import StringField from '../../../shared/StringField.vue'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
+import NodeFormDivider from './NodeFormDivider.vue'
 import {
   useNodeForm,
   useSubSchema,

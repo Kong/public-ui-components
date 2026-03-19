@@ -41,6 +41,8 @@
       </template>
     </StringField>
 
+    <NodeFormDivider />
+
     <InputsField
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
@@ -58,6 +60,7 @@
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
 import InputsField from './InputsField.vue'
+import NodeFormDivider from './NodeFormDivider.vue'
 import useI18n from '../../../../../composables/useI18n'
 import StringField from '../../../shared/StringField.vue'
 import { useTemplateRef } from 'vue'

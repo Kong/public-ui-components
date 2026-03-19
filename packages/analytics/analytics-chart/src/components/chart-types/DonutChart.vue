@@ -83,8 +83,8 @@ const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
   tooltipContext: '',
-  metricDisplay: props.tooltipMetricDisplay,
-  dimensionDisplay: props.tooltipDimensionDisplay,
+  metricDisplay: toRef(props, 'tooltipMetricDisplay'),
+  dimensionDisplay: toRef(props, 'tooltipDimensionDisplay'),
   tooltipSeries: [],
   left: '',
   top: '',
