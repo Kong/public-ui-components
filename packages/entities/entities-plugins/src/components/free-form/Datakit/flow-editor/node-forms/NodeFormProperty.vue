@@ -21,6 +21,8 @@
       @update:property-key="setConfig('property-key')"
     />
 
+    <NodeFormDivider v-if="writable" />
+
     <InputsField
       v-if="writable"
       :field-name-validator="fieldNameValidator"
@@ -40,6 +42,7 @@ import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/use
 import { computed, useTemplateRef } from 'vue'
 import EnumField from '../../../shared/EnumField.vue'
 import InputsField from './InputsField.vue'
+import NodeFormDivider from './NodeFormDivider.vue'
 import { extractKeyFromProperty, identifyPropertyHasKey, isReadableProperty, isWritableProperty } from '../node/property'
 import { useEditorStore } from '../store/store'
 import NameField from './NameField.vue'

@@ -74,7 +74,6 @@ describe('<StandardLayout />', () => {
     formSchema?: any
     model?: any
     formModel?: any
-    formOptions?: any
     isEditing?: boolean
     onFormChange?: any
     provide?: any
@@ -84,7 +83,6 @@ describe('<StandardLayout />', () => {
       formSchema = createFormSchema(),
       model = createBaseModel(),
       formModel = { enabled: true },
-      formOptions = {},
       isEditing = false,
       onFormChange = cy.spy().as('onFormChange'),
       provide,
@@ -96,9 +94,7 @@ describe('<StandardLayout />', () => {
         formSchema,
         model,
         formModel,
-        formOptions,
         isEditing,
-        onModelUpdated: cy.spy().as('onModelUpdated'),
         onFormChange,
         pluginName: 'test-plugin',
       },
@@ -248,9 +244,7 @@ describe('<StandardLayout />', () => {
         formSchema: createFormSchema(),
         model: createBaseModel(),
         formModel: { enabled: true },
-        formOptions: {},
         isEditing: false,
-        onModelUpdated: cy.spy(),
         onFormChange: cy.spy(),
         pluginName: 'test-plugin',
         editorMode: 'code',
@@ -301,6 +295,76 @@ describe('<StandardLayout />', () => {
         .find('[data-testid="collapse-trigger-label"]')
         .click()
       cy.getTestId('ff-condition').should('exist')
+    })
+  })
+
+  describe('SwitchField (enabled toggle)', () => {
+    it('should render enabled toggle in general info section', () => {
+      mountStandardLayout()
+
+      cy.get('.ff-standard-layout').should('exist')
+      cy.getTestId('form-section-general-info').should('exist')
+
+      cy.getTestId('ff-enabled').should('exist')
+
+      cy.getTestId('ff-enabled').find('.k-input-switch').should('exist')
+    })
+
+    it('should display enabled text when switch is on', () => {
+      mountStandardLayout()
+
+      cy.getTestId('ff-enabled').should('contain.text', 'Enabled')
+    })
+
+    it('should toggle the switch and emit form change', () => {
+      const onFormChangeSpy = cy.spy().as('onFormChange')
+
+      mountStandardLayout({
+        onFormChange: onFormChangeSpy,
+      })
+
+      // Click the switch to toggle it
+      cy.getTestId('ff-enabled').find('input[type="checkbox"]').click({ force: true })
+
+      cy.get('@onFormChange').should('have.been.called')
+    })
+  })
+
+  describe('ScopeEntityField (scope entity selection)', () => {
+    it('should render scope entity fields when scoped radio is selected', () => {
+      mountStandardLayout()
+
+      // Initially in Global mode, scope fields should be hidden
+      cy.get('.scope-detail').should('not.be.visible')
+
+      // Click "Scoped" radio
+      cy.get('.k-radio').eq(1).click()
+
+      cy.get('.scope-detail').should('be.visible')
+
+      cy.getTestId('ff-service').should('exist')
+      cy.getTestId('ff-route').should('exist')
+    })
+
+    it('should render scope entity labels', () => {
+      mountStandardLayout()
+
+      // Click "Scoped" radio to show entity fields
+      cy.get('.k-radio').eq(1).click()
+
+      cy.getTestId('ff-service').should('contain.text', 'Service')
+      cy.getTestId('ff-route').should('contain.text', 'Route')
+    })
+
+    it('should render scope entity help text', () => {
+      mountStandardLayout()
+
+      // Click "Scoped" radio
+      cy.get('.k-radio').eq(1).click()
+
+      cy.getTestId('ff-service').find('.ff-scope-entity-help')
+        .should('exist')
+        .should('contain.text', 'The service this plugin will target')
     })
   })
 

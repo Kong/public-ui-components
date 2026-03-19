@@ -75,6 +75,12 @@ A form component for Redis Configurations.
     - default: `undefined`
     - Whether to show the Cloud Authentication fields.
 
+  - `isKonnectManagedRedisEnabled`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - *Specific to Konnect*. When true, uses the stepped layout (Configuration and General information blocks with custom Save/Cancel/View configuration actions). Set to true when Konnect managed Redis is enabled.
+
   - `isPortReferenceable`
     - type: `boolean`
     - required: `false`
@@ -97,7 +103,7 @@ A form component for Redis Configurations.
     - type: `boolean`
     - required: `false`
     - default: `undefined`
-    - Whether the CE partial fields can accept vault references. 
+    - Whether the CE partial fields can accept vault references.
 
 The base konnect or kongManger config.
 

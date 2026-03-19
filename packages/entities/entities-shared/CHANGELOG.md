@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.40.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.40.0...@kong-ui-public/entities-shared@3.40.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+# [3.40.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.12...@kong-ui-public/entities-shared@3.40.0) (2026-03-18)
+
+
+### Features
+
+* **entities-plugins:** jwt nodes for datakit flow editor ([#3002](https://github.com/Kong/public-ui-components/issues/3002)) ([c6d1667](https://github.com/Kong/public-ui-components/commit/c6d16674bb9a18b13629f56dc898c279be9c98b8))
+
+
+
+
+
+## [3.39.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.11...@kong-ui-public/entities-shared@3.39.12) (2026-03-18)
+
+
+### Bug Fixes
+
+* **entities-shared:** only apply new layout to plugin form ([#3003](https://github.com/Kong/public-ui-components/issues/3003)) ([5f88b3d](https://github.com/Kong/public-ui-components/commit/5f88b3d59b959a3c2c80ae7534d120d6d7046d6f))
+
+
+
+
+
 ## [3.39.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.10...@kong-ui-public/entities-shared@3.39.11) (2026-02-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

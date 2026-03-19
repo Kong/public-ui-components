@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.0...@kong-ui-public/dashboard-renderer@8.9.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+# [8.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.8.2...@kong-ui-public/dashboard-renderer@8.9.0) (2026-03-18)
+
+
+### Features
+
+* **entities-plugins:** jwt nodes for datakit flow editor ([#3002](https://github.com/Kong/public-ui-components/issues/3002)) ([c6d1667](https://github.com/Kong/public-ui-components/commit/c6d16674bb9a18b13629f56dc898c279be9c98b8))
+
+
+
+
+
+## [8.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.8.1...@kong-ui-public/dashboard-renderer@8.8.2) (2026-03-18)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.8.0...@kong-ui-public/dashboard-renderer@8.8.1) (2026-03-17)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [8.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.17...@kong-ui-public/dashboard-renderer@8.8.0) (2026-03-13)
+
+
+### Features
+
+* datasource config store ([#2992](https://github.com/Kong/public-ui-components/issues/2992)) ([2db9601](https://github.com/Kong/public-ui-components/commit/2db960179ece42681cc07fc3e646e6ae04252c15))
+
+
+
+
+
 ## [8.7.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.7.16...@kong-ui-public/dashboard-renderer@8.7.17) (2026-03-11)
 
 

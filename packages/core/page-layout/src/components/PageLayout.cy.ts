@@ -1,11 +1,11 @@
-import { defineComponent, inject, h } from 'vue'
+import { defineComponent, inject, h, ref } from 'vue'
 import PageLayout from './PageLayout.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
 
 describe('<PageLayout />', () => {
-  const title = 'Test Page Title'
-
   it('renders breadcrumbs, title and tabs when breadcrumbs and tabs are passed', () => {
+    const title = 'Test Page Title'
+
     const breadcrumbs = [
       { key: 'home', text: 'Home', to: '/' },
       { key: 'current', text: 'Current Page' },
@@ -29,6 +29,8 @@ describe('<PageLayout />', () => {
   })
 
   it('renders only the title when neither breadcrumbs nor tabs are passed', () => {
+    const title = 'Test Page Title'
+
     cy.mount(PageLayout, {
       props: {
         title,
@@ -42,17 +44,18 @@ describe('<PageLayout />', () => {
 
   describe('nested PageLayout detection', () => {
     it('hides its own header when a nested PageLayout is detected', () => {
+      const parentTitle = 'Parent Title'
       // Simulate a child PageLayout by injecting a component that calls the registration callback
       const ChildNotifier = defineComponent({
         setup() {
-          const notify = inject<() => void>(nestedPageLayoutInjectionKey)
-          notify?.()
+          const register = inject<() => (() => void)>(nestedPageLayoutInjectionKey)
+          register?.()
           return () => null
         },
       })
 
       cy.mount(PageLayout, {
-        props: { title: 'Parent Title' },
+        props: { title: parentTitle },
         slots: { default: () => h(ChildNotifier) },
       })
 
@@ -62,14 +65,16 @@ describe('<PageLayout />', () => {
     })
 
     it('calls the parent registration callback on mount when nested inside a parent PageLayout', () => {
+      const childTitle = 'Child Title'
       let notified = false
 
       cy.mount(PageLayout, {
-        props: { title: 'Child Title' },
+        props: { title: childTitle },
         global: {
           provide: {
             [nestedPageLayoutInjectionKey]: () => {
               notified = true
+              return () => { }
             },
           },
         },
@@ -82,13 +87,43 @@ describe('<PageLayout />', () => {
       })
     })
 
-    it('hides the parent header when a nested PageLayout is slotted', () => {
-      cy.mount(PageLayout, {
-        props: { title: 'Parent Title' },
-        slots: { default: () => h(PageLayout, { title: 'Child Title' }) },
+    it('restores the parent header when the nested PageLayout is unmounted', () => {
+      const parentTitle = 'Parent Title'
+      const childTitle = 'Child Title'
+      const showChild = ref(true)
+
+      const Wrapper = defineComponent({
+        setup() {
+          return () => h(PageLayout, { title: parentTitle }, {
+            default: () => showChild.value ? h(PageLayout, { title: childTitle }) : null,
+          })
+        },
       })
 
-      cy.getTestId('page-layout-title').should('have.length', 1).and('contain.text', 'Child Title')
+      cy.mount(Wrapper)
+
+      // Child is mounted — parent header should be hidden, child header visible
+      cy.getTestId('page-layout-title').should('have.length', 1).and('contain.text', childTitle)
+
+      // Unmount the child
+      cy.then(() => {
+        showChild.value = false
+      })
+
+      // Parent header should reappear
+      cy.getTestId('page-layout-title').should('have.length', 1).and('contain.text', parentTitle)
+    })
+
+    it('hides the parent header when a nested PageLayout is slotted', () => {
+      const parentTitle = 'Parent Title'
+      const childTitle = 'Child Title'
+
+      cy.mount(PageLayout, {
+        props: { title: parentTitle },
+        slots: { default: () => h(PageLayout, { title: childTitle }) },
+      })
+
+      cy.getTestId('page-layout-title').should('have.length', 1).and('contain.text', childTitle)
       cy.getTestId('page-layout-breadcrumbs').should('not.exist')
       cy.getTestId('page-layout-tabs').should('not.exist')
     })

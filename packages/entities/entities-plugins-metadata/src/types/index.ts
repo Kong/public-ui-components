@@ -9,7 +9,7 @@ export enum PluginGroup {
   LOGGING = 'Logging',
   DEPLOYMENT = 'Deployment',
   WEBSOCKET = 'WebSocket Plugins',
-  CUSTOM_PLUGINS = 'Custom Plugins',
+  CUSTOM_PLUGINS = 'Custom plugins',
   MONETIZATION = 'Monetization',
 }
 

@@ -46,6 +46,8 @@
       @update:model-value="textBlockHandler.update"
     />
 
+    <NodeFormDivider />
+
     <InputsField
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
@@ -68,6 +70,7 @@ import Form from '../../../shared/Form.vue'
 import StringField from '../../../shared/StringField.vue'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
+import NodeFormDivider from './NodeFormDivider.vue'
 import {
   useNodeForm,
   useSubSchema,

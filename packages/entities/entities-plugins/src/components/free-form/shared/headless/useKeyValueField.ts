@@ -13,6 +13,11 @@ export interface KeyValueFieldProps<T = unknown, K extends string = string> exte
   label?: string
   keyPlaceholder?: string
   valuePlaceholder?: string
+  appearance?: {
+    string?: {
+      multiline?: boolean
+    }
+  }
   labelAttributes?: LabelAttributes
   showVaultSecretPicker?: boolean
   // Specify the order of keys in the field.

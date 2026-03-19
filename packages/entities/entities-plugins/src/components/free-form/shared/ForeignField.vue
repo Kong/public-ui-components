@@ -4,7 +4,7 @@
     v-bind="fieldAttrs"
     class="ff-foreign-field"
     :data-1p-ignore="is1pIgnore"
-    :data-autofocus="isAutoFocus"
+    :data-autofocus="autofocus ? 'true' : undefined"
     :data-testid="`ff-${field.path.value}`"
     :error="error"
     :error-message="errorMessage"
@@ -32,7 +32,7 @@ import useI18n from '../../../composables/useI18n'
 import EnhancedInput from './EnhancedInput.vue'
 
 import { getName } from './utils'
-import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
+import { useField, useFieldAttrs } from './composables'
 import type { ForeignFieldSchema } from 'src/types/plugins/form-schema'
 import type { BaseFieldProps } from './types'
 
@@ -47,12 +47,11 @@ type ForeignFieldValue = { id: string } | null
 
 interface ForeignFieldProps extends InputProps, BaseFieldProps {
   labelAttributes?: LabelAttributes
-  showPasswordMaskToggle?: boolean
   type?: string
 }
 
 const {
-  showPasswordMaskToggle = undefined,
+  autofocus,
   name,
   ...props
 } = defineProps<ForeignFieldProps>()
@@ -86,9 +85,6 @@ function handleUpdate(value: string) {
     emit('update:modelValue', fieldValue!.value)
   }
 }
-
-const isAutoFocus = useIsAutoFocus(field.ancestors)
-
 const is1pIgnore = computed(() => {
   if (attrs['data-1p-ignore'] !== undefined) return attrs['data-1p-ignore']
   return getName(name) === 'name'

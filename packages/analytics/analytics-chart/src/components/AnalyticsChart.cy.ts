@@ -433,6 +433,46 @@ describe('<AnalyticsChart />', () => {
     cy.get('.tooltip-container .square-marker').should('have.length', 2)
   })
 
+  it('updates an open chart tooltip when the metric changes externally', () => {
+    const updatedChartData = {
+      ...exploreResult,
+      data: exploreResult.data.map((entry: any) => ({
+        ...entry,
+        event: {
+          ...entry.event,
+          response_size_average: entry.event.request_count,
+        },
+      })),
+      meta: {
+        ...exploreResult.meta,
+        metric_names: ['response_size_average'],
+        metric_units: {
+          response_size_average: 'bytes',
+        },
+      },
+    }
+
+    mount({
+      chartData: exploreResult,
+      chartOptions: {
+        type: 'horizontal_bar',
+      },
+      tooltipTitle: 'Tooltip Title',
+    }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+    mouseMove({ x1: 0, y1: 0, x2: 200, y2: 50, duration: 400, withClick: false, selector: '.chart-body > canvas' })
+    cy.get('.chart-body > canvas').click(200, 50)
+
+    cy.get('.tooltip-container').should('be.visible')
+    cy.get('.tooltip-container .metric').should('have.text', 'Request count')
+
+    cy.get('@vueWrapper').then((wrapper: any) => {
+      return cy.wrap(wrapper.setProps({ chartData: updatedChartData }))
+    })
+
+    cy.get('.tooltip-container .metric').should('have.text', 'Response size (avg)')
+  })
+
   it('renders a truncation warning if truncated', () => {
     expect(exploreResult.meta.truncated).to.eq(true)
     mount({ chartData: exploreResult })

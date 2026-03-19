@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.14.0...@kong-ui-public/analytics-chart@10.14.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+# [10.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.33...@kong-ui-public/analytics-chart@10.14.0) (2026-03-18)
+
+
+### Features
+
+* **entities-plugins:** jwt nodes for datakit flow editor ([#3002](https://github.com/Kong/public-ui-components/issues/3002)) ([c6d1667](https://github.com/Kong/public-ui-components/commit/c6d16674bb9a18b13629f56dc898c279be9c98b8))
+
+
+
+
+
+## [10.13.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.32...@kong-ui-public/analytics-chart@10.13.33) (2026-03-17)
+
+
+### Bug Fixes
+
+* chart tooltip reactivitiy issue ([#3015](https://github.com/Kong/public-ui-components/issues/3015)) ([e640c47](https://github.com/Kong/public-ui-components/commit/e640c476cd0de087d99946e463e5f1efe9f480d8))
+
+
+
+
+
+## [10.13.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.31...@kong-ui-public/analytics-chart@10.13.32) (2026-03-13)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [10.13.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.13.30...@kong-ui-public/analytics-chart@10.13.31) (2026-02-19)
 
 

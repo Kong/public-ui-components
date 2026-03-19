@@ -23,6 +23,8 @@
       @update:model-value="setConfig()"
     />
 
+    <NodeFormDivider />
+
     <InputsField
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
@@ -42,6 +44,7 @@ import NumberField from '../../../shared/NumberField.vue'
 import BooleanField from '../../../shared/BooleanField.vue'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
+import NodeFormDivider from './NodeFormDivider.vue'
 import type { NodeId } from '../../types'
 import { useFormValidation } from '../composables/validation'
 import { compose, numberFormat, numberRange } from '../composables/validation'

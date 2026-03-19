@@ -3,6 +3,93 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.171.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.171.0...@kong-ui-public/entities-plugins@9.171.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+# [9.171.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.170.2...@kong-ui-public/entities-plugins@9.171.0) (2026-03-18)
+
+
+### Features
+
+* **entities-plugins:** jwt nodes for datakit flow editor ([#3002](https://github.com/Kong/public-ui-components/issues/3002)) ([c6d1667](https://github.com/Kong/public-ui-components/commit/c6d16674bb9a18b13629f56dc898c279be9c98b8))
+
+
+
+
+
+## [9.170.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.170.1...@kong-ui-public/entities-plugins@9.170.2) (2026-03-18)
+
+
+### Bug Fixes
+
+* **entities-plugins:** standardize capitalization ([#3006](https://github.com/Kong/public-ui-components/issues/3006)) ([0b39c74](https://github.com/Kong/public-ui-components/commit/0b39c7469602f993b5ba97442e5c4c882de5e101))
+
+
+
+
+
+## [9.170.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.170.0...@kong-ui-public/entities-plugins@9.170.1) (2026-03-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.170.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.169.2...@kong-ui-public/entities-plugins@9.170.0) (2026-03-17)
+
+
+### Features
+
+* **entities-plugins:** deprecate VFGField ([#2958](https://github.com/Kong/public-ui-components/issues/2958)) ([8a1b624](https://github.com/Kong/public-ui-components/commit/8a1b624516611368e45da409d4a6c451ebaa0901))
+
+
+
+
+
+## [9.169.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.169.1...@kong-ui-public/entities-plugins@9.169.2) (2026-03-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.169.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.169.0...@kong-ui-public/entities-plugins@9.169.1) (2026-03-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.169.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.168.3...@kong-ui-public/entities-plugins@9.169.0) (2026-03-13)
+
+
+### Features
+
+* **entities-plugins:** add ai-custom-guardrail-form ([#2990](https://github.com/Kong/public-ui-components/issues/2990)) ([6ba10a2](https://github.com/Kong/public-ui-components/commit/6ba10a217266bb9960f2a3507fb23c4b4ae0a779))
+
+
+
+
+
+## [9.168.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.168.2...@kong-ui-public/entities-plugins@9.168.3) (2026-03-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.168.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.168.1...@kong-ui-public/entities-plugins@9.168.2) (2026-03-11)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

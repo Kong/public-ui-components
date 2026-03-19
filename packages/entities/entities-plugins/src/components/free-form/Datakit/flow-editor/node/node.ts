@@ -180,6 +180,65 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
     },
     ...NODE_VISUAL.json_to_xml,
   },
+  jwt_decode: {
+    type: 'jwt_decode',
+    summary: getNodeTypeSummary('jwt_decode'),
+    description: getNodeTypeDescription('jwt_decode'),
+    io: {
+      input: {
+        fields: [],
+      },
+      output: {
+        fields: [
+          { name: 'header' },
+          { name: 'payload' },
+          { name: 'signature' },
+        ],
+      } as IOMeta,
+    },
+    ...NODE_VISUAL.jwt_decode,
+  },
+  jwt_sign: {
+    type: 'jwt_sign',
+    summary: getNodeTypeSummary('jwt_sign'),
+    description: getNodeTypeDescription('jwt_sign'),
+    io: {
+      input: {
+        fields: [
+          { name: 'claims' },
+          { name: 'key' },
+        ],
+      } as IOMeta,
+      output: {
+        fields: [
+          { name: 'claims' },
+          { name: 'header' },
+          { name: 'token' },
+        ],
+      } as IOMeta,
+    },
+    ...NODE_VISUAL.jwt_sign,
+  },
+  jwt_verify: {
+    type: 'jwt_verify',
+    summary: getNodeTypeSummary('jwt_verify'),
+    description: getNodeTypeDescription('jwt_verify'),
+    io: {
+      input: {
+        fields: [
+          { name: 'key' },
+          { name: 'token' },
+        ],
+      } as IOMeta,
+      output: {
+        fields: [
+          { name: 'claims' },
+          { name: 'header' },
+        ],
+      } as IOMeta,
+    },
+    ...NODE_VISUAL.jwt_verify,
+  },
 }
 
 export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
