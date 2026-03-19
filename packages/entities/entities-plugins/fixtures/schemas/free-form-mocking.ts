@@ -254,7 +254,7 @@ export function buildMapFieldCases(): Array<{ [name: string]: MapFieldSchema }> 
       },
     },
     {
-      map_complex: {
+      map_with_default: {
         type: 'map',
         required: true,
         description: 'A complex map field',
@@ -276,6 +276,68 @@ export function buildMapFieldCases(): Array<{ [name: string]: MapFieldSchema }> 
         values: {
           type: 'string',
           referenceable: true,
+        },
+      },
+    },
+    {
+      map_value_enum: {
+        type: 'map',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'string',
+          one_of: ['option1', 'option2', 'option3'],
+        },
+      },
+    },
+    {
+      map_value_record: {
+        type: 'map',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'record',
+          fields: [
+            {
+              nested_field: {
+                type: 'string',
+              },
+            },
+          ],
+          required: true,
+        },
+      },
+    },
+    {
+      map_value_array: {
+        type: 'map',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'array',
+          elements: {
+            type: 'string',
+          },
+        },
+      },
+    },
+    {
+      map_value_map: {
+        type: 'map',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'map',
+          keys: {
+            type: 'string',
+          },
+          values: {
+            type: 'string',
+          },
         },
       },
     },

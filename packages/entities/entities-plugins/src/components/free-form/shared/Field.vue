@@ -49,10 +49,11 @@ import ArrayField from './ArrayField.vue'
 import ObjectField from './ObjectField.vue'
 import NumberField from './NumberField.vue'
 import EnumField from './EnumField.vue'
-import KeyValueField from './KeyValueField.vue'
+// import KeyValueField from './KeyValueField.vue'
 import StringArrayField from './StringArrayField.vue'
 import JsonField from './JsonField.vue'
 import ForeignField from './ForeignField.vue'
+import MapField from './MapField.vue'
 import type { GlobalAction, BaseFieldProps } from './types'
 
 defineOptions({ name: 'AutoField' })
@@ -92,7 +93,7 @@ const fieldRenderer = computed(() => {
     case 'record':
       return ObjectField
     case 'map':
-      return KeyValueField
+      return MapField
     case 'json':
       return JsonField
     case 'foreign':

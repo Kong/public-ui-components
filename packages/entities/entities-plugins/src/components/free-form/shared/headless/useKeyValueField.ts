@@ -1,12 +1,12 @@
 import { isEqual } from 'lodash-es'
 import { toRef, watch, useAttrs, toValue, computed } from 'vue'
 import { useField, useFieldAttrs, useFormShared } from '../composables'
-import { resolve, arraySymbol } from '../utils'
+import { resolve, mapSymbol } from '../utils'
 
 import type { LabelAttributes } from '@kong/kongponents'
 import type { EmitFn, Ref } from 'vue'
 import type { BaseFieldProps } from '../types'
-import type { KeyId } from '../composables/kv'
+import type { KeyId } from '../composables/key-id-map'
 
 export interface KeyValueFieldProps<T = unknown, K extends string = string> extends BaseFieldProps {
   initialValue?: Record<K, T> | null
@@ -42,7 +42,7 @@ function useKeyValueManager<T = unknown, K extends string = string>(
   name: Ref<string>,
 ) {
   const { value, path } = useField<Record<KeyId, T>>(name)
-  const { keyValueStore, getEmptyOrDefault } = useFormShared()
+  const { keyIdMap: keyValueStore, getEmptyOrDefault } = useFormShared()
 
   const entries = computed(() => {
     const values = toValue(value)
@@ -50,7 +50,7 @@ function useKeyValueManager<T = unknown, K extends string = string>(
     if (!values) return result
 
     Object.getOwnPropertySymbols(values).forEach((keyId) => {
-      const key = keyValueStore.getName(keyId as KeyId) as K | undefined
+      const key = keyValueStore.getKey(keyId as KeyId) as K | undefined
       if (key === undefined) return
       result.push({
         id: keyId as KeyId,
@@ -62,11 +62,11 @@ function useKeyValueManager<T = unknown, K extends string = string>(
   })
 
   function addEntry(): KeyId {
-    const id = keyValueStore.createEntry()
+    const id = keyValueStore.createKey()
     let defaultVal
 
     if (defaultVal === undefined) {
-      const emptyOrDefault = getEmptyOrDefault<Record<K, T>>(resolve(path!.value, arraySymbol))
+      const emptyOrDefault = getEmptyOrDefault<Record<K, T>>(resolve(path!.value, mapSymbol))
       if (emptyOrDefault) {
         defaultVal = keyValueStore.serialize(emptyOrDefault)[id as KeyId]
       }
@@ -82,14 +82,14 @@ function useKeyValueManager<T = unknown, K extends string = string>(
   function removeEntry(id: KeyId) {
     const { [id]: _, ...rest } = toValue(value) || {}
     value!.value = rest
-    keyValueStore.deleteEntry(id)
+    keyValueStore.deleteKey(id)
   }
 
   function updateKey(id: KeyId, newKeyName: K) {
     const currentValue = toValue(value)
     if (!currentValue || !Object.prototype.hasOwnProperty.call(currentValue, id)) return
 
-    keyValueStore.updateName(id, newKeyName)
+    keyValueStore.updateKey(id, newKeyName)
     value!.value = { ...currentValue } // Force trigger reactive update
   }
 

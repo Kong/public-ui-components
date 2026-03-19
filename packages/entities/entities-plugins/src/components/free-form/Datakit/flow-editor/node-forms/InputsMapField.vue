@@ -91,7 +91,7 @@ import type {
   KeyValueFieldProps,
   KeyValueFieldEmits,
 } from '../../../shared/headless/useKeyValueField'
-import type { KeyId } from '../../../shared/composables/kv'
+import type { KeyId } from '../../../shared/composables/key-id-map'
 import type { FieldName, IdConnection } from '../../types'
 import type { InputOption, useNodeForm } from '../composables/useNodeForm'
 

@@ -74,7 +74,7 @@ import { AddIcon, CloseIcon } from '@kong/icons'
 import useI18n from '../../../../../composables/useI18n'
 import type { FieldName } from '../../types'
 import { useKeyValueField, type KeyValueFieldEmits, type KeyValueFieldProps, type KVEntry } from '../../../shared/headless/useKeyValueField'
-import type { KeyId } from '../../../shared/composables/kv'
+import type { KeyId } from '../../../shared/composables/key-id-map'
 import type { useNodeForm } from '../composables/useNodeForm'
 
 interface Props extends KeyValueFieldProps<string> {

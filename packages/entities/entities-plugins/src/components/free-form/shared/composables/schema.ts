@@ -83,7 +83,7 @@ export function buildArraySchemaMap(arraySchema: ArrayFieldSchema, pathPrefix: s
 
 export function buildMapSchemaMap(mapSchema: MapFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
   const schemaMap: Record<string, UnionFieldSchema> = {}
-  const valuePath = utils.resolve(pathPrefix, utils.arraySymbol)
+  const valuePath = utils.resolve(pathPrefix, utils.mapSymbol)
   schemaMap[valuePath] = mapSchema.values
 
   // Recurse into value schema if it has children
@@ -158,10 +158,10 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
   function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path: string): T | undefined
   function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path?: string): T | UnionFieldSchema | undefined {
     // todo(zehao): remove me
-    if (path) {
-      const p = generalizePath(path, schemaMap.value)
-      console.log(path, '->', p)
-    }
+    // if (path) {
+    //   const p = generalizePath(path, schemaMap.value)
+    //   console.log(`generalizePath('${path}')`, '->', p)
+    // }
     return path == null ? schemaValue : schemaMap.value?.[generalizePath(path, schemaMap.value)]
   }
 

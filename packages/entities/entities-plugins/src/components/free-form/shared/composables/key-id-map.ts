@@ -1,56 +1,54 @@
 import type { useSchemaHelpers } from './schema'
-import * as utils from '../utils'
+import { resolve, mapSymbol } from '../utils'
 
-export type KeyId = symbol & { __brand: 'KeyId' }
+export type KeyId = `kid:${number}`
 type Data = Record<string, any>
 
 let idCounter = 0
-function useId() {
-  return `kv_${++idCounter}`
+function useId(): KeyId {
+  return `kid:${++idCounter}`
 }
 
-export function useKeyValueStore(
+export function useKeyIdMap(
   getSchema: ReturnType<typeof useSchemaHelpers>['getSchema'],
 ) {
-  // Use WeakMap to avoid memory leaks
-  // KeyId will be cleaned up automatically when the corresponding map entry in the form data is removed
-  const store = new WeakMap<KeyId, string>()
+  const store = new Map<KeyId, string>()
 
-  function createEntry(name: string = ''): KeyId {
-    const id = Symbol(useId()) as KeyId
+  function createKey(name: string = ''): KeyId {
+    const id = useId()
     store.set(id, name)
     return id
   }
 
-  function getName(id: KeyId) {
+  function getKey(id: KeyId) {
     return store.get(id)
   }
 
-  function updateName(id: KeyId, name: string) {
+  function updateKey(id: KeyId, key: string) {
     if (store.has(id)) {
-      store.set(id, name)
+      store.set(id, key)
     }
   }
 
-  function deleteEntry(id: KeyId) {
+  function deleteKey(id: KeyId) {
     store.delete(id)
   }
 
   function serialize<T extends Data = Data>(data: T) {
-    return serializeData(data, getSchema, createEntry)
+    return serializeData(data, getSchema, createKey)
   }
 
   function deserialize<T extends Data = Data>(data: T) {
-    return deserializeData(data, getSchema, getName)
+    return deserializeData(data, getSchema, getKey)
   }
 
-  ; (window as any).kvStore = store
+  ; (window as any).keyIdMap = store
 
   return {
-    createEntry,
-    getName,
-    updateName,
-    deleteEntry,
+    createKey,
+    getKey,
+    updateKey,
+    deleteKey,
     serialize,
     deserialize,
   }
@@ -59,7 +57,7 @@ export function useKeyValueStore(
 export function serializeData<T extends Data>(
   data: T,
   getSchema: ReturnType<typeof useSchemaHelpers>['getSchema'],
-  createEntry: (name: string) => KeyId,
+  createKeyId: (name: string) => KeyId,
 ) {
   const traverse = (value: any, path?: string): any => {
     if (value == null || typeof value !== 'object') {
@@ -68,7 +66,7 @@ export function serializeData<T extends Data>(
 
     if (Array.isArray(value)) {
       return value.map((item, index) => {
-        const itemPath = path ? utils.resolve(path, `${index}`) : `${index}`
+        const itemPath = path ? resolve(path, `${index}`) : `${index}`
         return traverse(item, itemPath)
       })
     }
@@ -80,15 +78,11 @@ export function serializeData<T extends Data>(
       const nextValue: Record<KeyId, any> = {}
 
       Object.keys(mapValue).forEach((key) => {
-        const entryId = createEntry(key)
+        const entryId = createKeyId(key)
         const childValue = mapValue[key]
-        const childPath = path ? utils.resolve(path, key) : key
+        const childPath = path ? resolve(path, key) : key
 
         nextValue[entryId] = traverse(childValue, childPath)
-      })
-
-      Object.getOwnPropertySymbols(mapValue).forEach((key) => {
-        nextValue[key as KeyId] = mapValue[key]
       })
 
       return nextValue
@@ -96,7 +90,7 @@ export function serializeData<T extends Data>(
 
     const nextValue: Record<string, any> = {}
     Object.keys(value).forEach((key) => {
-      const childPath = path ? utils.resolve(path, key) : key
+      const childPath = path ? resolve(path, key) : key
       nextValue[key] = traverse(value[key], childPath)
     })
 
@@ -118,27 +112,30 @@ export function deserializeData<T extends Data>(
 
     if (Array.isArray(value)) {
       return value.map((item, index) => {
-        const itemPath = path ? utils.resolve(path, `${index}`) : `${index}`
+        const itemPath = path ? resolve(path, `${index}`) : `${index}`
         return traverse(item, itemPath)
       })
     }
 
     const schema = path ? getSchema(path) : getSchema()
+    // console.log('deserializing path', path, 'schema', schema)
 
     if (schema?.type === 'map') {
       const mapValue = value as Record<KeyId, unknown>
       const nextValue: Record<PropertyKey, any> = {}
 
-      Object.getOwnPropertySymbols(mapValue).forEach((key) => {
-        const childValue = mapValue[key as KeyId]
+      Object.keys(mapValue).forEach((key) => {
         const keyId = key as KeyId
+        const childValue = mapValue[keyId]
         const name = getName(keyId)
 
         if (name == null) {
           throw new Error(`Missing name for key ID: ${String(keyId)}`)
         }
 
-        const childPath = path ? utils.resolve(path, name) : name
+        const nameOrSymbol = name || mapSymbol
+
+        const childPath = path ? resolve(path, nameOrSymbol) : nameOrSymbol
 
         nextValue[name] = traverse(childValue, childPath)
       })
@@ -148,7 +145,7 @@ export function deserializeData<T extends Data>(
 
     const nextValue: Record<string, any> = {}
     Object.keys(value).forEach((key) => {
-      const childPath = path ? utils.resolve(path, key) : key
+      const childPath = path ? resolve(path, key) : key
       nextValue[key] = traverse(value[key], childPath)
     })
 

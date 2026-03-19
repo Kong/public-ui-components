@@ -79,7 +79,7 @@ import type {
   KeyValueFieldEmits,
 } from '../../../shared/headless/useKeyValueField'
 import { useKeyValueField } from '../../../shared/headless/useKeyValueField'
-import type { KeyId } from '../../../shared/composables/kv'
+import type { KeyId } from '../../../shared/composables/key-id-map'
 import {
   KUI_COLOR_TEXT_NEUTRAL,
   KUI_COLOR_TEXT,

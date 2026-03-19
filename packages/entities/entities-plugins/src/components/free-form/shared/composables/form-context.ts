@@ -5,7 +5,7 @@ import { FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
 import { provide, reactive, toRef, toValue, useSlots, watch } from 'vue'
 import { useSchemaHelpers } from './schema'
 import * as utils from '../utils'
-import { useKeyValueStore } from './kv'
+import { useKeyIdMap } from './key-id-map'
 
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import type { FormConfig, MatchMap, RenderRules } from '../types'
@@ -31,7 +31,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       getEmptyOrDefault: getEmptyOrDefaultFromSchema,
       ...schemaHelpers
     } = useSchemaHelpers(schema)
-    const keyValueStore = useKeyValueStore(schemaHelpers.getSchema)
+    const keyIdMap = useKeyIdMap(schemaHelpers.getSchema)
     const fieldRendererRegistry: MatchMap = new Map()
 
     const innerData = reactive<T>({} as T)
@@ -77,7 +77,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
         config.value.prepareFormData(dataValue)
       }
 
-      setValue(keyValueStore.serialize(dataValue))
+      setValue(keyIdMap.serialize(dataValue))
     }
 
     function hasValue(data: T | undefined): boolean {
@@ -111,7 +111,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
         }
       }
 
-      return keyValueStore.deserialize(nextValue)
+      return keyIdMap.deserialize(nextValue)
     }
 
     // Emit changes when the inner data changes
@@ -126,7 +126,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
 
     function serializeIfNeeded(data: any) {
       if (data != null && typeof data === 'object' && !Array.isArray(data)) {
-        return keyValueStore.serialize(data)
+        return keyIdMap.serialize(data)
       }
       return data
     }
@@ -157,7 +157,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       ...schemaHelpers,
       getValue,
       isFieldHidden,
-      keyValueStore,
+      keyIdMap,
       getDefault,
       getEmptyOrDefault,
     }
