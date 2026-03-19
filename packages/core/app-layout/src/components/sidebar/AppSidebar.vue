@@ -596,7 +596,7 @@ onBeforeUnmount(() => {
       display: block;
       height: $sidebar-header-spacing;
       left: 50%;
-      margin-top: -$sidebar-header-spacing;
+      margin-top: calc(-1 * $sidebar-header-spacing);
       position: absolute;
       top: 0;
       transform: translateX(-50%); // center
@@ -670,7 +670,7 @@ onBeforeUnmount(() => {
     display: block;
     height: $sidebar-header-spacing;
     left: 50%;
-    margin-bottom: -$sidebar-header-spacing;
+    margin-bottom: calc(-1 * $sidebar-header-spacing);
     position: absolute;
     transform: translateX(-50%); // center
     width: calc(100% - 16px);
