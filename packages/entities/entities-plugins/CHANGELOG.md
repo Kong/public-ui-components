@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.172.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.171.4...@kong-ui-public/entities-plugins@9.172.0) (2026-03-20)
+
+
+### Features
+
+* **entities-plugins:** improve advanced fields collapsing logic ([#3022](https://github.com/Kong/public-ui-components/issues/3022)) ([471a463](https://github.com/Kong/public-ui-components/commit/471a463d9c93638a683c27baecb3c899c30ed54f))
+
+
+
+
+
 ## [9.171.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.171.3...@kong-ui-public/entities-plugins@9.171.4) (2026-03-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
