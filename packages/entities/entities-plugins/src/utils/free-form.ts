@@ -42,6 +42,10 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
+  'aws-lambda': {
+    experimental: true,
+    component: 'CommonForm',
+  },
 } as const
 
 export type FreeFormName = keyof typeof mapping

@@ -33,6 +33,10 @@ const labelDictionary: Record<string, string> = {
   acl: 'ACL',
   cookie: 'Cookie',
   ai: 'AI',
+  awsgateway: 'AWS Gateway',
+  imds: 'IMDS',
+  sts: 'STS',
+  arn: 'ARN',
 }
 
 export function replaceByDictionary(name: string) {
