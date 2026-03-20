@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.173.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.172.0...@kong-ui-public/entities-plugins@9.173.0) (2026-03-20)
+
+
+### Features
+
+* **entities-plugins:** add prometheus to experimental ([#3027](https://github.com/Kong/public-ui-components/issues/3027)) ([44e5e34](https://github.com/Kong/public-ui-components/commit/44e5e348e645b21fd7a99383f9d42d9a6a71e6d8))
+
+
+
+
+
 # [9.172.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.171.4...@kong-ui-public/entities-plugins@9.172.0) (2026-03-20)
 
 
