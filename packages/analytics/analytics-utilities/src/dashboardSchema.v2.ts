@@ -510,7 +510,7 @@ export const mcpUsageSchema = {
     datasource: {
       type: 'string',
       enum: [
-        'mcp_usage',
+        'agentic_usage',
       ],
     },
     metrics: metricsFn(mcpExploreAggregations),

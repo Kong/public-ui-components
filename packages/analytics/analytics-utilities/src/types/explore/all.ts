@@ -14,7 +14,7 @@ export type AllFilterableDimensionsAndMetrics = FilterableExploreDimensions
   | FilterableRequestMetrics
   | FilterableRequestWildcardDimensions
 
-export const queryDatasources = ['basic', 'api_usage', 'llm_usage', 'mcp_usage'] as const
+export const queryDatasources = ['basic', 'api_usage', 'llm_usage', 'agentic_usage'] as const
 
 export type QueryDatasource = typeof queryDatasources[number]
 
@@ -24,14 +24,14 @@ export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
   basic: BasicExploreFilterAll
   api_usage: ExploreFilterAll
   llm_usage: AiExploreFilterAll
-  mcp_usage: McpExploreFilterAll
+  agentic_usage: McpExploreFilterAll
 }
 
 export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<string>> = {
   basic: new Set(filterableBasicExploreDimensions),
   api_usage: new Set(filterableExploreDimensions),
   llm_usage: new Set(filterableAiExploreDimensions),
-  mcp_usage: new Set(filterableMcpExploreDimensions),
+  agentic_usage: new Set(filterableMcpExploreDimensions),
 } as const
 
 // Utility for stripping unknown filters
