@@ -27,7 +27,6 @@
         :key="group"
       >
         <PluginCatalogGroup
-          v-model="shouldCollapsed[group]"
           :config="config"
           :name="group"
           :plugins="pluginList[group as keyof PluginCardList] || []"
@@ -38,7 +37,6 @@
     </template>
     <div v-if="pluginList?.['Query Result']?.length">
       <PluginCatalogGroup
-        v-model="shouldCollapsed['Query Result']"
         :config="config"
         :plugins="pluginList['Query Result'] || []"
         show-all-card
@@ -49,10 +47,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import composables from '../../composables'
 import {
-  PLUGIN_GROUPS_COLLAPSE_STATUS,
   PluginFeaturedArray,
   PluginGroupArraySortedAlphabetically,
   type KongManagerPluginSelectConfig,
@@ -79,7 +75,6 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t } } = composables.useI18n()
-const shouldCollapsed = ref<Record<string, boolean>>(PLUGIN_GROUPS_COLLAPSE_STATUS)
 
 const emitPluginData = (plugin: PluginType) => {
   emit('plugin-clicked', plugin)
