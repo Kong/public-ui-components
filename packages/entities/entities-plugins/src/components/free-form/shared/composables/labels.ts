@@ -32,6 +32,7 @@ const labelDictionary: Record<string, string> = {
   azure: 'Azure',
   acl: 'ACL',
   cookie: 'Cookie',
+  ai: 'AI',
 }
 
 export function replaceByDictionary(name: string) {
