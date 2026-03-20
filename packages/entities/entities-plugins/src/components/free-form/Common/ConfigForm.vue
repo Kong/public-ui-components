@@ -3,10 +3,11 @@
     as-child
     class="ff-default-visible-fields"
     name="config"
-    :omit="fieldsCategory.advanced"
+    :omit="allFieldsAdvanced ? [] : fieldsCategory.advanced"
     reset-label-path="reset"
   />
   <AdvancedFields
+    v-if="!allFieldsAdvanced"
     class="ff-advanced-fields-container"
     data-testid="ff-advanced-fields-container"
     hide-general-fields
@@ -144,6 +145,10 @@ const fieldsCategory = computed(() => {
 
   return { defaultVisible, advanced }
 })
+
+// If all fields are categorized as advanced, we can skip rendering two separate sections
+// and just render all fields in the default section.
+const allFieldsAdvanced = computed(() => fieldsCategory.value.defaultVisible.length === 0)
 </script>
 
 <style lang="scss" scoped>
@@ -159,14 +164,5 @@ const fieldsCategory = computed(() => {
   &:has(> .collapse-hidden-content > .ff-advanced-fields > .ff-object-field:empty:only-child) {
     display: none;
   }
-}
-
-:global(.ff-default-visible-fields:empty) {
-  display: none;
-}
-
-.ff-default-visible-fields:empty + .ff-advanced-fields-container {
-  border-top: none;
-  padding-top: 0;
 }
 </style>
