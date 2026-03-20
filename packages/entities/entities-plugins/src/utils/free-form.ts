@@ -38,6 +38,10 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
+  'prometheus': {
+    experimental: true,
+    component: 'CommonForm',
+  },
 } as const
 
 export type FreeFormName = keyof typeof mapping
