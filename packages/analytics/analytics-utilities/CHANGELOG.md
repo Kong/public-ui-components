@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.1...@kong-ui-public/analytics-utilities@12.12.2) (2026-03-20)
+
+
+### Bug Fixes
+
+* **analytics:** refactor mcp_usage ds to agentic_usage [MA-4890] ([#3030](https://github.com/Kong/public-ui-components/issues/3030)) ([69fc859](https://github.com/Kong/public-ui-components/commit/69fc859b61ed2fa3f08424f72ebf665ce131810f))
+
+
+
+
+
 ## [12.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.0...@kong-ui-public/analytics-utilities@12.12.1) (2026-03-18)
 
 
