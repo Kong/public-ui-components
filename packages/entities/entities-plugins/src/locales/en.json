@@ -839,7 +839,14 @@
           },
           "node_panel": {
             "title": "Node types",
-            "description": "Drag a node onto the canvas to add it to your data flow."
+            "description": "Drag a node onto the canvas to add it to your data flow.",
+            "groups": {
+              "external_interaction": "External interaction",
+              "control_flow": "Control flow",
+              "data_transformation": "Data transformation",
+              "data_value": "Data value",
+              "authentication": "Authentication"
+            }
           },
           "examples": "Examples",
           "debug": {

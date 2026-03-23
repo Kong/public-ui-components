@@ -23,6 +23,7 @@
 
         <NodePanel
           v-if="selectedOption === 'nodes'"
+          class="node-panel"
           hide-title
         />
 
@@ -110,6 +111,10 @@ onMounted(() => {
 
   .panel {
     padding: $kui-space-60 $kui-space-40;
+  }
+
+  .node-panel {
+    margin-top: $kui-space-50;
   }
 }
 </style>

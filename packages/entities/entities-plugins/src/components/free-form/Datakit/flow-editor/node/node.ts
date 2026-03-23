@@ -1,26 +1,35 @@
 import type {
+  ConfigNodeGroup,
+  ConfigNodeGroupMeta,
+  ConfigNodeMeta,
+  ConfigNodePanelGroup,
+  ConfigNodeType,
   FieldId,
+  GroupInstance,
   ImplicitNodeName,
   ImplicitNodeType,
+  IOMeta,
   NodeInstance,
   NodeId,
   NodeMeta,
   NodeName,
   NodeType,
-  ConfigNodeType,
-  IOMeta,
   NextMeta,
-  GroupInstance,
+  NodeVisual,
 } from '../../types'
 
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
 import { CONFIG_NODE_TYPES } from '../../constants'
-import { NODE_VISUAL } from './node-visual'
+import {
+  CONFIG_NODE_GROUP_COLORS,
+  CONFIG_NODE_ICON_MAP,
+  NODE_VISUAL,
+} from './node-visual'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-export function getNodeTypeDescription(type: NodeType): string {
+function getNodeTypeLocaleDescription(type: NodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.description`)
 }
 
@@ -28,15 +37,19 @@ function getNodeTypeSummary(type: ConfigNodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.summary`)
 }
 
-export function getNodeTypeName(type: NodeType): string {
+function getNodeTypeLocaleName(type: NodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.name`)
 }
 
-export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
-  call: {
+function getNodeGroupTitle(group: ConfigNodeGroup): string {
+  return t(`plugins.free-form.datakit.flow_editor.node_panel.groups.${group}`)
+}
+
+const CONFIG_NODE_CATALOG = [
+  {
     type: 'call',
-    summary: getNodeTypeSummary('call'),
-    description: getNodeTypeDescription('call'),
+    group: 'external_interaction',
+    icon: CONFIG_NODE_ICON_MAP.call,
     io: {
       input: {
         fields: [
@@ -53,12 +66,11 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.call,
   },
-  jq: {
+  {
     type: 'jq',
-    summary: getNodeTypeSummary('jq'),
-    description: getNodeTypeDescription('jq'),
+    group: 'data_transformation',
+    icon: CONFIG_NODE_ICON_MAP.jq,
     io: {
       input: {
         fields: [],
@@ -68,12 +80,11 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         fields: [],
       },
     },
-    ...NODE_VISUAL.jq,
   },
-  exit: {
+  {
     type: 'exit',
-    summary: getNodeTypeSummary('exit'),
-    description: getNodeTypeDescription('exit'),
+    group: 'control_flow',
+    icon: CONFIG_NODE_ICON_MAP.exit,
     io: {
       input: {
         fields: [
@@ -82,12 +93,11 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.exit,
   },
-  property: {
+  {
     type: 'property',
-    summary: getNodeTypeSummary('property'),
-    description: getNodeTypeDescription('property'),
+    group: 'data_value',
+    icon: CONFIG_NODE_ICON_MAP.property,
     io: {
       input: {
         fields: [],
@@ -97,24 +107,22 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         fields: [],
       },
     },
-    ...NODE_VISUAL.property,
   },
-  static: {
+  {
     type: 'static',
-    summary: getNodeTypeSummary('static'),
-    description: getNodeTypeDescription('static'),
+    group: 'data_value',
+    icon: CONFIG_NODE_ICON_MAP.static,
     io: {
       output: {
         fields: [],
         configurable: true,
       },
     },
-    ...NODE_VISUAL.static,
   },
-  branch: {
+  {
     type: 'branch',
-    summary: getNodeTypeSummary('branch'),
-    description: getNodeTypeDescription('branch'),
+    group: 'control_flow',
+    icon: CONFIG_NODE_ICON_MAP.branch,
     io: {
       input: {
         fields: [],
@@ -126,12 +134,11 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as NextMeta,
     },
-    ...NODE_VISUAL.branch,
   },
-  cache: {
+  {
     type: 'cache',
-    summary: getNodeTypeSummary('cache'),
-    description: getNodeTypeDescription('cache'),
+    group: 'external_interaction',
+    icon: CONFIG_NODE_ICON_MAP.cache,
     io: {
       input: {
         fields: [
@@ -149,12 +156,11 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.cache,
   },
-  xml_to_json: {
+  {
     type: 'xml_to_json',
-    summary: getNodeTypeSummary('xml_to_json'),
-    description: getNodeTypeDescription('xml_to_json'),
+    group: 'data_transformation',
+    icon: CONFIG_NODE_ICON_MAP.xml_to_json,
     io: {
       input: {
         fields: [],
@@ -163,12 +169,11 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         fields: [],
       },
     },
-    ...NODE_VISUAL.xml_to_json,
   },
-  json_to_xml: {
+  {
     type: 'json_to_xml',
-    summary: getNodeTypeSummary('json_to_xml'),
-    description: getNodeTypeDescription('json_to_xml'),
+    group: 'data_transformation',
+    icon: CONFIG_NODE_ICON_MAP.json_to_xml,
     io: {
       input: {
         fields: [],
@@ -178,12 +183,11 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         fields: [],
       },
     },
-    ...NODE_VISUAL.json_to_xml,
   },
-  jwt_decode: {
+  {
     type: 'jwt_decode',
-    summary: getNodeTypeSummary('jwt_decode'),
-    description: getNodeTypeDescription('jwt_decode'),
+    group: 'authentication',
+    icon: CONFIG_NODE_ICON_MAP.jwt_decode,
     io: {
       input: {
         fields: [],
@@ -196,12 +200,11 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.jwt_decode,
   },
-  jwt_sign: {
+  {
     type: 'jwt_sign',
-    summary: getNodeTypeSummary('jwt_sign'),
-    description: getNodeTypeDescription('jwt_sign'),
+    group: 'authentication',
+    icon: CONFIG_NODE_ICON_MAP.jwt_sign,
     io: {
       input: {
         fields: [
@@ -217,12 +220,11 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.jwt_sign,
   },
-  jwt_verify: {
+  {
     type: 'jwt_verify',
-    summary: getNodeTypeSummary('jwt_verify'),
-    description: getNodeTypeDescription('jwt_verify'),
+    group: 'authentication',
+    icon: CONFIG_NODE_ICON_MAP.jwt_verify,
     io: {
       input: {
         fields: [
@@ -237,14 +239,101 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.jwt_verify,
   },
+] as const satisfies ReadonlyArray<Pick<ConfigNodeMeta, 'type' | 'group' | 'icon' | 'io'>>
+
+export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, ConfigNodeMeta> = Object.fromEntries(
+  CONFIG_NODE_CATALOG.map((node) => [
+    node.type,
+    {
+      ...node,
+      name: getNodeTypeLocaleName(node.type),
+      summary: getNodeTypeSummary(node.type),
+      description: getNodeTypeLocaleDescription(node.type),
+    },
+  ]),
+) as Record<ConfigNodeType, ConfigNodeMeta>
+
+const CONFIG_NODE_GROUP_ORDER = [
+  {
+    id: 'external_interaction',
+    nodeTypes: ['call', 'cache'],
+  },
+  {
+    id: 'control_flow',
+    nodeTypes: ['branch', 'exit'],
+  },
+  {
+    id: 'data_transformation',
+    nodeTypes: ['jq', 'xml_to_json', 'json_to_xml'],
+  },
+  {
+    id: 'data_value',
+    nodeTypes: ['property', 'static'],
+  },
+  {
+    id: 'authentication',
+    nodeTypes: ['jwt_sign', 'jwt_decode', 'jwt_verify'],
+  },
+] as const satisfies ReadonlyArray<{
+  id: ConfigNodeGroup
+  nodeTypes: readonly ConfigNodeType[]
+}>
+
+export const CONFIG_NODE_GROUP_META_MAP = CONFIG_NODE_GROUP_ORDER.reduce<Record<ConfigNodeGroup, ConfigNodeGroupMeta>>(
+  (groups, group) => {
+    groups[group.id] = {
+      id: group.id,
+      title: getNodeGroupTitle(group.id),
+      colors: CONFIG_NODE_GROUP_COLORS[group.id],
+      nodeTypes: group.nodeTypes,
+    }
+
+    return groups
+  },
+  {} as Record<ConfigNodeGroup, ConfigNodeGroupMeta>,
+)
+
+export const CONFIG_NODE_PANEL_GROUPS: readonly ConfigNodePanelGroup[] = CONFIG_NODE_GROUP_ORDER.map(
+  (group) => ({
+    ...CONFIG_NODE_GROUP_META_MAP[group.id],
+    nodes: group.nodeTypes.map((type) => CONFIG_NODE_META_MAP[type]),
+  }),
+)
+
+export function getConfigNodeGroupMeta(group: ConfigNodeGroup): ConfigNodeGroupMeta {
+  return CONFIG_NODE_GROUP_META_MAP[group]
+}
+
+export function getNodeTypeDescription(type: NodeType): string {
+  return isConfigType(type)
+    ? CONFIG_NODE_META_MAP[type].description
+    : getNodeTypeLocaleDescription(type)
+}
+
+export function getNodeTypeName(type: NodeType): string {
+  return isConfigType(type)
+    ? CONFIG_NODE_META_MAP[type].name
+    : getNodeTypeLocaleName(type)
+}
+
+export function getNodeVisual(type: NodeType): NodeVisual {
+  if (isConfigType(type)) {
+    const meta = CONFIG_NODE_META_MAP[type]
+
+    return {
+      icon: meta.icon,
+      colors: CONFIG_NODE_GROUP_META_MAP[meta.group].colors,
+    }
+  }
+
+  return NODE_VISUAL[type]
 }
 
 export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   request: {
     type: 'request',
-    description: getNodeTypeDescription('request'),
+    description: getNodeTypeLocaleDescription('request'),
     io: {
       output: {
         fields: [
@@ -258,7 +347,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   },
   service_request: {
     type: 'service_request',
-    description: getNodeTypeDescription('service_request'),
+    description: getNodeTypeLocaleDescription('service_request'),
     io: {
       input: {
         fields: [
@@ -272,7 +361,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   },
   service_response: {
     type: 'service_response',
-    description: getNodeTypeDescription('service_response'),
+    description: getNodeTypeLocaleDescription('service_response'),
     io: {
       output: {
         fields: [
@@ -285,7 +374,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   },
   response: {
     type: 'response',
-    description: getNodeTypeDescription('response'),
+    description: getNodeTypeLocaleDescription('response'),
     io: {
       input: {
         fields: [

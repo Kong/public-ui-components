@@ -13,7 +13,7 @@
     </div>
     <div class="content">
       <div class="title">
-        {{ type }}
+        {{ name }}
       </div>
       <div class="description">
         {{ summary }}
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { CONFIG_NODE_META_MAP } from './node'
+import { CONFIG_NODE_META_MAP, getConfigNodeGroupMeta } from './node'
 
 import type { ConfigNodeType } from '../../types'
 
@@ -37,10 +37,13 @@ const emit = defineEmits<{
 }>()
 
 const {
+  name,
   summary,
   icon: Icon,
-  colors: { background, foreground } = {},
 } = CONFIG_NODE_META_MAP[type]
+const {
+  colors: { background, foreground },
+} = getConfigNodeGroupMeta(CONFIG_NODE_META_MAP[type].group)
 
 function handleDragStart(e: DragEvent) {
   emit('dragstart', e, type)

@@ -14,12 +14,23 @@
       </KLabel>
     </h3>
     <div class="node-list">
-      <NodePanelItem
-        v-for="nodeType in (Object.keys(CONFIG_NODE_META_MAP) as Array<ConfigNodeType>)"
-        :key="nodeType"
-        :type="nodeType"
-        @dragstart="handleDragStart"
-      />
+      <section
+        v-for="group in CONFIG_NODE_PANEL_GROUPS"
+        :key="group.id"
+        class="node-group"
+      >
+        <h4 class="group-title">
+          {{ group.title }}
+        </h4>
+        <div class="group-items">
+          <NodePanelItem
+            v-for="node in group.nodes"
+            :key="node.type"
+            :type="node.type"
+            @dragstart="handleDragStart"
+          />
+        </div>
+      </section>
     </div>
     <div
       aria-hidden="true"
@@ -45,7 +56,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { useEditorStore } from '../store/store'
-import { CONFIG_NODE_META_MAP } from '../node/node'
+import { CONFIG_NODE_PANEL_GROUPS } from '../node/node'
 import NodePanelItem from '../node/NodePanelItem.vue'
 import FlowNode from '../node/FlowNode.vue'
 
@@ -136,13 +147,11 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
 
 <style lang="scss" scoped>
 .dk-node-panel {
-
   .title {
     color: $kui-color-text;
     display: flex;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-bold;
-    gap: $kui-space-40;
     line-height: $kui-line-height-30;
     margin: 0;
   }
@@ -154,8 +163,28 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
   .node-list {
     display: flex;
     flex-direction: column;
+    gap: $kui-space-50;
+  }
+
+  .node-group {
+    display: flex;
+    flex-direction: column;
     gap: $kui-space-40;
-    margin-top: $kui-space-40;
+    margin: 0;
+  }
+
+  .group-title {
+    color: $kui-color-text-neutral-strongest;
+    font-size: $kui-font-size-20;
+    font-weight: $kui-font-weight-semibold;
+    line-height: $kui-line-height-30;
+    margin: 0;
+  }
+
+  .group-items {
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-40;
   }
 
   .preview {
