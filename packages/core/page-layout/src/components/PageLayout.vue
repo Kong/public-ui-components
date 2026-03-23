@@ -15,13 +15,29 @@
           data-testid="page-layout-breadcrumbs"
           :items="breadcrumbs"
         />
-        <h1
-          v-if="title"
-          class="page-layout-title"
-          data-testid="page-layout-title"
-        >
-          {{ title }}
-        </h1>
+        <div class="page-layout-title-container">
+          <component
+            :is="typeof backTo === 'string' ? 'a' : 'router-link'"
+            v-if="backTo"
+            class="navigate-back"
+            data-testid="page-layout-navigate-back"
+            :href="typeof backTo === 'string' ? backTo : undefined"
+            tabindex="0"
+            :to="typeof backTo === 'string' ? undefined : backTo"
+            @click.prevent="navigateBack()"
+            @keydown.enter.prevent="navigateBack()"
+            @keydown.space.prevent="navigateBack()"
+          >
+            <BackIcon :size="KUI_ICON_SIZE_30" />
+          </component>
+          <h1
+            v-if="title"
+            class="page-layout-title"
+            data-testid="page-layout-title"
+          >
+            {{ title }}
+          </h1>
+        </div>
       </div>
       <PageLayoutTabs
         v-if="hasTabs"
@@ -47,16 +63,40 @@ import { computed, ref, provide, inject, onUnmounted } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
+import { BackIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import { useRouter } from 'vue-router'
 
 const {
   breadcrumbs = [],
   title,
+  backTo,
   tabs = [],
 } = defineProps<PageLayoutProps>()
 
 defineSlots<PageLayoutSlots>()
 
+const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
+
+const router = useRouter()
+
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
+
+const navigateBack = () => {
+  // If not a string (a RouteLocationRaw)
+  if (typeof backTo !== 'string') {
+    router.push(backTo!)
+    return
+  }
+
+  // If navigateTo is undefined
+  if (typeof navigateTo !== 'function') {
+    window.location.href = backTo
+    return
+  }
+
+  navigateTo(backTo)
+}
 
 /**
  * PageLayout supports nesting: when a child PageLayout is rendered inside a parent,
@@ -124,12 +164,18 @@ onUnmounted(() => {
         }
       }
 
-      .page-layout-title {
-        color: var(--kui-color-text, $kui-color-text);
-        font-size: var(--kui-font-size-50, $kui-font-size-50);
-        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-        line-height: var(--kui-line-height-40, $kui-line-height-40);
-        margin: var(--kui-space-0, $kui-space-0);
+      .page-layout-title-container {
+        align-items: center;
+        display: flex;
+        gap: var(--kui-space-20, $kui-space-20);
+
+        .page-layout-title {
+          color: var(--kui-color-text, $kui-color-text);
+          font-size: var(--kui-font-size-50, $kui-font-size-50);
+          font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+          line-height: var(--kui-line-height-40, $kui-line-height-40);
+          margin: var(--kui-space-0, $kui-space-0);
+        }
       }
     }
 

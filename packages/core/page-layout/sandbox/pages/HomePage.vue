@@ -1,5 +1,6 @@
 <template>
   <PageLayout
+    back-to="/"
     :breadcrumbs="breadcrumbs"
     page-title="Overview"
     :tabs="tabs"
