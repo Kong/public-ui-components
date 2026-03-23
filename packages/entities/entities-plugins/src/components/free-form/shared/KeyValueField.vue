@@ -46,22 +46,24 @@
     >
       <div class="ff-kv-field-entry-fields">
         <EnhancedInput
-          v-model.trim="entry.key"
           class="ff-kv-field-entry-key"
           :data-key-input="index"
           :data-testid="`ff-key-${field.path.value}.${index}`"
+          :model-value="entry.key"
           :placeholder="keyPlaceholder || 'Key'"
           @keydown.enter.prevent="focus(index, 'value')"
+          @update:model-value="value => updateKey(entry.id, value)"
         />
 
         <EnhancedInput
-          v-model.trim="entry.value"
           class="ff-kv-field-entry-value"
           :data-testid="`ff-value-${field.path.value}.${index}`"
           :data-value-input="index"
+          :model-value="(entry.value as string)"
           :multiline="props.appearance?.string?.multiline"
           :placeholder="valuePlaceholder || 'Value'"
           @keydown.enter="handleValueKeydown($event, index)"
+          @update:model-value="value => updateValue(entry.id, value)"
         >
           <template #after>
             <component
@@ -117,7 +119,8 @@ import { KCard } from '@kong/kongponents'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import type { MapFieldSchema } from '../../../types/plugins/form-schema'
 import useI18n from '../../../composables/useI18n'
-import { useKeyValueField, type KeyValueFieldEmits, type KeyValueFieldProps } from '../shared/headless/useKeyValueField'
+import type { KeyValueFieldEmits, KeyValueFieldProps } from '../shared/headless/useKeyValueField'
+import { useKeyValueField } from '../shared/headless/useKeyValueField'
 import EnhancedInput from './EnhancedInput.vue'
 import { replaceByDictionaryInFieldName } from './composables'
 import { getName } from './utils'
@@ -136,6 +139,8 @@ const {
   setValue,
   labelAttrs,
   field,
+  updateKey,
+  updateValue,
 } = useKeyValueField(props, emit)
 
 const fieldName = computed(() => {

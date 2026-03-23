@@ -41,7 +41,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     for (const field of fields) {
       const fieldName = Object.keys(field)[0]
       const fieldKey = prefix ? resolve(prefix, fieldName) : fieldName
-      const path = generalizePath(fieldKey)
+      const path = generalizePath(fieldKey, schemaMap)
       const fieldSchema = schemaMap[path]
 
       assert(fieldSchema, `Field schema for "${fieldKey}" should exist in the schema map`)

@@ -374,6 +374,9 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     inputOptions,
     inputEdge,
     inputsEdges,
+    /**
+     * @deprecated
+     */
     inputsFieldNames,
     currentNode,
 

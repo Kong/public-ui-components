@@ -5,8 +5,9 @@ import * as utils from '../utils'
 
 import type { MaybeRefOrGetter } from 'vue'
 import type { RenderRules } from '../types'
+import type { UnionFieldSchema } from '../../../../types/plugins/form-schema'
 
-export function createRenderRuleRegistry(onChange: () => void) {
+export function createRenderRuleRegistry(onChange: () => void, getSchemaMap: () => Record<string, UnionFieldSchema>) {
   type RenderRulesMap = Record<string, RenderRules>
   const registry = ref<RenderRulesMap>({})
   const hiddenPaths = ref<Set<string>>(new Set())
@@ -307,7 +308,7 @@ export function createRenderRuleRegistry(onChange: () => void) {
     }
 
     // Use flattenedRules to get path-specific rules
-    const generalizedPath = generalizePath(fieldPath)
+    const generalizedPath = generalizePath(fieldPath, getSchemaMap())
     return flattenedRules.value[generalizedPath]
   }
 

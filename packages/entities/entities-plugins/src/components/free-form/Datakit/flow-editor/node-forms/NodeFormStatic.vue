@@ -56,6 +56,9 @@ const nameValidator = useNodeNameValidator(nodeId)
 
 const currentNode = computed(() => getNodeById(nodeId))
 
+/**
+ * @deprecated
+ */
 const outputsFieldNames = computed<FieldName[]>(() => {
   return currentNode.value?.fields.output.map(f => f.name) || []
 })

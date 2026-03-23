@@ -5,6 +5,7 @@ import { FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
 import { provide, reactive, toRef, toValue, useSlots, watch } from 'vue'
 import { useSchemaHelpers } from './schema'
 import * as utils from '../utils'
+import { useKeyIdMap } from './key-id-map'
 
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import type { FormConfig, MatchMap, RenderRules } from '../types'
@@ -25,7 +26,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       propsRenderRules,
       propsConfig,
     } = options
-    const schemaHelpers = useSchemaHelpers(schema)
+    const {
+      getDefault: getDefaultFromSchema,
+      getEmptyOrDefault: getEmptyOrDefaultFromSchema,
+      ...schemaHelpers
+    } = useSchemaHelpers(schema)
+    const keyIdMap = useKeyIdMap(schemaHelpers.getSchema)
     const fieldRendererRegistry: MatchMap = new Map()
 
     const innerData = reactive<T>({} as T)
@@ -40,7 +46,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       createComputedRules: createComputedRenderRules,
       hiddenPaths,
       isFieldHidden,
-    } = createRenderRuleRegistry(() => onChange?.(getValue()))
+    } = createRenderRuleRegistry(() => onChange?.(getValue()), schemaHelpers.getSchemaMap)
 
     const rootRenderRules = useCurrentRenderRules({
       fieldPath: utils.rootSymbol,
@@ -62,16 +68,16 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       let dataValue: T
 
       if (!propsData || !hasValue(toValue(propsData))) {
-        dataValue = schemaHelpers.getDefault()
+        dataValue = getDefaultFromSchema()
       } else {
         dataValue = cloneDeep(toValue(propsData))
       }
 
       if (isFunction(config.value.prepareFormData)) {
-        setValue(config.value.prepareFormData(dataValue))
-      } else {
-        setValue(dataValue)
+        config.value.prepareFormData(dataValue)
       }
+
+      setValue(keyIdMap.serialize(dataValue))
     }
 
     function hasValue(data: T | undefined): boolean {
@@ -100,12 +106,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
           const parentExists = parentPath.length === 0 || get(nextValue, parentPath) != null
 
           if (parentExists) {
-            set(nextValue, pathArray, schemaHelpers.getEmptyOrDefault(path))
+            set(nextValue, pathArray, getEmptyOrDefaultFromSchema(path))
           }
         }
       }
 
-      return nextValue
+      return keyIdMap.deserialize(nextValue)
     }
 
     // Emit changes when the inner data changes
@@ -117,6 +123,24 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     watch(() => propsData?.value, newData => {
       initInnerData(newData)
     }, { deep: true, immediate: true })
+
+    function serializeIfNeeded(data: any) {
+      if (data != null && typeof data === 'object' && !Array.isArray(data)) {
+        return keyIdMap.serialize(data)
+      }
+      return data
+    }
+
+    function getDefault(path?: string) {
+      return serializeIfNeeded(getDefaultFromSchema(path))
+    }
+
+    function getEmptyOrDefault<T = unknown>(path?: string): T | null {
+      return serializeIfNeeded(getEmptyOrDefaultFromSchema<T>(path))
+    }
+
+    ;(window as any).innerData = innerData
+    ;(window as any).getSchemaMap = schemaHelpers.getSchemaMap
 
     return {
       /**
@@ -133,6 +157,9 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       ...schemaHelpers,
       getValue,
       isFieldHidden,
+      keyIdMap,
+      getDefault,
+      getEmptyOrDefault,
     }
   },
 )

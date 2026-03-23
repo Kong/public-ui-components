@@ -1,13 +1,15 @@
-import { uniqueId, isEqual } from 'lodash-es'
-import { toRef, ref, watch, useAttrs, toValue } from 'vue'
-import { useField, useFieldAttrs } from '../composables'
+import { isEqual } from 'lodash-es'
+import { toRef, watch, useAttrs, toValue, computed } from 'vue'
+import { useField, useFieldAttrs, useFormShared } from '../composables'
+import { resolve, mapSymbol } from '../utils'
 
 import type { LabelAttributes } from '@kong/kongponents'
 import type { EmitFn, Ref } from 'vue'
 import type { BaseFieldProps } from '../types'
+import type { KeyId } from '../composables/key-id-map'
 
-export interface KeyValueFieldProps<TKey extends string = string, TValue extends string = string> extends BaseFieldProps {
-  initialValue?: Record<TKey, TValue> | null
+export interface KeyValueFieldProps<T = unknown, K extends string = string> extends BaseFieldProps {
+  initialValue?: Record<K, T> | null
   label?: string
   keyPlaceholder?: string
   valuePlaceholder?: string
@@ -16,205 +18,102 @@ export interface KeyValueFieldProps<TKey extends string = string, TValue extends
       multiline?: boolean
     }
   }
-  defaultKey?: TKey
-  defaultValue?: TValue
   labelAttributes?: LabelAttributes
   showVaultSecretPicker?: boolean
   // Specify the order of keys in the field.
   // If not provided, the order will be based on the order of object keys (which is not guaranteed when having numeric keys).
-  keyOrder?: TKey[]
+  /**
+   * @deprecated
+   */
+  keyOrder?: K[]
 }
 
-export interface KeyValueFieldEmits<TKey extends string = string, TValue extends string = string> {
-  change: [Record<TKey, TValue> | null]
+export interface KeyValueFieldEmits<T = unknown, K extends string = string> {
+  change: [Record<K, T> | null]
 }
 
-export interface KVEntry<TKey extends string = string, TValue extends string = string> {
-  id: string
-  key: TKey
-  value: TValue
+export interface KVEntry<T = unknown, K extends string = string> {
+  id: KeyId
+  key: K
+  value: T
 }
 
-/**
- * Headless composable for implementing a key-value field.
- */
-export function useKeyValueField<
-  TKey extends string = string,
-  TValue extends string = string,
->(
-  props: KeyValueFieldProps<TKey, TValue>,
-  emit: EmitFn<KeyValueFieldEmits>,
-  syncToFieldValue = true,
+function useKeyValueManager<T = unknown, K extends string = string>(
+  name: Ref<string>,
 ) {
-  type KVEntries = Array<KVEntry<TKey, TValue>>
+  const { value, path } = useField<Record<KeyId, T>>(name)
+  const { keyIdMap: keyValueStore, getEmptyOrDefault } = useFormShared()
 
-  const { value: fieldValue, emptyOrDefaultValue, ...field } = useField<Record<TKey, TValue> | null>(toRef(props, 'name'))
-  const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
+  const entries = computed(() => {
+    const values = toValue(value)
+    const result: Array<KVEntry<T, K>> = []
+    if (!values) return result
 
-  const entries = ref(getEntries(
-    props.initialValue ?? toValue(fieldValue),
-    props.keyOrder,
-  )) as Ref<KVEntries>
-  // the return type of ref(..) is not expected, it includes `UnwrapRef<TKey>` and `UnwrapRef<TValue>`
-  // fix it by using `as`
-
-  function generateId() {
-    return uniqueId('ff-kv-field-')
-  }
-
-  /**
-   * Compare function for sorting items based on a keyOrder array
-   */
-  function compareByKeyOrder<T extends string>(a: T, b: T, keyOrder: T[]): number {
-    const indexA = keyOrder.indexOf(a)
-    const indexB = keyOrder.indexOf(b)
-    if (indexA === -1 && indexB === -1) return 0 // both keys not in order
-    if (indexA === -1) return 1 // a comes after b
-    if (indexB === -1) return -1 // b comes after a
-    return indexA - indexB // sort by order in keyOrder
-  }
-
-  function getEntries(value: Record<TKey, TValue> | null | undefined, keyOrder?: TKey[]): KVEntries {
-    if (!value) return []
-
-    const entries = Object.entries(value).map(([key, value]) => ({
-      id: generateId(),
-      key: key as TKey,
-      value: value as TValue,
-    }))
-    if (keyOrder) {
-      // If keyOrder is specified, sort the entries based on it
-      entries.sort((a, b) => compareByKeyOrder(a.key, b.key, keyOrder))
-    }
-    return entries
-  }
-
-  function addEntry(): KVEntry<TKey, TValue> {
-    const entry = {
-      id: generateId(),
-      key: props.defaultKey || ('' as TKey),
-      value: props.defaultValue || ('' as TValue),
-    }
-    entries.value.push(entry)
-    return entry
-  }
-
-  function removeEntry(id: string) {
-    const index = entries.value.findIndex((entry) => entry.id === id)
-    if (index !== -1) {
-      entries.value.splice(index, 1)
-    }
-  }
-
-  function reset() {
-    entries.value = getEntries(props.initialValue, props.keyOrder)
-  }
-
-  function setValue(value: Record<TKey, TValue> | null | undefined) {
-    entries.value = getEntries(value, props.keyOrder)
-  }
-
-  let lastUpdatedValue: Record<TKey, TValue> | null | undefined = fieldValue?.value
-
-  // Sync entries to fieldValue
-  watch(entries, (newEntries) => {
-    if (!syncToFieldValue) return
-    const emptyValue = emptyOrDefaultValue?.value as Record<TKey, TValue> | null | undefined
-    const normalizedEntries = newEntries
-      .map(({ key, value }) => [key, value] as const)
-      .filter(([key]) => key)
-    const newValue: Record<TKey, TValue> | null | undefined = normalizedEntries.length
-      ? Object.fromEntries(normalizedEntries) as Record<TKey, TValue>
-      : emptyValue
-    const currentValue = fieldValue!.value
-    const currentOrDefaultValue = currentValue ?? emptyValue
-
-    // Avoid updating fieldValue to `null` from `{}`
-    // Currently, the UI does not distinguish between `null` and `{}` well, we'll improve it later. KM-2069
-    if (newValue === null && currentValue !== null && typeof currentValue === 'object' && Object.keys(currentValue).length === 0) {
-      return
-    }
-
-    // Ignore draft-only edits until they produce a different serialized value.
-    if (isEqual(newValue, currentOrDefaultValue)) {
-      return
-    }
-
-    if (newValue === undefined) {
-      return
-    }
-
-    fieldValue!.value = newValue
-    lastUpdatedValue = newValue
-    emit('change', newValue)
-  }, { deep: true, immediate: true })
-
-  // Sync fieldValue to entries
-  watch(() => fieldValue?.value, newValue => {
-    // avoid infinite sync loop
-    if (isEqual(newValue, lastUpdatedValue)) return
-    applyChangeToEntries(newValue)
-  }, { deep: true })
-
-  /**
-   * Apply changes to entries when the underlying data model changes.
-   * This function intelligently updates the entries array while:
-   * - Preserving existing entry IDs for stable component state/rendering
-   * - Applying the specified key ordering if provided
-   * - Adding new entries for keys that didn't exist before
-   * - Updating values for existing keys
-   * - Removing entries that no longer exist in the new value
-   */
-  function applyChangeToEntries(newValue?: Record<TKey, TValue> | null) {
-    if (!newValue) {
-      entries.value = []
-      return
-    }
-
-    // Create a map of existing entries by their keys for quick lookup
-    const currentEntriesMap = new Map<TKey, KVEntry<TKey, TValue>>()
-    entries.value.forEach(entry => {
-      if (entry.key) {
-        currentEntriesMap.set(entry.key, entry)
-      }
+    Object.getOwnPropertySymbols(values).forEach((keyId) => {
+      const key = keyValueStore.getKey(keyId as KeyId) as K | undefined
+      if (key === undefined) return
+      result.push({
+        id: keyId as KeyId,
+        key,
+        value: values[keyId as KeyId],
+      })
     })
+    return result
+  })
 
-    // Prepare array for the updated entries
-    const newEntries: KVEntries = []
-    const newKeys = Object.keys(newValue) as TKey[]
+  function addEntry(): KeyId {
+    const id = keyValueStore.createKey()
+    let defaultVal
 
-    // Apply key ordering if specified, otherwise use the original key order
-    const orderedKeys = props.keyOrder
-      ? [...newKeys].sort((a, b) => compareByKeyOrder(a, b, props.keyOrder!))
-      : newKeys
-
-    // Process each key in order
-    orderedKeys.forEach(key => {
-      const value = newValue[key]
-      if (currentEntriesMap.has(key)) {
-        // For existing keys: preserve the entry object (including its ID) and just update its value
-        // This helps maintain component state and prevents unnecessary re-renders
-        const existingEntry = currentEntriesMap.get(key)!
-        existingEntry.value = value
-        newEntries.push(existingEntry)
-      } else {
-        // For new keys: create a new entry with a fresh ID
-        newEntries.push({
-          id: generateId(),
-          key,
-          value,
-        })
+    if (defaultVal === undefined) {
+      const emptyOrDefault = getEmptyOrDefault<Record<K, T>>(resolve(path!.value, mapSymbol))
+      if (emptyOrDefault) {
+        defaultVal = keyValueStore.serialize(emptyOrDefault)[id as KeyId]
       }
-    })
+    }
 
-    entries.value = newEntries
+    value!.value = {
+      ...toValue(value),
+      [id]: defaultVal,
+    }
+    return id
+  }
+
+  function removeEntry(id: KeyId) {
+    const { [id]: _, ...rest } = toValue(value) || {}
+    value!.value = rest
+    keyValueStore.deleteKey(id)
+  }
+
+  function updateKey(id: KeyId, newKeyName: K) {
+    const currentValue = toValue(value)
+    if (!currentValue || !Object.prototype.hasOwnProperty.call(currentValue, id)) return
+
+    keyValueStore.updateKey(id, newKeyName)
+    value!.value = { ...currentValue } // Force trigger reactive update
+  }
+
+  function updateValue(id: KeyId, newValue: T) {
+    const currentValue = toValue(value)
+    if (!currentValue || !Object.prototype.hasOwnProperty.call(currentValue, id)) return
+
+    value!.value = {
+      ...currentValue,
+      [id]: newValue,
+    }
+  }
+
+  function deserialize(): Record<K, T> | null {
+    // null or undefined or {}
+    const realValue = toValue(value)
+    if (!realValue || Object.getOwnPropertySymbols(realValue).length === 0) {
+      return null
+    }
+
+    return keyValueStore.deserialize(realValue)
   }
 
   return {
-    /**
-     * The list of key-value entries.
-     * Use `v-for` to iterate over this in the template.
-     */
     entries,
     /**
      * Add a empty key-value entry.
@@ -224,6 +123,82 @@ export function useKeyValueField<
      * Remove a key-value entry by its ID.
      */
     removeEntry,
+    /**
+     * Update the key of a key-value entry by its ID.
+     */
+    updateKey,
+    /**
+     * Update the value of a key-value entry by its ID.
+     */
+    updateValue,
+    /**
+     * Deserialize the key-value entries.
+     */
+    deserialize,
+    /**
+     * Serialize the key-value entries.
+     */
+    serialize: keyValueStore.serialize,
+  }
+}
+
+export function useKeyValueField<T = unknown, K extends string = string>(
+  props: KeyValueFieldProps<T, K>,
+  emit: EmitFn<KeyValueFieldEmits<T, K>>,
+) {
+
+  const {
+    value: fieldValue,
+    emptyOrDefaultValue,
+    ...field
+  } = useField<Record<K, T> | null>(toRef(props, 'name'))
+
+  const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
+  const {
+    entries,
+    deserialize,
+    serialize,
+    ...keyValueManager
+  } = useKeyValueManager<T, K>(toRef(props, 'name'))
+
+  function reset() {
+    if (props.initialValue) {
+      fieldValue!.value = serialize(props.initialValue)
+    } else {
+      fieldValue!.value = emptyOrDefaultValue?.value ?? null
+    }
+  }
+
+  function setValue(data: Record<K, T>) {
+    fieldValue!.value = serialize(data)
+  }
+
+  let lastUpdatedValue = fieldValue?.value
+
+  // Trigger change event
+  watch(
+    () => fieldValue?.value,
+    () => {
+      const newValue = deserialize()
+      lastUpdatedValue = fieldValue!.value
+      emit('change', newValue)
+    },
+    { deep: true, immediate: true },
+  )
+
+  // Serialize fieldValue when it changes externally
+  watch(() => fieldValue?.value, newValue => {
+    // Avoid infinite sync loop
+    if (isEqual(lastUpdatedValue, newValue)) return
+    fieldValue!.value = fieldValue!.value ? serialize(fieldValue!.value) : fieldValue!.value
+  }, { deep: true })
+
+  return {
+    /**
+     * The list of key-value entries.
+     * Use `v-for` to iterate over this in the template.
+     */
+    entries,
     /**
      * Reset the entries to the initial value.
      */
@@ -240,5 +215,7 @@ export function useKeyValueField<
      * The field object.
      */
     field,
+
+    ...keyValueManager,
   }
 }

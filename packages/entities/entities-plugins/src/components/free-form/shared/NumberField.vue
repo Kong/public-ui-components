@@ -91,6 +91,8 @@ const between = computed(() => {
   }
 })
 
+console.log('fieldPath', field.path?.value)
+
 const emit = defineEmits<{
   'update:modelValue': [value: number | string | null]
 }>()
