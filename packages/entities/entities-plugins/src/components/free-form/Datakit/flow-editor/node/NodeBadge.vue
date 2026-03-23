@@ -14,7 +14,7 @@
     >
       <component :is="visual.icon" />
     </template>
-    {{ nodeName }}
+    {{ getNodeTypeName(type) }}
   </KBadge>
 </template>
 
@@ -32,8 +32,6 @@ const { type } = defineProps<{
 }>()
 
 const visual = computed<NodeVisual>(() => getNodeVisual(type))
-
-const nodeName = computed(() => getNodeTypeName(type))
 </script>
 
 <style lang="scss" scoped>
