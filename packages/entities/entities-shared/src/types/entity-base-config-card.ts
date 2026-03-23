@@ -29,6 +29,7 @@ export enum SupportedEntityType {
   ListenerPolicy = 'listener_policy',
   SchemaRegistry = 'schema_registry',
   StaticKey = 'static_key',
+  TlsTrustBundle = 'tls_trust_bundle',
   AuthServer = 'auth_server',
   AuthServerScopes = 'auth_server_scopes',
   AuthServerClaims = 'auth_server_claims',
@@ -59,7 +60,7 @@ export const SupportedEntityDeckArray = [
 
 export type SupportedEntityDeck = typeof SupportedEntityDeckArray[number]
 
-export const EventGatewayTypesArray = ['backend_cluster', 'virtual_cluster', 'listener', 'produce_policy', 'consume_policy', 'cluster_policy', 'listener_policy', 'schema_registry', 'static_key']
+export const EventGatewayTypesArray = ['backend_cluster', 'virtual_cluster', 'listener', 'produce_policy', 'consume_policy', 'cluster_policy', 'listener_policy', 'schema_registry', 'static_key', 'tls_trust_bundle']
 
 export const IdentityTypesArray = ['auth_server', 'auth_server_scopes', 'auth_server_claims', 'auth_server_clients']
 

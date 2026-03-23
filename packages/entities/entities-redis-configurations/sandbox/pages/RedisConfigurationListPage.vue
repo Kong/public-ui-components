@@ -46,6 +46,8 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const konnectConfig: KonnectRedisConfigurationListConfig = {
   app: 'konnect',
   apiBaseUrl: '/us/kong-api',
+  // Cloud Gateways add-ons API uses a non-geo base; CP/partials use apiBaseUrl
+  cloudGatewaysApiBaseUrl: '/kong-api',
   controlPlaneId,
   createRoute: { name: 'create-redis-configuration' },
   getViewRoute: (id: string) => ({ name: 'view-redis-configuration', params: { id } }),

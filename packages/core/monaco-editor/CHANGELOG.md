@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.20.1...@kong-ui-public/monaco-editor@0.20.2) (2026-03-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.47.0 ([#3032](https://github.com/Kong/public-ui-components/issues/3032)) ([8f04a91](https://github.com/Kong/public-ui-components/commit/8f04a919b363b9ed27d6b7b8b890f679fb9f604b))
+
+
+
+
+
 ## [0.20.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.20.0...@kong-ui-public/monaco-editor@0.20.1) (2026-03-18)
 
 

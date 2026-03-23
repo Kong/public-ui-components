@@ -24,7 +24,7 @@ export const getFieldDataSources = (
     datasources.push('llm_usage')
   }
   if ((filterableMcpExploreDimensions as string[]).includes(dimension)) {
-    datasources.push('mcp_usage')
+    datasources.push('agentic_usage')
   }
   if ((filterableRequestDimensions as string[]).includes(dimension) || (filterableRequestMetrics as string[]).includes(dimension)) {
     datasources.push('requests')

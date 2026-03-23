@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.3...@kong-ui-public/analytics-utilities@12.12.4) (2026-03-23)
+
+
+### Bug Fixes
+
+* time range and granularity values are just a string type ([#3041](https://github.com/Kong/public-ui-components/issues/3041)) ([371e16b](https://github.com/Kong/public-ui-components/commit/371e16b09821904179de053fce1ecce2a9de3aee))
+
+
+
+
+
+## [12.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.2...@kong-ui-public/analytics-utilities@12.12.3) (2026-03-23)
+
+
+### Bug Fixes
+
+* add supported dimensions to field ([#3031](https://github.com/Kong/public-ui-components/issues/3031)) ([7d0cc4c](https://github.com/Kong/public-ui-components/commit/7d0cc4c84b9d25a9dc2b8966c01bfd393649fad4))
+
+
+
+
+
+## [12.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.1...@kong-ui-public/analytics-utilities@12.12.2) (2026-03-20)
+
+
+### Bug Fixes
+
+* **analytics:** refactor mcp_usage ds to agentic_usage [MA-4890] ([#3030](https://github.com/Kong/public-ui-components/issues/3030)) ([69fc859](https://github.com/Kong/public-ui-components/commit/69fc859b61ed2fa3f08424f72ebf665ce131810f))
+
+
+
+
+
 ## [12.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.0...@kong-ui-public/analytics-utilities@12.12.1) (2026-03-18)
 
 

@@ -4,8 +4,8 @@
     :class="{ 'managed-konnect-layout': isManagedKonnectLayout }"
   >
     <EntityBaseForm
-      ref="baseFormRef"
       :action-teleport-target="actionTeleportTarget"
+      :align-action-button-to-left="isManagedKonnectLayout"
       :can-submit="canSubmit"
       :config="config"
       :edit-id="partialId"
@@ -41,7 +41,7 @@
 
       <component
         :is="isManagedKonnectLayout ? EntityFormBlock : 'div'"
-        v-bind="isManagedKonnectLayout ? { step: 2, title: t('form.managed_layout.configuration') } : {}"
+        v-bind="isManagedKonnectLayout ? { step: 2 + managedLayoutStepOffset, title: t('form.managed_layout.configuration') } : {}"
       >
         <!-- type section -->
         <EntityFormSection
@@ -461,7 +461,7 @@
       <EntityFormBlock
         v-if="isManagedKonnectLayout"
         class="managed-layout-general-block"
-        :step="3"
+        :step="3 + managedLayoutStepOffset"
         :title="t('form.managed_layout.general_information')"
       >
         <EntityFormSection
@@ -482,51 +482,11 @@
             data-testid="redis-tags-input"
             :help="t('form.fields.tags.help')"
             :label="t('form.fields.tags.label')"
-            :label-attributes="{
-              info: t('form.fields.tags.tooltip'),
-              tooltipAttributes: { maxWidth: '400' },
-            }"
             :placeholder="t('form.fields.tags.placeholder')"
             :readonly="form.readonly"
           />
         </EntityFormSection>
       </EntityFormBlock>
-
-      <template
-        v-if="isManagedKonnectLayout"
-        #form-actions
-      >
-        <div
-          class="managed-form-actions"
-          data-testid="managed-form-actions"
-        >
-          <KButton
-            appearance="primary"
-            :data-testid="`partial-${isEdit ? 'edit' : 'create'}-form-submit`"
-            :disabled="disableManagedSave"
-            type="submit"
-            @click="!!actionTeleportTarget && submitHandler()"
-          >
-            {{ t('form.actions.save') }}
-          </KButton>
-          <KButton
-            appearance="secondary"
-            :data-testid="`partial-${isEdit ? 'edit' : 'create'}-form-cancel`"
-            :disabled="form.readonly"
-            type="reset"
-            @click="!!actionTeleportTarget && cancelHandler()"
-          >
-            {{ t('form.actions.cancel') }}
-          </KButton>
-          <KButton
-            appearance="tertiary"
-            :data-testid="`partial-${isEdit ? 'edit' : 'create'}-form-view-configuration`"
-            @click="handleViewConfigClick"
-          >
-            {{ t('form.actions.view_configuration') }}
-          </KButton>
-        </div>
-      </template>
     </EntityBaseForm>
   </div>
 
@@ -643,12 +603,25 @@ const {
 const router = useRouter()
 
 const codeBlockType = ref<string>('json')
-const baseFormRef = ref<InstanceType<typeof EntityBaseForm> | null>(null)
 
-// When true, show the stepped Konnect layout (Configuration + General information blocks and custom actions).
 const isManagedKonnectLayout = computed<boolean>(() => {
-  return props.config.app === 'konnect' && !!props.config.isKonnectManagedRedisEnabled
+  if (props.config.app !== 'konnect') {
+    return false
+  }
+
+  // Keep backward compatibility: if UI-only flag is omitted, follow behavior flag
+  if (typeof props.config.useKonnectManagedRedisUi === 'boolean') {
+    return props.config.useKonnectManagedRedisUi
+  }
+
+  return !!props.config.isKonnectManagedRedisEnabled
 })
+
+// For non-cloud gateways, the selector hides managed step 1, so compress steps down:
+// so step 2 becomes 1 and step 3 becomes 2
+const managedLayoutStepOffset = computed<number>(() => (
+  (props.config as any).isCloudGateway === false ? -1 : 0
+))
 
 const isReferenceable = computed<{ host: boolean, port: boolean, serverName: boolean }>(() => {
   const canReferenceFields =
@@ -762,10 +735,6 @@ const {
   cloudAuthAvailable: props.config.cloudAuthAvailable,
 })
 
-// In Konnect managed layout we render our own Save button, so we need to disable it when the form
-// is not ready to submit either invalid or when it's readonly — same as the default form does
-const disableManagedSave = computed<boolean>(() => canSubmit.value === false || form.readonly)
-
 const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)
 
 const isEditWarningModalVisible = ref(false)
@@ -827,13 +796,6 @@ const updateFormValues = (data: Record<string, any>) => {
   setInitialFormValues(data as RedisConfigurationResponse)
 }
 
-// In managed layout View configuration button lives in the custom actions;
-// we call the base form to open its slideout JSON/YAML/etc so the user sees the same panel
-const handleViewConfigClick = () => {
-  const entityBaseForm = baseFormRef.value as unknown as { viewConfig?: () => void } | null
-  entityBaseForm?.viewConfig?.()
-}
-
 onBeforeMount(async () => {
   if (isEdit) {
     const { count } = await fetchLinks({ partialId: props.partialId })
@@ -855,23 +817,15 @@ onBeforeMount(async () => {
   margin-top: var(--kui-space-40, $kui-space-40) !important;
 }
 
-.managed-form-actions {
-  align-items: center;
-  display: flex;
-  gap: var(--kui-space-50, $kui-space-50);
-  justify-content: flex-start;
-  width: 100%;
-
-  :deep(.k-button) {
-    margin-inline-start: var(--kui-space-0, $kui-space-0) !important;
-  }
-}
-
 .managed-konnect-layout {
-  max-width: var(--kui-breakpoint-desktop, $kui-breakpoint-desktop);
+  // Override shared base form constraint so managed layout spans full width
+  :deep(.kong-ui-entity-base-form) {
+    max-width: 100%;
+    width: 100%;
+  }
 
-  :deep(.form-actions) {
-    justify-content: flex-start;
+  :deep(.kong-ui-entity-form-block .step) {
+    box-sizing: border-box;
   }
 
   :deep(.managed-layout-general-block) {

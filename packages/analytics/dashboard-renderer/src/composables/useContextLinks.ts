@@ -11,7 +11,7 @@ const EXPLORE_DATASOURCES = [
   'basic',
   'api_usage',
   'llm_usage',
-  'mcp_usage',
+  'agentic_usage',
   'platform',
   undefined,
 ] as const
@@ -157,7 +157,7 @@ export default function useContextLinks(
     }
 
     // If the datasource is 'basic' or not provided, fallback to api_usage
-    const datasource = ['api_usage', 'llm_usage', 'mcp_usage'].includes(definition.value.query.datasource) ? definition.value.query.datasource : 'api_usage'
+    const datasource = ['api_usage', 'llm_usage', 'agentic_usage'].includes(definition.value.query.datasource) ? definition.value.query.datasource : 'api_usage'
 
     return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${definition.value.chart.type}`
   }

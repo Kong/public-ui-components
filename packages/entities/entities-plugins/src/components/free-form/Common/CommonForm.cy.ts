@@ -162,6 +162,41 @@ describe('<CommonForm />', () => {
     cy.getTestId('ff-advanced-fields-container').should('exist').should('not.be.visible')
   })
 
+  it('Advanced fields container should not exist when all fields are advanced', () => {
+    mountCommonForm({
+      schema: {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                {
+                  foo: {
+                    type: 'string',
+                  },
+                },
+                {
+                  bar: {
+                    type: 'string',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    })
+
+    // All fields are optional (no required fields), so all are categorized as advanced.
+    // The AdvancedFields container should not be rendered (v-if="!allFieldsAdvanced").
+    cy.getTestId('ff-advanced-fields-container').should('not.exist')
+
+    // All fields should still be rendered in the default visible section
+    cy.get('.ff-default-visible-fields').findTestId('ff-config.foo').should('exist')
+    cy.get('.ff-default-visible-fields').findTestId('ff-config.bar').should('exist')
+  })
+
   describe('Condition field', () => {
     it('should not render condition field when formSchema does not include condition', () => {
       mountCommonForm()

@@ -6,15 +6,15 @@ import {
   Granularities,
   granularityMsToQuery,
 } from './granularity'
-import type { DruidGranularity, GranularityValues, QueryTime } from './types'
+import type { DruidGranularity, QueryTime } from './types'
 import type { Timeframe } from './timeframes'
 
 abstract class BaseQueryTime implements QueryTime {
   protected readonly timeframe: Timeframe
   protected readonly tz?: string
-  protected readonly dataGranularity: GranularityValues
+  protected readonly dataGranularity: string
 
-  constructor(timeframe: Timeframe, tz?: string, dataGranularity?: GranularityValues) {
+  constructor(timeframe: Timeframe, tz?: string, dataGranularity?: string) {
     // This is an abstract class.
     if (this.constructor === BaseQueryTime) {
       throw new Error('BaseQueryTime is not meant to be used directly.')
@@ -31,7 +31,7 @@ abstract class BaseQueryTime implements QueryTime {
 
   abstract granularityMs(): number
 
-  protected calculateStartDate(isRelative: boolean, granularity: GranularityValues, periods = 1) {
+  protected calculateStartDate(isRelative: boolean, granularity: string, periods = 1) {
     // `periods` is greater than 1 if we're doing a delta time query.
     if (isRelative) {
       return new Date(this.endDate().getTime() - this.timeframe.timeframeLengthMs() * periods)
@@ -79,9 +79,9 @@ abstract class BaseQueryTime implements QueryTime {
 
 // We expect to get back a number of values, depending on the selected timeframe and granularity.
 export class TimeseriesQueryTime extends BaseQueryTime {
-  private readonly granularity: GranularityValues
+  private readonly granularity: string
 
-  constructor(timeframe: Timeframe, granularity?: GranularityValues, tz?: string, dataGranularity?: GranularityValues, fineGrain?: boolean) {
+  constructor(timeframe: Timeframe, granularity?: string, tz?: string, dataGranularity?: string, fineGrain?: boolean) {
     super(timeframe, tz, dataGranularity)
 
     if (granularity && timeframe.allowedGranularities(fineGrain).has(granularity)) {

@@ -1,6 +1,6 @@
 import { expect } from 'vitest'
 import { TimeframeKeys } from './types'
-import { Timeframe, TimePeriods } from './timeframes'
+import { Timeframe, TimePeriods, TIMEFRAME_LOOKUP } from './timeframes'
 
 const freeTierMax = TimePeriods.get(TimeframeKeys.ONE_DAY)?.timeframeLength() || 86400
 const sevenDays = TimePeriods.get(TimeframeKeys.SEVEN_DAY)?.timeframeLength() || 86400 * 7
@@ -55,10 +55,16 @@ describe('allowedGranularities', () => {
     expect(TimePeriods.get(TimeframeKeys.CURRENT_MONTH)?.allowedGranularities())
       .toEqual(new Set(['daily', 'weekly']))
 
+    expect(TimePeriods.get(TimeframeKeys.CURRENT_QUARTER)?.allowedGranularities())
+      .toEqual(new Set(['daily', 'weekly']))
+
     expect(TimePeriods.get(TimeframeKeys.PREVIOUS_WEEK)?.allowedGranularities())
       .toEqual(new Set(['hourly', 'daily']))
 
     expect(TimePeriods.get(TimeframeKeys.PREVIOUS_MONTH)?.allowedGranularities())
+      .toEqual(new Set(['daily', 'weekly']))
+
+    expect(TimePeriods.get(TimeframeKeys.PREVIOUS_QUARTER)?.allowedGranularities())
       .toEqual(new Set(['daily', 'weekly']))
   })
 
@@ -75,6 +81,8 @@ describe('cacheKey', () => {
   it('handles relative keys', () => {
     expect(TimePeriods.get(TimeframeKeys.ONE_DAY)?.cacheKey()).toBe('24h')
     expect(TimePeriods.get(TimeframeKeys.CURRENT_MONTH)?.cacheKey()).toBe('current_month')
+    expect(TimePeriods.get(TimeframeKeys.CURRENT_QUARTER)?.cacheKey()).toBe('current_quarter')
+    expect(TimePeriods.get(TimeframeKeys.PREVIOUS_QUARTER)?.cacheKey()).toBe('previous_quarter')
   })
 
   it('handles absolute keys', () => {
@@ -90,6 +98,13 @@ describe('cacheKey', () => {
       isRelative: false,
       allowedTiers: ['free', 'plus', 'enterprise'],
     })).cacheKey()).toBe('2024-01-01T00:00:00.000Z-2024-01-02T00:00:00.000Z')
+  })
+})
+
+describe('timeframe lookups', () => {
+  it('maps quarter keys', () => {
+    expect(TIMEFRAME_LOOKUP.current_quarter).toBe(TimeframeKeys.CURRENT_QUARTER)
+    expect(TIMEFRAME_LOOKUP.previous_quarter).toBe(TimeframeKeys.PREVIOUS_QUARTER)
   })
 })
 

@@ -14,7 +14,6 @@ import {
   queryableBasicExploreDimensions,
   queryableExploreDimensions,
   queryableMcpExploreDimensions,
-  relativeTimeRangeValuesV4,
   requestFilterTypeEmptyV2,
 } from './types'
 import { COUNTRIES } from './types/country-codes'
@@ -307,8 +306,6 @@ const exploreV4RelativeTimeSchema = {
     },
     time_range: {
       type: 'string',
-      enum: relativeTimeRangeValuesV4,
-      default: '1h',
     },
   },
   required: [
@@ -510,7 +507,7 @@ export const mcpUsageSchema = {
     datasource: {
       type: 'string',
       enum: [
-        'mcp_usage',
+        'agentic_usage',
       ],
     },
     metrics: metricsFn(mcpExploreAggregations),

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.5...@kong-ui-public/entities-vaults@4.4.6) (2026-03-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.4...@kong-ui-public/entities-vaults@4.4.5) (2026-03-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.47.0 ([#3032](https://github.com/Kong/public-ui-components/issues/3032)) ([8f04a91](https://github.com/Kong/public-ui-components/commit/8f04a919b363b9ed27d6b7b8b890f679fb9f604b))
+
+
+
+
+
 ## [4.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.3...@kong-ui-public/entities-vaults@4.4.4) (2026-03-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

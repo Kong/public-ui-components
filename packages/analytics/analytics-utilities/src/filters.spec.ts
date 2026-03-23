@@ -10,9 +10,9 @@ describe('getFieldDataSources', () => {
     ['mcp_method'],
     ['mcp_session_id'],
     ['mcp_error'],
-  ])('returns mcp_usage and requests for MCP dimension "%s"', (dimension) => {
+  ])('returns agentic_usage and requests for MCP dimension "%s"', (dimension) => {
     const result = getFieldDataSources(dimension as AllFilterableDimensionsAndMetrics)
-    expect(result).toEqual(['mcp_usage', 'requests'])
+    expect(result).toEqual(['agentic_usage', 'requests'])
   })
 
   it.each([
@@ -20,11 +20,11 @@ describe('getFieldDataSources', () => {
     ['gateway_service'],
     ['route'],
     ['status_code'],
-  ])('includes basic, api_usage, mcp_usage, and requests for shared dimension "%s"', (dimension) => {
+  ])('includes basic, api_usage, agentic_usage, and requests for shared dimension "%s"', (dimension) => {
     const result = getFieldDataSources(dimension as AllFilterableDimensionsAndMetrics)
     expect(result).toContain('basic')
     expect(result).toContain('api_usage')
-    expect(result).toContain('mcp_usage')
+    expect(result).toContain('agentic_usage')
     expect(result).toContain('requests')
   })
 
@@ -32,11 +32,11 @@ describe('getFieldDataSources', () => {
     ['upstream_status_code'],
     ['consumer'],
     ['application'],
-  ])('includes api_usage, mcp_usage, and requests for advanced dimension "%s"', (dimension) => {
+  ])('includes api_usage, agentic_usage, and requests for advanced dimension "%s"', (dimension) => {
     const result = getFieldDataSources(dimension as AllFilterableDimensionsAndMetrics)
     expect(result).not.toContain('basic')
     expect(result).toContain('api_usage')
-    expect(result).toContain('mcp_usage')
+    expect(result).toContain('agentic_usage')
     expect(result).toContain('requests')
   })
 
@@ -44,9 +44,9 @@ describe('getFieldDataSources', () => {
     ['ai_provider'],
     ['ai_response_model'],
     ['ai_request_model'],
-  ])('does not include mcp_usage for AI dimension "%s"', (dimension) => {
+  ])('does not include agentic_usage for AI dimension "%s"', (dimension) => {
     const result = getFieldDataSources(dimension as AllFilterableDimensionsAndMetrics)
     expect(result).toContain('llm_usage')
-    expect(result).not.toContain('mcp_usage')
+    expect(result).not.toContain('agentic_usage')
   })
 })

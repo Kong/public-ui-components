@@ -211,7 +211,7 @@ describe('useContextLinks', () => {
   })
 
   it('builds explore link for expected datasources', async () => {
-    const datasources = ['api_usage', 'basic', 'llm_usage', 'mcp_usage', undefined]
+    const datasources = ['api_usage', 'basic', 'llm_usage', 'agentic_usage', undefined]
 
     for (const ds of datasources) {
       const { wrapper } = mountComposable({
