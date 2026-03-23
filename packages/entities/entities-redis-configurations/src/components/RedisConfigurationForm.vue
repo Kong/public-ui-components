@@ -856,7 +856,7 @@ onBeforeMount(async () => {
     margin-top: $kui-space-60;
   }
 
-  :deep(.k-alert.form-error) {
+  :deep(.k-alert.danger) {
     margin-top: $kui-space-60;
   }
 }
