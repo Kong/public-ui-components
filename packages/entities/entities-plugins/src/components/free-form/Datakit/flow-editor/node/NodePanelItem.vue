@@ -13,7 +13,7 @@
     </div>
     <div class="content">
       <div class="title">
-        {{ name }}
+        {{ type }}
       </div>
       <div class="description">
         {{ summary }}
@@ -37,7 +37,6 @@ const emit = defineEmits<{
 }>()
 
 const {
-  name,
   summary,
   icon: Icon,
 } = CONFIG_NODE_META_MAP[type]

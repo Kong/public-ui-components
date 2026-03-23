@@ -12,7 +12,7 @@
         v-if="!isImplicit"
         class="badge"
         placement="top"
-        :text="nodeTypeName"
+        :text="getNodeTypeName(data.type)"
       >
         <NodeBadge
           icon-only
@@ -389,8 +389,6 @@ const branchPosition = computed(() => {
 const name = computed(() => {
   return isImplicit.value ? t(`plugins.free-form.datakit.flow_editor.node_types.${data.type}.name`) : data.name
 })
-
-const nodeTypeName = computed(() => getNodeTypeName(data.type))
 
 const handleTwigColor = computed(() => {
   return isImplicit.value ? KUI_COLOR_BACKGROUND_NEUTRAL_STRONG : KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
