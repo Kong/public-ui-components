@@ -300,7 +300,7 @@ const CONFIG_NODE_GROUP_CATALOG = [
       },
     ],
   },
-] as const satisfies ReadonlyArray<ConfigNodeGroupCatalog>
+] as const satisfies readonly ConfigNodeGroupCatalog[]
 
 function createConfigNodeGroupMeta(group: ConfigNodeGroupCatalog): ConfigNodeGroupMeta {
   return {
