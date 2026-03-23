@@ -1,4 +1,5 @@
 export { default as AICustomGuardrailForm } from './AICustomGuardrail'
+export { default as ExitTransformerForm } from './ExitTransformer'
 export { default as RequestCalloutForm } from './RequestCallout'
 export { default as ServiceProtectionForm } from './ServiceProtection'
 export { default as DatakitForm } from './Datakit'
