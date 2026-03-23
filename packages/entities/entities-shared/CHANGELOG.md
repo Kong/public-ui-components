@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.41.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.40.3...@kong-ui-public/entities-shared@3.41.0) (2026-03-23)
+
+
+### Features
+
+* **entities-shared:** add `TlsTrustBundle` to config card ([#3013](https://github.com/Kong/public-ui-components/issues/3013)) ([10fd417](https://github.com/Kong/public-ui-components/commit/10fd41715778f4e1990b3a8548177d7b0e0d4c88))
+
+
+
+
+
 ## [3.40.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.40.2...@kong-ui-public/entities-shared@3.40.3) (2026-03-21)
 
 
