@@ -51,6 +51,13 @@ export function resetEmptyTokenExchange(config?: { token_exchange?: TokenExchang
     },
   ]
 
+  // Reset cache.ttl to null if it is 0
+  // The number field in VFG can never be null, even removing the value will set it to 0
+  // Since 0 is not a valid ttl value, so we treat 0 as null
+  if (config.token_exchange.cache?.ttl === 0) {
+    config.token_exchange.cache.ttl = null
+  }
+
   // If token_exchange is equal to the default value, set token_exchange to null
   if (emptyTokenExchanges.some((emptyTokenExchange) => isEqual(config.token_exchange, emptyTokenExchange))) {
     config.token_exchange = null
