@@ -70,6 +70,7 @@ provide(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, true)
 useProvideExperimentalFreeForms([
   'service-protection',
   'prometheus',
+  'aws-lambda',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
