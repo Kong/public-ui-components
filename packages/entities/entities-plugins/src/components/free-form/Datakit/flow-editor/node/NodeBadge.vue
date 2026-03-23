@@ -22,7 +22,7 @@
 import { computed } from 'vue'
 import type { NodeVisual } from '../../types'
 import { type NodeType } from '../../types'
-import { getNodeVisual } from './node'
+import { getNodeVisual } from './node-visual'
 import type { BadgeSize } from '@kong/kongponents'
 
 const { type } = defineProps<{

@@ -48,7 +48,7 @@ import { computed, ref } from 'vue'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_SPACE_10 } from '@kong/design-tokens'
 import { KTooltip } from '@kong/kongponents'
 import { useEditorStore } from '../store/store'
-import { getNodeVisual } from './node'
+import { getNodeVisual } from './node-visual'
 
 import type { EdgeId, FieldName, NodeInstance, NonEmptyArray } from '../../types'
 
