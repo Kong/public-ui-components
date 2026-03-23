@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.174.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.174.0...@kong-ui-public/entities-plugins@9.174.1) (2026-03-23)
+
+
+### Bug Fixes
+
+* **deps:** bump dagre ([#3040](https://github.com/Kong/public-ui-components/issues/3040)) ([c1d6ba9](https://github.com/Kong/public-ui-components/commit/c1d6ba9e310db2af9786518ed018bf86fd586c5d))
+
+
+
+
+
 # [9.174.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.173.2...@kong-ui-public/entities-plugins@9.174.0) (2026-03-23)
 
 
