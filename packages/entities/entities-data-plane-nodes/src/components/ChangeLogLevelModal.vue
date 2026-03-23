@@ -57,10 +57,10 @@
       data-testid="data-plane-node-list"
     >
       <thead>
-        <th style="width: 40%">
+        <th class="data-plane-node-col">
           {{ i18n.t('modal.dp_list.header.host') }}
         </th>
-        <th style="width: 40%">
+        <th class="data-plane-node-col">
           {{ i18n.t('modal.dp_list.header.action') }}
         </th>
         <th>{{ i18n.t('modal.dp_list.header.status') }}</th>
@@ -254,5 +254,9 @@ const actionButtonText = computed(() => {
       line-height: var(--kui-line-height-70, $kui-line-height-70);
     }
   }
+}
+
+.data-plane-node-col {
+  width: 40%;
 }
 </style>

@@ -9,8 +9,8 @@
     <mask
       id="mask0_180_20349"
       height="20"
+      mask-type="alpha"
       maskUnits="userSpaceOnUse"
-      style="mask-type: alpha"
       width="20"
       x="0"
       y="0"
