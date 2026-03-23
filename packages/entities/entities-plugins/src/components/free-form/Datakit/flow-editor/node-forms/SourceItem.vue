@@ -13,7 +13,7 @@
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import type { NodeType } from '../../types'
 import type { InputOption } from '../composables/useNodeForm'
-import { getNodeVisual } from '../node/node'
+import { getNodeVisual } from '../node/node-visual'
 
 defineProps<{
   item: InputOption
