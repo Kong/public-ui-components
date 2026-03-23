@@ -38,13 +38,21 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
-  'prometheus': {
+  prometheus: {
     experimental: true,
     component: 'CommonForm',
   },
   'aws-lambda': {
     experimental: true,
     component: 'CommonForm',
+  },
+  'file-log': {
+    experimental: true,
+    component: 'LogForm',
+  },
+  'http-log': {
+    experimental: true,
+    component: 'LogForm',
   },
 } as const
 
