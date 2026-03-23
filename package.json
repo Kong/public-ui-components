@@ -25,7 +25,7 @@
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
     "@evilmartians/lefthook": "^2.0.16",
     "@kong/design-tokens": "1.20.0",
-    "@kong/eslint-config-kong-ui": "^1.6.0",
+    "@kong/eslint-config-kong-ui": "^1.6.1",
     "@kong/kongponents": "9.52.5",
     "@stylistic/stylelint-plugin": "^5.0.1",
     "@types/flat": "^5.0.5",
