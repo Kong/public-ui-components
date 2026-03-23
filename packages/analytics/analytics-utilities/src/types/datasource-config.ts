@@ -36,6 +36,7 @@ export interface Field {
   group: boolean
   filter?: FieldFilter | null
   metricGroup?: string
+  supportedDimensions?: string[]
 }
 
 export interface DatasourceConfig {
