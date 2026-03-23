@@ -70,12 +70,14 @@ export interface NextMeta {
   branches: BranchMeta[]
 }
 
+export interface NodeColors {
+  foreground: string
+  background: string
+}
+
 export interface NodeVisual {
   icon: Component
-  colors?: {
-    foreground: string
-    background: string
-  }
+  colors?: NodeColors
 }
 
 export interface NodeMeta extends Partial<NodeVisual> {
@@ -89,6 +91,33 @@ export interface NodeMeta extends Partial<NodeVisual> {
   }
   /** hidden in UI */
   hidden?: boolean
+}
+
+export type ConfigNodeGroup =
+  | 'external_interaction'
+  | 'control_flow'
+  | 'data_transformation'
+  | 'data_value'
+  | 'authentication'
+
+export interface ConfigNodeMeta extends NodeMeta {
+  type: ConfigNodeType
+  name: string
+  summary: string
+  description: string
+  icon: Component
+  group: ConfigNodeGroup
+}
+
+export interface ConfigNodeGroupMeta {
+  id: ConfigNodeGroup
+  title: string
+  colors: NodeColors
+  nodeTypes: readonly ConfigNodeType[]
+}
+
+export interface ConfigNodePanelGroup extends ConfigNodeGroupMeta {
+  nodes: readonly ConfigNodeMeta[]
 }
 
 /************************************************

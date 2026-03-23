@@ -12,7 +12,7 @@
         v-if="!isImplicit"
         class="badge"
         placement="top"
-        :text="data.type"
+        :text="nodeTypeName"
       >
         <NodeBadge
           icon-only
@@ -301,7 +301,7 @@ import { useOptionalFlowStore } from '../store/flow'
 import { getNodeMeta } from '../store/helpers'
 import { useEditorStore } from '../store/store'
 import { HOTKEYS } from '../constants'
-import { isImplicitNode } from './node'
+import { getNodeTypeName, isImplicitNode } from './node'
 import HotkeyLabel from '../HotkeyLabel.vue'
 import NodePortal from './NodePortal.vue'
 import HandleTwig from './HandleTwig.vue'
@@ -389,6 +389,8 @@ const branchPosition = computed(() => {
 const name = computed(() => {
   return isImplicit.value ? t(`plugins.free-form.datakit.flow_editor.node_types.${data.type}.name`) : data.name
 })
+
+const nodeTypeName = computed(() => getNodeTypeName(data.type))
 
 const handleTwigColor = computed(() => {
   return isImplicit.value ? KUI_COLOR_BACKGROUND_NEUTRAL_STRONG : KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER

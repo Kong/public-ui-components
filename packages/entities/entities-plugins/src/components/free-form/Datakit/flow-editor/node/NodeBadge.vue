@@ -22,9 +22,8 @@
 import { computed } from 'vue'
 import type { NodeVisual } from '../../types'
 import { type NodeType } from '../../types'
-import { getNodeTypeName } from './node'
+import { getNodeTypeName, getNodeVisual } from './node'
 import type { BadgeSize } from '@kong/kongponents'
-import { NODE_VISUAL } from './node-visual'
 
 const { type } = defineProps<{
   type: NodeType
@@ -32,7 +31,7 @@ const { type } = defineProps<{
   iconOnly?: boolean
 }>()
 
-const visual = computed<NodeVisual>(() => NODE_VISUAL[type])
+const visual = computed<NodeVisual>(() => getNodeVisual(type))
 
 const nodeName = computed(() => getNodeTypeName(type))
 </script>

@@ -14,12 +14,23 @@
       </KLabel>
     </h3>
     <div class="node-list">
-      <NodePanelItem
-        v-for="nodeType in (Object.keys(CONFIG_NODE_META_MAP) as Array<ConfigNodeType>)"
-        :key="nodeType"
-        :type="nodeType"
-        @dragstart="handleDragStart"
-      />
+      <section
+        v-for="group in CONFIG_NODE_PANEL_GROUPS"
+        :key="group.id"
+        class="node-group"
+      >
+        <h4 class="group-title">
+          {{ group.title }}
+        </h4>
+        <div class="group-items">
+          <NodePanelItem
+            v-for="node in group.nodes"
+            :key="node.type"
+            :type="node.type"
+            @dragstart="handleDragStart"
+          />
+        </div>
+      </section>
     </div>
     <div
       aria-hidden="true"
@@ -45,7 +56,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { useEditorStore } from '../store/store'
-import { CONFIG_NODE_META_MAP } from '../node/node'
+import { CONFIG_NODE_PANEL_GROUPS } from '../node/node'
 import NodePanelItem from '../node/NodePanelItem.vue'
 import FlowNode from '../node/FlowNode.vue'
 
@@ -136,13 +147,11 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
 
 <style lang="scss" scoped>
 .dk-node-panel {
-
   .title {
     color: var(--kui-color-text, $kui-color-text);
     display: flex;
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-    gap: var(--kui-space-40, $kui-space-40);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
     margin: 0;
   }
@@ -154,8 +163,28 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
   .node-list {
     display: flex;
     flex-direction: column;
+    gap: var(--kui-space-50, $kui-space-50);
+  }
+
+  .node-group {
+    display: flex;
+    flex-direction: column;
     gap: var(--kui-space-40, $kui-space-40);
-    margin-top: var(--kui-space-40, $kui-space-40);
+    margin: 0;
+  }
+
+  .group-title {
+    color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
+    margin: 0;
+  }
+
+  .group-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-40, $kui-space-40);
   }
 
   .preview {
