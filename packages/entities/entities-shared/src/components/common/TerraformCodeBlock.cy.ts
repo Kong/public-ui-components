@@ -47,6 +47,11 @@ const records = {
     name: 'schema-registry-demo',
     gateway_id: '7b2f8c6a-3e4b-4f6e-9a6d-2d8f3c1e9b42',
   },
+  [SupportedEntityType.TlsTrustBundle]: {
+    name: 'tls-trust-bundle-demo',
+    gateway_id: '3c1e9b42-2d8f-4f6e-9a6d-7b2f8c6a3e4b',
+    pem: '-----BEGIN CERTIFICATE-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA\n-----END CERTIFICATE-----',
+  },
 }
 
 describe('<TerraformCodeBlock />', () => {
@@ -92,6 +97,23 @@ describe('<TerraformCodeBlock />', () => {
         .and('not.contain.text', 'password = "${vault.env.password}"')
         .and('contain.text', 'name = "schema-registry-demo"')
         .and('contain.text', 'gateway_id = "7b2f8c6a-3e4b-4f6e-9a6d-2d8f3c1e9b42"')
+    })
+  })
+
+  describe(`entity type: ${SupportedEntityType.TlsTrustBundle}`, () => {
+    it('renders TlsTrustBundle Terraform config with konnect-beta provider', () => {
+      cy.mount(TerraformCodeBlock, {
+        props: {
+          entityRecord: records[SupportedEntityType.TlsTrustBundle],
+          entityType: SupportedEntityType.TlsTrustBundle,
+        },
+      })
+
+      cy.get('.terraform-config')
+        .should('be.visible')
+        .and('contain.text', 'provider = konnect-beta')
+        .and('contain.text', 'name = "tls-trust-bundle-demo"')
+        .and('contain.text', 'gateway_id = "3c1e9b42-2d8f-4f6e-9a6d-7b2f8c6a3e4b"')
     })
   })
 })
