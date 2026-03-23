@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.2...@kong-ui-public/analytics-utilities@12.12.3) (2026-03-23)
+
+
+### Bug Fixes
+
+* add supported dimensions to field ([#3031](https://github.com/Kong/public-ui-components/issues/3031)) ([7d0cc4c](https://github.com/Kong/public-ui-components/commit/7d0cc4c84b9d25a9dc2b8966c01bfd393649fad4))
+
+
+
+
+
 ## [12.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.1...@kong-ui-public/analytics-utilities@12.12.2) (2026-03-20)
 
 
