@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.174.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.173.2...@kong-ui-public/entities-plugins@9.174.0) (2026-03-23)
+
+
+### Features
+
+* **entities-plugins:** add aws-lambda to experimental ([#3029](https://github.com/Kong/public-ui-components/issues/3029)) ([4900945](https://github.com/Kong/public-ui-components/commit/490094514bbcd035f858a81fd0e15deaa8844e25))
+
+
+
+
+
 ## [9.173.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.173.1...@kong-ui-public/entities-plugins@9.173.2) (2026-03-23)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
