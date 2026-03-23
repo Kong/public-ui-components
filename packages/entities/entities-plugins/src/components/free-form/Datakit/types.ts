@@ -102,7 +102,6 @@ export type ConfigNodeGroup =
 
 export interface ConfigNodeMeta extends NodeMeta {
   type: ConfigNodeType
-  name: string
   summary: string
   description: string
   icon: Component

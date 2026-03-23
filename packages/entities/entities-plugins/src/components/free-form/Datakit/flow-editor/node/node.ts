@@ -29,16 +29,12 @@ import {
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-function getNodeTypeLocaleDescription(type: NodeType): string {
+export function getNodeTypeDescription(type: NodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.description`)
 }
 
 function getNodeTypeSummary(type: ConfigNodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.summary`)
-}
-
-function getNodeTypeLocaleName(type: NodeType): string {
-  return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.name`)
 }
 
 function getNodeGroupTitle(group: ConfigNodeGroup): string {
@@ -247,9 +243,8 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, ConfigNodeMeta> = Obje
     node.type,
     {
       ...node,
-      name: getNodeTypeLocaleName(node.type),
       summary: getNodeTypeSummary(node.type),
-      description: getNodeTypeLocaleDescription(node.type),
+      description: getNodeTypeDescription(node.type),
     },
   ]),
 ) as Record<ConfigNodeType, ConfigNodeMeta>
@@ -305,18 +300,6 @@ export function getConfigNodeGroupMeta(group: ConfigNodeGroup): ConfigNodeGroupM
   return CONFIG_NODE_GROUP_META_MAP[group]
 }
 
-export function getNodeTypeDescription(type: NodeType): string {
-  return isConfigType(type)
-    ? CONFIG_NODE_META_MAP[type].description
-    : getNodeTypeLocaleDescription(type)
-}
-
-export function getNodeTypeName(type: NodeType): string {
-  return isConfigType(type)
-    ? CONFIG_NODE_META_MAP[type].name
-    : getNodeTypeLocaleName(type)
-}
-
 export function getNodeVisual(type: NodeType): NodeVisual {
   if (isConfigType(type)) {
     const meta = CONFIG_NODE_META_MAP[type]
@@ -333,7 +316,7 @@ export function getNodeVisual(type: NodeType): NodeVisual {
 export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   request: {
     type: 'request',
-    description: getNodeTypeLocaleDescription('request'),
+    description: getNodeTypeDescription('request'),
     io: {
       output: {
         fields: [
@@ -347,7 +330,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   },
   service_request: {
     type: 'service_request',
-    description: getNodeTypeLocaleDescription('service_request'),
+    description: getNodeTypeDescription('service_request'),
     io: {
       input: {
         fields: [
@@ -361,7 +344,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   },
   service_response: {
     type: 'service_response',
-    description: getNodeTypeLocaleDescription('service_response'),
+    description: getNodeTypeDescription('service_response'),
     io: {
       output: {
         fields: [
@@ -374,7 +357,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   },
   response: {
     type: 'response',
-    description: getNodeTypeLocaleDescription('response'),
+    description: getNodeTypeDescription('response'),
     io: {
       input: {
         fields: [
