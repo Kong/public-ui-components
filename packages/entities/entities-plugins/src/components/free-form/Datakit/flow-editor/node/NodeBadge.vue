@@ -14,7 +14,7 @@
     >
       <component :is="visual.icon" />
     </template>
-    {{ nodeName }}
+    {{ type }}
   </KBadge>
 </template>
 
@@ -22,9 +22,8 @@
 import { computed } from 'vue'
 import type { NodeVisual } from '../../types'
 import { type NodeType } from '../../types'
-import { getNodeTypeName } from './node'
+import { getNodeVisual } from './node-visual'
 import type { BadgeSize } from '@kong/kongponents'
-import { NODE_VISUAL } from './node-visual'
 
 const { type } = defineProps<{
   type: NodeType
@@ -32,9 +31,7 @@ const { type } = defineProps<{
   iconOnly?: boolean
 }>()
 
-const visual = computed<NodeVisual>(() => NODE_VISUAL[type])
-
-const nodeName = computed(() => getNodeTypeName(type))
+const visual = computed<NodeVisual>(() => getNodeVisual(type))
 </script>
 
 <style lang="scss" scoped>

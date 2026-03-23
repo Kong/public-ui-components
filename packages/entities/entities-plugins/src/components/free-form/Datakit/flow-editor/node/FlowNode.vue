@@ -387,7 +387,11 @@ const branchPosition = computed(() => {
 })
 
 const name = computed(() => {
-  return isImplicit.value ? t(`plugins.free-form.datakit.flow_editor.node_types.${data.type}.name`) : data.name
+  if (isImplicitNode(data)) {
+    return t(`plugins.free-form.datakit.flow_editor.node_types.${data.type}.name`)
+  }
+
+  return data.name
 })
 
 const handleTwigColor = computed(() => {
