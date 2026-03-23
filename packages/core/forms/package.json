@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@kong/icons": "^1.47.0",
-    "dompurify": "^3.3.2",
+    "dompurify": "^3.3.3",
     "fecha": "^4.2.3",
     "lodash-es": "^4.17.23"
   },
@@ -60,8 +60,8 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^9.52.5",
-    "axios": "^1.13.5",
-    "vue": "^3.5.27"
+    "axios": "^1.13.6",
+    "vue": "^3.5.30"
   },
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
@@ -69,8 +69,8 @@
     "@kong/design-tokens": "1.20.0",
     "@kong/kongponents": "9.52.5",
     "@types/lodash-es": "^4.17.12",
-    "axios": "^1.13.2",
-    "pug": "^3.0.3"
+    "axios": "^1.13.6",
+    "pug": "^3.0.4"
   },
   "distSizeChecker": {
     "errorLimit": "1.2MB"
