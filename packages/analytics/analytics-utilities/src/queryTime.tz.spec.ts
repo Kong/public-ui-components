@@ -86,8 +86,10 @@ describe('timeframe start/end times', () => {
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY)).endDate()).toEqual(endDaily)
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_WEEK)).endDate()).toEqual(endDaily)
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_MONTH)).endDate()).toEqual(endDaily)
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_QUARTER)).endDate()).toEqual(endDaily)
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_WEEK)).endDate()).toEqual(startOfWeek(endDaily, { weekStartsOn: 1 }))
     expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH)).endDate()).toEqual(startOfMonth(new Date()))
+    expect(new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_QUARTER)).endDate()).toEqual(startOfDay(new Date('2023-01-01T12:00:00Z')))
   })
 
   it('spot-check start times', () => {
@@ -108,6 +110,8 @@ describe('timeframe start/end times', () => {
     doCheck('2023-01-31T01:00:00Z', TimeframeKeys.TWELVE_HOUR)
     doCheck('2023-01-25T12:00:00Z', TimeframeKeys.SEVEN_DAY, true)
     doCheck('2023-01-02T12:00:00Z', TimeframeKeys.THIRTY_DAY, true)
+    doCheck('2023-01-01T12:00:00Z', TimeframeKeys.CURRENT_QUARTER, true)
+    doCheck('2022-10-01T12:00:00Z', TimeframeKeys.PREVIOUS_QUARTER, true)
   })
 
   it('start = end - timeframe length', () => {
@@ -265,6 +269,26 @@ describe('pseudo-absolute periods', () => {
     const timeQuery = new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_MONTH))
 
     const expectedStart = startOfDay(new Date('2022-12-01T12:00:00Z'))
+    const expectedEnd = startOfDay(new Date('2023-01-01T12:00:00Z'))
+
+    expect(timeQuery.startDate()).toEqual(expectedStart)
+    expect(timeQuery.endDate()).toEqual(expectedEnd)
+  })
+
+  it('calculates the correct start and end time for current quarter', () => {
+    const timeQuery = new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.CURRENT_QUARTER))
+
+    const expectedStart = startOfDay(new Date('2023-01-01T12:00:00Z'))
+    const expectedEnd = startOfDay(new Date('2023-02-01T12:00:00Z'))
+
+    expect(timeQuery.startDate()).toEqual(expectedStart)
+    expect(timeQuery.endDate()).toEqual(expectedEnd)
+  })
+
+  it('calculates the correct start and end time for previous quarter', () => {
+    const timeQuery = new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_QUARTER))
+
+    const expectedStart = startOfDay(new Date('2022-10-01T12:00:00Z'))
     const expectedEnd = startOfDay(new Date('2023-01-01T12:00:00Z'))
 
     expect(timeQuery.startDate()).toEqual(expectedStart)
@@ -688,6 +712,20 @@ runUtcTest('UTC: timezone handling', () => {
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
   })
 
+  it('calculates current quarter in a local, negative-offset timezone', () => {
+    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.CURRENT_QUARTER), 'US/Eastern')
+
+    expect(unaryQuery.endDate()).toEqual(new Date('2023-11-09T05:00:00.000Z'))
+    expect(unaryQuery.startDate()).toEqual(new Date('2023-10-01T04:00:00.000Z'))
+  })
+
+  it('calculates previous quarter in a local, negative-offset timezone', () => {
+    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_QUARTER), 'US/Eastern')
+
+    expect(unaryQuery.endDate()).toEqual(new Date('2023-10-01T04:00:00.000Z'))
+    expect(unaryQuery.startDate()).toEqual(new Date('2023-07-01T04:00:00.000Z'))
+  })
+
   it('calculates relative dates in a local, positive-offset timezone', () => {
     // Sanity check
     expect(formatInTimeZone(new Date(), 'Europe/Sofia', 'yyyy-MM-dd HH:mm:ssXXX')).toBe('2023-11-09 03:00:00+02:00')
@@ -776,6 +814,20 @@ runUtcTest('UTC: timezone handling', () => {
     expect(deltaQuery.startDate()).toEqual(new Date('2023-08-30T20:00:00.000Z'))
 
     expect(deltaQuery.granularitySeconds()).toBe(unaryQuery.granularitySeconds())
+  })
+
+  it('calculates current quarter in a local, positive-offset timezone', () => {
+    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.CURRENT_QUARTER), 'Europe/Sofia')
+
+    expect(unaryQuery.endDate()).toEqual(new Date('2023-11-09T22:00:00.000Z'))
+    expect(unaryQuery.startDate()).toEqual(new Date('2023-09-30T21:00:00.000Z'))
+  })
+
+  it('calculates previous quarter in a local, positive-offset timezone', () => {
+    const unaryQuery = new UnaryQueryTime(getTimePeriod(TimeframeKeys.PREVIOUS_QUARTER), 'Europe/Sofia')
+
+    expect(unaryQuery.endDate()).toEqual(new Date('2023-09-30T21:00:00.000Z'))
+    expect(unaryQuery.startDate()).toEqual(new Date('2023-06-30T21:00:00.000Z'))
   })
 })
 
