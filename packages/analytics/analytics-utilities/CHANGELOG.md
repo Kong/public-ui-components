@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.3...@kong-ui-public/analytics-utilities@12.12.4) (2026-03-23)
+
+
+### Bug Fixes
+
+* time range and granularity values are just a string type ([#3041](https://github.com/Kong/public-ui-components/issues/3041)) ([371e16b](https://github.com/Kong/public-ui-components/commit/371e16b09821904179de053fce1ecce2a9de3aee))
+
+
+
+
+
 ## [12.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.2...@kong-ui-public/analytics-utilities@12.12.3) (2026-03-23)
 
 
