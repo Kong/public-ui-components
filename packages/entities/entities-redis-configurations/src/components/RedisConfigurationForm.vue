@@ -857,7 +857,7 @@ onBeforeMount(async () => {
   }
 
   :deep(.k-alert.danger) {
-    margin-top: $kui-space-60;
+    margin-top: var(--kui-space-60, $kui-space-60);
   }
 }
 </style>
