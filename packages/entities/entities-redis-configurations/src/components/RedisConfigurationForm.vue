@@ -806,7 +806,7 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 .warning-alert {
-  margin-bottom: $kui-space-90;
+  margin-bottom: var(--kui-space-90, $kui-space-90);
 }
 
 .kong-ui-entities-redis-configurations-form {
@@ -814,7 +814,7 @@ onBeforeMount(async () => {
 }
 
 .secret-picker-provider {
-  margin-top: $kui-space-40 !important;
+  margin-top: var(--kui-space-40, $kui-space-40) !important;
 }
 
 .managed-konnect-layout {
@@ -829,17 +829,17 @@ onBeforeMount(async () => {
   }
 
   :deep(.managed-layout-general-block) {
-    margin-top: $kui-space-80;
+    margin-top: var(--kui-space-80, $kui-space-80);
   }
 
   :deep(.kong-ui-entity-form-block .content) {
-    gap: $kui-space-0;
+    gap: var(--kui-space-0, $kui-space-0);
   }
 
   :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-wrapper) {
     flex-direction: column !important;
-    padding-bottom: $kui-space-70;
-    row-gap: $kui-space-40;
+    padding-bottom: var(--kui-space-70, $kui-space-70);
+    row-gap: var(--kui-space-40, $kui-space-40);
   }
 
   :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-info) {
@@ -848,11 +848,15 @@ onBeforeMount(async () => {
   }
 
   :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section:not(:last-child) .form-section-wrapper) {
-    border-bottom: $kui-border-width-10 solid $kui-color-border;
-    margin-bottom: $kui-space-60;
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    margin-bottom: var(--kui-space-60, $kui-space-60);
   }
 
   :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-content > *:not(:first-child)) {
+    margin-top: var(--kui-space-60, $kui-space-60);
+  }
+
+  :deep(.k-alert.danger) {
     margin-top: $kui-space-60;
   }
 }

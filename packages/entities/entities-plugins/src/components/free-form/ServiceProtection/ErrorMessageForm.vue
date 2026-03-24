@@ -47,7 +47,7 @@ const { t } = createI18n<typeof english>('en-us', english)
   align-items: center;
   display: flex;
   flex-direction: row;
-  gap: $kui-space-50;
+  gap: var(--kui-space-50, $kui-space-50);
   justify-content: space-between;
 
   .input-error-code {

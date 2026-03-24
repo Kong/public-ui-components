@@ -143,9 +143,9 @@ function handleChange(item: SelectItem<string> | null) {
   width: 100%;
 
   .ff-scope-entity-help {
-    color: $kui-color-text-neutral;
-    font-size: $kui-font-size-20;
-    margin-top: $kui-space-20;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    margin-top: var(--kui-space-20, $kui-space-20);
   }
 }
 </style>

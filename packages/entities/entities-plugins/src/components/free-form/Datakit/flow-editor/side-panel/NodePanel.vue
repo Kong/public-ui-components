@@ -138,12 +138,12 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
 .dk-node-panel {
 
   .title {
-    color: $kui-color-text;
+    color: var(--kui-color-text, $kui-color-text);
     display: flex;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-bold;
-    gap: $kui-space-40;
-    line-height: $kui-line-height-30;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    gap: var(--kui-space-40, $kui-space-40);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
     margin: 0;
   }
 
@@ -154,8 +154,8 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
   .node-list {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-40;
-    margin-top: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 
   .preview {

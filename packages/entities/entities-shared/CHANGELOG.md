@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.41.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.0...@kong-ui-public/entities-shared@3.41.1) (2026-03-24)
+
+
+### Bug Fixes
+
+* apply token-var-usage stylelint rule ([#2959](https://github.com/Kong/public-ui-components/issues/2959)) ([c35b1fc](https://github.com/Kong/public-ui-components/commit/c35b1fc62fb4ba839efc5bce5da0d113a8f019ff))
+
+
+
+
+
 # [3.41.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.40.3...@kong-ui-public/entities-shared@3.41.0) (2026-03-23)
 
 

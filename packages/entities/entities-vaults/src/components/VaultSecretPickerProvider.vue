@@ -36,15 +36,15 @@ const { i18n: { t }, i18nT } = composables.useI18n()
 
 <style lang="scss" scoped>
 .vault-secret-picker-provider {
-  font-size: $kui-font-size-20;
-  margin: $kui-space-40 0;
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  margin: var(--kui-space-40, $kui-space-40) 0;
 
   &-action {
-    color: $kui-color-text-primary;
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
     cursor: pointer;
 
     &.disabled {
-      color: $kui-color-text-disabled;
+      color: var(--kui-color-text-disabled, $kui-color-text-disabled);
       cursor: not-allowed;
     }
   }

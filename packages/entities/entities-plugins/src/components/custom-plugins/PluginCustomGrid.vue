@@ -234,31 +234,31 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 :deep(.empty-state-wrapper) {
   .custom-plugins-empty-state {
-    padding-bottom: $kui-space-0;
+    padding-bottom: var(--kui-space-0, $kui-space-0);
 
     .empty-state-title {
-      font-size: $kui-font-size-40;
-      font-weight: $kui-font-weight-semibold;
+      font-size: var(--kui-font-size-40, $kui-font-size-40);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
 
     .empty-state-description {
-      font-size: $kui-font-size-30;
-      margin-left: $kui-space-60;
-      margin-right: $kui-space-60;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      margin-left: var(--kui-space-60, $kui-space-60);
+      margin-right: var(--kui-space-60, $kui-space-60);
     }
   }
 }
 
 .plugins-collapse {
-  margin-bottom: $kui-space-90;
+  margin-bottom: var(--kui-space-90, $kui-space-90);
 }
 
 .plugin-card-container {
   display: grid;
-  gap: $kui-space-90;
+  gap: var(--kui-space-90, $kui-space-90);
   grid-template-columns: repeat(auto-fit, minmax(0, 335px)); // display as many cards as possible in a row, with a max width of 335px
   justify-content: space-around;
-  margin-top: $kui-space-90;
+  margin-top: var(--kui-space-90, $kui-space-90);
 
   @media (min-width: $kui-breakpoint-laptop) {
     justify-content: flex-start;

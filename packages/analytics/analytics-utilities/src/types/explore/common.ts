@@ -56,7 +56,7 @@ export type RelativeTimeRangeValuesV4 = typeof relativeTimeRangeValuesV4[number]
 export interface RelativeTimeRangeV4 {
   type: 'relative'
   tz?: string
-  time_range: RelativeTimeRangeValuesV4
+  time_range: string
 }
 
 export type TimeRangeV4 = AbsoluteTimeRangeV4 | RelativeTimeRangeV4

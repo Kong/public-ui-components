@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.8...@kong-ui-public/split-pane@0.3.9) (2026-03-24)
+
+
+### Bug Fixes
+
+* apply token-var-usage stylelint rule ([#2959](https://github.com/Kong/public-ui-components/issues/2959)) ([c35b1fc](https://github.com/Kong/public-ui-components/commit/c35b1fc62fb4ba839efc5bce5da0d113a8f019ff))
+
+
+
+
+
 ## [0.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.7...@kong-ui-public/split-pane@0.3.8) (2026-03-21)
 
 

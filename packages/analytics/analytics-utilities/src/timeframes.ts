@@ -3,15 +3,15 @@ import {
   getDaysInMonth,
   hoursToSeconds,
   minutesToHours,
+  startOfQuarter,
   startOfDay,
   startOfMonth,
   startOfWeek,
+  subQuarters,
   subMonths,
 } from 'date-fns'
 
 import {
-  type ExtendedRelativeTimeRangeValues,
-  relativeTimeRangeValuesV4,
   TimeframeKeys,
 } from './types'
 
@@ -19,7 +19,7 @@ import type {
   DatePickerSelection,
   TimeframeOptions,
   TimePeriod,
-  RelativeTimeRangeValuesV4, TimeRangeV4,
+  TimeRangeV4,
   GranularityValues,
 } from './types'
 import { getTimezoneOffset, toZonedTime, fromZonedTime } from 'date-fns-tz'
@@ -35,7 +35,7 @@ const adjustForTz = (d: Date, tz: string) => {
 export class Timeframe implements ITimeframe {
   readonly timeframeText: string
 
-  readonly key: RelativeTimeRangeValuesV4 | ExtendedRelativeTimeRangeValues | 'custom'
+  readonly key: string
 
   readonly display: string
 
@@ -45,12 +45,12 @@ export class Timeframe implements ITimeframe {
 
   // defaultResponseGranularity tracks which of the allowed granularities is picked for a given
   // timeframe if the user does not or cannot specify a granularity.
-  readonly defaultResponseGranularity: GranularityValues
+  readonly defaultResponseGranularity: string
 
   // dataGranularity tracks the granularity of the available data on the server for a specific timeframe.
   // As of writing, it's always the same as the default response granularity, but it may not always be.
   // It controls how timeframes are rounded to ensure complete time buckets from the server.
-  readonly dataGranularity: GranularityValues
+  readonly dataGranularity: string
 
   // isRelative impacts whether we take the `floor` or the `ceil` of the start time.
   // If the time range is relative, we want the ceil -- because we take the ceil of the
@@ -59,13 +59,13 @@ export class Timeframe implements ITimeframe {
   // the first time bucket.
   readonly isRelative: boolean
 
-  readonly fineGrainedDefaultGranularity?: GranularityValues
+  readonly fineGrainedDefaultGranularity?: string
 
   private _startCustom?: Date
 
   private _endCustom?: Date
 
-  private _allowedGranularitiesOverride?: GranularityValues[]
+  private _allowedGranularitiesOverride?: string[]
 
   constructor(opts: TimeframeOptions) {
     this.display = opts.display
@@ -157,16 +157,12 @@ export class Timeframe implements ITimeframe {
       }
     }
 
-    if (relativeTimeRangeValuesV4.includes(this.key as any)) {
-      return {
-        type: 'relative',
-        // Safe assertion; we just checked that key is a member of the union.
-        time_range: this.key as RelativeTimeRangeValuesV4,
-        tz,
-      }
+    return {
+      type: 'relative',
+      // Safe assertion; we just checked that key is a member of the union.
+      time_range: this.key,
+      tz,
     }
-
-    throw new Error('Unsupported relative time value for Explore')
   }
 
   protected tzAdjustedDate(tz?: string): Date {
@@ -215,6 +211,23 @@ class CurrentMonth extends Timeframe {
   }
 }
 
+class CurrentQuarter extends Timeframe {
+  rawStart(tz?: string): Date {
+    // `startOfQuarter` isn't aware of timezones, so the resulting "start of quarter" time is in the local timezone.
+    let firstOfTheQuarter = startOfQuarter(this.tzAdjustedDate(tz))
+
+    if (tz) {
+      firstOfTheQuarter = adjustForTz(firstOfTheQuarter, tz)
+    }
+
+    return firstOfTheQuarter
+  }
+
+  maximumTimeframeLength() {
+    return 60 * 60 * 24 * 92
+  }
+}
+
 class CurrentYear extends Timeframe {
   rawStart(tz?: string): Date {
     let firstOfTheYear = new Date(this.tzAdjustedDate(tz).getFullYear(), 0, 1)
@@ -256,6 +269,30 @@ class PreviousWeek extends Timeframe {
     }
 
     return lastMonday
+  }
+}
+
+class PreviousQuarter extends Timeframe {
+  rawEnd(tz?: string): Date {
+    // `startOfQuarter` isn't aware of timezones, so the resulting "start of quarter" time is in the local timezone.
+    let thisQuarter = startOfQuarter(this.tzAdjustedDate(tz))
+
+    if (tz) {
+      thisQuarter = adjustForTz(thisQuarter, tz)
+    }
+
+    return thisQuarter
+  }
+
+  rawStart(tz?: string): Date {
+    // `startOfQuarter` isn't aware of timezones, so the resulting "start of quarter" time is in the local timezone.
+    let lastQuarter = startOfQuarter(subQuarters(this.tzAdjustedDate(tz), 1))
+
+    if (tz) {
+      lastQuarter = adjustForTz(lastQuarter, tz)
+    }
+
+    return lastQuarter
   }
 }
 
@@ -503,6 +540,25 @@ export const TimePeriods = new Map<string, Timeframe>([
     }),
   ],
   [
+    TimeframeKeys.CURRENT_QUARTER,
+    new CurrentQuarter({
+      key: TimeframeKeys.CURRENT_QUARTER,
+      display: 'This quarter',
+      timeframeText: 'Quarter',
+      timeframeLength: () => {
+        // First of the quarter -> now
+        const firstOfTheQuarter = startOfQuarter(new Date())
+        const end = startOfDay(addDays(new Date(), 1))
+
+        return (end.getTime() - firstOfTheQuarter.getTime()) / 1000
+      },
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: false,
+      allowedTiers: ['plus', 'enterprise'],
+    }),
+  ],
+  [
     TimeframeKeys.CURRENT_YEAR,
     new CurrentYear({
       key: TimeframeKeys.CURRENT_YEAR,
@@ -556,6 +612,24 @@ export const TimePeriods = new Map<string, Timeframe>([
         return (
           60 * 60 * 24 * getDaysInMonth(new Date().setMonth(new Date().getMonth() - 1)) + hoursToSeconds(offset)
         )
+      },
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: false,
+      allowedTiers: ['plus', 'enterprise'],
+    }),
+  ],
+  [
+    TimeframeKeys.PREVIOUS_QUARTER,
+    new PreviousQuarter({
+      key: TimeframeKeys.PREVIOUS_QUARTER,
+      display: 'Previous quarter',
+      timeframeText: 'Quarter',
+      timeframeLength: () => {
+        const end = startOfQuarter(new Date())
+        const start = startOfQuarter(subQuarters(new Date(), 1))
+
+        return (end.getTime() - start.getTime()) / 1000
       },
       defaultResponseGranularity: 'daily',
       dataGranularity: 'daily',
@@ -661,8 +735,10 @@ export const TIMEFRAME_LOOKUP: Record<string, TimeframeKeys> = {
   '365d': TimeframeKeys.ONE_YEAR,
   current_week: TimeframeKeys.CURRENT_WEEK,
   current_month: TimeframeKeys.CURRENT_MONTH,
+  current_quarter: TimeframeKeys.CURRENT_QUARTER,
   current_year: TimeframeKeys.CURRENT_YEAR,
   previous_week: TimeframeKeys.PREVIOUS_WEEK,
   previous_month: TimeframeKeys.PREVIOUS_MONTH,
+  previous_quarter: TimeframeKeys.PREVIOUS_QUARTER,
   previous_year: TimeframeKeys.PREVIOUS_YEAR,
 }

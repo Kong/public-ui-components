@@ -310,7 +310,7 @@ export default {
 .string-array-item {
   align-items: flex-start;
   display: flex;
-  gap: $kui-space-70;
+  gap: var(--kui-space-70, $kui-space-70);
   width: 100%;
 
   .field-string-array {
@@ -319,7 +319,7 @@ export default {
 
   .string-array-remove-btn {
     flex-shrink: 0;
-    margin-top: $kui-space-20;
+    margin-top: var(--kui-space-20, $kui-space-20);
   }
 }
 </style>

@@ -104,16 +104,16 @@ function handlePanelToggle() {
   align-items: center;
   display: flex;
   flex-direction: column;
-  gap: $kui-space-50;
+  gap: var(--kui-space-50, $kui-space-50);
   justify-content: space-between;
-  padding: 0 $kui-space-40 $kui-space-40;
+  padding: 0 var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40);
 
   .top,
   .bottom {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    gap: $kui-space-50;
+    gap: var(--kui-space-50, $kui-space-50);
     position: relative;
     width: 100%;
   }
@@ -136,30 +136,30 @@ function handlePanelToggle() {
 
   .nav-item {
     align-items: center;
-    background-color: $kui-navigation-color-background;
-    border: $kui-border-width-10 solid $kui-color-border-transparent;
-    border-radius: $kui-border-radius-30;
-    color: $kui-navigation-color-text;
+    background-color: var(--kui-navigation-color-background, $kui-navigation-color-background);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    color: var(--kui-navigation-color-text, $kui-navigation-color-text);
     cursor: pointer;
     display: flex;
     height: 36px;
     justify-content: center;
     text-decoration: none;
-    transition: color $kui-animation-duration-20 ease-in-out;
+    transition: color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
     white-space: nowrap;
     width: 36px;
 
     &:hover,
     &:focus-visible {
-      color: $kui-navigation-color-text-hover;
+      color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
 
       :deep(svg) {
-        color: $kui-navigation-color-text-hover;
+        color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
       }
     }
 
     &:focus-visible {
-      box-shadow: $kui-navigation-shadow-focus;
+      box-shadow: var(--kui-navigation-shadow-focus, $kui-navigation-shadow-focus);
       outline: none;
     }
 
@@ -167,19 +167,19 @@ function handlePanelToggle() {
       path {
         color: currentColor;
         fill: currentColor;
-        transition: all $kui-animation-duration-20 ease-in-out;
+        transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
       }
     }
 
     &-toggle {
-      border-color: $kui-navigation-color-border;
+      border-color: var(--kui-navigation-color-border, $kui-navigation-color-border);
     }
   }
 
   .side-panel-toggle {
     left: 0;
     position: absolute;
-    transition: left $kui-animation-duration-20 ease-in-out;
+    transition: left var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
     z-index: 1;
 
     &.expanded {

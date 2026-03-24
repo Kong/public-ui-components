@@ -136,16 +136,16 @@ const onCopyUuid = async (copyToClipboard: (str: string) => Promise<boolean>): P
     flex: 1;
 
     :deep(.external-link-icon) {
-      color: $kui-color-text-primary;
-      margin-left: $kui-space-20;
+      color: var(--kui-color-text-primary, $kui-color-text-primary);
+      margin-left: var(--kui-space-20, $kui-space-20);
       // Match size of copy icon
-      padding: $kui-space-10;
+      padding: var(--kui-space-10, $kui-space-10);
     }
   }
 
   .entity-link-label {
     display: inline-block;
-    font-weight: $kui-font-weight-regular;
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     max-width: 90%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -158,7 +158,7 @@ const onCopyUuid = async (copyToClipboard: (str: string) => Promise<boolean>): P
     display: flex;
 
     .entity-link-copy-id {
-      margin-left: $kui-space-10;
+      margin-left: var(--kui-space-10, $kui-space-10);
     }
   }
 }

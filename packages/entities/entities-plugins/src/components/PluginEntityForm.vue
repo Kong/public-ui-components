@@ -934,10 +934,10 @@ onBeforeMount(() => {
 
   .entity-form {
     .plugin-config-empty-state {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-30;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-style: italic;
-      margin-bottom: $kui-space-60;
+      margin-bottom: var(--kui-space-60, $kui-space-60);
     }
   }
 
@@ -949,25 +949,25 @@ onBeforeMount(() => {
     }
 
     .k-collapse.root-level-collapse {
-      border-top: $kui-border-width-10 solid $kui-color-border;
-      margin-top: $kui-space-80;
-      padding-top: $kui-space-80;
+      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      margin-top: var(--kui-space-80, $kui-space-80);
+      padding-top: var(--kui-space-80, $kui-space-80);
     }
 
     fieldset {
       border: none;
-      margin-left: $kui-space-0;
-      padding: $kui-space-0;
+      margin-left: var(--kui-space-0, $kui-space-0);
+      padding: var(--kui-space-0, $kui-space-0);
     }
 
     .bottom-border {
-      border-bottom: $kui-border-width-10 solid $kui-color-border;
-      padding-bottom: $kui-space-80;
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      padding-bottom: var(--kui-space-80, $kui-space-80);
     }
 
     .top-border {
-      border-top: $kui-border-width-10 solid $kui-color-border;
-      padding-top: $kui-space-80;
+      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      padding-top: var(--kui-space-80, $kui-space-80);
     }
 
     .form-group.kong-form-hidden-field-wrapper {
@@ -975,12 +975,12 @@ onBeforeMount(() => {
     }
 
     .form-group hr.divider {
-      border-color: $kui-color-border;
+      border-color: var(--kui-color-border, $kui-color-border);
       opacity: 0.3;
     }
 
     .form-group hr.wide-divider {
-      border-color: $kui-color-border;
+      border-color: var(--kui-color-border, $kui-color-border);
       opacity: 0.6;
     }
 
@@ -989,7 +989,7 @@ onBeforeMount(() => {
     }
 
     .hint {
-      font-size: $kui-font-size-20;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
       margin-bottom: 10px;
       margin-top: 5px;
       opacity: 0.6;
@@ -1011,7 +1011,7 @@ onBeforeMount(() => {
     }
 
     label {
-      font-weight: $kui-font-weight-medium;
+      font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
     }
 
     .form-group.field-array label,
@@ -1025,7 +1025,7 @@ onBeforeMount(() => {
       width: 100%;
 
       .kong-form-array-field-item {
-        margin-bottom: $kui-space-40;
+        margin-bottom: var(--kui-space-40, $kui-space-40);
 
         .k-button.delete {
           align-self: center;
@@ -1035,7 +1035,7 @@ onBeforeMount(() => {
   }
 
   .global-fields {
-    border-bottom: $kui-border-width-10 solid $kui-color-border;
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   }
 
   .general-settings {
@@ -1045,11 +1045,11 @@ onBeforeMount(() => {
     }
 
     .form-group .field-wrap button {
-      margin-top: $kui-space-30;
+      margin-top: var(--kui-space-30, $kui-space-30);
     }
 
     .link-wrapper {
-      margin-top: $kui-space-60;
+      margin-top: var(--kui-space-60, $kui-space-60);
     }
   }
 }

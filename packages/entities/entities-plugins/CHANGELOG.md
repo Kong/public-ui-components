@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.177.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.177.1...@kong-ui-public/entities-plugins@9.177.2) (2026-03-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.177.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.177.0...@kong-ui-public/entities-plugins@9.177.1) (2026-03-24)
+
+
+### Bug Fixes
+
+* apply token-var-usage stylelint rule ([#2959](https://github.com/Kong/public-ui-components/issues/2959)) ([c35b1fc](https://github.com/Kong/public-ui-components/commit/c35b1fc62fb4ba839efc5bce5da0d113a8f019ff))
+
+
+
+
+
+# [9.177.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.176.0...@kong-ui-public/entities-plugins@9.177.0) (2026-03-24)
+
+
+### Features
+
+* **entities-plugins:** add correlation-id to experimental ([#3043](https://github.com/Kong/public-ui-components/issues/3043)) ([3f33e21](https://github.com/Kong/public-ui-components/commit/3f33e2195c2dbb979730e9dff11be33f6a964969))
+
+
+
+
+
+# [9.176.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.175.0...@kong-ui-public/entities-plugins@9.176.0) (2026-03-24)
+
+
+### Features
+
+* **entities-plugins:** add file-log and http-log to experimental ([#3038](https://github.com/Kong/public-ui-components/issues/3038)) ([e351426](https://github.com/Kong/public-ui-components/commit/e351426218b9f6766fda19c056c9b72cdb15bf56))
+
+
+
+
+
+# [9.175.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.174.1...@kong-ui-public/entities-plugins@9.175.0) (2026-03-24)
+
+
+### Features
+
+* **entities-plugins:** add exit-transformer to experimental ([#3037](https://github.com/Kong/public-ui-components/issues/3037)) ([934707c](https://github.com/Kong/public-ui-components/commit/934707c987b325f44a73dc0efa8af3f694ef902a))
+
+
+
+
+
 ## [9.174.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.174.0...@kong-ui-public/entities-plugins@9.174.1) (2026-03-23)
 
 

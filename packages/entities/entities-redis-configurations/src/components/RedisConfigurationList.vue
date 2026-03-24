@@ -112,6 +112,7 @@
           <KDropdownItem
             danger
             data-testid="action-entity-delete"
+            :disabled="isDeleteDisabled(row)"
             has-divider
             @click="deleteRow(row)"
           >
@@ -223,6 +224,7 @@ import type {
   KonnectRedisConfigurationListConfig,
   KongManagerRedisConfigurationListConfig,
   EntityRow,
+  ManagedCacheAddOn,
   RedisConfigurationFields,
   CopyEventPayload,
   RedisConfigurationResponse,
@@ -365,27 +367,72 @@ const partialsPageSize = 1000
 
 // Cloud Gateways add-ons API limits page size at 100
 const addOnsPageSize = 100
-
-type ManagedCacheAddOn = {
-  id: string
-  name?: string
-  owner?: { control_plane_id?: string, control_plane_geo?: string }
-  config?: {
-    kind?: string
-    state_metadata?: {
-      cache_config_id?: string
-    }
-  }
-  state?: string
-}
+const maxAddOnPagesFallback = 1000
 
 const isRedisPartial = (item: RedisConfigurationResponse): boolean =>
   item.type === PartialType.REDIS_CE || item.type === PartialType.REDIS_EE
 
-/**
-* a hack to filter out non-redis configurations from the list,
-* this is needed because the API returns all partials, not just redis configurations.
-*/
+type ManagedCacheStateMetadata = { cache_config_id?: string }
+type ManagedCacheConfigShape = { state_metadata?: ManagedCacheStateMetadata }
+
+const getCacheConfigId = (addOn: ManagedCacheAddOn): string | undefined => {
+  const managedCacheConfig = (addOn.config ?? addOn.attributes) as ManagedCacheConfigShape | undefined
+  const meta = managedCacheConfig?.state_metadata ?? addOn.state_metadata
+  return meta?.cache_config_id
+}
+
+// Cloud Gateways list filter contract
+const isManagedCacheAddOn = (addOn: ManagedCacheAddOn): boolean => {
+  const kind = addOn.config?.kind ?? addOn.attributes?.kind
+  return kind === 'managed-cache.v0'
+}
+
+const isTerminatingState = (state?: string): boolean =>
+  typeof state === 'string' && state.trim().toLowerCase() === 'terminating'
+
+const fetchAllAddOns = async (): Promise<ManagedCacheAddOn[]> => {
+  const addOnsUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons`
+  const allAddOns: ManagedCacheAddOn[] = []
+  const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+  let pageNumber = 1
+  let totalPagesFromMeta: number | null = null
+
+  // If meta is missing, stop on the first short page; otherise continue until meta total pages are reached
+  while (pageNumber <= maxAddOnPagesFallback) {
+    const addOnsResponse = await axiosInstance.get(addOnsUrl, {
+      params: {
+        'page[size]': addOnsPageSize,
+        'page[number]': pageNumber,
+        'config.kind': 'managed-cache.v0',
+        'owner.control_plane_id': konnectConfig.controlPlaneId,
+        ...(konnectConfig.controlPlaneGeo ? { 'owner.control_plane_geo': konnectConfig.controlPlaneGeo } : {}),
+      },
+    })
+
+    const raw = addOnsResponse.data?.data ?? addOnsResponse.data
+    const pageItems = Array.isArray(raw) ? (raw as ManagedCacheAddOn[]) : []
+    const totalPages = addOnsResponse.data?.meta?.page?.total_pages as number | undefined
+
+    allAddOns.push(...pageItems)
+
+    if (typeof totalPages === 'number' && Number.isFinite(totalPages) && totalPages > 0) {
+      totalPagesFromMeta = totalPages
+    }
+
+    // Stop when either explicit total pages from meta reached or small page response
+    if ((totalPagesFromMeta != null && pageNumber >= totalPagesFromMeta) ||
+      !Array.isArray(raw) ||
+      pageItems.length < addOnsPageSize) {
+      break
+    }
+
+    pageNumber++
+  }
+
+  return allAddOns
+}
+
+// The partials endpoint returns every partial type, keep only redis rows in this list
 const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse> => {
   // Legacy Konnect/ KM: use the existing partials-only fetcher
   if (!isKonnectManagedRedisEnabled.value) {
@@ -398,38 +445,19 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
   try {
     errorMessage.value = null
 
-    // Fetch partials
-    const partialsRes = await rawFetcher({ ...params, pageSize: partialsPageSize })
+    // Fetch partials + add-ons in parallel
+    const partialsPromise = rawFetcher({ ...params, pageSize: partialsPageSize })
+    const addOnsPromise = fetchAllAddOns()
+      .then((items) => ({ items, isLoaded: true }))
+      .catch(() => {
+        // no op - if the add-ons can't be fetched, we still show partials self-managed Redis
+        return { items: [] as ManagedCacheAddOn[], isLoaded: false }
+      })
+    const [partialsRes, addOnsResult] = await Promise.all([partialsPromise, addOnsPromise])
+    const { items: addOns, isLoaded: isAddOnsLoaded } = addOnsResult
     const partials: RedisConfigurationResponse[] = partialsRes.data.filter(isRedisPartial)
 
-    // Fetch managed-cache add-ons for this CP from Cloud Gateways
     const konnectConfig = props.config as KonnectRedisConfigurationListConfig
-    const addOnsUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons`
-
-    let addOns: ManagedCacheAddOn[] = []
-    try {
-      const addOnsResponse = await axiosInstance.get(addOnsUrl, {
-        params: {
-          'page[size]': addOnsPageSize,
-          'page[number]': 1,
-        },
-      })
-      const raw = addOnsResponse.data?.data ?? addOnsResponse.data
-      addOns = Array.isArray(raw) ? (raw as ManagedCacheAddOn[]) : []
-    } catch {
-      // no op - if the add-ons can't be fetched, we still show the partials self-managed Redis
-    }
-
-    // Cloud Gateways add-ons are the 'source of truth' for the user-facing managed-cache name
-    // Once the Koko Redis partial exists, Cloud Gateways links it through `state_metadata.cache_config_id`
-    type ManagedCacheStateMetadata = { cache_config_id?: string }
-    type ManagedCacheConfigShape = { state_metadata?: ManagedCacheStateMetadata }
-
-    const getCacheConfigId = (addOn: ManagedCacheAddOn): string | undefined => {
-      const managedCacheConfig = (addOn.config ?? (addOn as { attributes?: ManagedCacheConfigShape }).attributes) as ManagedCacheConfigShape | undefined
-      const meta = managedCacheConfig?.state_metadata ?? (addOn as { state_metadata?: ManagedCacheStateMetadata }).state_metadata
-      return meta?.cache_config_id
-    }
 
     // The partials list can be very large (1000s), while add-ons are usually few. Build an index once to avoid an O(partials × add-ons) join
     const addOnByCacheConfigId = new Map<string, ManagedCacheAddOn>()
@@ -440,13 +468,20 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
       }
     }
 
-    const rows: EntityRow[] = partials.map((partial) => {
+    const rows: EntityRow[] = partials.flatMap((partial) => {
       const matchingAddOn = addOnByCacheConfigId.get(partial.id)
       const hasTags = Array.isArray(partial.tags) && partial.tags.length > 0
       const source: EntityRow['source'] = hasTags ? 'konnect-managed' : 'self-managed'
 
+      // If add-ons data is available, treat a managed partial without a linked
+      // add-on as stale. This avoids showing a stale partial row alongside
+      // the managed add-on lifecycle row during delete propagation
+      if (isAddOnsLoaded && source === 'konnect-managed' && !matchingAddOn) {
+        return []
+      }
+
       if (matchingAddOn) {
-        return {
+        return [{
           ...partial,
           id: partial.id,
           // Keep the add-on name so the row label stays stable from 'initializing' to 'ready'
@@ -456,17 +491,18 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
           addOn: {
             id: matchingAddOn.id,
             config: matchingAddOn.config,
+            state: matchingAddOn.state,
           },
-        }
+        }]
       }
 
-      return {
+      return [{
         ...partial,
         id: partial.id,
         name: partial.name,
         source,
         partial,
-      }
+      }]
     })
 
     // When a managed-cache add-on is being created, Cloud Gateways creates the add-on first and only later provisions the Redis partial in Koko. During that window
@@ -480,9 +516,7 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
       if (cacheConfigId != null && cacheConfigId !== '') return false
 
       // Only managed-cache add-ons (or unknown kind) get a placeholder
-      const kind = addOn.config?.kind
-      const isManagedCache = kind === 'managed-cache.v0' || kind === 'managed_cache.v0' || kind == null
-      if (!isManagedCache) return false
+      if (!isManagedCacheAddOn(addOn)) return false
 
       // Must belong to this CP (or have no CP id)
       const addOnCpId = addOn.owner?.control_plane_id
@@ -499,7 +533,31 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
       addOn,
     }))
 
-    const allRows = [...rows, ...placeholderRows]
+    // If an add-on still exists but its linked partial is no longer returned by Koko,
+    // keep showing the add-on row so the list doesn't look empty during BE lag
+    const partialIds = new Set(partials.map((partial) => partial.id))
+
+    const unlinkedAddOnRows: EntityRow[] = addOns
+      .filter((addOn) => {
+        const cacheConfigId = getCacheConfigId(addOn)
+        if (!cacheConfigId) return false
+
+        if (!isManagedCacheAddOn(addOn)) return false
+
+        const addOnCpId = addOn.owner?.control_plane_id
+        if (addOnCpId != null && addOnCpId !== cpId) return false
+
+        return !partialIds.has(cacheConfigId)
+      })
+      .map((addOn) => ({
+        id: addOn.id,
+        name: addOn.name ?? addOn.id,
+        source: 'konnect-managed',
+        partial: undefined,
+        addOn,
+      }))
+
+    const allRows = [...rows, ...placeholderRows, ...unlinkedAddOnRows]
 
     // Dont do full table refetch on every poll only once placeholders disappear
     managedAddOnStateById.value = initializingAddOns.reduce((acc, addOn) => {
@@ -513,7 +571,7 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
 
     return {
       data: allRows,
-      total: partialsRes.total ?? allRows.length,
+      total: Math.max(partialsRes.total ?? 0, allRows.length),
     }
   } catch (error: any) {
     clearPolling()
@@ -612,6 +670,12 @@ const canEditRow = async (row: EntityRow): Promise<boolean> => {
   }
   return props.canEdit(row)
 }
+// Disable delete for Konnect-managed Redis rows that are in terminating state to avoid confusion during the delete process
+const isDeleteDisabled = (row: EntityRow): boolean => {
+  return isKonnectManagedRedisEnabled.value &&
+    row.source === 'konnect-managed' &&
+    isTerminatingState(row.addOn?.state)
+}
 
 const deleteRow = async (row: EntityRow) => {
   // Konnect-managed: skip client-side links check; Cloud Gateways add-ons API will return error if partial still in use
@@ -708,6 +772,20 @@ const refreshList = (): void => {
   fetcherCacheKey.value++
 }
 
+const managedFetchReady = computed<boolean>(() => {
+  if (!isKonnectManagedRedisEnabled.value) {
+    return false
+  }
+
+  if (props.config.app !== 'konnect') {
+    return false
+  }
+
+  const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+  // Need CP id before Konnect list calls are valid
+  return typeof konnectConfig.controlPlaneId === 'string' && konnectConfig.controlPlaneId.trim() !== ''
+})
+
 // Polling for Konnect-managed Redis:
 // Cloud Gateways creates the add-on before Koko provisions the Redis partial, so we show a placeholder row
 // Without polling, the list can stay stuck in a non-ready placeholder state as state transitions can take ~15-20 minutes
@@ -722,10 +800,10 @@ const POLL_MAX_DELAY_MS = 120000
 // Increase the delay after each unsuccessful polling
 const POLL_DELAY_MULTIPLIER = 1.8
 
-// Hard caplimit for the polling window (30 minutes)
+// Hard cap for the polling window (30 minutes)
 const POLL_MAX_TOTAL_DURATION_MS = 30 * 60 * 1000
 
-// Make retry timing slightly different so requests dont line up
+// Make retry timing slightly different so requests don't line up
 const POLL_RANDOM_DELAY_RATIO = 0.2
 
 const pollTimeoutId = ref<ReturnType<typeof setTimeout> | null>(null)
@@ -746,36 +824,19 @@ const clearPolling = (): void => {
 const pollManagedAddOnsState = async (): Promise<void> => {
   const konnectConfig = props.config as KonnectRedisConfigurationListConfig
   const cpId = konnectConfig.controlPlaneId
-  const addOnsUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons`
 
   // Starting state: only update labels while there are still placeholders - no cache_config_id yet
   let placeholdersExist = false
   const nextStateById: Record<string, string> = {}
 
   try {
-    const addOnsResponse = await axiosInstance.get(addOnsUrl, {
-      params: {
-        'page[size]': addOnsPageSize,
-        'page[number]': 1,
-      },
-    })
-
-    const raw = addOnsResponse.data?.data ?? addOnsResponse.data
-    const addOns = Array.isArray(raw) ? raw as any[] : []
-
-    const getCacheConfigId = (addOn: any): string | undefined => {
-      const managedCacheConfig = addOn.config ?? addOn.attributes
-      const meta = managedCacheConfig?.state_metadata ?? addOn.state_metadata
-      return meta?.cache_config_id
-    }
+    const addOns = await fetchAllAddOns()
 
     const placeholderAddOns = addOns.filter((addOn) => {
       const cacheConfigId = getCacheConfigId(addOn)
       if (cacheConfigId != null && cacheConfigId !== '') return false
 
-      const kind = addOn.config?.kind
-      const isManagedCache = kind === 'managed-cache.v0' || kind === 'managed_cache.v0' || kind == null
-      if (!isManagedCache) return false
+      if (!isManagedCacheAddOn(addOn)) return false
 
       const addOnCpId = addOn.owner?.control_plane_id
       if (addOnCpId != null && addOnCpId !== cpId) return false
@@ -979,6 +1040,13 @@ watch(fetcherState, (state) => {
   }
 })
 
+watch(managedFetchReady, (isReadyNow, wasReadyBefore) => {
+  // Trigger one refresh when managed mode becomes ready after mount; otherwise list gets/stays empty
+  if (isReadyNow && !wasReadyBefore) {
+    refreshList()
+  }
+})
+
 const userCanCreate = ref<boolean>(false)
 
 watch(props.canCreate, async (canCreate) => {
@@ -1001,7 +1069,7 @@ watch(props.canCreate, async (canCreate) => {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    margin-right: $kui-space-50;
+    margin-right: var(--kui-space-50, $kui-space-50);
   }
 }
 </style>
