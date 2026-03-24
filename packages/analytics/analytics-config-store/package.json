@@ -39,7 +39,6 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
-    "@kong-ui-public/analytics-utilities": "workspace:^",
     "pinia": ">= 3.0.4 < 4",
     "vue": "^3.5.27"
   },
@@ -62,6 +61,7 @@
   },
   "peerDependencies": {
     "pinia": ">= 3.0.4 < 4",
-    "vue": ">= 3.4.21 < 4"
+    "vue": ">= 3.4.21 < 4",
+    "@kong-ui-public/analytics-utilities": "workspace:^"
   }
 }
