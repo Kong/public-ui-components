@@ -38,7 +38,7 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
-  'prometheus': {
+  prometheus: {
     experimental: true,
     component: 'CommonForm',
   },
@@ -49,6 +49,14 @@ const mapping = {
   'exit-transformer': {
     experimental: true,
     component: 'ExitTransformerForm',
+  },
+  'file-log': {
+    experimental: true,
+    component: 'LogForm',
+  },
+  'http-log': {
+    experimental: true,
+    component: 'LogForm',
   },
 } as const
 
