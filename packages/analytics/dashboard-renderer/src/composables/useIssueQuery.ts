@@ -1,7 +1,7 @@
 import {
   type AllFilters, type AnalyticsBridge, type DatasourceAwareQuery, type ExploreFilterAll, type ExploreQuery,
   type FilterTypeMap,
-  type QueryDatasource, stripUnknownFilters, type TimeRangeV4,
+  queryDatasources, type QueryDatasource, stripUnknownFilters, type TimeRangeV4,
   type ValidDashboardQuery,
 } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContextInternal } from '../types'
@@ -45,7 +45,9 @@ export default function useIssueQuery() {
       ...rest
     } = query
 
-    const datasource = originalDatasource || 'basic'
+    const datasource = originalDatasource
+      ? (queryDatasources.includes(originalDatasource as QueryDatasource) ? originalDatasource as QueryDatasource : 'api_usage')
+      : 'basic'
 
     const mergedFilters = deriveFilters(datasource, query.filters as Array<FilterTypeMap[typeof datasource]>, context.filters)
 
@@ -68,15 +70,15 @@ export default function useIssueQuery() {
     // TODO: similar to other places, consider adding a type guard to ensure the query
     // matches the datasource.  Currently, this block effectively pretends all queries
     // are advanced in order to make the types work out.
-    const mergedQuery: DatasourceAwareQuery = {
-      datasource: datasource as 'api_usage',
+    const mergedQuery = {
+      datasource,
       query: {
         ...rest as ExploreQuery,
         time_range,
         filters: mergedFilters as ExploreFilterAll[],
         limit: limitOverride ?? limit,
       },
-    }
+    } as DatasourceAwareQuery
 
     return queryBridge.queryFn(mergedQuery, abortController)
   }

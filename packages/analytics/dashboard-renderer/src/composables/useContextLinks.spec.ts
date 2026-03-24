@@ -1,25 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import useContextLinks from './useContextLinks'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
 const ONE_HOUR_MS = 3600000
 const ONE_DAY_MS = 86400000
 
 vi.mock('@kong-ui-public/analytics-utilities', () => ({
-  getFieldDataSources: vi.fn((field: string) => {
-    if (field === 'gateway_service') {
-      return ['api_usage']
-    }
-    if (field === 'ai_provider') {
-      return ['llm_usage']
-    }
-    if (field === 'shared_field') {
-      return ['api_usage', 'llm_usage']
-    }
-    return []
-  }),
   msToGranularity: vi.fn((ms: number) => {
     if (ms === ONE_HOUR_MS) return 'hourly'
     if (ms === ONE_DAY_MS) return 'daily'
@@ -30,8 +19,22 @@ vi.mock('@kong-ui-public/analytics-utilities', () => ({
 const analyticsConfig = { analytics: true, percentiles: true }
 
 vi.mock('@kong-ui-public/analytics-config-store', () => ({
+  useDatasourceConfigStore: vi.fn(),
   useAnalyticsConfigStore: vi.fn(() => analyticsConfig),
 }))
+
+const mockGetFieldDataSources = (field: string) => {
+  if (field === 'gateway_service') {
+    return ['api_usage']
+  }
+  if (field === 'ai_provider') {
+    return ['llm_usage']
+  }
+  if (field === 'shared_field') {
+    return ['api_usage', 'llm_usage']
+  }
+  return []
+}
 
 const makeFilter = (field: string) => ({ field, operator: 'in', value: ['x'] })
 
@@ -132,6 +135,34 @@ describe('useContextLinks', () => {
     vi.clearAllMocks()
     analyticsConfig.analytics = true
     analyticsConfig.percentiles = true
+    vi.mocked(useDatasourceConfigStore).mockReturnValue({
+      getFieldDataSources: ref(mockGetFieldDataSources),
+      isReady: vi.fn().mockResolvedValue(undefined),
+    } as any)
+  })
+
+  it('waits for datasource config readiness before generating links', async () => {
+    let resolveReady!: () => void
+    const ready = new Promise<void>((resolve) => {
+      resolveReady = resolve
+    })
+
+    vi.mocked(useDatasourceConfigStore).mockReturnValueOnce({
+      getFieldDataSources: ref(mockGetFieldDataSources),
+      isReady: vi.fn(() => ready),
+    } as any)
+
+    const { wrapper } = mountComposable({})
+    await flushPromises()
+
+    expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
+    expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+
+    resolveReady()
+    await flushPromises()
+
+    expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')
+    expect(wrapper.vm.requestsLinkKebabMenu).toContain('#requests?')
   })
 
   it('builds explore link with datasource-scoped filters and explicit granularity', async () => {
@@ -193,6 +224,32 @@ describe('useContextLinks', () => {
     expect(params.get('d')).toBe('api_usage')
   })
 
+  it('preserves platform for explore link', async () => {
+    const { wrapper } = mountComposable({
+      datasource: 'platform',
+      queryFilters: [makeFilter('gateway_service')],
+    })
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateExploreLink).toBe(true)
+
+    const params = new URLSearchParams((wrapper.vm.exploreLinkKebabMenu as string).split('?')[1])
+    expect(params.get('d')).toBe('platform')
+  })
+
+  it('does not generate requests drilldown for platform tiles', async () => {
+    const { wrapper } = mountComposable({
+      datasource: 'platform',
+      queryFilters: [makeFilter('shared_field')],
+    })
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateRequestsLink).toBe(false)
+    expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+    expect(wrapper.vm.requestsLinkZoomActions).toBeUndefined()
+    expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')
+  })
+
   it('falls back to api_usage when query datasource is not provided', async () => {
     const { wrapper } = mountComposable({ datasource: undefined })
     await flushPromises()
@@ -211,7 +268,7 @@ describe('useContextLinks', () => {
   })
 
   it('builds explore link for expected datasources', async () => {
-    const datasources = ['api_usage', 'basic', 'llm_usage', 'agentic_usage', undefined]
+    const datasources = ['api_usage', 'basic', 'llm_usage', 'agentic_usage', 'platform', undefined]
 
     for (const ds of datasources) {
       const { wrapper } = mountComposable({

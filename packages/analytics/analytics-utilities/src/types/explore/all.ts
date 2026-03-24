@@ -3,9 +3,10 @@ import { type AiExploreAggregations, type AiExploreFilterAll, type FilterableAiE
 import { type ExploreAggregations, type ExploreFilterAll, type FilterableExploreDimensions, filterableExploreDimensions } from './advanced'
 import { type FilterableRequestDimensions, type FilterableRequestMetrics, type FilterableRequestWildcardDimensions } from './requests'
 import { filterableMcpExploreDimensions, type FilterableMcpExploreDimensions, type McpExploreAggregations, type McpExploreFilterAll } from './mcp'
+import { type PlatformExploreFilterAll } from './platform'
 
 export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | McpExploreAggregations
-export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | McpExploreFilterAll
+export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | McpExploreFilterAll | PlatformExploreFilterAll
 export type AllFilterableDimensionsAndMetrics = FilterableExploreDimensions
   | FilterableAiExploreDimensions
   | FilterableBasicExploreDimensions
@@ -14,7 +15,7 @@ export type AllFilterableDimensionsAndMetrics = FilterableExploreDimensions
   | FilterableRequestMetrics
   | FilterableRequestWildcardDimensions
 
-export const queryDatasources = ['basic', 'api_usage', 'llm_usage', 'agentic_usage'] as const
+export const queryDatasources = ['basic', 'api_usage', 'llm_usage', 'agentic_usage', 'platform'] as const
 
 export type QueryDatasource = typeof queryDatasources[number]
 
@@ -25,6 +26,7 @@ export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
   api_usage: ExploreFilterAll
   llm_usage: AiExploreFilterAll
   agentic_usage: McpExploreFilterAll
+  platform: PlatformExploreFilterAll
 }
 
 export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<string>> = {
@@ -32,6 +34,7 @@ export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<strin
   api_usage: new Set(filterableExploreDimensions),
   llm_usage: new Set(filterableAiExploreDimensions),
   agentic_usage: new Set(filterableMcpExploreDimensions),
+  platform: new Set(),
 } as const
 
 // Utility for stripping unknown filters
@@ -40,6 +43,10 @@ export const stripUnknownFilters = <K extends keyof typeof datasourceToFilterabl
     // We currently can't determine the type for goap datasources as it could be
     // anything so we have to just trust that valid filters were applied
     return filters as any
+  }
+
+  if (datasource === 'platform') {
+    return filters as Array<FilterTypeMap[K]>
   }
 
   // Note: once we extend API request filters, this may need to look at more than just dimensions.

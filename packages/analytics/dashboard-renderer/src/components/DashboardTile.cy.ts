@@ -1,13 +1,154 @@
 import DashboardTile from './DashboardTile.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
-import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
+import { generateSingleMetricTimeSeriesData, type DatasourceConfig, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
-import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
+import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { defineComponent, h, ref } from 'vue'
 
 const start = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
 const end = new Date().toISOString()
+
+const datasourceConfigMock: DatasourceConfig[] = [
+  {
+    name: 'api_usage',
+    showInUI: true,
+    timeRangeOptions: ['15m', '30m', '1h', '24h'],
+    fields: [
+      {
+        name: 'api_product',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'control_plane',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'gateway_service',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'route',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'status_code',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'request_count',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+        metricGroup: 'count',
+      },
+    ],
+  },
+  {
+    name: 'llm_usage',
+    showInUI: true,
+    timeRangeOptions: ['15m', '30m', '1h', '24h'],
+    fields: [
+      {
+        name: 'ai_response_model',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'ai_provider',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'ai_request_model',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+    ],
+  },
+  {
+    name: 'requests',
+    showInUI: true,
+    timeRangeOptions: ['15m', '30m', '1h', '24h'],
+    fields: [
+      {
+        name: 'status_code',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'number',
+          allowNewValues: false,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'route',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+    ],
+  },
+]
 
 describe('<DashboardTile />', () => {
   const mockTileDefinition: TileDefinition = {
@@ -83,6 +224,7 @@ describe('<DashboardTile />', () => {
   const mockQueryProvider = {
     exploreBaseUrl: async () => 'http://test.com/explore',
     requestsBaseUrl: async () => 'http://test.com/requests',
+    datasourceConfigFn: () => Promise.resolve(datasourceConfigMock),
     evaluateFeatureFlagFn: () => true,
     queryFn: () => {
       return Promise.resolve(
@@ -145,6 +287,11 @@ describe('<DashboardTile />', () => {
     const analyticsConfigStore = useAnalyticsConfigStore()
     // @ts-ignore - mocking just what we need for the test
     analyticsConfigStore.analyticsConfig = { analytics: { percentiles: true } }
+    const datasourceConfigStore = useDatasourceConfigStore()
+    // @ts-ignore - seeding the store for component tests
+    datasourceConfigStore.datasourceConfig = datasourceConfigMock
+    // @ts-ignore - clear any load errors from outside-component store access
+    datasourceConfigStore.datasourceConfigError = null
   })
 
   it('should render tile with title', () => {
@@ -305,7 +452,7 @@ describe('<DashboardTile />', () => {
       ...mockContext,
       filters: [{ field: 'status_code', operator: 'in', value: ['test1'] }],
     }
-    mount({ context })
+    mount({ context, waitForDatasourceConfigStore: true })
 
     cy.getTestId('kebab-action-menu-1').click()
     cy.getTestId('chart-jump-to-explore-1').should('exist')
