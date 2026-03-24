@@ -49,7 +49,7 @@
         :chart-data="computedChartData"
         :chart-legend-sort-fn="chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
-        :dimension-axes-title="timestampAxisTitle"
+        :dimension-axes-title="dimensionAxesTitle ?? timestampAxisTitle"
         :fill="chartOptions.stacked"
         :granularity="timeSeriesGranularity"
         :legend-values="legendValues"
