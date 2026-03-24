@@ -124,17 +124,17 @@ function handleRenameField(oldName: FieldName, newName: FieldName) {
 
 <style lang="scss" scoped>
 .dk-inputs-field-h1 {
-  color: $kui-color-text;
-  font-size: $kui-font-size-40;
-  font-weight: $kui-font-weight-bold;
+  color: var(--kui-color-text, $kui-color-text);
+  font-size: var(--kui-font-size-40, $kui-font-size-40);
+  font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
   margin-bottom: 0;
 }
 
 .dk-inputs-field-h2,
 .dk-inputs-field-h2 > :deep(.k-label) {
-  color: $kui-color-text;
-  font-size: $kui-font-size-40;
-  font-weight: $kui-font-weight-semibold;
+  color: var(--kui-color-text, $kui-color-text);
+  font-size: var(--kui-font-size-40, $kui-font-size-40);
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
 }
 
 .dk-margin-0 {
@@ -144,22 +144,22 @@ function handleRenameField(oldName: FieldName, newName: FieldName) {
 .dk-inputs-field-or {
   align-items: center;
   display: flex;
-  height: $kui-icon-size-50;
+  height: var(--kui-icon-size-50, $kui-icon-size-50);
   justify-content: center;
   position: relative;
 
   & > span {
-    background-color: $kui-color-background;
-    color: $kui-color-text-neutral;
+    background-color: var(--kui-color-background, $kui-color-background);
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     display: inline-flex;
-    padding: 0 $kui-space-30;
+    padding: 0 var(--kui-space-30, $kui-space-30);
     position: relative;
     text-transform: uppercase;
     user-select: none;
   }
 
   &::before {
-    border-bottom: 1px solid $kui-color-border;
+    border-bottom: 1px solid var(--kui-color-border, $kui-color-border);
     content: ' ';
     display: block;
     height: 0px;

@@ -232,54 +232,54 @@ onBeforeMount(() => {
 
 <style scoped lang="scss">
 .redis-config-select {
-  margin: $kui-space-60 0;
+  margin: var(--kui-space-60, $kui-space-60) 0;
 
   :deep(.k-label) {
     margin-top: 0;
   }
 
   .shared-redis-config-title {
-    font-weight: $kui-font-weight-semibold;
-    line-height: $kui-line-height-30;
-    margin-bottom: $kui-space-40;
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
+    margin-bottom: var(--kui-space-40, $kui-space-40);
   }
 
   .empty-redis-config {
-    color: $kui-color-text-neutral;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
   }
 
   .new-redis-config-area {
     align-items: center;
-    color: $kui-color-text-primary;
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
     cursor: pointer;
     display: flex;
-    gap: $kui-space-10;
+    gap: var(--kui-space-10, $kui-space-10);
     pointer-events: auto;
   }
 
   .plugin-form-redis-configuration-dropdown-item {
     align-items: center;
     display: flex;
-    gap: $kui-space-60;
+    gap: var(--kui-space-60, $kui-space-60);
 
     .select-item-name {
-      color: $kui-color-text-neutral-stronger;
-      line-height: $kui-line-height-40;
+      color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+      line-height: var(--kui-line-height-40, $kui-line-height-40);
     }
   }
 
   .selected-redis-config {
-    font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-40;
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    line-height: var(--kui-line-height-40, $kui-line-height-40);
   }
 
   .plugin-form-selected-redis-config {
-    font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-40;
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    line-height: var(--kui-line-height-40, $kui-line-height-40);
   }
 }
 
 .redis-shared-config-error-message {
-  color: $kui-color-text-danger;
+  color: var(--kui-color-text-danger, $kui-color-text-danger);
 }
 </style>

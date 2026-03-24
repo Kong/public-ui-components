@@ -36,9 +36,11 @@ $branch-handle-size: 4px;
 $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
 
 .dk-branch-group-node {
+  /* stylelint-disable-next-line @kong/design-tokens/token-var-usage */
   background: rgba($kui-color-background-neutral-weak, $opacity);
+  /* stylelint-disable-next-line @kong/design-tokens/token-var-usage */
   border: 1px solid rgba($kui-color-border-disabled, $opacity);
-  border-radius: $kui-border-radius-20;
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   height: 100%;
   position: relative;
   width: 100%;
@@ -57,7 +59,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
     width: $branch-handle-size;
 
     &::after {
-      background-color: $kui-color-background-neutral;
+      background-color: var(--kui-color-background-neutral, $kui-color-background-neutral);
       content: "";
       display: block;
       height: 100%;
@@ -77,7 +79,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
   }
 
   &.drop-target {
-    border-color: $kui-color-border-primary;
+    border-color: var(--kui-color-border-primary, $kui-color-border-primary);
   }
 }
 </style>

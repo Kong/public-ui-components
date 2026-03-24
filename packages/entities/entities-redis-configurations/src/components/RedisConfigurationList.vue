@@ -1001,7 +1001,7 @@ watch(props.canCreate, async (canCreate) => {
   width: 100%;
 
   .kong-ui-entity-filter-input {
-    margin-right: $kui-space-50;
+    margin-right: var(--kui-space-50, $kui-space-50);
   }
 }
 </style>

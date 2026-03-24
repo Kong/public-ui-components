@@ -520,7 +520,7 @@ defineExpose({ getExportData })
 
   &.editable:hover {
     .tile-header {
-      background: $kui-color-background-neutral-weakest;
+      background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     }
   }
 
@@ -533,19 +533,19 @@ defineExpose({ getExportData })
   .tile-header {
     align-items: center;
     display: flex;
-    gap: $kui-space-50;
+    gap: var(--kui-space-50, $kui-space-50);
     justify-content: space-between;
-    padding: $kui-space-40 $kui-space-50 $kui-space-40 $kui-space-50;
+    padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
     right: 0;
     width: 100%;
 
     .title-tooltip {
-      margin-right: $kui-space-20;
+      margin-right: var(--kui-space-20, $kui-space-20);
       overflow: hidden;
     }
 
     .title {
-      font-size: $kui-font-size-40;
+      font-size: var(--kui-font-size-40, $kui-font-size-40);
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
       line-height: 24px;
       overflow: hidden;
@@ -563,8 +563,8 @@ defineExpose({ getExportData })
     }
 
     .header-description {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-20;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
       text-align: right;
     }
 
@@ -578,7 +578,7 @@ defineExpose({ getExportData })
       }
 
       .delete-option {
-        color: $kui-color-text-danger;
+        color: var(--kui-color-text-danger, $kui-color-text-danger);
       }
 
       li.k-dropdown-item {
@@ -588,10 +588,10 @@ defineExpose({ getExportData })
       }
 
       a {
-        color: $kui-color-text;
+        color: var(--kui-color-text, $kui-color-text);
 
         &:hover {
-          color: $kui-color-text;
+          color: var(--kui-color-text, $kui-color-text);
           text-decoration: none;
         }
       }
@@ -606,7 +606,7 @@ defineExpose({ getExportData })
     flex-grow: 1;
     margin: 0;
     overflow: hidden;
-    padding: $kui-space-20 $kui-space-60 0 $kui-space-60;
+    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
 
     &.type-golden_signals {
       padding: 0;
@@ -619,7 +619,7 @@ defineExpose({ getExportData })
     }
 
     .tile-content {
-      padding: $kui-space-60 $kui-space-60 0 $kui-space-60;
+      padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
 
       &.type-golden_signals {
         padding: 0;

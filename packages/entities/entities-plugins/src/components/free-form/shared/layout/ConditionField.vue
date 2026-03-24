@@ -64,14 +64,14 @@ const { i18n: { t }, i18nT } = useI18n()
 .label-content {
   align-items: center;
   display: inline-flex;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
 
   .label-tooltip {
     .tooltip-trigger-icon {
-      color: $kui-color-text-neutral !important;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
       cursor: help;
-      height: $kui-icon-size-30 !important;
-      width: $kui-icon-size-30 !important;
+      height: var(--kui-icon-size-30, $kui-icon-size-30) !important;
+      width: var(--kui-icon-size-30, $kui-icon-size-30) !important;
     }
   }
 
