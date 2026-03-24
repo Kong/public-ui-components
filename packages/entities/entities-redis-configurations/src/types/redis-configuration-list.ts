@@ -54,7 +54,32 @@ export interface EntityRow extends Record<string, any> {
    * Set only when this row is linked to a Cloud Gateways managed-cache add-on (Konnect).
    * Used when deleting: we call the add-ons API with addOn.id instead of the partial URL.
    */
-  addOn?: { id: string, config?: unknown, [key: string]: unknown }
+  addOn?: ManagedCacheAddOn
+}
+
+export interface ManagedCacheAddOn {
+  id: string
+  name?: string
+  owner?: {
+    control_plane_id?: string
+  }
+  config?: {
+    kind?: string
+    state_metadata?: {
+      cache_config_id?: string
+    }
+  }
+  // Fallback fields optional for payload compatibility
+  attributes?: {
+    kind?: string
+    state_metadata?: {
+      cache_config_id?: string
+    }
+  }
+  state_metadata?: {
+    cache_config_id?: string
+  }
+  state?: string
 }
 
 export interface CopyEventPayload {

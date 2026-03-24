@@ -855,5 +855,9 @@ onBeforeMount(async () => {
   :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-content > *:not(:first-child)) {
     margin-top: var(--kui-space-60, $kui-space-60);
   }
+
+  :deep(.k-alert.danger) {
+    margin-top: $kui-space-60;
+  }
 }
 </style>
