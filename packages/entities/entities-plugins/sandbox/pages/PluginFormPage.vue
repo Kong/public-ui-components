@@ -74,6 +74,7 @@ useProvideExperimentalFreeForms([
   'exit-transformer',
   'file-log',
   'http-log',
+  'correlation-id',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({

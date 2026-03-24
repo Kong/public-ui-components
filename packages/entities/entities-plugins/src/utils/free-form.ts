@@ -58,6 +58,10 @@ const mapping = {
     experimental: true,
     component: 'LogForm',
   },
+  'correlation-id': {
+    experimental: true,
+    component: 'CommonForm',
+  },
 } as const
 
 export type FreeFormName = keyof typeof mapping
