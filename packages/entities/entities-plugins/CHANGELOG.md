@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.176.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.175.0...@kong-ui-public/entities-plugins@9.176.0) (2026-03-24)
+
+
+### Features
+
+* **entities-plugins:** add file-log and http-log to experimental ([#3038](https://github.com/Kong/public-ui-components/issues/3038)) ([e351426](https://github.com/Kong/public-ui-components/commit/e351426218b9f6766fda19c056c9b72cdb15bf56))
+
+
+
+
+
 # [9.175.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.174.1...@kong-ui-public/entities-plugins@9.175.0) (2026-03-24)
 
 
