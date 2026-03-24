@@ -209,13 +209,11 @@ const getUrl = (action: 'create' | 'edit'): string => {
 
   if (props.config?.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config?.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  url = url.replace(/{id}/gi, props.consumerId)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.consumerId)
 }
 
 const isFormValid = computed((): boolean => !!state.fields.username || !!state.fields.customId)

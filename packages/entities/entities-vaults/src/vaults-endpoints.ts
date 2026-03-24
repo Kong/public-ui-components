@@ -1,4 +1,4 @@
-const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}'
 const konnectConfigStoreApiUrl = '/v2/control-planes/{controlPlaneId}/config-stores'
 const KMBaseApiUrl = '/{workspace}'
 

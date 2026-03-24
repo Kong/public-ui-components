@@ -213,11 +213,12 @@ const getOnePartialUrl = (partialId: string | number): string => {
 
   if (formConfig.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, formConfig?.controlPlaneId || '')
-  } else if (formConfig.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, formConfig?.workspace ? `/${formConfig.workspace}` : '')
   }
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, String(partialId))
+
+  url = url
+    .replace(/\/{workspace}/gi, formConfig?.workspace ? `/${formConfig.workspace}` : '')
+    .replace(/{id}/gi, String(partialId)) // Always replace the id when editing
+
   return url
 }
 

@@ -54,7 +54,7 @@ A form component for targets. Comes with [`TargetsList` component](../src/compon
     - type: `string`
     - required: `true`
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `controlPlaneId`:
     - type: `string`

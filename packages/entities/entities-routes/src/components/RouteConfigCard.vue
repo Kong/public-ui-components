@@ -123,14 +123,12 @@ const handleSuccess = async (entity: any) => {
 
   let url = `${props.config.apiBaseUrl}${fetchServiceName.value}`
   if (props.config.app === 'konnect') {
-    url = url
-      .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-      .replace(/{serviceId}/gi, internalServiceId.value || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-      .replace(/{serviceId}/gi, internalServiceId.value || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
+
+  url = url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{serviceId}/gi, internalServiceId.value || '')
 
   try {
     isServiceNameLoading.value = true

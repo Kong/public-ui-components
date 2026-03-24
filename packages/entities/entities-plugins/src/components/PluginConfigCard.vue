@@ -394,14 +394,11 @@ const schemaUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // replace the plugin type
-  url = url.replace(/{plugin}/gi, props.config.pluginType)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{plugin}/gi, props.config.pluginType) // replace the plugin type
 })
 
 const schema = ref<Record<string, any>>({})

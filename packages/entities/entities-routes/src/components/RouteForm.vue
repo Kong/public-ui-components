@@ -515,19 +515,13 @@ const submitUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value][props.serviceId ? 'forGatewayService' : 'all']}`
 
   if (props.config.app === 'konnect') {
-    url = url
-      .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-      .replace(/{serviceId}/gi, props.serviceId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-      .replace(/{serviceId}/gi, props.serviceId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.routeId)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{serviceId}/gi, props.serviceId || '')
+    .replace(/{id}/gi, props.routeId) // Always replace the id when editing
 })
 
 watch(() => state.fields, () => {

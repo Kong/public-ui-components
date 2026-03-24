@@ -290,12 +290,11 @@ const buildVaultFetchUrl = (vaultPrefix: string) => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // Replacing {id} with the prefix because /vaults/:prefix is allowed
-  return url.replace(/{id}/gi, vaultPrefix)
+  return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, vaultPrefix) // Replacing {id} with the prefix because /vaults/:prefix is allowed
 }
 
 const buildSecretFetchUrl = (secretId: string, configStoreId: string) => {

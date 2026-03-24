@@ -196,11 +196,11 @@ const getUrl = (action: ConsumerGroupActions, groupId = '', consumerId = ''): st
 
   if (props.config?.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config?.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  url = url.replace(/{id}/gi, groupId || props.consumerGroupId)
+  url = url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, groupId || props.consumerGroupId)
 
   if (action === 'addConsumer' || action === 'removeConsumer') {
     url = url.replace(/{consumerId}/gi, consumerId)

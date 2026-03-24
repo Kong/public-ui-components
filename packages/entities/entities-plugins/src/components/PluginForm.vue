@@ -1345,10 +1345,10 @@ const submitUrl = computed((): string => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
+  // replace workspace
+  url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   // replace resource endpoint for credentials
   url = url.replace(/{resourceEndpoint}/gi, resourceEndpoint.value)
   // Always replace the id when editing
@@ -1460,14 +1460,11 @@ const schemaUrl = computed((): string => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // replace the plugin type
-  url = url.replace(/{plugin}/gi, pluginType)
-
   return url
+    .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{plugin}/gi, pluginType) // replace the plugin type
 })
 
 const credentialType = ref('')
