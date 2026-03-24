@@ -1,6 +1,7 @@
 // Cypress component test spec file
 import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
+import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import composables from '../composables'
 import { exploreResult, emptyExploreResult, multiDimensionExploreResult } from '../../fixtures/mockData'
 import { INJECT_QUERY_PROVIDER } from '../constants'
@@ -498,6 +499,34 @@ describe('<AnalyticsChart />', () => {
       },
     })
     cy.getTestId('truncation-warning').should('not.exist')
+  })
+
+  describe('dimensionAxesTitle for TimeSeriesChart', () => {
+    it('passes dimensionAxesTitle from chartOptions to TimeSeriesChart', () => {
+      mount({
+        chartOptions: {
+          type: 'timeseries_line',
+          stacked: false,
+          dimensionAxesTitle: 'Custom Axis Title',
+        },
+      }).then(({ wrapper }) => {
+        const timeSeriesChart = wrapper.findComponent(TimeSeriesChart)
+        expect(timeSeriesChart.props('dimensionAxesTitle')).to.equal('Custom Axis Title')
+      })
+    })
+
+    it('falls back to granularity-based title when dimensionAxesTitle is not in chartOptions', () => {
+      mount({
+        chartOptions: {
+          type: 'timeseries_line',
+          stacked: false,
+        },
+      }).then(({ wrapper }) => {
+        const timeSeriesChart = wrapper.findComponent(TimeSeriesChart)
+        // exploreResult has granularity_ms: 3600000 (hourly) → '@timestamp per hour'
+        expect(timeSeriesChart.props('dimensionAxesTitle')).to.equal('@timestamp per hour')
+      })
+    })
   })
 
   describe('Zoom actions', () => {
