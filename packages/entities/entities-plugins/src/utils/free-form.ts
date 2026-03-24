@@ -70,6 +70,10 @@ const mapping = {
     experimental: true,
     component: 'ResponseTransformerForm',
   },
+  'correlation-id': {
+    experimental: true,
+    component: 'CommonForm',
+  },
 } as const
 
 export type FreeFormName = keyof typeof mapping

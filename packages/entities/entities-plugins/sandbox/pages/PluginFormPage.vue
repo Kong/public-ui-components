@@ -77,6 +77,7 @@ useProvideExperimentalFreeForms([
   'request-transformer-advanced',
   'response-transformer',
   'response-transformer-advanced',
+  'correlation-id',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
