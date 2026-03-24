@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.3...@kong-ui-public/entities-redis-configurations@1.14.4) (2026-03-24)
+
+
+### Bug Fixes
+
+* **redis:** update Konnect-managed Redis list page gap during add-on … ([#3039](https://github.com/Kong/public-ui-components/issues/3039)) ([6df0a94](https://github.com/Kong/public-ui-components/commit/6df0a9430a40fca5dac08cdd0122c642d8e100b5))
+* style lint ([#3047](https://github.com/Kong/public-ui-components/issues/3047)) ([4337f04](https://github.com/Kong/public-ui-components/commit/4337f04c0443c70b6e16b94c692f2503fe9b99ea))
+
+
+
+
+
 ## [1.14.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.2...@kong-ui-public/entities-redis-configurations@1.14.3) (2026-03-24)
 
 
