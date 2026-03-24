@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.177.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.176.0...@kong-ui-public/entities-plugins@9.177.0) (2026-03-24)
+
+
+### Features
+
+* **entities-plugins:** add correlation-id to experimental ([#3043](https://github.com/Kong/public-ui-components/issues/3043)) ([3f33e21](https://github.com/Kong/public-ui-components/commit/3f33e2195c2dbb979730e9dff11be33f6a964969))
+
+
+
+
+
 # [9.176.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.175.0...@kong-ui-public/entities-plugins@9.176.0) (2026-03-24)
 
 
