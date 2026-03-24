@@ -53,7 +53,6 @@
 import { computed, ref, type PropType } from 'vue'
 import composables from '../../composables'
 import {
-  PLUGIN_GROUPS_COLLAPSE_STATUS,
   PluginGroup,
   PluginGroupArray,
   type KongManagerPluginSelectConfig,
@@ -118,7 +117,10 @@ const emit = defineEmits<{
 
 const { i18n: { t } } = composables.useI18n()
 const isHighlightedPluginsCollapsed = ref(false)
-const shouldCollapsed = ref<Record<string, boolean>>(PLUGIN_GROUPS_COLLAPSE_STATUS)
+const shouldCollapsed = ref<Record<string, boolean>>(PluginGroupArray.reduce((acc, group) => {
+  acc[group] = false
+  return acc
+}, {} as Record<string, boolean>))
 
 const emitPluginData = (plugin: PluginType) => {
   emit('plugin-clicked', plugin)
