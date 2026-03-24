@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.175.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.174.1...@kong-ui-public/entities-plugins@9.175.0) (2026-03-24)
+
+
+### Features
+
+* **entities-plugins:** add exit-transformer to experimental ([#3037](https://github.com/Kong/public-ui-components/issues/3037)) ([934707c](https://github.com/Kong/public-ui-components/commit/934707c987b325f44a73dc0efa8af3f694ef902a))
+
+
+
+
+
 ## [9.174.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.174.0...@kong-ui-public/entities-plugins@9.174.1) (2026-03-23)
 
 
