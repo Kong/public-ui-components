@@ -220,20 +220,18 @@ const availablePluginsUrl = computed((): string => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = props.config.gatewayInfo?.edition === 'community'
-      ? `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePluginsForOss}`
-      : url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+  } else if (props.config.app === 'kongManager' && props.config.gatewayInfo?.edition === 'community') {
+    return `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePluginsForOss}`
   }
 
-  return url
+  return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
 })
 
 const streamingPluginsUrl = computed<string | null>(() => {
   if (props.config.app === 'konnect' && props.customPluginSupport === 'streaming') {
-    let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].streamingCustomPlugins}`
-    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-    return url
+    return `${props.config.apiBaseUrl}${endpoints.select[props.config.app].streamingCustomPlugins}`
+      .replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+      .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
   // Kong Manager and other support level does not support streaming custom plugins now
   return null
@@ -245,11 +243,10 @@ const fetchEntityPluginsUrl = computed((): string => {
 
     if (props.config.app === 'konnect') {
       url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-    } else if (props.config.app === 'kongManager') {
-      url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
     }
 
     return url
+      .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
       .replace(/{entityType}/gi, props.config.entityType || '')
       .replace(/{entityId}/gi, props.config.entityId || '')
   }
@@ -263,7 +260,7 @@ const filteredPlugins = computed((): PluginCardListExtended => {
   }
 
   const activeGroups = Object.entries(typeFilter.value)
-    .filter(([_, checked]) => checked)
+    .filter(([, checked]) => checked)
     .map(([group]) => group)
 
   let filtered: PluginCardList = {}

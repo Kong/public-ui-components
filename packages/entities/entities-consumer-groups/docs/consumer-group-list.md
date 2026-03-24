@@ -95,7 +95,7 @@ A table component for consumer groups.
     - type: `string`
     - required: `true`
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `isExactMatch`:
     - type: `boolean`

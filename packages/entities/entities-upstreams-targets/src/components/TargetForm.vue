@@ -140,13 +140,12 @@ const props = defineProps({
   isVisible: {
     type: Boolean,
     required: true,
-    default: false,
   },
   /** If a valid Target ID is provided, it will put the form in Edit mode instead of Create */
   targetId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
   failoverEnabled: {
     type: Boolean,
@@ -243,15 +242,13 @@ const submitUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value]}`
 
   if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '').replace(/{upstreamId}/gi, props.config?.upstreamId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '').replace(/{upstreamId}/gi, props.config?.upstreamId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
-  // Replace the id when editing
-  url = url.replace(/{id}/gi, props.targetId)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{upstreamId}/gi, props.config?.upstreamId || '')
+    .replace(/{id}/gi, props.targetId ?? '') // Replace the id when editing
 })
 
 const requestBody = computed((): Record<string, any> => {

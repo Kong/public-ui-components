@@ -242,12 +242,11 @@ export const useRedisConfigurationForm = (options: Options) => {
 
     if (config.app === 'konnect') {
       url = url.replace(/{controlPlaneId}/gi, config?.controlPlaneId || '')
-    } else if (config.app === 'kongManager') {
-      url = url.replace(/\/{workspace}/gi, config?.workspace ? `/${config.workspace}` : '')
     }
 
-    // Always replace the id when editing
-    url = url.replace(/{id}/gi, partialId || '')
+    url = url
+      .replace(/\/{workspace}/gi, config?.workspace ? `/${config.workspace}` : '')
+      .replace(/{id}/gi, partialId || '') // Always replace the id when editing
 
     return url
   })

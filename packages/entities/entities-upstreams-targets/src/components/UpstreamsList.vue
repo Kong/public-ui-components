@@ -293,14 +293,11 @@ const fetcherBaseUrl = computed((): string => {
   let url: string = `${props.config.apiBaseUrl}${endpoints.list[props.config.app]}`
 
   if (props.config.app === 'konnect') {
-    url = url
-      .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 })
 
 const filterQuery = ref<string>('')
