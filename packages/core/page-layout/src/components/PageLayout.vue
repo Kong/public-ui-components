@@ -169,6 +169,26 @@ onUnmounted(() => {
         display: flex;
         gap: var(--kui-space-20, $kui-space-20);
 
+        .navigate-back {
+          background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+          border: none;
+          border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+          color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+          cursor: pointer;
+          outline: none;
+          padding: var(--kui-space-30, $kui-space-30);
+          transition: background-color 0.2s ease-in, color 0.2s ease-in;
+
+          &:hover {
+            background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+            color: var(--kui-color-text, $kui-color-text);
+          }
+
+          &:focus-visible {
+            box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
+          }
+        }
+
         .page-layout-title {
           color: var(--kui-color-text, $kui-color-text);
           font-size: var(--kui-font-size-50, $kui-font-size-50);
