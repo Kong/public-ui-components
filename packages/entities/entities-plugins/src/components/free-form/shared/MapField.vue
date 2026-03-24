@@ -1,69 +1,226 @@
 <template>
-  <div>
-    <h3>{{ fieldAttrs.label }}</h3>
+  <!-- missing schema alert -->
+  <KAlert
+    v-if="field.error"
+    appearance="danger"
+    :message="field.error.message"
+  />
 
-    <div
-      v-for="([keyId, name]) in keys"
-      :key="keyId"
-      class="item"
+  <div
+    v-else
+    v-show="!field.hide.value"
+    ref="root"
+    class="ff-map-field"
+    :data-testid="`ff-map-${field.path.value}`"
+  >
+    <header
+      v-if="!!fieldAttrs.label"
+      class="ff-map-field-header"
+      :data-testid="`ff-map-header-${field.path.value}`"
     >
-      <div>
-        <input
-          placeholder="Key"
-          :value="name"
-          @input="(e: any) => updateKey(keyId, e.target.value)"
-        >
-
-        <Field :name="keyId" />
-      </div>
-      <button
-        type="button"
-        @click="removeKey(keyId)"
+      <KLabel
+        class="ff-map-field-label"
+        v-bind="fieldAttrs.labelAttributes"
+        :data-testid="`ff-label-${field.path.value}`"
+        :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
-        X
-      </button>
-    </div>
+        {{ fieldAttrs.label }}
+        <template
+          v-if="fieldAttrs.labelAttributes?.info"
+          #tooltip
+        >
+          <slot name="tooltip">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="fieldAttrs.labelAttributes.info" />
+          </slot>
+        </template>
+      </KLabel>
+    </header>
 
-    <button
-      type="button"
-      @click="addKey"
+    <component
+      :is="itemTag"
+      v-for="([keyId, name], index) in keys"
+      :key="keyId"
+      class="ff-map-field-item"
+      :class="{
+        'ff-map-field-item-simple': isSimpleMap,
+        'ff-map-field-item-complex': !isSimpleMap,
+      }"
+      :data-testid="`ff-map-container-${field.path.value}.${index}`"
     >
-      + Add {{ fieldAttrs.label }}
-    </button>
+      <div class="ff-map-field-fields">
+        <EnhancedInput
+          class="ff-map-field-fields-key"
+          :data-key-input="index"
+          :data-testid="`ff-key-${field.path.value}.${index}`"
+          :model-value="name"
+          :placeholder="keyPlaceholder || 'Key'"
+          @keydown.enter.prevent="focus(index)"
+          @update:model-value="(value: string) => updateKey(keyId, value)"
+        />
+
+        <StringField
+          v-if="valueSchema?.type === 'string'"
+          inline-vault-picker
+          :multiline="appearance?.string?.multiline"
+          :name="keyId"
+        />
+
+        <Field
+          v-else
+          :name="keyId"
+        />
+      </div>
+
+      <KTooltip
+        class="ff-kv-field-entry-remove"
+        :text="i18n.t('actions.remove_entity', { entity: fieldDisplayName })"
+      >
+        <KButton
+          appearance="tertiary"
+          :aria-label="i18n.t('actions.remove_entity', { entity: fieldDisplayName })"
+          :data-testid="`ff-map-remove-btn-${field.path.value}.${index}`"
+          icon
+          @click="removeKey(keyId)"
+        >
+          <CloseIcon />
+        </KButton>
+      </KTooltip>
+    </component>
+
+    <KButton
+      appearance="tertiary"
+      :aria-label="i18n.t('actions.add_entity', { entity: fieldDisplayName })"
+      class="ff-map-field-add-entry-btn"
+      :data-testid="`ff-map-add-btn-${field.path.value}`"
+      @click="handleAddClick"
+    >
+      <AddIcon />
+      {{ i18n.t('actions.add_entity', { entity: fieldDisplayName }) }}
+    </KButton>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { toRef } from 'vue'
-import { useField, useFieldAttrs } from './composables'
+import { toRef, computed, useTemplateRef, nextTick } from 'vue'
+import { AddIcon, CloseIcon } from '@kong/icons'
+import { useFieldAttrs } from './composables'
 import type { BaseFieldProps } from './types'
 import { useMapField } from './headless/useMapField'
 import Field from './Field.vue'
+import { KCard } from '@kong/kongponents'
+import EnhancedInput from './EnhancedInput.vue'
+import useI18n from '../../../composables/useI18n'
+import StringField from './StringField.vue'
 
 interface MapFieldProps extends BaseFieldProps {
+  keyPlaceholder?: string
+  appearance?: {
+    string?: {
+      multiline?: boolean
+    }
+  }
 }
 
+const { i18n } = useI18n()
+
 const props = defineProps<MapFieldProps>()
-
-const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
-
-const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const {
   keys,
   updateKey,
   addKey,
   removeKey,
+  field,
+  fieldDisplayName,
 } = useMapField(toRef(props, 'name'))
+
+const fieldAttrs = useFieldAttrs(field.path!, props)
+
+const simpleValueTypes = ['string', 'number', 'boolean', 'integer', 'foreign']
+
+const isSimpleMap = computed(() => {
+  return field.schema?.value?.type === 'map'
+    && simpleValueTypes.includes(field.schema.value.values.type)
+    && !props.appearance?.string?.multiline
+})
+
+const valueSchema = computed(() => {
+  return field.schema?.value?.type === 'map' ? field.schema.value.values : undefined
+})
+
+const itemTag = computed(() => isSimpleMap.value ? 'div' : KCard)
+
+const root = useTemplateRef('root')
+
+async function focus(index: number) {
+  if (!root.value) {
+    return
+  }
+
+  await nextTick()
+  root.value.querySelector<HTMLInputElement>(`[data-key-input="${index}"]`)?.focus()
+}
+
+function handleAddClick() {
+  addKey()
+
+  const index = keys.value.findIndex(([_, name]) => !name)
+  focus(index === -1 ? keys.value.length - 1 : index)
+}
+
 </script>
 
 <style scoped lang="scss">
-.item {
-  align-items: center;
-  border: 1px solid #ccc;
+.ff-map-field {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  padding: $kui-space-40;
+  flex-direction: column;
+  gap: $kui-space-40;
+
+  // .k-label is required to override styles correctly in KM
+  &-label.k-label {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+
+  &-header {
+    align-items: center;
+    display: flex;
+    gap: $kui-space-40;
+    height: 32px;
+  }
+
+  &-item-simple {
+    align-items: center;
+    display: flex;
+    gap: $kui-space-40;
+
+    .ff-map-field-fields {
+      display: grid;
+      flex: 1 1 0;
+      gap: $kui-space-40;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &-item-complex {
+
+    :deep(> .card-content) {
+      align-items: flex-start;
+      flex-direction: row;
+      gap: $kui-space-40;
+
+      > .ff-map-field-fields {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        gap: $kui-space-40;
+      }
+    }
+  }
+
+  &-add-entry-btn {
+    align-self: flex-start;
+  }
 }
 </style>

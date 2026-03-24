@@ -19,6 +19,7 @@
     :data-testid="`ff-array-${field.path.value}`"
   >
     <header
+      v-if="!!fieldAttrs.label"
       class="ff-array-field-header"
       :data-testid="`ff-array-header-${field.path.value}`"
     >
@@ -232,7 +233,7 @@ const realAppearance = computed(() => {
     return props.appearance
   }
 
-  if (subSchema.value.type === 'record') {
+  if (subSchema.value.type === 'record' || subSchema.value.type === 'map') {
     return 'card'
   }
 

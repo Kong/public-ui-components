@@ -33,6 +33,13 @@ export const selectors = {
   kvRemoveBtn: (path: string, index: number) => `[data-testid="ff-kv-remove-btn-${path}.${index}"]`,
   kvAddBtn: (path: string) => `[data-testid="ff-kv-add-btn-${path}"]`,
 
+  // MapField
+  map: (path: string) => `[data-testid="ff-map-${path}"]`,
+  mapKey: (path: string, index: number) => `[data-testid="ff-map-key-${path}.${index}"]`,
+  mapRemoveBtns: (path: string) => `[data-testid^="ff-map-remove-btn-${path}"]`,
+  mapRemoveBtn: (path: string, index: number) => `[data-testid="ff-map-remove-btn-${path}.${index}"]`,
+  mapAddBtn: (path: string) => `[data-testid="ff-map-add-btn-${path}"]`,
+
   // StringArrayField
   tag: (path: string) => `[data-testid="ff-tag-${path}"]`,
   tagInput: (path: string) => `[data-testid="ff-tag-${path}"] input`,

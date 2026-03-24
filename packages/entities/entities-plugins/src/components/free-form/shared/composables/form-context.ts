@@ -78,8 +78,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
         config.value.prepareFormData(dataValue)
       }
 
-      keyIdMap.clear()
-      setValue(keyIdMap.serialize(dataValue))
+      setValue(dataValue)
     }
 
     function hasValue(data: T | undefined): boolean {

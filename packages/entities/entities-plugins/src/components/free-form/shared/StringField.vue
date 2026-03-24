@@ -45,20 +45,44 @@
       >
         <slot name="help" />
       </template>
+
+      <!-- inline vault picker -->
+      <template
+        v-if="!multiline && inlineVaultPicker"
+        #after
+      >
+        <component
+          :is="autofillSlot"
+          v-if="autofillSlot && realShowVaultSecretPicker"
+          :schema="schema"
+          :update="handleUpdate"
+          :value="fieldValue ?? ''"
+        />
+        <KAlert
+          v-if="realShowVaultSecretPicker && !autofillSlot"
+          appearance="warning"
+          :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+          :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+        />
+      </template>
     </EnhancedInput>
-    <component
-      :is="autofillSlot"
-      v-if="autofillSlot && realShowVaultSecretPicker"
-      :schema="schema"
-      :update="handleUpdate"
-      :value="fieldValue ?? ''"
-    />
-    <KAlert
-      v-if="realShowVaultSecretPicker && !autofillSlot"
-      appearance="warning"
-      :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
-      :message="i18n.t('plugins.free-form.vault_picker.component_error')"
-    />
+
+    <!-- block vault picker -->
+    <template v-if="!inlineVaultPicker">
+      <component
+        :is="autofillSlot"
+        v-if="autofillSlot && realShowVaultSecretPicker"
+        :schema="schema"
+        :update="handleUpdate"
+        :value="fieldValue ?? ''"
+      />
+      <KAlert
+        v-if="realShowVaultSecretPicker && !autofillSlot"
+        appearance="warning"
+        :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+        :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+      />
+    </template>
   </div>
 </template>
 
@@ -90,6 +114,7 @@ interface StringFieldProps extends InputProps, BaseFieldProps {
   type?: string
   placeholder?: string
   inputId?: string
+  inlineVaultPicker?: boolean
 }
 
 const {
