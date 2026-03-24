@@ -6,6 +6,11 @@ settings:
 
 overrides:
   vue: ^3.5.27
+  form-data@>=3.0.0 <3.0.4: '>=3.3.2'
+  axios@>=1.0.0 <=1.13.4: '>=1.13.5'
+  minimatch@>=9.0.0 <9.0.7: '>=9.0.7'
+  serialize-javascript@<=7.0.2: '>=7.0.3'
+  dompurify@>=3.1.3 <=3.3.1: '>=3.3.2'
 
 importers:
 
@@ -317,7 +322,7 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       swrv:
         specifier: ^1.1.0
@@ -440,7 +445,7 @@ importers:
         specifier: ^2.16.0
         version: 2.16.0
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -514,7 +519,7 @@ importers:
         specifier: 1.20.0
         version: 1.20.0
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
 
   packages/core/documentation:
@@ -539,7 +544,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -649,7 +654,7 @@ importers:
         specifier: ^4.17.12
         version: 4.17.12
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       pug:
         specifier: ^3.0.3
@@ -807,7 +812,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -834,7 +839,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -861,7 +866,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -888,7 +893,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -915,7 +920,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -942,7 +947,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -966,7 +971,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -993,7 +998,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -1093,7 +1098,7 @@ importers:
         specifier: ^13.9.0
         version: 13.9.0(axios@1.13.6)(focus-trap@7.8.0)(sortablejs@1.15.7)(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       monaco-editor:
         specifier: ^0.55.1
@@ -1153,7 +1158,7 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       swrv:
         specifier: ^1.1.0
@@ -1193,7 +1198,7 @@ importers:
         specifier: ^4.5.8
         version: 4.5.8
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
@@ -1233,7 +1238,7 @@ importers:
         specifier: ^3.21.0
         version: 3.21.0
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       shiki:
         specifier: ^3.21.0
@@ -1263,7 +1268,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -1290,7 +1295,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -1318,7 +1323,7 @@ importers:
         specifier: 9.52.5
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       axios:
-        specifier: ^1.13.2
+        specifier: '>=1.13.5'
         version: 1.13.6
       vue:
         specifier: ^3.5.27
@@ -2551,7 +2556,7 @@ packages:
     resolution: {integrity: sha512-C/MFT+OZtyul62ElgHEggqMYPbLjXiRJg5GE3il8MZpaep2D5QV+F5UQ7frbA98TkZCCVBD4LpR0OmiwXKs+tg==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
-      axios: ^1.6.1
+      axios: '>=1.13.5'
       vue: ^3.5.27
       vue-router: ^4.2.4
 
@@ -4003,7 +4008,7 @@ packages:
     resolution: {integrity: sha512-SDobKBbPIOe0cVL7QxMzGkuUGHvWTdihi9zOrrWaWUgFKe15cwEcwfWmgrcNzjT6kHnNmWuTajPHoIzUjYNYYQ==}
     peerDependencies:
       async-validator: ^4
-      axios: ^1
+      axios: '>=1.13.5'
       change-case: ^5
       drauu: ^0.4
       focus-trap: ^7
@@ -4391,9 +4396,6 @@ packages:
 
   axios@1.13.6:
     resolution: {integrity: sha512-ChTCHMouEe2kn713WHbQGcuYrr6fXTBiu460OTwWrWob16g1bXn4vtz07Ope7ewMozJAnEquLk5lWQWtBig9DQ==}
-
-  axios@1.7.4:
-    resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
 
   babel-code-frame@6.26.0:
     resolution: {integrity: sha512-XqYMR2dfdGMW+hd0IUZ2PwK+fGeFkOxZJ0wY+JaQAHzt1Zx8LcvpiZD2NiGkEG8qx0CfkAOr5xt76d1e8vG90g==}
@@ -5514,9 +5516,6 @@ packages:
   dompurify@3.0.5:
     resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
 
-  dompurify@3.2.7:
-    resolution: {integrity: sha512-WhL/YuveyGXJaerVlMYGWhvQswa7myDG17P7Vu65EWC05o8vfeNbvNf4d/BOvH99+ZW+LlQsc1GDKMa1vNK6dw==}
-
   dompurify@3.3.2:
     resolution: {integrity: sha512-6obghkliLdmKa56xdbLOpUZ43pAR6xFy1uOrxBaIDjT+yaRuuybLjGS9eVBoSR/UPU5fq3OXClEHLJNGvbxKpQ==}
     engines: {node: '>=20'}
@@ -6125,10 +6124,6 @@ packages:
 
   forever-agent@0.6.1:
     resolution: {integrity: sha512-j0KLYPhm6zeac4lz3oJ3o65qvgQCcPubiyotZrXqEaG4hNagNYO8qdlUrX5vwqv9ohqeT/Z3j6+yW067yWWdUw==}
-
-  form-data@3.0.0:
-    resolution: {integrity: sha512-CKMFDglpbMi6PyN+brwB9Q/GOw0eAnsrEZDgcsH5Krhz5Od/haKHAX0NmQfha2zPPz0JpWzA7GJHGSnvCRLWsg==}
-    engines: {node: '>= 6'}
 
   form-data@4.0.5:
     resolution: {integrity: sha512-8RipRLol37bNs2bhoV67fiTEvdTrbMUYcFTiy3+wuuOnUog2QBHCZWXDRijWQfAkhBj2Uf5UnVaiWwA5vdd82w==}
@@ -7758,10 +7753,6 @@ packages:
     resolution: {integrity: sha512-Brg/fp/iAVDOQoHxkuN5bEYhyQlZhxddI78yWsCbeEwTHXQjlNLtiJDUsp1GIptVqMI7/gkJMz4vVAc01mpoBw==}
     engines: {node: '>=10'}
 
-  minimatch@9.0.1:
-    resolution: {integrity: sha512-0jWhJpD/MdhPXwPuiRkCbfYfSKp2qnn2eOc279qI7f+osl/l+prKSrvhg157zSYvx/1nmgn2NqdT6k2Z7zSH9w==}
-    engines: {node: '>=16 || 14 >=14.17'}
-
   minimatch@9.0.8:
     resolution: {integrity: sha512-reYkDYtj/b19TeqbNZCV4q9t+Yxylf/rYBsLb42SXJatTv4/ylq5lEiAmhA/IToxO7NI2UzNMghHoHuaqDkAjw==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -9319,8 +9310,9 @@ packages:
     resolution: {integrity: sha512-3NnuWfM6vBYoy5gZFvHiYsVbafvI9vZv/+jlIigFn4oP4zjNPK3LhcY0xSCgeb1a5L8jO71Mit9LlNoi2UfDDQ==}
     engines: {node: '>=10'}
 
-  serialize-javascript@6.0.2:
-    resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
+  serialize-javascript@7.0.4:
+    resolution: {integrity: sha512-DuGdB+Po43Q5Jxwpzt1lhyFSYKryqoNjQSA9M92tyw0lyHIOur+XCalOUe0KTJpyqzT8+fQ5A0Jf7vCx/NKmIg==}
+    engines: {node: '>=20.0.0'}
 
   serve-index@1.9.1:
     resolution: {integrity: sha512-pXHfKNP4qujrtteMrSBb0rc8HJ9Ms/GrXwcUtUtD5s4ewDJI8bT3Cz2zTVRMKtri49pLx2e0Ya8ziP5Ya2pZZw==}
@@ -12108,7 +12100,7 @@ snapshots:
 
   '@kong/sdk-portal-js@2.16.0':
     dependencies:
-      axios: 1.7.4
+      axios: 1.13.6
     transitivePeerDependencies:
       - debug
 
@@ -14413,14 +14405,6 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  axios@1.7.4:
-    dependencies:
-      follow-redirects: 1.15.11
-      form-data: 4.0.5
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-
   babel-code-frame@6.26.0:
     dependencies:
       chalk: 1.1.3
@@ -15646,10 +15630,6 @@ snapshots:
 
   dompurify@3.0.5: {}
 
-  dompurify@3.2.7:
-    optionalDependencies:
-      '@types/trusted-types': 2.0.7
-
   dompurify@3.3.2:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
@@ -15693,7 +15673,7 @@ snapshots:
     dependencies:
       '@one-ini/wasm': 0.1.1
       commander: 10.0.1
-      minimatch: 9.0.1
+      minimatch: 10.2.4
       semver: 7.7.4
 
   ee-first@1.1.1: {}
@@ -16438,12 +16418,6 @@ snapshots:
 
   forever-agent@0.6.1: {}
 
-  form-data@3.0.0:
-    dependencies:
-      asynckit: 0.4.0
-      combined-stream: 1.0.8
-      mime-types: 2.1.35
-
   form-data@4.0.5:
     dependencies:
       asynckit: 0.4.0
@@ -16985,7 +16959,7 @@ snapshots:
       commander: 2.20.3
       debug: 2.6.9
       event-stream: 3.3.4
-      form-data: 3.0.0
+      form-data: 4.0.5
       fs-readfile-promise: 2.0.1
       fs-writefile-promise: 1.0.3(mkdirp@1.0.4)
       har-validator: 5.1.5
@@ -18337,10 +18311,6 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.2
 
-  minimatch@9.0.1:
-    dependencies:
-      brace-expansion: 2.0.2
-
   minimatch@9.0.8:
     dependencies:
       brace-expansion: 5.0.3
@@ -18429,7 +18399,7 @@ snapshots:
 
   monaco-editor@0.55.1:
     dependencies:
-      dompurify: 3.2.7
+      dompurify: 3.3.2
       marked: 14.0.0
 
   mri@1.2.0: {}
@@ -20016,9 +19986,7 @@ snapshots:
     dependencies:
       type-fest: 0.20.2
 
-  serialize-javascript@6.0.2:
-    dependencies:
-      randombytes: 2.1.0
+  serialize-javascript@7.0.4: {}
 
   serve-index@1.9.1:
     dependencies:
@@ -20691,7 +20659,7 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.30
       jest-worker: 27.5.1
       schema-utils: 4.3.2
-      serialize-javascript: 6.0.2
+      serialize-javascript: 7.0.4
       terser: 5.43.1
       webpack: 5.104.1(webpack-cli@6.0.1)
 
