@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.6...@kong-ui-public/entities-vaults@4.4.7) (2026-03-24)
+
+
+### Bug Fixes
+
+* apply token-var-usage stylelint rule ([#2959](https://github.com/Kong/public-ui-components/issues/2959)) ([c35b1fc](https://github.com/Kong/public-ui-components/commit/c35b1fc62fb4ba839efc5bce5da0d113a8f019ff))
+
+
+
+
+
 ## [4.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.5...@kong-ui-public/entities-vaults@4.4.6) (2026-03-23)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
