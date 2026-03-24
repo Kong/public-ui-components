@@ -71,6 +71,7 @@ useProvideExperimentalFreeForms([
   'service-protection',
   'prometheus',
   'aws-lambda',
+  'exit-transformer',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({

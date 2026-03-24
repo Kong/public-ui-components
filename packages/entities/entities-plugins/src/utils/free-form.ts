@@ -46,6 +46,10 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
+  'exit-transformer': {
+    experimental: true,
+    component: 'ExitTransformerForm',
+  },
 } as const
 
 export type FreeFormName = keyof typeof mapping
