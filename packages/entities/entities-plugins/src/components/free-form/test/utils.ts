@@ -72,7 +72,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
         assertNumberLikeField({ fieldKey, fieldSchema, labelOption })
       }
     } else if (fieldSchema.type === 'map') {
-      assertKVField({ fieldKey, fieldSchema, labelOption })
+      assertMapField({ fieldKey, fieldSchema, labelOption })
     } else if (fieldSchema.type === 'array') {
       assertArrayField({ fieldKey, fieldSchema, labelOption })
     } else if (fieldSchema.type === 'set') {
@@ -304,46 +304,47 @@ export function assertFormRendering(schema: FormSchema, options?: {
     }
   }
 
-  const assertKVField: AssertFieldFn<MapFieldSchema> = ({
+  const assertMapField: AssertFieldFn<MapFieldSchema> = ({
     fieldKey,
     fieldSchema,
     labelOption,
   }) => {
     // Check wrapper element
-    cy.getTestId(`ff-kv-${fieldKey}`).should('exist')
+    cy.getTestId(`ff-map-${fieldKey}`).should('exist')
 
     // Check label
     assertLabel({ fieldKey, fieldSchema, labelOption })
 
     // Check if the content is initially existing
     if (fieldSchema.default && Object.keys(fieldSchema.default).length > 0) {
-      cy.getTestId(`ff-kv-container-${fieldKey}.0`).should('exist')
+      cy.getTestId(`ff-map-container-${fieldKey}.0`).should('exist')
     }
 
     // Check the 'add' button
-    cy.getTestId(`ff-kv-add-btn-${fieldKey}`)
+    cy.getTestId(`ff-map-add-btn-${fieldKey}`)
       .should('exist')
       .click()
 
 
-    cy.getTestId(`ff-kv-${fieldKey}`)
-      .find('.ff-kv-field-entry')
+    cy.getTestId(`ff-map-${fieldKey}`)
+      .find('[data-testid^="ff-map-container-"]')
       .its('length')
       .then((itemCount) => {
         const latestIndex = itemCount - 1
-        cy.getTestId(`ff-kv-container-${fieldKey}.${latestIndex}`).should('exist')
+        cy.getTestId(`ff-map-container-${fieldKey}.${latestIndex}`).should('exist')
 
         // Assert child fields
-        cy.getTestId(`ff-key-${fieldKey}.${latestIndex}`).should('exist')
-
-        cy.getTestId(`ff-value-${fieldKey}.${latestIndex}`).should('exist')
+        cy.getTestId(`ff-map-key-${fieldKey}.${latestIndex}`).should('exist')
+        cy.getTestId(`ff-map-container-${fieldKey}.${latestIndex}`)
+          .find(`[data-testid*="${fieldKey}.kid:"]`)
+          .should('exist')
 
         // Check the 'delete' button
-        cy.getTestId(`ff-kv-remove-btn-${fieldKey}.${latestIndex}`)
+        cy.getTestId(`ff-map-remove-btn-${fieldKey}.${latestIndex}`)
           .should('exist')
           .click()
 
-        cy.getTestId(`ff-kv-container-${fieldKey}.${latestIndex}`).should('not.exist')
+        cy.getTestId(`ff-map-container-${fieldKey}.${latestIndex}`).should('not.exist')
       })
   }
 

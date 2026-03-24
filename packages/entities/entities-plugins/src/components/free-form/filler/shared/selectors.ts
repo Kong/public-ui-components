@@ -35,6 +35,7 @@ export const selectors = {
 
   // MapField
   map: (path: string) => `[data-testid="ff-map-${path}"]`,
+  mapContainer: (path: string, index: number) => `[data-testid="ff-map-container-${path}.${index}"]`,
   mapKey: (path: string, index: number) => `[data-testid="ff-map-key-${path}.${index}"]`,
   mapRemoveBtns: (path: string) => `[data-testid^="ff-map-remove-btn-${path}"]`,
   mapRemoveBtn: (path: string, index: number) => `[data-testid="ff-map-remove-btn-${path}.${index}"]`,

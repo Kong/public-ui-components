@@ -1,17 +1,29 @@
-import type { MapFieldSchema } from '../../../../../types/plugins/form-schema'
-import type { HandlerOption } from './types'
+import type { MapHandlerOption } from './types'
 import { selectors } from '../../shared/selectors'
-import { defaultActionOptions } from './types'
 
-export function fillMap(option: HandlerOption<MapFieldSchema>): void {
-  const { fieldKey, value, actionOptions = defaultActionOptions } = option
+function extractKidId(testId: string | undefined, fieldKey: string): string {
+  if (!testId) {
+    throw new Error(`Unable to find map entry test id for "${fieldKey}"`)
+  }
+
+  const match = testId.match(/kid:\d+/)
+
+  if (!match) {
+    throw new Error(`Unable to extract map entry kid id from test id "${testId}"`)
+  }
+
+  return match[0]
+}
+
+export function fillMap(option: MapHandlerOption): void {
+  const { fieldKey, value, onFillEntry } = option
 
   // Clear existing entries
-  const kmRemoveBtnsSelector = selectors.kvRemoveBtns(fieldKey)
+  const mapRemoveBtnsSelector = selectors.mapRemoveBtns(fieldKey)
 
   const removeNext = () => {
     cy.get('body').then(($body) => {
-      const $btn = $body.find(kmRemoveBtnsSelector).first()
+      const $btn = $body.find(mapRemoveBtnsSelector).first()
       if ($btn.length > 0) {
         cy.wrap($btn).click()
         removeNext()
@@ -32,26 +44,17 @@ export function fillMap(option: HandlerOption<MapFieldSchema>): void {
   for (let i = 0; i < entries.length; i++) {
     const [key, val] = entries[i]
 
-    // Click add button for additional entries
-    const addBtnSelector = selectors.kvAddBtn(fieldKey)
-    cy.get(addBtnSelector).click()
+    cy.get(selectors.mapAddBtn(fieldKey)).click()
 
-    // Fill key
-    const keySelector = selectors.kvKey(fieldKey, i)
-    cy.get(keySelector).then(($el) => {
-      if (actionOptions.clear !== false) {
-        cy.wrap($el).clear(actionOptions.clear)
-      }
-      cy.wrap($el).type(String(key), actionOptions.type)
-    })
+    cy.get(selectors.mapKey(fieldKey, i)).clear({ force: true }).type(String(key), { force: true })
 
-    // Fill value
-    const valueSelector = selectors.kvValue(fieldKey, i)
-    cy.get(valueSelector).then(($el) => {
-      if (actionOptions.clear !== false) {
-        cy.wrap($el).clear(actionOptions.clear)
-      }
-      cy.wrap($el).type(String(val), actionOptions.type)
-    })
+    cy.get(selectors.mapContainer(fieldKey, i))
+      .find(`[data-testid*="${fieldKey}.kid:"]`)
+      .first()
+      .invoke('attr', 'data-testid')
+      .then((testId) => {
+        const kidId = extractKidId(testId, fieldKey)
+        onFillEntry(kidId, val)
+      })
   }
 }

@@ -52,7 +52,7 @@
         <EnhancedInput
           class="ff-map-field-fields-key"
           :data-key-input="index"
-          :data-testid="`ff-key-${field.path.value}.${index}`"
+          :data-testid="`ff-map-key-${field.path.value}.${index}`"
           :model-value="name"
           :placeholder="keyPlaceholder || 'Key'"
           @keydown.enter.prevent="focus(index)"

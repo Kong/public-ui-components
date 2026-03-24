@@ -107,6 +107,25 @@ export function getArrayItemInfo(
 }
 
 /**
+ * Get entry info for map iteration
+ */
+export function getMapEntryInfo(
+  fieldKey: string,
+  kidId: string,
+  ctx: FillerContext,
+): { entryKey: string, entrySchema: UnionFieldSchema } {
+  const entryKey = resolve(fieldKey, kidId)
+  const entryPath = generalizePath(entryKey, ctx.schemaMap)
+  const entrySchema = ctx.schemaMap[entryPath]
+
+  if (!entrySchema) {
+    throw new Error(`Map entry schema for "${entryKey}" not found in schema map`)
+  }
+
+  return { entryKey, entrySchema }
+}
+
+/**
  * Check if array item is a record that needs recursive filling
  */
 export function isRecordArrayItem(itemSchema: UnionFieldSchema): itemSchema is RecordFieldSchema {
