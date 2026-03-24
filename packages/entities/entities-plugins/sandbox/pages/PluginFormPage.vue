@@ -74,6 +74,9 @@ useProvideExperimentalFreeForms([
   'exit-transformer',
   'file-log',
   'http-log',
+  'request-transformer-advanced',
+  'response-transformer',
+  'response-transformer-advanced',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
