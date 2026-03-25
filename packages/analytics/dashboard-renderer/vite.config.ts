@@ -25,6 +25,8 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/analytics-utilities',
         '@kong-ui-public/analytics-geo-map',
         'swrv',
+        '@zumer/snapdom',
+        'jspdf',
       ],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
@@ -35,6 +37,8 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
           '@kong-ui-public/analytics-utilities': 'kong-ui-public-analytics-utilities',
           '@kong-ui-public/analytics-geo-map': 'kong-ui-public-analytics-geo-map',
           swrv: 'swrv',
+          '@zumer/snapdom': 'snapdom',
+          jspdf: 'jspdf',
         },
       },
     },

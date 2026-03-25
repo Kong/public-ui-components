@@ -21,6 +21,13 @@
         >
           Toggle fullscreen
         </KButton>
+        <KButton
+          appearance="primary"
+          size="small"
+          @click="exportPdf"
+        >
+          Export as PDF
+        </KButton>
         <KInputSwitch
           v-model="isToggled"
           :label="isToggled ? 'Custom styling' : 'Normal styling'"
@@ -65,14 +72,12 @@ import { DashboardRenderer } from '../../src'
 import { inject, ref } from 'vue'
 import type {
   DashboardConfig,
-  ExploreAggregations,
   TileConfig,
 } from '@kong-ui-public/analytics-utilities'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import type { Threshold } from '@kong-ui-public/analytics-chart'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
@@ -432,6 +437,10 @@ const refresh = () => {
 const toggleFullscreen = () => {
   dashboardRendererRef.value?.toggleFullscreen()
 }
+
+const exportPdf = () => {
+  dashboardRendererRef.value?.exportPdf({ filename: 'sandbox-dashboard' })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -440,9 +449,9 @@ h2 {
 }
 
 .controls {
-  align-itmes: center;
+  align-items: center;
   display: flex;
-  gap: $kui-space-50;
+  gap: var(--kui-space-50, $kui-space-50);
   margin: 10px 0;
 }
 
