@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.178.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.177.3...@kong-ui-public/entities-plugins@9.178.0) (2026-03-25)
+
+
+### Features
+
+* **entities-plugins:** group datakit node types in node selection panel ([#3035](https://github.com/Kong/public-ui-components/issues/3035)) ([8971857](https://github.com/Kong/public-ui-components/commit/89718579b882a2f670f6aa0467ac0f2096daeeaf))
+
+
+
+
+
 ## [9.177.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.177.2...@kong-ui-public/entities-plugins@9.177.3) (2026-03-24)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
