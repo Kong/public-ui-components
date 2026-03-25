@@ -112,11 +112,43 @@ export const useDatasourceConfigStore = defineStore('datasource-config', () => {
     return ({
       datasource,
       filters,
+      metrics = undefined,
     }: {
       datasource: string
       filters: AllFilters[]
+      metrics?: readonly string[]
     }): AllFilters[] => {
-      return filters.filter(filter => isFilterValidForDatasource.value({ datasource, filter }))
+      const filtered = filters.filter(filter => isFilterValidForDatasource.value({ datasource, filter }))
+
+      if (!metrics?.length) {
+        return filtered
+      }
+
+      // If metrics are provided, further filter the dimensions based on which dimensions are supported by the metric
+      const datasourceConfigEntry = datasourceConfigMap.value[datasource]
+      if (!datasourceConfigEntry) {
+        return filtered
+      }
+
+      const metricFields = metrics
+        .map(metric => datasourceConfigEntry.fieldsMap[metric])
+        .filter((field) => field !== undefined)
+
+      const fieldsWithSupportedDimensions = metricFields.filter((field) => {
+        return field.supportedDimensions !== undefined
+      })
+
+      const supportedDimensionSets: Array<Set<string>> = fieldsWithSupportedDimensions.map(field => new Set(field.supportedDimensions))
+
+      if (!supportedDimensionSets.length) {
+        return filtered
+      }
+
+      const supportedDimensions = supportedDimensionSets.reduce((intersection, dimensions) => {
+        return dimensions.intersection(intersection)
+      })
+
+      return filtered.filter(filter => supportedDimensions.has(filter.field))
     }
   })
 

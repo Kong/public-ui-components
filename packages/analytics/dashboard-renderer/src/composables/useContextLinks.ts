@@ -70,12 +70,13 @@ export default function useContextLinks(
 
   const datasourceScopedFilters = computed(() => {
     const filters = [...context.value.filters, ...definition.value.query.filters ?? []] as AllFilters[]
-
+    const metrics = definition.value.query.metrics
     const datasource = definition.value.query?.datasource ?? 'api_usage'
 
     return stripUnknownFilters.value({
       datasource,
       filters,
+      metrics,
     })
   })
 

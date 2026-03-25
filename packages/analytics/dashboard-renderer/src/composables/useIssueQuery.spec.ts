@@ -3,7 +3,7 @@ import { defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 import useIssueQuery from './useIssueQuery'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { AllFilters, AnalyticsBridge, DashboardRendererContextInternal, ValidDashboardQuery } from '@kong-ui-public/analytics-utilities'
+import type { AllFilters, AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
 vi.mock('@kong-ui-public/analytics-config-store', () => ({
@@ -29,10 +29,11 @@ const mountComposable = (queryBridge: AnalyticsBridge) => {
 
 describe('useIssueQuery', () => {
   const mockStore = {
-    stripUnknownFilters: ({ filters }: { filters: AllFilters[] }) => filters,
-  } as ReturnType<typeof useDatasourceConfigStore>
+    isReady: vi.fn().mockResolvedValue(undefined),
+    stripUnknownFilters: ({ filters }: { filters: AllFilters[] } ) => filters,
+  } as any
 
-  const context: DashboardRendererContextInternal = {
+  const context: any = {
     filters: [
       {
         field: 'gateway_service',
@@ -55,14 +56,14 @@ describe('useIssueQuery', () => {
     const queryFn = vi.fn().mockResolvedValue({})
     const wrapper = mountComposable({
       queryFn,
-    } as AnalyticsBridge)
+    } as any)
 
     await wrapper.vm.issueQuery({
       datasource: 'custom_datasource',
       metrics: [],
       dimensions: [],
       filters: [],
-    } as ValidDashboardQuery, context)
+    } as any, context)
 
     expect(queryFn).toHaveBeenCalledOnce()
     expect(queryFn.mock.calls[0][0]).toMatchObject({
@@ -84,13 +85,13 @@ describe('useIssueQuery', () => {
     const queryFn = vi.fn().mockResolvedValue({})
     const wrapper = mountComposable({
       queryFn,
-    } as AnalyticsBridge)
+    } as any)
 
     await wrapper.vm.issueQuery({
       metrics: [],
       dimensions: [],
       filters: [],
-    } as ValidDashboardQuery, context)
+    } as any, context)
 
     expect(queryFn).toHaveBeenCalledOnce()
     expect(queryFn.mock.calls[0][0]).toMatchObject({

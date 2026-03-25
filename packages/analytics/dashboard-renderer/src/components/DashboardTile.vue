@@ -180,7 +180,7 @@ import type {
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 
-import { type Component, computed, defineAsyncComponent, inject, nextTick, onMounted, readonly, ref, toRef, watch } from 'vue'
+import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
 import { formatTime, TimePeriods, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import '@kong-ui-public/analytics-chart/dist/style.css'
@@ -261,10 +261,6 @@ const {
   chartData: readonly(chartData),
   definition: readonly(toRef(props, 'definition')),
   context: readonly(toRef(props, 'context')),
-})
-
-onMounted(async () => {
-  await datasourceConfigStore.isReady()
 })
 
 const { issueQuery } = composables.useIssueQuery()
@@ -420,13 +416,14 @@ const agedOutWarning = computed(() => {
  */
 const datasourceScopedFilters = computed(() => {
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []] as AllFilters[]
-
+  const metrics = props.definition.query.metrics
   // TODO: default to api_usage until datasource is made required
   const datasource = props.definition?.query?.datasource ?? 'api_usage'
 
   return stripUnknownFilters.value({
     datasource,
     filters,
+    metrics,
   })
 })
 

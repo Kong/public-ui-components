@@ -75,6 +75,7 @@ function mountComposable({
   requestsBase = '#requests',
   chartType = 'line',
   datasource = 'api_usage',
+  metrics = ['request_count'],
   explicitGranularity,
   queryFilters = [],
   contextFilters = [],
@@ -87,6 +88,7 @@ function mountComposable({
   requestsBase?: string
   chartType?: string
   datasource?: string
+  metrics?: string[]
   explicitGranularity?: string | undefined
   queryFilters?: any[]
   contextFilters?: any[]
@@ -111,7 +113,7 @@ function mountComposable({
     chart: { type: chartType },
     query: {
       datasource,
-      metrics: ['request_count'],
+      metrics,
       dimensions: ['gateway_service'],
       filters: queryFilters,
       granularity: explicitGranularity,
@@ -149,18 +151,24 @@ describe('useContextLinks', () => {
     analyticsConfig.percentiles = true
     vi.mocked(useDatasourceConfigStore).mockReturnValue({
       stripUnknownFilters: ref(mockStripUnknownFilters),
+      loading: ref(false),
       isReady: vi.fn().mockResolvedValue(undefined),
     } as any)
   })
 
   it('waits for datasource config readiness before generating links', async () => {
     let resolveReady!: () => void
+    const loading = ref(true)
     const ready = new Promise<void>((resolve) => {
-      resolveReady = resolve
+      resolveReady = () => {
+        loading.value = false
+        resolve()
+      }
     })
 
     vi.mocked(useDatasourceConfigStore).mockReturnValueOnce({
       stripUnknownFilters: ref(mockStripUnknownFilters),
+      loading,
       isReady: vi.fn(() => ready),
     } as any)
 
@@ -202,6 +210,27 @@ describe('useContextLinks', () => {
     expect(parsed.granularity).toBe('minute')
     expect(params.get('d')).toBe('api_usage')
     expect(params.get('c')).toBe('line')
+  })
+
+  it('forwards metrics to filter stripping when generating dashboard links', async () => {
+    const stripUnknownFiltersSpy = vi.fn(mockStripUnknownFilters)
+    vi.mocked(useDatasourceConfigStore).mockReturnValueOnce({
+      stripUnknownFilters: ref(stripUnknownFiltersSpy),
+      loading: ref(false),
+      isReady: vi.fn().mockResolvedValue(undefined),
+    } as any)
+
+    const { wrapper } = mountComposable({
+      metrics: ['request_count', 'request_size'],
+    })
+
+    await flushPromises()
+    void wrapper.vm.exploreLinkKebabMenu
+
+    expect(stripUnknownFiltersSpy).toHaveBeenCalledWith(expect.objectContaining({
+      datasource: 'api_usage',
+      metrics: ['request_count', 'request_size'],
+    }))
   })
 
   it('falls back to chartData granularity via msToGranularity when query.granularity not set', async () => {
