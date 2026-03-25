@@ -9,34 +9,43 @@
       data-testid="page-layout-header"
     >
       <div class="page-header-container">
-        <KBreadcrumbs
-          v-if="breadcrumbs && breadcrumbs.length"
-          class="header-breadcrumbs"
-          data-testid="page-layout-breadcrumbs"
-          :items="breadcrumbs"
-        />
-        <div class="page-layout-title-container">
-          <component
-            :is="typeof backTo === 'string' ? 'a' : 'router-link'"
-            v-if="backTo"
-            class="navigate-back"
-            data-testid="page-layout-navigate-back"
-            :href="typeof backTo === 'string' ? backTo : undefined"
-            tabindex="0"
-            :to="typeof backTo === 'string' ? undefined : backTo"
-            @click.prevent="navigateBack()"
-            @keydown.enter.prevent="navigateBack()"
-            @keydown.space.prevent="navigateBack()"
-          >
-            <BackIcon :size="KUI_ICON_SIZE_30" />
-          </component>
-          <h1
-            v-if="title"
-            class="page-layout-title"
-            data-testid="page-layout-title"
-          >
-            {{ title }}
-          </h1>
+        <div class="page-header-start">
+          <KBreadcrumbs
+            v-if="breadcrumbs && breadcrumbs.length"
+            class="header-breadcrumbs"
+            data-testid="page-layout-breadcrumbs"
+            :items="breadcrumbs"
+          />
+          <div class="title-container">
+            <component
+              :is="typeof backTo === 'string' ? 'a' : 'router-link'"
+              v-if="backTo"
+              class="navigate-back"
+              data-testid="page-layout-navigate-back"
+              :href="typeof backTo === 'string' ? backTo : undefined"
+              tabindex="0"
+              :to="typeof backTo === 'string' ? undefined : backTo"
+              @click.prevent="navigateBack()"
+              @keydown.enter.prevent="navigateBack()"
+              @keydown.space.prevent="navigateBack()"
+            >
+              <ArrowTopLeftIcon :size="KUI_ICON_SIZE_30" />
+            </component>
+            <h1
+              v-if="title"
+              class="page-layout-title"
+              data-testid="page-layout-title"
+            >
+              {{ title }}
+            </h1>
+          </div>
+        </div>
+
+        <div
+          v-if="$slots.actions"
+          class="page-header-actions-container"
+        >
+          <slot name="actions" />
         </div>
       </div>
       <PageLayoutTabs
@@ -63,7 +72,7 @@ import { computed, ref, provide, inject, onUnmounted } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
-import { BackIcon } from '@kong/icons'
+import { ArrowTopLeftIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { useRouter } from 'vue-router'
 
@@ -146,56 +155,68 @@ onUnmounted(() => {
     gap: var(--kui-space-40, $kui-space-40);
 
     .page-header-container {
+      align-items: flex-end;
+      display: flex;
+      gap: var(--kui-space-30, $kui-space-30);
+      justify-content: space-between;
       padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 
-      .header-breadcrumbs {
-        &:deep(.breadcrumbs-item-container) {
-          // Override first breadcrumb padding left
-          &:first-child {
-            .breadcrumbs-item {
-              padding-left: var(--kui-space-0, $kui-space-0);
+      .page-header-start {
+        .header-breadcrumbs {
+          &:deep(.breadcrumbs-item-container) {
+            // Override first breadcrumb padding left
+            &:first-child {
+              .breadcrumbs-item {
+                padding-left: var(--kui-space-0, $kui-space-0);
+              }
+            }
+
+            // Override active (last) breadcrumb color
+            .breadcrumbs-item.active .breadcrumbs-text {
+              color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+            }
+          }
+        }
+
+        .title-container {
+          align-items: center;
+          display: flex;
+          gap: var(--kui-space-20, $kui-space-20);
+
+          .navigate-back {
+            background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+            border: none;
+            border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+            color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+            cursor: pointer;
+            outline: none;
+            padding: var(--kui-space-20, $kui-space-20);
+            transition: background-color 0.2s ease-in, color 0.2s ease-in;
+
+            &:hover {
+              color: var(--kui-color-text, $kui-color-text);
+            }
+
+            &:focus-visible {
+              box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
             }
           }
 
-          // Override active (last) breadcrumb color
-          .breadcrumbs-item.active .breadcrumbs-text {
-            color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+          .page-layout-title {
+            color: var(--kui-color-text, $kui-color-text);
+            font-size: var(--kui-font-size-50, $kui-font-size-50);
+            font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+            line-height: var(--kui-line-height-40, $kui-line-height-40);
+            margin: var(--kui-space-0, $kui-space-0);
           }
         }
       }
 
-      .page-layout-title-container {
-        align-items: center;
+      .page-header-actions-container {
+        align-items: flex-end;
         display: flex;
-        gap: var(--kui-space-20, $kui-space-20);
-
-        .navigate-back {
-          background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-          border: none;
-          border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-          color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-          cursor: pointer;
-          outline: none;
-          padding: var(--kui-space-30, $kui-space-30);
-          transition: background-color 0.2s ease-in, color 0.2s ease-in;
-
-          &:hover {
-            background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
-            color: var(--kui-color-text, $kui-color-text);
-          }
-
-          &:focus-visible {
-            box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
-          }
-        }
-
-        .page-layout-title {
-          color: var(--kui-color-text, $kui-color-text);
-          font-size: var(--kui-font-size-50, $kui-font-size-50);
-          font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-          line-height: var(--kui-line-height-40, $kui-line-height-40);
-          margin: var(--kui-space-0, $kui-space-0);
-        }
+        gap: var(--kui-space-30, $kui-space-30);
+        justify-content: flex-end;
       }
     }
 

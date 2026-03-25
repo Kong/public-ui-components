@@ -11,11 +11,7 @@
         appearance="secondary"
         icon
       >
-        <BookIcon />
-      </KButton>
-      <KButton>
-        Create
-        <ChevronDownIcon />
+        <MoreIcon />
       </KButton>
     </template>
   </PageLayout>
@@ -24,8 +20,7 @@
 <script setup lang="ts">
 import { PageLayout } from '../../src'
 import type { PageLayoutTab } from '../../src'
-import { ChevronDownIcon } from '@kong/icons'
-import { BookIcon } from '@kong/icons'
+import { MoreIcon } from '@kong/icons'
 
 const breadcrumbs = [{
   key: 'api-gateway',

@@ -18,4 +18,8 @@ export interface PageLayoutSlots {
    * Default slot for page content
    */
   default?(): any
+  /**
+   * Actions slot for page actions
+   */
+  actions?(): any
 }

@@ -56,6 +56,18 @@ describe('<PageLayout />', () => {
     cy.getTestId('page-layout-tabs').should('not.exist')
   })
 
+  it('renders content passed in through actions slot', () => {
+    const actionsTestId = 'page-layout-slotted-actions'
+    const actionsText = 'Actions'
+
+    cy.mount(PageLayout, {
+      props: { title: 'Test Page Title' },
+      slots: { actions: () => h('div', { 'data-testid': actionsTestId }, actionsText) },
+    })
+
+    cy.getTestId(actionsTestId).should('be.visible').and('contain.text', actionsText)
+  })
+
   describe('nested PageLayout detection', () => {
     it('hides its own header when a nested PageLayout is detected', () => {
       const parentTitle = 'Parent Title'
