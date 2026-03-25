@@ -110,8 +110,10 @@ const refreshCounter = ref(0)
 const gridLayoutRef = ref<ComponentPublicInstance<DraggableGridLayoutExpose<TileDefinition>> | null>(null)
 
 const dashboardContainer = ref()
-const layoutContainer = ref()
+const layoutContainer = ref<HTMLElement>()
 const scale = ref('scale(1)')
+
+const { exportPdf, exportState: pdfExportState } = composables.useExportPdf(layoutContainer)
 
 // Note: queryBridge is not directly used by the DashboardRenderer component.  It is required by many of the
 // subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
@@ -288,6 +290,8 @@ const { internalContext, queryReady } = composables.useDashboardInternalContext(
 defineExpose({
   refresh: refreshTiles,
   toggleFullscreen,
+  exportPdf,
+  pdfExportState,
 })
 </script>
 

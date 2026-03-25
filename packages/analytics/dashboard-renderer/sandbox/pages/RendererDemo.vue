@@ -21,6 +21,13 @@
         >
           Toggle fullscreen
         </KButton>
+        <KButton
+          appearance="primary"
+          size="small"
+          @click="exportPdf"
+        >
+          Export as PDF
+        </KButton>
         <KInputSwitch
           v-model="isToggled"
           :label="isToggled ? 'Custom styling' : 'Normal styling'"
@@ -461,6 +468,13 @@ const refresh = () => {
 
 const toggleFullscreen = () => {
   dashboardRendererRef.value?.toggleFullscreen()
+}
+
+const exportPdf = () => {
+  dashboardRendererRef.value?.exportPdf({
+    title: 'Sandbox Dashboard',
+    dashboardUrl: 'https://cloud.konghq.com/analytics/dashboards?ref=pdf',
+  })
 }
 </script>
 
