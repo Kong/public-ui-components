@@ -95,7 +95,7 @@
         </KClipboardProvider>
         <PermissionsWrapper :auth-function="() => canRetrieve(row)">
           <KDropdownItem
-            v-if="!isKonnectManagedRedisEnabled || row.partial"
+            v-if="!isKonnectManagedRedisEnabled || row.partial || (isKonnectManagedRedisEnabled && row.source === 'konnect-managed' && row.addOn)"
             data-testid="action-entity-view"
             has-divider
             :item="getViewDropdownItem(row.id)"
@@ -896,10 +896,15 @@ const clearFilter = (): void => {
   filterQuery.value = ''
 }
 
+/**
+ * Combined Konnect list only - Konnect app + FF + cloud gateway
+ * Otherwise caller does not use this. Navigate by partial id, or by add-on id for konnect-managed rows with no Koko partial yet
+ */
+const canNavigateCombinedKonnectRow = (row: EntityRow): boolean =>
+  Boolean(row.partial || (row.source === 'konnect-managed' && row.addOn))
+
 const rowClick = async (row: EntityRow): Promise<void> => {
-  // In combined Konnect-managed mode we can only navigate to details once the underlying Redis partial exists; placeholder rows from add-ons don't yet
-  // have a valid details route.
-  if (isKonnectManagedRedisEnabled.value && !row.partial) {
+  if (isKonnectManagedRedisEnabled.value && !canNavigateCombinedKonnectRow(row)) {
     return
   }
 

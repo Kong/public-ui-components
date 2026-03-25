@@ -493,6 +493,51 @@ describe('<RedisConfigurationList />', () => {
       cy.get('table').should('contain.text', 'Konnect-managed Redis (Terminating)')
     })
 
+    it('should offer View for konnect-managed rows backed only by an add-on and no Koko partial', () => {
+      const placeholderPartials = {
+        data: [
+          { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
+        ],
+        next: null,
+      }
+
+      const addOnsResponseTerminating = {
+        data: [
+          {
+            id: 'addon-unlinked',
+            name: 'unlinked-cache-row',
+            state: 'terminating',
+            config: { kind: 'managed-cache.v0', state_metadata: { cache_config_id: 'gone-partial-id' } },
+            owner: { control_plane_id: baseConfigKonnect.controlPlaneId },
+          },
+        ],
+      }
+
+      interceptList({ app: 'Konnect', body: placeholderPartials })
+      interceptLinkedPlugins({ app: 'Konnect' })
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons*',
+      }, {
+        statusCode: 200,
+        body: addOnsResponseTerminating,
+      }).as('getAddOns')
+
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+          canRetrieve: () => true,
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+
+      cy.getTestId('unlinked-cache-row').find('[data-testid="dropdown-trigger"]').click()
+      cy.getTestId('unlinked-cache-row-actions-dropdown-popover').find('[data-testid="action-entity-view"]').should('exist')
+    })
+
     it('should resolve managed-cache row when filtering by add-on id while Koko partial fetch 404s', () => {
       const placeholderPartials = {
         data: [
