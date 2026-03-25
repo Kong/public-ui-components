@@ -519,19 +519,42 @@ const fetchAllAddOns = async (): Promise<ManagedCacheAddOn[]> => {
 // Merged rows used to follow this order (partials, then placeholders, then unlinked add-ons), so items moved when
 // provisioning finished or during delete transitions. Sort by created_at when both rows have one (managed: add-on date, then
 // partial), then name, then id
+const parseSortTimestampToMs = (value: string | number | undefined | null): number | null => {
+  if (value == null || value === '') {
+    return null
+  }
+
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) {
+      return null
+    }
+    // Koko commonly returns unix seconds; Date uses ms. Treat <1e12 as seconds.
+    const ms = value < 1e12 ? value * 1000 : value
+
+    return Number.isFinite(ms) ? ms : null
+  }
+
+  const fromIso = Date.parse(value)
+
+  if (Number.isFinite(fromIso)) {
+    return fromIso
+  }
+
+  const asNum = Number(value)
+
+  return Number.isFinite(asNum) ? parseSortTimestampToMs(asNum) : null
+}
+
 const getRedisListRowSortTimeMs = (row: EntityRow): number | null => {
   const primary = row.addOn?.created_at
-  const fallback = typeof row.created_at === 'string' ? row.created_at : undefined
+  const created = row.created_at
+  const fallback = typeof created === 'string' || typeof created === 'number' ? created : undefined
   const candidates = row.addOn != null ? [primary, fallback] : [fallback]
 
   for (const value of candidates) {
-    if (typeof value !== 'string' || value === '') {
-      continue
-    }
+    const ms = parseSortTimestampToMs(value as string | number | undefined)
 
-    const ms = Date.parse(value)
-
-    if (Number.isFinite(ms)) {
+    if (ms != null) {
       return ms
     }
   }
