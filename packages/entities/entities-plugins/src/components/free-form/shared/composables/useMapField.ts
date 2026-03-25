@@ -1,14 +1,14 @@
 import { computed } from 'vue'
 import type { MaybeRefOrGetter } from 'vue'
-import { useField, useFormShared } from '../composables'
-import type { KeyId } from '../composables/key-id-map'
+import { useField, useFormShared } from '.'
+import type { KeyId } from './key-id-map'
 import { resolve, getName } from '../utils'
-import { replaceByDictionaryInFieldName } from '../composables'
+import { replaceByDictionaryInFieldName } from '.'
 
-export function useMapField(
+export function useMapField<T = unknown, K extends string = string>(
   name: MaybeRefOrGetter<string>,
 ) {
-  const { value: fieldValue, ...field } = useField<Record<KeyId, unknown>>(name)
+  const { value: fieldValue, ...field } = useField<Record<KeyId, T>>(name)
   const { getEmptyOrDefault, keyIdMap } = useFormShared()
 
   const keys = computed(() => {
@@ -16,14 +16,14 @@ export function useMapField(
 
     const ret = Object.keys(fieldValue.value || {}).map((key) => {
       const keyId = key as KeyId
-      const name = keyIdMap.getKey(keyId) ?? ''
+      const name = (keyIdMap.getKey(keyId) ?? '') as K
       return [keyId, name] as const
     })
 
     return ret
   })
 
-  function updateKey(keyId: KeyId, newKey: string) {
+  function updateKey(keyId: KeyId, newKey: K) {
     if (!fieldValue) return
 
     keyIdMap.updateKey(keyId, newKey)
@@ -40,6 +40,7 @@ export function useMapField(
       ...fieldValue.value,
       [newKeyId]: defaultValue,
     }
+    return newKeyId
   }
 
   function removeKey(keyId: KeyId) {
@@ -48,6 +49,10 @@ export function useMapField(
 
     const { [keyId]: _, ...rest } = fieldValue.value || {}
     fieldValue.value = rest
+  }
+
+  function getKeyName(keyId: KeyId): K | undefined {
+    return keyIdMap.getKey(keyId) as K | undefined
   }
 
   const fieldDisplayName = computed(() => {
@@ -63,5 +68,6 @@ export function useMapField(
     removeKey,
     field,
     fieldDisplayName,
+    getKeyName,
   }
 }

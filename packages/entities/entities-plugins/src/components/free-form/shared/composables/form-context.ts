@@ -140,9 +140,6 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       return serializeIfNeeded(getEmptyOrDefaultFromSchema<T>(path))
     }
 
-    ;(window as any).innerData = innerData
-    ;(window as any).getSchemaMap = schemaHelpers.getSchemaMap
-
     return {
       /**
        * The reactive form data object

@@ -153,8 +153,16 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
    */
   function getSchema(): FormSchema
   function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path: string): T | undefined
-  function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path?: string): T | UnionFieldSchema | undefined {
-    return path == null ? schemaValue : schemaMap.value?.[generalizePath(path, schemaMap.value)]
+  function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path?: string): T | FormSchema | undefined {
+    if (path) {
+      let generalizedPath = generalizePath(path, schemaMap.value || {})
+      if (generalizedPath.startsWith(`${utils.rootSymbol}${utils.separator}`)) {
+        // `$.config.field` -> `config.field`
+        generalizedPath = generalizedPath.slice(2)
+      }
+      return schemaMap.value?.[generalizedPath] as T | undefined
+    }
+    return schemaValue as FormSchema
   }
 
   /**

@@ -46,8 +46,6 @@ export function useKeyIdMap(
     store.clear()
   }
 
-  ; (window as any).keyIdMap = store // todo: remove me
-
   return {
     createKey,
     getKey,

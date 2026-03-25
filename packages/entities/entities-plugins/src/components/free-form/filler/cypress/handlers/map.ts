@@ -46,7 +46,8 @@ export function fillMap(option: MapHandlerOption): void {
 
     cy.get(selectors.mapAddBtn(fieldKey)).click()
 
-    cy.get(selectors.mapKey(fieldKey, i)).clear({ force: true }).type(String(key), { force: true })
+    cy.get(selectors.mapKey(fieldKey, i)).clear({ force: true })
+    cy.get(selectors.mapKey(fieldKey, i)).type(String(key), { force: true })
 
     cy.get(selectors.mapContainer(fieldKey, i))
       .find(`[data-testid*="${fieldKey}.kid:"]`)
