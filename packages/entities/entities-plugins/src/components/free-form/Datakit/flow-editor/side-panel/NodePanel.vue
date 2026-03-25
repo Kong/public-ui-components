@@ -15,7 +15,7 @@
     </h3>
     <div class="node-list">
       <section
-        v-for="group in CONFIG_NODE_PANEL_GROUPS"
+        v-for="group in nodePanelGroups"
         :key="group.id"
         class="node-group"
       >
@@ -50,10 +50,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, shallowRef, useId } from 'vue'
+import { computed, inject, nextTick, shallowRef, useId } from 'vue'
 import { VueFlow } from '@vue-flow/core'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
+import { FEATURE_FLAGS } from '../../../../../constants'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { useEditorStore } from '../store/store'
 import { CONFIG_NODE_PANEL_GROUPS } from '../node/node'
@@ -69,6 +70,14 @@ defineProps<{
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { createNode } = useEditorStore()
+const enableDatakitJwtNodes = inject<boolean>(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, false)
+const nodePanelGroups = computed(() => {
+  if (enableDatakitJwtNodes) {
+    return CONFIG_NODE_PANEL_GROUPS
+  }
+
+  return CONFIG_NODE_PANEL_GROUPS.filter(({ id }) => id !== 'authentication')
+})
 
 const previewId = `dk-drag-preview-${useId()}`
 
