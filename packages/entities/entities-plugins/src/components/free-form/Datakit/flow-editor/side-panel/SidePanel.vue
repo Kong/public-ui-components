@@ -114,7 +114,7 @@ onMounted(() => {
   }
 
   .node-panel {
-    margin-top: $kui-space-50;
+    margin-top: var(--kui-space-50, $kui-space-50);
   }
 }
 </style>
