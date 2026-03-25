@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@1.3.4...@kong-ui-public/analytics-config-store@1.3.5) (2026-03-25)
+
+
+### Bug Fixes
+
+* loosen metric dimension and filter dimension types in dashboard schema ([#3049](https://github.com/Kong/public-ui-components/issues/3049)) ([71a9cdd](https://github.com/Kong/public-ui-components/commit/71a9cdddbd9299418e4ee473e8654e88ccdaa134))
+
+
+
+
+
 ## [1.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@1.3.3...@kong-ui-public/analytics-config-store@1.3.4) (2026-03-23)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-config-store
