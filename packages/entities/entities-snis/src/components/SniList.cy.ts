@@ -819,4 +819,80 @@ describe('<SniList />', () => {
       cy.wait('@getSnisRefetch')
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('uses workspace-scoped URL when fetching with workspace', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/snis*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getWithWorkspace')
+
+      cy.mount(SniList, {
+        props: {
+          cacheIdentifier: `sni-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithWorkspace')
+      cy.get('.kong-ui-entities-snis-list').should('be.visible')
+    })
+
+    it('uses non-default workspace name in fetch URL', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'my-workspace' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/my-workspace/snis*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getWithMyWorkspace')
+
+      cy.mount(SniList, {
+        props: {
+          cacheIdentifier: `sni-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithMyWorkspace')
+      cy.get('.kong-ui-entities-snis-list').should('be.visible')
+    })
+
+    it('omits workspace segment when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/snis*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getNoWorkspace')
+
+      cy.mount(SniList, {
+        props: {
+          cacheIdentifier: `sni-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getNoWorkspace')
+      cy.get('.kong-ui-entities-snis-list').should('be.visible')
+    })
+  })
 })

@@ -851,4 +851,82 @@ describe('<ConsumerGroupForm />', () => {
       cy.get('@onUpdateSpy').should('have.been.calledWith', expectedOutput)
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    const groupId = '973ed6f2-3da6-4dfb-8bd5-e4235b726bd5'
+
+    it('includes workspace in POST URL when creating with workspace config', () => {
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumers*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumer_groups`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createGroupWithWorkspace')
+
+      cy.mount(ConsumerGroupForm, {
+        props: { config: { ...konnectConfig, workspace: 'default' } },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createGroupWithWorkspace')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumers*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumer_groups/${groupId}` },
+        { statusCode: 200, body: { item: { id: groupId, name: 'test', tags: [] } } },
+      ).as('getGroupWithWorkspace')
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumer_groups/${groupId}/consumers*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getConsumersWithWorkspace')
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumer_groups/${groupId}`,
+        },
+        { statusCode: 200, body: {} },
+      ).as('updateGroupWithWorkspace')
+
+      cy.mount(ConsumerGroupForm, {
+        props: { config: { ...konnectConfig, workspace: 'default' }, consumerGroupId: groupId },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getGroupWithWorkspace')
+      cy.wait('@getConsumersWithWorkspace')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@updateGroupWithWorkspace')
+    })
+
+    it('omits workspace segment in POST URL when workspace is not provided', () => {
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/consumers*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/consumer_groups`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createGroupNoWorkspace')
+
+      cy.mount(ConsumerGroupForm, {
+        props: { config: konnectConfig },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createGroupNoWorkspace')
+    })
+  })
 })
