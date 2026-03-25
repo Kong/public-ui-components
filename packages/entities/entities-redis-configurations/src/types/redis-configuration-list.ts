@@ -80,6 +80,7 @@ export interface ManagedCacheAddOn {
     cache_config_id?: string
   }
   state?: string
+  created_at?: string
 }
 
 export interface CopyEventPayload {

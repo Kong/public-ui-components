@@ -516,6 +516,64 @@ const fetchAllAddOns = async (): Promise<ManagedCacheAddOn[]> => {
   return allAddOns
 }
 
+// Merged rows used to follow this order (partials, then placeholders, then unlinked add-ons), so items moved when
+// provisioning finished or during delete transitions. Sort by created_at when both rows have one (managed: add-on date, then
+// partial), then name, then id
+const getRedisListRowSortTimeMs = (row: EntityRow): number | null => {
+  const primary = row.addOn?.created_at
+  const fallback = typeof row.created_at === 'string' ? row.created_at : undefined
+  const candidates = row.addOn != null ? [primary, fallback] : [fallback]
+
+  for (const value of candidates) {
+    if (typeof value !== 'string' || value === '') {
+      continue
+    }
+
+    const ms = Date.parse(value)
+
+    if (Number.isFinite(ms)) {
+      return ms
+    }
+  }
+
+  return null
+}
+
+const compareRedisListRows = (rowA: EntityRow, rowB: EntityRow): number => {
+  const sortTimeMsA = getRedisListRowSortTimeMs(rowA)
+  const sortTimeMsB = getRedisListRowSortTimeMs(rowB)
+
+  if (sortTimeMsA != null && sortTimeMsB != null && sortTimeMsA !== sortTimeMsB) {
+    return sortTimeMsA - sortTimeMsB
+  }
+
+  const nameA = (rowA.name ?? rowA.id ?? '').toLocaleLowerCase()
+  const nameB = (rowB.name ?? rowB.id ?? '').toLocaleLowerCase()
+  const byName = nameA.localeCompare(nameB)
+
+  if (byName !== 0) {
+    return byName
+  }
+
+  return String(rowA.id ?? '').localeCompare(String(rowB.id ?? ''))
+}
+
+const pickAddOnFieldsForLinkedRow = (addOn: ManagedCacheAddOn) => ({
+  id: addOn.id,
+  config: addOn.config,
+  state: addOn.state,
+  created_at: addOn.created_at,
+})
+
+// List row backed only by a managed-cache add-on (provisioning or unlinked after partial disappeared)
+const konnectManagedRowFromAddOn = (addOn: ManagedCacheAddOn): EntityRow => ({
+  id: addOn.id,
+  name: addOn.name ?? addOn.id,
+  source: 'konnect-managed',
+  partial: undefined,
+  addOn,
+})
+
 // The partials endpoint returns every partial type, keep only redis rows in this list
 const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse> => {
   // Legacy Konnect/ KM: use the existing partials-only fetcher
@@ -599,11 +657,7 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
           name: matchingAddOn.name ?? partial.name,
           source,
           partial,
-          addOn: {
-            id: matchingAddOn.id,
-            config: matchingAddOn.config,
-            state: matchingAddOn.state,
-          },
+          addOn: pickAddOnFieldsForLinkedRow(matchingAddOn),
         }]
       }
 
@@ -636,13 +690,7 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
       return true
     })
 
-    const placeholderRows: EntityRow[] = initializingAddOns.map((addOn) => ({
-      id: addOn.id,
-      name: addOn.name ?? addOn.id,
-      source: 'konnect-managed',
-      partial: undefined,
-      addOn,
-    }))
+    const placeholderRows: EntityRow[] = initializingAddOns.map(konnectManagedRowFromAddOn)
 
     // If an add-on still exists but its linked partial is no longer returned by Koko,
     // keep showing the add-on row so the list doesn't look empty during BE lag
@@ -660,13 +708,7 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
 
         return !partialIds.has(cacheConfigId)
       })
-      .map((addOn) => ({
-        id: addOn.id,
-        name: addOn.name ?? addOn.id,
-        source: 'konnect-managed',
-        partial: undefined,
-        addOn,
-      }))
+      .map(konnectManagedRowFromAddOn)
 
     let allRows = [...rows, ...placeholderRows, ...unlinkedAddOnRows]
 
@@ -674,6 +716,8 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
       // When a search string is present, only keep rows where the search string matches one of these- partial id, add-on id, or cache_config_id
       allRows = allRows.filter((row) => doesRowMatchExactListSearch(row, filterQueryTrimmed))
     }
+
+    allRows.sort(compareRedisListRows)
 
     // Keep row state labels fresh while any managed add-on is in non-ready state
     managedAddOnStateById.value = addOns.reduce((acc, addOn) => {
