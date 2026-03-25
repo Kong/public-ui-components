@@ -91,7 +91,7 @@ const router = useRouter()
 
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
-const navigateBack = () => {
+const navigateBack = async () => {
   // If not a string (a RouteLocationRaw)
   if (typeof backTo !== 'string') {
     router.push(backTo!)
@@ -104,7 +104,7 @@ const navigateBack = () => {
     return
   }
 
-  navigateTo(backTo)
+  await navigateTo(backTo)
 }
 
 /**
