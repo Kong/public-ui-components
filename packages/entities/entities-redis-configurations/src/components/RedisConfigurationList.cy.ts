@@ -363,7 +363,7 @@ describe('<RedisConfigurationList />', () => {
       cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').should('exist')
     })
 
-    it('should display Cloud Gateways add-on state for konnect-managed placeholder rows', () => {
+    it('should show Konnect-managed Redis type for placeholder rows in Type column', () => {
       const placeholderPartials = {
         data: [
           { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
@@ -403,10 +403,10 @@ describe('<RedisConfigurationList />', () => {
       cy.wait('@getAddOns')
 
       cy.getTestId('initializing cloud').should('be.visible')
-      cy.get('table').should('contain.text', 'Konnect-managed Redis (Initializing)')
+      cy.get('table').should('contain.text', 'Konnect-managed Redis')
     })
 
-    it('should not display a state suffix when konnect-managed add-on is ready', () => {
+    it('should show Konnect-managed Redis type when add-on is ready', () => {
       const placeholderPartials = {
         data: [
           { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
@@ -448,49 +448,6 @@ describe('<RedisConfigurationList />', () => {
       cy.getTestId('ready cloud').should('be.visible')
       cy.get('table').should('contain.text', 'Konnect-managed Redis')
       cy.get('table').should('not.contain.text', '(Ready)')
-    })
-
-    it('should display terminating state suffix for konnect-managed placeholders', () => {
-      const placeholderPartials = {
-        data: [
-          { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
-        ],
-        next: null,
-      }
-
-      const addOnsResponseTerminating = {
-        data: [
-          {
-            id: 'addon-789',
-            name: 'terminating cloud',
-            state: 'terminating',
-            config: { kind: 'managed-cache.v0' },
-          },
-        ],
-      }
-
-      interceptList({ app: 'Konnect', body: placeholderPartials })
-      interceptLinkedPlugins({ app: 'Konnect' })
-      cy.intercept({
-        method: 'GET',
-        url: '**/v2/cloud-gateways/add-ons*',
-      }, {
-        statusCode: 200,
-        body: addOnsResponseTerminating,
-      }).as('getAddOns')
-
-      cy.mount(RedisConfigurationList, {
-        props: {
-          config: getCombinedListConfig(),
-          cacheIdentifier: uuidv4(),
-        },
-      })
-
-      cy.wait('@getRedisConfigurations')
-      cy.wait('@getAddOns')
-
-      cy.getTestId('terminating cloud').should('be.visible')
-      cy.get('table').should('contain.text', 'Konnect-managed Redis (Terminating)')
     })
 
     it('should offer View for konnect-managed rows backed only by an add-on and no Koko partial', () => {

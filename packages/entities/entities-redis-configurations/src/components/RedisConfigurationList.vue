@@ -742,24 +742,6 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
 
     allRows.sort(compareRedisListRows)
 
-    // Keep row state labels fresh while any managed add-on is in non-ready state
-    managedAddOnStateById.value = addOns.reduce((acc, addOn) => {
-      const state = typeof addOn.state === 'string' ? addOn.state : ''
-
-      if (!isTransitionalManagedCacheState(state)) {
-        return acc
-      }
-
-      acc[addOn.id] = state
-      const cacheConfigId = getCacheConfigId(addOn)
-
-      if (cacheConfigId) {
-        acc[cacheConfigId] = state
-      }
-
-      return acc
-    }, {} as Record<string, string>)
-
     const transitionalAddOnsExist = addOns.some((addOn) => isTransitionalManagedCacheState(addOn.state))
 
     if (transitionalAddOnsExist) scheduleNextPoll()
@@ -771,7 +753,6 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
     }
   } catch (error: any) {
     clearPolling()
-    managedAddOnStateById.value = {}
     errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
     emit('error', error)
     return { data: [], total: 0 }
@@ -1010,7 +991,6 @@ const POLL_RANDOM_DELAY_RATIO = 0.2
 const pollTimeoutId = ref<ReturnType<typeof setTimeout> | null>(null)
 const pollStartAt = ref<number | null>(null)
 const currentPollDelayMs = ref<number>(POLL_INITIAL_DELAY_MS)
-const managedAddOnStateById = ref<Record<string, string>>({})
 
 const clearPolling = (): void => {
   if (pollTimeoutId.value) {
@@ -1019,7 +999,6 @@ const clearPolling = (): void => {
   }
   pollStartAt.value = null
   currentPollDelayMs.value = POLL_INITIAL_DELAY_MS
-  managedAddOnStateById.value = {}
 }
 
 const pollManagedAddOnsState = async (): Promise<void> => {
@@ -1028,7 +1007,6 @@ const pollManagedAddOnsState = async (): Promise<void> => {
 
   // Keep polling while any managed add-on is in non-ready state
   let transitionalAddOnsExist = false
-  const nextStateById: Record<string, string> = {}
 
   try {
     const addOns = await fetchAllAddOns()
@@ -1043,22 +1021,6 @@ const pollManagedAddOnsState = async (): Promise<void> => {
     })
 
     transitionalAddOnsExist = relevantAddOns.some((addOn) => isTransitionalManagedCacheState(addOn.state))
-
-    for (const addOn of relevantAddOns) {
-      const state = typeof addOn.state === 'string' ? addOn.state : ''
-      if (!isTransitionalManagedCacheState(state)) {
-        continue
-      }
-
-      nextStateById[addOn.id] = state
-      const cacheConfigId = getCacheConfigId(addOn)
-
-      if (cacheConfigId) {
-        nextStateById[cacheConfigId] = state
-      }
-    }
-
-    managedAddOnStateById.value = nextStateById
   } catch (error: any) {
     // Stop polling and surface error if we can't refresh state
     clearPolling()
@@ -1131,12 +1093,6 @@ const getRedisTypeLabelFromPartial = (fields: RedisConfigurationFields): string 
   }
 }
 
-const formatManagedCacheState = (state: string): string => {
-  const normalized = state.trim().replace(/[_-]+/g, ' ')
-  const words = normalized.split(/\s+/).filter(Boolean)
-  return words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')
-}
-
 const isReadyManagedCacheState = (state: string): boolean => {
   const cacheState = state.trim().toLowerCase()
   // Managed-cache add-on states: initializing/ready/terminating
@@ -1153,24 +1109,8 @@ const isTransitionalManagedCacheState = (state?: string): boolean => {
 
 const renderRedisType = (item: RedisConfigurationFields | EntityRow): string | undefined => {
   const row = item as EntityRow
-  // Konnect-managed row- display the add-on's state while it is non-ready
-  // Applies to both placeholder rows (no partial yet) and linked rows (partial already exists)
   if (isKonnectManagedRedisEnabled.value && row.source === 'konnect-managed') {
-    const mappedState = managedAddOnStateById.value[row.id]
-    const state = (typeof mappedState === 'string' && mappedState.trim() !== '')
-      ? mappedState
-      : row.addOn?.state
-
-    // Fallback in case state is missing
-    if (typeof state !== 'string' || state.trim() === '') {
-      return t('list.type.konnect_managed_redis_initializing')
-    }
-
-    if (isReadyManagedCacheState(state)) {
-      return t('list.type.konnect_managed_redis')
-    }
-
-    return `${t('list.type.konnect_managed_redis')} (${formatManagedCacheState(state)})`
+    return t('list.type.konnect_managed_redis')
   }
 
   const fields = row.partial ?? item
