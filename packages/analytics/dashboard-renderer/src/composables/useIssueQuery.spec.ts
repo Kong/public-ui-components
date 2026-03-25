@@ -3,7 +3,12 @@ import { defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 import useIssueQuery from './useIssueQuery'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { AnalyticsBridge, DashboardRendererContextInternal, ValidDashboardQuery } from '@kong-ui-public/analytics-utilities'
+import type { AllFilters, AnalyticsBridge, DashboardRendererContextInternal, ValidDashboardQuery } from '@kong-ui-public/analytics-utilities'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
+
+vi.mock('@kong-ui-public/analytics-config-store', () => ({
+  useDatasourceConfigStore: vi.fn(),
+}))
 
 const mountComposable = (queryBridge: AnalyticsBridge) => {
   const wrapper = mount(defineComponent({
@@ -23,6 +28,10 @@ const mountComposable = (queryBridge: AnalyticsBridge) => {
 }
 
 describe('useIssueQuery', () => {
+  const mockStore = {
+    stripUnknownFilters: ({ filters }: { filters: AllFilters[] }) => filters,
+  } as ReturnType<typeof useDatasourceConfigStore>
+
   const context: DashboardRendererContextInternal = {
     filters: [
       {
@@ -41,7 +50,8 @@ describe('useIssueQuery', () => {
     zoomable: false,
   }
 
-  it('falls back to api_usage for unknown datasources', async () => {
+  it('passes through unknown datasources as-is', async () => {
+    vi.mocked(useDatasourceConfigStore).mockReturnValue(mockStore)
     const queryFn = vi.fn().mockResolvedValue({})
     const wrapper = mountComposable({
       queryFn,
@@ -56,7 +66,7 @@ describe('useIssueQuery', () => {
 
     expect(queryFn).toHaveBeenCalledOnce()
     expect(queryFn.mock.calls[0][0]).toMatchObject({
-      datasource: 'api_usage',
+      datasource: 'custom_datasource',
       query: {
         filters: [
           {
@@ -70,6 +80,7 @@ describe('useIssueQuery', () => {
   })
 
   it('keeps the basic fallback when datasource is omitted', async () => {
+    vi.mocked(useDatasourceConfigStore).mockReturnValue(mockStore)
     const queryFn = vi.fn().mockResolvedValue({})
     const wrapper = mountComposable({
       queryFn,

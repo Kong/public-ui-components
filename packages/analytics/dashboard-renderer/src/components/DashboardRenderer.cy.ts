@@ -5,6 +5,7 @@ import type {
   AnalyticsConfigV2,
   DashboardConfig,
   DatasourceAwareQuery,
+  DatasourceConfig,
   ExploreFilterAll,
   ExploreResultV4,
   TileConfig,
@@ -37,6 +38,70 @@ interface MockOptions {
   shortRetention?: boolean
   renderEntityLink?: boolean
 }
+
+const mockDatasourceConfig: DatasourceConfig[] = [
+  {
+    name: 'api_usage',
+    showInUI: true,
+    fields: [
+      {
+        name: 'api_product',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'control_plane',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'gateway_service',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'route',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'status_code',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+    ],
+  },
+]
 
 describe('<DashboardRenderer />', () => {
   beforeEach(() => {
@@ -120,7 +185,7 @@ describe('<DashboardRenderer />', () => {
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
-      datasourceConfigFn: () => Promise.resolve([]),
+      datasourceConfigFn: () => Promise.resolve(mockDatasourceConfig),
       evaluateFeatureFlagFn,
       fetchComponent: opts?.renderEntityLink ? fetchComponentFn : undefined,
     }

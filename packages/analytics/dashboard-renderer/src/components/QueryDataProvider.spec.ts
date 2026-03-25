@@ -4,6 +4,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 
 import QueryDataProvider from './QueryDataProvider.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
 const swrvData = ref<any>(undefined)
 const swrvError = ref<any>(null)
@@ -27,9 +28,16 @@ vi.mock('swrv', () => ({
   }),
 }))
 
+vi.mock('@kong-ui-public/analytics-config-store', () => ({
+  useDatasourceConfigStore: vi.fn(),
+}))
+
 describe('QueryDataProvider', () => {
   beforeEach(() => {
     resetSwrvState()
+    vi.mocked(useDatasourceConfigStore).mockReturnValue({
+      stripUnknownFilters: ({ filters }: { filters: any[] }) => filters,
+    } as any)
   })
 
   it('shows fallback error message when queryError is null', async () => {

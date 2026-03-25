@@ -37,7 +37,9 @@ export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<strin
   platform: new Set(),
 } as const
 
-// Utility for stripping unknown filters
+/**
+ * @deprecated Use `useDatasourceConfigStore().stripUnknownFilters` from `@kong-ui-public/analytics-config-store`.
+ */
 export const stripUnknownFilters = <K extends keyof typeof datasourceToFilterableDimensions>(datasource: K, filters: AllFilters[]): Array<FilterTypeMap[K]> => {
   if (datasource.startsWith('goap')) {
     // We currently can't determine the type for goap datasources as it could be

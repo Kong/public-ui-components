@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, inject, ref, watch } from 'vue'
 import { INJECT_QUERY_PROVIDER } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsBridge, DatasourceConfig, Field } from '@kong-ui-public/analytics-utilities'
+import type { AllFilters, AnalyticsBridge, DatasourceConfig, Field } from '@kong-ui-public/analytics-utilities'
 
 export type MappedDatasourceConfig = DatasourceConfig & {
   fieldsMap: Record<string, Field>
@@ -76,12 +76,51 @@ export const useDatasourceConfigStore = defineStore('datasource-config', () => {
     }
   })
 
+  const isFilterValidForDatasource = computed(() => {
+    return ({
+      datasource,
+      filter,
+    }: {
+      datasource: string
+      filter: AllFilters
+    }): boolean => {
+      const datasourceConfigEntry = datasourceConfigMap.value[datasource]
+
+      // If we doing find a datasource config entry, assume it's a goap one for now.
+      if (!datasourceConfigEntry) {
+        return true
+      }
+
+      const field = datasourceConfigEntry.fieldsMap[filter.field]
+
+      if (!field?.filter) {
+        return false
+      }
+
+      return field.filter.operators.flatMap(operator => operator.ops).includes(filter.operator)
+    }
+  })
+
+  const stripUnknownFilters = computed(() => {
+    return ({
+      datasource,
+      filters,
+    }: {
+      datasource: string
+      filters: AllFilters[]
+    }): AllFilters[] => {
+      return filters.filter(filter => isFilterValidForDatasource.value({ datasource, filter }))
+    }
+  })
+
   return {
     datasourceConfig,
     datasourceConfigError,
     datasourceConfigMap,
     getFieldDataSources,
+    isFilterValidForDatasource,
     loading,
     isReady,
+    stripUnknownFilters,
   }
 })

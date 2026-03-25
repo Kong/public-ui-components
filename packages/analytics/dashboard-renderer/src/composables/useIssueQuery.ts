@@ -1,30 +1,23 @@
 import {
   type AllFilters, type AnalyticsBridge, type DatasourceAwareQuery, type ExploreFilterAll, type ExploreQuery,
-  type FilterTypeMap,
-  queryDatasources, type QueryDatasource, stripUnknownFilters, type TimeRangeV4,
+  type TimeRangeV4,
   type ValidDashboardQuery,
 } from '@kong-ui-public/analytics-utilities'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import type { DashboardRendererContextInternal } from '../types'
 import { inject, onUnmounted } from 'vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 
-const deriveFilters = <D extends QueryDatasource>(datasource: D, queryFilters: Array<FilterTypeMap[D]> | undefined, contextFilters: AllFilters[]): Array<FilterTypeMap[D]> => {
-  const mergedFilters: Array<FilterTypeMap[D]> = []
-
-  if (queryFilters) {
-    // The filters from the query should be safe -- as in, validated to be compatible
-    // with the chosen endpoint.
-    mergedFilters.push(...queryFilters)
-  }
-
-  // The contextual filters may not be compatible and need to be pruned.
-  mergedFilters.push(...stripUnknownFilters(datasource, contextFilters))
-
-  return mergedFilters
+type DatasourceConfigStore = ReturnType<typeof useDatasourceConfigStore> & {
+  stripUnknownFilters: (opts: {
+    datasource: string
+    filters: AllFilters[]
+  }) => AllFilters[]
 }
 
 export default function useIssueQuery() {
   const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
+  const datasourceConfigStore = useDatasourceConfigStore() as DatasourceConfigStore
 
   // Ensure that any pending requests are canceled on unmount.
   const abortController = new AbortController()
@@ -32,7 +25,6 @@ export default function useIssueQuery() {
   onUnmounted(() => {
     abortController.abort()
   })
-
 
   const issueQuery = async (query: ValidDashboardQuery, context: DashboardRendererContextInternal, limitOverride?: number) => {
     if (!queryBridge) {
@@ -45,11 +37,21 @@ export default function useIssueQuery() {
       ...rest
     } = query
 
-    const datasource = originalDatasource
-      ? (queryDatasources.includes(originalDatasource as QueryDatasource) ? originalDatasource as QueryDatasource : 'api_usage')
-      : 'basic'
+    const datasource = originalDatasource || 'basic'
 
-    const mergedFilters = deriveFilters(datasource, query.filters as Array<FilterTypeMap[typeof datasource]>, context.filters)
+    const mergedFilters: AllFilters[] = []
+
+    if (query.filters) {
+      // The filters from the query should be safe -- as in, validated to be compatible
+      // with the chosen endpoint.
+      mergedFilters.push(...query.filters as AllFilters[])
+    }
+
+    // The contextual filters may not be compatible and need to be pruned.
+    mergedFilters.push(...datasourceConfigStore.stripUnknownFilters({
+      datasource,
+      filters: context.filters,
+    }))
 
     // TODO: the cast is necessary because TimeRangeV4 specifies date objects for absolute time ranges.
     // If they're coming from a definition, they're strings; should clean this up as part of the dashboard type work.

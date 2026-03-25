@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { App } from 'vue'
 import { nextTick } from 'vue'
-import type { DatasourceConfig } from '@kong-ui-public/analytics-utilities'
+import type { AllFilters, DatasourceConfig } from '@kong-ui-public/analytics-utilities'
 import { useDatasourceConfigStore } from '../datasource-config'
 import { setupPiniaTestStore } from './setupPiniaTestStore'
 
@@ -153,5 +153,118 @@ describe('useDatasourceConfigStore', () => {
     await store.isReady()
     expect(store.loading).toBe(false)
     expect(store.datasourceConfig).toEqual([])
+  })
+
+  describe('isFilterValidForDatasource', () => {
+    it('returns true for a valid filter', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filter = {
+        field: 'status_code',
+        operator: 'in',
+        value: ['200'],
+      } as AllFilters
+
+      expect(store.isFilterValidForDatasource({ datasource: 'api_usage', filter })).toBe(true)
+    })
+
+    it('returns false when the field is not in the datasource', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filter = {
+        field: 'route',
+        operator: 'in',
+        value: ['route-id'],
+      } as AllFilters
+
+      expect(store.isFilterValidForDatasource({ datasource: 'api_usage', filter })).toBe(false)
+    })
+
+    it('returns false when the field has no filter config', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filter = {
+        field: 'request_count',
+        operator: 'in',
+        value: ['200'],
+      } as AllFilters
+
+      expect(store.isFilterValidForDatasource({ datasource: 'api_usage', filter })).toBe(false)
+    })
+
+    it('returns false when the operator is not supported', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filter = {
+        field: 'status_code',
+        operator: '=',
+        value: ['200'],
+      } as AllFilters
+
+      expect(store.isFilterValidForDatasource({ datasource: 'api_usage', filter })).toBe(false)
+    })
+
+    it('returns true for unknown datasources', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filter = {
+        field: 'unknown_field',
+        operator: 'in',
+        value: ['value'],
+      } as AllFilters
+
+      expect(store.isFilterValidForDatasource({ datasource: 'goap_test', filter })).toBe(true)
+    })
+  })
+
+  describe('stripUnknownFilters', () => {
+    it('removes invalid filters and keeps valid ones', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const validFilter = {
+        field: 'status_code',
+        operator: 'in',
+        value: ['200'],
+      } as AllFilters
+
+      const invalidFilter = {
+        field: 'request_count',
+        operator: 'in',
+        value: ['200'],
+      } as AllFilters
+
+      const result = store.stripUnknownFilters({
+        datasource: 'api_usage',
+        filters: [invalidFilter, validFilter],
+      })
+
+      expect(result).toEqual([validFilter])
+    })
+
+    it('keeps all filters for unknown datasources', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filters = [
+        {
+          field: 'status_code',
+          operator: 'in',
+          value: ['200'],
+        },
+        {
+          field: 'unknown_field',
+          operator: 'in',
+          value: ['value'],
+        },
+      ] as AllFilters[]
+
+      expect(store.stripUnknownFilters({ datasource: 'goap_test', filters })).toEqual(filters)
+    })
   })
 })

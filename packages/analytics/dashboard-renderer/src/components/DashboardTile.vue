@@ -513,18 +513,11 @@ const onBoundsChange = (e: Array<[number, number]>) => {
 }
 
 const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
-  const filters = datasourceScopedFilters.value as AllFilters[]
+  const filters = datasourceScopedFilters.value
   const exploreQuery = buildExploreQuery(newTimeRange, filters)
 
   exploreLinkZoomActions.value = canGenerateExploreLink.value ? { href: buildExploreLink(exploreQuery as ExploreQuery | AiExploreQuery) } : undefined
-
-  if (!canGenerateRequestsLink.value) {
-    requestsLinkZoomActions.value = undefined
-    return
-  }
-
-  const requestsQuery = buildRequestsQueryZoomActions(newTimeRange, filters)
-  requestsLinkZoomActions.value = { href: buildRequestLink(requestsQuery) }
+  requestsLinkZoomActions.value = canGenerateRequestsLink.value ? { href: buildRequestLink(buildRequestsQueryZoomActions(newTimeRange, filters)) } : undefined
 }
 
 defineExpose({ getExportData })
