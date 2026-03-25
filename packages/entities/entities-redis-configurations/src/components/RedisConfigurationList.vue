@@ -390,6 +390,90 @@ const isManagedCacheAddOn = (addOn: ManagedCacheAddOn): boolean => {
 const isTerminatingState = (state?: string): boolean =>
   typeof state === 'string' && state.trim().toLowerCase() === 'terminating'
 
+// Fetch one managed-cache add-on by id - use this when the user searches by add-on id (while cache is still provisioning) and Koko doesn't have a partial for that id
+const fetchManagedAddOnById = async (managedCacheAddOnId: string): Promise<ManagedCacheAddOn | null> => {
+  const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+  const singleAddOnUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons/${encodeURIComponent(managedCacheAddOnId)}`
+
+  try {
+    const addOnResponse = await axiosInstance.get(singleAddOnUrl)
+    const addOnData = addOnResponse.data
+
+    const parsedAddOn = addOnData && typeof addOnData === 'object' && !Array.isArray(addOnData)
+      ? (addOnData as ManagedCacheAddOn)
+      : null
+    if (!parsedAddOn?.id || !isManagedCacheAddOn(parsedAddOn)) {
+      return null
+    }
+
+    const controlPlaneIdOnAddOn = parsedAddOn.owner?.control_plane_id
+
+    // Keep the list scoped to selected CP
+    if (controlPlaneIdOnAddOn != null && controlPlaneIdOnAddOn !== konnectConfig.controlPlaneId) {
+      return null
+    }
+
+    return parsedAddOn
+  } catch (error: any) {
+    const httpStatus = error.response?.status ?? error.status
+
+    if (httpStatus === 404) {
+      // Treat "not found" as "no match" so the table shows an empty/no-results state instead of an error.
+      return null
+    }
+    throw error
+  }
+}
+
+const fetchRedisPartialById = async (kokoPartialId: string): Promise<RedisConfigurationResponse | null> => {
+  // When the user searches by add-on id, use `cache_config_id` to fetch the matching Koko partial
+  const singlePartialUrl = `${fetcherBaseUrl.value}/${encodeURIComponent(kokoPartialId)}`
+
+  try {
+    const partialResponse = await axiosInstance.get(singlePartialUrl)
+    const responseBody = partialResponse.data
+
+    // Koko can return the partial in different ways, normalize it into a single object for join logic
+    let entityFromResponse: unknown = responseBody?.data ?? responseBody
+
+    if (Array.isArray(entityFromResponse)) {
+      entityFromResponse = entityFromResponse[0]
+    }
+
+    if (!entityFromResponse || typeof entityFromResponse !== 'object') {
+      return null
+    }
+
+    const maybeRedisPartial = entityFromResponse as RedisConfigurationResponse
+
+    return isRedisPartial(maybeRedisPartial) ? maybeRedisPartial : null
+  } catch (error: any) {
+    const httpStatus = error.response?.status ?? error.status
+
+    if (httpStatus === 404) {
+      // Partial isn't available yet/id is wrong— treat as no result and keep the list usable
+      return null
+    }
+    throw error
+  }
+}
+
+const doesRowMatchExactListSearch = (tableRow: EntityRow, searchText: string): boolean => {
+  // Row id is the Koko partial id once cache exists
+  if (tableRow.id === searchText) {
+    return true
+  }
+
+  // While Koko partial doesn't exist yet, row uses Cloud Gateways add-on id as its id
+  if (tableRow.addOn?.id === searchText) {
+    return true
+  }
+
+  const kokoPartialIdFromAddOn = tableRow.addOn ? getCacheConfigId(tableRow.addOn) : undefined
+
+  return !!kokoPartialIdFromAddOn && kokoPartialIdFromAddOn === searchText
+}
+
 const fetchAllAddOns = async (): Promise<ManagedCacheAddOn[]> => {
   const addOnsUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons`
   const allAddOns: ManagedCacheAddOn[] = []
@@ -441,11 +525,11 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
     return res
   }
 
-  // Konnect managed Redis: combine partials from Koko with managed-cache add-ons from Cloud Gateways
+  // Merge Redis partials from Koko with managed-cache add-ons from Cloud Gateways
+  // This only runs when FF is enabled for Cloud Gateway CP
   try {
     errorMessage.value = null
 
-    // Fetch partials + add-ons in parallel
     const partialsPromise = rawFetcher({ ...params, pageSize: partialsPageSize })
     const addOnsPromise = fetchAllAddOns()
       .then((items) => ({ items, isLoaded: true }))
@@ -454,8 +538,35 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
         return { items: [] as ManagedCacheAddOn[], isLoaded: false }
       })
     const [partialsRes, addOnsResult] = await Promise.all([partialsPromise, addOnsPromise])
-    const { items: addOns, isLoaded: isAddOnsLoaded } = addOnsResult
-    const partials: RedisConfigurationResponse[] = partialsRes.data.filter(isRedisPartial)
+    let { items: addOns, isLoaded: isAddOnsLoaded } = addOnsResult
+    let partials: RedisConfigurationResponse[] = partialsRes.data.filter(isRedisPartial)
+    const filterQueryTrimmed = typeof params.query === 'string' ? params.query.trim() : ''
+
+    if (filterQueryTrimmed && partials.length === 0) {
+      // Toolbar search uses GET …/partials/{typedValue}. That works for Koko ids but 404s when the user typed the add-on id instead.
+      // When managed Redis is still provisioning, the ID the user copies/searches for is often Cloud Gateways add-on id, not the Koko partial id.
+      // So if Koko returns nothing, we resolve the add-on by id and then if available follow `cache_config_id` back to the Koko partial
+      const addOnFoundBySearchId = await fetchManagedAddOnById(filterQueryTrimmed)
+
+      if (addOnFoundBySearchId) {
+        const addOnAlreadyInPage = addOns.some((existingAddOn) => existingAddOn.id === addOnFoundBySearchId.id)
+
+        if (!addOnAlreadyInPage) {
+          addOns = [...addOns, addOnFoundBySearchId]
+        }
+
+        const linkedKokoPartialId = getCacheConfigId(addOnFoundBySearchId)
+
+        if (linkedKokoPartialId) {
+          // Add-on is wired to a partial — load that partial so join logic matches what you see with no filter
+          const redisPartialFromKoko = await fetchRedisPartialById(linkedKokoPartialId)
+
+          if (redisPartialFromKoko) {
+            partials = [redisPartialFromKoko]
+          }
+        }
+      }
+    }
 
     const konnectConfig = props.config as KonnectRedisConfigurationListConfig
 
@@ -557,16 +668,34 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
         addOn,
       }))
 
-    const allRows = [...rows, ...placeholderRows, ...unlinkedAddOnRows]
+    let allRows = [...rows, ...placeholderRows, ...unlinkedAddOnRows]
 
-    // Dont do full table refetch on every poll only once placeholders disappear
-    managedAddOnStateById.value = initializingAddOns.reduce((acc, addOn) => {
-      acc[addOn.id] = typeof addOn.state === 'string' ? addOn.state : ''
+    if (filterQueryTrimmed) {
+      // When a search string is present, only keep rows where the search string matches one of these- partial id, add-on id, or cache_config_id
+      allRows = allRows.filter((row) => doesRowMatchExactListSearch(row, filterQueryTrimmed))
+    }
+
+    // Keep row state labels fresh while any managed add-on is in non-ready state
+    managedAddOnStateById.value = addOns.reduce((acc, addOn) => {
+      const state = typeof addOn.state === 'string' ? addOn.state : ''
+
+      if (!isTransitionalManagedCacheState(state)) {
+        return acc
+      }
+
+      acc[addOn.id] = state
+      const cacheConfigId = getCacheConfigId(addOn)
+
+      if (cacheConfigId) {
+        acc[cacheConfigId] = state
+      }
+
       return acc
     }, {} as Record<string, string>)
 
-    const placeholdersExist = initializingAddOns.length > 0
-    if (placeholdersExist) scheduleNextPoll()
+    const transitionalAddOnsExist = addOns.some((addOn) => isTransitionalManagedCacheState(addOn.state))
+
+    if (transitionalAddOnsExist) scheduleNextPoll()
     else clearPolling()
 
     return {
@@ -825,17 +954,14 @@ const pollManagedAddOnsState = async (): Promise<void> => {
   const konnectConfig = props.config as KonnectRedisConfigurationListConfig
   const cpId = konnectConfig.controlPlaneId
 
-  // Starting state: only update labels while there are still placeholders - no cache_config_id yet
-  let placeholdersExist = false
+  // Keep polling while any managed add-on is in non-ready state
+  let transitionalAddOnsExist = false
   const nextStateById: Record<string, string> = {}
 
   try {
     const addOns = await fetchAllAddOns()
 
-    const placeholderAddOns = addOns.filter((addOn) => {
-      const cacheConfigId = getCacheConfigId(addOn)
-      if (cacheConfigId != null && cacheConfigId !== '') return false
-
+    const relevantAddOns = addOns.filter((addOn) => {
       if (!isManagedCacheAddOn(addOn)) return false
 
       const addOnCpId = addOn.owner?.control_plane_id
@@ -844,10 +970,20 @@ const pollManagedAddOnsState = async (): Promise<void> => {
       return true
     })
 
-    placeholdersExist = placeholderAddOns.length > 0
+    transitionalAddOnsExist = relevantAddOns.some((addOn) => isTransitionalManagedCacheState(addOn.state))
 
-    for (const addOn of placeholderAddOns) {
-      nextStateById[addOn.id] = typeof addOn.state === 'string' ? addOn.state : ''
+    for (const addOn of relevantAddOns) {
+      const state = typeof addOn.state === 'string' ? addOn.state : ''
+      if (!isTransitionalManagedCacheState(state)) {
+        continue
+      }
+
+      nextStateById[addOn.id] = state
+      const cacheConfigId = getCacheConfigId(addOn)
+
+      if (cacheConfigId) {
+        nextStateById[cacheConfigId] = state
+      }
     }
 
     managedAddOnStateById.value = nextStateById
@@ -860,14 +996,14 @@ const pollManagedAddOnsState = async (): Promise<void> => {
     return
   }
 
-  // Once placeholders disappear, do a single full refresh to swap in the linked Koko partial rows
-  if (!placeholdersExist) {
+  // Once non-ready states settle, do a single full refresh to render stable rows
+  if (!transitionalAddOnsExist) {
     clearPolling()
     refreshList()
     return
   }
 
-  // Placeholders still exist: schedule the next state poll.
+  // Non-ready states still exist: schedule the next state poll
   scheduleNextPoll()
 }
 
@@ -935,11 +1071,19 @@ const isReadyManagedCacheState = (state: string): boolean => {
   return cacheState === 'ready'
 }
 
+const isTransitionalManagedCacheState = (state?: string): boolean => {
+  if (typeof state !== 'string' || state.trim() === '') {
+    return false
+  }
+
+  return !isReadyManagedCacheState(state)
+}
+
 const renderRedisType = (item: RedisConfigurationFields | EntityRow): string | undefined => {
   const row = item as EntityRow
-  // Placeholder row: add-on exists but Koko partial not ready yet
-  // Display the add-on's Cloud Gateways `state` unless it's ready, in which case we show only the base type
-  if (isKonnectManagedRedisEnabled.value && row.source === 'konnect-managed' && !row.partial) {
+  // Konnect-managed row- display the add-on's state while it is non-ready
+  // Applies to both placeholder rows (no partial yet) and linked rows (partial already exists)
+  if (isKonnectManagedRedisEnabled.value && row.source === 'konnect-managed') {
     const mappedState = managedAddOnStateById.value[row.id]
     const state = (typeof mappedState === 'string' && mappedState.trim() !== '')
       ? mappedState

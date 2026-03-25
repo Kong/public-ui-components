@@ -492,5 +492,82 @@ describe('<RedisConfigurationList />', () => {
       cy.getTestId('terminating cloud').should('be.visible')
       cy.get('table').should('contain.text', 'Konnect-managed Redis (Terminating)')
     })
+
+    it('should resolve managed-cache row when filtering by add-on id while Koko partial fetch 404s', () => {
+      const placeholderPartials = {
+        data: [
+          { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
+        ],
+        next: null,
+      }
+
+      cy.intercept(
+        'GET',
+        '**/core-entities/partials/addon-123**',
+        { statusCode: 404, body: {} },
+      ).as('getPartialByAddonId')
+
+      cy.intercept(
+        'GET',
+        '**/v2/cloud-gateways/add-ons/addon-123',
+        {
+          statusCode: 200,
+          body: {
+            id: 'addon-123',
+            name: 'initializing cloud',
+            state: 'initializing',
+            config: { kind: 'managed-cache.v0' },
+            owner: { control_plane_id: baseConfigKonnect.controlPlaneId },
+          },
+        },
+      ).as('getAddOnById')
+
+      interceptList({ app: 'Konnect', body: placeholderPartials })
+      interceptLinkedPlugins({ app: 'Konnect' })
+      // The list endpoint calls `/add-ons` with query params, while the single-resource call uses `/add-ons/{id}`
+      // In the test, match those separately so one intercept doesn't accidentally catch the other request
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons?*',
+      }, {
+        statusCode: 200,
+        body: {
+          data: [
+            {
+              id: 'addon-123',
+              name: 'initializing cloud',
+              state: 'initializing',
+              config: { kind: 'managed-cache.v0' },
+              owner: { control_plane_id: baseConfigKonnect.controlPlaneId },
+            },
+          ],
+        },
+      }).as('getAddOns')
+
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: {
+            ...baseConfigKonnect,
+            isKonnectManagedRedisEnabled: true,
+            isExactMatch: true,
+          },
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+      cy.getTestId('self-managed-config').should('be.visible')
+      cy.getTestId('initializing cloud').should('be.visible')
+
+      cy.get('.kong-ui-entity-filter-input [data-testid="search-input"]').clear()
+      cy.get('.kong-ui-entity-filter-input [data-testid="search-input"]').type('addon-123')
+
+      cy.wait('@getPartialByAddonId')
+      cy.wait('@getAddOnById')
+
+      cy.getTestId('initializing cloud').should('be.visible')
+      cy.get('tr [data-testid="self-managed-config"]').should('not.exist')
+    })
   })
 })
