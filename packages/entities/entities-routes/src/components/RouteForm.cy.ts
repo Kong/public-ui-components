@@ -1977,4 +1977,73 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       })
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in POST URL when creating with workspace config', () => {
+      cy.intercept(
+        { method: 'GET', url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/routes`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createRouteWithWorkspace')
+
+      cy.mount(RouteForm, {
+        props: { config: { ...baseConfigKonnect, workspace: 'default' } },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createRouteWithWorkspace')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        { method: 'GET', url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        { method: 'GET', url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/routes/${route.id}` },
+        { statusCode: 200, body: route },
+      )
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/routes/${route.id}`,
+        },
+        { statusCode: 200, body: route },
+      ).as('updateRouteWithWorkspace')
+
+      cy.mount(RouteForm, {
+        props: { config: { ...baseConfigKonnect, workspace: 'default' }, routeId: route.id },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@updateRouteWithWorkspace')
+    })
+
+    it('omits workspace segment in POST URL when workspace is not provided', () => {
+      cy.intercept(
+        { method: 'GET', url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/routes`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createRouteNoWorkspace')
+
+      cy.mount(RouteForm, {
+        props: { config: baseConfigKonnect },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createRouteNoWorkspace')
+    })
+  })
 })
