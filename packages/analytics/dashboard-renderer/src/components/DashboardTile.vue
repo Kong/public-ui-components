@@ -235,7 +235,7 @@ const emit = defineEmits<{
 const GeoMapRendererAsync = defineAsyncComponent(() => import('./GeoMapRenderer.vue'))
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const datasourceConfigStore = useDatasourceConfigStore()
-const { getFieldDataSources } = storeToRefs(datasourceConfigStore)
+const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
 const datasourceConfigReady = ref(false)
 const { i18n } = composables.useI18n()
 const chartData = ref<ExploreResultV4>()
@@ -423,16 +423,12 @@ const agedOutWarning = computed(() => {
 const datasourceScopedFilters = computed(() => {
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []] as AllFilters[]
 
+  // TODO: default to api_usage until datasource is made required
   const datasource = props.definition?.query?.datasource ?? 'api_usage'
 
-  if (datasource === 'platform' || !datasourceConfigReady.value) {
-    return filters
-  }
-
-  return filters.filter(f => {
-    const possibleSources = getFieldDataSources.value(f.field)
-
-    return possibleSources.some(ds => datasource === ds)
+  return stripUnknownFilters.value({
+    datasource,
+    filters,
   })
 })
 

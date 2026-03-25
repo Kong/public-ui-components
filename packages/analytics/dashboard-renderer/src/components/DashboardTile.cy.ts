@@ -1,10 +1,12 @@
 import DashboardTile from './DashboardTile.vue'
+import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
 import { generateSingleMetricTimeSeriesData, type DatasourceConfig, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
-import { defineComponent, h, ref } from 'vue'
+import { flushPromises } from '@vue/test-utils'
+import { defineComponent, h, nextTick, ref } from 'vue'
 
 const start = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
 const end = new Date().toISOString()
@@ -505,6 +507,50 @@ describe('<DashboardTile />', () => {
     cy.getTestId('chart-jump-to-requests-1')
       .invoke('attr', 'href')
       .should('not.have.string', 'response_model')
+  })
+
+  it('retains unknown goap context filters in zoom drilldown links', () => {
+    const context: DashboardRendererContextInternal = {
+      ...mockContext,
+      filters: [{ field: 'goap_only_field', operator: 'in', value: ['value'] }],
+    }
+
+    cy.mount(DashboardTile, {
+      props: {
+        definition: cacheBustTile({
+          ...mockTileDefinition,
+          query: {
+            ...mockTileDefinition.query,
+            datasource: 'goap_event_gateway',
+          },
+        }),
+        context,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+      },
+    }).then(async ({ wrapper }) => {
+      await flushPromises()
+
+      const chart = wrapper.findComponent(TimeseriesChartRenderer)
+
+      expect(chart.exists()).to.equal(true)
+
+      chart.vm.$emit('select-chart-range', {
+        type: 'absolute',
+        start: new Date(start),
+        end: new Date(end),
+      })
+
+      await nextTick()
+
+      expect((chart.props('requestsLink') as { href: string }).href).to.contain('goap_only_field')
+    })
   })
 
   it('should show aged out warning when query granularity does not match saved granularity', () => {

@@ -38,7 +38,7 @@ export default function useContextLinks(
 
   const analyticsConfigStore = useAnalyticsConfigStore()
   const datasourceConfigStore = useDatasourceConfigStore()
-  const { getFieldDataSources } = storeToRefs(datasourceConfigStore)
+  const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
   const datasourceConfigReady = ref(false)
 
   onMounted(async () => {
@@ -76,14 +76,9 @@ export default function useContextLinks(
 
     const datasource = definition.value.query?.datasource ?? 'api_usage'
 
-    if (datasource === 'platform' || !datasourceConfigReady.value) {
-      return filters
-    }
-
-    return filters.filter(f => {
-      const possibleSources = getFieldDataSources.value(f.field)
-
-      return possibleSources.some(ds => datasource === ds)
+    return stripUnknownFilters.value({
+      datasource,
+      filters,
     })
   })
 

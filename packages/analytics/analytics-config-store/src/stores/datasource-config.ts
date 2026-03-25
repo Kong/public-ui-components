@@ -84,9 +84,15 @@ export const useDatasourceConfigStore = defineStore('datasource-config', () => {
       datasource: string
       filter: AllFilters
     }): boolean => {
+      // If datasource config is not ready yet assume filter is valid.
+      // Once config is loaded, it will be re-evaluated.
+      if (loading.value) {
+        return true
+      }
       const datasourceConfigEntry = datasourceConfigMap.value[datasource]
 
-      // If we doing find a datasource config entry, assume it's a goap one for now.
+      // If we don't find a datasource assume the filter is valid.
+      // We may be dealing with a goap datasource that we don't have config for.
       if (!datasourceConfigEntry) {
         return true
       }

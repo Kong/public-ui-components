@@ -23,17 +23,29 @@ vi.mock('@kong-ui-public/analytics-config-store', () => ({
   useAnalyticsConfigStore: vi.fn(() => analyticsConfig),
 }))
 
-const mockGetFieldDataSources = (field: string) => {
-  if (field === 'gateway_service') {
-    return ['api_usage']
+const mockStripUnknownFilters = ({
+  datasource,
+  filters,
+}: {
+  datasource: string
+  filters: Array<{ field: string }>
+}) => {
+  if (datasource === 'platform' || datasource.startsWith('goap')) {
+    return filters
   }
-  if (field === 'ai_provider') {
-    return ['llm_usage']
-  }
-  if (field === 'shared_field') {
-    return ['api_usage', 'llm_usage']
-  }
-  return []
+
+  return filters.filter(({ field }) => {
+    if (field === 'gateway_service') {
+      return datasource === 'api_usage'
+    }
+    if (field === 'ai_provider') {
+      return datasource === 'llm_usage'
+    }
+    if (field === 'shared_field') {
+      return datasource === 'api_usage' || datasource === 'llm_usage'
+    }
+    return false
+  })
 }
 
 const makeFilter = (field: string) => ({ field, operator: 'in', value: ['x'] })
@@ -136,7 +148,7 @@ describe('useContextLinks', () => {
     analyticsConfig.analytics = true
     analyticsConfig.percentiles = true
     vi.mocked(useDatasourceConfigStore).mockReturnValue({
-      getFieldDataSources: ref(mockGetFieldDataSources),
+      stripUnknownFilters: ref(mockStripUnknownFilters),
       isReady: vi.fn().mockResolvedValue(undefined),
     } as any)
   })
@@ -148,7 +160,7 @@ describe('useContextLinks', () => {
     })
 
     vi.mocked(useDatasourceConfigStore).mockReturnValueOnce({
-      getFieldDataSources: ref(mockGetFieldDataSources),
+      stripUnknownFilters: ref(mockStripUnknownFilters),
       isReady: vi.fn(() => ready),
     } as any)
 
@@ -359,6 +371,20 @@ describe('useContextLinks', () => {
     expect(parsed.timeframe.timePeriodsKey).toBe('24h')
     expect(parsed.timeframe.start).toBeUndefined()
     expect(parsed.timeframe.end).toBeUndefined()
+  })
+
+  it('keeps unknown datasource filters when building requests link', async () => {
+    const { wrapper } = mountComposable({
+      datasource: 'goap_event_gateway',
+      contextFilters: [{ field: 'goap_only_field', operator: 'in', value: ['x'] }],
+    })
+    await flushPromises()
+
+    const parsed = JSON.parse(decodeURIComponent((wrapper.vm.requestsLinkKebabMenu as string).split('=')[1]))
+
+    expect(parsed.filter).toEqual([
+      { field: 'goap_only_field', operator: 'in', value: ['x'] },
+    ])
   })
 
   it('buildRequestsQueryZoomActions uses provided absolute range start/end directly', async () => {
