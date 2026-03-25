@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.4.3...@kong-ui-public/sandbox-layout@2.4.4) (2026-03-25)
+
+
+### Bug Fixes
+
+* **deps:** bump icons ([#3054](https://github.com/Kong/public-ui-components/issues/3054)) ([77e55ac](https://github.com/Kong/public-ui-components/commit/77e55ac97c12b1b0bbab2b9c46ad78191317e807))
+
+
+
+
+
 ## [2.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.4.2...@kong-ui-public/sandbox-layout@2.4.3) (2026-03-24)
 
 

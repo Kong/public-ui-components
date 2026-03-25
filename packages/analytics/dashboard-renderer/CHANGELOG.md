@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.9.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.9...@kong-ui-public/dashboard-renderer@8.9.10) (2026-03-25)
+
+
+### Bug Fixes
+
+* **deps:** bump icons ([#3054](https://github.com/Kong/public-ui-components/issues/3054)) ([77e55ac](https://github.com/Kong/public-ui-components/commit/77e55ac97c12b1b0bbab2b9c46ad78191317e807))
+
+
+
+
+
 ## [8.9.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.8...@kong-ui-public/dashboard-renderer@8.9.9) (2026-03-24)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

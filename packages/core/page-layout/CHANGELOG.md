@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.4...@kong-ui-public/page-layout@0.2.5) (2026-03-25)
+
+
+### Bug Fixes
+
+* **deps:** bump icons ([#3054](https://github.com/Kong/public-ui-components/issues/3054)) ([77e55ac](https://github.com/Kong/public-ui-components/commit/77e55ac97c12b1b0bbab2b9c46ad78191317e807))
+
+
+
+
+
 ## [0.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.3...@kong-ui-public/page-layout@0.2.4) (2026-03-18)
 
 
