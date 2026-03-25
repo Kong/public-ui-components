@@ -47,8 +47,8 @@
 import { computed, ref } from 'vue'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_SPACE_10 } from '@kong/design-tokens'
 import { KTooltip } from '@kong/kongponents'
-import { NODE_VISUAL } from './node-visual'
 import { useEditorStore } from '../store/store'
+import { getNodeVisual } from './node-visual'
 
 import type { EdgeId, FieldName, NodeInstance, NonEmptyArray } from '../../types'
 
@@ -114,7 +114,7 @@ const targetBoxItems = computed(() =>
     return {
       edgeId: target.edgeId,
       key: `${target.node.id}-${target.fieldName ?? 'node'}-${index}`,
-      icon: NODE_VISUAL[target.node.type]?.icon,
+      icon: getNodeVisual(target.node.type).icon,
       tooltip: target.fieldName
         ? `${target.node.name}.${target.fieldName}`
         : target.node.name,

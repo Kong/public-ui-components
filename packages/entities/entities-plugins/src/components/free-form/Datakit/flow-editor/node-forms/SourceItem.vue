@@ -1,7 +1,7 @@
 <template>
   <span class="dk-source-item">
     <component
-      :is="NODE_VISUAL[item.type as NodeType].icon"
+      :is="getNodeVisual(item.type as NodeType).icon"
       :color="KUI_COLOR_TEXT_NEUTRAL"
       :size="KUI_ICON_SIZE_40"
     />
@@ -13,7 +13,7 @@
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import type { NodeType } from '../../types'
 import type { InputOption } from '../composables/useNodeForm'
-import { NODE_VISUAL } from '../node/node-visual'
+import { getNodeVisual } from '../node/node-visual'
 
 defineProps<{
   item: InputOption

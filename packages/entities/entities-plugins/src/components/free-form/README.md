@@ -381,3 +381,4 @@ filler.fillField('config.host', 'example.com')
 |---|---|
 | `KM_2262_CODE_MODE` | Enable form/code editor toggle in CommonForm |
 | `KM_2306_CONDITION_FIELD_314` | Show the `condition` field in plugin forms |
+| `KM_2446_DATAKIT_JWT_NODES` | Show the Authentication group in the Datakit flow editor node panel |
