@@ -368,6 +368,9 @@ importers:
       '@kong/design-tokens':
         specifier: 1.20.0
         version: 1.20.0
+      ajv:
+        specifier: ^8.17.1
+        version: 8.18.0
       json-schema-to-ts:
         specifier: ^3.1.1
         version: 3.1.1

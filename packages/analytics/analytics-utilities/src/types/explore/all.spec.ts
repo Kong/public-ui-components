@@ -36,6 +36,13 @@ describe('stripUnknownFilters', () => {
     value: ['foo'],
   }
 
+  // a filter that is valid for the platform datasource but not scoped elsewhere
+  const platformFilter = {
+    operator: 'in',
+    field: 'custom_platform_field',
+    value: ['foo'],
+  }
+
   it.each([
     ['basic', [basicFilter]],
     ['api_usage', [basicFilter, advancedFilter]],
@@ -45,6 +52,11 @@ describe('stripUnknownFilters', () => {
     // @ts-ignore these are the correct strings to use
     const result = stripUnknownFilters(datasource, [unknownFilter, basicFilter, advancedFilter, llmFilter, mcpFilter])
     expect(result).toEqual(expected)
+  })
+
+  it('keeps all filters for platform', () => {
+    const result = stripUnknownFilters('platform', [unknownFilter, basicFilter, advancedFilter, llmFilter, mcpFilter, platformFilter])
+    expect(result).toEqual([unknownFilter, basicFilter, advancedFilter, llmFilter, mcpFilter, platformFilter])
   })
 
   it('Keeps all filters if the datasource starts with "goap"', () => {
