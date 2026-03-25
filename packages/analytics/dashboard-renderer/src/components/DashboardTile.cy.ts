@@ -452,7 +452,7 @@ describe('<DashboardTile />', () => {
       ...mockContext,
       filters: [{ field: 'status_code', operator: 'in', value: ['test1'] }],
     }
-    mount({ context, waitForDatasourceConfigStore: true })
+    mount({ context })
 
     cy.getTestId('kebab-action-menu-1').click()
     cy.getTestId('chart-jump-to-explore-1').should('exist')
