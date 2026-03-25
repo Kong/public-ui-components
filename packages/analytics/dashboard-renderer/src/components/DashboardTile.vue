@@ -236,7 +236,6 @@ const GeoMapRendererAsync = defineAsyncComponent(() => import('./GeoMapRenderer.
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const datasourceConfigStore = useDatasourceConfigStore()
 const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
-const datasourceConfigReady = ref(false)
 const { i18n } = composables.useI18n()
 const chartData = ref<ExploreResultV4>()
 const exportState = ref<ExploreExportState>({ status: 'loading' })
@@ -266,7 +265,6 @@ const {
 
 onMounted(async () => {
   await datasourceConfigStore.isReady()
-  datasourceConfigReady.value = true
 })
 
 const { issueQuery } = composables.useIssueQuery()

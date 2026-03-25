@@ -38,15 +38,12 @@ export default function useContextLinks(
 
   const analyticsConfigStore = useAnalyticsConfigStore()
   const datasourceConfigStore = useDatasourceConfigStore()
-  const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
-  const datasourceConfigReady = ref(false)
+  const { stripUnknownFilters, loading: datasourceConfigLoading } = storeToRefs(datasourceConfigStore)
 
   onMounted(async () => {
     // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
     exploreBaseUrl.value = await queryBridge?.exploreBaseUrl?.() ?? ''
     requestsBaseUrl.value = await queryBridge?.requestsBaseUrl?.() ?? ''
-    await datasourceConfigStore.isReady()
-    datasourceConfigReady.value = true
   })
 
   const isAdvancedAnalytics = computed(() => analyticsConfigStore.analytics && analyticsConfigStore.percentiles)
@@ -64,8 +61,8 @@ export default function useContextLinks(
     return true
   })
 
-  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && definition.value.query.datasource !== 'platform' && isAdvancedAnalytics.value && datasourceConfigReady.value)
-  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && EXPLORE_DATASOURCES.includes(definition.value.query.datasource as any) && isAdvancedAnalytics.value && datasourceConfigReady.value)
+  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && definition.value.query.datasource !== 'platform' && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
+  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && EXPLORE_DATASOURCES.includes(definition.value.query.datasource as any) && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
 
   const chartDataGranularity = computed(() => {
     return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined

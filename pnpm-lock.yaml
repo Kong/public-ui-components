@@ -285,11 +285,10 @@ importers:
         version: 3.5.27(typescript@5.9.3)
 
   packages/analytics/analytics-config-store:
-    dependencies:
+    devDependencies:
       '@kong-ui-public/analytics-utilities':
         specifier: workspace:^
         version: link:../analytics-utilities
-    devDependencies:
       pinia:
         specifier: '>= 3.0.4 < 4'
         version: 3.0.4(typescript@5.9.3)(vue@3.5.27(typescript@5.9.3))

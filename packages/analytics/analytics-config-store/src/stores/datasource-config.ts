@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { computed, inject, ref, watch } from 'vue'
-import { INJECT_QUERY_PROVIDER } from '@kong-ui-public/analytics-utilities'
 import type { AllFilters, AnalyticsBridge, DatasourceConfig, Field } from '@kong-ui-public/analytics-utilities'
+
+const INJECT_QUERY_PROVIDER = 'analytics-query-provider'
 
 export type MappedDatasourceConfig = DatasourceConfig & {
   fieldsMap: Record<string, Field>

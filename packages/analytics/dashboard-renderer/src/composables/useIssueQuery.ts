@@ -8,16 +8,9 @@ import type { DashboardRendererContextInternal } from '../types'
 import { inject, onUnmounted } from 'vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 
-type DatasourceConfigStore = ReturnType<typeof useDatasourceConfigStore> & {
-  stripUnknownFilters: (opts: {
-    datasource: string
-    filters: AllFilters[]
-  }) => AllFilters[]
-}
-
 export default function useIssueQuery() {
   const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
-  const datasourceConfigStore = useDatasourceConfigStore() as DatasourceConfigStore
+  const datasourceConfigStore = useDatasourceConfigStore()
 
   // Ensure that any pending requests are canceled on unmount.
   const abortController = new AbortController()
@@ -30,6 +23,8 @@ export default function useIssueQuery() {
     if (!queryBridge) {
       throw new Error('Query bridge is not defined')
     }
+
+    await datasourceConfigStore.isReady()
 
     const {
       datasource: originalDatasource,
