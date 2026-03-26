@@ -7,10 +7,12 @@ import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store
 import type { DashboardRendererContextInternal } from '../types'
 import { inject, onUnmounted } from 'vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
+import { storeToRefs } from 'pinia'
 
 export default function useIssueQuery() {
   const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
   const datasourceConfigStore = useDatasourceConfigStore()
+  const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
 
   // Ensure that any pending requests are canceled on unmount.
   const abortController = new AbortController()
@@ -34,19 +36,14 @@ export default function useIssueQuery() {
 
     const datasource = originalDatasource || 'basic'
 
-    const mergedFilters: AllFilters[] = []
-
-    if (query.filters) {
-      // The filters from the query should be safe -- as in, validated to be compatible
-      // with the chosen endpoint.
-      mergedFilters.push(...query.filters as AllFilters[])
-    }
-
-    // The contextual filters may not be compatible and need to be pruned.
-    mergedFilters.push(...datasourceConfigStore.stripUnknownFilters({
+    const mergedFilters = stripUnknownFilters.value({
       datasource,
-      filters: context.filters,
-    }))
+      filters: [
+        ...(query.filters ?? []) as AllFilters[],
+        ...context.filters,
+      ],
+      metrics: query.metrics,
+    })
 
     // TODO: the cast is necessary because TimeRangeV4 specifies date objects for absolute time ranges.
     // If they're coming from a definition, they're strings; should clean this up as part of the dashboard type work.

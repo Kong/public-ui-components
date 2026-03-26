@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from 'vitest'
-import { defineComponent } from 'vue'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { defineComponent, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import useIssueQuery from './useIssueQuery'
 import { INJECT_QUERY_PROVIDER } from '../constants'
@@ -28,9 +28,13 @@ const mountComposable = (queryBridge: AnalyticsBridge) => {
 }
 
 describe('useIssueQuery', () => {
+  const mockStripUnknownFilters = vi.fn(({ filters }: { filters: AllFilters[] }) => {
+    return filters.filter(({ field }) => field !== 'unsupported_field')
+  })
+
   const mockStore = {
     isReady: vi.fn().mockResolvedValue(undefined),
-    stripUnknownFilters: ({ filters }: { filters: AllFilters[] } ) => filters,
+    stripUnknownFilters: ref(mockStripUnknownFilters),
   } as any
 
   const context: any = {
@@ -51,8 +55,12 @@ describe('useIssueQuery', () => {
     zoomable: false,
   }
 
-  it('passes through unknown datasources as-is', async () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
     vi.mocked(useDatasourceConfigStore).mockReturnValue(mockStore)
+  })
+
+  it('passes through unknown datasources as-is', async () => {
     const queryFn = vi.fn().mockResolvedValue({})
     const wrapper = mountComposable({
       queryFn,
@@ -81,7 +89,6 @@ describe('useIssueQuery', () => {
   })
 
   it('keeps the basic fallback when datasource is omitted', async () => {
-    vi.mocked(useDatasourceConfigStore).mockReturnValue(mockStore)
     const queryFn = vi.fn().mockResolvedValue({})
     const wrapper = mountComposable({
       queryFn,
@@ -96,6 +103,44 @@ describe('useIssueQuery', () => {
     expect(queryFn).toHaveBeenCalledOnce()
     expect(queryFn.mock.calls[0][0]).toMatchObject({
       datasource: 'basic',
+    })
+  })
+
+  it('prunes invalid filters from the merged query and context filters', async () => {
+    const invalidQueryFilter = {
+      field: 'unsupported_field',
+      operator: 'in',
+      value: ['200'],
+    }
+    const validContextFilter = {
+      field: 'gateway_service',
+      operator: 'in',
+      value: ['example-service'],
+    }
+
+    const queryFn = vi.fn().mockResolvedValue({})
+    const wrapper = mountComposable({
+      queryFn,
+    } as any)
+
+    await wrapper.vm.issueQuery({
+      metrics: [],
+      dimensions: [],
+      filters: [invalidQueryFilter],
+    } as any, {
+      ...context,
+      filters: [validContextFilter],
+    })
+
+    expect(mockStripUnknownFilters).toHaveBeenCalledWith(expect.objectContaining({
+      datasource: 'basic',
+      filters: [invalidQueryFilter, validContextFilter],
+    }))
+    expect(queryFn).toHaveBeenCalledOnce()
+    expect(queryFn.mock.calls[0][0]).toMatchObject({
+      query: {
+        filters: [validContextFilter],
+      },
     })
   })
 })
