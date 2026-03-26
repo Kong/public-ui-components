@@ -170,6 +170,14 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.proxy-cache-advanced.description',
     nameKey: 'plugins.meta.proxy-cache-advanced.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['proxy-cache-advanced'],
+    freeformRenderRules: {
+      bundles: [
+        ['config.strategy', 'config.redis'],
+      ],
+      dependencies: {
+        'config.redis': ['config.strategy', 'redis'],
+      },
+    },
   },
   'graphql-proxy-cache-advanced': {
     descriptionKey: 'plugins.meta.graphql-proxy-cache-advanced.description',
