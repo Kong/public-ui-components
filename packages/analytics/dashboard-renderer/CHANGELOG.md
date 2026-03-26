@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.9.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.11...@kong-ui-public/dashboard-renderer@8.9.12) (2026-03-26)
+
+
+### Bug Fixes
+
+* strip unknown filters issue ([#3065](https://github.com/Kong/public-ui-components/issues/3065)) ([b7476d5](https://github.com/Kong/public-ui-components/commit/b7476d5f87ea1964d8ae254d3ad51072eade497f))
+
+
+
+
+
 ## [8.9.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.10...@kong-ui-public/dashboard-renderer@8.9.11) (2026-03-25)
 
 
