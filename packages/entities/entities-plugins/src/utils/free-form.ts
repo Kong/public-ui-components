@@ -42,6 +42,10 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
+  'metering-and-billing': {
+    experimental: true,
+    component: 'MeteringAndBillingForm',
+  },
 } as const
 
 export type FreeFormName = keyof typeof mapping

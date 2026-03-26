@@ -772,6 +772,74 @@
         "entity_name": "Request callout",
         "by_lua_placeholder": "Enter Lua script here..."
       },
+      "metering-and-billing": {
+        "sections": {
+          "scope": {
+            "title": "Plugin scope",
+            "description": "Choose the scope at which this plugin applies."
+          },
+          "plugin_config": {
+            "title": "Plugin configuration",
+            "description": "Configure the Metering & Billing plugin."
+          },
+          "general_info": {
+            "title": "General information"
+          },
+          "metering": {
+            "title": "What to meter"
+          },
+          "subject": {
+            "title": "Who to bill (Subject)",
+            "description": "Define how billing subjects are identified."
+          },
+          "attributes": {
+            "title": "Event attributes",
+            "description": "Attach custom dimensions to metered events."
+          },
+          "ingestion": {
+            "title": "Connection",
+            "description": "Configure how metered data is delivered to the billing service."
+          },
+          "queue": {
+            "title": "Queue",
+            "description": "Configure internal event queue settings."
+          }
+        },
+        "fields": {
+          "meter_api_requests": {
+            "label": "Meter API requests",
+            "description": "Emit a usage event for each API Gateway request."
+          },
+          "meter_ai_token_usage": {
+            "label": "Meter AI token usage",
+            "description": "Emit events for LLM input and output tokens on AI Gateway requests. Each request produces separate input/output events so they can be priced independently."
+          },
+          "ingest_endpoint": {
+            "description": "The URL of the metering data ingest endpoint."
+          },
+          "api_token": {
+            "description": "Bearer token for authenticating requests to the ingest endpoint."
+          },
+          "look_up_value_in": {
+            "label": "Look up subject in"
+          },
+          "subject_field": {
+            "label": "Subject field name"
+          },
+          "ssl_verify": {
+            "label": "Verify TLS certificate",
+            "description": "Disable only for local development with self-signed certificates"
+          },
+          "timeout": {
+            "label": "Request timeout (ms)",
+            "description": "Timeout in milliseconds for ingest requests."
+          },
+          "keepalive": {
+            "label": "Connection keep-alive (ms)",
+            "description": "Keepalive timeout in milliseconds for persistent connections to the ingest endpoint."
+          }
+        }
+      },
       "datakit": {
         "plugin_config": {
           "title": "Flow editor"

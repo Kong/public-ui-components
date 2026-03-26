@@ -22,23 +22,38 @@
       class="ff-array-field-header"
       :data-testid="`ff-array-header-${field.path.value}`"
     >
-      <KLabel
-        class="ff-array-field-label"
-        v-bind="fieldAttrs"
-        :data-testid="`ff-label-${field.path.value}`"
-        :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
-      >
-        {{ fieldAttrs.label }}
-        <template
-          v-if="fieldAttrs.labelAttributes?.info"
-          #tooltip
+      <div class="ff-array-field-header-toggle">
+        <button
+          v-if="collapsible"
+          class="ff-array-field-toggle-btn"
+          type="button"
+          @click.prevent.stop="expanded = !expanded"
         >
-          <slot name="tooltip">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <div v-html="fieldAttrs.labelAttributes.info" />
-          </slot>
-        </template>
-      </KLabel>
+          <ChevronRightIcon
+            class="ff-array-field-toggle-btn-trigger-icon"
+            :class="{ 'collapse-expanded': expanded }"
+            decorative
+            :size="KUI_ICON_SIZE_30"
+          />
+        </button>
+        <KLabel
+          class="ff-array-field-label"
+          v-bind="fieldAttrs"
+          :data-testid="`ff-label-${field.path.value}`"
+          :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
+        >
+          {{ fieldAttrs.label }}
+          <template
+            v-if="fieldAttrs.labelAttributes?.info"
+            #tooltip
+          >
+            <slot name="tooltip">
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <div v-html="fieldAttrs.labelAttributes.info" />
+            </slot>
+          </template>
+        </KLabel>
+      </div>
       <KButton
         v-if="appearance === 'tabs'"
         appearance="tertiary"
@@ -51,7 +66,7 @@
       </KButton>
     </header>
 
-    <template v-if="realAppearance !== 'tabs'">
+    <template v-if="realAppearance !== 'tabs' && (!collapsible || expanded)">
       <div
         class="ff-array-field-container"
         :data-testid="`ff-array-basic-container-${field.path.value}`"
@@ -115,7 +130,7 @@
     </template>
 
     <KCard
-      v-else-if="realItems.length"
+      v-else-if="realItems.length && (!collapsible || expanded)"
       :data-testid="`ff-array-tab-container-${field.path.value}`"
     >
       <KTabs
@@ -166,13 +181,19 @@
         </template>
       </KTabs>
     </KCard>
+
+    <div
+      v-if="collapsible && expanded"
+      class="indent-guide"
+    />
   </div>
 </template>
 
 <script setup lang="ts" generic="T">
 import { useTemplateRef, nextTick, computed, ref, toValue, toRef, useAttrs } from 'vue'
-import { AddIcon, TrashIcon, CloseIcon } from '@kong/icons'
+import { AddIcon, TrashIcon, CloseIcon, ChevronRightIcon } from '@kong/icons'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { replaceByDictionaryInFieldName, useField, useFieldAttrs, useFormShared, useItemKeys } from './composables'
 import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
@@ -189,6 +210,7 @@ const props = defineProps<{
   itemLabel?: string | ((item: T, index: number) => string)
   appearance?: 'default' | 'card' | 'tabs'
   stickyTabs?: boolean | string | number
+  collapsible?: boolean
 } & BaseFieldProps>()
 
 const emit = defineEmits<{
@@ -210,6 +232,7 @@ const { i18n: { t } } = useI18n()
 const { getDefault, getSchema } = useFormShared()
 const { value: fieldValue, hide, ...field } = useField<T[] | null>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
+const expanded = ref(true)
 const subSchema = computed(() => {
   if (!field.path) throw new Error('Field path is required for sub-schema retrieval')
   const schema = getSchema<ArrayLikeFieldSchema>(field.path.value)
@@ -339,10 +362,81 @@ const stickyTop = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+$indent-guide-width: 6px;
+$indent-guide-left-offset: -10px;
+$indent-guide-top-offset: 20px;
+
 .ff-array-field {
   display: flex;
   flex-direction: column;
   gap: $kui-space-40;
+  position: relative;
+
+  .indent-guide {
+    bottom: 0;
+    left: $indent-guide-left-offset;
+    position: absolute;
+    top: $indent-guide-top-offset;
+    transform: translateX(-50%);
+    width: $indent-guide-width;
+
+    &::before {
+      border-left: 1px solid $kui-color-border-neutral-weaker;
+      bottom: 0;
+      content: '';
+      left: 50%;
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+      width: 0;
+    }
+
+    &:hover::before {
+      border-left-color: $kui-color-border-neutral-weak;
+    }
+  }
+
+  &-toggle-btn {
+    align-items: center;
+    background-color: $kui-color-background-transparent;
+    border: none;
+    border-radius: $kui-border-radius-20;
+    color: $kui-color-text-neutral-weak;
+    cursor: pointer;
+    display: flex;
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-semibold;
+    gap: $kui-space-20;
+    line-height: $kui-line-height-30;
+    margin-left: -$kui-space-70;
+    outline: none;
+    padding: $kui-space-10;
+
+    &:hover:not(:focus, :active, :disabled) {
+      color: $kui-color-text-neutral;
+    }
+
+    &:focus-visible {
+      box-shadow: $kui-shadow-focus;
+    }
+
+    &-trigger-icon {
+      transition: transform $kui-animation-duration-20 ease-in-out;
+
+      &.collapse-expanded {
+        transform: rotate(90deg);
+      }
+    }
+
+    &:disabled {
+      color: $kui-color-text-neutral-weak;
+      cursor: not-allowed;
+    }
+
+    label {
+      cursor: unset;
+    }
+  }
 
   // .k-label is required to override styles correctly in KM
   &-label.k-label {
@@ -355,6 +449,11 @@ const stickyTop = computed(() => {
     display: flex;
     gap: $kui-space-40;
     height: 32px;
+
+    &-toggle {
+      align-items: center;
+      display: flex;
+    }
   }
 
   &-container {
