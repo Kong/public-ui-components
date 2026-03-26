@@ -46,10 +46,10 @@
       @update:model-value="setConfig('typ')"
     />
 
-    <KeyValueField
+    <MapField
       :label="t('plugins.free-form.datakit.flow_editor.node_properties.jwt.static_claims.label')"
       name="static_claims"
-      @change="setConfig('static_claims')"
+      @legacy-value-change="setConfig('static_claims')"
     />
 
     <NodeFormDivider />
@@ -71,9 +71,9 @@ import { KLabel } from '@kong/kongponents'
 
 import Form from '../../../shared/Form.vue'
 import EnumField from '../../../shared/EnumField.vue'
-import KeyValueField from '../../../shared/KeyValueField.vue'
 import NumberField from '../../../shared/NumberField.vue'
 import StringField from '../../../shared/StringField.vue'
+import MapField from '../../../shared/MapField.vue'
 import useI18n from '../../../../../composables/useI18n'
 import type { IdConnection, NodeId } from '../../types'
 import InputsField from './InputsField.vue'

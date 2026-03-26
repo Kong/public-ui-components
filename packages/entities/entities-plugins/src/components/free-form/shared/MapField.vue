@@ -64,6 +64,7 @@
           inline-vault-picker
           :multiline="appearance?.string?.multiline"
           :name="keyId"
+          @keydown.enter="handleValueKeydown($event, index)"
         />
 
         <Field
@@ -125,6 +126,12 @@ interface MapFieldProps extends BaseFieldProps {
 const { i18n } = useI18n()
 
 const props = defineProps<MapFieldProps>()
+const emit = defineEmits<{
+  /**
+   * @deprecated Forward compatibility, only triggered when the type of value is string
+   */
+  legacyValueChange: [data: Record<string, unknown> | null]
+}>()
 
 const {
   keys,
@@ -133,7 +140,7 @@ const {
   removeKey,
   field,
   fieldDisplayName,
-} = useMapField(toRef(props, 'name'))
+} = useMapField(toRef(props, 'name'), onLegacyValueChange)
 
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
@@ -153,6 +160,15 @@ const itemTag = computed(() => isSimpleMap.value ? 'div' : KCard)
 
 const root = useTemplateRef('root')
 
+function handleValueKeydown(event: KeyboardEvent, index: number) {
+  if (props.appearance?.string?.multiline) return
+  event.preventDefault()
+  if (index === keys.value.length - 1) {
+    addKey()
+  }
+  focus(index + 1)
+}
+
 async function focus(index: number) {
   if (!root.value) {
     return
@@ -169,13 +185,17 @@ function handleAddClick() {
   focus(index === -1 ? keys.value.length - 1 : index)
 }
 
+function onLegacyValueChange(newValue: Record<string, unknown> | null) {
+  emit('legacyValueChange', newValue)
+}
+
 </script>
 
 <style scoped lang="scss">
 .ff-map-field {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
 
   // .k-label is required to override styles correctly in KM
   &-label.k-label {
@@ -186,19 +206,19 @@ function handleAddClick() {
   &-header {
     align-items: center;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     height: 32px;
   }
 
   &-item-simple {
     align-items: center;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
 
     .ff-map-field-fields {
       display: grid;
       flex: 1 1 0;
-      gap: $kui-space-40;
+      gap: var(--kui-space-40, $kui-space-40);
       grid-template-columns: 1fr 1fr;
     }
   }
@@ -208,13 +228,13 @@ function handleAddClick() {
     :deep(> .card-content) {
       align-items: flex-start;
       flex-direction: row;
-      gap: $kui-space-40;
+      gap: var(--kui-space-40, $kui-space-40);
 
       > .ff-map-field-fields {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
-        gap: $kui-space-40;
+        gap: var(--kui-space-40, $kui-space-40);
       }
     }
   }

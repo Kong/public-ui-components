@@ -1,15 +1,25 @@
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import type { MaybeRefOrGetter } from 'vue'
 import { useField, useFormShared } from '.'
 import type { KeyId } from './key-id-map'
 import { resolve, getName } from '../utils'
 import { replaceByDictionaryInFieldName } from '.'
+import type { MapFieldSchema } from 'src/types/plugins/form-schema'
+import { isEqual } from 'lodash-es'
 
 export function useMapField<T = unknown, K extends string = string>(
   name: MaybeRefOrGetter<string>,
+  /**
+   * @deprecated Forward compatibility, only triggered when the type of value is string
+   */
+  onLegacyValueChange?: (newValue: Record<K, T> | null) => void,
 ) {
   const { value: fieldValue, ...field } = useField<Record<KeyId, T>>(name)
   const { getEmptyOrDefault, keyIdMap } = useFormShared()
+  const valueSchema = computed(() => {
+    if (!field.path) return
+    return (field.schema.value as MapFieldSchema).values
+  })
 
   const keys = computed(() => {
     if (!fieldValue) return []
@@ -60,6 +70,32 @@ export function useMapField<T = unknown, K extends string = string>(
     const name = getName(field.path.value)
     return replaceByDictionaryInFieldName(name)
   })
+
+  // Forward compatibility for onChange callback, only triggered when the value type is string
+  if (onLegacyValueChange && valueSchema.value?.type === 'string') {
+    let lastEmittedValue: Record<K, T> | null = null
+    watch(() => fieldValue?.value, (v) => {
+      const newValue = getValue()
+      if (isEqual(lastEmittedValue, newValue)) {
+        return
+      }
+      lastEmittedValue = newValue
+      onLegacyValueChange?.(newValue)
+    }, { deep: true })
+
+    function getValue(): Record<K, T> | null {
+      if (!fieldValue || !fieldValue.value) return null
+
+      const ret: Record<K, T> = {} as Record<K, T>
+      for (const [keyId, value] of Object.entries(fieldValue.value)) {
+        const key = keyIdMap.getKey(keyId as KeyId)
+        if (key) {
+          ret[key as K] = value
+        }
+      }
+      return ret
+    }
+  }
 
   return {
     keys,

@@ -1,4 +1,4 @@
-import { cloneDeep, get, isFunction, omit, set } from 'lodash-es'
+import { cloneDeep, get, isEqual, isFunction, omit, set } from 'lodash-es'
 import { createInjectionState } from '@vueuse/core'
 import { createRenderRuleRegistry } from './render-rules'
 import { FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
@@ -122,6 +122,11 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
 
     // Sync the inner data when the props data changes
     watch(() => propsData?.value, newData => {
+      // Avoid unnecessary data serialization
+      if (isEqual(getValue(), toValue(newData))) {
+        return
+      }
+
       initInnerData(newData)
     }, { deep: true, immediate: true })
 
