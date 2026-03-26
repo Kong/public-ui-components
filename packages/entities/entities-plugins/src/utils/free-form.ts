@@ -74,6 +74,10 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
+  'opentelemetry': {
+    experimental: true,
+    component: 'OpentelemetryForm',
+  },
 } as const
 
 export type FreeFormName = keyof typeof mapping
