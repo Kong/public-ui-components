@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.179.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.179.0...@kong-ui-public/entities-plugins@9.179.1) (2026-03-26)
+
+
+### Bug Fixes
+
+* **entities-plugins:** incorrect alerts for deprecated or nested fields ([#3060](https://github.com/Kong/public-ui-components/issues/3060)) ([ed7bddb](https://github.com/Kong/public-ui-components/commit/ed7bddb34d3cf071d6d3e0e501370d35ba0e994f))
+
+
+
+
+
 # [9.179.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.178.1...@kong-ui-public/entities-plugins@9.179.0) (2026-03-26)
 
 
