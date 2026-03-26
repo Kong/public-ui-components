@@ -70,8 +70,9 @@ const fieldsCategory = computed(() => {
         fields = [check.conditional_at_least_one_of.if_field, ...check.conditional_at_least_one_of.then_at_least_one_of]
       }
 
-      // Add all extracted fields to the ruledFields set
-      fields?.forEach(field => ruledFields.add(field))
+      // Extract top-level field name from potentially nested paths (e.g., 'a.b' -> 'a')
+      // so that parent fields are correctly promoted to defaultVisible
+      fields?.forEach(field => ruledFields.add(field.split('.')[0]))
     })
   }
 
