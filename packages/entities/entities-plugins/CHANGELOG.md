@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.179.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.178.1...@kong-ui-public/entities-plugins@9.179.0) (2026-03-26)
+
+
+### Features
+
+* **entities-plugins:** add request-transformer-advanced, response-transformer to experimental ([#3044](https://github.com/Kong/public-ui-components/issues/3044)) ([34eaea7](https://github.com/Kong/public-ui-components/commit/34eaea7e57a1f1bb2480e48647204fa3948fe588))
+
+
+
+
+
 ## [9.178.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.178.0...@kong-ui-public/entities-plugins@9.178.1) (2026-03-25)
 
 
