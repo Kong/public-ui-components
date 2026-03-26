@@ -67,7 +67,7 @@ function formatter(fields: string[]): string {
 
 function getVisibleCheckFields(fields: string[]): string[] {
   if (!Array.isArray(visibleFields)) {
-    return []
+    return fields
   }
   return fields.filter(field => visibleFields.includes(field.split('.')[0]))
 }

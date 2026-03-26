@@ -170,12 +170,16 @@ describe('EntityChecksAlert', () => {
   })
 
   describe('edge case: visibleFields not provided', () => {
-    it('should not render alert when visibleFields is not passed', () => {
+    it('should fallback to showing all fields when visibleFields is not passed', () => {
       const wrapper = mountComponent({
         entityChecks: [{ at_least_one_of: ['allow', 'deny'] }],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(false)
+      expect(wrapper.find(alertSelector).exists()).toBe(true)
+      const items = wrapper.findAll(checkItemSelector)
+      expect(items).toHaveLength(1)
+      expect(items[0].text()).toContain('Allow')
+      expect(items[0].text()).toContain('Deny')
     })
   })
 })
