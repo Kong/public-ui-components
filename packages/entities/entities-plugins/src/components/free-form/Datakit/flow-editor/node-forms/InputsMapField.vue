@@ -12,8 +12,8 @@
     class="dk-inputs-map-field"
   >
     <div
-      v-for="(entry, index) of entries"
-      :key="entry.id"
+      v-for="([keyId, key], index) of sortedKeys"
+      :key="keyId"
       class="dk-inputs-map-field-entry"
       :data-testid="`ff-kv-container-${field.path.value}.${index}`"
     >
@@ -24,28 +24,28 @@
         <div class="dk-inputs-map-field-entry-content">
           <KInput
             :id="`ff-kv-entry-key-${field.path.value}.${index}`"
-            v-model.trim="entry.key"
             class="ff-kv-field-entry-key"
             :data-key-input="index"
             :data-testid="`ff-key-${field.path.value}.${index}`"
-            :error="!!errorMap[entry.id]"
-            :error-message="errorMap[entry.id]"
+            :error="!!errorMap[keyId]"
+            :error-message="errorMap[keyId]"
+            :model-value="editingKeyNames[keyId] ?? key"
             :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input_name.placeholder')"
-            @blur="handleInputsNameBlur(entry)"
-            @change="handleInputsNameChange(entry)"
-            @focus="handleBeforeInputsNameChange(entry)"
-            @update:model-value="validateFieldName(entry)"
+            @blur="handleInputsNameBlur(keyId)"
+            @change="handleInputsNameChange(keyId)"
+            @focus="handleBeforeInputsNameChange(keyId)"
+            @update:model-value="value => handleKeyNameInput(keyId, value)"
           />
           <KSelect
-            v-model="entry.value"
             class="ff-kv-field-entry-value"
             clearable
             :data-testid="`ff-value-${field.path.value}.${index}`"
             enable-filtering
             :items="items"
             :label="t('plugins.free-form.datakit.flow_editor.node_properties.input.source')"
+            :model-value="mapValue?.[keyId]"
             :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
-            @change="selectItem => handleInputsValueChange(entry, selectItem?.value ?? null)"
+            @change="selectItem => handleInputsValueChange(keyId, selectItem?.value ?? null)"
           >
             <template
               v-if="$slots['item-label']"
@@ -63,7 +63,7 @@
           class="dk-inputs-map-field-remove-btn"
           :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
           icon
-          @click="handleRemoveEntry(entry)"
+          @click="handleRemoveKey(keyId, key)"
         >
           <CloseIcon />
         </KButton>
@@ -73,7 +73,7 @@
     <KButton
       appearance="tertiary"
       :data-testid="`ff-kv-add-btn-${field.path.value}`"
-      :disabled="!!addingEntryId"
+      :disabled="!!addingKeyId"
       @click="handleAddClick"
     >
       <AddIcon />
@@ -83,24 +83,22 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, nextTick, ref, watch } from 'vue'
+import { useTemplateRef, nextTick, ref, watch, computed, toRef } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
 import useI18n from '../../../../../composables/useI18n'
-import { useKeyValueField } from '../../../shared/headless/useKeyValueField'
-import type {
-  KeyValueFieldProps,
-  KeyValueFieldEmits,
-  KVEntry,
-} from '../../../shared/headless/useKeyValueField'
+import { useField, useMapField } from '../../../shared/composables'
+import type { KeyId } from '../../../shared/composables/key-id-map'
 import type { FieldName, IdConnection } from '../../types'
 import type { InputOption, useNodeForm } from '../composables/useNodeForm'
 
-interface Props extends KeyValueFieldProps<FieldName, IdConnection> {
+interface Props {
+  name: string
   items: InputOption[]
   fieldNameValidator: ReturnType<typeof useNodeForm>['fieldNameValidator']
+  keyOrder?: FieldName[]
 }
 
-interface Emits extends KeyValueFieldEmits {
+interface Emits {
   'change:inputs': [name: FieldName, value: IdConnection | null]
   'add:field': [name: FieldName, value?: IdConnection | null]
   'remove:field': [name: FieldName]
@@ -111,18 +109,35 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const {
-  entries,
-  addEntry,
-  removeEntry,
+  keys,
+  addKey,
+  removeKey,
+  updateKey,
+  getKeyName,
   field,
-} = useKeyValueField<FieldName, IdConnection>(props, emit)
+} = useMapField<IdConnection, FieldName>(toRef(props, 'name'))
+
+const { value: mapValue } = useField<Record<KeyId, IdConnection>>(toRef(props, 'name'))
 
 const { i18n: { t } } = useI18n()
 const root = useTemplateRef('root')
-const addingEntryId = ref<string | null>(null)
+const addingKeyId = ref<KeyId | null>(null)
 const errorMap = ref<Record<string, string>>({})
+const editingKeyNames = ref<Partial<Record<KeyId, FieldName>>>({})
 
 let fieldNameBeforeChange: FieldName
+
+const sortedKeys = computed(() => {
+  if (!props.keyOrder?.length) {
+    return keys.value
+  }
+
+  return [...keys.value].sort((a, b) => {
+    const indexA = props.keyOrder!.indexOf(a[1])
+    const indexB = props.keyOrder!.indexOf(b[1])
+    return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB)
+  })
+})
 
 async function focus(index: number, type: 'key' | 'value' = 'key') {
   if (!root.value) {
@@ -134,76 +149,127 @@ async function focus(index: number, type: 'key' | 'value' = 'key') {
 }
 
 function handleAddClick() {
-  const { id } = addEntry()
-
-  const index = entries.value.findIndex(({ key }) => !key)
-  focus(index === -1 ? entries.value.length - 1 : index)
-
-  addingEntryId.value = id
-}
-
-function handleRemoveEntry(entry: KVEntry<FieldName, IdConnection>) {
-  removeEntry(entry.id)
-  if (entry.id === addingEntryId.value) {
-    addingEntryId.value = null
-  }
-  if (entry.key.trim() !== '') { // only emit remove if the field has a name
-    emit('remove:field', entry.key)
-  }
-}
-
-function handleBeforeInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
-  fieldNameBeforeChange = entry.key
-}
-
-function handleInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
-  // Reset the value if the field name is invalid
-  if (validateFieldName(entry)) {
-    entry.key = fieldNameBeforeChange
-    delete errorMap.value[entry.id]
+  const keyId = addKey()
+  if (!keyId) {
     return
   }
 
-  if (entry.id === addingEntryId.value) {
-    // add field
-    if (entry.key.trim() === '') return // skip if the field name is empty
-    emit('add:field', entry.key, entry.value)
-    addingEntryId.value = null
-  } else {
-    // rename field
-    emit('rename:field', fieldNameBeforeChange, entry.key)
-  }
-  fieldNameBeforeChange = entry.key
+  editingKeyNames.value[keyId] = '' as FieldName
+  const index = sortedKeys.value.findIndex(([, key]) => !key)
+  focus(index === -1 ? sortedKeys.value.length - 1 : index)
+
+  addingKeyId.value = keyId
 }
 
-function validateFieldName(entry: KVEntry<FieldName, IdConnection>) {
-  delete errorMap.value[entry.id]
+function handleRemoveKey(keyId: KeyId, key: FieldName) {
+  removeKey(keyId)
+  delete editingKeyNames.value[keyId]
+  delete errorMap.value[keyId]
+  if (keyId === addingKeyId.value) {
+    addingKeyId.value = null
+  }
+  if (key.trim() !== '') {
+    emit('remove:field', key)
+  }
+}
+
+function handleBeforeInputsNameChange(keyId: KeyId) {
+  fieldNameBeforeChange = (editingKeyNames.value[keyId] ?? getKeyName(keyId) ?? '') as FieldName
+}
+
+function handleKeyNameInput(keyId: KeyId, value: string) {
+  const trimmedValue = value.trim() as FieldName
+  editingKeyNames.value[keyId] = trimmedValue
+  validateFieldName(keyId, trimmedValue)
+}
+
+function handleInputsNameChange(keyId: KeyId) {
+  const newName = (editingKeyNames.value[keyId] ?? getKeyName(keyId) ?? '') as FieldName
+
+  if (validateFieldName(keyId, newName)) {
+    editingKeyNames.value[keyId] = fieldNameBeforeChange
+    updateKey(keyId, fieldNameBeforeChange)
+    delete errorMap.value[keyId]
+    return
+  }
+
+  if (keyId === addingKeyId.value) {
+    if (newName.trim() === '') {
+      return
+    }
+    updateKey(keyId, newName)
+    emit('add:field', newName, mapValue?.value?.[keyId] ?? null)
+    addingKeyId.value = null
+  } else {
+    updateKey(keyId, newName)
+    emit('rename:field', fieldNameBeforeChange, newName)
+  }
+
+  delete errorMap.value[keyId]
+  fieldNameBeforeChange = newName
+}
+
+function validateFieldName(keyId: KeyId, currentValue: FieldName) {
+  delete errorMap.value[keyId]
   const err = props.fieldNameValidator(
     'input',
     fieldNameBeforeChange,
-    entry.key,
+    currentValue,
   )
   if (err) {
-    errorMap.value[entry.id] = err
+    errorMap.value[keyId] = err
     return err
   }
 }
 
-function handleInputsNameBlur(entry: KVEntry<FieldName, IdConnection>) {
-  validateFieldName(entry)
+function handleInputsNameBlur(keyId: KeyId) {
+  validateFieldName(keyId, (editingKeyNames.value[keyId] ?? getKeyName(keyId) ?? '') as FieldName)
 }
 
-function handleInputsValueChange(entry: KVEntry<FieldName, IdConnection>, value: IdConnection | null) {
-  // skip if the field hasn't been created
-  if (entry.id === addingEntryId.value) return
-  emit('change:inputs', entry.key, value)
+function handleInputsValueChange(keyId: KeyId, value: IdConnection | null) {
+  if (mapValue?.value) {
+    mapValue.value[keyId] = value as IdConnection
+  }
+
+  if (keyId === addingKeyId.value) {
+    return
+  }
+
+  const key = getKeyName(keyId)
+  if (key) {
+    emit('change:inputs', key, value)
+  }
 }
 
-watch(() => entries.value, (newEntries) => {
-  if (addingEntryId.value) {
-    if (!newEntries.find(({ id }) => id === addingEntryId.value)) {
-      addingEntryId.value = null
+watch(keys, (newKeys) => {
+  const existingIds = new Set(newKeys.map(([id]) => id))
+
+  Object.keys(editingKeyNames.value).forEach((keyId) => {
+    if (!existingIds.has(keyId as KeyId)) {
+      delete editingKeyNames.value[keyId as KeyId]
+      delete errorMap.value[keyId]
+    } else {
+      editingKeyNames.value[keyId as KeyId] = (editingKeyNames.value[keyId as KeyId] ?? getKeyName(keyId as KeyId) ?? '') as FieldName
     }
+  })
+
+  newKeys.forEach(([keyId, key]) => {
+    editingKeyNames.value[keyId] = (editingKeyNames.value[keyId] ?? key) as FieldName
+  })
+
+  if (addingKeyId.value && !existingIds.has(addingKeyId.value)) {
+    addingKeyId.value = null
+  }
+}, { immediate: true })
+
+watch(() => props.keyOrder, () => {
+  if (!addingKeyId.value) {
+    return
+  }
+
+  const index = sortedKeys.value.findIndex(([keyId]) => keyId === addingKeyId.value)
+  if (index !== -1) {
+    focus(index)
   }
 })
 </script>
