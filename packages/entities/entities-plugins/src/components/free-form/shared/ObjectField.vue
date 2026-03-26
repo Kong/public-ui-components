@@ -19,7 +19,7 @@
       <slot>
         <EntityChecksAlert
           :entity-checks="field.schema.value?.entity_checks"
-          :omitted-fields="omit"
+          :visible-fields="visibleFieldNames"
         />
         <Field
           v-for="cfield in childFields"
@@ -104,7 +104,7 @@
         <slot>
           <EntityChecksAlert
             :entity-checks="field.schema.value?.entity_checks"
-            :omitted-fields="omit"
+            :visible-fields="visibleFieldNames"
           />
           <Field
             v-for="cfield in childFields"
@@ -216,6 +216,8 @@ const childFields = computed(() => {
 
   return fields
 })
+
+const visibleFieldNames = computed(() => childFields.value.map(f => Object.keys(f)[0]))
 
 function toggleDisplay() {
   expanded.value = !expanded.value

@@ -81,7 +81,9 @@
       "axios@>=1.0.0 <=1.13.4": ">=1.13.5",
       "minimatch@>=9.0.0 <9.0.7": ">=9.0.7",
       "serialize-javascript@<=7.0.2": ">=7.0.3",
-      "dompurify@<3.2.4": ">=3.3.2"
+      "dompurify@<3.2.4": ">=3.3.2",
+      "picomatch@<2.3.2": ">=2.3.2",
+      "picomatch@>=4.0.0 <4.0.4": ">=4.0.4"
     },
     "onlyBuiltDependencies": [
       "@evilmartians/lefthook",
