@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.180.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.179.1...@kong-ui-public/entities-plugins@9.180.0) (2026-03-26)
+
+
+### Features
+
+* **entities-plugins:** add otel to experimental ([#3053](https://github.com/Kong/public-ui-components/issues/3053)) ([cfa85d0](https://github.com/Kong/public-ui-components/commit/cfa85d0ff47dcf41e84e94d0003197ad53fa15b0))
+
+
+
+
+
 ## [9.179.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.179.0...@kong-ui-public/entities-plugins@9.179.1) (2026-03-26)
 
 
