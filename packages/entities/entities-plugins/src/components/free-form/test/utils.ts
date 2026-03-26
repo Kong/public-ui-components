@@ -318,6 +318,12 @@ export function assertFormRendering(schema: FormSchema, options?: {
     // Check if the content is initially existing
     if (fieldSchema.default && Object.keys(fieldSchema.default).length > 0) {
       cy.getTestId(`ff-map-container-${fieldKey}.0`).should('exist')
+
+      assertMapValueField({
+        fieldKey,
+        fieldSchema,
+        index: 0,
+      })
     }
 
     // Check the 'add' button
@@ -333,11 +339,13 @@ export function assertFormRendering(schema: FormSchema, options?: {
         const latestIndex = itemCount - 1
         cy.getTestId(`ff-map-container-${fieldKey}.${latestIndex}`).should('exist')
 
-        // Assert child fields
         cy.getTestId(`ff-map-key-${fieldKey}.${latestIndex}`).should('exist')
-        cy.getTestId(`ff-map-container-${fieldKey}.${latestIndex}`)
-          .find(`[data-testid*="${fieldKey}.kid:"]`)
-          .should('exist')
+
+        assertMapValueField({
+          fieldKey,
+          fieldSchema,
+          index: latestIndex,
+        })
 
         // Check the 'delete' button
         cy.getTestId(`ff-map-remove-btn-${fieldKey}.${latestIndex}`)
@@ -345,6 +353,33 @@ export function assertFormRendering(schema: FormSchema, options?: {
           .click()
 
         cy.getTestId(`ff-map-container-${fieldKey}.${latestIndex}`).should('not.exist')
+      })
+  }
+
+  const assertMapValueField = ({
+    fieldKey,
+    fieldSchema,
+    index,
+  }: {
+    fieldKey: string
+    fieldSchema: MapFieldSchema
+    index: number
+  }) => {
+    const childTestIdPrefix = getFieldTestIdPrefix(fieldSchema.values)
+
+    cy.getTestId(`ff-map-container-${fieldKey}.${index}`)
+      .find(`[data-testid^="${childTestIdPrefix}${fieldKey}.kid:"]`)
+      .first()
+      .invoke('attr', 'data-testid')
+      .then((dataTestId) => {
+        assert(dataTestId, `Map child field should exist for "${fieldKey}"`)
+
+        const childFieldKey = dataTestId.slice(childTestIdPrefix.length)
+        assertField({
+          fieldSchema: fieldSchema.values,
+          fieldKey: childFieldKey,
+          labelOption: { hide: true },
+        })
       })
   }
 
@@ -510,6 +545,23 @@ function isStringArrayOfArray(fieldSchema: UnionFieldSchema) {
   return fieldSchema.type === 'array'
     && fieldSchema.elements.type === 'array'
     && fieldSchema.elements.elements.type === 'string'
+}
+
+function getFieldTestIdPrefix(fieldSchema: UnionFieldSchema) {
+  switch (fieldSchema.type) {
+    case 'record':
+      return 'ff-object-'
+    case 'array':
+      return 'ff-array-'
+    case 'map':
+      return 'ff-map-'
+    case 'json':
+      return 'ff-json-'
+    case 'set':
+      return isTagField(fieldSchema) ? 'ff-tag-' : 'ff-'
+    default:
+      return 'ff-'
+  }
 }
 
 function convertFieldPathToLabel(fieldPath: string) {

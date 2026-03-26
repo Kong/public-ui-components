@@ -24,15 +24,6 @@ export const selectors = {
   objectSwitch: (path: string) => `[data-testid="ff-object-switch-${path}"]`,
   objectContent: (path: string) => `[data-testid="ff-object-content-${path}"]`,
 
-  // KeyValueField
-  kv: (path: string) => `[data-testid="ff-kv-${path}"]`,
-  kvEntry: (path: string, index: number) => `[data-testid="ff-kv-container-${path}.${index}"]`,
-  kvKey: (path: string, index: number) => `[data-testid="ff-key-${path}.${index}"]`,
-  kvValue: (path: string, index: number) => `[data-testid="ff-value-${path}.${index}"]`,
-  kvRemoveBtns: (path: string) => `[data-testid^="ff-kv-remove-btn-${path}"]`,
-  kvRemoveBtn: (path: string, index: number) => `[data-testid="ff-kv-remove-btn-${path}.${index}"]`,
-  kvAddBtn: (path: string) => `[data-testid="ff-kv-add-btn-${path}"]`,
-
   // MapField
   map: (path: string) => `[data-testid="ff-map-${path}"]`,
   mapContainer: (path: string, index: number) => `[data-testid="ff-map-container-${path}.${index}"]`,
