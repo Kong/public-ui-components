@@ -58,6 +58,18 @@ const mapping = {
     experimental: true,
     component: 'LogForm',
   },
+  'request-transformer-advanced': {
+    experimental: true,
+    component: 'CommonForm',
+  },
+  'response-transformer': {
+    experimental: true,
+    component: 'ResponseTransformerForm',
+  },
+  'response-transformer-advanced': {
+    experimental: true,
+    component: 'ResponseTransformerForm',
+  },
   'correlation-id': {
     experimental: true,
     component: 'CommonForm',
