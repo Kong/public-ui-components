@@ -20,6 +20,7 @@
             <component
               :is="isBackToString ? 'a' : 'router-link'"
               v-if="backTo"
+              :aria-label="t('back_button')"
               class="navigate-back"
               data-testid="page-layout-navigate-back"
               :href="isBackToString ? backTo : undefined"
@@ -29,7 +30,10 @@
               @keydown.enter.prevent="navigateBack"
               @keydown.space.prevent="navigateBack"
             >
-              <ArrowTopLeftIcon :size="KUI_ICON_SIZE_30" />
+              <ArrowTopLeftIcon
+                decorative
+                :size="KUI_ICON_SIZE_30"
+              />
             </component>
             <h1
               v-if="title"
@@ -75,6 +79,7 @@ import { nestedPageLayoutInjectionKey } from '../symbols'
 import { ArrowTopLeftIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { useRouter } from 'vue-router'
+import composables from '../composables'
 
 const {
   breadcrumbs = [],
@@ -86,6 +91,8 @@ const {
 defineSlots<PageLayoutSlots>()
 
 const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
+
+const { i18n: { t } } = composables.useI18n()
 
 const router = useRouter()
 
