@@ -341,6 +341,11 @@ const badgeData = computed<string | null>(() => {
   const query = props.definition.query
   const timeRange = query?.time_range
 
+  // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
+  if (query?.datasource === 'platform' && !query.dimensions?.includes('time')) {
+    return i18n.t('renderer.as_of_today')
+  }
+
   if (timeRange?.type === 'relative') {
     const timeframe = TimePeriods.get(TIMEFRAME_LOOKUP[timeRange.time_range])
     if (timeframe) {
@@ -354,11 +359,6 @@ const badgeData = computed<string | null>(() => {
     // When we support fine-grained absolute time, this assumption may need to be adjusted.
     const tz = timeRange.tz || 'Etc/UTC'
     return `${formatTime(timeRange.start, { short: true, tz })} - ${formatTime(timeRange.end, { short: true, tz })}`
-  }
-
-  // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
-  if (query?.datasource === 'platform' && !query.dimensions?.includes('time')) {
-    return i18n.t('renderer.as_of_today')
   }
 
   return null
