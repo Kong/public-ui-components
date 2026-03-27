@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.9.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.12...@kong-ui-public/dashboard-renderer@8.9.13) (2026-03-27)
+
+
+### Bug Fixes
+
+* non timeseries platform tiles always show "As of today" badge ([#3068](https://github.com/Kong/public-ui-components/issues/3068)) ([f34d65c](https://github.com/Kong/public-ui-components/commit/f34d65c2f99e7f62562cf2d8a33fd144711107f2))
+
+
+
+
+
 ## [8.9.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.11...@kong-ui-public/dashboard-renderer@8.9.12) (2026-03-26)
 
 
