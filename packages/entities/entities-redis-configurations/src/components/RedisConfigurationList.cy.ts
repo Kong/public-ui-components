@@ -503,11 +503,13 @@ describe('<RedisConfigurationList />', () => {
         next: null,
       }
 
+      // When searching by add-on id, the list resolves the add-on first, then if present uses
+      // `config.state_metadata.cache_config_id` to fetch the Koko partial by id
       cy.intercept(
         'GET',
-        '**/core-entities/partials/addon-123**',
+        '**/core-entities/partials/gone-partial-id**',
         { statusCode: 404, body: {} },
-      ).as('getPartialByAddonId')
+      ).as('getPartialByCacheConfigId')
 
       cy.intercept(
         'GET',
@@ -518,7 +520,7 @@ describe('<RedisConfigurationList />', () => {
             id: 'addon-123',
             name: 'initializing cloud',
             state: 'initializing',
-            config: { kind: 'managed-cache.v0' },
+            config: { kind: 'managed-cache.v0', state_metadata: { cache_config_id: 'gone-partial-id' } },
             owner: { control_plane_id: baseConfigKonnect.controlPlaneId },
           },
         },
@@ -565,8 +567,8 @@ describe('<RedisConfigurationList />', () => {
       cy.get('.kong-ui-entity-filter-input [data-testid="search-input"]').clear()
       cy.get('.kong-ui-entity-filter-input [data-testid="search-input"]').type('addon-123')
 
-      cy.wait('@getPartialByAddonId')
       cy.wait('@getAddOnById')
+      cy.wait('@getPartialByCacheConfigId')
 
       cy.getTestId('initializing cloud').should('be.visible')
       cy.get('tr [data-testid="self-managed-config"]').should('not.exist')
