@@ -25,9 +25,9 @@
               :href="isBackToString ? backTo : undefined"
               tabindex="0"
               :to="isBackToString ? undefined : backTo"
-              @click.prevent="navigateBack()"
-              @keydown.enter.prevent="navigateBack()"
-              @keydown.space.prevent="navigateBack()"
+              @click.prevent="navigateBack"
+              @keydown.enter.prevent="navigateBack"
+              @keydown.space.prevent="navigateBack"
             >
               <ArrowTopLeftIcon :size="KUI_ICON_SIZE_30" />
             </component>
