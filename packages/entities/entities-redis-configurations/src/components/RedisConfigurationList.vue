@@ -95,10 +95,10 @@
         </KClipboardProvider>
         <PermissionsWrapper :auth-function="() => canRetrieve(row)">
           <KDropdownItem
-            v-if="!isKonnectManagedRedisEnabled || row.partial || (isKonnectManagedRedisEnabled && row.source === 'konnect-managed' && row.addOn)"
+            v-if="canNavigateToRowDetails(row)"
             data-testid="action-entity-view"
             has-divider
-            :item="getViewDropdownItem(row.id)"
+            :item="getViewDropdownItem(row)"
           />
         </PermissionsWrapper>
         <PermissionsWrapper :auth-function="() => canEditRow(row)">
@@ -830,9 +830,35 @@ const tableHeaders = computed<BaseTableHeaders>(() => ({
   plugins: { label: t('list.table_headers.plugins') },
 }))
 
-const getViewDropdownItem = (id: string) => ({
+const getNavigableRowId = (row: EntityRow): string | null => {
+  if (!isKonnectManagedRedisEnabled.value || row.source !== 'konnect-managed') {
+    return row.id as string
+  }
+
+  if (row.partial?.id) {
+    return String(row.partial.id)
+  }
+
+  const linkedPartialId = row.addOn ? getCacheConfigId(row.addOn) : undefined
+  if (linkedPartialId) {
+    return linkedPartialId
+  }
+
+  // Non-ready state: no Koko partial yet; host detail is keyed by add-on id
+  const addOnId = row.addOn?.id
+  if (addOnId) {
+    return addOnId
+  }
+
+  return typeof row.id === 'string' && row.id !== '' ? row.id : null
+}
+
+const canNavigateToRowDetails = (row: EntityRow): boolean =>
+  Boolean(getNavigableRowId(row))
+
+const getViewDropdownItem = (row: EntityRow) => ({
   label: t('actions.view'),
-  to: props.config.getViewRoute(id),
+  to: props.config.getViewRoute(getNavigableRowId(row) as string),
 })
 
 const getEditDropdownItem = (id: string) => ({
@@ -882,7 +908,7 @@ const clearFilter = (): void => {
  * Otherwise caller does not use this. Navigate by partial id, or by add-on id for konnect-managed rows with no Koko partial yet
  */
 const canNavigateCombinedKonnectRow = (row: EntityRow): boolean =>
-  Boolean(row.partial || (row.source === 'konnect-managed' && row.addOn))
+  canNavigateToRowDetails(row)
 
 const rowClick = async (row: EntityRow): Promise<void> => {
   if (isKonnectManagedRedisEnabled.value && !canNavigateCombinedKonnectRow(row)) {
@@ -895,7 +921,13 @@ const rowClick = async (row: EntityRow): Promise<void> => {
     return
   }
 
-  router.push(props.config.getViewRoute(row.id as string))
+  const rowViewId = getNavigableRowId(row)
+
+  if (!rowViewId) {
+    return
+  }
+
+  router.push(props.config.getViewRoute(rowViewId))
 }
 
 const hideDeleteModal = (): void => {
