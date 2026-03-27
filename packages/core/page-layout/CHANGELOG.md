@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.6...@kong-ui-public/page-layout@0.2.7) (2026-03-27)
+
+
+### Bug Fixes
+
+* **page-layout:** back button attributes ([c6651f4](https://github.com/Kong/public-ui-components/commit/c6651f441681bd4b00783b58d072b9047bbdb9a1))
+
+
+
+
+
 ## [0.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.5...@kong-ui-public/page-layout@0.2.6) (2026-03-27)
 
 
