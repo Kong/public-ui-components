@@ -1,6 +1,7 @@
 <template>
   <div class="kong-ui-certificate-entity-config-card">
     <EntityBaseConfigCard
+      :code-block-record-formatter="codeBlockRecordFormatter"
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="(configSchema as any)"
@@ -150,6 +151,7 @@ import {
 } from '@kong-ui-public/entities-shared'
 import endpoints from '../certificates-endpoints'
 import composables from '../composables'
+import { codeBlockRecordFormatter } from '../utils/code-block'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
