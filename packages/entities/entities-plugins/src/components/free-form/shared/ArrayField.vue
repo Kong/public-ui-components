@@ -128,7 +128,6 @@
         {{ t('actions.add_entity', { entity: fieldName }) }}
       </KButton>
     </template>
-
     <KCard
       v-else-if="realItems.length && (!collapsible || expanded)"
       :data-testid="`ff-array-tab-container-${field.path.value}`"

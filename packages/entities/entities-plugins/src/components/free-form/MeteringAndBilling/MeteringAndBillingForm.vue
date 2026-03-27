@@ -26,24 +26,6 @@
       <!-- StringField description overrides -->
       <FieldRenderer
         v-slot="slotProps"
-        :match="({ path }) => path === 'config.ingest_endpoint'"
-      >
-        <StringField
-          v-bind="slotProps"
-          :label-attributes="{ info: t('plugins.free-form.metering-and-billing.fields.ingest_endpoint.description') }"
-        />
-      </FieldRenderer>
-      <FieldRenderer
-        v-slot="slotProps"
-        :match="({ path }) => path === 'config.api_token'"
-      >
-        <StringField
-          v-bind="slotProps"
-          :label-attributes="{ info: t('plugins.free-form.metering-and-billing.fields.api_token.description') }"
-        />
-      </FieldRenderer>
-      <FieldRenderer
-        v-slot="slotProps"
         :match="({ path }) => path === 'config.ssl_verify'"
       >
         <BooleanField
@@ -52,7 +34,6 @@
           :label="t('plugins.free-form.metering-and-billing.fields.ssl_verify.label')"
         />
       </FieldRenderer>
-      <!-- NumberField description overrides -->
       <FieldRenderer
         v-slot="slotProps"
         :match="({ path }) => path === 'config.subject.look_up_value_in'"
@@ -69,9 +50,9 @@
         <StringField
           v-bind="slotProps"
           :label="t('plugins.free-form.metering-and-billing.fields.subject_field.label')"
+          :placeholder="t('plugins.free-form.metering-and-billing.fields.subject_field.placeholder')"
         />
       </FieldRenderer>
-      <!-- NumberField description overrides -->
       <FieldRenderer
         v-slot="slotProps"
         :match="({ path }) => path === 'config.timeout'"
@@ -79,7 +60,6 @@
         <NumberField
           v-bind="slotProps"
           :label="t('plugins.free-form.metering-and-billing.fields.timeout.label')"
-          :label-attributes="{ info: t('plugins.free-form.metering-and-billing.fields.timeout.description') }"
         />
       </FieldRenderer>
       <FieldRenderer
@@ -98,16 +78,49 @@
         <ArrayField
           v-bind="slotProps"
           collapsible
-          :label="t('plugins.free-form.metering-and-billing.sections.attributes.title')"
+          :label="t('plugins.free-form.metering-and-billing.fields.attributes.title')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }) => path === 'config.attributes.*.look_up_value_in'"
+      >
+        <StringField
+          v-bind="slotProps"
+          :placeholder="t('plugins.free-form.metering-and-billing.fields.attributes.look_up_value_in.placeholder')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }) => path === 'config.attributes.*.event_property_name'"
+      >
+        <StringField
+          v-bind="slotProps"
+          :placeholder="t('plugins.free-form.metering-and-billing.fields.attributes.event_property_name.placeholder')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }) => path.startsWith('config.attributes.') && path.endsWith('.look_up_value_in')"
+      >
+        <StringField
+          v-bind="slotProps"
+          :placeholder="t('plugins.free-form.metering-and-billing.fields.attributes.look_up_value_in.placeholder')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }) => path.startsWith('config.attributes.') && path.endsWith('.event_property_name')"
+      >
+        <StringField
+          v-bind="slotProps"
+          :placeholder="t('plugins.free-form.metering-and-billing.fields.attributes.event_property_name.placeholder')"
         />
       </FieldRenderer>
     </template>
 
     <!-- Metering -->
-    <div
-      class="ff-mb-collapse"
-      :class="{ 'ff-mb-collapse-collapsed': !meteringExpanded }"
-    >
+    <div class="ff-mb-collapse">
       <header class="ff-mb-collapse-header">
         <div class="ff-mb-collapse-header-toggle">
           <button
@@ -155,10 +168,7 @@
     <Field name="config.attributes" />
 
     <!-- Ingestion -->
-    <div
-      class="ff-mb-collapse"
-      :class="{ 'ff-mb-collapse-collapsed': !ingestionExpanded }"
-    >
+    <div class="ff-mb-collapse">
       <header class="ff-mb-collapse-header">
         <div class="ff-mb-collapse-header-toggle">
           <button
@@ -359,6 +369,11 @@ const ingestionExpanded = ref(true)
     flex: 1 1 0;
     min-width: 0;
   }
+}
+
+:deep([data-testid="ff-array-config.attributes"] .ff-array-field-item-remove-tooltip) {
+  align-self: flex-end;
+  margin-bottom: $kui-space-20;
 }
 
 .ff-metering-billing-inline-row {

@@ -774,16 +774,9 @@
       },
       "metering-and-billing": {
         "sections": {
-          "scope": {
-            "title": "Plugin scope",
-            "description": "Choose the scope at which this plugin applies."
-          },
           "plugin_config": {
             "title": "Plugin configuration",
             "description": "Configure the Metering & Billing plugin."
-          },
-          "general_info": {
-            "title": "General information"
           },
           "metering": {
             "title": "What to meter"
@@ -791,10 +784,6 @@
           "subject": {
             "title": "Who to bill (Subject)",
             "description": "Define how billing subjects are identified."
-          },
-          "attributes": {
-            "title": "Event attributes",
-            "description": "Attach custom dimensions to metered events."
           },
           "ingestion": {
             "title": "Connection",
@@ -824,19 +813,28 @@
             "label": "Look up subject in"
           },
           "subject_field": {
-            "label": "Subject field name"
+            "label": "Subject field name",
+            "placeholder": "e.g., x-customer-id"
+          },
+          "attributes": {
+            "title": "Event attributes",
+            "description": "Attach custom dimensions to metered events.",
+            "look_up_value_in": {
+              "placeholder": "e.g., x-customer-id"
+            },
+            "event_property_name": {
+              "placeholder": "e.g., x-customer-id"
+            }
           },
           "ssl_verify": {
             "label": "Verify TLS certificate",
             "description": "Disable only for local development with self-signed certificates"
           },
           "timeout": {
-            "label": "Request timeout (ms)",
-            "description": "Timeout in milliseconds for ingest requests."
+            "label": "Request timeout (ms)"
           },
           "keepalive": {
-            "label": "Connection keep-alive (ms)",
-            "description": "Keepalive timeout in milliseconds for persistent connections to the ingest endpoint."
+            "label": "Connection keep-alive (ms)"
           }
         }
       },
