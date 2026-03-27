@@ -365,6 +365,13 @@ const { fetcher: rawFetcher, fetcherState } = useFetcher(props.config, fetcherBa
 // the API returns all partials, so we have to set a high page size to filter them on the frontend
 const partialsPageSize = 1000
 
+// Avoid Konnect exact-match `GET …/partials/{toolbarQuery}`; combined list filters partials client-side after merging add-ons
+const partialsListParamsWithoutToolbarQuery = (params: TableDataFetcherParams): TableDataFetcherParams => ({
+  ...params,
+  query: '',
+  pageSize: partialsPageSize,
+})
+
 // Cloud Gateways add-ons API limits page size at 100
 const addOnsPageSize = 100
 const maxAddOnPagesFallback = 1000
@@ -611,7 +618,11 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
   try {
     errorMessage.value = null
 
-    const partialsPromise = rawFetcher({ ...params, pageSize: partialsPageSize })
+    // Konnect `useFetchUrlBuilder` maps toolbar search to `GET …/partials/{query}`. That 404s while a
+    // managed-cache add-on is still provisioning (partial not created in Koko yet) even though the
+    // row exists via add-ons. Always load the partials collection here and filter client-side instead
+    const partialsPromise = rawFetcher(partialsListParamsWithoutToolbarQuery(params))
+
     const addOnsPromise = fetchAllAddOns()
       .then((items) => ({ items, isLoaded: true }))
       .catch(() => {
@@ -623,10 +634,8 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
     let partials: RedisConfigurationResponse[] = partialsRes.data.filter(isRedisPartial)
     const filterQueryTrimmed = typeof params.query === 'string' ? params.query.trim() : ''
 
-    if (filterQueryTrimmed && partials.length === 0) {
-      // Toolbar search uses GET …/partials/{typedValue}. That works for Koko ids but 404s when the user typed the add-on id instead.
-      // When managed Redis is still provisioning, the ID the user copies/searches for is often Cloud Gateways add-on id, not the Koko partial id.
-      // So if Koko returns nothing, we resolve the add-on by id and then if available follow `cache_config_id` back to the Koko partial
+    // When the typed id is not already in the partials page, resolve add-on and/or single partial (same as legacy `GET …/partials/{id}`).
+    if (filterQueryTrimmed && !partials.some((p) => p.id === filterQueryTrimmed)) {
       const addOnFoundBySearchId = await fetchManagedAddOnById(filterQueryTrimmed)
 
       if (addOnFoundBySearchId) {
@@ -639,12 +648,19 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
         const linkedKokoPartialId = getCacheConfigId(addOnFoundBySearchId)
 
         if (linkedKokoPartialId) {
-          // Add-on is wired to a partial — load that partial so join logic matches what you see with no filter
           const redisPartialFromKoko = await fetchRedisPartialById(linkedKokoPartialId)
 
-          if (redisPartialFromKoko) {
-            partials = [redisPartialFromKoko]
+          if (redisPartialFromKoko && !partials.some((p) => p.id === redisPartialFromKoko.id)) {
+            partials = [...partials, redisPartialFromKoko]
           }
+        }
+      }
+
+      if (!partials.some((p) => p.id === filterQueryTrimmed)) {
+        const redisPartialDirect = await fetchRedisPartialById(filterQueryTrimmed)
+
+        if (redisPartialDirect && !partials.some((p) => p.id === redisPartialDirect.id)) {
+          partials = [...partials, redisPartialDirect]
         }
       }
     }
