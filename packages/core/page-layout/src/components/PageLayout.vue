@@ -95,19 +95,24 @@ const isBackToString = computed((): boolean => typeof backTo === 'string')
 
 /** Handle navigation back via the backTo prop */
 const navigateBack = async () => {
-  // If not a string (a RouteLocationRaw)
-  if (!isBackToString.value) {
-    router.push(backTo!)
+  if (!backTo) {
     return
   }
 
+  // If backTo is a RouteLocationRaw
+  if (typeof backTo === 'object') {
+    router.push(backTo)
+    return
+  }
+
+  // backTo is a string
   // If navigateTo is undefined
   if (typeof navigateTo !== 'function') {
-    window.location.href = backTo as string
+    window.location.href = backTo
     return
   }
 
-  await navigateTo(backTo as string)
+  await navigateTo(backTo)
 }
 
 /**
