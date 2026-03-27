@@ -783,11 +783,16 @@
         "detected_config_format_title": "Convert configuration",
         "detected_config_format_confirm": "Convert",
         "examples": {
-          "authenticate": "Authenticate Kong to a third-party service",
-          "vault": "Authenticate to a third-party service using vault secrets",
-          "combine": "Combine multiple API responses",
-          "cache": "Conditionally fetch or store cache data",
-          "manipulate": "Manipulate request headers"
+          "authenticateThirdPartyWithDynamicUrl": "Authenticate Kong to a third-party service resolved at runtime",
+          "authenticateThirdParty": "Authenticate Kong to a third-party service",
+          "authenticateWithVaultSecret": "Authenticate to a third-party service using Vault secrets",
+          "clearHeaders": "Clear request headers",
+          "combineTwoApisIntoOneResponse": "Combine multiple API responses",
+          "conditionallyStoreCachedItems": "Conditionally fetch or store cache data",
+          "convertJsonIntoXml": "Transform JSON into XML",
+          "convertJsonToXmlAndBack": "Transform JSON into XML and back",
+          "convertXmlIntoJson": "Transform XML into JSON",
+          "manipulateRequestHeaders": "Manipulate request headers"
         },
         "flow_editor": {
           "mode": "Flow editor",
