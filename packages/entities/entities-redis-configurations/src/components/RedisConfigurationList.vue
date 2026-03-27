@@ -656,13 +656,6 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
         }
       }
 
-      if (!partials.some((p) => p.id === filterQueryTrimmed)) {
-        const redisPartialDirect = await fetchRedisPartialById(filterQueryTrimmed)
-
-        if (redisPartialDirect && !partials.some((p) => p.id === redisPartialDirect.id)) {
-          partials = [...partials, redisPartialDirect]
-        }
-      }
     }
 
     const konnectConfig = props.config as KonnectRedisConfigurationListConfig
