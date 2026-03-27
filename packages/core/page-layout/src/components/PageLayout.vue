@@ -18,13 +18,13 @@
           />
           <div class="title-container">
             <component
-              :is="typeof backTo === 'string' ? 'a' : 'router-link'"
+              :is="isBackToString ? 'a' : 'router-link'"
               v-if="backTo"
               class="navigate-back"
               data-testid="page-layout-navigate-back"
-              :href="typeof backTo === 'string' ? backTo : undefined"
+              :href="isBackToString ? backTo : undefined"
               tabindex="0"
-              :to="typeof backTo === 'string' ? undefined : backTo"
+              :to="isBackToString ? undefined : backTo"
               @click.prevent="navigateBack()"
               @keydown.enter.prevent="navigateBack()"
               @keydown.space.prevent="navigateBack()"
@@ -42,7 +42,7 @@
         </div>
 
         <div
-          v-if="$slots.actions"
+          v-if="!!$slots.actions"
           class="page-header-actions-container"
         >
           <slot name="actions" />
@@ -91,20 +91,23 @@ const router = useRouter()
 
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
+const isBackToString = computed((): boolean => typeof backTo === 'string')
+
+/** Handle navigation back via the backTo prop */
 const navigateBack = async () => {
   // If not a string (a RouteLocationRaw)
-  if (typeof backTo !== 'string') {
+  if (!isBackToString.value) {
     router.push(backTo!)
     return
   }
 
   // If navigateTo is undefined
   if (typeof navigateTo !== 'function') {
-    window.location.href = backTo
+    window.location.href = backTo as string
     return
   }
 
-  await navigateTo(backTo)
+  await navigateTo(backTo as string)
 }
 
 /**
