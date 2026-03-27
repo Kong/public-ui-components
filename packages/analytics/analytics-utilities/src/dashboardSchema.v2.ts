@@ -141,6 +141,9 @@ export const timeseriesChartSchema = {
     synthetics_data_key: syntheticsDataKey,
     chart_title: chartTitle,
     allow_csv_export: allowCsvExport,
+    dimension_axes_title: {
+      type: 'string',
+    },
   },
   required: ['type'],
   additionalProperties: false,
