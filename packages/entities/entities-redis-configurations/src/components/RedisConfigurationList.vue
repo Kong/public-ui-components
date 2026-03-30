@@ -407,7 +407,7 @@ const fetchManagedAddOnById = async (managedCacheAddOnId: string): Promise<Manag
     const addOnData = addOnResponse.data
 
     const parsedAddOn = addOnData && typeof addOnData === 'object' && !Array.isArray(addOnData)
-      ? (addOnData as ManagedCacheAddOn)
+      ? (addOnData satisfies ManagedCacheAddOn)
       : null
     if (!parsedAddOn?.id || !isManagedCacheAddOn(parsedAddOn)) {
       return null
@@ -437,21 +437,9 @@ const fetchRedisPartialById = async (kokoPartialId: string): Promise<RedisConfig
   const singlePartialUrl = `${fetcherBaseUrl.value}/${encodeURIComponent(kokoPartialId)}`
 
   try {
-    const partialResponse = await axiosInstance.get(singlePartialUrl)
-    const responseBody = partialResponse.data
-
-    // Koko can return the partial in different ways, normalize it into a single object for join logic
-    let entityFromResponse: unknown = responseBody?.data ?? responseBody
-
-    if (Array.isArray(entityFromResponse)) {
-      entityFromResponse = entityFromResponse[0]
-    }
-
-    if (!entityFromResponse || typeof entityFromResponse !== 'object') {
-      return null
-    }
-
-    const maybeRedisPartial = entityFromResponse as RedisConfigurationResponse
+    const partialResponse = await axiosInstance.get<{ data: RedisConfigurationResponse }>(singlePartialUrl)
+    const { data: responseBody } = partialResponse
+    const maybeRedisPartial = responseBody.data
 
     return isRedisPartial(maybeRedisPartial) ? maybeRedisPartial : null
   } catch (error: any) {
@@ -542,13 +530,11 @@ const parseSortTimestampToMs = (value: string | number | undefined | null): numb
   }
 
   const fromIso = Date.parse(value)
-
   if (Number.isFinite(fromIso)) {
     return fromIso
   }
 
   const asNum = Number(value)
-
   return Number.isFinite(asNum) ? parseSortTimestampToMs(asNum) : null
 }
 
@@ -559,7 +545,7 @@ const getRedisListRowSortTimeMs = (row: EntityRow): number | null => {
   const candidates = row.addOn != null ? [primary, fallback] : [fallback]
 
   for (const value of candidates) {
-    const ms = parseSortTimestampToMs(value as string | number | undefined)
+    const ms = parseSortTimestampToMs(value)
 
     if (ms != null) {
       return ms
@@ -859,11 +845,11 @@ const getNavigableRowId = (row: EntityRow): string | null => {
     return addOnId
   }
 
-  return typeof row.id === 'string' && row.id !== '' ? row.id : null
+  return typeof row.id === 'string' && row.id ? row.id : null
 }
 
 const canNavigateToRowDetails = (row: EntityRow): boolean =>
-  Boolean(getNavigableRowId(row))
+  !!getNavigableRowId(row)
 
 const getViewDropdownItem = (row: EntityRow) => ({
   label: t('actions.view'),
@@ -1141,7 +1127,7 @@ const isReadyManagedCacheState = (state: string): boolean => {
 }
 
 const isTransitionalManagedCacheState = (state?: string): boolean => {
-  if (typeof state !== 'string' || state.trim() === '') {
+  if (typeof state !== 'string' || !state.trim()) {
     return false
   }
 
