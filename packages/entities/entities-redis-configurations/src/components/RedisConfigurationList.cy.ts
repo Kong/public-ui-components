@@ -286,6 +286,7 @@ describe('<RedisConfigurationList />', () => {
         config: {
           ...baseConfigKonnect,
           isKonnectManagedRedisEnabled: true,
+          isCloudGateway: true,
         },
         cacheIdentifier: uuidv4(),
       },
@@ -329,6 +330,7 @@ describe('<RedisConfigurationList />', () => {
     const getCombinedListConfig = (): KonnectRedisConfigurationListConfig => ({
       ...baseConfigKonnect,
       isKonnectManagedRedisEnabled: true,
+      isCloudGateway: true,
     })
 
     it('should show managed add-on name over linked partial name', () => {
@@ -553,6 +555,7 @@ describe('<RedisConfigurationList />', () => {
           config: {
             ...baseConfigKonnect,
             isKonnectManagedRedisEnabled: true,
+            isCloudGateway: true,
             isExactMatch: true,
           },
           cacheIdentifier: uuidv4(),
