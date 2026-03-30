@@ -8,7 +8,10 @@ export type RedisConfigurationSource = 'self-managed' | 'konnect-managed'
 export interface BaseRedisConfigurationListConfig {
   /** Route for creating a redis configuration */
   createRoute: RouteLocationRaw
-  /** A function that returns the route for viewing a redis configuration */
+  /**
+   * A function that returns the route for viewing a redis config
+   * Host should safely handle empty ids-by returning a fallback route
+   */
   getViewRoute: (id: string) => RouteLocationRaw
   /** A function that returns the route for editing a redis configuration */
   getEditRoute: (id: string) => RouteLocationRaw

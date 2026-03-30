@@ -826,9 +826,9 @@ const tableHeaders = computed<BaseTableHeaders>(() => ({
   plugins: { label: t('list.table_headers.plugins') },
 }))
 
-const getNavigableRowId = (row: EntityRow): string | null => {
+const getNavigableRowId = (row: EntityRow): string => {
   if (!isKonnectManagedRedisEnabled.value || row.source !== 'konnect-managed') {
-    return row.id as string
+    return typeof row.id === 'string' ? row.id : ''
   }
 
   if (row.partial?.id) {
@@ -846,15 +846,15 @@ const getNavigableRowId = (row: EntityRow): string | null => {
     return addOnId
   }
 
-  return typeof row.id === 'string' && row.id ? row.id : null
+  return typeof row.id === 'string' && row.id ? row.id : ''
 }
 
 const canNavigateToRowDetails = (row: EntityRow): boolean =>
-  !!getNavigableRowId(row)
+  getNavigableRowId(row) !== ''
 
 const getViewDropdownItem = (row: EntityRow) => ({
   label: t('actions.view'),
-  to: props.config.getViewRoute(getNavigableRowId(row) as string),
+  to: props.config.getViewRoute(getNavigableRowId(row)),
 })
 
 const getEditDropdownItem = (id: string) => ({
@@ -919,7 +919,7 @@ const rowClick = async (row: EntityRow): Promise<void> => {
 
   const rowViewId = getNavigableRowId(row)
 
-  if (!rowViewId) {
+  if (rowViewId === '') {
     return
   }
 
