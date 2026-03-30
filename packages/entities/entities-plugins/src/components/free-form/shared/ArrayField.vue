@@ -413,7 +413,7 @@ $indent-guide-top-offset: 30px;
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     gap: var(--kui-space-20, $kui-space-20);
     line-height: var(--kui-line-height-30, $kui-line-height-30);
-    margin-left: -var(--kui-space-70, $kui-space-70);
+    margin-left: calc(-1 * var(--kui-space-70, $kui-space-70));
     outline: none;
     padding: var(--kui-space-10, $kui-space-10);
 
