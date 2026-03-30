@@ -54,6 +54,8 @@ const konnectConfig: KonnectRedisConfigurationListConfig = {
   getEditRoute: (id: string) => ({ name: 'edit-redis-configuration', params: { id } }),
   // Sandbox override for local testing: set true for managed-Redis copy, false for default copy
   isKonnectManagedRedisEnabled: true,
+  // Combined list/add-ons flow is enabled only for Cloud Gateway control planes.
+  isCloudGateway: true,
 }
 
 const kongManagerConfig: KongManagerRedisConfigurationListConfig = {
