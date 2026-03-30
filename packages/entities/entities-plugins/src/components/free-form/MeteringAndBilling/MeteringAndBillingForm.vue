@@ -40,6 +40,7 @@
       >
         <EnumField
           v-bind="slotProps"
+          :help="t('plugins.free-form.metering-and-billing.fields.look_up_value_in.help')"
           :label="t('plugins.free-form.metering-and-billing.fields.look_up_value_in.label')"
         />
       </FieldRenderer>
@@ -49,6 +50,7 @@
       >
         <StringField
           v-bind="slotProps"
+          :help="t('plugins.free-form.metering-and-billing.fields.subject_field.help')"
           :label="t('plugins.free-form.metering-and-billing.fields.subject_field.label')"
           :placeholder="t('plugins.free-form.metering-and-billing.fields.subject_field.placeholder')"
         />
@@ -69,6 +71,42 @@
         <NumberField
           v-bind="slotProps"
           :label="t('plugins.free-form.metering-and-billing.fields.keepalive.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }) => path === 'config.queue.max_coalescing_delay'"
+      >
+        <NumberField
+          v-bind="slotProps"
+          :label="t('plugins.free-form.metering-and-billing.fields.queue.max_coalescing_delay.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }) => path === 'config.queue.initial_retry_delay'"
+      >
+        <NumberField
+          v-bind="slotProps"
+          :label="t('plugins.free-form.metering-and-billing.fields.queue.initial_retry_delay.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }) => path === 'config.queue.max_retry_delay'"
+      >
+        <NumberField
+          v-bind="slotProps"
+          :label="t('plugins.free-form.metering-and-billing.fields.queue.max_retry_delay.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }) => path === 'config.queue.max_retry_time'"
+      >
+        <NumberField
+          v-bind="slotProps"
+          :label="t('plugins.free-form.metering-and-billing.fields.queue.max_retry_time.label')"
         />
       </FieldRenderer>
       <FieldRenderer
@@ -193,7 +231,10 @@
           v-if="ingestionExpanded"
           class="ff-mb-collapse-content"
         >
-          <Field name="config.ingest_endpoint" />
+          <StringField
+            :help="t('plugins.free-form.metering-and-billing.fields.ingest_endpoint.help')"
+            name="config.ingest_endpoint"
+          />
           <Field name="config.api_token" />
           <Field name="config.ssl_verify" />
           <div class="ff-metering-billing-inline-row">
@@ -209,7 +250,11 @@
     </div>
 
     <!-- Queue — in AdvancedFields, header-less, 2-column -->
-    <AdvancedFields hide-general-fields>
+    <AdvancedFields
+      class="ff-advanced-fields-container"
+      data-testid="ff-advanced-fields-container"
+      hide-general-fields
+    >
       <div class="ff-mb-queue">
         <KLabel class="ff-mb-queue-label">
           {{ t('plugins.free-form.metering-and-billing.sections.queue.title') }}
@@ -344,7 +389,7 @@ const ingestionExpanded = ref(true)
     flex-direction: column;
     gap: $kui-space-80;
     margin-top: $kui-space-20;
-    padding: $kui-space-60 0 $kui-space-20 $kui-space-20;
+    padding: $kui-space-60 0 $kui-space-20 $kui-space-60;
   }
 }
 
@@ -404,6 +449,20 @@ const ingestionExpanded = ref(true)
       flex: 1 1 calc(50% - $kui-space-60);
       min-width: 0;
     }
+  }
+}
+
+.ff-advanced-fields-container {
+  border-top: 1px solid $kui-color-border;
+  padding-top: $kui-space-70;
+
+  :deep(.collapse-heading) {
+    margin: 0;
+  }
+
+  // Hide the advanced fields container if there are no advanced fields to show
+  &:has(> .collapse-hidden-content > .ff-advanced-fields > .ff-object-field:empty:only-child) {
+    display: none;
   }
 }
 </style>

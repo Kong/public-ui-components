@@ -804,31 +804,48 @@
             "description": "Emit events for LLM input and output tokens on AI Gateway requests. Each request produces separate input/output events so they can be priced independently."
           },
           "ingest_endpoint": {
-            "description": "The URL of the metering data ingest endpoint."
+            "description": "The URL of the metering data ingest endpoint.",
+            "help": "For Konnect Metering&Billing, use the regional endpoint from your Metering&Billing settings. For self-hosted OpenMeter, use your ingest URL."
           },
           "api_token": {
             "description": "Bearer token for authenticating requests to the ingest endpoint."
           },
           "look_up_value_in": {
-            "label": "Look up subject in"
+            "label": "Look up subject in",
+            "help": "Where to find the customer identifier in the request."
           },
           "subject_field": {
             "label": "Subject field name",
-            "placeholder": "e.g., x-customer-id"
+            "placeholder": "e.g., x-customer-id",
+            "help": "e.g. x-customer-id, x-api-key, x-tenant"
+          },
+          "queue": {
+            "max_coalescing_delay": {
+              "label": "Max coalescing delay (s)"
+            },
+            "initial_retry_delay": {
+              "label": "Initial retry delay (s)"
+            },
+            "max_retry_delay": {
+              "label": "Max retry delay (s)"
+            },
+            "max_retry_time": {
+              "label": "Max retry time (s)"
+            }
           },
           "attributes": {
             "title": "Event attributes",
             "description": "Attach custom dimensions to metered events.",
             "look_up_value_in": {
-              "placeholder": "e.g., x-customer-id"
+              "placeholder": "e.g., x-priority-id"
             },
             "event_property_name": {
-              "placeholder": "e.g., x-customer-id"
+              "placeholder": "e.g., priority"
             }
           },
           "ssl_verify": {
             "label": "Verify TLS certificate",
-            "description": "Disable only for local development with self-signed certificates"
+            "description": "Disable only for local development with self-signed certificates."
           },
           "timeout": {
             "label": "Request timeout (ms)"

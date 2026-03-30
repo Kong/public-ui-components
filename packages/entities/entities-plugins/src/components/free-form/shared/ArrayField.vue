@@ -66,43 +66,111 @@
       </KButton>
     </header>
 
-    <template v-if="realAppearance !== 'tabs' && (!collapsible || expanded)">
+    <SlideTransition>
       <div
-        class="ff-array-field-container"
-        :data-testid="`ff-array-basic-container-${field.path.value}`"
+        v-if="realAppearance !== 'tabs' && (!collapsible || expanded)"
+        class="ff-array-field-content"
       >
-        <ListTag
-          v-for="(item, index) of realItems"
-          :key="getKey(item, index)"
-          class="ff-array-field-item"
-          :class="{ 'ff-array-field-item-card': realAppearance === 'card' }"
-          :data-index="index"
-          :data-testid="`ff-array-item-${field.path.value}.${index}`"
+        <div
+          class="ff-array-field-container"
+          :data-testid="`ff-array-basic-container-${field.path.value}`"
         >
-          <div class="ff-array-field-item-content">
-            <slot
-              v-if="$slots.item"
-              :autofocus="true"
-              :field-name="String(index)"
-              :index="index"
-              name="item"
-            />
-            <StringArrayField
-              v-else-if="subSchema.type === 'array' && subSchema.elements.type === 'string'"
-              autofocus
-              :help="t('plugins.free-form.tag_helper')"
-              :name="String(index)"
-            />
-            <Field
-              v-else
-              autofocus
-              :name="String(index)"
-            />
-          </div>
-          <KTooltip
-            class="ff-array-field-item-remove-tooltip"
-            :text="t('actions.remove_entity', { entity: fieldName })"
+          <ListTag
+            v-for="(item, index) of realItems"
+            :key="getKey(item, index)"
+            class="ff-array-field-item"
+            :class="{ 'ff-array-field-item-card': realAppearance === 'card' }"
+            :data-index="index"
+            :data-testid="`ff-array-item-${field.path.value}.${index}`"
           >
+            <div class="ff-array-field-item-content">
+              <slot
+                v-if="$slots.item"
+                :autofocus="true"
+                :field-name="String(index)"
+                :index="index"
+                name="item"
+              />
+              <StringArrayField
+                v-else-if="subSchema.type === 'array' && subSchema.elements.type === 'string'"
+                autofocus
+                :help="t('plugins.free-form.tag_helper')"
+                :name="String(index)"
+              />
+              <Field
+                v-else
+                autofocus
+                :name="String(index)"
+              />
+            </div>
+            <KTooltip
+              class="ff-array-field-item-remove-tooltip"
+              :text="t('actions.remove_entity', { entity: fieldName })"
+            >
+              <KButton
+                appearance="tertiary"
+                :aria-label="t('actions.remove_entity', { entity: fieldName })"
+                class="ff-array-field-item-remove"
+                :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
+                icon
+                @click.stop="removeItem(index)"
+              >
+                <CloseIcon />
+              </KButton>
+            </KTooltip>
+          </ListTag>
+        </div>
+
+        <KButton
+          appearance="tertiary"
+          :aria-label="t('actions.add_entity', { entity: fieldName })"
+          class="ff-array-field-add-item-btn"
+          :data-testid="`ff-add-item-btn-${field.path.value}`"
+          @click="addItem"
+        >
+          <AddIcon />
+          {{ t('actions.add_entity', { entity: fieldName }) }}
+        </KButton>
+      </div>
+      <KCard
+        v-else-if="realItems.length && (!collapsible || expanded)"
+        :data-testid="`ff-array-tab-container-${field.path.value}`"
+      >
+        <KTabs
+          v-model="activeTab"
+          :data-testid="`ff-array-tabs-${field.path.value}`"
+          :tabs="tabs"
+        >
+          <template
+            v-for="(item, index) of realItems"
+            :key="getKey(item, index)"
+            #[getKey(item,index)]
+          >
+            <div
+              class="ff-array-field-item"
+              :data-index="index"
+              :data-testid="`ff-array-item-${field.path.value}.${index}`"
+            >
+              <slot
+                v-if="$slots.item"
+                :autofocus="true"
+                :field-name="String(index)"
+                :index="index"
+                name="item"
+              />
+              <Field
+                v-else
+                autofocus
+                :name="String(index)"
+              />
+            </div>
+          </template>
+          <template
+            v-for="(item, index) of realItems"
+            :key="getKey(item, index)"
+            #[`${getKey(item,index)}-anchor`]
+          >
+            {{ getTabTitle(item, index) }}
             <KButton
               appearance="tertiary"
               :aria-label="t('actions.remove_entity', { entity: fieldName })"
@@ -111,75 +179,12 @@
               icon
               @click.stop="removeItem(index)"
             >
-              <CloseIcon />
+              <TrashIcon />
             </KButton>
-          </KTooltip>
-        </ListTag>
-      </div>
-
-      <KButton
-        appearance="tertiary"
-        :aria-label="t('actions.add_entity', { entity: fieldName })"
-        class="ff-array-field-add-item-btn"
-        :data-testid="`ff-add-item-btn-${field.path.value}`"
-        @click="addItem"
-      >
-        <AddIcon />
-        {{ t('actions.add_entity', { entity: fieldName }) }}
-      </KButton>
-    </template>
-    <KCard
-      v-else-if="realItems.length && (!collapsible || expanded)"
-      :data-testid="`ff-array-tab-container-${field.path.value}`"
-    >
-      <KTabs
-        v-model="activeTab"
-        :data-testid="`ff-array-tabs-${field.path.value}`"
-        :tabs="tabs"
-      >
-        <template
-          v-for="(item, index) of realItems"
-          :key="getKey(item, index)"
-          #[getKey(item,index)]
-        >
-          <div
-            class="ff-array-field-item"
-            :data-index="index"
-            :data-testid="`ff-array-item-${field.path.value}.${index}`"
-          >
-            <slot
-              v-if="$slots.item"
-              :autofocus="true"
-              :field-name="String(index)"
-              :index="index"
-              name="item"
-            />
-            <Field
-              v-else
-              autofocus
-              :name="String(index)"
-            />
-          </div>
-        </template>
-        <template
-          v-for="(item, index) of realItems"
-          :key="getKey(item, index)"
-          #[`${getKey(item,index)}-anchor`]
-        >
-          {{ getTabTitle(item, index) }}
-          <KButton
-            appearance="tertiary"
-            :aria-label="t('actions.remove_entity', { entity: fieldName })"
-            class="ff-array-field-item-remove"
-            :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
-            icon
-            @click.stop="removeItem(index)"
-          >
-            <TrashIcon />
-          </KButton>
-        </template>
-      </KTabs>
-    </KCard>
+          </template>
+        </KTabs>
+      </KCard>
+    </SlideTransition>
 
     <div
       v-if="collapsible && expanded"
@@ -197,6 +202,7 @@ import { replaceByDictionaryInFieldName, useField, useFieldAttrs, useFormShared,
 import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
+import SlideTransition from './SlideTransition.vue'
 import type { ArrayLikeFieldSchema } from '../../../types/plugins/form-schema'
 import StringArrayField from './StringArrayField.vue'
 import type { BaseFieldProps } from './types'
@@ -363,7 +369,7 @@ const stickyTop = computed(() => {
 <style lang="scss" scoped>
 $indent-guide-width: 6px;
 $indent-guide-left-offset: -10px;
-$indent-guide-top-offset: 20px;
+$indent-guide-top-offset: 30px;
 
 .ff-array-field {
   display: flex;
@@ -461,6 +467,12 @@ $indent-guide-top-offset: 20px;
     gap: $kui-space-60;
   }
 
+  &-content {
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-40;
+  }
+
   &-item {
     display: flex;
     padding: $kui-space-50 $kui-space-60;
@@ -473,7 +485,7 @@ $indent-guide-top-offset: 20px;
     }
   }
 
-  &-default > &-container > &-item {
+  &-default > &-content > &-container > &-item {
     align-items: center;
     flex-direction: row;
     gap: $kui-space-40;
@@ -489,7 +501,7 @@ $indent-guide-top-offset: 20px;
     }
   }
 
-  &-card > &-container > &-item :deep(.card-content) {
+  &-card > &-content > &-container > &-item :deep(.card-content) {
     align-items: center;
     flex-direction: row;
     gap: $kui-space-40;
