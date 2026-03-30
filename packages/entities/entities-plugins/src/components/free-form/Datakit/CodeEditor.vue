@@ -5,13 +5,13 @@
         {{ t('plugins.free-form.datakit.description_example') }}
 
         <KButton
-          v-for="(_, key) in examples"
-          :key="key"
+          v-for="example in examples"
+          :key="example.id"
           appearance="secondary"
           size="small"
-          @click="setExampleCode(key)"
+          @click="setExampleCode(example)"
         >
-          {{ t(`plugins.free-form.datakit.examples.${key}`) }}
+          {{ getExampleLabel(example.i18nKey) }}
         </KButton>
       </div>
 
@@ -60,8 +60,10 @@ import { extractors } from './config-extractors'
 
 import type { YAMLException } from 'js-yaml'
 import type { DatakitPluginData } from './types'
+import type { DatakitExample } from './examples'
 
 const { t } = createI18n<typeof english>('en-us', english)
+type TranslationKey = Parameters<typeof t>[0]
 
 const { formData, setValue } = useFormShared<DatakitPluginData>()
 
@@ -185,13 +187,17 @@ function handleConvertConfirm() {
   handleConvertCancel()
 }
 
+function getExampleLabel(i18nKey: string): string {
+  return t(`plugins.free-form.datakit.examples.${i18nKey}` as TranslationKey)
+}
+
 /**
  * Sets the example code in the Monaco editor.
  * We do not use `setValue` directly because it will clear the undo stack,
  * which prevents the user from undoing changes after inserting an example.
  */
-function setExampleCode(example: keyof typeof examples) {
-  const newCode = examples[example]
+function setExampleCode(example: DatakitExample) {
+  const newCode = example.code
 
   try {
     const config = yaml.load(code.value, {

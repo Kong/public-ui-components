@@ -25,7 +25,21 @@ describe('<PageLayout />', () => {
 
     cy.getTestId('page-layout-breadcrumbs').should('be.visible')
     cy.getTestId('page-layout-title').should('be.visible').and('contain.text', title)
+    cy.getTestId('page-layout-navigate-back').should('not.exist')
     cy.getTestId('page-layout-tabs').should('be.visible')
+  })
+
+  it('renders the back button when the backTo prop is passed', () => {
+    const backTo = '/'
+
+    cy.mount(PageLayout, {
+      props: {
+        title: 'Test Page Title',
+        backTo,
+      },
+    })
+
+    cy.getTestId('page-layout-navigate-back').should('be.visible').should('have.attr', 'href', backTo)
   })
 
   it('renders only the title when neither breadcrumbs nor tabs are passed', () => {
@@ -40,6 +54,18 @@ describe('<PageLayout />', () => {
     cy.getTestId('page-layout-breadcrumbs').should('not.exist')
     cy.getTestId('page-layout-title').should('be.visible').and('contain.text', title)
     cy.getTestId('page-layout-tabs').should('not.exist')
+  })
+
+  it('renders content passed in through actions slot', () => {
+    const actionsTestId = 'page-layout-slotted-actions'
+    const actionsText = 'Actions'
+
+    cy.mount(PageLayout, {
+      props: { title: 'Test Page Title' },
+      slots: { actions: () => h('div', { 'data-testid': actionsTestId }, actionsText) },
+    })
+
+    cy.getTestId(actionsTestId).should('be.visible').and('contain.text', actionsText)
   })
 
   describe('nested PageLayout detection', () => {

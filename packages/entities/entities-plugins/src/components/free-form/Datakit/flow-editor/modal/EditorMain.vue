@@ -71,11 +71,11 @@
         >
           <template #items>
             <KDropdownItem
-              v-for="(_, key) in examples"
-              :key="key"
-              @click="selectExample(key)"
+              v-for="example in examples"
+              :key="example.id"
+              @click="selectExample(example)"
             >
-              {{ t(`plugins.free-form.datakit.examples.${key}`) }}
+              {{ getExampleLabel(example.i18nKey) }}
             </KDropdownItem>
           </template>
         </KDropdown>
@@ -124,8 +124,10 @@ import { useEditorStore } from '../store/store'
 
 import type { TooltipAttributes } from '@kong/kongponents'
 import type { DatakitConfig, DatakitPluginData } from '../../types'
+import type { DatakitExample } from '../../examples'
 
 const { t } = createI18n<typeof english>('en-us', english)
+type TranslationKey = Parameters<typeof t>[0]
 
 defineSlots<{
   default(): any
@@ -133,9 +135,12 @@ defineSlots<{
 
 const { modalOpen, undo, redo, canUndo, canRedo, load } = useEditorStore()
 
-function selectExample(key: keyof typeof examples) {
-  const example = examples[key]
-  const maybeConfig = yaml.load(example, {
+function getExampleLabel(i18nKey: string): string {
+  return t(`plugins.free-form.datakit.examples.${i18nKey}` as TranslationKey)
+}
+
+function selectExample(example: DatakitExample) {
+  const maybeConfig = yaml.load(example.code, {
     schema: JSON_SCHEMA,
     json: true,
   })

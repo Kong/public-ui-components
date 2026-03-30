@@ -74,6 +74,22 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
+  'cors': {
+    experimental: true,
+    component: 'CommonForm',
+  },
+  'proxy-cache': {
+    experimental: true,
+    component: 'CommonForm',
+  },
+  'proxy-cache-advanced': {
+    experimental: true,
+    component: 'CommonForm',
+  },
+  'opentelemetry': {
+    experimental: true,
+    component: 'OpentelemetryForm',
+  },
 } as const
 
 export type FreeFormName = keyof typeof mapping

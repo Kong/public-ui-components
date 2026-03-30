@@ -1,6 +1,7 @@
 <template>
   <div class="kong-ui-ca-certificate-entity-config-card">
     <EntityBaseConfigCard
+      :code-block-record-formatter="codeBlockRecordFormatter"
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
@@ -80,6 +81,7 @@ import {
 } from '@kong-ui-public/entities-shared'
 import endpoints from '../ca-certificates-endpoints'
 import composables from '../composables'
+import { codeBlockRecordFormatter } from '../utils/code-block'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const HIDDEN_METADATA = ['dns_names', 'san_names', 'subject']
