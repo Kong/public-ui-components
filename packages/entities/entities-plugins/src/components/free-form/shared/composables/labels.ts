@@ -151,9 +151,11 @@ export function useFieldLabel(
     const parentIsArray = parentSchema?.type === 'array'
     const parentIsMap = parentSchema?.type === 'map'
 
-    const res = (parentIsArray || parentIsMap)
-      ? '' // hide the label when it is a child of Array or Map
-      : defaultLabelFormatter(realPath)
+    if (parentIsArray || parentIsMap) {
+      return '' // hide the label when it is a child of Array or Map
+    }
+
+    const res = defaultLabelFormatter(realPath)
 
     return config.value.transformLabel ? config.value.transformLabel(res, pathValue) : res
   })

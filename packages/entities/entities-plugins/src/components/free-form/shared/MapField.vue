@@ -22,6 +22,7 @@
         class="ff-map-field-label"
         v-bind="fieldAttrs.labelAttributes"
         :data-testid="`ff-label-${field.path.value}`"
+        :required="fieldAttrs.required"
         :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
         {{ fieldAttrs.label }}
@@ -60,7 +61,7 @@
         />
 
         <StringField
-          v-if="valueSchema?.type === 'string'"
+          v-if="isStringValue"
           inline-vault-picker
           :multiline="appearance?.string?.multiline"
           :name="keyId"
@@ -155,6 +156,8 @@ const isSimpleMap = computed(() => {
 const valueSchema = computed(() => {
   return field.schema?.value?.type === 'map' ? field.schema.value.values : undefined
 })
+
+const isStringValue = computed(() => valueSchema.value?.type === 'string' && !valueSchema.value?.one_of)
 
 const itemTag = computed(() => isSimpleMap.value ? 'div' : KCard)
 

@@ -75,10 +75,10 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       }
 
       if (isFunction(config.value.prepareFormData)) {
-        config.value.prepareFormData(dataValue)
+        setValue(config.value.prepareFormData(dataValue))
+      } else {
+        setValue(dataValue)
       }
-
-      setValue(dataValue)
     }
 
     function hasValue(data: T | undefined): boolean {

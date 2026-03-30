@@ -1,5 +1,6 @@
 import type { useSchemaHelpers } from './schema'
 import { resolve, mapSymbol } from '../utils'
+import { reactive } from 'vue'
 
 export type KeyId = `kid:${number}`
 type Data = Record<string, any>
@@ -12,7 +13,7 @@ function nextKeyId(): KeyId {
 export function useKeyIdMap(
   getSchema: ReturnType<typeof useSchemaHelpers>['getSchema'],
 ) {
-  const store = new Map<KeyId, string>()
+  const store = reactive(new Map<KeyId, string>())
 
   function createKey(name: string = ''): KeyId {
     const id = nextKeyId()
@@ -156,4 +157,8 @@ export function deserializeData<T extends Data>(
   }
 
   return traverse(data)
+}
+
+export function isKid(value: string): value is KeyId {
+  return /^kid:\d+$/.test(value)
 }

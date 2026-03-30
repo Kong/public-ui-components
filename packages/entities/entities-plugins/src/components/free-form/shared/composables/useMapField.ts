@@ -2,6 +2,7 @@ import { computed, watch } from 'vue'
 import type { MaybeRefOrGetter } from 'vue'
 import { useField, useFormShared } from '.'
 import type { KeyId } from './key-id-map'
+import { isKid } from './key-id-map'
 import { resolve, getName } from '../utils'
 import { replaceByDictionaryInFieldName } from '.'
 import type { MapFieldSchema } from 'src/types/plugins/form-schema'
@@ -68,7 +69,11 @@ export function useMapField<T = unknown, K extends string = string>(
   const fieldDisplayName = computed(() => {
     if (!field.path) return ''
     const name = getName(field.path.value)
-    return replaceByDictionaryInFieldName(name)
+    let displayName: string = name
+    if (isKid(name)) {
+      displayName = keyIdMap.getKey(name as KeyId) ?? ''
+    }
+    return replaceByDictionaryInFieldName(displayName)
   })
 
   // Forward compatibility for onChange callback, only triggered when the value type is string

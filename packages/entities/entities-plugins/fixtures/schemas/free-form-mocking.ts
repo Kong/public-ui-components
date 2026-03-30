@@ -254,10 +254,10 @@ export function buildMapFieldCases(): Array<{ [name: string]: MapFieldSchema }> 
       },
     },
     {
-      map_with_default: {
+      map_simple_default: {
         type: 'map',
         required: true,
-        description: 'A complex map field',
+        description: 'A simple map field with default value',
         keys: {
           type: 'string',
         },
