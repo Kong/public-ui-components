@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.6...@kong-ui-public/entities-certificates@3.12.7) (2026-03-27)
+
+
+### Bug Fixes
+
+* **entities-certificates:** exclude metadata field from code block in non-JSON formats ([#3064](https://github.com/Kong/public-ui-components/issues/3064)) ([d02c68d](https://github.com/Kong/public-ui-components/commit/d02c68d7ba4af6baa4e9472c39ffc1c2e8bef5d7))
+
+
+
+
+
 ## [3.12.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.5...@kong-ui-public/entities-certificates@3.12.6) (2026-03-25)
 
 

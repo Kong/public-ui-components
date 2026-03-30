@@ -49,6 +49,13 @@ export function resetEmptyTokenExchange(config?: { token_exchange?: TokenExchang
         empty_scopes: false,
       },
     },
+    {
+      cache: {},
+      request: {
+        audience: null,
+        scopes: null,
+      },
+    },
   ]
 
   // If token_exchange is equal to the default value, set token_exchange to null

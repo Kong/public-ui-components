@@ -89,12 +89,16 @@ const baseDefinition: TileDefinition = {
   },
 }
 
-const mountTile = (datasource: TileDefinition['query']['datasource']) => {
+const mountTile = (
+  datasource: TileDefinition['query']['datasource'],
+  dimensions: TileDefinition['query']['dimensions'] = ['time'],
+) => {
   const definition = {
     ...baseDefinition,
     query: {
       ...baseDefinition.query,
       datasource,
+      dimensions,
     },
   } as TileDefinition
 
@@ -162,5 +166,20 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     await nextTick()
 
     expect((wrapper.findComponent(TimeseriesChartRenderer).props('requestsLink') as { href?: string } | undefined)?.href).toContain('http://test.com/requests?q=')
+  })
+
+  it('shows the as-of-today badge for non-timeseries platform tiles', async () => {
+    const wrapper = mountTile('platform', ['status_code'])
+    await flushPromises()
+
+    const badge = wrapper.get('[data-testid="time-range-badge"]')
+    expect(badge.text()).toContain('As of today')
+  })
+
+  it('does not show the as-of-today badge when the time dimension is present', async () => {
+    const wrapper = mountTile('platform', ['time'])
+    await flushPromises()
+
+    expect(wrapper.find('[data-testid="time-range-badge"]').exists()).toBe(false)
   })
 })
