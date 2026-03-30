@@ -1,11 +1,12 @@
 import { computed, watch } from 'vue'
 import type { MaybeRefOrGetter } from 'vue'
-import { useField, useFormShared } from '.'
+import { useFormShared } from './form-context'
+import { useField } from './field'
 import type { KeyId } from './key-id-map'
 import { isKid } from './key-id-map'
 import { resolve, getName } from '../utils'
 import { replaceByDictionaryInFieldName } from '.'
-import type { MapFieldSchema } from 'src/types/plugins/form-schema'
+import type { MapFieldSchema } from '../../../../types/plugins/form-schema'
 import { isEqual } from 'lodash-es'
 
 export function useMapField<T = unknown, K extends string = string>(
