@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.182.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.181.1...@kong-ui-public/entities-plugins@9.182.0) (2026-03-30)
+
+
+### Features
+
+* **entities-plugins:** sync datakit examples with docs ([#3066](https://github.com/Kong/public-ui-components/issues/3066)) ([ebe7aff](https://github.com/Kong/public-ui-components/commit/ebe7affd48ef853d98afc6a470cbf27130000f13))
+
+
+
+
+
 ## [9.181.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.181.0...@kong-ui-public/entities-plugins@9.181.1) (2026-03-30)
 
 
