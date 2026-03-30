@@ -348,7 +348,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .expression-editor {
-  border: $kui-border-width-10 solid $kui-color-border;
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   border-radius: 3px;
   min-height: 200px;
   overflow: hidden;
@@ -356,7 +356,7 @@ defineExpose({
   width: 100%;
 
   &.invalid {
-    border-color: $kui-color-border-danger;
+    border-color: var(--kui-color-border-danger, $kui-color-border-danger);
   }
 }
 </style>

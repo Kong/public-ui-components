@@ -70,8 +70,9 @@ const fieldsCategory = computed(() => {
         fields = [check.conditional_at_least_one_of.if_field, ...check.conditional_at_least_one_of.then_at_least_one_of]
       }
 
-      // Add all extracted fields to the ruledFields set
-      fields?.forEach(field => ruledFields.add(field))
+      // Extract top-level field name from potentially nested paths (e.g., 'a.b' -> 'a')
+      // so that parent fields are correctly promoted to defaultVisible
+      fields?.forEach(field => ruledFields.add(field.split('.')[0]))
     })
   }
 
@@ -153,8 +154,8 @@ const allFieldsAdvanced = computed(() => fieldsCategory.value.defaultVisible.len
 
 <style lang="scss" scoped>
 .ff-advanced-fields-container {
-  border-top: 1px solid $kui-color-border;
-  padding-top: $kui-space-70;
+  border-top: 1px solid var(--kui-color-border, $kui-color-border);
+  padding-top: var(--kui-space-70, $kui-space-70);
 
   :deep(.collapse-heading) {
     margin: 0;

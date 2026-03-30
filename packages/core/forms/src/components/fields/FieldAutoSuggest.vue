@@ -185,8 +185,8 @@ export default {
 
   .autosuggest__results_message {
     color: rgba(0, 0, 0, 0.7);
-    font-size: $kui-font-size-30;;
-    padding: $kui-space-40 0;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    padding: var(--kui-space-40, $kui-space-40) 0;
     text-align: center;
   }
 
@@ -195,16 +195,16 @@ export default {
   }
 
   :deep(.select-item > .select-item-container > button:hover > span) {
-    background-color: $kui-color-background-neutral-weaker;
+    background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
   }
 
   :deep(.dropdown-footer) {
-    margin-bottom: -$kui-space-20;
+    margin-bottom: calc(-1 * var(--kui-space-20, $kui-space-20));
   }
 }
 
 .field-span {
-  color: $kui-color-text-neutral;
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
   display: flex;
   justify-content: space-between;
 }

@@ -329,15 +329,15 @@ onMounted(async () => {
   flex-direction: column;
 
   .entity-label {
-    color: $kui-color-text-neutral-stronger;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-medium;
+    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
   }
 
   .entity-id {
-    color: $kui-color-text-neutral;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-medium;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
   }
 }
 
@@ -345,8 +345,8 @@ onMounted(async () => {
   padding-left: 28px;
 
   .selected-entity-label {
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-regular;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
   }
 }
 </style>

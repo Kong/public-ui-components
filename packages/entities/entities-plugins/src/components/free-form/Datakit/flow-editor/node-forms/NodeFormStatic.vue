@@ -13,7 +13,6 @@
     <OutputValueField
       :field-name-validator="fieldNameValidator"
       :key-order="outputsFieldNames"
-      name="values"
       @add:field="handleAddField"
       @change:value="handleChangeValue"
       @remove:field="handleRemoveField"

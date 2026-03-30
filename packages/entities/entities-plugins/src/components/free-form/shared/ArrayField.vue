@@ -374,7 +374,7 @@ $indent-guide-top-offset: 30px;
 .ff-array-field {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
   position: relative;
 
   .indent-guide {
@@ -452,7 +452,7 @@ $indent-guide-top-offset: 30px;
   &-header {
     align-items: center;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     height: 32px;
 
     &-toggle {
@@ -464,7 +464,7 @@ $indent-guide-top-offset: 30px;
   &-container {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-60;
+    gap: var(--kui-space-60, $kui-space-60);
   }
 
   &-content {
@@ -475,20 +475,20 @@ $indent-guide-top-offset: 30px;
 
   &-item {
     display: flex;
-    padding: $kui-space-50 $kui-space-60;
+    padding: var(--kui-space-50, $kui-space-50) var(--kui-space-60, $kui-space-60);
 
     &-content {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      gap: $kui-space-60;
+      gap: var(--kui-space-60, $kui-space-60);
     }
   }
 
   &-default > &-content > &-container > &-item {
     align-items: center;
     flex-direction: row;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     padding: 0;
 
     // Align delete button to top when using TagField
@@ -496,7 +496,7 @@ $indent-guide-top-offset: 30px;
       align-items: flex-start;
 
       .ff-array-field-item-remove {
-        margin-top: $kui-space-20;
+        margin-top: var(--kui-space-20, $kui-space-20);
       }
     }
   }
@@ -504,26 +504,26 @@ $indent-guide-top-offset: 30px;
   &-card > &-content > &-container > &-item :deep(.card-content) {
     align-items: center;
     flex-direction: row;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
 
     // Align delete button to top when using TagField
     &:has(.ff-tag-field) {
       align-items: flex-start;
 
       .ff-array-field-item-remove {
-        margin-top: $kui-space-20;
+        margin-top: var(--kui-space-20, $kui-space-20);
       }
     }
   }
 
   &-tabs &-item {
     flex-direction: column;
-    gap: $kui-space-80;
+    gap: var(--kui-space-80, $kui-space-80);
   }
 
   &-sticky-tabs {
     :deep(.k-tabs > ul) {
-      background-color: $kui-color-background;
+      background-color: var(--kui-color-background, $kui-color-background);
       position: sticky;
       top: v-bind('stickyTop');
       z-index: 10;
@@ -543,7 +543,7 @@ $indent-guide-top-offset: 30px;
   }
 
   &-item-card {
-    padding: $kui-space-70;
+    padding: var(--kui-space-70, $kui-space-70);
 
     .ff-array-field-item-remove-tooltip {
       align-self: flex-start;

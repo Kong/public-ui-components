@@ -176,12 +176,12 @@ import type {
   DashboardTileType,
   ExploreQuery,
   ExploreResultV4,
-  FilterDatasource,
+  AllFilters,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
-import { formatTime, TimePeriods, getFieldDataSources, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
+import { formatTime, TimePeriods, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
@@ -192,6 +192,8 @@ import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
+import { storeToRefs } from 'pinia'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
 
 import { MoreIcon, EditIcon, WarningIcon, ProgressIcon, RefreshIcon } from '@kong/icons'
@@ -232,6 +234,8 @@ const emit = defineEmits<{
 
 const GeoMapRendererAsync = defineAsyncComponent(() => import('./GeoMapRenderer.vue'))
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
+const datasourceConfigStore = useDatasourceConfigStore()
+const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
 const { i18n } = composables.useI18n()
 const chartData = ref<ExploreResultV4>()
 const exportState = ref<ExploreExportState>({ status: 'loading' })
@@ -334,7 +338,13 @@ const componentData = computed(() => {
 })
 
 const badgeData = computed<string | null>(() => {
-  const timeRange = props.definition.query?.time_range
+  const query = props.definition.query
+  const timeRange = query?.time_range
+
+  // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
+  if (query?.datasource === 'platform' && !query.dimensions?.includes('time')) {
+    return i18n.t('renderer.as_of_today')
+  }
 
   if (timeRange?.type === 'relative') {
     const timeframe = TimePeriods.get(TIMEFRAME_LOOKUP[timeRange.time_range])
@@ -411,15 +421,15 @@ const agedOutWarning = computed(() => {
  * @returns Array of scoped filter objects to a datasource
  */
 const datasourceScopedFilters = computed(() => {
-  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
-
+  const filters = [...props.context.filters, ...props.definition.query.filters ?? []] as AllFilters[]
+  const metrics = props.definition.query.metrics
   // TODO: default to api_usage until datasource is made required
   const datasource = props.definition?.query?.datasource ?? 'api_usage'
 
-  return filters.filter(f => {
-    const possibleSources = getFieldDataSources(f.field)
-
-    return possibleSources.some((ds: FilterDatasource) => datasource === ds)
+  return stripUnknownFilters.value({
+    datasource,
+    filters,
+    metrics,
   })
 })
 
@@ -501,11 +511,10 @@ const onBoundsChange = (e: Array<[number, number]>) => {
 
 const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
   const filters = datasourceScopedFilters.value
-  const requestsQuery = buildRequestsQueryZoomActions(newTimeRange, filters)
   const exploreQuery = buildExploreQuery(newTimeRange, filters)
 
-  requestsLinkZoomActions.value = canGenerateRequestsLink.value ? { href: buildRequestLink(requestsQuery) } : undefined
   exploreLinkZoomActions.value = canGenerateExploreLink.value ? { href: buildExploreLink(exploreQuery as ExploreQuery | AiExploreQuery) } : undefined
+  requestsLinkZoomActions.value = canGenerateRequestsLink.value ? { href: buildRequestLink(buildRequestsQueryZoomActions(newTimeRange, filters)) } : undefined
 }
 
 defineExpose({ getExportData })
@@ -520,7 +529,7 @@ defineExpose({ getExportData })
 
   &.editable:hover {
     .tile-header {
-      background: $kui-color-background-neutral-weakest;
+      background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     }
   }
 
@@ -533,19 +542,19 @@ defineExpose({ getExportData })
   .tile-header {
     align-items: center;
     display: flex;
-    gap: $kui-space-50;
+    gap: var(--kui-space-50, $kui-space-50);
     justify-content: space-between;
-    padding: $kui-space-40 $kui-space-50 $kui-space-40 $kui-space-50;
+    padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
     right: 0;
     width: 100%;
 
     .title-tooltip {
-      margin-right: $kui-space-20;
+      margin-right: var(--kui-space-20, $kui-space-20);
       overflow: hidden;
     }
 
     .title {
-      font-size: $kui-font-size-40;
+      font-size: var(--kui-font-size-40, $kui-font-size-40);
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
       line-height: 24px;
       overflow: hidden;
@@ -563,8 +572,8 @@ defineExpose({ getExportData })
     }
 
     .header-description {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-20;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
       text-align: right;
     }
 
@@ -578,7 +587,7 @@ defineExpose({ getExportData })
       }
 
       .delete-option {
-        color: $kui-color-text-danger;
+        color: var(--kui-color-text-danger, $kui-color-text-danger);
       }
 
       li.k-dropdown-item {
@@ -588,10 +597,10 @@ defineExpose({ getExportData })
       }
 
       a {
-        color: $kui-color-text;
+        color: var(--kui-color-text, $kui-color-text);
 
         &:hover {
-          color: $kui-color-text;
+          color: var(--kui-color-text, $kui-color-text);
           text-decoration: none;
         }
       }
@@ -606,7 +615,7 @@ defineExpose({ getExportData })
     flex-grow: 1;
     margin: 0;
     overflow: hidden;
-    padding: $kui-space-20 $kui-space-60 0 $kui-space-60;
+    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
 
     &.type-golden_signals {
       padding: 0;
@@ -619,7 +628,7 @@ defineExpose({ getExportData })
     }
 
     .tile-content {
-      padding: $kui-space-60 $kui-space-60 0 $kui-space-60;
+      padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
 
       &.type-golden_signals {
         padding: 0;

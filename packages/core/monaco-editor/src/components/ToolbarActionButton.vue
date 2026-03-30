@@ -126,15 +126,15 @@ onMounted(() => {
   text-align: center;
 
   &.has-keys {
-    margin-bottom: $kui-space-20;
+    margin-bottom: var(--kui-space-20, $kui-space-20);
   }
 }
 
 .keys {
   align-items: center;
   display: flex;
-  font-family: $kui-font-family-code;
-  gap: $kui-space-30;
+  font-family: var(--kui-font-family-code, $kui-font-family-code);
+  gap: var(--kui-space-30, $kui-space-30);
   justify-content: center;
   min-width: auto;
   text-align: center;
@@ -142,10 +142,10 @@ onMounted(() => {
   white-space: nowrap;
 
   kbd {
-    border: $kui-border-width-10 solid $kui-color-border-neutral-weak;
-    border-radius: $kui-border-radius-20;
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     display: block;
-    padding: $kui-space-0 $kui-space-30;
+    padding: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30);
     user-select: none;
   }
 
@@ -159,7 +159,7 @@ onMounted(() => {
     // macos
     &.mac:after {
       content: '\2318';
-      font-size: $kui-font-size-40;
+      font-size: var(--kui-font-size-40, $kui-font-size-40);
       line-height: 0;
       position: relative;
       top: 2px;
@@ -176,7 +176,7 @@ onMounted(() => {
     // macos
     &.mac:after {
       content: '\2325';
-      font-size: $kui-font-size-40;
+      font-size: var(--kui-font-size-40, $kui-font-size-40);
       line-height: 0;
       position: relative;
       top: 2px;
@@ -186,7 +186,7 @@ onMounted(() => {
   .shift-key {
     &:after {
       content: '\21E7';
-      font-size: $kui-font-size-60;
+      font-size: var(--kui-font-size-60, $kui-font-size-60);
       line-height: 0;
       position: relative;
       top: 2px;
@@ -196,14 +196,14 @@ onMounted(() => {
 
 
 .toolbar-action-button {
-  color: $kui-color-text-neutral;
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
 
   &:hover {
-    color: $kui-color-text-neutral-strongest;
+    color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
   }
 
   &:disabled {
-    color: $kui-color-text-neutral-weak;
+    color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
   }
 }
 </style>

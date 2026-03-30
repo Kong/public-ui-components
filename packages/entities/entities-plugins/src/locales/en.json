@@ -866,11 +866,16 @@
         "detected_config_format_title": "Convert configuration",
         "detected_config_format_confirm": "Convert",
         "examples": {
-          "authenticate": "Authenticate Kong to a third-party service",
-          "vault": "Authenticate to a third-party service using vault secrets",
-          "combine": "Combine multiple API responses",
-          "cache": "Conditionally fetch or store cache data",
-          "manipulate": "Manipulate request headers"
+          "authenticateThirdPartyWithDynamicUrl": "Authenticate Kong to a third-party service resolved at runtime",
+          "authenticateThirdParty": "Authenticate Kong to a third-party service",
+          "authenticateWithVaultSecret": "Authenticate to a third-party service using Vault secrets",
+          "clearHeaders": "Clear request headers",
+          "combineTwoApisIntoOneResponse": "Combine multiple API responses",
+          "conditionallyStoreCachedItems": "Conditionally fetch or store cache data",
+          "convertJsonIntoXml": "Transform JSON into XML",
+          "convertJsonToXmlAndBack": "Transform JSON into XML and back",
+          "convertXmlIntoJson": "Transform XML into JSON",
+          "manipulateRequestHeaders": "Manipulate request headers"
         },
         "flow_editor": {
           "mode": "Flow editor",
@@ -922,7 +927,14 @@
           },
           "node_panel": {
             "title": "Node types",
-            "description": "Drag a node onto the canvas to add it to your data flow."
+            "description": "Drag a node onto the canvas to add it to your data flow.",
+            "groups": {
+              "external_interaction": "External interaction",
+              "control_flow": "Control flow",
+              "data_transformation": "Data transformation",
+              "data_value": "Data value",
+              "authentication": "Authentication"
+            }
           },
           "examples": "Examples",
           "debug": {
@@ -944,62 +956,50 @@
           },
           "node_types": {
             "call": {
-              "name": "call",
               "summary": "Call a third-party API",
               "description": "Send an HTTP request and retrieve the response."
             },
             "jq": {
-              "name": "jq",
               "summary": "Transform data and cast variables with jq",
               "description": "The <code>jq</code> node executes a jq script for processing JSON. See the official <a href=\"https://jqlang.org\" target=\"_blank\">jq docs</a> for more details."
             },
             "exit": {
-              "name": "exit",
               "summary": "Return directly to the client",
               "description": "Trigger an early exit that produces a direct response, rather than forwarding a proxied response."
             },
             "property": {
-              "name": "property",
               "summary": "Get and set Kong Gateway-specific data",
               "description": "Get and set Kong Gateway host and request properties."
             },
             "static": {
-              "name": "static",
               "summary": "Configure static input values ahead of time",
               "description": "Emits static values to be used as inputs for other nodes. The <code>static</code> node can help you with hardcoding some known value for an input."
             },
             "branch": {
-              "name": "branch",
               "summary": "Execute nodes based on matching input conditions",
               "description": "Execute different nodes based on matching input conditions, such as a cache hit or miss."
             },
             "cache": {
-              "name": "cache",
               "summary": "Store and fetch cached data",
               "description": "Store data into cache and fetch cached data from cache."
             },
             "xml_to_json": {
-              "name": "xml_to_json",
               "summary": "Transform XML to JSON",
               "description": "Transform XML to JSON."
             },
             "json_to_xml": {
-              "name": "json_to_xml",
               "summary": "Transform JSON to XML",
               "description": "Transform JSON to XML."
             },
             "jwt_decode": {
-              "name": "jwt_decode",
               "summary": "Decode JWT headers and claims",
               "description": "Parse a JWT without verifying its signature."
             },
             "jwt_sign": {
-              "name": "jwt_sign",
               "summary": "Create and sign JWTs",
               "description": "Generate a signed JWT from configured claims and a signing key."
             },
             "jwt_verify": {
-              "name": "jwt_verify",
               "summary": "Verify JWT signature and claims",
               "description": "Verify a JWT signature and validate claims such as exp, nbf, iss, and aud."
             },

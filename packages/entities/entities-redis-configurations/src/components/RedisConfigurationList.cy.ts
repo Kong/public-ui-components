@@ -331,7 +331,7 @@ describe('<RedisConfigurationList />', () => {
       isKonnectManagedRedisEnabled: true,
     })
 
-    it('should show source (Konnect managed/Self managed) in Type column when isKonnectManagedRedisEnabled and add-ons are returned', () => {
+    it('should show managed add-on name over linked partial name', () => {
       interceptCombinedList()
       cy.mount(RedisConfigurationList, {
         props: {
@@ -342,6 +342,7 @@ describe('<RedisConfigurationList />', () => {
 
       cy.getTestId('self-managed-config').should('be.visible')
       cy.getTestId('test cloud').should('be.visible')
+      cy.getTestId('konnect-managed-config').should('not.exist')
       cy.get('table').should('contain.text', 'Self-managed Redis')
       cy.get('table').should('contain.text', 'Konnect-managed Redis')
     })

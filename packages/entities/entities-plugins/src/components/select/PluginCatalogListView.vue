@@ -262,7 +262,7 @@ const onSort = (sortPayload: TableSortPayload) => {
 
 .plugin-action-cell {
   display: flex;
-  font-weight: $kui-font-weight-semibold;
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   justify-content: flex-start;
   max-width: 100px;
   min-width: 80px;

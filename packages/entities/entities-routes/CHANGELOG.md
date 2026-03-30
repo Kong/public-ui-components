@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.21.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.6...@kong-ui-public/entities-routes@3.21.7) (2026-03-30)
+
+
+### Bug Fixes
+
+* **entities-routes:** tooltip copy for route header ([#3073](https://github.com/Kong/public-ui-components/issues/3073)) ([25c7a33](https://github.com/Kong/public-ui-components/commit/25c7a33dce569ba3aa3ebffcc7f449d4c4b0b6bb))
+
+
+
+
+
+## [3.21.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.5...@kong-ui-public/entities-routes@3.21.6) (2026-03-25)
+
+
+### Bug Fixes
+
+* **deps:** bump icons ([#3054](https://github.com/Kong/public-ui-components/issues/3054)) ([77e55ac](https://github.com/Kong/public-ui-components/commit/77e55ac97c12b1b0bbab2b9c46ad78191317e807))
+
+
+
+
+
+## [3.21.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.4...@kong-ui-public/entities-routes@3.21.5) (2026-03-24)
+
+
+### Bug Fixes
+
+* apply token-var-usage stylelint rule ([#2959](https://github.com/Kong/public-ui-components/issues/2959)) ([c35b1fc](https://github.com/Kong/public-ui-components/commit/c35b1fc62fb4ba839efc5bce5da0d113a8f019ff))
+
+
+
+
+
+## [3.21.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.3...@kong-ui-public/entities-routes@3.21.4) (2026-03-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
 ## [3.21.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.2...@kong-ui-public/entities-routes@3.21.3) (2026-03-21)
 
 

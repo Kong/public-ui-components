@@ -14,7 +14,6 @@ import {
   queryableBasicExploreDimensions,
   queryableExploreDimensions,
   queryableMcpExploreDimensions,
-  relativeTimeRangeValuesV4,
   requestFilterTypeEmptyV2,
 } from './types'
 import { COUNTRIES } from './types/country-codes'
@@ -307,8 +306,6 @@ const exploreV4RelativeTimeSchema = {
     },
     time_range: {
       type: 'string',
-      enum: relativeTimeRangeValuesV4,
-      default: '1h',
     },
   },
   required: [
@@ -372,27 +369,27 @@ const baseQueryProperties = {
   },
 } as const
 
-const metricsFn = <T extends readonly string[]>(aggregations: T) => ({
+const metricsFn = <T extends readonly string[] | undefined>(aggregations?: T) => ({
   type: 'array',
   description: 'List of aggregated metrics to collect across the requested time span.',
   items: {
     type: 'string',
-    enum: aggregations,
+    ...(aggregations ? { enum: aggregations } : {}),
   },
 } as const satisfies JSONSchema)
 
-const dimensionsFn = <T extends readonly string[]>(dimensions: T) => ({
+const dimensionsFn = <T extends readonly string[] | undefined>(dimensions?: T) => ({
   type: 'array',
   description: 'List of attributes or entity types to group by.',
   minItems: 0,
   maxItems: 2,
   items: {
     type: 'string',
-    enum: dimensions,
+    ...(dimensions ? { enum: dimensions } : {}),
   },
 } as const satisfies JSONSchema)
 
-const filtersFn = <T extends readonly string[]>(filterableDimensions: T) => ({
+const filtersFn = <T extends readonly string[] | undefined>(filterableDimensions?: T) => ({
   type: 'array',
   description: 'A list of filters to apply to the query',
   items: {
@@ -403,7 +400,7 @@ const filtersFn = <T extends readonly string[]>(filterableDimensions: T) => ({
         properties: {
           field: {
             type: 'string',
-            enum: filterableDimensions,
+            ...(filterableDimensions ? { enum: filterableDimensions } : {}),
           },
           operator: {
             type: 'string',
@@ -429,11 +426,61 @@ const filtersFn = <T extends readonly string[]>(filterableDimensions: T) => ({
         properties: {
           field: {
             type: 'string',
-            enum: filterableDimensions,
+            ...(filterableDimensions ? { enum: filterableDimensions } : {}),
           },
           operator: {
             type: 'string',
             enum: requestFilterTypeEmptyV2,
+          },
+        },
+        required: [
+          'field',
+          'operator',
+        ],
+        additionalProperties: false,
+      },
+    ],
+  },
+} as const satisfies JSONSchema)
+
+const platformFiltersFn = () => ({
+  type: 'array',
+  description: 'A list of filters to apply to the platform query',
+  items: {
+    oneOf: [
+      {
+        type: 'object',
+        description: 'In filter',
+        properties: {
+          field: {
+            type: 'string',
+          },
+          operator: {
+            type: 'string',
+          },
+          value: {
+            type: 'array',
+            items: {
+              type: ['string', 'number', 'null'],
+            },
+          },
+        },
+        required: [
+          'field',
+          'operator',
+          'value',
+        ],
+        additionalProperties: false,
+      },
+      {
+        type: 'object',
+        description: 'Empty filter',
+        properties: {
+          field: {
+            type: 'string',
+          },
+          operator: {
+            type: 'string',
           },
         },
         required: [
@@ -522,8 +569,27 @@ export const mcpUsageSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
+export const platformQuerySchema = {
+  type: 'object',
+  description: 'A query to launch at the platform dashboard API',
+  properties: {
+    datasource: {
+      type: 'string',
+      enum: [
+        'platform',
+      ],
+    },
+    metrics: metricsFn(),
+    dimensions: dimensionsFn(),
+    filters: platformFiltersFn(),
+    ...baseQueryProperties,
+  },
+  required: ['datasource'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
 export const validDashboardQuery = {
-  anyOf: [apiUsageQuerySchema, basicQuerySchema, llmUsageSchema, mcpUsageSchema],
+  anyOf: [apiUsageQuerySchema, basicQuerySchema, llmUsageSchema, mcpUsageSchema, platformQuerySchema],
 } as const satisfies JSONSchema
 
 export type ValidDashboardQuery = FromSchemaWithOptions<typeof validDashboardQuery>

@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.6...@kong-ui-public/page-layout@0.2.7) (2026-03-27)
+
+
+### Bug Fixes
+
+* **page-layout:** back button attributes ([c6651f4](https://github.com/Kong/public-ui-components/commit/c6651f441681bd4b00783b58d072b9047bbdb9a1))
+
+
+
+
+
+## [0.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.5...@kong-ui-public/page-layout@0.2.6) (2026-03-27)
+
+
+### Bug Fixes
+
+* **page-layout:** back-to prop and actions slot [KHCP-20082] ([#3045](https://github.com/Kong/public-ui-components/issues/3045)) ([87ee464](https://github.com/Kong/public-ui-components/commit/87ee464689ceb9b65e2e203582a0d9ad3953403c))
+
+
+
+
+
+## [0.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.4...@kong-ui-public/page-layout@0.2.5) (2026-03-25)
+
+
+### Bug Fixes
+
+* **deps:** bump icons ([#3054](https://github.com/Kong/public-ui-components/issues/3054)) ([77e55ac](https://github.com/Kong/public-ui-components/commit/77e55ac97c12b1b0bbab2b9c46ad78191317e807))
+
+
+
+
+
 ## [0.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.3...@kong-ui-public/page-layout@0.2.4) (2026-03-18)
 
 

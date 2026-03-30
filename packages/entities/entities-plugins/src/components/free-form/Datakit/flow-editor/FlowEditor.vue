@@ -84,8 +84,8 @@ useLeaveConfirmation({ enabled: modalOpen })
 <style lang="scss" scoped>
 .dk-flow-editor {
   .flow-panels-container {
-    border: $kui-border-width-10 solid $kui-color-border;
-    border-radius: $kui-border-radius-30;
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     height: 560px;
     overflow: hidden;
     position: relative;
@@ -101,7 +101,7 @@ useLeaveConfirmation({ enabled: modalOpen })
       opacity: 0;
       position: absolute;
       top: 0;
-      transition: opacity $kui-animation-duration-20 ease-out;
+      transition: opacity var(--kui-animation-duration-20, $kui-animation-duration-20) ease-out;
       width: 100%;
       z-index: 200;
 
@@ -112,7 +112,7 @@ useLeaveConfirmation({ enabled: modalOpen })
   }
 
   .button-open-editor {
-    margin-top: $kui-space-70;
+    margin-top: var(--kui-space-70, $kui-space-70);
   }
 }
 </style>

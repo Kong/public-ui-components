@@ -63,7 +63,7 @@ defineProps({
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefined
-provide(ENTITIES_SHARED_FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => pluginFormEngine === 'free-form'))
+provide(ENTITIES_SHARED_FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => pluginFormEngine === 'freeform'))
 provide(FEATURE_FLAGS.KM_2262_CODE_MODE, true)
 provide(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, true)
 
@@ -71,6 +71,15 @@ useProvideExperimentalFreeForms([
   'service-protection',
   'prometheus',
   'metering-and-billing',
+  'aws-lambda',
+  'exit-transformer',
+  'file-log',
+  'http-log',
+  'request-transformer-advanced',
+  'response-transformer',
+  'response-transformer-advanced',
+  'correlation-id',
+  'opentelemetry',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({

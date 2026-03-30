@@ -275,7 +275,7 @@ defineExpose({ autoLayout, fitView })
 
 <style lang="scss" scoped>
 .dk-flow-canvas {
-  background-color: $kui-color-background-neutral-weakest;
+  background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
   height: 100%;
   position: relative;
   width: 100%;
@@ -294,11 +294,11 @@ defineExpose({ autoLayout, fitView })
     &:not(.readonly) {
       :deep(.vue-flow__node) {
         &:hover:not(.selected, :has(.value-indicator:hover)) .dk-flow-node {
-          border-color: $kui-color-border-primary-weak;
+          border-color: var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
         }
 
         &.selected .dk-flow-node {
-          border-color: $kui-color-border-primary;
+          border-color: var(--kui-color-border-primary, $kui-color-border-primary);
         }
       }
     }

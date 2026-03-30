@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "9.173.1",
+  "version": "9.182.2",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -35,7 +35,7 @@
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.47.0",
+    "@kong/icons": "^1.48.0",
     "@kong/kongponents": "^9.52.5",
     "@playwright/test": ">= 1.0.0 < 2.0.0",
     "@shikijs/core": ">= 3.0.0 < 4.0.0",
@@ -62,13 +62,13 @@
     }
   },
   "devDependencies": {
-    "@dagrejs/dagre": "^1.1.8",
+    "@dagrejs/dagre": "^2.0.4",
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong/design-tokens": "1.20.0",
-    "@kong/icons": "^1.47.0",
+    "@kong/icons": "^1.48.0",
     "@kong/kongponents": "9.52.5",
     "@playwright/experimental-ct-vue": "^1.58.2",
     "@playwright/test": "^1.58.2",

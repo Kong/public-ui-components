@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { App } from 'vue'
 import { nextTick } from 'vue'
-import type { DatasourceConfig } from '@kong-ui-public/analytics-utilities'
+import type { AllFilters, DatasourceConfig } from '@kong-ui-public/analytics-utilities'
 import { useDatasourceConfigStore } from '../datasource-config'
 import { setupPiniaTestStore } from './setupPiniaTestStore'
 
@@ -26,13 +26,79 @@ describe('useDatasourceConfigStore', () => {
           },
         },
         {
+          name: 'gateway_service',
+          showInUI: true,
+          aggregation: false,
+          group: true,
+          filter: {
+            valueType: 'string',
+            allowNewValues: true,
+            operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+          },
+        },
+        {
+          name: 'route',
+          showInUI: true,
+          aggregation: false,
+          group: true,
+          filter: {
+            valueType: 'string',
+            allowNewValues: true,
+            operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+          },
+        },
+        {
+          name: 'consumer',
+          showInUI: true,
+          aggregation: false,
+          group: true,
+          filter: {
+            valueType: 'string',
+            allowNewValues: true,
+            operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+          },
+        },
+        {
           name: 'request_count',
           showInUI: true,
           aggregation: true,
           group: false,
           metricGroup: 'count',
         },
+        {
+          name: 'request_size',
+          showInUI: true,
+          aggregation: true,
+          group: false,
+          metricGroup: 'sum',
+          supportedDimensions: ['status_code', 'gateway_service'],
+        },
+        {
+          name: 'error_rate',
+          showInUI: true,
+          aggregation: true,
+          group: false,
+          metricGroup: 'rate',
+          supportedDimensions: ['status_code', 'route'],
+        },
+        {
+          name: 'consumer_count',
+          showInUI: true,
+          aggregation: true,
+          group: false,
+          metricGroup: 'count',
+          supportedDimensions: ['consumer'],
+        },
+        {
+          name: 'no_dimensions_metric',
+          showInUI: true,
+          aggregation: true,
+          group: false,
+          metricGroup: 'count',
+          supportedDimensions: [],
+        },
       ],
+      timeRangeOptions: [],
     },
     {
       name: 'requests',
@@ -62,6 +128,7 @@ describe('useDatasourceConfigStore', () => {
           },
         },
       ],
+      timeRangeOptions: [],
     },
   ]
 
@@ -88,6 +155,12 @@ describe('useDatasourceConfigStore', () => {
 
     return useDatasourceConfigStore()
   }
+
+  const makeFilter = (field: string): AllFilters => ({
+    field,
+    operator: 'in',
+    value: ['value'],
+  } as AllFilters)
 
   it('loads datasource config and builds a fields map', async () => {
     const store = useStore()
@@ -153,5 +226,209 @@ describe('useDatasourceConfigStore', () => {
     await store.isReady()
     expect(store.loading).toBe(false)
     expect(store.datasourceConfig).toEqual([])
+  })
+
+  describe('isFilterValidForDatasource', () => {
+    it('returns true for a valid filter', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filter = {
+        field: 'status_code',
+        operator: 'in',
+        value: ['200'],
+      } as AllFilters
+
+      expect(store.isFilterValidForDatasource({ datasource: 'api_usage', filter })).toBe(true)
+    })
+
+    it('returns false when the field is not in the datasource', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filter = {
+        field: 'workspace',
+        operator: 'in',
+        value: ['route-id'],
+      } as AllFilters
+
+      expect(store.isFilterValidForDatasource({ datasource: 'api_usage', filter })).toBe(false)
+    })
+
+    it('returns false when the field has no filter config', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filter = {
+        field: 'request_count',
+        operator: 'in',
+        value: ['200'],
+      } as AllFilters
+
+      expect(store.isFilterValidForDatasource({ datasource: 'api_usage', filter })).toBe(false)
+    })
+
+    it('returns false when the operator is not supported', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filter = {
+        field: 'status_code',
+        operator: '=',
+        value: ['200'],
+      } as AllFilters
+
+      expect(store.isFilterValidForDatasource({ datasource: 'api_usage', filter })).toBe(false)
+    })
+
+    it('returns true for unknown datasources', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filter = {
+        field: 'unknown_field',
+        operator: 'in',
+        value: ['value'],
+      } as AllFilters
+
+      expect(store.isFilterValidForDatasource({ datasource: 'goap_test', filter })).toBe(true)
+    })
+  })
+
+  describe('stripUnknownFilters', () => {
+    it('removes invalid filters and keeps valid ones', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const validFilter = {
+        field: 'status_code',
+        operator: 'in',
+        value: ['200'],
+      } as AllFilters
+
+      const invalidFilter = {
+        field: 'request_count',
+        operator: 'in',
+        value: ['200'],
+      } as AllFilters
+
+      const result = store.stripUnknownFilters({
+        datasource: 'api_usage',
+        filters: [invalidFilter, validFilter],
+      })
+
+      expect(result).toEqual([validFilter])
+    })
+
+    it('keeps all filters for unknown datasources', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filters = [
+        {
+          field: 'status_code',
+          operator: 'in',
+          value: ['200'],
+        },
+        {
+          field: 'unknown_field',
+          operator: 'in',
+          value: ['value'],
+        },
+      ] as AllFilters[]
+
+      expect(store.stripUnknownFilters({ datasource: 'goap_test', filters })).toEqual(filters)
+    })
+
+    it('strips unsupported filters for a single metric with supported dimensions', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filters = [makeFilter('status_code'), makeFilter('gateway_service'), makeFilter('consumer')]
+
+      expect(store.stripUnknownFilters({
+        datasource: 'api_usage',
+        filters,
+        metrics: ['request_size'],
+      })).toEqual([makeFilter('status_code'), makeFilter('gateway_service')])
+    })
+
+    it('keeps datasource-valid filters when a single metric has supportedDimensions unset', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filters = [makeFilter('status_code'), makeFilter('gateway_service'), makeFilter('consumer')]
+
+      expect(store.stripUnknownFilters({
+        datasource: 'api_usage',
+        filters,
+        metrics: ['request_count'],
+      })).toEqual(filters)
+    })
+
+    it('strips all filters when a single metric has an empty supportedDimensions array', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filters = [makeFilter('status_code'), makeFilter('gateway_service')]
+
+      expect(store.stripUnknownFilters({
+        datasource: 'api_usage',
+        filters,
+        metrics: ['no_dimensions_metric'],
+      })).toEqual([])
+    })
+
+    it('keeps only the intersection for multiple metrics with supported dimensions', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filters = [makeFilter('status_code'), makeFilter('gateway_service'), makeFilter('route')]
+
+      expect(store.stripUnknownFilters({
+        datasource: 'api_usage',
+        filters,
+        metrics: ['request_size', 'error_rate'],
+      })).toEqual([makeFilter('status_code')])
+    })
+
+    it('strips all filters when one of multiple metrics supports no dimensions', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filters = [makeFilter('status_code'), makeFilter('gateway_service')]
+
+      expect(store.stripUnknownFilters({
+        datasource: 'api_usage',
+        filters,
+        metrics: ['request_size', 'no_dimensions_metric'],
+      })).toEqual([])
+    })
+
+    it('ignores metrics with supportedDimensions unset when intersecting multiple metrics', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filters = [makeFilter('status_code'), makeFilter('gateway_service'), makeFilter('consumer')]
+
+      expect(store.stripUnknownFilters({
+        datasource: 'api_usage',
+        filters,
+        metrics: ['request_size', 'request_count'],
+      })).toEqual([makeFilter('status_code'), makeFilter('gateway_service')])
+    })
+
+    it('strips all filters when multiple metrics have no supported dimension intersection', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filters = [makeFilter('status_code'), makeFilter('gateway_service'), makeFilter('consumer')]
+
+      expect(store.stripUnknownFilters({
+        datasource: 'api_usage',
+        filters,
+        metrics: ['request_size', 'consumer_count'],
+      })).toEqual([])
+    })
   })
 })
