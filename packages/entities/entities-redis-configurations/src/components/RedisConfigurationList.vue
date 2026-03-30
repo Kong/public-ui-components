@@ -333,8 +333,9 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() =>
   props.config.app === 'konnect' &&
   !!(props.config as KonnectRedisConfigurationListConfig).isKonnectManagedRedisEnabled &&
   // Konnect-managed Redis is only supported for Cloud Gateways
+  // Require explicit true so hosts that omit this flag don't trigger Cloud Gateways add-ons calls
   // Other gateway types must keep using the legacy partials flow
-  (props.config as KonnectRedisConfigurationListConfig).isCloudGateway !== false,
+  (props.config as KonnectRedisConfigurationListConfig).isCloudGateway === true,
 )
 
 const useKonnectManagedRedisUi = computed<boolean>(() => {
