@@ -17,6 +17,7 @@ import { EventGatewayTypesArray, type SupportedEntityType, SupportedEntityTypesA
 import { highlightCodeBlock } from '../../utils/code-block'
 
 const SINGLE_INDENT = '  '
+const HEREDOC_DELIMITER = 'TF_MULTILINE_EOT'
 
 const props = defineProps({
   /** A record to indicate the entity's configuration, used to populate the Terraform code block */
@@ -52,7 +53,7 @@ const buildStringLiteral = (value: string, indent: string): string => {
   if (value.includes('\n')) {
     const contentIndent = indent + SINGLE_INDENT
     const indentedLines = value.split('\n').map(line => `${contentIndent}${line}`).join('\n')
-    return `<<-EOT\n${indentedLines}\n${contentIndent}EOT`
+    return `<<-${HEREDOC_DELIMITER}\n${indentedLines}\n${contentIndent}${HEREDOC_DELIMITER}`
   }
   const escaped = value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
   return `"${escaped}"`
