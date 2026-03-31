@@ -45,10 +45,31 @@
           >
             <KCollapse
               v-model="partialSectionCollapsed"
+              class="managed-redis-partial-kcollapse"
               data-testid="managed-redis-partial-collapse"
               trigger-alignment="leading"
-              :trigger-label="partialCollapseTriggerLabel"
             >
+              <template #trigger="{ isCollapsed, toggle }">
+                <KButton
+                  appearance="tertiary"
+                  class="managed-redis-partial-collapse-trigger"
+                  data-testid="managed-redis-partial-collapse-trigger"
+                  type="button"
+                  @click="toggle()"
+                >
+                  <ChevronUpIcon
+                    v-if="!isCollapsed"
+                    decorative
+                    :size="KUI_ICON_SIZE_40"
+                  />
+                  <ChevronDownIcon
+                    v-else
+                    decorative
+                    :size="KUI_ICON_SIZE_40"
+                  />
+                  {{ partialCollapseTriggerLabel }}
+                </KButton>
+              </template>
               <div class="managed-redis-partial-expandable-body">
                 <RedisConfigurationConfigCard
                   v-if="!partialSectionCollapsed"
@@ -112,7 +133,9 @@ import {
   SupportedEntityType,
   useAxios,
 } from '@kong-ui-public/entities-shared'
-import { KCollapse, KSkeleton } from '@kong/kongponents'
+import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import { ChevronDownIcon, ChevronUpIcon } from '@kong/icons'
+import { KButton, KCollapse, KSkeleton } from '@kong/kongponents'
 import type {
   KonnectRedisConfigurationEntityConfig,
   KongManagerRedisConfigurationEntityConfig,
@@ -213,6 +236,12 @@ const detailLayout = ref<DetailLayout>('legacy')
 const addOnIdForCacheFetch = ref('')
 const linkedPartialIdForCollapse = ref<string | null>(null)
 const partialSectionCollapsed = ref(true)
+
+const partialCollapseTriggerLabel = computed((): string =>
+  partialSectionCollapsed.value
+    ? t('config_card.collapse.show_partial')
+    : t('config_card.collapse.hide_partial'),
+)
 
 // Keep only fields shown on the managed cache card
 const addOnRecordResolver = (data: AddOnRecord): AddOnRecord => {
@@ -321,12 +350,6 @@ const innerPartialCardConfig = computed((): KonnectRedisConfigurationEntityConfi
     formatPreferenceKey: k.formatPreferenceKey ? `${k.formatPreferenceKey}_managed_partial` : undefined,
   }
 })
-
-const partialCollapseTriggerLabel = computed((): string =>
-  partialSectionCollapsed.value
-    ? t('config_card.collapse.show_partial')
-    : t('config_card.collapse.hide_partial'),
-)
 
 // Terraform export needs the managed_cache_add_on wrapper
 const cacheAddonCodeBlockFormatter = (record: AddOnRecord, codeFormat: string): AddOnRecord => {
@@ -710,8 +733,45 @@ const configSchema = computed<ConfigurationSchema>(() => {
 </script>
 
 <style lang="scss" scoped>
+.managed-konnect-redis-detail {
+  :deep(.config-card-details-after) {
+    padding-left: var(--kui-space-0, $kui-space-0);
+    padding-top: var(--kui-space-60, $kui-space-60);
+  }
+
+  :deep(.managed-redis-partial-kcollapse .collapse-heading) {
+    margin-bottom: var(--kui-space-0, $kui-space-0);
+  }
+
+  :deep(.managed-redis-partial-kcollapse .collapse-hidden-content) {
+    margin-top: var(--kui-space-0, $kui-space-0);
+  }
+
+  :deep(.managed-redis-nested-detail .kong-ui-entity-base-config-card.k-card) {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding-left: var(--kui-space-0, $kui-space-0);
+    padding-right: var(--kui-space-0, $kui-space-0);
+  }
+
+  /* JsonArray fieldset legends (e.g. data plane groups): medium weight; keep global JsonCardItem unchanged */
+  :deep(.config-card-fieldset-title b) {
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+  }
+
+  /* Tertiary KButton: no hover/active highlight */
+  :deep(.managed-redis-partial-collapse-trigger) {
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
+      background-color: transparent !important;
+      box-shadow: none !important;
+      color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
+    }
+  }
+}
+
 .managed-redis-partial-expandable-body {
-  margin-top: var(--kui-space-50, $kui-space-50);
-  padding-left: var(--kui-space-60, $kui-space-60);
+  margin-top: var(--kui-space-0, $kui-space-0);
 }
 </style>
