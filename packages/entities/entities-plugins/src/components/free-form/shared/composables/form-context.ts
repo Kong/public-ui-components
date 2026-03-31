@@ -120,14 +120,16 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       onChange?.(getValue())
     }, { deep: true })
 
+    let hasInitialized = false
     // Sync the inner data when the props data changes
     watch(() => propsData?.value, newData => {
       // Avoid unnecessary data serialization
-      if (isEqual(getValue(), toValue(newData))) {
+      if (hasInitialized && isEqual(getValue(), toValue(newData))) {
         return
       }
 
       initInnerData(newData)
+      hasInitialized = true
     }, { deep: true, immediate: true })
 
     function serializeIfNeeded(data: any) {
