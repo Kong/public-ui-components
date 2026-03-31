@@ -40,7 +40,10 @@ export const parseManagedAddOn = (plain: unknown): ManagedCacheAddOn | null => {
   const kind = asNonEmptyString(configSource.kind)
   if (!kind) return null
 
-  const stateMetadata = normalizeStateMetadata(configSource.state_metadata)
+  // Match RedisConfigurationList: `config.state_metadata ?? addOn.state_metadata`
+  const stateMetadata =
+    normalizeStateMetadata(configSource.state_metadata)
+    ?? normalizeStateMetadata((plain as AddOnRecord).state_metadata)
 
   const addOn: ManagedCacheAddOn = {
     id,
@@ -93,7 +96,7 @@ export const parseManagedAddOn = (plain: unknown): ManagedCacheAddOn | null => {
 export const parseManagedAddOnDetailPayload = (data: unknown): ManagedCacheAddOn | null =>
   parseManagedAddOn(data)
 
-// Read linked partial id/`cache_config_id` from object metadata.
+// Read linked partial id/`cache_config_id` from object metadata
 const readCacheConfigIdFromMetadata = (meta: unknown): string | undefined => {
   if (!isPlainObject(meta)) return undefined
   const raw = meta.cache_config_id
@@ -102,7 +105,9 @@ const readCacheConfigIdFromMetadata = (meta: unknown): string | undefined => {
 
 // Extract the Koko partial id linked to a managed-cache add-on
 export const getCacheConfigId = (addOn: ManagedCacheAddOn): string | undefined =>
-  readCacheConfigIdFromMetadata(addOn.config?.state_metadata)
+  readCacheConfigIdFromMetadata(
+    addOn.config?.state_metadata ?? (addOn as AddOnRecord).state_metadata,
+  )
 
 // Type guard entrypoint accepts unknown because host pass raw network responses
 export const isManagedCacheAddOn = (addOn: unknown): addOn is ManagedCacheAddOn => {
