@@ -4,14 +4,14 @@
       <KRadio
         v-model="mode"
         data-testid="ff-acl-mode-allow"
-        :label="modeLabels.allow"
+        :label="t('plugins.free-form.acl.mode.allow')"
         :selected-value="'allow'"
         @update:model-value="handleModeChange"
       />
       <KRadio
         v-model="mode"
         data-testid="ff-acl-mode-deny"
-        :label="modeLabels.deny"
+        :label="t('plugins.free-form.acl.mode.deny')"
         :selected-value="'deny'"
         @update:model-value="handleModeChange"
       />
@@ -50,11 +50,6 @@ const { i18n: { t } } = useI18n()
 const mode = ref<AclMode>('allow')
 const userSelectedMode = ref(false)
 const cache = ref<{ allow?: string[], deny?: string[] }>({})
-
-const modeLabels = {
-  allow: t('plugins.free-form.acl.mode.allow'),
-  deny: t('plugins.free-form.acl.mode.deny'),
-}
 
 // Watch formData to detect which mode has data on initial load
 watch(() => formData.config, (config) => {
