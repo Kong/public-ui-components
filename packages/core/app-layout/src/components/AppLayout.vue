@@ -400,7 +400,9 @@ onBeforeUnmount(() => {
         padding: var(--kong-ui-app-layout-content-padding-top, var(--kui-space-70, $kui-space-70)) var(--kong-ui-app-layout-content-padding-x, var(--kui-space-70, $kui-space-70)) var(--kong-ui-app-layout-content-padding-bottom, var(--kui-space-130, $kui-space-130));
 
         &.remove-inner-padding {
-          padding: var(--kui-space-0, $kui-space-0);
+          &:has(.kong-ui-public-page-layout) {
+            padding: var(--kui-space-0, $kui-space-0);
+          }
         }
       }
     }
