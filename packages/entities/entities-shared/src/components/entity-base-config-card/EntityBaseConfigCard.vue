@@ -72,41 +72,47 @@
     </KEmptyState>
 
     <!-- Properties Content -->
-    <div
-      v-else
-      class="config-card-details-section"
-    >
-      <ConfigCardDisplay
-        :code-block-record-formatter="codeBlockRecordFormatter"
-        :config="config"
-        :entity-type="entityType"
-        :fetcher-url="fetcherUrl"
-        :format="configFormat"
-        :prop-list-types="propListTypes"
-        :property-collections="propertyLists"
-        :record="record"
-        :sub-entity-type="subEntityType"
-      >
-        <!-- Pass all the slots from GrandParent to Child components -->
-        <template
-          v-for="slotKey in Object.keys($slots)"
-          :key="slotKey"
-          #[slotKey]="slotProps"
+    <template v-else>
+      <div class="config-card-details-section">
+        <ConfigCardDisplay
+          :code-block-record-formatter="codeBlockRecordFormatter"
+          :config="config"
+          :entity-type="entityType"
+          :fetcher-url="fetcherUrl"
+          :format="configFormat"
+          :prop-list-types="propListTypes"
+          :property-collections="propertyLists"
+          :record="record"
+          :sub-entity-type="subEntityType"
         >
-          <slot
-            :name="slotKey"
-            :record="record"
-            v-bind="slotProps"
-          />
-        </template>
-      </ConfigCardDisplay>
-    </div>
+          <!-- Pass through slots except `after-fields` -->
+          <template
+            v-for="slotKey in configCardDisplaySlotKeys"
+            :key="slotKey"
+            #[slotKey]="slotProps"
+          >
+            <slot
+              :name="slotKey"
+              :record="record"
+              v-bind="slotProps"
+            />
+          </template>
+        </ConfigCardDisplay>
+      </div>
+      <!-- Pairs with `config-card-details-section`; optional block below the property grid (`#after-fields`) -->
+      <div
+        v-if="hasAfterFieldsSlot"
+        class="config-card-details-after"
+      >
+        <slot name="after-fields" />
+      </div>
+    </template>
   </KCard>
 </template>
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch, onMounted } from 'vue'
+import { computed, ref, onBeforeMount, watch, onMounted, useSlots } from 'vue'
 import type { AxiosError } from 'axios'
 import type {
   KonnectBaseEntityConfig,
@@ -256,7 +262,18 @@ const props = defineProps({
     type: String as PropType<HeaderTag>,
     default: 'h2',
   },
+  /**
+   * Hide entries from the Format dropdown (eg. ['yaml']). Structured view is always shown
+   */
+  formatsToHide: {
+    type: Array as PropType<CodeFormat[]>,
+    required: false,
+    default: () => [],
+  },
 })
+
+// If a parent passes `#after-fields`, dont forward that name to ConfigCardDisplay (its not a field slot)
+const RESERVED_ENTITY_CONFIG_CARD_SLOTS = new Set(['after-fields'])
 
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
@@ -266,44 +283,60 @@ composables.useSubSchema(props.pluginConfigKey) // reduce the schema to only the
 
 const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
-const configFormatItems = [
-  {
-    label: t('baseConfigCard.general.structuredFormat'),
-    value: 'structured',
-    selected: true,
-  },
-  {
-    label: t('baseForm.configuration.json'),
-    value: 'json',
-  },
-  {
-    label: t('baseForm.configuration.yaml'),
-    value: 'yaml',
-  },
-]
+const slots = useSlots()
 
-// terraform only supported in konnect
-if (props.config.app === 'konnect') {
-  // insert terraform as the third option
-  configFormatItems.splice(2, 0, {
-    label: t('baseForm.configuration.terraform'),
-    value: 'terraform',
-  })
-}
-// decK is only available for certain entity types
-// https://developer.konghq.com/deck/reference/entities/
-const isSupportedEntity = SupportedEntityDeckArray.includes(props.entityType as any)
-const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckConfig
-if (isDeckEnabled && isSupportedEntity) {
-  configFormatItems.push({
-    label: t('baseForm.configuration.deck'),
-    value: 'deck',
-  })
-}
+/** Every dynamic slot (title, type etc) oter than `after-fields` is passed through to ConfigCardDisplay */
+const configCardDisplaySlotKeys = computed(() =>
+  Object.keys(slots).filter((name) => !RESERVED_ENTITY_CONFIG_CARD_SLOTS.has(name)),
+)
 
-const DEFAULT_FORMAT = configFormatItems[0].value as Format
+const hasAfterFieldsSlot = computed((): boolean => Boolean(slots['after-fields']))
 
-const configFormat = ref<Format>(DEFAULT_FORMAT)
+/** KSelect items: built in display order, then filtered by `formatsToHide` */
+const configFormatItems = computed(() => {
+  const items: Array<{ label: string, value: Format, selected?: boolean }> = [
+    {
+      label: t('baseConfigCard.general.structuredFormat'),
+      value: 'structured',
+      selected: true,
+    },
+    {
+      label: t('baseForm.configuration.json'),
+      value: 'json',
+    },
+    {
+      label: t('baseForm.configuration.yaml'),
+      value: 'yaml',
+    },
+  ]
+
+  // terraform only supported in konnect
+  if (props.config.app === 'konnect') {
+    // insert terraform as the third option
+    items.splice(2, 0, {
+      label: t('baseForm.configuration.terraform'),
+      value: 'terraform',
+    })
+  }
+
+  // decK is only available for certain entity types
+  // https://developer.konghq.com/deck/reference/entities/
+  const isSupportedEntity = SupportedEntityDeckArray.includes(props.entityType as any)
+  const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckConfig
+  if (isDeckEnabled && isSupportedEntity) {
+    items.push({
+      label: t('baseForm.configuration.deck'),
+      value: 'deck',
+    })
+  }
+
+  const hidden = new Set(props.formatsToHide)
+  return items.filter((item) => item.value === 'structured' || !hidden.has(item.value as CodeFormat))
+})
+
+// Initial tab matches the first format item- `structured`.onMounted may replace this from localStorage
+// when `config.formatPreferenceKey` is set
+const configFormat = ref<Format>('structured')
 
 const handleChange = (payload: any): void => {
   configFormat.value = payload?.value
@@ -320,13 +353,16 @@ watch(configFormat, (format: Format) => {
   }
 })
 
+// Restore last format from localStorage if still allowed and not removed by `formatsToHide`
+// Otherwise fall back to the first dropdown option (always `structured`)
 onMounted(() => {
   if (props.config.formatPreferenceKey) {
     const storedFormat = localStorage.getItem(props.config.formatPreferenceKey)
-    if (storedFormat && configFormatItems.some(item => item.value === storedFormat)) {
+    const items = configFormatItems.value
+    if (storedFormat && items.some(item => item.value === storedFormat)) {
       configFormat.value = storedFormat as Format
     } else {
-      configFormat.value = DEFAULT_FORMAT
+      configFormat.value = items[0]?.value as Format ?? 'structured'
     }
     persistFormat(props.config.formatPreferenceKey, configFormat.value)
   }
@@ -532,6 +568,7 @@ const orderedPolicyConfigArray = computed((): RecordItem[] => {
   }).filter(item => !item.hidden) // strip hidden fields
 })
 
+// Split ordered rows by schema section so ConfigCardDisplay can render basic vs advanced vs plugin vs policy
 const propertyLists = computed((): { basic: RecordItem[], advanced: RecordItem[], plugin: RecordItem[], policy: RecordItem[] } => {
   return {
     basic: orderedRecordArray.value?.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Basic),
@@ -628,6 +665,7 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped>
+/* If `#after-fields` exists, keep a bottom border on the last property row so extra block aligns with grid */
 .kong-ui-entity-base-config-card {
   .config-card-actions {
     align-items: center;
@@ -647,8 +685,16 @@ onBeforeMount(async () => {
     margin-top: var(--kui-space-110, $kui-space-110);
   }
 
-  :deep(.config-card-details-row:last-of-type) {
-    border-bottom: none;
+/* No `#after-fields`- hide last row’s bottom border */
+  &:not(:has(.config-card-details-after)) {
+    :deep(.config-card-details-row:last-of-type) {
+      border-bottom: none;
+    }
+  }
+
+/* When `config-card-details-after` exists, keep border so that grid meets the next block */
+  .config-card-details-after {
+    padding-top: var(--kui-space-60, $kui-space-60);
   }
 
   .book-icon {

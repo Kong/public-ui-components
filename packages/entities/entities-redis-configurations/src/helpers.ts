@@ -13,6 +13,25 @@ import {
 } from './types'
 import { RedisType, AuthProvider } from './types'
 
+type KonnectManagedRedisFlags = {
+  app: 'konnect' | 'kongManager'
+  isKonnectManagedRedisEnabled?: boolean
+  isCloudGateway?: boolean
+}
+
+/**
+ * Host must pass on list/detail configs:
+ * app: 'konnect'; `isKonnectManagedRedisEnabled: true; `isCloudGateway: true` (required; otherwise legacy partials-only behavior)
+ * For add-on API calls, also pass `cloudGatewaysApiBaseUrl` and `controlPlaneGeo` when needed.
+ */
+export const isKonnectManagedRedisEnabled = (config: KonnectManagedRedisFlags): boolean => {
+  return (
+    config.app === 'konnect' &&
+    !!config.isKonnectManagedRedisEnabled &&
+    config.isCloudGateway === true
+  )
+}
+
 export const shallowCopyWithId = <T extends Record<any, any>>(node: T): Identifiable<T> => {
   return { ...node, id: uuidv4() }
 }
