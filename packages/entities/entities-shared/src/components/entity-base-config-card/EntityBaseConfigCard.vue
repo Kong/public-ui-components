@@ -685,14 +685,14 @@ onBeforeMount(async () => {
     margin-top: var(--kui-space-110, $kui-space-110);
   }
 
-/* No `#after-fields`- hide last row’s bottom border */
+  /* No `#after-fields`- hide last row’s bottom border */
   &:not(:has(.config-card-details-after)) {
     :deep(.config-card-details-row:last-of-type) {
       border-bottom: none;
     }
   }
 
-/* When `config-card-details-after` exists, keep border so that grid meets the next block */
+  /* When `config-card-details-after` exists, keep border so that grid meets the next block */
   .config-card-details-after {
     padding-top: var(--kui-space-60, $kui-space-60);
   }
