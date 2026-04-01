@@ -90,6 +90,10 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
+  'solace-consume': {
+    experimental: true,
+    component: 'SolaceConsumeForm',
+  },
   'opentelemetry': {
     experimental: true,
     component: 'OpentelemetryForm',

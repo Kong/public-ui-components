@@ -78,6 +78,7 @@ useProvideExperimentalFreeForms([
   'response-transformer',
   'response-transformer-advanced',
   'correlation-id',
+  'solace-consume',
   'opentelemetry',
   'acl',
 ])
