@@ -15,12 +15,6 @@
     </template>
     <template #title-after>
       <KBadge>Info</KBadge>
-      <KBadge
-        appearance="neutral"
-        size="small"
-      >
-        v1
-      </KBadge>
     </template>
   </PageLayout>
 </template>

@@ -234,7 +234,7 @@ onUnmounted(() => {
           .title-after-container {
             align-items: flex-end;
             display: flex;
-            gap: var(--kui-space-20, $kui-space-20);
+            gap: var(--kui-space-30, $kui-space-30);
           }
         }
       }
