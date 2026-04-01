@@ -201,10 +201,16 @@ const props = defineProps({
   },
 })
 
+/**
+ * fetch:success` - Koko redis partial (`RedisConfigurationResponse`)
+ * Konnect-managed redis loads Cloud Gateways add-ons as the primary entity; that payload is emitted
+ * separately via `fetch:managed-add-on-success` to avoid confusion with legacy partial payload
+ */
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:error', error: AxiosError): void
-  (e: 'fetch:success', data: RedisConfigurationResponse | ManagedCacheAddOn): void
+  (e: 'fetch:success', data: RedisConfigurationResponse): void
+  (e: 'fetch:managed-add-on-success', data: ManagedCacheAddOn): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -362,28 +368,27 @@ const cacheAddonCodeBlockFormatter = (record: AddOnRecord, codeFormat: string): 
     : { ...record }
 }
 
-// Rebuild schema from loaded add-on, then emit success
+// Konnect-managed: refresh display schema from API row; notify hosts via add-on-only event
 const onCacheAddOnLoaded = (data: AddOnRecord): void => {
   const display = addOnApiResponseToDisplayRecord(data, {
     cloudAuthAvailable: konnectCloudAuthAvailable.value,
   })
   setManagedAddOnSchemaFromDisplayRecord(display)
+
   if (isManagedCacheAddOn(data)) {
-    emit('fetch:success', data)
+    emit('fetch:managed-add-on-success', data)
   }
 }
 
-// Reuse the same success event for nested partial loads
-const onPartialNestedLoaded = (data: RedisConfigurationResponse | ManagedCacheAddOn) => {
-  if ('config' in data && 'type' in data && typeof data.type === 'string') {
-    emit('fetch:success', data as RedisConfigurationResponse)
-  }
+// Nested legacy partial config card
+const onPartialNestedLoaded = (data: RedisConfigurationResponse) => {
+  emit('fetch:success', data)
 }
 
 const redisType = ref<RedisType>(DEFAULT_REDIS_TYPE)
 
 
-// Legacy handler: derive type label and emit payload
+// Legacy partial config card
 const handleData = (payload: Record<string, any>): void => {
   const partialResponse = payload as RedisConfigurationResponse
   redisType.value = getRedisType(partialResponse)
