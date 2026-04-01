@@ -6,18 +6,15 @@
 </template>
 
 <script setup lang="ts">
+import { useMonacoEditor } from '@kong-ui-public/monaco-editor'
 import { useDebounce } from '@kong-ui-public/core'
 import type { AstType, Schema as AtcSchema, ParseResult, ParseResultOk } from '@kong/atc-router'
 import { Parser } from '@kong/atc-router'
 import * as monaco from 'monaco-editor'
-import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
-import { buildLanguageId, getTokensRange, locateStringLhsIdent, locateToken, registerLanguage, registerTheme, scanTokenBackward, scanTokensBidirectional, theme, TokenType, transformTokens } from '../monaco'
+import { computed, ref, useTemplateRef, watch } from 'vue'
+import { buildLanguageId, getTokensRange, locateStringLhsIdent, locateToken, registerLanguage, scanTokenBackward, scanTokensBidirectional, TokenType, transformTokens } from '../monaco'
 import { createSchema, type Schema } from '../schema'
 import type { ProvideCompletionItems, RhsValueCompletion } from '../types'
-
-let editor: monaco.editor.IStandaloneCodeEditor | undefined
-let editorModel: monaco.editor.ITextModel
-const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor>()
 
 const { debounce } = useDebounce()
 
@@ -49,7 +46,7 @@ const emit = defineEmits<{
   'parse-result-update': [result: ParseResult]
 }>()
 
-const root = ref(null)
+const root = useTemplateRef('root')
 const isParsingActive = ref(false)
 const parseResult = ref<ParseResult | undefined>()
 
@@ -162,10 +159,10 @@ const provideCompletionItems: ProvideCompletionItems = async (model, position) =
   }
 }
 
-onMounted(() => {
-  registerTheme()
-
-  editor = monaco.editor.create(root.value!, {
+const { editor, setLanguage } = useMonacoEditor(root, {
+  code: expression,
+  language: 'plaintext',
+  monacoOptions: {
     automaticLayout: true,
     fixedOverflowWidgets: true,
     fontSize: 14,
@@ -178,85 +175,79 @@ onMounted(() => {
     overviewRulerLanes: 0,
     renderLineHighlightOnlyWhenFocus: true,
     scrollBeyondLastLine: false,
-    theme,
-    value: expression.value,
     maxTokenizationLineLength: 1000,
     editContext: false,
     ...props.editorOptions,
-  })
+  },
+  onReady: (editorInstance) => {
+    const languageId = buildLanguageId(props.schema)
 
-  editorRef.value = editor
-
-  if (props.defaultShowDetails) {
-    editor.getContribution<Record<string, any> & monaco.editor.IEditorContribution>('editor.contrib.suggestController')
-      ?.widget?.value._setDetailsVisible(true)
-  }
-  editor.onDidChangeModelContent(() => {
-    const model = editor!.getModel()!
-    const value = model.getValue()!
-
-    if (props.rhsValueCompletion) {
-      const position = editor!.getPosition()
-      if (position) {
-        const [flatTokens, nestedTokens] = transformTokens(model, monaco.editor.tokenize(value, model.getLanguageId()))
-        const token = locateToken(nestedTokens, position.lineNumber - 1, position.column - 2)
-        switch (token?.shortType) {
-          case TokenType.STR_LITERAL:
-          case TokenType.STR_ESCAPE:
-          case TokenType.STR_INVALID_ESCAPE: {
-            const stringLeftTokenIndex = scanTokenBackward(flatTokens, token.flatIndex, (t) =>
-              !(t.shortType === TokenType.STR_LITERAL || t.shortType === TokenType.STR_ESCAPE || t.shortType === TokenType.STR_INVALID_ESCAPE),
-            ) + 1
-            const lhsIdentTokenIndex = locateStringLhsIdent(flatTokens, stringLeftTokenIndex)
-            if (lhsIdentTokenIndex >= 0) {
-              const lhsIdentRange = getTokensRange(model, flatTokens, lhsIdentTokenIndex, lhsIdentTokenIndex + 1)
-              const lhsIdentValue = model.getValueInRange(lhsIdentRange)
-              if (props.rhsValueCompletion.shouldProvide(lhsIdentValue)) {
-                editor!.getContribution<Record<string, any> & monaco.editor.IEditorContribution>('editor.contrib.suggestController')
-                  ?.triggerSuggest()
-              }
-            }
-            break
-          }
-          default:
-            break
-        }
-      }
+    if (props.defaultShowDetails) {
+      editorInstance.getContribution<Record<string, any> & monaco.editor.IEditorContribution>('editor.contrib.suggestController')
+        ?.widget?.value._setDetailsVisible(true)
     }
 
-    expression.value = value
-  })
+    // rhsValueCompletion: watch content changes to auto-trigger suggestions
+    if (props.rhsValueCompletion) {
+      const rhsValueCompletion = props.rhsValueCompletion
+      editorInstance.onDidChangeModelContent(() => {
+        const model = editorInstance.getModel()!
+        const value = model.getValue()
+        const position = editorInstance.getPosition()
+        if (position) {
+          const [flatTokens, nestedTokens] = transformTokens(model, monaco.editor.tokenize(value, model.getLanguageId()))
+          const token = locateToken(nestedTokens, position.lineNumber - 1, position.column - 2)
+          switch (token?.shortType) {
+            case TokenType.STR_LITERAL:
+            case TokenType.STR_ESCAPE:
+            case TokenType.STR_INVALID_ESCAPE: {
+              const stringLeftTokenIndex = scanTokenBackward(flatTokens, token.flatIndex, (t) =>
+                !(t.shortType === TokenType.STR_LITERAL || t.shortType === TokenType.STR_ESCAPE || t.shortType === TokenType.STR_INVALID_ESCAPE),
+              ) + 1
+              const lhsIdentTokenIndex = locateStringLhsIdent(flatTokens, stringLeftTokenIndex)
+              if (lhsIdentTokenIndex >= 0) {
+                const lhsIdentRange = getTokensRange(model, flatTokens, lhsIdentTokenIndex, lhsIdentTokenIndex + 1)
+                const lhsIdentValue = model.getValueInRange(lhsIdentRange)
+                if (rhsValueCompletion.shouldProvide(lhsIdentValue)) {
+                  editorInstance.getContribution<Record<string, any> & monaco.editor.IEditorContribution>('editor.contrib.suggestController')
+                    ?.triggerSuggest()
+                }
+              }
+              break
+            }
+            default:
+              break
+          }
+        }
+      })
+    }
 
-  editorModel = editor.getModel()!
+    const activateLanguage = () => {
+      // Registers a Monarch tokens provider whose token types are TextMate-scope names, so the
+      // shared Shiki editor theme colours them. We never define or switch a custom Monaco theme,
+      // which keeps us clear of Shiki's overridden `monaco.editor.setTheme` (it throws on unknown
+      // themes). `monaco.editor.tokenize()` then drives completion analysis via this provider.
+      registerLanguage(languageId, provideCompletionItems)
+      setLanguage(languageId)
+      isParsingActive.value = true
+      parseResult.value = parse(expression.value, createSchema(props.schema.definition))
+    }
 
-  if (props.inactiveUntilFocused) {
-    editor.onDidFocusEditorWidget(() => {
-      if (!isParsingActive.value) {
-        const { languageId } = registerLanguage(buildLanguageId(props.schema), provideCompletionItems)
-        monaco.editor.setModelLanguage(editorModel, languageId)
-        isParsingActive.value = true
-        parseResult.value = parse(expression.value, createSchema(props.schema.definition))
-      }
-    })
-  } else {
-    const { languageId } = registerLanguage(buildLanguageId(props.schema), provideCompletionItems)
-    monaco.editor.setModelLanguage(editorModel, languageId)
-    isParsingActive.value = true
-    parseResult.value = parse(expression.value, createSchema(props.schema.definition))
-  }
+    if (props.inactiveUntilFocused) {
+      editorInstance.onDidFocusEditorWidget(() => {
+        if (!isParsingActive.value) {
+          activateLanguage()
+        }
+      })
+    } else {
+      activateLanguage()
+    }
+  },
 })
 
-onBeforeUnmount(() => {
-  editor?.dispose()
-})
-
-watch(expression, (newExpression) => {
+watch(expression, () => {
   if (!isParsingActive.value) {
     isParsingActive.value = true
-  }
-
-  if (editor !== undefined && editor.getValue() !== newExpression) {
-    editor.setValue(newExpression)
   }
 })
 
@@ -274,6 +265,11 @@ watch([expression, schema], (() => {
 
 watch(() => parseResult.value, (result?: ParseResult) => {
   if (!isParsingActive.value) {
+    return
+  }
+
+  const editorModel = editor.value?.getModel()
+  if (!editorModel) {
     return
   }
 
@@ -342,7 +338,7 @@ watch(() => parseResult.value, (result?: ParseResult) => {
 })
 
 defineExpose({
-  editor: editorRef,
+  editor,
 })
 </script>
 
