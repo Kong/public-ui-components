@@ -68,6 +68,18 @@ describe('<PageLayout />', () => {
     cy.getTestId(actionsTestId).should('be.visible').and('contain.text', actionsText)
   })
 
+  it('renders content passed in through title-after slot', () => {
+    const titleAfterTestId = 'page-layout-slotted-title-after'
+    const titleAfterText = 'Title after'
+
+    cy.mount(PageLayout, {
+      props: { title: 'Test Page Title' },
+      slots: { 'title-after': () => h('span', { 'data-testid': titleAfterTestId }, titleAfterText) },
+    })
+
+    cy.getTestId(titleAfterTestId).should('be.visible').and('contain.text', titleAfterText)
+  })
+
   describe('nested PageLayout detection', () => {
     it('hides its own header when a nested PageLayout is detected', () => {
       const parentTitle = 'Parent Title'
