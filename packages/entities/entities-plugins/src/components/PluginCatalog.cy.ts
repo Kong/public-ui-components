@@ -1,5 +1,6 @@
 import PluginCatalog from './PluginCatalog.vue'
 import { PluginGroupArraySortedAlphabetically, type KonnectPluginSelectConfig } from '../types'
+import { PluginGroup } from '@kong-ui-public/entities-plugins-metadata'
 import {
   konnectAvailablePlugins,
   konnectStreamingCustomPlugins,
@@ -139,16 +140,16 @@ describe('<PluginCatalog />', {
     })
     cy.wait('@getAvailablePlugins')
     // check Traffic Control filter and Security filter
-    cy.getTestId('plugin-filter-checkbox-Traffic Control').check()
-    cy.getTestId('plugin-filter-checkbox-Security').check()
-    cy.getTestId('plugin-group-Traffic Control').should('exist')
-    cy.getTestId('plugin-group-Security').should('exist')
-    cy.getTestId('plugin-group-Authentication').should('not.exist')
+    cy.getTestId(`plugin-filter-checkbox-${PluginGroup.TRAFFIC_CONTROL}`).check()
+    cy.getTestId(`plugin-filter-checkbox-${PluginGroup.SECURITY}`).check()
+    cy.getTestId(`plugin-group-${PluginGroup.TRAFFIC_CONTROL}`).should('exist')
+    cy.getTestId(`plugin-group-${PluginGroup.SECURITY}`).should('exist')
+    cy.getTestId(`plugin-group-${PluginGroup.AUTHENTICATION}`).should('not.exist')
 
     // uncheck Traffic Control filter and Security filter
-    cy.getTestId('plugin-filter-checkbox-Traffic Control').uncheck()
-    cy.getTestId('plugin-filter-checkbox-Security').uncheck()
-    cy.getTestId('plugin-group-Authentication').should('exist')
+    cy.getTestId(`plugin-filter-checkbox-${PluginGroup.TRAFFIC_CONTROL}`).uncheck()
+    cy.getTestId(`plugin-filter-checkbox-${PluginGroup.SECURITY}`).uncheck()
+    cy.getTestId(`plugin-group-${PluginGroup.AUTHENTICATION}`).should('exist')
 
     // type in search box
     cy.getTestId('plugins-filter-input').type('jwt')
@@ -232,11 +233,11 @@ describe('<PluginCatalog />', {
     cy.getTestId('clear-filter-selection').should('be.disabled')
 
     // select a group filter
-    cy.getTestId('plugin-filter-checkbox-Traffic Control').check()
+    cy.getTestId(`plugin-filter-checkbox-${PluginGroup.TRAFFIC_CONTROL}`).check()
 
     // clear selection should now be enabled and clear the checkbox
     cy.getTestId('clear-filter-selection').should('not.be.disabled').click()
-    cy.getTestId('plugin-filter-checkbox-Traffic Control').should('not.be.checked')
+    cy.getTestId(`plugin-filter-checkbox-${PluginGroup.TRAFFIC_CONTROL}`).should('not.be.checked')
     cy.getTestId('clear-filter-selection').should('be.disabled')
   })
 })

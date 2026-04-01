@@ -418,7 +418,7 @@ const buildPluginList = (): PluginCardList => {
     }, {})
   // Pick highlighted plugin objects from pluginMetaData and assign to 'Featured'
   if (props.highlightedPluginIds && props.highlightedPluginIds.length > 0) {
-    list['Featured'] = props.highlightedPluginIds
+    list[PluginGroup.FEATURED] = props.highlightedPluginIds
       .flatMap(pluginId => {
         const meta = pluginMetaData[pluginId]
         if (!meta) return []
