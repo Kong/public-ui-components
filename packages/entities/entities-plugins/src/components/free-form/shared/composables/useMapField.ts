@@ -16,7 +16,7 @@ export function useMapField<T = unknown, K extends string = string>(
    */
   onLegacyValueChange?: (newValue: Record<K, T> | null) => void,
 ) {
-  const { value: fieldValue, ...field } = useField<Record<KeyId, T>>(name)
+  const { value: fieldValue, ...field } = useField<Record<KeyId, T> | null>(name)
   const { getEmptyOrDefault, keyIdMap } = useFormShared()
   const valueSchema = computed(() => {
     if (!field.path) return
@@ -60,7 +60,16 @@ export function useMapField<T = unknown, K extends string = string>(
     if (!fieldValue) return
 
     const { [keyId]: _, ...rest } = fieldValue.value || {}
-    fieldValue.value = rest
+
+    if (Object.keys(rest).length === 0) {
+      if (field.schema?.value?.required) {
+        fieldValue.value = {}
+      } else {
+        fieldValue.value = null
+      }
+    } else {
+      fieldValue.value = rest
+    }
   }
 
   function getKeyName(keyId: KeyId): K | undefined {
