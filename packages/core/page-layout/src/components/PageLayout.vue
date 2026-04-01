@@ -42,6 +42,12 @@
             >
               {{ title }}
             </h1>
+            <div
+              v-if="$slots['title-after']"
+              class="title-after-container"
+            >
+              <slot name="title-after" />
+            </div>
           </div>
         </div>
 
@@ -194,7 +200,7 @@ onUnmounted(() => {
         }
 
         .title-container {
-          align-items: center;
+          align-items: flex-end;
           display: flex;
           gap: var(--kui-space-20, $kui-space-20);
 
@@ -223,6 +229,12 @@ onUnmounted(() => {
             font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
             line-height: var(--kui-line-height-40, $kui-line-height-40);
             margin: var(--kui-space-0, $kui-space-0);
+          }
+
+          .title-after-container {
+            align-items: flex-end;
+            display: flex;
+            gap: var(--kui-space-20, $kui-space-20);
           }
         }
       }
