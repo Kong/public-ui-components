@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.184.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.183.1...@kong-ui-public/entities-plugins@9.184.0) (2026-04-02)
+
+
+### Features
+
+* **entities-plugins:** add solace-consume to experimental ([#3080](https://github.com/Kong/public-ui-components/issues/3080)) ([5d1cd28](https://github.com/Kong/public-ui-components/commit/5d1cd28655cee4dcbcac06351d984172f5bcef5d))
+
+
+
+
+
 ## [9.183.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.183.0...@kong-ui-public/entities-plugins@9.183.1) (2026-04-01)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
