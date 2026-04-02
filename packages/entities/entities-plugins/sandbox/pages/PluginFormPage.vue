@@ -82,6 +82,9 @@ useProvideExperimentalFreeForms([
   'solace-consume',
   'opentelemetry',
   'acl',
+  'cors',
+  'proxy-cache',
+  'proxy-cache-advanced',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
