@@ -193,20 +193,25 @@ All plugin forms use `StandardLayout` (`shared/layout/StandardLayout.vue`) as th
 
 ### Plugin Form Selection
 
-In `src/utils/free-form.ts`, a mapping determines which component renders each plugin:
+In `src/components/free-form/plugins/`, one config file determines how each plugin renders:
 
 ```typescript
-const mapping = {
-  'request-callout': 'RequestCalloutForm',       // Always active
-  'datakit': 'DatakitForm',                       // Always active
-  'ai-mcp-proxy': 'AIMcpProxyForm',              // Always active
-  'jwt-signer': 'CommonForm',                     // Always active
-  'service-protection': { experimental: true, component: 'ServiceProtectionForm' },
-  'upstream-oauth':     { experimental: true, component: 'UpstreamOauthForm' },
-  'key-auth':           { experimental: true, component: 'KeyAuthForm' },
-  'rate-limiting':      { experimental: true, component: 'CommonForm' },
-  // ... more experimental mappings
-}
+export default definePluginConfig({
+  experimental: true,
+  component: KeyAuthForm,
+  renderRules: {
+    dependencies: {
+      'config.foo': ['config.bar', 'baz'],
+    },
+  },
+  fieldRenderers: [
+    {
+      match: 'config.foo',
+      component: StringField,
+      propsOverrides: { multiline: true },
+    },
+  ],
+})
 ```
 
 - Experimental forms require opt-in via `experimentalRenders` in the consuming app.
@@ -240,7 +245,7 @@ Every plugin form follows a consistent structure:
 
 ```
 PluginEntityForm.vue
-  |-- if freeformName   -> render free-form component (from ./free-form/index.ts)
+  |-- if freeformComponent -> render free-form component (from ./free-form/plugins/*)
   |-- elif sharedFormName -> render shared form (legacy)
   |-- else               -> render VueFormGenerator (legacy)
 ```
@@ -254,7 +259,7 @@ Key props passed to free-form components:
 | `formSchema` | `any` | Legacy VFG schema (for scope and general info field metadata) |
 | `formModel` | `Record<string, any>` | Legacy form model (for scope initialization) |
 | `isEditing` | `boolean` | New vs edit mode |
-| `renderRules` | `RenderRules` | From `PLUGIN_METADATA[pluginName].freeformRenderRules` |
+| `renderRules` | `RenderRules` | From `pluginConfig.renderRules` |
 | `onFormChange` | `(value) => void` | Callback when free-form data changes |
 | `onModelUpdated` | `(value, model) => void` | Callback for VFG field changes |
 
@@ -324,13 +329,12 @@ filler.fillField('config.host', 'example.com')
 
 ### Adding a New Plugin Form
 
-1. Create directory `free-form/[PluginName]/`
-2. Create `index.ts` exporting the default component
-3. Create `[PluginName]Form.vue` using `StandardLayout`
-4. Optionally create `ConfigForm.vue` for custom config layout
-5. Add export to `free-form/index.ts`
-6. Add mapping entry in `src/utils/free-form.ts`
-7. If the plugin has render rules, add to `PLUGIN_METADATA` in `src/definitions/metadata.ts`
+1. Create a config file in `free-form/plugins/`
+2. Export it with `definePluginConfig()`
+3. Add `component` only if the plugin needs a dedicated Vue form component
+4. Add `fieldRenderers` for flat renderer overrides
+5. Add `renderRules` in the plugin config when free-form layout rules are needed
+6. Put reusable config fragments in `free-form/plugins/_shared/`
 
 ### Adding a New Field Type
 

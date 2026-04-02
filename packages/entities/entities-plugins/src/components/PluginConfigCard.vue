@@ -173,7 +173,7 @@ import { omit } from 'lodash-es'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
 import { PluginScope } from '../types'
-import DatakitConfigCardCanvas from './free-form/Datakit/DatakitConfigCardCanvas.vue'
+import DatakitConfigCardCanvas from './free-form/plugins/Datakit/DatakitConfigCardCanvas.vue'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
 

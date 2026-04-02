@@ -1,5 +1,7 @@
 import CommonForm from './CommonForm.vue'
 import { FEATURE_FLAGS } from '../../../constants'
+import StringField from '../shared/StringField.vue'
+import KeyValueField from '../shared/KeyValueField.vue'
 
 describe('<CommonForm />', () => {
   const createBaseSchema = () => ({
@@ -77,6 +79,7 @@ describe('<CommonForm />', () => {
     isEditing?: boolean
     onFormChange?: any
     provide?: any
+    [key: string]: any
   } = {}) => {
     const {
       schema = createBaseSchema(),
@@ -86,6 +89,7 @@ describe('<CommonForm />', () => {
       isEditing = false,
       onFormChange = cy.spy().as('onFormChange'),
       provide,
+      ...extraProps
     } = overrides
 
     const mountOptions: any = {
@@ -97,6 +101,7 @@ describe('<CommonForm />', () => {
         isEditing,
         onFormChange,
         pluginName: 'test-plugin',
+        ...extraProps,
       },
     }
 
@@ -135,6 +140,94 @@ describe('<CommonForm />', () => {
     })
 
     cy.getTestId('ff-advanced-fields-container').should('exist').should('be.visible')
+  })
+
+  it('renders config-driven string field renderers', () => {
+    mountCommonForm({
+      schema: {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                {
+                  replace: {
+                    type: 'record',
+                    fields: [
+                      { body: { type: 'string' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+      model: {
+        enabled: true,
+        config: {
+          replace: {
+            body: 'test body',
+          },
+        },
+      },
+      fieldRenderers: [
+        {
+          match: 'config.replace.body',
+          component: StringField,
+          propsOverrides: {
+            multiline: true,
+            rows: 3,
+          },
+        },
+      ],
+    } as any)
+
+    cy.getTestId('ff-config.replace.body').should('match', 'textarea')
+  })
+
+  it('renders config-driven key value renderers', () => {
+    mountCommonForm({
+      schema: {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                {
+                  custom_fields_by_lua: {
+                    type: 'map',
+                    keys: { type: 'string' },
+                    values: { type: 'string' },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+      model: {
+        enabled: true,
+        config: {
+          custom_fields_by_lua: {
+            my_key: 'my_value',
+          },
+        },
+      },
+      fieldRenderers: [
+        {
+          match: 'config.custom_fields_by_lua',
+          component: KeyValueField,
+          propsOverrides: {
+            appearance: { string: { multiline: true } },
+          },
+        },
+      ],
+    } as any)
+
+    cy.getTestId('ff-kv-container-config.custom_fields_by_lua.0').find('textarea').should('exist')
   })
 
   it('Advanced fields should be hidden when it is empty', () => {

@@ -10,8 +10,9 @@
       class="entity-form"
     >
       <component
-        :is="(freeForm as any)[freeformName]"
-        v-if="freeformName"
+        :is="freeformComponent"
+        v-if="freeformComponent"
+        :field-renderers="pluginConfig?.fieldRenderers"
         :form-model="formModel"
         :form-schema="formSchema"
         :is-editing="editing"
@@ -19,7 +20,7 @@
         :on-form-change="handleFreeFormUpdate"
         :on-validity-change="onValidityChange"
         :plugin-name="formModel.name"
-        :render-rules="PLUGIN_METADATA[formModel.name]?.freeformRenderRules"
+        :render-rules="pluginConfig?.renderRules"
         :schema="freeformSchema"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
       >
@@ -132,25 +133,12 @@ import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
-import * as freeForm from './free-form'
+import CommonForm from './free-form/Common'
 import type { GlobalAction } from './free-form/shared/types'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/shared/schema-enhancement'
+import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/shared/plugin-registry'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 import type { FormSchema } from '../types/plugins/form-schema'
-
-// Need to check for duplicates in sharedForms and freeForm
-// throw an error if there are any
-const sharedFormKeys = Object.keys(sharedForms)
-const freeFormKeys = Object.keys(freeForm)
-
-if (
-  new Set([...sharedFormKeys, ...freeFormKeys]).size !==
-  sharedFormKeys.length + freeFormKeys.length
-) {
-  throw new Error(
-    'Duplicate form component names found in `sharedForms` and `freeForm`',
-  )
-}
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -257,7 +245,7 @@ const { parseSchema } = composables.useSchemas({
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
-const { shouldUseFreeForm, getFreeFormName } = composables.useFreeFormResolver()
+const { shouldUseFreeForm, getFreeFormComponent } = composables.useFreeFormResolver()
 
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
@@ -417,7 +405,8 @@ provide(FORMS_API_KEY, {
 provide(FORMS_CONFIG, props.config)
 
 const sharedFormName = ref('')
-const freeformName = ref<string | undefined>('')
+const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()
+const freeformComponent = shallowRef<any>()
 const form = ref<Record<string, any> | null>(null)
 const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
@@ -666,7 +655,7 @@ const getModel = (freeformFields?: string[]): Record<string, any> => {
   const model: Record<string, any> = unFlattenObject(outputModel)
 
   // Handle the special case of the freeform plugin
-  if (freeformName.value) {
+  if (freeformComponent.value) {
     // remove any freeform fields from the model before merging
     if (freeformFields && freeformFields.length) {
       for (const field of freeformFields) {
@@ -838,7 +827,7 @@ const initFormModel = (): void => {
       }
 
       // main plugin configuration
-      if (freeformName.value) {
+      if (freeformComponent.value) {
         // keep original config from record for freeform plugins
         handleFreeFormUpdate(props.record)
       } else {
@@ -900,8 +889,9 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
 
-  freeformName.value = shouldUseFreeForm(form.model.name, props.engine)
-    ? getFreeFormName(form.model.name)
+  pluginConfig.value = getPluginConfig(form.model.name)
+  freeformComponent.value = shouldUseFreeForm(form.model.name, props.engine)
+    ? (getFreeFormComponent(form.model.name, props.engine) ?? CommonForm)
     : undefined
   sharedFormName.value = getSharedFormName(form.model.name)
 

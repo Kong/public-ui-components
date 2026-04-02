@@ -1,5 +1,5 @@
 import type { UnionFieldSchema } from '../../../types/plugins/form-schema'
-import type { ComponentPublicInstance, Ref, Slot } from 'vue'
+import type { Component, ComponentPublicInstance, Ref, Slot } from 'vue'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
@@ -174,3 +174,16 @@ export type Match = (opt: {
 }) => boolean
 
 export type MatchMap = Map<Match, Slot<{ name: string }>>
+
+export interface FieldRenderer {
+  match: string | Match
+  component: Component
+  propsOverrides?: Record<string, unknown>
+}
+
+export interface PluginFormConfig {
+  experimental?: boolean
+  component?: Component
+  renderRules?: RenderRules
+  fieldRenderers?: FieldRenderer[]
+}

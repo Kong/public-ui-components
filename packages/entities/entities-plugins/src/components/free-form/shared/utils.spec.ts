@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
-import { sortFieldsByBundles } from './utils'
+import { describe, it, expect, vi } from 'vitest'
+import { sortFieldsByBundles, normalizeMatch } from './utils'
 import type { NamedFieldSchema } from '../../../types/plugins/form-schema'
 
 describe('sortFieldsByBundles', () => {
@@ -350,5 +350,28 @@ describe('sortFieldsByBundles', () => {
         'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
       ])
     })
+  })
+})
+
+describe('normalizeMatch', () => {
+  it('converts string matches into exact path predicates', () => {
+    const match = normalizeMatch('config.redis')
+
+    expect(match({
+      path: 'config.redis',
+      schema: { type: 'string' },
+    })).toBe(true)
+
+    expect(match({
+      path: 'config.redis.host',
+      schema: { type: 'string' },
+    })).toBe(false)
+  })
+
+  it('passes function matches through unchanged', () => {
+    const predicate = vi.fn(() => true)
+    const match = normalizeMatch(predicate)
+
+    expect(match).toBe(predicate)
   })
 })
