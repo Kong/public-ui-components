@@ -72,6 +72,7 @@ import {
   computed,
   nextTick,
   onErrorCaptured,
+  provide,
   ref,
   useTemplateRef,
   watch,
@@ -82,6 +83,7 @@ import type {
   KongManagerPluginFormConfig,
 } from '../../src'
 import { PluginForm } from '../../src'
+import { FEATURE_FLAGS } from '../../src/constants'
 import { PLUGIN_METADATA } from '../../src/definitions/metadata'
 
 function save(type: 'pluginType' | 'schema', value: unknown) {
@@ -95,6 +97,8 @@ function load(type: 'pluginType' | 'schema', defaultValue?: unknown) {
 
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
+
+provide(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, true)
 
 const pluginTypes = [
   { label: '🚫', value: '' },
