@@ -25,7 +25,9 @@
           class="select-item-name"
           data-testid="selected-redis-config"
         >{{ item.name }}</span>
+        <!-- Omit badge when tag is unset -->
         <KBadge
+          v-if="item.tag"
           appearance="info"
           class="select-item-label"
         >
@@ -83,6 +85,7 @@ defineOptions({
 const {
   redisType = 'redis-ee',
   showCreateButton = true,
+  isKonnectManagedRedisEnabled = false,
 } = defineProps<{
   /** The selected redis configuration ID */
   modelValue?: string
@@ -96,6 +99,8 @@ const {
   showCreateButton?: boolean
   /** Text for the create new configuration button */
   createButtonText?: string
+  /** Konnect managed Redis UI (grouping, managed rows). When false- flat list for KM/ legacy Konnect */
+  isKonnectManagedRedisEnabled?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -120,16 +125,20 @@ const {
   loadItems,
 } = useRedisConfigurationSelector({
   redisType,
+  isKonnectManagedRedisEnabled,
 })
 
 // Modal state
 const isModalVisible = ref(false)
 
-// Event handlers
-const onSelectionChange = (item: SelectItem<string> | null) => {
-  const value = item?.value
-  emit('update:modelValue', value as string)
-  emit('change', item)
+/**
+ * KSelect `@change`- Kongponents types item as `SelectItem<string | number> | null`.
+ * Normalize to string `modelValue` for parents; re-emit `change` with loose `SelectItem` typing
+ */
+const onSelectionChange = (item: SelectItem<string | number> | null) => {
+  const value = item?.value // may be number from KSelect
+  emit('update:modelValue', value == null ? undefined : String(value)) // v-model is always string| undefined
+  emit('change', item as SelectItem | null) // public API stays `SelectItem | null`
 }
 
 const onCreateNew = () => {
@@ -142,6 +151,7 @@ const onModalClose = () => {
   emit('modal-close')
 }
 
+// After successful create- close modal, refetch options, select the new partial
 const onPartialCreated = (data: RedisConfigurationResponse) => {
   isModalVisible.value = false
   loadItems() // Refresh the list

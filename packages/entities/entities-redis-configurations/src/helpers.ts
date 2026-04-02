@@ -18,6 +18,21 @@ export const genDefaultSentinelNode = () => shallowCopyWithId(DEFAULT_SENTINEL_N
 
 export const genDefaultClusterNode = () => shallowCopyWithId(DEFAULT_CLUSTER_NODE)
 
+// Source used to group Redis partials in Konnect managed-cache plugin UI
+export type RedisPartialManagedSource = 'self-managed' | 'konnect-managed'
+
+// Classify a Redis partial as Konnect-managed (add-on / managed cache) vs self-managed from API `tags`
+export const inferRedisPartialManagedSource = (partial: { tags?: unknown }): RedisPartialManagedSource => {
+  const tags = Array.isArray(partial.tags) ? (partial.tags as unknown[]) : []
+  const normalizedTags = tags
+    .filter((tag): tag is string => typeof tag === 'string')
+    .map((tag) => tag.toLowerCase())
+
+  return normalizedTags.includes('konnect-managed') || normalizedTags.includes('managed_cache.v0')
+    ? 'konnect-managed'
+    : 'self-managed'
+}
+
 export const getRedisType = (fields: RedisConfigurationFields | RedisConfigurationDTO): RedisType => {
   if (fields.type === PartialType.REDIS_CE) {
     return RedisType.HOST_PORT_CE
