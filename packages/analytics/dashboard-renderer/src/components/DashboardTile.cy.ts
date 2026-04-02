@@ -822,11 +822,14 @@ describe('<DashboardTile />', () => {
           [INJECT_QUERY_PROVIDER]: provider,
         },
       },
-    }).then(async () => {
-      cy.get('@fetcher').should('have.been.calledOnce')
-      cy.get('@fetcher')
-        .its('firstCall.args.0.query.limit')
-        .should('eq', COUNTRIES.length)
+    })
+
+    cy.get('@fetcher').should((spy) => {
+      // @ts-ignore sinon spy helper
+      const call = spy.getCall(0)
+
+      expect(call).to.not.equal(undefined)
+      expect(call.args[0].query.limit).to.eq(COUNTRIES.length)
     })
   })
 
