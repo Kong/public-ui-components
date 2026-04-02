@@ -80,6 +80,7 @@ useProvideExperimentalFreeForms([
   'response-transformer-advanced',
   'correlation-id',
   'opentelemetry',
+  'acl',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({

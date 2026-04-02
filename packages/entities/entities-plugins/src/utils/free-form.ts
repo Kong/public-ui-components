@@ -34,6 +34,10 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
+  acl: {
+    experimental: true,
+    component: 'ACLForm',
+  },
   'basic-auth': {
     experimental: true,
     component: 'CommonForm',

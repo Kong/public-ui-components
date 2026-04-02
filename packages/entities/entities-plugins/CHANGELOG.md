@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.183.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.183.0...@kong-ui-public/entities-plugins@9.183.1) (2026-04-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.183.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.182.4...@kong-ui-public/entities-plugins@9.183.0) (2026-04-01)
+
+
+### Features
+
+* **entities-plugins:** add acl form ([#3076](https://github.com/Kong/public-ui-components/issues/3076)) ([547421c](https://github.com/Kong/public-ui-components/commit/547421cf24c120259860fde193d4463eee373c32))
+
+
+
+
+
+## [9.182.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.182.3...@kong-ui-public/entities-plugins@9.182.4) (2026-03-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.182.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.182.2...@kong-ui-public/entities-plugins@9.182.3) (2026-03-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.182.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.182.1...@kong-ui-public/entities-plugins@9.182.2) (2026-03-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.182.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.182.0...@kong-ui-public/entities-plugins@9.182.1) (2026-03-30)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

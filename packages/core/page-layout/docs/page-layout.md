@@ -22,6 +22,7 @@ A Kong UI page layout component that provides a structured page header with brea
 - Page title rendered as an `<h1>` with automatic ellipsis truncation for long text
 - Optional back navigation button next to the title via the `backTo` prop
 - Actions slot for placing buttons or controls in the page header, aligned to the right
+- Title-after slot for placing inline content (e.g. badges, status indicators) next to the page title
 - Responsive tabbed navigation bar with automatic overflow handling
 - Tabs that exceed the available width are moved into a "More" dropdown menu
 - Support for both Vue Router route objects and string URLs in tabs
@@ -102,6 +103,10 @@ The main content area of the page. This slot is **only rendered when no tabs are
 #### `actions`
 
 An optional slot rendered on the right side of the page header, aligned to the bottom of the header row. Use this slot to place action buttons, dropdowns, or other controls that relate to the current page. The slot is rendered regardless of whether tabs are present.
+
+#### `title-after`
+
+An optional slot rendered immediately after the page title `<h1>`, inline within the title row. Use this slot to place badges, status indicators, or other inline content that should appear next to the title.
 
 ### Usage example
 
@@ -195,6 +200,23 @@ const breadcrumbs = [
   { key: 'control-planes', text: 'Control Planes' },
 ]
 </script>
+```
+
+#### With title-after slot
+
+```html
+<template>
+  <PageLayout
+    :breadcrumbs="breadcrumbs"
+    title="My Control Plane"
+  >
+    <template #title-after>
+      <KBadge appearance="success">Active</KBadge>
+    </template>
+
+    <div>Page content here</div>
+  </PageLayout>
+</template>
 ```
 
 #### With back button (string URL)

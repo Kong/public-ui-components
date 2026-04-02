@@ -1,12 +1,17 @@
 import type { KonnectBaseTableConfig, KongManagerBaseTableConfig, FilterSchema } from '@kong-ui-public/entities-shared'
 import type { RouteLocationRaw } from 'vue-router'
 
+import type { RedisConfigurationResponse } from './redis-configuration'
+
 export type RedisConfigurationSource = 'self-managed' | 'konnect-managed'
 
 export interface BaseRedisConfigurationListConfig {
   /** Route for creating a redis configuration */
   createRoute: RouteLocationRaw
-  /** A function that returns the route for viewing a redis configuration */
+  /**
+   * A function that returns the route for viewing a redis config
+   * Host should safely handle empty ids-by returning a fallback route
+   */
   getViewRoute: (id: string) => RouteLocationRaw
   /** A function that returns the route for editing a redis configuration */
   getEditRoute: (id: string) => RouteLocationRaw
@@ -49,7 +54,7 @@ export interface EntityRow extends Record<string, any> {
    * The Koko partial payload. Set on every row when the list is combined so the Type
    * column can read Redis type from it; otherwise the row itself is the partial.
    */
-  partial?: Record<string, unknown>
+  partial?: RedisConfigurationResponse
   /**
    * Set only when this row is linked to a Cloud Gateways managed-cache add-on (Konnect).
    * Used when deleting: we call the add-ons API with addOn.id instead of the partial URL.
@@ -80,6 +85,7 @@ export interface ManagedCacheAddOn {
     cache_config_id?: string
   }
   state?: string
+  created_at?: string | number
 }
 
 export interface CopyEventPayload {
