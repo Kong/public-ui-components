@@ -1,6 +1,6 @@
 import type { PluginFormConfig } from './types'
 
-export function definePluginConfig<T extends PluginFormConfig>(config: T): T {
+export function definePluginConfig(config: Partial<PluginFormConfig>): PluginFormConfig {
   return config
 }
 

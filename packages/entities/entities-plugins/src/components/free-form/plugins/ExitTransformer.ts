@@ -5,16 +5,13 @@ export default definePluginConfig({
   experimental: true,
   fieldRenderers: [
     {
-      match: ({ path }) => (
-        path === 'config.replace.body' ||
-          /^config\.transform\.functions\.\d+$/.test(path) ||
-          /\.json\.\d+$/.test(path)
-      ),
+      match: ({ path }) => /^config.functions.\d$/.test(path),
       component: StringField,
-      propsOverrides: {
+      propsOverrides: (props) => ({
+        ...props,
         multiline: true,
         rows: 3,
-      },
+      }),
     },
   ],
 })

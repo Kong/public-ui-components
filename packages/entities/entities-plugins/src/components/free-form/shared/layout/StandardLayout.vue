@@ -22,7 +22,12 @@
       >
         <component
           :is="renderer.component"
-          v-bind="{ ...slotProps, ...(renderer.propsOverrides ?? {}) }"
+          v-bind="{
+            ...slotProps,
+            ...((typeof renderer.propsOverrides === 'function')
+              ? renderer.propsOverrides(slotProps)
+              : renderer.propsOverrides) ?? {},
+          }"
         />
       </FieldRenderer>
 

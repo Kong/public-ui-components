@@ -1,9 +1,8 @@
-import UpstreamOauthForm from '../UpstreamOauth'
+import StringField from '../shared/StringField.vue'
 import { definePluginConfig } from '../shared/define-plugin-config'
 
 export default definePluginConfig({
   experimental: true,
-  component: UpstreamOauthForm,
   renderRules: {
     bundles: [
       ['config.cache.strategy', 'config.cache.redis'],
@@ -12,4 +11,12 @@ export default definePluginConfig({
       'config.cache.redis': ['config.cache.strategy', 'redis'],
     },
   },
+  fieldRenderers: [
+    {
+      match: 'config.behavior.idp_error_response_body_template',
+      component: StringField,
+      propsOverrides: {
+      },
+    },
+  ],
 })

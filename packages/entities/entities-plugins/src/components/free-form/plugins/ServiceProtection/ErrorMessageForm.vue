@@ -35,9 +35,9 @@
 
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
-import english from '../../../locales/en.json'
-import StringField from '../shared/StringField.vue'
-import NumberField from '../shared/NumberField.vue'
+import english from '../../../../locales/en.json'
+import StringField from '../../shared/StringField.vue'
+import NumberField from '../../shared/NumberField.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 </script>

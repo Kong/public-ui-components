@@ -11,10 +11,10 @@
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
-import StandardLayout from '../shared/layout/StandardLayout.vue'
+import StandardLayout from '../../shared/layout/StandardLayout.vue'
 
-import type { Props } from '../shared/layout/StandardLayout.vue'
-import type { FreeFormPluginData } from '../../../types/plugins/free-form'
+import type { Props } from '../../shared/layout/StandardLayout.vue'
+import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 
 const props = defineProps<Props>()
 

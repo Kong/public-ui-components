@@ -1,7 +1,15 @@
-import { logConfig } from './_shared/log-config'
 import { definePluginConfig } from '../shared/define-plugin-config'
+import KeyValueField from '../shared/KeyValueField.vue'
 
 export default definePluginConfig({
-  ...logConfig,
   experimental: true,
+  fieldRenderers: [
+    {
+      match: 'config.custom_fields_by_lua',
+      component: KeyValueField,
+      propsOverrides: {
+        appearance: { string: { multiline: true } },
+      },
+    },
+  ],
 })

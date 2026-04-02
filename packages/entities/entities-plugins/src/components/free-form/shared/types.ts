@@ -175,10 +175,12 @@ export type Match = (opt: {
 
 export type MatchMap = Map<Match, Slot<{ name: string }>>
 
+export type PropsOverridesFn = (props: Record<string, unknown>) => Record<string, unknown>
+
 export interface FieldRenderer {
   match: string | Match
   component: Component
-  propsOverrides?: Record<string, unknown>
+  propsOverrides?: Record<string, unknown> | PropsOverridesFn
 }
 
 export interface PluginFormConfig {

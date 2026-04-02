@@ -1,4 +1,4 @@
-import ServiceProtectionForm from '../../ServiceProtection'
+import ServiceProtectionForm from './ServiceProtectionForm.vue'
 import { definePluginConfig } from '../../shared/define-plugin-config'
 
 export default definePluginConfig({

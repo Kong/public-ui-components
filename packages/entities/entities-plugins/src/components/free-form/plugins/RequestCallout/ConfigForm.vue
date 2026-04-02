@@ -33,5 +33,5 @@
 
 <script setup lang="ts">
 import CalloutsForm from './CalloutsForm.vue'
-import ObjectField from '../shared/ObjectField.vue'
+import ObjectField from '../../shared/ObjectField.vue'
 </script>

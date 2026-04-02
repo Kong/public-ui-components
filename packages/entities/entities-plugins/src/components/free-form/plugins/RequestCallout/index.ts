@@ -1,4 +1,4 @@
-import RequestCalloutForm from '../../RequestCallout'
+import RequestCalloutForm from './RequestCalloutForm.vue'
 import { definePluginConfig } from '../../shared/define-plugin-config'
 
 export default definePluginConfig({

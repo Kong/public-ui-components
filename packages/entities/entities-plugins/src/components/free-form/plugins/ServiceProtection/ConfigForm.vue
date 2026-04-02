@@ -22,10 +22,10 @@
 </template>
 
 <script setup lang="ts">
-import Field from '../shared/Field.vue'
-import ObjectField from '../shared/ObjectField.vue'
+import Field from '../../shared/Field.vue'
+import ObjectField from '../../shared/ObjectField.vue'
 import RequestLimitsForm from './RequestLimitsForm.vue'
 import ErrorMessageForm from './ErrorMessageForm.vue'
-import AdvancedFields from '../shared/AdvancedFields.vue'
+import AdvancedFields from '../../shared/AdvancedFields.vue'
 import RedisField from './RedisField.vue'
 </script>

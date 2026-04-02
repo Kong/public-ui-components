@@ -106,11 +106,11 @@
 import { AddIcon, RemoveIcon } from '@kong/icons'
 import { get } from 'lodash-es'
 import { createI18n } from '@kong-ui-public/i18n'
-import english from '../../../locales/en.json'
+import english from '../../../../locales/en.json'
 import { computed, nextTick, ref } from 'vue'
-import { useFormShared, useItemKeys } from '../shared/composables'
-import RadioField from '../shared/RadioField.vue'
-import NumberField from '../shared/NumberField.vue'
+import { useFormShared, useItemKeys } from '../../shared/composables'
+import RadioField from '../../shared/RadioField.vue'
+import NumberField from '../../shared/NumberField.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
