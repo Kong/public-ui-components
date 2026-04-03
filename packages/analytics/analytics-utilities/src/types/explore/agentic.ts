@@ -42,7 +42,7 @@ export type AgenticExploreAggregations = typeof agenticExploreAggregations[numbe
 
 export type AgenticExploreFilterAll = AgenticExploreInFilterV2 | AgenticExploreEmptyFilterV2
 
-export interface McpExploreQuery extends Omit<BasicExploreQuery, 'metrics' | 'dimensions' | 'filters'> {
+export interface AgenticExploreQuery extends Omit<BasicExploreQuery, 'metrics' | 'dimensions' | 'filters'> {
   metrics?: AgenticExploreAggregations[]
   dimensions?: QueryableAgenticExploreDimensions[]
   filters?: AgenticExploreFilterAll[]
