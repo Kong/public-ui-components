@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.184.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.184.0...@kong-ui-public/entities-plugins@9.184.1) (2026-04-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** align datakit jwt form validation ([#3084](https://github.com/Kong/public-ui-components/issues/3084)) ([88a38d3](https://github.com/Kong/public-ui-components/commit/88a38d36f75b6e6f7a3fe253893e4bcde9bd1d01))
+
+
+
+
+
 # [9.184.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.183.1...@kong-ui-public/entities-plugins@9.184.0) (2026-04-02)
 
 

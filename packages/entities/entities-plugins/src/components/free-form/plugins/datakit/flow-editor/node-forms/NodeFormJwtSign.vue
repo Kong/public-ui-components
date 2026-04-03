@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, watch } from 'vue'
+import { useTemplateRef } from 'vue'
 import { KLabel } from '@kong/kongponents'
 
 import Form from '../../../../shared/Form.vue'
@@ -79,7 +79,7 @@ import type { IdConnection, NodeId } from '../../types'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'
-import { notEmpty, numberFormat, useFormValidation } from '../composables/validation'
+import { compose, notEmpty, numberFormat, numberRange, useFormValidation } from '../composables/validation'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 
 interface JwtSignFormData extends BaseFormData {
@@ -124,18 +124,22 @@ const {
   return next
 })
 
-const { createFieldHandler, validateAll } = useFormValidation({
+const { createFieldHandler } = useFormValidation({
   validationConfig: {
     algorithm: notEmpty({ fieldName: 'Algorithm' }),
-    expires_in: numberFormat('integer', { fieldName: 'Expires in' }),
-    not_before: numberFormat('integer', { fieldName: 'Not before' }),
-    key_input: notEmpty({ fieldName: 'Signing key input' }),
+    expires_in: compose(
+      numberFormat('integer', { fieldName: 'Expires in' }),
+      numberRange(1, Infinity, { fieldName: 'Expires in' }),
+    ),
+    not_before: compose(
+      numberFormat('integer', { fieldName: 'Not before' }),
+      numberRange(0, Infinity, { fieldName: 'Not before' }),
+    ),
   },
   getValidationData: () => ({
     algorithm: formData.value.algorithm,
     expires_in: formData.value.expires_in,
     not_before: formData.value.not_before,
-    key_input: formData.value.inputs?.key,
   }),
   toggleNodeValid,
 })
@@ -143,11 +147,4 @@ const { createFieldHandler, validateAll } = useFormValidation({
 const algorithmHandler = createFieldHandler('algorithm', () => setConfig('algorithm'))
 const expiresInHandler = createFieldHandler('expires_in', () => setConfig('expires_in'))
 const notBeforeHandler = createFieldHandler('not_before', () => setConfig('not_before'))
-
-watch(
-  () => formData.value.inputs?.key,
-  () => {
-    validateAll()
-  },
-)
 </script>

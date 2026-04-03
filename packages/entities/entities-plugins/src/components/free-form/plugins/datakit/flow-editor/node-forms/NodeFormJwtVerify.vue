@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, watch } from 'vue'
+import { useTemplateRef } from 'vue'
 import { KLabel } from '@kong/kongponents'
 
 import Form from '../../../../shared/Form.vue'
@@ -109,7 +109,7 @@ import type { IdConnection, NodeId } from '../../types'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'
-import { useFormValidation, numberFormat, notEmpty } from '../composables/validation'
+import { compose, numberFormat, numberRange, useFormValidation } from '../composables/validation'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 
 interface JwtVerifyFormData extends BaseFormData {
@@ -149,30 +149,18 @@ const {
   fieldNameValidator,
 } = useNodeForm<JwtVerifyFormData>(nodeId, () => formRef.value!.getValue())
 
-const { createFieldHandler, validateAll } = useFormValidation({
+const { createFieldHandler } = useFormValidation({
   validationConfig: {
-    leeway: numberFormat('integer', { fieldName: 'Leeway' }),
-    token_input: notEmpty({ fieldName: 'JWT token input' }),
-    verification_key_input: notEmpty({ fieldName: 'Verification key input' }),
+    leeway: compose(
+      numberFormat('integer', { fieldName: 'Leeway' }),
+      numberRange(0, Infinity, { fieldName: 'Leeway' }),
+    ),
   },
   getValidationData: () => ({
     leeway: formData.value.leeway,
-    token_input: formData.value.input ?? formData.value.inputs?.token,
-    verification_key_input: formData.value.inputs?.key,
   }),
   toggleNodeValid,
 })
 
 const leewayHandler = createFieldHandler('leeway', () => setConfig('leeway'))
-
-watch(
-  () => [
-    formData.value.input,
-    formData.value.inputs?.token,
-    formData.value.inputs?.key,
-  ],
-  () => {
-    validateAll()
-  },
-)
 </script>
