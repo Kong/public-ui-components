@@ -293,19 +293,25 @@ export const buildManagedAddOnCardSchema = (
       const v = pickedRecord.data_plane_groups
 
       if (v === undefined) {
-        continue
+        continue // Advance to the next key in MANAGED_ADD_ON_CARD_KEY_ORDER
       }
 
-      const pluralLabel = t('config_card.managed_add_on.fields.data_plane_groups')
-      const singularLabel = t('config_card.managed_add_on.fields.data_plane_group')
-
-      // No Json/JsonArray type- value column is custom-rendered in the redis config card
-      schema.data_plane_groups = {
-        section: ConfigurationSchemaSection.Basic,
-        order: order++,
-        label: Array.isArray(v) ? pluralLabel : singularLabel,
+      if (Array.isArray(v)) {
+        schema.data_plane_groups = { // Register one field key for EntityBaseConfigCard/ ConfigCardItem
+          section: ConfigurationSchemaSection.Basic, // Keep DPG with the main properties
+          order: order++,
+          type: ConfigurationSchemaType.JsonArray, // ConfigCardItem- block layout so value area is full width under title
+          label: t('config_card.managed_add_on.fields.data_plane_groups'),
+        }
+      } else if (isPlainObject(v)) { // API returned a single DPG object instead of a one-element array
+        schema.data_plane_groups = {
+          section: ConfigurationSchemaSection.Basic,
+          order: order++,
+          type: ConfigurationSchemaType.Json,
+          label: t('config_card.managed_add_on.fields.data_plane_group'),
+        }
       }
-      continue
+      continue // Always skip the generic template merge for this key
     }
     // Normal fields: use template + next order number. Skip if key missing/value undefined
     if (!(key in pickedRecord)) {

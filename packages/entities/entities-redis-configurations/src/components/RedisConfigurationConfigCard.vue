@@ -38,6 +38,7 @@
           <template #type>
             <div>{{ t('list.type.konnect_managed_redis') }}</div>
           </template>
+          <!-- One JSON blob per group -->
           <template #data_plane_groups="{ row }">
             <div
               class="dpg-stack"
@@ -816,10 +817,12 @@ const configSchema = computed<ConfigurationSchema>(() => {
 
 <style lang="scss" scoped>
 .managed-konnect-redis-detail {
+  // Fills the config card value column
   .dpg-stack {
     width: 100%;
   }
 
+  // Mirror `ConfigCardItem`’s default label/value split
   .dpg-sub-row {
     align-items: flex-start;
     border-bottom: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
