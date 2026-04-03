@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { EntityCheck } from '../../../types/plugins/form-schema'
-import composables from '../../../composables'
+import useI18n from '../../../composables/useI18n'
 import { defaultLabelFormatter } from './composables'
 
 const { entityChecks, visibleFields } = defineProps<{
@@ -26,7 +26,7 @@ const { entityChecks, visibleFields } = defineProps<{
   visibleFields?: string[]
 }>()
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t } } = useI18n()
 
 const checks = computed(() => {
   if (!Array.isArray(entityChecks) || entityChecks.length === 0) {
