@@ -16,6 +16,8 @@ export default definePluginConfig({
       match: 'config.behavior.idp_error_response_body_template',
       component: StringField,
       propsOverrides: {
+        multiline: true,
+        rows: 4,
       },
     },
   ],

@@ -83,6 +83,7 @@ useProvideExperimentalFreeForms([
   'opentelemetry',
   'acl',
   'request-transformer',
+  'upstream-oauth',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({

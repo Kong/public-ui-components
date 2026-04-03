@@ -5,7 +5,7 @@ export default definePluginConfig({
   experimental: true,
   fieldRenderers: [
     {
-      match: 'config.flow.functions',
+      match: ({ genericPath }) => genericPath === 'config.flow.functions.*',
       component: StringField,
       propsOverrides: {
         multiline: true,
