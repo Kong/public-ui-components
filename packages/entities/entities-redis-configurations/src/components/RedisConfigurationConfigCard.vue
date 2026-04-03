@@ -100,7 +100,7 @@
                     decorative
                     :size="KUI_ICON_SIZE_40"
                   />
-                  <ChevronDownIcon
+                  <ChevronRightIcon
                     v-else
                     decorative
                     :size="KUI_ICON_SIZE_40"
@@ -173,7 +173,7 @@ import {
   useAxios,
 } from '@kong-ui-public/entities-shared'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { ChevronDownIcon, ChevronUpIcon } from '@kong/icons'
+import { ChevronRightIcon, ChevronUpIcon } from '@kong/icons'
 import { KButton, KCodeBlock, KCollapse, KSkeleton } from '@kong/kongponents'
 import type {
   KonnectRedisConfigurationEntityConfig,
@@ -312,7 +312,7 @@ const isManagedKonnectDetailEnabled = computed((): boolean =>
 // Use Cloud Gateways base when provided; otherwise use apiBaseUrl
 const cloudGatewaysBase = computed((): string => {
   const k = props.config as KonnectRedisConfigurationEntityConfig
-  return (k.cloudGatewaysApiBaseUrl ?? props.config.apiBaseUrl) ?? ''
+  return (k.cloudGatewaysApiBaseUrl ?? k.apiBaseUrl) ?? ''
 })
 
 const detailLayout = ref<DetailLayout>('legacy')
