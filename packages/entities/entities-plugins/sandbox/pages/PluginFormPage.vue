@@ -82,6 +82,7 @@ useProvideExperimentalFreeForms([
   'solace-consume',
   'opentelemetry',
   'acl',
+  'request-transformer',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({

@@ -5,10 +5,10 @@ export default definePluginConfig({
   experimental: true,
   fieldRenderers: [
     {
-      match: ({ path }) => (
+      match: ({ path, genericPath }) => (
         path === 'config.replace.body' ||
-          /^config\.transform\.functions\.\d+$/.test(path) ||
-          /\.json\.\d+$/.test(path)
+        genericPath === 'config.transform.functions.*' ||
+        /\.json\.\d+$/.test(path)
       ),
       component: StringField,
       propsOverrides: {

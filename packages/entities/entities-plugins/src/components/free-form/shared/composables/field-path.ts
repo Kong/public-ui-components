@@ -58,7 +58,8 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
 
     // todo(zehao): priority
     for (const [matcher, slot] of fieldRendererRegistry) {
-      if (matcher({ path: pathValue, schema: getSchema(pathValue)! })) {
+      const genericPath = generalizePath(pathValue)
+      if (matcher({ path: pathValue, genericPath, schema: getSchema(pathValue)! })) {
         return slot
       }
     }

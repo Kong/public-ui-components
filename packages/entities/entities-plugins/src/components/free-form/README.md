@@ -8,7 +8,7 @@ A schema-driven dynamic form rendering system for Kong plugin configuration. It 
 
 ```
 free-form/
-├── index.ts                 # Barrel export of all plugin form components
+├── README.md
 ├── shared/                  # Core framework (reusable across ALL plugins)
 │   ├── Form.vue             # Root form component (provides context)
 │   ├── Field.vue            # Auto-dispatches to correct field component by schema type
@@ -36,18 +36,18 @@ free-form/
 │   ├── composables/         # Vue composables (core logic)
 │   ├── headless/            # UI-free composable logic
 │   ├── layout/              # Layout components
-│   │   └── StandardLayout.vue  # 3-step layout: Scope -> Config -> General Info
+│   │   ├── StandardLayout.vue  # Shared layout with form/code modes
+│   │   └── ConditionField.vue  # Optional condition editor in General Info
 │   ├── types.ts             # Core type definitions
 │   ├── const.ts             # Injection keys (REDIS_PARTIAL_INFO, FORM_EDITING)
+│   ├── define-plugin-config.ts # Plugin config helper with CommonForm fallback
+│   ├── plugin-registry.ts   # Auto-discovers plugins/*.ts and plugins/*/index.ts
 │   ├── utils.ts             # Path utilities, field sorting
 │   └── schema-enhancement.ts # Transform legacy field rules to entity checks
-├── Common/                  # Generic plugin form (fallback for any plugin)
-├── AIMcpProxy/              # AI MCP Proxy plugin form
-├── Datakit/                 # Complex visual flow editor + code editor
-├── KeyAuth/                 # Key authentication plugin form
-├── RequestCallout/          # HTTP callout plugin form
-├── ServiceProtection/       # Service protection plugin form
-├── UpstreamOauth/           # Upstream OAuth plugin form
+├── Common/                  # Generic plugin form used by default
+├── plugins/                 # Plugin registry entries and custom plugin forms
+│   ├── *.ts                 # Simple plugins configured with CommonForm + overrides
+│   └── <plugin>/index.ts    # Folder-based plugins with dedicated Vue components
 ├── filler/                  # Test utilities for auto-filling forms (Cypress + Playwright)
 └── test/                    # Integration tests
 ```
@@ -183,7 +183,7 @@ Constraints:
 
 ## Layout
 
-All plugin forms use `StandardLayout` (`shared/layout/StandardLayout.vue`) as the unified layout component. It provides a 3-step form structure:
+All plugin forms use `StandardLayout` (`shared/layout/StandardLayout.vue`) as the unified layout component. In form mode it provides a 3-step structure:
 
 1. **Plugin Scope** — Global vs Scoped (service/route/consumer/consumer_group) via radio buttons + ScopeEntityField for entity selection
 2. **Plugin Configuration** — Free-form rendered config fields via default slot
@@ -193,7 +193,7 @@ All plugin forms use `StandardLayout` (`shared/layout/StandardLayout.vue`) as th
 
 ### Plugin Form Selection
 
-In `src/components/free-form/plugins/`, one config file determines how each plugin renders:
+In `src/components/free-form/plugins/`, one config module determines how each plugin renders. The registry is auto-built from both `plugins/*.ts` and `plugins/*/index.ts`.
 
 ```typescript
 export default definePluginConfig({
@@ -214,30 +214,36 @@ export default definePluginConfig({
 })
 ```
 
-- Experimental forms require opt-in via `experimentalRenders` in the consuming app.
-- When `engine: 'freeform'` is forced, unmapped plugins fall back to `CommonForm`.
+- `definePluginConfig()` defaults `component` to `CommonForm`, so simple plugins only need overrides.
+- `experimental` defaults to `false` when the registry is resolved.
+- Experimental forms require opt-in via the injected experimental free-form allowlist (`config.experimentalRenders` in Konnect flows).
+- When `engine: 'freeform'` is forced, `PluginEntityForm` still renders `CommonForm` for plugins that do not have a registry entry.
 
 ### Plugin Overview
 
-| Plugin | Complexity | Key Feature |
+The registry currently mixes many simple single-file configs with a smaller set of folder-based custom forms. Representative examples:
+
+| Plugin | Path Style | Key Feature |
 |---|---|---|
-| **Common** | Medium | Smart field categorization (required vs advanced) based on schema analysis |
-| **KeyAuth** | Low | Extends Common; adds environment-specific identity_realms field (Konnect only) |
-| **UpstreamOauth** | Low | Extends Common; one custom multiline field renderer |
-| **AIMcpProxy** | Medium | Data transformation (split/join comma strings in headers/query) |
-| **RequestCallout** | High | Symbol-based ID tracking for callout dependencies, tabs UI |
-| **ServiceProtection** | High | Custom request limits UI with preset use cases, Redis strategy |
-| **Datakit** | Very High | Dual-mode editor (visual flow graph via @vue-flow + YAML code editor) |
+| **Common** | `Common/` | Default layout + schema-driven required/advanced grouping |
+| **ACL** | `plugins/acl/` | Dedicated scope/mode UI |
+| **ai-mcp-proxy** | `plugins/ai-mcp-proxy/` | Data transformation for headers/query params |
+| **key-auth** | `plugins/key-auth/` | Adds Konnect-only `identity_realms` handling |
+| **request-callout** | `plugins/request-callout/` | Custom callout tabs and dependency tracking |
+| **service-protection** | `plugins/service-protection/` | Request limit presets + Redis strategy form |
+| **datakit** | `plugins/datakit/` | Visual flow editor plus code mode |
+| **upstream-oauth** | `plugins/upstream-oauth.ts` | CommonForm with render rules and field overrides |
 
 ### Common Plugin Patterns
 
-Every plugin form follows a consistent structure:
+Simple plugins and custom plugins follow different patterns:
 
-1. **Entry point**: `index.ts` exports a default Vue component
-2. **Main wrapper**: `[Plugin]Form.vue` — uses `StandardLayout`
-3. **Config form**: `ConfigForm.vue` (optional) — uses `Form` + `ObjectField` with plugin-specific layout
-4. **Data hooks**: `prepareFormData()` transforms API data for display; `onChange()` transforms back for submission
-5. **Slot injection**: All provide `AUTOFILL_SLOT` for vault secret picker integration
+1. **Simple config module**: `plugins/<name>.ts` exports `definePluginConfig({...})` and relies on `CommonForm`
+2. **Folder-based custom form**: `plugins/<name>/index.ts` exports a config that points to `[Plugin]Form.vue`
+3. **Main wrapper**: custom forms usually use `StandardLayout`
+4. **Config form**: `ConfigForm.vue` is optional and only exists when plugin-specific composition is needed
+5. **Data hooks**: some custom forms use `prepareFormData()` and custom change handling, but simple configs do not
+6. **Autofill slot**: forms built on `StandardLayout` typically provide `AUTOFILL_SLOT` for vault secret picker integration
 
 ## Integration with Parent System
 
@@ -255,13 +261,15 @@ Key props passed to free-form components:
 | Prop | Type | Description |
 |---|---|---|
 | `schema` | `FormSchema` | Raw form schema from API |
-| `model` | `record` | `Record<string, any>` | Plugin data |
+| `model` | `Record<string, any>` | Initial plugin data |
 | `formSchema` | `any` | Legacy VFG schema (for scope and general info field metadata) |
 | `formModel` | `Record<string, any>` | Legacy form model (for scope initialization) |
 | `isEditing` | `boolean` | New vs edit mode |
+| `pluginName` | `string` | Current plugin name |
 | `renderRules` | `RenderRules` | From `pluginConfig.renderRules` |
+| `fieldRenderers` | `FieldRenderer[]` | From `pluginConfig.fieldRenderers` |
 | `onFormChange` | `(value) => void` | Callback when free-form data changes |
-| `onModelUpdated` | `(value, model) => void` | Callback for VFG field changes |
+| `onValidityChange` | `(event) => void` | Callback for free-form validity updates |
 
 Schema enhancement pipeline (in PluginEntityForm):
 
@@ -285,7 +293,7 @@ Plugins can override how specific fields render using `FieldRenderer`:
 </Form>
 ```
 
-The `match` function receives `{ path, schema }` and returns `boolean`.
+The `match` function receives `{ path, genericPath, schema }` and returns `boolean`.
 
 Rendering priority in `Field.vue` (highest to lowest):
 
@@ -312,18 +320,22 @@ Supported field types: string, number, boolean, enum, array, record, map, tag, j
 Usage:
 
 ```typescript
+import { createFiller } from '@kong-ui-public/entities-plugins/filler/cypress'
+
 const filler = createFiller(schema)
 filler.fill({ config: { host: 'localhost', port: 6379 } })
 filler.fillField('config.host', 'example.com')
 ```
 
-### Integration Tests (`test/`)
+### Tests
 
 | Test File | What it Covers |
 |---|---|
 | `free-form-basic.cy.ts` | Schema rendering, slot overrides, reactivity, lifecycle hooks |
 | `free-form-render-rules.cy.ts` | Bundles, dependencies, circular detection, chained cascades |
 | `free-form-redis-selector.cy.ts` | Redis partial configuration, dependency-based visibility |
+| `shared/layout/StandardLayout.cy.ts` | Shared layout behavior, scope switching, general info and code mode |
+| `shared/*.spec.ts` | Unit coverage for schema enhancement, registry and path utilities |
 
 ## How-To Guides
 
@@ -331,7 +343,7 @@ filler.fillField('config.host', 'example.com')
 
 1. Create a config file in `free-form/plugins/`
 2. Export it with `definePluginConfig()`
-3. Add `component` only if the plugin needs a dedicated Vue form component
+3. Add `component` only if the plugin needs a dedicated Vue form component; otherwise `CommonForm` is used automatically
 4. Add `fieldRenderers` for flat renderer overrides
 5. Add `renderRules` in the plugin config when free-form layout rules are needed
 
@@ -342,8 +354,8 @@ filler.fillField('config.host', 'example.com')
 3. Add handler type in `filler/shared/field-walker.ts` (`HandlerType` enum)
 4. Add Cypress handler in `filler/cypress/handlers/`
 5. Add Playwright handler in `filler/playwright/handlers/`
-6. Add selector in `filler/shared/selectors.ts`
-7. Add assertion in `test/utils.ts`
+6. Add selector support in `filler/shared/selectors.ts`
+7. Add or update filler tests in `filler/cypress/fill-form.cy.ts` and `filler/playwright/fill-form.pw.ts`
 
 ### Modifying Shared Components — Impact Guide
 

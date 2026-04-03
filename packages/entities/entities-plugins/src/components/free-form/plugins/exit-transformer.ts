@@ -5,7 +5,7 @@ export default definePluginConfig({
   experimental: true,
   fieldRenderers: [
     {
-      match: ({ path }) => /^config.functions.\d$/.test(path),
+      match: ({ genericPath }) => genericPath === 'config.functions.*',
       component: StringField,
       propsOverrides: (props) => ({
         ...props,
