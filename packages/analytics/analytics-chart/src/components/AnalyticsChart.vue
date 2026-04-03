@@ -108,7 +108,7 @@ import DonutChart from './chart-types/DonutChart.vue'
 import { computed, provide, toRef } from 'vue'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
-import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
+import { hasMillisecondTimestamps, defaultStatusCodeColors, isUnitlessMetricUnit } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
@@ -220,7 +220,7 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
   }
 
   const metricName = props.chartData.meta.metric_names[0]
-  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
+  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations] || ''
 
   if (props.chartData.meta.metric_names.length > 1) {
     if (metricName.includes('latency')) {
@@ -238,6 +238,12 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
   }
 
   // @ts-ignore - dynamic i18n key
+  if (isUnitlessMetricUnit(metricUnit) && i18n.te(`metricAxisTitles.${metricName}`)) {
+    // @ts-ignore - dynamic i18n key
+    return i18n.t(`metricAxisTitles.${metricName}`) || undefined
+  }
+
+  // @ts-ignore - dynamic i18n key
   return i18n.te(`chartLabels.${metricName}`) ? i18n.t(`chartLabels.${metricName}`) : metricName
 })
 
@@ -251,7 +257,7 @@ const metricAxesTitle = computed<string | undefined>(() => {
   }
 
   const metricName = props.chartData.meta.metric_names[0]
-  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
+  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations] || ''
 
   if (props.chartData.meta.metric_names.length > 1) {
     if (metricName.includes('latency')) {
@@ -265,7 +271,11 @@ const metricAxesTitle = computed<string | undefined>(() => {
   }
 
   // @ts-ignore - dynamic i18n key
-  if (i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`)) {
+  if (i18n.te(`metricAxisTitles.${metricName}`) && (isUnitlessMetricUnit(metricUnit) || i18n.te(`chartUnits.${metricUnit}`))) {
+    if (isUnitlessMetricUnit(metricUnit)) {
+      // @ts-ignore - dynamic i18n key
+      return i18n.t(`metricAxisTitles.${metricName}`) || undefined
+    }
     // @ts-ignore - dynamic i18n key
     return i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) }) || undefined
   }
