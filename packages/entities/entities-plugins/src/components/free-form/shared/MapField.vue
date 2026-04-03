@@ -74,10 +74,7 @@
         />
       </div>
 
-      <KTooltip
-        class="ff-kv-field-entry-remove"
-        :text="i18n.t('actions.remove_entity', { entity: fieldDisplayName })"
-      >
+      <KTooltip :text="i18n.t('actions.remove_entity', { entity: fieldDisplayName })">
         <KButton
           appearance="tertiary"
           :aria-label="i18n.t('actions.remove_entity', { entity: fieldDisplayName })"
