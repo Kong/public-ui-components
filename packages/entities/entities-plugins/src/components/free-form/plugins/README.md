@@ -7,7 +7,6 @@ Each free-form plugin is registered by adding one config file in this directory.
 1. Create a new config file whose PascalCase file or folder name maps to the plugin name through `kebabCase`.
 2. Export the config with `definePluginConfig()`.
 3. Use a top-level `.ts` file for simple plugins, or a folder with `index.ts` when the plugin needs a dedicated Vue form component.
-4. Put shared helpers under `_shared/` so they are not auto-discovered by the registry.
 
 ## Simple Plugin
 

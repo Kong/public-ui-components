@@ -334,7 +334,6 @@ filler.fillField('config.host', 'example.com')
 3. Add `component` only if the plugin needs a dedicated Vue form component
 4. Add `fieldRenderers` for flat renderer overrides
 5. Add `renderRules` in the plugin config when free-form layout rules are needed
-6. Put reusable config fragments in `free-form/plugins/_shared/`
 
 ### Adding a New Field Type
 

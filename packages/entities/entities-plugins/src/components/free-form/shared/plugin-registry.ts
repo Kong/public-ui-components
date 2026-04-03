@@ -1,4 +1,3 @@
-import { kebabCase } from 'lodash-es'
 import type { PluginFormConfig } from './types'
 
 import type { Component } from 'vue'
@@ -14,7 +13,6 @@ type PluginConfigModule = PluginFormConfig
 const pluginModules = import.meta.glob([
   '../plugins/*/index.ts',
   '../plugins/*.ts',
-  '!../plugins/_shared/**',
 ], {
   eager: true,
   import: 'default',
@@ -29,7 +27,7 @@ export function derivePluginName(path: string): string {
 
   const [, rawName] = match
 
-  return kebabCase(rawName)
+  return rawName
 }
 
 export function buildPluginConfigRegistry(
