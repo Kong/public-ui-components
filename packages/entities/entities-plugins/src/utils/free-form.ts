@@ -80,15 +80,15 @@ const mapping = {
   },
   'cors': {
     experimental: true,
-    component: 'CorsForm',
+    component: 'HttpMethodsForm',
   },
   'proxy-cache': {
     experimental: true,
-    component: 'ProxyCacheForm',
+    component: 'HttpMethodsForm',
   },
   'proxy-cache-advanced': {
     experimental: true,
-    component: 'ProxyCacheAdvancedForm',
+    component: 'HttpMethodsForm',
   },
   'solace-consume': {
     experimental: true,

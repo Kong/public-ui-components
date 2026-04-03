@@ -3,9 +3,12 @@
     <template #field-renderers>
       <FieldRenderer
         v-slot="slotProps"
-        :match="({ path }) => path === 'config.methods'"
+        :match="isHttpMethodsField"
       >
-        <ArrayOneOfMultiselectField v-bind="slotProps" />
+        <EnumField
+          v-bind="slotProps"
+          multiple
+        />
       </FieldRenderer>
     </template>
 
@@ -19,7 +22,7 @@ import { provide } from 'vue'
 import ConfigForm from '../Common/ConfigForm.vue'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 import FieldRenderer from '../shared/FieldRenderer.vue'
-import ArrayOneOfMultiselectField from '../shared/ArrayOneOfMultiselectField.vue'
+import EnumField from '../shared/EnumField.vue'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
 
@@ -30,4 +33,8 @@ const slots = defineSlots<{
 }>()
 
 provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
+
+function isHttpMethodsField({ path }: { path: string }) {
+  return path === 'config.methods' || path === 'config.request_method'
+}
 </script>
