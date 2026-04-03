@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.7...@kong-ui-public/entities-redis-configurations@1.14.8) (2026-04-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.14.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.6...@kong-ui-public/entities-redis-configurations@1.14.7) (2026-03-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.14.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.5...@kong-ui-public/entities-redis-configurations@1.14.6) (2026-03-30)
+
+
+### Bug Fixes
+
+* **redis:** resolve Konnect-managed Redis search by add-on ID during … ([#3056](https://github.com/Kong/public-ui-components/issues/3056)) ([f67c37c](https://github.com/Kong/public-ui-components/commit/f67c37cd172d5aea8e8644523b50c95c60779bdf))
+
+
+
+
+
 ## [1.14.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.4...@kong-ui-public/entities-redis-configurations@1.14.5) (2026-03-25)
 
 

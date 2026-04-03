@@ -15,12 +15,7 @@
     "count/minute": "rpm",
     "requests": "request{plural}",
     "token count": "token{plural}",
-    "%": "%",
-    "control_plane_count": "Control plane{plural}",
-    "service_count": "Gateway service{plural}",
-    "route_count": "Route{plural}",
-    "consumer_count": "Consumer{plural}",
-    "plugin_count": "Plugin{plural}"
+    "%": "%"
   },
   "csvExport" :{
     "dataError": "Error loading data",
@@ -198,7 +193,8 @@
     "service_count": "Gateway service count",
     "route_count": "Route count",
     "consumer_count": "Consumer count",
-    "plugin_count": "Plugin count"
+    "plugin_count": "Plugin count",
+    "node_count": "Data plane node count"
   },
   "metricAxisTitles": {
     "error_rate": "Error rate in {unit}",
@@ -269,7 +265,8 @@
     "service_count": "Gateway service count",
     "route_count": "Route count",
     "consumer_count": "Consumer count",
-    "plugin_count": "Plugin count"
+    "plugin_count": "Plugin count",
+    "node_count": "Data plane node count"
   },
   "granularityAxisTitles": {
     "tenSecondly": "@timestamp per 10 seconds",

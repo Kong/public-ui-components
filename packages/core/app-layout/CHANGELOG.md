@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.4...@kong-ui-public/app-layout@4.11.5) (2026-03-31)
+
+
+### Bug Fixes
+
+* **app-layout:** remove inner padding only when has page layout ([#3077](https://github.com/Kong/public-ui-components/issues/3077)) ([88eae55](https://github.com/Kong/public-ui-components/commit/88eae55df1a3b8a8b27e376d250219c7b46a22bc))
+
+
+
+
+
 ## [4.11.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.3...@kong-ui-public/app-layout@4.11.4) (2026-03-25)
 
 

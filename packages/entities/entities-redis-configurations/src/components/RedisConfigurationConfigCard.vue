@@ -158,8 +158,8 @@ const codeBlockRecordFormatter = (record: Record<string, any>, codeFormat: strin
 type BasicFields = {
   id: string
   name: string
-  updated_at: string
-  created_at: string
+  updated_at: string | number
+  created_at: string | number
   type: string
   tags: string[]
 }

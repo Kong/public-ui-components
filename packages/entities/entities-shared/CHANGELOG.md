@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.41.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.2...@kong-ui-public/entities-shared@3.41.3) (2026-03-31)
+
+
+### Bug Fixes
+
+* **entities-shared:** handle multiline strings in TerraformCodeBlock ([#3063](https://github.com/Kong/public-ui-components/issues/3063)) ([7c30a24](https://github.com/Kong/public-ui-components/commit/7c30a2401d63355dc702f57f824c13b41f1b80a6))
+
+
+
+
+
 ## [3.41.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.1...@kong-ui-public/entities-shared@3.41.2) (2026-03-25)
 
 

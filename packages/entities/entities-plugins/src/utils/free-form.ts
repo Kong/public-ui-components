@@ -34,6 +34,10 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
+  acl: {
+    experimental: true,
+    component: 'ACLForm',
+  },
   'basic-auth': {
     experimental: true,
     component: 'CommonForm',
@@ -85,6 +89,10 @@ const mapping = {
   'proxy-cache-advanced': {
     experimental: true,
     component: 'CommonForm',
+  },
+  'solace-consume': {
+    experimental: true,
+    component: 'SolaceConsumeForm',
   },
   'opentelemetry': {
     experimental: true,

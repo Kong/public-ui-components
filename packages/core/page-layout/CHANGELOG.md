@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.7...@kong-ui-public/page-layout@0.2.8) (2026-04-01)
+
+
+### Bug Fixes
+
+* **page-layout:** add title-after slot ([#3082](https://github.com/Kong/public-ui-components/issues/3082)) ([f2816ff](https://github.com/Kong/public-ui-components/commit/f2816ff5f1ffa88c6b854d2fb8c0daca6a1feb9b))
+
+
+
+
+
 ## [0.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.6...@kong-ui-public/page-layout@0.2.7) (2026-03-27)
 
 

@@ -764,6 +764,12 @@
         "visual": "Visual editor",
         "code": "Code editor"
       },
+      "acl": {
+        "mode": {
+          "allow": "Use allow list",
+          "deny": "Use deny list"
+        }
+      },
       "ai-mcp-proxy": {
         "default_acl_item_label": "Default ACL #{index}",
         "tool_item_label": "Tool #{index}"
