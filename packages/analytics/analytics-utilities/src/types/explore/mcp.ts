@@ -1,3 +1,4 @@
+// TODO: remove this file once the frontend has updated to use new agentic datasource
 import { makeFilterable } from './util'
 import type { BasicExploreEmptyFilterV2, BasicExploreInFilterV2, BasicExploreQuery } from './basic'
 import { exploreAggregations, queryableExploreDimensions } from './advanced'
