@@ -4,10 +4,10 @@ import { type ExploreAggregations, type ExploreFilterAll, type FilterableExplore
 import { type FilterableRequestDimensions, type FilterableRequestMetrics, type FilterableRequestWildcardDimensions } from './requests'
 import { filterableMcpExploreDimensions, type FilterableMcpExploreDimensions, type McpExploreAggregations, type McpExploreFilterAll } from './mcp'
 import { type PlatformExploreFilterAll } from './platform'
-import type { AgenticExploreAggregations, FilterableAgenticExploreDimensions } from './agentic'
+import type { AgenticExploreAggregations, AgenticExploreFilterAll, FilterableAgenticExploreDimensions } from './agentic'
 
 export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | McpExploreAggregations | AgenticExploreAggregations
-export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | McpExploreFilterAll | AgenticExploreAggregations | PlatformExploreFilterAll
+export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | McpExploreFilterAll | AgenticExploreFilterAll | PlatformExploreFilterAll
 export type AllFilterableDimensionsAndMetrics = FilterableExploreDimensions
   | FilterableAiExploreDimensions
   | FilterableBasicExploreDimensions
