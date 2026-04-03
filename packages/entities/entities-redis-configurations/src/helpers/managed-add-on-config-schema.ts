@@ -1,7 +1,4 @@
-/**
- * Konnect-managed-cache add-on config card: allowlisted keys, label/type templates, and schema build for EntityBaseConfigCard.
- * DPG uses Json vs JsonArray so rows indent like `capacity_config`.
- */
+// Konnect-managed cache add-on: allowlisted keys and `ConfigurationSchema` for `EntityBaseConfigCard`
 import type { ConfigurationSchema, ConfigurationSchemaItem } from '@kong-ui-public/entities-shared'
 import type { AddOnRecord, AddOnValue } from '../types/cloud-gateways-add-on'
 import {
@@ -11,13 +8,15 @@ import {
 
 export type ManagedAddOnTranslate = (key: string) => string
 
+// Non-array object slice of `AddOnValue` (JsonArray entries must pass this)
 const isPlainObject = (v: AddOnValue | undefined): v is AddOnRecord =>
   v !== null && typeof v === 'object' && !Array.isArray(v)
 
-/**
- * Keys the managed card may show, in order (same idea as self-managed partial: flat `config` fields first, then Json blobs).
- * Unknown API keys are dropped in `pickManagedAddOnCardRecord`.
- */
+// Non-empty list of plain objects
+const isNonEmptyArrayOfPlainObjects = (v: AddOnValue | undefined): v is AddOnRecord[] =>
+  Array.isArray(v) && v.length > 0 && v.every(isPlainObject)
+
+// Single source of truth for row order; `pickManagedAddOnCardRecord`  will drop anything not listed here
 export const MANAGED_ADD_ON_CARD_KEY_ORDER = [
   'id',
   'name',
@@ -70,12 +69,11 @@ export const MANAGED_ADD_ON_CARD_KEY_ORDER = [
   'cloud_authentication_azure_tenant_id',
 ] as const
 
-// These are the only keys this card is allowed to render
 export type ManagedAddOnCardKey = (typeof MANAGED_ADD_ON_CARD_KEY_ORDER)[number]
-// Shaped record can include any subset of those keys
+
+// Subset of add-on/display record keys thats pass into the card
 export type ManagedAddOnCardRecord = Partial<Record<ManagedAddOnCardKey, AddOnValue | AddOnRecord | AddOnRecord[]>>
 
-// Array fields use `.title`; regular fields use `.label`
 const formFieldLabel = (t: ManagedAddOnTranslate, field: string): string => {
   if (field === 'cluster_nodes' || field === 'sentinel_nodes') {
     return t(`form.fields.${field}.title`)
@@ -83,10 +81,11 @@ const formFieldLabel = (t: ManagedAddOnTranslate, field: string): string => {
   return t(`form.fields.${field}.label`)
 }
 
-// Per-field label/type templates. Base card fills defaults for id/name/tags/dates
+// Default `ConfigurationSchemaItem` per key, omitting type lets `ConfigCardItem` fallback
 export const getManagedAddOnSchemaFieldTemplates = (
   t: ManagedAddOnTranslate,
 ): Record<ManagedAddOnCardKey, ConfigurationSchemaItem> => ({
+  // Empty entries- shared base card already knows how to render id, name, tags, timestamps
   id: {},
   name: {},
   tags: {},
@@ -189,38 +188,30 @@ export const getManagedAddOnSchemaFieldTemplates = (
     label: formFieldLabel(t, 'sentinel_password'),
   },
   cluster_nodes: {
-    type: ConfigurationSchemaType.JsonArray,
     label: formFieldLabel(t, 'cluster_nodes'),
   },
   sentinel_nodes: {
-    type: ConfigurationSchemaType.JsonArray,
     label: formFieldLabel(t, 'sentinel_nodes'),
   },
   owner: {
-    type: ConfigurationSchemaType.Json,
     label: t('config_card.managed_add_on.fields.owner'),
   },
   state_metadata: {
-    type: ConfigurationSchemaType.Json,
     label: t('config_card.managed_add_on.fields.state_metadata'),
   },
   capacity_config: {
-    type: ConfigurationSchemaType.Json,
     label: t('config_card.managed_add_on.fields.capacity_config'),
   },
-  // Placeholder type; we choose Json vs JsonArray from the actual payload later.
   data_plane_groups: {
-    type: ConfigurationSchemaType.Json,
     label: t('config_card.managed_add_on.fields.data_plane_groups'),
   },
   cache_state_metadata: {
-    type: ConfigurationSchemaType.Json,
     label: t('config_card.managed_add_on.fields.cache_state_metadata'),
   },
   cloud_authentication: {
-    type: ConfigurationSchemaType.Json,
     label: t('form.sections.cloud_auth.title'),
   },
+  // If auth still appears as separate top-level keys, these rows stay explicit text/redacted
   cloud_authentication_auth_provider: {
     type: ConfigurationSchemaType.Text,
     label: t('form.fields.cloud_authentication.auth_provider.label'),
@@ -271,16 +262,16 @@ export const getManagedAddOnSchemaFieldTemplates = (
   },
 })
 
-// Keep only keys the card knows how to show
+// Filter unknown API keys and fix iteration order to match `MANAGED_ADD_ON_CARD_KEY_ORDER`
 export const pickManagedAddOnCardRecord = (record: AddOnRecord): ManagedAddOnCardRecord => {
   const out: ManagedAddOnCardRecord = {}
-  // Loop in a fixed order so the output is predictable
   for (const key of MANAGED_ADD_ON_CARD_KEY_ORDER) {
     if (!(key in record)) {
       continue
     }
     const value = record[key]
     if (value === undefined) {
+      // Same action as omitting the row in `buildManagedAddOnCardSchema`
       continue
     }
     out[key] = value
@@ -288,19 +279,16 @@ export const pickManagedAddOnCardRecord = (record: AddOnRecord): ManagedAddOnCar
   return out
 }
 
-// Build schema from the shaped record
+// One `ConfigurationSchema` row per present key- JsonArray only for non-empty cluster_nodes/ sentinel_nodes object lists
 export const buildManagedAddOnCardSchema = (
   pickedRecord: ManagedAddOnCardRecord,
   t: ManagedAddOnTranslate,
 ): ConfigurationSchema => {
   const templates = getManagedAddOnSchemaFieldTemplates(t)
   const schema: ConfigurationSchema = {}
-  // `order` controls row position in config card
   let order = 0
 
-  // Keep display order stable by looping allowlist, not record keys. Skip keys not in record or with undefined value
   for (const key of MANAGED_ADD_ON_CARD_KEY_ORDER) {
-    // `data_plane_groups` can be 1 object or a list, so choose type at runtime
     if (key === 'data_plane_groups') {
       const v = pickedRecord.data_plane_groups
 
@@ -308,22 +296,14 @@ export const buildManagedAddOnCardSchema = (
         continue
       }
 
-      if (Array.isArray(v)) {
-        // Multiple groups- render as JsonArray
-        schema.data_plane_groups = {
-          section: ConfigurationSchemaSection.Basic,
-          order: order++,
-          type: ConfigurationSchemaType.JsonArray,
-          label: t('config_card.managed_add_on.fields.data_plane_groups'),
-        }
-      } else if (isPlainObject(v)) {
-        // Single group- render as Json
-        schema.data_plane_groups = {
-          section: ConfigurationSchemaSection.Basic,
-          order: order++,
-          type: ConfigurationSchemaType.Json,
-          label: t('config_card.managed_add_on.fields.data_plane_group'),
-        }
+      const pluralLabel = t('config_card.managed_add_on.fields.data_plane_groups')
+      const singularLabel = t('config_card.managed_add_on.fields.data_plane_group')
+
+      // No Json/JsonArray type- value column is custom-rendered in the redis config card
+      schema.data_plane_groups = {
+        section: ConfigurationSchemaSection.Basic,
+        order: order++,
+        label: Array.isArray(v) ? pluralLabel : singularLabel,
       }
       continue
     }
@@ -333,6 +313,21 @@ export const buildManagedAddOnCardSchema = (
     }
 
     const template = templates[key]
+    const v = pickedRecord[key]
+
+    if (
+      (key === 'cluster_nodes' || key === 'sentinel_nodes') &&
+      isNonEmptyArrayOfPlainObjects(v)) {
+      // Expand each array element as its own titled block, empty or non-object arrays stay default blob behavior
+      schema[key] = {
+        section: ConfigurationSchemaSection.Basic,
+        order: order++,
+        type: ConfigurationSchemaType.JsonArray,
+        label: template.label,
+      }
+      continue
+    }
+
     schema[key] = {
       section: ConfigurationSchemaSection.Basic,
       order: order++,

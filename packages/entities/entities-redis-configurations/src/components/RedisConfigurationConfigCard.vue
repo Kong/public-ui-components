@@ -38,6 +38,44 @@
           <template #type>
             <div>{{ t('list.type.konnect_managed_redis') }}</div>
           </template>
+          <template #data_plane_groups="{ row }">
+            <div
+              class="dpg-stack"
+              data-testid="dpg-display"
+            >
+              <template v-if="!dataPlaneGroupEntries(row.value).length">
+                –
+              </template>
+              <template v-else>
+                <div
+                  v-for="(entry, idx) in dataPlaneGroupEntries(row.value)"
+                  :key="idx"
+                  class="dpg-sub-row"
+                  :data-testid="`dpg-sub-row-${idx}`"
+                >
+                  <div
+                    class="dpg-sub-label"
+                    :data-testid="`dpg-item-heading-${idx}`"
+                  >
+                    {{ dataPlaneGroupItemHeading(entry, idx) }}
+                  </div>
+                  <div
+                    class="dpg-sub-value"
+                    :data-testid="`dpg-entry-blob-${idx}`"
+                  >
+                    <KCodeBlock
+                      :id="`dpg-${dataPlaneGroupsInstanceId}-${idx}`"
+                      :code="jsonStringifyDpgEntryForBlob(entry)"
+                      language="json"
+                      max-height="480px"
+                      :show-line-numbers="false"
+                      @code-block-render="highlightCodeBlock"
+                    />
+                  </div>
+                </div>
+              </template>
+            </div>
+          </template>
           <!-- Partial config shown only when Koko creates partial; nothing under cache card while provisioning -->
           <template
             v-if="linkedPartialIdForCollapse"
@@ -123,7 +161,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, onBeforeMount, onMounted, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref, useId } from 'vue'
 import type { AxiosError } from 'axios'
 import type { ConfigurationSchema, ConfigurationSchemaItem } from '@kong-ui-public/entities-shared'
 import {
@@ -131,11 +169,12 @@ import {
   ConfigurationSchemaType,
   EntityBaseConfigCard,
   SupportedEntityType,
+  highlightCodeBlock,
   useAxios,
 } from '@kong-ui-public/entities-shared'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { ChevronDownIcon, ChevronUpIcon } from '@kong/icons'
-import { KButton, KCollapse, KSkeleton } from '@kong/kongponents'
+import { KButton, KCodeBlock, KCollapse, KSkeleton } from '@kong/kongponents'
 import type {
   KonnectRedisConfigurationEntityConfig,
   KongManagerRedisConfigurationEntityConfig,
@@ -143,7 +182,7 @@ import type {
   RedisConfigurationConfigDTO,
 } from '../types'
 import { RedisType } from '../types'
-import type { AddOnRecord, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
+import type { AddOnRecord, AddOnValue, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import endpoints from '../partials-endpoints'
@@ -214,6 +253,44 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t } } = composables.useI18n()
+const dataPlaneGroupsInstanceId = useId()
+
+// Shaped add-on/cache values use `AddOnRecord`; `row.value` is typed `any` on the shared card, we only accept add-on shapes here
+const isDataPlaneGroupObject = (v: AddOnValue | undefined): v is AddOnRecord =>
+  v !== null && typeof v === 'object' && !Array.isArray(v)
+
+const dataPlaneGroupEntries = (value: AddOnValue | undefined): AddOnRecord[] => {
+  if (value === undefined || value === null) {
+    return []
+  }
+
+  if (Array.isArray(value)) {
+    return value.filter(isDataPlaneGroupObject)
+  }
+
+  if (isDataPlaneGroupObject(value)) {
+    return [value]
+  }
+
+  return []
+}
+
+const dataPlaneGroupItemHeading = (entry: AddOnRecord, index: number): string => {
+  const name = entry.name
+  if (typeof name === 'string' && name.trim() !== '') {
+    return name
+  }
+
+  return t('config_card.managed_dpg.entry_heading', { n: index + 1 })
+}
+
+// Omit UI-only `name` before JSON blob; everything else stays on the payload
+const jsonStringifyDpgEntryForBlob = (entry: AddOnRecord): string => {
+  const payload = { ...entry }
+
+  delete payload.name
+  return JSON.stringify(payload, null, 2)
+}
 
 const { managedAddOnConfigSchema, setManagedAddOnSchemaFromDisplayRecord } = composables.useManagedCacheAddOnDisplaySchema()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -739,6 +816,35 @@ const configSchema = computed<ConfigurationSchema>(() => {
 
 <style lang="scss" scoped>
 .managed-konnect-redis-detail {
+  .dpg-stack {
+    width: 100%;
+  }
+
+  .dpg-sub-row {
+    align-items: flex-start;
+    border-bottom: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+    box-sizing: border-box;
+    display: flex;
+    padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
+    width: 100%;
+  }
+
+  .dpg-sub-label {
+    box-sizing: border-box;
+    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    padding-right: var(--kui-space-60, $kui-space-60);
+    width: 25%;
+  }
+
+  .dpg-sub-value {
+    box-sizing: border-box;
+    flex: 1;
+    min-width: 0;
+    width: 75%;
+  }
+
   :deep(.config-card-details-after) {
     padding-left: var(--kui-space-0, $kui-space-0);
     padding-top: var(--kui-space-60, $kui-space-60);

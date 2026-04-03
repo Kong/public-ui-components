@@ -43,6 +43,9 @@
       "show_partial": "Show partial configuration",
       "hide_partial": "Hide partial configuration"
     },
+    "managed_dpg": {
+      "entry_heading": "Data plane group {n}"
+    },
     "managed_add_on": {
       "fields": {
         "type": "Type",
