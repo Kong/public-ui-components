@@ -11,7 +11,7 @@ export const queryableAgenticExploreDimensions = [
   'a2a_method',
   'a2a_task_id',
   'a2a_context_id',
-  'a2_error',
+  'a2a_error',
 ] as const
 
 export type QueryableAgenticExploreDimensions = typeof queryableAgenticExploreDimensions[number]
