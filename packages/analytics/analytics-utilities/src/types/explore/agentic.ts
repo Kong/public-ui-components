@@ -34,8 +34,8 @@ export const agenticExploreAggregations = [
   'a2a_latency_p50',
   'a2a_latency_p95',
   'a2a_latency_p99',
-  'a2a_response_body_size_sum',
-  'mcp_response_body_size_sum',
+  'a2a_response_size_sum',
+  'mcp_response_size_sum',
 ] as const
 
 export type AgenticExploreAggregations = typeof agenticExploreAggregations[number]
