@@ -8,6 +8,7 @@
       <RedisConfigSelect
         :default-redis-config-item="selectedRedisConfigItem"
         is-custom-plugin
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :plugin-redis-fields="field.fields"
         :update-redis-model="updateRedisModel"
         @show-new-partial-modal="$emit('showNewPartialModal')"
@@ -17,7 +18,7 @@
       v-else
       class="redis-config-card"
       data-testid="redis-config-card"
-      :title="t('redis.title')"
+      :title="redisCardTitle"
     >
       <div
         class="redis-config-radio-group"
@@ -28,12 +29,15 @@
           card
           card-orientation="horizontal"
           data-testid="shared-redis-config-radio"
-          :description="t('redis.shared_configuration.description')"
-          :label="t('redis.shared_configuration.label')"
+          :description="sharedRedisRadioDescription"
+          :label="sharedRedisRadioLabel"
           :selected-value="true"
         >
-          <KBadge appearance="success">
-            {{ t('redis.shared_configuration.badge') }}
+          <KBadge
+            v-if="isKonnectManagedRedisEnabled"
+            appearance="success"
+          >
+            {{ t('redis.managed_ui.shared_configuration.badge') }}
           </KBadge>
         </KRadio>
         <KRadio
@@ -41,8 +45,8 @@
           card
           card-orientation="horizontal"
           data-testid="dedicated-redis-config-radio"
-          :description="t('redis.dedicated_configuration.description')"
-          :label="t('redis.dedicated_configuration.label')"
+          :description="dedicatedRedisRadioDescription"
+          :label="dedicatedRedisRadioLabel"
           :selected-value="false"
         />
       </div>
@@ -52,6 +56,7 @@
       >
         <RedisConfigSelect
           :default-redis-config-item="selectedRedisConfigItem"
+          :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
           :plugin-redis-fields="field.fields"
           :redis-type="field.redisType"
           :update-redis-model="updateRedisModel"
@@ -144,6 +149,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /** This switches the whole Redis block to the Konnect-managed Redis strings and behavior */
+  isKonnectManagedRedisEnabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emits = defineEmits<{
@@ -155,6 +165,34 @@ const emits = defineEmits<{
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)
+
+const redisCardTitle = computed(() =>
+  props.isKonnectManagedRedisEnabled ? t('redis.managed_ui.title') : t('redis.title'),
+)
+
+const sharedRedisRadioDescription = computed(() =>
+  props.isKonnectManagedRedisEnabled
+    ? t('redis.managed_ui.shared_configuration.description')
+    : t('redis.shared_configuration.description'),
+)
+
+const sharedRedisRadioLabel = computed(() =>
+  props.isKonnectManagedRedisEnabled
+    ? t('redis.managed_ui.shared_configuration.label')
+    : t('redis.shared_configuration.label'),
+)
+
+const dedicatedRedisRadioDescription = computed(() =>
+  props.isKonnectManagedRedisEnabled
+    ? t('redis.managed_ui.dedicated_configuration.description')
+    : t('redis.dedicated_configuration.description'),
+)
+
+const dedicatedRedisRadioLabel = computed(() =>
+  props.isKonnectManagedRedisEnabled
+    ? t('redis.managed_ui.dedicated_configuration.label')
+    : t('redis.dedicated_configuration.label'),
+)
 
 // if the plugin is custom, show redis configuration selector instead of the whole card
 const isCustomPlugin = computed(() => props.field.pluginType === 'custom')
@@ -197,6 +235,10 @@ const onFieldValidated = (res: boolean, errors: any[], field: any) => {
   emits('validated', res, errors, field)
 }
 
+/**
+ * When shared configuration is selected, emits partial ids only if a partial was already chosen
+ * When dedicated configuration is selected, emits cached inline Redis field values
+ */
 watch(() => usePartial.value, (usePartial) => {
   if (usePartial) {
     // only pass partialToggled to parent if some partials are selected
