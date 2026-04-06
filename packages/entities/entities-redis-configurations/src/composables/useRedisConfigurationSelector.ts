@@ -6,7 +6,12 @@
 import { computed, inject, onBeforeMount } from 'vue'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { getRedisType, inferRedisPartialManagedSource } from '../helpers'
-import { useDebouncedFilter, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
+import {
+  useDebouncedFilter,
+  type KongManagerBaseFormConfig,
+  type KonnectBaseFormConfig,
+} from '@kong-ui-public/entities-shared'
+import { REDIS_CONFIGURATION_SOURCE, type RedisConfigurationSource } from '../types'
 import endpoints from '../partials-endpoints'
 import { RedisType } from '../types'
 
@@ -58,7 +63,7 @@ export function useRedisConfigurationSelector(options: {
   /** KSelect row with extra fields for grouping and Redis typing */
   type RedisSelectItem = SelectItem<string> & {
     type?: string
-    source?: 'self-managed' | 'konnect-managed'
+    source?: RedisConfigurationSource
     tag?: string
     partial?: RedisConfigurationDTO
   }
@@ -89,11 +94,8 @@ export function useRedisConfigurationSelector(options: {
       .map((row: Record<string, any>) => {
         const partial = (row.partial ?? row) as RedisConfigurationDTO & { id: string }
 
-        const explicitSource = (row.source === 'konnect-managed' || row.source === 'self-managed')
-          ? row.source : undefined
-
-        const source = explicitSource ?? inferRedisPartialManagedSource(partial)
-        const isKonnectManaged = source === 'konnect-managed'
+        const source = inferRedisPartialManagedSource(partial)
+        const isKonnectManaged = source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED
 
         return {
           label: partial.id,
@@ -109,9 +111,9 @@ export function useRedisConfigurationSelector(options: {
     return configs
       .filter((item) => item.type === redisType)
       .sort((a, b) => {
-        const sourceSortRank = (source?: 'self-managed' | 'konnect-managed'): number => {
-          if (source === 'konnect-managed') return 0
-          if (source === 'self-managed') return 1
+        const sourceSortRank = (source?: RedisConfigurationSource): number => {
+          if (source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED) return 0
+          if (source === REDIS_CONFIGURATION_SOURCE.SELF_MANAGED) return 1
           return 2
         }
 
@@ -130,9 +132,8 @@ export function useRedisConfigurationSelector(options: {
     }
 
     const items = managedRedisConfigItems.value
-    const konnectManagedItems = items.filter((item) => item.source === 'konnect-managed')
-    const selfManagedItems = items.filter((item) => item.source === 'self-managed')
-    const ungroupedItems = items.filter((item) => !item.source)
+    const konnectManagedItems = items.filter((item) => item.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED)
+    const selfManagedItems = items.filter((item) => item.source === REDIS_CONFIGURATION_SOURCE.SELF_MANAGED)
     const groups: SelectEntry[] = []
 
     if (konnectManagedItems.length > 0) {
@@ -149,7 +150,7 @@ export function useRedisConfigurationSelector(options: {
       })
     }
 
-    return [...groups, ...ungroupedItems]
+    return groups
   })
 
   onBeforeMount(() => {

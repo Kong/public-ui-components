@@ -1,7 +1,16 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import { DEFAULT_CLUSTER_NODE, DEFAULT_SENTINEL_NODE } from './constants'
-import { PartialType, type ClusterNode, type Identifiable, type RedisConfigurationDTO, type RedisConfigurationFields, type SentinelNode } from './types'
+import {
+  PartialType,
+  REDIS_CONFIGURATION_SOURCE,
+  type ClusterNode,
+  type Identifiable,
+  type RedisConfigurationDTO,
+  type RedisConfigurationFields,
+  type RedisConfigurationSource,
+  type SentinelNode,
+} from './types'
 import { RedisType, AuthProvider } from './types'
 
 export const shallowCopyWithId = <T extends Record<any, any>>(node: T): Identifiable<T> => {
@@ -18,19 +27,17 @@ export const genDefaultSentinelNode = () => shallowCopyWithId(DEFAULT_SENTINEL_N
 
 export const genDefaultClusterNode = () => shallowCopyWithId(DEFAULT_CLUSTER_NODE)
 
-// Source used to group Redis partials in Konnect managed-cache plugin UI
-export type RedisPartialManagedSource = 'self-managed' | 'konnect-managed'
-
 // Classify a Redis partial as Konnect-managed (add-on / managed cache) vs self-managed from API `tags`
-export const inferRedisPartialManagedSource = (partial: { tags?: unknown }): RedisPartialManagedSource => {
+export const inferRedisPartialManagedSource = (partial: { tags?: unknown }): RedisConfigurationSource => {
   const tags = Array.isArray(partial.tags) ? (partial.tags as unknown[]) : []
   const normalizedTags = tags
     .filter((tag): tag is string => typeof tag === 'string')
     .map((tag) => tag.toLowerCase())
 
-  return normalizedTags.includes('konnect-managed') || normalizedTags.includes('managed_cache.v0')
-    ? 'konnect-managed'
-    : 'self-managed'
+  return normalizedTags.includes(REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED)
+    || normalizedTags.includes('managed_cache.v0')
+    ? REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED
+    : REDIS_CONFIGURATION_SOURCE.SELF_MANAGED
 }
 
 export const getRedisType = (fields: RedisConfigurationFields | RedisConfigurationDTO): RedisType => {

@@ -131,14 +131,9 @@ const {
 // Modal state
 const isModalVisible = ref(false)
 
-/**
- * KSelect `@change`- Kongponents types item as `SelectItem<string | number> | null`.
- * Normalize to string `modelValue` for parents; re-emit `change` with loose `SelectItem` typing
- */
 const onSelectionChange = (item: SelectItem<string | number> | null) => {
-  const value = item?.value // may be number from KSelect
-  emit('update:modelValue', value == null ? undefined : String(value)) // v-model is always string| undefined
-  emit('change', item as SelectItem | null) // public API stays `SelectItem | null`
+  emit('update:modelValue', item === null ? undefined : String(item.value))
+  emit('change', item as SelectItem | null)
 }
 
 const onCreateNew = () => {

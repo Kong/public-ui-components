@@ -104,6 +104,11 @@ import { getRedisType, getPartialTypeDisplay } from '../utils/redisPartial'
 import type { PartialType, RedisConfigurationFields } from '../types'
 import type { SelectEntry, SelectItem } from '@kong/kongponents'
 import type { Field } from '../composables/useRedisPartial'
+import {
+  REDIS_CONFIGURATION_SOURCE,
+  type RedisConfigurationSource,
+  redisManagedSourceFromTags,
+} from '../utils/redisPartialManagedSource'
 import RedisConfigCard from './RedisConfigCard.vue'
 
 defineEmits<{
@@ -216,27 +221,17 @@ const getOnePartialUrl = (partialId: string | number): string => {
   return url
 }
 
-type RedisSelectItem = SelectItem<string> & { source?: 'self-managed' | 'konnect-managed', type?: string, tag?: string }
-
-// Classify partial as Konnect-managed or self-managed from tag metadata when grouping is enabled
-const inferSourceFromPartial = (partial: RedisConfigurationFields): 'self-managed' | 'konnect-managed' => {
-  const tags = Array.isArray((partial as any).tags) ? ((partial as any).tags as unknown[]) : []
-  const normalizedTags = tags
-    .filter((tag): tag is string => typeof tag === 'string') // drop non-string tag entries
-    .map((tag) => tag.toLowerCase()) // tag checks are case-insensitive
-
-  return normalizedTags.includes('konnect-managed') || normalizedTags.includes('managed_cache.v0')
-    ? 'konnect-managed'
-    : 'self-managed'
-}
+type RedisSelectItem = SelectItem<string> & { source?: RedisConfigurationSource, type?: string, tag?: string }
 
 // Map partials list API rows to KSelect items; adds `source` + grouped sections when Konnect-managed FF is on
 const redisConfigItems = computed((): RedisSelectItem[] => {
   const configs: RedisSelectItem[] = (redisConfigsResults.value || [])
     .map((listItem) => {
       const partial = listItem as RedisConfigurationFields
-      const managedSource = props.isKonnectManagedRedisEnabled ? inferSourceFromPartial(partial) : undefined // skip when legacy UI
-      const isKonnectManagedRow = managedSource === 'konnect-managed'
+      const managedSource = props.isKonnectManagedRedisEnabled
+        ? redisManagedSourceFromTags(partial)
+        : undefined // skip when legacy UI
+      const isKonnectManagedRow = managedSource === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED
 
       return {
         ...(props.isKonnectManagedRedisEnabled && managedSource ? { source: managedSource } : {}), // only attach `source` in managed mode
@@ -265,9 +260,8 @@ const availableRedisConfigs = computed((): SelectEntry[] => {
     return items // no `source` field on rows,treat as a flat list
   }
 
-  const konnectManagedItems = items.filter((item) => item.source === 'konnect-managed')
-  const selfManagedItems = items.filter((item) => item.source === 'self-managed')
-  const ungroupedItems = items.filter((item) => !item.source) // rows without inferred `source`
+  const konnectManagedItems = items.filter((item) => item.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED)
+  const selfManagedItems = items.filter((item) => item.source === REDIS_CONFIGURATION_SOURCE.SELF_MANAGED)
   const groups: SelectEntry[] = []
 
   if (konnectManagedItems.length > 0) {
@@ -284,7 +278,7 @@ const availableRedisConfigs = computed((): SelectEntry[] => {
     })
   }
 
-  return [...groups, ...ungroupedItems]
+  return groups
 })
 
 const { axiosInstance } = useAxios(formConfig?.axiosRequestConfig)
