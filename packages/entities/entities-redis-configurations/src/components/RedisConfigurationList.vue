@@ -213,7 +213,7 @@ import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
 import { getRedisType } from '../helpers'
-import { PartialType, RedisType } from '../types'
+import { PartialType, RedisType, REDIS_CONFIGURATION_SOURCE } from '../types'
 import LinkedPluginsInline from './LinkedPluginsInline.vue'
 import LinkedPluginListModal from './LinkedPluginListModal.vue'
 import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
@@ -586,7 +586,7 @@ const pickAddOnFieldsForLinkedRow = (addOn: ManagedCacheAddOn) => ({
 const konnectManagedRowFromAddOn = (addOn: ManagedCacheAddOn): EntityRow => ({
   id: addOn.id,
   name: addOn.name ?? addOn.id,
-  source: 'konnect-managed',
+  source: REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED,
   partial: undefined,
   addOn,
 })
@@ -659,12 +659,14 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
     const rows: EntityRow[] = partials.flatMap((partial) => {
       const matchingAddOn = addOnByCacheConfigId.get(partial.id)
       const hasTags = Array.isArray(partial.tags) && partial.tags.length > 0
-      const source: EntityRow['source'] = hasTags ? 'konnect-managed' : 'self-managed'
+      const source: EntityRow['source'] = hasTags
+        ? REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED
+        : REDIS_CONFIGURATION_SOURCE.SELF_MANAGED
 
       // If add-ons data is available, treat a managed partial without a linked
       // add-on as stale. This avoids showing a stale partial row alongside
       // the managed add-on lifecycle row during delete propagation
-      if (isAddOnsLoaded && source === 'konnect-managed' && !matchingAddOn) {
+      if (isAddOnsLoaded && source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED && !matchingAddOn) {
         return []
       }
 
@@ -827,7 +829,7 @@ const tableHeaders = computed<BaseTableHeaders>(() => ({
 }))
 
 const getNavigableRowId = (row: EntityRow): string => {
-  if (!isKonnectManagedRedisEnabled.value || row.source !== 'konnect-managed') {
+  if (!isKonnectManagedRedisEnabled.value || row.source !== REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED) {
     return typeof row.id === 'string' ? row.id : ''
   }
 
@@ -864,7 +866,7 @@ const getEditDropdownItem = (id: string) => ({
 
 // Row can not be edited for Konnect-managed otherwise follow canEdit prop
 const canEditRow = async (row: EntityRow): Promise<boolean> => {
-  if (isKonnectManagedRedisEnabled.value && row.source === 'konnect-managed') {
+  if (isKonnectManagedRedisEnabled.value && row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED) {
     return false
   }
   return props.canEdit(row)
@@ -872,13 +874,13 @@ const canEditRow = async (row: EntityRow): Promise<boolean> => {
 // Disable delete for Konnect-managed Redis rows that are in terminating state to avoid confusion during the delete process
 const isDeleteDisabled = (row: EntityRow): boolean => {
   return isKonnectManagedRedisEnabled.value &&
-    row.source === 'konnect-managed' &&
+    row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED &&
     isTerminatingState(row.addOn?.state)
 }
 
 const deleteRow = async (row: EntityRow) => {
   // Konnect-managed: skip client-side links check; Cloud Gateways add-ons API will return error if partial still in use
-  if (isKonnectManagedRedisEnabled.value && row.source === 'konnect-managed') {
+  if (isKonnectManagedRedisEnabled.value && row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED) {
     entityToBeDeleted.value = row
     isDeleteModalVisible.value = true
     return
@@ -944,7 +946,7 @@ const confirmDelete = async (): Promise<void> => {
   deleteModalError.value = ''
 
   try {
-    if (isKonnectManagedRedisEnabled.value && entityToBeDeleted.value.source === 'konnect-managed' && entityToBeDeleted.value.addOn?.id) {
+    if (isKonnectManagedRedisEnabled.value && entityToBeDeleted.value.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED && entityToBeDeleted.value.addOn?.id) {
       // Konnect-managed: delete the managed cache add-on via Cloud Gateways API
       const addOnDeleteUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons/${entityToBeDeleted.value.addOn.id}`
       await axiosInstance.delete(addOnDeleteUrl)
@@ -958,7 +960,7 @@ const confirmDelete = async (): Promise<void> => {
 
     // Konnect-managed deletions can still keep placeholders around when transitioning from`initializing` -> `terminating`
     // Restart from the initial delay for the next refresh cycle
-    if (isKonnectManagedRedisEnabled.value && entityToBeDeleted.value.source === 'konnect-managed') {
+    if (isKonnectManagedRedisEnabled.value && entityToBeDeleted.value.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED) {
       clearPolling()
     }
     refreshList()
@@ -1137,7 +1139,7 @@ const isTransitionalManagedCacheState = (state?: string): boolean => {
 
 const renderRedisType = (item: RedisConfigurationFields | EntityRow): string | undefined => {
   const row = item as EntityRow
-  if (isKonnectManagedRedisEnabled.value && row.source === 'konnect-managed') {
+  if (isKonnectManagedRedisEnabled.value && row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED) {
     return t('list.type.konnect_managed_redis')
   }
 
@@ -1150,7 +1152,7 @@ const renderRedisType = (item: RedisConfigurationFields | EntityRow): string | u
   const typeLabelFromPartial = getRedisTypeLabelFromPartial(typedFields)
 
   if (isKonnectManagedRedisEnabled.value && row.source) {
-    return row.source === 'konnect-managed'
+    return row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED
       ? t('list.type.konnect_managed_redis')
       : typeLabelFromPartial
         ? `${t('list.type.self_managed_redis')} (${typeLabelFromPartial})`

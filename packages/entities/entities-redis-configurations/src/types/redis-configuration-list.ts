@@ -3,7 +3,13 @@ import type { RouteLocationRaw } from 'vue-router'
 
 import type { RedisConfigurationResponse } from './redis-configuration'
 
-export type RedisConfigurationSource = 'self-managed' | 'konnect-managed'
+export const REDIS_CONFIGURATION_SOURCE = {
+  KONNECT_MANAGED: 'konnect-managed',
+  SELF_MANAGED: 'self-managed',
+} as const
+
+export type RedisConfigurationSource =
+  (typeof REDIS_CONFIGURATION_SOURCE)[keyof typeof REDIS_CONFIGURATION_SOURCE]
 
 export interface BaseRedisConfigurationListConfig {
   /** Route for creating a redis configuration */

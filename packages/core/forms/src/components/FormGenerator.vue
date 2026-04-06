@@ -16,6 +16,7 @@
           :errors="errors"
           :field="field"
           :is-editing="isEditing"
+          :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
           :model="model"
           :options="options"
           :tag="tag"
@@ -112,6 +113,7 @@
                 :errors="errors"
                 :field="field"
                 :is-editing="isEditing"
+                :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
                 :model="model"
                 :options="options"
                 :tag="tag"
@@ -258,6 +260,12 @@ export default {
     },
 
     enableRedisPartial: {
+      type: Boolean,
+      default: false,
+    },
+
+    /** Forwarded to FormRedis/ RedisConfigSelect for Konnect managed-cache Redis copy and grouping */
+    isKonnectManagedRedisEnabled: {
       type: Boolean,
       default: false,
     },
