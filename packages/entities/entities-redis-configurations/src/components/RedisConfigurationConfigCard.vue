@@ -177,6 +177,7 @@ import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { ChevronRightIcon, ChevronUpIcon } from '@kong/icons'
 import { KButton, KCodeBlock, KCollapse, KSkeleton } from '@kong/kongponents'
 import type {
+  DetailLayout,
   KonnectRedisConfigurationEntityConfig,
   KongManagerRedisConfigurationEntityConfig,
   RedisConfigurationResponse,
@@ -198,8 +199,6 @@ import {
 } from '../helpers/managed-cache-add-on'
 import { pickManagedAddOnCardRecord } from '../helpers/managed-add-on-config-schema'
 import { DEFAULT_REDIS_TYPE } from '../constants'
-
-type DetailLayout = 'legacy' | 'resolving' | 'managed'
 
 /**
  * Managed Konnect detail flow:
@@ -464,7 +463,6 @@ const onPartialNestedLoaded = (data: RedisConfigurationResponse) => {
 }
 
 const redisType = ref<RedisType>(DEFAULT_REDIS_TYPE)
-
 
 // Legacy partial config card
 const handleData = (payload: Record<string, any>): void => {

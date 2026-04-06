@@ -6,88 +6,61 @@ import type { AddOnRecord, ManagedCacheAddOn } from '../types/cloud-gateways-add
  * Assumes current Add-On API shape and extracts linked `cache_config_id`
  */
 
-// Expected payload shape is known, but values are still checked before reading fields
 const isPlainObject = (value: unknown): value is AddOnRecord =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
 
-const asNonEmptyString = (value: unknown): string | undefined =>
-  typeof value === 'string' && value.length > 0 ? value : undefined
-
-const asFiniteNumber = (value: unknown): number | undefined =>
-  typeof value === 'number' && Number.isFinite(value) ? value : undefined
-
-const asStringArray = (value: unknown): string[] | undefined =>
-  Array.isArray(value) && value.every((v) => typeof v === 'string') ? value : undefined
-
-const asAddOnState = (value: unknown): ManagedCacheAddOn['state'] | undefined =>
-  value === 'initializing' || value === 'ready' || value === 'terminating'
-    ? value : undefined
-
-const normalizeStateMetadata = (value: unknown): AddOnRecord | undefined =>
-  isPlainObject(value) ? value : undefined
-
-// Parse one add-on into the shape list/detail code expects.
-// Unknown so we validate runtime payloads before using typed fields
+// Parse one add-on into the shape list/config code expects
 export const parseManagedAddOn = (plain: unknown): ManagedCacheAddOn | null => {
   if (!isPlainObject(plain)) return null
 
-  const id = asNonEmptyString(plain.id)
-  if (!id) return null
+  const id = plain.id
+  if (typeof id !== 'string' || !id) return null
 
   const configSource = isPlainObject(plain.config) ? plain.config : null
   if (!configSource) return null
 
-  const kind = asNonEmptyString(configSource.kind)
-  if (!kind) return null
+  const kind = configSource.kind
+  if (typeof kind !== 'string' || !kind) return null
 
   // Match RedisConfigurationList: `config.state_metadata ?? addOn.state_metadata`
   const stateMetadata =
-    normalizeStateMetadata(configSource.state_metadata)
-    ?? normalizeStateMetadata((plain as AddOnRecord).state_metadata)
+    (isPlainObject(configSource.state_metadata) ? configSource.state_metadata : undefined)
+    ?? (isPlainObject(plain.state_metadata) ? plain.state_metadata : undefined)
 
   const addOn: ManagedCacheAddOn = {
     id,
-    config: ({
+    config: {
       ...configSource,
       kind,
       ...(stateMetadata ? { state_metadata: stateMetadata } : {}),
-    }) as ManagedCacheAddOn['config'],
+    } as ManagedCacheAddOn['config'],
   }
 
-  const name = asNonEmptyString(plain.name)
-  if (name) addOn.name = name
+  if (typeof plain.name === 'string') addOn.name = plain.name
+  if (typeof plain.type === 'string') addOn.type = plain.type
+  if (Array.isArray(plain.tags) && plain.tags.every((v) => typeof v === 'string')) {
+    addOn.tags = plain.tags
+  }
 
-  const type = asNonEmptyString(plain.type)
-  if (type) addOn.type = type
-
-  const tags = asStringArray(plain.tags)
-  if (tags) addOn.tags = tags
-
-  const ownerSource = isPlainObject(plain.owner) ? plain.owner : undefined
-
-  if (ownerSource) {
+  if (isPlainObject(plain.owner)) {
+    const o = plain.owner
     const owner: ManagedCacheAddOn['owner'] = {}
-    const ownerKind = asNonEmptyString(ownerSource.kind)
-    const controlPlaneId = asNonEmptyString(ownerSource.control_plane_id)
-    const controlPlaneGeo = asNonEmptyString(ownerSource.control_plane_geo)
-
-    if (ownerKind) owner.kind = ownerKind
-    if (controlPlaneId) owner.control_plane_id = controlPlaneId
-    if (controlPlaneGeo) owner.control_plane_geo = controlPlaneGeo
+    if (typeof o.kind === 'string') owner.kind = o.kind
+    if (typeof o.control_plane_id === 'string') owner.control_plane_id = o.control_plane_id
+    if (typeof o.control_plane_geo === 'string') owner.control_plane_geo = o.control_plane_geo
     if (Object.keys(owner).length) addOn.owner = owner
   }
 
-  const entityVersion = asFiniteNumber(plain.entity_version)
-  if (entityVersion != null) addOn.entity_version = entityVersion
+  if (typeof plain.entity_version === 'number' && Number.isFinite(plain.entity_version)) {
+    addOn.entity_version = plain.entity_version
+  }
 
-  const state = asAddOnState(plain.state)
-  if (state) addOn.state = state
+  if (plain.state === 'initializing' || plain.state === 'ready' || plain.state === 'terminating') {
+    addOn.state = plain.state
+  }
 
-  const createdAt = asNonEmptyString(plain.created_at)
-  if (createdAt) addOn.created_at = createdAt
-
-  const updatedAt = asNonEmptyString(plain.updated_at)
-  if (updatedAt) addOn.updated_at = updatedAt
+  if (typeof plain.created_at === 'string') addOn.created_at = plain.created_at
+  if (typeof plain.updated_at === 'string') addOn.updated_at = plain.updated_at
 
   return addOn
 }

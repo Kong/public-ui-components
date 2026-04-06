@@ -124,7 +124,7 @@ import type {
   SupportedEntityType,
   PolicyConfigurationSchema,
 } from '../../types'
-import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray, SupportedEntityDeckArray } from '../../types'
+import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray, isSupportedDeckEntityType } from '../../types'
 import composables from '../../composables'
 import ConfigCardDisplay, { type CodeFormat, type Format } from './ConfigCardDisplay.vue'
 import { BookIcon } from '@kong/icons'
@@ -321,7 +321,7 @@ const configFormatItems = computed(() => {
 
   // decK is only available for certain entity types
   // https://developer.konghq.com/deck/reference/entities/
-  const isSupportedEntity = SupportedEntityDeckArray.includes(props.entityType as any)
+  const isSupportedEntity = isSupportedDeckEntityType(props.entityType)
   const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckConfig
   if (isDeckEnabled && isSupportedEntity) {
     items.push({

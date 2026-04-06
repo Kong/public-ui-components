@@ -3,6 +3,9 @@ import type {
   KongManagerBaseEntityConfig,
 } from '@kong-ui-public/entities-shared'
 
+/** Konnect-managed Redis config card: deternine detail branch that's active */
+export type DetailLayout = 'legacy' | 'resolving' | 'managed'
+
 export interface BsseRedisConfigurationEntityConfig {
   /**
    * Show/hide cloud authentication configuration fields
