@@ -14,6 +14,7 @@
             v-if="breadcrumbs && breadcrumbs.length"
             class="header-breadcrumbs"
             data-testid="page-layout-breadcrumbs"
+            item-max-width="25ch"
             :items="breadcrumbs"
           />
           <div class="title-container">
@@ -235,15 +236,15 @@ onUnmounted(() => {
             align-items: flex-end;
             display: flex;
             gap: var(--kui-space-30, $kui-space-30);
+            padding-left: var(--kui-space-20, $kui-space-20);
           }
         }
       }
 
       .page-header-actions-container {
-        align-items: flex-end;
+        align-items: center;
         display: flex;
         gap: var(--kui-space-30, $kui-space-30);
-        justify-content: flex-end;
       }
     }
 
