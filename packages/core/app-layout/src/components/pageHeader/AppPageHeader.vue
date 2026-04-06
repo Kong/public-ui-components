@@ -39,7 +39,7 @@
           {{ title }}
         </component>
         <div
-          v-if="$slots['title-after'] && !konnectNavigationNext"
+          v-if="$slots['title-after']"
           class="page-header-title-after"
           data-testid="page-header-title-after"
         >
