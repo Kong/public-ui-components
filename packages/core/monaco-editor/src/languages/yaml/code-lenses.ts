@@ -1,20 +1,19 @@
 import { isMap, isNode, isPair, isScalar, isSeq } from 'yaml'
-import { getModelContext } from '../../singletons/model-contexts'
+
 import {
+  collectCodeLenses,
   createCopyUUIDCodeLens,
   createCopyValueCodeLens,
-  collectCodeLenses,
   emptyCodeLensList,
   uuidRe,
 } from '../../features/code-lenses'
+import { getModelContext } from '../../singletons/model-contexts'
 
 import type { JSONPath } from 'jsonc-parser'
 import type { CancellationToken, editor, IRange, languages } from 'monaco-editor'
 import type { Document as YAMLDocument, Node as YAMLNode } from 'yaml'
 
-import type { ModelContext } from '../../types'
-
-type ModelContextGetter = (model: editor.ITextModel) => ModelContext | Promise<ModelContext>
+import type { ModelContextGetter } from '../../types'
 
 type YAMLProvideCodeLensesFn<Value = any> = (
   value: Value,

@@ -1,20 +1,18 @@
 import { findNodeAtLocation, getNodePath, getNodeValue } from 'jsonc-parser'
 
-import { getModelContext } from '../../singletons/model-contexts'
 import {
+  collectCodeLenses,
   createCopyUUIDCodeLens,
   createCopyValueCodeLens,
-  collectCodeLenses,
   emptyCodeLensList,
   uuidRe,
 } from '../../features/code-lenses'
+import { getModelContext } from '../../singletons/model-contexts'
 
 import type { JSONPath, Node } from 'jsonc-parser'
 import type { CancellationToken, editor, IRange, languages } from 'monaco-editor'
 
-import type { ModelContext } from '../../types'
-
-type ModelContextGetter = (model: editor.ITextModel) => ModelContext | Promise<ModelContext>
+import type { ModelContextGetter } from '../../types'
 
 type JSONProvideCodeLensesFn<Value = any> = (
   value: Value,
