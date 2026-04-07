@@ -14,12 +14,23 @@
       </KLabel>
     </h3>
     <div class="node-list">
-      <NodePanelItem
-        v-for="nodeType in (Object.keys(CONFIG_NODE_META_MAP) as Array<ConfigNodeType>)"
-        :key="nodeType"
-        :type="nodeType"
-        @dragstart="handleDragStart"
-      />
+      <section
+        v-for="group in nodePanelGroups"
+        :key="group.id"
+        class="node-group"
+      >
+        <h4 class="group-title">
+          {{ group.title }}
+        </h4>
+        <div class="group-items">
+          <NodePanelItem
+            v-for="node in group.nodes"
+            :key="node.type"
+            :type="node.type"
+            @dragstart="handleDragStart"
+          />
+        </div>
+      </section>
     </div>
     <div
       aria-hidden="true"
@@ -39,13 +50,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, shallowRef, useId } from 'vue'
+import { computed, inject, nextTick, shallowRef, useId } from 'vue'
 import { VueFlow } from '@vue-flow/core'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
+import { FEATURE_FLAGS } from '../../../../../constants'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { useEditorStore } from '../store/store'
-import { CONFIG_NODE_META_MAP } from '../node/node'
+import { CONFIG_NODE_PANEL_GROUPS } from '../node/node'
 import NodePanelItem from '../node/NodePanelItem.vue'
 import FlowNode from '../node/FlowNode.vue'
 
@@ -58,6 +70,14 @@ defineProps<{
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { createNode } = useEditorStore()
+const enableDatakitJwtNodes = inject<boolean>(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, false)
+const nodePanelGroups = computed(() => {
+  if (enableDatakitJwtNodes) {
+    return CONFIG_NODE_PANEL_GROUPS
+  }
+
+  return CONFIG_NODE_PANEL_GROUPS.filter(({ id }) => id !== 'authentication')
+})
 
 const previewId = `dk-drag-preview-${useId()}`
 
@@ -136,14 +156,12 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
 
 <style lang="scss" scoped>
 .dk-node-panel {
-
   .title {
-    color: $kui-color-text;
+    color: var(--kui-color-text, $kui-color-text);
     display: flex;
-    font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-bold;
-    gap: $kui-space-40;
-    line-height: $kui-line-height-30;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
     margin: 0;
   }
 
@@ -154,8 +172,28 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
   .node-list {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-40;
-    margin-top: $kui-space-40;
+    gap: var(--kui-space-50, $kui-space-50);
+  }
+
+  .node-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-40, $kui-space-40);
+    margin: 0;
+  }
+
+  .group-title {
+    color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
+    margin: 0;
+  }
+
+  .group-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-40, $kui-space-40);
   }
 
   .preview {

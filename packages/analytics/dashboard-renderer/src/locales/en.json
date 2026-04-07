@@ -16,7 +16,8 @@
     "exit_fullscreen": "Exit fullscreen",
     "fullscreen": "Fullscreen",
     "remove": "Remove",
-    "delete": "Delete"
+    "delete": "Delete",
+    "as_of_today": "As of today"
   },
   "csvExport": {
     "defaultFilename": "Chart export",

@@ -1,0 +1,14 @@
+debug: true
+nodes:
+- name: XML_JSON
+  type: xml_to_json
+  attributes_block_name: null
+  attributes_name_prefix: '-'
+  recognize_type: true
+  text_block_name: '#text'
+  input: request.body
+  xpath: null
+- name: EXIT
+  type: exit
+  inputs:
+    body: XML_JSON

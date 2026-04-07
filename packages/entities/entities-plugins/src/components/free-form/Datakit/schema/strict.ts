@@ -337,10 +337,10 @@ export type JwtDecodeNode = z.infer<typeof JwtDecodeNodeSchema>
 export const JwtSignNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('jwt_sign'),
   algorithm: JWTAlgorithmSchema,
-  expires_in: z.number().int().default(300).nullish(),
+  expires_in: z.number().int().min(1).default(300).nullish(),
   inputs: JwtSignInputsSchema.nullish(),
   kid: z.string().nullish(),
-  not_before: z.number().int().default(0).nullish(),
+  not_before: z.number().int().min(0).default(0).nullish(),
   outputs: z
     .object({
       claims: NullishNameConnectionSchema,
@@ -361,7 +361,7 @@ export const JwtVerifyNodeSchema = ConfigNodeBaseSchema.safeExtend({
   audiences: z.array(z.string()).default([]).nullish(),
   inputs: JwtVerifyInputsSchema.nullish(),
   issuers: z.array(z.string()).default([]).nullish(),
-  leeway: z.number().int().default(0).nullish(),
+  leeway: z.number().int().min(0).default(0).nullish(),
   outputs: z
     .object({
       claims: NullishNameConnectionSchema,

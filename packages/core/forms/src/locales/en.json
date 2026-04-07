@@ -135,6 +135,27 @@
   },
   "redis": {
     "title": "Redis Configuration",
+    "managed_ui": {
+      "title": "Redis",
+      "groups": {
+        "self_managed": "Self-managed Redis",
+        "konnect_managed": "Konnect-managed Redis"
+      },
+      "shared_configuration": {
+        "label": "Use shared configuration",
+        "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins.",
+        "badge": "Recommended",
+        "title": "Shared Redis Configuration",
+        "create_new_configuration": "New Redis",
+        "selector": {
+          "placeholder": "Filter Redis configurations..."
+        }
+      },
+      "dedicated_configuration": {
+        "label": "Use locally-scoped configuration",
+        "description": "Create and use a Redis configuration specifically for this plugin."
+      }
+    },
     "shared_configuration": {
       "label": "Use shared configuration",
       "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins.",
@@ -145,7 +166,6 @@
       "configuration_selector_placeholder": "Pick Redis configuration",
       "create_new_configuration": "New {type} shared configuration",
       "empty_state": "No shared configurations",
-      "badge": "Recommended",
       "selector": {
         "title": "Select a Redis configuration",
         "placeholder": "Filter Configurations",

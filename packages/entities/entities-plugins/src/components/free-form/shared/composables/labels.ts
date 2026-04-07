@@ -37,6 +37,8 @@ const labelDictionary: Record<string, string> = {
   imds: 'IMDS',
   sts: 'STS',
   arn: 'ARN',
+  json: 'JSON',
+  traceid: 'TraceID',
 }
 
 export function replaceByDictionary(name: string) {
@@ -147,10 +149,13 @@ export function useFieldLabel(
       : null
 
     const parentIsArray = parentSchema?.type === 'array'
+    const parentIsMap = parentSchema?.type === 'map'
 
-    const res = parentIsArray
-      ? '' // hide the label when it is a child of Array
-      : defaultLabelFormatter(realPath)
+    if (parentIsArray || parentIsMap) {
+      return '' // hide the label when it is a child of Array or Map
+    }
+
+    const res = defaultLabelFormatter(realPath)
 
     return config.value.transformLabel ? config.value.transformLabel(res, pathValue) : res
   })

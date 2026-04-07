@@ -22,12 +22,12 @@ import BananaSplit from '../icons/BananaSplit.vue'
 
 .kong-ui-app-error {
   align-items: center;
-  background-color: $kui-color-background;
-  border-top: $kui-border-width-20 solid #00abd2;
+  background-color: var(--kui-color-background, $kui-color-background);
+  border-top: var(--kui-border-width-20, $kui-border-width-20) solid #00abd2;
   display: flex;
   flex-direction: column;
-  margin: $kui-space-90 $kui-space-auto $kui-space-0;
-  padding-bottom: $kui-space-110;
+  margin: var(--kui-space-90, $kui-space-90) var(--kui-space-auto, $kui-space-auto) var(--kui-space-0, $kui-space-0);
+  padding-bottom: var(--kui-space-110, $kui-space-110);
   width: 100%;
 
   @media (min-width: $kui-breakpoint-mobile) {
@@ -40,16 +40,16 @@ import BananaSplit from '../icons/BananaSplit.vue'
 
   .banana-icon {
     animation-delay: 0.75s;
-    margin: $kui-space-90 $kui-space-auto $kui-space-80;
+    margin: var(--kui-space-90, $kui-space-90) var(--kui-space-auto, $kui-space-auto) var(--kui-space-80, $kui-space-80);
   }
 
   .kong-ui-app-error-content {
     animation: .75s cubic-bezier(.785, .135, .15, .86) forwards fadeIn;
     opacity: 0;
-    padding: $kui-space-0 $kui-space-60;
+    padding: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 
     @media (min-width: $kui-breakpoint-phablet) {
-      padding: $kui-space-0 $kui-space-90;
+      padding: var(--kui-space-0, $kui-space-0) var(--kui-space-90, $kui-space-90);
     }
 
     @media (prefers-reduced-motion) {
@@ -76,16 +76,16 @@ import BananaSplit from '../icons/BananaSplit.vue'
 // Leave unscoped to style error slot content
 .kong-ui-app-error {
   .kong-ui-app-error-content {
-    color: $kui-color-text-neutral;
-    font-size: $kui-font-size-40;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
     text-align: center;
 
     h1, h2, h3, h4 {
-      color: $kui-color-text;
-      font-size: $kui-font-size-80;
-      font-weight: $kui-font-weight-semibold;
-      margin-bottom: $kui-space-60;
-      margin-top: $kui-space-0;
+      color: var(--kui-color-text, $kui-color-text);
+      font-size: var(--kui-font-size-80, $kui-font-size-80);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      margin-bottom: var(--kui-space-60, $kui-space-60);
+      margin-top: var(--kui-space-0, $kui-space-0);
     }
   }
 }

@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.4...@kong-ui-public/app-layout@4.11.5) (2026-03-31)
+
+
+### Bug Fixes
+
+* **app-layout:** remove inner padding only when has page layout ([#3077](https://github.com/Kong/public-ui-components/issues/3077)) ([88eae55](https://github.com/Kong/public-ui-components/commit/88eae55df1a3b8a8b27e376d250219c7b46a22bc))
+
+
+
+
+
+## [4.11.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.3...@kong-ui-public/app-layout@4.11.4) (2026-03-25)
+
+
+### Bug Fixes
+
+* **deps:** bump icons ([#3054](https://github.com/Kong/public-ui-components/issues/3054)) ([77e55ac](https://github.com/Kong/public-ui-components/commit/77e55ac97c12b1b0bbab2b9c46ad78191317e807))
+
+
+
+
+
+## [4.11.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.2...@kong-ui-public/app-layout@4.11.3) (2026-03-24)
+
+
+### Bug Fixes
+
+* apply token-var-usage stylelint rule ([#2959](https://github.com/Kong/public-ui-components/issues/2959)) ([c35b1fc](https://github.com/Kong/public-ui-components/commit/c35b1fc62fb4ba839efc5bce5da0d113a8f019ff))
+
+
+
+
+
 ## [4.11.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.1...@kong-ui-public/app-layout@4.11.2) (2026-03-21)
 
 

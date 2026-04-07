@@ -129,10 +129,10 @@ const displayModified = computed(() => {
 <style lang="scss" scoped>
 .kong-ui-app-about-section {
   .about-section-title {
-    color: $kui-color-text;
-    font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-30;
+    color: var(--kui-color-text, $kui-color-text);
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
   }
 
   .about-section-header-end {
@@ -140,72 +140,72 @@ const displayModified = computed(() => {
 
     .about-section-timestamps {
       align-self: center;
-      color: $kui-color-text-neutral;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
       flex-direction: column;
-      font-size: $kui-font-size-20;
-      line-height: $kui-line-height-20;
-      margin-bottom: $kui-space-50;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      line-height: var(--kui-line-height-20, $kui-line-height-20);
+      margin-bottom: var(--kui-space-50, $kui-space-50);
 
       @media (min-width: $kui-breakpoint-phablet) {
         flex-direction: row;
-        margin-bottom: $kui-space-0;
+        margin-bottom: var(--kui-space-0, $kui-space-0);
       }
 
       &.has-actions {
-        margin-right: $kui-space-60;
+        margin-right: var(--kui-space-60, $kui-space-60);
       }
 
       .about-section-timestamps-arrow {
-        line-height: $kui-line-height-30;
-        margin-left: $kui-space-40;
-        margin-right: $kui-space-40;
+        line-height: var(--kui-line-height-30, $kui-line-height-30);
+        margin-left: var(--kui-space-40, $kui-space-40);
+        margin-right: var(--kui-space-40, $kui-space-40);
       }
     }
   }
 
   .about-section-description {
-    color: $kui-color-text;
-    font-size: $kui-font-size-30;
-    line-height: $kui-line-height-30;
-    margin-bottom: $kui-space-70;
-    margin-top: $kui-space-0;
+    color: var(--kui-color-text, $kui-color-text);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
+    margin-bottom: var(--kui-space-70, $kui-space-70);
+    margin-top: var(--kui-space-0, $kui-space-0);
   }
 
   .about-section-content {
     align-items: flex-start;
     align-self: stretch;
-    color: $kui-color-text-neutral;
-    column-gap: $kui-space-70;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    column-gap: var(--kui-space-70, $kui-space-70);
     display: flex;
     flex-wrap: wrap;
-    font-size: $kui-font-size-30;
-    line-height: $kui-line-height-30;
-    padding: $kui-space-0;
-    row-gap: $kui-space-30;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
+    padding: var(--kui-space-0, $kui-space-0);
+    row-gap: var(--kui-space-30, $kui-space-30);
   }
 
   .about-divider-section {
-    color: $kui-color-text-neutral;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    font-size: $kui-font-size-30;
-    line-height: $kui-line-height-30;
-    row-gap: $kui-space-50;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
+    row-gap: var(--kui-space-50, $kui-space-50);
   }
 
   :deep(hr),
   hr {
-    background-color: $kui-color-background-disabled;
+    background-color: var(--kui-color-background-disabled, $kui-color-background-disabled);
     border: none;
     height: 1px;
-    margin: $kui-space-0;
+    margin: var(--kui-space-0, $kui-space-0);
     width: 100%;
   }
 
   hr {
-    margin-bottom: $kui-space-50;
-    margin-top: $kui-space-50;
+    margin-bottom: var(--kui-space-50, $kui-space-50);
+    margin-top: var(--kui-space-50, $kui-space-50);
   }
 }
 </style>
@@ -213,12 +213,12 @@ const displayModified = computed(() => {
 <style lang="scss">
 // TODO: clean up these styles after KCard redesign - KHCP-8971
 .kong-ui-app-about-section.kong-card.border {
-  border-radius: $kui-border-radius-20;
-  padding: $kui-space-70;
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+  padding: var(--kui-space-70, $kui-space-70);
 
   .k-card-header {
     align-items: baseline;
-    margin-bottom: $kui-space-0 !important;
+    margin-bottom: var(--kui-space-0, $kui-space-0) !important;
 
     @media (max-width: $kui-breakpoint-phablet) {
       flex-direction: column;

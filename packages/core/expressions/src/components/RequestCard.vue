@@ -116,19 +116,19 @@ const getMethodBadgeAppearance = (method: string): BadgeAppearance => {
 <style lang="scss" scoped>
 .request-card {
   align-items: flex-start;
-  background-color: $kui-color-background;
-  border-radius: $kui-border-radius-30;
+  background-color: var(--kui-color-background, $kui-color-background);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   display: flex;
   flex-direction: column;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
   justify-content: flex-start;
   min-width: 0;
-  padding: $kui-space-50;
+  padding: var(--kui-space-50, $kui-space-50);
   position: relative;
 
   &::before {
-    border: $kui-border-width-10 solid $kui-color-border-neutral-weaker;
-    border-radius: $kui-border-radius-30;
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     content: ' ';
     height: 100%;
     left: 0;
@@ -138,7 +138,7 @@ const getMethodBadgeAppearance = (method: string): BadgeAppearance => {
   }
 
   &.active::before {
-    border: $kui-border-width-20 solid $kui-color-border-primary-weak;
+    border: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
   }
 
   .close-btn {
@@ -159,20 +159,20 @@ const getMethodBadgeAppearance = (method: string): BadgeAppearance => {
     align-items: center;
     display: flex;
     flex-direction: row;
-    gap: $kui-space-40;
-    margin-bottom: $kui-space-30;
+    gap: var(--kui-space-40, $kui-space-40);
+    margin-bottom: var(--kui-space-30, $kui-space-30);
   }
 
   .url {
-    color: $kui-color-text;
-    font-family: $kui-font-family-code;
-    font-size: $kui-font-size-30;
+    color: var(--kui-color-text, $kui-color-text);
+    font-family: var(--kui-font-family-code, $kui-font-family-code);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
     word-break: break-all;
   }
 
   .headers {
     .header {
-      font-family: $kui-font-family-code;
+      font-family: var(--kui-font-family-code, $kui-font-family-code);
       list-style: none;
 
       &,
@@ -183,8 +183,8 @@ const getMethodBadgeAppearance = (method: string): BadgeAppearance => {
 
       li {
         list-style: none;
-        margin-left: $kui-space-60;
-        padding-left: $kui-space-30;
+        margin-left: var(--kui-space-60, $kui-space-60);
+        padding-left: var(--kui-space-30, $kui-space-30);
         position: relative;
         word-break: break-all;
       }
@@ -227,24 +227,24 @@ const getMethodBadgeAppearance = (method: string): BadgeAppearance => {
     }
 
     .header-key {
-      font-size: $kui-font-size-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-weight: bold;
-      margin-left: $kui-space-40;
+      margin-left: var(--kui-space-40, $kui-space-40);
       word-break: break-all;
     }
 
     .header-value {
-      font-size: $kui-font-size-30;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-weight: normal;
-      margin-left: $kui-space-60;
+      margin-left: var(--kui-space-60, $kui-space-60);
       word-break: break-all;
     }
   }
 
   .sni {
     .sni-content {
-      font-family: $kui-font-family-code;
-      font-size: $kui-font-size-30;
+      font-family: var(--kui-font-family-code, $kui-font-family-code);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
       word-break: break-all;
     }
   }

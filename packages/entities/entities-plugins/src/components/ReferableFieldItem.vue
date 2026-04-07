@@ -57,12 +57,12 @@ const scrollToField = () => {
 
 <style scoped lang="scss">
 .referable-field-link {
-  color: $kui-color-text-primary;
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
   cursor: pointer;
   text-decoration: underline;
 
   &:hover {
-    color: $kui-color-text-primary-strong;
+    color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
   }
 }
 </style>

@@ -34,17 +34,69 @@ const mapping = {
     experimental: true,
     component: 'CommonForm',
   },
+  acl: {
+    experimental: true,
+    component: 'ACLForm',
+  },
   'basic-auth': {
     experimental: true,
     component: 'CommonForm',
   },
-  'prometheus': {
+  prometheus: {
     experimental: true,
     component: 'CommonForm',
   },
   'aws-lambda': {
     experimental: true,
     component: 'CommonForm',
+  },
+  'exit-transformer': {
+    experimental: true,
+    component: 'ExitTransformerForm',
+  },
+  'file-log': {
+    experimental: true,
+    component: 'LogForm',
+  },
+  'http-log': {
+    experimental: true,
+    component: 'LogForm',
+  },
+  'request-transformer-advanced': {
+    experimental: true,
+    component: 'CommonForm',
+  },
+  'response-transformer': {
+    experimental: true,
+    component: 'ResponseTransformerForm',
+  },
+  'response-transformer-advanced': {
+    experimental: true,
+    component: 'ResponseTransformerForm',
+  },
+  'correlation-id': {
+    experimental: true,
+    component: 'CommonForm',
+  },
+  'cors': {
+    experimental: true,
+    component: 'CommonForm',
+  },
+  'proxy-cache': {
+    experimental: true,
+    component: 'CommonForm',
+  },
+  'proxy-cache-advanced': {
+    experimental: true,
+    component: 'CommonForm',
+  },
+  'solace-consume': {
+    experimental: true,
+    component: 'SolaceConsumeForm',
+  },
+  'opentelemetry': {
+    experimental: true,
+    component: 'OpentelemetryForm',
   },
 } as const
 

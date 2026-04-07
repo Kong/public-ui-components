@@ -1,4 +1,5 @@
 import composables from '../composables'
+import { isUnitlessMetricUnit } from '../utils'
 
 export default function useTranslatedUnits() {
   const { i18n } = composables.useI18n()
@@ -8,7 +9,7 @@ export default function useTranslatedUnits() {
 
     const translationKey = `chartUnits.${unit}`
 
-    if (unit === 'usd') {
+    if (isUnitlessMetricUnit(unit)) {
       return ''
     }
     // @ts-ignore - dynamic i18n key

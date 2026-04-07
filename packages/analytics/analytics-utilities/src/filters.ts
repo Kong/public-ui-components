@@ -1,4 +1,4 @@
-import type { AllFilterableDimensionsAndMetrics, FilterDatasource } from './types'
+import type { FilterDatasource } from './types'
 import {
   filterableAiExploreDimensions,
   filterableBasicExploreDimensions,
@@ -9,8 +9,11 @@ import {
 } from './types'
 
 
+/**
+ * @deprecated Use `useDatasourceConfigStore().getFieldDataSources` from `@kong-ui-public/analytics-config-store`.
+ */
 export const getFieldDataSources = (
-  dimension: AllFilterableDimensionsAndMetrics,
+  dimension: string,
 ): FilterDatasource[] => {
   const datasources: FilterDatasource[] = []
 

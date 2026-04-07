@@ -1,7 +1,7 @@
 <template>
   <PageLayout
+    back-to="/"
     :breadcrumbs="breadcrumbs"
-    page-title="Overview"
     :tabs="tabs"
     title="Umbrella R&D Dev"
   >
@@ -10,12 +10,11 @@
         appearance="secondary"
         icon
       >
-        <BookIcon />
+        <MoreIcon />
       </KButton>
-      <KButton>
-        Create
-        <ChevronDownIcon />
-      </KButton>
+    </template>
+    <template #title-after>
+      <KBadge>Info</KBadge>
     </template>
   </PageLayout>
 </template>
@@ -23,8 +22,7 @@
 <script setup lang="ts">
 import { PageLayout } from '../../src'
 import type { PageLayoutTab } from '../../src'
-import { ChevronDownIcon } from '@kong/icons'
-import { BookIcon } from '@kong/icons'
+import { MoreIcon } from '@kong/icons'
 
 const breadcrumbs = [{
   key: 'api-gateway',

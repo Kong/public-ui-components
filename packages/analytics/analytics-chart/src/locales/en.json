@@ -188,7 +188,13 @@
     "mcp_method": "MCP Method",
     "mcp_session_id": "MCP Session ID",
     "mcp_tool_name": "MCP Tool Name",
-    "mcp_response_body_size_sum": "MCP Response Size (sum)"
+    "mcp_response_body_size_sum": "MCP Response Size (sum)",
+    "control_plane_count": "Control plane count",
+    "service_count": "Gateway service count",
+    "route_count": "Route count",
+    "consumer_count": "Consumer count",
+    "plugin_count": "Plugin count",
+    "node_count": "Data plane node count"
   },
   "metricAxisTitles": {
     "error_rate": "Error rate in {unit}",
@@ -254,7 +260,13 @@
     "llm_cache_fetch_latency_average": "Fetch latency (avg)",
     "llm_latency_average": "Llm latency (avg)",
     "api": "API",
-    "mcp_response_body_size_sum": "MCP Response Size (sum)"
+    "mcp_response_body_size_sum": "MCP Response Size (sum)",
+    "control_plane_count": "Control plane count",
+    "service_count": "Gateway service count",
+    "route_count": "Route count",
+    "consumer_count": "Consumer count",
+    "plugin_count": "Plugin count",
+    "node_count": "Data plane node count"
   },
   "granularityAxisTitles": {
     "tenSecondly": "@timestamp per 10 seconds",

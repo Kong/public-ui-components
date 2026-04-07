@@ -528,7 +528,7 @@ onBeforeMount(async () => {
   }
 
   .invalid-key-set-message {
-    color: $kui-color-text-danger;
+    color: var(--kui-color-text-danger, $kui-color-text-danger);
     font-size: 11px;
     font-weight: 500;
     margin-top: 3px !important;
@@ -542,12 +542,12 @@ onBeforeMount(async () => {
 
   .select-item-container {
     .select-item-label {
-      font-weight: $kui-font-weight-semibold;
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
 
     .select-item-description {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-20;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
     }
   }
 }

@@ -284,15 +284,15 @@ defineExpose({ download: handleDownload, edit: handleEdit })
 <style lang="scss" scoped>
 .document-content {
   min-height: 450px; // fixes flaky jump when markdown content loads and renders, changing height of the container
-  padding: $kui-space-50 $kui-space-70 $kui-space-50;
+  padding: var(--kui-space-50, $kui-space-50) var(--kui-space-70, $kui-space-70) var(--kui-space-50, $kui-space-50);
 }
 
 .markdown-content-loading {
-  padding: $kui-space-70;
+  padding: var(--kui-space-70, $kui-space-70);
 }
 
 .markdown-content-loading :deep(.skeleton-card-column) {
-  margin-bottom: $kui-space-0;
+  margin-bottom: var(--kui-space-0, $kui-space-0);
 }
 
 .markdown-content-loading :deep(.skeleton-card) {
@@ -307,17 +307,17 @@ defineExpose({ download: handleDownload, edit: handleEdit })
 }
 
 .documentation-display {
-  border: $kui-border-width-10 solid $kui-color-border;
-  border-radius: $kui-border-radius-20;
+  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
 
   .document-meta {
     align-items: center;
-    border-bottom: $kui-border-width-10 solid $kui-color-border;
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding: $kui-space-40 $kui-space-70;
-    row-gap: $kui-space-40;
+    padding: var(--kui-space-40, $kui-space-40) var(--kui-space-70, $kui-space-70);
+    row-gap: var(--kui-space-40, $kui-space-40);
 
     .document-meta-start {
       display: flex;
@@ -329,22 +329,22 @@ defineExpose({ download: handleDownload, edit: handleEdit })
   }
 
   .meta-label {
-    color: $kui-color-text-neutral;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
   }
 
   .document-title {
     color: #0b172d;
-    font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-bold;
-    margin-right: $kui-space-50;
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    margin-right: var(--kui-space-50, $kui-space-50);
 
     &-extension {
-      color: $kui-color-text-neutral;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     }
   }
 
   .document-status {
-    margin-right: $kui-space-50;
+    margin-right: var(--kui-space-50, $kui-space-50);
   }
 
   .document-display-actions {
@@ -353,7 +353,7 @@ defineExpose({ download: handleDownload, edit: handleEdit })
   }
 
   .document-publish-toggle {
-    margin-right: $kui-space-50;
+    margin-right: var(--kui-space-50, $kui-space-50);
   }
 }
 </style>

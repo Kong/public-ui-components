@@ -1,25 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import useContextLinks from './useContextLinks'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
+import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
 const ONE_HOUR_MS = 3600000
 const ONE_DAY_MS = 86400000
 
 vi.mock('@kong-ui-public/analytics-utilities', () => ({
-  getFieldDataSources: vi.fn((field: string) => {
-    if (field === 'gateway_service') {
-      return ['api_usage']
-    }
-    if (field === 'ai_provider') {
-      return ['llm_usage']
-    }
-    if (field === 'shared_field') {
-      return ['api_usage', 'llm_usage']
-    }
-    return []
-  }),
   msToGranularity: vi.fn((ms: number) => {
     if (ms === ONE_HOUR_MS) return 'hourly'
     if (ms === ONE_DAY_MS) return 'daily'
@@ -30,8 +19,34 @@ vi.mock('@kong-ui-public/analytics-utilities', () => ({
 const analyticsConfig = { analytics: true, percentiles: true }
 
 vi.mock('@kong-ui-public/analytics-config-store', () => ({
+  useDatasourceConfigStore: vi.fn(),
   useAnalyticsConfigStore: vi.fn(() => analyticsConfig),
 }))
+
+const mockStripUnknownFilters = ({
+  datasource,
+  filters,
+}: {
+  datasource: string
+  filters: Array<{ field: string }>
+}) => {
+  if (datasource === 'platform' || datasource.startsWith('goap')) {
+    return filters
+  }
+
+  return filters.filter(({ field }) => {
+    if (field === 'gateway_service') {
+      return datasource === 'api_usage'
+    }
+    if (field === 'ai_provider') {
+      return datasource === 'llm_usage'
+    }
+    if (field === 'shared_field') {
+      return datasource === 'api_usage' || datasource === 'llm_usage'
+    }
+    return false
+  })
+}
 
 const makeFilter = (field: string) => ({ field, operator: 'in', value: ['x'] })
 
@@ -60,6 +75,7 @@ function mountComposable({
   requestsBase = '#requests',
   chartType = 'line',
   datasource = 'api_usage',
+  metrics = ['request_count'],
   explicitGranularity,
   queryFilters = [],
   contextFilters = [],
@@ -72,6 +88,7 @@ function mountComposable({
   requestsBase?: string
   chartType?: string
   datasource?: string
+  metrics?: string[]
   explicitGranularity?: string | undefined
   queryFilters?: any[]
   contextFilters?: any[]
@@ -96,7 +113,7 @@ function mountComposable({
     chart: { type: chartType },
     query: {
       datasource,
-      metrics: ['request_count'],
+      metrics,
       dimensions: ['gateway_service'],
       filters: queryFilters,
       granularity: explicitGranularity,
@@ -132,6 +149,40 @@ describe('useContextLinks', () => {
     vi.clearAllMocks()
     analyticsConfig.analytics = true
     analyticsConfig.percentiles = true
+    vi.mocked(useDatasourceConfigStore).mockReturnValue({
+      stripUnknownFilters: ref(mockStripUnknownFilters),
+      loading: ref(false),
+      isReady: vi.fn().mockResolvedValue(undefined),
+    } as any)
+  })
+
+  it('waits for datasource config readiness before generating links', async () => {
+    let resolveReady!: () => void
+    const loading = ref(true)
+    const ready = new Promise<void>((resolve) => {
+      resolveReady = () => {
+        loading.value = false
+        resolve()
+      }
+    })
+
+    vi.mocked(useDatasourceConfigStore).mockReturnValueOnce({
+      stripUnknownFilters: ref(mockStripUnknownFilters),
+      loading,
+      isReady: vi.fn(() => ready),
+    } as any)
+
+    const { wrapper } = mountComposable({})
+    await flushPromises()
+
+    expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
+    expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+
+    resolveReady()
+    await flushPromises()
+
+    expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')
+    expect(wrapper.vm.requestsLinkKebabMenu).toContain('#requests?')
   })
 
   it('builds explore link with datasource-scoped filters and explicit granularity', async () => {
@@ -159,6 +210,27 @@ describe('useContextLinks', () => {
     expect(parsed.granularity).toBe('minute')
     expect(params.get('d')).toBe('api_usage')
     expect(params.get('c')).toBe('line')
+  })
+
+  it('forwards metrics to filter stripping when generating dashboard links', async () => {
+    const stripUnknownFiltersSpy = vi.fn(mockStripUnknownFilters)
+    vi.mocked(useDatasourceConfigStore).mockReturnValueOnce({
+      stripUnknownFilters: ref(stripUnknownFiltersSpy),
+      loading: ref(false),
+      isReady: vi.fn().mockResolvedValue(undefined),
+    } as any)
+
+    const { wrapper } = mountComposable({
+      metrics: ['request_count', 'request_size'],
+    })
+
+    await flushPromises()
+    void wrapper.vm.exploreLinkKebabMenu
+
+    expect(stripUnknownFiltersSpy).toHaveBeenCalledWith(expect.objectContaining({
+      datasource: 'api_usage',
+      metrics: ['request_count', 'request_size'],
+    }))
   })
 
   it('falls back to chartData granularity via msToGranularity when query.granularity not set', async () => {
@@ -193,6 +265,32 @@ describe('useContextLinks', () => {
     expect(params.get('d')).toBe('api_usage')
   })
 
+  it('preserves platform for explore link', async () => {
+    const { wrapper } = mountComposable({
+      datasource: 'platform',
+      queryFilters: [makeFilter('gateway_service')],
+    })
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateExploreLink).toBe(true)
+
+    const params = new URLSearchParams((wrapper.vm.exploreLinkKebabMenu as string).split('?')[1])
+    expect(params.get('d')).toBe('platform')
+  })
+
+  it('does not generate requests drilldown for platform tiles', async () => {
+    const { wrapper } = mountComposable({
+      datasource: 'platform',
+      queryFilters: [makeFilter('shared_field')],
+    })
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateRequestsLink).toBe(false)
+    expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+    expect(wrapper.vm.requestsLinkZoomActions).toBeUndefined()
+    expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')
+  })
+
   it('falls back to api_usage when query datasource is not provided', async () => {
     const { wrapper } = mountComposable({ datasource: undefined })
     await flushPromises()
@@ -211,7 +309,7 @@ describe('useContextLinks', () => {
   })
 
   it('builds explore link for expected datasources', async () => {
-    const datasources = ['api_usage', 'basic', 'llm_usage', 'agentic_usage', undefined]
+    const datasources = ['api_usage', 'basic', 'llm_usage', 'agentic_usage', 'platform', undefined]
 
     for (const ds of datasources) {
       const { wrapper } = mountComposable({
@@ -302,6 +400,20 @@ describe('useContextLinks', () => {
     expect(parsed.timeframe.timePeriodsKey).toBe('24h')
     expect(parsed.timeframe.start).toBeUndefined()
     expect(parsed.timeframe.end).toBeUndefined()
+  })
+
+  it('keeps unknown datasource filters when building requests link', async () => {
+    const { wrapper } = mountComposable({
+      datasource: 'goap_event_gateway',
+      contextFilters: [{ field: 'goap_only_field', operator: 'in', value: ['x'] }],
+    })
+    await flushPromises()
+
+    const parsed = JSON.parse(decodeURIComponent((wrapper.vm.requestsLinkKebabMenu as string).split('=')[1]))
+
+    expect(parsed.filter).toEqual([
+      { field: 'goap_only_field', operator: 'in', value: ['x'] },
+    ])
   })
 
   it('buildRequestsQueryZoomActions uses provided absolute range start/end directly', async () => {

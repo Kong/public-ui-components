@@ -3,7 +3,7 @@ import { granularityValues } from './types'
 import { getTimezoneOffset } from 'date-fns-tz'
 
 // Units are milliseconds, which are what Druid expects.
-export const Granularities = {
+export const Granularities: Record<string, number> = {
   secondly: 1000,
   tenSecondly: 10 * 1000,
   thirtySecondly: 30 * 1000,
@@ -54,7 +54,7 @@ export function msToGranularity(ms?: number): GranularityValues | null {
 function toNearestTimeGrain(
   op: (x: number) => number,
   date: Date,
-  granularity: GranularityValues,
+  granularity: string,
   tz?: string,
 ): Date {
   // Days and weeks need special handling because naively trying to `ceil` or `floor` them results in a date ending
@@ -76,10 +76,10 @@ function toNearestTimeGrain(
   return new Date(op((date.getTime() - tzOffsetMs) / granularityMs) * granularityMs + tzOffsetMs)
 }
 
-export function floorToNearestTimeGrain(date: Date, granularity: GranularityValues, tz?: string): Date {
+export function floorToNearestTimeGrain(date: Date, granularity: string, tz?: string): Date {
   return toNearestTimeGrain(Math.floor, date, granularity, tz)
 }
 
-export function ceilToNearestTimeGrain(date: Date, granularity: GranularityValues, tz?: string): Date {
+export function ceilToNearestTimeGrain(date: Date, granularity: string, tz?: string): Date {
   return toNearestTimeGrain(Math.ceil, date, granularity, tz)
 }

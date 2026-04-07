@@ -23,7 +23,7 @@
           {{ formattedValue }}
         </span>
         <span
-          v-if="displayMetricUnit"
+          v-if="displayMetricUnit && metricUnit"
           class="single-value-unit"
         >
           &nbsp;{{ metricUnit }}
@@ -121,13 +121,16 @@ const metricName = computed((): AllAggregations | undefined => props.data.meta?.
 const metricUnit = computed((): string | undefined => {
   const unit = metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined
   if (unit) {
-    return i18n.t(`chartUnits.${unit as 'count/minute' | 'ms'}`, { plural: '' })
+    const localeKey = `chartUnits.${unit}` as 'chartUnits.%' | 'chartUnits.count/minute' | 'chartUnits.ms'
+    return i18n.te(localeKey) ? i18n.t(localeKey, { plural: '' }) : ''
   }
 
   return undefined
 })
 // by default, display metric units for requests per minute, latency
-const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute' || !!metricName.value?.includes('_latency_'))
+const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute'
+  || !!metricName.value?.includes('_latency_')
+  || metricName.value === 'error_rate')
 
 const previousValue = computed<number | null>(() => {
   if (!props.showTrend || records.value.length < 2 || !metricName.value) {
@@ -286,17 +289,17 @@ onMounted(() => {
     }
 
     .single-value {
-      color: $kui-color-text;
-      font-size: $kui-font-size-70;
-      font-weight: $kui-font-weight-bold;
-      line-height: $kui-line-height-70;
+      color: var(--kui-color-text, $kui-color-text);
+      font-size: var(--kui-font-size-70, $kui-font-size-70);
+      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+      line-height: var(--kui-line-height-70, $kui-line-height-70);
     }
 
     .single-value-unit {
-      color: $kui-color-text;
-      font-size: $kui-font-size-60;
-      font-weight: $kui-font-weight-bold;
-      line-height: $kui-line-height-60;
+      color: var(--kui-color-text, $kui-color-text);
+      font-size: var(--kui-font-size-60, $kui-font-size-60);
+      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+      line-height: var(--kui-line-height-60, $kui-line-height-60);
     }
 
     .single-value-trend {
@@ -342,13 +345,13 @@ onMounted(() => {
 
     @container (min-width: 300px) {
       .single-value {
-        font-size: $kui-font-size-100;
-        line-height: $kui-line-height-100;
+        font-size: var(--kui-font-size-100, $kui-font-size-100);
+        line-height: var(--kui-line-height-100, $kui-line-height-100);
       }
 
       .single-value-unit {
-        font-size: $kui-font-size-90;
-        line-height: $kui-line-height-90;
+        font-size: var(--kui-font-size-90, $kui-font-size-90);
+        line-height: var(--kui-line-height-90, $kui-line-height-90);
       }
     }
 
@@ -359,8 +362,8 @@ onMounted(() => {
       }
 
       .single-value-unit {
-        font-size: $kui-font-size-100;
-        line-height: $kui-line-height-100;
+        font-size: var(--kui-font-size-100, $kui-font-size-100);
+        line-height: var(--kui-line-height-100, $kui-line-height-100);
       }
     }
 

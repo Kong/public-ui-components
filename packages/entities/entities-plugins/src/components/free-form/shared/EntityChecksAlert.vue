@@ -21,9 +21,9 @@ import type { EntityCheck } from '../../../types/plugins/form-schema'
 import composables from '../../../composables'
 import { defaultLabelFormatter } from './composables'
 
-const { entityChecks, omittedFields } = defineProps<{
+const { entityChecks, visibleFields } = defineProps<{
   entityChecks?: EntityCheck[]
-  omittedFields?: string[]
+  visibleFields?: string[]
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -45,10 +45,13 @@ const checks = computed(() => {
     for (const { key, i18nKey } of checkTypes) {
       if (key in check) {
         const fields = check[key as keyof typeof check] as string[]
-        if (Array.isArray(fields) && fields.length > 0 && fieldsNotOmitted(fields)) {
-          checks.push(t(i18nKey, {
-            parameters: formatter(fields),
-          }))
+        if (Array.isArray(fields) && fields.length > 0) {
+          const visibleCheckFields = getVisibleCheckFields(fields)
+          if (visibleCheckFields.length > 0) {
+            checks.push(t(i18nKey, {
+              parameters: formatter(visibleCheckFields),
+            }))
+          }
         }
         break
       }
@@ -62,14 +65,11 @@ function formatter(fields: string[]): string {
   return fields.map(defaultLabelFormatter).join(', ')
 }
 
-function fieldsNotOmitted(fields: string[]): boolean {
-  if (Array.isArray(omittedFields) && omittedFields.length > 0) {
-    const filteredFields = fields.filter(
-      (field) => !omittedFields.includes(field),
-    )
-    return filteredFields.length > 0
+function getVisibleCheckFields(fields: string[]): string[] {
+  if (!Array.isArray(visibleFields)) {
+    return fields
   }
-  return true
+  return fields.filter(field => visibleFields.includes(field.split('.')[0]))
 }
 </script>
 
@@ -77,6 +77,6 @@ function fieldsNotOmitted(fields: string[]): boolean {
 .ff-entity-checks-list {
   list-style: disc;
   margin: 0;
-  padding-left: $kui-space-70;
+  padding-left: var(--kui-space-70, $kui-space-70);
 }
 </style>

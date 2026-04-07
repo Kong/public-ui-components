@@ -20,6 +20,9 @@ A Kong UI page layout component that provides a structured page header with brea
 
 - Breadcrumb navigation powered by Kongponents `KBreadcrumbs`
 - Page title rendered as an `<h1>` with automatic ellipsis truncation for long text
+- Optional back navigation button next to the title via the `backTo` prop
+- Actions slot for placing buttons or controls in the page header, aligned to the right
+- Title-after slot for placing inline content (e.g. badges, status indicators) next to the page title
 - Responsive tabbed navigation bar with automatic overflow handling
 - Tabs that exceed the available width are moved into a "More" dropdown menu
 - Support for both Vue Router route objects and string URLs in tabs
@@ -67,6 +70,19 @@ An array of breadcrumb items passed to the Kongponents `KBreadcrumbs` component.
 
 An array of `PageLayoutTab` objects that define the tabbed navigation displayed below the page title.
 
+#### `backTo`
+
+- type: `String | RouteLocationRaw`
+- required: `false`
+- default: `undefined`
+
+A navigation target for a back button rendered to the left of the page title. When provided, an arrow icon button is displayed that navigates to the specified location when clicked.
+
+The prop accepts two types of values:
+
+1. **String URL** (relative or absolute): Rendered as an `<a>` element. If an `app:navigateTo` function is provided via Vue's dependency injection, it will be called instead of the default `window.location.href` assignment.
+2. **Vue Router route object** (`RouteLocationRaw`): Rendered as a `<router-link>` and navigates using `router.push()`.
+
 When tabs are provided:
 
 - The internal `PageLayoutTabs` component renders a horizontal tab bar
@@ -83,6 +99,14 @@ When no tabs are provided:
 #### `default`
 
 The main content area of the page. This slot is **only rendered when no tabs are provided**. When tabs are present, a `<router-view>` is used instead to render the active tab's route component.
+
+#### `actions`
+
+An optional slot rendered on the right side of the page header, aligned to the bottom of the header row. Use this slot to place action buttons, dropdowns, or other controls that relate to the current page. The slot is rendered regardless of whether tabs are present.
+
+#### `title-after`
+
+An optional slot rendered immediately after the page title `<h1>`, inline within the title row. Use this slot to place badges, status indicators, or other inline content that should appear next to the title.
 
 ### Usage example
 
@@ -147,6 +171,65 @@ const breadcrumbs = [
   { key: 'settings', text: 'Settings' },
 ]
 </script>
+```
+
+#### With back button and actions
+
+```html
+<template>
+  <PageLayout
+    :back-to="{ name: 'control-planes' }"
+    :breadcrumbs="breadcrumbs"
+    title="My Control Plane"
+  >
+    <template #actions>
+      <KButton appearance="primary">
+        Create
+      </KButton>
+    </template>
+
+    <div>Page content here</div>
+  </PageLayout>
+</template>
+
+<script setup lang="ts">
+import { PageLayout } from '@kong-ui-public/page-layout'
+
+const breadcrumbs = [
+  { key: 'api-gateway', text: 'API Gateway' },
+  { key: 'control-planes', text: 'Control Planes' },
+]
+</script>
+```
+
+#### With title-after slot
+
+```html
+<template>
+  <PageLayout
+    :breadcrumbs="breadcrumbs"
+    title="My Control Plane"
+  >
+    <template #title-after>
+      <KBadge appearance="success">Active</KBadge>
+    </template>
+
+    <div>Page content here</div>
+  </PageLayout>
+</template>
+```
+
+#### With back button (string URL)
+
+```html
+<template>
+  <PageLayout
+    back-to="/control-planes"
+    title="My Control Plane"
+  >
+    <div>Page content here</div>
+  </PageLayout>
+</template>
 ```
 
 #### Title only (no breadcrumbs, no tabs)

@@ -86,15 +86,15 @@ onMounted(async () => {
 <style lang="scss">
 .route-form-open-in-playground {
   align-items: center;
-  color: $kui-color-text-primary-strong;
+  color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
   cursor: pointer;
   display: flex;
   flex-direction: row;
-  font-size: $kui-font-size-30;
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
   font-weight: bold;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
   justify-content: flex-start;
-  margin-top: $kui-space-50;
+  margin-top: var(--kui-space-50, $kui-space-50);
 
   &.disabled {
     cursor: not-allowed;

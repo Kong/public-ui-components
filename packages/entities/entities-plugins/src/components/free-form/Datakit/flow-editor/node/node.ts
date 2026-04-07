@@ -1,22 +1,30 @@
 import type {
+  ConfigNodeGroup,
+  ConfigNodeGroupMeta,
+  ConfigNodeMeta,
+  ConfigNodePanelGroup,
+  ConfigNodeType,
   FieldId,
+  GroupInstance,
   ImplicitNodeName,
   ImplicitNodeType,
+  IOMeta,
   NodeInstance,
   NodeId,
   NodeMeta,
   NodeName,
   NodeType,
-  ConfigNodeType,
-  IOMeta,
   NextMeta,
-  GroupInstance,
 } from '../../types'
 
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
 import { CONFIG_NODE_TYPES } from '../../constants'
-import { NODE_VISUAL } from './node-visual'
+import {
+  CONFIG_NODE_GROUP_VISUAL_CATALOG,
+  getConfigNodeGroupColors,
+  IMPLICIT_NODE_VISUALS,
+} from './node-visual'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -28,15 +36,14 @@ function getNodeTypeSummary(type: ConfigNodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.summary`)
 }
 
-export function getNodeTypeName(type: NodeType): string {
-  return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.name`)
+function getNodeGroupTitle(group: ConfigNodeGroup): string {
+  return t(`plugins.free-form.datakit.flow_editor.node_panel.groups.${group}`)
 }
 
-export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
+type ConfigNodeCatalogNode = Pick<ConfigNodeMeta, 'io'>
+
+const CONFIG_NODE_CATALOG: Record<ConfigNodeType, ConfigNodeCatalogNode> = {
   call: {
-    type: 'call',
-    summary: getNodeTypeSummary('call'),
-    description: getNodeTypeDescription('call'),
     io: {
       input: {
         fields: [
@@ -53,12 +60,8 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.call,
   },
   jq: {
-    type: 'jq',
-    summary: getNodeTypeSummary('jq'),
-    description: getNodeTypeDescription('jq'),
     io: {
       input: {
         fields: [],
@@ -68,12 +71,8 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         fields: [],
       },
     },
-    ...NODE_VISUAL.jq,
   },
   exit: {
-    type: 'exit',
-    summary: getNodeTypeSummary('exit'),
-    description: getNodeTypeDescription('exit'),
     io: {
       input: {
         fields: [
@@ -82,12 +81,8 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.exit,
   },
   property: {
-    type: 'property',
-    summary: getNodeTypeSummary('property'),
-    description: getNodeTypeDescription('property'),
     io: {
       input: {
         fields: [],
@@ -97,24 +92,16 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         fields: [],
       },
     },
-    ...NODE_VISUAL.property,
   },
   static: {
-    type: 'static',
-    summary: getNodeTypeSummary('static'),
-    description: getNodeTypeDescription('static'),
     io: {
       output: {
         fields: [],
         configurable: true,
       },
     },
-    ...NODE_VISUAL.static,
   },
   branch: {
-    type: 'branch',
-    summary: getNodeTypeSummary('branch'),
-    description: getNodeTypeDescription('branch'),
     io: {
       input: {
         fields: [],
@@ -126,12 +113,8 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as NextMeta,
     },
-    ...NODE_VISUAL.branch,
   },
   cache: {
-    type: 'cache',
-    summary: getNodeTypeSummary('cache'),
-    description: getNodeTypeDescription('cache'),
     io: {
       input: {
         fields: [
@@ -149,12 +132,8 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.cache,
   },
   xml_to_json: {
-    type: 'xml_to_json',
-    summary: getNodeTypeSummary('xml_to_json'),
-    description: getNodeTypeDescription('xml_to_json'),
     io: {
       input: {
         fields: [],
@@ -163,12 +142,8 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         fields: [],
       },
     },
-    ...NODE_VISUAL.xml_to_json,
   },
   json_to_xml: {
-    type: 'json_to_xml',
-    summary: getNodeTypeSummary('json_to_xml'),
-    description: getNodeTypeDescription('json_to_xml'),
     io: {
       input: {
         fields: [],
@@ -178,12 +153,8 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         fields: [],
       },
     },
-    ...NODE_VISUAL.json_to_xml,
   },
   jwt_decode: {
-    type: 'jwt_decode',
-    summary: getNodeTypeSummary('jwt_decode'),
-    description: getNodeTypeDescription('jwt_decode'),
     io: {
       input: {
         fields: [],
@@ -196,12 +167,8 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.jwt_decode,
   },
   jwt_sign: {
-    type: 'jwt_sign',
-    summary: getNodeTypeSummary('jwt_sign'),
-    description: getNodeTypeDescription('jwt_sign'),
     io: {
       input: {
         fields: [
@@ -217,12 +184,8 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.jwt_sign,
   },
   jwt_verify: {
-    type: 'jwt_verify',
-    summary: getNodeTypeSummary('jwt_verify'),
-    description: getNodeTypeDescription('jwt_verify'),
     io: {
       input: {
         fields: [
@@ -237,8 +200,61 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.jwt_verify,
   },
+}
+
+function createConfigNodeGroupMeta(group: typeof CONFIG_NODE_GROUP_VISUAL_CATALOG[number]): ConfigNodeGroupMeta {
+  return {
+    id: group.id,
+    title: getNodeGroupTitle(group.id),
+    colors: getConfigNodeGroupColors(group.id),
+    nodeTypes: group.nodes.map(({ type }) => type),
+  }
+}
+
+function createConfigNodeMeta(
+  group: typeof CONFIG_NODE_GROUP_VISUAL_CATALOG[number],
+  node: typeof CONFIG_NODE_GROUP_VISUAL_CATALOG[number]['nodes'][number],
+): ConfigNodeMeta {
+  return {
+    ...CONFIG_NODE_CATALOG[node.type],
+    type: node.type,
+    icon: node.icon,
+    group: group.id,
+    summary: getNodeTypeSummary(node.type),
+    description: getNodeTypeDescription(node.type),
+  }
+}
+
+export const CONFIG_NODE_GROUP_META_MAP = CONFIG_NODE_GROUP_VISUAL_CATALOG.reduce<Record<ConfigNodeGroup, ConfigNodeGroupMeta>>(
+  (groups, group) => {
+    groups[group.id] = createConfigNodeGroupMeta(group)
+
+    return groups
+  },
+  {} as Record<ConfigNodeGroup, ConfigNodeGroupMeta>,
+)
+
+export const CONFIG_NODE_META_MAP = CONFIG_NODE_GROUP_VISUAL_CATALOG.reduce<Record<ConfigNodeType, ConfigNodeMeta>>(
+  (nodes, group) => {
+    for (const node of group.nodes) {
+      nodes[node.type] = createConfigNodeMeta(group, node)
+    }
+
+    return nodes
+  },
+  {} as Record<ConfigNodeType, ConfigNodeMeta>,
+)
+
+export const CONFIG_NODE_PANEL_GROUPS: readonly ConfigNodePanelGroup[] = CONFIG_NODE_GROUP_VISUAL_CATALOG.map(
+  (group) => ({
+    ...CONFIG_NODE_GROUP_META_MAP[group.id],
+    nodes: group.nodes.map(({ type }) => CONFIG_NODE_META_MAP[type]),
+  }),
+)
+
+export function getConfigNodeGroupMeta(group: ConfigNodeGroup): ConfigNodeGroupMeta {
+  return CONFIG_NODE_GROUP_META_MAP[group]
 }
 
 export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
@@ -254,7 +270,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.request,
+    ...IMPLICIT_NODE_VISUALS.request,
   },
   service_request: {
     type: 'service_request',
@@ -268,7 +284,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.service_request,
+    ...IMPLICIT_NODE_VISUALS.service_request,
   },
   service_response: {
     type: 'service_response',
@@ -281,7 +297,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.service_response,
+    ...IMPLICIT_NODE_VISUALS.service_response,
   },
   response: {
     type: 'response',
@@ -294,7 +310,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
-    ...NODE_VISUAL.response,
+    ...IMPLICIT_NODE_VISUALS.response,
   },
   vault: {
     type: 'vault',
@@ -304,7 +320,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         configurable: true,
       },
     },
-    ...NODE_VISUAL.vault,
+    ...IMPLICIT_NODE_VISUALS.vault,
     hidden: true,
   },
 }

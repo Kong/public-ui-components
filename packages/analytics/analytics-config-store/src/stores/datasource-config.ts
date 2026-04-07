@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { computed, inject, ref, watch } from 'vue'
-import { INJECT_QUERY_PROVIDER } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsBridge, DatasourceConfig, Field } from '@kong-ui-public/analytics-utilities'
+import type { AllFilters, AnalyticsBridge, DatasourceConfig, Field } from '@kong-ui-public/analytics-utilities'
+
+const INJECT_QUERY_PROVIDER = 'analytics-query-provider'
 
 export type MappedDatasourceConfig = DatasourceConfig & {
   fieldsMap: Record<string, Field>
@@ -76,12 +77,89 @@ export const useDatasourceConfigStore = defineStore('datasource-config', () => {
     }
   })
 
+  const isFilterValidForDatasource = computed(() => {
+    return ({
+      datasource,
+      filter,
+    }: {
+      datasource: string
+      filter: AllFilters
+    }): boolean => {
+      // If datasource config is not ready yet assume filter is valid.
+      // Once config is loaded, it will be re-evaluated.
+      if (loading.value) {
+        return true
+      }
+      const datasourceConfigEntry = datasourceConfigMap.value[datasource]
+
+      // If we don't find a datasource assume the filter is valid.
+      // We may be dealing with a goap datasource that we don't have config for.
+      if (!datasourceConfigEntry) {
+        return true
+      }
+
+      const field = datasourceConfigEntry.fieldsMap[filter.field]
+
+      if (!field?.filter) {
+        return false
+      }
+
+      return field.filter.operators.flatMap(operator => operator.ops).includes(filter.operator)
+    }
+  })
+
+  const stripUnknownFilters = computed(() => {
+    return ({
+      datasource,
+      filters,
+      metrics = undefined,
+    }: {
+      datasource: string
+      filters: AllFilters[]
+      metrics?: readonly string[]
+    }): AllFilters[] => {
+      const filtered = filters.filter(filter => isFilterValidForDatasource.value({ datasource, filter }))
+
+      if (!metrics?.length) {
+        return filtered
+      }
+
+      // If metrics are provided, further filter the dimensions based on which dimensions are supported by the metric
+      const datasourceConfigEntry = datasourceConfigMap.value[datasource]
+      if (!datasourceConfigEntry) {
+        return filtered
+      }
+
+      const metricFields = metrics
+        .map(metric => datasourceConfigEntry.fieldsMap[metric])
+        .filter((field) => field !== undefined)
+
+      const fieldsWithSupportedDimensions = metricFields.filter((field) => {
+        return field.supportedDimensions !== undefined
+      })
+
+      const supportedDimensionSets: Array<Set<string>> = fieldsWithSupportedDimensions.map(field => new Set(field.supportedDimensions))
+
+      if (!supportedDimensionSets.length) {
+        return filtered
+      }
+
+      const supportedDimensions = supportedDimensionSets.reduce((intersection, dimensions) => {
+        return dimensions.intersection(intersection)
+      })
+
+      return filtered.filter(filter => supportedDimensions.has(filter.field))
+    }
+  })
+
   return {
     datasourceConfig,
     datasourceConfigError,
     datasourceConfigMap,
     getFieldDataSources,
+    isFilterValidForDatasource,
     loading,
     isReady,
+    stripUnknownFilters,
   }
 })
