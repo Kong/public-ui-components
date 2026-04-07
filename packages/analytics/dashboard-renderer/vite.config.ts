@@ -5,9 +5,36 @@ import { defineConfig, mergeConfig } from 'vite'
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
 const packageName = 'dashboard-renderer'
 const sanitizedPackageName = sanitizePackageName(packageName)
+const peerStyleImportsToStub = new Set([
+  '@kong-ui-public/analytics-chart/dist/style.css',
+  '@kong-ui-public/analytics-metric-provider/dist/style.css',
+  '@kong-ui-public/analytics-geo-map/dist/style.css',
+])
 
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
+  ...(process.env.VITEST
+    ? {
+      plugins: [{
+        name: 'vitest-peer-style-stub',
+        enforce: 'pre',
+        resolveId(id) {
+          if (peerStyleImportsToStub.has(id)) {
+            return '\0vitest-peer-style-stub.css'
+          }
+
+          return null
+        },
+        load(id) {
+          if (id === '\0vitest-peer-style-stub.css') {
+            return ''
+          }
+
+          return null
+        },
+      }],
+    }
+    : {}),
   build: {
     lib: {
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
