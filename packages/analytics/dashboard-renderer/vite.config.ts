@@ -10,10 +10,14 @@ const peerStyleImportsToStub = new Set([
   '@kong-ui-public/analytics-metric-provider/dist/style.css',
   '@kong-ui-public/analytics-geo-map/dist/style.css',
 ])
+const shouldStubPeerStylesForTests =
+  !!process.env.VITEST ||
+  process.env.BABEL_ENV === 'cypress' ||
+  process.env.npm_lifecycle_event === 'test:component'
 
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
-  ...(process.env.VITEST
+  ...(shouldStubPeerStylesForTests
     ? {
       plugins: [{
         name: 'vitest-peer-style-stub',

@@ -504,8 +504,6 @@ describe('<TargetsList />', () => {
         },
       })
 
-      cy.wait('@getTargetsMultiPage')
-
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-rowid="1"]`).should('exist')
       cy.get(`${l} tbody tr[data-rowid="2"]`).should('exist')
@@ -803,8 +801,6 @@ describe('<TargetsList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getTargetsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-rowid="1"]`).should('exist')

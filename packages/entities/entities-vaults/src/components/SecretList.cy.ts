@@ -401,8 +401,6 @@ describe('<SecretList />', () => {
         },
       })
 
-      cy.wait('@getSecretsMultiPage')
-
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="secret-1"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="secret-2"]`).should('exist')

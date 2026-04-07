@@ -600,8 +600,6 @@ describe('<RouteList />', () => {
         },
       })
 
-      cy.wait('@getRoutesMultiPage')
-
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="route-1"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="route-2"]`).should('exist')
@@ -899,8 +897,6 @@ describe('<RouteList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getRoutesMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="route-1"]`).should('exist')

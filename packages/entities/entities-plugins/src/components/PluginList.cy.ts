@@ -661,8 +661,6 @@ describe('<PluginList />', () => {
         },
       })
 
-      cy.wait('@getRoutesMultiPage')
-
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="plugin-1"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="plugin-2"]`).should('exist')
@@ -989,8 +987,6 @@ describe('<PluginList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getRoutesMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="plugin-1"]`).should('exist')

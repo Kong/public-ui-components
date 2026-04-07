@@ -440,8 +440,6 @@ describe('<KeyList />', () => {
         },
       })
 
-      cy.wait('@getKeysMultiPage')
-
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="key-1"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="key-2"]`).should('exist')
@@ -739,8 +737,6 @@ describe('<KeyList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getKeysMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="key-1"]`).should('exist')

@@ -1,6 +1,8 @@
 import { defineConfig } from 'cypress'
 import sharedViteConfig from './vite.config.shared'
 
+const cypressPeerDistStylePattern = /^@kong-ui-public\/.+\/dist\/.+\.css$/
+
 export default defineConfig({
   component: {
     devServer: {
@@ -8,6 +10,27 @@ export default defineConfig({
       bundler: 'vite',
       viteConfig: {
         ...sharedViteConfig,
+        plugins: [
+          ...(sharedViteConfig.plugins ?? []),
+          {
+            name: 'cypress-peer-style-stub',
+            enforce: 'pre',
+            resolveId(id: string) {
+              if (cypressPeerDistStylePattern.test(id)) {
+                return '\0cypress-peer-style-stub.css'
+              }
+
+              return null
+            },
+            load(id: string) {
+              if (id === '\0cypress-peer-style-stub.css') {
+                return ''
+              }
+
+              return null
+            },
+          },
+        ],
         define: {
           'process.env.VSCODE_TEXTMATE_DEBUG': false,
         },

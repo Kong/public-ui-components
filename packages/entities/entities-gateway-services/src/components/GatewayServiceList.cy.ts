@@ -472,8 +472,6 @@ describe('<GatewayServiceList />', () => {
         },
       })
 
-      cy.wait('@getGatewayServicesMultiPage')
-
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="gateway-service-1"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="gateway-service-2"]`).should('exist')
@@ -795,8 +793,6 @@ describe('<GatewayServiceList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getGatewayServicesMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="gateway-service-1"]`).should('exist')

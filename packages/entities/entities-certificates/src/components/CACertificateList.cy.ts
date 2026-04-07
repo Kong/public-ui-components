@@ -411,8 +411,6 @@ describe('<CACertificateList />', () => {
         },
       })
 
-      cy.wait('@getCaCertificateMultiPage')
-
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="ca-certificate-1"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="ca-certificate-2"]`).should('exist')
@@ -710,8 +708,6 @@ describe('<CACertificateList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getCaCertificateMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="ca-certificate-1"]`).should('exist')

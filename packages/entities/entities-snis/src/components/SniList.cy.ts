@@ -396,8 +396,6 @@ describe('<SniList />', () => {
         },
       })
 
-      cy.wait('@getSnisMultiPage')
-
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="sni-1"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="sni-2"]`).should('exist')
@@ -691,8 +689,6 @@ describe('<SniList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getSnisMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="sni-1"]`).should('exist')

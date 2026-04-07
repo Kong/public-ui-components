@@ -358,8 +358,6 @@ describe('<ConsumerGroupList />', () => {
         },
       })
 
-      cy.wait('@getConsumerGroupsMultiPage')
-
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="2"]`).should('exist')
@@ -958,8 +956,6 @@ describe('<ConsumerGroupList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getConsumerGroupsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="1"]`).should('exist')

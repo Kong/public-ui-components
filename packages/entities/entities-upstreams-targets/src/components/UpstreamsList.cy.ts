@@ -439,8 +439,6 @@ describe('<UpstreamsList />', () => {
         },
       })
 
-      cy.wait('@getUpstreamsMultiPage')
-
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="upstream-1"]`).should('exist')
       cy.get(`${l} tbody tr[data-testid="upstream-2"]`).should('exist')
@@ -738,8 +736,6 @@ describe('<UpstreamsList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getUpstreamsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="upstream-1"]`).should('exist')
