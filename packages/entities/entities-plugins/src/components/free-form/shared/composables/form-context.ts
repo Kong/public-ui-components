@@ -1,10 +1,11 @@
-import { cloneDeep, get, isFunction, omit, set } from 'lodash-es'
+import { cloneDeep, get, isEqual, isFunction, omit, set } from 'lodash-es'
 import { createInjectionState } from '@vueuse/core'
 import { createRenderRuleRegistry } from './render-rules'
 import { FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
 import { provide, reactive, toRef, toValue, useSlots, watch } from 'vue'
 import { useSchemaHelpers } from './schema'
 import * as utils from '../utils'
+import { useKeyIdMap } from './key-id-map'
 
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import type { FormConfig, MatchMap, RenderRules } from '../types'
@@ -25,7 +26,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       propsRenderRules,
       propsConfig,
     } = options
-    const schemaHelpers = useSchemaHelpers(schema)
+    const {
+      getDefault: getDefaultFromSchema,
+      getEmptyOrDefault: getEmptyOrDefaultFromSchema,
+      ...schemaHelpers
+    } = useSchemaHelpers(schema)
+    const keyIdMap = useKeyIdMap(schemaHelpers.getSchema)
     const fieldRendererRegistry: MatchMap = new Map()
 
     const innerData = reactive<T>({} as T)
@@ -40,7 +46,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       createComputedRules: createComputedRenderRules,
       hiddenPaths,
       isFieldHidden,
-    } = createRenderRuleRegistry(() => onChange?.(getValue()))
+    } = createRenderRuleRegistry(() => onChange?.(getValue()), schemaHelpers.getSchemaMap)
 
     const rootRenderRules = useCurrentRenderRules({
       fieldPath: utils.rootSymbol,
@@ -52,7 +58,8 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       Object.keys(innerData).forEach((key) => {
         delete (innerData as any)[key]
       })
-      Object.assign(innerData, newData)
+      keyIdMap.clear()
+      Object.assign(innerData, keyIdMap.serialize(newData))
     }
 
     /**
@@ -62,7 +69,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       let dataValue: T
 
       if (!propsData || !hasValue(toValue(propsData))) {
-        dataValue = schemaHelpers.getDefault()
+        dataValue = getDefaultFromSchema()
       } else {
         dataValue = cloneDeep(toValue(propsData))
       }
@@ -100,12 +107,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
           const parentExists = parentPath.length === 0 || get(nextValue, parentPath) != null
 
           if (parentExists) {
-            set(nextValue, pathArray, schemaHelpers.getEmptyOrDefault(path))
+            set(nextValue, pathArray, getEmptyOrDefaultFromSchema(path))
           }
         }
       }
 
-      return nextValue
+      return keyIdMap.deserialize(nextValue)
     }
 
     // Emit changes when the inner data changes
@@ -113,10 +120,32 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       onChange?.(getValue())
     }, { deep: true })
 
+    let hasInitialized = false
     // Sync the inner data when the props data changes
     watch(() => propsData?.value, newData => {
+      // Avoid unnecessary data serialization
+      if (hasInitialized && isEqual(getValue(), toValue(newData))) {
+        return
+      }
+
       initInnerData(newData)
+      hasInitialized = true
     }, { deep: true, immediate: true })
+
+    function serializeIfNeeded(data: any) {
+      if (data != null && typeof data === 'object' && !Array.isArray(data)) {
+        return keyIdMap.serialize(data)
+      }
+      return data
+    }
+
+    function getDefault(path?: string) {
+      return serializeIfNeeded(getDefaultFromSchema(path))
+    }
+
+    function getEmptyOrDefault<T = unknown>(path?: string): T | null {
+      return serializeIfNeeded(getEmptyOrDefaultFromSchema<T>(path))
+    }
 
     return {
       /**
@@ -133,6 +162,9 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       ...schemaHelpers,
       getValue,
       isFieldHidden,
+      keyIdMap,
+      getDefault,
+      getEmptyOrDefault,
     }
   },
 )

@@ -38,7 +38,7 @@ import type { ConfigNode, DatakitConfig, DatakitPluginData, DatakitUIData } from
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { formData } = useFormShared<DatakitPluginData>()
+const { formData, setValue, getValue } = useFormShared<DatakitPluginData>()
 
 const { isEditing } = defineProps<{
   isEditing?: boolean
@@ -56,19 +56,23 @@ function onChange(configNodes: ConfigNode[], uiData: DatakitUIData, resources: D
     ...formData.__ui_data,
     ...uiData,
   }
-  formData.config = nextConfig
-  formData.__ui_data = nextUIData
+  const nextFormData = {
+    ...formData,
+    config: nextConfig,
+    __ui_data: nextUIData,
+  }
   if (partialId != null) {
-    formData.partials = [{ id: partialId }]
-  } else if (formData.partials) {
+    nextFormData.partials = [{ id: partialId }]
+  } else if (nextFormData.partials) {
     // clear partials by setting to null, because plugin entity form **merge** free-form data and VFG data
     // so undefined won't clear existing partials
-    formData.partials = null
+    nextFormData.partials = null
   }
+  setValue(nextFormData)
   emit('change', nextConfig, nextUIData)
 }
 
-const { modalOpen, setPendingFitView } = provideEditorStore(formData, {
+const { modalOpen, setPendingFitView } = provideEditorStore(getValue(), {
   onChange,
   isEditing,
 })

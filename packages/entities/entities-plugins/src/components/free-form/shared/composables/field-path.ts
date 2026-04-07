@@ -31,17 +31,18 @@ export const useFieldPath = (name: MaybeRefOrGetter<string>) => {
 }
 
 export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
-  const { getSchema, fieldRendererRegistry } = useFormShared()
+  const { getSchema, getSchemaMap, fieldRendererRegistry } = useFormShared()
   const { default: defaultSlot, ...slots } = useSlots()
   const inheritSlots = inject(FIELD_RENDERER_SLOTS)
 
   const mergedSlots = computed(() => {
     const inheritSlotsValue = toValue(inheritSlots)
+    const sm = getSchemaMap()
     // Set relative path to each slot key
     const childSlots: Record<string, Slot<any> | undefined> = Object.keys(slots)
       .filter(k => k !== FIELD_RENDERERS && k !== 'item')
       .reduce((res, key) => {
-        const newKey = generalizePath(utils.resolve(toValue(path), key))
+        const newKey = generalizePath(utils.resolve(toValue(path), key), sm)
         return { ...res, [newKey]: slots[key] }
       }, {})
     return inheritSlotsValue ? { ...inheritSlotsValue, ...childSlots } : childSlots
@@ -53,7 +54,7 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
 
   return computed(() => {
     if (defaultSlot) return
-    const matchedByPath = mergedSlots.value[generalizePath(toValue(path))]
+    const matchedByPath = mergedSlots.value[generalizePath(toValue(path), getSchemaMap())]
     if (matchedByPath) return matchedByPath
 
     // todo(zehao): priority

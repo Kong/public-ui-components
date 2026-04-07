@@ -19,7 +19,7 @@ free-form/
 │   ├── NumberField.vue      # Number/integer inputs
 │   ├── BooleanField.vue     # Checkbox inputs
 │   ├── EnumField.vue        # Select/multiselect dropdowns (for one_of fields)
-│   ├── KeyValueField.vue    # Map/dictionary key-value pairs
+│   ├── MapField.vue         # Map/dictionary fields with KeyId-backed entry tracking
 │   ├── StringArrayField.vue # Tag-like comma-separated string sets
 │   ├── JsonField.vue        # JSON textarea editor
 │   ├── ForeignField.vue     # Foreign entity reference (stores {id: string})
@@ -33,8 +33,7 @@ free-form/
 │   ├── RedisSelector.vue    # Redis partial instance selector
 │   ├── SlideTransition.vue  # Height-animated collapse transition
 │   ├── EntityChecksAlert.vue # Validation constraint alerts
-│   ├── composables/         # Vue composables (core logic)
-│   ├── headless/            # UI-free composable logic
+│   ├── composables/         # Vue composables (core logic, including map entry tracking)
 │   ├── layout/              # Layout components
 │   │   └── StandardLayout.vue  # 3-step layout: Scope -> Config -> General Info
 │   ├── types.ts             # Core type definitions
@@ -89,7 +88,7 @@ Defined in `Field.vue`. The mapping logic:
 | `array` | - | `ArrayField` |
 | `set` (tag-like) | - | `StringArrayField` |
 | `set` (enum-like) | - | `EnumField` |
-| `map` | - | `KeyValueField` |
+| `map` | - | `MapField` |
 | `json` | - | `JsonField` |
 | `foreign` | - | `ForeignField` |
 
@@ -127,6 +126,7 @@ FormSchema + data props
 | `field.ts` | `useField(name)` | Individual field state: value, schema, path, renderer, error, ancestors |
 | `field-path.ts` | `useFieldPath()` | Calculates absolute dot-notation path from parent context via provide/inject |
 | `schema.ts` | `useSchemaHelpers()` | Schema introspection: getSchema, getDefault, getSelectItems, getLabelAttributes |
+| `useMapField.ts` | `useMapField()` | KeyId-backed map field state: keys, add/remove/rename, display labels |
 | `labels.ts` | `useLabelPath()`, `useFieldAttrs()` | Label generation with dictionary lookup (IP, SSL, TTL, JWT, etc.) |
 | `render-rules.ts` | `createRenderRuleRegistry()` | Bundles (field grouping/ordering) and dependencies (conditional visibility) |
 | `ancestors.ts` | `useAncestors()` | Access parent field context for nested components |
