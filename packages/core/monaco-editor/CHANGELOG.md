@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.20.4...@kong-ui-public/monaco-editor@0.21.0) (2026-04-07)
+
+
+### Features
+
+* **monaco-editor:** code lens provider presets ([#2816](https://github.com/Kong/public-ui-components/issues/2816)) ([1c20ff7](https://github.com/Kong/public-ui-components/commit/1c20ff78b07c848d891bfd3f282d33a776d1ec50))
+
+
+
+
+
 ## [0.20.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.20.3...@kong-ui-public/monaco-editor@0.20.4) (2026-03-25)
 
 
