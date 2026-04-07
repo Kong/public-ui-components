@@ -144,15 +144,11 @@ export type DisabledPlugin = {
   [key: string]: string // [plugin.id]: plugin.disabledMessage
 }
 
-export type PluginCardList = {
-  [key in PluginGroup | PluginFeatured]?: PluginType[];
-}
-
 export type PluginCatalogGroupKey = PluginFeatured | PluginGroup
 
-export type PluginCardListWithSearchResults = PluginCardList & {
-  'Query Result'?: PluginType[]
-}
+export type PluginCardList = Record<string, PluginType[] | undefined>
+
+export type PluginCardListWithSearchResults = PluginCardList
 
 export type TriggerLabels = {
   [key in PluginGroup]?: string // [plugin.group]: label

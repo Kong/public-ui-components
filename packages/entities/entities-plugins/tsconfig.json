@@ -4,6 +4,11 @@
     "baseUrl": ".",
     "outDir": "dist",
     "declarationDir": "dist/types",
+    "paths": {
+      "@kong-ui-public/entities-redis-configurations": ["../entities-redis-configurations/src/index.ts"],
+      "@kong-ui-public/entities-routes": ["../entities-routes/src/index.ts"],
+      "@kong-ui-public/expressions": ["../../core/expressions/src/index.ts"]
+    },
     "types": [
       "node",
       "vite/client",

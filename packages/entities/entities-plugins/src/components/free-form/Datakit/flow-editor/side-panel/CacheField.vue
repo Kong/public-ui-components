@@ -84,7 +84,7 @@
           <RedisConfigurationSelector
             :model-value="formData.cache?.partial_id"
             redis-type="redis-ee"
-            @update:model-value="data => formData.cache!.partial_id = data"
+            @update:model-value="(id: string | undefined) => { formData.cache!.partial_id = id }"
           />
         </div>
 
