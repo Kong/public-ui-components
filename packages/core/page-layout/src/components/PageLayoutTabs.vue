@@ -185,7 +185,7 @@ onBeforeUnmount(() => {
   }
 })
 
-watch(tabs, () => {
+watch(() => tabs, () => {
   computeTabLayoutOverflow()
 })
 </script>
