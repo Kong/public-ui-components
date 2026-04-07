@@ -29,7 +29,7 @@
         <PluginCatalogGroup
           :config="config"
           :name="group"
-          :plugins="pluginList[group as keyof PluginCardList] || []"
+          :plugins="pluginList[group as keyof PluginCardListWithSearchResults] || []"
           @delete:success="(pluginName: string) => emit('delete:success', pluginName)"
           @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
         />
@@ -53,7 +53,7 @@ import {
   PluginGroupArraySortedAlphabetically,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
-  type PluginCardList,
+  type PluginCardListWithSearchResults,
   type PluginType,
 } from '../../types'
 import PluginCatalogGroup from './PluginCatalogGroup.vue'
@@ -64,10 +64,10 @@ defineProps<{
   /**
    * Plugins to display in the grid
    */
-  pluginList?: PluginCardList
+  pluginList?: PluginCardListWithSearchResults
 }>()
 
-const displayGroups = PluginFeaturedArray.concat(PluginGroupArraySortedAlphabetically)
+const displayGroups = [...PluginFeaturedArray, ...PluginGroupArraySortedAlphabetically]
 
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType): void

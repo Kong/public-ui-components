@@ -59,7 +59,7 @@ import { computed, ref } from 'vue'
 import composables from '../../composables'
 import PluginCatalogCard from './PluginCatalogCard.vue'
 import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginSchemaModal.vue'
-import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginType } from '../../types'
+import { PluginFeaturedGroupKey, type KongManagerPluginSelectConfig, type KonnectPluginSelectConfig, type PluginType, type CustomPluginType } from '../../types'
 import { KUI_COLOR_TEXT_DECORATIVE_PURPLE } from '@kong/design-tokens'
 import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, TrafficIcon, TransformationIcon } from '@kong/icons'
 import { GATEWAY_VERSION_TIMESTAMP_MAP, PluginGroup } from '@kong-ui-public/entities-plugins-metadata'
@@ -84,7 +84,7 @@ const props = defineProps<{
 
 const groupIcon = computed(() => {
   switch (props.name) {
-    case PluginGroup.FEATURED:
+    case PluginFeaturedGroupKey:
       return PopularIcon
     case PluginGroup.AI:
       return BotIcon
@@ -248,8 +248,8 @@ const handleClose = (revalidate?: boolean): void => {
       content: '';
       inset: -2px;
 
-      -webkit-mask: linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
       padding: 2px;

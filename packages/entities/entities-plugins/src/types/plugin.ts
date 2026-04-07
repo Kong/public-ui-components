@@ -2,11 +2,11 @@ import type { PathToDotNotation } from '@kong-ui-public/i18n'
 import { PluginGroup, PluginScope } from '@kong-ui-public/entities-plugins-metadata'
 import type { RenderRules } from '../components/free-form/shared/types'
 
-export const PluginFeaturedArray = [
-  'Featured',
-]
+export type PluginFeatured = 'Featured'
 
-type PluginFeatured = (typeof PluginFeaturedArray)[number]
+export const PluginFeaturedGroupKey: PluginFeatured = 'Featured'
+
+export const PluginFeaturedArray: PluginFeatured[] = [PluginFeaturedGroupKey]
 
 export const PluginGroupArray = [
   PluginGroup.AUTHENTICATION,
@@ -146,6 +146,12 @@ export type DisabledPlugin = {
 
 export type PluginCardList = {
   [key in PluginGroup | PluginFeatured]?: PluginType[];
+}
+
+export type PluginCatalogGroupKey = PluginFeatured | PluginGroup
+
+export type PluginCardListWithSearchResults = PluginCardList & {
+  'Query Result'?: PluginType[]
 }
 
 export type TriggerLabels = {

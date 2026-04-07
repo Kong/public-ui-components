@@ -78,6 +78,8 @@ export default defineConfig({
         '@kong/icons',
         '@kong-ui-public/i18n',
         '@kong-ui-public/entities-shared',
+        // Keep it external so Rollup does not resolve dist before peer builds
+        '@kong-ui-public/entities-shared/dist/style.css',
         'axios',
       ],
       output: {
@@ -164,7 +166,7 @@ export const getApiProxies = (pathToRoot: string = '../../../.') => {
   const regionalProxies = {}
   // Build the regional API proxies
   for (const region of availableRegions) {
-    // @ts-ignore
+    // @ts-ignore: Ignoring TS error due to dynamic property access
     regionalProxies[`^/${region}/kong-api`] = {
       target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, region),
       rewrite: (path: string) => path.replace(`/${region}/kong-api`, ''),

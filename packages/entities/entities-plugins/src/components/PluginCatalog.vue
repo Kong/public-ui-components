@@ -153,6 +153,7 @@ import {
   PluginGroup,
   PluginScope,
   PluginFeaturedArray,
+  PluginFeaturedGroupKey,
   PluginGroupArraySortedAlphabetically,
   type CustomPluginSupportLevel,
   type KongManagerPluginSelectConfig,
@@ -160,6 +161,8 @@ import {
   type PluginType,
   type DisabledPlugin,
   type PluginCardList,
+  type PluginCardListWithSearchResults,
+  type PluginCatalogGroupKey,
   type StreamingCustomPluginSchema,
 } from '../types'
 import composables from '../composables'
@@ -176,10 +179,6 @@ const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType): void
   (e: 'delete-custom:success', pluginName: string): void
 }>()
-
-type PluginCardListExtended = PluginCardList & {
-  'Query Result'?: PluginType[]
-}
 
 const { i18n: { t } } = composables.useI18n()
 const { pluginMetaData } = composables.usePluginMetaData()
@@ -204,7 +203,9 @@ const searchFilterInput = useTemplateRef('filter-input')
 const searchFilter = ref('')
 const featuredFilterCollapse = ref(false)
 const groupFilterCollapse = ref(false)
-const typeFilter = ref(Object.fromEntries(PluginFeaturedArray.concat(PluginGroupArraySortedAlphabetically).map(item => [item, false])))
+const typeFilter = ref(Object.fromEntries(
+  [...PluginFeaturedArray, ...PluginGroupArraySortedAlphabetically].map(item => [item, false]),
+))
 const isLoading = ref(true)
 const hasError = ref(false)
 const fetchErrorMessage = ref('')
@@ -257,14 +258,14 @@ const fetchEntityPluginsUrl = computed((): string => {
   return ''
 })
 
-const filteredPlugins = computed((): PluginCardListExtended => {
+const filteredPlugins = computed((): PluginCardListWithSearchResults => {
   if (!pluginsList.value) {
     return {}
   }
 
   const activeGroups = Object.entries(typeFilter.value)
-    .filter(([_, checked]) => checked)
-    .map(([group]) => group)
+    .filter(([, checked]) => checked)
+    .map(([group]) => group) as PluginCatalogGroupKey[]
 
   let filtered: PluginCardList = {}
 
@@ -284,7 +285,7 @@ const filteredPlugins = computed((): PluginCardListExtended => {
 
   const results: PluginCardList = JSON.parse(JSON.stringify(filtered))
 
-  for (const type in filtered) {
+  for (const type of Object.keys(filtered) as PluginCatalogGroupKey[]) {
     const matches = filtered[type]?.filter((plugin: PluginType) => {
       const fields = [
         plugin.name.toLowerCase(),
@@ -418,7 +419,7 @@ const buildPluginList = (): PluginCardList => {
     }, {})
   // Pick highlighted plugin objects from pluginMetaData and assign to 'Featured'
   if (props.highlightedPluginIds && props.highlightedPluginIds.length > 0) {
-    list[PluginGroup.FEATURED] = props.highlightedPluginIds
+    list[PluginFeaturedGroupKey] = props.highlightedPluginIds
       .flatMap(pluginId => {
         const meta = pluginMetaData[pluginId]
         if (!meta) return []
