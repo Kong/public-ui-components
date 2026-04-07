@@ -10,7 +10,7 @@
  * - Automatically cleans up cached contexts when models are disposed.
  */
 
-import { parseIntoContext } from '../context'
+import { parseIntoContext } from '../features/context'
 
 import type { editor as Editor, IDisposable } from 'monaco-editor'
 
