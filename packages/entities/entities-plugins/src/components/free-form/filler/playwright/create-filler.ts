@@ -16,6 +16,7 @@ import {
   walkFields,
   getHandlerType,
   getArrayItemInfo,
+  getMapEntryInfo,
   isRecordArrayItem,
   type FillerContext,
   type FieldToFill,
@@ -66,7 +67,15 @@ export function createFiller(
         await mergedHandlers.fillTag({ page, fieldKey, fieldSchema: fieldSchema as SetFieldSchema, value, typeOptions })
         break
       case 'map':
-        await mergedHandlers.fillMap({ page, fieldKey, fieldSchema: fieldSchema as MapFieldSchema, value, typeOptions })
+        await mergedHandlers.fillMap({
+          page,
+          fieldKey,
+          fieldSchema: fieldSchema as MapFieldSchema,
+          value,
+          onFillEntry: async (kidId: string, entryValue: any) => {
+            await handleMapEntry(ctx, fieldKey, kidId, entryValue)
+          },
+        })
         break
       case 'json':
         await mergedHandlers.fillJson({ page, fieldKey, fieldSchema: fieldSchema as JsonFieldSchema, value, typeOptions })
@@ -112,6 +121,17 @@ export function createFiller(
         value: itemValue,
       })
     }
+  }
+
+  async function handleMapEntry(ctx: FillerContext, fieldKey: string, kidId: string, entryValue: any): Promise<void> {
+    const { entryKey, entrySchema } = getMapEntryInfo(fieldKey, kidId, ctx)
+
+    await fillFieldByInfo({
+      handlerType: getHandlerType(entrySchema),
+      fieldKey: entryKey,
+      fieldSchema: entrySchema,
+      value: entryValue,
+    })
   }
 
   async function fill(data: Record<string, any>): Promise<void> {
