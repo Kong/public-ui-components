@@ -208,6 +208,7 @@
       <VueFormGenerator
         :enable-redis-partial="enableRedisPartial"
         :is-editing="isEditing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="formModel"
         :options="formOptions"
         :schema="advancedSchema.redis"
@@ -339,6 +340,7 @@ const props = defineProps<{
   showNewPartialModal: (redisType: string) => void
   isEditing?: boolean
   enableRedisPartial?: boolean
+  isKonnectManagedRedisEnabled?: boolean
 }>()
 
 const globalFields = computed(() => {

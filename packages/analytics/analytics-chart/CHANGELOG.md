@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.14.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.14.11...@kong-ui-public/analytics-chart@10.14.12) (2026-04-03)
+
+
+### Bug Fixes
+
+* render percent for error rate ([#3091](https://github.com/Kong/public-ui-components/issues/3091)) ([b157032](https://github.com/Kong/public-ui-components/commit/b157032f08caeefbf720cb706d8a76d2ce907aee))
+
+
+
+
+
 ## [10.14.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.14.10...@kong-ui-public/analytics-chart@10.14.11) (2026-04-02)
 
 

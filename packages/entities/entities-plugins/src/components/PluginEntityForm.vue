@@ -9,6 +9,7 @@
       v-else-if="(formModel.id && editing) || !editing"
       class="entity-form"
     >
+      <!-- Konnect-managed Redis UI for free-form layouts (StandardLayout) -->
       <component
         :is="freeformComponent"
         v-if="freeformComponent"
@@ -16,6 +17,7 @@
         :form-model="formModel"
         :form-schema="formSchema"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="record"
         :on-form-change="handleFreeFormUpdate"
         :on-validity-change="onValidityChange"
@@ -35,6 +37,7 @@
           />
         </template>
       </component>
+      <!-- OIDC/ RLA embed their own `VueFormGenerator`, pass the Konnect-managed-Redis flag through -->
       <component
         :is="(sharedForms as any)[sharedFormName]"
         v-else-if="sharedFormName"
@@ -43,6 +46,7 @@
         :form-options="formOptions"
         :form-schema="formSchema"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :on-model-updated="onModelUpdated"
         :on-partial-toggled="onPartialToggled"
         :show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
@@ -59,10 +63,12 @@
         </template>
       </component>
 
+      <!-- Default schema-driven plugin form- `FormGenerator`- `FormRedis` -->
       <VueFormGenerator
         v-else
         :enable-redis-partial="enableRedisPartial"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="formModel"
         :options="formOptions"
         :schema="formSchema"
@@ -231,6 +237,16 @@ const props = defineProps({
     required: false,
     default: undefined,
   },
+})
+
+const isKonnectManagedRedisEnabled = computed<boolean>(() => {
+  if (props.config.app !== 'konnect') return false
+
+  const konnect = props.config as KonnectPluginFormConfig
+  return (
+    !!konnect.isKonnectManagedRedisEnabled
+    && konnect.isCloudGateway === true
+  )
 })
 
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)

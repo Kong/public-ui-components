@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.8...@kong-ui-public/entities-redis-configurations@1.14.9) (2026-04-06)
+
+
+### Bug Fixes
+
+* **redis:** konnect-managed Redis UI in plugin forms [khcp-19717] ([#3092](https://github.com/Kong/public-ui-components/issues/3092)) ([585bd6d](https://github.com/Kong/public-ui-components/commit/585bd6d9bc9420052eb43363260bf97b3afbfc3e))
+
+
+
+
+
 ## [1.14.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.7...@kong-ui-public/entities-redis-configurations@1.14.8) (2026-04-01)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations

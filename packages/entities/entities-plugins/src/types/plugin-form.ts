@@ -65,7 +65,15 @@ export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, Konne
   getCustomEditRoute?: (id: string, type: CustomPluginType) => RouteLocationRaw
 }
 
-export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig { }
+export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {
+  /**
+   * FF: Konnect-managed Redis copy/grouping in plugin forms
+   * No effect unless `isCloudGateway` is true (same as Redis configuration list)
+   */
+  isKonnectManagedRedisEnabled?: boolean
+  /** When true, CP is a Cloud Gateway */
+  isCloudGateway?: boolean
+}
 
 /** Kong Manager Plugin form config */
 export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig { }

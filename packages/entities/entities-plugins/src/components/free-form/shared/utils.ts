@@ -12,6 +12,7 @@ export function toSelectItems<T extends string | number>(
 }
 
 export const arraySymbol = '*'
+export const mapSymbol = '#'
 export const rootSymbol = '$'
 export const separator = '.'
 

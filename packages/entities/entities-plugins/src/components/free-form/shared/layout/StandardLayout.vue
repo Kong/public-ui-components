@@ -33,7 +33,7 @@
 
       <!-- Redis partial selector -->
       <FieldRenderer :match="({ path }) => path === redisPartialInfo?.redisPath?.value">
-        <RedisSelector />
+        <RedisSelector :is-konnect-managed-redis-enabled="props.isKonnectManagedRedisEnabled ?? false" />
       </FieldRenderer>
 
       <!-- Custom field renderers from consuming components -->
@@ -228,6 +228,8 @@ export type Props<T extends FreeFormPluginData = any> = {
   renderRules?: RenderRules
   fieldRenderers?: PluginFieldRenderer[]
   pluginName: string
+  /** Konnect-managed Redis UI, from plugin form config */
+  isKonnectManagedRedisEnabled?: boolean
 }
 </script>
 

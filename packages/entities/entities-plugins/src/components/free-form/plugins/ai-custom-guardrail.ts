@@ -1,11 +1,11 @@
 import { definePluginConfig } from '../shared/define-plugin-config'
-import KeyValueField from '../shared/KeyValueField.vue'
+import MapField from '../shared/MapField.vue'
 
 export default definePluginConfig({
   fieldRenderers: [
     {
       match: 'config.functions',
-      component: KeyValueField,
+      component: MapField,
       propsOverrides: {
         appearance: { string: { multiline: true } },
       },

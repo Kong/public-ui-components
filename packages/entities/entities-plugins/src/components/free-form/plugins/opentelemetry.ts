@@ -1,4 +1,4 @@
-import KeyValueField from '../shared/KeyValueField.vue'
+import MapField from '../shared/MapField.vue'
 import { definePluginConfig } from '../shared/define-plugin-config'
 
 export default definePluginConfig({
@@ -6,7 +6,7 @@ export default definePluginConfig({
   fieldRenderers: [
     {
       match: 'config.access_logs.custom_attributes_by_lua',
-      component: KeyValueField,
+      component: MapField,
       propsOverrides: {
         appearance: { string: { multiline: true } },
       },

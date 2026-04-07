@@ -1,7 +1,7 @@
 import CommonForm from './CommonForm.vue'
 import { FEATURE_FLAGS } from '../../../constants'
 import StringField from '../shared/StringField.vue'
-import KeyValueField from '../shared/KeyValueField.vue'
+import MapField from '../shared/MapField.vue'
 
 describe('<CommonForm />', () => {
   const createBaseSchema = () => ({
@@ -219,7 +219,7 @@ describe('<CommonForm />', () => {
       fieldRenderers: [
         {
           match: 'config.custom_fields_by_lua',
-          component: KeyValueField,
+          component: MapField,
           propsOverrides: {
             appearance: { string: { multiline: true } },
           },

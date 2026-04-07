@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.8...@kong-ui-public/page-layout@0.2.9) (2026-04-06)
+
+
+### Bug Fixes
+
+* **page-layout:** breadcrumbs truncation, title after padding ([#3094](https://github.com/Kong/public-ui-components/issues/3094)) ([6713bed](https://github.com/Kong/public-ui-components/commit/6713bed4edec6a20e24e27430ea190c5245c7a26))
+
+
+
+
+
 ## [0.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.7...@kong-ui-public/page-layout@0.2.8) (2026-04-01)
 
 
