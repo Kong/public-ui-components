@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.9...@kong-ui-public/page-layout@0.2.10) (2026-04-07)
+
+
+### Bug Fixes
+
+* **page-layout:** recompute tabs layout when tabs change ([#3100](https://github.com/Kong/public-ui-components/issues/3100)) ([79f2000](https://github.com/Kong/public-ui-components/commit/79f20004955d1bf0fac8b95cb0c7fe313666c05a))
+
+
+
+
+
 ## [0.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.8...@kong-ui-public/page-layout@0.2.9) (2026-04-06)
 
 
