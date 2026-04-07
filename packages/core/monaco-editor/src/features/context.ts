@@ -11,13 +11,13 @@ export async function parseIntoContext(model: editor.ITextModel): Promise<Readon
       // Get value before the await boundaries here and elsewhere
       const value = model.getValue()
 
-      const { parseIntoJSONContext } = await import('./json') // Code splitting-friendly
+      const { parseIntoJSONContext } = await import('../languages/json') // Code splitting-friendly
       return parseIntoJSONContext(value, altVersionId)
     }
     case 'yaml': {
       const value = model.getValue()
 
-      const { parseIntoYAMLContext } = await import('./yaml')
+      const { parseIntoYAMLContext } = await import('../languages/yaml')
       return parseIntoYAMLContext(value, altVersionId)
     }
   }

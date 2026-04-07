@@ -28,3 +28,7 @@ export type RecordHandlerOption = Omit<HandlerOption, 'actionOptions'> & {
 export type ArrayHandlerOption = Omit<HandlerOption, 'actionOptions'> & {
   onFillItem: (index: number, itemValue: any) => void
 }
+
+export type MapHandlerOption = Omit<HandlerOption, 'actionOptions'> & {
+  onFillEntry: (kidId: string, entryValue: any) => void
+}

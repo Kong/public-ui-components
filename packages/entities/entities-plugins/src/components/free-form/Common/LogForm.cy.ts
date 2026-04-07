@@ -45,7 +45,7 @@ describe('<LogForm />', () => {
     mountLogForm()
 
     // The value input for custom_fields_by_lua should be a textarea (multiline)
-    cy.getTestId('ff-kv-container-config.custom_fields_by_lua.0').should('exist')
-    cy.getTestId('ff-kv-container-config.custom_fields_by_lua.0').find('textarea').should('exist')
+    cy.getTestId('ff-map-container-config.custom_fields_by_lua.0').should('exist')
+    cy.getTestId('ff-map-container-config.custom_fields_by_lua.0').find('textarea').should('exist')
   })
 })

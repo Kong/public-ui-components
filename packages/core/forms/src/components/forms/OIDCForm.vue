@@ -93,6 +93,7 @@
             v-if="displayForm"
             :enable-redis-partial="enableRedisPartial"
             :is-editing="isEditing"
+            :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
             :model="formModel"
             :options="formOptions"
             :schema="advancedFieldsSchema"
@@ -167,6 +168,10 @@ export default {
     enableRedisPartial: {
       type: Boolean,
       required: false,
+    },
+    isKonnectManagedRedisEnabled: {
+      type: Boolean,
+      default: false,
     },
     showNewPartialModal: {
       type: Function,

@@ -15,8 +15,21 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
       // Example: name: 'kong-ui-public-demo-component'
       name: `kong-ui-public-${sanitizedPackageName}`,
-      entry: resolve(__dirname, './src/index.ts'),
-      fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+      entry: {
+        index: resolve(__dirname, './src/index.ts'),
+        // IMPORTANT: Splitting singletons as the language-specific entries import
+        // the singletons and they are also code split.
+        singletons: resolve(__dirname, './src/singletons/index.ts'),
+        // Language-specific entry points for code-splitting.
+        'languages/json': resolve(__dirname, './src/languages/json/index.ts'),
+        'languages/yaml': resolve(__dirname, './src/languages/yaml/index.ts'),
+      },
+      fileName: (format, entryName) => {
+        if (entryName === 'index') {
+          return `${sanitizedPackageName}.${format}.js`
+        }
+        return `${entryName}.${format}.js`
+      },
     },
     rollupOptions: {
       external: [
