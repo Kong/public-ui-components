@@ -24,7 +24,6 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       external: [
         '@kong-ui-public/core',
         '@kong-ui-public/forms',
-        '@kong-ui-public/forms/dist/style.css',
         '@kong/icons',
         'monaco-editor',
         'uuid',

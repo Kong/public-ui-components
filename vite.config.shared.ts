@@ -41,6 +41,24 @@ export const sanitizePackageName = (packageName: string): string => {
   return sanitizedName
 }
 
+/**
+ * Rollup treats these Peer libraries as a separate module id from the package root, so each path must be externalized.)
+ */
+export const rollupExternalPeerStyles: string[] = [
+  '@kong-ui-public/analytics-chart/dist/style.css',
+  '@kong-ui-public/analytics-geo-map/dist/style.css',
+  '@kong-ui-public/analytics-metric-provider/dist/style.css',
+  '@kong-ui-public/entities-redis-configurations/dist/style.css',
+  '@kong-ui-public/entities-shared/dist/style.css',
+  '@kong-ui-public/entities-vaults/dist/style.css',
+  '@kong-ui-public/expressions/dist/style.css',
+  '@kong-ui-public/forms/dist/style.css',
+  '@kong-ui-public/monaco-editor/dist/runtime/style.css',
+  '@vue-flow/controls/dist/style.css',
+  '@vue-flow/core/dist/style.css',
+  '@vue-flow/core/dist/theme-default.css',
+]
+
 export default defineConfig({
   plugins: [
     vue(),
@@ -78,8 +96,7 @@ export default defineConfig({
         '@kong/icons',
         '@kong-ui-public/i18n',
         '@kong-ui-public/entities-shared',
-        // Keep it external so Rollup does not resolve dist before peer builds
-        '@kong-ui-public/entities-shared/dist/style.css',
+        ...rollupExternalPeerStyles,
         'axios',
       ],
       output: {
