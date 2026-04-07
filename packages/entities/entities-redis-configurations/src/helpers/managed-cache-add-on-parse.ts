@@ -1,15 +1,8 @@
 import type { AddOnRecord, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
 
-/**
- * Parse helpers for managed-cache add-ons
- * Keeps payload normalization in one place so list/detail stay aligned.
- * Assumes current Add-On API shape and extracts linked `cache_config_id`
- */
-
 const isPlainObject = (value: unknown): value is AddOnRecord =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
 
-// Parse one add-on into the shape list/config code expects
 export const parseManagedAddOn = (plain: unknown): ManagedCacheAddOn | null => {
   if (!isPlainObject(plain)) return null
 
@@ -22,17 +15,11 @@ export const parseManagedAddOn = (plain: unknown): ManagedCacheAddOn | null => {
   const kind = configSource.kind
   if (typeof kind !== 'string' || !kind) return null
 
-  // Match RedisConfigurationList: `config.state_metadata ?? addOn.state_metadata`
-  const stateMetadata =
-    (isPlainObject(configSource.state_metadata) ? configSource.state_metadata : undefined)
-    ?? (isPlainObject(plain.state_metadata) ? plain.state_metadata : undefined)
-
   const addOn: ManagedCacheAddOn = {
     id,
     config: {
       ...configSource,
       kind,
-      ...(stateMetadata ? { state_metadata: stateMetadata } : {}),
     } as ManagedCacheAddOn['config'],
   }
 
@@ -65,7 +52,6 @@ export const parseManagedAddOn = (plain: unknown): ManagedCacheAddOn | null => {
   return addOn
 }
 
-// Detail endpoint payload is expected to be an add-on object.
 export const parseManagedAddOnDetailPayload = (data: unknown): ManagedCacheAddOn | null =>
   parseManagedAddOn(data)
 
@@ -78,9 +64,7 @@ const readCacheConfigIdFromMetadata = (meta: unknown): string | undefined => {
 
 // Extract the Koko partial id linked to a managed-cache add-on
 export const getCacheConfigId = (addOn: ManagedCacheAddOn): string | undefined =>
-  readCacheConfigIdFromMetadata(
-    addOn.config?.state_metadata ?? (addOn as AddOnRecord).state_metadata,
-  )
+  readCacheConfigIdFromMetadata(addOn.config?.state_metadata)
 
 // Type guard entrypoint accepts unknown because host pass raw network responses
 export const isManagedCacheAddOn = (addOn: unknown): addOn is ManagedCacheAddOn => {

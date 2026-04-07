@@ -19,11 +19,7 @@ type KonnectManagedRedisFlags = {
   isCloudGateway?: boolean
 }
 
-/**
- * Host must pass on list/detail configs:
- * app: 'konnect'; `isKonnectManagedRedisEnabled: true; `isCloudGateway: true` (required; otherwise legacy partials-only behavior)
- * For add-on API calls, also pass `cloudGatewaysApiBaseUrl` and `controlPlaneGeo` when needed.
- */
+/** Konnect + FF + Cloud Gateway: enables Konnect-managed redis UI; otherwise partials-only */
 export const isKonnectManagedRedisEnabled = (config: KonnectManagedRedisFlags): boolean => {
   return (
     config.app === 'konnect' &&

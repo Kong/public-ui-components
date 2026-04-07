@@ -80,16 +80,6 @@ export interface ManagedCacheAddOn {
       cache_config_id?: string
     }
   }
-  // Fallback fields optional for payload compatibility
-  attributes?: {
-    kind?: string
-    state_metadata?: {
-      cache_config_id?: string
-    }
-  }
-  state_metadata?: {
-    cache_config_id?: string
-  }
   state?: string
   created_at?: string | number
 }

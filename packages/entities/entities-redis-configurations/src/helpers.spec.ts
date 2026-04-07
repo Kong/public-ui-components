@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { inferRedisPartialManagedSource } from './helpers'
+import { inferRedisPartialManagedSource, isKonnectManagedRedisEnabled } from './helpers'
 import { REDIS_CONFIGURATION_SOURCE } from './types'
 
 describe('Infer Partial Source', () => {
@@ -28,5 +28,41 @@ describe('Infer Partial Source', () => {
     expect(inferRedisPartialManagedSource({ tags: ['production', 'eu'] })).toBe(
       REDIS_CONFIGURATION_SOURCE.SELF_MANAGED,
     )
+  })
+})
+
+describe('isKonnectManagedRedisEnabled', () => {
+  it('is true only for Konnect with FF and for cloud gateway', () => {
+    expect(
+      isKonnectManagedRedisEnabled({
+        app: 'konnect',
+        isKonnectManagedRedisEnabled: true,
+        isCloudGateway: true,
+      }),
+    ).toBe(true)
+  })
+
+  it('is false when any of 3 conditions not met', () => {
+    expect(
+      isKonnectManagedRedisEnabled({
+        app: 'kongManager',
+        isKonnectManagedRedisEnabled: true,
+        isCloudGateway: true,
+      }),
+    ).toBe(false)
+    expect(
+      isKonnectManagedRedisEnabled({
+        app: 'konnect',
+        isKonnectManagedRedisEnabled: false,
+        isCloudGateway: true,
+      }),
+    ).toBe(false)
+    expect(
+      isKonnectManagedRedisEnabled({
+        app: 'konnect',
+        isKonnectManagedRedisEnabled: true,
+        isCloudGateway: false,
+      }),
+    ).toBe(false)
   })
 })

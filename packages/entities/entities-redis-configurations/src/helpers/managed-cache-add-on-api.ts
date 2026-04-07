@@ -1,26 +1,22 @@
-import type { AxiosInstance } from 'axios'
 import { isAxiosError } from 'axios'
 import type { AddOnRecord, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
 import type { RedisConfigurationResponse } from '../types/redis-configuration'
 import { PartialType } from '../types/redis-configuration'
 import { isManagedCacheAddOn, parseManagedAddOn, parseManagedAddOnDetailPayload } from './managed-cache-add-on-parse'
 
-/**
- * API helpers for konnect-managed cache add-ons.
- * One place for add-on and partial fetches used by list + detail
- * Return `null` for not-found cases so host can safely fall back
- */
+/** Konnect managed redis add-on + partial fetches. Returns null when not found */
 
-// Cloud Gateways list endpoint page size
 const ADD_ONS_PAGE_SIZE = 100
-// Safety limit if pagination metadata is broken
 const MAX_ADD_ON_PAGES_FALLBACK = 1000
 
-// Expected response shape is stable, but values are still validated before use
+// Only `get` is used, narrow type keeps mocks simple and reduces Axios's generic `get` issue
+type ManagedCacheApiClient = {
+  get: (url: string, config?: { params?: Record<string, unknown> }) => Promise<{ data: unknown }>
+}
+
 const isPlainObject = (value: unknown): value is AddOnRecord =>
   value !== null && typeof value === 'object' && !Array.isArray(value)
 
-// List endpoint may return partial/malformed payloads; parse from unknown
 const extractListMeta = (payload: unknown): { items: unknown[], totalPages?: number } => {
   if (!isPlainObject(payload)) return { items: [] }
 
@@ -35,7 +31,7 @@ const extractListMeta = (payload: unknown): { items: unknown[], totalPages?: num
 }
 
 export const fetchManagedCacheAddOnById = async (
-  axiosInstance: AxiosInstance,
+  axiosInstance: ManagedCacheApiClient,
   cloudGatewaysBase: string,
   addOnId: string,
   controlPlaneId: string,
@@ -60,7 +56,7 @@ export const fetchManagedCacheAddOnById = async (
 }
 
 export const fetchAllManagedCacheAddOns = async (
-  axiosInstance: AxiosInstance,
+  axiosInstance: ManagedCacheApiClient,
   cloudGatewaysBase: string,
   controlPlaneId: string,
   controlPlaneGeo?: string,
@@ -105,7 +101,7 @@ export const fetchAllManagedCacheAddOns = async (
 }
 
 export const fetchRedisPartialForConfigCard = async (
-  axiosInstance: AxiosInstance,
+  axiosInstance: ManagedCacheApiClient,
   apiBaseUrl: string,
   controlPlaneId: string,
   partialId: string,
@@ -115,11 +111,8 @@ export const fetchRedisPartialForConfigCard = async (
 
   try {
     const { data } = await axiosInstance.get(url)
-    const unwrapped = (data?.data ?? data) as unknown
-    const entityFromResponse = Array.isArray(unwrapped) ? unwrapped[0] : unwrapped
-    if (!isPlainObject(entityFromResponse)) return null
-
-    const maybe = entityFromResponse as RedisConfigurationResponse
+    const maybe = (data as { data?: RedisConfigurationResponse } | undefined)?.data
+    if (!isPlainObject(maybe)) return null
     return maybe.type === PartialType.REDIS_CE || maybe.type === PartialType.REDIS_EE ? maybe : null
   } catch (error: any) {
     if (isAxiosError(error) && error.response?.status === 404) return null
