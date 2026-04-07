@@ -41,7 +41,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     for (const field of fields) {
       const fieldName = Object.keys(field)[0]
       const fieldKey = prefix ? resolve(prefix, fieldName) : fieldName
-      const path = generalizePath(fieldKey)
+      const path = generalizePath(fieldKey, schemaMap)
       const fieldSchema = schemaMap[path]
 
       assert(fieldSchema, `Field schema for "${fieldKey}" should exist in the schema map`)
@@ -72,7 +72,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
         assertNumberLikeField({ fieldKey, fieldSchema, labelOption })
       }
     } else if (fieldSchema.type === 'map') {
-      assertKVField({ fieldKey, fieldSchema, labelOption })
+      assertMapField({ fieldKey, fieldSchema, labelOption })
     } else if (fieldSchema.type === 'array') {
       assertArrayField({ fieldKey, fieldSchema, labelOption })
     } else if (fieldSchema.type === 'set') {
@@ -304,46 +304,82 @@ export function assertFormRendering(schema: FormSchema, options?: {
     }
   }
 
-  const assertKVField: AssertFieldFn<MapFieldSchema> = ({
+  const assertMapField: AssertFieldFn<MapFieldSchema> = ({
     fieldKey,
     fieldSchema,
     labelOption,
   }) => {
     // Check wrapper element
-    cy.getTestId(`ff-kv-${fieldKey}`).should('exist')
+    cy.getTestId(`ff-map-${fieldKey}`).should('exist')
 
     // Check label
     assertLabel({ fieldKey, fieldSchema, labelOption })
 
     // Check if the content is initially existing
     if (fieldSchema.default && Object.keys(fieldSchema.default).length > 0) {
-      cy.getTestId(`ff-kv-container-${fieldKey}.0`).should('exist')
+      cy.getTestId(`ff-map-container-${fieldKey}.0`).should('exist')
+
+      assertMapValueField({
+        fieldKey,
+        fieldSchema,
+        index: 0,
+      })
     }
 
     // Check the 'add' button
-    cy.getTestId(`ff-kv-add-btn-${fieldKey}`)
+    cy.getTestId(`ff-map-add-btn-${fieldKey}`)
       .should('exist')
       .click()
 
 
-    cy.getTestId(`ff-kv-${fieldKey}`)
-      .find('.ff-kv-field-entry')
+    cy.getTestId(`ff-map-${fieldKey}`)
+      .find('[data-testid^="ff-map-container-"]')
       .its('length')
       .then((itemCount) => {
         const latestIndex = itemCount - 1
-        cy.getTestId(`ff-kv-container-${fieldKey}.${latestIndex}`).should('exist')
+        cy.getTestId(`ff-map-container-${fieldKey}.${latestIndex}`).should('exist')
 
-        // Assert child fields
-        cy.getTestId(`ff-key-${fieldKey}.${latestIndex}`).should('exist')
+        cy.getTestId(`ff-map-key-${fieldKey}.${latestIndex}`).should('exist')
 
-        cy.getTestId(`ff-value-${fieldKey}.${latestIndex}`).should('exist')
+        assertMapValueField({
+          fieldKey,
+          fieldSchema,
+          index: latestIndex,
+        })
 
         // Check the 'delete' button
-        cy.getTestId(`ff-kv-remove-btn-${fieldKey}.${latestIndex}`)
+        cy.getTestId(`ff-map-remove-btn-${fieldKey}.${latestIndex}`)
           .should('exist')
           .click()
 
-        cy.getTestId(`ff-kv-container-${fieldKey}.${latestIndex}`).should('not.exist')
+        cy.getTestId(`ff-map-container-${fieldKey}.${latestIndex}`).should('not.exist')
+      })
+  }
+
+  const assertMapValueField = ({
+    fieldKey,
+    fieldSchema,
+    index,
+  }: {
+    fieldKey: string
+    fieldSchema: MapFieldSchema
+    index: number
+  }) => {
+    const childTestIdPrefix = getFieldTestIdPrefix(fieldSchema.values)
+
+    cy.getTestId(`ff-map-container-${fieldKey}.${index}`)
+      .find(`[data-testid^="${childTestIdPrefix}${fieldKey}.kid:"]`)
+      .first()
+      .invoke('attr', 'data-testid')
+      .then((dataTestId) => {
+        assert(dataTestId, `Map child field should exist for "${fieldKey}"`)
+
+        const childFieldKey = dataTestId.slice(childTestIdPrefix.length)
+        assertField({
+          fieldSchema: fieldSchema.values,
+          fieldKey: childFieldKey,
+          labelOption: { hide: true },
+        })
       })
   }
 
@@ -509,6 +545,23 @@ function isStringArrayOfArray(fieldSchema: UnionFieldSchema) {
   return fieldSchema.type === 'array'
     && fieldSchema.elements.type === 'array'
     && fieldSchema.elements.elements.type === 'string'
+}
+
+function getFieldTestIdPrefix(fieldSchema: UnionFieldSchema) {
+  switch (fieldSchema.type) {
+    case 'record':
+      return 'ff-object-'
+    case 'array':
+      return 'ff-array-'
+    case 'map':
+      return 'ff-map-'
+    case 'json':
+      return 'ff-json-'
+    case 'set':
+      return isTagField(fieldSchema) ? 'ff-tag-' : 'ff-'
+    default:
+      return 'ff-'
+  }
 }
 
 function convertFieldPathToLabel(fieldPath: string) {

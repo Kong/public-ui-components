@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.185.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.184.2...@kong-ui-public/entities-plugins@9.185.0) (2026-04-07)
+
+
+### Features
+
+* **entities-plugins:** freeform - MapField ([#3017](https://github.com/Kong/public-ui-components/issues/3017)) ([4174f76](https://github.com/Kong/public-ui-components/commit/4174f7601e12c604b846c944a0472fb4cc32bfb4))
+
+
+
+
+
 ## [9.184.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.184.1...@kong-ui-public/entities-plugins@9.184.2) (2026-04-06)
 
 

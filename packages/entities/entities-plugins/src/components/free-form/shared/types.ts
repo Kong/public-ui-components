@@ -1,5 +1,6 @@
 import type { UnionFieldSchema } from '../../../types/plugins/form-schema'
 import type { ComponentPublicInstance, Ref, Slot } from 'vue'
+import { type LabelAttributes } from '@kong/kongponents'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
@@ -166,6 +167,7 @@ export interface RenderRules {
 export interface BaseFieldProps {
   autofocus?: boolean
   name: string
+  labelAttributes?: LabelAttributes
 }
 
 export type Match = (opt: {

@@ -254,10 +254,10 @@ export function buildMapFieldCases(): Array<{ [name: string]: MapFieldSchema }> 
       },
     },
     {
-      map_complex: {
+      map_simple_default: {
         type: 'map',
         required: true,
-        description: 'A complex map field',
+        description: 'A simple map field with default value',
         keys: {
           type: 'string',
         },
@@ -276,6 +276,67 @@ export function buildMapFieldCases(): Array<{ [name: string]: MapFieldSchema }> 
         values: {
           type: 'string',
           referenceable: true,
+        },
+      },
+    },
+    {
+      map_value_enum: {
+        type: 'map',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'string',
+          one_of: ['option1', 'option2', 'option3'],
+        },
+      },
+    },
+    {
+      map_value_record: {
+        type: 'map',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'record',
+          fields: [
+            {
+              nested_field: {
+                type: 'string',
+              },
+            },
+          ],
+        },
+      },
+    },
+    {
+      map_value_array: {
+        type: 'map',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'array',
+          elements: {
+            type: 'string',
+          },
+        },
+      },
+    },
+    {
+      map_value_map: {
+        type: 'map',
+        keys: {
+          type: 'string',
+        },
+        values: {
+          type: 'map',
+          keys: {
+            type: 'string',
+          },
+          values: {
+            type: 'string',
+          },
         },
       },
     },
@@ -368,22 +429,22 @@ export function buildArrayFieldCases(): Array<{ [name: string]: ArrayLikeFieldSc
       },
     },
     // fixme: should support `resetLabelPath` in tests
-    // {
-    //   array_of_records: {
-    //     type: 'array',
-    //     elements: {
-    //       type: 'record',
-    //       fields: [
-    //         {
-    //           foo: {
-    //             type: 'string',
-    //           },
-    //         },
-    //       ],
-    //     },
-    //     description: 'An array of records',
-    //   },
-    // },
+    {
+      array_of_records: {
+        type: 'array',
+        elements: {
+          type: 'record',
+          fields: [
+            {
+              foo: {
+                type: 'string',
+              },
+            },
+          ],
+        },
+        description: 'An array of records',
+      },
+    },
     {
       array_of_array: {
         type: 'array',
@@ -394,6 +455,21 @@ export function buildArrayFieldCases(): Array<{ [name: string]: ArrayLikeFieldSc
           },
         },
         default: [['foo']],
+      },
+    },
+    {
+      array_of_maps: {
+        type: 'array',
+        elements: {
+          type: 'map',
+          keys: {
+            type: 'string',
+          },
+          values: {
+            type: 'string',
+          },
+        },
+        description: 'An array of maps',
       },
     },
   ]

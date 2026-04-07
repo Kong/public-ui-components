@@ -65,6 +65,7 @@
         </button>
 
         <KLabel
+          v-if="!isChildOfMap"
           class="ff-object-field-label"
           :data-testid="`ff-label-${field.path.value}`"
           v-bind="{
@@ -186,6 +187,16 @@ const isChildOfArray = computed(() => {
     const parent = field.ancestors.value.parent
     if (parent?.path) {
       return getSchema(parent.path)?.type === 'array'
+    }
+  }
+  return false
+})
+
+const isChildOfMap = computed(() => {
+  if (field.ancestors?.value) {
+    const parent = field.ancestors.value.parent
+    if (parent?.path) {
+      return getSchema(parent.path)?.type === 'map'
     }
   }
   return false
