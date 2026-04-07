@@ -227,7 +227,7 @@ describe('<CommonForm />', () => {
       ],
     } as any)
 
-    cy.getTestId('ff-kv-container-config.custom_fields_by_lua.0').find('textarea').should('exist')
+    cy.getTestId('ff-map-container-config.custom_fields_by_lua.0').find('textarea').should('exist')
   })
 
   it('Advanced fields should be hidden when it is empty', () => {
