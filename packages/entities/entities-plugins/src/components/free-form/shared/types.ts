@@ -191,8 +191,22 @@ export interface FieldRenderer {
 }
 
 export interface PluginFormConfig {
+  /**
+   * Whether the plugin is experimental.
+   * Experimental plugins will only be rendered when their names are included in the `EXPERIMENTAL_FREE_FORM_PROVIDER` provider.
+   */
   experimental?: boolean
+  /**
+   * Form-level custom component.
+   * @default CommonForm
+   */
   component?: Component
+  /**
+   * Form-level rendering rules.
+   */
   renderRules?: RenderRules
+  /**
+   * Field-level custom renderers.
+   */
   fieldRenderers?: FieldRenderer[]
 }

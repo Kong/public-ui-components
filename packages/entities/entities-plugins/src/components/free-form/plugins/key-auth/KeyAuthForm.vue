@@ -26,7 +26,7 @@ import { computed, inject, provide } from 'vue'
 import ConfigForm from '../../Common/ConfigForm.vue'
 import StandardLayout from '../../shared/layout/StandardLayout.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
-import IdentityRealmsField from '../../../fields/key-auth-identity-realms/FreeFormAdapter.vue'
+import IdentityRealmsField from './IdentityRealmsField.vue'
 
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { Props } from '../../shared/layout/StandardLayout.vue'

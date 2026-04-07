@@ -23,12 +23,12 @@
 
 <script lang="ts" setup>
 import { toRef } from 'vue'
-import { useField, useFieldAttrs } from '../../free-form/shared/composables'
-import Base from './Base.vue'
+import { useField, useFieldAttrs } from '../../shared/composables'
+import Base from '../../../fields/key-auth-identity-realms/Base.vue'
 
-import type { IdentityRealmItem } from './types'
+import type { IdentityRealmItem } from '../../../fields/key-auth-identity-realms/types'
 import type { LabelAttributes } from '@kong/kongponents'
-import type { ResetLabelPathRule } from '../../free-form/shared/types'
+import type { ResetLabelPathRule } from '../../shared/types'
 
 const props = defineProps<{
   name: string
