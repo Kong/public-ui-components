@@ -228,10 +228,10 @@ test.describe('Filler - Playwright', () => {
         'Authorization': 'Bearer token',
       })
 
-      await expect(page.locator('[data-testid="ff-key-headers.0"]')).toHaveValue('Content-Type')
-      await expect(page.locator('[data-testid="ff-value-headers.0"]')).toHaveValue('application/json')
-      await expect(page.locator('[data-testid="ff-key-headers.1"]')).toHaveValue('Authorization')
-      await expect(page.locator('[data-testid="ff-value-headers.1"]')).toHaveValue('Bearer token')
+      await expect(page.locator('[data-testid="ff-map-key-headers.0"]')).toHaveValue('Content-Type')
+      await expect(page.locator('[data-testid="ff-map-container-headers.0"] [data-testid^="ff-headers.kid:"]')).toHaveValue('application/json')
+      await expect(page.locator('[data-testid="ff-map-key-headers.1"]')).toHaveValue('Authorization')
+      await expect(page.locator('[data-testid="ff-map-container-headers.1"] [data-testid^="ff-headers.kid:"]')).toHaveValue('Bearer token')
     })
 
     test('should clear existing map entries before refilling', async ({ mount, page }) => {
@@ -256,9 +256,52 @@ test.describe('Filler - Playwright', () => {
       // Refill should clear previous entries first
       await filler.fillField('headers', { 'X-New': 'new-value' })
 
-      await expect(page.locator('[data-testid^="ff-kv-container-headers"]')).toHaveCount(1)
-      await expect(page.locator('[data-testid="ff-key-headers.0"]')).toHaveValue('X-New')
-      await expect(page.locator('[data-testid="ff-value-headers.0"]')).toHaveValue('new-value')
+      await expect(page.locator('[data-testid^="ff-map-container-headers"]')).toHaveCount(1)
+      await expect(page.locator('[data-testid="ff-map-key-headers.0"]')).toHaveValue('X-New')
+      await expect(page.locator('[data-testid="ff-map-container-headers.0"] [data-testid^="ff-headers.kid:"]')).toHaveValue('new-value')
+    })
+
+    test('should fill map field with record values', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            plugins: {
+              type: 'map',
+              keys: { type: 'string' },
+              values: {
+                type: 'record',
+                fields: [
+                  {
+                    name: {
+                      type: 'string',
+                    },
+                  },
+                  {
+                    route: {
+                      type: 'string',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('plugins', {
+        auth: {
+          name: 'key-auth',
+          route: '/auth',
+        },
+      })
+
+      await expect(page.locator('[data-testid="ff-map-key-plugins.0"]')).toHaveValue('auth')
+      await expect(page.locator('[data-testid="ff-map-container-plugins.0"] [data-testid^="ff-plugins.kid:"][data-testid$=".name"]')).toHaveValue('key-auth')
+      await expect(page.locator('[data-testid="ff-map-container-plugins.0"] [data-testid^="ff-plugins.kid:"][data-testid$=".route"]')).toHaveValue('/auth')
     })
 
     test('should fill multiline map field with both single-line and multiline values', async ({ mount, page }) => {
@@ -283,10 +326,10 @@ test.describe('Filler - Playwright', () => {
         'multi-line-fn': 'line1\nline2\nline3',
       })
 
-      await expect(page.locator('[data-testid="ff-key-functions.0"]')).toHaveValue('single-line-fn')
-      await expect(page.locator('[data-testid="ff-value-functions.0"]')).toHaveValue('return kong.request.get_path()')
-      await expect(page.locator('[data-testid="ff-key-functions.1"]')).toHaveValue('multi-line-fn')
-      await expect(page.locator('[data-testid="ff-value-functions.1"]')).toHaveValue('line1\nline2\nline3')
+      await expect(page.locator('[data-testid="ff-map-key-functions.0"]')).toHaveValue('single-line-fn')
+      await expect(page.locator('[data-testid="ff-map-container-functions.0"] [data-testid^="ff-functions.kid:"]')).toHaveValue('return kong.request.get_path()')
+      await expect(page.locator('[data-testid="ff-map-key-functions.1"]')).toHaveValue('multi-line-fn')
+      await expect(page.locator('[data-testid="ff-map-container-functions.1"] [data-testid^="ff-functions.kid:"]')).toHaveValue('line1\nline2\nline3')
     })
 
     test('should fill json field', async ({ mount, page }) => {
@@ -853,7 +896,7 @@ test.describe('Filler - Playwright', () => {
         'Content-Type': 'application/json',
       })
 
-      await expect(page.locator('[data-testid="ff-kv-headers"]')).toBeVisible()
+      await expect(page.locator('[data-testid="ff-map-headers"]')).toBeVisible()
     })
   })
 })

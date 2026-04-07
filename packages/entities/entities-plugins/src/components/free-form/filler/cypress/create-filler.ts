@@ -15,6 +15,7 @@ import {
   walkFields,
   getHandlerType,
   getArrayItemInfo,
+  getMapEntryInfo,
   isRecordArrayItem,
   type FillerContext,
   type FieldToFill,
@@ -60,7 +61,14 @@ export function createFiller(
         mergedHandlers.fillTag({ fieldKey, fieldSchema: fieldSchema as SetFieldSchema, value, actionOptions })
         break
       case 'map':
-        mergedHandlers.fillMap({ fieldKey, fieldSchema: fieldSchema as MapFieldSchema, value, actionOptions })
+        mergedHandlers.fillMap({
+          fieldKey,
+          fieldSchema: fieldSchema as MapFieldSchema,
+          value,
+          onFillEntry: (kidId: string, entryValue: any) => {
+            handleMapEntry(ctx, fieldKey, kidId, entryValue)
+          },
+        })
         break
       case 'json':
         mergedHandlers.fillJson({ fieldKey, fieldSchema: fieldSchema as JsonFieldSchema, value, actionOptions })
@@ -104,6 +112,17 @@ export function createFiller(
         value: itemValue,
       })
     }
+  }
+
+  function handleMapEntry(ctx: FillerContext, fieldKey: string, kidId: string, entryValue: any): void {
+    const { entryKey, entrySchema } = getMapEntryInfo(fieldKey, kidId, ctx)
+
+    fillFieldByInfo({
+      handlerType: getHandlerType(entrySchema),
+      fieldKey: entryKey,
+      fieldSchema: entrySchema,
+      value: entryValue,
+    })
   }
 
   function fill(data: Record<string, any>): void {

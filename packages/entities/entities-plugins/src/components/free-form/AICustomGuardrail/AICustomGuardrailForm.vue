@@ -5,7 +5,7 @@
         v-slot="slotProps"
         :match="({ path }) => path === 'config.functions'"
       >
-        <KeyValueField
+        <MapField
           v-bind="slotProps"
           :appearance="{ string: { multiline: true } }"
         />
@@ -22,7 +22,7 @@ import { provide } from 'vue'
 import ConfigForm from '../Common/ConfigForm.vue'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 import FieldRenderer from '../shared/FieldRenderer.vue'
-import KeyValueField from '../shared/KeyValueField.vue'
+import MapField from '../shared/MapField.vue'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
 
