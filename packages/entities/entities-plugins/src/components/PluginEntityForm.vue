@@ -907,7 +907,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 
   pluginConfig.value = getPluginConfig(form.model.name)
   freeformComponent.value = shouldUseFreeForm(form.model.name, props.engine)
-    ? (getFreeFormComponent(form.model.name, props.engine) ?? CommonForm)
+    ? (getFreeFormComponent(form.model.name) ?? CommonForm)
     : undefined
   sharedFormName.value = getSharedFormName(form.model.name)
 

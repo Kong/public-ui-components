@@ -65,17 +65,8 @@ export function getPluginConfig(pluginName: string): ResolvedPluginFormConfig | 
 export function getFreeFormComponent(
   pluginName: string,
   experimentalWhitelist: string[],
-  engine?: 'vfg' | 'freeform',
 ): Component | undefined {
-  if (engine === 'vfg') {
-    return undefined
-  }
-
   const pluginConfig = getPluginConfig(pluginName)
-
-  if (engine === 'freeform' && !pluginConfig) {
-    return undefined
-  }
 
   if (!pluginConfig) {
     return undefined
@@ -97,7 +88,7 @@ export function shouldUseFreeForm(
     return true
   }
 
-  return !!getFreeFormComponent(pluginName, experimentalWhitelist, engine)
+  return !!getFreeFormComponent(pluginName, experimentalWhitelist)
 }
 
 export function getExperimentalPluginNames(): string[] {

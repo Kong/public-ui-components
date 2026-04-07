@@ -35,7 +35,7 @@ export function useFreeFormResolver() {
     shouldUseFreeForm: (pluginName: string, engine?: 'vfg' | 'freeform') =>
       shouldUseFreeForm(pluginName, experimentalFreeForms, engine),
 
-    getFreeFormComponent: (pluginName: string, engine?: 'vfg' | 'freeform') =>
-      getFreeFormComponent(pluginName, experimentalFreeForms, engine),
+    getFreeFormComponent: (pluginName: string) =>
+      getFreeFormComponent(pluginName, experimentalFreeForms),
   }
 }
