@@ -1,5 +1,5 @@
 /**
- * This is polyfill for monaco editor running in JSDOM environment.
+ * This is a polyfill for monaco editor running in JSDOM environment.
  */
 
 if (typeof document !== 'undefined' && typeof document.queryCommandSupported !== 'function') {

@@ -50,10 +50,9 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
 
   provide(FIELD_RENDERER_SLOTS, mergedSlots)
 
-  const pathValue = toValue(path)
-
   return computed(() => {
     if (defaultSlot) return
+    const pathValue = toValue(path)
     const matchedByPath = mergedSlots.value[generalizePath(pathValue, getSchemaMap())]
     if (matchedByPath) return matchedByPath
 

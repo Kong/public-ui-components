@@ -86,6 +86,8 @@ export function shouldUseFreeForm(
 ): boolean {
   if (engine === 'freeform') {
     return true
+  } else if (engine === 'vfg') {
+    return false
   }
 
   return !!getFreeFormComponent(pluginName, experimentalWhitelist)
