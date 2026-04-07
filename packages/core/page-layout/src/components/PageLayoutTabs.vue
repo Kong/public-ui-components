@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { PageLayoutTabsProps, PageLayoutTab } from '../types'
 import composables from '../composables'
@@ -183,6 +183,10 @@ onBeforeUnmount(() => {
   if (resizeTimeout) {
     clearTimeout(resizeTimeout)
   }
+})
+
+watch(tabs, () => {
+  computeTabLayoutOverflow()
 })
 </script>
 
