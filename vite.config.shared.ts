@@ -164,7 +164,7 @@ export const getApiProxies = (pathToRoot: string = '../../../.') => {
   const regionalProxies = {}
   // Build the regional API proxies
   for (const region of availableRegions) {
-    // @ts-ignore
+    // @ts-ignore: Ignoring TS error due to dynamic property assignment
     regionalProxies[`^/${region}/kong-api`] = {
       target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, region),
       rewrite: (path: string) => path.replace(`/${region}/kong-api`, ''),
