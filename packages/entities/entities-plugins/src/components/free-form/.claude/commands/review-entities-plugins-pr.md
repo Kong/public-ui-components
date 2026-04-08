@@ -2,8 +2,15 @@
 
 You are reviewing a pull request that contains changes in the `packages/entities/entities-plugins` source code.
 
-**Before starting, make sure your working directory is the repository root (`public-ui-components`).**
-All relative paths and bash commands in this skill assume you are there.
+**Before starting**, confirm the repository root and save it — all file reads and commands use this path:
+```bash
+pwd  # must end with /public-ui-components
+```
+If not, `cd` to the correct directory first. Assign it for reference:
+```bash
+REPO_ROOT=$(pwd)
+```
+All subsequent paths in this skill are relative to `$REPO_ROOT`.
 
 ---
 
@@ -109,7 +116,7 @@ lsof -ti:5173
 If not running, start it and wait. Use the root vite binary to avoid pnpm lockfile hash mismatches between branches:
 ```bash
 cd packages/entities/entities-plugins
-USE_SANDBOX=true node_modules/.bin/vite > /tmp/entities-plugins-dev.log 2>&1 &
+USE_SANDBOX=true $REPO_ROOT/node_modules/.bin/vite > /tmp/entities-plugins-dev.log 2>&1 &
 for i in $(seq 1 30); do curl -s http://localhost:5173 > /dev/null && echo "ready after ${i}s" && break; sleep 1; done
 ```
 
