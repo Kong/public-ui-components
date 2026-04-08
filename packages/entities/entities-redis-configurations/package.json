@@ -83,6 +83,7 @@
   },
   "dependencies": {
     "@kong-ui-public/entities-plugins-icon": "workspace:^",
+    "lodash-es": "^4.17.23",
     "uuid": "^11.1.0"
   }
 }

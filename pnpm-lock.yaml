@@ -1141,6 +1141,9 @@ importers:
       '@kong-ui-public/entities-plugins-icon':
         specifier: workspace:^
         version: link:../entities-plugins-icon
+      lodash-es:
+        specifier: ^4.17.23
+        version: 4.18.1
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
