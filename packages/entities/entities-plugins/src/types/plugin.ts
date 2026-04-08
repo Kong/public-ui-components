@@ -28,6 +28,7 @@ export const PluginGroupArraySortedAlphabetically = [
   PluginGroup.ANALYTICS_AND_MONITORING,
   PluginGroup.AUTHENTICATION,
   PluginGroup.LOGGING,
+  PluginGroup.MONETIZATION,
   PluginGroup.SECURITY,
   PluginGroup.SERVERLESS,
   PluginGroup.TRAFFIC_CONTROL,
