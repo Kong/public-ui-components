@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.5...@kong-ui-public/app-layout@4.11.6) (2026-04-07)
+
+
+### Bug Fixes
+
+* **app-layout:** display title after slot in next navigation ([#3095](https://github.com/Kong/public-ui-components/issues/3095)) ([2c46837](https://github.com/Kong/public-ui-components/commit/2c4683778d0646b27342ce29cc4b4e038b4d97b5))
+
+
+
+
+
 ## [4.11.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.4...@kong-ui-public/app-layout@4.11.5) (2026-03-31)
 
 

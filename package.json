@@ -75,6 +75,11 @@
     "vue-tsc": "^3.2.4"
   },
   "pnpm": {
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-p9ff-h696-f583"
+      ]
+    },
     "overrides": {
       "vue": "^3.5.27",
       "form-data@>=3.0.0 <3.0.4": ">=4.0.4",
