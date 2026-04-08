@@ -11,7 +11,7 @@ const MAX_ADD_ON_PAGES_FALLBACK = 1000
 
 // Only `get` is used, narrow type keeps mocks simple and reduces Axios's generic `get` issue
 type ManagedCacheApiClient = {
-  get: (url: string, config?: { params?: Record<string, unknown> }) => Promise<{ data: unknown }>
+  get: <T>(url: string, config?: { params?: Record<string, unknown> }) => Promise<{ data: T }>
 }
 
 const extractListMeta = (
@@ -34,7 +34,7 @@ export const fetchManagedCacheAddOnById = async (
   const url = `${cloudGatewaysBase}/v2/cloud-gateways/add-ons/${encodeURIComponent(addOnId)}`
 
   try {
-    const { data } = await axiosInstance.get(url)
+    const { data } = await axiosInstance.get<ManagedCacheAddOn>(url)
     const parsed = parseManagedAddOnDetailPayload(data)
     if (parsed === null || !isManagedCacheAddOn(parsed)) return null
 
@@ -62,7 +62,7 @@ export const fetchAllManagedCacheAddOns = async (
   let totalPagesFromMeta: number | null = null
 
   while (pageNumber <= MAX_ADD_ON_PAGES_FALLBACK) {
-    const { data } = await axiosInstance.get(addOnsUrl, {
+    const { data } = await axiosInstance.get<CloudGatewaysListAddOnsResponse>(addOnsUrl, {
       params: {
         'page[size]': ADD_ONS_PAGE_SIZE,
         'page[number]': pageNumber,
@@ -72,7 +72,7 @@ export const fetchAllManagedCacheAddOns = async (
       },
     })
 
-    const { items, totalPages } = extractListMeta(data as CloudGatewaysListAddOnsResponse)
+    const { items, totalPages } = extractListMeta(data)
     const pageItems = items
       .map((item) => parseManagedAddOn(item))
       .filter((row): row is ManagedCacheAddOn => row !== null)
@@ -103,8 +103,8 @@ export const fetchRedisPartialForConfigCard = async (
   const url = `${apiBaseUrl}/v2/control-planes/${encodeURIComponent(controlPlaneId)}/core-entities/partials/${encodeURIComponent(partialId)}`
 
   try {
-    const { data } = await axiosInstance.get(url)
-    const maybe = (data as { data?: RedisConfigurationResponse }).data
+    const { data } = await axiosInstance.get<{ data?: RedisConfigurationResponse }>(url)
+    const maybe = data.data
 
     if (maybe == null) return null
     return maybe.type === PartialType.REDIS_CE || maybe.type === PartialType.REDIS_EE ? maybe : null

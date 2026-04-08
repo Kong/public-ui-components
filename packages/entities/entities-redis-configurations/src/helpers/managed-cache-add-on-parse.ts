@@ -1,9 +1,10 @@
 import type { AddOnRecord, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
 
-export const parseManagedAddOn = (plain: ManagedCacheAddOn): ManagedCacheAddOn => {
-  const value = plain satisfies ManagedCacheAddOn
+export const parseManagedAddOn = (plain: ManagedCacheAddOn | AddOnRecord): ManagedCacheAddOn => {
+  const value = plain as ManagedCacheAddOn
   return {
     ...value,
+    id: value.id,
     config: {
       ...value.config,
       kind: value.config.kind,
@@ -11,7 +12,7 @@ export const parseManagedAddOn = (plain: ManagedCacheAddOn): ManagedCacheAddOn =
   } satisfies ManagedCacheAddOn
 }
 
-export const parseManagedAddOnDetailPayload = (data: ManagedCacheAddOn): ManagedCacheAddOn =>
+export const parseManagedAddOnDetailPayload = (data: ManagedCacheAddOn | AddOnRecord): ManagedCacheAddOn =>
   parseManagedAddOn(data)
 
 // Read linked partial id/`cache_config_id` from object metadata
@@ -24,5 +25,5 @@ const readCacheConfigIdFromMetadata = (meta: AddOnRecord | undefined): string | 
 export const getCacheConfigId = (addOn: ManagedCacheAddOn): string | undefined =>
   readCacheConfigIdFromMetadata(addOn.config?.state_metadata)
 
-export const isManagedCacheAddOn = (addOn: ManagedCacheAddOn): addOn is ManagedCacheAddOn =>
-  addOn.config.kind === 'managed-cache.v0'
+export const isManagedCacheAddOn = (addOn: ManagedCacheAddOn | AddOnRecord): addOn is ManagedCacheAddOn =>
+  parseManagedAddOn(addOn).config.kind === 'managed-cache.v0'

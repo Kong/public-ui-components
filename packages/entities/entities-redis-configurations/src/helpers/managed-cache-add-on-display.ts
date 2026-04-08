@@ -434,8 +434,5 @@ export const addOnApiResponseToDisplayRecord = (
   options?: { cloudAuthAvailable?: boolean },
 ): DisplayRecord => {
   const addOn = parseManagedAddOnDetailPayload(data)
-  if (addOn === null) {
-    return {}
-  }
   return displayRecordFromManagedCacheAddOn(addOn, options?.cloudAuthAvailable === true)
 }
