@@ -1,20 +1,160 @@
 <template>
-  <div class="kong-ui-consumer-group-entity-config-card">
+  <div
+    class="kong-ui-consumer-group-entity-config-card"
+    :class="{ 'managed-redis-nested-detail': disableKonnectManagedDetail }"
+  >
+    <template v-if="isManagedKonnectDetailEnabled">
+      <KSkeleton
+        v-if="detailLayout === 'resolving'"
+        data-testid="managed-redis-config-resolver-skeleton"
+        :table-columns="2"
+        type="table"
+      />
+
+      <div
+        v-else-if="detailLayout === 'managed'"
+        class="managed-konnect-redis-detail"
+        data-testid="managed-konnect-redis-detail"
+      >
+        <!-- Konnect-managed add-on card intentionally hides YAML; only structured/json are shown here -->
+        <EntityBaseConfigCard
+          :key="addOnIdForCacheFetch"
+          :code-block-record-formatter="cacheAddonCodeBlockFormatter"
+          :config="addOnCardRuntimeConfig"
+          :config-card-doc="configCardDoc"
+          :config-schema="managedAddOnConfigSchema"
+          :entity-type="SupportedEntityType.Partial"
+          fetch-url="/v2/cloud-gateways/add-ons/{id}"
+          :formats-to-hide="['yaml']"
+          :hide-title="false"
+          :record-resolver="addOnRecordResolver"
+          @fetch:error="(e) => emit('fetch:error', e)"
+          @fetch:success="onCacheAddOnLoaded"
+          @loading="(v) => emit('loading', v)"
+        >
+          <template #title>
+            {{ t('config_card.sections.cache_configuration') }}
+          </template>
+          <template #type>
+            <div>{{ t('list.type.konnect_managed_redis') }}</div>
+          </template>
+          <!-- One JSON blob per group -->
+          <template #data_plane_groups="{ row }">
+            <div
+              class="dpg-stack"
+              data-testid="dpg-display"
+            >
+              <template v-if="!dataPlaneGroupEntries(row.value).length">
+                –
+              </template>
+              <template v-else>
+                <div
+                  v-for="(entry, idx) in dataPlaneGroupEntries(row.value)"
+                  :key="idx"
+                  class="dpg-sub-row"
+                  :data-testid="`dpg-sub-row-${idx}`"
+                >
+                  <div
+                    class="dpg-sub-label"
+                    :data-testid="`dpg-item-heading-${idx}`"
+                  >
+                    {{ dataPlaneGroupItemHeading(entry, idx) }}
+                  </div>
+                  <div
+                    class="dpg-sub-value"
+                    :data-testid="`dpg-entry-blob-${idx}`"
+                  >
+                    <KCodeBlock
+                      :id="`dpg-${dataPlaneGroupsInstanceId}-${idx}`"
+                      :code="jsonStringifyDpgEntryForBlob(entry)"
+                      language="json"
+                      max-height="480px"
+                      :show-line-numbers="false"
+                      @code-block-render="highlightCodeBlock"
+                    />
+                  </div>
+                </div>
+              </template>
+            </div>
+          </template>
+          <!-- Partial config shown only when Koko creates partial; nothing under cache card while provisioning -->
+          <template
+            v-if="linkedPartialIdForCollapse"
+            #after-fields
+          >
+            <KCollapse
+              v-model="partialSectionCollapsed"
+              class="managed-redis-partial-kcollapse"
+              data-testid="managed-redis-partial-collapse"
+              trigger-alignment="leading"
+            >
+              <template #trigger="{ isCollapsed, toggle }">
+                <KButton
+                  appearance="tertiary"
+                  class="managed-redis-partial-collapse-trigger"
+                  data-testid="managed-redis-partial-collapse-trigger"
+                  type="button"
+                  @click="toggle()"
+                >
+                  <ChevronUpIcon
+                    v-if="!isCollapsed"
+                    decorative
+                    :size="KUI_ICON_SIZE_40"
+                  />
+                  <ChevronRightIcon
+                    v-else
+                    decorative
+                    :size="KUI_ICON_SIZE_40"
+                  />
+                  {{ partialCollapseTriggerLabel }}
+                </KButton>
+              </template>
+              <div class="managed-redis-partial-expandable-body">
+                <RedisConfigurationConfigCard
+                  v-if="!partialSectionCollapsed"
+                  :config="innerPartialCardConfig"
+                  :config-card-doc="configCardDoc"
+                  disable-konnect-managed-detail
+                  :hide-title="false"
+                  @fetch:error="(e) => emit('fetch:error', e)"
+                  @fetch:success="onPartialNestedLoaded"
+                  @loading="(v) => emit('loading', v)"
+                >
+                  <template #title>
+                    {{ t('config_card.sections.partial_configuration') }}
+                  </template>
+                </RedisConfigurationConfigCard>
+              </div>
+            </KCollapse>
+          </template>
+        </EntityBaseConfigCard>
+      </div>
+    </template>
+
+    <!-- Legacy card hides YAML only for nested managed-partial detail; default legacy Konnect/KM passes [ ] -->
     <EntityBaseConfigCard
+      v-if="showLegacyConfigCard"
       :code-block-record-formatter="codeBlockRecordFormatter"
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
       :entity-type="SupportedEntityType.Partial"
       :fetch-url="fetchUrl"
+      :formats-to-hide="disableKonnectManagedDetail ? ['yaml'] : []"
       :hide-title="hideTitle"
       :record-resolver="recordResolver"
-      @fetch:error="(err: any) => $emit('fetch:error', err)"
+      @fetch:error="(e) => emit('fetch:error', e)"
       @fetch:success="handleData"
-      @loading="(val: boolean) => $emit('loading', val)"
+      @loading="(v) => emit('loading', v)"
     >
       <template #type>
         <div>{{ redisTypeText }}</div>
+      </template>
+      <template
+        v-if="$slots.title"
+        #title
+      >
+        <slot name="title" />
       </template>
     </EntityBaseConfigCard>
   </div>
@@ -22,31 +162,51 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref, useId } from 'vue'
 import type { AxiosError } from 'axios'
+import type { ConfigurationSchema, ConfigurationSchemaItem } from '@kong-ui-public/entities-shared'
 import {
   ConfigurationSchemaSection,
   ConfigurationSchemaType,
   EntityBaseConfigCard,
   SupportedEntityType,
+  highlightCodeBlock,
+  useAxios,
 } from '@kong-ui-public/entities-shared'
-import type { ConfigurationSchema, ConfigurationSchemaItem } from '@kong-ui-public/entities-shared'
+import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import { ChevronRightIcon, ChevronUpIcon } from '@kong/icons'
+import { KButton, KCodeBlock, KCollapse, KSkeleton } from '@kong/kongponents'
 import type {
+  DetailLayout,
   KonnectRedisConfigurationEntityConfig,
   KongManagerRedisConfigurationEntityConfig,
   RedisConfigurationResponse,
   RedisConfigurationConfigDTO,
 } from '../types'
 import { RedisType } from '../types'
+import type { AddOnRecord, AddOnValue, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import endpoints from '../partials-endpoints'
-import { getRedisType, pickCloudAuthFields } from '../helpers'
+import { getRedisType, isKonnectManagedRedisEnabled, pickCloudAuthFields } from '../helpers'
+import {
+  addOnApiResponseToDisplayRecord,
+  fetchAllManagedCacheAddOns,
+  fetchManagedCacheAddOnById,
+  fetchRedisPartialForConfigCard,
+  getCacheConfigId,
+  isManagedCacheAddOn,
+} from '../helpers/managed-cache-add-on'
+import { pickManagedAddOnCardRecord } from '../helpers/managed-add-on-config-schema'
 import { DEFAULT_REDIS_TYPE } from '../constants'
 
-// Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
+/**
+ * Managed Konnect detail flow:
+ * resolve route id as add-on first (source of truth), then fall back to partial and map back to add-on
+ * render managed card when resolved; otherwise fall back to legacy partial card
+ */
+
 const props = defineProps({
-  /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
     type: Object as PropType<KonnectRedisConfigurationEntityConfig | KongManagerRedisConfigurationEntityConfig>,
     required: true,
@@ -73,24 +233,242 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  /** Nested partial card only: skips managed (add-on + collapse) layout */
+  disableKonnectManagedDetail: {
+    type: Boolean,
+    default: false,
+  },
 })
 
+/**
+ * fetch:success` - Koko redis partial (`RedisConfigurationResponse`)
+ * Konnect-managed redis loads Cloud Gateways add-ons as the primary entity; that payload is emitted
+ * separately via `fetch:managed-add-on-success` to avoid confusion with legacy partial payload
+ */
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:error', error: AxiosError): void
   (e: 'fetch:success', data: RedisConfigurationResponse): void
+  (e: 'fetch:managed-add-on-success', data: ManagedCacheAddOn): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()
+const dataPlaneGroupsInstanceId = useId()
+
+// Shaped add-on/cache values use `AddOnRecord`; `row.value` is typed `any` on the shared card, we only accept add-on shapes here
+const isDataPlaneGroupObject = (v: AddOnValue | undefined): v is AddOnRecord =>
+  v !== null && typeof v === 'object' && !Array.isArray(v)
+
+const dataPlaneGroupEntries = (value: AddOnValue | undefined): AddOnRecord[] => {
+  if (value === undefined || value === null) {
+    return []
+  }
+
+  if (Array.isArray(value)) {
+    return value.filter(isDataPlaneGroupObject)
+  }
+
+  if (isDataPlaneGroupObject(value)) {
+    return [value]
+  }
+
+  return []
+}
+
+const dataPlaneGroupItemHeading = (entry: AddOnRecord, index: number): string => {
+  const name = entry.name
+  if (typeof name === 'string' && name.trim() !== '') {
+    return name
+  }
+
+  return t('config_card.managed_dpg.entry_heading', { n: index + 1 })
+}
+
+// Omit UI-only `name` before JSON blob; everything else stays on the payload
+const jsonStringifyDpgEntryForBlob = (entry: AddOnRecord): string => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `name` is UI-only; rest is serialized
+  const { name, ...payload } = entry
+  return JSON.stringify(payload, null, 2)
+}
+
+const { managedAddOnConfigSchema, setManagedAddOnSchemaFromDisplayRecord } = composables.useManagedCacheAddOnDisplaySchema()
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
 
-const redisType = ref<RedisType>(DEFAULT_REDIS_TYPE)
+// Show cloud auth fields only when enabled in config
+const konnectCloudAuthAvailable = computed((): boolean => props.config.cloudAuthAvailable === true )
 
-const handleData = (data: any) => {
-  redisType.value = getRedisType(data as RedisConfigurationResponse)
+// Enable managed layout only for supported Konnect setup
+const isManagedKonnectDetailEnabled = computed((): boolean =>
+  !props.disableKonnectManagedDetail &&
+  props.config.app === 'konnect' &&
+  isKonnectManagedRedisEnabled(props.config as KonnectRedisConfigurationEntityConfig),
+)
+
+// Use Cloud Gateways base when provided; otherwise use apiBaseUrl
+const cloudGatewaysBase = computed((): string => {
+  const k = props.config as KonnectRedisConfigurationEntityConfig
+  return (k.cloudGatewaysApiBaseUrl ?? k.apiBaseUrl) ?? ''
+})
+
+const detailLayout = ref<DetailLayout>('legacy')
+const addOnIdForCacheFetch = ref('')
+const linkedPartialIdForCollapse = ref<string | null>(null)
+const partialSectionCollapsed = ref(true)
+
+const partialCollapseTriggerLabel = computed((): string =>
+  partialSectionCollapsed.value
+    ? t('config_card.collapse.show_partial')
+    : t('config_card.collapse.hide_partial'),
+)
+
+// Keep only fields shown on the managed cache card
+const addOnRecordResolver = (data: AddOnRecord): AddOnRecord => {
+  const full = addOnApiResponseToDisplayRecord(data, {
+    cloudAuthAvailable: konnectCloudAuthAvailable.value,
+  })
+  // allowlist filter for add-on cache data
+  return pickManagedAddOnCardRecord(full)
+}
+
+// Show a skeleton first so legacy card does not flash
+onBeforeMount(() => {
+  if (isManagedKonnectDetailEnabled.value) {
+    detailLayout.value = 'resolving'
+  }
+})
+
+// Route id may be an add-on id or a partial id.
+// Resolve add-on first because it is the source of truth for managed detail + linked partial mapping.
+// If add-on is not found (for example during provisioning/teardown), resolve partial and map back to add-on.
+onMounted(() => {
+  if (!isManagedKonnectDetailEnabled.value) {
+    return
+  }
+
+  void (async () => {
+    emit('loading', true)
+
+    const k = props.config as KonnectRedisConfigurationEntityConfig
+    const routeEntityId = k.entityId
+    const gatewaysBase = cloudGatewaysBase.value
+
+    try {
+      const addOnFromRouteId = await fetchManagedCacheAddOnById(
+        axiosInstance,
+        gatewaysBase,
+        routeEntityId,
+        k.controlPlaneId,
+      )
+
+      if (addOnFromRouteId) {
+        addOnIdForCacheFetch.value = addOnFromRouteId.id
+        linkedPartialIdForCollapse.value = getCacheConfigId(addOnFromRouteId) ?? null
+        detailLayout.value = 'managed'
+        return
+      }
+
+      // Shared helper keeps detail behavior aligned with list and avoids duplicate fetch logic
+      const partial = await fetchRedisPartialForConfigCard(
+        axiosInstance,
+        k.apiBaseUrl,
+        k.controlPlaneId,
+        routeEntityId,
+      )
+
+      if (partial) {
+        const addOns = await fetchAllManagedCacheAddOns(
+          axiosInstance,
+          gatewaysBase,
+          k.controlPlaneId,
+          k.controlPlaneGeo,
+        )
+
+        const addOnForPartial = addOns.find((a) => getCacheConfigId(a) === routeEntityId)
+
+        if (addOnForPartial && isManagedCacheAddOn(addOnForPartial)) {
+          addOnIdForCacheFetch.value = addOnForPartial.id
+          linkedPartialIdForCollapse.value = routeEntityId
+          detailLayout.value = 'managed'
+          return
+        }
+      }
+    } catch {
+      // fall back to legacy partial-only card
+    } finally {
+      emit('loading', false)
+    }
+
+    detailLayout.value = 'legacy'
+  })()
+})
+
+// Show legacy card when konnect FF is disbaled or unresolved
+const showLegacyConfigCard = computed((): boolean =>
+  !isManagedKonnectDetailEnabled.value || detailLayout.value === 'legacy',
+)
+
+// Runtime config for managed cache card fetches
+const addOnCardRuntimeConfig = computed((): KonnectRedisConfigurationEntityConfig => {
+  const k = props.config as KonnectRedisConfigurationEntityConfig
+  return {
+    ...k,
+    apiBaseUrl: cloudGatewaysBase.value,
+    entityId: addOnIdForCacheFetch.value,
+    formatPreferenceKey: k.formatPreferenceKey ? `${k.formatPreferenceKey}_managed_cache` : undefined,
+  }
+})
+
+// Runtime config for nested partial card
+const innerPartialCardConfig = computed((): KonnectRedisConfigurationEntityConfig => {
+  const k = props.config as KonnectRedisConfigurationEntityConfig
+  const partialId = linkedPartialIdForCollapse.value ?? k.entityId
+  return {
+    ...k,
+    entityId: partialId,
+    formatPreferenceKey: k.formatPreferenceKey ? `${k.formatPreferenceKey}_managed_partial` : undefined,
+  }
+})
+
+// Terraform export needs the managed_cache_add_on wrapper
+const cacheAddonCodeBlockFormatter = (record: AddOnRecord, codeFormat: string): AddOnRecord => {
+  if (!record || Object.keys(record).length === 0) {
+    return {}
+  }
+
+  return codeFormat === 'terraform'
+    ? { managed_cache_add_on: { ...record } }
+    : { ...record }
+}
+
+// Konnect-managed: refresh display schema from API row; notify hosts via add-on-only event
+const onCacheAddOnLoaded = (data: AddOnRecord): void => {
+  const display = addOnApiResponseToDisplayRecord(data, {
+    cloudAuthAvailable: konnectCloudAuthAvailable.value,
+  })
+  setManagedAddOnSchemaFromDisplayRecord(display)
+
+  if (isManagedCacheAddOn(data)) {
+    emit('fetch:managed-add-on-success', data)
+  }
+}
+
+// Nested legacy partial config card
+const onPartialNestedLoaded = (data: RedisConfigurationResponse) => {
   emit('fetch:success', data)
 }
 
+const redisType = ref<RedisType>(DEFAULT_REDIS_TYPE)
+
+// Legacy partial config card
+const handleData = (payload: Record<string, any>): void => {
+  const partialResponse = payload as RedisConfigurationResponse
+  redisType.value = getRedisType(partialResponse)
+  emit('fetch:success', partialResponse)
+}
+
+// Labels used in legacy detail mode
 const redisTypeText = computed(() => {
   const suffix = redisType.value === RedisType.HOST_PORT_CE
     ? t('form.options.type.suffix_open_source')
@@ -113,22 +491,21 @@ const redisTypeText = computed(() => {
   return `${prefix}${suffix}`
 })
 
-/**
- * Flatten the config object to display in the structure tab
- */
-const recordResolver = (data: RedisConfigurationResponse) => {
+// Flatten the config object to display in the structure tab
+const recordResolver = (payload: Record<string, any>): AddOnRecord => {
+  const partialResponse = payload as RedisConfigurationResponse
+  const partialConfig = partialResponse.config ?? {}
   return {
-    id: data.id,
-    name: data.name,
-    tags: data.tags,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
-    type: data.type,
-    ...data.config,
-    ...(
-      props.config.cloudAuthAvailable
-        ? { cloud_authentication: pickCloudAuthFields(data.config.cloud_authentication) }
-        : null
+    id: partialResponse.id,
+    name: partialResponse.name,
+    tags: partialResponse.tags,
+    created_at: partialResponse.created_at,
+    updated_at: partialResponse.updated_at,
+    type: partialResponse.type,
+    ...partialConfig,
+    ...(props.config.cloudAuthAvailable
+      ? { cloud_authentication: pickCloudAuthFields(partialConfig.cloud_authentication) } :
+      {}
     ),
   }
 }
@@ -136,7 +513,7 @@ const recordResolver = (data: RedisConfigurationResponse) => {
 /**
  * Put config details into `config` object to display in the code block tab
  */
-const codeBlockRecordFormatter = (record: Record<string, any>, codeFormat: string) => {
+const codeBlockRecordFormatter = (record: Record<string, any>, codeFormat: string): AddOnRecord => {
   // Prevent type errors, return empty object if no record
   if (!record || Object.keys(record).length === 0) {
     return {}
@@ -432,3 +809,78 @@ const configSchema = computed<ConfigurationSchema>(() => {
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.managed-konnect-redis-detail {
+  // Fills the config card value column
+  .dpg-stack {
+    width: 100%;
+  }
+
+  // Mirror `ConfigCardItem`’s default label/value split
+  .dpg-sub-row {
+    align-items: flex-start;
+    border-bottom: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
+    box-sizing: border-box;
+    display: flex;
+    padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
+    width: 100%;
+  }
+
+  .dpg-sub-label {
+    box-sizing: border-box;
+    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    padding-right: var(--kui-space-60, $kui-space-60);
+    width: 25%;
+  }
+
+  .dpg-sub-value {
+    box-sizing: border-box;
+    flex: 1;
+    min-width: 0;
+    width: 75%;
+  }
+
+  :deep(.config-card-details-after) {
+    padding-left: var(--kui-space-0, $kui-space-0);
+    padding-top: var(--kui-space-60, $kui-space-60);
+  }
+
+  :deep(.managed-redis-partial-kcollapse .collapse-heading) {
+    margin-bottom: var(--kui-space-0, $kui-space-0);
+  }
+
+  :deep(.managed-redis-partial-kcollapse .collapse-hidden-content) {
+    margin-top: var(--kui-space-0, $kui-space-0);
+  }
+
+  :deep(.managed-redis-nested-detail .kong-ui-entity-base-config-card.k-card) {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding-left: var(--kui-space-0, $kui-space-0);
+    padding-right: var(--kui-space-0, $kui-space-0);
+  }
+
+  /* JsonArray fieldset legends (e.g. data plane groups): medium weight; keep global JsonCardItem unchanged */
+  :deep(.config-card-fieldset-title b) {
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+  }
+
+  /* Tertiary KButton: no hover/active highlight */
+  :deep(.managed-redis-partial-collapse-trigger) {
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
+      background-color: transparent !important;
+      box-shadow: none !important;
+      color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
+    }
+  }
+}
+
+.managed-redis-partial-expandable-body {
+  margin-top: var(--kui-space-0, $kui-space-0);
+}
+</style>

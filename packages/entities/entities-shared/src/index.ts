@@ -33,3 +33,5 @@ export * from './types'
 
 // Constants
 export * from './constants'
+
+export { highlightCodeBlock } from './utils/code-block'

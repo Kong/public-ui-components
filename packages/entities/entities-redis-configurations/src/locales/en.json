@@ -34,6 +34,33 @@
   "copy": {
     "success": "Copied {val} to clipboard"
   },
+  "config_card": {
+    "sections": {
+      "cache_configuration": "Cache configuration",
+      "partial_configuration": "Partial configuration"
+    },
+    "collapse": {
+      "show_partial": "Show partial configuration",
+      "hide_partial": "Hide partial configuration"
+    },
+    "managed_dpg": {
+      "entry_heading": "Data plane group {n}"
+    },
+    "managed_add_on": {
+      "fields": {
+        "type": "Type",
+        "state": "State",
+        "entity_version": "Entity version",
+        "kind": "Kind",
+        "owner": "Owner",
+        "capacity_config": "Capacity configuration",
+        "data_plane_group": "Data plane group",
+        "data_plane_groups": "Data plane groups",
+        "state_metadata": "State metadata",
+        "cache_state_metadata": "Cache state metadata"
+      }
+    }
+  },
   "form": {
     "redis_partial_modal_title": "Create Redis Configuration",
     "partial_created_success_message": "Redis configuration created successfully",

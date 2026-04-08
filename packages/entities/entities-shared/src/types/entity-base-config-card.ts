@@ -60,6 +60,10 @@ export const SupportedEntityDeckArray = [
 
 export type SupportedEntityDeck = typeof SupportedEntityDeckArray[number]
 
+export function isSupportedDeckEntityType(entityType: SupportedEntityType): boolean {
+  return (SupportedEntityDeckArray as readonly SupportedEntityType[]).includes(entityType)
+}
+
 export const EventGatewayTypesArray = ['backend_cluster', 'virtual_cluster', 'listener', 'produce_policy', 'consume_policy', 'cluster_policy', 'listener_policy', 'schema_registry', 'static_key', 'tls_trust_bundle']
 
 export const IdentityTypesArray = ['auth_server', 'auth_server_scopes', 'auth_server_claims', 'auth_server_clients']
