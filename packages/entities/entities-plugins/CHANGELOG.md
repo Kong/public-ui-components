@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.186.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.186.0...@kong-ui-public/entities-plugins@9.186.1) (2026-04-08)
+
+
+### Bug Fixes
+
+* **entities-plugins:** adjust aligment for array field ([#3103](https://github.com/Kong/public-ui-components/issues/3103)) ([bbba2cd](https://github.com/Kong/public-ui-components/commit/bbba2cd94e9bffad39683898516ab9923d54d344))
+
+
+
+
+
 # [9.186.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.185.2...@kong-ui-public/entities-plugins@9.186.0) (2026-04-08)
 
 
