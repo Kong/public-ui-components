@@ -98,6 +98,10 @@ const mapping = {
     experimental: true,
     component: 'OpentelemetryForm',
   },
+  'zipkin': {
+    experimental: true,
+    component: 'ZipkinForm',
+  },
 } as const
 
 export type FreeFormName = keyof typeof mapping

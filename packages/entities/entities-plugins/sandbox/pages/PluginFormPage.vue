@@ -85,6 +85,7 @@ useProvideExperimentalFreeForms([
   'cors',
   'proxy-cache',
   'proxy-cache-advanced',
+  'zipkin',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
