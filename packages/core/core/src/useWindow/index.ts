@@ -22,7 +22,7 @@ export default function useWindow(): WindowComposable {
     window.location.replace(url)
   }
 
-  const setLocationReload = (): void => {
+  const locationReload = (): void => {
     window.location.reload()
   }
 
@@ -35,6 +35,6 @@ export default function useWindow(): WindowComposable {
     getUrlSearchParams,
     setLocationAssign,
     setLocationReplace,
-    setLocationReload,
+    locationReload,
   }
 }

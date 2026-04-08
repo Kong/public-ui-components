@@ -7,5 +7,5 @@ export interface WindowComposable {
   getUrlSearchParams: () => URLSearchParams
   setLocationAssign: (url: string) => void
   setLocationReplace: (url: string) => void
-  setLocationReload: () => void
+  locationReload: () => void
 }
