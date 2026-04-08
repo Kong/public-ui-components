@@ -17,7 +17,9 @@ import { writeFileSync, mkdirSync } from 'fs'
 import { resolve } from 'path'
 
 const args = process.argv.slice(2)
-const getArg = (name) => { const i = args.indexOf(`--${name}`); return i !== -1 ? args[i + 1] : null }
+const getArg = (name) => {
+  const i = args.indexOf(`--${name}`); return i !== -1 ? args[i + 1] : null
+}
 
 const pluginsArg = getArg('plugins')
 const pluginArg = getArg('plugin')
@@ -49,7 +51,12 @@ if (pluginArg && screenshotSelector) {
   // Expand advanced sections
   const toggles = page.getByText('Show additional settings')
   const count = await toggles.count()
-  for (let i = 0; i < count; i++) { try { await toggles.nth(i).click() } catch {} }
+  for (let i = 0; i < count; i++) {
+    try {
+      await toggles.nth(i).click()
+    } catch { // ignore click error
+    }
+  }
   if (count > 0) await page.waitForTimeout(300)
 
   let screenshotPath = null
@@ -90,8 +97,12 @@ async function scanPlugin(browser, plugin) {
     if (!url.includes('/schemas/') || url.includes('/@fs/')) return
 
     const status = response.status()
-    if (status === 401) { warnings.push(`[401] Auth required — skipping schema: ${url}`); return }
-    if (status !== 200) { networkErrors.push(`[${status}] Schema fetch failed: ${url}`); return }
+    if (status === 401) {
+      warnings.push(`[401] Auth required — skipping schema: ${url}`); return
+    }
+    if (status !== 200) {
+      networkErrors.push(`[${status}] Schema fetch failed: ${url}`); return
+    }
 
     try {
       const json = await response.json()

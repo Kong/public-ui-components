@@ -21,11 +21,13 @@ import { writeFileSync, mkdirSync } from 'fs'
 import { resolve } from 'path'
 
 const args = process.argv.slice(2)
-const getArg = (name) => { const i = args.indexOf(`--${name}`); return i !== -1 ? args[i + 1] : null }
+const getArg = (name) => {
+  const i = args.indexOf(`--${name}`); return i !== -1 ? args[i + 1] : null
+}
 const hasFlag = (name) => args.includes(`--${name}`)
 
 const plugin = getArg('plugin')
-const scanMode = getArg('scan')       // 'freeform' | 'vfg'
+const scanMode = getArg('scan') // 'freeform' | 'vfg'
 const outputDir = resolve(getArg('output-dir') || '/tmp/plugin-migrate')
 const isSubmitTest = hasFlag('submit-test')
 const payloadArg = getArg('payload')
@@ -49,15 +51,15 @@ const BASE_URL = 'http://localhost:5173'
 // Sub-structural prefixes: these are internal parts of ArrayField/ObjectField, not standalone fields.
 // We KEEP ff-array-{path} (ArrayField root) and ff-object-{path} (ObjectField root) as real fields.
 const FF_SUB_STRUCTURAL_PREFIXES = [
-  'ff-label-',                   // KLabel elements inside array/object headers
-  'ff-array-header-',            // ArrayField header section
-  'ff-array-basic-container-',   // ArrayField inner container div
-  'ff-object-header-',           // ObjectField header section
-  'ff-object-content-',          // ObjectField content area
-  'ff-object-toggle-',           // ObjectField collapse toggle (also covers toggle-btn-, trigger-icon-)
-  'ff-object-switch-',           // ObjectField nullable switch
-  'ff-add-item-btn-',            // ArrayField add button
-  'ff-tag-',                     // StringArrayField inner KTagsInput (root ff-{path} is kept)
+  'ff-label-', // KLabel elements inside array/object headers
+  'ff-array-header-', // ArrayField header section
+  'ff-array-basic-container-', // ArrayField inner container div
+  'ff-object-header-', // ObjectField header section
+  'ff-object-content-', // ObjectField content area
+  'ff-object-toggle-', // ObjectField collapse toggle (also covers toggle-btn-, trigger-icon-)
+  'ff-object-switch-', // ObjectField nullable switch
+  'ff-add-item-btn-', // ArrayField add button
+  'ff-tag-', // StringArrayField inner KTagsInput (root ff-{path} is kept)
   'ff-vault-secret-picker-warning-',
 ]
 const FF_STRUCTURAL_EXACT = new Set(['ff-standard-layout-form', 'ff-advanced-fields-container'])
@@ -114,7 +116,12 @@ async function getInputInfo(el, testid) {
 async function expandFreeformAdvanced(page) {
   const toggles = page.getByText('Show additional settings')
   const count = await toggles.count()
-  for (let i = 0; i < count; i++) { try { await toggles.nth(i).click() } catch {} }
+  for (let i = 0; i < count; i++) {
+    try {
+      await toggles.nth(i).click()
+    } catch { // ignore click error
+    }
+  }
   if (count > 0) await page.waitForTimeout(400)
   return count
 }
@@ -124,12 +131,22 @@ async function expandVFGAdvanced(page) {
   // FieldAdvanced.vue toggles (older VFG advanced sections)
   const fa = page.locator('[data-testid="advanced-field-dropdown-wrapper"] .advanced-field-title')
   const faCount = await fa.count()
-  for (let i = 0; i < faCount; i++) { try { await fa.nth(i).click() } catch {} }
+  for (let i = 0; i < faCount; i++) {
+    try {
+      await fa.nth(i).click()
+    } catch { // ignore click error
+    }
+  }
   total += faCount
   // KCollapse "Show additional settings" triggers (used by FormGenerator group collapsible)
   const kc = page.locator('button.collapse-trigger-content').filter({ hasText: /show additional/i })
   const kcCount = await kc.count()
-  for (let i = 0; i < kcCount; i++) { try { await kc.nth(i).click() } catch {} }
+  for (let i = 0; i < kcCount; i++) {
+    try {
+      await kc.nth(i).click()
+    } catch { // ignore click error
+    }
+  }
   total += kcCount
   if (total > 0) await page.waitForTimeout(400)
   return total
@@ -146,14 +163,20 @@ async function scanFreeform() {
   const networkErrors = []
   const warnings = []
 
-  page.on('console', (msg) => { if (msg.type() === 'error') consoleErrors.push(msg.text()) })
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') consoleErrors.push(msg.text())
+  })
   page.on('pageerror', (err) => consoleErrors.push(err.message))
   page.on('response', async (response) => {
     const url = response.url()
     if (!url.includes('/schemas/') || url.includes('/@fs/')) return
     const status = response.status()
-    if (status === 401) { warnings.push(`[401] Auth required — skipping schema: ${url}`); return }
-    if (status !== 200) { networkErrors.push(`[${status}] Schema fetch failed: ${url}`); return }
+    if (status === 401) {
+      warnings.push(`[401] Auth required — skipping schema: ${url}`); return
+    }
+    if (status !== 200) {
+      networkErrors.push(`[${status}] Schema fetch failed: ${url}`); return
+    }
     try {
       const json = await response.json()
       if (url.includes('/us/kong-api/') || url.includes('/eu/kong-api/') || url.includes('/ap/kong-api/')) {
@@ -225,7 +248,9 @@ async function scanVFG() {
   const consoleErrors = []
   const warnings = []
 
-  page.on('console', (msg) => { if (msg.type() === 'error') consoleErrors.push(msg.text()) })
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') consoleErrors.push(msg.text())
+  })
   page.on('pageerror', (err) => consoleErrors.push(err.message))
 
   try {
@@ -260,7 +285,8 @@ async function scanVFG() {
       if (!label) {
         label = (await group.locator('label').first().innerText() || '').split('\n')[0].trim()
       }
-    } catch {}
+    } catch { // ignore click error
+    }
 
     if (!label || seen.has(label)) continue
     seen.add(label)
@@ -321,7 +347,10 @@ async function runSubmitTest() {
     const req = route.request()
     if (['POST', 'PUT', 'PATCH'].includes(req.method())) {
       let body = {}
-      try { body = JSON.parse(req.postData() || '{}') } catch {}
+      try {
+        body = JSON.parse(req.postData() || '{}')
+      } catch { // ignore click error
+      }
       capturedRequests.push({ url: req.url(), method: req.method(), body })
       await route.fulfill({
         status: req.method() === 'POST' ? 201 : 200,
@@ -348,7 +377,9 @@ async function runSubmitTest() {
   for (const [path, value] of Object.entries(flatPayload)) {
     const testid = `ff-${path}`
     const el = page.locator(`[data-testid="${testid}"]`).first()
-    if (!await el.count()) { fillLog.push(`[skip] ${testid} — not found`); continue }
+    if (!await el.count()) {
+      fillLog.push(`[skip] ${testid} — not found`); continue
+    }
 
     try {
       // The data-testid may be on the <input>/<textarea> itself (StringField/NumberField/BooleanField
