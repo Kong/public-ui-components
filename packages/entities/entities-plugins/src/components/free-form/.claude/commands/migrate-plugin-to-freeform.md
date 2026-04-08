@@ -2,12 +2,8 @@
 
 You are analyzing a plugin to migrate it from the legacy VueFormGenerator (VFG) form to the free-form system.
 
-The working directory for all relative paths is the repository root (`public-ui-components`).
-
-Establish it once at the start:
-```bash
-REPO_ROOT=$(git rev-parse --show-toplevel)
-```
+**Before starting, make sure your working directory is the repository root (`public-ui-components`).**
+All relative paths and bash commands in this skill assume you are there.
 
 The Playwright helper is at:
 `packages/entities/entities-plugins/playwright/helpers/migrate-plugin.mjs`
@@ -30,13 +26,13 @@ Key points to remember:
 
 Check that freeform mode is set:
 ```bash
-grep VITE_FORCE_PLUGIN_FORM_ENGINE $REPO_ROOT/.env.development.local
+grep VITE_FORCE_PLUGIN_FORM_ENGINE .env.development.local
 ```
 
 If not `freeform`, update it:
 ```bash
 sed -i '' "s/VITE_FORCE_PLUGIN_FORM_ENGINE=.*/VITE_FORCE_PLUGIN_FORM_ENGINE='freeform'/" \
-  $REPO_ROOT/.env.development.local
+  .env.development.local
 ```
 
 Check if the dev server is running:
@@ -47,7 +43,7 @@ lsof -ti:5173
 If not running, start it and wait:
 ```bash
 cd packages/entities/entities-plugins
-USE_SANDBOX=true $REPO_ROOT/node_modules/.bin/vite \
+USE_SANDBOX=true node_modules/.bin/vite \
   > /tmp/entities-plugins-dev.log 2>&1 &
 for i in $(seq 1 30); do curl -s http://localhost:5173 > /dev/null && echo "ready after ${i}s" && break; sleep 1; done
 ```
@@ -100,11 +96,11 @@ kill $(lsof -ti:5173) 2>/dev/null; sleep 1
 
 # Switch to VFG
 sed -i '' "s/VITE_FORCE_PLUGIN_FORM_ENGINE=.*/VITE_FORCE_PLUGIN_FORM_ENGINE='vfg'/" \
-  $REPO_ROOT/.env.development.local
+  .env.development.local
 
 # Restart server
 cd packages/entities/entities-plugins
-USE_SANDBOX=true $REPO_ROOT/node_modules/.bin/vite \
+USE_SANDBOX=true node_modules/.bin/vite \
   > /tmp/entities-plugins-dev.log 2>&1 &
 for i in $(seq 1 30); do curl -s http://localhost:5173 > /dev/null && echo "ready after ${i}s" && break; sleep 1; done
 ```
@@ -125,10 +121,10 @@ Restore freeform mode after:
 kill $(lsof -ti:5173) 2>/dev/null; sleep 1
 
 sed -i '' "s/VITE_FORCE_PLUGIN_FORM_ENGINE=.*/VITE_FORCE_PLUGIN_FORM_ENGINE='freeform'/" \
-  $REPO_ROOT/.env.development.local
+  .env.development.local
 
 cd packages/entities/entities-plugins
-USE_SANDBOX=true $REPO_ROOT/node_modules/.bin/vite \
+USE_SANDBOX=true node_modules/.bin/vite \
   > /tmp/entities-plugins-dev.log 2>&1 &
 for i in $(seq 1 30); do curl -s http://localhost:5173 > /dev/null && echo "ready after ${i}s" && break; sleep 1; done
 ```
