@@ -2,8 +2,12 @@
 
 You are reviewing a pull request that contains changes in the `packages/entities/entities-plugins` source code.
 
-The working directory for all relative paths is:
-`/Users/tian.tan@konghq.com/Projects/public-ui-components`
+The working directory for all relative paths is the repository root (`public-ui-components`).
+
+Establish it once at the start:
+```bash
+REPO_ROOT=$(git rev-parse --show-toplevel)
+```
 
 ---
 
@@ -109,7 +113,7 @@ lsof -ti:5173
 If not running, start it and wait. Use the root vite binary to avoid pnpm lockfile hash mismatches between branches:
 ```bash
 cd packages/entities/entities-plugins
-USE_SANDBOX=true /Users/tian.tan@konghq.com/Projects/public-ui-components/node_modules/.bin/vite > /tmp/entities-plugins-dev.log 2>&1 &
+USE_SANDBOX=true $REPO_ROOT/node_modules/.bin/vite > /tmp/entities-plugins-dev.log 2>&1 &
 for i in $(seq 1 30); do curl -s http://localhost:5173 > /dev/null && echo "ready after ${i}s" && break; sleep 1; done
 ```
 
