@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios'
-import type { AddOnRecord, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
+import type { CloudGatewaysListAddOnsResponse, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
 import type { RedisConfigurationResponse } from '../types/redis-configuration'
 import { PartialType } from '../types/redis-configuration'
 import { isManagedCacheAddOn, parseManagedAddOn, parseManagedAddOnDetailPayload } from './managed-cache-add-on-parse'
@@ -14,18 +14,12 @@ type ManagedCacheApiClient = {
   get: (url: string, config?: { params?: Record<string, unknown> }) => Promise<{ data: unknown }>
 }
 
-const isPlainObject = (value: unknown): value is AddOnRecord =>
-  value !== null && typeof value === 'object' && !Array.isArray(value)
-
-const extractListMeta = (payload: unknown): { items: unknown[], totalPages?: number } => {
-  if (!isPlainObject(payload)) return { items: [] }
-
-  const items = Array.isArray(payload.data) ? payload.data as unknown[] : []
-  if (!isPlainObject(payload.meta) || !isPlainObject(payload.meta.page)) return { items }
-
-  const totalPages = payload.meta.page.total_pages
+const extractListMeta = (
+  payload: CloudGatewaysListAddOnsResponse,
+): { items: CloudGatewaysListAddOnsResponse['data'], totalPages?: number } => {
+  const totalPages = payload.meta?.page?.total_pages
   return {
-    items,
+    items: payload.data,
     totalPages: typeof totalPages === 'number' && Number.isFinite(totalPages) ? totalPages : undefined,
   }
 }
@@ -78,8 +72,7 @@ export const fetchAllManagedCacheAddOns = async (
       },
     })
 
-    const { items, totalPages } = extractListMeta(data)
-    // Parse raw rows and drop invalid entries
+    const { items, totalPages } = extractListMeta(data as CloudGatewaysListAddOnsResponse)
     const pageItems = items
       .map((item) => parseManagedAddOn(item))
       .filter((row): row is ManagedCacheAddOn => row !== null)
@@ -111,8 +104,9 @@ export const fetchRedisPartialForConfigCard = async (
 
   try {
     const { data } = await axiosInstance.get(url)
-    const maybe = (data as { data?: RedisConfigurationResponse } | undefined)?.data
-    if (!isPlainObject(maybe)) return null
+    const maybe = (data as { data?: RedisConfigurationResponse }).data
+
+    if (maybe == null) return null
     return maybe.type === PartialType.REDIS_CE || maybe.type === PartialType.REDIS_EE ? maybe : null
   } catch (error: any) {
     if (isAxiosError(error) && error.response?.status === 404) return null

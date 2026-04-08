@@ -28,9 +28,9 @@
           :formats-to-hide="['yaml']"
           :hide-title="false"
           :record-resolver="addOnRecordResolver"
-          @fetch:error="emitFetchError"
+          @fetch:error="(e) => emit('fetch:error', e)"
           @fetch:success="onCacheAddOnLoaded"
-          @loading="emitLoading"
+          @loading="(v) => emit('loading', v)"
         >
           <template #title>
             {{ t('config_card.sections.cache_configuration') }}
@@ -116,9 +116,9 @@
                   :config-card-doc="configCardDoc"
                   disable-konnect-managed-detail
                   :hide-title="false"
-                  @fetch:error="emitFetchError"
+                  @fetch:error="(e) => emit('fetch:error', e)"
                   @fetch:success="onPartialNestedLoaded"
-                  @loading="emitLoading"
+                  @loading="(v) => emit('loading', v)"
                 >
                   <template #title>
                     {{ t('config_card.sections.partial_configuration') }}
@@ -143,9 +143,9 @@
       :formats-to-hide="disableKonnectManagedDetail ? ['yaml'] : []"
       :hide-title="hideTitle"
       :record-resolver="recordResolver"
-      @fetch:error="emitFetchError"
+      @fetch:error="(e) => emit('fetch:error', e)"
       @fetch:success="handleData"
-      @loading="emitLoading"
+      @loading="(v) => emit('loading', v)"
     >
       <template #type>
         <div>{{ redisTypeText }}</div>
@@ -286,9 +286,8 @@ const dataPlaneGroupItemHeading = (entry: AddOnRecord, index: number): string =>
 
 // Omit UI-only `name` before JSON blob; everything else stays on the payload
 const jsonStringifyDpgEntryForBlob = (entry: AddOnRecord): string => {
-  const payload = { ...entry }
-
-  delete payload.name
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `name` is UI-only; rest is serialized
+  const { name, ...payload } = entry
   return JSON.stringify(payload, null, 2)
 }
 
@@ -296,8 +295,6 @@ const { managedAddOnConfigSchema, setManagedAddOnSchemaFromDisplayRecord } = com
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
-const emitFetchError = (error: AxiosError): void => emit('fetch:error', error)
-const emitLoading = (isLoading: boolean): void => emit('loading', isLoading)
 
 // Show cloud auth fields only when enabled in config
 const konnectCloudAuthAvailable = computed((): boolean => props.config.cloudAuthAvailable === true )
