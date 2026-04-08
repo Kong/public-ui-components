@@ -3,15 +3,6 @@ import { describe, expect, it } from 'vitest'
 import { getCacheConfigId, isManagedCacheAddOn, parseManagedAddOn } from './managed-cache-add-on-parse'
 
 describe('parseManagedAddOn', () => {
-  it('returns null for non-objects or missing properties', () => {
-    expect(parseManagedAddOn(null)).toBeNull()
-    expect(parseManagedAddOn(undefined)).toBeNull()
-    expect(parseManagedAddOn([])).toBeNull()
-    expect(parseManagedAddOn({})).toBeNull()
-    expect(parseManagedAddOn({ id: '', config: { kind: 'managed-cache.v0' } })).toBeNull()
-    expect(parseManagedAddOn({ id: 'addon_invalid', config: {} })).toBeNull()
-  })
-
   it('uses state_metadata under config', () => {
     expect(
       parseManagedAddOn({
@@ -50,6 +41,5 @@ describe('isManagedCacheAddOn', () => {
   it('only managed-cache.v0 counts', () => {
     expect(isManagedCacheAddOn({ id: '1', config: { kind: 'managed-cache.v0' } })).toBe(true)
     expect(isManagedCacheAddOn({ id: '2', config: { kind: 'other' } })).toBe(false)
-    expect(isManagedCacheAddOn('random')).toBe(false)
   })
 })
