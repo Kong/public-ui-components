@@ -377,19 +377,14 @@ const stickyTop = computed(() => {
   }
 
   &-default > &-container > &-item {
-    align-items: center;
+    align-items: flex-start;
     flex-direction: row;
     gap: var(--kui-space-40, $kui-space-40);
     padding: 0;
+  }
 
-    // Align delete button to top when using TagField
-    &:has(.ff-tag-field) {
-      align-items: flex-start;
-
-      .ff-array-field-item-remove {
-        margin-top: var(--kui-space-20, $kui-space-20);
-      }
-    }
+  &-item-remove {
+    margin-top: var(--kui-space-20, $kui-space-20);
   }
 
   &-card > &-container > &-item :deep(.card-content) {
@@ -400,10 +395,6 @@ const stickyTop = computed(() => {
     // Align delete button to top when using TagField
     &:has(.ff-tag-field) {
       align-items: flex-start;
-
-      .ff-array-field-item-remove {
-        margin-top: var(--kui-space-20, $kui-space-20);
-      }
     }
   }
 
