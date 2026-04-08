@@ -359,11 +359,13 @@ describe('normalizeMatch', () => {
 
     expect(match({
       path: 'config.redis',
+      genericPath: 'config.redis',
       schema: { type: 'string' },
     })).toBe(true)
 
     expect(match({
       path: 'config.redis.host',
+      genericPath: 'config.redis.host',
       schema: { type: 'string' },
     })).toBe(false)
   })
