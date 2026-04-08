@@ -5,11 +5,7 @@ export default definePluginConfig({
   experimental: true,
   fieldRenderers: [
     {
-      match: ({ path, genericPath }) => (
-        path === 'config.replace.body' ||
-        genericPath === 'config.transform.functions.*' ||
-        /\.json\.\d+$/.test(path)
-      ),
+      match: ({ genericPath }) => genericPath.endsWith('.json.*'),
       component: StringField,
       propsOverrides: {
         multiline: true,

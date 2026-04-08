@@ -3,7 +3,7 @@ import type { PluginFormConfig } from './types'
 import type { Component } from 'vue'
 
 export interface ResolvedPluginFormConfig extends PluginFormConfig {
-  component?: Component
+  component: Component
   experimental: boolean
   fieldRenderers: NonNullable<PluginFormConfig['fieldRenderers']>
 }

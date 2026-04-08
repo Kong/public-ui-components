@@ -8,7 +8,7 @@ export default definePluginConfig({
       match: ({ path, genericPath }) => (
         path === 'config.replace.body' ||
         genericPath === 'config.transform.functions.*' ||
-        /\.json\.\d+$/.test(path)
+        genericPath.endsWith('.json.*')
       ),
       component: StringField,
       propsOverrides: {

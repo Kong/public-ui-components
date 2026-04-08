@@ -239,6 +239,6 @@ export function sortFieldsByBundles(
 
 export function normalizeMatch(match: FieldRenderer['match']): Match {
   return typeof match === 'string'
-    ? ({ path }) => path === match
+    ? ({ genericPath }) => genericPath === match
     : match
 }

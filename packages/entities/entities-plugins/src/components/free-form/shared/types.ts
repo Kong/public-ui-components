@@ -200,7 +200,7 @@ export interface PluginFormConfig {
    * Form-level custom component.
    * @default CommonForm
    */
-  component?: Component
+  component: Component
   /**
    * Form-level rendering rules.
    */
