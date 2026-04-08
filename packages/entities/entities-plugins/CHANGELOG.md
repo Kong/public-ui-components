@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.186.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.185.2...@kong-ui-public/entities-plugins@9.186.0) (2026-04-08)
+
+
+### Features
+
+* **entities-plugins:** override with multiselect ([#3089](https://github.com/Kong/public-ui-components/issues/3089)) ([fa57bb7](https://github.com/Kong/public-ui-components/commit/fa57bb7bb728f6884457777536290df4fb5b547a))
+
+
+
+
+
 ## [9.185.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.185.1...@kong-ui-public/entities-plugins@9.185.2) (2026-04-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
