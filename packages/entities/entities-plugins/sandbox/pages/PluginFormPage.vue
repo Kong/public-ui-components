@@ -84,6 +84,9 @@ useProvideExperimentalFreeForms([
   'acl',
   'request-transformer',
   'upstream-oauth',
+  'cors',
+  'proxy-cache',
+  'proxy-cache-advanced',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
