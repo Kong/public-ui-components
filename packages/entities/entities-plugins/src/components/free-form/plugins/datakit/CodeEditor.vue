@@ -19,16 +19,33 @@
         <SparklesIcon />
       </template>
     </KAlert>
-    <MonacoEditor
-      ref="editor"
-      v-model="code"
-      appearance="standalone"
-      class="editor"
-      language="yaml"
-      :options="monacoOptions"
-      theme="light"
-      @ready="handleEditorReady"
-    />
+
+    <div class="editor-shell">
+      <div
+        class="code-editor-toolbar"
+        data-testid="code-editor-toolbar"
+      >
+        <KInputSwitch
+          v-model="skipDefaults"
+          data-testid="code-editor-skip-defaults"
+        >
+          <template #label>
+            {{ t('plugins.free-form.code_editor.skip_defaults') }}
+          </template>
+        </KInputSwitch>
+      </div>
+
+      <MonacoEditor
+        ref="editor"
+        v-model="code"
+        appearance="standalone"
+        class="editor"
+        language="yaml"
+        :options="monacoOptions"
+        theme="light"
+        @ready="handleEditorReady"
+      />
+    </div>
 
     <KModal
       :action-button-text="t('plugins.free-form.datakit.detected_config_format_confirm')"
@@ -43,18 +60,18 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, toRaw } from 'vue'
-import { isEqual, omit } from 'lodash-es'
+import { shallowRef, watch } from 'vue'
+import { isEqual } from 'lodash-es'
 import * as monaco from 'monaco-editor'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 import { createI18n } from '@kong-ui-public/i18n'
-import { KAlert, KButton, KModal } from '@kong/kongponents'
+import { KAlert, KButton, KInputSwitch, KModal } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
 import { useErrors } from '@kong-ui-public/entities-shared'
 import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 import english from '../../../../locales/en.json'
-import { useFormShared } from '../../shared/composables'
+import { useFormShared, useSchemaHelpers, useSkipDefaults } from '../../shared/composables'
 import examples from './examples'
 import { extractors } from './config-extractors'
 
@@ -65,7 +82,18 @@ import type { DatakitExample } from './examples'
 const { t } = createI18n<typeof english>('en-us', english)
 type TranslationKey = Parameters<typeof t>[0]
 
-const { formData, setValue } = useFormShared<DatakitPluginData>()
+const { getValue, setValue, schema } = useFormShared<DatakitPluginData>()
+const { getDefault: getDefaultFromSchema } = useSchemaHelpers(schema)
+const {
+  skipDefaults,
+  toCode,
+  handleContentChange,
+  regenerateCode,
+} = useSkipDefaults<DatakitPluginData>({
+  getValue,
+  setValue,
+  getDefaultFromSchema,
+})
 
 defineProps<{
   editing: boolean
@@ -82,18 +110,13 @@ const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 
 const LINT_SOURCE = 'YAML Syntax'
 
-function dumpYaml(config: unknown): string {
-  return yaml.dump(toRaw(config), {
-    schema: JSON_SCHEMA,
-    noArrayIndent: true,
-  })
+function syncCodeEditor(nextConfig: DatakitPluginData) {
+  setValue(nextConfig)
+  regenerateCode(code, toCode(nextConfig))
+  emit('change', nextConfig)
 }
 
-function formDataToCode(): string {
-  return dumpYaml(omit(formData, ['__ui_data']))
-}
-
-const code = shallowRef(formDataToCode())
+const code = shallowRef(toCode())
 const monacoOptions = {
   scrollbar: {
     alwaysConsumeMouseWheel: false,
@@ -101,6 +124,10 @@ const monacoOptions = {
   autoIndent: 'keep',
   editContext: false,
 } as const satisfies Partial<monaco.editor.IStandaloneEditorConstructionOptions>
+
+watch(skipDefaults, () => {
+  regenerateCode(code)
+})
 
 function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
   const model = editor.getModel()
@@ -123,8 +150,12 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
 
       monaco.editor.setModelMarkers(model, LINT_SOURCE, [])
 
-      setValue(config as DatakitPluginData)
-      emit('change', config)
+      const nextConfig = handleContentChange(config as DatakitPluginData)
+      if (!nextConfig) {
+        return
+      }
+
+      emit('change', nextConfig)
     } catch (error: unknown) {
       const { message, mark } = error as YAMLException
       const { line, column } = mark || { line: 0, column: 0 }
@@ -182,7 +213,7 @@ function handleConvertCancel() {
 function handleConvertConfirm() {
   if (!pendingConfig.value) return
 
-  code.value = dumpYaml(pendingConfig.value)
+  syncCodeEditor(pendingConfig.value as DatakitPluginData)
 
   handleConvertCancel()
 }
@@ -197,27 +228,28 @@ function getExampleLabel(i18nKey: string): string {
  * which prevents the user from undoing changes after inserting an example.
  */
 function setExampleCode(example: DatakitExample) {
-  const newCode = example.code
+  const currentData = getValue()
 
   try {
-    const config = yaml.load(code.value, {
+    const exampleConfig = yaml.load(example.code, {
       schema: JSON_SCHEMA,
       json: true,
-    }) as any
+    })
 
-    const exampleConfigJson = yaml.load(newCode, {
-      schema: JSON_SCHEMA,
-      json: true,
-    }) as any
+    if (typeof exampleConfig !== 'object' || exampleConfig === null) {
+      return
+    }
 
-    if (typeof config === 'object' && config !== null && isEqual(config.config, exampleConfigJson)) return
+    if (isEqual(currentData.config, exampleConfig)) {
+      return
+    }
 
-    const nextConfig = omit({
-      ...formData,
-      config: { ...exampleConfigJson },
-    }, ['__ui_data'])
+    const nextConfig = {
+      ...currentData,
+      config: { ...(exampleConfig as DatakitPluginData['config']) },
+    }
 
-    code.value = dumpYaml(nextConfig)
+    syncCodeEditor(nextConfig as DatakitPluginData)
   } catch (error: unknown) {
     emit('error', getMessageFromError(error))
   }
@@ -244,7 +276,7 @@ defineExpose({
 <style lang="scss" scoped>
 .dk-code-editor {
   .examples {
-    margin-bottom: var(--kui-space-70, $kui-space-70);
+    margin-bottom: var(--kui-space-40, $kui-space-40);
   }
 
   .examples-content {
@@ -253,8 +285,21 @@ defineExpose({
     gap: var(--kui-space-40, $kui-space-40);
   }
 
-  .editor {
+  .editor-shell {
     height: 684px;
+    position: relative;
+  }
+
+  .code-editor-toolbar {
+    display: flex;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    z-index: 10;
+  }
+
+  .editor {
+    height: 100%;
     width: 100%;
   }
 }

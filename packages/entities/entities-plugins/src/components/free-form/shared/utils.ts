@@ -3,6 +3,7 @@ import type { FlattendRedisConfigurationFields } from './types'
 import type { Field } from '../shared/types'
 import type { NamedFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { toValue, type MaybeRefOrGetter } from 'vue'
+import { isEqual } from 'lodash-es'
 import type { FieldRenderer, Match } from './types'
 
 export function toSelectItems<T extends string | number>(
@@ -232,6 +233,58 @@ export function sortFieldsByBundles(
     } else {
       pending.add(fieldName)
     }
+  }
+
+  return result
+}
+
+function isPlainRecord(value: unknown): value is Record<string, any> {
+  return value != null && typeof value === 'object' && !Array.isArray(value)
+}
+
+export function stripDefaults(
+  data: Record<string, any>,
+  defaults: Record<string, any>,
+): Record<string, any> {
+  const result: Record<string, any> = {}
+
+  for (const key of Object.keys(data)) {
+    const value = data[key]
+    const defaultValue = defaults?.[key]
+
+    if (isEqual(value, defaultValue)) {
+      continue
+    }
+
+    if (isPlainRecord(value) && isPlainRecord(defaultValue)) {
+      const nested = stripDefaults(value, defaultValue)
+
+      if (Object.keys(nested).length > 0) {
+        result[key] = nested
+      }
+
+      continue
+    }
+
+    result[key] = value
+  }
+
+  return result
+}
+
+export function deepMergeConfig(base: any, override: any): any {
+  if (!isPlainRecord(override)) {
+    return override
+  }
+
+  if (!isPlainRecord(base)) {
+    return override
+  }
+
+  const result: Record<string, any> = { ...base }
+
+  for (const key of Object.keys(override)) {
+    result[key] = deepMergeConfig(base[key], override[key])
   }
 
   return result
