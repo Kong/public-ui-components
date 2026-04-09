@@ -556,6 +556,140 @@ describe('<EntityBaseConfigCard />', () => {
     })
   })
 
+  describe('Konnect workspace URL building', () => {
+    const wsControlPlaneId = '1234-abcd-ilove-cats-too'
+    const wsEntityId = '1234-cats-rule'
+    const wsBaseUrl = '/us/kong-api'
+
+    const workspaceFetchUrl = '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}/services/{id}'
+    const plainFetchUrl = '/v2/control-planes/{controlPlaneId}/core-entities/services/{id}'
+
+    const configWithWorkspace = (workspace: string): KonnectBaseEntityConfig => ({
+      app: 'konnect',
+      apiBaseUrl: wsBaseUrl,
+      controlPlaneId: wsControlPlaneId,
+      workspace,
+      entityId: wsEntityId,
+    })
+
+    const configNoWorkspace: KonnectBaseEntityConfig = {
+      app: 'konnect',
+      apiBaseUrl: wsBaseUrl,
+      controlPlaneId: wsControlPlaneId,
+      entityId: wsEntityId,
+    }
+
+    it('includes workspace name in fetch URL when workspace is provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/default/services/${wsEntityId}`,
+        },
+        { statusCode: 200, body: gatewayServiceRecord },
+      ).as('fetchWithWorkspace')
+
+      cy.mount(EntityBaseConfigCard, {
+        props: {
+          config: configWithWorkspace('default'),
+          configSchema,
+          entityType,
+          fetchUrl: workspaceFetchUrl,
+        },
+      })
+
+      cy.wait('@fetchWithWorkspace')
+      cy.getTestId('config-card-fetch-error').should('not.exist')
+    })
+
+    it('uses non-default workspace name in fetch URL', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/test/services/${wsEntityId}`,
+        },
+        { statusCode: 200, body: gatewayServiceRecord },
+      ).as('fetchWithTestWorkspace')
+
+      cy.mount(EntityBaseConfigCard, {
+        props: {
+          config: configWithWorkspace('test'),
+          configSchema,
+          entityType,
+          fetchUrl: workspaceFetchUrl,
+        },
+      })
+
+      cy.wait('@fetchWithTestWorkspace')
+      cy.getTestId('config-card-fetch-error').should('not.exist')
+    })
+
+    it('omits workspace segment in fetch URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/services/${wsEntityId}`,
+        },
+        { statusCode: 200, body: gatewayServiceRecord },
+      ).as('fetchNoWorkspace')
+
+      cy.mount(EntityBaseConfigCard, {
+        props: {
+          config: configNoWorkspace,
+          configSchema,
+          entityType,
+          fetchUrl: workspaceFetchUrl,
+        },
+      })
+
+      cy.wait('@fetchNoWorkspace')
+      cy.getTestId('config-card-fetch-error').should('not.exist')
+    })
+
+    it('shows fetch error when load fails with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/default/services/${wsEntityId}`,
+        },
+        { statusCode: 500, body: {} },
+      ).as('fetchError')
+
+      cy.mount(EntityBaseConfigCard, {
+        props: {
+          config: configWithWorkspace('default'),
+          configSchema,
+          entityType,
+          fetchUrl: workspaceFetchUrl,
+        },
+      })
+
+      cy.wait('@fetchError')
+      cy.getTestId('config-card-fetch-error').should('be.visible')
+    })
+
+    it('ignores workspace config when fetchUrl has no {workspace} placeholder', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/services/${wsEntityId}`,
+        },
+        { statusCode: 200, body: gatewayServiceRecord },
+      ).as('fetchPlain')
+
+      cy.mount(EntityBaseConfigCard, {
+        props: {
+          config: configWithWorkspace('default'),
+          configSchema,
+          entityType,
+          fetchUrl: plainFetchUrl,
+        },
+      })
+
+      cy.wait('@fetchPlain')
+      cy.getTestId('config-card-fetch-error').should('not.exist')
+    })
+  })
+
   describe('Slots', () => {
     it('allows slotting label and value', () => {
       const key = 'id'

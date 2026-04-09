@@ -42,15 +42,13 @@ export default function useDebouncedFilter(
   const allRecords = ref<Array<Record<string, any>> | undefined>(undefined)
 
   const url = computed(() => {
-    const url = `${config.apiBaseUrl}${unref(baseUrl)}`
+    let url = `${config.apiBaseUrl}${unref(baseUrl)}`
 
     if (config.app === 'konnect') {
-      return url.replace(/{controlPlaneId}/gi, config?.controlPlaneId || '')
-    } else if (config.app === 'kongManager') {
-      return url.replace(/\/{workspace}/gi, config?.workspace ? `/${config.workspace}` : '')
+      url = url.replace(/{controlPlaneId}/gi, config?.controlPlaneId || '')
     }
 
-    return url
+    return url.replace(/\/{workspace}/gi, config?.workspace ? `/${config.workspace}` : '')
   })
 
   const { isValidUuid } = useHelpers()
