@@ -174,17 +174,29 @@ describe('<SingleValue />', () => {
       },
     })
 
+    const getBaseline = (el: HTMLElement) => {
+      const range = document.createRange()
+      range.selectNodeContents(el)
+      const rects = range.getClientRects()
+      return rects[rects.length - 1].bottom
+    }
+
     // Verify value and unit appear horizontally, not stacked vertically
     cy.get('.single-value').then($value => {
       cy.get('.single-value-unit').then($unit => {
         const valueRect = $value[0].getBoundingClientRect()
         const unitRect = $unit[0].getBoundingClientRect()
 
-        // With baseline alignment, bottoms should be identical
-        expect(Math.abs(valueRect.bottom - unitRect.bottom)).to.equal(1)
+        const valueBaseline = getBaseline($value[0])
+        const unitBaseline = getBaseline($unit[0])
 
         // Unit should start after the value horizontally, not below it
         expect(unitRect.left).to.be.greaterThan(valueRect.left)
+
+        // Baselines of selections are sometimes as different as 3 pixels. This
+        // doesn't mean the text isn't aligned, it just means there are rendering
+        // differences depending on the relative font sizes and glyphs used.
+        expect(Math.abs(valueBaseline - unitBaseline)).to.be.lessThan(3)
       })
     })
   })
