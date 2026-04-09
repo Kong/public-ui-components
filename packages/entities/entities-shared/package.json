@@ -38,7 +38,7 @@
     "@kong/kongponents": "9.52.5",
     "@shikijs/core": "^3.21.0",
     "@shikijs/engine-javascript": "^3.21.0",
-    "axios": "^1.13.2",
+    "axios": "1.15.0",
     "shiki": "^3.21.0",
     "vue": "^3.5.27",
     "vue-router": "^4.6.4"
