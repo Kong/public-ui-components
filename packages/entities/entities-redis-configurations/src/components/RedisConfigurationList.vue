@@ -180,6 +180,17 @@
                   {{ t('cpg_redis.doc_link') }}
                 </KExternalLink>
               </KAlert>
+              <KButton
+                v-if="userCanCreate && emptyStateActionText"
+                appearance="primary"
+                data-testid="redis-empty-state-primary-cta"
+                size="large"
+                type="button"
+                @click="handleCreate"
+              >
+                <AddIcon decorative />
+                {{ emptyStateActionText }}
+              </KButton>
             </div>
           </template>
         </KEmptyState>
@@ -379,16 +390,23 @@ const useKonnectManagedRedisUi = computed<boolean>(() => {
 })
 
 const showCpgRedisAlert = computed<boolean>(() => {
-  if (props.config.app !== 'konnect' || !useKonnectManagedRedisUi.value) {
+  if (!useKonnectManagedRedisUi.value) {
     return false
   }
 
   const konnectConfig = props.config as KonnectRedisConfigurationListConfig
 
-  return !!(konnectConfig.isControlPlaneGroup || konnectConfig.isControlPlaneGroupMember)
+  if (konnectConfig.isControlPlaneGroup) {
+    return true
+  }
+
+  if (konnectConfig.isControlPlaneGroupMember) {
+    return true
+  }
+
+  return false
 })
 
-// CPG Group vs member copy
 const cpgRedisAlertKey = computed(() => {
   const konnectConfig = props.config as KonnectRedisConfigurationListConfig
   return konnectConfig.isControlPlaneGroupMember ? 'cpg_redis.member_alert' : 'cpg_redis.alert'
@@ -516,9 +534,9 @@ const fetchAllAddOns = async (): Promise<ManagedCacheAddOn[]> => {
       params: {
         'page[size]': addOnsPageSize,
         'page[number]': pageNumber,
-        'config.kind': 'managed-cache.v0',
-        'owner.control_plane_id': konnectConfig.controlPlaneId,
-        ...(konnectConfig.controlPlaneGeo ? { 'owner.control_plane_geo': konnectConfig.controlPlaneGeo } : {}),
+        'filter[config.kind]': 'managed-cache.v0',
+        'filter[owner.control_plane_id]': konnectConfig.controlPlaneId,
+        ...(konnectConfig.controlPlaneGeo ? { 'filter[owner.control_plane_geo]': konnectConfig.controlPlaneGeo } : {}),
       },
     })
 
