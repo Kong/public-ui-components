@@ -184,8 +184,7 @@
                 v-if="userCanCreate && emptyStateActionText"
                 appearance="primary"
                 data-testid="redis-empty-state-primary-cta"
-                size="large"
-                type="button"
+                size="medium"
                 @click="handleCreate"
               >
                 <AddIcon decorative />
@@ -1319,8 +1318,12 @@ watch(props.canCreate, async (canCreate) => {
     width: 100%;
   }
 
-  .cpg-redis-doc-link {
-    margin-left: var(--kui-space-20, $kui-space-20);
+  .cpg-redis-alert :deep(.k-external-link.cpg-redis-doc-link) {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   .kong-ui-entity-filter-input {
