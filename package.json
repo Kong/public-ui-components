@@ -43,7 +43,7 @@
     "cross-env": "^10.1.0",
     "cypress": "^13.17.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.2.0",
     "js-yaml": "^4.1.1",
     "jsdom": "^29.0.0",
     "lerna": "^9.0.7",
