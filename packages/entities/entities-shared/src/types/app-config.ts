@@ -18,6 +18,8 @@ export interface KonnectConfig extends BaseAppConfig {
   controlPlaneId: string
   /** Identifies whether the Control Plane type is a Control Plane Group or not */
   isControlPlaneGroup?: boolean
+  /** Identifies whether the control plane is a member of a control plane group (not the group itself) */
+  isControlPlaneGroupMember?: boolean
   /** Should use exact match */
   isExactMatch?: boolean
   /** The control plane name */

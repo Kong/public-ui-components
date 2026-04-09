@@ -11,6 +11,11 @@
     "view_plugin": "View Plugin",
     "close": "Close"
   },
+  "cpg_redis": {
+    "alert": "Control plane groups inherit configuration from their member control planes. Define Redis configurations at the control plane group level. To deploy a Konnect-managed Redis instance, use the API.",
+    "member_alert": "This control plane is part of a control plane group. To use a Konnect-managed Redis instance deployed at the control plane group level, you must create a Redis configuration that points to that cache.",
+    "doc_link": "See the documentation"
+  },
   "search": {
     "placeholder": "Filter by name",
     "placeholder_for_exact_match": "Filter by exact ID",

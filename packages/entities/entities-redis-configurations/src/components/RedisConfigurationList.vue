@@ -160,6 +160,28 @@
           <template #action-button-icon>
             <AddIcon decorative />
           </template>
+
+          <template
+            v-if="showCpgRedisAlert"
+            #action
+          >
+            <div class="cpg-redis-empty-action">
+              <KAlert
+                appearance="info"
+                class="cpg-redis-alert cpg-redis-empty-state"
+                data-testid="redis-cpg-alert"
+              >
+                {{ t(cpgRedisAlertKey) }}
+                <KExternalLink
+                  class="cpg-redis-doc-link"
+                  hide-icon
+                  :href="MANAGED_CACHE_FOR_REDIS_DOC_URL"
+                >
+                  {{ t('cpg_redis.doc_link') }}
+                </KExternalLink>
+              </KAlert>
+            </div>
+          </template>
         </KEmptyState>
       </template>
     </EntityBaseTable>
@@ -209,7 +231,9 @@ import {
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
+import { KAlert, KExternalLink } from '@kong/kongponents'
 
+import { MANAGED_CACHE_FOR_REDIS_DOC_URL } from '../constants'
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
 import { getRedisType } from '../helpers'
@@ -351,7 +375,23 @@ const useKonnectManagedRedisUi = computed<boolean>(() => {
     return konnectConfig.useKonnectManagedRedisUi
   }
 
-  return !!konnectConfig.isKonnectManagedRedisEnabled
+  return isKonnectManagedRedisEnabled.value
+})
+
+const showCpgRedisAlert = computed<boolean>(() => {
+  if (props.config.app !== 'konnect' || !useKonnectManagedRedisUi.value) {
+    return false
+  }
+
+  const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+
+  return !!(konnectConfig.isControlPlaneGroup || konnectConfig.isControlPlaneGroupMember)
+})
+
+// CPG Group vs member copy
+const cpgRedisAlertKey = computed(() => {
+  const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+  return konnectConfig.isControlPlaneGroupMember ? 'cpg_redis.member_alert' : 'cpg_redis.alert'
 })
 
 const cloudGatewaysBase = computed<string>(() => {
@@ -1246,6 +1286,24 @@ watch(props.canCreate, async (canCreate) => {
 <style lang="scss" scoped>
 .kong-ui-entities-partials-list {
   width: 100%;
+
+  .cpg-redis-empty-state {
+    text-align: start;
+    width: 100%;
+  }
+
+  .cpg-redis-empty-action {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-60, $kui-space-60);
+    max-width: 640px;
+    width: 100%;
+  }
+
+  .cpg-redis-doc-link {
+    margin-left: var(--kui-space-20, $kui-space-20);
+  }
 
   .kong-ui-entity-filter-input {
     margin-right: var(--kui-space-50, $kui-space-50);
