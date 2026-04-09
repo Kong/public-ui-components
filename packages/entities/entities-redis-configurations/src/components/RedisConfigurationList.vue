@@ -161,6 +161,9 @@
             <AddIcon decorative />
           </template>
 
+          <!--
+            CPG and CPG members need different empty-state alert for Konnect-managed Redis than a standalone CP
+          -->
           <template
             v-if="showCpgRedisAlert"
             #action
@@ -243,6 +246,7 @@ import { useRouter } from 'vue-router'
 import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
 import { KAlert, KExternalLink } from '@kong/kongponents'
 
+import { getCpgRedisAlertMessageKey, shouldShowCpgRedisAlert } from '../cpgRedisAlert'
 import { MANAGED_CACHE_FOR_REDIS_DOC_URL } from '../constants'
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
@@ -373,6 +377,7 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() =>
   (props.config as KonnectRedisConfigurationListConfig).isCloudGateway === true,
 )
 
+// Determines whether to use Konnect-managed Redis UI (copy, combined fetch, empty state). Kong Manager always false
 const useKonnectManagedRedisUi = computed<boolean>(() => {
   if (props.config.app !== 'konnect') {
     return false
@@ -388,27 +393,20 @@ const useKonnectManagedRedisUi = computed<boolean>(() => {
   return isKonnectManagedRedisEnabled.value
 })
 
+// Show CPG-specific empty-state messaging when Konnect-managed Redis UI is enabled and the CP is either the group
+// itself (isControlPlaneGroup) or a member CP (isControlPlaneGroupMember). Standalone CPs skip this
 const showCpgRedisAlert = computed<boolean>(() => {
-  if (!useKonnectManagedRedisUi.value) {
-    return false
-  }
-
   const konnectConfig = props.config as KonnectRedisConfigurationListConfig
-
-  if (konnectConfig.isControlPlaneGroup) {
-    return true
-  }
-
-  if (konnectConfig.isControlPlaneGroupMember) {
-    return true
-  }
-
-  return false
+  return shouldShowCpgRedisAlert({
+    useKonnectManagedRedisUi: useKonnectManagedRedisUi.value,
+    isControlPlaneGroup: konnectConfig.isControlPlaneGroup,
+    isControlPlaneGroupMember: konnectConfig.isControlPlaneGroupMember,
+  })
 })
 
 const cpgRedisAlertKey = computed(() => {
   const konnectConfig = props.config as KonnectRedisConfigurationListConfig
-  return konnectConfig.isControlPlaneGroupMember ? 'cpg_redis.member_alert' : 'cpg_redis.alert'
+  return getCpgRedisAlertMessageKey(konnectConfig.isControlPlaneGroupMember)
 })
 
 const cloudGatewaysBase = computed<string>(() => {
