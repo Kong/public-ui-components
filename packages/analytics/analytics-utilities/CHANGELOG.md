@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.0...@kong-ui-public/analytics-utilities@12.13.1) (2026-04-10)
+
+
+### Bug Fixes
+
+* update dashboard schema for agentic usage ([#3119](https://github.com/Kong/public-ui-components/issues/3119)) ([ea4f1d7](https://github.com/Kong/public-ui-components/commit/ea4f1d7f41a1bb9046b1ab7b1aeeeb54dde7d69a))
+
+
+
+
+
 # [12.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.5...@kong-ui-public/analytics-utilities@12.13.0) (2026-04-07)
 
 
