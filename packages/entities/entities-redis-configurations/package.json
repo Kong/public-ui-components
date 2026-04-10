@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-redis-configurations",
-  "version": "1.14.9",
+  "version": "1.14.11",
   "type": "module",
   "main": "./dist/entities-redis-configurations.umd.js",
   "module": "./dist/entities-redis-configurations.es.js",
@@ -67,7 +67,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "500KB"
+    "errorLimit": "550KB"
   },
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
@@ -83,6 +83,7 @@
   },
   "dependencies": {
     "@kong-ui-public/entities-plugins-icon": "workspace:^",
+    "lodash-es": ">=4.18.0",
     "uuid": "^11.1.0"
   }
 }

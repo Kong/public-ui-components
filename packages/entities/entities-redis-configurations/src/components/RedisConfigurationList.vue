@@ -213,6 +213,7 @@ import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
 import { getRedisType } from '../helpers'
+import { parseManagedAddOn } from '../helpers/managed-cache-add-on-parse'
 import { PartialType, RedisType, REDIS_CONFIGURATION_SOURCE } from '../types'
 import LinkedPluginsInline from './LinkedPluginsInline.vue'
 import LinkedPluginListModal from './LinkedPluginListModal.vue'
@@ -384,39 +385,32 @@ type ManagedCacheStateMetadata = { cache_config_id?: string }
 type ManagedCacheConfigShape = { state_metadata?: ManagedCacheStateMetadata }
 
 const getCacheConfigId = (addOn: ManagedCacheAddOn): string | undefined => {
-  const managedCacheConfig = (addOn.config ?? addOn.attributes) as ManagedCacheConfigShape | undefined
-  const meta = managedCacheConfig?.state_metadata ?? addOn.state_metadata
+  const managedCacheConfig = addOn.config as ManagedCacheConfigShape | undefined
+  const meta = managedCacheConfig?.state_metadata
   return meta?.cache_config_id
 }
 
-// Cloud Gateways list filter contract
 const isManagedCacheAddOn = (addOn: ManagedCacheAddOn): boolean => {
-  const kind = addOn.config?.kind ?? addOn.attributes?.kind
+  const kind = addOn.config?.kind
   return kind === 'managed-cache.v0'
 }
 
 const isTerminatingState = (state?: string): boolean =>
   typeof state === 'string' && state.trim().toLowerCase() === 'terminating'
 
-// Fetch one managed-cache add-on by id - use this when the user searches by add-on id (while cache is still provisioning) and Koko doesn't have a partial for that id
+// Exact search by add-on id (same parsing as managed-cache-add-on-api)
 const fetchManagedAddOnById = async (managedCacheAddOnId: string): Promise<ManagedCacheAddOn | null> => {
   const konnectConfig = props.config as KonnectRedisConfigurationListConfig
   const singleAddOnUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons/${encodeURIComponent(managedCacheAddOnId)}`
 
   try {
-    const addOnResponse = await axiosInstance.get(singleAddOnUrl)
-    const addOnData = addOnResponse.data
-
-    const parsedAddOn = addOnData && typeof addOnData === 'object' && !Array.isArray(addOnData)
-      ? (addOnData satisfies ManagedCacheAddOn)
-      : null
+    const { data } = await axiosInstance.get(singleAddOnUrl)
+    const parsedAddOn = parseManagedAddOn(data)
     if (!parsedAddOn?.id || !isManagedCacheAddOn(parsedAddOn)) {
       return null
     }
 
     const controlPlaneIdOnAddOn = parsedAddOn.owner?.control_plane_id
-
-    // Keep the list scoped to selected CP
     if (controlPlaneIdOnAddOn != null && controlPlaneIdOnAddOn !== konnectConfig.controlPlaneId) {
       return null
     }
@@ -426,7 +420,6 @@ const fetchManagedAddOnById = async (managedCacheAddOnId: string): Promise<Manag
     const httpStatus = error.response?.status ?? error.status
 
     if (httpStatus === 404) {
-      // Treat "not found" as "no match" so the table shows an empty/no-results state instead of an error.
       return null
     }
     throw error
@@ -489,7 +482,7 @@ const fetchAllAddOns = async (): Promise<ManagedCacheAddOn[]> => {
       },
     })
 
-    const raw = addOnsResponse.data?.data ?? addOnsResponse.data
+    const raw = addOnsResponse.data?.data
     const pageItems = Array.isArray(raw) ? (raw as ManagedCacheAddOn[]) : []
     const totalPages = addOnsResponse.data?.meta?.page?.total_pages as number | undefined
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.11.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.13...@kong-ui-public/core@1.11.14) (2026-04-08)
+
+
+### Bug Fixes
+
+* expose reload method in WIndowComposible [KHCP-20268] ([#3106](https://github.com/Kong/public-ui-components/issues/3106)) ([5f0c5e1](https://github.com/Kong/public-ui-components/commit/5f0c5e1c7126564e273d93d68f1972f456dcfc82))
+
+
+
+
+
 ## [1.11.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.12...@kong-ui-public/core@1.11.13) (2026-03-18)
 
 

@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.10...@kong-ui-public/documentation@1.5.11) (2026-04-09)
+
+
+### Bug Fixes
+
+* **deps:** upgrade mermaid ([#3114](https://github.com/Kong/public-ui-components/issues/3114)) ([34cd918](https://github.com/Kong/public-ui-components/commit/34cd918e9f706c3e6a894915a5dae12358ef030b))
+
+
+
+
+
+## [1.5.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.9...@kong-ui-public/documentation@1.5.10) (2026-04-09)
+
+
+### Bug Fixes
+
+* **deps:** upgrade kong markdown ([#3113](https://github.com/Kong/public-ui-components/issues/3113)) ([68905b2](https://github.com/Kong/public-ui-components/commit/68905b28dc9fbf2083f702a7dac9e08bb21b8deb))
+
+
+
+
+
+## [1.5.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.8...@kong-ui-public/documentation@1.5.9) (2026-04-08)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.7...@kong-ui-public/documentation@1.5.8) (2026-04-08)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
 ## [1.5.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.6...@kong-ui-public/documentation@1.5.7) (2026-03-31)
 
 **Note:** Version bump only for package @kong-ui-public/documentation

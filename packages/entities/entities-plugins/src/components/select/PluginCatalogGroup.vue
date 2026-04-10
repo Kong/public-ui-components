@@ -61,7 +61,7 @@ import PluginCatalogCard from './PluginCatalogCard.vue'
 import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginSchemaModal.vue'
 import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginType } from '../../types'
 import { KUI_COLOR_TEXT_DECORATIVE_PURPLE } from '@kong/design-tokens'
-import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, TrafficIcon, TransformationIcon } from '@kong/icons'
+import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, TrafficIcon, TransformationIcon, MoneyIcon } from '@kong/icons'
 import { GATEWAY_VERSION_TIMESTAMP_MAP, PluginGroup } from '@kong-ui-public/entities-plugins-metadata'
 import { within16Weeks } from '../../utils/helper'
 
@@ -94,6 +94,8 @@ const groupIcon = computed(() => {
       return LockIcon
     case PluginGroup.LOGGING:
       return ServiceDocumentIcon
+    case PluginGroup.MONETIZATION:
+      return MoneyIcon
     case PluginGroup.SECURITY:
       return SecurityIcon
     case PluginGroup.SERVERLESS:

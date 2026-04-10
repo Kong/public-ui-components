@@ -143,7 +143,7 @@ import { computed, ref, onBeforeMount, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
-import { SupportedEntityTypesArray, SupportedEntityType, SupportedEntityDeckArray } from '../../types'
+import { SupportedEntityTypesArray, SupportedEntityType, isSupportedDeckEntityType } from '../../types'
 import composables from '../../composables'
 import type { Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
@@ -374,7 +374,7 @@ if (props.config.app === 'konnect' && props.entityType !== SupportedEntityType.O
 
 // decK is only available for certain entity types
 // https://developer.konghq.com/deck/reference/entities/
-const isSupportedEntity = SupportedEntityDeckArray.includes(props.entityType as any)
+const isSupportedEntity = isSupportedDeckEntityType(props.entityType)
 const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckTab
 
 if (isDeckEnabled && isSupportedEntity) {

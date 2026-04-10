@@ -13,6 +13,10 @@ export interface BaseRedisConfigurationFormConfig {
    */
   useKonnectManagedRedisUi?: boolean
   /**
+   * Konnect only. Required for Cloud Gateway managed Redis behavior.
+   */
+  isCloudGateway?: boolean
+  /**
    * Show/hide cloud authentication configuration fields
    */
   cloudAuthAvailable?: boolean
