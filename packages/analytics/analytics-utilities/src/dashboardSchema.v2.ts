@@ -1,19 +1,19 @@
 import type { FromSchema, JSONSchema } from 'json-schema-to-ts'
 import {
+  agenticExploreAggregations,
   aiExploreAggregations,
   basicExploreAggregations,
   exploreAggregations,
   exploreFilterTypesV2,
+  filterableAgenticExploreDimensions,
   filterableAiExploreDimensions,
   filterableBasicExploreDimensions,
   filterableExploreDimensions,
-  filterableMcpExploreDimensions,
   granularityValues,
-  mcpExploreAggregations,
+  queryableAgenticExploreDimensions,
   queryableAiExploreDimensions,
   queryableBasicExploreDimensions,
   queryableExploreDimensions,
-  queryableMcpExploreDimensions,
   requestFilterTypeEmptyV2,
 } from './types'
 import { COUNTRIES } from './types/country-codes'
@@ -550,9 +550,9 @@ export const llmUsageSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export const mcpUsageSchema = {
+export const agenticUsageSchema = {
   type: 'object',
-  description: 'A query to launch at the MCP explore API',
+  description: 'A query to launch at the Agentic explore API',
   properties: {
     datasource: {
       type: 'string',
@@ -560,9 +560,9 @@ export const mcpUsageSchema = {
         'agentic_usage',
       ],
     },
-    metrics: metricsFn(mcpExploreAggregations),
-    dimensions: dimensionsFn(queryableMcpExploreDimensions),
-    filters: filtersFn(filterableMcpExploreDimensions),
+    metrics: metricsFn(agenticExploreAggregations),
+    dimensions: dimensionsFn(queryableAgenticExploreDimensions),
+    filters: filtersFn(filterableAgenticExploreDimensions),
     ...baseQueryProperties,
   },
   required: ['datasource'],
@@ -589,7 +589,7 @@ export const platformQuerySchema = {
 } as const satisfies JSONSchema
 
 export const validDashboardQuery = {
-  anyOf: [apiUsageQuerySchema, basicQuerySchema, llmUsageSchema, mcpUsageSchema, platformQuerySchema],
+  anyOf: [apiUsageQuerySchema, basicQuerySchema, llmUsageSchema, agenticUsageSchema, platformQuerySchema],
 } as const satisfies JSONSchema
 
 export type ValidDashboardQuery = FromSchemaWithOptions<typeof validDashboardQuery>
@@ -697,7 +697,7 @@ export const dashboardConfigSchema = {
         ...filterableExploreDimensions,
         ...filterableBasicExploreDimensions,
         ...filterableAiExploreDimensions,
-        ...filterableMcpExploreDimensions,
+        ...filterableAgenticExploreDimensions,
       ]),
     ]),
     template_id: {
