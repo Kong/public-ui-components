@@ -82,6 +82,8 @@ useProvideExperimentalFreeForms([
   'solace-consume',
   'opentelemetry',
   'acl',
+  'request-transformer',
+  'upstream-oauth',
   'cors',
   'proxy-cache',
   'proxy-cache-advanced',

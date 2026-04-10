@@ -14,6 +14,23 @@
   >
     <!-- global field templates -->
     <template #[FIELD_RENDERERS]>
+      <FieldRenderer
+        v-for="(renderer, index) in configFieldRenderers"
+        :key="`${pluginName}-${index}`"
+        v-slot="slotProps"
+        :match="normalizeMatch(renderer.match)"
+      >
+        <component
+          :is="renderer.component"
+          v-bind="{
+            ...slotProps,
+            ...((typeof renderer.propsOverrides === 'function')
+              ? renderer.propsOverrides(slotProps)
+              : renderer.propsOverrides) ?? {},
+          }"
+        />
+      </FieldRenderer>
+
       <!-- Redis partial selector -->
       <FieldRenderer :match="({ path }) => path === redisPartialInfo?.redisPath?.value">
         <RedisSelector :is-konnect-managed-redis-enabled="props.isKonnectManagedRedisEnabled ?? false" />
@@ -209,6 +226,7 @@ export type Props<T extends FreeFormPluginData = any> = {
   /** FreeForm configuration */
   formConfig?: FormConfig<T>
   renderRules?: RenderRules
+  fieldRenderers?: PluginFieldRenderer[]
   pluginName: string
   /** Konnect-managed Redis UI, from plugin form config */
   isKonnectManagedRedisEnabled?: boolean
@@ -226,7 +244,8 @@ import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import type { PluginValidityChangeEvent } from '../../../../types'
 import SwitchField from '../SwitchField.vue'
 import ScopeEntityField from '../ScopeEntityField.vue'
-import type { FormConfig, RenderRules } from '../types'
+import { normalizeMatch } from '../utils'
+import type { FieldRenderer as PluginFieldRenderer, FormConfig, RenderRules } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
@@ -263,6 +282,7 @@ const instanceId = useId()
 const { i18n: { t } } = useI18n()
 
 const { editorMode = 'form', ...props } = defineProps<Props<T>>()
+const configFieldRenderers = computed<PluginFieldRenderer[]>(() => props.fieldRenderers ?? [])
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 const slots = defineSlots<{

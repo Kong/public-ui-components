@@ -29,11 +29,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'basic-auth': {
     descriptionKey: 'plugins.meta.basic-auth.description',
     nameKey: 'plugins.meta.basic-auth.name',
-    freeformRenderRules: {
-      dependencies: {
-        'config.brute_force_protection.redis': ['config.brute_force_protection.strategy', 'redis'],
-      },
-    },
     ...PLUGIN_GROUP_AND_SCOPE_MAP['basic-auth'],
   },
   'hmac-auth': {
@@ -170,14 +165,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.proxy-cache-advanced.description',
     nameKey: 'plugins.meta.proxy-cache-advanced.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['proxy-cache-advanced'],
-    freeformRenderRules: {
-      bundles: [
-        ['config.strategy', 'config.redis'],
-      ],
-      dependencies: {
-        'config.redis': ['config.strategy', 'redis'],
-      },
-    },
   },
   'graphql-proxy-cache-advanced': {
     descriptionKey: 'plugins.meta.graphql-proxy-cache-advanced.description',
@@ -194,14 +181,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.rate-limiting.name',
     fieldRules: {
       atLeastOneOf: [['config.second', 'config.minute', 'config.hour', 'config.day', 'config.month', 'config.year']],
-    },
-    freeformRenderRules: {
-      bundles: [
-        ['config.policy', 'config.redis'],
-      ],
-      dependencies: {
-        'config.redis': ['config.policy', 'redis'],
-      },
     },
     ...PLUGIN_GROUP_AND_SCOPE_MAP['rate-limiting'],
   },
@@ -573,14 +552,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.upstream-oauth.description',
     nameKey: 'plugins.meta.upstream-oauth.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['upstream-oauth'],
-    freeformRenderRules: {
-      bundles: [
-        ['config.cache.strategy', 'config.cache.redis'],
-      ],
-      dependencies: {
-        'config.cache.redis': ['config.cache.strategy', 'redis'],
-      },
-    },
   },
   'confluent': {
     descriptionKey: 'plugins.meta.confluent.description',

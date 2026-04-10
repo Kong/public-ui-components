@@ -40,13 +40,13 @@ import typedefs from '../definitions/schemas/typedefs'
 import { type CustomSchemas } from '../types'
 import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
-import { getFreeFormName } from '../utils/free-form'
 import type { UnionFieldSchema } from 'src/types/plugins/form-schema'
 import { useExperimentalFreeForms } from './useExperimentalFreeForms'
 import { oidcSchema } from '../definitions/schemas/OIDC'
 import { otelSchema } from '../definitions/schemas/OTEL'
 import { konnectApplicationAuthSchema } from '../definitions/schemas/KonnectApplicationAuth'
 import { aiMCPOauth2Schema } from '../definitions/schemas/AIMCPOauth2'
+import { shouldUseFreeForm } from '../components/free-form/shared/plugin-registry'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -350,7 +350,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
     formSchema._redis_partial_path = currentSchema._redis_partial_path
 
-    if (getSharedFormName(pluginName) || getFreeFormName(pluginName, experimentalFreeForms) || metadata?.useLegacyForm || options?.credential || engine === 'freeform') {
+    if (getSharedFormName(pluginName) || shouldUseFreeForm(pluginName, experimentalFreeForms, engine) || metadata?.useLegacyForm || options?.credential) {
       /**
        * Do not generate grouped schema when:
        * - The plugin has a custom layout
