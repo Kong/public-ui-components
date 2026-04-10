@@ -3,29 +3,58 @@
     class="plugin-code-editor"
     data-testid="plugin-code-editor"
   >
-    <MonacoEditor
-      ref="editor"
-      v-model="code"
-      class="editor"
-      language="yaml"
-      :options="monacoOptions"
-      theme="light"
-      @ready="handleEditorReady"
-    />
+    <div class="editor-shell">
+      <div
+        class="code-editor-toolbar"
+        data-testid="code-editor-toolbar"
+      >
+        <KInputSwitch
+          v-model="skipDefaults"
+          data-testid="code-editor-skip-defaults"
+        >
+          <template #label>
+            {{ t('plugins.free-form.code_editor.skip_defaults') }}
+          </template>
+        </KInputSwitch>
+      </div>
+
+      <MonacoEditor
+        ref="editor"
+        v-model="code"
+        class="editor"
+        language="yaml"
+        :options="monacoOptions"
+        theme="light"
+        @ready="handleEditorReady"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { shallowRef, toRaw } from 'vue'
-import { omit } from 'lodash-es'
+import { shallowRef, watch } from 'vue'
 import * as monaco from 'monaco-editor'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 import { MonacoEditor } from '@kong-ui-public/monaco-editor'
-import { useFormShared } from '../shared/composables'
+import { KInputSwitch } from '@kong/kongponents'
+import { useFormShared, useSchemaHelpers, useSkipDefaults } from './composables'
+import useI18n from '../../../composables/useI18n'
 
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 
-const { formData, setValue } = useFormShared()
+const { i18n: { t } } = useI18n()
+const { getValue, setValue, schema } = useFormShared()
+const { getDefault: getDefaultFromSchema } = useSchemaHelpers(schema)
+const {
+  skipDefaults,
+  toCode,
+  handleContentChange,
+  regenerateCode,
+} = useSkipDefaults({
+  getValue,
+  setValue,
+  getDefaultFromSchema,
+})
 
 const emit = defineEmits<{
   change: [config: unknown]
@@ -37,14 +66,7 @@ const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 
 const LINT_SOURCE = 'YAML Syntax'
 
-function formDataToCode(): string {
-  return yaml.dump((omit(toRaw(formData), ['__ui_data'])), {
-    schema: JSON_SCHEMA,
-    noArrayIndent: true,
-  })
-}
-
-const code = shallowRef(formDataToCode())
+const code = shallowRef(toCode())
 const monacoOptions = {
   scrollbar: {
     alwaysConsumeMouseWheel: false,
@@ -52,6 +74,10 @@ const monacoOptions = {
   autoIndent: 'keep',
   editContext: false,
 } as const satisfies Partial<monaco.editor.IStandaloneEditorConstructionOptions>
+
+watch(skipDefaults, () => {
+  regenerateCode(code)
+})
 
 function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
   const model = editor.getModel()
@@ -76,8 +102,13 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
 
       monaco.editor.setModelMarkers(model, LINT_SOURCE, [])
 
-      setValue(config)
-      emit('change', config)
+      const nextConfig = handleContentChange(config as Record<string, any>)
+      if (!nextConfig) {
+        return
+      }
+
+      emit('sourceChange', editor.getValue())
+      emit('change', nextConfig)
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error)
       emit('error', errorMsg)
@@ -103,7 +134,24 @@ function focusEnd() {
 <style lang="scss" scoped>
 .plugin-code-editor {
   height: 684px;
-  position: relative;
   width: 100%;
+
+  .editor-shell {
+    height: 100%;
+    position: relative;
+  }
+
+  .code-editor-toolbar {
+    display: flex;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    z-index: 10;
+  }
+
+  .editor {
+    height: 100%;
+    min-height: 0;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { sortFieldsByBundles, normalizeMatch } from './utils'
+import { deepMergeConfig, normalizeMatch, sortFieldsByBundles, stripDefaults } from './utils'
 import type { NamedFieldSchema } from '../../../types/plugins/form-schema'
 
 describe('sortFieldsByBundles', () => {
@@ -375,5 +375,123 @@ describe('normalizeMatch', () => {
     const match = normalizeMatch(predicate)
 
     expect(match).toBe(predicate)
+  })
+})
+
+describe('stripDefaults', () => {
+  it('removes fields matching defaults', () => {
+    const data = { a: 1, b: 2, c: 3 }
+    const defaults = { a: 1, b: 99, c: 3 }
+
+    expect(stripDefaults(data, defaults)).toEqual({ b: 2 })
+  })
+
+  it('handles nested records recursively', () => {
+    const data = { config: { host: 'custom', port: 8080 } }
+    const defaults = { config: { host: 'localhost', port: 8080 } }
+
+    expect(stripDefaults(data, defaults)).toEqual({ config: { host: 'custom' } })
+  })
+
+  it('omits nested records when all children match defaults', () => {
+    const data = { config: { host: 'localhost', port: 8080 } }
+    const defaults = { config: { host: 'localhost', port: 8080 } }
+
+    expect(stripDefaults(data, defaults)).toEqual({})
+  })
+
+  it('keeps arrays that differ from defaults', () => {
+    const data = { protocols: ['https', 'http'] }
+    const defaults = { protocols: ['http', 'https'] }
+
+    expect(stripDefaults(data, defaults)).toEqual({ protocols: ['https', 'http'] })
+  })
+
+  it('removes arrays that match defaults exactly', () => {
+    const data = { protocols: ['http', 'https'] }
+    const defaults = { protocols: ['http', 'https'] }
+
+    expect(stripDefaults(data, defaults)).toEqual({})
+  })
+
+  it('removes null fields when the default is null', () => {
+    const data = { a: null, b: 'value' }
+    const defaults = { a: null, b: null }
+
+    expect(stripDefaults(data, defaults)).toEqual({ b: 'value' })
+  })
+
+  it('keeps fields that are not present in defaults', () => {
+    const data = { config: { custom_key: 'value' } }
+    const defaults = { config: {} }
+
+    expect(stripDefaults(data, defaults)).toEqual({ config: { custom_key: 'value' } })
+  })
+
+  it('handles empty data', () => {
+    expect(stripDefaults({}, { a: 1 })).toEqual({})
+  })
+
+  it('handles empty defaults', () => {
+    const data = { a: 1 }
+
+    expect(stripDefaults(data, {})).toEqual({ a: 1 })
+  })
+
+  it('handles deeply nested structures', () => {
+    const data = { config: { redis: { host: 'custom', port: 6379, db: 0 } } }
+    const defaults = { config: { redis: { host: 'localhost', port: 6379, db: 0 } } }
+
+    expect(stripDefaults(data, defaults)).toEqual({ config: { redis: { host: 'custom' } } })
+  })
+})
+
+describe('deepMergeConfig', () => {
+  it('recursively merges nested objects', () => {
+    const base = { config: { host: 'x', timeout: 60000, retries: 5 } }
+    const override = { config: { host: 'y' } }
+
+    expect(deepMergeConfig(base, override)).toEqual({
+      config: { host: 'y', timeout: 60000, retries: 5 },
+    })
+  })
+
+  it('replaces arrays entirely', () => {
+    const base = { protocols: ['http', 'https'] }
+    const override = { protocols: ['grpc'] }
+
+    expect(deepMergeConfig(base, override)).toEqual({ protocols: ['grpc'] })
+  })
+
+  it('preserves base keys that are not overridden', () => {
+    const base = { a: 1, b: 2 }
+    const override = { a: 10 }
+
+    expect(deepMergeConfig(base, override)).toEqual({ a: 10, b: 2 })
+  })
+
+  it('supports null overrides', () => {
+    const base = { a: 1, b: 2 }
+    const override = { a: null }
+
+    expect(deepMergeConfig(base, override)).toEqual({ a: null, b: 2 })
+  })
+
+  it('handles deeply nested merges', () => {
+    const base = { config: { redis: { host: 'old', port: 6379, db: 0 } } }
+    const override = { config: { redis: { host: 'new' } } }
+
+    expect(deepMergeConfig(base, override)).toEqual({
+      config: { redis: { host: 'new', port: 6379, db: 0 } },
+    })
+  })
+
+  it('adds new keys from the override', () => {
+    const base = { config: { host: 'x' } }
+    const override = { config: { host: 'x', custom: 'new' } }
+
+    expect(deepMergeConfig(base, override)).toEqual({
+      config: { host: 'x', custom: 'new' },
+    })
   })
 })

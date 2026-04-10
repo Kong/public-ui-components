@@ -764,6 +764,9 @@
         "visual": "Visual editor",
         "code": "Code editor"
       },
+      "code_editor": {
+        "skip_defaults": "Skip defaults"
+      },
       "acl": {
         "mode": {
           "allow": "Use allow list",

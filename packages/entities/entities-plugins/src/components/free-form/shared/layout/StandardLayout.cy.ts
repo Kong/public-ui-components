@@ -262,6 +262,28 @@ describe('<StandardLayout />', () => {
     cy.get('.plugin-code-editor').should('exist')
   })
 
+  it('should render the skip-defaults toggle in code mode', () => {
+    cy.mount(StandardLayout as any, {
+      props: {
+        schema: createBaseSchema(),
+        formSchema: createFormSchema(),
+        model: createBaseModel(),
+        formModel: { enabled: true },
+        isEditing: false,
+        onFormChange: cy.spy(),
+        pluginName: 'test-plugin',
+        editorMode: 'code',
+      },
+    })
+
+    cy.getTestId('code-editor-toolbar').should('exist')
+    cy.getTestId('code-editor-toolbar').should('contain.text', 'Skip defaults')
+    cy.getTestId('code-editor-toolbar').should('have.css', 'position', 'absolute')
+    cy.getTestId('code-editor-toolbar').should('have.css', 'right').and('not.equal', 'auto')
+    cy.getTestId('code-editor-toolbar').should('have.css', 'top').and('not.equal', 'auto')
+    cy.getTestId('code-editor-skip-defaults').should('exist')
+  })
+
   describe('Condition field', () => {
     it('should not render condition field when formSchema does not include condition', () => {
       mountStandardLayout()
