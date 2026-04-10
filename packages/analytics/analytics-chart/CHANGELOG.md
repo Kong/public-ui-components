@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.14.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.14.16...@kong-ui-public/analytics-chart@10.14.17) (2026-04-10)
+
+
+### Bug Fixes
+
+* missing locales for a2a fields ([#3120](https://github.com/Kong/public-ui-components/issues/3120)) ([e9747e4](https://github.com/Kong/public-ui-components/commit/e9747e4f1f402b9e88cada9d210fafe52704e74f))
+
+
+
+
+
 ## [10.14.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.14.15...@kong-ui-public/analytics-chart@10.14.16) (2026-04-10)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
