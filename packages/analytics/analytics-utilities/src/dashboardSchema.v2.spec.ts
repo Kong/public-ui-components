@@ -6,24 +6,24 @@ import {
   basicQuerySchema,
   dashboardConfigSchema,
   llmUsageSchema,
-  mcpUsageSchema,
+  agenticUsageSchema,
   validDashboardQuery,
   platformQuerySchema,
 } from './dashboardSchema.v2'
 import {
+  agenticExploreAggregations,
   aiExploreAggregations,
   basicExploreAggregations,
   exploreAggregations,
   exploreFilterTypesV2,
+  filterableAgenticExploreDimensions,
   filterableAiExploreDimensions,
   filterableBasicExploreDimensions,
   filterableExploreDimensions,
-  filterableMcpExploreDimensions,
-  mcpExploreAggregations,
+  queryableAgenticExploreDimensions,
   queryableAiExploreDimensions,
   queryableBasicExploreDimensions,
   queryableExploreDimensions,
-  queryableMcpExploreDimensions,
   requestFilterTypeEmptyV2,
 } from './types'
 
@@ -34,7 +34,7 @@ const validateDashboardConfigSchema = ajv.compile(dashboardConfigSchema)
 const validateApiUsageQuerySchema = ajv.compile(apiUsageQuerySchema)
 const validateBasicQuerySchema = ajv.compile(basicQuerySchema)
 const validateLlmUsageQuerySchema = ajv.compile(llmUsageSchema)
-const validateMcpUsageQuerySchema = ajv.compile(mcpUsageSchema)
+const validateAgenticUsageQuerySchema = ajv.compile(agenticUsageSchema)
 
 describe('dashboardSchema.v2', () => {
   const sharedPresetFilterableDimensions = [
@@ -42,7 +42,7 @@ describe('dashboardSchema.v2', () => {
       ...filterableExploreDimensions,
       ...filterableBasicExploreDimensions,
       ...filterableAiExploreDimensions,
-      ...filterableMcpExploreDimensions,
+      ...filterableAgenticExploreDimensions,
     ]),
   ]
 
@@ -153,7 +153,7 @@ describe('dashboardSchema.v2', () => {
     [apiUsageQuerySchema, exploreAggregations, queryableExploreDimensions, filterableExploreDimensions],
     [basicQuerySchema, basicExploreAggregations, queryableBasicExploreDimensions, filterableBasicExploreDimensions],
     [llmUsageSchema, aiExploreAggregations, queryableAiExploreDimensions, filterableAiExploreDimensions],
-    [mcpUsageSchema, mcpExploreAggregations, queryableMcpExploreDimensions, filterableMcpExploreDimensions],
+    [agenticUsageSchema, agenticExploreAggregations, queryableAgenticExploreDimensions, filterableAgenticExploreDimensions],
   ])('keeps strict enums for existing datasource schemas', (schema, expectedMetrics, expectedDimensions, expectedFilterableDimensions) => {
     expect(schema.properties.datasource.enum).toHaveLength(1)
     expect(schema.properties.metrics.items.enum).toEqual(expectedMetrics)
@@ -203,7 +203,7 @@ describe('dashboardSchema.v2', () => {
       ...invalidStrictQuery,
       datasource: 'llm_usage',
     })).toBe(false)
-    expect(validateMcpUsageQuerySchema({
+    expect(validateAgenticUsageQuerySchema({
       ...invalidStrictQuery,
       datasource: 'agentic_usage',
     })).toBe(false)
