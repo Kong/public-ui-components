@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.14.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.14.17...@kong-ui-public/analytics-chart@10.14.18) (2026-04-10)
+
+
+### Bug Fixes
+
+* update locale ([#3121](https://github.com/Kong/public-ui-components/issues/3121)) ([7e04a9e](https://github.com/Kong/public-ui-components/commit/7e04a9ea6451ed630193325007b603c8d5c73232))
+
+
+
+
+
 ## [10.14.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.14.16...@kong-ui-public/analytics-chart@10.14.17) (2026-04-10)
 
 
