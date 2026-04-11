@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.23.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.11...@kong-ui-public/forms@4.23.12) (2026-04-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** retain consumer_claim ([#3122](https://github.com/Kong/public-ui-components/issues/3122)) ([2b50c4d](https://github.com/Kong/public-ui-components/commit/2b50c4d6da073509fcfccde9d6574c0830b059c2))
+
+
+
+
+
 ## [4.23.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.10...@kong-ui-public/forms@4.23.11) (2026-04-10)
 
 **Note:** Version bump only for package @kong-ui-public/forms
