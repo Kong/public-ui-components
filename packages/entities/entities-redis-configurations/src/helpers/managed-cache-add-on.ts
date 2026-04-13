@@ -14,4 +14,5 @@ export {
   fetchManagedCacheAddOnById,
   fetchAllManagedCacheAddOns,
   fetchRedisPartialForConfigCard,
+  httpOkOr404,
 } from './managed-cache-add-on-api'

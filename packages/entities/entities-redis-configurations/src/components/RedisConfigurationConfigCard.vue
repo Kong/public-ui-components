@@ -117,7 +117,7 @@
                   disable-konnect-managed-detail
                   :hide-title="false"
                   @fetch:error="(e) => emit('fetch:error', e)"
-                  @fetch:not-found="(e) => emit('fetch:not-found', e)"
+                  @fetch:not-found="emitFetchNotFound"
                   @fetch:success="onPartialNestedLoaded"
                   @loading="(v) => emit('loading', v)"
                 >
@@ -262,6 +262,10 @@ const onEntityBaseConfigCardFetchError = (error: AxiosError): void => {
     return
   }
   emit('fetch:error', error)
+}
+
+const emitFetchNotFound = (error: AxiosError): void => {
+  emit('fetch:not-found', error)
 }
 
 const { i18n: { t } } = composables.useI18n()

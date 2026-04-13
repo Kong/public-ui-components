@@ -271,6 +271,7 @@ import { MANAGED_CACHE_FOR_REDIS_DOC_URL } from '../constants'
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
 import { getRedisType } from '../helpers'
+import { httpOkOr404 } from '../helpers/managed-cache-add-on-api'
 import { parseManagedAddOn } from '../helpers/managed-cache-add-on-parse'
 import { PartialType, RedisType, REDIS_CONFIGURATION_SOURCE } from '../types'
 import LinkedPluginsInline from './LinkedPluginsInline.vue'
@@ -495,8 +496,12 @@ const fetchManagedAddOnById = async (managedCacheAddOnId: string): Promise<Manag
   const singleAddOnUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons/${encodeURIComponent(managedCacheAddOnId)}`
 
   try {
-    const { data } = await axiosInstance.get(singleAddOnUrl)
-    const parsedAddOn = parseManagedAddOn(data)
+    const response = await axiosInstance.get(singleAddOnUrl, httpOkOr404)
+    if (response.status === 404) {
+      return null
+    }
+
+    const parsedAddOn = parseManagedAddOn(response.data)
     if (!parsedAddOn?.id || !isManagedCacheAddOn(parsedAddOn)) {
       return null
     }
@@ -524,9 +529,12 @@ const fetchRedisPartialById = async (kokoPartialId: string): Promise<RedisConfig
   const singlePartialUrl = `${fetcherBaseUrl.value}/${encodeURIComponent(kokoPartialId)}`
 
   try {
-    const partialResponse = await axiosInstance.get<{ data: RedisConfigurationResponse }>(singlePartialUrl)
-    const { data: responseBody } = partialResponse
-    const maybeRedisPartial = responseBody.data
+    const partialResponse = await axiosInstance.get<{ data: RedisConfigurationResponse }>(singlePartialUrl, httpOkOr404)
+    if (partialResponse.status === 404) {
+      return null
+    }
+
+    const maybeRedisPartial = partialResponse.data.data
 
     return isRedisPartial(maybeRedisPartial) ? maybeRedisPartial : null
   } catch (error) {
