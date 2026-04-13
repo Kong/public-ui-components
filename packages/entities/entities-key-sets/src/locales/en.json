@@ -35,7 +35,7 @@
       "placeholder": "Filter by exact name or ID"
     },
     "delete": {
-      "title": "Delete a Key Set",
+      "title": "Delete a key set",
       "description": "Deleting this key set will also delete keys associated. This action cannot be reversed so make sure to check the key set usage before deleting."
     },
     "errors": {

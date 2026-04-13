@@ -38,7 +38,7 @@
       "no_results": "No results found"
     },
     "delete": {
-      "title": "Delete a Key",
+      "title": "Delete a key",
       "description": "This action cannot be reversed so make sure to check the key usage before deleting."
     },
     "errors": {

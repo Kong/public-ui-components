@@ -1028,13 +1028,13 @@ importers:
   packages/entities/entities-plugins:
     dependencies:
       '@kong-ui-public/entities-consumer-groups':
-        specifier: workspace:^
+        specifier: link:../entities-consumer-groups
         version: link:../entities-consumer-groups
       '@kong-ui-public/entities-consumers':
-        specifier: workspace:^
+        specifier: link:../entities-consumers
         version: link:../entities-consumers
       '@kong-ui-public/entities-gateway-services':
-        specifier: workspace:^
+        specifier: link:../entities-gateway-services
         version: link:../entities-gateway-services
       '@kong-ui-public/entities-plugins-icon':
         specifier: workspace:^
@@ -1043,13 +1043,13 @@ importers:
         specifier: workspace:^
         version: link:../entities-plugins-metadata
       '@kong-ui-public/entities-redis-configurations':
-        specifier: workspace:^
+        specifier: link:../entities-redis-configurations
         version: link:../entities-redis-configurations
       '@kong-ui-public/entities-routes':
-        specifier: workspace:^
+        specifier: link:../entities-routes
         version: link:../entities-routes
       '@kong-ui-public/entities-vaults':
-        specifier: workspace:^
+        specifier: link:../entities-vaults
         version: link:../entities-vaults
       '@kong-ui-public/forms':
         specifier: workspace:^
@@ -1158,7 +1158,7 @@ importers:
         specifier: workspace:^
         version: link:../entities-shared
       '@kong-ui-public/entities-vaults':
-        specifier: workspace:^
+        specifier: link:../entities-vaults
         version: link:../entities-vaults
       '@kong-ui-public/forms':
         specifier: workspace:^

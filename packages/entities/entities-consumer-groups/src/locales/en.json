@@ -37,7 +37,7 @@
       "view": "View Details"
     },
     "delete": {
-      "title": "Delete a Consumer Group",
+      "title": "Delete a consumer group",
       "description": "Deleting this group will remove all its plugins and rate limit configuration. This action cannot be reversed."
     },
     "consumers": {

@@ -109,25 +109,25 @@
     },
     "delete": {
       "acls": {
-        "title": "Delete an ACL Credential"
+        "title": "Delete an ACL credential"
       },
       "basic-auth": {
-        "title": "Delete a Basic Auth Credential"
+        "title": "Delete a basic auth credential"
       },
       "key-auth": {
-        "title": "Delete a Key Auth Credential"
+        "title": "Delete a key auth credential"
       },
       "key-auth-enc": {
-        "title": "Delete a Key Auth Encrypted Credential"
+        "title": "Delete a key auth encrypted credential"
       },
       "oauth2": {
-        "title": "Delete an OAuth 2.0 Credential"
+        "title": "Delete an OAuth 2.0 credential"
       },
       "hmac-auth": {
-        "title": "Delete an HMAC Credential"
+        "title": "Delete an HMAC credential"
       },
       "jwt": {
-        "title": "Delete a JWT Credential"
+        "title": "Delete a JWT credential"
       },
       "description": "This action cannot be reversed."
     },

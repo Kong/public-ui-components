@@ -9,7 +9,7 @@
     "clear": "Clear",
     "view": "View Details",
     "delete": {
-      "title": "Delete a Gateway Service",
+      "title": "Delete a gateway service",
       "description": "Deleting this Gateway Service will also remove any associated plugins. This action cannot be reversed.",
       "menu_label": "Delete"
     }

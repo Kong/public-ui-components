@@ -50,7 +50,7 @@
     }
   },
   "delete": {
-    "title": "Delete a Route",
+    "title": "Delete a route",
     "description": "Deleting this route will also remove any associated plugins. This action cannot be reversed."
   },
   "errors": {

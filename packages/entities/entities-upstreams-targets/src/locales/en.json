@@ -35,7 +35,7 @@
       "view": "View Details"
     },
     "delete": {
-      "title": "Delete an Upstream",
+      "title": "Delete an upstream",
       "description": "This action cannot be reversed so make sure to check upstream usage before deleting."
     },
     "errors": {

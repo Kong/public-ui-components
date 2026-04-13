@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong-ui-public/entities-vaults": "workspace:^",
+    "@kong-ui-public/entities-vaults": "link:../entities-vaults",
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.20.0",

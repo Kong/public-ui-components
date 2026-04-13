@@ -9,7 +9,7 @@
     "loading": "Loading..."
   },
   "delete": {
-    "title": "Delete a Vault",
+    "title": "Delete a vault",
     "title_for_secret": "Delete a Secret",
     "description": "This action cannot be reversed."
   },

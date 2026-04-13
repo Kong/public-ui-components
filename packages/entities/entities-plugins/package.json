@@ -64,7 +64,7 @@
   "devDependencies": {
     "@dagrejs/dagre": "^2.0.4",
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong-ui-public/entities-vaults": "workspace:^",
+    "@kong-ui-public/entities-vaults": "link:../entities-vaults",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong/design-tokens": "1.20.0",
@@ -125,14 +125,14 @@
     "errorLimit": "4MB"
   },
   "dependencies": {
-    "@kong-ui-public/entities-consumer-groups": "workspace:^",
-    "@kong-ui-public/entities-consumers": "workspace:^",
-    "@kong-ui-public/entities-gateway-services": "workspace:^",
+    "@kong-ui-public/entities-consumer-groups": "link:../entities-consumer-groups",
+    "@kong-ui-public/entities-consumers": "link:../entities-consumers",
+    "@kong-ui-public/entities-gateway-services": "link:../entities-gateway-services",
     "@kong-ui-public/entities-plugins-icon": "workspace:^",
     "@kong-ui-public/entities-plugins-metadata": "workspace:^",
-    "@kong-ui-public/entities-redis-configurations": "workspace:^",
-    "@kong-ui-public/entities-routes": "workspace:^",
-    "@kong-ui-public/entities-vaults": "workspace:^",
+    "@kong-ui-public/entities-redis-configurations": "link:../entities-redis-configurations",
+    "@kong-ui-public/entities-routes": "link:../entities-routes",
+    "@kong-ui-public/entities-vaults": "link:../entities-vaults",
     "@kong-ui-public/forms": "workspace:^",
     "lodash-es": "^4.17.23",
     "marked": "^14.1.4"

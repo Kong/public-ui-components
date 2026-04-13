@@ -22,7 +22,7 @@
     "create_new": "Create new Redis configuration"
   },
   "delete": {
-    "title": "Delete Redis configuration",
+    "title": "Delete redis configuration",
     "description": "You’re about to delete this item. Are you sure you want to proceed?",
     "warning": "To delete this configuration, first remove it from all associated plugins."
   },
