@@ -87,7 +87,7 @@ import type { PageLayoutTabsProps, PageLayoutTab } from '../types'
 import composables from '../composables'
 import { KUI_SPACE_60 } from '@kong/design-tokens'
 import { useEventListener } from '@vueuse/core'
-import { inject } from 'vue'
+// import { inject } from 'vue'
 
 const {
   tabs = [],
@@ -96,7 +96,7 @@ const {
 const { i18n: { t } } = composables.useI18n()
 
 const router = useRouter()
-const navigateTo = inject<((to: string, options?: { replace?: boolean }) => Promise<void>) | null>('app:navigateTo', null)
+// const navigateTo = inject<((to: string, options?: { replace?: boolean }) => Promise<void>) | null>('app:navigateTo', null)
 
 const onTabNavigation = (tab: PageLayoutTab) => {
   // If not a string (a RouteLocationRaw)
@@ -105,14 +105,7 @@ const onTabNavigation = (tab: PageLayoutTab) => {
     return
   }
 
-  // If navigateTo is undefined
-  if (typeof navigateTo !== 'function') {
-    window.location.href = tab.to
-    return
-  }
-
-  console.log('navigating to', tab.to)
-  navigateTo(tab.to, { replace: true })
+  window.location.href = tab.to
 }
 
 const TABS_HORIZONTAL_PADDING = KUI_SPACE_60
