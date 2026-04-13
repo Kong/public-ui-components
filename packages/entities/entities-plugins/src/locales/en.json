@@ -1133,5 +1133,111 @@
         }
       }
     }
+  },
+  "custom_plugin_form": {
+    "step1": {
+      "title": "Custom plugin type",
+      "types": {
+        "installed": {
+          "label": "Installed custom plugin",
+          "description": "Install and manage plugins with full control over deployment and runtime. Requires restarting data planes."
+        },
+        "streamed": {
+          "label": "Streamed custom plugin",
+          "description": "Deploy and update plugins on running data planes without requiring gateway access."
+        },
+        "cloned": {
+          "label": "Cloned plugin",
+          "description": "Duplicate an existing plugin to run multiple instances within a single request."
+        }
+      },
+      "compare_trigger": "Compare deployment options",
+      "compare_table": {
+        "columns": {
+          "installed": "Installed custom plugin",
+          "streamed": "Streamed custom plugin",
+          "cloned": "Cloned plugin"
+        },
+        "rows": {
+          "main_use_case": {
+            "header": "Main use case",
+            "installed": "Extend Kong functionality with custom plugins and control who can modify and roll out changes.",
+            "streamed": "Extend Kong functionality with plugins without requiring sysadmin access to data plane instances.",
+            "cloned": "Modify an existing plugin to run multiple instances with different names or priorities."
+          },
+          "file_supplied": {
+            "header": "File supplied",
+            "installed": {
+              "handler": "handler.lua",
+              "schema": "schema.lua",
+              "additional": "Any additional files or libraries needed"
+            },
+            "streamed": {
+              "handler": "handler.lua",
+              "schema": "schema.lua"
+            }
+          },
+          "how_installed": {
+            "header": "How it's installed",
+            "installed": "Install directly on the data plane",
+            "streamed": "Through gateway configuration changes",
+            "cloned": "Through gateway configuration changes"
+          },
+          "sandboxing": {
+            "header": "Sandboxing",
+            "streamed": "Follows the standard sandboxing settings.",
+            "streamed_link": "Link to docs",
+            "cloned": "Inherit the same sandboxing as the original plugins"
+          },
+          "data_plane_reload": {
+            "header": "Data plane reload"
+          }
+        }
+      }
+    },
+    "step2_files": {
+      "title": "Custom plugin files",
+      "schema_file": {
+        "label": "Upload schema file",
+        "placeholder": "No file selected",
+        "button_text": "Select File",
+        "help": "Only Lua based schemas are supported by Konnect. Other plugin modules can be in any language as desired. Learn more"
+      },
+      "handler_file": {
+        "label": "Upload handler file",
+        "placeholder": "No file selected",
+        "button_text": "Select File",
+        "help": "Upload plugin handler to the data plane."
+      },
+      "plugin_modules": {
+        "label": "Plugin modules",
+        "alert": "Upload all plugin modules to the data plane: schema.lua, handler.lua"
+      }
+    },
+    "step2_clone": {
+      "title": "Clone plugin",
+      "select_plugin": {
+        "label": "Select a plugin",
+        "placeholder": "Type to search"
+      }
+    },
+    "step3": {
+      "title": "General information",
+      "description": "Enter a custom name for this custom plugin",
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter a unique name",
+        "help": "The name must be identical to the name of the plugin in the schema file."
+      },
+      "alias_name": {
+        "label": "Alias name",
+        "placeholder": "Enter a unique name"
+      },
+      "priority": {
+        "label": "Priority",
+        "tooltip": "Set the execution priority for this cloned plugin",
+        "help": "Optional. Use a number or +/- to set priority relative to the original plugin. If priority doesn't set, plugins run in alphabetical order. Learn more in the docs."
+      }
+    }
   }
 }
