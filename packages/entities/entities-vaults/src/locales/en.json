@@ -10,7 +10,7 @@
   },
   "delete": {
     "title": "Delete a vault",
-    "title_for_secret": "Delete a Secret",
+    "title_for_secret": "Delete a secret",
     "description": "This action cannot be reversed."
   },
   "errors": {

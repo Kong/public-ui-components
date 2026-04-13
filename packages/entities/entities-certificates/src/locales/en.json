@@ -167,7 +167,7 @@
       "placeholder": "Filter by exact ID"
     },
     "delete": {
-      "title": "Delete a CA Certificate",
+      "title": "Delete a CA certificate",
       "description": "Your organization's original certificate {bolded-text}.",
       "boldedText": "will not be affected",
       "description2": "This action cannot be reversed so make sure to check the certificate usage before deleting."
