@@ -144,7 +144,7 @@ describe('FieldObjectAdvanced', () => {
       })
 
       expect(wrapper.find('input[data-testid="keyname-input"]').exists()).toBe(true)
-      expect(wrapper.find('[data-testid="add-key"]').exists()).toBe(true)
+      expect(wrapper.getTestId('add-key').exists()).toBe(true)
     })
   })
 })

@@ -79,7 +79,7 @@ describe('QueryDataProvider', () => {
 
     await flushPromises()
 
-    expect(wrapper.find('[data-testid="chart-empty-state"]').exists()).toBe(true)
+    expect(wrapper.getTestId('chart-empty-state').exists()).toBe(true)
     expect(wrapper.text()).toContain('An unexpected error has occurred.')
   })
 })

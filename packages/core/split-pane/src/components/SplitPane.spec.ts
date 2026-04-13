@@ -62,17 +62,17 @@ describe('<SplitPane />', () => {
     it('should render the component', () => {
       const wrapper = createWrapper()
       expect(wrapper.isVisible()).toBe(true)
-      expect(wrapper.find('[data-testid="split-pane"]').exists()).toBe(true)
+      expect(wrapper.getTestId('split-pane').exists()).toBe(true)
     })
 
     it('should apply has-navigation class when showNavigation is true', () => {
       const wrapper = createWrapper({ showNavigation: true })
-      expect(wrapper.find('[data-testid="split-pane"]').classes()).toContain('has-navigation')
+      expect(wrapper.getTestId('split-pane').classes()).toContain('has-navigation')
     })
 
     it('should not apply has-navigation class when showNavigation is false', () => {
       const wrapper = createWrapper({ showNavigation: false })
-      expect(wrapper.find('[data-testid="split-pane"]').classes()).not.toContain('has-navigation')
+      expect(wrapper.getTestId('split-pane').classes()).not.toContain('has-navigation')
     })
 
     it('should render the VerticalNavigation component when showNavigation is true', () => {
@@ -87,7 +87,7 @@ describe('<SplitPane />', () => {
         { paneLeft: { visible: true } },
         { 'pane-left': '<div>Left Pane Content</div>' },
       )
-      expect(wrapper.find('[data-testid="split-pane-left"]').exists()).toBe(true)
+      expect(wrapper.getTestId('split-pane-left').exists()).toBe(true)
     })
 
     it('should hide pane-left when visible prop is false', () => {
@@ -97,7 +97,7 @@ describe('<SplitPane />', () => {
       )
       // showPaneLeft computed should be false, so pane won't be shown
       // Since mocked composable returns paneLeftExpanded as true, but visible is false the content should still not be visible
-      const paneLeft = wrapper.find('[data-testid="split-pane-left"]')
+      const paneLeft = wrapper.getTestId('split-pane-left')
       // The pane element itself may exist but showPaneLeft will be false
       expect(paneLeft.exists()).toBe(true)
     })
@@ -107,7 +107,7 @@ describe('<SplitPane />', () => {
         {},
         { 'pane-center': '<div>Center Pane Content</div>' },
       )
-      expect(wrapper.find('[data-testid="split-pane-center"]').exists()).toBe(true)
+      expect(wrapper.getTestId('split-pane-center').exists()).toBe(true)
     })
 
     it('should show pane-right when slot content is provided', () => {
@@ -115,7 +115,7 @@ describe('<SplitPane />', () => {
         {},
         { 'pane-right': '<div>Right Pane Content</div>' },
       )
-      expect(wrapper.find('[data-testid="split-pane-right"]').exists()).toBe(true)
+      expect(wrapper.getTestId('split-pane-right').exists()).toBe(true)
     })
 
     it('should hide pane-center when visible prop is false', () => {
@@ -123,7 +123,7 @@ describe('<SplitPane />', () => {
         { paneCenter: { visible: false } },
         { 'pane-center': '<div class="center-pane-content">Center Pane Content</div>' },
       )
-      const paneCenter = wrapper.find('[data-testid="split-pane-center"]')
+      const paneCenter = wrapper.getTestId('split-pane-center')
       // Pane uses v-show, so it exists in DOM
       expect(paneCenter.exists()).toBe(true)
       // When showPaneCenter is false, it should have aria-hidden
@@ -135,7 +135,7 @@ describe('<SplitPane />', () => {
         { paneRight: { visible: false } },
         { 'pane-right': '<div class="right-pane-content">Right Pane Content</div>' },
       )
-      const paneRight = wrapper.find('[data-testid="split-pane-right"]')
+      const paneRight = wrapper.getTestId('split-pane-right')
       // Pane uses v-show, so it exists in DOM
       expect(paneRight.exists()).toBe(true)
       // When showPaneRight is false, it should have aria-hidden
@@ -165,7 +165,7 @@ describe('<SplitPane />', () => {
           'pane-right': '<div>Right</div>',
         },
       )
-      const resizeDivider = wrapper.find('[data-testid="split-pane-resize-divider-right"]')
+      const resizeDivider = wrapper.getTestId('split-pane-resize-divider-right')
       expect(resizeDivider.exists()).toBe(true)
     })
 
@@ -177,7 +177,7 @@ describe('<SplitPane />', () => {
           'pane-right': '<div>Right</div>',
         },
       )
-      const resizeDivider = wrapper.find('[data-testid="split-pane-resize-divider-right"]')
+      const resizeDivider = wrapper.getTestId('split-pane-resize-divider-right')
       expect(resizeDivider.exists()).toBe(false)
     })
 
@@ -189,7 +189,7 @@ describe('<SplitPane />', () => {
           'pane-right': '<div>Right</div>',
         },
       )
-      const resizeDivider = wrapper.find('[data-testid="split-pane-resize-divider-right"]')
+      const resizeDivider = wrapper.getTestId('split-pane-resize-divider-right')
       expect(resizeDivider.exists()).toBe(false)
     })
 
@@ -198,7 +198,7 @@ describe('<SplitPane />', () => {
         { resizable: true, showResizeHandle: true },
         { 'pane-left': '<div>Left</div>' },
       )
-      const leftResizeDivider = wrapper.find('[data-testid="split-pane-resize-divider-left"]')
+      const leftResizeDivider = wrapper.getTestId('split-pane-resize-divider-left')
       expect(leftResizeDivider.exists()).toBe(true)
     })
 
@@ -207,7 +207,7 @@ describe('<SplitPane />', () => {
         { paneLeft: { visible: true } },
         { 'pane-left': '<div>Left</div>' },
       )
-      const paneLeft = wrapper.find('[data-testid="split-pane-left"]')
+      const paneLeft = wrapper.getTestId('split-pane-left')
       expect(paneLeft.classes()).toContain('expanded')
     })
   })
@@ -321,7 +321,7 @@ describe('<SplitPane />', () => {
       const wrapper = createWrapper()
 
       // showNavigation defaults to true
-      expect(wrapper.find('[data-testid="split-pane"]').classes()).toContain('has-navigation')
+      expect(wrapper.getTestId('split-pane').classes()).toContain('has-navigation')
 
       // VerticalNavigation should render by default
       expect(wrapper.findComponent(VerticalNavigation).exists()).toBe(true)
@@ -332,7 +332,7 @@ describe('<SplitPane />', () => {
 
       // resizable + showResizeHandle default to true,
       // but divider requires both center & right panes
-      expect(wrapper.find('[data-testid="split-pane-resize-divider-right"]').exists()).toBe(false)
+      expect(wrapper.getTestId('split-pane-resize-divider-right').exists()).toBe(false)
     })
 
     it('should apply default maxWidth for panes', () => {

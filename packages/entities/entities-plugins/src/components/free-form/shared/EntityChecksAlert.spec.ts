@@ -20,8 +20,8 @@ const mountComponent = (props: {
 }
 
 describe('EntityChecksAlert', () => {
-  const alertSelector = '[data-testid="ff-entity-checks-alert"]'
-  const checkItemSelector = '[data-testid="ff-entity-check-item"]'
+  const alertTestId = 'ff-entity-checks-alert'
+  const checkItemTestId = 'ff-entity-check-item'
 
   describe('normal cases', () => {
     it('should render at_least_one_of alert when all fields are visible', () => {
@@ -30,8 +30,8 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['allow', 'deny'],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(true)
-      const items = wrapper.findAll(checkItemSelector)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(true)
+      const items = wrapper.findAll(`[data-testid="${checkItemTestId}"]`)
       expect(items).toHaveLength(1)
       expect(items[0].text()).toContain('Allow')
       expect(items[0].text()).toContain('Deny')
@@ -43,8 +43,8 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['username', 'password'],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(true)
-      const items = wrapper.findAll(checkItemSelector)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(true)
+      const items = wrapper.findAll(`[data-testid="${checkItemTestId}"]`)
       expect(items).toHaveLength(1)
       expect(items[0].text()).toContain('Username')
       expect(items[0].text()).toContain('Password')
@@ -56,8 +56,8 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['allow', 'deny'],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(true)
-      const items = wrapper.findAll(checkItemSelector)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(true)
+      const items = wrapper.findAll(`[data-testid="${checkItemTestId}"]`)
       expect(items).toHaveLength(1)
       expect(items[0].text()).toContain('Allow')
       expect(items[0].text()).toContain('Deny')
@@ -72,7 +72,7 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['allow', 'deny', 'username', 'password'],
       })
 
-      const items = wrapper.findAll(checkItemSelector)
+      const items = wrapper.findAll(`[data-testid="${checkItemTestId}"]`)
       expect(items).toHaveLength(2)
     })
 
@@ -82,7 +82,7 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['allow'],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(false)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(false)
     })
 
     it('should not render alert when entityChecks is undefined', () => {
@@ -90,7 +90,7 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['allow'],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(false)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(false)
     })
 
     it('should only show fields that are in visibleFields', () => {
@@ -99,8 +99,8 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['allow'],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(true)
-      const items = wrapper.findAll(checkItemSelector)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(true)
+      const items = wrapper.findAll(`[data-testid="${checkItemTestId}"]`)
       expect(items).toHaveLength(1)
       expect(items[0].text()).toContain('Allow')
       expect(items[0].text()).not.toContain('Deny')
@@ -114,8 +114,8 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['allow', 'deny'],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(true)
-      const items = wrapper.findAll(checkItemSelector)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(true)
+      const items = wrapper.findAll(`[data-testid="${checkItemTestId}"]`)
       expect(items).toHaveLength(1)
       expect(items[0].text()).toContain('Allow')
       expect(items[0].text()).not.toContain('None')
@@ -127,7 +127,7 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['allow', 'deny'],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(false)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(false)
     })
   })
 
@@ -138,8 +138,8 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['auth', 'token'],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(true)
-      const items = wrapper.findAll(checkItemSelector)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(true)
+      const items = wrapper.findAll(`[data-testid="${checkItemTestId}"]`)
       expect(items).toHaveLength(1)
       // defaultLabelFormatter formats 'auth.username' as 'Auth › Username'
       expect(items[0].text()).toContain('Auth')
@@ -152,7 +152,7 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['token', 'other_field'],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(false)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(false)
     })
 
     it('should filter out nested paths whose parent is not visible', () => {
@@ -161,8 +161,8 @@ describe('EntityChecksAlert', () => {
         visibleFields: ['token'],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(true)
-      const items = wrapper.findAll(checkItemSelector)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(true)
+      const items = wrapper.findAll(`[data-testid="${checkItemTestId}"]`)
       expect(items).toHaveLength(1)
       expect(items[0].text()).toContain('Token')
       expect(items[0].text()).not.toContain('Auth')
@@ -175,8 +175,8 @@ describe('EntityChecksAlert', () => {
         entityChecks: [{ at_least_one_of: ['allow', 'deny'] }],
       })
 
-      expect(wrapper.find(alertSelector).exists()).toBe(true)
-      const items = wrapper.findAll(checkItemSelector)
+      expect(wrapper.getTestId(alertTestId).exists()).toBe(true)
+      const items = wrapper.findAll(`[data-testid="${checkItemTestId}"]`)
       expect(items).toHaveLength(1)
       expect(items[0].text()).toContain('Allow')
       expect(items[0].text()).toContain('Deny')
