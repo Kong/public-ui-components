@@ -200,22 +200,42 @@
     </EntityBaseTable>
 
     <DeleteWarningModal
-      :visible="isRemoveLinksModalVisible"
-      @close="isRemoveLinksModalVisible = false"
+      :plugin-count="deleteWarningPluginCount"
+      :variant="deleteWarningVariant"
+      :visible="isDeleteWarningVisible"
+      @close="isDeleteWarningVisible = false"
     />
 
     <EntityDeleteModal
       :action-pending="isDeletePending"
-      :description="t('delete.description')"
-      :entity-name="entityToBeDeleted && (entityToBeDeleted.name || entityToBeDeleted.id)"
+      :confirmation-prompt="nameConfirmPrompt"
+      :description="deleteNote"
+      :entity-name="pendingDeleteLabel"
       :entity-type="EntityTypes.RedisConfiguration"
+      :entity-type-display="deleteKindLabel"
       :error="deleteModalError"
-      :need-confirmation="true"
-      :title="t('delete.title')"
+      :need-confirm="true"
+      :stacked-copy="isManagedCacheDelete"
+      :title="deleteTitle"
       :visible="isDeleteModalVisible"
       @cancel="hideDeleteModal"
       @proceed="confirmDelete"
-    />
+    >
+      <template
+        v-if="isManagedCacheDelete"
+        #message
+      >
+        <i18n-t
+          class="message"
+          keypath="delete.konnect_managed_delete.sure_question"
+          tag="p"
+        >
+          <template #entityName>
+            <strong>{{ pendingDeleteLabel }}</strong>
+          </template>
+        </i18n-t>
+      </template>
+    </EntityDeleteModal>
 
     <LinkedPluginListModal
       :config="config"
@@ -269,7 +289,7 @@ import type {
   RedisConfigurationResponse,
 } from '../types'
 import type { BaseTableHeaders, EmptyStateOptions, ExactMatchFilterConfig, FilterFields, FuzzyMatchFilterConfig, TableErrorMessage, FetcherResponse } from '@kong-ui-public/entities-shared'
-import type { AxiosError } from 'axios'
+import { isAxiosError, type AxiosError } from 'axios'
 import type { TableDataFetcherParams } from '@kong/kongponents'
 
 const emit = defineEmits<{
@@ -363,7 +383,10 @@ const isDeleteModalVisible = ref<boolean>(false)
 const isDeletePending = ref<boolean>(false)
 const deleteModalError = ref<string>('')
 
-const isRemoveLinksModalVisible = ref<boolean>(false)
+// DeleteWarningModal: delete blocked while plugins still reference this cache
+const isDeleteWarningVisible = ref<boolean>(false)
+const deleteWarningVariant = ref<'default' | 'konnect-managed'>('default')
+const deleteWarningPluginCount = ref<number>(0)
 
 const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 
@@ -445,6 +468,19 @@ const getCacheConfigId = (addOn: ManagedCacheAddOn): string | undefined => {
   return meta?.cache_config_id
 }
 
+// Partial id for `…/partials/{id}/links`,  not the Cloud Gateways add-on id
+const getPartialIdForPluginLinks = (row: EntityRow): string | null => {
+  if (row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED && !row.partial) {
+    const cacheId = row.addOn ? getCacheConfigId(row.addOn) : undefined
+    return cacheId && cacheId !== '' ? cacheId : null
+  }
+  if (typeof row.id === 'string' && row.id !== '') {
+    return row.id
+  }
+  return null
+}
+
+// Cloud Gateways list filter contract
 const isManagedCacheAddOn = (addOn: ManagedCacheAddOn): boolean => {
   const kind = addOn.config?.kind
   return kind === 'managed-cache.v0'
@@ -471,10 +507,12 @@ const fetchManagedAddOnById = async (managedCacheAddOnId: string): Promise<Manag
     }
 
     return parsedAddOn
-  } catch (error: any) {
-    const httpStatus = error.response?.status ?? error.status
+  } catch (error) {
+    if (!isAxiosError(error)) {
+      throw error
+    }
 
-    if (httpStatus === 404) {
+    if (error.response?.status === 404) {
       return null
     }
     throw error
@@ -491,11 +529,12 @@ const fetchRedisPartialById = async (kokoPartialId: string): Promise<RedisConfig
     const maybeRedisPartial = responseBody.data
 
     return isRedisPartial(maybeRedisPartial) ? maybeRedisPartial : null
-  } catch (error: any) {
-    const httpStatus = error.response?.status ?? error.status
+  } catch (error) {
+    if (!isAxiosError(error)) {
+      throw error
+    }
 
-    if (httpStatus === 404) {
-      // Partial isn't available yet/id is wrong— treat as no result and keep the list usable
+    if (error.response?.status === 404) {
       return null
     }
     throw error
@@ -797,15 +836,19 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
       data: allRows,
       total: Math.max(partialsRes.total ?? 0, allRows.length),
     }
-  } catch (error: any) {
+  } catch (error) {
     clearPolling()
-    errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
-    emit('error', error)
+    if (isAxiosError(error)) {
+      errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
+      emit('error', error)
+    } else {
+      errorMessage.value = { title: t('errors.general'), message: t('errors.general') }
+    }
     return { data: [], total: 0 }
   }
 }
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t }, i18nT } = composables.useI18n()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()
 
@@ -859,6 +902,36 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 })
 
 const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)
+
+const pendingDeleteLabel = computed((): string => {
+  const row = entityToBeDeleted.value
+  return row ? (row.name || row.id) : ''
+})
+
+// Konnect-managed delete mirrors Konnect overview delete
+const isManagedCacheDelete = computed((): boolean => {
+  const row = entityToBeDeleted.value
+  return !!row &&
+    isKonnectManagedRedisEnabled.value &&
+    row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED
+})
+
+const deleteTitle = computed(() => isManagedCacheDelete.value ? t('delete.konnect_managed_delete.title') : t('delete.title'))
+
+const deleteNote = computed(() => isManagedCacheDelete.value ? t('delete.konnect_managed_delete.description') : t('delete.description'))
+
+const deleteKindLabel = computed(() => isManagedCacheDelete.value ? t('delete.konnect_managed_delete.entity_type_label') : '')
+
+// KPrompt splits on `{confirmationText}`; use `promptToken` so full sentence stays in one i18n string
+const KPROMPT_CONFIRMATION_MARKER = '{confirmationText}' as const
+
+const nameConfirmPrompt = computed((): string | undefined =>
+  isManagedCacheDelete.value
+    ? t('delete.konnect_managed_delete.confirmation_prompt', {
+      promptToken: KPROMPT_CONFIRMATION_MARKER,
+    })
+    : undefined,
+)
 
 // Initialize the empty state options assuming a user does not have create permissions
 // IMPORTANT: you must initialize this object assuming the user does **NOT** have create permissions so that the onBeforeMount hook can properly evaluate the props.canCreate function.
@@ -927,22 +1000,21 @@ const isDeleteDisabled = (row: EntityRow): boolean => {
 }
 
 const deleteRow = async (row: EntityRow) => {
-  // Konnect-managed: skip client-side links check; Cloud Gateways add-ons API will return error if partial still in use
-  if (isKonnectManagedRedisEnabled.value && row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED) {
-    entityToBeDeleted.value = row
-    isDeleteModalVisible.value = true
-    return
+  const partialId = getPartialIdForPluginLinks(row)
+
+  if (partialId) {
+    const { count } = await fetchLinks({ partialId })
+
+    if (count > 0) {
+      deleteWarningPluginCount.value = count
+      deleteWarningVariant.value = isKonnectManagedRedisEnabled.value && row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED ? 'konnect-managed' : 'default'
+      isDeleteWarningVisible.value = true
+      return
+    }
   }
-  // check if the partial still has plugins linked to it
-  const { count } = await fetchLinks({ partialId: row.id as string })
-  if (count > 0) {
-    // show warning modal
-    isRemoveLinksModalVisible.value = true
-  } else {
-    // show delete modal
-    entityToBeDeleted.value = row
-    isDeleteModalVisible.value = true
-  }
+
+  entityToBeDeleted.value = row
+  isDeleteModalVisible.value = true
 }
 
 const clearFilter = (): void => {
@@ -1099,12 +1171,14 @@ const pollManagedAddOnsState = async (): Promise<void> => {
     })
 
     transitionalAddOnsExist = relevantAddOns.some((addOn) => isTransitionalManagedCacheState(addOn.state))
-  } catch (error: any) {
-    // Stop polling and surface error if we can't refresh state
+  } catch (error) {
     clearPolling()
-    errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
-
-    emit('error', error)
+    if (isAxiosError(error)) {
+      errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
+      emit('error', error)
+    } else {
+      errorMessage.value = { title: t('errors.general'), message: t('errors.general') }
+    }
     return
   }
 

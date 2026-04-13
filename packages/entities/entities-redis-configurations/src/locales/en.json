@@ -29,7 +29,19 @@
   "delete": {
     "title": "Delete Redis configuration",
     "description": "You’re about to delete this item. Are you sure you want to proceed?",
-    "warning": "To delete this configuration, first remove it from all associated plugins."
+    "warning": "To delete this configuration, first remove it from all associated plugins.",
+    "konnect_managed_blocked": {
+      "title": "Delete Konnect-managed cache",
+      "message": "This cache is currently being used by {count} {plugin}. To delete this instance, first remove it from all associated plugins.",
+      "plugin": "{count, plural, one {plugin} other {plugins}}"
+    },
+    "konnect_managed_delete": {
+      "title": "Delete Konnect-managed cache",
+      "description": "Deleting this instance will cause all data to be lost. This action cannot be undone.",
+      "entity_type_label": "Konnect-managed cache",
+      "sure_question": "Are you sure you want to delete this Konnect-managed cache {entityName}?",
+      "confirmation_prompt": "Please enter {promptToken} to confirm your action."
+    }
   },
   "errors": {
     "copy": "Failed to copy to clipboard",
