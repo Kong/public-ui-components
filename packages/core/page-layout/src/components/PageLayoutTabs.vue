@@ -96,7 +96,7 @@ const {
 const { i18n: { t } } = composables.useI18n()
 
 const router = useRouter()
-const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
+const navigateTo = inject<((to: string, options?: { replace?: boolean }) => Promise<void>) | null>('app:navigateTo', null)
 
 const onTabNavigation = (tab: PageLayoutTab) => {
   // If not a string (a RouteLocationRaw)
@@ -111,6 +111,7 @@ const onTabNavigation = (tab: PageLayoutTab) => {
     return
   }
 
+  console.log('navigating to', tab.to)
   navigateTo(tab.to)
 }
 
