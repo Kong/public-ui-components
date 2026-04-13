@@ -112,7 +112,7 @@ const onTabNavigation = (tab: PageLayoutTab) => {
   }
 
   console.log('navigating to', tab.to)
-  navigateTo(tab.to)
+  navigateTo(tab.to, { replace: true })
 }
 
 const TABS_HORIZONTAL_PADDING = KUI_SPACE_60
