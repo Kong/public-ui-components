@@ -954,6 +954,13 @@ const getNavigableRowId = (row: EntityRow): string => {
     return typeof row.id === 'string' ? row.id : ''
   }
 
+  // Use Cloud Gateways add-on id for config routes. The config card resolves either add-on or partial id,
+  // but the partial is removed when deletion finishes; a partial- based URL then surface 404s
+  const addOnId = row.addOn?.id
+  if (addOnId) {
+    return addOnId
+  }
+
   if (row.partial?.id) {
     return String(row.partial.id)
   }
@@ -961,12 +968,6 @@ const getNavigableRowId = (row: EntityRow): string => {
   const linkedPartialId = row.addOn ? getCacheConfigId(row.addOn) : undefined
   if (linkedPartialId) {
     return linkedPartialId
-  }
-
-  // Non-ready state: no Koko partial yet; host detail is keyed by add-on id
-  const addOnId = row.addOn?.id
-  if (addOnId) {
-    return addOnId
   }
 
   return typeof row.id === 'string' && row.id ? row.id : ''
@@ -1023,7 +1024,7 @@ const clearFilter = (): void => {
 
 /**
  * Combined Konnect list only - Konnect app + FF + cloud gateway
- * Otherwise caller does not use this. Navigate by partial id, or by add-on id for konnect-managed rows with no Koko partial yet
+ * Otherwise caller does not use this. Navigate by Cloud Gateways add-on id when present, else partial id
  */
 const canNavigateCombinedKonnectRow = (row: EntityRow): boolean =>
   canNavigateToRowDetails(row)
