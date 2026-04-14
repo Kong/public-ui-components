@@ -28,7 +28,7 @@ const onUpdate = (data: Record<string, any>) => {
   console.log('Form submitted:', data)
 }
 
-const onError = (error: Error) => {
+const onError = (error: unknown) => {
   console.error('Form error:', error)
 }
 

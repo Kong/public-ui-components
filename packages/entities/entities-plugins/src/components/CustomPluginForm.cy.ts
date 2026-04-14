@@ -170,7 +170,8 @@ describe('<CustomPluginForm />', () => {
       })
 
       // For installed type, step 2 becomes step 1, but with no number shown
-      cy.getTestId('custom-plugin-schema-upload').should('exist')
+      cy.getTestId('form-block-content').should('exist')
+      cy.contains('h2', 'Custom plugin type').should('not.exist')
     })
   })
 

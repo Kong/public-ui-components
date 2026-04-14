@@ -1185,7 +1185,7 @@
           },
           "sandboxing": {
             "header": "Sandboxing",
-            "streamed": "Follows the standard sandboxing settings.",
+            "streamed": "Follows the standard sandboxing settings. {link}",
             "streamed_link": "Link to docs",
             "cloned": "Inherit the same sandboxing as the original plugins"
           },
@@ -1236,7 +1236,10 @@
       "priority": {
         "label": "Priority",
         "tooltip": "Set the execution priority for this cloned plugin",
-        "help": "Optional. Use a number or +/- to set priority relative to the original plugin. If priority doesn't set, plugins run in alphabetical order. Learn more in the docs."
+        "help": {
+          "text": "Optional. Use a number or +/- to set priority relative to the original plugin. If priority isn't set, plugins run in alphabetical order. {link} in the docs.",
+          "link": "Learn more"
+        }
       }
     }
   }

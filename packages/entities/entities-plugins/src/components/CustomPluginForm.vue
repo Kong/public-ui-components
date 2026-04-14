@@ -126,13 +126,16 @@
                     />
                   </td>
                   <td>
-                    {{ t('custom_plugin_form.step1.compare_table.rows.sandboxing.streamed') }}
-                    <KExternalLink
-                      hide-icon
-                      :href="externalLinks.customPluginSandboxing"
-                    >
-                      {{ t('custom_plugin_form.step1.compare_table.rows.sandboxing.streamed_link') }}
-                    </KExternalLink>
+                    <i18nT keypath="custom_plugin_form.step1.compare_table.rows.sandboxing.streamed">
+                      <template #link>
+                        <KExternalLink
+                          hide-icon
+                          :href="externalLinks.customPluginSandboxing"
+                        >
+                          {{ t('custom_plugin_form.step1.compare_table.rows.sandboxing.streamed_link') }}
+                        </KExternalLink>
+                      </template>
+                    </i18nt>
                   </td>
                   <td>{{ t('custom_plugin_form.step1.compare_table.rows.sandboxing.cloned') }}</td>
                 </tr>
@@ -300,14 +303,26 @@
         <KInput
           v-model.trim="state.fields.priority"
           data-testid="custom-plugin-priority"
-          :help="t('custom_plugin_form.step3.priority.help')"
           :label="t('custom_plugin_form.step3.priority.label')"
           :label-attributes="{
             info: t('custom_plugin_form.step3.priority.tooltip'),
           }"
           :readonly="state.readonly"
           type="number"
-        />
+        >
+          <template #help>
+            <i18nT keypath="custom_plugin_form.step3.priority.help.text">
+              <template #link>
+                <KExternalLink
+                  hide-icon
+                  :href="externalLinks.pluginPriority"
+                >
+                  {{ t('custom_plugin_form.step3.priority.help.link') }}
+                </KExternalLink>
+              </template>
+            </i18nT>
+          </template>
+        </KInput>
       </EntityFormBlock>
 
       <template #form-actions>
@@ -337,6 +352,7 @@ import {
   EntityBaseForm,
   EntityFormBlock,
   SupportedEntityType,
+  useErrors,
 } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
 import { CheckCircleIcon, ClearIcon } from '@kong/icons'
@@ -388,12 +404,14 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'update', data: FormPayload): void
-  (e: 'error', error: Error): void
+  (e: 'error', error: unknown): void
   (e: 'loading', isLoading: boolean): void // not used yet
 }>()
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t }, i18nT } = composables.useI18n()
 const router = useRouter()
+const { getMessageFromError } = useErrors()
+
 
 // Force-enable the new plugin form layout
 provide(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => true))
@@ -547,8 +565,8 @@ const submitData = async (): Promise<void> => {
   try {
     state.readonly = true
     emit('update', payload.value)
-  } catch (error: any) {
-    state.errorMessage = error?.message || 'An error occurred'
+  } catch (error: unknown) {
+    state.errorMessage = getMessageFromError(error)
     emit('error', error)
   } finally {
     state.readonly = false
