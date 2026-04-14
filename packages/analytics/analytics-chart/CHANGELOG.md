@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.14.18...@kong-ui-public/analytics-chart@10.15.0) (2026-04-14)
+
+
+### Features
+
+* display metric names in single value chart ([#3115](https://github.com/Kong/public-ui-components/issues/3115)) ([0aed325](https://github.com/Kong/public-ui-components/commit/0aed32557e2ceb1300217f470d4bfe8400f4f30a))
+
+
+
+
+
 ## [10.14.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.14.17...@kong-ui-public/analytics-chart@10.14.18) (2026-04-10)
 
 
