@@ -21,7 +21,9 @@
     </div>
 
     <!-- Attributes -->
-    <Field name="config.attributes" />
+    <div class="ff-mb-attributes">
+      <Field name="config.attributes" />
+    </div>
 
     <CollapsibleSection
       v-model:expanded="ingestionExpanded"
@@ -102,39 +104,30 @@ const ingestionExpanded = ref(true)
   }
 }
 
-:deep([data-testid="ff-array-config.attributes"] .ff-object-field-as-child) {
-  display: flex;
-  flex-direction: row;
-  gap: var(--kui-space-60, $kui-space-60);
+.ff-mb-attributes {
+  :deep(.ff-object-field-as-child) {
+    display: flex;
+    flex-direction: row;
+    gap: var(--kui-space-60, $kui-space-60);
 
-  > * {
-    flex: 1 1 0;
-    min-width: 0;
+    > * {
+      flex: 1 1 0;
+      min-width: 0;
+    }
   }
-}
 
-:deep([data-testid="ff-array-config.attributes"] [data-testid^="ff-array-item-config.attributes"] .ff-array-field-item-content) {
-  width: 100%;
-}
-
-:deep([data-testid="ff-array-config.attributes"] [data-testid^="ff-array-item-config.attributes"] .card-content) {
-  align-items: flex-start;
-}
-
-:deep([data-testid="ff-array-config.attributes"] [data-testid^="ff-array-item-config.attributes"] .ff-object-field-as-child) {
-  display: flex;
-  flex-direction: row;
-  gap: var(--kui-space-60, $kui-space-60);
-
-  > * {
-    flex: 1 1 0;
-    min-width: 0;
+  :deep(.ff-array-field-item-content) {
+    width: 100%;
   }
-}
 
-:deep([data-testid="ff-array-config.attributes"] .ff-array-field-item-remove-tooltip) {
-  align-self: flex-end;
-  margin-bottom: var(--kui-space-20, $kui-space-20);
+  :deep(.card-content) {
+    align-items: flex-start;
+  }
+
+  :deep(.ff-array-field-item-remove-tooltip) {
+    align-self: flex-end;
+    margin-bottom: var(--kui-space-20, $kui-space-20);
+  }
 }
 
 .ff-metering-billing-inline-row {
