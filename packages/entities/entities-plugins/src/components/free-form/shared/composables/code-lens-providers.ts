@@ -21,6 +21,7 @@ import { useRouter } from 'vue-router'
 
 import useI18n from '../../../../composables/useI18n'
 import endpoints from '../../../../plugins-endpoints'
+import { useFormShared } from './form-context'
 import { buildSchemaMap } from './schema'
 
 import type { X509Certificate } from '@peculiar/x509'
@@ -29,7 +30,7 @@ import type { IDisposable, IRange } from 'monaco-editor'
 import type { RouteLocationRaw } from 'vue-router'
 
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../../../types'
-import type { ForeignFieldSchema, FormSchema, UnionFieldSchema } from '../../../../types/plugins/form-schema'
+import type { ForeignFieldSchema, UnionFieldSchema } from '../../../../types/plugins/form-schema'
 
 type PluginFormConfig = KonnectPluginFormConfig | KongManagerPluginFormConfig
 
@@ -211,7 +212,7 @@ function createTimestampCodeLensProvider(keyPath: string): languages.CodeLensPro
   }))
 }
 
-export function useCodeLensProviders(config: PluginFormConfig, axiosConfig?: AxiosRequestConfig, schema?: FormSchema) {
+export function useCodeLensProviders(config: PluginFormConfig, axiosConfig?: AxiosRequestConfig) {
   const commandIdPrefix = `kong.entities-plugins.codeEditor.command.${nanoid()}`
 
   const commandIdCopy = `${commandIdPrefix}.copy`
@@ -220,6 +221,7 @@ export function useCodeLensProviders(config: PluginFormConfig, axiosConfig?: Axi
   const { axiosInstance } = useAxios(axiosConfig ?? config.axiosRequestConfig)
   const router = useRouter()
   const { i18n: { t } } = useI18n()
+  const { getSchema } = useFormShared()
 
   const entityLensDefs = createEntityLensDefs(t)
 
@@ -368,7 +370,7 @@ export function useCodeLensProviders(config: PluginFormConfig, axiosConfig?: Axi
       ),
     ]
 
-    const entityLensConfig = schema ? buildForeignEntityLensConfig(buildSchemaMap(schema)) : defaultEntityLensConfig
+    const entityLensConfig = buildForeignEntityLensConfig(buildSchemaMap(getSchema()))
     for (const { entity, keyPath } of entityLensConfig) {
       const clProvider = createEntityCodeLensProvider(entity, keyPath)
       disposables.push(

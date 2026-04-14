@@ -31,7 +31,7 @@ import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../../types'
 
 const config = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!
-const { formData, setValue, getSchema } = useFormShared()
+const { formData, setValue } = useFormShared()
 
 const emit = defineEmits<{
   change: [config: unknown]
@@ -42,7 +42,7 @@ const emit = defineEmits<{
 const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 const { setup: setupCodeLensProviders } = useCodeLensProviders(config, {
   validateStatus: (status) => status >= 200 && status < 500,
-}, getSchema())
+})
 
 const LINT_SOURCE = 'YAML Syntax'
 
