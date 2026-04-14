@@ -180,6 +180,6 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     const wrapper = mountTile('platform', ['time'])
     await flushPromises()
 
-    expect(wrapper.getTestId('time-range-badge').exists()).toBe(false)
+    expect(wrapper.findTestId('time-range-badge').exists()).toBe(false)
   })
 })

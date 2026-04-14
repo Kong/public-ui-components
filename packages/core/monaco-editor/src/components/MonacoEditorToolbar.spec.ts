@@ -81,40 +81,40 @@ describe('MonacoEditorToolbar', () => {
   describe('rendering', () => {
     it('should render the toolbar container', () => {
       const wrapper = mountToolbar()
-      expect(wrapper.getTestId('monaco-editor-toolbar').exists()).toBe(true)
+      expect(wrapper.findTestId('monaco-editor-toolbar').exists()).toBe(true)
     })
 
     it('should render left, centre, and right sections', () => {
       const wrapper = mountToolbar()
-      expect(wrapper.getTestId('monaco-editor-toolbar-left').exists()).toBe(true)
-      expect(wrapper.getTestId('monaco-editor-toolbar-center').exists()).toBe(true)
-      expect(wrapper.getTestId('monaco-editor-toolbar-right').exists()).toBe(true)
+      expect(wrapper.findTestId('monaco-editor-toolbar-left').exists()).toBe(true)
+      expect(wrapper.findTestId('monaco-editor-toolbar-center').exists()).toBe(true)
+      expect(wrapper.findTestId('monaco-editor-toolbar-right').exists()).toBe(true)
     })
 
     it('should render built-in left actions for markdown', () => {
       const editor = makeEditor('ready')
       const wrapper = mountToolbar({ props: { editor, settings: true } })
-      const leftSection = wrapper.getTestId('monaco-editor-toolbar-left')
+      const leftSection = wrapper.findTestId('monaco-editor-toolbar-left')
 
       for (const id of sampleLeftActionIds) {
-        expect(leftSection.getTestId(`editor-toolbar-mdc-action-${id}-button`).exists()).toBe(true)
+        expect(leftSection.findTestId(`editor-toolbar-mdc-action-${id}-button`).exists()).toBe(true)
       }
     })
 
     it('should render built-in right actions (search, fullScreen)', () => {
       const editor = makeEditor('ready')
       const wrapper = mountToolbar({ props: { editor, settings: true } })
-      const rightSection = wrapper.getTestId('monaco-editor-toolbar-right')
+      const rightSection = wrapper.findTestId('monaco-editor-toolbar-right')
 
       for (const id of sampleRightActionIds) {
-        expect(rightSection.getTestId(`editor-toolbar-mdc-action-${id}-button`).exists()).toBe(true)
+        expect(rightSection.findTestId(`editor-toolbar-mdc-action-${id}-button`).exists()).toBe(true)
       }
     })
 
     it('should group actions into separate action-group elements', () => {
       const editor = makeEditor('ready')
       const wrapper = mountToolbar({ props: { editor, settings: true } })
-      const leftSection = wrapper.getTestId('monaco-editor-toolbar-left')
+      const leftSection = wrapper.findTestId('monaco-editor-toolbar-left')
       const groups = leftSection.findAll('.monaco-editor-ui-toolbar-action-group')
 
       // Should have multiple groups (formatting group 1, group 2, insert group 3, etc.) + 1 overflow group
@@ -126,12 +126,12 @@ describe('MonacoEditorToolbar', () => {
       editor.editorStates.currentLanguage = 'json'
 
       const wrapper = mountToolbar({ props: { editor, settings: true } })
-      const leftSection = wrapper.getTestId('monaco-editor-toolbar-left')
+      const leftSection = wrapper.findTestId('monaco-editor-toolbar-left')
 
       // bold is markdown-only
-      expect(leftSection.getTestId('editor-toolbar-mdc-action-editor.action.bold-button').exists()).toBe(false)
+      expect(leftSection.findTestId('editor-toolbar-mdc-action-editor.action.bold-button').exists()).toBe(false)
       // format is language-agnostic, should still appear
-      expect(leftSection.getTestId('editor-toolbar-mdc-action-editor.action.format-button').exists()).toBe(true)
+      expect(leftSection.findTestId('editor-toolbar-mdc-action-editor.action.format-button').exists()).toBe(true)
     })
 
     it('should allow disabling a built-in action via settings', () => {
@@ -141,7 +141,7 @@ describe('MonacoEditorToolbar', () => {
       }
 
       const wrapper = mountToolbar({ props: { editor, settings } })
-      expect(wrapper.getTestId('editor-toolbar-mdc-action-editor.action.format-button').exists()).toBe(false)
+      expect(wrapper.findTestId('editor-toolbar-mdc-action-editor.action.format-button').exists()).toBe(false)
     })
   })
 
@@ -149,7 +149,7 @@ describe('MonacoEditorToolbar', () => {
     it('should pass active=true when editor status is ready', () => {
       const editor = makeEditor('ready')
       const wrapper = mountToolbar({ props: { editor, settings: true } })
-      const button = wrapper.getTestId('editor-toolbar-mdc-action-editor.action.format-button')
+      const button = wrapper.findTestId('editor-toolbar-mdc-action-editor.action.format-button')
 
       expect(button.attributes('disabled')).toBeUndefined()
     })
@@ -157,7 +157,7 @@ describe('MonacoEditorToolbar', () => {
     it('should pass active=false when editor status is loading', () => {
       const editor = makeEditor('loading')
       const wrapper = mountToolbar({ props: { editor, settings: true } })
-      const button = wrapper.getTestId('editor-toolbar-mdc-action-editor.action.format-button')
+      const button = wrapper.findTestId('editor-toolbar-mdc-action-editor.action.format-button')
 
       expect(button.attributes('disabled')).toBe('')
     })
@@ -189,7 +189,7 @@ describe('MonacoEditorToolbar', () => {
       const editor = makeEditor('ready')
       const wrapper = mountToolbar({ props: { editor, settings: true } })
 
-      const leftSection = wrapper.getTestId('monaco-editor-toolbar-left')
+      const leftSection = wrapper.findTestId('monaco-editor-toolbar-left')
       const groups = leftSection.findAll('.monaco-editor-ui-toolbar-action-group')
       const overflowGroup = groups[groups.length - 1]
 
@@ -208,7 +208,7 @@ describe('MonacoEditorToolbar', () => {
       await nextTick()
       await flushPromises()
 
-      const leftSection = wrapper.getTestId('monaco-editor-toolbar-left')
+      const leftSection = wrapper.findTestId('monaco-editor-toolbar-left')
       const groups = leftSection.findAll('.monaco-editor-ui-toolbar-action-group')
       const overflowGroup = groups[groups.length - 1]
 
@@ -236,7 +236,7 @@ describe('MonacoEditorToolbar', () => {
       const wrapper = mountToolbar({ props: { editor, settings: true } })
 
       const getVisibleActionCount = () => {
-        const left = wrapper.getTestId('monaco-editor-toolbar-left')
+        const left = wrapper.findTestId('monaco-editor-toolbar-left')
         return left.findAll('[data-testid$="-button"]')
           .filter(b => b.attributes('data-testid') !== 'editor-toolbar-mdc-action-more-button').length
       }
@@ -287,22 +287,22 @@ describe('MonacoEditorToolbar', () => {
       editor.editorStates.currentLanguage = 'markdown'
 
       const wrapper = mountToolbar({ props: { editor, settings: true } })
-      const leftSection = wrapper.getTestId('monaco-editor-toolbar-left')
+      const leftSection = wrapper.findTestId('monaco-editor-toolbar-left')
 
       // Should have markdown-specific actions (bold, italic, etc.)
-      expect(leftSection.getTestId('editor-toolbar-mdc-action-editor.action.bold-button').exists()).toBe(true)
+      expect(leftSection.findTestId('editor-toolbar-mdc-action-editor.action.bold-button').exists()).toBe(true)
 
       // Switch language to json — markdown-only actions should disappear
       editor.editorStates.currentLanguage = 'json'
       await nextTick()
 
-      expect(leftSection.getTestId('editor-toolbar-mdc-action-editor.action.bold-button').exists()).toBe(false)
+      expect(leftSection.findTestId('editor-toolbar-mdc-action-editor.action.bold-button').exists()).toBe(false)
     })
 
     it('should render the more button', () => {
       const editor = makeEditor('ready')
       const wrapper = mountToolbar({ props: { editor, settings: true } })
-      const moreButton = wrapper.getTestId('editor-toolbar-mdc-action-more-button')
+      const moreButton = wrapper.findTestId('editor-toolbar-mdc-action-more-button')
 
       expect(moreButton.exists()).toBe(true)
     })
@@ -324,8 +324,8 @@ describe('MonacoEditorToolbar', () => {
           },
         })
 
-        const section = wrapper.getTestId(`${sectionTestId}`)
-        const el = section.getTestId(`${customId}`)
+        const section = wrapper.findTestId(`${sectionTestId}`)
+        const el = section.findTestId(`${customId}`)
 
         expect(el.exists()).toBe(true)
         expect(el.text()).toBe(text)
@@ -341,9 +341,9 @@ describe('MonacoEditorToolbar', () => {
         },
       })
 
-      expect(wrapper.getTestId('custom-left').exists()).toBe(true)
-      expect(wrapper.getTestId('custom-center').exists()).toBe(true)
-      expect(wrapper.getTestId('custom-right').exists()).toBe(true)
+      expect(wrapper.findTestId('custom-left').exists()).toBe(true)
+      expect(wrapper.findTestId('custom-center').exists()).toBe(true)
+      expect(wrapper.findTestId('custom-right').exists()).toBe(true)
     })
 
     it('does not render slot content in the wrong sections', () => {
@@ -353,9 +353,9 @@ describe('MonacoEditorToolbar', () => {
         },
       })
 
-      expect(wrapper.getTestId('monaco-editor-toolbar-left').getTestId('custom-left').exists()).toBe(true)
-      expect(wrapper.getTestId('monaco-editor-toolbar-center').getTestId('custom-left').exists()).toBe(false)
-      expect(wrapper.getTestId('monaco-editor-toolbar-right').getTestId('custom-left').exists()).toBe(false)
+      expect(wrapper.findTestId('monaco-editor-toolbar-left').findTestId('custom-left').exists()).toBe(true)
+      expect(wrapper.findTestId('monaco-editor-toolbar-center').findTestId('custom-left').exists()).toBe(false)
+      expect(wrapper.findTestId('monaco-editor-toolbar-right').findTestId('custom-left').exists()).toBe(false)
     })
   })
 })

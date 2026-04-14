@@ -5,7 +5,7 @@ import { mount } from '@vue/test-utils'
 describe('SplitToolbar', () => {
   it('should render the toolbar', () => {
     const wrapper = mount(SplitToolbar)
-    expect(wrapper.getTestId('kong-ui-public-split-pane-toolbar').exists()).toBe(true)
+    expect(wrapper.findTestId('kong-ui-public-split-pane-toolbar').exists()).toBe(true)
   })
 
   it('should render left slot when provided', () => {
@@ -14,7 +14,7 @@ describe('SplitToolbar', () => {
         left: '<div class="test-left">Left Content</div>',
       },
     })
-    expect(wrapper.getTestId('split-toolbar-left').exists()).toBe(true)
+    expect(wrapper.findTestId('split-toolbar-left').exists()).toBe(true)
     expect(wrapper.find('.test-left').text()).toBe('Left Content')
   })
 
@@ -24,7 +24,7 @@ describe('SplitToolbar', () => {
         center: '<div class="test-center">Center Content</div>',
       },
     })
-    expect(wrapper.getTestId('split-toolbar-center').exists()).toBe(true)
+    expect(wrapper.findTestId('split-toolbar-center').exists()).toBe(true)
     expect(wrapper.find('.test-center').text()).toBe('Center Content')
   })
 
@@ -34,15 +34,15 @@ describe('SplitToolbar', () => {
         right: '<div class="test-right">Right Content</div>',
       },
     })
-    expect(wrapper.getTestId('split-toolbar-right').exists()).toBe(true)
+    expect(wrapper.findTestId('split-toolbar-right').exists()).toBe(true)
     expect(wrapper.find('.test-right').text()).toBe('Right Content')
   })
 
   it('should not render slot content when not provided', () => {
     const wrapper = mount(SplitToolbar)
     // left slot will render an empty div so centre is in it place (centred)
-    expect(wrapper.getTestId('split-toolbar-left').text()).toBe('')
-    expect(wrapper.getTestId('split-toolbar-center').exists()).toBe(false)
-    expect(wrapper.getTestId('split-toolbar-right').exists()).toBe(false)
+    expect(wrapper.findTestId('split-toolbar-left').text()).toBe('')
+    expect(wrapper.findTestId('split-toolbar-center').exists()).toBe(false)
+    expect(wrapper.findTestId('split-toolbar-right').exists()).toBe(false)
   })
 })
