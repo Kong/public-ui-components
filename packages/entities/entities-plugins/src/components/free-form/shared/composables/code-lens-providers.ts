@@ -285,13 +285,13 @@ export function useCodeLensProviders(config: PluginFormConfig, axiosConfig?: Axi
     const provider: languages.CodeLensProvider = {
       provideCodeLenses: innerProvider.provideCodeLenses,
       resolveCodeLens: async (model, codeLens, token) => {
-        const lens = (innerProvider.resolveCodeLens && await innerProvider.resolveCodeLens(model, codeLens, token)) ?? codeLens
-        if (!lens.id) return lens
+        codeLens = (innerProvider.resolveCodeLens && await innerProvider.resolveCodeLens(model, codeLens, token)) ?? codeLens
+        if (!codeLens.id) return codeLens
 
-        const indexColon = lens.id.indexOf(':')
-        const indexSlash = lens.id.indexOf('/')
-        const entityId = lens.id.substring(0, indexColon)
-        const kind = lens.id.substring(indexColon + 1, indexSlash) as EntityLensFieldKind | EntityLensCmdKind
+        const indexColon = codeLens.id.indexOf(':')
+        const indexSlash = codeLens.id.indexOf('/')
+        const entityId = codeLens.id.substring(0, indexColon)
+        const kind = codeLens.id.substring(indexColon + 1, indexSlash) as EntityLensFieldKind | EntityLensCmdKind
 
         try {
           const cached = await cache.get(entityId)
@@ -300,7 +300,7 @@ export function useCodeLensProviders(config: PluginFormConfig, axiosConfig?: Axi
           }
 
           const def = entityLensDefs[entity] as EntityLensDefinition<EntityDataMap[typeof entity]>
-          const lensKey = lens.id.substring(indexColon + 1)
+          const lensKey = codeLens.id.substring(indexColon + 1)
 
           switch (kind) {
             case 'field': {
