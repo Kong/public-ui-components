@@ -120,7 +120,7 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   viewServiceRoute: (serviceId: string) => ({ name: 'view-service', params: { id: serviceId } }),
   viewRouteRoute: (routeId: string) => ({ name: 'view-route', params: { id: routeId } }),
   viewConsumerRoute: (consumerId: string) => ({ name: 'view-consumer', params: { id: consumerId } }),
-  viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer-group', params: { id: consumerGroupId } }),
+  viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer_group', params: { id: consumerGroupId } }),
   viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
 })
 

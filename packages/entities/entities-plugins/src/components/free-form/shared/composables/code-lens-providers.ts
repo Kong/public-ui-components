@@ -166,7 +166,7 @@ export function buildForeignEntityLensConfig(
     if (fieldSchema.type !== 'foreign') continue
 
     const ref = (fieldSchema as ForeignFieldSchema).reference
-    if (!Object.hasOwn(entityKindSet, ref)) continue
+    if (!Object.prototype.hasOwnProperty.call(entityKindSet, ref)) continue
 
     results.push({
       entity: entityKindSet[ref],
@@ -190,13 +190,21 @@ function buildEntityUrl(config: PluginFormConfig, entity: `${EntityKind}s`, enti
   return url
 }
 
+function normalizeTimestampValue(value: unknown): number {
+  const timestamp = Number(value)
+  if (!Number.isFinite(timestamp)) {
+    return timestamp
+  }
+  return Math.abs(timestamp) < 1e12 ? timestamp * 1000 : timestamp
+}
+
 function createTimestampCodeLensProvider(keyPath: string): languages.CodeLensProvider {
   return createYAMLValueCodeLensProvider([keyPath], (value: unknown, range: IRange) => ({
     lenses: [{
       range,
       command: {
         id: '',
-        title: `$(calendar)\u00A0${new Date(Number(value)).toLocaleString('en', { dateStyle: 'full', timeStyle: 'full' })}`,
+        title: `$(calendar)\u00A0${new Date(normalizeTimestampValue(value)).toLocaleString('en', { dateStyle: 'full', timeStyle: 'full' })}`,
       },
     }],
     dispose: () => {},
@@ -381,11 +389,20 @@ export function useCodeLensProviders(config: PluginFormConfig, axiosConfig?: Axi
     }
 
     disposables.push(
-      editor.registerCommand(commandIdCopy, (_accessor, content) => navigator.clipboard.writeText(String(content))),
+      editor.registerCommand(commandIdCopy, (_accessor, content) => {
+        const text = String(content)
+        if (!navigator.clipboard?.writeText) {
+          console.warn('[useCodeLensProviders] Clipboard API is unavailable')
+          return
+        }
+        void navigator.clipboard.writeText(text).catch((e) => {
+          console.warn('[useCodeLensProviders] Failed to copy to clipboard:', e)
+        })
+      }),
       editor.registerCommand(commandIdViewEntity, (_accessor, entity: EntityKind, entityId) => {
         const route = viewRouteBuilders[entity]?.(entityId)
         if (route) {
-          window.open(router.resolve(route).href, '_blank')
+          window.open(router.resolve(route).href, '_blank', 'noopener')
         }
       }),
     )
