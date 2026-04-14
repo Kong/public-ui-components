@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/monaco-editor",
-  "version": "0.20.4",
+  "version": "0.22.0",
   "type": "module",
   "description": "A kong UI Monaco Editor wrapper for Vue 3 with syntax highlighting powered by Shiki.",
   "main": "./dist/runtime/monaco-editor.umd.js",
@@ -13,7 +13,12 @@
     ".": {
       "types": "./dist/types/src/index.d.ts",
       "import": "./dist/runtime/monaco-editor.es.js",
-      "require": "./dist/runtime/monaco-editor.umd.js"
+      "require": "./dist/runtime/monaco-editor.cjs.js"
+    },
+    "./languages/*": {
+      "types": "./dist/types/src/languages/*/index.d.ts",
+      "import": "./dist/runtime/languages/*.es.js",
+      "require": "./dist/runtime/languages/*.cjs.js"
     },
     "./vite-plugin": {
       "types": "./dist/types/vite-plugin/index.d.ts",
@@ -61,7 +66,7 @@
   },
   "distSizeChecker": {
     "warningLimit": "300KB",
-    "errorLimit": "600KB"
+    "errorLimit": "800KB"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
@@ -76,8 +81,10 @@
     "@kong/design-tokens": "1.20.0",
     "@kong/icons": "^1.48.0",
     "@kong/kongponents": "9.52.5",
+    "@peculiar/x509": "^2.0.0",
     "jsonc-parser": "^3.3.1",
     "monaco-editor": "^0.55.1",
+    "reflect-metadata": "^0.2.2",
     "shiki": "^3.21.0",
     "vue": "^3.5.27",
     "yaml": "^2.8.2"

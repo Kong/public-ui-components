@@ -764,6 +764,12 @@
         "visual": "Visual editor",
         "code": "Code editor"
       },
+      "acl": {
+        "mode": {
+          "allow": "Use allow list",
+          "deny": "Use deny list"
+        }
+      },
       "ai-mcp-proxy": {
         "default_acl_item_label": "Default ACL #{index}",
         "tool_item_label": "Tool #{index}"
@@ -1110,6 +1116,22 @@
   },
   "redis": {
     "title": "Redis configuration",
+    "managed_ui": {
+      "title": "Redis",
+      "shared_configuration": {
+        "label": "Use shared configuration",
+        "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins.",
+        "badge": "Recommended"
+      },
+      "dedicated_configuration": {
+        "label": "Use locally-scoped configuration",
+        "description": "Create and use a Redis configuration specifically for this plugin."
+      },
+      "selector": {
+        "placeholder": "Filter Redis configurations...",
+        "create_new": "New Redis"
+      }
+    },
     "shared_configuration": {
       "label": "Shared configuration",
       "description": "Select an existing shared Redis configuration or create a new one. Changes to this configuration automatically apply to all associated plugins.",

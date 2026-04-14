@@ -31,17 +31,18 @@ export const useFieldPath = (name: MaybeRefOrGetter<string>) => {
 }
 
 export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
-  const { getSchema, fieldRendererRegistry } = useFormShared()
+  const { getSchema, getSchemaMap, fieldRendererRegistry } = useFormShared()
   const { default: defaultSlot, ...slots } = useSlots()
   const inheritSlots = inject(FIELD_RENDERER_SLOTS)
 
   const mergedSlots = computed(() => {
     const inheritSlotsValue = toValue(inheritSlots)
+    const sm = getSchemaMap()
     // Set relative path to each slot key
     const childSlots: Record<string, Slot<any> | undefined> = Object.keys(slots)
       .filter(k => k !== FIELD_RENDERERS && k !== 'item')
       .reduce((res, key) => {
-        const newKey = generalizePath(utils.resolve(toValue(path), key))
+        const newKey = generalizePath(utils.resolve(toValue(path), key), sm)
         return { ...res, [newKey]: slots[key] }
       }, {})
     return inheritSlotsValue ? { ...inheritSlotsValue, ...childSlots } : childSlots
@@ -49,16 +50,17 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
 
   provide(FIELD_RENDERER_SLOTS, mergedSlots)
 
-  const pathValue = toValue(path)
-
   return computed(() => {
     if (defaultSlot) return
-    const matchedByPath = mergedSlots.value[generalizePath(toValue(path))]
+    const pathValue = toValue(path)
+    const matchedByPath = mergedSlots.value[generalizePath(pathValue, getSchemaMap())]
     if (matchedByPath) return matchedByPath
 
     // todo(zehao): priority
+    const sm = getSchemaMap()
     for (const [matcher, slot] of fieldRendererRegistry) {
-      if (matcher({ path: pathValue, schema: getSchema(pathValue)! })) {
+      const genericPath = generalizePath(pathValue, sm)
+      if (matcher({ path: pathValue, genericPath, schema: getSchema(pathValue)! })) {
         return slot
       }
     }

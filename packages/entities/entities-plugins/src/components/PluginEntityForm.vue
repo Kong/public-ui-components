@@ -9,17 +9,20 @@
       v-else-if="(formModel.id && editing) || !editing"
       class="entity-form"
     >
+      <!-- Konnect-managed Redis UI for free-form layouts (StandardLayout) -->
       <component
-        :is="(freeForm as any)[freeformName]"
-        v-if="freeformName"
+        :is="freeformComponent"
+        v-if="freeformComponent"
+        :field-renderers="pluginConfig?.fieldRenderers"
         :form-model="formModel"
         :form-schema="formSchema"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="record"
         :on-form-change="handleFreeFormUpdate"
         :on-validity-change="onValidityChange"
         :plugin-name="formModel.name"
-        :render-rules="PLUGIN_METADATA[formModel.name]?.freeformRenderRules"
+        :render-rules="pluginConfig?.renderRules"
         :schema="freeformSchema"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
       >
@@ -34,6 +37,7 @@
           />
         </template>
       </component>
+      <!-- OIDC/ RLA embed their own `VueFormGenerator`, pass the Konnect-managed-Redis flag through -->
       <component
         :is="(sharedForms as any)[sharedFormName]"
         v-else-if="sharedFormName"
@@ -42,6 +46,7 @@
         :form-options="formOptions"
         :form-schema="formSchema"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :on-model-updated="onModelUpdated"
         :on-partial-toggled="onPartialToggled"
         :show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
@@ -58,10 +63,12 @@
         </template>
       </component>
 
+      <!-- Default schema-driven plugin form- `FormGenerator`- `FormRedis` -->
       <VueFormGenerator
         v-else
         :enable-redis-partial="enableRedisPartial"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="formModel"
         :options="formOptions"
         :schema="formSchema"
@@ -132,25 +139,12 @@ import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
-import * as freeForm from './free-form'
+import CommonForm from './free-form/Common'
 import type { GlobalAction } from './free-form/shared/types'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/shared/schema-enhancement'
+import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/shared/plugin-registry'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 import type { FormSchema } from '../types/plugins/form-schema'
-
-// Need to check for duplicates in sharedForms and freeForm
-// throw an error if there are any
-const sharedFormKeys = Object.keys(sharedForms)
-const freeFormKeys = Object.keys(freeForm)
-
-if (
-  new Set([...sharedFormKeys, ...freeFormKeys]).size !==
-  sharedFormKeys.length + freeFormKeys.length
-) {
-  throw new Error(
-    'Duplicate form component names found in `sharedForms` and `freeForm`',
-  )
-}
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -245,6 +239,16 @@ const props = defineProps({
   },
 })
 
+const isKonnectManagedRedisEnabled = computed<boolean>(() => {
+  if (props.config.app !== 'konnect') return false
+
+  const konnect = props.config as KonnectPluginFormConfig
+  return (
+    !!konnect.isKonnectManagedRedisEnabled
+    && konnect.isCloudGateway === true
+  )
+})
+
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -257,7 +261,7 @@ const { parseSchema } = composables.useSchemas({
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
-const { shouldUseFreeForm, getFreeFormName } = composables.useFreeFormResolver()
+const { shouldUseFreeForm, getFreeFormComponent } = composables.useFreeFormResolver()
 
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
@@ -417,7 +421,8 @@ provide(FORMS_API_KEY, {
 provide(FORMS_CONFIG, props.config)
 
 const sharedFormName = ref('')
-const freeformName = ref<string | undefined>('')
+const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()
+const freeformComponent = shallowRef<any>()
 const form = ref<Record<string, any> | null>(null)
 const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
@@ -666,7 +671,7 @@ const getModel = (freeformFields?: string[]): Record<string, any> => {
   const model: Record<string, any> = unFlattenObject(outputModel)
 
   // Handle the special case of the freeform plugin
-  if (freeformName.value) {
+  if (freeformComponent.value) {
     // remove any freeform fields from the model before merging
     if (freeformFields && freeformFields.length) {
       for (const field of freeformFields) {
@@ -838,7 +843,7 @@ const initFormModel = (): void => {
       }
 
       // main plugin configuration
-      if (freeformName.value) {
+      if (freeformComponent.value) {
         // keep original config from record for freeform plugins
         handleFreeFormUpdate(props.record)
       } else {
@@ -900,8 +905,9 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
 
-  freeformName.value = shouldUseFreeForm(form.model.name, props.engine)
-    ? getFreeFormName(form.model.name)
+  pluginConfig.value = getPluginConfig(form.model.name)
+  freeformComponent.value = shouldUseFreeForm(form.model.name, props.engine)
+    ? (getFreeFormComponent(form.model.name) ?? CommonForm)
     : undefined
   sharedFormName.value = getSharedFormName(form.model.name)
 

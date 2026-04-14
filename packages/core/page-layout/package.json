@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/page-layout",
-  "version": "0.2.7",
+  "version": "0.2.12",
   "type": "module",
   "main": "./dist/page-layout.umd.js",
   "module": "./dist/page-layout.es.js",
@@ -66,7 +66,7 @@
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.48.0",
-    "@kong/kongponents": "9.52.5",
+    "@kong/kongponents": "^9.52.5",
     "vue": "^3.5.27",
     "vue-router": "^4.6.4"
   },

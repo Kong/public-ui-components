@@ -22,4 +22,8 @@ export interface PageLayoutSlots {
    * Actions slot for page actions
    */
   actions?(): any
+  /**
+   * Title after slot for page title after content
+   */
+  'title-after'(): any
 }

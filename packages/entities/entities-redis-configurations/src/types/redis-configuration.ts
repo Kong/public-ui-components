@@ -73,9 +73,9 @@ export type RedisConfigurationConfigDTO = {
 }
 
 export type RedisConfigurationResponse = RedisConfigurationDTO & {
-  created_at: string
+  created_at: string | number
   id: string
-  updated_at: string
+  updated_at: string | number
 }
 
 export type Identifiable<T> = T & { id: string }

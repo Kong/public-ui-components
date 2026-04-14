@@ -56,6 +56,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       ...getApiProxies(),
     },
   },
+  test: {
+    setupFiles: ['./test/setup.ts'],
+  },
 }))
 
 // If we are trying to preview a build of the local `package/entities-routes/sandbox` directory,

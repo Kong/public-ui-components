@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.11...@kong-ui-public/page-layout@0.2.12) (2026-04-13)
+
+
+### Bug Fixes
+
+* **deps:** use range constraint for kongponents peerDependency ([#3127](https://github.com/Kong/public-ui-components/issues/3127)) ([a86ef3b](https://github.com/Kong/public-ui-components/commit/a86ef3bcfcd4feeef3a44c48a7608586c54df591))
+
+
+
+
+
+## [0.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.10...@kong-ui-public/page-layout@0.2.11) (2026-04-13)
+
+
+### Bug Fixes
+
+* **page-layout:** recompute overflow when tabs change ([#3124](https://github.com/Kong/public-ui-components/issues/3124)) ([776bb55](https://github.com/Kong/public-ui-components/commit/776bb55d565c8357c14f85701ff9bdfcdb24c1f2))
+
+
+
+
+
+## [0.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.9...@kong-ui-public/page-layout@0.2.10) (2026-04-07)
+
+
+### Bug Fixes
+
+* **page-layout:** recompute tabs layout when tabs change ([#3100](https://github.com/Kong/public-ui-components/issues/3100)) ([79f2000](https://github.com/Kong/public-ui-components/commit/79f20004955d1bf0fac8b95cb0c7fe313666c05a))
+
+
+
+
+
+## [0.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.8...@kong-ui-public/page-layout@0.2.9) (2026-04-06)
+
+
+### Bug Fixes
+
+* **page-layout:** breadcrumbs truncation, title after padding ([#3094](https://github.com/Kong/public-ui-components/issues/3094)) ([6713bed](https://github.com/Kong/public-ui-components/commit/6713bed4edec6a20e24e27430ea190c5245c7a26))
+
+
+
+
+
+## [0.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.7...@kong-ui-public/page-layout@0.2.8) (2026-04-01)
+
+
+### Bug Fixes
+
+* **page-layout:** add title-after slot ([#3082](https://github.com/Kong/public-ui-components/issues/3082)) ([f2816ff](https://github.com/Kong/public-ui-components/commit/f2816ff5f1ffa88c6b854d2fb8c0daca6a1feb9b))
+
+
+
+
+
 ## [0.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.6...@kong-ui-public/page-layout@0.2.7) (2026-03-27)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "9.182.2",
+  "version": "9.188.2",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -47,7 +47,7 @@
     "@vue-flow/core": "^1.48.2",
     "@vueuse/core": "^13.9.0",
     "@vueuse/integrations": "^13.9.0",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "monaco-editor": "^0.55.1",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.6.4",
@@ -122,7 +122,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "3.5MB"
+    "errorLimit": "4MB"
   },
   "dependencies": {
     "@kong-ui-public/entities-consumer-groups": "workspace:^",

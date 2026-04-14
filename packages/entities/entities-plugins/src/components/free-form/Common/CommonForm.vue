@@ -29,8 +29,8 @@ import StandardLayout from '../shared/layout/StandardLayout.vue'
 import type { Props } from '../shared/layout/StandardLayout.vue'
 import type { SegmentedControlOption } from '@kong/kongponents'
 import { FEATURE_FLAGS } from '../../../constants'
-import composables from '../../../composables'
 import { useLocalStorage } from '@vueuse/core'
+import useI18n from '../../../composables/useI18n'
 
 const props = defineProps<Props>()
 
@@ -42,7 +42,7 @@ provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
 
 const enableCodeMode = inject<boolean>(FEATURE_FLAGS.KM_2262_CODE_MODE, false)
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t } } = useI18n()
 
 const editorModePreference = useLocalStorage<Props['editorMode']>('plugin-editor-mode', 'form')
 

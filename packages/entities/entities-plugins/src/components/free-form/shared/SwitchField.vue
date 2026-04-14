@@ -29,7 +29,7 @@ import { KInputSwitch, type LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs } from './composables'
 import { toRef } from 'vue'
 import type { BaseFieldProps } from './types'
-import composables from '../../../composables'
+import useI18n from '../../../composables/useI18n'
 
 interface SwitchFieldProps extends BaseFieldProps {
   labelAttributes?: LabelAttributes
@@ -37,7 +37,7 @@ interface SwitchFieldProps extends BaseFieldProps {
   disabledText?: string
 }
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t } } = useI18n()
 
 const { name, enabledText, disabledText, ...props } = defineProps<SwitchFieldProps>()
 const { value: fieldValue, hide, emptyOrDefaultValue, ...field } = useField<boolean>(toRef(() => name))

@@ -2,7 +2,6 @@
   <PageLayout
     back-to="/"
     :breadcrumbs="breadcrumbs"
-    page-title="Overview"
     :tabs="tabs"
     title="Umbrella R&D Dev"
   >
@@ -13,6 +12,9 @@
       >
         <MoreIcon />
       </KButton>
+    </template>
+    <template #title-after>
+      <KBadge>Info</KBadge>
     </template>
   </PageLayout>
 </template>

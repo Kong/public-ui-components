@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.41.2",
+  "version": "3.41.6",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -26,7 +26,7 @@
     "@kong/kongponents": "^9.52.5",
     "@shikijs/core": "^3.21.0",
     "@shikijs/engine-javascript": "^3.21.0",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "shiki": "^3.21.0",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.6.4"

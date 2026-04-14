@@ -23,7 +23,7 @@
           {{ formattedValue }}
         </span>
         <span
-          v-if="displayMetricUnit"
+          v-if="displayMetricUnit && metricUnit"
           class="single-value-unit"
         >
           &nbsp;{{ metricUnit }}
@@ -121,13 +121,16 @@ const metricName = computed((): AllAggregations | undefined => props.data.meta?.
 const metricUnit = computed((): string | undefined => {
   const unit = metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined
   if (unit) {
-    return i18n.t(`chartUnits.${unit as 'count/minute' | 'ms'}`, { plural: '' })
+    const localeKey = `chartUnits.${unit}` as 'chartUnits.%' | 'chartUnits.count/minute' | 'chartUnits.ms'
+    return i18n.te(localeKey) ? i18n.t(localeKey, { plural: '' }) : ''
   }
 
   return undefined
 })
 // by default, display metric units for requests per minute, latency
-const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute' || !!metricName.value?.includes('_latency_'))
+const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute'
+  || !!metricName.value?.includes('_latency_')
+  || metricName.value === 'error_rate')
 
 const previousValue = computed<number | null>(() => {
   if (!props.showTrend || records.value.length < 2 || !metricName.value) {

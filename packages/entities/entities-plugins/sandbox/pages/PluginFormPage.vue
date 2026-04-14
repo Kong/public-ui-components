@@ -66,6 +66,7 @@ const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefi
 provide(ENTITIES_SHARED_FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => pluginFormEngine === 'freeform'))
 provide(FEATURE_FLAGS.KM_2262_CODE_MODE, true)
 provide(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, true)
+provide(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, true)
 
 useProvideExperimentalFreeForms([
   'service-protection',
@@ -79,7 +80,14 @@ useProvideExperimentalFreeForms([
   'response-transformer',
   'response-transformer-advanced',
   'correlation-id',
+  'solace-consume',
   'opentelemetry',
+  'acl',
+  'request-transformer',
+  'upstream-oauth',
+  'cors',
+  'proxy-cache',
+  'proxy-cache-advanced',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({

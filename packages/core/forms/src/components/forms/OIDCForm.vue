@@ -93,6 +93,7 @@
             v-if="displayForm"
             :enable-redis-partial="enableRedisPartial"
             :is-editing="isEditing"
+            :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
             :model="formModel"
             :options="formOptions"
             :schema="advancedFieldsSchema"
@@ -167,6 +168,10 @@ export default {
     enableRedisPartial: {
       type: Boolean,
       required: false,
+    },
+    isKonnectManagedRedisEnabled: {
+      type: Boolean,
+      default: false,
     },
     showNewPartialModal: {
       type: Function,
@@ -361,6 +366,18 @@ export default {
             if (f.help === undefined && typeof help === 'string') {
               f.help = help
             }
+          }
+        }
+
+        // Migrate deprecated consumer_claim → consumer_claims
+        // consumer_claim is string[], consumer_claims is string[][]
+        const deprecatedValue = this.formModel['config-consumer_claim']
+        if (deprecatedValue !== undefined && deprecatedValue !== null && deprecatedValue !== '') {
+          if (!this.formModel['config-consumer_claims'] || this.formModel['config-consumer_claims'].length === 0) {
+            const claimArray = Array.isArray(deprecatedValue) ? deprecatedValue : [deprecatedValue]
+            // eslint-disable-next-line vue/no-mutating-props
+            this.formModel['config-consumer_claims'] = [claimArray]
+            this.onModelUpdated()
           }
         }
       }

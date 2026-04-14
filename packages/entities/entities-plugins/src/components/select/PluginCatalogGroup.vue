@@ -61,8 +61,8 @@ import PluginCatalogCard from './PluginCatalogCard.vue'
 import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginSchemaModal.vue'
 import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginType } from '../../types'
 import { KUI_COLOR_TEXT_DECORATIVE_PURPLE } from '@kong/design-tokens'
-import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, TrafficIcon, TransformationIcon } from '@kong/icons'
-import { GATEWAY_VERSION_TIMESTAMP_MAP } from '@kong-ui-public/entities-plugins-metadata'
+import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, TrafficIcon, TransformationIcon, MoneyIcon } from '@kong/icons'
+import { GATEWAY_VERSION_TIMESTAMP_MAP, PluginGroup } from '@kong-ui-public/entities-plugins-metadata'
 import { within16Weeks } from '../../utils/helper'
 
 const props = defineProps<{
@@ -84,27 +84,29 @@ const props = defineProps<{
 
 const groupIcon = computed(() => {
   switch (props.name) {
-    case 'Featured':
+    case PluginGroup.FEATURED:
       return PopularIcon
-    case 'AI':
+    case PluginGroup.AI:
       return BotIcon
-    case 'Analytics & Monitoring':
+    case PluginGroup.ANALYTICS_AND_MONITORING:
       return AnalyticsIcon
-    case 'Authentication':
+    case PluginGroup.AUTHENTICATION:
       return LockIcon
-    case 'Logging':
+    case PluginGroup.LOGGING:
       return ServiceDocumentIcon
-    case 'Security':
+    case PluginGroup.MONETIZATION:
+      return MoneyIcon
+    case PluginGroup.SECURITY:
       return SecurityIcon
-    case 'Serverless':
+    case PluginGroup.SERVERLESS:
       return RuntimeServerlessIcon
-    case 'Traffic Control':
+    case PluginGroup.TRAFFIC_CONTROL:
       return TrafficIcon
-    case 'Transformations':
+    case PluginGroup.TRANSFORMATIONS:
       return TransformationIcon
-    case 'Deployment':
+    case PluginGroup.DEPLOYMENT:
       return DeployIcon
-    case 'Custom Plugins':
+    case PluginGroup.CUSTOM_PLUGINS:
       return CodeblockIcon
     default:
       return null

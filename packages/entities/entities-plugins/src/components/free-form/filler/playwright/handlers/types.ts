@@ -16,3 +16,7 @@ export type RecordHandlerOption = Omit<HandlerOption, 'typeOptions'> & {
 export type ArrayHandlerOption = Omit<HandlerOption, 'typeOptions'> & {
   onFillItem: (index: number, itemValue: any) => Promise<void>
 }
+
+export type MapHandlerOption = Omit<HandlerOption, 'typeOptions'> & {
+  onFillEntry: (kidId: string, entryValue: any) => Promise<void>
+}

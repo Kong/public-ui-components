@@ -47,7 +47,7 @@ import { useField, useFieldAttrs } from './composables'
 import type { BaseFieldProps } from './types'
 import type { SelectItem } from '@kong/kongponents'
 import type { EntityData } from '@kong-ui-public/forms'
-import composables from '../../../composables'
+import useI18n from '../../../composables/useI18n'
 
 type ForeignFieldValue = { id: string } | null
 
@@ -75,7 +75,7 @@ const {
   ...props
 } = defineProps<ScopeEntityFieldProps>()
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t } } = useI18n()
 
 const { value: fieldValue, hide, ...field } = useField<ForeignFieldValue>(toRef(() => name))
 

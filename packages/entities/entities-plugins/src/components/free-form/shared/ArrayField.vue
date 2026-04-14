@@ -19,6 +19,7 @@
     :data-testid="`ff-array-${field.path.value}`"
   >
     <header
+      v-if="!!fieldAttrs.label"
       class="ff-array-field-header"
       :data-testid="`ff-array-header-${field.path.value}`"
     >
@@ -260,7 +261,7 @@ const realAppearance = computed(() => {
     return props.appearance
   }
 
-  if (subSchema.value.type === 'record') {
+  if (subSchema.value.type === 'record' || subSchema.value.type === 'map') {
     return 'card'
   }
 
@@ -485,20 +486,15 @@ $indent-guide-top-offset: 30px;
     }
   }
 
-  &-default > &-content > &-container > &-item {
-    align-items: center;
+  &-default > &-container > &-item {
+    align-items: flex-start;
     flex-direction: row;
     gap: var(--kui-space-40, $kui-space-40);
     padding: 0;
+  }
 
-    // Align delete button to top when using TagField
-    &:has(.ff-tag-field) {
-      align-items: flex-start;
-
-      .ff-array-field-item-remove {
-        margin-top: var(--kui-space-20, $kui-space-20);
-      }
-    }
+  &-item-remove {
+    margin-top: var(--kui-space-20, $kui-space-20);
   }
 
   &-card > &-content > &-container > &-item :deep(.card-content) {
@@ -509,10 +505,6 @@ $indent-guide-top-offset: 30px;
     // Align delete button to top when using TagField
     &:has(.ff-tag-field) {
       align-items: flex-start;
-
-      .ff-array-field-item-remove {
-        margin-top: var(--kui-space-20, $kui-space-20);
-      }
     }
   }
 
