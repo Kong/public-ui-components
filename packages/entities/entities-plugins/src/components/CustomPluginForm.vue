@@ -305,7 +305,6 @@
           :label-attributes="{
             info: t('custom_plugin_form.step3.priority.tooltip'),
           }"
-          number
           :readonly="state.readonly"
           type="number"
         />
@@ -390,7 +389,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'update', data: FormPayload): void
   (e: 'error', error: Error): void
-  (e: 'loading', isLoading: boolean): void
+  (e: 'loading', isLoading: boolean): void // not used yet
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -530,7 +529,9 @@ const payload = computed<FormPayload>(() => {
         ...base,
         sourcePlugin: state.fields.sourcePlugin,
         aliasName: state.fields.aliasName,
-        priority: state.fields.priority || undefined,
+        priority: state.fields.priority === '' || state.fields.priority == null
+          ? undefined
+          : state.fields.priority,
       } as ClonedPluginPayload
     default:
       return base as FormPayload

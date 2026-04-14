@@ -152,7 +152,7 @@ describe('<CustomPluginForm />', () => {
       })
 
       // Step 1 should not be visible
-      cy.contains('h2', 'custom_plugin_form.step1.title').should('not.exist')
+      cy.contains('h2', 'Custom plugin type').should('not.exist')
 
       // Plugin type radios should not be visible
       cy.getTestId('custom-plugin-type-installed').should('not.exist')
@@ -212,7 +212,9 @@ describe('<CustomPluginForm />', () => {
       cy.getTestId('custom-plugin-form-cancel').click()
 
       // Should navigate to home route
-      cy.url().should('include', '/')
+      cy.wrap(null).should(() => {
+        expect(router.currentRoute.value.fullPath).to.equal('/')
+      })
     })
   })
 })
