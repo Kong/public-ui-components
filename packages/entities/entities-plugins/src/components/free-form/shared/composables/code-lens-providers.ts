@@ -22,7 +22,6 @@ import { useRouter } from 'vue-router'
 import useI18n from '../../../../composables/useI18n'
 import endpoints from '../../../../plugins-endpoints'
 import { useFormShared } from './form-context'
-import { buildSchemaMap } from './schema'
 
 import type { X509Certificate } from '@peculiar/x509'
 import type { AxiosRequestConfig } from 'axios'
@@ -47,13 +46,6 @@ const entityKind = ['service', 'route', 'consumer', 'consumer_group', 'certifica
 export type EntityKind = (typeof entityKind)[number]
 const entityKindSet = Object.fromEntries(entityKind.map(e => [`${e}s`, e]))
 
-const defaultEntityLensConfig: EntityLensConfig[] = [
-  { entity: 'service', keyPath: ['service'] },
-  { entity: 'route', keyPath: ['route'] },
-  { entity: 'consumer', keyPath: ['consumer'] },
-  { entity: 'consumer_group', keyPath: ['consumer_group'] },
-]
-
 type EntityLensFieldKind = 'field'
 type EntityLensCmdKind = 'cmd'
 
@@ -75,19 +67,23 @@ type EntityLensDefinition<T> = {
   commands?: Array<EntityLensCmdDefinition<T>>
 }
 
+type EntityData<T = unknown> = T & { id: string } & Record<string, any>
+
 interface EntityDataMap {
-  service: { data: { id: string, name: string } & Record<string, any> }
-  route: { data: { id: string, name: string } & Record<string, any> }
-  consumer: { data: { id: string, username?: string, custom_id?: string } & Record<string, any> }
-  consumer_group: { data: { id: string, name: string } & Record<string, any> }
-  certificate: { data: { id: string } & Record<string, any>, cert: X509Certificate }
+  service: { data: EntityData<{ name: string }> }
+  route: { data: EntityData<{ name: string }> }
+  consumer: { data: EntityData<{ username?: string, custom_id?: string }> }
+  consumer_group: { data: EntityData<{ name: string }> }
+  certificate: { data: EntityData, cert: X509Certificate }
 }
 
 type EntityLensDataMap = {
   [K in EntityKind]: EntityLensDefinition<EntityDataMap[K]>
 }
 
-function createEntityLensDefs(t: ReturnType<typeof useI18n>['i18n']['t']): EntityLensDataMap {
+function createEntityLensDefs(): EntityLensDataMap {
+  const { i18n: { t } } = useI18n()
+
   const entityTitle = (kind: EntityKind) => t(`plugins.free-form.code-lens.entity.${kind}`)
   const fieldName = (value: string, entity: string) => t('plugins.free-form.code-lens.field.name', { value, entity })
 
@@ -131,14 +127,14 @@ function createEntityLensDefs(t: ReturnType<typeof useI18n>['i18n']['t']): Entit
       fields: [
         {
           id: 'field/subject',
-          resolve: async (c) => {
+          resolve: (c) => {
             if (!c) return
             return t('plugins.free-form.code-lens.field.subject', { value: c.cert.subject })
           },
         },
         {
           id: 'field/notAfter',
-          resolve: async c => {
+          resolve: c => {
             if (!c) return
             return t('plugins.free-form.code-lens.field.expires_after', { value: c.cert.notAfter.toLocaleString('en') })
           },
@@ -205,7 +201,7 @@ function createTimestampCodeLensProvider(keyPath: string): languages.CodeLensPro
       range,
       command: {
         id: '',
-        title: `$(calendar)\u00A0${new Date(normalizeTimestampValue(value)).toLocaleString('en', { dateStyle: 'full', timeStyle: 'full' })}`,
+        title: `$(calendar)\u00A0${new Date(normalizeTimestampValue(value)).toLocaleString('en', { dateStyle: 'full', timeStyle: 'full' })}`, // `\u00A0` is used instead of space to keep the gap between icon and text
       },
     }],
     dispose: () => {},
@@ -221,9 +217,9 @@ export function useCodeLensProviders(config: PluginFormConfig, axiosConfig?: Axi
   const { axiosInstance } = useAxios(axiosConfig ?? config.axiosRequestConfig)
   const router = useRouter()
   const { i18n: { t } } = useI18n()
-  const { getSchema } = useFormShared()
+  const { getSchemaMap } = useFormShared()
 
-  const entityLensDefs = createEntityLensDefs(t)
+  const entityLensDefs = createEntityLensDefs()
 
   function createEntityCodeLensProvider(entity: EntityKind, keyPath?: string[]) {
     const cache = new Map<string, Promise<EntityDataMap[typeof entity]>>()
@@ -276,7 +272,7 @@ export function useCodeLensProviders(config: PluginFormConfig, axiosConfig?: Axi
           range,
           command: {
             id: commandIdViewEntity,
-            title: `${t('plugins.free-form.code-lens.action.view_entity', { title: def.title })}\u00A0$(link-external)`,
+            title: `${t('plugins.free-form.code-lens.action.view_entity', { title: def.title })}\u00A0$(link-external)`, // `\u00A0` is used instead of space to keep the gap between icon and text
             arguments: [entity, entityId],
           },
         },
@@ -328,7 +324,7 @@ export function useCodeLensProviders(config: PluginFormConfig, axiosConfig?: Axi
           console.error('Error resolving code lens:', e)
           codeLens.command = {
             id: commandIdReloadProvider,
-            title: `$(warning)\u00A0${t('plugins.free-form.code-lens.action.retry_fetch')}`,
+            title: `$(warning)\u00A0${t('plugins.free-form.code-lens.action.retry_fetch')}`, // `\u00A0` is used instead of space to keep the gap between icon and text
             arguments: [entityId],
             tooltip: e instanceof Error ? e.message : t('plugins.free-form.code-lens.unknown_error'),
           }
@@ -370,7 +366,7 @@ export function useCodeLensProviders(config: PluginFormConfig, axiosConfig?: Axi
       ),
     ]
 
-    const entityLensConfig = buildForeignEntityLensConfig(buildSchemaMap(getSchema()))
+    const entityLensConfig = buildForeignEntityLensConfig(getSchemaMap())
     for (const { entity, keyPath } of entityLensConfig) {
       const clProvider = createEntityCodeLensProvider(entity, keyPath)
       disposables.push(
