@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.21.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.14...@kong-ui-public/entities-routes@3.21.15) (2026-04-15)
+
+
+### Bug Fixes
+
+* **redis:** cpg and member changes [khcp-20226] ([#3107](https://github.com/Kong/public-ui-components/issues/3107)) ([0880477](https://github.com/Kong/public-ui-components/commit/0880477a073fa261b1887cd40f3e19ccbbb6aba9))
+
+
+
+
+
 ## [3.21.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.13...@kong-ui-public/entities-routes@3.21.14) (2026-04-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
