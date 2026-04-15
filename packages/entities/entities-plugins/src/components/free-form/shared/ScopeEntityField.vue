@@ -19,7 +19,6 @@
       :entity="entity"
       :field-disabled="disabled"
       :fields="searchFields"
-      :initial-item-selected="initialValueSelected"
       :label-field="labelField"
       :placeholder="loading ? t('actions.loading_spinner') : (placeholder || fieldAttrs.placeholder)"
       :selected-item="selectedItem"
@@ -96,10 +95,6 @@ const allowUuidSearch = computed(() => fields.includes('id'))
 // --- Edit mode: fetch the currently selected entity ---
 const loading = ref(false)
 const selectedItem = ref<SelectItem<string> | undefined>()
-const initialItem = ref<SelectItem<string> | undefined>()
-const initialValueSelected = computed(() => {
-  return (fieldValue?.value?.id ?? '') === (initialItem.value?.value ?? '')
-})
 
 onMounted(async () => {
   const currentId = fieldValue?.value?.id
@@ -114,7 +109,6 @@ onMounted(async () => {
       if (developer) {
         // Developer consumers may not appear in the consumers API; use the known ID as fallback
         const item: SelectItem<string> = { label: currentId, value: currentId }
-        initialItem.value = item
         selectedItem.value = item
         return
       }
@@ -126,7 +120,6 @@ onMounted(async () => {
       label: entityData[labelField] ?? entityData.id,
       value: entityData.id,
     }
-    initialItem.value = item
     selectedItem.value = item
   } catch (err) {
     console.error('Failed to load selected entity:', err)
