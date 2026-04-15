@@ -62,6 +62,8 @@ interface ScopeEntityFieldProps extends BaseFieldProps {
   placeholder?: string
   help?: string
   disabled?: boolean
+  /** Whether the plugin is being created for a portal developer (consumer may not appear in consumers API) */
+  developer?: boolean
 }
 
 const {
@@ -72,6 +74,7 @@ const {
   disabled,
   placeholder,
   help,
+  developer,
   ...props
 } = defineProps<ScopeEntityFieldProps>()
 
@@ -108,6 +111,13 @@ onMounted(async () => {
       validateStatus: (status: number) => (status >= 200 && status < 300) || status === 404,
     })
     if (res.status === 404) {
+      if (developer) {
+        // Developer consumers may not appear in the consumers API; use the known ID as fallback
+        const item: SelectItem<string> = { label: currentId, value: currentId }
+        initialItem.value = item
+        selectedItem.value = item
+        return
+      }
       throw new Error(`Entity of type ${entity} with id ${currentId} not found`)
     }
     const entityData: EntityData = res.data

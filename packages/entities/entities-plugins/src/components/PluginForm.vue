@@ -47,6 +47,7 @@
       <PluginEntityForm
         :config="config"
         :credential="treatAsCredential"
+        :developer="developer"
         :editing="formType === EntityBaseFormType.Edit"
         :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"

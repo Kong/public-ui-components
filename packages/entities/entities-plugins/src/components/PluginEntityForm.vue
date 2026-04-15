@@ -13,6 +13,7 @@
       <component
         :is="freeformComponent"
         v-if="freeformComponent"
+        :developer="developer"
         :field-renderers="pluginConfig?.fieldRenderers"
         :form-model="formModel"
         :form-schema="formSchema"
@@ -236,6 +237,12 @@ const props = defineProps({
     type: String as PropType<'vfg' | 'freeform'>,
     required: false,
     default: undefined,
+  },
+
+  /** For Kong Manager portal developers */
+  developer: {
+    type: Boolean,
+    default: false,
   },
 })
 
