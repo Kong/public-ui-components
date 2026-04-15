@@ -39,7 +39,7 @@ const init = async () => {
       {
         path: '/custom-plugin/create',
         name: 'create-custom-plugin',
-        component: () => import('./pages/FallbackPage.vue'),
+        component: () => import('./pages/CustomPluginFormPage.vue'),
       },
       {
         path: '/plugin/:plugin/:id',

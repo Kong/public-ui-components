@@ -15,5 +15,10 @@
         Free Form (Mocking Schema)
       </router-link>
     </li>
+    <li>
+      <router-link :to="{ name: 'create-custom-plugin' }">
+        Custom Plugin Form
+      </router-link>
+    </li>
   </ul>
 </template>

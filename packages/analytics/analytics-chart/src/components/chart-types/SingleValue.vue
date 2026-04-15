@@ -16,18 +16,23 @@
       class="single-value-wrapper"
     >
       <div class="single-value-metric">
-        <span
-          class="single-value"
-          data-testid="single-value-chart"
-        >
-          {{ formattedValue }}
-        </span>
-        <span
-          v-if="displayMetricUnit && metricUnit"
-          class="single-value-unit"
-        >
-          &nbsp;{{ metricUnit }}
-        </span>
+        <div class="name-unit-alignment">
+          <span
+            class="single-value"
+            data-testid="single-value-chart"
+          >
+            {{ formattedValue }}
+          </span>
+          <span
+            v-if="displayMetricUnit && metricUnit"
+            class="single-value-unit"
+          >
+            &nbsp;{{ metricUnit }}
+          </span>
+        </div>
+        <div class="single-value-metric-name">
+          {{ formattedMetricName }}
+        </div>
       </div>
       <div
         v-if="showTrend"
@@ -118,6 +123,11 @@ const alignmentClass = computed(() => `align-${props.leftAlign ? 'left' : props.
 
 const records = computed<AnalyticsExploreRecord[]>(() => props.data.data)
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
+const formattedMetricName = computed((): string => {
+  return i18n.te(`chartLabels.${metricName.value}` as any)
+    ? i18n.t(`chartLabels.${metricName.value}` as any)
+    : ''
+})
 const metricUnit = computed((): string | undefined => {
   const unit = metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined
   if (unit) {
@@ -278,14 +288,21 @@ onMounted(() => {
   }
 
   .single-value-wrapper {
-    align-items: baseline;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    margin-top: -4px; // to account for .tile-content top padding :(
 
     .single-value-metric {
-      align-items: baseline;
-      display: inline-flex;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .single-value-metric-name {
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-10, $kui-font-size-10);
+      line-height: var(--kui-line-height-10, $kui-line-height-10);
     }
 
     .single-value {
@@ -353,6 +370,11 @@ onMounted(() => {
         font-size: var(--kui-font-size-90, $kui-font-size-90);
         line-height: var(--kui-line-height-90, $kui-line-height-90);
       }
+
+      .single-value-metric-name {
+        font-size: var(--kui-font-size-10, $kui-font-size-10);
+        line-height: var(--kui-line-height-10, $kui-line-height-10);
+      }
     }
 
     @container (min-width: 500px) {
@@ -364,6 +386,11 @@ onMounted(() => {
       .single-value-unit {
         font-size: var(--kui-font-size-100, $kui-font-size-100);
         line-height: var(--kui-line-height-100, $kui-line-height-100);
+      }
+
+      .single-value-metric-name {
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+        line-height: var(--kui-line-height-20, $kui-line-height-20);
       }
     }
 
@@ -377,6 +404,11 @@ onMounted(() => {
         font-size: 56px;
         line-height: 64px;
       }
+
+      .single-value-metric-name {
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+        line-height: var(--kui-line-height-20, $kui-line-height-20);
+      }
     }
 
     @container (min-width: 1000px) {
@@ -389,6 +421,11 @@ onMounted(() => {
         font-size: 64px;
         line-height: 72px;
       }
+
+      .single-value-metric-name {
+        font-size: var(--kui-font-size-40, $kui-font-size-40);
+        line-height: var(--kui-line-height-40, $kui-line-height-40);
+      }
     }
 
     @container (min-width: 1200px) {
@@ -400,6 +437,11 @@ onMounted(() => {
       .single-value-unit {
         font-size: 80px;
         line-height: 88px;
+      }
+
+      .single-value-metric-name {
+        font-size: var(--kui-font-size-40, $kui-font-size-40);
+        line-height: var(--kui-line-height-40, $kui-line-height-40);
       }
     }
   }
