@@ -82,6 +82,7 @@ useProvideExperimentalFreeForms([
   'correlation-id',
   'solace-consume',
   'solace-log',
+  'solace-upstream',
   'opentelemetry',
   'acl',
   'request-transformer',
