@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.190.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.189.0...@kong-ui-public/entities-plugins@9.190.0) (2026-04-15)
+
+
+### Features
+
+* **entities-plugins:** add solace-log to experimental ([#3130](https://github.com/Kong/public-ui-components/issues/3130)) ([c106a2a](https://github.com/Kong/public-ui-components/commit/c106a2abb35af3ad8498b2cc2513bdee7faa0c0b))
+
+
+
+
+
 # [9.189.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.188.2...@kong-ui-public/entities-plugins@9.189.0) (2026-04-14)
 
 
