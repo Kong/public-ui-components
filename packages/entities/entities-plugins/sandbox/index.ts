@@ -84,6 +84,11 @@ const init = async () => {
         component: () => import('./pages/FallbackPage.vue'),
       },
       {
+        path: '/certificate/:id',
+        name: 'view-certificate',
+        component: () => import('./pages/FallbackPage.vue'),
+      },
+      {
         path: '/plugin/:id/configure-dynamic-ordering',
         name: 'configure-dynamic-ordering',
         component: () => import('./pages/FallbackPage.vue'),

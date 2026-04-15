@@ -764,6 +764,29 @@
         "visual": "Visual editor",
         "code": "Code editor"
       },
+      "code-lens": {
+        "entity": {
+          "service": "Service",
+          "route": "Route",
+          "consumer": "Consumer",
+          "consumer_group": "Consumer Group",
+          "certificate": "Certificate"
+        },
+        "field": {
+          "name": "{entity} \"{value}\"",
+          "username": "Username \"{value}\"",
+          "custom_id": "Custom ID \"{value}\"",
+          "subject": "Subject \"{value}\"",
+          "expires_after": "Expires after \"{value}\""
+        },
+        "action": {
+          "view_entity": "View {title}",
+          "copy_certificate": "Copy certificate",
+          "copy_uuid": "Copy UUID",
+          "retry_fetch": "Retry fetch (Hover for details)"
+        },
+        "unknown_error": "Unknown error"
+      },
       "acl": {
         "mode": {
           "allow": "Use allow list",
