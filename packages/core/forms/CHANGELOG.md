@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.23.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.12...@kong-ui-public/forms@4.23.13) (2026-04-15)
+
+
+### Bug Fixes
+
+* **freeform:** pre-select developer consumer id ([#3132](https://github.com/Kong/public-ui-components/issues/3132)) ([712bf2a](https://github.com/Kong/public-ui-components/commit/712bf2a177600333bf8e286521792e76e1511275))
+
+
+
+
+
 ## [4.23.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.11...@kong-ui-public/forms@4.23.12) (2026-04-11)
 
 
