@@ -3,6 +3,130 @@
     v-bind="props"
     :plugin-config-description="t('plugins.free-form.metering-and-billing.sections.plugin_config.description')"
   >
+    <template #field-renderers>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path === 'config.meter_api_requests'"
+      >
+        <BooleanField
+          v-bind="slotProps"
+          :description="t('plugins.free-form.metering-and-billing.fields.meter_api_requests.description')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path === 'config.meter_ai_token_usage'"
+      >
+        <BooleanField
+          v-bind="slotProps"
+          :description="t('plugins.free-form.metering-and-billing.fields.meter_ai_token_usage.description')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path === 'config.ssl_verify'"
+      >
+        <BooleanField
+          v-bind="slotProps"
+          :description="t('plugins.free-form.metering-and-billing.fields.ssl_verify.description')"
+          :label="t('plugins.free-form.metering-and-billing.fields.ssl_verify.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path === 'config.subject.look_up_value_in'"
+      >
+        <EnumField
+          v-bind="slotProps"
+          :help="t('plugins.free-form.metering-and-billing.fields.look_up_value_in.help')"
+          :label="t('plugins.free-form.metering-and-billing.fields.look_up_value_in.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path === 'config.subject.field'"
+      >
+        <StringField
+          v-bind="slotProps"
+          :help="t('plugins.free-form.metering-and-billing.fields.subject_field.help')"
+          :label="t('plugins.free-form.metering-and-billing.fields.subject_field.label')"
+          :placeholder="t('plugins.free-form.metering-and-billing.fields.subject_field.placeholder')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path === 'config.timeout'"
+      >
+        <NumberField
+          v-bind="slotProps"
+          :label="t('plugins.free-form.metering-and-billing.fields.timeout.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path === 'config.keepalive'"
+      >
+        <NumberField
+          v-bind="slotProps"
+          :label="t('plugins.free-form.metering-and-billing.fields.keepalive.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path === 'config.queue.max_coalescing_delay'"
+      >
+        <NumberField
+          v-bind="slotProps"
+          :label="t('plugins.free-form.metering-and-billing.fields.queue.max_coalescing_delay.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path === 'config.queue.initial_retry_delay'"
+      >
+        <NumberField
+          v-bind="slotProps"
+          :label="t('plugins.free-form.metering-and-billing.fields.queue.initial_retry_delay.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path === 'config.queue.max_retry_delay'"
+      >
+        <NumberField
+          v-bind="slotProps"
+          :label="t('plugins.free-form.metering-and-billing.fields.queue.max_retry_delay.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path === 'config.queue.max_retry_time'"
+      >
+        <NumberField
+          v-bind="slotProps"
+          :label="t('plugins.free-form.metering-and-billing.fields.queue.max_retry_time.label')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path.startsWith('config.attributes.') && path.endsWith('.look_up_value_in')"
+      >
+        <StringField
+          v-bind="slotProps"
+          :placeholder="t('plugins.free-form.metering-and-billing.fields.attributes.look_up_value_in.placeholder')"
+        />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }: { path: string }) => path.startsWith('config.attributes.') && path.endsWith('.event_property_name')"
+      >
+        <StringField
+          v-bind="slotProps"
+          :placeholder="t('plugins.free-form.metering-and-billing.fields.attributes.event_property_name.placeholder')"
+        />
+      </FieldRenderer>
+    </template>
+
     <CollapsibleSection
       v-model:expanded="meteringExpanded"
       :label="t('plugins.free-form.metering-and-billing.sections.metering.title')"
@@ -21,9 +145,17 @@
     </div>
 
     <!-- Attributes -->
-    <div class="ff-mb-attributes">
-      <Field name="config.attributes" />
-    </div>
+    <CollapsibleSection
+      v-model:expanded="attributesExpanded"
+      :label="t('plugins.free-form.metering-and-billing.fields.attributes.title')"
+    >
+      <div class="ff-mb-attributes">
+        <ArrayField
+          hide-label
+          name="config.attributes"
+        />
+      </div>
+    </CollapsibleSection>
 
     <CollapsibleSection
       v-model:expanded="ingestionExpanded"
@@ -66,7 +198,12 @@ import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide, ref } from 'vue'
 import { KLabel } from '@kong/kongponents'
 import StandardLayout from '../../shared/layout/StandardLayout.vue'
+import FieldRenderer from '../../shared/FieldRenderer.vue'
 import Field from '../../shared/Field.vue'
+import BooleanField from '../../shared/BooleanField.vue'
+import EnumField from '../../shared/EnumField.vue'
+import NumberField from '../../shared/NumberField.vue'
+import ArrayField from '../../shared/ArrayField.vue'
 import AdvancedFields from '../../shared/AdvancedFields.vue'
 import ObjectField from '../../shared/ObjectField.vue'
 import CollapsibleSection from '../../shared/CollapsibleSection.vue'
@@ -86,6 +223,7 @@ provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
 const { i18n: { t } } = useI18n()
 
 const meteringExpanded = ref(true)
+const attributesExpanded = ref(true)
 const ingestionExpanded = ref(true)
 
 
