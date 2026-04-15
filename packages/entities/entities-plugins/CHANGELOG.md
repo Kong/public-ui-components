@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.191.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.190.0...@kong-ui-public/entities-plugins@9.191.0) (2026-04-15)
+
+
+### Features
+
+* **entities-plugins:** code lens providers ([#3075](https://github.com/Kong/public-ui-components/issues/3075)) ([8a845d1](https://github.com/Kong/public-ui-components/commit/8a845d155d8b1a21cc4c1c3c35dd33f4e91b4c0a))
+
+
+
+
+
 # [9.190.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.189.0...@kong-ui-public/entities-plugins@9.190.0) (2026-04-15)
 
 
