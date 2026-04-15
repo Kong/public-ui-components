@@ -82,6 +82,7 @@
           <ScopeEntityField
             v-for="scopeField in scopeEntityFields"
             :key="scopeField.name"
+            :developer="developer"
             :disabled="scopeField.disabled"
             :disabled-tooltip="scopeField.disabledTooltip"
             :entity="scopeField.entity"
@@ -230,6 +231,8 @@ export type Props<T extends FreeFormPluginData = any> = {
   pluginName: string
   /** Konnect-managed Redis UI, from plugin form config */
   isKonnectManagedRedisEnabled?: boolean
+  /** Whether the plugin is being created for a portal developer */
+  developer?: boolean
 }
 </script>
 
