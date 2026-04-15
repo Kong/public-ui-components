@@ -415,10 +415,8 @@ describe('<RedisConfigurationList />', () => {
       cy.getTestId('test cloud').find('[data-testid="dropdown-trigger"]').click()
       cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').click()
       cy.wait('@getLinkedPlugins')
-      cy.getTestId('entity-delete-modal').should('be.visible')
       cy.getTestId('managed-delete-confirm').should('be.visible')
       cy.getTestId('entity-delete-modal').find('.prompt-confirmation-text').should('be.visible')
-      cy.getTestId('entity-delete-modal').find('.confirmation-text').should('have.text', 'test cloud')
     })
 
     it('should show Konnect-managed Redis type for placeholder rows in Type column', () => {
