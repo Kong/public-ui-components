@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.192.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.191.0...@kong-ui-public/entities-plugins@9.192.0) (2026-04-15)
+
+
+### Features
+
+* **entities-plugins:** add solace-upstream to experimental ([#3131](https://github.com/Kong/public-ui-components/issues/3131)) ([74ca9d1](https://github.com/Kong/public-ui-components/commit/74ca9d142fc0db70a90485003e84576c66385df4))
+
+
+
+
+
 # [9.191.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.190.0...@kong-ui-public/entities-plugins@9.191.0) (2026-04-15)
 
 
