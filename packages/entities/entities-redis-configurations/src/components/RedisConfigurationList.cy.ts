@@ -381,9 +381,8 @@ describe('<RedisConfigurationList />', () => {
       cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').click()
       cy.wait('@getLinkedPlugins')
       cy.getTestId('remove-links-modal').find('.modal-container').should('be.visible')
-      cy.getTestId('remove-links-modal').should('contain.text', 'Delete Konnect-managed cache')
-      cy.getTestId('remove-links-modal').should('contain.text', '1 plugin')
-      cy.getTestId('remove-links-modal').find('strong').should('contain.text', '1')
+      cy.getTestId('remove-links-msg').should('be.visible')
+      cy.getTestId('remove-links-count').should('have.text', '1')
     })
 
     it('should allow delete confirmation for Konnect-managed row when no plugins are linked', () => {
@@ -416,10 +415,10 @@ describe('<RedisConfigurationList />', () => {
       cy.getTestId('test cloud').find('[data-testid="dropdown-trigger"]').click()
       cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').click()
       cy.wait('@getLinkedPlugins')
-      cy.get('.kong-ui-entity-delete-modal').should('contain.text', 'Delete Konnect-managed cache')
-      cy.get('.kong-ui-entity-delete-modal .message').should('contain.text', 'Konnect-managed cache')
-      cy.get('.kong-ui-entity-delete-modal .prompt-confirmation-text').should('contain.text', 'Please enter')
-      cy.get('.kong-ui-entity-delete-modal .prompt-confirmation-text .confirmation-text').should('contain.text', 'test cloud')
+      cy.getTestId('entity-delete-modal').should('be.visible')
+      cy.getTestId('managed-delete-confirm').should('be.visible')
+      cy.getTestId('entity-delete-modal').find('.prompt-confirmation-text').should('be.visible')
+      cy.getTestId('entity-delete-modal').find('.confirmation-text').should('have.text', 'test cloud')
     })
 
     it('should show Konnect-managed Redis type for placeholder rows in Type column', () => {

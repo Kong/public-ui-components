@@ -254,18 +254,18 @@ const emit = defineEmits<{
   (e: 'fetch:managed-add-on-success', data: ManagedCacheAddOn): void
 }>()
 
+const emitFetchNotFound = (error: AxiosError): void => {
+  emit('fetch:not-found', error)
+}
+
 // Host app treat `fetch:error` as fatal navigation. After Konnect-managed Redis is deleted,
 // `GET …/add-ons/{id}` returns 404, surface `fetch:not-found` instead
 const onEntityBaseConfigCardFetchError = (error: AxiosError): void => {
   if (isAxiosError(error) && error.response?.status === 404) {
-    emit('fetch:not-found', error)
+    emitFetchNotFound(error)
     return
   }
   emit('fetch:error', error)
-}
-
-const emitFetchNotFound = (error: AxiosError): void => {
-  emit('fetch:not-found', error)
 }
 
 const { i18n: { t } } = composables.useI18n()

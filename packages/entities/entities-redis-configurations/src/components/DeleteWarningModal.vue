@@ -11,11 +11,12 @@
   >
     <i18n-t
       v-if="variant === 'konnect-managed'"
+      data-testid="remove-links-msg"
       keypath="delete.konnect_managed_blocked.message"
       tag="p"
     >
       <template #count>
-        <strong>{{ pluginCount }}</strong>
+        <strong data-testid="remove-links-count">{{ pluginCount }}</strong>
       </template>
       <template #plugin>
         {{ t('delete.konnect_managed_blocked.plugin', { count: pluginCount }) }}

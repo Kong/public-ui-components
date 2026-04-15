@@ -6,6 +6,7 @@
     :class="['kong-ui-entity-delete-modal', { 'kong-ui-entity-delete-modal-stacked-copy': stackedCopy }]"
     :confirmation-prompt="confirmationPrompt || undefined"
     :confirmation-text="confirmText"
+    data-testid="entity-delete-modal"
     :title="title"
     :visible="visible"
     @cancel="cancel"

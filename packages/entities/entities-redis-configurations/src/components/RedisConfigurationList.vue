@@ -227,6 +227,7 @@
       >
         <i18n-t
           class="message"
+          data-testid="managed-delete-confirm"
           keypath="delete.konnect_managed_delete.sure_question"
           tag="p"
         >
@@ -374,6 +375,8 @@ const fetcherBaseUrl = computed<string>(() => {
 
 const linkedPluginsModalVisible = ref<boolean>(false)
 const idToBeViewedPlugins = ref<string>('')
+const { i18n: { t }, i18nT } = composables.useI18n()
+
 /**
  * loading, Error, Empty state
  */
@@ -846,17 +849,20 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
     }
   } catch (error) {
     clearPolling()
-    if (isAxiosError(error)) {
-      errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
-      emit('error', error)
-    } else {
-      errorMessage.value = { title: t('errors.general'), message: t('errors.general') }
-    }
+    applyTableFetchError(error instanceof Error ? error : new Error(String(error)))
     return { data: [], total: 0 }
   }
 }
 
-const { i18n: { t }, i18nT } = composables.useI18n()
+const applyTableFetchError = (error: Error): void => {
+  if (isAxiosError(error)) {
+    errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
+    emit('error', error)
+  } else {
+    errorMessage.value = { title: t('errors.general'), message: t('errors.general') }
+  }
+}
+
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()
 
@@ -1182,12 +1188,7 @@ const pollManagedAddOnsState = async (): Promise<void> => {
     transitionalAddOnsExist = relevantAddOns.some((addOn) => isTransitionalManagedCacheState(addOn.state))
   } catch (error) {
     clearPolling()
-    if (isAxiosError(error)) {
-      errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
-      emit('error', error)
-    } else {
-      errorMessage.value = { title: t('errors.general'), message: t('errors.general') }
-    }
+    applyTableFetchError(error instanceof Error ? error : new Error(String(error)))
     return
   }
 
