@@ -41,7 +41,7 @@
             :key="isFullscreen ? `${tile.id}-tile` : `${tile.id}-tile-fullscreen`"
             v-model:refresh-counter="refreshCounter"
             class="tile-container"
-            :context="internalContext"
+            :context="tileContext"
             :definition="tile.meta"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
             :hide-actions="preview"
@@ -145,12 +145,7 @@ const queryReady = computed<boolean>(() => {
   return !!context.timeSpec || !configStore.loading
 })
 
-const rendererContext = computed<DashboardRendererContext>(() => ({
-  ...context,
-  editable: preview ? false : context.editable,
-}))
-
-const isEditable = computed<boolean>(() => !!rendererContext.value.editable)
+const isEditable = computed<boolean>(() => !preview && !!context.editable)
 
 const tileSortFn = (a: TileConfig, b: TileConfig) => {
   const rowDiff = a.layout.position.row - b.layout.position.row
@@ -313,9 +308,15 @@ const globalFilters = computed<AllFilters[]>(() => {
 
 const { internalContext } = composables.useDashboardInternalContext({
   globalFilters,
-  context: rendererContext,
+  context: computed(() => context),
   isFullscreen,
 })
+
+const tileContext = computed(() => ({
+  ...internalContext.value,
+  editable: preview ? false : internalContext.value.editable,
+  zoomable: preview ? false : internalContext.value.zoomable,
+}))
 
 defineExpose({
   refresh: refreshTiles,
