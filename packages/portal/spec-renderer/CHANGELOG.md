@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.3...@kong-ui-public/spec-renderer@2.6.4) (2026-03-25)
+
+
+### Bug Fixes
+
+* **deps:** bump icons ([#3054](https://github.com/Kong/public-ui-components/issues/3054)) ([77e55ac](https://github.com/Kong/public-ui-components/commit/77e55ac97c12b1b0bbab2b9c46ad78191317e807))
+
+
+
+
+
+## [2.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.2...@kong-ui-public/spec-renderer@2.6.3) (2026-03-24)
+
+
+### Bug Fixes
+
+* apply token-var-usage stylelint rule ([#2959](https://github.com/Kong/public-ui-components/issues/2959)) ([c35b1fc](https://github.com/Kong/public-ui-components/commit/c35b1fc62fb4ba839efc5bce5da0d113a8f019ff))
+
+
+
+
+
+## [2.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.1...@kong-ui-public/spec-renderer@2.6.2) (2026-03-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.47.0 ([#3032](https://github.com/Kong/public-ui-components/issues/3032)) ([8f04a91](https://github.com/Kong/public-ui-components/commit/8f04a919b363b9ed27d6b7b8b890f679fb9f604b))
+
+
+
+
+
+## [2.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.0...@kong-ui-public/spec-renderer@2.6.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+# [2.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.5.30...@kong-ui-public/spec-renderer@2.6.0) (2026-03-18)
+
+
+### Features
+
+* **entities-plugins:** jwt nodes for datakit flow editor ([#3002](https://github.com/Kong/public-ui-components/issues/3002)) ([c6d1667](https://github.com/Kong/public-ui-components/commit/c6d16674bb9a18b13629f56dc898c279be9c98b8))
+
+
+
+
+
+## [2.5.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.5.29...@kong-ui-public/spec-renderer@2.5.30) (2026-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.5.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.5.28...@kong-ui-public/spec-renderer@2.5.29) (2026-02-25)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.5.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.5.27...@kong-ui-public/spec-renderer@2.5.28) (2026-02-25)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
 ## [2.5.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.5.26...@kong-ui-public/spec-renderer@2.5.27) (2026-01-26)
 
 

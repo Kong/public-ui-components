@@ -1,17 +1,27 @@
 import SingleValue from './SingleValue.vue'
 
-const buildExploreResult = (previous: number, current: number) => ({
+const buildExploreResult = ({
+  previous = 10,
+  current = 100,
+  metricName = 'request_per_minute',
+  metricUnit = 'count/minute',
+}: {
+  previous?: number
+  current?: number
+  metricName?: string
+  metricUnit?: string
+} = {}) => ({
   data: [
     {
       timestamp: '2023-05-30T13:09:00.987Z',
       event: {
-        request_per_minute: previous,
+        [metricName]: previous,
       },
     },
     {
       timestamp: '2023-05-30T14:09:00.987Z',
       event: {
-        request_per_minute: current,
+        [metricName]: current,
       },
     },
   ],
@@ -19,9 +29,9 @@ const buildExploreResult = (previous: number, current: number) => ({
     start: '2023-05-30T13:09:00.987Z',
     end: '2023-05-30T19:09:00.987Z',
     query_id: 'trend-test',
-    metric_names: ['request_per_minute'],
+    metric_names: [metricName],
     metric_units: {
-      request_per_minute: 'count/minute',
+      [metricName]: metricUnit,
     },
     granularity_ms: 3600000,
     truncated: false,
@@ -31,7 +41,7 @@ const buildExploreResult = (previous: number, current: number) => ({
 
 describe('<SingleValue />', () => {
   it('renders the value from the first bucket when trend is disabled', () => {
-    const exploreResult = buildExploreResult(100, 250)
+    const exploreResult = buildExploreResult({ previous: 100, current: 250 })
 
     cy.mount(SingleValue, {
       props: {
@@ -52,7 +62,7 @@ describe('<SingleValue />', () => {
   })
 
   it('uses the second bucket as the current value and shows trend when trend is enabled', () => {
-    const exploreResult = buildExploreResult(100, 250)
+    const exploreResult = buildExploreResult({ previous: 100, current: 250 })
 
     cy.mount(SingleValue, {
       props: {
@@ -73,7 +83,7 @@ describe('<SingleValue />', () => {
   })
 
   it('treats a non-numeric value as empty and shows the error state', () => {
-    const exploreResult = buildExploreResult(100, 250)
+    const exploreResult = buildExploreResult({ previous: 100, current: 250 })
     // @ts-expect-error - this is intentionally invalid for the test
     exploreResult.data[0].event.request_per_minute = 'not a number'
 
@@ -88,7 +98,7 @@ describe('<SingleValue />', () => {
   })
 
   it('shows the error state when no metric name is provided', () => {
-    const exploreResult = buildExploreResult(100, 250)
+    const exploreResult = buildExploreResult({ previous: 100, current: 250 })
     exploreResult.meta.metric_names = []
 
     cy.mount(SingleValue, {
@@ -102,7 +112,7 @@ describe('<SingleValue />', () => {
   })
 
   it('maps leftAlign and alignX props to container alignment class', () => {
-    const exploreResult = buildExploreResult(100, 250)
+    const exploreResult = buildExploreResult({ previous: 100, current: 250 })
 
     // leftAlign takes precedence
     cy.mount(SingleValue, {
@@ -129,7 +139,7 @@ describe('<SingleValue />', () => {
   })
 
   it('applies positive/negative classes based on increaseIsBad', () => {
-    const exploreResult = buildExploreResult(100, 250)
+    const exploreResult = buildExploreResult({ previous: 100, current: 250 })
 
     // increase is good (default)
     cy.mount(SingleValue, {
@@ -155,7 +165,7 @@ describe('<SingleValue />', () => {
   })
 
   it('renders value and unit on the same horizontal line', () => {
-    const exploreResult = buildExploreResult(100, 250)
+    const exploreResult = buildExploreResult({ previous: 100, current: 250 })
 
     cy.mount(SingleValue, {
       props: {
@@ -164,20 +174,63 @@ describe('<SingleValue />', () => {
       },
     })
 
+    const getBaseline = (el: HTMLElement) => {
+      const range = document.createRange()
+      range.selectNodeContents(el)
+      const rects = range.getClientRects()
+      return rects[rects.length - 1].bottom
+    }
+
     // Verify value and unit appear horizontally, not stacked vertically
     cy.get('.single-value').then($value => {
       cy.get('.single-value-unit').then($unit => {
         const valueRect = $value[0].getBoundingClientRect()
         const unitRect = $unit[0].getBoundingClientRect()
 
-        // With baseline alignment, bottoms should be identical
-        expect(Math.abs(valueRect.bottom - unitRect.bottom)).to.equal(1)
+        const valueBaseline = getBaseline($value[0])
+        const unitBaseline = getBaseline($unit[0])
 
         // Unit should start after the value horizontally, not below it
         expect(unitRect.left).to.be.greaterThan(valueRect.left)
+
+        // Baselines of selections are sometimes as different as 3 pixels. This
+        // doesn't mean the text isn't aligned, it just means there are rendering
+        // differences depending on the relative font sizes and glyphs used.
+        expect(Math.abs(valueBaseline - unitBaseline)).to.be.lessThan(3)
       })
     })
   })
+
+  it('renders expected unit for request_per_minute', () => {
+    const exploreResult = buildExploreResult({ metricName: 'request_per_minute', metricUnit: 'count/minute' })
+    cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
+    cy.get('.single-value-unit').should('have.html', ' &nbsp;rpm')
+  })
+
+  it('renders expected unit for _latency_ measures', () => {
+    const exploreResult = buildExploreResult({ metricName: 'response_latency_avg', metricUnit: 'ms' })
+    cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
+    cy.get('.single-value-unit').should('have.html', ' &nbsp;ms')
+  })
+
+  it('renders expected unit for error_rate measure', () => {
+    const exploreResult = buildExploreResult({ metricName: 'error_rate', metricUnit: '%' })
+    cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
+    cy.get('.single-value-unit').should('have.html', ' &nbsp;%')
+  })
+
+  it('renders no unit when backend returns unexpected result', () => {
+    const exploreResult = buildExploreResult({ metricName: 'error_rate', metricUnit: 'percent' })
+    cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
+    cy.get('.single-value-unit').should('not.exist')
+  })
+
+  it('renders no unit when the unit is something unique', () => {
+    const exploreResult = buildExploreResult({ metricName: 'foo_bar_baz', metricUnit: 'foo' })
+    cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
+    cy.get('.single-value-unit').should('not.exist')
+  })
+
 
   it('renders a non-empty trend range when trend is enabled', () => {
     const exploreResultWithMeta = {

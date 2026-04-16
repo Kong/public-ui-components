@@ -3,6 +3,127 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.0...@kong-ui-public/analytics-utilities@12.13.1) (2026-04-10)
+
+
+### Bug Fixes
+
+* update dashboard schema for agentic usage ([#3119](https://github.com/Kong/public-ui-components/issues/3119)) ([ea4f1d7](https://github.com/Kong/public-ui-components/commit/ea4f1d7f41a1bb9046b1ab7b1aeeeb54dde7d69a))
+
+
+
+
+
+# [12.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.5...@kong-ui-public/analytics-utilities@12.13.0) (2026-04-07)
+
+
+### Features
+
+* **analytics-utilities:** agentic datasource ([#3093](https://github.com/Kong/public-ui-components/issues/3093)) ([aff0eb7](https://github.com/Kong/public-ui-components/commit/aff0eb787668eadca85c603040fb87acd5f1a017))
+
+
+
+
+
+## [12.12.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.4...@kong-ui-public/analytics-utilities@12.12.5) (2026-03-25)
+
+
+### Bug Fixes
+
+* loosen metric dimension and filter dimension types in dashboard schema ([#3049](https://github.com/Kong/public-ui-components/issues/3049)) ([71a9cdd](https://github.com/Kong/public-ui-components/commit/71a9cdddbd9299418e4ee473e8654e88ccdaa134))
+
+
+
+
+
+## [12.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.3...@kong-ui-public/analytics-utilities@12.12.4) (2026-03-23)
+
+
+### Bug Fixes
+
+* time range and granularity values are just a string type ([#3041](https://github.com/Kong/public-ui-components/issues/3041)) ([371e16b](https://github.com/Kong/public-ui-components/commit/371e16b09821904179de053fce1ecce2a9de3aee))
+
+
+
+
+
+## [12.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.2...@kong-ui-public/analytics-utilities@12.12.3) (2026-03-23)
+
+
+### Bug Fixes
+
+* add supported dimensions to field ([#3031](https://github.com/Kong/public-ui-components/issues/3031)) ([7d0cc4c](https://github.com/Kong/public-ui-components/commit/7d0cc4c84b9d25a9dc2b8966c01bfd393649fad4))
+
+
+
+
+
+## [12.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.1...@kong-ui-public/analytics-utilities@12.12.2) (2026-03-20)
+
+
+### Bug Fixes
+
+* **analytics:** refactor mcp_usage ds to agentic_usage [MA-4890] ([#3030](https://github.com/Kong/public-ui-components/issues/3030)) ([69fc859](https://github.com/Kong/public-ui-components/commit/69fc859b61ed2fa3f08424f72ebf665ce131810f))
+
+
+
+
+
+## [12.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.12.0...@kong-ui-public/analytics-utilities@12.12.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+# [12.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.11.0...@kong-ui-public/analytics-utilities@12.12.0) (2026-03-13)
+
+
+### Features
+
+* datasource config store ([#2992](https://github.com/Kong/public-ui-components/issues/2992)) ([2db9601](https://github.com/Kong/public-ui-components/commit/2db960179ece42681cc07fc3e646e6ae04252c15))
+
+
+
+
+
+# [12.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.10.4...@kong-ui-public/analytics-utilities@12.11.0) (2026-02-10)
+
+
+### Features
+
+* **analytics:** add mcp_info to requests dimensions [MA-4790] ([#2918](https://github.com/Kong/public-ui-components/issues/2918)) ([82130f6](https://github.com/Kong/public-ui-components/commit/82130f600d1f7b4fe240b74fb7e16a41dcc819bf))
+
+
+
+
+
+## [12.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.10.3...@kong-ui-public/analytics-utilities@12.10.4) (2026-01-30)
+
+
+### Bug Fixes
+
+* error_rate should also work on ai analytics ([#2898](https://github.com/Kong/public-ui-components/issues/2898)) ([667f3d8](https://github.com/Kong/public-ui-components/commit/667f3d83941e36b227252852783863454f5874a8))
+
+
+
+
+
+## [12.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.10.2...@kong-ui-public/analytics-utilities@12.10.3) (2026-01-29)
+
+
+### Bug Fixes
+
+* **analytics:** add mcp_usage to dashboard schema [MA-4767] ([#2886](https://github.com/Kong/public-ui-components/issues/2886)) ([08aafad](https://github.com/Kong/public-ui-components/commit/08aafad97aab72c21019243e31945250f6a02c8d))
+
+
+
+
+
 ## [12.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.10.1...@kong-ui-public/analytics-utilities@12.10.2) (2026-01-26)
 
 

@@ -3,9 +3,11 @@ export * from './basic'
 export * from './advanced'
 export * from './ai'
 export * from './requests'
+export * from './platform'
 export * from './result'
 export * from './all'
 export * from './mcp'
+export * from './agentic'
 
 // To add a new datasource:
 // - Create a new file for the datasource and export it from this file.

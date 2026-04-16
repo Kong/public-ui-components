@@ -9,12 +9,15 @@ import {
   scopedService,
   scopedConsumer,
   customPluginSchema,
+  nestedArrayWithOneOfSchema,
 } from '../../fixtures/mockData'
 import schemaAiProxy from '../../fixtures/schemas/ai-proxy'
 import schemaCors from '../../fixtures/schemas/cors'
 import schemaMocking from '../../fixtures/schemas/mocking'
+import schemaRateLimiting from '../../fixtures/schemas/rate-limiting'
 import PluginForm from './PluginForm.vue'
 import { PLUGIN_METADATA } from '../definitions/metadata'
+import { EXPERIMENTAL_FREE_FORM_PROVIDER, FEATURE_FLAGS } from '../constants'
 
 const baseConfigKonnect: KonnectPluginFormConfig = {
   app: 'konnect',
@@ -212,7 +215,7 @@ describe('<PluginForm />', () => {
       cy.get('#route-id').should('be.visible')
 
       cy.getTestId('collapse-title')
-        .contains('Plugin Configuration')
+        .contains('Plugin configuration')
         .parents('.k-collapse')
         .first()
         .as('pluginFields')
@@ -283,7 +286,7 @@ describe('<PluginForm />', () => {
       cy.get('#route-id').should('be.visible')
 
       cy.getTestId('collapse-title')
-        .contains('Plugin Configuration')
+        .contains('Plugin configuration')
         .parents('.k-collapse')
         .first()
         .as('pluginFields')
@@ -394,6 +397,50 @@ describe('<PluginForm />', () => {
       cy.get('#config-discovery_uris-requires_proxy-0').should('have.attr', 'type', 'checkbox').and('be.checked')
       cy.get('#config-discovery_uris-ssl_verify-0').should('have.attr', 'type', 'checkbox').and('not.be.checked')
       cy.get('#config-discovery_uris-timeout_ms-0').should('have.attr', 'type', 'number').and('have.value', '5000')
+    })
+
+    it('should render nested array fields with one_of as select dropdowns', () => {
+      interceptKMSchema({ mockData: nestedArrayWithOneOfSchema })
+      const pluginType = 'custom'
+
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKM,
+          pluginType,
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
+        .parents('.k-collapse.nested-collapse')
+        .first()
+        .as('advancedFields')
+      cy.get('@advancedFields').findTestId('collapse-trigger-content').click()
+      cy.get('@advancedFields').findTestId('collapse-hidden-content').should('be.visible')
+
+      // Test backward compatibility: top-level array with one_of should remain as text input
+      cy.get('#config-claims_to_verify').should('have.attr', 'type', 'text')
+
+      // Test new functionality: nested array with one_of should render as array with select items
+      cy.getTestId('add-config-rules').click()
+
+      // --- method: no schema default → new items should not pre-select any value ---
+      cy.getTestId('add-config-rules-method-0').should('be.visible').click()
+      cy.get('#config-rules-method-0 .array-item').should('have.length', 1)
+      cy.get('#config-rules-method-0 .array-item').first().findTestId('select-input').should('have.value', '')
+
+      // --- allowed_methods: schema default ['GET'] → FieldArray pre-populated with 1 item ---
+      // The item already exists from the schema default, no need to click add first
+      cy.get('#config-rules-allowed_methods-0 .array-item').should('have.length', 1)
+      cy.get('#config-rules-allowed_methods-0 .array-item').first().findTestId('select-input').should('have.value', 'GET')
+
+      // Adding a second item should also pre-select 'GET'
+      cy.getTestId('add-config-rules-allowed_methods-0').click()
+      cy.get('#config-rules-allowed_methods-0 .array-item').should('have.length', 2)
+      cy.get('#config-rules-allowed_methods-0 .array-item').eq(1).findTestId('select-input').should('have.value', 'GET')
     })
 
     it('should hide scope selection when hideScopeSelection is true', () => {
@@ -940,6 +987,43 @@ describe('<PluginForm />', () => {
         })
       })
     })
+
+    describe('Condition field', () => {
+      ;[
+        {
+          description: 'should not show condition field when feature flag is disabled',
+          flagValue: false,
+          assertion: 'not.exist',
+        },
+        {
+          description: 'should show condition field when feature flag is enabled',
+          flagValue: true,
+          assertion: 'exist',
+        },
+      ].forEach(({ description, flagValue, assertion }) => {
+        it(description, () => {
+          interceptKMSchema()
+          const pluginType = 'cors'
+
+          cy.mount(PluginForm, {
+            props: {
+              config: baseConfigKM,
+              pluginType,
+            },
+            global: {
+              provide: {
+                [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: flagValue,
+              },
+            },
+            router,
+          })
+
+          cy.wait('@getPluginSchema')
+          cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+          cy.get('#condition').should(assertion)
+        })
+      })
+    })
   })
 
   describe('Konnect', () => {
@@ -1106,7 +1190,7 @@ describe('<PluginForm />', () => {
       cy.get('#route-id').should('be.visible')
 
       cy.getTestId('collapse-title')
-        .contains('Plugin Configuration')
+        .contains('Plugin configuration')
         .parents('.k-collapse')
         .first()
         .as('pluginFields')
@@ -1177,7 +1261,7 @@ describe('<PluginForm />', () => {
       cy.get('#route-id').should('be.visible')
 
       cy.getTestId('collapse-title')
-        .contains('Plugin Configuration')
+        .contains('Plugin configuration')
         .parents('.k-collapse')
         .first()
         .as('pluginFields')
@@ -1822,6 +1906,197 @@ describe('<PluginForm />', () => {
 
         cy.wait('@updatePlugin').then(() => {
           cy.get('@onUpdateSpy').should('have.been.calledOnce')
+        })
+      })
+    })
+  })
+
+  describe('Engine prop and experimental plugin mapping', () => {
+    // Create a new router instance for each test
+    let router: Router
+
+    const interceptKonnectSchema = (params?: {
+      mockData?: object
+      alias?: string
+    }) => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/schemas/core-entities/plugins/*`,
+        },
+        {
+          statusCode: 200,
+          body: params?.mockData ?? schemaRateLimiting,
+        },
+      ).as(params?.alias ?? 'getPluginSchema')
+    }
+
+    beforeEach(() => {
+      // Initialize a new router before each test
+      router = createRouter({
+        routes: [
+          { path: '/', name: 'home', component: { template: '<div>ListPage</div>' } },
+        ],
+        history: createMemoryHistory(),
+      })
+    })
+
+    it('should render VFG for experimental plugin when NOT in experimental whitelist and engine prop is not passed', () => {
+      // rate-limiting is marked as experimental in the mapping
+      const pluginType = 'rate-limiting'
+      interceptKonnectSchema()
+
+      // Mount without providing EXPERIMENTAL_FREE_FORM_PROVIDER (empty whitelist by default)
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKonnect,
+          pluginType,
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // VFG renders traditional form fields with specific selectors like #config-*, not freeform
+      // VFG uses vue-form-generator class
+      cy.get('.vue-form-generator').should('exist')
+
+      // Freeform uses data-testid="ff-*" pattern - should NOT exist when VFG is used
+      cy.get('[data-testid^="ff-"]').should('not.exist')
+    })
+
+    it('should render freeform for experimental plugin when IN experimental whitelist and engine prop is not passed', () => {
+      // rate-limiting is marked as experimental in the mapping
+      const pluginType = 'rate-limiting'
+      interceptKonnectSchema()
+
+      // Mount WITH EXPERIMENTAL_FREE_FORM_PROVIDER containing rate-limiting
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKonnect,
+          pluginType,
+        },
+        router,
+        global: {
+          provide: {
+            [EXPERIMENTAL_FREE_FORM_PROVIDER as symbol]: ['rate-limiting'],
+          },
+        },
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // Freeform renders with data-testid="ff-*" pattern
+      cy.get('[data-testid^="ff-"]').should('exist')
+    })
+
+    it('should render freeform when engine prop is set to "freeform" regardless of experimental whitelist', () => {
+      // rate-limiting is marked as experimental in the mapping
+      const pluginType = 'rate-limiting'
+      interceptKonnectSchema()
+
+      // Mount WITHOUT experimental whitelist but WITH engine='freeform'
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKonnect,
+          pluginType,
+          engine: 'freeform',
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // Freeform should be used because engine='freeform' is passed
+      cy.get('[data-testid^="ff-"]').should('exist')
+    })
+
+    it('should render VFG when engine prop is set to "vfg" even if plugin is in experimental whitelist', () => {
+      // rate-limiting is marked as experimental in the mapping
+      const pluginType = 'rate-limiting'
+      interceptKonnectSchema()
+
+      // Mount WITH experimental whitelist but WITH engine='vfg'
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKonnect,
+          pluginType,
+          engine: 'vfg',
+        },
+        router,
+        global: {
+          provide: {
+            [EXPERIMENTAL_FREE_FORM_PROVIDER as symbol]: ['rate-limiting'],
+          },
+        },
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // VFG should be used because engine='vfg' is passed
+      cy.get('.vue-form-generator').should('exist')
+
+      // Freeform should NOT exist
+      cy.get('[data-testid^="ff-"]').should('not.exist')
+    })
+
+    it('should render VFG for non-experimental plugin when engine prop is not passed', () => {
+      // cors is NOT in the free-form mapping at all
+      const pluginType = 'cors'
+      interceptKonnectSchema({ mockData: schemaCors })
+
+      cy.mount(PluginForm, {
+        props: {
+          config: baseConfigKonnect,
+          pluginType,
+        },
+        router,
+      })
+
+      cy.wait('@getPluginSchema')
+      cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+      // VFG should be used for non-freeform plugins
+      cy.get('.vue-form-generator').should('exist')
+    })
+
+    describe('Condition field', () => {
+      ;[
+        {
+          description: 'should not show condition field when feature flag is disabled',
+          flagValue: false,
+          assertion: 'not.exist',
+        },
+        {
+          description: 'should show condition field when feature flag is enabled',
+          flagValue: true,
+          assertion: 'exist',
+        },
+      ].forEach(({ description, flagValue, assertion }) => {
+        it(description, () => {
+          interceptKonnectSchema()
+          const pluginType = 'cors'
+
+          cy.mount(PluginForm, {
+            props: {
+              config: baseConfigKonnect,
+              pluginType,
+            },
+            global: {
+              provide: {
+                [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: flagValue,
+              },
+            },
+            router,
+          })
+
+          cy.wait('@getPluginSchema')
+          cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+          cy.get('#condition').should(assertion)
         })
       })
     })

@@ -73,5 +73,20 @@ describe('<VaultConfigCard/>', () => {
 
       cy.get('@onSuccess').should('have.been.calledWith', { message: 'text' })
     })
+
+    it('masks sensitive config keys in structured view', () => {
+      interceptGetVault()
+
+      cy.mount(VaultConfigCard, {
+        props: {
+          config: konnectCardConfig,
+        },
+      })
+
+      cy.wait('@getVault')
+
+      // Sensitive keys should be masked
+      cy.getTestId('api_key-plain-text').should('contain.text', '************')
+    })
   })
 })

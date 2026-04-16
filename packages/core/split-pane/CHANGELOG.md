@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.9...@kong-ui-public/split-pane@0.3.10) (2026-03-25)
+
+
+### Bug Fixes
+
+* **deps:** bump icons ([#3054](https://github.com/Kong/public-ui-components/issues/3054)) ([77e55ac](https://github.com/Kong/public-ui-components/commit/77e55ac97c12b1b0bbab2b9c46ad78191317e807))
+
+
+
+
+
+## [0.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.8...@kong-ui-public/split-pane@0.3.9) (2026-03-24)
+
+
+### Bug Fixes
+
+* apply token-var-usage stylelint rule ([#2959](https://github.com/Kong/public-ui-components/issues/2959)) ([c35b1fc](https://github.com/Kong/public-ui-components/commit/c35b1fc62fb4ba839efc5bce5da0d113a8f019ff))
+
+
+
+
+
+## [0.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.7...@kong-ui-public/split-pane@0.3.8) (2026-03-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.47.0 ([#3032](https://github.com/Kong/public-ui-components/issues/3032)) ([8f04a91](https://github.com/Kong/public-ui-components/commit/8f04a919b363b9ed27d6b7b8b890f679fb9f604b))
+
+
+
+
+
+## [0.3.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.6...@kong-ui-public/split-pane@0.3.7) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+## [0.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.5...@kong-ui-public/split-pane@0.3.6) (2026-02-04)
+
+
+### Bug Fixes
+
+* **split-pane:** adjust flex properties so right pane can moves easily ([#2903](https://github.com/Kong/public-ui-components/issues/2903)) ([4446fa9](https://github.com/Kong/public-ui-components/commit/4446fa9462a642c0b61a02fd6211806915c1342f))
+
+
+
+
+
+## [0.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.4...@kong-ui-public/split-pane@0.3.5) (2026-02-03)
+
+
+### Bug Fixes
+
+* **split-pane:** improve layout handling [KHCP-19405] ([#2900](https://github.com/Kong/public-ui-components/issues/2900)) ([48ef2a0](https://github.com/Kong/public-ui-components/commit/48ef2a0e2351ab9b7999917aa30223c58d677593))
+
+
+
+
+
 ## [0.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.3...@kong-ui-public/split-pane@0.3.4) (2026-01-26)
 
 **Note:** Version bump only for package @kong-ui-public/split-pane

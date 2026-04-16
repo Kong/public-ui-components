@@ -2,7 +2,7 @@ import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
 import { usePluginMetaData } from './usePluginMeta'
 import { useSchemas } from './useSchemas'
-import { useExperimentalFreeForms, useProvideExperimentalFreeForms } from './useExperimentalFreeForms'
+import { useExperimentalFreeForms, useProvideExperimentalFreeForms, useFreeFormResolver } from './useExperimentalFreeForms'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -12,4 +12,5 @@ export default {
   useSchemas,
   useExperimentalFreeForms,
   useProvideExperimentalFreeForms,
+  useFreeFormResolver,
 }

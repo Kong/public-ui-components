@@ -1,6 +1,5 @@
 import type { PathToDotNotation } from '@kong-ui-public/i18n'
 import { PluginGroup, PluginScope } from '@kong-ui-public/entities-plugins-metadata'
-import type { RenderRules } from '../components/free-form/shared/types'
 
 export const PluginFeaturedArray = [
   'Featured',
@@ -19,6 +18,7 @@ export const PluginGroupArray = [
   PluginGroup.LOGGING,
   PluginGroup.DEPLOYMENT,
   PluginGroup.WEBSOCKET,
+  PluginGroup.MONETIZATION,
   PluginGroup.CUSTOM_PLUGINS,
 ]
 
@@ -27,6 +27,7 @@ export const PluginGroupArraySortedAlphabetically = [
   PluginGroup.ANALYTICS_AND_MONITORING,
   PluginGroup.AUTHENTICATION,
   PluginGroup.LOGGING,
+  PluginGroup.MONETIZATION,
   PluginGroup.SECURITY,
   PluginGroup.SERVERLESS,
   PluginGroup.TRAFFIC_CONTROL,
@@ -35,19 +36,6 @@ export const PluginGroupArraySortedAlphabetically = [
   // PluginGroup.WEBSOCKET,
   PluginGroup.CUSTOM_PLUGINS,
 ]
-
-export const PLUGIN_GROUPS_COLLAPSE_STATUS = {
-  [PluginGroup.AUTHENTICATION]: false,
-  [PluginGroup.AI]: false,
-  [PluginGroup.SECURITY]: false,
-  [PluginGroup.TRAFFIC_CONTROL]: false,
-  [PluginGroup.SERVERLESS]: false,
-  [PluginGroup.ANALYTICS_AND_MONITORING]: false,
-  [PluginGroup.TRANSFORMATIONS]: false,
-  [PluginGroup.LOGGING]: false,
-  [PluginGroup.DEPLOYMENT]: false,
-  [PluginGroup.CUSTOM_PLUGINS]: false,
-}
 
 // this is the entity associated with a specific plugin, if no associated entity, then it's a global plugin meaning EntityType will be 'plugins'
 export type EntityType = 'consumers' | 'routes' | 'services' | 'consumer_groups' | 'plugins'
@@ -141,7 +129,6 @@ export type PluginMetaData<I18nMessageSource = void> = {
   useLegacyForm?: boolean // An optional field to use legacy form for the plugin. Default to false.
   fieldRules?: FieldRules
   useUIData?: boolean // An optional field that indicates if the plugin may have associated UI data. (via `?__ui_data`)
-  freeformRenderRules?: RenderRules // An optional field that indicates the free-form render rules for the plugin
 }
 
 export interface PluginType extends PluginMetaData {

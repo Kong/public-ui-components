@@ -3,6 +3,163 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.12...@kong-ui-public/documentation@1.5.13) (2026-04-15)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.11...@kong-ui-public/documentation@1.5.12) (2026-04-10)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.10...@kong-ui-public/documentation@1.5.11) (2026-04-09)
+
+
+### Bug Fixes
+
+* **deps:** upgrade mermaid ([#3114](https://github.com/Kong/public-ui-components/issues/3114)) ([34cd918](https://github.com/Kong/public-ui-components/commit/34cd918e9f706c3e6a894915a5dae12358ef030b))
+
+
+
+
+
+## [1.5.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.9...@kong-ui-public/documentation@1.5.10) (2026-04-09)
+
+
+### Bug Fixes
+
+* **deps:** upgrade kong markdown ([#3113](https://github.com/Kong/public-ui-components/issues/3113)) ([68905b2](https://github.com/Kong/public-ui-components/commit/68905b28dc9fbf2083f702a7dac9e08bb21b8deb))
+
+
+
+
+
+## [1.5.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.8...@kong-ui-public/documentation@1.5.9) (2026-04-08)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.7...@kong-ui-public/documentation@1.5.8) (2026-04-08)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.6...@kong-ui-public/documentation@1.5.7) (2026-03-31)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.5...@kong-ui-public/documentation@1.5.6) (2026-03-25)
+
+
+### Bug Fixes
+
+* **deps:** bump icons ([#3054](https://github.com/Kong/public-ui-components/issues/3054)) ([77e55ac](https://github.com/Kong/public-ui-components/commit/77e55ac97c12b1b0bbab2b9c46ad78191317e807))
+
+
+
+
+
+## [1.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.4...@kong-ui-public/documentation@1.5.5) (2026-03-24)
+
+
+### Bug Fixes
+
+* apply token-var-usage stylelint rule ([#2959](https://github.com/Kong/public-ui-components/issues/2959)) ([c35b1fc](https://github.com/Kong/public-ui-components/commit/c35b1fc62fb4ba839efc5bce5da0d113a8f019ff))
+
+
+
+
+
+## [1.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.3...@kong-ui-public/documentation@1.5.4) (2026-03-23)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.2...@kong-ui-public/documentation@1.5.3) (2026-03-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.47.0 ([#3032](https://github.com/Kong/public-ui-components/issues/3032)) ([8f04a91](https://github.com/Kong/public-ui-components/commit/8f04a919b363b9ed27d6b7b8b890f679fb9f604b))
+
+
+
+
+
+## [1.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.1...@kong-ui-public/documentation@1.5.2) (2026-03-19)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.0...@kong-ui-public/documentation@1.5.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+# [1.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.4.52...@kong-ui-public/documentation@1.5.0) (2026-03-18)
+
+
+### Features
+
+* **entities-plugins:** jwt nodes for datakit flow editor ([#3002](https://github.com/Kong/public-ui-components/issues/3002)) ([c6d1667](https://github.com/Kong/public-ui-components/commit/c6d16674bb9a18b13629f56dc898c279be9c98b8))
+
+
+
+
+
+## [1.4.52](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.4.51...@kong-ui-public/documentation@1.4.52) (2026-03-18)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.4.51](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.4.50...@kong-ui-public/documentation@1.4.51) (2026-02-12)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.4.50](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.4.49...@kong-ui-public/documentation@1.4.50) (2026-02-04)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
 ## [1.4.49](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.4.48...@kong-ui-public/documentation@1.4.49) (2026-01-26)
 
 

@@ -114,7 +114,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: [],
+    setupFiles: [path.resolve(__dirname, 'vitest.setup.ts')],
     coverage: {
       reporter: ['text', 'json', 'html'],
     },
@@ -164,7 +164,7 @@ export const getApiProxies = (pathToRoot: string = '../../../.') => {
   const regionalProxies = {}
   // Build the regional API proxies
   for (const region of availableRegions) {
-    // @ts-ignore
+    // @ts-ignore: Ignoring TS error due to dynamic property assignment
     regionalProxies[`^/${region}/kong-api`] = {
       target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, region),
       rewrite: (path: string) => path.replace(`/${region}/kong-api`, ''),

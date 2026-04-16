@@ -2,10 +2,19 @@
   <KAlert class="plugin-field-rule-alerts">
     <ul>
       <li
-        v-for="(alert, i) in formattedSimpleAlerts"
+        v-for="({ key, fields }, i) in formattedSimpleAlerts"
         :key="`simple-alert-${i}`"
       >
-        {{ alert }}
+        <i18nT :keypath="key">
+          <template #parameters>
+            <ReferableFieldItem
+              v-for="(field, idx) in fields"
+              :key="`alert-field-${field}`"
+              :field="field"
+              :is-last="idx === fields.length - 1"
+            />
+          </template>
+        </i18nT>
       </li>
 
       <li v-if="props.rules.onlyOneOfMutuallyRequired && props.rules.onlyOneOfMutuallyRequired.length > 0">
@@ -19,7 +28,12 @@
               v-for="(fields, j) in combinations"
               :key="`only-one-mutually-alert-${i}-combination-${j}`"
             >
-              {{ formatFields(fields) }}
+              <ReferableFieldItem
+                v-for="(field, idx) in fields"
+                :key="`only-one-mutually-field-${field}`"
+                :field="field"
+                :is-last="idx === fields.length - 1"
+              />
             </li>
           </ul>
         </div>
@@ -31,41 +45,35 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import composables from '../composables'
+import ReferableFieldItem from './ReferableFieldItem.vue'
 import type { FieldRules } from '../types'
 
 const props = defineProps<{
   rules: FieldRules
 }>()
 
-const { formatPluginFieldLabel } = composables.usePluginHelpers()
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t }, i18nT } = composables.useI18n()
 
-const formatFields = (fields: string[]) =>
-  fields.map((field) =>
-    field.replace(/^[cC]onfig\./, '').split('.').map((s) => formatPluginFieldLabel(s)).join('.'),
-  ).join(', ')
-
-const formatAlert = (translateKey: Parameters<typeof t>[0], fields: string[]) =>
-  t(translateKey, { parameters: formatFields(fields) })
-
-const formattedSimpleAlerts = computed<string[]>(() => {
-  const alerts = []
-
+const formattedSimpleAlerts = computed(() => {
+  const alerts: Array<{
+    key: 'plugins.form.field_rules.at_least_one_of' | 'plugins.form.field_rules.only_one_of' | 'plugins.form.field_rules.mutually_required'
+    fields: string[]
+  }> = []
   if (props.rules.atLeastOneOf) {
     for (const fields of props.rules.atLeastOneOf) {
-      alerts.push(formatAlert('plugins.form.field_rules.at_least_one_of', fields))
+      alerts.push({ key: 'plugins.form.field_rules.at_least_one_of', fields })
     }
   }
 
   if (props.rules.onlyOneOf) {
     for (const fields of props.rules.onlyOneOf) {
-      alerts.push(formatAlert('plugins.form.field_rules.only_one_of', fields))
+      alerts.push({ key: 'plugins.form.field_rules.only_one_of', fields })
     }
   }
 
   if (props.rules.mutuallyRequired) {
     for (const fields of props.rules.mutuallyRequired) {
-      alerts.push(formatAlert('plugins.form.field_rules.mutually_required', fields))
+      alerts.push({ key: 'plugins.form.field_rules.mutually_required', fields })
     }
   }
 
@@ -75,12 +83,12 @@ const formattedSimpleAlerts = computed<string[]>(() => {
 
 <style scoped lang="scss">
 .plugin-field-rule-alerts {
-  margin-bottom: $kui-space-60;
-  margin-top: $kui-space-40;
+  margin-bottom: var(--kui-space-60, $kui-space-60);
+  margin-top: var(--kui-space-40, $kui-space-40);
 
   ul {
     margin: 0;
-    padding-inline-start: $kui-space-80;
+    padding-inline-start: var(--kui-space-80, $kui-space-80);
   }
 }
 </style>

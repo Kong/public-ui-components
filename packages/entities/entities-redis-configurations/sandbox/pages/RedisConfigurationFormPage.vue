@@ -32,12 +32,16 @@ import type { AxiosError } from 'axios'
 const route = useRoute()
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
-const partialId = computed((): string => route?.params?.id as string || '')
+const partialId = computed((): string => String(route?.params?.id || ''))
 
 const konnectConfig: KonnectRedisConfigurationFormConfig = {
   app: 'konnect',
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
+  // Sandbox override for local testing: set true for managed-Redis copy, false for default copy
+  isKonnectManagedRedisEnabled: true,
+  // omit isCloudGateway to preview legacy Konnect form
+  isCloudGateway: true,
   cloudAuthAvailable: true,
 }
 

@@ -29,11 +29,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'basic-auth': {
     descriptionKey: 'plugins.meta.basic-auth.description',
     nameKey: 'plugins.meta.basic-auth.name',
-    freeformRenderRules: {
-      dependencies: {
-        'config.brute_force_protection.redis': ['config.brute_force_protection.strategy', 'redis'],
-      },
-    },
     ...PLUGIN_GROUP_AND_SCOPE_MAP['basic-auth'],
   },
   'hmac-auth': {
@@ -186,14 +181,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.rate-limiting.name',
     fieldRules: {
       atLeastOneOf: [['config.second', 'config.minute', 'config.hour', 'config.day', 'config.month', 'config.year']],
-    },
-    freeformRenderRules: {
-      bundles: [
-        ['config.policy', 'config.redis'],
-      ],
-      dependencies: {
-        'config.redis': ['config.policy', 'redis'],
-      },
     },
     ...PLUGIN_GROUP_AND_SCOPE_MAP['rate-limiting'],
   },
@@ -468,9 +455,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   opentelemetry: {
     descriptionKey: 'plugins.meta.opentelemetry.description',
     nameKey: 'plugins.meta.opentelemetry.name',
-    fieldRules: {
-      atLeastOneOf: [['config.access_logs_endpoint', 'config.traces_endpoint', 'config.logs_endpoint']],
-    },
     ...PLUGIN_GROUP_AND_SCOPE_MAP.opentelemetry,
   },
   'websocket-validator': {
@@ -689,6 +673,23 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.ai-lakera-guard.name',
     useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-lakera-guard'],
+  },
+  'ai-a2a-proxy': {
+    descriptionKey: 'plugins.meta.ai-a2a-proxy.description',
+    nameKey: 'plugins.meta.ai-a2a-proxy.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-a2a-proxy'],
+  },
+  'ai-custom-guardrail': {
+    descriptionKey: 'plugins.meta.ai-custom-guardrail.description',
+    nameKey: 'plugins.meta.ai-custom-guardrail.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-custom-guardrail'],
+  },
+  'metering-and-billing': {
+    descriptionKey: 'plugins.meta.metering-and-billing.description',
+    nameKey: 'plugins.meta.metering-and-billing.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['metering-and-billing'],
   },
 }
 

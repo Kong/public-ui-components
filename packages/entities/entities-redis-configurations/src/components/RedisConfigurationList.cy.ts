@@ -276,4 +276,359 @@ describe('<RedisConfigurationList />', () => {
       })
     })
   }
+
+  it('should show managed redis empty state description when feature flag is enabled in Konnect', () => {
+    interceptList({ app: 'Konnect', body: [] })
+    interceptLinkedPlugins({ app: 'Konnect' })
+
+    cy.mount(RedisConfigurationList, {
+      props: {
+        config: {
+          ...baseConfigKonnect,
+          isKonnectManagedRedisEnabled: true,
+          isCloudGateway: true,
+        },
+        cacheIdentifier: uuidv4(),
+      },
+    })
+
+    cy.wait('@getRedisConfigurations')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'Connect your own Redis instance or use a managed one from Konnect.')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'Redis')
+    cy.getTestId('redis-entity-empty-state').should('contain.text', 'New Redis')
+    cy.getTestId('entity-learn-more-button').should('not.exist')
+    cy.getTestId('redis-entity-empty-state').should('not.contain.text', 'Configure a Redis Configuration')
+    cy.getTestId('redis-entity-empty-state').should('not.contain.text', 'New configuration')
+  })
+
+  describe('combined list (partials + add-ons when isKonnectManagedRedisEnabled)', () => {
+    const combinedListPartials = {
+      data: [
+        { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
+        { ...partials.data[1], id: 'partial-2', name: 'konnect-managed-config', tags: ['managed'] },
+      ],
+      next: null,
+    }
+    const addOnsResponse = {
+      data: [
+        { id: 'addon-123', name: 'test cloud', config: { kind: 'managed-cache.v0', state_metadata: { cache_config_id: 'partial-2' } } },
+      ],
+    }
+
+    function interceptCombinedList() {
+      interceptList({ app: 'Konnect', body: combinedListPartials })
+      interceptLinkedPlugins({ app: 'Konnect' })
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons*',
+      }, {
+        statusCode: 200,
+        body: addOnsResponse,
+      }).as('getAddOns')
+    }
+
+    const getCombinedListConfig = (): KonnectRedisConfigurationListConfig => ({
+      ...baseConfigKonnect,
+      isKonnectManagedRedisEnabled: true,
+      isCloudGateway: true,
+    })
+
+    it('should show managed add-on name over linked partial name', () => {
+      interceptCombinedList()
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.getTestId('self-managed-config').should('be.visible')
+      cy.getTestId('test cloud').should('be.visible')
+      cy.getTestId('konnect-managed-config').should('not.exist')
+      cy.get('table').should('contain.text', 'Self-managed Redis')
+      cy.get('table').should('contain.text', 'Konnect-managed Redis')
+    })
+
+    it('should hide Edit action for konnect-managed row when isKonnectManagedRedisEnabled', () => {
+      interceptCombinedList()
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+          canEdit: () => true,
+        },
+      })
+
+      cy.getTestId('test cloud').find('[data-testid="dropdown-trigger"]').click()
+      cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-edit"]').should('not.exist')
+      cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-view"]').should('exist')
+      cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').should('exist')
+    })
+
+    it('should not allow delete for Konnect-managed row when plugins are still linked', () => {
+      interceptCombinedList()
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+
+      cy.getTestId('test cloud').find('[data-testid="dropdown-trigger"]').click()
+      cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').click()
+      cy.wait('@getLinkedPlugins')
+      cy.getTestId('remove-links-modal').find('.modal-container').should('be.visible')
+      cy.getTestId('remove-links-msg').should('be.visible')
+      cy.getTestId('remove-links-count').should('have.text', '1')
+    })
+
+    it('should allow delete confirmation for Konnect-managed row when no plugins are linked', () => {
+      interceptList({ app: 'Konnect', body: combinedListPartials })
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons*',
+      }, {
+        statusCode: 200,
+        body: addOnsResponse,
+      }).as('getAddOns')
+      cy.intercept('GET', '**/core-entities/partials/*/links*', (req) => {
+        if (req.url.includes('partial-2')) {
+          req.reply({ statusCode: 200, body: { count: 0, data: [], next: null } })
+        } else {
+          req.reply({ statusCode: 200, body: links })
+        }
+      }).as('getLinkedPlugins')
+
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+
+      cy.getTestId('test cloud').find('[data-testid="dropdown-trigger"]').click()
+      cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').click()
+      cy.wait('@getLinkedPlugins')
+      cy.getTestId('managed-delete-confirm').should('be.visible')
+      cy.getTestId('entity-delete-modal').find('.prompt-confirmation-text').should('be.visible')
+    })
+
+    it('should show Konnect-managed Redis type for placeholder rows in Type column', () => {
+      const placeholderPartials = {
+        data: [
+          { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
+        ],
+        next: null,
+      }
+
+      const addOnsResponseWithState = {
+        data: [
+          {
+            id: 'addon-123',
+            name: 'initializing cloud',
+            state: 'initializing',
+            config: { kind: 'managed-cache.v0' },
+          },
+        ],
+      }
+
+      interceptList({ app: 'Konnect', body: placeholderPartials })
+      interceptLinkedPlugins({ app: 'Konnect' })
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons*',
+      }, {
+        statusCode: 200,
+        body: addOnsResponseWithState,
+      }).as('getAddOns')
+
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+
+      cy.getTestId('initializing cloud').should('be.visible')
+      cy.get('table').should('contain.text', 'Konnect-managed Redis')
+    })
+
+    it('should show Konnect-managed Redis type when add-on is ready', () => {
+      const placeholderPartials = {
+        data: [
+          { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
+        ],
+        next: null,
+      }
+
+      const addOnsResponseReady = {
+        data: [
+          {
+            id: 'addon-456',
+            name: 'ready cloud',
+            state: 'ready',
+            config: { kind: 'managed-cache.v0' },
+          },
+        ],
+      }
+
+      interceptList({ app: 'Konnect', body: placeholderPartials })
+      interceptLinkedPlugins({ app: 'Konnect' })
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons*',
+      }, {
+        statusCode: 200,
+        body: addOnsResponseReady,
+      }).as('getAddOns')
+
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+
+      cy.getTestId('ready cloud').should('be.visible')
+      cy.get('table').should('contain.text', 'Konnect-managed Redis')
+      cy.get('table').should('not.contain.text', '(Ready)')
+    })
+
+    it('should offer View for konnect-managed rows backed only by an add-on and no Koko partial', () => {
+      const placeholderPartials = {
+        data: [
+          { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
+        ],
+        next: null,
+      }
+
+      const addOnsResponseTerminating = {
+        data: [
+          {
+            id: 'addon-unlinked',
+            name: 'unlinked-cache-row',
+            state: 'terminating',
+            config: { kind: 'managed-cache.v0', state_metadata: { cache_config_id: 'gone-partial-id' } },
+            owner: { control_plane_id: baseConfigKonnect.controlPlaneId },
+          },
+        ],
+      }
+
+      interceptList({ app: 'Konnect', body: placeholderPartials })
+      interceptLinkedPlugins({ app: 'Konnect' })
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons*',
+      }, {
+        statusCode: 200,
+        body: addOnsResponseTerminating,
+      }).as('getAddOns')
+
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+          canRetrieve: () => true,
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+
+      cy.getTestId('unlinked-cache-row').find('[data-testid="dropdown-trigger"]').click()
+      cy.getTestId('unlinked-cache-row-actions-dropdown-popover').find('[data-testid="action-entity-view"]').should('exist')
+    })
+
+    it('should resolve managed-cache row when filtering by add-on id while Koko partial fetch 404s', () => {
+      const placeholderPartials = {
+        data: [
+          { ...partials.data[0], id: 'partial-1', name: 'self-managed-config', tags: [] },
+        ],
+        next: null,
+      }
+
+      // When searching by add-on id, the list resolves the add-on first, then if present uses
+      // `config.state_metadata.cache_config_id` to fetch the Koko partial by id
+      cy.intercept(
+        'GET',
+        '**/core-entities/partials/gone-partial-id**',
+        { statusCode: 404, body: {} },
+      ).as('getPartialByCacheConfigId')
+
+      cy.intercept(
+        'GET',
+        '**/v2/cloud-gateways/add-ons/addon-123',
+        {
+          statusCode: 200,
+          body: {
+            id: 'addon-123',
+            name: 'initializing cloud',
+            state: 'initializing',
+            config: { kind: 'managed-cache.v0', state_metadata: { cache_config_id: 'gone-partial-id' } },
+            owner: { control_plane_id: baseConfigKonnect.controlPlaneId },
+          },
+        },
+      ).as('getAddOnById')
+
+      interceptList({ app: 'Konnect', body: placeholderPartials })
+      interceptLinkedPlugins({ app: 'Konnect' })
+      // The list endpoint calls `/add-ons` with query params, while the single-resource call uses `/add-ons/{id}`
+      // In the test, match those separately so one intercept doesn't accidentally catch the other request
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons?*',
+      }, {
+        statusCode: 200,
+        body: {
+          data: [
+            {
+              id: 'addon-123',
+              name: 'initializing cloud',
+              state: 'initializing',
+              config: { kind: 'managed-cache.v0' },
+              owner: { control_plane_id: baseConfigKonnect.controlPlaneId },
+            },
+          ],
+        },
+      }).as('getAddOns')
+
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: {
+            ...baseConfigKonnect,
+            isKonnectManagedRedisEnabled: true,
+            isCloudGateway: true,
+            isExactMatch: true,
+          },
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+      cy.getTestId('self-managed-config').should('be.visible')
+      cy.getTestId('initializing cloud').should('be.visible')
+
+      cy.get('.kong-ui-entity-filter-input [data-testid="search-input"]').clear()
+      cy.get('.kong-ui-entity-filter-input [data-testid="search-input"]').type('addon-123')
+
+      cy.wait('@getAddOnById')
+      cy.wait('@getPartialByCacheConfigId')
+
+      cy.getTestId('initializing cloud').should('be.visible')
+      cy.get('tr [data-testid="self-managed-config"]').should('not.exist')
+    })
+  })
 })

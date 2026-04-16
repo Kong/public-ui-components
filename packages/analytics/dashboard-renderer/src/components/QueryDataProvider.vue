@@ -5,19 +5,19 @@
     type="table"
   />
   <KEmptyState
-    v-else-if="hasError && queryError"
+    v-else-if="hasError"
     :action-button-visible="false"
     data-testid="chart-empty-state"
   >
     <template #icon>
-      <VisibilityOffIcon v-if="queryError.type === 'forbidden'" />
+      <VisibilityOffIcon v-if="queryError?.type === 'forbidden'" />
       <WarningOutlineIcon v-else />
     </template>
     <template #title>
-      <p>{{ queryError.message }}</p>
+      <p>{{ queryError?.message || i18n.t('renderer.unexpectedError') }}</p>
     </template>
     <template
-      v-if="queryError.details"
+      v-if="queryError?.details"
       #default
     >
       <p>{{ queryError.details }}</p>
@@ -68,6 +68,7 @@ const emit = defineEmits<{
   (e: 'queryComplete'): void
 }>()
 
+const { i18n } = composables.useI18n()
 const { issueQuery } = composables.useIssueQuery()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)

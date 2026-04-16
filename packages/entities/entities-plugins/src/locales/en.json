@@ -1,7 +1,7 @@
 {
   "actions": {
     "cancel": "Cancel",
-    "view_configuration": "View Configuration",
+    "view_configuration": "View configuration",
     "create": "New plugin",
     "create_custom": "Create",
     "configure": "Configure",
@@ -11,13 +11,15 @@
     "enable": "Enable",
     "enabled": "Enabled",
     "delete": "Delete",
+    "disabled": "Disabled",
     "confirm_delete": "Yes, delete",
-    "view": "View Details",
-    "configure_dynamic_ordering": "Configure Dynamic Ordering",
-    "go_to_plugins": "Go to Plugins",
+    "view": "View details",
+    "configure_dynamic_ordering": "Configure dynamic ordering",
+    "go_to_plugins": "Go to plugins",
     "save": "Save",
     "add_entity": "Add {entity}",
-    "remove_entity": "Remove {entity}"
+    "remove_entity": "Remove {entity}",
+    "loading_spinner": "Loading..."
   },
   "view_configuration": {
     "title": "Configuration",
@@ -28,12 +30,12 @@
     "deck": "decK"
   },
   "delete": {
-    "title": "Delete a Plugin",
+    "title": "Delete a plugin",
     "custom_title": "Delete {name}",
-    "custom_plugin": "Custom Plugin",
+    "custom_plugin": "Custom plugin",
     "description": "This action cannot be reversed.",
     "description_custom": "Please ensure this plugin is not in use. This action cannot be reversed.",
-    "plugin_schema_in_use_title": "Unable to Delete Custom Plugin",
+    "plugin_schema_in_use_title": "Unable to delete custom plugin",
     "plugin_schema_in_use_message": "The custom plugin schema {name} is being used in this control plane, please delete any existing instances before you delete this schema.",
     "confirmModalText1": "Are you sure you want to delete",
     "confirmModalText2": "Please ensure this plugin is not in use. This delete action cannot be reversed.",
@@ -78,17 +80,17 @@
         "new_plugin": "New plugin"
       },
       "table_headers": {
-        "applied_to": "Applied To",
+        "applied_to": "Applied to",
         "applied_to_badges": {
           "consumer": "Consumer",
           "global": "Global",
           "route": "Route",
           "service": "Service",
-          "consumer_group": "Consumer Group"
+          "consumer_group": "Consumer group"
         },
         "id": "ID",
         "name": "Name",
-        "instance_name": "Instance Name",
+        "instance_name": "Instance name",
         "ordering": "Ordering",
         "ordering_badge": {
           "dynamic": "Dynamic",
@@ -98,7 +100,7 @@
         "tags": "Tags"
       },
       "empty_state": {
-        "title": "Configure a New Plugin",
+        "title": "Configure a new plugin",
         "description": "Plugins are used to extend Kong functionality."
       },
       "empty_state_v2": {
@@ -580,26 +582,39 @@
       "ai-lakera-guard": {
         "name": "AI Lakera Guard",
         "description": "Audit and enforce safety policies on LLM requests and responses using the AI AWS Lakera plugin before they reach upstream LLMs."
+      },
+      "ai-a2a-proxy": {
+        "name": "AI A2A Proxy",
+        "description": "Securely proxy A2A Agents, with real-time RPC tracing and monitoring."
+      },
+      "ai-custom-guardrail": {
+        "name": "AI Custom Guardrail",
+        "description": "Integrate with any 3rd-party Guardrail service, with customizable enforcement modes — choose whether violations block, log, or allow traffic to proceed."
+      },
+      "metering-and-billing": {
+        "name": "Metering & Billing",
+        "description": "Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with Konnect Metering & Billing."
       }
     },
     "fields": {
       "service": "Service ID",
       "route": "Route ID",
       "consumer": "Consumer ID",
-      "consumer_group": "Consumer Group ID"
+      "consumer_group": "Consumer group ID"
     },
     "select": {
       "custom_badge_text": "This plugin is data plane node specific",
       "unavailable_tooltip": "This plugin is not available",
       "already_exists": "This plugin is already applied to this resource",
-      "misc_plugins": "Other Plugins",
+      "misc_plugins": "Other plugins",
       "show_all": "Show all",
       "view_more": "View more",
       "view_less": "View less",
       "filter": {
-        "title": "Filter Plugins",
+        "title": "Filter plugins",
         "featured": "Featured",
-        "type": "Type"
+        "type": "Type",
+        "clear": "Clear"
       },
       "list": {
         "table_headers": {
@@ -609,25 +624,25 @@
       },
       "tabs": {
         "kong": {
-          "title": "Kong Plugins",
+          "title": "Kong plugins",
           "description": "Kong plugins are bundled by default with Kong Gateway and are available across all control planes.",
-          "empty_title": "No Plugins",
+          "empty_title": "No plugins",
           "empty_description": "No plugins are available."
         },
         "custom": {
-          "title": "Custom Plugins",
+          "title": "Custom plugins",
           "description": "Custom plugins will be available in this control plane only.",
-          "disabled_tooltip": "Custom Plugins are not available with this Gateway. Create a Hybrid or Dedicated Cloud Gateway to leverage Custom Plugins.",
-          "empty_title": "No Custom Plugins",
-          "empty_description": "No custom plugins have been added to this Control Plane.",
+          "disabled_tooltip": "Custom plugins are not available with this gateway. Create a hybrid or dedicated cloud gateway to leverage custom plugins.",
+          "empty_title": "No custom plugins",
+          "empty_description": "No custom plugins have been added to this control plane.",
           "create": {
-            "name": "Custom Plugin",
+            "name": "Custom plugin",
             "description": "Upload schema file to create custom plugin"
           }
         }
       },
       "highlighted_plugins": {
-        "title": "Highlighted Plugins"
+        "title": "Highlighted plugins"
       }
     },
     "form": {
@@ -637,8 +652,8 @@
       "fields": {
         "enabled": {
           "label": "Enabled",
-          "on_text": "This plugin is Enabled",
-          "off_text": "This plugin is Disabled"
+          "on_text": "This plugin is enabled",
+          "off_text": "This plugin is disabled"
         },
         "plugin_status": {
           "label": "Plugin status",
@@ -649,6 +664,15 @@
           "label": "Name",
           "placeholder": "Enter a unique name",
           "help": "A custom name for this plugin instance to help with identifying from the list view."
+        },
+        "condition": {
+          "label": "Execution condition",
+          "placeholder": "Enter an expression",
+          "tooltip": "An expression used for conditional control over plugin execution. If the expression evaluates to true during the request flow, the plugin is executed; otherwise, it is skipped.",
+          "help": {
+            "learn": "Learn more",
+            "about": "{link} about plugin conditions."
+          }
         },
         "protocols": {
           "label": "Protocols",
@@ -665,39 +689,39 @@
       "scoping": {
         "label": "Scoped",
         "placeholder": "Search by name or UUID",
-        "disable_global_radio": "The plugin is set to 'Scoped' by default. To apply a plugin globally, please navigate to the global plugin list page.",
+        "disable_global_radio": "The plugin is set to 'scoped' by default. To apply a plugin globally, please navigate to the global plugin list page.",
         "global": {
           "label": "Global",
           "help": "All services, routes, and consumers"
         },
         "gateway_service": {
           "label": "Select a gateway service",
-          "help": "The Gateway Service to which this plugin configuration will apply",
-          "placeholder": "Select a Gateway Service",
-          "plural": "Gateway Services"
+          "help": "The gateway service to which this plugin configuration will apply",
+          "placeholder": "Select a gateway service",
+          "plural": "Gateway services"
         },
         "route": {
           "label": "Select a route",
-          "help": "The Route that this Plugin configuration will target",
-          "placeholder": "Select a Route",
+          "help": "The route that this plugin configuration will target",
+          "placeholder": "Select a route",
           "plural": "Routes"
         },
         "consumer": {
           "label": "Select a consumer",
-          "help": "The Consumer that this plugin configuration will target",
-          "placeholder": "Select a Consumer",
+          "help": "The consumer that this plugin configuration will target",
+          "placeholder": "Select a consumer",
           "plural": "Consumers"
         },
         "consumer_group": {
           "label": "Select a consumer group",
-          "help": "The Consumer Group that this plugin configuration will target",
-          "placeholder": "Select a Consumer Group",
-          "plural": "Consumer Groups"
+          "help": "The consumer group that this plugin configuration will target",
+          "placeholder": "Select a consumer group",
+          "plural": "Consumer groups"
         }
       },
       "grouping": {
         "plugin_configuration": {
-          "title": "Plugin Configuration",
+          "title": "Plugin configuration",
           "description": "Configuration parameters for this plugin. View advanced parameters for extended configuration.",
           "empty": "This plugin does not have required parameters."
         },
@@ -736,6 +760,39 @@
       }
     },
     "free-form": {
+      "editor_mode": {
+        "visual": "Visual editor",
+        "code": "Code editor"
+      },
+      "code-lens": {
+        "entity": {
+          "service": "Service",
+          "route": "Route",
+          "consumer": "Consumer",
+          "consumer_group": "Consumer Group",
+          "certificate": "Certificate"
+        },
+        "field": {
+          "name": "{entity} \"{value}\"",
+          "username": "Username \"{value}\"",
+          "custom_id": "Custom ID \"{value}\"",
+          "subject": "Subject \"{value}\"",
+          "expires_after": "Expires after \"{value}\""
+        },
+        "action": {
+          "view_entity": "View {title}",
+          "copy_certificate": "Copy certificate",
+          "copy_uuid": "Copy UUID",
+          "retry_fetch": "Retry fetch (Hover for details)"
+        },
+        "unknown_error": "Unknown error"
+      },
+      "acl": {
+        "mode": {
+          "allow": "Use allow list",
+          "deny": "Use deny list"
+        }
+      },
       "ai-mcp-proxy": {
         "default_acl_item_label": "Default ACL #{index}",
         "tool_item_label": "Tool #{index}"
@@ -743,6 +800,89 @@
       "request-callout": {
         "entity_name": "Request callout",
         "by_lua_placeholder": "Enter Lua script here..."
+      },
+      "metering-and-billing": {
+        "sections": {
+          "plugin_config": {
+            "title": "Plugin configuration",
+            "description": "Configure the Metering & Billing plugin."
+          },
+          "metering": {
+            "title": "What to meter"
+          },
+          "subject": {
+            "title": "Who to bill (Subject)",
+            "description": "Define how billing subjects are identified."
+          },
+          "ingestion": {
+            "title": "Connection",
+            "description": "Configure how metered data is delivered to the billing service."
+          },
+          "queue": {
+            "title": "Queue",
+            "description": "Configure internal event queue settings."
+          }
+        },
+        "fields": {
+          "meter_api_requests": {
+            "label": "Meter API requests",
+            "description": "Emit a usage event for each API Gateway request."
+          },
+          "meter_ai_token_usage": {
+            "label": "Meter AI token usage",
+            "description": "Emit events for LLM input and output tokens on AI Gateway requests. Each request produces separate input/output events so they can be priced independently."
+          },
+          "ingest_endpoint": {
+            "description": "The URL of the metering data ingest endpoint.",
+            "help": "For Konnect Metering&Billing, use the regional endpoint from your Metering&Billing settings. For self-hosted OpenMeter, use your ingest URL."
+          },
+          "api_token": {
+            "description": "Bearer token for authenticating requests to the ingest endpoint."
+          },
+          "look_up_value_in": {
+            "label": "Look up subject in",
+            "help": "Where to find the customer identifier in the request."
+          },
+          "subject_field": {
+            "label": "Subject field name",
+            "placeholder": "e.g., x-customer-id",
+            "help": "e.g. x-customer-id, x-api-key, x-tenant"
+          },
+          "queue": {
+            "max_coalescing_delay": {
+              "label": "Max coalescing delay (s)"
+            },
+            "initial_retry_delay": {
+              "label": "Initial retry delay (s)"
+            },
+            "max_retry_delay": {
+              "label": "Max retry delay (s)"
+            },
+            "max_retry_time": {
+              "label": "Max retry time (s)"
+            }
+          },
+          "attributes": {
+            "title": "Event attributes",
+            "description": "Attach custom dimensions to metered events.",
+            "look_up_value_in": {
+              "placeholder": "e.g., x-priority-id"
+            },
+            "event_property_name": {
+              "placeholder": "e.g., priority"
+            }
+          },
+          "ssl_verify": {
+            "label": "Verify TLS certificate",
+            "description": "Disable only for local development with self-signed certificates."
+          },
+          "timeout": {
+            "label": "Request timeout (ms)"
+          },
+          "keepalive": {
+            "label": "Connection keep-alive (ms)"
+          }
+        }
       },
       "datakit": {
         "plugin_config": {
@@ -755,11 +895,16 @@
         "detected_config_format_title": "Convert configuration",
         "detected_config_format_confirm": "Convert",
         "examples": {
-          "authenticate": "Authenticate Kong to a third-party service",
-          "vault": "Authenticate to a third-party service using vault secrets",
-          "combine": "Combine multiple API responses",
-          "cache": "Conditionally fetch or store cache data",
-          "manipulate": "Manipulate request headers"
+          "authenticateThirdPartyWithDynamicUrl": "Authenticate Kong to a third-party service resolved at runtime",
+          "authenticateThirdParty": "Authenticate Kong to a third-party service",
+          "authenticateWithVaultSecret": "Authenticate to a third-party service using Vault secrets",
+          "clearHeaders": "Clear request headers",
+          "combineTwoApisIntoOneResponse": "Combine multiple API responses",
+          "conditionallyStoreCachedItems": "Conditionally fetch or store cache data",
+          "convertJsonIntoXml": "Transform JSON into XML",
+          "convertJsonToXmlAndBack": "Transform JSON into XML and back",
+          "convertXmlIntoJson": "Transform XML into JSON",
+          "manipulateRequestHeaders": "Manipulate request headers"
         },
         "flow_editor": {
           "mode": "Flow editor",
@@ -811,7 +956,14 @@
           },
           "node_panel": {
             "title": "Node types",
-            "description": "Drag a node onto the canvas to add it to your data flow."
+            "description": "Drag a node onto the canvas to add it to your data flow.",
+            "groups": {
+              "external_interaction": "External interaction",
+              "control_flow": "Control flow",
+              "data_transformation": "Data transformation",
+              "data_value": "Data value",
+              "authentication": "Authentication"
+            }
           },
           "examples": "Examples",
           "debug": {
@@ -833,49 +985,52 @@
           },
           "node_types": {
             "call": {
-              "name": "call",
               "summary": "Call a third-party API",
               "description": "Send an HTTP request and retrieve the response."
             },
             "jq": {
-              "name": "jq",
               "summary": "Transform data and cast variables with jq",
               "description": "The <code>jq</code> node executes a jq script for processing JSON. See the official <a href=\"https://jqlang.org\" target=\"_blank\">jq docs</a> for more details."
             },
             "exit": {
-              "name": "exit",
               "summary": "Return directly to the client",
               "description": "Trigger an early exit that produces a direct response, rather than forwarding a proxied response."
             },
             "property": {
-              "name": "property",
               "summary": "Get and set Kong Gateway-specific data",
               "description": "Get and set Kong Gateway host and request properties."
             },
             "static": {
-              "name": "static",
               "summary": "Configure static input values ahead of time",
               "description": "Emits static values to be used as inputs for other nodes. The <code>static</code> node can help you with hardcoding some known value for an input."
             },
             "branch": {
-              "name": "branch",
               "summary": "Execute nodes based on matching input conditions",
               "description": "Execute different nodes based on matching input conditions, such as a cache hit or miss."
             },
             "cache": {
-              "name": "cache",
               "summary": "Store and fetch cached data",
               "description": "Store data into cache and fetch cached data from cache."
             },
             "xml_to_json": {
-              "name": "xml_to_json",
               "summary": "Transform XML to JSON",
               "description": "Transform XML to JSON."
             },
             "json_to_xml": {
-              "name": "json_to_xml",
               "summary": "Transform JSON to XML",
               "description": "Transform JSON to XML."
+            },
+            "jwt_decode": {
+              "summary": "Decode JWT headers and claims",
+              "description": "Parse a JWT without verifying its signature."
+            },
+            "jwt_sign": {
+              "summary": "Create and sign JWTs",
+              "description": "Generate a signed JWT from configured claims and a signing key."
+            },
+            "jwt_verify": {
+              "summary": "Verify JWT signature and claims",
+              "description": "Verify a JWT signature and validate claims such as exp, nbf, iss, and aud."
             },
             "request": {
               "name": "request",
@@ -932,6 +1087,15 @@
             "branch": {
               "placeholder": "Select nodes"
             },
+            "jwt": {
+              "static_claims": {
+                "label": "Static claims",
+                "help": "Enter a JSON object. It will be stored as the node's static claims map.",
+                "errors": {
+                  "invalid_json_object": "Static claims must be a valid JSON object"
+                }
+              }
+            },
             "errors": {
               "invalid_identifier_format": "{fieldName} must start with a letter or underscore and contain only letters, numbers, underscores, or hyphens",
               "invalid_url_format": "Not a valid URL format",
@@ -974,11 +1138,27 @@
     }
   },
   "redis": {
-    "title": "Redis Configuration",
+    "title": "Redis configuration",
+    "managed_ui": {
+      "title": "Redis",
+      "shared_configuration": {
+        "label": "Use shared configuration",
+        "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins.",
+        "badge": "Recommended"
+      },
+      "dedicated_configuration": {
+        "label": "Use locally-scoped configuration",
+        "description": "Create and use a Redis configuration specifically for this plugin."
+      },
+      "selector": {
+        "placeholder": "Filter Redis configurations...",
+        "create_new": "New Redis"
+      }
+    },
     "shared_configuration": {
       "label": "Shared configuration",
       "description": "Select an existing shared Redis configuration or create a new one. Changes to this configuration automatically apply to all associated plugins.",
-      "title": "Shared Redis Configuration",
+      "title": "Shared Redis configuration",
       "error": "Fetching shared Redis configurations failed."
     },
     "dedicated_configuration": {
@@ -988,8 +1168,8 @@
     "config_card": {
       "common_fields": {
         "created_at_label": "Created at",
-        "updated_at_label": "Last Updated at",
-        "type_label": "Redis Type"
+        "updated_at_label": "Last updated at",
+        "type_label": "Redis type"
       }
     }
   },
@@ -998,14 +1178,14 @@
   },
   "custom_field": {
     "key_auth_identity_realms": {
-      "cp_label": "Current Control Plane",
-      "cp_group_label": "Control Plane",
-      "realm_group_label": "Realms (Can only select one)"
+      "cp_label": "Current control plane",
+      "cp_group_label": "Control plane",
+      "realm_group_label": "Realms (can only select one)"
     }
   },
   "sp": {
     "window_type": {
-      "label": "Rate Limit Window Type",
+      "label": "Rate limit window type",
       "help": "Sets the time window type to either <code>sliding</code> (default) or <code>fixed</code>.<br><ul><li>Sliding windows apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight.</li><li>Fixed windows consist of buckets that are statically assigned to a definitive time range, each request is mapped to only one fixed window based on its timestamp and will affect only that window&#39;s counters.</li></ul>",
       "options": {
         "fixed": "Fixed",
@@ -1013,7 +1193,7 @@
       }
     },
     "request_limits": {
-      "title": "Request Limits",
+      "title": "Request limits",
       "subtitle": "Set one or more limits on the number of API requests allowed within a defined timeframe.",
       "label": "Limit",
       "label_index": "Limit {index}",
@@ -1056,6 +1236,115 @@
         "hourly_500": {
           "label": "500 requests every hour",
           "description": "Each user is allowed 500 requests per hour. \nIf the limit is exceeded and the user receives a 429 error, each additional request within the sliding window (hour) \nwill extend the wait time by about 12 minutes, continuously adjusting as new requests are made."
+        }
+      }
+    }
+  },
+  "custom_plugin_form": {
+    "step1": {
+      "title": "Custom plugin type",
+      "types": {
+        "installed": {
+          "label": "Installed custom plugin",
+          "description": "Install and manage plugins with full control over deployment and runtime. Requires restarting data planes."
+        },
+        "streamed": {
+          "label": "Streamed custom plugin",
+          "description": "Deploy and update plugins on running data planes without requiring gateway access."
+        },
+        "cloned": {
+          "label": "Cloned plugin",
+          "description": "Duplicate an existing plugin to run multiple instances within a single request."
+        }
+      },
+      "compare_trigger": "Compare deployment options",
+      "compare_table": {
+        "columns": {
+          "installed": "Installed custom plugin",
+          "streamed": "Streamed custom plugin",
+          "cloned": "Cloned plugin"
+        },
+        "rows": {
+          "main_use_case": {
+            "header": "Main use case",
+            "installed": "Extend Kong functionality with custom plugins and control who can modify and roll out changes.",
+            "streamed": "Extend Kong functionality with plugins without requiring sysadmin access to data plane instances.",
+            "cloned": "Modify an existing plugin to run multiple instances with different names or priorities."
+          },
+          "file_supplied": {
+            "header": "File supplied",
+            "installed": {
+              "handler": "handler.lua",
+              "schema": "schema.lua",
+              "additional": "Any additional files or libraries needed"
+            },
+            "streamed": {
+              "handler": "handler.lua",
+              "schema": "schema.lua"
+            }
+          },
+          "how_installed": {
+            "header": "How it's installed",
+            "installed": "Install directly on the data plane",
+            "streamed": "Through gateway configuration changes",
+            "cloned": "Through gateway configuration changes"
+          },
+          "sandboxing": {
+            "header": "Sandboxing",
+            "streamed": "Follows the standard sandboxing settings. {link}",
+            "streamed_link": "Link to docs",
+            "cloned": "Inherit the same sandboxing as the original plugins"
+          },
+          "data_plane_reload": {
+            "header": "Data plane reload"
+          }
+        }
+      }
+    },
+    "step2_files": {
+      "title": "Custom plugin files",
+      "schema_file": {
+        "label": "Upload schema file",
+        "placeholder": "No file selected",
+        "button_text": "Select File",
+        "help": "Only Lua based schemas are supported by Konnect. Other plugin modules can be in any language as desired. Learn more"
+      },
+      "handler_file": {
+        "label": "Upload handler file",
+        "placeholder": "No file selected",
+        "button_text": "Select File",
+        "help": "Upload plugin handler to the data plane."
+      },
+      "plugin_modules": {
+        "label": "Plugin modules",
+        "alert": "Upload all plugin modules to the data plane: schema.lua, handler.lua"
+      }
+    },
+    "step2_clone": {
+      "title": "Clone plugin",
+      "select_plugin": {
+        "label": "Select a plugin",
+        "placeholder": "Type to search"
+      }
+    },
+    "step3": {
+      "title": "General information",
+      "description": "Enter a custom name for this custom plugin",
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter a unique name",
+        "help": "The name must be identical to the name of the plugin in the schema file."
+      },
+      "alias_name": {
+        "label": "Alias name",
+        "placeholder": "Enter a unique name"
+      },
+      "priority": {
+        "label": "Priority",
+        "tooltip": "Set the execution priority for this cloned plugin",
+        "help": {
+          "text": "Optional. Use a number or +/- to set priority relative to the original plugin. If priority isn't set, plugins run in alphabetical order. {link} in the docs.",
+          "link": "Learn more"
         }
       }
     }

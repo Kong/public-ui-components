@@ -1,11 +1,21 @@
 import { computed, onMounted, ref, watch } from 'vue'
-import { getFieldDataSources, msToGranularity } from '@kong-ui-public/analytics-utilities'
-import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
+import { msToGranularity } from '@kong-ui-public/analytics-utilities'
+import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
+import { storeToRefs } from 'pinia'
 import type { DeepReadonly, Ref } from 'vue'
-import type { AiExploreAggregations, AiExploreQuery, AllFilters, ExploreAggregations, ExploreQuery, ExploreResultV4, FilterDatasource, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AllFilters, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsBridge, TileDefinition } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContextInternal } from '../types'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
+
+const EXPLORE_DATASOURCES = [
+  'basic',
+  'api_usage',
+  'llm_usage',
+  'agentic_usage',
+  'platform',
+  undefined,
+] as const
 
 export default function useContextLinks(
   {
@@ -27,6 +37,8 @@ export default function useContextLinks(
   const exploreLinkZoomActions = ref<ExternalLink | undefined>(undefined)
 
   const analyticsConfigStore = useAnalyticsConfigStore()
+  const datasourceConfigStore = useDatasourceConfigStore()
+  const { stripUnknownFilters, loading: datasourceConfigLoading } = storeToRefs(datasourceConfigStore)
 
   onMounted(async () => {
     // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
@@ -42,31 +54,29 @@ export default function useContextLinks(
       return false
     }
 
-    // For top_n, only show if context is editable
     if (chartType === 'top_n') {
-      return context.value.editable ?? false
+      return context.value.editable || context.value.showTileActions
     }
 
     return true
   })
 
-  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && isAdvancedAnalytics.value)
-  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['basic', 'api_usage', 'llm_usage', undefined].includes(definition.value.query.datasource) && isAdvancedAnalytics.value)
+  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && definition.value.query.datasource !== 'platform' && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
+  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && EXPLORE_DATASOURCES.includes(definition.value.query.datasource as any) && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
 
   const chartDataGranularity = computed(() => {
     return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
   })
 
   const datasourceScopedFilters = computed(() => {
-    const filters = [...context.value.filters, ...definition.value.query.filters ?? []]
-
-    // TODO: default to api_usage until datasource is made required
+    const filters = [...context.value.filters, ...definition.value.query.filters ?? []] as AllFilters[]
+    const metrics = definition.value.query.metrics
     const datasource = definition.value.query?.datasource ?? 'api_usage'
 
-    return filters.filter(f => {
-      const possibleSources = getFieldDataSources(f.field)
-
-      return possibleSources.some((ds: FilterDatasource) => datasource === ds)
+    return stripUnknownFilters.value({
+      datasource,
+      filters,
+      metrics,
     })
   })
 
@@ -77,7 +87,7 @@ export default function useContextLinks(
       return ''
     }
 
-    const filters = datasourceScopedFilters.value
+    const filters = datasourceScopedFilters.value as AllFilters[]
     const timeRange = definition.value.query.time_range as TimeRangeV4 || context.value.timeSpec
     const exploreQuery = buildExploreQuery(timeRange, filters)
     return buildExploreLink(exploreQuery)
@@ -88,7 +98,7 @@ export default function useContextLinks(
       return ''
     }
 
-    const filters = datasourceScopedFilters.value
+    const filters = datasourceScopedFilters.value as AllFilters[]
 
     const requestsQuery = buildRequestsQueryKebabMenu(
       definition.value.query.time_range as TimeRangeV4 || context.value.timeSpec,
@@ -148,8 +158,10 @@ export default function useContextLinks(
       return ''
     }
 
-    // If the datasource is 'basic' or not provided, fallback to api_usage
-    const datasource = ['api_usage', 'llm_usage'].includes(definition.value.query.datasource) ? definition.value.query.datasource : 'api_usage'
+    // `basic` and unset datasources are issued through api_usage.
+    const datasource = definition.value.query.datasource && definition.value.query.datasource !== 'basic'
+      ? definition.value.query.datasource
+      : 'api_usage'
 
     return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${definition.value.chart.type}`
   }

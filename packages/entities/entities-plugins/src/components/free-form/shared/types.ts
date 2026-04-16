@@ -1,4 +1,6 @@
-import type { ComponentPublicInstance, Ref } from 'vue'
+import type { UnionFieldSchema } from '../../../types/plugins/form-schema'
+import type { Component, ComponentPublicInstance, Ref, Slot } from 'vue'
+import { type LabelAttributes } from '@kong/kongponents'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
@@ -163,5 +165,48 @@ export interface RenderRules {
 }
 
 export interface BaseFieldProps {
+  autofocus?: boolean
   name: string
+  labelAttributes?: LabelAttributes
+}
+
+export type Match = (opt: {
+  path: string
+  /**
+   * A generic path pattern that can be used for matching multiple fields,
+   * e.g. `config.callouts.0.redis` can match `config.callouts.1.redis` and `config.callouts.2.redis`.
+   */
+  genericPath: string
+  schema: UnionFieldSchema
+}) => boolean
+
+export type MatchMap = Map<Match, Slot<{ name: string }>>
+
+export type PropsOverridesFn = (props: Record<string, unknown>) => Record<string, unknown>
+
+export interface FieldRenderer {
+  match: string | Match
+  component: Component
+  propsOverrides?: Record<string, unknown> | PropsOverridesFn
+}
+
+export interface PluginFormConfig {
+  /**
+   * Whether the plugin is experimental.
+   * Experimental plugins will only be rendered when their names are included in the `EXPERIMENTAL_FREE_FORM_PROVIDER` provider.
+   */
+  experimental?: boolean
+  /**
+   * Form-level custom component.
+   * @default CommonForm
+   */
+  component: Component
+  /**
+   * Form-level rendering rules.
+   */
+  renderRules?: RenderRules
+  /**
+   * Field-level custom renderers.
+   */
+  fieldRenderers?: FieldRenderer[]
 }

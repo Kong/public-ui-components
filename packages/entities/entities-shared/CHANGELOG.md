@@ -3,6 +3,162 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.41.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.6...@kong-ui-public/entities-shared@3.41.7) (2026-04-15)
+
+
+### Bug Fixes
+
+* **redis:** cpg and member changes [khcp-20226] ([#3107](https://github.com/Kong/public-ui-components/issues/3107)) ([0880477](https://github.com/Kong/public-ui-components/commit/0880477a073fa261b1887cd40f3e19ccbbb6aba9))
+
+
+
+
+
+## [3.41.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.5...@kong-ui-public/entities-shared@3.41.6) (2026-04-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.41.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.4...@kong-ui-public/entities-shared@3.41.5) (2026-04-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.41.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.3...@kong-ui-public/entities-shared@3.41.4) (2026-04-08)
+
+
+### Bug Fixes
+
+* **redis:** config card changes for add-ons [khcp-19716] ([#3079](https://github.com/Kong/public-ui-components/issues/3079)) ([c7c93c1](https://github.com/Kong/public-ui-components/commit/c7c93c1d89835acfc35afece4679283c662e111c))
+
+
+
+
+
+## [3.41.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.2...@kong-ui-public/entities-shared@3.41.3) (2026-03-31)
+
+
+### Bug Fixes
+
+* **entities-shared:** handle multiline strings in TerraformCodeBlock ([#3063](https://github.com/Kong/public-ui-components/issues/3063)) ([7c30a24](https://github.com/Kong/public-ui-components/commit/7c30a2401d63355dc702f57f824c13b41f1b80a6))
+
+
+
+
+
+## [3.41.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.1...@kong-ui-public/entities-shared@3.41.2) (2026-03-25)
+
+
+### Bug Fixes
+
+* **deps:** bump icons ([#3054](https://github.com/Kong/public-ui-components/issues/3054)) ([77e55ac](https://github.com/Kong/public-ui-components/commit/77e55ac97c12b1b0bbab2b9c46ad78191317e807))
+
+
+
+
+
+## [3.41.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.0...@kong-ui-public/entities-shared@3.41.1) (2026-03-24)
+
+
+### Bug Fixes
+
+* apply token-var-usage stylelint rule ([#2959](https://github.com/Kong/public-ui-components/issues/2959)) ([c35b1fc](https://github.com/Kong/public-ui-components/commit/c35b1fc62fb4ba839efc5bce5da0d113a8f019ff))
+
+
+
+
+
+# [3.41.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.40.3...@kong-ui-public/entities-shared@3.41.0) (2026-03-23)
+
+
+### Features
+
+* **entities-shared:** add `TlsTrustBundle` to config card ([#3013](https://github.com/Kong/public-ui-components/issues/3013)) ([10fd417](https://github.com/Kong/public-ui-components/commit/10fd41715778f4e1990b3a8548177d7b0e0d4c88))
+
+
+
+
+
+## [3.40.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.40.2...@kong-ui-public/entities-shared@3.40.3) (2026-03-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.47.0 ([#3032](https://github.com/Kong/public-ui-components/issues/3032)) ([8f04a91](https://github.com/Kong/public-ui-components/commit/8f04a919b363b9ed27d6b7b8b890f679fb9f604b))
+
+
+
+
+
+## [3.40.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.40.1...@kong-ui-public/entities-shared@3.40.2) (2026-03-19)
+
+
+### Bug Fixes
+
+* **entities-shared:** highlight codeblock synchronously ([#3019](https://github.com/Kong/public-ui-components/issues/3019)) ([a6d65c8](https://github.com/Kong/public-ui-components/commit/a6d65c801adbe19f3e0da203d2fa9a4a1949e6ee))
+
+
+
+
+
+## [3.40.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.40.0...@kong-ui-public/entities-shared@3.40.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+# [3.40.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.12...@kong-ui-public/entities-shared@3.40.0) (2026-03-18)
+
+
+### Features
+
+* **entities-plugins:** jwt nodes for datakit flow editor ([#3002](https://github.com/Kong/public-ui-components/issues/3002)) ([c6d1667](https://github.com/Kong/public-ui-components/commit/c6d16674bb9a18b13629f56dc898c279be9c98b8))
+
+
+
+
+
+## [3.39.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.11...@kong-ui-public/entities-shared@3.39.12) (2026-03-18)
+
+
+### Bug Fixes
+
+* **entities-shared:** only apply new layout to plugin form ([#3003](https://github.com/Kong/public-ui-components/issues/3003)) ([5f88b3d](https://github.com/Kong/public-ui-components/commit/5f88b3d59b959a3c2c80ae7534d120d6d7046d6f))
+
+
+
+
+
+## [3.39.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.10...@kong-ui-public/entities-shared@3.39.11) (2026-02-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.39.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.9...@kong-ui-public/entities-shared@3.39.10) (2026-02-04)
+
+
+### Bug Fixes
+
+* **entities-shared:** add styling for form error message ([#2905](https://github.com/Kong/public-ui-components/issues/2905)) ([2ca9aba](https://github.com/Kong/public-ui-components/commit/2ca9aba0d16ce64ca194067611b39738df179359))
+
+
+
+
+
 ## [3.39.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.8...@kong-ui-public/entities-shared@3.39.9) (2026-01-26)
 
 

@@ -328,7 +328,7 @@ onBeforeMount(async () => {
   width: 100%;
 
   .invalid-certificate-message {
-    color: $kui-color-text-danger;
+    color: var(--kui-color-text-danger, $kui-color-text-danger);
     font-size: 11px;
     font-weight: 500;
     margin-top: 3px !important;

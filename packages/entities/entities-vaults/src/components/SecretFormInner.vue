@@ -35,6 +35,7 @@
         <KTextArea
           v-model.trim="state.fields.value"
           autocomplete="off"
+          :character-limit="false"
           data-testid="secret-form-value"
           :label="t('secrets.form.fields.value.label')"
           :placeholder="t('secrets.form.fields.value.placeholder')"
@@ -199,7 +200,7 @@ const submitData = async (): Promise<void> => {
 <style lang="scss" scoped>
 @media screen and (min-width: $kui-breakpoint-laptop) {
   :deep(.form-section-wrapper) {
-    column-gap: $kui-space-130;
+    column-gap: var(--kui-space-130, $kui-space-130);
   }
 }
 </style>

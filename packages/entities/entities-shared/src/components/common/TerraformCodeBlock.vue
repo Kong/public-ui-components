@@ -17,6 +17,7 @@ import { EventGatewayTypesArray, type SupportedEntityType, SupportedEntityTypesA
 import { highlightCodeBlock } from '../../utils/code-block'
 
 const SINGLE_INDENT = '  '
+const HEREDOC_DELIMITER = 'TF_MULTILINE_EOT'
 
 const props = defineProps({
   /** A record to indicate the entity's configuration, used to populate the Terraform code block */
@@ -48,12 +49,22 @@ const isIdentityEntity = computed(() => {
   return IdentityTypesArray.includes(props.entityType)
 })
 
+const buildStringLiteral = (value: string, indent: string): string => {
+  if (value.includes('\n')) {
+    const contentIndent = indent + SINGLE_INDENT
+    const indentedLines = value.split('\n').map(line => `${contentIndent}${line}`).join('\n')
+    return `<<-${HEREDOC_DELIMITER}\n${indentedLines}\n${contentIndent}${HEREDOC_DELIMITER}`
+  }
+  const escaped = value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+  return `"${escaped}"`
+}
+
 const buildBasicValString = (value: string | number | boolean, key: string): string => {
   const indent = SINGLE_INDENT
   let content = ''
 
   if (typeof value === 'string') {
-    content += `${indent}${key} = "${value}"\n`
+    content += `${indent}${key} = ${buildStringLiteral(value, indent)}\n`
   } else { // boolean or number
     content += `${indent}${key} = ${String(value !== undefined && value !== null ? value : '')}\n`
   }
@@ -101,13 +112,10 @@ const buildObjectStr = (value: Record<string, any>, key?: string, additionalInde
       valueContent = '{\n'
       valueContent += buildObjectStr(v, undefined, indent)
       valueContent += `${indent}${SINGLE_INDENT}}`
-    } else { // string, number, boolean, or null/undefined -> string
+    } else if (typeof v === 'string') {
+      valueContent = buildStringLiteral(v, indent + SINGLE_INDENT)
+    } else { // number, boolean, or null/undefined -> string
       valueContent = String(v !== undefined && v !== null ? v : '')
-    }
-
-    if (typeof v === 'string') {
-      // double quote strings
-      valueContent = `"${valueContent}"`
     }
 
     content += `${indent}${SINGLE_INDENT}${k} = ${valueContent}\n`
@@ -139,8 +147,8 @@ const buildArrayStr = (arr: any[], key?: string, additionalIndent = ''): string 
       content += buildObjectStr(item, undefined, indent)
       content += `${indent}${SINGLE_INDENT}}`
     } else if (typeof item === 'string') {
-      content += `${indent}${SINGLE_INDENT}"${item}"`
-    } else { // string, number, boolean, or null/undefined -> string
+      content += `${indent}${SINGLE_INDENT}${buildStringLiteral(item, indent + SINGLE_INDENT)}`
+    } else { // number, boolean, or null/undefined -> string
       content += `${indent}${SINGLE_INDENT}${String(item !== undefined && item !== null ? item : '')}`
     }
 

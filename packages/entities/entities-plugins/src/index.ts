@@ -1,3 +1,4 @@
+import CustomPluginForm from './components/CustomPluginForm.vue'
 import PluginForm from './components/PluginForm.vue'
 import PluginList from './components/PluginList.vue'
 import PluginSelect from './components/PluginSelect.vue'
@@ -11,6 +12,7 @@ import pluginEndpoints from './plugins-endpoints'
 const { usePluginMetaData, useProvideExperimentalFreeForms } = composables
 
 export {
+  CustomPluginForm,
   PluginForm,
   PluginList,
   PluginSelect,

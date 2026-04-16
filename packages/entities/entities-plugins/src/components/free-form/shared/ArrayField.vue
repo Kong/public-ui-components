@@ -15,9 +15,11 @@
       [`ff-array-field-${realAppearance ?? 'default'}`]: true,
       'ff-array-field-sticky-tabs': stickyTabs,
     }"
+    :data-appearance="realAppearance"
     :data-testid="`ff-array-${field.path.value}`"
   >
     <header
+      v-if="!!fieldAttrs.label && !hideLabel"
       class="ff-array-field-header"
       :data-testid="`ff-array-header-${field.path.value}`"
     >
@@ -66,18 +68,20 @@
           <div class="ff-array-field-item-content">
             <slot
               v-if="$slots.item"
-              data-autofocus
+              :autofocus="true"
               :field-name="String(index)"
               :index="index"
               name="item"
             />
             <StringArrayField
-              v-if="subSchema.type === 'array' && subSchema.elements.type === 'string'"
+              v-else-if="subSchema.type === 'array' && subSchema.elements.type === 'string'"
+              autofocus
               :help="t('plugins.free-form.tag_helper')"
               :name="String(index)"
             />
             <Field
               v-else
+              autofocus
               :name="String(index)"
             />
           </div>
@@ -132,12 +136,14 @@
           >
             <slot
               v-if="$slots.item"
+              :autofocus="true"
               :field-name="String(index)"
               :index="index"
               name="item"
             />
             <Field
               v-else
+              autofocus
               :name="String(index)"
             />
           </div>
@@ -184,6 +190,7 @@ const props = defineProps<{
   itemLabel?: string | ((item: T, index: number) => string)
   appearance?: 'default' | 'card' | 'tabs'
   stickyTabs?: boolean | string | number
+  hideLabel?: boolean
 } & BaseFieldProps>()
 
 const emit = defineEmits<{
@@ -193,10 +200,10 @@ const emit = defineEmits<{
 
 defineSlots<{
   item(props: {
+    autofocus?: boolean
     index: number
     /** for named slot, the field name use `fieldName` instead */
     fieldName: string
-    'data-autofocus'?: boolean
   }): any
   tooltip(): any
 }>()
@@ -227,7 +234,7 @@ const realAppearance = computed(() => {
     return props.appearance
   }
 
-  if (subSchema.value.type === 'record') {
+  if (subSchema.value.type === 'record' || subSchema.value.type === 'map') {
     return 'card'
   }
 
@@ -293,9 +300,30 @@ function focus(index: number) {
   }
 
   const i = Math.max(0, Math.min(index, realItems.value.length - 1))
-  root.value
-    .querySelector<HTMLElement>(`[data-index="${i}"] [data-autofocus]`)
-    ?.focus()
+  const itemRoot = root.value.querySelector<HTMLElement>(`[data-index="${i}"]`)
+  if (!itemRoot) {
+    return
+  }
+
+  const focusTarget = findFocusTarget(itemRoot)
+
+  focusTarget?.focus()
+}
+
+const FOCUSABLE_SELECTOR = 'input:not(:disabled), textarea:not(:disabled), select:not(:disabled), button:not(:disabled), [contenteditable="true"], [tabindex]:not([tabindex="-1"]):not(:disabled)'
+
+function findFocusTarget(itemRoot: HTMLElement): HTMLElement | null {
+  const autofocusTarget = itemRoot.querySelector<HTMLElement>('[data-autofocus="true"]')
+  if (!autofocusTarget) {
+    return itemRoot.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
+  }
+
+  // Custom slot content may mark either the focusable control itself or a wrapper around it.
+  if (autofocusTarget.matches(FOCUSABLE_SELECTOR)) {
+    return autofocusTarget
+  }
+
+  return autofocusTarget.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
 }
 
 const stickyTop = computed(() => {
@@ -316,7 +344,7 @@ const stickyTop = computed(() => {
 .ff-array-field {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
 
   // .k-label is required to override styles correctly in KM
   &-label.k-label {
@@ -327,67 +355,58 @@ const stickyTop = computed(() => {
   &-header {
     align-items: center;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     height: 32px;
   }
 
   &-container {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-60;
+    gap: var(--kui-space-60, $kui-space-60);
   }
 
   &-item {
     display: flex;
-    padding: $kui-space-50 $kui-space-60;
+    padding: var(--kui-space-50, $kui-space-50) var(--kui-space-60, $kui-space-60);
 
     &-content {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      gap: $kui-space-60;
+      gap: var(--kui-space-60, $kui-space-60);
     }
   }
 
   &-default > &-container > &-item {
-    align-items: center;
+    align-items: flex-start;
     flex-direction: row;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     padding: 0;
+  }
 
-    // Align delete button to top when using TagField
-    &:has(.ff-tag-field) {
-      align-items: flex-start;
-
-      .ff-array-field-item-remove {
-        margin-top: $kui-space-20;
-      }
-    }
+  &-item-remove {
+    margin-top: var(--kui-space-20, $kui-space-20);
   }
 
   &-card > &-container > &-item :deep(.card-content) {
     align-items: center;
     flex-direction: row;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
 
     // Align delete button to top when using TagField
     &:has(.ff-tag-field) {
       align-items: flex-start;
-
-      .ff-array-field-item-remove {
-        margin-top: $kui-space-20;
-      }
     }
   }
 
   &-tabs &-item {
     flex-direction: column;
-    gap: $kui-space-80;
+    gap: var(--kui-space-80, $kui-space-80);
   }
 
   &-sticky-tabs {
     :deep(.k-tabs > ul) {
-      background-color: $kui-color-background;
+      background-color: var(--kui-color-background, $kui-color-background);
       position: sticky;
       top: v-bind('stickyTop');
       z-index: 10;
@@ -407,7 +426,7 @@ const stickyTop = computed(() => {
   }
 
   &-item-card {
-    padding: $kui-space-70;
+    padding: var(--kui-space-70, $kui-space-70);
 
     .ff-array-field-item-remove-tooltip {
       align-self: flex-start;

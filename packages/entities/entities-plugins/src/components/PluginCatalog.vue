@@ -9,6 +9,15 @@
     >
       <div class="plugin-filter-title">
         {{ t('plugins.select.filter.title') }}
+        <KButton
+          appearance="tertiary"
+          class="clear-selection"
+          data-testid="clear-filter-selection"
+          :disabled="!Object.values(typeFilter).some(v => v)"
+          @click="clearTypeFilter"
+        >
+          {{ t('plugins.select.filter.clear') }}
+        </KButton>
       </div>
       <KCollapse v-model="featuredFilterCollapse">
         <template #title>
@@ -317,6 +326,11 @@ const noSearchResults = computed((): boolean => {
   return (Object.keys(pluginsList.value).length > 0 && !hasFilteredResults.value)
 })
 
+const clearTypeFilter = (): void => {
+  Object.keys(typeFilter.value).forEach(key => {
+    typeFilter.value[key] = false
+  })
+}
 
 const buildPluginList = (): PluginCardList => {
   // If availableOnServer is false, we included unavailable plugins from pluginMeta in addition to available plugins
@@ -404,7 +418,7 @@ const buildPluginList = (): PluginCardList => {
     }, {})
   // Pick highlighted plugin objects from pluginMetaData and assign to 'Featured'
   if (props.highlightedPluginIds && props.highlightedPluginIds.length > 0) {
-    list['Featured'] = props.highlightedPluginIds
+    list[PluginGroup.FEATURED] = props.highlightedPluginIds
       .flatMap(pluginId => {
         const meta = pluginMetaData[pluginId]
         if (!meta) return []
@@ -496,35 +510,38 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .plugin-catalog {
   display: flex;
-  gap: $kui-space-90;
+  gap: var(--kui-space-90, $kui-space-90);
 
   .plugin-filter {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-60;
+    gap: var(--kui-space-60, $kui-space-60);
     height: max-content;
     min-width: 280px;
     position: sticky;
     top: 24px;
 
     :deep(.k-collapse .collapse-heading .collapse-trigger .collapse-trigger-content) {
-      color: $kui-color-text-neutral-strong;
+      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
     }
 
     .plugin-filter-title {
-      color: $kui-color-text-neutral-strongest;
-      font-size: $kui-font-size-40;
-      font-weight: $kui-font-weight-bold;
-      letter-spacing: $kui-letter-spacing-minus-20;
-      line-height: $kui-line-height-40;
+      align-items: center;
+      color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
+      display: flex;
+      font-size: var(--kui-font-size-40, $kui-font-size-40);
+      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+      justify-content: space-between;
+      letter-spacing: var(--kui-letter-spacing-minus-20, $kui-letter-spacing-minus-20);
+      line-height: var(--kui-line-height-40, $kui-line-height-40);
     }
 
     .featured-title,
     .group-title {
-      color: $kui-color-text-neutral-strongest;
-      font-size: $kui-font-size-20;
-      font-weight: $kui-font-weight-semibold;
-      line-height: $kui-line-height-20;
+      color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      line-height: var(--kui-line-height-20, $kui-line-height-20);
       text-transform: uppercase;
     }
 
@@ -532,11 +549,11 @@ onMounted(async () => {
       align-items: center;
       display: flex;
       justify-content: space-between;
-      padding: $kui-space-20;
+      padding: var(--kui-space-20, $kui-space-20);
 
       :deep(.k-checkbox .checkbox-label-wrapper .checkbox-label) {
-        color: $kui-color-text-neutral-strong;
-        font-weight: $kui-font-weight-regular;
+        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+        font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
       }
     }
   }
@@ -545,24 +562,24 @@ onMounted(async () => {
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: $kui-space-60;
+    gap: var(--kui-space-60, $kui-space-60);
 
     .icon-container {
       align-items: center;
       cursor: pointer;
       display: flex;
-      height: $kui-icon-size-60;
+      height: var(--kui-icon-size-60, $kui-icon-size-60);
       justify-content: center;
-      width: $kui-icon-size-60;
+      width: var(--kui-icon-size-60, $kui-icon-size-60);
     }
 
     .plugins-filter-input-container {
       align-items: center;
       display: flex;
-      gap: $kui-space-50;
+      gap: var(--kui-space-50, $kui-space-50);
 
       .plugins-filter-icon {
-        color: $kui-color-text-neutral-strong;
+        color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
         cursor: pointer;
         height: 24px;
         width: 24px;

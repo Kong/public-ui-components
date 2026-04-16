@@ -61,6 +61,7 @@ export const vault = {
   tags: ['dev', 'test'],
   config: {
     prefix: 'dev',
+    api_key: 'foobar',
   },
 }
 

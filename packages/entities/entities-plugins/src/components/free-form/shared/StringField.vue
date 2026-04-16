@@ -17,9 +17,10 @@
         showPasswordMaskToggle: encrypted,
         type: encrypted ? 'password' : 'text',
       }"
+      :id="inputId"
       class="ff-string-field"
       :data-1p-ignore="is1pIgnore"
-      :data-autofocus="isAutoFocus"
+      :data-autofocus="autofocus ? 'true' : undefined"
       :data-testid="`ff-${field.path.value}`"
       :error="error"
       :error-message="errorMessage"
@@ -44,20 +45,44 @@
       >
         <slot name="help" />
       </template>
+
+      <!-- inline vault picker -->
+      <template
+        v-if="!multiline && inlineVaultPicker"
+        #after
+      >
+        <component
+          :is="autofillSlot"
+          v-if="autofillSlot && realShowVaultSecretPicker"
+          :schema="schema"
+          :update="handleUpdate"
+          :value="fieldValue ?? ''"
+        />
+        <KAlert
+          v-if="realShowVaultSecretPicker && !autofillSlot"
+          appearance="warning"
+          :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+          :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+        />
+      </template>
     </EnhancedInput>
-    <component
-      :is="autofillSlot"
-      v-if="autofillSlot && realShowVaultSecretPicker"
-      :schema="schema"
-      :update="handleUpdate"
-      :value="fieldValue ?? ''"
-    />
-    <KAlert
-      v-if="realShowVaultSecretPicker && !autofillSlot"
-      appearance="warning"
-      :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
-      :message="i18n.t('plugins.free-form.vault_picker.component_error')"
-    />
+
+    <!-- block vault picker -->
+    <template v-if="!inlineVaultPicker">
+      <component
+        :is="autofillSlot"
+        v-if="autofillSlot && realShowVaultSecretPicker"
+        :schema="schema"
+        :update="handleUpdate"
+        :value="fieldValue ?? ''"
+      />
+      <KAlert
+        v-if="realShowVaultSecretPicker && !autofillSlot"
+        appearance="warning"
+        :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+        :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+      />
+    </template>
   </div>
 </template>
 
@@ -69,7 +94,7 @@ import useI18n from '../../../composables/useI18n'
 import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from '../shared/utils'
-import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
+import { useField, useFieldAttrs } from './composables'
 
 import type { StringFieldSchema } from 'src/types/plugins/form-schema'
 import type { BaseFieldProps } from './types'
@@ -88,11 +113,12 @@ interface StringFieldProps extends InputProps, BaseFieldProps {
   showPasswordMaskToggle?: boolean
   type?: string
   placeholder?: string
+  inputId?: string
+  inlineVaultPicker?: boolean
 }
 
 const {
-  // Props of type boolean cannot distinguish between `undefined` and `false` in vue.
-  // so we need to show them declaring their default value as undefined
+  autofocus,
   showVaultSecretPicker = undefined,
   showPasswordMaskToggle = undefined,
   name,
@@ -138,9 +164,6 @@ const realShowVaultSecretPicker = computed(() => {
 })
 
 const schema = computed(() => ({ referenceable: realShowVaultSecretPicker.value }))
-
-const isAutoFocus = useIsAutoFocus(field.ancestors)
-
 const is1pIgnore = computed(() => {
   if (attrs['data-1p-ignore'] !== undefined) return attrs['data-1p-ignore']
   return utils.getName(name) === 'name'

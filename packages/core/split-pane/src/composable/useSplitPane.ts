@@ -93,9 +93,14 @@ export default function useSplitPane(params?: useSplitPaneParams) {
   const refreshInnerPaneSizes = (): void => {
     // If center pane showing and right pane is hidden
     if (_paneCenterRef.value && _paneRightRef.value?.style.display === 'none') {
-      // Force the width on the HTML element
+      // Force the width on the HTML element and set flex to take full space
+      _paneCenterRef.value.style.flex = '1'
       setCenterPaneWidth(100)
     } else {
+      // Reset flex when right pane is visible
+      if (_paneCenterRef.value) {
+        _paneCenterRef.value.style.flex = ''
+      }
       setCenterPaneWidth()
     }
   }

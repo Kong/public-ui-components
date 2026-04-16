@@ -3,6 +3,10 @@ import type { AbsoluteTimeRangeV4, ExploreFilterTypesV2, RequestFilterTypeEmptyV
 
 // status_code and upstream_status_code are treated as metric filters
 export const queryableRequestDimensions = [
+  'a2a_context_id',
+  'a2a_error',
+  'a2a_method',
+  'a2a_task_id',
   'api',
   'api_package',
   'api_product',
@@ -21,6 +25,10 @@ export const queryableRequestDimensions = [
   'header_host',
   'header_user_agent',
   'http_method',
+  'mcp_error',
+  'mcp_method',
+  'mcp_session_id',
+  'mcp_tool_name',
   'portal',
   'realm',
   'request_id',

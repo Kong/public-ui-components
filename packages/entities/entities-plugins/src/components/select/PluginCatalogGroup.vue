@@ -61,8 +61,8 @@ import PluginCatalogCard from './PluginCatalogCard.vue'
 import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginSchemaModal.vue'
 import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginType } from '../../types'
 import { KUI_COLOR_TEXT_DECORATIVE_PURPLE } from '@kong/design-tokens'
-import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, TrafficIcon, TransformationIcon } from '@kong/icons'
-import { GATEWAY_VERSION_TIMESTAMP_MAP } from '@kong-ui-public/entities-plugins-metadata'
+import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, TrafficIcon, TransformationIcon, MoneyIcon } from '@kong/icons'
+import { GATEWAY_VERSION_TIMESTAMP_MAP, PluginGroup } from '@kong-ui-public/entities-plugins-metadata'
 import { within16Weeks } from '../../utils/helper'
 
 const props = defineProps<{
@@ -84,27 +84,29 @@ const props = defineProps<{
 
 const groupIcon = computed(() => {
   switch (props.name) {
-    case 'Featured':
+    case PluginGroup.FEATURED:
       return PopularIcon
-    case 'AI':
+    case PluginGroup.AI:
       return BotIcon
-    case 'Analytics & Monitoring':
+    case PluginGroup.ANALYTICS_AND_MONITORING:
       return AnalyticsIcon
-    case 'Authentication':
+    case PluginGroup.AUTHENTICATION:
       return LockIcon
-    case 'Logging':
+    case PluginGroup.LOGGING:
       return ServiceDocumentIcon
-    case 'Security':
+    case PluginGroup.MONETIZATION:
+      return MoneyIcon
+    case PluginGroup.SECURITY:
       return SecurityIcon
-    case 'Serverless':
+    case PluginGroup.SERVERLESS:
       return RuntimeServerlessIcon
-    case 'Traffic Control':
+    case PluginGroup.TRAFFIC_CONTROL:
       return TrafficIcon
-    case 'Transformations':
+    case PluginGroup.TRANSFORMATIONS:
       return TransformationIcon
-    case 'Deployment':
+    case PluginGroup.DEPLOYMENT:
       return DeployIcon
-    case 'Custom Plugins':
+    case PluginGroup.CUSTOM_PLUGINS:
       return CodeblockIcon
     default:
       return null
@@ -168,17 +170,17 @@ const handleClose = (revalidate?: boolean): void => {
 .group-title {
   align-items: center;
   display: flex;
-  margin-bottom: $kui-space-70;
+  margin-bottom: var(--kui-space-70, $kui-space-70);
 
   .group-icon-wrapper {
     align-items: center;
-    background-color: $kui-color-background-decorative-purple-weakest;
-    border: $kui-border-width-10 solid #CFC8FF;
-    border-radius: $kui-border-radius-40;
+    background-color: var(--kui-color-background-decorative-purple-weakest, $kui-color-background-decorative-purple-weakest);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid #CFC8FF;
+    border-radius: var(--kui-border-radius-40, $kui-border-radius-40);
     display: flex;
     height: 36px;
     justify-content: center;
-    margin-right: $kui-space-40;
+    margin-right: var(--kui-space-40, $kui-space-40);
     width: 36px;
 
     :deep(.runtime-serverless-icon svg path) {
@@ -188,30 +190,39 @@ const handleClose = (revalidate?: boolean): void => {
   }
 
   .group-title-text {
-    color: $kui-color-text;
-    font-size: $kui-font-size-60;
-    font-weight: $kui-font-weight-bold;
+    color: var(--kui-color-text, $kui-color-text);
+    font-size: var(--kui-font-size-60, $kui-font-size-60);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
   }
 }
 
 .plugin-card-container {
   display: grid;
-  gap: $kui-space-90;
-  grid-template-columns: repeat(auto-fit, minmax(0, 335px)); // display as many cards as possible in a row, with a max width of 335px
-  justify-content: start;
+  gap: var(--kui-space-60, $kui-space-60);
+  // Mobile: single column that fills available width
+  grid-template-columns: 1fr;
 
+  // Phablet+: auto-fit with flexible card widths
+  @media (min-width: $kui-breakpoint-phablet) {
+    gap: var(--kui-space-70, $kui-space-70);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  // Laptop+: restore original fixed max-width cards
   @media (min-width: $kui-breakpoint-laptop) {
+    gap: var(--kui-space-90, $kui-space-90);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 335px));
     justify-content: flex-start;
   }
 
   .show-all-plugin-card {
     align-items: center;
-    border: 1px solid $kui-color-border;
+    border: 1px solid var(--kui-color-border, $kui-color-border);
     border-radius: 8px;
-    color: $kui-color-text-primary;
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
     cursor: pointer;
     display: flex;
-    font-weight: $kui-font-weight-semibold;
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     height: 218px;
     justify-content: center;
   }
@@ -224,12 +235,12 @@ const handleClose = (revalidate?: boolean): void => {
       rgba(0, 214, 164, 0.3)
     );
     border: 1px solid transparent;
-    border-radius: $kui-border-radius-20;
-    color: $kui-color-text;
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    color: var(--kui-color-text, $kui-color-text);
     display: flex;
-    font-weight: $kui-font-weight-medium;
-    gap: $kui-space-40;
-    padding: $kui-space-10 $kui-space-20;
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+    gap: var(--kui-space-40, $kui-space-40);
+    padding: var(--kui-space-10, $kui-space-10) var(--kui-space-20, $kui-space-20);
     position: relative;
 
     &::before {

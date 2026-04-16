@@ -30,6 +30,10 @@ import type { ConfluentConsumeSchema } from './plugins/confluent-consume'
 import type { KafkaConsumeSchema } from './plugins/kafka-consume'
 import type { SolaceConsumeSchema } from './plugins/solace-consume'
 import type { SolaceUpstreamSchema } from './plugins/solace-upstream'
+import type { OIDCSchema } from './plugins/oidc'
+import type { OTELSchema } from './plugins/otel'
+import type { KonnectApplicationAuthSchema } from './plugins/konnect-application-auth'
+import type { AIMCPOauth2Schema } from './plugins/ai-mcp-oauth2'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -49,6 +53,12 @@ export interface BasePluginFormConfig {
   isNewOtelSchema?: boolean
   /** Whether to enable the experimental renders */
   experimentalRenders?: Record<string, boolean>
+
+  viewServiceRoute?: (id: string) => RouteLocationRaw
+  viewRouteRoute?: (id: string) => RouteLocationRaw
+  viewConsumerRoute?: (id: string) => RouteLocationRaw
+  viewConsumerGroupRoute?: (id: string) => RouteLocationRaw
+  viewCertificateRoute?: (id: string) => RouteLocationRaw
 }
 
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig { }
@@ -61,7 +71,15 @@ export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, Konne
   getCustomEditRoute?: (id: string, type: CustomPluginType) => RouteLocationRaw
 }
 
-export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig { }
+export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {
+  /**
+   * FF: Konnect-managed Redis copy/grouping in plugin forms
+   * No effect unless `isCloudGateway` is true (same as Redis configuration list)
+   */
+  isKonnectManagedRedisEnabled?: boolean
+  /** When true, CP is a Cloud Gateway */
+  isCloudGateway?: boolean
+}
 
 /** Kong Manager Plugin form config */
 export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig { }
@@ -70,6 +88,7 @@ export interface PluginFormFields {
   enabled: boolean
   name?: string
   instance_name?: string
+  condition?: string | null
   protocols: string[]
   tags: string[]
   [key: string]: any
@@ -242,6 +261,10 @@ export interface CustomSchemas {
   'confluent-consume': ConfluentConsumeSchema
   'kafka-consume': KafkaConsumeSchema
   'kafka-log': CommonSchemaFields
+  'openid-connect': OIDCSchema
+  'opentelemetry': OTELSchema
+  'konnect-application-auth': KonnectApplicationAuthSchema
+  'ai-mcp-oauth2': AIMCPOauth2Schema
 }
 
 export enum PluginPartialType {

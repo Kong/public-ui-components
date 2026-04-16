@@ -3,7 +3,7 @@
     :is="wrapperComponent"
     class="kong-ui-entity-base-form"
     :class="{
-      'new-form-layout': enabledNewPluginLayout,
+      'new-form-layout': enabledNewPluginLayout && entityType === SupportedEntityType.Plugin,
     }"
   >
     <!-- Loading -->
@@ -39,6 +39,7 @@
       <KAlert
         v-if="errorMessage"
         appearance="danger"
+        class="form-error"
         data-testid="form-error"
         :message="errorMessage"
       />
@@ -142,7 +143,7 @@ import { computed, ref, onBeforeMount, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
-import { SupportedEntityTypesArray, SupportedEntityType, SupportedEntityDeckArray } from '../../types'
+import { SupportedEntityTypesArray, SupportedEntityType, isSupportedDeckEntityType } from '../../types'
 import composables from '../../composables'
 import type { Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
@@ -373,7 +374,7 @@ if (props.config.app === 'konnect' && props.entityType !== SupportedEntityType.O
 
 // decK is only available for certain entity types
 // https://developer.konghq.com/deck/reference/entities/
-const isSupportedEntity = SupportedEntityDeckArray.includes(props.entityType as any)
+const isSupportedEntity = isSupportedDeckEntityType(props.entityType)
 const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckTab
 
 if (isDeckEnabled && isSupportedEntity) {
@@ -421,31 +422,31 @@ defineExpose({
 <style lang="scss" scoped>
 .kong-ui-entity-base-form {
   box-sizing: border-box;
-  max-width: $kui-breakpoint-desktop;
+  max-width: var(--kui-breakpoint-desktop, $kui-breakpoint-desktop);
   width: 100%;
 
   & :deep(.k-slideout-title) {
-    color: $kui-color-text !important;
-    font-size: $kui-font-size-70 !important;
-    font-weight: $kui-font-weight-bold !important;
-    line-height: $kui-line-height-60 !important;
-    margin-bottom: $kui-space-60 !important;
+    color: var(--kui-color-text, $kui-color-text) !important;
+    font-size: var(--kui-font-size-70, $kui-font-size-70) !important;
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold) !important;
+    line-height: var(--kui-line-height-60, $kui-line-height-60) !important;
+    margin-bottom: var(--kui-space-60, $kui-space-60) !important;
   }
 
   & :deep(.k-card.content-card) {
-    padding: $kui-space-0 $kui-space-60 !important;
+    padding: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60) !important;
   }
 
   & :deep(.tab-item > div.tab-link.has-panels) {
-    color: $kui-color-text-neutral !important;
-    font-size: $kui-font-size-30 !important;
-    font-weight: $kui-font-weight-bold !important;
-    line-height: $kui-line-height-40 !important;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
+    font-size: var(--kui-font-size-30, $kui-font-size-30) !important;
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold) !important;
+    line-height: var(--kui-line-height-40, $kui-line-height-40) !important;
   }
 
   & :deep(.tab-item.active > div.tab-link.has-panels) {
-    color: $kui-color-text !important;
-    font-weight: $kui-font-weight-semibold !important;
+    color: var(--kui-color-text, $kui-color-text) !important;
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold) !important;
   }
 
   :deep(.slideout-content) {
@@ -456,9 +457,13 @@ defineExpose({
     border: none;
     padding: 0;
 
-    .form-actions {
+    > :deep(.card-content > form > .form-actions) {
       justify-content: flex-start;
-      margin-top: $kui-space-70;
+      margin-top: var(--kui-space-70, $kui-space-70);
+    }
+
+    .form-error {
+      margin: var(--kui-space-70, $kui-space-70) 0 0 var(--kui-space-60, $kui-space-60);
     }
   }
 }
@@ -467,12 +472,12 @@ defineExpose({
   align-items: center;
   display: flex;
   justify-content: flex-end;
-  margin-top: $kui-space-80;
+  margin-top: var(--kui-space-80, $kui-space-80);
 
   :deep(.k-button) {
     &:last-of-type,
     &:nth-last-of-type(2) {
-      margin-inline-start: $kui-space-60;
+      margin-inline-start: var(--kui-space-60, $kui-space-60);
     }
   }
 }

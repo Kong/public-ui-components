@@ -427,6 +427,10 @@ export const kmAvailablePlugins = {
         version: '3.6.0',
         priority: -1,
       },
+      'metering-and-billing': {
+        version: '3.6.0',
+        priority: 500,
+      },
     },
     disabled_on_server: {},
   },
@@ -482,6 +486,7 @@ export const kongPluginNames = [
   'ldap-auth-advanced',
   'loggly',
   'mocking',
+  'metering-and-billing',
   'mtls-auth',
   'oas-validation',
   'oauth2-introspection',
@@ -653,6 +658,114 @@ export const customPluginSchema = {
                     timeout_ms: {
                       default: 5000,
                       type: 'number',
+                    },
+                  },
+                ],
+                type: 'record',
+              },
+              type: 'array',
+            },
+          },
+        ],
+        required: true,
+        type: 'record',
+      },
+    },
+  ],
+}
+
+// custom plugin with nested array fields that have one_of constraints
+// This simulates structures like JWT plugin's rules[].method field
+export const nestedArrayWithOneOfSchema = {
+  fields: [
+    {
+      consumer: {
+        description: 'Custom type for representing a foreign key with a null value allowed.',
+        eq: null,
+        reference: 'consumers',
+        type: 'foreign',
+      },
+    },
+    {
+      protocols: {
+        default: [
+          'grpc',
+          'grpcs',
+          'http',
+          'https',
+        ],
+        description: 'A set of strings representing HTTP protocols.',
+        elements: {
+          one_of: [
+            'grpc',
+            'grpcs',
+            'http',
+            'https',
+          ],
+          type: 'string',
+        },
+        required: true,
+        type: 'set',
+      },
+    },
+    {
+      config: {
+        fields: [
+          {
+            // Top-level array with one_of to test backward compatibility
+            claims_to_verify: {
+              elements: {
+                one_of: [
+                  'exp',
+                  'nbf',
+                  'iat',
+                ],
+                type: 'string',
+              },
+              type: 'set',
+            },
+          },
+          {
+            // Nested array with one_of - should render as array with select items
+            rules: {
+              elements: {
+                fields: [
+                  {
+                    path: {
+                      type: 'string',
+                    },
+                  },
+                  {
+                    // No schema default — new items should not pre-select any value
+                    method: {
+                      elements: {
+                        one_of: [
+                          'GET',
+                          'POST',
+                          'PUT',
+                          'DELETE',
+                          'PATCH',
+                        ],
+                        type: 'string',
+                      },
+                      type: 'array',
+                    },
+                  },
+                  {
+                    // Has schema default — new items should pre-select 'GET'
+                    allowed_methods: {
+                      default: ['GET'],
+                      elements: {
+                        one_of: [
+                          'GET',
+                          'POST',
+                          'PUT',
+                          'DELETE',
+                          'PATCH',
+                        ],
+                        type: 'string',
+                      },
+                      type: 'array',
                     },
                   },
                 ],

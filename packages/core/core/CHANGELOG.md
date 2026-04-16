@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.11.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.14...@kong-ui-public/core@1.11.15) (2026-04-10)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.11.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.13...@kong-ui-public/core@1.11.14) (2026-04-08)
+
+
+### Bug Fixes
+
+* expose reload method in WIndowComposible [KHCP-20268] ([#3106](https://github.com/Kong/public-ui-components/issues/3106)) ([5f0c5e1](https://github.com/Kong/public-ui-components/commit/5f0c5e1c7126564e273d93d68f1972f456dcfc82))
+
+
+
+
+
+## [1.11.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.12...@kong-ui-public/core@1.11.13) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+## [1.11.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.11...@kong-ui-public/core@1.11.12) (2026-02-12)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
 ## [1.11.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.10...@kong-ui-public/core@1.11.11) (2026-01-26)
 
 

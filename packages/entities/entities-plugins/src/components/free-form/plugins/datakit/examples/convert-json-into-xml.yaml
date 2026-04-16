@@ -1,0 +1,12 @@
+debug: true
+nodes:
+- name: JSON_XML
+  type: json_to_xml
+  attributes_name_prefix: '-'
+  attributes_block_name: null
+  text_block_name: '#text'
+  input: request.body
+- name: EXIT
+  type: exit
+  inputs:
+    body: JSON_XML

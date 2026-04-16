@@ -268,10 +268,13 @@
             "label": "Mount"
           },
           "kv": {
-            "label": "Kv"
+            "label": "KV"
           },
           "namespace": {
             "label": "Namespace"
+          },
+          "ssl_verify": {
+            "label": "SSL Verify"
           },
           "auth_method": {
             "label": "Authentication Method"
@@ -287,6 +290,51 @@
           },
           "kube_api_token_file": {
             "label": "Kubernetes API Token File"
+          },
+          "aws_auth_role": {
+            "label": "AWS Auth Role"
+          },
+          "aws_auth_region": {
+            "label": "AWS Auth Region"
+          },
+          "aws_access_key_id": {
+            "label": "AWS Access Key ID"
+          },
+          "aws_secret_access_key": {
+            "label": "AWS Secret Access Key"
+          },
+          "aws_auth_nonce": {
+            "label": "AWS Auth Nonce"
+          },
+          "aws_login_path": {
+            "label": "AWS Login Path"
+          },
+          "azure_auth_role": {
+            "label": "Azure Auth Role"
+          },
+          "azure_login_path": {
+            "label": "Azure Login Path"
+          },
+          "gcp_auth_role": {
+            "label": "GCP Auth Role"
+          },
+          "gcp_login_path": {
+            "label": "GCP Login Path"
+          },
+          "gcp_service_account": {
+            "label": "GCP Service Account"
+          },
+          "gcp_jwt_exp": {
+            "label": "GCP JWT Exp"
+          },
+          "aws_sts_endpoint_url": {
+            "label": "AWS STS Endpoint URL"
+          },
+          "aws_assume_role_arn": {
+            "label": "AWS Assume Role ARN"
+          },
+          "aws_role_session_name": {
+            "label": "AWS Role Session Name"
           },
           "approle_auth_path": {
             "label": "App Role Auth Path"
@@ -357,24 +405,24 @@
         }
       },
       "conjur": {
-        "label": "Conjur Vault",
-        "description": "Access secrets stored in Conjur Key Vault for Kong Gateway configuration.",
+        "label": "CyberArk Secrets Manager (Conjur)",
+        "description": "Access secrets stored in CyberArk Secrets Manager (Conjur) for Kong Gateway configuration.",
         "fields": {
           "endpoint_url": {
-            "label": "Conjur Server",
-            "tooltip": "The CyberArk Conjur backend url. Accepts http or https."
+            "label": "Server",
+            "tooltip": "The CyberArk Secrets Manager (Conjur) backend url. Accepts http or https."
           },
           "login": {
             "label": "Workload Identity",
-            "tooltip": "Identity of the workload or host authenticating to Conjur. In this case Kong is the workload/host."
+            "tooltip": "Identity of the workload or host authenticating to CyberArk Secrets Manager (Conjur). In this case Kong is the workload/host."
           },
           "api_key": {
             "label": "API Key",
             "tooltip": "The API key issued to the workload."
           },
           "account": {
-            "label": "Conjur Account",
-            "tooltip": "The Conjur account for which the token will be issued. This is the identifier provided during conjur configuration."
+            "label": "Account",
+            "tooltip": "The CyberArk Secrets Manager (Conjur) account for which the token will be issued. This is the identifier provided during CyberArk Secrets Manager (Conjur) configuration."
           }
         }
       },

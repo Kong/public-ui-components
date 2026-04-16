@@ -33,14 +33,16 @@
 </template>
 
 <script setup lang="ts">
+import { FEATURE_FLAGS as ENTITIES_SHARED_FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
 import { computed, provide, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
-import { FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
 
-import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
+import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
+import { FEATURE_FLAGS } from '../../src/constants'
+
 import { ToastManager } from '@kong/kongponents'
 
+import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
 import type { GlobalAction } from '../../src/components/free-form/shared/types'
 
 const toaster = new ToastManager()
@@ -62,10 +64,33 @@ defineProps({
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefined
-provide(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => pluginFormEngine === 'free-form'))
+provide(ENTITIES_SHARED_FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => pluginFormEngine === 'freeform'))
+provide(FEATURE_FLAGS.KM_2262_CODE_MODE, true)
+provide(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, true)
+provide(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, true)
 
 useProvideExperimentalFreeForms([
   'service-protection',
+  'prometheus',
+  'metering-and-billing',
+  'aws-lambda',
+  'exit-transformer',
+  'file-log',
+  'http-log',
+  'request-transformer-advanced',
+  'response-transformer',
+  'response-transformer-advanced',
+  'correlation-id',
+  'solace-consume',
+  'solace-log',
+  'solace-upstream',
+  'opentelemetry',
+  'acl',
+  'request-transformer',
+  'upstream-oauth',
+  'cors',
+  'proxy-cache',
+  'proxy-cache-advanced',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
@@ -77,6 +102,11 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // entityType: 'services',
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   cancelRoute: { name: 'list-plugin' },
+  viewServiceRoute: (serviceId: string) => ({ name: 'view-service', params: { id: serviceId } }),
+  viewRouteRoute: (routeId: string) => ({ name: 'view-route', params: { id: routeId } }),
+  viewConsumerRoute: (consumerId: string) => ({ name: 'view-consumer', params: { id: consumerId } }),
+  viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer_group', params: { id: consumerGroupId } }),
+  viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
   experimentalRenders: {
     keyAuthIdentityRealms: true,
   },
@@ -90,6 +120,11 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   // entityType: 'consumers',
   // entityId: '123-abc-i-lover-cats',
   cancelRoute: { name: 'list-plugin' },
+  viewServiceRoute: (serviceId: string) => ({ name: 'view-service', params: { id: serviceId } }),
+  viewRouteRoute: (routeId: string) => ({ name: 'view-route', params: { id: routeId } }),
+  viewConsumerRoute: (consumerId: string) => ({ name: 'view-consumer', params: { id: consumerId } }),
+  viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer_group', params: { id: consumerGroupId } }),
+  viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
 })
 
 const onUpdate = (payload: Record<string, any>) => {

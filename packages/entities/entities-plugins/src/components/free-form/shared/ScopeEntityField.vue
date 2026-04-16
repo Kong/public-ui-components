@@ -1,0 +1,154 @@
+<template>
+  <div
+    v-show="!hide"
+    class="ff-scope-entity-field"
+    :data-testid="`ff-${field.path.value}`"
+  >
+    <KLabel
+      v-if="fieldAttrs.label"
+      v-bind="fieldAttrs.labelAttributes"
+    >
+      {{ fieldAttrs.label }}
+    </KLabel>
+
+    <FieldScopedEntitySelect
+      :id="fieldValue?.id ?? ''"
+      :allow-uuid-search="allowUuidSearch"
+      :disabled="loading"
+      :dom-id="name"
+      :entity="entity"
+      :field-disabled="disabled"
+      :fields="searchFields"
+      :label-field="labelField"
+      :placeholder="loading ? t('actions.loading_spinner') : (placeholder || fieldAttrs.placeholder)"
+      :selected-item="selectedItem"
+      :selected-item-loading="loading"
+      @change="handleChange"
+    />
+
+    <p
+      v-if="help"
+      class="ff-scope-entity-help"
+    >
+      {{ help }}
+    </p>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, toRef, computed, inject, onMounted } from 'vue'
+import { KLabel } from '@kong/kongponents'
+import {
+  FieldScopedEntitySelect,
+  FORMS_API_KEY,
+} from '@kong-ui-public/forms'
+import { useField, useFieldAttrs } from './composables'
+import type { BaseFieldProps } from './types'
+import type { SelectItem } from '@kong/kongponents'
+import type { EntityData } from '@kong-ui-public/forms'
+import useI18n from '../../../composables/useI18n'
+
+type ForeignFieldValue = { id: string } | null
+
+interface ScopeEntityFieldProps extends BaseFieldProps {
+  /** Kong entity type: 'services', 'routes', 'consumers', 'consumer_groups' */
+  entity: string
+  /** Fields to search/display, e.g. ['name', 'id'] */
+  fields?: string[]
+  /** Field to use as display label, default 'name' */
+  labelField?: string
+  label?: string
+  placeholder?: string
+  help?: string
+  disabled?: boolean
+  /** Whether the plugin is being created for a portal developer (consumer may not appear in consumers API) */
+  developer?: boolean
+}
+
+const {
+  name,
+  entity,
+  fields = ['name', 'id'],
+  labelField = 'name',
+  disabled,
+  placeholder,
+  help,
+  developer,
+  ...props
+} = defineProps<ScopeEntityFieldProps>()
+
+const { i18n: { t } } = useI18n()
+
+const { value: fieldValue, hide, ...field } = useField<ForeignFieldValue>(toRef(() => name))
+
+if (field.error) {
+  throw new Error(field.error.message)
+}
+
+const fieldAttrs = useFieldAttrs(field.path, props)
+
+const api = inject<Record<string, any>>(FORMS_API_KEY)
+
+const searchFields = computed(() => fields.filter(f => f !== 'id'))
+const allowUuidSearch = computed(() => fields.includes('id'))
+
+// --- Edit mode: fetch the currently selected entity ---
+const loading = ref(false)
+const selectedItem = ref<SelectItem<string> | undefined>()
+
+onMounted(async () => {
+  const currentId = fieldValue?.value?.id
+  if (!currentId || !api) return
+
+  loading.value = true
+  try {
+    const res = await api.getOne(entity, currentId, {
+      validateStatus: (status: number) => (status >= 200 && status < 300) || status === 404,
+    })
+    if (res.status === 404) {
+      if (developer) {
+        // Developer consumers may not appear in the consumers API; use the known ID as fallback
+        const item: SelectItem<string> = { label: currentId, value: currentId }
+        selectedItem.value = item
+        return
+      }
+      throw new Error(`Entity of type ${entity} with id ${currentId} not found`)
+    }
+    const entityData: EntityData = res.data
+    const item: SelectItem<string> = {
+      ...entityData,
+      label: entityData[labelField] ?? entityData.id,
+      value: entityData.id,
+    }
+    selectedItem.value = item
+  } catch (err) {
+    console.error('Failed to load selected entity:', err)
+    fieldValue.value = null
+  } finally {
+    loading.value = false
+  }
+})
+
+// --- Event handling ---
+function handleChange(item: SelectItem<string> | null) {
+  if (item) {
+    fieldValue!.value = { id: item.value }
+    selectedItem.value = item
+  } else {
+    fieldValue!.value = null
+    selectedItem.value = undefined
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.ff-scope-entity-field {
+  width: 100%;
+
+  .ff-scope-entity-help {
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    margin-top: var(--kui-space-20, $kui-space-20);
+  }
+}
+</style>

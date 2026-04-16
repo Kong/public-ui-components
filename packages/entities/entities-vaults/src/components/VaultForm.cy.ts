@@ -15,6 +15,8 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
   hcvAppRoleMethodAvailable: true,
   hcvCertMethodAvailable: true,
   hcvJwtMethodAvailable: true,
+  hcvCspAuthMethodsAvailable: true,
+  hcvSslVerifyAvailable: true,
 }
 
 const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
@@ -37,6 +39,8 @@ const baseConfigKM: KongManagerVaultFormConfig = {
   hcvAppRoleMethodAvailable: true,
   hcvCertMethodAvailable: true,
   hcvJwtMethodAvailable: true,
+  hcvCspAuthMethodsAvailable: true,
+  hcvSslVerifyAvailable: true,
 }
 
 const baseConfigKMTurnOffTTL: KongManagerVaultFormConfig = {
@@ -46,6 +50,168 @@ const baseConfigKMTurnOffTTL: KongManagerVaultFormConfig = {
   cancelRoute,
   azureVaultProviderAvailable: false,
   ttl: false,
+}
+
+const cspMethods = ['aws_iam', 'aws_ec2', 'azure', 'gcp_gce', 'gcp_iam'] as const
+type CspMethod = typeof cspMethods[number]
+
+const cspFields = [
+  'aws_auth_role',
+  'aws_auth_region',
+  'aws_login_path',
+  'aws_access_key_id',
+  'aws_secret_access_key',
+  'aws_sts_endpoint_url',
+  'aws_assume_role_arn',
+  'aws_role_session_name',
+  'aws_auth_nonce',
+  'azure_auth_role',
+  'azure_login_path',
+  'gcp_auth_role',
+  'gcp_login_path',
+  'gcp_service_account',
+  'gcp_jwt_exp',
+] as const
+type CspField = typeof cspFields[number]
+const cspVisibility: Array<{ method: CspMethod, visible: CspField[] }> = [
+  {
+    method: 'aws_iam',
+    visible: ['aws_auth_role', 'aws_auth_region', 'aws_login_path', 'aws_access_key_id', 'aws_secret_access_key', 'aws_sts_endpoint_url', 'aws_assume_role_arn', 'aws_role_session_name'],
+  },
+  {
+    method: 'aws_ec2',
+    visible: ['aws_auth_role', 'aws_auth_nonce', 'aws_login_path'],
+  },
+  {
+    method: 'azure',
+    visible: ['azure_auth_role', 'azure_login_path'],
+  },
+  {
+    method: 'gcp_gce',
+    visible: ['gcp_auth_role', 'gcp_login_path'],
+  },
+  {
+    method: 'gcp_iam',
+    visible: ['gcp_auth_role', 'gcp_login_path', 'gcp_service_account', 'gcp_jwt_exp'],
+  },
+]
+const cspSubmit: Array<{ method: CspMethod, fields: Array<{ field: CspField, value: string, required: boolean }> }> = [
+  {
+    method: 'aws_iam',
+    fields: [
+      { field: 'aws_auth_role', value: 'aws-role', required: true },
+      { field: 'aws_auth_region', value: 'ap-northeast-1', required: true },
+      { field: 'aws_login_path', value: 'auth/aws/login', required: false },
+      { field: 'aws_access_key_id', value: 'access-key-id', required: false },
+      { field: 'aws_secret_access_key', value: 'secret-access-key', required: false },
+      { field: 'aws_sts_endpoint_url', value: 'https://sts.internal.example.com', required: false },
+      { field: 'aws_assume_role_arn', value: 'arn:aws:iam::123456789012:role/demo', required: false },
+      { field: 'aws_role_session_name', value: 'kong-vault-session', required: false },
+    ],
+  },
+  {
+    method: 'aws_ec2',
+    fields: [
+      { field: 'aws_auth_role', value: 'aws-role', required: true },
+      { field: 'aws_auth_nonce', value: 'nonce', required: true },
+      { field: 'aws_login_path', value: 'auth/aws-ec2/login', required: false },
+    ],
+  },
+  {
+    method: 'azure',
+    fields: [
+      { field: 'azure_auth_role', value: 'azure-role', required: true },
+      { field: 'azure_login_path', value: 'auth/azure/login', required: false },
+    ],
+  },
+  {
+    method: 'gcp_gce',
+    fields: [
+      { field: 'gcp_auth_role', value: 'gcp-role', required: true },
+      { field: 'gcp_login_path', value: 'auth/gcp/login', required: false },
+    ],
+  },
+  {
+    method: 'gcp_iam',
+    fields: [
+      { field: 'gcp_auth_role', value: 'gcp-iam-role', required: true },
+      { field: 'gcp_service_account', value: 'svc@example.iam.gserviceaccount.com', required: true },
+      { field: 'gcp_jwt_exp', value: '300', required: true },
+      { field: 'gcp_login_path', value: 'auth/gcp-iam/login', required: false },
+    ],
+  },
+]
+
+const encryptedCspFields: Record<CspMethod, CspField[]> = {
+  aws_iam: ['aws_access_key_id', 'aws_secret_access_key'],
+  aws_ec2: ['aws_auth_nonce'],
+  azure: [],
+  gcp_gce: [],
+  gcp_iam: [],
+}
+
+function pickAuth(method: CspMethod): void {
+  cy.getTestId('vault-form-config-hcv-auth_method').click()
+  cy.get(`[data-testid="select-item-${method}"] button`).click()
+}
+
+function hcvFieldId(field: CspField): string {
+  return `vault-form-config-hcv-${field}`
+}
+
+function checkSubmit(enabled: boolean): void {
+  cy.getTestId('vault-create-form-submit').should(enabled ? 'be.enabled' : 'be.disabled')
+}
+
+function fillHcvField(field: CspField, value: string): void {
+  cy.getTestId(hcvFieldId(field)).clear()
+  cy.getTestId(hcvFieldId(field)).type(value)
+}
+
+function checkCspVisibility(): void {
+  cspVisibility.forEach(({ method, visible }) => {
+    pickAuth(method)
+    cy.getTestId('vault-form-config-hcv-token').should('not.exist')
+
+    const visibleSet = new Set(visible)
+    cspFields.forEach((field) => {
+      cy.getTestId(hcvFieldId(field)).should(visibleSet.has(field) ? 'be.visible' : 'not.exist')
+    })
+  })
+}
+
+function checkEncryptedFieldTypes(): void {
+  cspMethods.forEach((method) => {
+    pickAuth(method)
+
+    encryptedCspFields[method].forEach((field) => {
+      cy.getTestId(hcvFieldId(field)).should('have.attr', 'type', 'password')
+    })
+  })
+}
+
+function checkCspSubmit(): void {
+  cspSubmit.forEach(({ method, fields }) => {
+    const requiredFields = fields.filter(({ required }) => required)
+    const optionalFields = fields.filter(({ required }) => !required)
+
+    pickAuth(method)
+
+    requiredFields.forEach(({ field }) => {
+      cy.getTestId(hcvFieldId(field)).clear()
+    })
+    checkSubmit(false)
+
+    requiredFields.forEach(({ field, value }, index) => {
+      fillHcvField(field, value)
+      checkSubmit(index === requiredFields.length - 1)
+    })
+
+    optionalFields.forEach(({ field, value }) => {
+      fillHcvField(field, value)
+      checkSubmit(true)
+    })
+  })
 }
 
 describe('<VaultForm />', () => {
@@ -131,6 +297,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-mount').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kv').should('be.visible')
       cy.getTestId('vault-form-config-hcv-namespace').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-ssl_verify').should('be.visible').should('be.checked')
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
 
@@ -156,6 +323,8 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-token').should('not.exist')
       cy.getTestId('vault-form-config-hcv-oauth2_client_id').should('be.visible')
       cy.getTestId('vault-form-config-hcv-oauth2_audiences').should('be.visible')
+      checkCspVisibility()
+      checkEncryptedFieldTypes()
 
       cy.getTestId('advanced-fields-collapse').should('be.visible')
     })
@@ -212,9 +381,13 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-mount').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kv').should('be.visible')
       cy.getTestId('vault-form-config-hcv-namespace').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-ssl_verify').should('not.exist')
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
       cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
+      cspMethods.forEach((method) => {
+        cy.get(`[data-testid="select-item-${method}"]`).should('not.exist')
+      })
       cy.get('[data-testid="select-item-kubernetes"] button').click({ force: true })
       cy.getTestId('vault-form-config-hcv-token').should('not.exist')
       cy.getTestId('vault-form-config-hcv-kube_role').should('be.visible')
@@ -305,6 +478,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-jwt_role').type('name')
       cy.getTestId('vault-form-config-hcv-oauth2_token_endpoint').type('endpoint')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
+      checkCspSubmit()
 
       // disables save when required field is cleared - general
       cy.getTestId('vault-form-prefix').clear()
@@ -569,6 +743,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-mount').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kv').should('be.visible')
       cy.getTestId('vault-form-config-hcv-namespace').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-ssl_verify').should('be.visible').should('be.checked')
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
 
@@ -594,6 +769,8 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-token').should('not.exist')
       cy.getTestId('vault-form-config-hcv-oauth2_client_id').should('be.visible')
       cy.getTestId('vault-form-config-hcv-oauth2_audiences').should('be.visible')
+      checkCspVisibility()
+      checkEncryptedFieldTypes()
 
       cy.getTestId('advanced-fields-collapse').should('be.visible')
     })
@@ -656,9 +833,13 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-mount').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kv').should('be.visible')
       cy.getTestId('vault-form-config-hcv-namespace').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-ssl_verify').should('not.exist')
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
       cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
+      cspMethods.forEach((method) => {
+        cy.get(`[data-testid="select-item-${method}"]`).should('not.exist')
+      })
       cy.get('[data-testid="select-item-kubernetes"] button').click({ force: true })
       cy.getTestId('vault-form-config-hcv-token').should('not.exist')
       cy.getTestId('vault-form-config-hcv-kube_role').should('be.visible')
@@ -774,6 +955,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-jwt_role').type('name')
       cy.getTestId('vault-form-config-hcv-oauth2_token_endpoint').type('endpoint')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
+      checkCspSubmit()
 
       // disables save when required field is cleared - general
       cy.getTestId('vault-form-prefix').clear()

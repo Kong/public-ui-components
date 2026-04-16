@@ -47,6 +47,7 @@
       <PluginEntityForm
         :config="config"
         :credential="treatAsCredential"
+        :developer="developer"
         :editing="formType === EntityBaseFormType.Edit"
         :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
@@ -174,6 +175,7 @@ import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
 import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
+import { createArraySelectFieldSchema } from '../definitions/schemas/ArraySelectFieldSchema'
 import endpoints from '../plugins-endpoints'
 import {
   EntityTypeIdField,
@@ -196,6 +198,7 @@ import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
 import type { GlobalAction } from './free-form/shared/types'
 import { FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
+import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 
 type ScopedEntitiesType = 'consumer' | 'route' | 'service' | 'consumer_group'
 type Permissions = 'canRetrieve' | 'canEdit' | 'canDelete'
@@ -203,6 +206,7 @@ type ScopedEntityPermission = Partial<Record<Permissions, boolean>>
 type ScopedEntitiesPermissions = Partial<Record<ScopedEntitiesType, ScopedEntityPermission>>
 
 const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => false))
+const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -346,6 +350,7 @@ const { customSchemas, typedefs } = composables.useSchemas({
   experimentalRenders: props.config.app === 'konnect' ? props.config.experimentalRenders : undefined,
 })
 const { formatPluginFieldLabel } = composables.usePluginHelpers()
+const { shouldUseFreeForm: isFreeForm } = composables.useFreeFormResolver()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()
@@ -582,6 +587,18 @@ const defaultFormSchema: DefaultPluginsSchemaRecord = reactive({
     help: t('plugins.form.fields.instance_name.help'),
   },
   tags: typedefs.tags as DefaultPluginsFormSchema,
+  ...(
+    enableConditionField ? {
+      condition: {
+        default: '',
+        type: 'input',
+        label: t('plugins.form.fields.condition.label'),
+        inputType: 'text',
+        help: t('plugins.form.fields.condition.tooltip'),
+        placeholder: t('plugins.form.fields.condition.placeholder'),
+      },
+    } : {}
+  ),
 })
 
 // This is specifically used for credential plugins and portal developer plugins
@@ -631,7 +648,9 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
   Object.keys(schema).sort().forEach(key => {
     const scheme = schema[key]
     // If the field type is 'set', convert it to 'array'
-    if (scheme.type === 'set') {
+    // Freeform can handle 'set' type with one_of elements as multiselect
+    // Todo: create suitable component for 'set' type in freeform and remove this conversion
+    if (scheme.type === 'set' && !(isFreeForm(props.pluginType, props.engine) && scheme.elements.one_of)) {
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
@@ -805,6 +824,23 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
         const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
         inputAttributes.type = elements.type === 'string' ? 'text' : 'number'
         initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, inputAttributes, ...overrides }
+      } else if (['string', 'integer', 'number'].includes(elements.type) && elements.one_of) {
+        // Array with select items for arrays with one_of constraint
+        // Only apply to nested fields (inside records) to minimize impact on existing plugins
+        if (arrayNested) {
+          const { id, help, label, hint, values, referenceable, model } = initialFormSchema[field]
+          initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, ...createArraySelectFieldSchema(elements.one_of, scheme.default) }
+        }
+        // For non-nested fields, keep existing behavior (individual text inputs) for now
+      } else if (elements.type === 'array') { // array of string arrays (string[][])
+        const { id, help, label, hint, values, referenceable, model, elements: schemaElements } = initialFormSchema[field]
+        const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
+        initialFormSchema[field] = {
+          id, help, label, hint, values, referenceable, model,
+          elements: schemaElements, // Preserve elements so FieldArray can check the original schema structure
+          inputAttributes,
+          ...overrides,
+        }
       }
     }
 
@@ -1511,7 +1547,7 @@ onBeforeMount(async () => {
   width: 100%;
 
   .form-action-button {
-    margin-left: $kui-space-60;
+    margin-left: var(--kui-space-60, $kui-space-60);
   }
 
   .plugin-form-actions {
@@ -1519,27 +1555,27 @@ onBeforeMount(async () => {
   }
 
   & :deep(.k-slideout-title) {
-    color: $kui-color-text !important;
-    font-size: $kui-font-size-70 !important;
-    font-weight: $kui-font-weight-bold !important;
-    line-height: $kui-line-height-60 !important;
-    margin-bottom: $kui-space-60 !important;
+    color: var(--kui-color-text, $kui-color-text) !important;
+    font-size: var(--kui-font-size-70, $kui-font-size-70) !important;
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold) !important;
+    line-height: var(--kui-line-height-60, $kui-line-height-60) !important;
+    margin-bottom: var(--kui-space-60, $kui-space-60) !important;
   }
 
   & :deep(.k-card.content-card) {
-    padding: $kui-space-0 $kui-space-60 !important;
+    padding: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60) !important;
   }
 
   & :deep(.tab-item > div.tab-link.has-panels) {
-    color: $kui-color-text-neutral !important;
-    font-size: $kui-font-size-30 !important;
-    font-weight: $kui-font-weight-bold !important;
-    line-height: $kui-line-height-40 !important;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
+    font-size: var(--kui-font-size-30, $kui-font-size-30) !important;
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold) !important;
+    line-height: var(--kui-line-height-40, $kui-line-height-40) !important;
   }
 
   & :deep(.tab-item.active > div.tab-link.has-panels) {
-    color: $kui-color-text !important;
-    font-weight: $kui-font-weight-semibold !important;
+    color: var(--kui-color-text, $kui-color-text) !important;
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold) !important;
   }
 
   :deep(.slideout-content) {
@@ -1549,9 +1585,9 @@ onBeforeMount(async () => {
   &.new-form-layout {
     .plugin-form-actions {
       flex-direction: row-reverse;
-      gap: $kui-space-60;
-      padding-left: $kui-space-60;
-      padding-top: $kui-space-70;
+      gap: var(--kui-space-60, $kui-space-60);
+      padding-left: var(--kui-space-60, $kui-space-60);
+      padding-top: var(--kui-space-70, $kui-space-70);
 
       > * {
         margin: 0;

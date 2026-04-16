@@ -1,5 +1,6 @@
-import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4 } from './explore'
+import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4, McpExploreQuery, PlatformExploreQuery } from './explore'
 import type { AnalyticsConfigV2 } from './analytics-config'
+import type { DatasourceConfig } from './datasource-config'
 import type { Component } from 'vue'
 
 export interface BasicDatasourceQuery {
@@ -17,7 +18,17 @@ export interface AiDatasourceQuery {
   query: AiExploreQuery
 }
 
-export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery
+export interface McpDatasourceQuery {
+  datasource: 'agentic_usage'
+  query: McpExploreQuery
+}
+
+export interface PlatformDatasourceQuery {
+  datasource: 'platform'
+  query: PlatformExploreQuery
+}
+
+export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | McpDatasourceQuery | PlatformDatasourceQuery
 
 // All flags in this interface should be optional; defaults are as documented.
 export interface StaticConfig {
@@ -30,6 +41,9 @@ export interface AnalyticsBridge {
 
   // Determine the current org's analytics config
   configFn: () => Promise<AnalyticsConfigV2>
+
+  // Determine the current org's datasource config
+  datasourceConfigFn: () => Promise<DatasourceConfig[]>
 
   // Evaluate feature flags (if applicable)
   evaluateFeatureFlagFn: <T = boolean>(key: string, defaultValue: T) => T

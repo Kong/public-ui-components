@@ -1,0 +1,16 @@
+nodes:
+- name: HEADERS
+  type: static
+  values:
+    X-Ignored: null
+    X-Add-Me: added
+- name: API
+  type: call
+  url: https://example.com/
+  inputs:
+    headers: HEADERS
+- name: EXIT
+  type: exit
+  inputs:
+    headers: HEADERS
+  status: 200

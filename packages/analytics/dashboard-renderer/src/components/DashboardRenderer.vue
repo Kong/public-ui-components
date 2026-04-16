@@ -208,30 +208,36 @@ const isSlottable = (chart: any): chart is SlottableOptions => {
 }
 
 const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
-  const chart = isSlottable(tile.meta.chart)
-    ? { ...tile.meta.chart }
-    : {
-      ...tile.meta.chart,
-      chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
+  try {
+    const chart = isSlottable(tile.meta.chart)
+      ? { ...tile.meta.chart }
+      : {
+        ...tile.meta.chart,
+        chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
+      }
+
+    const newTile: TileConfig = {
+      id: crypto.randomUUID(),
+      type: 'chart',
+      definition: {
+        ...tile.meta,
+        chart,
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: tile.layout.size,
+      },
     }
 
-  const newTile: TileConfig = {
-    id: crypto.randomUUID(),
-    type: 'chart',
-    definition: {
-      ...tile.meta,
-      chart,
-    },
-    layout: {
-      position: {
-        col: 0,
-        row: 0,
-      },
-      size: tile.layout.size,
-    },
+    // deep cloning to avoid duplicated references
+    model.value.tiles.push(JSON.parse(JSON.stringify(newTile)))
+  } catch (e) {
+    // this shouldn't happen, but we should always wrap JSON.parse/stringify in try catch
+    console.warn(e)
   }
-
-  model.value.tiles.push(newTile)
 }
 
 const onRemoveTile = (tile: GridTile<TileDefinition>) => {
@@ -324,12 +330,12 @@ defineExpose({
     background-color: white;
 
     .fullscreen-header {
-      margin-bottom: $kui-space-60;
+      margin-bottom: var(--kui-space-60, $kui-space-60);
     }
 
     .layout {
       background-color: white;
-      padding: $kui-space-60;
+      padding: var(--kui-space-60, $kui-space-60);
       transform: v-bind(scale);
       transform-origin: top;
     }
@@ -341,14 +347,14 @@ defineExpose({
 
   .fullscreen-control {
     align-items: center;
-    background-color: $kui-color-background-decorative-purple-weakest;
+    background-color: var(--kui-color-background-decorative-purple-weakest, $kui-color-background-decorative-purple-weakest);
     border-radius: 4px;
     bottom: -10px;
-    color: $kui-color-text-decorative-purple-strong;
+    color: var(--kui-color-text-decorative-purple-strong, $kui-color-text-decorative-purple-strong);
     cursor: pointer;
     display: inline-flex;
     font-size: 10px;
-    gap: $kui-space-10;
+    gap: var(--kui-space-10, $kui-space-10);
     line-height: 0;
     margin: 0;
     opacity: 0.5;

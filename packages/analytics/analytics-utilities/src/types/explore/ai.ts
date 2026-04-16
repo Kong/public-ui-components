@@ -40,6 +40,7 @@ export const aiExploreAggregations = [
   'prompt_tokens',
   'completion_tokens',
   'ai_request_count',
+  'error_rate',
   'cost',
   'llm_cache_embeddings_latency_average',
   'llm_cache_fetch_latency_average',

@@ -38,6 +38,8 @@ const konnectConfig = ref<KonnectVaultFormConfig>({
   azureVaultProviderAvailable: true,
   ttl: true,
   hcvAppRoleMethodAvailable: true,
+  hcvCspAuthMethodsAvailable: true,
+  hcvSslVerifyAvailable: true,
   conjurVaultProviderAvailable: true,
 })
 
@@ -54,11 +56,13 @@ const kongManagerConfig = ref<KongManagerVaultFormConfig>({
   azureVaultProviderAvailable: false,
   ttl: true,
   hcvAppRoleMethodAvailable: true,
+  hcvCspAuthMethodsAvailable: true,
   awsStsEndpointUrlAvailable: true,
   conjurVaultProviderAvailable: true,
   base64FieldAvailable: true,
   hcvCertMethodAvailable: true,
   hcvJwtMethodAvailable: true,
+  hcvSslVerifyAvailable: true,
 })
 
 const onError = (error: AxiosError) => {

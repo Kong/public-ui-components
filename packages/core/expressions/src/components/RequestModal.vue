@@ -168,7 +168,6 @@ watch(url, (url) => {
     // Handle URLs with grpc-protocol family specially
     if (['grpc', 'grpcs'].includes(protocol)) {
       u = new URL(`http:${u.pathname}`)
-      console.log(u)
     }
 
     model.protocol = protocol
@@ -193,7 +192,7 @@ watch(url, (url) => {
 
 <style scoped lang="scss">
 .url-input {
-  margin-bottom: $kui-space-90;
+  margin-bottom: var(--kui-space-90, $kui-space-90);
   width: 100%;
 }
 

@@ -10,12 +10,13 @@
     v-else
     v-show="!hide"
     v-bind="{ ...props, ...fieldAttrs }"
-    v-model="fieldValue"
+    v-model="fieldModel"
     class="ff-enum-field"
     :clearable="!fieldAttrs.required"
+    :data-autofocus="autofocus ? 'true' : undefined"
     :data-testid="`ff-${field.path.value}`"
     :items="realItems"
-    :kpop-attributes="{ 'data-testid': `${field.path.value}-items` }"
+    :kpop-attributes="{ 'data-testid': `ff-enum-${field.path.value}-items` }"
     @update:model-value="(value: string | string[] | null) => emit('update', value)"
   >
     <template
@@ -70,12 +71,21 @@ const {
   name,
   items,
   multiple = undefined,
+  autofocus,
   ...props
 } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
-const { value: fieldValue, hide, ...field } = useField<number | string>(
+const { value: fieldValue, hide, ...field } = useField<number | string | string[]>(
   toRef(() => name),
 )
+
+const fieldModel = defineModel({
+  // If multiple and value is null/undefined, return empty array for v-model
+  get: () => isMultiple.value && fieldValue?.value == null ? [] : fieldValue!.value,
+  set: (val) => {
+    fieldValue!.value = val as any
+  },
+})
 
 const fieldAttrs = useFieldAttrs(field.path!, props)
 

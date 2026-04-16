@@ -1,5 +1,27 @@
 {
   "editor": {
+    "labels": {
+      "action_search": "Search",
+      "action_bold": "Bold",
+      "action_italic": "Italic",
+      "action_strikethrough": "Strikethrough",
+      "action_inline_code": "Code",
+      "action_link": "Link",
+      "action_image": "Image",
+      "action_unordered_list": "Unordered list",
+      "action_ordered_list": "Ordered list",
+      "action_task_list": "Task list",
+      "action_codeblock": "Code block",
+      "action_blockquote": "Blockquote",
+      "action_table": "Table",
+      "action_search_label": "Search document",
+      "action_format": "Format",
+      "action_format_label": "Format document",
+      "action_fullscreen": "Full Screen",
+      "action_fullscreen_label": "Toggle full screen mode",
+      "action_more": "More",
+      "key": "Key: {key}"
+    },
     "messages": {
       "empty_message": "The editor is currently empty. Start typing to add content.",
       "empty_title": "No content available",

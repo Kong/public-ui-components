@@ -1,4 +1,4 @@
-import { INITIAL_ROUTE_RULES_FIELDS } from '../constants'
+import { INITIAL_ROUTE_RULES_FIELDS, DEFAULT_PROTOCOL } from '../constants'
 import { RoutingRulesEntities } from '../types'
 
 export const isDefinedByBasic = (data: Record<string, any>): boolean => {
@@ -6,7 +6,7 @@ export const isDefinedByBasic = (data: Record<string, any>): boolean => {
     return false
   }
 
-  if ((data.protocols || []).sort().join(',') !== 'http,https') {
+  if ((data.protocols || []).sort().join(',') !== DEFAULT_PROTOCOL) {
     return false
   }
 

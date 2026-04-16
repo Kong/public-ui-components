@@ -17,6 +17,11 @@ const routes = [
     component: () => import('./pages/FetchPage.vue'),
   },
   {
+    path: '/toolbar',
+    name: 'Toolbar',
+    component: () => import('./pages/ToolbarPage.vue'),
+  },
+  {
     path: '/dynamic-lang',
     name: 'DynamicLang',
     component: () => import('./pages/DynamicLangPage.vue'),
@@ -25,6 +30,16 @@ const routes = [
     path: '/composable',
     name: 'Composable',
     component: () => import('./pages/ComposablePage.vue'),
+  },
+  {
+    path: '/context',
+    name: 'Context',
+    component: () => import('./pages/ContextPage.vue'),
+  },
+  {
+    path: '/code-lenses',
+    name: 'Code Lenses',
+    component: () => import('./pages/CodeLensesPage.vue'),
   },
 ]
 

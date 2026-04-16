@@ -4,6 +4,9 @@
     class="ff-standard-layout"
     :config="realFormConfig"
     :data="(prunedData as T)"
+    :data-instance-id="instanceId"
+    :data-plugin-name="pluginName"
+    data-testid="ff-standard-layout-form"
     :render-rules="renderRules"
     :schema="freeFormSchema"
     tag="div"
@@ -11,18 +14,30 @@
   >
     <!-- global field templates -->
     <template #[FIELD_RENDERERS]>
-      <!-- Redis partial selector -->
-      <FieldRenderer :match="({ path }) => path === redisPartialInfo?.redisPath?.value">
-        <RedisSelector />
+      <FieldRenderer
+        v-for="(renderer, index) in configFieldRenderers"
+        :key="`${pluginName}-${index}`"
+        v-slot="slotProps"
+        :match="normalizeMatch(renderer.match)"
+      >
+        <component
+          :is="renderer.component"
+          v-bind="{
+            ...slotProps,
+            ...((typeof renderer.propsOverrides === 'function')
+              ? renderer.propsOverrides(slotProps)
+              : renderer.propsOverrides) ?? {},
+          }"
+        />
       </FieldRenderer>
 
-      <!-- Identity Realms field (key-auth plugin only) -->
-      <FieldRenderer
-        v-slot="slotProps"
-        :match="({ path }) => pluginName === 'key-auth' && path === 'config.identity_realms'"
-      >
-        <IdentityRealmsField v-bind="slotProps" />
+      <!-- Redis partial selector -->
+      <FieldRenderer :match="({ path }) => path === redisPartialInfo?.redisPath?.value">
+        <RedisSelector :is-konnect-managed-redis-enabled="props.isKonnectManagedRedisEnabled ?? false" />
       </FieldRenderer>
+
+      <!-- Custom field renderers from consuming components -->
+      <slot name="field-renderers" />
     </template>
 
     <template v-if="editorMode === 'form'">
@@ -64,9 +79,19 @@
           v-show="scoped"
           class="scope-detail"
         >
-          <VFGField
-            :form-options="formOptions"
-            :vfg-schema="scopeEntitiesSchema"
+          <ScopeEntityField
+            v-for="scopeField in scopeEntityFields"
+            :key="scopeField.name"
+            :developer="developer"
+            :disabled="scopeField.disabled"
+            :disabled-tooltip="scopeField.disabledTooltip"
+            :entity="scopeField.entity"
+            :fields="scopeField.fields"
+            :help="scopeField.help"
+            :label="scopeField.label"
+            :label-field="scopeField.labelField"
+            :name="scopeField.name"
+            :placeholder="scopeField.placeholder"
           />
         </div>
 
@@ -130,41 +155,53 @@
         :step="3"
         :title="t('plugins.form.sections.general_info.title')"
       >
-        <VFGField
-          :form-options="formOptions"
-          :vfg-schema="enabledSchema"
+        <SwitchField
+          v-if="freeFormFieldNames.has('enabled')"
+          :disabled-text="t('plugins.form.fields.plugin_status.text_off')"
+          :enabled-text="t('plugins.form.fields.plugin_status.text_on')"
+          :label="t('plugins.form.fields.plugin_status.label')"
+          name="enabled"
         />
 
         <StringField
-          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'instance_name')"
+          v-if="freeFormFieldNames.has('instance_name')"
           :label="t('plugins.form.fields.instance_name.label')"
           name="instance_name"
           :placeholder="t('plugins.form.fields.instance_name.placeholder')"
         />
 
         <StringArrayField
-          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'tags')"
+          v-if="freeFormFieldNames.has('tags')"
           :help="t('plugins.form.fields.tags.help')"
           name="tags"
           :placeholder="t('plugins.form.fields.tags.placeholder')"
         />
 
         <Field
-          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'protocols')"
+          v-if="freeFormFieldNames.has('protocols')"
           name="protocols"
         />
+
+        <KCollapse
+          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'condition')"
+          v-model="advancedCollapsed"
+          data-testid="view-general-info-additional-settings"
+          :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
+        >
+          <ConditionField />
+        </KCollapse>
       </EntityFormBlock>
     </template>
 
-    <template v-else>
-      <EntityFormBlock
-        :description="t('plugins.form.sections.code_mode.description')"
-        :title="t('plugins.form.sections.code_mode.title')"
-      >
-        <!-- TODO: Implement default code editor -->
-        <slot name="code-editor" />
-      </EntityFormBlock>
-    </template>
+    <EntityFormBlock
+      v-if="editorMode === 'code'"
+      :description="t('plugins.form.sections.code_mode.description')"
+      :title="t('plugins.form.sections.code_mode.title')"
+    >
+      <slot name="code-editor">
+        <CodeEditor />
+      </slot>
+    </EntityFormBlock>
   </Form>
 </template>
 
@@ -182,9 +219,7 @@ export type Props<T extends FreeFormPluginData = any> = {
   model: T
   /** VFG form model */
   formModel: Record<string, any>
-  formOptions: any
   isEditing: boolean
-  onModelUpdated: (value: any, model: string) => void
   /** Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority */
   onFormChange: (value: Partial<T>, fields?: string[]) => void
   onValidityChange?: (event: PluginValidityChangeEvent) => void
@@ -192,31 +227,38 @@ export type Props<T extends FreeFormPluginData = any> = {
   /** FreeForm configuration */
   formConfig?: FormConfig<T>
   renderRules?: RenderRules
+  fieldRenderers?: PluginFieldRenderer[]
   pluginName: string
+  /** Konnect-managed Redis UI, from plugin form config */
+  isKonnectManagedRedisEnabled?: boolean
+  /** Whether the plugin is being created for a portal developer */
+  developer?: boolean
 }
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, inject, nextTick, ref, useTemplateRef } from 'vue'
+import { computed, inject, nextTick, ref, useTemplateRef, useId } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
 import { KRadio, KTooltip } from '@kong/kongponents'
-import english from '../../../../locales/en.json'
-import { createI18n } from '@kong-ui-public/i18n'
 import Form from '../Form.vue'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import type { PluginValidityChangeEvent } from '../../../../types'
-import VFGField from '../VFGField.vue'
-import type { FormConfig, RenderRules } from '../types'
+import SwitchField from '../SwitchField.vue'
+import ScopeEntityField from '../ScopeEntityField.vue'
+import { normalizeMatch } from '../utils'
+import type { FieldRenderer as PluginFieldRenderer, FormConfig, RenderRules } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
-import { FIELD_RENDERERS } from '../composables'
-import IdentityRealmsField from '../../../fields/key-auth-identity-realms/FreeFormAdapter.vue'
+import { FIELD_RENDERERS, useSchemaExposer } from '../composables'
 import Field from '../Field.vue'
 import StringArrayField from '../StringArrayField.vue'
 import StringField from '../StringField.vue'
+import CodeEditor from '../CodeEditor.vue'
+import ConditionField from './ConditionField.vue'
+import useI18n from '../../../../composables/useI18n'
 
 const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   // plugin specific config
@@ -228,6 +270,7 @@ const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   'enabled',
   'protocols',
   'instance_name',
+  'condition',
   'tags',
 
   // scope
@@ -237,12 +280,14 @@ const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   'service',
 ]
 
-const { t } = createI18n<typeof english>('en-us', english)
+const instanceId = useId()
+
+const { i18n: { t } } = useI18n()
 
 const { editorMode = 'form', ...props } = defineProps<Props<T>>()
+const configFieldRenderers = computed<PluginFieldRenderer[]>(() => props.fieldRenderers ?? [])
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
-
 const slots = defineSlots<{
   default: () => any
   'code-editor'?: () => any
@@ -252,6 +297,7 @@ const slots = defineSlots<{
   'plugin-config-title'?: () => any
   'plugin-config-description'?: () => any
   'plugin-config-extra'?: () => any
+  'field-renderers'?: () => any
 }>()
 
 const realFormConfig = computed(() => {
@@ -285,6 +331,7 @@ interface LegacyFormSchemaField {
   description?: string
   disabled?: boolean
   disabledTooltip?: string
+  labelField?: string
 }
 
 interface LegacyFormSchemaGroup {
@@ -314,22 +361,6 @@ const flattenFormSchemaFields = computed<LegacyFormSchemaField[]>(() => {
   return props.formSchema?.fields || []
 })
 
-const enabledSchema = computed(() => {
-  return {
-    fields: flattenFormSchemaFields.value
-      .filter(field => field.model === 'enabled')
-      .map(field => {
-        return {
-          ...field,
-          styleClasses: 'ff-enabled-field',
-          label: t('plugins.form.fields.plugin_status.label'),
-          textOn: t('plugins.form.fields.plugin_status.text_on'),
-          textOff: t('plugins.form.fields.plugin_status.text_off'),
-        }
-      }),
-  }
-})
-
 const scopeSchema = computed(() => {
   return flattenFormSchemaFields.value.find(field => field.type === 'selectionGroup')
 })
@@ -342,14 +373,21 @@ const scopeEntitiesSchema = computed(() => {
   return scopeSchema.value?.fields?.[1]
 })
 
-const moreFieldsSchema = computed(() => {
-  const fields = ['instance_name', 'protocols', 'tags']
-
-  return {
-    fields: flattenFormSchemaFields.value.filter(field => fields.includes(field.model!)),
-  }
+const scopeEntityFields = computed(() => {
+  return (scopeEntitiesSchema.value?.fields ?? []).map((field: any) => ({
+    name: field.model.split('-')[0],
+    entity: field.entity,
+    fields: field.inputValues?.fields,
+    label: field.label,
+    placeholder: field.placeholder,
+    help: field.help,
+    disabled: field.disabled,
+    disabledTooltip: field.disabledTooltip,
+    labelField: field.labelField,
+  }))
 })
 
+const MORE_FIELDS = ['instance_name', 'protocols', 'tags', 'condition']
 const FREE_FORM_SCHEMA_KEYS = ['config']
 const freeFormSchema = computed(() => {
   const result: FormSchema = {
@@ -358,13 +396,14 @@ const freeFormSchema = computed(() => {
   }
 
   // append VFG fields to the freeform schema
+  const enabledField = flattenFormSchemaFields.value.find(field => field.model === 'enabled')
   const vfgFields = [
     // enabled field
-    ...enabledSchema.value.fields,
+    ...(enabledField ? [enabledField] : []),
     // scope fields
     ...(scopeEntitiesSchema.value?.fields ?? []),
     // general info fields
-    ...moreFieldsSchema.value.fields,
+    ...flattenFormSchemaFields.value.filter(field => MORE_FIELDS.includes(field.model!)),
   ]
   vfgFields.forEach((field: any) => {
     if (field.type === 'AutoSuggest') { // service, route, consumer, consumer_group
@@ -383,7 +422,7 @@ const freeFormSchema = computed(() => {
         },
       })
 
-    } else if (field.model === 'instance_name') {
+    } else if (field.model === 'instance_name' || field.model === 'condition') {
       result.fields.push({
         [field.model]: {
           type: 'string',
@@ -426,6 +465,10 @@ const freeFormSchema = computed(() => {
   return result
 })
 
+const freeFormFieldNames = computed(() =>
+  new Set(freeFormSchema.value.fields.map(f => Object.keys(f)[0])),
+)
+
 /**
  * Avoid passing freeform data that it can't handle. e.g. `scope`, `update_time`
  * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
@@ -434,12 +477,20 @@ const prunedData = computed(() => {
   return pick(props.model, FREE_FORM_CONTROLLED_FIELDS) as Partial<T>
 })
 
+/**
+ * The scope-related field keys in VFG data model, e.g. `service-id`, `route-id`, `consumer-id`, `consumer_group-id`
+ */
 const formModelScopeFields = computed<string[]>(() => {
   return scopeEntitiesSchema.value?.fields.map((field: any) => field.model) ?? []
 })
 
-const scopeFields = computed<Array<'service' | 'route' | 'consumer' | 'consumer_group'>>(() => {
-  return formModelScopeFields.value.map((field: any) => field.split('-')[0])
+type ScopeFieldName = 'service' | 'route' | 'consumer' | 'consumer_group'
+
+/**
+ * The scope-related field keys in freeform data model, e.g. `service`, `route`, `consumer`, `consumer_group`
+ */
+const scopeFields = computed<ScopeFieldName[]>(() => {
+  return formModelScopeFields.value.map(field => field.split('-')[0] as ScopeFieldName)
 })
 
 // Cache of scope-related fields to restore when toggling scoped on/off
@@ -530,13 +581,17 @@ function getScopesFromFormModel(): Partial<T> {
   })
   return data
 }
+
+useSchemaExposer(freeFormSchema, instanceId)
+
+const advancedCollapsed = ref(true)
 </script>
 
 <style lang="scss" scoped>
 .ff-standard-layout {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-80;
+  gap: var(--kui-space-80, $kui-space-80);
 
   .radio-group {
     width: 100%;
@@ -545,22 +600,12 @@ function getScopesFromFormModel(): Partial<T> {
   .scope .radio-group,
   .disabled-scope :deep(.popover-trigger-wrapper) .radio-group {
     display: grid;
-    gap: $kui-space-50;
+    gap: var(--kui-space-50, $kui-space-50);
     grid-template-columns: repeat(2, 1fr);
   }
 
   :deep(.form-group) {
-    margin-bottom: $kui-space-70;
-  }
-
-  :deep(.ff-enabled-field) {
-    & > .field-wrap label {
-      font-weight: unset;
-    }
-
-    & > label > .icon-wrapper {
-      font-weight: $kui-font-weight-semibold;
-    }
+    margin-bottom: var(--kui-space-70, $kui-space-70);
   }
 }
 </style>

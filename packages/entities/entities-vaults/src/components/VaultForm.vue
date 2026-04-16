@@ -225,6 +225,13 @@
               required
               width="100%"
             />
+            <KCheckbox
+              v-if="config.hcvSslVerifyAvailable"
+              v-model="configFields[VaultProviders.HCV].ssl_verify!"
+              data-testid="vault-form-config-hcv-ssl_verify"
+              :label="t('form.config.hcv.fields.ssl_verify.label')"
+              :readonly="form.isReadonly"
+            />
             <KInput
               v-model.trim="configFields[VaultProviders.HCV].host"
               autocomplete="off"
@@ -279,6 +286,15 @@
                 ...(config.hcvAppRoleMethodAvailable ? [{ label: VaultAuthMethods.APP_ROLE, value: VaultAuthMethods.APP_ROLE as string }] : []),
                 ...(config.hcvCertMethodAvailable ? [{ label: VaultAuthMethods.CERT, value: VaultAuthMethods.CERT as string }] : []),
                 ...(config.hcvJwtMethodAvailable ? [{ label: VaultAuthMethods.JWT, value: VaultAuthMethods.JWT as string }] : []),
+                ...(config.hcvCspAuthMethodsAvailable
+                  ? [
+                    { label: VaultAuthMethods.AWS_IAM, value: VaultAuthMethods.AWS_IAM as string },
+                    { label: VaultAuthMethods.AWS_EC2, value: VaultAuthMethods.AWS_EC2 as string },
+                    { label: VaultAuthMethods.AZURE, value: VaultAuthMethods.AZURE as string },
+                    { label: VaultAuthMethods.GCP_GCE, value: VaultAuthMethods.GCP_GCE as string },
+                    { label: VaultAuthMethods.GCP_IAM, value: VaultAuthMethods.GCP_IAM as string },
+                  ]
+                  : []),
               ]"
               :label="t('form.config.hcv.fields.auth_method.label')"
               :readonly="form.isReadonly"
@@ -332,6 +348,195 @@
               />
             </div>
             <div
+              v-else-if="config.hcvCspAuthMethodsAvailable && configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.AWS_IAM"
+              class="vault-form-config-auth-method-container"
+            >
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_auth_role"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_auth_role"
+                :label="t('form.config.hcv.fields.aws_auth_role.label')"
+                :readonly="form.isReadonly"
+                required
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_auth_region"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_auth_region"
+                :label="t('form.config.hcv.fields.aws_auth_region.label')"
+                :readonly="form.isReadonly"
+                required
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_login_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_login_path"
+                :label="t('form.config.hcv.fields.aws_login_path.label')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_access_key_id"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_access_key_id"
+                :label="t('form.config.hcv.fields.aws_access_key_id.label')"
+                :readonly="form.isReadonly"
+                show-password-mask-toggle
+                type="password"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_secret_access_key"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_secret_access_key"
+                :label="t('form.config.hcv.fields.aws_secret_access_key.label')"
+                :readonly="form.isReadonly"
+                show-password-mask-toggle
+                type="password"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_sts_endpoint_url"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_sts_endpoint_url"
+                :label="t('form.config.hcv.fields.aws_sts_endpoint_url.label')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_assume_role_arn"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_assume_role_arn"
+                :label="t('form.config.hcv.fields.aws_assume_role_arn.label')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_role_session_name"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_role_session_name"
+                :label="t('form.config.hcv.fields.aws_role_session_name.label')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
+            </div>
+            <div
+              v-else-if="config.hcvCspAuthMethodsAvailable && configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.AWS_EC2"
+              class="vault-form-config-auth-method-container"
+            >
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_auth_role"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_auth_role"
+                :label="t('form.config.hcv.fields.aws_auth_role.label')"
+                :readonly="form.isReadonly"
+                required
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_auth_nonce"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_auth_nonce"
+                :label="t('form.config.hcv.fields.aws_auth_nonce.label')"
+                :readonly="form.isReadonly"
+                required
+                show-password-mask-toggle
+                type="password"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].aws_login_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-aws_login_path"
+                :label="t('form.config.hcv.fields.aws_login_path.label')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
+            </div>
+            <div
+              v-else-if="config.hcvCspAuthMethodsAvailable && configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.AZURE"
+              class="vault-form-config-auth-method-container"
+            >
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].azure_auth_role"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-azure_auth_role"
+                :label="t('form.config.hcv.fields.azure_auth_role.label')"
+                :readonly="form.isReadonly"
+                required
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].azure_login_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-azure_login_path"
+                :label="t('form.config.hcv.fields.azure_login_path.label')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
+            </div>
+            <div
+              v-else-if="config.hcvCspAuthMethodsAvailable && configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.GCP_GCE"
+              class="vault-form-config-auth-method-container"
+            >
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].gcp_auth_role"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-gcp_auth_role"
+                :label="t('form.config.hcv.fields.gcp_auth_role.label')"
+                :readonly="form.isReadonly"
+                required
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].gcp_login_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-gcp_login_path"
+                :label="t('form.config.hcv.fields.gcp_login_path.label')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
+            </div>
+            <div
+              v-else-if="config.hcvCspAuthMethodsAvailable && configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.GCP_IAM"
+              class="vault-form-config-auth-method-container"
+            >
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].gcp_auth_role"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-gcp_auth_role"
+                :label="t('form.config.hcv.fields.gcp_auth_role.label')"
+                :readonly="form.isReadonly"
+                required
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].gcp_login_path"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-gcp_login_path"
+                :label="t('form.config.hcv.fields.gcp_login_path.label')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].gcp_service_account"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-gcp_service_account"
+                :label="t('form.config.hcv.fields.gcp_service_account.label')"
+                :readonly="form.isReadonly"
+                required
+                type="text"
+              />
+              <KInput
+                v-model="configFields[VaultProviders.HCV].gcp_jwt_exp"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-gcp_jwt_exp"
+                :label="t('form.config.hcv.fields.gcp_jwt_exp.label')"
+                :readonly="form.isReadonly"
+                required
+                type="number"
+              />
+            </div>
+            <div
               v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE"
               class="vault-form-config-auth-method-container"
             >
@@ -370,7 +575,7 @@
                 type="text"
               />
               <KCheckbox
-                v-model="configFields[VaultProviders.HCV].approle_response_wrapping as boolean"
+                v-model="configFields[VaultProviders.HCV].approle_response_wrapping!"
                 data-testid="vault-form-config-hcv-approle_response_wrapping"
                 :label="t('form.config.hcv.fields.approle_response_wrapping.label')"
               />
@@ -902,11 +1107,27 @@ const configFields = reactive<ConfigFields>({
     mount: 'secret',
     kv: 'v1',
     namespace: '',
+    ssl_verify: true,
     auth_method: VaultAuthMethods.TOKEN,
     token: '',
     kube_role: '',
     kube_auth_path: '',
     kube_api_token_file: '',
+    aws_auth_role: '',
+    aws_auth_region: '',
+    aws_auth_nonce: '',
+    aws_login_path: '',
+    aws_access_key_id: '',
+    aws_secret_access_key: '',
+    aws_sts_endpoint_url: '',
+    aws_assume_role_arn: '',
+    aws_role_session_name: '',
+    azure_auth_role: '',
+    azure_login_path: '',
+    gcp_auth_role: '',
+    gcp_login_path: '',
+    gcp_service_account: '',
+    gcp_jwt_exp: undefined,
     approle_auth_path: '',
     approle_role_id: '',
     approle_secret_id: '',
@@ -962,16 +1183,40 @@ const originalConfigFields = reactive<ConfigFields>({
     mount: 'secret',
     kv: 'v1',
     namespace: '',
+    ssl_verify: true,
     auth_method: VaultAuthMethods.TOKEN,
     token: '',
     kube_role: '',
     kube_auth_path: '',
     kube_api_token_file: '',
+    aws_auth_role: '',
+    aws_auth_region: '',
+    aws_auth_nonce: '',
+    aws_login_path: '',
+    aws_access_key_id: '',
+    aws_secret_access_key: '',
+    aws_sts_endpoint_url: '',
+    aws_assume_role_arn: '',
+    aws_role_session_name: '',
+    azure_auth_role: '',
+    azure_login_path: '',
+    gcp_auth_role: '',
+    gcp_login_path: '',
+    gcp_service_account: '',
+    gcp_jwt_exp: undefined,
     approle_auth_path: '',
     approle_role_id: '',
     approle_secret_id: '',
     approle_secret_id_file: '',
     approle_response_wrapping: false,
+    cert_auth_cert: '',
+    cert_auth_cert_key: '',
+    cert_auth_role_name: '',
+    oauth2_client_id: '',
+    oauth2_client_secret: '',
+    jwt_role: '',
+    oauth2_token_endpoint: '',
+    oauth2_audiences: '',
     ...base64FieldConfig,
   } as HCVVaultConfig,
   [VaultProviders.AZURE]: {
@@ -1132,12 +1377,43 @@ const isVaultConfigValid = computed((): boolean => {
           'approle_secret_id',
           'approle_secret_id_file',
           'oauth2_audiences',
+          'aws_login_path',
+          'aws_sts_endpoint_url',
+          'aws_assume_role_arn',
+          'aws_role_session_name',
+          'azure_login_path',
+          'gcp_login_path',
         ].includes(key)
       ) {
         return false
       }
       // kube_role and kube_api_token_file are not needed if auth method is not kubernetes
       if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.K8S && (key === 'kube_role' || key === 'kube_api_token_file')) {
+        return false
+      }
+      // Skip CSP auth fields entirely when the CSP auth-method feature flag is off.
+      if (!props.config.hcvCspAuthMethodsAvailable && ['aws_auth_role', 'aws_auth_region', 'aws_auth_nonce', 'aws_access_key_id', 'aws_secret_access_key', 'aws_login_path', 'aws_sts_endpoint_url', 'aws_assume_role_arn', 'aws_role_session_name', 'azure_auth_role', 'azure_login_path', 'gcp_auth_role', 'gcp_login_path', 'gcp_service_account', 'gcp_jwt_exp'].includes(key)) {
+        return false
+      }
+      if (![VaultAuthMethods.AWS_IAM, VaultAuthMethods.AWS_EC2].includes(configFields[VaultProviders.HCV].auth_method as VaultAuthMethods) && key === 'aws_auth_role') {
+        return false
+      }
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.AWS_IAM && ['aws_auth_region', 'aws_access_key_id', 'aws_secret_access_key'].includes(key)) {
+        return false
+      }
+      if (configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.AWS_IAM && ['aws_access_key_id', 'aws_secret_access_key'].includes(key)) {
+        return false
+      }
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.AWS_EC2 && key === 'aws_auth_nonce') {
+        return false
+      }
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.AZURE && key === 'azure_auth_role') {
+        return false
+      }
+      if (![VaultAuthMethods.GCP_GCE, VaultAuthMethods.GCP_IAM].includes(configFields[VaultProviders.HCV].auth_method as VaultAuthMethods) && key === 'gcp_auth_role') {
+        return false
+      }
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.GCP_IAM && ['gcp_service_account', 'gcp_jwt_exp'].includes(key)) {
         return false
       }
       // token is not needed if auth method is not token
@@ -1218,6 +1494,8 @@ const submitUrl = computed<string>(() => {
 })
 
 const getPayload = computed((): Record<string, any> => {
+  const gcpJwtExp = parseInt(String((configFields[VaultProviders.HCV] as HCVVaultConfig).gcp_jwt_exp), 10)
+
   const hcvConfig = {
     protocol: configFields[VaultProviders.HCV].protocol,
     host: configFields[VaultProviders.HCV].host,
@@ -1225,6 +1503,7 @@ const getPayload = computed((): Record<string, any> => {
     mount: configFields[VaultProviders.HCV].mount,
     kv: configFields[VaultProviders.HCV].kv,
     namespace: configFields[VaultProviders.HCV].namespace || null,
+    ...(props.config.hcvSslVerifyAvailable && { ssl_verify: configFields[VaultProviders.HCV].ssl_verify ?? true }),
     auth_method: configFields[VaultProviders.HCV].auth_method,
     ...(props.config.base64FieldAvailable && { base64_decode: configFields[VaultProviders.HCV].base64_decode }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN && { token: configFields[VaultProviders.HCV].token }),
@@ -1234,6 +1513,35 @@ const getPayload = computed((): Record<string, any> => {
       kube_auth_path: configFields[VaultProviders.HCV].kube_auth_path || undefined,
       kube_api_token_file: configFields[VaultProviders.HCV].kube_api_token_file,
       token: null,
+    }),
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.AWS_IAM && {
+      aws_auth_role: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_auth_role || undefined,
+      aws_auth_region: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_auth_region || undefined,
+      aws_login_path: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_login_path || undefined,
+      aws_access_key_id: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_access_key_id || undefined,
+      aws_secret_access_key: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_secret_access_key || undefined,
+      aws_sts_endpoint_url: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_sts_endpoint_url || undefined,
+      aws_assume_role_arn: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_assume_role_arn || undefined,
+      aws_role_session_name: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_role_session_name || undefined,
+    }),
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.AWS_EC2 && {
+      aws_auth_role: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_auth_role || undefined,
+      aws_auth_nonce: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_auth_nonce || undefined,
+      aws_login_path: (configFields[VaultProviders.HCV] as HCVVaultConfig).aws_login_path || undefined,
+    }),
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.AZURE && {
+      azure_auth_role: (configFields[VaultProviders.HCV] as HCVVaultConfig).azure_auth_role || undefined,
+      azure_login_path: (configFields[VaultProviders.HCV] as HCVVaultConfig).azure_login_path || undefined,
+    }),
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.GCP_GCE && {
+      gcp_auth_role: (configFields[VaultProviders.HCV] as HCVVaultConfig).gcp_auth_role || undefined,
+      gcp_login_path: (configFields[VaultProviders.HCV] as HCVVaultConfig).gcp_login_path || undefined,
+    }),
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.GCP_IAM && {
+      gcp_auth_role: (configFields[VaultProviders.HCV] as HCVVaultConfig).gcp_auth_role || undefined,
+      gcp_login_path: (configFields[VaultProviders.HCV] as HCVVaultConfig).gcp_login_path || undefined,
+      gcp_service_account: (configFields[VaultProviders.HCV] as HCVVaultConfig).gcp_service_account || undefined,
+      gcp_jwt_exp: Number.isNaN(gcpJwtExp) ? undefined : gcpJwtExp,
     }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE && {
       approle_auth_path: configFields[VaultProviders.HCV].approle_auth_path || undefined,
@@ -1413,7 +1721,7 @@ const saveFormData = async (): Promise<void> => {
       .provider-item {
         display: flex;
         flex-direction: row;
-        gap: $kui-space-60;
+        gap: var(--kui-space-60, $kui-space-60);
 
         &-title-container {
           flex: 1;
@@ -1421,34 +1729,34 @@ const saveFormData = async (): Promise<void> => {
 
         &-title {
           display: block;
-          font-weight: $kui-font-weight-bold;
+          font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
         }
 
         &-description {
           display: block;
-          font-size: $kui-font-size-20;
+          font-size: var(--kui-font-size-20, $kui-font-size-20);
         }
       }
 
       button:not(:disabled) .provider-item {
         &-title {
-          color: $kui-color-text-neutral-stronger;
+          color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
         }
 
         &-description {
-          color: $kui-color-text-neutral;
+          color: var(--kui-color-text-neutral, $kui-color-text-neutral);
         }
       }
 
       :deep(.k-tooltip .popover-container) {
-        padding: $kui-space-30 !important;
+        padding: var(--kui-space-30, $kui-space-30) !important;
       }
     }
 
     &-config-fields-container {
       > *, .vault-form-config-auth-method-container > * {
         &:not(:first-child) {
-          margin-top: $kui-space-80;
+          margin-top: var(--kui-space-80, $kui-space-80);
         }
       }
     }

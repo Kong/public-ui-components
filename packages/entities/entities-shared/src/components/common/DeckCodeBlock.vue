@@ -175,11 +175,11 @@ ${yamlContent.value}
 <style lang="scss" scoped>
 .deck-config {
   .k-select {
-    margin-bottom: $kui-space-60;
+    margin-bottom: var(--kui-space-60, $kui-space-60);
   }
 
   .k-code-block {
-    margin-top: $kui-space-50;
+    margin-top: var(--kui-space-50, $kui-space-50);
   }
 }
 </style>

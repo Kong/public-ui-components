@@ -20,6 +20,11 @@
           name="tags"
           :placeholder="t('plugins.form.fields.tags.placeholder')"
         />
+        <StringField
+          v-if="getSchema('condition')"
+          name="condition"
+          :placeholder="t('plugins.form.fields.condition.placeholder')"
+        />
       </template>
       <slot />
     </div>
@@ -34,6 +39,7 @@ import { KCollapse } from '@kong/kongponents'
 import english from '../../../locales/en.json'
 import { useFormShared } from './composables'
 import StringArrayField from './StringArrayField.vue'
+import StringField from './StringField.vue'
 
 defineProps<{
   hideGeneralFields?: boolean
@@ -50,6 +56,6 @@ const advancedCollapsed = ref(true)
 .ff-advanced-fields {
   display: flex;
   flex-direction: column;
-  gap: $kui-space-80;
+  gap: var(--kui-space-80, $kui-space-80);
 }
 </style>

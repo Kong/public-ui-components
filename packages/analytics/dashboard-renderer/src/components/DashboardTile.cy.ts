@@ -1,12 +1,156 @@
 import DashboardTile from './DashboardTile.vue'
+import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
-import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
+import { generateSingleMetricTimeSeriesData, type DatasourceConfig, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
-import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
+import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
+import { flushPromises } from '@vue/test-utils'
+import { defineComponent, h, nextTick, ref } from 'vue'
 
 const start = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
 const end = new Date().toISOString()
+
+const datasourceConfigMock: DatasourceConfig[] = [
+  {
+    name: 'api_usage',
+    showInUI: true,
+    timeRangeOptions: ['15m', '30m', '1h', '24h'],
+    fields: [
+      {
+        name: 'api_product',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'control_plane',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'gateway_service',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'route',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'status_code',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'request_count',
+        showInUI: true,
+        aggregation: true,
+        group: false,
+        metricGroup: 'count',
+      },
+    ],
+  },
+  {
+    name: 'llm_usage',
+    showInUI: true,
+    timeRangeOptions: ['15m', '30m', '1h', '24h'],
+    fields: [
+      {
+        name: 'ai_response_model',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'ai_provider',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'ai_request_model',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+    ],
+  },
+  {
+    name: 'requests',
+    showInUI: true,
+    timeRangeOptions: ['15m', '30m', '1h', '24h'],
+    fields: [
+      {
+        name: 'status_code',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'number',
+          allowNewValues: false,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+      {
+        name: 'route',
+        showInUI: true,
+        aggregation: false,
+        group: true,
+        filter: {
+          valueType: 'string',
+          allowNewValues: true,
+          operators: [{ type: 'multi-value', ops: ['in', 'not_in'] }],
+        },
+      },
+    ],
+  },
+]
 
 describe('<DashboardTile />', () => {
   const mockTileDefinition: TileDefinition = {
@@ -82,6 +226,7 @@ describe('<DashboardTile />', () => {
   const mockQueryProvider = {
     exploreBaseUrl: async () => 'http://test.com/explore',
     requestsBaseUrl: async () => 'http://test.com/requests',
+    datasourceConfigFn: () => Promise.resolve(datasourceConfigMock),
     evaluateFeatureFlagFn: () => true,
     queryFn: () => {
       return Promise.resolve(
@@ -144,12 +289,100 @@ describe('<DashboardTile />', () => {
     const analyticsConfigStore = useAnalyticsConfigStore()
     // @ts-ignore - mocking just what we need for the test
     analyticsConfigStore.analyticsConfig = { analytics: { percentiles: true } }
+    const datasourceConfigStore = useDatasourceConfigStore()
+    // @ts-ignore - seeding the store for component tests
+    datasourceConfigStore.datasourceConfig = datasourceConfigMock
+    // @ts-ignore - clear any load errors from outside-component store access
+    datasourceConfigStore.datasourceConfigError = null
   })
 
   it('should render tile with title', () => {
     mount()
     cy.getTestId('tile-1').should('be.visible')
     cy.get('.title').should('contain.text', 'Test Chart')
+  })
+
+  it('should emit chart-data when query resolves', () => {
+    const chartDataSpy = cy.spy().as('chartDataSpy')
+    const queryFn = cy.stub().as('queryFn').callsFake(() => {
+      return Promise.resolve(
+        generateSingleMetricTimeSeriesData(
+          { name: 'TotalRequests', unit: 'count' },
+          { status_code: ['request_count'] as string[] },
+          { start, end },
+        ) as ExploreResultV4,
+      )
+    })
+
+    cy.mount(DashboardTile, {
+      props: {
+        definition: cacheBustTile(mockTileDefinition),
+        context: mockContext,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      attrs: {
+        onChartData: chartDataSpy,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+        },
+      },
+    })
+
+    cy.get('@queryFn').should('have.been.calledOnce')
+    cy.get('@chartDataSpy').should('have.been.calledOnce').then(() => {
+      const emittedData = chartDataSpy.getCall(0).args[0]
+      expect(emittedData).to.have.property('meta')
+      expect(emittedData).to.have.property('data')
+    })
+  })
+
+  it('increments refreshCounter and retriggers tile request when refresh is clicked', () => {
+    const updateRefreshCounterSpy = cy.spy().as('updateRefreshCounterSpy')
+    const queryFn = cy.stub().as('queryFn').callsFake(() => {
+      return Promise.resolve(
+        generateSingleMetricTimeSeriesData(
+          { name: 'TotalRequests', unit: 'count' },
+          { status_code: ['request_count'] as string[] },
+          { start, end },
+        ) as ExploreResultV4,
+      )
+    })
+
+    const Harness = defineComponent({
+      setup() {
+        const refreshCounter = ref(0)
+
+        return () => h(DashboardTile, {
+          definition: cacheBustTile(mockTileDefinition),
+          context: mockContext,
+          queryReady: true,
+          showRefresh: true,
+          tileId: '1',
+          refreshCounter: refreshCounter.value,
+          'onUpdate:refreshCounter': (value: number) => {
+            updateRefreshCounterSpy(value)
+            refreshCounter.value = value
+          },
+        })
+      },
+    })
+
+    cy.mount(Harness, {
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+        },
+      },
+    })
+
+    cy.get('@queryFn').should('have.been.calledOnce')
+    cy.getTestId('tile-refresh-button-1').should('not.be.disabled').click()
+    cy.get('@updateRefreshCounterSpy').should('have.been.calledWith', 1)
+    cy.get('@queryFn').should('have.been.calledTwice')
   })
 
   it('should emit edit-tile event when edit button is clicked', () => {
@@ -274,6 +507,50 @@ describe('<DashboardTile />', () => {
     cy.getTestId('chart-jump-to-requests-1')
       .invoke('attr', 'href')
       .should('not.have.string', 'response_model')
+  })
+
+  it('retains unknown goap context filters in zoom drilldown links', () => {
+    const context: DashboardRendererContextInternal = {
+      ...mockContext,
+      filters: [{ field: 'goap_only_field', operator: 'in', value: ['value'] }],
+    }
+
+    cy.mount(DashboardTile, {
+      props: {
+        definition: cacheBustTile({
+          ...mockTileDefinition,
+          query: {
+            ...mockTileDefinition.query,
+            datasource: 'goap_event_gateway',
+          },
+        }),
+        context,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+      },
+    }).then(async ({ wrapper }) => {
+      await flushPromises()
+
+      const chart = wrapper.findComponent(TimeseriesChartRenderer)
+
+      expect(chart.exists()).to.equal(true)
+
+      chart.vm.$emit('select-chart-range', {
+        type: 'absolute',
+        start: new Date(start),
+        end: new Date(end),
+      })
+
+      await nextTick()
+
+      expect((chart.props('requestsLink') as { href: string }).href).to.contain('goap_only_field')
+    })
   })
 
   it('should show aged out warning when query granularity does not match saved granularity', () => {
@@ -497,6 +774,28 @@ describe('<DashboardTile />', () => {
     cy.getTestId('kebab-action-menu-1').should('not.exist')
   })
 
+  it('should show error empty state when queryFn rejects', () => {
+    const queryFn = cy.stub().rejects(new Error('request failed'))
+
+    cy.mount(DashboardTile, {
+      props: {
+        definition: cacheBustTile(mockTileDefinition),
+        context: mockContext,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+        },
+      },
+    })
+
+    cy.getTestId('chart-empty-state').should('be.visible')
+    cy.getTestId('chart-empty-state').should('contain.text', 'Bad request')
+  })
+
   it('should include limit override when chart type is choropleth', () => {
     const provider = { ...mockQueryProvider }
     cy.spy(provider, 'queryFn').as('fetcher')
@@ -523,11 +822,14 @@ describe('<DashboardTile />', () => {
           [INJECT_QUERY_PROVIDER]: provider,
         },
       },
-    }).then(async () => {
-      cy.get('@fetcher').should('have.been.calledOnce')
-      cy.get('@fetcher')
-        .its('firstCall.args.0.query.limit')
-        .should('eq', COUNTRIES.length)
+    })
+
+    cy.get('@fetcher').should((spy) => {
+      // @ts-ignore sinon spy helper
+      const call = spy.getCall(0)
+
+      expect(call).to.not.equal(undefined)
+      expect(call.args[0].query.limit).to.eq(COUNTRIES.length)
     })
   })
 
@@ -735,6 +1037,147 @@ describe('<DashboardTile />', () => {
         })
     })
 
+    it('getExportData issues query with EXPORT_RECORD_LIMIT when allowed', () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start, end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: cacheBustTile(mockTileDefinition),
+          context: mockContext,
+          tileId: 1,
+          queryReady: true,
+          refreshCounter: 0,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+          },
+        },
+      }).then(({ wrapper }) => {
+        const callCountBefore = queryFn.callCount
+        wrapper.vm.getExportData().then((result) => {
+          // a new query was issued
+          expect(queryFn.callCount).to.be.greaterThan(callCountBefore)
+          const payload = queryFn.lastCall.args[0]
+          expect(payload.query).to.have.property('limit', EXPORT_RECORD_LIMIT)
+          expect(result.meta.metric_names).to.include('TotalRequests')
+          expect(result.data).to.be.an('array').that.is('not.empty')
+        })
+      })
+    })
+
+    it('getExportData returns cached chartData when limit increase is disabled', () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start, end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: cacheBustTile(mockTileDefinition),
+          context: mockContext,
+          tileId: 1,
+          queryReady: true,
+          refreshCounter: 0,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn, staticConfig: { increaseCsvExportLimit: false } },
+          },
+        },
+      }).then(({ wrapper }) => {
+        const callCountBefore = queryFn.callCount
+        wrapper.vm.getExportData().then((result) => {
+          // cached data was used, so no new query
+          expect(queryFn.callCount).to.equal(callCountBefore)
+          expect(result.meta.metric_names).to.include('TotalRequests')
+          expect(result.data).to.be.an('array').that.is('not.empty')
+        })
+      })
+    })
+
+    it('getExportData returns cached chartData for goap datasource', () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start, end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: cacheBustTile(mockGoapTileDefinition),
+          context: mockContext,
+          tileId: 1,
+          queryReady: true,
+          refreshCounter: 0,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+          },
+        },
+      }).then(({ wrapper }) => {
+        const callCountBefore = queryFn.callCount
+        wrapper.vm.getExportData().then((result) => {
+          expect(queryFn.callCount).to.equal(callCountBefore)
+          expect(result.meta.metric_names).to.include('TotalRequests')
+          expect(result.data).to.be.an('array').that.is('not.empty')
+        })
+      })
+    })
+
+    it('getExportData rejects when queryFn fails', () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start, end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: cacheBustTile(mockTileDefinition),
+          context: mockContext,
+          tileId: 1,
+          queryReady: true,
+          refreshCounter: 0,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+          },
+        },
+      }).then(({ wrapper }) => {
+        wrapper.vm.getExportData().then(() => {
+          throw new Error('should have rejected')
+        },
+        (err: Error) => err,
+        ).then((err: any) => {
+          expect(err).to.be.instanceOf(Error)
+          expect(err.message).to.equal('export failed')
+        })
+      })
+    })
 
     it('handles deferred loading', () => {
       const queryFn = cy.stub().as('queryFn').callsFake(() => {

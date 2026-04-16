@@ -13,7 +13,7 @@
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
     enable-v2-empty-states
-    @view-plugin="id => console.log('View plugin', id)"
+    @view-plugin="(id: string) => console.log('View plugin', id)"
   />
 
   <h2>Kong Manager API</h2>
@@ -26,7 +26,7 @@
     :can-retrieve="permissions.canRetrieve"
     :config="kongManagerConfig"
     enable-v2-empty-states
-    @view-plugin="id => console.log('View plugin', id)"
+    @view-plugin="(id: string) => console.log('View plugin', id)"
   />
 </template>
 
@@ -43,14 +43,19 @@ import type {
 import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
-
 const konnectConfig: KonnectRedisConfigurationListConfig = {
   app: 'konnect',
   apiBaseUrl: '/us/kong-api',
+  // Cloud Gateways add-ons API uses a non-geo base; CP/partials use apiBaseUrl
+  cloudGatewaysApiBaseUrl: '/kong-api',
   controlPlaneId,
   createRoute: { name: 'create-redis-configuration' },
   getViewRoute: (id: string) => ({ name: 'view-redis-configuration', params: { id } }),
   getEditRoute: (id: string) => ({ name: 'edit-redis-configuration', params: { id } }),
+  // Sandbox override for local testing: set true for managed-Redis copy, false for default copy
+  isKonnectManagedRedisEnabled: true,
+  // Combined list/add-ons flow is enabled only for Cloud Gateway control planes.
+  isCloudGateway: true,
 }
 
 const kongManagerConfig: KongManagerRedisConfigurationListConfig = {
@@ -62,12 +67,9 @@ const kongManagerConfig: KongManagerRedisConfigurationListConfig = {
   getEditRoute: (id: string) => ({ name: 'edit-redis-configuration', params: { id } }),
 }
 
-// Remount the tables in the sandbox when the permission props change; not needed outside of a sandbox
-const key = ref(1)
 const permissions = ref<PermissionsActions | null>(null)
 
 const handlePermissionsUpdate = (newPermissions: PermissionsActions) => {
   permissions.value = newPermissions
-  key.value++
 }
 </script>

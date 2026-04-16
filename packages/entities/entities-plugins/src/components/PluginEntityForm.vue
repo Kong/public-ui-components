@@ -9,19 +9,21 @@
       v-else-if="(formModel.id && editing) || !editing"
       class="entity-form"
     >
+      <!-- Konnect-managed Redis UI for free-form layouts (StandardLayout) -->
       <component
-        :is="(freeForm as any)[freeformName]"
-        v-if="freeformName"
+        :is="freeformComponent"
+        v-if="freeformComponent"
+        :developer="developer"
+        :field-renderers="pluginConfig?.fieldRenderers"
         :form-model="formModel"
-        :form-options="formOptions"
         :form-schema="formSchema"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="record"
         :on-form-change="handleFreeFormUpdate"
-        :on-model-updated="onModelUpdated"
         :on-validity-change="onValidityChange"
         :plugin-name="formModel.name"
-        :render-rules="PLUGIN_METADATA[formModel.name]?.freeformRenderRules"
+        :render-rules="pluginConfig?.renderRules"
         :schema="freeformSchema"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
       >
@@ -36,6 +38,7 @@
           />
         </template>
       </component>
+      <!-- OIDC/ RLA embed their own `VueFormGenerator`, pass the Konnect-managed-Redis flag through -->
       <component
         :is="(sharedForms as any)[sharedFormName]"
         v-else-if="sharedFormName"
@@ -44,6 +47,7 @@
         :form-options="formOptions"
         :form-schema="formSchema"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :on-model-updated="onModelUpdated"
         :on-partial-toggled="onPartialToggled"
         :show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
@@ -60,10 +64,12 @@
         </template>
       </component>
 
+      <!-- Default schema-driven plugin form- `FormGenerator`- `FormRedis` -->
       <VueFormGenerator
         v-else
         :enable-redis-partial="enableRedisPartial"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="formModel"
         :options="formOptions"
         :schema="formSchema"
@@ -127,32 +133,19 @@ import {
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
+import { computed, inject, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
-import * as freeForm from './free-form'
-import { getFreeFormName } from '../utils/free-form'
+import CommonForm from './free-form/Common'
 import type { GlobalAction } from './free-form/shared/types'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/shared/schema-enhancement'
+import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/shared/plugin-registry'
+import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 import type { FormSchema } from '../types/plugins/form-schema'
-
-// Need to check for duplicates in sharedForms and freeForm
-// throw an error if there are any
-const sharedFormKeys = Object.keys(sharedForms)
-const freeFormKeys = Object.keys(freeForm)
-
-if (
-  new Set([...sharedFormKeys, ...freeFormKeys]).size !==
-  sharedFormKeys.length + freeFormKeys.length
-) {
-  throw new Error(
-    'Duplicate form component names found in `sharedForms` and `freeForm`',
-  )
-}
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -245,7 +238,25 @@ const props = defineProps({
     required: false,
     default: undefined,
   },
+
+  /** For Kong Manager portal developers */
+  developer: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+const isKonnectManagedRedisEnabled = computed<boolean>(() => {
+  if (props.config.app !== 'konnect') return false
+
+  const konnect = props.config as KonnectPluginFormConfig
+  return (
+    !!konnect.isKonnectManagedRedisEnabled
+    && konnect.isCloudGateway === true
+  )
+})
+
+const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
@@ -257,7 +268,7 @@ const { parseSchema } = composables.useSchemas({
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
-const experimentalFreeForms = composables.useExperimentalFreeForms()
+const { shouldUseFreeForm, getFreeFormComponent } = composables.useFreeFormResolver()
 
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
@@ -417,7 +428,8 @@ provide(FORMS_API_KEY, {
 provide(FORMS_CONFIG, props.config)
 
 const sharedFormName = ref('')
-const freeformName = ref<string | undefined>('')
+const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()
+const freeformComponent = shallowRef<any>()
 const form = ref<Record<string, any> | null>(null)
 const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
@@ -666,7 +678,7 @@ const getModel = (freeformFields?: string[]): Record<string, any> => {
   const model: Record<string, any> = unFlattenObject(outputModel)
 
   // Handle the special case of the freeform plugin
-  if (freeformName.value) {
+  if (freeformComponent.value) {
     // remove any freeform fields from the model before merging
     if (freeformFields && freeformFields.length) {
       for (const field of freeformFields) {
@@ -805,6 +817,7 @@ const initFormModel = (): void => {
     updateModel({
       enabled: props.record.enabled ?? true,
       ...(props.record.instance_name && { instance_name: props.record.instance_name || '' }),
+      ...(enableConditionField && props.record.condition != null && { condition: props.record.condition }),
       ...(props.record.protocols && { protocols: props.record.protocols }),
       ...(props.record.tags && { tags: props.record.tags }),
     })
@@ -837,7 +850,7 @@ const initFormModel = (): void => {
       }
 
       // main plugin configuration
-      if (freeformName.value) {
+      if (freeformComponent.value) {
         // keep original config from record for freeform plugins
         handleFreeFormUpdate(props.record)
       } else {
@@ -899,11 +912,10 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
 
-  freeformName.value = !props.engine
-    ? getFreeFormName(form.model.name, experimentalFreeForms)
-    : props.engine === 'vfg'
-      ? undefined
-      : getFreeFormName(form.model.name, experimentalFreeForms) || 'CommonForm'
+  pluginConfig.value = getPluginConfig(form.model.name)
+  freeformComponent.value = shouldUseFreeForm(form.model.name, props.engine)
+    ? (getFreeFormComponent(form.model.name) ?? CommonForm)
+    : undefined
   sharedFormName.value = getSharedFormName(form.model.name)
 
   initFormModel()
@@ -935,10 +947,10 @@ onBeforeMount(() => {
 
   .entity-form {
     .plugin-config-empty-state {
-      color: $kui-color-text-neutral;
-      font-size: $kui-font-size-30;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-style: italic;
-      margin-bottom: $kui-space-60;
+      margin-bottom: var(--kui-space-60, $kui-space-60);
     }
   }
 
@@ -950,25 +962,25 @@ onBeforeMount(() => {
     }
 
     .k-collapse.root-level-collapse {
-      border-top: $kui-border-width-10 solid $kui-color-border;
-      margin-top: $kui-space-80;
-      padding-top: $kui-space-80;
+      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      margin-top: var(--kui-space-80, $kui-space-80);
+      padding-top: var(--kui-space-80, $kui-space-80);
     }
 
     fieldset {
       border: none;
-      margin-left: $kui-space-0;
-      padding: $kui-space-0;
+      margin-left: var(--kui-space-0, $kui-space-0);
+      padding: var(--kui-space-0, $kui-space-0);
     }
 
     .bottom-border {
-      border-bottom: $kui-border-width-10 solid $kui-color-border;
-      padding-bottom: $kui-space-80;
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      padding-bottom: var(--kui-space-80, $kui-space-80);
     }
 
     .top-border {
-      border-top: $kui-border-width-10 solid $kui-color-border;
-      padding-top: $kui-space-80;
+      border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      padding-top: var(--kui-space-80, $kui-space-80);
     }
 
     .form-group.kong-form-hidden-field-wrapper {
@@ -976,12 +988,12 @@ onBeforeMount(() => {
     }
 
     .form-group hr.divider {
-      border-color: $kui-color-border;
+      border-color: var(--kui-color-border, $kui-color-border);
       opacity: 0.3;
     }
 
     .form-group hr.wide-divider {
-      border-color: $kui-color-border;
+      border-color: var(--kui-color-border, $kui-color-border);
       opacity: 0.6;
     }
 
@@ -990,7 +1002,7 @@ onBeforeMount(() => {
     }
 
     .hint {
-      font-size: $kui-font-size-20;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
       margin-bottom: 10px;
       margin-top: 5px;
       opacity: 0.6;
@@ -1012,7 +1024,7 @@ onBeforeMount(() => {
     }
 
     label {
-      font-weight: $kui-font-weight-medium;
+      font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
     }
 
     .form-group.field-array label,
@@ -1026,7 +1038,7 @@ onBeforeMount(() => {
       width: 100%;
 
       .kong-form-array-field-item {
-        margin-bottom: $kui-space-40;
+        margin-bottom: var(--kui-space-40, $kui-space-40);
 
         .k-button.delete {
           align-self: center;
@@ -1036,7 +1048,7 @@ onBeforeMount(() => {
   }
 
   .global-fields {
-    border-bottom: $kui-border-width-10 solid $kui-color-border;
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   }
 
   .general-settings {
@@ -1046,11 +1058,11 @@ onBeforeMount(() => {
     }
 
     .form-group .field-wrap button {
-      margin-top: $kui-space-30;
+      margin-top: var(--kui-space-30, $kui-space-30);
     }
 
     .link-wrapper {
-      margin-top: $kui-space-60;
+      margin-top: var(--kui-space-60, $kui-space-60);
     }
   }
 }

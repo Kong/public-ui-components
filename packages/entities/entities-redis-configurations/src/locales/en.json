@@ -11,6 +11,11 @@
     "view_plugin": "View Plugin",
     "close": "Close"
   },
+  "cpg_redis": {
+    "alert": "Control plane groups inherit configuration from their member control planes. Define Redis configurations at the control plane group level. To deploy a Konnect-managed Redis instance, use the API.",
+    "member_alert": "This control plane is part of a control plane group. To use a Konnect-managed Redis instance deployed at the control plane group level, you must create a Redis configuration that points to that cache.",
+    "doc_link": "See the documentation"
+  },
   "search": {
     "placeholder": "Filter by name",
     "placeholder_for_exact_match": "Filter by exact ID",
@@ -24,7 +29,19 @@
   "delete": {
     "title": "Delete Redis configuration",
     "description": "You’re about to delete this item. Are you sure you want to proceed?",
-    "warning": "To delete this configuration, first remove it from all associated plugins."
+    "warning": "To delete this configuration, first remove it from all associated plugins.",
+    "konnect_managed_blocked": {
+      "title": "Delete Konnect-managed cache",
+      "message": "This cache is currently being used by {count} {plugin}. To delete this instance, first remove it from all associated plugins.",
+      "plugin": "{count, plural, one {plugin} other {plugins}}"
+    },
+    "konnect_managed_delete": {
+      "title": "Delete Konnect-managed cache",
+      "description": "Deleting this instance will cause all data to be lost. This action cannot be undone.",
+      "entity_type_label": "Konnect-managed cache",
+      "sure_question": "Are you sure you want to delete this Konnect-managed cache {entityName}?",
+      "confirmation_prompt": "Please enter {promptToken} to confirm your action."
+    }
   },
   "errors": {
     "copy": "Failed to copy to clipboard",
@@ -34,9 +51,45 @@
   "copy": {
     "success": "Copied {val} to clipboard"
   },
+  "config_card": {
+    "sections": {
+      "cache_configuration": "Cache configuration",
+      "partial_configuration": "Partial configuration"
+    },
+    "collapse": {
+      "show_partial": "Show partial configuration",
+      "hide_partial": "Hide partial configuration"
+    },
+    "managed_dpg": {
+      "entry_heading": "Data plane group {n}"
+    },
+    "managed_add_on": {
+      "fields": {
+        "type": "Type",
+        "state": "State",
+        "entity_version": "Entity version",
+        "kind": "Kind",
+        "owner": "Owner",
+        "capacity_config": "Capacity configuration",
+        "data_plane_group": "Data plane group",
+        "data_plane_groups": "Data plane groups",
+        "state_metadata": "State metadata",
+        "cache_state_metadata": "Cache state metadata"
+      }
+    }
+  },
   "form": {
     "redis_partial_modal_title": "Create Redis Configuration",
     "partial_created_success_message": "Redis configuration created successfully",
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "view_configuration": "View configuration"
+    },
+    "managed_layout": {
+      "configuration": "Configuration",
+      "general_information": "General information"
+    },
     "sections": {
       "type": {
         "title": "Redis type",
@@ -286,20 +339,31 @@
   "redis": {
     "title": "Redis Configurations",
     "empty_state": {
+      "title_with_managed_konnect": "Redis",
       "title": "Configure a Redis Configuration",
       "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing."
     }
   },
   "list": {
     "action": "New configuration",
+    "action_with_managed_konnect": "New Redis",
     "table_headers": {
       "name": "Name",
       "type": "Type",
       "plugins": "Plugins",
       "tags": "Tags"
     },
+    "source": {
+      "konnect_managed": "Konnect managed",
+      "self_managed": "Self managed"
+    },
+    "type": {
+      "konnect_managed_redis": "Konnect-managed Redis",
+      "self_managed_redis": "Self-managed Redis"
+    },
     "empty_state": {
       "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing.",
+      "description_with_managed_konnect": "Connect your own Redis instance or use a managed one from Konnect. Set up configurations for your gateway plugins to store and retrieve data, like counters or other data, needed during request processing.",
       "feature_1": {
         "title": "Store your Redis configurations",
         "description": "Define a Redis configuration once and use it across multiple plugins."

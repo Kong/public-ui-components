@@ -17,7 +17,8 @@ vi.mock('monaco-editor', () => {
       focus: vi.fn(),
       trigger: vi.fn(),
       dispose: vi.fn(),
-      getModel: vi.fn(() => ({ uri: { toString: () => 'mock://model' }, dispose: vi.fn() })),
+      getModel: vi.fn(() => ({ uri: { toString: () => 'mock://model' }, dispose: vi.fn(), getLanguageId: vi.fn(() => 'javascript'), onDidChangeLanguage: vi.fn(() => createDisposable()) })),
+      addAction: vi.fn(() => createDisposable()),
       getContribution: vi.fn(() => ({
         getState: vi.fn(() => ({
           isRevealed: false,
@@ -31,7 +32,11 @@ vi.mock('monaco-editor', () => {
     setTheme: vi.fn(),
     createModel: vi.fn(() => ({
       setValue: vi.fn(),
+      getValue: vi.fn(() => ''),
+      getFullModelRange: vi.fn(() => ({ startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 1 })),
       dispose: vi.fn(),
+      getLanguageId: vi.fn(() => 'javascript'),
+      onDidChangeLanguage: vi.fn(() => createDisposable()),
     })),
   }
 
@@ -47,10 +52,32 @@ vi.mock('monaco-editor', () => {
     },
   }
 
+  // Mock KeyCode enum
+  const KeyCode = {
+    KeyA: 31,
+    KeyB: 32,
+    KeyK: 40,
+    KeyP: 41,
+    Digit5: 15,
+    F2: 61,
+    Enter: 3,
+    LeftArrow: 15,
+  }
+
+  // Mock KeyMod enum
+  const KeyMod = {
+    CtrlCmd: 1 << 11,
+    Shift: 1 << 10,
+    Alt: 1 << 9,
+    WinCtrl: 1 << 8,
+  }
+
   return {
     Uri,
     editor,
     languages,
     json,
+    KeyCode,
+    KeyMod,
   }
 })

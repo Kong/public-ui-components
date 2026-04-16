@@ -115,7 +115,10 @@
       data-testid="kong-ui-app-layout-main"
     >
       <div class="kong-ui-app-layout-content">
-        <div class="kong-ui-app-layout-content-inner">
+        <div
+          class="kong-ui-app-layout-content-inner"
+          :class="{ 'remove-inner-padding': removeContentInnerPadding }"
+        >
           <!-- Default host app teleport container -->
           <div id="kong-ui-app-layout-teleport-default-slot" />
           <slot name="app-error" />
@@ -181,6 +184,10 @@ const props = defineProps({
     type: String as PropType<'light' | 'dark'>,
     default: 'light',
     validator: (theme: 'light' | 'dark'): boolean => ['light', 'dark'].includes(theme),
+  },
+  removeContentInnerPadding: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -320,11 +327,11 @@ onBeforeUnmount(() => {
 @use "../styles/variables" as *;
 
 .kong-ui-app-layout {
-  background: $kui-color-background-inverse;
+  background: var(--kui-color-background-inverse, $kui-color-background-inverse);
   bottom: 0;
   display: flex;
   flex-direction: column;
-  font-family: $kui-font-family-text;
+  font-family: var(--kui-font-family-text, $kui-font-family-text);
   height: 100%;
   left: 0;
   overflow: hidden;
@@ -381,7 +388,7 @@ onBeforeUnmount(() => {
     }
 
     &.full-width {
-      margin-left: $kui-space-0;
+      margin-left: var(--kui-space-0, $kui-space-0);
     }
 
     .kong-ui-app-layout-content {
@@ -390,7 +397,13 @@ onBeforeUnmount(() => {
 
       // Apply the padding to the inner element
       &-inner {
-        padding: var(--kong-ui-app-layout-content-padding-top, $kui-space-70) var(--kong-ui-app-layout-content-padding-x, $kui-space-70) var(--kong-ui-app-layout-content-padding-bottom, $kui-space-130);
+        padding: var(--kong-ui-app-layout-content-padding-top, var(--kui-space-70, $kui-space-70)) var(--kong-ui-app-layout-content-padding-x, var(--kui-space-70, $kui-space-70)) var(--kong-ui-app-layout-content-padding-bottom, var(--kui-space-130, $kui-space-130));
+
+        &.remove-inner-padding {
+          &:has(.kong-ui-public-page-layout) {
+            padding: var(--kui-space-0, $kui-space-0);
+          }
+        }
       }
     }
   }
@@ -398,14 +411,14 @@ onBeforeUnmount(() => {
   // Style overrides if AppNavbar is hidden
   &.navbar-hidden {
     .kong-ui-app-layout-main {
-      margin-top: $kui-space-0;
+      margin-top: var(--kui-space-0, $kui-space-0);
     }
   }
 
   // Style overrides if AppSidebar is hidden
   &.sidebar-hidden {
     .kong-ui-app-layout-main {
-      margin-left: $kui-space-0;
+      margin-left: var(--kui-space-0, $kui-space-0);
       width: 100%;
     }
   }
@@ -420,7 +433,7 @@ onBeforeUnmount(() => {
 
     // Modify KAlert styles
     :deep(.k-alert) {
-      border-radius: $kui-border-radius-0 !important;
+      border-radius: var(--kui-border-radius-0, $kui-border-radius-0) !important;
     }
   }
 }

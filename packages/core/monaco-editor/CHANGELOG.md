@@ -3,6 +3,193 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.21.0...@kong-ui-public/monaco-editor@0.22.0) (2026-04-07)
+
+
+### Features
+
+* **tests:** create getTestId helper [TDX-7648] ([#3090](https://github.com/Kong/public-ui-components/issues/3090)) ([b5a4739](https://github.com/Kong/public-ui-components/commit/b5a473948ed0d4e5f883716c887a3b8303c0751b))
+
+
+
+
+
+# [0.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.20.4...@kong-ui-public/monaco-editor@0.21.0) (2026-04-07)
+
+
+### Features
+
+* **monaco-editor:** code lens provider presets ([#2816](https://github.com/Kong/public-ui-components/issues/2816)) ([1c20ff7](https://github.com/Kong/public-ui-components/commit/1c20ff78b07c848d891bfd3f282d33a776d1ec50))
+
+
+
+
+
+## [0.20.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.20.3...@kong-ui-public/monaco-editor@0.20.4) (2026-03-25)
+
+
+### Bug Fixes
+
+* **deps:** bump icons ([#3054](https://github.com/Kong/public-ui-components/issues/3054)) ([77e55ac](https://github.com/Kong/public-ui-components/commit/77e55ac97c12b1b0bbab2b9c46ad78191317e807))
+
+
+
+
+
+## [0.20.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.20.2...@kong-ui-public/monaco-editor@0.20.3) (2026-03-24)
+
+
+### Bug Fixes
+
+* apply token-var-usage stylelint rule ([#2959](https://github.com/Kong/public-ui-components/issues/2959)) ([c35b1fc](https://github.com/Kong/public-ui-components/commit/c35b1fc62fb4ba839efc5bce5da0d113a8f019ff))
+
+
+
+
+
+## [0.20.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.20.1...@kong-ui-public/monaco-editor@0.20.2) (2026-03-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.47.0 ([#3032](https://github.com/Kong/public-ui-components/issues/3032)) ([8f04a91](https://github.com/Kong/public-ui-components/commit/8f04a919b363b9ed27d6b7b8b890f679fb9f604b))
+
+
+
+
+
+## [0.20.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.20.0...@kong-ui-public/monaco-editor@0.20.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3011](https://github.com/Kong/public-ui-components/issues/3011)) ([af2d115](https://github.com/Kong/public-ui-components/commit/af2d115eea61eb0b95036cb4785ee19f4399dad6))
+
+
+
+
+
+# [0.20.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.19.1...@kong-ui-public/monaco-editor@0.20.0) (2026-03-18)
+
+
+### Features
+
+* **entities-plugins:** jwt nodes for datakit flow editor ([#3002](https://github.com/Kong/public-ui-components/issues/3002)) ([c6d1667](https://github.com/Kong/public-ui-components/commit/c6d16674bb9a18b13629f56dc898c279be9c98b8))
+
+
+
+
+
+## [0.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.19.0...@kong-ui-public/monaco-editor@0.19.1) (2026-03-06)
+
+
+### Bug Fixes
+
+* **monaco-editor:** improve overflow handling by using direct DOM measurements for toolbar size ([#2977](https://github.com/Kong/public-ui-components/issues/2977)) ([6b4aecb](https://github.com/Kong/public-ui-components/commit/6b4aecb6b88e5e7cd9019c969b189d5d8141635a))
+
+
+
+
+
+# [0.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.18.0...@kong-ui-public/monaco-editor@0.19.0) (2026-03-06)
+
+
+### Features
+
+* **monaco-editor:** add customizable toolbar slots ([#2972](https://github.com/Kong/public-ui-components/issues/2972)) ([a22642f](https://github.com/Kong/public-ui-components/commit/a22642f57cf42ad4d65926822c6a9bd8c9bcf43d))
+
+
+
+
+
+# [0.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.17.0...@kong-ui-public/monaco-editor@0.18.0) (2026-03-05)
+
+
+### Features
+
+* **monaco-editor:** add action buttons to overflow menu based on screen width [KHCP-19811] ([#2966](https://github.com/Kong/public-ui-components/issues/2966)) ([20a3eb7](https://github.com/Kong/public-ui-components/commit/20a3eb7751a595023eb47aeb72ccc2f567951a94))
+
+
+
+
+
+# [0.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.16.0...@kong-ui-public/monaco-editor@0.17.0) (2026-03-04)
+
+
+### Features
+
+* **monaco-editor:** add action buttons for code block, blockquote, and table [KHCP-19536] ([#2965](https://github.com/Kong/public-ui-components/issues/2965)) ([ed8612a](https://github.com/Kong/public-ui-components/commit/ed8612a390323a17aa2eec606bdbc34861ac1d52))
+
+
+
+
+
+# [0.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.15.0...@kong-ui-public/monaco-editor@0.16.0) (2026-03-04)
+
+
+### Features
+
+* **monaco-editor:** add list actions group [KHCP-19535] ([#2960](https://github.com/Kong/public-ui-components/issues/2960)) ([5cdbf6c](https://github.com/Kong/public-ui-components/commit/5cdbf6ca11d3a5d1d8b01520f8bdab88ad02db24))
+
+
+
+
+
+# [0.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.14.0...@kong-ui-public/monaco-editor@0.15.0) (2026-03-04)
+
+
+### Features
+
+* **monaco-editor:** language-aware model context helpers ([#2776](https://github.com/Kong/public-ui-components/issues/2776)) ([c6dc1ae](https://github.com/Kong/public-ui-components/commit/c6dc1ae7248e05a826707f2909913bac33fa5470))
+
+
+
+
+
+# [0.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.13.0...@kong-ui-public/monaco-editor@0.14.0) (2026-03-03)
+
+
+### Features
+
+* **monaco-editor:** add insert actions group [KHCP-19534] ([#2955](https://github.com/Kong/public-ui-components/issues/2955)) ([36faa06](https://github.com/Kong/public-ui-components/commit/36faa06b1c46b9a16b296e2367f9f82e65b229b0))
+
+
+
+
+
+# [0.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.12.0...@kong-ui-public/monaco-editor@0.13.0) (2026-03-03)
+
+
+### Features
+
+* **monaco-editor:** add default formatting action buttons [KHCP-19533] ([#2925](https://github.com/Kong/public-ui-components/issues/2925)) ([b221d24](https://github.com/Kong/public-ui-components/commit/b221d24d113962022a0c6f4014915629ac50e549))
+
+
+
+
+
+# [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.11.0...@kong-ui-public/monaco-editor@0.12.0) (2026-02-09)
+
+
+### Features
+
+* **monaco-editor:** add support for toolbar and action buttons [KHCP-18444] ([#2791](https://github.com/Kong/public-ui-components/issues/2791)) ([3a0b761](https://github.com/Kong/public-ui-components/commit/3a0b761efdac4ea257cd3120652fa091f2a749b9))
+
+
+
+
+
+# [0.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.10.1...@kong-ui-public/monaco-editor@0.11.0) (2026-01-28)
+
+
+### Features
+
+* **monaco-editor:** export MonacoEditorStatusOverlay ([#2887](https://github.com/Kong/public-ui-components/issues/2887)) ([dd26373](https://github.com/Kong/public-ui-components/commit/dd26373937e3154d094c992013116840d7e69334))
+
+
+
+
+
 ## [0.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.10.0...@kong-ui-public/monaco-editor@0.10.1) (2026-01-26)
 
 

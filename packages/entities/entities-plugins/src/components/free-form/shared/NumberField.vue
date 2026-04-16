@@ -18,7 +18,7 @@
         min: between.min,
         max: between.max,
       }"
-      :data-autofocus="isAutoFocus"
+      :data-autofocus="autofocus ? 'true' : undefined"
       :data-testid="`ff-${field.path.value}`"
       :model-value="modelValue"
       :type="inputType"
@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import type { InputProps, LabelAttributes } from '@kong/kongponents'
-import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
+import { useField, useFieldAttrs } from './composables'
 import { computed, inject, toRef } from 'vue'
 import type { NumberLikeFieldSchema } from 'src/types/plugins/form-schema'
 import EnhancedInput from './EnhancedInput.vue'
@@ -69,8 +69,7 @@ export interface NumberFieldProps extends InputProps, BaseFieldProps {
 }
 
 const {
-  // Props of type boolean cannot distinguish between `undefined` and `false` in vue.
-  // so we need to show them declaring their default value as undefined
+  autofocus,
   showVaultSecretPicker = undefined,
   name,
   ...props
@@ -134,9 +133,6 @@ function normalizeValue(value: string): number | string | null {
 
   return num
 }
-
-const isAutoFocus = useIsAutoFocus(field.ancestors)
-
 const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
 
 const schema = computed(() => ({ referenceable: realShowVaultSecretPicker.value }))

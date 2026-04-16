@@ -130,7 +130,7 @@ import type { PropType } from 'vue'
 import { computed, onBeforeMount, onMounted, reactive, ref, watch, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
-import { INITIAL_SHARED_ROUTE_RULES_FIELDS, INITIAL_TRADITIONAL_ROUTE_RULES_VALUES } from '../constants'
+import { INITIAL_SHARED_ROUTE_RULES_FIELDS, INITIAL_TRADITIONAL_ROUTE_RULES_VALUES, DEFAULT_PROTOCOL } from '../constants'
 import endpoints from '../routes-endpoints'
 import type {
   BaseRoutePayload,
@@ -278,7 +278,7 @@ const state = reactive<RouteState<BaseRouteStateFields & TraditionalRouteRulesFi
   routeFlavors: props.routeFlavors,
   fields: {
     name: '',
-    protocols: 'http,https',
+    protocols: DEFAULT_PROTOCOL,
     tags: '',
     service_id: '',
     ...INITIAL_SHARED_ROUTE_RULES_FIELDS,
@@ -316,7 +316,7 @@ const originalCustomMethods = ref<Array<{ label: string, value: string }>>([])
 
 const originalFields = reactive<BaseRouteStateFields & TraditionalRouteRulesFields & ExpressionsRouteRulesFields>({
   name: '',
-  protocols: 'http,https',
+  protocols: DEFAULT_PROTOCOL,
   tags: '',
   service_id: '',
   ...INITIAL_SHARED_ROUTE_RULES_FIELDS,
@@ -650,12 +650,12 @@ provide('configType', configType)
       flex-direction: column;
 
       .select-item-label {
-        font-weight: $kui-font-weight-semibold;
+        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       }
 
       .select-item-description {
-        color: $kui-color-text-neutral;
-        font-size: $kui-font-size-20;
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
       }
     }
 
