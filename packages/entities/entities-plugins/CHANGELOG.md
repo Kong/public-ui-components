@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.193.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.192.2...@kong-ui-public/entities-plugins@9.193.0) (2026-04-16)
+
+
+### Features
+
+* **entities-plugins:** add metering-and-billing-plugin form ([#3058](https://github.com/Kong/public-ui-components/issues/3058)) ([139e1ff](https://github.com/Kong/public-ui-components/commit/139e1ffa294095bbe58039e503ff71c7762eb426))
+
+
+
+
+
 ## [9.192.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.192.1...@kong-ui-public/entities-plugins@9.192.2) (2026-04-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
