@@ -44,6 +44,7 @@
             :context="internalContext"
             :definition="tile.meta"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+            :hide-actions="preview"
             :is-fullscreen="isFullscreen"
             :query-ready="queryReady"
             :tile-id="tile.id"
@@ -84,8 +85,12 @@ import {
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
-const props = defineProps<{
+const {
+  context,
+  preview = false,
+} = defineProps<{
   context: DashboardRendererContext
+  preview?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -120,8 +125,8 @@ composables.useRequestQueue()
 const configStore = useAnalyticsConfigStore()
 
 const timeSpec = computed<TimeRangeV4>(() => {
-  if (props.context.timeSpec) {
-    return props.context.timeSpec
+  if (context.timeSpec) {
+    return context.timeSpec
   }
 
   return {
@@ -137,7 +142,7 @@ const queryReady = computed<boolean>(() => {
   // We're ready to issue queries if we know the time spec.
   // We know the timespec if we were given the timespec, or if the config store has loaded the org's retention
   // and we're able to calculate a timespec.
-  return !!props.context.timeSpec || !configStore.loading
+  return !!context.timeSpec || !configStore.loading
 })
 
 const tileSortFn = (a: TileConfig, b: TileConfig) => {
@@ -178,7 +183,7 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
       }
     }
 
-    if (props.context.editable && !tile.id) {
+    if (context.editable && !tile.id) {
       console.warn(
         'No id provided for tile. One will be generated automatically,',
         'however tracking changes to this tile may not work as expected.',
@@ -301,7 +306,7 @@ const globalFilters = computed<AllFilters[]>(() => {
 
 const { internalContext } = composables.useDashboardInternalContext({
   globalFilters,
-  context: toRef(props, 'context'),
+  context: toRef(() => context),
   isFullscreen,
 })
 

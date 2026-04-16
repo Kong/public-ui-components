@@ -977,6 +977,34 @@ describe('<DashboardRenderer />', () => {
     cy.getTestId('tile-tile-1').get('.ui-resizable-se').should('exist')
   })
 
+  it('preview mode hides tile kebab menus', () => {
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '15m',
+        },
+        editable: true,
+      },
+      modelValue: fourByFourDashboardConfigJustCharts,
+      preview: true,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    fourByFourDashboardConfigJustCharts.tiles.forEach((tile: TileConfig) => {
+      cy.getTestId(`kebab-action-menu-${tile.id}`).should('not.exist')
+    })
+  })
+
   it('tiles maintain row-column order after reordering', () => {
     const configRef = ref<DashboardConfig>(fourByFourDashboardConfigJustCharts)
     const props = {
