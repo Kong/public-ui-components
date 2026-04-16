@@ -19,7 +19,7 @@
     :data-testid="`ff-array-${field.path.value}`"
   >
     <header
-      v-if="!!fieldAttrs.label"
+      v-if="!!fieldAttrs.label && !hideLabel"
       class="ff-array-field-header"
       :data-testid="`ff-array-header-${field.path.value}`"
     >
@@ -190,6 +190,7 @@ const props = defineProps<{
   itemLabel?: string | ((item: T, index: number) => string)
   appearance?: 'default' | 'card' | 'tabs'
   stickyTabs?: boolean | string | number
+  hideLabel?: boolean
 } & BaseFieldProps>()
 
 const emit = defineEmits<{

@@ -72,6 +72,7 @@ provide(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, true)
 useProvideExperimentalFreeForms([
   'service-protection',
   'prometheus',
+  'metering-and-billing',
   'aws-lambda',
   'exit-transformer',
   'file-log',
