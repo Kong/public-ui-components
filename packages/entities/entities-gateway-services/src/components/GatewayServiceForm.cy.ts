@@ -378,6 +378,31 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('tls-sans-uris-input-0').should('have.value', 'spiffe://example.com/service')
     })
 
+    it('should hide tls_sans fields and emit tls_sans as undefined when isTlsSansSupported is false', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          isTlsSansSupported: false,
+          onModelUpdated: cy.spy().as('onModelUpdatedSpy'),
+        },
+      })
+
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+      cy.getTestId('gateway-service-protocol-radio').click()
+      cy.getTestId('gateway-service-protocol-select').click()
+      cy.getTestId('select-item-https').click()
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
+
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('not.exist')
+      cy.getTestId('gateway-service-tls-sans-uris').should('not.exist')
+
+      cy.get('@onModelUpdatedSpy').should('have.been.called')
+      cy.get('@onModelUpdatedSpy').then((spy: any) => {
+        const lastCall = spy.lastCall.args[0]
+        expect(lastCall.tls_sans).to.equal(undefined)
+      })
+    })
+
     it('should correctly pass getPayload as props to json/yaml code blocks', () => {
       interceptKonnect()
 
