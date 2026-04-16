@@ -1306,12 +1306,14 @@
       "schema_file": {
         "label": "Upload schema file",
         "placeholder": "No file selected",
+        "placeholder_edit": "File not changed",
         "button_text": "Select File",
         "help": "Only Lua based schemas are supported by Konnect. Other plugin modules can be in any language as desired. Learn more"
       },
       "handler_file": {
         "label": "Upload handler file",
         "placeholder": "No file selected",
+        "placeholder_edit": "File not changed",
         "button_text": "Select File",
         "help": "Upload plugin handler to the data plane."
       },
@@ -1347,6 +1349,12 @@
           "link": "Learn more"
         }
       }
+    },
+    "errors": {
+      "file_read_error": "Failed to read file content. Please try again.",
+      "file_too_large": "File size exceeds the maximum limit of 1 MB.",
+      "plugin_not_found": "The selected plugin could not be found. Please refresh the list and try again.",
+      "no_supported_types": "No supported custom plugin types are available in this context."
     }
   }
 }

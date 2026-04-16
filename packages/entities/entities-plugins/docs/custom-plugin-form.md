@@ -31,46 +31,69 @@ A multi-step form component for creating and editing custom Kong plugins. Suppor
 
 #### `config`
 
-- type: `Object as PropType<CustomPluginFormConfig>`
+- type: `Object as PropType<KonnectCustomPluginFormConfig | KongManagerCustomPluginFormConfig>`
 - required: `true`
 - default: `undefined`
-- properties:
+
+Supports both Konnect and Kong Manager configurations.
+
+**Common properties:**
+
   - `app`:
-    - type: `'konnect'`
+    - type: `'konnect' | 'kongManager'`
     - required: `true`
-    - App name (currently Konnect only).
+    - App type identifier.
 
   - `apiBaseUrl`:
     - type: `string`
     - required: `true`
     - Base URL for API requests.
 
-  - `controlPlaneId`:
-    - type: `string`
-    - required: `true`
-    - The control plane ID.
-
   - `cancelRoute`:
     - type: `RouteLocationRaw`
     - required: `true`
     - Route to navigate to when form is cancelled.
 
+  - `successRoute`:
+    - type: `RouteLocationRaw`
+    - required: `true`
+    - Route to navigate to after successful create/update.
+
   - `clonablePlugins`:
-    - type: `ClonablePlugin[]`
+    - type: `string[]`
     - required: `false`
     - default: `undefined`
-    - Array of available plugins for cloning. Only needed when using "Cloned" plugin type.
-    - Each item has: `{ label: string, value: string }`
+    - Array of available plugin names for cloning. Only needed when using "Cloned" plugin type.
 
-The base Konnect config for the form.
+**Konnect-specific:**
 
-#### `pluginId`
+  - `controlPlaneId`:
+    - type: `string`
+    - required: `true`
+    - The control plane ID.
+
+**Kong Manager-specific:**
+
+  - `workspace`:
+    - type: `string`
+    - required: `true`
+    - The workspace name. Note: Kong Manager does not support installed custom plugins — pass `unsupportedTypes: ['installed']`.
+
+#### `pluginName`
 
 - type: `String`
 - required: `false`
 - default: `''`
 
-The ID of an existing plugin when in edit mode. When provided, the form enters edit mode and hides Step 1 (plugin type selection).
+The name of an existing plugin when in edit mode. When provided, the form enters edit mode and hides Step 1 (plugin type selection).
+
+#### `unsupportedTypes`
+
+- type: `CustomPluginFormType[]`
+- required: `false`
+- default: `[]`
+
+List of custom plugin types to hide in create mode. If all three types are unsupported, the component renders an error state instead of the form.
 
 ### Events
 
@@ -78,20 +101,20 @@ The ID of an existing plugin when in edit mode. When provided, the form enters e
 
 Emitted when the form is submitted with valid data.
 
-Payload: `FormPayload` - Union type containing:
-- `InstalledPluginPayload`: `{ pluginType: 'installed', schemaFile: File }`
-- `StreamedPluginPayload`: `{ pluginType: 'streamed', schemaFile: File, handlerFile: File, name: string }`
+Payload: `InstalledPluginResponse | StreamedPluginResponse | ClonedPluginPayload`
+- `InstalledPluginResponse`: API response for installed plugins (contains `item.lua_schema`, `item.name`, etc.)
+- `StreamedPluginResponse`: API response for streamed plugins (contains `id`, `name`, `schema`, `handler`, etc.)
 - `ClonedPluginPayload`: `{ pluginType: 'cloned', sourcePlugin: string, aliasName: string, priority?: string }`
 
 #### `error`
 
-Emitted when an error occurs during form submission.
+Emitted when an error occurs during data fetching (edit mode) or form submission.
 
-Payload: `Error` object with error details.
+Payload: `unknown` - the error object.
 
 #### `loading`
 
-Emitted to indicate loading state during form submission.
+Emitted to indicate loading state during data fetching (edit mode).
 
 Payload: `boolean` - `true` when loading starts, `false` when complete.
 
@@ -105,8 +128,8 @@ None. The form structure is fixed and all content is controlled via props.
 <template>
   <CustomPluginForm
     :config="formConfig"
-    :plugin-id="currentPluginId"
-    @update="handleFormSubmit"
+    :plugin-name="currentPluginName"
+    :unsupported-types="['cloned']"
     @error="handleError"
     @loading="isLoading = $event"
   />
@@ -114,27 +137,21 @@ None. The form structure is fixed and all content is controlled via props.
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import CustomPluginForm from '@kong-ui-public/entities-plugins/CustomPluginForm.vue'
-import type { CustomPluginFormConfig, FormPayload } from '@kong-ui-public/entities-plugins'
+import type { KonnectCustomPluginFormConfig } from '@kong-ui-public/entities-plugins'
 
-const router = useRouter()
 const isLoading = ref(false)
-const currentPluginId = ref('')
+const currentPluginName = ref('')
 
-const formConfig: CustomPluginFormConfig = {
+const formConfig: KonnectCustomPluginFormConfig = {
   app: 'konnect',
   apiBaseUrl: 'https://api.example.com',
   controlPlaneId: 'my-control-plane',
   cancelRoute: { name: 'plugins-list' },
+  successRoute: { name: 'plugins-list' },
 }
 
-const handleFormSubmit = (payload: FormPayload) => {
-  console.log('Form submitted:', payload)
-  // Handle submission - send to API, etc.
-}
-
-const handleError = (error: Error) => {
+const handleError = (error: unknown) => {
   console.error('Form error:', error)
 }
 </script>
@@ -175,10 +192,12 @@ The form includes a collapsible comparison table showing differences between the
 
 ### Edit Mode
 
-When `pluginId` is provided:
+When `pluginName` is provided:
+- The component fetches the existing plugin data (tries installed, then streamed endpoints)
 - Step 1 (plugin type selection) is hidden
 - Plugin type cannot be changed
-- Submit action becomes an update operation (implementation pending)
+- File upload fields show "File not changed" placeholder; re-upload is optional
+- Submit calls the appropriate update API endpoint
 
 ### Plugin Icon Support
 

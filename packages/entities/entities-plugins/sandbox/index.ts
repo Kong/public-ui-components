@@ -50,7 +50,8 @@ const init = async () => {
       {
         path: '/custom-plugin/:plugin/edit',
         name: 'edit-custom-plugin',
-        component: () => import('./pages/FallbackPage.vue'),
+        props: true,
+        component: () => import('./pages/CustomPluginFormPage.vue'),
       },
       {
         path: '/plugin/:plugin/:id/edit',
