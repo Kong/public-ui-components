@@ -9,7 +9,7 @@ overrides:
   form-data@>=3.0.0 <3.0.4: '>=4.0.4'
   minimatch@>=9.0.0 <9.0.7: '>=9.0.7'
   serialize-javascript@<=7.0.2: '>=7.0.5'
-  dompurify@<3.2.4: '>=3.3.3'
+  dompurify@<3.2.4: '>=3.4.0'
   picomatch@<2.3.2: '>=2.3.2'
   picomatch@>=4.0.0 <4.0.4: '>=4.0.4'
   handlebars@>=4.0.0 <=4.7.8: '>=4.7.9'
