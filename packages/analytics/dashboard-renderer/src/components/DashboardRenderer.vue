@@ -22,7 +22,7 @@
         {{ i18n.t('renderer.noQueryBridge') }}
       </KAlert>
       <component
-        :is="context.editable && !isFullscreen ? DraggableGridLayout : GridLayout"
+        :is="isEditable && !isFullscreen ? DraggableGridLayout : GridLayout"
         v-else
         ref="gridLayoutRef"
         :tile-height="model.tile_height"
@@ -72,7 +72,7 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import type { ComponentPublicInstance } from 'vue'
-import { computed, inject, nextTick, ref, toRef } from 'vue'
+import { computed, inject, nextTick, ref } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
@@ -145,6 +145,13 @@ const queryReady = computed<boolean>(() => {
   return !!context.timeSpec || !configStore.loading
 })
 
+const rendererContext = computed<DashboardRendererContext>(() => ({
+  ...context,
+  editable: preview ? false : context.editable,
+}))
+
+const isEditable = computed<boolean>(() => !!rendererContext.value.editable)
+
 const tileSortFn = (a: TileConfig, b: TileConfig) => {
   const rowDiff = a.layout.position.row - b.layout.position.row
   if (rowDiff !== 0) {
@@ -183,7 +190,7 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
       }
     }
 
-    if (context.editable && !tile.id) {
+    if (isEditable.value && !tile.id) {
       console.warn(
         'No id provided for tile. One will be generated automatically,',
         'however tracking changes to this tile may not work as expected.',
@@ -306,7 +313,7 @@ const globalFilters = computed<AllFilters[]>(() => {
 
 const { internalContext } = composables.useDashboardInternalContext({
   globalFilters,
-  context: toRef(() => context),
+  context: rendererContext,
   isFullscreen,
 })
 

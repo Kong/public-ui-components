@@ -1002,7 +1002,12 @@ describe('<DashboardRenderer />', () => {
 
     fourByFourDashboardConfigJustCharts.tiles.forEach((tile: TileConfig) => {
       cy.getTestId(`kebab-action-menu-${tile.id}`).should('not.exist')
+      cy.getTestId(`edit-tile-${tile.id}`).should('not.exist')
     })
+
+    cy.getTestId('tile-tile-1').trigger('mouseover')
+    cy.getTestId('tile-tile-1').find('.ui-resizable-sw').should('not.exist')
+    cy.getTestId('tile-tile-1').find('.ui-resizable-se').should('not.exist')
   })
 
   it('tiles maintain row-column order after reordering', () => {
