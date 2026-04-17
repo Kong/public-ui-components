@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.15.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.15.2...@kong-ui-public/analytics-chart@10.15.3) (2026-04-17)
+
+
+### Bug Fixes
+
+* **analytics-chart:** format usd metric values with currency symbol in SingleValue ([#3144](https://github.com/Kong/public-ui-components/issues/3144)) ([2c181e5](https://github.com/Kong/public-ui-components/commit/2c181e530ea2f9d7590ec51e4393f78a1d13046c))
+
+
+
+
+
 ## [10.15.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.15.1...@kong-ui-public/analytics-chart@10.15.2) (2026-04-17)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
