@@ -54,7 +54,7 @@
     "@kong/icons": "^1.48.0",
     "approximate-number": "^2.1.1",
     "axios": "^1.13.6",
-    "swrv": "^1.1.0"
+    "swrv": "^1.2.0"
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-config-store": "workspace:^",

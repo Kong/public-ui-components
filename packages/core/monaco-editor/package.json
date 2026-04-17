@@ -85,13 +85,13 @@
     "jsonc-parser": "^3.3.1",
     "monaco-editor": "^0.55.1",
     "reflect-metadata": "^0.2.2",
-    "shiki": "^3.21.0",
+    "shiki": "^3.23.0",
     "vue": "^3.5.32",
     "yaml": "^2.8.3"
   },
   "dependencies": {
-    "@shikijs/monaco": "^3.21.0",
-    "@vueuse/core": "^14.1.0",
-    "shiki-codegen": "^3.21.0"
+    "@shikijs/monaco": "^3.23.0",
+    "@vueuse/core": "^14.2.1",
+    "shiki-codegen": "^3.23.0"
   }
 }
