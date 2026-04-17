@@ -232,14 +232,14 @@ describe('<SingleValue />', () => {
   })
 
   it('formats small usd values with a currency symbol and no separate unit label', () => {
-    const exploreResult = buildExploreResult({ metricName: 'cost', metricUnit: 'usd', previous: 0.001, current: 0.00412 })
+    const exploreResult = buildExploreResult({ metricName: 'cost', metricUnit: 'usd', previous: 0.00412, current: 0.001 })
     cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
     cy.getTestId('single-value-chart').should('contain.text', '$0.00412')
     cy.get('.single-value-unit').should('not.exist')
   })
 
   it('formats standard usd values with a currency symbol and no separate unit label', () => {
-    const exploreResult = buildExploreResult({ metricName: 'cost', metricUnit: 'usd', previous: 5.00, current: 12.34 })
+    const exploreResult = buildExploreResult({ metricName: 'cost', metricUnit: 'usd', previous: 12.34, current: 5.00 })
     cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
     cy.getTestId('single-value-chart').should('contain.text', '$12.34')
     cy.get('.single-value-unit').should('not.exist')
