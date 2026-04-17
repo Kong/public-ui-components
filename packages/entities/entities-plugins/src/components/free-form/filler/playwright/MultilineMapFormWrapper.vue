@@ -11,7 +11,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div style="padding: 20px">
+  <div class="multiline-form-wrapper">
     <Form :schema="schema">
       <template #free-form-field-renderers-slot>
         <FieldRenderer :match="({ path }) => path === props.fieldName">
@@ -26,3 +26,9 @@ const props = defineProps<{
     </Form>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.multiline-form-wrapper {
+  padding: 20px;
+}
+</style>

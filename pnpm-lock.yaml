@@ -48,7 +48,7 @@ importers:
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.32(typescript@5.9.3)))(vue@3.5.32(typescript@5.9.3))
       '@stylistic/stylelint-plugin':
         specifier: ^5.0.1
-        version: 5.0.1(stylelint@17.4.0(typescript@5.9.3))
+        version: 5.0.1(stylelint@17.8.0(typescript@5.9.3))
       '@types/flat':
         specifier: ^5.0.5
         version: 5.0.5
@@ -128,20 +128,20 @@ importers:
         specifier: ^1.97.3
         version: 1.97.3
       stylelint:
-        specifier: ^17.4.0
-        version: 17.4.0(typescript@5.9.3)
+        specifier: ^17.5.0
+        version: 17.8.0(typescript@5.9.3)
       stylelint-config-html:
         specifier: ^1.1.0
-        version: 1.1.0(postcss-html@1.8.1)(stylelint@17.4.0(typescript@5.9.3))
+        version: 1.1.0(postcss-html@1.8.1)(stylelint@17.8.0(typescript@5.9.3))
       stylelint-config-recommended-scss:
         specifier: ^17.0.1
-        version: 17.0.1(postcss@8.5.9)(stylelint@17.4.0(typescript@5.9.3))
+        version: 17.0.1(postcss@8.5.9)(stylelint@17.8.0(typescript@5.9.3))
       stylelint-config-recommended-vue:
         specifier: ^1.6.1
-        version: 1.6.1(postcss-html@1.8.1)(stylelint@17.4.0(typescript@5.9.3))
+        version: 1.6.1(postcss-html@1.8.1)(stylelint@17.8.0(typescript@5.9.3))
       stylelint-order:
         specifier: ^7.0.1
-        version: 7.0.1(stylelint@17.4.0(typescript@5.9.3))
+        version: 7.0.1(stylelint@17.8.0(typescript@5.9.3))
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/wasm@1.15.7)(@types/node@24.12.2)(typescript@5.9.3)
@@ -621,10 +621,10 @@ importers:
         version: 1.1.0(monaco-editor@0.55.1)
       vite-plugin-top-level-await:
         specifier: ^1.6.0
-        version: 1.6.0(rollup@4.59.0)(vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))
+        version: 1.6.0(rollup@4.59.0)(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3))
       vite-plugin-wasm:
         specifier: ^3.5.0
-        version: 3.5.0(vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))
+        version: 3.5.0(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3))
       vue:
         specifier: 3.5.32
         version: 3.5.32(typescript@5.9.3)
@@ -1087,7 +1087,7 @@ importers:
         version: 2.0.0
       '@playwright/experimental-ct-vue':
         specifier: ^1.58.2
-        version: 1.58.2(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))(vue@3.5.32(typescript@5.9.3))(yaml@2.8.3)
+        version: 1.58.2(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3))(vue@3.5.32(typescript@5.9.3))(yaml@2.8.3)
       '@playwright/test':
         specifier: ^1.58.2
         version: 1.58.2
@@ -1382,7 +1382,7 @@ importers:
         version: 1.26.6
       '@vitejs/plugin-vue-jsx':
         specifier: ^4.2.0
-        version: 4.2.0(vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))(vue@3.5.32(typescript@5.9.3))
+        version: 4.2.0(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3))(vue@3.5.32(typescript@5.9.3))
       vue:
         specifier: 3.5.32
         version: 3.5.32(typescript@5.9.3)
@@ -1413,7 +1413,7 @@ importers:
         version: 9.52.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.32(typescript@5.9.3)))(vue@3.5.32(typescript@5.9.3))
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.1
-        version: 1.1.1(rollup@4.59.0)(vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))
+        version: 1.1.1(rollup@4.59.0)(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3))
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -1815,13 +1815,6 @@ packages:
     resolution: {integrity: sha512-LMGQLS9EuADloEFkcTBR3BwV/CGHV7zyDxVRtVDTwdI2Ca4it0CCVTT9wCkxSgokjE5Ho41hEPgb8OEUwoXr6Q==}
     engines: {node: '>=20.19.0'}
 
-  '@csstools/css-calc@3.1.1':
-    resolution: {integrity: sha512-HJ26Z/vmsZQqs/o3a6bgKslXGFAungXGbinULZO3eMsOyNJHeBBZfup5FiZInOghgoM4Hwnmw+OgbJCNg1wwUQ==}
-    engines: {node: '>=20.19.0'}
-    peerDependencies:
-      '@csstools/css-parser-algorithms': ^4.0.0
-      '@csstools/css-tokenizer': ^4.0.0
-
   '@csstools/css-calc@3.2.0':
     resolution: {integrity: sha512-bR9e6o2BDB12jzN/gIbjHa5wLJ4UjD1CB9pM7ehlc0ddk6EBz+yYS1EV2MF55/HUxrHcB/hehAyt5vhsA3hx7w==}
     engines: {node: '>=20.19.0'}
@@ -1842,11 +1835,16 @@ packages:
     peerDependencies:
       '@csstools/css-tokenizer': ^4.0.0
 
-  '@csstools/css-syntax-patches-for-csstree@1.0.28':
-    resolution: {integrity: sha512-1NRf1CUBjnr3K7hu8BLxjQrKCxEe8FP/xmPTenAxCRZWVLbmGotkFvG9mfNpjA6k7Bw1bw4BilZq9cu19RA5pg==}
-
   '@csstools/css-syntax-patches-for-csstree@1.1.1':
     resolution: {integrity: sha512-BvqN0AMWNAnLk9G8jnUT77D+mUbY/H2b3uDTvg2isJkHaOufUE2R3AOwxWo7VBQKT1lOdwdvorddo2B/lk64+w==}
+    peerDependencies:
+      css-tree: ^3.2.1
+    peerDependenciesMeta:
+      css-tree:
+        optional: true
+
+  '@csstools/css-syntax-patches-for-csstree@1.1.3':
+    resolution: {integrity: sha512-SH60bMfrRCJF3morcdk57WklujF4Jr/EsQUzqkarfHXEFcAR1gg7fS/chAE922Sehgzc1/+Tz5H3Ypa1HiEKrg==}
     peerDependencies:
       css-tree: ^3.2.1
     peerDependenciesMeta:
@@ -5138,6 +5136,15 @@ packages:
       typescript:
         optional: true
 
+  cosmiconfig@9.0.1:
+    resolution: {integrity: sha512-hr4ihw+DBqcvrsEDioRO31Z17x71pUYoNe/4h6Z0wB72p7MU7/9gH8Q3s12NFhHPfYBBOV3qyfUxmr/Yn3shnQ==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      typescript: '>=4.9.5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
 
@@ -5165,10 +5172,6 @@ packages:
         optional: true
       webpack:
         optional: true
-
-  css-tree@3.1.0:
-    resolution: {integrity: sha512-0eW44TGN5SQXU1mWSkKwFstI/22X2bG1nYzZTYMAWjylYURhse752YgbE4Cx46AC+bAvI+/dYTPRk1LqSUnu6w==}
-    engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
 
   css-tree@3.2.1:
     resolution: {integrity: sha512-X7sjQzceUhu1u7Y/ylrRZFU2FS6LRiFVp6rKLPg23y3x3c3DOKAwuXGDp+PAGjh6CSnCjYeAul8pcT8bAl+lSA==}
@@ -6486,8 +6489,8 @@ packages:
     resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
     engines: {node: '>=10'}
 
-  globby@16.1.1:
-    resolution: {integrity: sha512-dW7vl+yiAJSp6aCekaVnVJxurRv7DCOLyXqEG3RYMYUg7AuJ2jCqPkZTA8ooqC2vtnkaMcV5WfFBMuEnTu1OQg==}
+  globby@16.2.0:
+    resolution: {integrity: sha512-QrJia2qDf5BB/V6HYlDTs0I0lBahyjLzpGQg3KT7FnCdTonAyPy2RtY802m2k4ALx6Dp752f82WsOczEVr3l6Q==}
     engines: {node: '>=20'}
 
   globjoin@0.1.4:
@@ -7638,9 +7641,6 @@ packages:
 
   mdast-util-to-string@3.2.0:
     resolution: {integrity: sha512-V4Zn/ncyN1QNSqSBxTrMOLpjr+IKdHl2v3KVLoWmDPscP4r9GcCi71gjgvUV1SFSKh92AjAG4peFuBl2/YgCJg==}
-
-  mdn-data@2.12.2:
-    resolution: {integrity: sha512-IEn+pegP1aManZuckezWCO+XZQDplx1366JoVhTpMpBB1sPey/SbveZQUosKiKiGYjg1wH4pMlNgXbCiYgihQA==}
 
   mdn-data@2.27.1:
     resolution: {integrity: sha512-9Yubnt3e8A0OKwxYSXyhLymGW4sCufcLG6VdiDdUGVkPhpqLxlvP5vl1983gQjJl3tqbrM731mjaZaP68AgosQ==}
@@ -9773,8 +9773,8 @@ packages:
     peerDependencies:
       stylelint: ^16.8.2 || ^17.0.0
 
-  stylelint@17.4.0:
-    resolution: {integrity: sha512-3kQ2/cHv3Zt8OBg+h2B8XCx9evEABQIrv4hh3uXahGz/ZEHrTR80zxBiK2NfXNaSoyBzxO1pjsz1Vhdzwn5XSw==}
+  stylelint@17.8.0:
+    resolution: {integrity: sha512-oHkld9T60LDSaUQ4CSVc+tlt9eUoDlxhaGWShsUCKyIL14boZfmK5bSphZqx64aiC5tCqX+BsQMTMoSz8D1zIg==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -10841,8 +10841,8 @@ packages:
     resolution: {integrity: sha512-GmqrO8WJ1NuzJ2DrziEI2o57jKAVIQNf8a18W3nCYU3H7PNWqCCVTeH6/NQE93CIllIgQS98rrmVkYgTX9fFJQ==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  write-file-atomic@7.0.0:
-    resolution: {integrity: sha512-YnlPC6JqnZl6aO4uRc+dx5PHguiR9S6WeoLtpxNT9wIG+BDya7ZNE1q7KOjVgaA73hKhKLpVPgJ5QA9THQ5BRg==}
+  write-file-atomic@7.0.1:
+    resolution: {integrity: sha512-OTIk8iR8/aCRWBqvxrzxR0hgxWpnYBblY1S5hDWBQfk/VFmJwzmJgQFN3WsoUKHISv2eAwe+PpbUzyL1CKTLXg==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
   ws@8.18.3:
@@ -11419,11 +11419,6 @@ snapshots:
 
   '@csstools/color-helpers@6.0.2': {}
 
-  '@csstools/css-calc@3.1.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)':
-    dependencies:
-      '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
-      '@csstools/css-tokenizer': 4.0.0
-
   '@csstools/css-calc@3.2.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)':
     dependencies:
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
@@ -11440,9 +11435,11 @@ snapshots:
     dependencies:
       '@csstools/css-tokenizer': 4.0.0
 
-  '@csstools/css-syntax-patches-for-csstree@1.0.28': {}
-
   '@csstools/css-syntax-patches-for-csstree@1.1.1(css-tree@3.2.1)':
+    optionalDependencies:
+      css-tree: 3.2.1
+
+  '@csstools/css-syntax-patches-for-csstree@1.1.3(css-tree@3.2.1)':
     optionalDependencies:
       css-tree: 3.2.1
 
@@ -12276,12 +12273,12 @@ snapshots:
     dependencies:
       langium: 4.2.2
 
-  '@modyfi/vite-plugin-yaml@1.1.1(rollup@4.59.0)(vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))':
+  '@modyfi/vite-plugin-yaml@1.1.1(rollup@4.59.0)(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3))':
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.59.0)
       js-yaml: 4.1.0
       tosource: 2.0.0-alpha.3
-      vite: 5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)
+      vite: 6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3)
     transitivePeerDependencies:
       - rollup
 
@@ -12750,10 +12747,10 @@ snapshots:
       - tsx
       - yaml
 
-  '@playwright/experimental-ct-vue@1.58.2(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))(vue@3.5.32(typescript@5.9.3))(yaml@2.8.3)':
+  '@playwright/experimental-ct-vue@1.58.2(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3))(vue@3.5.32(typescript@5.9.3))(yaml@2.8.3)':
     dependencies:
       '@playwright/experimental-ct-core': 1.58.2(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3)
-      '@vitejs/plugin-vue': 5.2.4(vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))(vue@3.5.32(typescript@5.9.3))
+      '@vitejs/plugin-vue': 5.2.4(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3))(vue@3.5.32(typescript@5.9.3))
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -12992,7 +12989,7 @@ snapshots:
       estraverse: 5.3.0
       picomatch: 4.0.4
 
-  '@stylistic/stylelint-plugin@5.0.1(stylelint@17.4.0(typescript@5.9.3))':
+  '@stylistic/stylelint-plugin@5.0.1(stylelint@17.8.0(typescript@5.9.3))':
     dependencies:
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-tokenizer': 4.0.0
@@ -13001,7 +12998,7 @@ snapshots:
       postcss-selector-parser: 7.1.1
       postcss-value-parser: 4.2.0
       style-search: 0.1.0
-      stylelint: 17.4.0(typescript@5.9.3)
+      stylelint: 17.8.0(typescript@5.9.3)
 
   '@swagger-api/apidom-ast@0.99.2':
     dependencies:
@@ -13890,9 +13887,25 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@vitejs/plugin-vue-jsx@4.2.0(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3))(vue@3.5.32(typescript@5.9.3))':
+    dependencies:
+      '@babel/core': 7.28.0
+      '@babel/plugin-transform-typescript': 7.28.0(@babel/core@7.28.0)
+      '@rolldown/pluginutils': 1.0.0-beta.32
+      '@vue/babel-plugin-jsx': 1.5.0(@babel/core@7.28.0)
+      vite: 6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3)
+      vue: 3.5.32(typescript@5.9.3)
+    transitivePeerDependencies:
+      - supports-color
+
   '@vitejs/plugin-vue@5.2.4(vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1))(vue@3.5.32(typescript@5.9.3))':
     dependencies:
       vite: 5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)
+      vue: 3.5.32(typescript@5.9.3)
+
+  '@vitejs/plugin-vue@5.2.4(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3))(vue@3.5.32(typescript@5.9.3))':
+    dependencies:
+      vite: 6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3)
       vue: 3.5.32(typescript@5.9.3)
 
   '@vitest/expect@3.2.4':
@@ -15254,6 +15267,15 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
+  cosmiconfig@9.0.1(typescript@5.9.3):
+    dependencies:
+      env-paths: 2.2.1
+      import-fresh: 3.3.1
+      js-yaml: 4.1.1
+      parse-json: 5.2.0
+    optionalDependencies:
+      typescript: 5.9.3
+
   create-require@1.1.1: {}
 
   cross-env@10.1.0:
@@ -15281,11 +15303,6 @@ snapshots:
       semver: 7.7.4
     optionalDependencies:
       webpack: 5.104.1(webpack-cli@6.0.1)
-
-  css-tree@3.1.0:
-    dependencies:
-      mdn-data: 2.12.2
-      source-map-js: 1.2.1
 
   css-tree@3.2.1:
     dependencies:
@@ -16847,7 +16864,7 @@ snapshots:
       merge2: 1.4.1
       slash: 3.0.0
 
-  globby@16.1.1:
+  globby@16.2.0:
     dependencies:
       '@sindresorhus/merge-streams': 4.0.0
       fast-glob: 3.3.3
@@ -18124,8 +18141,6 @@ snapshots:
   mdast-util-to-string@3.2.0:
     dependencies:
       '@types/mdast': 3.0.15
-
-  mdn-data@2.12.2: {}
 
   mdn-data@2.27.1: {}
 
@@ -20498,43 +20513,43 @@ snapshots:
 
   style-search@0.1.0: {}
 
-  stylelint-config-html@1.1.0(postcss-html@1.8.1)(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-config-html@1.1.0(postcss-html@1.8.1)(stylelint@17.8.0(typescript@5.9.3)):
     dependencies:
       postcss-html: 1.8.1
-      stylelint: 17.4.0(typescript@5.9.3)
+      stylelint: 17.8.0(typescript@5.9.3)
 
-  stylelint-config-recommended-scss@17.0.1(postcss@8.5.9)(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-config-recommended-scss@17.0.1(postcss@8.5.9)(stylelint@17.8.0(typescript@5.9.3)):
     dependencies:
       postcss-scss: 4.0.9(postcss@8.5.9)
-      stylelint: 17.4.0(typescript@5.9.3)
-      stylelint-config-recommended: 18.0.0(stylelint@17.4.0(typescript@5.9.3))
-      stylelint-scss: 7.0.0(stylelint@17.4.0(typescript@5.9.3))
+      stylelint: 17.8.0(typescript@5.9.3)
+      stylelint-config-recommended: 18.0.0(stylelint@17.8.0(typescript@5.9.3))
+      stylelint-scss: 7.0.0(stylelint@17.8.0(typescript@5.9.3))
     optionalDependencies:
       postcss: 8.5.9
 
-  stylelint-config-recommended-vue@1.6.1(postcss-html@1.8.1)(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-config-recommended-vue@1.6.1(postcss-html@1.8.1)(stylelint@17.8.0(typescript@5.9.3)):
     dependencies:
       postcss-html: 1.8.1
       semver: 7.7.2
-      stylelint: 17.4.0(typescript@5.9.3)
-      stylelint-config-html: 1.1.0(postcss-html@1.8.1)(stylelint@17.4.0(typescript@5.9.3))
-      stylelint-config-recommended: 14.0.1(stylelint@17.4.0(typescript@5.9.3))
+      stylelint: 17.8.0(typescript@5.9.3)
+      stylelint-config-html: 1.1.0(postcss-html@1.8.1)(stylelint@17.8.0(typescript@5.9.3))
+      stylelint-config-recommended: 14.0.1(stylelint@17.8.0(typescript@5.9.3))
 
-  stylelint-config-recommended@14.0.1(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-config-recommended@14.0.1(stylelint@17.8.0(typescript@5.9.3)):
     dependencies:
-      stylelint: 17.4.0(typescript@5.9.3)
+      stylelint: 17.8.0(typescript@5.9.3)
 
-  stylelint-config-recommended@18.0.0(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-config-recommended@18.0.0(stylelint@17.8.0(typescript@5.9.3)):
     dependencies:
-      stylelint: 17.4.0(typescript@5.9.3)
+      stylelint: 17.8.0(typescript@5.9.3)
 
-  stylelint-order@7.0.1(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-order@7.0.1(stylelint@17.8.0(typescript@5.9.3)):
     dependencies:
       postcss: 8.5.9
       postcss-sorting: 9.1.0(postcss@8.5.9)
-      stylelint: 17.4.0(typescript@5.9.3)
+      stylelint: 17.8.0(typescript@5.9.3)
 
-  stylelint-scss@7.0.0(stylelint@17.4.0(typescript@5.9.3)):
+  stylelint-scss@7.0.0(stylelint@17.8.0(typescript@5.9.3)):
     dependencies:
       css-tree: 3.2.1
       is-plain-object: 5.0.0
@@ -20544,32 +20559,31 @@ snapshots:
       postcss-resolve-nested-selector: 0.1.6
       postcss-selector-parser: 7.1.1
       postcss-value-parser: 4.2.0
-      stylelint: 17.4.0(typescript@5.9.3)
+      stylelint: 17.8.0(typescript@5.9.3)
 
-  stylelint@17.4.0(typescript@5.9.3):
+  stylelint@17.8.0(typescript@5.9.3):
     dependencies:
-      '@csstools/css-calc': 3.1.1(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
+      '@csstools/css-calc': 3.2.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
-      '@csstools/css-syntax-patches-for-csstree': 1.0.28
+      '@csstools/css-syntax-patches-for-csstree': 1.1.3(css-tree@3.2.1)
       '@csstools/css-tokenizer': 4.0.0
       '@csstools/media-query-list-parser': 5.0.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
       '@csstools/selector-resolve-nested': 4.0.0(postcss-selector-parser@7.1.1)
       '@csstools/selector-specificity': 6.0.0(postcss-selector-parser@7.1.1)
       colord: 2.9.3
-      cosmiconfig: 9.0.0(typescript@5.9.3)
+      cosmiconfig: 9.0.1(typescript@5.9.3)
       css-functions-list: 3.3.3
-      css-tree: 3.1.0
+      css-tree: 3.2.1
       debug: 4.4.3(supports-color@8.1.1)
       fast-glob: 3.3.3
       fastest-levenshtein: 1.0.16
       file-entry-cache: 11.1.2
       global-modules: 2.0.0
-      globby: 16.1.1
+      globby: 16.2.0
       globjoin: 0.1.4
       html-tags: 5.1.0
       ignore: 7.0.5
       import-meta-resolve: 4.2.0
-      imurmurhash: 0.1.4
       is-plain-object: 5.0.0
       mathml-tag-names: 4.0.0
       meow: 14.1.0
@@ -20584,7 +20598,7 @@ snapshots:
       supports-hyperlinks: 4.4.0
       svg-tags: 1.0.0
       table: 6.9.0
-      write-file-atomic: 7.0.0
+      write-file-atomic: 7.0.1
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -21319,13 +21333,13 @@ snapshots:
     dependencies:
       monaco-editor: 0.55.1
 
-  vite-plugin-top-level-await@1.6.0(rollup@4.59.0)(vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)):
+  vite-plugin-top-level-await@1.6.0(rollup@4.59.0)(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3)):
     dependencies:
       '@rollup/plugin-virtual': 3.0.2(rollup@4.59.0)
       '@swc/core': 1.15.7
       '@swc/wasm': 1.15.7
       uuid: 10.0.0
-      vite: 5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)
+      vite: 6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3)
     transitivePeerDependencies:
       - '@swc/helpers'
       - rollup
@@ -21361,9 +21375,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-wasm@3.5.0(vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)):
+  vite-plugin-wasm@3.5.0(vite@6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3)):
     dependencies:
-      vite: 5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)
+      vite: 6.4.1(@types/node@24.12.2)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1)(yaml@2.8.3)
 
   vite@5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.97.3)(terser@5.43.1):
     dependencies:
@@ -21795,9 +21809,8 @@ snapshots:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
 
-  write-file-atomic@7.0.0:
+  write-file-atomic@7.0.1:
     dependencies:
-      imurmurhash: 0.1.4
       signal-exit: 4.1.0
 
   ws@8.18.3: {}
