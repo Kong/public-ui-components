@@ -20,6 +20,13 @@
         >
           Add tile
         </KButton>
+        <KButton
+          appearance="primary"
+          size="small"
+          @click="exportPdf"
+        >
+          Export as PDF
+        </KButton>
         <KInputSwitch
           v-model="editableSwitch"
           label="Editable"
@@ -275,6 +282,10 @@ const addTile = () => {
       },
     },
   })
+}
+
+const exportPdf = () => {
+  dashboardRendererRef.value?.exportPdf({ filename: 'sandbox-editable-dashboard' })
 }
 
 watchDebounced(() => dashboardConfig.value.tiles, (newValue) => {
