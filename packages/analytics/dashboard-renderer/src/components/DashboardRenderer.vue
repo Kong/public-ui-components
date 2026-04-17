@@ -81,7 +81,6 @@ import {
   INJECT_QUERY_PROVIDER,
   TIMEFRAME_TOKEN,
 } from '../constants'
-import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const {
@@ -120,20 +119,6 @@ if (!queryBridge) {
 
 // Enable a request queue on the query bridge for all subcomponents.
 composables.useRequestQueue()
-
-const configStore = useAnalyticsConfigStore()
-
-const queryReady = computed<boolean>(() => {
-  // In the future, this will need to be determined on a per-tile basis to support pipelining.
-  // For now, it's fine for it to only be global.
-
-  // We're ready to issue queries if we know the time spec.
-  // We know the timespec if we were given the timespec, or if the config store has loaded the org's retention
-  // and we're able to calculate a timespec.
-  // Note: this checks the *caller-supplied* timeSpec, not internalContext.timeSpec, because the latter
-  // always has a fallback value even before configStore finishes loading.
-  return !!context.timeSpec || !configStore.loading
-})
 
 const tileSortFn = (a: TileConfig, b: TileConfig) => {
   const rowDiff = a.layout.position.row - b.layout.position.row
@@ -295,7 +280,7 @@ const globalFilters = computed<AllFilters[]>(() => {
   return model.value.preset_filters as AllFilters[] ?? []
 })
 
-const { internalContext } = composables.useDashboardInternalContext({
+const { internalContext, queryReady } = composables.useDashboardInternalContext({
   globalFilters,
   context: computed(() => context),
   isFullscreen,

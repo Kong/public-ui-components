@@ -23,6 +23,7 @@ export default function useDashboardInternalContext({
   preview?: Readonly<Ref<boolean>>
 }): {
   internalContext: Readonly<Ref<DashboardRendererContextInternal>>
+  queryReady: Readonly<Ref<boolean>>
 } {
   const configStore = useAnalyticsConfigStore()
 
@@ -108,7 +109,12 @@ export default function useDashboardInternalContext({
     }
   })
 
+  const queryReady = computed<boolean>(() => {
+    return !!context.value.timeSpec || !configStore.loading
+  })
+
   return {
     internalContext,
+    queryReady,
   }
 }

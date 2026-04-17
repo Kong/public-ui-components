@@ -31,11 +31,14 @@ import { getCurrentInstance, nextTick, ref, type App, type Ref } from 'vue'
 
 describe('useContextLinks', () => {
   let app: App | undefined
+  let configFn: Mock
+
   beforeEach(() => {
     vi.clearAllMocks()
+    configFn = vi.fn(() => Promise.resolve({}))
     app = setupPiniaTestStore({ createVueApp: true })
     if (app) {
-      app.provide(INJECT_QUERY_PROVIDER, { configFn: vi.fn(() => Promise.resolve({})) })
+      app.provide(INJECT_QUERY_PROVIDER, { configFn })
     }
   })
 
@@ -51,6 +54,7 @@ describe('useContextLinks', () => {
     globalFilters = [],
     hasZoomProp = false,
     isFullscreen = false,
+    isLoading = false,
     preview = false,
   }: {
     contextEditable?: boolean
@@ -61,6 +65,7 @@ describe('useContextLinks', () => {
     globalFilters?: AllFilters[]
     hasZoomProp?: boolean
     isFullscreen?: boolean
+    isLoading?: boolean
     preview?: boolean
   } = {}) => {
     const context = ref<DashboardRendererContext>({
@@ -81,7 +86,16 @@ describe('useContextLinks', () => {
       }
     })
 
+    configFn.mockImplementation(() => {
+      if (isLoading) {
+        return new Promise(() => {})
+      }
+
+      return Promise.resolve({})
+    })
+
     let internalContext: Ref<DashboardRendererContextInternal>
+    let queryReady: Ref<boolean>
     const wrapper = mount({
       template: '<div />',
       setup() {
@@ -92,6 +106,7 @@ describe('useContextLinks', () => {
           preview: ref(preview),
         })
         internalContext = result.internalContext
+        queryReady = result.queryReady
       },
     })
 
@@ -101,6 +116,8 @@ describe('useContextLinks', () => {
       wrapper,
       // @ts-ignore it's defined in mount, and we await nextTick for it
       internalContext,
+      // @ts-ignore it's defined in mount, and we await nextTick for it
+      queryReady,
     }
   }
 
@@ -126,8 +143,15 @@ describe('useContextLinks', () => {
 
   it('uses the context timeSpec when provided', async () => {
     const timeSpec: TimeRangeV4 = { type: 'relative', time_range: '1h' }
-    const { internalContext } = await setup({ contextTimeSpec: timeSpec })
+    const { internalContext, queryReady } = await setup({ contextTimeSpec: timeSpec })
     expect(internalContext.value).toEqual(expect.objectContaining({ timeSpec }))
+    expect(queryReady.value).to.eq(true)
+  })
+
+  it('sets queryReady to false when the config store is still loading and no timeSpec was provided', async () => {
+    const { queryReady } = await setup({ contextFilters: [], isLoading: true })
+
+    expect(queryReady.value).to.eq(false)
   })
 
   it('uses the context tz when provided', async () => {
