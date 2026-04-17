@@ -239,7 +239,7 @@ jobs:
 
       - name: Check dist bundle size against max-limit
         if: ${{ steps.changed_packages.outputs.filter != '' }}
-        uses: Kong/github-action-dist-size-checker@main
+        uses: Kong/github-action-dist-size-checker@4a3422fbaa0ab9fced4959078dbb69d157db873e # main
 
       - name: Publish Previews
         if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
