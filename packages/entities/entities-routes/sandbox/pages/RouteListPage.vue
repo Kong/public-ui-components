@@ -167,17 +167,17 @@ watch([routeListHideTraditionalColumns, routeListHasExpressionColumn], () => {
 
 <style lang="scss" scoped>
 .sandbox-route-list-control {
-  margin-top: $kui-space-80;
+  margin-top: var(--kui-space-80, $kui-space-80);
 
   :deep(.k-collapse) {
     &.is-collapsed {
       .k-collapse-heading {
         align-items: center;
-        margin-bottom: $kui-space-0 !important;
+        margin-bottom: var(--kui-space-0, $kui-space-0) !important;
       }
 
       .k-collapse-title {
-        margin-bottom: $kui-space-0 !important;
+        margin-bottom: var(--kui-space-0, $kui-space-0) !important;
       }
     }
   }
@@ -187,7 +187,7 @@ watch([routeListHideTraditionalColumns, routeListHasExpressionColumn], () => {
     flex-direction: column;
 
     .route-list-traditional-columns-toggle, .route-list-expressions-column-toggle {
-      margin-bottom: $kui-space-50;
+      margin-bottom: var(--kui-space-50, $kui-space-50);
     }
   }
 }

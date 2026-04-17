@@ -260,7 +260,7 @@ const unwatchEditor = watch(editor, (editor) => {
 .sandbox-model-context {
   box-sizing: border-box;
   display: grid;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
   grid-template-columns: minmax(600px, 1fr) minmax(400px, 600px);
   height: 100%;
   width: 100%;
@@ -269,20 +269,20 @@ const unwatchEditor = watch(editor, (editor) => {
     height: 100%;
 
     :deep(.sandbox-monaco-highlight) {
-      background: rgba($kui-color-background-warning-weaker, 0.85);
+      background: rgba(var(--kui-color-background-warning-weaker, $kui-color-background-warning-weaker), 0.85);
     }
   }
 
   .controls-area {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-60;
+    gap: var(--kui-space-60, $kui-space-60);
     min-height: 0;
-    padding: $kui-space-80 $kui-space-80;
+    padding: var(--kui-space-80, $kui-space-80) var(--kui-space-80, $kui-space-80);
 
     .list {
-      margin: $kui-space-20 0 0 $kui-space-20;
-      padding: $kui-space-40;
+      margin: var(--kui-space-20, $kui-space-20) 0 0 var(--kui-space-20, $kui-space-20);
+      padding: var(--kui-space-40, $kui-space-40);
     }
 
     .info-area {
