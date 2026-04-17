@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.9.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.29...@kong-ui-public/dashboard-renderer@8.9.30) (2026-04-17)
+
+
+### Bug Fixes
+
+* also do not generate zoom links when "hiding actions" ([#3146](https://github.com/Kong/public-ui-components/issues/3146)) ([87ccd40](https://github.com/Kong/public-ui-components/commit/87ccd40497179ccef3a2fa6bc4ef5528617575cf))
+
+
+
+
+
 ## [8.9.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.28...@kong-ui-public/dashboard-renderer@8.9.29) (2026-04-17)
 
 
