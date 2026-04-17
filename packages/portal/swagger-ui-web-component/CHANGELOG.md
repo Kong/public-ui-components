@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.12.18...@kong-ui-public/swagger-ui-web-component@0.12.19) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** refresh renovate all-stable onto main ([#3010](https://github.com/Kong/public-ui-components/issues/3010)) ([c55a51d](https://github.com/Kong/public-ui-components/commit/c55a51d13409413207ea94d5d5e42c64e675e885))
+
+
+
+
+
 ## [0.12.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/swagger-ui-web-component@0.12.17...@kong-ui-public/swagger-ui-web-component@0.12.18) (2026-04-17)
 
 
