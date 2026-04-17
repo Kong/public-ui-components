@@ -326,8 +326,8 @@ const componentData = computed(() => {
       chartOptions: props.definition.chart,
       height: props.height - PADDING_SIZE * 2,
       refreshCounter: refreshCounter.value,
-      requestsLink: requestsLinkZoomActions.value,
-      exploreLink: exploreLinkZoomActions.value,
+      requestsLink: props.hideActions ? undefined : requestsLinkZoomActions.value,
+      exploreLink: props.hideActions ? undefined : exploreLinkZoomActions.value,
     },
     rendererEvents: {
       supportsRequests,

@@ -131,14 +131,16 @@ ${JSON.stringify(props, null, 2)}`,
     expectPropIs('height', 100)
   })
 
-  it('always sets editable as false', () => {
+  it('always sets a non-interactive context', () => {
     setup({ editable: true })
     expectPreviewPropIs('context.editable', true)
     expectTilePropIs('context.editable', false)
+    expectTilePropIs('context.zoomable', false)
 
     setup({ editable: false })
     expectPreviewPropIs('context.editable', false)
     expectTilePropIs('context.editable', false)
+    expectTilePropIs('context.zoomable', false)
   })
 
   it('sets hideActions', () => {
