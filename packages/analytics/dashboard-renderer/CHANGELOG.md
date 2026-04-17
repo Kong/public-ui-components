@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.9.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.27...@kong-ui-public/dashboard-renderer@8.9.28) (2026-04-17)
+
+
+### Bug Fixes
+
+* add preview flag to dashboards ([#3139](https://github.com/Kong/public-ui-components/issues/3139)) ([a25643d](https://github.com/Kong/public-ui-components/commit/a25643dcc56c4d8a67790259da6969b7fd289e0e))
+
+
+
+
+
 ## [8.9.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.26...@kong-ui-public/dashboard-renderer@8.9.27) (2026-04-17)
 
 
