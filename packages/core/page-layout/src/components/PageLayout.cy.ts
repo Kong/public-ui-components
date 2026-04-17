@@ -80,6 +80,44 @@ describe('<PageLayout />', () => {
     cy.getTestId(titleAfterTestId).should('be.visible').and('contain.text', titleAfterText)
   })
 
+  describe('disableRouterView', () => {
+    const tabs = [
+      { key: 'overview', label: 'Overview', to: '/overview' },
+      { key: 'settings', label: 'Settings', to: '/settings' },
+    ]
+
+    it('renders the default slot instead of router-view when disableRouterView is true', () => {
+      const slotTestId = 'page-layout-slot-content'
+      const slotText = 'Slot content'
+
+      cy.mount(PageLayout, {
+        props: {
+          title: 'Test Page Title',
+          tabs,
+          disableRouterView: true,
+        },
+        slots: { default: () => h('div', { 'data-testid': slotTestId }, slotText) },
+      })
+
+      cy.getTestId(slotTestId).should('be.visible').and('contain.text', slotText)
+    })
+
+    it('does not render the default slot when tabs are present and disableRouterView is false', () => {
+      const slotTestId = 'page-layout-slot-content'
+
+      cy.mount(PageLayout, {
+        props: {
+          title: 'Test Page Title',
+          tabs,
+          disableRouterView: false,
+        },
+        slots: { default: () => h('div', { 'data-testid': slotTestId }, 'Slot content') },
+      })
+
+      cy.getTestId(slotTestId).should('not.exist')
+    })
+  })
+
   describe('nested PageLayout detection', () => {
     it('hides its own header when a nested PageLayout is detected', () => {
       const parentTitle = 'Parent Title'

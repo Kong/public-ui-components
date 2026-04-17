@@ -83,6 +83,14 @@ The prop accepts two types of values:
 1. **String URL** (relative or absolute): Rendered as an `<a>` element. If an `app:navigateTo` function is provided via Vue's dependency injection, it will be called instead of the default `window.location.href` assignment.
 2. **Vue Router route object** (`RouteLocationRaw`): Rendered as a `<router-link>` and navigates using `router.push()`.
 
+#### `disableRouterView`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+When `true` and tabs are present, renders the default slot instead of a `<router-view>`. This is not recommended and should only be used in rare cases where props must be set directly on the router-view.
+
 When tabs are provided:
 
 - The internal `PageLayoutTabs` component renders a horizontal tab bar
@@ -98,7 +106,7 @@ When no tabs are provided:
 
 #### `default`
 
-The main content area of the page. This slot is **only rendered when no tabs are provided**. When tabs are present, a `<router-view>` is used instead to render the active tab's route component.
+The main content area of the page. This slot is rendered when no tabs are provided, or when tabs are present and [`disableRouterView`](#disablerouterview) is `true`. When tabs are present and `disableRouterView` is `false` (the default), a `<router-view>` is used instead to render the active tab's route component.
 
 #### `actions`
 

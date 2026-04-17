@@ -69,7 +69,7 @@
       class="page-layout-content"
       :class="{ 'has-nested-page-layout': hasNestedPageLayout }"
     >
-      <router-view v-if="hasTabs" />
+      <router-view v-if="hasTabs && !disableRouterView" />
       <slot
         v-else
         name="default"
@@ -93,6 +93,7 @@ const {
   title,
   backTo,
   tabs = [],
+  disableRouterView = false,
 } = defineProps<PageLayoutProps>()
 
 defineSlots<PageLayoutSlots>()

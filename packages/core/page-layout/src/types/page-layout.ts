@@ -11,6 +11,11 @@ export interface PageLayoutProps {
   backTo?: string | RouteLocationRaw
   /** Tabs */
   tabs?: PageLayoutTab[]
+  /**
+   * Instead of using a <router-view>, render the default slot when tabs are present.
+   * ! This is not recommended and should only be used in rare cases where props must be set directly on the router-view.
+   */
+  disableRouterView?: boolean
 }
 
 export interface PageLayoutSlots {
