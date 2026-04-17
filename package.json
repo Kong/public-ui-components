@@ -23,15 +23,15 @@
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^2.0.16",
+    "@evilmartians/lefthook": "^2.1.5",
     "@kong/design-tokens": "1.20.0",
     "@kong/eslint-config-kong-ui": "^1.6.0",
     "@kong/kongponents": "9.52.5",
     "@stylistic/stylelint-plugin": "^5.0.1",
     "@types/flat": "^5.0.5",
     "@types/js-yaml": "^4.0.9",
-    "@types/jsdom": "^28.0.0",
-    "@types/node": "^24.10.11",
+    "@types/jsdom": "^28.0.1",
+    "@types/node": "^24.10.15",
     "@types/uuid": "^11.0.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
@@ -43,16 +43,16 @@
     "cross-env": "^10.1.0",
     "cypress": "^13.17.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^9.39.2",
+    "eslint": "^9.39.4",
     "js-yaml": "^4.1.1",
-    "jsdom": "^29.0.0",
+    "jsdom": "^29.0.2",
     "lerna": "^9.0.7",
     "npm-run-all2": "^8.0.4",
-    "postcss": "^8.5.6",
-    "postcss-custom-properties": "^15.0.0",
+    "postcss": "^8.5.9",
+    "postcss-custom-properties": "^15.0.1",
     "postcss-html": "^1.8.1",
-    "rimraf": "^6.1.2",
-    "rollup-plugin-visualizer": "^6.0.5",
+    "rimraf": "^6.1.3",
+    "rollup-plugin-visualizer": "^6.0.11",
     "sass": "^1.97.3",
     "stylelint": "^17.5.0",
     "stylelint-config-html": "^1.1.0",
@@ -70,9 +70,9 @@
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-vue-devtools": "^7.7.9",
     "vitest": "^3.2.4",
-    "vue": "^3.5.27",
+    "vue": "^3.5.32",
     "vue-router": "^4.6.4",
-    "vue-tsc": "^3.2.4"
+    "vue-tsc": "^3.2.6"
   },
   "pnpm": {
     "auditConfig": {
@@ -81,9 +81,9 @@
       ]
     },
     "overrides": {
-      "vue": "3.5.27",
-      "form-data@>=3.0.0 <3.0.4": ">=4.0.4",
-      "minimatch@>=9.0.0 <9.0.7": ">=9.0.7",
+      "vue": "3.5.32",
+      "form-data@>=3.0.0 <3.0.4": ">=4.0.5",
+      "minimatch@>=9.0.0 <9.0.7": ">=9.0.9",
       "serialize-javascript@<=7.0.2": ">=7.0.5",
       "dompurify@<3.2.4": ">=3.4.0",
       "picomatch@<2.3.2": ">=2.3.2",
@@ -133,7 +133,7 @@
     "node": ">=18.20.8"
   },
   "volta": {
-    "node": "24.13.0",
+    "node": "24.13.1",
     "pnpm": "10.28.2"
   },
   "packageManager": "pnpm@10.28.2"
