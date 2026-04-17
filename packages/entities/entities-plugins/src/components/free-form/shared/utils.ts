@@ -3,6 +3,7 @@ import type { FlattendRedisConfigurationFields } from './types'
 import type { Field } from '../shared/types'
 import type { NamedFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { toValue, type MaybeRefOrGetter } from 'vue'
+import type { FieldRenderer, Match } from './types'
 
 export function toSelectItems<T extends string | number>(
   items: T[],
@@ -234,4 +235,10 @@ export function sortFieldsByBundles(
   }
 
   return result
+}
+
+export function normalizeMatch(match: FieldRenderer['match']): Match {
+  return typeof match === 'string'
+    ? ({ genericPath }) => genericPath === match
+    : match
 }

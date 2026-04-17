@@ -187,7 +187,7 @@ onBeforeUnmount(() => {
 
 watch(() => tabs, () => {
   computeTabLayoutOverflow()
-})
+}, { deep: true })
 </script>
 
 <style lang="scss" scoped>

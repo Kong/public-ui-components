@@ -50,7 +50,7 @@ import { computed } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import { useRedisNonstandardFields } from './utils'
 import english from '../../../locales/en.json'
-import type { FlattendRedisConfigurationFields } from '../RequestCallout/types'
+import type { FlattendRedisConfigurationFields } from '../plugins/request-callout/types'
 
 const { t, formatUnixTimeStamp } = createI18n<typeof english>('en-us', english)
 

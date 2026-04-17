@@ -20,6 +20,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     rollupOptions: {
       external: [
         '@kong-ui-public/expressions',
+        '@kong-ui-public/expressions/dist/style.css',
         'lodash.isequal',
       ],
       output: {

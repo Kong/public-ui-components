@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.11...@kong-ui-public/page-layout@0.2.12) (2026-04-13)
+
+
+### Bug Fixes
+
+* **deps:** use range constraint for kongponents peerDependency ([#3127](https://github.com/Kong/public-ui-components/issues/3127)) ([a86ef3b](https://github.com/Kong/public-ui-components/commit/a86ef3bcfcd4feeef3a44c48a7608586c54df591))
+
+
+
+
+
+## [0.2.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.10...@kong-ui-public/page-layout@0.2.11) (2026-04-13)
+
+
+### Bug Fixes
+
+* **page-layout:** recompute overflow when tabs change ([#3124](https://github.com/Kong/public-ui-components/issues/3124)) ([776bb55](https://github.com/Kong/public-ui-components/commit/776bb55d565c8357c14f85701ff9bdfcdb24c1f2))
+
+
+
+
+
 ## [0.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.9...@kong-ui-public/page-layout@0.2.10) (2026-04-07)
 
 

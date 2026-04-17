@@ -164,6 +164,18 @@
           "placeholder": "Enter a Certificate ID",
           "tooltip": "Certificate to be used as client certificate while TLS handshaking to the upstream server."
         },
+        "tls_sans_dnsnames": {
+          "label": "TLS SANs - DNS names",
+          "placeholder": "Enter a DNS name",
+          "tooltip": "Additional DNS names that can be matched on the upstream server's TLS certificate.",
+          "add": "Add DNS name"
+        },
+        "tls_sans_uris": {
+          "label": "TLS SANs - URIs",
+          "placeholder": "Enter a URI",
+          "tooltip": "Additional URIs that can be matched on the upstream server's TLS certificate.",
+          "add": "Add URI"
+        },
         "ca_certificates": {
           "label": "CA certificates",
           "placeholder": "Enter a comma separated list of CA Certificate IDs",

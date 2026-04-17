@@ -160,27 +160,83 @@
           <template #action-button-icon>
             <AddIcon decorative />
           </template>
+
+          <!--
+            CPG and CPG members need different empty-state alert for Konnect-managed Redis than a standalone CP
+          -->
+          <template
+            v-if="showCpgRedisAlert"
+            #action
+          >
+            <div class="cpg-redis-empty-action">
+              <KAlert
+                appearance="info"
+                class="cpg-redis-alert cpg-redis-empty-state"
+                data-testid="redis-cpg-alert"
+              >
+                {{ t(cpgRedisAlertKey) }}
+                <KExternalLink
+                  class="cpg-redis-doc-link"
+                  hide-icon
+                  :href="MANAGED_CACHE_FOR_REDIS_DOC_URL"
+                >
+                  {{ t('cpg_redis.doc_link') }}
+                </KExternalLink>
+              </KAlert>
+              <KButton
+                v-if="userCanCreate && emptyStateActionText"
+                appearance="primary"
+                data-testid="redis-empty-state-primary-cta"
+                size="medium"
+                @click="handleCreate"
+              >
+                <AddIcon decorative />
+                {{ emptyStateActionText }}
+              </KButton>
+            </div>
+          </template>
         </KEmptyState>
       </template>
     </EntityBaseTable>
 
     <DeleteWarningModal
-      :visible="isRemoveLinksModalVisible"
-      @close="isRemoveLinksModalVisible = false"
+      :plugin-count="deleteWarningPluginCount"
+      :variant="deleteWarningVariant"
+      :visible="isDeleteWarningVisible"
+      @close="isDeleteWarningVisible = false"
     />
 
     <EntityDeleteModal
       :action-pending="isDeletePending"
-      :description="t('delete.description')"
-      :entity-name="entityToBeDeleted && (entityToBeDeleted.name || entityToBeDeleted.id)"
+      :confirmation-prompt="nameConfirmPrompt"
+      :description="deleteNote"
+      :entity-name="pendingDeleteLabel"
       :entity-type="EntityTypes.RedisConfiguration"
+      :entity-type-display="deleteKindLabel"
       :error="deleteModalError"
-      :need-confirmation="true"
-      :title="t('delete.title')"
+      :need-confirm="true"
+      :stacked-copy="isManagedCacheDelete"
+      :title="deleteTitle"
       :visible="isDeleteModalVisible"
       @cancel="hideDeleteModal"
       @proceed="confirmDelete"
-    />
+    >
+      <template
+        v-if="isManagedCacheDelete"
+        #message
+      >
+        <i18n-t
+          class="message"
+          data-testid="managed-delete-confirm"
+          keypath="delete.konnect_managed_delete.sure_question"
+          tag="p"
+        >
+          <template #entityName>
+            <strong>{{ pendingDeleteLabel }}</strong>
+          </template>
+        </i18n-t>
+      </template>
+    </EntityDeleteModal>
 
     <LinkedPluginListModal
       :config="config"
@@ -209,10 +265,14 @@ import {
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
+import { KAlert, KExternalLink } from '@kong/kongponents'
 
+import { getCpgRedisAlertMessageKey, shouldShowCpgRedisAlert } from '../cpgRedisAlert'
+import { MANAGED_CACHE_FOR_REDIS_DOC_URL } from '../constants'
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
 import { getRedisType } from '../helpers'
+import { httpOkOr404 } from '../helpers/managed-cache-add-on-api'
 import { parseManagedAddOn } from '../helpers/managed-cache-add-on-parse'
 import { PartialType, RedisType, REDIS_CONFIGURATION_SOURCE } from '../types'
 import LinkedPluginsInline from './LinkedPluginsInline.vue'
@@ -231,7 +291,7 @@ import type {
   RedisConfigurationResponse,
 } from '../types'
 import type { BaseTableHeaders, EmptyStateOptions, ExactMatchFilterConfig, FilterFields, FuzzyMatchFilterConfig, TableErrorMessage, FetcherResponse } from '@kong-ui-public/entities-shared'
-import type { AxiosError } from 'axios'
+import { isAxiosError, type AxiosError } from 'axios'
 import type { TableDataFetcherParams } from '@kong/kongponents'
 
 const emit = defineEmits<{
@@ -315,6 +375,8 @@ const fetcherBaseUrl = computed<string>(() => {
 
 const linkedPluginsModalVisible = ref<boolean>(false)
 const idToBeViewedPlugins = ref<string>('')
+const { i18n: { t }, i18nT } = composables.useI18n()
+
 /**
  * loading, Error, Empty state
  */
@@ -325,7 +387,10 @@ const isDeleteModalVisible = ref<boolean>(false)
 const isDeletePending = ref<boolean>(false)
 const deleteModalError = ref<string>('')
 
-const isRemoveLinksModalVisible = ref<boolean>(false)
+// DeleteWarningModal: delete blocked while plugins still reference this cache
+const isDeleteWarningVisible = ref<boolean>(false)
+const deleteWarningVariant = ref<'default' | 'konnect-managed'>('default')
+const deleteWarningPluginCount = ref<number>(0)
 
 const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 
@@ -339,6 +404,7 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() =>
   (props.config as KonnectRedisConfigurationListConfig).isCloudGateway === true,
 )
 
+// Determines whether to use Konnect-managed Redis UI (copy, combined fetch, empty state). Kong Manager always false
 const useKonnectManagedRedisUi = computed<boolean>(() => {
   if (props.config.app !== 'konnect') {
     return false
@@ -351,7 +417,23 @@ const useKonnectManagedRedisUi = computed<boolean>(() => {
     return konnectConfig.useKonnectManagedRedisUi
   }
 
-  return !!konnectConfig.isKonnectManagedRedisEnabled
+  return isKonnectManagedRedisEnabled.value
+})
+
+// Show CPG-specific empty-state messaging when Konnect-managed Redis UI is enabled and the CP is either the group
+// itself (isControlPlaneGroup) or a member CP (isControlPlaneGroupMember). Standalone CPs skip this
+const showCpgRedisAlert = computed<boolean>(() => {
+  const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+  return shouldShowCpgRedisAlert({
+    useKonnectManagedRedisUi: useKonnectManagedRedisUi.value,
+    isControlPlaneGroup: konnectConfig.isControlPlaneGroup,
+    isControlPlaneGroupMember: konnectConfig.isControlPlaneGroupMember,
+  })
+})
+
+const cpgRedisAlertKey = computed(() => {
+  const konnectConfig = props.config as KonnectRedisConfigurationListConfig
+  return getCpgRedisAlertMessageKey(konnectConfig.isControlPlaneGroupMember)
 })
 
 const cloudGatewaysBase = computed<string>(() => {
@@ -390,6 +472,19 @@ const getCacheConfigId = (addOn: ManagedCacheAddOn): string | undefined => {
   return meta?.cache_config_id
 }
 
+// Partial id for `…/partials/{id}/links`,  not the Cloud Gateways add-on id
+const getPartialIdForPluginLinks = (row: EntityRow): string | null => {
+  if (row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED && !row.partial) {
+    const cacheId = row.addOn ? getCacheConfigId(row.addOn) : undefined
+    return cacheId && cacheId !== '' ? cacheId : null
+  }
+  if (typeof row.id === 'string' && row.id !== '') {
+    return row.id
+  }
+  return null
+}
+
+// Cloud Gateways list filter contract
 const isManagedCacheAddOn = (addOn: ManagedCacheAddOn): boolean => {
   const kind = addOn.config?.kind
   return kind === 'managed-cache.v0'
@@ -404,8 +499,12 @@ const fetchManagedAddOnById = async (managedCacheAddOnId: string): Promise<Manag
   const singleAddOnUrl = `${cloudGatewaysBase.value}/v2/cloud-gateways/add-ons/${encodeURIComponent(managedCacheAddOnId)}`
 
   try {
-    const { data } = await axiosInstance.get(singleAddOnUrl)
-    const parsedAddOn = parseManagedAddOn(data)
+    const response = await axiosInstance.get(singleAddOnUrl, httpOkOr404)
+    if (response.status === 404) {
+      return null
+    }
+
+    const parsedAddOn = parseManagedAddOn(response.data)
     if (!parsedAddOn?.id || !isManagedCacheAddOn(parsedAddOn)) {
       return null
     }
@@ -416,10 +515,12 @@ const fetchManagedAddOnById = async (managedCacheAddOnId: string): Promise<Manag
     }
 
     return parsedAddOn
-  } catch (error: any) {
-    const httpStatus = error.response?.status ?? error.status
+  } catch (error) {
+    if (!isAxiosError(error)) {
+      throw error
+    }
 
-    if (httpStatus === 404) {
+    if (error.response?.status === 404) {
       return null
     }
     throw error
@@ -431,16 +532,20 @@ const fetchRedisPartialById = async (kokoPartialId: string): Promise<RedisConfig
   const singlePartialUrl = `${fetcherBaseUrl.value}/${encodeURIComponent(kokoPartialId)}`
 
   try {
-    const partialResponse = await axiosInstance.get<{ data: RedisConfigurationResponse }>(singlePartialUrl)
-    const { data: responseBody } = partialResponse
-    const maybeRedisPartial = responseBody.data
+    const partialResponse = await axiosInstance.get<{ data: RedisConfigurationResponse }>(singlePartialUrl, httpOkOr404)
+    if (partialResponse.status === 404) {
+      return null
+    }
+
+    const maybeRedisPartial = partialResponse.data.data
 
     return isRedisPartial(maybeRedisPartial) ? maybeRedisPartial : null
-  } catch (error: any) {
-    const httpStatus = error.response?.status ?? error.status
+  } catch (error) {
+    if (!isAxiosError(error)) {
+      throw error
+    }
 
-    if (httpStatus === 404) {
-      // Partial isn't available yet/id is wrong— treat as no result and keep the list usable
+    if (error.response?.status === 404) {
       return null
     }
     throw error
@@ -476,9 +581,9 @@ const fetchAllAddOns = async (): Promise<ManagedCacheAddOn[]> => {
       params: {
         'page[size]': addOnsPageSize,
         'page[number]': pageNumber,
-        'config.kind': 'managed-cache.v0',
-        'owner.control_plane_id': konnectConfig.controlPlaneId,
-        ...(konnectConfig.controlPlaneGeo ? { 'owner.control_plane_geo': konnectConfig.controlPlaneGeo } : {}),
+        'filter[config.kind]': 'managed-cache.v0',
+        'filter[owner.control_plane_id]': konnectConfig.controlPlaneId,
+        ...(konnectConfig.controlPlaneGeo ? { 'filter[owner.control_plane_geo]': konnectConfig.controlPlaneGeo } : {}),
       },
     })
 
@@ -742,15 +847,22 @@ const fetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse>
       data: allRows,
       total: Math.max(partialsRes.total ?? 0, allRows.length),
     }
-  } catch (error: any) {
+  } catch (error) {
     clearPolling()
-    errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
-    emit('error', error)
+    applyTableFetchError(error instanceof Error ? error : new Error(String(error)))
     return { data: [], total: 0 }
   }
 }
 
-const { i18n: { t } } = composables.useI18n()
+const applyTableFetchError = (error: Error): void => {
+  if (isAxiosError(error)) {
+    errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
+    emit('error', error)
+  } else {
+    errorMessage.value = { title: t('errors.general'), message: t('errors.general') }
+  }
+}
+
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()
 
@@ -805,6 +917,36 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 
 const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)
 
+const pendingDeleteLabel = computed((): string => {
+  const row = entityToBeDeleted.value
+  return row ? (row.name || row.id) : ''
+})
+
+// Konnect-managed delete mirrors Konnect overview delete
+const isManagedCacheDelete = computed((): boolean => {
+  const row = entityToBeDeleted.value
+  return !!row &&
+    isKonnectManagedRedisEnabled.value &&
+    row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED
+})
+
+const deleteTitle = computed(() => isManagedCacheDelete.value ? t('delete.konnect_managed_delete.title') : t('delete.title'))
+
+const deleteNote = computed(() => isManagedCacheDelete.value ? t('delete.konnect_managed_delete.description') : t('delete.description'))
+
+const deleteKindLabel = computed(() => isManagedCacheDelete.value ? t('delete.konnect_managed_delete.entity_type_label') : '')
+
+// KPrompt splits on `{confirmationText}`; use `promptToken` so full sentence stays in one i18n string
+const KPROMPT_CONFIRMATION_MARKER = '{confirmationText}' as const
+
+const nameConfirmPrompt = computed((): string | undefined =>
+  isManagedCacheDelete.value
+    ? t('delete.konnect_managed_delete.confirmation_prompt', {
+      promptToken: KPROMPT_CONFIRMATION_MARKER,
+    })
+    : undefined,
+)
+
 // Initialize the empty state options assuming a user does not have create permissions
 // IMPORTANT: you must initialize this object assuming the user does **NOT** have create permissions so that the onBeforeMount hook can properly evaluate the props.canCreate function.
 const emptyStateOptions = ref<EmptyStateOptions>({
@@ -826,6 +968,13 @@ const getNavigableRowId = (row: EntityRow): string => {
     return typeof row.id === 'string' ? row.id : ''
   }
 
+  // Use Cloud Gateways add-on id for config routes. The config card resolves either add-on or partial id,
+  // but the partial is removed when deletion finishes; a partial- based URL then surface 404s
+  const addOnId = row.addOn?.id
+  if (addOnId) {
+    return addOnId
+  }
+
   if (row.partial?.id) {
     return String(row.partial.id)
   }
@@ -833,12 +982,6 @@ const getNavigableRowId = (row: EntityRow): string => {
   const linkedPartialId = row.addOn ? getCacheConfigId(row.addOn) : undefined
   if (linkedPartialId) {
     return linkedPartialId
-  }
-
-  // Non-ready state: no Koko partial yet; host detail is keyed by add-on id
-  const addOnId = row.addOn?.id
-  if (addOnId) {
-    return addOnId
   }
 
   return typeof row.id === 'string' && row.id ? row.id : ''
@@ -872,22 +1015,21 @@ const isDeleteDisabled = (row: EntityRow): boolean => {
 }
 
 const deleteRow = async (row: EntityRow) => {
-  // Konnect-managed: skip client-side links check; Cloud Gateways add-ons API will return error if partial still in use
-  if (isKonnectManagedRedisEnabled.value && row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED) {
-    entityToBeDeleted.value = row
-    isDeleteModalVisible.value = true
-    return
+  const partialId = getPartialIdForPluginLinks(row)
+
+  if (partialId) {
+    const { count } = await fetchLinks({ partialId })
+
+    if (count > 0) {
+      deleteWarningPluginCount.value = count
+      deleteWarningVariant.value = isKonnectManagedRedisEnabled.value && row.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED ? 'konnect-managed' : 'default'
+      isDeleteWarningVisible.value = true
+      return
+    }
   }
-  // check if the partial still has plugins linked to it
-  const { count } = await fetchLinks({ partialId: row.id as string })
-  if (count > 0) {
-    // show warning modal
-    isRemoveLinksModalVisible.value = true
-  } else {
-    // show delete modal
-    entityToBeDeleted.value = row
-    isDeleteModalVisible.value = true
-  }
+
+  entityToBeDeleted.value = row
+  isDeleteModalVisible.value = true
 }
 
 const clearFilter = (): void => {
@@ -896,7 +1038,7 @@ const clearFilter = (): void => {
 
 /**
  * Combined Konnect list only - Konnect app + FF + cloud gateway
- * Otherwise caller does not use this. Navigate by partial id, or by add-on id for konnect-managed rows with no Koko partial yet
+ * Otherwise caller does not use this. Navigate by Cloud Gateways add-on id when present, else partial id
  */
 const canNavigateCombinedKonnectRow = (row: EntityRow): boolean =>
   canNavigateToRowDetails(row)
@@ -1044,12 +1186,9 @@ const pollManagedAddOnsState = async (): Promise<void> => {
     })
 
     transitionalAddOnsExist = relevantAddOns.some((addOn) => isTransitionalManagedCacheState(addOn.state))
-  } catch (error: any) {
-    // Stop polling and surface error if we can't refresh state
+  } catch (error) {
     clearPolling()
-    errorMessage.value = { title: t('errors.general'), message: error.response?.data?.message ?? error.message }
-
-    emit('error', error)
+    applyTableFetchError(error instanceof Error ? error : new Error(String(error)))
     return
   }
 
@@ -1246,6 +1385,28 @@ watch(props.canCreate, async (canCreate) => {
 <style lang="scss" scoped>
 .kong-ui-entities-partials-list {
   width: 100%;
+
+  .cpg-redis-empty-state {
+    text-align: start;
+    width: 100%;
+  }
+
+  .cpg-redis-empty-action {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-60, $kui-space-60);
+    max-width: 640px;
+    width: 100%;
+  }
+
+  .cpg-redis-alert :deep(.k-external-link.cpg-redis-doc-link) {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 
   .kong-ui-entity-filter-input {
     margin-right: var(--kui-space-50, $kui-space-50);

@@ -28,7 +28,7 @@
           :formats-to-hide="['yaml']"
           :hide-title="false"
           :record-resolver="addOnRecordResolver"
-          @fetch:error="(e) => emit('fetch:error', e)"
+          @fetch:error="onEntityBaseConfigCardFetchError"
           @fetch:success="onCacheAddOnLoaded"
           @loading="(v) => emit('loading', v)"
         >
@@ -117,6 +117,7 @@
                   disable-konnect-managed-detail
                   :hide-title="false"
                   @fetch:error="(e) => emit('fetch:error', e)"
+                  @fetch:not-found="emitFetchNotFound"
                   @fetch:success="onPartialNestedLoaded"
                   @loading="(v) => emit('loading', v)"
                 >
@@ -143,7 +144,7 @@
       :formats-to-hide="disableKonnectManagedDetail ? ['yaml'] : []"
       :hide-title="hideTitle"
       :record-resolver="recordResolver"
-      @fetch:error="(e) => emit('fetch:error', e)"
+      @fetch:error="onEntityBaseConfigCardFetchError"
       @fetch:success="handleData"
       @loading="(v) => emit('loading', v)"
     >
@@ -163,7 +164,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, onMounted, ref, useId } from 'vue'
-import type { AxiosError } from 'axios'
+import { isAxiosError, type AxiosError } from 'axios'
 import type { ConfigurationSchema, ConfigurationSchemaItem } from '@kong-ui-public/entities-shared'
 import {
   ConfigurationSchemaSection,
@@ -248,9 +249,24 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:error', error: AxiosError): void
+  (e: 'fetch:not-found', error: AxiosError): void
   (e: 'fetch:success', data: RedisConfigurationResponse): void
   (e: 'fetch:managed-add-on-success', data: ManagedCacheAddOn): void
 }>()
+
+const emitFetchNotFound = (error: AxiosError): void => {
+  emit('fetch:not-found', error)
+}
+
+// Host app treat `fetch:error` as fatal navigation. After Konnect-managed Redis is deleted,
+// `GET …/add-ons/{id}` returns 404, surface `fetch:not-found` instead
+const onEntityBaseConfigCardFetchError = (error: AxiosError): void => {
+  if (isAxiosError(error) && error.response?.status === 404) {
+    emitFetchNotFound(error)
+    return
+  }
+  emit('fetch:error', error)
+}
 
 const { i18n: { t } } = composables.useI18n()
 const dataPlaneGroupsInstanceId = useId()

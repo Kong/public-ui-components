@@ -50,16 +50,17 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
 
   provide(FIELD_RENDERER_SLOTS, mergedSlots)
 
-  const pathValue = toValue(path)
-
   return computed(() => {
     if (defaultSlot) return
-    const matchedByPath = mergedSlots.value[generalizePath(toValue(path), getSchemaMap())]
+    const pathValue = toValue(path)
+    const matchedByPath = mergedSlots.value[generalizePath(pathValue, getSchemaMap())]
     if (matchedByPath) return matchedByPath
 
     // todo(zehao): priority
+    const sm = getSchemaMap()
     for (const [matcher, slot] of fieldRendererRegistry) {
-      if (matcher({ path: pathValue, schema: getSchema(pathValue)! })) {
+      const genericPath = generalizePath(pathValue, sm)
+      if (matcher({ path: pathValue, genericPath, schema: getSchema(pathValue)! })) {
         return slot
       }
     }

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/portal-analytics-bridge",
-  "version": "0.4.6",
+  "version": "0.4.8",
   "type": "module",
   "main": "./dist/portal-vitals-bridge.umd.js",
   "module": "./dist/portal-vitals-bridge.es.js",
@@ -57,7 +57,7 @@
   },
   "peerDependencies": {
     "@kong/sdk-portal-js": "^2.16.0",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "vue": "^3.5.27"
   },
   "devDependencies": {

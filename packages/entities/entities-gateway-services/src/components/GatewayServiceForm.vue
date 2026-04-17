@@ -264,7 +264,7 @@
               </div>
 
               <div
-                v-if="showClientCert"
+                v-if="showTlsFields"
                 class="gateway-service-form-margin-bottom"
               >
                 <KInput
@@ -285,8 +285,38 @@
                 />
               </div>
 
+              <GatewayServiceFormTlsSansField
+                v-if="showTlsFields && isTlsSansSupported"
+                v-model="form.fields.tls_sans.dnsnames"
+                :add-button-text="t('gateway_services.form.fields.tls_sans_dnsnames.add')"
+                class="gateway-service-form-margin-bottom"
+                data-testid="gateway-service-tls-sans-dnsnames"
+                :error="!!form.formFieldErrors.tls_sans_dnsnames"
+                :label="t('gateway_services.form.fields.tls_sans_dnsnames.label')"
+                :placeholder="t('gateway_services.form.fields.tls_sans_dnsnames.placeholder')"
+                :readonly="form.isReadonly"
+                test-id-prefix="tls-sans-dnsnames"
+                :tooltip="t('gateway_services.form.fields.tls_sans_dnsnames.tooltip')"
+                @input="handleValidateAdvancedFields('tls_sans_dnsnames')"
+              />
+
+              <GatewayServiceFormTlsSansField
+                v-if="showTlsFields && isTlsSansSupported"
+                v-model="form.fields.tls_sans.uris"
+                :add-button-text="t('gateway_services.form.fields.tls_sans_uris.add')"
+                class="gateway-service-form-margin-bottom"
+                data-testid="gateway-service-tls-sans-uris"
+                :error="!!form.formFieldErrors.tls_sans_uris"
+                :label="t('gateway_services.form.fields.tls_sans_uris.label')"
+                :placeholder="t('gateway_services.form.fields.tls_sans_uris.placeholder')"
+                :readonly="form.isReadonly"
+                test-id-prefix="tls-sans-uris"
+                :tooltip="t('gateway_services.form.fields.tls_sans_uris.tooltip')"
+                @input="handleValidateAdvancedFields('tls_sans_uris')"
+              />
+
               <div
-                v-if="showCaCert"
+                v-if="showCaCertField"
                 class="gateway-service-form-margin-bottom"
               >
                 <KInput
@@ -318,7 +348,7 @@
               </div>
 
               <div
-                v-if="showTlsVerify"
+                v-if="showTlsFields"
                 class="gateway-service-form-margin-bottom"
               >
                 <KCheckbox
@@ -467,6 +497,7 @@ import {
 import type { SelectItem } from '@kong/kongponents'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import { KongAirService } from '../constants'
+import GatewayServiceFormTlsSansField from './GatewayServiceFormTlsSansField.vue'
 
 const emit = defineEmits<{
   (e: 'update', data: Record<string, any>): void
@@ -510,6 +541,12 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  /** Whether tls_sans fields are supported */
+  isTlsSansSupported: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
 })
 
 const isCollapsed = ref(true)
@@ -544,6 +581,7 @@ const form = reactive<GatewayServiceFormState>({
     write_timeout: 60000,
     read_timeout: 60000,
     client_certificate: '',
+    tls_sans: { dnsnames: [''], uris: [''] },
     ca_certificates: '',
     tls_verify_enabled: false,
     tls_verify_value: false,
@@ -564,6 +602,8 @@ const form = reactive<GatewayServiceFormState>({
     write_timeout: '',
     read_timeout: '',
     client_certificate: '',
+    tls_sans_dnsnames: '',
+    tls_sans_uris: '',
     ca_certificates: '',
     tls_verify_enabled: '',
     tls_verify_value: '',
@@ -582,6 +622,7 @@ const formFieldsOriginal = reactive<GatewayServiceFormFields>({
   write_timeout: 60000,
   read_timeout: 60000,
   client_certificate: '',
+  tls_sans: { dnsnames: [''], uris: [''] },
   ca_certificates: '',
   tls_verify_enabled: false,
   tls_verify_value: false,
@@ -682,6 +723,10 @@ const initFieldDefaultValues = (): void => {
   form.fields.write_timeout = formFieldsOriginal.write_timeout
   form.fields.read_timeout = formFieldsOriginal.read_timeout
   form.fields.client_certificate = formFieldsOriginal.client_certificate
+  form.fields.tls_sans = {
+    dnsnames: [...formFieldsOriginal.tls_sans.dnsnames],
+    uris: [...formFieldsOriginal.tls_sans.uris],
+  }
   form.fields.ca_certificates = formFieldsOriginal.ca_certificates
   form.fields.tls_verify_enabled = formFieldsOriginal.tls_verify_enabled
   form.fields.tls_verify_value = formFieldsOriginal.tls_verify_value
@@ -855,8 +900,9 @@ const setPathAllowed = computed(() => {
   return !['tcp', 'tls', 'tls_passthrough', 'grpc', 'grpcs', 'udp'].includes(form.fields.protocol)
 })
 
-// https://github.com/Kong/kong-ee/blob/ba6595a136c503c7f7ba93aaa45231985c00325e/kong/db/schema/entities/services.lua#L63-L68
-const showClientCert = computed((): boolean => {
+// Show TLS-related fields (client_certificate, tls_sans, tls_verify) when protocol is https, wss, or tls
+// https://github.com/Kong/kong-ee/blob/b25dbaf38116ed2cc21a4c87d5d6383a08f6034f/kong/db/schema/entities/services.lua#L90-L107
+const showTlsFields = computed((): boolean => {
   if (checkedGroup.value === 'url') {
     return true
   }
@@ -865,23 +911,14 @@ const showClientCert = computed((): boolean => {
   return checkedGroup.value === 'protocol' && isValidProtocol
 })
 
-// https://github.com/Kong/kong-ee/blob/ba6595a136c503c7f7ba93aaa45231985c00325e/kong/db/schema/entities/services.lua#L79-L82
-const showCaCert = computed((): boolean => {
+// Show CA certificate field when protocol is https or tls (excludes wss)
+// https://github.com/Kong/kong-ee/blob/b25dbaf38116ed2cc21a4c87d5d6383a08f6034f/kong/db/schema/entities/services.lua#L112-L115
+const showCaCertField = computed((): boolean => {
   if (checkedGroup.value === 'url') {
     return true
   }
 
   const isValidProtocol = ['https', 'tls'].includes(form.fields.protocol)
-  return checkedGroup.value === 'protocol' && isValidProtocol
-})
-
-// https://github.com/Kong/kong-ee/blob/ba6595a136c503c7f7ba93aaa45231985c00325e/kong/db/schema/entities/services.lua#L69-L74
-const showTlsVerify = computed((): boolean => {
-  if (checkedGroup.value === 'url') {
-    return true
-  }
-
-  const isValidProtocol = ['https', 'wss', 'tls'].includes(form.fields.protocol)
   return checkedGroup.value === 'protocol' && isValidProtocol
 })
 
@@ -922,11 +959,19 @@ const initForm = (data: Record<string, any>): void => {
   form.fields.tls_verify_value = data?.tls_verify ? data?.tls_verify : false
   form.fields.ca_certificates = data?.ca_certificates?.join(',') || ''
   form.fields.client_certificate = data?.client_certificate?.id || ''
+  form.fields.tls_sans = {
+    dnsnames: data?.tls_sans?.dnsnames ?? [''],
+    uris: data?.tls_sans?.uris ?? [''],
+  }
   form.fields.write_timeout = (data?.write_timeout || data?.write_timeout === 0) ? data?.write_timeout : 60000
   form.fields.port = (data?.port || data?.port === 0) ? data?.port : 80
   form.fields.enabled = data?.enabled ?? true
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
   Object.assign(formFieldsOriginal, form.fields)
+  formFieldsOriginal.tls_sans = {
+    dnsnames: [...form.fields.tls_sans.dnsnames],
+    uris: [...form.fields.tls_sans.uris],
+  }
 }
 
 const handleClickCancel = (): void => {
@@ -951,6 +996,26 @@ const submitUrl = computed<string>(() => {
   return url
 })
 
+const tlsSansPayload = computed(() => {
+  if (!props.isTlsSansSupported) {
+    return undefined
+  }
+
+  if (!showTlsFields.value) {
+    return null
+  }
+
+  const dnsnames = form.fields.tls_sans.dnsnames.map(s => s.trim()).filter(Boolean)
+  const uris = form.fields.tls_sans.uris.map(s => s.trim()).filter(Boolean)
+  if (dnsnames.length || uris.length) {
+    return {
+      dnsnames: dnsnames.length ? dnsnames : null,
+      uris: uris.length ? uris : null,
+    }
+  }
+  return null
+})
+
 const getPayload = computed((): Record<string, any> => {
   const requestBody: Record<string, any> = {
     name: form.fields.name || null,
@@ -963,14 +1028,15 @@ const getPayload = computed((): Record<string, any> => {
     connect_timeout: form.fields.connect_timeout,
     ca_certificates: form.fields.ca_certificates ? form.fields.ca_certificates?.split(',').filter(caCert => caCert !== '') : null,
     client_certificate: form.fields.client_certificate ? { id: form.fields.client_certificate } : null,
+    tls_sans: tlsSansPayload.value,
     write_timeout: form.fields.write_timeout,
     port: form.fields.port,
     url: form.fields.url,
     enabled: form.fields.enabled,
   }
 
-  if (form.fields.client_certificate && ['https', 'wss', 'tls'].includes(form.fields.protocol)) {
-    requestBody.client_certificate = { id: form.fields.client_certificate }
+  if (!showTlsFields.value) {
+    requestBody.client_certificate = null
   }
 
   if (form.fields.tls_verify_enabled && ['https', 'wss', 'tls'].includes(form.fields.protocol)) {
@@ -1034,6 +1100,10 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
       form.fields.write_timeout = (data?.write_timeout || data?.write_timeout === 0) ? data?.write_timeout : 60000
       form.fields.read_timeout = (data?.read_timeout || data?.read_timeout === 0) ? data?.read_timeout : 60000
       form.fields.client_certificate = data?.client_certificate?.id || ''
+      form.fields.tls_sans = {
+        dnsnames: data?.tls_sans?.dnsnames ?? [],
+        uris: data?.tls_sans?.uris ?? [],
+      }
       form.fields.ca_certificates = data?.ca_certificates?.length ? data?.ca_certificates.join(',') : ''
       form.fields.tls_verify_enabled = data?.tls_verify !== '' && data?.tls_verify !== null && data?.tls_verify !== undefined
       form.fields.tls_verify_value = form.fields.tls_verify_enabled && data?.tls_verify
@@ -1041,6 +1111,10 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
       form.fields.enabled = data?.enabled ?? true
       // Set initial state of `formFieldsOriginal` to these values in order to detect changes
       Object.assign(formFieldsOriginal, form.fields)
+      formFieldsOriginal.tls_sans = {
+        dnsnames: [...form.fields.tls_sans.dnsnames],
+        uris: [...form.fields.tls_sans.uris],
+      }
       // Emit an update event for the host app to respond to
       emit('update', response?.data)
     }
@@ -1055,6 +1129,10 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
         const field = errorField.field
         if (field === 'client_certificate.id') {
           form.formFieldErrors.client_certificate = errorField.message
+        } else if (field.startsWith('tls_sans.dnsnames')) {
+          form.formFieldErrors.tls_sans_dnsnames = errorField.message
+        } else if (field.startsWith('tls_sans.uris')) {
+          form.formFieldErrors.tls_sans_uris = errorField.message
         } else if (field.startsWith('ca_certificates')) {
           form.formFieldErrors.ca_certificates = errorField.message
         } else if (Object.keys(form.formFieldErrors).includes(field)) {

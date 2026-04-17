@@ -1,5 +1,7 @@
 import PageLayoutTabs from './PageLayoutTabs.vue'
+import { defineComponent, h, ref, type Ref } from 'vue'
 import { createRouter, createMemoryHistory } from 'vue-router'
+import type { PageLayoutTab } from '../types'
 
 const router = createRouter({
   history: createMemoryHistory(),
@@ -98,6 +100,38 @@ describe('<PageLayoutTabs />', () => {
     cy.getTestId('tabs-overflow-dropdown-button').should('not.exist')
 
     cy.then(() => vueWrapper.setProps({ tabs: manyTabs }))
+
+    cy.getTestId('tabs-overflow-dropdown-button').should('be.visible')
+  })
+
+  it('recomputes the tab layout when tabs are pushed into the existing array', () => {
+    const initialTabs: PageLayoutTab[] = [
+      { key: 'tab1', label: 'Tab 1', to: '/tab1' },
+      { key: 'tab2', label: 'Tab 2', to: '/tab2' },
+    ]
+
+    const tabsToAppend: PageLayoutTab[] = [
+      { key: 'tab3', label: 'Tab 3', to: '/tab3' },
+      { key: 'tab4', label: 'Tab 4', to: '/tab4' },
+      { key: 'tab5', label: 'Tab 5', to: '/tab5' },
+      { key: 'tab6', label: 'Tab 6', to: '/tab6' },
+      { key: 'tab7', label: 'Tab 7', to: '/tab7' },
+      { key: 'tab8', label: 'Tab 8', to: '/tab8' },
+    ]
+
+    cy.viewport(300, 400)
+
+    const tabsRef: Ref<PageLayoutTab[]> = ref([...initialTabs])
+
+    cy.mount(defineComponent({
+      setup: () => () => h(PageLayoutTabs, { tabs: tabsRef.value }),
+    }))
+
+    cy.getTestId('tabs-overflow-dropdown-button').should('not.exist')
+
+    cy.then(() => {
+      tabsRef.value.push(...tabsToAppend)
+    })
 
     cy.getTestId('tabs-overflow-dropdown-button').should('be.visible')
   })

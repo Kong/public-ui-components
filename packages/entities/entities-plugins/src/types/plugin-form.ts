@@ -53,6 +53,12 @@ export interface BasePluginFormConfig {
   isNewOtelSchema?: boolean
   /** Whether to enable the experimental renders */
   experimentalRenders?: Record<string, boolean>
+
+  viewServiceRoute?: (id: string) => RouteLocationRaw
+  viewRouteRoute?: (id: string) => RouteLocationRaw
+  viewConsumerRoute?: (id: string) => RouteLocationRaw
+  viewConsumerGroupRoute?: (id: string) => RouteLocationRaw
+  viewCertificateRoute?: (id: string) => RouteLocationRaw
 }
 
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig { }

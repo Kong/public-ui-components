@@ -3,6 +3,9 @@ import { h } from 'vue'
 import EntityDeleteModal from './EntityDeleteModal.vue'
 import composables from '../../composables'
 
+// Cypress `mount` typings don’t accept Volar’s SFC type (TS2769)
+const EntityDeleteModalMount = EntityDeleteModal as any
+
 describe('<EntityDeleteModal />', () => {
   const { i18n: { t } } = composables.useI18n()
   const entityType = 'route'
@@ -11,7 +14,7 @@ describe('<EntityDeleteModal />', () => {
   it('should show title and description', () => {
     const title = 'Continue?'
     const description = 'Shall we proceed?'
-    cy.mount(EntityDeleteModal, {
+    cy.mount(EntityDeleteModalMount, {
       props: {
         visible: true,
         entityType,
@@ -25,7 +28,7 @@ describe('<EntityDeleteModal />', () => {
   })
 
   it('should show entity type', () => {
-    cy.mount(EntityDeleteModal, {
+    cy.mount(EntityDeleteModalMount, {
       props: {
         visible: true,
         entityType,
@@ -39,7 +42,7 @@ describe('<EntityDeleteModal />', () => {
   })
 
   it('should show entity name and confirmation input', () => {
-    cy.mount(EntityDeleteModal, {
+    cy.mount(EntityDeleteModalMount, {
       props: {
         visible: true,
         entityType,
@@ -52,8 +55,23 @@ describe('<EntityDeleteModal />', () => {
     cy.get('.prompt-confirmation-text').should('exist')
   })
 
+  it('should use entityTypeDisplay in the message when provided', () => {
+    const entityTypeDisplay = 'Konnect-managed cache'
+    cy.mount(EntityDeleteModalMount, {
+      props: {
+        visible: true,
+        entityType,
+        entityName,
+        entityTypeDisplay,
+      },
+    })
+
+    cy.get('.kong-ui-entity-delete-modal .message')
+      .should('contain.text', t('deleteModal.messageWithName', { entityType: entityTypeDisplay, entityName }))
+  })
+
   it('should disable action button', () => {
-    cy.mount(EntityDeleteModal, {
+    cy.mount(EntityDeleteModalMount, {
       props: {
         visible: true,
         entityType,
@@ -68,7 +86,7 @@ describe('<EntityDeleteModal />', () => {
     const title = 'Continue?'
     const description = 'Shall we proceed?'
 
-    cy.mount(EntityDeleteModal, {
+    cy.mount(EntityDeleteModalMount, {
       props: {
         visible: true,
         entityType,

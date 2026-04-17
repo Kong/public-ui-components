@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios'
-import type { CloudGatewaysListAddOnsResponse, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
+import type { AddOnRecord, CloudGatewaysListAddOnsResponse, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
 import type { RedisConfigurationResponse } from '../types/redis-configuration'
 import { PartialType } from '../types/redis-configuration'
 import { isManagedCacheAddOn, parseManagedAddOn, parseManagedAddOnDetailPayload } from './managed-cache-add-on-parse'
@@ -9,9 +9,15 @@ import { isManagedCacheAddOn, parseManagedAddOn, parseManagedAddOnDetailPayload 
 const ADD_ONS_PAGE_SIZE = 100
 const MAX_ADD_ON_PAGES_FALLBACK = 1000
 
-// Only `get` is used, narrow type keeps mocks simple and reduces Axios's generic `get` issue
+export const httpOkOr404 = {
+  validateStatus: (status: number) => (status >= 200 && status < 300) || status === 404,
+} as const
+
 type ManagedCacheApiClient = {
-  get: <T>(url: string, config?: { params?: Record<string, unknown> }) => Promise<{ data: T }>
+  get: (
+    url: string,
+    config?: { params?: Record<string, unknown>, validateStatus?: (status: number) => boolean },
+  ) => Promise<{ data: unknown, status?: number }>
 }
 
 const extractListMeta = (
@@ -34,8 +40,13 @@ export const fetchManagedCacheAddOnById = async (
   const url = `${cloudGatewaysBase}/v2/cloud-gateways/add-ons/${encodeURIComponent(addOnId)}`
 
   try {
-    const { data } = await axiosInstance.get<ManagedCacheAddOn>(url)
-    const parsed = parseManagedAddOnDetailPayload(data)
+    const response = await axiosInstance.get(url, httpOkOr404)
+    const status = response.status ?? 200
+    if (status === 404) {
+      return null
+    }
+
+    const parsed = parseManagedAddOnDetailPayload(response.data as ManagedCacheAddOn | AddOnRecord)
     if (parsed === null || !isManagedCacheAddOn(parsed)) return null
 
     const addOnControlPlaneId = parsed.owner?.control_plane_id
@@ -62,7 +73,7 @@ export const fetchAllManagedCacheAddOns = async (
   let totalPagesFromMeta: number | null = null
 
   while (pageNumber <= MAX_ADD_ON_PAGES_FALLBACK) {
-    const { data } = await axiosInstance.get<CloudGatewaysListAddOnsResponse>(addOnsUrl, {
+    const { data } = await axiosInstance.get(addOnsUrl, {
       params: {
         'page[size]': ADD_ONS_PAGE_SIZE,
         'page[number]': pageNumber,
@@ -72,7 +83,7 @@ export const fetchAllManagedCacheAddOns = async (
       },
     })
 
-    const { items, totalPages } = extractListMeta(data)
+    const { items, totalPages } = extractListMeta(data as CloudGatewaysListAddOnsResponse)
     const pageItems = items
       .map((item) => parseManagedAddOn(item))
       .filter((row): row is ManagedCacheAddOn => row !== null)
@@ -103,8 +114,14 @@ export const fetchRedisPartialForConfigCard = async (
   const url = `${apiBaseUrl}/v2/control-planes/${encodeURIComponent(controlPlaneId)}/core-entities/partials/${encodeURIComponent(partialId)}`
 
   try {
-    const { data } = await axiosInstance.get<{ data?: RedisConfigurationResponse }>(url)
-    const maybe = data.data
+    const response = await axiosInstance.get(url, httpOkOr404)
+    const status = response.status ?? 200
+    if (status === 404) {
+      return null
+    }
+
+    const body = response.data as { data?: RedisConfigurationResponse }
+    const maybe = body.data
 
     if (maybe == null) return null
     return maybe.type === PartialType.REDIS_CE || maybe.type === PartialType.REDIS_EE ? maybe : null

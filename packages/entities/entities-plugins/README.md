@@ -49,3 +49,4 @@ import '@kong-ui-public/entities-plugins/dist/style.css'
 - [`<PluginSelect.vue />`](docs/plugin-select.md)
 - [`<PluginForm.vue />`](docs/plugin-form.md)
 - [`<PluginConfigCard.vue />`](docs/plugin-config-card.md)
+- [`<CustomPluginForm.vue />`](docs/custom-plugin-form.md)

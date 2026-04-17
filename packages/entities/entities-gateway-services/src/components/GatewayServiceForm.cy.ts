@@ -262,29 +262,37 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-protocol-radio').click()
       cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
 
-      // hide clineCert, caCert and tlsVerify fields when protocol is http (default)
+      // hide clineCert, tlsSans, caCert and tlsVerify fields when protocol is http (default)
       cy.getTestId('gateway-service-clientCert-input').should('not.exist')
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('not.exist')
+      cy.getTestId('gateway-service-tls-sans-uris').should('not.exist')
       cy.getTestId('gateway-service-ca-certs-input').should('not.exist')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('not.exist')
 
-      // show clineCert, caCert and tlsVerify fields when protocol is https
+      // show clineCert, tlsSans, caCert and tlsVerify fields when protocol is https
       cy.getTestId('gateway-service-protocol-select').click()
       cy.getTestId('select-item-https').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-uris').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
 
-      // show clineCert, caCert and tlsVerify fields when protocol is tls
+      // show clineCert, tlsSans, caCert and tlsVerify fields when protocol is tls
       cy.getTestId('gateway-service-protocol-select').click()
       cy.getTestId('select-item-tls').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-uris').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
 
-      // show clineCert and tlsVerify fields when protocol is wss
+      // show clineCert, tlsSans and tlsVerify fields when protocol is wss
       cy.getTestId('gateway-service-protocol-select').click()
       cy.getTestId('select-item-wss').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-uris').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('not.exist')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
     })
@@ -343,6 +351,56 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         })
       })
       cy.getTestId('gateway-service-host-input').should('have.value', gatewayService1.host)
+    })
+
+    it('should show tls_sans fields in edit form when protocol is https', () => {
+      interceptKonnect({ mockData: gatewayService2 })
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          gatewayServiceId: gatewayService2.id,
+          isEditing: true,
+        },
+      })
+
+      cy.wait('@getGatewayService')
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
+
+      // tls_sans dnsnames should be populated
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('be.visible')
+      cy.getTestId('tls-sans-dnsnames-input-0').should('have.value', 'example.com')
+      cy.getTestId('tls-sans-dnsnames-input-1').should('have.value', 'api.example.com')
+
+      // tls_sans uris should be populated
+      cy.getTestId('gateway-service-tls-sans-uris').should('be.visible')
+      cy.getTestId('tls-sans-uris-input-0').should('have.value', 'spiffe://example.com/service')
+    })
+
+    it('should hide tls_sans fields and emit tls_sans as undefined when isTlsSansSupported is false', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          isTlsSansSupported: false,
+          onModelUpdated: cy.spy().as('onModelUpdatedSpy'),
+        },
+      })
+
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+      cy.getTestId('gateway-service-protocol-radio').click()
+      cy.getTestId('gateway-service-protocol-select').click()
+      cy.getTestId('select-item-https').click()
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
+
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('not.exist')
+      cy.getTestId('gateway-service-tls-sans-uris').should('not.exist')
+
+      cy.get('@onModelUpdatedSpy').should('have.been.called')
+      cy.get('@onModelUpdatedSpy').then((spy: any) => {
+        const lastCall = spy.lastCall.args[0]
+        expect(lastCall.tls_sans).to.equal(undefined)
+      })
     })
 
     it('should correctly pass getPayload as props to json/yaml code blocks', () => {
@@ -689,29 +747,37 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-protocol-radio').click()
       cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
 
-      // hide clineCert, caCert and tlsVerify fields when protocol is http (default)
+      // hide clineCert, tlsSans, caCert and tlsVerify fields when protocol is http (default)
       cy.getTestId('gateway-service-clientCert-input').should('not.exist')
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('not.exist')
+      cy.getTestId('gateway-service-tls-sans-uris').should('not.exist')
       cy.getTestId('gateway-service-ca-certs-input').should('not.exist')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('not.exist')
 
-      // show clineCert, caCert and tlsVerify fields when protocol is https
+      // show clineCert, tlsSans, caCert and tlsVerify fields when protocol is https
       cy.getTestId('gateway-service-protocol-select').click()
       cy.getTestId('select-item-https').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-uris').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
 
-      // show clineCert, caCert and tlsVerify fields when protocol is tls
+      // show clineCert, tlsSans, caCert and tlsVerify fields when protocol is tls
       cy.getTestId('gateway-service-protocol-select').click()
       cy.getTestId('select-item-tls').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-uris').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
 
-      // show clineCert and tlsVerify fields when protocol is wss
+      // show clineCert, tlsSans and tlsVerify fields when protocol is wss
       cy.getTestId('gateway-service-protocol-select').click()
       cy.getTestId('select-item-wss').click()
       cy.getTestId('gateway-service-clientCert-input').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('be.visible')
+      cy.getTestId('gateway-service-tls-sans-uris').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-input').should('not.exist')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
     })

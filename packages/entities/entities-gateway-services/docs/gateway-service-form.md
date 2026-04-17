@@ -86,6 +86,15 @@ If showing the `Edit` type form, the ID of the Gateway Service.
 
 Show/hide `EntityFormSection` component info column.
 
+#### `isTlsSansSupported`
+
+- type: `Boolean`
+- required: `false`
+- default: `true`
+
+Controls whether `tls_sans` input fields are rendered and included in payload generation.
+When set to `false`, `tls_sans` fields are hidden and emitted payload sets `tls_sans` to `undefined`.
+
 ### Slots
 
 #### `form-actions`

@@ -16,15 +16,21 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, toRaw } from 'vue'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { MonacoEditor } from '@kong-ui-public/monaco-editor'
+import yaml, { JSON_SCHEMA } from 'js-yaml'
 import { omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
-import yaml, { JSON_SCHEMA } from 'js-yaml'
-import { MonacoEditor } from '@kong-ui-public/monaco-editor'
+import { inject, shallowRef, toRaw } from 'vue'
+
 import { useFormShared } from '../shared/composables'
+import { useCodeLensProviders } from './composables/code-lens-providers'
 
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 
+import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../../types'
+
+const config = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!
 const { formData, setValue } = useFormShared()
 
 const emit = defineEmits<{
@@ -34,6 +40,9 @@ const emit = defineEmits<{
 }>()
 
 const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
+const { setup: setupCodeLensProviders } = useCodeLensProviders(config, {
+  validateStatus: (status) => status >= 200 && status < 500,
+})
 
 const LINT_SOURCE = 'YAML Syntax'
 
@@ -59,6 +68,7 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
     return
   }
 
+  setupCodeLensProviders(model)
   editorRef.value = editor
 
   editor.onDidChangeModelContent(() => {
@@ -97,7 +107,6 @@ function focusEnd() {
   editor.setPosition(model.getFullModelRange().getEndPosition())
   editor.focus()
 }
-
 </script>
 
 <style lang="scss" scoped>
