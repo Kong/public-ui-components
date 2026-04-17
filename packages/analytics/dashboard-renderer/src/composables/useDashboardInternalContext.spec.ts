@@ -51,6 +51,7 @@ describe('useContextLinks', () => {
     globalFilters = [],
     hasZoomProp = false,
     isFullscreen = false,
+    preview = false,
   }: {
     contextEditable?: boolean
     contextFilters?: AllFilters[]
@@ -60,6 +61,7 @@ describe('useContextLinks', () => {
     globalFilters?: AllFilters[]
     hasZoomProp?: boolean
     isFullscreen?: boolean
+    preview?: boolean
   } = {}) => {
     const context = ref<DashboardRendererContext>({
       filters: contextFilters,
@@ -87,6 +89,7 @@ describe('useContextLinks', () => {
           context,
           globalFilters: ref(globalFilters),
           isFullscreen: ref(isFullscreen),
+          preview: ref(preview),
         })
         internalContext = result.internalContext
       },
@@ -210,5 +213,15 @@ describe('useContextLinks', () => {
   it('sets zoomable to true if the node has the onTileTimeRangeZoom prop', async () => {
     const { internalContext } = await setup({ hasZoomProp: true })
     expect(internalContext.value.zoomable).to.eq(true)
+  })
+
+  it('forces editable to false when preview is true, even if context.editable is true', async () => {
+    const { internalContext } = await setup({ contextEditable: true, preview: true })
+    expect(internalContext.value.editable).to.eq(false)
+  })
+
+  it('forces zoomable to false when preview is true, even if the node has the onTileTimeRangeZoom prop', async () => {
+    const { internalContext } = await setup({ hasZoomProp: true, preview: true })
+    expect(internalContext.value.zoomable).to.eq(false)
   })
 })

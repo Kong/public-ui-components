@@ -15,10 +15,12 @@ export default function useDashboardInternalContext({
   context,
   globalFilters = ref([]),
   isFullscreen = ref(false),
+  preview = ref(false),
 }: {
   context: Readonly<Ref<DeepReadonly<DashboardRendererContext>>>
   globalFilters?: Readonly<Ref<DeepReadonly<AllFilters[]>>>
   isFullscreen?: Readonly<Ref<boolean>>
+  preview?: Readonly<Ref<boolean>>
 }): {
   internalContext: Readonly<Ref<DashboardRendererContextInternal>>
 } {
@@ -82,7 +84,7 @@ export default function useDashboardInternalContext({
       }
     }
 
-    if (editable === undefined) {
+    if (editable === undefined || preview.value) {
       editable = false
     }
 
@@ -92,7 +94,8 @@ export default function useDashboardInternalContext({
 
     // Check if the host app has provided an event handler for zooming.
     // If there's no handler, disable zooming -- it won't do anything.
-    const zoomable = !!getCurrentInstance()?.vnode?.props?.onTileTimeRangeZoom
+    // Preview mode also disables zooming.
+    const zoomable = !preview.value && !!getCurrentInstance()?.vnode?.props?.onTileTimeRangeZoom
 
     return {
       filters,

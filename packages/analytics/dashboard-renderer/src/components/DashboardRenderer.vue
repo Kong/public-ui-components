@@ -22,7 +22,7 @@
         {{ i18n.t('renderer.noQueryBridge') }}
       </KAlert>
       <component
-        :is="isEditable && !isFullscreen ? DraggableGridLayout : GridLayout"
+        :is="internalContext.editable && !isFullscreen ? DraggableGridLayout : GridLayout"
         v-else
         ref="gridLayoutRef"
         :tile-height="model.tile_height"
@@ -41,7 +41,7 @@
             :key="isFullscreen ? `${tile.id}-tile` : `${tile.id}-tile-fullscreen`"
             v-model:refresh-counter="refreshCounter"
             class="tile-container"
-            :context="tileContext"
+            :context="internalContext"
             :definition="tile.meta"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
             :hide-actions="preview"
@@ -68,7 +68,6 @@ import type {
   SlottableOptions,
   TileConfig,
   TileDefinition,
-  TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import type { ComponentPublicInstance } from 'vue'
@@ -124,17 +123,6 @@ composables.useRequestQueue()
 
 const configStore = useAnalyticsConfigStore()
 
-const timeSpec = computed<TimeRangeV4>(() => {
-  if (context.timeSpec) {
-    return context.timeSpec
-  }
-
-  return {
-    type: 'relative',
-    time_range: configStore.defaultQueryTimeForOrg,
-  }
-})
-
 const queryReady = computed<boolean>(() => {
   // In the future, this will need to be determined on a per-tile basis to support pipelining.
   // For now, it's fine for it to only be global.
@@ -142,10 +130,10 @@ const queryReady = computed<boolean>(() => {
   // We're ready to issue queries if we know the time spec.
   // We know the timespec if we were given the timespec, or if the config store has loaded the org's retention
   // and we're able to calculate a timespec.
+  // Note: this checks the *caller-supplied* timeSpec, not internalContext.timeSpec, because the latter
+  // always has a fallback value even before configStore finishes loading.
   return !!context.timeSpec || !configStore.loading
 })
-
-const isEditable = computed<boolean>(() => !preview && !!context.editable)
 
 const tileSortFn = (a: TileConfig, b: TileConfig) => {
   const rowDiff = a.layout.position.row - b.layout.position.row
@@ -162,7 +150,8 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
     if ('description' in tileMeta.chart) {
       // Replace tokens in tile descriptions
       const description = tileMeta.chart.description?.replace(TIMEFRAME_TOKEN, () => {
-        const timeSpecKey = timeSpec.value.type === 'absolute' ? 'custom' : timeSpec.value.time_range
+        const { timeSpec } = internalContext.value
+        const timeSpecKey = timeSpec.type === 'absolute' ? 'custom' : timeSpec.time_range
         const key = `renderer.trendRange.${timeSpecKey}`
 
         // Right now, we basically only support 2 ranges: 24 hours and 30 days.
@@ -185,7 +174,7 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
       }
     }
 
-    if (isEditable.value && !tile.id) {
+    if (internalContext.value.editable && !tile.id) {
       console.warn(
         'No id provided for tile. One will be generated automatically,',
         'however tracking changes to this tile may not work as expected.',
@@ -310,13 +299,8 @@ const { internalContext } = composables.useDashboardInternalContext({
   globalFilters,
   context: computed(() => context),
   isFullscreen,
+  preview: computed(() => preview),
 })
-
-const tileContext = computed(() => ({
-  ...internalContext.value,
-  editable: preview ? false : internalContext.value.editable,
-  zoomable: preview ? false : internalContext.value.zoomable,
-}))
 
 defineExpose({
   refresh: refreshTiles,
