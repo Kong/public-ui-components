@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/expressions",
-  "version": "1.4.15",
+  "version": "1.4.17",
   "type": "module",
   "module": "./dist/expressions.es.js",
   "types": "dist/types/index.d.ts",
@@ -44,8 +44,8 @@
     "monaco-editor": "^0.55.1",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-top-level-await": "^1.6.0",
-    "vite-plugin-wasm": "^3.5.0",
-    "vue": "^3.5.27"
+    "vite-plugin-wasm": "^3.6.0",
+    "vue": "^3.5.32"
   },
   "repository": {
     "type": "git",
@@ -68,7 +68,7 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong/kongponents": "^9.52.5",
     "monaco-editor": "^0.55.1",
-    "vue": "^3.5.27"
+    "vue": "^3.5.32"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",

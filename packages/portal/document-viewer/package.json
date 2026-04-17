@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/document-viewer",
-  "version": "2.3.25",
+  "version": "2.3.26",
   "type": "module",
   "main": "./dist/document-viewer.umd.js",
   "module": "./dist/document-viewer.es.js",
@@ -45,9 +45,9 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.20.0",
     "@kong/kongponents": "9.52.5",
-    "@types/prismjs": "^1.26.5",
+    "@types/prismjs": "^1.26.6",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
-    "vue": "^3.5.27"
+    "vue": "^3.5.32"
   },
   "dependencies": {
     "prismjs": "^1.30.0"
