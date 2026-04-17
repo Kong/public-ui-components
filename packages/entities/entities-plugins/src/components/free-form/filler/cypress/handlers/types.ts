@@ -3,8 +3,8 @@ import type { UnionFieldSchema } from '../../../../../types/plugins/form-schema'
 export interface ActionOptions {
   type?: Partial<Cypress.TypeOptions>
   click?: Partial<Cypress.ClickOptions>
-  check?: Partial<Cypress.CheckOptions>
-  clear?: Partial<Cypress.ClearOptions> | false
+  check?: Partial<Cypress.CheckClearOptions>
+  clear?: Partial<Cypress.CheckClearOptions> | false
 }
 
 export const defaultActionOptions: ActionOptions = {
