@@ -84,6 +84,7 @@ const { i18n } = composables.useI18n()
 const { internalContext, queryReady } = composables.useDashboardInternalContext({
   globalFilters: toRef(() => globalFilters),
   context: toRef(() => context),
+  preview: computed(() => true),
 })
 
 const chartNotConfigured = computed(() => {
