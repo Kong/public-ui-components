@@ -472,6 +472,7 @@ const props = defineProps({
       if (config.app === 'konnect' && !config.controlPlaneId) return false
       if (config.app === 'kongManager' && !(config as KongManagerCustomPluginFormConfig).workspace) return false
       if (!config.cancelRoute) return false
+      if (!config.successRoute) return false
       return true
     },
   },
@@ -694,6 +695,11 @@ const handleFileAdded = async (type: 'schema' | 'handler', files: FileList): Pro
     }
   } catch {
     state.errorMessage = t('custom_plugin_form.errors.file_read_error')
+    if (type === 'schema') {
+      state.fields.schemaContent = ''
+    } else {
+      state.fields.handlerContent = ''
+    }
   }
 }
 
@@ -782,7 +788,6 @@ const submitData = async (): Promise<void> => {
         aliasName: state.fields.aliasName,
         priority: state.fields.priority || undefined,
       } as ClonedPluginPayload)
-      return
     }
 
     router.push(props.config.successRoute)

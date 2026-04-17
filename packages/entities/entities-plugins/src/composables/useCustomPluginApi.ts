@@ -1,4 +1,5 @@
 import type { AxiosInstance } from 'axios'
+import { isAxiosError } from 'axios'
 import endpoints from '../plugins-endpoints'
 import type {
   InstalledPluginRequestBody,
@@ -105,8 +106,11 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
       try {
         const data = await getInstalledPlugin(pluginId)
         return Object.assign(data, { [CUSTOM_PLUGIN_TYPE_KEY]: 'installed' as const })
-      } catch {
+      } catch (e: unknown) {
         // not installed, continue
+        if (isAxiosError(e) && e.response?.status !== 404) {
+          throw e
+        }
       }
     }
 
@@ -114,8 +118,11 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
     try {
       const data = await getStreamedPlugin(pluginId)
       return Object.assign(data, { [CUSTOM_PLUGIN_TYPE_KEY]: 'streamed' as const })
-    } catch {
+    } catch (e: unknown) {
       // not streamed, continue
+      if (isAxiosError(e) && e.response?.status !== 404) {
+        throw e
+      }
     }
 
     // TODO: Try cloned once the API is available
