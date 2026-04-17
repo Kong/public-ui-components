@@ -87,7 +87,7 @@ import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
 import composables from '../../composables'
 
 const { i18n } = composables.useI18n()
-const { formatBytes } = unitFormatter({ i18n })
+const { formatBytes, formatCost } = unitFormatter({ i18n })
 
 const props = defineProps({
   data: {
@@ -185,6 +185,11 @@ const formattedValue = computed((): string => {
 
   if (value === null) {
     return ''
+  }
+
+  const rawUnit = metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined
+  if (rawUnit === 'usd') {
+    return formatCost(value)
   }
 
   // for response/request size metrics, display in bytes
