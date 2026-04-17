@@ -895,7 +895,6 @@ const initFormModel = (): void => {
 watch(loading, (newLoading) => {
   emit('loading', newLoading)
 })
-
 // if the schema changed we've got to start over and completely rebuild the form model
 watch(() => props.schema, (newSchema, oldSchema) => {
   if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
