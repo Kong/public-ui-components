@@ -25,6 +25,9 @@ describe('<GithubStar />', () => {
   })
 
   it('renders default tooltip text on mouseenter', () => {
+    // Intercept the GitHub buttons script to prevent it from replacing
+    // the <a> element with an <iframe>, which would detach the element from DOM
+    cy.intercept('https://buttons.github.io/buttons.js', { body: '' })
     cy.mount(GithubStar, {
       props: {
         url: 'http://github.com/kong/kong',
