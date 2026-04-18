@@ -379,8 +379,11 @@ export function createRenderRuleRegistry(onChange: () => void, getSchemaMap: () 
             ? utils.removeRootSymbol(utils.resolve(path, fieldName))
             : fieldName
 
-          // Skip if dependency condition is met
-          if (isEqual(actualDepFieldValue, expectedDepFieldValue)) {
+          // Skip if dependency condition is met (array = any-of, value = exact match)
+          const meetsCondition = Array.isArray(expectedDepFieldValue)
+            ? expectedDepFieldValue.includes(actualDepFieldValue)
+            : isEqual(actualDepFieldValue, expectedDepFieldValue)
+          if (meetsCondition) {
             hiddenPaths.value.delete(sourceFieldPath) // Unhide the field
             onChange()
             return

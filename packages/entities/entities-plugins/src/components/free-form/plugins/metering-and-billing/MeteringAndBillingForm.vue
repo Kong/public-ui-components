@@ -1,6 +1,6 @@
 <template>
   <StandardLayout
-    v-bind="props"
+    v-bind="{ ...props, model: modelWithDefaults }"
     :plugin-config-description="t('plugins.free-form.metering-and-billing.sections.plugin_config.description')"
   >
     <template #field-renderers>
@@ -140,6 +140,11 @@
       <ObjectField
         :label="t('plugins.free-form.metering-and-billing.sections.subject.title')"
         name="config.subject"
+        :render-rules="{
+          dependencies: {
+            'field': ['look_up_value_in', ['query', 'header']],
+          },
+        }"
         reset-label-path="reset"
       />
     </div>
@@ -194,8 +199,9 @@
 </template>
 
 <script setup lang="ts">
-import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
-import { provide, ref } from 'vue'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME, FORMS_CONFIG } from '@kong-ui-public/forms'
+import { computed, inject, provide, ref } from 'vue'
+import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import { KLabel } from '@kong/kongponents'
 import StandardLayout from '../../shared/layout/StandardLayout.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
@@ -221,6 +227,30 @@ const slots = defineSlots<{
 provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
 
 const { i18n: { t } } = useI18n()
+
+const appConfig = inject<KonnectBaseFormConfig | KongManagerBaseFormConfig | undefined>(FORMS_CONFIG)
+
+const ingestEndpointUrl = computed(() => {
+  const geo = (appConfig as KonnectBaseFormConfig)?.geoApiServerUrl
+  const region = geo ? new URL(geo).hostname.split('.')[0] : null
+  return region
+    ? `https://${region}.api.konghq.com/v3/openmeter/events`
+    : 'https://{{region}}.api.konghq.com/v3/openmeter/events'
+})
+
+// Prefill ingest_endpoint for new plugins when region is known, otherwise show placeholder
+const modelWithDefaults = computed(() => {
+  if (props.isEditing || props.model?.config?.ingest_endpoint) {
+    return props.model
+  }
+  return {
+    ...props.model,
+    config: {
+      ...props.model?.config,
+      ingest_endpoint: ingestEndpointUrl.value,
+    },
+  }
+})
 
 const meteringExpanded = ref(true)
 const attributesExpanded = ref(true)
