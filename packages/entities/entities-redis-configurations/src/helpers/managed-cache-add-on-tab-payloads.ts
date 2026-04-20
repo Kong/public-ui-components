@@ -5,17 +5,58 @@ import type {
   ManagedCacheAddOnConfig,
 } from '../types/cloud-gateways-add-on'
 
+type TerraformControlPlaneOwner = {
+  control_plane: {
+    control_plane_id: string | null
+    control_plane_geo: string | null
+  }
+}
+
+type TerraformControlPlaneGroupOwner = {
+  control_plane_group: {
+    control_plane_group_id: string | null
+    control_plane_group_geo: string | null
+  }
+}
+
+type TerraformOwner = TerraformControlPlaneOwner | TerraformControlPlaneGroupOwner
+
+type TerraformManagedCache = {
+  capacity_config?: {
+    tiered: {
+      tier: string
+    }
+  }
+}
+
+export type AddOnTfArgs = {
+  name: string | null
+  owner: TerraformOwner | null
+  config: {
+    managed_cache: TerraformManagedCache
+  }
+}
+
 // Deep clone of GET `/v2/cloud-gateways/add-ons/{id}` for tabs
 export function cloneAddOnResponse(addOnResponse: CloudGatewaysAddOnResponse): CloudGatewaysAddOnResponse {
   // Deep-copy nested objects/arrays so edits or JSON.stringify in UI cannot change the in-memory add-on row
-  return structuredClone(addOnResponse)
+  try {
+    return structuredClone(addOnResponse)
+  } catch {
+    return JSON.parse(JSON.stringify(addOnResponse)) as CloudGatewaysAddOnResponse
+  }
 }
 
-export function cloneAddOnResponseForConfigTabs(addOnResponse: CloudGatewaysAddOnResponse): Record<string, any> {
-  return cloneAddOnResponse(addOnResponse) as Record<string, any>
+export function cloneAddOnResponseForConfigTabs(addOnResponse: CloudGatewaysAddOnResponse): CloudGatewaysAddOnResponse {
+  return cloneAddOnResponse(addOnResponse)
 }
 
-function terraformOwnerBlock(owner: ControlPlaneAddOnOwner): Record<string, any> {
+function terraformOwnerBlock(owner?: ControlPlaneAddOnOwner): TerraformOwner | null {
+  // Owner can be temporarily missing while host data is still resolving
+  if (!owner || typeof owner !== 'object') {
+    return null
+  }
+
   if (owner.kind === 'control-plane') {
     return {
       control_plane: {
@@ -32,7 +73,12 @@ function terraformOwnerBlock(owner: ControlPlaneAddOnOwner): Record<string, any>
   }
 }
 
-function terraformManagedCacheBlock(addOnConfig: ManagedCacheAddOnConfig): Record<string, any> {
+function terraformManagedCacheBlock(addOnConfig?: ManagedCacheAddOnConfig): TerraformManagedCache {
+  // Keep TR output valid even when config is partially populated
+  if (!addOnConfig || typeof addOnConfig !== 'object') {
+    return {}
+  }
+
   const tieredCapacity = addOnConfig.capacity_config
   if (!tieredCapacity || tieredCapacity.kind !== 'tiered' || tieredCapacity.tier == null || tieredCapacity.tier === '') {
     return {}
@@ -45,10 +91,11 @@ function terraformManagedCacheBlock(addOnConfig: ManagedCacheAddOnConfig): Recor
 }
 
 // GET add-on body with `konnect_cloud_gateway_addon` argument map
-export function addOnToTerraformArgs(addOnResponse: CloudGatewaysAddOnResponse): Record<string, any> {
+export function addOnToTerraformArgs(addOnResponse: CloudGatewaysAddOnResponse): AddOnTfArgs {
+  // Return provider-shaped args only; TerraformCodeBlock owns the resource header
   return {
     name: addOnResponse.name ?? null,
-    owner: terraformOwnerBlock(addOnResponse.owner ?? {}),
+    owner: terraformOwnerBlock(addOnResponse.owner),
     config: {
       managed_cache: terraformManagedCacheBlock(addOnResponse.config),
     },

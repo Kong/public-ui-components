@@ -18,6 +18,8 @@ import { highlightCodeBlock } from '../../utils/code-block'
 
 const SINGLE_INDENT = '  '
 const HEREDOC_DELIMITER = 'TF_MULTILINE_EOT'
+// Resource name for Konnect managed cache add-ons
+const CLOUD_GATEWAY_ADDON_ENTITY_TYPE = 'cloud_gateway_addon'
 
 const props = defineProps({
   /** A record to indicate the entity's configuration, used to populate the Terraform code block */
@@ -41,12 +43,38 @@ const props = defineProps({
   },
 })
 
+const isAddonPayload = computed((): boolean => {
+  const record = props.entityRecord
+  if (!record || typeof record !== 'object') {
+    return false
+  }
+
+  const config = record.config
+  if (!config || typeof config !== 'object') {
+    return false
+  }
+
+  // Support both raw API shape (`capacity_config`) and helper-shaped TF args (`managed_cache`)
+  return typeof config.managed_cache !== 'undefined' || typeof config.capacity_config !== 'undefined'
+})
+
+const resolvedEntityType = computed((): string => {
+  if (typeof props.entityType === 'string' && props.entityType.length > 0) {
+    return props.entityType
+  }
+
+  // Fallback prevents `konnect_gateway_undefined` headers in mixed host/runtime versions
+  return isAddonPayload.value
+    ? CLOUD_GATEWAY_ADDON_ENTITY_TYPE
+    : SupportedEntityType.Partial
+})
+
 const isEventGatewayEntity = computed(() => {
-  return EventGatewayTypesArray.includes(props.entityType)
+  return EventGatewayTypesArray.includes(resolvedEntityType.value)
 })
 
 const isIdentityEntity = computed(() => {
-  return IdentityTypesArray.includes(props.entityType)
+  return IdentityTypesArray.includes(resolvedEntityType.value)
 })
 
 const buildStringLiteral = (value: string, indent: string): string => {
@@ -241,11 +269,11 @@ const terraformContent = computed((): string => {
   if (isEventGatewayEntity.value) {
     // special handling for event gateways
     const entityName = props.subEntityType
-      ? `${props.entityType}_${props.subEntityType}`
-      : props.entityType
+      ? `${resolvedEntityType.value}_${props.subEntityType}`
+      : resolvedEntityType.value
     content += `resource "konnect_event_gateway_${entityName}" "my_eventgateway${entityName.replaceAll('_', '')}" {\n`
     content += `${SINGLE_INDENT}provider = konnect-beta \n` // remove this line if provider changes
-  } else if (props.entityType === 'plugin') {
+  } else if (resolvedEntityType.value === SupportedEntityType.Plugin) {
     // plugin type is specified separately
     //clone and convert '-' to '_' since terraform doesn't allow '-'
     const pluginType = props.credentialType.replace(/-/g, '_') || (modifiedRecord.name + '').replace(/-/g, '_')
@@ -253,20 +281,20 @@ const terraformContent = computed((): string => {
 
     content += `resource "konnect_gateway_plugin_${pluginType}" "my_${pluginType}" {\n`
   } else if (isIdentityEntity.value) {
-    content += `resource "konnect_${props.entityType}" "my_${props.entityType}" {\n`
+    content += `resource "konnect_${resolvedEntityType.value}" "my_${resolvedEntityType.value}" {\n`
     content += `${SINGLE_INDENT}provider = konnect-beta\n`
-  } else if (props.entityType === SupportedEntityType.CloudGatewayAddon) {
-    // Managed-cache row uses `konnect_cloud_gateway_addon`, not `konnect_gateway_partial`
+  } else if (isAddonPayload.value || resolvedEntityType.value === CLOUD_GATEWAY_ADDON_ENTITY_TYPE) {
+    // Managed cache uses a dedicated provider resource name
     content += 'resource "konnect_cloud_gateway_addon" "managed_cache" {\n'
   } else { // generic entity
-    content += `resource "konnect_gateway_${props.entityType}" "my_${props.entityType}" {\n`
+    content += `resource "konnect_gateway_${resolvedEntityType.value}" "my_${resolvedEntityType.value}" {\n`
   }
 
   // main config
   content += generateConfig(modifiedRecord)
 
-  // cp id; cloud gateway add-ons use `owner` blocks per provider schema, not root control_plane_id
-  if (!isEventGatewayEntity.value && !isIdentityEntity.value && props.entityType !== SupportedEntityType.CloudGatewayAddon) {
+  // Add-ons use `owner` blocks, so skip generic root `control_plane_id`
+  if (!isEventGatewayEntity.value && !isIdentityEntity.value && resolvedEntityType.value !== CLOUD_GATEWAY_ADDON_ENTITY_TYPE) {
     content += `${SINGLE_INDENT}control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id\n`
   } else if (parentEntityType) { // parent entity information if scoped
     content += `${SINGLE_INDENT}${parentEntityType} = {\n`
