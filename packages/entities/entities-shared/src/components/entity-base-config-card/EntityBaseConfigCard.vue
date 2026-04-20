@@ -608,14 +608,11 @@ const fetcherUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // Always replace the id for editing
-  url = url.replace(/{id}/gi, props.config.entityId)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.config.entityId) // Always replace the id for editing
 })
 
 watch(isLoading, (loading: boolean) => {

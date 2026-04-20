@@ -16,6 +16,8 @@ export interface KonnectConfig extends BaseAppConfig {
   app: 'konnect'
   /** The control plane id */
   controlPlaneId: string
+  /** Optional workspace name or identifier */
+  workspace?: string
   /** Identifies whether the Control Plane type is a Control Plane Group or not */
   isControlPlaneGroup?: boolean
   /** Identifies whether the control plane is a member of a control plane group (not the group itself) */

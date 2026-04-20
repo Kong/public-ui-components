@@ -944,4 +944,76 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       })
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in GET URL when loading with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services/${gatewayService1.id}`,
+        },
+        { statusCode: 200, body: gatewayService1 },
+      ).as('getServiceWithWorkspace')
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          gatewayServiceId: gatewayService1.id,
+        },
+      })
+
+      cy.wait('@getServiceWithWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services/${gatewayService1.id}`,
+        },
+        { statusCode: 200, body: gatewayService1 },
+      ).as('getServiceWithWorkspace')
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services/${gatewayService1.id}`,
+        },
+        { statusCode: 200, body: gatewayService1 },
+      ).as('updateServiceWithWorkspace')
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          gatewayServiceId: gatewayService1.id,
+          isEditing: true,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getServiceWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+        cy.wait('@updateServiceWithWorkspace')
+      })
+    })
+
+    it('omits workspace segment in GET URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services/${gatewayService1.id}`,
+        },
+        { statusCode: 200, body: gatewayService1 },
+      ).as('getServiceNoWorkspace')
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          gatewayServiceId: gatewayService1.id,
+        },
+      })
+
+      cy.wait('@getServiceNoWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+  })
 })

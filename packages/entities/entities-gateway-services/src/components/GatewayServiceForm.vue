@@ -988,12 +988,11 @@ const submitUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.gatewayServiceId)
+
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.gatewayServiceId) // Always replace the id when editing
 })
 
 const tlsSansPayload = computed(() => {
