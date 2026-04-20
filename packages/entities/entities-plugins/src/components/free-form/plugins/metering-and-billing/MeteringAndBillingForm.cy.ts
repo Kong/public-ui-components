@@ -46,8 +46,13 @@ const mountForm = (options: {
   isEditing?: boolean
   model?: Record<string, any>
   geoApiServerUrl?: string
+  app?: 'konnect' | 'kongManager'
 }) => {
-  const { isEditing = false, model = {}, geoApiServerUrl } = options
+  const { isEditing = false, model = {}, geoApiServerUrl, app = 'konnect' } = options
+
+  const formsConfig = app === 'konnect'
+    ? { app: 'konnect' as const, apiBaseUrl: '/us/kong-api', controlPlaneId: '123', ...(geoApiServerUrl ? { geoApiServerUrl } : {}) }
+    : { app: 'kongManager' as const, apiBaseUrl: '/kong-manager' }
 
   cy.mount(MeteringAndBillingForm, {
     props: {
@@ -58,16 +63,10 @@ const mountForm = (options: {
       isEditing,
       pluginName: 'metering-and-billing',
       onFormChange: cy.spy().as('onFormChange'),
-      onValidityChange: cy.spy().as('onValidityChange'),
     },
     global: {
       provide: {
-        [FORMS_CONFIG]: {
-          app: 'konnect' as const,
-          apiBaseUrl: '/us/kong-api',
-          controlPlaneId: '123',
-          ...(geoApiServerUrl ? { geoApiServerUrl } : {}),
-        },
+        [FORMS_CONFIG]: formsConfig,
       },
     },
   })
@@ -103,5 +102,11 @@ describe('MeteringAndBillingForm - ingest_endpoint prefill', () => {
     })
 
     cy.getTestId('ff-config.ingest_endpoint').should('have.value', 'https://custom.example.com/events')
+  })
+
+  it('does not prefill ingest_endpoint in Kong Manager', () => {
+    mountForm({ app: 'kongManager' })
+
+    cy.getTestId('ff-config.ingest_endpoint').should('have.value', '')
   })
 })

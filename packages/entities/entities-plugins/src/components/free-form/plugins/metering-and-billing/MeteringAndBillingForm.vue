@@ -238,9 +238,9 @@ const ingestEndpointUrl = computed(() => {
     : 'https://{{region}}.api.konghq.com/v3/openmeter/events'
 })
 
-// Prefill ingest_endpoint for new plugins when region is known, otherwise show placeholder
+// Prefill ingest_endpoint for new Konnect plugins; Kong Manager has no regional endpoint
 const modelWithDefaults = computed(() => {
-  if (props.isEditing || props.model?.config?.ingest_endpoint) {
+  if (props.isEditing || props.model?.config?.ingest_endpoint || (appConfig as KonnectBaseFormConfig)?.app !== 'konnect') {
     return props.model
   }
   return {
