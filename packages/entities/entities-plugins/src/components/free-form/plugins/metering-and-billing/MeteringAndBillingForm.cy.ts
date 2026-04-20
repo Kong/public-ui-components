@@ -73,22 +73,17 @@ const mountForm = (options: {
   })
 }
 
-const getIngestEndpointInput = () =>
-  cy.get('[data-testid="ff-config.ingest_endpoint"] input')
-
 describe('MeteringAndBillingForm - ingest_endpoint prefill', () => {
   it('prefills with region-based URL when geoApiServerUrl is available', () => {
     mountForm({ geoApiServerUrl: 'https://us.api.konghq.com' })
 
-    getIngestEndpointInput()
-      .should('have.value', 'https://us.api.konghq.com/v3/openmeter/events')
+    cy.getTestId('ff-config.ingest_endpoint').should('have.value', 'https://us.api.konghq.com/v3/openmeter/events')
   })
 
   it('prefills with {{region}} placeholder when geoApiServerUrl is not available', () => {
     mountForm({})
 
-    getIngestEndpointInput()
-      .should('have.value', 'https://{{region}}.api.konghq.com/v3/openmeter/events')
+    cy.getTestId('ff-config.ingest_endpoint').should('have.value', 'https://{{region}}.api.konghq.com/v3/openmeter/events')
   })
 
   it('does not overwrite an existing ingest_endpoint in create mode', () => {
@@ -97,8 +92,7 @@ describe('MeteringAndBillingForm - ingest_endpoint prefill', () => {
       geoApiServerUrl: 'https://us.api.konghq.com',
     })
 
-    getIngestEndpointInput()
-      .should('have.value', 'https://custom.example.com/events')
+    cy.getTestId('ff-config.ingest_endpoint').should('have.value', 'https://custom.example.com/events')
   })
 
   it('does not overwrite an existing ingest_endpoint in edit mode', () => {
@@ -108,7 +102,6 @@ describe('MeteringAndBillingForm - ingest_endpoint prefill', () => {
       geoApiServerUrl: 'https://us.api.konghq.com',
     })
 
-    getIngestEndpointInput()
-      .should('have.value', 'https://custom.example.com/events')
+    cy.getTestId('ff-config.ingest_endpoint').should('have.value', 'https://custom.example.com/events')
   })
 })
