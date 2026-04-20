@@ -1186,7 +1186,7 @@ const configSchema = computed<ConfigurationSchema>(() => {
   color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
   font-size: var(--kui-font-size-30, $kui-font-size-30);
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-  padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-0);
+  padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-60, var(--kui-space-0, $kui-space-0));
   width: 25%;
 }
 
