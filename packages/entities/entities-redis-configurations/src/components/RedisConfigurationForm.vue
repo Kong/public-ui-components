@@ -594,7 +594,7 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t }, i18nT } = composables.useI18n()
 const {
   vaultSecretPickerSetup,
   setUpVaultSecretPicker,

@@ -995,7 +995,7 @@ const configSchema = computed<ConfigurationSchema>(() => {
   animation: managed-redis-spin 0.8s linear infinite;
   border: 2px solid var(--kui-color-border, $kui-color-border);
   border-radius: 50%;
-  border-right-color: var(--kui-color-text-primary, $kui-color-text-primary);
+  border-right-color: var(--kui-color-border-primary, $kui-color-border-primary);
   display: inline-block;
   flex: 0 0 auto;
   height: 14px;
