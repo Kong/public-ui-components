@@ -142,7 +142,7 @@
         name="config.subject"
         :render-rules="{
           dependencies: {
-            'field': ['look_up_value_in', ['query', 'header']],
+            field: ['look_up_value_in', ['query', 'header']],
           },
         }"
         reset-label-path="reset"
