@@ -281,7 +281,7 @@ import type {
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import endpoints from '../partials-endpoints'
-import { getRedisType, isKonnectManagedRedisEnabled, pickCloudAuthFields } from '../helpers'
+import { getRedisType, isKonnectManagedRedisEnabled } from '../helpers'
 import {
   addOnApiResponseToDisplayRecord,
   fetchAllManagedCacheAddOns,
@@ -290,6 +290,7 @@ import {
   getCacheConfigId,
   isManagedCacheAddOn,
 } from '../helpers/managed-cache-add-on'
+import { cloudAuthenticationObjectForDisplay } from '../helpers/managed-cache-add-on-display'
 import { pickManagedAddOnCardRecord } from '../helpers/managed-add-on-config-schema'
 import { addOnToTerraformArgs, cloneAddOnResponseForConfigTabs } from '../helpers/managed-cache-add-on-tab-payloads'
 import { DEFAULT_REDIS_TYPE } from '../constants'
@@ -750,6 +751,18 @@ const redisTypeText = computed(() => {
 const recordResolver = (payload: Record<string, any>): AddOnRecord => {
   const row = payload as RedisConfigurationResponse
   const partialConfig = row.config ?? {}
+  const rawCloudAuth = partialConfig.cloud_authentication
+
+  const cloudAuthForDisplay = props.config.cloudAuthAvailable
+    ? cloudAuthenticationObjectForDisplay(
+      rawCloudAuth !== null &&
+        typeof rawCloudAuth === 'object' &&
+        !Array.isArray(rawCloudAuth)
+        ? (rawCloudAuth as AddOnRecord)
+        : {},
+      true,
+    ) : null
+
   return {
     id: row.id,
     name: row.name,
@@ -759,8 +772,8 @@ const recordResolver = (payload: Record<string, any>): AddOnRecord => {
     type: row.type,
     ...partialConfig,
     ...(props.config.cloudAuthAvailable
-      ? { cloud_authentication: pickCloudAuthFields(partialConfig.cloud_authentication) } :
-      {}
+      ? { cloud_authentication: cloudAuthForDisplay }
+      : {}
     ),
   }
 }

@@ -108,7 +108,7 @@ const clonePlainObjectDeep = (obj: AddOnRecord): AddOnRecord => {
 }
 
 // Primitives-only object for the cloud_authentication row (optional field allowlist when Konnect enables it)
-const cloudAuthenticationObjectForDisplay = (
+export const cloudAuthenticationObjectForDisplay = (
   raw: AddOnRecord,
   cloudAuthAvailable: boolean,
 ): AddOnRecord | null => {
