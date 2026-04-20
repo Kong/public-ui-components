@@ -52,6 +52,10 @@ const records = {
     gateway_id: '3c1e9b42-2d8f-4f6e-9a6d-7b2f8c6a3e4b',
     pem: '-----BEGIN CERTIFICATE-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA\n-----END CERTIFICATE-----',
   },
+  [SupportedEntityType.CloudGatewayAddon]: {
+    name: 'managed-cache',
+    config: { kind: 'managed-cache.v0' },
+  },
 }
 
 describe('<TerraformCodeBlock />', () => {
@@ -118,6 +122,21 @@ describe('<TerraformCodeBlock />', () => {
         .and('contain.text', '-----BEGIN CERTIFICATE-----')
         .and('contain.text', '-----END CERTIFICATE-----')
         .and('contain.text', 'TF_MULTILINE_EOT')
+    })
+  })
+
+  describe(`entity type: ${SupportedEntityType.CloudGatewayAddon}`, () => {
+    it('uses konnect_cloud_gateway_addon/ managed_cache resource header', () => {
+      cy.mount(TerraformCodeBlock, {
+        props: {
+          entityRecord: records[SupportedEntityType.CloudGatewayAddon],
+          entityType: SupportedEntityType.CloudGatewayAddon,
+        },
+      })
+
+      cy.get('.terraform-config')
+        .should('be.visible')
+        .and('contain.text', 'resource "konnect_cloud_gateway_addon" "managed_cache"')
     })
   })
 })

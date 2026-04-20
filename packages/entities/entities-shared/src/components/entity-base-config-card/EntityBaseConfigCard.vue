@@ -75,11 +75,13 @@
     <template v-else>
       <div class="config-card-details-section">
         <ConfigCardDisplay
+          :code-block-record="codeBlockRecordFromApi"
           :code-block-record-formatter="codeBlockRecordFormatter"
           :config="config"
           :entity-type="entityType"
           :fetcher-url="fetcherUrl"
           :format="configFormat"
+          :preserve-code-block-timestamps="preserveCodeBlockTimestamps"
           :prop-list-types="propListTypes"
           :property-collections="propertyLists"
           :record="record"
@@ -223,9 +225,9 @@ const props = defineProps({
    * This prop only works if dataKey is not provided.
    */
   recordResolver: {
-    type: Function as PropType<(data: any) => any>,
+    type: Function as PropType<(data: Record<string, any>) => Record<string, any>>,
     required: false,
-    default: (data: any) => data,
+    default: (data: Record<string, any>) => data,
   },
   /**
    * A function to format the entity record before displaying it in the code block.
@@ -234,6 +236,22 @@ const props = defineProps({
     type: Function as PropType<(entityRecord: Record<string, any>, format: CodeFormat) => Record<string, any>>,
     required: false,
     default: (entityRecord: Record<string, any>) => entityRecord,
+  },
+  /**
+   * JSON tab show the same nested shape the GET returned
+   */
+  codeBlockRecordResolver: {
+    type: Function as PropType<(rawData: Record<string, any>) => Record<string, any>>,
+    required: false,
+    default: undefined,
+  },
+  /**
+   * When true, code blocks keep `created_at`/ `updated_at` (default strips them per KHCP-9837)
+   */
+  preserveCodeBlockTimestamps: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
   /**
    * Boolean to control card title visibility.
@@ -417,6 +435,16 @@ const isLoading = ref(false)
 const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
 const record = ref<Record<string, any>>({})
+// Raw API payload for code tabs, structured tab always reads `record` (from `recordResolver`)
+const rawFetchedData = ref<Record<string, any> | null>(null)
+
+// Optional resolver for JSON/YAML/TR/deck tabs; fallback is `record` when omitted
+const codeBlockRecordFromApi = computed((): Record<string, any> | undefined => {
+  if (!props.codeBlockRecordResolver || rawFetchedData.value == null) {
+    return undefined
+  }
+  return props.codeBlockRecordResolver(rawFetchedData.value)
+})
 
 // Handle sorting by 'order' prop
 const orderedRecordArray = computed((): RecordItem[] => {
@@ -629,6 +657,8 @@ onBeforeMount(async () => {
 
   try {
     const { data } = await axiosInstance.get(fetcherUrl.value)
+    // Stash raw payload before `recordResolver` reshape it
+    rawFetchedData.value = data
 
     if (props.dataKey) {
       if (typeof data[props.dataKey] !== 'undefined') {
@@ -652,6 +682,7 @@ onBeforeMount(async () => {
 
     emit('fetch:success', data)
   } catch (error: any) {
+    rawFetchedData.value = null // avoid showing stale JSON after a failed refetch
     const parsedError = getMessageFromError(error)
     // Custom logic here for 404 - if error message is `code 5` fallback to default error message
     fetchErrorMessage.value = !parsedError.startsWith('code') ? parsedError : t('baseConfigCard.errors.load')

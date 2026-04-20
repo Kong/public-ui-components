@@ -60,6 +60,10 @@
       "show_partial": "Show partial configuration",
       "hide_partial": "Hide partial configuration"
     },
+    "partial": {
+      "provisioning_value": "Provisioning cache...",
+      "terminating_value": "Terminating cache..."
+    },
     "managed_dpg": {
       "entry_heading": "Data plane group {n}"
     },

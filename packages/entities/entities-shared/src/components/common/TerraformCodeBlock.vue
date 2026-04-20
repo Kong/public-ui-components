@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { type PropType, computed } from 'vue'
-import { EventGatewayTypesArray, type SupportedEntityType, SupportedEntityTypesArray, IdentityTypesArray } from '../../types'
+import { EventGatewayTypesArray, SupportedEntityType, SupportedEntityTypesArray, IdentityTypesArray } from '../../types'
 import { highlightCodeBlock } from '../../utils/code-block'
 
 const SINGLE_INDENT = '  '
@@ -255,6 +255,9 @@ const terraformContent = computed((): string => {
   } else if (isIdentityEntity.value) {
     content += `resource "konnect_${props.entityType}" "my_${props.entityType}" {\n`
     content += `${SINGLE_INDENT}provider = konnect-beta\n`
+  } else if (props.entityType === SupportedEntityType.CloudGatewayAddon) {
+    // Managed-cache row uses `konnect_cloud_gateway_addon`, not `konnect_gateway_partial`
+    content += 'resource "konnect_cloud_gateway_addon" "managed_cache" {\n'
   } else { // generic entity
     content += `resource "konnect_gateway_${props.entityType}" "my_${props.entityType}" {\n`
   }
@@ -262,8 +265,8 @@ const terraformContent = computed((): string => {
   // main config
   content += generateConfig(modifiedRecord)
 
-  // control plane id
-  if (!isEventGatewayEntity.value && !isIdentityEntity.value) {
+  // cp id; cloud gateway add-ons use `owner` blocks per provider schema, not root control_plane_id
+  if (!isEventGatewayEntity.value && !isIdentityEntity.value && props.entityType !== SupportedEntityType.CloudGatewayAddon) {
     content += `${SINGLE_INDENT}control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id\n`
   } else if (parentEntityType) { // parent entity information if scoped
     content += `${SINGLE_INDENT}${parentEntityType} = {\n`

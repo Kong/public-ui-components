@@ -16,17 +16,18 @@
         class="managed-konnect-redis-detail"
         data-testid="managed-konnect-redis-detail"
       >
-        <!-- Konnect-managed add-on card intentionally hides YAML; only structured/json are shown here -->
         <EntityBaseConfigCard
           :key="addOnIdForCacheFetch"
-          :code-block-record-formatter="cacheAddonCodeBlockFormatter"
+          :code-block-record-formatter="addOnCodeFmt"
+          :code-block-record-resolver="addOnCodeRslv"
           :config="addOnCardRuntimeConfig"
           :config-card-doc="configCardDoc"
           :config-schema="managedAddOnConfigSchema"
-          :entity-type="SupportedEntityType.Partial"
+          :entity-type="SupportedEntityType.CloudGatewayAddon"
           fetch-url="/v2/cloud-gateways/add-ons/{id}"
           :formats-to-hide="['yaml']"
           :hide-title="false"
+          :preserve-code-block-timestamps="true"
           :record-resolver="addOnRecordResolver"
           @fetch:error="onEntityBaseConfigCardFetchError"
           @fetch:success="onCacheAddOnLoaded"
@@ -77,11 +78,8 @@
               </template>
             </div>
           </template>
-          <!-- Partial config shown only when Koko creates partial; nothing under cache card while provisioning -->
-          <template
-            v-if="linkedPartialIdForCollapse"
-            #after-fields
-          >
+          <!-- Spinner while add-on is initializing/terminating; full partial card when state is ready -->
+          <template #after-fields>
             <KCollapse
               v-model="partialSectionCollapsed"
               class="managed-redis-partial-kcollapse"
@@ -110,8 +108,24 @@
                 </KButton>
               </template>
               <div class="managed-redis-partial-expandable-body">
+                <!-- Initializing/terminating Add on -->
+                <div
+                  v-if="!partialSectionCollapsed && showPartialTransitionalUi"
+                  class="managed-redis-partial-provisioning"
+                  :data-partial-transitional="partialTransitionalKind"
+                  data-testid="managed-redis-partial-provisioning"
+                >
+                  <div class="partial-transitional-status">
+                    <span
+                      aria-hidden="true"
+                      class="managed-redis-provisioning-spinner"
+                    />
+                    <span>{{ partialTransitionalMessage }}</span>
+                  </div>
+                </div>
+
                 <RedisConfigurationConfigCard
-                  v-if="!partialSectionCollapsed"
+                  v-else-if="!partialSectionCollapsed"
                   :config="innerPartialCardConfig"
                   :config-card-doc="configCardDoc"
                   disable-konnect-managed-detail
@@ -165,7 +179,11 @@
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, onMounted, ref, useId } from 'vue'
 import { isAxiosError, type AxiosError } from 'axios'
-import type { ConfigurationSchema, ConfigurationSchemaItem } from '@kong-ui-public/entities-shared'
+import type {
+  ConfigurationSchema,
+  ConfigurationSchemaItem,
+  ConfigCardCodeFormat,
+} from '@kong-ui-public/entities-shared'
 import {
   ConfigurationSchemaSection,
   ConfigurationSchemaType,
@@ -185,7 +203,13 @@ import type {
   RedisConfigurationConfigDTO,
 } from '../types'
 import { RedisType } from '../types'
-import type { AddOnRecord, AddOnValue, ManagedCacheAddOn } from '../types/cloud-gateways-add-on'
+import type {
+  AddOnRecord,
+  AddOnValue,
+  CloudGatewaysAddOnResponse,
+  CloudGatewaysAddOnState,
+  ManagedCacheAddOn,
+} from '../types/cloud-gateways-add-on'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import endpoints from '../partials-endpoints'
@@ -199,6 +223,7 @@ import {
   isManagedCacheAddOn,
 } from '../helpers/managed-cache-add-on'
 import { pickManagedAddOnCardRecord } from '../helpers/managed-add-on-config-schema'
+import { addOnToTerraformArgs, cloneAddOnResponseForConfigTabs } from '../helpers/managed-cache-add-on-tab-payloads'
 import { DEFAULT_REDIS_TYPE } from '../constants'
 
 /**
@@ -333,11 +358,51 @@ const addOnIdForCacheFetch = ref('')
 const linkedPartialIdForCollapse = ref<string | null>(null)
 const partialSectionCollapsed = ref(true)
 
+// Add-on state from GET add-on
+const managedAddOnState = ref<CloudGatewaysAddOnState | null>(null)
+
+const showNestedPartialConfiguration = computed((): boolean => {
+  const state = managedAddOnState.value
+  if (state === 'ready') {
+    return true
+  }
+
+  if (state === null) {
+    return !!linkedPartialIdForCollapse.value
+  }
+
+  if (state === 'initializing' || state === 'terminating') {
+    return false
+  }
+
+  return !!linkedPartialIdForCollapse.value
+})
+
+// Spinner row instead of nested partial when add-on is not in Ready state
+const showPartialTransitionalUi = computed((): boolean => !showNestedPartialConfiguration.value)
+
+const partialTransitionalKind = computed((): 'provisioning' | 'terminating' => (
+  managedAddOnState.value === 'terminating' ? 'terminating' : 'provisioning'
+))
+
+const partialTransitionalMessage = computed((): string =>
+  partialTransitionalKind.value === 'terminating'
+    ? t('config_card.partial.terminating_value')
+    : t('config_card.partial.provisioning_value'),
+)
+
 const partialCollapseTriggerLabel = computed((): string =>
   partialSectionCollapsed.value
     ? t('config_card.collapse.show_partial')
     : t('config_card.collapse.hide_partial'),
 )
+
+// The same Cloud Gateway add-on response powers 3 outputs:
+// Structured tab: `addOnRecordResolver` maps and filters API fields for card display
+// JSON tab: `addOnCodeRslv` preserves original GET payload including timestamps
+// TR tab: `addOnCodeFmt` transforms that payload via `addOnToTerraformArgs`
+const addOnCodeRslv = (raw: Record<string, any>): Record<string, any> =>
+  cloneAddOnResponseForConfigTabs(raw as CloudGatewaysAddOnResponse)
 
 // Keep only fields shown on the managed cache card
 const addOnRecordResolver = (data: AddOnRecord): AddOnRecord => {
@@ -381,6 +446,9 @@ onMounted(() => {
       if (addOnFromRouteId) {
         addOnIdForCacheFetch.value = addOnFromRouteId.id
         linkedPartialIdForCollapse.value = getCacheConfigId(addOnFromRouteId) ?? null
+        // Lifecycle state from prefetch
+        managedAddOnState.value = addOnFromRouteId.state ?? null
+        partialSectionCollapsed.value = linkedPartialIdForCollapse.value !== null
         detailLayout.value = 'managed'
         return
       }
@@ -406,6 +474,9 @@ onMounted(() => {
         if (addOnForPartial && isManagedCacheAddOn(addOnForPartial)) {
           addOnIdForCacheFetch.value = addOnForPartial.id
           linkedPartialIdForCollapse.value = routeEntityId
+          // Route opened with Koko partial id; same lifecycle rules as direct add-on
+          managedAddOnState.value = addOnForPartial.state ?? null
+          partialSectionCollapsed.value = true
           detailLayout.value = 'managed'
           return
         }
@@ -447,26 +518,31 @@ const innerPartialCardConfig = computed((): KonnectRedisConfigurationEntityConfi
   }
 })
 
-// Terraform export needs the managed_cache_add_on wrapper
-const cacheAddonCodeBlockFormatter = (record: AddOnRecord, codeFormat: string): AddOnRecord => {
-  if (!record || Object.keys(record).length === 0) {
-    return {}
-  }
-
-  return codeFormat === 'terraform'
-    ? { managed_cache_add_on: { ...record } }
-    : { ...record }
+// Wire add-on JSON- pass through for JSON tab; TR uses `konnect_cloud_gateway_addon` map
+const addOnCodeFmt = (
+  record: Record<string, any>,
+  codeFormat: ConfigCardCodeFormat,
+): Record<string, any> => {
+  const addOn = record as CloudGatewaysAddOnResponse
+  return codeFormat === 'terraform' ? addOnToTerraformArgs(addOn) : cloneAddOnResponseForConfigTabs(addOn)
 }
 
 // Konnect-managed: refresh display schema from API row; notify hosts via add-on-only event
-const onCacheAddOnLoaded = (data: AddOnRecord): void => {
-  const display = addOnApiResponseToDisplayRecord(data, {
+const onCacheAddOnLoaded = (data: Record<string, any>): void => {
+  const row = data as AddOnRecord
+  const display = addOnApiResponseToDisplayRecord(row, {
     cloudAuthAvailable: konnectCloudAuthAvailable.value,
   })
   setManagedAddOnSchemaFromDisplayRecord(display)
 
-  if (isManagedCacheAddOn(data)) {
-    emit('fetch:managed-add-on-success', data)
+  if (isManagedCacheAddOn(row)) {
+    // Keep partial UI in sync when add-on transitions
+    managedAddOnState.value = row.state ?? null
+    const nextLinkedPartialId = getCacheConfigId(row) ?? null
+    if (nextLinkedPartialId && linkedPartialIdForCollapse.value !== nextLinkedPartialId) {
+      linkedPartialIdForCollapse.value = nextLinkedPartialId
+    }
+    emit('fetch:managed-add-on-success', row)
   }
 }
 
@@ -479,9 +555,9 @@ const redisType = ref<RedisType>(DEFAULT_REDIS_TYPE)
 
 // Legacy partial config card
 const handleData = (payload: Record<string, any>): void => {
-  const partialResponse = payload as RedisConfigurationResponse
-  redisType.value = getRedisType(partialResponse)
-  emit('fetch:success', partialResponse)
+  const row = payload as RedisConfigurationResponse
+  redisType.value = getRedisType(row)
+  emit('fetch:success', row)
 }
 
 // Labels used in legacy detail mode
@@ -509,15 +585,15 @@ const redisTypeText = computed(() => {
 
 // Flatten the config object to display in the structure tab
 const recordResolver = (payload: Record<string, any>): AddOnRecord => {
-  const partialResponse = payload as RedisConfigurationResponse
-  const partialConfig = partialResponse.config ?? {}
+  const row = payload as RedisConfigurationResponse
+  const partialConfig = row.config ?? {}
   return {
-    id: partialResponse.id,
-    name: partialResponse.name,
-    tags: partialResponse.tags,
-    created_at: partialResponse.created_at,
-    updated_at: partialResponse.updated_at,
-    type: partialResponse.type,
+    id: row.id,
+    name: row.name,
+    tags: row.tags,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+    type: row.type,
     ...partialConfig,
     ...(props.config.cloudAuthAvailable
       ? { cloud_authentication: pickCloudAuthFields(partialConfig.cloud_authentication) } :
@@ -529,16 +605,16 @@ const recordResolver = (payload: Record<string, any>): AddOnRecord => {
 /**
  * Put config details into `config` object to display in the code block tab
  */
-const codeBlockRecordFormatter = (record: Record<string, any>, codeFormat: string): AddOnRecord => {
-  // Prevent type errors, return empty object if no record
+const codeBlockRecordFormatter = (record: AddOnRecord, codeFormat: ConfigCardCodeFormat): AddOnRecord => {
   if (!record || Object.keys(record).length === 0) {
     return {}
   }
 
   const { id, name, created_at, updated_at, type, tags, ...config } = record
   if (codeFormat === 'terraform') {
+    const typeKey = typeof type === 'string' ? type.replaceAll('-', '_') : 'partial'
     return {
-      [type.replaceAll('-', '_')]: {
+      [typeKey]: {
         id, name, tags, created_at, updated_at, config,
       },
     }
@@ -898,5 +974,37 @@ const configSchema = computed<ConfigurationSchema>(() => {
 
 .managed-redis-partial-expandable-body {
   margin-top: var(--kui-space-0, $kui-space-0);
+}
+
+.managed-redis-partial-provisioning {
+  width: 100%;
+}
+
+.partial-transitional-status {
+  align-items: center;
+  box-sizing: border-box;
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  display: flex;
+  gap: var(--kui-space-30, $kui-space-30);
+  min-height: 44px;
+  padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
+  width: 100%;
+}
+
+.managed-redis-provisioning-spinner {
+  animation: managed-redis-spin 0.8s linear infinite;
+  border: 2px solid var(--kui-color-border, $kui-color-border);
+  border-radius: 50%;
+  border-right-color: var(--kui-color-text-primary, $kui-color-text-primary);
+  display: inline-block;
+  flex: 0 0 auto;
+  height: 14px;
+  width: 14px;
+}
+
+@keyframes managed-redis-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

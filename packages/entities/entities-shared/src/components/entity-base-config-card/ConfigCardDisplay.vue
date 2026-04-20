@@ -84,7 +84,16 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { computed, useSlots } from 'vue'
-import type { RecordItem, KonnectBaseEntityConfig, KongManagerBaseEntityConfig, SupportedEntityType, SupportedEntityDeck } from '../../types'
+import {
+  CONFIG_CARD_FORMATS,
+  type ConfigCardCodeFormat,
+  type ConfigCardFormat,
+  type KongManagerBaseEntityConfig,
+  type KonnectBaseEntityConfig,
+  type RecordItem,
+  type SupportedEntityDeck,
+  type SupportedEntityType,
+} from '../../types'
 import { SupportedEntityTypesArray } from '../../types'
 import ConfigCardItem from './ConfigCardItem.vue'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
@@ -99,8 +108,8 @@ export interface PropList {
   plugin?: RecordItem[]
 }
 
-export type CodeFormat = 'yaml' | 'json' | 'terraform' | 'deck'
-export type Format = 'structured' | CodeFormat
+export type CodeFormat = ConfigCardCodeFormat
+export type Format = ConfigCardFormat
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
@@ -128,7 +137,7 @@ const props = defineProps({
     type: String as PropType<Format>,
     required: false,
     default: 'structured',
-    validator: (val: string) => ['structured', 'yaml', 'json', 'terraform', 'deck'].includes(val),
+    validator: (val: string) => (CONFIG_CARD_FORMATS as readonly string[]).includes(val),
   },
   propListTypes: {
     type: Array as PropType<string[]>,
@@ -140,6 +149,23 @@ const props = defineProps({
     type: Object as PropType<Record<string, any>>,
     required: false,
     default: () => ({}),
+  },
+  /**
+   * When set, JSON/YAML/TR/deck code blocks use this record instead of `record`
+   */
+  codeBlockRecord: {
+    type: Object as PropType<Record<string, any>>,
+    required: false,
+    default: undefined,
+  },
+  /**
+   * When false/default, strip created_at/ updated_at per KHCP-9837
+   * Set true to show full payloads
+   */
+  preserveCodeBlockTimestamps: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
   /** Fetcher url for the entity with the filled-in controlPlaneId, workspace, and entity id. */
   fetcherUrl: {
@@ -161,18 +187,30 @@ const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
-const entityRecord = computed((): PropType<Record<string, any>> => {
-  if (!props.record) {
-    return props.record
+
+// Structured grid always uses `record`; code tabs uses `codeBlockRecord` when the parent passes it
+const recordForCodeBlocks = computed((): Record<string, any> | undefined =>
+  props.codeBlockRecord !== undefined ? props.codeBlockRecord : props.record,
+)
+
+// Deep clone + optional timestamp strip + per-format shaping (`codeBlockRecordFormatter`)
+const entityRecord = computed((): Record<string, any> | undefined => {
+  const base = recordForCodeBlocks.value
+  if (base == null) {
+    return undefined
   }
-  let record = props.record
+  let record = base
+
   if (props.codeBlockRecordFormatter) {
     record = props.codeBlockRecordFormatter(record, props.format as CodeFormat)
   }
+
   const processedRecord = JSON.parse(JSON.stringify(record))
-  // remove dates from JSON/YAML config [KHCP-9837]
-  delete processedRecord.created_at
-  delete processedRecord.updated_at
+  if (!props.preserveCodeBlockTimestamps) {
+    // remove dates from JSON/YAML config [KHCP-9837]
+    delete processedRecord.created_at
+    delete processedRecord.updated_at
+  }
   return processedRecord
 })
 
