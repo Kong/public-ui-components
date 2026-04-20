@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.42.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.9...@kong-ui-public/entities-shared@3.42.0) (2026-04-20)
+
+
+### Features
+
+* **workspace:** add workspace support to shared and gateway service ([#3108](https://github.com/Kong/public-ui-components/issues/3108)) ([a65984b](https://github.com/Kong/public-ui-components/commit/a65984b4b2d976c3ada049153e8654e14924e511))
+
+
+
+
+
 ## [3.41.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.8...@kong-ui-public/entities-shared@3.41.9) (2026-04-17)
 
 
