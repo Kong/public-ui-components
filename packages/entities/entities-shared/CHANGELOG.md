@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.42.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.42.0...@kong-ui-public/entities-shared@3.42.1) (2026-04-21)
+
+
+### Bug Fixes
+
+* **redis:** partial config content and tab formats [khcp-20227] ([#3149](https://github.com/Kong/public-ui-components/issues/3149)) ([16f6450](https://github.com/Kong/public-ui-components/commit/16f645013e5766e0ff8268ef95a9f47b11ca70ac))
+
+
+
+
+
 # [3.42.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.41.9...@kong-ui-public/entities-shared@3.42.0) (2026-04-20)
 
 
