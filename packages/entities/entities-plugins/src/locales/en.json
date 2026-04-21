@@ -834,7 +834,7 @@
           },
           "ingest_endpoint": {
             "description": "The URL of the metering data ingest endpoint.",
-            "help": "For Konnect Metering&Billing, use the regional endpoint from your Metering&Billing settings. For self-hosted OpenMeter, use your ingest URL."
+            "help": "For Konnect Metering & Billing, use the regional endpoint from your Metering & Billing settings. For self-hosted OpenMeter, use your ingest URL."
           },
           "api_token": {
             "description": "Bearer token for authenticating requests to the ingest endpoint."

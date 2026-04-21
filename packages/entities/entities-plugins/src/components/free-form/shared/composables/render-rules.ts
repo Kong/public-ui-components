@@ -7,6 +7,32 @@ import type { MaybeRefOrGetter } from 'vue'
 import type { RenderRules } from '../types'
 import type { UnionFieldSchema } from '../../../../types/plugins/form-schema'
 
+/**
+ * Symbol used internally to tag values created by `renderRuleExactMatch`.
+ * Using a Symbol prevents accidental collision with plain domain objects
+ * that happen to share the same key names.
+ */
+export const RENDER_RULE_EXACT_MATCH = Symbol('ff-render-rule-exact-match')
+
+/**
+ * Wraps a value so that dependency checks use **exact deep equality** instead
+ * of the default any-of semantics that apply when an array is passed.
+ *
+ * Use this when the dependency field itself holds an array value and you need
+ * to match it precisely.
+ *
+ * @example
+ * ```ts
+ * import { renderRuleExactMatch } from './composables/render-rules'
+ *
+ * // Show 'field_b' only when 'field_a' equals exactly ['x', 'y']
+ * dependencies: { field_b: ['field_a', renderRuleExactMatch(['x', 'y'])] }
+ * ```
+ */
+export function renderRuleExactMatch<T>(value: T): { [RENDER_RULE_EXACT_MATCH]: T } {
+  return { [RENDER_RULE_EXACT_MATCH]: value }
+}
+
 export function createRenderRuleRegistry(onChange: () => void, getSchemaMap: () => Record<string, UnionFieldSchema>) {
   type RenderRulesMap = Record<string, RenderRules>
   const registry = ref<RenderRulesMap>({})
@@ -379,8 +405,17 @@ export function createRenderRuleRegistry(onChange: () => void, getSchemaMap: () 
             ? utils.removeRootSymbol(utils.resolve(path, fieldName))
             : fieldName
 
-          // Skip if dependency condition is met
-          if (isEqual(actualDepFieldValue, expectedDepFieldValue)) {
+          // Skip if dependency condition is met:
+          // - array → any-of (common case: string field, show when value matches any element)
+          // - renderRuleExactMatch(value) → exact deep equality (rare case: field itself holds an array)
+          // - anything else → exact deep equality
+          const isExactWrapper = typeof expectedDepFieldValue === 'object' && expectedDepFieldValue !== null && RENDER_RULE_EXACT_MATCH in expectedDepFieldValue
+          const meetsCondition = isExactWrapper
+            ? isEqual(actualDepFieldValue, (expectedDepFieldValue as Record<typeof RENDER_RULE_EXACT_MATCH, unknown>)[RENDER_RULE_EXACT_MATCH])
+            : Array.isArray(expectedDepFieldValue)
+              ? expectedDepFieldValue.some((v: unknown) => isEqual(actualDepFieldValue, v))
+              : isEqual(actualDepFieldValue, expectedDepFieldValue)
+          if (meetsCondition) {
             hiddenPaths.value.delete(sourceFieldPath) // Unhide the field
             onChange()
             return
