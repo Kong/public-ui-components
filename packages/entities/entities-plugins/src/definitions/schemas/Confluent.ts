@@ -1,6 +1,6 @@
 import type { ConfluentSchema } from '../../types/plugins/confluent'
 import { ArrayInputFieldSchema } from './ArrayInputFieldSchema'
-import { stripEmptyBasicFields } from '../../utils/helper'
+import { stripEmptyBasicFields, removeOauthbearer } from '../../utils/helper'
 
 export const confluentSchema: ConfluentSchema = {
   'config-message_by_lua_functions': {
@@ -17,5 +17,6 @@ export const confluentSchema: ConfluentSchema = {
   // when both username and password are not provided.
   shamefullyTransformPayload: ({ payload }) => {
     stripEmptyBasicFields(payload.config?.schema_registry)
+    removeOauthbearer(payload)
   },
 }

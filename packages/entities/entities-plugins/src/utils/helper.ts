@@ -138,3 +138,12 @@ export function within16Weeks(targetTs: number) {
   const SIXTEEN_WEEKS_MS = 16 * 7 * 24 * 60 * 60 * 1000
   return Math.abs(nowTs - targetTs) <= SIXTEEN_WEEKS_MS
 }
+
+export function removeOauthbearer(payload: Record<string, any>) {
+  if (isEqual(payload.config?.oauthbearer, {
+    extensions: {},
+    token_endpoint_tls_verify: true,
+  })) {
+    payload.config.oauthbearer = null
+  }
+}
