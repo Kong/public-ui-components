@@ -72,6 +72,27 @@ const mountForm = (options: {
   })
 }
 
+describe('MeteringAndBillingForm - schema defaults', () => {
+  it('populates schema defaults alongside ingest_endpoint for new Konnect plugin', () => {
+    mountForm({ geoApiServerUrl: 'https://us.api.konghq.com' })
+
+    cy.getTestId('ff-config.ingest_endpoint').should('have.value', 'https://us.api.konghq.com/v3/openmeter/events')
+    cy.getTestId('ff-config.meter_api_requests').should('be.checked')
+    cy.getTestId('ff-config.ssl_verify').should('be.checked')
+    cy.getTestId('ff-config.timeout').should('have.value', '10000')
+    cy.getTestId('ff-config.keepalive').should('have.value', '60000')
+  })
+
+  it('populates schema defaults for new Kong Manager plugin', () => {
+    mountForm({ app: 'kongManager' })
+
+    cy.getTestId('ff-config.meter_api_requests').should('be.checked')
+    cy.getTestId('ff-config.ssl_verify').should('be.checked')
+    cy.getTestId('ff-config.timeout').should('have.value', '10000')
+    cy.getTestId('ff-config.keepalive').should('have.value', '60000')
+  })
+})
+
 describe('MeteringAndBillingForm - ingest_endpoint prefill', () => {
   it('prefills with region-based URL when geoApiServerUrl is available', () => {
     mountForm({ geoApiServerUrl: 'https://us.api.konghq.com' })
