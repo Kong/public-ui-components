@@ -84,7 +84,7 @@ If showing the `Edit` type form, the ID of the Route.
 - required: `false`
 - default: `''`
 
-If service is pre-selected, hides service select dropdown.
+If service is pre-selected, disables the service select dropdown.
 
 #### `hideSectionsInfo`
 

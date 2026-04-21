@@ -873,8 +873,9 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         // tags field should always be visible
         cy.getTestId('route-form-tags').should('be.visible')
 
-        // service id field should be hidden when serviceId is provided
-        cy.getTestId('route-form-service-id').should('not.exist')
+        // service id field should be visible but disabled when serviceId is provided
+        cy.getTestId('route-form-service-id').should('be.visible')
+        cy.getTestId('route-form-service-id').should('be.disabled')
 
         // sections info should be hidden when hideSectionsInfo is true
         cy.get('.form-section-info sticky').should('not.exist')
@@ -1847,8 +1848,9 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         // tags field should always be visible
         cy.getTestId('route-form-tags').should('be.visible')
 
-        // service id field should be hidden when serviceId is provided
-        cy.getTestId('route-form-service-id').should('not.exist')
+        // service id field should be visible but disabled when serviceId is provided
+        cy.getTestId('route-form-service-id').should('be.visible')
+        cy.getTestId('route-form-service-id').should('be.disabled')
 
         // sections info should be hidden when hideSectionsInfo is true
         cy.get('.form-section-info sticky').should('not.exist')

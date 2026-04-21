@@ -30,11 +30,12 @@
           :readonly="state.isReadonly"
           type="text"
         />
-        <div v-if="hideServiceField ? false : !serviceId">
+        <div v-if="!hideServiceField">
           <KSelect
             v-model="state.fields.service_id"
             clearable
             data-testid="route-form-service-id"
+            :disabled="!!serviceId"
             enable-filtering
             :filter-function="() => true"
             :items="availableServices"
@@ -181,7 +182,7 @@ const props = defineProps({
     required: false,
     default: '',
   },
-  /** If valid serviceId is provided, don't show service select field */
+  /** If valid serviceId is provided, disable the service select field */
   serviceId: {
     type: String,
     required: false,
