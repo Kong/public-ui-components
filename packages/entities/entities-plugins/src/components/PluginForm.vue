@@ -51,7 +51,7 @@
         :editing="formType === EntityBaseFormType.Edit"
         :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
-        :engine="engine"
+        :engine="realEngine"
         :entity-map="entityMap"
         :raw-schema="loadedSchema"
         :record="record"
@@ -367,6 +367,15 @@ const record = ref<Record<string, any> | undefined>(undefined)
 const configResponse = ref<Record<string, any>>({})
 const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
 const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
+
+const customPluginFreeform = inject(PLUGIN_FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, false)
+
+const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
+  if (props.engine) return props.engine
+  if (customPluginFreeform && isCustomPlugin.value) return 'freeform'
+  return undefined
+})
+
 provide(REDIS_PARTIAL_INFO, {
   redisType: pluginPartialType,
   redisPath: pluginRedisPath,
@@ -650,7 +659,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // If the field type is 'set', convert it to 'array'
     // Freeform can handle 'set' type with one_of elements as multiselect
     // Todo: create suitable component for 'set' type in freeform and remove this conversion
-    if (scheme.type === 'set' && !(isFreeForm(props.pluginType, props.engine) && scheme.elements.one_of)) {
+    if (scheme.type === 'set' && !(isFreeForm(props.pluginType, realEngine.value) && scheme.elements.one_of)) {
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`

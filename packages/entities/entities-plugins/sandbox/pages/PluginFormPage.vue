@@ -68,6 +68,7 @@ provide(ENTITIES_SHARED_FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() =>
 provide(FEATURE_FLAGS.KM_2262_CODE_MODE, true)
 provide(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, true)
 provide(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, true)
+provide(FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, true)
 
 useProvideExperimentalFreeForms([
   'service-protection',
