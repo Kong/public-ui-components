@@ -846,6 +846,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       })
 
       it(`should correctly render with all props and slot content, ${configFlavor}`, () => {
+        interceptKMServices()
+
         cy.mount(RouteForm, {
           props: {
             config: baseConfigKM,
@@ -859,6 +861,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           },
         })
 
+        cy.wait('@getServices')
         cy.get('.kong-ui-entities-route-form').should('be.visible')
         cy.get('.kong-ui-entities-route-form form').should('be.visible')
         cy.getTestId('route-form-config-type-advanced').click()
@@ -1821,6 +1824,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       })
 
       it(`should correctly render with all props and slot content, ${configFlavor}`, () => {
+        interceptKonnectServices()
+
         cy.mount(RouteForm, {
           props: {
             config: baseConfigKonnect,
@@ -1834,6 +1839,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           },
         })
 
+        cy.wait('@getServices')
         cy.get('.kong-ui-entities-route-form').should('be.visible')
         cy.get('.kong-ui-entities-route-form form').should('be.visible')
         cy.getTestId('route-form-config-type-advanced').click()

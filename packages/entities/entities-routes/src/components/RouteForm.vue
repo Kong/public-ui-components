@@ -610,10 +610,11 @@ const fetchServicesErrorMessage = computed((): string => servicesFetchError.valu
 const availableServices = computed((): SelectItem[] => servicesResults.value?.map(el => ({ label: el.id, name: el.name, value: el.id })))
 
 onBeforeMount(async () => {
-  if (!props.hideServiceField && !props.serviceId) {
-    // load services for filtering
+  if (!props.hideServiceField) {
+    // load services so the select can display the selected item even when disabled
     await loadServices()
-  } else {
+  }
+  if (props.serviceId) {
     state.fields.service_id = props.serviceId
   }
 })
