@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.194.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.194.0...@kong-ui-public/entities-plugins@9.194.1) (2026-04-21)
+
+
+### Bug Fixes
+
+* **entities-plugins:** confluent consume shameful ([#3154](https://github.com/Kong/public-ui-components/issues/3154)) ([85b4698](https://github.com/Kong/public-ui-components/commit/85b4698e3bcb0c7f75bd99a68ddbeda57090d485))
+
+
+
+
+
 # [9.194.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.193.5...@kong-ui-public/entities-plugins@9.194.0) (2026-04-21)
 
 
