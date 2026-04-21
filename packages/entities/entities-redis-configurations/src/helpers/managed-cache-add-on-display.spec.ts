@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { AddOnRecord } from '../types/cloud-gateways-add-on'
-import { addOnApiResponseToDisplayRecord } from './managed-cache-add-on-display'
+import { addOnApiResponseToDisplayRecord, cloudAuthenticationObjectForDisplay } from './managed-cache-add-on-display'
 import { pickManagedAddOnCardRecord } from './managed-add-on-config-schema'
 
 describe('addOnApiResponseToDisplayRecord', () => {
@@ -60,6 +60,29 @@ describe('addOnApiResponseToDisplayRecord', () => {
       auth_provider: 'aws',
       aws_region: 'us-west-2',
       aws_secret_access_key: 'secret',
+    })
+  })
+})
+
+describe('cloudAuthenticationObjectForDisplay', () => {
+  it('keeps primitive cloud auth fields when auth_provider is not aws/gcp/azure', () => {
+    const row = cloudAuthenticationObjectForDisplay(
+      {
+        auth_provider: '{{vault://env/ADDON_MANAGED_CACHE_AUTH_PROVIDER}}',
+        aws_region: '{{vault://env/ADDON_MANAGED_CACHE_AWS_REGION}}',
+        aws_cache_name: '{{vault://env/ADDON_MANAGED_CACHE_AWS_CACHE_NAME}}',
+        aws_assume_role_arn: '{{vault://env/ADDON_MANAGED_CACHE_AWS_ASSUME_ROLE_ARN}}',
+        aws_is_serverless: false,
+      },
+      true,
+    )
+
+    expect(row).toEqual({
+      auth_provider: '{{vault://env/ADDON_MANAGED_CACHE_AUTH_PROVIDER}}',
+      aws_region: '{{vault://env/ADDON_MANAGED_CACHE_AWS_REGION}}',
+      aws_cache_name: '{{vault://env/ADDON_MANAGED_CACHE_AWS_CACHE_NAME}}',
+      aws_assume_role_arn: '{{vault://env/ADDON_MANAGED_CACHE_AWS_ASSUME_ROLE_ARN}}',
+      aws_is_serverless: false,
     })
   })
 })

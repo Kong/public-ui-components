@@ -11,11 +11,20 @@ export interface ControlPlaneAddOnOwner {
   kind?: string
   control_plane_id?: string
   control_plane_geo?: string
+  control_plane_group_id?: string
+  control_plane_group_geo?: string
+}
+
+// `config.capacity_config` when kind is tiered
+export interface ManagedCacheTieredCapacity extends AddOnRecord {
+  kind: string
+  tier?: string
 }
 
 // Config block returned by Cloud Gateways add-on APIs
 export interface ManagedCacheAddOnConfig {
   kind: string
+  capacity_config?: ManagedCacheTieredCapacity
   // Contains linked partial id + runtime fields used in UI helpers
   state_metadata?: AddOnRecord
   // Keep extra keys so parsing stays forward-compatible with API changes
