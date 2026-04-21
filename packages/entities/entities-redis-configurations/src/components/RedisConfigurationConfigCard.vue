@@ -163,9 +163,8 @@
                         {{ field.label }}
                       </div>
                       <div class="redis-val">
-                        <span
-                          aria-hidden="true"
-                          class="redis-spinner"
+                        <ProgressIcon
+                          decorative
                         />
                         <span>{{ partialTransitionalMessage }}</span>
                       </div>
@@ -261,7 +260,7 @@ import {
   useAxios,
 } from '@kong-ui-public/entities-shared'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { ChevronRightIcon, ChevronUpIcon } from '@kong/icons'
+import { ChevronRightIcon, ChevronUpIcon, ProgressIcon } from '@kong/icons'
 import { KAlert, KButton, KCodeBlock, KCollapse, KLabel, KSelect, KSkeleton } from '@kong/kongponents'
 import type {
   DetailLayout,
@@ -1224,22 +1223,5 @@ const configSchema = computed<ConfigurationSchema>(() => {
   border-top: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
   padding-top: var(--kui-space-40, $kui-space-40);
   width: 100%;
-}
-
-.redis-spinner {
-  animation: redis-spin 0.8s linear infinite;
-  border: 2px solid var(--kui-color-border, $kui-color-border);
-  border-radius: 50%;
-  border-right-color: var(--kui-color-border-primary, $kui-color-border-primary);
-  display: inline-block;
-  flex: 0 0 auto;
-  height: 14px;
-  width: 14px;
-}
-
-@keyframes redis-spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 </style>
