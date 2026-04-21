@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.12...@kong-ui-public/analytics-geo-map@1.5.13) (2026-04-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
 ## [1.5.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.11...@kong-ui-public/analytics-geo-map@1.5.12) (2026-04-17)
 
 

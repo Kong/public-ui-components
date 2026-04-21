@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.13.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.2...@kong-ui-public/analytics-utilities@12.13.3) (2026-04-21)
+
+
+### Bug Fixes
+
+* update mock data generator ([#3150](https://github.com/Kong/public-ui-components/issues/3150)) ([90a6599](https://github.com/Kong/public-ui-components/commit/90a6599c066481271359b6156a1ce7947ce79f8f))
+
+
+
+
+
 ## [12.13.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.1...@kong-ui-public/analytics-utilities@12.13.2) (2026-04-17)
 
 
