@@ -108,9 +108,6 @@ export interface PropList {
   plugin?: RecordItem[]
 }
 
-export type CodeFormat = ConfigCardCodeFormat
-export type Format = ConfigCardFormat
-
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
@@ -134,7 +131,7 @@ const props = defineProps({
     default: () => null,
   },
   format: {
-    type: String as PropType<Format>,
+    type: String as PropType<ConfigCardFormat>,
     required: false,
     default: 'structured',
     validator: (val: string) => (CONFIG_CARD_FORMATS as readonly string[]).includes(val),
@@ -155,7 +152,6 @@ const props = defineProps({
    */
   codeBlockRecord: {
     type: Object as PropType<Record<string, any>>,
-    required: false,
     default: undefined,
   },
   /**
@@ -164,7 +160,6 @@ const props = defineProps({
    */
   preserveCodeBlockTimestamps: {
     type: Boolean,
-    required: false,
     default: false,
   },
   /** Fetcher url for the entity with the filled-in controlPlaneId, workspace, and entity id. */
@@ -177,7 +172,7 @@ const props = defineProps({
    * A function to format the entity record before displaying it in the code block.
    */
   codeBlockRecordFormatter: {
-    type: Function as PropType<(entityRecord: Record<string, any>, format: CodeFormat) => Record<string, any>>,
+    type: Function as PropType<(entityRecord: Record<string, any>, format: ConfigCardCodeFormat) => Record<string, any>>,
     required: false,
     default: (entityRecord: Record<string, any>) => entityRecord,
   },
@@ -195,14 +190,14 @@ const recordForCodeBlocks = computed((): Record<string, any> | undefined =>
 
 // Deep clone + optional timestamp strip + per-format shaping (`codeBlockRecordFormatter`)
 const entityRecord = computed((): Record<string, any> | undefined => {
-  const base = recordForCodeBlocks.value
-  if (base == null) {
+  let record = recordForCodeBlocks.value
+
+  if (record == null) {
     return undefined
   }
-  let record = base
 
   if (props.codeBlockRecordFormatter) {
-    record = props.codeBlockRecordFormatter(record, props.format as CodeFormat)
+    record = props.codeBlockRecordFormatter(record, props.format as ConfigCardCodeFormat)
   }
 
   const processedRecord = JSON.parse(JSON.stringify(record))

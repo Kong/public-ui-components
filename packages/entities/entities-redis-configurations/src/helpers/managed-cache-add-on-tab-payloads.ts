@@ -4,38 +4,11 @@ import type {
   ControlPlaneAddOnOwner,
   ManagedCacheAddOnConfig,
 } from '../types/cloud-gateways-add-on'
-
-type TerraformControlPlaneOwner = {
-  control_plane: {
-    control_plane_id: string | null
-    control_plane_geo: string | null
-  }
-}
-
-type TerraformControlPlaneGroupOwner = {
-  control_plane_group: {
-    control_plane_group_id: string | null
-    control_plane_group_geo: string | null
-  }
-}
-
-type TerraformOwner = TerraformControlPlaneOwner | TerraformControlPlaneGroupOwner
-
-type TerraformManagedCache = {
-  capacity_config?: {
-    tiered: {
-      tier: string
-    }
-  }
-}
-
-export type AddOnTfArgs = {
-  name: string | null
-  owner: TerraformOwner | null
-  config: {
-    managed_cache: TerraformManagedCache
-  }
-}
+import type {
+  AddOnTfArgs,
+  TerraformManagedCache,
+  TerraformOwner,
+} from '../types/managed-cache-add-on-tab-payloads'
 
 // Deep clone of GET `/v2/cloud-gateways/add-ons/{id}` for tabs
 export function cloneAddOnResponse(addOnResponse: CloudGatewaysAddOnResponse): CloudGatewaysAddOnResponse {
