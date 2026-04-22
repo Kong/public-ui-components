@@ -23,6 +23,22 @@
           sticky-tabs
         />
       </FieldRenderer>
+
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ genericPath }) => genericPath === 'config.tools.*.query' || genericPath === 'config.tools.*.headers'"
+      >
+        <MapField
+          v-slot="{ keyId }"
+          v-bind="slotProps"
+          one-line
+        >
+          <StringArrayField
+            :name="keyId"
+            :placeholder="t('plugins.free-form.tag_helper')"
+          />
+        </MapField>
+      </FieldRenderer>
     </template>
 
     <ObjectField
@@ -43,6 +59,8 @@ import ObjectField from '../../shared/ObjectField.vue'
 import composables from '../../../../composables'
 
 import type { Props } from '../../shared/layout/StandardLayout.vue'
+import StringArrayField from '../../shared/StringArrayField.vue'
+import MapField from '../../shared/MapField.vue'
 
 const props = defineProps<Props>()
 
