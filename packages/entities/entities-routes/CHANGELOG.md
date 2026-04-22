@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.21.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.21...@kong-ui-public/entities-routes@3.21.22) (2026-04-22)
+
+
+### Bug Fixes
+
+* **entities-routes:** disable service select instead of hiding when serviceId is provided ([#3153](https://github.com/Kong/public-ui-components/issues/3153)) ([4aedaf5](https://github.com/Kong/public-ui-components/commit/4aedaf52f3c339da2faadae8bb597f362e31d9e0))
+
+
+
+
+
 ## [3.21.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.20...@kong-ui-public/entities-routes@3.21.21) (2026-04-22)
 
 
