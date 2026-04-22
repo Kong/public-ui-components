@@ -5,343 +5,412 @@
       :config="config"
       :entity-type="SupportedEntityType.Plugin"
       :error-message="state.errorMessage"
-      :form-fields="payload"
+      :form-fields="state.fields"
       :is-readonly="state.readonly"
       @cancel="cancelHandler"
       @submit="submitData"
     >
-      <!-- Step 1: Custom plugin type -->
-      <EntityFormBlock
-        v-if="!editMode"
-        class="custom-plugin-form-steps"
-        :step="1"
-        :title="t('custom_plugin_form.step1.title')"
-      >
-        <div class="plugin-type-radios">
-          <KRadio
-            v-model="state.fields.pluginType"
-            card
-            card-orientation="horizontal"
-            data-testid="custom-plugin-type-installed"
-            :description="t('custom_plugin_form.step1.types.installed.description')"
-            :label="t('custom_plugin_form.step1.types.installed.label')"
-            selected-value="installed"
-          />
-          <KRadio
-            v-model="state.fields.pluginType"
-            card
-            card-orientation="horizontal"
-            data-testid="custom-plugin-type-streamed"
-            :description="t('custom_plugin_form.step1.types.streamed.description')"
-            :label="t('custom_plugin_form.step1.types.streamed.label')"
-            selected-value="streamed"
-          />
-          <KRadio
-            v-model="state.fields.pluginType"
-            card
-            card-orientation="horizontal"
-            data-testid="custom-plugin-type-cloned"
-            :description="t('custom_plugin_form.step1.types.cloned.description')"
-            :label="t('custom_plugin_form.step1.types.cloned.label')"
-            selected-value="cloned"
-          />
-        </div>
+      <!-- Loading -->
+      <KSkeleton
+        v-if="isLoading"
+        type="form"
+      />
 
-        <KCollapse
-          v-model="isCompareCollapsed"
-          class="custom-plugin-form-compare-collapse"
-          data-testid="compare-deployment-options"
-          trigger-alignment="leading"
-          :trigger-label="t('custom_plugin_form.step1.compare_trigger')"
+      <!-- Fetch Error -->
+      <KEmptyState
+        v-else-if="fetchError"
+        :action-button-visible="false"
+        data-testid="custom-plugin-form-fetch-error"
+        icon-variant="error"
+      >
+        <template #default>
+          <h3>{{ fetchError }}</h3>
+        </template>
+      </KEmptyState>
+
+      <KEmptyState
+        v-else-if="showUnsupportedTypesError"
+        :action-button-visible="false"
+        data-testid="custom-plugin-form-unsupported-types-error"
+        icon-variant="error"
+      >
+        <template #default>
+          <h3>{{ t('custom_plugin_form.errors.no_supported_types') }}</h3>
+        </template>
+      </KEmptyState>
+
+      <!-- Form Content -->
+      <template v-else>
+        <!-- Step 1: Custom plugin type -->
+        <EntityFormBlock
+          v-if="!editMode"
+          class="custom-plugin-form-steps"
+          :step="1"
+          :title="t('custom_plugin_form.step1.title')"
         >
-          <div class="compare-table-wrapper">
-            <table class="compare-table">
-              <thead>
-                <tr>
-                  <th scope="col" />
-                  <th scope="col">
-                    {{ t('custom_plugin_form.step1.compare_table.columns.installed') }}
-                  </th>
-                  <th scope="col">
-                    {{ t('custom_plugin_form.step1.compare_table.columns.streamed') }}
-                  </th>
-                  <th scope="col">
-                    {{ t('custom_plugin_form.step1.compare_table.columns.cloned') }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Main use case -->
-                <tr>
-                  <th scope="row">
-                    {{ t('custom_plugin_form.step1.compare_table.rows.main_use_case.header') }}
-                  </th>
-                  <td>{{ t('custom_plugin_form.step1.compare_table.rows.main_use_case.installed') }}</td>
-                  <td>{{ t('custom_plugin_form.step1.compare_table.rows.main_use_case.streamed') }}</td>
-                  <td>{{ t('custom_plugin_form.step1.compare_table.rows.main_use_case.cloned') }}</td>
-                </tr>
-                <!-- File supplied -->
-                <tr>
-                  <th scope="row">
-                    {{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.header') }}
-                  </th>
-                  <td>
-                    <ul class="compare-list">
-                      <li>{{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.installed.handler') }}</li>
-                      <li>{{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.installed.schema') }}</li>
-                      <li>{{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.installed.additional') }}</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ul class="compare-list">
-                      <li>{{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.streamed.handler') }}</li>
-                      <li>{{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.streamed.schema') }}</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ClearIcon
-                      :color="KUI_COLOR_TEXT_NEUTRAL"
-                      :size="KUI_ICON_SIZE_30"
-                    />
-                  </td>
-                </tr>
-                <!-- How it's installed -->
-                <tr>
-                  <th scope="row">
-                    {{ t('custom_plugin_form.step1.compare_table.rows.how_installed.header') }}
-                  </th>
-                  <td>{{ t('custom_plugin_form.step1.compare_table.rows.how_installed.installed') }}</td>
-                  <td>{{ t('custom_plugin_form.step1.compare_table.rows.how_installed.streamed') }}</td>
-                  <td>{{ t('custom_plugin_form.step1.compare_table.rows.how_installed.cloned') }}</td>
-                </tr>
-                <!-- Sandboxing -->
-                <tr>
-                  <th scope="row">
-                    {{ t('custom_plugin_form.step1.compare_table.rows.sandboxing.header') }}
-                  </th>
-                  <td>
-                    <ClearIcon
-                      :color="KUI_COLOR_TEXT_NEUTRAL"
-                      :size="KUI_ICON_SIZE_30"
-                    />
-                  </td>
-                  <td>
-                    <i18nT keypath="custom_plugin_form.step1.compare_table.rows.sandboxing.streamed">
-                      <template #link>
-                        <KExternalLink
-                          hide-icon
-                          :href="externalLinks.customPluginSandboxing"
-                        >
-                          {{ t('custom_plugin_form.step1.compare_table.rows.sandboxing.streamed_link') }}
-                        </KExternalLink>
-                      </template>
-                    </i18nt>
-                  </td>
-                  <td>{{ t('custom_plugin_form.step1.compare_table.rows.sandboxing.cloned') }}</td>
-                </tr>
-                <!-- Data plane reload -->
-                <tr>
-                  <th scope="row">
-                    {{ t('custom_plugin_form.step1.compare_table.rows.data_plane_reload.header') }}
-                  </th>
-                  <td>
-                    <CheckCircleIcon
-                      :color="KUI_COLOR_TEXT_SUCCESS"
-                      :size="KUI_ICON_SIZE_30"
-                    />
-                  </td>
-                  <td>
-                    <ClearIcon
-                      :color="KUI_COLOR_TEXT_NEUTRAL"
-                      :size="KUI_ICON_SIZE_30"
-                    />
-                  </td>
-                  <td>
-                    <ClearIcon
-                      :color="KUI_COLOR_TEXT_NEUTRAL"
-                      :size="KUI_ICON_SIZE_30"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="plugin-type-radios">
+            <KRadio
+              v-if="isPluginTypeSupported('installed')"
+              v-model="state.fields.pluginType"
+              card
+              card-orientation="horizontal"
+              data-testid="custom-plugin-type-installed"
+              :description="t('custom_plugin_form.step1.types.installed.description')"
+              :label="t('custom_plugin_form.step1.types.installed.label')"
+              selected-value="installed"
+            />
+            <KRadio
+              v-if="isPluginTypeSupported('streamed')"
+              v-model="state.fields.pluginType"
+              card
+              card-orientation="horizontal"
+              data-testid="custom-plugin-type-streamed"
+              :description="t('custom_plugin_form.step1.types.streamed.description')"
+              :label="t('custom_plugin_form.step1.types.streamed.label')"
+              selected-value="streamed"
+            />
+            <KRadio
+              v-if="isPluginTypeSupported('cloned')"
+              v-model="state.fields.pluginType"
+              card
+              card-orientation="horizontal"
+              data-testid="custom-plugin-type-cloned"
+              :description="t('custom_plugin_form.step1.types.cloned.description')"
+              :label="t('custom_plugin_form.step1.types.cloned.label')"
+              selected-value="cloned"
+            />
           </div>
-        </KCollapse>
-      </EntityFormBlock>
 
-      <!-- Step 2: Installed - Custom plugin files -->
-      <EntityFormBlock
-        v-if="state.fields.pluginType === 'installed'"
-        class="custom-plugin-form-steps"
-        :step="getDisplayStep(2)"
-        :title="t('custom_plugin_form.step2_files.title')"
-      >
-        <KFileUpload
-          :accept="['.lua']"
-          :button-text="t('custom_plugin_form.step2_files.schema_file.button_text')"
-          data-testid="custom-plugin-schema-upload"
-          :help="t('custom_plugin_form.step2_files.schema_file.help')"
-          :label="t('custom_plugin_form.step2_files.schema_file.label')"
-          :placeholder="t('custom_plugin_form.step2_files.schema_file.placeholder')"
-          required
-          @file-added="(files: FileList) => state.fields.schemaFile = files[0] ?? null"
-          @file-removed="state.fields.schemaFile = null"
-        />
-        <div class="plugin-modules-section">
-          <KLabel>{{ t('custom_plugin_form.step2_files.plugin_modules.label') }}</KLabel>
-          <KAlert
-            appearance="warning"
-            :message="t('custom_plugin_form.step2_files.plugin_modules.alert')"
+          <KCollapse
+            v-model="isCompareCollapsed"
+            class="custom-plugin-form-compare-collapse"
+            data-testid="compare-deployment-options"
+            trigger-alignment="leading"
+            :trigger-label="t('custom_plugin_form.step1.compare_trigger')"
+          >
+            <div class="compare-table-wrapper">
+              <table class="compare-table">
+                <thead>
+                  <tr>
+                    <th scope="col" />
+                    <th
+                      v-if="isPluginTypeSupported('installed')"
+                      scope="col"
+                    >
+                      {{ t('custom_plugin_form.step1.compare_table.columns.installed') }}
+                    </th>
+                    <th
+                      v-if="isPluginTypeSupported('streamed')"
+                      scope="col"
+                    >
+                      {{ t('custom_plugin_form.step1.compare_table.columns.streamed') }}
+                    </th>
+                    <th
+                      v-if="isPluginTypeSupported('cloned')"
+                      scope="col"
+                    >
+                      {{ t('custom_plugin_form.step1.compare_table.columns.cloned') }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Main use case -->
+                  <tr>
+                    <th scope="row">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.main_use_case.header') }}
+                    </th>
+                    <td v-if="isPluginTypeSupported('installed')">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.main_use_case.installed') }}
+                    </td>
+                    <td v-if="isPluginTypeSupported('streamed')">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.main_use_case.streamed') }}
+                    </td>
+                    <td v-if="isPluginTypeSupported('cloned')">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.main_use_case.cloned') }}
+                    </td>
+                  </tr>
+                  <!-- File supplied -->
+                  <tr>
+                    <th scope="row">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.header') }}
+                    </th>
+                    <td v-if="isPluginTypeSupported('installed')">
+                      <ul class="compare-list">
+                        <li>{{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.installed.handler') }}</li>
+                        <li>{{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.installed.schema') }}</li>
+                        <li>{{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.installed.additional') }}</li>
+                      </ul>
+                    </td>
+                    <td v-if="isPluginTypeSupported('streamed')">
+                      <ul class="compare-list">
+                        <li>{{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.streamed.handler') }}</li>
+                        <li>{{ t('custom_plugin_form.step1.compare_table.rows.file_supplied.streamed.schema') }}</li>
+                      </ul>
+                    </td>
+                    <td v-if="isPluginTypeSupported('cloned')">
+                      <ClearIcon
+                        :color="KUI_COLOR_TEXT_NEUTRAL"
+                        :size="KUI_ICON_SIZE_30"
+                      />
+                    </td>
+                  </tr>
+                  <!-- How it's installed -->
+                  <tr>
+                    <th scope="row">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.how_installed.header') }}
+                    </th>
+                    <td v-if="isPluginTypeSupported('installed')">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.how_installed.installed') }}
+                    </td>
+                    <td v-if="isPluginTypeSupported('streamed')">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.how_installed.streamed') }}
+                    </td>
+                    <td v-if="isPluginTypeSupported('cloned')">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.how_installed.cloned') }}
+                    </td>
+                  </tr>
+                  <!-- Sandboxing -->
+                  <tr>
+                    <th scope="row">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.sandboxing.header') }}
+                    </th>
+                    <td v-if="isPluginTypeSupported('installed')">
+                      <ClearIcon
+                        :color="KUI_COLOR_TEXT_NEUTRAL"
+                        :size="KUI_ICON_SIZE_30"
+                      />
+                    </td>
+                    <td v-if="isPluginTypeSupported('streamed')">
+                      <i18nT keypath="custom_plugin_form.step1.compare_table.rows.sandboxing.streamed">
+                        <template #link>
+                          <KExternalLink
+                            hide-icon
+                            :href="externalLinks.customPluginSandboxing"
+                          >
+                            {{ t('custom_plugin_form.step1.compare_table.rows.sandboxing.streamed_link') }}
+                          </KExternalLink>
+                        </template>
+                      </i18nT>
+                    </td>
+                    <td v-if="isPluginTypeSupported('cloned')">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.sandboxing.cloned') }}
+                    </td>
+                  </tr>
+                  <!-- Data plane reload -->
+                  <tr>
+                    <th scope="row">
+                      {{ t('custom_plugin_form.step1.compare_table.rows.data_plane_reload.header') }}
+                    </th>
+                    <td v-if="isPluginTypeSupported('installed')">
+                      <CheckCircleIcon
+                        :color="KUI_COLOR_TEXT_SUCCESS"
+                        :size="KUI_ICON_SIZE_30"
+                      />
+                    </td>
+                    <td v-if="isPluginTypeSupported('streamed')">
+                      <ClearIcon
+                        :color="KUI_COLOR_TEXT_NEUTRAL"
+                        :size="KUI_ICON_SIZE_30"
+                      />
+                    </td>
+                    <td v-if="isPluginTypeSupported('cloned')">
+                      <ClearIcon
+                        :color="KUI_COLOR_TEXT_NEUTRAL"
+                        :size="KUI_ICON_SIZE_30"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </KCollapse>
+        </EntityFormBlock>
+
+        <!-- Step 2: Installed - Custom plugin files -->
+        <EntityFormBlock
+          v-if="state.fields.pluginType === 'installed'"
+          class="custom-plugin-form-steps"
+          :step="getDisplayStep(2)"
+          :title="t('custom_plugin_form.step2_files.title')"
+        >
+          <KFileUpload
+            :accept="['.lua']"
+            :button-text="t('custom_plugin_form.step2_files.schema_file.button_text')"
+            data-testid="custom-plugin-schema-upload"
+            :help="t('custom_plugin_form.step2_files.schema_file.help')"
+            :label="t('custom_plugin_form.step2_files.schema_file.label')"
+            :placeholder="editMode && state.fields.schemaContent
+              ? t('custom_plugin_form.step2_files.schema_file.placeholder_edit')
+              : t('custom_plugin_form.step2_files.schema_file.placeholder')"
+            :required="!editMode"
+            @file-added="(files: FileList) => handleFileAdded('schema', files)"
+            @file-removed="handleFileRemoved('schema')"
           />
-        </div>
-      </EntityFormBlock>
+          <div class="plugin-modules-section">
+            <KLabel>{{ t('custom_plugin_form.step2_files.plugin_modules.label') }}</KLabel>
+            <KAlert
+              appearance="warning"
+              :message="t('custom_plugin_form.step2_files.plugin_modules.alert')"
+            />
+          </div>
+        </EntityFormBlock>
 
-      <!-- Step 2: Streamed - Custom plugin files -->
-      <EntityFormBlock
-        v-if="state.fields.pluginType === 'streamed'"
-        class="custom-plugin-form-steps"
-        :step="getDisplayStep(2)"
-        :title="t('custom_plugin_form.step2_files.title')"
-      >
-        <KFileUpload
-          :accept="['.lua']"
-          :button-text="t('custom_plugin_form.step2_files.schema_file.button_text')"
-          data-testid="custom-plugin-schema-upload"
-          :help="t('custom_plugin_form.step2_files.schema_file.help')"
-          :label="t('custom_plugin_form.step2_files.schema_file.label')"
-          :placeholder="t('custom_plugin_form.step2_files.schema_file.placeholder')"
-          required
-          @file-added="(files: FileList) => state.fields.schemaFile = files[0] ?? null"
-          @file-removed="state.fields.schemaFile = null"
-        />
-        <KFileUpload
-          :accept="['.lua']"
-          :button-text="t('custom_plugin_form.step2_files.handler_file.button_text')"
-          data-testid="custom-plugin-handler-upload"
-          :help="t('custom_plugin_form.step2_files.handler_file.help')"
-          :label="t('custom_plugin_form.step2_files.handler_file.label')"
-          :placeholder="t('custom_plugin_form.step2_files.handler_file.placeholder')"
-          required
-          @file-added="(files: FileList) => state.fields.handlerFile = files[0] ?? null"
-          @file-removed="state.fields.handlerFile = null"
-        />
-      </EntityFormBlock>
-
-      <!-- Step 2: Cloned - Clone plugin -->
-      <EntityFormBlock
-        v-if="state.fields.pluginType === 'cloned'"
-        class="custom-plugin-form-steps"
-        :step="getDisplayStep(2)"
-        :title="t('custom_plugin_form.step2_clone.title')"
-      >
-        <KSelect
-          v-model="state.fields.sourcePlugin"
-          data-testid="custom-plugin-clone-select"
-          enable-filtering
-          :items="clonablePluginItems"
-          :label="t('custom_plugin_form.step2_clone.select_plugin.label')"
-          :placeholder="t('custom_plugin_form.step2_clone.select_plugin.placeholder')"
-          required
+        <!-- Step 2: Streamed - Custom plugin files -->
+        <EntityFormBlock
+          v-if="state.fields.pluginType === 'streamed'"
+          class="custom-plugin-form-steps"
+          :step="getDisplayStep(2)"
+          :title="t('custom_plugin_form.step2_files.title')"
         >
-          <template #item-template="{ item }">
-            <div class="plugin-select-item">
-              <PluginIcon
-                :name="String(item.value)"
-                :size="20"
-              />
-              <span>{{ item.label }}</span>
-            </div>
-          </template>
-          <template #selected-item-template="{ item }">
-            <div class="plugin-select-item">
-              <PluginIcon
-                :name="String(item.value)"
-                :size="20"
-              />
-              <span>{{ item.label }}</span>
-            </div>
-          </template>
-        </KSelect>
-      </EntityFormBlock>
+          <KFileUpload
+            :accept="['.lua']"
+            :button-text="t('custom_plugin_form.step2_files.schema_file.button_text')"
+            data-testid="custom-plugin-schema-upload"
+            :help="t('custom_plugin_form.step2_files.schema_file.help')"
+            :label="t('custom_plugin_form.step2_files.schema_file.label')"
+            :placeholder="editMode && state.fields.schemaContent
+              ? t('custom_plugin_form.step2_files.schema_file.placeholder_edit')
+              : t('custom_plugin_form.step2_files.schema_file.placeholder')"
+            :required="!editMode"
+            @file-added="(files: FileList) => handleFileAdded('schema', files)"
+            @file-removed="handleFileRemoved('schema')"
+          />
+          <KFileUpload
+            :accept="['.lua']"
+            :button-text="t('custom_plugin_form.step2_files.handler_file.button_text')"
+            data-testid="custom-plugin-handler-upload"
+            :help="t('custom_plugin_form.step2_files.handler_file.help')"
+            :label="t('custom_plugin_form.step2_files.handler_file.label')"
+            :placeholder="editMode && state.fields.handlerContent
+              ? t('custom_plugin_form.step2_files.handler_file.placeholder_edit')
+              : t('custom_plugin_form.step2_files.handler_file.placeholder')"
+            :required="!editMode"
+            @file-added="(files: FileList) => handleFileAdded('handler', files)"
+            @file-removed="handleFileRemoved('handler')"
+          />
+        </EntityFormBlock>
 
-      <!-- Step 3: Streamed - General information -->
-      <EntityFormBlock
-        v-if="state.fields.pluginType === 'streamed'"
-        class="custom-plugin-form-steps"
-        :description="t('custom_plugin_form.step3.description')"
-        :step="getDisplayStep(3)"
-        :title="t('custom_plugin_form.step3.title')"
-      >
-        <KInput
-          v-model.trim="state.fields.name"
-          data-testid="custom-plugin-name"
-          :help="t('custom_plugin_form.step3.name.help')"
-          :label="t('custom_plugin_form.step3.name.label')"
-          :placeholder="t('custom_plugin_form.step3.name.placeholder')"
-          :readonly="state.readonly"
-          type="text"
-        />
-      </EntityFormBlock>
-
-      <!-- Step 3: Cloned - General information -->
-      <EntityFormBlock
-        v-if="state.fields.pluginType === 'cloned'"
-        class="custom-plugin-form-steps"
-        :description="t('custom_plugin_form.step3.description')"
-        :step="getDisplayStep(3)"
-        :title="t('custom_plugin_form.step3.title')"
-      >
-        <KInput
-          v-model.trim="state.fields.aliasName"
-          data-testid="custom-plugin-alias-name"
-          :label="t('custom_plugin_form.step3.alias_name.label')"
-          :placeholder="t('custom_plugin_form.step3.alias_name.placeholder')"
-          :readonly="state.readonly"
-          required
-          type="text"
-        />
-        <KInput
-          v-model.trim="state.fields.priority"
-          data-testid="custom-plugin-priority"
-          :label="t('custom_plugin_form.step3.priority.label')"
-          :label-attributes="{
-            info: t('custom_plugin_form.step3.priority.tooltip'),
-          }"
-          :readonly="state.readonly"
-          type="number"
+        <!-- Step 2: Cloned - Clone plugin -->
+        <EntityFormBlock
+          v-if="state.fields.pluginType === 'cloned'"
+          class="custom-plugin-form-steps"
+          :step="getDisplayStep(2)"
+          :title="t('custom_plugin_form.step2_clone.title')"
         >
-          <template #help>
-            <i18nT keypath="custom_plugin_form.step3.priority.help.text">
-              <template #link>
-                <KExternalLink
-                  hide-icon
-                  :href="externalLinks.pluginPriority"
-                >
-                  {{ t('custom_plugin_form.step3.priority.help.link') }}
-                </KExternalLink>
-              </template>
-            </i18nT>
-          </template>
-        </KInput>
-      </EntityFormBlock>
+          <KSelect
+            v-model="state.fields.sourcePlugin"
+            data-testid="custom-plugin-clone-select"
+            enable-filtering
+            :items="clonablePluginItems"
+            :label="t('custom_plugin_form.step2_clone.select_plugin.label')"
+            :placeholder="t('custom_plugin_form.step2_clone.select_plugin.placeholder')"
+            required
+          >
+            <template #item-template="{ item }">
+              <div class="plugin-select-item">
+                <PluginIcon
+                  :name="String(item.value)"
+                  :size="20"
+                />
+                <span>{{ item.label }}</span>
+              </div>
+            </template>
+            <template #selected-item-template="{ item }">
+              <div class="plugin-select-item">
+                <PluginIcon
+                  :name="String(item.value)"
+                  :size="20"
+                />
+                <span>{{ item.label }}</span>
+              </div>
+            </template>
+          </KSelect>
+        </EntityFormBlock>
 
+        <!-- Step 3: Streamed - General information -->
+        <EntityFormBlock
+          v-if="state.fields.pluginType === 'streamed'"
+          class="custom-plugin-form-steps"
+          :description="t('custom_plugin_form.step3.description')"
+          :step="getDisplayStep(3)"
+          :title="t('custom_plugin_form.step3.title')"
+        >
+          <KInput
+            v-model.trim="state.fields.name"
+            data-testid="custom-plugin-name"
+            :help="t('custom_plugin_form.step3.name.help')"
+            :label="t('custom_plugin_form.step3.name.label')"
+            :placeholder="t('custom_plugin_form.step3.name.placeholder')"
+            :readonly="state.readonly"
+            required
+            type="text"
+          />
+        </EntityFormBlock>
+
+        <!-- Step 3: Cloned - General information -->
+        <EntityFormBlock
+          v-if="state.fields.pluginType === 'cloned'"
+          class="custom-plugin-form-steps"
+          :description="t('custom_plugin_form.step3.description')"
+          :step="getDisplayStep(3)"
+          :title="t('custom_plugin_form.step3.title')"
+        >
+          <KInput
+            v-model.trim="state.fields.aliasName"
+            data-testid="custom-plugin-alias-name"
+            :label="t('custom_plugin_form.step3.alias_name.label')"
+            :placeholder="t('custom_plugin_form.step3.alias_name.placeholder')"
+            :readonly="state.readonly"
+            required
+            type="text"
+          />
+          <KInput
+            v-model.trim="state.fields.priority"
+            data-testid="custom-plugin-priority"
+            :label="t('custom_plugin_form.step3.priority.label')"
+            :label-attributes="{
+              info: t('custom_plugin_form.step3.priority.tooltip'),
+            }"
+            :readonly="state.readonly"
+            type="number"
+          >
+            <template #help>
+              <i18nT keypath="custom_plugin_form.step3.priority.help.text">
+                <template #link>
+                  <KExternalLink
+                    hide-icon
+                    :href="externalLinks.pluginPriority"
+                  >
+                    {{ t('custom_plugin_form.step3.priority.help.link') }}
+                  </KExternalLink>
+                </template>
+              </i18nT>
+            </template>
+          </KInput>
+        </EntityFormBlock>
+      </template>
+
+      <!-- Form Actions -->
       <template #form-actions>
-        <KButton
-          appearance="primary"
-          data-testid="custom-plugin-form-submit"
-          :disabled="!canSubmit || state.readonly"
-          type="submit"
-        >
-          {{ t('actions.save') }}
-        </KButton>
-        <KButton
-          appearance="secondary"
-          data-testid="custom-plugin-form-cancel"
-          :disabled="state.readonly"
-          @click="cancelHandler"
-        >
-          {{ t('actions.cancel') }}
-        </KButton>
+        <template v-if="!(isLoading || fetchError || showUnsupportedTypesError)">
+          <KButton
+            appearance="primary"
+            data-testid="custom-plugin-form-submit"
+            :disabled="!canSubmit || state.readonly"
+            type="submit"
+          >
+            {{ t('actions.save') }}
+          </KButton>
+          <KButton
+            appearance="secondary"
+            data-testid="custom-plugin-form-cancel"
+            :disabled="state.readonly"
+            @click="cancelHandler"
+          >
+            {{ t('actions.cancel') }}
+          </KButton>
+        </template>
+        <span v-else />
       </template>
     </EntityBaseForm>
   </div>
@@ -351,10 +420,11 @@
 import {
   EntityBaseForm,
   EntityFormBlock,
+  FEATURE_FLAGS,
   SupportedEntityType,
+  useAxios,
   useErrors,
 } from '@kong-ui-public/entities-shared'
-import { FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
 import { CheckCircleIcon, ClearIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_COLOR_TEXT_SUCCESS, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { KExternalLink } from '@kong/kongponents'
@@ -364,8 +434,15 @@ import externalLinks from '../external-links'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { PropType } from 'vue'
-import { computed, provide, reactive, ref, watch } from 'vue'
-import type { ClonedPluginPayload, CustomPluginFormConfig, CustomPluginFormType, FormPayload, InstalledPluginPayload, StreamedPluginPayload } from '../types'
+import { computed, onMounted, provide, reactive, ref, watch } from 'vue'
+import type {
+  ClonedPluginPayload,
+  KonnectCustomPluginFormConfig,
+  CustomPluginFormType,
+  InstalledPluginResponse,
+  StreamedPluginResponse,
+  KongManagerCustomPluginFormConfig,
+} from '../types'
 import type { SelectGroup, SelectItem } from '@kong/kongponents'
 import { useRouter } from 'vue-router'
 import { usePluginMetaData } from '../composables/usePluginMeta'
@@ -384,39 +461,76 @@ const DEFAULT_CLONABLE_PLUGINS = [
   'rate-limiting-advanced',
 ]
 
+const ALL_PLUGIN_TYPES: CustomPluginFormType[] = ['installed', 'streamed', 'cloned']
+
 const props = defineProps({
   config: {
-    type: Object as PropType<CustomPluginFormConfig>,
+    type: Object as PropType<KonnectCustomPluginFormConfig | KongManagerCustomPluginFormConfig>,
     required: true,
-    validator: (config: CustomPluginFormConfig): boolean => {
-      if (!config || config?.app !== 'konnect') return false
-      if (!config?.controlPlaneId) return false
-      if (!config?.cancelRoute) return false
+    validator: (config: KonnectCustomPluginFormConfig | KongManagerCustomPluginFormConfig): boolean => {
+      if (!config || !config.app) return false
+      if (config.app === 'konnect' && !config.controlPlaneId) return false
+      if (config.app === 'kongManager' && !(config as KongManagerCustomPluginFormConfig).workspace) return false
+      if (!config.cancelRoute) return false
+      if (!config.successRoute) return false
       return true
     },
   },
-  /** The ID of a specific plugin instance. If a valid Plugin ID is provided, it will put the form in Edit mode instead of Create */
-  pluginId: {
+  /** The name of a specific plugin instance. If a valid Plugin Name is provided, it will put the form in Edit mode instead of Create */
+  pluginName: {
     type: String,
     default: '',
+  },
+  unsupportedTypes: {
+    type: Array as PropType<CustomPluginFormType[]>,
+    default: () => [],
   },
 })
 
 const emit = defineEmits<{
-  (e: 'update', data: FormPayload): void
+  (e: 'update', data: InstalledPluginResponse | StreamedPluginResponse | ClonedPluginPayload): void
   (e: 'error', error: unknown): void
-  (e: 'loading', isLoading: boolean): void // not used yet
+  (e: 'loading', isLoading: boolean): void
 }>()
 
 const { i18n: { t }, i18nT } = composables.useI18n()
 const router = useRouter()
 const { getMessageFromError } = useErrors()
-
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const {
+  createInstalledPlugin,
+  updateInstalledPlugin,
+  createStreamedPlugin,
+  updateStreamedPlugin,
+  getPluginType,
+  getPluginByUnknownType,
+} = composables.useCustomPluginApi({
+  axiosInstance,
+  apiBaseUrl: props.config.apiBaseUrl,
+  controlPlaneId: (props.config as KonnectCustomPluginFormConfig).controlPlaneId,
+  app: props.config.app,
+  workspace: (props.config as KongManagerCustomPluginFormConfig).workspace,
+})
 
 // Force-enable the new plugin form layout
 provide(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => true))
 
-const editMode = computed(() => !!props.pluginId)
+const editMode = computed(() => !!props.pluginName)
+const isLoading = ref(false)
+const fetchError = ref('')
+const unsupportedTypeSet = computed(() => new Set(props.unsupportedTypes))
+const supportedPluginTypes = computed(() => {
+  return ALL_PLUGIN_TYPES.filter((type) => !unsupportedTypeSet.value.has(type))
+})
+const showUnsupportedTypesError = computed(() => !editMode.value && supportedPluginTypes.value.length === 0)
+
+const getDefaultPluginType = (): CustomPluginFormType | null => {
+  return supportedPluginTypes.value[0] ?? null
+}
+
+const isPluginTypeSupported = (type: CustomPluginFormType): boolean => {
+  return supportedPluginTypes.value.includes(type)
+}
 
 /**
  * Calculate the step number to display
@@ -439,9 +553,9 @@ const isCompareCollapsed = ref(true)
 
 const state = reactive<{
   fields: {
-    pluginType: CustomPluginFormType
-    schemaFile: File | null
-    handlerFile: File | null
+    pluginType: CustomPluginFormType | null
+    schemaContent: string
+    handlerContent: string
     name: string
     sourcePlugin: string
     aliasName: string
@@ -451,9 +565,9 @@ const state = reactive<{
   errorMessage: string
 }>({
   fields: {
-    pluginType: 'installed',
-    schemaFile: null,
-    handlerFile: null,
+    pluginType: getDefaultPluginType(),
+    schemaContent: '',
+    handlerContent: '',
     name: '',
     sourcePlugin: '',
     aliasName: '',
@@ -463,14 +577,24 @@ const state = reactive<{
   errorMessage: '',
 })
 
-// Reset type-specific fields when plugin type changes
+watch(supportedPluginTypes, (types) => {
+  if (editMode.value) return
+
+  if (!state.fields.pluginType || !types.includes(state.fields.pluginType)) {
+    state.fields.pluginType = types[0] ?? null
+  }
+}, { immediate: true })
+
+// Reset type-specific fields when plugin type changes (only in create mode)
 watch(() => state.fields.pluginType, () => {
-  state.fields.schemaFile = null
-  state.fields.handlerFile = null
-  state.fields.name = ''
-  state.fields.sourcePlugin = ''
-  state.fields.aliasName = ''
-  state.fields.priority = ''
+  if (!editMode.value) {
+    state.fields.schemaContent = ''
+    state.fields.handlerContent = ''
+    state.fields.name = ''
+    state.fields.sourcePlugin = ''
+    state.fields.aliasName = ''
+    state.fields.priority = ''
+  }
 })
 
 const { getDisplayName } = usePluginMetaData()
@@ -514,12 +638,16 @@ const clonablePluginItems = computed(() => {
 })
 
 const canSubmit = computed((): boolean => {
+  if (showUnsupportedTypesError.value || !state.fields.pluginType) {
+    return false
+  }
+
   switch (state.fields.pluginType) {
     case 'installed':
-      return state.fields.schemaFile !== null
+      return state.fields.schemaContent.length > 0
     case 'streamed':
-      return state.fields.schemaFile !== null &&
-        state.fields.handlerFile !== null &&
+      return state.fields.schemaContent.length > 0 &&
+        state.fields.handlerContent.length > 0 &&
         state.fields.name.trim().length > 0
     case 'cloned':
       return !!state.fields.sourcePlugin &&
@@ -529,45 +657,143 @@ const canSubmit = computed((): boolean => {
   }
 })
 
-const payload = computed<FormPayload>(() => {
-  const base = { pluginType: state.fields.pluginType }
+// File reading helpers
 
-  switch (state.fields.pluginType) {
-    case 'installed':
-      return { ...base, schemaFile: state.fields.schemaFile } as InstalledPluginPayload
-    case 'streamed':
-      return {
-        ...base,
-        schemaFile: state.fields.schemaFile,
-        handlerFile: state.fields.handlerFile,
-        name: state.fields.name,
-      } as StreamedPluginPayload
-    case 'cloned':
-      return {
-        ...base,
-        sourcePlugin: state.fields.sourcePlugin,
-        aliasName: state.fields.aliasName,
-        priority: state.fields.priority === '' || state.fields.priority == null
-          ? undefined
-          : state.fields.priority,
-      } as ClonedPluginPayload
-    default:
-      return base as FormPayload
+const MAX_FILE_SIZE = 1 * 1024 * 1024 // 1 MB
+
+const readFileContent = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const result = e.target?.result
+      if (typeof result === 'string') {
+        resolve(result)
+      } else {
+        reject(new Error('Failed to read file as text'))
+      }
+    }
+    reader.onerror = reject
+    reader.readAsText(file)
+  })
+}
+
+const handleFileAdded = async (type: 'schema' | 'handler', files: FileList): Promise<void> => {
+  const file = files[0]
+  if (!file) return
+
+  if (file.size > MAX_FILE_SIZE) {
+    state.errorMessage = t('custom_plugin_form.errors.file_too_large')
+    return
+  }
+
+  try {
+    const content = await readFileContent(file)
+    if (type === 'schema') {
+      state.fields.schemaContent = content
+    } else {
+      state.fields.handlerContent = content
+    }
+  } catch {
+    state.errorMessage = t('custom_plugin_form.errors.file_read_error')
+    if (type === 'schema') {
+      state.fields.schemaContent = ''
+    } else {
+      state.fields.handlerContent = ''
+    }
+  }
+}
+
+const handleFileRemoved = (type: 'schema' | 'handler'): void => {
+  if (type === 'schema') {
+    state.fields.schemaContent = ''
+  } else {
+    state.fields.handlerContent = ''
+  }
+}
+
+const cancelHandler = (): void => {
+  router.push(props.config.cancelRoute)
+}
+
+// Fetch existing data in edit mode.
+// Uses manual fetch instead of EntityBaseForm's built-in fetch because installed and
+// streamed plugins have different API endpoints and response shapes that require
+// custom mapping to form state.
+onMounted(async () => {
+  if (!props.pluginName) return
+
+  isLoading.value = true
+  emit('loading', true)
+
+  try {
+    const data = await getPluginByUnknownType(props.pluginName)
+    if (!data) {
+      fetchError.value = t('custom_plugin_form.errors.plugin_not_found')
+      emit('error', new Error(fetchError.value))
+      return
+    }
+    const type = getPluginType(data)
+
+    state.fields.pluginType = type
+
+    if (type === 'installed') {
+      state.fields.schemaContent = (data as InstalledPluginResponse).item.lua_schema
+    } else if (type === 'streamed') {
+      const { name, schema, handler } = (data as StreamedPluginResponse)
+      state.fields.name = name
+      state.fields.schemaContent = schema
+      state.fields.handlerContent = handler
+    }
+  } catch (err: unknown) {
+    fetchError.value = getMessageFromError(err)
+    emit('error', err)
+  } finally {
+    isLoading.value = false
+    emit('loading', false)
   }
 })
 
-const cancelHandler = (): void => {
-  router.push(props.config?.cancelRoute ?? { name: 'home' })
-}
-
 const submitData = async (): Promise<void> => {
-  // API integration deferred — emit payload for parent to handle
+  state.errorMessage = ''
+  state.readonly = true
+
   try {
-    state.readonly = true
-    emit('update', payload.value)
-  } catch (error: unknown) {
-    state.errorMessage = getMessageFromError(error)
-    emit('error', error)
+    const type = state.fields.pluginType
+
+    if (!type) {
+      return
+    }
+
+    if (type === 'installed') {
+      const body = { lua_schema: state.fields.schemaContent }
+      const data = editMode.value
+        ? await updateInstalledPlugin(props.pluginName, body)
+        : await createInstalledPlugin(body)
+      emit('update', data)
+    } else if (type === 'streamed') {
+      const body = {
+        name: state.fields.name,
+        schema: state.fields.schemaContent,
+        handler: state.fields.handlerContent,
+      }
+      const data = editMode.value
+        ? await updateStreamedPlugin(props.pluginName, body)
+        : await createStreamedPlugin(body)
+      emit('update', data)
+    } else {
+      // cloned - API not yet available
+      emit('update', {
+        pluginType: 'cloned',
+        sourcePlugin: state.fields.sourcePlugin,
+        aliasName: state.fields.aliasName,
+        priority: state.fields.priority || undefined,
+      } as ClonedPluginPayload)
+    }
+
+    router.push(props.config.successRoute)
+  } catch (err: unknown) {
+    state.errorMessage = getMessageFromError(err)
+    emit('error', err)
   } finally {
     state.readonly = false
   }

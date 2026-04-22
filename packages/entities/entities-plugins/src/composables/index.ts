@@ -3,6 +3,7 @@ import usePluginHelpers from './usePluginHelpers'
 import { usePluginMetaData } from './usePluginMeta'
 import { useSchemas } from './useSchemas'
 import { useExperimentalFreeForms, useProvideExperimentalFreeForms, useFreeFormResolver } from './useExperimentalFreeForms'
+import { useCustomPluginApi } from './useCustomPluginApi'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -13,4 +14,5 @@ export default {
   useExperimentalFreeForms,
   useProvideExperimentalFreeForms,
   useFreeFormResolver,
+  useCustomPluginApi,
 }
