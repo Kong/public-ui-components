@@ -1,16 +1,14 @@
 import type { ExploreAggregations, GranularityValues } from '@kong-ui-public/analytics-utilities'
-import type { CallbackDataParams, ECBasicOption } from 'echarts/types/dist/shared'
 import type { SeriesOption } from 'echarts'
-import type { ChartTooltipSortFn, KChartData, Threshold, TooltipEntry, TooltipState } from '../types'
+import type { ChartTooltipSortFn, KChartData, Threshold, TooltipState } from '../types'
+import { formatChartTicksByGranularity, thresholdColor } from '../utils'
+import {
+  createCrossSectionBarTooltipFormatter,
+  createCrossSectionDonutTooltipFormatter,
+  createTimeseriesTooltipFormatter,
+} from './build-echart-tooltip-formatters'
+import type { ECBasicOption } from 'echarts/types/dist/shared'
 
-// ECharts tooltip formatter receives extended params with axis-specific fields
-type TooltipFormatterParams = CallbackDataParams & {
-  axisValue?: string | number
-  axisValueLabel?: string
-}
-import { formatChartTicksByGranularity, formatTooltipTimestampByGranularity, thresholdColor } from '../utils'
-
-const DEFAULT_TOOLTIP_SORT: ChartTooltipSortFn = (a, b) => b.rawValue - a.rawValue
 const MAX_LABEL_LENGTH = 20
 const BAR_LABEL_MIN_SIZE = 72
 const HORIZONTAL_AXIS_LABEL_WIDTH = 112
@@ -36,52 +34,6 @@ type ResponsiveMediaOptions = {
   maxHeight: ECBasicOption
   mediumWidth: ECBasicOption
   smallWidth: ECBasicOption
-}
-
-const getColorString = (value: unknown) => {
-  if (typeof value === 'string') {
-    return value
-  }
-
-  if (Array.isArray(value)) {
-    return getColorString(value[0])
-  }
-
-  if (value && typeof value === 'object' && 'color' in value) {
-    return getColorString(value.color)
-  }
-
-  return ''
-}
-
-const getTooltipRawValue = (value: unknown): number => {
-  if (Array.isArray(value)) {
-    return Number(value[value.length - 1] ?? 0)
-  }
-
-  return Number(value ?? 0)
-}
-
-const getCrossSectionTooltipSubtitle = ({
-  chartData,
-  points,
-  dimensionAxisTitle,
-}: {
-  chartData: KChartData
-  points: TooltipFormatterParams[]
-  dimensionAxisTitle?: string
-}) => {
-  const firstPoint = points[0]
-
-  if (!firstPoint) {
-    return dimensionAxisTitle || ''
-  }
-
-  if (chartData.isMultiDimension) {
-    return String(firstPoint.axisValueLabel || firstPoint.axisValue || '')
-  }
-
-  return String(firstPoint.seriesName || firstPoint.name || firstPoint.axisValueLabel || dimensionAxisTitle || '')
 }
 
 const truncateAxisLabel = (label: string) => {
@@ -284,32 +236,14 @@ export const buildTimeseriesOption = ({
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'line' },
-      formatter: (params: unknown) => {
-        const points = (Array.isArray(params) ? params : [params]).filter(Boolean) as TooltipFormatterParams[]
-
-        tooltipState.title = tooltipTitle
-        tooltipState.metricDisplay = tooltipMetricDisplay
-        tooltipState.entries = points.map((point) => {
-          const rawValue = Number(Array.isArray(point.value) ? point.value[1] : point.value ?? 0)
-
-          return {
-            label: String(point.seriesName ?? ''),
-            value: formatValue(rawValue),
-            rawValue,
-            backgroundColor: getColorString(point.color),
-            borderColor: getColorString(point.borderColor || point.color),
-          } satisfies TooltipEntry
-        }).sort(chartTooltipSortFn || DEFAULT_TOOLTIP_SORT)
-        tooltipState.subtitle = points[0]?.axisValue
-          ? formatTooltipTimestampByGranularity({
-            tickValue: new Date(Number(points[0].axisValue)),
-            granularity,
-          })
-          : undefined
-        tooltipState.visible = true
-
-        return ''
-      },
+      formatter: createTimeseriesTooltipFormatter({
+        granularity,
+        tooltipState,
+        tooltipTitle,
+        tooltipMetricDisplay,
+        formatValue,
+        chartTooltipSortFn,
+      }),
     },
     legend: {
       show: false,
@@ -437,24 +371,13 @@ export const buildCrossSectionOption = ({
     return {
       tooltip: {
         trigger: 'item',
-        formatter: (params: unknown) => {
-          const point = (Array.isArray(params) ? params[0] : params) as TooltipFormatterParams
-          const rawValue = Number(point.value || 0)
-
-          tooltipState.title = tooltipTitle
-          tooltipState.subtitle = dimensionAxisTitle || String(point.name || '')
-          tooltipState.metricDisplay = tooltipMetricDisplay
-          tooltipState.entries = [{
-            label: String(point.name || ''),
-            value: formatValue(rawValue),
-            rawValue,
-            backgroundColor: getColorString(point.color),
-            borderColor: getColorString(point.color),
-          }]
-          tooltipState.visible = true
-
-          return ''
-        },
+        formatter: createCrossSectionDonutTooltipFormatter({
+          tooltipState,
+          tooltipTitle,
+          tooltipMetricDisplay,
+          dimensionAxisTitle,
+          formatValue,
+        }),
       },
       legend: {
         show: false,
@@ -518,36 +441,15 @@ export const buildCrossSectionOption = ({
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'shadow' },
-      formatter: (params: unknown) => {
-        const points = (Array.isArray(params) ? params : [params]).filter(Boolean) as TooltipFormatterParams[]
-        const validPoints = points.filter((point) => {
-          const rawValue = getTooltipRawValue(point.value)
-
-          return Number.isFinite(rawValue) && rawValue !== 0
-        })
-
-        tooltipState.title = tooltipTitle
-        tooltipState.metricDisplay = tooltipMetricDisplay
-        tooltipState.subtitle = getCrossSectionTooltipSubtitle({
-          chartData,
-          points,
-          dimensionAxisTitle,
-        })
-        tooltipState.entries = validPoints.map(point => {
-          const rawValue = getTooltipRawValue(point.value)
-
-          return {
-            label: String(point.seriesName ?? ''),
-            value: formatValue(rawValue),
-            rawValue,
-            backgroundColor: getColorString(point.color),
-            borderColor: getColorString(point.color),
-          } satisfies TooltipEntry
-        }).sort(chartTooltipSortFn || DEFAULT_TOOLTIP_SORT)
-        tooltipState.visible = true
-
-        return ''
-      },
+      formatter: createCrossSectionBarTooltipFormatter({
+        chartData,
+        tooltipState,
+        tooltipTitle,
+        tooltipMetricDisplay,
+        dimensionAxisTitle,
+        formatValue,
+        chartTooltipSortFn,
+      }),
     },
     legend: {
       show: false,

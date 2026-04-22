@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef, useTemplateRef } from 'vue'
+import { computed, toRef } from 'vue'
 import {
   msToGranularity,
   type AbsoluteTimeRangeV4,
@@ -52,11 +52,8 @@ import {
   type ExploreResultV4,
   type GranularityValues,
 } from '@kong-ui-public/analytics-utilities'
-import { useElementBounding, useElementSize } from '@vueuse/core'
 import composables from '../composables'
 import {
-  createDefaultChartLegendSort,
-  createDefaultChartTooltipSort,
   datavisPalette,
   getGranularityAxisTitle,
   getMetricAxisTitle,
@@ -71,7 +68,6 @@ import type {
   ExternalLink,
   LegendPosition,
   Threshold,
-  TooltipState,
 } from '../types'
 import AnalyticsChartShell from './AnalyticsChartShell.vue'
 import BaseAnalyticsEcharts from './BaseAnalyticsEcharts.vue'
@@ -127,26 +123,6 @@ const emit = defineEmits<{
 }>()
 
 const { i18n } = composables.useI18n()
-const tooltipState = ref<TooltipState>({
-  interactionMode: 'idle',
-  entries: [],
-  visible: false,
-  top: 0,
-  left: 0,
-})
-
-const baseChartRef = useTemplateRef('baseChart')
-const tooltipRef = useTemplateRef('tooltip')
-
-const chartRef = computed(() => baseChartRef.value?.getChart())
-const containerRef = computed(() => baseChartRef.value?.getContainer())
-const chartEl = computed(() => chartRef.value?.$el as HTMLElement | undefined)
-
-const { width: chartWidth, height: chartHeight } = useElementSize(chartEl)
-const { top: containerTop, left: containerLeft } = useElementBounding(containerRef)
-
-const tooltipWidth = computed(() => tooltipRef.value?.width)
-const tooltipHeight = computed(() => tooltipRef.value?.height)
 
 const timeSeriesGranularity = computed<GranularityValues>(() => {
   if (!props.data.meta.granularity_ms && props.data.data.length > 1) {
@@ -167,6 +143,32 @@ const metricUnit = computed(() => getMetricUnit(
   props.data.meta?.metric_units,
   props.data.meta?.metric_names?.[0],
 ))
+
+const { selectedLabels, toggleLegendItem } = composables.useChartLabelSelection(chartData)
+
+const {
+  chartRef,
+  chartWidth,
+  chartHeight,
+  containerTop,
+  containerLeft,
+  tooltipWidth,
+  tooltipHeight,
+  chartFlexClass,
+  chartTooltipSortFn: frameChartTooltipSortFn,
+  legendItems,
+  maxEntitiesShown,
+  resultSetTruncated,
+} = composables.useChartFrame({
+  data: toRef(props, 'data'),
+  chartData,
+  metricUnit,
+  selectedLabels,
+  legendPosition: toRef(props, 'legendPosition'),
+  chartLegendSortFn: toRef(props, 'chartLegendSortFn'),
+  chartTooltipSortFn: toRef(props, 'chartTooltipSortFn'),
+  hideTruncationWarning: toRef(props, 'hideTruncationWarning'),
+})
 
 const metricAxisTitle = computed(() => {
   return getMetricAxisTitle({
@@ -194,50 +196,6 @@ const tooltipMetricDisplay = computed(() => {
   })
 })
 
-const defaultLegendSort = computed(() => createDefaultChartLegendSort(i18n.t('chartLabels.____OTHER____')))
-const defaultTooltipSort = computed(() => createDefaultChartTooltipSort(i18n.t('chartLabels.____OTHER____')))
-const chartLegendSortFn = computed(() => props.chartLegendSortFn || defaultLegendSort.value)
-const chartTooltipSortFn = computed(() => props.chartTooltipSortFn || defaultTooltipSort.value)
-
-const { selectedLabels, toggleLegendItem } = composables.useChartLabelSelection(chartData)
-
-const { legendValues } = composables.useChartLegendValues(chartData, metricUnit)
-
-const chartFlexClass = computed(() => {
-  return props.legendPosition === 'bottom' ? 'column' : undefined
-})
-
-const legendItems = computed(() => {
-  return chartData.value.datasets.map(dataset => ({
-    label: dataset.label || '',
-    color: dataset.backgroundColor || dataset.borderColor || '#000',
-    borderColor: dataset.borderColor || dataset.backgroundColor || '#000',
-    value: legendValues.value[dataset.label || ''],
-    isSegmentEmpty: dataset.isSegmentEmpty,
-    hidden: selectedLabels.value[dataset.label || ''] === false,
-  })).sort(chartLegendSortFn.value)
-})
-
-const { option } = composables.useExploreResultToEchartTimeseries({
-  chartData,
-  chartType: toRef(props, 'type'),
-  granularity: timeSeriesGranularity,
-  stacked: toRef(props, 'stacked'),
-  threshold: toRef(props, 'threshold'),
-  metricUnit,
-  tooltipTitle: toRef(props, 'tooltipTitle'),
-  tooltipMetricDisplay,
-  metricAxisTitle,
-  dimensionAxisTitle,
-  selectedLabels,
-  chartTooltipSortFn,
-  tooltipState,
-})
-
-const maxEntitiesShown = computed(() => props.data.meta?.limit?.toString() || null)
-const resultSetTruncated = computed(() => {
-  return props.hideTruncationWarning ? false : props.data.meta?.truncated || false
-})
 const hasValidChartData = computed(() => hasMillisecondTimestamps(chartData.value))
 
 const zoomActionItems = computed<ZoomActionItem[]>(() => {
@@ -271,50 +229,55 @@ const {
 } = composables.useBrushZoom({
   chartRef,
   onSelectionStart: () => {
-    tooltipState.value.interactionMode = 'selecting-chart-area'
+    setInteractionMode('selecting-chart-area')
   },
   onSelectionEnd: (timeRange) => {
-    tooltipState.value.interactionMode = 'zoom-interactive'
+    setInteractionMode('zoom-interactive')
     if (timeRange) {
       emit('select-chart-range', timeRange)
     }
   },
 })
 
-const { calculatePosition } = composables.useTooltipPosition({
+const {
+  tooltipState,
+  handleTooltipMouseMove,
+  handleTooltipClick,
+  handleTooltipMouseOut,
+  resetTooltipState,
+  setInteractionMode,
+} = composables.useEchartsTooltipController({
   chartWidth,
   chartHeight,
   containerTop,
   containerLeft,
   tooltipWidth,
   tooltipHeight,
+  onReset: props.timeseriesZoom ? clearBrush : undefined,
 })
 
-const isInteractive = computed(() => {
-  return ['interactive', 'zoom-interactive'].includes(tooltipState.value.interactionMode)
+const { option } = composables.useExploreResultToEchartTimeseries({
+  chartData,
+  chartType: toRef(props, 'type'),
+  granularity: timeSeriesGranularity,
+  stacked: toRef(props, 'stacked'),
+  threshold: toRef(props, 'threshold'),
+  metricUnit,
+  tooltipTitle: toRef(props, 'tooltipTitle'),
+  tooltipMetricDisplay,
+  metricAxisTitle,
+  dimensionAxisTitle,
+  selectedLabels,
+  chartTooltipSortFn: frameChartTooltipSortFn,
+  tooltipState,
 })
-
-const resetTooltipState = () => {
-  tooltipState.value.interactionMode = 'idle'
-  tooltipState.value.visible = false
-  if (props.timeseriesZoom) {
-    clearBrush()
-  }
-}
 
 const handleMouseMove = (event: any) => {
   if (props.timeseriesZoom) {
     brushMouseMove(event)
   }
 
-  if (!isInteractive.value) {
-    const pos = calculatePosition(event)
-
-    if (pos) {
-      tooltipState.value.left = pos.left
-      tooltipState.value.top = pos.top
-    }
-  }
+  handleTooltipMouseMove(event)
 }
 
 const handleMouseDown = (event: any) => {
@@ -334,17 +297,11 @@ const handleClick = () => {
     return
   }
 
-  if (tooltipState.value.interactionMode !== 'idle') {
-    resetTooltipState()
-  } else {
-    tooltipState.value.interactionMode = 'interactive'
-  }
+  handleTooltipClick()
 }
 
 const handleMouseOut = () => {
-  if (!isInteractive.value) {
-    tooltipState.value.visible = false
-  }
+  handleTooltipMouseOut()
 }
 
 

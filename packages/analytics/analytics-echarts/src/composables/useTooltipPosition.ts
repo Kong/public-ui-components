@@ -1,5 +1,6 @@
-import { computed, type Ref } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 import type { ElementEvent } from 'echarts/core'
+import type { TooltipState } from '../types'
 
 export interface UseTooltipPositionOptions {
   chartWidth: Ref<number>
@@ -8,6 +9,7 @@ export interface UseTooltipPositionOptions {
   containerLeft: Ref<number>
   tooltipWidth: Ref<number | undefined>
   tooltipHeight: Ref<number | undefined>
+  tooltipState: Ref<TooltipState>
   offset?: number
 }
 
@@ -19,15 +21,23 @@ export default function useTooltipPosition(options: UseTooltipPositionOptions) {
     containerLeft,
     tooltipWidth,
     tooltipHeight,
+    tooltipState,
     offset = 40,
   } = options
+
+  const anchor = ref<{ left: number, top: number } | null>(null)
 
   const canPosition = computed(() => {
     return tooltipWidth.value !== undefined && tooltipHeight.value !== undefined
   })
 
-  const calculatePosition = (e: ElementEvent): { left: number, top: number } | null => {
-    if (!canPosition.value) return null
+  const applyAnchorPosition = (position: { left: number, top: number }) => {
+    tooltipState.value.left = position.left + containerLeft.value
+    tooltipState.value.top = position.top + containerTop.value
+  }
+
+  const calculatePosition = (e: ElementEvent): void => {
+    if (!canPosition.value) return
 
     const x = e.offsetX
     const y = e.offsetY
@@ -42,14 +52,23 @@ export default function useTooltipPosition(options: UseTooltipPositionOptions) {
       ? y - tooltipHeight.value! - offset
       : y + offset
 
-    return {
-      left: left + containerLeft.value,
-      top: top + containerTop.value,
+    anchor.value = { left, top }
+
+    applyAnchorPosition(anchor.value)
+  }
+
+  watch([containerTop, containerLeft], () => {
+    if (anchor.value) {
+      applyAnchorPosition(anchor.value)
     }
+  })
+
+  const resetAnchor = () => {
+    anchor.value = null
   }
 
   return {
     calculatePosition,
-    canPosition,
+    resetAnchor,
   }
 }

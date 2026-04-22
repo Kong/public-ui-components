@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { TooltipState, KChartData } from '../types'
 import { buildCrossSectionOption, buildTimeseriesOption } from './build-echart-options'
+import { formatTooltipTimestampByGranularity } from './format-timestamps'
 
 const createTooltipState = (): TooltipState => ({
   interactionMode: 'idle',
@@ -23,6 +24,52 @@ const createFormatter = (chartData: KChartData) => {
     metricAxisTitle: 'Request count',
     selectedLabels: Object.fromEntries(chartData.datasets.map((dataset) => [dataset.label || '', true])),
     formatValue: (value: number) => `${value} requests`,
+  })
+  const formatter = (option.tooltip as { formatter: (params: unknown) => string }).formatter
+
+  return {
+    formatter,
+    tooltipState,
+  }
+}
+
+const createDonutFormatter = (chartData: KChartData) => {
+  const tooltipState = createTooltipState()
+  const option = buildCrossSectionOption({
+    chartData,
+    chartType: 'donut',
+    stacked: false,
+    tooltipState,
+    tooltipTitle: 'Tooltip title',
+    tooltipMetricDisplay: 'Request count',
+    dimensionAxisTitle: 'Status code',
+    metricAxisTitle: 'Request count',
+    selectedLabels: Object.fromEntries(chartData.datasets.map((dataset) => [dataset.label || '', true])),
+    formatValue: (value: number) => `${value} requests`,
+  })
+  const formatter = (option.tooltip as { formatter: (params: unknown) => string }).formatter
+
+  return {
+    formatter,
+    tooltipState,
+  }
+}
+
+const createTimeseriesFormatter = (chartData: KChartData) => {
+  const tooltipState = createTooltipState()
+  const option = buildTimeseriesOption({
+    chartData,
+    chartType: 'timeseries_line',
+    stacked: false,
+    granularity: 'hourly',
+    tooltipState,
+    tooltipTitle: 'Tooltip title',
+    tooltipMetricDisplay: 'Request count',
+    dimensionAxisTitle: '@timestamp per hour',
+    metricAxisTitle: 'Request count',
+    selectedLabels: Object.fromEntries(chartData.datasets.map((dataset) => [dataset.label || '', true])),
+    formatValue: (value: number) => `${value} requests`,
+    thresholdLabelFormatter: () => '',
   })
   const formatter = (option.tooltip as { formatter: (params: unknown) => string }).formatter
 
@@ -114,6 +161,61 @@ describe('buildCrossSectionOption tooltip formatter', () => {
         rawValue: 25,
       }),
     ])
+  })
+
+  it('respects a custom tooltip sort function', () => {
+    const chartData: KChartData = {
+      labels: ['Request count'],
+      isMultiDimension: false,
+      datasets: [
+        {
+          label: '200',
+          rawDimension: '200',
+          backgroundColor: '#7e57c2',
+          borderColor: '#7e57c2',
+          data: [25],
+        },
+        {
+          label: '500',
+          rawDimension: '500',
+          backgroundColor: '#ef5350',
+          borderColor: '#ef5350',
+          data: [10],
+        },
+      ],
+    }
+    const tooltipState = createTooltipState()
+    const option = buildCrossSectionOption({
+      chartData,
+      chartType: 'horizontal_bar',
+      stacked: false,
+      tooltipState,
+      tooltipTitle: 'Tooltip title',
+      tooltipMetricDisplay: 'Request count',
+      dimensionAxisTitle: 'Status code',
+      metricAxisTitle: 'Request count',
+      selectedLabels: Object.fromEntries(chartData.datasets.map((dataset) => [dataset.label || '', true])),
+      formatValue: (value: number) => `${value} requests`,
+      chartTooltipSortFn: (a, b) => a.rawValue - b.rawValue,
+    })
+    const formatter = (option.tooltip as { formatter: (params: unknown) => string }).formatter
+
+    formatter([
+      {
+        seriesName: '200',
+        value: 25,
+        color: '#7e57c2',
+        axisValueLabel: 'Request count',
+      },
+      {
+        seriesName: '500',
+        value: 10,
+        color: '#ef5350',
+        axisValueLabel: 'Request count',
+      },
+    ])
+
+    expect(tooltipState.entries.map(({ label }) => label)).toEqual(['500', '200'])
   })
 
   it('truncates horizontal category labels and hides value labels that do not fit in the bar', () => {
@@ -312,6 +414,109 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       { maxHeight: 200 },
       { maxWidth: 500 },
       { maxWidth: 400 },
+    ])
+  })
+})
+
+describe('buildCrossSectionOption donut tooltip formatter', () => {
+  it('populates a single entry using the hovered donut slice', () => {
+    const chartData: KChartData = {
+      datasets: [
+        {
+          label: '200',
+          rawDimension: '200',
+          backgroundColor: '#7e57c2',
+          borderColor: '#7e57c2',
+          data: [25],
+          total: 25,
+        },
+      ],
+    }
+    const { formatter, tooltipState } = createDonutFormatter(chartData)
+
+    formatter({
+      name: '200',
+      value: 25,
+      color: '#7e57c2',
+    })
+
+    expect(tooltipState.title).toBe('Tooltip title')
+    expect(tooltipState.subtitle).toBe('Status code')
+    expect(tooltipState.metricDisplay).toBe('Request count')
+    expect(tooltipState.entries).toEqual([
+      expect.objectContaining({
+        label: '200',
+        value: '25 requests',
+        rawValue: 25,
+        backgroundColor: '#7e57c2',
+        borderColor: '#7e57c2',
+      }),
+    ])
+  })
+})
+
+describe('buildTimeseriesOption tooltip formatter', () => {
+  it('populates sorted tooltip entries and a formatted timestamp subtitle', () => {
+    const chartData: KChartData = {
+      datasets: [
+        {
+          label: '500',
+          backgroundColor: '#ef5350',
+          borderColor: '#ef5350',
+          data: [
+            { x: Date.UTC(2024, 0, 1, 0, 0), y: 10 },
+            { x: Date.UTC(2024, 0, 1, 1, 0), y: 20 },
+          ],
+        },
+        {
+          label: '200',
+          backgroundColor: '#42a5f5',
+          borderColor: '#42a5f5',
+          data: [
+            { x: Date.UTC(2024, 0, 1, 0, 0), y: 30 },
+            { x: Date.UTC(2024, 0, 1, 1, 0), y: 40 },
+          ],
+        },
+      ],
+    }
+    const { formatter, tooltipState } = createTimeseriesFormatter(chartData)
+    const timestamp = Date.UTC(2024, 0, 1, 1, 0)
+    const expectedSubtitle = formatTooltipTimestampByGranularity({
+      tickValue: new Date(timestamp),
+      granularity: 'hourly',
+    })
+
+    formatter([
+      {
+        seriesName: '500',
+        value: [timestamp, 20],
+        color: '#ef5350',
+        borderColor: '#ef5350',
+        axisValue: timestamp,
+      },
+      {
+        seriesName: '200',
+        value: [timestamp, 40],
+        color: '#42a5f5',
+        borderColor: '#42a5f5',
+        axisValue: timestamp,
+      },
+    ])
+
+    expect(tooltipState.title).toBe('Tooltip title')
+    expect(tooltipState.metricDisplay).toBe('Request count')
+    expect(tooltipState.subtitle).toBe(expectedSubtitle)
+    expect(tooltipState.entries).toEqual([
+      expect.objectContaining({
+        label: '200',
+        value: '40 requests',
+        rawValue: 40,
+      }),
+      expect.objectContaining({
+        label: '500',
+        value: '20 requests',
+        rawValue: 20,
+      }),
     ])
   })
 })

@@ -1,72 +1,84 @@
 <template>
-  <div
-    v-if="state.visible"
-    ref="toolip"
-    class="chart-tooltip"
-    :style="{
-      transform: isInteractive ? `translate(${dragLeft}, ${dragTop})` : `translate(${left}, ${top})`,
-      pointerEvents: isInteractive ? 'all' : 'none',
-    }"
-  >
-    <ZoomTimerange
-      v-if="state.interactionMode === 'selecting-chart-area' && brushTimeRange && granularity"
-      :end="brushTimeRange?.end"
-      :granularity="granularity"
-      :start="brushTimeRange?.start"
-    />
-    <ZoomActions
-      v-else-if="state.interactionMode === 'zoom-interactive' && brushTimeRange && zoomActionItems && granularity"
-      :granularity="granularity"
-      :new-time-range="brushTimeRange"
-      :zoom-action-items="zoomActionItems"
-      @on-action="emit('onAction')"
-    />
-    <div v-else>
-      <div class="tooltip-title">
-        <div class="title">
-          <div>{{ state.title }}</div>
-        </div>
-        <div
-          v-if="state.subtitle || state.metricDisplay"
-          class="subtitle"
-        >
-          <div class="context">
-            {{ state.subtitle }}
+  <Teleport to="body">
+    <div
+      v-if="state.visible"
+      ref="toolip"
+      class="chart-tooltip"
+      :class="{ locked: isInteractive }"
+      :style="{
+        transform: isInteractive ? `translate(${dragLeft}, ${dragTop})` : `translate(${left}, ${top})`,
+        pointerEvents: isInteractive ? 'all' : 'none',
+      }"
+    >
+      <ZoomTimerange
+        v-if="state.interactionMode === 'selecting-chart-area' && brushTimeRange && granularity"
+        :end="brushTimeRange?.end"
+        :granularity="granularity"
+        :start="brushTimeRange?.start"
+      />
+      <ZoomActions
+        v-else-if="state.interactionMode === 'zoom-interactive' && brushTimeRange && zoomActionItems && granularity"
+        :granularity="granularity"
+        :new-time-range="brushTimeRange"
+        :zoom-action-items="zoomActionItems"
+        @on-action="emit('onAction')"
+      />
+      <div v-else>
+        <div class="tooltip-title">
+          <div class="title">
+            <div>{{ state.title }}</div>
+            <DragIcon
+              v-if="isInteractive"
+              class="drag-icon"
+              :color="KUI_COLOR_TEXT_NEUTRAL"
+              :size="KUI_ICON_SIZE_30"
+            />
           </div>
-          <div class="metric">
-            {{ state.metricDisplay }}
-          </div>
-        </div>
-      </div>
-      <div class="tooltip-content">
-        <div
-          v-for="item in state.entries"
-          :key="`${item.label}-${item.value}`"
-          class="tooltip-item"
-        >
           <div
-            class="square-marker"
-            :style="{ background: item.backgroundColor, 'border-color': item.borderColor }"
-          />
-          <div
-            class="tooltip-item-label"
-            :class="{ empty: item.isSegmentEmpty }"
+            v-if="state.subtitle || state.metricDisplay"
+            class="subtitle"
           >
-            {{ item.label }}
+            <div class="context">
+              {{ state.subtitle }}
+            </div>
+            <div class="metric">
+              {{ state.metricDisplay }}
+            </div>
           </div>
-          <div class="tooltip-item-value">
-            {{ item.value }}
+        </div>
+        <div class="tooltip-content">
+          <div
+            v-for="item in state.entries"
+            :key="`${item.label}-${item.value}`"
+            class="tooltip-item"
+          >
+            <div
+              class="square-marker"
+              :style="{ background: item.backgroundColor, 'border-color': item.borderColor }"
+            />
+            <div
+              class="tooltip-item-label"
+              :class="{ empty: item.isSegmentEmpty }"
+            >
+              {{ item.label }}
+            </div>
+            <div class="tooltip-item-value">
+              {{ item.value }}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
 import type { AbsoluteTimeRangeV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import { DragIcon } from '@kong/icons'
 import { useElementSize, useDraggable } from '@vueuse/core'
 import { computed, useTemplateRef, watch } from 'vue'
+import { isTooltipInteractive } from '../utils'
 import type { TooltipState } from '../types'
 import ZoomActions, { type ZoomActionItem } from './ZoomActions.vue'
 import ZoomTimerange from './ZoomTimerange.vue'
@@ -101,11 +113,11 @@ const left = computed(() => `${state.left}px`)
 const dragTop = computed(() => `${dragY.value}px`)
 const dragLeft = computed(() => `${dragX.value}px`)
 const isInteractive = computed(() => {
-  return ['interactive', 'zoom-interactive'].includes(state.interactionMode)
+  return isTooltipInteractive(state.interactionMode)
 })
 
 watch(() => [state.left, state.top], ([left, top]) => {
-  if (!isDragging.value && !isInteractive.value) {
+  if (!isDragging.value) {
     dragX.value = left
     dragY.value = top
   }
@@ -130,7 +142,7 @@ defineExpose({
 @use "../styles/mixins.scss" as *;
 
 .chart-tooltip {
-  background-color: $kui-color-background;
+  background-color: var(--kui-color-background, $kui-color-background);
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);
   left: 0;
@@ -139,6 +151,10 @@ defineExpose({
   top: 0;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 1;
+
+  &.locked {
+    cursor: move;
+  }
 
   .tooltip-title {
     border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);

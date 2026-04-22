@@ -24,6 +24,7 @@
         <ChartTooltip
           ref="tooltip"
           :state="tooltipState"
+          @on-action="resetTooltipState"
         />
       </BaseAnalyticsEcharts>
       <ChartLegend
@@ -37,13 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef, useTemplateRef } from 'vue'
+import { computed, toRef } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { useElementBounding, useElementSize } from '@vueuse/core'
 import composables from '../composables'
 import {
-  createDefaultChartLegendSort,
-  createDefaultChartTooltipSort,
   datavisPalette,
   getDimensionAxisTitle,
   getMetricAxisTitle,
@@ -55,7 +53,6 @@ import type {
   ChartLegendSortFn,
   ChartTooltipSortFn,
   LegendPosition,
-  TooltipState,
 } from '../types'
 import AnalyticsChartShell from './AnalyticsChartShell.vue'
 import BaseAnalyticsEcharts from './BaseAnalyticsEcharts.vue'
@@ -97,26 +94,6 @@ const props = withDefaults(defineProps<{
 })
 
 const { i18n } = composables.useI18n()
-const tooltipState = ref<TooltipState>({
-  interactionMode: 'idle',
-  entries: [],
-  visible: false,
-  top: 0,
-  left: 0,
-})
-
-const baseChartRef = useTemplateRef('baseChart')
-const tooltipRef = useTemplateRef('tooltip')
-
-const chartRef = computed(() => baseChartRef.value?.getChart())
-const containerRef = computed(() => baseChartRef.value?.getContainer())
-const chartEl = computed(() => chartRef.value?.$el as HTMLElement | undefined)
-
-const { width: chartWidth, height: chartHeight } = useElementSize(chartEl)
-const { top: containerTop, left: containerLeft } = useElementBounding(containerRef)
-
-const tooltipWidth = computed(() => tooltipRef.value?.width)
-const tooltipHeight = computed(() => tooltipRef.value?.height)
 
 const chartData = composables.useExploreResultToDatasets({
   colorPalette: computed(() => props.colorPalette || datavisPalette),
@@ -126,6 +103,46 @@ const metricUnit = computed(() => getMetricUnit(
   props.data.meta?.metric_units,
   props.data.meta?.metric_names?.[0],
 ))
+
+const { selectedLabels, toggleLegendItem } = composables.useChartLabelSelection(chartData)
+
+const {
+  chartWidth,
+  chartHeight,
+  containerTop,
+  containerLeft,
+  tooltipWidth,
+  tooltipHeight,
+  chartFlexClass,
+  chartTooltipSortFn: frameChartTooltipSortFn,
+  legendItems,
+  maxEntitiesShown,
+  resultSetTruncated,
+} = composables.useChartFrame({
+  data: toRef(props, 'data'),
+  chartData,
+  metricUnit,
+  selectedLabels,
+  legendPosition: toRef(props, 'legendPosition'),
+  chartLegendSortFn: toRef(props, 'chartLegendSortFn'),
+  chartTooltipSortFn: toRef(props, 'chartTooltipSortFn'),
+  hideTruncationWarning: toRef(props, 'hideTruncationWarning'),
+})
+
+const {
+  tooltipState,
+  handleTooltipMouseMove,
+  handleTooltipClick,
+  handleTooltipMouseOut,
+  resetTooltipState,
+} = composables.useEchartsTooltipController({
+  chartWidth,
+  chartHeight,
+  containerTop,
+  containerLeft,
+  tooltipWidth,
+  tooltipHeight,
+})
 
 const metricAxisTitle = computed(() => {
   return getMetricAxisTitle({
@@ -158,30 +175,6 @@ const tooltipMetricDisplay = computed(() => {
   })
 })
 
-const defaultLegendSort = computed(() => createDefaultChartLegendSort(i18n.t('chartLabels.____OTHER____')))
-const defaultTooltipSort = computed(() => createDefaultChartTooltipSort(i18n.t('chartLabels.____OTHER____')))
-const chartLegendSortFn = computed(() => props.chartLegendSortFn || defaultLegendSort.value)
-const chartTooltipSortFn = computed(() => props.chartTooltipSortFn || defaultTooltipSort.value)
-
-const { selectedLabels, toggleLegendItem } = composables.useChartLabelSelection(chartData)
-
-const { legendValues } = composables.useChartLegendValues(chartData, metricUnit)
-
-const chartFlexClass = computed(() => {
-  return props.legendPosition === 'bottom' ? 'column' : undefined
-})
-
-const legendItems = computed(() => {
-  return chartData.value.datasets.map(dataset => ({
-    label: dataset.label || '',
-    color: dataset.backgroundColor || dataset.borderColor || '#000',
-    borderColor: dataset.borderColor || dataset.backgroundColor || '#000',
-    value: legendValues.value[dataset.label || ''],
-    isSegmentEmpty: dataset.isSegmentEmpty,
-    hidden: selectedLabels.value[dataset.label || ''] === false,
-  })).sort(chartLegendSortFn.value)
-})
-
 const { option } = composables.useExploreResultToEChartCrossSectional({
   chartData,
   chartType: toRef(props, 'type'),
@@ -192,53 +185,24 @@ const { option } = composables.useExploreResultToEChartCrossSectional({
   metricAxisTitle,
   dimensionAxisTitle,
   selectedLabels,
-  chartTooltipSortFn,
+  chartTooltipSortFn: frameChartTooltipSortFn,
   tooltipState,
 })
 
-const maxEntitiesShown = computed(() => props.data.meta?.limit?.toString() || null)
-const resultSetTruncated = computed(() => {
-  return props.hideTruncationWarning ? false : props.data.meta?.truncated || false
-})
 const hasValidChartData = computed(() => {
   return props.data && props.data.meta && props.data.data.length > 0 && chartData.value.datasets.length > 0
 })
 
-const { calculatePosition } = composables.useTooltipPosition({
-  chartWidth,
-  chartHeight,
-  containerTop,
-  containerLeft,
-  tooltipWidth,
-  tooltipHeight,
-})
-
-const isInteractive = computed(() => tooltipState.value.interactionMode === 'interactive')
-
 const handleMouseMove = (event: any) => {
-  if (!isInteractive.value) {
-    const pos = calculatePosition(event)
-
-    if (pos) {
-      tooltipState.value.left = pos.left
-      tooltipState.value.top = pos.top
-    }
-  }
+  handleTooltipMouseMove(event)
 }
 
 const handleClick = () => {
-  if (tooltipState.value.interactionMode !== 'idle') {
-    tooltipState.value.interactionMode = 'idle'
-    tooltipState.value.visible = false
-  } else {
-    tooltipState.value.interactionMode = 'interactive'
-  }
+  handleTooltipClick()
 }
 
 const handleMouseOut = () => {
-  if (!isInteractive.value) {
-    tooltipState.value.visible = false
-  }
+  handleTooltipMouseOut()
 }
 
 
