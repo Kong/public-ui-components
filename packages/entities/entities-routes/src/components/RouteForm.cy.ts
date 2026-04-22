@@ -846,6 +846,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       })
 
       it(`should correctly render with all props and slot content, ${configFlavor}`, () => {
+        interceptKMServices()
+
         cy.mount(RouteForm, {
           props: {
             config: baseConfigKM,
@@ -859,6 +861,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           },
         })
 
+        cy.wait('@getServices')
         cy.get('.kong-ui-entities-route-form').should('be.visible')
         cy.get('.kong-ui-entities-route-form form').should('be.visible')
         cy.getTestId('route-form-config-type-advanced').click()
@@ -873,8 +876,9 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         // tags field should always be visible
         cy.getTestId('route-form-tags').should('be.visible')
 
-        // service id field should be hidden when serviceId is provided
-        cy.getTestId('route-form-service-id').should('not.exist')
+        // service id field should be visible but disabled when serviceId is provided
+        cy.getTestId('route-form-service-id').should('be.visible')
+        cy.getTestId('route-form-service-id').should('be.disabled')
 
         // sections info should be hidden when hideSectionsInfo is true
         cy.get('.form-section-info sticky').should('not.exist')
@@ -1820,6 +1824,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       })
 
       it(`should correctly render with all props and slot content, ${configFlavor}`, () => {
+        interceptKonnectServices()
+
         cy.mount(RouteForm, {
           props: {
             config: baseConfigKonnect,
@@ -1833,6 +1839,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           },
         })
 
+        cy.wait('@getServices')
         cy.get('.kong-ui-entities-route-form').should('be.visible')
         cy.get('.kong-ui-entities-route-form form').should('be.visible')
         cy.getTestId('route-form-config-type-advanced').click()
@@ -1847,8 +1854,9 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         // tags field should always be visible
         cy.getTestId('route-form-tags').should('be.visible')
 
-        // service id field should be hidden when serviceId is provided
-        cy.getTestId('route-form-service-id').should('not.exist')
+        // service id field should be visible but disabled when serviceId is provided
+        cy.getTestId('route-form-service-id').should('be.visible')
+        cy.getTestId('route-form-service-id').should('be.disabled')
 
         // sections info should be hidden when hideSectionsInfo is true
         cy.get('.form-section-info sticky').should('not.exist')
