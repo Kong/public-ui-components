@@ -128,7 +128,7 @@ importers:
         specifier: ^1.99.0
         version: 1.99.0
       stylelint:
-        specifier: ^17.7.0
+        specifier: ^17.8.0
         version: 17.8.0(typescript@5.9.3)
       stylelint-config-html:
         specifier: ^1.1.0
