@@ -34,12 +34,12 @@ export default {
         all: `${konnectBaseApiUrl}/plugins/{id}`,
         forEntity: `${konnectBaseApiUrl}/{entityType}/{entityId}/plugins/{id}`,
       },
-      pluginSchema: '/v2/control-planes/{controlPlaneId}/schemas/core-entities/plugins/{plugin}',
+      pluginSchema: '/v2/control-planes/{controlPlaneId}/core-entities/schemas/plugins/{plugin}',
       credential: {
         create: `${konnectBaseApiUrl}/{resourceEndpoint}`,
         edit: `${konnectBaseApiUrl}/{resourceEndpoint}/{id}`,
       },
-      credentialSchema: '/v2/control-planes/{controlPlaneId}/schemas/core-entities/{plugin}',
+      credentialSchema: '/v2/control-planes/{controlPlaneId}/core-entities/schemas/{plugin}',
       // VFG endpoints24
       entityGetOne: `${konnectBaseApiUrl}/{entity}/{id}`,
       entityGetAll: `${konnectBaseApiUrl}/{entity}`,
