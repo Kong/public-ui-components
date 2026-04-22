@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.195.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.195.1...@kong-ui-public/entities-plugins@9.195.2) (2026-04-22)
+
+
+### Bug Fixes
+
+* **entities-plugins:** prefill default values with prepareFormData ([#3156](https://github.com/Kong/public-ui-components/issues/3156)) ([c404c57](https://github.com/Kong/public-ui-components/commit/c404c573576ee40fc16713355197f2f3ccb8166f))
+
+
+
+
+
 ## [9.195.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.195.0...@kong-ui-public/entities-plugins@9.195.1) (2026-04-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
