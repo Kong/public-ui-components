@@ -1062,8 +1062,8 @@ importers:
         version: 14.1.4
     devDependencies:
       '@dagrejs/dagre':
-        specifier: ^2.0.4
-        version: 2.0.4
+        specifier: ^3.0.0
+        version: 3.0.0
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
@@ -1895,11 +1895,11 @@ packages:
   '@cypress/xvfb@1.2.4':
     resolution: {integrity: sha512-skbBzPggOVYCbnGgV+0dmBdW/s77ZkAOXIC1knS8NagwDjBrNC1LuXtQJeiN6l+m7lzmHtaoUw/ctJKdqkG57Q==}
 
-  '@dagrejs/dagre@2.0.4':
-    resolution: {integrity: sha512-J6vCWTNpicHF4zFlZG1cS5DkGzMr9941gddYkakjrg3ZNev4bbqEgLHFTWiFrcJm7UCRu7olO3K6IRDd9gSGhA==}
+  '@dagrejs/dagre@3.0.0':
+    resolution: {integrity: sha512-ZzhnTy1rfuoew9Ez3EIw4L2znPGnYYhfn8vc9c4oB8iw6QAsszbiU0vRhlxWPFnmmNSFAkrYeF1PhM5m4lAN0Q==}
 
-  '@dagrejs/graphlib@3.0.4':
-    resolution: {integrity: sha512-HxZ7fCvAwTLCWCO0WjDkzAFQze8LdC6iOpKbetDKHIuDfIgMlIzYzqZ4nxwLlclQX+3ZVeZ1K2OuaOE2WWcyOg==}
+  '@dagrejs/graphlib@4.0.1':
+    resolution: {integrity: sha512-IvcV6FduIIAmLwnH+yun+QtV36SC7mERqa86aClNqmMN09WhmPPYU8ckHrZBozErf+UvHPWOTJYaGYiIcs0DgA==}
 
   '@digitalroute/cz-conventional-changelog-for-jira@8.0.1':
     resolution: {integrity: sha512-I7uNQ2R5LnDYVhQ01sfNvaxqe1PutXyDl8Kltj4L8uDa1LTYqQgWWp3yEj3XYDNjhUjsAheHW0lsmF1oiAjWVg==}
@@ -11453,11 +11453,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@dagrejs/dagre@2.0.4':
+  '@dagrejs/dagre@3.0.0':
     dependencies:
-      '@dagrejs/graphlib': 3.0.4
+      '@dagrejs/graphlib': 4.0.1
 
-  '@dagrejs/graphlib@3.0.4': {}
+  '@dagrejs/graphlib@4.0.1': {}
 
   '@digitalroute/cz-conventional-changelog-for-jira@8.0.1(@types/node@24.12.2)(typescript@5.9.3)':
     dependencies:
