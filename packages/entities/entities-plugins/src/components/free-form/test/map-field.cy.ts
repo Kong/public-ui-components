@@ -448,8 +448,8 @@ describe('MapField', () => {
       // Custom slot is rendered.
       getMapRow(0).find('[data-testid="custom-slot"]').should('exist')
 
-      // Slot prop keyId matches the kid:<n> format used elsewhere (and matches the
-      // keyId on the remove button testid `ff-map-remove-btn-kv.<keyId>.0`).
+      // Slot prop keyId matches the kid:<n> format used elsewhere. The remove
+      // button testid is indexed by field path and row index, e.g. `ff-map-remove-btn-kv.0`.
       getMapRow(0)
         .find('[data-testid="custom-slot"]')
         .invoke('attr', 'data-key-id')
