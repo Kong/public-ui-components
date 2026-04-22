@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.3.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.15...@kong-ui-public/analytics-metric-provider@11.3.16) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.51.0 ([#3161](https://github.com/Kong/public-ui-components/issues/3161)) ([e31249c](https://github.com/Kong/public-ui-components/commit/e31249c1abf532c946acc4f6f12f089c1beaf7ef))
+
+
+
+
+
 ## [11.3.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.14...@kong-ui-public/analytics-metric-provider@11.3.15) (2026-04-22)
 
 

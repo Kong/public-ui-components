@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.12...@kong-ui-public/split-pane@0.3.13) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.51.0 ([#3161](https://github.com/Kong/public-ui-components/issues/3161)) ([e31249c](https://github.com/Kong/public-ui-components/commit/e31249c1abf532c946acc4f6f12f089c1beaf7ef))
+
+
+
+
+
 ## [0.3.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.11...@kong-ui-public/split-pane@0.3.12) (2026-04-17)
 
 
