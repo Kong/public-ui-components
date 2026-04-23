@@ -1,19 +1,19 @@
 import { generateSingleMetricTimeSeriesData, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import { ref } from 'vue'
 import { describe, expect, it } from 'vitest'
-import useExploreResultToTimeDatasets from './useExploreResultToTimeDatasets'
-import useExploreResultToEChartTimeseries from './useExploreResultToEChartTimeseries'
+import useTimeseriesChartData from './useTimeseriesChartData'
+import useTimeseriesChartOption from './useTimeseriesChartOption'
 
-describe('useExploreResultToEChartTimeseries', () => {
+describe('useTimeseriesChartOption', () => {
   it('builds chart series from ISO start/end values', () => {
     const exploreResult = generateSingleMetricTimeSeriesData(
       { name: 'request_count', unit: 'count' },
       { status_code: ['200', '500'] },
     )
 
-    const chartData = useExploreResultToTimeDatasets({}, ref(exploreResult))
+    const chartData = useTimeseriesChartData({}, ref(exploreResult))
 
-    const { option } = useExploreResultToEChartTimeseries({
+    const { option } = useTimeseriesChartOption({
       chartData,
       chartType: ref('timeseries_line'),
       granularity: ref(msToGranularity(exploreResult.meta.granularity_ms) || 'hourly'),
@@ -39,4 +39,3 @@ describe('useExploreResultToEChartTimeseries', () => {
     expect(series[0]?.data.length).toBeGreaterThan(0)
   })
 })
-

@@ -134,7 +134,7 @@ const timeSeriesGranularity = computed<GranularityValues>(() => {
   return msToGranularity(props.data.meta.granularity_ms) || 'hourly'
 })
 
-const chartData = composables.useExploreResultToTimeDatasets({
+const chartData = composables.useTimeseriesChartData({
   fill: toRef(props, 'stacked'),
   colorPalette: computed(() => props.colorPalette || datavisPalette),
 }, toRef(props, 'data'))
@@ -256,7 +256,7 @@ const {
   onReset: props.timeseriesZoom ? clearBrush : undefined,
 })
 
-const { option } = composables.useExploreResultToEchartTimeseries({
+const { option } = composables.useTimeseriesChartOption({
   chartData,
   chartType: toRef(props, 'type'),
   granularity: timeSeriesGranularity,

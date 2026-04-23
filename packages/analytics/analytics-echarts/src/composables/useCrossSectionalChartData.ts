@@ -60,7 +60,7 @@ const generateDatasets = ({
   })
 }
 
-export default function useExploreResultToDatasets(
+export default function useCrossSectionalChartData(
   {
     colorPalette = datavisPalette,
   }: {

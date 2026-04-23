@@ -95,7 +95,7 @@ const props = withDefaults(defineProps<{
 
 const { i18n } = composables.useI18n()
 
-const chartData = composables.useExploreResultToDatasets({
+const chartData = composables.useCrossSectionalChartData({
   colorPalette: computed(() => props.colorPalette || datavisPalette),
 }, toRef(props, 'data'))
 
@@ -175,7 +175,7 @@ const tooltipMetricDisplay = computed(() => {
   })
 })
 
-const { option } = composables.useExploreResultToEChartCrossSectional({
+const { option } = composables.useCrossSectionalChartOption({
   chartData,
   chartType: toRef(props, 'type'),
   stacked: toRef(props, 'stacked'),

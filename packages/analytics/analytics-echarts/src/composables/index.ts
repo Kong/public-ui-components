@@ -2,13 +2,13 @@ import useBrushZoom from './useBrushZoom'
 import useChartFrame from './useChartFrame'
 import useChartLabelSelection from './useChartLabelSelection'
 import useChartLegendValues from './useChartLegendValues'
-import useExploreResultToDatasets from './useExploreResultToDatasets'
-import useExploreResultToEchartTimeseries from './useExploreResultToEChartTimeseries'
-import useExploreResultToEChartCrossSectional from './useExploreResultToEchartCrossSectional'
-import useExploreResultToTimeDatasets from './useExploreResultToTimeDatasets'
+import useCrossSectionalChartData from './useCrossSectionalChartData'
+import useCrossSectionalChartOption from './useCrossSectionalChartOption'
 import useEchartsTooltipController from './useEchartsTooltipController'
 import useTooltipPosition from './useTooltipPosition'
 import useI18n from './useI18n'
+import useTimeseriesChartData from './useTimeseriesChartData'
+import useTimeseriesChartOption from './useTimeseriesChartOption'
 import useTranslatedUnits from './useTranslatedUnits'
 
 export default {
@@ -17,10 +17,10 @@ export default {
   useChartLabelSelection,
   useTranslatedUnits,
   useChartLegendValues,
-  useExploreResultToDatasets,
-  useExploreResultToTimeDatasets,
-  useExploreResultToEchartTimeseries,
-  useExploreResultToEChartCrossSectional,
+  useCrossSectionalChartData,
+  useTimeseriesChartData,
+  useTimeseriesChartOption,
+  useCrossSectionalChartOption,
   useBrushZoom,
   useEchartsTooltipController,
   useTooltipPosition,

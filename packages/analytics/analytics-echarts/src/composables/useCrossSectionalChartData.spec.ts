@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { ref } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import useExploreResultToDatasets from './useExploreResultToDatasets'
+import useCrossSectionalChartData from './useCrossSectionalChartData'
 
-describe('useExploreResultToDatasets', () => {
+describe('useCrossSectionalChartData', () => {
   it('preserves full primary dimension ids when sorting labels', () => {
     const exploreResult = ref({
       meta: {
@@ -31,7 +31,7 @@ describe('useExploreResultToDatasets', () => {
       ],
     } as ExploreResultV4)
 
-    const chartData = useExploreResultToDatasets({}, exploreResult)
+    const chartData = useCrossSectionalChartData({}, exploreResult)
 
     expect(chartData.value.labels).toEqual(['Alpha, Beta', 'Alpha'])
   })

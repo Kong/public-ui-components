@@ -1,22 +1,17 @@
 import type { Ref } from 'vue'
 import { computed } from 'vue'
-import type { ExploreAggregations, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import type { ECBasicOption } from 'echarts/types/dist/shared'
-import type { ChartTooltipSortFn, KChartData, Threshold, TooltipState } from '../types'
+import type { ChartTooltipSortFn, KChartData, TooltipState } from '../types'
 
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
-import { buildTimeseriesOption, getThresholdIntersections } from '../utils'
+import { buildCrossSectionOption } from '../utils'
 import composables from '.'
 
-export { getThresholdIntersections }
-
-export default function useExploreResultToEChartTimeseries({
+export default function useCrossSectionalChartOption({
   chartData,
   chartType,
   tooltipState,
-  granularity,
   stacked,
-  threshold,
   metricUnit,
   tooltipTitle,
   tooltipMetricDisplay,
@@ -26,11 +21,9 @@ export default function useExploreResultToEChartTimeseries({
   chartTooltipSortFn,
 }: {
   chartData: Ref<KChartData>
-  chartType: Ref<'timeseries_line' | 'timeseries_bar'>
+  chartType: Ref<'horizontal_bar' | 'vertical_bar' | 'donut'>
   tooltipState: Ref<TooltipState>
-  granularity: Ref<GranularityValues>
   stacked: Ref<boolean>
-  threshold: Ref<Partial<Record<ExploreAggregations, Threshold[]>> | undefined>
   metricUnit: Ref<string>
   tooltipTitle?: Ref<string | undefined>
   tooltipMetricDisplay?: Ref<string | undefined>
@@ -49,29 +42,17 @@ export default function useExploreResultToEChartTimeseries({
         return {}
       }
 
-      return buildTimeseriesOption({
+      return buildCrossSectionOption({
         chartData: chartData.value,
         chartType: chartType.value,
         stacked: stacked.value,
-        granularity: granularity.value,
         tooltipState: tooltipState.value,
         tooltipTitle: tooltipTitle?.value,
         tooltipMetricDisplay: tooltipMetricDisplay?.value,
         metricAxisTitle: metricAxisTitle?.value,
         dimensionAxisTitle: dimensionAxisTitle?.value,
-        threshold: threshold.value,
         selectedLabels: selectedLabels.value,
         formatValue: (value: number) => formatUnit(value, metricUnit.value, { translateUnit }),
-        thresholdLabelFormatter: (currentThreshold: Threshold) => {
-          const key = `chartLabels.threshold-${currentThreshold.type}`
-          const fallbackKey = currentThreshold.type === 'neutral'
-            ? 'chartLabels.threshold-neutral'
-            : key
-
-          return (i18n as any).te(key)
-            ? (i18n as any).t(key, { value: String(currentThreshold.value) })
-            : (i18n as any).t(fallbackKey, { value: String(currentThreshold.value) })
-        },
         chartTooltipSortFn: chartTooltipSortFn?.value,
       })
     } catch (err) {

@@ -58,7 +58,7 @@ export const createZeroFilledTimeSeries = (
   return range(roundedStart, roundedEnd, stepMs)
 }
 
-export default function useExploreResultToTimeDatasets(
+export default function useTimeseriesChartData(
   {
     colorPalette = datavisPalette,
     fill = false,

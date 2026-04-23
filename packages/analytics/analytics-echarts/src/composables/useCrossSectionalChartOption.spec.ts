@@ -1,19 +1,19 @@
 import { generateCrossSectionalData } from '@kong-ui-public/analytics-utilities'
 import { ref } from 'vue'
 import { describe, expect, it } from 'vitest'
-import useExploreResultToDatasets from './useExploreResultToDatasets'
-import useExploreResultToEChartCrossSectional from './useExploreResultToEchartCrossSectional'
+import useCrossSectionalChartData from './useCrossSectionalChartData'
+import useCrossSectionalChartOption from './useCrossSectionalChartOption'
 
-describe('useExploreResultToEChartCrossSectional', () => {
+describe('useCrossSectionalChartOption', () => {
   it('builds chart series from cross-sectional explore data', () => {
     const exploreResult = generateCrossSectionalData(
       [{ name: 'request_count', unit: 'count' }],
       { status_code: ['200', '500'] },
     )
 
-    const chartData = useExploreResultToDatasets({}, ref(exploreResult))
+    const chartData = useCrossSectionalChartData({}, ref(exploreResult))
 
-    const { option } = useExploreResultToEChartCrossSectional({
+    const { option } = useCrossSectionalChartOption({
       chartData,
       chartType: ref('horizontal_bar'),
       stacked: ref(false),
