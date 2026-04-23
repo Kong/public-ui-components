@@ -50,7 +50,7 @@ import {
   getMetricUnit,
   getTooltipMetricDisplay,
   normalizeDataZoomWindow,
-  resolveChartScrollWindow,
+  resolveCrossSectionViewportState,
 } from '../utils'
 import type {
   AnalyticsChartColors,
@@ -74,6 +74,7 @@ const props = withDefaults(defineProps<{
   emptyStateDescription?: string
   metricAxesTitle?: string
   dimensionAxesTitle?: string
+  showAnnotations?: boolean
   showLegendValues?: boolean
   legendPosition?: LegendPosition
   chartLegendSortFn?: ChartLegendSortFn
@@ -89,6 +90,7 @@ const props = withDefaults(defineProps<{
   emptyStateDescription: undefined,
   metricAxesTitle: undefined,
   dimensionAxesTitle: undefined,
+  showAnnotations: true,
   showLegendValues: false,
   legendPosition: 'bottom',
   chartLegendSortFn: undefined,
@@ -111,6 +113,7 @@ const metricUnit = computed(() => getMetricUnit(
 
 const { selectedLabels, toggleLegendItem } = composables.useChartLabelSelection(chartData)
 const scrollWindow = ref<StoredChartScrollWindow | null>(null)
+const chartLabels = computed(() => chartData.value.labels || [])
 
 const {
   chartWidth,
@@ -187,6 +190,7 @@ const { option } = composables.useCrossSectionalChartOption({
   chartWidth,
   chartHeight,
   scrollWindow,
+  showAnnotations: toRef(props, 'showAnnotations'),
   stacked: toRef(props, 'stacked'),
   metricUnit,
   tooltipTitle: toRef(props, 'tooltipTitle'),
@@ -233,16 +237,19 @@ watch([
   () => props.type,
   chartWidth,
   chartHeight,
-], ([chartType, width, height]) => {
+  chartLabels,
+], ([chartType, width, height, labels]) => {
   if (chartType === 'donut') {
     scrollWindow.value = null
 
     return
   }
 
-  const { storedScrollWindow } = resolveChartScrollWindow({
-    axisSize: chartType === 'horizontal_bar' ? height : width,
-    labels: chartData.value.labels || [],
+  const { storedScrollWindow } = resolveCrossSectionViewportState({
+    chartType,
+    chartWidth: width,
+    chartHeight: height,
+    labels,
     scrollWindow: scrollWindow.value,
   })
 

@@ -8,7 +8,7 @@ import {
   createTimeseriesTooltipFormatter,
 } from './build-echart-tooltip-formatters'
 import type { ECBasicOption } from 'echarts/types/dist/shared'
-import { resolveChartScrollWindow } from './chart-scroll'
+import { resolveChartScrollWindow, resolveCrossSectionViewportState } from './chart-scroll'
 import type { StoredChartScrollWindow } from './chart-scroll'
 
 const MAX_LABEL_LENGTH = 20
@@ -429,6 +429,7 @@ export const buildCrossSectionOption = ({
   chartWidth,
   chartHeight,
   scrollWindow,
+  showAnnotations,
   stacked,
   tooltipState,
   tooltipTitle,
@@ -444,6 +445,7 @@ export const buildCrossSectionOption = ({
   chartWidth: number
   chartHeight: number
   scrollWindow: StoredChartScrollWindow | null
+  showAnnotations: boolean
   stacked: boolean
   tooltipState: TooltipState
   tooltipTitle?: string
@@ -511,6 +513,13 @@ export const buildCrossSectionOption = ({
 
   const labels = chartData.labels || []
   const isHorizontal = chartType === 'horizontal_bar'
+  const viewportState = resolveCrossSectionViewportState({
+    chartType,
+    chartWidth,
+    chartHeight,
+    labels,
+    scrollWindow,
+  })
   const scrollConfig = buildCrossSectionDataZoom({
     chartType,
     chartWidth,
@@ -638,7 +647,7 @@ export const buildCrossSectionOption = ({
       },
       stack: stacked ? 'total' : undefined,
       label: {
-        show: true,
+        show: showAnnotations && !viewportState.annotationsSuppressed,
         position: stacked ? (isHorizontal ? 'insideRight' : 'insideTop') : (isHorizontal ? 'right' : 'top'),
         distance: isHorizontal ? 8 : 10,
         align: isHorizontal ? 'right' : undefined,
@@ -658,6 +667,10 @@ export const buildCrossSectionOption = ({
         rect?: { width?: number, height?: number }
         dataIndex?: number
       }) => {
+        if (!showAnnotations || viewportState.annotationsSuppressed) {
+          return { hide: true }
+        }
+
         const availableSize = isHorizontal ? rect?.width : rect?.height
 
         if (isHorizontal) {

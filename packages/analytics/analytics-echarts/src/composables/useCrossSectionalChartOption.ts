@@ -14,6 +14,7 @@ export default function useCrossSectionalChartOption({
   chartWidth,
   chartHeight,
   scrollWindow,
+  showAnnotations,
   tooltipState,
   stacked,
   metricUnit,
@@ -29,6 +30,7 @@ export default function useCrossSectionalChartOption({
   chartWidth: Ref<number>
   chartHeight: Ref<number>
   scrollWindow: Ref<StoredChartScrollWindow | null>
+  showAnnotations: Ref<boolean>
   tooltipState: Ref<TooltipState>
   stacked: Ref<boolean>
   metricUnit: Ref<string>
@@ -55,6 +57,7 @@ export default function useCrossSectionalChartOption({
         chartWidth: chartWidth.value,
         chartHeight: chartHeight.value,
         scrollWindow: scrollWindow.value,
+        showAnnotations: showAnnotations.value,
         stacked: stacked.value,
         tooltipState: tooltipState.value,
         tooltipTitle: tooltipTitle?.value,

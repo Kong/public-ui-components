@@ -1,10 +1,23 @@
 import type { ChartScrollWindow } from '../types'
 
 const MIN_CATEGORY_SIZE = 26
+const RESPONSIVE_MAX_HEIGHT = 200
+const RESPONSIVE_MEDIUM_MAX_WIDTH = 500
+
+type CrossSectionChartType = 'horizontal_bar' | 'vertical_bar'
 
 export interface StoredChartScrollWindow {
   anchorLabel: string
   visibleCategoryCount: number
+}
+
+export interface CrossSectionViewportState {
+  visibleCategoryCount: number
+  scrollWindow: ChartScrollWindow | null
+  storedScrollWindow: StoredChartScrollWindow | null
+  isScrollable: boolean
+  annotationsHiddenByBreakpoint: boolean
+  annotationsSuppressed: boolean
 }
 
 export const getVisibleCategoryCount = ({
@@ -144,5 +157,47 @@ export const resolveChartScrollWindow = ({
         scrollWindow: resolvedWindow,
       })
       : null,
+  }
+}
+
+export const shouldHideAnnotationsForBreakpoint = ({
+  chartWidth,
+  chartHeight,
+}: {
+  chartWidth: number
+  chartHeight: number
+}) => {
+  return chartHeight <= RESPONSIVE_MAX_HEIGHT || chartWidth <= RESPONSIVE_MEDIUM_MAX_WIDTH
+}
+
+export const resolveCrossSectionViewportState = ({
+  chartType,
+  chartWidth,
+  chartHeight,
+  labels,
+  scrollWindow,
+}: {
+  chartType: CrossSectionChartType
+  chartWidth: number
+  chartHeight: number
+  labels: string[]
+  scrollWindow: StoredChartScrollWindow | null
+}): CrossSectionViewportState => {
+  const axisSize = chartType === 'horizontal_bar' ? chartHeight : chartWidth
+  const resolved = resolveChartScrollWindow({
+    axisSize,
+    labels,
+    scrollWindow,
+  })
+  const annotationsHiddenByBreakpoint = shouldHideAnnotationsForBreakpoint({
+    chartWidth,
+    chartHeight,
+  })
+
+  return {
+    ...resolved,
+    isScrollable: resolved.scrollWindow !== null,
+    annotationsHiddenByBreakpoint,
+    annotationsSuppressed: annotationsHiddenByBreakpoint || resolved.scrollWindow !== null,
   }
 }

@@ -4,8 +4,10 @@ import {
   createStoredScrollWindow,
   getVisibleCategoryCount,
   normalizeDataZoomWindow,
+  resolveCrossSectionViewportState,
   resolveChartScrollWindow,
   resolveStoredScrollWindow,
+  shouldHideAnnotationsForBreakpoint,
 } from './chart-scroll'
 
 describe('chart-scroll', () => {
@@ -102,6 +104,49 @@ describe('chart-scroll', () => {
     })).toEqual({
       anchorLabel: 'Beta',
       visibleCategoryCount: 2,
+    })
+  })
+
+  it('suppresses annotations at the current responsive breakpoints', () => {
+    expect(shouldHideAnnotationsForBreakpoint({
+      chartWidth: 500,
+      chartHeight: 420,
+    })).toBe(true)
+
+    expect(shouldHideAnnotationsForBreakpoint({
+      chartWidth: 640,
+      chartHeight: 200,
+    })).toBe(true)
+
+    expect(shouldHideAnnotationsForBreakpoint({
+      chartWidth: 640,
+      chartHeight: 420,
+    })).toBe(false)
+  })
+
+  it('reports scrollable and annotation suppression state through one shared viewport helper', () => {
+    expect(resolveCrossSectionViewportState({
+      chartType: 'horizontal_bar',
+      chartWidth: 640,
+      chartHeight: 52,
+      labels: ['Alpha', 'Beta', 'Gamma', 'Delta'],
+      scrollWindow: {
+        anchorLabel: 'Gamma',
+        visibleCategoryCount: 3,
+      },
+    })).toEqual({
+      visibleCategoryCount: 2,
+      scrollWindow: {
+        startValue: 2,
+        endValue: 3,
+      },
+      storedScrollWindow: {
+        anchorLabel: 'Gamma',
+        visibleCategoryCount: 2,
+      },
+      isScrollable: true,
+      annotationsHiddenByBreakpoint: true,
+      annotationsSuppressed: true,
     })
   })
 })

@@ -19,6 +19,7 @@ const createFormatter = (chartData: KChartData) => {
     chartWidth: 640,
     chartHeight: 400,
     scrollWindow: null,
+    showAnnotations: true,
     stacked: false,
     tooltipState,
     tooltipTitle: 'Tooltip title',
@@ -44,6 +45,7 @@ const createDonutFormatter = (chartData: KChartData) => {
     chartWidth: 640,
     chartHeight: 400,
     scrollWindow: null,
+    showAnnotations: true,
     stacked: false,
     tooltipState,
     tooltipTitle: 'Tooltip title',
@@ -197,6 +199,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       chartWidth: 640,
       chartHeight: 400,
       scrollWindow: null,
+      showAnnotations: true,
       stacked: false,
       tooltipState,
       tooltipTitle: 'Tooltip title',
@@ -247,6 +250,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       chartWidth: 640,
       chartHeight: 400,
       scrollWindow: null,
+      showAnnotations: true,
       stacked: true,
       tooltipState: createTooltipState(),
       tooltipTitle: 'Tooltip title',
@@ -340,6 +344,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
         anchorLabel: 'Route 4',
         visibleCategoryCount: 7,
       },
+      showAnnotations: true,
       stacked: false,
       tooltipState: createTooltipState(),
       tooltipTitle: 'Tooltip title',
@@ -417,6 +422,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       chartWidth: 640,
       chartHeight: 400,
       scrollWindow: null,
+      showAnnotations: true,
       stacked: false,
       tooltipState: createTooltipState(),
       tooltipTitle: 'Tooltip title',
@@ -452,6 +458,78 @@ describe('buildCrossSectionOption tooltip formatter', () => {
     expect(series[0].labelLayout({ rect: { height: 120, width: 96 }, dataIndex: 0 })).toEqual({ hide: false })
   })
 
+  it('turns bar labels off when annotations are disabled', () => {
+    const option = buildCrossSectionOption({
+      chartData: {
+        labels: ['Route 1'],
+        datasets: [{
+          label: 'Requests',
+          rawDimension: 'request_count',
+          backgroundColor: '#42a5f5',
+          borderColor: '#42a5f5',
+          data: [25],
+        }],
+      },
+      chartType: 'horizontal_bar',
+      chartWidth: 640,
+      chartHeight: 400,
+      scrollWindow: null,
+      showAnnotations: false,
+      stacked: false,
+      tooltipState: createTooltipState(),
+      tooltipTitle: 'Tooltip title',
+      tooltipMetricDisplay: 'Request count',
+      dimensionAxisTitle: 'Route',
+      metricAxisTitle: 'Request count',
+      selectedLabels: { Requests: true },
+      formatValue: (value: number) => `${value} requests`,
+    })
+
+    const series = option.series as Array<{
+      label: { show: boolean }
+      labelLayout: (params: { rect?: { width?: number }, dataIndex?: number }) => { hide: boolean }
+    }>
+
+    expect(series[0]?.label.show).toBe(false)
+    expect(series[0]?.labelLayout({ rect: { width: 240 }, dataIndex: 0 })).toEqual({ hide: true })
+  })
+
+  it('suppresses bar labels when the chart is scrollable even if annotations are requested', () => {
+    const option = buildCrossSectionOption({
+      chartData: {
+        labels: Array.from({ length: 20 }, (_, index) => `route-${index}`),
+        datasets: [{
+          label: 'Requests',
+          rawDimension: 'request_count',
+          backgroundColor: '#42a5f5',
+          borderColor: '#42a5f5',
+          data: Array.from({ length: 20 }, (_, index) => index + 1),
+        }],
+      },
+      chartType: 'horizontal_bar',
+      chartWidth: 640,
+      chartHeight: 260,
+      scrollWindow: null,
+      showAnnotations: true,
+      stacked: false,
+      tooltipState: createTooltipState(),
+      tooltipTitle: 'Tooltip title',
+      tooltipMetricDisplay: 'Request count',
+      dimensionAxisTitle: 'Route',
+      metricAxisTitle: 'Request count',
+      selectedLabels: { Requests: true },
+      formatValue: (value: number) => `${value} requests`,
+    })
+
+    const series = option.series as Array<{
+      label: { show: boolean }
+      labelLayout: (params: { rect?: { width?: number }, dataIndex?: number }) => { hide: boolean }
+    }>
+
+    expect(series[0]?.label.show).toBe(false)
+    expect(series[0]?.labelLayout({ rect: { width: 240 }, dataIndex: 0 })).toEqual({ hide: true })
+  })
+
   it('uses the same responsive breakpoint queries for timeseries and cross-sectional charts', () => {
     const crossSectionOption = buildCrossSectionOption({
       chartData: {
@@ -470,6 +548,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       chartWidth: 640,
       chartHeight: 400,
       scrollWindow: null,
+      showAnnotations: true,
       stacked: true,
       tooltipState: createTooltipState(),
       tooltipTitle: 'Tooltip title',
@@ -536,6 +615,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       chartWidth: 640,
       chartHeight: 200,
       scrollWindow: null,
+      showAnnotations: true,
       stacked: false,
       tooltipState: createTooltipState(),
       tooltipTitle: 'Tooltip title',
@@ -599,6 +679,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       chartWidth: 200,
       chartHeight: 400,
       scrollWindow: null,
+      showAnnotations: true,
       stacked: false,
       tooltipState: createTooltipState(),
       tooltipTitle: 'Tooltip title',
@@ -660,6 +741,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       chartWidth: 640,
       chartHeight: 200,
       scrollWindow: { anchorLabel: 'route-5', visibleCategoryCount: 7 },
+      showAnnotations: true,
       stacked: false,
       tooltipState: createTooltipState(),
       tooltipTitle: 'Tooltip title',
@@ -696,6 +778,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       chartWidth: 640,
       chartHeight: 200,
       scrollWindow: { anchorLabel: 'route-18', visibleCategoryCount: 13 },
+      showAnnotations: true,
       stacked: false,
       tooltipState: createTooltipState(),
       tooltipTitle: 'Tooltip title',

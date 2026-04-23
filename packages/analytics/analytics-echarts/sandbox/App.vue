@@ -7,7 +7,10 @@
           <p>Use this to compare in-scope behavior with analytics-chart and experiment with ECharts-specific UX.</p>
         </div>
 
-        <div class="chart-frame">
+        <div
+          ref="chartFrame"
+          class="chart-frame"
+        >
           <TimeseriesChart
             v-if="isTimeseries"
             :chart-legend-sort-fn="chartLegendSortFn"
@@ -46,6 +49,7 @@
             :legend-position="effectiveLegendPosition"
             :metric-axes-title="metricAxisTitle"
             :render-mode="renderMode"
+            :show-annotations="showAnnotations"
             :show-legend-values="showLegendValues"
             :stacked="stacked"
             :theme="theme"
@@ -103,6 +107,11 @@
             <KInputSwitch
               v-model="showLegendValues"
               label="Show legend values"
+            />
+            <KInputSwitch
+              v-if="isCrossSectionBar"
+              v-model="showAnnotations"
+              :label="showAnnotations ? 'Show annotations' : 'Hide annotations'"
             />
             <KInputSwitch
               v-model="hideLegend"
@@ -223,6 +232,16 @@
             </p>
           </div>
 
+          <div
+            v-if="isCrossSectionBar"
+            class="control-group"
+          >
+            <KLabel>Annotations</KLabel>
+            <p class="helper-text">
+              {{ annotationStatusMessage }}
+            </p>
+          </div>
+
           <div class="control-group">
             <KLabel>Import chart data</KLabel>
             <CodeText v-model="exploreResultText" />
@@ -261,8 +280,10 @@ import {
   type ExploreResultV4,
   type QueryResponseMeta,
 } from '@kong-ui-public/analytics-utilities'
-import { computed, ref } from 'vue'
+import { useElementSize } from '@vueuse/core'
+import { computed, ref, useTemplateRef } from 'vue'
 import { CrossSectionChart, TimeseriesChart } from '../src'
+import useCrossSectionalChartData from '../src/composables/useCrossSectionalChartData'
 import type {
   AnalyticsChartColors,
   ChartLegendItem,
@@ -271,6 +292,7 @@ import type {
   Threshold,
   TooltipEntry,
 } from '../src'
+import { resolveCrossSectionViewportState } from '../src/utils'
 import CodeText from './CodeText.vue'
 
 type SupportedChartTypes =
@@ -295,7 +317,9 @@ const renderMode = ref<'svg' | 'canvas'>('svg')
 const EXTRA_DIMENSION_BATCH_SIZE = 10
 const BASE_STATUS_CODE_DIMENSIONS = ['200', '300', '400', '500', 'empty'] as const
 const BASE_ROUTE_DIMENSIONS = ['payments', 'search', 'billing'] as const
-const stacked = ref(false)
+const timeseriesStacked = ref(false)
+const crossSectionStacked = ref(true)
+const showAnnotations = ref(true)
 const showLegendValues = ref(true)
 const hideLegend = ref(false)
 const hideTruncationWarning = ref(false)
@@ -316,6 +340,8 @@ const isMultiDimension = ref(false)
 const isMultiMetric = ref(false)
 const legendPosition = ref<LegendPosition>('bottom')
 const extraDimensionCount = ref(0)
+const chartFrameRef = useTemplateRef('chartFrame')
+const { width: chartFrameWidth, height: chartFrameHeight } = useElementSize(chartFrameRef)
 
 const chartLegendSortFn = (a: ChartLegendItem, b: ChartLegendItem) => {
   return (b.value?.raw || 0) - (a.value?.raw || 0)
@@ -373,6 +399,21 @@ const chartThreshold = computed<Partial<Record<ExploreAggregations, Threshold[]>
 
 const isTimeseries = computed(() => {
   return chartType.value === 'timeseries_line' || chartType.value === 'timeseries_bar'
+})
+const isCrossSectionBar = computed(() => {
+  return chartType.value === 'horizontal_bar' || chartType.value === 'vertical_bar'
+})
+const stacked = computed({
+  get: () => isTimeseries.value ? timeseriesStacked.value : crossSectionStacked.value,
+  set: (value: boolean) => {
+    if (isTimeseries.value) {
+      timeseriesStacked.value = value
+
+      return
+    }
+
+    crossSectionStacked.value = value
+  },
 })
 
 const parsedExploreResult = computed<ExploreResultV4 | undefined>(() => {
@@ -433,6 +474,7 @@ const withSandboxMeta = (value: ExploreResultV4) => {
 
 const timeseriesData = computed<ExploreResultV4>(() => withSandboxMeta(baseTimeseriesData.value))
 const crossSectionalData = computed<ExploreResultV4>(() => withSandboxMeta(baseCrossSectionData.value))
+const sandboxCrossSectionChartData = useCrossSectionalChartData({}, crossSectionalData)
 
 const chartColorPalette = computed<AnalyticsChartColors | undefined>(() => {
   return useCustomPalette.value ? customPalette : undefined
@@ -446,6 +488,38 @@ const emptyStateTitle = computed(() => useCustomTitles.value ? emptyStateTitleIn
 const emptyStateDescription = computed(() => useCustomTitles.value ? emptyStateDescriptionInput.value : undefined)
 
 const activeData = computed(() => isTimeseries.value ? timeseriesData.value : crossSectionalData.value)
+const crossSectionAnnotationState = computed(() => {
+  if (!isCrossSectionBar.value) {
+    return null
+  }
+
+  return resolveCrossSectionViewportState({
+    chartType: chartType.value,
+    chartWidth: chartFrameWidth.value,
+    chartHeight: chartFrameHeight.value,
+    labels: sandboxCrossSectionChartData.value.labels || [],
+    scrollWindow: null,
+  })
+})
+const annotationStatusMessage = computed(() => {
+  if (!crossSectionAnnotationState.value) {
+    return 'Annotations apply only to cross-sectional bar charts.'
+  }
+
+  if (!showAnnotations.value) {
+    return 'Annotations are manually disabled.'
+  }
+
+  if (crossSectionAnnotationState.value.annotationsSuppressed) {
+    if (crossSectionAnnotationState.value.isScrollable) {
+      return 'Annotations are suppressed because the chart is scrollable at the current size.'
+    }
+
+    return 'Annotations are suppressed because the chart is below the current responsive size threshold.'
+  }
+
+  return 'Annotations are enabled.'
+})
 const activeChartProps = computed(() => {
   return {
     type: chartType.value,
@@ -453,6 +527,10 @@ const activeChartProps = computed(() => {
     renderMode: renderMode.value,
     theme: theme.value,
     legendPosition: effectiveLegendPosition.value,
+    showAnnotations: isCrossSectionBar.value ? showAnnotations.value : undefined,
+    effectiveShowAnnotations: isCrossSectionBar.value
+      ? showAnnotations.value && !crossSectionAnnotationState.value?.annotationsSuppressed
+      : undefined,
     showLegendValues: showLegendValues.value,
     tooltipTitle: tooltipTitle.value,
     metricAxesTitle: metricAxisTitle.value,
