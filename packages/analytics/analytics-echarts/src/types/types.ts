@@ -58,6 +58,11 @@ export interface KChartData {
   isMultiDimension?: boolean
 }
 
+export interface ChartScrollWindow {
+  startValue: number
+  endValue: number
+}
+
 export interface LegendValueEntry {
   raw: number
   formatted: string

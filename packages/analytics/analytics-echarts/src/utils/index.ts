@@ -1,6 +1,7 @@
 export * from './build-echart-options'
 export * from './colors'
 export * from './chart-data'
+export * from './chart-scroll'
 export * from './chart-labels'
 export * from './default-sorts'
 export * from './format-timestamps'

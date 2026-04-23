@@ -16,6 +16,9 @@ const createFormatter = (chartData: KChartData) => {
   const option = buildCrossSectionOption({
     chartData,
     chartType: 'horizontal_bar',
+    chartWidth: 640,
+    chartHeight: 400,
+    scrollWindow: null,
     stacked: false,
     tooltipState,
     tooltipTitle: 'Tooltip title',
@@ -38,6 +41,9 @@ const createDonutFormatter = (chartData: KChartData) => {
   const option = buildCrossSectionOption({
     chartData,
     chartType: 'donut',
+    chartWidth: 640,
+    chartHeight: 400,
+    scrollWindow: null,
     stacked: false,
     tooltipState,
     tooltipTitle: 'Tooltip title',
@@ -188,6 +194,9 @@ describe('buildCrossSectionOption tooltip formatter', () => {
     const option = buildCrossSectionOption({
       chartData,
       chartType: 'horizontal_bar',
+      chartWidth: 640,
+      chartHeight: 400,
+      scrollWindow: null,
       stacked: false,
       tooltipState,
       tooltipTitle: 'Tooltip title',
@@ -235,6 +244,9 @@ describe('buildCrossSectionOption tooltip formatter', () => {
     const option = buildCrossSectionOption({
       chartData,
       chartType: 'horizontal_bar',
+      chartWidth: 640,
+      chartHeight: 400,
+      scrollWindow: null,
       stacked: true,
       tooltipState: createTooltipState(),
       tooltipTitle: 'Tooltip title',
@@ -247,6 +259,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
 
     const yAxis = option.yAxis as {
       axisLabel: { formatter: (value: string) => string, width: number, overflow: string }
+      inverse: boolean
       nameLocation: string
       nameRotate: number
       nameGap: number
@@ -256,6 +269,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
     const media = option.media as Array<{
       query: { maxWidth?: number, maxHeight?: number }
       option: {
+        grid?: { left?: number, right?: number, top?: number, bottom?: number }
         xAxis?: { show?: boolean, splitNumber?: number }
         yAxis?: { show?: boolean }
       }
@@ -269,9 +283,11 @@ describe('buildCrossSectionOption tooltip formatter', () => {
 
     expect(grid.left).toBe(0)
     expect(grid.bottom).toBe(28)
+    expect(option.dataZoom).toBeUndefined()
     expect(xAxis.name).toBe('Request count')
     expect(yAxis.axisLabel.width).toBe(112)
     expect(yAxis.axisLabel.overflow).toBe('truncate')
+    expect(yAxis.inverse).toBe(true)
     expect(yAxis.nameLocation).toBe('middle')
     expect(yAxis.nameRotate).toBe(90)
     expect(yAxis.nameGap).toBe(140)
@@ -287,6 +303,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       expect.objectContaining({
         query: { maxWidth: 500 },
         option: expect.objectContaining({
+          grid: { left: 0, right: 44, top: 20, bottom: 28 },
           xAxis: expect.objectContaining({ splitNumber: 4 }),
           yAxis: { show: false },
         }),
@@ -294,6 +311,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       expect.objectContaining({
         query: { maxWidth: 400 },
         option: expect.objectContaining({
+          grid: { left: 0, right: 44, top: 20, bottom: 28 },
           xAxis: { show: false },
           yAxis: { show: false },
         }),
@@ -301,6 +319,82 @@ describe('buildCrossSectionOption tooltip formatter', () => {
     ])
     expect(series[0].labelLayout({ rect: { width: 40 }, dataIndex: 0 })).toEqual({ hide: true })
     expect(series[0].labelLayout({ rect: { width: 120 }, dataIndex: 0 })).toEqual({ hide: false })
+  })
+
+  it('keeps responsive vertical bar grid spacing large enough for the zoom slider', () => {
+    const option = buildCrossSectionOption({
+      chartData: {
+        labels: Array.from({ length: 20 }, (_, index) => `Route ${index}`),
+        datasets: [{
+          label: 'Requests',
+          rawDimension: 'request_count',
+          backgroundColor: '#42a5f5',
+          borderColor: '#42a5f5',
+          data: Array.from({ length: 20 }, (_, index) => index + 1),
+        }],
+      },
+      chartType: 'vertical_bar',
+      chartWidth: 200,
+      chartHeight: 400,
+      scrollWindow: {
+        anchorLabel: 'Route 4',
+        visibleCategoryCount: 7,
+      },
+      stacked: false,
+      tooltipState: createTooltipState(),
+      tooltipTitle: 'Tooltip title',
+      tooltipMetricDisplay: 'Request count',
+      dimensionAxisTitle: 'Route',
+      metricAxisTitle: 'Request count',
+      selectedLabels: { Requests: true },
+      formatValue: (value: number) => `${value} requests`,
+    })
+
+    const grid = option.grid as { bottom: number }
+    const media = option.media as Array<{
+      query: { maxWidth?: number }
+      option: {
+        grid?: { bottom?: number }
+        xAxis?: { show?: boolean, axisLabel?: { show?: boolean } }
+        yAxis?: { show?: boolean }
+      }
+    }>
+
+    expect(grid.bottom).toBe(52)
+    expect(option.dataZoom).toEqual([
+      expect.objectContaining({
+        type: 'slider',
+        xAxisIndex: 0,
+        startValue: 4,
+        endValue: 10,
+      }),
+      expect.objectContaining({
+        type: 'inside',
+        xAxisIndex: 0,
+        startValue: 4,
+        endValue: 10,
+      }),
+    ])
+    expect(media).toEqual([
+      expect.objectContaining({
+        query: { maxHeight: 200 },
+      }),
+      expect.objectContaining({
+        query: { maxWidth: 500 },
+        option: expect.objectContaining({
+          grid: { bottom: 52, top: 24, left: 12, right: 12 },
+          xAxis: { axisLabel: { show: false } },
+        }),
+      }),
+      expect.objectContaining({
+        query: { maxWidth: 400 },
+        option: expect.objectContaining({
+          grid: { bottom: 52, left: 0, right: 12 },
+          xAxis: { show: false },
+          yAxis: { show: false },
+        }),
+      }),
+    ])
   })
 
   it('adds extra space for vertical bar axis titles and hides oversized value labels', () => {
@@ -320,6 +414,9 @@ describe('buildCrossSectionOption tooltip formatter', () => {
     const option = buildCrossSectionOption({
       chartData,
       chartType: 'vertical_bar',
+      chartWidth: 640,
+      chartHeight: 400,
+      scrollWindow: null,
       stacked: false,
       tooltipState: createTooltipState(),
       tooltipTitle: 'Tooltip title',
@@ -345,6 +442,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
 
     expect(grid.left).toBe(88)
     expect(grid.bottom).toBe(32)
+    expect(option.dataZoom).toBeUndefined()
     expect(xAxis.axisLabel.width).toBe(96)
     expect(xAxis.axisLabel.overflow).toBe('truncate')
     expect(xAxis.nameGap).toBe(36)
@@ -369,6 +467,9 @@ describe('buildCrossSectionOption tooltip formatter', () => {
         ],
       },
       chartType: 'horizontal_bar',
+      chartWidth: 640,
+      chartHeight: 400,
+      scrollWindow: null,
       stacked: true,
       tooltipState: createTooltipState(),
       tooltipTitle: 'Tooltip title',
@@ -414,6 +515,202 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       { maxHeight: 200 },
       { maxWidth: 500 },
       { maxWidth: 400 },
+    ])
+  })
+
+  it('adds vertical data zoom for crowded horizontal bar charts', () => {
+    const option = buildCrossSectionOption({
+      chartData: {
+        labels: Array.from({ length: 20 }, (_, index) => `route-${index}`),
+        datasets: [
+          {
+            label: 'requests',
+            rawDimension: 'requests',
+            backgroundColor: '#42a5f5',
+            borderColor: '#42a5f5',
+            data: Array.from({ length: 20 }, (_, index) => index + 1),
+          },
+        ],
+      },
+      chartType: 'horizontal_bar',
+      chartWidth: 640,
+      chartHeight: 200,
+      scrollWindow: null,
+      stacked: false,
+      tooltipState: createTooltipState(),
+      tooltipTitle: 'Tooltip title',
+      tooltipMetricDisplay: 'Request count',
+      dimensionAxisTitle: 'Route',
+      metricAxisTitle: 'Request count',
+      selectedLabels: { requests: true },
+      formatValue: (value: number) => `${value} requests`,
+    })
+
+    const dataZoom = option.dataZoom as Array<{
+      type?: string
+      yAxisIndex?: number
+      zoomLock?: boolean
+      orient?: string
+      startValue?: number
+      endValue?: number
+      zoomOnMouseWheel?: boolean
+      moveOnMouseWheel?: boolean
+      moveOnMouseMove?: boolean
+    }>
+    const grid = option.grid as { right: number }
+
+    expect(dataZoom).toEqual([
+      expect.objectContaining({
+        type: 'slider',
+        yAxisIndex: 0,
+        zoomLock: true,
+        orient: 'vertical',
+        startValue: 0,
+        endValue: 6,
+      }),
+      expect.objectContaining({
+        type: 'inside',
+        yAxisIndex: 0,
+        startValue: 0,
+        endValue: 6,
+        zoomOnMouseWheel: false,
+        moveOnMouseWheel: true,
+        moveOnMouseMove: false,
+      }),
+    ])
+    expect(grid.right).toBe(44)
+  })
+
+  it('adds horizontal data zoom for crowded vertical bar charts', () => {
+    const option = buildCrossSectionOption({
+      chartData: {
+        labels: Array.from({ length: 40 }, (_, index) => `route-${index}`),
+        datasets: [
+          {
+            label: 'requests',
+            rawDimension: 'requests',
+            backgroundColor: '#42a5f5',
+            borderColor: '#42a5f5',
+            data: Array.from({ length: 40 }, (_, index) => index + 1),
+          },
+        ],
+      },
+      chartType: 'vertical_bar',
+      chartWidth: 200,
+      chartHeight: 400,
+      scrollWindow: null,
+      stacked: false,
+      tooltipState: createTooltipState(),
+      tooltipTitle: 'Tooltip title',
+      tooltipMetricDisplay: 'Request count',
+      dimensionAxisTitle: 'Route',
+      metricAxisTitle: 'Request count',
+      selectedLabels: { requests: true },
+      formatValue: (value: number) => `${value} requests`,
+    })
+
+    const dataZoom = option.dataZoom as Array<{
+      type?: string
+      xAxisIndex?: number
+      zoomLock?: boolean
+      startValue?: number
+      endValue?: number
+      zoomOnMouseWheel?: boolean
+      moveOnMouseWheel?: boolean
+      moveOnMouseMove?: boolean
+    }>
+    const grid = option.grid as { bottom: number }
+
+    expect(dataZoom).toEqual([
+      expect.objectContaining({
+        type: 'slider',
+        xAxisIndex: 0,
+        zoomLock: true,
+        startValue: 0,
+        endValue: 6,
+      }),
+      expect.objectContaining({
+        type: 'inside',
+        xAxisIndex: 0,
+        startValue: 0,
+        endValue: 6,
+        zoomOnMouseWheel: false,
+        moveOnMouseWheel: true,
+        moveOnMouseMove: false,
+      }),
+    ])
+    expect(grid.bottom).toBe(52)
+  })
+
+  it('uses a stored scroll window when rebuilding a crowded bar chart', () => {
+    const option = buildCrossSectionOption({
+      chartData: {
+        labels: Array.from({ length: 20 }, (_, index) => `route-${index}`),
+        datasets: [
+          {
+            label: 'requests',
+            rawDimension: 'requests',
+            backgroundColor: '#42a5f5',
+            borderColor: '#42a5f5',
+            data: Array.from({ length: 20 }, (_, index) => index + 1),
+          },
+        ],
+      },
+      chartType: 'horizontal_bar',
+      chartWidth: 640,
+      chartHeight: 200,
+      scrollWindow: { anchorLabel: 'route-5', visibleCategoryCount: 7 },
+      stacked: false,
+      tooltipState: createTooltipState(),
+      tooltipTitle: 'Tooltip title',
+      tooltipMetricDisplay: 'Request count',
+      dimensionAxisTitle: 'Route',
+      metricAxisTitle: 'Request count',
+      selectedLabels: { requests: true },
+      formatValue: (value: number) => `${value} requests`,
+    })
+
+    const dataZoom = option.dataZoom as Array<{ startValue?: number, endValue?: number }>
+
+    expect(dataZoom).toEqual([
+      expect.objectContaining({ startValue: 5, endValue: 11 }),
+      expect.objectContaining({ startValue: 5, endValue: 11 }),
+    ])
+  })
+
+  it('clamps an out-of-range stored window to the current category range', () => {
+    const option = buildCrossSectionOption({
+      chartData: {
+        labels: Array.from({ length: 20 }, (_, index) => `route-${index}`),
+        datasets: [
+          {
+            label: 'requests',
+            rawDimension: 'requests',
+            backgroundColor: '#42a5f5',
+            borderColor: '#42a5f5',
+            data: Array.from({ length: 20 }, (_, index) => index + 1),
+          },
+        ],
+      },
+      chartType: 'horizontal_bar',
+      chartWidth: 640,
+      chartHeight: 200,
+      scrollWindow: { anchorLabel: 'route-18', visibleCategoryCount: 13 },
+      stacked: false,
+      tooltipState: createTooltipState(),
+      tooltipTitle: 'Tooltip title',
+      tooltipMetricDisplay: 'Request count',
+      dimensionAxisTitle: 'Route',
+      metricAxisTitle: 'Request count',
+      selectedLabels: { requests: true },
+      formatValue: (value: number) => `${value} requests`,
+    })
+
+    const dataZoom = option.dataZoom as Array<{ startValue?: number, endValue?: number }>
+
+    expect(dataZoom).toEqual([
+      expect.objectContaining({ startValue: 13, endValue: 19 }),
+      expect.objectContaining({ startValue: 13, endValue: 19 }),
     ])
   })
 })

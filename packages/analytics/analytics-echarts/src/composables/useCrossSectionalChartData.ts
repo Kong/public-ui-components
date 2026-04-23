@@ -151,12 +151,12 @@ export default function useCrossSectionalChartData(
         }))
       }
 
-      if (!STATUS_CODE_DIMENSIONS.includes(primaryDimension as typeof STATUS_CODE_DIMENSIONS[number])) {
-        const sortOrder = new Map(sortedDatasetIds.map((id, i) => [id, i]))
-        const bySortOrder = (a: DatasetLabel, b: DatasetLabel) => (sortOrder.get(a.id) ?? Infinity) - (sortOrder.get(b.id) ?? Infinity)
+      const sortOrder = new Map(sortedDatasetIds.map((id, i) => [id, i]))
+      const bySortOrder = (a: DatasetLabel, b: DatasetLabel) => (sortOrder.get(a.id) ?? Infinity) - (sortOrder.get(b.id) ?? Infinity)
+      const preserveLexicalRowOrder = hasDimensions && STATUS_CODE_DIMENSIONS.includes(primaryDimension as typeof STATUS_CODE_DIMENSIONS[number])
 
+      if (!preserveLexicalRowOrder) {
         rowLabels.sort(bySortOrder)
-        barSegmentLabels.sort(bySortOrder)
       }
 
       const datasets = generateDatasets({
@@ -175,6 +175,10 @@ export default function useCrossSectionalChartData(
           total,
         }
       })
+
+      if (!preserveLexicalRowOrder) {
+        datasets.sort((a, b) => Number(b.total) - Number(a.total))
+      }
 
       const labels = !hasDimensions
         ? metricNames.map(name => translateChartLabel(i18n, name))

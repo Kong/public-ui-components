@@ -12,6 +12,7 @@
       :option="option"
       @brush="emit('brush', $event)"
       @click="emit('click', $event)"
+      @datazoom="emit('datazoom', $event)"
       @zr:click="emit('zr:click', $event)"
       @zr:mousedown="emit('zr:mousedown', $event)"
       @zr:mousemove="emit('zr:mousemove', $event)"
@@ -33,6 +34,8 @@ import {
   TooltipComponent,
   LegendComponent,
   GridComponent,
+  DataZoomComponent,
+  DataZoomInsideComponent,
   BrushComponent,
   ToolboxComponent,
   MarkLineComponent,
@@ -56,6 +59,7 @@ const emit = defineEmits<{
   // ECharts component events
   (e: 'brush', params: any): void
   (e: 'click', params: ECElementEvent): void
+  (e: 'datazoom', params: any): void
   // ZRender events (low-level)
   (e: 'zr:click', event: ElementEvent): void
   (e: 'zr:mousedown', event: ElementEvent): void
@@ -75,6 +79,8 @@ watch(() => renderMode, (newRenderMode) => {
     TooltipComponent,
     LegendComponent,
     GridComponent,
+    DataZoomComponent,
+    DataZoomInsideComponent,
     BrushComponent,
     ToolboxComponent,
     MarkLineComponent,

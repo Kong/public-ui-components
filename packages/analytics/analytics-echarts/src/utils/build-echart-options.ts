@@ -8,6 +8,8 @@ import {
   createTimeseriesTooltipFormatter,
 } from './build-echart-tooltip-formatters'
 import type { ECBasicOption } from 'echarts/types/dist/shared'
+import { resolveChartScrollWindow } from './chart-scroll'
+import type { StoredChartScrollWindow } from './chart-scroll'
 
 const MAX_LABEL_LENGTH = 20
 const BAR_LABEL_MIN_SIZE = 72
@@ -29,6 +31,8 @@ const VERTICAL_BAR_LABEL_MIN_HEIGHT = 80
 const VERTICAL_BAR_LABEL_MIN_WIDTH = 52
 const VERTICAL_BAR_LABEL_WIDTH_RATIO = 0.5
 const VERTICAL_BAR_METRIC_TITLE_GAP = 76
+const DATA_ZOOM_SLIDER_GAP = 8
+const DATA_ZOOM_SLIDER_SIZE = 12
 
 type ResponsiveMediaOptions = {
   maxHeight: ECBasicOption
@@ -46,6 +50,91 @@ const truncateAxisLabel = (label: string) => {
 
 const estimateHorizontalBarLabelWidth = (label: string): number => {
   return Math.max(BAR_LABEL_MIN_SIZE, label.length * HORIZONTAL_BAR_VALUE_LABEL_CHAR_WIDTH)
+}
+
+const buildCrossSectionDataZoom = ({
+  chartType,
+  chartWidth,
+  chartHeight,
+  categoryCount,
+  labels,
+  scrollWindow,
+}: {
+  chartType: 'horizontal_bar' | 'vertical_bar'
+  chartWidth: number
+  chartHeight: number
+  categoryCount: number
+  labels: string[]
+  scrollWindow: StoredChartScrollWindow | null
+}) => {
+  const isHorizontal = chartType === 'horizontal_bar'
+  const { scrollWindow: resolvedScrollWindow } = resolveChartScrollWindow({
+    axisSize: isHorizontal ? chartHeight : chartWidth,
+    labels,
+    scrollWindow,
+  })
+
+  if (!resolvedScrollWindow || categoryCount <= 0) {
+    return {
+      dataZoom: undefined,
+      grid: undefined,
+    }
+  }
+
+  return isHorizontal
+    ? {
+      dataZoom: [{
+        type: 'slider' as const,
+        yAxisIndex: 0,
+        orient: 'vertical' as const,
+        zoomLock: true,
+        startValue: resolvedScrollWindow.startValue,
+        endValue: resolvedScrollWindow.endValue,
+        width: DATA_ZOOM_SLIDER_SIZE,
+        right: DATA_ZOOM_SLIDER_GAP / 2,
+        top: 20,
+        bottom: HORIZONTAL_BAR_GRID_BOTTOM,
+        showDetail: false,
+        brushSelect: false,
+      }, {
+        type: 'inside' as const,
+        yAxisIndex: 0,
+        startValue: resolvedScrollWindow.startValue,
+        endValue: resolvedScrollWindow.endValue,
+        zoomOnMouseWheel: false,
+        moveOnMouseWheel: true,
+        moveOnMouseMove: false,
+      }],
+      grid: {
+        right: 24 + DATA_ZOOM_SLIDER_SIZE + DATA_ZOOM_SLIDER_GAP,
+      },
+    }
+    : {
+      dataZoom: [{
+        type: 'slider' as const,
+        xAxisIndex: 0,
+        zoomLock: true,
+        startValue: resolvedScrollWindow.startValue,
+        endValue: resolvedScrollWindow.endValue,
+        height: DATA_ZOOM_SLIDER_SIZE,
+        bottom: DATA_ZOOM_SLIDER_GAP / 2,
+        left: VERTICAL_BAR_GRID_LEFT,
+        right: 56,
+        showDetail: false,
+        brushSelect: false,
+      }, {
+        type: 'inside' as const,
+        xAxisIndex: 0,
+        startValue: resolvedScrollWindow.startValue,
+        endValue: resolvedScrollWindow.endValue,
+        zoomOnMouseWheel: false,
+        moveOnMouseWheel: true,
+        moveOnMouseMove: false,
+      }],
+      grid: {
+        bottom: VERTICAL_BAR_GRID_BOTTOM + DATA_ZOOM_SLIDER_SIZE + DATA_ZOOM_SLIDER_GAP,
+      },
+    }
 }
 
 const buildResponsiveMediaOptions = ({
@@ -337,6 +426,9 @@ export const buildTimeseriesOption = ({
 export const buildCrossSectionOption = ({
   chartData,
   chartType,
+  chartWidth,
+  chartHeight,
+  scrollWindow,
   stacked,
   tooltipState,
   tooltipTitle,
@@ -349,6 +441,9 @@ export const buildCrossSectionOption = ({
 }: {
   chartData: KChartData
   chartType: 'horizontal_bar' | 'vertical_bar' | 'donut'
+  chartWidth: number
+  chartHeight: number
+  scrollWindow: StoredChartScrollWindow | null
   stacked: boolean
   tooltipState: TooltipState
   tooltipTitle?: string
@@ -416,6 +511,14 @@ export const buildCrossSectionOption = ({
 
   const labels = chartData.labels || []
   const isHorizontal = chartType === 'horizontal_bar'
+  const scrollConfig = buildCrossSectionDataZoom({
+    chartType,
+    chartWidth,
+    chartHeight,
+    categoryCount: labels.length,
+    labels,
+    scrollWindow,
+  })
   const baseGrid = isHorizontal
     ? {
       left: 0,
@@ -431,6 +534,10 @@ export const buildCrossSectionOption = ({
       top: 52,
       containLabel: true,
     }
+  const grid = {
+    ...baseGrid,
+    ...scrollConfig.grid,
+  }
   const selected = Object.fromEntries(chartData.datasets.map(dataset => {
     const label = dataset.label || ''
 
@@ -455,7 +562,8 @@ export const buildCrossSectionOption = ({
       show: false,
       selected,
     },
-    grid: baseGrid,
+    grid,
+    dataZoom: scrollConfig.dataZoom,
     xAxis: isHorizontal
       ? {
         show: true,
@@ -491,6 +599,7 @@ export const buildCrossSectionOption = ({
       ? {
         show: true,
         type: 'category',
+        inverse: true,
         data: labels,
         axisLine: { show: true },
         axisLabel: {
@@ -589,7 +698,7 @@ export const buildCrossSectionOption = ({
       },
       mediumWidth: isHorizontal
         ? {
-          grid: { left: 0, right: 12, top: 20, bottom: 12 },
+          grid: { left: 0, right: 44, top: 20, bottom: 28 },
           xAxis: {
             splitNumber: 4,
           },
@@ -598,14 +707,16 @@ export const buildCrossSectionOption = ({
           },
         }
         : {
-          grid: { bottom: 8, top: 24, left: 12, right: 12 },
+          grid: { bottom: 52, top: 24, left: 12, right: 12 },
           xAxis: { axisLabel: { show: false } },
         },
       smallWidth: isHorizontal
         ? {
           grid: {
-            bottom: 0,
             left: 0,
+            right: 44,
+            top: 20,
+            bottom: 28,
           },
           xAxis: {
             show: false,
@@ -615,7 +726,7 @@ export const buildCrossSectionOption = ({
           },
         }
         : {
-          grid: { bottom: 0, left: 0 },
+          grid: { bottom: 52, left: 0, right: 12 },
           xAxis: { show: false },
           yAxis: { show: false },
         },

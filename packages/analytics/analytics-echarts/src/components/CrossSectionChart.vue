@@ -17,6 +17,7 @@
         :option="option"
         :render-mode="props.renderMode"
         :theme="props.theme"
+        @datazoom="handleDataZoom"
         @zr:click="handleClick"
         @zr:mousemove="handleMouseMove"
         @zr:mouseout="handleMouseOut"
@@ -38,15 +39,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRef } from 'vue'
+import { computed, ref, toRef, watch } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import {
+  createStoredScrollWindow,
   datavisPalette,
   getDimensionAxisTitle,
   getMetricAxisTitle,
   getMetricUnit,
   getTooltipMetricDisplay,
+  normalizeDataZoomWindow,
+  resolveChartScrollWindow,
 } from '../utils'
 import type {
   AnalyticsChartColors,
@@ -54,6 +58,7 @@ import type {
   ChartTooltipSortFn,
   LegendPosition,
 } from '../types'
+import type { StoredChartScrollWindow } from '../utils'
 import AnalyticsChartShell from './AnalyticsChartShell.vue'
 import BaseAnalyticsEcharts from './BaseAnalyticsEcharts.vue'
 import ChartLegend from './ChartLegend.vue'
@@ -105,6 +110,7 @@ const metricUnit = computed(() => getMetricUnit(
 ))
 
 const { selectedLabels, toggleLegendItem } = composables.useChartLabelSelection(chartData)
+const scrollWindow = ref<StoredChartScrollWindow | null>(null)
 
 const {
   chartWidth,
@@ -178,6 +184,9 @@ const tooltipMetricDisplay = computed(() => {
 const { option } = composables.useCrossSectionalChartOption({
   chartData,
   chartType: toRef(props, 'type'),
+  chartWidth,
+  chartHeight,
+  scrollWindow,
   stacked: toRef(props, 'stacked'),
   metricUnit,
   tooltipTitle: toRef(props, 'tooltipTitle'),
@@ -204,6 +213,41 @@ const handleClick = () => {
 const handleMouseOut = () => {
   handleTooltipMouseOut()
 }
+
+const handleDataZoom = (payload: {
+  startValue?: number | string
+  endValue?: number | string
+  batch?: Array<{ startValue?: number | string, endValue?: number | string }>
+}) => {
+  const nextWindow = normalizeDataZoomWindow(payload)
+
+  if (nextWindow) {
+    scrollWindow.value = createStoredScrollWindow({
+      labels: chartData.value.labels || [],
+      scrollWindow: nextWindow,
+    })
+  }
+}
+
+watch([
+  () => props.type,
+  chartWidth,
+  chartHeight,
+], ([chartType, width, height]) => {
+  if (chartType === 'donut') {
+    scrollWindow.value = null
+
+    return
+  }
+
+  const { storedScrollWindow } = resolveChartScrollWindow({
+    axisSize: chartType === 'horizontal_bar' ? height : width,
+    labels: chartData.value.labels || [],
+    scrollWindow: scrollWindow.value,
+  })
+
+  scrollWindow.value = storedScrollWindow
+}, { immediate: true })
 
 
 </script>
