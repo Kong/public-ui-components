@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.21.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.24...@kong-ui-public/entities-routes@3.21.25) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3167](https://github.com/Kong/public-ui-components/issues/3167)) ([acaa6a4](https://github.com/Kong/public-ui-components/commit/acaa6a433a5fdf0cdabe20ee6d0948890e19bdd4))
+* **deps:** update dependency @kong/icons to ^1.52.0 ([#3168](https://github.com/Kong/public-ui-components/issues/3168)) ([bb53126](https://github.com/Kong/public-ui-components/commit/bb531267d6a9f37998ef164995ca590a980be807))
+
+
+
+
+
+## [3.21.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.23...@kong-ui-public/entities-routes@3.21.24) (2026-04-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
 ## [3.21.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.22...@kong-ui-public/entities-routes@3.21.23) (2026-04-22)
 
 

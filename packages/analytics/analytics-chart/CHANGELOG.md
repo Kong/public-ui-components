@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.15.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.15.7...@kong-ui-public/analytics-chart@10.15.8) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.52.0 ([#3168](https://github.com/Kong/public-ui-components/issues/3168)) ([bb53126](https://github.com/Kong/public-ui-components/commit/bb531267d6a9f37998ef164995ca590a980be807))
+
+
+
+
+
+## [10.15.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.15.6...@kong-ui-public/analytics-chart@10.15.7) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency uuid to v14 [security] ([#3166](https://github.com/Kong/public-ui-components/issues/3166)) ([2f787f0](https://github.com/Kong/public-ui-components/commit/2f787f0ef80b9df102ed3556a77f0088eeab4d99))
+
+
+
+
+
 ## [10.15.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.15.5...@kong-ui-public/analytics-chart@10.15.6) (2026-04-22)
 
 

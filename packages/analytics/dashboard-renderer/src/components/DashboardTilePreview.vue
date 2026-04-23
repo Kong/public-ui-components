@@ -56,10 +56,12 @@ const {
   context,
   definition,
   globalFilters = [],
+  preview = false,
 } = defineProps<{
   context: DashboardRendererContext
   definition: TileDefinition
   globalFilters?: AllFilters[]
+  preview?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -84,7 +86,7 @@ const { i18n } = composables.useI18n()
 const { internalContext, queryReady } = composables.useDashboardInternalContext({
   globalFilters: toRef(() => globalFilters),
   context: toRef(() => context),
-  preview: computed(() => true),
+  preview: computed(() => preview),
 })
 
 const chartNotConfigured = computed(() => {

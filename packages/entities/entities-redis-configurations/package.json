@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-redis-configurations",
-  "version": "1.14.22",
+  "version": "1.14.24",
   "type": "module",
   "main": "./dist/entities-redis-configurations.umd.js",
   "module": "./dist/entities-redis-configurations.es.js",
@@ -44,10 +44,10 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.20.0",
-    "@kong/icons": "^1.51.0",
+    "@kong/icons": "^1.52.0",
     "@kong/kongponents": "9.52.5",
     "@types/uuid": "^11.0.0",
-    "axios": "^1.15.0",
+    "axios": "^1.15.1",
     "swrv": "^1.2.0",
     "vue": "^3.5.32",
     "vue-router": "^4.6.4"
@@ -74,9 +74,9 @@
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.51.0",
+    "@kong/icons": "^1.52.0",
     "@kong/kongponents": "9.52.5",
-    "axios": "^1.15.0",
+    "axios": "^1.15.1",
     "swrv": "^1.2.0",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.6.4"
@@ -84,6 +84,6 @@
   "dependencies": {
     "@kong-ui-public/entities-plugins-icon": "workspace:^",
     "lodash-es": ">=4.18.0",
-    "uuid": "^11.1.0"
+    "uuid": "^14.0.0"
   }
 }

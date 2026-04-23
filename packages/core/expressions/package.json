@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/expressions",
-  "version": "1.4.21",
+  "version": "1.4.23",
   "type": "module",
   "module": "./dist/expressions.es.js",
   "types": "dist/types/index.d.ts",
@@ -74,7 +74,7 @@
     "@kong-ui-public/core": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.51.0",
-    "uuid": "^11.1.0"
+    "@kong/icons": "^1.52.0",
+    "uuid": "^14.0.0"
   }
 }

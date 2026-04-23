@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.9.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.39...@kong-ui-public/dashboard-renderer@8.9.40) (2026-04-23)
+
+
+### Bug Fixes
+
+* explore allows zooming actions again ([#3175](https://github.com/Kong/public-ui-components/issues/3175)) ([14418cd](https://github.com/Kong/public-ui-components/commit/14418cdd6090d864b4a05f6058b9e92ce263c14c))
+
+
+
+
+
+## [8.9.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.38...@kong-ui-public/dashboard-renderer@8.9.39) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.52.0 ([#3168](https://github.com/Kong/public-ui-components/issues/3168)) ([bb53126](https://github.com/Kong/public-ui-components/commit/bb531267d6a9f37998ef164995ca590a980be807))
+
+
+
+
+
+## [8.9.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.37...@kong-ui-public/dashboard-renderer@8.9.38) (2026-04-23)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.36...@kong-ui-public/dashboard-renderer@8.9.37) (2026-04-22)
+
+
+### Bug Fixes
+
+* preview should default to false for dashboard tile preview ([#3165](https://github.com/Kong/public-ui-components/issues/3165)) ([f914726](https://github.com/Kong/public-ui-components/commit/f914726557c935004c5b393e0497f75d70bc894a))
+
+
+
+
+
 ## [8.9.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.35...@kong-ui-public/dashboard-renderer@8.9.36) (2026-04-22)
 
 

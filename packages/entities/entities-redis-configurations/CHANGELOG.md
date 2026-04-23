@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.14.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.23...@kong-ui-public/entities-redis-configurations@1.14.24) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3167](https://github.com/Kong/public-ui-components/issues/3167)) ([acaa6a4](https://github.com/Kong/public-ui-components/commit/acaa6a433a5fdf0cdabe20ee6d0948890e19bdd4))
+* **deps:** update dependency @kong/icons to ^1.52.0 ([#3168](https://github.com/Kong/public-ui-components/issues/3168)) ([bb53126](https://github.com/Kong/public-ui-components/commit/bb531267d6a9f37998ef164995ca590a980be807))
+
+
+
+
+
+## [1.14.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.22...@kong-ui-public/entities-redis-configurations@1.14.23) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency uuid to v14 [security] ([#3166](https://github.com/Kong/public-ui-components/issues/3166)) ([2f787f0](https://github.com/Kong/public-ui-components/commit/2f787f0ef80b9df102ed3556a77f0088eeab4d99))
+
+
+
+
+
 ## [1.14.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.21...@kong-ui-public/entities-redis-configurations@1.14.22) (2026-04-22)
 
 
