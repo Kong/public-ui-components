@@ -91,11 +91,12 @@ export default function useExploreResultToDatasets(
       const dimensionFieldNames = (hasDimensions && dimensionKeys) || metricNames
       const primaryDimension = dimensionFieldNames[0]
       const secondaryDimension = dimensionFieldNames.length > 1 ? dimensionFieldNames[1] : dimensionFieldNames[0]
+      const getPrimaryDimensionId = (record: AnalyticsExploreRecord) => String(record.event[primaryDimension])
 
       const pivotRecords = isMultiMetric
         ? Object.fromEntries(records.flatMap(record => {
           return metricNames.map((metric, index) => {
-            const dimensionValue = record.event[primaryDimension]
+            const dimensionValue = getPrimaryDimensionId(record)
             const label = hasDimensions ? `${dimensionValue},${metric}` : `${index},${metric}`
             const value = Number(record.event[metric]) || 0
 
@@ -110,9 +111,11 @@ export default function useExploreResultToDatasets(
           return [label, Number(record.event[metricNames[0]]) || 0]
         }))
 
-      const aggregatedPivotRecords = Object.keys(pivotRecords).reduce((acc, key) => {
-        const [row] = key.split(',')
-        const pivotEntry = pivotRecords[key] as number
+      const aggregatedPivotRecords = records.reduce((acc, record) => {
+        const row = getPrimaryDimensionId(record)
+        const pivotEntry = isMultiMetric
+          ? metricNames.reduce((sum, metric) => sum + (Number(record.event[metric]) || 0), 0)
+          : Number(record.event[metricNames[0]]) || 0
 
         acc[row] = (acc[row] || 0) + pivotEntry
 

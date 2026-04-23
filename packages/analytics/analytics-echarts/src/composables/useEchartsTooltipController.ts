@@ -69,6 +69,10 @@ export default function useEchartsTooltipController(options: UseEchartsTooltipCo
   }
 
   const handleTooltipMouseOut = () => {
+    if (tooltipState.value.interactionMode === 'selecting-chart-area') {
+      return
+    }
+
     if (!isInteractive.value) {
       tooltipState.value.visible = false
       resetAnchor()

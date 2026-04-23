@@ -63,17 +63,17 @@ export default function useBrushZoom(options: UseBrushZoomOptions) {
       })
 
       dragStartX.value = xValFromPixel(e)
-      if (dragStartX.value) {
+      if (dragStartX.value !== undefined) {
         setBrush(dragStartX.value, dragStartX.value)
       }
     }, 150)
   }
 
   const handleMouseMove = (e: ElementEvent) => {
-    if (!isSelecting.value || !dragStartX.value) return
+    if (!isSelecting.value || dragStartX.value === undefined) return
 
     const xNow = xValFromPixel(e)
-    if (xNow) {
+    if (xNow !== undefined) {
       setBrush(dragStartX.value, xNow)
     }
   }
@@ -84,7 +84,7 @@ export default function useBrushZoom(options: UseBrushZoomOptions) {
 
     isSelecting.value = false
     const xEnd = xValFromPixel(e)
-    if (xEnd && dragStartX.value) {
+    if (xEnd !== undefined && dragStartX.value !== undefined) {
       setBrush(dragStartX.value, xEnd)
     }
 

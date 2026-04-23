@@ -101,4 +101,26 @@ describe('useEchartsTooltipController', () => {
     controller.setInteractionMode('zoom-interactive')
     expect(controller.isInteractive.value).toBe(true)
   })
+
+  it('keeps following the pointer while selecting-chart-area is active but does not hide on mouseout', () => {
+    const controller = useEchartsTooltipController({
+      chartWidth: ref(200),
+      chartHeight: ref(100),
+      containerTop: ref(10),
+      containerLeft: ref(20),
+      tooltipWidth: ref(30),
+      tooltipHeight: ref(20),
+    })
+
+    controller.handleTooltipMouseMove(createEvent({ offsetX: 40, offsetY: 20 }))
+    controller.tooltipState.value.visible = true
+    controller.setInteractionMode('selecting-chart-area')
+
+    controller.handleTooltipMouseMove(createEvent({ offsetX: 150, offsetY: 80 }))
+    controller.handleTooltipMouseOut()
+
+    expect(controller.tooltipState.value.left).toBe(100)
+    expect(controller.tooltipState.value.top).toBe(30)
+    expect(controller.tooltipState.value.visible).toBe(true)
+  })
 })

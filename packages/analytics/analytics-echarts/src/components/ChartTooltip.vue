@@ -77,7 +77,7 @@ import type { AbsoluteTimeRangeV4, GranularityValues } from '@kong-ui-public/ana
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { DragIcon } from '@kong/icons'
 import { useElementSize, useDraggable } from '@vueuse/core'
-import { computed, useTemplateRef, watch } from 'vue'
+import { computed, onUnmounted, useTemplateRef, watch } from 'vue'
 import { isTooltipInteractive } from '../utils'
 import type { TooltipState } from '../types'
 import ZoomActions, { type ZoomActionItem } from './ZoomActions.vue'
@@ -129,6 +129,10 @@ watch(isDragging, (dragging) => {
   } else {
     document.body.classList.remove('no-select')
   }
+})
+
+onUnmounted(() => {
+  document.body.classList.remove('no-select')
 })
 
 defineExpose({
