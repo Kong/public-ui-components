@@ -1022,6 +1022,7 @@ describe('<DashboardRenderer />', () => {
         editable: true,
       },
       modelValue: fourByFourDashboardConfigJustCharts,
+      onTileTimeRangeZoom: () => {},
       preview: true,
     }
 
@@ -1039,6 +1040,42 @@ describe('<DashboardRenderer />', () => {
       expect(tile.exists()).to.eq(true)
       expect(context.editable).to.eq(false)
       expect(context.zoomable).to.eq(false)
+      expect(tile.props('hideZoomActions')).to.eq(true)
+      expect(tile.props('hideActions')).to.eq(true)
+    })
+  })
+
+  it('without preview mode normal defaults are set', () => {
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '15m',
+        },
+        editable: true,
+      },
+      modelValue: fourByFourDashboardConfigJustCharts,
+      onTileTimeRangeZoom: () => {},
+      preview: false,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    }).then(({ wrapper }) => {
+      const tile = wrapper.findComponent(DashboardTile)
+      const context = tile.props('context') as { editable: boolean, zoomable: boolean }
+
+      expect(tile.exists()).to.eq(true)
+      expect(context.editable).to.eq(true)
+      expect(context.zoomable).to.eq(true)
+      expect(tile.props('hideZoomActions')).to.eq(false)
+      expect(tile.props('hideActions')).to.eq(false)
     })
   })
 
