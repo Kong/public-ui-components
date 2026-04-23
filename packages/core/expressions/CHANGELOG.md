@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.4.21...@kong-ui-public/expressions@1.4.22) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency uuid to v14 [security] ([#3166](https://github.com/Kong/public-ui-components/issues/3166)) ([2f787f0](https://github.com/Kong/public-ui-components/commit/2f787f0ef80b9df102ed3556a77f0088eeab4d99))
+
+
+
+
+
 ## [1.4.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.4.20...@kong-ui-public/expressions@1.4.21) (2026-04-22)
 
 
