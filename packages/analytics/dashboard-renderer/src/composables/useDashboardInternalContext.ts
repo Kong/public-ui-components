@@ -104,7 +104,8 @@ export default function useDashboardInternalContext({
       timeSpec: timeSpec.value,
       refreshInterval,
       editable,
-      showTileActions,
+      showTileActions: showTileActions && !preview.value,
+      showTileZoomActions: !preview.value,
       zoomable,
     }
   })
