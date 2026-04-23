@@ -75,6 +75,6 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.51.0",
-    "uuid": "^11.1.0"
+    "uuid": "^14.0.0"
   }
 }

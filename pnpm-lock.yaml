@@ -161,8 +161,8 @@ importers:
         specifier: ~5.9.3
         version: 5.9.3
       uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
+        specifier: ^14.0.0
+        version: 14.0.0
       vite:
         specifier: ^5.4.21
         version: 5.4.21(@types/node@24.12.2)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1)
@@ -230,8 +230,8 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(date-fns@4.1.0)
       uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
+        specifier: ^14.0.0
+        version: 14.0.0
       vue-chartjs:
         specifier: ^5.3.3
         version: 5.3.3(chart.js@4.5.1)(vue@3.5.32(typescript@5.9.3))
@@ -598,8 +598,8 @@ importers:
         specifier: ^1.51.0
         version: 1.51.0(vue@3.5.32(typescript@5.9.3))
       uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
+        specifier: ^14.0.0
+        version: 14.0.0
     devDependencies:
       '@kong/atc-router':
         specifier: 1.6.0-rc.1
@@ -1160,8 +1160,8 @@ importers:
         specifier: '>=4.18.0'
         version: 4.18.1
       uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
+        specifier: ^14.0.0
+        version: 14.0.0
     devDependencies:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
@@ -1399,8 +1399,8 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
       uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
+        specifier: ^14.0.0
+        version: 14.0.0
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -10301,6 +10301,10 @@ packages:
     resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
     hasBin: true
 
+  uuid@14.0.0:
+    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
+    hasBin: true
+
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
@@ -13710,7 +13714,7 @@ snapshots:
 
   '@types/uuid@11.0.0':
     dependencies:
-      uuid: 11.1.0
+      uuid: 14.0.0
 
   '@types/web-bluetooth@0.0.20': {}
 
@@ -21106,6 +21110,8 @@ snapshots:
   uuid@10.0.0: {}
 
   uuid@11.1.0: {}
+
+  uuid@14.0.0: {}
 
   uuid@8.3.2: {}
 

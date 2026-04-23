@@ -57,7 +57,7 @@
     "@kong-ui-public/swagger-ui-web-component": "workspace:^0.12.20",
     "@kong/icons": "^1.51.0",
     "lodash.clonedeep": "^4.5.0",
-    "uuid": "^11.1.0"
+    "uuid": "^14.0.0"
   },
   "repository": {
     "type": "git",
