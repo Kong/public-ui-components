@@ -292,7 +292,7 @@ import type {
   Threshold,
   TooltipEntry,
 } from '../src'
-import { resolveCrossSectionViewportState } from '../src/utils'
+import { resolveChartScrollWindow, shouldHideAnnotationsForBreakpoint } from '../src/utils'
 import CodeText from './CodeText.vue'
 
 type SupportedChartTypes =
@@ -493,13 +493,20 @@ const crossSectionAnnotationState = computed(() => {
     return null
   }
 
-  return resolveCrossSectionViewportState({
-    chartType: chartType.value,
-    chartWidth: chartFrameWidth.value,
-    chartHeight: chartFrameHeight.value,
-    labels: sandboxCrossSectionChartData.value.labels || [],
+  const scrollWindow = resolveChartScrollWindow({
+    axisSize: chartType.value === 'horizontal_bar' ? chartFrameHeight.value : chartFrameWidth.value,
+    categoryCount: sandboxCrossSectionChartData.value.labels?.length || 0,
     scrollWindow: null,
   })
+  const annotationsHiddenByBreakpoint = shouldHideAnnotationsForBreakpoint({
+    chartWidth: chartFrameWidth.value,
+    chartHeight: chartFrameHeight.value,
+  })
+
+  return {
+    annotationsSuppressed: annotationsHiddenByBreakpoint || scrollWindow !== null,
+    isScrollable: scrollWindow !== null,
+  }
 })
 const annotationStatusMessage = computed(() => {
   if (!crossSectionAnnotationState.value) {

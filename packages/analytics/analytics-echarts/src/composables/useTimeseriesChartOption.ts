@@ -64,13 +64,8 @@ export default function useTimeseriesChartOption({
         formatValue: (value: number) => formatUnit(value, metricUnit.value, { translateUnit }),
         thresholdLabelFormatter: (currentThreshold: Threshold) => {
           const key = `chartLabels.threshold-${currentThreshold.type}`
-          const fallbackKey = currentThreshold.type === 'neutral'
-            ? 'chartLabels.threshold-neutral'
-            : key
 
-          return (i18n as any).te(key)
-            ? (i18n as any).t(key, { value: String(currentThreshold.value) })
-            : (i18n as any).t(fallbackKey, { value: String(currentThreshold.value) })
+          return (i18n as any).t(key, { value: String(currentThreshold.value) })
         },
         chartTooltipSortFn: chartTooltipSortFn?.value,
       })

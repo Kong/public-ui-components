@@ -1,6 +1,6 @@
 import type { ExploreAggregations, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import type { SeriesOption } from 'echarts'
-import type { ChartTooltipSortFn, KChartData, Threshold, TooltipState } from '../types'
+import type { ChartScrollWindow, ChartTooltipSortFn, KChartData, Threshold, TooltipState } from '../types'
 import { formatChartTicksByGranularity, thresholdColor } from '../utils'
 import {
   createCrossSectionBarTooltipFormatter,
@@ -8,8 +8,7 @@ import {
   createTimeseriesTooltipFormatter,
 } from './build-echart-tooltip-formatters'
 import type { ECBasicOption } from 'echarts/types/dist/shared'
-import { resolveChartScrollWindow, resolveCrossSectionViewportState } from './chart-scroll'
-import type { StoredChartScrollWindow } from './chart-scroll'
+import { resolveChartScrollWindow, shouldHideAnnotationsForBreakpoint } from './chart-scroll'
 
 const MAX_LABEL_LENGTH = 20
 const BAR_LABEL_MIN_SIZE = 72
@@ -33,6 +32,7 @@ const VERTICAL_BAR_LABEL_WIDTH_RATIO = 0.5
 const VERTICAL_BAR_METRIC_TITLE_GAP = 76
 const DATA_ZOOM_SLIDER_GAP = 8
 const DATA_ZOOM_SLIDER_SIZE = 12
+const DATA_ZOOM_SLIDER_SHOW_DATA_SHADOW = false
 
 type ResponsiveMediaOptions = {
   maxHeight: ECBasicOption
@@ -54,27 +54,16 @@ const estimateHorizontalBarLabelWidth = (label: string): number => {
 
 const buildCrossSectionDataZoom = ({
   chartType,
-  chartWidth,
-  chartHeight,
   categoryCount,
-  labels,
   scrollWindow,
 }: {
   chartType: 'horizontal_bar' | 'vertical_bar'
-  chartWidth: number
-  chartHeight: number
   categoryCount: number
-  labels: string[]
-  scrollWindow: StoredChartScrollWindow | null
+  scrollWindow: ChartScrollWindow | null
 }) => {
   const isHorizontal = chartType === 'horizontal_bar'
-  const { scrollWindow: resolvedScrollWindow } = resolveChartScrollWindow({
-    axisSize: isHorizontal ? chartHeight : chartWidth,
-    labels,
-    scrollWindow,
-  })
 
-  if (!resolvedScrollWindow || categoryCount <= 0) {
+  if (!scrollWindow || categoryCount <= 0) {
     return {
       dataZoom: undefined,
       grid: undefined,
@@ -87,20 +76,20 @@ const buildCrossSectionDataZoom = ({
         type: 'slider' as const,
         yAxisIndex: 0,
         orient: 'vertical' as const,
-        zoomLock: true,
-        startValue: resolvedScrollWindow.startValue,
-        endValue: resolvedScrollWindow.endValue,
+        startValue: scrollWindow.startValue,
+        endValue: scrollWindow.endValue,
         width: DATA_ZOOM_SLIDER_SIZE,
         right: DATA_ZOOM_SLIDER_GAP / 2,
         top: 20,
         bottom: HORIZONTAL_BAR_GRID_BOTTOM,
         showDetail: false,
         brushSelect: false,
+        showDataShadow: DATA_ZOOM_SLIDER_SHOW_DATA_SHADOW,
       }, {
         type: 'inside' as const,
         yAxisIndex: 0,
-        startValue: resolvedScrollWindow.startValue,
-        endValue: resolvedScrollWindow.endValue,
+        startValue: scrollWindow.startValue,
+        endValue: scrollWindow.endValue,
         zoomOnMouseWheel: false,
         moveOnMouseWheel: true,
         moveOnMouseMove: false,
@@ -113,20 +102,20 @@ const buildCrossSectionDataZoom = ({
       dataZoom: [{
         type: 'slider' as const,
         xAxisIndex: 0,
-        zoomLock: true,
-        startValue: resolvedScrollWindow.startValue,
-        endValue: resolvedScrollWindow.endValue,
+        startValue: scrollWindow.startValue,
+        endValue: scrollWindow.endValue,
         height: DATA_ZOOM_SLIDER_SIZE,
         bottom: DATA_ZOOM_SLIDER_GAP / 2,
         left: VERTICAL_BAR_GRID_LEFT,
         right: 56,
         showDetail: false,
         brushSelect: false,
+        showDataShadow: DATA_ZOOM_SLIDER_SHOW_DATA_SHADOW,
       }, {
         type: 'inside' as const,
         xAxisIndex: 0,
-        startValue: resolvedScrollWindow.startValue,
-        endValue: resolvedScrollWindow.endValue,
+        startValue: scrollWindow.startValue,
+        endValue: scrollWindow.endValue,
         zoomOnMouseWheel: false,
         moveOnMouseWheel: true,
         moveOnMouseMove: false,
@@ -444,7 +433,7 @@ export const buildCrossSectionOption = ({
   chartType: 'horizontal_bar' | 'vertical_bar' | 'donut'
   chartWidth: number
   chartHeight: number
-  scrollWindow: StoredChartScrollWindow | null
+  scrollWindow: ChartScrollWindow | null
   showAnnotations: boolean
   stacked: boolean
   tooltipState: TooltipState
@@ -513,20 +502,19 @@ export const buildCrossSectionOption = ({
 
   const labels = chartData.labels || []
   const isHorizontal = chartType === 'horizontal_bar'
-  const viewportState = resolveCrossSectionViewportState({
-    chartType,
-    chartWidth,
-    chartHeight,
-    labels,
+  const resolvedScrollWindow = resolveChartScrollWindow({
+    axisSize: isHorizontal ? chartHeight : chartWidth,
+    categoryCount: labels.length,
     scrollWindow,
   })
-  const scrollConfig = buildCrossSectionDataZoom({
-    chartType,
+  const annotationsSuppressed = shouldHideAnnotationsForBreakpoint({
     chartWidth,
     chartHeight,
+  }) || resolvedScrollWindow !== null
+  const scrollConfig = buildCrossSectionDataZoom({
+    chartType,
     categoryCount: labels.length,
-    labels,
-    scrollWindow,
+    scrollWindow: resolvedScrollWindow,
   })
   const baseGrid = isHorizontal
     ? {
@@ -647,7 +635,7 @@ export const buildCrossSectionOption = ({
       },
       stack: stacked ? 'total' : undefined,
       label: {
-        show: showAnnotations && !viewportState.annotationsSuppressed,
+        show: showAnnotations && !annotationsSuppressed,
         position: stacked ? (isHorizontal ? 'insideRight' : 'insideTop') : (isHorizontal ? 'right' : 'top'),
         distance: isHorizontal ? 8 : 10,
         align: isHorizontal ? 'right' : undefined,
@@ -667,7 +655,7 @@ export const buildCrossSectionOption = ({
         rect?: { width?: number, height?: number }
         dataIndex?: number
       }) => {
-        if (!showAnnotations || viewportState.annotationsSuppressed) {
+        if (!showAnnotations || annotationsSuppressed) {
           return { hide: true }
         }
 

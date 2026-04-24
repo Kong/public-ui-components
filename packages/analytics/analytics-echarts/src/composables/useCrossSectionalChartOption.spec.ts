@@ -54,7 +54,7 @@ describe('useCrossSectionalChartOption', () => {
       chartType: ref('horizontal_bar'),
       chartWidth: ref(640),
       chartHeight: ref(200),
-      scrollWindow: ref({ anchorLabel: '4', visibleCategoryCount: 7 }),
+      scrollWindow: ref({ startValue: 4, endValue: 10 }),
       showAnnotations: ref(true),
       stacked: ref(false),
       metricUnit: ref('count'),
@@ -68,13 +68,21 @@ describe('useCrossSectionalChartOption', () => {
       }),
     })
 
-    const dataZoom = option.value.dataZoom as Array<{ yAxisIndex?: number, zoomLock?: boolean, startValue?: number, type?: string }>
+    const dataZoom = option.value.dataZoom as Array<{
+      yAxisIndex?: number
+      zoomLock?: boolean
+      brushSelect?: boolean
+      startValue?: number
+      type?: string
+      showDataShadow?: boolean
+    }>
 
     expect(dataZoom).toEqual([
       expect.objectContaining({
         type: 'slider',
         yAxisIndex: 0,
-        zoomLock: true,
+        brushSelect: false,
+        showDataShadow: false,
         startValue: 4,
       }),
       expect.objectContaining({
@@ -83,9 +91,10 @@ describe('useCrossSectionalChartOption', () => {
         startValue: 4,
       }),
     ])
+    expect(dataZoom[0]).not.toHaveProperty('zoomLock')
   })
 
-  it('preserves the same visible category after data reorder', () => {
+  it('preserves the seeded scroll window through option recomputes', () => {
     const exploreResult = ref({
       meta: {
         metric_names: ['request_count'],
@@ -107,24 +116,24 @@ describe('useCrossSectionalChartOption', () => {
     })
 
     const chartData = useCrossSectionalChartData({}, exploreResult)
-    const scrollWindow = ref({ anchorLabel: 'Beta', visibleCategoryCount: 2 })
+    const tooltipState = ref({
+      interactionMode: 'idle',
+      entries: [],
+      visible: false,
+      top: 0,
+      left: 0,
+    })
     const { option } = useCrossSectionalChartOption({
       chartData,
       chartType: ref('horizontal_bar'),
       chartWidth: ref(640),
       chartHeight: ref(52),
-      scrollWindow,
+      scrollWindow: ref({ startValue: 1, endValue: 2 }),
       showAnnotations: ref(true),
       stacked: ref(false),
       metricUnit: ref('count'),
       selectedLabels: ref(Object.fromEntries(chartData.value.datasets.map((dataset) => [dataset.label || '', true]))),
-      tooltipState: ref({
-        interactionMode: 'idle',
-        entries: [],
-        visible: false,
-        top: 0,
-        left: 0,
-      }),
+      tooltipState,
     })
 
     expect((option.value.dataZoom as Array<{ startValue: number, endValue: number }>)[0]).toEqual(expect.objectContaining({
@@ -132,20 +141,17 @@ describe('useCrossSectionalChartOption', () => {
       endValue: 2,
     }))
 
-    exploreResult.value = {
-      ...exploreResult.value,
-      data: [
-        { event: { route: 'delta', request_count: 100 } },
-        { event: { route: 'alpha', request_count: 40 } },
-        { event: { route: 'beta', request_count: 30 } },
-        { event: { route: 'gamma', request_count: 20 } },
-      ],
+    tooltipState.value = {
+      interactionMode: 'interactive',
+      entries: [],
+      visible: true,
+      top: 10,
+      left: 20,
     }
 
-    expect(chartData.value.labels).toEqual(['Delta', 'Alpha', 'Beta', 'Gamma'])
     expect((option.value.dataZoom as Array<{ startValue: number, endValue: number }>)[0]).toEqual(expect.objectContaining({
-      startValue: 2,
-      endValue: 3,
+      startValue: 1,
+      endValue: 2,
     }))
   })
 

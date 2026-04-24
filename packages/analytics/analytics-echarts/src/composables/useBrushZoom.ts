@@ -108,7 +108,7 @@ export default function useBrushZoom(options: UseBrushZoomOptions) {
   }
 
   onUnmounted(() => {
-    if (dragTimeout.value) {
+    if (dragTimeout.value !== undefined) {
       clearTimeout(dragTimeout.value)
     }
   })

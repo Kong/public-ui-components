@@ -68,25 +68,23 @@ const emit = defineEmits<{
   (e: 'zr:mouseup', event: ElementEvent): void
 }>()
 
-watch(() => renderMode, (newRenderMode) => {
-  use([
-    ...(newRenderMode === 'canvas' ? [CanvasRenderer] : []),
-    ...(newRenderMode === 'svg' ? [SVGRenderer] : []),
-    LineChart,
-    BarChart,
-    PieChart,
-    TitleComponent,
-    TooltipComponent,
-    LegendComponent,
-    GridComponent,
-    DataZoomComponent,
-    DataZoomInsideComponent,
-    BrushComponent,
-    ToolboxComponent,
-    MarkLineComponent,
-    MarkAreaComponent,
-  ])
-}, { immediate: true })
+use([
+  SVGRenderer,
+  CanvasRenderer,
+  LineChart,
+  BarChart,
+  PieChart,
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent,
+  DataZoomComponent,
+  DataZoomInsideComponent,
+  BrushComponent,
+  ToolboxComponent,
+  MarkLineComponent,
+  MarkAreaComponent,
+])
 
 provide(THEME_KEY, toRef(() => theme))
 
@@ -110,7 +108,7 @@ const autoresizeOptions = {
 
 watch(() => option, (newOption) => {
   applyOption(newOption)
-}, { deep: true })
+})
 
 type ExposedChart = {
   $el?: HTMLElement

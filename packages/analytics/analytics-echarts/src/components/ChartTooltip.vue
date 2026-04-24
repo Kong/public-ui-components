@@ -2,7 +2,7 @@
   <Teleport to="body">
     <div
       v-if="state.visible"
-      ref="toolip"
+      ref="tooltip"
       class="chart-tooltip"
       :class="{ locked: isInteractive }"
       :style="{
@@ -99,7 +99,7 @@ const emit = defineEmits<{
   (e: 'onAction'): void
 }>()
 
-const tooltipRef = useTemplateRef('toolip')
+const tooltipRef = useTemplateRef('tooltip')
 const { width, height } = useElementSize(tooltipRef)
 const { x: dragX, y: dragY, isDragging } = useDraggable(tooltipRef, {
   initialValue: {

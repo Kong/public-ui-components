@@ -341,8 +341,8 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       chartWidth: 200,
       chartHeight: 400,
       scrollWindow: {
-        anchorLabel: 'Route 4',
-        visibleCategoryCount: 7,
+        startValue: 4,
+        endValue: 10,
       },
       showAnnotations: true,
       stacked: false,
@@ -631,11 +631,13 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       yAxisIndex?: number
       zoomLock?: boolean
       orient?: string
+      brushSelect?: boolean
       startValue?: number
       endValue?: number
       zoomOnMouseWheel?: boolean
       moveOnMouseWheel?: boolean
       moveOnMouseMove?: boolean
+      showDataShadow?: boolean
     }>
     const grid = option.grid as { right: number }
 
@@ -643,8 +645,9 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       expect.objectContaining({
         type: 'slider',
         yAxisIndex: 0,
-        zoomLock: true,
         orient: 'vertical',
+        brushSelect: false,
+        showDataShadow: false,
         startValue: 0,
         endValue: 6,
       }),
@@ -658,6 +661,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
         moveOnMouseMove: false,
       }),
     ])
+    expect(dataZoom[0]).not.toHaveProperty('zoomLock')
     expect(grid.right).toBe(44)
   })
 
@@ -694,11 +698,13 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       type?: string
       xAxisIndex?: number
       zoomLock?: boolean
+      brushSelect?: boolean
       startValue?: number
       endValue?: number
       zoomOnMouseWheel?: boolean
       moveOnMouseWheel?: boolean
       moveOnMouseMove?: boolean
+      showDataShadow?: boolean
     }>
     const grid = option.grid as { bottom: number }
 
@@ -706,7 +712,8 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       expect.objectContaining({
         type: 'slider',
         xAxisIndex: 0,
-        zoomLock: true,
+        brushSelect: false,
+        showDataShadow: false,
         startValue: 0,
         endValue: 6,
       }),
@@ -720,10 +727,11 @@ describe('buildCrossSectionOption tooltip formatter', () => {
         moveOnMouseMove: false,
       }),
     ])
+    expect(dataZoom[0]).not.toHaveProperty('zoomLock')
     expect(grid.bottom).toBe(52)
   })
 
-  it('uses a stored scroll window when rebuilding a crowded bar chart', () => {
+  it('uses a seeded scroll window when rebuilding a crowded bar chart', () => {
     const option = buildCrossSectionOption({
       chartData: {
         labels: Array.from({ length: 20 }, (_, index) => `route-${index}`),
@@ -740,7 +748,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       chartType: 'horizontal_bar',
       chartWidth: 640,
       chartHeight: 200,
-      scrollWindow: { anchorLabel: 'route-5', visibleCategoryCount: 7 },
+      scrollWindow: { startValue: 5, endValue: 11 },
       showAnnotations: true,
       stacked: false,
       tooltipState: createTooltipState(),
@@ -760,7 +768,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
     ])
   })
 
-  it('clamps an out-of-range stored window to the current category range', () => {
+  it('clamps an out-of-range seeded window to the current category range', () => {
     const option = buildCrossSectionOption({
       chartData: {
         labels: Array.from({ length: 20 }, (_, index) => `route-${index}`),
@@ -777,7 +785,7 @@ describe('buildCrossSectionOption tooltip formatter', () => {
       chartType: 'horizontal_bar',
       chartWidth: 640,
       chartHeight: 200,
-      scrollWindow: { anchorLabel: 'route-18', visibleCategoryCount: 13 },
+      scrollWindow: { startValue: 18, endValue: 30 },
       showAnnotations: true,
       stacked: false,
       tooltipState: createTooltipState(),
@@ -792,8 +800,8 @@ describe('buildCrossSectionOption tooltip formatter', () => {
     const dataZoom = option.dataZoom as Array<{ startValue?: number, endValue?: number }>
 
     expect(dataZoom).toEqual([
-      expect.objectContaining({ startValue: 13, endValue: 19 }),
-      expect.objectContaining({ startValue: 13, endValue: 19 }),
+      expect.objectContaining({ startValue: 7, endValue: 19 }),
+      expect.objectContaining({ startValue: 7, endValue: 19 }),
     ])
   })
 })

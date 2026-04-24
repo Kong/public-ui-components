@@ -39,26 +39,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef, watch } from 'vue'
+import { computed, toRef, watch } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import {
-  createStoredScrollWindow,
   datavisPalette,
   getDimensionAxisTitle,
   getMetricAxisTitle,
   getMetricUnit,
   getTooltipMetricDisplay,
   normalizeDataZoomWindow,
-  resolveCrossSectionViewportState,
 } from '../utils'
 import type {
   AnalyticsChartColors,
+  ChartScrollWindow,
   ChartLegendSortFn,
   ChartTooltipSortFn,
   LegendPosition,
 } from '../types'
-import type { StoredChartScrollWindow } from '../utils'
+import type { DataZoomPayload } from '../utils'
 import AnalyticsChartShell from './AnalyticsChartShell.vue'
 import BaseAnalyticsEcharts from './BaseAnalyticsEcharts.vue'
 import ChartLegend from './ChartLegend.vue'
@@ -114,8 +113,9 @@ const metricUnit = computed(() => getMetricUnit(
 ))
 
 const { selectedLabels, toggleLegendItem } = composables.useChartLabelSelection(chartData)
-const scrollWindow = ref<StoredChartScrollWindow | null>(null)
 const chartLabels = computed(() => chartData.value.labels || [])
+let latestScrollWindow: ChartScrollWindow | null = null
+const optionScrollWindow = toRef(() => latestScrollWindow)
 
 const {
   chartWidth,
@@ -173,7 +173,7 @@ const dimensionAxisTitle = computed(() => {
   return getDimensionAxisTitle({
     i18n,
     dimensionAxesTitle,
-    dimension: type === 'donut' ? primaryDimension.value : primaryDimension.value,
+    dimension: primaryDimension.value,
   })
 })
 
@@ -191,7 +191,7 @@ const { option } = composables.useCrossSectionalChartOption({
   chartType: toRef(() => type),
   chartWidth,
   chartHeight,
-  scrollWindow,
+  scrollWindow: optionScrollWindow,
   showAnnotations: toRef(() => showAnnotations),
   stacked: toRef(() => stacked),
   metricUnit,
@@ -208,56 +208,27 @@ const hasValidChartData = computed(() => {
   return data && data.meta && data.data.length > 0 && chartData.value.datasets.length > 0
 })
 
-const handleMouseMove = (event: any) => {
-  handleTooltipMouseMove(event)
-}
+const handleMouseMove = handleTooltipMouseMove
+const handleClick = handleTooltipClick
+const handleMouseOut = handleTooltipMouseOut
 
-const handleClick = () => {
-  handleTooltipClick()
-}
-
-const handleMouseOut = () => {
-  handleTooltipMouseOut()
-}
-
-const handleDataZoom = (payload: {
-  startValue?: number | string
-  endValue?: number | string
-  batch?: Array<{ startValue?: number | string, endValue?: number | string }>
-}) => {
-  const nextWindow = normalizeDataZoomWindow(payload)
-
-  if (nextWindow) {
-    scrollWindow.value = createStoredScrollWindow({
-      labels: chartData.value.labels || [],
-      scrollWindow: nextWindow,
-    })
-  }
-}
-
-watch([
-  () => type,
-  chartWidth,
-  chartHeight,
-  chartLabels,
-], ([chartType, width, height, labels]) => {
-  if (chartType === 'donut') {
-    scrollWindow.value = null
-
+const handleDataZoom = (payload: DataZoomPayload) => {
+  if (type === 'donut') {
     return
   }
 
-  const { storedScrollWindow } = resolveCrossSectionViewportState({
-    chartType,
-    chartWidth: width,
-    chartHeight: height,
-    labels,
-    scrollWindow: scrollWindow.value,
-  })
+  const scrollWindow = normalizeDataZoomWindow(payload, chartLabels.value.length)
 
-  scrollWindow.value = storedScrollWindow
-}, { immediate: true })
+  if (!scrollWindow) {
+    return
+  }
 
+  latestScrollWindow = scrollWindow
+}
+
+watch([() => data, () => type], () => {
+  latestScrollWindow = null
+})
 
 </script>
 

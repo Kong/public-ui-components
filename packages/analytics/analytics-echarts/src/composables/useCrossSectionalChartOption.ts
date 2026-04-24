@@ -1,8 +1,7 @@
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type { ECBasicOption } from 'echarts/types/dist/shared'
-import type { ChartTooltipSortFn, KChartData, TooltipState } from '../types'
-import type { StoredChartScrollWindow } from '../utils'
+import type { ChartScrollWindow, ChartTooltipSortFn, KChartData, TooltipState } from '../types'
 
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import { buildCrossSectionOption } from '../utils'
@@ -29,7 +28,7 @@ export default function useCrossSectionalChartOption({
   chartType: Ref<'horizontal_bar' | 'vertical_bar' | 'donut'>
   chartWidth: Ref<number>
   chartHeight: Ref<number>
-  scrollWindow: Ref<StoredChartScrollWindow | null>
+  scrollWindow: Ref<ChartScrollWindow | null>
   showAnnotations: Ref<boolean>
   tooltipState: Ref<TooltipState>
   stacked: Ref<boolean>

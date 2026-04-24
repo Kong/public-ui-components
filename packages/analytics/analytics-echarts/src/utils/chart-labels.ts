@@ -9,6 +9,18 @@ export const translateChartLabel = (
   return i18n.te(key) ? i18n.t(key) : label
 }
 
+const getMultiMetricUnitLabel = (i18n: any, metricName: string, metricUnit: string): string | undefined => {
+  if (metricName.includes('latency')) {
+    return i18n.t('metricAxisTitles.latency_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
+  }
+
+  if (metricName.includes('size')) {
+    return i18n.t('metricAxisTitles.size_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
+  }
+
+  return undefined
+}
+
 export const getMetricAxisTitle = ({
   i18n,
   metricName,
@@ -31,16 +43,10 @@ export const getMetricAxisTitle = ({
   }
 
   if (metricCount > 1) {
-    if (metricName.includes('latency')) {
-      return i18n.t('metricAxisTitles.latency_in', {
-        unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }),
-      })
-    }
+    const multiMetricLabel = getMultiMetricUnitLabel(i18n, metricName, metricUnit)
 
-    if (metricName.includes('size')) {
-      return i18n.t('metricAxisTitles.size_in', {
-        unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }),
-      })
+    if (multiMetricLabel) {
+      return multiMetricLabel
     }
   }
 
@@ -72,16 +78,10 @@ export const getTooltipMetricDisplay = ({
   }
 
   if (metricCount > 1 && metricUnit) {
-    if (metricName.includes('latency')) {
-      return i18n.t('metricAxisTitles.latency_in', {
-        unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }),
-      })
-    }
+    const multiMetricLabel = getMultiMetricUnitLabel(i18n, metricName, metricUnit)
 
-    if (metricName.includes('size')) {
-      return i18n.t('metricAxisTitles.size_in', {
-        unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }),
-      })
+    if (multiMetricLabel) {
+      return multiMetricLabel
     }
   }
 
