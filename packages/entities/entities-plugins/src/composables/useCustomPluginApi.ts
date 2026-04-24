@@ -40,6 +40,12 @@ type UseCustomPluginApiOptions = (
 export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   const { axiosInstance, apiBaseUrl } = options
 
+  const assertKonnectInstalledApi = (): void => {
+    if (options.app !== 'konnect') {
+      throw new Error('Installed custom plugin APIs are only available for Konnect')
+    }
+  }
+
   const buildUrl = (endpointTemplate: string, pluginId?: string): string => {
     let url = `${apiBaseUrl}${endpointTemplate}`
 
@@ -59,21 +65,23 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   // ── Installed (Konnect only) ──
 
   const getInstalledPlugin = async (pluginId: string): Promise<InstalledPluginResponse> => {
+    assertKonnectInstalledApi()
     const url = buildUrl(endpoints.customPlugin.konnect.installed.edit, pluginId)
     const { data } = await axiosInstance.get<InstalledPluginResponse>(url)
     return data
   }
 
   const createInstalledPlugin = async (body: InstalledPluginRequestBody): Promise<InstalledPluginResponse> => {
+    assertKonnectInstalledApi()
     const url = buildUrl(endpoints.customPlugin.konnect.installed.create)
     const { data } = await axiosInstance.post<InstalledPluginResponse>(url, body)
     return data
   }
 
   const updateInstalledPlugin = async (pluginId: string, body: InstalledPluginRequestBody): Promise<InstalledPluginResponse> => {
+    assertKonnectInstalledApi()
     const url = buildUrl(endpoints.customPlugin.konnect.installed.edit, pluginId)
-    const method = options.app === 'konnect' ? 'put' : 'patch'
-    const { data } = await axiosInstance[method]<InstalledPluginResponse>(url, body)
+    const { data } = await axiosInstance.put<InstalledPluginResponse>(url, body)
     return data
   }
 

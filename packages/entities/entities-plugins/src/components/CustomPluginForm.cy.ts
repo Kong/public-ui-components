@@ -47,6 +47,11 @@ const clonedPluginResponse = {
   updated_at: 1700000001,
 }
 
+const selectClonedPlugin = (pluginName: string): void => {
+  cy.getTestId('custom-plugin-clone-select').click()
+  cy.getTestId(`select-item-${pluginName}`).click()
+}
+
 describe('<CustomPluginForm />', () => {
   let router: Router
 
@@ -254,6 +259,85 @@ describe('<CustomPluginForm />', () => {
         expect(interception.request.body.name).to.equal('my-streamed')
         expect(interception.request.body.schema).to.contain('return')
         expect(interception.request.body.handler).to.contain('local M')
+      })
+    })
+
+    it('should submit cloned plugin via API without priority when left empty', () => {
+      const aliasName = 'my-created-cloned-plugin'
+
+      cy.intercept(
+        'PUT',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/cloned-plugins/${aliasName}`,
+        {
+          statusCode: 201,
+          body: {
+            ...clonedPluginResponse,
+            link: 'acl',
+            name: aliasName,
+            priority: null,
+          },
+        },
+      ).as('createClonedPlugin')
+
+      cy.mount(CustomPluginForm, {
+        props: {
+          config: konnectConfig,
+        },
+        router,
+      })
+
+      cy.getTestId('custom-plugin-type-cloned').click()
+      selectClonedPlugin('acl')
+      cy.getTestId('custom-plugin-alias-name').type(aliasName)
+
+      cy.getTestId('custom-plugin-form-submit').should('be.enabled').click()
+
+      cy.wait('@createClonedPlugin').then((interception) => {
+        expect(interception.request.method).to.equal('PUT')
+        expect(interception.request.body).to.deep.equal({
+          link: 'acl',
+        })
+      })
+    })
+
+    it('should submit cloned plugin via API with priority 0', () => {
+      const aliasName = 'my-created-cloned-plugin-zero'
+
+      cy.intercept(
+        'PUT',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/cloned-plugins/${aliasName}`,
+        {
+          statusCode: 201,
+          body: {
+            ...clonedPluginResponse,
+            link: 'acl',
+            name: aliasName,
+            priority: 0,
+          },
+        },
+      ).as('createClonedPluginWithPriority')
+
+      cy.mount(CustomPluginForm, {
+        props: {
+          config: konnectConfig,
+        },
+        router,
+      })
+
+      cy.getTestId('custom-plugin-type-cloned').click()
+      selectClonedPlugin('acl')
+      cy.getTestId('custom-plugin-alias-name').type(aliasName)
+      cy.getTestId('custom-plugin-priority').type('0')
+      cy.getTestId('custom-plugin-priority').should('have.value', '0')
+
+      cy.getTestId('custom-plugin-form-submit').should('be.enabled').click()
+
+      cy.wait('@createClonedPluginWithPriority').then((interception) => {
+        expect(interception.request.method).to.equal('PUT')
+        expect(interception.request.body).to.deep.equal({
+          link: 'acl',
+          priority: 0,
+        })
       })
     })
   })
