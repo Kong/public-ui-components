@@ -55,7 +55,7 @@ jobs:
       - name: Check if PR Up to Date
         id: 'up-to-date'
         if: ${{ github.event_name == 'push' }}
-        uses: Kong/public-shared-actions/pr-previews/up-to-date@181795782517d00eb0d968d7e0b28a9d180b4f76
+        uses: Kong/public-shared-actions/pr-previews/up-to-date@8d98bc15a5143332a36f206e6699296e6cc2adac
         with:
           github_token: ${{ env.GH_TOKEN }}
 
@@ -469,7 +469,7 @@ jobs:
         uses: Kong/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3
 
       - name: Post Slack notification
-        uses: Kong/public-shared-actions/slack-actions/workflow-notification@181795782517d00eb0d968d7e0b28a9d180b4f76
+        uses: Kong/public-shared-actions/slack-actions/workflow-notification@8d98bc15a5143332a36f206e6699296e6cc2adac
         with:
           slack-webhook-url: ${{ env.WORKFLOW_CONCLUSION == 'failure' && secrets.SLACK_WEBHOOK_URL_ALERT || secrets.SLACK_WEBHOOK_URL_NOTIFY }}
           status: ${{ env.WORKFLOW_CONCLUSION == 'failure' && 'failure' || 'success' }}
