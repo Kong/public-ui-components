@@ -53,7 +53,14 @@ import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
 import composables from '../composables'
 
-defineProps<{
+const {
+  hasValidChartData,
+  resultSetTruncated,
+  maxEntitiesShown,
+  emptyStateTitle,
+  emptyStateDescription,
+  showLegendValues,
+} = defineProps<{
   hasValidChartData: boolean
   resultSetTruncated: boolean
   maxEntitiesShown?: string | number | null

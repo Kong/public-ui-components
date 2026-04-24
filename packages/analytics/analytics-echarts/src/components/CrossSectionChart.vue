@@ -1,11 +1,11 @@
 <template>
   <AnalyticsChartShell
-    :empty-state-description="props.emptyStateDescription"
-    :empty-state-title="props.emptyStateTitle"
+    :empty-state-description="emptyStateDescription"
+    :empty-state-title="emptyStateTitle"
     :has-valid-chart-data="hasValidChartData"
     :max-entities-shown="maxEntitiesShown"
     :result-set-truncated="resultSetTruncated"
-    :show-legend-values="props.showLegendValues"
+    :show-legend-values="showLegendValues"
   >
     <div
       class="chart-parent"
@@ -15,8 +15,8 @@
         ref="baseChart"
         class="chart-container"
         :option="option"
-        :render-mode="props.renderMode"
-        :theme="props.theme"
+        :render-mode="renderMode"
+        :theme="theme"
         @datazoom="handleDataZoom"
         @zr:click="handleClick"
         @zr:mousemove="handleMouseMove"
@@ -30,8 +30,8 @@
       </BaseAnalyticsEcharts>
       <ChartLegend
         :items="legendItems"
-        :position="props.legendPosition"
-        :show-values="props.showLegendValues"
+        :position="legendPosition"
+        :show-values="showLegendValues"
         @toggle="toggleLegendItem"
       />
     </div>
@@ -64,7 +64,25 @@ import BaseAnalyticsEcharts from './BaseAnalyticsEcharts.vue'
 import ChartLegend from './ChartLegend.vue'
 import ChartTooltip from './ChartTooltip.vue'
 
-const props = withDefaults(defineProps<{
+const {
+  data,
+  type,
+  stacked = false,
+  colorPalette,
+  tooltipTitle,
+  emptyStateTitle,
+  emptyStateDescription,
+  metricAxesTitle,
+  dimensionAxesTitle,
+  showAnnotations = true,
+  showLegendValues = false,
+  legendPosition = 'bottom',
+  chartLegendSortFn,
+  chartTooltipSortFn,
+  hideTruncationWarning = false,
+  theme = 'light',
+  renderMode = 'svg',
+} = defineProps<{
   data: ExploreResultV4
   type: 'horizontal_bar' | 'vertical_bar' | 'donut'
   stacked?: boolean
@@ -82,33 +100,17 @@ const props = withDefaults(defineProps<{
   hideTruncationWarning?: boolean
   theme?: 'light' | 'dark'
   renderMode?: 'svg' | 'canvas'
-}>(), {
-  stacked: false,
-  colorPalette: undefined,
-  tooltipTitle: undefined,
-  emptyStateTitle: undefined,
-  emptyStateDescription: undefined,
-  metricAxesTitle: undefined,
-  dimensionAxesTitle: undefined,
-  showAnnotations: true,
-  showLegendValues: false,
-  legendPosition: 'bottom',
-  chartLegendSortFn: undefined,
-  chartTooltipSortFn: undefined,
-  hideTruncationWarning: false,
-  theme: 'light',
-  renderMode: 'svg',
-})
+}>()
 
 const { i18n } = composables.useI18n()
 
 const chartData = composables.useCrossSectionalChartData({
-  colorPalette: computed(() => props.colorPalette || datavisPalette),
-}, toRef(props, 'data'))
+  colorPalette: computed(() => colorPalette || datavisPalette),
+}, toRef(() => data))
 
 const metricUnit = computed(() => getMetricUnit(
-  props.data.meta?.metric_units,
-  props.data.meta?.metric_names?.[0],
+  data.meta?.metric_units,
+  data.meta?.metric_names?.[0],
 ))
 
 const { selectedLabels, toggleLegendItem } = composables.useChartLabelSelection(chartData)
@@ -128,14 +130,14 @@ const {
   maxEntitiesShown,
   resultSetTruncated,
 } = composables.useChartFrame({
-  data: toRef(props, 'data'),
+  data: toRef(() => data),
   chartData,
   metricUnit,
   selectedLabels,
-  legendPosition: toRef(props, 'legendPosition'),
-  chartLegendSortFn: toRef(props, 'chartLegendSortFn'),
-  chartTooltipSortFn: toRef(props, 'chartTooltipSortFn'),
-  hideTruncationWarning: toRef(props, 'hideTruncationWarning'),
+  legendPosition: toRef(() => legendPosition),
+  chartLegendSortFn: toRef(() => chartLegendSortFn),
+  chartTooltipSortFn: toRef(() => chartTooltipSortFn),
+  hideTruncationWarning: toRef(() => hideTruncationWarning),
 })
 
 const {
@@ -156,44 +158,44 @@ const {
 const metricAxisTitle = computed(() => {
   return getMetricAxisTitle({
     i18n,
-    metricName: props.data.meta?.metric_names?.[0],
+    metricName: data.meta?.metric_names?.[0],
     metricUnit: metricUnit.value,
-    metricAxesTitle: props.metricAxesTitle,
-    metricCount: props.data.meta?.metric_names?.length || 0,
+    metricAxesTitle,
+    metricCount: data.meta?.metric_names?.length || 0,
   })
 })
 
 const primaryDimension = computed(() => {
-  return Object.keys(props.data.meta?.display || {})[0] || props.data.meta?.metric_names?.[0]
+  return Object.keys(data.meta?.display || {})[0] || data.meta?.metric_names?.[0]
 })
 
 const dimensionAxisTitle = computed(() => {
   return getDimensionAxisTitle({
     i18n,
-    dimensionAxesTitle: props.dimensionAxesTitle,
-    dimension: props.type === 'donut' ? primaryDimension.value : primaryDimension.value,
+    dimensionAxesTitle,
+    dimension: type === 'donut' ? primaryDimension.value : primaryDimension.value,
   })
 })
 
 const tooltipMetricDisplay = computed(() => {
   return getTooltipMetricDisplay({
     i18n,
-    metricName: props.data.meta?.metric_names?.[0],
+    metricName: data.meta?.metric_names?.[0],
     metricUnit: metricUnit.value,
-    metricCount: props.data.meta?.metric_names?.length || 0,
+    metricCount: data.meta?.metric_names?.length || 0,
   })
 })
 
 const { option } = composables.useCrossSectionalChartOption({
   chartData,
-  chartType: toRef(props, 'type'),
+  chartType: toRef(() => type),
   chartWidth,
   chartHeight,
   scrollWindow,
-  showAnnotations: toRef(props, 'showAnnotations'),
-  stacked: toRef(props, 'stacked'),
+  showAnnotations: toRef(() => showAnnotations),
+  stacked: toRef(() => stacked),
   metricUnit,
-  tooltipTitle: toRef(props, 'tooltipTitle'),
+  tooltipTitle: toRef(() => tooltipTitle),
   tooltipMetricDisplay,
   metricAxisTitle,
   dimensionAxisTitle,
@@ -203,7 +205,7 @@ const { option } = composables.useCrossSectionalChartOption({
 })
 
 const hasValidChartData = computed(() => {
-  return props.data && props.data.meta && props.data.data.length > 0 && chartData.value.datasets.length > 0
+  return data && data.meta && data.data.length > 0 && chartData.value.datasets.length > 0
 })
 
 const handleMouseMove = (event: any) => {
@@ -234,7 +236,7 @@ const handleDataZoom = (payload: {
 }
 
 watch([
-  () => props.type,
+  () => type,
   chartWidth,
   chartHeight,
   chartLabels,

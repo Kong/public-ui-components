@@ -29,7 +29,11 @@ import { ref, watch } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { formatTooltipTimestampByGranularity } from '../utils'
 
-const props = defineProps<{
+const {
+  start,
+  end,
+  granularity,
+} = defineProps<{
   start: Date
   end: Date
   granularity: GranularityValues
@@ -37,28 +41,28 @@ const props = defineProps<{
 
 const { i18n } = composables.useI18n()
 const throttledStartTime = ref(formatTooltipTimestampByGranularity({
-  tickValue: props.start,
-  granularity: props.granularity,
+  tickValue: start,
+  granularity,
 }))
 const throttledEndTime = ref(formatTooltipTimestampByGranularity({
-  tickValue: props.end,
-  granularity: props.granularity,
+  tickValue: end,
+  granularity,
 }))
 
 const updateTimeRangeDebounced = (start: Date, end: Date) => {
   useDebounceFn(() => {
     throttledStartTime.value = formatTooltipTimestampByGranularity({
       tickValue: start,
-      granularity: props.granularity,
+      granularity,
     })
     throttledEndTime.value = formatTooltipTimestampByGranularity({
       tickValue: end,
-      granularity: props.granularity,
+      granularity,
     })
   }, 100)()
 }
 
-watch(() => [props.start, props.end], ([newStart, newEnd]) => {
+watch(() => [start, end], ([newStart, newEnd]) => {
   updateTimeRangeDebounced(newStart, newEnd)
 }, { immediate: true })
 

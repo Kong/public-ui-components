@@ -1,11 +1,11 @@
 <template>
   <AnalyticsChartShell
-    :empty-state-description="props.emptyStateDescription"
-    :empty-state-title="props.emptyStateTitle"
+    :empty-state-description="emptyStateDescription"
+    :empty-state-title="emptyStateTitle"
     :has-valid-chart-data="hasValidChartData"
     :max-entities-shown="maxEntitiesShown"
     :result-set-truncated="resultSetTruncated"
-    :show-legend-values="props.showLegendValues"
+    :show-legend-values="showLegendValues"
   >
     <div
       class="chart-parent"
@@ -15,8 +15,8 @@
         ref="baseChart"
         class="chart-container"
         :option="option"
-        :render-mode="props.renderMode"
-        :theme="props.theme"
+        :render-mode="renderMode"
+        :theme="theme"
         @brush="handleBrush"
         @zr:click="handleClick"
         @zr:mousedown="handleMouseDown"
@@ -35,8 +35,8 @@
       </BaseAnalyticsEcharts>
       <ChartLegend
         :items="legendItems"
-        :position="props.legendPosition"
-        :show-values="props.showLegendValues"
+        :position="legendPosition"
+        :show-values="showLegendValues"
         @toggle="toggleLegendItem"
       />
     </div>
@@ -75,7 +75,28 @@ import ChartLegend from './ChartLegend.vue'
 import ChartTooltip from './ChartTooltip.vue'
 import type { ZoomActionItem } from './ZoomActions.vue'
 
-const props = withDefaults(defineProps<{
+const {
+  data,
+  type,
+  stacked = false,
+  timeseriesZoom = false,
+  requestsLink,
+  exploreLink,
+  threshold,
+  colorPalette,
+  tooltipTitle,
+  emptyStateTitle,
+  emptyStateDescription,
+  metricAxesTitle,
+  dimensionAxesTitle,
+  showLegendValues = false,
+  legendPosition = 'bottom',
+  chartLegendSortFn,
+  chartTooltipSortFn,
+  hideTruncationWarning = false,
+  theme = 'light',
+  renderMode = 'svg',
+} = defineProps<{
   data: ExploreResultV4
   type: 'timeseries_line' | 'timeseries_bar'
   stacked?: boolean
@@ -96,26 +117,7 @@ const props = withDefaults(defineProps<{
   hideTruncationWarning?: boolean
   theme?: 'light' | 'dark'
   renderMode?: 'svg' | 'canvas'
-}>(), {
-  stacked: false,
-  timeseriesZoom: false,
-  requestsLink: undefined,
-  exploreLink: undefined,
-  threshold: undefined,
-  colorPalette: undefined,
-  tooltipTitle: undefined,
-  emptyStateTitle: undefined,
-  emptyStateDescription: undefined,
-  metricAxesTitle: undefined,
-  dimensionAxesTitle: undefined,
-  showLegendValues: false,
-  legendPosition: 'bottom',
-  chartLegendSortFn: undefined,
-  chartTooltipSortFn: undefined,
-  hideTruncationWarning: false,
-  theme: 'light',
-  renderMode: 'svg',
-})
+}>()
 
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
@@ -125,23 +127,23 @@ const emit = defineEmits<{
 const { i18n } = composables.useI18n()
 
 const timeSeriesGranularity = computed<GranularityValues>(() => {
-  if (!props.data.meta.granularity_ms && props.data.data.length > 1) {
+  if (!data.meta.granularity_ms && data.data.length > 1) {
     return msToGranularity(
-      new Date(props.data.data[1].timestamp).getTime() - new Date(props.data.data[0].timestamp).getTime(),
+      new Date(data.data[1].timestamp).getTime() - new Date(data.data[0].timestamp).getTime(),
     ) || 'hourly'
   }
 
-  return msToGranularity(props.data.meta.granularity_ms) || 'hourly'
+  return msToGranularity(data.meta.granularity_ms) || 'hourly'
 })
 
 const chartData = composables.useTimeseriesChartData({
-  fill: toRef(props, 'stacked'),
-  colorPalette: computed(() => props.colorPalette || datavisPalette),
-}, toRef(props, 'data'))
+  fill: toRef(() => stacked),
+  colorPalette: computed(() => colorPalette || datavisPalette),
+}, toRef(() => data))
 
 const metricUnit = computed(() => getMetricUnit(
-  props.data.meta?.metric_units,
-  props.data.meta?.metric_names?.[0],
+  data.meta?.metric_units,
+  data.meta?.metric_names?.[0],
 ))
 
 const { selectedLabels, toggleLegendItem } = composables.useChartLabelSelection(chartData)
@@ -160,28 +162,28 @@ const {
   maxEntitiesShown,
   resultSetTruncated,
 } = composables.useChartFrame({
-  data: toRef(props, 'data'),
+  data: toRef(() => data),
   chartData,
   metricUnit,
   selectedLabels,
-  legendPosition: toRef(props, 'legendPosition'),
-  chartLegendSortFn: toRef(props, 'chartLegendSortFn'),
-  chartTooltipSortFn: toRef(props, 'chartTooltipSortFn'),
-  hideTruncationWarning: toRef(props, 'hideTruncationWarning'),
+  legendPosition: toRef(() => legendPosition),
+  chartLegendSortFn: toRef(() => chartLegendSortFn),
+  chartTooltipSortFn: toRef(() => chartTooltipSortFn),
+  hideTruncationWarning: toRef(() => hideTruncationWarning),
 })
 
 const metricAxisTitle = computed(() => {
   return getMetricAxisTitle({
     i18n,
-    metricName: props.data.meta?.metric_names?.[0],
+    metricName: data.meta?.metric_names?.[0],
     metricUnit: metricUnit.value,
-    metricAxesTitle: props.metricAxesTitle,
-    metricCount: props.data.meta?.metric_names?.length || 0,
+    metricAxesTitle,
+    metricCount: data.meta?.metric_names?.length || 0,
   })
 })
 
 const dimensionAxisTitle = computed(() => {
-  return props.dimensionAxesTitle || getGranularityAxisTitle({
+  return dimensionAxesTitle || getGranularityAxisTitle({
     i18n,
     granularity: timeSeriesGranularity.value,
   })
@@ -190,9 +192,9 @@ const dimensionAxisTitle = computed(() => {
 const tooltipMetricDisplay = computed(() => {
   return getTooltipMetricDisplay({
     i18n,
-    metricName: props.data.meta?.metric_names?.[0],
+    metricName: data.meta?.metric_names?.[0],
     metricUnit: metricUnit.value,
-    metricCount: props.data.meta?.metric_names?.length || 0,
+    metricCount: data.meta?.metric_names?.length || 0,
   })
 })
 
@@ -200,20 +202,20 @@ const hasValidChartData = computed(() => hasMillisecondTimestamps(chartData.valu
 
 const zoomActionItems = computed<ZoomActionItem[]>(() => {
   return [
-    ...(props.timeseriesZoom ? [{
+    ...(timeseriesZoom ? [{
       label: i18n.t('zoom_action_items.zoom'),
       key: 'zoom-in',
       action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange),
     }] : []),
-    ...(props.exploreLink ? [{
+    ...(exploreLink ? [{
       label: i18n.t('zoom_action_items.explore'),
       key: 'explore',
-      href: props.exploreLink.href,
+      href: exploreLink.href,
     }] : []),
-    ...(props.requestsLink ? [{
+    ...(requestsLink ? [{
       label: i18n.t('zoom_action_items.view_requests'),
       key: 'view-requests',
-      href: props.requestsLink.href,
+      href: requestsLink.href,
     }] : []),
   ]
 })
@@ -253,17 +255,17 @@ const {
   containerLeft,
   tooltipWidth,
   tooltipHeight,
-  onReset: props.timeseriesZoom ? clearBrush : undefined,
+  onReset: timeseriesZoom ? clearBrush : undefined,
 })
 
 const { option } = composables.useTimeseriesChartOption({
   chartData,
-  chartType: toRef(props, 'type'),
+  chartType: toRef(() => type),
   granularity: timeSeriesGranularity,
-  stacked: toRef(props, 'stacked'),
-  threshold: toRef(props, 'threshold'),
+  stacked: toRef(() => stacked),
+  threshold: toRef(() => threshold),
   metricUnit,
-  tooltipTitle: toRef(props, 'tooltipTitle'),
+  tooltipTitle: toRef(() => tooltipTitle),
   tooltipMetricDisplay,
   metricAxisTitle,
   dimensionAxisTitle,
@@ -273,7 +275,7 @@ const { option } = composables.useTimeseriesChartOption({
 })
 
 const handleMouseMove = (event: any) => {
-  if (props.timeseriesZoom) {
+  if (timeseriesZoom) {
     brushMouseMove(event)
   }
 
@@ -281,19 +283,19 @@ const handleMouseMove = (event: any) => {
 }
 
 const handleMouseDown = (event: any) => {
-  if (props.timeseriesZoom) {
+  if (timeseriesZoom) {
     brushMouseDown(event)
   }
 }
 
 const handleMouseUp = (event: any) => {
-  if (props.timeseriesZoom) {
+  if (timeseriesZoom) {
     brushMouseUp(event)
   }
 }
 
 const handleClick = () => {
-  if (props.timeseriesZoom && isSelecting.value) {
+  if (timeseriesZoom && isSelecting.value) {
     return
   }
 

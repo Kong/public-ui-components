@@ -46,14 +46,15 @@
 import type { ChartLegendItem, LegendPosition } from '../types'
 import composables from '../composables'
 
-withDefaults(defineProps<{
+const {
+  items,
+  position = 'bottom',
+  showValues = false,
+} = defineProps<{
   items: ChartLegendItem[]
   position?: LegendPosition
   showValues?: boolean
-}>(), {
-  position: 'bottom',
-  showValues: false,
-})
+}>()
 
 const emit = defineEmits<{
   (e: 'toggle', label: string): void
