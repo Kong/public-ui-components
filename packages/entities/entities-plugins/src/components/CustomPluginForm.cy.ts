@@ -38,6 +38,15 @@ const streamedPluginResponse = {
   updated_at: 1700000001,
 }
 
+const clonedPluginResponse = {
+  link: 'acl',
+  name: 'my-cloned-plugin',
+  priority: 0,
+  tags: null,
+  created_at: 1700000000,
+  updated_at: 1700000001,
+}
+
 describe('<CustomPluginForm />', () => {
   let router: Router
 
@@ -375,6 +384,92 @@ describe('<CustomPluginForm />', () => {
       cy.getTestId('custom-plugin-name').should('have.value', streamedPluginResponse.name)
     })
 
+    it('should load cloned plugin data when installed and streamed fail', () => {
+      cy.intercept(
+        'GET',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/plugin-schemas/my-cloned-plugin`,
+        { statusCode: 404, body: { message: 'not found' } },
+      ).as('getInstalledPlugin')
+
+      cy.intercept(
+        'GET',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/custom-plugins/my-cloned-plugin`,
+        { statusCode: 404, body: { message: 'not found' } },
+      ).as('getStreamedPlugin')
+
+      cy.intercept(
+        'GET',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/cloned-plugins/my-cloned-plugin`,
+        { statusCode: 200, body: clonedPluginResponse },
+      ).as('getClonedPlugin')
+
+      cy.mount(CustomPluginForm, {
+        props: {
+          config: konnectConfig,
+          pluginName: 'my-cloned-plugin',
+        },
+        router,
+      })
+
+      cy.wait('@getInstalledPlugin')
+      cy.wait('@getStreamedPlugin')
+      cy.wait('@getClonedPlugin')
+
+      cy.getTestId('custom-plugin-alias-name').should('have.value', clonedPluginResponse.name)
+      cy.getTestId('custom-plugin-priority').should('have.value', '0')
+    })
+
+    it('should update cloned plugin via API and preserve priority 0', () => {
+      cy.intercept(
+        'GET',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/plugin-schemas/my-cloned-plugin`,
+        { statusCode: 404, body: { message: 'not found' } },
+      ).as('getInstalledPlugin')
+
+      cy.intercept(
+        'GET',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/custom-plugins/my-cloned-plugin`,
+        { statusCode: 404, body: { message: 'not found' } },
+      ).as('getStreamedPlugin')
+
+      cy.intercept(
+        'GET',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/cloned-plugins/my-cloned-plugin`,
+        { statusCode: 200, body: clonedPluginResponse },
+      ).as('getClonedPlugin')
+
+      cy.intercept(
+        'PATCH',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/cloned-plugins/my-cloned-plugin`,
+        {
+          statusCode: 200,
+          body: clonedPluginResponse,
+        },
+      ).as('updateClonedPlugin')
+
+      cy.mount(CustomPluginForm, {
+        props: {
+          config: konnectConfig,
+          pluginName: 'my-cloned-plugin',
+        },
+        router,
+      })
+
+      cy.wait('@getInstalledPlugin')
+      cy.wait('@getStreamedPlugin')
+      cy.wait('@getClonedPlugin')
+
+      cy.getTestId('custom-plugin-form-submit').should('be.enabled').click()
+
+      cy.wait('@updateClonedPlugin').then((interception) => {
+        expect(interception.request.body).to.deep.equal({
+          link: clonedPluginResponse.link,
+          priority: 0,
+          name: clonedPluginResponse.name,
+        })
+      })
+    })
+
     it('should show error state when plugin not found', () => {
       cy.intercept(
         'GET',
@@ -388,6 +483,12 @@ describe('<CustomPluginForm />', () => {
         { statusCode: 404, body: { message: 'not found' } },
       ).as('getStreamedPlugin')
 
+      cy.intercept(
+        'GET',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/cloned-plugins/not-found`,
+        { statusCode: 404, body: { message: 'not found' } },
+      ).as('getClonedPlugin')
+
       cy.mount(CustomPluginForm, {
         props: {
           config: konnectConfig,
@@ -398,6 +499,7 @@ describe('<CustomPluginForm />', () => {
 
       cy.wait('@getInstalledPlugin')
       cy.wait('@getStreamedPlugin')
+      cy.wait('@getClonedPlugin')
 
       // Should show error state
       cy.getTestId('custom-plugin-form-fetch-error').should('exist')
