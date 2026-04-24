@@ -55,7 +55,7 @@ jobs:
       - name: Check if PR Up to Date
         id: 'up-to-date'
         if: ${{ github.event_name == 'push' }}
-        uses: Kong/public-shared-actions/pr-previews/up-to-date@main
+        uses: Kong/public-shared-actions/pr-previews/up-to-date@8d98bc15a5143332a36f206e6699296e6cc2adac
         with:
           github_token: ${{ env.GH_TOKEN }}
 
@@ -75,7 +75,7 @@ jobs:
       # See 'changed_packages' below
       - name: Check for config file changes
         id: config-files-changed
-        uses: Kong/changed-files@1f31e0a3b1acd04d48dff8801048bb314c8a9e0d
+        uses: Kong/changed-files@cd69b79ca4e2a1198064c5e6564cce68920df311
         with:
           files: |
             ./vite.config.shared.ts
@@ -84,6 +84,7 @@ jobs:
             ./package.json
             ./eslintrc.cjs
             ./.stylelintrc.js
+            ./.github/**
 
       - name: Verify no packages are in the wrong scope and have the correct publishConfig.access
         run: |
@@ -465,10 +466,10 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Get aggregate Workflow status
-        uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3
+        uses: Kong/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3
 
       - name: Post Slack notification
-        uses: Kong/public-shared-actions/slack-actions/workflow-notification@a18abf762d6e2444bcbfd20de70451ea1e3bc1b1 # v4.0.1
+        uses: Kong/public-shared-actions/slack-actions/workflow-notification@8d98bc15a5143332a36f206e6699296e6cc2adac
         with:
           slack-webhook-url: ${{ env.WORKFLOW_CONCLUSION == 'failure' && secrets.SLACK_WEBHOOK_URL_ALERT || secrets.SLACK_WEBHOOK_URL_NOTIFY }}
           status: ${{ env.WORKFLOW_CONCLUSION == 'failure' && 'failure' || 'success' }}
