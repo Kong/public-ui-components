@@ -75,7 +75,7 @@ jobs:
       # See 'changed_packages' below
       - name: Check for config file changes
         id: config-files-changed
-        uses: Kong/changed-files@1f31e0a3b1acd04d48dff8801048bb314c8a9e0d
+        uses: Kong/changed-files@cd69b79ca4e2a1198064c5e6564cce68920df311
         with:
           files: |
             ./vite.config.shared.ts
@@ -84,6 +84,7 @@ jobs:
             ./package.json
             ./eslintrc.cjs
             ./.stylelintrc.js
+            ./.github/**
 
       - name: Verify no packages are in the wrong scope and have the correct publishConfig.access
         run: |
