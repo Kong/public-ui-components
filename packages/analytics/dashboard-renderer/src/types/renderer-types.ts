@@ -17,6 +17,11 @@ export interface DashboardRendererContext {
 // The DashboardRenderer component fills in optional values before passing them down to the tile renderers.
 export interface DashboardRendererContextInternal extends Required<DashboardRendererContext> {
   zoomable: boolean
+  /**
+   * only used internally as controlling this externally is just a matter of
+   * including a zoom handler on the DashboardRenderer component.
+   */
+  showTileZoomActions: boolean
 }
 
 export interface RendererProps<T> {
