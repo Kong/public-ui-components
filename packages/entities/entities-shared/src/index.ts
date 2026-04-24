@@ -20,13 +20,13 @@ import TableTags from './components/common/TableTags.vue'
 import composables from './composables'
 
 // Extract specific composables to export
-const { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider, useTableState } = composables
+const { useAxios, useDeleteUrlBuilder, useBaseEntityDeckOptions, useBaseFormDeckOptions, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider, useTableState } = composables
 
 // Components
 export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityFormBlock, EntityLink, EntityEmptyState, JsonCodeBlock, TerraformCodeBlock, YamlCodeBlock, DeckCodeBlock, TableTags }
 
 // Composables
-export { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider, useTableState }
+export { useAxios, useDeleteUrlBuilder, useBaseEntityDeckOptions, useBaseFormDeckOptions, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider, useTableState }
 
 // Types
 export * from './types'
