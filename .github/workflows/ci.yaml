@@ -55,7 +55,7 @@ jobs:
       - name: Check if PR Up to Date
         id: 'up-to-date'
         if: ${{ github.event_name == 'push' }}
-        uses: Kong/public-shared-actions/pr-previews/up-to-date@main
+        uses: Kong/public-shared-actions/pr-previews/up-to-date@181795782517d00eb0d968d7e0b28a9d180b4f76
         with:
           github_token: ${{ env.GH_TOKEN }}
 
@@ -465,10 +465,10 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Get aggregate Workflow status
-        uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3
+        uses: Kong/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3
 
       - name: Post Slack notification
-        uses: Kong/public-shared-actions/slack-actions/workflow-notification@a18abf762d6e2444bcbfd20de70451ea1e3bc1b1 # v4.0.1
+        uses: Kong/public-shared-actions/slack-actions/workflow-notification@181795782517d00eb0d968d7e0b28a9d180b4f76
         with:
           slack-webhook-url: ${{ env.WORKFLOW_CONCLUSION == 'failure' && secrets.SLACK_WEBHOOK_URL_ALERT || secrets.SLACK_WEBHOOK_URL_NOTIFY }}
           status: ${{ env.WORKFLOW_CONCLUSION == 'failure' && 'failure' || 'success' }}
