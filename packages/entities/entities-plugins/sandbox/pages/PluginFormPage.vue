@@ -92,6 +92,11 @@ useProvideExperimentalFreeForms([
   'cors',
   'proxy-cache',
   'proxy-cache-advanced',
+  'header-cert-auth',
+  'session',
+  'oauth2',
+  'jwe-decrypt',
+  'mtls-auth',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({

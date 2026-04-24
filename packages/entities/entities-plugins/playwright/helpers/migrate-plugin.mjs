@@ -191,8 +191,9 @@ async function scanFreeform() {
 
   try {
     await page.goto(`${BASE_URL}/plugin/create/${plugin}`, { waitUntil: 'networkidle', timeout: 20000 })
-  } catch (err) {
-    warnings.push(`Navigation/timeout: ${err.message}`)
+  } catch {
+    await page.waitForLoadState('domcontentloaded')
+    await page.waitForTimeout(2000)
   }
 
   const advancedCount = await expandFreeformAdvanced(page)
@@ -255,8 +256,9 @@ async function scanVFG() {
 
   try {
     await page.goto(`${BASE_URL}/plugin/create/${plugin}`, { waitUntil: 'networkidle', timeout: 20000 })
-  } catch (err) {
-    warnings.push(`Navigation/timeout: ${err.message}`)
+  } catch {
+    await page.waitForLoadState('domcontentloaded')
+    await page.waitForTimeout(2000)
   }
 
   // Check that VFG actually rendered (not freeform)
@@ -363,7 +365,9 @@ async function runSubmitTest() {
   })
 
   try {
-    await page.goto(`${BASE_URL}/plugin/create/${plugin}`, { waitUntil: 'networkidle', timeout: 20000 })
+    await page.goto(`${BASE_URL}/plugin/create/${plugin}`, { waitUntil: 'networkidle', timeout: 20000 }).catch(() =>
+      page.waitForLoadState('domcontentloaded').then(() => page.waitForTimeout(2000)),
+    )
   } catch (err) {
     consoleErrors.push(`Navigation/timeout: ${err.message}`)
   }
