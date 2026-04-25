@@ -41,6 +41,11 @@ export default function useTimeseriesChartOption({
 }) {
   const { i18n } = composables.useI18n()
   const { translateUnit } = composables.useTranslatedUnits()
+  const thresholdLabelKeys: Record<Threshold['type'], 'chartLabels.threshold-warning' | 'chartLabels.threshold-error' | 'chartLabels.threshold-neutral'> = {
+    error: 'chartLabels.threshold-error',
+    neutral: 'chartLabels.threshold-neutral',
+    warning: 'chartLabels.threshold-warning',
+  }
   const { formatUnit } = unitFormatter({ i18n })
 
   const option = computed<ECBasicOption>(() => {
@@ -63,9 +68,7 @@ export default function useTimeseriesChartOption({
         selectedLabels: selectedLabels.value,
         formatValue: (value: number) => formatUnit(value, metricUnit.value, { translateUnit }),
         thresholdLabelFormatter: (currentThreshold: Threshold) => {
-          const key = `chartLabels.threshold-${currentThreshold.type}`
-
-          return (i18n as any).t(key, { value: String(currentThreshold.value) })
+          return i18n.t(thresholdLabelKeys[currentThreshold.type], { value: String(currentThreshold.value) })
         },
         chartTooltipSortFn: chartTooltipSortFn?.value,
       })

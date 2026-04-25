@@ -40,30 +40,27 @@ const {
 }>()
 
 const { i18n } = composables.useI18n()
-const throttledStartTime = ref(formatTooltipTimestampByGranularity({
-  tickValue: start,
-  granularity,
-}))
-const throttledEndTime = ref(formatTooltipTimestampByGranularity({
-  tickValue: end,
-  granularity,
-}))
-
-const updateTimeRangeDebounced = (start: Date, end: Date) => {
-  useDebounceFn(() => {
-    throttledStartTime.value = formatTooltipTimestampByGranularity({
-      tickValue: start,
-      granularity,
-    })
-    throttledEndTime.value = formatTooltipTimestampByGranularity({
-      tickValue: end,
-      granularity,
-    })
-  }, 100)()
+const formatTime = (tickValue: Date, granularity: GranularityValues) => {
+  return formatTooltipTimestampByGranularity({
+    tickValue,
+    granularity,
+  })
 }
 
-watch(() => [start, end], ([newStart, newEnd]) => {
-  updateTimeRangeDebounced(newStart, newEnd)
+const throttledStartTime = ref(formatTime(start, granularity))
+const throttledEndTime = ref(formatTime(end, granularity))
+
+const updateTimeRangeDebounced = useDebounceFn((
+  nextStart: Date,
+  nextEnd: Date,
+  nextGranularity: GranularityValues,
+) => {
+  throttledStartTime.value = formatTime(nextStart, nextGranularity)
+  throttledEndTime.value = formatTime(nextEnd, nextGranularity)
+}, 100)
+
+watch(() => [start, end, granularity] as const, ([newStart, newEnd, newGranularity]) => {
+  updateTimeRangeDebounced(newStart, newEnd, newGranularity)
 }, { immediate: true })
 
 </script>

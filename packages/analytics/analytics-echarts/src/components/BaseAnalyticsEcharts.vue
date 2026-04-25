@@ -44,6 +44,13 @@ import {
 import { provide, toRef, useTemplateRef, watch } from 'vue'
 import type { ECBasicOption } from 'echarts/types/dist/shared'
 import type { ECElementEvent } from 'echarts/core'
+import type { DataZoomPayload } from '../utils/chart-scroll'
+
+type BrushPayload = {
+  areas?: Array<{
+    coordRange?: number[]
+  }>
+}
 
 const {
   option,
@@ -57,9 +64,9 @@ const {
 
 const emit = defineEmits<{
   // ECharts component events
-  (e: 'brush', params: any): void
+  (e: 'brush', params: BrushPayload): void
   (e: 'click', params: ECElementEvent): void
-  (e: 'datazoom', params: any): void
+  (e: 'datazoom', params: DataZoomPayload): void
   // ZRender events (low-level)
   (e: 'zr:click', event: ElementEvent): void
   (e: 'zr:mousedown', event: ElementEvent): void
@@ -112,6 +119,7 @@ watch(() => option, (newOption) => {
 
 type ExposedChart = {
   $el?: HTMLElement
+  convertFromPixel: (finder: { xAxisIndex: number }, value: number) => number | number[] | undefined
   dispatchAction: (payload: unknown) => void
   setOption: (option: ECBasicOption, opts?: { notMerge?: boolean, lazyUpdate?: boolean }) => void
 }

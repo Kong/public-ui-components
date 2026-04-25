@@ -23,8 +23,14 @@ export interface UseChartFrameOptions {
   hideTruncationWarning: Readonly<Ref<boolean | undefined>>
 }
 
+type ChartFrameChart = {
+  $el?: HTMLElement
+  convertFromPixel: (finder: { xAxisIndex: number }, value: number) => number | number[] | undefined
+  dispatchAction: (payload: unknown) => void
+}
+
 type BaseChartRef = {
-  getChart: () => { $el?: HTMLElement } | undefined
+  getChart: () => ChartFrameChart | undefined
   getContainer: () => HTMLElement | undefined
 }
 

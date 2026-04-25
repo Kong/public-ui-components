@@ -2,6 +2,8 @@ import composables from '.'
 
 export default function useTranslatedUnits() {
   const { i18n } = composables.useI18n()
+  const hasTranslation = i18n.te as (key: string) => boolean
+  const translate = i18n.t as (key: string, values?: Record<string, string>) => string
 
   const translateUnit = (unit: string, rawValue: number) => {
     const singular = rawValue === 1
@@ -11,10 +13,8 @@ export default function useTranslatedUnits() {
       return ''
     }
 
-    // @ts-ignore - dynamic i18n key
-    if (i18n.te(translationKey)) {
-      // @ts-ignore - dynamic i18n key
-      return i18n.t(translationKey, { plural: singular ? '' : 's' })
+    if (hasTranslation(translationKey)) {
+      return translate(translationKey, { plural: singular ? '' : 's' })
     }
 
     return unit
@@ -22,4 +22,3 @@ export default function useTranslatedUnits() {
 
   return { translateUnit }
 }
-

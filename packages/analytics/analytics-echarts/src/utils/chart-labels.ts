@@ -1,21 +1,33 @@
 import type { ExploreAggregations, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type useI18n from '../composables/useI18n'
+
+type AnalyticsI18n = ReturnType<typeof useI18n>['i18n']
+type TranslationParams = Record<string, string>
+
+const hasTranslation = (i18n: AnalyticsI18n, key: string) => {
+  return (i18n.te as (key: string) => boolean)(key)
+}
+
+const translate = (i18n: AnalyticsI18n, key: string, params?: TranslationParams) => {
+  return (i18n.t as (key: string, params?: TranslationParams) => string)(key, params)
+}
 
 export const translateChartLabel = (
-  i18n: any,
+  i18n: AnalyticsI18n,
   label: string,
 ) => {
   const key = `chartLabels.${label}`
 
-  return i18n.te(key) ? i18n.t(key) : label
+  return hasTranslation(i18n, key) ? translate(i18n, key) : label
 }
 
-const getMultiMetricUnitLabel = (i18n: any, metricName: string, metricUnit: string): string | undefined => {
+const getMultiMetricUnitLabel = (i18n: AnalyticsI18n, metricName: string, metricUnit: string): string | undefined => {
   if (metricName.includes('latency')) {
-    return i18n.t('metricAxisTitles.latency_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
+    return i18n.t('metricAxisTitles.latency_in', { unit: translate(i18n, `chartUnits.${metricUnit}`, { plural: 's' }) })
   }
 
   if (metricName.includes('size')) {
-    return i18n.t('metricAxisTitles.size_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
+    return i18n.t('metricAxisTitles.size_in', { unit: translate(i18n, `chartUnits.${metricUnit}`, { plural: 's' }) })
   }
 
   return undefined
@@ -28,7 +40,7 @@ export const getMetricAxisTitle = ({
   metricAxesTitle,
   metricCount,
 }: {
-  i18n: any
+  i18n: AnalyticsI18n
   metricName?: string
   metricUnit?: string
   metricAxesTitle?: string
@@ -53,9 +65,9 @@ export const getMetricAxisTitle = ({
   const axisKey = `metricAxisTitles.${metricName}`
   const unitKey = `chartUnits.${metricUnit}`
 
-  if (i18n.te(axisKey) && i18n.te(unitKey)) {
-    return i18n.t(axisKey, {
-      unit: i18n.t(unitKey, { plural: 's' }),
+  if (hasTranslation(i18n, axisKey) && hasTranslation(i18n, unitKey)) {
+    return translate(i18n, axisKey, {
+      unit: translate(i18n, unitKey, { plural: 's' }),
     })
   }
 
@@ -68,7 +80,7 @@ export const getTooltipMetricDisplay = ({
   metricUnit,
   metricCount,
 }: {
-  i18n: any
+  i18n: AnalyticsI18n
   metricName?: string
   metricUnit?: string
   metricCount: number
@@ -93,7 +105,7 @@ export const getDimensionAxisTitle = ({
   dimensionAxesTitle,
   dimension,
 }: {
-  i18n: any
+  i18n: AnalyticsI18n
   dimensionAxesTitle?: string
   dimension?: string
 }) => {
@@ -112,7 +124,7 @@ export const getGranularityAxisTitle = ({
   i18n,
   granularity,
 }: {
-  i18n: any
+  i18n: AnalyticsI18n
   granularity?: GranularityValues
 }) => {
   if (!granularity) {
@@ -121,7 +133,7 @@ export const getGranularityAxisTitle = ({
 
   const key = `granularityAxisTitles.${granularity}`
 
-  return i18n.te(key) ? i18n.t(key) : granularity
+  return hasTranslation(i18n, key) ? translate(i18n, key) : granularity
 }
 
 export const getMetricUnit = (

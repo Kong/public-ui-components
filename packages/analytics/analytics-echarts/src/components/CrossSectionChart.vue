@@ -49,6 +49,7 @@ import {
   getMetricUnit,
   getTooltipMetricDisplay,
   normalizeDataZoomWindow,
+  type DataZoomPayload,
 } from '../utils'
 import type {
   AnalyticsChartColors,
@@ -57,7 +58,6 @@ import type {
   ChartTooltipSortFn,
   LegendPosition,
 } from '../types'
-import type { DataZoomPayload } from '../utils'
 import AnalyticsChartShell from './AnalyticsChartShell.vue'
 import BaseAnalyticsEcharts from './BaseAnalyticsEcharts.vue'
 import ChartLegend from './ChartLegend.vue'

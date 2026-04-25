@@ -1,9 +1,20 @@
-import { ref, onUnmounted, type ShallowRef } from 'vue'
+import { ref, onUnmounted, type Ref } from 'vue'
 import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { ElementEvent } from 'echarts/core'
 
+type BrushZoomChart = {
+  convertFromPixel: (finder: { xAxisIndex: number }, value: number) => number | number[] | undefined
+  dispatchAction: (payload: unknown) => void
+}
+
+type BrushZoomPayload = {
+  areas?: Array<{
+    coordRange?: number[]
+  }>
+}
+
 export interface UseBrushZoomOptions {
-  chartRef: Readonly<ShallowRef<any>>
+  chartRef: Readonly<Ref<BrushZoomChart | undefined>>
   onSelectionStart?: () => void
   onSelectionEnd?: (timeRange: AbsoluteTimeRangeV4 | undefined) => void
 }
@@ -17,7 +28,9 @@ export default function useBrushZoom(options: UseBrushZoomOptions) {
   const brushTimeRange = ref<AbsoluteTimeRangeV4 | undefined>(undefined)
 
   const xValFromPixel = (e: ElementEvent): number | undefined => {
-    return chartRef.value?.convertFromPixel({ xAxisIndex: 0 }, e.offsetX)
+    const value = chartRef.value?.convertFromPixel({ xAxisIndex: 0 }, e.offsetX)
+
+    return typeof value === 'number' ? value : undefined
   }
 
   const setBrush = (min: number, max: number) => {
@@ -97,13 +110,15 @@ export default function useBrushZoom(options: UseBrushZoomOptions) {
     onSelectionEnd?.(brushTimeRange.value)
   }
 
-  const handleBrush = (e: any) => {
-    if (!e.areas?.[0]?.coordRange) return
+  const handleBrush = (e: BrushZoomPayload) => {
+    const [start, end] = e.areas?.[0]?.coordRange || []
+
+    if (start === undefined || end === undefined) return
 
     brushTimeRange.value = {
       type: 'absolute',
-      start: new Date(e.areas[0].coordRange[0]),
-      end: new Date(e.areas[0].coordRange[1]),
+      start: new Date(start),
+      end: new Date(end),
     }
   }
 

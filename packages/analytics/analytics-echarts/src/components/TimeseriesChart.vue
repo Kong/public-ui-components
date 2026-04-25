@@ -52,6 +52,7 @@ import {
   type ExploreResultV4,
   type GranularityValues,
 } from '@kong-ui-public/analytics-utilities'
+import type { ElementEvent } from 'echarts/core'
 import composables from '../composables'
 import {
   datavisPalette,
@@ -274,7 +275,7 @@ const { option } = composables.useTimeseriesChartOption({
   tooltipState,
 })
 
-const handleMouseMove = (event: any) => {
+const handleMouseMove = (event: ElementEvent) => {
   if (timeseriesZoom) {
     brushMouseMove(event)
   }
@@ -282,13 +283,13 @@ const handleMouseMove = (event: any) => {
   handleTooltipMouseMove(event)
 }
 
-const handleMouseDown = (event: any) => {
+const handleMouseDown = (event: ElementEvent) => {
   if (timeseriesZoom) {
     brushMouseDown(event)
   }
 }
 
-const handleMouseUp = (event: any) => {
+const handleMouseUp = (event: ElementEvent) => {
   if (timeseriesZoom) {
     brushMouseUp(event)
   }
