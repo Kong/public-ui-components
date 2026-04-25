@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.195.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.195.7...@kong-ui-public/entities-plugins@9.195.8) (2026-04-24)
+
+
+### Bug Fixes
+
+* **entities-plugins:** set allow/deny to null when toggling ([#3173](https://github.com/Kong/public-ui-components/issues/3173)) ([1b1641b](https://github.com/Kong/public-ui-components/commit/1b1641b4e608eeb54beb82a5103bf9261b040fa7))
+
+
+
+
+
 ## [9.195.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.195.6...@kong-ui-public/entities-plugins@9.195.7) (2026-04-23)
 
 
