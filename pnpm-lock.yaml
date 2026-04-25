@@ -469,11 +469,11 @@ importers:
         specifier: ^13.9.0
         version: 13.9.0(vue@3.5.32(typescript@5.9.3))
       focus-trap:
-        specifier: ^7.8.0
-        version: 7.8.0
+        specifier: ^8.0.1
+        version: 8.1.0
       focus-trap-vue:
         specifier: ^4.1.0
-        version: 4.1.0(focus-trap@7.8.0)(vue@3.5.32(typescript@5.9.3))
+        version: 4.1.0(focus-trap@8.1.0)(vue@3.5.32(typescript@5.9.3))
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -6223,6 +6223,9 @@ packages:
 
   focus-trap@7.8.0:
     resolution: {integrity: sha512-/yNdlIkpWbM0ptxno3ONTuf+2g318kh2ez3KSeZN5dZ8YC6AAmgeWz+GasYYiBJPFaYcSAPeu4GfhUaChzIJXA==}
+
+  focus-trap@8.1.0:
+    resolution: {integrity: sha512-T65crff26CKV2CZ3csg5y05r+560srp0b8EbAif35euW58hzklVf/Gb4Q+/HCtB8e9III3QFEyk5BWV5XJuOyw==}
 
   follow-redirects@1.15.11:
     resolution: {integrity: sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==}
@@ -16557,7 +16560,16 @@ snapshots:
       focus-trap: 7.8.0
       vue: 3.5.32(typescript@5.9.3)
 
+  focus-trap-vue@4.1.0(focus-trap@8.1.0)(vue@3.5.32(typescript@5.9.3)):
+    dependencies:
+      focus-trap: 8.1.0
+      vue: 3.5.32(typescript@5.9.3)
+
   focus-trap@7.8.0:
+    dependencies:
+      tabbable: 6.4.0
+
+  focus-trap@8.1.0:
     dependencies:
       tabbable: 6.4.0
 
