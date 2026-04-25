@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.13.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.4...@kong-ui-public/analytics-utilities@12.13.5) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency approximate-number to v3 ([#3187](https://github.com/Kong/public-ui-components/issues/3187)) ([8432e3c](https://github.com/Kong/public-ui-components/commit/8432e3c5ebe8383068ffedc351e243828e4887fa))
+
+
+
+
+
 ## [12.13.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.3...@kong-ui-public/analytics-utilities@12.13.4) (2026-04-25)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
