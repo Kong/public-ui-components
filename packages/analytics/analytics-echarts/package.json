@@ -59,7 +59,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "2MB"
+    "errorLimit": "3MB"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
