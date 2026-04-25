@@ -1,4 +1,3 @@
-import type { ExploreAggregations, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import type { SeriesOption } from 'echarts'
 import type { ChartScrollWindow, ChartTooltipSortFn, KChartData, Threshold, TooltipState } from '../types'
 import { formatChartTicksByGranularity, thresholdColor } from '../utils'
@@ -223,13 +222,13 @@ export const buildTimeseriesOption = ({
   chartData: KChartData
   chartType: 'timeseries_line' | 'timeseries_bar'
   stacked: boolean
-  granularity: GranularityValues
+  granularity: string
   tooltipState: TooltipState
   tooltipTitle?: string
   tooltipMetricDisplay?: string
   dimensionAxisTitle?: string
   metricAxisTitle?: string
-  threshold?: Partial<Record<ExploreAggregations, Threshold[]>>
+  threshold?: Partial<Record<string, Threshold[]>>
   selectedLabels: Record<string, boolean>
   formatValue: (value: number) => string
   thresholdLabelFormatter: (threshold: Threshold) => string
@@ -252,7 +251,9 @@ export const buildTimeseriesOption = ({
     return [label, selectedLabels[label] !== false]
   }))
 
-  const thresholds = threshold ? Object.values(threshold).flatMap(value => value) : []
+  const thresholds = threshold
+    ? Object.values(threshold).flatMap(value => value || [])
+    : []
   const markLineData = thresholds.map(currentThreshold => ({
     yAxis: currentThreshold.value,
     label: {

@@ -1,4 +1,4 @@
-import type { ExploreAggregations, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import type useI18n from '../composables/useI18n'
 
 type AnalyticsI18n = ReturnType<typeof useI18n>['i18n']
@@ -125,7 +125,7 @@ export const getGranularityAxisTitle = ({
   granularity,
 }: {
   i18n: AnalyticsI18n
-  granularity?: GranularityValues
+  granularity?: string
 }) => {
   if (!granularity) {
     return undefined

@@ -42,7 +42,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { AbsoluteTimeRangeV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import ZoomTimerange from './ZoomTimerange.vue'
 import { CloseIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
@@ -62,7 +62,7 @@ const {
 } = defineProps<{
   zoomActionItems: ZoomActionItem[]
   newTimeRange: AbsoluteTimeRangeV4
-  granularity: GranularityValues
+  granularity: string
 }>()
 
 const emit = defineEmits<{

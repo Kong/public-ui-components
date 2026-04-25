@@ -23,7 +23,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import { ref, watch } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
@@ -36,11 +35,11 @@ const {
 } = defineProps<{
   start: Date
   end: Date
-  granularity: GranularityValues
+  granularity: string
 }>()
 
 const { i18n } = composables.useI18n()
-const formatTime = (tickValue: Date, granularity: GranularityValues) => {
+const formatTime = (tickValue: Date, granularity: string) => {
   return formatTooltipTimestampByGranularity({
     tickValue,
     granularity,
@@ -53,7 +52,7 @@ const throttledEndTime = ref(formatTime(end, granularity))
 const updateTimeRangeDebounced = useDebounceFn((
   nextStart: Date,
   nextEnd: Date,
-  nextGranularity: GranularityValues,
+  nextGranularity: string,
 ) => {
   throttledStartTime.value = formatTime(nextStart, nextGranularity)
   throttledEndTime.value = formatTime(nextEnd, nextGranularity)

@@ -44,13 +44,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRef } from 'vue'
+import { computed, toRef, watch } from 'vue'
 import {
   msToGranularity,
   type AbsoluteTimeRangeV4,
-  type ExploreAggregations,
   type ExploreResultV4,
-  type GranularityValues,
 } from '@kong-ui-public/analytics-utilities'
 import type { ElementEvent } from 'echarts/core'
 import composables from '../composables'
@@ -104,7 +102,7 @@ const {
   timeseriesZoom?: boolean
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
-  threshold?: Partial<Record<ExploreAggregations, Threshold[]>>
+  threshold?: Partial<Record<string, Threshold[]>>
   colorPalette?: string[] | AnalyticsChartColors
   tooltipTitle?: string
   emptyStateTitle?: string
@@ -127,7 +125,7 @@ const emit = defineEmits<{
 
 const { i18n } = composables.useI18n()
 
-const timeSeriesGranularity = computed<GranularityValues>(() => {
+const timeSeriesGranularity = computed<string>(() => {
   if (!data.meta.granularity_ms && data.data.length > 1) {
     return msToGranularity(
       new Date(data.data[1].timestamp).getTime() - new Date(data.data[0].timestamp).getTime(),
@@ -220,6 +218,9 @@ const zoomActionItems = computed<ZoomActionItem[]>(() => {
     }] : []),
   ]
 })
+const canBrushTimeRange = computed(() => {
+  return timeseriesZoom || !!exploreLink || !!requestsLink
+})
 
 const {
   isSelecting,
@@ -256,7 +257,11 @@ const {
   containerLeft,
   tooltipWidth,
   tooltipHeight,
-  onReset: timeseriesZoom ? clearBrush : undefined,
+  onReset: () => {
+    if (canBrushTimeRange.value) {
+      clearBrush()
+    }
+  },
 })
 
 const { option } = composables.useTimeseriesChartOption({
@@ -276,7 +281,7 @@ const { option } = composables.useTimeseriesChartOption({
 })
 
 const handleMouseMove = (event: ElementEvent) => {
-  if (timeseriesZoom) {
+  if (canBrushTimeRange.value) {
     brushMouseMove(event)
   }
 
@@ -284,19 +289,19 @@ const handleMouseMove = (event: ElementEvent) => {
 }
 
 const handleMouseDown = (event: ElementEvent) => {
-  if (timeseriesZoom) {
+  if (canBrushTimeRange.value) {
     brushMouseDown(event)
   }
 }
 
 const handleMouseUp = (event: ElementEvent) => {
-  if (timeseriesZoom) {
+  if (canBrushTimeRange.value) {
     brushMouseUp(event)
   }
 }
 
 const handleClick = () => {
-  if (timeseriesZoom && isSelecting.value) {
+  if (canBrushTimeRange.value && isSelecting.value) {
     return
   }
 
@@ -307,6 +312,11 @@ const handleMouseOut = () => {
   handleTooltipMouseOut()
 }
 
+watch(canBrushTimeRange, (enabled) => {
+  if (!enabled) {
+    clearBrush()
+  }
+})
 
 </script>
 

@@ -1,4 +1,3 @@
-import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 import type { CallbackDataParams } from 'echarts/types/dist/shared'
 import type { ChartTooltipSortFn, KChartData, TooltipEntry, TooltipState } from '../types'
 import { formatTooltipTimestampByGranularity } from './format-timestamps'
@@ -108,7 +107,7 @@ export const createTimeseriesTooltipFormatter = ({
   formatValue,
   chartTooltipSortFn,
 }: {
-  granularity: GranularityValues
+  granularity: string
   tooltipState: TooltipState
   tooltipTitle?: string
   tooltipMetricDisplay?: string

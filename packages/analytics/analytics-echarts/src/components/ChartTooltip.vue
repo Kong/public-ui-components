@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import type { AbsoluteTimeRangeV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { DragIcon } from '@kong/icons'
 import { useElementSize, useDraggable } from '@vueuse/core'
@@ -91,7 +91,7 @@ const {
 } = defineProps<{
   state: TooltipState
   brushTimeRange?: AbsoluteTimeRangeV4
-  granularity?: GranularityValues
+  granularity?: string
   zoomActionItems?: ZoomActionItem[]
 }>()
 

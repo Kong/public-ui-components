@@ -1,6 +1,5 @@
 import type { Ref } from 'vue'
 import { computed } from 'vue'
-import type { ExploreAggregations, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import type { ECBasicOption } from 'echarts/types/dist/shared'
 import type { ChartTooltipSortFn, KChartData, Threshold, TooltipState } from '../types'
 
@@ -28,9 +27,9 @@ export default function useTimeseriesChartOption({
   chartData: Ref<KChartData>
   chartType: Ref<'timeseries_line' | 'timeseries_bar'>
   tooltipState: Ref<TooltipState>
-  granularity: Ref<GranularityValues>
+  granularity: Ref<string>
   stacked: Ref<boolean>
-  threshold: Ref<Partial<Record<ExploreAggregations, Threshold[]>> | undefined>
+  threshold: Ref<Partial<Record<string, Threshold[]>> | undefined>
   metricUnit: Ref<string>
   tooltipTitle?: Ref<string | undefined>
   tooltipMetricDisplay?: Ref<string | undefined>

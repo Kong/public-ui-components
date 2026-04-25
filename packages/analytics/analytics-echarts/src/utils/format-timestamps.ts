@@ -1,4 +1,3 @@
-import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { formatInTimeZone } from 'date-fns-tz'
 
 type TickResolver = (dayBoundaryCrossed: boolean) => string
@@ -16,7 +15,7 @@ const TICK_FMT_DATE = 'yyyy-MM-dd'
 const TOOLTIP_FMT_DATE_TIME_SECONDS = 'MMM dd, yyyy h:mm:ss a'
 const TOOLTIP_FMT_DATE_TIME_MINUTES = 'MMM dd, yyyy h:mm a'
 
-const tickResolvers: Partial<Record<GranularityValues, TickResolver>> = {
+const tickResolvers: Partial<Record<string, TickResolver>> = {
   secondly: (d) => (d ? TICK_FMT_DATE_TIME_SECONDS : TICK_FMT_TIME_SECONDS),
   tenSecondly: (d) => (d ? TICK_FMT_DATE_TIME_SECONDS : TICK_FMT_TIME_SECONDS),
   thirtySecondly: (d) => (d ? TICK_FMT_DATE_TIME_SECONDS : TICK_FMT_TIME_SECONDS),
@@ -30,7 +29,7 @@ const tickResolvers: Partial<Record<GranularityValues, TickResolver>> = {
   daily: () => TICK_FMT_DATE,
 }
 
-const tooltipResolvers: Partial<Record<GranularityValues, TooltipResolver>> = {
+const tooltipResolvers: Partial<Record<string, TooltipResolver>> = {
   secondly: () => TOOLTIP_FMT_DATE_TIME_SECONDS,
   tenSecondly: () => TOOLTIP_FMT_DATE_TIME_SECONDS,
   thirtySecondly: () => TOOLTIP_FMT_DATE_TIME_SECONDS,
@@ -54,11 +53,11 @@ function formatUsingResolver({
   defaultFormat,
 }: {
   tickValue: Date
-  granularity: GranularityValues
+  granularity: string
   timezone?: string
   dayBoundaryCrossed?: boolean
-  tickMap?: Partial<Record<GranularityValues, TickResolver>>
-  tooltipMap?: Partial<Record<GranularityValues, TooltipResolver>>
+  tickMap?: Partial<Record<string, TickResolver>>
+  tooltipMap?: Partial<Record<string, TooltipResolver>>
   defaultFormat: string
 }): string {
   const tz = timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -87,7 +86,7 @@ export const formatChartTicksByGranularity = ({
   timezone,
 }: {
   tickValue: Date
-  granularity: GranularityValues
+  granularity: string
   dayBoundaryCrossed: boolean
   timezone?: string
 }): string =>
@@ -106,7 +105,7 @@ export const formatTooltipTimestampByGranularity = ({
   timezone,
 }: {
   tickValue: Date
-  granularity: GranularityValues
+  granularity: string
   timezone?: string
 }): string =>
   formatUsingResolver({

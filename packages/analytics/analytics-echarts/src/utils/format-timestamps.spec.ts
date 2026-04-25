@@ -1,4 +1,3 @@
-import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { describe, it, expect } from 'vitest'
 import { formatChartTicksByGranularity, formatTooltipTimestampByGranularity } from './format-timestamps'
 
@@ -12,13 +11,13 @@ describe('formatChartTicksByGranularity', () => {
   ])('displays seconds when formatting \'%s\' granularity in UTC', (granularity) => {
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
-      granularity: granularity as GranularityValues,
+      granularity,
       dayBoundaryCrossed: false,
       timezone: 'UTC',
     })).toBe('3:30:45 PM')
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
-      granularity: granularity as GranularityValues,
+      granularity,
       dayBoundaryCrossed: true,
       timezone: 'UTC',
     })).toBe('2024-12-10 3:30:45 PM')
@@ -31,13 +30,13 @@ describe('formatChartTicksByGranularity', () => {
   ])('displays seconds when formatting \'%s\' granularity in America/New_York', (granularity) => {
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
-      granularity: granularity as GranularityValues,
+      granularity,
       dayBoundaryCrossed: false,
       timezone: 'America/New_York',
     })).toBe('10:30:45 AM')
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
-      granularity: granularity as GranularityValues,
+      granularity,
       dayBoundaryCrossed: true,
       timezone: 'America/New_York',
     })).toBe('2024-12-10 10:30:45 AM')
@@ -53,13 +52,13 @@ describe('formatChartTicksByGranularity', () => {
   ])('displays minutes when formatting \'%s\' granularity in UTC', (granularity) => {
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
-      granularity: granularity as GranularityValues,
+      granularity,
       dayBoundaryCrossed: false,
       timezone: 'UTC',
     })).toBe('3:30 PM')
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
-      granularity: granularity as GranularityValues,
+      granularity,
       dayBoundaryCrossed: true,
       timezone: 'UTC',
     })).toBe('2024-12-10 3:30 PM')
@@ -75,13 +74,13 @@ describe('formatChartTicksByGranularity', () => {
   ])('displays minutes when formatting \'%s\' granularity in America/New_York', (granularity) => {
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
-      granularity: granularity as GranularityValues,
+      granularity,
       dayBoundaryCrossed: false,
       timezone: 'America/New_York',
     })).toBe('10:30 AM')
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
-      granularity: granularity as GranularityValues,
+      granularity,
       dayBoundaryCrossed: true,
       timezone: 'America/New_York',
     })).toBe('2024-12-10 10:30 AM')
@@ -135,7 +134,6 @@ describe('formatChartTicksByGranularity', () => {
   it('formats with default format for unknown granularities in UTC and America/New_York', () => {
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
-      // @ts-ignore - testing unknown granularity
       granularity: 'unknownGranularity',
       dayBoundaryCrossed: false,
       timezone: 'UTC',
@@ -143,7 +141,6 @@ describe('formatChartTicksByGranularity', () => {
 
     expect(formatChartTicksByGranularity({
       tickValue: testDate,
-      // @ts-ignore - testing unknown granularity
       granularity: 'unknownGranularity',
       dayBoundaryCrossed: false,
       timezone: 'America/New_York',
@@ -169,7 +166,7 @@ describe('formatChartTicksByGranularity', () => {
     ])('formats \'%s\' granularity in UTC', (granularity, expected) => {
       expect(formatTooltipTimestampByGranularity({
         tickValue: testDate,
-        granularity: granularity as GranularityValues,
+        granularity,
         timezone: 'UTC',
       })).toBe(expected)
     })
@@ -190,7 +187,7 @@ describe('formatChartTicksByGranularity', () => {
     ])('formats \'%s\' granularity in America/New_York', (granularity, expected) => {
       expect(formatTooltipTimestampByGranularity({
         tickValue: testDate,
-        granularity: granularity as GranularityValues,
+        granularity,
         timezone: 'America/New_York',
       })).toBe(expected)
     })
