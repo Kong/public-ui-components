@@ -46,7 +46,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.52.11",
-    "vue": "^3.5.32"
+    "vue": "^3.5.33"
   },
   "repository": {
     "type": "git",

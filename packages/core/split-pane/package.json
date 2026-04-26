@@ -43,7 +43,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.20.1",
     "@kong/kongponents": "9.52.11",
-    "vue": "^3.5.32"
+    "vue": "^3.5.33"
   },
   "repository": {
     "type": "git",
@@ -66,7 +66,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.52.0",
     "@kong/kongponents": ">=9.42.0 <10.0.0",
-    "vue": "^3.5.32"
+    "vue": "^3.5.33"
   },
   "dependencies": {
     "@vueuse/core": "^14.2.1"
