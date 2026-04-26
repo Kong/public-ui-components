@@ -70,8 +70,8 @@
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-vue-devtools": "^7.7.9",
     "vitest": "^3.2.4",
-    "vue": "^3.5.32",
-    "vue-router": "^5.0.4",
+    "vue": "^3.5.33",
+    "vue-router": "^5.0.6",
     "vue-tsc": "^3.2.7"
   },
   "pnpm": {
@@ -81,7 +81,7 @@
       ]
     },
     "overrides": {
-      "vue": "3.5.32",
+      "vue": "3.5.33",
       "form-data@>=3.0.0 <3.0.4": ">=4.0.5",
       "minimatch@>=9.0.0 <9.0.7": ">=10.2.5",
       "serialize-javascript@<=7.0.2": ">=7.0.5",
@@ -134,7 +134,7 @@
   },
   "volta": {
     "node": "24.14.1",
-    "pnpm": "10.33.0"
+    "pnpm": "10.33.1"
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@10.33.1"
 }
