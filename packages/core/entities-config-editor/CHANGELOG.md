@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.25...@kong-ui-public/entities-config-editor@0.3.26) (2026-04-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
+## [0.3.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.24...@kong-ui-public/entities-config-editor@0.3.25) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-config-editor
+
+
+
+
+
 ## [0.3.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.3.23...@kong-ui-public/entities-config-editor@0.3.24) (2026-04-17)
 
 

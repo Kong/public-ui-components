@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.3.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.19...@kong-ui-public/analytics-metric-provider@11.3.21) (2026-04-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency approximate-number to v3 ([#3187](https://github.com/Kong/public-ui-components/issues/3187)) ([8432e3c](https://github.com/Kong/public-ui-components/commit/8432e3c5ebe8383068ffedc351e243828e4887fa))
+
+
+
+
+
+## [11.3.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.19...@kong-ui-public/analytics-metric-provider@11.3.20) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency approximate-number to v3 ([#3187](https://github.com/Kong/public-ui-components/issues/3187)) ([8432e3c](https://github.com/Kong/public-ui-components/commit/8432e3c5ebe8383068ffedc351e243828e4887fa))
+
+
+
+
+
+## [11.3.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.18...@kong-ui-public/analytics-metric-provider@11.3.19) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [11.3.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.17...@kong-ui-public/analytics-metric-provider@11.3.18) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3183](https://github.com/Kong/public-ui-components/issues/3183)) ([d25bc84](https://github.com/Kong/public-ui-components/commit/d25bc844fcff896a64a7940eed78cdc4bc5796b8))
+
+
+
+
+
 ## [11.3.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.16...@kong-ui-public/analytics-metric-provider@11.3.17) (2026-04-23)
 
 
