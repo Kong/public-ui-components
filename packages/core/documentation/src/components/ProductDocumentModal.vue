@@ -1,5 +1,5 @@
 <template>
-  <Teleport to="body">
+  <Teleport to="#kong-ui-app-layout-teleport-default-slot">
     <KModal
       class="edit-document-modal"
       data-testid="edit-document-modal"
