@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.15.13...@kong-ui-public/analytics-chart@10.16.0) (2026-04-27)
+
+
+### Features
+
+* **analytics-chart:** enhance donut chart visuals and add center metric ([#3174](https://github.com/Kong/public-ui-components/issues/3174)) ([6e583bf](https://github.com/Kong/public-ui-components/commit/6e583bf03850e2f38b154061eaeba4ef29ceed1e))
+
+
+
+
+
 ## [10.15.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.15.11...@kong-ui-public/analytics-chart@10.15.13) (2026-04-26)
 
 
