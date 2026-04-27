@@ -75,14 +75,20 @@ export default {
         create: `${konnectBaseApiUrl}/custom-plugins`,
         edit: `${konnectBaseApiUrl}/custom-plugins/{pluginId}`,
       },
-      // todo: cloned
+      cloned: {
+        create: `${konnectBaseApiUrl}/cloned-plugins/{pluginId}`,
+        edit: `${konnectBaseApiUrl}/cloned-plugins/{pluginId}`,
+      },
     },
     kongManager: {
       streamed: {
         create: `${KMBaseApiUrl}/custom-plugins`,
         edit: `${KMBaseApiUrl}/custom-plugins/{pluginId}`,
       },
-      // todo: cloned
+      cloned: {
+        create: `${KMBaseApiUrl}/cloned-plugins/{pluginId}`,
+        edit: `${KMBaseApiUrl}/cloned-plugins/{pluginId}`,
+      },
     },
   },
   item: {

@@ -2,6 +2,8 @@ import type { AxiosInstance } from 'axios'
 import { isAxiosError } from 'axios'
 import endpoints from '../plugins-endpoints'
 import type {
+  ClonedPluginRequestBody,
+  ClonedPluginResponse,
   InstalledPluginRequestBody,
   InstalledPluginResponse,
   StreamedPluginRequestBody,
@@ -14,6 +16,7 @@ export const CUSTOM_PLUGIN_TYPE_KEY = Symbol('customPluginType')
 export type CustomPluginWithType =
   | (InstalledPluginResponse & { [CUSTOM_PLUGIN_TYPE_KEY]: 'installed' })
   | (StreamedPluginResponse & { [CUSTOM_PLUGIN_TYPE_KEY]: 'streamed' })
+  | (ClonedPluginResponse & { [CUSTOM_PLUGIN_TYPE_KEY]: 'cloned' })
 
 interface UseKonnectCustomPluginApiOptions {
   app: 'konnect'
@@ -37,6 +40,12 @@ type UseCustomPluginApiOptions = (
 export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   const { axiosInstance, apiBaseUrl } = options
 
+  const assertKonnectInstalledApi = (): void => {
+    if (options.app !== 'konnect') {
+      throw new Error('Installed custom plugin APIs are only available for Konnect')
+    }
+  }
+
   const buildUrl = (endpointTemplate: string, pluginId?: string): string => {
     let url = `${apiBaseUrl}${endpointTemplate}`
 
@@ -56,18 +65,21 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   // ── Installed (Konnect only) ──
 
   const getInstalledPlugin = async (pluginId: string): Promise<InstalledPluginResponse> => {
+    assertKonnectInstalledApi()
     const url = buildUrl(endpoints.customPlugin.konnect.installed.edit, pluginId)
     const { data } = await axiosInstance.get<InstalledPluginResponse>(url)
     return data
   }
 
   const createInstalledPlugin = async (body: InstalledPluginRequestBody): Promise<InstalledPluginResponse> => {
+    assertKonnectInstalledApi()
     const url = buildUrl(endpoints.customPlugin.konnect.installed.create)
     const { data } = await axiosInstance.post<InstalledPluginResponse>(url, body)
     return data
   }
 
   const updateInstalledPlugin = async (pluginId: string, body: InstalledPluginRequestBody): Promise<InstalledPluginResponse> => {
+    assertKonnectInstalledApi()
     const url = buildUrl(endpoints.customPlugin.konnect.installed.edit, pluginId)
     const { data } = await axiosInstance.put<InstalledPluginResponse>(url, body)
     return data
@@ -89,7 +101,37 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
 
   const updateStreamedPlugin = async (pluginId: string, body: StreamedPluginRequestBody): Promise<StreamedPluginResponse> => {
     const url = buildUrl(endpoints.customPlugin[options.app].streamed.edit, pluginId)
-    const { data } = await axiosInstance.put<StreamedPluginResponse>(url, body)
+    const method = options.app === 'konnect' ? 'put' : 'patch'
+    const { data } = await axiosInstance[method]<StreamedPluginResponse>(url, body)
+    return data
+  }
+
+  // ── Cloned ──
+
+  const createClonedPlugin = async (body: ClonedPluginRequestBody): Promise<ClonedPluginResponse> => {
+    const { aliasName: alias, priority, sourcePlugin: link } = body
+    const url = buildUrl(endpoints.customPlugin[options.app].cloned.create, alias)
+    const { data } = await axiosInstance.put<ClonedPluginResponse>(url, {
+      link,
+      priority,
+    })
+    return data
+  }
+
+  const updateClonedPlugin = async (originName: string, body: ClonedPluginRequestBody): Promise<ClonedPluginResponse> => {
+    const { aliasName: alias, priority, sourcePlugin: link } = body
+    const url = buildUrl(endpoints.customPlugin[options.app].cloned.edit, originName)
+    const { data } = await axiosInstance.patch<ClonedPluginResponse>(url, {
+      link,
+      priority,
+      name: alias,
+    })
+    return data
+  }
+
+  const getClonedPlugin = async (pluginId: string): Promise<ClonedPluginResponse> => {
+    const url = buildUrl(endpoints.customPlugin[options.app].cloned.edit, pluginId)
+    const { data } = await axiosInstance.get<ClonedPluginResponse>(url)
     return data
   }
 
@@ -125,12 +167,21 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
       }
     }
 
-    // TODO: Try cloned once the API is available
+    try {
+      const data = await getClonedPlugin(pluginId)
+      return Object.assign(data, { [CUSTOM_PLUGIN_TYPE_KEY]: 'cloned' as const })
+    } catch (e: unknown) {
+      // not cloned, continue
+      if (isAxiosError(e) && e.response?.status !== 404) {
+        throw e
+      }
+
+    }
 
     return null
   }
 
-  const getPluginType = (plugin: CustomPluginWithType): 'installed' | 'streamed' => {
+  const getPluginType = (plugin: CustomPluginWithType): 'installed' | 'streamed' | 'cloned' => {
     return plugin[CUSTOM_PLUGIN_TYPE_KEY]
   }
 
@@ -143,5 +194,7 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
     updateStreamedPlugin,
     getPluginByUnknownType,
     getPluginType,
+    createClonedPlugin,
+    updateClonedPlugin,
   }
 }

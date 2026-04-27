@@ -442,6 +442,7 @@ import type {
   InstalledPluginResponse,
   StreamedPluginResponse,
   KongManagerCustomPluginFormConfig,
+  ClonedPluginResponse,
 } from '../types'
 import type { SelectGroup, SelectItem } from '@kong/kongponents'
 import { useRouter } from 'vue-router'
@@ -504,6 +505,8 @@ const {
   updateStreamedPlugin,
   getPluginType,
   getPluginByUnknownType,
+  createClonedPlugin,
+  updateClonedPlugin,
 } = composables.useCustomPluginApi({
   axiosInstance,
   apiBaseUrl: props.config.apiBaseUrl,
@@ -576,6 +579,8 @@ const state = reactive<{
   readonly: false,
   errorMessage: '',
 })
+
+let originalPluginAlias = ''
 
 watch(supportedPluginTypes, (types) => {
   if (editMode.value) return
@@ -743,6 +748,15 @@ onMounted(async () => {
       state.fields.name = name
       state.fields.schemaContent = schema
       state.fields.handlerContent = handler
+    } else if (type === 'cloned') {
+      const { link, name, priority } = data as ClonedPluginResponse
+      state.fields.aliasName = name
+      state.fields.sourcePlugin = link
+      state.fields.priority = priority !== null ? String(priority) : ''
+      originalPluginAlias = name
+    } else {
+      fetchError.value = t('custom_plugin_form.errors.unsupported_plugin_type', { type })
+      emit('error', new Error(fetchError.value))
     }
   } catch (err: unknown) {
     fetchError.value = getMessageFromError(err)
@@ -781,13 +795,23 @@ const submitData = async (): Promise<void> => {
         : await createStreamedPlugin(body)
       emit('update', data)
     } else {
-      // cloned - API not yet available
+      const data = editMode.value
+        ? await updateClonedPlugin(originalPluginAlias, {
+          aliasName: state.fields.aliasName,
+          sourcePlugin: state.fields.sourcePlugin,
+          priority: state.fields.priority ? parseInt(state.fields.priority, 10) : undefined,
+        })
+        : await createClonedPlugin({
+          aliasName: state.fields.aliasName,
+          sourcePlugin: state.fields.sourcePlugin,
+          priority: state.fields.priority ? parseInt(state.fields.priority, 10) : undefined,
+        })
       emit('update', {
         pluginType: 'cloned',
-        sourcePlugin: state.fields.sourcePlugin,
-        aliasName: state.fields.aliasName,
-        priority: state.fields.priority || undefined,
-      } as ClonedPluginPayload)
+        sourcePlugin: data.link,
+        aliasName: data.name,
+        priority: data.priority ?? undefined,
+      })
     }
 
     router.push(props.config.successRoute)
