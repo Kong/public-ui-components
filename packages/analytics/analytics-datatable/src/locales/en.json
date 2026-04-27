@@ -1,0 +1,14 @@
+{
+  "datatable": {
+    "errorTitle": "Unable to load data",
+    "errorMessage": "There was an error loading table data.",
+    "emptyTitle": "No data",
+    "bulkActions": "Bulk actions",
+    "selectVisibleColumns": "Select visible columns",
+    "searchPlaceholder": "Search",
+    "clearSearch": "Clear search",
+    "searchColumns": "Search columns",
+    "clearColumnSearch": "Clear search",
+    "toggleAllColumns": "Toggle all"
+  }
+}
