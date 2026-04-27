@@ -32,6 +32,7 @@
       :form-fields="getRequestBody"
       :is-readonly="form.isReadonly"
       no-validate
+      :slideout-top-offset="slideoutTopOffset"
       :wrapper-component="noCardWrapper ? 'div' : undefined"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -106,7 +107,7 @@
       :close-on-blur="false"
       data-testid="form-view-configuration-slideout"
       :has-overlay="false"
-      :offset-top="60"
+      :offset-top="slideoutTopOffset"
       :title="t('view_configuration.title')"
       :visible="isToggled"
       @close="toggle"
@@ -339,6 +340,13 @@ const props = defineProps({
     type: String as PropType<'vfg' | 'freeform'>,
     required: false,
     default: undefined,
+  },
+  /**
+   * Top offset for the slideout
+   */
+  slideoutTopOffset: {
+    type: String,
+    required: false,
   },
 })
 

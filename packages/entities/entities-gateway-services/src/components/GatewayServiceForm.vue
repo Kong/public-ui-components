@@ -8,6 +8,7 @@
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
       :is-readonly="form.isReadonly"
+      :slideout-top-offset="slideoutTopOffset"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
       @fetch:success="initForm"
@@ -546,6 +547,13 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: true,
+  },
+  /**
+   * Top offset for the slideout
+   */
+  slideoutTopOffset: {
+    type: String,
+    required: false,
   },
 })
 
