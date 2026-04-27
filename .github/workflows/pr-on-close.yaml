@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Remove preview consumption comment
-        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
+        uses: Kong/sticky-pull-request-comment@ae583cebedbfd32256b349cce8ddf5772e77636e # v3.0.4
         with:
           header: pr_preview_consumption
           delete: true
