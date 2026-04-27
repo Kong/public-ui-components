@@ -14,7 +14,7 @@
       :fetch-url="fetchUrl"
       :form-fields="formField"
       :is-readonly="form.readonly"
-      :slideout-top-offset="slideoutTopOffset"
+      :slideout-top-offset="slideoutTopOffset ?? slidoutTopOffset"
       :wrapper-component="isManagedKonnectLayout ? 'div' : 'KCard'"
       @cancel="cancelHandler"
       @code-block-tab-change="(tab: string) => codeBlockType = tab"
