@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.197.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.196.1...@kong-ui-public/entities-plugins@9.197.0) (2026-04-28)
+
+
+### Features
+
+* **entities-plugins:** reslove cloned plugin engine via source ([#3197](https://github.com/Kong/public-ui-components/issues/3197)) ([ddb2580](https://github.com/Kong/public-ui-components/commit/ddb2580b46007db6fd63947e207d8d478e40f636))
+
+
+
+
+
 ## [9.196.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.196.0...@kong-ui-public/entities-plugins@9.196.1) (2026-04-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
