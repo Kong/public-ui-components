@@ -1,6 +1,6 @@
 import type { AxiosInstance } from 'axios'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { useCustomPluginApi } from './useCustomPluginApi'
+import { fetchAllPages, useCustomPluginApi } from './useCustomPluginApi'
 
 describe('useCustomPluginApi', () => {
   let axiosInstance: Pick<AxiosInstance, 'get' | 'post' | 'put' | 'patch'>
@@ -55,5 +55,38 @@ describe('useCustomPluginApi', () => {
     expect(axiosInstance.post).not.toHaveBeenCalled()
     expect(axiosInstance.put).not.toHaveBeenCalled()
     expect(axiosInstance.patch).not.toHaveBeenCalled()
+  })
+
+  it('preserves hostname when paginating absolute next urls', async () => {
+    vi.mocked(axiosInstance.get)
+      .mockResolvedValueOnce({
+        data: {
+          data: [{ id: 'page-1' }],
+          next: 'https://api.example.com/default/custom-plugins?offset=next-page',
+        },
+      })
+      .mockResolvedValueOnce({
+        data: {
+          data: [{ id: 'page-2' }],
+          next: null,
+        },
+      })
+
+    const records = await fetchAllPages<{ id: string }>(
+      axiosInstance as AxiosInstance,
+      'https://api.example.com/default/custom-plugins',
+    )
+
+    expect(records).toEqual([{ id: 'page-1' }, { id: 'page-2' }])
+    expect(axiosInstance.get).toHaveBeenNthCalledWith(
+      1,
+      'https://api.example.com/default/custom-plugins?size=1000',
+      { signal: undefined },
+    )
+    expect(axiosInstance.get).toHaveBeenNthCalledWith(
+      2,
+      'https://api.example.com/default/custom-plugins?offset=next-page&size=1000',
+      { signal: undefined },
+    )
   })
 })

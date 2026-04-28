@@ -34,10 +34,15 @@ const MAX_PAGES = 20
 const MAX_RECORDS = 5000
 
 const appendPageSize = (url: string, size = PAGE_SIZE): string => {
+  const isAbsoluteUrl = /^[a-z][a-z\d+.-]*:/i.test(url)
   const parsedUrl = new URL(url, 'http://localhost')
 
   if (!parsedUrl.searchParams.has('size')) {
     parsedUrl.searchParams.set('size', `${size}`)
+  }
+
+  if (isAbsoluteUrl) {
+    return parsedUrl.toString()
   }
 
   return `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`
