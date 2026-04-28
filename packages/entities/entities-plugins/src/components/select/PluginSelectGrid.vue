@@ -24,10 +24,13 @@
     <PluginSelectGroup
       v-if="!props.hideHighlightedPlugins && props.highlightedPlugins.length > 0"
       v-model="isHighlightedPluginsCollapsed"
+      :can-delete-custom-plugin="canDeleteCustomPlugin"
+      :can-edit-custom-plugin="canEditCustomPlugin"
       :config="config"
       :name="props.highlightedPluginsTitle || t('plugins.select.highlighted_plugins.title')"
       :navigate-on-click="navigateOnClick"
       :plugins="props.highlightedPlugins"
+      @delete:success="(pluginName: string) => emit('delete:success', pluginName)"
       @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
     />
 
@@ -38,10 +41,13 @@
       >
         <PluginSelectGroup
           v-model="shouldCollapsed[group]"
+          :can-delete-custom-plugin="canDeleteCustomPlugin"
+          :can-edit-custom-plugin="canEditCustomPlugin"
           :config="config"
           :name="group"
           :navigate-on-click="navigateOnClick"
           :plugins="displayedPlugins[group as keyof PluginCardList] || []"
+          @delete:success="(pluginName: string) => emit('delete:success', pluginName)"
           @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
         />
       </div>
@@ -88,6 +94,14 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  canDeleteCustomPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  canEditCustomPlugin: {
+    type: Boolean,
+    default: false,
+  },
   /**
    * List of plugins to show in the highlighted plugins group
    */
@@ -113,6 +127,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType): void
+  (e: 'delete:success', pluginName: string): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()

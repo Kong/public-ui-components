@@ -604,6 +604,9 @@
     },
     "select": {
       "custom_badge_text": "This plugin is data plane node specific",
+      "cloned_from_badge": "Cloned from {link}",
+      "installed_custom_badge": "Installed custom",
+      "streamed_custom_badge": "Streamed custom",
       "unavailable_tooltip": "This plugin is not available",
       "already_exists": "This plugin is already applied to this resource",
       "misc_plugins": "Other plugins",
@@ -633,6 +636,8 @@
           "title": "Custom plugins",
           "description": "Custom plugins will be available in this control plane only.",
           "disabled_tooltip": "Custom plugins are not available with this gateway. Create a hybrid or dedicated cloud gateway to leverage custom plugins.",
+          "fetch_error": "Unable to load some custom plugins. Bundled plugins are still available.",
+          "license_required": "Plugin cloning requires a license to be used.",
           "empty_title": "No custom plugins",
           "empty_description": "No custom plugins have been added to this control plane.",
           "create": {
