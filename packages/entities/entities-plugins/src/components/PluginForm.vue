@@ -356,12 +356,12 @@ const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()
 
-const { axiosInstance: axiosInstanceIgnore404 } = useAxios({ konnect: { bypassGlobal404Handler: true } } as any)
+const { axiosInstance: axiosInstanceWithout404Redirect } = useAxios({ konnect: { bypassGlobal404Handler: true } } as any)
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const { getClonedPlugin: fetchClonedPluginDetail } = composables.useCustomPluginApi({
   // force bypassGlobal404Handler for this call
-  axiosInstance: axiosInstanceIgnore404,
+  axiosInstance: axiosInstanceWithout404Redirect,
   apiBaseUrl: props.config.apiBaseUrl,
   app: props.config.app,
   workspace: (props.config as KongManagerPluginFormConfig).workspace,
@@ -1511,7 +1511,7 @@ onBeforeMount(async () => {
       const shouldResolveClone = enabledClonedPlugin && isCustomPlugin.value
       const schemaPromise: Promise<any> = props.schema
         ? Promise.resolve(props.schema)
-        : axiosInstanceIgnore404.get(schemaUrl.value).then(res => res.data)
+        : axiosInstanceWithout404Redirect.get(schemaUrl.value).then(res => res.data)
       const [data] = await Promise.all([
         schemaPromise,
         shouldResolveClone ? getClonedPlugin(props.pluginType) : Promise.resolve(),
