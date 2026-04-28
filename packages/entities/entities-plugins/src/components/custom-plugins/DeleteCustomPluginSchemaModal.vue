@@ -96,16 +96,32 @@ const errorMessage = ref('')
 const isPluginSchemaInUse = ref(false)
 
 const requestUrl = computed(() => {
+  const pluginType = props.plugin.customPluginType
+
   if (props.config.app === 'konnect') {
-    const partialPluginURL = props.plugin.customPluginType === 'streaming'
+    const partialPluginURL = pluginType === 'streaming'
       ? endpoints.select[props.config.app].streamingCustomPluginItem
-      : endpoints.select[props.config.app].schemaCustomPluginItem
+      : pluginType === 'cloned'
+        ? endpoints.customPlugin[props.config.app].cloned.edit
+        : endpoints.select[props.config.app].schemaCustomPluginItem
+
     let url = `${props.config.apiBaseUrl}${partialPluginURL}`
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
     url = url.replace(/{pluginId}/gi, props.plugin.id)
     return url
   }
-  // Kong Manager does not have this feature
+
+  if (props.config.app === 'kongManager' && pluginType && pluginType !== 'schema') {
+    const partialPluginUrl = pluginType === 'cloned'
+      ? endpoints.customPlugin[props.config.app].cloned.edit
+      : endpoints.customPlugin[props.config.app].streamed.edit
+
+    let url = `${props.config.apiBaseUrl}${partialPluginUrl}`
+    url = url.replace(/{workspace}/gi, props.config.workspace || '')
+    url = url.replace(/{pluginId}/gi, props.plugin.id)
+    return url
+  }
+
   return null
 })
 
@@ -113,7 +129,8 @@ const handleSubmit = async (): Promise<void> => {
   isLoading.value = true
   errorMessage.value = ''
 
-  if (!props.plugin?.name || props.config?.app !== 'konnect') {
+  if (!props.plugin?.name) {
+    isLoading.value = false
     return
   }
 

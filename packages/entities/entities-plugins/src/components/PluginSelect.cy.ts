@@ -26,7 +26,7 @@ const baseConfigKonnect: KonnectPluginSelectConfig = {
   }),
   // custom plugins
   createCustomRoute: { name: 'create-custom-plugin' },
-  getCustomEditRoute: (plugin: string, type: 'schema' | 'streaming') => ({
+  getCustomEditRoute: (plugin: string, type: 'schema' | 'streaming' | 'cloned') => ({
     name: 'edit-custom-plugin',
     params: {
       control_plane_id: 'abc-123-i-love-cats',

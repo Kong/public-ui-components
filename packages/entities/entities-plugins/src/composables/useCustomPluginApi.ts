@@ -24,6 +24,56 @@ interface UseKonnectCustomPluginApiOptions {
   workspace?: string
 }
 
+interface PagedResponse<T> {
+  data: T[]
+  next?: string | null
+}
+
+const PAGE_SIZE = 1000
+const MAX_PAGES = 20
+const MAX_RECORDS = 5000
+
+const appendPageSize = (url: string, size = PAGE_SIZE): string => {
+  const parsedUrl = new URL(url, 'http://localhost')
+
+  if (!parsedUrl.searchParams.has('size')) {
+    parsedUrl.searchParams.set('size', `${size}`)
+  }
+
+  return `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`
+}
+
+export const fetchAllPages = async <T>(
+  axiosInstance: AxiosInstance,
+  initialUrl: string,
+  signal?: AbortSignal,
+): Promise<T[]> => {
+  const records: T[] = []
+  let nextUrl: string | null = appendPageSize(initialUrl)
+  let previousUrl: string | null = null
+  let pageCount = 0
+
+  while (nextUrl && pageCount < MAX_PAGES && records.length < MAX_RECORDS) {
+    if (nextUrl === previousUrl) {
+      break
+    }
+
+    previousUrl = nextUrl
+
+    const response: { data: PagedResponse<T> } = await axiosInstance.get<PagedResponse<T>>(nextUrl, { signal })
+    const pageData: PagedResponse<T> = response.data
+
+    if (Array.isArray(pageData?.data)) {
+      records.push(...pageData.data)
+    }
+
+    nextUrl = pageData?.next ? appendPageSize(pageData.next) : null
+    pageCount += 1
+  }
+
+  return records.slice(0, MAX_RECORDS)
+}
+
 interface UseKongManagerCustomPluginApiOptions {
   app: 'kongManager'
   workspace: string
