@@ -136,7 +136,7 @@ const props = defineProps({
    * Top offset for the slideout
    */
   slideoutTopOffset: {
-    type: String,
+    type: [String, Number],
     required: false,
   },
 })
