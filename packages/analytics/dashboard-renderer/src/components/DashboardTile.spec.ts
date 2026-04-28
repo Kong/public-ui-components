@@ -203,7 +203,7 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     const wrapper = mountTile('platform', ['status_code'])
     await flushPromises()
 
-    const badge = wrapper.get('[data-testid="time-range-badge"]')
+    const badge = wrapper.getTestId('time-range-badge')
     expect(badge.text()).toContain('As of today')
   })
 
@@ -211,6 +211,6 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     const wrapper = mountTile('platform', ['time'])
     await flushPromises()
 
-    expect(wrapper.find('[data-testid="time-range-badge"]').exists()).toBe(false)
+    expect(wrapper.findTestId('time-range-badge').exists()).toBe(false)
   })
 })
