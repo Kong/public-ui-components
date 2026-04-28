@@ -35,7 +35,7 @@
     "@types/uuid": "^11.0.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
-    "@vitest/ui": "^3.2.4",
+    "@vitest/ui": "^4.1.4",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.9.1",
     "c8": "^11.0.0",
@@ -69,7 +69,7 @@
     "vite": "^5.4.21",
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-vue-devtools": "^7.7.9",
-    "vitest": "^3.2.4",
+    "vitest": "^4.1.4",
     "vue": "^3.5.33",
     "vue-router": "^5.0.6",
     "vue-tsc": "^3.2.7"
