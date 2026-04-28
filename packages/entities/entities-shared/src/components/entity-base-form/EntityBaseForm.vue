@@ -88,7 +88,7 @@
       :close-on-blur="false"
       data-testid="form-view-configuration-slideout"
       :has-overlay="false"
-      :offset-top="slidoutTopOffset"
+      :offset-top="slideoutTopOffset ?? slidoutTopOffset"
       :title="t('baseForm.configuration.title')"
       :visible="isToggled"
       @close="toggle()"
@@ -264,6 +264,13 @@ const props = defineProps({
   },
   /**
    * Top offset for the slideout
+   */
+  slideoutTopOffset: {
+    type: [String, Number],
+    required: false,
+  },
+  /**
+   * @deprecated Use `slideoutTopOffset` instead
    */
   slidoutTopOffset: {
     type: Number,

@@ -870,11 +870,11 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-update-warning-alert').should('not.exist')
       })
 
-      it('props `slidoutTopOffset` should be working', () => {
+      it('props `slideoutTopOffset` should be working', () => {
         cy.mount(RedisConfigurationForm, {
           props: {
             config,
-            slidoutTopOffset: 0,
+            slideoutTopOffset: 0,
           },
         })
 

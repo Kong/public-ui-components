@@ -9,6 +9,7 @@
       :fetch-url="fetchUrl"
       :form-fields="payload"
       :is-readonly="state.readonly"
+      :slideout-top-offset="slideoutTopOffset"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler($event)"
       @fetch:success="updateFormValues"
@@ -145,6 +146,13 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  /**
+   * Top offset for the slideout
+   */
+  slideoutTopOffset: {
+    type: [String, Number],
+    required: false,
   },
 })
 

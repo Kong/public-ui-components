@@ -7,6 +7,7 @@
       :error-message="state.errorMessage"
       :form-fields="state.fields"
       :is-readonly="state.readonly"
+      :slideout-top-offset="slideoutTopOffset"
       @cancel="cancelHandler"
       @submit="submitData"
     >
@@ -485,6 +486,13 @@ const props = defineProps({
   unsupportedTypes: {
     type: Array as PropType<CustomPluginFormType[]>,
     default: () => [],
+  },
+  /**
+   * Top offset for the slideout
+   */
+  slideoutTopOffset: {
+    type: [String, Number],
+    required: false,
   },
 })
 

@@ -14,7 +14,7 @@
       :fetch-url="fetchUrl"
       :form-fields="formField"
       :is-readonly="form.readonly"
-      :slidout-top-offset="slidoutTopOffset"
+      :slideout-top-offset="slideoutTopOffset ?? slidoutTopOffset"
       :wrapper-component="isManagedKonnectLayout ? 'div' : 'KCard'"
       @cancel="cancelHandler"
       @code-block-tab-change="(tab: string) => codeBlockType = tab"
@@ -573,6 +573,13 @@ const props = defineProps({
   },
   /**
    * Top offset for the slideout
+   */
+  slideoutTopOffset: {
+    type: [String, Number],
+    required: false,
+  },
+  /**
+   * @deprecated Use `slideoutTopOffset` instead
    */
   slidoutTopOffset: {
     type: Number,
