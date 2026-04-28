@@ -31,6 +31,26 @@ export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
   platform: PlatformExploreFilterAll
 }
 
+/**
+ * A collection of values that are used in the dashboard list filters
+ */
+export type DashboardListFilterValues = {
+  /**
+   * Distinct uuids of users who have created a dashboard
+   */
+  createdBy: {
+    values: string[]
+    truncated: boolean
+  }
+  /**
+   * Distinct labels in use by any dashboard
+   */
+  labels: {
+    values: string[]
+    truncated: boolean
+  }
+}
+
 export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<string>> = {
   basic: new Set(filterableBasicExploreDimensions),
   api_usage: new Set(filterableExploreDimensions),
