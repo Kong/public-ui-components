@@ -91,7 +91,6 @@ Read `$OUTPUT_DIR/freeform-fields.json`. Note:
 - Fields with `elementType: 'other'` — custom/complex components (maps, arrays, json, etc.)
 - `schema.konnect` or `schema.kongManager` — the raw backend schema for field type analysis
 - `consoleErrors` — any Vue warnings or JS errors
-- `schema.konnect.supported_partials` — if present, certain config sub-paths (e.g. `config.embeddings`, `config.vectordb`) support the Redis partial selector UI. This is handled automatically by `PluginForm` when `enable-redis-partial` is passed; **no action needed in the plugin's `.ts` config file**.
 
 If schema fetch returned 401 for Konnect (no auth), continue with Kong Manager schema only.
 
@@ -189,26 +188,6 @@ Also analyze the backend schema (from Step 4):
   })
   ```
 - See existing examples: `plugins/rate-limiting.ts`, `plugins/proxy-cache-advanced.ts`, `plugins/basic-auth.ts`
-
-**Pattern 2b — Nested strategy controlling multiple sub-records** (AI plugins, e.g. `config.vectordb.strategy` with `one_of: ['redis', 'pgvector']` and sibling `config.vectordb.redis` + `config.vectordb.pgvector` records)
-- The renderRules engine validates that all fields in a bundle are at the **same level** — use full nested paths in both `bundles` and `dependencies`, and the engine extracts the common parent automatically.
-- **Fix**: Use full nested paths:
-  ```typescript
-  export default definePluginConfig({
-    experimental: true,
-    renderRules: {
-      bundles: [
-        ['config.vectordb.strategy', 'config.vectordb.redis', 'config.vectordb.pgvector'],
-      ],
-      dependencies: {
-        'config.vectordb.redis': ['config.vectordb.strategy', 'redis'],
-        'config.vectordb.pgvector': ['config.vectordb.strategy', 'pgvector'],
-      },
-    },
-  })
-  ```
-- A bundle can contain more than two fields — add one entry per dependent sub-record. The strategy field (first in the bundle) is always visible; the rest are hidden until strategy matches.
-- See `plugins/ai-semantic-cache.ts` as the example.
 
 **Pattern 3 — Single long string fields that need textarea**
 - Schema: `type: 'string'`, field name suggests long content (e.g. `body_template`, `api_specification`, `body`, `script`)
