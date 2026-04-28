@@ -346,4 +346,69 @@ describe('<TargetForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('info-slot').should('be.visible').should('contain', infoSlotContent)
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in GET URL when loading with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/upstreams/${upstreamId}/targets/${target.id}`,
+        },
+        { statusCode: 200, body: target },
+      ).as('getTargetWithWorkspace')
+
+      cy.mount(TargetForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          isVisible: true,
+          targetId: target.id,
+        },
+      })
+
+      cy.wait('@getTargetWithWorkspace')
+      cy.get('.kong-ui-entities-target-form').should('be.visible')
+    })
+
+    it('uses non-default workspace name in GET URL', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/my-workspace/upstreams/${upstreamId}/targets/${target.id}`,
+        },
+        { statusCode: 200, body: target },
+      ).as('getTargetWithMyWorkspace')
+
+      cy.mount(TargetForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'my-workspace' },
+          isVisible: true,
+          targetId: target.id,
+        },
+      })
+
+      cy.wait('@getTargetWithMyWorkspace')
+      cy.get('.kong-ui-entities-target-form').should('be.visible')
+    })
+
+    it('omits workspace segment in GET URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/upstreams/${upstreamId}/targets/${target.id}`,
+        },
+        { statusCode: 200, body: target },
+      ).as('getTargetNoWorkspace')
+
+      cy.mount(TargetForm, {
+        props: {
+          config: baseConfigKonnect,
+          isVisible: true,
+          targetId: target.id,
+        },
+      })
+
+      cy.wait('@getTargetNoWorkspace')
+      cy.get('.kong-ui-entities-target-form').should('be.visible')
+    })
+  })
 })

@@ -480,13 +480,11 @@ const getUrl = (action: UpstreamsFormActions): string => {
 
   if (props.config?.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config?.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  url = url.replace(/{id}/gi, props.upstreamId)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.upstreamId)
 }
 
 const submitData = async (): Promise<void> => {

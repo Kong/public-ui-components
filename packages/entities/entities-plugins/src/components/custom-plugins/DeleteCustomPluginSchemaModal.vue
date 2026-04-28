@@ -100,10 +100,10 @@ const requestUrl = computed(() => {
     const partialPluginURL = props.plugin.customPluginType === 'streaming'
       ? endpoints.select[props.config.app].streamingCustomPluginItem
       : endpoints.select[props.config.app].schemaCustomPluginItem
-    let url = `${props.config.apiBaseUrl}${partialPluginURL}`
-    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-    url = url.replace(/{pluginId}/gi, props.plugin.id)
-    return url
+    return `${props.config.apiBaseUrl}${partialPluginURL}`
+      .replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+      .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+      .replace(/{pluginId}/gi, props.plugin.id)
   }
   // Kong Manager does not have this feature
   return null

@@ -84,7 +84,7 @@ describe('<CACertificateForm />', () => {
       cy.getTestId('ca_certificate-create-form-cancel').should('be.enabled')
       cy.getTestId('ca_certificate-create-form-submit').should('be.disabled')
       // enables save when required fields have values
-      cy.getTestId('ca-certificate-form-cert').type(caCertificate1.cert)
+      cy.getTestId('ca-certificate-form-cert').type(caCertificate1.cert, { delay: 0 })
       cy.getTestId('ca_certificate-create-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('ca-certificate-form-cert').clear()
@@ -130,7 +130,7 @@ describe('<CACertificateForm />', () => {
       cy.getTestId('ca_certificate-edit-form-cancel').should('be.enabled')
       cy.getTestId('ca_certificate-edit-form-submit').should('be.disabled')
       // enables save when form has changes
-      cy.getTestId('ca-certificate-form-cert-digest').type('edited')
+      cy.getTestId('ca-certificate-form-cert-digest').type('edited', { delay: 0 })
       cy.getTestId('ca_certificate-edit-form-submit').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('ca-certificate-form-cert-digest').clear()
@@ -255,7 +255,7 @@ describe('<CACertificateForm />', () => {
       cy.getTestId('ca_certificate-create-form-cancel').should('be.enabled')
       cy.getTestId('ca_certificate-create-form-submit').should('be.disabled')
       // enables save when required fields have values
-      cy.getTestId('ca-certificate-form-cert').type(caCertificate1.cert)
+      cy.getTestId('ca-certificate-form-cert').type(caCertificate1.cert, { delay: 0 })
       cy.getTestId('ca_certificate-create-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('ca-certificate-form-cert').clear()
@@ -301,7 +301,7 @@ describe('<CACertificateForm />', () => {
       cy.getTestId('ca_certificate-edit-form-cancel').should('be.enabled')
       cy.getTestId('ca_certificate-edit-form-submit').should('be.disabled')
       // enables save when form has changes
-      cy.getTestId('ca-certificate-form-cert-digest').type('edited')
+      cy.getTestId('ca-certificate-form-cert-digest').type('edited', { delay: 0 })
       cy.getTestId('ca_certificate-edit-form-submit').should('be.enabled')
       // disables save when form changes are undone
       cy.getTestId('ca-certificate-form-cert-digest').clear()
