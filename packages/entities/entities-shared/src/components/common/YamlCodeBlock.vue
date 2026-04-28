@@ -1,5 +1,14 @@
 <template>
-  <div class="yaml-config config-card-code-block">
+  <DeckCallout
+    v-if="props.deckCalloutPreferenceKey && deckCalloutPreference === 'visible'"
+    @click-cta="$emit('deck-callout:click-cta')"
+    @dismiss="handleDeckCalloutDismiss()"
+  />
+
+  <div
+    class="yaml-config config-card-code-block"
+    v-bind="$attrs"
+  >
     <KCodeBlock
       v-if="props.entityRecord"
       id="yaml-codeblock"
@@ -13,9 +22,16 @@
 
 <script setup lang="ts">
 import yaml from 'js-yaml'
-import type { PropType } from 'vue'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
+
 import { highlightCodeBlock } from '../../utils/code-block'
+import DeckCallout from './DeckCallout.vue'
+
+import type { PropType } from 'vue'
+
+import type { DeckCalloutPreference } from '../../types'
+
+defineOptions({ inheritAttrs: false })
 
 const props = defineProps({
   /** A record to indicate the entity's configuration, used to populate the YAML code block */
@@ -23,7 +39,23 @@ const props = defineProps({
     type: Object as PropType<Record<string, any>>,
     required: true,
   },
+  /**
+   * The localStorage key to use to persist the visibility preference for the decK format callout.
+   * Omitting this will hide the callout in any case.
+   */
+  deckCalloutPreferenceKey: {
+    type: String,
+    required: false,
+    default: '',
+  },
 })
+
+const emit = defineEmits<{
+  'deck-callout:click-cta': []
+  'deck-callout:dismiss': []
+}>()
+
+const deckCalloutPreference = ref<DeckCalloutPreference>('visible')
 
 const yamlContent = computed((): string => {
   // filter out null values, empty strings, and empty arrays since decK doesn't accept them [KHCP-10642]
@@ -31,4 +63,23 @@ const yamlContent = computed((): string => {
   // if empty object, display empty yaml, else convert to yaml and remove any trailing whitespace
   return (Object.keys(filteredRecord).length === 0 && filteredRecord.constructor === Object) ? '' : yaml.dump(filteredRecord).trim()
 })
+
+watch(() => props.deckCalloutPreferenceKey, (key) => {
+  if (key) {
+    const storedValue = localStorage.getItem(key)
+    deckCalloutPreference.value = storedValue === 'dismissed' ? 'dismissed' : 'visible'
+  }
+}, { immediate: true })
+
+watch(deckCalloutPreference, (preference) => {
+  const key = props.deckCalloutPreferenceKey
+  if (key) {
+    localStorage.setItem(key, preference)
+  }
+})
+
+function handleDeckCalloutDismiss() {
+  deckCalloutPreference.value = 'dismissed'
+  emit('deck-callout:dismiss')
+}
 </script>

@@ -115,6 +115,7 @@
         {{ t('view_configuration.message') }}
       </div>
       <KTabs
+        v-model="configTab"
         data-testid="form-view-configuration-slideout-tabs"
         :tabs="tabs"
       >
@@ -127,7 +128,11 @@
           />
         </template>
         <template #yaml>
-          <YamlCodeBlock :entity-record="viewConfigurationRecord" />
+          <YamlCodeBlock
+            :deck-callout-preference-key="isDeckEnabled ? deckCalloutPreferenceKey : undefined"
+            :entity-record="viewConfigurationRecord"
+            @deck-callout:click-cta="configTab = '#deck'"
+          />
         </template>
         <template #terraform>
           <TerraformCodeBlock
@@ -137,14 +142,30 @@
           />
         </template>
         <template #deck>
+          <div
+            v-if="Boolean(deckCustomizationOptions)"
+            class="button-customize-deck-wrapper"
+          >
+            <KButton
+              appearance="secondary"
+              class="button-customize-deck"
+              @click="isDeckCustomizationVisible = true"
+            >
+              {{ t('plugins.form.button_deck_customize') }}
+            </KButton>
+          </div>
+
           <DeckCodeBlock
             :app="config.app"
             :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
+            :customization-options="deckCustomizationOptions"
             :entity-record="viewConfigurationRecord"
             :entity-type="SupportedEntityType.Plugin"
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :is-customization-modal-visible="isDeckCustomizationVisible"
             :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
             :workspace="config.app === 'kongManager' ? config.workspace : undefined"
+            @customization-close="isDeckCustomizationVisible = false"
           />
         </template>
       </KTabs>
@@ -162,6 +183,7 @@ import {
   DeckCodeBlock,
   SupportedEntityType,
   useAxios,
+  useBaseFormDeckOptions,
   useErrors,
   useHelpers,
   useStringHelpers,
@@ -401,6 +423,18 @@ provide(REDIS_PARTIAL_INFO, {
   redisPath: pluginRedisPath,
   isEditing: isEditing.value,
 })
+
+const isDeckCustomizationVisible = ref(false)
+
+const {
+  isDeckEnabled,
+  deckCustomizationOptions,
+  deckCalloutPreferenceKey,
+} = useBaseFormDeckOptions(
+  () => props.config,
+  SupportedEntityType.Plugin,
+)
+
 const formLoading = ref(false)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
@@ -439,12 +473,14 @@ if (props.config.app === 'konnect') {
   })
 }
 
-if (props.config.app === 'kongManager' || props.config.enableDeckTab) {
+if (isDeckEnabled.value) {
   tabs.value.push({
     title: t('view_configuration.deck'),
     hash: '#deck',
   })
 }
+
+const configTab = ref(tabs.value[0].hash)
 
 // For array-typed fields, if their elements are deeply nested objects,
 // we need this variable to record the key of the array field.
@@ -1645,6 +1681,13 @@ async function getClonedPlugin(clonedPluginName: string): Promise<void> {
         margin-inline-start: unset!important;
       }
     }
+  }
+
+  .button-customize-deck-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: var(--kui-space-60, $kui-space-60);
   }
 }
 </style>

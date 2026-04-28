@@ -10,7 +10,7 @@ const sanitizedPackageName = sanitizePackageName(packageName)
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
   plugins: [monaco({
-    languages: ['yaml'],
+    languages: ['powershell', 'shell', 'yaml'],
   })],
   build: {
     lib: {
