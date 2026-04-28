@@ -109,7 +109,6 @@ const {
   fields?: string[]
   selectedItem?: SelectItem<string>
   selectedItemLoading?: boolean
-  initialItemSelected?: boolean
   domId: string
   id: string
   entity: string

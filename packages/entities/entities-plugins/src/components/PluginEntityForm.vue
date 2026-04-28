@@ -13,6 +13,7 @@
       <component
         :is="freeformComponent"
         v-if="freeformComponent"
+        :developer="developer"
         :field-renderers="pluginConfig?.fieldRenderers"
         :form-model="formModel"
         :form-schema="formSchema"
@@ -236,6 +237,12 @@ const props = defineProps({
     type: String as PropType<'vfg' | 'freeform'>,
     required: false,
     default: undefined,
+  },
+
+  /** For Kong Manager portal developers */
+  developer: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -888,7 +895,6 @@ const initFormModel = (): void => {
 watch(loading, (newLoading) => {
   emit('loading', newLoading)
 })
-
 // if the schema changed we've got to start over and completely rebuild the form model
 watch(() => props.schema, (newSchema, oldSchema) => {
   if (objectsAreEqual(newSchema || {}, oldSchema || {})) {

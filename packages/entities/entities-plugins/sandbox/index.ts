@@ -50,7 +50,8 @@ const init = async () => {
       {
         path: '/custom-plugin/:plugin/edit',
         name: 'edit-custom-plugin',
-        component: () => import('./pages/FallbackPage.vue'),
+        props: true,
+        component: () => import('./pages/CustomPluginFormPage.vue'),
       },
       {
         path: '/plugin/:plugin/:id/edit',
@@ -81,6 +82,11 @@ const init = async () => {
       {
         path: '/consumer_group/:id',
         name: 'view-consumer_group',
+        component: () => import('./pages/FallbackPage.vue'),
+      },
+      {
+        path: '/certificate/:id',
+        name: 'view-certificate',
         component: () => import('./pages/FallbackPage.vue'),
       },
       {

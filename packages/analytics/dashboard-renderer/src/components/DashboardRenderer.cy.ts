@@ -19,6 +19,7 @@ import {
   TimePeriods,
 } from '@kong-ui-public/analytics-utilities'
 import DashboardRenderer from './DashboardRenderer.vue'
+import DashboardTile from './DashboardTile.vue'
 import {
   nonTsExploreResponse,
   timeSeriesExploreResponse,
@@ -975,6 +976,107 @@ describe('<DashboardRenderer />', () => {
     cy.getTestId('tile-tile-1').trigger('mouseover')
     cy.getTestId('tile-tile-1').get('.ui-resizable-sw').should('exist')
     cy.getTestId('tile-tile-1').get('.ui-resizable-se').should('exist')
+  })
+
+  it('preview mode hides tile kebab menus', () => {
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '15m',
+        },
+        editable: true,
+      },
+      modelValue: fourByFourDashboardConfigJustCharts,
+      preview: true,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    fourByFourDashboardConfigJustCharts.tiles.forEach((tile: TileConfig) => {
+      cy.getTestId(`kebab-action-menu-${tile.id}`).should('not.exist')
+      cy.getTestId(`edit-tile-${tile.id}`).should('not.exist')
+    })
+
+    cy.getTestId('tile-tile-1').trigger('mouseover')
+    cy.getTestId('tile-tile-1').find('.ui-resizable-sw').should('not.exist')
+    cy.getTestId('tile-tile-1').find('.ui-resizable-se').should('not.exist')
+  })
+
+  it('preview mode passes a non-interactive context to tiles', () => {
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '15m',
+        },
+        editable: true,
+      },
+      modelValue: fourByFourDashboardConfigJustCharts,
+      onTileTimeRangeZoom: () => {},
+      preview: true,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    }).then(({ wrapper }) => {
+      const tile = wrapper.findComponent(DashboardTile)
+      const context = tile.props('context') as { editable: boolean, zoomable: boolean }
+
+      expect(tile.exists()).to.eq(true)
+      expect(context.editable).to.eq(false)
+      expect(context.zoomable).to.eq(false)
+      expect(tile.props('hideZoomActions')).to.eq(true)
+      expect(tile.props('hideActions')).to.eq(true)
+    })
+  })
+
+  it('without preview mode normal defaults are set', () => {
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '15m',
+        },
+        editable: true,
+      },
+      modelValue: fourByFourDashboardConfigJustCharts,
+      onTileTimeRangeZoom: () => {},
+      preview: false,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    }).then(({ wrapper }) => {
+      const tile = wrapper.findComponent(DashboardTile)
+      const context = tile.props('context') as { editable: boolean, zoomable: boolean }
+
+      expect(tile.exists()).to.eq(true)
+      expect(context.editable).to.eq(true)
+      expect(context.zoomable).to.eq(true)
+      expect(tile.props('hideZoomActions')).to.eq(false)
+      expect(tile.props('hideActions')).to.eq(false)
+    })
   })
 
   it('tiles maintain row-column order after reordering', () => {

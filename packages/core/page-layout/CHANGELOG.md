@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.17...@kong-ui-public/page-layout@0.2.18) (2026-04-26)
+
+**Note:** Version bump only for package @kong-ui-public/page-layout
+
+
+
+
+
+## [0.2.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.16...@kong-ui-public/page-layout@0.2.17) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/page-layout
+
+
+
+
+
+## [0.2.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.15...@kong-ui-public/page-layout@0.2.16) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/page-layout
+
+
+
+
+
+## [0.2.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.14...@kong-ui-public/page-layout@0.2.15) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.52.0 ([#3168](https://github.com/Kong/public-ui-components/issues/3168)) ([bb53126](https://github.com/Kong/public-ui-components/commit/bb531267d6a9f37998ef164995ca590a980be807))
+
+
+
+
+
+## [0.2.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.13...@kong-ui-public/page-layout@0.2.14) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.51.0 ([#3161](https://github.com/Kong/public-ui-components/issues/3161)) ([e31249c](https://github.com/Kong/public-ui-components/commit/e31249c1abf532c946acc4f6f12f089c1beaf7ef))
+
+
+
+
+
+## [0.2.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.12...@kong-ui-public/page-layout@0.2.13) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3007](https://github.com/Kong/public-ui-components/issues/3007)) ([69e7d85](https://github.com/Kong/public-ui-components/commit/69e7d856c9802cc728b18b259b632426d5d7a549))
+
+
+
+
+
 ## [0.2.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.11...@kong-ui-public/page-layout@0.2.12) (2026-04-13)
 
 

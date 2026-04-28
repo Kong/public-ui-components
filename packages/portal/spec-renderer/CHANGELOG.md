@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.12...@kong-ui-public/spec-renderer@2.6.13) (2026-04-26)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.6.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.11...@kong-ui-public/spec-renderer@2.6.12) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.6.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.10...@kong-ui-public/spec-renderer@2.6.11) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.6.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.9...@kong-ui-public/spec-renderer@2.6.10) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.52.0 ([#3168](https://github.com/Kong/public-ui-components/issues/3168)) ([bb53126](https://github.com/Kong/public-ui-components/commit/bb531267d6a9f37998ef164995ca590a980be807))
+
+
+
+
+
+## [2.6.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.8...@kong-ui-public/spec-renderer@2.6.9) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency uuid to v14 [security] ([#3166](https://github.com/Kong/public-ui-components/issues/3166)) ([2f787f0](https://github.com/Kong/public-ui-components/commit/2f787f0ef80b9df102ed3556a77f0088eeab4d99))
+
+
+
+
+
+## [2.6.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.7...@kong-ui-public/spec-renderer@2.6.8) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.51.0 ([#3161](https://github.com/Kong/public-ui-components/issues/3161)) ([e31249c](https://github.com/Kong/public-ui-components/commit/e31249c1abf532c946acc4f6f12f089c1beaf7ef))
+
+
+
+
+
+## [2.6.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.6...@kong-ui-public/spec-renderer@2.6.7) (2026-04-22)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.6.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.5...@kong-ui-public/spec-renderer@2.6.6) (2026-04-17)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.6.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.4...@kong-ui-public/spec-renderer@2.6.5) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3007](https://github.com/Kong/public-ui-components/issues/3007)) ([69e7d85](https://github.com/Kong/public-ui-components/commit/69e7d856c9802cc728b18b259b632426d5d7a549))
+
+
+
+
+
 ## [2.6.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.3...@kong-ui-public/spec-renderer@2.6.4) (2026-03-25)
 
 

@@ -112,6 +112,14 @@ yarn add @kong-ui-public/analytics-chart
 - default: `false`
 - Enable zooming on timeseries charts
 
+#### `showCenterMetric` (donut only)
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+- When `true` and `chartOptions.type` is `'donut'`, displays the summed total value in the center of the chart along with a label derived from the metric name (e.g. "Request count").
+- Only renders for summable metric units (`count`, `requests`, `usd`, `token count`). Automatically hidden for non-summable units such as `ms` or `bytes`.
+
 ### Events
 `@zoom-time-range` - event emitted representing a new time range on zoom selection see [AbsoluteTimeRangeV4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore/common.ts#L33)
 

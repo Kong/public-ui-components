@@ -1,5 +1,5 @@
 import type { CommonSchemaFields } from '../../types/plugins/shared'
-import { stripEmptyBasicFields } from '../../utils/helper'
+import { removeOauthbearer, stripEmptyBasicFields } from '../../utils/helper'
 
 export const kafkaLogSchema: CommonSchemaFields = {
   // Clean up empty authentication fields in the payload before submission.
@@ -7,5 +7,7 @@ export const kafkaLogSchema: CommonSchemaFields = {
   // when both username and password are not provided.
   shamefullyTransformPayload: ({ payload }) => {
     stripEmptyBasicFields(payload.config?.schema_registry)
+
+    removeOauthbearer(payload)
   },
 }

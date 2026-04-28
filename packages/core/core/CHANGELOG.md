@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.11.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.20...@kong-ui-public/core@1.11.21) (2026-04-26)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.11.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.19...@kong-ui-public/core@1.11.20) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.11.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.18...@kong-ui-public/core@1.11.19) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3183](https://github.com/Kong/public-ui-components/issues/3183)) ([d25bc84](https://github.com/Kong/public-ui-components/commit/d25bc844fcff896a64a7940eed78cdc4bc5796b8))
+
+
+
+
+
+## [1.11.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.17...@kong-ui-public/core@1.11.18) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3167](https://github.com/Kong/public-ui-components/issues/3167)) ([acaa6a4](https://github.com/Kong/public-ui-components/commit/acaa6a433a5fdf0cdabe20ee6d0948890e19bdd4))
+
+
+
+
+
+## [1.11.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.16...@kong-ui-public/core@1.11.17) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3152](https://github.com/Kong/public-ui-components/issues/3152)) ([b4ee165](https://github.com/Kong/public-ui-components/commit/b4ee165d6b026bb4ce48dc40f67dbce0c0e2c02c))
+
+
+
+
+
+## [1.11.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.15...@kong-ui-public/core@1.11.16) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3007](https://github.com/Kong/public-ui-components/issues/3007)) ([69e7d85](https://github.com/Kong/public-ui-components/commit/69e7d856c9802cc728b18b259b632426d5d7a549))
+
+
+
+
+
 ## [1.11.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.14...@kong-ui-public/core@1.11.15) (2026-04-10)
 
 **Note:** Version bump only for package @kong-ui-public/core

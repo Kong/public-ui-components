@@ -22,7 +22,7 @@
         {{ i18n.t('renderer.noQueryBridge') }}
       </KAlert>
       <component
-        :is="context.editable && !isFullscreen ? DraggableGridLayout : GridLayout"
+        :is="internalContext.editable && !isFullscreen ? DraggableGridLayout : GridLayout"
         v-else
         ref="gridLayoutRef"
         :tile-height="model.tile_height"
@@ -44,6 +44,8 @@
             :context="internalContext"
             :definition="tile.meta"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+            :hide-actions="!internalContext.showTileActions"
+            :hide-zoom-actions="!internalContext.showTileZoomActions"
             :is-fullscreen="isFullscreen"
             :query-ready="queryReady"
             :tile-id="tile.id"
@@ -67,11 +69,10 @@ import type {
   SlottableOptions,
   TileConfig,
   TileDefinition,
-  TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import type { ComponentPublicInstance } from 'vue'
-import { computed, inject, nextTick, ref, toRef } from 'vue'
+import { computed, inject, nextTick, ref } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
@@ -81,11 +82,14 @@ import {
   INJECT_QUERY_PROVIDER,
   TIMEFRAME_TOKEN,
 } from '../constants'
-import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
-const props = defineProps<{
+const {
+  context,
+  preview = false,
+} = defineProps<{
   context: DashboardRendererContext
+  preview?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -117,29 +121,6 @@ if (!queryBridge) {
 // Enable a request queue on the query bridge for all subcomponents.
 composables.useRequestQueue()
 
-const configStore = useAnalyticsConfigStore()
-
-const timeSpec = computed<TimeRangeV4>(() => {
-  if (props.context.timeSpec) {
-    return props.context.timeSpec
-  }
-
-  return {
-    type: 'relative',
-    time_range: configStore.defaultQueryTimeForOrg,
-  }
-})
-
-const queryReady = computed<boolean>(() => {
-  // In the future, this will need to be determined on a per-tile basis to support pipelining.
-  // For now, it's fine for it to only be global.
-
-  // We're ready to issue queries if we know the time spec.
-  // We know the timespec if we were given the timespec, or if the config store has loaded the org's retention
-  // and we're able to calculate a timespec.
-  return !!props.context.timeSpec || !configStore.loading
-})
-
 const tileSortFn = (a: TileConfig, b: TileConfig) => {
   const rowDiff = a.layout.position.row - b.layout.position.row
   if (rowDiff !== 0) {
@@ -155,7 +136,8 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
     if ('description' in tileMeta.chart) {
       // Replace tokens in tile descriptions
       const description = tileMeta.chart.description?.replace(TIMEFRAME_TOKEN, () => {
-        const timeSpecKey = timeSpec.value.type === 'absolute' ? 'custom' : timeSpec.value.time_range
+        const { timeSpec } = internalContext.value
+        const timeSpecKey = timeSpec.type === 'absolute' ? 'custom' : timeSpec.time_range
         const key = `renderer.trendRange.${timeSpecKey}`
 
         // Right now, we basically only support 2 ranges: 24 hours and 30 days.
@@ -178,7 +160,7 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
       }
     }
 
-    if (props.context.editable && !tile.id) {
+    if (internalContext.value.editable && !tile.id) {
       console.warn(
         'No id provided for tile. One will be generated automatically,',
         'however tracking changes to this tile may not work as expected.',
@@ -299,10 +281,11 @@ const globalFilters = computed<AllFilters[]>(() => {
   return model.value.preset_filters as AllFilters[] ?? []
 })
 
-const { internalContext } = composables.useDashboardInternalContext({
+const { internalContext, queryReady } = composables.useDashboardInternalContext({
   globalFilters,
-  context: toRef(props, 'context'),
+  context: computed(() => context),
   isFullscreen,
+  preview: computed(() => preview),
 })
 
 defineExpose({

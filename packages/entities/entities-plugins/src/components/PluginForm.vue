@@ -47,10 +47,11 @@
       <PluginEntityForm
         :config="config"
         :credential="treatAsCredential"
+        :developer="developer"
         :editing="formType === EntityBaseFormType.Edit"
         :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
-        :engine="engine"
+        :engine="realEngine"
         :entity-map="entityMap"
         :raw-schema="loadedSchema"
         :record="record"
@@ -114,6 +115,7 @@
         {{ t('view_configuration.message') }}
       </div>
       <KTabs
+        v-model="configTab"
         data-testid="form-view-configuration-slideout-tabs"
         :tabs="tabs"
       >
@@ -126,7 +128,11 @@
           />
         </template>
         <template #yaml>
-          <YamlCodeBlock :entity-record="viewConfigurationRecord" />
+          <YamlCodeBlock
+            :deck-callout-preference-key="isDeckEnabled ? deckCalloutPreferenceKey : undefined"
+            :entity-record="viewConfigurationRecord"
+            @deck-callout:click-cta="configTab = '#deck'"
+          />
         </template>
         <template #terraform>
           <TerraformCodeBlock
@@ -136,14 +142,30 @@
           />
         </template>
         <template #deck>
+          <div
+            v-if="Boolean(deckCustomizationOptions)"
+            class="button-customize-deck-wrapper"
+          >
+            <KButton
+              appearance="secondary"
+              class="button-customize-deck"
+              @click="isDeckCustomizationVisible = true"
+            >
+              {{ t('plugins.form.button_deck_customize') }}
+            </KButton>
+          </div>
+
           <DeckCodeBlock
             :app="config.app"
             :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
+            :customization-options="deckCustomizationOptions"
             :entity-record="viewConfigurationRecord"
             :entity-type="SupportedEntityType.Plugin"
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :is-customization-modal-visible="isDeckCustomizationVisible"
             :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
             :workspace="config.app === 'kongManager' ? config.workspace : undefined"
+            @customization-close="isDeckCustomizationVisible = false"
           />
         </template>
       </KTabs>
@@ -161,13 +183,14 @@ import {
   DeckCodeBlock,
   SupportedEntityType,
   useAxios,
+  useBaseFormDeckOptions,
   useErrors,
   useHelpers,
   useStringHelpers,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
-import type { AxiosError, AxiosResponse } from 'axios'
+import { isAxiosError, type AxiosError, type AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
 import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType, inject } from 'vue'
 import { useRouter } from 'vue-router'
@@ -206,6 +229,7 @@ type ScopedEntitiesPermissions = Partial<Record<ScopedEntitiesType, ScopedEntity
 
 const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => false))
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
+const enabledClonedPlugin = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, false)
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -356,6 +380,17 @@ const { objectsAreEqual } = useHelpers()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
+const { getClonedPlugin: fetchClonedPluginDetail } = composables.useCustomPluginApi({
+  axiosInstance: useAxios({
+    ...(props.config?.axiosRequestConfig ?? {}),
+    konnect: { bypassGlobal404Handler: true }, // force bypassGlobal404Handler for this call
+  } as any).axiosInstance,
+  apiBaseUrl: props.config.apiBaseUrl,
+  app: props.config.app,
+  workspace: (props.config as KongManagerPluginFormConfig).workspace,
+  controlPlaneId: (props.config as KonnectPluginFormConfig).controlPlaneId,
+})
+
 const isToggled = ref(false)
 const isEditing = computed(() => !!props.pluginId)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
@@ -366,11 +401,40 @@ const record = ref<Record<string, any> | undefined>(undefined)
 const configResponse = ref<Record<string, any>>({})
 const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
 const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
+
+const customPluginFreeform = inject(PLUGIN_FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, false)
+
+const clonedSourcePlugin = ref<string | null>(null)
+
+const isClonedPlugin = computed(() => clonedSourcePlugin.value !== null)
+
+const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
+  if (props.engine) return props.engine
+  if (!customPluginFreeform || !isCustomPlugin.value) return undefined
+  if (isClonedPlugin.value && clonedSourcePlugin.value) {
+    // Cloned plugin: defer to the source plugin's engine.
+    return isFreeForm(clonedSourcePlugin.value) ? 'freeform' : 'vfg'
+  }
+  return 'freeform'
+})
+
 provide(REDIS_PARTIAL_INFO, {
   redisType: pluginPartialType,
   redisPath: pluginRedisPath,
   isEditing: isEditing.value,
 })
+
+const isDeckCustomizationVisible = ref(false)
+
+const {
+  isDeckEnabled,
+  deckCustomizationOptions,
+  deckCalloutPreferenceKey,
+} = useBaseFormDeckOptions(
+  () => props.config,
+  SupportedEntityType.Plugin,
+)
+
 const formLoading = ref(false)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
@@ -409,12 +473,14 @@ if (props.config.app === 'konnect') {
   })
 }
 
-if (props.config.app === 'kongManager' || props.config.enableDeckTab) {
+if (isDeckEnabled.value) {
   tabs.value.push({
     title: t('view_configuration.deck'),
     hash: '#deck',
   })
 }
+
+const configTab = ref(tabs.value[0].hash)
 
 // For array-typed fields, if their elements are deeply nested objects,
 // we need this variable to record the key of the array field.
@@ -649,7 +715,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // If the field type is 'set', convert it to 'array'
     // Freeform can handle 'set' type with one_of elements as multiselect
     // Todo: create suitable component for 'set' type in freeform and remove this conversion
-    if (scheme.type === 'set' && !(isFreeForm(props.pluginType, props.engine) && scheme.elements.one_of)) {
+    if (scheme.type === 'set' && !(isFreeForm(props.pluginType, realEngine.value) && scheme.elements.one_of)) {
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
@@ -1477,7 +1543,16 @@ onBeforeMount(async () => {
       finalSchema.value = buildFormSchema('', data, {})
       schemaLoading.value = false
     } else { // handling for standard plugins
-      const data = props.schema ?? (await axiosInstance.get(schemaUrl.value)).data
+      // When the cloned-plugin feature flag is on and the plugin isn't a built-in,
+      // resolve its source plugin in parallel with the schema fetch (404 = not a clone).
+      const shouldResolveClone = enabledClonedPlugin && isCustomPlugin.value
+      const schemaPromise: Promise<any> = props.schema
+        ? Promise.resolve(props.schema)
+        : axiosInstance.get(schemaUrl.value).then(res => res.data)
+      const [data] = await Promise.all([
+        schemaPromise,
+        shouldResolveClone ? getClonedPlugin(props.pluginType) : Promise.resolve(),
+      ])
       loadedSchema.value = data
 
       if (data) {
@@ -1539,6 +1614,19 @@ onBeforeMount(async () => {
     schemaLoading.value = false
   }
 })
+
+async function getClonedPlugin(clonedPluginName: string): Promise<void> {
+  try {
+    const detail = await fetchClonedPluginDetail(clonedPluginName)
+    clonedSourcePlugin.value = detail?.link ?? null
+  } catch (error: unknown) {
+    // A 404 means this custom plugin is not a clone — leave clonedSourcePlugin null and stay quiet.
+    if (isAxiosError(error) && error.response?.status === 404) {
+      return
+    }
+    throw error
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -1593,6 +1681,13 @@ onBeforeMount(async () => {
         margin-inline-start: unset!important;
       }
     }
+  }
+
+  .button-customize-deck-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: var(--kui-space-60, $kui-space-60);
   }
 }
 </style>

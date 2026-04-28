@@ -1,4 +1,8 @@
 import { RedisType } from './types'
+
+// Developer docs: Konnect-managed Redis
+export const MANAGED_CACHE_FOR_REDIS_DOC_URL = 'https://developer.konghq.com/dedicated-cloud-gateways/reference/#managed-cache-for-redis'
+
 import type { ClusterNode, RedisConfigurationFormState, SentinelNode } from './types'
 
 export const DEFAULT_CLUSTER_NODE: Readonly<ClusterNode> = {

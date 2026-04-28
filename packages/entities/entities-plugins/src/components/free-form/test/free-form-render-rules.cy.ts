@@ -1,5 +1,6 @@
 import Form from '../shared/Form.vue'
 import type { FormSchema } from '../../../types/plugins/form-schema'
+import { renderRuleExactMatch } from '../shared/composables/render-rules'
 import type { RenderRules } from '../shared/types'
 
 const fieldPrefix = 'field'
@@ -370,6 +371,91 @@ describe('Render Rules', () => {
         cy.getTestId(getFieldTestId(getFieldName('a'))).type('value')
 
         // field_b should be hidden
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
+      })
+    })
+
+    describe('Array any-of dependencies', () => {
+      it('should toggle visibility when switching between matching and non-matching values', () => {
+        const schema = createSchema('a', 'b')
+
+        const renderRules: RenderRules = {
+          dependencies: {
+            [getFieldName('b')]: [getFieldName('a'), ['valueA', 'valueB']],
+          },
+        }
+
+        cy.mount(Form, { props: { schema, renderRules } })
+
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
+
+        cy.getTestId(getFieldTestId(getFieldName('a'))).type('valueA')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('be.visible')
+
+        cy.getTestId(getFieldTestId(getFieldName('a'))).clear()
+        cy.getTestId(getFieldTestId(getFieldName('a'))).type('other')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
+
+        cy.getTestId(getFieldTestId(getFieldName('a'))).clear()
+        cy.getTestId(getFieldTestId(getFieldName('a'))).type('valueB')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('be.visible')
+      })
+    })
+
+    describe('Exact array value dependencies', () => {
+      it('should show field when dependency exactly equals the specified array', () => {
+        const schema = createSchema('a', 'b')
+
+        const renderRules: RenderRules = {
+          dependencies: {
+            [getFieldName('b')]: [getFieldName('a'), renderRuleExactMatch(['x', 'y'])],
+          },
+        }
+
+        cy.mount(Form, {
+          props: {
+            schema,
+            renderRules,
+            data: { [getFieldName('a')]: ['x', 'y'] },
+          },
+        })
+
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('be.visible')
+      })
+
+      it('should hide field when dependency is a partial match of the array', () => {
+        const schema = createSchema('a', 'b')
+
+        const renderRules: RenderRules = {
+          dependencies: {
+            [getFieldName('b')]: [getFieldName('a'), renderRuleExactMatch(['x', 'y'])],
+          },
+        }
+
+        cy.mount(Form, {
+          props: {
+            schema,
+            renderRules,
+            data: { [getFieldName('a')]: ['x'] },
+          },
+        })
+
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
+      })
+
+      it('should not treat { type: "exact" } as any-of when dependency value is a plain string element', () => {
+        const schema = createSchema('a', 'b')
+
+        const renderRules: RenderRules = {
+          dependencies: {
+            [getFieldName('b')]: [getFieldName('a'), renderRuleExactMatch(['x', 'y'])],
+          },
+        }
+
+        cy.mount(Form, { props: { schema, renderRules } })
+
+        // 'x' is an element of the array but should NOT satisfy an exact-match against ['x', 'y']
+        cy.getTestId(getFieldTestId(getFieldName('a'))).type('x')
         cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
       })
     })

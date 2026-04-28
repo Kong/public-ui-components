@@ -65,6 +65,32 @@ export default {
       entityGetAll: `${KMBaseApiUrl}/{entity}`,
     },
   },
+  customPlugin: {
+    konnect: {
+      installed: {
+        create: `${konnectBaseApiUrl}/plugin-schemas`,
+        edit: `${konnectBaseApiUrl}/plugin-schemas/{pluginId}`,
+      },
+      streamed: {
+        create: `${konnectBaseApiUrl}/custom-plugins`,
+        edit: `${konnectBaseApiUrl}/custom-plugins/{pluginId}`,
+      },
+      cloned: {
+        create: `${konnectBaseApiUrl}/cloned-plugins/{pluginId}`,
+        edit: `${konnectBaseApiUrl}/cloned-plugins/{pluginId}`,
+      },
+    },
+    kongManager: {
+      streamed: {
+        create: `${KMBaseApiUrl}/custom-plugins`,
+        edit: `${KMBaseApiUrl}/custom-plugins/{pluginId}`,
+      },
+      cloned: {
+        create: `${KMBaseApiUrl}/cloned-plugins/{pluginId}`,
+        edit: `${KMBaseApiUrl}/cloned-plugins/{pluginId}`,
+      },
+    },
+  },
   item: {
     konnect: {
       all: `${konnectBaseApiUrl}/plugins/{id}`,

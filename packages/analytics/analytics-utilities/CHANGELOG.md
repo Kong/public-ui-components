@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.13.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.4...@kong-ui-public/analytics-utilities@12.13.6) (2026-04-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency approximate-number to v3 ([#3187](https://github.com/Kong/public-ui-components/issues/3187)) ([8432e3c](https://github.com/Kong/public-ui-components/commit/8432e3c5ebe8383068ffedc351e243828e4887fa))
+
+
+
+
+
+## [12.13.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.4...@kong-ui-public/analytics-utilities@12.13.5) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency approximate-number to v3 ([#3187](https://github.com/Kong/public-ui-components/issues/3187)) ([8432e3c](https://github.com/Kong/public-ui-components/commit/8432e3c5ebe8383068ffedc351e243828e4887fa))
+
+
+
+
+
+## [12.13.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.3...@kong-ui-public/analytics-utilities@12.13.4) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.13.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.2...@kong-ui-public/analytics-utilities@12.13.3) (2026-04-21)
+
+
+### Bug Fixes
+
+* update mock data generator ([#3150](https://github.com/Kong/public-ui-components/issues/3150)) ([90a6599](https://github.com/Kong/public-ui-components/commit/90a6599c066481271359b6156a1ce7947ce79f8f))
+
+
+
+
+
+## [12.13.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.1...@kong-ui-public/analytics-utilities@12.13.2) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3007](https://github.com/Kong/public-ui-components/issues/3007)) ([69e7d85](https://github.com/Kong/public-ui-components/commit/69e7d856c9802cc728b18b259b632426d5d7a549))
+
+
+
+
+
 ## [12.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.0...@kong-ui-public/analytics-utilities@12.13.1) (2026-04-10)
 
 

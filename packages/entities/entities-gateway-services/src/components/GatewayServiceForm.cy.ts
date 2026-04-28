@@ -378,6 +378,31 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('tls-sans-uris-input-0').should('have.value', 'spiffe://example.com/service')
     })
 
+    it('should hide tls_sans fields and emit tls_sans as undefined when isTlsSansSupported is false', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          isTlsSansSupported: false,
+          onModelUpdated: cy.spy().as('onModelUpdatedSpy'),
+        },
+      })
+
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+      cy.getTestId('gateway-service-protocol-radio').click()
+      cy.getTestId('gateway-service-protocol-select').click()
+      cy.getTestId('select-item-https').click()
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
+
+      cy.getTestId('gateway-service-tls-sans-dnsnames').should('not.exist')
+      cy.getTestId('gateway-service-tls-sans-uris').should('not.exist')
+
+      cy.get('@onModelUpdatedSpy').should('have.been.called')
+      cy.get('@onModelUpdatedSpy').then((spy: any) => {
+        const lastCall = spy.lastCall.args[0]
+        expect(lastCall.tls_sans).to.equal(undefined)
+      })
+    })
+
     it('should correctly pass getPayload as props to json/yaml code blocks', () => {
       interceptKonnect()
 
@@ -917,6 +942,78 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         expect(lastCall).to.not.have.property('tls_verify_value')
         expect(lastCall).to.have.property('tls_verify')
       })
+    })
+  })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in GET URL when loading with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services/${gatewayService1.id}`,
+        },
+        { statusCode: 200, body: gatewayService1 },
+      ).as('getServiceWithWorkspace')
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          gatewayServiceId: gatewayService1.id,
+        },
+      })
+
+      cy.wait('@getServiceWithWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services/${gatewayService1.id}`,
+        },
+        { statusCode: 200, body: gatewayService1 },
+      ).as('getServiceWithWorkspace')
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services/${gatewayService1.id}`,
+        },
+        { statusCode: 200, body: gatewayService1 },
+      ).as('updateServiceWithWorkspace')
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          gatewayServiceId: gatewayService1.id,
+          isEditing: true,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getServiceWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+        cy.wait('@updateServiceWithWorkspace')
+      })
+    })
+
+    it('omits workspace segment in GET URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services/${gatewayService1.id}`,
+        },
+        { statusCode: 200, body: gatewayService1 },
+      ).as('getServiceNoWorkspace')
+
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          gatewayServiceId: gatewayService1.id,
+        },
+      })
+
+      cy.wait('@getServiceNoWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
     })
   })
 })

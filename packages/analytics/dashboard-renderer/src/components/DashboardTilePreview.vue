@@ -46,7 +46,6 @@ import type {
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
-import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
 
 const root = useTemplateRef('root')
@@ -57,10 +56,12 @@ const {
   context,
   definition,
   globalFilters = [],
+  preview = false,
 } = defineProps<{
   context: DashboardRendererContext
   definition: TileDefinition
   globalFilters?: AllFilters[]
+  preview?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -82,14 +83,10 @@ const onBoundsChange = (e: TileBoundsChangeEvent) => {
 }
 
 const { i18n } = composables.useI18n()
-const { internalContext } = composables.useDashboardInternalContext({
+const { internalContext, queryReady } = composables.useDashboardInternalContext({
   globalFilters: toRef(() => globalFilters),
   context: toRef(() => context),
-})
-
-const configStore = useAnalyticsConfigStore()
-const queryReady = computed<boolean>(() => {
-  return !!context.timeSpec || !configStore.loading
+  preview: computed(() => preview),
 })
 
 const chartNotConfigured = computed(() => {

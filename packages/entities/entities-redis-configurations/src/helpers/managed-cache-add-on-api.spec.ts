@@ -6,6 +6,7 @@ describe('fetchManagedCacheAddOnById', () => {
   it('returns add-on when cp matches', async () => {
     const axiosInstance = {
       get: vi.fn(async () => ({
+        status: 200,
         data: {
           id: 'addon-1',
           name: 'redis-cache-primary',
@@ -18,12 +19,16 @@ describe('fetchManagedCacheAddOnById', () => {
     const out = await fetchManagedCacheAddOnById(axiosInstance, 'https://cg.example', 'addon-1', 'cp-1')
 
     expect(out).toMatchObject({ id: 'addon-1', config: { kind: 'managed-cache.v0' } })
-    expect(axiosInstance.get).toHaveBeenCalledWith('https://cg.example/v2/cloud-gateways/add-ons/addon-1')
+    expect(axiosInstance.get).toHaveBeenCalledWith(
+      'https://cg.example/v2/cloud-gateways/add-ons/addon-1',
+      expect.objectContaining({ validateStatus: expect.any(Function) }),
+    )
   })
 
   it('returns null when cp does not match', async () => {
     const axiosInstance = {
       get: vi.fn(async () => ({
+        status: 200,
         data: {
           id: 'addon-1',
           config: { kind: 'managed-cache.v0' },
@@ -90,6 +95,7 @@ describe('fetchRedisPartialForConfigCard', () => {
   it('accepts redis-ee from payload', async () => {
     const axiosInstance = {
       get: vi.fn(async () => ({
+        status: 200,
         data: {
           data: {
             id: 'partial-1',
@@ -112,6 +118,7 @@ describe('fetchRedisPartialForConfigCard', () => {
   it('returns null for non-redis entity type', async () => {
     const axiosInstance = {
       get: vi.fn(async () => ({
+        status: 200,
         data: { data: { id: 'svc-1', type: 'service' } },
       })),
     }

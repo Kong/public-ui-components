@@ -60,7 +60,7 @@ A base display component for an entity's record data.
     - type: `string`
     - required: `true`
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `controlPlaneId`:
     - type: `string`

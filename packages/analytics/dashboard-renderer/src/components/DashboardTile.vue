@@ -208,12 +208,14 @@ const props = withDefaults(defineProps<{
   height?: number
   isFullscreen?: boolean
   hideActions?: boolean
+  hideZoomActions?: boolean
   queryReady: boolean
   showRefresh?: boolean
   tileId: string | number
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
   hideActions: false,
+  hideZoomActions: false,
   showRefresh: false,
 })
 
@@ -326,8 +328,8 @@ const componentData = computed(() => {
       chartOptions: props.definition.chart,
       height: props.height - PADDING_SIZE * 2,
       refreshCounter: refreshCounter.value,
-      requestsLink: requestsLinkZoomActions.value,
-      exploreLink: exploreLinkZoomActions.value,
+      requestsLink: props.hideZoomActions ? undefined : requestsLinkZoomActions.value,
+      exploreLink: props.hideZoomActions ? undefined : exploreLinkZoomActions.value,
     },
     rendererEvents: {
       supportsRequests,

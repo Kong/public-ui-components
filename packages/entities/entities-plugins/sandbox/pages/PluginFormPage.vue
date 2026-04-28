@@ -1,5 +1,17 @@
 <template>
   <div class="plugin-form-sandbox">
+    <div class="sandbox-controls">
+      <KInputSwitch
+        v-model="enableDeckConfigCustomization"
+        label="Enable decK configuration customization"
+      />
+
+      <KInputSwitch
+        v-model="enableDeckCallout"
+        label="Show decK config callout above YAML config"
+      />
+    </div>
+
     <div
       id="plugin-form-page-actions"
       class="actions"
@@ -33,15 +45,16 @@
 </template>
 
 <script setup lang="ts">
+import { FEATURE_FLAGS as ENTITIES_SHARED_FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
 import { computed, provide, ref } from 'vue'
 import { useRouter } from 'vue-router'
+
 import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
-import { FEATURE_FLAGS as ENTITIES_SHARED_FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS } from '../../src/constants'
 
-import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
 import { ToastManager } from '@kong/kongponents'
 
+import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
 import type { GlobalAction } from '../../src/components/free-form/shared/types'
 
 const toaster = new ToastManager()
@@ -67,10 +80,13 @@ provide(ENTITIES_SHARED_FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() =>
 provide(FEATURE_FLAGS.KM_2262_CODE_MODE, true)
 provide(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, true)
 provide(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, true)
+provide(FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, true)
+provide(FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, true)
 
 useProvideExperimentalFreeForms([
   'service-protection',
   'prometheus',
+  'metering-and-billing',
   'aws-lambda',
   'exit-transformer',
   'file-log',
@@ -80,6 +96,8 @@ useProvideExperimentalFreeForms([
   'response-transformer-advanced',
   'correlation-id',
   'solace-consume',
+  'solace-log',
+  'solace-upstream',
   'opentelemetry',
   'acl',
   'request-transformer',
@@ -87,9 +105,17 @@ useProvideExperimentalFreeForms([
   'cors',
   'proxy-cache',
   'proxy-cache-advanced',
+  'header-cert-auth',
+  'session',
+  'oauth2',
+  'jwe-decrypt',
+  'mtls-auth',
 ])
 
-const konnectConfig = ref<KonnectPluginFormConfig>({
+const enableDeckConfigCustomization = ref(false)
+const enableDeckCallout = ref(false)
+
+const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   app: 'konnect',
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
@@ -98,12 +124,28 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // entityType: 'services',
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   cancelRoute: { name: 'list-plugin' },
+  viewServiceRoute: (serviceId: string) => ({ name: 'view-service', params: { id: serviceId } }),
+  viewRouteRoute: (routeId: string) => ({ name: 'view-route', params: { id: routeId } }),
+  viewConsumerRoute: (consumerId: string) => ({ name: 'view-consumer', params: { id: consumerId } }),
+  viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer_group', params: { id: consumerGroupId } }),
+  viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
   experimentalRenders: {
     keyAuthIdentityRealms: true,
   },
-})
+  enableDeckTab: {
+    ...enableDeckConfigCustomization.value && {
+      customization: {
+        generateKonnectPat: async () => {
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          return 'kpat_test'
+        },
+      },
+    },
+    calloutPreferenceKey: enableDeckCallout.value ? 'konnect-entities-plugin-form-deck-callout-sandbox' : undefined,
+  },
+}))
 
-const kongManagerConfig = ref<KongManagerPluginFormConfig>({
+const kongManagerConfig = computed<KongManagerPluginFormConfig>(() => ({
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
@@ -111,7 +153,13 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   // entityType: 'consumers',
   // entityId: '123-abc-i-lover-cats',
   cancelRoute: { name: 'list-plugin' },
-})
+  viewServiceRoute: (serviceId: string) => ({ name: 'view-service', params: { id: serviceId } }),
+  viewRouteRoute: (routeId: string) => ({ name: 'view-route', params: { id: routeId } }),
+  viewConsumerRoute: (consumerId: string) => ({ name: 'view-consumer', params: { id: consumerId } }),
+  viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer_group', params: { id: consumerGroupId } }),
+  viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
+  deckCalloutPreferenceKey: enableDeckCallout.value ? 'kong-manager-entities-plugin-form-deck-callout-sandbox' : undefined,
+}))
 
 const onUpdate = (payload: Record<string, any>) => {
   console.log('update', payload)
@@ -138,6 +186,13 @@ const handleGlobalAction = (action: GlobalAction, payload: any) => {
 
   .actions {
     align-self: flex-end;
+  }
+
+  .sandbox-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-bottom: 20px;
   }
 }
 </style>

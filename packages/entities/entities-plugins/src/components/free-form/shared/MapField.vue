@@ -60,18 +60,20 @@
           @update:model-value="(value: string) => updateKey(keyId, value)"
         />
 
-        <StringField
-          v-if="isStringValue"
-          inline-vault-picker
-          :multiline="appearance?.string?.multiline"
-          :name="keyId"
-          @keydown.enter="handleValueKeydown($event, index)"
-        />
+        <slot :key-id="keyId">
+          <StringField
+            v-if="isStringValue"
+            inline-vault-picker
+            :multiline="appearance?.string?.multiline"
+            :name="keyId"
+            @keydown.enter="handleValueKeydown($event, index)"
+          />
 
-        <Field
-          v-else
-          :name="keyId"
-        />
+          <Field
+            v-else
+            :name="keyId"
+          />
+        </slot>
       </div>
 
       <KTooltip :text="i18n.t('actions.remove_entity', { entity: fieldDisplayName })">
@@ -119,6 +121,7 @@ interface MapFieldProps extends BaseFieldProps {
       multiline?: boolean
     }
   }
+  oneLine?: boolean
 }
 
 const { i18n } = useI18n()
@@ -129,6 +132,11 @@ const emit = defineEmits<{
    * @deprecated Forward compatibility, only triggered when the type of value is string
    */
   legacyValueChange: [data: Record<string, unknown> | null]
+}>()
+
+defineSlots<{
+  default: (props: { keyId: string }) => any
+  tooltip: () => any
 }>()
 
 const {
@@ -145,6 +153,8 @@ const fieldAttrs = useFieldAttrs(field.path!, props)
 const simpleValueTypes = ['string', 'number', 'boolean', 'integer', 'foreign']
 
 const isSimpleMap = computed(() => {
+  if (props.oneLine) return true
+
   return field.schema?.value?.type === 'map'
     && simpleValueTypes.includes(field.schema.value.values.type)
     && !props.appearance?.string?.multiline

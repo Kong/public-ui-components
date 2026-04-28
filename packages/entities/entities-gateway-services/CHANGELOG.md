@@ -3,6 +3,140 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.19.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.8...@kong-ui-public/entities-gateway-services@3.19.9) (2026-04-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.19.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.7...@kong-ui-public/entities-gateway-services@3.19.8) (2026-04-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.19.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.6...@kong-ui-public/entities-gateway-services@3.19.7) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.19.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.5...@kong-ui-public/entities-gateway-services@3.19.6) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.19.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.4...@kong-ui-public/entities-gateway-services@3.19.5) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3183](https://github.com/Kong/public-ui-components/issues/3183)) ([d25bc84](https://github.com/Kong/public-ui-components/commit/d25bc844fcff896a64a7940eed78cdc4bc5796b8))
+
+
+
+
+
+## [3.19.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.3...@kong-ui-public/entities-gateway-services@3.19.4) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3167](https://github.com/Kong/public-ui-components/issues/3167)) ([acaa6a4](https://github.com/Kong/public-ui-components/commit/acaa6a433a5fdf0cdabe20ee6d0948890e19bdd4))
+* **deps:** update dependency @kong/icons to ^1.52.0 ([#3168](https://github.com/Kong/public-ui-components/issues/3168)) ([bb53126](https://github.com/Kong/public-ui-components/commit/bb531267d6a9f37998ef164995ca590a980be807))
+
+
+
+
+
+## [3.19.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.2...@kong-ui-public/entities-gateway-services@3.19.3) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.51.0 ([#3161](https://github.com/Kong/public-ui-components/issues/3161)) ([e31249c](https://github.com/Kong/public-ui-components/commit/e31249c1abf532c946acc4f6f12f089c1beaf7ef))
+
+
+
+
+
+## [3.19.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.1...@kong-ui-public/entities-gateway-services@3.19.2) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3152](https://github.com/Kong/public-ui-components/issues/3152)) ([b4ee165](https://github.com/Kong/public-ui-components/commit/b4ee165d6b026bb4ce48dc40f67dbce0c0e2c02c))
+
+
+
+
+
+## [3.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.0...@kong-ui-public/entities-gateway-services@3.19.1) (2026-04-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+# [3.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.18.2...@kong-ui-public/entities-gateway-services@3.19.0) (2026-04-20)
+
+
+### Features
+
+* **workspace:** add workspace support to shared and gateway service ([#3108](https://github.com/Kong/public-ui-components/issues/3108)) ([a65984b](https://github.com/Kong/public-ui-components/commit/a65984b4b2d976c3ada049153e8654e14924e511))
+
+
+
+
+
+## [3.18.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.18.1...@kong-ui-public/entities-gateway-services@3.18.2) (2026-04-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.18.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.18.0...@kong-ui-public/entities-gateway-services@3.18.1) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3007](https://github.com/Kong/public-ui-components/issues/3007)) ([69e7d85](https://github.com/Kong/public-ui-components/commit/69e7d856c9802cc728b18b259b632426d5d7a549))
+
+
+
+
+
+# [3.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.17.1...@kong-ui-public/entities-gateway-services@3.18.0) (2026-04-16)
+
+
+### Features
+
+* **entities-gateway-services:** add isTlsSansSupported ([#3134](https://github.com/Kong/public-ui-components/issues/3134)) ([64d8378](https://github.com/Kong/public-ui-components/commit/64d83787e7d0db70041c824bf7be4afa1fd35339))
+
+
+
+
+
+## [3.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.17.0...@kong-ui-public/entities-gateway-services@3.17.1) (2026-04-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
 # [3.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.16.10...@kong-ui-public/entities-gateway-services@3.17.0) (2026-04-14)
 
 

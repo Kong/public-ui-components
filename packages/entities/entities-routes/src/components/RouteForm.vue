@@ -30,11 +30,12 @@
           :readonly="state.isReadonly"
           type="text"
         />
-        <div v-if="hideServiceField ? false : !serviceId">
+        <div v-if="!hideServiceField">
           <KSelect
             v-model="state.fields.service_id"
             clearable
             data-testid="route-form-service-id"
+            :disabled="!!serviceId"
             enable-filtering
             :filter-function="() => true"
             :items="availableServices"
@@ -181,7 +182,7 @@ const props = defineProps({
     required: false,
     default: '',
   },
-  /** If valid serviceId is provided, don't show service select field */
+  /** If valid serviceId is provided, disable the service select field */
   serviceId: {
     type: String,
     required: false,
@@ -609,10 +610,11 @@ const fetchServicesErrorMessage = computed((): string => servicesFetchError.valu
 const availableServices = computed((): SelectItem[] => servicesResults.value?.map(el => ({ label: el.id, name: el.name, value: el.id })))
 
 onBeforeMount(async () => {
-  if (!props.hideServiceField && !props.serviceId) {
-    // load services for filtering
+  if (!props.hideServiceField) {
+    // load services so the select can display the selected item even when disabled
     await loadServices()
-  } else {
+  }
+  if (props.serviceId) {
     state.fields.service_id = props.serviceId
   }
 })

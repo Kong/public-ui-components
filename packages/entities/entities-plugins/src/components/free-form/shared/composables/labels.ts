@@ -39,6 +39,7 @@ const labelDictionary: Record<string, string> = {
   arn: 'ARN',
   json: 'JSON',
   traceid: 'TraceID',
+  dmq: 'DMQ',
 }
 
 export function replaceByDictionary(name: string) {

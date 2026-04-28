@@ -23,10 +23,12 @@ runs:
     - name: get Node version
       id: node-version
       shell: bash
+      env:
+        NODEJS_VERSION: ${{ inputs.nodejs-version }}
       run: |
         voltaNodeVersion=$(cat package.json|jq -r ".volta.node")
         if [[ $voltaNodeVersion == null ]]; then
-          voltaNodeVersion="${{ inputs.nodejs-version }}"
+          voltaNodeVersion="$NODEJS_VERSION"
         fi
         voltaPnpmVersion=$(cat package.json|jq -r ".volta.pnpm")
         if [[ $voltaPnpmVersion == null ]]; then
@@ -37,7 +39,7 @@ runs:
         echo "pnpm-version=${voltaPnpmVersion}">> $GITHUB_OUTPUT
 
     - name: Setup Node
-      uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+      uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
       with:
         node-version: ${{ steps.node-version.outputs.node-version }}
         registry-url: https://registry.npmjs.org
@@ -51,7 +53,7 @@ runs:
 
     - name: Dependency Cache
       id: dependency-cache
-      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # 5.0.5
       with:
         path: '**/node_modules'
         key: pnpm-${{ steps.node-version.outputs.pnpm-version }}-${{ steps.node-version.outputs.node-version }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}

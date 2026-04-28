@@ -111,6 +111,11 @@ export interface AnalyticsChartOptions {
    * Hide the truncation warning. Used if manually setting a limit
    */
   hideTruncationWarning?: boolean
+  /**
+   * Show a total metric value in the center of the donut chart.
+   * Only applies when type is 'donut'.
+   */
+  showCenterMetric?: boolean
 }
 
 /**
@@ -171,8 +176,12 @@ export interface LegendValues {
 export interface DonutChartData {
   labels: string[]
   backgroundColor: string[]
-  borderColor: string[]
+  borderColor: string
+  borderWidth: number
+  hoverBorderColor: string[]
+  hoverBorderWidth: number
   data: number[]
+  hoverOffset: number
 }
 
 export interface DatasetLabel {

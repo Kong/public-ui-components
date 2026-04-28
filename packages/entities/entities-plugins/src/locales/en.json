@@ -646,6 +646,7 @@
       }
     },
     "form": {
+      "button_deck_customize": "Customize before copying to CLI",
       "disable_data_retrieving": "You do not have permission to select {scope}",
       "disable_source_scope_change": "Changing the {scope} is not allowed when configuring a plugin under it",
       "no_selection": "No selection...",
@@ -764,6 +765,29 @@
         "visual": "Visual editor",
         "code": "Code editor"
       },
+      "code-lens": {
+        "entity": {
+          "service": "Service",
+          "route": "Route",
+          "consumer": "Consumer",
+          "consumer_group": "Consumer Group",
+          "certificate": "Certificate"
+        },
+        "field": {
+          "name": "{entity} \"{value}\"",
+          "username": "Username \"{value}\"",
+          "custom_id": "Custom ID \"{value}\"",
+          "subject": "Subject \"{value}\"",
+          "expires_after": "Expires after \"{value}\""
+        },
+        "action": {
+          "view_entity": "View {title}",
+          "copy_certificate": "Copy certificate",
+          "copy_uuid": "Copy UUID",
+          "retry_fetch": "Retry fetch (Hover for details)"
+        },
+        "unknown_error": "Unknown error"
+      },
       "acl": {
         "mode": {
           "allow": "Use allow list",
@@ -777,6 +801,89 @@
       "request-callout": {
         "entity_name": "Request callout",
         "by_lua_placeholder": "Enter Lua script here..."
+      },
+      "metering-and-billing": {
+        "sections": {
+          "plugin_config": {
+            "title": "Plugin configuration",
+            "description": "Configure the Metering & Billing plugin."
+          },
+          "metering": {
+            "title": "What to meter"
+          },
+          "subject": {
+            "title": "Who to bill (Subject)",
+            "description": "Define how billing subjects are identified."
+          },
+          "ingestion": {
+            "title": "Connection",
+            "description": "Configure how metered data is delivered to the billing service."
+          },
+          "queue": {
+            "title": "Queue",
+            "description": "Configure internal event queue settings."
+          }
+        },
+        "fields": {
+          "meter_api_requests": {
+            "label": "Meter API requests",
+            "description": "Emit a usage event for each API Gateway request."
+          },
+          "meter_ai_token_usage": {
+            "label": "Meter AI token usage",
+            "description": "Emit events for LLM input and output tokens on AI Gateway requests. Each request produces separate input/output events so they can be priced independently."
+          },
+          "ingest_endpoint": {
+            "description": "The URL of the metering data ingest endpoint.",
+            "help": "For Konnect Metering & Billing, use the regional endpoint from your Metering & Billing settings. For self-hosted OpenMeter, use your ingest URL."
+          },
+          "api_token": {
+            "description": "Bearer token for authenticating requests to the ingest endpoint."
+          },
+          "look_up_value_in": {
+            "label": "Look up subject in",
+            "help": "Where to find the customer identifier in the request."
+          },
+          "subject_field": {
+            "label": "Subject field name",
+            "placeholder": "e.g., x-customer-id",
+            "help": "e.g. x-customer-id, x-api-key, x-tenant"
+          },
+          "queue": {
+            "max_coalescing_delay": {
+              "label": "Max coalescing delay (s)"
+            },
+            "initial_retry_delay": {
+              "label": "Initial retry delay (s)"
+            },
+            "max_retry_delay": {
+              "label": "Max retry delay (s)"
+            },
+            "max_retry_time": {
+              "label": "Max retry time (s)"
+            }
+          },
+          "attributes": {
+            "title": "Event attributes",
+            "description": "Attach custom dimensions to metered events.",
+            "look_up_value_in": {
+              "placeholder": "e.g., x-priority-id"
+            },
+            "event_property_name": {
+              "placeholder": "e.g., priority"
+            }
+          },
+          "ssl_verify": {
+            "label": "Verify TLS certificate",
+            "description": "Disable only for local development with self-signed certificates."
+          },
+          "timeout": {
+            "label": "Request timeout (ms)"
+          },
+          "keepalive": {
+            "label": "Connection keep-alive (ms)"
+          }
+        }
       },
       "datakit": {
         "plugin_config": {
@@ -1200,12 +1307,14 @@
       "schema_file": {
         "label": "Upload schema file",
         "placeholder": "No file selected",
+        "placeholder_edit": "File not changed",
         "button_text": "Select File",
         "help": "Only Lua based schemas are supported by Konnect. Other plugin modules can be in any language as desired. Learn more"
       },
       "handler_file": {
         "label": "Upload handler file",
         "placeholder": "No file selected",
+        "placeholder_edit": "File not changed",
         "button_text": "Select File",
         "help": "Upload plugin handler to the data plane."
       },
@@ -1241,6 +1350,13 @@
           "link": "Learn more"
         }
       }
+    },
+    "errors": {
+      "file_read_error": "Failed to read file content. Please try again.",
+      "file_too_large": "File size exceeds the maximum limit of 1 MB.",
+      "plugin_not_found": "The selected plugin could not be found. Please refresh the list and try again.",
+      "no_supported_types": "No supported custom plugin types are available in this context.",
+      "unsupported_plugin_type": "Unsupported plugin type {type}."
     }
   }
 }

@@ -60,7 +60,7 @@ A form component for gateway services.
     - type: `string`
     - required: `true`
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `controlPlaneId`:
     - type: `string`
@@ -85,6 +85,15 @@ If showing the `Edit` type form, the ID of the Gateway Service.
 - default: `false`
 
 Show/hide `EntityFormSection` component info column.
+
+#### `isTlsSansSupported`
+
+- type: `Boolean`
+- required: `false`
+- default: `true`
+
+Controls whether `tls_sans` input fields are rendered and included in payload generation.
+When set to `false`, `tls_sans` fields are hidden and emitted payload sets `tls_sans` to `undefined`.
 
 ### Slots
 

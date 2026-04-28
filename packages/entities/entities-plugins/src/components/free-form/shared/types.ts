@@ -126,6 +126,7 @@ export type GlobalAction = 'notify'
  * Rules to control the rendering of form fields.
  * Only `Form` and `ObjectField` components can accept these rules
  */
+
 export interface RenderRules {
   /**
    * Bundles of fields to be rendered together.
@@ -147,20 +148,30 @@ export interface RenderRules {
    * Dependencies between fields to control their visibility.
    * - A field will be shown only if its dependency is satisfied.
    * - A field will only have a value if its dependency is satisfied.
-   * - The `fieldValue` will be deeply compared.
    * - Field and its dependency should be in the same level.
    * - Circular dependencies are not allowed.
+   *
+   * The `fieldValue` can be:
+   * - A primitive or plain object — deeply compared with `isEqual`.
+   * - An array — treated as **any-of**: shown when the dependency value matches any element. Suitable for string fields.
+   * - `renderRuleExactMatch(value)` — for rare cases where the dependency field itself holds an array value
+   *   and exact deep equality is required. Using a Symbol-keyed wrapper avoids collision with plain objects.
+   *
    * @example
    * ```ts
+   * import { renderRuleExactMatch } from '../types'
+   *
    * {
    *   'config.redis': ['config.strategy', 'redis'],
+   *   'config.mode': ['config.strategy', ['redis', 'cluster']], // any-of: shown when strategy is 'redis' or 'cluster'
+   *   'config.tags': ['config.required_tags', renderRuleExactMatch(['a', 'b'])], // exact array match
    *   'config.cache.redis': ['config.strategy', 'cache'], // ❌ different levels are not allowed
    *   'config.strategy': ['config.redis', {}], // ❌ circular dependency not allowed
    * }
    * ```
    */
   dependencies?: {
-    [fieldPath: string]: [fieldPath: string, fieldValue: any]
+    [fieldPath: string]: [fieldPath: string, fieldValue: unknown]
   }
 }
 

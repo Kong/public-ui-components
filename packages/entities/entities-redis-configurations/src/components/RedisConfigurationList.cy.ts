@@ -365,6 +365,60 @@ describe('<RedisConfigurationList />', () => {
       cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').should('exist')
     })
 
+    it('should not allow delete for Konnect-managed row when plugins are still linked', () => {
+      interceptCombinedList()
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+
+      cy.getTestId('test cloud').find('[data-testid="dropdown-trigger"]').click()
+      cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').click()
+      cy.wait('@getLinkedPlugins')
+      cy.getTestId('remove-links-modal').find('.modal-container').should('be.visible')
+      cy.getTestId('remove-links-msg').should('be.visible')
+      cy.getTestId('remove-links-count').should('have.text', '1')
+    })
+
+    it('should allow delete confirmation for Konnect-managed row when no plugins are linked', () => {
+      interceptList({ app: 'Konnect', body: combinedListPartials })
+      cy.intercept({
+        method: 'GET',
+        url: '**/v2/cloud-gateways/add-ons*',
+      }, {
+        statusCode: 200,
+        body: addOnsResponse,
+      }).as('getAddOns')
+      cy.intercept('GET', '**/core-entities/partials/*/links*', (req) => {
+        if (req.url.includes('partial-2')) {
+          req.reply({ statusCode: 200, body: { count: 0, data: [], next: null } })
+        } else {
+          req.reply({ statusCode: 200, body: links })
+        }
+      }).as('getLinkedPlugins')
+
+      cy.mount(RedisConfigurationList, {
+        props: {
+          config: getCombinedListConfig(),
+          cacheIdentifier: uuidv4(),
+        },
+      })
+
+      cy.wait('@getRedisConfigurations')
+      cy.wait('@getAddOns')
+
+      cy.getTestId('test cloud').find('[data-testid="dropdown-trigger"]').click()
+      cy.getTestId('test cloud-actions-dropdown-popover').find('[data-testid="action-entity-delete"]').click()
+      cy.wait('@getLinkedPlugins')
+      cy.getTestId('managed-delete-confirm').should('be.visible')
+      cy.getTestId('entity-delete-modal').find('.prompt-confirmation-text').should('be.visible')
+    })
+
     it('should show Konnect-managed Redis type for placeholder rows in Type column', () => {
       const placeholderPartials = {
         data: [

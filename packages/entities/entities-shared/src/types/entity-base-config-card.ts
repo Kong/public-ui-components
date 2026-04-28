@@ -1,3 +1,4 @@
+import type { DeckConfigOptions } from './deck'
 import type { KonnectConfig, KongManagerConfig } from './index'
 
 /**
@@ -20,6 +21,9 @@ export enum SupportedEntityType {
   Target = 'target',
   Vault = 'vault',
   Partial = 'partial',
+  // Cloud Gateways add-on drives TR header `konnect_cloud_gateway_addon`
+  // and skips generic pattern
+  CloudGatewayAddon = 'cloud_gateway_addon',
   BackendCluster = 'backend_cluster',
   VirtualCluster = 'virtual_cluster',
   Listener = 'listener',
@@ -82,11 +86,17 @@ export interface BaseEntityConfig {
 
 /** Konnect base form config */
 export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig {
-  enableDeckConfig?: boolean
+  enableDeckConfig?: boolean | DeckConfigOptions
 }
 
 /** Kong Manager base form config */
-export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig { }
+export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig {
+  /**
+   * The localStorage key to use while persisting the visibility preference for the
+   * decK format callout. Omitting this will hide the callout in any case.
+   */
+  deckCalloutPreferenceKey?: string
+}
 
 export enum ConfigurationSchemaType {
   ID = 'id',
@@ -162,3 +172,12 @@ export interface ComponentAttrsData {
   text?: string
   additionalComponent?: string
 }
+
+// Runtime list of every option in the config card Format control
+export const CONFIG_CARD_FORMATS = ['structured', 'yaml', 'json', 'terraform', 'deck'] as const
+
+// Union of all format values, including structured property grid
+export type ConfigCardFormat = (typeof CONFIG_CARD_FORMATS)[number]
+
+// JSON/ YAML/ TR/ Deck tabs only- excludes structured (used for `codeBlockRecordFormatter`)
+export type ConfigCardCodeFormat = Exclude<ConfigCardFormat, 'structured'>

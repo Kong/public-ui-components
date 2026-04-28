@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.11...@kong-ui-public/app-layout@4.11.13) (2026-04-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency focus-trap to v8 ([#3188](https://github.com/Kong/public-ui-components/issues/3188)) ([5ade545](https://github.com/Kong/public-ui-components/commit/5ade545d6eb1533da92a74cf9e952affd6c06131))
+
+
+
+
+
+## [4.11.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.11...@kong-ui-public/app-layout@4.11.12) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency focus-trap to v8 ([#3188](https://github.com/Kong/public-ui-components/issues/3188)) ([5ade545](https://github.com/Kong/public-ui-components/commit/5ade545d6eb1533da92a74cf9e952affd6c06131))
+
+
+
+
+
+## [4.11.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.10...@kong-ui-public/app-layout@4.11.11) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.11.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.9...@kong-ui-public/app-layout@4.11.10) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.11.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.8...@kong-ui-public/app-layout@4.11.9) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.52.0 ([#3168](https://github.com/Kong/public-ui-components/issues/3168)) ([bb53126](https://github.com/Kong/public-ui-components/commit/bb531267d6a9f37998ef164995ca590a980be807))
+
+
+
+
+
+## [4.11.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.7...@kong-ui-public/app-layout@4.11.8) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.51.0 ([#3161](https://github.com/Kong/public-ui-components/issues/3161)) ([e31249c](https://github.com/Kong/public-ui-components/commit/e31249c1abf532c946acc4f6f12f089c1beaf7ef))
+
+
+
+
+
+## [4.11.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.6...@kong-ui-public/app-layout@4.11.7) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3007](https://github.com/Kong/public-ui-components/issues/3007)) ([69e7d85](https://github.com/Kong/public-ui-components/commit/69e7d856c9802cc728b18b259b632426d5d7a549))
+
+
+
+
+
 ## [4.11.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.5...@kong-ui-public/app-layout@4.11.6) (2026-04-07)
 
 

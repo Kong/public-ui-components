@@ -60,6 +60,7 @@ describe('<DashboardTilePreview />', () => {
           },
         },
         stubs: {
+          // eslint-disable-next-line vue/one-component-per-file
           DashboardTile: defineComponent({
             name: 'DashboardTile',
             props: Object.keys(DashboardTile.props ?? {}),
@@ -72,11 +73,10 @@ describe('<DashboardTilePreview />', () => {
                   'data-props': JSON.stringify(props),
                   'data-preview-props': JSON.stringify({ context, definition, globalFilters }),
                 },
-                `Stubbed DashboardTile
-DashboardTilePreview props:
-${JSON.stringify({ context, definition, globalFilters }, null, 2)}
-DashboardTile props:
-${JSON.stringify(props, null, 2)}`,
+                `Stubbed DashboardTile DashboardTilePreview props:
+                  ${JSON.stringify({ context, definition, globalFilters }, null, 2)}
+                  DashboardTile props:
+                  ${JSON.stringify(props, null, 2)}`,
               )
             },
           }),
@@ -131,14 +131,16 @@ ${JSON.stringify(props, null, 2)}`,
     expectPropIs('height', 100)
   })
 
-  it('always sets editable as false', () => {
+  it('always sets a non-interactive context', () => {
     setup({ editable: true })
     expectPreviewPropIs('context.editable', true)
     expectTilePropIs('context.editable', false)
+    expectTilePropIs('context.zoomable', false)
 
     setup({ editable: false })
     expectPreviewPropIs('context.editable', false)
     expectTilePropIs('context.editable', false)
+    expectTilePropIs('context.zoomable', false)
   })
 
   it('sets hideActions', () => {
@@ -225,6 +227,7 @@ ${JSON.stringify(props, null, 2)}`,
           },
         },
         stubs: {
+          // eslint-disable-next-line vue/one-component-per-file
           DashboardTile: defineComponent({
             name: 'DashboardTile',
             props: Object.keys(DashboardTile.props ?? {}),
@@ -296,6 +299,7 @@ ${JSON.stringify(props, null, 2)}`,
           },
         },
         stubs: {
+          // eslint-disable-next-line vue/one-component-per-file
           DashboardTile: defineComponent({
             name: 'DashboardTile',
             props: Object.keys(DashboardTile.props ?? {}),

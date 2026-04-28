@@ -3,6 +3,164 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.21.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.29...@kong-ui-public/entities-routes@3.21.30) (2026-04-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.21.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.28...@kong-ui-public/entities-routes@3.21.29) (2026-04-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.21.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.27...@kong-ui-public/entities-routes@3.21.28) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.21.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.26...@kong-ui-public/entities-routes@3.21.27) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.21.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.25...@kong-ui-public/entities-routes@3.21.26) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3183](https://github.com/Kong/public-ui-components/issues/3183)) ([d25bc84](https://github.com/Kong/public-ui-components/commit/d25bc844fcff896a64a7940eed78cdc4bc5796b8))
+
+
+
+
+
+## [3.21.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.24...@kong-ui-public/entities-routes@3.21.25) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3167](https://github.com/Kong/public-ui-components/issues/3167)) ([acaa6a4](https://github.com/Kong/public-ui-components/commit/acaa6a433a5fdf0cdabe20ee6d0948890e19bdd4))
+* **deps:** update dependency @kong/icons to ^1.52.0 ([#3168](https://github.com/Kong/public-ui-components/issues/3168)) ([bb53126](https://github.com/Kong/public-ui-components/commit/bb531267d6a9f37998ef164995ca590a980be807))
+
+
+
+
+
+## [3.21.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.23...@kong-ui-public/entities-routes@3.21.24) (2026-04-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.21.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.22...@kong-ui-public/entities-routes@3.21.23) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.51.0 ([#3161](https://github.com/Kong/public-ui-components/issues/3161)) ([e31249c](https://github.com/Kong/public-ui-components/commit/e31249c1abf532c946acc4f6f12f089c1beaf7ef))
+
+
+
+
+
+## [3.21.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.21...@kong-ui-public/entities-routes@3.21.22) (2026-04-22)
+
+
+### Bug Fixes
+
+* **entities-routes:** disable service select instead of hiding when serviceId is provided ([#3153](https://github.com/Kong/public-ui-components/issues/3153)) ([4aedaf5](https://github.com/Kong/public-ui-components/commit/4aedaf52f3c339da2faadae8bb597f362e31d9e0))
+
+
+
+
+
+## [3.21.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.20...@kong-ui-public/entities-routes@3.21.21) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3152](https://github.com/Kong/public-ui-components/issues/3152)) ([b4ee165](https://github.com/Kong/public-ui-components/commit/b4ee165d6b026bb4ce48dc40f67dbce0c0e2c02c))
+
+
+
+
+
+## [3.21.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.19...@kong-ui-public/entities-routes@3.21.20) (2026-04-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.21.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.18...@kong-ui-public/entities-routes@3.21.19) (2026-04-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.21.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.17...@kong-ui-public/entities-routes@3.21.18) (2026-04-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.21.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.16...@kong-ui-public/entities-routes@3.21.17) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3007](https://github.com/Kong/public-ui-components/issues/3007)) ([69e7d85](https://github.com/Kong/public-ui-components/commit/69e7d856c9802cc728b18b259b632426d5d7a549))
+
+
+
+
+
+## [3.21.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.15...@kong-ui-public/entities-routes@3.21.16) (2026-04-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.21.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.14...@kong-ui-public/entities-routes@3.21.15) (2026-04-15)
+
+
+### Bug Fixes
+
+* **redis:** cpg and member changes [khcp-20226] ([#3107](https://github.com/Kong/public-ui-components/issues/3107)) ([0880477](https://github.com/Kong/public-ui-components/commit/0880477a073fa261b1887cd40f3e19ccbbb6aba9))
+
+
+
+
+
+## [3.21.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.13...@kong-ui-public/entities-routes@3.21.14) (2026-04-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
 ## [3.21.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.12...@kong-ui-public/entities-routes@3.21.13) (2026-04-11)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes

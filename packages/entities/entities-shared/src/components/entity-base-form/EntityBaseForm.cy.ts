@@ -211,4 +211,198 @@ describe('<EntityBaseForm />', () => {
     cy.getTestId('form-content').should('contain.text', content)
     cy.getTestId('form-actions').should('contain.text', action)
   })
+
+  describe('Konnect workspace URL building', () => {
+    const wsControlPlaneId = '123abc-ilove-cats'
+    const wsEditId = '1234-ideclare-athumb-war'
+    const wsBaseUrl = '/us/kong-api'
+    const wsEntityType = SupportedEntityType.Route
+
+    // fetchUrl with {controlPlaneId} and {workspace} placeholders (realistic endpoint format)
+    const workspaceFetchUrl = '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}/routes/{id}'
+    // fetchUrl without {workspace} placeholder (endpoint not supporting workspace)
+    const plainFetchUrl = '/v2/control-planes/{controlPlaneId}/core-entities/routes/{id}'
+
+    const configWithWorkspace = (workspace: string): KonnectBaseFormConfig => ({
+      app: 'konnect',
+      apiBaseUrl: wsBaseUrl,
+      controlPlaneId: wsControlPlaneId,
+      workspace,
+      cancelRoute: { name: '/' },
+    })
+
+    const configNoWorkspace: KonnectBaseFormConfig = {
+      app: 'konnect',
+      apiBaseUrl: wsBaseUrl,
+      controlPlaneId: wsControlPlaneId,
+      cancelRoute: { name: '/' },
+    }
+
+    it('includes workspace name in fetch URL when workspace is provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/default/routes/${wsEditId}`,
+        },
+        { statusCode: 200, body: {} },
+      ).as('fetchWithWorkspace')
+
+      cy.mount(EntityBaseForm, {
+        props: {
+          config: configWithWorkspace('default'),
+          formFields: route,
+          entityType: wsEntityType,
+          editId: wsEditId,
+          fetchUrl: workspaceFetchUrl,
+          canSubmit: true,
+        },
+      })
+
+      cy.wait('@fetchWithWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('uses non-default workspace name in fetch URL', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/test/routes/${wsEditId}`,
+        },
+        { statusCode: 200, body: {} },
+      ).as('fetchWithTestWorkspace')
+
+      cy.mount(EntityBaseForm, {
+        props: {
+          config: configWithWorkspace('test'),
+          formFields: route,
+          entityType: wsEntityType,
+          editId: wsEditId,
+          fetchUrl: workspaceFetchUrl,
+          canSubmit: true,
+        },
+      })
+
+      cy.wait('@fetchWithTestWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('omits workspace segment in fetch URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/routes/${wsEditId}`,
+        },
+        { statusCode: 200, body: {} },
+      ).as('fetchNoWorkspace')
+
+      cy.mount(EntityBaseForm, {
+        props: {
+          config: configNoWorkspace,
+          formFields: route,
+          entityType: wsEntityType,
+          editId: wsEditId,
+          fetchUrl: workspaceFetchUrl,
+          canSubmit: true,
+        },
+      })
+
+      cy.wait('@fetchNoWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('renders edit form correctly when load succeeds with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/default/routes/${wsEditId}`,
+        },
+        { statusCode: 200, body: {} },
+      )
+
+      cy.mount(EntityBaseForm, {
+        props: {
+          config: configWithWorkspace('default'),
+          formFields: route,
+          entityType: wsEntityType,
+          editId: wsEditId,
+          fetchUrl: workspaceFetchUrl,
+          canSubmit: true,
+        },
+      })
+
+      cy.getTestId('form-fetch-error').should('not.exist')
+      cy.getTestId(`${wsEntityType}-edit-form-cancel`).should('be.enabled')
+      cy.getTestId(`${wsEntityType}-edit-form-submit`).should('be.enabled')
+    })
+
+    it('shows fetch error when load fails with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/default/routes/${wsEditId}`,
+        },
+        { statusCode: 500, body: {} },
+      )
+
+      cy.mount(EntityBaseForm, {
+        props: {
+          config: configWithWorkspace('default'),
+          formFields: route,
+          entityType: wsEntityType,
+          editId: wsEditId,
+          fetchUrl: workspaceFetchUrl,
+        },
+      })
+
+      cy.getTestId('form-fetch-error').should('be.visible')
+    })
+
+    it('ignores workspace config when fetchUrl has no {workspace} placeholder', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/routes/${wsEditId}`,
+        },
+        { statusCode: 200, body: {} },
+      ).as('fetchPlain')
+
+      cy.mount(EntityBaseForm, {
+        props: {
+          config: configWithWorkspace('default'),
+          formFields: route,
+          entityType: wsEntityType,
+          editId: wsEditId,
+          fetchUrl: plainFetchUrl,
+          canSubmit: true,
+        },
+      })
+
+      cy.wait('@fetchPlain')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('handles workspace name with hyphens and numbers', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/my-workspace-123/routes/${wsEditId}`,
+        },
+        { statusCode: 200, body: {} },
+      ).as('fetchWithComplexWorkspace')
+
+      cy.mount(EntityBaseForm, {
+        props: {
+          config: configWithWorkspace('my-workspace-123'),
+          formFields: route,
+          entityType: wsEntityType,
+          editId: wsEditId,
+          fetchUrl: workspaceFetchUrl,
+          canSubmit: true,
+        },
+      })
+
+      cy.wait('@fetchWithComplexWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+  })
 })

@@ -286,7 +286,7 @@
               </div>
 
               <GatewayServiceFormTlsSansField
-                v-if="showTlsFields"
+                v-if="showTlsFields && isTlsSansSupported"
                 v-model="form.fields.tls_sans.dnsnames"
                 :add-button-text="t('gateway_services.form.fields.tls_sans_dnsnames.add')"
                 class="gateway-service-form-margin-bottom"
@@ -301,7 +301,7 @@
               />
 
               <GatewayServiceFormTlsSansField
-                v-if="showTlsFields"
+                v-if="showTlsFields && isTlsSansSupported"
                 v-model="form.fields.tls_sans.uris"
                 :add-button-text="t('gateway_services.form.fields.tls_sans_uris.add')"
                 class="gateway-service-form-margin-bottom"
@@ -540,6 +540,12 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  /** Whether tls_sans fields are supported */
+  isTlsSansSupported: {
+    type: Boolean,
+    required: false,
+    default: true,
   },
 })
 
@@ -982,15 +988,22 @@ const submitUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.gatewayServiceId)
+
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.gatewayServiceId) // Always replace the id when editing
 })
 
 const tlsSansPayload = computed(() => {
+  if (!props.isTlsSansSupported) {
+    return undefined
+  }
+
+  if (!showTlsFields.value) {
+    return null
+  }
+
   const dnsnames = form.fields.tls_sans.dnsnames.map(s => s.trim()).filter(Boolean)
   const uris = form.fields.tls_sans.uris.map(s => s.trim()).filter(Boolean)
   if (dnsnames.length || uris.length) {
@@ -1023,7 +1036,6 @@ const getPayload = computed((): Record<string, any> => {
 
   if (!showTlsFields.value) {
     requestBody.client_certificate = null
-    requestBody.tls_sans = null
   }
 
   if (form.fields.tls_verify_enabled && ['https', 'wss', 'tls'].includes(form.fields.protocol)) {
