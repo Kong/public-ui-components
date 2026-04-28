@@ -20,6 +20,15 @@
     <template #actions>
       <div class="config-card-actions">
         <slot name="actions" />
+
+        <KCheckbox
+          v-if="configFormat !== 'structured'"
+          v-model="showSensitiveFields"
+          class="sensitive-fields-checkbox"
+          data-testid="sensitive-fields-checkbox"
+          label="Show sensitive fields"
+        />
+
         <KButton
           v-if="configFormat === 'deck' && Boolean(deckCustomizationOptions)"
           appearance="secondary"
@@ -28,18 +37,21 @@
         >
           {{ t('baseConfigCard.actions.deck_customize') }}
         </KButton>
-        <KLabel
-          class="config-format-select-label"
-          data-testid="config-format-select-label"
-        >
-          {{ label }}
-        </KLabel>
-        <KSelect
-          v-model="configFormat"
-          data-testid="select-config-format"
-          :items="configFormatItems"
-          @change="handleChange"
-        />
+
+        <div class="row">
+          <KLabel
+            class="config-format-select-label"
+            data-testid="config-format-select-label"
+          >
+            {{ label }}
+          </KLabel>
+          <KSelect
+            v-model="configFormat"
+            data-testid="select-config-format"
+            :items="configFormatItems"
+            @change="handleChange"
+          />
+        </div>
 
         <KButton
           v-if="configCardDoc"
@@ -85,7 +97,9 @@
         <ConfigCardDisplay
           :code-block-record="codeBlockRecordFromApi"
           :code-block-record-formatter="codeBlockRecordFormatter"
+          :code-block-record-redacted="!showSensitiveFields ? redactedCodeBlockRecord : undefined"
           :config="config"
+          :config-schema="configSchema"
           :entity-type="entityType"
           :fetcher-url="fetcherUrl"
           :format="configFormat"
@@ -465,6 +479,19 @@ const codeBlockRecordFromApi = computed((): Record<string, any> | undefined => {
   return props.codeBlockRecordResolver(rawFetchedData.value)
 })
 
+const showSensitiveFields = ref(false)
+const redactedCodeBlockRecord = computed((): Record<string, any> => {
+  const rec = { ...(codeBlockRecordFromApi.value || record.value) }
+
+  for (const key in rec) {
+    if (props.configSchema[key]?.type === ConfigurationSchemaType.Redacted) {
+      rec[key] = '********'
+    }
+  }
+
+  return rec
+})
+
 // Handle sorting by 'order' prop
 const orderedRecordArray = computed((): RecordItem[] => {
   if (!record.value) {
@@ -717,14 +744,24 @@ onBeforeMount(async () => {
   .config-card-actions {
     align-items: center;
     display: flex;
+    gap: var(--kui-space-60, $kui-space-60);
 
-    .button-customize-deck {
-      margin-inline-end: var(--kui-space-60, $kui-space-60);
+    .row {
+      align-items: center;
+      display: flex;
     }
 
     .config-format-select-label {
       margin-bottom: var(--kui-space-0, $kui-space-0);
       margin-right: var(--kui-space-40, $kui-space-40);
+    }
+
+    .sensitive-fields-checkbox {
+      align-items: center;
+
+      :deep(.checkbox-label) {
+        width: max-content;
+      }
     }
   }
 

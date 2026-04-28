@@ -160,6 +160,13 @@ const props = defineProps({
     default: undefined,
   },
   /**
+   * When set, JSON/YAML/TR/deck code blocks use this record instead of `codeBlockRecord`
+   */
+  codeBlockRecordRedacted: {
+    type: Object as PropType<Record<string, any>>,
+    default: undefined,
+  },
+  /**
    * When false/default, strip created_at/ updated_at per KHCP-9837
    * Set true to show full payloads
    */
@@ -198,10 +205,16 @@ const { i18n: { t } } = composables.useI18n()
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
 
-// Structured grid always uses `record`; code tabs uses `codeBlockRecord` when the parent passes it
-const recordForCodeBlocks = computed((): Record<string, any> | undefined =>
-  props.codeBlockRecord !== undefined ? props.codeBlockRecord : props.record,
-)
+// Structured grid always uses `record`; code tabs uses `codeBlockRecordRedacted` or `codeBlockRecord` when the parent passes it
+const recordForCodeBlocks = computed((): Record<string, any> | undefined => {
+  if (props.codeBlockRecordRedacted !== undefined) {
+    return props.codeBlockRecordRedacted
+  } else if (props.codeBlockRecord !== undefined) {
+    return props.codeBlockRecord
+  }
+
+  return props.record
+})
 
 // Deep clone + optional timestamp strip + per-format shaping (`codeBlockRecordFormatter`)
 const entityRecord = computed((): Record<string, any> | undefined => {
