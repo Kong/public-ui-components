@@ -82,7 +82,7 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent()
 
-    expect(wrapper.getTestId('monaco-editor-status-overlay-loading').exists()).toBe(true)
+    expect(wrapper.findTestId('monaco-editor-status-overlay-loading').exists()).toBe(true)
     expect(wrapper.text()).toContain('editor.messages.loading_title')
     expect(wrapper.text()).toContain('editor.messages.loading_message')
     expect(wrapper.find('.progress-icon').exists()).toBe(true)
@@ -94,7 +94,7 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent()
 
-    expect(wrapper.getTestId('monaco-editor-status-overlay-empty').exists()).toBe(true)
+    expect(wrapper.findTestId('monaco-editor-status-overlay-empty').exists()).toBe(true)
     expect(wrapper.text()).toContain('editor.messages.empty_title')
     expect(wrapper.text()).toContain('editor.messages.empty_message')
     expect(wrapper.find('.codeblock-icon').exists()).toBe(true)
@@ -106,8 +106,8 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent()
 
-    expect(wrapper.getTestId('monaco-editor-status-overlay-empty').exists()).toBe(false)
-    expect(wrapper.getTestId('monaco-editor-status-overlay-loading').exists()).toBe(false)
+    expect(wrapper.findTestId('monaco-editor-status-overlay-empty').exists()).toBe(false)
+    expect(wrapper.findTestId('monaco-editor-status-overlay-loading').exists()).toBe(false)
   })
 
   it('should apply loading class to container', () => {
@@ -132,7 +132,7 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent()
 
-    expect(wrapper.getTestId('monaco-editor-target').exists()).toBe(true)
+    expect(wrapper.findTestId('monaco-editor-target').exists()).toBe(true)
   })
 
   it('shows loading, then renders content when fetched', async () => {
@@ -141,7 +141,7 @@ describe('MonacoEditor.vue', () => {
     const wrapper = mountComponent()
 
     // Initially loading overlay should exist
-    expect(wrapper.getTestId('monaco-editor-status-overlay-loading').exists()).toBe(true)
+    expect(wrapper.findTestId('monaco-editor-status-overlay-loading').exists()).toBe(true)
     expect(wrapper.getTestId('monaco-editor-container').classes()).toContain('loading')
 
     // Simulate async fetch of code
@@ -156,7 +156,7 @@ describe('MonacoEditor.vue', () => {
     // Editor should no longer have loading class
     expect(wrapper.getTestId('monaco-editor-container').classes()).not.toContain('loading')
     // Empty state should not show
-    expect(wrapper.getTestId('monaco-editor-status-overlay-empty').exists()).toBe(false)
+    expect(wrapper.findTestId('monaco-editor-status-overlay-empty').exists()).toBe(false)
     // The model value should be updated via the internal ref
     expect(wrapper.vm.model).toBe('fetched code')
 
@@ -194,7 +194,7 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent({ props: { modelValue: '', showLoadingState: false } })
 
-    expect(wrapper.getTestId('monaco-editor-status-overlay-loading').exists()).toBe(false)
+    expect(wrapper.findTestId('monaco-editor-status-overlay-loading').exists()).toBe(false)
   })
 
   it('should not show empty state overlay when showEmptyState is false', () => {
@@ -203,7 +203,7 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent({ props: { modelValue: '', showEmptyState: false } })
 
-    expect(wrapper.getTestId('monaco-editor-status-overlay-empty').exists()).toBe(false)
+    expect(wrapper.findTestId('monaco-editor-status-overlay-empty').exists()).toBe(false)
   })
 
   it('should show loading state by default when showLoadingState is not provided', () => {
@@ -211,7 +211,7 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent()
 
-    expect(wrapper.getTestId('monaco-editor-status-overlay-loading').exists()).toBe(true)
+    expect(wrapper.findTestId('monaco-editor-status-overlay-loading').exists()).toBe(true)
   })
 
   it('should show empty state by default when showEmptyState is not provided', () => {
@@ -220,7 +220,7 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent()
 
-    expect(wrapper.getTestId('monaco-editor-status-overlay-empty').exists()).toBe(true)
+    expect(wrapper.findTestId('monaco-editor-status-overlay-empty').exists()).toBe(true)
   })
 
   it('should still apply loading class when showLoadingState is false but editor is loading', () => {
@@ -231,7 +231,7 @@ describe('MonacoEditor.vue', () => {
     // The loading class should still be applied to the container
     expect(wrapper.getTestId('monaco-editor-container').classes()).toContain('loading')
     // But the overlay should not be rendered
-    expect(wrapper.getTestId('monaco-editor-status-overlay-loading').exists()).toBe(false)
+    expect(wrapper.findTestId('monaco-editor-status-overlay-loading').exists()).toBe(false)
   })
 
   it('should apply appearance classes on render', () => {
@@ -353,13 +353,13 @@ describe('MonacoEditor.vue', () => {
     it('should not render toolbar when toolbar prop is false', () => {
       const wrapper = mountWithToolbar({ props: { toolbar: false } })
 
-      expect(wrapper.getTestId('monaco-editor-toolbar').exists()).toBe(false)
+      expect(wrapper.findTestId('monaco-editor-toolbar').exists()).toBe(false)
     })
 
     it('should render toolbar when toolbar prop is true', () => {
       const wrapper = mountWithToolbar()
 
-      expect(wrapper.getTestId('monaco-editor-toolbar').exists()).toBe(true)
+      expect(wrapper.findTestId('monaco-editor-toolbar').exists()).toBe(true)
     })
 
     describe('slot forwarding', () => {
@@ -378,7 +378,7 @@ describe('MonacoEditor.vue', () => {
             },
           })
 
-          const el = wrapper.getTestId(testId)
+          const el = wrapper.findTestId(testId)
           expect(el.exists()).toBe(true)
           expect(el.text()).toBe(content)
         },
@@ -393,9 +393,9 @@ describe('MonacoEditor.vue', () => {
           },
         })
 
-        expect(wrapper.getTestId('custom-left').exists()).toBe(true)
-        expect(wrapper.getTestId('custom-center').exists()).toBe(true)
-        expect(wrapper.getTestId('custom-right').exists()).toBe(true)
+        expect(wrapper.findTestId('custom-left').exists()).toBe(true)
+        expect(wrapper.findTestId('custom-center').exists()).toBe(true)
+        expect(wrapper.findTestId('custom-right').exists()).toBe(true)
       })
     })
   })
