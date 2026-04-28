@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.198.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.197.0...@kong-ui-public/entities-plugins@9.198.0) (2026-04-28)
+
+
+### Features
+
+* **entities-shared:** customize decK config before copying and generate Konnect PAT ([#3155](https://github.com/Kong/public-ui-components/issues/3155)) ([ed42401](https://github.com/Kong/public-ui-components/commit/ed4240114cf0d47383e4beb8c9aa88d65f1e1564))
+
+
+
+
+
 # [9.197.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.196.1...@kong-ui-public/entities-plugins@9.197.0) (2026-04-28)
 
 
