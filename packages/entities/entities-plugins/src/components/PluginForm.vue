@@ -168,7 +168,7 @@ import {
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
-import type { AxiosError, AxiosResponse } from 'axios'
+import { isAxiosError, type AxiosError, type AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
 import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType, inject } from 'vue'
 import { useRouter } from 'vue-router'
@@ -207,6 +207,7 @@ type ScopedEntitiesPermissions = Partial<Record<ScopedEntitiesType, ScopedEntity
 
 const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => false))
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
+const enabledClonedPlugin = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, false)
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -357,6 +358,17 @@ const { objectsAreEqual } = useHelpers()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
+const { getClonedPlugin: fetchClonedPluginDetail } = composables.useCustomPluginApi({
+  axiosInstance: useAxios({
+    ...(props.config?.axiosRequestConfig ?? {}),
+    konnect: { bypassGlobal404Handler: true }, // force bypassGlobal404Handler for this call
+  } as any).axiosInstance,
+  apiBaseUrl: props.config.apiBaseUrl,
+  app: props.config.app,
+  workspace: (props.config as KongManagerPluginFormConfig).workspace,
+  controlPlaneId: (props.config as KonnectPluginFormConfig).controlPlaneId,
+})
+
 const isToggled = ref(false)
 const isEditing = computed(() => !!props.pluginId)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
@@ -370,10 +382,18 @@ const pluginRedisPath = ref<string | undefined>() // specify the path to the red
 
 const customPluginFreeform = inject(PLUGIN_FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, false)
 
+const clonedSourcePlugin = ref<string | null>(null)
+
+const isClonedPlugin = computed(() => clonedSourcePlugin.value !== null)
+
 const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
   if (props.engine) return props.engine
-  if (customPluginFreeform && isCustomPlugin.value) return 'freeform'
-  return undefined
+  if (!customPluginFreeform || !isCustomPlugin.value) return undefined
+  if (isClonedPlugin.value && clonedSourcePlugin.value) {
+    // Cloned plugin: defer to the source plugin's engine.
+    return isFreeForm(clonedSourcePlugin.value) ? 'freeform' : 'vfg'
+  }
+  return 'freeform'
 })
 
 provide(REDIS_PARTIAL_INFO, {
@@ -1487,7 +1507,16 @@ onBeforeMount(async () => {
       finalSchema.value = buildFormSchema('', data, {})
       schemaLoading.value = false
     } else { // handling for standard plugins
-      const data = props.schema ?? (await axiosInstance.get(schemaUrl.value)).data
+      // When the cloned-plugin feature flag is on and the plugin isn't a built-in,
+      // resolve its source plugin in parallel with the schema fetch (404 = not a clone).
+      const shouldResolveClone = enabledClonedPlugin && isCustomPlugin.value
+      const schemaPromise: Promise<any> = props.schema
+        ? Promise.resolve(props.schema)
+        : axiosInstance.get(schemaUrl.value).then(res => res.data)
+      const [data] = await Promise.all([
+        schemaPromise,
+        shouldResolveClone ? getClonedPlugin(props.pluginType) : Promise.resolve(),
+      ])
       loadedSchema.value = data
 
       if (data) {
@@ -1549,6 +1578,19 @@ onBeforeMount(async () => {
     schemaLoading.value = false
   }
 })
+
+async function getClonedPlugin(clonedPluginName: string): Promise<void> {
+  try {
+    const detail = await fetchClonedPluginDetail(clonedPluginName)
+    clonedSourcePlugin.value = detail?.link ?? null
+  } catch (error: unknown) {
+    // A 404 means this custom plugin is not a clone — leave clonedSourcePlugin null and stay quiet.
+    if (isAxiosError(error) && error.response?.status === 404) {
+      return
+    }
+    throw error
+  }
+}
 </script>
 
 <style lang="scss" scoped>
