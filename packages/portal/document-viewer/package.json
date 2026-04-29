@@ -44,7 +44,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.20.1",
-    "@kong/kongponents": "9.52.11",
+    "@kong/kongponents": "9.52.13",
     "@types/prismjs": "^1.26.6",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
     "vue": "^3.5.33"
