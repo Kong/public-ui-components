@@ -98,6 +98,13 @@ useProvideExperimentalFreeForms([
   'jwe-decrypt',
   'mtls-auth',
   'ai-semantic-cache',
+  'ai-proxy-advanced',
+  'ai-proxy',
+  'ai-prompt-decorator',
+  'ai-prompt-guard',
+  'ai-rate-limiting-advanced',
+  'ai-semantic-prompt-guard',
+  'ai-request-transformer',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
