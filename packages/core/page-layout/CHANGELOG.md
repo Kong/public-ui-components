@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.18...@kong-ui-public/page-layout@0.2.19) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
 ## [0.2.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.17...@kong-ui-public/page-layout@0.2.18) (2026-04-26)
 
 **Note:** Version bump only for package @kong-ui-public/page-layout

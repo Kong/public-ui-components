@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.199.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.199.0...@kong-ui-public/entities-plugins@9.199.1) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
 # [9.199.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.198.0...@kong-ui-public/entities-plugins@9.199.0) (2026-04-29)
 
 

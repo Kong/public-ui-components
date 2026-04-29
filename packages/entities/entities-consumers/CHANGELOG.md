@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.3.23...@kong-ui-public/entities-consumers@4.3.24) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
 ## [4.3.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.3.22...@kong-ui-public/entities-consumers@4.3.23) (2026-04-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumers
