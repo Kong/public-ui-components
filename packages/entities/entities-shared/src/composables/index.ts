@@ -1,5 +1,6 @@
 import useAxios from './useAxios'
 import useDebouncedFilter from './useDebouncedFilter'
+import { useBaseEntityDeckOptions, useBaseFormDeckOptions } from './useDeckOptions'
 import useDeleteUrlBuilder from './useDeleteUrlBuilder'
 import useErrors from './useErrors'
 import useExternalLinkCreator from './useExternalLinkCreator'
@@ -19,6 +20,8 @@ export default {
   useAxios,
   useDebouncedFilter,
   useDeleteUrlBuilder,
+  useBaseEntityDeckOptions,
+  useBaseFormDeckOptions,
   useErrors,
   useExternalLinkCreator,
   useFetcher,

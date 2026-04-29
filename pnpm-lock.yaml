@@ -1252,6 +1252,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
+      '@kong-ui-public/monaco-editor':
+        specifier: workspace:^
+        version: link:../../core/monaco-editor
       '@kong/design-tokens':
         specifier: 1.20.1
         version: 1.20.1
@@ -1270,6 +1273,9 @@ importers:
       axios:
         specifier: ^1.15.2
         version: 1.15.2
+      monaco-editor:
+        specifier: ^0.55.1
+        version: 0.55.1
       shiki:
         specifier: ^3.23.0
         version: 3.23.0

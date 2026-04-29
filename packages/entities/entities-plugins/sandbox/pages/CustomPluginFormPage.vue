@@ -15,7 +15,7 @@
       <CustomPluginForm
         :config="kongManagerConfig"
         :plugin-name="pluginName"
-        :unsupported-types="['installed']"
+        :unsupported-types="['installed', 'streamed']"
       />
     </div>
   </div>

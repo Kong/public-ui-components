@@ -194,6 +194,7 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
     updateStreamedPlugin,
     getPluginByUnknownType,
     getPluginType,
+    getClonedPlugin,
     createClonedPlugin,
     updateClonedPlugin,
   }

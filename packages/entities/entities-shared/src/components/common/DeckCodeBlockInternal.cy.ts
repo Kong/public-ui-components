@@ -9,7 +9,7 @@ function selectShell(shell: 'bash' | 'powershell') {
 }
 
 
-describe('<DeckCodeBlock />', () => {
+describe('<DeckCodeBlockInternal />', () => {
   // Konnect specific props
   const controlPlaneName = 'test-control-plane'
   const geoApiServerUrl = 'https://us.api.konghq.tech'

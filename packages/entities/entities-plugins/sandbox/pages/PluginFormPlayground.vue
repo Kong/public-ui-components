@@ -1,5 +1,17 @@
 <template>
   <div class="plugin-form-playground-sandbox">
+    <div class="sandbox-controls">
+      <KInputSwitch
+        v-model="enableDeckConfigCustomization"
+        label="Enable decK configuration customization"
+      />
+
+      <KInputSwitch
+        v-model="enableDeckCallout"
+        label="Show decK config callout above YAML config"
+      />
+    </div>
+
     <KSlideout
       :close-on-blur="false"
       :has-overlay="false"
@@ -93,6 +105,9 @@ function load(type: 'pluginType' | 'schema', defaultValue?: unknown) {
   return stored ? JSON.parse(stored) : defaultValue
 }
 
+const enableDeckConfigCustomization = ref(false)
+const enableDeckCallout = ref(false)
+
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
@@ -150,7 +165,7 @@ const parseError = computed(() => {
 
 const text = useTemplateRef('text')
 
-const konnectConfig = ref<KonnectPluginFormConfig>({
+const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   app: 'konnect',
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
@@ -163,8 +178,18 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
     keyAuthIdentityRealms: true,
   },
   geoApiServerUrl: 'https://us.api.konghq.tech',
-  enableDeckTab: true,
-})
+  enableDeckTab: {
+    ...enableDeckConfigCustomization.value && {
+      customization: {
+        generateKonnectPat: async () => {
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          return 'kpat_test'
+        },
+      },
+    },
+    calloutPreferenceKey: enableDeckCallout.value ? 'konnect-entities-plugins-form-playground-deck-callout-sandbox' : undefined,
+  },
+}))
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   app: 'kongManager',
