@@ -221,7 +221,7 @@ const emitPluginData = (): void => {
  * Custom Plugin logic
  */
 const isCreateCustomPlugin = computed((): boolean => props.plugin.id === 'custom-plugin-create')
-const isCustomPlugin = computed((): boolean => ['konnect', 'kongManager'].includes(props.config.app) && props.plugin.group === PluginGroup.CUSTOM_PLUGINS)
+const isCustomPlugin = computed((): boolean => props.plugin.group === PluginGroup.CUSTOM_PLUGINS)
 
 const handleCustomDelete = (): void => {
   if (isCustomPlugin.value) {
