@@ -216,6 +216,55 @@ describe('<PluginCatalog />', {
     cy.getTestId('acl-card').should('have.class', 'disabled')
   })
 
+  it('should show only scope-matching featured plugins when entityType is consumers', () => {
+    interceptKonnect()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: {
+          ...baseConfigKonnect,
+          entityType: 'consumers',
+          entityId: 'consumer-123',
+        },
+        // mix of consumer-scoped and non-consumer-scoped plugins
+        highlightedPluginIds: ['datakit', 'key-auth', 'openid-connect', 'cors', 'rate-limiting-advanced', 'request-transformer'],
+      },
+      router,
+    })
+
+    cy.wait('@getAvailablePlugins')
+
+    // Featured group should exist with in-scope plugins
+    cy.getTestId('plugin-group-Featured').should('be.visible')
+    cy.getTestId('rate-limiting-advanced-card').should('exist')
+    cy.getTestId('request-transformer-card').should('exist')
+    // out-of-scope plugins should not appear in Featured
+    cy.getTestId('plugin-group-Featured').within(() => {
+      cy.getTestId('key-auth-card').should('not.exist')
+    })
+  })
+
+  it('should exclude featured group entirely when all highlighted plugins are out of scope', () => {
+    interceptKonnect()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: {
+          ...baseConfigKonnect,
+          entityType: 'consumers',
+          entityId: 'consumer-123',
+        },
+        // none of these have CONSUMER scope
+        highlightedPluginIds: ['key-auth', 'openid-connect', 'cors'],
+      },
+      router,
+    })
+
+    cy.wait('@getAvailablePlugins')
+
+    cy.getTestId('plugin-group-Featured').should('not.exist')
+  })
+
   it('should clear selected filters when clear selection clicked', () => {
     interceptKonnect()
 

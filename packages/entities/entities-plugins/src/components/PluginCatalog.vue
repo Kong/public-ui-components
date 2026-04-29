@@ -417,11 +417,13 @@ const buildPluginList = (): PluginCardList => {
       return list
     }, {})
   // Pick highlighted plugin objects from pluginMetaData and assign to 'Featured'
+  // Only include plugins that passed scope filtering (i.e., already present in the list)
   if (props.highlightedPluginIds && props.highlightedPluginIds.length > 0) {
-    list[PluginGroup.FEATURED] = props.highlightedPluginIds
+    const scopedIds = new Set(Object.values(list).flat().map(p => p?.id))
+    const featuredPlugins = props.highlightedPluginIds
       .flatMap(pluginId => {
         const meta = pluginMetaData[pluginId]
-        if (!meta) return []
+        if (!meta || !scopedIds.has(pluginId)) return []
         return {
           ...meta,
           id: pluginId,
@@ -431,7 +433,10 @@ const buildPluginList = (): PluginCardList => {
           group: meta.group || PluginGroup.CUSTOM_PLUGINS,
         }
       })
-      .filter(Boolean) // remove undefined if any id not found in meta
+      .filter(Boolean)
+    if (featuredPlugins.length > 0) {
+      list[PluginGroup.FEATURED] = featuredPlugins
+    }
   }
   return list
 }
