@@ -43,7 +43,7 @@
       <template v-else>
         <!-- Step 1: Custom plugin type -->
         <EntityFormBlock
-          v-if="!editMode"
+          v-if="showPluginTypeSelection"
           class="custom-plugin-form-steps"
           :step="1"
           :title="t('custom_plugin_form.step1.title')"
@@ -526,6 +526,7 @@ const supportedPluginTypes = computed(() => {
   return ALL_PLUGIN_TYPES.filter((type) => !unsupportedTypeSet.value.has(type))
 })
 const showUnsupportedTypesError = computed(() => !editMode.value && supportedPluginTypes.value.length === 0)
+const showPluginTypeSelection = computed(() => !editMode.value && supportedPluginTypes.value.length > 1)
 
 const getDefaultPluginType = (): CustomPluginFormType | null => {
   return supportedPluginTypes.value[0] ?? null
@@ -541,14 +542,15 @@ const isPluginTypeSupported = (type: CustomPluginFormType): boolean => {
  * If only one step exists, don't display the step number (return undefined)
  */
 const getDisplayStep = (originalStep: number): number | undefined => {
-  if (editMode.value) {
-    // In edit mode, step 1 is hidden, so subtract 1 from original step
+  if (editMode.value || !showPluginTypeSelection.value) {
+    // In edit mode, or when only one supported type remains, step 1 is hidden.
     const displayStep = originalStep - 1
     // Only show step number if there's more than one step
-    // For 'installed' type there's only 1 step (originally step 2), so don't show
+    // For 'installed' type there's only 1 visible step, so don't show
     const totalSteps = state.fields.pluginType === 'installed' ? 1 : 2
     return totalSteps > 1 ? displayStep : undefined
   }
+
   return originalStep
 }
 

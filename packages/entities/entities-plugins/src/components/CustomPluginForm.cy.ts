@@ -594,7 +594,7 @@ describe('<CustomPluginForm />', () => {
   })
 
   describe('unsupportedTypes', () => {
-    it('should hide unsupported plugin types', () => {
+    it('should hide type selection UI when only one supported type remains', () => {
       cy.mount(CustomPluginForm, {
         props: {
           config: konnectConfig,
@@ -603,10 +603,15 @@ describe('<CustomPluginForm />', () => {
         router,
       })
 
-      // Only streamed should be visible
+      // Type selection UI should be hidden when only streamed remains
       cy.getTestId('custom-plugin-type-installed').should('not.exist')
-      cy.getTestId('custom-plugin-type-streamed').should('exist')
+      cy.getTestId('custom-plugin-type-streamed').should('not.exist')
       cy.getTestId('custom-plugin-type-cloned').should('not.exist')
+      cy.getTestId('compare-deployment-options').should('not.exist')
+
+      // Streamed fields should still be shown as the default path
+      cy.getTestId('custom-plugin-schema-upload').should('exist')
+      cy.getTestId('custom-plugin-handler-upload').should('exist')
     })
 
     it('should show error state when all types are unsupported', () => {
