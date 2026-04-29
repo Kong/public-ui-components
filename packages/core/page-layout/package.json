@@ -42,7 +42,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.20.1",
     "@kong/icons": "^1.52.0",
-    "@kong/kongponents": "9.52.11",
+    "@kong/kongponents": "9.52.13",
     "vue": "^3.5.33",
     "vue-router": "^5.0.6"
   },
@@ -68,7 +68,7 @@
     "@kong/icons": "^1.52.0",
     "@kong/kongponents": "^9.52.11",
     "vue": "^3.5.33",
-    "vue-router": "^5.0.6"
+    "vue-router": "^4.6.4 || ^5.0.6"
   },
   "dependencies": {
     "@vueuse/core": "^14.2.1"
