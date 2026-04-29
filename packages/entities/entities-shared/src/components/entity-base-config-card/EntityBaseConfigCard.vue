@@ -20,6 +20,14 @@
     <template #actions>
       <div class="config-card-actions">
         <slot name="actions" />
+        <KButton
+          v-if="configFormat === 'deck' && Boolean(deckCustomizationOptions)"
+          appearance="secondary"
+          class="button-customize-deck"
+          @click="isDeckCustomizationVisible = true"
+        >
+          {{ t('baseConfigCard.actions.deck_customize') }}
+        </KButton>
         <KLabel
           class="config-format-select-label"
           data-testid="config-format-select-label"
@@ -81,11 +89,14 @@
           :entity-type="entityType"
           :fetcher-url="fetcherUrl"
           :format="configFormat"
+          :is-deck-customization-visible="isDeckCustomizationVisible"
           :preserve-code-block-timestamps="preserveCodeBlockTimestamps"
           :prop-list-types="propListTypes"
           :property-collections="propertyLists"
           :record="record"
           :sub-entity-type="subEntityType"
+          @deck-customization:close="isDeckCustomizationVisible = false"
+          @request-deck-format="configFormat = 'deck'"
         >
           <!-- Pass through slots except `after-fields` -->
           <template
@@ -128,7 +139,7 @@ import type {
   SupportedEntityType,
   PolicyConfigurationSchema,
 } from '../../types'
-import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray, isSupportedDeckEntityType } from '../../types'
+import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray } from '../../types'
 import composables from '../../composables'
 import ConfigCardDisplay from './ConfigCardDisplay.vue'
 import { BookIcon } from '@kong/icons'
@@ -305,12 +316,22 @@ const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
 const slots = useSlots()
 
+const isDeckCustomizationVisible = ref(false)
+
 /** Every dynamic slot (title, type etc) oter than `after-fields` is passed through to ConfigCardDisplay */
 const configCardDisplaySlotKeys = computed(() =>
   Object.keys(slots).filter((name) => !RESERVED_ENTITY_CONFIG_CARD_SLOTS.has(name)),
 )
 
 const hasAfterFieldsSlot = computed((): boolean => Boolean(slots['after-fields']))
+
+const {
+  isDeckEnabled,
+  deckCustomizationOptions,
+} = composables.useBaseEntityDeckOptions(
+  () => props.config,
+  () => props.entityType,
+)
 
 /** KSelect items: built in display order, then filtered by `formatsToHide` */
 const configFormatItems = computed(() => {
@@ -339,11 +360,7 @@ const configFormatItems = computed(() => {
     })
   }
 
-  // decK is only available for certain entity types
-  // https://developer.konghq.com/deck/reference/entities/
-  const isSupportedEntity = isSupportedDeckEntityType(props.entityType)
-  const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckConfig
-  if (isDeckEnabled && isSupportedEntity) {
+  if (isDeckEnabled.value) {
     items.push({
       label: t('baseForm.configuration.deck'),
       value: 'deck',
@@ -700,6 +717,10 @@ onBeforeMount(async () => {
   .config-card-actions {
     align-items: center;
     display: flex;
+
+    .button-customize-deck {
+      margin-inline-end: var(--kui-space-60, $kui-space-60);
+    }
 
     .config-format-select-label {
       margin-bottom: var(--kui-space-0, $kui-space-0);

@@ -1,3 +1,4 @@
+import type { DeckConfigOptions } from './deck'
 import type { KonnectConfig, KongManagerConfig } from './index'
 
 /**
@@ -85,11 +86,17 @@ export interface BaseEntityConfig {
 
 /** Konnect base form config */
 export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig {
-  enableDeckConfig?: boolean
+  enableDeckConfig?: boolean | DeckConfigOptions
 }
 
 /** Kong Manager base form config */
-export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig { }
+export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig {
+  /**
+   * The localStorage key to use while persisting the visibility preference for the
+   * decK format callout. Omitting this will hide the callout in any case.
+   */
+  deckCalloutPreferenceKey?: string
+}
 
 export enum ConfigurationSchemaType {
   ID = 'id',

@@ -61,7 +61,9 @@
   />
   <YamlCodeBlock
     v-if="format === 'yaml' && entityRecord"
+    :deck-callout-preference-key="isDeckEnabled ? deckCalloutPreferenceKey : undefined"
     :entity-record="entityRecord"
+    @deck-callout:click-cta="$emit('request-deck-format')"
   />
   <TerraformCodeBlock
     v-if="format === 'terraform' && entityRecord"
@@ -73,11 +75,14 @@
     v-if="format === 'deck' && entityRecord"
     :app="config.app"
     :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
+    :customization-options="deckCustomizationOptions"
     :entity-record="entityRecord"
-    :entity-type="props.entityType as SupportedEntityDeck"
+    :entity-type="(props.entityType as SupportedEntityDeck)"
     :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+    :is-customization-modal-visible="isDeckCustomizationVisible"
     :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
     :workspace="config.app === 'kongManager' ? config.workspace : undefined"
+    @customization-close="$emit('deck-customization:close')"
   />
 </template>
 
@@ -176,7 +181,17 @@ const props = defineProps({
     required: false,
     default: (entityRecord: Record<string, any>) => entityRecord,
   },
+  isDeckCustomizationVisible: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
+
+defineEmits<{
+  'deck-customization:close': []
+  'request-deck-format': []
+}>()
 
 const slots = useSlots()
 const { i18n: { t } } = composables.useI18n()
@@ -213,6 +228,15 @@ const fetchUrlJsonBlock = computed(() => {
   return props.fetcherUrl
     .replace(/(\?|&)__ui_data=true/, '')
 })
+
+const {
+  isDeckEnabled,
+  deckCustomizationOptions,
+  deckCalloutPreferenceKey,
+} = composables.useBaseEntityDeckOptions(
+  () => props.config,
+  () => props.entityType,
+)
 </script>
 
 <style lang="scss" scoped>

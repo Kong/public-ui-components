@@ -1,5 +1,6 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { KonnectConfig, KongManagerConfig } from './index'
+import type { DeckConfigOptions } from './deck'
 
 export interface BaseFormConfig {
   /** Route to return to if canceling create/edit an entity */
@@ -11,11 +12,17 @@ export interface BaseFormConfig {
 /** Konnect base form config */
 export interface KonnectBaseFormConfig extends KonnectConfig, BaseFormConfig {
   /** Whether to enable the deck tab */
-  enableDeckTab?: boolean
+  enableDeckTab?: boolean | DeckConfigOptions
 }
 
 /** Kong Manager base form config */
-export interface KongManagerBaseFormConfig extends KongManagerConfig, BaseFormConfig {}
+export interface KongManagerBaseFormConfig extends KongManagerConfig, BaseFormConfig {
+  /**
+   * The localStorage key to use while persisting the visibility preference for the
+   * decK format callout. Omitting this will hide the callout in any case.
+   */
+  deckCalloutPreferenceKey?: string
+}
 
 export enum EntityBaseFormType {
   Edit = 'edit',

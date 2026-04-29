@@ -70,6 +70,12 @@
         </div>
         <div>
           <KInputSwitch
+            v-model="showCenterMetricToggle"
+            :label="showCenterMetricToggle ? 'Center Metric' : 'No Center Metric'"
+          />
+        </div>
+        <div>
+          <KInputSwitch
             v-model="emptyState"
             :label="emptyState ? 'Empty State' : 'Chart Has Data'"
           />
@@ -174,6 +180,7 @@ const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 const limitToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
+const showCenterMetricToggle = ref(false)
 const emptyState = ref(false)
 const chartType = ref<ChartType>('donut')
 const legendPosition = ref(ChartLegendPosition.Bottom)
@@ -245,6 +252,7 @@ const updateSelectedColor = (event: Event, label: string) => {
 const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
   type: chartType.value,
   chartDatasetColors: colorPalette.value,
+  showCenterMetric: showCenterMetricToggle.value,
 }))
 
 const addDataset = () => {

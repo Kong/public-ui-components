@@ -38,8 +38,8 @@ import useI18n from '../../../../composables/useI18n'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 
 type AclConfig = {
-  allow?: string[]
-  deny?: string[]
+  allow?: string[] | null
+  deny?: string[] | null
 }
 
 type AclMode = 'allow' | 'deny'
@@ -76,7 +76,7 @@ function handleModeChange() {
     if (formData.config.deny) {
       cache.value.deny = [...formData.config.deny]
     }
-    delete formData.config.deny
+    formData.config.deny = null
     // Restore cached allow data if exists
     if (cache.value.allow) {
       formData.config.allow = [...cache.value.allow]
@@ -85,7 +85,7 @@ function handleModeChange() {
     if (formData.config.allow) {
       cache.value.allow = [...formData.config.allow]
     }
-    delete formData.config.allow
+    formData.config.allow = null
     // Restore cached deny data if exists
     if (cache.value.deny) {
       formData.config.deny = [...cache.value.deny]

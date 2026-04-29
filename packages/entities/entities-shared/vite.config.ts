@@ -1,6 +1,7 @@
 import sharedViteConfig, { getApiProxies, sanitizePackageName } from '../../../vite.config.shared'
 import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
+import monaco from '@kong-ui-public/monaco-editor/vite-plugin'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
 const packageName = 'entities-shared'
@@ -8,6 +9,9 @@ const sanitizedPackageName = sanitizePackageName(packageName)
 
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
+  plugins: [monaco({
+    languages: ['powershell', 'shell'],
+  })],
   build: {
     lib: {
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
@@ -17,7 +21,12 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
     rollupOptions: {
-      external: [/^@shikijs\//],
+      external: [
+        '@kong-ui-public/monaco-editor',
+        '@kong-ui-public/monaco-editor/dist/runtime/style.css',
+        'monaco-editor',
+        /^@shikijs\//,
+      ],
     },
   },
   server: {

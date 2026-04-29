@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.23...@kong-ui-public/entities-certificates@3.12.24) (2026-04-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.12.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.22...@kong-ui-public/entities-certificates@3.12.23) (2026-04-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.12.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.21...@kong-ui-public/entities-certificates@3.12.22) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.12.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.20...@kong-ui-public/entities-certificates@3.12.21) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.12.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.19...@kong-ui-public/entities-certificates@3.12.20) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3183](https://github.com/Kong/public-ui-components/issues/3183)) ([d25bc84](https://github.com/Kong/public-ui-components/commit/d25bc844fcff896a64a7940eed78cdc4bc5796b8))
+
+
+
+
+
 ## [3.12.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.18...@kong-ui-public/entities-certificates@3.12.19) (2026-04-23)
 
 

@@ -99,6 +99,7 @@
         </slot>
       </div>
       <KTabs
+        v-model="configTab"
         data-testid="form-view-configuration-slideout-tabs"
         :tabs="tabs"
         @change="hash => emit('codeBlockTabChange', hash.replace('#', ''))"
@@ -112,7 +113,11 @@
           />
         </template>
         <template #yaml>
-          <YamlCodeBlock :entity-record="props.formFields" />
+          <YamlCodeBlock
+            :deck-callout-preference-key="isDeckEnabled ? deckCalloutPreferenceKey : undefined"
+            :entity-record="props.formFields"
+            @deck-callout:click-cta="configTab = '#deck'"
+          />
         </template>
         <template #terraform>
           <TerraformCodeBlock
@@ -122,14 +127,30 @@
           />
         </template>
         <template #deck>
+          <div
+            v-if="Boolean(deckCustomizationOptions)"
+            class="button-customize-deck-wrapper"
+          >
+            <KButton
+              appearance="secondary"
+              class="button-customize-deck"
+              @click="isDeckCustomizationVisible = true"
+            >
+              {{ t('baseConfigCard.actions.deck_customize') }}
+            </KButton>
+          </div>
+
           <DeckCodeBlock
             :app="config.app"
             :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
+            :customization-options="deckCustomizationOptions"
             :entity-record="props.formFields"
-            :entity-type="entityType as SupportedEntityDeck"
+            :entity-type="(entityType as SupportedEntityDeck)"
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :is-customization-modal-visible="isDeckCustomizationVisible"
             :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
             :workspace="config.app === 'kongManager' ? config.workspace : undefined"
+            @customization-close="isDeckCustomizationVisible = false"
           />
         </template>
       </KTabs>
@@ -143,7 +164,7 @@ import { computed, ref, onBeforeMount, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
-import { SupportedEntityTypesArray, SupportedEntityType, isSupportedDeckEntityType } from '../../types'
+import { SupportedEntityTypesArray, SupportedEntityType } from '../../types'
 import composables from '../../composables'
 import type { Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
@@ -326,6 +347,17 @@ const fetcherUrl = computed<string>(() => {
   return url
 })
 
+const isDeckCustomizationVisible = ref(false)
+
+const {
+  isDeckEnabled,
+  deckCustomizationOptions,
+  deckCalloutPreferenceKey,
+} = composables.useBaseFormDeckOptions(
+  () => props.config,
+  () => props.entityType,
+)
+
 const toggle = (): void => {
   isToggled.value = !isToggled.value
 }
@@ -372,17 +404,14 @@ if (props.config.app === 'konnect' && props.entityType !== SupportedEntityType.O
   })
 }
 
-// decK is only available for certain entity types
-// https://developer.konghq.com/deck/reference/entities/
-const isSupportedEntity = isSupportedDeckEntityType(props.entityType)
-const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckTab
-
-if (isDeckEnabled && isSupportedEntity) {
+if (isDeckEnabled.value) {
   tabs.value.push({
     title: t('baseForm.configuration.deck'),
     hash: '#deck',
   })
 }
+
+const configTab = ref(tabs.value[0].hash)
 
 watch(() => isLoading.value, (val: boolean) => {
   // Emit the loading state for the host app
@@ -465,6 +494,13 @@ defineExpose({
     .form-error {
       margin: var(--kui-space-70, $kui-space-70) 0 0 var(--kui-space-60, $kui-space-60);
     }
+  }
+
+  .button-customize-deck-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: var(--kui-space-60, $kui-space-60);
   }
 }
 

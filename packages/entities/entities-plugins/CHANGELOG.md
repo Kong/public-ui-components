@@ -3,6 +3,104 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.199.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.198.0...@kong-ui-public/entities-plugins@9.199.0) (2026-04-29)
+
+
+### Features
+
+* **entities-plugins:** hide step 1 if only allows 1 type of custom plugin ([#3200](https://github.com/Kong/public-ui-components/issues/3200)) ([69bcb3c](https://github.com/Kong/public-ui-components/commit/69bcb3c80d2342065a43c1db89c7e507f1f99e4a))
+
+
+
+
+
+# [9.198.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.197.0...@kong-ui-public/entities-plugins@9.198.0) (2026-04-28)
+
+
+### Features
+
+* **entities-shared:** customize decK config before copying and generate Konnect PAT ([#3155](https://github.com/Kong/public-ui-components/issues/3155)) ([ed42401](https://github.com/Kong/public-ui-components/commit/ed4240114cf0d47383e4beb8c9aa88d65f1e1564))
+
+
+
+
+
+# [9.197.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.196.1...@kong-ui-public/entities-plugins@9.197.0) (2026-04-28)
+
+
+### Features
+
+* **entities-plugins:** reslove cloned plugin engine via source ([#3197](https://github.com/Kong/public-ui-components/issues/3197)) ([ddb2580](https://github.com/Kong/public-ui-components/commit/ddb2580b46007db6fd63947e207d8d478e40f636))
+
+
+
+
+
+## [9.196.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.196.0...@kong-ui-public/entities-plugins@9.196.1) (2026-04-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.196.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.195.12...@kong-ui-public/entities-plugins@9.196.0) (2026-04-27)
+
+
+### Features
+
+* **entities-plugins:** intergrate cloned plugin endpoints ([#3179](https://github.com/Kong/public-ui-components/issues/3179)) ([91ddcf9](https://github.com/Kong/public-ui-components/commit/91ddcf9ea229ce15379f8a865a07ac54787b8b1c))
+
+
+
+
+
+## [9.195.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.195.11...@kong-ui-public/entities-plugins@9.195.12) (2026-04-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.195.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.195.10...@kong-ui-public/entities-plugins@9.195.11) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.195.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.195.9...@kong-ui-public/entities-plugins@9.195.10) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.195.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.195.8...@kong-ui-public/entities-plugins@9.195.9) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3183](https://github.com/Kong/public-ui-components/issues/3183)) ([d25bc84](https://github.com/Kong/public-ui-components/commit/d25bc844fcff896a64a7940eed78cdc4bc5796b8))
+
+
+
+
+
+## [9.195.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.195.7...@kong-ui-public/entities-plugins@9.195.8) (2026-04-24)
+
+
+### Bug Fixes
+
+* **entities-plugins:** set allow/deny to null when toggling ([#3173](https://github.com/Kong/public-ui-components/issues/3173)) ([1b1641b](https://github.com/Kong/public-ui-components/commit/1b1641b4e608eeb54beb82a5103bf9261b040fa7))
+
+
+
+
+
 ## [9.195.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.195.6...@kong-ui-public/entities-plugins@9.195.7) (2026-04-23)
 
 

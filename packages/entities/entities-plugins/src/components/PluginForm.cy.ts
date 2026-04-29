@@ -2064,6 +2064,116 @@ describe('<PluginForm />', () => {
       cy.get('.vue-form-generator').should('exist')
     })
 
+    describe('Cloned plugin engine resolution', () => {
+      const interceptClonedPlugin = (params: {
+        pluginName: string
+        link?: string
+        status?: number
+        alias?: string
+      }) => {
+        cy.intercept(
+          {
+            method: 'GET',
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/cloned-plugins/${params.pluginName}`,
+          },
+          params.status === 404
+            ? { statusCode: 404, body: { message: 'Not found' } }
+            : {
+              statusCode: 200,
+              body: {
+                name: params.pluginName,
+                link: params.link!,
+                priority: null,
+                tags: null,
+                created_at: 1700000000,
+                updated_at: 1700000000,
+              },
+            },
+        ).as(params.alias ?? 'getClonedPlugin')
+      }
+
+      it('renders freeform for a non-cloned custom plugin when KM_2503 flag is on', () => {
+        const pluginType = 'my-custom-plugin'
+        interceptKonnectSchema({ mockData: customPluginSchema })
+        // Not a clone — backend returns 404
+        interceptClonedPlugin({ pluginName: pluginType, status: 404 })
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKonnect,
+            pluginType,
+          },
+          global: {
+            provide: {
+              [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
+              [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+            },
+          },
+          router,
+        })
+
+        cy.wait(['@getPluginSchema', '@getClonedPlugin'])
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+        // Freeform renders cards with data-testid="ff-*"
+        cy.get('[data-testid^="ff-"]').should('exist')
+      })
+
+      it('renders freeform for a cloned plugin when its source plugin uses freeform', () => {
+        // rate-limiting has a freeform component (experimental — needs whitelist).
+        const pluginType = 'rate-limiting-clone'
+        interceptKonnectSchema({ mockData: schemaRateLimiting })
+        interceptClonedPlugin({ pluginName: pluginType, link: 'rate-limiting' })
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKonnect,
+            pluginType,
+          },
+          global: {
+            provide: {
+              [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
+              [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+              [EXPERIMENTAL_FREE_FORM_PROVIDER as symbol]: ['rate-limiting'],
+            },
+          },
+          router,
+        })
+
+        cy.wait(['@getPluginSchema', '@getClonedPlugin'])
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+        cy.get('[data-testid^="ff-"]').should('exist')
+      })
+
+      it('renders VFG for a cloned plugin when its source plugin uses VFG', () => {
+        // cors has no freeform component, so the source — and therefore the clone — falls back to VFG.
+        const pluginType = 'cors-clone'
+        interceptKonnectSchema({ mockData: schemaCors })
+        interceptClonedPlugin({ pluginName: pluginType, link: 'cors' })
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKonnect,
+            pluginType,
+          },
+          global: {
+            provide: {
+              [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
+              [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+            },
+          },
+          router,
+        })
+
+        cy.wait(['@getPluginSchema', '@getClonedPlugin'])
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+        cy.get('.vue-form-generator').should('exist')
+        cy.get('[data-testid^="ff-"]').should('not.exist')
+      })
+    })
+
     describe('Condition field', () => {
       ;[
         {

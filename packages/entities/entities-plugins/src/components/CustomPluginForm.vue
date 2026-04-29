@@ -43,7 +43,7 @@
       <template v-else>
         <!-- Step 1: Custom plugin type -->
         <EntityFormBlock
-          v-if="!editMode"
+          v-if="showPluginTypeSelection"
           class="custom-plugin-form-steps"
           :step="1"
           :title="t('custom_plugin_form.step1.title')"
@@ -442,6 +442,7 @@ import type {
   InstalledPluginResponse,
   StreamedPluginResponse,
   KongManagerCustomPluginFormConfig,
+  ClonedPluginResponse,
 } from '../types'
 import type { SelectGroup, SelectItem } from '@kong/kongponents'
 import { useRouter } from 'vue-router'
@@ -504,6 +505,8 @@ const {
   updateStreamedPlugin,
   getPluginType,
   getPluginByUnknownType,
+  createClonedPlugin,
+  updateClonedPlugin,
 } = composables.useCustomPluginApi({
   axiosInstance,
   apiBaseUrl: props.config.apiBaseUrl,
@@ -523,6 +526,7 @@ const supportedPluginTypes = computed(() => {
   return ALL_PLUGIN_TYPES.filter((type) => !unsupportedTypeSet.value.has(type))
 })
 const showUnsupportedTypesError = computed(() => !editMode.value && supportedPluginTypes.value.length === 0)
+const showPluginTypeSelection = computed(() => !editMode.value && supportedPluginTypes.value.length > 1)
 
 const getDefaultPluginType = (): CustomPluginFormType | null => {
   return supportedPluginTypes.value[0] ?? null
@@ -538,14 +542,15 @@ const isPluginTypeSupported = (type: CustomPluginFormType): boolean => {
  * If only one step exists, don't display the step number (return undefined)
  */
 const getDisplayStep = (originalStep: number): number | undefined => {
-  if (editMode.value) {
-    // In edit mode, step 1 is hidden, so subtract 1 from original step
+  if (editMode.value || !showPluginTypeSelection.value) {
+    // In edit mode, or when only one supported type remains, step 1 is hidden.
     const displayStep = originalStep - 1
     // Only show step number if there's more than one step
-    // For 'installed' type there's only 1 step (originally step 2), so don't show
+    // For 'installed' type there's only 1 visible step, so don't show
     const totalSteps = state.fields.pluginType === 'installed' ? 1 : 2
     return totalSteps > 1 ? displayStep : undefined
   }
+
   return originalStep
 }
 
@@ -576,6 +581,8 @@ const state = reactive<{
   readonly: false,
   errorMessage: '',
 })
+
+let originalPluginAlias = ''
 
 watch(supportedPluginTypes, (types) => {
   if (editMode.value) return
@@ -743,6 +750,15 @@ onMounted(async () => {
       state.fields.name = name
       state.fields.schemaContent = schema
       state.fields.handlerContent = handler
+    } else if (type === 'cloned') {
+      const { link, name, priority } = data as ClonedPluginResponse
+      state.fields.aliasName = name
+      state.fields.sourcePlugin = link
+      state.fields.priority = priority !== null ? String(priority) : ''
+      originalPluginAlias = name
+    } else {
+      fetchError.value = t('custom_plugin_form.errors.unsupported_plugin_type', { type })
+      emit('error', new Error(fetchError.value))
     }
   } catch (err: unknown) {
     fetchError.value = getMessageFromError(err)
@@ -781,13 +797,23 @@ const submitData = async (): Promise<void> => {
         : await createStreamedPlugin(body)
       emit('update', data)
     } else {
-      // cloned - API not yet available
+      const data = editMode.value
+        ? await updateClonedPlugin(originalPluginAlias, {
+          aliasName: state.fields.aliasName,
+          sourcePlugin: state.fields.sourcePlugin,
+          priority: state.fields.priority ? parseInt(state.fields.priority, 10) : undefined,
+        })
+        : await createClonedPlugin({
+          aliasName: state.fields.aliasName,
+          sourcePlugin: state.fields.sourcePlugin,
+          priority: state.fields.priority ? parseInt(state.fields.priority, 10) : undefined,
+        })
       emit('update', {
         pluginType: 'cloned',
-        sourcePlugin: state.fields.sourcePlugin,
-        aliasName: state.fields.aliasName,
-        priority: state.fields.priority || undefined,
-      } as ClonedPluginPayload)
+        sourcePlugin: data.link,
+        aliasName: data.name,
+        priority: data.priority ?? undefined,
+      })
     }
 
     router.push(props.config.successRoute)

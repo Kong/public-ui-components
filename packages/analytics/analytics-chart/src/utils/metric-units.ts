@@ -11,3 +11,14 @@ export const UNITLESS_METRICS = new Set([
 export const isUnitlessMetricUnit = (unit: string): boolean => {
   return UNITLESS_METRICS.has(unit)
 }
+
+export const SUMMABLE_METRIC_UNITS = new Set([
+  'count',
+  'requests',
+  'usd',
+  'token count',
+])
+
+export const isSummableMetricUnit = (unit: string): boolean => {
+  return SUMMABLE_METRIC_UNITS.has(unit)
+}
