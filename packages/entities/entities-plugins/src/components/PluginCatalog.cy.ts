@@ -49,7 +49,8 @@ describe('<PluginCatalog />', {
     cy.intercept(
       {
         method: 'GET',
-        url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins`,
+        // Match regardless of pagination query (e.g. `?size=1000`) appended by `fetchAllPages`.
+        pathname: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins`,
       },
       {
         statusCode: 200,
