@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.199.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.198.0...@kong-ui-public/entities-plugins@9.199.0) (2026-04-29)
+
+
+### Features
+
+* **entities-plugins:** hide step 1 if only allows 1 type of custom plugin ([#3200](https://github.com/Kong/public-ui-components/issues/3200)) ([69bcb3c](https://github.com/Kong/public-ui-components/commit/69bcb3c80d2342065a43c1db89c7e507f1f99e4a))
+
+
+
+
+
 # [9.198.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.197.0...@kong-ui-public/entities-plugins@9.198.0) (2026-04-28)
 
 
