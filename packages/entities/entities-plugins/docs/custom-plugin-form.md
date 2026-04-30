@@ -65,6 +65,12 @@ Supports both Konnect and Kong Manager configurations.
     - default: `undefined`
     - Array of available plugin names for cloning. Only needed when using "Cloned" plugin type.
 
+  - `workspace`:
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
+    - default: `undefined`
+    - The workspace name. Note: Kong Manager does not support installed custom plugins — pass `unsupportedTypes: ['installed']`.
+
 **Konnect-specific:**
 
   - `controlPlaneId`:
@@ -72,12 +78,6 @@ Supports both Konnect and Kong Manager configurations.
     - required: `true`
     - The control plane ID.
 
-**Kong Manager-specific:**
-
-  - `workspace`:
-    - type: `string`
-    - required: `true`
-    - The workspace name. Note: Kong Manager does not support installed custom plugins — pass `unsupportedTypes: ['installed']`.
 
 #### `pluginName`
 
