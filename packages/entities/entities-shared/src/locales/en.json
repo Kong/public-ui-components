@@ -43,7 +43,8 @@
     "actions": {
       "copy": "Copy JSON",
       "deck_customize": "Customize before copying to CLI",
-      "deck_customize_cancel": "Cancel"
+      "deck_customize_cancel": "Cancel",
+      "sensitive_fields": "Show sensitive fields"
     },
     "sections": {
       "advanced": "Advanced",
