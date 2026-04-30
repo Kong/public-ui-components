@@ -15,7 +15,7 @@
             <PluginIcon
               :alt="plugin.name"
               class="plugin-card-icon"
-              :name="plugin.id"
+              :name="pluginIconName"
               :size="55"
             />
             <span :class="{ 'non-custom-title': !isCustomPlugin }">
@@ -135,6 +135,11 @@ const props = defineProps<{
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
+const pluginIconName = computed((): string => {
+  return props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromLink
+    ? props.plugin.clonedFromLink
+    : props.plugin.id
+})
 const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
 const customPluginBadges = computed((): string[] => {
   if (!isCustomPlugin.value || isCreateCustomPlugin.value) {

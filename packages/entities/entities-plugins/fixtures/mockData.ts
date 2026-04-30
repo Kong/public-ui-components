@@ -548,6 +548,12 @@ export const konnectStreamingCustomPlugins = {
   ],
 }
 
+export const konnectClonedCustomPlugins = {
+  data: [
+    { id: '9d26ba5a-9c6b-4e79-9501-0e0bd9ade0af', name: 'my-basic-auth-clone', link: 'basic-auth' },
+  ],
+}
+
 /**
  * Form page data
  */

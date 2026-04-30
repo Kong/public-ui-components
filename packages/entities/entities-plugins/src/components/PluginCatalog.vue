@@ -133,13 +133,13 @@
           v-if="isListView"
           :config="config"
           :plugin-list="filteredPlugins"
-          @delete:success="(name: string) => $emit('delete-custom:success', name)"
+          @delete:success="handleCustomPluginDeleteSuccess"
         />
         <PluginCatalogGrid
           v-else
           :config="config"
           :plugin-list="filteredPlugins"
-          @delete:success="(name: string) => $emit('delete-custom:success', name)"
+          @delete:success="handleCustomPluginDeleteSuccess"
           @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
         />
       </section>
@@ -148,8 +148,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { computed, inject, onMounted, ref, useTemplateRef, watch } from 'vue'
 import {
+  type ClonedPluginSchema,
+  type CustomPluginType,
   PluginGroup,
   PluginScope,
   PluginFeaturedArray,
@@ -162,7 +164,9 @@ import {
   type PluginCardList,
   type StreamingCustomPluginSchema,
 } from '../types'
+import { FEATURE_FLAGS } from '../constants'
 import composables from '../composables'
+import { fetchAllPages } from '../composables/useCustomPluginApi'
 import endpoints from '../plugins-endpoints'
 import PluginCatalogGrid from './select/PluginCatalogGrid.vue'
 import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
@@ -198,6 +202,7 @@ const props = withDefaults(defineProps<{
 })
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const enabledClonedPlugin = inject<boolean>(FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, false)
 
 const searchFilterInput = useTemplateRef('filter-input')
 
@@ -210,10 +215,23 @@ const hasError = ref(false)
 const fetchErrorMessage = ref('')
 const availablePlugins = ref<string[]>([]) // all available plugins
 const streamingCustomPlugins = ref<StreamingCustomPluginSchema[]>([])
+const clonedCustomPlugins = ref<ClonedPluginSchema[]>([])
 const pluginsList = ref<PluginCardList>({})
 const existingEntityPlugins = ref<string[]>([])
 const isListView = ref(false)
 const viewModeIcon = computed(() => (isListView.value ? GridIcon : ListIcon))
+
+const normalizeCustomPluginSupport = (support?: CustomPluginSupportLevel): Set<CustomPluginType> => {
+  if (!support || support === 'none' || support === 'disabled') {
+    return new Set()
+  }
+
+  return new Set(Array.isArray(support) ? support : [support])
+}
+
+const normalizedCustomPluginSupport = computed<Set<CustomPluginType>>(() => normalizeCustomPluginSupport(props.customPluginSupport))
+const isStreamingCustomPluginSupported = computed(() => normalizedCustomPluginSupport.value.has('streaming'))
+const isClonedCustomPluginSupported = computed(() => enabledClonedPlugin && normalizedCustomPluginSupport.value.has('cloned'))
 
 const availablePluginsUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePlugins}`
@@ -230,12 +248,22 @@ const availablePluginsUrl = computed((): string => {
 })
 
 const streamingPluginsUrl = computed<string | null>(() => {
-  if (props.config.app === 'konnect' && props.customPluginSupport === 'streaming') {
+  if (props.config.app === 'konnect' && isStreamingCustomPluginSupported.value) {
     let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].streamingCustomPlugins}`
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
     return url
   }
   // Kong Manager and other support level does not support streaming custom plugins now
+  return null
+})
+
+const clonedPluginsUrl = computed<string | null>(() => {
+  if (props.config.app === 'konnect' && isClonedCustomPluginSupported.value) {
+    let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].clonedPlugins}`
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+    return url
+  }
+
   return null
 })
 
@@ -333,6 +361,11 @@ const clearTypeFilter = (): void => {
 }
 
 const buildPluginList = (): PluginCardList => {
+  const allCustomPluginNames = new Set<string>([
+    ...streamingCustomPlugins.value.map(plugin => plugin.name),
+    ...clonedCustomPlugins.value.map(plugin => plugin.name),
+  ])
+
   // If availableOnServer is false, we included unavailable plugins from pluginMeta in addition to available plugins
   // returning an array of unique plugin ids
   // either grab all plugins from metadata file or use list of available plugins provided by API
@@ -340,6 +373,7 @@ const buildPluginList = (): PluginCardList => {
     [
       ...Object.keys({ ...(!props.availableOnServer ? pluginMetaData : {}) }),
       ...availablePlugins.value,
+      ...allCustomPluginNames,
     ],
   )]
     // Used to filter out ignored plugins, seems we don't need it anymore
@@ -382,20 +416,31 @@ const buildPluginList = (): PluginCardList => {
     })
     // build the actual card list
     .reduce((list: PluginCardList, pluginId: string) => {
+      const clonedPlugin = clonedCustomPlugins.value.find(customPlugin => customPlugin.name === pluginId)
+      const streamingPlugin = streamingCustomPlugins.value.find(customPlugin => customPlugin.name === pluginId)
+      const clonedParentMeta = clonedPlugin ? pluginMetaData[clonedPlugin.link] : undefined
+      const pluginMeta = pluginMetaData[pluginId] || clonedParentMeta
       const pluginName = (pluginMetaData[pluginId] && pluginMetaData[pluginId].name) || pluginId
       const plugin: PluginType = {
-        ...pluginMetaData[pluginId],
+        ...pluginMeta,
         id: pluginId,
         name: pluginName,
-        available: availablePlugins.value.includes(pluginId),
+        available: availablePlugins.value.includes(pluginId) || !!clonedPlugin || !!streamingPlugin,
         disabledMessage: '',
+        description: clonedParentMeta?.description || pluginMeta?.description,
+        descriptionKey: clonedParentMeta?.descriptionKey || pluginMeta?.descriptionKey,
         group: pluginMetaData[pluginId]?.group || PluginGroup.CUSTOM_PLUGINS,
       }
 
       if (plugin.group === PluginGroup.CUSTOM_PLUGINS) {
-        plugin.customPluginType = streamingCustomPlugins.value.find(sp => sp.name === pluginId)
-          ? 'streaming'
-          : 'schema'
+        if (clonedPlugin) {
+          plugin.customPluginType = 'cloned'
+          plugin.clonedFromLink = clonedPlugin.link
+        } else if (streamingPlugin) {
+          plugin.customPluginType = 'streaming'
+        } else {
+          plugin.customPluginType = 'schema'
+        }
       }
 
       if (props.disabledPlugins) {
@@ -436,6 +481,34 @@ const buildPluginList = (): PluginCardList => {
   return list
 }
 
+const loadCustomPlugins = async (): Promise<void> => {
+  const requests: Array<Promise<void>> = []
+
+  if (streamingPluginsUrl.value) {
+    requests.push(
+      fetchAllPages<StreamingCustomPluginSchema>(axiosInstance, streamingPluginsUrl.value)
+        .then((plugins): void => {
+          streamingCustomPlugins.value = plugins
+          return undefined
+        }),
+    )
+  }
+
+  if (clonedPluginsUrl.value) {
+    requests.push(
+      fetchAllPages<ClonedPluginSchema>(axiosInstance, clonedPluginsUrl.value)
+        .then((plugins): void => {
+          clonedCustomPlugins.value = plugins
+          return undefined
+        }),
+    )
+  }
+
+  if (requests.length) {
+    await Promise.all(requests)
+  }
+}
+
 // race condition between fetch of available plugins and setting
 // disabled/ignored plugins
 // if disabled/ignored plugins changes before availablePlugins fetch
@@ -452,6 +525,13 @@ watch((isLoading), (loading: boolean) => {
   emit('loading', loading)
 })
 
+const handleCustomPluginDeleteSuccess = (pluginName: string): void => {
+  streamingCustomPlugins.value = streamingCustomPlugins.value.filter((plugin) => plugin.name !== pluginName)
+  clonedCustomPlugins.value = clonedCustomPlugins.value.filter((plugin) => plugin.name !== pluginName)
+  pluginsList.value = buildPluginList()
+  emit('delete-custom:success', pluginName)
+}
+
 onMounted(async () => {
   searchFilterInput.value?.input?.focus()
 
@@ -461,11 +541,7 @@ onMounted(async () => {
     if (props.config.app === 'konnect') {
       const { names: allAvailablePlugins } = data
       availablePlugins.value = allAvailablePlugins || []
-      if (streamingPluginsUrl.value) {
-        // fetch streaming custom plugins for plugin type partition
-        const { data: streamingCustomPluginsData } = await axiosInstance.get<{ data: StreamingCustomPluginSchema[] }>(streamingPluginsUrl.value)
-        streamingCustomPlugins.value = streamingCustomPluginsData.data || []
-      }
+      await loadCustomPlugins()
     } else if (props.config.app === 'kongManager') {
       const { plugins: { available_on_server: aPlugins } } = data
       availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
