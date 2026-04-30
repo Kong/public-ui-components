@@ -516,7 +516,7 @@ const {
 })
 
 // Force-enable the new plugin form layout
-provide(PLUGIN_FORM_LAYOUT_STATE, computed(() => true))
+provide(PLUGIN_FORM_LAYOUT_STATE, ref(true))
 
 const editMode = computed(() => !!props.pluginName)
 const isLoading = ref(false)

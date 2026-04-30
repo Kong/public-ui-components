@@ -133,7 +133,7 @@ import {
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowRef, watch, type PropType, type Ref } from 'vue'
+import { computed, inject, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
@@ -269,7 +269,7 @@ const { parseSchema } = composables.useSchemas({
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
 const { shouldUseFreeForm, getFreeFormComponent } = composables.useFreeFormResolver()
-const pluginFormLayoutState = inject<Ref<boolean> | undefined>(PLUGIN_FORM_LAYOUT_STATE)
+const pluginFormLayoutState = inject(PLUGIN_FORM_LAYOUT_STATE)
 const setPluginFormLayoutState = (value: boolean) => {
   if (pluginFormLayoutState) {
     pluginFormLayoutState.value = value
