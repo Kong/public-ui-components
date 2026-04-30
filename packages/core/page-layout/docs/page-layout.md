@@ -250,9 +250,10 @@ The `PageLayoutTabs` component is an internal component used by `PageLayout` to 
 
 The tab bar dynamically measures the available container width and determines how many tabs can fit. Tabs that exceed the available space are moved into a "More" dropdown menu powered by Kongponents `KDropdown`.
 
-- Layout is computed on mount and recalculated on window resize (debounced at 150ms)
-- A skeleton loading state is displayed while the layout is being computed
-- The "More" button displays a badge with the count of hidden tabs
+- Layout is computed on mount and recalculated whenever the tab bar's own size changes (observed via [`useResizeObserver`](https://vueuse.org/core/useResizeObserver), debounced at 150ms). This means the overflow recomputes correctly even when the window size doesn't change but the available width does (for example, when a sidebar is collapsed/expanded or a parent container is resized).
+- The overflow is also recomputed automatically when the `tabs` prop changes (added, removed, or replaced).
+- A skeleton loading state is displayed while the layout is being computed.
+- The "More" button displays a badge with the count of hidden tabs.
 
 ### Navigation Handling
 

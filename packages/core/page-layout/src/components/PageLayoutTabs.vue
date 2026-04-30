@@ -86,7 +86,7 @@ import { useRouter } from 'vue-router'
 import type { PageLayoutTabsProps, PageLayoutTab } from '../types'
 import composables from '../composables'
 import { KUI_SPACE_60 } from '@kong/design-tokens'
-import { useEventListener } from '@vueuse/core'
+import { useResizeObserver } from '@vueuse/core'
 import { inject } from 'vue'
 
 const {
@@ -176,7 +176,7 @@ const handleResize = () => {
 
 onMounted(() => {
   computeTabLayoutOverflow()
-  useEventListener(window, 'resize', handleResize)
+  useResizeObserver(pageLayoutTabsRef, handleResize)
 })
 
 onBeforeUnmount(() => {
