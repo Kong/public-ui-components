@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.199.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.199.5...@kong-ui-public/entities-plugins@9.199.6) (2026-04-30)
+
+
+### Bug Fixes
+
+* **entities-plugins:** sanitize tooltip HTML to prevent XSS vulnerabilities ([#3210](https://github.com/Kong/public-ui-components/issues/3210)) ([ff06b7b](https://github.com/Kong/public-ui-components/commit/ff06b7b4fab32b7b56088afad8d3c8a600127c14))
+
+
+
+
+
 ## [9.199.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.199.4...@kong-ui-public/entities-plugins@9.199.5) (2026-04-30)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
