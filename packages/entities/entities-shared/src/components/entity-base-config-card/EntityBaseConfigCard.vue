@@ -26,7 +26,7 @@
           v-model="showSensitiveFields"
           class="sensitive-fields-checkbox"
           data-testid="sensitive-fields-checkbox"
-          label="Show sensitive fields"
+          :label="t('baseConfigCard.actions.sensitive_fields')"
         />
 
         <KButton

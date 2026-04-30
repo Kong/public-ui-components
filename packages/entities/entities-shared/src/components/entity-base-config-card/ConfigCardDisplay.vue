@@ -206,15 +206,7 @@ const { i18n: { t } } = composables.useI18n()
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
 
 // Structured grid always uses `record`; code tabs uses `codeBlockRecordRedacted` or `codeBlockRecord` when the parent passes it
-const recordForCodeBlocks = computed((): Record<string, any> | undefined => {
-  if (props.codeBlockRecordRedacted !== undefined) {
-    return props.codeBlockRecordRedacted
-  } else if (props.codeBlockRecord !== undefined) {
-    return props.codeBlockRecord
-  }
-
-  return props.record
-})
+const recordForCodeBlocks = computed((): Record<string, any> | undefined => props.codeBlockRecordRedacted || props.codeBlockRecord || props.record)
 
 // Deep clone + optional timestamp strip + per-format shaping (`codeBlockRecordFormatter`)
 const entityRecord = computed((): Record<string, any> | undefined => {
