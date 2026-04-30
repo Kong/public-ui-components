@@ -525,9 +525,9 @@ const props = defineProps({
   },
   /** If a valid Gateway Service ID is provided, it will put the form in Edit mode instead of Create */
   gatewayServiceId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
   /** Whether show or hide EntityFormSection info column */
   hideSectionsInfo: {
@@ -992,7 +992,7 @@ const submitUrl = computed<string>(() => {
 
   return url
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-    .replace(/{id}/gi, props.gatewayServiceId) // Always replace the id when editing
+    .replace(/{id}/gi, props.gatewayServiceId ?? '') // Always replace the id when editing
 })
 
 const tlsSansPayload = computed(() => {
