@@ -136,6 +136,49 @@ describe('<PageLayoutTabs />', () => {
     cy.getTestId('tabs-overflow-dropdown-button').should('be.visible')
   })
 
+  it('recomputes the tab layout when its container is resized', () => {
+    const tabs: PageLayoutTab[] = [
+      { key: 'tab1', label: 'Tab 1', to: '/tab1' },
+      { key: 'tab2', label: 'Tab 2', to: '/tab2' },
+      { key: 'tab3', label: 'Tab 3', to: '/tab3' },
+      { key: 'tab4', label: 'Tab 4', to: '/tab4' },
+      { key: 'tab5', label: 'Tab 5', to: '/tab5' },
+      { key: 'tab6', label: 'Tab 6', to: '/tab6' },
+      { key: 'tab7', label: 'Tab 7', to: '/tab7' },
+      { key: 'tab8', label: 'Tab 8', to: '/tab8' },
+    ]
+
+    // Use a wide viewport so the layout is driven by the container width below, not the viewport width
+    cy.viewport(1200, 400)
+
+    const containerWidth = ref('1100px')
+
+    cy.mount(defineComponent({
+      setup: () => () => h(
+        'div',
+        { style: { width: containerWidth.value } },
+        [h(PageLayoutTabs, { tabs })],
+      ),
+    }))
+
+    // All tabs fit in the wide container, so the overflow dropdown should not appear
+    cy.getTestId('tabs-overflow-dropdown-button').should('not.exist')
+
+    // Shrink the container; the ResizeObserver should detect the change and recompute overflow
+    cy.then(() => {
+      containerWidth.value = '300px'
+    })
+
+    cy.getTestId('tabs-overflow-dropdown-button').should('be.visible')
+
+    // Grow the container back; the dropdown should disappear once everything fits again
+    cy.then(() => {
+      containerWidth.value = '1100px'
+    })
+
+    cy.getTestId('tabs-overflow-dropdown-button').should('not.exist')
+  })
+
   it('uses the navigateTo injectable to navigate to the tab', () => {
     const navigateToStub = cy.stub().as('navigateTo')
 
