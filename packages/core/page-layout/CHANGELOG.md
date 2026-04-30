@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.19...@kong-ui-public/page-layout@0.2.20) (2026-04-30)
+
+
+### Bug Fixes
+
+* **page-layout:** detect overflow using resize observer [KHCP-20425] ([#3206](https://github.com/Kong/public-ui-components/issues/3206)) ([da22783](https://github.com/Kong/public-ui-components/commit/da2278347c2856a1a9d7a8a532c93f7e1de3172c))
+
+
+
+
+
 ## [0.2.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.18...@kong-ui-public/page-layout@0.2.19) (2026-04-29)
 
 
