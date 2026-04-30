@@ -74,8 +74,8 @@ A table component for consumer credentials.
     - Current credential plugin name.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
     - Name of the current workspace.
 

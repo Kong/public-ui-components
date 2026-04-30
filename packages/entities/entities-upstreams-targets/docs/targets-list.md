@@ -65,8 +65,8 @@ A table component for targets. Includes target create/edit form modal out of the
     - Additional message to show when there are no records.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
     - Name of the current workspace.
 
