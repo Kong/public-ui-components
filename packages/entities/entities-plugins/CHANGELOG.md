@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.199.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.199.2...@kong-ui-public/entities-plugins@9.199.3) (2026-04-30)
+
+
+### Bug Fixes
+
+* **entities-plugins:** identity_realms should support sg ([#3205](https://github.com/Kong/public-ui-components/issues/3205)) ([c49db5a](https://github.com/Kong/public-ui-components/commit/c49db5ae2ed174eab6b9abe52f37edc9ff91241e))
+
+
+
+
+
 ## [9.199.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.199.1...@kong-ui-public/entities-plugins@9.199.2) (2026-04-30)
 
 
