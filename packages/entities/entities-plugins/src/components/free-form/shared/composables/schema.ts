@@ -1,6 +1,7 @@
 import { computed, toValue } from 'vue'
 import { marked } from 'marked'
 import * as utils from '../utils'
+import DOMPurify from 'dompurify'
 
 const SHARED_LABEL_ATTRIBUTES = {
   tooltipAttributes: {
@@ -238,7 +239,8 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
 
   function getLabelAttributes(fieldPath: string): LabelAttributes {
     const schema = getSchema(fieldPath)
-    const info = schema?.description ? marked.parse(schema.description, { async: false }) : undefined
+    const info = schema?.description ? DOMPurify.sanitize(marked.parse(schema.description, { async: false })) : undefined
+
     return {
       ...SHARED_LABEL_ATTRIBUTES,
       'data-testid': `ff-label-${fieldPath}`,
