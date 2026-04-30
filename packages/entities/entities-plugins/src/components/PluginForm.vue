@@ -1,7 +1,7 @@
 <template>
   <div
     class="kong-ui-entities-plugin-form-container"
-    :class="{ 'new-form-layout': enabledNewPluginLayout }"
+    :class="{ 'new-form-layout': usesFreeformLayout }"
   >
     <KSkeleton
       v-if="schemaLoading"
@@ -219,7 +219,7 @@ import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
 import type { GlobalAction } from './free-form/shared/types'
-import { FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
+import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 
 type ScopedEntitiesType = 'consumer' | 'route' | 'service' | 'consumer_group'
@@ -227,9 +227,11 @@ type Permissions = 'canRetrieve' | 'canEdit' | 'canDelete'
 type ScopedEntityPermission = Partial<Record<Permissions, boolean>>
 type ScopedEntitiesPermissions = Partial<Record<ScopedEntitiesType, ScopedEntityPermission>>
 
-const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => false))
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
 const enabledClonedPlugin = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, false)
+const usesFreeformLayout = ref(false)
+
+provide(PLUGIN_FORM_LAYOUT_STATE, usesFreeformLayout)
 
 const emit = defineEmits<{
   (e: 'cancel'): void

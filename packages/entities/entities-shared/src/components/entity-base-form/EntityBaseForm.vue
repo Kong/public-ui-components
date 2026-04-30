@@ -171,9 +171,9 @@ import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 import DeckCodeBlock from '../common/DeckCodeBlock.vue'
-import { FEATURE_FLAGS } from '../../constants'
+import { PLUGIN_FORM_LAYOUT_STATE } from '../../constants'
 
-const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => false))
+const enabledNewPluginLayout = inject(PLUGIN_FORM_LAYOUT_STATE, computed(() => false))
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void

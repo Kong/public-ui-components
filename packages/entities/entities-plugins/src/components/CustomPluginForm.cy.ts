@@ -88,6 +88,8 @@ describe('<CustomPluginForm />', () => {
       // Submit and cancel buttons should be visible
       cy.getTestId('custom-plugin-form-submit').should('exist')
       cy.getTestId('custom-plugin-form-cancel').should('exist')
+
+      cy.get('.kong-ui-entity-base-form').should('have.class', 'new-form-layout')
     })
 
     it('should show step 2 files for installed type', () => {
