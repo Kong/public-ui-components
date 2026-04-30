@@ -420,7 +420,7 @@
 import {
   EntityBaseForm,
   EntityFormBlock,
-  FEATURE_FLAGS,
+  PLUGIN_FORM_LAYOUT_STATE,
   SupportedEntityType,
   useAxios,
   useErrors,
@@ -516,7 +516,7 @@ const {
 })
 
 // Force-enable the new plugin form layout
-provide(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => true))
+provide(PLUGIN_FORM_LAYOUT_STATE, ref(true))
 
 const editMode = computed(() => !!props.pluginName)
 const isLoading = ref(false)

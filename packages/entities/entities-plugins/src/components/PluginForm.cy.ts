@@ -1957,6 +1957,8 @@ describe('<PluginForm />', () => {
 
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+      cy.get('.kong-ui-entities-plugin-form-container').should('not.have.class', 'new-form-layout')
+      cy.get('.kong-ui-entity-base-form').should('not.have.class', 'new-form-layout')
 
       // VFG renders traditional form fields with specific selectors like #config-*, not freeform
       // VFG uses vue-form-generator class
@@ -1987,6 +1989,8 @@ describe('<PluginForm />', () => {
 
       cy.wait('@getPluginSchema')
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+      cy.get('.kong-ui-entities-plugin-form-container').should('have.class', 'new-form-layout')
+      cy.get('.kong-ui-entity-base-form').should('have.class', 'new-form-layout')
 
       // Freeform renders with data-testid="ff-*" pattern
       cy.get('[data-testid^="ff-"]').should('exist')

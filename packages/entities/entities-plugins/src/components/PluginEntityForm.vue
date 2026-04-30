@@ -120,7 +120,7 @@ import {
   VaultSecretPickerProvider,
 } from '@kong-ui-public/entities-vaults'
 import '@kong-ui-public/entities-vaults/dist/style.css'
-import { useAxios, useHelpers } from '@kong-ui-public/entities-shared'
+import { PLUGIN_FORM_LAYOUT_STATE, useAxios, useHelpers } from '@kong-ui-public/entities-shared'
 import {
   AUTOFILL_SLOT_NAME,
   FORMS_API_KEY,
@@ -133,7 +133,7 @@ import {
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
+import { computed, inject, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
@@ -269,6 +269,12 @@ const { parseSchema } = composables.useSchemas({
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
 const { shouldUseFreeForm, getFreeFormComponent } = composables.useFreeFormResolver()
+const pluginFormLayoutState = inject(PLUGIN_FORM_LAYOUT_STATE)
+const setPluginFormLayoutState = (value: boolean) => {
+  if (pluginFormLayoutState) {
+    pluginFormLayoutState.value = value
+  }
+}
 
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
@@ -452,6 +458,26 @@ const setUpVaultSecretPicker = (setupValue: string, autofillAction: (secretRef: 
 const handleVaultSecretPickerAutofill = (secretRef: string) => {
   vaultSecretPickerAutofillAction.value?.(secretRef)
   vaultSecretPickerSetup.value = false
+}
+
+const syncFormRenderingMode = (pluginName?: string) => {
+  if (!pluginName) {
+    pluginConfig.value = undefined
+    freeformComponent.value = undefined
+    sharedFormName.value = ''
+
+    setPluginFormLayoutState(false)
+
+    return
+  }
+
+  pluginConfig.value = getPluginConfig(pluginName)
+  freeformComponent.value = shouldUseFreeForm(pluginName, props.engine)
+    ? (getFreeFormComponent(pluginName) ?? CommonForm)
+    : undefined
+  sharedFormName.value = getSharedFormName(pluginName)
+
+  setPluginFormLayoutState(Boolean(freeformComponent.value))
 }
 
 // This function transforms the form data into the correct structure to be submitted to the API
@@ -900,22 +926,18 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
     return
   }
-  const form: Record<string, any> = parseSchema(newSchema, undefined, undefined, props.engine)
+  const parsedForm: Record<string, any> = parseSchema(newSchema, undefined, undefined, props.engine)
 
-  Object.assign(formModel, form.model)
+  Object.assign(formModel, parsedForm.model)
 
   formSchema.value = {
     fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
       return { ...r, disabled: r.disabled || false }
     }),
   }
-  Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
+  Object.assign(originalModel, JSON.parse(JSON.stringify(parsedForm.model)))
 
-  pluginConfig.value = getPluginConfig(form.model.name)
-  freeformComponent.value = shouldUseFreeForm(form.model.name, props.engine)
-    ? (getFreeFormComponent(form.model.name) ?? CommonForm)
-    : undefined
-  sharedFormName.value = getSharedFormName(form.model.name)
+  syncFormRenderingMode(parsedForm.model.name)
 
   initFormModel()
 }, { immediate: true, deep: true })
@@ -925,8 +947,13 @@ onBeforeMount(() => {
 
   Object.assign(formModel, form.value?.model || {})
   formSchema.value = form.value?.schema || {}
+  syncFormRenderingMode(form.value?.model?.name)
 
   initFormModel()
+})
+
+onBeforeUnmount(() => {
+  setPluginFormLayoutState(false)
 })
 </script>
 

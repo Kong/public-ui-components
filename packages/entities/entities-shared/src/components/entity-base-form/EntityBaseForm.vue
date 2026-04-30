@@ -3,7 +3,7 @@
     :is="wrapperComponent"
     class="kong-ui-entity-base-form"
     :class="{
-      'new-form-layout': enabledNewPluginLayout && entityType === SupportedEntityType.Plugin,
+      'new-form-layout': pluginFormLayoutEnabled && entityType === SupportedEntityType.Plugin,
     }"
   >
     <!-- Loading -->
@@ -171,9 +171,9 @@ import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 import DeckCodeBlock from '../common/DeckCodeBlock.vue'
-import { FEATURE_FLAGS } from '../../constants'
+import { PLUGIN_FORM_LAYOUT_STATE } from '../../constants'
 
-const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => false))
+const pluginFormLayoutEnabled = inject(PLUGIN_FORM_LAYOUT_STATE, ref(false))
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
