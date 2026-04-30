@@ -52,7 +52,7 @@
     "postcss-custom-properties": "^15.0.1",
     "postcss-html": "^1.8.1",
     "rimraf": "^6.1.3",
-    "rollup-plugin-visualizer": "^6.0.11",
+    "rollup-plugin-visualizer": "^7.0.1",
     "sass": "^1.99.0",
     "stylelint": "^17.8.0",
     "stylelint-config-html": "^1.1.0",
