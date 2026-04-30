@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.199.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.199.3...@kong-ui-public/entities-plugins@9.199.4) (2026-04-30)
+
+
+### Bug Fixes
+
+* **entities-plugins:** filter scoped plugins in featured plugin list ([#3202](https://github.com/Kong/public-ui-components/issues/3202)) ([068750d](https://github.com/Kong/public-ui-components/commit/068750d86d21dbee8461e1e26f3029a18304d0e8))
+
+
+
+
+
 ## [9.199.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.199.2...@kong-ui-public/entities-plugins@9.199.3) (2026-04-30)
 
 
