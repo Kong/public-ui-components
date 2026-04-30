@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.199.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.199.1...@kong-ui-public/entities-plugins@9.199.2) (2026-04-30)
+
+
+### Bug Fixes
+
+* **entities-plugins:** transform proof_of_possession_mtls_from_header ([#3203](https://github.com/Kong/public-ui-components/issues/3203)) ([bd57e17](https://github.com/Kong/public-ui-components/commit/bd57e17cac98260a7c961de89f2d667fe2dcd876))
+
+
+
+
+
 ## [9.199.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.199.0...@kong-ui-public/entities-plugins@9.199.1) (2026-04-29)
 
 
