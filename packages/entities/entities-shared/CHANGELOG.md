@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.44.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.43.3...@kong-ui-public/entities-shared@3.44.0) (2026-05-01)
+
+
+### Features
+
+* **entities-shared:** provide/inject DeckCommandEditor to split monaco-editor and shiki ([#3212](https://github.com/Kong/public-ui-components/issues/3212)) ([88c62cb](https://github.com/Kong/public-ui-components/commit/88c62cb87058974f9bd8dda9a6e2b6fa24f7aca9))
+
+
+
+
+
 ## [3.43.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.43.2...@kong-ui-public/entities-shared@3.43.3) (2026-05-01)
 
 
