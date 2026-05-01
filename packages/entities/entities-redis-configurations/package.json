@@ -75,7 +75,7 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.52.0",
-    "@kong/kongponents": "9.52.11",
+    "@kong/kongponents": "9.52.13",
     "axios": "^1.15.2",
     "swrv": "^1.2.0",
     "vue": ">= 3.3.13 < 4",
