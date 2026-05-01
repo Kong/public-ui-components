@@ -24,6 +24,13 @@ export interface DeckCustomizationOptions {
 export interface DeckConfigOptions {
   /**
    * This option enables the "Customize before copying" feature on the decK config.
+   *
+   * Requires the host app to provide `DeckCommandEditor` via the
+   * `DECK_COMMAND_EDITOR_KEY` injection key — typically through the
+   * `provideDeckCommandEditor` helper from `@kong-ui-public/entities-shared/deck-editor`.
+   * If the editor is not provided, the customize button is hidden and a
+   * `console.warn` is emitted at runtime.
+   *
    * See {@link DeckCustomizationOptions} for extra options.
    */
   customization?: boolean | DeckCustomizationOptions

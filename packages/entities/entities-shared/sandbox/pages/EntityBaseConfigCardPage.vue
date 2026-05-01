@@ -76,6 +76,7 @@ import {
   ConfigCardItem,
   SupportedEntityType,
 } from '../../src'
+import { provideDeckCommandEditor } from '../../src/deck-editor'
 import composables from '../../src/composables'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
@@ -91,6 +92,8 @@ const { convertKeyToTitle } = composables.useStringHelpers()
 
 const enableDeckConfigCustomization = ref(false)
 const enableDeckCallout = ref(false)
+
+provideDeckCommandEditor()
 
 const konnectConfig = computed<KonnectBaseEntityConfig>(() => ({
   app: 'konnect',
