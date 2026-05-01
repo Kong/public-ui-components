@@ -85,8 +85,9 @@
       @code-block-render="highlightCodeBlock"
     />
 
-    <DeckCommandEditor
-      v-else-if="props.entityRecord && props.isCustomizing"
+    <component
+      :is="DeckCommandEditor"
+      v-else-if="props.entityRecord && props.isCustomizing && DeckCommandEditor"
       v-model="deckCommand"
       :language="shell"
     />
@@ -116,24 +117,17 @@
 import { InfoIcon, LanguageBashIcon, LanguageShellIcon } from '@kong/icons'
 import { KExternalLink } from '@kong/kongponents'
 import yaml from 'js-yaml'
-import { computed, defineAsyncComponent, ref, watchEffect } from 'vue'
+import { computed, inject, ref, watchEffect } from 'vue'
 
 import composables from '../../composables'
+import { DECK_COMMAND_EDITOR_KEY, DECK_COMMAND_EDITOR_MISSING_WARNING } from '../../constants'
 import { SupportedEntityType } from '../../types'
 import { highlightCodeBlock } from '../../utils/code-block'
-import DeckCommandEditorLoading from './DeckCommandEditorLoading.vue'
 import GeneratePatModal from './GeneratePatModal.vue'
 
 import type { DeckCodeBlockProps } from '../../types'
 
-/**
- * Lazy load the Monaco Editor inside when customization mode is enabled.
- */
-const DeckCommandEditor = defineAsyncComponent({
-  loader: () => import('./DeckCommandEditor.vue'),
-  loadingComponent: DeckCommandEditorLoading,
-  delay: 200,
-})
+const DeckCommandEditor = inject(DECK_COMMAND_EDITOR_KEY, null)
 
 const props = defineProps<DeckCodeBlockProps & {
   isCustomizing?: boolean
@@ -143,6 +137,10 @@ const props = defineProps<DeckCodeBlockProps & {
    */
   generateKonnectPat?: (name: string, expiresAt: Date) => string | Promise<string>
 }>()
+
+if (props.isCustomizing && !DeckCommandEditor) {
+  console.warn(DECK_COMMAND_EDITOR_MISSING_WARNING)
+}
 
 const { i18n, i18nT } = composables.useI18n()
 const { t } = i18n

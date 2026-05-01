@@ -12,7 +12,12 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-shared.es.js",
-      "require": "./dist/entities-shared.umd.js"
+      "require": "./dist/entities-shared.cjs.js"
+    },
+    "./deck-editor": {
+      "types": "./dist/types/deck-editor.d.ts",
+      "import": "./dist/deck-editor.es.js",
+      "require": "./dist/deck-editor.cjs.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
