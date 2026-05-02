@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.19.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.14...@kong-ui-public/entities-gateway-services@3.19.15) (2026-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
 ## [3.19.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.13...@kong-ui-public/entities-gateway-services@3.19.14) (2026-05-01)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
