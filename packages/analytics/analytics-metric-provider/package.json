@@ -60,14 +60,14 @@
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.52.13"
+    "@kong/kongponents": "^9.53.2"
   },
   "devDependencies": {
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.20.1",
-    "@kong/kongponents": "9.52.13",
+    "@kong/kongponents": "9.53.2",
     "pinia": ">= 3.0.4 < 4"
   }
 }
