@@ -158,7 +158,8 @@ const breadcrumbIconSlots = computed((): string[] => {
   }
 
   &.konnect-navigation-next {
-    margin-bottom: var(--kui-space-50, $kui-space-50);
+    display: flex;
+    min-height: 32px;
 
     .page-header-title-section {
       .page-header-title {
