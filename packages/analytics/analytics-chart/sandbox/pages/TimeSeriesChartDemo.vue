@@ -171,9 +171,15 @@
           />
         </div>
         <div>
+          <KInputSwitch
+            v-model="thresholdToggle"
+            :label="thresholdToggle ? 'Threshold enabled' : 'Threshold disabled'"
+          />
+        </div>
+        <div v-if="thresholdToggle">
           <KInput
             v-model="thresholdValue"
-            label="Eror threshold"
+            label="Error threshold"
             type="number"
           />
         </div>
@@ -235,9 +241,7 @@ import {
 } from '../../src'
 import type { AnalyticsExploreRecord, ExploreExportState, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType, Threshold } from '../../src/types'
-import { isValidJson, rand } from '../utils/utils'
-import { lookupDatavisColor } from '../../src/utils'
-import { lookupStatusCodeColor } from '../../src/utils/customColors'
+import { getStatusCodeDatasetColor, isValidJson, rand } from '../utils/utils'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { generateMultipleMetricTimeSeriesData, generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
 import CodeText from '../CodeText.vue'
@@ -265,6 +269,7 @@ const multiDimensionToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
+const thresholdToggle = ref(false)
 const chartType = ref<ChartType>('timeseries_line')
 const legendPosition = ref(ChartLegendPosition.Bottom)
 const secondaryMetrics = ref([{ name: 'secondaryMetric', unit: 'count' }])
@@ -291,7 +296,7 @@ const metricItems = [{
 
 // Short labels
 const statusCodeLabels = [
-  '200', '300', '400', '500', '5XX', 'empty',
+  '200', '300', '400', '500', '5XX', '____OTHER____', 'empty',
 ]
 
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
@@ -374,7 +379,7 @@ const exploreResult = computed<ExploreResultV4>(() => {
   return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, undefined, metaOverrides)
 })
 
-const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))
+const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: getStatusCodeDatasetColor(dimension) }), {}))
 
 const updateSelectedColor = (event: Event, label: string) => {
   colorPalette.value[label] = (event.target as HTMLInputElement).value
@@ -384,7 +389,7 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => {
   return {
     type: chartType.value,
     stacked: stackToggle.value,
-    threshold: threshold.value,
+    threshold: thresholdToggle.value ? threshold.value : undefined,
     // chartDatasetColors: colorPalette.value,
   }
 })
@@ -394,7 +399,7 @@ const addDataset = () => {
   if (multiDimensionToggle.value) {
     const statusCode = `${rand(100, 599)}`
     statusCodeDimensionValues.value.add(statusCode)
-    colorPalette.value[statusCode] = lookupStatusCodeColor(statusCode)
+    colorPalette.value[statusCode] = getStatusCodeDatasetColor(statusCode)
 
     const service = `Service${rand(1, 100)}`
     serviceDimensionValues.value.add(service)
@@ -424,7 +429,7 @@ watch(multiDimensionToggle, () => {
   serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))
   statusCodeDimensionValues.value = new Set(statusCodeLabels)
 
-  colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {})
+  colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: getStatusCodeDatasetColor(dimension) }), {})
 })
 </script>
 
