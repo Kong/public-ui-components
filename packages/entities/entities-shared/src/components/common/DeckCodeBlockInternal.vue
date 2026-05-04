@@ -80,7 +80,7 @@
       id="deck-codeblock"
       :class="{ customization: props.isCustomizing }"
       :code="deckCommand"
-      :copy-code="unredactedCommand"
+      :copy-code="unredactedDeckCommand"
       data-dd-privacy="mask"
       :language="shell"
       :theme="isCustomizing ? 'light' : 'dark'"

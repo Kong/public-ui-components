@@ -99,7 +99,6 @@
           :code-block-record-formatter="codeBlockRecordFormatter"
           :code-block-record-redacted="!showSensitiveFields ? redactedCodeBlockRecord : undefined"
           :config="config"
-          :config-schema="configSchema"
           :entity-type="entityType"
           :fetcher-url="fetcherUrl"
           :format="configFormat"
