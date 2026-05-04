@@ -158,6 +158,8 @@ const breadcrumbIconSlots = computed((): string[] => {
   }
 
   &.konnect-navigation-next {
+    margin-bottom: var(--kui-space-50, $kui-space-50);
+
     .page-header-title-section {
       .page-header-title {
         font-size: var(--kui-font-size-40, $kui-font-size-40);
