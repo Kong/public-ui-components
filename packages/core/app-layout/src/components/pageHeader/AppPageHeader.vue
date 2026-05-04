@@ -160,6 +160,7 @@ const breadcrumbIconSlots = computed((): string[] => {
   &.konnect-navigation-next {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     min-height: 32px;
 
     .page-header-title-section {
