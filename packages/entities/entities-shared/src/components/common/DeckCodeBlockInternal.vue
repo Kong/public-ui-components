@@ -80,6 +80,8 @@
       id="deck-codeblock"
       :class="{ customization: props.isCustomizing }"
       :code="deckCommand"
+      :copy-code="unredactedCommand"
+      data-dd-privacy="mask"
       :language="shell"
       :theme="isCustomizing ? 'light' : 'dark'"
       @code-block-render="highlightCodeBlock"
@@ -149,6 +151,7 @@ const { t } = i18n
 
 const konnectPat = ref<string>('')
 const deckCommand = ref<string>('')
+const unredactedDeckCommand = ref<string>('')
 const isGeneratePatModalVisible = ref(false)
 
 const shells = [
@@ -179,9 +182,9 @@ const baseObject = computed(() => {
   return obj
 })
 
-const yamlContent = computed((): string => {
+const buildYaml = (record: Record<string, any>): string => {
   // filter out null values, empty strings, and empty arrays since decK doesn't accept them [KHCP-10642]
-  const filteredRecord = Object.fromEntries(Object.entries(props.entityRecord).filter(([, value]) => value !== null && value !== '' && (Array.isArray(value) ? value.length !== 0 : true)))
+  const filteredRecord = Object.fromEntries(Object.entries(record).filter(([, value]) => value !== null && value !== '' && (Array.isArray(value) ? value.length !== 0 : true)))
 
   // transfer parent object `{id: string}` to just id string for decK compatibility [KM-2056]
   if (props.entityType === SupportedEntityType.Plugin) {
@@ -212,6 +215,14 @@ const yamlContent = computed((): string => {
   }
 
   return yaml.dump(fullRecord, { quotingType: '"' }).trim()
+}
+
+const yamlContent = computed((): string => {
+  return buildYaml(props.entityRecord)
+})
+
+const unredactedCommand = computed((): string => {
+  return buildYaml(props.unredactedRecord || props.entityRecord)
 })
 
 const envCommand = computed((): string => {
@@ -241,10 +252,18 @@ watchEffect(() => {
     deckCommand.value = `echo '
 ${yamlContent.value}
 ' | ${command}`
+    // unredacted Bash command
+    unredactedDeckCommand.value = `echo '
+${unredactedCommand.value}
+' | ${command}`
   } else {
     // PowerShell uses @' '@ for multi-line strings
     deckCommand.value = `@'
 ${yamlContent.value}
+'@ | ${command}`
+    // unredacted PowerShell command
+    unredactedDeckCommand.value = `@'
+${unredactedCommand.value}
 '@ | ${command}`
   }
 })

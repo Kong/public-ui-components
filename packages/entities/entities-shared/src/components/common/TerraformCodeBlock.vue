@@ -4,6 +4,8 @@
       v-if="props.entityRecord"
       id="terraform-codeblock"
       :code="terraformContent"
+      :copy-code="unredactedTerraformContent"
+      data-dd-privacy="mask"
       language="terraform"
       theme="dark"
       @code-block-render="highlightCodeBlock"
@@ -22,10 +24,15 @@ const HEREDOC_DELIMITER = 'TF_MULTILINE_EOT'
 const CLOUD_GATEWAY_ADDON_ENTITY_TYPE = 'cloud_gateway_addon'
 
 const props = defineProps({
-  /** A record to indicate the entity's configuration, used to populate the Terraform code block */
+  /** A record to indicate the entity's configuration, the visible code content (may be redacted) */
   entityRecord: {
     type: Object as PropType<Record<string, any>>,
     required: true,
+  },
+  /** The unredacted record, used for copy actions */
+  unredactedRecord: {
+    type: Object as PropType<Record<string, any>>,
+    default: null,
   },
   entityType: {
     type: String as PropType<SupportedEntityType>,
@@ -219,11 +226,11 @@ const generateConfig = (record: Record<string, any>): string => {
   return escapeTerraformInterpolation(content)
 }
 
-const terraformContent = computed((): string => {
+const buildTerraformCode = (record: Record<string, any>): string => {
   // filter out null/undefined values since terraform doesn't accept them
   // this logic isn't recursive, so manually handle nested config object
-  const modifiedRecord = Object.fromEntries(Object.entries(props.entityRecord).filter(([, value]) => value !== null && value !== undefined))
-  const modifiedConfig = props.entityRecord.config ? Object.fromEntries(Object.entries(props.entityRecord?.config).filter(([, value]) => value !== null && value !== undefined)) : undefined
+  const modifiedRecord = Object.fromEntries(Object.entries(record).filter(([, value]) => value !== null && value !== undefined))
+  const modifiedConfig = record.config ? Object.fromEntries(Object.entries(record?.config).filter(([, value]) => value !== null && value !== undefined)) : undefined
   if (modifiedConfig) {
     modifiedRecord.config = modifiedConfig
   }
@@ -305,5 +312,13 @@ const terraformContent = computed((): string => {
   content += '}\n'
 
   return content
+}
+
+const terraformContent = computed((): string => {
+  return buildTerraformCode(props.entityRecord)
+})
+
+const unredactedTerraformContent = computed((): string => {
+  return buildTerraformCode(props.unredactedRecord || props.entityRecord)
 })
 </script>

@@ -479,6 +479,7 @@ const codeBlockRecordFromApi = computed((): Record<string, any> | undefined => {
   return props.codeBlockRecordResolver(rawFetchedData.value)
 })
 
+// redact sensitive fields by default
 const showSensitiveFields = ref(false)
 const redactedCodeBlockRecord = computed((): Record<string, any> => {
   const rec = { ...(codeBlockRecordFromApi.value || record.value) }
@@ -489,7 +490,7 @@ const redactedCodeBlockRecord = computed((): Record<string, any> => {
     }
   }
 
-  return rec
+  return props.codeBlockRecordResolver ? props.codeBlockRecordResolver(rec) : rec
 })
 
 // Handle sorting by 'order' prop

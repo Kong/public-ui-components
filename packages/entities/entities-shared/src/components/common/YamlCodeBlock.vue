@@ -13,6 +13,8 @@
       v-if="props.entityRecord"
       id="yaml-codeblock"
       :code="yamlContent"
+      :copy-code="unredactedYamlContent"
+      data-dd-privacy="mask"
       language="yaml"
       theme="dark"
       @code-block-render="highlightCodeBlock"
@@ -34,10 +36,15 @@ import type { DeckCalloutPreference } from '../../types'
 defineOptions({ inheritAttrs: false })
 
 const props = defineProps({
-  /** A record to indicate the entity's configuration, used to populate the YAML code block */
+  /** A record to indicate the entity's configuration, the visible code content (may be redacted) */
   entityRecord: {
     type: Object as PropType<Record<string, any>>,
     required: true,
+  },
+  /** The unredacted record, used for copy actions */
+  unredactedRecord: {
+    type: Object as PropType<Record<string, any>>,
+    default: null,
   },
   /**
    * The localStorage key to use to persist the visibility preference for the decK format callout.
@@ -57,11 +64,19 @@ const emit = defineEmits<{
 
 const deckCalloutPreference = ref<DeckCalloutPreference>('visible')
 
-const yamlContent = computed((): string => {
+const buildYaml = (record: Record<string, any>): string => {
   // filter out null values, empty strings, and empty arrays since decK doesn't accept them [KHCP-10642]
-  const filteredRecord = Object.fromEntries(Object.entries(props.entityRecord).filter(([, value]) => value !== null && value !== '' && (Array.isArray(value) ? value.length !== 0 : true)))
+  const filteredRecord = Object.fromEntries(Object.entries(record).filter(([, value]) => value !== null && value !== '' && (Array.isArray(value) ? value.length !== 0 : true)))
   // if empty object, display empty yaml, else convert to yaml and remove any trailing whitespace
   return (Object.keys(filteredRecord).length === 0 && filteredRecord.constructor === Object) ? '' : yaml.dump(filteredRecord).trim()
+}
+
+const yamlContent = computed((): string => {
+  return buildYaml(props.entityRecord)
+})
+
+const unredactedYamlContent = computed((): string => {
+  return buildYaml(props.unredactedRecord || props.entityRecord)
 })
 
 watch(() => props.deckCalloutPreferenceKey, (key) => {

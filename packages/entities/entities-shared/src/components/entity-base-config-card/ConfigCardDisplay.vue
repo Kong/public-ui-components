@@ -58,11 +58,13 @@
     :entity-record="entityRecord"
     :fetcher-url="fetchUrlJsonBlock"
     request-method="get"
+    :unredacted-record="codeBlockRecord || record"
   />
   <YamlCodeBlock
     v-if="format === 'yaml' && entityRecord"
     :deck-callout-preference-key="isDeckEnabled ? deckCalloutPreferenceKey : undefined"
     :entity-record="entityRecord"
+    :unredacted-record="codeBlockRecord || record"
     @deck-callout:click-cta="$emit('request-deck-format')"
   />
   <TerraformCodeBlock
@@ -70,6 +72,7 @@
     :entity-record="entityRecord"
     :entity-type="props.entityType"
     :sub-entity-type="props.subEntityType"
+    :unredacted-record="codeBlockRecord || record"
   />
   <DeckCodeBlock
     v-if="format === 'deck' && entityRecord"
@@ -81,6 +84,7 @@
     :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
     :is-customization-modal-visible="isDeckCustomizationVisible"
     :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
+    :unredacted-record="codeBlockRecord || record"
     :workspace="config.app === 'kongManager' ? config.workspace : undefined"
     @customization-close="$emit('deck-customization:close')"
   />
