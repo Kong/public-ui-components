@@ -2,16 +2,14 @@ import { type BasicExploreAggregations, type BasicExploreFilterAll, type Filtera
 import { type AiExploreAggregations, type AiExploreFilterAll, type FilterableAiExploreDimensions, filterableAiExploreDimensions } from './ai'
 import { type ExploreAggregations, type ExploreFilterAll, type FilterableExploreDimensions, filterableExploreDimensions } from './advanced'
 import { type FilterableRequestDimensions, type FilterableRequestMetrics, type FilterableRequestWildcardDimensions } from './requests'
-import { filterableMcpExploreDimensions, type FilterableMcpExploreDimensions, type McpExploreAggregations, type McpExploreFilterAll } from './mcp'
 import { type PlatformExploreFilterAll } from './platform'
-import type { AgenticExploreAggregations, AgenticExploreFilterAll, FilterableAgenticExploreDimensions } from './agentic'
+import { filterableAgenticExploreDimensions, type AgenticExploreAggregations, type AgenticExploreFilterAll, type FilterableAgenticExploreDimensions } from './agentic'
 
-export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | McpExploreAggregations | AgenticExploreAggregations
-export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | McpExploreFilterAll | AgenticExploreFilterAll | PlatformExploreFilterAll
+export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | AgenticExploreAggregations
+export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | AgenticExploreFilterAll | PlatformExploreFilterAll
 export type AllFilterableDimensionsAndMetrics = FilterableExploreDimensions
   | FilterableAiExploreDimensions
   | FilterableBasicExploreDimensions
-  | FilterableMcpExploreDimensions
   | FilterableAgenticExploreDimensions
   | FilterableRequestDimensions
   | FilterableRequestMetrics
@@ -27,7 +25,7 @@ export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
   basic: BasicExploreFilterAll
   api_usage: ExploreFilterAll
   llm_usage: AiExploreFilterAll
-  agentic_usage: McpExploreFilterAll
+  agentic_usage: AgenticExploreFilterAll
   platform: PlatformExploreFilterAll
 }
 
@@ -35,7 +33,7 @@ export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<strin
   basic: new Set(filterableBasicExploreDimensions),
   api_usage: new Set(filterableExploreDimensions),
   llm_usage: new Set(filterableAiExploreDimensions),
-  agentic_usage: new Set(filterableMcpExploreDimensions),
+  agentic_usage: new Set(filterableAgenticExploreDimensions),
   platform: new Set(),
 } as const
 
