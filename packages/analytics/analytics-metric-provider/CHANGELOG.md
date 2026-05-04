@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.3.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.24...@kong-ui-public/analytics-metric-provider@11.3.25) (2026-05-04)
+
+
+### Bug Fixes
+
+* add new timerange locales ([#3218](https://github.com/Kong/public-ui-components/issues/3218)) ([1a324ed](https://github.com/Kong/public-ui-components/commit/1a324ed9d72bf60cff40bd84e4643b86fd016f47))
+
+
+
+
+
 ## [11.3.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.23...@kong-ui-public/analytics-metric-provider@11.3.24) (2026-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
