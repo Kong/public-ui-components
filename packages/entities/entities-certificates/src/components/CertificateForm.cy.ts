@@ -636,4 +636,98 @@ describe('<CertificateForm />', () => {
       cy.wait('@createCertificate').its('response.statusCode').should('eq', 200)
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    const configWithWorkspace: KonnectCertificateFormConfig = {
+      ...baseConfigKonnect,
+      workspace: 'default',
+    }
+
+    const interceptGetWithWorkspace = (params?: { alias?: string }) => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${configWithWorkspace.apiBaseUrl}/v2/control-planes/${configWithWorkspace.controlPlaneId}/core-entities/default/certificates/*`,
+        },
+        { statusCode: 200, body: certificate1 },
+      ).as(params?.alias ?? 'getCertificate')
+    }
+
+    it('uses workspace-scoped URL for certificate creation in Konnect', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${configWithWorkspace.apiBaseUrl}/v2/control-planes/${configWithWorkspace.controlPlaneId}/core-entities/default/certificates`,
+        },
+        handleCertificateCreateUpdate((request) => {
+          request.reply({ statusCode: 200, body: request.body })
+        }),
+      ).as('createCertificateWithWorkspace')
+
+      cy.mount(CertificateForm, {
+        props: { config: configWithWorkspace },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+
+      cy.wait('@createCertificateWithWorkspace').its('response.statusCode').should('eq', 200)
+    })
+
+    it('uses workspace-scoped URL when updating a certificate in Konnect', () => {
+      interceptGetWithWorkspace()
+
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${configWithWorkspace.apiBaseUrl}/v2/control-planes/${configWithWorkspace.controlPlaneId}/core-entities/default/certificates/*`,
+        },
+        handleCertificateCreateUpdate((request) => {
+          request.reply({ statusCode: 200, body: request.body })
+        }),
+      ).as('updateCertificateWithWorkspace')
+
+      cy.mount(CertificateForm, {
+        props: {
+          config: configWithWorkspace,
+          certificateId: certificate1.id,
+          onUpdate: cy.spy().as('onUpdateSpy'),
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getCertificate')
+      cy.getTestId('certificate-form-tags').clear()
+      cy.getTestId('certificate-form-tags').type('workspace-tag')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+
+      cy.wait('@updateCertificateWithWorkspace').its('response.statusCode').should('eq', 200)
+      cy.get('@onUpdateSpy').should('have.been.calledOnce')
+    })
+
+    it('omits workspace segment in submit URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/certificates`,
+        },
+        handleCertificateCreateUpdate((request) => {
+          request.reply({ statusCode: 200, body: request.body })
+        }),
+      ).as('createCertificateNoWorkspace')
+
+      cy.mount(CertificateForm, {
+        props: { config: baseConfigKonnect },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+
+      cy.wait('@createCertificateNoWorkspace').its('response.statusCode').should('eq', 200)
+    })
+  })
 })

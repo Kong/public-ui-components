@@ -49,15 +49,14 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   const buildUrl = (endpointTemplate: string, pluginId?: string): string => {
     let url = `${apiBaseUrl}${endpointTemplate}`
 
-    url = url.replace(/{pluginId}/gi, pluginId ?? '')
 
     if (options.app === 'konnect') {
       url = url.replace(/{controlPlaneId}/gi, options.controlPlaneId)
     }
 
-    if (options.workspace) {
-      url = url.replace(/{workspace}/gi, options.workspace)
-    }
+    url = url
+      .replace(/{pluginId}/gi, pluginId ?? '')
+      .replace(/\/{workspace}/gi, options.workspace ? `/${options.workspace}` : '')
 
     return url
   }

@@ -86,6 +86,7 @@ const configStoreId = ref<string>('')
 const fetchVaultUrl = computed<string>(() => {
   return `${props.config.apiBaseUrl}${endpoints.getVault[props.config.app]}`
     .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, props.vaultId)
 })
 

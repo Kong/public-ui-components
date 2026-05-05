@@ -280,13 +280,13 @@ const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
 
 const mapControlPlane = (url: string) => {
+  let urlString = url
+
   if (props.config.app === 'konnect') {
-    return url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+    urlString = urlString.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   }
 
-  return url
+  return urlString.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
 }
 
 // define endpoints for use by KFG

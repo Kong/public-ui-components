@@ -902,4 +902,85 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       })
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in POST URL when creating with workspace config', () => {
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/services*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/certificates*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/upstreams`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createUpstreamWithWorkspace')
+
+      cy.mount(UpstreamsForm, {
+        props: { config: { ...konnectConfig, workspace: 'default' } },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createUpstreamWithWorkspace')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/services*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/certificates*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/upstreams/${upstreamsResponse.id}` },
+        { statusCode: 200, body: upstreamsResponse },
+      )
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/upstreams/${upstreamsResponse.id}`,
+        },
+        { statusCode: 200, body: upstreamsResponse },
+      ).as('updateUpstreamWithWorkspace')
+
+      cy.mount(UpstreamsForm, {
+        props: { config: { ...konnectConfig, workspace: 'default' }, upstreamId: upstreamsResponse.id },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@updateUpstreamWithWorkspace')
+    })
+
+    it('omits workspace segment in POST URL when workspace is not provided', () => {
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/services*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/certificates*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/upstreams`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createUpstreamNoWorkspace')
+
+      cy.mount(UpstreamsForm, {
+        props: { config: konnectConfig },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createUpstreamNoWorkspace')
+    })
+  })
 })

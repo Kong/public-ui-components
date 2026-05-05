@@ -1202,4 +1202,75 @@ describe('<RedisConfigurationForm />', {
     })
 
   }
+
+  describe('Konnect - workspace URL building', () => {
+    const partialId = 'workspace-test-partial-id'
+
+    it('includes workspace in POST URL when creating with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/partials`,
+        },
+        { statusCode: 201, body: { id: partialId } },
+      ).as('createPartialWithWorkspace')
+
+      cy.mount(RedisConfigurationForm, {
+        props: { config: { ...baseConfigKonnect, workspace: 'default' } },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+      cy.wait('@createPartialWithWorkspace')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/partials/${partialId}`,
+        },
+        { statusCode: 200, body: redisConfigurationCE },
+      ).as('getPartialWithWorkspace')
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/partials/${partialId}/links*`,
+        },
+        { statusCode: 200, body: { data: [], next: null, count: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/partials/${partialId}`,
+        },
+        { statusCode: 200, body: redisConfigurationCE },
+      ).as('updatePartialWithWorkspace')
+
+      cy.mount(RedisConfigurationForm, {
+        props: { config: { ...baseConfigKonnect, workspace: 'default' }, partialId },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getPartialWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+        cy.wait('@updatePartialWithWorkspace')
+      })
+    })
+
+    it('omits workspace segment in POST URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials`,
+        },
+        { statusCode: 201, body: { id: partialId } },
+      ).as('createPartialNoWorkspace')
+
+      cy.mount(RedisConfigurationForm, {
+        props: { config: baseConfigKonnect },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+      cy.wait('@createPartialNoWorkspace')
+    })
+  })
 })

@@ -1099,4 +1099,75 @@ describe('<VaultForm />', () => {
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in GET URL when loading with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('getVaultWithWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          vaultId: vault.id,
+        },
+      })
+
+      cy.wait('@getVaultWithWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('getVaultWithWorkspace')
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('updateVaultWithWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          vaultId: vault.id,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getVaultWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+        cy.wait('@updateVaultWithWorkspace')
+      })
+    })
+
+    it('omits workspace segment in GET URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('getVaultNoWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: baseConfigKonnect,
+          vaultId: vault.id,
+        },
+      })
+
+      cy.wait('@getVaultNoWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+  })
 })
