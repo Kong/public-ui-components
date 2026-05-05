@@ -2,13 +2,7 @@ import type { Dataset, KChartData } from '../types'
 import { STATUS_CODE_DIMENSIONS } from '../types'
 import { isValid } from 'date-fns'
 
-export const hasDatasets = (chartData: KChartData) =>
-  chartData && chartData.datasets && chartData.datasets.length
-
-export const hasDataInDatasets = (chartData: KChartData) =>
-  hasDatasets(chartData) && chartData.datasets.some(dataset => dataset.data.length)
-
-export const hasTimeseriesData = (chartData: KChartData) => {
+const hasTimeseriesData = (chartData: KChartData) => {
   return chartData.datasets.some(dataset => {
     const first = dataset.data[0]
 
@@ -37,4 +31,3 @@ export const sortDatasetsByDimension = (
     datasets.sort((a, b) => Number(a.total) < Number(b.total) ? -1 : 1)
   }
 }
-

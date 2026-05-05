@@ -8,6 +8,7 @@
       ref="chart"
       :autoresize="autoresizeOptions"
       class="chart"
+      :init-options="initOptions"
       manual-update
       :option="option"
       @brush="emit('brush', $event)"
@@ -41,7 +42,7 @@ import {
   MarkLineComponent,
   MarkAreaComponent,
 } from 'echarts/components'
-import { provide, toRef, useTemplateRef, watch } from 'vue'
+import { computed, provide, toRef, useTemplateRef, watch } from 'vue'
 import type { ECBasicOption } from 'echarts/types/dist/shared'
 import type { ECElementEvent } from 'echarts/core'
 import type { DataZoomPayload } from '../utils/chart-scroll'
@@ -97,6 +98,9 @@ provide(THEME_KEY, toRef(() => theme))
 
 const containerRef = useTemplateRef('container')
 const chartRef = useTemplateRef('chart')
+const initOptions = computed(() => ({
+  renderer: renderMode,
+}))
 
 const updateOptions = {
   notMerge: true,

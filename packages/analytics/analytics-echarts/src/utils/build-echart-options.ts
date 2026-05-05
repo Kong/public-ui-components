@@ -1,6 +1,7 @@
 import type { SeriesOption } from 'echarts'
 import type { ChartScrollWindow, ChartTooltipSortFn, KChartData, Threshold, TooltipState } from '../types'
-import { formatChartTicksByGranularity, thresholdColor } from '../utils'
+import { thresholdColor } from './colors'
+import { formatChartTicksByGranularity } from './format-timestamps'
 import {
   createCrossSectionBarTooltipFormatter,
   createCrossSectionDonutTooltipFormatter,
@@ -49,6 +50,29 @@ const truncateAxisLabel = (label: string) => {
 
 const estimateHorizontalBarLabelWidth = (label: string): number => {
   return Math.max(BAR_LABEL_MIN_SIZE, label.length * HORIZONTAL_BAR_VALUE_LABEL_CHAR_WIDTH)
+}
+
+const shouldHideBarValueLabel = ({
+  isHorizontal,
+  rect,
+  rawValue,
+  formatValue,
+}: {
+  isHorizontal: boolean
+  rect?: { width?: number, height?: number }
+  rawValue: number
+  formatValue: (value: number) => string
+}) => {
+  const availableSize = isHorizontal ? rect?.width : rect?.height
+  const labelWidth = estimateHorizontalBarLabelWidth(formatValue(rawValue))
+
+  if (isHorizontal) {
+    return !availableSize || availableSize <= labelWidth + HORIZONTAL_BAR_VALUE_LABEL_PADDING
+  }
+
+  const minimumBarWidth = Math.max(VERTICAL_BAR_LABEL_MIN_WIDTH, labelWidth * VERTICAL_BAR_LABEL_WIDTH_RATIO)
+
+  return !availableSize || availableSize < VERTICAL_BAR_LABEL_MIN_HEIGHT || !rect?.width || rect.width < minimumBarWidth
 }
 
 const buildCrossSectionDataZoom = ({
@@ -164,7 +188,7 @@ type ThresholdIntersection = {
   type: Threshold['type']
 }
 
-export const getThresholdIntersections = (
+const getThresholdIntersections = (
   data: Array<[number, number]>,
   thresholds: Threshold[],
 ): ThresholdIntersection[] => {
@@ -660,23 +684,15 @@ export const buildCrossSectionOption = ({
           return { hide: true }
         }
 
-        const availableSize = isHorizontal ? rect?.width : rect?.height
-
-        if (isHorizontal) {
-          const rawValue = Number(dataset.data[dataIndex ?? 0] ?? 0)
-          const labelWidth = estimateHorizontalBarLabelWidth(formatValue(rawValue))
-
-          return {
-            hide: !availableSize || availableSize <= labelWidth + HORIZONTAL_BAR_VALUE_LABEL_PADDING,
-          }
-        }
-
         const rawValue = Number(dataset.data[dataIndex ?? 0] ?? 0)
-        const labelWidth = estimateHorizontalBarLabelWidth(formatValue(rawValue))
-        const minimumBarWidth = Math.max(VERTICAL_BAR_LABEL_MIN_WIDTH, labelWidth * VERTICAL_BAR_LABEL_WIDTH_RATIO)
 
         return {
-          hide: !availableSize || availableSize < VERTICAL_BAR_LABEL_MIN_HEIGHT || !rect?.width || rect.width < minimumBarWidth,
+          hide: shouldHideBarValueLabel({
+            isHorizontal,
+            rect,
+            rawValue,
+            formatValue,
+          }),
         }
       },
       emphasis: {

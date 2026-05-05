@@ -4,10 +4,9 @@ import type { ECBasicOption } from 'echarts/types/dist/shared'
 import type { ChartTooltipSortFn, KChartData, Threshold, TooltipState } from '../types'
 
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
-import { buildTimeseriesOption, getThresholdIntersections } from '../utils'
-import composables from '.'
-
-export { getThresholdIntersections }
+import { buildTimeseriesOption } from '../utils'
+import useI18n from './useI18n'
+import useTranslatedUnits from './useTranslatedUnits'
 
 export default function useTimeseriesChartOption({
   chartData,
@@ -38,8 +37,8 @@ export default function useTimeseriesChartOption({
   selectedLabels: Ref<Record<string, boolean>>
   chartTooltipSortFn?: Ref<ChartTooltipSortFn | undefined>
 }) {
-  const { i18n } = composables.useI18n()
-  const { translateUnit } = composables.useTranslatedUnits()
+  const { i18n } = useI18n()
+  const { translateUnit } = useTranslatedUnits()
   const thresholdLabelKeys: Record<Threshold['type'], 'chartLabels.threshold-warning' | 'chartLabels.threshold-error' | 'chartLabels.threshold-neutral'> = {
     error: 'chartLabels.threshold-error',
     neutral: 'chartLabels.threshold-neutral',

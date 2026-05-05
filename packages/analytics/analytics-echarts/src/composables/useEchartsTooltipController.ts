@@ -4,7 +4,7 @@ import type { TooltipInteractionMode, TooltipState } from '../types'
 import { isTooltipInteractive } from '../utils'
 import useTooltipPosition from './useTooltipPosition'
 
-export interface UseEchartsTooltipControllerOptions {
+interface UseEchartsTooltipControllerOptions {
   chartWidth: Ref<number>
   chartHeight: Ref<number>
   containerTop: Ref<number>

@@ -12,7 +12,7 @@ import {
   sortDatasetsByDimension,
 } from '../utils'
 import { translateChartLabel } from '../utils/chart-labels'
-import composables from '.'
+import useI18n from './useI18n'
 
 const range = (start: number, stop: number, step: number = 1): number[] =>
   Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
@@ -39,7 +39,35 @@ const originToOffset = (origin: string | number): number => {
   return origin
 }
 
-export const createZeroFilledTimeSeries = (
+const applyCountryNames = (dimension: string, labels: DatasetLabel[]): DatasetLabel[] => {
+  if (dimension !== DIMENSION_COUNTRY_CODE) {
+    return labels
+  }
+
+  return labels.map(label => ({
+    ...label,
+    name: getCountryName(label.id as CountryISOA2) || label.name,
+  }))
+}
+
+const getDatasetLabels = ({
+  display,
+  dimension,
+  metricNames,
+}: {
+  display: ExploreResultV4['meta']['display']
+  dimension: string
+  metricNames: string[]
+}) => {
+  const dimensionDisplay = display?.[dimension]
+  const labels: DatasetLabel[] =
+    (display && dimensionDisplay && Object.keys(dimensionDisplay).map(id => ({ id, name: dimensionDisplay[id].name }))) ||
+    metricNames.map(name => ({ id: name, name }))
+
+  return applyCountryNames(dimension, labels)
+}
+
+const createZeroFilledTimeSeries = (
   startMs: number,
   endMs: number,
   stepMs: number,
@@ -58,6 +86,59 @@ export const createZeroFilledTimeSeries = (
   return range(roundedStart, roundedEnd, stepMs)
 }
 
+const buildTimedEvents = ({
+  records,
+  metricNames,
+  datasetLabels,
+  dimension,
+  dimensionFieldNames,
+}: {
+  records: AnalyticsExploreRecord[]
+  metricNames: string[]
+  datasetLabels: DatasetLabel[]
+  dimension: string
+  dimensionFieldNames: string[]
+}) => {
+  return records.reduce((acc: Record<string, Record<string, Record<string, number>>>, druidRow) => {
+    const timestamp: number = new Date(druidRow.timestamp).valueOf()
+    const event = druidRow.event as { [label: string]: string | number }
+
+    if (!(timestamp in acc)) {
+      acc[timestamp] = {}
+    }
+
+    for (const metric of metricNames) {
+      if (!(metric in acc[timestamp])) {
+        acc[timestamp][metric] = {}
+      }
+
+      datasetLabels.forEach((label: DatasetLabel) => {
+        if (event[dimension] === label.id || metric === label.id) {
+          acc[timestamp][metric][label.name] = Math.round(Number(event[metric]) * 1e3) / 1e3
+        } else if (!dimensionFieldNames.length) {
+          acc[timestamp][metric][label.name] = Math.round(Number(event[label.id]) * 1e3) / 1e3
+        }
+      })
+    }
+
+    return acc
+  }, {})
+}
+
+const getDimensionsCrossMetrics = ({
+  metricNames,
+  datasetLabels,
+}: {
+  metricNames: string[]
+  datasetLabels: DatasetLabel[]
+}): Array<[string, string, boolean]> => {
+  return metricNames.length === 1
+    ? metricNames.flatMap<[string, string, boolean]>(metric => {
+      return datasetLabels.map<[string, string, boolean]>(label => [metric, label.name, label.id === EMPTY_SEGMENT_ID])
+    })
+    : datasetLabels.map(label => [label.name, label.name, label.id === EMPTY_SEGMENT_ID])
+}
+
 export default function useTimeseriesChartData(
   {
     colorPalette = datavisPalette,
@@ -68,7 +149,7 @@ export default function useTimeseriesChartData(
   },
   exploreResult: Ref<ExploreResultV4>,
 ): Ref<KChartData> {
-  const { i18n } = composables.useI18n()
+  const { i18n } = useI18n()
 
   return computed(() => {
     try {
@@ -96,17 +177,7 @@ export default function useTimeseriesChartData(
 
       const dimensionFieldNames = (display && Object.keys(display)) || metricNames
       const dimension = dimensionFieldNames[0]
-      const dimensionDisplay = display?.[dimension]
-      let datasetLabels: DatasetLabel[] =
-        (display && dimensionDisplay && Object.keys(dimensionDisplay).map(id => ({ id, name: dimensionDisplay[id].name }))) ||
-        metricNames.map(name => ({ id: name, name }))
-
-      if (dimension === DIMENSION_COUNTRY_CODE) {
-        datasetLabels = datasetLabels.map(label => ({
-          ...label,
-          name: getCountryName(label.id as CountryISOA2) || label.name,
-        }))
-      }
+      const datasetLabels = getDatasetLabels({ display, dimension, metricNames })
 
       if (typeof stepMs !== 'number' || isNaN(stepMs) || !isFinite(stepMs) || stepMs === 0) {
         console.error('Invalid step value:', stepMs)
@@ -121,36 +192,14 @@ export default function useTimeseriesChartData(
       const offsetMs = originToOffset(startMs)
       const zeroFilledTimeSeries = createZeroFilledTimeSeries(startMs, endMs, stepMs, offsetMs, records)
 
-      const timedEvents = records.reduce((acc: Record<string, Record<string, Record<string, number>>>, druidRow) => {
-        const timestamp: number = new Date(druidRow.timestamp).valueOf()
-        const event = druidRow.event as { [label: string]: string | number }
-
-        if (!(timestamp in acc)) {
-          acc[timestamp] = {}
-        }
-
-        for (const metric of metricNames) {
-          if (!(metric in acc[timestamp])) {
-            acc[timestamp][metric] = {}
-          }
-
-          datasetLabels.forEach((label: DatasetLabel) => {
-            if (event[dimension] === label.id || metric === label.id) {
-              acc[timestamp][metric][label.name] = Math.round(Number(event[metric]) * 1e3) / 1e3
-            } else if (!dimensionFieldNames.length) {
-              acc[timestamp][metric][label.name] = Math.round(Number(event[label.id]) * 1e3) / 1e3
-            }
-          })
-        }
-
-        return acc
-      }, {})
-
-      const dimensionsCrossMetrics: Array<[string, string, boolean]> = metricNames.length === 1
-        ? metricNames.flatMap<[string, string, boolean]>(metric => {
-          return datasetLabels.map<[string, string, boolean]>(label => [metric, label.name, label.id === EMPTY_SEGMENT_ID])
-        })
-        : datasetLabels.map(label => [label.name, label.name, label.id === EMPTY_SEGMENT_ID])
+      const timedEvents = buildTimedEvents({
+        records,
+        metricNames,
+        datasetLabels,
+        dimension,
+        dimensionFieldNames,
+      })
+      const dimensionsCrossMetrics = getDimensionsCrossMetrics({ metricNames, datasetLabels })
 
       const datasets: Dataset[] = dimensionsCrossMetrics.map(([metric, dimensionName, isSegmentEmpty], index) => {
         const filled = zeroFilledTimeSeries.map(ts => {

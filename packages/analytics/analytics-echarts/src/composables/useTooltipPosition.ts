@@ -2,7 +2,7 @@ import { computed, ref, watch, type Ref } from 'vue'
 import type { ElementEvent } from 'echarts/core'
 import type { TooltipState } from '../types'
 
-export interface UseTooltipPositionOptions {
+interface UseTooltipPositionOptions {
   chartWidth: Ref<number>
   chartHeight: Ref<number>
   containerTop: Ref<number>

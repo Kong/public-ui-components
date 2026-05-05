@@ -7,7 +7,7 @@ import { computed, unref } from 'vue'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette, determineBaseColor } from '../utils'
 import { translateChartLabel } from '../utils/chart-labels'
-import composables from '.'
+import useI18n from './useI18n'
 
 const generateDatasets = ({
   isMultiMetric,
@@ -26,7 +26,7 @@ const generateDatasets = ({
   rowLabels: DatasetLabel[]
   colorPalette: AnalyticsChartColors | string[]
 }): Dataset[] => {
-  const { i18n } = composables.useI18n()
+  const { i18n } = useI18n()
 
   if (isMultiMetric) {
     return metricNames.map((metric, metricIndex): Dataset => ({
@@ -60,6 +60,119 @@ const generateDatasets = ({
   })
 }
 
+const applyCountryNames = (dimension: string, labels: DatasetLabel[]): DatasetLabel[] => {
+  if (dimension !== DIMENSION_COUNTRY_CODE) {
+    return labels
+  }
+
+  return labels.map(label => ({
+    ...label,
+    name: getCountryName(label.id as CountryISOA2) || label.name,
+  }))
+}
+
+const getDimensionLabels = ({
+  hasDimensions,
+  dimension,
+  dimensionDisplay,
+  metricNames,
+}: {
+  hasDimensions: boolean
+  dimension: string
+  dimensionDisplay: ExploreResultV4['meta']['display'][string] | undefined
+  metricNames: string[]
+}) => {
+  const labels: DatasetLabel[] = (hasDimensions && dimensionDisplay &&
+    Object.entries(dimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) ||
+    metricNames.map(name => ({ id: name, name }))
+
+  return applyCountryNames(dimension, labels)
+}
+
+const buildPivotRecords = ({
+  records,
+  metricNames,
+  isMultiMetric,
+  hasDimensions,
+  primaryDimension,
+  secondaryDimension,
+  getPrimaryDimensionId,
+}: {
+  records: AnalyticsExploreRecord[]
+  metricNames: string[]
+  isMultiMetric: boolean
+  hasDimensions: boolean
+  primaryDimension: string
+  secondaryDimension: string
+  getPrimaryDimensionId: (record: AnalyticsExploreRecord) => string
+}) => {
+  return isMultiMetric
+    ? Object.fromEntries(records.flatMap(record => {
+      return metricNames.map((metric, index) => {
+        const dimensionValue = getPrimaryDimensionId(record)
+        const label = hasDimensions ? `${dimensionValue},${metric}` : `${index},${metric}`
+        const value = Number(record.event[metric]) || 0
+
+        return [label, value]
+      })
+    }))
+    : Object.fromEntries(records.map(record => {
+      const label = hasDimensions
+        ? `${record.event[primaryDimension]},${record.event[secondaryDimension]}`
+        : `${primaryDimension},${secondaryDimension}`
+
+      return [label, Number(record.event[metricNames[0]]) || 0]
+    }))
+}
+
+const aggregatePivotRecords = ({
+  records,
+  metricNames,
+  isMultiMetric,
+  getPrimaryDimensionId,
+}: {
+  records: AnalyticsExploreRecord[]
+  metricNames: string[]
+  isMultiMetric: boolean
+  getPrimaryDimensionId: (record: AnalyticsExploreRecord) => string
+}) => {
+  return records.reduce((acc, record) => {
+    const row = getPrimaryDimensionId(record)
+    const pivotEntry = isMultiMetric
+      ? metricNames.reduce((sum, metric) => sum + (Number(record.event[metric]) || 0), 0)
+      : Number(record.event[metricNames[0]]) || 0
+
+    acc[row] = (acc[row] || 0) + pivotEntry
+
+    return acc
+  }, {} as Record<string, number>)
+}
+
+const sortLabelsByTotals = ({
+  rowLabels,
+  totals,
+  primaryDimension,
+  hasDimensions,
+}: {
+  rowLabels: DatasetLabel[]
+  totals: Record<string, number>
+  primaryDimension: string
+  hasDimensions: boolean
+}) => {
+  const sortedDatasetIds = Object.entries(totals)
+    .sort(([, a], [, b]) => Number(b) - Number(a))
+    .map(([key]) => key)
+  const sortOrder = new Map(sortedDatasetIds.map((id, i) => [id, i]))
+  const bySortOrder = (a: DatasetLabel, b: DatasetLabel) => (sortOrder.get(a.id) ?? Infinity) - (sortOrder.get(b.id) ?? Infinity)
+  const preserveLexicalRowOrder = hasDimensions && STATUS_CODE_DIMENSIONS.includes(primaryDimension as typeof STATUS_CODE_DIMENSIONS[number])
+
+  if (!preserveLexicalRowOrder) {
+    rowLabels.sort(bySortOrder)
+  }
+
+  return preserveLexicalRowOrder
+}
+
 export default function useCrossSectionalChartData(
   {
     colorPalette = datavisPalette,
@@ -68,7 +181,7 @@ export default function useCrossSectionalChartData(
   },
   exploreResult: Ref<ExploreResultV4>,
 ): Ref<KChartData> {
-  const { i18n } = composables.useI18n()
+  const { i18n } = useI18n()
 
   return computed<KChartData>(() => {
     try {
@@ -93,71 +206,43 @@ export default function useCrossSectionalChartData(
       const secondaryDimension = dimensionFieldNames.length > 1 ? dimensionFieldNames[1] : dimensionFieldNames[0]
       const getPrimaryDimensionId = (record: AnalyticsExploreRecord) => String(record.event[primaryDimension])
 
-      const pivotRecords = isMultiMetric
-        ? Object.fromEntries(records.flatMap(record => {
-          return metricNames.map((metric, index) => {
-            const dimensionValue = getPrimaryDimensionId(record)
-            const label = hasDimensions ? `${dimensionValue},${metric}` : `${index},${metric}`
-            const value = Number(record.event[metric]) || 0
-
-            return [label, value]
-          })
-        }))
-        : Object.fromEntries(records.map(record => {
-          const label = hasDimensions
-            ? `${record.event[primaryDimension]},${record.event[secondaryDimension]}`
-            : `${primaryDimension},${secondaryDimension}`
-
-          return [label, Number(record.event[metricNames[0]]) || 0]
-        }))
-
-      const aggregatedPivotRecords = records.reduce((acc, record) => {
-        const row = getPrimaryDimensionId(record)
-        const pivotEntry = isMultiMetric
-          ? metricNames.reduce((sum, metric) => sum + (Number(record.event[metric]) || 0), 0)
-          : Number(record.event[metricNames[0]]) || 0
-
-        acc[row] = (acc[row] || 0) + pivotEntry
-
-        return acc
-      }, {} as Record<string, number>)
-
-      const sortedDatasetIds = Object.entries(aggregatedPivotRecords)
-        .sort(([, a], [, b]) => Number(b) - Number(a))
-        .map(([key]) => key)
+      const pivotRecords = buildPivotRecords({
+        records,
+        metricNames,
+        isMultiMetric,
+        hasDimensions,
+        primaryDimension,
+        secondaryDimension,
+        getPrimaryDimensionId,
+      })
+      const aggregatedPivotRecords = aggregatePivotRecords({
+        records,
+        metricNames,
+        isMultiMetric,
+        getPrimaryDimensionId,
+      })
 
       const primaryDimensionDisplay = display?.[primaryDimension]
       const secondaryDimensionDisplay = display?.[secondaryDimension]
 
-      let rowLabels: DatasetLabel[] = (hasDimensions && primaryDimensionDisplay &&
-        Object.entries(primaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) ||
-        metricNames.map(name => ({ id: name, name }))
-
-      let barSegmentLabels: DatasetLabel[] = (hasDimensions && secondaryDimensionDisplay &&
-        Object.entries(secondaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) ||
-        metricNames.map(name => ({ id: name, name }))
-
-      if (hasDimensions && primaryDimension === DIMENSION_COUNTRY_CODE) {
-        rowLabels = rowLabels.map(label => ({
-          ...label,
-          name: getCountryName(label.id as CountryISOA2) || label.name,
-        }))
-      }
-
-      if (hasDimensions && secondaryDimension === DIMENSION_COUNTRY_CODE) {
-        barSegmentLabels = barSegmentLabels.map(label => ({
-          ...label,
-          name: getCountryName(label.id as CountryISOA2) || label.name,
-        }))
-      }
-
-      const sortOrder = new Map(sortedDatasetIds.map((id, i) => [id, i]))
-      const bySortOrder = (a: DatasetLabel, b: DatasetLabel) => (sortOrder.get(a.id) ?? Infinity) - (sortOrder.get(b.id) ?? Infinity)
-      const preserveLexicalRowOrder = hasDimensions && STATUS_CODE_DIMENSIONS.includes(primaryDimension as typeof STATUS_CODE_DIMENSIONS[number])
-
-      if (!preserveLexicalRowOrder) {
-        rowLabels.sort(bySortOrder)
-      }
+      const rowLabels = getDimensionLabels({
+        hasDimensions,
+        dimension: primaryDimension,
+        dimensionDisplay: primaryDimensionDisplay,
+        metricNames,
+      })
+      const barSegmentLabels = getDimensionLabels({
+        hasDimensions,
+        dimension: secondaryDimension,
+        dimensionDisplay: secondaryDimensionDisplay,
+        metricNames,
+      })
+      const preserveLexicalRowOrder = sortLabelsByTotals({
+        rowLabels,
+        totals: aggregatedPivotRecords,
+        primaryDimension,
+        hasDimensions,
+      })
 
       const datasets = generateDatasets({
         isMultiMetric,

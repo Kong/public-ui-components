@@ -12,7 +12,7 @@ import { createDefaultChartLegendSort, createDefaultChartTooltipSort } from '../
 import useChartLegendValues from './useChartLegendValues'
 import useI18n from './useI18n'
 
-export interface UseChartFrameOptions {
+interface UseChartFrameOptions {
   data: Readonly<Ref<ExploreResultV4>>
   chartData: Readonly<Ref<KChartData>>
   metricUnit: Readonly<Ref<string>>

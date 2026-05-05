@@ -5,7 +5,8 @@ import type { ChartScrollWindow, ChartTooltipSortFn, KChartData, TooltipState } 
 
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import { buildCrossSectionOption } from '../utils'
-import composables from '.'
+import useI18n from './useI18n'
+import useTranslatedUnits from './useTranslatedUnits'
 
 export default function useCrossSectionalChartOption({
   chartData,
@@ -40,8 +41,8 @@ export default function useCrossSectionalChartOption({
   selectedLabels: Ref<Record<string, boolean>>
   chartTooltipSortFn?: Ref<ChartTooltipSortFn | undefined>
 }) {
-  const { i18n } = composables.useI18n()
-  const { translateUnit } = composables.useTranslatedUnits()
+  const { i18n } = useI18n()
+  const { translateUnit } = useTranslatedUnits()
   const { formatUnit } = unitFormatter({ i18n })
 
   const option = computed<ECBasicOption>(() => {

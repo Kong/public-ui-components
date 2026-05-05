@@ -13,7 +13,7 @@ type BrushZoomPayload = {
   }>
 }
 
-export interface UseBrushZoomOptions {
+interface UseBrushZoomOptions {
   chartRef: Readonly<Ref<BrushZoomChart | undefined>>
   onSelectionStart?: () => void
   onSelectionEnd?: (timeRange: AbsoluteTimeRangeV4 | undefined) => void

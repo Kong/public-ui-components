@@ -2,7 +2,8 @@ import type { LegendValues, KChartData } from '../types'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
-import composables from '.'
+import useI18n from './useI18n'
+import useTranslatedUnits from './useTranslatedUnits'
 
 const APPROXIMATE_LEGEND_UNITS = ['count', 'count/minute', 'token count']
 
@@ -10,9 +11,9 @@ export default function useChartLegendValues(
   chartData: Readonly<Ref<KChartData>>,
   metricUnit: Readonly<Ref<string>>,
 ) {
-  const { i18n } = composables.useI18n()
+  const { i18n } = useI18n()
   const { formatUnit } = unitFormatter({ i18n })
-  const { translateUnit } = composables.useTranslatedUnits()
+  const { translateUnit } = useTranslatedUnits()
 
   const legendValues = computed<LegendValues>(() => {
     const values: LegendValues = {}
