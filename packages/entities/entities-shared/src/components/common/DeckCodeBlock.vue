@@ -8,6 +8,7 @@
     :entity-type="(props.entityType as SupportedEntityDeck)"
     :geo-api-server-url="props.app === 'konnect' ? props.geoApiServerUrl : undefined"
     :kong-admin-api-url="props.app === 'kongManager' ? props.kongAdminApiUrl : undefined"
+    :unredacted-record="props.unredactedRecord"
     :workspace="props.app === 'kongManager' ? props.workspace : undefined"
   />
 
@@ -31,6 +32,7 @@
       :geo-api-server-url="props.app === 'konnect' ? props.geoApiServerUrl : undefined"
       is-customizing
       :kong-admin-api-url="props.app === 'kongManager' ? props.kongAdminApiUrl : undefined"
+      :unredacted-record="props.unredactedRecord"
       :workspace="props.app === 'kongManager' ? props.workspace : undefined"
     />
   </KModal>

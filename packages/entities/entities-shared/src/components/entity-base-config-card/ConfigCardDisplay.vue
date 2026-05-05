@@ -58,11 +58,13 @@
     :entity-record="entityRecord"
     :fetcher-url="fetchUrlJsonBlock"
     request-method="get"
+    :unredacted-record="codeBlockRecord || record"
   />
   <YamlCodeBlock
     v-if="format === 'yaml' && entityRecord"
     :deck-callout-preference-key="isDeckEnabled ? deckCalloutPreferenceKey : undefined"
     :entity-record="entityRecord"
+    :unredacted-record="codeBlockRecord || record"
     @deck-callout:click-cta="$emit('request-deck-format')"
   />
   <TerraformCodeBlock
@@ -70,6 +72,7 @@
     :entity-record="entityRecord"
     :entity-type="props.entityType"
     :sub-entity-type="props.subEntityType"
+    :unredacted-record="codeBlockRecord || record"
   />
   <DeckCodeBlock
     v-if="format === 'deck' && entityRecord"
@@ -81,6 +84,7 @@
     :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
     :is-customization-modal-visible="isDeckCustomizationVisible"
     :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
+    :unredacted-record="codeBlockRecord || record"
     :workspace="config.app === 'kongManager' ? config.workspace : undefined"
     @customization-close="$emit('deck-customization:close')"
   />
@@ -160,6 +164,13 @@ const props = defineProps({
     default: undefined,
   },
   /**
+   * When set, JSON/YAML/TR/deck code blocks use this record instead of `codeBlockRecord`
+   */
+  codeBlockRecordRedacted: {
+    type: Object as PropType<Record<string, any>>,
+    default: undefined,
+  },
+  /**
    * When false/default, strip created_at/ updated_at per KHCP-9837
    * Set true to show full payloads
    */
@@ -198,10 +209,8 @@ const { i18n: { t } } = composables.useI18n()
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
 
-// Structured grid always uses `record`; code tabs uses `codeBlockRecord` when the parent passes it
-const recordForCodeBlocks = computed((): Record<string, any> | undefined =>
-  props.codeBlockRecord !== undefined ? props.codeBlockRecord : props.record,
-)
+// Structured grid always uses `record`; code tabs uses `codeBlockRecordRedacted` or `codeBlockRecord` when the parent passes it
+const recordForCodeBlocks = computed((): Record<string, any> | undefined => props.codeBlockRecordRedacted || props.codeBlockRecord || props.record)
 
 // Deep clone + optional timestamp strip + per-format shaping (`codeBlockRecordFormatter`)
 const entityRecord = computed((): Record<string, any> | undefined => {

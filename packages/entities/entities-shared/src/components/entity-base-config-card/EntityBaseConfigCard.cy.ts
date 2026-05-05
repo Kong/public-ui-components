@@ -4,7 +4,7 @@ import type {
   ConfigurationSchema,
   PluginConfigurationSchema,
 } from '../../types'
-import { ConfigurationSchemaSection, SupportedEntityType } from '../../types'
+import { ConfigurationSchemaSection, ConfigurationSchemaType, SupportedEntityType } from '../../types'
 import { gatewayServiceRecord, pluginRecord, emptyKey, keyWithValue } from '../../../fixtures/mockData'
 import composables from '../../composables'
 import EntityBaseConfigCard from './EntityBaseConfigCard.vue'
@@ -33,12 +33,14 @@ const customTooltip = 'Custom tooltip'
 const customLabel = 'CA Certificates'
 const unconfiguredKey = 'client_certificate'
 const untypedKey = 'extra'
+const sensitiveKey = 'host'
 const configSchema: ConfigurationSchema = {
   protocol: {
     section: ConfigurationSchemaSection.Basic,
   },
-  host: {
+  [sensitiveKey]: {
     section: ConfigurationSchemaSection.Basic,
+    type: ConfigurationSchemaType.Redacted,
   },
   path: {
     section: ConfigurationSchemaSection.Basic,
@@ -156,6 +158,66 @@ describe('<EntityBaseConfigCard />', () => {
       })
 
       cy.getTestId('select-config-format').should('exist')
+    })
+
+    it('KCheckbox to show sensitive fields is hidden on structured view', () => {
+      interceptFetch()
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config,
+          configSchema,
+          entityType,
+          fetchUrl,
+        },
+      })
+
+      cy.getTestId('sensitive-fields-checkbox').should('not.exist')
+    })
+
+    it('displays KCheckbox to show sensitive fields on non-structured view', () => {
+      interceptFetch()
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config,
+          configSchema,
+          entityType,
+          fetchUrl,
+        },
+      })
+
+      cy.getTestId('select-config-format').should('be.visible')
+      cy.getTestId('select-config-format').click()
+      cy.getTestId('select-item-json').click()
+
+      cy.getTestId('sensitive-fields-checkbox').should('be.visible')
+    })
+
+    it('redacts/unredacts sensitive fields when KCheckbox is checked/unchecked', () => {
+      interceptFetch()
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config,
+          configSchema,
+          entityType,
+          fetchUrl,
+        },
+      })
+
+      cy.getTestId('select-config-format').should('be.visible')
+      cy.getTestId('select-config-format').click()
+      cy.getTestId('select-item-json').click()
+
+      // redacted by default
+      cy.get('#json-codeblock').findTestId('highlighted-code-block').should('contain.text', `"${sensitiveKey}": "********"`)
+      cy.get('#json-codeblock').findTestId('highlighted-code-block').should('not.contain.text', gatewayServiceRecord.host)
+
+      cy.getTestId('sensitive-fields-checkbox').should('be.visible')
+      cy.getTestId('sensitive-fields-checkbox').click()
+      // unredacted
+      cy.get('#json-codeblock').findTestId('highlighted-code-block').should('contain.text', gatewayServiceRecord.host)
     })
 
     it('displays KButton with book icon when `configCardDoc` prop is set correctly', () => {

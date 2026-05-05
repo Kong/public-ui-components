@@ -1,25 +1,27 @@
 <template>
   <div class="json-config config-card-code-block">
     <div
-      v-if="props.fetcherUrl"
+      v-if="fetcherUrl"
       class="json-endpoint"
     >
-      <KBadge :appearance="props.requestMethod">
-        {{ props.requestMethod }}
+      <KBadge :appearance="requestMethod">
+        {{ requestMethod }}
       </KBadge>
       <KCodeBlock
         id="json-endpoint-codeblock"
-        :code="props.fetcherUrl"
+        :code="fetcherUrl"
         language="plaintext"
         single-line
         theme="dark"
       />
     </div>
     <KCodeBlock
-      v-if="props.entityRecord"
+      v-if="entityRecord"
       id="json-codeblock"
-      :class="{ 'json-content': props.fetcherUrl }"
+      :class="{ 'json-content': fetcherUrl }"
       :code="JSON.stringify(jsonContent, null, 2)"
+      :copy-code="JSON.stringify(unredactedRecord || jsonContent, null, 2)"
+      data-dd-privacy="mask"
       language="json"
       theme="dark"
       @code-block-render="highlightCodeBlock"
@@ -46,16 +48,21 @@ const props = defineProps({
     required: false,
     default: '',
   },
-  /** A record to indicate the entity's configuration, used to populate the JSON code block */
-  entityRecord: {
-    type: Object as PropType<Record<string, any>>,
-    required: true,
-  },
   /** HTTP request method like GET, POST, PUT, used to make the api call. */
   requestMethod: {
     type: String as PropType<BadgeAppearance>,
     required: false,
     default: '',
+  },
+  /** A record to indicate the entity's configuration, the visible code content (may be redacted) */
+  entityRecord: {
+    type: Object as PropType<Record<string, any>>,
+    required: true,
+  },
+  /** The unredacted record, used for copy actions */
+  unredactedRecord: {
+    type: Object as PropType<Record<string, any>>,
+    default: null,
   },
 })
 

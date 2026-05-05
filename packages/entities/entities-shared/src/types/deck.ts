@@ -2,8 +2,10 @@ import type { SupportedEntityDeck } from './entity-base-config-card'
 
 export interface DeckCodeBlockProps {
   app: 'konnect' | 'kongManager'
-  /** A record to indicate the entity's configuration, used to populate the decK code block */
+  /** A record to indicate the entity's configuration, the visible code content (may be redacted) */
   entityRecord: Record<string, any>
+  /** The unredacted record, used for copy actions */
+  unredactedRecord?: Record<string, any>
   entityType: SupportedEntityDeck
   /** e.g. https://us.api.konghq.tech, used to pass --konnect-addr parameter to decK */
   geoApiServerUrl?: string
