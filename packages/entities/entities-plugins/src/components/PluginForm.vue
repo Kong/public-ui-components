@@ -1352,6 +1352,24 @@ const handleValidityChange = (event: PluginValidityChangeEvent) => {
   }
 }
 
+// for free-form plugins, use the default schema(enabled, name, tags and etc.) without building from the config schema
+// free-form can handle the raw configResponse
+const buildFinalSchema = () => {
+  if (isFreeForm(props.pluginType, props.engine)) {
+    return { ...defaultFormSchema }
+  }
+  const initialFormSchema = buildFormSchema('config', JSON.parse(JSON.stringify(configResponse.value)), defaultFormSchema)
+  // pass the redis partial type and redis path in plugin with the schema
+  if (pluginPartialType.value) {
+    initialFormSchema._supported_redis_partial_type = pluginPartialType.value
+  }
+  // pass whether the plugin is a custom plugin to the form schema
+  if (isCustomPlugin.value) {
+    initialFormSchema._isCustomPlugin = true
+  }
+  return initialFormSchema
+}
+
 watch([entityMap, initialized], (newData, oldData) => {
   const newEntityData = newData[0] !== oldData[0]
   const newinitialized = newData[1]
@@ -1359,14 +1377,7 @@ watch([entityMap, initialized], (newData, oldData) => {
 
   // rebuild schema if its not a credential and we either just determined a new entity id, or newly initialized the data
   if (!treatAsCredential.value && formType.value === EntityBaseFormType.Edit && (newEntityData || (newinitialized && newinitialized !== oldinitialized))) {
-    const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
-    if (isCustomPlugin.value) {
-      initialFormSchema._isCustomPlugin = true
-    }
-    if (pluginPartialType.value) {
-      initialFormSchema._supported_redis_partial_type = pluginPartialType.value
-    }
-    finalSchema.value = initialFormSchema
+    finalSchema.value = buildFinalSchema()
   }
 }, { deep: true })
 
@@ -1595,14 +1606,7 @@ onBeforeMount(async () => {
 
           // if editing, wait for record to load before building schema
           if (initialized.value || formType.value === EntityBaseFormType.Create) {
-            const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
-            // pass the redis partial type and redis path in plugin with the schema
-            if (pluginPartialType.value) {
-              initialFormSchema._supported_redis_partial_type = pluginPartialType.value
-            }
-            // pass whether the plugin is a custom plugin to the form schema
-            if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
-            finalSchema.value = initialFormSchema
+            finalSchema.value = buildFinalSchema()
           }
         }
       }
