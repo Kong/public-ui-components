@@ -15,7 +15,7 @@
             <PluginIcon
               :alt="plugin.name"
               class="plugin-card-icon"
-              :name="plugin.id"
+              :name="pluginIconName"
               :size="55"
             />
             <span :class="{ 'non-custom-title': !isCustomPlugin }">
@@ -71,10 +71,19 @@
           :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
         >
           <div
-            v-if="plugin.description || (isCustomPlugin && !isCreateCustomPlugin)"
+            v-if="plugin.description || customPluginBadges.length"
           >
-            <div v-if="isCustomPlugin && !isCreateCustomPlugin">
-              {{ t('plugins.select.custom_badge_text') }}
+            <div
+              v-if="customPluginBadges.length"
+              class="custom-plugin-badges"
+            >
+              <KBadge
+                v-for="badge in customPluginBadges"
+                :key="badge"
+                appearance="info"
+              >
+                {{ badge }}
+              </KBadge>
             </div>
 
             <div
@@ -126,7 +135,27 @@ const props = defineProps<{
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
+const pluginIconName = computed((): string => {
+  return props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromLink
+    ? props.plugin.clonedFromLink
+    : props.plugin.id
+})
 const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
+const customPluginBadges = computed((): string[] => {
+  if (!isCustomPlugin.value || isCreateCustomPlugin.value) {
+    return []
+  }
+
+  if (props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromLink) {
+    return [t('plugins.select.cloned_from_badge', { link: props.plugin.clonedFromLink })]
+  }
+
+  if (props.plugin.customPluginType === 'streaming') {
+    return [t('plugins.select.streamed_custom_badge')]
+  }
+
+  return [t('plugins.select.installed_custom_badge')]
+})
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
 const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && controlPlaneId.value))
 
@@ -237,6 +266,13 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
       line-height: var(--kui-line-height-30, $kui-line-height-30);
       overflow: hidden;
       text-align: left;
+
+      .custom-plugin-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kui-space-40, $kui-space-40);
+        margin-bottom: var(--kui-space-40, $kui-space-40);
+      }
     }
 
     .plugin-card-footer {

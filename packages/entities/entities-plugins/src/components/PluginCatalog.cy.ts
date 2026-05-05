@@ -1,8 +1,10 @@
 import PluginCatalog from './PluginCatalog.vue'
+import { FEATURE_FLAGS } from '../constants'
 import { PluginGroupArraySortedAlphabetically, type KonnectPluginSelectConfig } from '../types'
 import { PluginGroup } from '@kong-ui-public/entities-plugins-metadata'
 import {
   konnectAvailablePlugins,
+  konnectClonedCustomPlugins,
   konnectStreamingCustomPlugins,
 } from '../../fixtures/mockData'
 import { createMemoryHistory, createRouter } from 'vue-router'
@@ -19,7 +21,7 @@ const baseConfigKonnect: KonnectPluginSelectConfig = {
     },
   }),
   createCustomRoute: { name: 'create-custom-plugin' },
-  getCustomEditRoute: (plugin: string, type: 'schema' | 'streaming') => ({
+  getCustomEditRoute: (plugin: string, type: 'schema' | 'streaming' | 'cloned') => ({
     name: 'edit-custom-plugin',
     params: {
       control_plane_id: 'abc-123-i-love-cats',
@@ -49,13 +51,25 @@ describe('<PluginCatalog />', {
     cy.intercept(
       {
         method: 'GET',
-        url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins`,
+        // Match regardless of pagination query (e.g. `?size=1000`) appended by `fetchAllPages`.
+        pathname: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins`,
       },
       {
         statusCode: 200,
         body: konnectStreamingCustomPlugins,
       },
     ).as('getStreamingCustomPlugins')
+
+    cy.intercept(
+      {
+        method: 'GET',
+        pathname: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/cloned-plugins`,
+      },
+      {
+        statusCode: 200,
+        body: konnectClonedCustomPlugins,
+      },
+    ).as('getClonedCustomPlugins')
   }
 
   beforeEach(() => {
@@ -288,5 +302,54 @@ describe('<PluginCatalog />', {
     cy.getTestId('clear-filter-selection').should('not.be.disabled').click()
     cy.getTestId(`plugin-filter-checkbox-${PluginGroup.TRAFFIC_CONTROL}`).should('not.be.checked')
     cy.getTestId('clear-filter-selection').should('be.disabled')
+  })
+
+  it('should not load cloned plugins when the feature flag is disabled', () => {
+    interceptKonnect()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        customPluginSupport: ['streaming', 'cloned'],
+      },
+      router,
+    })
+
+    cy.wait('@getAvailablePlugins')
+    cy.getTestId('my-basic-auth-clone-card').should('not.exist')
+    cy.get('@getClonedCustomPlugins.all').should('have.length', 0)
+  })
+
+  it('should render cloned plugins with parent metadata when the feature flag is enabled', () => {
+    interceptKonnect()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        customPluginSupport: ['streaming', 'cloned'],
+      },
+      global: {
+        provide: {
+          [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+        },
+      },
+      router,
+    })
+
+    cy.wait('@getAvailablePlugins')
+    cy.wait('@getClonedCustomPlugins')
+
+    cy.getTestId('my-basic-auth-clone-card').should('be.visible')
+    cy.getTestId('my-basic-auth-clone-card-body')
+      .should('contain.text', 'Add Basic Authentication to your Services')
+      .should('contain.text', 'Cloned from basic-auth')
+
+    cy.get('.plugins-filter-icon').click()
+    cy.getTestId('plugins-filter-input').clear()
+    cy.getTestId('plugins-filter-input').type('my-basic-auth-clone')
+    cy.getTestId('plugin-catalog-list-view-name-text').contains('my-basic-auth-clone').should('be.visible')
+    cy.getTestId('plugin-catalog-list-view-description')
+      .contains('Add Basic Authentication to your Services')
+      .should('be.visible')
   })
 })

@@ -23,7 +23,7 @@
         >
           <PluginIcon
             :data-testid="`plugin-catalog-list-view-${row.plugin!.id}-icon`"
-            :name="row.plugin!.id"
+            :name="getPluginIconName(row.plugin!)"
             :size="20"
           />
           <span
@@ -138,6 +138,12 @@ const props = defineProps<{
 }>()
 
 const { i18n: { t } } = composables.useI18n()
+
+const getPluginIconName = (plugin: PluginType): string => {
+  return plugin.customPluginType === 'cloned' && plugin.clonedFromLink
+    ? plugin.clonedFromLink
+    : plugin.id
+}
 
 
 const showMoreActions = computed(() => {
