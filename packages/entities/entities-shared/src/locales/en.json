@@ -41,7 +41,10 @@
   "baseConfigCard": {
     "title": "Configuration",
     "actions": {
-      "copy": "Copy JSON"
+      "copy": "Copy JSON",
+      "deck_customize": "Customize before copying to CLI",
+      "deck_customize_cancel": "Cancel",
+      "sensitive_fields": "Show sensitive fields"
     },
     "sections": {
       "advanced": "Advanced",
@@ -119,6 +122,42 @@
       "konnect": "The {token} environment variable must be added first. See {link} for details.",
       "kongManager": "If your Admin API is secured, set up authentication following {link}."
     },
-    "documentation": "the documentation"
+    "documentation": "the documentation",
+    "steps": {
+      "step_1": "Step 1: Export token",
+      "step_2": "Step 2: Apply configuration"
+    },
+    "customization": {
+      "title": "Customize before copying to CLI",
+      "copy_pat": "Make sure to copy your personal access token now. You won't be able to see it again.",
+      "reuse_pat": "Use an existing PAT if you've already generated one.",
+      "generate_pat": "Generate PAT",
+      "footer_reminder": "Changes made here won't affect your configuration."
+    },
+    "copy_tooltip": "Copy"
+  },
+  "deckCallout": {
+    "body": "Want a ready-to-use CLI command? {cta} to view this configuration as a decK sync snippet you can copy directly.",
+    "cta": "Switch to decK format"
+  },
+  "generatePatModal": {
+    "title": "Generate a Personal Access Token",
+    "description": "Personal access tokens are used to authenticate decK commands and Konnect API requests.",
+    "fields": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter token name"
+      },
+      "expiresAt": {
+        "label": "Expiration Date",
+        "placeholder": "Select an expiration date",
+        "n_days": "{n} days"
+      }
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "generate": "Generate",
+      "generating": "Generating…"
+    }
   }
 }

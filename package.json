@@ -26,7 +26,7 @@
     "@evilmartians/lefthook": "^2.1.6",
     "@kong/design-tokens": "1.20.1",
     "@kong/eslint-config-kong-ui": "^1.6.2",
-    "@kong/kongponents": "9.52.11",
+    "@kong/kongponents": "9.53.2",
     "@stylistic/stylelint-plugin": "^5.1.0",
     "@types/flat": "^5.0.5",
     "@types/js-yaml": "^4.0.9",
@@ -54,7 +54,7 @@
     "rimraf": "^6.1.3",
     "rollup-plugin-visualizer": "^6.0.11",
     "sass": "^1.99.0",
-    "stylelint": "^17.8.0",
+    "stylelint": "^17.9.0",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-recommended-scss": "^17.0.1",
     "stylelint-config-recommended-vue": "^1.6.1",
@@ -134,7 +134,7 @@
   },
   "volta": {
     "node": "24.14.1",
-    "pnpm": "10.33.1"
+    "pnpm": "10.33.2"
   },
-  "packageManager": "pnpm@10.33.1"
+  "packageManager": "pnpm@10.33.2"
 }

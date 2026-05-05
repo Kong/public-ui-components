@@ -77,13 +77,13 @@ describe('<VerticalNavigation />', () => {
 
     it('should render the toggle left panel button when paneLeftVisible is true', () => {
       const wrapper = createWrapper({ paneLeftVisible: true })
-      const toggleButton = wrapper.find('[data-testid="kong-ui-public-split-pane-toggle-left-panel-button"]')
+      const toggleButton = wrapper.findTestId('kong-ui-public-split-pane-toggle-left-panel-button')
       expect(toggleButton.exists()).toBe(true)
     })
 
     it('should not render the toggle left panel button when paneLeftVisible is false', () => {
       const wrapper = createWrapper({ paneLeftVisible: false })
-      const toggleButton = wrapper.find('[data-testid="kong-ui-public-split-pane-toggle-left-panel-button"]')
+      const toggleButton = wrapper.findTestId('kong-ui-public-split-pane-toggle-left-panel-button')
       expect(toggleButton.exists()).toBe(false)
     })
   })
@@ -100,7 +100,7 @@ describe('<VerticalNavigation />', () => {
         },
       ]
       const wrapper = createWrapper({ items })
-      const activeItem = wrapper.find('[data-testid="kong-ui-public-split-pane-vertical-navigation-nav-item-active-item"]')
+      const activeItem = wrapper.findTestId('kong-ui-public-split-pane-vertical-navigation-nav-item-active-item')
       expect(activeItem.classes('active')).toBe(true)
     })
 
@@ -116,7 +116,7 @@ describe('<VerticalNavigation />', () => {
       ]
       const wrapper = createWrapper({ items })
       // The return button should not be active
-      const returnButton = wrapper.find('[data-testid="kong-ui-public-split-pane-vertical-navigation-nav-item-inactive-item"]')
+      const returnButton = wrapper.findTestId('kong-ui-public-split-pane-vertical-navigation-nav-item-inactive-item')
       expect(returnButton.classes('active')).toBe(false)
     })
   })
@@ -124,13 +124,13 @@ describe('<VerticalNavigation />', () => {
   describe('toggle panel', () => {
     it('should show collapse icon when pane is expanded', async () => {
       const wrapper = createWrapper()
-      const toggleButton = wrapper.find('[data-testid="kong-ui-public-split-pane-toggle-left-panel-button"]')
+      const toggleButton = wrapper.findTestId('kong-ui-public-split-pane-toggle-left-panel-button')
       expect(toggleButton.exists()).toBe(true)
     })
 
     it('should call togglePaneLeft when toggle button is clicked', async () => {
       const wrapper = createWrapper()
-      const toggleButton = wrapper.find('[data-testid="kong-ui-public-split-pane-toggle-left-panel-button"]')
+      const toggleButton = wrapper.findTestId('kong-ui-public-split-pane-toggle-left-panel-button')
       await toggleButton.trigger('click')
       // The mock function should have been called
       expect(toggleButton.exists()).toBe(true)
@@ -149,7 +149,7 @@ describe('<VerticalNavigation />', () => {
         },
       ]
       const wrapper = createWrapper({ items })
-      const button = wrapper.find('[data-testid="kong-ui-public-split-pane-vertical-navigation-nav-item-active-item"]')
+      const button = wrapper.findTestId('kong-ui-public-split-pane-vertical-navigation-nav-item-active-item')
       await button.trigger('click')
       // Should not navigate (tested via router mock)
       expect(button.exists()).toBe(true)
@@ -196,14 +196,14 @@ describe('<VerticalNavigation />', () => {
         },
       ]
       const wrapper = createWrapper({ items })
-      const button = wrapper.find('[data-testid="kong-ui-public-split-pane-vertical-navigation-nav-item-test-item"]')
+      const button = wrapper.findTestId('kong-ui-public-split-pane-vertical-navigation-nav-item-test-item')
       // Button stub is present
       expect(button.exists()).toBe(true)
     })
 
     it('should set correct aria-controls and aria-expanded on toggle button', () => {
       const wrapper = createWrapper()
-      const toggleButton = wrapper.find('[data-testid="kong-ui-public-split-pane-toggle-left-panel-button"]')
+      const toggleButton = wrapper.findTestId('kong-ui-public-split-pane-toggle-left-panel-button')
       // Toggle button is present
       expect(toggleButton.exists()).toBe(true)
     })

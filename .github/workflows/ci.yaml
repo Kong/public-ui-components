@@ -38,7 +38,7 @@ jobs:
       # this comment is removed in this step
       - name: Remove preview consumption comment
         if: ${{ env.GH_TOKEN != '' }}
-        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
+        uses: Kong/sticky-pull-request-comment@ae583cebedbfd32256b349cce8ddf5772e77636e # v3.0.4
         with:
           header: pr_preview_consumption
           delete: true
@@ -303,7 +303,7 @@ jobs:
 
       - name: Provide preview link info
         if: ${{ env.npm_instructions != '' && env.GH_TOKEN != '' }}
-        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
+        uses: Kong/sticky-pull-request-comment@ae583cebedbfd32256b349cce8ddf5772e77636e # v3.0.4
         with:
           header: pr_preview_consumption
           message: |
@@ -348,13 +348,13 @@ jobs:
         run: pnpm cypress install
 
       - name: Download build artifacts
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: package-dist-artifacts
           path: packages/
 
       - name: Run Component Tests
-        uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 # v7.1.9
+        uses: cypress-io/github-action@783cb3f07983868532cabaedaa1e6c00ff4786a8 #v7.1.9
         with:
           install: false
           command: pnpm run test:component:ci --spec ${{ matrix.container }}
@@ -413,7 +413,7 @@ jobs:
 
       - name: Download build artifacts
         if: ${{ github.event_name == 'push' }}
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: package-dist-artifacts
           path: packages/
@@ -466,7 +466,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Get aggregate Workflow status
-        uses: Kong/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3
+        uses: Kong/workflow-conclusion-action@e9d844ce2869399e71dbcb43d2c6192ddbdb3904 # v3.0.3 node24
 
       - name: Post Slack notification
         uses: Kong/public-shared-actions/slack-actions/workflow-notification@8d98bc15a5143332a36f206e6699296e6cc2adac

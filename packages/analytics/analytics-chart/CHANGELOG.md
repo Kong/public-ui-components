@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.16.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.16.3...@kong-ui-public/analytics-chart@10.16.4) (2026-05-04)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.16.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.16.2...@kong-ui-public/analytics-chart@10.16.3) (2026-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.16.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.16.1...@kong-ui-public/analytics-chart@10.16.2) (2026-05-01)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3211](https://github.com/Kong/public-ui-components/issues/3211)) ([174f605](https://github.com/Kong/public-ui-components/commit/174f605910392130ad1e05e891d0e674bd597116))
+
+
+
+
+
+## [10.16.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.16.0...@kong-ui-public/analytics-chart@10.16.1) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
+# [10.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.15.13...@kong-ui-public/analytics-chart@10.16.0) (2026-04-27)
+
+
+### Features
+
+* **analytics-chart:** enhance donut chart visuals and add center metric ([#3174](https://github.com/Kong/public-ui-components/issues/3174)) ([6e583bf](https://github.com/Kong/public-ui-components/commit/6e583bf03850e2f38b154061eaeba4ef29ceed1e))
+
+
+
+
+
 ## [10.15.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.15.11...@kong-ui-public/analytics-chart@10.15.13) (2026-04-26)
 
 

@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.21...@kong-ui-public/page-layout@0.2.22) (2026-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/page-layout
+
+
+
+
+
+## [0.2.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.20...@kong-ui-public/page-layout@0.2.21) (2026-05-01)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3211](https://github.com/Kong/public-ui-components/issues/3211)) ([174f605](https://github.com/Kong/public-ui-components/commit/174f605910392130ad1e05e891d0e674bd597116))
+
+
+
+
+
+## [0.2.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.19...@kong-ui-public/page-layout@0.2.20) (2026-04-30)
+
+
+### Bug Fixes
+
+* **page-layout:** detect overflow using resize observer [KHCP-20425] ([#3206](https://github.com/Kong/public-ui-components/issues/3206)) ([da22783](https://github.com/Kong/public-ui-components/commit/da2278347c2856a1a9d7a8a532c93f7e1de3172c))
+
+
+
+
+
+## [0.2.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.18...@kong-ui-public/page-layout@0.2.19) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
 ## [0.2.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.17...@kong-ui-public/page-layout@0.2.18) (2026-04-26)
 
 **Note:** Version bump only for package @kong-ui-public/page-layout

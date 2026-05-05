@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.3.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.24...@kong-ui-public/analytics-metric-provider@11.3.25) (2026-05-04)
+
+
+### Bug Fixes
+
+* add new timerange locales ([#3218](https://github.com/Kong/public-ui-components/issues/3218)) ([1a324ed](https://github.com/Kong/public-ui-components/commit/1a324ed9d72bf60cff40bd84e4643b86fd016f47))
+
+
+
+
+
+## [11.3.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.23...@kong-ui-public/analytics-metric-provider@11.3.24) (2026-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [11.3.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.22...@kong-ui-public/analytics-metric-provider@11.3.23) (2026-05-01)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3211](https://github.com/Kong/public-ui-components/issues/3211)) ([174f605](https://github.com/Kong/public-ui-components/commit/174f605910392130ad1e05e891d0e674bd597116))
+
+
+
+
+
+## [11.3.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.21...@kong-ui-public/analytics-metric-provider@11.3.22) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
 ## [11.3.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.19...@kong-ui-public/analytics-metric-provider@11.3.21) (2026-04-26)
 
 

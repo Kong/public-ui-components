@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.18...@kong-ui-public/split-pane@0.3.19) (2026-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/split-pane
+
+
+
+
+
+## [0.3.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.17...@kong-ui-public/split-pane@0.3.18) (2026-05-01)
+
+**Note:** Version bump only for package @kong-ui-public/split-pane
+
+
+
+
+
+## [0.3.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.16...@kong-ui-public/split-pane@0.3.17) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
 ## [0.3.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.15...@kong-ui-public/split-pane@0.3.16) (2026-04-26)
 
 **Note:** Version bump only for package @kong-ui-public/split-pane

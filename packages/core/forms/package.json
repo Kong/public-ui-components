@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/forms",
-  "version": "4.23.26",
+  "version": "4.23.34",
   "type": "module",
   "main": "./dist/forms.umd.js",
   "module": "./dist/forms.es.js",
@@ -59,7 +59,7 @@
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.52.11",
+    "@kong/kongponents": "^9.53.2",
     "axios": "^1.15.2",
     "vue": "^3.5.33"
   },
@@ -67,7 +67,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.20.1",
-    "@kong/kongponents": "9.52.11",
+    "@kong/kongponents": "9.53.2",
     "@types/lodash-es": "^4.17.12",
     "axios": "^1.15.2",
     "pug": "^3.0.4"

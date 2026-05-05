@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.19.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.15...@kong-ui-public/entities-gateway-services@3.19.16) (2026-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.19.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.14...@kong-ui-public/entities-gateway-services@3.19.15) (2026-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.19.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.13...@kong-ui-public/entities-gateway-services@3.19.14) (2026-05-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.19.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.12...@kong-ui-public/entities-gateway-services@3.19.13) (2026-05-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.19.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.11...@kong-ui-public/entities-gateway-services@3.19.12) (2026-05-01)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3211](https://github.com/Kong/public-ui-components/issues/3211)) ([174f605](https://github.com/Kong/public-ui-components/commit/174f605910392130ad1e05e891d0e674bd597116))
+
+
+
+
+
+## [3.19.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.10...@kong-ui-public/entities-gateway-services@3.19.11) (2026-04-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.19.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.9...@kong-ui-public/entities-gateway-services@3.19.10) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
+## [3.19.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.8...@kong-ui-public/entities-gateway-services@3.19.9) (2026-04-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
 ## [3.19.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.7...@kong-ui-public/entities-gateway-services@3.19.8) (2026-04-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

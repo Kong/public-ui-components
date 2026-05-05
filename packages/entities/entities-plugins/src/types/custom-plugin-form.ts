@@ -54,5 +54,20 @@ export interface ClonedPluginPayload {
   pluginType: 'cloned'
   sourcePlugin: string
   aliasName: string
-  priority?: string
+  priority?: number
+}
+
+export interface ClonedPluginRequestBody {
+  sourcePlugin: string
+  aliasName: string
+  priority?: number
+}
+
+export interface ClonedPluginResponse {
+  link: string
+  name: string
+  priority: number | null
+  tags: string[] | null
+  created_at: number
+  updated_at: number
 }

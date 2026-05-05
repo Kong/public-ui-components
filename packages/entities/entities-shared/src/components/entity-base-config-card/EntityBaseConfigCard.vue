@@ -20,18 +20,38 @@
     <template #actions>
       <div class="config-card-actions">
         <slot name="actions" />
-        <KLabel
-          class="config-format-select-label"
-          data-testid="config-format-select-label"
-        >
-          {{ label }}
-        </KLabel>
-        <KSelect
-          v-model="configFormat"
-          data-testid="select-config-format"
-          :items="configFormatItems"
-          @change="handleChange"
+
+        <KCheckbox
+          v-if="configFormat !== 'structured'"
+          v-model="showSensitiveFields"
+          class="sensitive-fields-checkbox"
+          data-testid="sensitive-fields-checkbox"
+          :label="t('baseConfigCard.actions.sensitive_fields')"
         />
+
+        <KButton
+          v-if="configFormat === 'deck' && Boolean(deckCustomizationOptions)"
+          appearance="secondary"
+          class="button-customize-deck"
+          @click="isDeckCustomizationVisible = true"
+        >
+          {{ t('baseConfigCard.actions.deck_customize') }}
+        </KButton>
+
+        <div class="row">
+          <KLabel
+            class="config-format-select-label"
+            data-testid="config-format-select-label"
+          >
+            {{ label }}
+          </KLabel>
+          <KSelect
+            v-model="configFormat"
+            data-testid="select-config-format"
+            :items="configFormatItems"
+            @change="handleChange"
+          />
+        </div>
 
         <KButton
           v-if="configCardDoc"
@@ -77,15 +97,19 @@
         <ConfigCardDisplay
           :code-block-record="codeBlockRecordFromApi"
           :code-block-record-formatter="codeBlockRecordFormatter"
+          :code-block-record-redacted="!showSensitiveFields ? redactedCodeBlockRecord : undefined"
           :config="config"
           :entity-type="entityType"
           :fetcher-url="fetcherUrl"
           :format="configFormat"
+          :is-deck-customization-visible="isDeckCustomizationVisible"
           :preserve-code-block-timestamps="preserveCodeBlockTimestamps"
           :prop-list-types="propListTypes"
           :property-collections="propertyLists"
           :record="record"
           :sub-entity-type="subEntityType"
+          @deck-customization:close="isDeckCustomizationVisible = false"
+          @request-deck-format="configFormat = 'deck'"
         >
           <!-- Pass through slots except `after-fields` -->
           <template
@@ -128,7 +152,7 @@ import type {
   SupportedEntityType,
   PolicyConfigurationSchema,
 } from '../../types'
-import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray, isSupportedDeckEntityType } from '../../types'
+import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray } from '../../types'
 import composables from '../../composables'
 import ConfigCardDisplay from './ConfigCardDisplay.vue'
 import { BookIcon } from '@kong/icons'
@@ -305,12 +329,22 @@ const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
 const slots = useSlots()
 
+const isDeckCustomizationVisible = ref(false)
+
 /** Every dynamic slot (title, type etc) oter than `after-fields` is passed through to ConfigCardDisplay */
 const configCardDisplaySlotKeys = computed(() =>
   Object.keys(slots).filter((name) => !RESERVED_ENTITY_CONFIG_CARD_SLOTS.has(name)),
 )
 
 const hasAfterFieldsSlot = computed((): boolean => Boolean(slots['after-fields']))
+
+const {
+  isDeckEnabled,
+  deckCustomizationOptions,
+} = composables.useBaseEntityDeckOptions(
+  () => props.config,
+  () => props.entityType,
+)
 
 /** KSelect items: built in display order, then filtered by `formatsToHide` */
 const configFormatItems = computed(() => {
@@ -339,11 +373,7 @@ const configFormatItems = computed(() => {
     })
   }
 
-  // decK is only available for certain entity types
-  // https://developer.konghq.com/deck/reference/entities/
-  const isSupportedEntity = isSupportedDeckEntityType(props.entityType)
-  const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckConfig
-  if (isDeckEnabled && isSupportedEntity) {
+  if (isDeckEnabled.value) {
     items.push({
       label: t('baseForm.configuration.deck'),
       value: 'deck',
@@ -446,6 +476,20 @@ const codeBlockRecordFromApi = computed((): Record<string, any> | undefined => {
     return undefined
   }
   return props.codeBlockRecordResolver(rawFetchedData.value)
+})
+
+// redact sensitive fields by default
+const showSensitiveFields = ref(false)
+const redactedCodeBlockRecord = computed((): Record<string, any> => {
+  const rec = { ...(codeBlockRecordFromApi.value || record.value) }
+
+  for (const key in rec) {
+    if (props.configSchema[key]?.type === ConfigurationSchemaType.Redacted) {
+      rec[key] = '********'
+    }
+  }
+
+  return props.codeBlockRecordResolver ? props.codeBlockRecordResolver(rec) : rec
 })
 
 // Handle sorting by 'order' prop
@@ -700,10 +744,24 @@ onBeforeMount(async () => {
   .config-card-actions {
     align-items: center;
     display: flex;
+    gap: var(--kui-space-60, $kui-space-60);
+
+    .row {
+      align-items: center;
+      display: flex;
+    }
 
     .config-format-select-label {
       margin-bottom: var(--kui-space-0, $kui-space-0);
       margin-right: var(--kui-space-40, $kui-space-40);
+    }
+
+    .sensitive-fields-checkbox {
+      align-items: center;
+
+      :deep(.checkbox-label) {
+        width: max-content;
+      }
     }
   }
 

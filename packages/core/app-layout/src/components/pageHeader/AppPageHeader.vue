@@ -158,10 +158,17 @@ const breadcrumbIconSlots = computed((): string[] => {
   }
 
   &.konnect-navigation-next {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: var(--kui-space-50, $kui-space-50);
+    min-height: 32px;
+
     .page-header-title-section {
       .page-header-title {
-        font-size: var(--kui-font-size-50, $kui-font-size-50);
-        line-height: var(--kui-line-height-40, $kui-line-height-40);
+        font-size: var(--kui-font-size-40, $kui-font-size-40);
+        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+        line-height: var(--kui-line-height-30, $kui-line-height-30);
       }
     }
 

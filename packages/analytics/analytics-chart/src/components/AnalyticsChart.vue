@@ -90,6 +90,7 @@
         :legend-position="legendPosition"
         :legend-values="legendValues"
         :metric-unit="computedMetricUnit"
+        :show-center-metric="chartOptions.showCenterMetric"
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-dimension-display="dimensionAxesTitle"
         :tooltip-metric-display="tooltipMetricDisplay"

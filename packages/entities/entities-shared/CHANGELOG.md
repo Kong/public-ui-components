@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.44.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.2...@kong-ui-public/entities-shared@3.44.3) (2026-05-05)
+
+
+### Bug Fixes
+
+* **entity-config-card:** hide sensitive fields [khcp-20260] ([#3199](https://github.com/Kong/public-ui-components/issues/3199)) ([5ff5c79](https://github.com/Kong/public-ui-components/commit/5ff5c795d98909f8cba14dedbfe47b7a30d1911a))
+
+
+
+
+
+## [3.44.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.1...@kong-ui-public/entities-shared@3.44.2) (2026-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.44.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.0...@kong-ui-public/entities-shared@3.44.1) (2026-05-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+# [3.44.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.43.3...@kong-ui-public/entities-shared@3.44.0) (2026-05-01)
+
+
+### Features
+
+* **entities-shared:** provide/inject DeckCommandEditor to split monaco-editor and shiki ([#3212](https://github.com/Kong/public-ui-components/issues/3212)) ([88c62cb](https://github.com/Kong/public-ui-components/commit/88c62cb87058974f9bd8dda9a6e2b6fa24f7aca9))
+
+
+
+
+
+## [3.43.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.43.2...@kong-ui-public/entities-shared@3.43.3) (2026-05-01)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3211](https://github.com/Kong/public-ui-components/issues/3211)) ([174f605](https://github.com/Kong/public-ui-components/commit/174f605910392130ad1e05e891d0e674bd597116))
+
+
+
+
+
+## [3.43.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.43.1...@kong-ui-public/entities-shared@3.43.2) (2026-04-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.43.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.43.0...@kong-ui-public/entities-shared@3.43.1) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
+# [3.43.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.42.8...@kong-ui-public/entities-shared@3.43.0) (2026-04-28)
+
+
+### Features
+
+* **entities-shared:** customize decK config before copying and generate Konnect PAT ([#3155](https://github.com/Kong/public-ui-components/issues/3155)) ([ed42401](https://github.com/Kong/public-ui-components/commit/ed4240114cf0d47383e4beb8c9aa88d65f1e1564))
+
+
+
+
+
 ## [3.42.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.42.7...@kong-ui-public/entities-shared@3.42.8) (2026-04-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.17...@kong-ui-public/app-layout@4.11.18) (2026-05-05)
+
+
+### Bug Fixes
+
+* **app-layout:** app page header next nav spacing ([#3216](https://github.com/Kong/public-ui-components/issues/3216)) ([7be10a9](https://github.com/Kong/public-ui-components/commit/7be10a9b3408f43133b4c45733f47979eeab5a2a))
+
+
+
+
+
+## [4.11.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.16...@kong-ui-public/app-layout@4.11.17) (2026-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.11.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.15...@kong-ui-public/app-layout@4.11.16) (2026-05-01)
+
+
+### Bug Fixes
+
+* **app-layout:** tweak app page header title in next navigation ([#3213](https://github.com/Kong/public-ui-components/issues/3213)) ([2e1824e](https://github.com/Kong/public-ui-components/commit/2e1824edef40ab0e972cef31581b6be34834441e))
+
+
+
+
+
+## [4.11.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.14...@kong-ui-public/app-layout@4.11.15) (2026-05-01)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3211](https://github.com/Kong/public-ui-components/issues/3211)) ([174f605](https://github.com/Kong/public-ui-components/commit/174f605910392130ad1e05e891d0e674bd597116))
+
+
+
+
+
+## [4.11.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.13...@kong-ui-public/app-layout@4.11.14) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
 ## [4.11.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.11...@kong-ui-public/app-layout@4.11.13) (2026-04-26)
 
 

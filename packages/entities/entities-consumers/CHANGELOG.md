@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.3.29...@kong-ui-public/entities-consumers@4.3.30) (2026-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.3.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.3.28...@kong-ui-public/entities-consumers@4.3.29) (2026-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.3.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.3.27...@kong-ui-public/entities-consumers@4.3.28) (2026-05-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.3.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.3.26...@kong-ui-public/entities-consumers@4.3.27) (2026-05-01)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.3.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.3.25...@kong-ui-public/entities-consumers@4.3.26) (2026-05-01)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3211](https://github.com/Kong/public-ui-components/issues/3211)) ([174f605](https://github.com/Kong/public-ui-components/commit/174f605910392130ad1e05e891d0e674bd597116))
+
+
+
+
+
+## [4.3.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.3.24...@kong-ui-public/entities-consumers@4.3.25) (2026-04-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [4.3.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.3.23...@kong-ui-public/entities-consumers@4.3.24) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
+## [4.3.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.3.22...@kong-ui-public/entities-consumers@4.3.23) (2026-04-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
 ## [4.3.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.3.21...@kong-ui-public/entities-consumers@4.3.22) (2026-04-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumers

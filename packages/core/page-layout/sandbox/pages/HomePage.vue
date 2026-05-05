@@ -1,22 +1,24 @@
 <template>
-  <PageLayout
-    back-to="/"
-    :breadcrumbs="breadcrumbs"
-    :tabs="tabs"
-    title="Umbrella R&D Dev"
-  >
-    <template #actions>
-      <KButton
-        appearance="secondary"
-        icon
-      >
-        <MoreIcon />
-      </KButton>
-    </template>
-    <template #title-after>
-      <KBadge>Info</KBadge>
-    </template>
-  </PageLayout>
+  <div class="page-layout-sandbox-wrapper">
+    <PageLayout
+      back-to="/"
+      :breadcrumbs="breadcrumbs"
+      :tabs="tabs"
+      title="Umbrella R&D Dev"
+    >
+      <template #actions>
+        <KButton
+          appearance="secondary"
+          icon
+        >
+          <MoreIcon />
+        </KButton>
+      </template>
+      <template #title-after>
+        <KBadge>Info</KBadge>
+      </template>
+    </PageLayout>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -89,3 +91,11 @@ const tabs: PageLayoutTab[] = [
   },
 ]
 </script>
+
+<style lang="scss" scoped>
+.page-layout-sandbox-wrapper {
+  overflow-x: auto;
+  resize: horizontal;
+  width: 90%;
+}
+</style>

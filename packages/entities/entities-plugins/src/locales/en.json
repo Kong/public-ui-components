@@ -646,6 +646,7 @@
       }
     },
     "form": {
+      "button_deck_customize": "Customize before copying to CLI",
       "disable_data_retrieving": "You do not have permission to select {scope}",
       "disable_source_scope_change": "Changing the {scope} is not allowed when configuring a plugin under it",
       "no_selection": "No selection...",
@@ -1354,7 +1355,8 @@
       "file_read_error": "Failed to read file content. Please try again.",
       "file_too_large": "File size exceeds the maximum limit of 1 MB.",
       "plugin_not_found": "The selected plugin could not be found. Please refresh the list and try again.",
-      "no_supported_types": "No supported custom plugin types are available in this context."
+      "no_supported_types": "No supported custom plugin types are available in this context.",
+      "unsupported_plugin_type": "Unsupported plugin type {type}."
     }
   }
 }

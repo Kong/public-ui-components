@@ -43,7 +43,7 @@ const { axiosInstance } = useAxios(formConfig?.axiosRequestConfig)
 // we should remove this line when the DP supports it
 const guessRegion = () => {
   if (formConfig?.app === 'konnect') {
-    const regionMatch = /\b(us|eu|au|me|in)\b/.exec(formConfig?.apiBaseUrl || '')
+    const regionMatch = /\b(us|eu|au|me|in|sg)\b/.exec(formConfig?.apiBaseUrl || '')
     if (regionMatch) {
       return { region: regionMatch[1] }
     }
