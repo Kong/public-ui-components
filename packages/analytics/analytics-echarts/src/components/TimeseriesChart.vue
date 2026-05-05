@@ -53,7 +53,7 @@ import {
 import type { ElementEvent } from 'echarts/core'
 import composables from '../composables'
 import {
-  datavisPalette,
+  defaultStatusCodeColors,
   getGranularityAxisTitle,
   getMetricAxisTitle,
   getMetricUnit,
@@ -137,7 +137,7 @@ const timeSeriesGranularity = computed<string>(() => {
 
 const chartData = composables.useTimeseriesChartData({
   fill: toRef(() => stacked),
-  colorPalette: computed(() => colorPalette || datavisPalette),
+  colorPalette: computed(() => colorPalette || defaultStatusCodeColors),
 }, toRef(() => data))
 
 const metricUnit = computed(() => getMetricUnit(

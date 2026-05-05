@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { ref } from 'vue'
+import {
+  KUI_STATUS_COLOR_200,
+  KUI_STATUS_COLOR_404,
+  KUI_STATUS_COLOR_500,
+} from '@kong/design-tokens'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import useCrossSectionalChartData from './useCrossSectionalChartData'
 
@@ -75,6 +80,49 @@ describe('useCrossSectionalChartData', () => {
 
     expect(chartData.value.labels).toEqual(['200', '404', '500'])
     expect(chartData.value.datasets.map(({ label }) => label)).toEqual(['200', '404', '500'])
+  })
+
+  it('uses status-code colors by default for status code dimensions', () => {
+    const exploreResult = ref({
+      meta: {
+        metric_names: ['request_count'],
+        display: {
+          status_code: {
+            200: { name: '200' },
+            404: { name: '404' },
+            500: { name: '500' },
+          },
+        },
+      },
+      data: [
+        {
+          event: {
+            status_code: '404',
+            request_count: 10,
+          },
+        },
+        {
+          event: {
+            status_code: '200',
+            request_count: 100,
+          },
+        },
+        {
+          event: {
+            status_code: '500',
+            request_count: 50,
+          },
+        },
+      ],
+    } as ExploreResultV4)
+
+    const chartData = useCrossSectionalChartData({}, exploreResult)
+
+    expect(chartData.value.datasets.map(({ backgroundColor }) => backgroundColor)).toEqual([
+      KUI_STATUS_COLOR_200,
+      KUI_STATUS_COLOR_404,
+      KUI_STATUS_COLOR_500,
+    ])
   })
 
   it('keeps non-status dimensions and dataset totals in descending order', () => {

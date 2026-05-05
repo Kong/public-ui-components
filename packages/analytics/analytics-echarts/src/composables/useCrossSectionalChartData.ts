@@ -5,7 +5,7 @@ import type { AnalyticsChartColors, Dataset, DatasetLabel, KChartData } from '..
 
 import { computed, unref } from 'vue'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
-import { datavisPalette, determineBaseColor } from '../utils'
+import { defaultStatusCodeColors, determineBaseColor } from '../utils'
 import { translateChartLabel } from '../utils/chart-labels'
 import useI18n from './useI18n'
 
@@ -175,7 +175,7 @@ const sortLabelsByTotals = ({
 
 export default function useCrossSectionalChartData(
   {
-    colorPalette = datavisPalette,
+    colorPalette = defaultStatusCodeColors,
   }: {
     colorPalette?: AnalyticsChartColors | string[] | Ref<AnalyticsChartColors | string[]>
   },

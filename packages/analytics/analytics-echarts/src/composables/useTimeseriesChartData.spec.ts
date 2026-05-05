@@ -1,6 +1,12 @@
 import { generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
 import { ref } from 'vue'
 import { describe, expect, it, vi } from 'vitest'
+import {
+  KUI_STATUS_COLOR_200,
+  KUI_STATUS_COLOR_200S,
+  KUI_STATUS_COLOR_400S,
+  KUI_STATUS_COLOR_500,
+} from '@kong/design-tokens'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import useTimeseriesChartData from './useTimeseriesChartData'
 
@@ -186,5 +192,100 @@ describe('useTimeseriesChartData', () => {
       { x: Date.parse('2024-01-01T01:00:00.000Z'), y: 0 },
       { x: Date.parse('2024-01-01T02:00:00.000Z'), y: 7 },
     ])
+  })
+
+  it('uses status-code colors by default for status code dimensions', () => {
+    const exploreResult = createExploreResult({
+      display: {
+        status_code: {
+          200: { name: '200' },
+          500: { name: '500' },
+        },
+      },
+      records: [
+        {
+          timestamp: '2024-01-01T00:00:00.000Z',
+          event: {
+            status_code: '200',
+            request_count: 5,
+          },
+        },
+        {
+          timestamp: '2024-01-01T00:00:00.000Z',
+          event: {
+            status_code: '500',
+            request_count: 7,
+          },
+        },
+      ],
+    })
+
+    const chartData = useTimeseriesChartData({}, ref(exploreResult))
+
+    expect(chartData.value.datasets.map(({ backgroundColor }) => backgroundColor)).toEqual([
+      KUI_STATUS_COLOR_200,
+      KUI_STATUS_COLOR_500,
+    ])
+  })
+
+  it('uses status-code group colors by default for grouped status code dimensions', () => {
+    const exploreResult = createExploreResult({
+      display: {
+        status_code_grouped: {
+          '2XX': { name: '2XX' },
+          '4XX': { name: '4XX' },
+        },
+      },
+      records: [
+        {
+          timestamp: '2024-01-01T00:00:00.000Z',
+          event: {
+            status_code_grouped: '2XX',
+            request_count: 5,
+          },
+        },
+        {
+          timestamp: '2024-01-01T00:00:00.000Z',
+          event: {
+            status_code_grouped: '4XX',
+            request_count: 7,
+          },
+        },
+      ],
+    })
+
+    const chartData = useTimeseriesChartData({}, ref(exploreResult))
+
+    expect(chartData.value.datasets.map(({ backgroundColor }) => backgroundColor)).toEqual([
+      KUI_STATUS_COLOR_200S,
+      KUI_STATUS_COLOR_400S,
+    ])
+  })
+
+  it('keeps caller-provided colors ahead of status-code defaults', () => {
+    const exploreResult = createExploreResult({
+      display: {
+        status_code: {
+          200: { name: '200' },
+        },
+      },
+      records: [
+        {
+          timestamp: '2024-01-01T00:00:00.000Z',
+          event: {
+            status_code: '200',
+            request_count: 5,
+          },
+        },
+      ],
+    })
+
+    const chartData = useTimeseriesChartData({
+      colorPalette: {
+        200: '#123456',
+      },
+    }, ref(exploreResult))
+
+    expect(chartData.value.datasets[0]?.backgroundColor).toBe('#123456')
   })
 })

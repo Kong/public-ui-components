@@ -7,7 +7,7 @@ import { computed, unref } from 'vue'
 import { parseISO } from 'date-fns'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
 import {
-  datavisPalette,
+  defaultStatusCodeColors,
   determineBaseColor,
   sortDatasetsByDimension,
 } from '../utils'
@@ -141,7 +141,7 @@ const getDimensionsCrossMetrics = ({
 
 export default function useTimeseriesChartData(
   {
-    colorPalette = datavisPalette,
+    colorPalette = defaultStatusCodeColors,
     fill = false,
   }: {
     colorPalette?: AnalyticsChartColors | string[] | Ref<AnalyticsChartColors | string[]>

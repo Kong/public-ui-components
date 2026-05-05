@@ -43,7 +43,7 @@ import { computed, toRef, watch } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import {
-  datavisPalette,
+  defaultStatusCodeColors,
   getDimensionAxisTitle,
   getMetricAxisTitle,
   getMetricUnit,
@@ -104,7 +104,7 @@ const {
 const { i18n } = composables.useI18n()
 
 const chartData = composables.useCrossSectionalChartData({
-  colorPalette: computed(() => colorPalette || datavisPalette),
+  colorPalette: computed(() => colorPalette || defaultStatusCodeColors),
 }, toRef(() => data))
 
 const metricUnit = computed(() => getMetricUnit(
