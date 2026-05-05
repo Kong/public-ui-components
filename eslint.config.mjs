@@ -28,11 +28,11 @@ export default [
         'swagger-ui': {
           '$ref': '#/definitions/exactOnlyVersion',
         },
-      }
-    }
+      },
+    },
   }),
   {
-    ignores: ['**/__template__/**'],
+    ignores: ['**/__template__/**', 'packages/core/monaco-editor/sandbox/assets/**'],
   },
   {
     files: [
