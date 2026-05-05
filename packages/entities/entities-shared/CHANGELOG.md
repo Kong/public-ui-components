@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.44.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.2...@kong-ui-public/entities-shared@3.44.3) (2026-05-05)
+
+
+### Bug Fixes
+
+* **entity-config-card:** hide sensitive fields [khcp-20260] ([#3199](https://github.com/Kong/public-ui-components/issues/3199)) ([5ff5c79](https://github.com/Kong/public-ui-components/commit/5ff5c795d98909f8cba14dedbfe47b7a30d1911a))
+
+
+
+
+
 ## [3.44.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.1...@kong-ui-public/entities-shared@3.44.2) (2026-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

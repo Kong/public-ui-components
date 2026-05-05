@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.4.34...@kong-ui-public/expressions@1.4.35) (2026-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
 ## [1.4.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.4.33...@kong-ui-public/expressions@1.4.34) (2026-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/expressions
