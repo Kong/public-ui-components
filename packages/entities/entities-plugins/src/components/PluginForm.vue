@@ -137,6 +137,7 @@
         <template #terraform>
           <TerraformCodeBlock
             :credential-type="credentialType"
+            :entity-id="treatAsCredential ? props.config.entityId : undefined"
             :entity-record="viewConfigurationRecord"
             :entity-type="SupportedEntityType.Plugin"
           />
