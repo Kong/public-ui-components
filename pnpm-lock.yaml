@@ -811,8 +811,8 @@ importers:
   packages/entities/entities-certificates:
     dependencies:
       '@peculiar/x509':
-        specifier: ^1.14.3
-        version: 1.14.3
+        specifier: ^2.0.0
+        version: 2.0.0
     devDependencies:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
