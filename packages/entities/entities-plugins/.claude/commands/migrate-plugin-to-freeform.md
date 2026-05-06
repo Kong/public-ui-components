@@ -78,6 +78,12 @@ Run the Playwright helper in freeform mode. This captures:
 - Console errors
 - Full-page screenshot
 
+The helper automatically:
+1. **Expands advanced sections** — clicks "Show additional settings"
+2. **Enables ObjectField switches** — for optional objects (nullable records), enables the KInputSwitch so the object becomes active, which auto-expands it via `watch(realAdded)`
+3. **Expands collapsed ObjectFields** — clicks toggle buttons for objects that are active but still collapsed
+4. **Adds one array item** per visible `ff-add-item-btn-*` button — so item-level fields (e.g. `config.allow_patterns.0`) are captured
+
 ```bash
 cd packages/entities/entities-plugins
 node playwright/helpers/migrate-plugin.mjs \
@@ -87,10 +93,13 @@ node playwright/helpers/migrate-plugin.mjs \
 ```
 
 Read `$OUTPUT_DIR/freeform-fields.json`. Note:
+- `objectsExpanded` — number of ObjectField switch/toggle actions taken. If `> 0`, confirm that child fields of those objects actually appear in `fields[]`. A non-zero count does not guarantee success — verify by checking that expected leaf fields (e.g. `ff-config.redis.host`) are present.
+- `arrayItemsAdded` — number of "Add item" buttons clicked. Confirm that item-level fields (e.g. `ff-config.allow_patterns.0`) appear in `fields[]` for each array.
 - Fields in `fields[]` with `elementType: 'textarea'` — already textareas
 - Fields with `elementType: 'other'` — custom/complex components (maps, arrays, json, etc.)
 - `schema.konnect` or `schema.kongManager` — the raw backend schema for field type analysis
 - `consoleErrors` — any Vue warnings or JS errors
+- `schema.konnect.supported_partials` — if present, certain config sub-paths (e.g. `config.embeddings`, `config.vectordb`) support the Redis partial selector UI. This is handled automatically by `PluginForm` when `enable-redis-partial` is passed; **no action needed in the plugin's `.ts` config file**.
 
 If schema fetch returned 401 for Konnect (no auth), continue with Kong Manager schema only.
 
@@ -124,6 +133,8 @@ node playwright/helpers/migrate-plugin.mjs \
   --output-dir "$OUTPUT_DIR"
 ```
 
+The VFG helper automatically expands advanced sections and clicks array "Add item" buttons (class `kong-form-new-element-button-label`). Check `arrayItemsAdded` in `vfg-fields.json` and confirm item-level fields appear for each array.
+
 If the helper warns "freeform layout detected", the server didn't switch — troubleshoot before continuing.
 
 Restore freeform mode after:
@@ -153,6 +164,8 @@ Produce a comparison:
 1. **Missing in freeform** — VFG fields whose label/path has no corresponding freeform testid. These are fields users cannot fill in freeform mode.
 2. **Type downgrade** — VFG fields with `elementType: 'textarea'` that are `elementType: 'input'` in freeform. These need a `fieldRenderers` override.
 3. **Advanced section mismatch** — fields that VFG showed by default but freeform hides in advanced (or vice versa). These may affect UX but aren't blockers.
+
+> **Warning — `renderRules` hides fields from the freeform snapshot.** Any field that is conditionally hidden (e.g. a dependent sub-record like `config.redis`, `config.vectordb.pgvector`, or any field behind a strategy/policy dependency) will not appear in the scan when its controlling field has no default or a non-matching default. Do **not** flag those sub-fields as "missing in freeform". Verify them with the dependency toggle check in Step 11 instead.
 
 ---
 
@@ -188,6 +201,26 @@ Also analyze the backend schema (from Step 4):
   })
   ```
 - See existing examples: `plugins/rate-limiting.ts`, `plugins/proxy-cache-advanced.ts`, `plugins/basic-auth.ts`
+
+**Pattern 2b — Nested strategy controlling multiple sub-records** (AI plugins, e.g. `config.vectordb.strategy` with `one_of: ['redis', 'pgvector']` and sibling `config.vectordb.redis` + `config.vectordb.pgvector` records)
+- The renderRules engine validates that all fields in a bundle are at the **same level** — use full nested paths in both `bundles` and `dependencies`, and the engine extracts the common parent automatically.
+- **Fix**: Use full nested paths:
+  ```typescript
+  export default definePluginConfig({
+    experimental: true,
+    renderRules: {
+      bundles: [
+        ['config.vectordb.strategy', 'config.vectordb.redis', 'config.vectordb.pgvector'],
+      ],
+      dependencies: {
+        'config.vectordb.redis': ['config.vectordb.strategy', 'redis'],
+        'config.vectordb.pgvector': ['config.vectordb.strategy', 'pgvector'],
+      },
+    },
+  })
+  ```
+- A bundle can contain more than two fields — add one entry per dependent sub-record. The strategy field (first in the bundle) is always visible; the rest are hidden until strategy matches.
+- See `plugins/ai-semantic-cache.ts` as the example.
 
 **Pattern 3 — Single long string fields that need textarea**
 - Schema: `type: 'string'`, field name suggests long content (e.g. `body_template`, `api_specification`, `body`, `script`)
@@ -468,3 +501,28 @@ node playwright/helpers/migrate-plugin.mjs \
 ```
 
 Confirm `capturedRequests[].body` matches expectations and `submitError` is null.
+
+**If the plugin has `renderRules` with conditional field visibility**, also verify the dependency toggle. For each controlling field (e.g. `config.strategy`, `config.vectordb.strategy`, `config.policy`), programmatically select each possible value and confirm that:
+- The expected dependent sub-fields become visible when their condition is met
+- The other dependent sub-fields are hidden at the same time
+
+```javascript
+// Example: verify strategy toggle using Playwright
+async function verifyStrategyToggle(page, strategyTestid, values) {
+  for (const value of values) {
+    // Click the KSelect trigger
+    await page.locator(`[data-testid="${strategyTestid}"]`).first().click()
+    await page.waitForTimeout(300)
+    // Click the matching option in the popover
+    const itemsTestid = strategyTestid.replace('ff-', 'ff-enum-') + '-items'
+    await page.locator(`[data-testid="${itemsTestid}"]`).first()
+      .locator('[data-testid]').filter({ hasText: value }).first().click()
+    await page.waitForTimeout(600)
+
+    const visible = await page.locator(`[data-testid^="ff-config.${value}"]:visible`).count()
+    console.log(`strategy=${value}: ${visible} fields visible`)
+  }
+}
+```
+
+This catches cases where the field comparison looked complete (all VFG fields accounted for) but the conditional visibility was never actually exercised.
