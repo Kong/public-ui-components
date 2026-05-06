@@ -199,9 +199,9 @@ const props = defineProps({
   },
   /** If a valid edit ID is provided, it will put the form in Edit mode instead of Create */
   editId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
   /**
    * Entity type, required to generate terraform code
