@@ -67,7 +67,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.20.1",
+    "@kong/design-tokens": "^1.20.1",
     "ajv": "^8.18.0",
     "json-schema-to-ts": "^3.1.1",
     "vue": "^3.5.33"

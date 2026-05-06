@@ -10,7 +10,9 @@
   },
   "scripts": {
     "start": "webpack serve",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "dependencies": {
     "@kong/swagger-ui-kong-theme-universal": "^4.3.3",
