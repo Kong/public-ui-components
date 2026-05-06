@@ -180,7 +180,7 @@ export interface StreamingCustomPluginSchema {
 export interface ClonedPluginSchema {
   id: string
   name: string
-  link: string
+  ref: string
   priority?: number | null
   created_at?: number
   updated_at?: number

@@ -486,7 +486,7 @@ const buildPluginList = (): PluginCardList => {
       if (plugin.group === PluginGroup.CUSTOM_PLUGINS) {
         if (clonedPlugin) {
           plugin.customPluginType = 'cloned'
-          plugin.clonedFromLink = clonedPlugin.link
+          plugin.clonedFromLink = clonedPlugin.ref
         } else if (streamingPlugin) {
           plugin.customPluginType = 'streaming'
         } else {

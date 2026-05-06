@@ -164,20 +164,20 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   // ── Cloned ──
 
   const createClonedPlugin = async (body: ClonedPluginRequestBody): Promise<ClonedPluginResponse> => {
-    const { aliasName: alias, priority, sourcePlugin: link } = body
+    const { aliasName: alias, priority, sourcePlugin: ref } = body
     const url = buildUrl(endpoints.customPlugin[options.app].cloned.create, alias)
     const { data } = await axiosInstance.put<ClonedPluginResponse>(url, {
-      link,
+      ref,
       priority,
     })
     return data
   }
 
   const updateClonedPlugin = async (originName: string, body: ClonedPluginRequestBody): Promise<ClonedPluginResponse> => {
-    const { aliasName: alias, priority, sourcePlugin: link } = body
+    const { aliasName: alias, priority, sourcePlugin: ref } = body
     const url = buildUrl(endpoints.customPlugin[options.app].cloned.edit, originName)
     const { data } = await axiosInstance.patch<ClonedPluginResponse>(url, {
-      link,
+      ref,
       priority,
       name: alias,
     })

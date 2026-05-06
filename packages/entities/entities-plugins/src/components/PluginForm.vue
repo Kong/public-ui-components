@@ -1620,7 +1620,7 @@ onBeforeMount(async () => {
 async function getClonedPlugin(clonedPluginName: string): Promise<void> {
   try {
     const detail = await fetchClonedPluginDetail(clonedPluginName)
-    clonedSourcePlugin.value = detail?.link ?? null
+    clonedSourcePlugin.value = detail?.ref ?? null
   } catch (error: unknown) {
     // A 404 means this custom plugin is not a clone — leave clonedSourcePlugin null and stay quiet.
     if (isAxiosError(error) && error.response?.status === 404) {

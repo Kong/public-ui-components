@@ -751,9 +751,9 @@ onMounted(async () => {
       state.fields.schemaContent = schema
       state.fields.handlerContent = handler
     } else if (type === 'cloned') {
-      const { link, name, priority } = data as ClonedPluginResponse
+      const { ref, name, priority } = data as ClonedPluginResponse
       state.fields.aliasName = name
-      state.fields.sourcePlugin = link
+      state.fields.sourcePlugin = ref
       state.fields.priority = priority !== null ? String(priority) : ''
       originalPluginAlias = name
     } else {
@@ -810,7 +810,7 @@ const submitData = async (): Promise<void> => {
         })
       emit('update', {
         pluginType: 'cloned',
-        sourcePlugin: data.link,
+        sourcePlugin: data.ref,
         aliasName: data.name,
         priority: data.priority ?? undefined,
       })
