@@ -770,7 +770,7 @@
           "service": "Service",
           "route": "Route",
           "consumer": "Consumer",
-          "consumer_group": "Consumer Group",
+          "consumer_group": "Consumer group",
           "certificate": "Certificate"
         },
         "field": {

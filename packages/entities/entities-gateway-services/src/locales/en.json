@@ -2,15 +2,15 @@
   "actions": {
     "create": "New gateway service",
     "debugger": "Start debugging",
-    "serverless_create": "Add a Service",
+    "serverless_create": "Add a service",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
     "clear": "Clear",
-    "view": "View Details",
+    "view": "View details",
     "delete": {
-      "title": "Delete a Gateway Service",
-      "description": "Deleting this Gateway Service will also remove any associated plugins. This action cannot be reversed.",
+      "title": "Delete a gateway service",
+      "description": "Deleting this gateway service will also remove any associated plugins. This action cannot be reversed.",
       "menu_label": "Delete"
     }
   },
@@ -21,14 +21,14 @@
     }
   },
   "gateway_services": {
-    "title": "Gateway Services",
+    "title": "Gateway services",
     "list": {
       "toolbar_actions": {
         "new_gateway_service": "New gateway service"
       },
       "table_headers": {
         "name": "Name",
-        "control_plane": "Control Plane",
+        "control_plane": "Control plane",
         "protocol": "Protocol",
         "host": "Host",
         "port": "Port",
@@ -36,13 +36,13 @@
         "enabled": "Enabled",
         "tags": "Tags",
         "id": "ID",
-        "created_at": "Created At",
-        "updated_at": "Last Modified"
+        "created_at": "Created at",
+        "updated_at": "Last modified"
       },
       "empty_state": {
-        "title": "Configure a New Gateway Service",
+        "title": "Configure a new gateway service",
         "description": "Gateway services are used to proxy traffic.",
-        "serverless_title": "Configure your first Gateway Service"
+        "serverless_title": "Configure your first gateway service"
       }
     },
     "empty_state_v2": {
@@ -81,7 +81,7 @@
       },
       "sections": {
         "general": {
-          "title": "General Information",
+          "title": "General information",
           "description": "Provide a name and tags to help identify and manage this service."
         },
         "keys": {
@@ -111,7 +111,7 @@
         "name": {
           "label": "Name",
           "placeholder": "Enter a unique name",
-          "tooltip": "The Service name."
+          "tooltip": "The gateway service name."
         },
         "protocol": {
           "label": "Protocol",
@@ -161,7 +161,7 @@
         },
         "client_certificate": {
           "label": "Client certificate",
-          "placeholder": "Enter a Certificate ID",
+          "placeholder": "Enter a certificate ID",
           "tooltip": "Certificate to be used as client certificate while TLS handshaking to the upstream server."
         },
         "tls_sans_dnsnames": {
@@ -178,9 +178,9 @@
         },
         "ca_certificates": {
           "label": "CA certificates",
-          "placeholder": "Enter a comma separated list of CA Certificate IDs",
+          "placeholder": "Enter a comma separated list of CA certificate IDs",
           "tooltip": "Array of {code1} object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate. If set to {code2} when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).",
-          "code1": "CA Certificate",
+          "code1": "CA certificate",
           "code2": "null"
         },
         "tls_verify_enabled": {
@@ -204,14 +204,14 @@
         },
         "tags": {
           "label": "Tags",
-          "tooltip": "An optional set of strings associated with the Service for grouping and filtering.",
+          "tooltip": "An optional set of strings associated with the service for grouping and filtering.",
           "placeholder": "Enter a list of tags separated by comma",
           "help": "e.g. tag1, tag2, tag3",
           "collapse": "Add tags"
         },
         "enabled": {
           "label": "Enabled",
-          "tooltip": "Whether the Service is active. If set to {false}, the proxy behavior will be as if any routes attached to it do not exist (404). Default: {true}.",
+          "tooltip": "Whether the service is active. If set to {false}, the proxy behavior will be as if any routes attached to it do not exist (404). Default: {true}.",
           "false": "false",
           "true": "true"
         }
@@ -219,7 +219,7 @@
     }
   },
   "errors": {
-    "general": "Gateway Services could not be retrieved",
+    "general": "Gateway services could not be retrieved",
     "delete": "The gateway service could not be deleted at this time.",
     "copy": "Failed to copy to clipboard",
     "urlErrorMessage": "Error: invalid URL"
