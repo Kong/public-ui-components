@@ -115,8 +115,8 @@ export interface FieldRules {
   onlyOneOfMutuallyRequired?: string[][][]
 }
 
-export type CustomPluginType = 'schema' | 'streaming'
-export type CustomPluginSupportLevel = 'none' | 'disabled' | CustomPluginType
+export type CustomPluginType = 'schema' | 'streaming' | 'cloned'
+export type CustomPluginSupportLevel = 'none' | 'disabled' | CustomPluginType | CustomPluginType[]
 
 export type PluginMetaData<I18nMessageSource = void> = {
   nameKey: I18nMessageSource extends void ? string : PathToDotNotation<I18nMessageSource, string>
@@ -137,6 +137,7 @@ export interface PluginType extends PluginMetaData {
   exists?: boolean // whether the plugin exists already for the current entity
   disabledMessage?: string // An optional field for plugin's disabled message.
   customPluginType?: CustomPluginType // custom plugin type
+  clonedFromLink?: string
 }
 
 export type DisabledPlugin = {
@@ -174,6 +175,16 @@ export interface StreamingCustomPluginSchema {
   created_at?: number
   updated_at?: number
   tags?: string[]
+}
+
+export interface ClonedPluginSchema {
+  id: string
+  name: string
+  ref: string
+  priority?: number | null
+  created_at?: number
+  updated_at?: number
+  tags?: string[] | null
 }
 
 export { PluginGroup, PluginScope }

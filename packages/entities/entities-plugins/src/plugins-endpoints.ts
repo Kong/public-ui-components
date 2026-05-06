@@ -16,12 +16,15 @@ export default {
     konnect: {
       availablePlugins: `${konnectBaseApiUrl}/v1/available-plugins`,
       streamingCustomPlugins: `${konnectBaseApiUrl}/custom-plugins`,
+      clonedPlugins: `${konnectBaseApiUrl}/cloned-plugins`,
       schemaCustomPluginItem: `${konnectBaseApiUrl}/plugin-schemas/{pluginId}`,
       streamingCustomPluginItem: `${konnectBaseApiUrl}/custom-plugins/{pluginId}`,
     },
     kongManager: {
       availablePlugins: `${KMBaseApiUrl}/kong`,
       availablePluginsForOss: '/',
+      streamingCustomPlugins: `${KMBaseApiUrl}/custom-plugins`,
+      clonedPlugins: `${KMBaseApiUrl}/cloned-plugins`,
     },
   },
   form: {

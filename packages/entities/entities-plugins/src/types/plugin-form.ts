@@ -38,6 +38,10 @@ import type { AIMCPOauth2Schema } from './plugins/ai-mcp-oauth2'
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
   getCreateRoute: (id: string) => RouteLocationRaw
+  /** Route for creating a custom plugin */
+  createCustomRoute?: RouteLocationRaw
+  /** A function that returns the route for editing a custom plugin */
+  getCustomEditRoute?: (id: string, type: CustomPluginType) => RouteLocationRaw
   /** Current entity type and id for plugins for specific entity */
   entityType?: EntityType
   entityId?: string
@@ -64,12 +68,7 @@ export interface BasePluginFormConfig {
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig { }
 
 /** Konnect Plugin form config */
-export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, KonnectBaseFormConfig {
-  /** Route for creating a custom plugin */
-  createCustomRoute?: RouteLocationRaw
-  /** A function that returns the route for editing a custom plugin */
-  getCustomEditRoute?: (id: string, type: CustomPluginType) => RouteLocationRaw
-}
+export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, KonnectBaseFormConfig { }
 
 export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {
   /**
