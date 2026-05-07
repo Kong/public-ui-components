@@ -56,6 +56,7 @@ import {
   datavisPalette,
   darkenColor,
   isSummableMetricUnit,
+  isSummableMetricName,
 } from '../../utils'
 import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
@@ -69,6 +70,7 @@ const props = withDefaults(defineProps<{
   chartData: KChartData
   tooltipTitle: string
   metricUnit?: string
+  metricName?: string
   legendPosition?: `${ChartLegendPosition}`
   legendValues?: LegendValues
   syntheticsDataKey?: string
@@ -78,13 +80,14 @@ const props = withDefaults(defineProps<{
   showCenterMetric?: boolean
 }>(), {
   metricUnit: '',
+  metricName: '',
   legendPosition: ChartLegendPosition.Bottom,
   legendValues: undefined,
   syntheticsDataKey: '',
   datasetColors: () => datavisPalette,
   tooltipDimensionDisplay: '',
   tooltipMetricDisplay: '',
-  showCenterMetric: false,
+  showCenterMetric: true,
 })
 
 const { translateUnit } = composables.useTranslatedUnits()
@@ -156,7 +159,7 @@ const formattedDataset = computed<DonutChartData[]>(() => {
 
 const { formatUnit } = unitFormatter({ i18n })
 
-const isSummable = computed(() => isSummableMetricUnit(props.metricUnit))
+const isSummable = computed(() => isSummableMetricUnit(props.metricUnit) || isSummableMetricName(props.metricName ?? ''))
 
 const grandTotal = computed(() => {
   const sum = formattedDataset.value[0]?.data.reduce((a, b) => a + b, 0) ?? 0

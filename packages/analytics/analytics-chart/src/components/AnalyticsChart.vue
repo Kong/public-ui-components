@@ -89,6 +89,7 @@
         :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColors"
         :legend-position="legendPosition"
         :legend-values="legendValues"
+        :metric-name="computedMetricName"
         :metric-unit="computedMetricUnit"
         :show-center-metric="chartOptions.showCenterMetric"
         :synthetics-data-key="syntheticsDataKey"
@@ -191,6 +192,14 @@ const computedMetricUnit = computed<string>(() => {
   }
 
   return Object.values(props.chartData.meta.metric_units)[0]
+})
+
+const computedMetricName = computed<string>(() => {
+  if (!props.chartData.meta?.metric_units) {
+    return ''
+  }
+
+  return Object.keys(props.chartData.meta.metric_units)[0] ?? ''
 })
 
 const showLegendValues = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Hidden)
