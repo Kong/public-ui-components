@@ -28,6 +28,8 @@ export const isSummableMetricUnit = (unit: string): boolean => {
   return SUMMABLE_METRIC_UNITS.has(unit)
 }
 
+// Unit-based checks don't work for size metrics since all aggregations (sum, avg, percentiles) share
+// the same 'bytes' unit. Check the metric name instead — both _sum (Druid) and :sum (GOAP) notations.
 export const isSummableMetricName = (name: string): boolean => {
   return name.endsWith('_sum') || name.endsWith(':sum')
 }
