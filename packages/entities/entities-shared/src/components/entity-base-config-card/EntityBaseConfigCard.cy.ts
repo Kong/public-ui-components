@@ -238,7 +238,7 @@ describe('<EntityBaseConfigCard />', () => {
 
     it('correctly displays common fields', () => {
       const commonFields = ['id', 'name', 'enabled', 'updated_at', 'created_at', 'tags']
-      const commonLabels = ['ID', 'Name', 'Enabled', 'Last Updated', 'Created', 'Tags']
+      const commonLabels = ['ID', 'Name', 'Enabled', 'Last updated', 'Created', 'Tags']
 
       interceptFetch()
 

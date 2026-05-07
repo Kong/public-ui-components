@@ -73,7 +73,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
       },
     })
 
-    cy.get('.hash-on-select input').should('have.value', 'Query Argument')
+    cy.get('.hash-on-select input').should('have.value', 'Query argument')
     cy.getTestId('upstreams-form-query-argument').should('exist')
     cy.getTestId('upstreams-form-query-argument').type(data)
 
@@ -90,7 +90,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
       },
     })
 
-    cy.get('.hash-on-select input').should('have.value', 'URI Capture')
+    cy.get('.hash-on-select input').should('have.value', 'URI capture')
     cy.getTestId('upstreams-form-uri-capture').should('exist')
     cy.getTestId('upstreams-form-uri-capture').type(data)
 
@@ -124,7 +124,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
       },
     })
 
-    cy.get('.hash-fallback-select input').should('have.value', 'Query Argument')
+    cy.get('.hash-fallback-select input').should('have.value', 'Query argument')
     cy.getTestId('upstreams-form-hash-fallback-query-argument').should('exist')
     cy.getTestId('upstreams-form-hash-fallback-query-argument').type(data)
 
@@ -141,7 +141,7 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
       },
     })
 
-    cy.get('.hash-fallback-select input').should('have.value', 'URI Capture')
+    cy.get('.hash-fallback-select input').should('have.value', 'URI capture')
     cy.getTestId('upstreams-form-hash-fallback-uri-capture').should('exist')
     cy.getTestId('upstreams-form-hash-fallback-uri-capture').type(data)
 

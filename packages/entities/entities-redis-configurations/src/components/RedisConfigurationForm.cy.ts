@@ -488,7 +488,7 @@ describe('<RedisConfigurationForm />', {
 
         cy.wait('@getRedisConfiguration')
 
-        cy.getTestId('redis-type-select-popover').should('contain.text', 'Host/Port (Open Source)')
+        cy.getTestId('redis-type-select-popover').should('contain.text', 'Host/Port (Open source)')
 
         // button state
         cy.getTestId('partial-edit-form-submit').should('be.visible')
