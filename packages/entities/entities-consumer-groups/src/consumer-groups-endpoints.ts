@@ -34,4 +34,8 @@ export default {
       getConsumers: `${KMBaseApiUrl}/consumer_groups/{id}/consumers`,
     },
   },
+  item: {
+    konnect: `${konnectBaseApiUrl}/consumer_groups/{id}?list_consumers=false`,
+    kongManager: `${KMBaseApiUrl}/consumer_groups/{id}?list_consumers=false`,
+  },
 }
