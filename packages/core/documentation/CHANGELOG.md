@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.33...@kong-ui-public/documentation@1.5.34) (2026-05-07)
+
+
+### Bug Fixes
+
+* update teleport targets [KHCP-19780] ([#3224](https://github.com/Kong/public-ui-components/issues/3224)) ([ad42261](https://github.com/Kong/public-ui-components/commit/ad422613ea5f3e4c57e2e80868a1ade2815d6bb8))
+
+
+
+
+
 ## [1.5.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.32...@kong-ui-public/documentation@1.5.33) (2026-05-07)
 
 **Note:** Version bump only for package @kong-ui-public/documentation
