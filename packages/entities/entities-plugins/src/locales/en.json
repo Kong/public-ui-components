@@ -36,7 +36,7 @@
     "description": "This action cannot be reversed.",
     "description_custom": "Please ensure this plugin is not in use. This action cannot be reversed.",
     "plugin_schema_in_use_title": "Unable to delete custom plugin",
-    "plugin_schema_in_use_message": "The custom plugin schema {name} is being used in this control plane, please delete any existing instances before you delete this schema.",
+    "plugin_schema_in_use_message": "This custom plugin is currently in use in this control plane. Please delete any existing instances before removing this schema.",
     "confirmModalText1": "Are you sure you want to delete",
     "confirmModalText2": "Please ensure this plugin is not in use. This delete action cannot be reversed.",
     "confirm_text": "Type {name} to confirm your action",

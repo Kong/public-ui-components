@@ -25,16 +25,10 @@
     @cancel="$emit('closed')"
   >
     <template #default>
-      <div>
-        <i18n-t
-          keypath="delete.plugin_schema_in_use_message"
-          tag="p"
-        >
-          <template #name>
-            <strong>{{ plugin.name }}</strong>
-          </template>
-        </i18n-t>
-      </div>
+      <KAlert
+        appearance="danger"
+        :message="t('delete.plugin_schema_in_use_message')"
+      />
     </template>
     <template #footer-actions>
       <div>
@@ -60,6 +54,7 @@ import {
 } from '../../types'
 import composables from '../../composables'
 import endpoints from '../../plugins-endpoints'
+import { isPluginSchemaInUseError } from '../../utils/customPluginErrors'
 import { useAxios, useErrors, EntityTypes, EntityDeleteModal } from '@kong-ui-public/entities-shared'
 
 const props = defineProps({
@@ -80,7 +75,7 @@ const props = defineProps({
 
 const emit = defineEmits(['closed', 'proceed'])
 
-const { i18nT, i18n: { t } } = composables.useI18n()
+const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = useErrors()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -140,13 +135,8 @@ const handleSubmit = async (): Promise<void> => {
     }
 
     emit('proceed')
-  } catch (err: any) {
-    const { response } = err
-
-    if (
-      response?.status === 400 &&
-      response.data?.message?.includes('plugin schema is currently in use')
-    ) {
+  } catch (err: unknown) {
+    if (isPluginSchemaInUseError(err)) {
       isPluginSchemaInUse.value = true
     } else {
       errorMessage.value = getMessageFromError(err)

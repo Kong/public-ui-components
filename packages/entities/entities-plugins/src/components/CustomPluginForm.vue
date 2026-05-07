@@ -447,6 +447,7 @@ import type {
 import type { SelectGroup, SelectItem } from '@kong/kongponents'
 import { useRouter } from 'vue-router'
 import { usePluginMetaData } from '../composables/usePluginMeta'
+import { isPluginSchemaInUseError } from '../utils/customPluginErrors'
 
 const DEFAULT_CLONABLE_PLUGINS = [
   'acl',
@@ -818,7 +819,9 @@ const submitData = async (): Promise<void> => {
 
     router.push(props.config.successRoute)
   } catch (err: unknown) {
-    state.errorMessage = getMessageFromError(err)
+    state.errorMessage = isPluginSchemaInUseError(err)
+      ? t('delete.plugin_schema_in_use_message')
+      : getMessageFromError(err)
     emit('error', err)
   } finally {
     state.readonly = false
