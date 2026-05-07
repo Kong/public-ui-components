@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.13.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.6...@kong-ui-public/analytics-utilities@12.13.7) (2026-05-07)
+
+
+### Bug Fixes
+
+* analytics queriable dimension types ([#3222](https://github.com/Kong/public-ui-components/issues/3222)) ([3900fc0](https://github.com/Kong/public-ui-components/commit/3900fc0879c92edaafb8b403703fcf0006391f59))
+
+
+
+
+
 ## [12.13.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.4...@kong-ui-public/analytics-utilities@12.13.6) (2026-04-26)
 
 
