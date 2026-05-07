@@ -182,7 +182,7 @@ const displayedConsumers = computed((): MultiselectItem[] => {
   }))
 })
 
-const fetchUrl = computed<string>(() => endpoints.form[props.config?.app]?.edit)
+const fetchUrl = computed<string>(() => endpoints.item[props.config?.app])
 
 const formType = computed((): EntityBaseFormType => props.consumerGroupId
   ? EntityBaseFormType.Edit
