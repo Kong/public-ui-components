@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.3.30...@kong-ui-public/entities-consumer-groups@4.4.0) (2026-05-07)
+
+
+### Features
+
+* **entities-consumer-groups:** add a query when fetching consumer group detail ([#3219](https://github.com/Kong/public-ui-components/issues/3219)) ([3e36edb](https://github.com/Kong/public-ui-components/commit/3e36edbc805298c45a9ce873bba62848941d7af1))
+
+
+
+
+
 ## [4.3.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.3.29...@kong-ui-public/entities-consumer-groups@4.3.30) (2026-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
