@@ -82,6 +82,7 @@ provide(FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, true)
 provide(FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, true)
 
 useProvideExperimentalFreeForms([
+  'rate-limiting-advanced',
   'service-protection',
   'prometheus',
   'metering-and-billing',
