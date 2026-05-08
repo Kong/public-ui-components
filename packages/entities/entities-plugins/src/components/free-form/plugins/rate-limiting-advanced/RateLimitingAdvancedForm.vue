@@ -29,8 +29,15 @@ function handleFormChange(value: Partial<FreeFormPluginData>, fields?: string[])
    * `namespace` can be undefined, but can't be null.
    * If it is null, we should delete it from the config object so the server auto-generates it.
    */
-  if (value.config?.namespace === null) {
-    delete value.config.namespace
+  // if (value.config?.namespace === null) {
+  //   delete value.config.namespace
+  // }
+
+  /**
+   * `compound_identifier` should be null when empty, not an empty array.
+   */
+  if (Array.isArray(value.config?.compound_identifier) && value.config.compound_identifier.length === 0) {
+    value.config.compound_identifier = null
   }
   props.onFormChange(value, fields)
 }
