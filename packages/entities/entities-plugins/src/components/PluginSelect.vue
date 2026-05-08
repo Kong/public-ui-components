@@ -415,9 +415,11 @@ const activeTab = computed(() => {
 })
 
 const buildPluginList = (): PluginCardList => {
+  const clonedPluginMap = new Map(clonedCustomPlugins.value.map(p => [p.name, p]))
+  const streamingPluginSet = new Set(streamingCustomPlugins.value.map(p => p.name))
   const allCustomPluginNames = new Set<string>([
-    ...streamingCustomPlugins.value.map(plugin => plugin.name),
-    ...clonedCustomPlugins.value.map(plugin => plugin.name),
+    ...streamingPluginSet,
+    ...clonedPluginMap.keys(),
   ])
 
   // If availableOnServer is false, we included unavailable plugins from pluginMeta in addition to available plugins
@@ -472,13 +474,13 @@ const buildPluginList = (): PluginCardList => {
     // build the actual card list
     .reduce((list: PluginCardList, pluginId: string) => {
       const pluginName = (pluginMetaData[pluginId] && pluginMetaData[pluginId].name) || pluginId
-      const clonedPlugin = clonedCustomPlugins.value.find(customPlugin => customPlugin.name === pluginId)
-      const streamingPlugin = streamingCustomPlugins.value.find(customPlugin => customPlugin.name === pluginId)
+      const clonedPlugin = clonedPluginMap.get(pluginId)
+      const isStreamingPlugin = streamingPluginSet.has(pluginId)
       const plugin: PluginType = {
         ...pluginMetaData[pluginId],
         id: pluginId,
         name: pluginName,
-        available: availablePlugins.value.includes(pluginId) || !!clonedPlugin || !!streamingPlugin,
+        available: availablePlugins.value.includes(pluginId) || !!clonedPlugin || isStreamingPlugin,
         disabledMessage: '',
         group: pluginMetaData[pluginId]?.group || PluginGroup.CUSTOM_PLUGINS,
       }
@@ -487,7 +489,7 @@ const buildPluginList = (): PluginCardList => {
         if (clonedPlugin) {
           plugin.customPluginType = 'cloned'
           plugin.clonedFromRef = clonedPlugin.ref
-        } else if (streamingPlugin) {
+        } else if (isStreamingPlugin) {
           plugin.customPluginType = 'streaming'
         } else {
           plugin.customPluginType = 'schema'
@@ -661,7 +663,9 @@ const loadCustomPlugins = async (signal?: AbortSignal): Promise<void> => {
             return
           }
 
-          customPluginsListError.value = getMessageFromError(error) || t('plugins.select.tabs.custom.fetch_error')
+          if (!customPluginsListError.value) {
+            customPluginsListError.value = getMessageFromError(error) ?? t('plugins.select.tabs.custom.fetch_error')
+          }
         }),
     )
   }
@@ -678,9 +682,12 @@ const loadCustomPlugins = async (signal?: AbortSignal): Promise<void> => {
             return
           }
 
-          customPluginsListError.value = isClonedPluginLicenseError(error)
-            ? t('plugins.select.tabs.custom.license_required')
-            : getMessageFromError(error) || t('plugins.select.tabs.custom.fetch_error')
+          const isLicenseError = isClonedPluginLicenseError(error)
+          if (isLicenseError || !customPluginsListError.value) {
+            customPluginsListError.value = isLicenseError
+              ? t('plugins.select.tabs.custom.license_required')
+              : getMessageFromError(error) ?? t('plugins.select.tabs.custom.fetch_error')
+          }
         }),
     )
   }
