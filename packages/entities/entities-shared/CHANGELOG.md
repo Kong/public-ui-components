@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.45.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.45.1...@kong-ui-public/entities-shared@3.45.2) (2026-05-08)
+
+
+### Bug Fixes
+
+* **entities-consumer-groups:** query in exact match ([#3229](https://github.com/Kong/public-ui-components/issues/3229)) ([f9e5e43](https://github.com/Kong/public-ui-components/commit/f9e5e435adaad1af9c3fc91a737f36bece3e0496))
+
+
+
+
+
 ## [3.45.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.45.0...@kong-ui-public/entities-shared@3.45.1) (2026-05-08)
 
 

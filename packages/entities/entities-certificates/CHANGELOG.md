@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.34...@kong-ui-public/entities-certificates@3.13.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to cert-related entities ([#3232](https://github.com/Kong/public-ui-components/issues/3232)) ([2a4de9a](https://github.com/Kong/public-ui-components/commit/2a4de9a2dc3c124eedb0e07f6a0fddff89d6938d))
+
+
+
+
+
 ## [3.12.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.33...@kong-ui-public/entities-certificates@3.12.34) (2026-05-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates
