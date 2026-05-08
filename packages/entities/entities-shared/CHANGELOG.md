@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.45.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.45.0...@kong-ui-public/entities-shared@3.45.1) (2026-05-08)
+
+
+### Bug Fixes
+
+* **entities-shared:** use unredacted command for decK customization editor ([#3230](https://github.com/Kong/public-ui-components/issues/3230)) ([1f4ff15](https://github.com/Kong/public-ui-components/commit/1f4ff151adc7058690742ea76934a803d84a193b))
+
+
+
+
+
 # [3.45.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.4...@kong-ui-public/entities-shared@3.45.0) (2026-05-08)
 
 
