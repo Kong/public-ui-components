@@ -1,4 +1,17 @@
 <template>
+  <!-- Editor Mode Switcher -->
+  <Teleport
+    v-if="showEditorModeSwitcher"
+    to="#plugin-form-page-actions"
+  >
+    <KSegmentedControl
+      data-testid="plugin-editor-mode-switcher"
+      :model-value="editorMode"
+      :options="editorModeOptions"
+      @update:model-value="handleEditorModeChange"
+    />
+  </Teleport>
+
   <Form
     ref="form"
     class="ff-standard-layout"
@@ -223,7 +236,12 @@ export type Props<T extends FreeFormPluginData = any> = {
   /** Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority */
   onFormChange: (value: Partial<T>, fields?: string[]) => void
   onValidityChange?: (event: PluginValidityChangeEvent) => void
-  editorMode?: 'form' | 'code'
+  /**
+   * Hide the built-in form/code switcher. Plugins that own a custom switcher
+   * (e.g. Datakit's flow/code control) should set this to true to avoid
+   * rendering duplicate controls into #plugin-form-page-actions.
+   */
+  hideEditorModeSwitcher?: boolean
   /** FreeForm configuration */
   formConfig?: FormConfig<T>
   renderRules?: RenderRules
@@ -240,7 +258,10 @@ export type Props<T extends FreeFormPluginData = any> = {
 import { computed, inject, nextTick, ref, useTemplateRef, useId } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
-import { KRadio, KTooltip } from '@kong/kongponents'
+import { KRadio, KSegmentedControl, KTooltip } from '@kong/kongponents'
+import type { SegmentedControlOption } from '@kong/kongponents'
+import { useLocalStorage } from '@vueuse/core'
+import { FEATURE_FLAGS } from '../../../../constants'
 import Form from '../Form.vue'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
@@ -284,8 +305,45 @@ const instanceId = useId()
 
 const { i18n: { t } } = useI18n()
 
-const { editorMode = 'form', ...props } = defineProps<Props<T>>()
+const { hideEditorModeSwitcher = false, ...props } = defineProps<Props<T>>()
 const configFieldRenderers = computed<PluginFieldRenderer[]>(() => props.fieldRenderers ?? [])
+
+const enableCodeMode = inject<boolean>(FEATURE_FLAGS.KM_2262_CODE_MODE, false)
+
+type EditorMode = 'form' | 'code'
+
+const editorModePreference = useLocalStorage<EditorMode>('plugin-editor-mode', 'form')
+
+// `v-model:editor-mode` for callers that want to control the mode externally.
+// If no binding is provided, the model falls back to the persisted preference
+// (when code mode is enabled) or `'form'`. Done via computed wrapper because
+// `defineModel`'s `default` is hoisted to module scope and cannot reference
+// `enableCodeMode`.
+const editorModeModel = defineModel<EditorMode>('editorMode')
+const editorMode = computed<EditorMode>({
+  get: () => editorModeModel.value ?? (enableCodeMode ? editorModePreference.value : 'form'),
+  set: (value) => {
+    editorModeModel.value = value
+  },
+})
+
+const showEditorModeSwitcher = computed(() => enableCodeMode && !hideEditorModeSwitcher)
+
+const editorModeOptions: Array<SegmentedControlOption<EditorMode>> = [
+  {
+    label: t('plugins.free-form.editor_mode.visual'),
+    value: 'form',
+  },
+  {
+    label: t('plugins.free-form.editor_mode.code'),
+    value: 'code',
+  },
+]
+
+function handleEditorModeChange(newMode: EditorMode) {
+  editorMode.value = newMode
+  editorModePreference.value = newMode
+}
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 const slots = defineSlots<{
@@ -541,7 +599,7 @@ function handleDataChange(value: T) {
   }
 
   // Update scoped state based on current form data from code editor mode
-  if (editorMode === 'code') {
+  if (editorMode.value === 'code') {
     // Check if at least one scope-related field is filled
     const nextScoped = scopeFields.value.some((field) => hasScopeId(value[field]))
 
