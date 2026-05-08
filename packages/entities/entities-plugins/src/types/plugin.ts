@@ -137,7 +137,7 @@ export interface PluginType extends PluginMetaData {
   exists?: boolean // whether the plugin exists already for the current entity
   disabledMessage?: string // An optional field for plugin's disabled message.
   customPluginType?: CustomPluginType // custom plugin type
-  clonedFromLink?: string
+  clonedFromRef?: string
 }
 
 export type DisabledPlugin = {

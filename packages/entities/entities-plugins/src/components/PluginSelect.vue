@@ -350,7 +350,7 @@ const filteredPlugins = computed((): PluginCardList => {
       return plugin.name.toLowerCase().includes(query)
         || plugin.id.toLowerCase().includes(query)
         || plugin.group.toLowerCase().includes(query)
-        || plugin.clonedFromLink?.toLowerCase().includes(query)
+        || plugin.clonedFromRef?.toLowerCase().includes(query)
         || plugin.customPluginType?.toLowerCase().includes(query)
     }) || []
 
@@ -486,7 +486,7 @@ const buildPluginList = (): PluginCardList => {
       if (plugin.group === PluginGroup.CUSTOM_PLUGINS) {
         if (clonedPlugin) {
           plugin.customPluginType = 'cloned'
-          plugin.clonedFromLink = clonedPlugin.ref
+          plugin.clonedFromRef = clonedPlugin.ref
         } else if (streamingPlugin) {
           plugin.customPluginType = 'streaming'
         } else {

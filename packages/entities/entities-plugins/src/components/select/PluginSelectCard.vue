@@ -166,8 +166,8 @@ const props = defineProps({
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const pluginIconName = computed((): string => {
-  return props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromLink
-    ? props.plugin.clonedFromLink
+  return props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromRef
+    ? props.plugin.clonedFromRef
     : props.plugin.id
 })
 const customPluginBadges = computed((): string[] => {
@@ -175,8 +175,8 @@ const customPluginBadges = computed((): string[] => {
     return []
   }
 
-  if (props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromLink) {
-    return [t('plugins.select.cloned_from_badge', { link: props.plugin.clonedFromLink })]
+  if (props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromRef) {
+    return [t('plugins.select.cloned_from_badge', { link: props.plugin.clonedFromRef })]
   }
 
   if (props.plugin.customPluginType === 'streaming') {

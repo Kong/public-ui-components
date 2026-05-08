@@ -141,8 +141,8 @@ const customPluginBadges = computed((): string[] => {
     return []
   }
 
-  if (props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromLink) {
-    return [t('plugins.select.cloned_from_badge', { link: props.plugin.clonedFromLink })]
+  if (props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromRef) {
+    return [t('plugins.select.cloned_from_badge', { link: props.plugin.clonedFromRef })]
   }
 
   if (props.plugin.customPluginType === 'streaming') {
