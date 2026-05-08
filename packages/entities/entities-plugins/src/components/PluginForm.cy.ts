@@ -1051,10 +1051,15 @@ describe('<PluginForm />', () => {
       status?: number
       entityId?: string
       credential?: boolean
+      workspace?: string
     }): void => {
-      const url = params?.credential
-        ? `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${params.entityId}/acls`
-        : `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins`
+      let url: string
+      if (params?.credential) {
+        url = `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/consumers/${params.entityId}/acls`
+      } else {
+        const workspaceSegment = params?.workspace ? `/${params.workspace}` : ''
+        url = `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities${workspaceSegment}/plugins`
+      }
 
       cy.intercept(
         {
@@ -1909,6 +1914,50 @@ describe('<PluginForm />', () => {
         })
       })
     })
+
+    describe('workspace URL building', () => {
+      it('includes workspace in POST URL when creating with workspace config', () => {
+        interceptKonnectSchema()
+        interceptKonnectCreatePlugin({ alias: 'createPluginWithWorkspace', workspace: 'default' })
+
+        cy.mount(PluginForm, {
+          props: { config: { ...baseConfigKonnect, workspace: 'default' }, pluginType: 'cors' },
+          router,
+        }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+        cy.wait('@getPluginSchema')
+        cy.getTestId('plugin-create-form-submit').click()
+        cy.wait('@createPluginWithWorkspace')
+      })
+
+      it('uses non-default workspace name in POST URL', () => {
+        interceptKonnectSchema()
+        interceptKonnectCreatePlugin({ alias: 'createPluginWithMyWorkspace', workspace: 'my-workspace' })
+
+        cy.mount(PluginForm, {
+          props: { config: { ...baseConfigKonnect, workspace: 'my-workspace' }, pluginType: 'cors' },
+          router,
+        }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+        cy.wait('@getPluginSchema')
+        cy.getTestId('plugin-create-form-submit').click()
+        cy.wait('@createPluginWithMyWorkspace')
+      })
+
+      it('omits workspace segment in POST URL when workspace is not provided', () => {
+        interceptKonnectSchema()
+        interceptKonnectCreatePlugin({ alias: 'createPluginNoWorkspace' })
+
+        cy.mount(PluginForm, {
+          props: { config: baseConfigKonnect, pluginType: 'cors' },
+          router,
+        }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+        cy.wait('@getPluginSchema')
+        cy.getTestId('plugin-create-form-submit').click()
+        cy.wait('@createPluginNoWorkspace')
+      })
+    })
   })
 
   describe('Engine prop and experimental plugin mapping', () => {
@@ -2215,4 +2264,5 @@ describe('<PluginForm />', () => {
       })
     })
   })
+
 })
