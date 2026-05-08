@@ -272,8 +272,8 @@ const props = defineProps({
   },
   /** The ID of a specific plugin instance. If a valid Plugin ID is provided, it will put the form in Edit mode instead of Create */
   pluginId: {
-    type: String,
-    default: '',
+    type: String as PropType<string | null>,
+    default: null,
   },
 
   /** Rather than using internal logic to determine whether or not to hide scope, force it */
@@ -1403,14 +1403,14 @@ const submitUrl = computed((): string => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
+  // replace workspace
+  url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   // replace resource endpoint for credentials
   url = url.replace(/{resourceEndpoint}/gi, resourceEndpoint.value)
   // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.pluginId)
+  url = url.replace(/{id}/gi, props.pluginId ?? '')
   // replace entityType and entityId if scoped
   url = url.replace(/{entityType}/gi, props.config.entityType || '')
   url = url.replace(/{entityId}/gi, props.config.entityId || '')
@@ -1518,14 +1518,11 @@ const schemaUrl = computed((): string => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // replace the plugin type
-  url = url.replace(/{plugin}/gi, pluginType)
-
   return url
+    .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{plugin}/gi, pluginType) // replace the plugin type
 })
 
 const credentialType = ref('')
