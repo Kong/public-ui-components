@@ -39,7 +39,7 @@ const streamedPluginResponse = {
 }
 
 const clonedPluginResponse = {
-  link: 'acl',
+  ref: 'acl',
   name: 'my-cloned-plugin',
   priority: 0,
   tags: null,
@@ -274,7 +274,7 @@ describe('<CustomPluginForm />', () => {
           statusCode: 201,
           body: {
             ...clonedPluginResponse,
-            link: 'acl',
+            ref: 'acl',
             name: aliasName,
             priority: null,
           },
@@ -297,7 +297,7 @@ describe('<CustomPluginForm />', () => {
       cy.wait('@createClonedPlugin').then((interception) => {
         expect(interception.request.method).to.equal('PUT')
         expect(interception.request.body).to.deep.equal({
-          link: 'acl',
+          ref: 'acl',
         })
       })
     })
@@ -312,7 +312,6 @@ describe('<CustomPluginForm />', () => {
           statusCode: 201,
           body: {
             ...clonedPluginResponse,
-            link: 'acl',
             name: aliasName,
             priority: 0,
           },
@@ -337,7 +336,7 @@ describe('<CustomPluginForm />', () => {
       cy.wait('@createClonedPluginWithPriority').then((interception) => {
         expect(interception.request.method).to.equal('PUT')
         expect(interception.request.body).to.deep.equal({
-          link: 'acl',
+          ref: 'acl',
           priority: 0,
         })
       })
@@ -549,7 +548,7 @@ describe('<CustomPluginForm />', () => {
 
       cy.wait('@updateClonedPlugin').then((interception) => {
         expect(interception.request.body).to.deep.equal({
-          link: clonedPluginResponse.link,
+          ref: clonedPluginResponse.ref,
           priority: 0,
           name: clonedPluginResponse.name,
         })

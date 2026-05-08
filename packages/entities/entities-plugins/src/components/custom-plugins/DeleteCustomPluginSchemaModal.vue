@@ -25,16 +25,10 @@
     @cancel="$emit('closed')"
   >
     <template #default>
-      <div>
-        <i18n-t
-          keypath="delete.plugin_schema_in_use_message"
-          tag="p"
-        >
-          <template #name>
-            <strong>{{ plugin.name }}</strong>
-          </template>
-        </i18n-t>
-      </div>
+      <KAlert
+        appearance="danger"
+        :message="t('delete.plugin_schema_in_use_message')"
+      />
     </template>
     <template #footer-actions>
       <div>
@@ -60,6 +54,7 @@ import {
 } from '../../types'
 import composables from '../../composables'
 import endpoints from '../../plugins-endpoints'
+import { isPluginSchemaInUseError } from '../../utils/customPluginErrors'
 import { useAxios, useErrors, EntityTypes, EntityDeleteModal } from '@kong-ui-public/entities-shared'
 
 const props = defineProps({
@@ -80,7 +75,7 @@ const props = defineProps({
 
 const emit = defineEmits(['closed', 'proceed'])
 
-const { i18nT, i18n: { t } } = composables.useI18n()
+const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = useErrors()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -96,16 +91,32 @@ const errorMessage = ref('')
 const isPluginSchemaInUse = ref(false)
 
 const requestUrl = computed(() => {
+  const pluginType = props.plugin.customPluginType
+
   if (props.config.app === 'konnect') {
-    const partialPluginURL = props.plugin.customPluginType === 'streaming'
+    const partialPluginURL = pluginType === 'streaming'
       ? endpoints.select[props.config.app].streamingCustomPluginItem
-      : endpoints.select[props.config.app].schemaCustomPluginItem
+      : pluginType === 'cloned'
+        ? endpoints.customPlugin[props.config.app].cloned.edit
+        : endpoints.select[props.config.app].schemaCustomPluginItem
+
     let url = `${props.config.apiBaseUrl}${partialPluginURL}`
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
     url = url.replace(/{pluginId}/gi, props.plugin.id)
     return url
   }
-  // Kong Manager does not have this feature
+
+  if (props.config.app === 'kongManager' && pluginType && pluginType !== 'schema') {
+    const partialPluginUrl = pluginType === 'cloned'
+      ? endpoints.customPlugin[props.config.app].cloned.edit
+      : endpoints.customPlugin[props.config.app].streamed.edit
+
+    let url = `${props.config.apiBaseUrl}${partialPluginUrl}`
+    url = url.replace(/{workspace}/gi, props.config.workspace || '')
+    url = url.replace(/{pluginId}/gi, props.plugin.id)
+    return url
+  }
+
   return null
 })
 
@@ -113,7 +124,8 @@ const handleSubmit = async (): Promise<void> => {
   isLoading.value = true
   errorMessage.value = ''
 
-  if (!props.plugin?.name || props.config?.app !== 'konnect') {
+  if (!props.plugin?.name) {
+    isLoading.value = false
     return
   }
 
@@ -123,13 +135,8 @@ const handleSubmit = async (): Promise<void> => {
     }
 
     emit('proceed')
-  } catch (err: any) {
-    const { response } = err
-
-    if (
-      response?.status === 400 &&
-      response.data?.message?.includes('plugin schema is currently in use')
-    ) {
+  } catch (err: unknown) {
+    if (isPluginSchemaInUseError(err)) {
       isPluginSchemaInUse.value = true
     } else {
       errorMessage.value = getMessageFromError(err)
