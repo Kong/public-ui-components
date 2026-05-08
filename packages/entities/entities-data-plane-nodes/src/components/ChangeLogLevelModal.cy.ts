@@ -65,7 +65,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
       cy.getTestId(`data-plane-node-list-row-${instance.id}`).as(`instanceRow_${instance.id}`).scrollIntoView()
       cy.get(`@instanceRow_${instance.id}`).should('be.visible')
       cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-action').should('contain.text', 'N/A')
-      cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status').should('contain.text', 'Not Supported')
+      cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status').should('contain.text', 'Not supported')
     }
 
     cy.wrap(getDataPlaneLogLevel).should('not.be.called')
@@ -189,7 +189,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
       cy.getTestId(`data-plane-node-list-row-${instance.id}`).as(`instanceRow_${instance.id}`).scrollIntoView()
       cy.get(`@instanceRow_${instance.id}`).should('be.visible')
       cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status')
-        .should('contain.text', instance.hasDLLCapability ? 'Pending' : 'Not Supported')
+        .should('contain.text', instance.hasDLLCapability ? 'Pending' : 'Not supported')
     }
 
     cy.wrap(getDataPlaneLogLevel).should('have.callCount', 6)
@@ -238,7 +238,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
       cy.getTestId(`data-plane-node-list-row-${instance.id}`).as(`instanceRow_${instance.id}`).scrollIntoView()
       cy.get(`@instanceRow_${instance.id}`).should('be.visible')
       cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status')
-        .should('contain.text', instance.hasDLLCapability ? 'Pending' : 'Not Supported')
+        .should('contain.text', instance.hasDLLCapability ? 'Pending' : 'Not supported')
     }
 
     cy.wrap(getDataPlaneLogLevel).should('have.callCount', 6)
@@ -261,7 +261,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
       }
 
       cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status')
-        .should('contain.text', instance.hasDLLCapability ? 'Succeed' : 'Not Supported')
+        .should('contain.text', instance.hasDLLCapability ? 'Succeed' : 'Not supported')
     }
 
     for (const instance of instanceList) {
@@ -311,7 +311,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
       cy.getTestId(`data-plane-node-list-row-${instance.id}`).as(`instanceRow_${instance.id}`).scrollIntoView()
       cy.get(`@instanceRow_${instance.id}`).should('be.visible')
       cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status')
-        .should('contain.text', instance.hasDLLCapability ? 'Pending' : 'Not Supported')
+        .should('contain.text', instance.hasDLLCapability ? 'Pending' : 'Not supported')
     }
 
     for (const instance of instanceList.filter((instance) => !instance.hasDLLCapability)) {
@@ -338,7 +338,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
           ? 'Failure'
           : instance.hasDLLCapability
             ? 'Succeed'
-            : 'Not Supported')
+            : 'Not supported')
     }
 
     for (const instance of instanceList) {

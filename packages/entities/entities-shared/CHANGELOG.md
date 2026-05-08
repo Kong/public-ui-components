@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.45.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.4...@kong-ui-public/entities-shared@3.45.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** allow `workspace` and `editId` to be `null` and workspace-scoped route support ([#3208](https://github.com/Kong/public-ui-components/issues/3208)) ([b1c6611](https://github.com/Kong/public-ui-components/commit/b1c66117d7cbc44c05c1eba6384e365d10efc5ef))
+
+
+
+
+
+## [3.44.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.3...@kong-ui-public/entities-shared@3.44.4) (2026-05-07)
+
+
+### Bug Fixes
+
+* **locales/en.json:** fix copies in all the entities ([#3221](https://github.com/Kong/public-ui-components/issues/3221)) ([a3bcf52](https://github.com/Kong/public-ui-components/commit/a3bcf526d9aff14cab8e2f3d9ba7810b5167d974))
+
+
+
+
+
 ## [3.44.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.2...@kong-ui-public/entities-shared@3.44.3) (2026-05-05)
 
 

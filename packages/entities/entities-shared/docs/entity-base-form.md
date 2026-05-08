@@ -56,8 +56,8 @@ A base form component for entity create/edit views.
     - Route to return to when canceling creation of an entity.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
     - Name of the current workspace.
 
@@ -71,9 +71,9 @@ The base konnect or kongManger config.
 
 #### `editId`
 
-- type: `String`
+- type: `string | null`
 - required: `false`
-- default: `''`
+- default: `null`
 
 If showing the `Edit` type form, the ID of the entity to edit.
 

@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.4.2...@kong-ui-public/entities-consumer-groups@4.5.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to consumer-related entities ([#3228](https://github.com/Kong/public-ui-components/issues/3228)) ([b096aeb](https://github.com/Kong/public-ui-components/commit/b096aebdaa74d55f9ed6b491f583fe0a19a54082))
+
+
+
+
+
+## [4.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.4.1...@kong-ui-public/entities-consumer-groups@4.4.2) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [4.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.4.0...@kong-ui-public/entities-consumer-groups@4.4.1) (2026-05-07)
+
+
+### Bug Fixes
+
+* **locales/en.json:** fix copies in all the entities ([#3221](https://github.com/Kong/public-ui-components/issues/3221)) ([a3bcf52](https://github.com/Kong/public-ui-components/commit/a3bcf526d9aff14cab8e2f3d9ba7810b5167d974))
+
+
+
+
+
 # [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.3.30...@kong-ui-public/entities-consumer-groups@4.4.0) (2026-05-07)
 
 

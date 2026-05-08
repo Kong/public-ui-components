@@ -2071,7 +2071,7 @@ describe('<PluginForm />', () => {
     describe('Cloned plugin engine resolution', () => {
       const interceptClonedPlugin = (params: {
         pluginName: string
-        link?: string
+        ref?: string
         status?: number
         alias?: string
       }) => {
@@ -2086,7 +2086,7 @@ describe('<PluginForm />', () => {
               statusCode: 200,
               body: {
                 name: params.pluginName,
-                link: params.link!,
+                ref: params.ref!,
                 priority: null,
                 tags: null,
                 created_at: 1700000000,
@@ -2127,7 +2127,7 @@ describe('<PluginForm />', () => {
         // rate-limiting has a freeform component (experimental — needs whitelist).
         const pluginType = 'rate-limiting-clone'
         interceptKonnectSchema({ mockData: schemaRateLimiting })
-        interceptClonedPlugin({ pluginName: pluginType, link: 'rate-limiting' })
+        interceptClonedPlugin({ pluginName: pluginType, ref: 'rate-limiting' })
 
         cy.mount(PluginForm, {
           props: {
@@ -2154,7 +2154,7 @@ describe('<PluginForm />', () => {
         // cors has no freeform component, so the source — and therefore the clone — falls back to VFG.
         const pluginType = 'cors-clone'
         interceptKonnectSchema({ mockData: schemaCors })
-        interceptClonedPlugin({ pluginName: pluginType, link: 'cors' })
+        interceptClonedPlugin({ pluginName: pluginType, ref: 'cors' })
 
         cy.mount(PluginForm, {
           props: {

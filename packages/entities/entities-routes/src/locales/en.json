@@ -8,7 +8,7 @@
     "edit": "Edit",
     "delete": "Delete",
     "clear": "Clear",
-    "view": "View Details",
+    "view": "View details",
     "loading": "Loading..."
   },
   "search": {
@@ -34,12 +34,12 @@
         "expression": "Expression",
         "id": "ID",
         "tags": "Tags",
-        "created_at": "Created At",
-        "updated_at": "Last Modified"
+        "created_at": "Created at",
+        "updated_at": "Last modified"
       },
       "empty_state": {
-        "title": "Configure a New Route",
-        "description": "Routes proxy requests to an associated Service."
+        "title": "Configure a new route",
+        "description": "Routes proxy requests to an associated service."
       },
       "empty_state_v2": {
         "title": "Configure your first route",
@@ -50,7 +50,7 @@
     }
   },
   "delete": {
-    "title": "Delete a Route",
+    "title": "Delete a route",
     "description": "Deleting this route will also remove any associated plugins. This action cannot be reversed."
   },
   "errors": {
@@ -100,33 +100,33 @@
     },
     "sections": {
       "general": {
-        "title": "General Information",
+        "title": "General information",
         "description": "General information will help you identify and manage this route"
       },
       "config": {
-        "title": "Route Configuration",
+        "title": "Route configuration",
         "description": "Route configuration determines how this route will handle incoming requests"
       },
       "routingRules": {
-        "title": "Routing Rules"
+        "title": "Routing rules"
       },
       "routingExpression": {
-        "title": "Routing Expression"
+        "title": "Routing expression"
       }
     },
     "fields": {
       "service_id": {
-        "label": "Service",
-        "placeholder": "Select a service"
+        "label": "Gateway service",
+        "placeholder": "Select a gateway service"
       },
       "name": {
         "label": "Name",
         "placeholder": "Enter a unique name",
-        "tooltip": "The name of the Route. Route names must be unique, and they are case sensitive. For example, there can be two different Routes named 'test' and 'Test'."
+        "tooltip": "The name of the route. Route names must be unique, and they are case sensitive. For example, there can be two different routes named 'test' and 'Test'."
       },
       "service": {
-        "label": "Gateway Service",
-        "tooltip": "The Service this Route is associated to. This is where the Route proxies traffic to."
+        "label": "Gateway service",
+        "tooltip": "The service this route is associated to. This is where the route proxies traffic to."
       },
       "tags": {
         "label": "Tags",
@@ -209,7 +209,7 @@
         "add": "Add a source",
         "label": "Sources",
         "singular": "source",
-        "tooltip": "A list of IP sources of incoming connections that match this Route when using stream routing.",
+        "tooltip": "A list of IP sources of incoming connections that match this route when using stream routing.",
         "ip": {
           "placeholder": "Enter a source IP"
         },
@@ -221,7 +221,7 @@
         "add": "Add a destination",
         "label": "Destinations",
         "singular": "destination",
-        "tooltip": "A list of IP destinations of incoming connections that match this Route when using stream routing.",
+        "tooltip": "A list of IP destinations of incoming connections that match this route when using stream routing.",
         "ip": {
           "placeholder": "Enter a destination IP"
         },
@@ -247,15 +247,15 @@
       }
     },
     "flavors": {
-      "traditional": "Traditional Form",
-      "expressions": "Expressions Editor"
+      "traditional": "Traditional form",
+      "expressions": "Expressions editor"
     },
     "show_more": "Show more",
     "hint": {
       "rules_message": "Choose at least one {routingRules} option.",
       "single_rule": "{routingRules}",
       "multiple_rules": "{routingRules} or {lastRoutingRule}",
-      "advanced": "To add more than one, use the Advanced options."
+      "advanced": "To add more than one, use the advanced options."
     },
     "warning": {
       "cannotChangeFlavor": {
@@ -264,11 +264,11 @@
       }
     },
     "expressions_editor": {
-      "loading": "Loading the Expressions editor…",
-      "error": "Error occurred while loading the Expressions editor. Please view the console for more details."
+      "loading": "Loading the expressions editor…",
+      "error": "Error occurred while loading the expressions editor. Please view the console for more details."
     },
     "expression_playground": {
-      "test_link": "Test with Router Playground",
+      "test_link": "Test with router playground",
       "supported_protocols_hint": "Currently only supports the following protocols: {protocols}"
     }
   }

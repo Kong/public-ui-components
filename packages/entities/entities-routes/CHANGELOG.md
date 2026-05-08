@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.38...@kong-ui-public/entities-routes@3.22.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** allow `workspace` and `editId` to be `null` and workspace-scoped route support ([#3208](https://github.com/Kong/public-ui-components/issues/3208)) ([b1c6611](https://github.com/Kong/public-ui-components/commit/b1c66117d7cbc44c05c1eba6384e365d10efc5ef))
+
+
+
+
+
+## [3.21.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.37...@kong-ui-public/entities-routes@3.21.38) (2026-05-07)
+
+
+### Bug Fixes
+
+* **locales/en.json:** fix copies in all the entities ([#3221](https://github.com/Kong/public-ui-components/issues/3221)) ([a3bcf52](https://github.com/Kong/public-ui-components/commit/a3bcf526d9aff14cab8e2f3d9ba7810b5167d974))
+
+
+
+
+
 ## [3.21.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.21.36...@kong-ui-public/entities-routes@3.21.37) (2026-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes

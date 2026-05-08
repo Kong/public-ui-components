@@ -1229,4 +1229,90 @@ describe('<ConsumerGroupList />', () => {
         cy.getTestId(confirmationModalQuery).should('exist')
       })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    const wsConfig: KonnectConsumerGroupListConfig = {
+      app: 'konnect',
+      controlPlaneId: '1234-abcd-ilove-cats',
+      apiBaseUrl: '/us/kong-api',
+      isExactMatch: false,
+      createRoute: 'create-consumer-group',
+      getViewRoute: () => 'view-consumer-group',
+      getEditRoute: () => 'edit-consumer-group',
+    }
+
+    it('uses workspace-scoped URL when fetching with workspace', () => {
+      const configWithWorkspace = { ...wsConfig, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsConfig.apiBaseUrl}/v2/control-planes/${wsConfig.controlPlaneId}/core-entities/default/consumer_groups*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getWithWorkspace')
+
+      cy.mount(ConsumerGroupList, {
+        props: {
+          cacheIdentifier: `consumer-group-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithWorkspace')
+      cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
+    })
+
+    it('uses non-default workspace name in fetch URL', () => {
+      const configWithWorkspace = { ...wsConfig, workspace: 'my-workspace' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsConfig.apiBaseUrl}/v2/control-planes/${wsConfig.controlPlaneId}/core-entities/my-workspace/consumer_groups*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getWithMyWorkspace')
+
+      cy.mount(ConsumerGroupList, {
+        props: {
+          cacheIdentifier: `consumer-group-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithMyWorkspace')
+      cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
+    })
+
+    it('omits workspace segment when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsConfig.apiBaseUrl}/v2/control-planes/${wsConfig.controlPlaneId}/core-entities/consumer_groups*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getNoWorkspace')
+
+      cy.mount(ConsumerGroupList, {
+        props: {
+          cacheIdentifier: `consumer-group-list-${uuidv4()}`,
+          config: wsConfig,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getNoWorkspace')
+      cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
+    })
+  })
 })

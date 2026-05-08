@@ -6,7 +6,7 @@
       "ok": "OK"
     },
     "change_log_level": {
-      "title": "Change Log Level ({summary})",
+      "title": "Change log level ({summary})",
       "summary_with_name": "Node {name}",
       "summary_with_number": "{number} Nodes"
     },
@@ -21,7 +21,7 @@
         "loading": "Loading",
         "pending": "Pending",
         "succeed": "Succeed",
-        "not_supported": "Not Supported"
+        "not_supported": "Not supported"
       }
     },
     "log_level_disk_space_warning": "If left on for extended periods of time, can result in excess disk space consumption.",
@@ -39,7 +39,7 @@
       "minutes": "min",
       "seconds": "seconds"
     },
-    "select_log_level_title": "Select Log Level"
+    "select_log_level_title": "Select log level"
   },
   "log_level": {
     "debug": "Debug",
