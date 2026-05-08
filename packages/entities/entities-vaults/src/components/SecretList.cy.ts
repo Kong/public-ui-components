@@ -426,4 +426,71 @@ describe('<SecretList />', () => {
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('uses workspace-scoped URLs for vault and secrets when workspace is provided', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vaultId}`,
+        },
+        { statusCode: 200, body: { config: { config_store_id: configStoreId } } },
+      ).as('getVaultWithWorkspace')
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/default/config-stores/${configStoreId}/secrets*`,
+        },
+        { statusCode: 200, body: secrets },
+      ).as('getSecretsWithWorkspace')
+
+      cy.mount(SecretList, {
+        props: {
+          cacheIdentifier: `secret-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          vaultId,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+        },
+      })
+
+      cy.wait('@getVaultWithWorkspace')
+      cy.wait('@getSecretsWithWorkspace')
+      cy.get('.kong-ui-entities-secrets-list').should('be.visible')
+    })
+
+    it('omits workspace segment in both URLs when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}`,
+        },
+        { statusCode: 200, body: { config: { config_store_id: configStoreId } } },
+      ).as('getVaultNoWorkspace')
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores/${configStoreId}/secrets*`,
+        },
+        { statusCode: 200, body: secrets },
+      ).as('getSecretsNoWorkspace')
+
+      cy.mount(SecretList, {
+        props: {
+          cacheIdentifier: `secret-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          vaultId,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+        },
+      })
+
+      cy.wait('@getVaultNoWorkspace')
+      cy.wait('@getSecretsNoWorkspace')
+      cy.get('.kong-ui-entities-secrets-list').should('be.visible')
+    })
+  })
 })
