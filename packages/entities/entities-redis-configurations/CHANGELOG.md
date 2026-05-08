@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.40...@kong-ui-public/entities-redis-configurations@1.15.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to redis configuration ([#3234](https://github.com/Kong/public-ui-components/issues/3234)) ([faf3b97](https://github.com/Kong/public-ui-components/commit/faf3b97b61f79200d5a798694e0c82fc0c2bf1d6))
+
+
+
+
+
 ## [1.14.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.14.39...@kong-ui-public/entities-redis-configurations@1.14.40) (2026-05-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.13.34...@kong-ui-public/entities-upstreams-targets@3.14.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to vault & upstream target entities ([#3233](https://github.com/Kong/public-ui-components/issues/3233)) ([99e75c4](https://github.com/Kong/public-ui-components/commit/99e75c4bba24713cd888b0d1a90779fc5e53f6d0))
+
+
+
+
+
 ## [3.13.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.13.33...@kong-ui-public/entities-upstreams-targets@3.13.34) (2026-05-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
