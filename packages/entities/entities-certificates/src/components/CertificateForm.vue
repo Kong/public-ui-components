@@ -184,9 +184,9 @@ const props = defineProps({
   },
   /** If a valid certificate ID is provided, it will put the form in Edit mode instead of Create */
   certificateId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
   /** If true, the SNI field will be shown */
   showSnisField: {
@@ -269,14 +269,11 @@ const submitUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.certificateId)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.certificateId ?? '') // Always replace the id when editing
 })
 
 const requestBody = computed((): Record<string, any> => {
