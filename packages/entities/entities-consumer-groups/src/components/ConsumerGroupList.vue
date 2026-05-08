@@ -357,6 +357,11 @@ const fetcherBaseUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    // When doing an exact-match lookup by ID, append list_consumers=false so the
+    // fetched item endpoint doesn't return the full consumer list inside the group.
+    if (filterQuery.value && props.config.isExactMatch) {
+      url += '?list_consumers=false'
+    }
   }
 
   return url
