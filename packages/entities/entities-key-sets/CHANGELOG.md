@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.10.34...@kong-ui-public/entities-key-sets@3.11.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to key-related entities ([#3231](https://github.com/Kong/public-ui-components/issues/3231)) ([c800dbf](https://github.com/Kong/public-ui-components/commit/c800dbf316c08e14f17d472bbf8ecea38f236223))
+
+
+
+
+
 ## [3.10.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.10.33...@kong-ui-public/entities-key-sets@3.10.34) (2026-05-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-key-sets
