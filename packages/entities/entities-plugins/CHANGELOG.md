@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.201.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.200.3...@kong-ui-public/entities-plugins@9.201.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to plugin entities ([#3042](https://github.com/Kong/public-ui-components/issues/3042)) ([e71b386](https://github.com/Kong/public-ui-components/commit/e71b3869b3afa5828be48eb31071f31996715ffb))
+
+
+
+
+
 ## [9.200.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.200.2...@kong-ui-public/entities-plugins@9.200.3) (2026-05-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
