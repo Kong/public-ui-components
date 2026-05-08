@@ -90,7 +90,7 @@
     <component
       :is="DeckCommandEditor"
       v-else-if="props.entityRecord && props.isCustomizing && DeckCommandEditor"
-      v-model="deckCommand"
+      v-model="unredactedDeckCommand"
       :language="shell"
     />
 
