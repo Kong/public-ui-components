@@ -457,6 +457,7 @@ const deleteAssociatedConfigStore = async (configStoreId: string): Promise<void>
   const { apiBaseUrl, app, controlPlaneId } = (props.config as KonnectVaultListConfig)
   const url = `${apiBaseUrl}${endpoints.list[app].deleteConfigStore}`
     .replace(/{controlPlaneId}/gi, controlPlaneId || '')
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, configStoreId)
   try {
     await axiosInstance.delete(url)

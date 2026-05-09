@@ -1627,6 +1627,7 @@ const createConfigStore = async (): Promise<string | undefined> => {
 
     const requestUrl = `${props.config.apiBaseUrl}${endpoints.form.konnect.createConfigStore}`
       .replace(/{controlPlaneId}/gi, (props.config as KonnectVaultFormConfig)?.controlPlaneId || '')
+      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 
     const response = await axiosInstance.post<KonnectConfigStore>(requestUrl)
 
