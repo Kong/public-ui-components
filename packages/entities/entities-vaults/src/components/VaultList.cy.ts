@@ -832,5 +832,116 @@ describe('<VaultList />', () => {
       cy.wait('@getNoWorkspace')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
     })
+
+    it('includes workspace in config-store DELETE URL when deleting a Konnect vault', () => {
+      const konnectConfigStoreId = 'test-config-store-id'
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults*`,
+        },
+        {
+          statusCode: 200,
+          body: {
+            data: [{
+              id: '1',
+              name: 'konnect',
+              prefix: 'konnect-vault',
+              config: { config_store_id: konnectConfigStoreId },
+            }],
+            total: 1,
+          },
+        },
+      ).as('getVaultsWithWorkspace')
+      cy.intercept(
+        {
+          method: 'DELETE',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/1`,
+        },
+        { statusCode: 204 },
+      ).as('deleteVaultWithWorkspace')
+      cy.intercept(
+        {
+          method: 'DELETE',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/default/config-stores/${konnectConfigStoreId}*`,
+        },
+        { statusCode: 204 },
+      ).as('deleteConfigStoreWithWorkspace')
+
+      cy.mount(VaultList, {
+        props: {
+          cacheIdentifier: `vault-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => true,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getVaultsWithWorkspace')
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
+      cy.getTestId('action-entity-delete').click()
+      cy.getTestId('confirmation-input').type('konnect-vault')
+      cy.getTestId('modal-action-button').click()
+      cy.wait('@deleteVaultWithWorkspace')
+      cy.wait('@deleteConfigStoreWithWorkspace')
+    })
+
+    it('omits workspace in config-store DELETE URL when workspace is not provided', () => {
+      const konnectConfigStoreId = 'test-config-store-id'
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults*`,
+        },
+        {
+          statusCode: 200,
+          body: {
+            data: [{
+              id: '1',
+              name: 'konnect',
+              prefix: 'konnect-vault',
+              config: { config_store_id: konnectConfigStoreId },
+            }],
+            total: 1,
+          },
+        },
+      ).as('getVaultsNoWorkspace')
+      cy.intercept(
+        {
+          method: 'DELETE',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/1`,
+        },
+        { statusCode: 204 },
+      ).as('deleteVaultNoWorkspace')
+      cy.intercept(
+        {
+          method: 'DELETE',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores/${konnectConfigStoreId}*`,
+        },
+        { statusCode: 204 },
+      ).as('deleteConfigStoreNoWorkspace')
+
+      cy.mount(VaultList, {
+        props: {
+          cacheIdentifier: `vault-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => true,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getVaultsNoWorkspace')
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
+      cy.getTestId('action-entity-delete').click()
+      cy.getTestId('confirmation-input').type('konnect-vault')
+      cy.getTestId('modal-action-button').click()
+      cy.wait('@deleteVaultNoWorkspace')
+      cy.wait('@deleteConfigStoreNoWorkspace')
+    })
   })
 })

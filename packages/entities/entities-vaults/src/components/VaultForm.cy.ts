@@ -1169,5 +1169,61 @@ describe('<VaultForm />', () => {
       cy.wait('@getVaultNoWorkspace')
       cy.getTestId('form-fetch-error').should('not.exist')
     })
+
+    it('includes workspace in config-store POST and vault POST URLs when creating a Konnect vault', () => {
+      const configStoreId = 'new-config-store-id'
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/default/config-stores`,
+        },
+        { statusCode: 201, body: { id: configStoreId } },
+      ).as('createConfigStoreWithWorkspace')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults`,
+        },
+        { statusCode: 201, body: vault },
+      ).as('createVaultWithWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createConfigStoreWithWorkspace')
+      cy.wait('@createVaultWithWorkspace')
+    })
+
+    it('omits workspace in config-store POST and vault POST URLs when workspace is not provided', () => {
+      const configStoreId = 'new-config-store-id'
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores`,
+        },
+        { statusCode: 201, body: { id: configStoreId } },
+      ).as('createConfigStoreNoWorkspace')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults`,
+        },
+        { statusCode: 201, body: vault },
+      ).as('createVaultNoWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createConfigStoreNoWorkspace')
+      cy.wait('@createVaultNoWorkspace')
+    })
   })
 })
