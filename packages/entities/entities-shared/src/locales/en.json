@@ -132,7 +132,8 @@
       "copy_pat": "Make sure to copy your personal access token now. You won't be able to see it again.",
       "reuse_pat": "Use an existing PAT if you've already generated one.",
       "generate_pat": "Generate PAT",
-      "footer_reminder": "Changes made here won't affect your configuration."
+      "footer_reminder": "Changes made here won't affect your configuration.",
+      "secret_advise": "Command may contain sensitive values. Treat it as a secret."
     },
     "copy_tooltip": "Copy"
   },
