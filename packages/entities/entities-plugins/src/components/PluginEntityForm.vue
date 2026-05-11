@@ -471,11 +471,13 @@ const syncFormRenderingMode = (pluginName?: string) => {
     return
   }
 
-  pluginConfig.value = getPluginConfig(pluginName)
-  freeformComponent.value = shouldUseFreeForm(pluginName, props.engine)
-    ? (getFreeFormComponent(pluginName) ?? CommonForm)
+  // For cloned plugins, use the source plugin name for rendering decisions
+  const effectivePluginName = props.schema?._sourcePlugin || pluginName
+  pluginConfig.value = getPluginConfig(effectivePluginName)
+  freeformComponent.value = shouldUseFreeForm(effectivePluginName, props.engine)
+    ? (getFreeFormComponent(effectivePluginName) ?? CommonForm)
     : undefined
-  sharedFormName.value = getSharedFormName(pluginName)
+  sharedFormName.value = getSharedFormName(effectivePluginName)
 
   setPluginFormLayoutState(Boolean(freeformComponent.value))
 }
