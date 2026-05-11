@@ -2225,6 +2225,35 @@ describe('<PluginForm />', () => {
         cy.get('.vue-form-generator').should('exist')
         cy.get('[data-testid^="ff-"]').should('not.exist')
       })
+
+      it('renders OIDCForm for a cloned plugin when its source plugin is openid-connect', () => {
+        // openid-connect uses a shared custom form (OIDCForm) — a clone should inherit it.
+        const pluginType = 'oidc-clone'
+        interceptKonnectSchema({ mockData: schemaCors })
+        interceptClonedPlugin({ pluginName: pluginType, ref: 'openid-connect' })
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKonnect,
+            pluginType,
+          },
+          global: {
+            provide: {
+              [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
+              [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+            },
+          },
+          router,
+        })
+
+        cy.wait(['@getPluginSchema', '@getClonedPlugin'])
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
+        // OIDCForm renders KTabs with these tab IDs — present only when OIDCForm is active.
+        cy.get('#advanced-tab').should('exist')
+        // Generic freeform layout must not be used.
+        cy.get('[data-testid^="ff-"]').should('not.exist')
+      })
     })
 
     describe('Condition field', () => {

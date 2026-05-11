@@ -686,7 +686,8 @@ const getArrayType = (list: unknown[]): string => {
 
 const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>, arrayNested?: boolean) => {
   let schema = (response && response.fields) || []
-  const pluginSchema = customSchemas[props.pluginType as keyof CustomSchemas]
+  const effectivePluginType = (isClonedPlugin.value && clonedSourcePlugin.value) ? clonedSourcePlugin.value : props.pluginType
+  const pluginSchema = customSchemas[effectivePluginType as keyof CustomSchemas]
   const credentialSchema = CREDENTIAL_METADATA[props.pluginType]?.schema?.fields
 
   // schema can either be an object or an array of objects. If it's an array, convert it to an object
@@ -1363,6 +1364,9 @@ watch([entityMap, initialized], (newData, oldData) => {
     if (isCustomPlugin.value) {
       initialFormSchema._isCustomPlugin = true
     }
+    if (isClonedPlugin.value && clonedSourcePlugin.value) {
+      initialFormSchema._sourcePlugin = clonedSourcePlugin.value
+    }
     if (pluginPartialType.value) {
       initialFormSchema._supported_redis_partial_type = pluginPartialType.value
     }
@@ -1599,6 +1603,9 @@ onBeforeMount(async () => {
             }
             // pass whether the plugin is a custom plugin to the form schema
             if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
+            if (isClonedPlugin.value && clonedSourcePlugin.value) {
+              initialFormSchema._sourcePlugin = clonedSourcePlugin.value
+            }
             finalSchema.value = initialFormSchema
           }
         }
