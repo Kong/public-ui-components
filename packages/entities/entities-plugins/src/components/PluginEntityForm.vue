@@ -472,7 +472,7 @@ const syncFormRenderingMode = (pluginName?: string) => {
   }
 
   // For cloned plugins, use the source plugin name for rendering decisions
-  const effectivePluginName = (props.schema as any)?._sourcePlugin || pluginName
+  const effectivePluginName = props.schema?._sourcePlugin || pluginName
   pluginConfig.value = getPluginConfig(effectivePluginName)
   freeformComponent.value = shouldUseFreeForm(effectivePluginName, props.engine)
     ? (getFreeFormComponent(effectivePluginName) ?? CommonForm)

@@ -410,6 +410,10 @@ const clonedSourcePlugin = ref<string | null>(null)
 
 const isClonedPlugin = computed(() => clonedSourcePlugin.value !== null)
 
+const effectivePluginType = computed(() =>
+  (isClonedPlugin.value && clonedSourcePlugin.value) ? clonedSourcePlugin.value : props.pluginType
+)
+
 const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
   if (props.engine) return props.engine
   if (!customPluginFreeform || !isCustomPlugin.value) return undefined
@@ -686,8 +690,7 @@ const getArrayType = (list: unknown[]): string => {
 
 const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>, arrayNested?: boolean) => {
   let schema = (response && response.fields) || []
-  const effectivePluginType = (isClonedPlugin.value && clonedSourcePlugin.value) ? clonedSourcePlugin.value : props.pluginType
-  const pluginSchema = customSchemas[effectivePluginType as keyof CustomSchemas]
+  const pluginSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
   const credentialSchema = CREDENTIAL_METADATA[props.pluginType]?.schema?.fields
 
   // schema can either be an object or an array of objects. If it's an array, convert it to an object
@@ -1276,9 +1279,9 @@ const initScopeFields = (): void => {
   }
 
   // apply custom front-end schema if overwriteDefault is true
-  if (customSchemas[props.pluginType as keyof CustomSchemas] && customSchemas[props.pluginType as keyof CustomSchemas].overwriteDefault) {
-    if (Object.hasOwnProperty.call(customSchemas[props.pluginType as keyof CustomSchemas], 'formSchema')) {
-      Object.assign(defaultFormSchema, customSchemas[props.pluginType as keyof CustomSchemas].formSchema)
+  if (customSchemas[effectivePluginType.value as keyof CustomSchemas] && customSchemas[effectivePluginType.value as keyof CustomSchemas].overwriteDefault) {
+    if (Object.hasOwnProperty.call(customSchemas[effectivePluginType.value as keyof CustomSchemas], 'formSchema')) {
+      Object.assign(defaultFormSchema, customSchemas[effectivePluginType.value as keyof CustomSchemas].formSchema)
     }
   }
 }
@@ -1476,7 +1479,7 @@ const saveFormData = async (): Promise<void> => {
     let response: AxiosResponse | undefined
 
     const payload = JSON.parse(JSON.stringify(getRequestBody.value))
-    const customSchema = customSchemas[props.pluginType as keyof CustomSchemas]
+    const customSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
     if (typeof customSchema?.shamefullyTransformPayload === 'function') {
       customSchema.shamefullyTransformPayload({
         originalModel: formFieldsOriginal,

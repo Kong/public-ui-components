@@ -2229,7 +2229,8 @@ describe('<PluginForm />', () => {
       it('renders OIDCForm for a cloned plugin when its source plugin is openid-connect', () => {
         // openid-connect uses a shared custom form (OIDCForm) — a clone should inherit it.
         const pluginType = 'oidc-clone'
-        interceptKonnectSchema({ mockData: schemaCors })
+        // Use a minimal schema — OIDCForm renders its own fields regardless of schema content.
+        interceptKonnectSchema({ mockData: { fields: [] } })
         interceptClonedPlugin({ pluginName: pluginType, ref: 'openid-connect' })
 
         cy.mount(PluginForm, {
