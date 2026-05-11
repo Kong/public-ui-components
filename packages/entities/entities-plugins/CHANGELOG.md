@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.201.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.201.1...@kong-ui-public/entities-plugins@9.201.2) (2026-05-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** prevent showing create custom plugin card when query is present ([#3239](https://github.com/Kong/public-ui-components/issues/3239)) ([edd093c](https://github.com/Kong/public-ui-components/commit/edd093cfb689557e157e383db19ff244646367e7))
+
+
+
+
+
 ## [9.201.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.201.0...@kong-ui-public/entities-plugins@9.201.1) (2026-05-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
