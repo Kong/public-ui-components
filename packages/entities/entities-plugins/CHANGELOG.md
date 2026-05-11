@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.201.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.201.2...@kong-ui-public/entities-plugins@9.201.3) (2026-05-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** cloned plugins now render source plugin's shared VFG form ([#3241](https://github.com/Kong/public-ui-components/issues/3241)) ([3dbaa46](https://github.com/Kong/public-ui-components/commit/3dbaa461e41a19ea9c7a71df6fa147e2d82c388a))
+
+
+
+
+
 ## [9.201.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.201.1...@kong-ui-public/entities-plugins@9.201.2) (2026-05-11)
 
 
