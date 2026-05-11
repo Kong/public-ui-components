@@ -121,6 +121,7 @@ async function copyTextToClipboard(text: string): Promise<boolean> {
     right: 10px;
     top: 10px;
     transition: opacity linear var(--kui-animation-duration-20, $kui-animation-duration-20);
+    z-index: 10000;
   }
 
   &:hover .deck-command-copy-button {
