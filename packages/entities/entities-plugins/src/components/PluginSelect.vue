@@ -361,7 +361,7 @@ const filteredPlugins = computed((): PluginCardList => {
     }
   }
 
-  if (shouldShowCreateCustomPluginCard.value) {
+  if (shouldShowCreateCustomPluginCard.value && !query) {
     const customPlugins = (results[PluginGroup.CUSTOM_PLUGINS] || []).filter((plugin: PluginType) => plugin.id !== createCustomPluginCard.value.id)
     results[PluginGroup.CUSTOM_PLUGINS] = [createCustomPluginCard.value, ...customPlugins]
   }
