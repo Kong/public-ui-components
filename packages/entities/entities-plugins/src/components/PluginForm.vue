@@ -411,7 +411,7 @@ const clonedSourcePlugin = ref<string | null>(null)
 const isClonedPlugin = computed(() => clonedSourcePlugin.value !== null)
 
 const effectivePluginType = computed(() =>
-  (isClonedPlugin.value && clonedSourcePlugin.value) ? clonedSourcePlugin.value : props.pluginType
+  (isClonedPlugin.value && clonedSourcePlugin.value) ? clonedSourcePlugin.value : props.pluginType,
 )
 
 const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
