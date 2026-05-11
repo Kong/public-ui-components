@@ -14,7 +14,10 @@
       :multiple="true"
       name="config.compound_identifier"
     />
-    <Field name="config.counter_key" />
+    <Field
+      v-if="getSchema('config.counter_key')"
+      name="config.counter_key"
+    />
     <Field name="config.sync_rate" />
     <Field name="config.namespace" />
     <Field name="config.strategy" />
@@ -40,4 +43,7 @@ import AdvancedFields from '../../shared/AdvancedFields.vue'
 import RequestLimitsForm from './RequestLimitsForm.vue'
 import ErrorMessageForm from './ErrorMessageForm.vue'
 import RedisField from './RedisField.vue'
+import { useFormShared } from '../../shared/composables'
+
+const { getSchema } = useFormShared()
 </script>
