@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.16.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.16.6...@kong-ui-public/analytics-chart@10.16.7) (2026-05-11)
+
+
+### Bug Fixes
+
+* use design token colors for status code colors ([#3236](https://github.com/Kong/public-ui-components/issues/3236)) ([1e4c857](https://github.com/Kong/public-ui-components/commit/1e4c857c0d0e0a28fa374f6044fafc66fc47bb78))
+
+
+
+
+
 ## [10.16.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.16.5...@kong-ui-public/analytics-chart@10.16.6) (2026-05-10)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
