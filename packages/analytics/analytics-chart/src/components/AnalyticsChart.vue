@@ -110,7 +110,7 @@ import DonutChart from './chart-types/DonutChart.vue'
 import { computed, provide, toRef } from 'vue'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
-import { hasMillisecondTimestamps, defaultStatusCodeColors, isUnitlessMetricUnit } from '../utils'
+import { hasMillisecondTimestamps, defaultStatusCodeColors, isNoSuffixMetric } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
@@ -248,7 +248,7 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
   }
 
   // @ts-ignore - dynamic i18n key
-  if (isUnitlessMetricUnit(metricUnit) && i18n.te(`metricAxisTitles.${metricName}`)) {
+  if (isNoSuffixMetric(metricUnit) && i18n.te(`metricAxisTitles.${metricName}`)) {
     // @ts-ignore - dynamic i18n key
     return i18n.t(`metricAxisTitles.${metricName}`) || undefined
   }
@@ -281,8 +281,8 @@ const metricAxesTitle = computed<string | undefined>(() => {
   }
 
   // @ts-ignore - dynamic i18n key
-  if (i18n.te(`metricAxisTitles.${metricName}`) && (isUnitlessMetricUnit(metricUnit) || i18n.te(`chartUnits.${metricUnit}`))) {
-    if (isUnitlessMetricUnit(metricUnit)) {
+  if (i18n.te(`metricAxisTitles.${metricName}`) && (isNoSuffixMetric(metricUnit) || i18n.te(`chartUnits.${metricUnit}`))) {
+    if (isNoSuffixMetric(metricUnit)) {
       // @ts-ignore - dynamic i18n key
       return i18n.t(`metricAxisTitles.${metricName}`) || undefined
     }

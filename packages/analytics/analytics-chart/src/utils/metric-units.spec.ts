@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { isUnitlessMetricUnit, isSummableMetricUnit, isSummableMetricName } from './metric-units'
+import { isNoSuffixMetric, isSummableMetricUnit, isSummableMetricName } from './metric-units'
 
 describe('metric-units', () => {
-  describe('isUnitlessMetricUnit', () => {
+  describe('isNoSuffixMetric', () => {
     it.each([
       'control_plane_count',
       'service_count',
@@ -12,14 +12,14 @@ describe('metric-units', () => {
       'node_count',
       'usd',
     ])('identifies %s as a unitless metric unit', (unit) => {
-      expect(isUnitlessMetricUnit(unit)).toBe(true)
+      expect(isNoSuffixMetric(unit)).toBe(true)
     })
 
     it.each([
       'count',
       'bytes',
     ])('does not identify %s as a unitless metric unit', (unit) => {
-      expect(isUnitlessMetricUnit(unit)).toBe(false)
+      expect(isNoSuffixMetric(unit)).toBe(false)
     })
   })
 

@@ -55,8 +55,7 @@ import HtmlLegend from '../chart-plugins/ChartLegend.vue'
 import {
   datavisPalette,
   darkenColor,
-  isSummableMetricUnit,
-  isSummableMetricName,
+  isSummableMetric,
 } from '../../utils'
 import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
@@ -159,13 +158,13 @@ const formattedDataset = computed<DonutChartData[]>(() => {
 
 const { formatUnit } = unitFormatter({ i18n })
 
-const isSummable = computed(() => isSummableMetricUnit(props.metricUnit) || isSummableMetricName(props.metricName ?? ''))
+const isSummable = computed(() => isSummableMetric(props.metricName ?? ''))
 
 const grandTotal = computed(() => {
   const sum = formattedDataset.value[0]?.data.reduce((a, b) => a + b, 0) ?? 0
   return formatUnit(sum, props.metricUnit, {
     approximate: true,
-    translateUnit: (unit, value) => isSummableMetricUnit(unit) && unit !== 'usd' ? '' : translateUnit(unit, value),
+    translateUnit: (unit, value) => translateUnit(unit, value),
   }).trim()
 })
 
