@@ -10,3 +10,5 @@ minimumReleaseAgeExclude:
 trustPolicy: no-downgrade
 # Ignore policy if published at least 12 days (17280 minutes)
 trustPolicyIgnoreAfter: 17280
+# Block transitive dependencies from using exotic sources (git repos, tarball URLs)
+blockExoticSubdeps: true
