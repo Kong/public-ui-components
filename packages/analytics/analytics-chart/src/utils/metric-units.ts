@@ -1,6 +1,6 @@
 
 export const isNoSuffixMetric = (unit: string): boolean => {
-  return unit.toLocaleLowerCase().includes('count')
+  return unit.toLocaleLowerCase().endsWith('count')
 }
 
 // Unit-based checks don't work for size metrics since all aggregations (sum, avg, percentiles) share

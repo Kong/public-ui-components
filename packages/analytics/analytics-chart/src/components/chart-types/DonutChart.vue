@@ -146,9 +146,9 @@ const formattedDataset = computed<DonutChartData[]>(() => {
     labels: [],
     backgroundColor: [],
     borderColor: '#ffffff',
-    borderWidth: 3,
+    borderWidth: 1,
     hoverBorderColor: [],
-    hoverBorderWidth: 3,
+    hoverBorderWidth: 1,
     data: [],
     hoverOffset: 10,
   })
