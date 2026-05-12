@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.24.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.1...@kong-ui-public/forms@4.24.2) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.24.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.0...@kong-ui-public/forms@4.24.1) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+# [4.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.38...@kong-ui-public/forms@4.24.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to redis configuration ([#3234](https://github.com/Kong/public-ui-components/issues/3234)) ([faf3b97](https://github.com/Kong/public-ui-components/commit/faf3b97b61f79200d5a798694e0c82fc0c2bf1d6))
+
+
+
+
+
+## [4.23.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.37...@kong-ui-public/forms@4.23.38) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.23.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.36...@kong-ui-public/forms@4.23.37) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.23.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.35...@kong-ui-public/forms@4.23.36) (2026-05-08)
 
 **Note:** Version bump only for package @kong-ui-public/forms

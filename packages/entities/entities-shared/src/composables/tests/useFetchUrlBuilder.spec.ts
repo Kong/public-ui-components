@@ -91,4 +91,26 @@ describe('useFetchUrlBuilder()', () => {
 
     expect(builder(query)).toBe('http://foo.bar/entity/testQuery')
   })
+
+  it('should preserve base URL query params in the exact match URL for konnect', () => {
+    const config = {
+      apiBaseUrl: '/',
+      app: 'konnect',
+      controlPlaneId: 'default',
+      isExactMatch: true,
+    } as KonnectConfig
+
+    const builder = useFetchUrlBuilder(config, 'http://foo.bar/entity?list_consumers=false')
+
+    const query: TableDataFetcherParams = {
+      page: 1,
+      pageSize: 10,
+      offset: '0',
+      sortColumnKey: 'name',
+      sortColumnOrder: 'asc',
+      query: 'test-id',
+    }
+
+    expect(builder(query)).toBe('http://foo.bar/entity/test-id?list_consumers=false')
+  })
 })

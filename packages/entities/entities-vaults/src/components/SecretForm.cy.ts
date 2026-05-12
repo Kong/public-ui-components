@@ -178,4 +178,102 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.get('.kong-ui-entities-secret-form form').should('not.exist')
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in vault and POST URLs when creating with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vaultId}`,
+        },
+        { statusCode: 200, body: { config: { config_store_id: configStoreId } } },
+      ).as('getVaultWithWorkspace')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/default/config-stores/${configStoreId}/secrets`,
+        },
+        { statusCode: 201, body: secret },
+      ).as('createSecretWithWorkspace')
+
+      cy.mount(SecretForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          vaultId,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getVaultWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+        cy.wait('@createSecretWithWorkspace')
+      })
+    })
+
+    it('includes workspace in vault and GET/PUT URLs when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vaultId}`,
+        },
+        { statusCode: 200, body: { config: { config_store_id: configStoreId } } },
+      ).as('getVaultWithWorkspace')
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/default/config-stores/${configStoreId}/secrets/${secret.key}`,
+        },
+        { statusCode: 200, body: secret },
+      ).as('getSecretWithWorkspace')
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/default/config-stores/${configStoreId}/secrets/${secret.key}`,
+        },
+        { statusCode: 200, body: secret },
+      ).as('updateSecretWithWorkspace')
+
+      cy.mount(SecretForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          vaultId,
+          secretId: secret.key,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getVaultWithWorkspace')
+      cy.wait('@getSecretWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+        cy.wait('@updateSecretWithWorkspace')
+      })
+    })
+
+    it('omits workspace segment in vault and POST URLs when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}`,
+        },
+        { statusCode: 200, body: { config: { config_store_id: configStoreId } } },
+      ).as('getVaultNoWorkspace')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores/${configStoreId}/secrets`,
+        },
+        { statusCode: 201, body: secret },
+      ).as('createSecretNoWorkspace')
+
+      cy.mount(SecretForm, {
+        props: {
+          config: baseConfigKonnect,
+          vaultId,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getVaultNoWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+        cy.wait('@createSecretNoWorkspace')
+      })
+    })
+  })
 })

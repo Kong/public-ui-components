@@ -455,11 +455,10 @@ const fetcherBaseUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{entityType}/gi, props.config?.entityType || '')
     .replace(/{entityId}/gi, props.config?.entityId || '')
 })
@@ -617,12 +616,11 @@ const confirmSwitchEnablement = async () => {
     .replace(/{id}/gi, switchEnablementTarget.value.id || '')
 
   if (props.config.app === 'konnect') {
-    url = url
-      .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
+
+  url = url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 
   const enabled = !switchEnablementTarget.value.enabled
 

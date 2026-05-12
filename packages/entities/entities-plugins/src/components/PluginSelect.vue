@@ -361,7 +361,7 @@ const filteredPlugins = computed((): PluginCardList => {
     }
   }
 
-  if (shouldShowCreateCustomPluginCard.value) {
+  if (shouldShowCreateCustomPluginCard.value && !query) {
     const customPlugins = (results[PluginGroup.CUSTOM_PLUGINS] || []).filter((plugin: PluginType) => plugin.id !== createCustomPluginCard.value.id)
     results[PluginGroup.CUSTOM_PLUGINS] = [createCustomPluginCard.value, ...customPlugins]
   }
@@ -538,13 +538,11 @@ const availablePluginsUrl = computed((): string => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = props.config.gatewayInfo?.edition === 'community'
-      ? `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePluginsForOss}`
-      : url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+  } else if (props.config.app === 'kongManager' && props.config.gatewayInfo?.edition === 'community') {
+    return `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePluginsForOss}`
   }
 
-  return url
+  return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
 })
 
 const streamingPluginsUrl = computed<string | null>(() => {
@@ -553,11 +551,9 @@ const streamingPluginsUrl = computed<string | null>(() => {
 
     if (props.config.app === 'konnect') {
       url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-    } else if (props.config.app === 'kongManager') {
-      url = url.replace(/{workspace}/gi, props.config.workspace || '')
     }
 
-    return url
+    return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
   return null
@@ -585,11 +581,10 @@ const fetchEntityPluginsUrl = computed((): string => {
 
     if (props.config.app === 'konnect') {
       url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-    } else if (props.config.app === 'kongManager') {
-      url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
     }
 
     return url
+      .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
       .replace(/{entityType}/gi, props.config.entityType || '')
       .replace(/{entityId}/gi, props.config.entityId || '')
   }

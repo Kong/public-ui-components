@@ -280,13 +280,13 @@ const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
 
 const mapControlPlane = (url: string) => {
+  let urlString = url
+
   if (props.config.app === 'konnect') {
-    return url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+    urlString = urlString.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   }
 
-  return url
+  return urlString.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
 }
 
 // define endpoints for use by KFG
@@ -471,11 +471,13 @@ const syncFormRenderingMode = (pluginName?: string) => {
     return
   }
 
-  pluginConfig.value = getPluginConfig(pluginName)
-  freeformComponent.value = shouldUseFreeForm(pluginName, props.engine)
-    ? (getFreeFormComponent(pluginName) ?? CommonForm)
+  // For cloned plugins, use the source plugin name for rendering decisions
+  const effectivePluginName = props.schema?._sourcePlugin || pluginName
+  pluginConfig.value = getPluginConfig(effectivePluginName)
+  freeformComponent.value = shouldUseFreeForm(effectivePluginName, props.engine)
+    ? (getFreeFormComponent(effectivePluginName) ?? CommonForm)
     : undefined
-  sharedFormName.value = getSharedFormName(pluginName)
+  sharedFormName.value = getSharedFormName(effectivePluginName)
 
   setPluginFormLayoutState(Boolean(freeformComponent.value))
 }

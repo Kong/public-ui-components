@@ -100,10 +100,10 @@ const requestUrl = computed(() => {
         ? endpoints.customPlugin[props.config.app].cloned.edit
         : endpoints.select[props.config.app].schemaCustomPluginItem
 
-    let url = `${props.config.apiBaseUrl}${partialPluginURL}`
-    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-    url = url.replace(/{pluginId}/gi, props.plugin.id)
-    return url
+    return `${props.config.apiBaseUrl}${partialPluginURL}`
+      .replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+      .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+      .replace(/{pluginId}/gi, props.plugin.id)
   }
 
   if (props.config.app === 'kongManager' && pluginType && pluginType !== 'schema') {

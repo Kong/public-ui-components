@@ -33,10 +33,13 @@ export default function useFetchUrlBuilder(
         // handle
         // 1) all konnect usage or
         // 2) kongManager usage with config.isExactMatch === true
-        urlWithParams.search = '' // trim any query params
+        const baseParams = new URLSearchParams(baseRequestUrl.value.search)
+        urlWithParams.search = '' // clear existing search params because we will re-apply them after determining the URL structure based on isExactMatch
         urlWithParams = toValue(config).isExactMatch
           ? new URL(`${urlWithParams.href}/${query}`)
           : new URL(`${urlWithParams.href}?filter[name][contains]=${query}`)
+        // Re-apply static params from the base URL definition (e.g. list_consumers=false)
+        baseParams.forEach((value, key) => urlWithParams.searchParams.append(key, value))
       } else {
         // handle kongManager usage with config.isExactMatch === false
         if (!isExactMatch.value) {

@@ -8,7 +8,7 @@ export { AnalyticsChart, SimpleChart, TopNTable, CsvExportModal, SparklineChart 
 
 export * from './types'
 export * from './enums'
-export * from './utils/colors'
-export * from './utils/customColors'
+export { statusCodeBadgeBackgroundColor } from './utils/colors'
+export { lookupStatusCodeColor } from './utils/customColors'
 export * from './utils/constants'
 export * from './utils/queryError'

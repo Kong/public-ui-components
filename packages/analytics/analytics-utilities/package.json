@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-utilities",
-  "version": "12.13.7",
+  "version": "12.14.0",
   "type": "module",
   "main": "./dist/vitals-utilities.umd.js",
   "module": "./dist/vitals-utilities.es.js",
@@ -68,7 +68,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.20.1",
-    "ajv": "^8.18.0",
+    "ajv": "^8.20.0",
     "json-schema-to-ts": "^3.1.1",
     "vue": "^3.5.33"
   }
