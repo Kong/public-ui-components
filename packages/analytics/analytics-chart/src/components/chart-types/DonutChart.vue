@@ -54,7 +54,6 @@ import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import HtmlLegend from '../chart-plugins/ChartLegend.vue'
 import {
   datavisPalette,
-  darkenColor,
   isSummableMetric,
 } from '../../utils'
 import { Doughnut } from 'vue-chartjs'
