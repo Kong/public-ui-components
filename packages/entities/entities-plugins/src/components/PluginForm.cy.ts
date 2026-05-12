@@ -14,7 +14,6 @@ import {
 import schemaAiProxy from '../../fixtures/schemas/ai-proxy'
 import schemaCors from '../../fixtures/schemas/cors'
 import schemaMocking from '../../fixtures/schemas/mocking'
-import schemaOidc from '../../fixtures/schemas/oidc'
 import schemaRateLimiting from '../../fixtures/schemas/rate-limiting'
 import PluginForm from './PluginForm.vue'
 import { PLUGIN_METADATA } from '../definitions/metadata'
@@ -2230,7 +2229,7 @@ describe('<PluginForm />', () => {
       it('renders OIDCForm for a cloned plugin when its source plugin is openid-connect', () => {
         // openid-connect uses a shared custom form (OIDCForm) — a clone should inherit it.
         const pluginType = 'oidc-clone'
-        interceptKonnectSchema({ mockData: schemaOidc })
+        interceptKonnectSchema({ mockData: [] })
         interceptClonedPlugin({ pluginName: pluginType, ref: 'openid-connect' })
 
         cy.mount(PluginForm, {
