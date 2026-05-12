@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.16.8...@kong-ui-public/analytics-chart@10.17.0) (2026-05-12)
+
+
+### Features
+
+* display tooltip numbers with better css ([#3243](https://github.com/Kong/public-ui-components/issues/3243)) ([6b4254c](https://github.com/Kong/public-ui-components/commit/6b4254cf306b647c14bbe434e4bf34ff8d0c7dd4))
+
+
+
+
+
 ## [10.16.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.16.7...@kong-ui-public/analytics-chart@10.16.8) (2026-05-11)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
