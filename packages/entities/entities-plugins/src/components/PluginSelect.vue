@@ -759,8 +759,8 @@ onMounted(async () => {
 
 watch(
   () => [
-    props.config.app === 'kongManager' ? props.config.workspace : undefined,
     props.config.app === 'konnect' ? props.config.controlPlaneId : undefined,
+    props.config.workspace,
     props.config.entityType,
     props.config.entityId,
     props.config.app === 'kongManager' ? props.config.gatewayInfo?.edition : undefined,

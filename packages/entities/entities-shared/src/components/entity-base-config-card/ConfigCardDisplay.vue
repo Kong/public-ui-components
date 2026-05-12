@@ -85,7 +85,7 @@
     :is-customization-modal-visible="isDeckCustomizationVisible"
     :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
     :unredacted-record="unredactedEntityRecord"
-    :workspace="config.app === 'kongManager' ? config.workspace : undefined"
+    :workspace="config.workspace || undefined"
     @customization-close="$emit('deck-customization:close')"
   />
 </template>
