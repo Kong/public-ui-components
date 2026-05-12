@@ -651,4 +651,96 @@ describe('<SniForm />', {
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in GET URL when loading with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/certificates*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/snis/${sni1.id}`,
+        },
+        { statusCode: 200, body: sni1 },
+      ).as('getSniWithWorkspace')
+
+      cy.mount(SniForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          sniId: sni1.id,
+        },
+      })
+
+      cy.wait('@getSniWithWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/certificates*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/snis/${sni1.id}`,
+        },
+        { statusCode: 200, body: sni1 },
+      ).as('getSniWithWorkspace')
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/snis/${sni1.id}`,
+        },
+        { statusCode: 200, body: sni1 },
+      ).as('updateSniWithWorkspace')
+
+      cy.mount(SniForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          sniId: sni1.id,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getSniWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+        cy.wait('@updateSniWithWorkspace')
+      })
+    })
+
+    it('omits workspace segment in GET URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/certificates*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/snis/${sni1.id}`,
+        },
+        { statusCode: 200, body: sni1 },
+      ).as('getSniNoWorkspace')
+
+      cy.mount(SniForm, {
+        props: {
+          config: baseConfigKonnect,
+          sniId: sni1.id,
+        },
+      })
+
+      cy.wait('@getSniNoWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+  })
 })

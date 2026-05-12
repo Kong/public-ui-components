@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.14.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.14.2...@kong-ui-public/entities-upstreams-targets@3.14.3) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.14.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.14.1...@kong-ui-public/entities-upstreams-targets@3.14.2) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.14.0...@kong-ui-public/entities-upstreams-targets@3.14.1) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+# [3.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.13.34...@kong-ui-public/entities-upstreams-targets@3.14.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to vault & upstream target entities ([#3233](https://github.com/Kong/public-ui-components/issues/3233)) ([99e75c4](https://github.com/Kong/public-ui-components/commit/99e75c4bba24713cd888b0d1a90779fc5e53f6d0))
+
+
+
+
+
+## [3.13.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.13.33...@kong-ui-public/entities-upstreams-targets@3.13.34) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.13.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.13.32...@kong-ui-public/entities-upstreams-targets@3.13.33) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.13.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.13.31...@kong-ui-public/entities-upstreams-targets@3.13.32) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.13.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.13.30...@kong-ui-public/entities-upstreams-targets@3.13.31) (2026-05-07)
+
+
+### Bug Fixes
+
+* **locales/en.json:** fix copies in all the entities ([#3221](https://github.com/Kong/public-ui-components/issues/3221)) ([a3bcf52](https://github.com/Kong/public-ui-components/commit/a3bcf526d9aff14cab8e2f3d9ba7810b5167d974))
+
+
+
+
+
 ## [3.13.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.13.29...@kong-ui-public/entities-upstreams-targets@3.13.30) (2026-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets

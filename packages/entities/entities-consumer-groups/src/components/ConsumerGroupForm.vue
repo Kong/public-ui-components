@@ -123,9 +123,9 @@ const props = defineProps({
   },
   /** If a valid consumerGroupId is provided, it will put the form in Edit mode instead of Create */
   consumerGroupId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
   hideConsumers: {
     type: Boolean,
@@ -196,11 +196,11 @@ const getUrl = (action: ConsumerGroupActions, groupId = '', consumerId = ''): st
 
   if (props.config?.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config?.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  url = url.replace(/{id}/gi, groupId || props.consumerGroupId)
+  url = url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, (groupId || props.consumerGroupId) ?? '')
 
   if (action === 'addConsumer' || action === 'removeConsumer') {
     url = url.replace(/{consumerId}/gi, consumerId)
@@ -267,13 +267,13 @@ const emitError = (e: AxiosError): void => {
   emit('error', e as AxiosError)
 }
 
-const emitUpdate = (id = props.consumerGroupId): void => {
+const emitUpdate = (id = props.consumerGroupId ?? ''): void => {
   Object.assign(originalFields, state.fields)
 
   emit('update', { ...state.fields, id })
 }
 
-const handleConsumers = (results: any[] | undefined, message: string, groupId = props.consumerGroupId): void => {
+const handleConsumers = (results: any[] | undefined, message: string, groupId = props.consumerGroupId ?? ''): void => {
   const failed = results?.find(result => result.status !== 'fulfilled')
   if (failed) {
     emitError({

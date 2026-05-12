@@ -8,7 +8,7 @@
         "tags": "Tags"
       },
       "empty_state": {
-        "title": "Configure a New Upstream",
+        "title": "Configure a new upstream",
         "description": "Upstreams are used to load balance incoming requests."
       },
       "empty_state_v2": {
@@ -35,7 +35,7 @@
       "view": "View Details"
     },
     "delete": {
-      "title": "Delete an Upstream",
+      "title": "Delete an upstream",
       "description": "This action cannot be reversed so make sure to check upstream usage before deleting."
     },
     "errors": {
@@ -54,34 +54,34 @@
         "in_range": "Accepts an integer in the range of 10 - 65536"
       },
       "general_info": {
-        "title": "General Information",
+        "title": "General information",
         "help": "General information will help identify and manage this Upstream."
       },
       "load_balancing": {
-        "title": "Load Balancing",
+        "title": "Load balancing",
         "help": "Active health checks actively probe targets for their health. Currently only support HTTP/HTTPS targets."
       },
       "health_check": {
-        "title": "Health Checks & Circuit Breakers",
+        "title": "Health checks & circuit breakers",
         "help": "Active health checks actively probe targets for their health. Currently only support HTTP/HTTPS targets."
       },
       "active_health_check": {
-        "title": "Active Health Checks",
+        "title": "Active health checks",
         "help": "Active health checks actively probe targets for their health. Currently only support HTTP/HTTPS targets."
       },
       "passive_health_check": {
-        "title": "Passive Health Checks",
+        "title": "Passive health checks",
         "help": "Passive health checks, also known as circuit breakers, are checks performed based on the requests being proxied by Kong (HTTP/HTTPS/TCP), with no additional traffic being generated."
       },
       "buttons": {
         "view_documentation": "View documentation"
       },
       "algorithms": {
-        "round_robin_label": "Round Robin",
-        "least_connections_label": "Least Connections",
-        "consistent_hashing_label": "Consistent Hashing",
+        "round_robin_label": "Round robin",
+        "least_connections_label": "Least connections",
+        "consistent_hashing_label": "Consistent hashing",
         "latency_label": "Latency",
-        "sticky_sessions_label": "Sticky Sessions"
+        "sticky_sessions_label": "Sticky sessions"
       },
       "hash_labels": {
         "none": "None",
@@ -90,8 +90,8 @@
         "header": "Header",
         "cookie": "Cookie",
         "path": "Path",
-        "query_argument": "Query Argument",
-        "uri_capture": "URI Capture"
+        "query_argument": "Query argument",
+        "uri_capture": "URI capture"
       },
       "hash_tooltips": {
         "hash_on_header": {
@@ -185,11 +185,11 @@
           "host": "host"
         },
         "host_header": {
-          "label": "Host Header"
+          "label": "Host header"
         },
         "client_certificate": {
-          "label": "Client Certificate",
-          "placeholder": "Select or enter a Certificate ID",
+          "label": "Client certificate",
+          "placeholder": "Select or enter a certificate ID",
           "tooltip": "If set, the certificate to be used as client certificate while TLS handshaking to the upstream server."
         },
         "tags": {
@@ -203,11 +203,11 @@
           "tooltip": "Which load balancing algorithm to use."
         },
         "sticky_sessions_cookie": {
-          "label": "Sticky Sessions Cookie",
+          "label": "Sticky sessions cookie",
           "tooltip": "The cookie name to keep sticky sessions."
         },
         "sticky_sessions_cookie_path": {
-          "label": "Sticky Sessions Cookie Path",
+          "label": "Sticky sessions cookie path",
           "tooltip": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes)."
         },
         "slots": {
@@ -220,22 +220,22 @@
           "tooltip": "What to use as hashing input. Using {result} results in a weighted-round-robin scheme with no hashing."
         },
         "hash_fallback": {
-          "label": "Hash Fallback",
+          "label": "Hash fallback",
           "help": "What to use as hashing input if the primary hash_on does not return a hash",
-          "tooltip": "What to use as hashing input if the primary {hash_on} does not return a hash (eg. header is missing, or no Consumer identified). Not available if {hash_on} is set to {cookie}.",
+          "tooltip": "What to use as hashing input if the primary {hash_on} does not return a hash (eg. header is missing, or no consumer identified). Not available if {hash_on} is set to {cookie}.",
           "hash_on": "hash_on",
           "cookie": "cookie"
         },
         "active_health_checks": {
-          "label": "Active Health Checks",
+          "label": "Active health checks",
           "help": "Actively probe the targets for their health."
         },
         "passive_health_checks": {
-          "label": "Passive Health Checks / Circuit Breakers",
+          "label": "Passive health checks / Circuit breakers",
           "help": "Checks performed based on the requests being proxied by Kong (HTTP/HTTPS/TCP), with no additional traffic being generated."
         },
         "healthchecks_threshold": {
-          "label": "Healthchecks Threshold"
+          "label": "Healthchecks threshold"
         },
         "header": {
           "label": "Header"
@@ -248,19 +248,19 @@
           "label": "Cookie"
         },
         "cookie_path": {
-          "label": "Cookie Path"
+          "label": "Cookie path"
         },
         "query_argument": {
-          "label": "Query Argument"
+          "label": "Query argument"
         },
         "uri_capture": {
-          "label": "URI Capture"
+          "label": "URI capture"
         },
         "active_healthcheck_type": {
-          "label": "Active Health Check Type"
+          "label": "Active health check type"
         },
         "http_path": {
-          "label": "HTTP Path"
+          "label": "HTTP path"
         },
         "timeout": {
           "label": "Timeout"
@@ -282,19 +282,19 @@
           "label": "Successes"
         },
         "http_statuses": {
-          "label": "HTTP Statuses"
+          "label": "HTTP statuses"
         },
         "http_failures": {
-          "label": "HTTP Failures"
+          "label": "HTTP failures"
         },
         "tcp_failures": {
-          "label": "TCP Failures"
+          "label": "TCP failures"
         },
         "timeouts": {
           "label": "Timeouts"
         },
         "passive_health_check_type": {
-          "label": "Passive Health Check Type"
+          "label": "Passive health check type"
         }
       }
     },
@@ -306,31 +306,31 @@
     "list": {
       "table_headers": {
         "id": "ID",
-        "target_address": "Target Address",
+        "target_address": "Target address",
         "weight": "Weight",
         "tags": "Tags",
-        "target_type": "Target Type"
+        "target_type": "Target type"
       },
       "empty_state": {
-        "title": "Configure a New Target",
+        "title": "Configure a new target",
         "description": "A target is an IP address/hostname with a port that identifies an instance of a backend service."
       },
       "toolbar_actions": {
-        "new_target": "New Target"
+        "new_target": "New target"
       }
     },
     "title": "Targets",
     "actions": {
-      "create": "New Target",
+      "create": "New target",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",
       "delete": "Delete",
-      "mark_healthy": "Mark Healthy",
-      "mark_unhealthy": "Mark Unhealthy"
+      "mark_healthy": "Mark healthy",
+      "mark_unhealthy": "Mark unhealthy"
     },
     "delete": {
-      "title": "Delete a Target",
+      "title": "Delete a target",
       "description": "This action cannot be reversed so make sure to check target usage before deleting."
     },
     "errors": {
@@ -345,10 +345,10 @@
     },
     "form": {
       "create": {
-        "title": "New Target"
+        "title": "New target"
       },
       "edit": {
-        "title": "Edit Target"
+        "title": "Edit target"
       },
       "buttons": {
         "save": "Save",
@@ -356,7 +356,7 @@
       },
       "fields": {
         "target": {
-          "label": "Target Address",
+          "label": "Target address",
           "placeholder": "Enter IP/hostname and port",
           "tooltip": "The target address (IP or hostname) and port. If omitted the port defaults to 8000."
         },
@@ -370,7 +370,7 @@
           "help": "e.g. tag1, tag2, tag3"
         },
         "failover": {
-          "label": "Failover Target",
+          "label": "Failover target",
           "load_balance_target": "Load balance",
           "failover_target": "Failover",
           "help": "Whether to use this target only as backup.",

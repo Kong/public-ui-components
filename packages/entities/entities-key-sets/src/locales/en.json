@@ -11,8 +11,8 @@
         "tags": "Tags"
       },
       "empty_state": {
-        "title": "Configure a New Key Set",
-        "description": "A Key Set object holds a collection of asymmetric key objects. This entity allows to logically group keys by their purpose."
+        "title": "Configure a new key set",
+        "description": "A key set object holds a collection of asymmetric key objects. This entity allows to logically group keys by their purpose."
       },
       "empty_state_v2": {
         "title": "Configure your first key set",
@@ -23,19 +23,19 @@
       }
     },
     "actions": {
-      "create": "New Key Set",
+      "create": "New key set",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",
       "delete": "Delete",
       "clear": "Clear",
-      "view": "View Details"
+      "view": "View details"
     },
     "search": {
       "placeholder": "Filter by exact name or ID"
     },
     "delete": {
-      "title": "Delete a Key Set",
+      "title": "Delete a key set",
       "description": "Deleting this key set will also delete keys associated. This action cannot be reversed so make sure to check the key set usage before deleting."
     },
     "errors": {
@@ -50,7 +50,7 @@
     "form": {
       "sections": {
         "general": {
-          "title": "General Information",
+          "title": "General information",
           "description": "General information will help identify and manage this key set."
         }
       },

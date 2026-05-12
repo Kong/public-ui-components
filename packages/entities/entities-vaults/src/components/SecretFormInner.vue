@@ -159,6 +159,7 @@ const formType = computed((): EntityBaseFormType => props.secretId
 const submitUrl = computed<string>(() => {
   return `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value]}`
     .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, props.configStoreId)
     .replace(/{secretId}/gi, props.secretId)
 })

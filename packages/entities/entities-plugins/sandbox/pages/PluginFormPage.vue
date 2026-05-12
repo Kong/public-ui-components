@@ -52,6 +52,7 @@ import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '.
 import { FEATURE_FLAGS } from '../../src/constants'
 
 import { ToastManager } from '@kong/kongponents'
+import { provideDeckCommandEditor } from '@kong-ui-public/entities-shared/deck-editor'
 
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
 import type { GlobalAction } from '../../src/components/free-form/shared/types'
@@ -80,6 +81,8 @@ provide(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, true)
 provide(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, true)
 provide(FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, true)
 provide(FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, true)
+
+provideDeckCommandEditor()
 
 useProvideExperimentalFreeForms([
   'service-protection',

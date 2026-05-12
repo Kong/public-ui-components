@@ -272,8 +272,8 @@ const props = defineProps({
   },
   /** The ID of a specific plugin instance. If a valid Plugin ID is provided, it will put the form in Edit mode instead of Create */
   pluginId: {
-    type: String,
-    default: '',
+    type: String as PropType<string | null>,
+    default: null,
   },
 
   /** Rather than using internal logic to determine whether or not to hide scope, force it */
@@ -409,6 +409,10 @@ const customPluginFreeform = inject(PLUGIN_FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_F
 const clonedSourcePlugin = ref<string | null>(null)
 
 const isClonedPlugin = computed(() => clonedSourcePlugin.value !== null)
+
+const effectivePluginType = computed(() =>
+  (isClonedPlugin.value && clonedSourcePlugin.value) ? clonedSourcePlugin.value : props.pluginType,
+)
 
 const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
   if (props.engine) return props.engine
@@ -686,7 +690,7 @@ const getArrayType = (list: unknown[]): string => {
 
 const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>, arrayNested?: boolean) => {
   let schema = (response && response.fields) || []
-  const pluginSchema = customSchemas[props.pluginType as keyof CustomSchemas]
+  const pluginSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
   const credentialSchema = CREDENTIAL_METADATA[props.pluginType]?.schema?.fields
 
   // schema can either be an object or an array of objects. If it's an array, convert it to an object
@@ -1275,9 +1279,9 @@ const initScopeFields = (): void => {
   }
 
   // apply custom front-end schema if overwriteDefault is true
-  if (customSchemas[props.pluginType as keyof CustomSchemas] && customSchemas[props.pluginType as keyof CustomSchemas].overwriteDefault) {
-    if (Object.hasOwnProperty.call(customSchemas[props.pluginType as keyof CustomSchemas], 'formSchema')) {
-      Object.assign(defaultFormSchema, customSchemas[props.pluginType as keyof CustomSchemas].formSchema)
+  if (customSchemas[effectivePluginType.value as keyof CustomSchemas] && customSchemas[effectivePluginType.value as keyof CustomSchemas].overwriteDefault) {
+    if (Object.hasOwnProperty.call(customSchemas[effectivePluginType.value as keyof CustomSchemas], 'formSchema')) {
+      Object.assign(defaultFormSchema, customSchemas[effectivePluginType.value as keyof CustomSchemas].formSchema)
     }
   }
 }
@@ -1363,6 +1367,9 @@ watch([entityMap, initialized], (newData, oldData) => {
     if (isCustomPlugin.value) {
       initialFormSchema._isCustomPlugin = true
     }
+    if (isClonedPlugin.value && clonedSourcePlugin.value) {
+      initialFormSchema._sourcePlugin = clonedSourcePlugin.value
+    }
     if (pluginPartialType.value) {
       initialFormSchema._supported_redis_partial_type = pluginPartialType.value
     }
@@ -1403,14 +1410,14 @@ const submitUrl = computed((): string => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
+  // replace workspace
+  url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   // replace resource endpoint for credentials
   url = url.replace(/{resourceEndpoint}/gi, resourceEndpoint.value)
   // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.pluginId)
+  url = url.replace(/{id}/gi, props.pluginId ?? '')
   // replace entityType and entityId if scoped
   url = url.replace(/{entityType}/gi, props.config.entityType || '')
   url = url.replace(/{entityId}/gi, props.config.entityId || '')
@@ -1472,7 +1479,7 @@ const saveFormData = async (): Promise<void> => {
     let response: AxiosResponse | undefined
 
     const payload = JSON.parse(JSON.stringify(getRequestBody.value))
-    const customSchema = customSchemas[props.pluginType as keyof CustomSchemas]
+    const customSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
     if (typeof customSchema?.shamefullyTransformPayload === 'function') {
       customSchema.shamefullyTransformPayload({
         originalModel: formFieldsOriginal,
@@ -1518,14 +1525,11 @@ const schemaUrl = computed((): string => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // replace the plugin type
-  url = url.replace(/{plugin}/gi, pluginType)
-
   return url
+    .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{plugin}/gi, pluginType) // replace the plugin type
 })
 
 const credentialType = ref('')
@@ -1602,6 +1606,9 @@ onBeforeMount(async () => {
             }
             // pass whether the plugin is a custom plugin to the form schema
             if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
+            if (isClonedPlugin.value && clonedSourcePlugin.value) {
+              initialFormSchema._sourcePlugin = clonedSourcePlugin.value
+            }
             finalSchema.value = initialFormSchema
           }
         }
@@ -1620,7 +1627,7 @@ onBeforeMount(async () => {
 async function getClonedPlugin(clonedPluginName: string): Promise<void> {
   try {
     const detail = await fetchClonedPluginDetail(clonedPluginName)
-    clonedSourcePlugin.value = detail?.link ?? null
+    clonedSourcePlugin.value = detail?.ref ?? null
   } catch (error: unknown) {
     // A 404 means this custom plugin is not a clone — leave clonedSourcePlugin null and stay quiet.
     if (isAxiosError(error) && error.response?.status === 404) {

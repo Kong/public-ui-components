@@ -58,13 +58,13 @@
     :entity-record="entityRecord"
     :fetcher-url="fetchUrlJsonBlock"
     request-method="get"
-    :unredacted-record="codeBlockRecord || record"
+    :unredacted-record="unredactedEntityRecord"
   />
   <YamlCodeBlock
     v-if="format === 'yaml' && entityRecord"
     :deck-callout-preference-key="isDeckEnabled ? deckCalloutPreferenceKey : undefined"
     :entity-record="entityRecord"
-    :unredacted-record="codeBlockRecord || record"
+    :unredacted-record="unredactedEntityRecord"
     @deck-callout:click-cta="$emit('request-deck-format')"
   />
   <TerraformCodeBlock
@@ -72,7 +72,7 @@
     :entity-record="entityRecord"
     :entity-type="props.entityType"
     :sub-entity-type="props.subEntityType"
-    :unredacted-record="codeBlockRecord || record"
+    :unredacted-record="unredactedEntityRecord"
   />
   <DeckCodeBlock
     v-if="format === 'deck' && entityRecord"
@@ -84,7 +84,7 @@
     :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
     :is-customization-modal-visible="isDeckCustomizationVisible"
     :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
-    :unredacted-record="codeBlockRecord || record"
+    :unredacted-record="unredactedEntityRecord"
     :workspace="config.app === 'kongManager' ? config.workspace : undefined"
     @customization-close="$emit('deck-customization:close')"
   />
@@ -209,29 +209,35 @@ const { i18n: { t } } = composables.useI18n()
 
 const hasTooltip = (item: RecordItem): boolean => !!(item.tooltip || slots[`${item.key}-label-tooltip`])
 
-// Structured grid always uses `record`; code tabs uses `codeBlockRecordRedacted` or `codeBlockRecord` when the parent passes it
-const recordForCodeBlocks = computed((): Record<string, any> | undefined => props.codeBlockRecordRedacted || props.codeBlockRecord || props.record)
-
 // Deep clone + optional timestamp strip + per-format shaping (`codeBlockRecordFormatter`)
-const entityRecord = computed((): Record<string, any> | undefined => {
-  let record = recordForCodeBlocks.value
-
-  if (record == null) {
+const processForCodeBlock = (source: Record<string, any> | undefined): Record<string, any> | undefined => {
+  if (source == null) {
     return undefined
   }
 
+  // Clone first in case `codeBlockRecordFormatter` mutates the source (could be a prop field)
+  let record: Record<string, any> = JSON.parse(JSON.stringify(source))
   if (props.codeBlockRecordFormatter) {
     record = props.codeBlockRecordFormatter(record, props.format as ConfigCardCodeFormat)
   }
 
-  const processedRecord = JSON.parse(JSON.stringify(record))
   if (!props.preserveCodeBlockTimestamps) {
     // remove dates from JSON/YAML config [KHCP-9837]
-    delete processedRecord.created_at
-    delete processedRecord.updated_at
+    delete record.created_at
+    delete record.updated_at
   }
-  return processedRecord
-})
+  return record
+}
+
+// Structured grid always uses `record`; code tabs uses `codeBlockRecordRedacted` or `codeBlockRecord` when the parent passes it
+const entityRecord = computed((): Record<string, any> | undefined =>
+  processForCodeBlock(props.codeBlockRecordRedacted || props.codeBlockRecord || props.record),
+)
+
+// Unredacted record for code blocks, with date fields removed.
+const unredactedEntityRecord = computed((): Record<string, any> | undefined =>
+  processForCodeBlock(props.codeBlockRecord || props.record),
+)
 
 const fetchUrlJsonBlock = computed(() => {
   return props.fetcherUrl

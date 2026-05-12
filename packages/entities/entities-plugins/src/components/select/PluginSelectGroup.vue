@@ -23,14 +23,25 @@
           v-for="plugin in props.plugins"
           :key="`plugin-card-${plugin.id}`"
           ref="pluginCardRef"
+          :can-delete-custom-plugin="canDeleteCustomPlugin"
+          :can-edit-custom-plugin="canEditCustomPlugin"
           :config="config"
           :navigate-on-click="navigateOnClick"
           :plugin="plugin"
+          @custom-plugin-delete="handleCustomPluginDelete(plugin)"
           @plugin-clicked="emit('plugin-clicked', plugin)"
         />
       </div>
     </template>
   </KCollapse>
+
+  <DeleteCustomPluginSchemaModal
+    v-if="openDeleteModal && selectedPlugin"
+    :config="config"
+    :plugin="selectedPlugin"
+    @closed="handleClose"
+    @proceed="handleClose(true)"
+  />
 </template>
 
 <script setup lang="ts">
@@ -38,7 +49,8 @@ import type { PropType } from 'vue'
 import { nextTick, ref, computed, onMounted, onUnmounted } from 'vue'
 import composables from '../../composables'
 import PluginSelectCard from './PluginSelectCard.vue'
-import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType } from '../../types'
+import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginSchemaModal.vue'
+import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginType } from '../../types'
 
 const isCollapsed = defineModel<boolean>({ required: true })
 
@@ -75,10 +87,19 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  canDeleteCustomPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  canEditCustomPlugin: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
   'plugin-clicked': [plugin: PluginType]
+  'delete:success': [pluginName: string]
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -102,6 +123,26 @@ const collapsedGroupStyles = computed((): Record<string, string> => {
   return {}
 })
 const showCollapseTrigger = ref<boolean>(false) // don't display a trigger if all plugins will already be visible
+const openDeleteModal = ref(false)
+const selectedPlugin = ref<{ name: string, id: string, customPluginType?: CustomPluginType } | null>(null)
+
+const handleCustomPluginDelete = (plugin: PluginType): void => {
+  openDeleteModal.value = true
+  selectedPlugin.value = {
+    id: plugin.id,
+    name: plugin.name,
+    customPluginType: plugin.customPluginType,
+  }
+}
+
+const handleClose = (didDelete?: boolean): void => {
+  if (didDelete) {
+    emit('delete:success', selectedPlugin.value?.name || '')
+  }
+
+  openDeleteModal.value = false
+  selectedPlugin.value = null
+}
 
 const handleResize = (): void => {
   tallestPluginCardHeight.value = Math.max(getTallestPluginCardHeight(pluginCardRef.value!), minHeight)

@@ -58,6 +58,7 @@ import {
   isSummableMetric,
 } from '../../utils'
 import { Doughnut } from 'vue-chartjs'
+import { color } from 'chart.js/helpers'
 import composables from '../../composables'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
@@ -138,7 +139,7 @@ const formattedDataset = computed<DonutChartData[]>(() => {
   const formatted = props.chartData.datasets.reduce((acc: any, current: ChartDataset) => {
     acc.labels.push(current.label)
     acc.backgroundColor.push(current.backgroundColor)
-    acc.hoverBorderColor.push(darkenColor(current.backgroundColor as string, 50))
+    acc.hoverBorderColor.push(color(current.backgroundColor as string).saturate(0.5).darken(0.15).hexString())
     acc.data.push(current.data.reduce((a, b) => (a as number) + (b as number), 0))
 
     return acc

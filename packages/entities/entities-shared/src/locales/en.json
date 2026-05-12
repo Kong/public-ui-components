@@ -48,19 +48,19 @@
     },
     "sections": {
       "advanced": "Advanced",
-      "plugin": "Plugin Specific Configuration",
-      "policy": "Policy Specific Configuration"
+      "plugin": "Plugin specific configuration",
+      "policy": "Policy specific configuration"
     },
     "commonFields": {
       "id_label": "ID",
       "name_label": "Name",
       "enabled_label": "Enabled",
       "enabled_tooltip": "Enabled is FTW",
-      "updated_at_label": "Last Updated",
+      "updated_at_label": "Last updated",
       "created_at_label": "Created",
       "tags_label": "Tags",
       "link": "Link",
-      "partial_label": "Redis Configuration"
+      "partial_label": "Redis configuration"
     },
     "statusBadge": {
       "enabledLabel": "Enabled",
@@ -132,7 +132,8 @@
       "copy_pat": "Make sure to copy your personal access token now. You won't be able to see it again.",
       "reuse_pat": "Use an existing PAT if you've already generated one.",
       "generate_pat": "Generate PAT",
-      "footer_reminder": "Changes made here won't affect your configuration."
+      "footer_reminder": "Changes made here won't affect your configuration.",
+      "secret_advise": "Command may contain sensitive values. Treat it as a secret."
     },
     "copy_tooltip": "Copy"
   },
@@ -149,7 +150,7 @@
         "placeholder": "Enter token name"
       },
       "expiresAt": {
-        "label": "Expiration Date",
+        "label": "Expiration date",
         "placeholder": "Select an expiration date",
         "n_days": "{n} days"
       }

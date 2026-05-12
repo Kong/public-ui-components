@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.12.2...@kong-ui-public/entities-snis@3.12.3) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.12.1...@kong-ui-public/entities-snis@3.12.2) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.12.0...@kong-ui-public/entities-snis@3.12.1) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+# [3.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.11.33...@kong-ui-public/entities-snis@3.12.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to cert-related entities ([#3232](https://github.com/Kong/public-ui-components/issues/3232)) ([2a4de9a](https://github.com/Kong/public-ui-components/commit/2a4de9a2dc3c124eedb0e07f6a0fddff89d6938d))
+
+
+
+
+
+## [3.11.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.11.32...@kong-ui-public/entities-snis@3.11.33) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.11.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.11.31...@kong-ui-public/entities-snis@3.11.32) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.11.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.11.30...@kong-ui-public/entities-snis@3.11.31) (2026-05-07)
+
+
+### Bug Fixes
+
+* **locales/en.json:** fix copies in all the entities ([#3221](https://github.com/Kong/public-ui-components/issues/3221)) ([a3bcf52](https://github.com/Kong/public-ui-components/commit/a3bcf526d9aff14cab8e2f3d9ba7810b5167d974))
+
+
+
+
+
 ## [3.11.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.11.29...@kong-ui-public/entities-snis@3.11.30) (2026-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-snis
