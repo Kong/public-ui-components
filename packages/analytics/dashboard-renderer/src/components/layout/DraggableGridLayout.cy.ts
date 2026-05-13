@@ -92,7 +92,7 @@ describe('<DraggableGridLayout />', () => {
       },
     })
 
-    cy.get('.grid-stack').should('have.class', 'grid-stack-12')
+    cy.get('.grid-stack').should('have.class', 'gs-12')
   })
 
   it('should default to 6 columns when cols prop is not set', () => {
@@ -102,7 +102,7 @@ describe('<DraggableGridLayout />', () => {
       },
     })
 
-    cy.get('.grid-stack').should('have.class', 'grid-stack-6')
+    cy.get('.grid-stack').should('have.class', 'gs-6')
   })
 
   it('should add new tile when tiles prop length increases', () => {
