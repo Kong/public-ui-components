@@ -59,6 +59,7 @@ const processTileForAdvancedTier = (tile: TileConfig): TileConfig => {
  * The algorithm lays out tiles row by row based on their widths (cols) and heights (rows).
  *
  * @param tiles - The array of tile configuration objects.
+ * @param cols - The number of grid columns (default: DASHBOARD_COLS).
  * @returns The updated array of tile configuration objects.
  */
 const repositionTiles = (tiles: TileConfig[], cols: number = DASHBOARD_COLS): TileConfig[] => {
