@@ -161,13 +161,13 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
     cy.get('[data-testid="legend"]').children().should('have.length', 5)
     cy.get('.label').eq(0).should('include.text', '200')
-    cy.get('.sub-label').eq(0).should('include.text', '1.2M requests')
+    cy.get('.sub-label').eq(0).should('include.text', '1.2M')
     cy.get('.label').eq(1).should('include.text', '201')
-    cy.get('.sub-label').eq(1).should('include.text', '907K requests')
+    cy.get('.sub-label').eq(1).should('include.text', '907K')
     cy.get('.label').eq(2).should('include.text', '202')
-    cy.get('.sub-label').eq(2).should('include.text', '910K requests')
+    cy.get('.sub-label').eq(2).should('include.text', '910K')
     cy.get('.label').eq(3).should('include.text', '300')
-    cy.get('.sub-label').eq(3).should('include.text', '378K requests')
+    cy.get('.sub-label').eq(3).should('include.text', '378K')
   })
 
   it('shows the empty state with no data', () => {
@@ -195,7 +195,7 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="time-series-bar-chart"]').should('be.visible')
     cy.get('[data-testid="legend"]').should('have.length', 1)
     cy.get(':nth-child(1) > .label-container > .label').should('include.text', '200')
-    cy.get(':nth-child(1) > .label-container > .sub-label').should('include.text', '1.2M requests')
+    cy.get(':nth-child(1) > .label-container > .sub-label').should('include.text', '1.2M')
     cy.get("[role='tooltip']").should(
       'include.text',
       'Grouped value limit exceeded, showing the top 50',
@@ -243,13 +243,13 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="bar-chart-container"]').should('be.visible')
     cy.get('[data-testid="legend"]').children().should('have.length', 20)
     cy.get('.label').eq(0).should('include.text', '200')
-    cy.get('.sub-label').eq(0).should('include.text', '1.2M requests')
+    cy.get('.sub-label').eq(0).should('include.text', '1.2M')
     cy.get('.label').eq(1).should('include.text', '201')
-    cy.get('.sub-label').eq(1).should('include.text', '882K requests')
+    cy.get('.sub-label').eq(1).should('include.text', '882K')
     cy.get('.label').eq(2).should('include.text', '202')
-    cy.get('.sub-label').eq(2).should('include.text', '885K requests')
+    cy.get('.sub-label').eq(2).should('include.text', '885K')
     cy.get('.label').eq(3).should('include.text', '300')
-    cy.get('.sub-label').eq(3).should('include.text', '367K requests')
+    cy.get('.sub-label').eq(3).should('include.text', '367K')
   })
 
   it('renders a donut chart with multi dimension data', () => {
@@ -283,13 +283,13 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="donut-chart-parent"]').should('be.visible')
     cy.get('[data-testid="legend"]').children().should('have.length', 5)
     cy.get('.label').eq(0).should('include.text', '200')
-    cy.get('.sub-label').eq(0).should('include.text', '42K requests')
+    cy.get('.sub-label').eq(0).should('include.text', '42K')
     cy.get('.label').eq(1).should('include.text', '201')
-    cy.get('.sub-label').eq(1).should('include.text', '31K requests')
+    cy.get('.sub-label').eq(1).should('include.text', '31K')
     cy.get('.label').eq(2).should('include.text', '202')
-    cy.get('.sub-label').eq(2).should('include.text', '30K requests')
+    cy.get('.sub-label').eq(2).should('include.text', '30K')
     cy.get('.label').eq(3).should('include.text', '300')
-    cy.get('.sub-label').eq(3).should('include.text', '12K requests')
+    cy.get('.sub-label').eq(3).should('include.text', '12K')
   })
 
   it('renders an empty state with default title and description text', () => {
