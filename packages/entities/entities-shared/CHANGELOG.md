@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.46.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.3...@kong-ui-public/entities-shared@3.46.4) (2026-05-13)
+
+
+### Bug Fixes
+
+* **entities-shared:** add missing shiki deps ([#3245](https://github.com/Kong/public-ui-components/issues/3245)) ([58195cf](https://github.com/Kong/public-ui-components/commit/58195cf91a6c3e1c1b961ee365a56ab56d6e45b6))
+
+
+
+
+
 ## [3.46.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.2...@kong-ui-public/entities-shared@3.46.3) (2026-05-13)
 
 
