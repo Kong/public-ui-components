@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.202.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.202.3...@kong-ui-public/entities-plugins@9.202.4) (2026-05-13)
+
+
+### Bug Fixes
+
+* **entities-plugins:** preserve request callout ids in mapfield ([#3255](https://github.com/Kong/public-ui-components/issues/3255)) ([7552e59](https://github.com/Kong/public-ui-components/commit/7552e592d688eaaea9b6839086dac06e4ceb1143))
+
+
+
+
+
 ## [9.202.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.202.2...@kong-ui-public/entities-plugins@9.202.3) (2026-05-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
