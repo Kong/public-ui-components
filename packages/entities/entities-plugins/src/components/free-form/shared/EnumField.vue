@@ -17,7 +17,7 @@
     :data-testid="`ff-${field.path.value}`"
     :items="realItems"
     :kpop-attributes="{ 'data-testid': `ff-enum-${field.path.value}-items` }"
-    @update:model-value="(value: string | string[] | null) => emit('update', value)"
+    @update:model-value="(value: string | string[] | null) => emit('update', normalizeValue(value))"
   >
     <template
       v-if="'tooltip' in $slots || fieldAttrs.labelAttributes?.info"
@@ -75,24 +75,26 @@ const {
   ...props
 } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
-const { value: fieldValue, hide, ...field } = useField<number | string | string[]>(
+const { value: fieldValue, hide, ...field } = useField<number | string | string[] | null>(
   toRef(() => name),
 )
+const fieldAttrs = useFieldAttrs(field.path!, props)
+
+function normalizeValue(value: number | string | string[] | null) {
+  if (isMultiple.value && Array.isArray(value) && value.length === 0 && !fieldAttrs.value.required) {
+    return null
+  }
+
+  return value
+}
 
 const fieldModel = defineModel({
   // If multiple and value is null/undefined, return empty array for v-model
   get: () => isMultiple.value && fieldValue?.value == null ? [] : fieldValue!.value,
   set: (val) => {
-    if (isMultiple.value && Array.isArray(val) && val.length === 0 && !field.schema?.value?.required) {
-      fieldValue!.value = null as any
-      return
-    }
-
-    fieldValue!.value = val as any
+    fieldValue!.value = normalizeValue(val as number | string | string[] | null)
   },
 })
-
-const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const realItems = computed<SelectItem[]>(() => {
   if (items) return items

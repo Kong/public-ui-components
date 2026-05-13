@@ -1,4 +1,6 @@
+import { h } from 'vue'
 import Form from '../shared/Form.vue'
+import EnumField from '../shared/EnumField.vue'
 import type { FormSchema } from 'src/types/plugins/form-schema'
 
 const FIELD_NAME = 'protocols'
@@ -24,13 +26,28 @@ function getMultiEnumSchema(required = false): FormSchema {
 function mountEnumForm(options: {
   required?: boolean
   data: Record<string, unknown>
+  onUpdate?: (value: string | string[] | null) => void
 }) {
+  const props = {
+    schema: getMultiEnumSchema(options.required),
+    data: options.data,
+    onChange: cy.spy().as('onChangeSpy'),
+  }
+
+  if (options.onUpdate) {
+    cy.mount(() => h(Form, props, {
+      default: () => h(EnumField, {
+        name: FIELD_NAME,
+        multiple: true,
+        onUpdate: options.onUpdate,
+      }),
+    }))
+
+    return
+  }
+
   cy.mount(Form, {
-    props: {
-      schema: getMultiEnumSchema(options.required),
-      data: options.data,
-      onChange: cy.spy().as('onChangeSpy'),
-    },
+    props,
   })
 }
 
@@ -79,5 +96,21 @@ describe('EnumField', () => {
     removeSelectedValue('grpc')
 
     assertLastChange({ [FIELD_NAME]: ['http'] })
+  })
+
+  it('should emit null from @update when clearing all selections from optional multiselect', () => {
+    const onUpdateSpy = cy.spy().as('onUpdateSpy')
+
+    mountEnumForm({
+      data: { [FIELD_NAME]: ['http', 'grpc'] },
+      onUpdate: onUpdateSpy,
+    })
+
+    removeSelectedValue('http')
+    removeSelectedValue('grpc')
+
+    cy.get('@onUpdateSpy').should((spy: any) => {
+      expect(spy.lastCall?.args[0]).to.equal(null)
+    })
   })
 })

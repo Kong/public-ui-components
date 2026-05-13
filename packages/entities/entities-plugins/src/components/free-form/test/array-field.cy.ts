@@ -1,4 +1,6 @@
+import { h } from 'vue'
 import Form from '../shared/Form.vue'
+import ArrayField from '../shared/ArrayField.vue'
 import type { FormSchema } from 'src/types/plugins/form-schema'
 
 const FIELD_NAME = 'list'
@@ -23,13 +25,24 @@ function createArraySchema(options: {
 function mountArrayForm(options: {
   schema?: FormSchema
   data?: Record<string, unknown>
+  requiredOverride?: boolean
 }) {
+  const props = {
+    schema: options.schema ?? createArraySchema(),
+    data: options.data,
+    onChange: cy.spy().as('onChangeSpy'),
+  }
+
+  if (options.requiredOverride) {
+    cy.mount(() => h(Form, props, {
+      default: () => h(ArrayField, { name: FIELD_NAME, required: true }),
+    }))
+
+    return
+  }
+
   cy.mount(Form, {
-    props: {
-      schema: options.schema ?? createArraySchema(),
-      data: options.data,
-      onChange: cy.spy().as('onChangeSpy'),
-    },
+    props,
   })
 }
 
@@ -89,5 +102,16 @@ describe('ArrayField', () => {
     cy.getTestId(`ff-array-remove-item-btn-${FIELD_NAME}.1`).click()
 
     assertLastChange({ [FIELD_NAME]: ['alpha'] })
+  })
+
+  it('should emit [] when removing the last item from an array marked required via prop override', () => {
+    mountArrayForm({
+      data: { [FIELD_NAME]: ['alpha'] },
+      requiredOverride: true,
+    })
+
+    cy.getTestId(`ff-array-remove-item-btn-${FIELD_NAME}.0`).click()
+
+    assertLastChange({ [FIELD_NAME]: [] })
   })
 })
