@@ -3,12 +3,12 @@ import useTranslatedUnits from './useTranslatedUnits'
 
 describe('useTranslatedUnits', () => {
 
-  it('pluralizes properly', () => {
+  it('suppresses unit text for count', () => {
     const { translateUnit } = useTranslatedUnits()
 
-    expect(translateUnit('count', 0)).toBe('requests')
-    expect(translateUnit('count', 1)).toBe('request')
-    expect(translateUnit('count', 2)).toBe('requests')
+    expect(translateUnit('count', 0)).toBe('')
+    expect(translateUnit('count', 1)).toBe('')
+    expect(translateUnit('count', 2)).toBe('')
   })
 
   it('suppresses unit text for unitless metrics', () => {

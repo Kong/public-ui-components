@@ -89,6 +89,7 @@
         :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColors"
         :legend-position="legendPosition"
         :legend-values="legendValues"
+        :metric-name="computedMetricName"
         :metric-unit="computedMetricUnit"
         :show-center-metric="chartOptions.showCenterMetric"
         :synthetics-data-key="syntheticsDataKey"
@@ -109,7 +110,7 @@ import DonutChart from './chart-types/DonutChart.vue'
 import { computed, provide, toRef } from 'vue'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
-import { hasMillisecondTimestamps, defaultStatusCodeColors, isUnitlessMetricUnit } from '../utils'
+import { hasMillisecondTimestamps, defaultStatusCodeColors, isNoSuffixMetric } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
@@ -193,6 +194,14 @@ const computedMetricUnit = computed<string>(() => {
   return Object.values(props.chartData.meta.metric_units)[0]
 })
 
+const computedMetricName = computed<string>(() => {
+  if (!props.chartData.meta?.metric_units) {
+    return ''
+  }
+
+  return Object.keys(props.chartData.meta.metric_units)[0] ?? ''
+})
+
 const showLegendValues = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Hidden)
 
 const { legendValues } = composables.useChartLegendValues(computedChartData, props.chartOptions.type, computedMetricUnit)
@@ -239,7 +248,7 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
   }
 
   // @ts-ignore - dynamic i18n key
-  if (isUnitlessMetricUnit(metricUnit) && i18n.te(`metricAxisTitles.${metricName}`)) {
+  if (isNoSuffixMetric(metricUnit) && i18n.te(`metricAxisTitles.${metricName}`)) {
     // @ts-ignore - dynamic i18n key
     return i18n.t(`metricAxisTitles.${metricName}`) || undefined
   }
@@ -272,8 +281,8 @@ const metricAxesTitle = computed<string | undefined>(() => {
   }
 
   // @ts-ignore - dynamic i18n key
-  if (i18n.te(`metricAxisTitles.${metricName}`) && (isUnitlessMetricUnit(metricUnit) || i18n.te(`chartUnits.${metricUnit}`))) {
-    if (isUnitlessMetricUnit(metricUnit)) {
+  if (i18n.te(`metricAxisTitles.${metricName}`) && (isNoSuffixMetric(metricUnit) || i18n.te(`chartUnits.${metricUnit}`))) {
+    if (isNoSuffixMetric(metricUnit)) {
       // @ts-ignore - dynamic i18n key
       return i18n.t(`metricAxisTitles.${metricName}`) || undefined
     }
