@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.202.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.201.5...@kong-ui-public/entities-plugins@9.202.0) (2026-05-13)
+
+
+### Features
+
+* **entities-plugins:** migrate rla plugin to freeform ([#3223](https://github.com/Kong/public-ui-components/issues/3223)) ([94c1b0f](https://github.com/Kong/public-ui-components/commit/94c1b0f4dabfc9a3e27be48ae03212977a848f19))
+
+
+
+
+
 ## [9.201.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.201.4...@kong-ui-public/entities-plugins@9.201.5) (2026-05-12)
 
 
