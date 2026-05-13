@@ -29,15 +29,6 @@
           :label="t('baseConfigCard.actions.sensitive_fields')"
         />
 
-        <KButton
-          v-if="configFormat === 'deck' && Boolean(deckCustomizationOptions)"
-          appearance="secondary"
-          class="button-customize-deck"
-          @click="isDeckCustomizationVisible = true"
-        >
-          {{ t('baseConfigCard.actions.deck_customize') }}
-        </KButton>
-
         <div class="row">
           <KLabel
             class="config-format-select-label"
@@ -52,6 +43,16 @@
             @change="handleChange"
           />
         </div>
+
+        <KButton
+          v-if="configFormat === 'deck' && Boolean(deckCustomizationOptions)"
+          appearance="secondary"
+          class="button-customize-deck"
+          data-testid="config-deck-customize-button"
+          @click="isDeckCustomizationVisible = true"
+        >
+          {{ t('baseConfigCard.actions.deck_customize') }}
+        </KButton>
 
         <KButton
           v-if="configCardDoc"

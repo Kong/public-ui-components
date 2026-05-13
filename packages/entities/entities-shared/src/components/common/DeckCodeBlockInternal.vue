@@ -64,6 +64,7 @@
     >
       <KButton
         appearance="secondary"
+        data-testid="generate-konnect-pat-button"
         @click="isGeneratePatModalVisible = true"
       >
         {{ t('deckCodeBlock.customization.generate_pat') }}
