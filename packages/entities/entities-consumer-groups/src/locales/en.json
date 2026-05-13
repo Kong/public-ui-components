@@ -8,7 +8,7 @@
         "id": "ID"
       },
       "empty_state": {
-        "title": "Configure a New Consumer Group",
+        "title": "Configure a new consumer group",
         "description": "Use consumer groups to manage custom rate limiting configuration for subsets of consumers.",
         "title_for_consumer": "Add to a consumer group"
       },
@@ -22,7 +22,7 @@
         "new_consumer_group": "New consumer group"
       }
     },
-    "title": "Consumer Groups",
+    "title": "Consumer groups",
     "search": {
       "placeholder": "Filter by exact name or ID"
     },
@@ -34,29 +34,29 @@
       "edit": "Edit",
       "delete": "Delete",
       "exit": "Exit",
-      "view": "View Details"
+      "view": "View details"
     },
     "delete": {
-      "title": "Delete a Consumer Group",
+      "title": "Delete a consumer group",
       "description": "Deleting this group will remove all its plugins and rate limit configuration. This action cannot be reversed."
     },
     "consumers": {
       "add": {
-        "title": "Add To Consumer Groups",
+        "title": "Add To consumer groups",
         "ctaText": "Add this consumer to consumer groups",
-        "consumer_groups_label": "Consumer Groups",
+        "consumer_groups_label": "Consumer groups",
         "consumer_group_placeholder": "Add to consumer groups",
         "footer": "Search by exact name or ID to find consumer groups not included in the list"
       },
       "exit": {
-        "title": "Exit from a Consumer Group",
+        "title": "Exit from a consumer group",
         "confirmation": "Are you sure you want to remove consumer {consumer} from consumer group {consumerGroup}?",
         "confirmationNoUsername": "Are you sure you want this consumer to exit from consumer group {consumerGroup}?",
         "description": "Exiting from the group could change the rate limit policy applied to this consumer."
       }
     },
     "errors": {
-      "general": "Consumer Groups could not be retrieved",
+      "general": "Consumer groups could not be retrieved",
       "delete": "The consumer group could not be deleted at this time.",
       "copy": "Failed to copy to clipboard",
       "add": "The consumer could not be added to some groups at this time.",
@@ -70,7 +70,7 @@
     },
     "form": {
       "general_info": {
-        "title": "General Information",
+        "title": "General information",
         "description": "General information will help identify and manage this consumer group."
       },
       "consumers": {

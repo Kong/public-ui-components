@@ -3,6 +3,127 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.46.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.4...@kong-ui-public/entities-shared@3.46.5) (2026-05-13)
+
+
+### Bug Fixes
+
+* **entities-shared:** deck customization tweaks ([#3246](https://github.com/Kong/public-ui-components/issues/3246)) ([39504d3](https://github.com/Kong/public-ui-components/commit/39504d3e53f92d03b9f2a73a6b721332b383e51e))
+
+
+
+
+
+## [3.46.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.3...@kong-ui-public/entities-shared@3.46.4) (2026-05-13)
+
+
+### Bug Fixes
+
+* **entities-shared:** add missing shiki deps ([#3245](https://github.com/Kong/public-ui-components/issues/3245)) ([58195cf](https://github.com/Kong/public-ui-components/commit/58195cf91a6c3e1c1b961ee365a56ab56d6e45b6))
+
+
+
+
+
+## [3.46.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.2...@kong-ui-public/entities-shared@3.46.3) (2026-05-13)
+
+
+### Bug Fixes
+
+* **workspace:** passthrough the `workspace` prop and add to deck command ([#3250](https://github.com/Kong/public-ui-components/issues/3250)) ([aded4c5](https://github.com/Kong/public-ui-components/commit/aded4c53560433e0c6f2d6fe630225190b55f225))
+
+
+
+
+
+## [3.46.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.1...@kong-ui-public/entities-shared@3.46.2) (2026-05-12)
+
+
+### Bug Fixes
+
+* **entities-shared:** filter out date fields from code to copy ([#3244](https://github.com/Kong/public-ui-components/issues/3244)) ([e65bc43](https://github.com/Kong/public-ui-components/commit/e65bc432210a38a24237aeeac0cf986fef1c03a4))
+
+
+
+
+
+## [3.46.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.0...@kong-ui-public/entities-shared@3.46.1) (2026-05-11)
+
+
+### Bug Fixes
+
+* **entities-shared:** z-index on deck command copy button ([#3242](https://github.com/Kong/public-ui-components/issues/3242)) ([8df058e](https://github.com/Kong/public-ui-components/commit/8df058e6c53b355583abf6226a80b0ab9d568b91))
+
+
+
+
+
+# [3.46.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.45.2...@kong-ui-public/entities-shared@3.46.0) (2026-05-11)
+
+
+### Features
+
+* **entities-shared:** add a secret advice to the decK customization editor ([#3240](https://github.com/Kong/public-ui-components/issues/3240)) ([ebfd53e](https://github.com/Kong/public-ui-components/commit/ebfd53e1ad7294890011ec54fc766fcdd025437e))
+
+
+
+
+
+## [3.45.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.45.1...@kong-ui-public/entities-shared@3.45.2) (2026-05-08)
+
+
+### Bug Fixes
+
+* **entities-consumer-groups:** query in exact match ([#3229](https://github.com/Kong/public-ui-components/issues/3229)) ([f9e5e43](https://github.com/Kong/public-ui-components/commit/f9e5e435adaad1af9c3fc91a737f36bece3e0496))
+
+
+
+
+
+## [3.45.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.45.0...@kong-ui-public/entities-shared@3.45.1) (2026-05-08)
+
+
+### Bug Fixes
+
+* **entities-shared:** use unredacted command for decK customization editor ([#3230](https://github.com/Kong/public-ui-components/issues/3230)) ([1f4ff15](https://github.com/Kong/public-ui-components/commit/1f4ff151adc7058690742ea76934a803d84a193b))
+
+
+
+
+
+# [3.45.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.4...@kong-ui-public/entities-shared@3.45.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** allow `workspace` and `editId` to be `null` and workspace-scoped route support ([#3208](https://github.com/Kong/public-ui-components/issues/3208)) ([b1c6611](https://github.com/Kong/public-ui-components/commit/b1c66117d7cbc44c05c1eba6384e365d10efc5ef))
+
+
+
+
+
+## [3.44.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.3...@kong-ui-public/entities-shared@3.44.4) (2026-05-07)
+
+
+### Bug Fixes
+
+* **locales/en.json:** fix copies in all the entities ([#3221](https://github.com/Kong/public-ui-components/issues/3221)) ([a3bcf52](https://github.com/Kong/public-ui-components/commit/a3bcf526d9aff14cab8e2f3d9ba7810b5167d974))
+
+
+
+
+
+## [3.44.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.2...@kong-ui-public/entities-shared@3.44.3) (2026-05-05)
+
+
+### Bug Fixes
+
+* **entity-config-card:** hide sensitive fields [khcp-20260] ([#3199](https://github.com/Kong/public-ui-components/issues/3199)) ([5ff5c79](https://github.com/Kong/public-ui-components/commit/5ff5c795d98909f8cba14dedbfe47b7a30d1911a))
+
+
+
+
+
 ## [3.44.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.44.1...@kong-ui-public/entities-shared@3.44.2) (2026-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

@@ -205,6 +205,7 @@ watch(tooltipEl, value => {
     }
 
     .display-value {
+      font-variant-numeric: tabular-nums;
       margin-left: var(--kui-space-auto, $kui-space-auto);
       padding-left: var(--kui-space-40, $kui-space-40);
       white-space: nowrap;

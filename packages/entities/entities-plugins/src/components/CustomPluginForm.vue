@@ -447,19 +447,24 @@ import type {
 import type { SelectGroup, SelectItem } from '@kong/kongponents'
 import { useRouter } from 'vue-router'
 import { usePluginMetaData } from '../composables/usePluginMeta'
+import { isPluginSchemaInUseError } from '../utils/customPluginErrors'
 
 const DEFAULT_CLONABLE_PLUGINS = [
   'acl',
-  'datakit',
+  'file-log',
   'http-log',
   'ip-restriction',
-  'jwt',
+  'key-auth',
   'opa',
   'openid-connect',
-  'opentelemetry',
   'post-function',
   'pre-function',
-  'rate-limiting-advanced',
+  'request-transformer-advanced',
+  'request-transformer',
+  'response-transformer-advanced',
+  'response-transformer',
+  'route-by-header',
+  'tcp-log',
 ]
 
 const ALL_PLUGIN_TYPES: CustomPluginFormType[] = ['installed', 'streamed', 'cloned']
@@ -751,9 +756,9 @@ onMounted(async () => {
       state.fields.schemaContent = schema
       state.fields.handlerContent = handler
     } else if (type === 'cloned') {
-      const { link, name, priority } = data as ClonedPluginResponse
+      const { ref, name, priority } = data as ClonedPluginResponse
       state.fields.aliasName = name
-      state.fields.sourcePlugin = link
+      state.fields.sourcePlugin = ref
       state.fields.priority = priority !== null ? String(priority) : ''
       originalPluginAlias = name
     } else {
@@ -810,7 +815,7 @@ const submitData = async (): Promise<void> => {
         })
       emit('update', {
         pluginType: 'cloned',
-        sourcePlugin: data.link,
+        sourcePlugin: data.ref,
         aliasName: data.name,
         priority: data.priority ?? undefined,
       })
@@ -818,7 +823,9 @@ const submitData = async (): Promise<void> => {
 
     router.push(props.config.successRoute)
   } catch (err: unknown) {
-    state.errorMessage = getMessageFromError(err)
+    state.errorMessage = isPluginSchemaInUseError(err)
+      ? t('delete.plugin_schema_in_use_message')
+      : getMessageFromError(err)
     emit('error', err)
   } finally {
     state.readonly = false
@@ -877,6 +884,7 @@ const submitData = async (): Promise<void> => {
   width: 100%;
 
   .compare-list {
+    list-style: disc;
     margin: 0;
     padding-left: var(--kui-space-60, $kui-space-60);
   }

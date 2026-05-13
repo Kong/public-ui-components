@@ -8,9 +8,9 @@
         "id": "ID"
       },
       "empty_state": {
-        "title": "Configure a New Consumer",
+        "title": "Configure a new consumer",
         "description": "Consumers are the end users of a service.",
-        "title_for_consumer_group": "Configure a New Consumer"
+        "title_for_consumer_group": "Configure a new consumer"
       },
       "empty_state_v2": {
         "title": "Configure your first consumer",
@@ -30,29 +30,29 @@
       }
     },
     "actions": {
-      "add_consumer": "Add Consumer",
-      "create": "New Consumer",
+      "add_consumer": "Add consumer",
+      "create": "New consumer",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",
       "delete": "Delete",
       "remove": "Remove",
-      "view": "View Details"
+      "view": "View details"
     },
     "delete": {
-      "title": "Delete a Consumer",
+      "title": "Delete a consumer",
       "description": "Deleting this consumer will also remove this consumer from any associated consumer group and delete all its plugins. This action cannot be reversed."
     },
     "consumer_groups": {
       "add": {
-        "title": "Add Consumers",
+        "title": "Add consumers",
         "ctaText": "Add consumers to this group",
         "consumers_label": "Consumers",
         "consumer_placeholder": "Add consumer",
         "footer": "Search by exact name or ID to find consumers not included in the list"
       },
       "remove": {
-        "title": "Remove a Consumer",
+        "title": "Remove a consumer",
         "confirmation": "Are you sure you want to remove this consumer {consumer} from consumer group {consumerGroup}?",
         "confirmationNoCG": "Are you sure you want to remove this consumer {consumer} from this consumer group?",
         "description": "Removing this consumer from the group could change the rate limit policy applied to this consumer."
@@ -70,13 +70,13 @@
       "success_brief": "Successfully copied to clipboard"
     },
     "form": {
-      "title": "Consumer Identification",
+      "title": "Consumer identification",
       "info": {
-        "title": "General Information",
+        "title": "General information",
         "description": "General information will help identify and manage added consumer."
       },
       "consumer_identification": {
-        "title": "Consumer Identification",
+        "title": "Consumer identification",
         "description": "A consumer can have both unique username and unique custom ID or one of them."
       }
     },
@@ -84,20 +84,20 @@
       "username": {
         "label": "Username",
         "placeholder": "Enter a unique username",
-        "tooltip": "The unique username of the Consumer. You must send either this field or {custom_id} with the request.",
+        "tooltip": "The unique username of the consumer. You must send either this field or {custom_id} with the request.",
         "custom_id": "custom_id"
       },
       "custom_id": {
         "label": "Custom ID",
         "placeholder": "Enter a unique custom ID",
-        "tooltip": "Field for storing an existing unique ID for the Consumer - useful for mapping Kong with users in your existing database. You must send either this field or {username} with the request.",
+        "tooltip": "Field for storing an existing unique ID for the consumer - useful for mapping Kong with users in your existing database. You must send either this field or {username} with the request.",
         "username": "username"
       },
       "tags": {
         "label": "Tags",
         "placeholder": "Enter a list of tags separated by comma",
         "help": "e.g. tag1, tag2, tag3",
-        "tooltip": "An optional set of strings associated with the Consumer for grouping and filtering."
+        "tooltip": "An optional set of strings associated with the consumer for grouping and filtering."
       }
     }
   }

@@ -64,6 +64,7 @@
     >
       <KButton
         appearance="secondary"
+        data-testid="generate-konnect-pat-button"
         @click="isGeneratePatModalVisible = true"
       >
         {{ t('deckCodeBlock.customization.generate_pat') }}
@@ -80,28 +81,34 @@
       id="deck-codeblock"
       :class="{ customization: props.isCustomizing }"
       :code="deckCommand"
+      :copy-code="unredactedDeckCommand"
+      data-dd-privacy="mask"
       :language="shell"
       :theme="isCustomizing ? 'light' : 'dark'"
       @code-block-render="highlightCodeBlock"
     />
 
-    <component
-      :is="DeckCommandEditor"
-      v-else-if="props.entityRecord && props.isCustomizing && DeckCommandEditor"
-      v-model="deckCommand"
-      :language="shell"
-    />
+    <template v-else-if="props.entityRecord && props.isCustomizing && DeckCommandEditor">
+      <div class="customization-secret-advise">
+        {{ t('deckCodeBlock.customization.secret_advise') }}
+      </div>
 
-    <KAlert
-      v-if="props.isCustomizing"
-      class="customization-footer-reminder"
-    >
-      <template #icon>
-        <InfoIcon />
-      </template>
+      <component
+        :is="DeckCommandEditor"
+        v-model="unredactedDeckCommand"
+        :language="shell"
+      />
 
-      {{ t('deckCodeBlock.customization.footer_reminder') }}
-    </KAlert>
+      <KAlert
+        class="customization-footer-reminder"
+      >
+        <template #icon>
+          <InfoIcon />
+        </template>
+
+        {{ t('deckCodeBlock.customization.footer_reminder') }}
+      </KAlert>
+    </template>
   </div>
 
   <GeneratePatModal
@@ -147,6 +154,7 @@ const { t } = i18n
 
 const konnectPat = ref<string>('')
 const deckCommand = ref<string>('')
+const unredactedDeckCommand = ref<string>('')
 const isGeneratePatModalVisible = ref(false)
 
 const shells = [
@@ -171,15 +179,16 @@ const baseObject = computed(() => {
     obj._konnect = {
       control_plane_name: props.controlPlaneName,
     }
-  } else if (props.workspace) {
+  }
+  if (props.workspace) {
     obj._workspace = props.workspace
   }
   return obj
 })
 
-const yamlContent = computed((): string => {
+const buildYaml = (record: Record<string, any>): string => {
   // filter out null values, empty strings, and empty arrays since decK doesn't accept them [KHCP-10642]
-  const filteredRecord = Object.fromEntries(Object.entries(props.entityRecord).filter(([, value]) => value !== null && value !== '' && (Array.isArray(value) ? value.length !== 0 : true)))
+  const filteredRecord = Object.fromEntries(Object.entries(record).filter(([, value]) => value !== null && value !== '' && (Array.isArray(value) ? value.length !== 0 : true)))
 
   // transfer parent object `{id: string}` to just id string for decK compatibility [KM-2056]
   if (props.entityType === SupportedEntityType.Plugin) {
@@ -210,6 +219,14 @@ const yamlContent = computed((): string => {
   }
 
   return yaml.dump(fullRecord, { quotingType: '"' }).trim()
+}
+
+const yamlContent = computed((): string => {
+  return buildYaml(props.entityRecord)
+})
+
+const unredactedCommand = computed((): string => {
+  return buildYaml(props.unredactedRecord || props.entityRecord)
 })
 
 const envCommand = computed((): string => {
@@ -239,10 +256,18 @@ watchEffect(() => {
     deckCommand.value = `echo '
 ${yamlContent.value}
 ' | ${command}`
+    // unredacted Bash command
+    unredactedDeckCommand.value = `echo '
+${unredactedCommand.value}
+' | ${command}`
   } else {
     // PowerShell uses @' '@ for multi-line strings
     deckCommand.value = `@'
 ${yamlContent.value}
+'@ | ${command}`
+    // unredacted PowerShell command
+    unredactedDeckCommand.value = `@'
+${unredactedCommand.value}
 '@ | ${command}`
   }
 })
@@ -286,6 +311,11 @@ ${yamlContent.value}
 
   .copy-konnect-pat-alert {
     margin-top: var(--kui-space-40, $kui-space-40);
+  }
+
+  .customization-secret-advise {
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    opacity: 0.7;
   }
 
   .customization-footer-reminder {

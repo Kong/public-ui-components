@@ -2,11 +2,17 @@ import type { AnalyticsExploreRecord, DisplayBlob, ExploreAggregations, ExploreR
 import { describe, it, expect, vitest } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
+import {
+  KUI_STATUS_COLOR_100,
+  KUI_STATUS_COLOR_200,
+  KUI_STATUS_COLOR_300,
+  KUI_STATUS_COLOR_400,
+  KUI_STATUS_COLOR_500,
+} from '@kong/design-tokens'
 import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
 import { BORDER_WIDTH, NO_BORDER, defaultStatusCodeColors } from '../utils'
 import { addHours } from 'date-fns'
 import type { MockInstance } from 'vitest'
-import type { Threshold } from 'src/types'
 
 const START_FOR_DAILY_QUERY = new Date(1672560000000)
 const END_FOR_DAILY_QUERY = new Date(1672646400000)
@@ -893,11 +899,11 @@ describe('useVitalsExploreDatasets', () => {
       exploreResult,
     )
 
-    expect(result.value.datasets[0].backgroundColor).toEqual('#80bfff')
-    expect(result.value.datasets[1].backgroundColor).toEqual('#9edca6')
-    expect(result.value.datasets[2].backgroundColor).toEqual('#ffe9b8')
-    expect(result.value.datasets[3].backgroundColor).toEqual('#ffd5b1')
-    expect(result.value.datasets[4].backgroundColor).toEqual('#ffb6b6')
+    expect(result.value.datasets[0].backgroundColor).toEqual(KUI_STATUS_COLOR_100)
+    expect(result.value.datasets[1].backgroundColor).toEqual(KUI_STATUS_COLOR_200)
+    expect(result.value.datasets[2].backgroundColor).toEqual(KUI_STATUS_COLOR_300)
+    expect(result.value.datasets[3].backgroundColor).toEqual(KUI_STATUS_COLOR_400)
+    expect(result.value.datasets[4].backgroundColor).toEqual(KUI_STATUS_COLOR_500)
   })
 
   it('maps country_code values to full country names via getCountryName', () => {

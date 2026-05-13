@@ -3,6 +3,119 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.6.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.5...@kong-ui-public/entities-vaults@4.6.6) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.4...@kong-ui-public/entities-vaults@4.6.5) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.3...@kong-ui-public/entities-vaults@4.6.4) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.2...@kong-ui-public/entities-vaults@4.6.3) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.1...@kong-ui-public/entities-vaults@4.6.2) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.0...@kong-ui-public/entities-vaults@4.6.1) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+# [4.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.5.0...@kong-ui-public/entities-vaults@4.6.0) (2026-05-10)
+
+
+### Features
+
+* **workspace:** add workspace support to config store ([#3237](https://github.com/Kong/public-ui-components/issues/3237)) ([78c8fb3](https://github.com/Kong/public-ui-components/commit/78c8fb3480af6b99698449f411589fd54f355148))
+
+
+
+
+
+# [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.36...@kong-ui-public/entities-vaults@4.5.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to vault & upstream target entities ([#3233](https://github.com/Kong/public-ui-components/issues/3233)) ([99e75c4](https://github.com/Kong/public-ui-components/commit/99e75c4bba24713cd888b0d1a90779fc5e53f6d0))
+
+
+
+
+
+## [4.4.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.35...@kong-ui-public/entities-vaults@4.4.36) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.4.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.34...@kong-ui-public/entities-vaults@4.4.35) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.4.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.33...@kong-ui-public/entities-vaults@4.4.34) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.4.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.32...@kong-ui-public/entities-vaults@4.4.33) (2026-05-07)
+
+
+### Bug Fixes
+
+* **locales/en.json:** fix copies in all the entities ([#3221](https://github.com/Kong/public-ui-components/issues/3221)) ([a3bcf52](https://github.com/Kong/public-ui-components/commit/a3bcf526d9aff14cab8e2f3d9ba7810b5167d974))
+
+
+
+
+
+## [4.4.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.31...@kong-ui-public/entities-vaults@4.4.32) (2026-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
 ## [4.4.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.30...@kong-ui-public/entities-vaults@4.4.31) (2026-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

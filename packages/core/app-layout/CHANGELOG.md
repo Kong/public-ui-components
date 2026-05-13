@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.17...@kong-ui-public/app-layout@4.11.18) (2026-05-05)
+
+
+### Bug Fixes
+
+* **app-layout:** app page header next nav spacing ([#3216](https://github.com/Kong/public-ui-components/issues/3216)) ([7be10a9](https://github.com/Kong/public-ui-components/commit/7be10a9b3408f43133b4c45733f47979eeab5a2a))
+
+
+
+
+
 ## [4.11.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.16...@kong-ui-public/app-layout@4.11.17) (2026-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout

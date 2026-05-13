@@ -141,7 +141,7 @@ import type {
 import { computed } from 'vue'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
-import { isUnitlessMetricUnit } from '../utils'
+import { isNoSuffixMetric } from '../utils'
 
 type TableHeader = {
   key: string
@@ -396,7 +396,7 @@ const getRowMetricDisplayValue = (row: TopNRow, key: string): string => {
 }
 
 const translateChartUnit = (unit: string, value: number): string => {
-  if (isUnitlessMetricUnit(unit) || unit === 'count' || unit === 'requests') {
+  if (isNoSuffixMetric(unit) || unit === 'count' || unit === 'requests') {
     return ''
   }
 

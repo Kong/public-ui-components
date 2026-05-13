@@ -3,6 +3,113 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.43...@kong-ui-public/documentation@1.5.44) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.42...@kong-ui-public/documentation@1.5.43) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.41...@kong-ui-public/documentation@1.5.42) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.40...@kong-ui-public/documentation@1.5.41) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.39...@kong-ui-public/documentation@1.5.40) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.38...@kong-ui-public/documentation@1.5.39) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.37...@kong-ui-public/documentation@1.5.38) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.36...@kong-ui-public/documentation@1.5.37) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.35...@kong-ui-public/documentation@1.5.36) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.34...@kong-ui-public/documentation@1.5.35) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.33...@kong-ui-public/documentation@1.5.34) (2026-05-07)
+
+
+### Bug Fixes
+
+* update teleport targets [KHCP-19780] ([#3224](https://github.com/Kong/public-ui-components/issues/3224)) ([ad42261](https://github.com/Kong/public-ui-components/commit/ad422613ea5f3e4c57e2e80868a1ade2815d6bb8))
+
+
+
+
+
+## [1.5.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.32...@kong-ui-public/documentation@1.5.33) (2026-05-07)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.5.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.31...@kong-ui-public/documentation@1.5.32) (2026-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
 ## [1.5.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.5.30...@kong-ui-public/documentation@1.5.31) (2026-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/documentation

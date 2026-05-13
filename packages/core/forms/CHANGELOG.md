@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.24.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.5...@kong-ui-public/forms@4.24.6) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.24.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.4...@kong-ui-public/forms@4.24.5) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.24.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.3...@kong-ui-public/forms@4.24.4) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.24.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.2...@kong-ui-public/forms@4.24.3) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.24.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.1...@kong-ui-public/forms@4.24.2) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.24.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.0...@kong-ui-public/forms@4.24.1) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+# [4.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.38...@kong-ui-public/forms@4.24.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to redis configuration ([#3234](https://github.com/Kong/public-ui-components/issues/3234)) ([faf3b97](https://github.com/Kong/public-ui-components/commit/faf3b97b61f79200d5a798694e0c82fc0c2bf1d6))
+
+
+
+
+
+## [4.23.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.37...@kong-ui-public/forms@4.23.38) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.23.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.36...@kong-ui-public/forms@4.23.37) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.23.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.35...@kong-ui-public/forms@4.23.36) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.23.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.34...@kong-ui-public/forms@4.23.35) (2026-05-07)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.23.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.33...@kong-ui-public/forms@4.23.34) (2026-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.23.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.23.32...@kong-ui-public/forms@4.23.33) (2026-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/forms
