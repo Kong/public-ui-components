@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.202.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.201.5...@kong-ui-public/entities-plugins@9.202.0) (2026-05-13)
+
+
+### Features
+
+* **entities-plugins:** migrate rla plugin to freeform ([#3223](https://github.com/Kong/public-ui-components/issues/3223)) ([94c1b0f](https://github.com/Kong/public-ui-components/commit/94c1b0f4dabfc9a3e27be48ae03212977a848f19))
+
+
+
+
+
+## [9.201.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.201.4...@kong-ui-public/entities-plugins@9.201.5) (2026-05-12)
+
+
+### Bug Fixes
+
+* **entities-shared:** filter out date fields from code to copy ([#3244](https://github.com/Kong/public-ui-components/issues/3244)) ([e65bc43](https://github.com/Kong/public-ui-components/commit/e65bc432210a38a24237aeeac0cf986fef1c03a4))
+
+
+
+
+
+## [9.201.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.201.3...@kong-ui-public/entities-plugins@9.201.4) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.201.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.201.2...@kong-ui-public/entities-plugins@9.201.3) (2026-05-11)
 
 

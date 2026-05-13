@@ -473,14 +473,12 @@ const formConfig = computed((): KonnectTargetFormConfig | KongManagerTargetFormC
     apiBaseUrl: props.config.apiBaseUrl,
     upstreamId: props.config.upstreamId,
     axiosRequestConfig: props.config.axiosRequestConfig,
+    workspace: props.config.workspace,
     ...{
-      // Depending on the app, we need to pass in the control plane ID or workspace
+      // Depending on the app, we need to pass in the control plane ID
       // see KonnectTargetFormConfig and KongManagerTargetFormConfig types
       ...(props.config.app === 'konnect' && {
         controlPlaneId: props.config.controlPlaneId,
-      }),
-      ...(props.config.app === 'kongManager' && {
-        workspace: props.config.workspace,
       }),
     },
   } as KonnectTargetFormConfig | KongManagerTargetFormConfig

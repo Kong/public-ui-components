@@ -178,7 +178,8 @@ const baseObject = computed(() => {
     obj._konnect = {
       control_plane_name: props.controlPlaneName,
     }
-  } else if (props.workspace) {
+  }
+  if (props.workspace) {
     obj._workspace = props.workspace
   }
   return obj
