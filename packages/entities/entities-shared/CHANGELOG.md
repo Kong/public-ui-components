@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.46.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.2...@kong-ui-public/entities-shared@3.46.3) (2026-05-13)
+
+
+### Bug Fixes
+
+* **workspace:** passthrough the `workspace` prop and add to deck command ([#3250](https://github.com/Kong/public-ui-components/issues/3250)) ([aded4c5](https://github.com/Kong/public-ui-components/commit/aded4c53560433e0c6f2d6fe630225190b55f225))
+
+
+
+
+
 ## [3.46.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.1...@kong-ui-public/entities-shared@3.46.2) (2026-05-12)
 
 

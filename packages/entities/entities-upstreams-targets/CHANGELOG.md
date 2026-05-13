@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.14.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.14.3...@kong-ui-public/entities-upstreams-targets@3.14.4) (2026-05-13)
+
+
+### Bug Fixes
+
+* **workspace:** passthrough the `workspace` prop and add to deck command ([#3250](https://github.com/Kong/public-ui-components/issues/3250)) ([aded4c5](https://github.com/Kong/public-ui-components/commit/aded4c53560433e0c6f2d6fe630225190b55f225))
+
+
+
+
+
 ## [3.14.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.14.2...@kong-ui-public/entities-upstreams-targets@3.14.3) (2026-05-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets

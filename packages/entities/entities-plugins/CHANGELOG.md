@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.202.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.202.0...@kong-ui-public/entities-plugins@9.202.1) (2026-05-13)
+
+
+### Bug Fixes
+
+* **workspace:** passthrough the `workspace` prop and add to deck command ([#3250](https://github.com/Kong/public-ui-components/issues/3250)) ([aded4c5](https://github.com/Kong/public-ui-components/commit/aded4c53560433e0c6f2d6fe630225190b55f225))
+
+
+
+
+
 # [9.202.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.201.5...@kong-ui-public/entities-plugins@9.202.0) (2026-05-13)
 
 
