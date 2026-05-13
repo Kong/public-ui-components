@@ -369,6 +369,37 @@ describe('configureAllowedDefinition', () => {
     })
   })
 
+  describe('cols config', () => {
+    const halfWidthTile = (id: string, col: number): TileConfig => ({
+      ...mockBasicTile,
+      id,
+      layout: { size: { cols: 6, rows: 1 }, position: { col, row: 0 } },
+    })
+
+    it('wraps second tile to next row with default 6-column grid', () => {
+      const config: DashboardConfig = {
+        tiles: [halfWidthTile('t1', 0), halfWidthTile('t2', 6)],
+      }
+
+      const result = configureAllowedDefinition(config, false)
+
+      expect(result.tiles[0].layout?.position).toEqual({ col: 0, row: 0 })
+      expect(result.tiles[1].layout?.position).toEqual({ col: 0, row: 1 })
+    })
+
+    it('keeps both tiles on the same row when cols is 12', () => {
+      const config: DashboardConfig = {
+        cols: 12,
+        tiles: [halfWidthTile('t1', 0), halfWidthTile('t2', 6)],
+      }
+
+      const result = configureAllowedDefinition(config, false)
+
+      expect(result.tiles[0].layout?.position).toEqual({ col: 0, row: 0 })
+      expect(result.tiles[1].layout?.position).toEqual({ col: 6, row: 0 })
+    })
+  })
+
   describe('Dashboard Example', () => {
     it('should correctly process dashboard for advanced tier', () => {
       const runtimeInstancesConfig: DashboardConfig = {

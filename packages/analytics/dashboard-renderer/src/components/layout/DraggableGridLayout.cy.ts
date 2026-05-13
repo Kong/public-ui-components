@@ -84,6 +84,27 @@ describe('<DraggableGridLayout />', () => {
     })
   })
 
+  it('should initialize GridStack with the cols prop', () => {
+    cy.mount(DraggableGridLayout, {
+      props: {
+        tiles: mockTiles,
+        cols: 12,
+      },
+    })
+
+    cy.get('.grid-stack').should('have.class', 'grid-stack-12')
+  })
+
+  it('should default to 6 columns when cols prop is not set', () => {
+    cy.mount(DraggableGridLayout, {
+      props: {
+        tiles: mockTiles,
+      },
+    })
+
+    cy.get('.grid-stack').should('have.class', 'grid-stack-6')
+  })
+
   it('should add new tile when tiles prop length increases', () => {
 
     const tilesRef = ref(mockTiles)
