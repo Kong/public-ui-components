@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.46.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.4...@kong-ui-public/entities-shared@3.46.5) (2026-05-13)
+
+
+### Bug Fixes
+
+* **entities-shared:** deck customization tweaks ([#3246](https://github.com/Kong/public-ui-components/issues/3246)) ([39504d3](https://github.com/Kong/public-ui-components/commit/39504d3e53f92d03b9f2a73a6b721332b383e51e))
+
+
+
+
+
 ## [3.46.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.3...@kong-ui-public/entities-shared@3.46.4) (2026-05-13)
 
 
