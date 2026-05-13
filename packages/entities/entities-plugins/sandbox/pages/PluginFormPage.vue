@@ -85,6 +85,7 @@ provide(FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, true)
 provideDeckCommandEditor()
 
 useProvideExperimentalFreeForms([
+  'rate-limiting-advanced',
   'service-protection',
   'prometheus',
   'metering-and-billing',
