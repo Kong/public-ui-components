@@ -42,8 +42,10 @@ export type DraggableGridLayoutExpose<T> = {
 const props = withDefaults(defineProps<{
   tiles: Array<GridTile<T>>
   tileHeight?: number
+  cols?: number
 }>(), {
   tileHeight: DEFAULT_TILE_HEIGHT,
+  cols: DASHBOARD_COLS,
 })
 const emit = defineEmits<{
   (e: 'update-tiles', tiles: Array<GridTile<T>>): void
@@ -95,7 +97,7 @@ onMounted(() => {
   if (gridContainer.value) {
     grid = GridStack.init({
       margin: 10,
-      column: DASHBOARD_COLS,
+      column: props.cols,
       cellHeight: props.tileHeight,
       resizable: { handles: 'se, sw' },
       handle: '.tile-header',
