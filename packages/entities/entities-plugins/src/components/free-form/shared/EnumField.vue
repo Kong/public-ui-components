@@ -83,6 +83,11 @@ const fieldModel = defineModel({
   // If multiple and value is null/undefined, return empty array for v-model
   get: () => isMultiple.value && fieldValue?.value == null ? [] : fieldValue!.value,
   set: (val) => {
+    if (isMultiple.value && Array.isArray(val) && val.length === 0 && !field.schema?.value?.required) {
+      fieldValue!.value = null as any
+      return
+    }
+
     fieldValue!.value = val as any
   },
 })

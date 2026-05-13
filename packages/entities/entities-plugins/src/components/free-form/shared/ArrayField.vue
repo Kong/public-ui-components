@@ -284,6 +284,10 @@ const addItem = async () => {
 const removeItem = async (index: number) => {
   if (Array.isArray(fieldValue!.value)) {
     fieldValue!.value.splice(index, 1)
+
+    if (fieldValue!.value.length === 0 && !field.schema?.value?.required) {
+      fieldValue!.value = null as any
+    }
   }
   emit('remove', index)
 
