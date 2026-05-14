@@ -32,13 +32,6 @@ function handleFormChange(value: Partial<FreeFormPluginData>, fields?: string[])
   if (value.config?.namespace === null) {
     delete value.config.namespace
   }
-
-  /**
-   * `compound_identifier` should be null when empty, not an empty array.
-   */
-  if (Array.isArray(value.config?.compound_identifier) && value.config.compound_identifier.length === 0) {
-    value.config.compound_identifier = null
-  }
   props.onFormChange(value, fields)
 }
 </script>

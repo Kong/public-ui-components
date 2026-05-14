@@ -19,7 +19,7 @@
       :items="branchOptions"
       multiple
       name="then"
-      @update="(value) => onBranchChange('then', value)"
+      @update="(value) => onBranchChange('then', value as string | string[] | null)"
     >
       <template #item-label="item">
         <SourceItem :item="item" />
@@ -31,7 +31,7 @@
       :items="branchOptions"
       multiple
       name="else"
-      @update="(value) => onBranchChange('else', value)"
+      @update="(value) => onBranchChange('else', value as string | string[] | null)"
     >
       <template #item-label="item">
         <SourceItem :item="item" />
