@@ -19,7 +19,7 @@ export const queryableAiExploreDimensions = [
   'status_code',
   'status_code_grouped',
   'ai_plugin',
-  'principal'
+  'principal',
 ] as const
 
 export type QueryableAiExploreDimensions = typeof queryableAiExploreDimensions[number]

@@ -16,7 +16,7 @@ export const queryableExploreDimensions = [
   'data_plane_node_version',
   'realm',
   'portal_api',
-  'principal'
+  'principal',
 ] as const
 
 export type QueryableExploreDimensions = typeof queryableExploreDimensions[number]
