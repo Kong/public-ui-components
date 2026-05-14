@@ -1,4 +1,4 @@
-import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4, McpExploreQuery, PlatformExploreQuery } from './explore'
+import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4, AgenticExploreQuery, PlatformExploreQuery } from './explore'
 import type { AnalyticsConfigV2 } from './analytics-config'
 import type { DatasourceConfig } from './datasource-config'
 import type { Component } from 'vue'
@@ -18,9 +18,9 @@ export interface AiDatasourceQuery {
   query: AiExploreQuery
 }
 
-export interface McpDatasourceQuery {
+export interface AgenticDatasourceQuery {
   datasource: 'agentic_usage'
-  query: McpExploreQuery
+  query: AgenticExploreQuery
 }
 
 export interface PlatformDatasourceQuery {
@@ -28,7 +28,7 @@ export interface PlatformDatasourceQuery {
   query: PlatformExploreQuery
 }
 
-export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | McpDatasourceQuery | PlatformDatasourceQuery
+export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | AgenticDatasourceQuery | PlatformDatasourceQuery
 
 // All flags in this interface should be optional; defaults are as documented.
 export interface StaticConfig {
