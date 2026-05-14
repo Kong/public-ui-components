@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, onUnmounted } from 'vue'
+import { computed, ref, provide, inject, onUnmounted, onMounted, type DeepReadonly, type Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
@@ -98,6 +98,7 @@ const {
 defineSlots<PageLayoutSlots>()
 
 const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
+const pageShortcutsContext = inject<DeepReadonly<Reactive<unknown>> | null>('pageShortcutsContext', null)
 
 const { i18n: { t } } = composables.useI18n()
 
@@ -163,6 +164,12 @@ if (typeof registerNestedPageLayout === 'function') {
 
 onUnmounted(() => {
   unregisterNestedPageLayout.value?.()
+})
+
+onMounted(() => {
+  if (pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
+    pageShortcutsContext.onEntityPageVisit()
+  }
 })
 </script>
 
