@@ -98,7 +98,7 @@ const {
 defineSlots<PageLayoutSlots>()
 
 const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
-const pageShortcutsContext = inject<DeepReadonly<Reactive<unknown>> | null>('pageShortcutsContext', null)
+const pageShortcutsContext = inject<DeepReadonly<Reactive<unknown>> | null>('app:pageShortcutsContext', null)
 
 const { i18n: { t } } = composables.useI18n()
 
