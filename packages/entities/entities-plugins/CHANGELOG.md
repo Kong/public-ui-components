@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.203.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.202.4...@kong-ui-public/entities-plugins@9.203.0) (2026-05-14)
+
+
+### Features
+
+* **entities-plugins:** reset cleared array enums to null ([#3253](https://github.com/Kong/public-ui-components/issues/3253)) ([5abb436](https://github.com/Kong/public-ui-components/commit/5abb436c3f875218afb160bc23e721d54ae66ead))
+
+
+
+
+
 ## [9.202.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.202.3...@kong-ui-public/entities-plugins@9.202.4) (2026-05-13)
 
 
