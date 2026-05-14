@@ -692,7 +692,7 @@ export const dashboardConfigSchema = {
       type: 'number',
       description: 'Height of each tile in pixels.',
     },
-    cols: {
+    columns: {
       type: 'number',
       description: 'Number of columns in the dashboard grid.',
     },

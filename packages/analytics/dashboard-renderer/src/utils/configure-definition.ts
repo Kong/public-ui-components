@@ -59,10 +59,10 @@ const processTileForAdvancedTier = (tile: TileConfig): TileConfig => {
  * The algorithm lays out tiles row by row based on their widths (cols) and heights (rows).
  *
  * @param tiles - The array of tile configuration objects.
- * @param cols - The number of grid columns (default: DASHBOARD_COLS).
+ * @param columns - The number of grid columns (default: DASHBOARD_COLS).
  * @returns The updated array of tile configuration objects.
  */
-const repositionTiles = (tiles: TileConfig[], cols: number = DASHBOARD_COLS): TileConfig[] => {
+const repositionTiles = (tiles: TileConfig[], columns: number = DASHBOARD_COLS): TileConfig[] => {
   if (!tiles.length) {
     return []
   }
@@ -79,7 +79,7 @@ const repositionTiles = (tiles: TileConfig[], cols: number = DASHBOARD_COLS): Ti
     const rowSpan = tile.layout?.size?.rows ?? 1
 
     // If the tile won't fit on the current row, move to next row
-    if (currentCol + colSpan > cols) {
+    if (currentCol + colSpan > columns) {
       currentRow += rowHeight
       currentCol = 0
       rowHeight = 0
@@ -131,7 +131,7 @@ export const configureAllowedDefinition = (
     .map(processTileForBasicTier)
     .filter((tile) => tile !== undefined)
 
-  const repositionedTiles = repositionTiles(processedTiles, config.cols)
+  const repositionedTiles = repositionTiles(processedTiles, config.columns)
 
   return {
     ...config,

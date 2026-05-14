@@ -25,7 +25,7 @@
         :is="internalContext.editable && !isFullscreen ? DraggableGridLayout : GridLayout"
         v-else
         ref="gridLayoutRef"
-        :cols="model.cols"
+        :columns="model.columns"
         :tile-height="model.tile_height"
         :tiles="gridTiles"
         @update-tiles="handleUpdateTiles"

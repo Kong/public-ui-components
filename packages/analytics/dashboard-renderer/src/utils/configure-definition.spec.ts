@@ -369,7 +369,7 @@ describe('configureAllowedDefinition', () => {
     })
   })
 
-  describe('cols config', () => {
+  describe('columns config', () => {
     const halfWidthTile = (id: string, col: number): TileConfig => ({
       ...mockBasicTile,
       id,
@@ -387,9 +387,9 @@ describe('configureAllowedDefinition', () => {
       expect(result.tiles[1].layout?.position).toEqual({ col: 0, row: 1 })
     })
 
-    it('keeps both tiles on the same row when cols is 12', () => {
+    it('keeps both tiles on the same row when columns is 12', () => {
       const config: DashboardConfig = {
-        cols: 12,
+        columns: 12,
         tiles: [halfWidthTile('t1', 0), halfWidthTile('t2', 6)],
       }
 
