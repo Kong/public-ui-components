@@ -1,6 +1,6 @@
 const konnectV1BaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities/v1'
 const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}'
-// Custom plugins (streamed / cloned) are CP-global and never workspace-scoped.
+// Custom plugins (installed / streamed / cloned) are CP-global and never workspace-scoped.
 const konnectGlobalBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
 const KMBaseApiUrl = '/{workspace}'
 const KMGlobalBaseApiUrl = ''
@@ -21,7 +21,7 @@ export default {
       availablePlugins: `${konnectV1BaseApiUrl}/available-plugins`,
       streamingCustomPlugins: `${konnectGlobalBaseApiUrl}/custom-plugins`,
       clonedPlugins: `${konnectGlobalBaseApiUrl}/cloned-plugins`,
-      schemaCustomPluginItem: `${konnectBaseApiUrl}/plugin-schemas/{pluginId}`,
+      schemaCustomPluginItem: `${konnectGlobalBaseApiUrl}/plugin-schemas/{pluginId}`,
       streamingCustomPluginItem: `${konnectGlobalBaseApiUrl}/custom-plugins/{pluginId}`,
     },
     kongManager: {
@@ -75,8 +75,8 @@ export default {
   customPlugin: {
     konnect: {
       installed: {
-        create: `${konnectBaseApiUrl}/plugin-schemas`,
-        edit: `${konnectBaseApiUrl}/plugin-schemas/{pluginId}`,
+        create: `${konnectGlobalBaseApiUrl}/plugin-schemas`,
+        edit: `${konnectGlobalBaseApiUrl}/plugin-schemas/{pluginId}`,
       },
       streamed: {
         create: `${konnectGlobalBaseApiUrl}/custom-plugins`,
