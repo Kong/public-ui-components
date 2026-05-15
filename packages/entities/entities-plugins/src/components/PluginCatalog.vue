@@ -229,9 +229,9 @@ const availablePluginsUrl = computed((): string => {
 
 const streamingPluginsUrl = computed<string | null>(() => {
   if (props.config.app === 'konnect' && props.customPluginSupport === 'streaming') {
+    // Streamed custom plugins are CP-global, not workspace-scoped.
     return `${props.config.apiBaseUrl}${endpoints.select[props.config.app].streamingCustomPlugins}`
       .replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-      .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
   // Kong Manager and other support level does not support streaming custom plugins now
   return null
