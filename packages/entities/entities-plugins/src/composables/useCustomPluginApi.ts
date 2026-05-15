@@ -159,8 +159,9 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
 
   const createClonedPlugin = async (body: ClonedPluginRequestBody): Promise<ClonedPluginResponse> => {
     const { aliasName: alias, priority, sourcePlugin: ref } = body
-    const url = buildUrl(endpoints.customPlugin[options.app].cloned.create, alias)
-    const { data } = await axiosInstance.put<ClonedPluginResponse>(url, {
+    const url = buildUrl(endpoints.customPlugin[options.app].cloned.create)
+    const { data } = await axiosInstance.post<ClonedPluginResponse>(url, {
+      name: alias,
       ref,
       priority,
     })

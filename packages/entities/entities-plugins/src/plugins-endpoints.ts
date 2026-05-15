@@ -83,7 +83,7 @@ export default {
         edit: `${konnectGlobalBaseApiUrl}/custom-plugins/{pluginId}`,
       },
       cloned: {
-        create: `${konnectGlobalBaseApiUrl}/cloned-plugins/{pluginId}`,
+        create: `${konnectGlobalBaseApiUrl}/cloned-plugins`,
         edit: `${konnectGlobalBaseApiUrl}/cloned-plugins/{pluginId}`,
       },
     },
@@ -93,7 +93,7 @@ export default {
         edit: `${KMGlobalBaseApiUrl}/custom-plugins/{pluginId}`,
       },
       cloned: {
-        create: `${KMGlobalBaseApiUrl}/cloned-plugins/{pluginId}`,
+        create: `${KMGlobalBaseApiUrl}/cloned-plugins`,
         edit: `${KMGlobalBaseApiUrl}/cloned-plugins/{pluginId}`,
       },
     },
