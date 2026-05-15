@@ -198,7 +198,7 @@ onMounted(() => {
   // Call the onEntityPageVisit function after a 3s delay to ensure any nested PageLayouts have mounted to make sure shortcut logic handling is deferred to the most nested PageLayout.
   setTimeout(() => {
     if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
-      pageShortcutsContext.onEntityPageVisit()
+      pageShortcutsContext.onEntityPageVisit(pageShortcutData)
     }
   }, 3000)
 })
