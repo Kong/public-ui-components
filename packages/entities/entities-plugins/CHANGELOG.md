@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.205.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.205.0...@kong-ui-public/entities-plugins@9.205.1) (2026-05-15)
+
+
+### Bug Fixes
+
+* **entities-plugins:** missing workspace param in fetch url for code mode ([#3264](https://github.com/Kong/public-ui-components/issues/3264)) ([7ff4b43](https://github.com/Kong/public-ui-components/commit/7ff4b4349d9df31f39bff225380a77d041dd972f))
+
+
+
+
+
 # [9.205.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.204.1...@kong-ui-public/entities-plugins@9.205.0) (2026-05-15)
 
 
