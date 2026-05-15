@@ -45,7 +45,6 @@ describe('useCustomPluginApi', () => {
       axiosInstance: axiosInstance as AxiosInstance,
       apiBaseUrl: '/kong-manager',
       app: 'kongManager',
-      workspace: 'default',
     })
 
     await expect(api.getInstalledPlugin('my-plugin')).rejects.toThrow('Installed custom plugin APIs are only available for Konnect')

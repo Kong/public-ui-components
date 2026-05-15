@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.205.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.205.1...@kong-ui-public/entities-plugins@9.205.2) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.205.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.205.0...@kong-ui-public/entities-plugins@9.205.1) (2026-05-15)
+
+
+### Bug Fixes
+
+* **entities-plugins:** missing workspace param in fetch url for code mode ([#3264](https://github.com/Kong/public-ui-components/issues/3264)) ([7ff4b43](https://github.com/Kong/public-ui-components/commit/7ff4b4349d9df31f39bff225380a77d041dd972f))
+
+
+
+
+
+# [9.205.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.204.1...@kong-ui-public/entities-plugins@9.205.0) (2026-05-15)
+
+
+### Features
+
+* **entities-plugins:** move editor mode switch to StandardLayout ([#3235](https://github.com/Kong/public-ui-components/issues/3235)) ([e65c6d0](https://github.com/Kong/public-ui-components/commit/e65c6d0532c0d2a71c74f99f527b1097468827c8))
+
+
+
+
+
+## [9.204.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.204.0...@kong-ui-public/entities-plugins@9.204.1) (2026-05-15)
+
+
+### Bug Fixes
+
+* **entities-plugins:** use POST to create cloned plugin to reject duplicate names [KM-2579] ([#3262](https://github.com/Kong/public-ui-components/issues/3262)) ([d442bad](https://github.com/Kong/public-ui-components/commit/d442bad62bffa14a7ec7ecf084b1b5e2d0b41605))
+
+
+
+
+
+# [9.204.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.203.0...@kong-ui-public/entities-plugins@9.204.0) (2026-05-15)
+
+
+### Features
+
+* **entities-plugins:** make custom plugins cp-global ([#3260](https://github.com/Kong/public-ui-components/issues/3260)) ([dd53bf1](https://github.com/Kong/public-ui-components/commit/dd53bf11ea2cc4a9f252e42857d128c798545777))
+
+
+
+
+
 # [9.203.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.202.4...@kong-ui-public/entities-plugins@9.203.0) (2026-05-14)
 
 

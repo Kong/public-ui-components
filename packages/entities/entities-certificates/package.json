@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-certificates",
-  "version": "3.13.6",
+  "version": "3.13.8",
   "type": "module",
   "main": "./dist/entities-certificates.umd.js",
   "module": "./dist/entities-certificates.es.js",
@@ -33,7 +33,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.20.1",
-    "@kong/icons": "^1.52.0",
+    "@kong/icons": "^1.55.0",
     "@kong/kongponents": "9.53.2",
     "axios": "^1.15.2",
     "vue": "^3.5.33",

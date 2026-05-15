@@ -245,6 +245,12 @@ describe('<SingleValue />', () => {
     cy.get('.single-value-unit').should('not.exist')
   })
 
+  it('formats bytes values when metric_units is bytes', () => {
+    const exploreResult = buildExploreResult({ metricName: 'response_size_average', metricUnit: 'bytes', previous: 1500000, current: 1500000 })
+    cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
+    cy.getTestId('single-value-chart').should('contain.text', 'MB')
+    cy.get('.single-value-unit').should('not.exist')
+  })
 
   it('renders a non-empty trend range when trend is enabled', () => {
     const exploreResultWithMeta = {

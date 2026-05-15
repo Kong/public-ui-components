@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "8.9.72",
+  "version": "8.10.3",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",
@@ -48,7 +48,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.20.1",
-    "@kong/icons": "^1.52.0",
+    "@kong/icons": "^1.55.0",
     "@kong/kongponents": "9.53.2",
     "ajv": "^8.20.0",
     "cypress-real-events": "^1.15.0",

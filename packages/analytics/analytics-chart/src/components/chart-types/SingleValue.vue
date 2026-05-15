@@ -192,8 +192,7 @@ const formattedValue = computed((): string => {
     return formatCost(value)
   }
 
-  // for response/request size metrics, display in bytes
-  if (metricName.value?.includes('_size_')) {
+  if (rawUnit === 'bytes') {
     return formatBytes(value)
   }
 

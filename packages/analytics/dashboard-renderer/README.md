@@ -418,6 +418,7 @@ The root configuration type for a dashboard.
 interface DashboardConfig {
   tiles: TileConfig[]         // Array of tile configurations
   tile_height?: number         // Optional height of each tile in pixels
+  columns?: number             // Optional number of grid columns (default: 6)
 }
 ```
 

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.47.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.47.0...@kong-ui-public/entities-shared@3.47.1) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+# [3.47.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.5...@kong-ui-public/entities-shared@3.47.0) (2026-05-15)
+
+
+### Features
+
+* **entities-shared:** support enableItemCreation in EntityFilter select fields ([#3263](https://github.com/Kong/public-ui-components/issues/3263)) ([cd20f05](https://github.com/Kong/public-ui-components/commit/cd20f0540317f8b6d9e832e0b6f7a68c216ad50b))
+
+
+
+
+
 ## [3.46.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.46.4...@kong-ui-public/entities-shared@3.46.5) (2026-05-13)
 
 
