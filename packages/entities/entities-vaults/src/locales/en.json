@@ -426,6 +426,16 @@
           }
         }
       },
+      "fs": {
+        "label": "File system",
+        "description": "Access secrets stored in the file system.",
+        "fields": {
+          "prefix": {
+            "label": "File path prefix",
+            "tooltip": "The prefix path for the file vault referenced files."
+          }
+        }
+      },
       "advancedFields": {
         "title": "View advanced fields",
         "ttl": "TTL",

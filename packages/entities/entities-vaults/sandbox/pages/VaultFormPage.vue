@@ -41,6 +41,7 @@ const konnectConfig = ref<KonnectVaultFormConfig>({
   hcvCspAuthMethodsAvailable: true,
   hcvSslVerifyAvailable: true,
   conjurVaultProviderAvailable: true,
+  fsVaultProviderAvailable: true,
 })
 
 const kongManagerConfig = ref<KongManagerVaultFormConfig>({
@@ -59,6 +60,7 @@ const kongManagerConfig = ref<KongManagerVaultFormConfig>({
   hcvCspAuthMethodsAvailable: true,
   awsStsEndpointUrlAvailable: true,
   conjurVaultProviderAvailable: true,
+  fsVaultProviderAvailable: true,
   base64FieldAvailable: true,
   hcvCertMethodAvailable: true,
   hcvJwtMethodAvailable: true,

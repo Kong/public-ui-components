@@ -74,6 +74,12 @@ A form component for Vaults.
     - *Specific to Konnect*. Show/hide Azure option.
     - **Note:** This is experimental and not supported by the backend right now
 
+  - `fsVaultProviderAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide File system (fs) Vault option.
+
   - `ttl`
     - type: `boolean`
     - required: `true`

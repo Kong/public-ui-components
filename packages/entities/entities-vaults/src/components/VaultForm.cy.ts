@@ -11,6 +11,7 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: true,
   hcvAppRoleMethodAvailable: true,
   hcvCertMethodAvailable: true,
@@ -25,6 +26,7 @@ const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: false,
 }
 
@@ -34,6 +36,7 @@ const baseConfigKM: KongManagerVaultFormConfig = {
   apiBaseUrl: '/kong-manager',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: true,
   awsStsEndpointUrlAvailable: true,
   hcvAppRoleMethodAvailable: true,
@@ -49,6 +52,7 @@ const baseConfigKMTurnOffTTL: KongManagerVaultFormConfig = {
   apiBaseUrl: '/kong-manager',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: false,
 }
 
@@ -1097,6 +1101,46 @@ describe('<VaultForm />', () => {
       cy.wait('@updateVault')
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
+    })
+
+    it('hides fs vault option when fsVaultProviderAvailable is false', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      })
+
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-fs').should('not.exist')
+    })
+
+    it('shows fs vault fields and supports submit when fsVaultProviderAvailable is true', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, fsVaultProviderAvailable: true },
+        },
+      })
+
+      // fs option appears in the provider dropdown
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-fs').should('exist')
+      cy.getTestId('vault-form-provider-fs').click({ force: true })
+
+      // fs config fields are visible
+      cy.getTestId('vault-form-config-fs-prefix').should('be.visible')
+      // advanced TTL section is available for fs
+      cy.getTestId('advanced-fields-collapse').should('be.visible')
+
+      // submit requires both the general prefix and the fs prefix
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-prefix').type(vault.prefix)
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-fs-prefix').type('/etc/secrets')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      // clearing fs prefix disables submit again
+      cy.getTestId('vault-form-config-fs-prefix').clear()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
     })
   })
 
