@@ -178,11 +178,12 @@ function buildEntityUrl(config: PluginFormConfig, entity: `${EntityKind}s`, enti
 
   if (config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, config.controlPlaneId || '')
-  } else if (config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, config.workspace ? `/${config.workspace}` : '')
   }
 
-  url = url.replace(/{entity}/gi, entity).replace(/{id}/gi, entityId)
+  url = url
+    .replace(/\/{workspace}/gi, config.workspace ? `/${config.workspace}` : '')
+    .replace(/{entity}/gi, entity)
+    .replace(/{id}/gi, entityId)
 
   return url
 }
