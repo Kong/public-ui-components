@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.15.0...@kong-ui-public/analytics-utilities@12.16.0) (2026-05-15)
+
+
+### Features
+
+* add new principal and internal latency fields ([#3258](https://github.com/Kong/public-ui-components/issues/3258)) ([f354d97](https://github.com/Kong/public-ui-components/commit/f354d9782885d38c8b2303e5c28c3756360d076b))
+
+
+
+
+
 # [12.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.14.1...@kong-ui-public/analytics-utilities@12.15.0) (2026-05-14)
 
 
