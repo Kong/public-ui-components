@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.204.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.203.0...@kong-ui-public/entities-plugins@9.204.0) (2026-05-15)
+
+
+### Features
+
+* **entities-plugins:** make custom plugins cp-global ([#3260](https://github.com/Kong/public-ui-components/issues/3260)) ([dd53bf1](https://github.com/Kong/public-ui-components/commit/dd53bf11ea2cc4a9f252e42857d128c798545777))
+
+
+
+
+
 # [9.203.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.202.4...@kong-ui-public/entities-plugins@9.203.0) (2026-05-14)
 
 
