@@ -195,9 +195,6 @@ onUnmounted(() => {
 })
 
 onMounted(async () => {
-  // Call the onEntityPageVisit function after the next tick to ensure any nested PageLayouts have mounted to make sure shortcut logic handling is deferred to the most nested PageLayout.
-  await nextTick()
-
   if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
     pageShortcutsContext.onEntityPageVisit(pageShortcutData)
   }
