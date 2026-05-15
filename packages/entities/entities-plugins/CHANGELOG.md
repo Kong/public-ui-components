@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.205.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.204.1...@kong-ui-public/entities-plugins@9.205.0) (2026-05-15)
+
+
+### Features
+
+* **entities-plugins:** move editor mode switch to StandardLayout ([#3235](https://github.com/Kong/public-ui-components/issues/3235)) ([e65c6d0](https://github.com/Kong/public-ui-components/commit/e65c6d0532c0d2a71c74f99f527b1097468827c8))
+
+
+
+
+
 ## [9.204.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.204.0...@kong-ui-public/entities-plugins@9.204.1) (2026-05-15)
 
 
