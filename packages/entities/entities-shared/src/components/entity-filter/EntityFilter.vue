@@ -79,11 +79,11 @@
             <KSelect
               v-if="config.schema?.[field.value]?.type === 'select'"
               :id="getFieldId(field.value)"
-              :model-value="searchParams[field.value]"
               :enable-filtering="enableFiltering(field.value)"
               :enable-item-creation="config.schema?.[field.value]?.enableItemCreation"
               :filter-function="(params: SelectFilterFunctionParams<string | number>) => handleFilter(field.value, params)"
               :items="getFieldOptions(field.value)"
+              :model-value="searchParams[field.value]"
               :placeholder="t('filter.selectPlaceholder')"
               @change="(item) => handleSelectChange(field.value, item)"
             />
