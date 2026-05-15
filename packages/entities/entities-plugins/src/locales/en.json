@@ -115,12 +115,12 @@
       "basic-auth": {
         "name": "Basic Authentication",
         "credential_name": "Basic Auth Credential",
-        "description": "Add Basic Authentication to your Services"
+        "description": "Add Basic Authentication to your services"
       },
       "hmac-auth": {
         "name": "HMAC Authentication",
         "credential_name": "HMAC Credential",
-        "description": "Add HMAC Authentication to your Services"
+        "description": "Add HMAC Authentication to your services"
       },
       "jwt-signer": {
         "name": "JWT Signer",
@@ -134,12 +134,12 @@
       "key-auth": {
         "name": "Key Authentication",
         "credential_name": "Key Auth Credential",
-        "description": "Add key authentication to your Services"
+        "description": "Add key authentication to your services"
       },
       "key-auth-enc": {
         "name": "Key Authentication Encrypted",
         "credential_name": "Key Auth Encrypted",
-        "description": "Add key authentication to your Services with an encrypted token"
+        "description": "Add key authentication to your services with an encrypted token"
       },
       "ldap-auth-advanced": {
         "name": "LDAP Authentication Advanced",
@@ -156,11 +156,11 @@
       "oauth2": {
         "name": "OAuth 2.0 Authentication",
         "credential_name": "OAuth 2.0 Application",
-        "description": "Add OAuth 2.0 authentication to your Services"
+        "description": "Add OAuth 2.0 authentication to your services"
       },
       "openid-connect": {
         "name": "OpenID Connect",
-        "description": "Integrate Kong with a third-party OpenID Connect 1.0 Provider"
+        "description": "Integrate Kong with a third-party OpenID Connect 1.0 provider"
       },
       "mtls-auth": {
         "name": "Mutual TLS Authentication",
@@ -192,12 +192,12 @@
       },
       "request-validator": {
         "name": "Request Validator",
-        "description": "Validate requests before they reach their upstream Service."
+        "description": "Validate requests before they reach their upstream service."
       },
       "acl": {
         "name": "ACL",
         "credential_name": "Access Control Group",
-        "description": "Control which consumers can access Services"
+        "description": "Control which consumers can access services"
       },
       "canary": {
         "name": "Canary Release",
@@ -449,7 +449,7 @@
       },
       "oas-validation": {
         "name": "OAS Validation",
-        "description": "Validate HTTP requests and responses based on an API Specification."
+        "description": "Validate HTTP requests and responses based on an API specification."
       },
       "jwe-decrypt": {
         "name": "Kong JWE Decrypt",
@@ -585,7 +585,7 @@
       },
       "ai-a2a-proxy": {
         "name": "AI A2A Proxy",
-        "description": "Securely proxy A2A Agents, with real-time RPC tracing and monitoring."
+        "description": "Securely proxy A2A agents, with real-time RPC tracing and monitoring."
       },
       "ai-custom-guardrail": {
         "name": "AI Custom Guardrail",
@@ -817,7 +817,7 @@
             "title": "What to meter"
           },
           "subject": {
-            "title": "Who to bill (Subject)",
+            "title": "Who to bill (subject)",
             "description": "Define how billing subjects are identified."
           },
           "ingestion": {
