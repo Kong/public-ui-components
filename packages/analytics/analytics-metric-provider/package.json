@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-metric-provider",
-  "version": "11.3.28",
+  "version": "11.3.30",
   "type": "module",
   "main": "./dist/vitals-metric-provider.umd.js",
   "module": "./dist/vitals-metric-provider.es.js",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "@kong/icons": "^1.52.0",
+    "@kong/icons": "^1.55.0",
     "approximate-number": "^3.0.1",
     "axios": "^1.15.2",
     "swrv": "^1.2.0"

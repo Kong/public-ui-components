@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.14.1...@kong-ui-public/analytics-utilities@12.15.0) (2026-05-14)
+
+
+### Features
+
+* **dashboard-renderer:** add configurable cols to DashboardConfig ([#3256](https://github.com/Kong/public-ui-components/issues/3256)) ([c8f9eab](https://github.com/Kong/public-ui-components/commit/c8f9eab0431ec0a9ba2ba9e9dc6b8cbd167ef5e7))
+
+
+
+
+
+## [12.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.14.0...@kong-ui-public/analytics-utilities@12.14.1) (2026-05-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
 # [12.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.8...@kong-ui-public/analytics-utilities@12.14.0) (2026-05-11)
 
 

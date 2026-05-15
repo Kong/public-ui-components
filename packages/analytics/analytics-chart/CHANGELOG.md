@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.17.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.3...@kong-ui-public/analytics-chart@10.17.4) (2026-05-15)
+
+
+### Bug Fixes
+
+* **analytics-chart:** use metric_units to detect bytes in SingleValue chart ([#3261](https://github.com/Kong/public-ui-components/issues/3261)) ([b0a5519](https://github.com/Kong/public-ui-components/commit/b0a5519b080a1c259793b2397201613f95ea7f6b))
+
+
+
+
+
+## [10.17.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.2...@kong-ui-public/analytics-chart@10.17.3) (2026-05-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.1...@kong-ui-public/analytics-chart@10.17.2) (2026-05-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [10.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.0...@kong-ui-public/analytics-chart@10.17.1) (2026-05-13)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

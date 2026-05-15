@@ -21,7 +21,6 @@ export type CustomPluginWithType =
 interface UseKonnectCustomPluginApiOptions {
   app: 'konnect'
   controlPlaneId: string
-  workspace?: string
 }
 
 interface PagedResponse<T> {
@@ -81,7 +80,6 @@ export const fetchAllPages = async <T>(
 
 interface UseKongManagerCustomPluginApiOptions {
   app: 'kongManager'
-  workspace: string
 }
 
 type UseCustomPluginApiOptions = (
@@ -104,14 +102,11 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   const buildUrl = (endpointTemplate: string, pluginId?: string): string => {
     let url = `${apiBaseUrl}${endpointTemplate}`
 
-
     if (options.app === 'konnect') {
       url = url.replace(/{controlPlaneId}/gi, options.controlPlaneId)
     }
 
-    url = url
-      .replace(/{pluginId}/gi, pluginId ?? '')
-      .replace(/\/{workspace}/gi, options.workspace ? `/${options.workspace}` : '')
+    url = url.replace(/{pluginId}/gi, pluginId ?? '')
 
     return url
   }
@@ -164,8 +159,9 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
 
   const createClonedPlugin = async (body: ClonedPluginRequestBody): Promise<ClonedPluginResponse> => {
     const { aliasName: alias, priority, sourcePlugin: ref } = body
-    const url = buildUrl(endpoints.customPlugin[options.app].cloned.create, alias)
-    const { data } = await axiosInstance.put<ClonedPluginResponse>(url, {
+    const url = buildUrl(endpoints.customPlugin[options.app].cloned.create)
+    const { data } = await axiosInstance.post<ClonedPluginResponse>(url, {
+      name: alias,
       ref,
       priority,
     })

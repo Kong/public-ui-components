@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "9.203.0",
+  "version": "9.205.1",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -69,7 +69,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong/design-tokens": "1.20.1",
-    "@kong/icons": "^1.52.0",
+    "@kong/icons": "^1.55.0",
     "@kong/kongponents": "9.53.2",
     "@peculiar/x509": "^2.0.0",
     "@playwright/experimental-ct-vue": "^1.59.1",
