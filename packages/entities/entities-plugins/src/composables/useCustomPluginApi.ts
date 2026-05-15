@@ -81,7 +81,11 @@ export const fetchAllPages = async <T>(
 
 interface UseKongManagerCustomPluginApiOptions {
   app: 'kongManager'
-  workspace: string
+  /**
+   * Only used by installed-plugin endpoints, which remain workspace-scoped.
+   * Streamed and cloned custom plugins are CP-global and ignore this value.
+   */
+  workspace?: string
 }
 
 type UseCustomPluginApiOptions = (

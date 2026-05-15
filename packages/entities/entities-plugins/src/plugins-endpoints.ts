@@ -1,6 +1,9 @@
 const konnectV1BaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities/v1'
 const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}'
+// Custom plugins (streamed / cloned) are CP-global and never workspace-scoped.
+const konnectGlobalBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
 const KMBaseApiUrl = '/{workspace}'
+const KMGlobalBaseApiUrl = ''
 
 export default {
   list: {
@@ -16,16 +19,16 @@ export default {
   select: {
     konnect: {
       availablePlugins: `${konnectV1BaseApiUrl}/available-plugins`,
-      streamingCustomPlugins: `${konnectBaseApiUrl}/custom-plugins`,
-      clonedPlugins: `${konnectBaseApiUrl}/cloned-plugins`,
+      streamingCustomPlugins: `${konnectGlobalBaseApiUrl}/custom-plugins`,
+      clonedPlugins: `${konnectGlobalBaseApiUrl}/cloned-plugins`,
       schemaCustomPluginItem: `${konnectBaseApiUrl}/plugin-schemas/{pluginId}`,
-      streamingCustomPluginItem: `${konnectBaseApiUrl}/custom-plugins/{pluginId}`,
+      streamingCustomPluginItem: `${konnectGlobalBaseApiUrl}/custom-plugins/{pluginId}`,
     },
     kongManager: {
       availablePlugins: `${KMBaseApiUrl}/kong`,
       availablePluginsForOss: '/',
-      streamingCustomPlugins: `${KMBaseApiUrl}/custom-plugins`,
-      clonedPlugins: `${KMBaseApiUrl}/cloned-plugins`,
+      streamingCustomPlugins: `${KMGlobalBaseApiUrl}/custom-plugins`,
+      clonedPlugins: `${KMGlobalBaseApiUrl}/cloned-plugins`,
     },
   },
   form: {
@@ -76,22 +79,22 @@ export default {
         edit: `${konnectBaseApiUrl}/plugin-schemas/{pluginId}`,
       },
       streamed: {
-        create: `${konnectBaseApiUrl}/custom-plugins`,
-        edit: `${konnectBaseApiUrl}/custom-plugins/{pluginId}`,
+        create: `${konnectGlobalBaseApiUrl}/custom-plugins`,
+        edit: `${konnectGlobalBaseApiUrl}/custom-plugins/{pluginId}`,
       },
       cloned: {
-        create: `${konnectBaseApiUrl}/cloned-plugins/{pluginId}`,
-        edit: `${konnectBaseApiUrl}/cloned-plugins/{pluginId}`,
+        create: `${konnectGlobalBaseApiUrl}/cloned-plugins/{pluginId}`,
+        edit: `${konnectGlobalBaseApiUrl}/cloned-plugins/{pluginId}`,
       },
     },
     kongManager: {
       streamed: {
-        create: `${KMBaseApiUrl}/custom-plugins`,
-        edit: `${KMBaseApiUrl}/custom-plugins/{pluginId}`,
+        create: `${KMGlobalBaseApiUrl}/custom-plugins`,
+        edit: `${KMGlobalBaseApiUrl}/custom-plugins/{pluginId}`,
       },
       cloned: {
-        create: `${KMBaseApiUrl}/cloned-plugins/{pluginId}`,
-        edit: `${KMBaseApiUrl}/cloned-plugins/{pluginId}`,
+        create: `${KMGlobalBaseApiUrl}/cloned-plugins/{pluginId}`,
+        edit: `${KMGlobalBaseApiUrl}/cloned-plugins/{pluginId}`,
       },
     },
   },
