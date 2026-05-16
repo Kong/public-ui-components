@@ -97,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, onUnmounted, onMounted, type DeepReadonly, type Reactive, nextTick } from 'vue'
+import { computed, ref, provide, inject, onUnmounted, onMounted, type DeepReadonly, type Reactive, nextTick, watch } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
@@ -194,11 +194,13 @@ onUnmounted(() => {
   unregisterNestedPageLayout.value?.()
 })
 
-onMounted(async () => {
+watch(() => pageShortcutData, async (newPageShortcutData) => {
+  // Wait for the next tick to ensure any nested PageLayouts have mounted to make sure shortcut logic handling is deferred to the most nested PageLayout.
+  await nextTick()
   if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
-    pageShortcutsContext.onEntityPageVisit(pageShortcutData)
+    pageShortcutsContext.onEntityPageVisit(newPageShortcutData)
   }
-})
+}, { deep: true })
 </script>
 
 <style lang="scss" scoped>
