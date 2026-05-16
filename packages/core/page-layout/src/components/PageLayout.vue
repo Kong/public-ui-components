@@ -97,7 +97,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, onUnmounted, onMounted, type DeepReadonly, type Reactive, nextTick, watch } from 'vue'
+import { computed, ref, provide, inject, onUnmounted, nextTick, watch } from 'vue'
+import type { DeepReadonly, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
