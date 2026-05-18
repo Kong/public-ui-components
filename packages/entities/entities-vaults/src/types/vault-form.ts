@@ -52,6 +52,11 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
   conjurVaultProviderAvailable?: boolean
 
   /**
+   * Show/hide File system (fs) option - mostly for Konnect to pass feature flag value
+   */
+  fsVaultProviderAvailable?: boolean
+
+  /**
    * Show/hide Base64 field (added since 3.11)
    */
   base64FieldAvailable?: boolean
@@ -71,6 +76,7 @@ export enum VaultProviders {
   AZURE = 'azure',
   KONNECT = 'konnect',
   CONJUR = 'conjur',
+  FS = 'fs',
 }
 
 export enum VaultAuthMethods {
@@ -186,6 +192,14 @@ export interface ConjurVaultConfig {
   base64_decode?: boolean
 }
 
+export interface FSVaultConfig {
+  prefix: string
+  ttl?: number
+  neg_ttl?: number
+  resurrect_ttl?: number
+  base64_decode?: boolean
+}
+
 // allow for nullish values in payload because Kong Admin API treats null as an empty value
 // in case it's an empty string, it will be treated as a value and must have length > 0
 export interface HCVVaultConfigPayload extends Omit<HCVVaultConfig, 'namespace' | 'token'> {
@@ -212,7 +226,7 @@ export interface VaultPayload {
   prefix: string
   description: string | null
   tags: string[]
-  config: ConfigStoreConfig | KongVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload | AWSVaultConfigPayload
+  config: ConfigStoreConfig | KongVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload | AWSVaultConfigPayload | ConjurVaultConfig | FSVaultConfig
 }
 
 export interface VaultStateFields {
