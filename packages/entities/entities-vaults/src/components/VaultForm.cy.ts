@@ -489,6 +489,50 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-create-form-submit').should('be.disabled')
     })
 
+    it('should show azure-certs fields and validate required fields', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: {
+            ...baseConfigKM,
+            azureCertsVaultProviderAvailable: true,
+          },
+        },
+      })
+
+      cy.get('.kong-ui-entities-vault-form').should('be.visible')
+      cy.getTestId('vault-form-prefix').type(vault.prefix)
+
+      // switch to azure-certs provider
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-azure-certs').click({ force: true })
+
+      // required fields are visible
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('be.visible')
+
+      // optional fields are visible
+      cy.getTestId('vault-form-config-azure-certs-client-id').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-tenant-id').should('be.visible')
+
+      // ttl advanced section is visible
+      cy.getTestId('advanced-fields-collapse').should('be.visible')
+
+      // credentials_prefix has default value AZURE
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('have.value', 'AZURE')
+
+      // ttl has default value 3600
+      cy.getTestId('vault-ttl-input').should('have.value', '3600')
+
+      // submit disabled until vault_uri is filled
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').type('https://my-vault.vault.azure.net')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      // clears vault_uri → submit disabled again
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').clear()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+    })
+
     it('should show edit form', () => {
       interceptKM()
 
@@ -963,6 +1007,50 @@ describe('<VaultForm />', () => {
 
       // disables save when required field is cleared - general
       cy.getTestId('vault-form-prefix').clear()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+    })
+
+    it('should show azure-certs fields and validate required fields', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: {
+            ...baseConfigKonnect,
+            azureCertsVaultProviderAvailable: true,
+          },
+        },
+      })
+
+      cy.get('.kong-ui-entities-vault-form').should('be.visible')
+      cy.getTestId('vault-form-prefix').type(vault.prefix)
+
+      // switch to azure-certs provider
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-azure-certs').click({ force: true })
+
+      // required fields are visible
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('be.visible')
+
+      // optional fields are visible
+      cy.getTestId('vault-form-config-azure-certs-client-id').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-tenant-id').should('be.visible')
+
+      // ttl advanced section is visible
+      cy.getTestId('advanced-fields-collapse').should('be.visible')
+
+      // credentials_prefix has default value AZURE
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('have.value', 'AZURE')
+
+      // ttl has default value 3600
+      cy.getTestId('vault-ttl-input').should('have.value', '3600')
+
+      // submit disabled until vault_uri is filled
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').type('https://my-vault.vault.azure.net')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      // clears vault_uri → submit disabled again
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').clear()
       cy.getTestId('vault-create-form-submit').should('be.disabled')
     })
 
