@@ -817,6 +817,9 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
+      '@kong-ui-public/entities-vaults':
+        specifier: workspace:^
+        version: link:../entities-vaults
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
