@@ -29,7 +29,7 @@
           <KButton
             :appearance="useKonnectManagedRedisUi ? 'secondary' : 'primary'"
             data-testid="toolbar-add-redis-configuration"
-            size="medium"
+            size="large"
             :to="config.createRoute"
           >
             <AddIcon />
@@ -50,7 +50,7 @@
             <KButton
               appearance="primary"
               data-testid="toolbar-add-redis-configuration"
-              size="medium"
+              :size="useActionOutside ? 'medium' : 'large'"
               :to="config.createRoute"
             >
               <AddIcon />
