@@ -31,7 +31,7 @@ describe('<PluginFieldRuleAlerts />', () => {
         ],
       } satisfies FieldRules,
       linkCount: 2,
-      expectedLabels: ['Field One', 'Field Two'],
+      expectedLabels: ['Field one', 'Field two'],
       topLevelItems: 1,
     },
     {
