@@ -196,10 +196,10 @@ describe('<PluginFieldRuleAlerts />', () => {
     mountComponent(rules)
 
     cy.contains('Exactly one of the following parameter combinations is required')
-    cy.get('.referable-field-link').should('contain.text', 'Http Proxy Host')
-    cy.get('.referable-field-link').should('contain.text', 'Http Proxy Port')
-    cy.get('.referable-field-link').should('contain.text', 'Https Proxy Host')
-    cy.get('.referable-field-link').should('contain.text', 'Https Proxy Port')
+    cy.get('.referable-field-link').should('contain.text', 'Http proxy host')
+    cy.get('.referable-field-link').should('contain.text', 'Http proxy port')
+    cy.get('.referable-field-link').should('contain.text', 'Https proxy host')
+    cy.get('.referable-field-link').should('contain.text', 'Https proxy port')
   })
 
   it('should allow clicking on field links', () => {
