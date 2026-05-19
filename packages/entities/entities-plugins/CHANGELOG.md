@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.205.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.205.4...@kong-ui-public/entities-plugins@9.205.5) (2026-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.205.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.205.3...@kong-ui-public/entities-plugins@9.205.4) (2026-05-19)
+
+
+### Bug Fixes
+
+* redis button size + copy updates ([#3268](https://github.com/Kong/public-ui-components/issues/3268)) ([4d88632](https://github.com/Kong/public-ui-components/commit/4d88632b2c1bc8718501f5610d5e5b83c22e9c46))
+
+
+
+
+
+## [9.205.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.205.2...@kong-ui-public/entities-plugins@9.205.3) (2026-05-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.205.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.205.1...@kong-ui-public/entities-plugins@9.205.2) (2026-05-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

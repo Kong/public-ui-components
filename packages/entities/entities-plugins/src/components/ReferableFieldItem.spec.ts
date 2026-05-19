@@ -37,12 +37,12 @@ describe('ReferableFieldItem', () => {
       {
         title: 'format simple field names',
         field: 'config.my_field',
-        expected: ['My Field'],
+        expected: ['My field'],
       },
       {
         title: 'remove config prefix',
         field: 'config.test_value',
-        expected: ['Test Value'],
+        expected: ['Test value'],
         notExpected: ['config.'],
       },
       {
@@ -53,7 +53,7 @@ describe('ReferableFieldItem', () => {
       {
         title: 'handle uppercase config prefix',
         field: 'Config.uppercase_field',
-        expected: ['Uppercase Field'],
+        expected: ['Uppercase field'],
         notExpected: ['Config.'],
       },
       {

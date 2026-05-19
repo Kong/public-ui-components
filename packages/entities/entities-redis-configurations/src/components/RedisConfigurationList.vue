@@ -50,7 +50,7 @@
             <KButton
               appearance="primary"
               data-testid="toolbar-add-redis-configuration"
-              size="large"
+              :size="useActionOutside ? 'medium' : 'large'"
               :to="config.createRoute"
             >
               <AddIcon />

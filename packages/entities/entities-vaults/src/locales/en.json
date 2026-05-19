@@ -322,10 +322,10 @@
             "label": "GCP login path"
           },
           "gcp_service_account": {
-            "label": "GCP Service account"
+            "label": "GCP service account"
           },
           "gcp_jwt_exp": {
-            "label": "GCP JWT Exp"
+            "label": "GCP JWT exp"
           },
           "aws_sts_endpoint_url": {
             "label": "AWS STS endpoint URL"
@@ -423,6 +423,16 @@
           "account": {
             "label": "Account",
             "tooltip": "The CyberArk Secrets Manager (Conjur) account for which the token will be issued. This is the identifier provided during CyberArk Secrets Manager (Conjur) configuration."
+          }
+        }
+      },
+      "fs": {
+        "label": "File system",
+        "description": "Access secrets stored in the file system.",
+        "fields": {
+          "prefix": {
+            "label": "File path prefix",
+            "tooltip": "The prefix path for the file vault referenced files."
           }
         }
       },

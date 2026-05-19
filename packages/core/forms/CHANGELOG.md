@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.24.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.9...@kong-ui-public/forms@4.24.10) (2026-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.24.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.8...@kong-ui-public/forms@4.24.9) (2026-05-19)
+
+
+### Bug Fixes
+
+* redis button size + copy updates ([#3268](https://github.com/Kong/public-ui-components/issues/3268)) ([4d88632](https://github.com/Kong/public-ui-components/commit/4d88632b2c1bc8718501f5610d5e5b83c22e9c46))
+
+
+
+
+
 ## [4.24.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.7...@kong-ui-public/forms@4.24.8) (2026-05-15)
 
 **Note:** Version bump only for package @kong-ui-public/forms

@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.7.1...@kong-ui-public/entities-vaults@4.7.2) (2026-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.7.0...@kong-ui-public/entities-vaults@4.7.1) (2026-05-19)
+
+
+### Bug Fixes
+
+* redis button size + copy updates ([#3268](https://github.com/Kong/public-ui-components/issues/3268)) ([4d88632](https://github.com/Kong/public-ui-components/commit/4d88632b2c1bc8718501f5610d5e5b83c22e9c46))
+
+
+
+
+
+# [4.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.8...@kong-ui-public/entities-vaults@4.7.0) (2026-05-18)
+
+
+### Features
+
+* **entities-vaults:** support fs vault ([#3265](https://github.com/Kong/public-ui-components/issues/3265)) ([f369933](https://github.com/Kong/public-ui-components/commit/f3699332dac5c56aebcabd77972e9284c1d8c02d))
+
+
+
+
+
 ## [4.6.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.7...@kong-ui-public/entities-vaults@4.6.8) (2026-05-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

@@ -49,12 +49,12 @@
           "emphasis": "referenceable"
         },
         "cert_alt": {
-          "label": "Cert Alt",
+          "label": "Cert alt",
           "tooltip": "PEM-encoded public certificate chain of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is {emphasis}, which means it can be securely stored as a secret in a vault. References must follow a specific format.",
           "emphasis": "referenceable"
         },
         "key_alt": {
-          "label": "Key Alt",
+          "label": "Key alt",
           "tooltip": "PEM-encoded private key of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is {emphasis}, which means it can be securely stored as a secret in a vault. References must follow a specific format.",
           "emphasis": "referenceable"
         },

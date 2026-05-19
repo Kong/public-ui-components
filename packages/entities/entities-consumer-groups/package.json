@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-consumer-groups",
-  "version": "4.5.10",
+  "version": "4.5.12",
   "type": "module",
   "main": "./dist/entities-consumer-groups.umd.js",
   "module": "./dist/entities-consumer-groups.es.js",
@@ -37,7 +37,7 @@
     "@kong/kongponents": "9.53.2",
     "axios": "^1.15.2",
     "vue": "^3.5.33",
-    "vue-router": "^5.0.6"
+    "vue-router": "^5.0.7"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
