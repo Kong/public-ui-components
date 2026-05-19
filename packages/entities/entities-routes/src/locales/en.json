@@ -130,7 +130,7 @@
       },
       "tags": {
         "label": "Tags",
-        "tooltip": "An optional set of strings associated with the Route for grouping and filtering.",
+        "tooltip": "An optional set of strings associated with the route for grouping and filtering.",
         "placeholder": "Enter a list of tags separated by commas",
         "help": "e.g. tag1, tag2, tag3"
       },
@@ -139,23 +139,23 @@
         "tooltip": "The protocols this route supports."
       },
       "path_handling": {
-        "label": "Path Handling",
+        "label": "Path handling",
         "tooltip": "Controls how Kong modifies the request path before proxying to the upstream service. Use v1 for standardized, predictable path behavior. Use v0 for legacy compatibility."
       },
       "https_redirect_status_code": {
-        "label": "HTTPS Redirect Status Code",
+        "label": "HTTPS redirect status code",
         "tooltip": "Specifies the HTTP status code for redirecting requests from HTTP to HTTPS. Use <code>301</code> or <code>308</code> for permanent redirects, <code>302</code> or <code>307</code> for temporary redirects."
       },
       "regex_priority": {
-        "label": "Regex Priority",
+        "label": "Regex priority",
         "tooltip": "Regex priority is determined by length first (longer patterns win), and when lengths are the same, more specific regexes are preferred.  When two routes match the path and have the same <code>regex_priority</code>, the older one (lowest <code>created_at</code>) is used."
       },
       "strip_path": {
-        "label": "Strip Path",
+        "label": "Strip path",
         "tooltip": "When enabled, Kong removes the portion of the request path that matches the route's path before forwarding the request to the upstream. If the request exactly matches the route, the result is <code>/</code>. Disable if that's not desired."
       },
       "preserve_host": {
-        "label": "Preserve Host",
+        "label": "Preserve host",
         "tooltip": "Keeps the original <code>Host</code> header when proxying requests. Enable this if the upstream service requires the client's <code>Host</code> value. Disable if the service expects its own hostname."
       },
       "paths": {

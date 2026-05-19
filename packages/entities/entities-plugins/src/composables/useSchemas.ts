@@ -725,7 +725,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       // This can be overridden in the field schema
     }
 
-    return convertToDotNotation(capitalize(schema.label || fieldName.replace(/_/g, ' ')))
+    return convertToDotNotation(schema.label || fieldName.replace(/_/g, ' '))
   }
 
   const fieldSchemaHandler = (schema: Record<string, any>, formModel: Record<string, any>) => {

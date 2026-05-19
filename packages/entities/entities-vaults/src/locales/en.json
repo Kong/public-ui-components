@@ -322,10 +322,10 @@
             "label": "GCP login path"
           },
           "gcp_service_account": {
-            "label": "GCP Service account"
+            "label": "GCP service account"
           },
           "gcp_jwt_exp": {
-            "label": "GCP JWT Exp"
+            "label": "GCP JWT exp"
           },
           "aws_sts_endpoint_url": {
             "label": "AWS STS endpoint URL"
