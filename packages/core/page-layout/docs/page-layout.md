@@ -329,7 +329,7 @@ Provide this prop to mark the page as an entity page. The `path` field is the UR
 
 ### `app:pageShortcutsContext` injection
 
-The host application must `provide('app:pageShortcutsContext', ctx)` a reactive object (typically created via `reactive()`) implementing the [`PageShortcutsContext`](#pageshortcutscontext-interface) interface. `PageLayout` interacts with it as follows:
+The host application must `provide('app:pageShortcutsContext', ctx)` a reactive object (typically created via `reactive()`). `PageLayout` interacts with it as follows:
 
 - **`isFavorite`** — reactive boolean. When `true`, the star button renders as a filled star (and its aria-label switches to "Remove page from shortcuts"). The host is responsible for keeping this in sync with the user's favorites list whenever the route changes.
 - **`onFavoriteToggle()`** — called when the user clicks the star button. The host should toggle the favorite state for the current page and update `isFavorite` accordingly.
@@ -338,13 +338,13 @@ The host application must `provide('app:pageShortcutsContext', ctx)` a reactive 
 #### Example host setup
 
 ```ts
-import { reactive, provide } from 'vue'
-import type { PageShortcutsContext, PageShortcutData } from '@kong-ui-public/page-layout'
+import { ref, reactive, provide } from 'vue'
+import type { PageShortcutData } from '@kong-ui-public/page-layout'
 
-const favorites = reactive<PageShortcutData[]>([])
-const recents = reactive<PageShortcutData[]>([])
+const favorites = ref<PageShortcutData[]>([])
+const recents = ref<PageShortcutData[]>([])
 
-const pageShortcutsContext: PageShortcutsContext = reactive({
+const pageShortcutsContext = reactive({
   isFavorite: false,
   onFavoriteToggle: () => {
     // toggle the currently active entity in `favorites`,
@@ -382,16 +382,19 @@ interface PageShortcutData {
 
 ### `PageShortcutsContext` Interface
 
-The shape `PageLayout` expects when injecting `app:pageShortcutsContext`. Only `onFavoriteToggle` is strictly required for the star button to render; `isFavorite` and `onEntityPageVisit` are optional but recommended for full functionality.
+> [!IMPORTANT]
+> This interface is not defined within `@kong-ui-public/page-layout` package as it is primarily host-driven. PageLayout checks whether all mentioned above properties are provided and are of expected type but does not enforce the type to avoid breaking changes should the host-driven use case or interface change.
+
+The shape `PageLayout` expects when injecting `app:pageShortcutsContext`. Only `onFavoriteToggle` is strictly required for the star button to render.
 
 ```ts
 interface PageShortcutsContext {
   /** Whether the current page is currently favorited */
-  isFavorite?: boolean
+  isFavorite: boolean
   /** Called when the user clicks the favorite star button */
   onFavoriteToggle: () => void
   /** Called when an entity page is visited or its shortcut data changes */
-  onEntityPageVisit?: (data: PageShortcutData) => void
+  onEntityPageVisit: (data: PageShortcutData) => void
 }
 ```
 
