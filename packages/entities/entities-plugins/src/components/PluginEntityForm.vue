@@ -818,9 +818,56 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
   })
 }
 
+// Recursively drops keys from a config object whose dash-key path is unknown to `props.schema`.
+// In practice these are deprecated `shorthand_fields` the backend echoes back but the form
+// doesn't render — re-submitting them lets the backend re-fill the canonical field from a
+// stale shorthand value (e.g. clearing `redis.password` is undone by a leftover `redis_password`).
+const stripUnknownConfigKeys = (
+  obj: Record<string, any> | null | undefined,
+  prefix: string,
+): Record<string, any> | null | undefined => {
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return obj
+
+  const result: Record<string, any> = {}
+  for (const key of Object.keys(obj)) {
+    const dashKey = `${prefix}-${key}`
+    // Fields with dashes are stored with underscores in props.schema (see PluginForm.vue buildFormSchema)
+    const underscoredKey = key.includes('-') ? `${prefix}-${key.replace(/-/g, '_')}` : dashKey
+    const schemaEntry = props.schema[dashKey] ?? props.schema[underscoredKey]
+    const value = obj[key]
+
+    if (schemaEntry) {
+      if (Array.isArray(value)) {
+        // Array-of-records (`nestedFields: true`) elements share the array's dash-key as their
+        // prefix (e.g. config-targets-auth-header_name), so recurse with `dashKey` unchanged.
+        // Primitive elements and nested arrays pass through.
+        result[key] = value.map((item) =>
+          item && typeof item === 'object' && !Array.isArray(item)
+            ? stripUnknownConfigKeys(item, dashKey)
+            : item,
+        )
+      } else {
+        result[key] = value
+      }
+    } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+      // Record containers (e.g. `redis`) aren't themselves leaves in props.schema — recurse to
+      // find their known leaves and keep the container only if anything survives.
+      const stripped = stripUnknownConfigKeys(value, dashKey)
+      if (stripped && Object.keys(stripped).length > 0) {
+        result[key] = stripped
+      }
+    }
+  }
+  return result
+}
+
 const freeformData = shallowRef<Record<string, any>>(props.record)
 const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[]) => {
-  freeformData.value = value
+  const unknownFieldStripped = value?.config
+    ? { ...value, config: stripUnknownConfigKeys(value.config, 'config') }
+    : value
+
+  freeformData.value = unknownFieldStripped
 
   const newModel = { ...formModel }
 
@@ -832,7 +879,7 @@ const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[]) => 
   emit('model-updated', {
     // config change should also update the form model
     // otherwise the submit button will be disabled
-    model: { ...newModel, ...value },
+    model: { ...newModel, ...unknownFieldStripped },
     originalModel,
     data: getModel(fields),
   })
