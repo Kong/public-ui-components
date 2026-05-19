@@ -88,7 +88,7 @@
     "nanoid": "^5.1.9",
     "reflect-metadata": "^0.2.2",
     "vue": "^3.5.33",
-    "vue-router": "^5.0.6",
+    "vue-router": "^5.0.7",
     "zod": "^4.3.6"
   },
   "scripts": {
