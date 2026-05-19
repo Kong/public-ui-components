@@ -14,6 +14,11 @@ A Kong UI page layout component that provides a structured page header with brea
   - [Navigation Handling](#navigation-handling)
   - [`PageLayoutTab` Interface](#pagelayouttab-interface)
 - [Nested PageLayout](#nested-pagelayout)
+- [Page Shortcuts](#page-shortcuts)
+  - [`pageShortcutData` prop](#pageshortcutdata-prop)
+  - [`app:pageShortcutsContext` injection](#apppageshortcutscontext-injection)
+  - [`PageShortcutData` Interface](#pageshortcutdata-interface)
+  - [`PageShortcutsContext` Interface](#pageshortcutscontext-interface)
 - [TypeScript interfaces](#typescript-interfaces)
 
 ## Features
@@ -29,6 +34,7 @@ A Kong UI page layout component that provides a structured page header with brea
 - `<router-view>` integration when tabs are present; falls back to a default slot otherwise
 - Skeleton loading state while the tab layout is being computed
 - Border separator between the header and content area
+- Optional "favorite" star button next to the title for marking entity pages as shortcuts, integrated with a host-provided shortcuts context via dependency injection
 
 ## Requirements
 
@@ -69,6 +75,16 @@ An array of breadcrumb items passed to the Kongponents `KBreadcrumbs` component.
 - default: `[]`
 
 An array of `PageLayoutTab` objects that define the tabbed navigation displayed below the page title.
+
+#### `pageShortcutData`
+
+- type: `PageShortcutData`
+- required: `false`
+- default: `undefined`
+
+When provided, marks the current page as an entity page eligible to be saved as a shortcut (favorite / recent). See [Page Shortcuts](#page-shortcuts) for the full integration contract.
+
+The favorite star button only renders when **both** `pageShortcutData` is provided _and_ a host application supplies an `app:pageShortcutsContext` via `provide()` that exposes an `onFavoriteToggle` function. If either is missing, the button is hidden.
 
 #### `backTo`
 
@@ -293,6 +309,92 @@ interface PageLayoutTab {
 
 This behavior is automatic and requires no additional configuration — simply nest `PageLayout` components via routing and the parent will defer to the child.
 
+## Page Shortcuts
+
+`PageLayout` can integrate with a host application's "shortcuts" system (typically a sidebar listing favorited and recently-visited entity pages). The integration has two halves:
+
+1. The page declares itself as a shortcut-eligible entity via the `pageShortcutData` prop.
+2. The host app provides a `PageShortcutsContext` via Vue `provide()` under the `app:pageShortcutsContext` injection key. This context is reactive and tells `PageLayout` whether the current page is currently favorited, and gives it callbacks to invoke when the user favorites a page or when an entity page is visited.
+
+The favorite star button is only rendered when **both** halves of the contract are satisfied:
+
+- `pageShortcutData` is provided with non-empty `entityType`, `path`, and `label`, **and**
+- An `app:pageShortcutsContext` is injected and exposes an `onFavoriteToggle` function.
+
+If either side is missing, the button is hidden entirely (no DOM is rendered for it). This means a page can opt-in unconditionally by declaring `pageShortcutData`, and the host app controls global availability of the feature by deciding whether to `provide()` the context.
+
+### `pageShortcutData` prop
+
+Provide this prop to mark the page as an entity page. The `path` field is the URL the shortcut will navigate to when clicked from the host's shortcut list; `label` is the display text; `entityType` is a string the host uses to group / categorize shortcuts (e.g. `"gateway-service"`, `"route"`). An optional `parentLabel` can disambiguate entities with the same label under different parents.
+
+### `app:pageShortcutsContext` injection
+
+The host application must `provide('app:pageShortcutsContext', ctx)` a reactive object (typically created via `reactive()`) implementing the [`PageShortcutsContext`](#pageshortcutscontext-interface) interface. `PageLayout` interacts with it as follows:
+
+- **`isFavorite`** — reactive boolean. When `true`, the star button renders as a filled star (and its aria-label switches to "Remove page from shortcuts"). The host is responsible for keeping this in sync with the user's favorites list whenever the route changes.
+- **`onFavoriteToggle()`** — called when the user clicks the star button. The host should toggle the favorite state for the current page and update `isFavorite` accordingly.
+- **`onEntityPageVisit(pageShortcutData)`** — called when an entity page is visited (or when `pageShortcutData` changes). The host typically uses this to record the visit in a "Recents" list. To avoid double-counting in nested-PageLayout scenarios, this callback is only invoked from the **innermost** (non-nested) `PageLayout`, and is deferred via `nextTick()` so nested-layout detection has settled first.
+
+#### Example host setup
+
+```ts
+import { reactive, provide } from 'vue'
+import type { PageShortcutsContext, PageShortcutData } from '@kong-ui-public/page-layout'
+
+const favorites = reactive<PageShortcutData[]>([])
+const recents = reactive<PageShortcutData[]>([])
+
+const pageShortcutsContext: PageShortcutsContext = reactive({
+  isFavorite: false,
+  onFavoriteToggle: () => {
+    // toggle the currently active entity in `favorites`,
+    // then update `pageShortcutsContext.isFavorite` to match
+  },
+  onEntityPageVisit: (data) => {
+    // prepend `data` to `recents`, dedupe by `path`, cap length, etc.
+  },
+})
+
+provide('app:pageShortcutsContext', pageShortcutsContext)
+```
+
+### `PageShortcutData` Interface
+
+```ts
+interface PageShortcutData {
+  /** The display label of the page shortcut */
+  label: string
+  /** The URL path of the page shortcut */
+  path: string
+  /** The entity type of the page shortcut */
+  entityType: string
+  /** The display label of the parent entity */
+  parentLabel?: string
+}
+```
+
+| Property      | Type     | Required | Description                                                            |
+| ------------- | -------- | -------- | ---------------------------------------------------------------------- |
+| `label`       | `string` | Yes      | Display text for the shortcut entry                                    |
+| `path`        | `string` | Yes      | URL path the shortcut navigates to                                     |
+| `entityType`  | `string` | Yes      | Host-defined entity category (e.g. `"gateway-service"`, `"route"`)     |
+| `parentLabel` | `string` | No       | Optional parent entity label, useful for disambiguating shortcut rows  |
+
+### `PageShortcutsContext` Interface
+
+The shape `PageLayout` expects when injecting `app:pageShortcutsContext`. Only `onFavoriteToggle` is strictly required for the star button to render; `isFavorite` and `onEntityPageVisit` are optional but recommended for full functionality.
+
+```ts
+interface PageShortcutsContext {
+  /** Whether the current page is currently favorited */
+  isFavorite?: boolean
+  /** Called when the user clicks the favorite star button */
+  onFavoriteToggle: () => void
+  /** Called when an entity page is visited or its shortcut data changes */
+  onEntityPageVisit?: (data: PageShortcutData) => void
+}
+```
+
 ## TypeScript interfaces
 
 TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/core/page-layout/src/types/) and can be directly imported into your host application. The following type interfaces are available for import:
@@ -303,5 +405,6 @@ import type {
   PageLayoutProps,
   PageLayoutSlots,
   PageLayoutTabsProps,
+  PageShortcutData,
 } from '@kong-ui-public/page-layout'
 ```

@@ -51,6 +51,7 @@
                 :aria-label="isFavorite ? t('favorite_button.remove_shortcut') : t('favorite_button.save_shortcut')"
                 class="favorite-button"
                 :class="{ 'active': isFavorite }"
+                data-testid="page-layout-favorite-button"
                 type="button"
                 @click="onFavoriteButtonClick"
               >
@@ -196,12 +197,15 @@ onUnmounted(() => {
 })
 
 watch(() => pageShortcutData, async (newPageShortcutData) => {
-  // Wait for the next tick to ensure any nested PageLayouts have mounted to make sure shortcut logic handling is deferred to the most nested PageLayout.
+  /**
+   * Wait for the next tick to ensure any nested PageLayouts have mounted to make sure shortcut logic handling is deferred to the most nested PageLayout.
+   * The reason why it has to be a watcher is because sometimes it takes time for the host app router to update the route and set the path properly.
+   */
   await nextTick()
   if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
     pageShortcutsContext.onEntityPageVisit(newPageShortcutData)
   }
-}, { deep: true })
+}, { immediate: true, deep: true })
 </script>
 
 <style lang="scss" scoped>
