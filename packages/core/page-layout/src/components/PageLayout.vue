@@ -21,12 +21,11 @@
             <component
               :is="isBackToString ? 'a' : 'router-link'"
               v-if="backTo"
+              v-bind="isBackToString ? { href: backTo } : { to: backTo }"
               :aria-label="t('back_button')"
               class="navigate-back"
               data-testid="page-layout-navigate-back"
-              :href="isBackToString ? backTo : undefined"
               tabindex="0"
-              :to="isBackToString ? undefined : backTo"
               @click.prevent="navigateBack"
               @keydown.enter.prevent="navigateBack"
               @keydown.space.prevent="navigateBack"
