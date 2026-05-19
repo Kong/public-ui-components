@@ -7,7 +7,7 @@ export interface PageShortcutData {
   label: string
   /** The URL path of the page shortcut */
   path: string
-  /** The entity type of the page shortcut */
+  /** The entity type of the page shortcut (snake_case, e.g. "gateway_service") */
   entityType: string
   /** The display label of the parent entity */
   parentLabel?: string
