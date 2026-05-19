@@ -8,7 +8,7 @@
   />
 
   <KongIdentityField
-    v-if="isKonnect"
+    v-if="isKonnect && hasPrincipals"
     class="kong-identity-section"
     :has-identity-realms="hasIdentityRealms"
   />
@@ -54,6 +54,15 @@ const hasIdentityRealms = computed(() => {
   }
 })
 
+// Only show Kong Identity selector if schema has principals field
+const hasPrincipals = computed(() => {
+  try {
+    return !!getSchema('$.config.principals')
+  } catch {
+    return false
+  }
+})
+
 const configRenderRules = createComputedRenderRules('config')
 
 // Determine if identity_realms should be shown (only in centrally-managed mode)
@@ -65,6 +74,8 @@ const isCentrallyManaged = computed(() => {
 
 // Fields managed by KongIdentityField — always omit from normal rendering
 const identityFields = computed(() => {
+  if (!hasPrincipals.value) return []
+
   const fields = ['principals']
   // Hide identity_realms when not in centrally-managed mode
   if (hasIdentityRealms.value && !isCentrallyManaged.value) {
@@ -175,7 +186,25 @@ const advancedFieldsOmit = computed(() => [
 <style lang="scss" scoped>
 .kong-identity-section {
   border-top: 1px solid var(--kui-color-border, $kui-color-border);
-  padding-top: var(--kui-space-70, $kui-space-70);
   margin-top: var(--kui-space-70, $kui-space-70);
+  padding-top: var(--kui-space-70, $kui-space-70);
+
+  + .ff-advanced-fields-container {
+    border-top: none;
+    padding-top: 0;
+  }
+}
+
+.ff-advanced-fields-container {
+  border-top: 1px solid var(--kui-color-border, $kui-color-border);
+  padding-top: var(--kui-space-70, $kui-space-70);
+
+  :deep(.collapse-heading) {
+    margin: 0;
+  }
+
+  &:has(> .collapse-hidden-content > .ff-advanced-fields > .ff-object-field:empty:only-child) {
+    display: none;
+  }
 }
 </style>

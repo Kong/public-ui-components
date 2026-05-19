@@ -1,6 +1,8 @@
 import { h } from 'vue'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import Form from '../../free-form/shared/Form.vue'
 import KongIdentityField from './KongIdentityField.vue'
+import ConfigFormContent from './ConfigFormContent.vue'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 
 // Schema with both principals and identity_realms (like key-auth)
@@ -208,5 +210,75 @@ describe('KongIdentityField', () => {
           && Array.isArray(val.config?.identity_realms)
       }))
     })
+  })
+})
+
+// Schema without principals (older plugin version)
+const schemaWithoutPrincipals: FormSchema = {
+  type: 'record',
+  fields: [
+    {
+      config: {
+        type: 'record',
+        fields: [
+          {
+            key_names: {
+              type: 'array',
+              required: true,
+              elements: { type: 'string' },
+              default: ['apikey'],
+            },
+          },
+          {
+            hide_credentials: {
+              type: 'boolean',
+              default: false,
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+
+describe('ConfigFormContent - backward compatibility', () => {
+  function mountContent(schema: FormSchema, options?: { isKonnect?: boolean }) {
+    const formsConfig = options?.isKonnect
+      ? { app: 'konnect', apiBaseUrl: 'https://us.api.konghq.com' }
+      : { app: 'kongManager' }
+
+    cy.mount(() =>
+      h('div', { style: 'padding: 20px' },
+        h(Form, {
+          schema,
+          onChange: () => {},
+        }, {
+          default: () => h(ConfigFormContent),
+        }),
+      ), {
+      global: {
+        provide: {
+          [FORMS_CONFIG as unknown as symbol]: formsConfig,
+        },
+      },
+    })
+  }
+
+  it('does not show Kong Identity selector when schema has no principals field', () => {
+    mountContent(schemaWithoutPrincipals, { isKonnect: true })
+
+    cy.getTestId('ff-kong-identity-field').should('not.exist')
+  })
+
+  it('shows Kong Identity selector when schema has principals field', () => {
+    mountContent(schemaWithRealms, { isKonnect: true })
+
+    cy.getTestId('ff-kong-identity-field').should('exist')
+  })
+
+  it('does not show Kong Identity selector in Kong Manager even with principals', () => {
+    mountContent(schemaWithRealms, { isKonnect: false })
+
+    cy.getTestId('ff-kong-identity-field').should('not.exist')
   })
 })
