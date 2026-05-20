@@ -11,7 +11,7 @@ export interface CustomPluginFormConfig {
   /** Available plugins for cloning (only needed for Cloned type) */
   clonablePlugins?: string[]
 }
-export type KonnectCustomPluginFormConfig = KonnectBaseFormConfig & CustomPluginFormConfig
+export type KonnectCustomPluginFormConfig = Omit<KonnectBaseFormConfig & CustomPluginFormConfig, 'workspace'>
 
 export type KongManagerCustomPluginFormConfig = KongManagerBaseFormConfig & CustomPluginFormConfig
 

@@ -21,6 +21,8 @@ export type CustomPluginWithType =
 interface UseKonnectCustomPluginApiOptions {
   app: 'konnect'
   controlPlaneId: string
+  // Workspace is supported in this composable, but the entry in Konnect will not include workspace for now.
+  workspace?: string
 }
 
 interface PagedResponse<T> {
@@ -80,6 +82,7 @@ export const fetchAllPages = async <T>(
 
 interface UseKongManagerCustomPluginApiOptions {
   app: 'kongManager'
+  workspace: string
 }
 
 type UseCustomPluginApiOptions = (
@@ -106,7 +109,9 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
       url = url.replace(/{controlPlaneId}/gi, options.controlPlaneId)
     }
 
-    url = url.replace(/{pluginId}/gi, pluginId ?? '')
+    url = url
+      .replace(/{pluginId}/gi, pluginId ?? '')
+      .replace(/\/{workspace}/gi, options.workspace ? `/${options.workspace}` : '')
 
     return url
   }

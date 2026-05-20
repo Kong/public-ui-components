@@ -669,7 +669,7 @@ describe('<CustomPluginForm />', () => {
     it('should submit streamed plugin via Kong Manager API', () => {
       cy.intercept(
         'POST',
-        `${kongManagerConfig.apiBaseUrl}/custom-plugins`,
+        `${kongManagerConfig.apiBaseUrl}/${kongManagerConfig.workspace}/custom-plugins`,
         {
           statusCode: 201,
           body: streamedPluginResponse,

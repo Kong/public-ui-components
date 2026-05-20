@@ -389,6 +389,7 @@ const { getClonedPlugin: fetchClonedPluginDetail } = composables.useCustomPlugin
   } as any).axiosInstance,
   apiBaseUrl: props.config.apiBaseUrl,
   app: props.config.app,
+  workspace: (props.config as KongManagerPluginFormConfig).workspace,
   controlPlaneId: (props.config as KonnectPluginFormConfig).controlPlaneId,
 })
 

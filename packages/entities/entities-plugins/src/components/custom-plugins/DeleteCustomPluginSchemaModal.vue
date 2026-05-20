@@ -94,7 +94,6 @@ const requestUrl = computed(() => {
   const pluginType = props.plugin.customPluginType
 
   if (props.config.app === 'konnect') {
-    // Installed / streamed / cloned custom plugins are all CP-global.
     const partialPluginURL = pluginType === 'streaming'
       ? endpoints.select[props.config.app].streamingCustomPluginItem
       : pluginType === 'cloned'
@@ -103,16 +102,17 @@ const requestUrl = computed(() => {
 
     return `${props.config.apiBaseUrl}${partialPluginURL}`
       .replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+      .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
       .replace(/{pluginId}/gi, props.plugin.id)
   }
 
   if (props.config.app === 'kongManager' && pluginType && pluginType !== 'schema') {
-    // Streamed and cloned custom plugins are CP-global, not workspace-scoped.
     const partialPluginUrl = pluginType === 'cloned'
       ? endpoints.customPlugin[props.config.app].cloned.edit
       : endpoints.customPlugin[props.config.app].streamed.edit
 
     return `${props.config.apiBaseUrl}${partialPluginUrl}`
+      .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
       .replace(/{pluginId}/gi, props.plugin.id)
   }
 

@@ -175,6 +175,12 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (config.app === 'kongManager' && !config.workspace) return false
+      if (config.app === 'konnect') {
+        if (!config.controlPlaneId || config.workspace) { // controlPlaneId is required and workspace should not be provided for konnect
+          return false
+        }
+      }
       if (!config.getCreateRoute) return false
       return true
     },
@@ -545,7 +551,6 @@ const availablePluginsUrl = computed((): string => {
   return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
 })
 
-// Streamed and cloned custom plugins are CP-global, not workspace-scoped.
 const streamingPluginsUrl = computed<string | null>(() => {
   if (isStreamingCustomPluginSupported.value) {
     let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].streamingCustomPlugins}`
@@ -554,7 +559,7 @@ const streamingPluginsUrl = computed<string | null>(() => {
       url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
     }
 
-    return url
+    return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
   return null
@@ -568,7 +573,7 @@ const clonedPluginsUrl = computed<string | null>(() => {
       url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
     }
 
-    return url
+    return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
   return null
