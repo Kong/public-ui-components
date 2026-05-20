@@ -111,10 +111,9 @@ const requestUrl = computed(() => {
       ? endpoints.customPlugin[props.config.app].cloned.edit
       : endpoints.customPlugin[props.config.app].streamed.edit
 
-    let url = `${props.config.apiBaseUrl}${partialPluginUrl}`
-    url = url.replace(/{workspace}/gi, props.config.workspace || '')
-    url = url.replace(/{pluginId}/gi, props.plugin.id)
-    return url
+    return `${props.config.apiBaseUrl}${partialPluginUrl}`
+      .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+      .replace(/{pluginId}/gi, props.plugin.id)
   }
 
   return null
