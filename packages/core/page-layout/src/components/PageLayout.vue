@@ -21,12 +21,11 @@
             <component
               :is="isBackToString ? 'a' : 'router-link'"
               v-if="backTo"
+              v-bind="isBackToString ? { href: backTo } : { to: backTo }"
               :aria-label="t('back_button')"
               class="navigate-back"
               data-testid="page-layout-navigate-back"
-              :href="isBackToString ? backTo : undefined"
               tabindex="0"
-              :to="isBackToString ? undefined : backTo"
               @click.prevent="navigateBack"
               @keydown.enter.prevent="navigateBack"
               @keydown.space.prevent="navigateBack"
@@ -43,6 +42,25 @@
             >
               {{ title }}
             </h1>
+            <div
+              v-if="showFavoriteButton"
+              class="favorite-button-container"
+            >
+              <button
+                :aria-label="isFavorite ? t('favorite_button.remove_shortcut') : t('favorite_button.save_shortcut')"
+                class="favorite-button"
+                :class="{ 'active': isFavorite }"
+                data-testid="page-layout-favorite-button"
+                type="button"
+                @click="onFavoriteButtonClick"
+              >
+                <component
+                  :is="isFavorite ? StarFillIcon : StarIcon"
+                  decorative
+                  :size="KUI_ICON_SIZE_30"
+                />
+              </button>
+            </div>
             <div
               v-if="$slots['title-after']"
               class="title-after-container"
@@ -79,11 +97,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, onUnmounted } from 'vue'
+import { computed, ref, provide, inject, onUnmounted, nextTick, watch } from 'vue'
+import type { DeepReadonly, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
-import { ArrowTopLeftIcon } from '@kong/icons'
+import { ArrowTopLeftIcon, StarIcon, StarFillIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
@@ -93,11 +112,13 @@ const {
   title,
   backTo,
   tabs = [],
+  pageShortcutData,
 } = defineProps<PageLayoutProps>()
 
 defineSlots<PageLayoutSlots>()
 
 const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
+const pageShortcutsContext = inject<DeepReadonly<Reactive<unknown>> | null>('app:pageShortcutsContext', null)
 
 const { i18n: { t } } = composables.useI18n()
 
@@ -106,6 +127,10 @@ const router = useRouter()
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
 const isBackToString = computed((): boolean => typeof backTo === 'string')
+
+const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.path && !!pageShortcutData.label)
+const showFavoriteButton = computed((): boolean => isEntityPage.value && !!pageShortcutsContext && 'onFavoriteToggle' in pageShortcutsContext && typeof pageShortcutsContext.onFavoriteToggle === 'function')
+const isFavorite = computed((): boolean => !!pageShortcutsContext && 'isFavorite' in pageShortcutsContext && pageShortcutsContext.isFavorite === true)
 
 /** Handle navigation back via the backTo prop */
 const navigateBack = async () => {
@@ -143,8 +168,8 @@ const navigateBack = async () => {
  *    (nestedCount) is used so the parent only restores its header when all nested
  *    children have unmounted, not just the first one.
  */
-const nestedCount = ref(0)
-const hasNestedPageLayout = computed(() => nestedCount.value > 0)
+const nestedCount = ref<number>(0)
+const hasNestedPageLayout = computed((): boolean => nestedCount.value > 0)
 provide(nestedPageLayoutInjectionKey, (): (() => void) => {
   nestedCount.value++
 
@@ -161,9 +186,25 @@ if (typeof registerNestedPageLayout === 'function') {
   unregisterNestedPageLayout.value = registerNestedPageLayout()
 }
 
+const onFavoriteButtonClick = () => {
+  // Cast to the expected type -- we already checked for the function in the computed property
+  (pageShortcutsContext as { onFavoriteToggle: () => void }).onFavoriteToggle()
+}
+
 onUnmounted(() => {
   unregisterNestedPageLayout.value?.()
 })
+
+watch(() => pageShortcutData, async (newPageShortcutData) => {
+  /**
+   * Wait for the next tick to ensure any nested PageLayouts have mounted to make sure shortcut logic handling is deferred to the most nested PageLayout.
+   * The reason why it has to be a watcher is because sometimes it takes time for the host app router to update the route and set the path properly.
+   */
+  await nextTick()
+  if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
+    pageShortcutsContext.onEntityPageVisit(newPageShortcutData)
+  }
+}, { immediate: true, deep: true })
 </script>
 
 <style lang="scss" scoped>
@@ -205,7 +246,8 @@ onUnmounted(() => {
           display: flex;
           gap: var(--kui-space-20, $kui-space-20);
 
-          .navigate-back {
+          .navigate-back,
+          .favorite-button {
             background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
             border: none;
             border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
@@ -232,11 +274,29 @@ onUnmounted(() => {
             margin: var(--kui-space-0, $kui-space-0);
           }
 
+          .favorite-button-container {
+            align-self: center;
+            margin-left: var(--kui-space-20, $kui-space-20);
+
+            .favorite-button {
+              color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
+              padding: var(--kui-space-0, $kui-space-0);
+
+              &:hover {
+                color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+              }
+
+              &.active {
+                color: var(--kui-color-text-warning-weak, $kui-color-text-warning-weak);
+              }
+            }
+          }
+
           .title-after-container {
             align-items: flex-end;
             display: flex;
             gap: var(--kui-space-30, $kui-space-30);
-            padding-left: var(--kui-space-20, $kui-space-20);
+            margin-left: var(--kui-space-20, $kui-space-20);
           }
         }
       }

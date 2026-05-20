@@ -14,13 +14,12 @@
       >
         <component
           :is="typeof tab.to === 'string' ? 'a' : 'router-link'"
+          v-bind="typeof tab.to === 'string' ? { href: tab.to } : { to: tab.to }"
           :aria-current="tab.active ? 'page' : undefined"
           class="tab-link"
           :class="{ 'active': tab.active }"
           :data-testid="tab.dataTestId ? tab.dataTestId : `page-layout-tab-${tab.key}`"
-          :href="typeof tab.to === 'string' ? tab.to : undefined"
           tabindex="0"
-          :to="typeof tab.to === 'string' ? undefined : tab.to"
           @click.prevent="onTabNavigation(tab)"
           @keydown.enter.prevent="onTabNavigation(tab)"
           @keydown.space.prevent="onTabNavigation(tab)"

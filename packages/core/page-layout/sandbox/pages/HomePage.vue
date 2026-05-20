@@ -3,6 +3,7 @@
     <PageLayout
       back-to="/"
       :breadcrumbs="breadcrumbs"
+      :page-shortcut-data="pageShortcutData"
       :tabs="tabs"
       title="Umbrella R&D Dev"
     >
@@ -22,8 +23,9 @@
 </template>
 
 <script setup lang="ts">
+import { provide, reactive } from 'vue'
 import { PageLayout } from '../../src'
-import type { PageLayoutTab } from '../../src'
+import type { PageLayoutTab, PageShortcutData } from '../../src'
 import { MoreIcon } from '@kong/icons'
 
 const breadcrumbs = [{
@@ -90,6 +92,24 @@ const tabs: PageLayoutTab[] = [
     to: '/keys',
   },
 ]
+
+const pageShortcutsContext = reactive({
+  isFavorite: false,
+  onFavoriteToggle: () => {
+    pageShortcutsContext.isFavorite = !pageShortcutsContext.isFavorite
+  },
+  onEntityPageVisit: () => {
+    console.log('onEntityPageVisit')
+  },
+})
+
+provide('app:pageShortcutsContext', pageShortcutsContext)
+
+const pageShortcutData: PageShortcutData = {
+  label: 'Home',
+  path: '/',
+  entityType: 'sandbox',
+}
 </script>
 
 <style lang="scss" scoped>

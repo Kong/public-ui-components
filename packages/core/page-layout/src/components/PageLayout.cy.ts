@@ -1,6 +1,13 @@
-import { defineComponent, inject, h, ref } from 'vue'
+import { defineComponent, inject, h, reactive, ref } from 'vue'
 import PageLayout from './PageLayout.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
+import type { PageShortcutData } from '../types'
+
+const validShortcutData: PageShortcutData = {
+  label: 'My Service',
+  path: '/services/my-service',
+  entityType: 'gateway-service',
+}
 
 describe('<PageLayout />', () => {
   it('renders breadcrumbs, title and tabs when breadcrumbs and tabs are passed', () => {
@@ -152,6 +159,27 @@ describe('<PageLayout />', () => {
       cy.getTestId('page-layout-title').should('have.length', 1).and('contain.text', parentTitle)
     })
 
+    it('only the innermost PageLayout invokes onEntityPageVisit when nested', () => {
+      const onEntityPageVisit = cy.stub().as('onEntityPageVisit')
+      const ctx = reactive({
+        isFavorite: false,
+        onFavoriteToggle: () => { },
+        onEntityPageVisit,
+      })
+
+      cy.mount(PageLayout, {
+        props: { title: 'Parent Title', pageShortcutData: validShortcutData },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+        slots: {
+          default: () => h(PageLayout, { title: 'Child Title', pageShortcutData: validShortcutData }),
+        },
+      })
+
+      // Only the child (innermost) PageLayout should invoke onEntityPageVisit
+      cy.get('@onEntityPageVisit').should('have.been.calledOnce')
+      cy.get('@onEntityPageVisit').should('have.been.calledWith', validShortcutData)
+    })
+
     it('hides the parent header when a nested PageLayout is slotted', () => {
       const parentTitle = 'Parent Title'
       const childTitle = 'Child Title'
@@ -164,6 +192,181 @@ describe('<PageLayout />', () => {
       cy.getTestId('page-layout-title').should('have.length', 1).and('contain.text', childTitle)
       cy.getTestId('page-layout-breadcrumbs').should('not.exist')
       cy.getTestId('page-layout-tabs').should('not.exist')
+    })
+  })
+
+  describe('page shortcuts', () => {
+    it('does not render the favorite button when neither pageShortcutData nor pageShortcutsContext are provided', () => {
+      cy.mount(PageLayout, {
+        props: { title: 'Test Page Title' },
+      })
+
+      cy.getTestId('page-layout-favorite-button').should('not.exist')
+    })
+
+    it('does not render the favorite button when only pageShortcutData is provided', () => {
+      cy.mount(PageLayout, {
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
+      })
+
+      cy.getTestId('page-layout-favorite-button').should('not.exist')
+    })
+
+    it('does not render the favorite button when only pageShortcutsContext is provided', () => {
+      const ctx = reactive({
+        isFavorite: false,
+        onFavoriteToggle: () => { },
+        onEntityPageVisit: () => { },
+      })
+
+      cy.mount(PageLayout, {
+        props: { title: 'Test Page Title' },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.getTestId('page-layout-favorite-button').should('not.exist')
+    })
+
+    it('does not render the favorite button when pageShortcutData is missing required fields', () => {
+      const ctx = reactive({
+        isFavorite: false,
+        onFavoriteToggle: () => { },
+        onEntityPageVisit: () => { },
+      })
+
+      cy.mount(PageLayout, {
+        // @ts-expect-error testing invalid shape
+        props: { title: 'Test Page Title', pageShortcutData: { label: 'X' } },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.getTestId('page-layout-favorite-button').should('not.exist')
+    })
+
+    it('does not render the favorite button when context lacks onFavoriteToggle', () => {
+      const ctx = reactive({
+        isFavorite: false,
+        onEntityPageVisit: () => { },
+      })
+
+      cy.mount(PageLayout, {
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.getTestId('page-layout-favorite-button').should('not.exist')
+    })
+
+    it('renders the favorite button when both pageShortcutData and pageShortcutsContext are provided', () => {
+      const ctx = reactive({
+        isFavorite: false,
+        onFavoriteToggle: () => { },
+        onEntityPageVisit: () => { },
+      })
+
+      cy.mount(PageLayout, {
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.getTestId('page-layout-favorite-button')
+        .should('be.visible')
+        .and('have.attr', 'aria-label', 'Save page to shortcuts')
+        .find('svg')
+        .should('exist')
+    })
+
+    it('reflects isFavorite=true with the filled star icon', () => {
+      const ctx = reactive({
+        isFavorite: true,
+        onFavoriteToggle: () => { },
+        onEntityPageVisit: () => { },
+      })
+
+      cy.mount(PageLayout, {
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.getTestId('page-layout-favorite-button').should('have.class', 'active')
+    })
+
+    it('calls onFavoriteToggle when the favorite button is clicked', () => {
+      const onFavoriteToggle = cy.stub().as('onFavoriteToggle')
+      const ctx = reactive({
+        isFavorite: false,
+        onFavoriteToggle,
+        onEntityPageVisit: () => { },
+      })
+
+      cy.mount(PageLayout, {
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.getTestId('page-layout-favorite-button').click()
+      cy.get('@onFavoriteToggle').should('have.been.calledOnce')
+    })
+
+    it('calls onEntityPageVisit on mount with the provided pageShortcutData', () => {
+      const onEntityPageVisit = cy.stub().as('onEntityPageVisit')
+      const ctx = reactive({
+        isFavorite: false,
+        onFavoriteToggle: () => { },
+        onEntityPageVisit,
+      })
+
+      cy.mount(PageLayout, {
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.get('@onEntityPageVisit').should('have.been.calledOnce')
+      cy.get('@onEntityPageVisit').should('have.been.calledWith', validShortcutData)
+    })
+
+    it('calls onEntityPageVisit again when pageShortcutData changes', () => {
+      const onEntityPageVisit = cy.stub().as('onEntityPageVisit')
+      const ctx = reactive({
+        isFavorite: false,
+        onFavoriteToggle: () => { },
+        onEntityPageVisit,
+      })
+
+      const data = ref<PageShortcutData>(validShortcutData)
+      const Wrapper = defineComponent({
+        setup() {
+          return () => h(PageLayout, { title: 'Test Page Title', pageShortcutData: data.value })
+        },
+      })
+
+      cy.mount(Wrapper, {
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.get('@onEntityPageVisit').should('have.been.calledOnce')
+
+      cy.then(() => {
+        data.value = { ...validShortcutData, path: '/services/another', label: 'Another' }
+      })
+
+      cy.get('@onEntityPageVisit').should('have.been.calledTwice')
+      cy.get('@onEntityPageVisit').should('have.been.calledWith', data.value)
+    })
+
+    it('does not call onEntityPageVisit when context is missing the callback', () => {
+      const ctx = reactive({
+        isFavorite: false,
+        onFavoriteToggle: () => { },
+      })
+
+      // Should not throw despite the missing callback
+      cy.mount(PageLayout, {
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.getTestId('page-layout-favorite-button').should('be.visible')
     })
   })
 })
