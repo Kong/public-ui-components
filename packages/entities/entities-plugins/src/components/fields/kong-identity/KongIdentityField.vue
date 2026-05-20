@@ -7,47 +7,66 @@
       {{ t('custom_field.kong_identity.title') }}
     </KLabel>
 
+    <p class="kong-identity-description">
+      {{ descriptionText }}
+      <a
+        class="kong-identity-learn-more"
+        href="https://developer.konghq.com/kong-identity/"
+        target="_blank"
+      >
+        {{ t('custom_field.kong_identity.learn_more') }}
+      </a>
+    </p>
+
     <div class="kong-identity-options">
       <KRadio
-        v-model="selectedMode"
-        card
-        card-orientation="horizontal"
-        data-testid="kong-identity-mode-kong-identity"
-        :description="t('custom_field.kong_identity.kong_identity_description')"
-        :label="t('custom_field.kong_identity.kong_identity_label')"
-        selected-value="kong-identity"
-        @update:model-value="handleModeChange"
-      />
-
-      <KRadio
-        v-model="selectedMode"
         card
         card-orientation="horizontal"
         data-testid="kong-identity-mode-consumers"
-        :description="t('custom_field.kong_identity.consumers_description')"
+        :description="consumersDescription"
         :label="t('custom_field.kong_identity.consumers_label')"
+        :model-value="selectedMode"
         selected-value="consumers"
         @update:model-value="handleModeChange"
-      />
+      >
+        <TeamIcon :size="KUI_ICON_SIZE_50" />
+      </KRadio>
 
       <KRadio
         v-if="hasIdentityRealms"
-        v-model="selectedMode"
         card
         card-orientation="horizontal"
         data-testid="kong-identity-mode-centrally-managed"
         :description="t('custom_field.kong_identity.centrally_managed_description')"
         :label="t('custom_field.kong_identity.centrally_managed_label')"
+        :model-value="selectedMode"
         selected-value="centrally-managed"
         @update:model-value="handleModeChange"
-      />
+      >
+        <AccountTreeIcon :size="KUI_ICON_SIZE_50" />
+      </KRadio>
+
+      <KRadio
+        card
+        card-orientation="horizontal"
+        data-testid="kong-identity-mode-kong-identity"
+        :description="kongIdentityDescription"
+        :label="t('custom_field.kong_identity.kong_identity_label')"
+        :model-value="selectedMode"
+        selected-value="kong-identity"
+        @update:model-value="handleModeChange"
+      >
+        <KeyIcon :size="KUI_ICON_SIZE_50" />
+      </KRadio>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { KRadio } from '@kong/kongponents'
+import { KLabel, KRadio } from '@kong/kongponents'
+import { TeamIcon, AccountTreeIcon, KeyIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import { useFormShared } from '../../free-form/shared/composables'
 import composables from '../../../composables'
 
@@ -73,6 +92,24 @@ const hasIdentityRealms = computed(() => {
   } catch {
     return false
   }
+})
+
+const descriptionText = computed(() => {
+  return hasIdentityRealms.value
+    ? t('custom_field.kong_identity.description_with_realms')
+    : t('custom_field.kong_identity.description_without_realms')
+})
+
+const consumersDescription = computed(() => {
+  return hasIdentityRealms.value
+    ? t('custom_field.kong_identity.consumers_description_key_auth')
+    : t('custom_field.kong_identity.consumers_description_basic_auth')
+})
+
+const kongIdentityDescription = computed(() => {
+  return hasIdentityRealms.value
+    ? t('custom_field.kong_identity.kong_identity_description_key_auth')
+    : t('custom_field.kong_identity.kong_identity_description_basic_auth')
 })
 
 // Derive initial mode from existing data
@@ -103,8 +140,10 @@ watch(() => formData.config, () => {
 
 function handleModeChange(mode: AuthMode) {
   if (!formData.config) return
+  if (mode === selectedMode.value) return
 
   userSelectedMode.value = true
+  selectedMode.value = mode
 
   switch (mode) {
     case 'kong-identity':
@@ -128,10 +167,40 @@ function handleModeChange(mode: AuthMode) {
 </script>
 
 <style lang="scss" scoped>
+.kong-identity-description {
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
+  margin: var(--kui-space-20, $kui-space-20) 0 0;
+}
+
+.kong-identity-learn-more {
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .kong-identity-options {
   display: flex;
   gap: var(--kui-space-50, $kui-space-50);
   margin-top: var(--kui-space-40, $kui-space-40);
+
+  :deep(.k-radio.radio-card) {
+    flex: 1;
+
+    .radio-card-wrapper.radio-label-wrapper {
+      flex-direction: column !important;
+      justify-content: flex-start !important;
+    }
+
+    &.card-horizontal .radio-card-wrapper .card-content-wrapper {
+      align-self: flex-start !important;
+      height: max-content;
+    }
+  }
 }
 </style>
 
