@@ -1,12 +1,13 @@
 import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { Ref } from 'vue'
 import { DIMENSION_COUNTRY_CODE, EMPTY_SEGMENT_ID, STATUS_CODE_DIMENSIONS } from '../types'
-import type { AnalyticsChartColors, Dataset, DatasetLabel, KChartData } from '../types'
+import type { Dataset, DatasetLabel, KChartData } from '../types'
 
 import { computed, unref } from 'vue'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
-import { defaultStatusCodeColors, determineBaseColor } from '../utils'
+import { determineBaseColor } from '../utils'
 import { translateChartLabel } from '../utils/chart-labels'
+import { resolveAnalyticsEchartsThemePalette } from '../themes'
 import useI18n from './useI18n'
 
 const generateDatasets = ({
@@ -16,7 +17,8 @@ const generateDatasets = ({
   barSegmentLabels,
   pivotRecords,
   rowLabels,
-  colorPalette,
+  themePalette,
+  colorDimension,
 }: {
   isMultiMetric: boolean
   hasDimensions: boolean
@@ -24,7 +26,8 @@ const generateDatasets = ({
   barSegmentLabels: DatasetLabel[]
   pivotRecords: Record<string, number>
   rowLabels: DatasetLabel[]
-  colorPalette: AnalyticsChartColors | string[]
+  themePalette: string[]
+  colorDimension: string
 }): Dataset[] => {
   const { i18n } = useI18n()
 
@@ -33,8 +36,20 @@ const generateDatasets = ({
       rawMetric: metric,
       rawDimension: metric,
       label: translateChartLabel(i18n, metric),
-      backgroundColor: determineBaseColor(metricIndex, metric, false, colorPalette),
-      borderColor: determineBaseColor(metricIndex, metric, false, colorPalette),
+      backgroundColor: determineBaseColor({
+        dimensionField: metric,
+        dimensionName: metric,
+        index: metricIndex,
+        isEmpty: false,
+        themePalette,
+      }),
+      borderColor: determineBaseColor({
+        dimensionField: metric,
+        dimensionName: metric,
+        index: metricIndex,
+        isEmpty: false,
+        themePalette,
+      }),
       data: rowLabels.map((rowPosition, index): number => {
         return hasDimensions ? pivotRecords[`${rowPosition.id},${metric}`] || 0 : pivotRecords[`${index},${metric}`] || 0
       }),
@@ -46,7 +61,13 @@ const generateDatasets = ({
       return []
     }
 
-    const baseColor = determineBaseColor(dimensionIndex, dimension.name, dimension.id === EMPTY_SEGMENT_ID, colorPalette)
+    const baseColor = determineBaseColor({
+      dimensionField: colorDimension,
+      dimensionName: dimension.name,
+      index: dimensionIndex,
+      isEmpty: dimension.id === EMPTY_SEGMENT_ID,
+      themePalette,
+    })
 
     return {
       rawMetric: metricNames[0],
@@ -175,9 +196,9 @@ const sortLabelsByTotals = ({
 
 export default function useCrossSectionalChartData(
   {
-    colorPalette = defaultStatusCodeColors,
+    themePalette = resolveAnalyticsEchartsThemePalette('light'),
   }: {
-    colorPalette?: AnalyticsChartColors | string[] | Ref<AnalyticsChartColors | string[]>
+    themePalette?: string[] | Ref<string[]>
   },
   exploreResult: Ref<ExploreResultV4>,
 ): Ref<KChartData> {
@@ -251,7 +272,8 @@ export default function useCrossSectionalChartData(
         barSegmentLabels,
         pivotRecords,
         rowLabels,
-        colorPalette: unref(colorPalette),
+        themePalette: unref(themePalette),
+        colorDimension: isMultiMetric ? metricNames[0] : secondaryDimension,
       }).map((dataset): Dataset => {
         const total = (dataset.data as number[]).reduce((acc, value) => acc + Number(value), 0)
 

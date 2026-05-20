@@ -4,6 +4,7 @@ import {
   KUI_STATUS_COLOR_200,
   KUI_STATUS_COLOR_404,
   KUI_STATUS_COLOR_500,
+  KUI_STATUS_COLOR_500S,
 } from '@kong/design-tokens'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import useCrossSectionalChartData from './useCrossSectionalChartData'
@@ -123,6 +124,68 @@ describe('useCrossSectionalChartData', () => {
       KUI_STATUS_COLOR_404,
       KUI_STATUS_COLOR_500,
     ])
+  })
+
+  it('uses status-code group colors for upstream grouped status code dimensions', () => {
+    const exploreResult = ref({
+      meta: {
+        metric_names: ['request_count'],
+        display: {
+          upstream_status_code_grouped: {
+            '5XX': { name: '5XX' },
+          },
+        },
+      },
+      data: [
+        {
+          event: {
+            upstream_status_code_grouped: '5XX',
+            request_count: 50,
+          },
+        },
+      ],
+    } as ExploreResultV4)
+
+    const chartData = useCrossSectionalChartData({}, exploreResult)
+
+    expect(chartData.value.datasets[0]?.backgroundColor).toBe(KUI_STATUS_COLOR_500S)
+  })
+
+  it('uses the active theme palette for non-status dimensions', () => {
+    const exploreResult = ref({
+      meta: {
+        metric_names: ['request_count'],
+        display: {
+          route: {
+            alpha: { name: 'Alpha' },
+            beta: { name: 'Beta' },
+          },
+        },
+      },
+      data: [
+        {
+          event: {
+            route: 'alpha',
+            request_count: 10,
+          },
+        },
+        {
+          event: {
+            route: 'beta',
+            request_count: 20,
+          },
+        },
+      ],
+    } as ExploreResultV4)
+
+    const chartData = useCrossSectionalChartData({
+      themePalette: ref(['#111111', '#222222']),
+    }, exploreResult)
+
+    expect(Object.fromEntries(chartData.value.datasets.map(({ label, backgroundColor }) => [label, backgroundColor]))).toEqual({
+      Alpha: '#111111',
+      Beta: '#222222',
+    })
   })
 
   it('keeps non-status dimensions and dataset totals in descending order', () => {

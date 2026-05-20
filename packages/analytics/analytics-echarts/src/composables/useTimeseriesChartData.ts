@@ -1,17 +1,17 @@
 import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { Ref } from 'vue'
 import { DIMENSION_COUNTRY_CODE, EMPTY_SEGMENT_ID } from '../types'
-import type { AnalyticsChartColors, Dataset, DatasetLabel, KChartData } from '../types'
+import type { Dataset, DatasetLabel, KChartData } from '../types'
 
 import { computed, unref } from 'vue'
 import { parseISO } from 'date-fns'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
 import {
-  defaultStatusCodeColors,
   determineBaseColor,
   sortDatasetsByDimension,
 } from '../utils'
 import { translateChartLabel } from '../utils/chart-labels'
+import { resolveAnalyticsEchartsThemePalette } from '../themes'
 import useI18n from './useI18n'
 
 const range = (start: number, stop: number, step: number = 1): number[] =>
@@ -141,10 +141,10 @@ const getDimensionsCrossMetrics = ({
 
 export default function useTimeseriesChartData(
   {
-    colorPalette = defaultStatusCodeColors,
+    themePalette = resolveAnalyticsEchartsThemePalette('light'),
     fill = false,
   }: {
-    colorPalette?: AnalyticsChartColors | string[] | Ref<AnalyticsChartColors | string[]>
+    themePalette?: string[] | Ref<string[]>
     fill?: boolean | Ref<boolean>
   },
   exploreResult: Ref<ExploreResultV4>,
@@ -210,7 +210,13 @@ export default function useTimeseriesChartData(
           return { x: ts, y: 0 }
         })
 
-        const baseColor = determineBaseColor(index, dimensionName, isSegmentEmpty, unref(colorPalette))
+        const baseColor = determineBaseColor({
+          dimensionField: dimension,
+          dimensionName,
+          index,
+          isEmpty: isSegmentEmpty,
+          themePalette: unref(themePalette),
+        })
 
         return {
           rawDimension: dimensionName,

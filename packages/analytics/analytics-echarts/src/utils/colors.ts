@@ -76,20 +76,14 @@ import {
   KUI_STATUS_COLOR_511,
   KUI_STATUS_COLOR_5NA,
 } from '@kong/design-tokens'
+import { EMPTY_SEGMENT_ID, STATUS_CODE_DIMENSIONS } from '../types'
 import type { AnalyticsChartColors, ThresholdType } from '../types'
 
-const datavisPalette = [
-  '#a86cd5',
-  '#6a86d2',
-  '#00bbf9',
-  '#00c4b0',
-  '#ffdf15',
-]
+const EMPTY_COLOR = '#afb7c5'
 
 // Wrap around if we run out of colors.
-export const lookupDatavisColor = (idx: number, customPalette?: string[]) => {
-  const colorLookup = customPalette || datavisPalette
-  return colorLookup[idx % datavisPalette.length]
+const lookupThemeColor = (idx: number, palette: string[]) => {
+  return palette[idx % palette.length] ?? EMPTY_COLOR
 }
 
 const statusCodeColors: AnalyticsChartColors = {
@@ -193,20 +187,32 @@ export const defaultStatusCodeColors: AnalyticsChartColors = {
   ...statusCodeGroupColors,
 }
 
-const EMPTY_COLOR = '#afb7c5'
+const isStatusCodeDimension = (dimension: string): dimension is typeof STATUS_CODE_DIMENSIONS[number] => {
+  return STATUS_CODE_DIMENSIONS.includes(dimension as typeof STATUS_CODE_DIMENSIONS[number])
+}
 
-export const determineBaseColor = (i: number, dimensionName: string, isEmpty: boolean, colorPalette: string[] | AnalyticsChartColors): string => {
-  let baseColor
-
-  if (isEmpty) {
-    baseColor = EMPTY_COLOR
-  } else if (Array.isArray(colorPalette)) {
-    baseColor = lookupDatavisColor(i, colorPalette)
-  } else {
-    baseColor = colorPalette[dimensionName]
+export const determineBaseColor = ({
+  dimensionField,
+  dimensionName,
+  index,
+  isEmpty,
+  themePalette,
+}: {
+  dimensionField: string
+  dimensionName: string
+  index: number
+  isEmpty: boolean
+  themePalette: string[]
+}): string => {
+  if (isEmpty || dimensionName === EMPTY_SEGMENT_ID) {
+    return EMPTY_COLOR
   }
 
-  return baseColor || lookupDatavisColor(i) // fallback to default datavis palette if no color found
+  if (isStatusCodeDimension(dimensionField)) {
+    return defaultStatusCodeColors[dimensionName] || lookupStatusCodeColor(dimensionName)
+  }
+
+  return lookupThemeColor(index, themePalette)
 }
 
 export const thresholdColor = (type: ThresholdType): string => {

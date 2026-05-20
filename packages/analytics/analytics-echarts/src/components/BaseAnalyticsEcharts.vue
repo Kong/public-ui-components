@@ -4,7 +4,7 @@
     class="kong-ui-public-analytics-echarts"
   >
     <VChart
-      :key="`${theme}-${renderMode}`"
+      :key="`${themeKey}-${renderMode}`"
       ref="chart"
       :autoresize="autoresizeOptions"
       class="chart"
@@ -42,10 +42,11 @@ import {
   MarkLineComponent,
   MarkAreaComponent,
 } from 'echarts/components'
-import { computed, provide, toRef, useTemplateRef, watch } from 'vue'
+import { computed, inject, provide, toValue, useTemplateRef, watch } from 'vue'
 import type { ECBasicOption } from 'echarts/types/dist/shared'
 import type { ECElementEvent } from 'echarts/core'
 import type { DataZoomPayload } from '../utils/chart-scroll'
+import { registerAnalyticsEchartsThemes } from '../themes'
 
 type BrushPayload = {
   areas?: Array<{
@@ -55,11 +56,9 @@ type BrushPayload = {
 
 const {
   option,
-  theme = 'light',
   renderMode = 'svg',
 } = defineProps<{
   option: ECBasicOption
-  theme?: 'light' | 'dark'
   renderMode?: 'svg' | 'canvas'
 }>()
 
@@ -94,7 +93,16 @@ use([
   MarkAreaComponent,
 ])
 
-provide(THEME_KEY, toRef(() => theme))
+registerAnalyticsEchartsThemes()
+
+const injectedTheme = inject(THEME_KEY, 'light')
+provide(THEME_KEY, injectedTheme)
+
+const themeKey = computed(() => {
+  const theme = toValue(injectedTheme)
+
+  return typeof theme === 'string' ? theme : JSON.stringify(theme)
+})
 
 const containerRef = useTemplateRef('container')
 const chartRef = useTemplateRef('chart')

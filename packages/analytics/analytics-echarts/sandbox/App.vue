@@ -15,7 +15,6 @@
             v-if="isTimeseries"
             :chart-legend-sort-fn="chartLegendSortFn"
             :chart-tooltip-sort-fn="chartTooltipSortFn"
-            :color-palette="chartColorPalette"
             :data="timeseriesData"
             :dimension-axes-title="dimensionAxisTitle"
             :empty-state-description="emptyStateDescription"
@@ -28,7 +27,6 @@
             :requests-link="{ href: '#' }"
             :show-legend-values="showLegendValues"
             :stacked="stacked"
-            :theme="theme"
             :threshold="chartThreshold"
             :timeseries-zoom="zoomEnabled"
             :tooltip-title="tooltipTitle"
@@ -40,7 +38,6 @@
             v-else
             :chart-legend-sort-fn="chartLegendSortFn"
             :chart-tooltip-sort-fn="chartTooltipSortFn"
-            :color-palette="chartColorPalette"
             :data="crossSectionalData"
             :dimension-axes-title="dimensionAxisTitle"
             :empty-state-description="emptyStateDescription"
@@ -52,7 +49,6 @@
             :show-annotations="showAnnotations"
             :show-legend-values="showLegendValues"
             :stacked="stacked"
-            :theme="theme"
             :tooltip-title="tooltipTitle"
             :type="chartType"
           />
@@ -79,6 +75,33 @@
 
           <div class="control-group">
             <KSelect
+              v-model="mockDataType"
+              :items="mockDataTypeItems"
+              label="Mock data"
+            />
+            <div
+              v-if="mockDataType === 'random'"
+              class="button-row"
+            >
+              <KButton
+                appearance="secondary"
+                :disabled="!isGeneratedMockData"
+                @click="regenerateRandomData"
+              >
+                Regenerate random data
+              </KButton>
+            </div>
+            <p class="helper-text">
+              {{
+                isGeneratedMockData
+                  ? 'Generated data is active. Import chart data below to override it.'
+                  : 'Imported chart data is active. Clear the import field to use generated mock data.'
+              }}
+            </p>
+          </div>
+
+          <div class="control-group">
+            <KSelect
               v-model="renderMode"
               :items="[
                 { label: 'SVG', value: 'svg' },
@@ -94,8 +117,44 @@
               :items="[
                 { label: 'Light', value: 'light' },
                 { label: 'Dark', value: 'dark' },
+                { label: 'Konnect', value: 'konnect' },
+                { label: 'Custom', value: 'custom' },
               ]"
               label="Theme"
+            />
+          </div>
+
+          <div
+            v-if="activeThemeJson"
+            class="control-group"
+          >
+            <KLabel>{{ theme === 'custom' ? 'Custom theme' : 'Konnect theme' }}</KLabel>
+            <div
+              v-if="theme === 'custom'"
+              class="theme-color-grid"
+            >
+              <label
+                v-for="control in customThemeColorControls"
+                :key="control.key"
+                class="color-control"
+              >
+                <span>{{ control.label }}</span>
+                <input
+                  v-model="customThemeColors[control.key]"
+                  type="color"
+                >
+              </label>
+              <KButton
+                appearance="tertiary"
+                @click="resetCustomTheme"
+              >
+                Reset colors
+              </KButton>
+            </div>
+            <KTextArea
+              :model-value="JSON.stringify(activeThemeJson, null, 2)"
+              readonly
+              :rows="12"
             />
           </div>
 
@@ -134,10 +193,6 @@
               label="Custom axis titles"
             />
             <KInputSwitch
-              v-model="useCustomPalette"
-              label="Custom palette"
-            />
-            <KInputSwitch
               v-if="isTimeseries"
               v-model="zoomEnabled"
               label="Zoom enabled"
@@ -146,14 +201,6 @@
               v-if="isTimeseries"
               v-model="thresholdEnabled"
               label="Threshold"
-            />
-            <KInputSwitch
-              v-model="isMultiDimension"
-              :label="isMultiDimension ? 'Multi-dimension' : 'Single dimension'"
-            />
-            <KInputSwitch
-              v-model="isMultiMetric"
-              :label="isMultiMetric ? 'Multi-metric' : 'Single metric'"
             />
           </div>
 
@@ -206,18 +253,18 @@
           </div>
 
           <div class="control-group">
-            <KLabel>Mock dimensions</KLabel>
+            <KLabel>Mock data volume</KLabel>
             <div class="button-row">
               <KButton
                 appearance="secondary"
-                :disabled="!isGeneratedMockData"
+                :disabled="!canAddDimensionsToActiveMockData"
                 @click="addMoreDimensions"
               >
-                Add 10 dimensions
+                Add 10 series
               </KButton>
               <KButton
                 appearance="tertiary"
-                :disabled="!isGeneratedMockData || extraDimensionCount === 0"
+                :disabled="!canAddDimensionsToActiveMockData || extraDimensionCount === 0"
                 @click="resetExtraDimensions"
               >
                 Reset
@@ -225,9 +272,9 @@
             </div>
             <p class="helper-text">
               {{
-                isGeneratedMockData
-                  ? `Adds ${extraDimensionCount} synthetic dimensions to generated sandbox data.`
-                  : 'Available only when using generated sandbox data.'
+                canAddDimensionsToActiveMockData
+                  ? `Adds ${extraDimensionCount} synthetic series to the selected generated mock data.`
+                  : 'Available for generated single-dimension, status-code, and random mock data.'
               }}
             </p>
           </div>
@@ -272,26 +319,33 @@
 
 <script setup lang="ts">
 import {
-  generateCrossSectionalData,
-  generateMultipleMetricTimeSeriesData,
-  generateSingleMetricTimeSeriesData,
   type AnalyticsExploreRecord,
   type ExploreAggregations,
   type ExploreResultV4,
   type QueryResponseMeta,
 } from '@kong-ui-public/analytics-utilities'
 import { useElementSize } from '@vueuse/core'
-import { computed, ref, useTemplateRef } from 'vue'
-import { CrossSectionChart, TimeseriesChart } from '../src'
+import { computed, provide, reactive, ref, useTemplateRef, watch } from 'vue'
+import { ANALYTICS_ECHARTS_THEME_KEY, CrossSectionChart, TimeseriesChart } from '../src'
 import useCrossSectionalChartData from '../src/composables/useCrossSectionalChartData'
+import {
+  createAnalyticsEchartsTheme,
+  konnectTheme,
+  konnectThemePalette,
+  registerAnalyticsEchartsTheme,
+} from '../src/themes'
 import type {
-  AnalyticsChartColors,
   ChartLegendItem,
   ChartTooltipSortFn,
   LegendPosition,
   Threshold,
   TooltipEntry,
 } from '../src'
+import {
+  canAddMockDimensions,
+  generateSandboxMockData,
+  type SandboxMockDataType,
+} from '../src/sandbox/mock-data'
 import { resolveChartScrollWindow, shouldHideAnnotationsForBreakpoint } from '../src/utils'
 import CodeText from './CodeText.vue'
 
@@ -302,6 +356,8 @@ type SupportedChartTypes =
   | 'timeseries_bar'
   | 'donut'
 
+type SandboxTheme = 'light' | 'dark' | 'konnect' | 'custom'
+
 const chartTypeItems = [
   { label: 'Timeseries line', value: 'timeseries_line' },
   { label: 'Timeseries bar', value: 'timeseries_bar' },
@@ -309,14 +365,21 @@ const chartTypeItems = [
   { label: 'Horizontal bar', value: 'horizontal_bar' },
   { label: 'Donut', value: 'donut' },
 ]
+const mockDataTypeItems: Array<{ label: string, value: SandboxMockDataType }> = [
+  { label: 'Single dimension', value: 'single_dimension' },
+  { label: 'Status codes', value: 'status_codes' },
+  { label: 'Status code groups', value: 'status_code_groups' },
+  { label: 'Multi metric', value: 'multi_metric' },
+  { label: 'Random', value: 'random' },
+]
 
 const chartType = ref<SupportedChartTypes>('timeseries_line')
 const exploreResultText = ref('')
-const theme = ref<'light' | 'dark'>('light')
+const theme = ref<SandboxTheme>('light')
 const renderMode = ref<'svg' | 'canvas'>('svg')
+const mockDataType = ref<SandboxMockDataType>('random')
+const randomDataVersion = ref(1)
 const EXTRA_DIMENSION_BATCH_SIZE = 10
-const BASE_STATUS_CODE_DIMENSIONS = ['200', '300', '400', '500', 'empty'] as const
-const BASE_ROUTE_DIMENSIONS = ['payments', 'search', 'billing'] as const
 const timeseriesStacked = ref(false)
 const crossSectionStacked = ref(true)
 const showAnnotations = ref(true)
@@ -326,7 +389,6 @@ const hideTruncationWarning = ref(false)
 const chartHasData = ref(true)
 const markAsTruncated = ref(false)
 const useCustomTitles = ref(false)
-const useCustomPalette = ref(false)
 const zoomEnabled = ref(true)
 const thresholdEnabled = ref(false)
 const thresholdValue = ref(500)
@@ -336,12 +398,69 @@ const dimensionAxisTitleInput = ref('Time buckets')
 const emptyStateTitleInput = ref('No analytics data')
 const emptyStateDescriptionInput = ref('Traffic will appear here once requests are available.')
 const eventLog = ref('')
-const isMultiDimension = ref(false)
-const isMultiMetric = ref(false)
 const legendPosition = ref<LegendPosition>('bottom')
 const extraDimensionCount = ref(0)
 const chartFrameRef = useTemplateRef('chartFrame')
 const { width: chartFrameWidth, height: chartFrameHeight } = useElementSize(chartFrameRef)
+
+const defaultCustomThemeColors = {
+  seriesPrimary: konnectThemePalette[0],
+  seriesSecondary: konnectThemePalette[1],
+  seriesAccent: konnectThemePalette[2],
+  background: '#ffffff',
+  text: '#000933',
+  axis: '#6c7489',
+  grid: '#e0e4ea',
+}
+type CustomThemeColorKey = keyof typeof defaultCustomThemeColors
+
+const customThemeColors = reactive({ ...defaultCustomThemeColors })
+const customThemeVersion = ref(0)
+const customThemeColorControls: Array<{ key: CustomThemeColorKey, label: string }> = [
+  { key: 'seriesPrimary', label: 'Series 1' },
+  { key: 'seriesSecondary', label: 'Series 2' },
+  { key: 'seriesAccent', label: 'Series 3' },
+  { key: 'background', label: 'Background' },
+  { key: 'text', label: 'Text' },
+  { key: 'axis', label: 'Axis' },
+  { key: 'grid', label: 'Grid line' },
+]
+
+const customTheme = computed(() => createAnalyticsEchartsTheme({
+  axisColor: customThemeColors.axis,
+  backgroundColor: customThemeColors.background,
+  color: [
+    customThemeColors.seriesPrimary,
+    customThemeColors.seriesSecondary,
+    customThemeColors.seriesAccent,
+  ],
+  gridLineColor: customThemeColors.grid,
+  textColor: customThemeColors.text,
+}))
+const customThemeName = computed(() => `sandbox-custom-${customThemeVersion.value}`)
+const activeThemeName = computed(() => theme.value === 'custom' ? customThemeName.value : theme.value)
+const activeThemeJson = computed(() => {
+  if (theme.value === 'konnect') {
+    return konnectTheme
+  }
+
+  if (theme.value === 'custom') {
+    return customTheme.value
+  }
+
+  return null
+})
+
+provide(ANALYTICS_ECHARTS_THEME_KEY, activeThemeName)
+
+watch(customTheme, (nextTheme) => {
+  customThemeVersion.value += 1
+  registerAnalyticsEchartsTheme(customThemeName.value, nextTheme)
+}, { immediate: true })
+
+const resetCustomTheme = () => {
+  Object.assign(customThemeColors, defaultCustomThemeColors)
+}
 
 const chartLegendSortFn = (a: ChartLegendItem, b: ChartLegendItem) => {
   return (b.value?.raw || 0) - (a.value?.raw || 0)
@@ -349,18 +468,6 @@ const chartLegendSortFn = (a: ChartLegendItem, b: ChartLegendItem) => {
 
 const chartTooltipSortFn: ChartTooltipSortFn = (a: TooltipEntry, b: TooltipEntry) => {
   return b.rawValue - a.rawValue
-}
-
-const customPalette: AnalyticsChartColors = {
-  '200': '#91d9a2',
-  '300': '#fde59d',
-  '400': '#f7bf8a',
-  '500': '#ef8f8f',
-  empty: '#d7dbe2',
-}
-
-const buildSyntheticDimensions = ({ prefix, count }: { prefix: string, count: number }) => {
-  return Array.from({ length: count }, (_, index) => `${prefix}-${String(index + 1).padStart(2, '0')}`)
 }
 
 const addMoreDimensions = () => {
@@ -371,15 +478,20 @@ const resetExtraDimensions = () => {
   extraDimensionCount.value = 0
 }
 
+const regenerateRandomData = () => {
+  randomDataVersion.value += 1
+}
+
 const isGeneratedMockData = computed(() => !exploreResultText.value.trim())
+const canAddDimensionsToActiveMockData = computed(() => {
+  return isGeneratedMockData.value && canAddMockDimensions(mockDataType.value)
+})
 
-const dimensions = computed(() => {
-  const syntheticStatusCodes = buildSyntheticDimensions({ prefix: 'status', count: extraDimensionCount.value })
-  const syntheticRoutes = buildSyntheticDimensions({ prefix: 'route', count: extraDimensionCount.value })
+watch(mockDataType, (nextMockDataType) => {
+  resetExtraDimensions()
 
-  return {
-    status_code: [...BASE_STATUS_CODE_DIMENSIONS, ...syntheticStatusCodes],
-    ...(isMultiDimension.value ? { route: [...BASE_ROUTE_DIMENSIONS, ...syntheticRoutes] } : {}),
+  if (nextMockDataType === 'random') {
+    regenerateRandomData()
   }
 })
 
@@ -433,15 +545,12 @@ const baseTimeseriesData = computed<ExploreResultV4>(() => {
     return parsedExploreResult.value
   }
 
-  return isMultiMetric.value
-    ? generateMultipleMetricTimeSeriesData([
-      { name: 'request_count', unit: 'count' },
-      { name: 'response_latency_average', unit: 'ms' },
-    ])
-    : generateSingleMetricTimeSeriesData(
-      { name: 'request_count', unit: 'count' },
-      dimensions.value,
-    )
+  return generateSandboxMockData({
+    chartKind: 'timeseries',
+    extraDimensionCount: extraDimensionCount.value,
+    mockDataType: mockDataType.value,
+    randomSeed: randomDataVersion.value,
+  })
 })
 
 const baseCrossSectionData = computed<ExploreResultV4>(() => {
@@ -449,15 +558,12 @@ const baseCrossSectionData = computed<ExploreResultV4>(() => {
     return parsedExploreResult.value
   }
 
-  return generateCrossSectionalData(
-    isMultiMetric.value
-      ? [
-        { name: 'request_count', unit: 'count' },
-        { name: 'response_latency_average', unit: 'ms' },
-      ]
-      : [{ name: 'request_count', unit: 'count' }],
-    dimensions.value,
-  )
+  return generateSandboxMockData({
+    chartKind: 'cross_section',
+    extraDimensionCount: extraDimensionCount.value,
+    mockDataType: mockDataType.value,
+    randomSeed: randomDataVersion.value,
+  })
 })
 
 const withSandboxMeta = (value: ExploreResultV4) => {
@@ -476,9 +582,6 @@ const timeseriesData = computed<ExploreResultV4>(() => withSandboxMeta(baseTimes
 const crossSectionalData = computed<ExploreResultV4>(() => withSandboxMeta(baseCrossSectionData.value))
 const sandboxCrossSectionChartData = useCrossSectionalChartData({}, crossSectionalData)
 
-const chartColorPalette = computed<AnalyticsChartColors | undefined>(() => {
-  return useCustomPalette.value ? customPalette : undefined
-})
 const effectiveLegendPosition = computed<LegendPosition>(() => hideLegend.value ? 'hidden' : legendPosition.value)
 
 const tooltipTitle = computed(() => useCustomTitles.value ? tooltipTitleInput.value : undefined)
@@ -530,9 +633,11 @@ const annotationStatusMessage = computed(() => {
 const activeChartProps = computed(() => {
   return {
     type: chartType.value,
+    mockDataType: parsedExploreResult.value ? 'imported' : mockDataType.value,
+    extraGeneratedSeries: parsedExploreResult.value ? undefined : extraDimensionCount.value,
     stacked: stacked.value,
     renderMode: renderMode.value,
-    theme: theme.value,
+    theme: activeThemeName.value,
     legendPosition: effectiveLegendPosition.value,
     showAnnotations: isCrossSectionBar.value ? showAnnotations.value : undefined,
     effectiveShowAnnotations: isCrossSectionBar.value
@@ -543,7 +648,6 @@ const activeChartProps = computed(() => {
     metricAxesTitle: metricAxisTitle.value,
     dimensionAxesTitle: dimensionAxisTitle.value,
     hideTruncationWarning: hideTruncationWarning.value,
-    colorPalette: chartColorPalette.value,
     ...(isTimeseries.value ? {
       timeseriesZoom: zoomEnabled.value,
       threshold: chartThreshold.value,
@@ -598,6 +702,30 @@ const activeChartProps = computed(() => {
   gap: 12px;
 }
 
+.theme-color-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.color-control {
+  align-items: center;
+  color: var(--kui-color-text, #000933);
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+  justify-content: space-between;
+  line-height: 1.4;
+}
+
+.color-control input {
+  background: transparent;
+  border: 0;
+  height: 28px;
+  padding: 0;
+  width: 44px;
+}
+
 .button-row {
   display: flex;
   flex-wrap: wrap;
@@ -634,6 +762,7 @@ const activeChartProps = computed(() => {
 }
 
 @media (max-width: 640px) {
+  .theme-color-grid,
   .toggles-grid {
     grid-template-columns: 1fr;
   }

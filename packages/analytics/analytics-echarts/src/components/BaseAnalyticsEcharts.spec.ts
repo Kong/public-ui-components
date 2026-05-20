@@ -1,12 +1,19 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
+import { nextTick, ref } from 'vue'
 import BaseAnalyticsEcharts from './BaseAnalyticsEcharts.vue'
 
+const { themeKey } = vi.hoisted(() => ({
+  themeKey: Symbol('THEME_KEY'),
+}))
+
+let vChartMountCount = 0
+
 vi.mock('vue-echarts', async () => {
-  const { defineComponent, h } = await import('vue')
+  const { defineComponent, h, inject, toValue } = await import('vue')
 
   return {
-    THEME_KEY: Symbol('THEME_KEY'),
+    THEME_KEY: themeKey,
     default: defineComponent({
       name: 'VChart',
       props: {
@@ -28,11 +35,17 @@ vi.mock('vue-echarts', async () => {
         },
       },
       setup(_props, { expose }) {
+        const instanceId = ++vChartMountCount
+        const theme = inject(themeKey, 'missing')
+
         expose({
           setOption: vi.fn(),
         })
 
-        return () => h('div')
+        return () => h('div', {
+          'data-instance-id': String(instanceId),
+          'data-theme': String(toValue(theme)),
+        })
       },
     }),
   }
@@ -40,12 +53,13 @@ vi.mock('vue-echarts', async () => {
 
 const mountBaseAnalyticsEcharts = (props: {
   renderMode?: 'svg' | 'canvas'
-} = {}) => {
+} = {}, global: Parameters<typeof mount>[1]['global'] = {}) => {
   return mount(BaseAnalyticsEcharts, {
     props: {
       option: {},
       ...props,
     },
+    global,
   })
 }
 
@@ -54,6 +68,44 @@ const getVChart = (wrapper: ReturnType<typeof mountBaseAnalyticsEcharts>) => {
 }
 
 describe('BaseAnalyticsEcharts', () => {
+  it('provides the light ECharts theme by default', () => {
+    const wrapper = mountBaseAnalyticsEcharts()
+
+    expect(getVChart(wrapper).attributes('data-theme')).toBe('light')
+
+    wrapper.unmount()
+  })
+
+  it('passes a host-provided ECharts theme through to VChart', () => {
+    const wrapper = mountBaseAnalyticsEcharts({}, {
+      provide: {
+        [themeKey]: 'konnect',
+      },
+    })
+
+    expect(getVChart(wrapper).attributes('data-theme')).toBe('konnect')
+
+    wrapper.unmount()
+  })
+
+  it('remounts VChart when the provided ECharts theme changes', async () => {
+    const theme = ref('light')
+    const wrapper = mountBaseAnalyticsEcharts({}, {
+      provide: {
+        [themeKey]: theme,
+      },
+    })
+    const firstInstanceId = getVChart(wrapper).attributes('data-instance-id')
+
+    theme.value = 'konnect'
+    await nextTick()
+
+    expect(getVChart(wrapper).attributes('data-theme')).toBe('konnect')
+    expect(getVChart(wrapper).attributes('data-instance-id')).not.toBe(firstInstanceId)
+
+    wrapper.unmount()
+  })
+
   it('passes svg as the default ECharts renderer', () => {
     const wrapper = mountBaseAnalyticsEcharts()
 

@@ -6,6 +6,7 @@ Vue 3 analytics chart components backed by [Apache ECharts](https://echarts.apac
 - [Requirements](#requirements)
 - [Install](#install)
 - [Package Exports](#package-exports)
+- [Theming](#theming)
 - [TimeseriesChart](#timeserieschart)
   - [Props](#timeserieschart-props)
   - [Events](#timeserieschart-events)
@@ -21,7 +22,7 @@ Vue 3 analytics chart components backed by [Apache ECharts](https://echarts.apac
 - Timeseries line and bar charts.
 - Vertical bar, horizontal bar, and donut charts for cross-sectional analytics.
 - SVG and Canvas ECharts render modes.
-- Light and dark ECharts themes.
+- Provider-driven ECharts themes, including bundled Konnect design-token themes.
 - Legend filtering and optional formatted legend values.
 - Timeseries brush selection for zoom, explore, and request actions.
 - Timeseries threshold lines and optional threshold intersection highlighting.
@@ -55,6 +56,7 @@ For workspace consumers in this monorepo, use the workspace dependency:
 
 ```ts
 import {
+  ANALYTICS_ECHARTS_THEME_KEY,
   CrossSectionChart,
   TimeseriesChart,
   type AnalyticsChartColors,
@@ -74,7 +76,8 @@ import {
 | --- | --- |
 | `TimeseriesChart` | Vue component for `timeseries_line` and `timeseries_bar` charts. |
 | `CrossSectionChart` | Vue component for `horizontal_bar`, `vertical_bar`, and `donut` charts. |
-| `AnalyticsChartColors` | Color palette type. Accepts either an array of colors or a map from dataset label to color. |
+| `ANALYTICS_ECHARTS_THEME_KEY` | Vue injection key used to provide the active ECharts theme to all descendant analytics-echarts charts. |
+| `AnalyticsChartColors` | Color map type keyed by dataset label or dimension value. |
 | `ChartLegendItem` | Legend item shape passed to custom legend sort functions. |
 | `ChartLegendSortFn` | Sort function type for legend items. |
 | `ChartTooltipSortFn` | Sort function type for tooltip entries. |
@@ -84,6 +87,27 @@ import {
 | `Threshold` | Timeseries threshold configuration. |
 | `ThresholdType` | Threshold severity: `warning`, `error`, or `neutral`. |
 | `TooltipEntry` | Tooltip entry shape passed to custom tooltip sort functions. |
+
+## Theming
+
+`analytics-echarts` uses Vue ECharts' provide/inject theme API. Host applications can provide a reactive ECharts theme name once, and descendant charts will reinitialize when that name changes. If no theme is provided, charts default to `light`.
+
+The package registers local `konnect` and `konnect-dark` themes backed by current Konnect design token values. These names can be provided directly by host apps:
+
+```vue
+<script setup lang="ts">
+import { computed, provide, ref } from 'vue'
+import { ANALYTICS_ECHARTS_THEME_KEY } from '@kong-ui-public/analytics-echarts'
+
+const isDark = ref(false)
+
+provide(ANALYTICS_ECHARTS_THEME_KEY, computed(() => isDark.value ? 'konnect-dark' : 'konnect'))
+</script>
+```
+
+Arbitrary dataset colors come from the active theme's top-level ECharts `color` array. Status-code and status-code-group datasets always use the package's internal design-token status colors instead of the theme palette.
+
+Custom ECharts theme objects can also be provided through `ANALYTICS_ECHARTS_THEME_KEY`.
 
 ## TimeseriesChart
 
@@ -100,7 +124,6 @@ Use `TimeseriesChart` for time-based analytics. The component accepts `ExploreRe
 | `requestsLink` | `ExternalLink` | No | - | Adds a tooltip action that links to request details for the brushed time range. Also enables brushing. |
 | `exploreLink` | `ExternalLink` | No | - | Adds a tooltip action that links to explore for the brushed time range. Also enables brushing. |
 | `threshold` | `Partial<Record<string, Threshold[]>>` | No | - | Draws threshold lines. Thresholds with `highlightIntersections: true` also shade intersections. |
-| `colorPalette` | `string[] \| AnalyticsChartColors` | No | internal palette | Custom series colors. Arrays are cycled; object keys map labels to colors. |
 | `tooltipTitle` | `string` | No | derived from metric | Title shown in chart tooltips. |
 | `emptyStateTitle` | `string` | No | localized default | Empty-state title when no valid chart data exists. |
 | `emptyStateDescription` | `string` | No | localized default | Empty-state body when no valid chart data exists. |
@@ -111,7 +134,6 @@ Use `TimeseriesChart` for time-based analytics. The component accepts `ExploreRe
 | `chartLegendSortFn` | `ChartLegendSortFn` | No | default value sort | Custom legend item ordering. |
 | `chartTooltipSortFn` | `ChartTooltipSortFn` | No | default value sort | Custom tooltip entry ordering. |
 | `hideTruncationWarning` | `boolean` | No | `false` | Suppresses the warning shown when the query result is truncated. |
-| `theme` | `'light' \| 'dark'` | No | `'light'` | ECharts theme. |
 | `renderMode` | `'svg' \| 'canvas'` | No | `'svg'` | ECharts renderer. |
 
 ### TimeseriesChart Events
@@ -201,7 +223,6 @@ Use `CrossSectionChart` for categorical analytics. The component accepts `Explor
 | `data` | `ExploreResultV4` | Yes | - | Analytics result data. |
 | `type` | `'horizontal_bar' \| 'vertical_bar' \| 'donut'` | Yes | - | Chart visualization type. |
 | `stacked` | `boolean` | No | `false` | Stacks bar series when multiple datasets are present. |
-| `colorPalette` | `string[] \| AnalyticsChartColors` | No | internal palette | Custom series colors. Arrays are cycled; object keys map labels to colors. |
 | `tooltipTitle` | `string` | No | derived from metric | Title shown in chart tooltips. |
 | `emptyStateTitle` | `string` | No | localized default | Empty-state title when no valid chart data exists. |
 | `emptyStateDescription` | `string` | No | localized default | Empty-state body when no valid chart data exists. |
@@ -213,7 +234,6 @@ Use `CrossSectionChart` for categorical analytics. The component accepts `Explor
 | `chartLegendSortFn` | `ChartLegendSortFn` | No | default value sort | Custom legend item ordering. |
 | `chartTooltipSortFn` | `ChartTooltipSortFn` | No | default value sort | Custom tooltip entry ordering. |
 | `hideTruncationWarning` | `boolean` | No | `false` | Suppresses the warning shown when the query result is truncated. |
-| `theme` | `'light' \| 'dark'` | No | `'light'` | ECharts theme. |
 | `renderMode` | `'svg' \| 'canvas'` | No | `'svg'` | ECharts renderer. |
 
 ### CrossSectionChart Example

@@ -1,5 +1,5 @@
 export const DIMENSION_COUNTRY_CODE = 'country_code' as const
-export const STATUS_CODE_DIMENSIONS = ['status_code', 'status_code_grouped'] as const
+export const STATUS_CODE_DIMENSIONS = ['status_code', 'status_code_grouped', 'upstream_status_code', 'upstream_status_code_grouped'] as const
 export const EMPTY_SEGMENT_ID = 'empty' as const
 
 export type ThresholdType = 'warning' | 'error' | 'neutral'

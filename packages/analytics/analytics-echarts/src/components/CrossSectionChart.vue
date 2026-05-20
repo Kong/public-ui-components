@@ -16,7 +16,6 @@
         class="chart-container"
         :option="option"
         :render-mode="renderMode"
-        :theme="theme"
         @datazoom="handleDataZoom"
         @zr:click="handleClick"
         @zr:mousemove="handleMouseMove"
@@ -43,7 +42,6 @@ import { computed, toRef, watch } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import {
-  defaultStatusCodeColors,
   getDimensionAxisTitle,
   getMetricAxisTitle,
   getMetricUnit,
@@ -52,7 +50,6 @@ import {
   type DataZoomPayload,
 } from '../utils'
 import type {
-  AnalyticsChartColors,
   ChartScrollWindow,
   ChartLegendSortFn,
   ChartTooltipSortFn,
@@ -62,12 +59,12 @@ import AnalyticsChartShell from './AnalyticsChartShell.vue'
 import BaseAnalyticsEcharts from './BaseAnalyticsEcharts.vue'
 import ChartLegend from './ChartLegend.vue'
 import ChartTooltip from './ChartTooltip.vue'
+import { useAnalyticsEchartsThemePalette } from '../themes'
 
 const {
   data,
   type,
   stacked = false,
-  colorPalette,
   tooltipTitle,
   emptyStateTitle,
   emptyStateDescription,
@@ -79,13 +76,11 @@ const {
   chartLegendSortFn,
   chartTooltipSortFn,
   hideTruncationWarning = false,
-  theme = 'light',
   renderMode = 'svg',
 } = defineProps<{
   data: ExploreResultV4
   type: 'horizontal_bar' | 'vertical_bar' | 'donut'
   stacked?: boolean
-  colorPalette?: string[] | AnalyticsChartColors
   tooltipTitle?: string
   emptyStateTitle?: string
   emptyStateDescription?: string
@@ -97,14 +92,14 @@ const {
   chartLegendSortFn?: ChartLegendSortFn
   chartTooltipSortFn?: ChartTooltipSortFn
   hideTruncationWarning?: boolean
-  theme?: 'light' | 'dark'
   renderMode?: 'svg' | 'canvas'
 }>()
 
 const { i18n } = composables.useI18n()
+const themePalette = useAnalyticsEchartsThemePalette()
 
 const chartData = composables.useCrossSectionalChartData({
-  colorPalette: computed(() => colorPalette || defaultStatusCodeColors),
+  themePalette,
 }, toRef(() => data))
 
 const metricUnit = computed(() => getMetricUnit(

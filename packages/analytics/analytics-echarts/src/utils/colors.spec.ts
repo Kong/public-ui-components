@@ -12,11 +12,17 @@ import {
   KUI_STATUS_COLOR_500S,
   KUI_STATUS_COLOR_5NA,
 } from '@kong/design-tokens'
-import { defaultStatusCodeColors, lookupDatavisColor, lookupStatusCodeColor } from './colors'
+import { defaultStatusCodeColors, determineBaseColor, lookupStatusCodeColor } from './colors'
 
-describe('lookupDatavisColor', () => {
-  it('handles large numbers of entities', () => {
-    expect(lookupDatavisColor(5)).toBe('#a86cd5')
+describe('determineBaseColor', () => {
+  it('cycles through the active theme palette for non-status dimensions', () => {
+    expect(determineBaseColor({
+      dimensionField: 'route',
+      dimensionName: 'Alpha',
+      index: 3,
+      isEmpty: false,
+      themePalette: ['#111111', '#222222', '#333333'],
+    })).toBe('#111111')
   })
 })
 

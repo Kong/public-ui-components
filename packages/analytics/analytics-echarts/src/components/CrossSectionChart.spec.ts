@@ -22,10 +22,6 @@ const BaseAnalyticsEchartsStub = defineComponent({
       type: String,
       default: 'svg',
     },
-    theme: {
-      type: String,
-      default: 'light',
-    },
   },
   emits: ['datazoom'],
   setup(_props, { expose, slots }) {
@@ -54,9 +50,11 @@ const EmptyStub = defineComponent({
   },
 })
 
-const createExploreResult = (count: number): ExploreResultV4 => {
-  const routeEntries = Array.from({ length: count }, (_, index) => {
-    const id = `route-${index}`
+const createExploreResult = (count: number, dimension = 'route'): ExploreResultV4 => {
+  const dimensionEntries = Array.from({ length: count }, (_, index) => {
+    const id = dimension === 'status_code'
+      ? ['200', '300', '400', '500'][index % 4]
+      : `route-${index}`
 
     return [id, { name: id }]
   })
@@ -65,13 +63,15 @@ const createExploreResult = (count: number): ExploreResultV4 => {
     meta: {
       metric_names: ['request_count'],
       display: {
-        route: Object.fromEntries(routeEntries),
+        [dimension]: Object.fromEntries(dimensionEntries),
       },
     },
     data: Array.from({ length: count }, (_, index) => ({
       timestamp: new Date(index).toISOString(),
       event: {
-        route: `route-${index}`,
+        [dimension]: dimension === 'status_code'
+          ? ['200', '300', '400', '500'][index % 4]
+          : `route-${index}`,
         request_count: count - index,
       },
     })),
@@ -122,6 +122,25 @@ const expectDataZoomWindow = (
 }
 
 describe('CrossSectionChart', () => {
+  it('does not expose colorPalette as a public prop', () => {
+    const props = (CrossSectionChart as unknown as { props: Record<string, unknown> }).props
+
+    expect(props).not.toHaveProperty('colorPalette')
+  })
+
+  it('uses design-token status code colors by default', () => {
+    const wrapper = mountCrossSectionChart({
+      data: createExploreResult(4, 'status_code'),
+    })
+    const option = getBaseChart(wrapper).props('option') as {
+      series: Array<{ itemStyle: { color: string } }>
+    }
+
+    expect(option.series[0].itemStyle.color).toBe('#b5ffee')
+
+    wrapper.unmount()
+  })
+
   it('keeps data zoom events off the render path until another option dependency changes', async () => {
     const wrapper = mountCrossSectionChart()
     const baseChart = getBaseChart(wrapper)

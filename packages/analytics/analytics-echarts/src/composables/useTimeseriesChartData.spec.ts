@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   KUI_STATUS_COLOR_200,
   KUI_STATUS_COLOR_200S,
+  KUI_STATUS_COLOR_400,
   KUI_STATUS_COLOR_400S,
   KUI_STATUS_COLOR_500,
 } from '@kong/design-tokens'
@@ -262,30 +263,101 @@ describe('useTimeseriesChartData', () => {
     ])
   })
 
-  it('keeps caller-provided colors ahead of status-code defaults', () => {
+  it('uses status-code colors for upstream status code dimensions', () => {
     const exploreResult = createExploreResult({
       display: {
-        status_code: {
+        upstream_status_code: {
           200: { name: '200' },
+          400: { name: '400' },
         },
       },
       records: [
         {
           timestamp: '2024-01-01T00:00:00.000Z',
           event: {
-            status_code: '200',
+            upstream_status_code: '200',
             request_count: 5,
+          },
+        },
+        {
+          timestamp: '2024-01-01T00:00:00.000Z',
+          event: {
+            upstream_status_code: '400',
+            request_count: 7,
+          },
+        },
+      ],
+    })
+
+    const chartData = useTimeseriesChartData({}, ref(exploreResult))
+
+    expect(chartData.value.datasets.map(({ backgroundColor }) => backgroundColor)).toEqual([
+      KUI_STATUS_COLOR_200,
+      KUI_STATUS_COLOR_400,
+    ])
+  })
+
+  it('uses the active theme palette for non-status dimensions', () => {
+    const exploreResult = createExploreResult({
+      display: {
+        route: {
+          alpha: { name: 'Alpha' },
+          beta: { name: 'Beta' },
+        },
+      },
+      records: [
+        {
+          timestamp: '2024-01-01T00:00:00.000Z',
+          event: {
+            route: 'alpha',
+            request_count: 5,
+          },
+        },
+        {
+          timestamp: '2024-01-01T00:00:00.000Z',
+          event: {
+            route: 'beta',
+            request_count: 7,
           },
         },
       ],
     })
 
     const chartData = useTimeseriesChartData({
-      colorPalette: {
-        200: '#123456',
-      },
+      themePalette: ref(['#111111', '#222222']),
     }, ref(exploreResult))
 
-    expect(chartData.value.datasets[0]?.backgroundColor).toBe('#123456')
+    expect(Object.fromEntries(chartData.value.datasets.map(({ label, backgroundColor }) => [label, backgroundColor]))).toEqual({
+      Alpha: '#111111',
+      Beta: '#222222',
+    })
+  })
+
+  it('recomputes non-status colors when the active theme palette changes', () => {
+    const themePalette = ref(['#111111', '#222222'])
+    const exploreResult = createExploreResult({
+      display: {
+        route: {
+          alpha: { name: 'Alpha' },
+        },
+      },
+      records: [
+        {
+          timestamp: '2024-01-01T00:00:00.000Z',
+          event: {
+            route: 'alpha',
+            request_count: 5,
+          },
+        },
+      ],
+    })
+
+    const chartData = useTimeseriesChartData({ themePalette }, ref(exploreResult))
+
+    expect(chartData.value.datasets[0]?.backgroundColor).toBe('#111111')
+
+    themePalette.value = ['#333333']
+
+    expect(chartData.value.datasets[0]?.backgroundColor).toBe('#333333')
   })
 })

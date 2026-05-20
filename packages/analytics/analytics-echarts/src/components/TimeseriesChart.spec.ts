@@ -19,10 +19,6 @@ const BaseAnalyticsEchartsStub = defineComponent({
       type: String,
       default: 'svg',
     },
-    theme: {
-      type: String,
-      default: 'light',
-    },
   },
   emits: ['brush', 'zr:click', 'zr:mousedown', 'zr:mousemove', 'zr:mouseout', 'zr:mouseup'],
   setup(_props, { expose, slots }) {
@@ -92,6 +88,23 @@ const getBaseChart = (wrapper: ReturnType<typeof mountTimeseriesChart>) => {
 }
 
 describe('TimeseriesChart', () => {
+  it('does not expose colorPalette as a public prop', () => {
+    const props = (TimeseriesChart as unknown as { props: Record<string, unknown> }).props
+
+    expect(props).not.toHaveProperty('colorPalette')
+  })
+
+  it('uses design-token status code colors by default', () => {
+    const wrapper = mountTimeseriesChart()
+    const option = getBaseChart(wrapper).props('option') as {
+      series: Array<{ itemStyle: { color: string } }>
+    }
+
+    expect(option.series[0].itemStyle.color).toBe('#b5ffee')
+
+    wrapper.unmount()
+  })
+
   it('does not brush-select time ranges when no range action is available', async () => {
     vi.useFakeTimers()
     dispatchAction.mockClear()

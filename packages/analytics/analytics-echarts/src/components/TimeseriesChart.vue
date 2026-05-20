@@ -16,7 +16,6 @@
         class="chart-container"
         :option="option"
         :render-mode="renderMode"
-        :theme="theme"
         @brush="handleBrush"
         @zr:click="handleClick"
         @zr:mousedown="handleMouseDown"
@@ -53,7 +52,6 @@ import {
 import type { ElementEvent } from 'echarts/core'
 import composables from '../composables'
 import {
-  defaultStatusCodeColors,
   getGranularityAxisTitle,
   getMetricAxisTitle,
   getMetricUnit,
@@ -61,7 +59,6 @@ import {
   hasMillisecondTimestamps,
 } from '../utils'
 import type {
-  AnalyticsChartColors,
   ChartLegendSortFn,
   ChartTooltipSortFn,
   ExternalLink,
@@ -73,6 +70,7 @@ import BaseAnalyticsEcharts from './BaseAnalyticsEcharts.vue'
 import ChartLegend from './ChartLegend.vue'
 import ChartTooltip from './ChartTooltip.vue'
 import type { ZoomActionItem } from './ZoomActions.vue'
+import { useAnalyticsEchartsThemePalette } from '../themes'
 
 const {
   data,
@@ -82,7 +80,6 @@ const {
   requestsLink,
   exploreLink,
   threshold,
-  colorPalette,
   tooltipTitle,
   emptyStateTitle,
   emptyStateDescription,
@@ -93,7 +90,6 @@ const {
   chartLegendSortFn,
   chartTooltipSortFn,
   hideTruncationWarning = false,
-  theme = 'light',
   renderMode = 'svg',
 } = defineProps<{
   data: ExploreResultV4
@@ -103,7 +99,6 @@ const {
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
   threshold?: Partial<Record<string, Threshold[]>>
-  colorPalette?: string[] | AnalyticsChartColors
   tooltipTitle?: string
   emptyStateTitle?: string
   emptyStateDescription?: string
@@ -114,7 +109,6 @@ const {
   chartLegendSortFn?: ChartLegendSortFn
   chartTooltipSortFn?: ChartTooltipSortFn
   hideTruncationWarning?: boolean
-  theme?: 'light' | 'dark'
   renderMode?: 'svg' | 'canvas'
 }>()
 
@@ -135,9 +129,10 @@ const timeSeriesGranularity = computed<string>(() => {
   return msToGranularity(data.meta.granularity_ms) || 'hourly'
 })
 
+const themePalette = useAnalyticsEchartsThemePalette()
 const chartData = composables.useTimeseriesChartData({
   fill: toRef(() => stacked),
-  colorPalette: computed(() => colorPalette || defaultStatusCodeColors),
+  themePalette,
 }, toRef(() => data))
 
 const metricUnit = computed(() => getMetricUnit(
