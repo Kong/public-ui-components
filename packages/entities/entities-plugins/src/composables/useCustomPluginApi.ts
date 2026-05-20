@@ -21,6 +21,8 @@ export type CustomPluginWithType =
 interface UseKonnectCustomPluginApiOptions {
   app: 'konnect'
   controlPlaneId: string
+  // Workspace is supported in this composable, but the entry in Konnect will not include workspace for now.
+  workspace?: string
 }
 
 interface PagedResponse<T> {
@@ -103,21 +105,13 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   const buildUrl = (endpointTemplate: string, pluginId?: string): string => {
     let url = `${apiBaseUrl}${endpointTemplate}`
 
-
     if (options.app === 'konnect') {
       url = url.replace(/{controlPlaneId}/gi, options.controlPlaneId)
     }
 
     url = url
       .replace(/{pluginId}/gi, pluginId ?? '')
-
-    // For Kong Manager, even resources are none-workspace, the endpoint still include /{workspace}
-    if (options.app === 'kongManager') {
-      url = url.replace(/\/{workspace}/gi, options.workspace ? `/${options.workspace}` : '')
-    } else {
-      // For Konnect, the endpoint should not include /{workspace} at all
-      url = url.replace(/\/{workspace}/gi, '')
-    }
+      .replace(/\/{workspace}/gi, options.workspace ? `/${options.workspace}` : '')
 
     return url
   }

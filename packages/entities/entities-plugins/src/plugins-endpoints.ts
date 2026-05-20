@@ -80,7 +80,7 @@ export default {
         edit: `${konnectBaseApiUrl}/custom-plugins/{pluginId}`,
       },
       cloned: {
-        create: `${konnectBaseApiUrl}/cloned-plugins/{pluginId}`,
+        create: `${konnectBaseApiUrl}/cloned-plugins`,
         edit: `${konnectBaseApiUrl}/cloned-plugins/{pluginId}`,
       },
     },
@@ -90,7 +90,7 @@ export default {
         edit: `${KMBaseApiUrl}/custom-plugins/{pluginId}`,
       },
       cloned: {
-        create: `${KMBaseApiUrl}/cloned-plugins/{pluginId}`,
+        create: `${KMBaseApiUrl}/cloned-plugins`,
         edit: `${KMBaseApiUrl}/cloned-plugins/{pluginId}`,
       },
     },
