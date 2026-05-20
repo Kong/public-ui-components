@@ -13,6 +13,44 @@ const baseConfigKM = {
   apiBaseUrl: '/kong-manager',
 }
 
+const baseConfigKonnect = {
+  app: 'konnect',
+  apiBaseUrl: 'https://us.api.konghq.com',
+}
+
+const principalsFields = [
+  {
+    id: 'config-principals-enabled',
+    model: 'config-principals-enabled',
+    type: 'switch',
+    label: 'Config.Principals.Enabled',
+    default: false,
+    valueType: 'boolean',
+    order: 0,
+  },
+  {
+    id: 'config-principals-directory',
+    model: 'config-principals-directory',
+    type: 'input',
+    inputType: 'text',
+    label: 'Config.Principals.Directory',
+    default: 'default',
+    valueType: 'string',
+    order: 0,
+  },
+]
+
+const OIDCFormSchemaWithPrincipals = {
+  ...OIDCFormSchema,
+  fields: [...OIDCFormSchema.fields, ...principalsFields],
+}
+
+const OIDCModelWithPrincipals = {
+  ...OIDCModel,
+  'config-principals-enabled': false,
+  'config-principals-directory': 'default',
+}
+
 describe('<OIDCForm />', () => {
   it('should render redis fields as common fields when enableRedisPartial is not passed', () => {
     cy.mount(OIDCForm, {
@@ -86,5 +124,55 @@ describe('<OIDCForm />', () => {
     cy.getTestId(`redis-configuration-dropdown-item-${redisEEConfigDetail.name}`).click()
     cy.get('.partial-config-card').getTestId('name-property-value').should('contain.text', redisEEConfigDetail.name)
 
+  })
+
+  describe('Kong Identity principals', () => {
+    it('should render principals section in Konnect when schema has principals fields', () => {
+      cy.mount(OIDCForm, {
+        props: {
+          formSchema: OIDCFormSchemaWithPrincipals,
+          formModel: OIDCModelWithPrincipals,
+        },
+        global: {
+          provide: {
+            'kong-ui-forms-config': baseConfigKonnect,
+          },
+        },
+      })
+
+      cy.getTestId('oidc-principals-section').should('exist')
+    })
+
+    it('should not render principals section in Kong Manager', () => {
+      cy.mount(OIDCForm, {
+        props: {
+          formSchema: OIDCFormSchemaWithPrincipals,
+          formModel: OIDCModelWithPrincipals,
+        },
+        global: {
+          provide: {
+            'kong-ui-forms-config': baseConfigKM,
+          },
+        },
+      })
+
+      cy.getTestId('oidc-principals-section').should('not.exist')
+    })
+
+    it('should not render principals section in Konnect when schema has no principals fields', () => {
+      cy.mount(OIDCForm, {
+        props: {
+          formSchema: OIDCFormSchema,
+          formModel: OIDCModel,
+        },
+        global: {
+          provide: {
+            'kong-ui-forms-config': baseConfigKonnect,
+          },
+        },
+      })
+
+      cy.getTestId('oidc-principals-section').should('not.exist')
+    })
   })
 })
