@@ -21,7 +21,6 @@ export type CustomPluginWithType =
 interface UseKonnectCustomPluginApiOptions {
   app: 'konnect'
   controlPlaneId: string
-  workspace?: string
 }
 
 interface PagedResponse<T> {
@@ -111,7 +110,11 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
 
     url = url
       .replace(/{pluginId}/gi, pluginId ?? '')
-      .replace(/\/{workspace}/gi, options.workspace ? `/${options.workspace}` : '')
+
+    // For Kong Manager, even resources are none-workspace, the endpoint still include /{workspace}
+    if (options.app === 'kongManager') {
+      url = url.replace(/\/{workspace}/gi, options.workspace ? `/${options.workspace}` : '')
+    }
 
     return url
   }
