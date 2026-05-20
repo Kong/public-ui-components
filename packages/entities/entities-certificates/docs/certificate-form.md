@@ -55,6 +55,12 @@ A form component for Certificates.
     - default: `undefined`
     - Route to return to when canceling creation of an Certificate.
 
+  - `azureCertsVaultAvailable`:
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide the Azure Key Vault Certificates source type option in the certificate form.
+
   - `sniListRoute`:
     - type: `RouteLocationRaw`
     - required: `false`
