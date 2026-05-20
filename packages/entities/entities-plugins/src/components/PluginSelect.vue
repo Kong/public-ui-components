@@ -175,6 +175,12 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (config.app === 'kongManager' && !config.workspace) return false
+      if (config.app === 'konnect') {
+        if (!config.controlPlaneId || config.workspace) { // controlPlaneId is required and workspace should not be provided for konnect
+          return false
+        }
+      }
       if (!config.getCreateRoute) return false
       return true
     },
@@ -565,11 +571,9 @@ const clonedPluginsUrl = computed<string | null>(() => {
 
     if (props.config.app === 'konnect') {
       url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-    } else if (props.config.app === 'kongManager') {
-      url = url.replace(/{workspace}/gi, props.config.workspace || '')
     }
 
-    return url
+    return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
   return null
