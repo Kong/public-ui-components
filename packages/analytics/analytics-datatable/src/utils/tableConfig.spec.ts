@@ -33,6 +33,8 @@ describe('table config utilities', () => {
       columnVisibility: { status: false },
       columnWidths: {},
       pinnedColumns: {},
+      sortColumnKey: undefined,
+      sortColumnOrder: undefined,
       pageSize: 50,
     })
     expect(partialConfig).toEqual({
