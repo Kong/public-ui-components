@@ -34,7 +34,7 @@ describe('useCustomPluginApi', () => {
 
     await expect(api.updateInstalledPlugin('my-plugin', { lua_schema: 'return {}' })).resolves.toEqual(response)
     expect(axiosInstance.put).toHaveBeenCalledWith(
-      '/us/kong-api/v2/control-planes/test-cp-id/core-entities/plugin-schemas/my-plugin',
+      '/us/kong-api/v2/control-planes/test-cp-id/core-entities/{workspace}/plugin-schemas/my-plugin',
       { lua_schema: 'return {}' },
     )
     expect(axiosInstance.patch).not.toHaveBeenCalled()

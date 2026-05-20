@@ -114,6 +114,9 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
     // For Kong Manager, even resources are none-workspace, the endpoint still include /{workspace}
     if (options.app === 'kongManager') {
       url = url.replace(/\/{workspace}/gi, options.workspace ? `/${options.workspace}` : '')
+    } else {
+      // For Konnect, the endpoint should not include /{workspace} at all
+      url = url.replace(/\/{workspace}/gi, '')
     }
 
     return url
