@@ -3,6 +3,138 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.13.10...@kong-ui-public/entities-certificates@3.14.0) (2026-05-20)
+
+
+### Features
+
+* **entities-certificates:** add vault reference tab for azure-certs vault integration [KM-2543] ([#3266](https://github.com/Kong/public-ui-components/issues/3266)) ([34e0f65](https://github.com/Kong/public-ui-components/commit/34e0f65cd51466c5c6951dad74c35d130d37f4c6))
+
+
+
+
+
+## [3.13.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.13.9...@kong-ui-public/entities-certificates@3.13.10) (2026-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.13.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.13.8...@kong-ui-public/entities-certificates@3.13.9) (2026-05-19)
+
+
+### Bug Fixes
+
+* redis button size + copy updates ([#3268](https://github.com/Kong/public-ui-components/issues/3268)) ([4d88632](https://github.com/Kong/public-ui-components/commit/4d88632b2c1bc8718501f5610d5e5b83c22e9c46))
+
+
+
+
+
+## [3.13.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.13.7...@kong-ui-public/entities-certificates@3.13.8) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.13.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.13.6...@kong-ui-public/entities-certificates@3.13.7) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.13.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.13.5...@kong-ui-public/entities-certificates@3.13.6) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.13.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.13.4...@kong-ui-public/entities-certificates@3.13.5) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.13.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.13.3...@kong-ui-public/entities-certificates@3.13.4) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.13.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.13.2...@kong-ui-public/entities-certificates@3.13.3) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.13.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.13.1...@kong-ui-public/entities-certificates@3.13.2) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.13.0...@kong-ui-public/entities-certificates@3.13.1) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+# [3.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.34...@kong-ui-public/entities-certificates@3.13.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to cert-related entities ([#3232](https://github.com/Kong/public-ui-components/issues/3232)) ([2a4de9a](https://github.com/Kong/public-ui-components/commit/2a4de9a2dc3c124eedb0e07f6a0fddff89d6938d))
+
+
+
+
+
+## [3.12.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.33...@kong-ui-public/entities-certificates@3.12.34) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.12.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.32...@kong-ui-public/entities-certificates@3.12.33) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-certificates
+
+
+
+
+
+## [3.12.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.31...@kong-ui-public/entities-certificates@3.12.32) (2026-05-07)
+
+
+### Bug Fixes
+
+* **locales/en.json:** fix copies in all the entities ([#3221](https://github.com/Kong/public-ui-components/issues/3221)) ([a3bcf52](https://github.com/Kong/public-ui-components/commit/a3bcf526d9aff14cab8e2f3d9ba7810b5167d974))
+
+
+
+
+
 ## [3.12.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.12.30...@kong-ui-public/entities-certificates@3.12.31) (2026-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates

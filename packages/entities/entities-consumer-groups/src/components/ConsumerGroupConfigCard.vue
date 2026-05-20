@@ -63,7 +63,7 @@ const props = defineProps({
 })
 
 const { i18n: { t } } = composables.useI18n()
-const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
+const fetchUrl = computed((): string => endpoints.item[props.config.app])
 
 const configSchema = ref<ConsumerGroupConfigurationSchema>({
   id: {},

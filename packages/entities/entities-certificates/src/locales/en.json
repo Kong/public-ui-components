@@ -15,7 +15,7 @@
         "snis": "SNIs"
       },
       "empty_state": {
-        "title": "Configure a New Certificate",
+        "title": "Configure a new certificate",
         "description": "Certificates handle SSL/TLS termination for encrypted requests."
       },
       "empty_state_v2": {
@@ -29,12 +29,26 @@
     "form": {
       "sections": {
         "ssl": {
-          "title": "SSL Key Pair",
+          "title": "SSL key pair",
           "description": "The PEM-encoded public certificate chain and private key of the SSL key pair and the alternate."
         },
+        "certificate_config": {
+          "title": "Certificate configuration"
+        },
         "general": {
-          "title": "General Information",
-          "description": "General information will help identify and manage this key."
+          "title": "General information",
+          "description": "General information will help identify and manage this certificate."
+        }
+      },
+      "source_type": {
+        "question": "Which certificate source would you like to use?",
+        "ssl": {
+          "label": "SSL key pair",
+          "description": "Use self-managed certificates when you need full control over certificate lifecycle management."
+        },
+        "azure": {
+          "label": "Azure Key Vault Certificates",
+          "description": "Automatically provision and renew TLS certificates through Azure Certificate Management."
         }
       },
       "fields": {
@@ -49,12 +63,12 @@
           "emphasis": "referenceable"
         },
         "cert_alt": {
-          "label": "Cert Alt",
+          "label": "Cert alt",
           "tooltip": "PEM-encoded public certificate chain of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is {emphasis}, which means it can be securely stored as a secret in a vault. References must follow a specific format.",
           "emphasis": "referenceable"
         },
         "key_alt": {
-          "label": "Key Alt",
+          "label": "Key alt",
           "tooltip": "PEM-encoded private key of the alternate SSL key pair. This should only be set if you have both RSA and ECDSA types of certificate available and would like Kong to prefer serving using ECDSA certs when client advertises support for it. This field is {emphasis}, which means it can be securely stored as a secret in a vault. References must follow a specific format.",
           "emphasis": "referenceable"
         },
@@ -70,7 +84,16 @@
           "label": "Tags",
           "placeholder": "Enter a list of tags separated by comma",
           "help": "e.g. tag1, tag2, tag3",
-          "tooltip": "An optional set of strings for grouping and filtering, separated by commas."
+          "tooltip": "An optional set of strings for grouping and filtering, separated by commas.",
+          "show_label": "Show labels and tags"
+        },
+        "vault": {
+          "label": "Managed certificate",
+          "placeholder": "e.g. {vault://azure-certs-prefix/my-cert}"
+        },
+        "vault_alt": {
+          "label": "Managed certificate alt",
+          "placeholder": "e.g. {vault://azure-certs-prefix/my-cert-alt}"
         }
       }
     },
@@ -79,16 +102,16 @@
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",
-      "addSni": "Add to New SNI",
+      "addSni": "Add to new SNI",
       "delete": "Delete",
       "clear": "Clear",
-      "view": "View Details"
+      "view": "View details"
     },
     "search": {
       "placeholder": "Filter by exact ID"
     },
     "delete": {
-      "title": "Delete a Certificate",
+      "title": "Delete a certificate",
       "description": "Your organization's original certificate {bolded-text}.",
       "boldedText": "will not be affected",
       "description2": "This action cannot be reversed so make sure to check the certificate usage before deleting."
@@ -104,7 +127,7 @@
     }
   },
   "ca-certificates": {
-    "title": "CA Certificates",
+    "title": "CA certificates",
     "list": {
       "toolbar_actions": {
         "new_ca_certificate": "New CA certificate"
@@ -115,25 +138,25 @@
         "tags": "Tags"
       },
       "empty_state": {
-        "title": "Configure a New CA Certificate",
+        "title": "Configure a new CA certificate",
         "description": "CA certificates validate client or server certificates."
       },
       "empty_state_v2": {
         "create": "New CA certificate",
         "title": "Configure your first CA certificate",
-        "group": "CA Certificates created in gateways within this group will automatically appear here.",
-        "description": "CA Certificates validate the authenticity of client and server certificates, reinforcing the trust and security of your API communications.",
+        "group": "CA certificates created in gateways within this group will automatically appear here.",
+        "description": "CA certificates validate the authenticity of client and server certificates, reinforcing the trust and security of your API communications.",
         "learn_more": "Learn more"
       }
     },
     "form": {
       "sections": {
         "cert": {
-          "title": "Public Certificate",
+          "title": "Public certificate",
           "description": "The PEM-encoded public certificate of the CA and it’s SHA256 hex digest."
         },
         "general": {
-          "title": "General Information",
+          "title": "General information",
           "description": "General information will help identify and manage this key."
         }
       },
@@ -143,7 +166,7 @@
           "tooltip": "PEM-encoded public certificate of the CA."
         },
         "cert_digest": {
-          "label": "Cert Digest",
+          "label": "Cert digest",
           "tooltip": "SHA256 hex digest of the public certificate"
         },
         "tags": {
@@ -161,20 +184,20 @@
       "edit": "Edit",
       "delete": "Delete",
       "clear": "Clear",
-      "view": "View Details"
+      "view": "View details"
     },
     "search": {
       "placeholder": "Filter by exact ID"
     },
     "delete": {
-      "title": "Delete a CA Certificate",
+      "title": "Delete a CA certificate",
       "description": "Your organization's original certificate {bolded-text}.",
       "boldedText": "will not be affected",
       "description2": "This action cannot be reversed so make sure to check the certificate usage before deleting."
     },
     "errors": {
-      "general": "CA Certificates could not be retrieved",
-      "delete": "The CA Certificate could not be deleted at this time",
+      "general": "CA certificates could not be retrieved",
+      "delete": "The CA certificate could not be deleted at this time",
       "copy": "Failed to copy to clipboard"
     },
     "copy": {

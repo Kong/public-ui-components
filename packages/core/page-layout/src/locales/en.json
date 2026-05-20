@@ -1,5 +1,9 @@
 {
   "back_button": "Go back",
+  "favorite_button": {
+    "save_shortcut": "Save page to shortcuts",
+    "remove_shortcut": "Remove page from shortcuts"
+  },
   "tabs": {
     "more_button": {
       "label": "More",

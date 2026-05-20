@@ -5,12 +5,12 @@
     "copy_json": "Copy JSON",
     "edit": "Edit",
     "delete": "Delete",
-    "view": "View Details",
+    "view": "View details",
     "loading": "Loading..."
   },
   "delete": {
-    "title": "Delete a Vault",
-    "title_for_secret": "Delete a Secret",
+    "title": "Delete a vault",
+    "title_for_secret": "Delete a secret",
     "description": "This action cannot be reversed."
   },
   "errors": {
@@ -34,13 +34,13 @@
       },
       "table_headers": {
         "prefix": "Prefix",
-        "name": "Vault Type",
+        "name": "Vault type",
         "description": "Description",
         "tags": "Tags",
         "id": "ID"
       },
       "empty_state": {
-        "title": "Configure a New Vault",
+        "title": "Configure a new vault",
         "description": "Improve the security of your Kong Gateway deployment with centralized secrets."
       },
       "empty_state_v2": {
@@ -56,14 +56,14 @@
     "title": "Secrets",
     "list": {
       "toolbar_actions": {
-        "new_secret": "Store New Secret"
+        "new_secret": "Store new secret"
       },
       "table_headers": {
-        "key": "Secret Key",
+        "key": "Secret key",
         "updated_at": "Updated At"
       },
       "empty_state": {
-        "title": "No Secrets Stored",
+        "title": "No secrets stored",
         "description": "Improve the security of your Kong Gateway deployment with centralized secrets."
       }
     },
@@ -90,17 +90,17 @@
     "success_brief": "Successfully copied to clipboard"
   },
   "labels": {
-    "vault_type": "Vault Type"
+    "vault_type": "Vault type"
   },
   "form": {
     "sections": {
       "general": {
-        "title": "General Information",
-        "description": "General information helps identify and manage this Vault instance."
+        "title": "General information",
+        "description": "General information helps identify and manage this vault instance."
       },
       "config": {
-        "title": "Vault Configuration",
-        "description": "Select a type of Vault and configure properties specific to each type of Vault."
+        "title": "Vault configuration",
+        "description": "Select a type of vault and configure properties specific to each type of Vault."
       }
     },
     "fields": {
@@ -126,11 +126,11 @@
         "description": "Access secrets stored directly in Konnect's unified platform to easily reference in Kong Gateway configuration."
       },
       "env": {
-        "label": "Environment Variables",
+        "label": "Environment variables",
         "description": "Access secrets stored via variables to be made available in Kong Gateway at runtime.",
         "fields": {
           "prefix": {
-            "label": "Environment Variable Prefix",
+            "label": "Environment variable prefix",
             "placeholder": "Enter your environment variable vault prefix",
             "tooltip": "Data plane will access all the environment variables starting with this prefix."
           }
@@ -224,15 +224,15 @@
             "tooltip": "The AWS SecretsManager service endpoint url. If not specified, the value used by vault will be the official AWS SecretsManager service url which is `https://secretsmanager.<region>.amazonaws.com`. You can specify a complete URL(including the \"http/https\" scheme) to override the endpoint that vault will connect to."
           },
           "assume_role_arn": {
-            "label": "Assume Role ARN",
+            "label": "Assume role ARN",
             "tooltip": "The target AWS IAM role ARN that will be assumed. Typically this is used for operating between multiple roles or cross-accounts. If you are not using assume role you should not specify this value."
           },
           "role_session_name": {
-            "label": "Role Session Name",
+            "label": "Role session name",
             "tooltip": "The role session name used for role assuming."
           },
           "sts_endpoint_url": {
-            "label": "STS Endpoint URL",
+            "label": "STS endpoint URL",
             "tooltip": "The custom STS endpoint URL used for role assuming in AWS Vault. Note that this value will override the default STS endpoint URL(which should be `https: //sts.amazonaws.com`, or `https: //sts.<region>.amazonaws.com` if you have `AWS_STS_REGIONAL_ENDPOINTS` set to `regional`). If you are not using private VPC endpoint for STS service, you should not specify this value."
           }
         }
@@ -274,108 +274,108 @@
             "label": "Namespace"
           },
           "ssl_verify": {
-            "label": "SSL Verify"
+            "label": "SSL verify"
           },
           "auth_method": {
-            "label": "Authentication Method"
+            "label": "Authentication method"
           },
           "token": {
             "label": "Token"
           },
           "kube_role": {
-            "label": "Kubernetes Role"
+            "label": "Kubernetes role"
           },
           "kube_auth_path": {
-            "label": "Kubernetes Auth Path"
+            "label": "Kubernetes auth path"
           },
           "kube_api_token_file": {
-            "label": "Kubernetes API Token File"
+            "label": "Kubernetes API token file"
           },
           "aws_auth_role": {
-            "label": "AWS Auth Role"
+            "label": "AWS auth role"
           },
           "aws_auth_region": {
-            "label": "AWS Auth Region"
+            "label": "AWS auth region"
           },
           "aws_access_key_id": {
-            "label": "AWS Access Key ID"
+            "label": "AWS access key ID"
           },
           "aws_secret_access_key": {
-            "label": "AWS Secret Access Key"
+            "label": "AWS secret access key"
           },
           "aws_auth_nonce": {
-            "label": "AWS Auth Nonce"
+            "label": "AWS auth nonce"
           },
           "aws_login_path": {
-            "label": "AWS Login Path"
+            "label": "AWS login path"
           },
           "azure_auth_role": {
-            "label": "Azure Auth Role"
+            "label": "Azure auth role"
           },
           "azure_login_path": {
-            "label": "Azure Login Path"
+            "label": "Azure login path"
           },
           "gcp_auth_role": {
-            "label": "GCP Auth Role"
+            "label": "GCP auth role"
           },
           "gcp_login_path": {
-            "label": "GCP Login Path"
+            "label": "GCP login path"
           },
           "gcp_service_account": {
-            "label": "GCP Service Account"
+            "label": "GCP service account"
           },
           "gcp_jwt_exp": {
-            "label": "GCP JWT Exp"
+            "label": "GCP JWT exp"
           },
           "aws_sts_endpoint_url": {
-            "label": "AWS STS Endpoint URL"
+            "label": "AWS STS endpoint URL"
           },
           "aws_assume_role_arn": {
-            "label": "AWS Assume Role ARN"
+            "label": "AWS assume role ARN"
           },
           "aws_role_session_name": {
-            "label": "AWS Role Session Name"
+            "label": "AWS role session name"
           },
           "approle_auth_path": {
-            "label": "App Role Auth Path"
+            "label": "App role auth path"
           },
           "approle_role_id": {
-            "label": "App Role Role ID"
+            "label": "App role role ID"
           },
           "approle_secret_id": {
-            "label": "App Role Secret ID"
+            "label": "App role secret ID"
           },
           "approle_secret_id_file": {
-            "label": "App Role Secret ID File"
+            "label": "App role secret ID file"
           },
           "approle_response_wrapping": {
-            "label": "App Role Response Wrapping"
+            "label": "App role response wrapping"
           },
           "cert_auth_cert": {
             "label": "Cert"
           },
           "cert_auth_cert_key": {
-            "label": "Cert Key"
+            "label": "Cert key"
           },
           "cert_auth_role_name": {
-            "label": "Role Name"
+            "label": "Role name"
           },
           "oauth2_audiences": {
-            "label": "OAuth2 Audiences",
+            "label": "OAuth2 audiences",
             "tooltip": "Comma-separated list of OAuth2 audiences."
           },
           "oauth2_client_id": {
-            "label": "OAuth2 Client ID"
+            "label": "OAuth2 client ID"
           },
           "oauth2_client_secret": {
-            "label": "OAuth2 Client Secret"
+            "label": "OAuth2 client secret"
           },
           "jwt_role": {
-            "label": "JWT Role",
+            "label": "JWT role",
             "tooltip": "The configured role name in HashiCorp Vault for JWT auth. When creating the role in HashiCorp Vault, make sure that the `role_type` is `jwt` and the `token_policies` have permissions to read the secrets."
           },
           "oauth2_token_endpoint": {
-            "label": "OAuth2 Token Endpoint"
+            "label": "OAuth2 token endpoint"
           }
         }
       },
@@ -390,11 +390,29 @@
             "label": "Vault URI"
           },
           "credential_prefix": {
-            "label": "Credential Prefix"
+            "label": "Credential prefix"
           },
           "type": {
             "label": "Type",
             "placeholder": "Select a type"
+          },
+          "client_id": {
+            "label": "Client ID"
+          },
+          "tenant_id": {
+            "label": "Tenant ID"
+          }
+        }
+      },
+      "azure-certs": {
+        "label": "Azure Key Vault (Certificates)",
+        "description": "Access certificates stored in Azure Key Vault for Kong Gateway TLS termination.",
+        "fields": {
+          "vault_uri": {
+            "label": "Vault URI"
+          },
+          "credential_prefix": {
+            "label": "Credential prefix"
           },
           "client_id": {
             "label": "Client ID"
@@ -413,11 +431,11 @@
             "tooltip": "The CyberArk Secrets Manager (Conjur) backend url. Accepts http or https."
           },
           "login": {
-            "label": "Workload Identity",
+            "label": "Workload identity",
             "tooltip": "Identity of the workload or host authenticating to CyberArk Secrets Manager (Conjur). In this case Kong is the workload/host."
           },
           "api_key": {
-            "label": "API Key",
+            "label": "API key",
             "tooltip": "The API key issued to the workload."
           },
           "account": {
@@ -426,8 +444,18 @@
           }
         }
       },
+      "fs": {
+        "label": "File system",
+        "description": "Access secrets stored in the file system.",
+        "fields": {
+          "prefix": {
+            "label": "File path prefix",
+            "tooltip": "The prefix path for the file vault referenced files."
+          }
+        }
+      },
       "advancedFields": {
-        "title": "View Advanced Fields",
+        "title": "View advanced fields",
         "ttl": "TTL",
         "ttlTooltip": "Time-to-live (in seconds) of a secret from the vault when it's cached. The special value of 0 means \"no rotation\" and it's the default. When using non-zero values, it is recommended that they're at least 1 minute.",
         "negTtl": "Negative TTL",
@@ -437,7 +465,7 @@
       },
       "commonFields": {
         "base64_decode": {
-          "label": "Base64 Decode",
+          "label": "Base64 decode",
           "tooltip": "Decode all secrets in this vault as base64, useful for binary data. If some of the secrets are not base64 encoded, an error will occur when using them. It's recommended to create a separate vault for base64 secrets."
         }
       }
@@ -445,7 +473,7 @@
     "unavailable": "This vault provider is available on Enterprise."
   },
   "vault_secret_picker": {
-    "title": "Look up Key in Vault",
+    "title": "Look up key in vault",
     "vault": {
       "label": "Vault",
       "placeholder": "Select a vault"
@@ -456,7 +484,7 @@
       "select_placeholder": "Select or enter a complete secret ID"
     },
     "optional_secret_key": {
-      "label": "Secret Key",
+      "label": "Secret key",
       "placeholder": "Enter the key or key path to access a nested secret value",
       "help": "Optional. e.g. tokens, tokens/refresh_token"
     },
@@ -467,7 +495,7 @@
     },
     "no_results": "No results found",
     "actions": {
-      "use_key": "Use Key"
+      "use_key": "Use key"
     },
     "provider": {
       "complete_action": "Look up {cta}",

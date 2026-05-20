@@ -64,6 +64,7 @@
     >
       <KButton
         appearance="secondary"
+        data-testid="generate-konnect-pat-button"
         @click="isGeneratePatModalVisible = true"
       >
         {{ t('deckCodeBlock.customization.generate_pat') }}
@@ -87,23 +88,27 @@
       @code-block-render="highlightCodeBlock"
     />
 
-    <component
-      :is="DeckCommandEditor"
-      v-else-if="props.entityRecord && props.isCustomizing && DeckCommandEditor"
-      v-model="deckCommand"
-      :language="shell"
-    />
+    <template v-else-if="props.entityRecord && props.isCustomizing && DeckCommandEditor">
+      <div class="customization-secret-advise">
+        {{ t('deckCodeBlock.customization.secret_advise') }}
+      </div>
 
-    <KAlert
-      v-if="props.isCustomizing"
-      class="customization-footer-reminder"
-    >
-      <template #icon>
-        <InfoIcon />
-      </template>
+      <component
+        :is="DeckCommandEditor"
+        v-model="unredactedDeckCommand"
+        :language="shell"
+      />
 
-      {{ t('deckCodeBlock.customization.footer_reminder') }}
-    </KAlert>
+      <KAlert
+        class="customization-footer-reminder"
+      >
+        <template #icon>
+          <InfoIcon />
+        </template>
+
+        {{ t('deckCodeBlock.customization.footer_reminder') }}
+      </KAlert>
+    </template>
   </div>
 
   <GeneratePatModal
@@ -174,7 +179,8 @@ const baseObject = computed(() => {
     obj._konnect = {
       control_plane_name: props.controlPlaneName,
     }
-  } else if (props.workspace) {
+  }
+  if (props.workspace) {
     obj._workspace = props.workspace
   }
   return obj
@@ -305,6 +311,11 @@ ${unredactedCommand.value}
 
   .copy-konnect-pat-alert {
     margin-top: var(--kui-space-40, $kui-space-40);
+  }
+
+  .customization-secret-advise {
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    opacity: 0.7;
   }
 
   .customization-footer-reminder {

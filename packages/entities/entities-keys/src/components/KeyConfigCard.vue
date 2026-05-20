@@ -191,14 +191,12 @@ watch(entityKeySetId, async () => {
 
   let url = `${props.config.apiBaseUrl}${fetchKeySetNameUrl.value}`
   if (props.config.app === 'konnect') {
-    url = url
-      .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-      .replace(/{keySetId}/gi, entityKeySetId.value || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-      .replace(/{keySetId}/gi, entityKeySetId.value || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
+
+  url = url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{keySetId}/gi, entityKeySetId.value || '')
 
   try {
     isKeySetNameLoading.value = true

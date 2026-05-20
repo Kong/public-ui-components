@@ -149,7 +149,7 @@
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
             :is-customization-modal-visible="isDeckCustomizationVisible"
             :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
-            :workspace="config.app === 'kongManager' ? config.workspace : undefined"
+            :workspace="config.workspace || undefined"
             @customization-close="isDeckCustomizationVisible = false"
           />
         </template>
@@ -199,9 +199,9 @@ const props = defineProps({
   },
   /** If a valid edit ID is provided, it will put the form in Edit mode instead of Create */
   editId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
   /**
    * Entity type, required to generate terraform code

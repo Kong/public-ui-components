@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-geo-map",
-  "version": "1.5.22",
+  "version": "1.5.29",
   "type": "module",
   "main": "./dist/vitals-geo-map.umd.js",
   "module": "./dist/vitals-geo-map.es.js",
@@ -72,7 +72,7 @@
   },
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "@kong/icons": "^1.52.0",
+    "@kong/icons": "^1.55.0",
     "geobuf": "^3.0.2"
   }
 }

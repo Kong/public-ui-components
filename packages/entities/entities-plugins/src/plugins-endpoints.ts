@@ -1,4 +1,5 @@
-const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const konnectV1BaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities/v1'
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}'
 const KMBaseApiUrl = '/{workspace}'
 
 export default {
@@ -14,14 +15,17 @@ export default {
   },
   select: {
     konnect: {
-      availablePlugins: `${konnectBaseApiUrl}/v1/available-plugins`,
+      availablePlugins: `${konnectV1BaseApiUrl}/available-plugins`,
       streamingCustomPlugins: `${konnectBaseApiUrl}/custom-plugins`,
+      clonedPlugins: `${konnectBaseApiUrl}/cloned-plugins`,
       schemaCustomPluginItem: `${konnectBaseApiUrl}/plugin-schemas/{pluginId}`,
       streamingCustomPluginItem: `${konnectBaseApiUrl}/custom-plugins/{pluginId}`,
     },
     kongManager: {
       availablePlugins: `${KMBaseApiUrl}/kong`,
       availablePluginsForOss: '/',
+      streamingCustomPlugins: `${KMBaseApiUrl}/custom-plugins`,
+      clonedPlugins: `${KMBaseApiUrl}/cloned-plugins`,
     },
   },
   form: {
@@ -76,7 +80,7 @@ export default {
         edit: `${konnectBaseApiUrl}/custom-plugins/{pluginId}`,
       },
       cloned: {
-        create: `${konnectBaseApiUrl}/cloned-plugins/{pluginId}`,
+        create: `${konnectBaseApiUrl}/cloned-plugins`,
         edit: `${konnectBaseApiUrl}/cloned-plugins/{pluginId}`,
       },
     },
@@ -86,7 +90,7 @@ export default {
         edit: `${KMBaseApiUrl}/custom-plugins/{pluginId}`,
       },
       cloned: {
-        create: `${KMBaseApiUrl}/cloned-plugins/{pluginId}`,
+        create: `${KMBaseApiUrl}/cloned-plugins`,
         edit: `${KMBaseApiUrl}/cloned-plugins/{pluginId}`,
       },
     },

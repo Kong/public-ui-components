@@ -1,10 +1,8 @@
 import type { ConfigurationSchema } from '@kong-ui-public/entities-shared'
-import { ConfigurationSchemaType, useStringHelpers } from '@kong-ui-public/entities-shared'
+import { ConfigurationSchemaType } from '@kong-ui-public/entities-shared'
 import type PluginSelectCard from './../components/select/PluginSelectCard.vue'
 
 export default function useHelpers() {
-  const { capitalize } = useStringHelpers()
-
   const METHOD_KEYS = ['methods', 'logout_methods']
 
   /**
@@ -179,9 +177,13 @@ export default function useHelpers() {
     }
   }
 
-  // _ gets converted to space and capitalize each word
+  // _ gets converted to space and only the first letter of each '-' separated segment is capitalized
   const formatPluginFieldLabel = (label: string) => {
-    return capitalize(label.replace(/_/g, ' '))
+    return label
+      .replace(/_/g, ' ')
+      .split('-')
+      .map(segment => segment.charAt(0).toUpperCase() + segment.slice(1))
+      .join('-')
   }
 
   /**

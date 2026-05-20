@@ -11,7 +11,7 @@ export interface CustomPluginFormConfig {
   /** Available plugins for cloning (only needed for Cloned type) */
   clonablePlugins?: string[]
 }
-export type KonnectCustomPluginFormConfig = KonnectBaseFormConfig & CustomPluginFormConfig
+export type KonnectCustomPluginFormConfig = Omit<KonnectBaseFormConfig & CustomPluginFormConfig, 'workspace'>
 
 export type KongManagerCustomPluginFormConfig = KongManagerBaseFormConfig & CustomPluginFormConfig
 
@@ -64,7 +64,7 @@ export interface ClonedPluginRequestBody {
 }
 
 export interface ClonedPluginResponse {
-  link: string
+  ref: string
   name: string
   priority: number | null
   tags: string[] | null

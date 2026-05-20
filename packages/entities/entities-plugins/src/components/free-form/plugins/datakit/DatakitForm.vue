@@ -31,6 +31,7 @@
     v-bind="props"
     class="dk-form"
     :editor-mode="layoutEditorMode"
+    hide-editor-mode-switcher
   >
     <FlowEditor
       v-if="realEditorMode === 'flow'"

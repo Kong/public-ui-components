@@ -374,4 +374,75 @@ describe('<KeySetForm />', () => {
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in GET URL when loading with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/key-sets/${keySet1.id}`,
+        },
+        { statusCode: 200, body: keySet1 },
+      ).as('getKeySetWithWorkspace')
+
+      cy.mount(KeySetForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          keySetId: keySet1.id,
+        },
+      })
+
+      cy.wait('@getKeySetWithWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/key-sets/${keySet1.id}`,
+        },
+        { statusCode: 200, body: keySet1 },
+      ).as('getKeySetWithWorkspace')
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/key-sets/${keySet1.id}`,
+        },
+        { statusCode: 200, body: keySet1 },
+      ).as('updateKeySetWithWorkspace')
+
+      cy.mount(KeySetForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          keySetId: keySet1.id,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getKeySetWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+        cy.wait('@updateKeySetWithWorkspace')
+      })
+    })
+
+    it('omits workspace segment in GET URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/key-sets/${keySet1.id}`,
+        },
+        { statusCode: 200, body: keySet1 },
+      ).as('getKeySetNoWorkspace')
+
+      cy.mount(KeySetForm, {
+        props: {
+          config: baseConfigKonnect,
+          keySetId: keySet1.id,
+        },
+      })
+
+      cy.wait('@getKeySetNoWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+  })
 })

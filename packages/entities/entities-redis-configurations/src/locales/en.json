@@ -1,14 +1,14 @@
 {
   "actions": {
-    "create": "New Redis Configuration",
+    "create": "New Redis configuration",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
     "delete": "Delete",
     "done": "Done",
-    "view": "View Details",
+    "view": "View details",
     "loading": "Loading...",
-    "view_plugin": "View Plugin",
+    "view_plugin": "View plugin",
     "close": "Close"
   },
   "cpg_redis": {
@@ -91,7 +91,7 @@
     }
   },
   "form": {
-    "redis_partial_modal_title": "Create Redis Configuration",
+    "redis_partial_modal_title": "Create Redis configuration",
     "partial_created_success_message": "Redis configuration created successfully",
     "actions": {
       "save": "Save",
@@ -105,7 +105,7 @@
     "sections": {
       "type": {
         "title": "Redis type",
-        "description": "Both Enterprise and Open Source plugins support Redis. Enterprise plugins can connect to a standalone Redis instance (host/port), Cluster, or Sentinel, while Open Source plugins support only a simplified host/port configuration."
+        "description": "Both Enterprise and open source plugins support Redis. Enterprise plugins can connect to a standalone Redis instance (host/port), cluster, or Sentinel, while open source plugins support only a simplified host/port configuration."
       },
       "general": {
         "title": "General information",
@@ -188,7 +188,7 @@
         },
         "azure_tenant_id": {
           "label": "Azure tenant ID",
-          "tooltip": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`."
+          "tooltip": "Azure tenant ID to be used for authentication when `auth_provider` is set to `azure`."
         }
       },
       "type": {
@@ -202,7 +202,7 @@
         "label": "Tags",
         "placeholder": "Enter a list of tags separated by comma",
         "help": "e.g. tag1, tag2, tag3",
-        "tooltip": "An optional set of strings associated with the Route for grouping and filtering."
+        "tooltip": "An optional set of strings associated with the redis configuration for grouping and filtering."
       },
       "host": {
         "label": "Host",
@@ -230,7 +230,7 @@
         "tooltip": "If set to true, uses SSL to connect to Redis."
       },
       "ssl_verify": {
-        "label": "SSL Verify",
+        "label": "SSL verify",
         "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure lua_ssl_trusted_certificate in kong. conf to specify the CA (or server) certificate used by your Redis server. You may also need to configure lua_ss1_verify_depth accordingly.",
         "tooltip": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure lua_ssl_trusted_certificate in kong.conf to specify the CA (or server) certificate used by your Redis server. You may also need to configure lua_ssl_verify_depth accordingly."
       },
@@ -288,7 +288,7 @@
       },
       "timeout": {
         "label": "Timeout",
-        "tooltip": "redis schema field `timeout` is deprecated, use `connect_timeout`, `send_timeout` and `read_timeout`"
+        "tooltip": "Redis schema field `timeout` is deprecated, use `connect_timeout`, `send_timeout` and `read_timeout`"
       },
       "connection_is_proxied": {
         "label": "Connection is proxied",
@@ -323,9 +323,9 @@
         "host_port": "Host/Port",
         "cluster": "Cluster",
         "sentinel": "Sentinel",
-        "open_source": "Open Source",
+        "open_source": "Open source",
         "enterprise": "Enterprise",
-        "suffix_open_source": " (Open Source)",
+        "suffix_open_source": " (Open source)",
         "suffix_enterprise": " (Enterprise)"
       },
       "sentinel_role": {
@@ -349,10 +349,10 @@
     }
   },
   "redis": {
-    "title": "Redis Configurations",
+    "title": "Redis configurations",
     "empty_state": {
       "title_with_managed_konnect": "Redis",
-      "title": "Configure a Redis Configuration",
+      "title": "Configure a Redis configuration",
       "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing."
     }
   },

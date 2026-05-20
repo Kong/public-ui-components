@@ -1,7 +1,7 @@
 // Cypress component test spec file
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 import type { CyHttpMessages, RouteHandler } from 'cypress/types/net-stubbing'
-import { certificate1, secp384r1CertKeyPair } from '../../fixtures/mockData'
+import { certificate1, certificate3, certificateVaultRef, secp384r1CertKeyPair } from '../../fixtures/mockData'
 import type { KongManagerCertificateFormConfig, KonnectCertificateFormConfig } from '../types'
 import CertificateForm from './CertificateForm.vue'
 
@@ -634,6 +634,228 @@ describe('<CertificateForm />', () => {
         .vm.$emit('submit'))
 
       cy.wait('@createCertificate').its('response.statusCode').should('eq', 200)
+    })
+  })
+
+  describe('Konnect - workspace URL building', () => {
+    const configWithWorkspace: KonnectCertificateFormConfig = {
+      ...baseConfigKonnect,
+      workspace: 'default',
+    }
+
+    const interceptGetWithWorkspace = (params?: { alias?: string }) => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${configWithWorkspace.apiBaseUrl}/v2/control-planes/${configWithWorkspace.controlPlaneId}/core-entities/default/certificates/*`,
+        },
+        { statusCode: 200, body: certificate1 },
+      ).as(params?.alias ?? 'getCertificate')
+    }
+
+    it('uses workspace-scoped URL for certificate creation in Konnect', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${configWithWorkspace.apiBaseUrl}/v2/control-planes/${configWithWorkspace.controlPlaneId}/core-entities/default/certificates`,
+        },
+        handleCertificateCreateUpdate((request) => {
+          request.reply({ statusCode: 200, body: request.body })
+        }),
+      ).as('createCertificateWithWorkspace')
+
+      cy.mount(CertificateForm, {
+        props: { config: configWithWorkspace },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+
+      cy.wait('@createCertificateWithWorkspace').its('response.statusCode').should('eq', 200)
+    })
+
+    it('uses workspace-scoped URL when updating a certificate in Konnect', () => {
+      interceptGetWithWorkspace()
+
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${configWithWorkspace.apiBaseUrl}/v2/control-planes/${configWithWorkspace.controlPlaneId}/core-entities/default/certificates/*`,
+        },
+        handleCertificateCreateUpdate((request) => {
+          request.reply({ statusCode: 200, body: request.body })
+        }),
+      ).as('updateCertificateWithWorkspace')
+
+      cy.mount(CertificateForm, {
+        props: {
+          config: configWithWorkspace,
+          certificateId: certificate1.id,
+          onUpdate: cy.spy().as('onUpdateSpy'),
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getCertificate')
+      cy.getTestId('certificate-form-tags').clear()
+      cy.getTestId('certificate-form-tags').type('workspace-tag')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+
+      cy.wait('@updateCertificateWithWorkspace').its('response.statusCode').should('eq', 200)
+      cy.get('@onUpdateSpy').should('have.been.calledOnce')
+    })
+
+    it('omits workspace segment in submit URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/certificates`,
+        },
+        handleCertificateCreateUpdate((request) => {
+          request.reply({ statusCode: 200, body: request.body })
+        }),
+      ).as('createCertificateNoWorkspace')
+
+      cy.mount(CertificateForm, {
+        props: { config: baseConfigKonnect },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.getTestId('certificate-form-cert').type(certificate1.cert, { delay: 0 })
+      cy.getTestId('certificate-form-key').type(certificate1.key, { delay: 0 })
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+
+      cy.wait('@createCertificateNoWorkspace').its('response.statusCode').should('eq', 200)
+    })
+  })
+
+  describe('source type selector (azureCertsVaultAvailable)', () => {
+    const configWithVault: KongManagerCertificateFormConfig = {
+      ...baseConfigKM,
+      azureCertsVaultAvailable: true,
+    }
+
+    const interceptKMGet = (mockData: object = certificate1) => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/certificates/*`,
+        },
+        { statusCode: 200, body: mockData },
+      ).as('getCertificate')
+    }
+
+    const interceptKMCreate = () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/certificates`,
+        },
+        (request) => {
+          request.reply({ statusCode: 200, body: request.body })
+        },
+      ).as('createCertificate')
+    }
+
+    it('should not show source type selector when azureCertsVaultAvailable is not set', () => {
+      cy.mount(CertificateForm, {
+        props: { config: baseConfigKM },
+      })
+
+      cy.get('.kong-ui-entities-certificates-form').should('be.visible')
+      cy.getTestId('certificate-form-cert').should('be.visible')
+      cy.getTestId('certificate-form-vault').should('not.exist')
+      cy.getTestId('certificate-source-type-azure').should('not.exist')
+    })
+
+    it('should show ssl and azure source type options when azureCertsVaultAvailable is true', () => {
+      cy.mount(CertificateForm, {
+        props: { config: configWithVault },
+      })
+
+      cy.get('.kong-ui-entities-certificates-form').should('be.visible')
+      cy.getTestId('certificate-source-type-ssl').should('exist')
+      cy.getTestId('certificate-source-type-azure').should('exist')
+      // ssl is selected by default — PEM fields visible, vault input not rendered
+      cy.getTestId('certificate-form-cert').should('be.visible')
+      cy.getTestId('certificate-form-vault').should('not.exist')
+    })
+
+    it('should show vault input and hide PEM fields when azure source type is selected', () => {
+      cy.mount(CertificateForm, {
+        props: { config: configWithVault },
+      })
+
+      cy.getTestId('certificate-source-type-azure').click()
+      cy.getTestId('certificate-form-vault').should('be.visible')
+      cy.getTestId('certificate-form-cert').should('not.exist')
+    })
+
+    it('should disable submit when azure source type is selected until vault field is filled', () => {
+      cy.mount(CertificateForm, {
+        props: { config: configWithVault },
+      })
+
+      cy.getTestId('certificate-source-type-azure').click()
+      cy.getTestId('certificate-create-form-submit').should('be.disabled')
+      cy.getTestId('certificate-form-vault').type(certificateVaultRef, { delay: 0, parseSpecialCharSequences: false })
+      cy.getTestId('certificate-create-form-submit').should('be.enabled')
+      cy.getTestId('certificate-form-vault').clear()
+      cy.getTestId('certificate-create-form-submit').should('be.disabled')
+    })
+
+    it('should send vault field in the payload when azure source type is selected', () => {
+      interceptKMCreate()
+
+      cy.mount(CertificateForm, {
+        props: { config: configWithVault },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.getTestId('certificate-source-type-azure').click()
+      cy.getTestId('certificate-form-vault').type(certificateVaultRef, { delay: 0, parseSpecialCharSequences: false })
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+
+      cy.wait('@createCertificate').then((interception) => {
+        expect(interception.request.body.vault).to.equal(certificateVaultRef)
+      })
+    })
+
+    it('should auto-select azure source type on edit when cert is a vault reference', () => {
+      interceptKMGet(certificate3)
+
+      cy.mount(CertificateForm, {
+        props: {
+          config: configWithVault,
+          certificateId: certificate3.id,
+        },
+      })
+
+      cy.wait('@getCertificate')
+      // azure source type should be automatically selected
+      cy.getTestId('certificate-form-vault').should('be.visible')
+      cy.getTestId('certificate-form-vault').should('have.value', certificateVaultRef)
+      // PEM fields should not be rendered
+      cy.getTestId('certificate-form-cert').should('not.exist')
+    })
+
+    it('should auto-select ssl source type on edit when cert is not a vault reference', () => {
+      interceptKMGet(certificate1)
+
+      cy.mount(CertificateForm, {
+        props: {
+          config: configWithVault,
+          certificateId: certificate1.id,
+        },
+      })
+
+      cy.wait('@getCertificate')
+      // ssl source type should be active
+      cy.getTestId('certificate-form-cert').should('be.visible')
+      cy.getTestId('certificate-form-cert').should('have.value', certificate1.cert)
+      cy.getTestId('certificate-form-vault').should('not.exist')
     })
   })
 })

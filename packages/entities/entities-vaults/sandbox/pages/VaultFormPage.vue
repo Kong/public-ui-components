@@ -36,11 +36,13 @@ const konnectConfig = ref<KonnectVaultFormConfig>({
   controlPlaneId,
   cancelRoute: { name: 'vault-list' },
   azureVaultProviderAvailable: true,
+  azureCertsVaultProviderAvailable: true,
   ttl: true,
   hcvAppRoleMethodAvailable: true,
   hcvCspAuthMethodsAvailable: true,
   hcvSslVerifyAvailable: true,
   conjurVaultProviderAvailable: true,
+  fsVaultProviderAvailable: true,
 })
 
 const kongManagerConfig = ref<KongManagerVaultFormConfig>({
@@ -54,11 +56,13 @@ const kongManagerConfig = ref<KongManagerVaultFormConfig>({
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   cancelRoute: { name: 'vault-list' },
   azureVaultProviderAvailable: false,
+  azureCertsVaultProviderAvailable: true,
   ttl: true,
   hcvAppRoleMethodAvailable: true,
   hcvCspAuthMethodsAvailable: true,
   awsStsEndpointUrlAvailable: true,
   conjurVaultProviderAvailable: true,
+  fsVaultProviderAvailable: true,
   base64FieldAvailable: true,
   hcvCertMethodAvailable: true,
   hcvJwtMethodAvailable: true,

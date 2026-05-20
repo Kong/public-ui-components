@@ -156,9 +156,7 @@ import {
 } from '../../src'
 import type { AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../../src/types'
-import { isValidJson, rand } from '../utils/utils'
-import { lookupDatavisColor } from '../../src/utils'
-import { lookupStatusCodeColor } from '../../src/utils/customColors'
+import { getStatusCodeDatasetColor, isValidJson, rand } from '../utils/utils'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { generateCrossSectionalData } from '@kong-ui-public/analytics-utilities'
 import CodeText from '../CodeText.vue'
@@ -206,7 +204,7 @@ const metricItems = [{
 
 // Short labels
 const statusCodeLabels = [
-  '200', '300', '400', '500',
+  '200', '300', '400', '500', '____OTHER____',
 ]
 
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
@@ -243,7 +241,7 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
 
 })
 
-const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))
+const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: getStatusCodeDatasetColor(dimension) }), {}))
 
 const updateSelectedColor = (event: Event, label: string) => {
   colorPalette.value[label] = (event.target as HTMLInputElement).value
@@ -258,7 +256,7 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => ({
 const addDataset = () => {
   const statusCode = `${rand(100, 599)}`
   statusCodeDimensionValues.value.add(statusCode)
-  colorPalette.value[statusCode] = lookupStatusCodeColor(statusCode)
+  colorPalette.value[statusCode] = getStatusCodeDatasetColor(statusCode)
 }
 const dataCode = computed(() => JSON.stringify(exploreResult.value, null, 2))
 const optionsCode = computed(() => JSON.stringify(analyticsChartOptions.value, null, 2))

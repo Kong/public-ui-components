@@ -1,9 +1,9 @@
 import type { FilterDatasource } from './types'
 import {
+  filterableAgenticExploreDimensions,
   filterableAiExploreDimensions,
   filterableBasicExploreDimensions,
   filterableExploreDimensions,
-  filterableMcpExploreDimensions,
   filterableRequestDimensions,
   filterableRequestMetrics,
 } from './types'
@@ -26,7 +26,7 @@ export const getFieldDataSources = (
   if ((filterableAiExploreDimensions as string[]).includes(dimension)) {
     datasources.push('llm_usage')
   }
-  if ((filterableMcpExploreDimensions as string[]).includes(dimension)) {
+  if ((filterableAgenticExploreDimensions as string[]).includes(dimension)) {
     datasources.push('agentic_usage')
   }
   if ((filterableRequestDimensions as string[]).includes(dimension) || (filterableRequestMetrics as string[]).includes(dimension)) {

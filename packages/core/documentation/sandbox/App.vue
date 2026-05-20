@@ -29,8 +29,6 @@
       @save="handleSave"
       @toggle-published="handlePublishToggle"
     />
-
-    <div id="kong-ui-app-layout-teleport-default-slot" />
   </div>
 </template>
 

@@ -31,7 +31,7 @@
             @model-updated="onModelUpdated"
           />
 
-          <KLabel>Auth Methods</KLabel>
+          <KLabel>Auth methods</KLabel>
           <div class="auth-method-container">
             <div
               v-for="(method) in authMethods"
@@ -318,23 +318,23 @@ export default {
         this.sessionManagement = this.formModel['config-auth_methods'].includes('session')
 
         this.authMethods = [{
-          label: 'Authorization Code Flow',
+          label: 'Authorization code flow',
           value: 'authorization_code',
           hint: 'authorization code flow',
           prop: this.formModel['config-auth_methods'].includes('authorization_code'),
         },
         {
-          label: 'Bearer Access Token',
+          label: 'Bearer access token',
           value: 'bearer',
           hint: 'JWT access token verification',
           prop: this.formModel['config-auth_methods'].includes('bearer'),
         }, {
-          label: 'Client Credentials Grant',
+          label: 'Client credentials grant',
           value: 'client_credentials',
           hint: 'OAuth client credentials grant',
           prop: this.formModel['config-auth_methods'].includes('client_credentials'),
         }, {
-          label: 'Passwords Grant',
+          label: 'Passwords grant',
           value: 'password',
           hint: 'OAuth legacy password grant',
           prop: this.formModel['config-auth_methods'].includes('password'),
@@ -354,7 +354,7 @@ export default {
           hint: 'Kong OAuth plugin issued tokens verification',
           prop: this.formModel['config-auth_methods'].includes('kong_oauth2'),
         }, {
-          label: 'Refresh Token',
+          label: 'Refresh token',
           value: 'refresh_token',
           hint: 'OAuth refresh token grant',
           prop: this.formModel['config-auth_methods'].includes('refresh_token'),

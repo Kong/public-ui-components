@@ -3,6 +3,168 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.7.2...@kong-ui-public/entities-vaults@4.8.0) (2026-05-20)
+
+
+### Features
+
+* **entities-certificates:** add vault reference tab for azure-certs vault integration [KM-2543] ([#3266](https://github.com/Kong/public-ui-components/issues/3266)) ([34e0f65](https://github.com/Kong/public-ui-components/commit/34e0f65cd51466c5c6951dad74c35d130d37f4c6))
+
+
+
+
+
+## [4.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.7.1...@kong-ui-public/entities-vaults@4.7.2) (2026-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.7.0...@kong-ui-public/entities-vaults@4.7.1) (2026-05-19)
+
+
+### Bug Fixes
+
+* redis button size + copy updates ([#3268](https://github.com/Kong/public-ui-components/issues/3268)) ([4d88632](https://github.com/Kong/public-ui-components/commit/4d88632b2c1bc8718501f5610d5e5b83c22e9c46))
+
+
+
+
+
+# [4.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.8...@kong-ui-public/entities-vaults@4.7.0) (2026-05-18)
+
+
+### Features
+
+* **entities-vaults:** support fs vault ([#3265](https://github.com/Kong/public-ui-components/issues/3265)) ([f369933](https://github.com/Kong/public-ui-components/commit/f3699332dac5c56aebcabd77972e9284c1d8c02d))
+
+
+
+
+
+## [4.6.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.7...@kong-ui-public/entities-vaults@4.6.8) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.6...@kong-ui-public/entities-vaults@4.6.7) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.5...@kong-ui-public/entities-vaults@4.6.6) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.4...@kong-ui-public/entities-vaults@4.6.5) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.3...@kong-ui-public/entities-vaults@4.6.4) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.2...@kong-ui-public/entities-vaults@4.6.3) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.1...@kong-ui-public/entities-vaults@4.6.2) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.6.0...@kong-ui-public/entities-vaults@4.6.1) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+# [4.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.5.0...@kong-ui-public/entities-vaults@4.6.0) (2026-05-10)
+
+
+### Features
+
+* **workspace:** add workspace support to config store ([#3237](https://github.com/Kong/public-ui-components/issues/3237)) ([78c8fb3](https://github.com/Kong/public-ui-components/commit/78c8fb3480af6b99698449f411589fd54f355148))
+
+
+
+
+
+# [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.36...@kong-ui-public/entities-vaults@4.5.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to vault & upstream target entities ([#3233](https://github.com/Kong/public-ui-components/issues/3233)) ([99e75c4](https://github.com/Kong/public-ui-components/commit/99e75c4bba24713cd888b0d1a90779fc5e53f6d0))
+
+
+
+
+
+## [4.4.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.35...@kong-ui-public/entities-vaults@4.4.36) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.4.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.34...@kong-ui-public/entities-vaults@4.4.35) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.4.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.33...@kong-ui-public/entities-vaults@4.4.34) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.4.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.32...@kong-ui-public/entities-vaults@4.4.33) (2026-05-07)
+
+
+### Bug Fixes
+
+* **locales/en.json:** fix copies in all the entities ([#3221](https://github.com/Kong/public-ui-components/issues/3221)) ([a3bcf52](https://github.com/Kong/public-ui-components/commit/a3bcf526d9aff14cab8e2f3d9ba7810b5167d974))
+
+
+
+
+
 ## [4.4.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.4.31...@kong-ui-public/entities-vaults@4.4.32) (2026-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

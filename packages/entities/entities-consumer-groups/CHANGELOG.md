@@ -3,6 +3,149 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.11...@kong-ui-public/entities-consumer-groups@4.5.12) (2026-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [4.5.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.10...@kong-ui-public/entities-consumer-groups@4.5.11) (2026-05-19)
+
+
+### Bug Fixes
+
+* redis button size + copy updates ([#3268](https://github.com/Kong/public-ui-components/issues/3268)) ([4d88632](https://github.com/Kong/public-ui-components/commit/4d88632b2c1bc8718501f5610d5e5b83c22e9c46))
+
+
+
+
+
+## [4.5.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.9...@kong-ui-public/entities-consumer-groups@4.5.10) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [4.5.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.8...@kong-ui-public/entities-consumer-groups@4.5.9) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [4.5.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.7...@kong-ui-public/entities-consumer-groups@4.5.8) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [4.5.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.6...@kong-ui-public/entities-consumer-groups@4.5.7) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [4.5.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.5...@kong-ui-public/entities-consumer-groups@4.5.6) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [4.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.4...@kong-ui-public/entities-consumer-groups@4.5.5) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [4.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.3...@kong-ui-public/entities-consumer-groups@4.5.4) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [4.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.2...@kong-ui-public/entities-consumer-groups@4.5.3) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [4.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.1...@kong-ui-public/entities-consumer-groups@4.5.2) (2026-05-08)
+
+
+### Bug Fixes
+
+* **entities-consumer-groups:** query in exact match ([#3229](https://github.com/Kong/public-ui-components/issues/3229)) ([f9e5e43](https://github.com/Kong/public-ui-components/commit/f9e5e435adaad1af9c3fc91a737f36bece3e0496))
+
+
+
+
+
+## [4.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.0...@kong-ui-public/entities-consumer-groups@4.5.1) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+# [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.4.2...@kong-ui-public/entities-consumer-groups@4.5.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** add workspace support to consumer-related entities ([#3228](https://github.com/Kong/public-ui-components/issues/3228)) ([b096aeb](https://github.com/Kong/public-ui-components/commit/b096aebdaa74d55f9ed6b491f583fe0a19a54082))
+
+
+
+
+
+## [4.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.4.1...@kong-ui-public/entities-consumer-groups@4.4.2) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [4.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.4.0...@kong-ui-public/entities-consumer-groups@4.4.1) (2026-05-07)
+
+
+### Bug Fixes
+
+* **locales/en.json:** fix copies in all the entities ([#3221](https://github.com/Kong/public-ui-components/issues/3221)) ([a3bcf52](https://github.com/Kong/public-ui-components/commit/a3bcf526d9aff14cab8e2f3d9ba7810b5167d974))
+
+
+
+
+
+# [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.3.30...@kong-ui-public/entities-consumer-groups@4.4.0) (2026-05-07)
+
+
+### Features
+
+* **entities-consumer-groups:** add a query when fetching consumer group detail ([#3219](https://github.com/Kong/public-ui-components/issues/3219)) ([3e36edb](https://github.com/Kong/public-ui-components/commit/3e36edbc805298c45a9ce873bba62848941d7af1))
+
+
+
+
+
 ## [4.3.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.3.29...@kong-ui-public/entities-consumer-groups@4.3.30) (2026-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups

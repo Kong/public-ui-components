@@ -56,10 +56,10 @@ A form component for Vaults.
     - Route to return to when canceling creation of an Vault.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `controlPlaneId`:
     - type: `string`
@@ -73,6 +73,18 @@ A form component for Vaults.
     - default: `undefined`
     - *Specific to Konnect*. Show/hide Azure option.
     - **Note:** This is experimental and not supported by the backend right now
+
+  - `azureCertsVaultProviderAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide the Azure Key Vault Certificates provider option.
+
+  - `fsVaultProviderAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide File system (fs) Vault option.
 
   - `ttl`
     - type: `boolean`

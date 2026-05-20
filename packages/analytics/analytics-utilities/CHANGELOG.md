@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.15.0...@kong-ui-public/analytics-utilities@12.16.0) (2026-05-15)
+
+
+### Features
+
+* add new principal and internal latency fields ([#3258](https://github.com/Kong/public-ui-components/issues/3258)) ([f354d97](https://github.com/Kong/public-ui-components/commit/f354d9782885d38c8b2303e5c28c3756360d076b))
+
+
+
+
+
+# [12.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.14.1...@kong-ui-public/analytics-utilities@12.15.0) (2026-05-14)
+
+
+### Features
+
+* **dashboard-renderer:** add configurable cols to DashboardConfig ([#3256](https://github.com/Kong/public-ui-components/issues/3256)) ([c8f9eab](https://github.com/Kong/public-ui-components/commit/c8f9eab0431ec0a9ba2ba9e9dc6b8cbd167ef5e7))
+
+
+
+
+
+## [12.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.14.0...@kong-ui-public/analytics-utilities@12.14.1) (2026-05-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+# [12.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.8...@kong-ui-public/analytics-utilities@12.14.0) (2026-05-11)
+
+
+### Features
+
+* dashboard filter type ([#3226](https://github.com/Kong/public-ui-components/issues/3226)) ([b6aaf4b](https://github.com/Kong/public-ui-components/commit/b6aaf4b2f3a35bcabf2d21225cb11796df4f8467))
+
+
+
+
+
+## [12.13.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.7...@kong-ui-public/analytics-utilities@12.13.8) (2026-05-10)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.13.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.6...@kong-ui-public/analytics-utilities@12.13.7) (2026-05-07)
+
+
+### Bug Fixes
+
+* analytics queriable dimension types ([#3222](https://github.com/Kong/public-ui-components/issues/3222)) ([3900fc0](https://github.com/Kong/public-ui-components/commit/3900fc0879c92edaafb8b403703fcf0006391f59))
+
+
+
+
+
 ## [12.13.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.13.4...@kong-ui-public/analytics-utilities@12.13.6) (2026-04-26)
 
 

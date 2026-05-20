@@ -1,34 +1,34 @@
 {
   "credentials": {
-    "title": "Consumer Credentials",
+    "title": "Consumer credentials",
     "list": {
       "toolbar_actions": {
         "acls": {
-          "new": "New ACL Credential"
+          "new": "New ACL credential"
         },
         "basic-auth": {
-          "new": "New Basic Auth Credential"
+          "new": "New Basic Auth credential"
         },
         "key-auth": {
-          "new": "New Key Auth Credential"
+          "new": "New Key Auth credential"
         },
         "key-auth-enc": {
-          "new": "New Key Auth Encrypted Credential"
+          "new": "New Key Auth encrypted credential"
         },
         "oauth2": {
-          "new": "New OAuth 2.0 Credential"
+          "new": "New OAuth 2.0 credential"
         },
         "hmac-auth": {
-          "new": "New HMAC Credential"
+          "new": "New HMAC credential"
         },
         "jwt": {
-          "new": "New JWT Credential"
+          "new": "New JWT credential"
         }
       },
       "table_headers": {
         "acls": {
           "group": "Group",
-          "created_at": "Created At",
+          "created_at": "Created at",
           "tags": "Tags"
         },
         "basic-auth": {
@@ -69,65 +69,65 @@
       },
       "empty_state": {
         "acls": {
-          "title": "Configure a New ACL Credential",
-          "cta": "New ACL Credential"
+          "title": "Configure a new ACL credential",
+          "cta": "New ACL credential"
         },
         "basic-auth": {
-          "title": "Configure a New Basic Auth Credential",
-          "cta": "New Basic Auth Credential"
+          "title": "Configure a new Basic Auth credential",
+          "cta": "New Basic Auth credential"
         },
         "key-auth": {
-          "title": "Configure a New Key Auth Credential",
-          "cta": "New Key Auth Credential"
+          "title": "Configure a new Key Auth credential",
+          "cta": "New Key Auth credential"
         },
         "key-auth-enc": {
-          "title": "Configure a New Key Auth Encrypted Credential",
-          "cta": "New Key Auth Encrypted Credential"
+          "title": "Configure a new Key Auth Encrypted credential",
+          "cta": "New Key Auth Encrypted credential"
         },
         "oauth2": {
-          "title": "Configure a New OAuth 2.0 Credential",
-          "cta": "New OAuth 2.0 Credential"
+          "title": "Configure a new OAuth 2.0 credential",
+          "cta": "New OAuth 2.0 credential"
         },
         "hmac-auth": {
-          "title": "Configure a New HMAC Credential",
-          "cta": "New HMAC Credential"
+          "title": "Configure a new HMAC credential",
+          "cta": "New HMAC credential"
         },
         "jwt": {
-          "title": "Configure a New JWT Credential",
-          "cta": "New JWT Credential"
+          "title": "Configure a new JWT credential",
+          "cta": "New JWT credential"
         }
       }
     },
     "actions": {
       "copy_id": "Copy ID",
-      "copy_credential": "Copy Credential",
-      "copy_key": "Copy Key",
-      "copy_secret": "Copy Secret",
+      "copy_credential": "Copy credential",
+      "copy_key": "Copy key",
+      "copy_secret": "Copy secret",
       "copy_json": "Copy JSON",
       "edit": "Edit",
       "delete": "Delete"
     },
     "delete": {
       "acls": {
-        "title": "Delete an ACL Credential"
+        "title": "Delete an ACL credential"
       },
       "basic-auth": {
-        "title": "Delete a Basic Auth Credential"
+        "title": "Delete a Basic Auth credential"
       },
       "key-auth": {
-        "title": "Delete a Key Auth Credential"
+        "title": "Delete a Key Auth credential"
       },
       "key-auth-enc": {
-        "title": "Delete a Key Auth Encrypted Credential"
+        "title": "Delete a Key Auth encrypted credential"
       },
       "oauth2": {
-        "title": "Delete an OAuth 2.0 Credential"
+        "title": "Delete an OAuth 2.0 credential"
       },
       "hmac-auth": {
-        "title": "Delete an HMAC Credential"
+        "title": "Delete an HMAC credential"
       },
       "jwt": {
-        "title": "Delete a JWT Credential"
+        "title": "Delete a JWT credential"
       },
       "description": "This action cannot be reversed."
     },

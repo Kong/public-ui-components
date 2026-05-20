@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.44.3",
+  "version": "3.47.2",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -32,6 +32,8 @@
     "@kong/kongponents": "^9.53.2",
     "@shikijs/core": "^3.23.0",
     "@shikijs/engine-javascript": "^3.23.0",
+    "@shikijs/langs": "^3.23.0",
+    "@shikijs/themes": "^3.23.0",
     "axios": "^1.15.2",
     "monaco-editor": "^0.55.1",
     "shiki": "^3.23.0",
@@ -42,15 +44,17 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong/design-tokens": "1.20.1",
-    "@kong/icons": "^1.52.0",
+    "@kong/icons": "^1.55.0",
     "@kong/kongponents": "9.53.2",
     "@shikijs/core": "^3.23.0",
     "@shikijs/engine-javascript": "^3.23.0",
+    "@shikijs/langs": "^3.23.0",
+    "@shikijs/themes": "^3.23.0",
     "axios": "^1.15.2",
     "monaco-editor": "^0.55.1",
     "shiki": "^3.23.0",
     "vue": "^3.5.33",
-    "vue-router": "^5.0.6"
+    "vue-router": "^5.0.7"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",

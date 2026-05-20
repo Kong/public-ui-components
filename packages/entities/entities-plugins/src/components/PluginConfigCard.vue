@@ -238,9 +238,9 @@ const props = defineProps({
   },
   /** The id of the entity with which the plugin is associated */
   scopedEntityId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
   /** Whether to expand partial in config */
   expandPartial: {
@@ -257,7 +257,7 @@ const { getPropValue } = useHelpers()
 const fetchUrl = computed<string>(() => {
   let url = endpoints.item[props.config.app]?.[props.scopedEntityType ? 'forEntity' : 'all']
     .replace(/{entityType}/gi, props.scopedEntityType)
-    .replace(/{entityId}/gi, props.scopedEntityId)
+    .replace(/{entityId}/gi, props.scopedEntityId ?? '')
     .concat(props.expandPartial ? '?expand_partials=true' : '')
 
   if (props.config.app === 'konnect') {
@@ -394,14 +394,11 @@ const schemaUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // replace the plugin type
-  url = url.replace(/{plugin}/gi, props.config.pluginType)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{plugin}/gi, props.config.pluginType) // replace the plugin type
 })
 
 const schema = ref<Record<string, any>>({})

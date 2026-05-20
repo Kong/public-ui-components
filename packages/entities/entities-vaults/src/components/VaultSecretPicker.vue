@@ -102,6 +102,7 @@
       />
 
       <KInput
+        v-if="showSecretKey"
         v-model.trim="optionalSecretKey"
         autocomplete="off"
         data-testid="vault-secret-picker-secret-key-input"
@@ -118,6 +119,7 @@
 <script lang="ts">
 import { useAxios, useDebouncedFilter, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { SecretEntityRow as SecretEntity, EntityRow as VaultEntity } from '../types'
+import { VaultProviders } from '../types'
 import vaultsEndpoints from '../vaults-endpoints'
 import secretsEndpoints from '../secrets-endpoints'
 import type { SelectItem } from '@kong/kongponents'
@@ -163,6 +165,16 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  allowedProviders: {
+    type: Array as PropType<VaultProviders[]>,
+    required: false,
+    default: undefined,
+  },
+  showSecretKey: {
+    type: Boolean,
+    required: false,
+    default: true,
   },
 })
 
@@ -236,17 +248,24 @@ const {
   exactMatchKey: 'key',
 })
 
+const isProviderAllowed = (vaultName: string): boolean => {
+  if (props.allowedProviders?.length) {
+    return props.allowedProviders.includes(vaultName as VaultProviders)
+  }
+  return vaultName !== VaultProviders.AZURE_CERTS
+}
+
 const availableVaults = computed<SelectVaultItem[]>(() => {
   let hasSelectedVault = false
 
-  const items = vaultsResults.value?.map((v) => {
-    if (v.prefix === selectedVaultPrefix.value) {
-      hasSelectedVault = true
-    }
-
-    return { label: v.prefix, value: v.prefix, vault: v as VaultEntity }
-  }) ?? []
-
+  const items = (vaultsResults.value ?? [])
+    .filter((v) => isProviderAllowed(v.name))
+    .map((v) => {
+      if (v.prefix === selectedVaultPrefix.value) {
+        hasSelectedVault = true
+      }
+      return { label: v.prefix, value: v.prefix, vault: v as VaultEntity }
+    })
 
   if (!hasSelectedVault && selectedVault.value) {
     items.push({
@@ -290,12 +309,11 @@ const buildVaultFetchUrl = (vaultPrefix: string) => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // Replacing {id} with the prefix because /vaults/:prefix is allowed
-  return url.replace(/{id}/gi, vaultPrefix)
+  return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, vaultPrefix) // Replacing {id} with the prefix because /vaults/:prefix is allowed
 }
 
 const buildSecretFetchUrl = (secretId: string, configStoreId: string) => {
@@ -306,6 +324,7 @@ const buildSecretFetchUrl = (secretId: string, configStoreId: string) => {
 
   return `${props.config.apiBaseUrl}${secretsEndpoints.form[props.config.app].edit}`
     .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, configStoreId)
     .replace(/{secretId}/gi, secretId)
 }

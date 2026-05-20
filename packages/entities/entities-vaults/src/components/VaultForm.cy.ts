@@ -11,6 +11,7 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: true,
   hcvAppRoleMethodAvailable: true,
   hcvCertMethodAvailable: true,
@@ -25,6 +26,7 @@ const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: false,
 }
 
@@ -34,6 +36,7 @@ const baseConfigKM: KongManagerVaultFormConfig = {
   apiBaseUrl: '/kong-manager',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: true,
   awsStsEndpointUrlAvailable: true,
   hcvAppRoleMethodAvailable: true,
@@ -49,6 +52,7 @@ const baseConfigKMTurnOffTTL: KongManagerVaultFormConfig = {
   apiBaseUrl: '/kong-manager',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: false,
 }
 
@@ -482,6 +486,50 @@ describe('<VaultForm />', () => {
 
       // disables save when required field is cleared - general
       cy.getTestId('vault-form-prefix').clear()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+    })
+
+    it('should show azure-certs fields and validate required fields', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: {
+            ...baseConfigKM,
+            azureCertsVaultProviderAvailable: true,
+          },
+        },
+      })
+
+      cy.get('.kong-ui-entities-vault-form').should('be.visible')
+      cy.getTestId('vault-form-prefix').type(vault.prefix)
+
+      // switch to azure-certs provider
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-azure-certs').click({ force: true })
+
+      // required fields are visible
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('be.visible')
+
+      // optional fields are visible
+      cy.getTestId('vault-form-config-azure-certs-client-id').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-tenant-id').should('be.visible')
+
+      // ttl advanced section is visible
+      cy.getTestId('advanced-fields-collapse').should('be.visible')
+
+      // credentials_prefix has default value AZURE
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('have.value', 'AZURE')
+
+      // ttl has default value 3600
+      cy.getTestId('vault-ttl-input').should('have.value', '3600')
+
+      // submit disabled until vault_uri is filled
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').type('https://my-vault.vault.azure.net')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      // clears vault_uri → submit disabled again
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').clear()
       cy.getTestId('vault-create-form-submit').should('be.disabled')
     })
 
@@ -962,6 +1010,50 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-create-form-submit').should('be.disabled')
     })
 
+    it('should show azure-certs fields and validate required fields', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: {
+            ...baseConfigKonnect,
+            azureCertsVaultProviderAvailable: true,
+          },
+        },
+      })
+
+      cy.get('.kong-ui-entities-vault-form').should('be.visible')
+      cy.getTestId('vault-form-prefix').type(vault.prefix)
+
+      // switch to azure-certs provider
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-azure-certs').click({ force: true })
+
+      // required fields are visible
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('be.visible')
+
+      // optional fields are visible
+      cy.getTestId('vault-form-config-azure-certs-client-id').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-tenant-id').should('be.visible')
+
+      // ttl advanced section is visible
+      cy.getTestId('advanced-fields-collapse').should('be.visible')
+
+      // credentials_prefix has default value AZURE
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('have.value', 'AZURE')
+
+      // ttl has default value 3600
+      cy.getTestId('vault-ttl-input').should('have.value', '3600')
+
+      // submit disabled until vault_uri is filled
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').type('https://my-vault.vault.azure.net')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      // clears vault_uri → submit disabled again
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').clear()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+    })
+
     it('should show edit form', () => {
       interceptKonnect()
 
@@ -1097,6 +1189,173 @@ describe('<VaultForm />', () => {
       cy.wait('@updateVault')
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
+    })
+
+    it('hides fs vault option when fsVaultProviderAvailable is false', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      })
+
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-fs').should('not.exist')
+    })
+
+    it('shows fs vault fields and supports submit when fsVaultProviderAvailable is true', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, fsVaultProviderAvailable: true },
+        },
+      })
+
+      // fs option appears in the provider dropdown
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-fs').should('exist')
+      cy.getTestId('vault-form-provider-fs').click({ force: true })
+
+      // fs config fields are visible
+      cy.getTestId('vault-form-config-fs-prefix').should('be.visible')
+      // advanced TTL section is available for fs
+      cy.getTestId('advanced-fields-collapse').should('be.visible')
+
+      // submit requires both the general prefix and the fs prefix
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-prefix').type(vault.prefix)
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-fs-prefix').type('/etc/secrets')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      // clearing fs prefix disables submit again
+      cy.getTestId('vault-form-config-fs-prefix').clear()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+    })
+  })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in GET URL when loading with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('getVaultWithWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          vaultId: vault.id,
+        },
+      })
+
+      cy.wait('@getVaultWithWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('getVaultWithWorkspace')
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('updateVaultWithWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          vaultId: vault.id,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getVaultWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+        cy.wait('@updateVaultWithWorkspace')
+      })
+    })
+
+    it('omits workspace segment in GET URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('getVaultNoWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: baseConfigKonnect,
+          vaultId: vault.id,
+        },
+      })
+
+      cy.wait('@getVaultNoWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('includes workspace in config-store POST and vault POST URLs when creating a Konnect vault', () => {
+      const configStoreId = 'new-config-store-id'
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/default/config-stores`,
+        },
+        { statusCode: 201, body: { id: configStoreId } },
+      ).as('createConfigStoreWithWorkspace')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults`,
+        },
+        { statusCode: 201, body: vault },
+      ).as('createVaultWithWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createConfigStoreWithWorkspace')
+      cy.wait('@createVaultWithWorkspace')
+    })
+
+    it('omits workspace in config-store POST and vault POST URLs when workspace is not provided', () => {
+      const configStoreId = 'new-config-store-id'
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores`,
+        },
+        { statusCode: 201, body: { id: configStoreId } },
+      ).as('createConfigStoreNoWorkspace')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults`,
+        },
+        { statusCode: 201, body: vault },
+      ).as('createVaultNoWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createConfigStoreNoWorkspace')
+      cy.wait('@createVaultNoWorkspace')
     })
   })
 })

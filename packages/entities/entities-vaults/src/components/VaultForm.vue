@@ -748,6 +748,48 @@
             />
           </div>
 
+          <!-- Azure Key Vault Certificates fields -->
+          <div
+            v-if="vaultProvider === VaultProviders.AZURE_CERTS"
+            :key="`${VaultProviders.AZURE_CERTS}-vault-config-fields`"
+            class="vault-form-config-fields-container"
+          >
+            <KInput
+              v-model.trim="configFields[VaultProviders.AZURE_CERTS].vault_uri"
+              autocomplete="off"
+              data-testid="vault-form-config-azure-certs-vault-uri"
+              :label="t('form.config.azure-certs.fields.vault_uri.label')"
+              :readonly="form.isReadonly"
+              required
+              type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.AZURE_CERTS].credentials_prefix"
+              autocomplete="off"
+              data-testid="vault-form-config-azure-certs-credentials-prefix"
+              :label="t('form.config.azure-certs.fields.credential_prefix.label')"
+              :readonly="form.isReadonly"
+              required
+              type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.AZURE_CERTS].client_id"
+              autocomplete="off"
+              data-testid="vault-form-config-azure-certs-client-id"
+              :label="t('form.config.azure-certs.fields.client_id.label')"
+              :readonly="form.isReadonly"
+              type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.AZURE_CERTS].tenant_id"
+              autocomplete="off"
+              data-testid="vault-form-config-azure-certs-tenant-id"
+              :label="t('form.config.azure-certs.fields.tenant_id.label')"
+              :readonly="form.isReadonly"
+              type="text"
+            />
+          </div>
+
           <!-- Conjur fields -->
           <div
             v-if="vaultProvider === VaultProviders.CONJUR"
@@ -820,6 +862,38 @@
             />
           </div>
 
+          <!-- FS fields -->
+          <div
+            v-if="vaultProvider === VaultProviders.FS"
+            :key="`${VaultProviders.FS}-vault-config-fields`"
+            class="vault-form-config-fields-container"
+          >
+            <KInput
+              v-model.trim="configFields[VaultProviders.FS].prefix"
+              autocomplete="off"
+              data-testid="vault-form-config-fs-prefix"
+              :label="t('form.config.fs.fields.prefix.label')"
+              :label-attributes="{
+                info: t('form.config.fs.fields.prefix.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
+              required
+              type="text"
+            />
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.FS].base64_decode!"
+              data-testid="vault-form-config-fs-base64_decode"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
+            />
+          </div>
+
           <div v-if="config.ttl">
             <KCollapse
               v-if="isAvailableTTLConfig"
@@ -831,7 +905,7 @@
               <div class="wrapper">
                 <div class="item-50">
                   <KInput
-                    v-model="configFields[vaultProvider as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS].ttl"
+                    v-model="configFields[vaultProvider as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS | VaultProviders.AZURE | VaultProviders.CONJUR | VaultProviders.FS | VaultProviders.AZURE_CERTS].ttl"
                     data-testid="vault-ttl-input"
                     :label="t('form.config.advancedFields.ttl')"
                     :label-attributes="{
@@ -844,7 +918,7 @@
 
                 <div class="item-50">
                   <KInput
-                    v-model="configFields[vaultProvider as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS].neg_ttl"
+                    v-model="configFields[vaultProvider as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS | VaultProviders.AZURE | VaultProviders.CONJUR | VaultProviders.FS | VaultProviders.AZURE_CERTS].neg_ttl"
                     data-testid="vault-neg-ttl-input"
                     :label="t('form.config.advancedFields.negTtl')"
                     :label-attributes="{
@@ -859,7 +933,7 @@
               <div class="wrapper">
                 <div class="item-100">
                   <KInput
-                    v-model="configFields[vaultProvider as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS].resurrect_ttl"
+                    v-model="configFields[vaultProvider as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS | VaultProviders.AZURE | VaultProviders.CONJUR | VaultProviders.FS | VaultProviders.AZURE_CERTS].resurrect_ttl"
                     data-testid="vault-resurrect-ttl-input"
                     :label="t('form.config.advancedFields.resurrectTtl')"
                     :label-attributes="{
@@ -939,12 +1013,14 @@ import type {
   GCPVaultConfig,
   HCVVaultConfig,
   AzureVaultConfig,
+  AzureCertsVaultConfig,
   VaultState,
   VaultStateFields,
   KongManagerVaultFormConfig,
   KonnectVaultFormConfig,
   VaultPayload,
   ConjurVaultConfig,
+  FSVaultConfig,
 } from '../types'
 import {
   VaultProviders,
@@ -962,6 +1038,7 @@ import {
   GoogleCloudIcon,
   AzureIcon,
   ConjourIcon,
+  FolderIcon,
 } from '@kong/icons'
 
 interface ConfigFields {
@@ -970,8 +1047,10 @@ interface ConfigFields {
   [VaultProviders.GCP]: GCPVaultConfig
   [VaultProviders.HCV]: HCVVaultConfig
   [VaultProviders.AZURE]: AzureVaultConfig
+  [VaultProviders.AZURE_CERTS]: AzureCertsVaultConfig
   [VaultProviders.KONNECT]: ConfigStoreConfig
   [VaultProviders.CONJUR]: ConjurVaultConfig
+  [VaultProviders.FS]: FSVaultConfig
 }
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -990,9 +1069,9 @@ const props = defineProps({
   },
   /** If a valid vaultId is provided, it will put the form in Edit mode instead of Create */
   vaultId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
 })
 
@@ -1028,7 +1107,7 @@ const originalVaultProvider = ref<VaultProviders | null>(null)
 const configStoreId = ref<string>()
 
 const isAvailableTTLConfig = computed(() => {
-  return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE, VaultProviders.CONJUR].includes(vaultProvider.value)
+  return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE, VaultProviders.CONJUR, VaultProviders.FS, VaultProviders.AZURE_CERTS].includes(vaultProvider.value)
 })
 
 const providers = computed<Array<{ label: string, value: VaultProviders }>>(() => {
@@ -1074,6 +1153,24 @@ const providers = computed<Array<{ label: string, value: VaultProviders }>>(() =
         ? [{
           label: t('form.config.conjur.label'),
           value: VaultProviders.CONJUR,
+          disabled: !isOtherProvidersSupported.value,
+        }]
+        : []
+    ),
+    ...(
+      props.config.fsVaultProviderAvailable
+        ? [{
+          label: t('form.config.fs.label'),
+          value: VaultProviders.FS,
+          disabled: !isOtherProvidersSupported.value,
+        }]
+        : []
+    ),
+    ...(
+      props.config.azureCertsVaultProviderAvailable
+        ? [{
+          label: t('form.config.azure-certs.label'),
+          value: VaultProviders.AZURE_CERTS,
           disabled: !isOtherProvidersSupported.value,
         }]
         : []
@@ -1152,11 +1249,22 @@ const configFields = reactive<ConfigFields>({
     tenant_id: '',
     ...base64FieldConfig,
   } as AzureVaultConfig,
+  [VaultProviders.AZURE_CERTS]: {
+    vault_uri: '',
+    credentials_prefix: 'AZURE',
+    client_id: '',
+    tenant_id: '',
+    ttl: 3600,
+  } as AzureCertsVaultConfig,
   [VaultProviders.CONJUR]: {
     endpoint_url: '',
     auth_method: 'api_key',
     ...base64FieldConfig,
   },
+  [VaultProviders.FS]: {
+    prefix: '',
+    ...base64FieldConfig,
+  } as FSVaultConfig,
 })
 
 const originalConfigFields = reactive<ConfigFields>({
@@ -1228,11 +1336,22 @@ const originalConfigFields = reactive<ConfigFields>({
     tenant_id: '',
     ...base64FieldConfig,
   } as AzureVaultConfig,
+  [VaultProviders.AZURE_CERTS]: {
+    vault_uri: '',
+    credentials_prefix: 'AZURE',
+    client_id: '',
+    tenant_id: '',
+    ttl: 3600,
+  } as AzureCertsVaultConfig,
   [VaultProviders.CONJUR]: {
     endpoint_url: '',
     auth_method: 'api_key',
     ...base64FieldConfig,
   },
+  [VaultProviders.FS]: {
+    prefix: '',
+    ...base64FieldConfig,
+  } as FSVaultConfig,
 })
 
 const awsRegions = [
@@ -1309,8 +1428,12 @@ const getProviderIcon = (providerName: VaultProviders) => {
       return HashicorpIcon
     case VaultProviders.AZURE:
       return AzureIcon
+    case VaultProviders.AZURE_CERTS:
+      return AzureIcon
     case VaultProviders.CONJUR:
       return ConjourIcon
+    case VaultProviders.FS:
+      return FolderIcon
   }
 }
 
@@ -1328,8 +1451,12 @@ const getProviderDescription = (providerName: VaultProviders) => {
       return t('form.config.hcv.description')
     case VaultProviders.AZURE:
       return t('form.config.azure.description')
+    case VaultProviders.AZURE_CERTS:
+      return t('form.config.azure-certs.description')
     case VaultProviders.CONJUR:
       return t('form.config.conjur.description')
+    case VaultProviders.FS:
+      return t('form.config.fs.description')
   }
 }
 
@@ -1448,6 +1575,17 @@ const isVaultConfigValid = computed((): boolean => {
     }).length
   }
 
+  // Azure Key Vault Certificates fields logic
+  if (vaultProvider.value === VaultProviders.AZURE_CERTS) {
+    return !Object.keys(configFields[VaultProviders.AZURE_CERTS]).filter(key => {
+      // client_id, tenant_id and ttl fields are optional
+      if (['client_id', 'tenant_id', 'ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
+        return false
+      }
+      return isEmpty((configFields[vaultProvider.value] as AzureCertsVaultConfig)[key as keyof AzureCertsVaultConfig])
+    }).length
+  }
+
   // AWS Vault fields logic
   if (vaultProvider.value === VaultProviders.AWS) {
     return !Object.keys(configFields[VaultProviders.AWS]).filter(key => {
@@ -1464,7 +1602,7 @@ const isVaultConfigValid = computed((): boolean => {
     if (['ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
       return false
     }
-    return isEmpty((configFields[vaultProvider.value] as KongVaultConfig | GCPVaultConfig)[key as keyof (KongVaultConfig | GCPVaultConfig)])
+    return isEmpty((configFields[vaultProvider.value] as KongVaultConfig | GCPVaultConfig | FSVaultConfig)[key as keyof (KongVaultConfig | GCPVaultConfig | FSVaultConfig)])
   }).length
 })
 const isFormValid = computed((): boolean => !!form.fields.prefix && isVaultConfigValid.value)
@@ -1483,14 +1621,11 @@ const submitUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.vaultId)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.vaultId ?? '') // Always replace the id when editing
 })
 
 const getPayload = computed((): Record<string, any> => {
@@ -1570,6 +1705,12 @@ const getPayload = computed((): Record<string, any> => {
     tenant_id: (configFields[vaultProvider.value] as AzureVaultConfig).tenant_id || null,
   }
 
+  const azureCertsConfig = {
+    ...configFields[vaultProvider.value],
+    client_id: (configFields[vaultProvider.value] as AzureCertsVaultConfig).client_id || null,
+    tenant_id: (configFields[vaultProvider.value] as AzureCertsVaultConfig).tenant_id || null,
+  }
+
   const awsConfig = {
     ...configFields[vaultProvider.value],
     endpoint_url: (configFields[vaultProvider.value] as AWSVaultConfig).endpoint_url || null,
@@ -1582,13 +1723,15 @@ const getPayload = computed((): Record<string, any> => {
     config = hcvConfig
   } else if (vaultProvider.value === VaultProviders.AZURE) {
     config = azureConfig
+  } else if (vaultProvider.value === VaultProviders.AZURE_CERTS) {
+    config = azureCertsConfig
   } else if (vaultProvider.value === VaultProviders.AWS) {
     config = awsConfig
   }
 
   let ttlFields = {}
   if (![VaultProviders.KONNECT, VaultProviders.ENV].includes(vaultProvider.value)) {
-    const fields = configFields[vaultProvider.value as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS | VaultProviders.AZURE]
+    const fields = configFields[vaultProvider.value as VaultProviders.HCV | VaultProviders.GCP | VaultProviders.AWS | VaultProviders.AZURE | VaultProviders.CONJUR | VaultProviders.FS | VaultProviders.AZURE_CERTS]
     const ttl = fields.ttl
     const negTtl = fields.neg_ttl
     const resurrectTtl = fields.resurrect_ttl
@@ -1630,6 +1773,7 @@ const createConfigStore = async (): Promise<string | undefined> => {
 
     const requestUrl = `${props.config.apiBaseUrl}${endpoints.form.konnect.createConfigStore}`
       .replace(/{controlPlaneId}/gi, (props.config as KonnectVaultFormConfig)?.controlPlaneId || '')
+      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 
     const response = await axiosInstance.post<KonnectConfigStore>(requestUrl)
 

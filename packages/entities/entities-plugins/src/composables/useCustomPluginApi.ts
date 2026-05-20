@@ -21,7 +21,63 @@ export type CustomPluginWithType =
 interface UseKonnectCustomPluginApiOptions {
   app: 'konnect'
   controlPlaneId: string
+  // Workspace is supported in this composable, but the entry in Konnect will not include workspace for now.
   workspace?: string
+}
+
+interface PagedResponse<T> {
+  data: T[]
+  next?: string | null
+}
+
+const PAGE_SIZE = 1000
+const MAX_PAGES = 20
+const MAX_RECORDS = 5000
+
+const appendPageSize = (url: string, size = PAGE_SIZE): string => {
+  const isAbsoluteUrl = /^[a-z][a-z\d+.-]*:/i.test(url)
+  const parsedUrl = new URL(url, 'http://localhost')
+
+  if (!parsedUrl.searchParams.has('size')) {
+    parsedUrl.searchParams.set('size', `${size}`)
+  }
+
+  if (isAbsoluteUrl) {
+    return parsedUrl.toString()
+  }
+
+  return `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`
+}
+
+export const fetchAllPages = async <T>(
+  axiosInstance: AxiosInstance,
+  initialUrl: string,
+  signal?: AbortSignal,
+): Promise<T[]> => {
+  const records: T[] = []
+  let nextUrl: string | null = appendPageSize(initialUrl)
+  let previousUrl: string | null = null
+  let pageCount = 0
+
+  while (nextUrl && pageCount < MAX_PAGES && records.length < MAX_RECORDS) {
+    if (nextUrl === previousUrl) {
+      break
+    }
+
+    previousUrl = nextUrl
+
+    const response: { data: PagedResponse<T> } = await axiosInstance.get<PagedResponse<T>>(nextUrl, { signal })
+    const pageData: PagedResponse<T> = response.data
+
+    if (Array.isArray(pageData?.data)) {
+      records.push(...pageData.data)
+    }
+
+    nextUrl = pageData?.next ? appendPageSize(pageData.next) : null
+    pageCount += 1
+  }
+
+  return records.slice(0, MAX_RECORDS)
 }
 
 interface UseKongManagerCustomPluginApiOptions {
@@ -49,15 +105,13 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   const buildUrl = (endpointTemplate: string, pluginId?: string): string => {
     let url = `${apiBaseUrl}${endpointTemplate}`
 
-    url = url.replace(/{pluginId}/gi, pluginId ?? '')
-
     if (options.app === 'konnect') {
       url = url.replace(/{controlPlaneId}/gi, options.controlPlaneId)
     }
 
-    if (options.workspace) {
-      url = url.replace(/{workspace}/gi, options.workspace)
-    }
+    url = url
+      .replace(/{pluginId}/gi, pluginId ?? '')
+      .replace(/\/{workspace}/gi, options.workspace ? `/${options.workspace}` : '')
 
     return url
   }
@@ -109,20 +163,21 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   // ── Cloned ──
 
   const createClonedPlugin = async (body: ClonedPluginRequestBody): Promise<ClonedPluginResponse> => {
-    const { aliasName: alias, priority, sourcePlugin: link } = body
-    const url = buildUrl(endpoints.customPlugin[options.app].cloned.create, alias)
-    const { data } = await axiosInstance.put<ClonedPluginResponse>(url, {
-      link,
+    const { aliasName: alias, priority, sourcePlugin: ref } = body
+    const url = buildUrl(endpoints.customPlugin[options.app].cloned.create)
+    const { data } = await axiosInstance.post<ClonedPluginResponse>(url, {
+      name: alias,
+      ref,
       priority,
     })
     return data
   }
 
   const updateClonedPlugin = async (originName: string, body: ClonedPluginRequestBody): Promise<ClonedPluginResponse> => {
-    const { aliasName: alias, priority, sourcePlugin: link } = body
+    const { aliasName: alias, priority, sourcePlugin: ref } = body
     const url = buildUrl(endpoints.customPlugin[options.app].cloned.edit, originName)
     const { data } = await axiosInstance.patch<ClonedPluginResponse>(url, {
-      link,
+      ref,
       priority,
       name: alias,
     })

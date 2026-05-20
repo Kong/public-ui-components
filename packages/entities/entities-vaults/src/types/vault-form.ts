@@ -52,6 +52,16 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
   conjurVaultProviderAvailable?: boolean
 
   /**
+   * Show/hide File system (fs) option - mostly for Konnect to pass feature flag value
+   */
+  fsVaultProviderAvailable?: boolean
+
+  /**
+   * Show/hide Azure Key Vault Certificates option
+   */
+  azureCertsVaultProviderAvailable?: boolean
+
+  /**
    * Show/hide Base64 field (added since 3.11)
    */
   base64FieldAvailable?: boolean
@@ -69,8 +79,10 @@ export enum VaultProviders {
   HCV = 'hcv',
   ENV = 'env',
   AZURE = 'azure',
+  AZURE_CERTS = 'azure-certs',
   KONNECT = 'konnect',
   CONJUR = 'conjur',
+  FS = 'fs',
 }
 
 export enum VaultAuthMethods {
@@ -174,12 +186,30 @@ export interface AzureVaultConfig {
   base64_decode?: boolean
 }
 
+export interface AzureCertsVaultConfig {
+  vault_uri: string
+  credentials_prefix: string
+  client_id?: string
+  tenant_id?: string
+  ttl?: number
+  neg_ttl?: number
+  resurrect_ttl?: number
+}
+
 export interface ConjurVaultConfig {
   endpoint_url: string
   auth_method: 'api_key'
   login?: string
   account?: string
   api_key?: string
+  ttl?: number
+  neg_ttl?: number
+  resurrect_ttl?: number
+  base64_decode?: boolean
+}
+
+export interface FSVaultConfig {
+  prefix: string
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
@@ -202,6 +232,13 @@ export interface AzureVaultConfigPayload extends Omit<AzureVaultConfig, 'client_
 
 // allow for nullish values in payload because Kong Admin API treats null as an empty value
 // in case it's an empty string, it will be treated as a value and must have length > 0
+export interface AzureCertsVaultConfigPayload extends Omit<AzureCertsVaultConfig, 'client_id' | 'tenant_id'> {
+  client_id?: string | null
+  tenant_id?: string | null
+}
+
+// allow for nullish values in payload because Kong Admin API treats null as an empty value
+// in case it's an empty string, it will be treated as a value and must have length > 0
 export interface AWSVaultConfigPayload extends Omit<AWSVaultConfig, 'endpoint_url' | 'assume_role_arn'> {
   endpoint_url?: string | null
   assume_role_arn?: string | null
@@ -212,7 +249,7 @@ export interface VaultPayload {
   prefix: string
   description: string | null
   tags: string[]
-  config: ConfigStoreConfig | KongVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload | AWSVaultConfigPayload
+  config: ConfigStoreConfig | KongVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload | AWSVaultConfigPayload | ConjurVaultConfig | FSVaultConfig | AzureCertsVaultConfigPayload
 }
 
 export interface VaultStateFields {

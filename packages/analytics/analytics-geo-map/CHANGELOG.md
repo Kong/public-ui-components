@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.28...@kong-ui-public/analytics-geo-map@1.5.29) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [1.5.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.27...@kong-ui-public/analytics-geo-map@1.5.28) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [1.5.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.26...@kong-ui-public/analytics-geo-map@1.5.27) (2026-05-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [1.5.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.25...@kong-ui-public/analytics-geo-map@1.5.26) (2026-05-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [1.5.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.24...@kong-ui-public/analytics-geo-map@1.5.25) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [1.5.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.23...@kong-ui-public/analytics-geo-map@1.5.24) (2026-05-10)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [1.5.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.22...@kong-ui-public/analytics-geo-map@1.5.23) (2026-05-07)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
 ## [1.5.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.21...@kong-ui-public/analytics-geo-map@1.5.22) (2026-05-02)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-geo-map

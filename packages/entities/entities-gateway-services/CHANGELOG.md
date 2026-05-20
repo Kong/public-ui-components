@@ -3,6 +3,116 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.20.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.10...@kong-ui-public/entities-gateway-services@3.20.11) (2026-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.20.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.9...@kong-ui-public/entities-gateway-services@3.20.10) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.20.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.8...@kong-ui-public/entities-gateway-services@3.20.9) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.20.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.7...@kong-ui-public/entities-gateway-services@3.20.8) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.20.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.6...@kong-ui-public/entities-gateway-services@3.20.7) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.20.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.5...@kong-ui-public/entities-gateway-services@3.20.6) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.20.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.4...@kong-ui-public/entities-gateway-services@3.20.5) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.20.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.3...@kong-ui-public/entities-gateway-services@3.20.4) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.20.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.2...@kong-ui-public/entities-gateway-services@3.20.3) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.20.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.1...@kong-ui-public/entities-gateway-services@3.20.2) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.20.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.0...@kong-ui-public/entities-gateway-services@3.20.1) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+# [3.20.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.17...@kong-ui-public/entities-gateway-services@3.20.0) (2026-05-08)
+
+
+### Features
+
+* **workspace:** allow `workspace` and `editId` to be `null` and workspace-scoped route support ([#3208](https://github.com/Kong/public-ui-components/issues/3208)) ([b1c6611](https://github.com/Kong/public-ui-components/commit/b1c66117d7cbc44c05c1eba6384e365d10efc5ef))
+
+
+
+
+
+## [3.19.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.16...@kong-ui-public/entities-gateway-services@3.19.17) (2026-05-07)
+
+
+### Bug Fixes
+
+* **locales/en.json:** fix copies in all the entities ([#3221](https://github.com/Kong/public-ui-components/issues/3221)) ([a3bcf52](https://github.com/Kong/public-ui-components/commit/a3bcf526d9aff14cab8e2f3d9ba7810b5167d974))
+
+
+
+
+
 ## [3.19.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.19.15...@kong-ui-public/entities-gateway-services@3.19.16) (2026-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

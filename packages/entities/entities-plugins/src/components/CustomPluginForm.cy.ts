@@ -39,7 +39,7 @@ const streamedPluginResponse = {
 }
 
 const clonedPluginResponse = {
-  link: 'acl',
+  ref: 'acl',
   name: 'my-cloned-plugin',
   priority: 0,
   tags: null,
@@ -268,13 +268,13 @@ describe('<CustomPluginForm />', () => {
       const aliasName = 'my-created-cloned-plugin'
 
       cy.intercept(
-        'PUT',
-        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/cloned-plugins/${aliasName}`,
+        'POST',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/cloned-plugins`,
         {
           statusCode: 201,
           body: {
             ...clonedPluginResponse,
-            link: 'acl',
+            ref: 'acl',
             name: aliasName,
             priority: null,
           },
@@ -295,9 +295,10 @@ describe('<CustomPluginForm />', () => {
       cy.getTestId('custom-plugin-form-submit').should('be.enabled').click()
 
       cy.wait('@createClonedPlugin').then((interception) => {
-        expect(interception.request.method).to.equal('PUT')
+        expect(interception.request.method).to.equal('POST')
         expect(interception.request.body).to.deep.equal({
-          link: 'acl',
+          name: aliasName,
+          ref: 'acl',
         })
       })
     })
@@ -306,13 +307,12 @@ describe('<CustomPluginForm />', () => {
       const aliasName = 'my-created-cloned-plugin-zero'
 
       cy.intercept(
-        'PUT',
-        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/cloned-plugins/${aliasName}`,
+        'POST',
+        `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/cloned-plugins`,
         {
           statusCode: 201,
           body: {
             ...clonedPluginResponse,
-            link: 'acl',
             name: aliasName,
             priority: 0,
           },
@@ -335,9 +335,10 @@ describe('<CustomPluginForm />', () => {
       cy.getTestId('custom-plugin-form-submit').should('be.enabled').click()
 
       cy.wait('@createClonedPluginWithPriority').then((interception) => {
-        expect(interception.request.method).to.equal('PUT')
+        expect(interception.request.method).to.equal('POST')
         expect(interception.request.body).to.deep.equal({
-          link: 'acl',
+          name: aliasName,
+          ref: 'acl',
           priority: 0,
         })
       })
@@ -549,7 +550,7 @@ describe('<CustomPluginForm />', () => {
 
       cy.wait('@updateClonedPlugin').then((interception) => {
         expect(interception.request.body).to.deep.equal({
-          link: clonedPluginResponse.link,
+          ref: clonedPluginResponse.ref,
           priority: 0,
           name: clonedPluginResponse.name,
         })
