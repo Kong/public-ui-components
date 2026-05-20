@@ -477,6 +477,7 @@ const props = defineProps({
     validator: (config: KonnectCustomPluginFormConfig | KongManagerCustomPluginFormConfig): boolean => {
       if (!config || !config.app) return false
       if (config.app === 'konnect' && !config.controlPlaneId) return false
+      if (config.app === 'kongManager' && !(config as KongManagerCustomPluginFormConfig).workspace) return false
       if (!config.cancelRoute) return false
       if (!config.successRoute) return false
       return true
@@ -517,6 +518,7 @@ const {
   apiBaseUrl: props.config.apiBaseUrl,
   controlPlaneId: (props.config as KonnectCustomPluginFormConfig).controlPlaneId,
   app: props.config.app,
+  workspace: (props.config as KongManagerCustomPluginFormConfig).workspace,
 })
 
 // Force-enable the new plugin form layout
