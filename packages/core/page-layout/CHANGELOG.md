@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.24...@kong-ui-public/page-layout@0.2.25) (2026-05-20)
+
+
+### Bug Fixes
+
+* **page-layout:** shortcuts support [KHCP-20629] ([#3259](https://github.com/Kong/public-ui-components/issues/3259)) ([55f1474](https://github.com/Kong/public-ui-components/commit/55f1474ac2b222f6f8181172b922f9d41b11a3e3))
+
+
+
+
+
 ## [0.2.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.23...@kong-ui-public/page-layout@0.2.24) (2026-05-19)
 
 **Note:** Version bump only for package @kong-ui-public/page-layout
