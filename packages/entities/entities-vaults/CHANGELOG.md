@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.7.2...@kong-ui-public/entities-vaults@4.8.0) (2026-05-20)
+
+
+### Features
+
+* **entities-certificates:** add vault reference tab for azure-certs vault integration [KM-2543] ([#3266](https://github.com/Kong/public-ui-components/issues/3266)) ([34e0f65](https://github.com/Kong/public-ui-components/commit/34e0f65cd51466c5c6951dad74c35d130d37f4c6))
+
+
+
+
+
 ## [4.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.7.1...@kong-ui-public/entities-vaults@4.7.2) (2026-05-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
