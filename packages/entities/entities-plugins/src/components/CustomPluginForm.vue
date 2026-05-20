@@ -451,6 +451,7 @@ import { isPluginSchemaInUseError } from '../utils/customPluginErrors'
 
 const DEFAULT_CLONABLE_PLUGINS = [
   'acl',
+  'datakit',
   'file-log',
   'http-log',
   'ip-restriction',
