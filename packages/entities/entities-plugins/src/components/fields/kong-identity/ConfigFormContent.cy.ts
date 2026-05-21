@@ -301,7 +301,9 @@ describe('ConfigFormContent', () => {
       })
 
       it('clears principals when switching back to "Consumers"', () => {
-        mountContent(schemaWithRealms, { isKonnect: true })
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: { principals: null, identity_realms: null },
+        })
 
         // First switch to kong-identity
         cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
@@ -368,22 +370,22 @@ describe('ConfigFormContent', () => {
         }))
       })
 
-      // it('clears identity_realms when switching from centrally-managed to kong-identity', () => {
-      //   mountContent(schemaWithRealms, { isKonnect: true }, {
-      //     config: { principals: null, identity_realms: null },
-      //   })
+      it('clears identity_realms when switching from centrally-managed to kong-identity', () => {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: { principals: null, identity_realms: null },
+        })
 
-      //   // Switch to centrally-managed first
-      //   cy.getTestId('kong-identity-mode-centrally-managed').closest('.k-radio').click()
+        // Switch to centrally-managed first
+        cy.getTestId('kong-identity-mode-centrally-managed').closest('.k-radio').click()
 
-      //   // Then switch to kong-identity
-      //   cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
+        // Then switch to kong-identity
+        cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
 
-      //   cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
-      //     return val.config?.identity_realms === null
-      //       && val.config?.principals?.enabled === true
-      //   }))
-      // })
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return val.config?.identity_realms === null
+            && val.config?.principals?.enabled === true
+        }))
+      })
     })
 
     describe('Field visibility', () => {
