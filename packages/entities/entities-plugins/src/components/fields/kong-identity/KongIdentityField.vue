@@ -12,6 +12,7 @@
       <a
         class="kong-identity-learn-more"
         href="https://developer.konghq.com/kong-identity/"
+        rel="noopener noreferrer"
         target="_blank"
       >
         {{ t('custom_field.kong_identity.learn_more') }}
@@ -33,7 +34,7 @@
       </KRadio>
 
       <KRadio
-        v-if="hasIdentityRealms"
+        v-if="showCentrallyManaged"
         card
         card-orientation="horizontal"
         data-testid="kong-identity-mode-centrally-managed"
@@ -63,98 +64,75 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { KLabel, KRadio } from '@kong/kongponents'
 import { TeamIcon, AccountTreeIcon, KeyIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import { useFormShared } from '../../free-form/shared/composables'
 import composables from '../../../composables'
 
-import type { AuthMode, KongIdentityPrincipals } from './types'
-import type { IdentityRealmItem } from '../key-auth-identity-realms/types'
+import type { AuthMode } from './types'
 
 defineOptions({ name: 'KongIdentityField' })
 
 const props = defineProps<{
-  hasIdentityRealms?: boolean
+  identityRealmsInSchema?: boolean
+  hasExistingRealms?: boolean
 }>()
-
 const { i18n } = composables.useI18n()
 const { t } = i18n
 
 const { formData, getSchema } = useFormShared()
 
 // Determine if schema has identity_realms
-const hasIdentityRealms = computed(() => {
-  if (props.hasIdentityRealms !== undefined) return props.hasIdentityRealms
-  try {
-    return !!getSchema('$.config.identity_realms')
-  } catch {
-    return false
-  }
+const identityRealmsInSchema = computed(() => {
+  if (props.identityRealmsInSchema !== undefined) return props.identityRealmsInSchema
+  return !!getSchema('$.config.identity_realms')
 })
 
+const showCentrallyManaged = computed(() => identityRealmsInSchema.value && !!props.hasExistingRealms)
+
 const descriptionText = computed(() => {
-  return hasIdentityRealms.value
+  return identityRealmsInSchema.value
     ? t('custom_field.kong_identity.description_with_realms')
     : t('custom_field.kong_identity.description_without_realms')
 })
 
 const consumersDescription = computed(() => {
-  return hasIdentityRealms.value
+  return identityRealmsInSchema.value
     ? t('custom_field.kong_identity.consumers_description_key_auth')
     : t('custom_field.kong_identity.consumers_description_basic_auth')
 })
 
 const kongIdentityDescription = computed(() => {
-  return hasIdentityRealms.value
+  return identityRealmsInSchema.value
     ? t('custom_field.kong_identity.kong_identity_description_key_auth')
     : t('custom_field.kong_identity.kong_identity_description_basic_auth')
 })
 
-// Derive initial mode from existing data
-function deriveMode(): AuthMode {
-  const principals = formData.config?.principals as KongIdentityPrincipals | null | undefined
-  const realms = formData.config?.identity_realms as IdentityRealmItem[] | null | undefined
-
-  if (principals?.enabled) {
-    return 'kong-identity'
-  }
-  if (Array.isArray(realms) && realms.length > 0) {
-    return 'centrally-managed'
-  }
-  return 'consumers'
-}
-
-const selectedMode = ref<AuthMode>(deriveMode())
-const userSelectedMode = ref(false)
-
-// Watch for external data changes (e.g. edit mode population)
-watch(() => formData.config, () => {
-  if (userSelectedMode.value) return
-  const derived = deriveMode()
-  if (derived !== selectedMode.value) {
-    selectedMode.value = derived
-  }
-}, { deep: true })
+const model = defineModel<AuthMode>()
+const selectedMode = ref<AuthMode>(model.value ?? 'consumers')
 
 function handleModeChange(mode: AuthMode) {
   if (!formData.config) return
   if (mode === selectedMode.value) return
 
-  userSelectedMode.value = true
   selectedMode.value = mode
+  model.value = mode
 
   switch (mode) {
     case 'kong-identity':
       formData.config.principals = { enabled: true, directory: 'default' }
-      if (hasIdentityRealms.value) {
+      if (identityRealmsInSchema.value) {
         formData.config.identity_realms = null
+      }
+      if (!getSchema('$.config.realm')?.required) {
+        formData.config.realm = null
       }
       break
     case 'consumers':
       formData.config.principals = null
-      if (hasIdentityRealms.value) {
+      if (identityRealmsInSchema.value) {
         formData.config.identity_realms = null
       }
       break

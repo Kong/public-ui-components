@@ -13,6 +13,20 @@ const schemaWithRealms: FormSchema = {
         type: 'record',
         fields: [
           {
+            key_names: {
+              type: 'array',
+              required: true,
+              elements: { type: 'string' },
+              default: ['apikey'],
+            },
+          },
+          {
+            hide_credentials: {
+              type: 'boolean',
+              default: false,
+            },
+          },
+          {
             principals: {
               type: 'record',
               fields: [
@@ -45,6 +59,57 @@ const schemaWithRealms: FormSchema = {
               },
             },
           },
+          {
+            anonymous: {
+              type: 'string',
+            },
+          },
+          {
+            realm: {
+              type: 'string',
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+
+// Schema with identity_realms but no principals (old plugin with identity_realms)
+const schemaWithRealmsNoPrincipals: FormSchema = {
+  type: 'record',
+  fields: [
+    {
+      config: {
+        type: 'record',
+        fields: [
+          {
+            key_names: {
+              type: 'array',
+              required: true,
+              elements: { type: 'string' },
+              default: ['apikey'],
+            },
+          },
+          {
+            hide_credentials: {
+              type: 'boolean',
+              default: false,
+            },
+          },
+          {
+            identity_realms: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  { scope: { type: 'string' } },
+                  { id: { type: 'string' } },
+                  { region: { type: 'string' } },
+                ],
+              },
+            },
+          },
         ],
       },
     },
@@ -59,6 +124,12 @@ const schemaWithoutRealms: FormSchema = {
       config: {
         type: 'record',
         fields: [
+          {
+            hide_credentials: {
+              type: 'boolean',
+              default: false,
+            },
+          },
           {
             principals: {
               type: 'record',
@@ -113,11 +184,17 @@ const schemaWithoutPrincipals: FormSchema = {
   ],
 }
 
-function mountContent(schema: FormSchema, options: { isKonnect: boolean }, data?: Record<string, any>) {
+function mountContent(schema: FormSchema, options: { isKonnect: boolean, hasExistingRealms?: boolean }, data?: Record<string, any>) {
   const onChangeSpy = cy.spy().as('onChangeSpy')
   const formsConfig = options.isKonnect
     ? { app: 'konnect', apiBaseUrl: 'https://us.api.konghq.com' }
     : { app: 'kongManager' }
+
+  // Mock the realms API
+  const realmsResponse = options.hasExistingRealms !== false
+    ? { data: [{ id: 'realm-1', name: 'My Realm' }], meta: { next: null } }
+    : { data: [], meta: { next: null } }
+  cy.intercept('GET', '**/v1/realms*', { body: realmsResponse }).as('fetchRealms')
 
   cy.mount(() =>
     h('div', { style: 'padding: 20px' },
@@ -148,7 +225,7 @@ describe('ConfigFormContent', () => {
         cy.getTestId('ff-kong-identity-field').should('exist')
       })
 
-      it('renders all 3 options when schema has identity_realms', () => {
+      it('renders all 3 options when schema has identity_realms and there are existing realms', () => {
         mountContent(schemaWithRealms, { isKonnect: true })
 
         cy.getTestId('kong-identity-mode-kong-identity').should('exist')
@@ -156,8 +233,14 @@ describe('ConfigFormContent', () => {
         cy.getTestId('kong-identity-mode-centrally-managed').should('exist')
       })
 
-      it('renders only 2 options when schema has no identity_realms', () => {
+      it('hides Kong Identity selector when schema has no identity_realms', () => {
         mountContent(schemaWithoutRealms, { isKonnect: true })
+
+        cy.getTestId('ff-kong-identity-field').should('not.exist')
+      })
+
+      it('hides centrally managed when schema has identity_realms but no realms exist', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, hasExistingRealms: false })
 
         cy.getTestId('kong-identity-mode-kong-identity').should('exist')
         cy.getTestId('kong-identity-mode-consumers').should('exist')
@@ -178,7 +261,7 @@ describe('ConfigFormContent', () => {
           .should('have.class', 'checked')
       })
 
-      it('selects "kong-identity" mode when principals.enabled is true', () => {
+      it('defaults to "kong-identity" mode when principals.enabled is true', () => {
         mountContent(schemaWithRealms, { isKonnect: true }, {
           config: { principals: { enabled: true, directory: 'default' }, identity_realms: null },
         })
@@ -188,11 +271,11 @@ describe('ConfigFormContent', () => {
           .should('have.class', 'checked')
       })
 
-      it('selects "centrally-managed" mode when identity_realms has items', () => {
+      it('defaults to "centrally-managed" mode when identity_realms has items', () => {
         mountContent(schemaWithRealms, { isKonnect: true }, {
           config: {
             principals: null,
-            identity_realms: [{ scope: 'realm', id: 'some-realm-id', region: 'us' }],
+            identity_realms: [{ scope: 'cp', id: 'some-id', region: 'us' }],
           },
         })
 
@@ -200,6 +283,7 @@ describe('ConfigFormContent', () => {
           .closest('.k-radio')
           .should('have.class', 'checked')
       })
+
     })
 
     describe('Mode switching', () => {
@@ -216,11 +300,13 @@ describe('ConfigFormContent', () => {
         }))
       })
 
-      it('clears principals when "Consumers" is selected', () => {
-        mountContent(schemaWithRealms, { isKonnect: true }, {
-          config: { principals: { enabled: true, directory: 'default' }, identity_realms: null },
-        })
+      it('clears principals when switching back to "Consumers"', () => {
+        mountContent(schemaWithRealms, { isKonnect: true })
 
+        // First switch to kong-identity
+        cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
+
+        // Then switch back to consumers
         cy.getTestId('kong-identity-mode-consumers').closest('.k-radio').click()
 
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
@@ -252,6 +338,112 @@ describe('ConfigFormContent', () => {
           return val.config?.principals === null
             && Array.isArray(val.config?.identity_realms)
         }))
+      })
+
+      it('clears realm when switching to kong-identity (not required)', () => {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: { principals: null, identity_realms: null, realm: 'my-realm' },
+        })
+
+        cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return val.config?.realm === null
+        }))
+      })
+
+      it('clears identity_realms when switching from centrally-managed to consumers', () => {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: { principals: null, identity_realms: null },
+        })
+
+        // Switch to centrally-managed first
+        cy.getTestId('kong-identity-mode-centrally-managed').closest('.k-radio').click()
+
+        // Then switch to consumers
+        cy.getTestId('kong-identity-mode-consumers').closest('.k-radio').click()
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return val.config?.identity_realms === null
+        }))
+      })
+
+      // it('clears identity_realms when switching from centrally-managed to kong-identity', () => {
+      //   mountContent(schemaWithRealms, { isKonnect: true }, {
+      //     config: { principals: null, identity_realms: null },
+      //   })
+
+      //   // Switch to centrally-managed first
+      //   cy.getTestId('kong-identity-mode-centrally-managed').closest('.k-radio').click()
+
+      //   // Then switch to kong-identity
+      //   cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
+
+      //   cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+      //     return val.config?.identity_realms === null
+      //       && val.config?.principals?.enabled === true
+      //   }))
+      // })
+    })
+
+    describe('Field visibility', () => {
+      it('hides identity_realms field in consumers mode', () => {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: { principals: null, identity_realms: null },
+        })
+
+        cy.getTestId('ff-array-config.identity_realms').should('not.exist')
+      })
+
+      it('hides identity_realms field in kong-identity mode', () => {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: { principals: null, identity_realms: null },
+        })
+
+        cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
+
+        cy.getTestId('ff-array-config.identity_realms').should('not.exist')
+      })
+
+      it('shows identity_realms field in centrally-managed mode (advanced section)', () => {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: { principals: null, identity_realms: null },
+        })
+
+        cy.getTestId('kong-identity-mode-centrally-managed').closest('.k-radio').click()
+
+        cy.getTestId('ff-advanced-fields-container').within(() => {
+          cy.getTestId('ff-array-config.identity_realms').should('exist')
+        })
+      })
+
+      it('shows identity_realms normally when schema has no principals (old schema)', () => {
+        mountContent(schemaWithRealmsNoPrincipals, { isKonnect: true })
+
+        cy.getTestId('ff-kong-identity-field').should('not.exist')
+        cy.getTestId('ff-advanced-fields-container').within(() => {
+          cy.getTestId('ff-array-config.identity_realms').should('exist')
+        })
+      })
+
+      it('hides realm field in kong-identity mode (not required)', () => {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: { principals: null, identity_realms: null },
+        })
+
+        cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
+
+        cy.getTestId('ff-config.realm').should('not.exist')
+      })
+
+      it('shows realm field in advanced section in consumers mode (not required)', () => {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: { principals: null, identity_realms: null },
+        })
+
+        cy.getTestId('ff-advanced-fields-container').within(() => {
+          cy.getTestId('ff-config.realm').should('exist')
+        })
       })
     })
   })
