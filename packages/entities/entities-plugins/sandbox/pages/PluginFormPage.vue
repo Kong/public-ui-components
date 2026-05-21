@@ -102,6 +102,7 @@ useProvideExperimentalFreeForms([
   'solace-upstream',
   'opentelemetry',
   'acl',
+  'acme',
   'request-transformer',
   'upstream-oauth',
   'cors',
