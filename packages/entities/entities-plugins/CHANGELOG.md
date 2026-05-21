@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.207.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.206.4...@kong-ui-public/entities-plugins@9.207.0) (2026-05-21)
+
+
+### Features
+
+* **entities-plugins:** add free-form plugin migration progress report script ([#3278](https://github.com/Kong/public-ui-components/issues/3278)) ([36d61b4](https://github.com/Kong/public-ui-components/commit/36d61b4b5e6cc020bcbd01db50124d32d99bfb46))
+
+
+
+
+
 ## [9.206.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.206.3...@kong-ui-public/entities-plugins@9.206.4) (2026-05-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
