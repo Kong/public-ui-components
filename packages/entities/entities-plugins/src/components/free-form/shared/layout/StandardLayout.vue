@@ -568,8 +568,8 @@ let skipUpdateScopeCache = false
 function handleScopeChange() {
   if (!formRef.value) return
 
-  const { getRawValue, setValue } = formRef.value
-  const currentData = getRawValue() as T
+  const { getValue, setValue } = formRef.value
+  const currentData = getValue() as T
   const nextData = { ...currentData }
 
   if (scoped.value) {
