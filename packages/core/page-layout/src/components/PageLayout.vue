@@ -128,7 +128,7 @@ const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
 const isBackToString = computed((): boolean => typeof backTo === 'string')
 
-const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.path && !!pageShortcutData.label)
+const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.label)
 const showFavoriteButton = computed((): boolean => isEntityPage.value && !!pageShortcutsContext && 'onFavoriteToggle' in pageShortcutsContext && typeof pageShortcutsContext.onFavoriteToggle === 'function')
 const isFavorite = computed((): boolean => !!pageShortcutsContext && 'isFavorite' in pageShortcutsContext && pageShortcutsContext.isFavorite === true)
 
