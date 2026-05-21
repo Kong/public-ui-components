@@ -12,7 +12,11 @@ import { DASHBOARD_COLS } from '../constants'
  * @returns The updated tile configuration object.
  */
 const processTileForBasicTier = (tile: TileConfig): TileConfig | undefined => {
-  const query = tile.definition?.query
+  if (tile.type === 'markdown') {
+    return tile
+  }
+
+  const query = tile.definition.query
 
   if (!query) {
     return tile
@@ -34,7 +38,11 @@ const processTileForBasicTier = (tile: TileConfig): TileConfig | undefined => {
  * @returns The updated tile configuration object.
  */
 const processTileForAdvancedTier = (tile: TileConfig): TileConfig => {
-  const query = tile.definition?.query
+  if (tile.type === 'markdown') {
+    return tile
+  }
+
+  const query = tile.definition.query
 
   if (!query) {
     return tile
