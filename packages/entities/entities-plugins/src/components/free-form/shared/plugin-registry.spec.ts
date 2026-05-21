@@ -11,6 +11,7 @@ describe('derivePluginName', () => {
     expect(derivePluginName('../plugins/jwt.ts')).toBe('jwt')
     expect(derivePluginName('../plugins/aws-lambda.ts')).toBe('aws-lambda')
     expect(derivePluginName('../plugins/proxy-cache-advanced.ts')).toBe('proxy-cache-advanced')
+    expect(derivePluginName('../plugins/acme.ts')).toBe('acme')
   })
 })
 
