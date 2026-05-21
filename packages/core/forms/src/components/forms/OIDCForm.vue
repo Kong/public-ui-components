@@ -23,6 +23,14 @@
             Parameters for enabling the OpenID Connect plugin. Set these parameters before adding authorization,
             authentication, or other advanced configuration details.
           </div>
+
+          <OIDCPrincipals
+            v-if="isKonnect && hasPrincipalsFields"
+            :form-model="formModel"
+            :form-options="formOptions"
+            :form-schema="formSchema"
+            :on-model-updated="onModelUpdated"
+          />
           <VueFormGenerator
             v-if="displayForm"
             :model="formModel"
@@ -108,15 +116,26 @@
 </template>
 
 <script>
-import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME, FORMS_CONFIG } from '../../const'
 import composables from '../../composables'
 import VueFormGenerator from '../FormGenerator.vue'
+import OIDCPrincipals from './OIDCPrincipals.vue'
 import externalLinks from '../../external-links'
 
 const COMMON_FIELD_MODELS = new Set([
   'config-client_id',
   'config-client_secret',
   'config-issuer',
+])
+
+const PRINCIPALS_FIELD_MODELS = new Set([
+  'config-principals-enabled',
+  'config-principals-directory',
+  'config-principals-principal_by',
+  'config-principals-principal_claim',
+  'config-principals-match_consumer',
+  'config-principals-match_consumer_groups',
+  'config-principals-error_on_miss',
 ])
 
 const AUTH_FIELD_MODELS = new Set([
@@ -133,12 +152,18 @@ const AUTH_FIELD_MODELS = new Set([
 
 export default {
   name: 'OIDCForm',
-  components: { VueFormGenerator },
+  components: { VueFormGenerator, OIDCPrincipals },
   provide() {
     // Provide AUTOFILL_SLOT
     return {
       [AUTOFILL_SLOT]: this.$slots?.[AUTOFILL_SLOT_NAME],
     }
+  },
+  inject: {
+    formsConfig: {
+      from: FORMS_CONFIG,
+      default: () => ({}),
+    },
   },
   props: {
     formModel: {
@@ -215,6 +240,14 @@ export default {
     displayForm() {
       return (this.formModel.id && this.isEditing) || !this.isEditing
     },
+    hasPrincipalsFields() {
+      return this.formSchema.fields?.some(
+        (field) => PRINCIPALS_FIELD_MODELS.has(field.model),
+      )
+    },
+    isKonnect() {
+      return this.formsConfig?.app === 'konnect'
+    },
   },
   watch: {
     formModel: {
@@ -273,6 +306,7 @@ export default {
                 && field.model !== 'config-auth_methods'
                 && !COMMON_FIELD_MODELS.has(field.model)
                 && !AUTH_FIELD_MODELS.has(field.model)
+                && !PRINCIPALS_FIELD_MODELS.has(field.model)
                 && (!this.enableRedisPartial || !redisModels.includes(field.model))) // if redis partial is enabled, don't include redis fields in advanced
               || field.model === 'tags',
             )
