@@ -114,13 +114,6 @@
               v-bind="toolbarSlotProps"
             />
 
-            <!-- region: column visibility -->
-            <AnalyticsColumnVisibilityMenu
-              v-if="showColumnVisibility"
-              v-model:column-visibility="columnVisibilityModel"
-              :headers="headers"
-            />
-
             <!-- region: bulk actions -->
             <div
               v-if="showBulkActions"
@@ -152,6 +145,13 @@
             </div>
           </div>
         </slot>
+
+        <!-- region: column visibility -->
+        <AnalyticsColumnVisibilityMenu
+          v-if="showColumnVisibility"
+          v-model:column-visibility="columnVisibilityModel"
+          :headers="headers"
+        />
       </div>
 
       <slot

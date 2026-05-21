@@ -341,7 +341,7 @@ Use `row-selection="single"` for click-based single row selection, `row-selectio
 </AnalyticsDatatable>
 ```
 
-Use `toolbar` to replace the whole toolbar, or `toolbar-left` / `toolbar-right` to compose host controls alongside built-in search, filters, bulk actions, and the column visibility menu.
+Use `toolbar` to replace the host-controlled toolbar content, or `toolbar-left` / `toolbar-right` to compose host controls alongside built-in search, filters, and bulk actions. The column visibility menu stays the rightmost toolbar control unless `hideColumnVisibility` is true.
 
 Use `outside-search` and `outside-filters` to move built-in controls to Teleport targets. Use `outside-actions` for custom toolbar-adjacent controls that must stay mounted outside the visible table toolbar. The slot is mounted even when `hideToolbar` is true and while the table is loading, empty, or in an error state.
 
@@ -432,7 +432,7 @@ Use `outside-search` and `outside-filters` to move built-in controls to Teleport
 | --- | --- | --- |
 | `[header.key]` | `{ row, rowValue, column, rowIndex, refreshCell, selected }` | Dynamic cell slot for the matching column key. Call `refreshCell()` when async slot content changes internal loading or display state. |
 | `bulk-action-items` | `{ selectedRows }` | Dropdown items rendered inside the selected-row actions dropdown. |
-| `toolbar` | `{ selectedRows, filterSelection, filters, search, updateFilterSelection, updateSearch, refresh }` | Replaces the entire toolbar. |
+| `toolbar` | `{ selectedRows, filterSelection, filters, search, updateFilterSelection, updateSearch, refresh }` | Replaces the host-controlled toolbar content. The column visibility menu still renders as the rightmost toolbar control unless `hideColumnVisibility` is true. |
 | `toolbar-left` | `{ selectedRows, filterSelection, filters, search, updateFilterSelection, updateSearch, refresh }` | Renders before built-in bulk actions, search, and filters. |
 | `toolbar-right` | `{ selectedRows, filterSelection, filters, search, updateFilterSelection, updateSearch, refresh }` | Renders before the built-in column visibility menu. |
 | `outside-actions` | `{ selectedRows, filterSelection, filters, search, updateFilterSelection, updateSearch, refresh }` | Always-mounted renderless slot for custom controls that host apps Teleport outside the visible table toolbar. |

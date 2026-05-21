@@ -53,7 +53,7 @@
           :fetcher="fetchRows"
           :headers="headers"
           :hide-bulk-actions="hideToolbarBuiltIns"
-          :hide-column-visibility="hideToolbarBuiltIns"
+          :hide-column-visibility="hideColumnVisibility"
           :hide-toolbar="shouldHideToolbar"
           :loading="showLoadingState"
           :mode="mode"
@@ -277,6 +277,10 @@
               label="Hide toolbar"
             />
             <KCheckbox
+              v-model="hideColumnVisibility"
+              label="Hide column visibility"
+            />
+            <KCheckbox
               v-model="showLoadingState"
               label="Loading state"
             />
@@ -467,6 +471,7 @@ const mode = ref<AnalyticsDatatableMode>('pagination')
 const rowSelection = ref<AnalyticsDatatableRowSelectionMode>('multiple')
 const enableSearch = ref(true)
 const hideToolbar = ref(false)
+const hideColumnVisibility = ref(false)
 const toolbarSlotMode = ref<ToolbarSlotMode>('default')
 const showLoadingState = ref(false)
 const showErrorState = ref(false)
@@ -1112,6 +1117,7 @@ const resetTableState = () => {
   columnSettings.value = createDefaultColumnSettings()
   tableConfig.value = createDefaultTableConfig()
   enableSearch.value = true
+  hideColumnVisibility.value = false
   selectedRows.value = []
   filterSelection.value = undefined
   selectedCustomMethod.value = 'GET'

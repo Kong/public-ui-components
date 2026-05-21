@@ -1436,10 +1436,10 @@ describe('<AnalyticsDatatable />', () => {
       cy.get('.datatable-toolbar-secondary')
         .findTestId('analytics-datatable-bulk-actions-trigger')
         .should('be.visible')
-      cy.get('.datatable-toolbar-secondary')
+      cy.get('.datatable-toolbar')
         .children()
         .last()
-        .findTestId('analytics-datatable-bulk-actions-trigger')
+        .findTestId('column-visibility-trigger')
         .should('be.visible')
       cy.contains('Gateway service').click()
       cy.getTestId('analytics-datatable-bulk-actions-trigger')
@@ -1645,10 +1645,15 @@ describe('<AnalyticsDatatable />', () => {
       cy.getTestId('toolbar-left-action').should('be.visible')
       cy.getTestId('toolbar-right-action').should('be.visible')
       cy.getTestId('column-visibility-trigger').should('be.visible')
+      cy.get('.datatable-toolbar')
+        .children()
+        .last()
+        .findTestId('column-visibility-trigger')
+        .should('be.visible')
       cy.getTestId('analytics-datatable-bulk-actions-trigger').should('be.visible')
     })
 
-    it('renders a custom toolbar instead of built-in controls', () => {
+    it('renders a custom toolbar instead of built-in controls while keeping column visibility rightmost', () => {
       mountTable({
         slots: {
           toolbar: ({ selectedRows }) => h('div', { 'data-testid': 'custom-toolbar' }, `Selected ${selectedRows.length}`),
@@ -1656,8 +1661,25 @@ describe('<AnalyticsDatatable />', () => {
       })
 
       cy.getTestId('custom-toolbar').should('contain.text', 'Selected 0')
-      cy.getTestId('column-visibility-trigger').should('not.exist')
+      cy.getTestId('column-visibility-trigger').should('be.visible')
+      cy.get('.datatable-toolbar')
+        .children()
+        .last()
+        .findTestId('column-visibility-trigger')
+        .should('be.visible')
       cy.getTestId('analytics-datatable-bulk-actions-trigger').should('not.exist')
+    })
+
+    it('hides column visibility when requested with a custom toolbar', () => {
+      mountTable({
+        hideColumnVisibility: true,
+        slots: {
+          toolbar: () => h('div', { 'data-testid': 'custom-toolbar' }, 'Custom toolbar'),
+        },
+      })
+
+      cy.getTestId('custom-toolbar').should('be.visible')
+      cy.getTestId('column-visibility-trigger').should('not.exist')
     })
 
     it('can hide individual built-in toolbar controls', () => {
