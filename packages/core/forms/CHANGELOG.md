@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.10...@kong-ui-public/forms@4.25.0) (2026-05-21)
+
+
+### Features
+
+* **entities-plugins:** add oidc principals support ([#3274](https://github.com/Kong/public-ui-components/issues/3274)) ([120c3fc](https://github.com/Kong/public-ui-components/commit/120c3fce12a9afc59d963d85491606bd36244b89))
+
+
+
+
+
 ## [4.24.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.24.9...@kong-ui-public/forms@4.24.10) (2026-05-19)
 
 **Note:** Version bump only for package @kong-ui-public/forms
