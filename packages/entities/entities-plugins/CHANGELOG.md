@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.206.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.206.2...@kong-ui-public/entities-plugins@9.206.3) (2026-05-21)
+
+
+### Bug Fixes
+
+* **entities-plugins:** kid:x in map field after switching scope ([#3277](https://github.com/Kong/public-ui-components/issues/3277)) ([8713ae2](https://github.com/Kong/public-ui-components/commit/8713ae2ed6c819c74235ca1a67e9940fe2c25ab9))
+
+
+
+
+
 ## [9.206.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.206.1...@kong-ui-public/entities-plugins@9.206.2) (2026-05-20)
 
 
