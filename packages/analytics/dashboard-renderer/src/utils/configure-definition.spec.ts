@@ -471,4 +471,58 @@ describe('configureAllowedDefinition', () => {
       expect(result.tiles[0].layout?.position).toEqual({ col: 0, row: 0 })
     })
   })
+
+  describe('Markdown tiles', () => {
+    const mockMarkdownTile: TileConfig = {
+      id: 'markdown_tile_1',
+      type: 'markdown',
+      layout: {
+        size: { cols: 3, rows: 2 },
+        position: { col: 0, row: 0 },
+      },
+      definition: {
+        content: '## Notes\n\nSome context here.',
+      },
+    }
+
+    it('passes through unchanged for the advanced tier', () => {
+      const config: DashboardConfig = {
+        tiles: [mockMarkdownTile],
+        tile_height: 167,
+      }
+
+      const result = configureAllowedDefinition(config, true)
+
+      expect(result.tiles).toHaveLength(1)
+      expect(result.tiles[0]).toEqual(mockMarkdownTile)
+    })
+
+    it('passes through unchanged for the basic tier', () => {
+      const config: DashboardConfig = {
+        tiles: [mockMarkdownTile],
+        tile_height: 167,
+      }
+
+      const result = configureAllowedDefinition(config, false)
+
+      expect(result.tiles).toHaveLength(1)
+      expect(result.tiles[0]).toEqual(mockMarkdownTile)
+    })
+
+    it('survives alongside chart tiles when basic tier filters api_usage charts', () => {
+      const config: DashboardConfig = {
+        tiles: [
+          mockMarkdownTile,
+          mockApiUsageTile,
+        ],
+        tile_height: 167,
+      }
+
+      const result = configureAllowedDefinition(config, false)
+
+      // api_usage chart is filtered; markdown tile survives
+      expect(result.tiles).toHaveLength(1)
+      expect(result.tiles[0].type).toBe('markdown')
+    })
+  })
 })

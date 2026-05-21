@@ -30,12 +30,18 @@
         @update-tiles="handleUpdateTiles"
       >
         <template #tile="{ tile }">
-          <div
+          <MarkdownTile
             v-if="tile.type === 'markdown'"
             class="tile-container"
-          >
-            <MarkdownTileRenderer :content="(tile.meta as any).content" />
-          </div>
+            :content="(tile.meta as any).content"
+            :context="internalContext"
+            :hide-actions="!internalContext.showTileActions"
+            :is-fullscreen="isFullscreen"
+            :tile-id="tile.id"
+            @duplicate-tile="onDuplicateTile(tile)"
+            @edit-tile="onEditTile(tile)"
+            @remove-tile="onRemoveTile(tile)"
+          />
           <div
             v-else-if="tile.meta.chart.type === 'slottable'"
             class="tile-container slottable-tile"
@@ -77,7 +83,7 @@ import type {
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
-import MarkdownTileRenderer from './MarkdownTileRenderer.vue'
+import MarkdownTile from './MarkdownTile.vue'
 import type { ComponentPublicInstance } from 'vue'
 import { computed, inject, nextTick, ref } from 'vue'
 import composables from '../composables'

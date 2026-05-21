@@ -211,7 +211,7 @@ describe('dashboardSchema.v2', () => {
     })).toBe(false)
   })
 
-  describe('markdownTileDefinitionSchema', () => {
+  describe('markdown tile schemas', () => {
     const validateMarkdownTileDefinitionSchema = ajv.compile(markdownTileDefinitionSchema)
     const validateMarkdownTileConfigSchema = ajv.compile(markdownTileConfigSchema)
 
