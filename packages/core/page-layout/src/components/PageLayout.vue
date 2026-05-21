@@ -202,6 +202,7 @@ watch(() => pageShortcutData, async (newPageShortcutData) => {
    */
   await nextTick()
   if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
+    console.log('here')
     pageShortcutsContext.onEntityPageVisit(newPageShortcutData)
   }
 }, { immediate: true, deep: true })
