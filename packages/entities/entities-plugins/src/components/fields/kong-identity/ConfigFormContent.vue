@@ -111,7 +111,7 @@ const topOmit = computed(() => {
 
 // Advanced section: show only anonymous + conditionally realm/identity_realms
 const advancedOmit = computed(() => {
-  const schema = getSchema('$.config')
+  const schema = getSchema('$.config') as { fields?: Array<Record<string, unknown>> } | undefined
   const allFields: string[] = schema?.fields?.map((f: Record<string, unknown>) => Object.keys(f)[0]) ?? []
 
   const advancedSet = new Set(['anonymous'])
