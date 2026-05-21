@@ -26,7 +26,7 @@ describe('<MarkdownTileRenderer />', () => {
   it('does not execute injected script tags', () => {
     cy.mount(MarkdownTileRenderer, {
       props: {
-        content: '<script>window.__xss = true<\/script>\n\nSafe content.',
+        content: '<script>window.__xss = true</s' + 'cript>\n\nSafe content.',
       },
     })
 
