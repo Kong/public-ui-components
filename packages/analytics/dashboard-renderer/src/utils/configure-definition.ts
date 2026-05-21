@@ -13,7 +13,11 @@ import { isTableChartDefinition } from './tile-definition'
  * @returns The updated tile configuration object.
  */
 const processTileForBasicTier = (tile: TileConfig): TileConfig | undefined => {
-  const query = tile.definition?.query
+  if (tile.type === 'markdown') {
+    return tile
+  }
+
+  const query = tile.definition.query
 
   if (!query) {
     return tile
@@ -35,8 +39,8 @@ const processTileForBasicTier = (tile: TileConfig): TileConfig | undefined => {
  * @returns The updated tile configuration object.
  */
 const processTileForAdvancedTier = (tile: TileConfig): TileConfig => {
-  if (isTableChartDefinition(tile.definition)) {
-    // Table chart queries use the platform tabular API, so leave their datasource unchanged.
+  if (tile.type === 'markdown' || isTableChartDefinition(tile.definition)) {
+    // Markdown tiles have no query; table chart queries use the platform tabular API — skip datasource migration for both.
     return tile
   }
 
