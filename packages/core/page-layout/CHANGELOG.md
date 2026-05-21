@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.25...@kong-ui-public/page-layout@0.2.26) (2026-05-21)
+
+
+### Bug Fixes
+
+* **page-layout:** make path optional in shortcut data ([#3280](https://github.com/Kong/public-ui-components/issues/3280)) ([e16142d](https://github.com/Kong/public-ui-components/commit/e16142d20fd9afee83595acf1e840b9dd7b02237))
+
+
+
+
+
 ## [0.2.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.24...@kong-ui-public/page-layout@0.2.25) (2026-05-20)
 
 
