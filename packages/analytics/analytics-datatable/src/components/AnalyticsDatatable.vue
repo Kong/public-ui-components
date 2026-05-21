@@ -180,7 +180,6 @@
           :infinite-initial-row-count="1"
           :loading="isFetching"
           :process-row-post-create="onRowPostCreate"
-          :row-buffer="0"
           :row-data="mode === 'pagination' ? rowData : undefined"
           :row-model-type="mode === 'infinite' ? 'infinite' : 'clientSide'"
           :row-selection="rowSelectionConfig"
@@ -287,7 +286,6 @@ const {
   hideToolbar = false,
   hideBulkActions = false,
   hideColumnVisibility = false,
-  disableRowClick = false,
   hidePagination = false,
   hidePaginationWhenOptional = false,
   rowSelection = 'none',
@@ -314,7 +312,6 @@ const {
   hideToolbar?: boolean
   hideBulkActions?: boolean
   hideColumnVisibility?: boolean
-  disableRowClick?: boolean
   hidePagination?: boolean
   hidePaginationWhenOptional?: boolean
   rowSelection?: AnalyticsDatatableRowSelectionMode
@@ -577,6 +574,28 @@ const getAgGridRowId = ({ data }: { data: Row }) => {
   return getRowKeyValue(data, resolvedRowKey.value)
 }
 
+const rowClickDisabledColumnKeys = computed(() => new Set(
+  headers
+    .filter(header => header.disableRowClick)
+    .map(header => header.key),
+))
+
+const getClickedColumnKey = (event: RowClickedEvent<Row>): string | undefined => {
+  const target = event.event?.target
+
+  if (!(target instanceof Element)) {
+    return undefined
+  }
+
+  return target.closest('.ag-cell')?.getAttribute('col-id') ?? undefined
+}
+
+const isRowClickDisabledForColumn = (event: RowClickedEvent<Row>): boolean => {
+  const columnKey = getClickedColumnKey(event)
+
+  return Boolean(columnKey && rowClickDisabledColumnKeys.value.has(columnKey))
+}
+
 const applyDomAttrs = (element: HTMLElement | undefined, attrs: Record<string, unknown>) => {
   if (!element) {
     return
@@ -638,7 +657,7 @@ const onFilterClose = (filterKey: string) => {
 }
 
 const onRowClick = (event: RowClickedEvent<Row>) => {
-  if (event.data && !disableRowClick) {
+  if (event.data && !isRowClickDisabledForColumn(event)) {
     emit('row:click', event.data, event)
   }
 }
@@ -794,6 +813,20 @@ defineExpose<{
   :deep(.ag-root-wrapper) {
     border: 0;
     border-radius: 0;
+  }
+
+  :deep(.ag-cell) {
+    align-items: center;
+    display: flex;
+  }
+
+  :deep(.ag-cell-wrapper),
+  :deep(.ag-cell-value) {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    min-width: 0;
+    width: 100%;
   }
 }
 

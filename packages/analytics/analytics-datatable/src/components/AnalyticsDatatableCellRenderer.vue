@@ -80,3 +80,13 @@ defineExpose({
     <RenderCellSlot />
   </span>
 </template>
+
+<style lang="scss" scoped>
+.datatable-cell-content {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  min-width: 0;
+  width: 100%;
+}
+</style>

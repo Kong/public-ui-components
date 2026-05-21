@@ -3,6 +3,7 @@ import type {
   AnalyticsDatatableCellSlotProps,
   AnalyticsDatatableConfig,
   AnalyticsDatatableFetcher,
+  AnalyticsDatatableGridOptions,
   AnalyticsDatatableHeader,
   AnalyticsDatatableMode,
   AnalyticsDatatableRowAttrs,
@@ -37,13 +38,13 @@ type TestDatatableProps = {
   hideToolbar?: boolean
   hideBulkActions?: boolean
   hideColumnVisibility?: boolean
-  disableRowClick?: boolean
   hidePagination?: boolean
   hidePaginationWhenOptional?: boolean
   paginationPageSizeOptions?: number[]
   refreshKey?: string | number
   rowAttrs?: AnalyticsDatatableRowAttrs<TestRow>
   cellAttrs?: AnalyticsDatatableCellAttrs<TestRow>
+  agGridOptions?: AnalyticsDatatableGridOptions<TestRow>
   tableConfig?: AnalyticsDatatableConfig
   filterSelection?: FilterGroupSelection
 }
@@ -149,12 +150,12 @@ describe('<AnalyticsDatatable />', () => {
     hideToolbar = false,
     hideBulkActions = false,
     hideColumnVisibility = false,
-    disableRowClick = false,
     hidePagination = false,
     hidePaginationWhenOptional = false,
     refreshKey = undefined,
     rowAttrs = undefined,
     cellAttrs = undefined,
+    agGridOptions = {},
     useTableConfig = true,
     onGridReady = undefined,
     onCellClick = undefined,
@@ -184,12 +185,12 @@ describe('<AnalyticsDatatable />', () => {
     hideToolbar?: boolean
     hideBulkActions?: boolean
     hideColumnVisibility?: boolean
-    disableRowClick?: boolean
     hidePagination?: boolean
     hidePaginationWhenOptional?: boolean
     refreshKey?: string | number | undefined
     rowAttrs?: AnalyticsDatatableRowAttrs<TestRow> | undefined
     cellAttrs?: AnalyticsDatatableCellAttrs<TestRow> | undefined
+    agGridOptions?: AnalyticsDatatableGridOptions<TestRow>
     useTableConfig?: boolean
     onGridReady?: ((api: GridApi<TestRow>) => void) | undefined
     onCellClick?: ((payload: CellClickPayload) => void) | undefined
@@ -220,12 +221,12 @@ describe('<AnalyticsDatatable />', () => {
       hideToolbar,
       hideBulkActions,
       hideColumnVisibility,
-      disableRowClick,
       hidePagination,
       hidePaginationWhenOptional,
       refreshKey,
       rowAttrs,
       cellAttrs,
+      agGridOptions,
       paginationPageSizeOptions: [10, 15, 25],
       'onGrid:ready': onGridReady,
       'onCell:click': onCellClick,
@@ -1090,6 +1091,46 @@ describe('<AnalyticsDatatable />', () => {
       })
     })
 
+    it('keeps AG Grid row buffering enabled unless configured by the host', () => {
+      let defaultGridApi: GridApi<TestRow> | undefined
+      let configuredGridApi: GridApi<TestRow> | undefined
+
+      mountTable({
+        onGridReady: (api) => {
+          defaultGridApi = api
+        },
+      })
+
+      cy.then(() => {
+        expect(defaultGridApi!.getGridOption('rowBuffer')).to.equal(10)
+      })
+
+      mountTable({
+        agGridOptions: { rowBuffer: 4 },
+        onGridReady: (api) => {
+          configuredGridApi = api
+        },
+      })
+
+      cy.then(() => {
+        expect(configuredGridApi!.getGridOption('rowBuffer')).to.equal(4)
+      })
+    })
+
+    it('stretches AG Grid cell wrappers so cell content can center vertically', () => {
+      mountTable()
+
+      cy.get('.analytics-datatable-grid .ag-cell').first()
+        .should('have.css', 'display', 'flex')
+        .and('have.css', 'align-items', 'center')
+      cy.get('.analytics-datatable-grid .ag-cell-wrapper').first()
+        .should('have.css', 'display', 'flex')
+        .and('have.css', 'align-items', 'center')
+      cy.get('.analytics-datatable-grid .ag-cell-value').first()
+        .should('have.css', 'display', 'flex')
+        .and('have.css', 'align-items', 'center')
+    })
+
     it('allows configured wide columns to overflow horizontally', () => {
       let gridApi: GridApi<TestRow> | undefined
 
@@ -1369,19 +1410,38 @@ describe('<AnalyticsDatatable />', () => {
       cy.get('@rowSelect').should('have.been.calledWithMatch', [rows[0]])
     })
 
-    it('can disable row click events without disabling selection', () => {
+    it('does not emit row click from columns with row click disabled', () => {
       const onRowClick = cy.stub().as('rowClick')
       const onRowSelect = cy.stub().as('rowSelect')
 
       mountTable({
-        disableRowClick: true,
+        config: {
+          ...tableConfig,
+          columnOrder: ['name', 'status', 'latency', 'actions'],
+          columnVisibility: {
+            ...tableConfig.columnVisibility,
+            actions: true,
+          },
+        },
+        headers: [
+          ...headers,
+          { key: 'actions', label: 'Actions', disableRowClick: true, width: 80 },
+        ],
         onRowClick,
         onRowSelect,
+        slots: {
+          actions: ({ row }) => h('button', {
+            'data-testid': `actions-${row.id}`,
+            type: 'button',
+          }, 'Actions'),
+        },
       })
 
-      cy.contains('Gateway service').click()
+      cy.getTestId('actions-row-1').click()
       cy.get('@rowClick').should('not.have.been.called')
       cy.get('@rowSelect').should('have.been.calledWithMatch', [rows[0]])
+      cy.contains('Gateway service').click()
+      cy.get('@rowClick').should('have.been.calledWithMatch', rows[0])
     })
 
     it('emits cell click payloads', () => {

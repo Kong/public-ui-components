@@ -300,6 +300,70 @@ import {
 
 Use `row-selection="single"` for click-based single row selection, `row-selection="multiple"` for checkbox-backed multi-row selection, and `row-selection="none"` to disable selection UI and selection events.
 
+Use `headers[].disableRowClick` for action or control columns that should not emit `row:click` while the rest of the row remains clickable.
+
+```ts
+const headers: Array<AnalyticsDatatableHeader<Row>> = [
+  { key: 'route', label: 'Route', sortable: true },
+  { key: 'status', label: 'Status', sortable: true },
+  {
+    key: 'actions',
+    label: 'Actions',
+    disableRowClick: true,
+    width: 120,
+  },
+]
+```
+
+```vue
+<AnalyticsDatatable
+  :fetcher="fetchRows"
+  :headers="headers"
+  row-selection="multiple"
+  @row:click="openRequest"
+  @row:select="selectedRows = $event"
+>
+  <template #actions="{ row }">
+    <KButton
+      appearance="tertiary"
+      size="small"
+      @click="inspectRequest(row)"
+    >
+      Inspect
+    </KButton>
+  </template>
+</AnalyticsDatatable>
+```
+
+Clicking the `actions` column slot does not emit `row:click`, but normal AG Grid selection behavior is preserved.
+
+### Cell Layout
+
+Cells are vertically centered by default. The wrapper stretches AG Grid cell wrappers and the package cell renderer so slotted content can fill the row height.
+
+Host apps can customize per-cell content layout with `cellAttrs`:
+
+```vue
+<AnalyticsDatatable
+  :cell-attrs="getCellAttrs"
+  :fetcher="fetchRows"
+  :headers="headers"
+/>
+```
+
+```ts
+const getCellAttrs: AnalyticsDatatableCellAttrs<Row> = ({ column }) => ({
+  class: {
+    'requests-table-cell-right': column.key === 'latency',
+  },
+  style: column.key === 'latency'
+    ? { justifyContent: 'flex-end', textAlign: 'right' }
+    : undefined,
+})
+```
+
+Use `headers[].agGridColumnOptions.cellClass` or `headers[].agGridColumnOptions.cellStyle` when the host must style the underlying AG Grid cell instead of the rendered cell content.
+
 ### Custom States
 
 ```vue
@@ -393,7 +457,6 @@ Use `outside-search` and `outside-filters` to move built-in controls to Teleport
 | `hideToolbar` | `boolean` | No | `false` | Hides toolbar-rendered search, filters, selected-row actions, and the column visibility menu. Built-in controls with outside targets remain mounted. |
 | `hideBulkActions` | `boolean` | No | `false` | Hides the selected-row actions dropdown while leaving the rest of the toolbar visible. |
 | `hideColumnVisibility` | `boolean` | No | `false` | Hides the column visibility menu while leaving the rest of the toolbar visible. |
-| `disableRowClick` | `boolean` | No | `false` | Prevents `row:click` emission without changing selection behavior. |
 | `hidePagination` | `boolean` | No | `false` | Hides pagination controls in pagination mode. |
 | `hidePaginationWhenOptional` | `boolean` | No | `false` | Hides pagination controls when the loaded dataset fits on one page. |
 | `rowSelection` | `'none' \| 'single' \| 'multiple'` | No | `'none'` | Enables no selection, click-based single selection, or checkbox-backed multi-selection. |
@@ -403,6 +466,24 @@ Use `outside-search` and `outside-filters` to move built-in controls to Teleport
 | `rowAttrs` | `(row: Row) => Record<string, unknown>` | No | - | Applies DOM attributes to rendered AG Grid rows. |
 | `cellAttrs` | `({ row, rowValue, column, rowIndex, colIndex }) => Record<string, unknown>` | No | - | Applies DOM attributes to rendered cell content. |
 | `tableConfig` | `AnalyticsDatatableConfig` | No | Internal state | Optional controlled table state for column order, visibility, widths, pinning, sort, and page size. |
+
+## Header Options
+
+| Field | Type | Default | Notes |
+| --- | --- | --- | --- |
+| `key` | `string` | - | Column key. Also controls the dynamic cell slot name. |
+| `label` | `string` | - | Header label. |
+| `sortable` | `boolean` | `false` | Enables AG Grid sorting and wrapper sort payload updates for the column. |
+| `hideable` | `boolean` | `true` | Allows the column visibility menu to hide or show the column. |
+| `hideLabel` | `boolean` | `false` | Hides the visual header label while keeping the column key and slot mapping. |
+| `disableRowClick` | `boolean` | `false` | Suppresses `row:click` when clicks originate from this column without changing selection behavior. |
+| `tooltip` | `string` | - | Header tooltip text and fallback cell tooltip text. |
+| `width` / `minWidth` / `maxWidth` | `number` | - | AG Grid column sizing constraints in pixels. |
+| `resizable` | `boolean` | `true` | Enables AG Grid column resizing. |
+| `draggable` | `boolean` | `true` | Enables column reordering. |
+| `pinned` | `'left' \| 'right' \| false` | `false` | Initial pinned column state. |
+| `filter` | `Filter` | - | KFilterGroup filter definition for the column. |
+| `agGridColumnOptions` | `Partial<ColDef<Row>>` | - | Escape hatch for lower-level AG Grid column options. These options can override package defaults and bypass wrapper guarantees. |
 
 ## Models
 
@@ -479,3 +560,5 @@ Run the package sandbox to test the interactive mock-data playground:
 ```sh
 pnpm --filter @kong-ui-public/analytics-datatable run dev
 ```
+
+The sandbox includes an `Actions` column that uses `disableRowClick: true`. Click the `Inspect` button in that column to verify action-cell clicks do not emit `row:click`, while row selection still updates the selected-row debug panel.

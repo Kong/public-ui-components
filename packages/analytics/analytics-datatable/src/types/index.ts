@@ -47,6 +47,7 @@ export type AnalyticsDatatableHeader<Row extends Record<string, any> = Record<st
   sortable?: boolean
   hideable?: boolean
   hideLabel?: boolean
+  disableRowClick?: boolean
   tooltip?: string
   width?: number
   minWidth?: number

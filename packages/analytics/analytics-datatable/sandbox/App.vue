@@ -219,6 +219,17 @@
           <template #latency="{ row }">
             <span :class="{ slow: row.latency > 500 }">{{ row.latency }} ms</span>
           </template>
+
+          <template #actions="{ row }">
+            <KButton
+              appearance="tertiary"
+              data-testid="sandbox-row-action"
+              size="small"
+              @click="logEvent('action:inspect', { id: row.id, service: row.service })"
+            >
+              Inspect
+            </KButton>
+          </template>
         </AnalyticsDatatable>
       </section>
 
@@ -652,6 +663,13 @@ const createDefaultColumnSettings = (): Array<AnalyticsDatatableHeader<MockRow>>
       },
     },
     { key: 'latency', label: 'Latency', sortable: true, width: 140 },
+    {
+      key: 'actions',
+      label: 'Actions',
+      disableRowClick: true,
+      tooltip: 'Clicking this column does not emit row:click, but row selection still works.',
+      width: 120,
+    },
     {
       key: asyncColumnKey,
       label: 'Async value',

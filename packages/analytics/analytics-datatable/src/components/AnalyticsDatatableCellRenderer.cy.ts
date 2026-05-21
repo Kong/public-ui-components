@@ -87,6 +87,18 @@ describe('<AnalyticsDatatableCellRenderer />', () => {
     cy.get('.datatable-cell-content').should('contain.text', 'Gateway service')
   })
 
+  it('vertically centers cell content by default', () => {
+    cy.mount(AnalyticsDatatableCellRenderer, {
+      props: {
+        params: createParams(),
+      },
+    })
+
+    cy.get('.datatable-cell-content')
+      .should('have.css', 'display', 'flex')
+      .and('have.css', 'align-items', 'center')
+  })
+
   it('passes the expected payload to the matching cell slot', () => {
     let slotPayload: AnalyticsDatatableCellSlotProps<TestRow> | undefined
     const params = createParams({
