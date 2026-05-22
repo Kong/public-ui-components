@@ -116,6 +116,7 @@ useProvideExperimentalFreeForms([
   'basic-auth',
   'key-auth',
   'response-ratelimiting',
+  'redirect',
 ])
 
 const enableDeckConfigCustomization = ref(false)
