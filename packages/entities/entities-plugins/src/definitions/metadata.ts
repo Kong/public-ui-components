@@ -531,7 +531,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-semantic-prompt-guard': {
     descriptionKey: 'plugins.meta.ai-semantic-prompt-guard.description',
     nameKey: 'plugins.meta.ai-semantic-prompt-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-prompt-guard'],
   },
   'header-cert-auth': {
