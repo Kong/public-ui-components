@@ -116,6 +116,7 @@ useProvideExperimentalFreeForms([
   'key-auth',
   'confluent',
   'confluent-consume',
+  'degraphql',
 ])
 
 const enableDeckConfigCustomization = ref(false)
