@@ -118,6 +118,7 @@ useProvideExperimentalFreeForms([
   'key-auth-enc',
   'ldap-auth',
   'ldap-auth-advanced',
+  'oauth2-introspection',
 ])
 
 const enableDeckConfigCustomization = ref(false)
