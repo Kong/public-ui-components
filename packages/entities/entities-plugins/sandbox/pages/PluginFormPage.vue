@@ -117,6 +117,7 @@ useProvideExperimentalFreeForms([
   'app-dynamics',
   'datadog',
   'statsd',
+  'zipkin',
 ])
 
 const enableDeckConfigCustomization = ref(false)
