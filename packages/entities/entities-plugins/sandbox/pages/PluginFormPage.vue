@@ -112,6 +112,7 @@ useProvideExperimentalFreeForms([
   'oauth2',
   'jwe-decrypt',
   'mtls-auth',
+  'grpc-gateway',
 ])
 
 const enableDeckConfigCustomization = ref(false)
