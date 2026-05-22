@@ -112,6 +112,8 @@ useProvideExperimentalFreeForms([
   'oauth2',
   'jwe-decrypt',
   'mtls-auth',
+  'confluent',
+  'confluent-consume',
 ])
 
 const enableDeckConfigCustomization = ref(false)
