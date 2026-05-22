@@ -659,7 +659,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-mcp-oauth2': {
     descriptionKey: 'plugins.meta.ai-mcp-oauth2.description',
     nameKey: 'plugins.meta.ai-mcp-oauth2.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-mcp-oauth2'],
   },
   'ai-semantic-response-guard': {

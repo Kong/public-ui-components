@@ -116,6 +116,7 @@ useProvideExperimentalFreeForms([
   'key-auth',
   'ai-llm-as-judge',
   'ai-lakera-guard',
+  'ai-mcp-oauth2',
 ])
 
 const enableDeckConfigCustomization = ref(false)
