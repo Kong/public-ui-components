@@ -117,6 +117,7 @@ useProvideExperimentalFreeForms([
   'websocket-size-limit',
   'websocket-validator',
   'xml-threat-protection',
+  'upstream-timeout',
 ])
 
 const enableDeckConfigCustomization = ref(false)
