@@ -114,6 +114,7 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'ai-semantic-cache',
 ])
 
 const enableDeckConfigCustomization = ref(false)
