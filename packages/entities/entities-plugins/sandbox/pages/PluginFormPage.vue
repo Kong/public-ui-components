@@ -118,6 +118,7 @@ useProvideExperimentalFreeForms([
   'ai-lakera-guard',
   'ai-mcp-oauth2',
   'ai-sanitizer',
+  'ai-rag-injector',
 ])
 
 const enableDeckConfigCustomization = ref(false)
