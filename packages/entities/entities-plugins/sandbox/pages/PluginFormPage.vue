@@ -116,6 +116,7 @@ useProvideExperimentalFreeForms([
   'key-auth',
   'pre-function',
   'ip-restriction',
+  'post-function',
 ])
 
 const enableDeckConfigCustomization = ref(false)
