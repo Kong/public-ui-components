@@ -116,6 +116,7 @@ useProvideExperimentalFreeForms([
   'key-auth',
   'kafka-log',
   'loggly',
+  'syslog',
 ])
 
 const enableDeckConfigCustomization = ref(false)
