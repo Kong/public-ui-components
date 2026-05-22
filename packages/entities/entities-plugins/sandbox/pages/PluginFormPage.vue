@@ -116,6 +116,7 @@ useProvideExperimentalFreeForms([
   'basic-auth',
   'key-auth',
   'injection-protection',
+  'json-threat-protection',
 ])
 
 const enableDeckConfigCustomization = ref(false)
