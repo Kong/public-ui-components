@@ -112,6 +112,7 @@ useProvideExperimentalFreeForms([
   'oauth2',
   'jwe-decrypt',
   'mtls-auth',
+  'ai-a2a-proxy',
 ])
 
 const enableDeckConfigCustomization = ref(false)
