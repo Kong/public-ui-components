@@ -115,6 +115,7 @@ useProvideExperimentalFreeForms([
   'basic-auth',
   'key-auth',
   'ai-semantic-cache',
+  'ai-prompt-template',
 ])
 
 const enableDeckConfigCustomization = ref(false)
