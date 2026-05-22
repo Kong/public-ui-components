@@ -98,6 +98,7 @@ useProvideExperimentalFreeForms([
   'response-transformer-advanced',
   'correlation-id',
   'solace-consume',
+  'confluent-consume',
   'solace-log',
   'solace-upstream',
   'opentelemetry',
