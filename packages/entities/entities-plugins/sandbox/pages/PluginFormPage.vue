@@ -117,6 +117,7 @@ useProvideExperimentalFreeForms([
   'request-validator',
   'canary',
   'mocking',
+  'oas-validation',
 ])
 
 const enableDeckConfigCustomization = ref(false)
