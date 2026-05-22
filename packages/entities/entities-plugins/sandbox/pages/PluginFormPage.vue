@@ -86,6 +86,7 @@ provideDeckCommandEditor()
 
 useProvideExperimentalFreeForms([
   'rate-limiting-advanced',
+  'graphql-rate-limiting-advanced',
   'service-protection',
   'prometheus',
   'metering-and-billing',
