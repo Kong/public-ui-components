@@ -118,6 +118,7 @@ useProvideExperimentalFreeForms([
   'canary',
   'mocking',
   'oas-validation',
+  'route-by-header',
 ])
 
 const enableDeckConfigCustomization = ref(false)
