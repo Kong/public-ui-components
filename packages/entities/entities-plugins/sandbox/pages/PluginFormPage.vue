@@ -116,6 +116,7 @@ useProvideExperimentalFreeForms([
   'key-auth',
   'jq',
   'kafka-upstream',
+  'azure-functions',
 ])
 
 const enableDeckConfigCustomization = ref(false)
