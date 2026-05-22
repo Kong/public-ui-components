@@ -116,6 +116,7 @@ useProvideExperimentalFreeForms([
   'key-auth',
   'request-validator',
   'canary',
+  'mocking',
 ])
 
 const enableDeckConfigCustomization = ref(false)
