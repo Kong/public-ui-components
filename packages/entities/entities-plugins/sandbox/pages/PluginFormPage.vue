@@ -116,6 +116,7 @@ useProvideExperimentalFreeForms([
   'basic-auth',
   'key-auth',
   'ace',
+  'kafka-consume',
 ])
 
 const enableDeckConfigCustomization = ref(false)
