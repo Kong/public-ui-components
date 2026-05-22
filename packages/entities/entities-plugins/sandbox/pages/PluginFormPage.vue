@@ -114,6 +114,7 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'kafka-log',
 ])
 
 const enableDeckConfigCustomization = ref(false)
