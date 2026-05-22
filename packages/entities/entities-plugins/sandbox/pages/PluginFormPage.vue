@@ -116,6 +116,7 @@ useProvideExperimentalFreeForms([
   'key-auth',
   'hmac-auth',
   'key-auth-enc',
+  'ldap-auth',
 ])
 
 const enableDeckConfigCustomization = ref(false)
