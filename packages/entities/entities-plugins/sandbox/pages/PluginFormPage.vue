@@ -114,6 +114,7 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'openid-connect',
 ])
 
 const enableDeckConfigCustomization = ref(false)
