@@ -112,6 +112,7 @@ useProvideExperimentalFreeForms([
   'oauth2',
   'jwe-decrypt',
   'mtls-auth',
+  'websocket-size-limit',
 ])
 
 const enableDeckConfigCustomization = ref(false)
