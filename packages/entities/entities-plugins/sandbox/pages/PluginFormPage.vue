@@ -119,6 +119,7 @@ useProvideExperimentalFreeForms([
   'ai-mcp-oauth2',
   'ai-sanitizer',
   'ai-rag-injector',
+  'ai-semantic-response-guard',
 ])
 
 const enableDeckConfigCustomization = ref(false)
