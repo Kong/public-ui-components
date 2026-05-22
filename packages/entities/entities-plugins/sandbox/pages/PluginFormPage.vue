@@ -112,6 +112,7 @@ useProvideExperimentalFreeForms([
   'oauth2',
   'jwe-decrypt',
   'mtls-auth',
+  'kafka-upstream',
 ])
 
 const enableDeckConfigCustomization = ref(false)
