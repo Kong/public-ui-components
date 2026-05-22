@@ -115,6 +115,7 @@ useProvideExperimentalFreeForms([
   'basic-auth',
   'key-auth',
   'websocket-size-limit',
+  'websocket-validator',
 ])
 
 const enableDeckConfigCustomization = ref(false)
