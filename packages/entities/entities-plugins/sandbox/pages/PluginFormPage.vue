@@ -112,6 +112,7 @@ useProvideExperimentalFreeForms([
   'oauth2',
   'jwe-decrypt',
   'mtls-auth',
+  'ai-llm-as-judge',
 ])
 
 const enableDeckConfigCustomization = ref(false)
