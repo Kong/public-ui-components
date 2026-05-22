@@ -118,6 +118,7 @@ useProvideExperimentalFreeForms([
   'kafka-log',
   'loggly',
   'syslog',
+  'udp-log',
 ])
 
 const enableDeckConfigCustomization = ref(false)
