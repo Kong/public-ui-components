@@ -108,6 +108,7 @@ useProvideExperimentalFreeForms([
   'cors',
   'proxy-cache',
   'proxy-cache-advanced',
+  'graphql-proxy-cache-advanced',
   'header-cert-auth',
   'session',
   'oauth2',
