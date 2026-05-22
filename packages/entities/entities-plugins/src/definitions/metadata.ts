@@ -253,7 +253,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-rate-limiting-advanced': {
     descriptionKey: 'plugins.meta.ai-rate-limiting-advanced.description',
     nameKey: 'plugins.meta.ai-rate-limiting-advanced.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-rate-limiting-advanced'],
   },
   'ai-azure-content-safety': {
