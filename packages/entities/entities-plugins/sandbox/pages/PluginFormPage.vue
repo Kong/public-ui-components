@@ -117,6 +117,7 @@ useProvideExperimentalFreeForms([
   'key-auth',
   'ace',
   'kafka-consume',
+  'standard-webhooks',
 ])
 
 const enableDeckConfigCustomization = ref(false)
