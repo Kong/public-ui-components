@@ -236,7 +236,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-prompt-guard': {
     descriptionKey: 'plugins.meta.ai-prompt-guard.description',
     nameKey: 'plugins.meta.ai-prompt-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-guard'],
   },
   'ai-request-transformer': {
