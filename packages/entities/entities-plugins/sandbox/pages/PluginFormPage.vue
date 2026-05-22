@@ -118,6 +118,7 @@ useProvideExperimentalFreeForms([
   'injection-protection',
   'json-threat-protection',
   'opa',
+  'tls-handshake-modifier',
 ])
 
 const enableDeckConfigCustomization = ref(false)
