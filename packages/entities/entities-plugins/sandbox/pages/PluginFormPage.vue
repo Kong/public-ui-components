@@ -116,6 +116,7 @@ useProvideExperimentalFreeForms([
   'key-auth',
   'app-dynamics',
   'datadog',
+  'statsd',
 ])
 
 const enableDeckConfigCustomization = ref(false)
