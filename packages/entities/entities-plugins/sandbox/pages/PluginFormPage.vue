@@ -112,6 +112,7 @@ useProvideExperimentalFreeForms([
   'oauth2',
   'jwe-decrypt',
   'mtls-auth',
+  'json-threat-protection',
 ])
 
 const enableDeckConfigCustomization = ref(false)
