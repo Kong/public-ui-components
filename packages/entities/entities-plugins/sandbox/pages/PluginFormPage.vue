@@ -114,6 +114,7 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'websocket-size-limit',
 ])
 
 const enableDeckConfigCustomization = ref(false)
