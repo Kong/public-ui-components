@@ -112,6 +112,7 @@ useProvideExperimentalFreeForms([
   'oauth2',
   'jwe-decrypt',
   'mtls-auth',
+  'tls-handshake-modifier',
 ])
 
 const enableDeckConfigCustomization = ref(false)
