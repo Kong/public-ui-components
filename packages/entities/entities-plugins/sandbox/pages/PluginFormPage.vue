@@ -93,6 +93,7 @@ useProvideExperimentalFreeForms([
   'exit-transformer',
   'file-log',
   'http-log',
+  'tcp-log',
   'request-transformer-advanced',
   'response-transformer',
   'response-transformer-advanced',
