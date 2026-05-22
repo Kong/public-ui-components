@@ -112,6 +112,7 @@ useProvideExperimentalFreeForms([
   'oauth2',
   'jwe-decrypt',
   'mtls-auth',
+  'ai-rag-injector',
 ])
 
 const enableDeckConfigCustomization = ref(false)
