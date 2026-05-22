@@ -3,25 +3,26 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-05-21T09:01:29.186Z
+> Generated: 2026-05-22T02:00:00.000Z
 
 ## Summary
 
-`██████████░░░░░░░░░░░░░░░░░░░░` **33%**
+`██████████░░░░░░░░░░░░░░░░░░░░` **34%**
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **37** |
-| ⏳ Pending | **76** |
+| ✅ Migrated | **38** |
+| ⏳ Pending | **75** |
 
 ---
 
-## ✅ Migrated (37)
+## ✅ Migrated (38)
 
 - acl
 - ai-custom-guardrail
 - ai-mcp-proxy
+- ai-prompt-compressor
 - aws-lambda
 - basic-auth
 - correlation-id
@@ -59,7 +60,7 @@
 
 ---
 
-## ⏳ Pending (76)
+## ⏳ Pending (75)
 
 - ace
 - acme
@@ -70,7 +71,6 @@
 - ai-lakera-guard
 - ai-llm-as-judge
 - ai-mcp-oauth2
-- ai-prompt-compressor
 - ai-prompt-decorator
 - ai-prompt-guard
 - ai-prompt-template
