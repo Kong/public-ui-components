@@ -226,7 +226,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-prompt-decorator': {
     descriptionKey: 'plugins.meta.ai-prompt-decorator.description',
     nameKey: 'plugins.meta.ai-prompt-decorator.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-decorator'],
   },
   'ai-prompt-template': {
