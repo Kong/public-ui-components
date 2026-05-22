@@ -118,6 +118,7 @@ useProvideExperimentalFreeForms([
   'ai-prompt-template',
   'ai-semantic-prompt-guard',
   'ai-request-transformer',
+  'ai-response-transformer',
 ])
 
 const enableDeckConfigCustomization = ref(false)

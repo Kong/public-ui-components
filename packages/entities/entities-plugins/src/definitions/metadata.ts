@@ -249,7 +249,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-response-transformer': {
     descriptionKey: 'plugins.meta.ai-response-transformer.description',
     nameKey: 'plugins.meta.ai-response-transformer.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-response-transformer'],
   },
   'ai-rate-limiting-advanced': {
