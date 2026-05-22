@@ -1,6 +1,24 @@
 import EnumField from '../shared/EnumField.vue'
 import { definePluginConfig } from '../shared/define-plugin-config'
 
+const MULTISELECT_FIELDS = new Set([
+  'config.auth_methods',
+  'config.client_auth',
+  'config.client_alg',
+  'config.token_headers_grants',
+  'config.bearer_token_param_type',
+  'config.client_credentials_param_type',
+  'config.password_param_type',
+  'config.id_token_param_type',
+  'config.refresh_token_param_type',
+  'config.login_methods',
+  'config.login_tokens',
+  'config.logout_methods',
+  'config.consumer_by',
+  'config.ignore_signature',
+  'config.disable_session',
+])
+
 export default definePluginConfig({
   experimental: true,
   renderRules: {
@@ -15,23 +33,7 @@ export default definePluginConfig({
   },
   fieldRenderers: [
     {
-      match: ({ path }) => [
-        'config.auth_methods',
-        'config.client_auth',
-        'config.client_alg',
-        'config.token_headers_grants',
-        'config.bearer_token_param_type',
-        'config.client_credentials_param_type',
-        'config.password_param_type',
-        'config.id_token_param_type',
-        'config.refresh_token_param_type',
-        'config.login_methods',
-        'config.login_tokens',
-        'config.logout_methods',
-        'config.consumer_by',
-        'config.ignore_signature',
-        'config.disable_session',
-      ].includes(path),
+      match: ({ path }) => MULTISELECT_FIELDS.has(path),
       component: EnumField,
       propsOverrides: { multiple: true },
     },
