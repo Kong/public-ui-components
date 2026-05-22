@@ -117,6 +117,7 @@ useProvideExperimentalFreeForms([
   'jq',
   'kafka-upstream',
   'azure-functions',
+  'openwhisk',
 ])
 
 const enableDeckConfigCustomization = ref(false)
