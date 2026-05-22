@@ -526,7 +526,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-semantic-cache': {
     descriptionKey: 'plugins.meta.ai-semantic-cache.description',
     nameKey: 'plugins.meta.ai-semantic-cache.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-cache'],
   },
   'ai-semantic-prompt-guard': {
