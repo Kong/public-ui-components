@@ -118,6 +118,7 @@ useProvideExperimentalFreeForms([
   'ip-restriction',
   'post-function',
   'bot-detection',
+  'request-size-limiting',
 ])
 
 const enableDeckConfigCustomization = ref(false)
