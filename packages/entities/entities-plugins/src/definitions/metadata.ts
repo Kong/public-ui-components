@@ -244,7 +244,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-request-transformer': {
     descriptionKey: 'plugins.meta.ai-request-transformer.description',
     nameKey: 'plugins.meta.ai-request-transformer.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-request-transformer'],
   },
   'ai-response-transformer': {
