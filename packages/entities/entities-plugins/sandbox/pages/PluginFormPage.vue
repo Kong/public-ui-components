@@ -118,6 +118,7 @@ useProvideExperimentalFreeForms([
   'websocket-validator',
   'xml-threat-protection',
   'upstream-timeout',
+  'forward-proxy',
 ])
 
 const enableDeckConfigCustomization = ref(false)
