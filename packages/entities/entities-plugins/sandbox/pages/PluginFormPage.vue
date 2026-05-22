@@ -118,6 +118,7 @@ useProvideExperimentalFreeForms([
   'confluent-consume',
   'degraphql',
   'grpc-gateway',
+  'grpc-web',
 ])
 
 const enableDeckConfigCustomization = ref(false)
