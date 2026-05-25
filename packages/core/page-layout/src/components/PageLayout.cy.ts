@@ -1,4 +1,6 @@
 import { defineComponent, inject, h, reactive, ref } from 'vue'
+import { createRouter, createMemoryHistory, type Router } from 'vue-router'
+import type { OptionsParam } from '../../../../../cypress/types'
 import PageLayout from './PageLayout.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
 import type { PageShortcutData } from '../types'
@@ -9,7 +11,23 @@ const validShortcutData: PageShortcutData = {
   entityType: 'gateway-service',
 }
 
+const createTestRouter = () => createRouter({
+  history: createMemoryHistory(),
+  routes: [{ path: '/:pathMatch(.*)*', component: { template: '<div />' } }],
+})
+
 describe('<PageLayout />', () => {
+  let router: Router
+
+  beforeEach(() => {
+    router = createTestRouter()
+    cy.wrap(router.push('/services/my-service').then(() => router.isReady()))
+  })
+
+  const mountWithRouter = (
+    component: Parameters<typeof cy.mount>[0],
+    options: OptionsParam = {},
+  ) => cy.mount(component, { ...options, router } as OptionsParam)
   it('renders breadcrumbs, title and tabs when breadcrumbs and tabs are passed', () => {
     const title = 'Test Page Title'
 
@@ -22,7 +40,7 @@ describe('<PageLayout />', () => {
       { key: 'settings', label: 'Settings', to: '/settings' },
     ]
 
-    cy.mount(PageLayout, {
+    mountWithRouter(PageLayout, {
       props: {
         title,
         breadcrumbs,
@@ -39,7 +57,7 @@ describe('<PageLayout />', () => {
   it('renders the back button when the backTo prop is passed', () => {
     const backTo = '/'
 
-    cy.mount(PageLayout, {
+    mountWithRouter(PageLayout, {
       props: {
         title: 'Test Page Title',
         backTo,
@@ -52,7 +70,7 @@ describe('<PageLayout />', () => {
   it('renders only the title when neither breadcrumbs nor tabs are passed', () => {
     const title = 'Test Page Title'
 
-    cy.mount(PageLayout, {
+    mountWithRouter(PageLayout, {
       props: {
         title,
       },
@@ -67,7 +85,7 @@ describe('<PageLayout />', () => {
     const actionsTestId = 'page-layout-slotted-actions'
     const actionsText = 'Actions'
 
-    cy.mount(PageLayout, {
+    mountWithRouter(PageLayout, {
       props: { title: 'Test Page Title' },
       slots: { actions: () => h('div', { 'data-testid': actionsTestId }, actionsText) },
     })
@@ -79,7 +97,7 @@ describe('<PageLayout />', () => {
     const titleAfterTestId = 'page-layout-slotted-title-after'
     const titleAfterText = 'Title after'
 
-    cy.mount(PageLayout, {
+    mountWithRouter(PageLayout, {
       props: { title: 'Test Page Title' },
       slots: { 'title-after': () => h('span', { 'data-testid': titleAfterTestId }, titleAfterText) },
     })
@@ -99,7 +117,7 @@ describe('<PageLayout />', () => {
         },
       })
 
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: parentTitle },
         slots: { default: () => h(ChildNotifier) },
       })
@@ -113,7 +131,7 @@ describe('<PageLayout />', () => {
       const childTitle = 'Child Title'
       let notified = false
 
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: childTitle },
         global: {
           provide: {
@@ -145,7 +163,7 @@ describe('<PageLayout />', () => {
         },
       })
 
-      cy.mount(Wrapper)
+      mountWithRouter(Wrapper)
 
       // Child is mounted — parent header should be hidden, child header visible
       cy.getTestId('page-layout-title').should('have.length', 1).and('contain.text', childTitle)
@@ -167,7 +185,7 @@ describe('<PageLayout />', () => {
         onEntityPageVisit,
       })
 
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: 'Parent Title', pageShortcutData: validShortcutData },
         global: { provide: { 'app:pageShortcutsContext': ctx } },
         slots: {
@@ -184,7 +202,7 @@ describe('<PageLayout />', () => {
       const parentTitle = 'Parent Title'
       const childTitle = 'Child Title'
 
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: parentTitle },
         slots: { default: () => h(PageLayout, { title: childTitle }) },
       })
@@ -197,7 +215,7 @@ describe('<PageLayout />', () => {
 
   describe('page shortcuts', () => {
     it('does not render the favorite button when neither pageShortcutData nor pageShortcutsContext are provided', () => {
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: 'Test Page Title' },
       })
 
@@ -205,7 +223,7 @@ describe('<PageLayout />', () => {
     })
 
     it('does not render the favorite button when only pageShortcutData is provided', () => {
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
       })
 
@@ -219,7 +237,7 @@ describe('<PageLayout />', () => {
         onEntityPageVisit: () => { },
       })
 
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: 'Test Page Title' },
         global: { provide: { 'app:pageShortcutsContext': ctx } },
       })
@@ -234,7 +252,7 @@ describe('<PageLayout />', () => {
         onEntityPageVisit: () => { },
       })
 
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         // @ts-expect-error testing invalid shape
         props: { title: 'Test Page Title', pageShortcutData: { label: 'X' } },
         global: { provide: { 'app:pageShortcutsContext': ctx } },
@@ -249,7 +267,7 @@ describe('<PageLayout />', () => {
         onEntityPageVisit: () => { },
       })
 
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
         global: { provide: { 'app:pageShortcutsContext': ctx } },
       })
@@ -264,7 +282,7 @@ describe('<PageLayout />', () => {
         onEntityPageVisit: () => { },
       })
 
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
         global: { provide: { 'app:pageShortcutsContext': ctx } },
       })
@@ -283,7 +301,7 @@ describe('<PageLayout />', () => {
         onEntityPageVisit: () => { },
       })
 
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
         global: { provide: { 'app:pageShortcutsContext': ctx } },
       })
@@ -299,13 +317,14 @@ describe('<PageLayout />', () => {
         onEntityPageVisit: () => { },
       })
 
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
         global: { provide: { 'app:pageShortcutsContext': ctx } },
       })
 
       cy.getTestId('page-layout-favorite-button').click()
       cy.get('@onFavoriteToggle').should('have.been.calledOnce')
+      cy.get('@onFavoriteToggle').should('have.been.calledWith', validShortcutData)
     })
 
     it('calls onEntityPageVisit on mount with the provided pageShortcutData', () => {
@@ -316,7 +335,7 @@ describe('<PageLayout />', () => {
         onEntityPageVisit,
       })
 
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
         global: { provide: { 'app:pageShortcutsContext': ctx } },
       })
@@ -340,7 +359,7 @@ describe('<PageLayout />', () => {
         },
       })
 
-      cy.mount(Wrapper, {
+      mountWithRouter(Wrapper, {
         global: { provide: { 'app:pageShortcutsContext': ctx } },
       })
 
@@ -361,7 +380,7 @@ describe('<PageLayout />', () => {
       })
 
       // Should not throw despite the missing callback
-      cy.mount(PageLayout, {
+      mountWithRouter(PageLayout, {
         props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
         global: { provide: { 'app:pageShortcutsContext': ctx } },
       })

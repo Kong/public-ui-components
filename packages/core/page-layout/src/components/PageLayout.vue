@@ -99,12 +99,12 @@
 <script setup lang="ts">
 import { computed, ref, provide, inject, onUnmounted, nextTick, watch } from 'vue'
 import type { DeepReadonly, Reactive } from 'vue'
-import type { PageLayoutProps, PageLayoutSlots } from '../types'
+import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
 import { ArrowTopLeftIcon, StarIcon, StarFillIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import composables from '../composables'
 
 const {
@@ -123,6 +123,7 @@ const pageShortcutsContext = inject<DeepReadonly<Reactive<unknown>> | null>('app
 const { i18n: { t } } = composables.useI18n()
 
 const router = useRouter()
+const route = useRoute()
 
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
@@ -188,21 +189,21 @@ if (typeof registerNestedPageLayout === 'function') {
 
 const onFavoriteButtonClick = () => {
   // Cast to the expected type -- we already checked for the function in the computed property
-  (pageShortcutsContext as { onFavoriteToggle: () => void }).onFavoriteToggle()
+  (pageShortcutsContext as { onFavoriteToggle: (pageShortcutData: PageShortcutData) => void }).onFavoriteToggle({ ...pageShortcutData!, path: pageShortcutData?.path || route.fullPath })
 }
 
 onUnmounted(() => {
   unregisterNestedPageLayout.value?.()
 })
 
-watch(() => pageShortcutData, async (newPageShortcutData) => {
+watch([() => pageShortcutData, () => route.fullPath], async () => {
   /**
    * Wait for the next tick to ensure any nested PageLayouts have mounted to make sure shortcut logic handling is deferred to the most nested PageLayout.
    * The reason why it has to be a watcher is because sometimes it takes time for the host app router to update the route and set the path properly.
    */
   await nextTick()
   if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
-    pageShortcutsContext.onEntityPageVisit(newPageShortcutData)
+    pageShortcutsContext.onEntityPageVisit({ ...pageShortcutData, path: pageShortcutData?.path || route.fullPath })
   }
 }, { immediate: true, deep: true })
 </script>
