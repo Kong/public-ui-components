@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import composables from '../../../composables'
@@ -117,15 +117,18 @@ const onRealmsUpdate = (currentSelected: string[]) => {
 }
 
 onMounted(() => {
-  if (props.realms) {
-    // Use provided realms instead of fetching
-    realmItems.value = [kCurrentCPSelectItem, ...props.realms.map(item => ({
+  if (props.realms === undefined) {
+    fetchRealms()
+  }
+})
+
+watch(() => props.realms, (realms) => {
+  if (realms && realms.length > 0) {
+    realmItems.value = [kCurrentCPSelectItem, ...realms.map(item => ({
       ...item,
       group: t('custom_field.key_auth_identity_realms.realm_group_label'),
     }))]
     isLoadingRealms.value = false
-  } else {
-    fetchRealms()
   }
-})
+}, { immediate: true })
 </script>

@@ -233,10 +233,13 @@ describe('ConfigFormContent', () => {
         cy.getTestId('kong-identity-mode-centrally-managed').should('exist')
       })
 
-      it('hides Kong Identity selector when schema has no identity_realms', () => {
+      it('shows Kong Identity selector with only 2 options when schema has no identity_realms', () => {
         mountContent(schemaWithoutRealms, { isKonnect: true })
 
-        cy.getTestId('ff-kong-identity-field').should('not.exist')
+        cy.getTestId('ff-kong-identity-field').should('exist')
+        cy.getTestId('kong-identity-mode-consumers').should('exist')
+        cy.getTestId('kong-identity-mode-kong-identity').should('exist')
+        cy.getTestId('kong-identity-mode-centrally-managed').should('not.exist')
       })
 
       it('hides centrally managed when schema has identity_realms but no realms exist', () => {

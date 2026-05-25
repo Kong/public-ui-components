@@ -8,7 +8,7 @@
   />
 
   <KongIdentityField
-    v-if="isKonnect && hasPrincipals && identityRealmsInSchema"
+    v-if="isKonnect && hasPrincipals"
     v-model="selectedMode"
     class="kong-identity-section"
     :has-existing-realms="hasExistingRealms"
@@ -49,14 +49,14 @@ const { axiosInstance } = useAxios(appConfig?.axiosRequestConfig)
 
 const { formData, getSchema } = useFormShared()
 
-// Fetch realms from API (Konnect only)
+// Fetch realms from API only when the Konnect identity realms field is relevant
 type KonnectRealmResponse = { data: Array<{ id: string, name: string }>, meta: { next: string | null } }
 
 const fetchedRealms = ref<MultiselectItem[]>([])
 const hasExistingRealms = ref(false)
 
 const fetchRealms = async () => {
-  if (appConfig?.app !== 'konnect') return
+  if (appConfig?.app !== 'konnect' || !identityRealmsInSchema.value) return
 
   try {
     let nextUrl: string | null = `${appConfig.apiBaseUrl}/v1/realms`
