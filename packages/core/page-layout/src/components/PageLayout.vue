@@ -99,7 +99,7 @@
 <script setup lang="ts">
 import { computed, ref, provide, inject, onUnmounted, nextTick, watch } from 'vue'
 import type { DeepReadonly, Reactive } from 'vue'
-import type { PageLayoutProps, PageLayoutSlots } from '../types'
+import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
 import { ArrowTopLeftIcon, StarIcon, StarFillIcon } from '@kong/icons'
@@ -189,7 +189,7 @@ if (typeof registerNestedPageLayout === 'function') {
 
 const onFavoriteButtonClick = () => {
   // Cast to the expected type -- we already checked for the function in the computed property
-  (pageShortcutsContext as { onFavoriteToggle: () => void }).onFavoriteToggle()
+  (pageShortcutsContext as { onFavoriteToggle: (pageShortcutData: PageShortcutData) => void }).onFavoriteToggle(pageShortcutData!)
 }
 
 onUnmounted(() => {
