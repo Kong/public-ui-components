@@ -803,6 +803,22 @@
         "default_acl_item_label": "Default ACL #{index}",
         "tool_item_label": "Tool #{index}"
       },
+      "openid-connect": {
+        "tabs": {
+          "common": {
+            "title": "Common Configuration Settings",
+            "description": "Parameters for enabling the OpenID Connect plugin. Set these parameters before adding authorization, authentication, or other advanced configuration details."
+          },
+          "authorization": {
+            "title": "Authorization Configuration Settings",
+            "description": "Parameters for setting up claims-based authorization."
+          },
+          "advanced": {
+            "title": "Advanced Configuration Settings",
+            "description": "Advanced parameters for manually configuring the OpenID Connect plugin."
+          }
+        }
+      },
       "request-callout": {
         "entity_name": "Request callout",
         "by_lua_placeholder": "Enter Lua script here..."
