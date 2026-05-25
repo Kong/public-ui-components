@@ -59,10 +59,13 @@ const FF_SUB_STRUCTURAL_PREFIXES = [
   'ff-object-toggle-', // ObjectField collapse toggle (also covers toggle-btn-, trigger-icon-)
   'ff-object-switch-', // ObjectField nullable switch
   'ff-add-item-btn-', // ArrayField add button
+  'ff-array-item-', // ArrayField item row wrapper
+  'ff-array-remove-item-btn-', // ArrayField item remove button
+  'ff-json-', // JsonField root wrapper (inner ff-{path} textarea is the real field)
   'ff-tag-', // StringArrayField inner KTagsInput (root ff-{path} is kept)
   'ff-vault-secret-picker-warning-',
 ]
-const FF_STRUCTURAL_EXACT = new Set(['ff-standard-layout-form', 'ff-advanced-fields-container'])
+const FF_STRUCTURAL_EXACT = new Set(['ff-standard-layout-form', 'ff-advanced-fields-container', 'ff-entity-checks-alert', 'ff-entity-check-item'])
 // ff-enum-{path}-items = KPop dropdown content with a search <input> inside — not a field
 const FF_ENUM_ITEMS_RE = /^ff-enum-.+-items$/
 
@@ -124,6 +127,97 @@ async function expandFreeformAdvanced(page) {
   }
   if (count > 0) await page.waitForTimeout(400)
   return count
+}
+
+// Expand all collapsed ObjectFields so nested fields are visible.
+// Two-step per iteration:
+//   1. Enable switches for optional objects (ff-object-switch-*) — enabling auto-expands via watch(realAdded)
+//   2. Click toggle buttons for objects already added but still collapsed (ff-object-toggle-btn-*)
+// Loops up to 10 times to handle nested objects revealed by prior expansions.
+async function expandFreeformObjects(page) {
+  let total = 0
+  for (let iter = 0; iter < 10; iter++) {
+    let clicked = 0
+
+    // Step 1: turn on switches for optional objects that are off.
+    // Signal: the toggle button is :disabled="!added" — if disabled, the switch is off.
+    // For each disabled toggle button, click the switch-control in the same header element.
+    // This handles multiple form instances (sandbox renders two side-by-side) without cross-instance confusion.
+    const disabledBtns = await page.locator('[data-testid^="ff-object-toggle-btn-"]:visible').all()
+    for (const btn of disabledBtns) {
+      try {
+        const disabled = await btn.evaluate(el => el.disabled)
+        if (!disabled) continue
+        await btn.evaluate((el) => {
+          const header = el.closest('[data-testid^="ff-object-header-"]')
+          const switchCtrl = header?.querySelector('[data-testid="switch-control"]')
+          switchCtrl?.click()
+        })
+        clicked++
+      } catch { /* ignore */ }
+    }
+    if (clicked > 0) await page.waitForTimeout(400)
+
+    // Step 2: expand objects that are added but still collapsed (e.g. in edit mode)
+    const collapsedToggles = await page.locator('[data-testid^="ff-object-toggle-btn-"]:visible').evaluateAll(
+      els => els
+        .filter(el => el.getAttribute('aria-expanded') !== 'true' && !el.disabled)
+        .map(el => el.getAttribute('data-testid')),
+    )
+    for (const testid of collapsedToggles) {
+      try {
+        await page.locator(`[data-testid="${testid}"]`).click()
+        clicked++
+      } catch { /* ignore */ }
+    }
+
+    if (clicked === 0) break
+    total += clicked
+    await page.waitForTimeout(400)
+  }
+  return total
+}
+
+// Click each visible array add button once to reveal item-level fields.
+// Deduplicates by testid — sandbox renders two forms side-by-side so each button appears twice.
+// Uses waitForSelector so the function self-paces against SlideTransition animations that may
+// still be completing when this runs (e.g. arrays inside recently-expanded advanced sections).
+async function expandFreeformArrayItems(page) {
+  try {
+    await page.waitForSelector('[data-testid^="ff-add-item-btn-"]:visible', { timeout: 2000 })
+  } catch {
+    return 0 // no array fields on this plugin
+  }
+
+  const addBtns = await page.locator('[data-testid^="ff-add-item-btn-"]:visible').evaluateAll(
+    els => [...new Set(els.map(el => el.getAttribute('data-testid')))],
+  )
+  let total = 0
+  for (const testid of addBtns) {
+    try {
+      await page.locator(`[data-testid="${testid}"]`).first().click()
+      total++
+    } catch { /* ignore */ }
+  }
+  if (total > 0) await page.waitForTimeout(400)
+  return total
+}
+
+// VFG equivalent: VFG array add buttons carry class 'kong-form-new-element-button-label'.
+// Deduplicates by data-testid (pattern: add-{fieldPath}).
+async function expandVFGArrayItems(page) {
+  const addBtns = await page.locator('button.kong-form-new-element-button-label:visible').evaluateAll(
+    els => [...new Set(els.map(el => el.getAttribute('data-testid')).filter(Boolean))],
+  )
+  let total = 0
+  for (const testid of addBtns) {
+    try {
+      await page.locator(`button.kong-form-new-element-button-label[data-testid="${testid}"]`).first().click()
+      total++
+    } catch { /* ignore */ }
+  }
+  if (total > 0) await page.waitForTimeout(400)
+  return total
 }
 
 async function expandVFGAdvanced(page) {
@@ -197,6 +291,8 @@ async function scanFreeform() {
   }
 
   const advancedCount = await expandFreeformAdvanced(page)
+  const objectsExpanded = await expandFreeformObjects(page)
+  const arrayItemsAdded = await expandFreeformArrayItems(page)
 
   // Collect all ff-* field elements (deduplicated by testid)
   const fields = []
@@ -232,6 +328,8 @@ async function scanFreeform() {
     fields,
     fieldCount: fields.length,
     advancedSectionsExpanded: advancedCount,
+    objectsExpanded,
+    arrayItemsAdded,
     schema, consoleErrors, networkErrors, warnings,
     screenshotPath,
   }
@@ -268,6 +366,7 @@ async function scanVFG() {
   }
 
   const advancedCount = await expandVFGAdvanced(page)
+  const arrayItemsAdded = await expandVFGArrayItems(page)
 
   // Collect form groups — deduplicate by label (page has two forms side-by-side)
   const fields = []
@@ -317,6 +416,7 @@ async function scanVFG() {
     fields,
     fieldCount: fields.length,
     advancedSectionsExpanded: advancedCount,
+    arrayItemsAdded,
     consoleErrors, warnings,
     screenshotPath,
   }
@@ -373,6 +473,7 @@ async function runSubmitTest() {
   }
 
   await expandFreeformAdvanced(page)
+  await expandFreeformObjects(page)
 
   // Fill fields from flattened payload
   const flatPayload = flattenObject(payload)
