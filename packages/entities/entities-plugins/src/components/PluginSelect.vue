@@ -447,29 +447,31 @@ const buildPluginList = (): PluginCardList => {
         return plugin
       }
 
+      const pluginName = clonedPluginMap.has(plugin) ? clonedPluginMap.get(plugin)!.ref : plugin
+
       if (props.config.entityType === 'services') {
-        const isNotServicePlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.SERVICE))
+        const isNotServicePlugin = (pluginMetaData[pluginName] && !pluginMetaData[pluginName].scope.includes(PluginScope.SERVICE))
         if (isNotServicePlugin) {
           return false
         }
       }
 
       if (props.config.entityType === 'routes') {
-        const isNotRoutePlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.ROUTE))
+        const isNotRoutePlugin = (pluginMetaData[pluginName] && !pluginMetaData[pluginName].scope.includes(PluginScope.ROUTE))
         if (isNotRoutePlugin) {
           return false
         }
       }
 
       if (props.config.entityType === 'consumer_groups') {
-        const isNotConsumerGroupPlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.CONSUMER_GROUP))
+        const isNotConsumerGroupPlugin = (pluginMetaData[pluginName] && !pluginMetaData[pluginName].scope.includes(PluginScope.CONSUMER_GROUP))
         if (isNotConsumerGroupPlugin) {
           return false
         }
       }
 
       if (props.config.entityType === 'consumers') {
-        const isNotConsumerPlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.CONSUMER))
+        const isNotConsumerPlugin = (pluginMetaData[pluginName] && !pluginMetaData[pluginName].scope.includes(PluginScope.CONSUMER))
         if (isNotConsumerPlugin) {
           return false
         }
