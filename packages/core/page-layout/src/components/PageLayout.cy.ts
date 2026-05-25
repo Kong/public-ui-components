@@ -324,6 +324,7 @@ describe('<PageLayout />', () => {
 
       cy.getTestId('page-layout-favorite-button').click()
       cy.get('@onFavoriteToggle').should('have.been.calledOnce')
+      cy.get('@onFavoriteToggle').should('have.been.calledWith', validShortcutData)
     })
 
     it('calls onEntityPageVisit on mount with the provided pageShortcutData', () => {
