@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.27...@kong-ui-public/page-layout@0.2.28) (2026-05-25)
+
+
+### Bug Fixes
+
+* **page-layout:** always pass path on entity page visit ([#3357](https://github.com/Kong/public-ui-components/issues/3357)) ([e964676](https://github.com/Kong/public-ui-components/commit/e96467623e5cea25d85071984652c23c000d0f65))
+
+
+
+
+
 ## [0.2.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.26...@kong-ui-public/page-layout@0.2.27) (2026-05-25)
 
 
