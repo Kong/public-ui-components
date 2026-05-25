@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.208.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.208.0...@kong-ui-public/entities-plugins@9.208.1) (2026-05-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3192](https://github.com/Kong/public-ui-components/issues/3192)) ([547be23](https://github.com/Kong/public-ui-components/commit/547be23b721f0be6c81b2753dd03d945b071881d))
+
+
+
+
+
+# [9.208.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.207.1...@kong-ui-public/entities-plugins@9.208.0) (2026-05-25)
+
+
+### Features
+
+* add kong identity ([#3271](https://github.com/Kong/public-ui-components/issues/3271)) ([f64d606](https://github.com/Kong/public-ui-components/commit/f64d6063345703d4886a8874ad6be4f8485c3cdd))
+
+
+
+
+
+## [9.207.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.207.0...@kong-ui-public/entities-plugins@9.207.1) (2026-05-25)
+
+
+### Bug Fixes
+
+* **entities-plugins:** hide unsupported plugins in consumer page ([#3356](https://github.com/Kong/public-ui-components/issues/3356)) ([f0aff4c](https://github.com/Kong/public-ui-components/commit/f0aff4c9d69fb4daefad5871edfcf5dfa996e9d2))
+
+
+
+
+
 # [9.207.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.206.4...@kong-ui-public/entities-plugins@9.207.0) (2026-05-21)
 
 

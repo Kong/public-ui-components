@@ -113,6 +113,8 @@ useProvideExperimentalFreeForms([
   'jwe-decrypt',
   'mtls-auth',
   'ace',
+  'basic-auth',
+  'key-auth',
 ])
 
 const enableDeckConfigCustomization = ref(false)

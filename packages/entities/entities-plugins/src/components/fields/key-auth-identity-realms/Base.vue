@@ -1,6 +1,6 @@
 <template>
   <KMultiselect
-    :items="realms"
+    :items="realmItems"
     :loading="isLoadingRealms"
     :model-value="selectedRealms"
     @update:model-value="onRealmsUpdate"
@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import composables from '../../../composables'
@@ -22,6 +22,10 @@ type KonnectRealmItem = { id: string, name: string }
 type KonnectRealmResponse = { data: KonnectRealmItem[], meta: { next: string | null } }
 
 defineOptions({ name: 'KeyAuthIdentityRealmsBase' })
+
+const props = defineProps<{
+  realms?: MultiselectItem[]
+}>()
 
 const model = defineModel<IdentityRealmItem[]>({
   default: [{ scope: 'cp', id: null, region: null }],
@@ -52,7 +56,7 @@ const guessRegion = () => {
 }
 
 const isLoadingRealms = ref<boolean>(true)
-const realms = ref<MultiselectItem[]>([kCurrentCPSelectItem])
+const realmItems = ref<MultiselectItem[]>([kCurrentCPSelectItem])
 
 const fetchRealms = async (): Promise<void> => {
   if (formConfig?.app !== 'konnect') {
@@ -76,7 +80,7 @@ const fetchRealms = async (): Promise<void> => {
       nextUrl = resp.data.meta.next ? `${formConfig?.apiBaseUrl}${resp.data.meta.next}` : null
     } while (nextUrl)
 
-    realms.value = [kCurrentCPSelectItem, ...items]
+    realmItems.value = [kCurrentCPSelectItem, ...items]
   } catch (e) {
     console.error('Failed to fetch Konnect realms', e)
   } finally {
@@ -113,6 +117,18 @@ const onRealmsUpdate = (currentSelected: string[]) => {
 }
 
 onMounted(() => {
-  fetchRealms()
+  if (props.realms === undefined) {
+    fetchRealms()
+  }
 })
+
+watch(() => props.realms, (realms) => {
+  if (realms && realms.length > 0) {
+    realmItems.value = [kCurrentCPSelectItem, ...realms.map(item => ({
+      ...item,
+      group: t('custom_field.key_auth_identity_realms.realm_group_label'),
+    }))]
+    isLoadingRealms.value = false
+  }
+}, { immediate: true })
 </script>

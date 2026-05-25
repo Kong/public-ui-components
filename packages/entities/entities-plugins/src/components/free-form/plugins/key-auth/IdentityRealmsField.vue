@@ -17,15 +17,21 @@
         </slot>
       </template>
     </KLabel>
-    <Base v-model="value" />
+    <Base
+      v-model="value"
+      :realms="fetchedRealms"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { toRef } from 'vue'
+import { inject, toRef } from 'vue'
 import { useField, useFieldAttrs } from '../../shared/composables'
 import Base from '../../../fields/key-auth-identity-realms/Base.vue'
+import { FETCHED_REALMS_KEY } from '../../../fields/key-auth-identity-realms/const'
 
+import type { MultiselectItem } from '@kong/kongponents'
+import type { Ref } from 'vue'
 import type { IdentityRealmItem } from '../../../fields/key-auth-identity-realms/types'
 import type { LabelAttributes } from '@kong/kongponents'
 import type { ResetLabelPathRule } from '../../shared/types'
@@ -47,4 +53,7 @@ if (error) {
 
 // path stripped of the leading '$.'
 const fieldAttrs = useFieldAttrs(path, props)
+
+// Receive pre-fetched realms from ConfigFormContent
+const fetchedRealms = inject<Ref<MultiselectItem[]> | undefined>(FETCHED_REALMS_KEY, undefined)
 </script>

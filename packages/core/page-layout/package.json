@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/page-layout",
-  "version": "0.2.26",
+  "version": "0.2.27",
   "type": "module",
   "main": "./dist/page-layout.umd.js",
   "module": "./dist/page-layout.es.js",
@@ -71,6 +71,6 @@
     "vue-router": "^4.6.4 || ^5.0.6"
   },
   "dependencies": {
-    "@vueuse/core": "^14.2.1"
+    "@vueuse/core": "^14.3.0"
   }
 }
