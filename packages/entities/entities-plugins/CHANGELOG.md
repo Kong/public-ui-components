@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.207.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.207.0...@kong-ui-public/entities-plugins@9.207.1) (2026-05-25)
+
+
+### Bug Fixes
+
+* **entities-plugins:** hide unsupported plugins in consumer page ([#3356](https://github.com/Kong/public-ui-components/issues/3356)) ([f0aff4c](https://github.com/Kong/public-ui-components/commit/f0aff4c9d69fb4daefad5871edfcf5dfa996e9d2))
+
+
+
+
+
 # [9.207.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.206.4...@kong-ui-public/entities-plugins@9.207.0) (2026-05-21)
 
 
