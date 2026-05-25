@@ -47,7 +47,6 @@
               class="favorite-button-container"
             >
               <button
-                :key="favoriteButtonKey"
                 :aria-label="isFavorite ? t('favorite_button.remove_shortcut') : t('favorite_button.save_shortcut')"
                 class="favorite-button"
                 :class="{ 'active': isFavorite }"
@@ -188,7 +187,6 @@ if (typeof registerNestedPageLayout === 'function') {
   unregisterNestedPageLayout.value = registerNestedPageLayout()
 }
 
-const favoriteButtonKey = ref<number>(0)
 const onFavoriteButtonClick = () => {
   // Cast to the expected type -- we already checked for the function in the computed property
   (pageShortcutsContext as { onFavoriteToggle: () => void }).onFavoriteToggle()
@@ -206,7 +204,6 @@ watch([() => pageShortcutData, () => route.fullPath], async () => {
   await nextTick()
   if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
     pageShortcutsContext.onEntityPageVisit({ ...pageShortcutData, path: pageShortcutData?.path || route.fullPath })
-    favoriteButtonKey.value++
   }
 }, { immediate: true, deep: true })
 </script>
