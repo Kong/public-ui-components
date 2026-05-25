@@ -189,7 +189,7 @@ if (typeof registerNestedPageLayout === 'function') {
 
 const onFavoriteButtonClick = () => {
   // Cast to the expected type -- we already checked for the function in the computed property
-  (pageShortcutsContext as { onFavoriteToggle: (pageShortcutData: PageShortcutData) => void }).onFavoriteToggle(pageShortcutData!)
+  (pageShortcutsContext as { onFavoriteToggle: (pageShortcutData: PageShortcutData) => void }).onFavoriteToggle({ ...pageShortcutData!, path: pageShortcutData?.path || route.fullPath })
 }
 
 onUnmounted(() => {
