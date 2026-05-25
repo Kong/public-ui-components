@@ -45,7 +45,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.39.4",
     "js-yaml": "^4.1.1",
-    "jsdom": "^29.0.2",
+    "jsdom": "^29.1.1",
     "lerna": "^9.0.7",
     "npm-run-all2": "^8.0.4",
     "postcss": "^8.5.10",
@@ -93,7 +93,7 @@
       "path-to-regexp@<0.1.13": ">=8.4.2",
       "lodash-es@<=4.17.23": ">=4.18.0",
       "lodash@<=4.17.23": ">=4.18.0",
-      "axios@<1.15.0": ">=1.15.2"
+      "axios@<1.15.0": ">=1.16.0"
     },
     "onlyBuiltDependencies": [
       "@evilmartians/lefthook",
@@ -134,7 +134,7 @@
     "node": ">=18.20.8"
   },
   "volta": {
-    "node": "24.14.1",
+    "node": "24.15.0",
     "pnpm": "10.33.2"
   },
   "packageManager": "pnpm@10.33.2"
