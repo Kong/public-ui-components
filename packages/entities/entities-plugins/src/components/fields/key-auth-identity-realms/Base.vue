@@ -123,7 +123,7 @@ onMounted(() => {
 })
 
 watch(() => props.realms, (realms) => {
-  if (realms && realms.length > 0) {
+  if (realms) {
     realmItems.value = [kCurrentCPSelectItem, ...realms.map(item => ({
       ...item,
       group: t('custom_field.key_auth_identity_realms.realm_group_label'),
