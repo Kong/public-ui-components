@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.208.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.208.1...@kong-ui-public/entities-plugins@9.208.2) (2026-05-26)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix loading state when realms is empty array ([#3362](https://github.com/Kong/public-ui-components/issues/3362)) ([7c88a67](https://github.com/Kong/public-ui-components/commit/7c88a67d313e9e4f421dedfa422d6d3afa26af92))
+
+
+
+
+
 ## [9.208.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.208.0...@kong-ui-public/entities-plugins@9.208.1) (2026-05-25)
 
 
