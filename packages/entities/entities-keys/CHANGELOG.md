@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.13.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.11...@kong-ui-public/entities-keys@3.13.12) (2026-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3361](https://github.com/Kong/public-ui-components/issues/3361)) ([fb2890b](https://github.com/Kong/public-ui-components/commit/fb2890b10622def66cf9db5c067b75fddd9198bb))
+
+
+
+
+
 ## [3.13.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.10...@kong-ui-public/entities-keys@3.13.11) (2026-05-25)
 
 

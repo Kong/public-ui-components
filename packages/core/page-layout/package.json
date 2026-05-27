@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/page-layout",
-  "version": "0.2.29",
+  "version": "0.2.30",
   "type": "module",
   "main": "./dist/page-layout.umd.js",
   "module": "./dist/page-layout.es.js",
@@ -43,7 +43,7 @@
     "@kong/design-tokens": "1.20.1",
     "@kong/icons": "^1.55.0",
     "@kong/kongponents": "9.53.2",
-    "vue": "^3.5.33",
+    "vue": "^3.5.34",
     "vue-router": "^5.0.7"
   },
   "repository": {
@@ -67,7 +67,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.52.0",
     "@kong/kongponents": "^9.53.2",
-    "vue": "^3.5.33",
+    "vue": "^3.5.34",
     "vue-router": "^4.6.4 || ^5.0.6"
   },
   "dependencies": {
