@@ -1359,13 +1359,14 @@
       },
       "alias_name": {
         "label": "Alias name",
-        "placeholder": "Enter a unique name"
+        "placeholder": "Enter a unique name",
+        "help": "Format: ^[a-z][a-z0-9-]*[a-z0-9]$. The name must be unique enough to avoid future conflicts with bundled plugins."
       },
       "priority": {
         "label": "Priority",
         "tooltip": "Set the execution priority for this cloned plugin",
         "help": {
-          "text": "Optional. Use a number or +/- to set priority relative to the original plugin. If priority isn't set, plugins run in alphabetical order. {link} in the docs.",
+          "text": "Optional. Use a number to set the absolute execution priority. If priority isn't set, plugins run in alphabetical order. {link} in the docs.",
           "link": "Learn more"
         }
       }
