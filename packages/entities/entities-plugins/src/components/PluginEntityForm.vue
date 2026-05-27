@@ -145,7 +145,7 @@ import type { GlobalAction } from './free-form/shared/types'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/shared/schema-enhancement'
 import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/shared/plugin-registry'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
-import type { FormSchema } from '../types/plugins/form-schema'
+import type { ArrayFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../types/plugins/form-schema'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -822,12 +822,12 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
 // the schema's `fields[]`. Deprecated `shorthand_fields` live in their own array on each
 // record, never in `fields[]`, so they fall out naturally — preventing the backend from
 // re-filling canonical fields (e.g. `redis.password`) from stale shorthand values.
-const stripUnknownConfigFields = (value: any, subschema: Record<string, any> | undefined): any => {
+const stripUnknownConfigFields = (value: any, subschema: UnionFieldSchema | undefined): any => {
   if (!subschema) return value
 
   // Array: walk into elements only when they're records with declared fields.
   if (Array.isArray(value)) {
-    const elements = subschema.elements
+    const elements = (subschema as ArrayFieldSchema).elements
     if (elements?.type === 'record' && Array.isArray(elements.fields)) {
       return value.map((item) => stripUnknownConfigFields(item, elements))
     }
@@ -837,10 +837,10 @@ const stripUnknownConfigFields = (value: any, subschema: Record<string, any> | u
   // Primitive or null — nothing to strip.
   if (!value || typeof value !== 'object') return value
   // Record with no declared `fields[]` (e.g. `map`) — pass through.
-  if (!Array.isArray(subschema.fields)) return value
+  if (!Array.isArray((subschema as RecordFieldSchema).fields)) return value
 
-  const fieldByName = new Map<string, Record<string, any>>()
-  for (const fieldDef of subschema.fields) {
+  const fieldByName = new Map<string, UnionFieldSchema | undefined>()
+  for (const fieldDef of (subschema as RecordFieldSchema).fields) {
     const name = fieldDef && Object.keys(fieldDef)[0]
     if (name) fieldByName.set(name, fieldDef[name])
   }
@@ -854,7 +854,7 @@ const stripUnknownConfigFields = (value: any, subschema: Record<string, any> | u
   return result
 }
 
-const getConfigSubschema = (): Record<string, any> | undefined => {
+const getConfigSubschema = (): UnionFieldSchema | undefined => {
   const fields = props.rawSchema?.fields
   if (!Array.isArray(fields)) return undefined
   const configField = fields.find((f: Record<string, any>) => f?.config)

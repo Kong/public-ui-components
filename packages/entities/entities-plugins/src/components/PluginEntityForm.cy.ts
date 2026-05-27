@@ -5,6 +5,7 @@
 import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import PluginEntityForm from './PluginEntityForm.vue'
+import schemaNestedMixed from '../../fixtures/schemas/nested-mixed'
 import schemaOpentelemetry from '../../fixtures/schemas/opentelemetry'
 import schemaRateLimiting from '../../fixtures/schemas/rate-limiting'
 import type { KonnectPluginFormConfig } from '../types'
@@ -257,6 +258,144 @@ describe('<PluginEntityForm /> — shorthand_fields stripping', () => {
         expect(data.protocols).to.deep.equal(['http', 'https'])
         expect(data.config).to.not.have.property('endpoint')
         expect(data.config.traces_endpoint).to.equal('https://otel.example.com/v1/traces')
+      })
+    })
+
+    it('deeply nested schema — strips shorthand at every depth, preserves every canonical leaf', () => {
+      // Synthetic schema (`nested-mixed`) puts shorthand_fields at:
+      //   - top of config                         (`legacy_alias`)
+      //   - inside outer.inner                    (`legacy_inner`)
+      //   - inside outer.inner.deep               (`legacy_deep`)
+      //   - inside each outer.inner.entries[]    (`legacy_alias`)
+      //   - inside each targets[].auth            (`legacy_token`)
+      const record = {
+        name: 'nested-mixed',
+        enabled: true,
+        config: {
+          // Shorthand at the top of config — must disappear.
+          legacy_alias: 'should-not-be-submitted',
+
+          // record → record → record → array (of records w/ shorthand)
+          //         + record → record → record (deep leaf w/ shorthand sibling)
+          //         + map field at deep nesting (arbitrary user keys, passes through)
+          outer: {
+            inner: {
+              legacy_inner: 'drop-me',
+              entries: [
+                { key: 'k1', value: 'v1', legacy_alias: 'drop-element-1' },
+                { key: 'k2', value: 'v2', legacy_alias: 'drop-element-2' },
+              ],
+              deep: {
+                value: 'kept',
+                legacy_deep: 'drop-me',
+              },
+              // Map keys happen to share names with shorthand aliases used elsewhere —
+              // must NOT be filtered because user-defined map keys are opaque to the schema.
+              metadata: {
+                legacy_alias: 'user-supplied-keep',
+                team: 'platform',
+                version: 'v2',
+              },
+            },
+          },
+
+          // record → array (of records) → record → array (of primitives)
+          // + shorthand inside the auth record (which itself lives inside an array element)
+          targets: [
+            {
+              url: '/api1',
+              auth: {
+                header_name: 'X-Token',
+                allowed_scopes: ['read', 'write'],
+                headers: { 'x-trace-id': 'abc', 'x-team': 'platform' },
+                legacy_token: 'drop-me',
+              },
+            },
+            {
+              url: '/api2',
+              auth: {
+                header_name: 'X-Other',
+                allowed_scopes: ['read'],
+                headers: { 'x-trace-id': 'xyz' },
+                legacy_token: 'drop-me-too',
+              },
+            },
+          ],
+
+          // record → array (of records) → array (of records) — no shorthand here,
+          // verifies the structure survives recursion intact.
+          pipelines: [
+            {
+              id: 'p1',
+              steps: [
+                { name: 's1', kind: 'transform' },
+                { name: 's2', kind: 'forward' },
+              ],
+            },
+          ],
+        },
+      }
+
+      mountForm({
+        pluginName: 'nested-mixed',
+        rawSchema: schemaNestedMixed,
+        record,
+        router,
+      })
+
+      lastEmittedConfig().then((data) => {
+        // Top-of-config shorthand dropped.
+        expect(data.config).to.not.have.property('legacy_alias')
+
+        // record → record → record path: shorthand at every level dropped, canonical kept.
+        expect(data.config.outer.inner).to.not.have.property('legacy_inner')
+        expect(data.config.outer.inner.deep).to.deep.equal({ value: 'kept' })
+
+        // Map at deep nesting passes through verbatim — including a key that *coincidentally*
+        // matches a shorthand alias name (`legacy_alias`). User-defined map keys are opaque.
+        expect(data.config.outer.inner.metadata).to.deep.equal({
+          legacy_alias: 'user-supplied-keep',
+          team: 'platform',
+          version: 'v2',
+        })
+
+        // Each array element keeps its canonical keys; per-element shorthand stripped.
+        expect(data.config.outer.inner.entries).to.deep.equal([
+          { key: 'k1', value: 'v1' },
+          { key: 'k2', value: 'v2' },
+        ])
+
+        // record → array (of records) → record: shorthand inside the inner record stripped,
+        // primitive array + map inside it preserved.
+        expect(data.config.targets).to.deep.equal([
+          {
+            url: '/api1',
+            auth: {
+              header_name: 'X-Token',
+              allowed_scopes: ['read', 'write'],
+              headers: { 'x-trace-id': 'abc', 'x-team': 'platform' },
+            },
+          },
+          {
+            url: '/api2',
+            auth: {
+              header_name: 'X-Other',
+              allowed_scopes: ['read'],
+              headers: { 'x-trace-id': 'xyz' },
+            },
+          },
+        ])
+
+        // record → array → array — deeply nested arrays of records preserved end-to-end.
+        expect(data.config.pipelines).to.deep.equal([
+          {
+            id: 'p1',
+            steps: [
+              { name: 's1', kind: 'transform' },
+              { name: 's2', kind: 'forward' },
+            ],
+          },
+        ])
       })
     })
 
