@@ -1091,4 +1091,152 @@ describe('<PluginList />', () => {
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
     })
   })
+
+  describe('Konnect useSearchApi mode', () => {
+    const searchConfig: KonnectPluginListConfig = {
+      ...baseConfigKonnect,
+      useSearchApi: true,
+    }
+
+    const searchPath = `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins/search*`
+    const itemPath = (id: string) =>
+      `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins/${id}*`
+
+    it('renders the fuzzy filter dropdown (not the exact-match input)', () => {
+      cy.intercept({ method: 'GET', url: searchPath }, { statusCode: 200, body: plugins }).as('searchList')
+
+      cy.mount(PluginList, {
+        props: {
+          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          config: searchConfig,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
+        },
+      })
+
+      cy.wait('@searchList')
+      cy.get('[data-testid="filter-button"]').should('be.visible')
+      cy.get('[data-testid="search-input"]').should('not.exist')
+    })
+
+    it('maps each filter dimension to the correct query param', () => {
+      cy.intercept({ method: 'GET', url: searchPath }, { statusCode: 200, body: plugins }).as('searchList')
+
+      cy.mount(PluginList, {
+        props: {
+          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          config: searchConfig,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
+        },
+      })
+
+      cy.wait('@searchList')
+
+      cy.get('[data-testid="filter-button"]').click()
+
+      // Name → filter[name][contains]
+      cy.get('[data-testid="name"]').click()
+      cy.get('#filter-name').type('basic')
+      cy.get('[data-testid="name"] [data-testid="apply-filter"]').click()
+
+      cy.wait('@searchList').its('request.url').should((url) => {
+        expect(url).to.include('filter%5Bname%5D%5Bcontains%5D=basic')
+      })
+    })
+
+    it('uses filter[scope][eq] when scope is selected', () => {
+      cy.intercept({ method: 'GET', url: searchPath }, { statusCode: 200, body: plugins }).as('searchList')
+
+      cy.mount(PluginList, {
+        props: {
+          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          config: searchConfig,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
+        },
+      })
+
+      cy.wait('@searchList')
+
+      cy.get('[data-testid="filter-button"]').click()
+      cy.get('[data-testid="scope"]').click()
+      cy.get('[data-testid="scope"] .k-select-input').click()
+      cy.get('.k-select-pop-dropdown [data-testid="k-select-item-route"]').click()
+      cy.get('[data-testid="scope"] [data-testid="apply-filter"]').click()
+
+      cy.wait('@searchList').its('request.url').should((url) => {
+        expect(url).to.include('filter%5Bscope%5D%5Beq%5D=route')
+      })
+    })
+
+    it('ID box bypasses /search and hits /plugins/{id}', () => {
+      // Initial list call
+      cy.intercept({ method: 'GET', url: searchPath }, { statusCode: 200, body: plugins }).as('searchList')
+      // Direct item GET
+      cy.intercept({ method: 'GET', url: itemPath('abc-123') }, { statusCode: 200, body: plugins.data[0] }).as('itemById')
+
+      cy.mount(PluginList, {
+        props: {
+          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          config: searchConfig,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
+        },
+      })
+
+      cy.wait('@searchList')
+
+      cy.get('[data-testid="filter-button"]').click()
+      cy.get('[data-testid="id"]').click()
+      cy.get('#filter-id').type('abc-123')
+      cy.get('[data-testid="id"] [data-testid="apply-filter"]').click()
+
+      cy.wait('@itemById')
+      // /search should NOT have been called again with id filter (no filter[id] param exists)
+    })
+
+    it('nested entity Plugins tab keeps the standard list endpoint', () => {
+      const nestedConfig: KonnectPluginListConfig = {
+        ...searchConfig,
+        entityType: 'routes',
+        entityId: 'route-1',
+      }
+      const nestedPath = `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/routes/route-1/plugins*`
+
+      cy.intercept({ method: 'GET', url: nestedPath }, { statusCode: 200, body: plugins }).as('nestedList')
+      // Search intercept should NOT be hit
+      cy.intercept({ method: 'GET', url: searchPath }, (req) => {
+        throw new Error(`Unexpected call to /plugins/search: ${req.url}`)
+      })
+
+      cy.mount(PluginList, {
+        props: {
+          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          config: nestedConfig,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
+        },
+      })
+
+      cy.wait('@nestedList')
+      // Exact-match input should still render (search dropdown disabled for nested usage)
+      cy.get('[data-testid="filter-button"]').should('not.exist')
+    })
+  })
 })

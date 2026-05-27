@@ -45,7 +45,10 @@ export interface BasePluginListConfig {
 }
 
 /** Konnect plugin list config */
-export interface KonnectPluginListConfig extends KonnectBaseTableConfig, BasePluginListConfig {}
+export interface KonnectPluginListConfig extends KonnectBaseTableConfig, BasePluginListConfig {
+  /** Opt into the new Plugin Search endpoint and a multi-field filter dropdown. */
+  useSearchApi?: boolean
+}
 
 /** Kong Manager plugin list config */
 export interface KongManagerPluginListConfig extends KongManagerBaseTableConfig, BasePluginListConfig {

@@ -119,6 +119,12 @@ A table component for plugins.
     - default: `undefined`
     - *Specific to Konnect*. Name of the current control plane.
 
+  - `useSearchApi`:
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - *Specific to Konnect*. Opt into the new Plugin Search endpoint and a multi-field filter dropdown. The new Plugin Search endpoint does not support for-entity filtering.
+
   - `entityId`:
     - type: `string`
     - required: `false`

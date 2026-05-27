@@ -26,6 +26,25 @@
     @error="onError"
   />
 
+  <h2>Konnect API (useSearchApi)</h2>
+  <PluginList
+    v-if="permissions"
+    :key="key"
+    cache-identifier="konnect-search"
+    :can-configure-dynamic-ordering="permissions.canEdit"
+    :can-create="permissions.canCreate"
+    :can-delete="permissions.canDelete"
+    :can-edit="permissions.canEdit"
+    :can-retrieve="permissions.canRetrieve"
+    :can-toggle="permissions.canEdit"
+    :config="konnectSearchConfig"
+    title="Plugins (search)"
+    @copy:error="onCopyIdError"
+    @copy:success="onCopyIdSuccess"
+    @delete-plugin:success="onDeletePluginSuccess"
+    @error="onError"
+  />
+
   <h2>Kong Manager API</h2>
   <PluginList
     v-if="permissions"
@@ -66,6 +85,11 @@ const konnectConfig = ref<KonnectPluginListConfig>({
   getEditRoute: (plugin: EntityRow) => ({ name: 'edit-plugin', params: { id: plugin.id, plugin: plugin.name } }),
   getScopedEntityViewRoute: (type: ViewRouteType, id: string) => ({ name: `view-${type}`, params: { id } }),
   getConfigureDynamicOrderingRoute: (plugin: EntityRow) => ({ name: 'configure-dynamic-ordering', params: { id: plugin.id } }),
+})
+
+const konnectSearchConfig = ref<KonnectPluginListConfig>({
+  ...konnectConfig.value,
+  useSearchApi: true,
 })
 
 const kongManagerConfig = ref<KongManagerPluginListConfig>({

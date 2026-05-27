@@ -288,10 +288,14 @@ import type {
   BaseTableHeaders,
   EmptyStateOptions,
   ExactMatchFilterConfig,
+  FetcherResponse,
+  FetcherState,
   FilterFields,
+  FilterSchema,
   FuzzyMatchFilterConfig,
   TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
+import type { TableDataFetcherParams } from '@kong/kongponents'
 import { AddIcon, BookIcon, PlugIcon } from '@kong/icons'
 
 import composables from '../composables'
@@ -464,7 +468,50 @@ const fetcherBaseUrl = computed<string>(() => {
 })
 
 const filterQuery = ref<string>('')
+
+const isSearchMode = computed<boolean>(() =>
+  props.config.app === 'konnect'
+  && (props.config as KonnectPluginListConfig).useSearchApi === true
+  && !props.config.entityType,
+)
+
+const searchFilterSchema = computed<FilterSchema>(() => ({
+  name: { type: 'text' },
+  enabled: {
+    type: 'select',
+    values: [
+      { label: t('search.filter.value.enabled.true'), value: 'true' },
+      { label: t('search.filter.value.enabled.false'), value: 'false' },
+    ],
+  },
+  scope: {
+    type: 'select',
+    values: [
+      { label: t('search.filter.value.scope.global'), value: 'global' },
+      { label: t('search.filter.value.scope.route'), value: 'route' },
+      { label: t('search.filter.value.scope.service'), value: 'service' },
+      { label: t('search.filter.value.scope.consumer'), value: 'consumer' },
+      { label: t('search.filter.value.scope.consumer_group'), value: 'consumer_group' },
+    ],
+  },
+  id: { type: 'text' },
+}))
+
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
+  if (isSearchMode.value) {
+    const filterFields: FilterFields = {
+      name: { label: t('search.filter.field.name'), searchable: true },
+      enabled: { label: t('search.filter.field.enabled'), searchable: true },
+      scope: { label: t('search.filter.field.scope'), searchable: true },
+      id: { label: t('search.filter.field.id'), searchable: true },
+    }
+    return {
+      isExactMatch: false,
+      fields: filterFields,
+      schema: searchFilterSchema.value,
+    } as FuzzyMatchFilterConfig
+  }
+
   const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
 
   if (isExactMatch) {
@@ -493,10 +540,111 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 })
 
 const {
-  fetcher,
-  fetcherState,
+  fetcher: listFetcher,
+  fetcherState: listFetcherState,
   fetcherCacheKey,
 } = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
+
+const searchFetcherInitialLoad = ref<boolean>(true)
+const searchFetcherState = ref<FetcherState>({ status: FetcherStatus.Idle })
+
+const interpolateKonnectUrl = (template: string): string =>
+  template
+    .replace(/{controlPlaneId}/gi, (props.config as KonnectPluginListConfig).controlPlaneId || '')
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+
+const searchBaseUrl = computed<string>(() => {
+  const tpl = `${props.config.apiBaseUrl}${endpoints.list.konnect.search}`
+  return interpolateKonnectUrl(tpl)
+})
+
+const buildSearchRequestUrl = (params: TableDataFetcherParams): string => {
+  const base = searchBaseUrl.value
+  const url = base.startsWith('/')
+    ? new URL(`${window.location.origin}${base}`)
+    : new URL(base)
+
+  const filters = new URLSearchParams(params.query || '')
+
+  const append = (key: string, value: string | null) => {
+    if (value !== null && value !== '') {
+      url.searchParams.append(key, value)
+    }
+  }
+
+  append('filter[name][contains]', filters.get('name'))
+  append('filter[enabled][eq]', filters.get('enabled'))
+  append('filter[scope][eq]', filters.get('scope'))
+
+  url.searchParams.append('size', String(params.pageSize))
+  if (params.offset && params.page !== 1) {
+    url.searchParams.append('offset', String(params.offset))
+  }
+
+  return url.href
+}
+
+const searchFetcher = async (params: TableDataFetcherParams): Promise<FetcherResponse> => {
+  try {
+    searchFetcherState.value = searchFetcherInitialLoad.value
+      ? { status: FetcherStatus.InitialLoad }
+      : { status: FetcherStatus.Loading }
+    searchFetcherInitialLoad.value = false
+
+    const filters = new URLSearchParams(params.query || '')
+    const id = filters.get('id')?.trim() || ''
+
+    let tableData: any[]
+    let offset: string | undefined
+
+    if (id) {
+      // ID box: bypass /search and look the plugin up directly by id.
+      const itemUrl = interpolateKonnectUrl(
+        `${props.config.apiBaseUrl}${endpoints.item.konnect.all}`,
+      ).replace(/{id}/gi, id)
+      const res = await axiosInstance.get(itemUrl)
+      tableData = res.data ? [res.data] : []
+    } else {
+      const requestUrl = buildSearchRequestUrl(params)
+      const res = await axiosInstance.get(requestUrl)
+      tableData = Array.isArray(res.data?.data) ? res.data.data : []
+      offset = res.data?.offset
+    }
+
+    const response: FetcherResponse = {
+      data: tableData,
+      total: tableData.length,
+      ...(offset ? { pagination: { offset } } : null),
+    }
+
+    if (response.data.length === 0 && !params.query) {
+      searchFetcherState.value = { status: FetcherStatus.NoRecords, response }
+    } else {
+      searchFetcherState.value = { status: FetcherStatus.Idle, response }
+    }
+
+    return response
+  } catch (error: any) {
+    const response: FetcherResponse = { data: [], total: 0 }
+    if (params.query && (error.response?.status === 404 || error.status === 404)) {
+      searchFetcherState.value = {
+        status: FetcherStatus.NoResults,
+        response,
+        error: error.response ? error : { response: error },
+      }
+      return response
+    }
+    searchFetcherState.value = {
+      status: FetcherStatus.Error,
+      response,
+      error: error.response ? error : { response: error },
+    }
+    return response
+  }
+}
+
+const fetcher = computed(() => isSearchMode.value ? searchFetcher : listFetcher)
+const fetcherState = computed(() => isSearchMode.value ? searchFetcherState.value : listFetcherState.value)
 
 const clearFilter = (): void => {
   filterQuery.value = ''

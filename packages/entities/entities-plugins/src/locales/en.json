@@ -65,8 +65,25 @@
     },
     "filter": {
       "field": {
-        "enabled": "Enabled"
-      }
+        "enabled": "Enabled",
+        "name": "Name",
+        "scope": "Scope",
+        "id": "ID"
+      },
+      "value": {
+        "enabled": {
+          "true": "Enabled",
+          "false": "Disabled"
+        },
+        "scope": {
+          "global": "Global",
+          "route": "Route",
+          "service": "Service",
+          "consumer": "Consumer",
+          "consumer_group": "Consumer group"
+        }
+      },
+      "id_hint": "Looks up a single plugin by exact ID."
     },
     "no_results": "No results found for \"{filter}\""
   },

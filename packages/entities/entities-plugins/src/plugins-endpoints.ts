@@ -7,6 +7,8 @@ export default {
     konnect: {
       all: `${konnectBaseApiUrl}/plugins`,
       forEntity: `${konnectBaseApiUrl}/{entityType}/{entityId}/plugins`,
+      // New Plugin Search endpoint. No for-entity variant now.
+      search: `${konnectBaseApiUrl}/plugins/search`,
     },
     kongManager: {
       all: `${KMBaseApiUrl}/plugins`,
