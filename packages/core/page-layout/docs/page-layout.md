@@ -318,21 +318,21 @@ This behavior is automatic and requires no additional configuration — simply n
 
 The favorite star button is only rendered when **both** halves of the contract are satisfied:
 
-- `pageShortcutData` is provided with non-empty `entityType`, `path`, and `label`, **and**
+- `pageShortcutData` is provided with non-empty `entityType` and `label`, **and**
 - An `app:pageShortcutsContext` is injected and exposes an `onFavoriteToggle` function.
 
 If either side is missing, the button is hidden entirely (no DOM is rendered for it). This means a page can opt-in unconditionally by declaring `pageShortcutData`, and the host app controls global availability of the feature by deciding whether to `provide()` the context.
 
 ### `pageShortcutData` prop
 
-Provide this prop to mark the page as an entity page. The `path` field is the URL the shortcut will navigate to when clicked from the host's shortcut list; `label` is the display text; `entityType` is a string the host uses to group / categorize shortcuts (e.g. `"gateway-service"`, `"route"`). An optional `parentLabel` can disambiguate entities with the same label under different parents.
+Provide this prop to mark the page as an entity page. The `label` field is the display text; `entityType` is a string the host uses to group / categorize shortcuts (e.g. `"gateway-service"`, `"route"`). The optional `path` field is the URL the shortcut will navigate to when clicked from the host's shortcut list — if omitted, `PageLayout` falls back to the current route's `fullPath` (via `useRoute()`) when invoking `onFavoriteToggle` / `onEntityPageVisit`. An optional `parentLabel` can disambiguate entities with the same label under different parents.
 
 ### `app:pageShortcutsContext` injection
 
 The host application must `provide('app:pageShortcutsContext', ctx)` a reactive object (typically created via `reactive()`). `PageLayout` interacts with it as follows:
 
 - **`isFavorite`** — reactive boolean. When `true`, the star button renders as a filled star (and its aria-label switches to "Remove page from shortcuts"). The host is responsible for keeping this in sync with the user's favorites list whenever the route changes.
-- **`onFavoriteToggle()`** — called when the user clicks the star button. The host should toggle the favorite state for the current page and update `isFavorite` accordingly.
+- **`onFavoriteToggle(pageShortcutData)`** — called when the user clicks the star button. Receives the current page's `PageShortcutData` with `path` resolved (either the value from the prop, or the current route's `fullPath` as a fallback). The host should toggle the favorite state for the current page and update `isFavorite` accordingly.
 - **`onEntityPageVisit(pageShortcutData)`** — called when an entity page is visited (or when `pageShortcutData` changes). The host typically uses this to record the visit in a "Recents" list. To avoid double-counting in nested-PageLayout scenarios, this callback is only invoked from the **innermost** (non-nested) `PageLayout`, and is deferred via `nextTick()` so nested-layout detection has settled first.
 
 #### Example host setup
@@ -346,11 +346,11 @@ const recents = ref<PageShortcutData[]>([])
 
 const pageShortcutsContext = reactive({
   isFavorite: false,
-  onFavoriteToggle: () => {
-    // toggle the currently active entity in `favorites`,
+  onFavoriteToggle: (data: PageShortcutData) => {
+    // toggle `data` in `favorites` (e.g. dedupe by `path`),
     // then update `pageShortcutsContext.isFavorite` to match
   },
-  onEntityPageVisit: (data) => {
+  onEntityPageVisit: (data: PageShortcutData) => {
     // prepend `data` to `recents`, dedupe by `path`, cap length, etc.
   },
 })
@@ -364,8 +364,8 @@ provide('app:pageShortcutsContext', pageShortcutsContext)
 interface PageShortcutData {
   /** The display label of the page shortcut */
   label: string
-  /** The URL path of the page shortcut */
-  path: string
+  /** The URL path of the page shortcut. If omitted, PageLayout falls back to the current route's `fullPath`. */
+  path?: string
   /** The entity type of the page shortcut */
   entityType: string
   /** The display label of the parent entity */
@@ -373,12 +373,12 @@ interface PageShortcutData {
 }
 ```
 
-| Property      | Type     | Required | Description                                                            |
-| ------------- | -------- | -------- | ---------------------------------------------------------------------- |
-| `label`       | `string` | Yes      | Display text for the shortcut entry                                    |
-| `path`        | `string` | Yes      | URL path the shortcut navigates to                                     |
-| `entityType`  | `string` | Yes      | Host-defined entity category (e.g. `"gateway-service"`, `"route"`)     |
-| `parentLabel` | `string` | No       | Optional parent entity label, useful for disambiguating shortcut rows  |
+| Property      | Type     | Required | Description                                                                                  |
+| ------------- | -------- | -------- | -------------------------------------------------------------------------------------------- |
+| `label`       | `string` | Yes      | Display text for the shortcut entry                                                          |
+| `path`        | `string` | No       | URL path the shortcut navigates to. Falls back to the current route's `fullPath` if omitted. |
+| `entityType`  | `string` | Yes      | Host-defined entity category (e.g. `"gateway-service"`, `"route"`)                           |
+| `parentLabel` | `string` | No       | Optional parent entity label, useful for disambiguating shortcut rows                        |
 
 ### `PageShortcutsContext` Interface
 
@@ -391,8 +391,8 @@ The shape `PageLayout` expects when injecting `app:pageShortcutsContext`. Only `
 interface PageShortcutsContext {
   /** Whether the current page is currently favorited */
   isFavorite: boolean
-  /** Called when the user clicks the favorite star button */
-  onFavoriteToggle: () => void
+  /** Called when the user clicks the favorite star button. Receives the current page's shortcut data with `path` resolved. */
+  onFavoriteToggle: (data: PageShortcutData) => void
   /** Called when an entity page is visited or its shortcut data changes */
   onEntityPageVisit: (data: PageShortcutData) => void
 }
