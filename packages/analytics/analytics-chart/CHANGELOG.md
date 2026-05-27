@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.17.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.9...@kong-ui-public/analytics-chart@10.17.10) (2026-05-27)
+
+
+### Bug Fixes
+
+* add kong internal latency locale ([#3368](https://github.com/Kong/public-ui-components/issues/3368)) ([59a60f9](https://github.com/Kong/public-ui-components/commit/59a60f9e46a914fffad084ca23c114b9c0ac987a))
+
+
+
+
+
 ## [10.17.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.8...@kong-ui-public/analytics-chart@10.17.9) (2026-05-27)
 
 
