@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.3.9...@kong-ui-public/error-boundary@2.3.10) (2026-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3361](https://github.com/Kong/public-ui-components/issues/3361)) ([fb2890b](https://github.com/Kong/public-ui-components/commit/fb2890b10622def66cf9db5c067b75fddd9198bb))
+
+
+
+
+
 ## [2.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.3.8...@kong-ui-public/error-boundary@2.3.9) (2026-05-15)
 
 **Note:** Version bump only for package @kong-ui-public/error-boundary
