@@ -358,6 +358,7 @@
           <KInput
             v-model.trim="state.fields.aliasName"
             data-testid="custom-plugin-alias-name"
+            :help="t('custom_plugin_form.step3.alias_name.help')"
             :label="t('custom_plugin_form.step3.alias_name.label')"
             :placeholder="t('custom_plugin_form.step3.alias_name.placeholder')"
             :readonly="state.readonly"
