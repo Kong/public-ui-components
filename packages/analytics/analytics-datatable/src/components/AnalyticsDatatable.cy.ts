@@ -2569,7 +2569,12 @@ describe('<AnalyticsDatatable />', () => {
         startRow: 0,
         cursor: undefined,
       })
-      cy.wrap(fetcher).should('have.been.calledOnce')
+      cy.wrap(fetcher).its('firstCall.args.0').should('include', {
+        mode: 'infinite',
+        pageSize: 15,
+        startRow: 0,
+        cursor: undefined,
+      })
       cy.get('.ag-body-viewport').scrollTo('bottom')
       cy.wrap(fetcher).should('have.been.calledWithMatch', {
         mode: 'infinite',
