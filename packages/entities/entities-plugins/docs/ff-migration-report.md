@@ -3,11 +3,11 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-05-28T09:39:24.015Z
+> Generated: 2026-05-28T09:48:22.547Z
 
 ## Summary
 
-`█████▓▓▒▒▒░░░░░░░░░░░░░` **33%**
+`██████▓▒▒▒░░░░░░░░░░░░░` **33%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
@@ -20,8 +20,8 @@
 
 | Status | Count |
 |--------|-------|
-| ✅ Complete | **5** |
-| 🚀 Ready for Release | **2** |
+| ✅ Complete | **6** |
+| 🚀 Ready for Release | **1** |
 | 🔄 In Progress | **3** |
 | ⏸️ Not Started | **13** |
 
@@ -112,13 +112,16 @@
 
 ---
 
-### 🚀 M8 — JWT Signer, Datakit & Advanced Plugins — Ready for Release (5/5)
+<details>
+<summary><strong>✅ M8 — JWT Signer, Datakit & Advanced Plugins — Complete (5/5)</strong></summary>
 
 - ✅ `jwt-signer`
 - ✅ `datakit`
 - ✅ `request-callout`
 - ✅ `ai-mcp-proxy`
 - ✅ `service-protection`
+
+</details>
 
 ---
 

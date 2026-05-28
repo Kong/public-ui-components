@@ -168,6 +168,7 @@ const RELEASED_MILESTONES = new Set([
   'M4', // prometheus, file-log, http-log, correlation-id, opentelemetry
   'M5', // request-transformer-advanced, response-transformer-advanced, aws-lambda, exit-transformer
   'M9', // solace-consume, solace-log, solace-upstream
+  'M8', // jwt-signer, datakit, request-callout, ai-mcp-proxy, service-protection
 ])
 
 // ============================================================
