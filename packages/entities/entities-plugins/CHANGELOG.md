@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.209.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.208.5...@kong-ui-public/entities-plugins@9.209.0) (2026-05-28)
+
+
+### Features
+
+* **entities-plugins:** add milestone grouping to ff-migration-report ([#3375](https://github.com/Kong/public-ui-components/issues/3375)) ([d27cbf6](https://github.com/Kong/public-ui-components/commit/d27cbf6db1f0afde8feae9eb14563b81cb70a2b8))
+
+
+
+
+
 ## [9.208.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.208.4...@kong-ui-public/entities-plugins@9.208.5) (2026-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

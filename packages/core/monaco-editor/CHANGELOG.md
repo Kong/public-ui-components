@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.12...@kong-ui-public/monaco-editor@0.22.13) (2026-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/monaco-editor
+
+
+
+
+
 ## [0.22.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.11...@kong-ui-public/monaco-editor@0.22.12) (2026-05-27)
 
 
