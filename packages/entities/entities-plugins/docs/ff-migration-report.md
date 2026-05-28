@@ -3,11 +3,12 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-05-21T09:01:29.186Z
+> Generated: 2026-05-28T09:48:22.547Z
 
 ## Summary
 
-`██████████░░░░░░░░░░░░░░░░░░░░` **33%**
+`██████▓▒▒▒░░░░░░░░░░░░░` **33%**
+> █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
@@ -15,125 +16,259 @@
 | ✅ Migrated | **37** |
 | ⏳ Pending | **76** |
 
----
+### Milestone Status
 
-## ✅ Migrated (37)
-
-- acl
-- ai-custom-guardrail
-- ai-mcp-proxy
-- aws-lambda
-- basic-auth
-- correlation-id
-- cors
-- datakit
-- exit-transformer
-- file-log
-- header-cert-auth
-- http-log
-- jwe-decrypt
-- jwt
-- jwt-signer
-- key-auth
-- metering-and-billing
-- mtls-auth
-- oauth2
-- opentelemetry
-- prometheus
-- proxy-cache
-- proxy-cache-advanced
-- rate-limiting
-- rate-limiting-advanced
-- request-callout
-- request-transformer
-- request-transformer-advanced
-- response-transformer
-- response-transformer-advanced
-- route-transformer-advanced
-- service-protection
-- session
-- solace-consume
-- solace-log
-- solace-upstream
-- upstream-oauth
+| Status | Count |
+|--------|-------|
+| ✅ Complete | **6** |
+| 🚀 Ready for Release | **1** |
+| 🔄 In Progress | **3** |
+| ⏸️ Not Started | **13** |
 
 ---
 
-## ⏳ Pending (76)
+## Milestones
 
-- ace
-- acme
-- ai-a2a-proxy
-- ai-aws-guardrails
-- ai-azure-content-safety
-- ai-gcp-model-armor
-- ai-lakera-guard
-- ai-llm-as-judge
-- ai-mcp-oauth2
-- ai-prompt-compressor
-- ai-prompt-decorator
-- ai-prompt-guard
-- ai-prompt-template
-- ai-proxy
-- ai-proxy-advanced
-- ai-rag-injector
-- ai-rate-limiting-advanced
-- ai-request-transformer
-- ai-response-transformer
-- ai-sanitizer
-- ai-semantic-cache
-- ai-semantic-prompt-guard
-- ai-semantic-response-guard
-- app-dynamics
-- azure-functions
-- bot-detection
-- canary
-- confluent
-- confluent-consume
-- datadog
-- degraphql
-- forward-proxy
-- graphql-proxy-cache-advanced
-- graphql-rate-limiting-advanced
-- grpc-gateway
-- grpc-web
-- hmac-auth
-- injection-protection
-- ip-restriction
-- jq
-- json-threat-protection
-- kafka-consume
-- kafka-log
-- kafka-upstream
-- key-auth-enc
-- ldap-auth
-- ldap-auth-advanced
-- loggly
-- mocking
-- oas-validation
-- oauth2-introspection
-- opa
-- openid-connect
-- openwhisk
-- post-function
-- pre-function
-- redirect
-- request-size-limiting
-- request-termination
-- request-validator
-- response-ratelimiting
-- route-by-header
-- saml
-- standard-webhooks
-- statsd
-- syslog
-- tcp-log
-- tls-handshake-modifier
-- tls-metadata-headers
-- udp-log
-- upstream-timeout
-- vault-auth
-- websocket-size-limit
-- websocket-validator
-- xml-threat-protection
-- zipkin
+<details>
+<summary><strong>✅ M1 — Key Auth, Rate Limiting & Core Transformations — Complete (7/7)</strong></summary>
+
+- ✅ `key-auth`
+- ✅ `rate-limiting`
+- ✅ `jwt`
+- ✅ `route-transformer-advanced`
+- ✅ `request-transformer`
+- ✅ `basic-auth`
+- ✅ `upstream-oauth`
+
+</details>
+
+---
+
+<details>
+<summary><strong>✅ M2 — CORS, ACL & Proxy Cache — Complete (5/5)</strong></summary>
+
+- ✅ `cors`
+- ✅ `acl`
+- ✅ `proxy-cache`
+- ✅ `proxy-cache-advanced`
+- ✅ `response-transformer`
+
+</details>
+
+---
+
+### ⏸️ M3 — AI Proxy Core — Not Started (0/5)
+
+- ⏳ `ai-proxy-advanced`
+- ⏳ `ai-proxy`
+- ⏳ `ai-prompt-decorator`
+- ⏳ `ai-prompt-guard`
+- ⏳ `ai-rate-limiting-advanced`
+
+---
+
+<details>
+<summary><strong>✅ M4 — Analytics & Monitoring Core — Complete (5/5)</strong></summary>
+
+- ✅ `prometheus`
+- ✅ `file-log`
+- ✅ `http-log`
+- ✅ `correlation-id`
+- ✅ `opentelemetry`
+
+</details>
+
+---
+
+<details>
+<summary><strong>✅ M5 — Advanced Transformations & Serverless — Complete (4/4)</strong></summary>
+
+- ✅ `request-transformer-advanced`
+- ✅ `response-transformer-advanced`
+- ✅ `aws-lambda`
+- ✅ `exit-transformer`
+
+</details>
+
+---
+
+### ⏸️ M6 — Security & Serverless Functions — Not Started (0/5)
+
+- ⏳ `pre-function`
+- ⏳ `ip-restriction`
+- ⏳ `post-function`
+- ⏳ `bot-detection`
+- ⏳ `request-size-limiting`
+
+---
+
+### ⏸️ M7 — AI Semantic & Transformers — Not Started (0/5)
+
+- ⏳ `ai-semantic-cache`
+- ⏳ `ai-prompt-template`
+- ⏳ `ai-semantic-prompt-guard`
+- ⏳ `ai-request-transformer`
+- ⏳ `ai-response-transformer`
+
+---
+
+<details>
+<summary><strong>✅ M8 — JWT Signer, Datakit & Advanced Plugins — Complete (5/5)</strong></summary>
+
+- ✅ `jwt-signer`
+- ✅ `datakit`
+- ✅ `request-callout`
+- ✅ `ai-mcp-proxy`
+- ✅ `service-protection`
+
+</details>
+
+---
+
+<details>
+<summary><strong>✅ M9 — Solace Integration — Complete (3/3)</strong></summary>
+
+- ✅ `solace-consume`
+- ✅ `solace-log`
+- ✅ `solace-upstream`
+
+</details>
+
+---
+
+### 🚀 M10 — Auth & Session — Ready for Release (5/5)
+
+- ✅ `header-cert-auth`
+- ✅ `jwe-decrypt`
+- ✅ `mtls-auth`
+- ✅ `oauth2`
+- ✅ `session`
+
+---
+
+### 🔄 M11 — Traffic Control: Rate Limiting — In Progress (1/5)
+
+- ✅ `rate-limiting-advanced`
+- ⏳ `response-ratelimiting`
+- ⏳ `graphql-rate-limiting-advanced`
+- ⏳ `redirect`
+- ⏳ `request-termination`
+
+---
+
+### ⏸️ M12 — Traffic Control: Validation & Routing — Not Started (0/5)
+
+- ⏳ `request-validator`
+- ⏳ `canary`
+- ⏳ `mocking`
+- ⏳ `oas-validation`
+- ⏳ `route-by-header`
+
+---
+
+### ⏸️ M13 — Traffic Control: WebSocket & Timeouts — Not Started (0/5)
+
+- ⏳ `websocket-size-limit`
+- ⏳ `websocket-validator`
+- ⏳ `xml-threat-protection`
+- ⏳ `upstream-timeout`
+- ⏳ `forward-proxy`
+
+---
+
+### ⏸️ M14 — Traffic Control: Messaging & Access — Not Started (0/5)
+
+- ⏳ `ace`
+- ⏳ `confluent-consume`
+- ⏳ `kafka-consume`
+- ⏳ `standard-webhooks`
+- ⏳ `graphql-proxy-cache-advanced`
+
+---
+
+### 🔄 M15 — Analytics, Monitoring & Monetization — In Progress (1/5)
+
+- ⏳ `app-dynamics`
+- ⏳ `datadog`
+- ⏳ `statsd`
+- ⏳ `zipkin`
+- ✅ `metering-and-billing`
+
+---
+
+### ⏸️ M16 — Authentication: Extended Methods — Not Started (0/5)
+
+- ⏳ `hmac-auth`
+- ⏳ `key-auth-enc`
+- ⏳ `ldap-auth`
+- ⏳ `ldap-auth-advanced`
+- ⏳ `oauth2-introspection`
+
+---
+
+### ⏸️ M17 — Authentication: OpenID & Enterprise — Not Started (0/3)
+
+- ⏳ `openid-connect`
+- ⏳ `saml`
+- ⏳ `vault-auth`
+
+---
+
+### ⏸️ M18 — Logging — Not Started (0/5)
+
+- ⏳ `kafka-log`
+- ⏳ `loggly`
+- ⏳ `syslog`
+- ⏳ `tcp-log`
+- ⏳ `udp-log`
+
+---
+
+### ⏸️ M19 — Security — Not Started (0/6)
+
+- ⏳ `acme`
+- ⏳ `injection-protection`
+- ⏳ `json-threat-protection`
+- ⏳ `opa`
+- ⏳ `tls-handshake-modifier`
+- ⏳ `tls-metadata-headers`
+
+---
+
+### ⏸️ M20 — Transformations & Serverless — Not Started (0/4)
+
+- ⏳ `confluent`
+- ⏳ `degraphql`
+- ⏳ `grpc-gateway`
+- ⏳ `grpc-web`
+
+---
+
+### ⏸️ M21 — Transformations & Serverless (cont.) — Not Started (0/4)
+
+- ⏳ `jq`
+- ⏳ `kafka-upstream`
+- ⏳ `azure-functions`
+- ⏳ `openwhisk`
+
+---
+
+### 🔄 M22 — AI: Guardrails — In Progress (1/5)
+
+- ⏳ `ai-a2a-proxy`
+- ⏳ `ai-aws-guardrails`
+- ⏳ `ai-azure-content-safety`
+- ✅ `ai-custom-guardrail`
+- ⏳ `ai-gcp-model-armor`
+
+---
+
+### ⏸️ M23 — AI: Advanced Safety & RAG — Not Started (0/7)
+
+- ⏳ `ai-llm-as-judge`
+- ⏳ `ai-lakera-guard`
+- ⏳ `ai-mcp-oauth2`
+- ⏳ `ai-sanitizer`
+- ⏳ `ai-prompt-compressor`
+- ⏳ `ai-rag-injector`
+- ⏳ `ai-semantic-response-guard`
