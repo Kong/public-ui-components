@@ -35,13 +35,19 @@
                 :size="KUI_ICON_SIZE_30"
               />
             </component>
-            <h1
-              v-if="title"
-              class="page-layout-title"
-              data-testid="page-layout-title"
+            <span
+              v-if="title || $slots.title"
+              class="page-layout-title-wrapper"
             >
-              {{ title }}
-            </h1>
+              <slot name="title">
+                <h1
+                  class="page-layout-title"
+                  data-testid="page-layout-title"
+                >
+                  {{ title }}
+                </h1>
+              </slot>
+            </span>
             <div
               v-if="showFavoriteButton"
               class="favorite-button-container"
@@ -271,12 +277,14 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
             }
           }
 
-          .page-layout-title {
-            color: var(--kui-color-text, $kui-color-text);
-            font-size: var(--kui-font-size-50, $kui-font-size-50);
-            font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-            line-height: var(--kui-line-height-40, $kui-line-height-40);
-            margin: var(--kui-space-0, $kui-space-0);
+          .page-layout-title-wrapper {
+            > * {
+              color: var(--kui-color-text, $kui-color-text);
+              font-size: var(--kui-font-size-50, $kui-font-size-50);
+              font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+              line-height: var(--kui-line-height-40, $kui-line-height-40);
+              margin: var(--kui-space-0, $kui-space-0);
+            }
           }
 
           .favorite-button-container {

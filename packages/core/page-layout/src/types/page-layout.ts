@@ -17,7 +17,7 @@ export interface PageLayoutProps {
   /** Breadcrumb items */
   breadcrumbs?: BreadcrumbItem[]
   /** Page title */
-  title: string
+  title?: string
   /** The URL to navigate back to when the back button is clicked */
   backTo?: string | RouteLocationRaw
   /** Tabs */
@@ -35,6 +35,10 @@ export interface PageLayoutSlots {
    * Actions slot for page actions
    */
   actions?(): any
+  /**
+   * Title slot for page title
+   */
+  title?(): any
   /**
    * Title after slot for page title after content
    */

@@ -56,7 +56,7 @@ A Kong UI page layout component that provides a structured page header with brea
 #### `title`
 
 - type: `String`
-- required: `true`
+- required: `false`
 
 The title text of the page, rendered as an `<h1>` element.
 
@@ -119,6 +119,10 @@ The main content area of the page. This slot is **only rendered when no tabs are
 #### `actions`
 
 An optional slot rendered on the right side of the page header, aligned to the bottom of the header row. Use this slot to place action buttons, dropdowns, or other controls that relate to the current page. The slot is rendered regardless of whether tabs are present.
+
+#### `title`
+
+Optional slot for a custom page title. Use it when the default `<h1>` needs to be replaced with a lower-level heading to preserve proper heading order.
 
 #### `title-after`
 

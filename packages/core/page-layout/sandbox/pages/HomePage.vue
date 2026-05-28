@@ -5,8 +5,10 @@
       :breadcrumbs="breadcrumbs"
       :page-shortcut-data="pageShortcutData"
       :tabs="tabs"
-      title="Umbrella R&D Dev"
     >
+      <template #title>
+        <h1>Umbrella R&D Dev</h1>
+      </template>
       <template #actions>
         <KButton
           appearance="secondary"
