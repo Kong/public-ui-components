@@ -13,6 +13,8 @@
 //   - shorthand at the top of config                               : legacy_alias
 //   - map field at deep nesting (user-defined keys pass through)   : outer.inner.metadata
 //   - map field inside an array-element record                     : targets[].auth.headers
+//   - map of records w/ shorthand (keys opaque, value records      : service_map (string → record)
+//     get walked & shorthand inside each record value stripped)
 export default {
   fields: [
     {
@@ -131,6 +133,25 @@ export default {
                 type: 'record',
               },
               type: 'array',
+            },
+          },
+          {
+            // Map whose VALUES are records with their own `shorthand_fields`. User-defined
+            // keys are opaque, but each record value is walked so its deprecated alias is stripped.
+            service_map: {
+              keys: { type: 'string' },
+              type: 'map',
+              values: {
+                fields: [
+                  { url: { type: 'string' } },
+                  { weight: { type: 'integer' } },
+                ],
+                shorthand_fields: [
+                  // Deprecated inside each map-value record
+                  { endpoint: { type: 'string' } },
+                ],
+                type: 'record',
+              },
             },
           },
         ],

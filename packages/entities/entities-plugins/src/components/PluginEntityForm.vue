@@ -145,7 +145,7 @@ import type { GlobalAction } from './free-form/shared/types'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/shared/schema-enhancement'
 import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/shared/plugin-registry'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
-import type { ArrayFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../types/plugins/form-schema'
+import type { ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '../types/plugins/form-schema'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -836,7 +836,25 @@ const stripUnknownConfigFields = (value: any, subschema: UnionFieldSchema | unde
 
   // Primitive or null — nothing to strip.
   if (!value || typeof value !== 'object') return value
-  // Record with no declared `fields[]` (e.g. `map`) — pass through.
+
+  // Map with record values — recurse into each value with the values-subschema.
+  // Map KEYS are user-defined and remain opaque; only the inner records get walked,
+  // so their `shorthand_fields` are stripped while canonical keys are preserved.
+  // Primitive-valued maps (e.g. string → string) fall through to the early return below.
+  if (
+    (subschema as MapFieldSchema).type === 'map'
+    && (subschema as MapFieldSchema).values?.type === 'record'
+    && Array.isArray(((subschema as MapFieldSchema).values as RecordFieldSchema).fields)
+  ) {
+    const valuesSchema = (subschema as MapFieldSchema).values as RecordFieldSchema
+    const result: Record<string, any> = {}
+    for (const key of Object.keys(value)) {
+      result[key] = stripUnknownConfigFields(value[key], valuesSchema)
+    }
+    return result
+  }
+
+  // Record with no declared `fields[]` (e.g. primitive-valued `map`) — pass through.
   if (!Array.isArray((subschema as RecordFieldSchema).fields)) return value
 
   const fieldByName = new Map<string, UnionFieldSchema | undefined>()

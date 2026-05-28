@@ -333,6 +333,14 @@ describe('<PluginEntityForm /> — shorthand_fields stripping', () => {
               ],
             },
           ],
+
+          // Map whose VALUES are records with their own shorthand_fields. Map KEYS are
+          // user-defined and opaque (must be kept verbatim); each record VALUE is walked so
+          // its deprecated alias (`endpoint`) is stripped while canonical fields survive.
+          service_map: {
+            'svc-a': { url: '/api', weight: 1, endpoint: 'legacy-a' },
+            'svc-b': { url: '/api2', weight: 2, endpoint: 'legacy-b' },
+          },
         },
       }
 
@@ -396,6 +404,13 @@ describe('<PluginEntityForm /> — shorthand_fields stripping', () => {
             ],
           },
         ])
+
+        // Map of records with shorthand inside each value: keys preserved verbatim,
+        // each record value walked so `endpoint` (shorthand) is dropped, canonical kept.
+        expect(data.config.service_map).to.deep.equal({
+          'svc-a': { url: '/api', weight: 1 },
+          'svc-b': { url: '/api2', weight: 2 },
+        })
       })
     })
 
