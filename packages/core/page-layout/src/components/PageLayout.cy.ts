@@ -28,6 +28,7 @@ describe('<PageLayout />', () => {
     component: Parameters<typeof cy.mount>[0],
     options: OptionsParam = {},
   ) => cy.mount(component, { ...options, router } as OptionsParam)
+
   it('renders breadcrumbs, title and tabs when breadcrumbs and tabs are passed', () => {
     const title = 'Test Page Title'
 
@@ -91,6 +92,18 @@ describe('<PageLayout />', () => {
     })
 
     cy.getTestId(actionsTestId).should('be.visible').and('contain.text', actionsText)
+  })
+
+  it('renders content passed in through title slot', () => {
+    const titleTestId = 'page-layout-slotted-title'
+    const titleText = 'Title'
+
+    mountWithRouter(PageLayout, {
+      props: { title: 'Test Page Title' },
+      slots: { title: () => h('span', { 'data-testid': titleTestId }, titleText) },
+    })
+
+    cy.getTestId(titleTestId).should('be.visible').and('contain.text', titleText)
   })
 
   it('renders content passed in through title-after slot', () => {

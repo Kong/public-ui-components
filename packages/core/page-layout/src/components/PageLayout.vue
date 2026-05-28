@@ -35,13 +35,19 @@
                 :size="KUI_ICON_SIZE_30"
               />
             </component>
-            <h1
-              v-if="title"
-              class="page-layout-title"
-              data-testid="page-layout-title"
+            <span
+              v-if="title || $slots.title"
+              class="page-layout-title-wrapper"
             >
-              {{ title }}
-            </h1>
+              <slot name="title">
+                <h1
+                  class="page-layout-title"
+                  data-testid="page-layout-title"
+                >
+                  {{ title }}
+                </h1>
+              </slot>
+            </span>
             <div
               v-if="showFavoriteButton"
               class="favorite-button-container"
@@ -97,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, onUnmounted, nextTick, watch } from 'vue'
+import { computed, ref, provide, inject, onUnmounted, watch } from 'vue'
 import type { DeepReadonly, Reactive } from 'vue'
 import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
@@ -105,6 +111,7 @@ import { nestedPageLayoutInjectionKey } from '../symbols'
 import { ArrowTopLeftIcon, StarIcon, StarFillIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { useRoute, useRouter } from 'vue-router'
+import { useDebounceFn } from '@vueuse/core'
 import composables from '../composables'
 
 const {
@@ -196,15 +203,18 @@ onUnmounted(() => {
   unregisterNestedPageLayout.value?.()
 })
 
-watch([() => pageShortcutData, () => route?.fullPath], async () => {
-  /**
-   * Wait for the next tick to ensure any nested PageLayouts have mounted to make sure shortcut logic handling is deferred to the most nested PageLayout.
-   * The reason why it has to be a watcher is because sometimes it takes time for the host app router to update the route and set the path properly.
-   */
-  await nextTick()
+const debouncedEntityPageVisit = useDebounceFn(() => {
   if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
     pageShortcutsContext.onEntityPageVisit({ ...pageShortcutData, path: pageShortcutData?.path || route?.fullPath })
   }
+}, 500)
+
+/**
+ * The reason why it has to be a watcher vs onMounted is because sometimes it takes time for the host app router to update the route and set the path properly.
+ * Same applies to label and parentLabel which are often sourced from a store.
+ */
+watch([() => pageShortcutData, () => route?.fullPath], () => {
+  debouncedEntityPageVisit()
 }, { immediate: true, deep: true })
 </script>
 
@@ -267,12 +277,14 @@ watch([() => pageShortcutData, () => route?.fullPath], async () => {
             }
           }
 
-          .page-layout-title {
-            color: var(--kui-color-text, $kui-color-text);
-            font-size: var(--kui-font-size-50, $kui-font-size-50);
-            font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-            line-height: var(--kui-line-height-40, $kui-line-height-40);
-            margin: var(--kui-space-0, $kui-space-0);
+          .page-layout-title-wrapper {
+            > * {
+              color: var(--kui-color-text, $kui-color-text);
+              font-size: var(--kui-font-size-50, $kui-font-size-50);
+              font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+              line-height: var(--kui-line-height-40, $kui-line-height-40);
+              margin: var(--kui-space-0, $kui-space-0);
+            }
           }
 
           .favorite-button-container {
