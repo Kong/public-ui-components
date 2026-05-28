@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.32...@kong-ui-public/page-layout@0.2.33) (2026-05-28)
+
+
+### Bug Fixes
+
+* **page-layout:** debounce entity page visit callback ([#3369](https://github.com/Kong/public-ui-components/issues/3369)) ([9bbe818](https://github.com/Kong/public-ui-components/commit/9bbe81809196cfdea4f040ab30f64ffb8e0d5dff))
+
+
+
+
+
 ## [0.2.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.31...@kong-ui-public/page-layout@0.2.32) (2026-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/page-layout
