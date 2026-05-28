@@ -107,6 +107,7 @@ async function copyTextToClipboard(text: string): Promise<boolean> {
 
 <style lang="scss" scoped>
 .deck-command-editor-wrapper {
+  isolation: isolate;
   position: relative;
 
   .deck-command-editor {
