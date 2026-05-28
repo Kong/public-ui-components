@@ -1,10 +1,18 @@
 import PluginCatalog from './PluginCatalog.vue'
-import { PluginGroupArraySortedAlphabetically, type KonnectPluginSelectConfig } from '../types'
+import {
+  PluginGroupArraySortedAlphabetically,
+  type KonnectPluginSelectConfig,
+  type KongManagerPluginSelectConfig,
+} from '../types'
 import { PluginGroup } from '@kong-ui-public/entities-plugins-metadata'
 import {
   konnectAvailablePlugins,
   konnectStreamingCustomPlugins,
+  kmAvailablePlugins,
+  kmClonedCustomPlugins,
+  kmStreamingCustomPlugins,
 } from '../../fixtures/mockData'
+import { FEATURE_FLAGS } from '../constants'
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 const baseConfigKonnect: KonnectPluginSelectConfig = {
@@ -289,5 +297,322 @@ describe('<PluginCatalog />', {
     cy.getTestId('clear-filter-selection').should('not.be.disabled').click()
     cy.getTestId(`plugin-filter-checkbox-${PluginGroup.TRAFFIC_CONTROL}`).should('not.be.checked')
     cy.getTestId('clear-filter-selection').should('be.disabled')
+  })
+
+  it('should hide the featured filter and group when showFeaturedGroup is false', () => {
+    interceptKonnect()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        highlightedPluginIds: ['basic-auth'],
+        showFeaturedGroup: false,
+      },
+      router,
+    })
+
+    cy.wait('@getAvailablePlugins')
+
+    // featured filter sidebar item should not exist
+    cy.getTestId('plugin-filter-item-Featured').should('not.exist')
+    // featured group in results should not exist
+    cy.getTestId('plugin-group-Featured').should('not.exist')
+  })
+
+  it('should render streaming custom plugins in the Custom Plugins group', () => {
+    interceptKonnect()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        customPluginSupport: 'streaming',
+      },
+      router,
+    })
+
+    cy.wait('@getAvailablePlugins')
+    cy.wait('@getStreamingCustomPlugins')
+
+    cy.getTestId('plugin-group-Custom Plugins').should('exist')
+    cy.getTestId('plugin-1-card').should('exist')
+    cy.getTestId('plugin-2-card').should('exist')
+  })
+})
+
+describe('<PluginCatalog /> Kong Manager', {
+  viewportWidth: 1024,
+  viewportHeight: 576,
+}, () => {
+  const baseConfigKongManager: KongManagerPluginSelectConfig = {
+    app: 'kongManager',
+    workspace: 'default',
+    apiBaseUrl: '/kong-manager',
+    getCreateRoute: (plugin: string) => ({
+      name: 'create-plugin',
+      params: { plugin },
+    }),
+    createCustomRoute: { name: 'create-custom-plugin' },
+    getCustomEditRoute: (plugin: string, type: 'schema' | 'streaming' | 'cloned') => ({
+      name: 'edit-custom-plugin',
+      params: { plugin, customPluginType: type },
+    }),
+  }
+
+  let router: ReturnType<typeof createRouter>
+
+  const interceptKMAvailablePlugins = (mockData = kmAvailablePlugins) => {
+    cy.intercept(
+      {
+        method: 'GET',
+        url: `${baseConfigKongManager.apiBaseUrl}/${baseConfigKongManager.workspace}/kong`,
+      },
+      { statusCode: 200, body: mockData },
+    ).as('getKMAvailablePlugins')
+  }
+
+  const interceptKMClonedPlugins = (options?: { statusCode?: number, mockData?: object }) => {
+    cy.intercept(
+      {
+        method: 'GET',
+        pathname: `${baseConfigKongManager.apiBaseUrl}/${baseConfigKongManager.workspace}/cloned-plugins`,
+      },
+      { statusCode: options?.statusCode ?? 200, body: options?.mockData ?? kmClonedCustomPlugins },
+    ).as('getKMClonedPlugins')
+  }
+
+  const interceptKMStreamingPlugins = (mockData = kmStreamingCustomPlugins) => {
+    cy.intercept(
+      {
+        method: 'GET',
+        pathname: `${baseConfigKongManager.apiBaseUrl}/${baseConfigKongManager.workspace}/custom-plugins`,
+      },
+      { statusCode: 200, body: mockData },
+    ).as('getKMStreamingPlugins')
+  }
+
+  beforeEach(() => {
+    router = createRouter({
+      routes: [
+        { path: '/', name: 'list-plugin', component: { template: '<div>ListPage</div>' } },
+        { path: '/create-plugin', name: 'create-plugin', component: { template: '<div>CreatePlugin</div>' } },
+        { path: '/create-custom-plugin', name: 'create-custom-plugin', component: { template: '<div>CreateCustomPlugin</div>' } },
+        { path: '/edit-custom-plugin', name: 'edit-custom-plugin', component: { template: '<div>EditCustomPlugin</div>' } },
+      ],
+      history: createMemoryHistory(),
+    })
+  })
+
+  it('should render plugin groups from Kong Manager API', () => {
+    interceptKMAvailablePlugins()
+
+    cy.mount(PluginCatalog, {
+      props: { config: baseConfigKongManager },
+      router,
+    })
+
+    cy.wait('@getKMAvailablePlugins')
+    cy.getTestId('plugin-catalog').should('exist')
+    cy.getTestId(`plugin-group-${PluginGroup.AUTHENTICATION}`).should('exist')
+  })
+
+  it('should render cloned custom plugins with cloned-from badge', () => {
+    interceptKMAvailablePlugins()
+    interceptKMClonedPlugins()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKongManager,
+        customPluginSupport: ['cloned', 'schema'],
+      },
+      global: {
+        provide: {
+          [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+        },
+      },
+      router,
+    })
+
+    cy.wait('@getKMAvailablePlugins')
+    cy.wait('@getKMClonedPlugins')
+
+    cy.getTestId('plugin-group-Custom Plugins').should('exist')
+    cy.getTestId('km-cloned-plugin-card').should('exist')
+    cy.getTestId('km-cloned-plugin-card').find('.cloned-from-badge').should('exist')
+  })
+
+  it('should render streaming custom plugins in the Custom Plugins group', () => {
+    interceptKMAvailablePlugins()
+    interceptKMStreamingPlugins()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKongManager,
+        customPluginSupport: 'streaming',
+      },
+      router,
+    })
+
+    cy.wait('@getKMAvailablePlugins')
+    cy.wait('@getKMStreamingPlugins')
+
+    cy.getTestId('plugin-group-Custom Plugins').should('exist')
+    cy.getTestId('km-streaming-plugin-card').should('exist')
+  })
+
+  it('should show overflow actions menu on cloned plugin card', () => {
+    interceptKMAvailablePlugins()
+    interceptKMClonedPlugins()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKongManager,
+        customPluginSupport: ['cloned', 'schema'],
+        canUpdateClonedPlugin: true,
+        canDeleteClonedPlugin: true,
+      },
+      global: {
+        provide: {
+          [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+        },
+      },
+      router,
+    })
+
+    cy.wait('@getKMAvailablePlugins')
+    cy.wait('@getKMClonedPlugins')
+
+    cy.getTestId('km-cloned-plugin-card')
+      .within(() => {
+        cy.getTestId('overflow-actions-button').should('be.visible').click()
+      })
+    cy.getTestId('edit-plugin-schema').should('be.visible')
+    cy.getTestId('delete-plugin-schema').should('be.visible')
+  })
+
+  it('should open delete modal when Delete is clicked on a cloned plugin card', () => {
+    interceptKMAvailablePlugins()
+    interceptKMClonedPlugins()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKongManager,
+        customPluginSupport: ['cloned', 'schema'],
+        canDeleteClonedPlugin: true,
+      },
+      global: {
+        provide: {
+          [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+        },
+      },
+      router,
+    })
+
+    cy.wait('@getKMAvailablePlugins')
+    cy.wait('@getKMClonedPlugins')
+
+    cy.getTestId('km-cloned-plugin-card')
+      .within(() => {
+        cy.getTestId('overflow-actions-button').click()
+      })
+    cy.getTestId('delete-plugin-schema').click()
+    cy.getTestId('delete-custom-plugin-schema-modal').should('exist')
+  })
+
+  it('should not render cloned plugin edit action for KM schema-type plugins', () => {
+    // schema-type custom plugins in KM are server-installed — not editable/deletable
+    interceptKMAvailablePlugins()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKongManager,
+        // schema support only, no cloned
+        customPluginSupport: 'schema',
+        availableOnServer: false,
+      },
+      global: {
+        provide: {
+          [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+        },
+      },
+      router,
+    })
+
+    cy.wait('@getKMAvailablePlugins')
+
+    // If a schema plugin exists in the custom group, it should NOT have an overflow menu
+    // (schema plugins in KM are server-installed, not manageable)
+    cy.getTestId('plugin-group-Custom Plugins').should('not.exist')
+  })
+
+  it('should filter out ignoredPlugins from Kong Manager plugin list', () => {
+    interceptKMAvailablePlugins()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKongManager,
+        ignoredPlugins: ['acl'],
+      },
+      router,
+    })
+
+    cy.wait('@getKMAvailablePlugins')
+
+    cy.getTestId('acl-card').should('not.exist')
+    // other plugins should still be present
+    cy.getTestId('basic-auth-card').should('exist')
+  })
+
+  it('should show warning alert when cloned plugins API fails', () => {
+    interceptKMAvailablePlugins()
+    interceptKMClonedPlugins({ statusCode: 500, mockData: { message: 'Internal Server Error' } })
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKongManager,
+        customPluginSupport: ['cloned', 'schema'],
+      },
+      global: {
+        provide: {
+          [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+        },
+      },
+      router,
+    })
+
+    cy.wait('@getKMAvailablePlugins')
+    cy.wait('@getKMClonedPlugins')
+
+    // warning alert should be shown; other Kong plugins still render
+    cy.get('.custom-plugins-warning').should('exist')
+    cy.getTestId(`plugin-group-${PluginGroup.AUTHENTICATION}`).should('exist')
+  })
+
+  it('should not show overflow actions when canUpdateClonedPlugin and canDeleteClonedPlugin are false', () => {
+    interceptKMAvailablePlugins()
+    interceptKMClonedPlugins()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKongManager,
+        customPluginSupport: ['cloned', 'schema'],
+        canUpdateClonedPlugin: false,
+        canDeleteClonedPlugin: false,
+      },
+      global: {
+        provide: {
+          [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+        },
+      },
+      router,
+    })
+
+    cy.wait('@getKMAvailablePlugins')
+    cy.wait('@getKMClonedPlugins')
+
+    cy.getTestId('km-cloned-plugin-card').should('exist')
+    cy.getTestId('km-cloned-plugin-card')
+      .within(() => {
+        cy.getTestId('overflow-actions-button').should('not.exist')
+      })
   })
 })

@@ -187,4 +187,13 @@ export interface ClonedPluginSchema {
   tags?: string[] | null
 }
 
+export interface PluginCatalogPermissions {
+  canReadCustomPlugin: boolean
+  canUpdateCustomPlugin: boolean
+  canDeleteCustomPlugin: boolean
+  canReadClonedPlugin: boolean
+  canUpdateClonedPlugin: boolean
+  canDeleteClonedPlugin: boolean
+}
+
 export { PluginGroup, PluginScope }

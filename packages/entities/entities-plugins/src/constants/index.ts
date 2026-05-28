@@ -10,4 +10,6 @@ export const FEATURE_FLAGS = {
 
 export const TOASTER_PROVIDER = Symbol('TOASTER_PROVIDER')
 
+export const PLUGIN_CATALOG_PERMISSIONS_KEY = Symbol('plugin-catalog-permissions')
+
 export const FREE_FORM_SCHEMA_MAP_KEY = '__FREEFORM_SCHEMA_MAP__'

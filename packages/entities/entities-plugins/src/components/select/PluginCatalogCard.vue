@@ -47,15 +47,17 @@
 
               <template #items>
                 <KDropdownItem
+                  v-if="canEditPlugin"
                   data-testid="edit-plugin-schema"
                   @click.stop.prevent="handleCustomEdit(plugin.name, plugin.customPluginType!)"
                 >
                   {{ t('actions.edit') }}
                 </KDropdownItem>
                 <KDropdownItem
+                  v-if="canDeletePlugin"
                   danger
                   data-testid="delete-plugin-schema"
-                  has-divider
+                  :has-divider="canEditPlugin"
                   @click.stop.prevent="handleCustomDelete"
                 >
                   {{ t('actions.delete') }}
@@ -71,31 +73,31 @@
           :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
         >
           <div
-            v-if="plugin.description || customPluginBadges.length"
+            v-if="plugin.description"
+            :title="plugin.description"
           >
-            <div
-              v-if="customPluginBadges.length"
-              class="custom-plugin-badges"
-            >
-              <KBadge
-                v-for="badge in customPluginBadges"
-                :key="badge"
-                appearance="info"
-              >
-                {{ badge }}
-              </KBadge>
-            </div>
-
-            <div
-              v-if="plugin.description"
-              :title="plugin.description"
-            >
-              {{ plugin.description }}
-            </div>
+            {{ plugin.description }}
           </div>
         </div>
         <div class="plugin-card-footer">
           <div>{{ isCreateCustomPlugin ? t('actions.create_custom') : t('actions.configure') }}</div>
+          <KBadge
+            v-if="footerBadgeText"
+            appearance="info"
+          >
+            {{ footerBadgeText }}
+          </KBadge>
+          <KTooltip
+            v-if="clonedFromText"
+            :text="clonedFromText"
+          >
+            <KBadge
+              appearance="info"
+              class="cloned-from-badge"
+            >
+              <span class="cloned-badge-text">{{ clonedFromText }}</span>
+            </KBadge>
+          </KTooltip>
           <slot name="footer-extra" />
         </div>
       </RouterLink>
@@ -104,15 +106,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
+import type { ComputedRef } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   PluginGroup,
   type CustomPluginType,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
+  type PluginCatalogPermissions,
   type PluginType,
 } from '../../types'
+import { PLUGIN_CATALOG_PERMISSIONS_KEY } from '../../constants'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { MoreIcon } from '@kong/icons'
 import composables from '../../composables'
@@ -135,24 +140,39 @@ const props = defineProps<{
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
-const customPluginBadges = computed((): string[] => {
+
+const DEFAULT_PERMISSIONS: PluginCatalogPermissions = {
+  canReadCustomPlugin: true,
+  canUpdateCustomPlugin: true,
+  canDeleteCustomPlugin: true,
+  canReadClonedPlugin: true,
+  canUpdateClonedPlugin: true,
+  canDeleteClonedPlugin: true,
+}
+const injectedPerms = inject<ComputedRef<PluginCatalogPermissions>>(PLUGIN_CATALOG_PERMISSIONS_KEY)
+const permissions = computed(() => injectedPerms?.value ?? DEFAULT_PERMISSIONS)
+
+const footerBadgeText = computed((): string | null => {
   if (!isCustomPlugin.value || isCreateCustomPlugin.value) {
-    return []
+    return null
   }
-
-  if (props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromRef) {
-    return [t('plugins.select.cloned_from_badge', { link: props.plugin.clonedFromRef })]
-  }
-
   if (props.plugin.customPluginType === 'streaming') {
-    return [t('plugins.select.streamed_custom_badge')]
+    return t('plugins.select.streamed_custom_badge')
   }
+  if (props.plugin.customPluginType === 'schema') {
+    return t('plugins.select.installed_custom_badge')
+  }
+  return null
+})
 
-  return [t('plugins.select.installed_custom_badge')]
+const clonedFromText = computed((): string | null => {
+  if (props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromRef) {
+    return t('plugins.select.cloned_from_badge', { link: props.plugin.clonedFromRef })
+  }
+  return null
 })
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
-const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && controlPlaneId.value))
+const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && (canEditPlugin.value || canDeletePlugin.value)))
 
 const pluginCardLink = computed(() => {
   if (isDisabled.value) {
@@ -160,9 +180,8 @@ const pluginCardLink = computed(() => {
   }
 
   if (isCustomPlugin.value) {
-    const konnectConfig = props.config as KonnectPluginSelectConfig
-    if (isCreateCustomPlugin.value && konnectConfig.createCustomRoute) {
-      return konnectConfig.createCustomRoute
+    if (isCreateCustomPlugin.value && props.config.createCustomRoute) {
+      return props.config.createCustomRoute
     }
   }
 
@@ -173,18 +192,32 @@ const pluginCardLink = computed(() => {
  * Custom Plugin logic
  */
 const isCreateCustomPlugin = computed((): boolean => props.plugin.id === 'custom-plugin-create')
-const isCustomPlugin = computed((): boolean => props.config.app === 'konnect' && props.plugin.group === PluginGroup.CUSTOM_PLUGINS)
+const isCustomPlugin = computed((): boolean => (props.config.app === 'konnect' || props.config.app === 'kongManager') && props.plugin.group === PluginGroup.CUSTOM_PLUGINS)
+
+// 'cloned' and 'schema' types are both managed via the cloned-plugins RBAC path
+const isClonedType = computed(() => props.plugin.customPluginType === 'cloned' || props.plugin.customPluginType === 'schema')
+
+const canEditPlugin = computed((): boolean => {
+  if (!isCustomPlugin.value || isCreateCustomPlugin.value) return false
+  // schema plugins in KM are installed plugins — not manageable, no RBAC control
+  if (props.config.app === 'kongManager' && props.plugin.customPluginType === 'schema') return false
+  return isClonedType.value ? permissions.value.canUpdateClonedPlugin : permissions.value.canUpdateCustomPlugin
+})
+
+const canDeletePlugin = computed((): boolean => {
+  if (!isCustomPlugin.value || isCreateCustomPlugin.value) return false
+  // schema plugins in KM are installed plugins — not manageable, no RBAC control
+  if (props.config.app === 'kongManager' && props.plugin.customPluginType === 'schema') return false
+  return isClonedType.value ? permissions.value.canDeleteClonedPlugin : permissions.value.canDeleteCustomPlugin
+})
 
 const handleCustomDelete = (): void => {
-  if (props.config.app === 'konnect') {
-    emit('custom-plugin-delete')
-  }
+  emit('custom-plugin-delete')
 }
 
 const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
-  const konnectConfig = props.config as KonnectPluginSelectConfig
-  if (props.config.app === 'konnect' && typeof konnectConfig.getCustomEditRoute === 'function') {
-    router.push(konnectConfig.getCustomEditRoute(pluginName, type))
+  if (typeof props.config.getCustomEditRoute === 'function') {
+    router.push(props.config.getCustomEditRoute(pluginName, type))
   }
 }
 
@@ -262,12 +295,6 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
       overflow: hidden;
       text-align: left;
 
-      .custom-plugin-badges {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--kui-space-40, $kui-space-40);
-        margin-bottom: var(--kui-space-40, $kui-space-40);
-      }
     }
 
     .plugin-card-footer {
@@ -277,6 +304,15 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
       justify-content: space-between;
       text-align: center;
+
+      .cloned-badge-text {
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+        white-space: nowrap;
+      }
     }
 
     &.disabled * {
