@@ -807,6 +807,9 @@
         "entity_name": "Request callout",
         "by_lua_placeholder": "Enter Lua script here..."
       },
+      "jwt-signer": {
+        "keyset_url_required": "Provide a valid HTTP/HTTPS URL to ensure signing works correctly when \"{signingField}\" is enabled and \"{headerField}\" is set."
+      },
       "metering-and-billing": {
         "sections": {
           "plugin_config": {
