@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.47.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.47.4...@kong-ui-public/entities-shared@3.47.5) (2026-05-28)
+
+
+### Bug Fixes
+
+* **entities-shared:** z-index on copy button in decK editor ([#3370](https://github.com/Kong/public-ui-components/issues/3370)) ([17fa6bd](https://github.com/Kong/public-ui-components/commit/17fa6bd11c060cc988581879d0e826945c2736bf))
+
+
+
+
+
 ## [3.47.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.47.3...@kong-ui-public/entities-shared@3.47.4) (2026-05-27)
 
 
