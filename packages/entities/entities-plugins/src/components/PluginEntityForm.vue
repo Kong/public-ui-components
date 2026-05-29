@@ -822,10 +822,18 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
 // the schema's `fields[]`. Deprecated `shorthand_fields` live in their own array on each
 // record, never in `fields[]`, so they fall out naturally — preventing the backend from
 // re-filling canonical fields (e.g. `redis.password`) from stale shorthand values.
+//
+// Polymorphic records (e.g. datakit's `nodes[]` whose actual field set is chosen by a
+// `subschema_key` + `subschema_definitions` discriminator) are deliberately NOT dispatched:
+// Kong schemas treat the discriminator field and other implicit common fields (e.g. `name`)
+// as runtime-required but don't always declare them inside each concrete subschema. Walking
+// with the concrete subschema would over-strip those fields. Such records have no declared
+// `fields[]` on the element schema itself, so they pass through the array branch unchanged.
 const stripUnknownConfigFields = (value: any, subschema: UnionFieldSchema | undefined): any => {
   if (!subschema) return value
 
-  // Array: walk into elements only when they're records with declared fields.
+  // Array: walk into elements only when they're records with declared `fields[]`. Records
+  // that rely on `subschema_definitions` (no top-level `fields[]`) are left untouched.
   if (Array.isArray(value)) {
     const elements = (subschema as ArrayFieldSchema).elements
     if (elements?.type === 'record' && Array.isArray(elements.fields)) {
@@ -879,11 +887,20 @@ const getConfigSubschema = (): UnionFieldSchema | undefined => {
   return configField?.config
 }
 
+// Plugins whose schemas use polymorphic-record patterns (e.g. datakit's `nodes[].type`
+// dispatch) declare `name`/`type` as implicit common fields that the FE schema model can't
+// reliably recover from `subschema_definitions` alone. Skip the strip entirely for them —
+// the walker would over-strip those implicit fields and break the payload.
+const STRIP_BYPASS_PLUGINS = new Set(['datakit'])
+
+// Mirrors the cloned-plugin resolution at line 475 — `_sourcePlugin` wins for clones so a
+// `datakit-clone` plugin is also recognized as datakit for strip-bypass purposes.
+const effectivePluginName = computed(() => (props.schema?._sourcePlugin || formModel.name) as string | undefined)
+
 const freeformData = shallowRef<Record<string, any>>(props.record)
 const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[]) => {
-  const configSubschema = getConfigSubschema()
-  const unknownFieldStripped = value?.config && configSubschema
-    ? { ...value, config: stripUnknownConfigFields(value.config, configSubschema) }
+  const unknownFieldStripped = !STRIP_BYPASS_PLUGINS.has(effectivePluginName.value as string)
+    ? { ...value, config: stripUnknownConfigFields(value.config, getConfigSubschema()) }
     : value
 
   freeformData.value = unknownFieldStripped
