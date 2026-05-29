@@ -15,6 +15,7 @@
 //   - map field inside an array-element record                     : targets[].auth.headers
 //   - map of records w/ shorthand (keys opaque, value records      : service_map (string → record)
 //     get walked & shorthand inside each record value stripped)
+//   - array of maps (each map has record values w/ shorthand)    : routing_rules[]
 export default {
   fields: [
     {
@@ -133,6 +134,28 @@ export default {
                 type: 'record',
               },
               type: 'array',
+            },
+          },
+          {
+            // Array of maps — each element is a map whose values are records with shorthand.
+            // Exercises the `elements.type === 'map'` branch in the walker.
+            routing_rules: {
+              type: 'array',
+              elements: {
+                type: 'map',
+                keys: { type: 'string' },
+                values: {
+                  type: 'record',
+                  fields: [
+                    { url: { type: 'string' } },
+                    { priority: { type: 'integer' } },
+                  ],
+                  shorthand_fields: [
+                    // Deprecated inside each map-value record nested in an array
+                    { legacy_endpoint: { type: 'string' } },
+                  ],
+                },
+              },
             },
           },
           {

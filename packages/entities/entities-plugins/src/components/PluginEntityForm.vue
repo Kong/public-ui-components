@@ -839,6 +839,10 @@ const stripUnknownConfigFields = (value: any, subschema: UnionFieldSchema | unde
     if (elements?.type === 'record' && Array.isArray(elements.fields)) {
       return value.map((item) => stripUnknownConfigFields(item, elements))
     }
+    if (elements?.type === 'map') {
+      return value.map((item) => stripUnknownConfigFields(item, elements))
+    }
+    // return value for non-nested array item
     return value
   }
 

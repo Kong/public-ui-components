@@ -334,6 +334,18 @@ describe('<PluginEntityForm /> — shorthand_fields stripping', () => {
             },
           ],
 
+          // Array of maps — each element is a map with record values containing shorthand.
+          // Exercises the `elements.type === 'map'` branch.
+          routing_rules: [
+            {
+              'route-a': { url: '/api1', priority: 1, legacy_endpoint: 'drop-a' },
+              'route-b': { url: '/api2', priority: 2, legacy_endpoint: 'drop-b' },
+            },
+            {
+              'route-c': { url: '/api3', priority: 3, legacy_endpoint: 'drop-c' },
+            },
+          ],
+
           // Map whose VALUES are records with their own shorthand_fields. Map KEYS are
           // user-defined and opaque (must be kept verbatim); each record VALUE is walked so
           // its deprecated alias (`endpoint`) is stripped while canonical fields survive.
@@ -402,6 +414,17 @@ describe('<PluginEntityForm /> — shorthand_fields stripping', () => {
               { name: 's1', kind: 'transform' },
               { name: 's2', kind: 'forward' },
             ],
+          },
+        ])
+
+        // Array of maps: map keys preserved, shorthand inside each record value stripped.
+        expect(data.config.routing_rules).to.deep.equal([
+          {
+            'route-a': { url: '/api1', priority: 1 },
+            'route-b': { url: '/api2', priority: 2 },
+          },
+          {
+            'route-c': { url: '/api3', priority: 3 },
           },
         ])
 
