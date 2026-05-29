@@ -284,37 +284,6 @@ importers:
         specifier: 3.5.34
         version: 3.5.34(typescript@5.9.3)
 
-  packages/analytics/analytics-datatable:
-    dependencies:
-      '@vueuse/core':
-        specifier: ^14.2.1
-        version: 14.2.1(vue@3.5.34(typescript@5.9.3))
-      ag-grid-community:
-        specifier: ^34.3.1
-        version: 34.3.1
-      ag-grid-vue3:
-        specifier: ^34.3.1
-        version: 34.3.1(vue@3.5.34(typescript@5.9.3))
-      lodash-es:
-        specifier: ^4.18.1
-        version: 4.18.1
-    devDependencies:
-      '@kong-ui-public/i18n':
-        specifier: workspace:^
-        version: link:../../core/i18n
-      '@kong/design-tokens':
-        specifier: 1.20.1
-        version: 1.20.1
-      '@kong/icons':
-        specifier: ^1.52.0
-        version: 1.52.0(vue@3.5.34(typescript@5.9.3))
-      '@kong/kongponents':
-        specifier: ^9.52.11
-        version: 9.53.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
-      vue:
-        specifier: 3.5.34
-        version: 3.5.34(typescript@5.9.3)
-
   packages/analytics/analytics-geo-map:
     dependencies:
       '@kong-ui-public/analytics-utilities':
@@ -837,6 +806,37 @@ importers:
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
+      vue:
+        specifier: 3.5.34
+        version: 3.5.34(typescript@5.9.3)
+
+  packages/core/table-data-grid:
+    dependencies:
+      '@vueuse/core':
+        specifier: ^14.2.1
+        version: 14.2.1(vue@3.5.34(typescript@5.9.3))
+      ag-grid-community:
+        specifier: ^34.3.1
+        version: 34.3.1
+      ag-grid-vue3:
+        specifier: ^34.3.1
+        version: 34.3.1(vue@3.5.34(typescript@5.9.3))
+      lodash-es:
+        specifier: ^4.18.1
+        version: 4.18.1
+    devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../i18n
+      '@kong/design-tokens':
+        specifier: 1.20.1
+        version: 1.20.1
+      '@kong/icons':
+        specifier: ^1.52.0
+        version: 1.52.0(vue@3.5.34(typescript@5.9.3))
+      '@kong/kongponents':
+        specifier: ^9.52.11
+        version: 9.53.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
       vue:
         specifier: 3.5.34
         version: 3.5.34(typescript@5.9.3)
