@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.23...@kong-ui-public/app-layout@4.11.24) (2026-05-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency focus-trap to ^8.2.1 ([#3394](https://github.com/Kong/public-ui-components/issues/3394)) ([d0a9917](https://github.com/Kong/public-ui-components/commit/d0a991715ed3c00295ccfea82882658e680baac5))
+
+
+
+
+
 ## [4.11.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.22...@kong-ui-public/app-layout@4.11.23) (2026-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
