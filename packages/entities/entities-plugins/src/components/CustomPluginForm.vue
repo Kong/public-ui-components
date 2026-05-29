@@ -1,12 +1,16 @@
 <template>
   <div class="kong-ui-entities-custom-plugin-form">
     <EntityBaseForm
+      ref="entityBaseFormRef"
       :can-submit="canSubmit"
       :config="config"
       :entity-type="SupportedEntityType.Plugin"
       :error-message="state.errorMessage"
-      :form-fields="state.fields"
+      :form-fields="viewConfigFormFields"
       :is-readonly="state.readonly"
+      :slideout-deck-entity-type="viewConfigDeckEntityType"
+      :slideout-fetch-url="viewConfigFetchUrl"
+      :slideout-request-method="viewConfigRequestMethod"
       @cancel="cancelHandler"
       @submit="submitData"
     >
@@ -410,6 +414,13 @@
           >
             {{ t('actions.cancel') }}
           </KButton>
+          <KButton
+            appearance="tertiary"
+            data-testid="custom-plugin-form-view-configuration"
+            @click="entityBaseFormRef?.viewConfig()"
+          >
+            {{ t('actions.view_configuration') }}
+          </KButton>
         </template>
         <span v-else />
       </template>
@@ -433,8 +444,9 @@ import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
 import composables from '../composables'
 import externalLinks from '../external-links'
 import { PLUGIN_METADATA } from '../definitions/metadata'
+import endpoints from '../plugins-endpoints'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import type { PropType } from 'vue'
+import type { PropType, ComponentPublicInstance } from 'vue'
 import { computed, onMounted, provide, reactive, ref, watch } from 'vue'
 import type {
   ClonedPluginPayload,
@@ -524,6 +536,71 @@ const {
 
 // Force-enable the new plugin form layout
 provide(PLUGIN_FORM_LAYOUT_STATE, ref(true))
+
+const entityBaseFormRef = ref<ComponentPublicInstance & { viewConfig: () => void } | null>(null)
+
+const buildCustomPluginUrl = (template: string, pluginId?: string): string => {
+  const workspace = (props.config as KongManagerCustomPluginFormConfig).workspace ?? ''
+  const controlPlaneId = props.config.app === 'konnect'
+    ? (props.config as KonnectCustomPluginFormConfig).controlPlaneId
+    : ''
+  return `${props.config.apiBaseUrl}${template}`
+    .replace(/{controlPlaneId}/gi, controlPlaneId)
+    .replace(/{pluginId}/gi, pluginId ?? '')
+    .replace(/\/\{workspace\}/gi, workspace ? `/${workspace}` : '')
+}
+
+const viewConfigFetchUrl = computed<string>(() => {
+  const type = state.fields.pluginType
+  if (!type) return ''
+  const id = editMode.value ? props.pluginName : undefined
+  const key = id ? 'edit' : 'create'
+  const app = props.config.app
+  if (app === 'konnect') {
+    if (type === 'installed') return buildCustomPluginUrl(endpoints.customPlugin.konnect.installed[key], id)
+    if (type === 'streamed') return buildCustomPluginUrl(endpoints.customPlugin.konnect.streamed[key], id)
+    if (type === 'cloned') return buildCustomPluginUrl(endpoints.customPlugin.konnect.cloned[key], id)
+  } else {
+    if (type === 'streamed') return buildCustomPluginUrl(endpoints.customPlugin.kongManager.streamed[key], id)
+    if (type === 'cloned') return buildCustomPluginUrl(endpoints.customPlugin.kongManager.cloned[key], id)
+  }
+  return ''
+})
+
+const viewConfigRequestMethod = computed<'post' | 'put' | 'patch'>(() => {
+  if (!editMode.value) return 'post'
+  return state.fields.pluginType === 'cloned' ? 'patch' : 'put'
+})
+
+const viewConfigDeckEntityType = computed<SupportedEntityType>(() => {
+  switch (state.fields.pluginType) {
+    case 'installed': return SupportedEntityType.PluginSchema
+    case 'streamed': return SupportedEntityType.CustomPlugin
+    case 'cloned': return SupportedEntityType.ClonedPlugin
+    default: return SupportedEntityType.Plugin
+  }
+})
+
+const viewConfigFormFields = computed<Record<string, any>>(() => {
+  switch (state.fields.pluginType) {
+    case 'installed':
+      return { lua_schema: state.fields.schemaContent }
+    case 'streamed':
+      return {
+        name: state.fields.name,
+        schema: state.fields.schemaContent,
+        handler: state.fields.handlerContent,
+      }
+    case 'cloned':
+      return {
+        ref: state.fields.sourcePlugin,
+        name: state.fields.aliasName,
+        ...(state.fields.priority ? { priority: parseInt(state.fields.priority, 10) } : {}),
+      }
+    default:
+      return {}
+  }
+})
 
 const editMode = computed(() => !!props.pluginName)
 const isLoading = ref(false)

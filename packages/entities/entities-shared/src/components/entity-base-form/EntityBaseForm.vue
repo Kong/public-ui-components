@@ -108,8 +108,8 @@
           <JsonCodeBlock
             :config="config"
             :entity-record="props.formFields"
-            :fetcher-url="fetcherUrl"
-            :request-method="props.editId ? 'put' : 'post'"
+            :fetcher-url="props.slideoutFetchUrl ?? fetcherUrl"
+            :request-method="(props.slideoutRequestMethod ?? (props.editId ? 'put' : 'post')) as BadgeAppearance"
           />
         </template>
         <template #yaml>
@@ -145,7 +145,7 @@
             :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
             :customization-options="deckCustomizationOptions"
             :entity-record="props.formFields"
-            :entity-type="(entityType as SupportedEntityDeck)"
+            :entity-type="((props.slideoutDeckEntityType ?? entityType) as SupportedEntityDeck)"
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
             :is-customization-modal-visible="isDeckCustomizationVisible"
             :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
@@ -166,7 +166,7 @@ import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
 import { SupportedEntityTypesArray, SupportedEntityType } from '../../types'
 import composables from '../../composables'
-import type { Tab } from '@kong/kongponents'
+import type { BadgeAppearance, Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
@@ -306,6 +306,32 @@ const props = defineProps({
   },
   cancelButtonText: {
     type: String,
+    default: undefined,
+  },
+  /**
+   * Override the fetcher URL shown in the slideout code blocks.
+   * Useful when the form manages its own fetching (e.g. CustomPluginForm).
+   * Should be the fully-resolved URL including the API base.
+   */
+  slideoutFetchUrl: {
+    type: String,
+    default: undefined,
+  },
+  /**
+   * Override the HTTP request method shown in the slideout JSON code block.
+   * Defaults to 'put' when editId is set, 'post' otherwise.
+   */
+  slideoutRequestMethod: {
+    type: String as PropType<BadgeAppearance>,
+    default: undefined,
+  },
+  /**
+   * Override the entity type used for the deck code block in the slideout.
+   * Use when the form represents a sub-type (e.g. PluginSchema, CustomPlugin, ClonedPlugin)
+   * that has a different decK YAML collection key than the base entityType.
+   */
+  slideoutDeckEntityType: {
+    type: String as PropType<SupportedEntityType>,
     default: undefined,
   },
 })
