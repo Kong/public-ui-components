@@ -832,33 +832,29 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
 const stripUnknownConfigFields = (value: any, subschema: UnionFieldSchema | undefined): any => {
   if (!subschema) return value
 
-  // Array: walk into elements only when they're records with declared `fields[]`. Records
-  // that rely on `subschema_definitions` (no top-level `fields[]`) are left untouched.
+  // Array (or set — Kong `set` values are JSON arrays with the same `elements` schema shape).
+  // Recurse into each element when the schema declares an `elements` subschema. Primitive
+  // elements (e.g. `{ type: 'string' }`) are safe — the recursive call hits the early
+  // `typeof value !== 'object'` return. Records without declared `fields[]` (polymorphic
+  // `subschema_definitions`) pass through via the `!Array.isArray(fields)` guard below.
   if (Array.isArray(value)) {
     const elements = (subschema as ArrayFieldSchema).elements
-    if (elements?.type === 'record' && Array.isArray(elements.fields)) {
+    if (elements) {
       return value.map((item) => stripUnknownConfigFields(item, elements))
     }
-    if (elements?.type === 'map') {
-      return value.map((item) => stripUnknownConfigFields(item, elements))
-    }
-    // return value for non-nested array item
     return value
   }
 
   // Primitive or null — nothing to strip.
   if (!value || typeof value !== 'object') return value
 
-  // Map with record values — recurse into each value with the values-subschema.
-  // Map KEYS are user-defined and remain opaque; only the inner records get walked,
-  // so their `shorthand_fields` are stripped while canonical keys are preserved.
-  // Primitive-valued maps (e.g. string → string) fall through to the early return below.
-  if (
-    (subschema as MapFieldSchema).type === 'map'
-    && (subschema as MapFieldSchema).values?.type === 'record'
-    && Array.isArray(((subschema as MapFieldSchema).values as RecordFieldSchema).fields)
-  ) {
-    const valuesSchema = (subschema as MapFieldSchema).values as RecordFieldSchema
+  // Map — recurse into each value with the values-subschema.
+  // Map KEYS are user-defined and remain opaque; only values get walked.
+  // Covers map-of-records, map-of-arrays, and nested maps uniformly.
+  // Primitive-valued maps (e.g. string → string) are safe: the recursive call
+  // hits the early `!value || typeof value !== 'object'` return.
+  if ((subschema as MapFieldSchema).type === 'map' && (subschema as MapFieldSchema).values) {
+    const valuesSchema = (subschema as MapFieldSchema).values as UnionFieldSchema
     const result: Record<string, any> = {}
     for (const key of Object.keys(value)) {
       result[key] = stripUnknownConfigFields(value[key], valuesSchema)

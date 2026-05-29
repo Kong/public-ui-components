@@ -334,6 +334,24 @@ describe('<PluginEntityForm /> — shorthand_fields stripping', () => {
             },
           ],
 
+          // Array of primitives — must pass through unchanged (no elements.fields to walk).
+          tags: ['team-a', 'observability', 'v2'],
+
+          // Set of primitives — runtime value is a JSON array, must also pass through.
+          protocols: ['http', 'https', 'grpc'],
+
+          // Map of arrays — each map value is an array of records with shorthand.
+          // Exercises the generalized map handler recursing into array values.
+          region_backends: {
+            'us-east': [
+              { host: 'be1.example.com', port: 8080, legacy_addr: 'drop-1' },
+              { host: 'be2.example.com', port: 8081, legacy_addr: 'drop-2' },
+            ],
+            'eu-west': [
+              { host: 'be3.example.com', port: 9090, legacy_addr: 'drop-3' },
+            ],
+          },
+
           // Array of maps — each element is a map with record values containing shorthand.
           // Exercises the `elements.type === 'map'` branch.
           routing_rules: [
@@ -416,6 +434,23 @@ describe('<PluginEntityForm /> — shorthand_fields stripping', () => {
             ],
           },
         ])
+
+        // Array of primitives passes through unchanged.
+        expect(data.config.tags).to.deep.equal(['team-a', 'observability', 'v2'])
+
+        // Set of primitives passes through unchanged.
+        expect(data.config.protocols).to.deep.equal(['http', 'https', 'grpc'])
+
+        // Map of arrays: map keys preserved, shorthand inside each array-element record stripped.
+        expect(data.config.region_backends).to.deep.equal({
+          'us-east': [
+            { host: 'be1.example.com', port: 8080 },
+            { host: 'be2.example.com', port: 8081 },
+          ],
+          'eu-west': [
+            { host: 'be3.example.com', port: 9090 },
+          ],
+        })
 
         // Array of maps: map keys preserved, shorthand inside each record value stripped.
         expect(data.config.routing_rules).to.deep.equal([

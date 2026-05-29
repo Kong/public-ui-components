@@ -16,6 +16,9 @@
 //   - map of records w/ shorthand (keys opaque, value records      : service_map (string → record)
 //     get walked & shorthand inside each record value stripped)
 //   - array of maps (each map has record values w/ shorthand)    : routing_rules[]
+//   - map of arrays of records w/ shorthand (map → array → rec)  : region_backends
+//   - array of primitives (no elements.fields — passes through)  : tags
+//   - set of primitives (treated as array at runtime, passes through) : protocols
 export default {
   fields: [
     {
@@ -156,6 +159,42 @@ export default {
                   ],
                 },
               },
+            },
+          },
+          {
+            // Map whose VALUES are arrays of records with shorthand.
+            // Exercises the generalized map handler recursing into array values.
+            region_backends: {
+              keys: { type: 'string' },
+              type: 'map',
+              values: {
+                type: 'array',
+                elements: {
+                  type: 'record',
+                  fields: [
+                    { host: { type: 'string' } },
+                    { port: { type: 'integer' } },
+                  ],
+                  shorthand_fields: [
+                    { legacy_addr: { type: 'string' } },
+                  ],
+                },
+              },
+            },
+          },
+          {
+            // Array of primitives — no elements.fields, must pass through unchanged.
+            tags: {
+              type: 'array',
+              elements: { type: 'string' },
+            },
+          },
+          {
+            // Set of primitives — runtime value is a JSON array, same as `array`.
+            // Must pass through unchanged.
+            protocols: {
+              type: 'set',
+              elements: { type: 'string' },
             },
           },
           {
