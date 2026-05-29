@@ -1091,11 +1091,11 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       '@playwright/experimental-ct-vue':
-        specifier: ^1.59.1
-        version: 1.59.1(@types/node@25.9.0)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1)(vite@5.4.21(@types/node@25.9.0)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1))(vue@3.5.34(typescript@5.9.3))(yaml@2.9.0)
+        specifier: ^1.60.0
+        version: 1.60.0(@types/node@25.9.0)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1)(vite@5.4.21(@types/node@25.9.0)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1))(vue@3.5.34(typescript@5.9.3))(yaml@2.9.0)
       '@playwright/test':
-        specifier: ^1.59.1
-        version: 1.59.1
+        specifier: ^1.60.0
+        version: 1.60.0
       '@shikijs/core':
         specifier: ^3.23.0
         version: 3.23.0
@@ -3196,17 +3196,17 @@ packages:
     resolution: {integrity: sha512-YLT9Zo3oNPJoBjBc4q8G2mjU4tqIbf5CEOORbUUr48dCD9q3umJ3IPlVqOqDakPfd2HuwccBaqlGhN4Gmr5OWg==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@playwright/experimental-ct-core@1.59.1':
-    resolution: {integrity: sha512-U7+jNROBJxfwjM/G7011+UNEyLiI5zIT1HWAn1k89WZIWl5RUWaCGWlYkYdAZwBSVfGstjF9AgkzmS0RsF8Ulw==}
+  '@playwright/experimental-ct-core@1.60.0':
+    resolution: {integrity: sha512-cMYDe0KpfdfFTZR2ev6frlgIwksSnXCu1o5s/DxpiVPTJeKp8TSXo9dzKuRhUMDAxAQESF1uM4uPQ56PZ/a5QA==}
     engines: {node: '>=18'}
 
-  '@playwright/experimental-ct-vue@1.59.1':
-    resolution: {integrity: sha512-RygXcwXQwRHzcdaQAXpKiHEl8XDPepZKmfHDNPCSnCN1g9ylaAvtNF6s7DgpsxlHqLlwgc2DmMr1n3D/OOVKyQ==}
+  '@playwright/experimental-ct-vue@1.60.0':
+    resolution: {integrity: sha512-tmNRdsRCI6133Jl/pHRYXz+ZmKwrJKnIg6sd5pDq69yF28zitLyoB0gh95p15uEh0BP5++FLAC2iSRs6l+KUNQ==}
     engines: {node: '>=18'}
     hasBin: true
 
-  '@playwright/test@1.59.1':
-    resolution: {integrity: sha512-PG6q63nQg5c9rIi4/Z5lR5IVF7yU5MqmKaPOe0HSc0O2cX1fPi96sUQu5j7eo4gKCkB2AnNGoWt7y4/Xx3Kcqg==}
+  '@playwright/test@1.60.0':
+    resolution: {integrity: sha512-O71yZIbAh/PxDMNGns37GHBIfrVkEVyn+AXyIa5dOTfb4/xNvRWV+Vv/NMbNCtODB/pO7vLlF2OTmMVLhmr7Ag==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -8623,13 +8623,13 @@ packages:
     resolution: {integrity: sha512-emEcLuomt2j03vxD54giVB4SxTjnsqkU692xZOZXHDVoYyypEm+b3jpiTcc+Cf+myooc+/Ly0z01jqeNHVgJGw==}
     engines: {node: '>=16.0.0'}
 
-  playwright-core@1.59.1:
-    resolution: {integrity: sha512-HBV/RJg81z5BiiZ9yPzIiClYV/QMsDCKUyogwH9p3MCP6IYjUFu/MActgYAvK0oWyV9NlwM3GLBjADyWgydVyg==}
+  playwright-core@1.60.0:
+    resolution: {integrity: sha512-9bW6zvX/m0lEbgTKJ6YppOKx8H3VOPBMOCFh2irXFOT4BbHgrx5hPjwJYLT40Lu+4qtD36qKc/Hn56StUW57IA==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.59.1:
-    resolution: {integrity: sha512-C8oWjPR3F81yljW9o5OxcWzfh6avkVwDD2VYdwIGqTkl+OGFISgypqzfu7dOe4QNLL2aqcWBmI3PMtLIK233lw==}
+  playwright@1.60.0:
+    resolution: {integrity: sha512-hheHdokM8cdqCb0lcE3s+zT4t4W+vvjpGxsZlDnikarzx8tSzMebh3UiFtgqwFwnTnjYQcsyMF8ei2mCO/tpeA==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -13007,10 +13007,10 @@ snapshots:
 
   '@pkgr/core@0.2.7': {}
 
-  '@playwright/experimental-ct-core@1.59.1(@types/node@25.9.0)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1)(yaml@2.9.0)':
+  '@playwright/experimental-ct-core@1.60.0(@types/node@25.9.0)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1)(yaml@2.9.0)':
     dependencies:
-      playwright: 1.59.1
-      playwright-core: 1.59.1
+      playwright: 1.60.0
+      playwright-core: 1.60.0
       vite: 6.4.1(@types/node@25.9.0)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1)(yaml@2.9.0)
     transitivePeerDependencies:
       - '@types/node'
@@ -13025,9 +13025,9 @@ snapshots:
       - tsx
       - yaml
 
-  '@playwright/experimental-ct-vue@1.59.1(@types/node@25.9.0)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1)(vite@5.4.21(@types/node@25.9.0)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1))(vue@3.5.34(typescript@5.9.3))(yaml@2.9.0)':
+  '@playwright/experimental-ct-vue@1.60.0(@types/node@25.9.0)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1)(vite@5.4.21(@types/node@25.9.0)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1))(vue@3.5.34(typescript@5.9.3))(yaml@2.9.0)':
     dependencies:
-      '@playwright/experimental-ct-core': 1.59.1(@types/node@25.9.0)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1)(yaml@2.9.0)
+      '@playwright/experimental-ct-core': 1.60.0(@types/node@25.9.0)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1)(yaml@2.9.0)
       '@vitejs/plugin-vue': 5.2.4(vite@5.4.21(@types/node@25.9.0)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1))(vue@3.5.34(typescript@5.9.3))
     transitivePeerDependencies:
       - '@types/node'
@@ -13044,9 +13044,9 @@ snapshots:
       - vue
       - yaml
 
-  '@playwright/test@1.59.1':
+  '@playwright/test@1.60.0':
     dependencies:
-      playwright: 1.59.1
+      playwright: 1.60.0
 
   '@polka/url@1.0.0-next.28': {}
 
@@ -19478,11 +19478,11 @@ snapshots:
       pvutils: 1.1.5
       tslib: 2.8.1
 
-  playwright-core@1.59.1: {}
+  playwright-core@1.60.0: {}
 
-  playwright@1.59.1:
+  playwright@1.60.0:
     dependencies:
-      playwright-core: 1.59.1
+      playwright-core: 1.60.0
     optionalDependencies:
       fsevents: 2.3.2
 
