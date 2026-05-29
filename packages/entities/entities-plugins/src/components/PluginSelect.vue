@@ -76,7 +76,9 @@
             </p>
 
             <PluginSelectGrid
+              :can-delete-cloned-plugin="usercanDeleteClonedPlugin"
               :can-delete-custom-plugin="usercanDeleteCustomPlugin"
+              :can-edit-cloned-plugin="usercanEditClonedPlugin"
               :can-edit-custom-plugin="usercanEditCustomPlugin"
               :config="config"
               :hide-highlighted-plugins="filter.length > 0"
@@ -107,7 +109,9 @@
 
             <PluginCustomGrid
               :can-create-custom-plugin="usercanCreateCustomPlugin"
+              :can-delete-cloned-plugin="usercanDeleteClonedPlugin"
               :can-delete-custom-plugin="usercanDeleteCustomPlugin"
+              :can-edit-cloned-plugin="usercanEditClonedPlugin"
               :can-edit-custom-plugin="usercanEditCustomPlugin"
               :config="config"
               :navigate-on-click="navigateOnClick"
@@ -128,7 +132,9 @@
         />
 
         <PluginSelectGrid
+          :can-delete-cloned-plugin="usercanDeleteClonedPlugin"
           :can-delete-custom-plugin="usercanDeleteCustomPlugin"
+          :can-edit-cloned-plugin="usercanEditClonedPlugin"
           :can-edit-custom-plugin="usercanEditCustomPlugin"
           :config="config"
           :hide-highlighted-plugins="filter.length > 0"
@@ -202,11 +208,33 @@ const props = defineProps({
     required: false,
     default: async () => true,
   },
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can read custom plugin */
+  canReadCustomPlugin: {
+    type: Function as PropType<() => boolean | Promise<boolean>>,
+    required: false,
+    default: async () => true,
+  },
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can delete cloned plugin */
+  canDeleteClonedPlugin: {
+    type: Function as PropType<() => boolean | Promise<boolean>>,
+    required: false,
+  },
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can read cloned plugin */
+  canReadClonedPlugin: {
+    type: Function as PropType<() => boolean | Promise<boolean>>,
+    required: false,
+    default: async () => true,
+  },
   /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit custom plugin */
   canEditCustomPlugin: {
     type: Function as PropType<() => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
+  },
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit cloned plugin */
+  canEditClonedPlugin: {
+    type: Function as PropType<() => boolean | Promise<boolean>>,
+    required: false,
   },
   /**
    * @param {boolean} navigateOnClick if false, let consuming component handle event when clicking on a plugin
@@ -300,14 +328,6 @@ const customPluginsDisabled = computed(() => props.customPluginSupport === 'disa
 const hasCustomPluginSupport = computed(() => customPluginsDisabled.value || normalizedCustomPluginSupport.value.size > 0)
 const isStreamingCustomPluginSupported = computed(() => normalizedCustomPluginSupport.value.has('streaming'))
 const isClonedCustomPluginSupported = computed(() => normalizedCustomPluginSupport.value.has('cloned'))
-const shouldShowCreateCustomPluginCard = computed((): boolean => {
-  return props.config.app === 'kongManager'
-    && hasCustomPluginSupport.value
-    && !customPluginsDisabled.value
-    && usercanCreateCustomPlugin.value
-    && props.navigateOnClick
-    && !!props.config.createCustomRoute
-})
 
 const isRequestCancelled = (error: unknown): boolean => {
   return isAxiosError(error) && error.code === 'ERR_CANCELED'
@@ -332,17 +352,6 @@ const flattenPluginMap = computed(() => {
     }, {} as Record<string, PluginType>)
 })
 
-const createCustomPluginCard = computed((): PluginType => ({
-  id: 'custom-plugin-create',
-  name: t('plugins.select.tabs.custom.create.name'),
-  nameKey: 'plugins.select.tabs.custom.create.name',
-  description: t('plugins.select.tabs.custom.create.description'),
-  descriptionKey: 'plugins.select.tabs.custom.create.description',
-  available: true,
-  group: PluginGroup.CUSTOM_PLUGINS,
-  scope: [],
-}))
-
 const filteredPlugins = computed((): PluginCardList => {
   if (!pluginsList.value) {
     return {}
@@ -365,11 +374,6 @@ const filteredPlugins = computed((): PluginCardList => {
     } else {
       results[type] = matches
     }
-  }
-
-  if (shouldShowCreateCustomPluginCard.value && !query) {
-    const customPlugins = (results[PluginGroup.CUSTOM_PLUGINS] || []).filter((plugin: PluginType) => plugin.id !== createCustomPluginCard.value.id)
-    results[PluginGroup.CUSTOM_PLUGINS] = [createCustomPluginCard.value, ...customPlugins]
   }
 
   return results
@@ -524,23 +528,6 @@ const buildPluginList = (): PluginCardList => {
     }, {} as PluginCardList)
 }
 
-const injectKongManagerCreateCard = (list: PluginCardList): PluginCardList => {
-  if (!shouldShowCreateCustomPluginCard.value) {
-    return list
-  }
-
-  const customPlugins = list[PluginGroup.CUSTOM_PLUGINS] || []
-  const filteredCustomPlugins = customPlugins.filter((plugin) => plugin.id !== 'custom-plugin-create')
-
-  list[PluginGroup.CUSTOM_PLUGINS] = [createCustomPluginCard.value, ...filteredCustomPlugins]
-
-  return list
-}
-
-const buildPluginListWithCustomCreateCard = (): PluginCardList => {
-  return injectKongManagerCreateCard(buildPluginList())
-}
-
 const availablePluginsUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePlugins}`
 
@@ -610,13 +597,13 @@ const onTabsChange = (hash: string) => {
 // rebuild the list
 watch(() => props.disabledPlugins, (val, oldVal) => {
   if (!objectsAreEqual(val, oldVal) && !isLoading.value) {
-    pluginsList.value = buildPluginListWithCustomCreateCard()
+    pluginsList.value = buildPluginList()
   }
 })
 
 watch(() => props.ignoredPlugins, (val, oldVal) => {
   if (!objectsAreEqual(val, oldVal) && !isLoading.value) {
-    pluginsList.value = buildPluginListWithCustomCreateCard()
+    pluginsList.value = buildPluginList()
   }
 })
 
@@ -652,7 +639,7 @@ const loadEntityPlugins = async (signal?: AbortSignal): Promise<void> => {
 const loadCustomPlugins = async (signal?: AbortSignal): Promise<void> => {
   const requests: Array<Promise<void>> = []
 
-  if (streamingPluginsUrl.value) {
+  if (streamingPluginsUrl.value && usercanReadCustomPlugin.value) {
     requests.push(
       fetchAllPages<StreamingCustomPluginSchema>(axiosInstance, streamingPluginsUrl.value, signal)
         .then((plugins): void => {
@@ -671,7 +658,7 @@ const loadCustomPlugins = async (signal?: AbortSignal): Promise<void> => {
     )
   }
 
-  if (clonedPluginsUrl.value) {
+  if (clonedPluginsUrl.value && usercanReadClonedPlugin.value) {
     requests.push(
       fetchAllPages<ClonedPluginSchema>(axiosInstance, clonedPluginsUrl.value, signal)
         .then((plugins): void => {
@@ -724,7 +711,7 @@ const loadPlugins = async (): Promise<void> => {
     }
 
     await loadCustomPlugins(abortController.value.signal)
-    pluginsList.value = buildPluginListWithCustomCreateCard()
+    pluginsList.value = buildPluginList()
   } catch (error: any) {
     if (!isRequestCancelled(error)) {
       hasError.value = true
@@ -740,19 +727,45 @@ const loadPlugins = async (): Promise<void> => {
 const usercanCreateCustomPlugin = ref(false)
 const usercanEditCustomPlugin = ref(false)
 const usercanDeleteCustomPlugin = ref(false)
+const usercanReadCustomPlugin = ref(false)
+const usercanEditClonedPlugin = ref(false)
+const usercanDeleteClonedPlugin = ref(false)
+const usercanReadClonedPlugin = ref(false)
 
 const handleCustomPluginDeleteSuccess = (pluginName: string): void => {
   streamingCustomPlugins.value = streamingCustomPlugins.value.filter((plugin) => plugin.name !== pluginName)
   clonedCustomPlugins.value = clonedCustomPlugins.value.filter((plugin) => plugin.name !== pluginName)
-  pluginsList.value = buildPluginListWithCustomCreateCard()
+  pluginsList.value = buildPluginList()
   emit('delete-custom:success', pluginName)
 }
 
 onBeforeMount(async () => {
   // Evaluate the user permissions
-  usercanCreateCustomPlugin.value = await props.canCreateCustomPlugin()
-  usercanEditCustomPlugin.value = await props.canEditCustomPlugin()
-  usercanDeleteCustomPlugin.value = await props.canDeleteCustomPlugin()
+  const [
+    canCreateCustom,
+    canEditCustom,
+    canDeleteCustom,
+    canReadCustom,
+    canEditCloned,
+    canDeleteCloned,
+    canReadCloned,
+  ] = await Promise.all([
+    props.canCreateCustomPlugin(),
+    props.canEditCustomPlugin(),
+    props.canDeleteCustomPlugin(),
+    props.canReadCustomPlugin(),
+    props.canEditClonedPlugin ? props.canEditClonedPlugin() : Promise.resolve(null),
+    props.canDeleteClonedPlugin ? props.canDeleteClonedPlugin() : Promise.resolve(null),
+    props.canReadClonedPlugin(),
+  ])
+
+  usercanCreateCustomPlugin.value = canCreateCustom
+  usercanEditCustomPlugin.value = canEditCustom
+  usercanDeleteCustomPlugin.value = canDeleteCustom
+  usercanReadCustomPlugin.value = canReadCustom
+  usercanEditClonedPlugin.value = canEditCloned ?? canEditCustom
+  usercanDeleteClonedPlugin.value = canDeleteCloned ?? canDeleteCustom
+  usercanReadClonedPlugin.value = canReadCloned
 })
 
 const filterInput = useTemplateRef('filter-input')
@@ -779,12 +792,6 @@ watch(
     }
   },
 )
-
-watch(shouldShowCreateCustomPluginCard, () => {
-  if (!isLoading.value) {
-    pluginsList.value = buildPluginListWithCustomCreateCard()
-  }
-})
 
 onBeforeUnmount(() => {
   abortController.value?.abort()
