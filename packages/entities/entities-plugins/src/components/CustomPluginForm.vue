@@ -569,7 +569,9 @@ const viewConfigFetchUrl = computed<string>(() => {
 
 const viewConfigRequestMethod = computed<'post' | 'put' | 'patch'>(() => {
   if (!editMode.value) return 'post'
-  return state.fields.pluginType === 'cloned' ? 'patch' : 'put'
+  if (state.fields.pluginType === 'cloned') return 'patch'
+  if (props.config.app === 'kongManager' && state.fields.pluginType === 'streamed') return 'patch'
+  return 'put'
 })
 
 const viewConfigDeckEntityType = computed<SupportedEntityType>(() => {
