@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.210.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.209.1...@kong-ui-public/entities-plugins@9.210.0) (2026-06-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.56.0 ([#3396](https://github.com/Kong/public-ui-components/issues/3396)) ([13336a9](https://github.com/Kong/public-ui-components/commit/13336a9be92e452d4bd217e65d6450778d47844f))
+* **entities-plugins:** strip unknown fields for freeform ([#3270](https://github.com/Kong/public-ui-components/issues/3270)) ([a3410af](https://github.com/Kong/public-ui-components/commit/a3410af74d6c536e742f7c9d1706168db223137e))
+
+
+### Features
+
+* **entities-*:** custom/cloned plugin permissions + View Configuration slideout ([#3393](https://github.com/Kong/public-ui-components/issues/3393)) ([1f2f635](https://github.com/Kong/public-ui-components/commit/1f2f635a75177237251d8c97413a707932a55315))
+* **entities-plugins:** add warnings for keyset fields in jwt-signer ([#3359](https://github.com/Kong/public-ui-components/issues/3359)) ([d102279](https://github.com/Kong/public-ui-components/commit/d1022798b2364e8cac764a64764a77e6fc15504d))
+
+
+
+
+
 ## [9.209.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.209.0...@kong-ui-public/entities-plugins@9.209.1) (2026-05-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

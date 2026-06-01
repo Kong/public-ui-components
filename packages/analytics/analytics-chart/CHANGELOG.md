@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.17.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.11...@kong-ui-public/analytics-chart@10.17.12) (2026-06-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.56.0 ([#3396](https://github.com/Kong/public-ui-components/issues/3396)) ([13336a9](https://github.com/Kong/public-ui-components/commit/13336a9be92e452d4bd217e65d6450778d47844f))
+
+
+
+
+
 ## [10.17.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.10...@kong-ui-public/analytics-chart@10.17.11) (2026-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
