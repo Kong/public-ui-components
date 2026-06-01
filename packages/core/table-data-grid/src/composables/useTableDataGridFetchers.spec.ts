@@ -134,6 +134,44 @@ describe('useTableDataGridFetchers', () => {
     expect(currentPage.value).toBe(2)
   })
 
+  it('does not mark stale pagination requests as fetched', async () => {
+    const firstRequest = createDeferred<{
+      data: TestRow[]
+      total: number
+    }>()
+    const secondRequest = createDeferred<{
+      data: TestRow[]
+      total: number
+    }>()
+    const fetcher = vi.fn()
+      .mockReturnValueOnce(firstRequest.promise)
+      .mockReturnValueOnce(secondRequest.promise)
+    const {
+      fetchPage,
+      hasFetched,
+    } = useTableDataGridFetchers<TestRow>({
+      fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
+      fetcherParams: createPaginationFetcherParamSources(),
+    })
+
+    const firstFetch = fetchPage(1)
+    const secondFetch = fetchPage(2)
+    firstRequest.resolve({
+      data: [{ id: 'row-1', name: 'First', status: 200 }],
+      total: 2,
+    })
+    await firstFetch
+    expect(hasFetched.value).toBe(false)
+
+    secondRequest.resolve({
+      data: [{ id: 'row-2', name: 'Second', status: 200 }],
+      total: 2,
+    })
+    await secondFetch
+
+    expect(hasFetched.value).toBe(true)
+  })
+
   it('uses the latest fetcher ref when fetching', async () => {
     const initialFetcher = vi.fn().mockResolvedValue({
       data: [{ id: 'row-1', name: 'Initial', status: 200 }],
@@ -209,7 +247,95 @@ describe('useTableDataGridFetchers', () => {
     expect(hasNextPageWhenTotalUnknown.value).toBe(false)
   })
 
-  it('uses previous infinite blocks for cursors and resolves terminal last rows', async () => {
+  it('waits for the previous infinite block to complete before fetching the next block', async () => {
+    const firstRequest = createDeferred<{
+      data: TestRow[]
+      cursor: string
+      hasMore: boolean
+    }>()
+    const secondRequest = createDeferred<{
+      data: TestRow[]
+      cursor: string
+      hasMore: boolean
+    }>()
+    const fetcher = vi.fn()
+      .mockReturnValueOnce(firstRequest.promise)
+      .mockReturnValueOnce(secondRequest.promise)
+    const {
+      datasource,
+      refresh,
+    } = useTableDataGridFetchers<TestRow>({
+      fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
+      fetcherParams: createInfiniteFetcherParamSources(),
+    })
+
+    refresh()
+
+    const activeDatasource = expectDatasource(datasource.value)
+    const firstBlockPromise = getDatasourceRows(activeDatasource, { startRow: 0, endRow: 15 })
+    const secondBlockPromise = getDatasourceRows(activeDatasource, { startRow: 15, endRow: 30 })
+    await Promise.resolve()
+
+    expect(fetcher).toHaveBeenNthCalledWith(1, expect.objectContaining({
+      cursor: undefined,
+      pageSize: 15,
+      startRow: 0,
+    }))
+
+    firstRequest.resolve({
+      data: createRows('block-1', 15),
+      cursor: 'cursor-1',
+      hasMore: true,
+    })
+    const firstBlock = await firstBlockPromise
+    await Promise.resolve()
+
+    expect(fetcher).toHaveBeenNthCalledWith(2, expect.objectContaining({
+      cursor: 'cursor-1',
+      pageSize: 15,
+      startRow: 15,
+    }))
+
+    secondRequest.resolve({
+      data: createRows('block-2', 15),
+      cursor: 'cursor-2',
+      hasMore: false,
+    })
+    const secondBlock = await secondBlockPromise
+
+    expect(firstBlock.lastRow).toBeUndefined()
+    expect(secondBlock.lastRow).toBe(30)
+  })
+
+  it('fails a later infinite block when the prior block never completed', async () => {
+    const fetcher = vi.fn().mockResolvedValue({
+      data: createRows('block-1', 15),
+      cursor: 'cursor-1',
+      hasMore: true,
+    })
+    const {
+      datasource,
+      refresh,
+    } = useTableDataGridFetchers<TestRow>({
+      fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
+      fetcherParams: createInfiniteFetcherParamSources(),
+    })
+
+    refresh()
+
+    const activeDatasource = expectDatasource(datasource.value)
+    const failCallback = vi.fn()
+    await (activeDatasource.getRows(createGetRowsParams({
+      endRow: 30,
+      failCallback,
+      startRow: 15,
+    })) as Promise<void>)
+
+    expect(fetcher).not.toHaveBeenCalled()
+    expect(failCallback).toHaveBeenCalledOnce()
+  })
+
+  it('allows a failed out-of-order infinite block to be retried after the prior block completes', async () => {
     const fetcher = vi.fn()
       .mockResolvedValueOnce({
         data: createRows('block-1', 15),
@@ -224,7 +350,6 @@ describe('useTableDataGridFetchers', () => {
     const {
       datasource,
       refresh,
-      rowData,
     } = useTableDataGridFetchers<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
       fetcherParams: createInfiniteFetcherParamSources(),
@@ -233,22 +358,74 @@ describe('useTableDataGridFetchers', () => {
     refresh()
 
     const activeDatasource = expectDatasource(datasource.value)
-    const firstBlock = await getDatasourceRows(activeDatasource, { startRow: 0, endRow: 15 })
-    const secondBlock = await getDatasourceRows(activeDatasource, { startRow: 15, endRow: 30 })
+    const failCallback = vi.fn()
+    await (activeDatasource.getRows(createGetRowsParams({
+      endRow: 30,
+      failCallback,
+      startRow: 15,
+    })) as Promise<void>)
 
-    expect(fetcher).toHaveBeenNthCalledWith(1, expect.objectContaining({
-      cursor: undefined,
-      pageSize: 15,
-      startRow: 0,
-    }))
+    await getDatasourceRows(activeDatasource, { startRow: 0, endRow: 15 })
+    await getDatasourceRows(activeDatasource, { startRow: 15, endRow: 30 })
+
+    expect(failCallback).toHaveBeenCalledOnce()
     expect(fetcher).toHaveBeenNthCalledWith(2, expect.objectContaining({
       cursor: 'cursor-1',
+      startRow: 15,
+    }))
+  })
+
+  it('continues sequential infinite fetches when the prior cursor is undefined', async () => {
+    const firstRequest = createDeferred<{
+      data: TestRow[]
+      cursor?: string
+      hasMore: boolean
+    }>()
+    const secondRequest = createDeferred<{
+      data: TestRow[]
+      cursor?: string
+      hasMore: boolean
+    }>()
+    const fetcher = vi.fn()
+      .mockReturnValueOnce(firstRequest.promise)
+      .mockReturnValueOnce(secondRequest.promise)
+    const {
+      datasource,
+      refresh,
+    } = useTableDataGridFetchers<TestRow>({
+      fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
+      fetcherParams: createInfiniteFetcherParamSources(),
+    })
+
+    refresh()
+
+    const activeDatasource = expectDatasource(datasource.value)
+    const firstBlockPromise = getDatasourceRows(activeDatasource, { startRow: 0, endRow: 15 })
+    const secondBlockPromise = getDatasourceRows(activeDatasource, { startRow: 15, endRow: 30 })
+    await Promise.resolve()
+
+    firstRequest.resolve({
+      data: createRows('block-1', 15),
+      cursor: undefined,
+      hasMore: true,
+    })
+    await firstBlockPromise
+    await Promise.resolve()
+
+    expect(fetcher).toHaveBeenNthCalledWith(2, expect.objectContaining({
+      cursor: undefined,
       pageSize: 15,
       startRow: 15,
     }))
-    expect(firstBlock.lastRow).toBeUndefined()
+
+    secondRequest.resolve({
+      data: createRows('block-2', 15),
+      cursor: 'cursor-2',
+      hasMore: false,
+    })
+    const secondBlock = await secondBlockPromise
+
     expect(secondBlock.lastRow).toBe(30)
-    expect(rowData.value).toEqual(firstBlock.rows)
   })
 
   it('ignores stale infinite datasource results after a datasource refresh', async () => {
@@ -322,6 +499,10 @@ describe('useTableDataGridFetchers', () => {
       })
       .mockResolvedValueOnce({
         data: createRows('short-block', 3),
+        hasMore: true,
+      })
+      .mockResolvedValueOnce({
+        data: createRows('terminal-short-block', 3),
       })
     const {
       datasource,
@@ -336,8 +517,10 @@ describe('useTableDataGridFetchers', () => {
     const activeDatasource = expectDatasource(datasource.value)
     const knownTotalBlock = await getDatasourceRows(activeDatasource, { startRow: 0, endRow: 15 })
     const shortBlock = await getDatasourceRows(activeDatasource, { startRow: 15, endRow: 30 })
+    const terminalShortBlock = await getDatasourceRows(activeDatasource, { startRow: 30, endRow: 45 })
 
     expect(knownTotalBlock.lastRow).toBe(42)
-    expect(shortBlock.lastRow).toBe(18)
+    expect(shortBlock.lastRow).toBeUndefined()
+    expect(terminalShortBlock.lastRow).toBe(33)
   })
 })

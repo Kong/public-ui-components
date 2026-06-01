@@ -78,9 +78,6 @@ export const useDatatableSelection = <Row extends Record<string, any>>({
 
   const deselectAll = () => {
     gridApi.value?.deselectAll()
-    selectedRows.value = []
-    selectedRowKeys.value = []
-    emitRowSelect([])
   }
 
   const onSelectionChange = () => {

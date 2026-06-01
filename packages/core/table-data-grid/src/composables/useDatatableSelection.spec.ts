@@ -111,8 +111,7 @@ describe('useDatatableSelection', () => {
 
     selection.deselectAll()
     expect(api.deselectAll).toHaveBeenCalledOnce()
-    expect(selection.selectedRows.value).toEqual([])
-    expect(emitRowSelect).toHaveBeenCalledWith([])
+    expect(emitRowSelect).not.toHaveBeenCalled()
   })
 
   it('emits and refreshes changed rows only when selection changes', () => {
@@ -148,5 +147,29 @@ describe('useDatatableSelection', () => {
       force: true,
     })
     expect(emitRowSelect).toHaveBeenCalledWith([rows[1]])
+  })
+
+  it('emits row:select([]) once when deselectAll is reflected by selectionChanged', () => {
+    const { api } = createGridApi({ selectedRows: [rows[0]] })
+    const { emitRowSelect, selection } = createSelection({
+      gridApi: ref(api),
+    })
+
+    selection.onSelectionChange()
+    emitRowSelect.mockClear()
+    vi.mocked(api.refreshCells).mockClear()
+
+    selection.deselectAll()
+    api.setSelectedRows([])
+    selection.onSelectionChange()
+
+    expect(api.deselectAll).toHaveBeenCalledOnce()
+    expect(emitRowSelect).toHaveBeenCalledTimes(1)
+    expect(emitRowSelect).toHaveBeenCalledWith([])
+    expect(selection.selectedRows.value).toEqual([])
+    expect(api.refreshCells).toHaveBeenCalledWith({
+      rowNodes: [api.getRowNode('row-1')],
+      force: true,
+    })
   })
 })

@@ -111,6 +111,26 @@ describe('<TableDataGridHeaderRenderer />', () => {
     cy.get('@progressSort').should('have.been.calledWith', true)
   })
 
+  it('does not progress sort when the tooltip trigger is clicked', () => {
+    const { params } = createParams({
+      column: {
+        key: 'name',
+        label: 'Name',
+        sortable: true,
+        tooltip: 'Gateway service name',
+      },
+    })
+
+    cy.mount(TableDataGridHeaderRenderer, {
+      props: {
+        params,
+      },
+    })
+
+    cy.get('.header-tooltip-trigger').click()
+    cy.get('@progressSort').should('not.have.been.called')
+  })
+
   it('does not progress sort when sorting is disabled', () => {
     const { params } = createParams({
       enableSorting: false,

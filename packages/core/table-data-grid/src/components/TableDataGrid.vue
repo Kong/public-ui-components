@@ -230,7 +230,6 @@
 const DEFAULT_PAGE_SIZE_OPTIONS = [10, 15, 25, 50, 100]
 const DEFAULT_PAGE_SIZE = 25
 const DEFAULT_ROW_KEY = 'id'
-const ROW_ATTR_CLASSES = new WeakMap<HTMLElement, string[]>()
 </script>
 
 <script setup lang="ts" generic="Row extends Record<string, any>">
@@ -267,6 +266,7 @@ import TableDataGridColumnVisibilityMenu from './TableDataGridColumnVisibilityMe
 import TableDataGridFilters from './TableDataGridFilters.vue'
 import TableDataGridSearch from './TableDataGridSearch.vue'
 import { getRowKeyValue } from '../utils/rowKey'
+import { patchRowAttrs } from '../utils/rowAttrs'
 import composables from '../composables'
 
 ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
@@ -596,35 +596,6 @@ const isRowClickDisabledForColumn = (event: RowClickedEvent<Row>): boolean => {
   return Boolean(columnKey && rowClickDisabledColumnKeys.value.has(columnKey))
 }
 
-const applyDomAttrs = (element: HTMLElement | undefined, attrs: Record<string, unknown>) => {
-  if (!element) {
-    return
-  }
-
-  Object.entries(attrs).forEach(([key, value]) => {
-    if (key === 'class') {
-      const previousClasses = ROW_ATTR_CLASSES.get(element) ?? []
-      element.classList.remove(...previousClasses)
-      const nextClasses = value == null || value === false ? [] : String(value).split(' ').filter(Boolean)
-      element.classList.add(...nextClasses)
-      ROW_ATTR_CLASSES.set(element, nextClasses)
-      return
-    }
-
-    if (value == null || value === false) {
-      element.removeAttribute(key)
-      return
-    }
-
-    if (key === 'style' && typeof value === 'object') {
-      Object.assign(element.style, value)
-      return
-    }
-
-    element.setAttribute(key, String(value))
-  })
-}
-
 const onRowPostCreate = (params: ProcessRowParams<Row>) => {
   agGridOptions.processRowPostCreate?.(params)
 
@@ -633,9 +604,9 @@ const onRowPostCreate = (params: ProcessRowParams<Row>) => {
   }
 
   const attrs = rowAttrs(params.node.data)
-  applyDomAttrs(params.eRow, attrs)
-  applyDomAttrs(params.ePinnedLeftRow, attrs)
-  applyDomAttrs(params.ePinnedRightRow, attrs)
+  patchRowAttrs(params.eRow, attrs)
+  patchRowAttrs(params.ePinnedLeftRow, attrs)
+  patchRowAttrs(params.ePinnedRightRow, attrs)
 }
 
 const onFilterApply = (filterKey: string, selection: FilterGroupSelection) => {

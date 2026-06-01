@@ -109,7 +109,7 @@ const fetchRows: TableDataGridFetcher<Row> = async ({
 </script>
 ```
 
-The fetcher must return `{ data, total?, cursor?, hasMore? }`. Paginated tables use `page`, `pageSize`, `sortColumnKey`, `sortColumnOrder`, `search`, and `filterSelection`; infinite tables use `startRow`, `endRow`, `cursor`, `pageSize`, `sortColumnKey`, `sortColumnOrder`, `search`, and `filterSelection`.
+The fetcher must return `{ data, total?, cursor?, hasMore? }`. `total` is the known row count when the dataset is finite. `hasMore` is an explicit next-page signal that overrides the wrapper's fallback inference. In infinite mode, `cursor` may be `undefined` for offset-style APIs; the wrapper still advances blocks sequentially and will not call the next block until the prior one has completed. Paginated tables use `page`, `pageSize`, `sortColumnKey`, `sortColumnOrder`, `search`, and `filterSelection`; infinite tables use `startRow`, `endRow`, `cursor`, `pageSize`, `sortColumnKey`, `sortColumnOrder`, `search`, and `filterSelection`.
 
 ### Infinite Loading
 
@@ -133,6 +133,8 @@ const fetchRows: TableDataGridFetcher<Row> = async ({ startRow = 0, pageSize, cu
   }
 }
 ```
+
+If the API returns `cursor: undefined`, the wrapper still treats the block as completed and will request the next sequential block after the prior block resolves.
 
 ### Filterable Headers
 
@@ -446,7 +448,7 @@ Use `outside-search` and `outside-filters` to move built-in controls to Teleport
 | `headers` | `Array<TableDataGridHeader<Row>>` | Yes | - | Column definitions used to build AG Grid columns, slots, filters, and table config defaults. |
 | `fetcher` | `TableDataGridFetcher<Row>` | Yes | - | Async function called whenever the table needs rows. |
 | `mode` | `'pagination' \| 'infinite'` | No | `'pagination'` | Controls whether the table renders pagination or an infinite datasource. |
-| `rowKey` | `Extract<keyof Row, string>` | No | `'id'` | Row field used for AG Grid row identity and exposed selection methods. |
+| `rowKey` | `Extract<keyof Row, string>` | No | `'id'` | Row field used for AG Grid row identity and exposed selection methods. Pick a unique, stable field so row selection and row updates stay attached to the same logical row. |
 | `pageSize` | `number` | No | `25` | Default page or block size when `tableConfig.pageSize` is not set. |
 | `initialFetcherParams` | `{ search?: string }` | No | `{}` | Initial fetcher params currently limited to `search`. |
 | `loading` | `boolean` | No | `false` | Shows the table skeleton before rendering the grid. |
@@ -460,10 +462,10 @@ Use `outside-search` and `outside-filters` to move built-in controls to Teleport
 | `hidePagination` | `boolean` | No | `false` | Hides pagination controls in pagination mode. |
 | `hidePaginationWhenOptional` | `boolean` | No | `false` | Hides pagination controls when the loaded dataset fits on one page. |
 | `rowSelection` | `'none' \| 'single' \| 'multiple'` | No | `'none'` | Enables no selection, click-based single selection, or checkbox-backed multi-selection. |
-| `agGridOptions` | `TableDataGridGridOptions<Row>` | No | `{}` | Pass-through for lower-level AG Grid options. The wrapper still owns its documented behavior. |
+| `agGridOptions` | `TableDataGridGridOptions<Row>` | No | `{}` | Pass-through for lower-level AG Grid options. This is an escape hatch: overrides can bypass wrapper defaults and guarantees, including datasource and row-model behavior. |
 | `paginationPageSizeOptions` | `number[]` | No | `[10, 15, 25, 50, 100]` | Page size choices shown in pagination mode. The active page size is included if missing. |
 | `refreshKey` | `string \| number` | No | - | Refetches when the key changes. |
-| `rowAttrs` | `(row: Row) => Record<string, unknown>` | No | - | Applies DOM attributes to rendered AG Grid rows. |
+| `rowAttrs` | `(row: Row) => Record<string, unknown>` | No | - | Applies DOM attributes to rendered AG Grid rows. Supports `class` as a string, string array, or object map, `style` as an object, and any other DOM attributes as key/value pairs. |
 | `cellAttrs` | `({ row, rowValue, column, rowIndex, colIndex }) => Record<string, unknown>` | No | - | Applies DOM attributes to rendered cell content. |
 | `tableConfig` | `TableDataGridConfig` | No | Internal state | Optional controlled table state for column order, visibility, widths, pinning, sort, and page size. |
 

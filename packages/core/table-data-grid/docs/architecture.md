@@ -138,8 +138,8 @@ flowchart TD
 
 | Mode | AG Grid row model | Request params | Commit behavior |
 | --- | --- | --- | --- |
-| `pagination` | `clientSide` | `mode`, `page`, `pageSize`, `sortColumnKey`, `sortColumnOrder`, `search`, `filterSelection` | Stores returned `data` in `rowData`, stores `total`, updates `currentPage`, computes whether a next page exists when total is unknown |
-| `infinite` | `infinite` | `mode`, `startRow`, `endRow`, `pageSize`, `cursor`, `sortColumnKey`, `sortColumnOrder`, `search`, `filterSelection` | Creates an AG Grid datasource, stores returned cursors by block, calls `successCallback`, copies the first block into `rowData` for state rendering |
+| `pagination` | `clientSide` | `mode`, `page`, `pageSize`, `sortColumnKey`, `sortColumnOrder`, `search`, `filterSelection` | Stores returned `data` in `rowData`, stores `total`, updates `currentPage`, computes whether a next page exists when total is unknown, and only marks the table as fetched for the latest request |
+| `infinite` | `infinite` | `mode`, `startRow`, `endRow`, `pageSize`, `cursor`, `sortColumnKey`, `sortColumnOrder`, `search`, `filterSelection` | Creates an AG Grid datasource, tracks block completion separately from cursor values, stores returned cursors by block, waits for the prior block before requesting the next one, calls `successCallback`, and copies the first block into `rowData` for state rendering |
 
 Stale response protection is split by mode:
 

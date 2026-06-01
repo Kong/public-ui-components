@@ -23,6 +23,13 @@ type FetcherParamSources = {
   filterSelection: Readonly<Ref<TableDataGridFetcherParams['filterSelection']>>
 }
 
+type BlockCompletion = {
+  promise: Promise<boolean>
+  resolve: (completed: boolean) => void
+}
+
+type InfiniteBlockGateResult = 'ready' | 'failed' | 'stale'
+
 export const useTableDataGridFetchers = <Row extends Record<string, any>>({
   fetcher,
   fetcherParams,
@@ -32,6 +39,7 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
 }) => {
   const currentPage = ref(1)
   const cursorMap = new Map<number, any>()
+  const blockCompletionMap = new Map<number, BlockCompletion>()
   const datasource = ref<IDatasource>()
   const hasFetched = ref(false)
   const hasNextPageWhenTotalUnknown = ref(false)
@@ -144,7 +152,7 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
         hasNextPageWhenTotalUnknown.value = false
       }
     } finally {
-      endFetch()
+      endFetch({ markFetched: isLatestPaginationRequest(requestId) })
     }
   }
 
@@ -178,6 +186,10 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
       return result.total
     }
 
+    if (result.hasMore === true) {
+      return undefined
+    }
+
     if (result.hasMore === false || result.data.length < pageSize) {
       return startRow + result.data.length
     }
@@ -185,10 +197,73 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
     return undefined
   }
 
+  const createBlockCompletion = (blockIndex: number): BlockCompletion => {
+    const existingCompletion = blockCompletionMap.get(blockIndex)
+    if (existingCompletion) {
+      return existingCompletion
+    }
+
+    let resolveCurrentBlock!: (completed: boolean) => void
+    const completion: BlockCompletion = {
+      promise: new Promise<boolean>((resolve) => {
+        resolveCurrentBlock = resolve
+      }),
+      resolve: completed => resolveCurrentBlock(completed),
+    }
+
+    blockCompletionMap.set(blockIndex, completion)
+
+    return completion
+  }
+
+  const rejectBlockCompletion = (blockIndex: number, completion: BlockCompletion) => {
+    completion.resolve(false)
+    if (blockCompletionMap.get(blockIndex) === completion) {
+      blockCompletionMap.delete(blockIndex)
+    }
+  }
+
+  const waitForPreviousBlockCompletion = async ({
+    blockIndex,
+    currentBlockCompletion,
+    datasourceId,
+  }: {
+    blockIndex: number
+    currentBlockCompletion: BlockCompletion
+    datasourceId: number
+  }): Promise<InfiniteBlockGateResult> => {
+    if (blockIndex === 0) {
+      return 'ready'
+    }
+
+    const previousBlockCompletion = blockCompletionMap.get(blockIndex - 1)
+    if (!previousBlockCompletion) {
+      rejectBlockCompletion(blockIndex, currentBlockCompletion)
+      return 'failed'
+    }
+
+    const previousBlockCompleted = await previousBlockCompletion.promise
+
+    // AG Grid can let block requests from a previous datasource resolve after
+    // a sort/filter/mode refresh has swapped in a new datasource.
+    if (!isLatestInfiniteDatasource(datasourceId)) {
+      rejectBlockCompletion(blockIndex, currentBlockCompletion)
+      return 'stale'
+    }
+
+    if (!previousBlockCompleted) {
+      rejectBlockCompletion(blockIndex, currentBlockCompletion)
+      return 'failed'
+    }
+
+    return 'ready'
+  }
+
   const buildInfiniteDatasource = (options: RefreshOptions = {}): IDatasource => {
     const datasourceId = latestInfiniteDatasourceId.value + 1
     latestInfiniteDatasourceId.value = datasourceId
     cursorMap.clear()
+    blockCompletionMap.clear()
     fetchError.value = undefined
     hasFetched.value = false
     rowData.value = []
@@ -198,15 +273,28 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
       async getRows(params) {
         const {
           blockIndex,
-          cursor,
           pageSize,
         } = getCursorBlock({
           endRow: params.endRow,
           startRow: params.startRow,
         })
 
+        const currentBlockCompletion = createBlockCompletion(blockIndex)
+        const blockGateResult = await waitForPreviousBlockCompletion({
+          blockIndex,
+          currentBlockCompletion,
+          datasourceId,
+        })
+        if (blockGateResult !== 'ready') {
+          if (blockGateResult === 'failed') {
+            params.failCallback()
+          }
+          return
+        }
+
         beginFetch()
         try {
+          const cursor = blockIndex > 0 ? cursorMap.get(blockIndex - 1) : undefined
           const result = await fetcher.value({
             mode: 'infinite',
             page: undefined,
@@ -223,6 +311,7 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
           // AG Grid can let block requests from a previous datasource resolve after
           // a sort/filter/mode refresh has swapped in a new datasource.
           if (!isLatestInfiniteDatasource(datasourceId)) {
+            rejectBlockCompletion(blockIndex, currentBlockCompletion)
             return
           }
 
@@ -238,12 +327,15 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
           if (params.startRow === 0) {
             rowData.value = result.data
           }
+          currentBlockCompletion.resolve(true)
         } catch (err) {
           if (!isLatestInfiniteDatasource(datasourceId)) {
+            rejectBlockCompletion(blockIndex, currentBlockCompletion)
             return
           }
           fetchError.value = err
           params.failCallback()
+          rejectBlockCompletion(blockIndex, currentBlockCompletion)
         } finally {
           endFetch({ markFetched: isLatestInfiniteDatasource(datasourceId) })
         }

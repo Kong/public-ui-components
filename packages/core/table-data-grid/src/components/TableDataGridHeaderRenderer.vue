@@ -17,7 +17,10 @@
       :kpop-attributes="{ target: 'body' }"
       :text="column.tooltip"
     >
-      <span class="header-tooltip-trigger">
+      <span
+        class="header-tooltip-trigger"
+        @click.stop
+      >
         <InfoIcon
           class="header-tooltip-icon"
           decorative
