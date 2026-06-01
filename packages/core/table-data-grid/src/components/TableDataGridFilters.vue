@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import type { FilterGroupFilters, FilterGroupSelection } from '@kong/kongponents'
+import { getFilterSlotName } from '../utils/headers'
 
 const props = defineProps<{
   filters: FilterGroupFilters
@@ -34,7 +35,6 @@ const emit = defineEmits<{
   (e: 'close', filterKey: string): void
 }>()
 
-const getFilterSlotName = (filterKey: string) => `filter-${filterKey}`
 const isHostManagedFilter = (filterKey: string) => props.forwardedFilterSlotNames.includes(getFilterSlotName(filterKey))
 const commitBuiltInFilterSelection = (filterKey: string, selection: FilterGroupSelection) => {
   if (isHostManagedFilter(filterKey)) {

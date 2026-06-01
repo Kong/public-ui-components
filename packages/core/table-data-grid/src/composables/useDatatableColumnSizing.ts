@@ -2,6 +2,7 @@ import type {
   TableDataGridConfig,
   TableDataGridHeader,
 } from '../types'
+import type { GridColumnWidthChangeSource } from '../types/internal'
 import type {
   ColumnState,
   GridApi,
@@ -11,8 +12,6 @@ import type { Ref } from 'vue'
 import { computed, onBeforeUnmount } from 'vue'
 import isEqual from 'lodash-es/isEqual'
 import { hasConfiguredColumnWidths, normalizedTableConfigsEqual } from '../utils/tableConfig'
-
-type GridColumnWidthChangeSource = 'intentional' | 'layout-side-effect'
 
 // Fit-time usability floor for columns that do not provide an explicit minWidth.
 const DEFAULT_AUTO_FIT_MIN_WIDTH = 120

@@ -18,13 +18,11 @@ export const useTableDataGridConfig = <Row extends Record<string, any>>({
   emitTableConfigUpdate,
   headers,
   pageSize,
-  onTableConfigChange,
 }: {
   tableConfig: Readonly<Ref<TableDataGridConfig | undefined>>
   emitTableConfigUpdate: (config: TableDataGridConfig) => void
   headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
   pageSize: Readonly<Ref<number>>
-  onTableConfigChange?: (nextConfig: TableDataGridConfig, previousConfig: TableDataGridConfig) => void
 }) => {
   const activeTableConfig = ref<TableDataGridConfig>(normalizeTableConfig(tableConfig.value))
   const resolvedHeaders = computed(() => headers.value)
@@ -48,10 +46,8 @@ export const useTableDataGridConfig = <Row extends Record<string, any>>({
       return
     }
 
-    const previousConfig = activeTableConfig.value
     activeTableConfig.value = normalized
     emitTableConfigUpdate(normalized)
-    onTableConfigChange?.(normalized, previousConfig)
   }
 
   const patchTableConfig = (partial: Partial<TableDataGridConfig>) => {
@@ -89,9 +85,7 @@ export const useTableDataGridConfig = <Row extends Record<string, any>>({
   watch(tableConfig, (nextConfig) => {
     const normalized = normalizeTableConfig(nextConfig)
     if (!normalizedTableConfigsEqual(activeTableConfig.value, normalized)) {
-      const previousConfig = activeTableConfig.value
       activeTableConfig.value = normalized
-      onTableConfigChange?.(normalized, previousConfig)
     }
   })
 

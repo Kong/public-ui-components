@@ -265,6 +265,7 @@ import union from 'lodash-es/union'
 import TableDataGridColumnVisibilityMenu from './TableDataGridColumnVisibilityMenu.vue'
 import TableDataGridFilters from './TableDataGridFilters.vue'
 import TableDataGridSearch from './TableDataGridSearch.vue'
+import { getFilterSlotName } from '../utils/headers'
 import { getRowKeyValue } from '../utils/rowKey'
 import { patchRowAttrs } from '../utils/rowAttrs'
 import composables from '../composables'
@@ -355,8 +356,6 @@ const { width: datatableWidth } = useElementSize(datatableElement, { width: 0, h
 const gridApi = ref<GridApi<Row>>()
 const resolvedRowKey = computed<TableDataGridRowKey<Row>>(() => rowKey ?? DEFAULT_ROW_KEY as TableDataGridRowKey<Row>)
 const searchQuery = ref(initialFetcherParams.search ?? '')
-// Assigned after gridSync is initialized; captured by useTableDataGridConfig through closure.
-let handleTableConfigChange = (_nextConfig: TableDataGridConfig, _previousConfig: TableDataGridConfig) => {}
 
 // Access through the composables bag keeps Cypress stubs working for package component tests.
 const {
@@ -374,7 +373,6 @@ const {
   emitTableConfigUpdate: config => emit('update:tableConfig', config),
   headers: toRef(() => headers),
   pageSize: toRef(() => pageSize),
-  onTableConfigChange: (nextConfig, previousConfig) => handleTableConfigChange(nextConfig, previousConfig),
 })
 
 const {
@@ -385,6 +383,7 @@ const {
   hasFetched,
   hasNextPageWhenTotalUnknown,
   isFetching,
+  resetFetched,
   refresh,
   rowData,
   totalRows,
@@ -437,15 +436,14 @@ const gridSync = composables.useDatatableGridSync<Row>({
   emitSort: sort => emit('sort', sort),
   getGridConfig,
   gridApi,
-  hasFetched,
   mode: toRef(() => mode),
   patchTableConfig,
+  resetFetched,
   refresh,
   resolvedSort,
   resolvedTableConfig,
   rowSelection: toRef(() => rowSelection),
 })
-handleTableConfigChange = gridSync.handleTableConfigChange
 
 const {
   columnDefs,
@@ -497,7 +495,6 @@ const filterGroupFilters = computed<FilterGroupFilters>(() => Object.fromEntries
     .filter(header => header.filter)
     .map(header => [header.key, header.filter]),
 ) as FilterGroupFilters)
-const getFilterSlotName = (filterKey: string) => `filter-${filterKey}`
 
 const getForwardedFilterSlotNames = () => Object.keys(filterGroupFilters.value)
   .map(getFilterSlotName)
@@ -537,6 +534,7 @@ const columnVisibilityModel = computed({
 
 const hasRows = computed(() => rowData.value.length > 0)
 const shouldShowErrorState = computed(() => error || (Boolean(fetchError.value) && !hasRows.value))
+const shouldEmitLoadingState = computed(() => loading || (!hasRows.value && (!hasFetched.value || isFetching.value)))
 const isEmpty = computed(() => hasFetched.value && !isFetching.value && !hasRows.value && !shouldShowErrorState.value)
 const shouldShowPaginationWhenOptional = computed(() => {
   if (totalRows.value == null) {
@@ -552,20 +550,16 @@ const shouldShowPagination = computed(() => (
     && (!hidePaginationWhenOptional || shouldShowPaginationWhenOptional.value)
 ))
 const datatableState = computed<TableDataGridState>(() => {
-  if (loading || isFetching.value) {
+  if (shouldEmitLoadingState.value) {
     return 'loading'
   }
 
-  if (error || fetchError.value) {
+  if (shouldShowErrorState.value) {
     return 'error'
   }
 
   if (isEmpty.value) {
     return 'empty'
-  }
-
-  if (!hasFetched.value && !hasRows.value) {
-    return 'loading'
   }
 
   return 'success'

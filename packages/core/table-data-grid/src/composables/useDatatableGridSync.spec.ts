@@ -94,8 +94,8 @@ describe('useDatatableGridSync', () => {
     const gridApi = ref(createGridApi())
     const resolvedTableConfigRef = ref(resolvedTableConfig)
     const activePageSize = ref(25)
-    const hasFetched = ref(true)
     const patchTableConfig = vi.fn()
+    const resetFetched = vi.fn()
     const refresh = vi.fn()
     const emitGridReady = vi.fn()
     const emitSort = vi.fn()
@@ -123,9 +123,9 @@ describe('useDatatableGridSync', () => {
           emitSort,
           getGridConfig,
           gridApi,
-          hasFetched,
           mode,
           patchTableConfig,
+          resetFetched,
           refresh,
           resolvedSort: ref({
             sortColumnKey: resolvedTableConfigRef.value.sortColumnKey,
@@ -148,8 +148,8 @@ describe('useDatatableGridSync', () => {
       emitGridReady,
       emitSort,
       gridApi,
-      hasFetched,
       patchTableConfig,
+      resetFetched,
       refresh,
       resolvedTableConfigRef,
       rowSelection,
@@ -166,6 +166,7 @@ describe('useDatatableGridSync', () => {
       emitGridConfigChange,
       gridApi,
       patchTableConfig,
+      resetFetched,
       sync,
     } = mountGridSync({
       applyTableConfig: vi.fn(() => {
@@ -181,15 +182,17 @@ describe('useDatatableGridSync', () => {
     } as GridReadyEvent<TestRow>)
 
     expect(applyTableConfig).toHaveBeenCalledOnce()
+    expect(resetFetched).toHaveBeenCalledOnce()
     expect(emitGridConfigChange).toHaveBeenCalledOnce()
     expect(patchTableConfig).not.toHaveBeenCalled()
   })
 
-  it('refreshes once and emits once per sort or page-size change', () => {
+  it('refreshes once and emits once per sort or page-size change', async () => {
     const {
       emitSort,
       patchTableConfig,
       refresh,
+      resolvedTableConfigRef,
       sync,
     } = mountGridSync({
       gridConfig: {
@@ -198,23 +201,6 @@ describe('useDatatableGridSync', () => {
         sortColumnKey: 'status',
         sortColumnOrder: 'desc',
       },
-    })
-
-    sync.handleTableConfigChange(
-      {
-        ...defaultResolvedConfig,
-        sortColumnKey: 'status',
-        sortColumnOrder: 'desc',
-        pageSize: 50,
-      },
-      defaultResolvedConfig,
-    )
-
-    expect(refresh).toHaveBeenCalledOnce()
-    expect(refresh).toHaveBeenCalledWith({
-      pageSize: 50,
-      sortColumnKey: 'status',
-      sortColumnOrder: 'desc',
     })
 
     sync.onSortChange()
@@ -232,21 +218,34 @@ describe('useDatatableGridSync', () => {
     expect(patchTableConfig).toHaveBeenNthCalledWith(2, {
       pageSize: 50,
     })
+
+    resolvedTableConfigRef.value = {
+      ...defaultResolvedConfig,
+      sortColumnKey: 'status',
+      sortColumnOrder: 'desc',
+      pageSize: 50,
+    }
+    await nextTick()
+
+    expect(refresh).toHaveBeenCalledOnce()
+    expect(refresh).toHaveBeenCalledWith({
+      pageSize: 50,
+      sortColumnKey: 'status',
+      sortColumnOrder: 'desc',
+    })
   })
 
-  it('does not refresh for infinite-mode sort changes because ag-grid refetches the cache', () => {
-    const { refresh, sync } = mountGridSync({
+  it('does not refresh for infinite-mode sort changes because ag-grid refetches the cache', async () => {
+    const { refresh, resolvedTableConfigRef } = mountGridSync({
       mode: ref<TableDataGridMode>('infinite'),
     })
 
-    sync.handleTableConfigChange(
-      {
-        ...defaultResolvedConfig,
-        sortColumnKey: 'status',
-        sortColumnOrder: 'desc',
-      },
-      defaultResolvedConfig,
-    )
+    resolvedTableConfigRef.value = {
+      ...defaultResolvedConfig,
+      sortColumnKey: 'status',
+      sortColumnOrder: 'desc',
+    }
+    await nextTick()
 
     expect(refresh).not.toHaveBeenCalled()
   })

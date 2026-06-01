@@ -1,3 +1,12 @@
+<template>
+  <span
+    v-bind="cellAttrs"
+    :class="['datatable-cell-content', cellAttrs.class]"
+  >
+    <RenderCellSlot />
+  </span>
+</template>
+
 <script setup lang="ts">
 import type { TableDataGridCellAttrs, TableDataGridHeader } from '../types'
 import type { ICellRendererParams } from 'ag-grid-community'
@@ -71,15 +80,6 @@ defineExpose({
   },
 })
 </script>
-
-<template>
-  <span
-    v-bind="cellAttrs"
-    :class="['datatable-cell-content', cellAttrs.class]"
-  >
-    <RenderCellSlot />
-  </span>
-</template>
 
 <style lang="scss" scoped>
 .datatable-cell-content {

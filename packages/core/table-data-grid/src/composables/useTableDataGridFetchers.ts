@@ -61,6 +61,10 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
     pendingFetchCount.value += 1
   }
 
+  const resetFetched = () => {
+    hasFetched.value = false
+  }
+
   const endFetch = ({ markFetched = true }: { markFetched?: boolean } = {}) => {
     // Guards against an extra endFetch call after an interrupted or rejected request path.
     pendingFetchCount.value = Math.max(0, pendingFetchCount.value - 1)
@@ -392,6 +396,7 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
     hasFetched,
     hasNextPageWhenTotalUnknown,
     isFetching,
+    resetFetched,
     refresh,
     rowData,
     totalRows,

@@ -1520,7 +1520,7 @@ describe('<TableDataGrid />', () => {
         const searchIndex = $toolbarItems.index($toolbarItems.filter('.datatable-search'))
 
         expect(filtersIndex).to.be.greaterThan(-1)
-        expect(searchIndex).to.be.greaterThan(filtersIndex)
+        expect(searchIndex).to.be.lessThan(filtersIndex)
       })
     })
 
@@ -2581,6 +2581,46 @@ describe('<TableDataGrid />', () => {
         pageSize: 15,
         startRow: 15,
         cursor: 15,
+      })
+    })
+
+    it('keeps state aligned with rendered infinite rows when a later block fails', () => {
+      const onState = cy.stub().as('state')
+      const fetcher = cy.stub().callsFake(({ startRow = 0, pageSize = 15 }) => {
+        if (startRow > 0) {
+          return Promise.reject(new Error('failed'))
+        }
+
+        return Promise.resolve({
+          data: rows.slice(0, pageSize),
+          hasMore: true,
+        })
+      })
+
+      mountTable({
+        fetcher,
+        mode: 'infinite',
+        onState,
+      })
+
+      cy.contains('Gateway service').should('be.visible')
+      cy.get('@state').should('have.been.calledWithMatch', {
+        state: 'success',
+        hasData: true,
+      })
+
+      cy.get('.ag-body-viewport').scrollTo('bottom')
+      cy.wrap(fetcher).should('have.been.calledWithMatch', {
+        mode: 'infinite',
+        startRow: 15,
+      })
+      cy.getTestId('table-data-grid-error').should('not.exist')
+      cy.get('@state').should((stateStub) => {
+        const calls = (stateStub as unknown as sinon.SinonStub).getCalls()
+        expect(calls.some(call => call.calledWithMatch({
+          state: 'error',
+          hasData: true,
+        }))).to.equal(false)
       })
     })
 

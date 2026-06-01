@@ -18,10 +18,8 @@ describe('useTableDataGridConfig', () => {
 
   const createConfig = ({
     tableConfig = ref<TableDataGridConfig | undefined>(),
-    onTableConfigChange = vi.fn(),
   }: {
     tableConfig?: ReturnType<typeof ref<TableDataGridConfig | undefined>>
-    onTableConfigChange?: (nextConfig: TableDataGridConfig, previousConfig: TableDataGridConfig) => void
   } = {}) => {
     const emitTableConfigUpdate = vi.fn()
     const config = useTableDataGridConfig<TestRow>({
@@ -29,19 +27,17 @@ describe('useTableDataGridConfig', () => {
       emitTableConfigUpdate,
       headers: ref(headers),
       pageSize: ref(25),
-      onTableConfigChange,
     })
 
     return {
       config,
       emitTableConfigUpdate,
-      onTableConfigChange,
       tableConfig,
     }
   }
 
   it('emits normalized updates and suppresses no-op updates', () => {
-    const { config, emitTableConfigUpdate, onTableConfigChange } = createConfig()
+    const { config, emitTableConfigUpdate } = createConfig()
 
     config.updateTableConfig({
       columnOrder: ['status', 'name'],
@@ -64,7 +60,6 @@ describe('useTableDataGridConfig', () => {
       sortColumnOrder: undefined,
       pageSize: 50,
     })
-    expect(onTableConfigChange).toHaveBeenCalledOnce()
   })
 
   it('reacts to controlled prop changes without echoing update events', async () => {
@@ -72,7 +67,7 @@ describe('useTableDataGridConfig', () => {
       columnOrder: ['name', 'status'],
       pageSize: 25,
     })
-    const { config, emitTableConfigUpdate, onTableConfigChange } = createConfig({ tableConfig })
+    const { config, emitTableConfigUpdate } = createConfig({ tableConfig })
 
     tableConfig.value = {
       columnOrder: ['status', 'name'],
@@ -87,10 +82,6 @@ describe('useTableDataGridConfig', () => {
       status: false,
     })
     expect(emitTableConfigUpdate).not.toHaveBeenCalled()
-    expect(onTableConfigChange).toHaveBeenCalledWith(
-      expect.objectContaining({ pageSize: 50 }),
-      expect.objectContaining({ pageSize: 25 }),
-    )
   })
 
   it('patches resolved config values before emitting updates', () => {

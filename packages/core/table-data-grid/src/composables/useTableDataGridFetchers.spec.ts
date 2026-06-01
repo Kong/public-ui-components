@@ -174,6 +174,28 @@ describe('useTableDataGridFetchers', () => {
     expect(hasFetched.value).toBe(true)
   })
 
+  it('resets fetched state through the fetcher-owned reset callback', async () => {
+    const fetcher = vi.fn().mockResolvedValue({
+      data: [{ id: 'row-1', name: 'First', status: 200 }],
+      total: 1,
+    })
+    const {
+      fetchPage,
+      hasFetched,
+      resetFetched,
+    } = useTableDataGridFetchers<TestRow>({
+      fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
+      fetcherParams: createPaginationFetcherParamSources(),
+    })
+
+    await fetchPage(1)
+    expect(hasFetched.value).toBe(true)
+
+    resetFetched()
+
+    expect(hasFetched.value).toBe(false)
+  })
+
   it('uses the latest fetcher ref when fetching', async () => {
     const initialFetcher = vi.fn().mockResolvedValue({
       data: [{ id: 'row-1', name: 'Initial', status: 200 }],

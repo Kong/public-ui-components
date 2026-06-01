@@ -448,7 +448,7 @@ Use `outside-search` and `outside-filters` to move built-in controls to Teleport
 | `headers` | `Array<TableDataGridHeader<Row>>` | Yes | - | Column definitions used to build AG Grid columns, slots, filters, and table config defaults. |
 | `fetcher` | `TableDataGridFetcher<Row>` | Yes | - | Async function called whenever the table needs rows. |
 | `mode` | `'pagination' \| 'infinite'` | No | `'pagination'` | Controls whether the table renders pagination or an infinite datasource. |
-| `rowKey` | `Extract<keyof Row, string>` | No | `'id'` | Row field used for AG Grid row identity and exposed selection methods. Pick a unique, stable field so row selection and row updates stay attached to the same logical row. |
+| `rowKey` | `Extract<keyof Row, string>` | No | `'id'` | Row field used for AG Grid row identity and exposed selection methods. Pick a unique, stable field so row selection and row updates stay attached to the same logical row. Missing values are treated as an empty string, so duplicate or missing keys can collide and break identity-sensitive behavior. |
 | `pageSize` | `number` | No | `25` | Default page or block size when `tableConfig.pageSize` is not set. |
 | `initialFetcherParams` | `{ search?: string }` | No | `{}` | Initial fetcher params currently limited to `search`. |
 | `loading` | `boolean` | No | `false` | Shows the table skeleton before rendering the grid. |
@@ -502,7 +502,7 @@ Use `outside-search` and `outside-filters` to move built-in controls to Teleport
 | `row:select` | `Row[]` | The selected row set changes. |
 | `update:tableConfig` | `TableDataGridConfig` | User interaction or wrapper-managed refitting changes table config state. |
 | `sort` | `{ sortColumnKey?: string, sortColumnOrder?: 'asc' \| 'desc' }` | Sort state changes before the updated table config is emitted. |
-| `state` | `{ state: 'loading' \| 'error' \| 'success' \| 'empty', hasData: boolean }` | The table loading, error, success, or empty state changes. |
+| `state` | `{ state: 'loading' \| 'error' \| 'success' \| 'empty', hasData: boolean }` | The rendered table state changes. Background refetches and later infinite-block failures keep emitting `success` while existing rows remain visible. |
 | `grid:ready` | `GridApi<Row>` | AG Grid is ready and the wrapper has applied initial column state. |
 | `filter:apply` | `(filterKey: string, selection: FilterGroupSelection)` | KFilterGroup emits apply. Default filters update `v-model:filter-selection`; custom filter slots must write their selected value to the model in the host. |
 | `filter:clear` | `(filterKey: string, selection: FilterGroupSelection)` | KFilterGroup emits clear. Default filters update `v-model:filter-selection`; custom filter slots must clear their value from the model in the host. |
@@ -516,7 +516,7 @@ Use `outside-search` and `outside-filters` to move built-in controls to Teleport
 | `[header.key]` | `{ row, rowValue, column, rowIndex, refreshCell, selected }` | Dynamic cell slot for the matching column key. Call `refreshCell()` when async slot content changes internal loading or display state. |
 | `bulk-action-items` | `{ selectedRows }` | Dropdown items rendered inside the selected-row actions dropdown. |
 | `toolbar` | `{ selectedRows, filterSelection, filters, search, updateFilterSelection, updateSearch, refresh }` | Replaces the host-controlled toolbar content. The column visibility menu still renders as the rightmost toolbar control unless `hideColumnVisibility` is true. |
-| `toolbar-left` | `{ selectedRows, filterSelection, filters, search, updateFilterSelection, updateSearch, refresh }` | Renders before built-in bulk actions, search, and filters. |
+| `toolbar-left` | `{ selectedRows, filterSelection, filters, search, updateFilterSelection, updateSearch, refresh }` | Renders before built-in search, filters, and bulk actions. |
 | `toolbar-right` | `{ selectedRows, filterSelection, filters, search, updateFilterSelection, updateSearch, refresh }` | Renders before the built-in column visibility menu. |
 | `outside-actions` | `{ selectedRows, filterSelection, filters, search, updateFilterSelection, updateSearch, refresh }` | Always-mounted renderless slot for custom controls that host apps Teleport outside the visible table toolbar. |
 | `filter-${header.key}` | None | Forwards custom filter popover content to the built-in KFilterGroup. The host app must update `v-model:filter-selection` when custom filter values are applied or cleared. |
