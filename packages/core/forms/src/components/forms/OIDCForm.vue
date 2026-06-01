@@ -26,13 +26,14 @@
 
           <OIDCPrincipals
             v-if="isKonnect && hasPrincipalsFields"
+            :common-fields-schema="commonFieldsSchema"
             :form-model="formModel"
             :form-options="formOptions"
             :form-schema="formSchema"
             :on-model-updated="onModelUpdated"
           />
           <VueFormGenerator
-            v-if="displayForm"
+            v-else-if="displayForm"
             :model="formModel"
             :options="formOptions"
             :schema="commonFieldsSchema"

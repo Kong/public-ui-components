@@ -78,6 +78,10 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
   isKonnectManagedRedisEnabled?: boolean
   /** When true, CP is a Cloud Gateway */
   isCloudGateway?: boolean
+  /** URL to navigate to when creating a new Kong Identity auth server */
+  createAuthServerUrl?: string
+  /** URL to navigate to when creating a new Kong Identity client */
+  createClientUrl?: string
 }
 
 /** Kong Manager Plugin form config */

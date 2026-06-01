@@ -38,6 +38,64 @@ const principalsFields = [
     valueType: 'string',
     order: 0,
   },
+  {
+    id: 'config-principals-principal_by',
+    model: 'config-principals-principal_by',
+    type: 'radio',
+    label: 'Config.Principals.Principal By',
+    default: 'username',
+    values: [
+      { name: 'username', value: 'username' },
+      { name: 'custom_id', value: 'custom_id' },
+    ],
+    order: 0,
+  },
+  {
+    id: 'config-principals-principal_claim',
+    model: 'config-principals-principal_claim',
+    type: 'input',
+    inputType: 'text',
+    label: 'Config.Principals.Principal Claim',
+    default: 'sub',
+    valueType: 'string',
+    order: 0,
+  },
+  {
+    id: 'config-principals-match_consumer',
+    model: 'config-principals-match_consumer',
+    type: 'radio',
+    label: 'Config.Principals.Match Consumer',
+    default: true,
+    values: [
+      { name: 'True', value: true },
+      { name: 'False', value: false },
+    ],
+    order: 0,
+  },
+  {
+    id: 'config-principals-match_consumer_groups',
+    model: 'config-principals-match_consumer_groups',
+    type: 'radio',
+    label: 'Config.Principals.Match Consumer Groups',
+    default: true,
+    values: [
+      { name: 'True', value: true },
+      { name: 'False', value: false },
+    ],
+    order: 0,
+  },
+  {
+    id: 'config-principals-error_on_miss',
+    model: 'config-principals-error_on_miss',
+    type: 'radio',
+    label: 'Config.Principals.Error On Miss',
+    default: false,
+    values: [
+      { name: 'True', value: true },
+      { name: 'False', value: false },
+    ],
+    order: 0,
+  },
 ]
 
 const OIDCFormSchemaWithPrincipals = {
@@ -49,6 +107,11 @@ const OIDCModelWithPrincipals = {
   ...OIDCModel,
   'config-principals-enabled': false,
   'config-principals-directory': 'default',
+  'config-principals-principal_by': 'username',
+  'config-principals-principal_claim': 'sub',
+  'config-principals-match_consumer': true,
+  'config-principals-match_consumer_groups': true,
+  'config-principals-error_on_miss': false,
 }
 
 describe('<OIDCForm />', () => {
