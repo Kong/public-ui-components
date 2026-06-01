@@ -1,5 +1,6 @@
 import type {
   TableDataGridConfig,
+  TableDataGridMode,
   TableDataGridRowSelectionMode,
   TableDataGridSort,
 } from '../types'
@@ -50,6 +51,7 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
   getGridConfig,
   gridApi,
   hasFetched,
+  mode,
   patchTableConfig,
   refresh,
   resolvedSort,
@@ -64,6 +66,7 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
   getGridConfig: (api: GridApi<Row>) => TableDataGridConfig
   gridApi: Ref<GridApi<Row> | undefined>
   hasFetched: Ref<boolean>
+  mode: Readonly<Ref<TableDataGridMode>>
   patchTableConfig: (config: Partial<TableDataGridConfig>) => void
   refresh: (params?: Partial<TableDataGridSort & { pageSize: number }>) => void
   resolvedSort: Readonly<Ref<Pick<TableDataGridSort, 'sortColumnKey' | 'sortColumnOrder'>>>
@@ -108,14 +111,15 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
   ) => {
     const sortChanged = getSortKey(nextConfig) !== getSortKey(previousConfig)
     const pageSizeChanged = nextConfig.pageSize !== previousConfig.pageSize
+    const shouldRefreshForSort = sortChanged && mode.value !== 'infinite'
 
-    if (!sortChanged && !pageSizeChanged) {
+    if (!shouldRefreshForSort && !pageSizeChanged) {
       return
     }
 
     refresh({
       ...(pageSizeChanged && typeof nextConfig.pageSize === 'number' ? { pageSize: nextConfig.pageSize } : {}),
-      ...(sortChanged
+      ...(shouldRefreshForSort
         ? {
           sortColumnKey: nextConfig.sortColumnKey,
           sortColumnOrder: nextConfig.sortColumnOrder,

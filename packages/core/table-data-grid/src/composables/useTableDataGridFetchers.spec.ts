@@ -72,18 +72,20 @@ describe('useTableDataGridFetchers', () => {
     endRow,
     startRow,
     failCallback = vi.fn(),
+    sortModel = [],
     successCallback = vi.fn(),
   }: {
     endRow: number
     startRow: number
     failCallback?: IGetRowsParams['failCallback']
+    sortModel?: IGetRowsParams['sortModel']
     successCallback?: IGetRowsParams['successCallback']
   }): IGetRowsParams => ({
     context: undefined,
     endRow,
     failCallback,
     filterModel: undefined,
-    sortModel: [],
+    sortModel,
     startRow,
     successCallback,
   })
@@ -305,6 +307,35 @@ describe('useTableDataGridFetchers', () => {
 
     expect(firstBlock.lastRow).toBeUndefined()
     expect(secondBlock.lastRow).toBe(30)
+  })
+
+  it('uses the ag-grid infinite sort model for row requests', async () => {
+    const fetcher = vi.fn().mockResolvedValue({
+      data: createRows('sorted-block', 15),
+      cursor: 'cursor-1',
+      hasMore: true,
+    })
+    const {
+      datasource,
+      refresh,
+    } = useTableDataGridFetchers<TestRow>({
+      fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
+      fetcherParams: createInfiniteFetcherParamSources(),
+    })
+
+    refresh()
+
+    const activeDatasource = expectDatasource(datasource.value)
+    await (activeDatasource.getRows(createGetRowsParams({
+      endRow: 15,
+      sortModel: [{ colId: 'status', sort: 'desc' }],
+      startRow: 0,
+    })) as Promise<void>)
+
+    expect(fetcher).toHaveBeenCalledWith(expect.objectContaining({
+      sortColumnKey: 'status',
+      sortColumnOrder: 'desc',
+    }))
   })
 
   it('fails a later infinite block when the prior block never completed', async () => {

@@ -28,6 +28,11 @@ type BlockCompletion = {
   resolve: (completed: boolean) => void
 }
 
+type InfiniteSortModelItem = {
+  colId?: string
+  sort?: string
+}
+
 type InfiniteBlockGateResult = 'ready' | 'failed' | 'stale'
 
 export const useTableDataGridFetchers = <Row extends Record<string, any>>({
@@ -69,6 +74,24 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
     sortColumnKey: 'sortColumnKey' in options ? options.sortColumnKey : fetcherParams.sortColumnKey.value,
     sortColumnOrder: 'sortColumnOrder' in options ? options.sortColumnOrder : fetcherParams.sortColumnOrder.value,
   })
+
+  const resolveInfiniteRequestSort = ({
+    datasourceSort,
+    sortModel,
+  }: {
+    datasourceSort: ReturnType<typeof resolveSort>
+    sortModel?: InfiniteSortModelItem[]
+  }): Pick<TableDataGridFetcherParams, 'sortColumnKey' | 'sortColumnOrder'> => {
+    const [activeSort] = sortModel ?? []
+    if (activeSort?.colId && (activeSort.sort === 'asc' || activeSort.sort === 'desc')) {
+      return {
+        sortColumnKey: activeSort.colId,
+        sortColumnOrder: activeSort.sort,
+      }
+    }
+
+    return datasourceSort
+  }
 
   const isLatestPaginationRequest = (requestId: number): boolean => (
     requestId === latestPaginationRequestId.value && fetcherParams.mode.value === 'pagination'
@@ -295,6 +318,10 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
         beginFetch()
         try {
           const cursor = blockIndex > 0 ? cursorMap.get(blockIndex - 1) : undefined
+          const requestSort = resolveInfiniteRequestSort({
+            datasourceSort,
+            sortModel: params.sortModel,
+          })
           const result = await fetcher.value({
             mode: 'infinite',
             page: undefined,
@@ -302,8 +329,8 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
             startRow: params.startRow,
             endRow: params.endRow,
             cursor,
-            sortColumnKey: datasourceSort.sortColumnKey,
-            sortColumnOrder: datasourceSort.sortColumnOrder,
+            sortColumnKey: requestSort.sortColumnKey,
+            sortColumnOrder: requestSort.sortColumnOrder,
             search: fetcherParams.search.value,
             filterSelection: fetcherParams.filterSelection.value,
           })

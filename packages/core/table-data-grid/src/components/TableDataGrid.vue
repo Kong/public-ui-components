@@ -81,6 +81,12 @@
               v-bind="toolbarSlotProps"
             />
 
+            <!-- region: search -->
+            <TableDataGridSearch
+              v-if="showToolbarSearch"
+              v-model="searchQuery"
+            />
+
             <!-- region: filters -->
             <TableDataGridFilters
               v-if="showToolbarFilters"
@@ -100,12 +106,6 @@
                 <slot :name="slotName" />
               </template>
             </TableDataGridFilters>
-
-            <!-- region: search -->
-            <TableDataGridSearch
-              v-if="showToolbarSearch"
-              v-model="searchQuery"
-            />
           </div>
 
           <div class="datatable-toolbar-secondary">
@@ -438,6 +438,7 @@ const gridSync = composables.useDatatableGridSync<Row>({
   getGridConfig,
   gridApi,
   hasFetched,
+  mode: toRef(() => mode),
   patchTableConfig,
   refresh,
   resolvedSort,
@@ -769,6 +770,7 @@ defineExpose<{
   width: 100%;
 
   :deep(.ag-header-cell) {
+    background-color: var(--kui-color-background, $kui-color-background);
     border-right: 1px solid var(--kui-color-border, $kui-color-border);
   }
 

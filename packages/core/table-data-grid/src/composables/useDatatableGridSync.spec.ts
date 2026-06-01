@@ -11,6 +11,7 @@ import type {
 } from 'ag-grid-community'
 import type {
   TableDataGridConfig,
+  TableDataGridMode,
   TableDataGridRowSelectionMode,
 } from '../types'
 import { useDatatableGridSync } from './useDatatableGridSync'
@@ -76,6 +77,7 @@ describe('useDatatableGridSync', () => {
     gridConfig = defaultResolvedConfig,
     getGridConfig = vi.fn(() => gridConfig),
     resolvedTableConfig = defaultResolvedConfig,
+    mode = ref<TableDataGridMode>('pagination'),
     rowSelection = ref<TableDataGridRowSelectionMode>('none'),
     shouldRefitColumnsAfterConfigChange = vi.fn(() => true),
   }: {
@@ -84,6 +86,7 @@ describe('useDatatableGridSync', () => {
     gridConfig?: TableDataGridConfig
     getGridConfig?: ReturnType<typeof vi.fn>
     resolvedTableConfig?: TableDataGridConfig
+    mode?: Ref<TableDataGridMode>
     rowSelection?: Ref<TableDataGridRowSelectionMode>
     shouldRefitColumnsAfterConfigChange?: ReturnType<typeof vi.fn>
   } = {}) => {
@@ -121,6 +124,7 @@ describe('useDatatableGridSync', () => {
           getGridConfig,
           gridApi,
           hasFetched,
+          mode,
           patchTableConfig,
           refresh,
           resolvedSort: ref({
@@ -228,6 +232,23 @@ describe('useDatatableGridSync', () => {
     expect(patchTableConfig).toHaveBeenNthCalledWith(2, {
       pageSize: 50,
     })
+  })
+
+  it('does not refresh for infinite-mode sort changes because ag-grid refetches the cache', () => {
+    const { refresh, sync } = mountGridSync({
+      mode: ref<TableDataGridMode>('infinite'),
+    })
+
+    sync.handleTableConfigChange(
+      {
+        ...defaultResolvedConfig,
+        sortColumnKey: 'status',
+        sortColumnOrder: 'desc',
+      },
+      defaultResolvedConfig,
+    )
+
+    expect(refresh).not.toHaveBeenCalled()
   })
 
   it('only replays grid state when column layout inputs change', async () => {

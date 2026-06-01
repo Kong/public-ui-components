@@ -2628,6 +2628,28 @@ describe('<TableDataGrid />', () => {
       })
     })
 
+    it('keeps infinite rows rendered after sorting the same column twice', () => {
+      const fetcher = createInfiniteFetcher()
+
+      mountTable({
+        fetcher,
+        mode: 'infinite',
+      })
+
+      cy.contains('Infinite service 1').should('be.visible')
+      cy.getTestId('table-data-grid-header-latency').click()
+      cy.contains('Infinite service 1').should('be.visible')
+      cy.getTestId('table-data-grid-header-latency').click()
+      cy.getTestId('table-data-grid-empty').should('not.exist')
+      cy.contains('Infinite service 1').should('be.visible')
+      cy.wrap(fetcher).should('have.been.calledWithMatch', {
+        mode: 'infinite',
+        startRow: 0,
+        sortColumnKey: 'latency',
+        sortColumnOrder: 'desc',
+      })
+    })
+
     it('rebuilds the infinite datasource with filter selection when a filter is applied', () => {
       const fetcher = createInfiniteFetcher()
 
