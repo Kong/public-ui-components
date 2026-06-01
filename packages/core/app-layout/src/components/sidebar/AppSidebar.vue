@@ -71,9 +71,9 @@
                       :is="isCollapsed ? ChevronRightIcon : ChevronDownIcon"
                       v-if="isGroupCollapsible(groupName)"
                       class="level-primary-group-collapse-icon"
-                      :color="KUI_NAVIGATION_COLOR_TEXT"
+                      :color="`var(--kui-navigation-color-text, ${KUI_NAVIGATION_COLOR_TEXT})`"
                       data-testid="level-primary-group-collapse-icon"
-                      :size="KUI_ICON_SIZE_30"
+                      :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
                     />
                   </component>
                 </template>

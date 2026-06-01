@@ -84,7 +84,7 @@
           <component
             :is="viewModeIcon"
             class="plugins-filter-icon"
-            :color="KUI_ICON_COLOR_PRIMARY"
+            :color="`var(--kui-icon-color-primary, ${KUI_ICON_COLOR_PRIMARY})`"
             @click="isListView = !isListView"
           />
         </div>

@@ -1,3 +1,4 @@
+
 <template>
   <div
     ref="dashboardContainer"
@@ -31,6 +32,7 @@
         @update-tiles="handleUpdateTiles"
       >
         <template #tile="{ tile }">
+          <!-- eslint-disable @kong/design-tokens/token-constant-requires-css-var -->
           <div
             v-if="tile.meta.chart.type === 'slottable'"
             class="tile-container slottable-tile"
@@ -55,6 +57,7 @@
             @remove-tile="onRemoveTile(tile)"
             @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
           />
+          <!-- eslint-enable @kong/design-tokens/token-constant-requires-css-var -->
         </template>
       </component>
     </div>

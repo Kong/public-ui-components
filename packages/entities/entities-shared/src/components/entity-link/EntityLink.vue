@@ -45,9 +45,9 @@
         >
           <CopyIcon
             class="copy-icon"
-            :color="KUI_COLOR_TEXT_PRIMARY"
+            :color="`var(--kui-color-text-primary, ${KUI_COLOR_TEXT_PRIMARY})`"
             data-testid="copy-id"
-            :size="KUI_ICON_SIZE_30"
+            :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
           />
         </span>
       </KClipboardProvider>

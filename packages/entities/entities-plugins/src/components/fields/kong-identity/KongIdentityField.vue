@@ -30,7 +30,7 @@
         selected-value="consumers"
         @update:model-value="handleModeChange"
       >
-        <TeamIcon :size="KUI_ICON_SIZE_50" />
+        <TeamIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
       </KRadio>
 
       <KRadio
@@ -44,7 +44,7 @@
         selected-value="centrally-managed"
         @update:model-value="handleModeChange"
       >
-        <AccountTreeIcon :size="KUI_ICON_SIZE_50" />
+        <AccountTreeIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
       </KRadio>
 
       <KRadio
@@ -57,7 +57,7 @@
         selected-value="kong-identity"
         @update:model-value="handleModeChange"
       >
-        <KeyIcon :size="KUI_ICON_SIZE_50" />
+        <KeyIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
       </KRadio>
     </div>
   </div>

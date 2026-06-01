@@ -47,12 +47,12 @@
             :is="trendIcon"
             v-if="polarity !== 0"
             :color="colorAttribute(polarity)"
-            :size="KUI_ICON_SIZE_30"
+            :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
           />
           <EqualIcon
             v-else
             :color="`var(--kui-color-text-neutral-strong, ${KUI_COLOR_TEXT_NEUTRAL_STRONG})`"
-            :size="KUI_ICON_SIZE_30"
+            :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
           />
           <div>{{ formattedChange }}</div>
         </div>
