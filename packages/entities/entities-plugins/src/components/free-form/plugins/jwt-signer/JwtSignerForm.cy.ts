@@ -22,13 +22,6 @@ const createSchema = (): FormSchema => ({
   }],
 })
 
-const RENDER_RULES = {
-  bundles: [
-    ['config.access_token_signing', 'config.access_token_upstream_header', 'config.access_token_keyset'],
-    ['config.channel_token_signing', 'config.channel_token_upstream_header', 'config.channel_token_keyset'],
-  ],
-}
-
 interface MountOptions {
   isEditing?: boolean
   model?: Record<string, any>
@@ -50,7 +43,6 @@ const mountForm = (options: MountOptions = {}) => {
       model: model ?? {},
       isEditing,
       pluginName: 'jwt-signer',
-      renderRules: RENDER_RULES,
       onFormChange: cy.spy().as('onFormChange'),
     },
     global: {

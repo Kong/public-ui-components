@@ -1,5 +1,8 @@
 <template>
-  <StandardLayout v-bind="props">
+  <StandardLayout
+    v-bind="props"
+    :render-rules="renderRules"
+  >
     <template #field-renderers>
       <FieldRenderer
         v-slot="slotProps"
@@ -35,8 +38,16 @@ import StandardLayout from '../../shared/layout/StandardLayout.vue'
 import KeysetField from './KeysetField.vue'
 
 import type { Props } from '../../shared/layout/StandardLayout.vue'
+import type { RenderRules } from '../../shared/types'
 
 const props = defineProps<Props>()
+
+const renderRules: RenderRules = {
+  bundles: [
+    ['config.access_token_signing', 'config.access_token_upstream_header', 'config.access_token_keyset'],
+    ['config.channel_token_signing', 'config.channel_token_upstream_header', 'config.channel_token_keyset'],
+  ],
+}
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any
