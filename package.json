@@ -16,6 +16,7 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 pnpm -r run test:unit:open",
     "create-package": "pnpm --filter \"@kong-ui-public/cli\" run create-package",
     "commit": "cz",
+    "t": "t",
     "lerna": "lerna"
   },
   "devDependencies": {
