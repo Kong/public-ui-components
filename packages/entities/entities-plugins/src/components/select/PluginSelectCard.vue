@@ -38,14 +38,14 @@
 
               <template #items>
                 <KDropdownItem
-                  v-if="canEditCustomPlugin && hasEditRoute"
+                  v-if="canEditCurrentPlugin && hasEditRoute"
                   data-testid="edit-plugin-schema"
                   @click.stop="handleCustomEdit(plugin.name, plugin.customPluginType!)"
                 >
                   {{ t('actions.edit') }}
                 </KDropdownItem>
                 <KDropdownItem
-                  v-if="canDeleteCustomPlugin"
+                  v-if="canDeleteCurrentPlugin"
                   danger
                   data-testid="delete-plugin-schema"
                   has-divider
@@ -147,9 +147,23 @@ const props = defineProps({
     default: false,
   },
   /**
+   * Whether or not user has rights to delete cloned custom plugins
+   */
+  canDeleteClonedPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * Whether or not user has rights to edit custom plugins
    */
   canEditCustomPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Whether or not user has rights to edit cloned custom plugins
+   */
+  canEditClonedPlugin: {
     type: Boolean,
     default: false,
   },
@@ -187,6 +201,13 @@ const customPluginBadges = computed((): string[] => {
 })
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
 const hasEditRoute = computed((): boolean => typeof props.config.getCustomEditRoute === 'function')
+const isClonedCustomPlugin = computed((): boolean => props.plugin.customPluginType === 'cloned')
+const canDeleteCurrentPlugin = computed((): boolean => {
+  return isClonedCustomPlugin.value ? props.canDeleteClonedPlugin : props.canDeleteCustomPlugin
+})
+const canEditCurrentPlugin = computed((): boolean => {
+  return isClonedCustomPlugin.value ? props.canEditClonedPlugin : props.canEditCustomPlugin
+})
 const canManageCustomPlugin = computed((): boolean => {
   return !(
     props.config.app === 'kongManager'
@@ -198,7 +219,7 @@ const hasActions = computed((): boolean => !!(
   && !isCreateCustomPlugin.value
   && canManageCustomPlugin.value
   && props.navigateOnClick
-  && (props.canDeleteCustomPlugin || (props.canEditCustomPlugin && hasEditRoute.value))
+  && (canDeleteCurrentPlugin.value || (canEditCurrentPlugin.value && hasEditRoute.value))
 ))
 
 const handleCreateClick = (): void => {
