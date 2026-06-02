@@ -12,16 +12,18 @@
       aria-hidden="true"
       class="icon-wrapper"
     >
+      <!-- eslint-disable @kong/design-tokens/token-constant-requires-css-var -->
       <ChevronRightIcon
         v-if="isCollapsed"
         :color="`var(--kong-ui-spec-renderer-operations-list-section-icon-color-collapsed, ${KUI_COLOR_TEXT_NEUTRAL_WEAK})`"
-        :size="KUI_ICON_SIZE_40"
+        :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
       />
       <ChevronDownIcon
         v-else
         :color="`var(--kong-ui-spec-renderer-operations-list-section-icon-color-expanded, ${KUI_COLOR_TEXT_NEUTRAL_STRONGER})`"
-        :size="KUI_ICON_SIZE_40"
+        :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
       />
+      <!-- eslint-enable @kong/design-tokens/token-constant-requires-css-var -->
     </div>
     <h1
       aria-hidden="true"

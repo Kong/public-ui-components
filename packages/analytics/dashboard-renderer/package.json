@@ -47,7 +47,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "1.22.2",
+    "@kong/design-tokens": "1.23.0",
     "@kong/icons": "^1.56.0",
     "@kong/kongponents": "9.56.0",
     "ajv": "^8.20.0",

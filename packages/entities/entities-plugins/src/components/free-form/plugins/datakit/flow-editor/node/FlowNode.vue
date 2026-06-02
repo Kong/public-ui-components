@@ -26,7 +26,7 @@
       <WarningIcon
         v-if="error"
         class="error-icon"
-        :color="KUI_COLOR_TEXT_DANGER"
+        :color="`var(--kui-color-text-danger, ${KUI_COLOR_TEXT_DANGER})`"
         :size="16"
       />
       <KDropdown
@@ -47,7 +47,7 @@
           icon
           size="small"
         >
-          <MoreIcon :color="KUI_COLOR_TEXT" />
+          <MoreIcon :color="`var(--kui-color-text, ${KUI_COLOR_TEXT})`" />
         </KButton>
         <template #items>
           <KDropdownItem
@@ -115,12 +115,12 @@
               <template v-if="hasInputFields">
                 <UnfoldMoreIcon
                   v-if="!inputsExpanded"
-                  :size="KUI_ICON_SIZE_20"
+                  :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`"
                 />
                 <UnfoldLessIcon
                   v-if="inputsExpanded"
-                  :color="inputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
-                  :size="KUI_ICON_SIZE_20"
+                  :color="inputsCollapsible ? undefined : `var(--kui-color-text-disabled, ${KUI_COLOR_TEXT_DISABLED})`"
+                  :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`"
                 />
               </template>
             </div>
@@ -187,12 +187,12 @@
               <template v-if="hasOutputFields">
                 <UnfoldMoreIcon
                   v-if="!outputsExpanded"
-                  :size="KUI_ICON_SIZE_20"
+                  :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`"
                 />
                 <UnfoldLessIcon
                   v-if="outputsExpanded"
-                  :color="outputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
-                  :size="KUI_ICON_SIZE_20"
+                  :color="outputsCollapsible ? undefined : `var(--kui-color-text-disabled, ${KUI_COLOR_TEXT_DISABLED})`"
+                  :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`"
                 />
               </template>
             </div>
