@@ -43,6 +43,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@vueuse/core',
         '@vueuse/integrations',
         'marked',
+        'dompurify',
         'monaco-editor',
         '@kong-ui-public/entities-plugins-icon',
         'zod',

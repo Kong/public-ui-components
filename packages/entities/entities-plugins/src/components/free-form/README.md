@@ -367,6 +367,52 @@ filler.fillField('config.host', 'example.com')
 | `composables/form-context.ts` | Central state; changes affect data flow everywhere |
 | `composables/render-rules.ts` | Bundle/dependency logic; changes affect field visibility |
 
+## Standalone Usage (`@kong-ui-public/entities-plugins/freeform`)
+
+The freeform rendering engine is published as a dedicated subpath export. It contains only the schema-driven field rendering primitives — no plugin registry, no layout, no scope selectors. This makes it suitable for building custom plugin form UIs (e.g. in a different MFE) without pulling in the full entities-plugins bundle.
+
+### Installation
+
+```ts
+import { Form, FieldRenderer, FIELD_RENDERERS } from '@kong-ui-public/entities-plugins/freeform'
+import type { FormSchema, RenderRules } from '@kong-ui-public/entities-plugins/freeform'
+
+import '@kong-ui-public/entities-plugins/freeform/style.css'
+```
+
+### Basic Usage
+
+```vue
+<template>
+  <form @submit.prevent="handleSubmit">
+    <!-- freeform config fields -->
+    <Form
+      ref="formRef"
+      :schema="pluginSchema"
+      :data="formData"
+      @change="formData = $event"
+    />
+
+    <button type="submit">Save</button>
+  </form>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Form } from '@kong-ui-public/entities-plugins/freeform'
+import type { FormSchema } from '@kong-ui-public/entities-plugins/freeform'
+
+const props = defineProps<{ pluginSchema: FormSchema }>()
+const formData = ref({})
+const formRef = ref<InstanceType<typeof Form>>()
+
+function handleSubmit() {
+  const value = formRef.value?.getValue()
+  // submit value
+}
+</script>
+```
+
 ## Reference
 
 ### Injection Keys
