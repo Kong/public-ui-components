@@ -119,7 +119,12 @@
               class="top-n-table-cell top-n-table-cell--dimension"
               :class="{ 'top-n-table-cell-dimension-compact': !isLastDimensionHeader(header) }"
             >
-              {{ getDimensionDisplayValue(row, header.key) }}
+              <slot
+                name="name"
+                :record="getDimensionSlotRecord(row, header.key)"
+              >
+                {{ getDimensionDisplayValue(row, header.key) }}
+              </slot>
             </td>
 
             <!-- Metric columns (primary 'value' + additional metrics) -->
@@ -471,6 +476,18 @@ const getRowMetricDisplayValue = (row: TopNRow, key: string): string => {
 
 const getDimensionDisplayValue = (row: TopNRow, key: string): string => {
   return row.dimensions.find((dimension) => dimension.dimension === key)?.name || '–'
+}
+
+const getDimensionSlotRecord = (row: TopNRow, key: string) => {
+  const dimension = row.dimensions.find((rowDimension) => rowDimension.dimension === key)
+
+  return {
+    id: dimension?.id || '',
+    name: dimension?.name || '–',
+    deleted: dimension?.deleted || false,
+    dimension: key,
+    dimensions: row.dimensions,
+  }
 }
 
 const getChartLabel = (key: string): string => {

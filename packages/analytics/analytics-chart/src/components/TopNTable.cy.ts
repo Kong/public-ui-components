@@ -377,6 +377,28 @@ describe('<TopNTable />', () => {
       cy.get(`[data-testid="row-${ROUTE_ID}"]`).should('contain', `ROUTE:2:GATEWAY_SERVICE:${SERVICE_ID}:${SERVICE_NAME}`)
     })
 
+    it('uses the name slot for additional dimension cells', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: MULTI_DIMENSION_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+        slots: {
+          name: `<template #name="params">
+                  {{ params.record.dimension }}={{ params.record.name }}
+                 </template>
+          `,
+        },
+      })
+
+      cy.get('tbody tr').first().within(() => {
+        cy.get('td').eq(0).should('contain.text', `ROUTE=${ROUTE_NAME}`)
+        cy.get('td').eq(1).should('contain.text', `GATEWAY_SERVICE=${SERVICE_NAME}`)
+        cy.get('td').eq(2).should('contain.text', '9.4K')
+      })
+    })
+
     it('supports rendering three dimensions before metric cells', () => {
       cy.mount(TopNTable, {
         props: {
