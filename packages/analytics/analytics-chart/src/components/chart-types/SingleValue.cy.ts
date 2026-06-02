@@ -141,7 +141,7 @@ describe('<SingleValue />', () => {
   it('applies positive/negative classes based on increaseIsBad', () => {
     const exploreResult = buildExploreResult({ previous: 100, current: 250 })
 
-    // increase is good (default)
+    // increase is good (default): green color, arrow still points up
     cy.mount(SingleValue, {
       props: {
         data: exploreResult,
@@ -151,8 +151,9 @@ describe('<SingleValue />', () => {
     })
 
     cy.get('.trend-change').should('have.class', 'positive')
+    cy.get('.trend-change .trend-up-icon').should('exist')
 
-    // increase is bad
+    // increase is bad: red color, but arrow should still point up
     cy.mount(SingleValue, {
       props: {
         data: exploreResult,
@@ -162,6 +163,7 @@ describe('<SingleValue />', () => {
     })
 
     cy.get('.trend-change').should('have.class', 'negative')
+    cy.get('.trend-change .trend-up-icon').should('exist')
   })
 
   it('renders value and unit on the same horizontal line', () => {
