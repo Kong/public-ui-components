@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.35...@kong-ui-public/page-layout@0.2.36) (2026-06-02)
+
+
+### Bug Fixes
+
+* **page-layout:** favorite button tooltip ([#3406](https://github.com/Kong/public-ui-components/issues/3406)) ([97a5cd6](https://github.com/Kong/public-ui-components/commit/97a5cd659574bf8cdbfc8d726fc146f60bf18f85))
+
+
+
+
+
 ## [0.2.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.34...@kong-ui-public/page-layout@0.2.35) (2026-06-02)
 
 
