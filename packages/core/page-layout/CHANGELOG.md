@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.34...@kong-ui-public/page-layout@0.2.35) (2026-06-02)
+
+
+### Bug Fixes
+
+* **page-layout:** minor styleing fix ([#3405](https://github.com/Kong/public-ui-components/issues/3405)) ([13c9a33](https://github.com/Kong/public-ui-components/commit/13c9a3351bd35d79a238aaca213d04ad683704f4))
+
+
+
+
+
 ## [0.2.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.33...@kong-ui-public/page-layout@0.2.34) (2026-06-01)
 
 
