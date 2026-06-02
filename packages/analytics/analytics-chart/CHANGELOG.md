@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.17.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.13...@kong-ui-public/analytics-chart@10.17.14) (2026-06-02)
+
+
+### Bug Fixes
+
+* **analytics-chart:** pass increaseIsBad to defineIcon in SingleValue ([#3404](https://github.com/Kong/public-ui-components/issues/3404)) ([a731e2e](https://github.com/Kong/public-ui-components/commit/a731e2e7eff4380db4e41addb95ea0d6a1ec1a0f))
+
+
+
+
+
+## [10.17.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.12...@kong-ui-public/analytics-chart@10.17.13) (2026-06-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [10.17.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.11...@kong-ui-public/analytics-chart@10.17.12) (2026-06-01)
 
 

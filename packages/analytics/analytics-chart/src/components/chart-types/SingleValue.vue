@@ -214,7 +214,7 @@ const formattedValue = computed((): string => {
 
 const change = computed(() => calculateChange(singleValue.value ?? 0, previousValue.value ?? 0) || 0)
 const polarity = computed(() => changePolarity(change.value, true, props.increaseIsBad)) // Assume hasTrendAccess=true
-const trendIcon = computed(() => defineIcon(polarity.value))
+const trendIcon = computed(() => defineIcon(polarity.value, props.increaseIsBad))
 const formattedChange = computed(() => metricChange(change.value, true, i18n.t('singleValue.trend.not_available')))
 const trendRange = useTrendRange(computed(() => props.showTrend), undefined, computed(() => props.data.meta))
 
