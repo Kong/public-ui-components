@@ -66,93 +66,63 @@
     </slot>
 
     <template v-else>
-      <!-- region: toolbar -->
-      <div
+      <TableDataGridToolbar
         v-if="!hideToolbar"
-        class="datatable-toolbar"
+        v-model:column-visibility="columnVisibilityModel"
+        v-model:filter-selection="filterSelection"
+        v-model:search="searchQuery"
+        :filters="filterGroupFilters"
+        :forwarded-filter-slot-names="getForwardedFilterSlotNames()"
+        :headers="headers"
+        :show-bulk-actions="showBulkActions"
+        :show-column-visibility="showColumnVisibility"
+        :show-toolbar-filters="showToolbarFilters"
+        :show-toolbar-search="showToolbarSearch"
+        :toolbar-slot-props="toolbarSlotProps"
+        @filter:apply="onFilterApply"
+        @filter:clear="onFilterClear"
+        @filter:close="onFilterClose"
+        @filter:open="onFilterOpen"
       >
-        <slot
-          name="toolbar"
-          v-bind="toolbarSlotProps"
+        <template
+          v-if="$slots.toolbar"
+          #toolbar="slotProps"
         >
-          <div class="datatable-toolbar-primary">
-            <slot
-              name="toolbar-left"
-              v-bind="toolbarSlotProps"
-            />
+          <slot
+            name="toolbar"
+            v-bind="slotProps"
+          />
+        </template>
 
-            <!-- region: search -->
-            <TableDataGridSearch
-              v-if="showToolbarSearch"
-              v-model="searchQuery"
-            />
+        <template #toolbar-left="slotProps">
+          <slot
+            name="toolbar-left"
+            v-bind="slotProps"
+          />
+        </template>
 
-            <!-- region: filters -->
-            <TableDataGridFilters
-              v-if="showToolbarFilters"
-              v-model="filterSelection"
-              :filters="filterGroupFilters"
-              :forwarded-filter-slot-names="getForwardedFilterSlotNames()"
-              @apply="onFilterApply"
-              @clear="onFilterClear"
-              @close="onFilterClose"
-              @open="onFilterOpen"
-            >
-              <template
-                v-for="slotName in getForwardedFilterSlotNames()"
-                :key="slotName"
-                #[slotName]
-              >
-                <slot :name="slotName" />
-              </template>
-            </TableDataGridFilters>
-          </div>
+        <template #toolbar-right="slotProps">
+          <slot
+            name="toolbar-right"
+            v-bind="slotProps"
+          />
+        </template>
 
-          <div class="datatable-toolbar-secondary">
-            <slot
-              name="toolbar-right"
-              v-bind="toolbarSlotProps"
-            />
+        <template #bulk-action-items="slotProps">
+          <slot
+            name="bulk-action-items"
+            v-bind="slotProps"
+          />
+        </template>
 
-            <!-- region: bulk actions -->
-            <div
-              v-if="showBulkActions"
-              class="datatable-toolbar-selection"
-            >
-              <KDropdown
-                class="datatable-bulk-actions-dropdown"
-                data-testid="table-data-grid-bulk-actions-dropdown"
-                :disabled="!selectedRows.length"
-                :kpop-attributes="{ placement: 'bottom-start' }"
-              >
-                <KButton
-                  appearance="secondary"
-                  class="datatable-bulk-actions-trigger"
-                  data-testid="table-data-grid-bulk-actions-trigger"
-                  :disabled="!selectedRows.length"
-                  size="large"
-                >
-                  ({{ selectedRows.length }}) {{ i18n.t('datatable.bulkActions') }}
-                </KButton>
-
-                <template #items>
-                  <slot
-                    name="bulk-action-items"
-                    :selected-rows="selectedRows"
-                  />
-                </template>
-              </KDropdown>
-            </div>
-          </div>
-        </slot>
-
-        <!-- region: column visibility -->
-        <TableDataGridColumnVisibilityMenu
-          v-if="showColumnVisibility"
-          v-model:column-visibility="columnVisibilityModel"
-          :headers="headers"
-        />
-      </div>
+        <template
+          v-for="slotName in getForwardedFilterSlotNames()"
+          :key="slotName"
+          #[slotName]
+        >
+          <slot :name="slotName" />
+        </template>
+      </TableDataGridToolbar>
 
       <slot
         v-if="isEmpty"
@@ -260,11 +230,9 @@ import { AllCommunityModule, InfiniteRowModelModule, ModuleRegistry, themeQuartz
 import type { FilterGroupFilters, FilterGroupSelection } from '@kong/kongponents'
 import { useElementSize, watchDebounced } from '@vueuse/core'
 import { computed, nextTick, ref, toRef, watch } from 'vue'
-import sortBy from 'lodash-es/sortBy'
-import union from 'lodash-es/union'
-import TableDataGridColumnVisibilityMenu from './TableDataGridColumnVisibilityMenu.vue'
 import TableDataGridFilters from './TableDataGridFilters.vue'
 import TableDataGridSearch from './TableDataGridSearch.vue'
+import TableDataGridToolbar from './TableDataGridToolbar.vue'
 import { getFilterSlotName } from '../utils/headers'
 import { getRowKeyValue } from '../utils/rowKey'
 import { patchRowAttrs } from '../utils/rowAttrs'
@@ -428,7 +396,19 @@ const {
   emitRowSelect: selected => emit('row:select', selected),
 })
 
-const gridSync = composables.useDatatableGridSync<Row>({
+const {
+  connectSizing,
+  displayedColumnIndexesByKey,
+  isApplyingTableConfig,
+  onColumnLayoutChange,
+  onColumnPinned,
+  onColumnResize,
+  onColumnVisibilityChange,
+  onDisplayedColumnsChange,
+  onGridReady,
+  onPageSizeChange,
+  onSortChange,
+} = composables.useDatatableGridSync<Row>({
   activePageSize,
   captureGridConfig,
   applyTableConfig,
@@ -451,7 +431,7 @@ const {
 } = composables.useDatatableColumnDefs<Row>({
   headers: toRef(() => headers),
   cellAttrs: toRef(() => cellAttrs),
-  displayedColumnIndexesByKey: gridSync.displayedColumnIndexesByKey,
+  displayedColumnIndexesByKey,
   resolvedTableConfig,
   slots,
 })
@@ -470,13 +450,13 @@ const {
   getGridConfig,
   gridApi,
   headers: toRef(() => headers),
-  isApplyingTableConfig: gridSync.isApplyingTableConfig,
+  isApplyingTableConfig,
   resolvedTableConfig,
   tableConfig: toRef(() => tableConfig),
   updateTableConfig,
 })
 
-gridSync.connectSizing({
+connectSizing({
   emitGridConfigChange,
   fitColumnsOnGridReady,
   scheduleColumnsToFit,
@@ -485,7 +465,9 @@ gridSync.connectSizing({
   startResizeTracking,
 })
 
-const resolvedPaginationPageSizeOptions = computed(() => sortBy(union(paginationPageSizeOptions, [activePageSize.value])))
+const resolvedPaginationPageSizeOptions = computed(() => (
+  [...new Set([...paginationPageSizeOptions, activePageSize.value])].sort((a, b) => a - b)
+))
 // Kongponents reads initialPageSize only on mount, so remount pagination when
 // page-size options change to keep its internal selection aligned.
 const paginationKey = computed(() => `${activePageSize.value}:${resolvedPaginationPageSizeOptions.value.join(',')}`)
@@ -629,6 +611,7 @@ const onRowClick = (event: RowClickedEvent<Row>) => {
 }
 
 const onCellClick = (event: CellClickedEvent<Row>) => {
+  // AG Grid can emit cell clicks without row data or a stable column id.
   if (!event.data || !event.colDef.colId) {
     return
   }
@@ -640,14 +623,6 @@ const onCellClick = (event: CellClickedEvent<Row>) => {
   })
 }
 
-const onGridReady = gridSync.onGridReady
-const onColumnPinned = gridSync.onColumnPinned
-const onColumnLayoutChange = gridSync.onColumnLayoutChange
-const onColumnVisibilityChange = gridSync.onColumnVisibilityChange
-const onDisplayedColumnsChange = gridSync.onDisplayedColumnsChange
-const onColumnResize = gridSync.onColumnResize
-const onSortChange = gridSync.onSortChange
-const onPageSizeChange = gridSync.onPageSizeChange
 const searchDebounceMs = computed(() => searchQuery.value ? 350 : 0)
 
 watch(() => refreshKey, (nextKey, previousKey) => {
@@ -677,8 +652,9 @@ watchDebounced(searchQuery, () => {
   refresh()
 }, {
   debounce: searchDebounceMs,
+  // Without sync flush, outside-actions slot calls to updateSearch() can miss
+  // the immediate debounce window and refetch with the previous search value.
   flush: 'sync',
-  immediate: false,
   maxWait: 1000,
 })
 
@@ -710,52 +686,12 @@ defineExpose<{
   width: 100%;
 }
 
-.datatable-toolbar {
-  align-items: center;
-  background: var(--kui-color-background, $kui-color-background);
-  border-bottom: 1px solid var(--kui-color-border, $kui-color-border);
-  display: flex;
-  gap: var(--kui-space-40, $kui-space-40);
-  justify-content: space-between;
-  padding: var(--kui-space-30, $kui-space-30);
-}
-
 .datatable-outside-actions-host {
   height: 0;
   overflow: hidden;
   pointer-events: none;
   position: absolute;
   width: 0;
-}
-
-.datatable-toolbar-primary {
-  align-items: center;
-  display: flex;
-  flex: 1 1 auto;
-  gap: var(--kui-space-40, $kui-space-40);
-  min-width: 0;
-}
-
-.datatable-toolbar-secondary {
-  align-items: center;
-  display: flex;
-  flex: 0 0 auto;
-  gap: var(--kui-space-40, $kui-space-40);
-  min-width: 0;
-}
-
-.datatable-toolbar-selection {
-  align-items: center;
-  display: flex;
-  min-width: 0;
-}
-
-.datatable-bulk-actions-dropdown {
-  :deep(.k-button.datatable-bulk-actions-trigger) {
-    border-width: var(--kui-border-width-10, $kui-border-width-10);
-    font-size: var(--kui-font-size-30, $kui-font-size-30);
-    width: 140px;
-  }
 }
 
 .table-data-grid-grid {

@@ -1484,44 +1484,51 @@ describe('<TableDataGrid />', () => {
   })
 
   describe('toolbar and outside actions', () => {
-    it('renders the default toolbar and selected row actions trigger', () => {
-      mountTable()
-
-      cy.getTestId('column-visibility-trigger').should('be.visible')
-      cy.getTestId('table-data-grid-search').should('not.exist')
-      cy.getTestId('table-data-grid-bulk-actions-trigger')
-        .should('be.visible')
-        .and('be.disabled')
-        .and('contain.text', '(0) Bulk actions')
-      cy.get('.datatable-toolbar-secondary')
-        .findTestId('table-data-grid-bulk-actions-trigger')
-        .should('be.visible')
-      cy.get('.datatable-toolbar')
-        .children()
-        .last()
-        .findTestId('column-visibility-trigger')
-        .should('be.visible')
-      cy.contains('Gateway service').click()
-      cy.getTestId('table-data-grid-bulk-actions-trigger')
-        .should('not.be.disabled')
-        .and('contain.text', '(1) Bulk actions')
-    })
-
-    it('renders search in the toolbar when search is enabled', () => {
+    it('forwards toolbar slots through the table component boundary', () => {
       mountTable({
-        enableSearch: true,
-        headers: headersWithNameFilter,
+        slots: {
+          toolbar: ({ selectedRows }: TableDataGridToolbarSlotProps<TestRow>) => h('div', {
+            'data-testid': 'forwarded-toolbar',
+          }, `Custom toolbar ${selectedRows.length}`),
+          'toolbar-left': ({ selectedRows }: TableDataGridToolbarSlotProps<TestRow>) => h('button', {
+            'data-testid': 'forwarded-toolbar-left',
+            type: 'button',
+          }, `Left ${selectedRows.length}`),
+          'toolbar-right': ({ filterSelection }: TableDataGridToolbarSlotProps<TestRow>) => h('button', {
+            'data-active-filter-count': Object.keys(filterSelection).length,
+            'data-testid': 'forwarded-toolbar-right',
+            type: 'button',
+          }, 'Right'),
+        },
       })
 
-      cy.getTestId('table-data-grid-search').should('be.visible')
-      cy.getTestId('outside-search-target').findTestId('table-data-grid-search').should('not.exist')
-      cy.get('.datatable-toolbar-primary').children().then(($toolbarItems) => {
-        const filtersIndex = $toolbarItems.index($toolbarItems.filter('.k-filter-group'))
-        const searchIndex = $toolbarItems.index($toolbarItems.filter('.datatable-search'))
+      cy.getTestId('forwarded-toolbar')
+        .should('be.visible')
+        .and('contain.text', 'Custom toolbar 0')
+      cy.getTestId('table-data-grid-bulk-actions-trigger').should('not.exist')
+      cy.getTestId('column-visibility-trigger').should('be.visible')
 
-        expect(filtersIndex).to.be.greaterThan(-1)
-        expect(searchIndex).to.be.lessThan(filtersIndex)
+      mountTable({
+        slots: {
+          'toolbar-left': ({ selectedRows }: TableDataGridToolbarSlotProps<TestRow>) => h('button', {
+            'data-testid': 'forwarded-toolbar-left',
+            type: 'button',
+          }, `Left ${selectedRows.length}`),
+          'toolbar-right': ({ filterSelection }: TableDataGridToolbarSlotProps<TestRow>) => h('button', {
+            'data-active-filter-count': Object.keys(filterSelection).length,
+            'data-testid': 'forwarded-toolbar-right',
+            type: 'button',
+          }, 'Right'),
+        },
       })
+
+      cy.getTestId('forwarded-toolbar-left')
+        .should('be.visible')
+        .and('contain.text', 'Left 0')
+      cy.getTestId('forwarded-toolbar-right')
+        .should('be.visible')
+        .and('have.attr', 'data-active-filter-count', '0')
+      cy.getTestId('table-data-grid-bulk-actions-trigger').should('be.visible')
     })
 
     it('debounces search changes before refetching the first page', () => {
@@ -1692,67 +1699,6 @@ describe('<TableDataGrid />', () => {
         search: 'Gateway',
       })
       cy.getTestId('outside-search-action').should('have.attr', 'data-search', 'Gateway')
-    })
-
-    it('renders custom toolbar slots alongside built-in controls', () => {
-      mountTable({
-        slots: {
-          'toolbar-left': () => h('button', { 'data-testid': 'toolbar-left-action' }, 'Left action'),
-          'toolbar-right': () => h('button', { 'data-testid': 'toolbar-right-action' }, 'Right action'),
-        },
-      })
-
-      cy.getTestId('toolbar-left-action').should('be.visible')
-      cy.getTestId('toolbar-right-action').should('be.visible')
-      cy.getTestId('column-visibility-trigger').should('be.visible')
-      cy.get('.datatable-toolbar')
-        .children()
-        .last()
-        .findTestId('column-visibility-trigger')
-        .should('be.visible')
-      cy.getTestId('table-data-grid-bulk-actions-trigger').should('be.visible')
-    })
-
-    it('renders a custom toolbar instead of built-in controls while keeping column visibility rightmost', () => {
-      mountTable({
-        slots: {
-          toolbar: ({ selectedRows }) => h('div', { 'data-testid': 'custom-toolbar' }, `Selected ${selectedRows.length}`),
-        },
-      })
-
-      cy.getTestId('custom-toolbar').should('contain.text', 'Selected 0')
-      cy.getTestId('column-visibility-trigger').should('be.visible')
-      cy.get('.datatable-toolbar')
-        .children()
-        .last()
-        .findTestId('column-visibility-trigger')
-        .should('be.visible')
-      cy.getTestId('table-data-grid-bulk-actions-trigger').should('not.exist')
-    })
-
-    it('hides column visibility when requested with a custom toolbar', () => {
-      mountTable({
-        hideColumnVisibility: true,
-        slots: {
-          toolbar: () => h('div', { 'data-testid': 'custom-toolbar' }, 'Custom toolbar'),
-        },
-      })
-
-      cy.getTestId('custom-toolbar').should('be.visible')
-      cy.getTestId('column-visibility-trigger').should('not.exist')
-    })
-
-    it('can hide individual built-in toolbar controls', () => {
-      mountTable({
-        headers: headersWithNameFilter,
-        hideBulkActions: true,
-        hideColumnVisibility: true,
-      })
-
-      cy.getTestId('table-data-grid-bulk-actions-trigger').should('not.exist')
-      cy.getTestId('column-visibility-trigger').should('not.exist')
-      cy.getTestId('filter-group-pill-name').should('be.visible')
-      cy.contains('Gateway service').should('be.visible')
     })
 
     it('hides toolbar controls while keeping the grid usable', () => {
