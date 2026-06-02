@@ -319,9 +319,7 @@ export default {
         this.kongIdentityServersLoading = true
         const { axiosInstance } = useAxios(this.formsConfig?.axiosRequestConfig)
         const url = `${this.formsConfig.apiBaseUrl}${KONG_IDENTITY_SERVERS_ENDPOINT}`
-        const resp = await axiosInstance.get(url, {
-          // params: { 'page[size]': 30, 'page[number]': 1 },
-        })
+        const resp = await axiosInstance.get(url)
         this.kongIdentityServers = resp.data?.data ?? []
         // If editing with an existing issuer, try to match a server
         const issuer = this.formModel['config-issuer']
@@ -342,9 +340,7 @@ export default {
         this.clientsLoading = true
         const { axiosInstance } = useAxios(this.formsConfig?.axiosRequestConfig)
         const url = `${this.formsConfig.apiBaseUrl}/v1/auth-servers/${serverId}/clients`
-        const resp = await axiosInstance.get(url, {
-          params: { 'page[size]': 30, 'page[number]': 1 },
-        })
+        const resp = await axiosInstance.get(url)
         this.clients = resp.data?.data ?? []
       } catch {
         this.clients = []
@@ -392,7 +388,9 @@ export default {
         const url = this.formsConfig?.createAuthServerUrl || `${window.location.origin}/${geo}/identity/create-auth-server`
         document.location.href = url
       } else if (type === 'client') {
-        const url = this.formsConfig?.createClientUrl || `${window.location.origin}/${geo}/kong-identity/auth-servers/${this.selectedServer?.id}/create-auth-server-client`
+        const url = this.formsConfig?.createClientUrl
+          ? this.formsConfig.createClientUrl(this.selectedServer?.id)
+          : `${window.location.origin}/${geo}/identity/auth-servers/${this.selectedServer?.id}/create-auth-server-client`
         document.location.href = url
       }
     },

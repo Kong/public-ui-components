@@ -80,8 +80,8 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
   isCloudGateway?: boolean
   /** URL to navigate to when creating a new Kong Identity auth server */
   createAuthServerUrl?: string
-  /** URL to navigate to when creating a new Kong Identity client */
-  createClientUrl?: string
+  /** Function that returns the URL to navigate to when creating a new Kong Identity client */
+  createClientUrl?: (authServerId: string) => string
 }
 
 /** Kong Manager Plugin form config */
