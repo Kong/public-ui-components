@@ -695,42 +695,19 @@ defineExpose<{
 }
 
 .table-data-grid-grid {
+  /* stylelint-disable custom-property-pattern -- AG Grid theme variables must use AG Grid's --ag-* namespace. */
+  --ag-background-color: var(--kui-color-background, #{$kui-color-background});
+  --ag-border-color: var(--kui-color-border, #{$kui-color-border});
+  --ag-header-background-color: var(--kui-color-background, #{$kui-color-background});
+  --ag-header-column-border: 1px solid var(--kui-color-border, #{$kui-color-border});
+  --ag-header-column-resize-handle-color: transparent;
+  --ag-wrapper-border: none;
+  --ag-wrapper-border-radius: 0;
+  /* stylelint-enable custom-property-pattern */
+
   flex: 1 1 420px;
   min-height: 0;
   width: 100%;
-
-  :deep(.ag-header-cell) {
-    background-color: var(--kui-color-background, $kui-color-background);
-    border-right: 1px solid var(--kui-color-border, $kui-color-border);
-  }
-
-  :deep(.ag-header-cell[col-id="ag-Grid-SelectionColumn"]) {
-    border-right: 0;
-    gap: 0;
-  }
-
-  :deep(.ag-header-cell-resize::after) {
-    display: none;
-  }
-
-  :deep(.ag-root-wrapper) {
-    border: 0;
-    border-radius: 0;
-  }
-
-  :deep(.ag-cell) {
-    align-items: center;
-    display: flex;
-  }
-
-  :deep(.ag-cell-wrapper),
-  :deep(.ag-cell-value) {
-    align-items: center;
-    display: flex;
-    height: 100%;
-    min-width: 0;
-    width: 100%;
-  }
 }
 
 .datatable-pagination {
@@ -743,16 +720,31 @@ defineExpose<{
   margin-top: 0;
   padding: 0;
   width: 100%;
+}
 
-  :deep(.pagination-text.large-screen) {
-    padding-left: var(--kui-space-40, $kui-space-40);
-  }
+.table-data-grid-grid :global(.ag-header-cell[col-id="ag-Grid-SelectionColumn"]) {
+  /* stylelint-disable-next-line custom-property-pattern -- AG Grid theme variables must use AG Grid's --ag-* namespace. */
+  --ag-header-column-border: none;
 
-  :deep(.pagination-button.placeholder) {
-    align-items: center;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-  }
+  border-right: 0;
+  gap: 0;
+}
+
+.table-data-grid-grid :global(.ag-cell) {
+  align-items: center;
+  display: flex;
+}
+
+.table-data-grid-grid :global(.ag-cell-wrapper),
+.table-data-grid-grid :global(.ag-cell-value) {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  min-width: 0;
+  width: 100%;
+}
+
+.datatable-pagination-control :global(.pagination-button.placeholder) {
+  box-sizing: border-box;
 }
 </style>

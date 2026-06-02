@@ -162,8 +162,8 @@ const handleSort = (event: MouseEvent) => {
   color: var(--kui-color-text-primary, $kui-color-text-primary);
 }
 
-.header-tooltip :deep(svg),
-.header-sort-icon :deep(svg) {
+.header-tooltip svg,
+.header-sort-icon svg {
   color: currentColor;
   display: block;
   flex-shrink: 0;

@@ -1117,6 +1117,61 @@ describe('<TableDataGrid />', () => {
       })
     })
 
+    it('applies table data grid theme tokens through AG Grid CSS variables', () => {
+      mountTable({ rowSelection: 'multiple' })
+
+      cy.get('.table-data-grid-grid')
+        .should(($grid) => {
+          const styles = getComputedStyle($grid[0])
+
+          expect(styles.getPropertyValue('--ag-background-color').trim()).to.equal('#ffffff')
+          expect(styles.getPropertyValue('--ag-header-background-color').trim()).to.equal('#ffffff')
+          expect(styles.getPropertyValue('--ag-border-color').trim()).to.equal('#e0e4ea')
+          expect(styles.getPropertyValue('--ag-header-column-border').trim()).to.equal('1px solid #e0e4ea')
+          expect(styles.getPropertyValue('--ag-header-column-resize-handle-color').trim()).to.equal('transparent')
+          expect(styles.getPropertyValue('--ag-wrapper-border').trim()).to.equal('none')
+          expect(styles.getPropertyValue('--ag-wrapper-border-radius').trim()).to.equal('0')
+        })
+
+      cy.get('.table-data-grid-grid .ag-root-wrapper')
+        .should('have.css', 'border-top-width', '0px')
+        .and('have.css', 'border-radius', '0px')
+
+      cy.get('.table-data-grid-grid .ag-header')
+        .should('have.css', 'background-color', 'rgb(255, 255, 255)')
+      cy.get('.table-data-grid-grid .ag-header-cell').eq(1)
+        .then(($headerCell) => {
+          const dividerStyles = getComputedStyle($headerCell[0], '::after')
+
+          expect(dividerStyles.borderRightWidth).to.equal('1px')
+          expect(dividerStyles.borderRightColor).to.equal('rgb(224, 228, 234)')
+        })
+
+      cy.get('.table-data-grid-grid .ag-header-cell[col-id="ag-Grid-SelectionColumn"]')
+        .should('have.css', 'gap', '0px')
+        .then(($selectionHeaderCell) => {
+          expect(getComputedStyle($selectionHeaderCell[0], '::after').borderRightWidth).to.equal('0px')
+        })
+
+      cy.get('.table-data-grid-grid .ag-header-cell-resize')
+        .first()
+        .then(($resizeHandle) => {
+          expect(getComputedStyle($resizeHandle[0], '::after').backgroundColor).to.equal('rgba(0, 0, 0, 0)')
+        })
+
+      cy.get('.kong-ui-public-table-data-grid')
+        .then(($datatable) => {
+          $datatable[0].style.setProperty('--kui-color-background', 'rgb(1, 2, 3)')
+          $datatable[0].style.setProperty('--kui-color-border', 'rgb(4, 5, 6)')
+        })
+      cy.get('.table-data-grid-grid .ag-header')
+        .should('have.css', 'background-color', 'rgb(1, 2, 3)')
+      cy.get('.table-data-grid-grid .ag-header-cell').eq(1)
+        .then(($headerCell) => {
+          expect(getComputedStyle($headerCell[0], '::after').borderRightColor).to.equal('rgb(4, 5, 6)')
+        })
+    })
+
     it('stretches AG Grid cell wrappers so cell content can center vertically', () => {
       mountTable()
 
@@ -1129,6 +1184,20 @@ describe('<TableDataGrid />', () => {
       cy.get('.table-data-grid-grid .ag-cell-value').first()
         .should('have.css', 'display', 'flex')
         .and('have.css', 'align-items', 'center')
+    })
+
+    it('aligns pagination internals without deep selectors', () => {
+      mountTable({
+        fetcher: cy.stub().resolves({ data: rows.slice(0, 15), total: 1000 }),
+      })
+
+      cy.get('.datatable-pagination-control .pagination-text.large-screen')
+        .should('have.css', 'padding-left', '8px')
+      cy.get('.datatable-pagination-control .pagination-button.placeholder')
+        .should('have.css', 'display', 'flex')
+        .and('have.css', 'align-items', 'center')
+        .and('have.css', 'box-sizing', 'border-box')
+        .and('have.css', 'justify-content', 'center')
     })
 
     it('allows configured wide columns to overflow horizontally', () => {
