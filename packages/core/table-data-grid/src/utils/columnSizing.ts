@@ -11,6 +11,18 @@ import type {
 
 const DEFAULT_AUTO_FIT_MIN_WIDTH = 120
 
+type FitColumnWidth = {
+  key: string
+  newWidth: number
+}
+
+type ConstrainedFitColumn = {
+  key: string
+  maxWidth?: number
+  minWidth: number
+  width: number
+}
+
 const getColumnFitMinWidth = <Row extends Record<string, any>>(
   header: TableDataGridHeader<Row>,
 ) => header.minWidth ?? DEFAULT_AUTO_FIT_MIN_WIDTH
@@ -40,6 +52,90 @@ const getDisplayedPinnedColumnWidth = (columnState: ColumnState[]) => (
   getDisplayedColumnWidth(columnState, column => column.pinned === 'left' || column.pinned === 'right')
 )
 
+const clampColumnWidth = (
+  width: number,
+  {
+    maxWidth,
+    minWidth,
+  }: Pick<ConstrainedFitColumn, 'maxWidth' | 'minWidth'>,
+) => Math.min(Math.max(width, minWidth), maxWidth ?? Number.POSITIVE_INFINITY)
+
+const distributeConstrainedWidths = ({
+  columns,
+  targetWidth,
+}: {
+  columns: ConstrainedFitColumn[]
+  targetWidth: number
+}) => {
+  const widths = columns.map(column => clampColumnWidth(column.width, column))
+  let remainingDelta = targetWidth - widths.reduce((total, width) => total + width, 0)
+
+  for (let pass = 0; pass < columns.length && Math.abs(remainingDelta) >= 0.5; pass += 1) {
+    const candidateIndexes = widths
+      .map((width, index) => ({ index, width }))
+      .filter(({ index, width }) => (
+        remainingDelta > 0
+          ? width < (columns[index].maxWidth ?? Number.POSITIVE_INFINITY)
+          : width > columns[index].minWidth
+      ))
+
+    if (!candidateIndexes.length) {
+      break
+    }
+
+    const candidateWidthTotal = candidateIndexes.reduce((total, { width }) => total + width, 0)
+    let consumedDelta = 0
+
+    candidateIndexes.forEach(({ index, width }) => {
+      const proportionalDelta = candidateWidthTotal > 0
+        ? remainingDelta * (width / candidateWidthTotal)
+        : remainingDelta / candidateIndexes.length
+      const nextWidth = clampColumnWidth(width + proportionalDelta, columns[index])
+      consumedDelta += nextWidth - width
+      widths[index] = nextWidth
+    })
+
+    if (Math.abs(consumedDelta) < 0.5) {
+      break
+    }
+
+    remainingDelta -= consumedDelta
+  }
+
+  return widths
+}
+
+const roundConstrainedWidths = ({
+  columns,
+  targetWidth,
+  widths,
+}: {
+  columns: ConstrainedFitColumn[]
+  targetWidth: number
+  widths: number[]
+}) => {
+  const roundedWidths = widths.map(width => Math.floor(width))
+  let remainingPixels = Math.round(targetWidth - roundedWidths.reduce((total, width) => total + width, 0))
+
+  while (remainingPixels !== 0) {
+    const direction = remainingPixels > 0 ? 1 : -1
+    const candidateIndex = roundedWidths.findIndex((width, index) => (
+      direction > 0
+        ? width < (columns[index].maxWidth ?? Number.POSITIVE_INFINITY)
+        : width > columns[index].minWidth
+    ))
+
+    if (candidateIndex === -1) {
+      break
+    }
+
+    roundedWidths[candidateIndex] += direction
+    remainingPixels -= direction
+  }
+
+  return roundedWidths
+}
+
 const getRenderedCenterViewportWidth = (datatableElement?: HTMLElement) => {
   const viewport = datatableElement?.querySelector<HTMLElement>('.ag-center-cols-viewport')
 
@@ -62,6 +158,53 @@ export const getAvailableFitWidth = <Row extends Record<string, any>>({
 
   const { left, right } = horizontalPixelRange
   return (getRenderedCenterViewportWidth(datatableElement) ?? right - left) + getDisplayedPinnedColumnWidth(columnState)
+}
+
+export const createConstrainedFitColumnWidths = <Row extends Record<string, any>>({
+  availableWidth,
+  columnState,
+  headers,
+}: {
+  availableWidth: number
+  columnState: ColumnState[]
+  headers: Array<TableDataGridHeader<Row>>
+}): FitColumnWidth[] | undefined => {
+  const headerByKey = new Map(headers.map(header => [header.key, header]))
+  const displayedColumns = columnState.filter(column => !column.hide)
+  const nonHeaderWidth = getDisplayedColumnWidth(displayedColumns, column => !headerByKey.has(column.colId))
+  const targetHeaderWidth = availableWidth - nonHeaderWidth
+  const fitColumns = displayedColumns.flatMap((column): ConstrainedFitColumn[] => {
+    const header = headerByKey.get(column.colId)
+    if (!header) {
+      return []
+    }
+
+    return [{
+      key: column.colId,
+      maxWidth: header.maxWidth,
+      minWidth: getColumnFitMinWidth(header),
+      width: column.width ?? getColumnFitMinWidth(header),
+    }]
+  })
+
+  if (targetHeaderWidth <= 0 || !fitColumns.length) {
+    return undefined
+  }
+
+  const widths = distributeConstrainedWidths({
+    columns: fitColumns,
+    targetWidth: targetHeaderWidth,
+  })
+  const roundedWidths = roundConstrainedWidths({
+    columns: fitColumns,
+    targetWidth: targetHeaderWidth,
+    widths,
+  })
+
+  return fitColumns.map((column, index) => ({
+    key: column.key,
+    newWidth: roundedWidths[index],
+  }))
 }
 
 const getRequiredHeaderWidth = <Row extends Record<string, any>>(

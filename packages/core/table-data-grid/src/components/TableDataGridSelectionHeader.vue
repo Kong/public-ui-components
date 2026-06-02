@@ -55,11 +55,11 @@ const syncSelectionState = () => {
 }
 
 const onSelectionChange = (checked: boolean) => {
-  if (checked) {
-    currentParams.value.api.selectAll()
-  } else {
-    currentParams.value.api.deselectAll()
-  }
+  currentParams.value.api.forEachNode((node) => {
+    if (node.selectable) {
+      node.setSelected(checked)
+    }
+  })
 
   syncSelectionState()
 }
@@ -81,11 +81,14 @@ onBeforeUnmount(() => {
 
 defineExpose({
   refresh(nextParams: SelectionHeaderParams<Record<string, any>>) {
-    currentParams.value.api.removeEventListener('selectionChanged', onGridSelectionChange)
-    currentParams.value.api.removeEventListener('modelUpdated', onGridSelectionChange)
+    const currentApi = currentParams.value.api
     currentParams.value = nextParams
-    nextParams.api.addEventListener('selectionChanged', onGridSelectionChange)
-    nextParams.api.addEventListener('modelUpdated', onGridSelectionChange)
+    if (nextParams.api !== currentApi) {
+      currentApi.removeEventListener('selectionChanged', onGridSelectionChange)
+      currentApi.removeEventListener('modelUpdated', onGridSelectionChange)
+      nextParams.api.addEventListener('selectionChanged', onGridSelectionChange)
+      nextParams.api.addEventListener('modelUpdated', onGridSelectionChange)
+    }
     syncSelectionState()
     return true
   },

@@ -3,6 +3,7 @@ import type { ColumnState, GridApi } from 'ag-grid-community'
 import type { TableDataGridConfig, TableDataGridHeader } from '../types'
 import {
   canDisplayedColumnsFit,
+  createConstrainedFitColumnWidths,
   createColumnFitParams,
   getAvailableFitWidth,
   getConfigForColumnWidthChangeDetection,
@@ -76,6 +77,23 @@ describe('column sizing utilities', () => {
       columnState,
       datatableElement,
     })).toBe(418)
+  })
+
+  it('creates constrained fit widths without exceeding header maxWidth', () => {
+    expect(createConstrainedFitColumnWidths({
+      availableWidth: 500,
+      columnState: [
+        { colId: 'name', hide: false, pinned: null, width: 100 },
+        { colId: 'status', hide: false, pinned: null, width: 100 },
+      ],
+      headers: [
+        { key: 'name', label: 'Name', maxWidth: 160 },
+        { key: 'status', label: 'Status' },
+      ],
+    })).toEqual([
+      { key: 'name', newWidth: 160 },
+      { key: 'status', newWidth: 340 },
+    ])
   })
 
   it('checks whether displayed columns can fit with configured widths and ag-grid-owned display columns', () => {

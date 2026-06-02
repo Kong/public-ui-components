@@ -100,7 +100,7 @@ describe('useDatatableSelection', () => {
       colId: 'ag-Grid-SelectionColumn',
       headerComponent: TableDataGridSelectionHeader,
       lockPosition: 'left',
-      maxWidth: 48,
+      maxWidth: 72,
       minWidth: 48,
       pinned: 'left',
       resizable: false,

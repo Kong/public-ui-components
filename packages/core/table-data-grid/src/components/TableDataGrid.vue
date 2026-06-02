@@ -154,6 +154,7 @@
           :row-model-type="mode === 'infinite' ? 'infinite' : 'clientSide'"
           :row-selection="rowSelectionConfig"
           :suppress-cell-focus="true"
+          :suppress-drag-leave-hides-columns="agGridOptions.suppressDragLeaveHidesColumns ?? true"
           :theme="themeQuartz"
           @cell-clicked="onCellClick"
           @column-moved="onColumnLayoutChange"

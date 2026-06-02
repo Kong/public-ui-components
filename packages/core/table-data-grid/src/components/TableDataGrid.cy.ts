@@ -1021,8 +1021,14 @@ describe('<TableDataGrid />', () => {
         })
       })
       let gridApi: GridApi<TestRow> | undefined
+      const headersWithMaxWidth: Array<TableDataGridHeader<TestRow>> = headers.map(header => (
+        header.key === 'status'
+          ? { ...header, maxWidth: 130 }
+          : header
+      ))
       const { mode } = mountSyncedTable({
         fetcher,
+        headers: headersWithMaxWidth,
         onGridReady: (api) => {
           gridApi = api
         },
@@ -1036,6 +1042,7 @@ describe('<TableDataGrid />', () => {
       waitForColumnSizing()
       cy.then(() => {
         expectColumnsToFillGrid(gridApi!)
+        expect(gridApi!.getColumnState().find(column => column.colId === 'status')?.width).to.be.at.most(130)
       })
       expectNoHorizontalScrollbar()
     })
@@ -1140,6 +1147,32 @@ describe('<TableDataGrid />', () => {
 
       cy.then(() => {
         expect(configuredGridApi!.getGridOption('alwaysShowVerticalScroll')).to.equal(true)
+      })
+    })
+
+    it('does not hide columns while dragging a header out of the grid unless configured by the host', () => {
+      let defaultGridApi: GridApi<TestRow> | undefined
+      let configuredGridApi: GridApi<TestRow> | undefined
+
+      mountTable({
+        onGridReady: (api) => {
+          defaultGridApi = api
+        },
+      })
+
+      cy.then(() => {
+        expect(defaultGridApi!.getGridOption('suppressDragLeaveHidesColumns')).to.equal(true)
+      })
+
+      mountTable({
+        agGridOptions: { suppressDragLeaveHidesColumns: false },
+        onGridReady: (api) => {
+          configuredGridApi = api
+        },
+      })
+
+      cy.then(() => {
+        expect(configuredGridApi!.getGridOption('suppressDragLeaveHidesColumns')).to.equal(false)
       })
     })
 
@@ -2188,6 +2221,34 @@ describe('<TableDataGrid />', () => {
       cy.getTestId('table-data-grid-selection-header-checkbox').click()
       cy.get('@rowSelect').should('have.been.calledWithMatch', [])
       cy.getTestId('table-data-grid-bulk-actions-trigger').should('contain.text', '(0) Bulk actions')
+    })
+
+    it('selects loaded infinite rows from the Kongponents header checkbox', () => {
+      const onRowSelect = cy.stub().as('rowSelect')
+      let gridApi: GridApi<TestRow> | undefined
+
+      mountTable({
+        fetcher: createInfiniteFetcher(),
+        mode: 'infinite',
+        onGridReady: (api) => {
+          gridApi = api
+        },
+        onRowSelect,
+      })
+
+      cy.contains('Infinite service 1').should('be.visible')
+      cy.getTestId('table-data-grid-selection-header-checkbox').click()
+      cy.get('@rowSelect').should('have.been.called')
+      cy.then(() => {
+        let loadedRowCount = 0
+        gridApi!.forEachNode(() => {
+          loadedRowCount += 1
+        })
+        cy.get('@rowSelect').should((stub) => {
+          expect(stub.lastCall.args[0]).to.have.length(loadedRowCount)
+        })
+        cy.getTestId('table-data-grid-bulk-actions-trigger').should('contain.text', `(${loadedRowCount}) Bulk actions`)
+      })
     })
 
     it('keeps only the latest selected row in single selection mode', () => {

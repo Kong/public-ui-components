@@ -125,5 +125,7 @@ export type TableDataGridCellAttrs<Row extends Record<string, any> = Record<stri
 
 // AG Grid options are an intentional escape hatch for consumers that need
 // lower-level control; they can override package defaults and guarantees, so
-// datasource and row-model behavior may be affected by design.
+// datasource and row-model behavior may be affected by design. In multiple
+// selection mode, selectionColumnDef only honors sizing/style options because
+// row-selection checkbox rendering is owned by TableDataGrid.
 export type TableDataGridGridOptions<Row extends Record<string, any> = Record<string, any>> = GridOptions<Row>

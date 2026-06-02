@@ -10,6 +10,7 @@ import isEqual from 'lodash-es/isEqual'
 import { hasConfiguredColumnWidths, normalizedTableConfigsEqual } from '../utils/tableConfig'
 import {
   canDisplayedColumnsFit,
+  createConstrainedFitColumnWidths,
   createColumnFitParams,
   getAvailableFitWidth,
   getConfigForColumnWidthChangeDetection,
@@ -124,7 +125,22 @@ export const useDatatableColumnSizing = <Row extends Record<string, any>>({
       return false
     }
 
-    api.sizeColumnsToFit(availableWidth === agGridAvailableWidth ? columnFitParams : availableWidth)
+    if (availableWidth === agGridAvailableWidth) {
+      api.sizeColumnsToFit(columnFitParams)
+    } else {
+      const fittedColumnWidths = createConstrainedFitColumnWidths({
+        availableWidth,
+        columnState,
+        headers: headers.value,
+      })
+
+      if (!fittedColumnWidths) {
+        return false
+      }
+
+      api.setColumnWidths(fittedColumnWidths, true, 'sizeColumnsToFit')
+    }
+
     return true
   }
 

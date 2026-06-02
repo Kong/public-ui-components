@@ -70,6 +70,7 @@ describe('useDatatableColumnSizing', () => {
   } = {}) => ({
     getColumnState: vi.fn(() => columnState),
     getHorizontalPixelRange: vi.fn(() => horizontalPixelRange),
+    setColumnWidths: vi.fn(),
     sizeColumnsToFit: vi.fn(),
   }) as unknown as GridApi<TestRow>
 
@@ -257,7 +258,11 @@ describe('useDatatableColumnSizing', () => {
     sizing.scheduleColumnsToFitAfterRenderedRowsChange(api)
     flushAnimationFrames()
 
-    expect(api.sizeColumnsToFit).toHaveBeenCalledWith(300)
+    expect(api.sizeColumnsToFit).not.toHaveBeenCalled()
+    expect(api.setColumnWidths).toHaveBeenCalledWith([
+      { key: 'name', newWidth: 160 },
+      { key: 'status', newWidth: 140 },
+    ], true, 'sizeColumnsToFit')
     expect(updateTableConfig).not.toHaveBeenCalled()
   })
 
