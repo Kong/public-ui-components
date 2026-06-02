@@ -289,6 +289,7 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
 
           .favorite-button-container {
             align-self: center;
+            display: flex;
             margin-left: var(--kui-space-20, $kui-space-20);
 
             .favorite-button {
