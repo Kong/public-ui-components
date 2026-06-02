@@ -57,6 +57,27 @@ describe('column sizing utilities', () => {
     expect(getAvailableFitWidth({ api, columnState })).toBe(448)
   })
 
+  it('uses the rendered center viewport when the live vertical scrollbar narrows the fit area', () => {
+    const datatableElement = document.createElement('div')
+    const centerViewport = document.createElement('div')
+
+    Object.defineProperty(centerViewport, 'clientWidth', {
+      value: 370,
+    })
+    centerViewport.className = 'ag-center-cols-viewport'
+    datatableElement.append(centerViewport)
+
+    const api = {
+      getHorizontalPixelRange: () => ({ left: 0, right: 400 }),
+    } as GridApi<TestRow>
+
+    expect(getAvailableFitWidth({
+      api,
+      columnState,
+      datatableElement,
+    })).toBe(418)
+  })
+
   it('checks whether displayed columns can fit with configured widths and ag-grid-owned display columns', () => {
     expect(canDisplayedColumnsFit({
       availableWidth: 500,

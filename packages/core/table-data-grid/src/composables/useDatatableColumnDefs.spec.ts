@@ -21,6 +21,7 @@ describe('useDatatableColumnDefs', () => {
     resolvedTableConfig = ref<TableDataGridConfig>({
       columnOrder: ['name', 'status'],
     }),
+    selectionColumnDef = ref(undefined),
     displayedColumnIndexesByKey = shallowRef(new Map<string, number>()),
     slots = {} as Slots,
   } = {}) => useDatatableColumnDefs<TestRow>({
@@ -28,6 +29,7 @@ describe('useDatatableColumnDefs', () => {
     cellAttrs: ref(undefined),
     displayedColumnIndexesByKey,
     resolvedTableConfig,
+    selectionColumnDef,
     slots,
   })
 
@@ -50,6 +52,17 @@ describe('useDatatableColumnDefs', () => {
       columnOrder: ['name', 'status'],
     }
     expect(columnDefs.value.map(column => column.colId)).toEqual(['name', 'status'])
+  })
+
+  it('prepends the internal selection column when provided', () => {
+    const selectionColumnDef = ref({
+      colId: 'ag-Grid-SelectionColumn',
+      width: 48,
+    })
+    const { columnDefs } = createColumnDefs({ selectionColumnDef })
+
+    expect(columnDefs.value.map(column => column.colId)).toEqual(['ag-Grid-SelectionColumn', 'name', 'status'])
+    expect(columnDefs.value[0]).toBe(selectionColumnDef.value)
   })
 
   it('builds ag-grid column definitions from table data grid headers', () => {
@@ -123,6 +136,7 @@ describe('useDatatableColumnDefs', () => {
       cellAttrs: ref(cellAttrs),
       displayedColumnIndexesByKey,
       resolvedTableConfig: ref({ columnOrder: ['status'] }),
+      selectionColumnDef: ref(undefined),
       slots,
     })
 

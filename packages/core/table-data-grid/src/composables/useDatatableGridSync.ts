@@ -32,6 +32,7 @@ type DatatableColumnSizingHandlers<Row extends Record<string, any>> = {
     honorConfiguredColumnWidths?: boolean
   }) => void
   scheduleColumnsToFitAfterDisplayedColumnsChange: (api?: GridApi<Row>) => void
+  scheduleColumnsToFitAfterRenderedRowsChange: (api?: GridApi<Row>) => void
   shouldRefitColumnsAfterConfigChange: () => boolean
   startResizeTracking: () => void
 }
@@ -183,6 +184,14 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
     sizingHandlers.scheduleColumnsToFitAfterDisplayedColumnsChange(event.api)
   }
 
+  const onModelUpdated = (event: { api: GridApi<Row> }) => {
+    if (mode.value !== 'infinite' || event.api.getDisplayedRowCount() === 0) {
+      return
+    }
+
+    sizingHandlers.scheduleColumnsToFitAfterRenderedRowsChange(event.api)
+  }
+
   const onColumnResize = (event: ColumnResizedEvent<Row>) => {
     // sizeColumnsToFit emits resize events for our own fitting writes; only user
     // resize completions should persist column widths into tableConfig.
@@ -277,6 +286,7 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
     onColumnVisibilityChange,
     onDisplayedColumnsChange,
     onGridReady,
+    onModelUpdated,
     onPageSizeChange,
     onSortChange,
     refreshForConfigChange,

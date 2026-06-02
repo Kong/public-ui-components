@@ -5,6 +5,8 @@ import type {
   TableDataGridGridOptions,
   TableDataGridRowSelectionMode,
 } from '../types'
+import TableDataGridSelectionCell from '../components/TableDataGridSelectionCell.vue'
+import TableDataGridSelectionHeader from '../components/TableDataGridSelectionHeader.vue'
 import { useDatatableSelection } from './useDatatableSelection'
 
 type TestRow = {
@@ -89,13 +91,22 @@ describe('useDatatableSelection', () => {
     rowSelection.value = 'multiple'
     expect(selection.rowSelectionConfig.value).toEqual({
       mode: 'multiRow',
-      checkboxes: true,
+      checkboxes: false,
       enableClickSelection: true,
+      headerCheckbox: false,
     })
     expect(selection.selectionColumnDef.value).toEqual({
-      pinned: 'left',
-      minWidth: 48,
+      cellRenderer: TableDataGridSelectionCell,
+      colId: 'ag-Grid-SelectionColumn',
+      headerComponent: TableDataGridSelectionHeader,
+      lockPosition: 'left',
       maxWidth: 48,
+      minWidth: 48,
+      pinned: 'left',
+      resizable: false,
+      sortable: false,
+      suppressHeaderMenuButton: true,
+      suppressMovable: true,
       width: 72,
     })
   })

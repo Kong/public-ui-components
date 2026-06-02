@@ -99,10 +99,17 @@ export const useDatatableColumnSizing = <Row extends Record<string, any>>({
     }
 
     const columnState = api.getColumnState()
-    const availableWidth = getAvailableFitWidth({ api, columnState })
+    const availableWidth = getAvailableFitWidth({
+      api,
+      columnState,
+      datatableElement: datatableElement.value,
+    })
     if (availableWidth == null) {
       return false
     }
+
+    const agGridAvailableWidth = getAvailableFitWidth({ api, columnState })
+    const columnFitParams = createColumnFitParams({ headers: headers.value })
 
     // sizeColumnsToFit acts on all displayed columns, so the preflight must use
     // the same width domain: visible headers, pinned columns, AG Grid-owned
@@ -117,7 +124,7 @@ export const useDatatableColumnSizing = <Row extends Record<string, any>>({
       return false
     }
 
-    api.sizeColumnsToFit(createColumnFitParams({ headers: headers.value }))
+    api.sizeColumnsToFit(availableWidth === agGridAvailableWidth ? columnFitParams : availableWidth)
     return true
   }
 
@@ -205,6 +212,13 @@ export const useDatatableColumnSizing = <Row extends Record<string, any>>({
     })
   }
 
+  const scheduleColumnsToFitAfterRenderedRowsChange = (api = gridApi.value) => {
+    scheduleColumnFitFrame({
+      api,
+      getHonorConfiguredColumnWidths: shouldHonorConfiguredColumnWidthsAfterDisplayedColumnsChange,
+    })
+  }
+
   const fitColumnsOnGridReady = (api: GridApi<Row>) => {
     const didFitColumns = fitColumnsToGrid(api, {
       force: hasGridMounted,
@@ -245,6 +259,7 @@ export const useDatatableColumnSizing = <Row extends Record<string, any>>({
     handleDatatableWidthChange,
     scheduleColumnsToFit,
     scheduleColumnsToFitAfterDisplayedColumnsChange,
+    scheduleColumnsToFitAfterRenderedRowsChange,
     shouldRefitColumnsAfterConfigChange,
     startResizeTracking,
   }

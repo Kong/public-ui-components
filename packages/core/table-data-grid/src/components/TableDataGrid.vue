@@ -138,7 +138,7 @@
         <!-- region: grid -->
         <AgGridVue
           :key="mode"
-          :always-show-vertical-scroll="agGridOptions.alwaysShowVerticalScroll ?? true"
+          :always-show-vertical-scroll="agGridOptions.alwaysShowVerticalScroll ?? false"
           :cache-block-size="activePageSize"
           class="table-data-grid-grid"
           :col-resize-default="agGridOptions.colResizeDefault ?? 'shift'"
@@ -153,7 +153,6 @@
           :row-data="mode === 'pagination' ? rowData : undefined"
           :row-model-type="mode === 'infinite' ? 'infinite' : 'clientSide'"
           :row-selection="rowSelectionConfig"
-          :selection-column-def="selectionColumnDef"
           :suppress-cell-focus="true"
           :theme="themeQuartz"
           @cell-clicked="onCellClick"
@@ -163,6 +162,7 @@
           @column-visible="onColumnVisibilityChange"
           @displayed-columns-changed="onDisplayedColumnsChange"
           @grid-ready="onGridReady"
+          @model-updated="onModelUpdated"
           @row-clicked="onRowClick"
           @selection-changed="onSelectionChange"
           @sort-changed="onSortChange"
@@ -403,6 +403,7 @@ const {
   handleDatatableWidthChange,
   scheduleColumnsToFit,
   scheduleColumnsToFitAfterDisplayedColumnsChange,
+  scheduleColumnsToFitAfterRenderedRowsChange,
   shouldRefitColumnsAfterConfigChange,
   startResizeTracking,
 } = composables.useDatatableColumnSizing<Row>({
@@ -431,6 +432,7 @@ const {
   onColumnVisibilityChange,
   onDisplayedColumnsChange,
   onGridReady,
+  onModelUpdated,
   onPageSizeChange,
   onSortChange,
 } = composables.useDatatableGridSync<Row>({
@@ -462,6 +464,7 @@ const {
     fitColumnsOnGridReady,
     scheduleColumnsToFit,
     scheduleColumnsToFitAfterDisplayedColumnsChange,
+    scheduleColumnsToFitAfterRenderedRowsChange,
     shouldRefitColumnsAfterConfigChange,
     startResizeTracking,
   },
@@ -475,6 +478,7 @@ const {
   cellAttrs: toRef(() => cellAttrs),
   displayedColumnIndexesByKey,
   resolvedTableConfig,
+  selectionColumnDef,
   slots,
 })
 
@@ -714,6 +718,7 @@ defineExpose<{
   --ag-header-background-color: var(--kui-color-background, #{$kui-color-background});
   --ag-header-column-border: 1px solid var(--kui-color-border, #{$kui-color-border});
   --ag-header-column-resize-handle-color: transparent;
+  --ag-selected-row-background-color: var(--kui-color-background-primary-weakest, #{$kui-color-background-primary-weakest});
   --ag-wrapper-border: none;
   --ag-wrapper-border-radius: 0;
   /* stylelint-enable custom-property-pattern */
@@ -735,6 +740,10 @@ defineExpose<{
   width: 100%;
 }
 
+.datatable-pagination-control :global(.pagination-text.large-screen) {
+  padding-left: var(--kui-space-40, $kui-space-40);
+}
+
 .table-data-grid-grid :global(.ag-header-cell[col-id="ag-Grid-SelectionColumn"]) {
   /* stylelint-disable-next-line custom-property-pattern -- AG Grid theme variables must use AG Grid's --ag-* namespace. */
   --ag-header-column-border: none;
@@ -749,7 +758,8 @@ defineExpose<{
 }
 
 .table-data-grid-grid :global(.ag-cell-wrapper),
-.table-data-grid-grid :global(.ag-cell-value) {
+.table-data-grid-grid :global(.ag-cell-value),
+.table-data-grid-grid :global(.datatable-cell-content) {
   align-items: center;
   display: flex;
   height: 100%;

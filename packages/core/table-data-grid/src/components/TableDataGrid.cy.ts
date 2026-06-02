@@ -367,7 +367,7 @@ describe('<TableDataGrid />', () => {
   }
 
   const expectNoHorizontalScrollbar = () => {
-    cy.get('.table-data-grid-grid .ag-body-horizontal-scroll-viewport').then(($viewport) => {
+    cy.get('.table-data-grid-grid .ag-center-cols-viewport').should(($viewport) => {
       expect($viewport[0].scrollWidth).to.be.at.most($viewport[0].clientWidth)
     })
   }
@@ -1117,8 +1117,41 @@ describe('<TableDataGrid />', () => {
       })
     })
 
+    it('does not reserve vertical scrollbar space unless configured by the host', () => {
+      let defaultGridApi: GridApi<TestRow> | undefined
+      let configuredGridApi: GridApi<TestRow> | undefined
+
+      mountTable({
+        onGridReady: (api) => {
+          defaultGridApi = api
+        },
+      })
+
+      cy.then(() => {
+        expect(defaultGridApi!.getGridOption('alwaysShowVerticalScroll')).to.equal(false)
+      })
+
+      mountTable({
+        agGridOptions: { alwaysShowVerticalScroll: true },
+        onGridReady: (api) => {
+          configuredGridApi = api
+        },
+      })
+
+      cy.then(() => {
+        expect(configuredGridApi!.getGridOption('alwaysShowVerticalScroll')).to.equal(true)
+      })
+    })
+
     it('applies table data grid theme tokens through AG Grid CSS variables', () => {
-      mountTable({ rowSelection: 'multiple' })
+      let gridApi: GridApi<TestRow> | undefined
+
+      mountTable({
+        rowSelection: 'multiple',
+        onGridReady: (api) => {
+          gridApi = api
+        },
+      })
 
       cy.get('.table-data-grid-grid')
         .should(($grid) => {
@@ -1129,6 +1162,7 @@ describe('<TableDataGrid />', () => {
           expect(styles.getPropertyValue('--ag-border-color').trim()).to.equal('#e0e4ea')
           expect(styles.getPropertyValue('--ag-header-column-border').trim()).to.equal('1px solid #e0e4ea')
           expect(styles.getPropertyValue('--ag-header-column-resize-handle-color').trim()).to.equal('transparent')
+          expect(styles.getPropertyValue('--ag-selected-row-background-color').trim()).to.equal('#eefaff')
           expect(styles.getPropertyValue('--ag-wrapper-border').trim()).to.equal('none')
           expect(styles.getPropertyValue('--ag-wrapper-border-radius').trim()).to.equal('0')
         })
@@ -1159,10 +1193,20 @@ describe('<TableDataGrid />', () => {
           expect(getComputedStyle($resizeHandle[0], '::after').backgroundColor).to.equal('rgba(0, 0, 0, 0)')
         })
 
+      cy.contains('Gateway service').should('be.visible')
+      cy.then(() => {
+        gridApi!.getDisplayedRowAtIndex(0)?.setSelected(true)
+      })
+      cy.get('.table-data-grid-grid .ag-row-selected')
+        .then(($row) => {
+          expect(getComputedStyle($row[0], '::before').backgroundColor).to.equal('rgb(238, 250, 255)')
+        })
+
       cy.get('.kong-ui-public-table-data-grid')
         .then(($datatable) => {
           $datatable[0].style.setProperty('--kui-color-background', 'rgb(1, 2, 3)')
           $datatable[0].style.setProperty('--kui-color-border', 'rgb(4, 5, 6)')
+          $datatable[0].style.setProperty('--kui-color-background-primary-weakest', 'rgb(7, 8, 9)')
         })
       cy.get('.table-data-grid-grid .ag-header')
         .should('have.css', 'background-color', 'rgb(1, 2, 3)')
@@ -1170,18 +1214,19 @@ describe('<TableDataGrid />', () => {
         .then(($headerCell) => {
           expect(getComputedStyle($headerCell[0], '::after').borderRightColor).to.equal('rgb(4, 5, 6)')
         })
+      cy.get('.table-data-grid-grid .ag-row-selected')
+        .then(($row) => {
+          expect(getComputedStyle($row[0], '::before').backgroundColor).to.equal('rgb(7, 8, 9)')
+        })
     })
 
-    it('stretches AG Grid cell wrappers so cell content can center vertically', () => {
+    it('stretches AG Grid cells so cell content can center vertically', () => {
       mountTable()
 
-      cy.get('.table-data-grid-grid .ag-cell').first()
+      cy.get('.table-data-grid-grid .ag-cell[col-id="name"]').first()
         .should('have.css', 'display', 'flex')
         .and('have.css', 'align-items', 'center')
-      cy.get('.table-data-grid-grid .ag-cell-wrapper').first()
-        .should('have.css', 'display', 'flex')
-        .and('have.css', 'align-items', 'center')
-      cy.get('.table-data-grid-grid .ag-cell-value').first()
+      cy.get('.table-data-grid-grid .ag-cell[col-id="name"] .datatable-cell-content').first()
         .should('have.css', 'display', 'flex')
         .and('have.css', 'align-items', 'center')
     })
@@ -2080,6 +2125,15 @@ describe('<TableDataGrid />', () => {
   })
 
   describe('selection and bulk actions', () => {
+    it('renders Kongponents checkboxes instead of AG Grid selection checkboxes', () => {
+      mountTable()
+
+      cy.get('.ag-selection-checkbox').should('not.exist')
+      cy.get('.ag-header-cell[col-id="ag-Grid-SelectionColumn"] .k-checkbox').should('exist')
+      cy.get('.ag-cell[col-id="ag-Grid-SelectionColumn"] .k-checkbox').should('exist')
+      cy.getTestId('table-data-grid-selection-checkbox').should('have.length.greaterThan', 0)
+    })
+
     it('provides selected rows to the bulk action items slot', () => {
       mountTable({
         slots: {
@@ -2090,6 +2144,50 @@ describe('<TableDataGrid />', () => {
       cy.contains('Gateway service').click()
       cy.getTestId('table-data-grid-bulk-actions-trigger').click()
       cy.getTestId('bulk-action').should('contain.text', '1:Gateway service')
+    })
+
+    it('selects rows through Kongponents checkboxes without emitting row clicks', () => {
+      const onRowClick = cy.stub().as('rowClick')
+      const onRowSelect = cy.stub().as('rowSelect')
+
+      mountTable({
+        onRowClick,
+        onRowSelect,
+        slots: {
+          'bulk-action-items': renderSelectedRowsBulkAction,
+        },
+      })
+
+      cy.getTestId('table-data-grid-selection-checkbox').first().click()
+      cy.get('@rowClick').should('not.have.been.called')
+      cy.get('@rowSelect').should('have.been.calledWithMatch', [rows[0]])
+      cy.getTestId('table-data-grid-bulk-actions-trigger')
+        .should('not.be.disabled')
+        .and('contain.text', '(1) Bulk actions')
+        .click()
+      cy.getTestId('bulk-action').should('contain.text', '1:Gateway service')
+    })
+
+    it('selects all rows from the Kongponents header checkbox and shows partial selection', () => {
+      const onRowSelect = cy.stub().as('rowSelect')
+
+      mountTable({
+        onRowSelect,
+      })
+
+      cy.getTestId('table-data-grid-selection-checkbox').first().click()
+      cy.getTestId('table-data-grid-selection-header-checkbox')
+        .should(($checkbox) => {
+          expect(($checkbox[0] as HTMLInputElement).indeterminate).to.equal(true)
+        })
+
+      cy.getTestId('table-data-grid-selection-header-checkbox').click()
+      cy.get('@rowSelect').should('have.been.calledWithMatch', rows.slice(0, 15))
+      cy.getTestId('table-data-grid-bulk-actions-trigger').should('contain.text', '(15) Bulk actions')
+
+      cy.getTestId('table-data-grid-selection-header-checkbox').click()
+      cy.get('@rowSelect').should('have.been.calledWithMatch', [])
+      cy.getTestId('table-data-grid-bulk-actions-trigger').should('contain.text', '(0) Bulk actions')
     })
 
     it('keeps only the latest selected row in single selection mode', () => {

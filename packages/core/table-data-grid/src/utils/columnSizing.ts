@@ -40,12 +40,20 @@ const getDisplayedPinnedColumnWidth = (columnState: ColumnState[]) => (
   getDisplayedColumnWidth(columnState, column => column.pinned === 'left' || column.pinned === 'right')
 )
 
+const getRenderedCenterViewportWidth = (datatableElement?: HTMLElement) => {
+  const viewport = datatableElement?.querySelector<HTMLElement>('.ag-center-cols-viewport')
+
+  return viewport?.clientWidth || undefined
+}
+
 export const getAvailableFitWidth = <Row extends Record<string, any>>({
   api,
   columnState,
+  datatableElement,
 }: {
   api: GridApi<Row>
   columnState: ColumnState[]
+  datatableElement?: HTMLElement
 }) => {
   const horizontalPixelRange = api.getHorizontalPixelRange()
   if (!horizontalPixelRange) {
@@ -53,7 +61,7 @@ export const getAvailableFitWidth = <Row extends Record<string, any>>({
   }
 
   const { left, right } = horizontalPixelRange
-  return right - left + getDisplayedPinnedColumnWidth(columnState)
+  return (getRenderedCenterViewportWidth(datatableElement) ?? right - left) + getDisplayedPinnedColumnWidth(columnState)
 }
 
 const getRequiredHeaderWidth = <Row extends Record<string, any>>(

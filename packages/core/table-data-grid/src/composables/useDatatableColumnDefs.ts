@@ -16,12 +16,14 @@ export const useDatatableColumnDefs = <Row extends Record<string, any>>({
   cellAttrs,
   displayedColumnIndexesByKey,
   resolvedTableConfig,
+  selectionColumnDef,
   slots,
 }: {
   headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
   cellAttrs: Readonly<Ref<TableDataGridCellAttrs<Row> | undefined>>
   displayedColumnIndexesByKey: Readonly<ShallowRef<Map<string, number>>>
   resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
+  selectionColumnDef: Readonly<Ref<ColDef<Row> | undefined>>
   slots: Slots
 }) => {
   const resolvedHeaders = computed(() => headers.value)
@@ -66,7 +68,13 @@ export const useDatatableColumnDefs = <Row extends Record<string, any>>({
     ...header.agGridColumnOptions,
   })
 
-  const columnDefs = computed<Array<ColDef<Row>>>(() => orderedHeaders.value.map(createColumnDef))
+  const columnDefs = computed<Array<ColDef<Row>>>(() => {
+    const tableColumnDefs = orderedHeaders.value.map(createColumnDef)
+
+    return selectionColumnDef.value
+      ? [selectionColumnDef.value, ...tableColumnDefs]
+      : tableColumnDefs
+  })
 
   return {
     gridContext,

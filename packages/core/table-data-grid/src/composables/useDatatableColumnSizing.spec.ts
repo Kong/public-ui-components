@@ -241,6 +241,26 @@ describe('useDatatableColumnSizing', () => {
     expect(api.sizeColumnsToFit).toHaveBeenCalledTimes(2)
   })
 
+  it('refits rendered rows to the live center viewport without emitting table config', () => {
+    const api = createGridApi()
+    const { datatableElement, sizing, updateTableConfig } = mountColumnSizing({ api })
+    const element = document.createElement('div')
+    const centerViewport = document.createElement('div')
+
+    Object.defineProperty(centerViewport, 'clientWidth', {
+      value: 300,
+    })
+    centerViewport.className = 'ag-center-cols-viewport'
+    element.append(centerViewport)
+    datatableElement.value = element
+
+    sizing.scheduleColumnsToFitAfterRenderedRowsChange(api)
+    flushAnimationFrames()
+
+    expect(api.sizeColumnsToFit).toHaveBeenCalledWith(300)
+    expect(updateTableConfig).not.toHaveBeenCalled()
+  })
+
   it('only forces configured-width fitting after the grid has mounted once', () => {
     const api = createGridApi({
       horizontalPixelRange: { left: 0, right: 1200 },

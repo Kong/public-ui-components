@@ -4,17 +4,20 @@ import type {
   TableDataGridRowSelectionMode,
 } from '../types'
 import type {
+  ColDef,
   GridApi,
   RowNode,
   RowSelectionOptions,
-  SelectionColumnDef,
 } from 'ag-grid-community'
 import type { Ref } from 'vue'
 import { computed, shallowRef } from 'vue'
 import isEqual from 'lodash-es/isEqual'
 import xor from 'lodash-es/xor'
+import TableDataGridSelectionCell from '../components/TableDataGridSelectionCell.vue'
+import TableDataGridSelectionHeader from '../components/TableDataGridSelectionHeader.vue'
 import { getRowKeyValue } from '../utils/rowKey'
 
+const SELECTION_COLUMN_ID = 'ag-Grid-SelectionColumn'
 const SELECTION_COLUMN_WIDTH_PX = 48
 
 export const useDatatableSelection = <Row extends Record<string, any>>({
@@ -43,12 +46,19 @@ export const useDatatableSelection = <Row extends Record<string, any>>({
 
     return {
       mode: selectionMode === 'multiple' ? 'multiRow' : 'singleRow',
-      checkboxes: selectionMode === 'multiple',
       enableClickSelection: true,
+      ...(selectionMode === 'multiple'
+        ? {
+          checkboxes: false,
+          headerCheckbox: false,
+        }
+        : {
+          checkboxes: false,
+        }),
     }
   })
 
-  const selectionColumnDef = computed<SelectionColumnDef | undefined>(() => {
+  const selectionColumnDef = computed<ColDef<Row> | undefined>(() => {
     const options = agGridOptions.value
     const selectionMode = rowSelection.value
 
@@ -56,12 +66,31 @@ export const useDatatableSelection = <Row extends Record<string, any>>({
       return undefined
     }
 
+    const selectionColumnOptions = { ...(options.selectionColumnDef as Partial<ColDef<Row>>) }
+    delete selectionColumnOptions.cellRenderer
+    delete selectionColumnOptions.colId
+    delete selectionColumnOptions.headerComponent
+    delete selectionColumnOptions.lockPosition
+    delete selectionColumnOptions.pinned
+    delete selectionColumnOptions.resizable
+    delete selectionColumnOptions.sortable
+    delete selectionColumnOptions.suppressHeaderMenuButton
+    delete selectionColumnOptions.suppressMovable
+
     return {
-      ...options.selectionColumnDef,
-      maxWidth: options.selectionColumnDef?.maxWidth ?? SELECTION_COLUMN_WIDTH_PX,
-      minWidth: options.selectionColumnDef?.minWidth ?? SELECTION_COLUMN_WIDTH_PX,
+      maxWidth: SELECTION_COLUMN_WIDTH_PX,
+      minWidth: SELECTION_COLUMN_WIDTH_PX,
+      width: SELECTION_COLUMN_WIDTH_PX,
+      ...selectionColumnOptions,
+      cellRenderer: TableDataGridSelectionCell,
+      colId: SELECTION_COLUMN_ID,
+      headerComponent: TableDataGridSelectionHeader,
+      lockPosition: 'left',
       pinned: 'left',
-      width: options.selectionColumnDef?.width ?? SELECTION_COLUMN_WIDTH_PX,
+      resizable: false,
+      sortable: false,
+      suppressHeaderMenuButton: true,
+      suppressMovable: true,
     }
   })
 

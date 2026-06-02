@@ -66,6 +66,7 @@ describe('useDatatableGridSync', () => {
       createDisplayedColumn('name'),
       createDisplayedColumn('status'),
     ]),
+    getDisplayedRowCount: vi.fn(() => 1),
     getHorizontalPixelRange: vi.fn(),
     sizeColumnsToFit: vi.fn(),
     applyColumnState: vi.fn(),
@@ -110,6 +111,7 @@ describe('useDatatableGridSync', () => {
       fitColumnsOnGridReady: vi.fn(),
       scheduleColumnsToFit: vi.fn(),
       scheduleColumnsToFitAfterDisplayedColumnsChange: vi.fn(),
+      scheduleColumnsToFitAfterRenderedRowsChange: vi.fn(),
       shouldRefitColumnsAfterConfigChange,
       startResizeTracking: vi.fn(),
     }
@@ -330,6 +332,32 @@ describe('useDatatableGridSync', () => {
       ['status', 0],
       ['name', 1],
     ]))
+  })
+
+  it('refits columns after infinite row model updates with displayed rows', () => {
+    const { gridApi, sizingHandlers, sync } = mountGridSync({
+      mode: ref<TableDataGridMode>('infinite'),
+    })
+
+    sync.onModelUpdated({ api: gridApi.value })
+
+    expect(sizingHandlers.scheduleColumnsToFitAfterRenderedRowsChange).toHaveBeenCalledOnce()
+    expect(sizingHandlers.scheduleColumnsToFitAfterRenderedRowsChange).toHaveBeenCalledWith(gridApi.value)
+  })
+
+  it('does not refit columns after pagination model updates or empty infinite model updates', () => {
+    const { gridApi, sizingHandlers, sync } = mountGridSync()
+
+    sync.onModelUpdated({ api: gridApi.value })
+    expect(sizingHandlers.scheduleColumnsToFitAfterRenderedRowsChange).not.toHaveBeenCalled()
+
+    const infiniteGrid = mountGridSync({
+      mode: ref<TableDataGridMode>('infinite'),
+    })
+    vi.mocked(infiniteGrid.gridApi.value.getDisplayedRowCount).mockReturnValue(0)
+
+    infiniteGrid.sync.onModelUpdated({ api: infiniteGrid.gridApi.value })
+    expect(infiniteGrid.sizingHandlers.scheduleColumnsToFitAfterRenderedRowsChange).not.toHaveBeenCalled()
   })
 
   it('emits layout-side-effect config changes for pin and layout events', () => {
