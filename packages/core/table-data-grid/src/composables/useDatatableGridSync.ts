@@ -13,8 +13,13 @@ import type {
 } from 'ag-grid-community'
 import type { Ref } from 'vue'
 import { ref, shallowRef, watch } from 'vue'
-import isEqual from 'lodash-es/isEqual'
 import { getSortKey, normalizedTableConfigsEqual } from '../utils/tableConfig'
+import {
+  createLayoutSnapshot,
+  createRefreshParamsForConfigChange,
+  hasColumnVisibilityChanged,
+  hasSelectionColumn,
+} from '../utils/gridSync'
 
 type DatatableColumnSizingHandlers<Row extends Record<string, any>> = {
   emitGridConfigChange: (options?: {
@@ -31,69 +36,73 @@ type DatatableColumnSizingHandlers<Row extends Record<string, any>> = {
   startResizeTracking: () => void
 }
 
-const createLayoutSnapshot = (config: TableDataGridConfig): TableDataGridConfig => ({
-  columnOrder: config.columnOrder,
-  columnVisibility: config.columnVisibility,
-  columnWidths: config.columnWidths,
-  pinnedColumns: config.pinnedColumns,
-  sortColumnKey: undefined,
-  sortColumnOrder: undefined,
-  pageSize: undefined,
-})
-
-export const useDatatableGridSync = <Row extends Record<string, any>>({
-  activePageSize,
-  captureGridConfig,
-  applyTableConfig,
-  emitGridReady,
-  emitSort,
-  getGridConfig,
-  gridApi,
-  mode,
-  patchTableConfig,
-  resetFetched,
-  refresh,
-  resolvedSort,
-  resolvedTableConfig,
-  rowSelection,
-}: {
+type DatatableGridSyncConfig<Row extends Record<string, any>> = {
   activePageSize: Readonly<Ref<number>>
-  captureGridConfig: (api: GridApi<Row>) => void
   applyTableConfig: (api?: GridApi<Row>) => void
+  captureGridConfig: (api: GridApi<Row>) => void
+  isApplyingTableConfig: Ref<boolean>
+  patchTableConfig: (config: Partial<TableDataGridConfig>) => void
+  resolvedSort: Readonly<Ref<Pick<TableDataGridSort, 'sortColumnKey' | 'sortColumnOrder'>>>
+  resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
+}
+
+type DatatableGridSyncFetch = {
+  mode: Readonly<Ref<TableDataGridMode>>
+  resetFetched: () => void
+  refresh: (params?: Partial<TableDataGridSort & { pageSize: number }>) => void
+}
+
+type DatatableGridSyncGrid<Row extends Record<string, any>> = {
   emitGridReady: (api: GridApi<Row>) => void
   emitSort: (sort: TableDataGridSort) => void
   getGridConfig: (api: GridApi<Row>) => TableDataGridConfig
   gridApi: Ref<GridApi<Row> | undefined>
-  mode: Readonly<Ref<TableDataGridMode>>
-  patchTableConfig: (config: Partial<TableDataGridConfig>) => void
-  resetFetched: () => void
-  refresh: (params?: Partial<TableDataGridSort & { pageSize: number }>) => void
-  resolvedSort: Readonly<Ref<Pick<TableDataGridSort, 'sortColumnKey' | 'sortColumnOrder'>>>
-  resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
+}
+
+type DatatableGridSyncSelection = {
   rowSelection: Readonly<Ref<TableDataGridRowSelectionMode>>
+}
+
+export const useDatatableGridSync = <Row extends Record<string, any>>({
+  config,
+  fetch,
+  grid,
+  selection,
+  sizingHandlers,
+}: {
+  config: DatatableGridSyncConfig<Row>
+  fetch: DatatableGridSyncFetch
+  grid: DatatableGridSyncGrid<Row>
+  selection: DatatableGridSyncSelection
+  sizingHandlers: DatatableColumnSizingHandlers<Row>
 }) => {
+  const {
+    activePageSize,
+    applyTableConfig,
+    captureGridConfig,
+    isApplyingTableConfig,
+    patchTableConfig,
+    resolvedSort,
+    resolvedTableConfig,
+  } = config
+  const {
+    mode,
+    resetFetched,
+    refresh,
+  } = fetch
+  const {
+    emitGridReady,
+    emitSort,
+    getGridConfig,
+    gridApi,
+  } = grid
+  const {
+    rowSelection,
+  } = selection
+
   const displayedColumnIndexesByKey = shallowRef(new Map<string, number>())
-  const isApplyingTableConfig = ref(false)
   const isApplyingInitialColumnState = ref(false)
   const isRowSelectionColumnRefitPending = ref(false)
-
-  let sizingHandlers: DatatableColumnSizingHandlers<Row> | undefined
-
-  const connectSizing = (handlers: DatatableColumnSizingHandlers<Row>) => {
-    if (sizingHandlers) {
-      throw new Error('useDatatableGridSync sizing handlers are already connected')
-    }
-
-    sizingHandlers = handlers
-  }
-
-  const getSizingHandlers = () => {
-    if (!sizingHandlers) {
-      throw new Error('useDatatableGridSync requires connectSizing before handling grid events')
-    }
-
-    return sizingHandlers
-  }
 
   const applyResolvedTableConfig = (api: GridApi<Row>) => {
     isApplyingTableConfig.value = true
@@ -108,32 +117,16 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
     nextConfig: TableDataGridConfig,
     previousConfig: TableDataGridConfig,
   ) => {
-    const sortChanged = getSortKey(nextConfig) !== getSortKey(previousConfig)
-    const pageSizeChanged = nextConfig.pageSize !== previousConfig.pageSize
-    const shouldRefreshForSort = sortChanged && mode.value !== 'infinite'
-
-    if (!shouldRefreshForSort && !pageSizeChanged) {
+    const refreshParams = createRefreshParamsForConfigChange({
+      mode: mode.value,
+      nextConfig,
+      previousConfig,
+    })
+    if (!refreshParams) {
       return
     }
 
-    refresh({
-      ...(pageSizeChanged && typeof nextConfig.pageSize === 'number' ? { pageSize: nextConfig.pageSize } : {}),
-      ...(shouldRefreshForSort
-        ? {
-          sortColumnKey: nextConfig.sortColumnKey,
-          sortColumnOrder: nextConfig.sortColumnOrder,
-        }
-        : {}),
-    })
-  }
-
-  const hasColumnVisibilityChanged = (
-    nextConfig: TableDataGridConfig,
-    previousConfig: TableDataGridConfig,
-  ) => {
-    const nextColumnVisibility = nextConfig.columnVisibility ?? {}
-    const previousColumnVisibility = previousConfig.columnVisibility ?? {}
-    return !isEqual(nextColumnVisibility, previousColumnVisibility)
+    refresh(refreshParams)
   }
 
   const updateDisplayedColumnIndexes = (api = gridApi.value) => {
@@ -143,11 +136,10 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
   }
 
   const onGridReady = (event: GridReadyEvent<Row>) => {
-    const sizing = getSizingHandlers()
     resetFetched()
     isApplyingInitialColumnState.value = true
     applyResolvedTableConfig(event.api)
-    sizing.fitColumnsOnGridReady(event.api)
+    sizingHandlers.fitColumnsOnGridReady(event.api)
     captureGridConfig(event.api)
     gridApi.value = event.api
     updateDisplayedColumnIndexes(event.api)
@@ -157,29 +149,28 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
     // defer user-driven refits until that first layout frame has completed.
     requestAnimationFrame(() => {
       isApplyingInitialColumnState.value = false
-      sizing.startResizeTracking()
+      sizingHandlers.startResizeTracking()
     })
   }
 
   const onColumnPinned = (event?: { api?: GridApi<Row> }) => {
     updateDisplayedColumnIndexes(event?.api)
-    getSizingHandlers().emitGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
+    sizingHandlers.emitGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
   }
 
   const onColumnLayoutChange = (event?: { api?: GridApi<Row> }) => {
     updateDisplayedColumnIndexes(event?.api)
-    getSizingHandlers().emitGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
+    sizingHandlers.emitGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
   }
 
   const onColumnVisibilityChange = (event?: { api?: GridApi<Row> }) => {
     updateDisplayedColumnIndexes(event?.api)
-    const sizing = getSizingHandlers()
-    sizing.emitGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
+    sizingHandlers.emitGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
     if (isApplyingInitialColumnState.value) {
       return
     }
 
-    sizing.scheduleColumnsToFitAfterDisplayedColumnsChange()
+    sizingHandlers.scheduleColumnsToFitAfterDisplayedColumnsChange()
   }
 
   const onDisplayedColumnsChange = (event: DisplayedColumnsChangedEvent<Row>) => {
@@ -189,14 +180,14 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
     }
 
     isRowSelectionColumnRefitPending.value = false
-    getSizingHandlers().scheduleColumnsToFitAfterDisplayedColumnsChange(event.api)
+    sizingHandlers.scheduleColumnsToFitAfterDisplayedColumnsChange(event.api)
   }
 
   const onColumnResize = (event: ColumnResizedEvent<Row>) => {
     // sizeColumnsToFit emits resize events for our own fitting writes; only user
     // resize completions should persist column widths into tableConfig.
     if (event.source !== 'sizeColumnsToFit' && event.finished !== false) {
-      getSizingHandlers().emitGridConfigChange()
+      sizingHandlers.emitGridConfigChange()
     }
   }
 
@@ -251,16 +242,18 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
       return
     }
 
-    const didColumnVisibilityChange = hasColumnVisibilityChanged(nextConfig, gridConfig)
+    const didColumnVisibilityChange = hasColumnVisibilityChanged({
+      nextConfig,
+      previousConfig: gridConfig,
+    })
     applyResolvedTableConfig(api)
     if (didColumnVisibilityChange) {
-      getSizingHandlers().scheduleColumnsToFitAfterDisplayedColumnsChange()
+      sizingHandlers.scheduleColumnsToFitAfterDisplayedColumnsChange()
       return
     }
 
-    const sizing = getSizingHandlers()
-    if (sizing.shouldRefitColumnsAfterConfigChange()) {
-      sizing.scheduleColumnsToFit({ persistFittedConfig: true })
+    if (sizingHandlers.shouldRefitColumnsAfterConfigChange()) {
+      sizingHandlers.scheduleColumnsToFit({ persistFittedConfig: true })
     }
   })
 
@@ -274,7 +267,6 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
 
   return {
     applyResolvedTableConfig,
-    connectSizing,
     displayedColumnIndexesByKey,
     isApplyingInitialColumnState,
     isApplyingTableConfig,
@@ -291,5 +283,3 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
     updateDisplayedColumnIndexes,
   }
 }
-
-const hasSelectionColumn = (selectionMode: TableDataGridRowSelectionMode) => selectionMode === 'multiple'

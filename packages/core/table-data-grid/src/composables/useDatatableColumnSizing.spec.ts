@@ -97,15 +97,21 @@ describe('useDatatableColumnSizing', () => {
     const wrapper = mount(defineComponent({
       setup() {
         sizing = useDatatableColumnSizing<TestRow>({
-          datatableElement,
-          datatableWidth: datatableWidthRef,
-          getGridConfig,
-          gridApi: ref(api),
-          headers: ref(headers),
-          isApplyingTableConfig: ref(isApplyingTableConfig),
-          resolvedTableConfig: ref(resolvedTableConfig),
-          tableConfig: ref(tableConfig),
-          updateTableConfig,
+          config: {
+            headers: ref(headers),
+            isApplyingTableConfig: ref(isApplyingTableConfig),
+            resolvedTableConfig: ref(resolvedTableConfig),
+            tableConfig: ref(tableConfig),
+            updateTableConfig,
+          },
+          element: {
+            datatableElement,
+            datatableWidth: datatableWidthRef,
+          },
+          grid: {
+            getGridConfig,
+            gridApi: ref(api),
+          },
         })
 
         return () => h('div')

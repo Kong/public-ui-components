@@ -46,10 +46,13 @@ flowchart LR
 | Public contract | [`src/types/index.ts`](../src/types/index.ts) | Header, config, fetcher, row key, selection, slot, and attribute types |
 | Config state | [`src/composables/useTableDataGridConfig.ts`](../src/composables/useTableDataGridConfig.ts) | Internal active config, resolved config, applying config to AG Grid, emitting config updates |
 | Config translation | [`src/utils/tableConfig.ts`](../src/utils/tableConfig.ts), [`src/utils/tablePreferencesInterop.ts`](../src/utils/tablePreferencesInterop.ts) | Defaults, normalization, semantic equality, AG Grid `ColumnState` conversion, table preference conversion |
+| Fetch request helpers | [`src/utils/fetchers.ts`](../src/utils/fetchers.ts) | Pure sort, cursor-block, next-page, and infinite-last-row decisions |
 | Fetch lifecycle | [`src/composables/useTableDataGridFetchers.ts`](../src/composables/useTableDataGridFetchers.ts) | Pagination requests, infinite datasource creation, cursor tracking, stale request guards |
-| Grid state sync | [`src/composables/useDatatableGridSync.ts`](../src/composables/useDatatableGridSync.ts) | AG Grid event handlers, config-change side effects, sort/page-size refresh dispatch, sizing handler injection |
+| Grid sync helpers | [`src/utils/gridSync.ts`](../src/utils/gridSync.ts) | Pure layout snapshots, config-refresh params, visibility-change checks, selection-column checks |
+| Grid state sync | [`src/composables/useDatatableGridSync.ts`](../src/composables/useDatatableGridSync.ts) | AG Grid event handlers, config-change side effects, sort/page-size refresh dispatch, sizing handler coordination |
 | Column definitions | [`src/composables/useDatatableColumnDefs.ts`](../src/composables/useDatatableColumnDefs.ts) | Header order, `ColDef` creation, renderer context |
-| Column sizing | [`src/composables/useDatatableColumnSizing.ts`](../src/composables/useDatatableColumnSizing.ts) | Fit preflight, `sizeColumnsToFit`, resize tracking, auto-fit width tracking, layout-side-effect filtering |
+| Column sizing helpers | [`src/utils/columnSizing.ts`](../src/utils/columnSizing.ts) | Pure fit-width math, min/max width checks, layout-side-effect change-detection config |
+| Column sizing | [`src/composables/useDatatableColumnSizing.ts`](../src/composables/useDatatableColumnSizing.ts) | `sizeColumnsToFit`, resize tracking, auto-fit width tracking, layout-side-effect persistence |
 | Selection | [`src/composables/useDatatableSelection.ts`](../src/composables/useDatatableSelection.ts) | AG Grid row selection options, selected row tracking, public selection methods |
 | Pagination controls | [`src/composables/useDatatablePagination.ts`](../src/composables/useDatatablePagination.ts) | Page navigation rules for known and unknown totals |
 | Cell renderer | [`src/components/TableDataGridCellRenderer.vue`](../src/components/TableDataGridCellRenderer.vue) | Column-key slots, cell attrs, selected slot state, AG Grid renderer refresh |
@@ -113,7 +116,7 @@ The config composable keeps two related shapes:
 
 The wrapper avoids feedback loops with `normalizedTableConfigsEqual`. This matters because reading AG Grid state and normalizing config creates fresh arrays and records. Reference equality would emit no-op updates forever.
 
-`useDatatableGridSync` watches the resolved config and owns the AG Grid side effects that follow config changes. Sort and page-size changes call the fetcher again; layout-only changes replay AG Grid column state and may schedule a column fit. Keeping those effects in grid sync avoids a callback cycle between `useTableDataGridConfig` and the grid event layer.
+`useDatatableGridSync` watches the resolved config and owns the AG Grid side effects that follow config changes. Sort and page-size changes call the fetcher again; layout-only changes replay AG Grid column state and may schedule a column fit. Its inputs are grouped by collaborator boundary (`config`, `fetch`, `grid`, `selection`, and `sizingHandlers`) so the composable reads as orchestration instead of a flat bag of unrelated callbacks. Keeping those effects in grid sync avoids a callback cycle between `useTableDataGridConfig` and the grid event layer.
 
 ## Fetch lifecycle
 
@@ -151,6 +154,8 @@ Stale response protection is split by mode:
 | `latestPaginationRequestId` | Pagination | Older page requests committing after a newer refresh |
 | `latestInfiniteDatasourceId` | Infinite | Older datasource block requests resolving after sort/filter/mode changes |
 
+Pure fetch decisions live in `src/utils/fetchers.ts`. The composable still owns reactive refs, datasource construction, async request ordering, and commits into Vue/AG Grid state.
+
 ## Column definition and sizing split
 
 Column definitions and column sizing are intentionally separate:
@@ -158,7 +163,8 @@ Column definitions and column sizing are intentionally separate:
 | Composable | Responsibility |
 | --- | --- |
 | `useDatatableColumnDefs` | Converts `headers` plus resolved column order into AG Grid `columnDefs` and renderer context |
-| `useDatatableColumnSizing` | Decides whether columns can fit, runs `api.sizeColumnsToFit`, tracks generated widths, and persists meaningful width/config changes |
+| `useDatatableColumnSizing` | Runs `api.sizeColumnsToFit`, tracks generated widths, and persists meaningful width/config changes |
+| `src/utils/columnSizing.ts` | Decides whether columns can fit and derives the width/config inputs for those decisions |
 
 ```mermaid
 flowchart LR
@@ -194,6 +200,8 @@ Key sizing rules:
 | Schedule fitting with `requestAnimationFrame` | AG Grid viewport measurements depend on browser layout, not just Vue DOM flush |
 | Ignore layout-only width changes during pin/move/hide change detection | AG Grid may recalculate pixel widths as a side effect; those should not emit config changes unless order/pin/visibility changed |
 | Persist fitted widths when fitting is part of a displayed-column change | The emitted config should match the grid the user now sees |
+
+The boundary rule is: use utilities for deterministic calculations that only need arguments and return values; use composables for reactive state, Vue lifecycle hooks, browser scheduling, AG Grid calls, or emitted side effects.
 
 ## User action effects
 

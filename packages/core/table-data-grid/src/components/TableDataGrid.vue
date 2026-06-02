@@ -322,6 +322,7 @@ const { i18n } = composables.useI18n()
 const datatableElement = ref<HTMLElement>()
 const { width: datatableWidth } = useElementSize(datatableElement, { width: 0, height: 0 }, { box: 'border-box' })
 const gridApi = ref<GridApi<Row>>()
+const isApplyingTableConfig = ref(false)
 const resolvedRowKey = computed<TableDataGridRowKey<Row>>(() => rowKey ?? DEFAULT_ROW_KEY as TableDataGridRowKey<Row>)
 const searchQuery = ref(initialFetcherParams.search ?? '')
 
@@ -397,9 +398,33 @@ const {
 })
 
 const {
-  connectSizing,
+  emitGridConfigChange,
+  fitColumnsOnGridReady,
+  handleDatatableWidthChange,
+  scheduleColumnsToFit,
+  scheduleColumnsToFitAfterDisplayedColumnsChange,
+  shouldRefitColumnsAfterConfigChange,
+  startResizeTracking,
+} = composables.useDatatableColumnSizing<Row>({
+  config: {
+    headers: toRef(() => headers),
+    isApplyingTableConfig,
+    resolvedTableConfig,
+    tableConfig: toRef(() => tableConfig),
+    updateTableConfig,
+  },
+  element: {
+    datatableElement,
+    datatableWidth,
+  },
+  grid: {
+    getGridConfig,
+    gridApi,
+  },
+})
+
+const {
   displayedColumnIndexesByKey,
-  isApplyingTableConfig,
   onColumnLayoutChange,
   onColumnPinned,
   onColumnResize,
@@ -409,20 +434,37 @@ const {
   onPageSizeChange,
   onSortChange,
 } = composables.useDatatableGridSync<Row>({
-  activePageSize,
-  captureGridConfig,
-  applyTableConfig,
-  emitGridReady: api => emit('grid:ready', api),
-  emitSort: sort => emit('sort', sort),
-  getGridConfig,
-  gridApi,
-  mode: toRef(() => mode),
-  patchTableConfig,
-  resetFetched,
-  refresh,
-  resolvedSort,
-  resolvedTableConfig,
-  rowSelection: toRef(() => rowSelection),
+  config: {
+    activePageSize,
+    applyTableConfig,
+    captureGridConfig,
+    isApplyingTableConfig,
+    patchTableConfig,
+    resolvedSort,
+    resolvedTableConfig,
+  },
+  fetch: {
+    mode: toRef(() => mode),
+    resetFetched,
+    refresh,
+  },
+  grid: {
+    emitGridReady: api => emit('grid:ready', api),
+    emitSort: sort => emit('sort', sort),
+    getGridConfig,
+    gridApi,
+  },
+  selection: {
+    rowSelection: toRef(() => rowSelection),
+  },
+  sizingHandlers: {
+    emitGridConfigChange,
+    fitColumnsOnGridReady,
+    scheduleColumnsToFit,
+    scheduleColumnsToFitAfterDisplayedColumnsChange,
+    shouldRefitColumnsAfterConfigChange,
+    startResizeTracking,
+  },
 })
 
 const {
@@ -434,35 +476,6 @@ const {
   displayedColumnIndexesByKey,
   resolvedTableConfig,
   slots,
-})
-
-const {
-  emitGridConfigChange,
-  fitColumnsOnGridReady,
-  handleDatatableWidthChange,
-  scheduleColumnsToFit,
-  scheduleColumnsToFitAfterDisplayedColumnsChange,
-  shouldRefitColumnsAfterConfigChange,
-  startResizeTracking,
-} = composables.useDatatableColumnSizing<Row>({
-  datatableElement,
-  datatableWidth,
-  getGridConfig,
-  gridApi,
-  headers: toRef(() => headers),
-  isApplyingTableConfig,
-  resolvedTableConfig,
-  tableConfig: toRef(() => tableConfig),
-  updateTableConfig,
-})
-
-connectSizing({
-  emitGridConfigChange,
-  fitColumnsOnGridReady,
-  scheduleColumnsToFit,
-  scheduleColumnsToFitAfterDisplayedColumnsChange,
-  shouldRefitColumnsAfterConfigChange,
-  startResizeTracking,
 })
 
 const resolvedPaginationPageSizeOptions = computed(() => (

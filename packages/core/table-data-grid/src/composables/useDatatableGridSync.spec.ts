@@ -92,6 +92,7 @@ describe('useDatatableGridSync', () => {
   } = {}) => {
     let sync!: GridSync
     const gridApi = ref(createGridApi())
+    const isApplyingTableConfig = ref(false)
     const resolvedTableConfigRef = ref(resolvedTableConfig)
     const activePageSize = ref(25)
     const patchTableConfig = vi.fn()
@@ -116,25 +117,34 @@ describe('useDatatableGridSync', () => {
     const wrapper = mount(defineComponent({
       setup() {
         sync = useDatatableGridSync<TestRow>({
-          activePageSize,
-          captureGridConfig,
-          applyTableConfig,
-          emitGridReady,
-          emitSort,
-          getGridConfig,
-          gridApi,
-          mode,
-          patchTableConfig,
-          resetFetched,
-          refresh,
-          resolvedSort: ref({
-            sortColumnKey: resolvedTableConfigRef.value.sortColumnKey,
-            sortColumnOrder: resolvedTableConfigRef.value.sortColumnOrder,
-          }),
-          resolvedTableConfig: resolvedTableConfigRef,
-          rowSelection,
+          config: {
+            activePageSize,
+            applyTableConfig,
+            captureGridConfig,
+            isApplyingTableConfig,
+            patchTableConfig,
+            resolvedSort: ref({
+              sortColumnKey: resolvedTableConfigRef.value.sortColumnKey,
+              sortColumnOrder: resolvedTableConfigRef.value.sortColumnOrder,
+            }),
+            resolvedTableConfig: resolvedTableConfigRef,
+          },
+          fetch: {
+            mode,
+            resetFetched,
+            refresh,
+          },
+          grid: {
+            emitGridReady,
+            emitSort,
+            getGridConfig,
+            gridApi,
+          },
+          selection: {
+            rowSelection,
+          },
+          sizingHandlers,
         })
-        sync.connectSizing(sizingHandlers)
 
         return () => h('div')
       },
@@ -148,6 +158,7 @@ describe('useDatatableGridSync', () => {
       emitGridReady,
       emitSort,
       gridApi,
+      isApplyingTableConfig,
       patchTableConfig,
       resetFetched,
       refresh,
@@ -369,9 +380,4 @@ describe('useDatatableGridSync', () => {
     expect(sync.isRowSelectionColumnRefitPending.value).toBe(false)
   })
 
-  it('throws when sizing handlers are connected more than once', () => {
-    const { sizingHandlers, sync } = mountGridSync()
-
-    expect(() => sync.connectSizing(sizingHandlers)).toThrow('already connected')
-  })
 })
