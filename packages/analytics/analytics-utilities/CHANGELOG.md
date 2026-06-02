@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.16.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.16.2...@kong-ui-public/analytics-utilities@12.16.3) (2026-06-02)
+
+
+### Bug Fixes
+
+* add datasource to explore result meta ([#3400](https://github.com/Kong/public-ui-components/issues/3400)) ([9d36f5c](https://github.com/Kong/public-ui-components/commit/9d36f5c0850eb1d097dd28eabdc54e6405dd9bd0))
+
+
+
+
+
 ## [12.16.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.16.1...@kong-ui-public/analytics-utilities@12.16.2) (2026-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
