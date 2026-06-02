@@ -126,11 +126,10 @@
 
       <KInput
         data-testid="principals-issuer"
-        :disabled="!selectedServer"
+        disabled
         label="Issuer"
         :model-value="formModel['config-issuer']"
-        placeholder="e.g., https://issuer.example.com/auth"
-        @update:model-value="updateField('config-issuer', $event)"
+        placeholder="Automatically deciphered based on the selected auth server"
       />
 
       <KCollapse
@@ -159,47 +158,35 @@
         </div>
 
         <div class="principals-field-group">
-          <KLabel info="Choose whether Kong uses Consumers linked to the resolved principal or existing Consumer matching settings.">
-            Consumer matching behavior
-          </KLabel>
-          <KRadio
-            data-testid="principals-match-consumer-true"
-            description="Use consumers associated with the resolved principal and ignore existing consumer matching settings."
-            label="Use consumers linked to the principal"
+          <KCheckbox
+            data-testid="principals-match-consumer"
             :model-value="formModel['config-principals-match_consumer']"
-            :selected-value="true"
-            @change="updateField('config-principals-match_consumer', true)"
-          />
-          <KRadio
-            data-testid="principals-match-consumer-false"
-            description="Ignore consumers linked to the principal and continue using configured consumer matching behavior."
-            label="Use existing consumer matching settings"
-            :model-value="formModel['config-principals-match_consumer']"
-            :selected-value="false"
-            @change="updateField('config-principals-match_consumer', false)"
-          />
+            @update:model-value="handleMatchConsumerChange($event)"
+          >
+            Use linked consumers
+            <template #description>
+              Use the consumer linked to the authenticated principal so existing consumer-based plugins and policies continue to work.
+              <a
+                href="https://developer.konghq.com/how-to/create-centrally-managed-consumer/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >Learn how to link a consumer.</a>
+            </template>
+          </KCheckbox>
         </div>
 
         <div class="principals-field-group">
-          <KLabel info="Choose whether Kong uses Consumer Groups linked to the resolved principal or existing Consumer Group matching settings.">
-            Consumer group matching behavior
-          </KLabel>
-          <KRadio
-            data-testid="principals-match-consumer-groups-true"
-            description="Use consumer groups associated with the resolved principal and ignore existing consumer group matching settings."
-            label="Use consumer groups linked to the principal"
+          <KCheckbox
+            data-testid="principals-match-consumer-groups"
+            :disabled="!formModel['config-principals-match_consumer']"
             :model-value="formModel['config-principals-match_consumer_groups']"
-            :selected-value="true"
-            @change="updateField('config-principals-match_consumer_groups', true)"
-          />
-          <KRadio
-            data-testid="principals-match-consumer-groups-false"
-            description="Ignore consumer groups linked to the principal and continue using configured consumer group matching behavior."
-            label="Use existing consumer group matching settings"
-            :model-value="formModel['config-principals-match_consumer_groups']"
-            :selected-value="false"
-            @change="updateField('config-principals-match_consumer_groups', false)"
-          />
+            @update:model-value="updateField('config-principals-match_consumer_groups', $event)"
+          >
+            Use linked consumer groups
+            <template #description>
+              Use consumer groups associated with the linked consumer so existing consumer group policies and plugins continue to work. This setting applies only when  <b>Use linked consumer</b> is enabled.
+            </template>
+          </KCheckbox>
         </div>
       </KCollapse>
     </template>
@@ -383,6 +370,12 @@ export default {
       this.selectedClientId = clientId
       this.updateField('config-client_id', [clientId])
     },
+    handleMatchConsumerChange(checked) {
+      this.updateField('config-principals-match_consumer', checked)
+      if (!checked) {
+        this.updateField('config-principals-match_consumer_groups', false)
+      }
+    },
     updateField(field, value) {
       // eslint-disable-next-line vue/no-mutating-props
       this.formModel[field] = value
@@ -396,10 +389,10 @@ export default {
         ? new URL(geoApiServerUrl).hostname.split('.')[0]
         : (this.formsConfig?.apiBaseUrl?.match(/^\/([^/]+)/)?.[1] || 'us')
       if (type === 'authServer') {
-        const url = this.formsConfig?.createAuthServerUrl || `${window.location.origin}/${geo}/kong-identity/auth-servers/create`
+        const url = this.formsConfig?.createAuthServerUrl || `${window.location.origin}/${geo}/identity/create-auth-server`
         document.location.href = url
       } else if (type === 'client') {
-        const url = this.formsConfig?.createClientUrl || `${window.location.origin}/${geo}/kong-identity/auth-servers/${this.selectedServer?.id}/clients/create`
+        const url = this.formsConfig?.createClientUrl || `${window.location.origin}/${geo}/kong-identity/auth-servers/${this.selectedServer?.id}/create-auth-server-client`
         document.location.href = url
       }
     },
@@ -469,7 +462,7 @@ export default {
 }
 
 .principals-advanced-settings {
-  margin-top: var(--kui-space-50, $kui-space-50);
+  margin-top: var(--kui-space-70, $kui-space-70);
 
   :deep(.collapse-hidden-content) {
     display: flex;
@@ -496,7 +489,7 @@ export default {
 }
 
 .create-action {
-  align-items: center;
+  align-items: flex-start;
   color: var(--kui-color-text-primary, $kui-color-text-primary);
   cursor: pointer;
   display: flex;
