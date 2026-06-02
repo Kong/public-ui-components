@@ -52,20 +52,25 @@
               v-if="showFavoriteButton"
               class="favorite-button-container"
             >
-              <button
-                :aria-label="isFavorite ? t('favorite_button.remove_shortcut') : t('favorite_button.save_shortcut')"
-                class="favorite-button"
-                :class="{ 'active': isFavorite }"
-                data-testid="page-layout-favorite-button"
-                type="button"
-                @click="onFavoriteButtonClick"
+              <KTooltip
+                placement="right"
+                :text="isFavorite ? t('favorite_button.remove_shortcut') : t('favorite_button.save_shortcut')"
               >
-                <component
-                  :is="isFavorite ? StarFillIcon : StarIcon"
-                  decorative
-                  :size="KUI_ICON_SIZE_30"
-                />
-              </button>
+                <button
+                  :aria-label="isFavorite ? t('favorite_button.remove_shortcut') : t('favorite_button.save_shortcut')"
+                  class="favorite-button"
+                  :class="{ 'active': isFavorite }"
+                  data-testid="page-layout-favorite-button"
+                  type="button"
+                  @click="onFavoriteButtonClick"
+                >
+                  <component
+                    :is="isFavorite ? StarFillIcon : StarIcon"
+                    decorative
+                    :size="KUI_ICON_SIZE_30"
+                  />
+                </button>
+              </KTooltip>
             </div>
             <div
               v-if="$slots['title-after']"
