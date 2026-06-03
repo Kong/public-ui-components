@@ -829,7 +829,7 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.20.1
+        specifier: ^1.20.1
         version: 1.20.1
       '@kong/icons':
         specifier: ^1.52.0

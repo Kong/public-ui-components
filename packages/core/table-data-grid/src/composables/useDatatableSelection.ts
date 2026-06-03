@@ -1,15 +1,16 @@
 import type {
   TableDataGridGridOptions,
-  TableDataGridRowKey,
-  TableDataGridRowSelectionMode,
 } from '../types'
 import type {
+  TableDataGridSelectionConfig,
+  TableDataGridSelectionEmit,
+  TableDataGridSelectionGrid,
+} from '../types/internal'
+import type {
   ColDef,
-  GridApi,
   RowNode,
   RowSelectionOptions,
 } from 'ag-grid-community'
-import type { Ref } from 'vue'
 import { computed, shallowRef } from 'vue'
 import isEqual from 'lodash-es/isEqual'
 import xor from 'lodash-es/xor'
@@ -93,18 +94,22 @@ const createSelectionColumnOptions = <Row extends Record<string, any>>(
 }
 
 export const useDatatableSelection = <Row extends Record<string, any>>({
-  gridApi,
-  rowSelection,
-  agGridOptions,
-  rowKey,
-  emitRowSelect,
+  config,
+  emit,
+  grid,
 }: {
-  gridApi: Readonly<Ref<GridApi<Row> | undefined>>
-  rowSelection: Readonly<Ref<TableDataGridRowSelectionMode>>
-  agGridOptions: Readonly<Ref<TableDataGridGridOptions<Row>>>
-  rowKey: Readonly<Ref<TableDataGridRowKey<Row>>>
-  emitRowSelect: (selectedRows: Row[]) => void
+  config: TableDataGridSelectionConfig<Row>
+  emit: TableDataGridSelectionEmit<Row>
+  grid: TableDataGridSelectionGrid<Row>
 }) => {
+  const {
+    agGridOptions,
+    rowKey,
+    rowSelection,
+  } = config
+  const {
+    gridApi,
+  } = grid
   const selectedRows = shallowRef<Row[]>([])
   const selectedRowKeys = shallowRef<string[]>([])
 
@@ -195,7 +200,7 @@ export const useDatatableSelection = <Row extends Record<string, any>>({
       ...(changedRowNodes.length ? { rowNodes: changedRowNodes } : {}),
       force: true,
     })
-    emitRowSelect(nextSelectedRows)
+    emit.rowSelect(nextSelectedRows)
   }
 
   return {

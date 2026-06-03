@@ -1,7 +1,7 @@
 <template>
   <span
-    v-bind="cellAttrs"
-    :class="['datatable-cell-content', cellAttrs.class]"
+    v-bind="boundCellAttrs"
+    :class="cellClass"
   >
     <RenderCellSlot />
   </span>
@@ -52,6 +52,13 @@ const cellAttrs = computed(() => currentParams.value.context.cellAttrs?.({
   rowIndex: rowIndex.value,
   rowValue: rowValue.value,
 }) ?? {})
+const boundCellAttrs = computed(() => {
+  const attrs = { ...cellAttrs.value }
+  delete attrs.class
+
+  return attrs
+})
+const cellClass = computed(() => ['datatable-cell-content', cellAttrs.value.class])
 const refreshCell = () => {
   currentParams.value.api.refreshCells({
     force: true,

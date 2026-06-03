@@ -1,17 +1,20 @@
 import type {
   TableDataGridConfig,
-  TableDataGridMode,
-  TableDataGridRowSelectionMode,
-  TableDataGridSort,
 } from '../types'
-import type { GridColumnWidthChangeSource } from '../types/internal'
+import type {
+  TableDataGridGridSyncConfig,
+  TableDataGridGridSyncEmit,
+  TableDataGridGridSyncFetch,
+  TableDataGridGridSyncGrid,
+  TableDataGridGridSyncSelection,
+  TableDataGridGridSyncSizingHandlers,
+} from '../types/internal'
 import type {
   ColumnResizedEvent,
   DisplayedColumnsChangedEvent,
   GridApi,
   GridReadyEvent,
 } from 'ag-grid-community'
-import type { Ref } from 'vue'
 import { ref, shallowRef, watch } from 'vue'
 import { getSortKey, normalizedTableConfigsEqual } from '../utils/tableConfig'
 import {
@@ -21,61 +24,20 @@ import {
   hasSelectionColumn,
 } from '../utils/gridSync'
 
-type DatatableColumnSizingHandlers<Row extends Record<string, any>> = {
-  emitGridConfigChange: (options?: {
-    columnWidthChangeSource?: GridColumnWidthChangeSource
-  }) => void
-  fitColumnsOnGridReady: (api: GridApi<Row>) => void
-  scheduleColumnsToFit: (options?: {
-    api?: GridApi<Row>
-    persistFittedConfig?: boolean
-    honorConfiguredColumnWidths?: boolean
-  }) => void
-  scheduleColumnsToFitAfterDisplayedColumnsChange: (api?: GridApi<Row>) => void
-  scheduleColumnsToFitAfterRenderedRowsChange: (api?: GridApi<Row>) => void
-  shouldRefitColumnsAfterConfigChange: () => boolean
-  startResizeTracking: () => void
-}
-
-type DatatableGridSyncConfig<Row extends Record<string, any>> = {
-  activePageSize: Readonly<Ref<number>>
-  applyTableConfig: (api?: GridApi<Row>) => void
-  captureGridConfig: (api: GridApi<Row>) => void
-  isApplyingTableConfig: Ref<boolean>
-  patchTableConfig: (config: Partial<TableDataGridConfig>) => void
-  resolvedSort: Readonly<Ref<Pick<TableDataGridSort, 'sortColumnKey' | 'sortColumnOrder'>>>
-  resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
-}
-
-type DatatableGridSyncFetch = {
-  mode: Readonly<Ref<TableDataGridMode>>
-  resetFetched: () => void
-  refresh: (params?: Partial<TableDataGridSort & { pageSize: number }>) => void
-}
-
-type DatatableGridSyncGrid<Row extends Record<string, any>> = {
-  emitGridReady: (api: GridApi<Row>) => void
-  emitSort: (sort: TableDataGridSort) => void
-  getGridConfig: (api: GridApi<Row>) => TableDataGridConfig
-  gridApi: Ref<GridApi<Row> | undefined>
-}
-
-type DatatableGridSyncSelection = {
-  rowSelection: Readonly<Ref<TableDataGridRowSelectionMode>>
-}
-
 export const useDatatableGridSync = <Row extends Record<string, any>>({
   config,
+  emit,
   fetch,
   grid,
   selection,
   sizingHandlers,
 }: {
-  config: DatatableGridSyncConfig<Row>
-  fetch: DatatableGridSyncFetch
-  grid: DatatableGridSyncGrid<Row>
-  selection: DatatableGridSyncSelection
-  sizingHandlers: DatatableColumnSizingHandlers<Row>
+  config: TableDataGridGridSyncConfig<Row>
+  emit: TableDataGridGridSyncEmit<Row>
+  fetch: TableDataGridGridSyncFetch
+  grid: TableDataGridGridSyncGrid<Row>
+  selection: TableDataGridGridSyncSelection
+  sizingHandlers: TableDataGridGridSyncSizingHandlers<Row>
 }) => {
   const {
     activePageSize,
@@ -92,8 +54,6 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
     refresh,
   } = fetch
   const {
-    emitGridReady,
-    emitSort,
     getGridConfig,
     gridApi,
   } = grid
@@ -144,7 +104,7 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
     captureGridConfig(event.api)
     gridApi.value = event.api
     updateDisplayedColumnIndexes(event.api)
-    emitGridReady(event.api)
+    emit.gridReady(event.api)
     refresh(resolvedSort.value)
     // AG Grid emits initial column visibility events while applyColumnState runs;
     // defer user-driven refits until that first layout frame has completed.
@@ -212,7 +172,7 @@ export const useDatatableGridSync = <Row extends Record<string, any>>({
       return
     }
 
-    emitSort({
+    emit.sort({
       sortColumnKey: nextConfig.sortColumnKey,
       sortColumnOrder: nextConfig.sortColumnOrder,
     })

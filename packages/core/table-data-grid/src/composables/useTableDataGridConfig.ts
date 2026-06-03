@@ -1,9 +1,6 @@
-import type {
-  TableDataGridConfig,
-  TableDataGridHeader,
-} from '../types'
+import type { TableDataGridConfig } from '../types'
+import type { TableDataGridConfigSources } from '../types/internal'
 import type { GridApi } from 'ag-grid-community'
-import type { Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
 import {
   buildColumnStateFromConfig,
@@ -14,16 +11,16 @@ import {
 } from '../utils/tableConfig'
 
 export const useTableDataGridConfig = <Row extends Record<string, any>>({
-  tableConfig,
-  emitTableConfigUpdate,
-  headers,
-  pageSize,
+  config,
 }: {
-  tableConfig: Readonly<Ref<TableDataGridConfig | undefined>>
-  emitTableConfigUpdate: (config: TableDataGridConfig) => void
-  headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
-  pageSize: Readonly<Ref<number>>
+  config: TableDataGridConfigSources<Row>
 }) => {
+  const {
+    emitTableConfigUpdate,
+    headers,
+    pageSize,
+    tableConfig,
+  } = config
   const activeTableConfig = ref<TableDataGridConfig>(normalizeTableConfig(tableConfig.value))
   const resolvedHeaders = computed(() => headers.value)
   const resolvedDefaultPageSize = computed(() => pageSize.value)

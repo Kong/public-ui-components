@@ -1,10 +1,11 @@
 import type {
-  TableDataGridFetcher,
-  TableDataGridFetcherParams,
   TableDataGridFetcherResult,
 } from '../types'
+import type {
+  TableDataGridFetchParams,
+  TableDataGridFetchSource,
+} from '../types/internal'
 import type { IDatasource } from 'ag-grid-community'
-import type { Ref } from 'vue'
 import { computed, ref, shallowRef } from 'vue'
 import type { RefreshOptions } from '../utils/fetchers'
 import {
@@ -14,15 +15,6 @@ import {
   resolveInfiniteRequestSort,
 } from '../utils/fetchers'
 
-type FetcherParamSources = {
-  mode: Readonly<Ref<TableDataGridFetcherParams['mode']>>
-  pageSize: Readonly<Ref<TableDataGridFetcherParams['pageSize']>>
-  search: Readonly<Ref<TableDataGridFetcherParams['search']>>
-  sortColumnKey: Readonly<Ref<TableDataGridFetcherParams['sortColumnKey']>>
-  sortColumnOrder: Readonly<Ref<TableDataGridFetcherParams['sortColumnOrder']>>
-  filterSelection: Readonly<Ref<TableDataGridFetcherParams['filterSelection']>>
-}
-
 type BlockCompletion = {
   promise: Promise<boolean>
   resolve: (completed: boolean) => void
@@ -30,12 +22,12 @@ type BlockCompletion = {
 
 type InfiniteBlockGateResult = 'ready' | 'failed' | 'stale'
 
-export const useTableDataGridFetchers = <Row extends Record<string, any>>({
+export const useTableDataGridFetch = <Row extends Record<string, any>>({
   fetcher,
-  fetcherParams,
+  params,
 }: {
-  fetcher: Readonly<Ref<TableDataGridFetcher<Row>>>
-  fetcherParams: FetcherParamSources
+  fetcher: TableDataGridFetchSource<Row>['fetcher']
+  params: TableDataGridFetchParams
 }) => {
   const currentPage = ref(1)
   const cursorMap = new Map<number, unknown>()
@@ -70,16 +62,16 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
 
   const resolveSort = (options: RefreshOptions) => ({
     // Presence matters: { sortColumnKey: undefined } intentionally clears the active sort.
-    sortColumnKey: 'sortColumnKey' in options ? options.sortColumnKey : fetcherParams.sortColumnKey.value,
-    sortColumnOrder: 'sortColumnOrder' in options ? options.sortColumnOrder : fetcherParams.sortColumnOrder.value,
+    sortColumnKey: 'sortColumnKey' in options ? options.sortColumnKey : params.sortColumnKey.value,
+    sortColumnOrder: 'sortColumnOrder' in options ? options.sortColumnOrder : params.sortColumnOrder.value,
   })
 
   const isLatestPaginationRequest = (requestId: number): boolean => (
-    requestId === latestPaginationRequestId.value && fetcherParams.mode.value === 'pagination'
+    requestId === latestPaginationRequestId.value && params.mode.value === 'pagination'
   )
 
   const isLatestInfiniteDatasource = (datasourceId: number): boolean => (
-    datasourceId === latestInfiniteDatasourceId.value && fetcherParams.mode.value === 'infinite'
+    datasourceId === latestInfiniteDatasourceId.value && params.mode.value === 'infinite'
   )
 
   const commitPaginationResult = ({
@@ -105,11 +97,11 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
     page: number,
     options: RefreshOptions = {},
   ) => {
-    if (fetcherParams.mode.value !== 'pagination') {
+    if (params.mode.value !== 'pagination') {
       return
     }
 
-    const fetchPageSize = options.pageSize ?? fetcherParams.pageSize.value
+    const fetchPageSize = options.pageSize ?? params.pageSize.value
     const requestId = latestPaginationRequestId.value + 1
     latestPaginationRequestId.value = requestId
     beginFetch()
@@ -121,8 +113,8 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
         pageSize: fetchPageSize,
         sortColumnKey: sort.sortColumnKey,
         sortColumnOrder: sort.sortColumnOrder,
-        search: fetcherParams.search.value,
-        filterSelection: fetcherParams.filterSelection.value,
+        search: params.search.value,
+        filterSelection: params.filterSelection.value,
       })
 
       if (!isLatestPaginationRequest(requestId)) {
@@ -219,14 +211,14 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
     const datasourceSort = resolveSort(options)
 
     return {
-      async getRows(params) {
+      async getRows(getRowsParams) {
         const {
           blockIndex,
           pageSize,
         } = getCursorBlock({
           cursorMap,
-          endRow: params.endRow,
-          startRow: params.startRow,
+          endRow: getRowsParams.endRow,
+          startRow: getRowsParams.startRow,
         })
 
         const currentBlockCompletion = createBlockCompletion(blockIndex)
@@ -237,7 +229,7 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
         })
         if (blockGateResult !== 'ready') {
           if (blockGateResult === 'failed') {
-            params.failCallback()
+            getRowsParams.failCallback()
           }
           return
         }
@@ -247,19 +239,19 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
           const cursor = blockIndex > 0 ? cursorMap.get(blockIndex - 1) : undefined
           const requestSort = resolveInfiniteRequestSort({
             datasourceSort,
-            sortModel: params.sortModel,
+            sortModel: getRowsParams.sortModel,
           })
           const result = await fetcher.value({
             mode: 'infinite',
             page: undefined,
             pageSize,
-            startRow: params.startRow,
-            endRow: params.endRow,
+            startRow: getRowsParams.startRow,
+            endRow: getRowsParams.endRow,
             cursor,
             sortColumnKey: requestSort.sortColumnKey,
             sortColumnOrder: requestSort.sortColumnOrder,
-            search: fetcherParams.search.value,
-            filterSelection: fetcherParams.filterSelection.value,
+            search: params.search.value,
+            filterSelection: params.filterSelection.value,
           })
 
           // AG Grid can let block requests from a previous datasource resolve after
@@ -273,12 +265,12 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
             cursorMap.set(blockIndex, result.cursor)
           }
 
-          params.successCallback(result.data, resolveInfiniteLastRow({
+          getRowsParams.successCallback(result.data, resolveInfiniteLastRow({
             result,
             pageSize,
-            startRow: params.startRow,
+            startRow: getRowsParams.startRow,
           }))
-          if (params.startRow === 0) {
+          if (getRowsParams.startRow === 0) {
             rowData.value = result.data
           }
           currentBlockCompletion.resolve(true)
@@ -288,7 +280,7 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
             return
           }
           fetchError.value = err
-          params.failCallback()
+          getRowsParams.failCallback()
           rejectBlockCompletion(blockIndex, currentBlockCompletion)
         } finally {
           endFetch({ markFetched: isLatestInfiniteDatasource(datasourceId) })
@@ -298,7 +290,7 @@ export const useTableDataGridFetchers = <Row extends Record<string, any>>({
   }
 
   const refresh = (options: RefreshOptions = {}) => {
-    if (fetcherParams.mode.value === 'pagination') {
+    if (params.mode.value === 'pagination') {
       datasource.value = undefined
       void fetchPage(1, options)
       return

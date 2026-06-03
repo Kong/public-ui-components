@@ -1,7 +1,7 @@
 <template>
   <KFilterGroup
     v-model="filterSelection"
-    :filters="filters"
+    :filters="filterGroupFilters"
     @apply="handleApply"
     @clear="handleClear"
     @close="filterKey => emit('close', filterKey)"
@@ -17,13 +17,15 @@
   </KFilterGroup>
 </template>
 
-<script setup lang="ts">
-import type { FilterGroupFilters, FilterGroupSelection } from '@kong/kongponents'
-import { getFilterSlotName } from '../utils/headers'
+<script setup lang="ts" generic="Row extends Record<string, any>">
+import type { FilterGroupSelection } from '@kong/kongponents'
+import { computed } from 'vue'
+import type { TableDataGridHeader } from '../types'
+import { getFilterGroupFilters, getFilterSlotName } from '../utils/headers'
 
 const props = defineProps<{
-  filters: FilterGroupFilters
   forwardedFilterSlotNames: string[]
+  headers: Array<TableDataGridHeader<Row>>
 }>()
 
 const filterSelection = defineModel<FilterGroupSelection>({ required: true })
@@ -35,6 +37,7 @@ const emit = defineEmits<{
   (e: 'close', filterKey: string): void
 }>()
 
+const filterGroupFilters = computed(() => getFilterGroupFilters(props.headers))
 const isHostManagedFilter = (filterKey: string) => props.forwardedFilterSlotNames.includes(getFilterSlotName(filterKey))
 const commitBuiltInFilterSelection = (filterKey: string, selection: FilterGroupSelection) => {
   if (isHostManagedFilter(filterKey)) {

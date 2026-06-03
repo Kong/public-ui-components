@@ -25,12 +25,20 @@ describe('useDatatableColumnDefs', () => {
     displayedColumnIndexesByKey = shallowRef(new Map<string, number>()),
     slots = {} as Slots,
   } = {}) => useDatatableColumnDefs<TestRow>({
-    headers,
-    cellAttrs: ref(undefined),
-    displayedColumnIndexesByKey,
-    resolvedTableConfig,
-    selectionColumnDef,
-    slots,
+    config: {
+      cellAttrs: ref(undefined),
+      headers,
+      resolvedTableConfig,
+    },
+    grid: {
+      displayedColumnIndexesByKey,
+    },
+    selection: {
+      selectionColumnDef,
+    },
+    slots: {
+      slots,
+    },
   })
 
   it('orders column definitions from resolved table config and preserves unchanged order references', () => {
@@ -122,22 +130,30 @@ describe('useDatatableColumnDefs', () => {
     const cellAttrs = () => ({ 'data-testid': 'cell' })
     const displayedColumnIndexesByKey = shallowRef(new Map([['status', 1]]))
     const { columnDefs, gridContext } = useDatatableColumnDefs<TestRow>({
-      headers: ref([
-        {
-          key: 'status',
-          label: 'Status',
-          draggable: false,
-          agGridColumnOptions: {
-            suppressMovable: false,
-            cellClass: 'custom-status-cell',
+      config: {
+        cellAttrs: ref(cellAttrs),
+        headers: ref([
+          {
+            key: 'status',
+            label: 'Status',
+            draggable: false,
+            agGridColumnOptions: {
+              suppressMovable: false,
+              cellClass: 'custom-status-cell',
+            },
           },
-        },
-      ]),
-      cellAttrs: ref(cellAttrs),
-      displayedColumnIndexesByKey,
-      resolvedTableConfig: ref({ columnOrder: ['status'] }),
-      selectionColumnDef: ref(undefined),
-      slots,
+        ]),
+        resolvedTableConfig: ref({ columnOrder: ['status'] }),
+      },
+      grid: {
+        displayedColumnIndexesByKey,
+      },
+      selection: {
+        selectionColumnDef: ref(undefined),
+      },
+      slots: {
+        slots,
+      },
     })
 
     expect(gridContext.value).toEqual({

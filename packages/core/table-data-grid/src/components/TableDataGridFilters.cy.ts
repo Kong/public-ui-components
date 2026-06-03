@@ -1,13 +1,25 @@
-import type { FilterGroupFilters, FilterGroupSelection } from '@kong/kongponents'
+import type { FilterGroupSelection } from '@kong/kongponents'
 import { defineComponent, h, ref } from 'vue'
+import type { TableDataGridHeader } from '../types'
 import TableDataGridFilters from './TableDataGridFilters.vue'
 
-const filters: FilterGroupFilters = {
-  name: {
-    label: 'Name',
-    pinned: true,
-  },
+type TestRow = {
+  id: string
+  name: string
+  status: string
 }
+
+const headers: Array<TableDataGridHeader<TestRow>> = [
+  {
+    key: 'name',
+    label: 'Name',
+    filter: {
+      label: 'Name',
+      pinned: true,
+    },
+  },
+  { key: 'status', label: 'Status' },
+]
 
 const createNameFilterSelection = (value: string): FilterGroupSelection => ({
   name: {
@@ -39,8 +51,8 @@ describe('<TableDataGridFilters />', () => {
       setup() {
         return () => h('div', [
           h(TableDataGridFilters, {
-            filters,
             forwardedFilterSlotNames,
+            headers,
             modelValue: filterSelection.value,
             'onUpdate:modelValue': (nextSelection: FilterGroupSelection) => {
               filterSelection.value = nextSelection
@@ -100,5 +112,12 @@ describe('<TableDataGridFilters />', () => {
     cy.getTestId('filter-group-pill-name').findTestId('filter-pill-apply').click()
     cy.get('@filterApply').should('have.been.calledWithMatch', 'name', {})
     cy.getTestId('filter-selection-model').should('have.text', '{}')
+  })
+
+  it('renders pills only for filterable headers', () => {
+    mountFilters()
+
+    cy.getTestId('filter-group-pill-name').should('be.visible')
+    cy.getTestId('filter-group-pill-status').should('not.exist')
   })
 })

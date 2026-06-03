@@ -2,7 +2,7 @@ import { computed, ref } from 'vue'
 import { describe, expect, it, vi } from 'vitest'
 import type { IDatasource, IGetRowsParams } from 'ag-grid-community'
 import type { TableDataGridFetcher } from '../types'
-import { useTableDataGridFetchers } from './useTableDataGridFetchers'
+import { useTableDataGridFetch } from './useTableDataGridFetch'
 
 type TestRow = {
   id: string
@@ -10,8 +10,8 @@ type TestRow = {
   status: number
 }
 
-describe('useTableDataGridFetchers', () => {
-  const createPaginationFetcherParamSources = () => ({
+describe('useTableDataGridFetch', () => {
+  const createPaginationFetchParams = () => ({
     mode: computed(() => 'pagination' as const),
     pageSize: computed(() => 15),
     search: computed(() => undefined),
@@ -20,7 +20,7 @@ describe('useTableDataGridFetchers', () => {
     filterSelection: computed(() => undefined),
   })
 
-  const createInfiniteFetcherParamSources = () => ({
+  const createInfiniteFetchParams = () => ({
     mode: computed(() => 'infinite' as const),
     pageSize: computed(() => 15),
     search: computed(() => undefined),
@@ -113,9 +113,9 @@ describe('useTableDataGridFetchers', () => {
       fetchPage,
       rowData,
       totalRows,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
-      fetcherParams: createPaginationFetcherParamSources(),
+      params: createPaginationFetchParams(),
     })
 
     const firstFetch = fetchPage(1)
@@ -151,9 +151,9 @@ describe('useTableDataGridFetchers', () => {
     const {
       fetchPage,
       hasFetched,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
-      fetcherParams: createPaginationFetcherParamSources(),
+      params: createPaginationFetchParams(),
     })
 
     const firstFetch = fetchPage(1)
@@ -183,9 +183,9 @@ describe('useTableDataGridFetchers', () => {
       fetchPage,
       hasFetched,
       resetFetched,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
-      fetcherParams: createPaginationFetcherParamSources(),
+      params: createPaginationFetchParams(),
     })
 
     await fetchPage(1)
@@ -209,9 +209,9 @@ describe('useTableDataGridFetchers', () => {
     const {
       fetchPage,
       rowData,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher,
-      fetcherParams: createPaginationFetcherParamSources(),
+      params: createPaginationFetchParams(),
     })
 
     fetcher.value = latestFetcher
@@ -234,9 +234,9 @@ describe('useTableDataGridFetchers', () => {
       fetchPage,
       hasNextPageWhenTotalUnknown,
       totalRows,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
-      fetcherParams: createPaginationFetcherParamSources(),
+      params: createPaginationFetchParams(),
     })
 
     await fetchPage(1)
@@ -258,9 +258,9 @@ describe('useTableDataGridFetchers', () => {
     const {
       fetchPage,
       hasNextPageWhenTotalUnknown,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher,
-      fetcherParams: createPaginationFetcherParamSources(),
+      params: createPaginationFetchParams(),
     })
 
     await fetchPage(1)
@@ -288,9 +288,9 @@ describe('useTableDataGridFetchers', () => {
     const {
       datasource,
       refresh,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
-      fetcherParams: createInfiniteFetcherParamSources(),
+      params: createInfiniteFetchParams(),
     })
 
     refresh()
@@ -340,9 +340,9 @@ describe('useTableDataGridFetchers', () => {
     const {
       datasource,
       refresh,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
-      fetcherParams: createInfiniteFetcherParamSources(),
+      params: createInfiniteFetchParams(),
     })
 
     refresh()
@@ -369,9 +369,9 @@ describe('useTableDataGridFetchers', () => {
     const {
       datasource,
       refresh,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
-      fetcherParams: createInfiniteFetcherParamSources(),
+      params: createInfiniteFetchParams(),
     })
 
     refresh()
@@ -403,9 +403,9 @@ describe('useTableDataGridFetchers', () => {
     const {
       datasource,
       refresh,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
-      fetcherParams: createInfiniteFetcherParamSources(),
+      params: createInfiniteFetchParams(),
     })
 
     refresh()
@@ -445,9 +445,9 @@ describe('useTableDataGridFetchers', () => {
     const {
       datasource,
       refresh,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
-      fetcherParams: createInfiniteFetcherParamSources(),
+      params: createInfiniteFetchParams(),
     })
 
     refresh()
@@ -500,9 +500,9 @@ describe('useTableDataGridFetchers', () => {
       isFetching,
       refresh,
       rowData,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
-      fetcherParams: createInfiniteFetcherParamSources(),
+      params: createInfiniteFetchParams(),
     })
 
     refresh()
@@ -560,9 +560,9 @@ describe('useTableDataGridFetchers', () => {
     const {
       datasource,
       refresh,
-    } = useTableDataGridFetchers<TestRow>({
+    } = useTableDataGridFetch<TestRow>({
       fetcher: ref(fetcher as TableDataGridFetcher<TestRow>),
-      fetcherParams: createInfiniteFetcherParamSources(),
+      params: createInfiniteFetchParams(),
     })
 
     refresh()

@@ -131,14 +131,16 @@ describe('useDatatableGridSync', () => {
             }),
             resolvedTableConfig: resolvedTableConfigRef,
           },
+          emit: {
+            gridReady: emitGridReady,
+            sort: emitSort,
+          },
           fetch: {
             mode,
             resetFetched,
             refresh,
           },
           grid: {
-            emitGridReady,
-            emitSort,
             getGridConfig,
             gridApi,
           },

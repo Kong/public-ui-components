@@ -1,10 +1,11 @@
+import type { TableDataGridHeader } from '../types'
 import type {
-  TableDataGridCellAttrs,
-  TableDataGridConfig,
-  TableDataGridHeader,
-} from '../types'
+  TableDataGridColumnDefsConfig,
+  TableDataGridColumnDefsGrid,
+  TableDataGridColumnDefsSelection,
+  TableDataGridColumnDefsSlots,
+} from '../types/internal'
 import type { ColDef } from 'ag-grid-community'
-import type { Ref, ShallowRef, Slots } from 'vue'
 import { computed } from 'vue'
 import isEqual from 'lodash-es/isEqual'
 import TableDataGridCellRenderer from '../components/TableDataGridCellRenderer.vue'
@@ -12,20 +13,30 @@ import TableDataGridHeaderRenderer from '../components/TableDataGridHeaderRender
 import { isColumnHideable } from '../utils/headers'
 
 export const useDatatableColumnDefs = <Row extends Record<string, any>>({
-  headers,
-  cellAttrs,
-  displayedColumnIndexesByKey,
-  resolvedTableConfig,
-  selectionColumnDef,
+  config,
+  grid,
+  selection,
   slots,
 }: {
-  headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
-  cellAttrs: Readonly<Ref<TableDataGridCellAttrs<Row> | undefined>>
-  displayedColumnIndexesByKey: Readonly<ShallowRef<Map<string, number>>>
-  resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
-  selectionColumnDef: Readonly<Ref<ColDef<Row> | undefined>>
-  slots: Slots
+  config: TableDataGridColumnDefsConfig<Row>
+  grid: TableDataGridColumnDefsGrid
+  selection: TableDataGridColumnDefsSelection<Row>
+  slots: TableDataGridColumnDefsSlots
 }) => {
+  const {
+    cellAttrs,
+    headers,
+    resolvedTableConfig,
+  } = config
+  const {
+    displayedColumnIndexesByKey,
+  } = grid
+  const {
+    selectionColumnDef,
+  } = selection
+  const {
+    slots: componentSlots,
+  } = slots
   const resolvedHeaders = computed(() => headers.value)
   const columnsByKey = computed(() => new Map(resolvedHeaders.value.map(header => [header.key, header])))
   const columnOrder = computed<string[]>((previous) => {
@@ -45,7 +56,7 @@ export const useDatatableColumnDefs = <Row extends Record<string, any>>({
     cellAttrs: cellAttrs.value,
     columnsByKey: columnsByKey.value,
     displayedColumnIndexesByKey,
-    slots,
+    slots: componentSlots,
   }))
 
   const createColumnDef = (header: TableDataGridHeader<Row>): ColDef<Row> => ({

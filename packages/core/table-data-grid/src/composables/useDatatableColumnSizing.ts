@@ -1,10 +1,10 @@
 import type {
-  TableDataGridConfig,
-  TableDataGridHeader,
-} from '../types'
-import type { GridColumnWidthChangeSource } from '../types/internal'
+  GridColumnWidthChangeSource,
+  TableDataGridColumnSizingConfig,
+  TableDataGridColumnSizingElement,
+  TableDataGridColumnSizingGrid,
+} from '../types/internal'
 import type { GridApi } from 'ag-grid-community'
-import type { Ref } from 'vue'
 import { computed, onBeforeUnmount } from 'vue'
 import isEqual from 'lodash-es/isEqual'
 import { hasConfiguredColumnWidths, normalizedTableConfigsEqual } from '../utils/tableConfig'
@@ -16,32 +16,14 @@ import {
   getConfigForColumnWidthChangeDetection,
 } from '../utils/columnSizing'
 
-type DatatableColumnSizingElement = {
-  datatableElement: Readonly<Ref<HTMLElement | undefined>>
-  datatableWidth: Readonly<Ref<number>>
-}
-
-type DatatableColumnSizingGrid<Row extends Record<string, any>> = {
-  getGridConfig: (api: GridApi<Row>) => TableDataGridConfig
-  gridApi: Readonly<Ref<GridApi<Row> | undefined>>
-}
-
-type DatatableColumnSizingConfig<Row extends Record<string, any>> = {
-  headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
-  isApplyingTableConfig: Readonly<Ref<boolean>>
-  resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
-  tableConfig: Readonly<Ref<TableDataGridConfig | undefined>>
-  updateTableConfig: (config: TableDataGridConfig) => void
-}
-
 export const useDatatableColumnSizing = <Row extends Record<string, any>>({
   config,
   element,
   grid,
 }: {
-  config: DatatableColumnSizingConfig<Row>
-  element: DatatableColumnSizingElement
-  grid: DatatableColumnSizingGrid<Row>
+  config: TableDataGridColumnSizingConfig<Row>
+  element: TableDataGridColumnSizingElement
+  grid: TableDataGridColumnSizingGrid<Row>
 }) => {
   const {
     headers,

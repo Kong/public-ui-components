@@ -4,48 +4,37 @@
     class="kong-ui-public-table-data-grid"
     data-testid="table-data-grid"
   >
-    <div
-      aria-hidden="true"
-      class="datatable-outside-actions-host"
-      inert
+    <TableDataGridControls
+      v-model:filter-selection="filterSelection"
+      v-model:search="searchQuery"
+      :column-visibility="resolvedColumnVisibility"
+      :enable-search="enableSearch"
+      :headers="headers"
+      :hide-bulk-actions="hideBulkActions"
+      :hide-column-visibility="hideColumnVisibility"
+      :outside-filters="outsideFilters"
+      :outside-search="outsideSearch"
+      :row-selection="rowSelection"
+      :selected-rows="selectedRows"
+      :show-toolbar="!loading && !hideToolbar"
+      @filter:apply="onFilterApply"
+      @filter:clear="onFilterClear"
+      @filter:close="onFilterClose"
+      @filter:open="onFilterOpen"
+      @refresh="refresh"
+      @update:column-visibility="columnVisibility => patchTableConfig({ columnVisibility })"
     >
-      <slot
-        name="outside-actions"
-        v-bind="toolbarSlotProps"
-      />
-    </div>
-
-    <Teleport
-      v-if="showOutsideSearch"
-      defer
-      :to="outsideSearch"
-    >
-      <TableDataGridSearch v-model="searchQuery" />
-    </Teleport>
-
-    <Teleport
-      v-if="showOutsideFilters"
-      defer
-      :to="outsideFilters"
-    >
-      <TableDataGridFilters
-        v-model="filterSelection"
-        :filters="filterGroupFilters"
-        :forwarded-filter-slot-names="getForwardedFilterSlotNames()"
-        @apply="onFilterApply"
-        @clear="onFilterClear"
-        @close="onFilterClose"
-        @open="onFilterOpen"
+      <template
+        v-for="(_, slotName) in $slots"
+        :key="slotName"
+        #[slotName]="slotProps"
       >
-        <template
-          v-for="slotName in getForwardedFilterSlotNames()"
-          :key="slotName"
-          #[slotName]
-        >
-          <slot :name="slotName" />
-        </template>
-      </TableDataGridFilters>
-    </Teleport>
+        <slot
+          :name="slotName"
+          v-bind="slotProps ?? {}"
+        />
+      </template>
+    </TableDataGridControls>
 
     <KSkeleton
       v-if="loading"
@@ -66,64 +55,6 @@
     </slot>
 
     <template v-else>
-      <TableDataGridToolbar
-        v-if="!hideToolbar"
-        v-model:column-visibility="columnVisibilityModel"
-        v-model:filter-selection="filterSelection"
-        v-model:search="searchQuery"
-        :filters="filterGroupFilters"
-        :forwarded-filter-slot-names="getForwardedFilterSlotNames()"
-        :headers="headers"
-        :show-bulk-actions="showBulkActions"
-        :show-column-visibility="showColumnVisibility"
-        :show-toolbar-filters="showToolbarFilters"
-        :show-toolbar-search="showToolbarSearch"
-        :toolbar-slot-props="toolbarSlotProps"
-        @filter:apply="onFilterApply"
-        @filter:clear="onFilterClear"
-        @filter:close="onFilterClose"
-        @filter:open="onFilterOpen"
-      >
-        <template
-          v-if="$slots.toolbar"
-          #toolbar="slotProps"
-        >
-          <slot
-            name="toolbar"
-            v-bind="slotProps"
-          />
-        </template>
-
-        <template #toolbar-left="slotProps">
-          <slot
-            name="toolbar-left"
-            v-bind="slotProps"
-          />
-        </template>
-
-        <template #toolbar-right="slotProps">
-          <slot
-            name="toolbar-right"
-            v-bind="slotProps"
-          />
-        </template>
-
-        <template #bulk-action-items="slotProps">
-          <slot
-            name="bulk-action-items"
-            v-bind="slotProps"
-          />
-        </template>
-
-        <template
-          v-for="slotName in getForwardedFilterSlotNames()"
-          :key="slotName"
-          #[slotName]
-        >
-          <slot :name="slotName" />
-        </template>
-      </TableDataGridToolbar>
-
       <slot
         v-if="isEmpty"
         name="empty-state"
@@ -134,65 +65,40 @@
         />
       </slot>
 
-      <template v-else>
-        <!-- region: grid -->
-        <AgGridVue
-          :key="mode"
-          :always-show-vertical-scroll="agGridOptions.alwaysShowVerticalScroll ?? false"
-          :cache-block-size="activePageSize"
-          class="table-data-grid-grid"
-          :col-resize-default="agGridOptions.colResizeDefault ?? 'shift'"
-          :column-defs="columnDefs"
-          :context="gridContext"
-          :datasource="datasource"
-          :get-row-id="getAgGridRowId"
-          :grid-options="agGridOptions"
-          :infinite-initial-row-count="1"
-          :loading="isFetching"
-          :process-row-post-create="onRowPostCreate"
-          :row-data="mode === 'pagination' ? rowData : undefined"
-          :row-model-type="mode === 'infinite' ? 'infinite' : 'clientSide'"
-          :row-selection="rowSelectionConfig"
-          :suppress-cell-focus="true"
-          :suppress-drag-leave-hides-columns="agGridOptions.suppressDragLeaveHidesColumns ?? true"
-          :theme="themeQuartz"
-          @cell-clicked="onCellClick"
-          @column-moved="onColumnLayoutChange"
-          @column-pinned="onColumnPinned"
-          @column-resized="onColumnResize"
-          @column-visible="onColumnVisibilityChange"
-          @displayed-columns-changed="onDisplayedColumnsChange"
-          @grid-ready="onGridReady"
-          @model-updated="onModelUpdated"
-          @row-clicked="onRowClick"
-          @selection-changed="onSelectionChange"
-          @sort-changed="onSortChange"
-        />
-
-        <!-- region: pagination -->
-        <div
-          v-if="shouldShowPagination"
-          class="datatable-pagination"
-          data-testid="table-data-grid-pagination"
-        >
-          <KPagination
-            :key="paginationKey"
-            class="datatable-pagination-control"
-            :current-page="hasKnownTotalRows ? currentPage : null"
-            :disable-page-jump="!hasKnownTotalRows"
-            :initial-page-size="activePageSize"
-            :offset="!hasKnownTotalRows"
-            :offset-next-button-disabled="!canGoNextPage || isFetching"
-            :offset-previous-button-disabled="!canGoPreviousPage || isFetching"
-            :page-sizes="resolvedPaginationPageSizeOptions"
-            :total-count="totalRows"
-            @get-next-offset="goToPage(currentPage + 1)"
-            @get-previous-offset="goToPage(currentPage - 1)"
-            @page-change="onPageChange"
-            @page-size-change="onPageSizeChange"
-          />
-        </div>
-      </template>
+      <TableDataGridBody
+        v-else
+        :active-page-size="activePageSize"
+        :ag-grid-options="agGridOptions"
+        :column-defs="columnDefs"
+        :current-page="currentPage"
+        :datasource="datasource"
+        :fetch-page="fetchPage"
+        :get-row-id="getAgGridRowId"
+        :grid-context="gridContext"
+        :has-fetched="hasFetched"
+        :has-next-page-when-total-unknown="hasNextPageWhenTotalUnknown"
+        :hide-pagination="hidePagination"
+        :hide-pagination-when-optional="hidePaginationWhenOptional"
+        :is-fetching="isFetching"
+        :mode="mode"
+        :pagination-page-size-options="paginationPageSizeOptions"
+        :process-row-post-create="onRowPostCreate"
+        :row-data="rowData"
+        :row-selection-config="rowSelectionConfig"
+        :total-rows="totalRows"
+        @cell-clicked="onCellClick"
+        @column-moved="onColumnLayoutChange"
+        @column-pinned="onColumnPinned"
+        @column-resized="onColumnResize"
+        @column-visible="onColumnVisibilityChange"
+        @displayed-columns-changed="onDisplayedColumnsChange"
+        @grid-ready="onGridReady"
+        @model-updated="onModelUpdated"
+        @page-size-change="onPageSizeChange"
+        @row-clicked="onRowClick"
+        @selection-changed="onSelectionChange"
+        @sort-changed="onSortChange"
+      />
     </template>
   </div>
 </template>
@@ -215,31 +121,20 @@ import type {
   TableDataGridRowKey,
   TableDataGridRowSelectionMode,
   TableDataGridSort,
-  TableDataGridState,
   TableDataGridStatePayload,
   TableDataGridToolbarSlotProps,
   TableDataGridTeleportTarget,
 } from '../types'
 import type {
-  CellClickedEvent,
   GridApi,
-  ProcessRowParams,
   RowClickedEvent,
 } from 'ag-grid-community'
-import { AgGridVue } from 'ag-grid-vue3'
-import { AllCommunityModule, InfiniteRowModelModule, ModuleRegistry, themeQuartz } from 'ag-grid-community'
-import type { FilterGroupFilters, FilterGroupSelection } from '@kong/kongponents'
-import { useElementSize, watchDebounced } from '@vueuse/core'
-import { computed, nextTick, ref, toRef, watch } from 'vue'
-import TableDataGridFilters from './TableDataGridFilters.vue'
-import TableDataGridSearch from './TableDataGridSearch.vue'
-import TableDataGridToolbar from './TableDataGridToolbar.vue'
-import { getFilterSlotName } from '../utils/headers'
-import { getRowKeyValue } from '../utils/rowKey'
-import { patchRowAttrs } from '../utils/rowAttrs'
+import type { FilterGroupSelection } from '@kong/kongponents'
+import { useElementSize } from '@vueuse/core'
+import { computed, nextTick, ref, toRef } from 'vue'
+import TableDataGridBody from './TableDataGridBody.vue'
+import TableDataGridControls from './TableDataGridControls.vue'
 import composables from '../composables'
-
-ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
 
 const {
   headers,
@@ -322,34 +217,35 @@ const emit = defineEmits<{
 const { i18n } = composables.useI18n()
 const datatableElement = ref<HTMLElement>()
 const { width: datatableWidth } = useElementSize(datatableElement, { width: 0, height: 0 }, { box: 'border-box' })
+const searchQuery = ref(initialFetcherParams.search ?? '')
 const gridApi = ref<GridApi<Row>>()
 const isApplyingTableConfig = ref(false)
 const resolvedRowKey = computed<TableDataGridRowKey<Row>>(() => rowKey ?? DEFAULT_ROW_KEY as TableDataGridRowKey<Row>)
-const searchQuery = ref(initialFetcherParams.search ?? '')
 
-// Access through the composables bag keeps Cypress stubs working for package component tests.
 const {
   activePageSize,
   applyTableConfig,
+  captureGridConfig,
   getGridConfig,
+  patchTableConfig,
   resolvedColumnVisibility,
   resolvedSort,
   resolvedTableConfig,
-  captureGridConfig,
-  patchTableConfig,
   updateTableConfig,
 } = composables.useTableDataGridConfig<Row>({
-  tableConfig: toRef(() => tableConfig),
-  emitTableConfigUpdate: config => emit('update:tableConfig', config),
-  headers: toRef(() => headers),
-  pageSize: toRef(() => pageSize),
+  config: {
+    emitTableConfigUpdate: nextConfig => emit('update:tableConfig', nextConfig),
+    headers: toRef(() => headers),
+    pageSize: toRef(() => pageSize),
+    tableConfig: toRef(() => tableConfig),
+  },
 })
 
 const {
   currentPage,
   datasource,
-  fetchPage,
   fetchError,
+  fetchPage,
   hasFetched,
   hasNextPageWhenTotalUnknown,
   isFetching,
@@ -357,57 +253,40 @@ const {
   refresh,
   rowData,
   totalRows,
-} = composables.useTableDataGridFetchers<Row>({
+} = composables.useTableDataGridFetch<Row>({
   fetcher: toRef(() => fetcher),
-  fetcherParams: {
+  params: {
     mode: toRef(() => mode),
     pageSize: activePageSize,
     search: searchQuery,
     sortColumnKey: computed(() => resolvedTableConfig.value.sortColumnKey),
     sortColumnOrder: computed(() => resolvedTableConfig.value.sortColumnOrder),
-    filterSelection: filterSelection,
+    filterSelection,
   },
 })
-const {
-  hasKnownTotalRows,
-  canGoPreviousPage,
-  canGoNextPage,
-  goToPage,
-  onPageChange,
-} = composables.useDatatablePagination({
-  activePageSize,
-  isFetching,
-  fetchPage,
-  currentPage,
-  totalRows,
-  hasNextPageWhenTotalUnknown,
-})
 
 const {
-  selectedRows,
-  rowSelectionConfig,
-  selectionColumnDef,
-  selectRowByKey,
   deselectAll,
   onSelectionChange,
+  rowSelectionConfig,
+  selectedRows,
+  selectionColumnDef,
+  selectRowByKey,
 } = composables.useDatatableSelection<Row>({
-  gridApi,
-  rowSelection: toRef(() => rowSelection),
-  agGridOptions: toRef(() => agGridOptions),
-  rowKey: resolvedRowKey,
-  emitRowSelect: selected => emit('row:select', selected),
+  config: {
+    agGridOptions: toRef(() => agGridOptions),
+    rowKey: resolvedRowKey,
+    rowSelection: toRef(() => rowSelection),
+  },
+  emit: {
+    rowSelect: selectedRows => emit('row:select', selectedRows),
+  },
+  grid: {
+    gridApi,
+  },
 })
 
-const {
-  emitGridConfigChange,
-  fitColumnsOnGridReady,
-  handleDatatableWidthChange,
-  scheduleColumnsToFit,
-  scheduleColumnsToFitAfterDisplayedColumnsChange,
-  scheduleColumnsToFitAfterRenderedRowsChange,
-  shouldRefitColumnsAfterConfigChange,
-  startResizeTracking,
-} = composables.useDatatableColumnSizing<Row>({
+const sizing = composables.useDatatableColumnSizing<Row>({
   config: {
     headers: toRef(() => headers),
     isApplyingTableConfig,
@@ -446,171 +325,89 @@ const {
     resolvedSort,
     resolvedTableConfig,
   },
+  emit: {
+    gridReady: api => emit('grid:ready', api),
+    sort: sortValue => emit('sort', sortValue),
+  },
   fetch: {
     mode: toRef(() => mode),
     resetFetched,
     refresh,
   },
   grid: {
-    emitGridReady: api => emit('grid:ready', api),
-    emitSort: sort => emit('sort', sort),
     getGridConfig,
     gridApi,
   },
   selection: {
     rowSelection: toRef(() => rowSelection),
   },
-  sizingHandlers: {
-    emitGridConfigChange,
-    fitColumnsOnGridReady,
-    scheduleColumnsToFit,
-    scheduleColumnsToFitAfterDisplayedColumnsChange,
-    scheduleColumnsToFitAfterRenderedRowsChange,
-    shouldRefitColumnsAfterConfigChange,
-    startResizeTracking,
-  },
+  sizingHandlers: sizing,
 })
 
 const {
   columnDefs,
   gridContext,
 } = composables.useDatatableColumnDefs<Row>({
-  headers: toRef(() => headers),
-  cellAttrs: toRef(() => cellAttrs),
-  displayedColumnIndexesByKey,
-  resolvedTableConfig,
-  selectionColumnDef,
-  slots,
-})
-
-const resolvedPaginationPageSizeOptions = computed(() => (
-  [...new Set([...paginationPageSizeOptions, activePageSize.value])].sort((a, b) => a - b)
-))
-// Kongponents reads initialPageSize only on mount, so remount pagination when
-// page-size options change to keep its internal selection aligned.
-const paginationKey = computed(() => `${activePageSize.value}:${resolvedPaginationPageSizeOptions.value.join(',')}`)
-
-const filterGroupFilters = computed<FilterGroupFilters>(() => Object.fromEntries(
-  headers
-    .filter(header => header.filter)
-    .map(header => [header.key, header.filter]),
-) as FilterGroupFilters)
-
-const getForwardedFilterSlotNames = () => Object.keys(filterGroupFilters.value)
-  .map(getFilterSlotName)
-  .filter(slotName => Boolean(slots[slotName]))
-
-const updateFilterSelection = (selection: FilterGroupSelection) => {
-  filterSelection.value = { ...selection }
-  refresh()
-}
-const updateSearch = (search: string) => {
-  searchQuery.value = search
-}
-const toolbarSlotProps = computed<TableDataGridToolbarSlotProps<Row>>(() => ({
-  selectedRows: selectedRows.value,
-  filterSelection: filterSelection.value,
-  filters: filterGroupFilters.value,
-  search: searchQuery.value,
-  updateFilterSelection,
-  updateSearch,
-  refresh,
-}))
-const hasFilters = computed(() => headers.some(header => header.filter != null))
-const hasOutsideFiltersTarget = computed(() => Boolean(outsideFilters))
-const hasOutsideSearchTarget = computed(() => Boolean(outsideSearch))
-const showOutsideFilters = computed(() => hasFilters.value && hasOutsideFiltersTarget.value)
-const showOutsideSearch = computed(() => enableSearch && hasOutsideSearchTarget.value)
-const showBulkActions = computed(() => rowSelection !== 'none' && !hideBulkActions)
-const showToolbarFilters = computed(() => hasFilters.value && !hasOutsideFiltersTarget.value)
-const showToolbarSearch = computed(() => enableSearch && !hasOutsideSearchTarget.value)
-const showColumnVisibility = computed(() => !hideColumnVisibility)
-const columnVisibilityModel = computed({
-  get: () => resolvedColumnVisibility.value,
-  set: (columnVisibility: Record<string, boolean>) => {
-    patchTableConfig({ columnVisibility })
+  config: {
+    cellAttrs: toRef(() => cellAttrs),
+    headers: toRef(() => headers),
+    resolvedTableConfig,
+  },
+  grid: {
+    displayedColumnIndexesByKey,
+  },
+  selection: {
+    selectionColumnDef,
+  },
+  slots: {
+    slots,
   },
 })
 
-const hasRows = computed(() => rowData.value.length > 0)
-const shouldShowErrorState = computed(() => error || (Boolean(fetchError.value) && !hasRows.value))
-const shouldEmitLoadingState = computed(() => loading || (!hasRows.value && (!hasFetched.value || isFetching.value)))
-const isEmpty = computed(() => hasFetched.value && !isFetching.value && !hasRows.value && !shouldShowErrorState.value)
-const shouldShowPaginationWhenOptional = computed(() => {
-  if (totalRows.value == null) {
-    return currentPage.value > 1 || hasNextPageWhenTotalUnknown.value
-  }
-
-  return totalRows.value > activePageSize.value
-})
-const shouldShowPagination = computed(() => (
-  mode === 'pagination'
-    && hasFetched.value
-    && !hidePagination
-    && (!hidePaginationWhenOptional || shouldShowPaginationWhenOptional.value)
-))
-const datatableState = computed<TableDataGridState>(() => {
-  if (shouldEmitLoadingState.value) {
-    return 'loading'
-  }
-
-  if (shouldShowErrorState.value) {
-    return 'error'
-  }
-
-  if (isEmpty.value) {
-    return 'empty'
-  }
-
-  return 'success'
+const {
+  isEmpty,
+  shouldShowErrorState,
+} = composables.useTableDataGridState<Row>({
+  emit: {
+    state: payload => emit('state', payload),
+  },
+  fetch: {
+    fetchError,
+    hasFetched,
+    isFetching,
+    rowData,
+  },
+  inputs: {
+    error: toRef(() => error),
+    loading: toRef(() => loading),
+  },
 })
 
-const getAgGridRowId = ({ data }: { data: Row }) => {
-  return getRowKeyValue(data, resolvedRowKey.value)
-}
+const {
+  getAgGridRowId,
+  onCellClick,
+  onRowClick,
+  onRowPostCreate,
+} = composables.useTableDataGridInteractions<Row>({
+  emit: {
+    cellClick: payload => emit('cell:click', payload),
+    rowClick: (row, event) => emit('row:click', row, event),
+  },
+  inputs: {
+    agGridOptions: toRef(() => agGridOptions),
+    headers: toRef(() => headers),
+    rowAttrs: toRef(() => rowAttrs),
+    rowKey: resolvedRowKey,
+  },
+})
 
-const rowClickDisabledColumnKeys = computed(() => new Set(
-  headers
-    .filter(header => header.disableRowClick)
-    .map(header => header.key),
-))
-
-const getClickedColumnKey = (event: RowClickedEvent<Row>): string | undefined => {
-  const target = event.event?.target
-
-  if (!(target instanceof Element)) {
-    return undefined
-  }
-
-  return target.closest('.ag-cell')?.getAttribute('col-id') ?? undefined
-}
-
-const isRowClickDisabledForColumn = (event: RowClickedEvent<Row>): boolean => {
-  const columnKey = getClickedColumnKey(event)
-
-  return Boolean(columnKey && rowClickDisabledColumnKeys.value.has(columnKey))
-}
-
-const onRowPostCreate = (params: ProcessRowParams<Row>) => {
-  agGridOptions.processRowPostCreate?.(params)
-
-  if (!params.node.data || !rowAttrs) {
-    return
-  }
-
-  const attrs = rowAttrs(params.node.data)
-  patchRowAttrs(params.eRow, attrs)
-  patchRowAttrs(params.ePinnedLeftRow, attrs)
-  patchRowAttrs(params.ePinnedRightRow, attrs)
-}
-
-const onFilterApply = (filterKey: string, selection: FilterGroupSelection) => {
-  emit('filter:apply', filterKey, selection)
+const onFilterApply = (filterKey: string, selectionValue: FilterGroupSelection) => {
+  emit('filter:apply', filterKey, selectionValue)
   void nextTick(refresh)
 }
 
-const onFilterClear = (filterKey: string, selection: FilterGroupSelection) => {
-  emit('filter:clear', filterKey, selection)
+const onFilterClear = (filterKey: string, selectionValue: FilterGroupSelection) => {
+  emit('filter:clear', filterKey, selectionValue)
   void nextTick(refresh)
 }
 
@@ -622,58 +419,23 @@ const onFilterClose = (filterKey: string) => {
   emit('filter:close', filterKey)
 }
 
-const onRowClick = (event: RowClickedEvent<Row>) => {
-  if (event.data && !isRowClickDisabledForColumn(event)) {
-    emit('row:click', event.data, event)
-  }
-}
-
-const onCellClick = (event: CellClickedEvent<Row>) => {
-  // AG Grid can emit cell clicks without row data or a stable column id.
-  if (!event.data || !event.colDef.colId) {
-    return
-  }
-
-  emit('cell:click', {
-    row: event.data,
-    columnKey: event.colDef.colId,
-    value: event.value,
-  })
-}
-
-const searchDebounceMs = computed(() => searchQuery.value ? 350 : 0)
-
-watch(() => refreshKey, (nextKey, previousKey) => {
-  if (nextKey === previousKey) {
-    return
-  }
-
-  refresh()
-})
-
-watch(datatableState, state => emit('state', {
-  state,
-  hasData: hasRows.value,
-}), { immediate: true })
-
-watch(datatableWidth, handleDatatableWidthChange)
-
-watch(() => enableSearch, (isEnabled) => {
-  if (isEnabled || !searchQuery.value) {
-    return
-  }
-
-  searchQuery.value = ''
-})
-
-watchDebounced(searchQuery, () => {
-  refresh()
-}, {
-  debounce: searchDebounceMs,
-  // Without sync flush, outside-actions slot calls to updateSearch() can miss
-  // the immediate debounce window and refetch with the previous search value.
-  flush: 'sync',
-  maxWait: 1000,
+composables.useTableDataGridRefreshTriggers({
+  element: {
+    datatableWidth,
+  },
+  fetch: {
+    refresh,
+  },
+  inputs: {
+    enableSearch: toRef(() => enableSearch),
+    refreshKey: toRef(() => refreshKey),
+  },
+  models: {
+    searchQuery,
+  },
+  sizing: {
+    handleDatatableWidthChange: sizing.handleDatatableWidthChange,
+  },
 })
 
 defineExpose<{
@@ -704,71 +466,4 @@ defineExpose<{
   width: 100%;
 }
 
-.datatable-outside-actions-host {
-  height: 0;
-  overflow: hidden;
-  pointer-events: none;
-  position: absolute;
-  width: 0;
-}
-
-.table-data-grid-grid {
-  /* stylelint-disable custom-property-pattern -- AG Grid theme variables must use AG Grid's --ag-* namespace. */
-  --ag-background-color: var(--kui-color-background, #{$kui-color-background});
-  --ag-border-color: var(--kui-color-border, #{$kui-color-border});
-  --ag-header-background-color: var(--kui-color-background, #{$kui-color-background});
-  --ag-header-column-border: 1px solid var(--kui-color-border, #{$kui-color-border});
-  --ag-header-column-resize-handle-color: transparent;
-  --ag-selected-row-background-color: var(--kui-color-background-primary-weakest, #{$kui-color-background-primary-weakest});
-  --ag-wrapper-border: none;
-  --ag-wrapper-border-radius: 0;
-  /* stylelint-enable custom-property-pattern */
-
-  flex: 1 1 420px;
-  min-height: 0;
-  width: 100%;
-}
-
-.datatable-pagination {
-  background: var(--kui-color-background, $kui-color-background);
-  border-top: 1px solid var(--kui-color-border, $kui-color-border);
-  padding: var(--kui-space-20, $kui-space-20) var(--kui-space-50, $kui-space-50) var(--kui-space-30, $kui-space-30);
-}
-
-.datatable-pagination-control {
-  margin-top: 0;
-  padding: 0;
-  width: 100%;
-}
-
-.datatable-pagination-control :global(.pagination-text.large-screen) {
-  padding-left: var(--kui-space-40, $kui-space-40);
-}
-
-.table-data-grid-grid :global(.ag-header-cell[col-id="ag-Grid-SelectionColumn"]) {
-  /* stylelint-disable-next-line custom-property-pattern -- AG Grid theme variables must use AG Grid's --ag-* namespace. */
-  --ag-header-column-border: none;
-
-  border-right: 0;
-  gap: 0;
-}
-
-.table-data-grid-grid :global(.ag-cell) {
-  align-items: center;
-  display: flex;
-}
-
-.table-data-grid-grid :global(.ag-cell-wrapper),
-.table-data-grid-grid :global(.ag-cell-value),
-.table-data-grid-grid :global(.datatable-cell-content) {
-  align-items: center;
-  display: flex;
-  height: 100%;
-  min-width: 0;
-  width: 100%;
-}
-
-.datatable-pagination-control :global(.pagination-button.placeholder) {
-  box-sizing: border-box;
-}
 </style>

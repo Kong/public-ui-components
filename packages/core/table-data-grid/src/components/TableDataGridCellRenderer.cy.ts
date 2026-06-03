@@ -166,6 +166,9 @@ describe('<TableDataGridCellRenderer />', () => {
       .should('have.class', 'status-cell')
       .and('have.attr', 'data-column-index', '1')
       .and('have.attr', 'data-row-id', 'row-1')
+      .invoke('attr', 'class')
+      .then(className => className?.split(/\s+/).filter(classToken => classToken === 'status-cell'))
+      .should('have.length', 1)
   })
 
   it('updates rendered content when AG Grid refreshes the renderer', () => {

@@ -20,8 +20,8 @@
         <TableDataGridFilters
           v-if="showToolbarFilters"
           v-model="filterSelection"
-          :filters="filters"
           :forwarded-filter-slot-names="forwardedFilterSlotNames"
+          :headers="headers"
           @apply="(filterKey, selection) => emit('filter:apply', filterKey, selection)"
           @clear="(filterKey, selection) => emit('filter:clear', filterKey, selection)"
           @close="filterKey => emit('filter:close', filterKey)"
@@ -89,7 +89,7 @@ import type {
   TableDataGridHeader,
   TableDataGridToolbarSlotProps,
 } from '../types'
-import type { FilterGroupFilters, FilterGroupSelection } from '@kong/kongponents'
+import type { FilterGroupSelection } from '@kong/kongponents'
 import TableDataGridColumnVisibilityMenu from './TableDataGridColumnVisibilityMenu.vue'
 import TableDataGridFilters from './TableDataGridFilters.vue'
 import TableDataGridSearch from './TableDataGridSearch.vue'
@@ -97,7 +97,6 @@ import composables from '../composables'
 
 defineProps<{
   headers: Array<TableDataGridHeader<Row>>
-  filters: FilterGroupFilters
   forwardedFilterSlotNames: string[]
   toolbarSlotProps: TableDataGridToolbarSlotProps<Row>
   showToolbarSearch: boolean

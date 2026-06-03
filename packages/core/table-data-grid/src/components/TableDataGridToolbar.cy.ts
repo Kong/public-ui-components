@@ -2,9 +2,10 @@ import type {
   TableDataGridHeader,
   TableDataGridToolbarSlotProps,
 } from '../types'
-import type { FilterGroupFilters, FilterGroupSelection } from '@kong/kongponents'
+import type { FilterGroupSelection } from '@kong/kongponents'
 import type { Ref, VNode } from 'vue'
 import { defineComponent, h, ref } from 'vue'
+import { getFilterGroupFilters } from '../utils/headers'
 import TableDataGridToolbar from './TableDataGridToolbar.vue'
 
 type TestRow = {
@@ -24,17 +25,20 @@ const rows: TestRow[] = [
 ]
 
 const headers: Array<TableDataGridHeader<TestRow>> = [
-  { key: 'name', label: 'Name', hideable: false },
+  {
+    key: 'name',
+    label: 'Name',
+    hideable: false,
+    filter: {
+      label: 'Name',
+      pinned: true,
+    },
+  },
   { key: 'status', label: 'Status' },
   { key: 'latency', label: 'Latency' },
 ]
 
-const filters: FilterGroupFilters = {
-  name: {
-    label: 'Name',
-    pinned: true,
-  },
-}
+const filters = getFilterGroupFilters(headers)
 
 const createNameFilterSelection = (value: string): FilterGroupSelection => ({
   name: {
@@ -107,7 +111,6 @@ describe('<TableDataGridToolbar />', () => {
           }, 'Select row'),
           h(TableDataGridToolbar, {
             headers,
-            filters,
             forwardedFilterSlotNames,
             toolbarSlotProps: createToolbarSlotProps(),
             showBulkActions,

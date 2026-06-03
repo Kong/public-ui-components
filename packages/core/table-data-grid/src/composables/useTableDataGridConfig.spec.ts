@@ -23,10 +23,12 @@ describe('useTableDataGridConfig', () => {
   } = {}) => {
     const emitTableConfigUpdate = vi.fn()
     const config = useTableDataGridConfig<TestRow>({
-      tableConfig,
-      emitTableConfigUpdate,
-      headers: ref(headers),
-      pageSize: ref(25),
+      config: {
+        emitTableConfigUpdate,
+        headers: ref(headers),
+        pageSize: ref(25),
+        tableConfig,
+      },
     })
 
     return {

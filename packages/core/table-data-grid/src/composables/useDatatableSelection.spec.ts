@@ -55,11 +55,17 @@ describe('useDatatableSelection', () => {
   } = {}) => {
     const emitRowSelect = vi.fn()
     const selection = useDatatableSelection<TestRow>({
-      gridApi,
-      rowSelection,
-      agGridOptions,
-      rowKey: ref('id'),
-      emitRowSelect,
+      config: {
+        agGridOptions,
+        rowKey: ref('id'),
+        rowSelection,
+      },
+      emit: {
+        rowSelect: emitRowSelect,
+      },
+      grid: {
+        gridApi,
+      },
     })
 
     return {
