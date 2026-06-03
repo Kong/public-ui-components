@@ -50,6 +50,13 @@ const allowCsvExport = {
   type: 'boolean',
 } as const
 
+const entityLinks = {
+  type: 'object',
+  additionalProperties: {
+    type: 'string',
+  },
+} as const satisfies JSONSchema
+
 const chartDatasetColorsSchema = {
   type: ['object', 'array'],
   items: {
@@ -205,6 +212,7 @@ export const topNTableSchema = {
     entity_link: {
       type: 'string',
     },
+    entity_links: entityLinks,
   },
   required: ['type'],
   additionalProperties: false,
@@ -382,7 +390,7 @@ const dimensionsFn = <T extends readonly string[] | undefined>(dimensions?: T) =
   type: 'array',
   description: 'List of attributes or entity types to group by.',
   minItems: 0,
-  maxItems: 2,
+  maxItems: 3,
   items: {
     type: 'string',
     ...(dimensions ? { enum: dimensions } : {}),

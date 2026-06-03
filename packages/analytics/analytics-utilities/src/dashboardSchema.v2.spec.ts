@@ -149,6 +149,75 @@ describe('dashboardSchema.v2', () => {
     expect(validateDashboardConfigSchema(mixedDashboardConfig)).toBe(true)
   })
 
+  it('accepts top_n entity link mappings', () => {
+    const topNEntityLinksConfig = {
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: strictQuery,
+            chart: {
+              type: 'top_n',
+              entity_link: 'https://example.com/routes/{entity-id}',
+              entity_links: {
+                route: 'https://example.com/routes/{entity-id}',
+                gateway_service: 'https://example.com/services/{entity-id}',
+              },
+            },
+          },
+        },
+      ],
+    }
+
+    expect(validateDashboardConfigSchema(topNEntityLinksConfig)).toBe(true)
+  })
+
+  it('accepts dashboard queries with three dimensions', () => {
+    const topNThreeDimensionConfig = {
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: {
+              ...strictQuery,
+              dimensions: ['route', 'gateway_service', 'consumer'],
+            },
+            chart: {
+              type: 'top_n',
+            },
+          },
+        },
+      ],
+    }
+
+    expect(validateValidDashboardQuery(topNThreeDimensionConfig.tiles[0].definition.query)).toBe(true)
+    expect(validateDashboardConfigSchema(topNThreeDimensionConfig)).toBe(true)
+  })
+
+  it('rejects top_n entity link mappings with non-string values', () => {
+    const topNEntityLinksConfig = {
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: strictQuery,
+            chart: {
+              type: 'top_n',
+              entity_links: {
+                route: 1,
+              },
+            },
+          },
+        },
+      ],
+    }
+
+    expect(validateDashboardConfigSchema(topNEntityLinksConfig)).toBe(false)
+  })
+
   it.each([
     [apiUsageQuerySchema, exploreAggregations, queryableExploreDimensions, filterableExploreDimensions],
     [basicQuerySchema, basicExploreAggregations, queryableBasicExploreDimensions, filterableBasicExploreDimensions],
