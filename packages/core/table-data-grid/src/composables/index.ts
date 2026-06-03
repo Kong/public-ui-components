@@ -3,9 +3,11 @@ import { useTableDataGridConfig } from './useTableDataGridConfig'
 import { useTableDataGridFetch } from './useTableDataGridFetch'
 import { useDatatableColumnDefs } from './useDatatableColumnDefs'
 import { useDatatableColumnSizing } from './useDatatableColumnSizing'
-import { useDatatableGridSync } from './useDatatableGridSync'
 import { useDatatablePagination } from './useDatatablePagination'
 import { useDatatableSelection } from './useDatatableSelection'
+import { useTableDataGridColumnLayoutSync } from './useTableDataGridColumnLayoutSync'
+import { useTableDataGridConfigSync } from './useTableDataGridConfigSync'
+import { useTableDataGridGridLifecycle } from './useTableDataGridGridLifecycle'
 import { useTableDataGridInteractions } from './useTableDataGridInteractions'
 import { useTableDataGridRefreshTriggers } from './useTableDataGridRefreshTriggers'
 import { useTableDataGridState } from './useTableDataGridState'
@@ -16,9 +18,11 @@ export default {
   useTableDataGridFetch,
   useDatatableColumnDefs,
   useDatatableColumnSizing,
-  useDatatableGridSync,
   useDatatablePagination,
   useDatatableSelection,
+  useTableDataGridColumnLayoutSync,
+  useTableDataGridConfigSync,
+  useTableDataGridGridLifecycle,
   useTableDataGridInteractions,
   useTableDataGridRefreshTriggers,
   useTableDataGridState,

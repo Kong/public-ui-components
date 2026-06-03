@@ -11,16 +11,11 @@ import {
 } from '../utils/tableConfig'
 
 export const useTableDataGridConfig = <Row extends Record<string, any>>({
-  config,
-}: {
-  config: TableDataGridConfigSources<Row>
-}) => {
-  const {
-    emitTableConfigUpdate,
-    headers,
-    pageSize,
-    tableConfig,
-  } = config
+  emitTableConfigUpdate,
+  headers,
+  pageSize,
+  tableConfig,
+}: TableDataGridConfigSources<Row>) => {
   const activeTableConfig = ref<TableDataGridConfig>(normalizeTableConfig(tableConfig.value))
   const resolvedHeaders = computed(() => headers.value)
   const resolvedDefaultPageSize = computed(() => pageSize.value)

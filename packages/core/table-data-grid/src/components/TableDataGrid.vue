@@ -219,6 +219,7 @@ const datatableElement = ref<HTMLElement>()
 const { width: datatableWidth } = useElementSize(datatableElement, { width: 0, height: 0 }, { box: 'border-box' })
 const searchQuery = ref(initialFetcherParams.search ?? '')
 const gridApi = ref<GridApi<Row>>()
+const isApplyingInitialColumnState = ref(false)
 const isApplyingTableConfig = ref(false)
 const resolvedRowKey = computed<TableDataGridRowKey<Row>>(() => rowKey ?? DEFAULT_ROW_KEY as TableDataGridRowKey<Row>)
 
@@ -233,12 +234,10 @@ const {
   resolvedTableConfig,
   updateTableConfig,
 } = composables.useTableDataGridConfig<Row>({
-  config: {
-    emitTableConfigUpdate: nextConfig => emit('update:tableConfig', nextConfig),
-    headers: toRef(() => headers),
-    pageSize: toRef(() => pageSize),
-    tableConfig: toRef(() => tableConfig),
-  },
+  emitTableConfigUpdate: nextConfig => emit('update:tableConfig', nextConfig),
+  headers: toRef(() => headers),
+  pageSize: toRef(() => pageSize),
+  tableConfig: toRef(() => tableConfig),
 })
 
 const {
@@ -311,37 +310,47 @@ const {
   onColumnResize,
   onColumnVisibilityChange,
   onDisplayedColumnsChange,
-  onGridReady,
   onModelUpdated,
+  updateDisplayedColumnIndexes,
+} = composables.useTableDataGridColumnLayoutSync<Row>({
+  gridApi,
+  isApplyingInitialColumnState,
+  mode: toRef(() => mode),
+  rowSelection: toRef(() => rowSelection),
+  sizing,
+})
+
+const {
+  applyResolvedTableConfig,
+  onGridReady,
+} = composables.useTableDataGridGridLifecycle<Row>({
+  applyTableConfig,
+  captureGridConfig,
+  emitGridReady: api => emit('grid:ready', api),
+  gridApi,
+  isApplyingInitialColumnState,
+  isApplyingTableConfig,
+  refresh,
+  resetFetched,
+  resolvedSort,
+  sizing,
+  updateDisplayedColumnIndexes,
+})
+
+const {
   onPageSizeChange,
   onSortChange,
-} = composables.useDatatableGridSync<Row>({
-  config: {
-    activePageSize,
-    applyTableConfig,
-    captureGridConfig,
-    isApplyingTableConfig,
-    patchTableConfig,
-    resolvedSort,
-    resolvedTableConfig,
-  },
-  emit: {
-    gridReady: api => emit('grid:ready', api),
-    sort: sortValue => emit('sort', sortValue),
-  },
-  fetch: {
-    mode: toRef(() => mode),
-    resetFetched,
-    refresh,
-  },
-  grid: {
-    getGridConfig,
-    gridApi,
-  },
-  selection: {
-    rowSelection: toRef(() => rowSelection),
-  },
-  sizingHandlers: sizing,
+} = composables.useTableDataGridConfigSync<Row>({
+  activePageSize,
+  applyResolvedTableConfig,
+  emitSort: sortValue => emit('sort', sortValue),
+  getGridConfig,
+  gridApi,
+  mode: toRef(() => mode),
+  patchTableConfig,
+  refresh,
+  resolvedTableConfig,
+  sizing,
 })
 
 const {

@@ -5,10 +5,8 @@ import type {
   TableDataGridFetcherParams,
   TableDataGridGridOptions,
   TableDataGridHeader,
-  TableDataGridMode,
   TableDataGridRowKey,
   TableDataGridRowSelectionMode,
-  TableDataGridSort,
 } from './index'
 import type { ColDef, GridApi } from 'ag-grid-community'
 import type { Ref, ShallowRef, Slots } from 'vue'
@@ -67,7 +65,7 @@ export type TableDataGridColumnSizingGrid<Row extends Record<string, any>> = {
   gridApi: Ref<GridApi<Row> | undefined>
 }
 
-type TableDataGridColumnSizingHandlers<Row extends Record<string, any>> = {
+export type TableDataGridColumnSizingHandlers<Row extends Record<string, any>> = {
   emitGridConfigChange: (options?: {
     columnWidthChangeSource?: GridColumnWidthChangeSource
   }) => void
@@ -82,49 +80,6 @@ type TableDataGridColumnSizingHandlers<Row extends Record<string, any>> = {
   scheduleColumnsToFitAfterRenderedRowsChange: (api?: GridApi<Row>) => void
   shouldRefitColumnsAfterConfigChange: () => boolean
   startResizeTracking: () => void
-}
-
-export type TableDataGridGridSyncConfig<Row extends Record<string, any>> = {
-  activePageSize: Readonly<Ref<number>>
-  applyTableConfig: (api?: GridApi<Row>) => void
-  captureGridConfig: (api: GridApi<Row>) => void
-  isApplyingTableConfig: Ref<boolean>
-  patchTableConfig: (config: Partial<TableDataGridConfig>) => void
-  resolvedSort: Readonly<Ref<{
-    sortColumnKey?: TableDataGridSort['sortColumnKey']
-    sortColumnOrder?: TableDataGridSort['sortColumnOrder']
-  }>>
-  resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
-}
-
-export type TableDataGridGridSyncFetch = {
-  mode: Readonly<Ref<TableDataGridMode>>
-  resetFetched: () => void
-  refresh: (params?: Partial<TableDataGridSort & { pageSize: number }>) => void
-}
-
-export type TableDataGridGridSyncEmit<Row extends Record<string, any>> = {
-  gridReady: (api: GridApi<Row>) => void
-  sort: (sort: TableDataGridSort) => void
-}
-
-export type TableDataGridGridSyncSelection = {
-  rowSelection: Readonly<Ref<TableDataGridRowSelectionMode>>
-}
-
-export type TableDataGridGridSyncGrid<Row extends Record<string, any>> = {
-  getGridConfig: (api: GridApi<Row>) => TableDataGridConfig
-  gridApi: Ref<GridApi<Row> | undefined>
-}
-
-export type TableDataGridGridSyncSizingHandlers<Row extends Record<string, any>> = {
-  emitGridConfigChange: TableDataGridColumnSizingHandlers<Row>['emitGridConfigChange']
-  fitColumnsOnGridReady: TableDataGridColumnSizingHandlers<Row>['fitColumnsOnGridReady']
-  scheduleColumnsToFit: TableDataGridColumnSizingHandlers<Row>['scheduleColumnsToFit']
-  scheduleColumnsToFitAfterDisplayedColumnsChange: TableDataGridColumnSizingHandlers<Row>['scheduleColumnsToFitAfterDisplayedColumnsChange']
-  scheduleColumnsToFitAfterRenderedRowsChange: TableDataGridColumnSizingHandlers<Row>['scheduleColumnsToFitAfterRenderedRowsChange']
-  shouldRefitColumnsAfterConfigChange: TableDataGridColumnSizingHandlers<Row>['shouldRefitColumnsAfterConfigChange']
-  startResizeTracking: TableDataGridColumnSizingHandlers<Row>['startResizeTracking']
 }
 
 export type TableDataGridColumnDefsConfig<Row extends Record<string, any>> = {
