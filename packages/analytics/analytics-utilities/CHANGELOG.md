@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.16.3...@kong-ui-public/analytics-utilities@12.17.0) (2026-06-03)
+
+
+### Features
+
+* Support TopN entity link mappings ([#3409](https://github.com/Kong/public-ui-components/issues/3409)) ([5dd2dba](https://github.com/Kong/public-ui-components/commit/5dd2dbaf8eee4c9a5e2623b525839f6e8957b22b))
+
+
+
+
+
 ## [12.16.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.16.2...@kong-ui-public/analytics-utilities@12.16.3) (2026-06-02)
 
 
