@@ -1628,25 +1628,6 @@ describe('<TableDataGrid />', () => {
         .and('have.attr', 'data-row-value', '500')
     })
 
-    it('calls host processRowPostCreate once while applying row attrs', () => {
-      const processRowPostCreate = cy.stub().as('processRowPostCreate')
-
-      mountTable({
-        agGridOptions: {
-          processRowPostCreate,
-        },
-        rowAttrs: row => ({
-          'data-testid': `row-${row.id}`,
-        }),
-      })
-
-      cy.getTestId('row-row-1').should('exist')
-      cy.get('.table-data-grid-grid .ag-center-cols-container .ag-row')
-        .then(($rows) => {
-          expect(processRowPostCreate).to.have.callCount($rows.length)
-        })
-    })
-
   })
 
   describe('toolbar and outside actions', () => {

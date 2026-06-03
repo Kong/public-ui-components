@@ -9,18 +9,18 @@
     :column-defs="columnDefs"
     :context="gridContext"
     :datasource="datasource"
-    :get-row-id="getRowId"
+    :get-row-id="getAgGridRowId"
     :grid-options="agGridOptions"
     :infinite-initial-row-count="1"
     :loading="isFetching"
-    :process-row-post-create="processRowPostCreate"
+    :process-row-post-create="onRowPostCreate"
     :row-data="mode === 'pagination' ? rowData : undefined"
     :row-model-type="mode === 'infinite' ? 'infinite' : 'clientSide'"
     :row-selection="rowSelectionConfig"
     :suppress-cell-focus="true"
     :suppress-drag-leave-hides-columns="agGridOptions.suppressDragLeaveHidesColumns ?? true"
     :theme="themeQuartz"
-    @cell-clicked="emitCellClicked"
+    @cell-clicked="onCellClick"
     @column-moved="emitColumnMoved"
     @column-pinned="emitColumnPinned"
     @column-resized="emitColumnResized"
@@ -28,7 +28,7 @@
     @displayed-columns-changed="emitDisplayedColumnsChanged"
     @grid-ready="emitGridReady"
     @model-updated="emitModelUpdated"
-    @row-clicked="emitRowClicked"
+    @row-clicked="onRowClick"
     @selection-changed="emitSelectionChanged"
     @sort-changed="emitSortChanged"
   />
@@ -61,21 +61,21 @@
 <script setup lang="ts" generic="Row extends Record<string, any>">
 import type {
   TableDataGridGridOptions,
+  TableDataGridHeader,
   TableDataGridMode,
+  TableDataGridRowAttrs,
+  TableDataGridRowKey,
 } from '../types'
 import type {
-  CellClickedEvent,
   ColDef,
   ColumnMovedEvent,
   ColumnPinnedEvent,
   ColumnResizedEvent,
   ColumnVisibleEvent,
   DisplayedColumnsChangedEvent,
-  GetRowIdFunc,
   GridReadyEvent,
   IDatasource,
   ModelUpdatedEvent,
-  ProcessRowParams,
   RowClickedEvent,
   RowSelectionOptions,
   SelectionChangedEvent,
@@ -96,10 +96,11 @@ const props = defineProps<{
   columnDefs: Array<ColDef<Row>>
   gridContext: object
   datasource?: IDatasource
-  getRowId: GetRowIdFunc<Row>
+  headers: Array<TableDataGridHeader<Row>>
   isFetching: boolean
-  processRowPostCreate: (params: ProcessRowParams<Row>) => void
+  rowAttrs?: TableDataGridRowAttrs<Row>
   rowData: Row[]
+  rowKey: TableDataGridRowKey<Row>
   rowSelectionConfig?: RowSelectionOptions
   currentPage: number
   fetchPage: (page: number) => Promise<void> | void
@@ -112,7 +113,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'cell-clicked', event: CellClickedEvent<Row>): void
+  (e: 'cell-click', payload: { row: Row, columnKey: string, value: any }): void
   (e: 'column-moved', event: ColumnMovedEvent<Row>): void
   (e: 'column-pinned', event: ColumnPinnedEvent<Row>): void
   (e: 'column-resized', event: ColumnResizedEvent<Row>): void
@@ -120,11 +121,29 @@ const emit = defineEmits<{
   (e: 'displayed-columns-changed', event: DisplayedColumnsChangedEvent<Row>): void
   (e: 'grid-ready', event: GridReadyEvent<Row>): void
   (e: 'model-updated', event: ModelUpdatedEvent<Row>): void
-  (e: 'row-clicked', event: RowClickedEvent<Row>): void
+  (e: 'row-click', row: Row, event: RowClickedEvent<Row>): void
   (e: 'selection-changed', event: SelectionChangedEvent<Row>): void
   (e: 'sort-changed', event: SortChangedEvent<Row>): void
   (e: 'page-size-change', event: PageSizeChangeData): void
 }>()
+
+const {
+  getAgGridRowId,
+  onCellClick,
+  onRowClick,
+  onRowPostCreate,
+} = composables.useTableDataGridInteractions<Row>({
+  emit: {
+    cellClick: payload => emit('cell-click', payload),
+    rowClick: (row, event) => emit('row-click', row, event),
+  },
+  inputs: {
+    agGridOptions: toRef(() => props.agGridOptions),
+    headers: toRef(() => props.headers),
+    rowAttrs: toRef(() => props.rowAttrs),
+    rowKey: toRef(() => props.rowKey),
+  },
+})
 
 const {
   hasKnownTotalRows,
@@ -162,7 +181,6 @@ const shouldShowPagination = computed(() => (
     && (!props.hidePaginationWhenOptional || shouldShowPaginationWhenOptional.value)
 ))
 
-const emitCellClicked = (event: CellClickedEvent<Row>) => emit('cell-clicked', event)
 const emitColumnMoved = (event: ColumnMovedEvent<Row>) => emit('column-moved', event)
 const emitColumnPinned = (event: ColumnPinnedEvent<Row>) => emit('column-pinned', event)
 const emitColumnResized = (event: ColumnResizedEvent<Row>) => emit('column-resized', event)
@@ -170,7 +188,6 @@ const emitColumnVisible = (event: ColumnVisibleEvent<Row>) => emit('column-visib
 const emitDisplayedColumnsChanged = (event: DisplayedColumnsChangedEvent<Row>) => emit('displayed-columns-changed', event)
 const emitGridReady = (event: GridReadyEvent<Row>) => emit('grid-ready', event)
 const emitModelUpdated = (event: ModelUpdatedEvent<Row>) => emit('model-updated', event)
-const emitRowClicked = (event: RowClickedEvent<Row>) => emit('row-clicked', event)
 const emitSelectionChanged = (event: SelectionChangedEvent<Row>) => emit('selection-changed', event)
 const emitSortChanged = (event: SortChangedEvent<Row>) => emit('sort-changed', event)
 const emitPageSizeChange = (event: PageSizeChangeData) => emit('page-size-change', event)

@@ -73,20 +73,21 @@
         :current-page="currentPage"
         :datasource="datasource"
         :fetch-page="fetchPage"
-        :get-row-id="getAgGridRowId"
         :grid-context="gridContext"
         :has-fetched="hasFetched"
         :has-next-page-when-total-unknown="hasNextPageWhenTotalUnknown"
+        :headers="headers"
         :hide-pagination="hidePagination"
         :hide-pagination-when-optional="hidePaginationWhenOptional"
         :is-fetching="isFetching"
         :mode="mode"
         :pagination-page-size-options="paginationPageSizeOptions"
-        :process-row-post-create="onRowPostCreate"
+        :row-attrs="rowAttrs"
         :row-data="rowData"
+        :row-key="resolvedRowKey"
         :row-selection-config="rowSelectionConfig"
         :total-rows="totalRows"
-        @cell-clicked="onCellClick"
+        @cell-click="payload => emit('cell:click', payload)"
         @column-moved="onColumnLayoutChange"
         @column-pinned="onColumnPinned"
         @column-resized="onColumnResize"
@@ -95,7 +96,7 @@
         @grid-ready="onGridReady"
         @model-updated="onModelUpdated"
         @page-size-change="onPageSizeChange"
-        @row-clicked="onRowClick"
+        @row-click="(row, event) => emit('row:click', row, event)"
         @selection-changed="onSelectionChange"
         @sort-changed="onSortChange"
       />
@@ -389,24 +390,6 @@ const {
   inputs: {
     error: toRef(() => error),
     loading: toRef(() => loading),
-  },
-})
-
-const {
-  getAgGridRowId,
-  onCellClick,
-  onRowClick,
-  onRowPostCreate,
-} = composables.useTableDataGridInteractions<Row>({
-  emit: {
-    cellClick: payload => emit('cell:click', payload),
-    rowClick: (row, event) => emit('row:click', row, event),
-  },
-  inputs: {
-    agGridOptions: toRef(() => agGridOptions),
-    headers: toRef(() => headers),
-    rowAttrs: toRef(() => rowAttrs),
-    rowKey: resolvedRowKey,
   },
 })
 
