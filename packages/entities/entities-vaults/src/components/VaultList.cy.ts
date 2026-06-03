@@ -1010,7 +1010,7 @@ describe('<VaultList />', () => {
       cy.wait('@getAiVaults')
       // The konnect-provider vault (kv-1) is the 3rd row; delete it to also hit the config store
       cy.getTestId('row-actions-dropdown-trigger').eq(2).click()
-      cy.getTestId('action-entity-delete').click()
+      cy.getTestId('action-entity-delete').filter(':visible').click()
       cy.getTestId('confirmation-input').type('kv-1')
       cy.getTestId('modal-action-button').click()
       cy.wait('@deleteAiVault')
