@@ -390,7 +390,7 @@ const dimensionsFn = <T extends readonly string[] | undefined>(dimensions?: T) =
   type: 'array',
   description: 'List of attributes or entity types to group by.',
   minItems: 0,
-  maxItems: 2,
+  maxItems: 3,
   items: {
     type: 'string',
     ...(dimensions ? { enum: dimensions } : {}),

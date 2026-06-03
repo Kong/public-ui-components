@@ -173,6 +173,29 @@ describe('dashboardSchema.v2', () => {
     expect(validateDashboardConfigSchema(topNEntityLinksConfig)).toBe(true)
   })
 
+  it('accepts dashboard queries with three dimensions', () => {
+    const topNThreeDimensionConfig = {
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: {
+              ...strictQuery,
+              dimensions: ['route', 'gateway_service', 'consumer'],
+            },
+            chart: {
+              type: 'top_n',
+            },
+          },
+        },
+      ],
+    }
+
+    expect(validateValidDashboardQuery(topNThreeDimensionConfig.tiles[0].definition.query)).toBe(true)
+    expect(validateDashboardConfigSchema(topNThreeDimensionConfig)).toBe(true)
+  })
+
   it('rejects top_n entity link mappings with non-string values', () => {
     const topNEntityLinksConfig = {
       ...dashboardConfig,
