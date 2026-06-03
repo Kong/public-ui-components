@@ -126,6 +126,13 @@ import type { SelectItem } from '@kong/kongponents'
 import { computed, nextTick, ref, watch, type PropType } from 'vue'
 import composables from '../composables'
 import { buildSecretRef, parseSecretRef } from '../utils'
+import { fromAiGatewayVault } from '../ai-gateway-mappers'
+
+/** Config accepted by the picker, optionally targeting the AI Gateway vault/secret API. */
+type VaultSecretPickerConfig = (KonnectBaseFormConfig | KongManagerBaseFormConfig) & {
+  apiType?: 'gateway' | 'aiGateway'
+  aiGatewayId?: string
+}
 
 export interface SelectVaultItem extends SelectItem {
   vault: VaultEntity
@@ -137,12 +144,13 @@ const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps({
   config: {
-    type: Object as PropType<KonnectBaseFormConfig | KongManagerBaseFormConfig>,
+    type: Object as PropType<VaultSecretPickerConfig>,
     required: true,
-    validator: (config: KonnectBaseFormConfig | KongManagerBaseFormConfig): boolean => {
+    validator: (config: VaultSecretPickerConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (config.app === 'konnect' && !config.controlPlaneId) return false
       if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (config.apiType === 'aiGateway' && !config.aiGatewayId) return false
       return true
     },
   },
@@ -197,9 +205,21 @@ const optionalSecretKey = ref('')
 
 const selectedVault = ref<VaultEntity | undefined>()
 
-// Endpoint to list secrets for a Konnect Vault
-// We don't care about other typed vaults
+const isAiGateway = computed((): boolean => props.config.apiType === 'aiGateway')
+const withAiGatewayId = (url: string): string => url.replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
+
+// Endpoint to list vaults (AI Gateway uses a different path + id placeholder).
+const vaultsListEndpoint = computed<string>(() => isAiGateway.value
+  ? withAiGatewayId(vaultsEndpoints.list.aiGateway.getAll)
+  : vaultsEndpoints.list[props.config.app].getAll)
+
+// Endpoint to list secrets for a Konnect / AI Gateway Vault.
+// We don't care about other typed vaults.
 const secretsEndpoint = computed(() => {
+  if (isAiGateway.value) {
+    return withAiGatewayId(secretsEndpoints.list.aiGateway).replace(/{id}/gi, selectedVault.value?.config?.config_store_id ?? '')
+  }
+
   if (props.config.app === 'konnect') {
     return secretsEndpoints.list[props.config.app].replace(/{id}/gi, selectedVault.value?.config?.config_store_id ?? '')
   }
@@ -230,9 +250,10 @@ const {
   error: vaultsFetchError,
   loadItems: loadVaults,
   results: vaultsResults,
-} = useDebouncedFilter(props.config, vaultsEndpoints.list[props.config.app].getAll, undefined, {
+} = useDebouncedFilter(props.config, vaultsListEndpoint, undefined, {
   fetchedItemsKey: 'data',
-  searchKeys: ['prefix'],
+  // AI Gateway vaults carry the identifier in `name`; gateway vaults in `prefix`.
+  searchKeys: isAiGateway.value ? ['name'] : ['prefix'],
 })
 
 // Secret fetching
@@ -255,10 +276,15 @@ const isProviderAllowed = (vaultName: string): boolean => {
   return vaultName !== VaultProviders.AZURE_CERTS
 }
 
+// AI Gateway list rows use type/name; normalize to the gateway shape (name/prefix/config).
+const normalizedVaults = computed<VaultEntity[]>(() => isAiGateway.value
+  ? (vaultsResults.value ?? []).map((v) => fromAiGatewayVault(v) as VaultEntity)
+  : (vaultsResults.value ?? []) as VaultEntity[])
+
 const availableVaults = computed<SelectVaultItem[]>(() => {
   let hasSelectedVault = false
 
-  const items = (vaultsResults.value ?? [])
+  const items = (normalizedVaults.value ?? [])
     .filter((v) => isProviderAllowed(v.name))
     .map((v) => {
       if (v.prefix === selectedVaultPrefix.value) {
@@ -305,13 +331,14 @@ const formatSelectedVault = (item: SelectVaultItem) => {
 }
 
 const buildVaultFetchUrl = (vaultPrefix: string) => {
-  let url = `${props.config.apiBaseUrl}${vaultsEndpoints.form[props.config.app].edit}`
+  const endpoint = isAiGateway.value ? vaultsEndpoints.form.aiGateway.edit : vaultsEndpoints.form[props.config.app].edit
+  let url = `${props.config.apiBaseUrl}${endpoint}`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
-  return url
+  return withAiGatewayId(url)
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, vaultPrefix) // Replacing {id} with the prefix because /vaults/:prefix is allowed
 }
@@ -322,7 +349,9 @@ const buildSecretFetchUrl = (secretId: string, configStoreId: string) => {
     return '<not_applicable>'
   }
 
-  return `${props.config.apiBaseUrl}${secretsEndpoints.form[props.config.app].edit}`
+  const endpoint = isAiGateway.value ? secretsEndpoints.form.aiGateway.edit : secretsEndpoints.form[props.config.app].edit
+
+  return withAiGatewayId(`${props.config.apiBaseUrl}${endpoint}`)
     .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, configStoreId)
@@ -357,7 +386,10 @@ watch(() => props.setup, async (secretRef) => {
       let verifiedOptionalSecretKey = ''
 
       const parsed = parseSecretRef(secretRef)
-      const { data: vault } = await axiosInstance.get<VaultEntity | undefined>(buildVaultFetchUrl(parsed.vaultPrefix))
+      const { data: rawVault } = await axiosInstance.get<VaultEntity | undefined>(buildVaultFetchUrl(parsed.vaultPrefix))
+      // AI Gateway returns a type/name shape; normalize so name (provider) / prefix /
+      // config.config_store_id are consistent with the rest of this component.
+      const vault = rawVault && isAiGateway.value ? (fromAiGatewayVault(rawVault) as VaultEntity) : rawVault
 
       // Ensure the vault exists
       if (vault?.name) {

@@ -6,6 +6,7 @@ import {
   paginate,
   vaults,
   vaults100,
+  aiGatewayVaultsResponse,
 } from '../../fixtures/mockData'
 import type { KongManagerVaultListConfig, KonnectVaultListConfig } from '../types'
 import type { Router } from 'vue-router'
@@ -942,6 +943,78 @@ describe('<VaultList />', () => {
       cy.getTestId('modal-action-button').click()
       cy.wait('@deleteVaultNoWorkspace')
       cy.wait('@deleteConfigStoreNoWorkspace')
+    })
+  })
+
+  describe('Kong AI Gateway', () => {
+    const aiGatewayId = 'ai-gw-1234'
+    const baseConfigAiGateway: KonnectVaultListConfig = {
+      ...baseConfigKonnect,
+      apiType: 'aiGateway',
+      aiGatewayId,
+    }
+    const aiVaultsUrl = `${baseConfigAiGateway.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/vaults`
+
+    it('fetches from the AI Gateway URL and renders normalized rows (prefix from name, type as vault type)', () => {
+      cy.intercept(
+        { method: 'GET', url: `${aiVaultsUrl}*` },
+        { statusCode: 200, body: aiGatewayVaultsResponse },
+      ).as('getAiVaults')
+
+      cy.mount(VaultList, {
+        props: {
+          cacheIdentifier: `vault-list-${uuidv4()}`,
+          config: baseConfigAiGateway,
+          canCreate: () => true,
+          canEdit: () => true,
+          canDelete: () => true,
+          canRetrieve: () => true,
+        },
+      })
+
+      cy.wait('@getAiVaults')
+      // identifier (API `name`) shown in the prefix column
+      cy.get('td').contains('hcv-1').should('be.visible')
+      cy.get('td').contains('kv-1').should('be.visible')
+      // provider (API `type`) shown in the vault-type ("name") column
+      cy.get('td').contains('konnect').should('be.visible')
+      // tags column is hidden in AI Gateway mode
+      cy.get('th').contains('Tags').should('not.exist')
+    })
+
+    it('deletes a vault via the AI Gateway URL (and its config store for konnect vaults)', () => {
+      cy.intercept(
+        { method: 'GET', url: `${aiVaultsUrl}*` },
+        { statusCode: 200, body: aiGatewayVaultsResponse },
+      ).as('getAiVaults')
+      cy.intercept(
+        { method: 'DELETE', url: `${aiVaultsUrl}/*` },
+        { statusCode: 204 },
+      ).as('deleteAiVault')
+      cy.intercept(
+        { method: 'DELETE', url: `${baseConfigAiGateway.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/config-stores/*` },
+        { statusCode: 204 },
+      ).as('deleteConfigStore')
+
+      cy.mount(VaultList, {
+        props: {
+          cacheIdentifier: `vault-list-${uuidv4()}`,
+          config: baseConfigAiGateway,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => true,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getAiVaults')
+      // The konnect-provider vault (kv-1) is the 3rd row; delete it to also hit the config store
+      cy.getTestId('row-actions-dropdown-trigger').eq(2).click()
+      cy.getTestId('action-entity-delete').click()
+      cy.getTestId('confirmation-input').type('kv-1')
+      cy.getTestId('modal-action-button').click()
+      cy.wait('@deleteAiVault')
+      cy.wait('@deleteConfigStore')
     })
   })
 })

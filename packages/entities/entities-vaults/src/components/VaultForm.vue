@@ -978,6 +978,7 @@
           :readonly="form.isReadonly"
         />
         <KInput
+          v-if="!isAiGateway"
           v-model.trim="form.fields.tags"
           autocomplete="off"
           data-testid="vault-form-tags"
@@ -1030,6 +1031,7 @@ import {
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import endpoints from '../vaults-endpoints'
+import { toAiGatewayVaultPayload, fromAiGatewayVault } from '../ai-gateway-mappers'
 import {
   KongIcon,
   CodeIcon,
@@ -1063,6 +1065,7 @@ const props = defineProps({
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (config?.app === 'konnect' && !config?.controlPlaneId) return false
       if (config?.app === 'kongManager' && typeof config?.workspace !== 'string') return false
+      if (config?.apiType === 'aiGateway' && !config?.aiGatewayId) return false
       if (!config?.cancelRoute) return false
       return true
     },
@@ -1085,6 +1088,17 @@ const { i18nT, i18n: { t } } = composables.useI18n()
 const router = useRouter()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
+
+// AI Gateway runs on Konnect (app === 'konnect') but targets a different vault API.
+const isAiGateway = computed((): boolean => props.config.apiType === 'aiGateway')
+// Endpoint bucket to use: 'aiGateway' overrides the app-based key.
+const endpointKey = computed<'konnect' | 'kongManager' | 'aiGateway'>(() => isAiGateway.value ? 'aiGateway' : props.config.app)
+// entities-shared only substitutes {controlPlaneId}/{workspace}/{id}; the AI Gateway
+// id placeholder must be replaced by us before any URL is used.
+const withAiGatewayId = (url: string): string => url.replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
+// HashiCorp Vault `protocol` default: AI Gateway spec defaults to 'https'; the Kong API
+// Gateway form keeps its historical 'http' default.
+const defaultHcvProtocol = isAiGateway.value ? 'https' : 'http'
 
 const form = reactive<VaultState>({
   fields: {
@@ -1111,6 +1125,20 @@ const isAvailableTTLConfig = computed(() => {
 })
 
 const providers = computed<Array<{ label: string, value: VaultProviders }>>(() => {
+  // AI Gateway supports a fixed provider set (no azure-certs / fs) and gates nothing
+  // behind the gateway feature flags.
+  if (isAiGateway.value) {
+    return [
+      { label: t('form.config.konnect.label'), value: VaultProviders.KONNECT },
+      { label: t('form.config.env.label'), value: VaultProviders.ENV },
+      { label: t('form.config.aws.label'), value: VaultProviders.AWS },
+      { label: t('form.config.gcp.label'), value: VaultProviders.GCP },
+      { label: t('form.config.hcv.label'), value: VaultProviders.HCV },
+      { label: t('form.config.azure.label'), value: VaultProviders.AZURE },
+      { label: t('form.config.conjur.label'), value: VaultProviders.CONJUR },
+    ]
+  }
+
   return [
     ...(
       props.config.app === 'konnect'
@@ -1198,7 +1226,7 @@ const configFields = reactive<ConfigFields>({
     ...base64FieldConfig,
   } as GCPVaultConfig,
   [VaultProviders.HCV]: {
-    protocol: 'http',
+    protocol: defaultHcvProtocol,
     host: '127.0.0.1',
     port: 8200,
     mount: 'secret',
@@ -1285,7 +1313,7 @@ const originalConfigFields = reactive<ConfigFields>({
     ...base64FieldConfig,
   } as GCPVaultConfig,
   [VaultProviders.HCV]: {
-    protocol: 'http',
+    protocol: defaultHcvProtocol,
     host: '127.0.0.1',
     port: 8200,
     mount: 'secret',
@@ -1391,9 +1419,10 @@ const formType = computed((): EntityBaseFormType => props.vaultId
   ? EntityBaseFormType.Edit
   : EntityBaseFormType.Create)
 
-const fetchUrl = computed<string>(() => endpoints.form[props.config?.app]?.edit)
+const fetchUrl = computed<string>(() => withAiGatewayId(endpoints.form[endpointKey.value]?.edit))
 
-const vaultProviderDisabled = computed<boolean>(() => formType.value === EntityBaseFormType.Edit && props.config.app === 'kongManager')
+// On edit, the provider/type cannot be changed for Kong Manager or AI Gateway vaults.
+const vaultProviderDisabled = computed<boolean>(() => formType.value === EntityBaseFormType.Edit && (props.config.app === 'kongManager' || isAiGateway.value))
 const isOtherProvidersSupported = computed<boolean>(() => props.config.app === 'konnect' || useGatewayFeatureSupported({
   gatewayInfo: props.config.gatewayInfo,
   // vault name can only be `env` in Gateway Community Edition
@@ -1460,7 +1489,11 @@ const getProviderDescription = (providerName: VaultProviders) => {
   }
 }
 
-const updateFormValues = (data: Record<string, any>): void => {
+const updateFormValues = (rawData: Record<string, any>): void => {
+  // AI Gateway returns a different vault shape (type/name/renamed hcv fields);
+  // normalize it to the gateway shape the rest of this function expects.
+  const data = isAiGateway.value ? fromAiGatewayVault(rawData?.item ?? rawData) : rawData
+
   form.fields.prefix = data?.item?.prefix || data?.prefix || ''
   form.fields.description = data?.item?.description || data?.description || ''
 
@@ -1617,13 +1650,13 @@ const changesExist = computed((): boolean => (JSON.stringify(form.fields) !== JS
  * Build the submit URL
  */
 const submitUrl = computed<string>(() => {
-  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value]}`
+  let url = `${props.config.apiBaseUrl}${endpoints.form[endpointKey.value][formType.value]}`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
-  return url
+  return withAiGatewayId(url)
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, props.vaultId ?? '') // Always replace the id when editing
 })
@@ -1754,7 +1787,8 @@ const getPayload = computed((): Record<string, any> => {
     },
   }
 
-  return payload
+  // Remap the gateway-shaped payload to the AI Gateway request body at the boundary only.
+  return isAiGateway.value ? toAiGatewayVaultPayload(payload) : payload
 })
 
 const payloadWithConfigStoreId = computed<Record<string, any>>(() => (
@@ -1771,7 +1805,8 @@ const createConfigStore = async (): Promise<string | undefined> => {
   try {
     form.isReadonly = true
 
-    const requestUrl = `${props.config.apiBaseUrl}${endpoints.form.konnect.createConfigStore}`
+    // createConfigStore only applies to the konnect provider flow (konnect / AI Gateway apps).
+    const requestUrl = withAiGatewayId(`${props.config.apiBaseUrl}${endpoints.form[isAiGateway.value ? 'aiGateway' : 'konnect'].createConfigStore}`)
       .replace(/{controlPlaneId}/gi, (props.config as KonnectVaultFormConfig)?.controlPlaneId || '')
       .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 
