@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.15...@kong-ui-public/analytics-chart@10.18.0) (2026-06-03)
+
+
+### Features
+
+* **analytics-chart:** support multiple dimensions in TopN table ([#3401](https://github.com/Kong/public-ui-components/issues/3401)) ([3c57957](https://github.com/Kong/public-ui-components/commit/3c57957d6f3effb3b83cf257b57599d406ee2008))
+
+
+
+
+
 ## [10.17.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.14...@kong-ui-public/analytics-chart@10.17.15) (2026-06-02)
 
 
