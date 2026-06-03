@@ -50,6 +50,13 @@ const allowCsvExport = {
   type: 'boolean',
 } as const
 
+const entityLinks = {
+  type: 'object',
+  additionalProperties: {
+    type: 'string',
+  },
+} as const satisfies JSONSchema
+
 const chartDatasetColorsSchema = {
   type: ['object', 'array'],
   items: {
@@ -205,6 +212,7 @@ export const topNTableSchema = {
     entity_link: {
       type: 'string',
     },
+    entity_links: entityLinks,
   },
   required: ['type'],
   additionalProperties: false,
