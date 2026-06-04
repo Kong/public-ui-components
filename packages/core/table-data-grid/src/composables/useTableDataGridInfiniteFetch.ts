@@ -1,18 +1,14 @@
 import type {
-  TableDataGridFetcherResult,
-} from '../types'
-import type {
-  TableDataGridFetchParams,
-  TableDataGridFetchSource,
+  TableDataGridFetchModeSources,
 } from '../types/internal'
 import type { IDatasource } from 'ag-grid-community'
-import { computed, ref, shallowRef } from 'vue'
+import { ref } from 'vue'
 import type { RefreshOptions } from '../utils/fetchers'
 import {
   getCursorBlock,
-  resolveHasNextPageWhenTotalUnknown,
   resolveInfiniteLastRow,
   resolveInfiniteRequestSort,
+  resolveRefreshSort,
 } from '../utils/fetchers'
 
 type BlockCompletion = {
@@ -22,121 +18,18 @@ type BlockCompletion = {
 
 type InfiniteBlockGateResult = 'ready' | 'failed' | 'stale'
 
-export const useTableDataGridFetch = <Row extends Record<string, any>>({
+export const useTableDataGridInfiniteFetch = <Row extends Record<string, any>>({
   fetcher,
   params,
-}: {
-  fetcher: TableDataGridFetchSource<Row>['fetcher']
-  params: TableDataGridFetchParams
-}) => {
-  const currentPage = ref(1)
+  state,
+}: TableDataGridFetchModeSources<Row>) => {
   const cursorMap = new Map<number, unknown>()
   const blockCompletionMap = new Map<number, BlockCompletion>()
-  const datasource = ref<IDatasource>()
-  const hasFetched = ref(false)
-  const hasNextPageWhenTotalUnknown = ref(false)
-  const pendingFetchCount = ref(0)
-  const fetchError = ref<unknown>()
   const latestInfiniteDatasourceId = ref(0)
-  const latestPaginationRequestId = ref(0)
-  const rowData = shallowRef<Row[]>([])
-  const totalRows = ref<number>()
-  const isFetching = computed(() => pendingFetchCount.value > 0)
-
-  const beginFetch = () => {
-    fetchError.value = undefined
-    pendingFetchCount.value += 1
-  }
-
-  const resetFetched = () => {
-    hasFetched.value = false
-  }
-
-  const endFetch = ({ markFetched = true }: { markFetched?: boolean } = {}) => {
-    // Guards against an extra endFetch call after an interrupted or rejected request path.
-    pendingFetchCount.value = Math.max(0, pendingFetchCount.value - 1)
-    if (markFetched) {
-      hasFetched.value = true
-    }
-  }
-
-  const resolveSort = (options: RefreshOptions) => ({
-    // Presence matters: { sortColumnKey: undefined } intentionally clears the active sort.
-    sortColumnKey: 'sortColumnKey' in options ? options.sortColumnKey : params.sortColumnKey.value,
-    sortColumnOrder: 'sortColumnOrder' in options ? options.sortColumnOrder : params.sortColumnOrder.value,
-  })
-
-  const isLatestPaginationRequest = (requestId: number): boolean => (
-    requestId === latestPaginationRequestId.value && params.mode.value === 'pagination'
-  )
 
   const isLatestInfiniteDatasource = (datasourceId: number): boolean => (
     datasourceId === latestInfiniteDatasourceId.value && params.mode.value === 'infinite'
   )
-
-  const commitPaginationResult = ({
-    page,
-    pageSize,
-    result,
-  }: {
-    page: number
-    pageSize: number
-    result: TableDataGridFetcherResult<Row>
-  }) => {
-    rowData.value = result.data
-    totalRows.value = result.total
-    hasNextPageWhenTotalUnknown.value = resolveHasNextPageWhenTotalUnknown({
-      page,
-      pageSize,
-      result,
-    })
-    currentPage.value = page
-  }
-
-  const fetchPage = async (
-    page: number,
-    options: RefreshOptions = {},
-  ) => {
-    if (params.mode.value !== 'pagination') {
-      return
-    }
-
-    const fetchPageSize = options.pageSize ?? params.pageSize.value
-    const requestId = latestPaginationRequestId.value + 1
-    latestPaginationRequestId.value = requestId
-    beginFetch()
-    try {
-      const sort = resolveSort(options)
-      const result = await fetcher.value({
-        mode: 'pagination',
-        page,
-        pageSize: fetchPageSize,
-        sortColumnKey: sort.sortColumnKey,
-        sortColumnOrder: sort.sortColumnOrder,
-        search: params.search.value,
-        filterSelection: params.filterSelection.value,
-      })
-
-      if (!isLatestPaginationRequest(requestId)) {
-        return
-      }
-
-      commitPaginationResult({
-        page,
-        pageSize: fetchPageSize,
-        result,
-      })
-    } catch (err) {
-      if (isLatestPaginationRequest(requestId)) {
-        fetchError.value = err
-        rowData.value = []
-        totalRows.value = undefined
-        hasNextPageWhenTotalUnknown.value = false
-      }
-    } finally {
-      endFetch({ markFetched: isLatestPaginationRequest(requestId) })
-    }
-  }
 
   const createBlockCompletion = (blockIndex: number): BlockCompletion => {
     const existingCompletion = blockCompletionMap.get(blockIndex)
@@ -205,10 +98,16 @@ export const useTableDataGridFetch = <Row extends Record<string, any>>({
     latestInfiniteDatasourceId.value = datasourceId
     cursorMap.clear()
     blockCompletionMap.clear()
-    fetchError.value = undefined
-    hasFetched.value = false
-    rowData.value = []
-    const datasourceSort = resolveSort(options)
+    state.fetchError.value = undefined
+    state.hasFetched.value = false
+    state.rowData.value = []
+    const datasourceSort = resolveRefreshSort({
+      currentSort: {
+        sortColumnKey: params.sortColumnKey.value,
+        sortColumnOrder: params.sortColumnOrder.value,
+      },
+      options,
+    })
 
     return {
       async getRows(getRowsParams) {
@@ -234,7 +133,7 @@ export const useTableDataGridFetch = <Row extends Record<string, any>>({
           return
         }
 
-        beginFetch()
+        state.markFetchStarted()
         try {
           const cursor = blockIndex > 0 ? cursorMap.get(blockIndex - 1) : undefined
           const requestSort = resolveInfiniteRequestSort({
@@ -271,7 +170,7 @@ export const useTableDataGridFetch = <Row extends Record<string, any>>({
             startRow: getRowsParams.startRow,
           }))
           if (getRowsParams.startRow === 0) {
-            rowData.value = result.data
+            state.rowData.value = result.data
           }
           currentBlockCompletion.resolve(true)
         } catch (err) {
@@ -279,41 +178,23 @@ export const useTableDataGridFetch = <Row extends Record<string, any>>({
             rejectBlockCompletion(blockIndex, currentBlockCompletion)
             return
           }
-          fetchError.value = err
+          state.fetchError.value = err
           getRowsParams.failCallback()
           rejectBlockCompletion(blockIndex, currentBlockCompletion)
         } finally {
-          endFetch({ markFetched: isLatestInfiniteDatasource(datasourceId) })
+          state.markFetchFinished({ markFetched: isLatestInfiniteDatasource(datasourceId) })
         }
       },
     }
   }
 
-  const refresh = (options: RefreshOptions = {}) => {
-    if (params.mode.value === 'pagination') {
-      datasource.value = undefined
-      void fetchPage(1, options)
-      return
-    }
-
-    // Invalidates any in-flight pagination request before swapping to a datasource.
-    latestPaginationRequestId.value += 1
-    totalRows.value = undefined
-    hasNextPageWhenTotalUnknown.value = false
-    datasource.value = buildInfiniteDatasource(options)
+  const refreshInfinite = (options: RefreshOptions = {}) => {
+    state.totalRows.value = undefined
+    state.hasNextPageWhenTotalUnknown.value = false
+    state.datasource.value = buildInfiniteDatasource(options)
   }
 
   return {
-    currentPage,
-    datasource,
-    fetchPage,
-    fetchError,
-    hasFetched,
-    hasNextPageWhenTotalUnknown,
-    isFetching,
-    resetFetched,
-    refresh,
-    rowData,
-    totalRows,
+    refreshInfinite,
   }
 }

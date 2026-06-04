@@ -104,12 +104,6 @@
   </div>
 </template>
 
-<script lang="ts">
-const DEFAULT_PAGE_SIZE_OPTIONS = [10, 15, 25, 50, 100]
-const DEFAULT_PAGE_SIZE = 25
-const DEFAULT_ROW_KEY = 'id'
-</script>
-
 <script setup lang="ts" generic="Row extends Record<string, any>">
 import type {
   TableDataGridCellAttrs,
@@ -128,14 +122,23 @@ import type {
 } from '../types'
 import type {
   GridApi,
+  IDatasource,
   RowClickedEvent,
 } from 'ag-grid-community'
 import type { FilterGroupSelection } from '@kong/kongponents'
 import { useElementSize } from '@vueuse/core'
-import { computed, nextTick, ref, toRef } from 'vue'
+import { computed, nextTick, ref, shallowRef, toRef } from 'vue'
 import TableDataGridBody from './TableDataGridBody.vue'
 import TableDataGridControls from './TableDataGridControls.vue'
 import composables from '../composables'
+import type {
+  TableDataGridFetchModeSources,
+  TableDataGridFetchParams,
+} from '../types/internal'
+import type { RefreshOptions } from '../utils/fetchers'
+
+const DEFAULT_PAGE_SIZE = 25
+const DEFAULT_ROW_KEY = 'id'
 
 const {
   headers,
@@ -156,7 +159,7 @@ const {
   hidePaginationWhenOptional = false,
   rowSelection = 'none',
   agGridOptions = {},
-  paginationPageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
+  paginationPageSizeOptions = [10, 15, 25, 50, 100],
   refreshKey,
   rowAttrs,
   cellAttrs,
@@ -220,8 +223,17 @@ const datatableElement = ref<HTMLElement>()
 const { width: datatableWidth } = useElementSize(datatableElement, { width: 0, height: 0 }, { box: 'border-box' })
 const searchQuery = ref(initialFetcherParams.search ?? '')
 const gridApi = ref<GridApi<Row>>()
+const datasource = ref<IDatasource>()
+const currentPage = ref(1)
+const hasFetched = ref(false)
+const hasNextPageWhenTotalUnknown = ref(false)
+const pendingFetchCount = ref(0)
+const fetchError = ref<unknown>()
+const rowData = shallowRef<Row[]>([])
+const totalRows = ref<number>()
 const isApplyingInitialColumnState = ref(false)
 const isApplyingTableConfig = ref(false)
+const isFetching = computed(() => pendingFetchCount.value > 0)
 const resolvedRowKey = computed<TableDataGridRowKey<Row>>(() => rowKey ?? DEFAULT_ROW_KEY as TableDataGridRowKey<Row>)
 
 const {
@@ -241,29 +253,67 @@ const {
   tableConfig: toRef(() => tableConfig),
 })
 
-const {
-  currentPage,
+const fetchState: TableDataGridFetchModeSources<Row>['state'] = {
   datasource,
+  currentPage,
   fetchError,
-  fetchPage,
   hasFetched,
   hasNextPageWhenTotalUnknown,
-  isFetching,
-  resetFetched,
-  refresh,
+  markFetchStarted: () => {
+    fetchError.value = undefined
+    pendingFetchCount.value += 1
+  },
+  markFetchFinished: ({ markFetched = true }: { markFetched?: boolean } = {}) => {
+    // Guards against an extra finish call after an interrupted or rejected request path.
+    pendingFetchCount.value = Math.max(0, pendingFetchCount.value - 1)
+    if (markFetched) {
+      hasFetched.value = true
+    }
+  },
+  resetFetched: () => {
+    hasFetched.value = false
+  },
   rowData,
   totalRows,
-} = composables.useTableDataGridFetch<Row>({
+}
+
+const fetchParams: TableDataGridFetchParams = {
+  mode: toRef(() => mode),
+  pageSize: activePageSize,
+  search: searchQuery,
+  sortColumnKey: computed(() => resolvedTableConfig.value.sortColumnKey),
+  sortColumnOrder: computed(() => resolvedTableConfig.value.sortColumnOrder),
+  filterSelection,
+}
+
+const {
+  fetchPage,
+  invalidatePaginationRequests,
+} = composables.useTableDataGridPaginationFetch<Row>({
   fetcher: toRef(() => fetcher),
-  params: {
-    mode: toRef(() => mode),
-    pageSize: activePageSize,
-    search: searchQuery,
-    sortColumnKey: computed(() => resolvedTableConfig.value.sortColumnKey),
-    sortColumnOrder: computed(() => resolvedTableConfig.value.sortColumnOrder),
-    filterSelection,
-  },
+  params: fetchParams,
+  state: fetchState,
 })
+
+const {
+  refreshInfinite,
+} = composables.useTableDataGridInfiniteFetch<Row>({
+  fetcher: toRef(() => fetcher),
+  params: fetchParams,
+  state: fetchState,
+})
+
+const refresh = (options: RefreshOptions = {}) => {
+  if (mode === 'pagination') {
+    datasource.value = undefined
+    void fetchPage(1, options)
+    return
+  }
+
+  // Invalidates any in-flight pagination request before swapping to a datasource.
+  invalidatePaginationRequests()
+  refreshInfinite(options)
+}
 
 const {
   deselectAll,
@@ -332,7 +382,7 @@ const {
   isApplyingInitialColumnState,
   isApplyingTableConfig,
   refresh,
-  resetFetched,
+  resetFetched: fetchState.resetFetched,
   resolvedSort,
   sizing,
   updateDisplayedColumnIndexes,

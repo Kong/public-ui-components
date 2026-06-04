@@ -8,7 +8,7 @@ import type {
   TableDataGridRowKey,
   TableDataGridRowSelectionMode,
 } from './index'
-import type { ColDef, GridApi } from 'ag-grid-community'
+import type { ColDef, GridApi, IDatasource } from 'ag-grid-community'
 import type { Ref, ShallowRef, Slots } from 'vue'
 
 export type GridColumnWidthChangeSource = 'intentional' | 'layout-side-effect'
@@ -20,7 +20,7 @@ export type TableDataGridConfigSources<Row extends Record<string, any>> = {
   tableConfig: Readonly<Ref<TableDataGridConfig | undefined>>
 }
 
-export type TableDataGridFetchSource<Row extends Record<string, any>> = {
+type TableDataGridFetchSource<Row extends Record<string, any>> = {
   fetcher: Readonly<Ref<TableDataGridFetcher<Row>>>
 }
 
@@ -31,6 +31,25 @@ export type TableDataGridFetchParams = {
   search: Readonly<Ref<TableDataGridFetcherParams['search']>>
   sortColumnKey: Readonly<Ref<TableDataGridFetcherParams['sortColumnKey']>>
   sortColumnOrder: Readonly<Ref<TableDataGridFetcherParams['sortColumnOrder']>>
+}
+
+type TableDataGridFetchState<Row extends Record<string, any>> = {
+  currentPage: Ref<number>
+  datasource: Ref<IDatasource | undefined>
+  fetchError: Ref<unknown>
+  hasFetched: Ref<boolean>
+  hasNextPageWhenTotalUnknown: Ref<boolean>
+  markFetchFinished: (options?: { markFetched?: boolean }) => void
+  markFetchStarted: () => void
+  resetFetched: () => void
+  rowData: ShallowRef<Row[]>
+  totalRows: Ref<number | undefined>
+}
+
+export type TableDataGridFetchModeSources<Row extends Record<string, any>> = {
+  fetcher: TableDataGridFetchSource<Row>['fetcher']
+  params: TableDataGridFetchParams
+  state: TableDataGridFetchState<Row>
 }
 
 export type TableDataGridSelectionConfig<Row extends Record<string, any>> = {

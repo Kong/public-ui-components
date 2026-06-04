@@ -5,6 +5,7 @@ import {
   resolveHasNextPageWhenTotalUnknown,
   resolveInfiniteLastRow,
   resolveInfiniteRequestSort,
+  resolveRefreshSort,
 } from './fetchers'
 
 type TestRow = {
@@ -79,6 +80,29 @@ describe('fetcher utilities', () => {
     })).toEqual({
       sortColumnKey: 'name',
       sortColumnOrder: 'asc',
+    })
+  })
+
+  it('uses explicit refresh sort options while allowing omitted options to fall back to current sort', () => {
+    const currentSort = {
+      sortColumnKey: 'name',
+      sortColumnOrder: 'asc' as const,
+    }
+
+    expect(resolveRefreshSort({
+      currentSort,
+      options: {},
+    })).toEqual(currentSort)
+
+    expect(resolveRefreshSort({
+      currentSort,
+      options: {
+        sortColumnKey: undefined,
+        sortColumnOrder: undefined,
+      },
+    })).toEqual({
+      sortColumnKey: undefined,
+      sortColumnOrder: undefined,
     })
   })
 })

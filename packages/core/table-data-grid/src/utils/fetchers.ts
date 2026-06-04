@@ -15,6 +15,18 @@ export type RefreshOptions = {
   sortColumnOrder?: TableDataGridConfig['sortColumnOrder']
 }
 
+export const resolveRefreshSort = ({
+  currentSort,
+  options,
+}: {
+  currentSort: Pick<TableDataGridFetcherParams, 'sortColumnKey' | 'sortColumnOrder'>
+  options: RefreshOptions
+}): Pick<TableDataGridFetcherParams, 'sortColumnKey' | 'sortColumnOrder'> => ({
+  // Presence matters: { sortColumnKey: undefined } intentionally clears the active sort.
+  sortColumnKey: 'sortColumnKey' in options ? options.sortColumnKey : currentSort.sortColumnKey,
+  sortColumnOrder: 'sortColumnOrder' in options ? options.sortColumnOrder : currentSort.sortColumnOrder,
+})
+
 export const resolveInfiniteRequestSort = ({
   datasourceSort,
   sortModel,
