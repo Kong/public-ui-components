@@ -27,7 +27,7 @@
     </KSegmentedControl>
   </Teleport>
 
-  <StandardLayout
+  <DynamicLayout
     v-bind="props"
     class="dk-form"
     :editor-mode="layoutEditorMode"
@@ -56,7 +56,7 @@
       <!-- eslint-disable-next-line vue/no-v-html -->
       <span v-html="description" />
     </template>
-  </StandardLayout>
+  </DynamicLayout>
 </template>
 
 <script setup lang="ts">
@@ -64,7 +64,7 @@ import type { SegmentedControlOption } from '@kong/kongponents'
 import type { Component } from 'vue'
 import type { ZodError } from 'zod'
 
-import type { Props } from '../../shared/layout/StandardLayout.vue'
+import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
 import type { EditorMode, DatakitPluginData } from './types'
 
 import { computed, inject, onMounted, ref, watch } from 'vue'
@@ -76,7 +76,7 @@ import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../../types'
 
 import english from '../../../../locales/en.json'
-import StandardLayout from '../../shared/layout/StandardLayout.vue'
+import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
 import FlowEditor from './flow-editor/FlowEditor.vue'
