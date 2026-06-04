@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import type { ColumnState, GridApi } from 'ag-grid-community'
 import type { TableDataGridConfig, TableDataGridHeader } from '../types'
-import { useDatatableColumnSizing } from './useDatatableColumnSizing'
+import { useTableDataGridColumnSizing } from './useTableDataGridColumnSizing'
 
 type TestRow = {
   id: string
@@ -11,9 +11,9 @@ type TestRow = {
   status: number
 }
 
-type ColumnSizing = ReturnType<typeof useDatatableColumnSizing<TestRow>>
+type ColumnSizing = ReturnType<typeof useTableDataGridColumnSizing<TestRow>>
 
-describe('useDatatableColumnSizing', () => {
+describe('useTableDataGridColumnSizing', () => {
   let frameId = 0
   let scheduledFrames: Map<number, FrameRequestCallback>
 
@@ -97,22 +97,16 @@ describe('useDatatableColumnSizing', () => {
     const updateTableConfig = vi.fn()
     const wrapper = mount(defineComponent({
       setup() {
-        sizing = useDatatableColumnSizing<TestRow>({
-          config: {
-            headers: ref(headers),
-            isApplyingTableConfig: ref(isApplyingTableConfig),
-            resolvedTableConfig: ref(resolvedTableConfig),
-            tableConfig: ref(tableConfig),
-            updateTableConfig,
-          },
-          element: {
-            datatableElement,
-            datatableWidth: datatableWidthRef,
-          },
-          grid: {
-            getGridConfig,
-            gridApi: ref(api),
-          },
+        sizing = useTableDataGridColumnSizing<TestRow>({
+          datatableElement,
+          datatableWidth: datatableWidthRef,
+          getGridConfig,
+          gridApi: ref(api),
+          headers: ref(headers),
+          isApplyingTableConfig: ref(isApplyingTableConfig),
+          resolvedTableConfig: ref(resolvedTableConfig),
+          tableConfig: ref(tableConfig),
+          updateTableConfig,
         })
 
         return () => h('div')
@@ -139,7 +133,7 @@ describe('useDatatableColumnSizing', () => {
       },
     })
 
-    sizing.emitGridConfigChange()
+    sizing.persistGridConfigChange()
 
     expect(getGridConfig).not.toHaveBeenCalled()
     expect(updateTableConfig).not.toHaveBeenCalled()
@@ -163,7 +157,7 @@ describe('useDatatableColumnSizing', () => {
       },
     })
 
-    sizing.emitGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
+    sizing.persistGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
 
     expect(updateTableConfig).not.toHaveBeenCalled()
   })
@@ -190,7 +184,7 @@ describe('useDatatableColumnSizing', () => {
       configFromGrid: gridConfig,
     })
 
-    sizing.emitGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
+    sizing.persistGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
 
     expect(updateTableConfig).toHaveBeenCalledWith(gridConfig)
   })

@@ -20,22 +20,12 @@ describe('useTableDataGridRefreshTriggers', () => {
     const wrapper = mount(defineComponent({
       setup() {
         triggers = useTableDataGridRefreshTriggers({
-          element: {
-            datatableWidth,
-          },
-          fetch: {
-            refresh,
-          },
-          inputs: {
-            enableSearch,
-            refreshKey,
-          },
-          models: {
-            searchQuery,
-          },
-          sizing: {
-            handleDatatableWidthChange,
-          },
+          datatableWidth,
+          enableSearch,
+          handleDatatableWidthChange,
+          refresh,
+          refreshKey,
+          searchQuery,
         })
 
         return () => h('div')

@@ -11,16 +11,18 @@ type TestRow = {
 
 type TestCellParams = ICellRendererParams<TestRow> & {
   context: {
-    cellAttrs?: (params: {
-      row: TestRow
-      rowValue: unknown
-      column: TableDataGridHeader<TestRow>
-      rowIndex: number
-      colIndex: number
-    }) => Record<string, unknown>
-    columnsByKey: Map<string, TableDataGridHeader<TestRow>>
-    displayedColumnIndexesByKey: ReturnType<typeof shallowRef<Map<string, number>>>
-    slots: Record<string, (props: TableDataGridCellSlotProps<TestRow>) => any>
+    cells: {
+      cellAttrs?: (params: {
+        row: TestRow
+        rowValue: unknown
+        column: TableDataGridHeader<TestRow>
+        rowIndex: number
+        colIndex: number
+      }) => Record<string, unknown>
+      columnsByKey: Map<string, TableDataGridHeader<TestRow>>
+      displayedColumnIndexesByKey: ReturnType<typeof shallowRef<Map<string, number>>>
+      slots: Record<string, (props: TableDataGridCellSlotProps<TestRow>) => any>
+    }
   }
 }
 
@@ -42,8 +44,8 @@ const createParams = ({
   columnKey?: keyof TestRow
   rowIndex?: number
   isSelected?: boolean
-  slots?: TestCellParams['context']['slots']
-  cellAttrs?: TestCellParams['context']['cellAttrs']
+  slots?: TestCellParams['context']['cells']['slots']
+  cellAttrs?: TestCellParams['context']['cells']['cellAttrs']
 } = {}): TestCellParams => {
   const node = {
     isSelected: cy.stub().returns(isSelected),
@@ -59,16 +61,18 @@ const createParams = ({
       headerName: columnKey,
     },
     context: {
-      cellAttrs,
-      columnsByKey: new Map<string, TableDataGridHeader<TestRow>>([
-        ['name', { key: 'name', label: 'Name' }],
-        ['status', { key: 'status', label: 'Status' }],
-      ]),
-      displayedColumnIndexesByKey: shallowRef(new Map([
-        ['name', 0],
-        ['status', 1],
-      ])),
-      slots,
+      cells: {
+        cellAttrs,
+        columnsByKey: new Map<string, TableDataGridHeader<TestRow>>([
+          ['name', { key: 'name', label: 'Name' }],
+          ['status', { key: 'status', label: 'Status' }],
+        ]),
+        displayedColumnIndexesByKey: shallowRef(new Map([
+          ['name', 0],
+          ['status', 1],
+        ])),
+        slots,
+      },
     },
     data: row,
     node,

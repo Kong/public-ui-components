@@ -69,6 +69,7 @@ import type {
   TableDataGridRowKey,
   TableDataGridRowSelectionMode,
 } from '../types'
+import type { TableDataGridSelectionRendererContext } from '../types/internal'
 import type {
   ColumnMovedEvent,
   ColumnPinnedEvent,
@@ -106,6 +107,7 @@ const props = defineProps<{
   rowKey: TableDataGridRowKey<Row>
   rowSelection: TableDataGridRowSelectionMode
   rowSelectionConfig?: RowSelectionOptions
+  selectionRendererContext: TableDataGridSelectionRendererContext<Row>
   currentPage: number
   fetchPage: (page: number) => Promise<void> | void
   hasFetched: boolean
@@ -136,20 +138,15 @@ const slots = useSlots()
 const {
   columnDefs,
   gridContext,
-} = composables.useDatatableColumnDefs<Row>({
-  config: {
-    agGridOptions: toRef(() => props.agGridOptions),
-    cellAttrs: toRef(() => props.cellAttrs),
-    headers: toRef(() => props.headers),
-    resolvedTableConfig: toRef(() => props.resolvedTableConfig),
-    rowSelection: toRef(() => props.rowSelection),
-  },
-  grid: {
-    displayedColumnIndexesByKey: toRef(() => props.displayedColumnIndexesByKey),
-  },
-  slots: {
-    slots,
-  },
+} = composables.useTableDataGridColumnDefs<Row>({
+  agGridOptions: toRef(() => props.agGridOptions),
+  cellAttrs: toRef(() => props.cellAttrs),
+  displayedColumnIndexesByKey: toRef(() => props.displayedColumnIndexesByKey),
+  headers: toRef(() => props.headers),
+  resolvedTableConfig: toRef(() => props.resolvedTableConfig),
+  rowSelection: toRef(() => props.rowSelection),
+  selectionRendererContext: props.selectionRendererContext,
+  slots,
 })
 
 const {
@@ -158,16 +155,12 @@ const {
   onRowClick,
   onRowPostCreate,
 } = composables.useTableDataGridInteractions<Row>({
-  emit: {
-    cellClick: payload => emit('cell-click', payload),
-    rowClick: (row, event) => emit('row-click', row, event),
-  },
-  inputs: {
-    agGridOptions: toRef(() => props.agGridOptions),
-    headers: toRef(() => props.headers),
-    rowAttrs: toRef(() => props.rowAttrs),
-    rowKey: toRef(() => props.rowKey),
-  },
+  agGridOptions: toRef(() => props.agGridOptions),
+  cellClick: payload => emit('cell-click', payload),
+  headers: toRef(() => props.headers),
+  rowAttrs: toRef(() => props.rowAttrs),
+  rowClick: (row, event) => emit('row-click', row, event),
+  rowKey: toRef(() => props.rowKey),
 })
 
 const {
@@ -176,7 +169,7 @@ const {
   canGoNextPage,
   goToPage,
   onPageChange,
-} = composables.useDatatablePagination({
+} = composables.useTableDataGridPagination({
   activePageSize: toRef(() => props.activePageSize),
   isFetching: toRef(() => props.isFetching),
   fetchPage: page => props.fetchPage(page),

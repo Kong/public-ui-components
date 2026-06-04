@@ -88,6 +88,7 @@
         :row-key="resolvedRowKey"
         :row-selection="rowSelection"
         :row-selection-config="rowSelectionConfig"
+        :selection-renderer-context="selectionRendererContext"
         :total-rows="totalRows"
         @cell-click="payload => emit('cell:click', payload)"
         @column-moved="onColumnLayoutChange"
@@ -333,36 +334,25 @@ const {
   onSelectionChange,
   rowSelectionConfig,
   selectedRows,
+  selectionRendererContext,
   selectRowByKey,
-} = composables.useDatatableSelection<Row>({
-  config: {
-    rowKey: resolvedRowKey,
-    rowSelection: toRef(() => rowSelection),
-  },
-  emit: {
-    rowSelect: selectedRows => emit('row:select', selectedRows),
-  },
-  grid: {
-    gridApi,
-  },
+} = composables.useTableDataGridSelection<Row>({
+  gridApi,
+  rowKey: resolvedRowKey,
+  rowSelect: selectedRows => emit('row:select', selectedRows),
+  rowSelection: toRef(() => rowSelection),
 })
 
-const sizing = composables.useDatatableColumnSizing<Row>({
-  config: {
-    headers: toRef(() => headers),
-    isApplyingTableConfig,
-    resolvedTableConfig,
-    tableConfig: toRef(() => tableConfig),
-    updateTableConfig,
-  },
-  element: {
-    datatableElement,
-    datatableWidth,
-  },
-  grid: {
-    getGridConfig,
-    gridApi,
-  },
+const sizing = composables.useTableDataGridColumnSizing<Row>({
+  datatableElement,
+  datatableWidth,
+  getGridConfig,
+  gridApi,
+  headers: toRef(() => headers),
+  isApplyingTableConfig,
+  resolvedTableConfig,
+  tableConfig: toRef(() => tableConfig),
+  updateTableConfig,
 })
 
 const {
@@ -419,19 +409,13 @@ const {
   isEmpty,
   shouldShowErrorState,
 } = composables.useTableDataGridState<Row>({
-  emit: {
-    state: payload => emit('state', payload),
-  },
-  fetch: {
-    fetchError,
-    hasFetched,
-    isFetching,
-    rowData,
-  },
-  inputs: {
-    error: toRef(() => error),
-    loading: toRef(() => loading),
-  },
+  emitState: payload => emit('state', payload),
+  error: toRef(() => error),
+  fetchError,
+  hasFetched,
+  isFetching,
+  loading: toRef(() => loading),
+  rowData,
 })
 
 const onFilterApply = (filterKey: string, selectionValue: FilterGroupSelection) => {
@@ -453,22 +437,12 @@ const onFilterClose = (filterKey: string) => {
 }
 
 composables.useTableDataGridRefreshTriggers({
-  element: {
-    datatableWidth,
-  },
-  fetch: {
-    refresh,
-  },
-  inputs: {
-    enableSearch: toRef(() => enableSearch),
-    refreshKey: toRef(() => refreshKey),
-  },
-  models: {
-    searchQuery,
-  },
-  sizing: {
-    handleDatatableWidthChange: sizing.handleDatatableWidthChange,
-  },
+  datatableWidth,
+  enableSearch: toRef(() => enableSearch),
+  handleDatatableWidthChange: sizing.handleDatatableWidthChange,
+  refresh,
+  refreshKey: toRef(() => refreshKey),
+  searchQuery,
 })
 
 defineExpose<{

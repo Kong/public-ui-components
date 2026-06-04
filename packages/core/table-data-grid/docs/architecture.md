@@ -13,26 +13,32 @@ flowchart LR
   Host["Host app<br/>headers, fetcher, tableConfig,<br/>filterSelection, slots"]
   Component["TableDataGrid.vue<br/>orchestration and template"]
   Config["useTableDataGridConfig<br/>controlled config state"]
-  Fetchers["useTableDataGridFetchers<br/>pagination and infinite requests"]
-  Columns["useDatatableColumnDefs<br/>headers to columnDefs"]
-  Sizing["useDatatableColumnSizing<br/>fit, resize, width persistence"]
-  Selection["useDatatableSelection<br/>row selection state"]
-  Pagination["useDatatablePagination<br/>pagination gating"]
+  PaginationFetch["useTableDataGridPaginationFetch<br/>pagination requests"]
+  InfiniteFetch["useTableDataGridInfiniteFetch<br/>infinite datasource"]
+  Columns["useTableDataGridColumnDefs<br/>headers to columnDefs"]
+  Sizing["useTableDataGridColumnSizing<br/>fit, resize, width persistence"]
+  Selection["useTableDataGridSelection<br/>row selection state"]
+  Pagination["useTableDataGridPagination<br/>pagination gating"]
+  Lifecycle["grid lifecycle / config sync / layout sync"]
   Grid["AG Grid"]
   Events["emits<br/>update:tableConfig, sort,<br/>row/cell/select/state/filter"]
 
   Host --> Component
   Component --> Config
-  Component --> Fetchers
+  Component --> PaginationFetch
+  Component --> InfiniteFetch
   Component --> Columns
   Component --> Sizing
   Component --> Selection
   Component --> Pagination
+  Component --> Lifecycle
   Config --> Grid
   Columns --> Grid
   Sizing --> Grid
-  Fetchers --> Grid
+  PaginationFetch --> Grid
+  InfiniteFetch --> Grid
   Selection --> Grid
+  Lifecycle --> Grid
   Grid --> Component
   Component --> Events
   Events --> Host
@@ -47,16 +53,19 @@ flowchart LR
 | Config state | [`src/composables/useTableDataGridConfig.ts`](../src/composables/useTableDataGridConfig.ts) | Internal active config, resolved config, applying config to AG Grid, emitting config updates |
 | Config translation | [`src/utils/tableConfig.ts`](../src/utils/tableConfig.ts), [`src/utils/tablePreferencesInterop.ts`](../src/utils/tablePreferencesInterop.ts) | Defaults, normalization, semantic equality, AG Grid `ColumnState` conversion, table preference conversion |
 | Fetch request helpers | [`src/utils/fetchers.ts`](../src/utils/fetchers.ts) | Pure sort, cursor-block, next-page, and infinite-last-row decisions |
-| Fetch lifecycle | [`src/composables/useTableDataGridFetchers.ts`](../src/composables/useTableDataGridFetchers.ts) | Pagination requests, infinite datasource creation, cursor tracking, stale request guards |
+| Pagination fetch lifecycle | [`src/composables/useTableDataGridPaginationFetch.ts`](../src/composables/useTableDataGridPaginationFetch.ts) | Pagination requests, result commits, unknown-total next-page state, stale request guards |
+| Infinite fetch lifecycle | [`src/composables/useTableDataGridInfiniteFetch.ts`](../src/composables/useTableDataGridInfiniteFetch.ts) | Infinite datasource creation, cursor tracking, sequential block gating, stale datasource guards |
 | Grid sync helpers | [`src/utils/gridSync.ts`](../src/utils/gridSync.ts) | Pure layout snapshots, config-refresh params, visibility-change checks, selection-column checks |
-| Grid state sync | [`src/composables/useDatatableGridSync.ts`](../src/composables/useDatatableGridSync.ts) | AG Grid event handlers, config-change side effects, sort/page-size refresh dispatch, sizing handler coordination |
-| Column definitions | [`src/composables/useDatatableColumnDefs.ts`](../src/composables/useDatatableColumnDefs.ts) | Header order, `ColDef` creation, renderer context |
+| Grid lifecycle | [`src/composables/useTableDataGridGridLifecycle.ts`](../src/composables/useTableDataGridGridLifecycle.ts) | Grid-ready setup, initial config capture/application, exposed grid API, initial refresh |
+| Config sync | [`src/composables/useTableDataGridConfigSync.ts`](../src/composables/useTableDataGridConfigSync.ts) | Sort/page-size config writes, config-change refresh dispatch, resolved config replay |
+| Column layout sync | [`src/composables/useTableDataGridColumnLayoutSync.ts`](../src/composables/useTableDataGridColumnLayoutSync.ts) | AG Grid layout event classification, displayed column indexes, layout-driven refit scheduling |
+| Column definitions | [`src/composables/useTableDataGridColumnDefs.ts`](../src/composables/useTableDataGridColumnDefs.ts) | Header order, `ColDef` creation, renderer context |
 | Column sizing helpers | [`src/utils/columnSizing.ts`](../src/utils/columnSizing.ts) | Pure fit-width math, min/max width checks, layout-side-effect change-detection config |
-| Column sizing | [`src/composables/useDatatableColumnSizing.ts`](../src/composables/useDatatableColumnSizing.ts) | `sizeColumnsToFit`, resize tracking, auto-fit width tracking, layout-side-effect persistence |
-| Selection | [`src/composables/useDatatableSelection.ts`](../src/composables/useDatatableSelection.ts) | AG Grid row selection options, selected row tracking, public selection methods |
-| Pagination controls | [`src/composables/useDatatablePagination.ts`](../src/composables/useDatatablePagination.ts) | Page navigation rules for known and unknown totals |
-| Cell renderer | [`src/components/TableDataGridCellRenderer.vue`](../src/components/TableDataGridCellRenderer.vue) | Column-key slots, cell attrs, selected slot state, AG Grid renderer refresh |
-| Header renderer | [`src/components/TableDataGridHeaderRenderer.vue`](../src/components/TableDataGridHeaderRenderer.vue) | Sort button, sort icon state, tooltip rendering |
+| Column sizing | [`src/composables/useTableDataGridColumnSizing.ts`](../src/composables/useTableDataGridColumnSizing.ts) | `sizeColumnsToFit`, resize tracking, auto-fit width tracking, layout-side-effect persistence |
+| Selection | [`src/composables/useTableDataGridSelection.ts`](../src/composables/useTableDataGridSelection.ts) | AG Grid row selection options, selected row tracking, public selection methods, selection renderer context |
+| Pagination controls | [`src/composables/useTableDataGridPagination.ts`](../src/composables/useTableDataGridPagination.ts) | Page navigation rules for known and unknown totals |
+| Cell renderer | [`src/components/TableDataGridCellRenderer.vue`](../src/components/TableDataGridCellRenderer.vue) | Column-key slots, cell attrs, selected slot state, AG Grid renderer refresh through `context.cells` |
+| Header renderer | [`src/components/TableDataGridHeaderRenderer.vue`](../src/components/TableDataGridHeaderRenderer.vue) | Sort button, sort icon state from `context.sort`, tooltip rendering |
 | Column visibility menu | [`src/components/TableDataGridColumnVisibilityMenu.vue`](../src/components/TableDataGridColumnVisibilityMenu.vue) | Hideable-column menu, search, toggle-all visibility updates |
 
 ## Public contracts
@@ -116,7 +125,7 @@ The config composable keeps two related shapes:
 
 The wrapper avoids feedback loops with `normalizedTableConfigsEqual`. This matters because reading AG Grid state and normalizing config creates fresh arrays and records. Reference equality would emit no-op updates forever.
 
-`useDatatableGridSync` watches the resolved config and owns the AG Grid side effects that follow config changes. Sort and page-size changes call the fetcher again; layout-only changes replay AG Grid column state and may schedule a column fit. Its inputs are grouped by collaborator boundary (`config`, `fetch`, `grid`, `selection`, and `sizingHandlers`) so the composable reads as orchestration instead of a flat bag of unrelated callbacks. Keeping those effects in grid sync avoids a callback cycle between `useTableDataGridConfig` and the grid event layer.
+Config changes are split by effect owner. `useTableDataGridConfigSync` owns sort/page-size config writes, refresh dispatch for config changes, and replaying resolved config into AG Grid. `useTableDataGridColumnLayoutSync` owns AG Grid layout event classification and asks sizing to persist or refit when move, pin, visibility, resize, or displayed-column changes are meaningful. `useTableDataGridGridLifecycle` owns grid-ready setup, initial config capture/application, and the initial refresh path.
 
 ## Fetch lifecycle
 
@@ -154,7 +163,7 @@ Stale response protection is split by mode:
 | `latestPaginationRequestId` | Pagination | Older page requests committing after a newer refresh |
 | `latestInfiniteDatasourceId` | Infinite | Older datasource block requests resolving after sort/filter/mode changes |
 
-Pure fetch decisions live in `src/utils/fetchers.ts`. The composable still owns reactive refs, datasource construction, async request ordering, and commits into Vue/AG Grid state.
+Pure fetch decisions live in `src/utils/fetchers.ts`. The fetch composables still own reactive refs, datasource construction, async request ordering, and commits into Vue/AG Grid state.
 
 ## Column definition and sizing split
 
@@ -162,16 +171,16 @@ Column definitions and column sizing are intentionally separate:
 
 | Composable | Responsibility |
 | --- | --- |
-| `useDatatableColumnDefs` | Converts `headers` plus resolved column order into AG Grid `columnDefs` and renderer context |
-| `useDatatableColumnSizing` | Runs `api.sizeColumnsToFit`, tracks generated widths, and persists meaningful width/config changes |
+| `useTableDataGridColumnDefs` | Converts `headers` plus resolved column order into AG Grid `columnDefs` and renderer context |
+| `useTableDataGridColumnSizing` | Runs `api.sizeColumnsToFit`, tracks generated widths, and persists meaningful width/config changes |
 | `src/utils/columnSizing.ts` | Decides whether columns can fit and derives the width/config inputs for those decisions |
 
 ```mermaid
 flowchart LR
   Headers["headers"]
   Config["resolvedTableConfig"]
-  Defs["useDatatableColumnDefs"]
-  Sizing["useDatatableColumnSizing"]
+  Defs["useTableDataGridColumnDefs"]
+  Sizing["useTableDataGridColumnSizing"]
   Grid["AG Grid"]
 
   Headers --> Defs
@@ -246,15 +255,23 @@ The `state` event follows the same user-visible state policy. A background fetch
 ```mermaid
 flowchart LR
   Headers["headers"]
-  ColumnDefs["useDatatableColumnDefs"]
+  Config["resolvedTableConfig"]
+  Selection["useTableDataGridSelection"]
+  ColumnDefs["useTableDataGridColumnDefs"]
+  Context["typed AG Grid context<br/>cells, selection, sort"]
   Grid["AG Grid"]
   HeaderRenderer["TableDataGridHeaderRenderer"]
+  SelectionRenderers["selection cell/header renderers"]
   CellRenderer["TableDataGridCellRenderer"]
   Slots["consumer slots by column key"]
 
   Headers --> ColumnDefs
-  ColumnDefs --> Grid
+  Config --> ColumnDefs
+  Selection --> ColumnDefs
+  ColumnDefs --> Context
+  Context --> Grid
   Grid --> HeaderRenderer
+  Grid --> SelectionRenderers
   Grid --> CellRenderer
   CellRenderer --> Slots
 ```
@@ -272,6 +289,14 @@ Cell rendering is slot-first. If the host provides a slot matching the header ke
 
 If no matching slot exists, the raw cell value is rendered.
 
+AG Grid renderers may receive AG Grid params, but package-owned behavior must flow through typed context sections:
+
+| Context section | Owner | Consumers |
+| --- | --- | --- |
+| `context.cells` | `useTableDataGridColumnDefs` | Cell renderer column lookup, cell attrs, displayed column indexes, cell slots |
+| `context.selection` | `useTableDataGridSelection` | Selection cell/header checkbox state, row toggle, select-all, header selection subscriptions |
+| `context.sort` | `useTableDataGridColumnDefs` from resolved config | Header sort icon state and sort progression |
+
 ## Ownership guidelines
 
 Components import internal composables through `src/composables/index.ts` as a namespace object. That indirection exists so Cypress component tests can stub package-local composables; do not replace it with direct imports unless the test strategy changes at the same time.
@@ -280,11 +305,12 @@ Components import internal composables through `src/composables/index.ts` as a n
 | --- | --- | --- |
 | Public props, emits, or exported types | `src/types/index.ts`, `TableDataGrid.vue`, README | Treat as public API unless intentionally breaking |
 | Config normalization or equality | `src/utils/tableConfig.ts` | Preserve explicit `pinnedColumns[key] = false` semantics |
-| Sort/page-size-driven refreshes | `useDatatableGridSync` | Sort and page size are config changes that trigger fetch refresh |
-| Pagination or infinite fetch behavior | `useTableDataGridFetchers` | Preserve stale request guards |
-| Column rendering | `useDatatableColumnDefs`, renderers | Keep sizing out of column definitions |
-| Column fit/width behavior | `useDatatableColumnSizing` | This is the source of truth for auto-fit and configured-width decisions |
-| Row selection behavior | `useDatatableSelection` | Selection state should refresh affected cells because cell slots receive `selected` |
+| Sort/page-size-driven refreshes | `useTableDataGridConfigSync` | Sort and page size are config changes that trigger fetch refresh |
+| Pagination fetch behavior | `useTableDataGridPaginationFetch` | Preserve stale pagination request guards and commit rules |
+| Infinite fetch behavior | `useTableDataGridInfiniteFetch` | Preserve cursor sequencing, block gating, and stale datasource guards |
+| Column rendering | `useTableDataGridColumnDefs`, renderers | Keep sizing out of column definitions |
+| Column fit/width behavior | `useTableDataGridColumnSizing` | This is the source of truth for auto-fit and configured-width decisions |
+| Row selection behavior | `useTableDataGridSelection` | Selection state should refresh affected cells because cell slots receive `selected` |
 | Filter ownership | `TableDataGrid.vue`, `TableDataGridFilters.vue` | Built-in filters update `filterSelection`; custom filter slots are host-owned |
 
 ## Verification focus

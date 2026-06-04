@@ -748,6 +748,7 @@ describe('<TableDataGrid />', () => {
         sortColumnKey: 'latency',
         sortColumnOrder: 'desc',
       })
+      cy.getTestId('table-data-grid-header-latency').should('have.class', 'is-sorted')
     })
 
     it('applies partial table config as overrides on top of defaults', () => {

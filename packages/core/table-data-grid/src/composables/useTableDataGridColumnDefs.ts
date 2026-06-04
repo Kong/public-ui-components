@@ -1,14 +1,15 @@
 import type {
+  TableDataGridCellAttrs,
+  TableDataGridConfig,
   TableDataGridGridOptions,
   TableDataGridHeader,
   TableDataGridRowSelectionMode,
 } from '../types'
 import type {
-  TableDataGridColumnDefsConfig,
-  TableDataGridColumnDefsGrid,
-  TableDataGridColumnDefsSlots,
+  TableDataGridSelectionRendererContext,
 } from '../types/internal'
 import type { ColDef } from 'ag-grid-community'
+import type { Ref, Slots } from 'vue'
 import { computed } from 'vue'
 import isEqual from 'lodash-es/isEqual'
 import TableDataGridCellRenderer from '../components/TableDataGridCellRenderer.vue'
@@ -125,28 +126,32 @@ const createSelectionColumnDef = <Row extends Record<string, any>>({
   }
 }
 
-export const useDatatableColumnDefs = <Row extends Record<string, any>>({
-  config,
-  grid,
+/**
+ * Owns AG Grid column definition creation.
+ *
+ * Headers and resolved tableConfig are the sources of truth for table columns.
+ * The returned `gridContext` is the only internal bridge AG Grid renderers use
+ * to access cell, selection, and sort behavior without reaching into the parent.
+ */
+export const useTableDataGridColumnDefs = <Row extends Record<string, any>>({
+  agGridOptions,
+  cellAttrs,
+  displayedColumnIndexesByKey,
+  headers,
+  resolvedTableConfig,
+  rowSelection,
+  selectionRendererContext,
   slots,
 }: {
-  config: TableDataGridColumnDefsConfig<Row>
-  grid: TableDataGridColumnDefsGrid
-  slots: TableDataGridColumnDefsSlots
+  agGridOptions: Readonly<Ref<TableDataGridGridOptions<Row>>>
+  cellAttrs: Readonly<Ref<TableDataGridCellAttrs<Row> | undefined>>
+  displayedColumnIndexesByKey: Readonly<Ref<Map<string, number>>>
+  headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
+  resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
+  rowSelection: Readonly<Ref<TableDataGridRowSelectionMode>>
+  selectionRendererContext: TableDataGridSelectionRendererContext<Row>
+  slots: Slots
 }) => {
-  const {
-    agGridOptions,
-    cellAttrs,
-    headers,
-    resolvedTableConfig,
-    rowSelection,
-  } = config
-  const {
-    displayedColumnIndexesByKey,
-  } = grid
-  const {
-    slots: componentSlots,
-  } = slots
   const resolvedHeaders = computed(() => headers.value)
   const columnsByKey = computed(() => new Map(resolvedHeaders.value.map(header => [header.key, header])))
   const columnOrder = computed<string[]>((previous) => {
@@ -162,11 +167,28 @@ export const useDatatableColumnDefs = <Row extends Record<string, any>>({
       .map(key => columnsByKey.value.get(key))
       .filter((header): header is TableDataGridHeader<Row> => Boolean(header))
   })
+  const currentSort = computed(() => ({
+    sortColumnKey: resolvedTableConfig.value.sortColumnKey,
+    sortColumnOrder: resolvedTableConfig.value.sortColumnOrder,
+  }))
   const gridContext = computed(() => ({
-    cellAttrs: cellAttrs.value,
-    columnsByKey: columnsByKey.value,
-    displayedColumnIndexesByKey,
-    slots: componentSlots,
+    cells: {
+      cellAttrs: cellAttrs.value,
+      columnsByKey: columnsByKey.value,
+      displayedColumnIndexesByKey,
+      slots,
+    },
+    selection: selectionRendererContext,
+    sort: {
+      currentSort,
+      requestSort: ({
+        multiSort,
+        progressSort,
+      }: {
+        multiSort: boolean
+        progressSort: (multiSort?: boolean) => void
+      }) => progressSort(multiSort),
+    },
   }))
 
   const createColumnDef = (header: TableDataGridHeader<Row>): ColDef<Row> => ({

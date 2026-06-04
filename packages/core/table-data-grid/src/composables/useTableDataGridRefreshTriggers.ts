@@ -2,52 +2,50 @@ import type { Ref } from 'vue'
 import { computed, watch } from 'vue'
 import { watchDebounced } from '@vueuse/core'
 
+/**
+ * Owns refresh triggers that come from wrapper-level reactive inputs.
+ *
+ * Search text, refresh keys, search enablement, and container width changes are
+ * observed here. The actual fetch implementation remains behind the `refresh`
+ * callback, and sizing owns what a width change means.
+ */
 export const useTableDataGridRefreshTriggers = ({
-  element,
-  fetch,
-  inputs,
-  models,
-  sizing,
+  datatableWidth,
+  enableSearch,
+  handleDatatableWidthChange,
+  refresh,
+  refreshKey,
+  searchQuery,
 }: {
-  element: {
-    datatableWidth: Readonly<Ref<number>>
-  }
-  fetch: {
-    refresh: () => void
-  }
-  inputs: {
-    enableSearch: Readonly<Ref<boolean>>
-    refreshKey: Readonly<Ref<string | number | undefined>>
-  }
-  models: {
-    searchQuery: Ref<string>
-  }
-  sizing: {
-    handleDatatableWidthChange: () => void
-  }
+  datatableWidth: Readonly<Ref<number>>
+  enableSearch: Readonly<Ref<boolean>>
+  handleDatatableWidthChange: () => void
+  refresh: () => void
+  refreshKey: Readonly<Ref<string | number | undefined>>
+  searchQuery: Ref<string>
 }) => {
-  const searchDebounceMs = computed(() => models.searchQuery.value ? 350 : 0)
+  const searchDebounceMs = computed(() => searchQuery.value ? 350 : 0)
 
-  watch(inputs.refreshKey, (nextKey, previousKey) => {
+  watch(refreshKey, (nextKey, previousKey) => {
     if (nextKey === previousKey) {
       return
     }
 
-    fetch.refresh()
+    refresh()
   })
 
-  watch(element.datatableWidth, sizing.handleDatatableWidthChange)
+  watch(datatableWidth, handleDatatableWidthChange)
 
-  watch(inputs.enableSearch, (isEnabled) => {
-    if (isEnabled || !models.searchQuery.value) {
+  watch(enableSearch, (isEnabled) => {
+    if (isEnabled || !searchQuery.value) {
       return
     }
 
-    models.searchQuery.value = ''
+    searchQuery.value = ''
   })
 
-  watchDebounced(models.searchQuery, () => {
-    fetch.refresh()
+  watchDebounced(searchQuery, () => {
+    refresh()
   }, {
     debounce: searchDebounceMs,
     // Without sync flush, outside-actions slot calls to updateSearch() can miss

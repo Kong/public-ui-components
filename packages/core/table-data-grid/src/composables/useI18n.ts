@@ -6,6 +6,9 @@ interface UseI18nReturn {
   i18nT: ReturnType<typeof i18nTComponent<typeof english>>
 }
 
+/**
+ * Owns the package-local i18n instance for table-data-grid chrome.
+ */
 export default function useI18n(): UseI18nReturn {
   const i18n = createI18n<typeof english>('en-us', english)
 

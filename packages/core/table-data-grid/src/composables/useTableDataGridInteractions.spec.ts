@@ -35,13 +35,12 @@ describe('useTableDataGridInteractions', () => {
       rowClick: vi.fn(),
     }
     const interactions = useTableDataGridInteractions<TestRow>({
-      emit,
-      inputs: {
-        agGridOptions,
-        headers: ref(headers),
-        rowAttrs,
-        rowKey,
-      },
+      agGridOptions,
+      cellClick: emit.cellClick,
+      headers: ref(headers),
+      rowAttrs,
+      rowClick: emit.rowClick,
+      rowKey,
     })
 
     return {

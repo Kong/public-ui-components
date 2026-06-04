@@ -1,5 +1,6 @@
 import type { TableDataGridHeader } from '../types'
 import type { SortDirection } from 'ag-grid-community'
+import { shallowRef } from 'vue'
 import TableDataGridHeaderRenderer from './TableDataGridHeaderRenderer.vue'
 
 class TestColumn extends EventTarget {
@@ -40,19 +41,32 @@ const createParams = ({
 } = {}) => {
   const testColumn = new TestColumn(column.key, initialSort)
   const progressSort = cy.stub().as('progressSort')
+  const requestSort = cy.stub().as('requestSort')
+  const currentSort = shallowRef({
+    sortColumnKey: initialSort ? column.key : undefined,
+    sortColumnOrder: initialSort,
+  })
 
   return {
     column: testColumn,
+    currentSort,
     params: {
       column: testColumn,
       context: {
-        columnsByKey: new Map([[column.key, column]]),
+        cells: {
+          columnsByKey: new Map([[column.key, column]]),
+        },
+        sort: {
+          currentSort,
+          requestSort,
+        },
       },
       displayName,
       enableSorting,
       progressSort,
     },
     progressSort,
+    requestSort,
   }
 }
 
@@ -106,9 +120,15 @@ describe('<TableDataGridHeaderRenderer />', () => {
     })
 
     cy.getTestId('table-data-grid-header-name').click()
-    cy.get('@progressSort').should('have.been.calledWith', false)
+    cy.get('@requestSort').should('have.been.calledWithMatch', {
+      multiSort: false,
+      progressSort: params.progressSort,
+    })
     cy.getTestId('table-data-grid-header-name').click({ shiftKey: true })
-    cy.get('@progressSort').should('have.been.calledWith', true)
+    cy.get('@requestSort').should('have.been.calledWithMatch', {
+      multiSort: true,
+      progressSort: params.progressSort,
+    })
   })
 
   it('does not progress sort when the tooltip trigger is clicked', () => {
@@ -128,7 +148,7 @@ describe('<TableDataGridHeaderRenderer />', () => {
     })
 
     cy.get('.header-tooltip-trigger').click()
-    cy.get('@progressSort').should('not.have.been.called')
+    cy.get('@requestSort').should('not.have.been.called')
   })
 
   it('does not progress sort when sorting is disabled', () => {
@@ -144,11 +164,11 @@ describe('<TableDataGridHeaderRenderer />', () => {
 
     cy.getTestId('table-data-grid-sort-name').should('not.exist')
     cy.getTestId('table-data-grid-header-name').click()
-    cy.get('@progressSort').should('not.have.been.called')
+    cy.get('@requestSort').should('not.have.been.called')
   })
 
-  it('updates sorted state when the column emits sortChanged', () => {
-    const { column, params } = createParams()
+  it('updates sorted state from sort context', () => {
+    const { currentSort, params } = createParams()
 
     cy.mount(TableDataGridHeaderRenderer, {
       props: {
@@ -158,7 +178,10 @@ describe('<TableDataGridHeaderRenderer />', () => {
 
     cy.getTestId('table-data-grid-header-name').should('not.have.class', 'is-sorted')
     cy.then(() => {
-      column.setSort('asc')
+      currentSort.value = {
+        sortColumnKey: 'name',
+        sortColumnOrder: 'asc',
+      }
     })
     cy.getTestId('table-data-grid-header-name').should('have.class', 'is-sorted')
   })

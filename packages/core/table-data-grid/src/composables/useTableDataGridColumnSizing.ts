@@ -1,10 +1,12 @@
 import type {
   GridColumnWidthChangeSource,
-  TableDataGridColumnSizingConfig,
-  TableDataGridColumnSizingElement,
-  TableDataGridColumnSizingGrid,
 } from '../types/internal'
+import type {
+  TableDataGridConfig,
+  TableDataGridHeader,
+} from '../types'
 import type { GridApi } from 'ag-grid-community'
+import type { Ref } from 'vue'
 import { computed, onBeforeUnmount } from 'vue'
 import isEqual from 'lodash-es/isEqual'
 import { hasConfiguredColumnWidths, normalizedTableConfigsEqual } from '../utils/tableConfig'
@@ -16,31 +18,35 @@ import {
   getConfigForColumnWidthChangeDetection,
 } from '../utils/columnSizing'
 
-export const useDatatableColumnSizing = <Row extends Record<string, any>>({
-  config,
-  element,
-  grid,
+/**
+ * Owns column fitting and width persistence.
+ *
+ * `resolvedTableConfig` is the current layout contract, while `tableConfig`
+ * identifies host-provided widths that should be honored. AG Grid supplies the
+ * measured column/viewport state; this composable decides when that state should
+ * become a tableConfig update.
+ */
+export const useTableDataGridColumnSizing = <Row extends Record<string, any>>({
+  datatableElement,
+  datatableWidth,
+  getGridConfig,
+  gridApi,
+  headers,
+  isApplyingTableConfig,
+  resolvedTableConfig,
+  tableConfig,
+  updateTableConfig,
 }: {
-  config: TableDataGridColumnSizingConfig<Row>
-  element: TableDataGridColumnSizingElement
-  grid: TableDataGridColumnSizingGrid<Row>
+  datatableElement: Readonly<Ref<HTMLElement | undefined>>
+  datatableWidth: Readonly<Ref<number>>
+  getGridConfig: (api: GridApi<Row>) => TableDataGridConfig
+  gridApi: Ref<GridApi<Row> | undefined>
+  headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
+  isApplyingTableConfig: Readonly<Ref<boolean>>
+  resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
+  tableConfig: Readonly<Ref<TableDataGridConfig | undefined>>
+  updateTableConfig: (config: Partial<TableDataGridConfig>) => void
 }) => {
-  const {
-    headers,
-    isApplyingTableConfig,
-    resolvedTableConfig,
-    tableConfig,
-    updateTableConfig,
-  } = config
-  const {
-    datatableElement,
-    datatableWidth,
-  } = element
-  const {
-    getGridConfig,
-    gridApi,
-  } = grid
-
   const hasResolvedColumnWidths = computed(() => hasConfiguredColumnWidths(resolvedTableConfig.value))
   const hasPropColumnWidths = computed(() => hasConfiguredColumnWidths(tableConfig.value ?? {}))
 
@@ -126,7 +132,7 @@ export const useDatatableColumnSizing = <Row extends Record<string, any>>({
     return true
   }
 
-  const emitGridConfigChange = ({
+  const persistGridConfigChange = ({
     columnWidthChangeSource = 'intentional',
   }: {
     columnWidthChangeSource?: GridColumnWidthChangeSource
@@ -181,7 +187,7 @@ export const useDatatableColumnSizing = <Row extends Record<string, any>>({
         lastAutoFittedColumnWidths = getGridConfig(api).columnWidths
       }
       if (persistFittedConfig) {
-        emitGridConfigChange()
+        persistGridConfigChange()
       }
     })
   }
@@ -252,7 +258,7 @@ export const useDatatableColumnSizing = <Row extends Record<string, any>>({
   })
 
   return {
-    emitGridConfigChange,
+    persistGridConfigChange,
     fitColumnsOnGridReady,
     handleDatatableWidthChange,
     scheduleColumnsToFit,

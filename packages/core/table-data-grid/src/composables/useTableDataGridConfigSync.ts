@@ -16,6 +16,13 @@ import {
   hasColumnVisibilityChanged,
 } from '../utils/gridSync'
 
+/**
+ * Owns side effects caused by resolved tableConfig changes after the grid exists.
+ *
+ * This is the bridge between the config source of truth and AG Grid: sort/page
+ * size writes patch tableConfig, meaningful config changes trigger refreshes,
+ * and layout config changes are replayed into AG Grid.
+ */
 export const useTableDataGridConfigSync = <Row extends Record<string, any>>({
   activePageSize,
   applyResolvedTableConfig,

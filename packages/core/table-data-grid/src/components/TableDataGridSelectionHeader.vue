@@ -8,7 +8,7 @@
       aria-label="Select all rows"
       class="datatable-selection-checkbox"
       data-testid="table-data-grid-selection-header-checkbox"
-      :disabled="!selectableRowCount"
+      :disabled="isDisabled"
       :indeterminate="isIndeterminate"
       :model-value="isChecked"
       @change="onSelectionChange"
@@ -17,48 +17,34 @@
 </template>
 
 <script setup lang="ts">
+import type { TableDataGridRendererContext } from '../types/internal'
 import type { IHeaderParams } from 'ag-grid-community'
 import { KCheckbox } from '@kong/kongponents'
 import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 
-type SelectionHeaderParams<Row extends Record<string, any>> = IHeaderParams<Row>
+type SelectionHeaderParams<Row extends Record<string, any>> = IHeaderParams<Row, TableDataGridRendererContext<Row>>
 
 const props = defineProps<{
   params: SelectionHeaderParams<Record<string, any>>
 }>()
 
 const currentParams = shallowRef(props.params)
-const selectableRowCount = ref(0)
-const selectedRowCount = ref(0)
 const isChecked = ref(false)
 const isIndeterminate = ref(false)
+const isDisabled = ref(false)
+let unsubscribeFromSelectionState: (() => void) | undefined
 
 const syncSelectionState = () => {
-  let nextSelectableRowCount = 0
-  let nextSelectedRowCount = 0
-
-  currentParams.value.api.forEachNode((node) => {
-    if (!node.selectable) {
-      return
-    }
-
-    nextSelectableRowCount += 1
-    if (node.isSelected()) {
-      nextSelectedRowCount += 1
-    }
-  })
-
-  selectableRowCount.value = nextSelectableRowCount
-  selectedRowCount.value = nextSelectedRowCount
-  isChecked.value = nextSelectableRowCount > 0 && nextSelectedRowCount === nextSelectableRowCount
-  isIndeterminate.value = nextSelectedRowCount > 0 && nextSelectedRowCount < nextSelectableRowCount
+  const selectionState = currentParams.value.context.selection.getHeaderSelectionState(currentParams.value.api)
+  isChecked.value = selectionState.checked
+  isDisabled.value = selectionState.disabled
+  isIndeterminate.value = selectionState.indeterminate
 }
 
 const onSelectionChange = (checked: boolean) => {
-  currentParams.value.api.forEachNode((node) => {
-    if (node.selectable) {
-      node.setSelected(checked)
-    }
+  currentParams.value.context.selection.setAllRowsSelected({
+    api: currentParams.value.api,
+    selected: checked,
   })
 
   syncSelectionState()
@@ -68,15 +54,20 @@ const onGridSelectionChange = () => {
   syncSelectionState()
 }
 
+const subscribeToSelectionState = () => {
+  unsubscribeFromSelectionState = currentParams.value.context.selection.subscribeToHeaderSelectionState({
+    api: currentParams.value.api,
+    onChange: onGridSelectionChange,
+  })
+}
+
 onMounted(() => {
   syncSelectionState()
-  currentParams.value.api.addEventListener('selectionChanged', onGridSelectionChange)
-  currentParams.value.api.addEventListener('modelUpdated', onGridSelectionChange)
+  subscribeToSelectionState()
 })
 
 onBeforeUnmount(() => {
-  currentParams.value.api.removeEventListener('selectionChanged', onGridSelectionChange)
-  currentParams.value.api.removeEventListener('modelUpdated', onGridSelectionChange)
+  unsubscribeFromSelectionState?.()
 })
 
 defineExpose({
@@ -84,10 +75,8 @@ defineExpose({
     const currentApi = currentParams.value.api
     currentParams.value = nextParams
     if (nextParams.api !== currentApi) {
-      currentApi.removeEventListener('selectionChanged', onGridSelectionChange)
-      currentApi.removeEventListener('modelUpdated', onGridSelectionChange)
-      nextParams.api.addEventListener('selectionChanged', onGridSelectionChange)
-      nextParams.api.addEventListener('modelUpdated', onGridSelectionChange)
+      unsubscribeFromSelectionState?.()
+      subscribeToSelectionState()
     }
     syncSelectionState()
     return true

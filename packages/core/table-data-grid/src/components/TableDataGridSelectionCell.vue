@@ -16,27 +16,35 @@
 </template>
 
 <script setup lang="ts">
+import type { TableDataGridRendererContext } from '../types/internal'
 import type { ICellRendererParams } from 'ag-grid-community'
 import { KCheckbox } from '@kong/kongponents'
 import { ref, shallowRef } from 'vue'
 
-type SelectionCellParams<Row extends Record<string, any>> = ICellRendererParams<Row>
+type SelectionCellParams<Row extends Record<string, any>> = ICellRendererParams<Row> & {
+  context: TableDataGridRendererContext<Row>
+}
 
 const props = defineProps<{
   params: SelectionCellParams<Record<string, any>>
 }>()
 
 const currentParams = shallowRef(props.params)
-const isSelected = ref(Boolean(props.params.node.isSelected()))
-const isSelectable = ref(props.params.node.selectable)
+const initialSelectionState = props.params.context.selection.getRowSelectionState(props.params.node)
+const isSelected = ref(initialSelectionState.selected)
+const isSelectable = ref(initialSelectionState.selectable)
 
 const syncSelectionState = () => {
-  isSelected.value = Boolean(currentParams.value.node.isSelected())
-  isSelectable.value = currentParams.value.node.selectable
+  const selectionState = currentParams.value.context.selection.getRowSelectionState(currentParams.value.node)
+  isSelected.value = selectionState.selected
+  isSelectable.value = selectionState.selectable
 }
 
 const onSelectionChange = (checked: boolean) => {
-  currentParams.value.node.setSelected(checked)
+  currentParams.value.context.selection.setRowSelected({
+    node: currentParams.value.node,
+    selected: checked,
+  })
   syncSelectionState()
 }
 

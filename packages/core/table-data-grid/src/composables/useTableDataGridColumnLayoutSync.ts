@@ -14,6 +14,13 @@ import type { Ref } from 'vue'
 import { ref, shallowRef, watch } from 'vue'
 import { hasSelectionColumn } from '../utils/gridSync'
 
+/**
+ * Owns AG Grid layout-event classification.
+ *
+ * This composable keeps displayed column indexes current for renderers and asks
+ * sizing to persist or refit after move, pin, visibility, resize, displayed
+ * column, and infinite-row render events. It does not own tableConfig itself.
+ */
 export const useTableDataGridColumnLayoutSync = <Row extends Record<string, any>>({
   gridApi,
   isApplyingInitialColumnState,
@@ -27,7 +34,7 @@ export const useTableDataGridColumnLayoutSync = <Row extends Record<string, any>
   rowSelection: Readonly<Ref<TableDataGridRowSelectionMode>>
   sizing: Pick<
     TableDataGridColumnSizingHandlers<Row>,
-    | 'emitGridConfigChange'
+    | 'persistGridConfigChange'
     | 'scheduleColumnsToFitAfterDisplayedColumnsChange'
     | 'scheduleColumnsToFitAfterRenderedRowsChange'
   >
@@ -43,17 +50,17 @@ export const useTableDataGridColumnLayoutSync = <Row extends Record<string, any>
 
   const onColumnPinned = (event?: { api?: GridApi<Row> }) => {
     updateDisplayedColumnIndexes(event?.api)
-    sizing.emitGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
+    sizing.persistGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
   }
 
   const onColumnLayoutChange = (event?: { api?: GridApi<Row> }) => {
     updateDisplayedColumnIndexes(event?.api)
-    sizing.emitGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
+    sizing.persistGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
   }
 
   const onColumnVisibilityChange = (event?: { api?: GridApi<Row> }) => {
     updateDisplayedColumnIndexes(event?.api)
-    sizing.emitGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
+    sizing.persistGridConfigChange({ columnWidthChangeSource: 'layout-side-effect' })
     if (isApplyingInitialColumnState.value) {
       return
     }
@@ -83,7 +90,7 @@ export const useTableDataGridColumnLayoutSync = <Row extends Record<string, any>
     // sizeColumnsToFit emits resize events for our own fitting writes; only user
     // resize completions should persist column widths into tableConfig.
     if (event.source !== 'sizeColumnsToFit' && event.finished !== false) {
-      sizing.emitGridConfigChange()
+      sizing.persistGridConfigChange()
     }
   }
 

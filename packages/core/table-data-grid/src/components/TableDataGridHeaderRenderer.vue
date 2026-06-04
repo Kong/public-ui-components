@@ -45,17 +45,13 @@
 
 <script setup lang="ts">
 import type { TableDataGridHeader } from '../types'
+import type { TableDataGridRendererContext } from '../types/internal'
 import type { IHeaderParams, SortDirection } from 'ag-grid-community'
 import { ArrowDownIcon, ArrowUpIcon, InfoIcon, SwapSortIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
-import { useEventListener } from '@vueuse/core'
-import { computed, ref } from 'vue'
+import { computed, unref } from 'vue'
 
-type HeaderContext = {
-  columnsByKey: Map<string, TableDataGridHeader<Record<string, any>>>
-}
-
-type HeaderParams = IHeaderParams<Record<string, any>, HeaderContext>
+type HeaderParams = IHeaderParams<Record<string, any>, TableDataGridRendererContext<Record<string, any>>>
 type SortIconKey = Exclude<SortDirection, null> | 'none'
 
 const sortIconByDirection = {
@@ -71,22 +67,24 @@ const {
 }>()
 
 const columnKey = computed(() => params.column.getId())
-const column = computed(() => params.context.columnsByKey.get(columnKey.value))
-const sortDirection = ref<SortDirection | undefined>(params.column.getSort())
+const column = computed(() => params.context.cells.columnsByKey.get(columnKey.value) as TableDataGridHeader<Record<string, any>> | undefined)
+const currentSort = computed(() => unref(params.context.sort.currentSort))
+const sortDirection = computed<SortDirection | undefined>(() => (
+  currentSort.value.sortColumnKey === columnKey.value
+    ? currentSort.value.sortColumnOrder
+    : undefined
+))
 const sortIcon = computed(() => sortIconByDirection[(sortDirection.value ?? 'none') as SortIconKey])
-
-const handleSortChange = () => {
-  sortDirection.value = params.column.getSort()
-}
-
-useEventListener(params.column, 'sortChanged', handleSortChange)
 
 const handleSort = (event: MouseEvent) => {
   if (!params.enableSorting) {
     return
   }
 
-  params.progressSort(event.shiftKey)
+  params.context.sort.requestSort({
+    multiSort: event.shiftKey,
+    progressSort: params.progressSort,
+  })
 }
 </script>
 

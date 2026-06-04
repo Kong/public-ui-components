@@ -18,6 +18,13 @@ type BlockCompletion = {
 
 type InfiniteBlockGateResult = 'ready' | 'failed' | 'stale'
 
+/**
+ * Owns infinite-mode datasource creation and block sequencing.
+ *
+ * AG Grid owns when blocks are requested. This composable owns cursor tracking,
+ * stale datasource guards, sequential block gating, and commits first-block
+ * data into shared fetch state so table empty/error state has one source.
+ */
 export const useTableDataGridInfiniteFetch = <Row extends Record<string, any>>({
   fetcher,
   params,

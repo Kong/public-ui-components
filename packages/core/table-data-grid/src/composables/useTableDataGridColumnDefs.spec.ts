@@ -1,5 +1,5 @@
 import { ref, shallowRef } from 'vue'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import type { Slots } from 'vue'
 import type {
   TableDataGridConfig,
@@ -7,11 +7,12 @@ import type {
   TableDataGridHeader,
   TableDataGridRowSelectionMode,
 } from '../types'
+import type { TableDataGridSelectionRendererContext } from '../types/internal'
 import TableDataGridCellRenderer from '../components/TableDataGridCellRenderer.vue'
 import TableDataGridHeaderRenderer from '../components/TableDataGridHeaderRenderer.vue'
 import TableDataGridSelectionCell from '../components/TableDataGridSelectionCell.vue'
 import TableDataGridSelectionHeader from '../components/TableDataGridSelectionHeader.vue'
-import { useDatatableColumnDefs } from './useDatatableColumnDefs'
+import { useTableDataGridColumnDefs } from './useTableDataGridColumnDefs'
 
 type TestRow = {
   id: string
@@ -19,7 +20,7 @@ type TestRow = {
   status: number
 }
 
-describe('useDatatableColumnDefs', () => {
+describe('useTableDataGridColumnDefs', () => {
   const createColumnDefs = ({
     agGridOptions = ref<TableDataGridGridOptions<TestRow>>({}),
     headers = ref<Array<TableDataGridHeader<TestRow>>>([
@@ -30,22 +31,33 @@ describe('useDatatableColumnDefs', () => {
       columnOrder: ['name', 'status'],
     }),
     rowSelection = ref<TableDataGridRowSelectionMode>('none'),
+    selectionRendererContext = createSelectionRendererContext(),
     displayedColumnIndexesByKey = shallowRef(new Map<string, number>()),
     slots = {} as Slots,
-  } = {}) => useDatatableColumnDefs<TestRow>({
-    config: {
-      agGridOptions,
-      cellAttrs: ref(undefined),
-      headers,
-      resolvedTableConfig,
-      rowSelection,
-    },
-    grid: {
-      displayedColumnIndexesByKey,
-    },
-    slots: {
-      slots,
-    },
+  } = {}) => useTableDataGridColumnDefs<TestRow>({
+    agGridOptions,
+    cellAttrs: ref(undefined),
+    displayedColumnIndexesByKey,
+    headers,
+    resolvedTableConfig,
+    rowSelection,
+    selectionRendererContext,
+    slots,
+  })
+
+  const createSelectionRendererContext = (): TableDataGridSelectionRendererContext<TestRow> => ({
+    getHeaderSelectionState: () => ({
+      disabled: false,
+      checked: false,
+      indeterminate: false,
+    }),
+    getRowSelectionState: () => ({
+      selected: false,
+      selectable: true,
+    }),
+    setAllRowsSelected: vi.fn(),
+    setRowSelected: vi.fn(),
+    subscribeToHeaderSelectionState: vi.fn(() => vi.fn()),
   })
 
   it('orders column definitions from resolved table config and preserves unchanged order references', () => {
@@ -156,39 +168,35 @@ describe('useDatatableColumnDefs', () => {
     })
   })
 
-  it('passes grid context and lets ag-grid column options override defaults', () => {
+  it('passes nested renderer context and lets ag-grid column options override defaults', () => {
     const slots = {
       status: () => 'status slot',
     } as Slots
     const cellAttrs = () => ({ 'data-testid': 'cell' })
     const displayedColumnIndexesByKey = shallowRef(new Map([['status', 1]]))
-    const { columnDefs, gridContext } = useDatatableColumnDefs<TestRow>({
-      config: {
-        agGridOptions: ref({}),
-        cellAttrs: ref(cellAttrs),
-        headers: ref([
-          {
-            key: 'status',
-            label: 'Status',
-            draggable: false,
-            agGridColumnOptions: {
-              suppressMovable: false,
-              cellClass: 'custom-status-cell',
-            },
+    const selectionRendererContext = createSelectionRendererContext()
+    const { columnDefs, gridContext } = useTableDataGridColumnDefs<TestRow>({
+      agGridOptions: ref({}),
+      cellAttrs: ref(cellAttrs),
+      displayedColumnIndexesByKey,
+      headers: ref([
+        {
+          key: 'status',
+          label: 'Status',
+          draggable: false,
+          agGridColumnOptions: {
+            suppressMovable: false,
+            cellClass: 'custom-status-cell',
           },
-        ]),
-        resolvedTableConfig: ref({ columnOrder: ['status'] }),
-        rowSelection: ref('none'),
-      },
-      grid: {
-        displayedColumnIndexesByKey,
-      },
-      slots: {
-        slots,
-      },
+        },
+      ]),
+      resolvedTableConfig: ref({ columnOrder: ['status'] }),
+      rowSelection: ref('none'),
+      selectionRendererContext,
+      slots,
     })
 
-    expect(gridContext.value).toEqual({
+    expect(gridContext.value.cells).toEqual({
       cellAttrs,
       columnsByKey: new Map([['status', {
         key: 'status',
@@ -202,6 +210,12 @@ describe('useDatatableColumnDefs', () => {
       displayedColumnIndexesByKey,
       slots,
     })
+    expect(gridContext.value.selection).toBe(selectionRendererContext)
+    expect(gridContext.value.sort.currentSort.value).toEqual({
+      sortColumnKey: undefined,
+      sortColumnOrder: undefined,
+    })
+    expect(gridContext.value.sort.requestSort).toEqual(expect.any(Function))
     expect(columnDefs.value[0]).toMatchObject({
       cellClass: 'custom-status-cell',
       suppressMovable: false,

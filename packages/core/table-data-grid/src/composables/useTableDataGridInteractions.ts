@@ -14,27 +14,34 @@ import { computed } from 'vue'
 import { getRowKeyValue } from '../utils/rowKey'
 import { patchRowAttrs } from '../utils/rowAttrs'
 
+/**
+ * Owns row identity and row/cell interaction handlers for AG Grid.
+ *
+ * Header metadata is the source for row-click suppression, `rowAttrs` owns host
+ * row DOM attributes, and emitted row/cell events are the only public side
+ * effects from clicks.
+ */
 export const useTableDataGridInteractions = <Row extends Record<string, any>>({
-  emit,
-  inputs,
+  agGridOptions,
+  cellClick,
+  headers,
+  rowAttrs,
+  rowClick,
+  rowKey,
 }: {
-  emit: {
-    cellClick: (payload: { row: Row, columnKey: string, value: any }) => void
-    rowClick: (row: Row, event: RowClickedEvent<Row>) => void
-  }
-  inputs: {
-    agGridOptions: Readonly<Ref<TableDataGridGridOptions<Row>>>
-    headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
-    rowAttrs: Readonly<Ref<TableDataGridRowAttrs<Row> | undefined>>
-    rowKey: Readonly<Ref<TableDataGridRowKey<Row>>>
-  }
+  agGridOptions: Readonly<Ref<TableDataGridGridOptions<Row>>>
+  cellClick: (payload: { row: Row, columnKey: string, value: any }) => void
+  headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
+  rowAttrs: Readonly<Ref<TableDataGridRowAttrs<Row> | undefined>>
+  rowClick: (row: Row, event: RowClickedEvent<Row>) => void
+  rowKey: Readonly<Ref<TableDataGridRowKey<Row>>>
 }) => {
   const getAgGridRowId = ({ data }: { data: Row }) => {
-    return getRowKeyValue(data, inputs.rowKey.value)
+    return getRowKeyValue(data, rowKey.value)
   }
 
   const rowClickDisabledColumnKeys = computed(() => new Set(
-    inputs.headers.value
+    headers.value
       .filter(header => header.disableRowClick)
       .map(header => header.key),
   ))
@@ -56,13 +63,13 @@ export const useTableDataGridInteractions = <Row extends Record<string, any>>({
   }
 
   const onRowPostCreate = (params: ProcessRowParams<Row>) => {
-    inputs.agGridOptions.value.processRowPostCreate?.(params)
+    agGridOptions.value.processRowPostCreate?.(params)
 
-    if (!params.node.data || !inputs.rowAttrs.value) {
+    if (!params.node.data || !rowAttrs.value) {
       return
     }
 
-    const attrs = inputs.rowAttrs.value(params.node.data)
+    const attrs = rowAttrs.value(params.node.data)
     patchRowAttrs(params.eRow, attrs)
     patchRowAttrs(params.ePinnedLeftRow, attrs)
     patchRowAttrs(params.ePinnedRightRow, attrs)
@@ -70,7 +77,7 @@ export const useTableDataGridInteractions = <Row extends Record<string, any>>({
 
   const onRowClick = (event: RowClickedEvent<Row>) => {
     if (event.data && !isRowClickDisabledForColumn(event)) {
-      emit.rowClick(event.data, event)
+      rowClick(event.data, event)
     }
   }
 
@@ -80,7 +87,7 @@ export const useTableDataGridInteractions = <Row extends Record<string, any>>({
       return
     }
 
-    emit.cellClick({
+    cellClick({
       row: event.data,
       columnKey: event.colDef.colId,
       value: event.value,

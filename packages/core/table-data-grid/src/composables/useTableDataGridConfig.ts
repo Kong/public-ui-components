@@ -10,6 +10,13 @@ import {
   normalizeTableConfig,
 } from '../utils/tableConfig'
 
+/**
+ * Owns the tableConfig source of truth for the wrapper.
+ *
+ * `tableConfig` is the optional host-controlled input. `activeTableConfig` is
+ * the wrapper's current raw config, and `resolvedTableConfig` is the normalized
+ * config that downstream AG Grid code should use.
+ */
 export const useTableDataGridConfig = <Row extends Record<string, any>>({
   emitTableConfigUpdate,
   headers,

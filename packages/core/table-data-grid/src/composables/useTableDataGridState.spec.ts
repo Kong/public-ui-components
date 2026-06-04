@@ -21,19 +21,13 @@ describe('useTableDataGridState', () => {
     const wrapper = mount(defineComponent({
       setup() {
         state = useTableDataGridState<TestRow>({
-          emit: {
-            state: emitState,
-          },
-          fetch: {
-            fetchError,
-            hasFetched,
-            isFetching,
-            rowData,
-          },
-          inputs: {
-            error,
-            loading,
-          },
+          emitState,
+          error,
+          fetchError,
+          hasFetched,
+          isFetching,
+          loading,
+          rowData,
         })
 
         return () => h('div')

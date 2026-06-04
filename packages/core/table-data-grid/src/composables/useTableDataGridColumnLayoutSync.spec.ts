@@ -39,7 +39,7 @@ describe('useTableDataGridColumnLayoutSync', () => {
   } = {}) => {
     const gridApi = ref(createGridApi())
     const sizing = {
-      emitGridConfigChange: vi.fn(),
+      persistGridConfigChange: vi.fn(),
       scheduleColumnsToFitAfterDisplayedColumnsChange: vi.fn(),
       scheduleColumnsToFitAfterRenderedRowsChange: vi.fn(),
     }
@@ -106,11 +106,11 @@ describe('useTableDataGridColumnLayoutSync', () => {
     sync.onColumnPinned()
     sync.onColumnLayoutChange()
 
-    expect(sizing.emitGridConfigChange).toHaveBeenCalledTimes(2)
-    expect(sizing.emitGridConfigChange).toHaveBeenNthCalledWith(1, {
+    expect(sizing.persistGridConfigChange).toHaveBeenCalledTimes(2)
+    expect(sizing.persistGridConfigChange).toHaveBeenNthCalledWith(1, {
       columnWidthChangeSource: 'layout-side-effect',
     })
-    expect(sizing.emitGridConfigChange).toHaveBeenNthCalledWith(2, {
+    expect(sizing.persistGridConfigChange).toHaveBeenNthCalledWith(2, {
       columnWidthChangeSource: 'layout-side-effect',
     })
   })
@@ -122,8 +122,8 @@ describe('useTableDataGridColumnLayoutSync', () => {
 
     sync.onColumnVisibilityChange()
 
-    expect(sizing.emitGridConfigChange).toHaveBeenCalledOnce()
-    expect(sizing.emitGridConfigChange).toHaveBeenCalledWith({
+    expect(sizing.persistGridConfigChange).toHaveBeenCalledOnce()
+    expect(sizing.persistGridConfigChange).toHaveBeenCalledWith({
       columnWidthChangeSource: 'layout-side-effect',
     })
     expect(sizing.scheduleColumnsToFitAfterDisplayedColumnsChange).not.toHaveBeenCalled()
@@ -134,7 +134,7 @@ describe('useTableDataGridColumnLayoutSync', () => {
 
     sync.onColumnVisibilityChange()
 
-    expect(sizing.emitGridConfigChange).toHaveBeenCalledOnce()
+    expect(sizing.persistGridConfigChange).toHaveBeenCalledOnce()
     expect(sizing.scheduleColumnsToFitAfterDisplayedColumnsChange).toHaveBeenCalledOnce()
   })
 
@@ -180,7 +180,7 @@ describe('useTableDataGridColumnLayoutSync', () => {
       finished: true,
     } as ColumnResizedEvent<TestRow>)
 
-    expect(sizing.emitGridConfigChange).toHaveBeenCalledOnce()
+    expect(sizing.persistGridConfigChange).toHaveBeenCalledOnce()
   })
 
   it('refits displayed columns after the selection column appears or disappears', async () => {

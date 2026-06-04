@@ -10,6 +10,13 @@ import type {
 } from 'ag-grid-community'
 import type { Ref } from 'vue'
 
+/**
+ * Owns one-time grid-ready orchestration.
+ *
+ * On grid ready it applies the resolved config, captures the mounted AG Grid
+ * state, publishes the GridApi, initializes sizing, resets fetch state, and
+ * starts the first refresh. Later config sync is owned elsewhere.
+ */
 export const useTableDataGridGridLifecycle = <Row extends Record<string, any>>({
   applyTableConfig,
   captureGridConfig,

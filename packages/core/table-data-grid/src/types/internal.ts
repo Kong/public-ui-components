@@ -3,12 +3,10 @@ import type {
   TableDataGridConfig,
   TableDataGridFetcher,
   TableDataGridFetcherParams,
-  TableDataGridGridOptions,
   TableDataGridHeader,
-  TableDataGridRowKey,
-  TableDataGridRowSelectionMode,
+  TableDataGridSort,
 } from './index'
-import type { GridApi, IDatasource } from 'ag-grid-community'
+import type { GridApi, IDatasource, RowNode } from 'ag-grid-community'
 import type { Ref, ShallowRef, Slots } from 'vue'
 
 export type GridColumnWidthChangeSource = 'intentional' | 'layout-side-effect'
@@ -52,39 +50,36 @@ export type TableDataGridFetchModeSources<Row extends Record<string, any>> = {
   state: TableDataGridFetchState<Row>
 }
 
-export type TableDataGridSelectionConfig<Row extends Record<string, any>> = {
-  rowKey: Readonly<Ref<TableDataGridRowKey<Row>>>
-  rowSelection: Readonly<Ref<TableDataGridRowSelectionMode>>
+export type TableDataGridSelectionRendererState = {
+  selected: boolean
+  selectable: boolean
 }
 
-export type TableDataGridSelectionEmit<Row extends Record<string, any>> = {
-  rowSelect: (selectedRows: Row[]) => void
+export type TableDataGridSelectionHeaderRendererState = {
+  checked: boolean
+  disabled: boolean
+  indeterminate: boolean
 }
 
-export type TableDataGridSelectionGrid<Row extends Record<string, any>> = {
-  gridApi: Ref<GridApi<Row> | undefined>
-}
-
-export type TableDataGridColumnSizingConfig<Row extends Record<string, any>> = {
-  headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
-  isApplyingTableConfig: Readonly<Ref<boolean>>
-  resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
-  tableConfig: Readonly<Ref<TableDataGridConfig | undefined>>
-  updateTableConfig: (config: Partial<TableDataGridConfig>) => void
-}
-
-export type TableDataGridColumnSizingElement = {
-  datatableElement: Readonly<Ref<HTMLElement | undefined>>
-  datatableWidth: Readonly<Ref<number>>
-}
-
-export type TableDataGridColumnSizingGrid<Row extends Record<string, any>> = {
-  getGridConfig: (api: GridApi<Row>) => TableDataGridConfig
-  gridApi: Ref<GridApi<Row> | undefined>
+export type TableDataGridSelectionRendererContext<Row extends Record<string, any>> = {
+  getHeaderSelectionState: (api: GridApi<Row>) => TableDataGridSelectionHeaderRendererState
+  getRowSelectionState: (node: RowNode<Row>) => TableDataGridSelectionRendererState
+  setAllRowsSelected: (options: {
+    api: GridApi<Row>
+    selected: boolean
+  }) => void
+  setRowSelected: (options: {
+    node: RowNode<Row>
+    selected: boolean
+  }) => void
+  subscribeToHeaderSelectionState: (options: {
+    api: GridApi<Row>
+    onChange: () => void
+  }) => () => void
 }
 
 export type TableDataGridColumnSizingHandlers<Row extends Record<string, any>> = {
-  emitGridConfigChange: (options?: {
+  persistGridConfigChange: (options?: {
     columnWidthChangeSource?: GridColumnWidthChangeSource
   }) => void
   fitColumnsOnGridReady: (api: GridApi<Row>) => void
@@ -100,18 +95,23 @@ export type TableDataGridColumnSizingHandlers<Row extends Record<string, any>> =
   startResizeTracking: () => void
 }
 
-export type TableDataGridColumnDefsConfig<Row extends Record<string, any>> = {
-  agGridOptions: Readonly<Ref<TableDataGridGridOptions<Row>>>
-  cellAttrs: Readonly<Ref<TableDataGridCellAttrs<Row> | undefined>>
-  headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
-  resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
-  rowSelection: Readonly<Ref<TableDataGridRowSelectionMode>>
-}
-
-export type TableDataGridColumnDefsGrid = {
+type TableDataGridCellRendererContext<Row extends Record<string, any>> = {
+  cellAttrs?: TableDataGridCellAttrs<Row>
+  columnsByKey: Map<string, TableDataGridHeader<Row>>
   displayedColumnIndexesByKey: Readonly<Ref<Map<string, number>>>
+  slots: Slots
 }
 
-export type TableDataGridColumnDefsSlots = {
-  slots: Slots
+type TableDataGridSortRendererContext = {
+  currentSort: Readonly<Ref<TableDataGridSort>>
+  requestSort: (options: {
+    multiSort: boolean
+    progressSort: (multiSort?: boolean) => void
+  }) => void
+}
+
+export type TableDataGridRendererContext<Row extends Record<string, any>> = {
+  cells: TableDataGridCellRendererContext<Row>
+  selection: TableDataGridSelectionRendererContext<Row>
+  sort: TableDataGridSortRendererContext
 }

@@ -9,6 +9,13 @@ import {
   resolveRefreshSort,
 } from '../utils/fetchers'
 
+/**
+ * Owns paginated fetch execution and commits.
+ *
+ * `params` is the current fetch contract, `state` is the shared fetch state
+ * mutated by both fetch modes, and `latestPaginationRequestId` prevents stale
+ * page responses from becoming the visible rows.
+ */
 export const useTableDataGridPaginationFetch = <Row extends Record<string, any>>({
   fetcher,
   params,

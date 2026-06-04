@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 import { describe, expect, it, vi } from 'vitest'
-import { useDatatablePagination } from './useDatatablePagination'
+import { useTableDataGridPagination } from './useTableDataGridPagination'
 
-describe('useDatatablePagination', () => {
+describe('useTableDataGridPagination', () => {
   const createPagination = ({
     activePageSize = ref(15),
     isFetching = ref(false),
@@ -12,7 +12,7 @@ describe('useDatatablePagination', () => {
     fetchPage = vi.fn(),
   } = {}) => ({
     fetchPage,
-    pagination: useDatatablePagination({
+    pagination: useTableDataGridPagination({
       activePageSize,
       isFetching,
       fetchPage,

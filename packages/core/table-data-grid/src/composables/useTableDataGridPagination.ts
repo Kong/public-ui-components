@@ -2,7 +2,14 @@ import type { PageChangeData } from '@kong/kongponents'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 
-export const useDatatablePagination = ({
+/**
+ * Owns pagination navigation rules for the pagination controls.
+ *
+ * `currentPage`, `totalRows`, and `hasNextPageWhenTotalUnknown` are fetch-owned
+ * state. This composable only derives button availability and gates page-change
+ * requests before delegating actual fetching to `fetchPage`.
+ */
+export const useTableDataGridPagination = ({
   activePageSize,
   isFetching,
   fetchPage,

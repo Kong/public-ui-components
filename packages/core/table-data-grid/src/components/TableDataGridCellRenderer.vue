@@ -8,20 +8,12 @@
 </template>
 
 <script setup lang="ts">
-import type { TableDataGridCellAttrs, TableDataGridHeader } from '../types'
+import type { TableDataGridRendererContext } from '../types/internal'
 import type { ICellRendererParams } from 'ag-grid-community'
-import type { Ref, Slots } from 'vue'
 import { computed, shallowRef, toRaw } from 'vue'
 
-type DatatableCellContext<Row extends Record<string, any>> = {
-  cellAttrs?: TableDataGridCellAttrs<Row>
-  columnsByKey: Map<string, TableDataGridHeader<Row>>
-  displayedColumnIndexesByKey: Readonly<Ref<Map<string, number>>>
-  slots: Slots
-}
-
 type DatatableCellParams = ICellRendererParams<Record<string, any>> & {
-  context: DatatableCellContext<Record<string, any>>
+  context: TableDataGridRendererContext<Record<string, any>>
 }
 
 defineOptions({
@@ -36,16 +28,17 @@ const currentParams = shallowRef(props.params)
 
 const row = computed(() => currentParams.value.data ?? {})
 const rowIndex = computed(() => currentParams.value.node.rowIndex ?? 0)
-const column = computed(() => currentParams.value.context.columnsByKey.get(currentParams.value.colDef?.colId ?? '') ?? {
+const cellContext = computed(() => currentParams.value.context.cells)
+const column = computed(() => cellContext.value.columnsByKey.get(currentParams.value.colDef?.colId ?? '') ?? {
   key: currentParams.value.colDef?.colId ?? '',
   label: currentParams.value.colDef?.headerName ?? '',
 })
 const rowValue = computed(() => currentParams.value.value)
 const colIndex = computed(() => (
-  toRaw(currentParams.value.context).displayedColumnIndexesByKey.value.get(column.value.key) ?? -1
+  toRaw(cellContext.value).displayedColumnIndexesByKey.value.get(column.value.key) ?? -1
 ))
 const selected = computed(() => currentParams.value.node.isSelected())
-const cellAttrs = computed(() => currentParams.value.context.cellAttrs?.({
+const cellAttrs = computed(() => cellContext.value.cellAttrs?.({
   column: column.value,
   colIndex: colIndex.value,
   row: row.value,
@@ -65,7 +58,7 @@ const refreshCell = () => {
     rowNodes: [currentParams.value.node],
   })
 }
-const cellSlot = computed(() => currentParams.value.context.slots[column.value.key])
+const cellSlot = computed(() => cellContext.value.slots[column.value.key])
 const slotPayload = computed(() => ({
   column: column.value,
   refreshCell,
