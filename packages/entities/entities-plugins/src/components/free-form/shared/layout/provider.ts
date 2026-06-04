@@ -5,14 +5,13 @@ import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import type { PluginValidityChangeEvent } from '../../../../types'
 import type { FieldRenderer as PluginFieldRenderer, FormConfig, RenderRules } from '../types'
 
-export type PluginFormLayoutProps<T extends FreeFormPluginData = FreeFormPluginData> = {
+export type PluginConfigurationBaseProps<T extends Record<string, any> = Record<string, any>> = {
   /** FreeForm Schema */
   schema: FormSchema
   /** The **initial** entire plugin model, never update */
   model: T
   /** Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority */
   onFormChange: (value: Partial<T>, fields?: string[]) => void
-  onValidityChange?: (event: PluginValidityChangeEvent) => void
   /** FreeForm configuration */
   formConfig?: FormConfig<T>
   renderRules?: RenderRules
@@ -20,6 +19,12 @@ export type PluginFormLayoutProps<T extends FreeFormPluginData = FreeFormPluginD
   pluginName: string
   /** Konnect-managed Redis UI, from plugin form config */
   isKonnectManagedRedisEnabled?: boolean
+  pluginConfigTitle?: string
+  pluginConfigDescription?: string
+}
+
+export type PluginFormLayoutProps<T extends FreeFormPluginData = FreeFormPluginData> = PluginConfigurationBaseProps<T> & {
+  onValidityChange?: (event: PluginValidityChangeEvent) => void
   isEditing: boolean
   /**
    * Hide the built-in form/code switcher. Plugins that own a custom switcher
@@ -31,8 +36,6 @@ export type PluginFormLayoutProps<T extends FreeFormPluginData = FreeFormPluginD
   developer?: boolean
   generalInfoTitle?: string
   generalInfoDescription?: string
-  pluginConfigTitle?: string
-  pluginConfigDescription?: string
 }
 
 export type PluginFormLayoutComponent<T extends FreeFormPluginData = FreeFormPluginData> = Component<PluginFormLayoutProps<T>>

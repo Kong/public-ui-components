@@ -12,51 +12,34 @@
     />
   </Teleport>
 
-  <Form
+  <PluginConfigurationForm
     ref="form"
     v-bind="attrs"
     class="ff-standard-layout"
-    :config="realFormConfig"
-    :data="(prunedData as T)"
-    :data-instance-id="instanceId"
-    :data-plugin-name="pluginName"
+    :controlled-fields="FREE_FORM_CONTROLLED_FIELDS"
     data-testid="ff-standard-layout-form"
+    :field-renderers="fieldRenderers"
+    :form-config="formConfig"
+    :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
+    :model="model"
+    :on-form-change="onFormChange"
+    :plugin-config-description="pluginConfigDescription"
+    :plugin-config-step="2"
+    :plugin-config-title="pluginConfigTitle"
+    :plugin-name="pluginName"
+    :prepare-form-data="prepareFormData"
     :render-rules="renderRules"
     :schema="freeFormSchema"
-    tag="div"
+    :show-plugin-configuration="editorMode === 'form'"
     @change="handleDataChange"
   >
-    <!-- global field templates -->
-    <template #[FIELD_RENDERERS]>
-      <FieldRenderer
-        v-for="(renderer, index) in configFieldRenderers"
-        :key="`${pluginName}-${index}`"
-        v-slot="slotProps"
-        :match="normalizeMatch(renderer.match)"
-      >
-        <component
-          :is="renderer.component"
-          v-bind="{
-            ...slotProps,
-            ...((typeof renderer.propsOverrides === 'function')
-              ? renderer.propsOverrides(slotProps)
-              : renderer.propsOverrides) ?? {},
-          }"
-        />
-      </FieldRenderer>
-
-      <!-- Redis partial selector -->
-      <FieldRenderer :match="({ path }) => path === redisPartialInfo?.redisPath?.value">
-        <RedisSelector :is-konnect-managed-redis-enabled="props.isKonnectManagedRedisEnabled ?? false" />
-      </FieldRenderer>
-
-      <!-- Custom field renderers from consuming components -->
+    <template #field-renderers>
       <slot name="field-renderers" />
     </template>
 
-    <template v-if="editorMode === 'form'">
-      <!-- Plugin scope -->
+    <template #before>
       <EntityFormBlock
+        v-if="editorMode === 'form'"
         data-testid="form-section-plugin-scope"
         :description="generalInfoDescription ?? t('plugins.form.sections.plugin_scope.description')"
         :step="1"
@@ -130,40 +113,34 @@
           <slot name="general-info-extra" />
         </template>
       </EntityFormBlock>
+    </template>
 
-      <!-- Plugin configuration -->
+    <slot />
+
+    <template
+      v-if="slots['plugin-config-title']"
+      #plugin-config-title
+    >
+      <slot name="plugin-config-title" />
+    </template>
+
+    <template
+      v-if="slots['plugin-config-description']"
+      #plugin-config-description
+    >
+      <slot name="plugin-config-description" />
+    </template>
+
+    <template
+      v-if="slots['plugin-config-extra']"
+      #plugin-config-extra
+    >
+      <slot name="plugin-config-extra" />
+    </template>
+
+    <template #after>
       <EntityFormBlock
-        data-testid="form-section-plugin-config"
-        :description="pluginConfigDescription ?? t('plugins.form.sections.plugin_config.description')"
-        :step="2"
-        :title="pluginConfigTitle ?? t('plugins.form.sections.plugin_config.title')"
-      >
-        <slot />
-
-        <template
-          v-if="slots['plugin-config-title']"
-          #title
-        >
-          <slot name="plugin-config-title" />
-        </template>
-
-        <template
-          v-if="slots['plugin-config-description']"
-          #description
-        >
-          <slot name="plugin-config-description" />
-        </template>
-
-        <template
-          v-if="slots['plugin-config-extra']"
-          #extra
-        >
-          <slot name="plugin-config-extra" />
-        </template>
-      </EntityFormBlock>
-
-      <!-- General information -->
-      <EntityFormBlock
+        v-if="editorMode === 'form'"
         data-testid="form-section-general-info"
         :description="t('plugins.form.sections.plugin_general_info.description')"
         :step="3"
@@ -205,18 +182,18 @@
           <ConditionField />
         </KCollapse>
       </EntityFormBlock>
-    </template>
 
-    <EntityFormBlock
-      v-if="editorMode === 'code'"
-      :description="t('plugins.form.sections.code_mode.description')"
-      :title="t('plugins.form.sections.code_mode.title')"
-    >
-      <slot name="code-editor">
-        <CodeEditor />
-      </slot>
-    </EntityFormBlock>
-  </Form>
+      <EntityFormBlock
+        v-if="editorMode === 'code'"
+        :description="t('plugins.form.sections.code_mode.description')"
+        :title="t('plugins.form.sections.code_mode.title')"
+      >
+        <slot name="code-editor">
+          <CodeEditor />
+        </slot>
+      </EntityFormBlock>
+    </template>
+  </PluginConfigurationForm>
 </template>
 
 <script lang="ts">
@@ -229,24 +206,17 @@ export interface Props<T extends FreeFormPluginData = any> extends PluginFormLay
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, inject, nextTick, ref, useAttrs, useTemplateRef, useId } from 'vue'
+import { computed, inject, nextTick, ref, useAttrs, useTemplateRef } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
-import { KRadio, KSegmentedControl, KTooltip } from '@kong/kongponents'
+import { KCollapse, KRadio, KSegmentedControl, KTooltip } from '@kong/kongponents'
 import type { SegmentedControlOption } from '@kong/kongponents'
 import { useLocalStorage } from '@vueuse/core'
 import { FEATURE_FLAGS } from '../../../../constants'
-import Form from '../Form.vue'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import SwitchField from '../SwitchField.vue'
 import ScopeEntityField from '../ScopeEntityField.vue'
-import { normalizeMatch } from '../utils'
-import type { FieldRenderer as PluginFieldRenderer, FormConfig } from '../types'
-import FieldRenderer from '../FieldRenderer.vue'
-import { REDIS_PARTIAL_INFO } from '../const'
-import RedisSelector from '../RedisSelector.vue'
-import { FIELD_RENDERERS, useSchemaExposer } from '../composables'
 import Field from '../Field.vue'
 import StringArrayField from '../StringArrayField.vue'
 import StringField from '../StringField.vue'
@@ -254,6 +224,7 @@ import CodeEditor from '../CodeEditor.vue'
 import ConditionField from './ConditionField.vue'
 import useI18n from '../../../../composables/useI18n'
 import type { PluginFormLayoutProps } from './provider'
+import PluginConfigurationForm from './PluginConfigurationForm.vue'
 
 defineOptions({ inheritAttrs: false })
 
@@ -277,13 +248,10 @@ const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   'service',
 ]
 
-const instanceId = useId()
-
 const { i18n: { t } } = useI18n()
 
 const { hideEditorModeSwitcher = false, ...props } = defineProps<Props<T>>()
 const attrs = useAttrs()
-const configFieldRenderers = computed<PluginFieldRenderer[]>(() => props.fieldRenderers ?? [])
 
 const enableCodeMode = inject<boolean>(FEATURE_FLAGS.KM_2262_CODE_MODE, false)
 
@@ -322,7 +290,6 @@ function handleEditorModeChange(newMode: EditorMode) {
   editorModePreference.value = newMode
 }
 
-const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 const slots = defineSlots<{
   default: () => any
   'code-editor'?: () => any
@@ -334,23 +301,6 @@ const slots = defineSlots<{
   'plugin-config-extra'?: () => any
   'field-renderers'?: () => any
 }>()
-
-const realFormConfig = computed(() => {
-  const formConfig = props.formConfig as FormConfig<T> | undefined
-
-  return {
-    ...(formConfig ?? {}),
-    hasValue: formConfig?.hasValue ?? ((data?: T): boolean => !!data && Object.keys(data).length > 0),
-    prepareFormData: (data: T): Partial<T> => {
-      const preparedData = formConfig?.prepareFormData?.(data) ?? data
-
-      if (props.isEditing) return preparedData
-
-      // Init scope-related fields from formModel when creating a new plugin
-      return { ...preparedData, ... getScopesFromFormModel() }
-    },
-  }
-})
 
 const scopeWrapperAttrs = computed(() => {
   if (scopeSchema.value?.disabled) {
@@ -544,8 +494,14 @@ const scopesCache = ref(
 // `scopeIds` is not reactive. Initialize `scoped` in one shot.
 const scoped = ref(Object.values(scopesCache.value).some(hasScopeId))
 
-const formRef = useTemplateRef('form')
+const formRef = useTemplateRef<any>('form')
 let skipUpdateScopeCache = false
+
+function prepareFormData(data: Partial<T>): Partial<T> {
+  if (props.isEditing) return data
+
+  return { ...data, ... getScopesFromFormModel() }
+}
 
 function handleScopeChange() {
   if (!formRef.value) return
@@ -591,7 +547,6 @@ function handleDataChange(value: T) {
     }
   }
 
-  props.onFormChange(value, FREE_FORM_CONTROLLED_FIELDS)
 }
 
 function updateScopeCache(value: T) {
@@ -621,8 +576,6 @@ function getScopesFromFormModel(): Partial<T> {
   })
   return data
 }
-
-useSchemaExposer(freeFormSchema, instanceId)
 
 const advancedCollapsed = ref(true)
 </script>
