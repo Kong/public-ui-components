@@ -2,11 +2,8 @@ import { ref } from 'vue'
 import { describe, expect, it, vi } from 'vitest'
 import type { GridApi, RowNode } from 'ag-grid-community'
 import type {
-  TableDataGridGridOptions,
   TableDataGridRowSelectionMode,
 } from '../types'
-import TableDataGridSelectionCell from '../components/TableDataGridSelectionCell.vue'
-import TableDataGridSelectionHeader from '../components/TableDataGridSelectionHeader.vue'
 import { useDatatableSelection } from './useDatatableSelection'
 
 type TestRow = {
@@ -49,14 +46,12 @@ describe('useDatatableSelection', () => {
   }
 
   const createSelection = ({
-    agGridOptions = ref<TableDataGridGridOptions<TestRow>>({}),
     gridApi = ref<GridApi<TestRow>>(),
     rowSelection = ref<TableDataGridRowSelectionMode>('multiple'),
   } = {}) => {
     const emitRowSelect = vi.fn()
     const selection = useDatatableSelection<TestRow>({
       config: {
-        agGridOptions,
         rowKey: ref('id'),
         rowSelection,
       },
@@ -74,17 +69,11 @@ describe('useDatatableSelection', () => {
     }
   }
 
-  it('resolves row selection mode and selection column configuration', () => {
+  it('resolves row selection mode', () => {
     const rowSelection = ref<TableDataGridRowSelectionMode>('none')
-    const agGridOptions = ref<TableDataGridGridOptions<TestRow>>({
-      selectionColumnDef: {
-        width: 72,
-      },
-    })
-    const { selection } = createSelection({ agGridOptions, rowSelection })
+    const { selection } = createSelection({ rowSelection })
 
     expect(selection.rowSelectionConfig.value).toBeUndefined()
-    expect(selection.selectionColumnDef.value).toBeUndefined()
 
     rowSelection.value = 'single'
     expect(selection.rowSelectionConfig.value).toEqual({
@@ -92,7 +81,6 @@ describe('useDatatableSelection', () => {
       checkboxes: false,
       enableClickSelection: true,
     })
-    expect(selection.selectionColumnDef.value).toBeUndefined()
 
     rowSelection.value = 'multiple'
     expect(selection.rowSelectionConfig.value).toEqual({
@@ -100,20 +88,6 @@ describe('useDatatableSelection', () => {
       checkboxes: false,
       enableClickSelection: true,
       headerCheckbox: false,
-    })
-    expect(selection.selectionColumnDef.value).toEqual({
-      cellRenderer: TableDataGridSelectionCell,
-      colId: 'ag-Grid-SelectionColumn',
-      headerComponent: TableDataGridSelectionHeader,
-      lockPosition: 'left',
-      maxWidth: 72,
-      minWidth: 48,
-      pinned: 'left',
-      resizable: false,
-      sortable: false,
-      suppressHeaderMenuButton: true,
-      suppressMovable: true,
-      width: 72,
     })
   })
 

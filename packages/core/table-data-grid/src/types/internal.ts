@@ -8,7 +8,7 @@ import type {
   TableDataGridRowKey,
   TableDataGridRowSelectionMode,
 } from './index'
-import type { ColDef, GridApi, IDatasource } from 'ag-grid-community'
+import type { GridApi, IDatasource } from 'ag-grid-community'
 import type { Ref, ShallowRef, Slots } from 'vue'
 
 export type GridColumnWidthChangeSource = 'intentional' | 'layout-side-effect'
@@ -53,7 +53,6 @@ export type TableDataGridFetchModeSources<Row extends Record<string, any>> = {
 }
 
 export type TableDataGridSelectionConfig<Row extends Record<string, any>> = {
-  agGridOptions: Readonly<Ref<TableDataGridGridOptions<Row>>>
   rowKey: Readonly<Ref<TableDataGridRowKey<Row>>>
   rowSelection: Readonly<Ref<TableDataGridRowSelectionMode>>
 }
@@ -102,17 +101,15 @@ export type TableDataGridColumnSizingHandlers<Row extends Record<string, any>> =
 }
 
 export type TableDataGridColumnDefsConfig<Row extends Record<string, any>> = {
+  agGridOptions: Readonly<Ref<TableDataGridGridOptions<Row>>>
   cellAttrs: Readonly<Ref<TableDataGridCellAttrs<Row> | undefined>>
   headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
   resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
+  rowSelection: Readonly<Ref<TableDataGridRowSelectionMode>>
 }
 
 export type TableDataGridColumnDefsGrid = {
-  displayedColumnIndexesByKey: Readonly<ShallowRef<Map<string, number>>>
-}
-
-export type TableDataGridColumnDefsSelection<Row extends Record<string, any>> = {
-  selectionColumnDef: Readonly<Ref<ColDef<Row> | undefined>>
+  displayedColumnIndexesByKey: Readonly<Ref<Map<string, number>>>
 }
 
 export type TableDataGridColumnDefsSlots = {

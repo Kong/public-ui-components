@@ -1,9 +1,16 @@
 import { ref, shallowRef } from 'vue'
 import { describe, expect, it } from 'vitest'
 import type { Slots } from 'vue'
-import type { TableDataGridConfig, TableDataGridHeader } from '../types'
+import type {
+  TableDataGridConfig,
+  TableDataGridGridOptions,
+  TableDataGridHeader,
+  TableDataGridRowSelectionMode,
+} from '../types'
 import TableDataGridCellRenderer from '../components/TableDataGridCellRenderer.vue'
 import TableDataGridHeaderRenderer from '../components/TableDataGridHeaderRenderer.vue'
+import TableDataGridSelectionCell from '../components/TableDataGridSelectionCell.vue'
+import TableDataGridSelectionHeader from '../components/TableDataGridSelectionHeader.vue'
 import { useDatatableColumnDefs } from './useDatatableColumnDefs'
 
 type TestRow = {
@@ -14,6 +21,7 @@ type TestRow = {
 
 describe('useDatatableColumnDefs', () => {
   const createColumnDefs = ({
+    agGridOptions = ref<TableDataGridGridOptions<TestRow>>({}),
     headers = ref<Array<TableDataGridHeader<TestRow>>>([
       { key: 'name', label: 'Name', hideable: false, width: 200 },
       { key: 'status', label: 'Status', width: 120 },
@@ -21,20 +29,19 @@ describe('useDatatableColumnDefs', () => {
     resolvedTableConfig = ref<TableDataGridConfig>({
       columnOrder: ['name', 'status'],
     }),
-    selectionColumnDef = ref(undefined),
+    rowSelection = ref<TableDataGridRowSelectionMode>('none'),
     displayedColumnIndexesByKey = shallowRef(new Map<string, number>()),
     slots = {} as Slots,
   } = {}) => useDatatableColumnDefs<TestRow>({
     config: {
+      agGridOptions,
       cellAttrs: ref(undefined),
       headers,
       resolvedTableConfig,
+      rowSelection,
     },
     grid: {
       displayedColumnIndexesByKey,
-    },
-    selection: {
-      selectionColumnDef,
     },
     slots: {
       slots,
@@ -62,15 +69,41 @@ describe('useDatatableColumnDefs', () => {
     expect(columnDefs.value.map(column => column.colId)).toEqual(['name', 'status'])
   })
 
-  it('prepends the internal selection column when provided', () => {
-    const selectionColumnDef = ref({
-      colId: 'ag-Grid-SelectionColumn',
-      width: 48,
+  it('prepends the internal selection column for multiple row selection', () => {
+    const rowSelection = ref<TableDataGridRowSelectionMode>('none')
+    const agGridOptions = ref<TableDataGridGridOptions<TestRow>>({
+      selectionColumnDef: {
+        cellClass: 'selection-cell',
+        headerClass: 'selection-header',
+        width: 72,
+      },
     })
-    const { columnDefs } = createColumnDefs({ selectionColumnDef })
+    const { columnDefs } = createColumnDefs({ agGridOptions, rowSelection })
+
+    expect(columnDefs.value.map(column => column.colId)).toEqual(['name', 'status'])
+
+    rowSelection.value = 'single'
+    expect(columnDefs.value.map(column => column.colId)).toEqual(['name', 'status'])
+
+    rowSelection.value = 'multiple'
 
     expect(columnDefs.value.map(column => column.colId)).toEqual(['ag-Grid-SelectionColumn', 'name', 'status'])
-    expect(columnDefs.value[0]).toBe(selectionColumnDef.value)
+    expect(columnDefs.value[0]).toMatchObject({
+      cellClass: 'selection-cell',
+      cellRenderer: TableDataGridSelectionCell,
+      colId: 'ag-Grid-SelectionColumn',
+      headerClass: 'selection-header',
+      headerComponent: TableDataGridSelectionHeader,
+      lockPosition: 'left',
+      maxWidth: 72,
+      minWidth: 48,
+      pinned: 'left',
+      resizable: false,
+      sortable: false,
+      suppressHeaderMenuButton: true,
+      suppressMovable: true,
+      width: 72,
+    })
   })
 
   it('builds ag-grid column definitions from table data grid headers', () => {
@@ -131,6 +164,7 @@ describe('useDatatableColumnDefs', () => {
     const displayedColumnIndexesByKey = shallowRef(new Map([['status', 1]]))
     const { columnDefs, gridContext } = useDatatableColumnDefs<TestRow>({
       config: {
+        agGridOptions: ref({}),
         cellAttrs: ref(cellAttrs),
         headers: ref([
           {
@@ -144,12 +178,10 @@ describe('useDatatableColumnDefs', () => {
           },
         ]),
         resolvedTableConfig: ref({ columnOrder: ['status'] }),
+        rowSelection: ref('none'),
       },
       grid: {
         displayedColumnIndexesByKey,
-      },
-      selection: {
-        selectionColumnDef: ref(undefined),
       },
       slots: {
         slots,

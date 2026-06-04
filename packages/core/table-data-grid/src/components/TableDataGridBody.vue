@@ -60,14 +60,16 @@
 
 <script setup lang="ts" generic="Row extends Record<string, any>">
 import type {
+  TableDataGridCellAttrs,
+  TableDataGridConfig,
   TableDataGridGridOptions,
   TableDataGridHeader,
   TableDataGridMode,
   TableDataGridRowAttrs,
   TableDataGridRowKey,
+  TableDataGridRowSelectionMode,
 } from '../types'
 import type {
-  ColDef,
   ColumnMovedEvent,
   ColumnPinnedEvent,
   ColumnResizedEvent,
@@ -84,7 +86,7 @@ import type {
 import type { PageSizeChangeData } from '@kong/kongponents'
 import { AgGridVue } from 'ag-grid-vue3'
 import { AllCommunityModule, InfiniteRowModelModule, ModuleRegistry, themeQuartz } from 'ag-grid-community'
-import { computed, toRef } from 'vue'
+import { computed, toRef, useSlots } from 'vue'
 import composables from '../composables'
 
 ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
@@ -93,14 +95,16 @@ const props = defineProps<{
   mode: TableDataGridMode
   agGridOptions: TableDataGridGridOptions<Row>
   activePageSize: number
-  columnDefs: Array<ColDef<Row>>
-  gridContext: object
+  cellAttrs?: TableDataGridCellAttrs<Row>
   datasource?: IDatasource
+  displayedColumnIndexesByKey: Map<string, number>
   headers: Array<TableDataGridHeader<Row>>
   isFetching: boolean
+  resolvedTableConfig: TableDataGridConfig
   rowAttrs?: TableDataGridRowAttrs<Row>
   rowData: Row[]
   rowKey: TableDataGridRowKey<Row>
+  rowSelection: TableDataGridRowSelectionMode
   rowSelectionConfig?: RowSelectionOptions
   currentPage: number
   fetchPage: (page: number) => Promise<void> | void
@@ -126,6 +130,27 @@ const emit = defineEmits<{
   (e: 'sort-changed', event: SortChangedEvent<Row>): void
   (e: 'page-size-change', event: PageSizeChangeData): void
 }>()
+
+const slots = useSlots()
+
+const {
+  columnDefs,
+  gridContext,
+} = composables.useDatatableColumnDefs<Row>({
+  config: {
+    agGridOptions: toRef(() => props.agGridOptions),
+    cellAttrs: toRef(() => props.cellAttrs),
+    headers: toRef(() => props.headers),
+    resolvedTableConfig: toRef(() => props.resolvedTableConfig),
+    rowSelection: toRef(() => props.rowSelection),
+  },
+  grid: {
+    displayedColumnIndexesByKey: toRef(() => props.displayedColumnIndexesByKey),
+  },
+  slots: {
+    slots,
+  },
+})
 
 const {
   getAgGridRowId,

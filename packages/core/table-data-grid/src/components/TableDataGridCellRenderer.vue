@@ -10,13 +10,13 @@
 <script setup lang="ts">
 import type { TableDataGridCellAttrs, TableDataGridHeader } from '../types'
 import type { ICellRendererParams } from 'ag-grid-community'
-import type { ShallowRef, Slots } from 'vue'
+import type { Ref, Slots } from 'vue'
 import { computed, shallowRef, toRaw } from 'vue'
 
 type DatatableCellContext<Row extends Record<string, any>> = {
   cellAttrs?: TableDataGridCellAttrs<Row>
   columnsByKey: Map<string, TableDataGridHeader<Row>>
-  displayedColumnIndexesByKey: Readonly<ShallowRef<Map<string, number>>>
+  displayedColumnIndexesByKey: Readonly<Ref<Map<string, number>>>
   slots: Slots
 }
 

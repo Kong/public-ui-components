@@ -2,7 +2,6 @@ import type {
   TableDataGridGridOptions,
   TableDataGridHeader,
 } from '../types'
-import type { ColDef } from 'ag-grid-community'
 import { defineComponent, h } from 'vue'
 import TableDataGridBody from './TableDataGridBody.vue'
 
@@ -31,38 +30,26 @@ const headers: Array<TableDataGridHeader<TestRow>> = [
   { key: 'status', label: 'Status', disableRowClick: true },
 ]
 
-const columnDefs: Array<ColDef<TestRow>> = [
-  {
-    colId: 'name',
-    field: 'name',
-    headerName: 'Name',
-  },
-  {
-    colId: 'status',
-    field: 'status',
-    headerName: 'Status',
-  },
-]
-
 describe('<TableDataGridBody />', () => {
   const mountBody = ({
     agGridOptions = {},
     onCellClick = cy.stub().as('cellClick'),
     onRowClick = cy.stub().as('rowClick'),
+    slots,
   }: {
     agGridOptions?: TableDataGridGridOptions<TestRow>
     onCellClick?: (payload: CellClickPayload) => void
     onRowClick?: (row: TestRow, event: unknown) => void
+    slots?: Record<string, (props: Record<string, any>) => any>
   } = {}) => {
     cy.mount(defineComponent({
       setup() {
         return () => h(TableDataGridBody<TestRow>, {
           activePageSize: 25,
           agGridOptions,
-          columnDefs,
           currentPage: 1,
+          displayedColumnIndexesByKey: new Map(),
           fetchPage: cy.stub(),
-          gridContext: {},
           hasFetched: true,
           hasNextPageWhenTotalUnknown: false,
           headers,
@@ -71,15 +58,19 @@ describe('<TableDataGridBody />', () => {
           isFetching: false,
           mode: 'pagination',
           paginationPageSizeOptions: [25],
+          resolvedTableConfig: {
+            columnOrder: ['name', 'status'],
+          },
           rowAttrs: row => ({
             'data-testid': `body-row-${row.id}`,
           }),
           rowData: rows,
           rowKey: 'id',
+          rowSelection: 'none',
           totalRows: rows.length,
           onCellClick,
           onRowClick,
-        })
+        }, slots)
       },
     }))
   }
@@ -113,5 +104,17 @@ describe('<TableDataGridBody />', () => {
       .then(($rows) => {
         expect(processRowPostCreate).to.have.callCount($rows.length)
       })
+  })
+
+  it('renders forwarded cell slots through generated column definitions', () => {
+    mountBody({
+      slots: {
+        name: ({ row }: { row: TestRow }) => h('span', {
+          'data-testid': 'body-name-slot',
+        }, row.name.toUpperCase()),
+      },
+    })
+
+    cy.getTestId('body-name-slot').should('contain.text', 'GATEWAY SERVICE')
   })
 })

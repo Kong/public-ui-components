@@ -69,11 +69,11 @@
         v-else
         :active-page-size="activePageSize"
         :ag-grid-options="agGridOptions"
-        :column-defs="columnDefs"
+        :cell-attrs="cellAttrs"
         :current-page="currentPage"
         :datasource="datasource"
+        :displayed-column-indexes-by-key="displayedColumnIndexesByKey"
         :fetch-page="fetchPage"
-        :grid-context="gridContext"
         :has-fetched="hasFetched"
         :has-next-page-when-total-unknown="hasNextPageWhenTotalUnknown"
         :headers="headers"
@@ -82,9 +82,11 @@
         :is-fetching="isFetching"
         :mode="mode"
         :pagination-page-size-options="paginationPageSizeOptions"
+        :resolved-table-config="resolvedTableConfig"
         :row-attrs="rowAttrs"
         :row-data="rowData"
         :row-key="resolvedRowKey"
+        :row-selection="rowSelection"
         :row-selection-config="rowSelectionConfig"
         :total-rows="totalRows"
         @cell-click="payload => emit('cell:click', payload)"
@@ -99,7 +101,18 @@
         @row-click="(row, event) => emit('row:click', row, event)"
         @selection-changed="onSelectionChange"
         @sort-changed="onSortChange"
-      />
+      >
+        <template
+          v-for="(_, slotName) in $slots"
+          :key="slotName"
+          #[slotName]="slotProps"
+        >
+          <slot
+            :name="slotName"
+            v-bind="slotProps ?? {}"
+          />
+        </template>
+      </TableDataGridBody>
     </template>
   </div>
 </template>
@@ -193,7 +206,7 @@ const {
 }>()
 const filterSelection = defineModel<FilterGroupSelection>('filterSelection', { default: () => ({}) })
 
-const slots = defineSlots<{
+defineSlots<{
   'bulk-action-items': (props: { selectedRows: Row[] }) => any
   'empty-state': () => any
   'error-state': () => any
@@ -320,11 +333,9 @@ const {
   onSelectionChange,
   rowSelectionConfig,
   selectedRows,
-  selectionColumnDef,
   selectRowByKey,
 } = composables.useDatatableSelection<Row>({
   config: {
-    agGridOptions: toRef(() => agGridOptions),
     rowKey: resolvedRowKey,
     rowSelection: toRef(() => rowSelection),
   },
@@ -402,26 +413,6 @@ const {
   refresh,
   resolvedTableConfig,
   sizing,
-})
-
-const {
-  columnDefs,
-  gridContext,
-} = composables.useDatatableColumnDefs<Row>({
-  config: {
-    cellAttrs: toRef(() => cellAttrs),
-    headers: toRef(() => headers),
-    resolvedTableConfig,
-  },
-  grid: {
-    displayedColumnIndexesByKey,
-  },
-  selection: {
-    selectionColumnDef,
-  },
-  slots: {
-    slots,
-  },
 })
 
 const {
