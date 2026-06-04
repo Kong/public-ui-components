@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.210.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.210.0...@kong-ui-public/entities-plugins@9.210.1) (2026-06-04)
+
+
+### Bug Fixes
+
+* **entities-plugins:** centralize freeform scope preparation ([#3410](https://github.com/Kong/public-ui-components/issues/3410)) ([5181380](https://github.com/Kong/public-ui-components/commit/51813802dd76257f7fcfd1a661604db9bfe901f7))
+
+
+
+
+
 # [9.210.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.209.1...@kong-ui-public/entities-plugins@9.210.0) (2026-06-01)
 
 
