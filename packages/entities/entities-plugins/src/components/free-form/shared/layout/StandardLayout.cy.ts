@@ -1,3 +1,4 @@
+import { h } from 'vue'
 import StandardLayout from './StandardLayout.vue'
 import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../../constants'
 
@@ -235,6 +236,32 @@ describe('<StandardLayout />', () => {
 
     // Code editor section should not exist
     cy.get('.plugin-code-editor').should('not.exist')
+  })
+
+  it('should own plugin configuration block slots', () => {
+    cy.mount(StandardLayout as any, {
+      props: {
+        schema: createBaseSchema(),
+        formSchema: createFormSchema(),
+        model: createBaseModel(),
+        formModel: { enabled: true },
+        isEditing: false,
+        onFormChange: cy.spy(),
+        pluginName: 'test-plugin',
+      },
+      slots: {
+        default: () => h('div', { 'data-testid': 'plugin-config-fields' }, 'Plugin config fields'),
+        'plugin-config-title': () => h('span', { 'data-testid': 'custom-config-title' }, 'Custom config title'),
+        'plugin-config-description': () => h('span', { 'data-testid': 'custom-config-description' }, 'Custom config description'),
+        'plugin-config-extra': () => h('button', { 'data-testid': 'custom-config-extra' }, 'Extra action'),
+      },
+    })
+
+    cy.getTestId('form-section-plugin-config').should('exist')
+    cy.getTestId('plugin-config-fields').should('contain.text', 'Plugin config fields')
+    cy.getTestId('custom-config-title').should('contain.text', 'Custom config title')
+    cy.getTestId('custom-config-description').should('contain.text', 'Custom config description')
+    cy.getTestId('custom-config-extra').should('contain.text', 'Extra action')
   })
 
   it('should show code editor and hide form sections when editorMode is code', () => {
