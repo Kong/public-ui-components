@@ -208,7 +208,16 @@
     "route_count": "Route count",
     "consumer_count": "Consumer count",
     "plugin_count": "Plugin count",
-    "node_count": "Data plane node count"
+    "node_count": "Data plane node count",
+    "virtual_cluster_id": "Virtual cluster",
+    "backend_cluster_id": "Backend cluster",
+    "listener_id": "Listener",
+    "principal_name": "Principal name",
+    "principal_type": "Principal type",
+    "request_type": "Request type",
+    "topic_name": "Topic name",
+    "partition_index": "Partition index",
+    "api_key": "API key"
   },
   "metricAxisTitles": {
     "error_rate": "Error rate in {unit}",
