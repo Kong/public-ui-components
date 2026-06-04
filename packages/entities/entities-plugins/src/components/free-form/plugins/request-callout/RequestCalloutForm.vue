@@ -73,20 +73,6 @@ function getNameMap(callouts: Callout[], reverse: boolean = false) {
   }, {} as Record<string, string>)
 }
 
-function getScopesFromFormModel(): Record<string, any> {
-  const data: Record<string, any> = {}
-  const scopeModelFields = ['service-id', 'route-id', 'consumer-id', 'consumer_group-id']
-  for (const field of scopeModelFields) {
-    if (props.formModel[field]) {
-      const name = field.split('-')[0]
-      if (name) {
-        data[name] = { id: props.formModel[field] }
-      }
-    }
-  }
-  return data
-}
-
 // Replace callout names in `depends_on` with freshly generated ids
 function prepareFormData(data: RequestCalloutPlugin) {
   const pluginConfig = cloneDeep(data)
@@ -105,10 +91,6 @@ function prepareFormData(data: RequestCalloutPlugin) {
     callouts.forEach((callout) => {
       callout.depends_on = callout.depends_on.map((name) => nameMap[name])
     })
-  }
-
-  if (!props.isEditing) {
-    return { ...pluginConfig, ...getScopesFromFormModel() } as RequestCalloutPlugin
   }
 
   return pluginConfig
