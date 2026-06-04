@@ -273,7 +273,7 @@ export interface VaultPayload {
  * identifier in `name` (not `prefix`), there are no `tags`, and the HashiCorp
  * config fields are renamed per auth method. The form keeps using the
  * gateway-shaped internal model (above); the mapper layer in
- * `utils/ai-gateway-mappers.ts` converts to/from these shapes at the boundary.
+ * `ai-gateway-mappers.ts` converts to/from these shapes at the boundary.
  * -------------------------------------------------------------------------- */
 
 export interface AiHcvCommonConfig {
