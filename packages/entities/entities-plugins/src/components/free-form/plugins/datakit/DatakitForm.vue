@@ -28,7 +28,7 @@
   </Teleport>
 
   <DynamicLayout
-    v-bind="props"
+    v-bind="{ ...attrs, ...props }"
     class="dk-form"
     :editor-mode="layoutEditorMode"
     hide-editor-mode-switcher
@@ -67,7 +67,7 @@ import type { ZodError } from 'zod'
 import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
 import type { EditorMode, DatakitPluginData } from './types'
 
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch, useAttrs } from 'vue'
 import { escape } from 'lodash-es'
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
@@ -85,9 +85,12 @@ import {
   DatakitConfigSchema as DatakitConfigCompatSchema,
 } from './schema/compat'
 
+defineOptions({ inheritAttrs: false })
+
 const { t } = createI18n<typeof english>('en-us', english)
 
 const props = defineProps<Props<DatakitPluginData>>()
+const attrs = useAttrs()
 
 // provided by consumer apps
 const formConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!

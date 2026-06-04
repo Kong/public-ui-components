@@ -21,6 +21,18 @@ export type PluginFormLayoutProps<T extends FreeFormPluginData = FreeFormPluginD
   /** Konnect-managed Redis UI, from plugin form config */
   isKonnectManagedRedisEnabled?: boolean
   isEditing: boolean
+  /**
+   * Hide the built-in form/code switcher. Plugins that own a custom switcher
+   * (e.g. Datakit's flow/code control) should set this to true to avoid
+   * rendering duplicate controls into #plugin-form-page-actions.
+   */
+  hideEditorModeSwitcher?: boolean
+  /** Whether the plugin is being created for a portal developer */
+  developer?: boolean
+  generalInfoTitle?: string
+  generalInfoDescription?: string
+  pluginConfigTitle?: string
+  pluginConfigDescription?: string
 }
 
 export type PluginFormLayoutComponent<T extends FreeFormPluginData = FreeFormPluginData> = Component<PluginFormLayoutProps<T>>

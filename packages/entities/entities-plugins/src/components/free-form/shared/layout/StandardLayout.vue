@@ -221,22 +221,10 @@
 
 <script lang="ts">
 export interface Props<T extends FreeFormPluginData = any> extends PluginFormLayoutProps<T> {
-  generalInfoTitle?: string
-  generalInfoDescription?: string
-  pluginConfigTitle?: string
-  pluginConfigDescription?: string
   /** VFG schema */
   formSchema: any
   /** VFG form model */
   formModel: Record<string, any>
-  /**
-   * Hide the built-in form/code switcher. Plugins that own a custom switcher
-   * (e.g. Datakit's flow/code control) should set this to true to avoid
-   * rendering duplicate controls into #plugin-form-page-actions.
-   */
-  hideEditorModeSwitcher?: boolean
-  /** Whether the plugin is being created for a portal developer */
-  developer?: boolean
 }
 </script>
 
