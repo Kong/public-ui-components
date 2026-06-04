@@ -359,13 +359,18 @@ const slots = defineSlots<{
 }>()
 
 const realFormConfig = computed(() => {
-  return props.formConfig ?? {
-    hasValue: (data?: T): boolean => !!data && Object.keys(data).length > 0,
+  const formConfig = props.formConfig as FormConfig<T> | undefined
+
+  return {
+    ...(formConfig ?? {}),
+    hasValue: formConfig?.hasValue ?? ((data?: T): boolean => !!data && Object.keys(data).length > 0),
     prepareFormData: (data: T): Partial<T> => {
-      if (props.isEditing) return data
+      const preparedData = formConfig?.prepareFormData?.(data) ?? data
+
+      if (props.isEditing) return preparedData
 
       // Init scope-related fields from formModel when creating a new plugin
-      return { ...data, ... getScopesFromFormModel() }
+      return { ...preparedData, ... getScopesFromFormModel() }
     },
   }
 })

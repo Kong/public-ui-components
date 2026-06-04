@@ -239,34 +239,20 @@ const ingestEndpointUrl = computed(() => {
     : 'https://{{region}}.api.konghq.com/v3/openmeter/events'
 })
 
-function getScopesFromFormModel(): Record<string, any> {
-  const data: Record<string, any> = {}
-  const scopeModelFields = ['service-id', 'route-id', 'consumer-id', 'consumer_group-id']
-  for (const field of scopeModelFields) {
-    if (props.formModel[field]) {
-      const name = field.split('-')[0]
-      if (name) data[name] = { id: props.formModel[field] }
-    }
-  }
-  return data
-}
-
 const formConfig = {
   hasValue: (data: any): boolean => !!data && Object.keys(data).length > 0,
   prepareFormData: (data: any): any => {
     if (props.isEditing) return data
 
-    const withScopes = { ...data, ...getScopesFromFormModel() }
-
     // Prefill ingest_endpoint for new Konnect plugins; Kong Manager has no regional endpoint
-    if ((appConfig as KonnectBaseFormConfig)?.app === 'konnect' && !withScopes?.config?.ingest_endpoint) {
+    if ((appConfig as KonnectBaseFormConfig)?.app === 'konnect' && !data?.config?.ingest_endpoint) {
       return {
-        ...withScopes,
-        config: { ...withScopes?.config, ingest_endpoint: ingestEndpointUrl.value },
+        ...data,
+        config: { ...data?.config, ingest_endpoint: ingestEndpointUrl.value },
       }
     }
 
-    return withScopes
+    return data
   },
 }
 
