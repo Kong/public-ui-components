@@ -7,6 +7,7 @@ import PluginSelectGrid from './components/select/PluginSelectGrid.vue'
 import PluginSelectCard from './components/select/PluginSelectCard.vue'
 import PluginConfigCard from './components/PluginConfigCard.vue'
 import DynamicLayout from './components/free-form/shared/layout/DynamicLayout.vue'
+import PluginConfigurationForm from './components/free-form/shared/layout/PluginConfigurationForm.vue'
 import composables from './composables'
 import pluginEndpoints from './plugins-endpoints'
 
@@ -22,6 +23,7 @@ export {
   PluginSelectCard,
   PluginConfigCard,
   DynamicLayout,
+  PluginConfigurationForm,
   usePluginMetaData,
   useProvideExperimentalFreeForms,
 }
@@ -31,6 +33,7 @@ export {
 } from './components/free-form/shared/layout/provider'
 
 export type {
+  PluginConfigurationBaseProps,
   PluginFormLayoutComponent,
   PluginFormLayoutProps,
 } from './components/free-form/shared/layout/provider'

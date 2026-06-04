@@ -185,7 +185,7 @@ Constraints:
 
 ## Layout
 
-Plugin forms use `DynamicLayout` (`shared/layout/DynamicLayout.vue`) as the layout entry point. It renders a host-provided layout from `FREE_FORM_PLUGIN_LAYOUT` when one is available, and otherwise falls back to `StandardLayout` (`shared/layout/StandardLayout.vue`). The default StandardLayout form mode provides a 3-step structure:
+Plugin forms use `DynamicLayout` (`shared/layout/DynamicLayout.vue`) as the layout entry point. It renders a host-provided layout from `FREE_FORM_PLUGIN_LAYOUT` when one is available, and otherwise falls back to `StandardLayout` (`shared/layout/StandardLayout.vue`). Layouts that need the common free-form `Form` wrapper can compose `PluginConfigurationForm` (`shared/layout/PluginConfigurationForm.vue`) and provide their own surrounding product-specific blocks. The default StandardLayout form mode provides a 3-step structure:
 
 1. **Plugin Scope** — Global vs Scoped (service/route/consumer/consumer_group) via radio buttons + ScopeEntityField for entity selection
 2. **Plugin Configuration** — Free-form rendered config fields via default slot
