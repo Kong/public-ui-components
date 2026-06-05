@@ -24,11 +24,13 @@ import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 
 type SelectionHeaderParams<Row extends Record<string, any>> = IHeaderParams<Row, TableDataGridRendererContext<Row>>
 
-const props = defineProps<{
+const {
+  params,
+} = defineProps<{
   params: SelectionHeaderParams<Record<string, any>>
 }>()
 
-const currentParams = shallowRef(props.params)
+const currentParams = shallowRef(params)
 const isChecked = ref(false)
 const isIndeterminate = ref(false)
 const isDisabled = ref(false)

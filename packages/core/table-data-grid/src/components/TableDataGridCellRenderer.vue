@@ -20,11 +20,13 @@ defineOptions({
   name: 'TableDataGridCellRenderer',
 })
 
-const props = defineProps<{
+const {
+  params,
+} = defineProps<{
   params: DatatableCellParams
 }>()
 
-const currentParams = shallowRef(props.params)
+const currentParams = shallowRef(params)
 
 const row = computed(() => currentParams.value.data ?? {})
 const rowIndex = computed(() => currentParams.value.node.rowIndex ?? 0)

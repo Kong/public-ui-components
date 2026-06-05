@@ -95,7 +95,15 @@ import TableDataGridFilters from './TableDataGridFilters.vue'
 import TableDataGridSearch from './TableDataGridSearch.vue'
 import composables from '../composables'
 
-defineProps<{
+const {
+  forwardedFilterSlotNames,
+  headers,
+  showBulkActions,
+  showColumnVisibility,
+  showToolbarFilters,
+  showToolbarSearch,
+  toolbarSlotProps,
+} = defineProps<{
   headers: Array<TableDataGridHeader<Row>>
   forwardedFilterSlotNames: string[]
   toolbarSlotProps: TableDataGridToolbarSlotProps<Row>

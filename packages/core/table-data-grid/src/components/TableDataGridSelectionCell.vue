@@ -25,12 +25,14 @@ type SelectionCellParams<Row extends Record<string, any>> = ICellRendererParams<
   context: TableDataGridRendererContext<Row>
 }
 
-const props = defineProps<{
+const {
+  params,
+} = defineProps<{
   params: SelectionCellParams<Record<string, any>>
 }>()
 
-const currentParams = shallowRef(props.params)
-const initialSelectionState = props.params.context.selection.getRowSelectionState(props.params.node)
+const currentParams = shallowRef(params)
+const initialSelectionState = params.context.selection.getRowSelectionState(params.node)
 const isSelected = ref(initialSelectionState.selected)
 const isSelectable = ref(initialSelectionState.selectable)
 

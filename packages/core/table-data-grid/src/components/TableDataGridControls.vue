@@ -114,7 +114,18 @@ import TableDataGridSearch from './TableDataGridSearch.vue'
 import TableDataGridToolbar from './TableDataGridToolbar.vue'
 import { getFilterGroupFilters, getFilterSlotName } from '../utils/headers'
 
-const props = defineProps<{
+const {
+  columnVisibility,
+  enableSearch,
+  headers,
+  hideBulkActions,
+  hideColumnVisibility,
+  outsideFilters,
+  outsideSearch,
+  rowSelection,
+  selectedRows,
+  showToolbar,
+} = defineProps<{
   columnVisibility: Record<string, boolean>
   enableSearch: boolean
   headers: Array<TableDataGridHeader<Row>>
@@ -149,7 +160,7 @@ const emit = defineEmits<{
   (e: 'update:columnVisibility', columnVisibility: Record<string, boolean>): void
 }>()
 
-const filterGroupFilters = computed(() => getFilterGroupFilters(props.headers))
+const filterGroupFilters = computed(() => getFilterGroupFilters(headers))
 const getForwardedFilterSlotNames = () => Object.keys(filterGroupFilters.value)
   .map(getFilterSlotName)
   .filter(slotName => Boolean(runtimeSlots[slotName]))
@@ -164,7 +175,7 @@ const updateSearch = (nextSearch: string) => {
 }
 
 const toolbarSlotProps = computed<TableDataGridToolbarSlotProps<Row>>(() => ({
-  selectedRows: props.selectedRows,
+  selectedRows,
   filterSelection: filterSelection.value,
   filters: filterGroupFilters.value,
   search: search.value,
@@ -173,17 +184,17 @@ const toolbarSlotProps = computed<TableDataGridToolbarSlotProps<Row>>(() => ({
   refresh: () => emit('refresh'),
 }))
 
-const hasFilters = computed(() => props.headers.some(header => header.filter != null))
-const hasOutsideFiltersTarget = computed(() => Boolean(props.outsideFilters))
-const hasOutsideSearchTarget = computed(() => Boolean(props.outsideSearch))
+const hasFilters = computed(() => headers.some(header => header.filter != null))
+const hasOutsideFiltersTarget = computed(() => Boolean(outsideFilters))
+const hasOutsideSearchTarget = computed(() => Boolean(outsideSearch))
 const showOutsideFilters = computed(() => hasFilters.value && hasOutsideFiltersTarget.value)
-const showOutsideSearch = computed(() => props.enableSearch && hasOutsideSearchTarget.value)
-const showBulkActions = computed(() => props.rowSelection !== 'none' && !props.hideBulkActions)
+const showOutsideSearch = computed(() => enableSearch && hasOutsideSearchTarget.value)
+const showBulkActions = computed(() => rowSelection !== 'none' && !hideBulkActions)
 const showToolbarFilters = computed(() => hasFilters.value && !hasOutsideFiltersTarget.value)
-const showToolbarSearch = computed(() => props.enableSearch && !hasOutsideSearchTarget.value)
-const showColumnVisibility = computed(() => !props.hideColumnVisibility)
+const showToolbarSearch = computed(() => enableSearch && !hasOutsideSearchTarget.value)
+const showColumnVisibility = computed(() => !hideColumnVisibility)
 const columnVisibilityModel = computed({
-  get: () => props.columnVisibility,
+  get: () => columnVisibility,
   set: (columnVisibility: Record<string, boolean>) => {
     emit('update:columnVisibility', columnVisibility)
   },

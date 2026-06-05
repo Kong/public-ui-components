@@ -92,7 +92,31 @@ import composables from '../composables'
 
 ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
 
-const props = defineProps<{
+const {
+  activePageSize,
+  agGridOptions,
+  cellAttrs,
+  currentPage,
+  datasource,
+  displayedColumnIndexesByKey,
+  fetchPage,
+  hasFetched,
+  hasNextPageWhenTotalUnknown,
+  headers,
+  hidePagination,
+  hidePaginationWhenOptional,
+  isFetching,
+  mode,
+  paginationPageSizeOptions,
+  resolvedTableConfig,
+  rowAttrs,
+  rowData,
+  rowKey,
+  rowSelection,
+  rowSelectionConfig,
+  selectionRendererContext,
+  totalRows,
+} = defineProps<{
   mode: TableDataGridMode
   agGridOptions: TableDataGridGridOptions<Row>
   activePageSize: number
@@ -139,13 +163,13 @@ const {
   columnDefs,
   gridContext,
 } = composables.useTableDataGridColumnDefs<Row>({
-  agGridOptions: toRef(() => props.agGridOptions),
-  cellAttrs: toRef(() => props.cellAttrs),
-  displayedColumnIndexesByKey: toRef(() => props.displayedColumnIndexesByKey),
-  headers: toRef(() => props.headers),
-  resolvedTableConfig: toRef(() => props.resolvedTableConfig),
-  rowSelection: toRef(() => props.rowSelection),
-  selectionRendererContext: props.selectionRendererContext,
+  agGridOptions: toRef(() => agGridOptions),
+  cellAttrs: toRef(() => cellAttrs),
+  displayedColumnIndexesByKey: toRef(() => displayedColumnIndexesByKey),
+  headers: toRef(() => headers),
+  resolvedTableConfig: toRef(() => resolvedTableConfig),
+  rowSelection: toRef(() => rowSelection),
+  selectionRendererContext,
   slots,
 })
 
@@ -155,12 +179,12 @@ const {
   onRowClick,
   onRowPostCreate,
 } = composables.useTableDataGridInteractions<Row>({
-  agGridOptions: toRef(() => props.agGridOptions),
+  agGridOptions: toRef(() => agGridOptions),
   cellClick: payload => emit('cell-click', payload),
-  headers: toRef(() => props.headers),
-  rowAttrs: toRef(() => props.rowAttrs),
+  headers: toRef(() => headers),
+  rowAttrs: toRef(() => rowAttrs),
   rowClick: (row, event) => emit('row-click', row, event),
-  rowKey: toRef(() => props.rowKey),
+  rowKey: toRef(() => rowKey),
 })
 
 const {
@@ -170,33 +194,33 @@ const {
   goToPage,
   onPageChange,
 } = composables.useTableDataGridPagination({
-  activePageSize: toRef(() => props.activePageSize),
-  isFetching: toRef(() => props.isFetching),
-  fetchPage: page => props.fetchPage(page),
-  currentPage: toRef(() => props.currentPage),
-  totalRows: toRef(() => props.totalRows),
-  hasNextPageWhenTotalUnknown: toRef(() => props.hasNextPageWhenTotalUnknown),
+  activePageSize: toRef(() => activePageSize),
+  isFetching: toRef(() => isFetching),
+  fetchPage: page => fetchPage(page),
+  currentPage: toRef(() => currentPage),
+  totalRows: toRef(() => totalRows),
+  hasNextPageWhenTotalUnknown: toRef(() => hasNextPageWhenTotalUnknown),
 })
 
 const resolvedPaginationPageSizeOptions = computed(() => (
-  [...new Set([...props.paginationPageSizeOptions, props.activePageSize])].sort((a, b) => a - b)
+  [...new Set([...paginationPageSizeOptions, activePageSize])].sort((a, b) => a - b)
 ))
 // Kongponents reads initialPageSize only on mount, so remount pagination when
 // page-size options change to keep its internal selection aligned.
-const paginationKey = computed(() => `${props.activePageSize}:${resolvedPaginationPageSizeOptions.value.join(',')}`)
+const paginationKey = computed(() => `${activePageSize}:${resolvedPaginationPageSizeOptions.value.join(',')}`)
 
 const shouldShowPaginationWhenOptional = computed(() => {
-  if (props.totalRows == null) {
-    return props.currentPage > 1 || props.hasNextPageWhenTotalUnknown
+  if (totalRows == null) {
+    return currentPage > 1 || hasNextPageWhenTotalUnknown
   }
 
-  return props.totalRows > props.activePageSize
+  return totalRows > activePageSize
 })
 const shouldShowPagination = computed(() => (
-  props.mode === 'pagination'
-    && props.hasFetched
-    && !props.hidePagination
-    && (!props.hidePaginationWhenOptional || shouldShowPaginationWhenOptional.value)
+  mode === 'pagination'
+    && hasFetched
+    && !hidePagination
+    && (!hidePaginationWhenOptional || shouldShowPaginationWhenOptional.value)
 ))
 
 const emitColumnMoved = (event: ColumnMovedEvent<Row>) => emit('column-moved', event)

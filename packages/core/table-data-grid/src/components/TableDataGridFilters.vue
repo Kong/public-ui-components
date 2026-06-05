@@ -23,7 +23,10 @@ import { computed } from 'vue'
 import type { TableDataGridHeader } from '../types'
 import { getFilterGroupFilters, getFilterSlotName } from '../utils/headers'
 
-const props = defineProps<{
+const {
+  forwardedFilterSlotNames,
+  headers,
+} = defineProps<{
   forwardedFilterSlotNames: string[]
   headers: Array<TableDataGridHeader<Row>>
 }>()
@@ -37,8 +40,8 @@ const emit = defineEmits<{
   (e: 'close', filterKey: string): void
 }>()
 
-const filterGroupFilters = computed(() => getFilterGroupFilters(props.headers))
-const isHostManagedFilter = (filterKey: string) => props.forwardedFilterSlotNames.includes(getFilterSlotName(filterKey))
+const filterGroupFilters = computed(() => getFilterGroupFilters(headers))
+const isHostManagedFilter = (filterKey: string) => forwardedFilterSlotNames.includes(getFilterSlotName(filterKey))
 const commitBuiltInFilterSelection = (filterKey: string, selection: FilterGroupSelection) => {
   if (isHostManagedFilter(filterKey)) {
     return
