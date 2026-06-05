@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.18.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.1...@kong-ui-public/analytics-chart@10.18.2) (2026-06-05)
+
+
+### Bug Fixes
+
+* **analytics-chart:** add i18n messages for event-gateway dimensions [KM-2686] ([#3412](https://github.com/Kong/public-ui-components/issues/3412)) ([6ca0659](https://github.com/Kong/public-ui-components/commit/6ca06594f4bece1a0e71d6ee814df849f4f92b61))
+
+
+
+
+
 ## [10.18.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.0...@kong-ui-public/analytics-chart@10.18.1) (2026-06-03)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
