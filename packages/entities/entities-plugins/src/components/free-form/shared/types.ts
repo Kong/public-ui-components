@@ -185,7 +185,7 @@ export type Match = (opt: {
   path: string
   /**
    * A generic path pattern that can be used for matching multiple fields,
-   * e.g. `config.callouts.0.redis` can match `config.callouts.1.redis` and `config.callouts.2.redis`.
+   * e.g. `config.callouts.*.redis` can match `config.callouts.1.redis` and `config.callouts.2.redis`.
    */
   genericPath: string
   schema: UnionFieldSchema
