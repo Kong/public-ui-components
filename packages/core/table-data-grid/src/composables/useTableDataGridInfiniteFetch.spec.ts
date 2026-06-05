@@ -312,6 +312,26 @@ describe('useTableDataGridInfiniteFetch', () => {
     expect(infiniteFetch.isFetching.value).toBe(false)
   })
 
+  it('tracks infinite fetch failures and clears the error state on refresh', async () => {
+    const fetcher = vi.fn().mockRejectedValueOnce(new Error('failed'))
+    const infiniteFetch = createInfiniteFetch(fetcher as TableDataGridFetcher<TestRow>)
+    const activeDatasource = infiniteFetch.refreshAndGetDatasource()
+    const failCallback = vi.fn()
+
+    await (activeDatasource.getRows(createGetRowsParams({
+      endRow: 15,
+      failCallback,
+      startRow: 0,
+    })) as Promise<void>)
+
+    expect(failCallback).toHaveBeenCalledOnce()
+    expect(infiniteFetch.hasFetchError.value).toBe(true)
+
+    infiniteFetch.refreshInfinite()
+
+    expect(infiniteFetch.hasFetchError.value).toBe(false)
+  })
+
   it('resolves infinite last rows from total or short terminal blocks', async () => {
     const fetcher = vi.fn()
       .mockResolvedValueOnce({

@@ -242,8 +242,8 @@ const fetchState = composables.useTableDataGridFetchState<Row>()
 const {
   currentPage,
   datasource,
-  fetchError,
   hasFetched,
+  hasFetchError,
   hasNextPageWhenTotalUnknown,
   isFetching,
   rowData,
@@ -266,8 +266,6 @@ const {
   pageSize: toRef(() => pageSize),
   tableConfig: toRef(() => tableConfig),
 })
-
-const hasFetchError = computed(() => Boolean(fetchError.value))
 
 const fetchParams: TableDataGridFetchParams = {
   mode: toRef(() => mode),

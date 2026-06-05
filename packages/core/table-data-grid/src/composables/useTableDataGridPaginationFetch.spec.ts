@@ -119,6 +119,22 @@ describe('useTableDataGridPaginationFetch', () => {
     expect(paginationFetch.hasFetched.value).toBe(false)
   })
 
+  it('tracks pagination fetch failures and clears the error state on the next request', async () => {
+    const fetcher = vi.fn()
+      .mockRejectedValueOnce(new Error('failed'))
+      .mockResolvedValueOnce({
+        data: [{ id: 'row-1', name: 'Recovered', status: 200 }],
+        total: 1,
+      })
+    const paginationFetch = createPaginationFetch(fetcher as TableDataGridFetcher<TestRow>)
+
+    await paginationFetch.fetchPage(1)
+    expect(paginationFetch.hasFetchError.value).toBe(true)
+
+    await paginationFetch.fetchPage(1)
+    expect(paginationFetch.hasFetchError.value).toBe(false)
+  })
+
   it('resets fetched state through the fetcher-owned reset callback', async () => {
     const fetcher = vi.fn().mockResolvedValue({
       data: [{ id: 'row-1', name: 'First', status: 200 }],

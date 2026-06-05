@@ -85,9 +85,9 @@ export const useTableDataGridPaginationFetch = <Row extends Record<string, any>>
         pageSize: fetchPageSize,
         result,
       })
-    } catch (err) {
+    } catch {
       if (isLatestPaginationRequest(requestId)) {
-        state.fetchError.value = err
+        state.hasFetchError.value = true
         state.rowData.value = []
         state.totalRows.value = undefined
         state.hasNextPageWhenTotalUnknown.value = false

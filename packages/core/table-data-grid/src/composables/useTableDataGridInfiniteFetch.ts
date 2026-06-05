@@ -105,8 +105,8 @@ export const useTableDataGridInfiniteFetch = <Row extends Record<string, any>>({
     latestInfiniteDatasourceId.value = datasourceId
     cursorMap.clear()
     blockCompletionMap.clear()
-    state.fetchError.value = undefined
     state.hasFetched.value = false
+    state.hasFetchError.value = false
     state.rowData.value = []
     const datasourceSort = resolveRefreshSort({
       currentSort: {
@@ -180,12 +180,12 @@ export const useTableDataGridInfiniteFetch = <Row extends Record<string, any>>({
             state.rowData.value = result.data
           }
           currentBlockCompletion.resolve(true)
-        } catch (err) {
+        } catch {
           if (!isLatestInfiniteDatasource(datasourceId)) {
             rejectBlockCompletion(blockIndex, currentBlockCompletion)
             return
           }
-          state.fetchError.value = err
+          state.hasFetchError.value = true
           getRowsParams.failCallback()
           rejectBlockCompletion(blockIndex, currentBlockCompletion)
         } finally {
