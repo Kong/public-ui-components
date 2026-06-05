@@ -24,6 +24,12 @@ type TestRow = {
   latency: number
 }
 
+type ColumnStateSnapshot = {
+  colId: ColumnState['colId']
+  pinned: ColumnState['pinned']
+  width: ColumnState['width']
+}
+
 type TestDatatableProps = {
   headers: Array<TableDataGridHeader<TestRow>>
   fetcher: TableDataGridFetcher<TestRow>
@@ -2514,7 +2520,7 @@ describe('<TableDataGrid />', () => {
       const fetcher = createPaginatedFetcher()
       const onUpdateTableConfig = cy.stub().as('updateTableConfig')
       let gridApi: GridApi<TestRow> | undefined
-      let columnStateBeforePageSizeChange: Array<Pick<ColumnState, 'colId' | 'pinned' | 'width'>>
+      let columnStateBeforePageSizeChange: ColumnStateSnapshot[]
 
       mountTable({
         fetcher,

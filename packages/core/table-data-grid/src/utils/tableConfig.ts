@@ -2,6 +2,7 @@ import type {
   TableDataGridConfig,
   TableDataGridHeader,
   TableDataGridPinnedState,
+  TableDataGridSort,
 } from '../types'
 import type { ColumnState, GridApi } from 'ag-grid-community'
 import isEqual from 'lodash-es/isEqual'
@@ -21,7 +22,7 @@ export const createDefaultTableDataGridConfig = <Row extends Record<string, any>
   pageSize,
 })
 
-export const getSortKey = (config: Pick<TableDataGridConfig, 'sortColumnKey' | 'sortColumnOrder'>): string => {
+export const getSortKey = (config: TableDataGridSort): string => {
   if (!config.sortColumnKey || !config.sortColumnOrder) {
     return ''
   }
@@ -102,7 +103,7 @@ const resolvePinnedColumns = <Row extends Record<string, any>>(
 const resolveSort = <Row extends Record<string, any>>(
   config: TableDataGridConfig,
   headersOrKeys: Array<TableDataGridHeader<Row>> | Set<string>,
-): Pick<TableDataGridConfig, 'sortColumnKey' | 'sortColumnOrder'> => {
+): TableDataGridSort => {
   const headerKeys = getHeaderKeySet(headersOrKeys)
   const sortColumnKey = config.sortColumnKey || undefined
 

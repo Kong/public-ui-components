@@ -80,22 +80,36 @@ export type TableDataGridSelectionRendererContext<Row extends Record<string, any
   }) => () => void
 }
 
-export type TableDataGridColumnSizingHandlers<Row extends Record<string, any>> = {
+export type TableDataGridColumnLayoutSizingHandlers<Row extends Record<string, any>> = {
   persistGridConfigChange: (options?: {
     columnWidthChangeSource?: GridColumnWidthChangeSource
   }) => void
+  scheduleColumnsToFitAfterDisplayedColumnsChange: (api?: GridApi<Row>) => void
+  scheduleColumnsToFitAfterRenderedRowsChange: (api?: GridApi<Row>) => void
+}
+
+export type TableDataGridLifecycleSizingHandlers<Row extends Record<string, any>> = {
   fitColumnsOnGridReady: (api: GridApi<Row>) => void
-  handleDatatableWidthChange: () => void
+  startResizeTracking: () => void
+}
+
+export type TableDataGridConfigSyncSizingHandlers<Row extends Record<string, any>> = {
   scheduleColumnsToFit: (options?: {
     api?: GridApi<Row>
     persistFittedConfig?: boolean
     honorConfiguredColumnWidths?: boolean
   }) => void
   scheduleColumnsToFitAfterDisplayedColumnsChange: (api?: GridApi<Row>) => void
-  scheduleColumnsToFitAfterRenderedRowsChange: (api?: GridApi<Row>) => void
   shouldRefitColumnsAfterConfigChange: () => boolean
-  startResizeTracking: () => void
 }
+
+export type TableDataGridColumnSizingHandlers<Row extends Record<string, any>> =
+  & TableDataGridColumnLayoutSizingHandlers<Row>
+  & TableDataGridLifecycleSizingHandlers<Row>
+  & TableDataGridConfigSyncSizingHandlers<Row>
+  & {
+    handleDatatableWidthChange: () => void
+  }
 
 type TableDataGridCellRendererContext<Row extends Record<string, any>> = {
   cellAttrs?: TableDataGridCellAttrs<Row>

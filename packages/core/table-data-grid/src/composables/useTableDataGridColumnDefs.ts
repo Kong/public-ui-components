@@ -24,22 +24,21 @@ const SELECTION_COLUMN_WIDTH_PX = 48
 type StaticSelectionColumnClass = string | string[]
 type StaticSelectionColumnStyle = Record<string, string | number>
 
-type SelectionColumnHostOptions<Row extends Record<string, any>> = Pick<ColDef<Row>,
-  | 'flex'
-  | 'headerName'
-  | 'headerTooltip'
-  | 'initialFlex'
-  | 'initialWidth'
-  | 'maxWidth'
-  | 'minWidth'
-  | 'suppressAutoSize'
-  | 'suppressSizeToFit'
-  | 'width'
-> & {
+type SelectionColumnHostOptions<Row extends Record<string, any>> = {
   cellClass?: StaticSelectionColumnClass
   cellStyle?: StaticSelectionColumnStyle
+  flex?: ColDef<Row>['flex']
   headerClass?: StaticSelectionColumnClass
+  headerName?: ColDef<Row>['headerName']
   headerStyle?: StaticSelectionColumnStyle
+  headerTooltip?: ColDef<Row>['headerTooltip']
+  initialFlex?: ColDef<Row>['initialFlex']
+  initialWidth?: ColDef<Row>['initialWidth']
+  maxWidth?: ColDef<Row>['maxWidth']
+  minWidth?: ColDef<Row>['minWidth']
+  suppressAutoSize?: ColDef<Row>['suppressAutoSize']
+  suppressSizeToFit?: ColDef<Row>['suppressSizeToFit']
+  width?: ColDef<Row>['width']
 }
 
 const createSelectionColumnOptions = <Row extends Record<string, any>>(

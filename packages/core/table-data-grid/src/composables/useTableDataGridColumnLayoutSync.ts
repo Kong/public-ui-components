@@ -3,7 +3,7 @@ import type {
   TableDataGridRowSelectionMode,
 } from '../types'
 import type {
-  TableDataGridColumnSizingHandlers,
+  TableDataGridColumnLayoutSizingHandlers,
 } from '../types/internal'
 import type {
   ColumnResizedEvent,
@@ -32,12 +32,7 @@ export const useTableDataGridColumnLayoutSync = <Row extends Record<string, any>
   isApplyingInitialColumnState: Readonly<Ref<boolean>>
   mode: Readonly<Ref<TableDataGridMode>>
   rowSelection: Readonly<Ref<TableDataGridRowSelectionMode>>
-  sizing: Pick<
-    TableDataGridColumnSizingHandlers<Row>,
-    | 'persistGridConfigChange'
-    | 'scheduleColumnsToFitAfterDisplayedColumnsChange'
-    | 'scheduleColumnsToFitAfterRenderedRowsChange'
-  >
+  sizing: TableDataGridColumnLayoutSizingHandlers<Row>
 }) => {
   const displayedColumnIndexesByKey = shallowRef(new Map<string, number>())
   const isRowSelectionColumnRefitPending = ref(false)

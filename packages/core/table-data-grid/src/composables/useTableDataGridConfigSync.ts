@@ -4,7 +4,7 @@ import type {
   TableDataGridSort,
 } from '../types'
 import type {
-  TableDataGridColumnSizingHandlers,
+  TableDataGridConfigSyncSizingHandlers,
 } from '../types/internal'
 import type { GridApi } from 'ag-grid-community'
 import type { Ref } from 'vue'
@@ -44,12 +44,7 @@ export const useTableDataGridConfigSync = <Row extends Record<string, any>>({
   patchTableConfig: (config: Partial<TableDataGridConfig>) => void
   refresh: (params?: Partial<TableDataGridSort & { pageSize: number }>) => void
   resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
-  sizing: Pick<
-    TableDataGridColumnSizingHandlers<Row>,
-    | 'scheduleColumnsToFit'
-    | 'scheduleColumnsToFitAfterDisplayedColumnsChange'
-    | 'shouldRefitColumnsAfterConfigChange'
-  >
+  sizing: TableDataGridConfigSyncSizingHandlers<Row>
 }) => {
   const refreshForConfigChange = (
     nextConfig: TableDataGridConfig,

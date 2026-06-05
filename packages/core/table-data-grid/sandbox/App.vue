@@ -435,6 +435,7 @@ import type {
   TableDataGridPinnedState,
   TableDataGridRowAttrs,
   TableDataGridRowSelectionMode,
+  TableDataGridSort,
 } from '../src'
 import type { FilterGroupSelection } from '@kong/kongponents'
 import type { PropType } from 'vue'
@@ -823,7 +824,7 @@ const addGeneratedColumnValues = (rows: MockRow[]): MockRow[] => {
 
 const applySort = (
   rows: MockRow[],
-  { sortColumnKey, sortColumnOrder }: Pick<TableDataGridConfig, 'sortColumnKey' | 'sortColumnOrder'>,
+  { sortColumnKey, sortColumnOrder }: TableDataGridSort,
 ) => {
   if (!sortColumnKey || !sortColumnOrder) {
     return rows

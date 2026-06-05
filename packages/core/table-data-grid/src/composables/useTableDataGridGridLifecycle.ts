@@ -2,7 +2,7 @@ import type {
   TableDataGridSort,
 } from '../types'
 import type {
-  TableDataGridColumnSizingHandlers,
+  TableDataGridLifecycleSizingHandlers,
 } from '../types/internal'
 import type {
   GridApi,
@@ -39,10 +39,7 @@ export const useTableDataGridGridLifecycle = <Row extends Record<string, any>>({
   refresh: (params?: Partial<TableDataGridSort & { pageSize: number }>) => void
   resetFetched: () => void
   resolvedSort: Readonly<Ref<TableDataGridSort>>
-  sizing: Pick<
-    TableDataGridColumnSizingHandlers<Row>,
-    'fitColumnsOnGridReady' | 'startResizeTracking'
-  >
+  sizing: TableDataGridLifecycleSizingHandlers<Row>
   updateDisplayedColumnIndexes: (api?: GridApi<Row>) => void
 }) => {
   const applyResolvedTableConfig = (api: GridApi<Row>) => {

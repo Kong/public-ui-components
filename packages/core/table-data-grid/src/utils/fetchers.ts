@@ -1,7 +1,6 @@
 import type {
-  TableDataGridConfig,
-  TableDataGridFetcherParams,
   TableDataGridFetcherResult,
+  TableDataGridSort,
 } from '../types'
 
 type InfiniteSortModelItem = {
@@ -9,19 +8,17 @@ type InfiniteSortModelItem = {
   sort?: string
 }
 
-export type RefreshOptions = {
+export type RefreshOptions = TableDataGridSort & {
   pageSize?: number
-  sortColumnKey?: TableDataGridConfig['sortColumnKey']
-  sortColumnOrder?: TableDataGridConfig['sortColumnOrder']
 }
 
 export const resolveRefreshSort = ({
   currentSort,
   options,
 }: {
-  currentSort: Pick<TableDataGridFetcherParams, 'sortColumnKey' | 'sortColumnOrder'>
+  currentSort: TableDataGridSort
   options: RefreshOptions
-}): Pick<TableDataGridFetcherParams, 'sortColumnKey' | 'sortColumnOrder'> => ({
+}): TableDataGridSort => ({
   // Presence matters: { sortColumnKey: undefined } intentionally clears the active sort.
   sortColumnKey: 'sortColumnKey' in options ? options.sortColumnKey : currentSort.sortColumnKey,
   sortColumnOrder: 'sortColumnOrder' in options ? options.sortColumnOrder : currentSort.sortColumnOrder,
@@ -31,9 +28,9 @@ export const resolveInfiniteRequestSort = ({
   datasourceSort,
   sortModel,
 }: {
-  datasourceSort: Pick<TableDataGridFetcherParams, 'sortColumnKey' | 'sortColumnOrder'>
+  datasourceSort: TableDataGridSort
   sortModel?: InfiniteSortModelItem[]
-}): Pick<TableDataGridFetcherParams, 'sortColumnKey' | 'sortColumnOrder'> => {
+}): TableDataGridSort => {
   const [activeSort] = sortModel ?? []
   if (activeSort?.colId && (activeSort.sort === 'asc' || activeSort.sort === 'desc')) {
     return {

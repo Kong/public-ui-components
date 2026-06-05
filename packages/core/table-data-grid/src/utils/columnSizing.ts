@@ -23,6 +23,11 @@ type ConstrainedFitColumn = {
   width: number
 }
 
+type ColumnWidthLimits = {
+  maxWidth?: number
+  minWidth: number
+}
+
 const getColumnFitMinWidth = <Row extends Record<string, any>>(
   header: TableDataGridHeader<Row>,
 ) => header.minWidth ?? DEFAULT_AUTO_FIT_MIN_WIDTH
@@ -57,7 +62,7 @@ const clampColumnWidth = (
   {
     maxWidth,
     minWidth,
-  }: Pick<ConstrainedFitColumn, 'maxWidth' | 'minWidth'>,
+  }: ColumnWidthLimits,
 ) => Math.min(Math.max(width, minWidth), maxWidth ?? Number.POSITIVE_INFINITY)
 
 const distributeConstrainedWidths = ({

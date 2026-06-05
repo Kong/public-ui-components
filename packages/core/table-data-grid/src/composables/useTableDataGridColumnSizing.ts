@@ -1,5 +1,6 @@
 import type {
   GridColumnWidthChangeSource,
+  TableDataGridColumnSizingHandlers,
 } from '../types/internal'
 import type {
   TableDataGridConfig,
@@ -46,7 +47,7 @@ export const useTableDataGridColumnSizing = <Row extends Record<string, any>>({
   resolvedTableConfig: Readonly<Ref<TableDataGridConfig>>
   tableConfig: Readonly<Ref<TableDataGridConfig | undefined>>
   updateTableConfig: (config: Partial<TableDataGridConfig>) => void
-}) => {
+}): TableDataGridColumnSizingHandlers<Row> => {
   const hasResolvedColumnWidths = computed(() => hasConfiguredColumnWidths(resolvedTableConfig.value))
   const hasPropColumnWidths = computed(() => hasConfiguredColumnWidths(tableConfig.value ?? {}))
 
