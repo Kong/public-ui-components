@@ -31,6 +31,8 @@ const {
   params: SelectionCellParams<Record<string, any>>
 }>()
 
+// AG Grid refreshes reused renderers through the exposed refresh hook, not by
+// updating Vue props. Keep only the top-level params reference reactive.
 const currentParams = shallowRef(params)
 const initialSelectionState = params.context.selection.getRowSelectionState(params.node)
 const isSelected = ref(initialSelectionState.selected)
@@ -50,6 +52,8 @@ const onSelectionChange = (checked: boolean) => {
   syncSelectionState()
 }
 
+// AG Grid calls this hook when reusing the selection cell renderer instance,
+// so checkbox state syncs with the latest row params without a remount.
 defineExpose({
   refresh(nextParams: SelectionCellParams<Record<string, any>>) {
     currentParams.value = nextParams

@@ -26,6 +26,8 @@ const {
   params: DatatableCellParams
 }>()
 
+// AG Grid refreshes reused renderers through the exposed refresh hook, not by
+// updating Vue props. Keep only the top-level params reference reactive.
 const currentParams = shallowRef(params)
 
 const row = computed(() => currentParams.value.data ?? {})
@@ -73,8 +75,8 @@ const RenderCellSlot = () => cellSlot.value
   ? cellSlot.value(slotPayload.value)
   : currentParams.value.value ?? ''
 
-// AG Grid calls refresh on reused renderer instances so slot content receives
-// the latest cell params without remounting the component.
+// AG Grid calls this hook when reusing the renderer instance for new cell
+// params, so slot content receives updated values without a remount.
 defineExpose({
   refresh(nextParams: DatatableCellParams) {
     currentParams.value = nextParams

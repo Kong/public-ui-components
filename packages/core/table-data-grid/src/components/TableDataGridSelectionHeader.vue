@@ -30,6 +30,8 @@ const {
   params: SelectionHeaderParams<Record<string, any>>
 }>()
 
+// AG Grid refreshes reused renderers through the exposed refresh hook, not by
+// updating Vue props. Keep only the top-level params reference reactive.
 const currentParams = shallowRef(params)
 const isChecked = ref(false)
 const isIndeterminate = ref(false)
@@ -72,6 +74,8 @@ onBeforeUnmount(() => {
   unsubscribeFromSelectionState?.()
 })
 
+// AG Grid calls this hook when reusing the selection header renderer instance,
+// so subscription state and checkbox state stay aligned with the latest params.
 defineExpose({
   refresh(nextParams: SelectionHeaderParams<Record<string, any>>) {
     const currentApi = currentParams.value.api
