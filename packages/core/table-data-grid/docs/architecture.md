@@ -11,9 +11,11 @@ The core principle is:
 ```mermaid
 flowchart LR
   Host["Host app<br/>headers, fetcher, tableConfig,<br/>filterSelection, slots"]
-  Component["TableDataGrid.vue<br/>orchestration and template"]
+  Component["TableDataGrid.vue<br/>public wrapper and orchestration"]
+  Controls["TableDataGridControls.vue<br/>toolbar, outside controls, filters/search"]
+  Body["TableDataGridBody.vue<br/>AG Grid and pagination surface"]
   Config["useTableDataGridConfig<br/>controlled config state"]
-  FetchState["useTableDataGridFetchState<br/>shared fetch refs"]
+  FetchState["useTableDataGridFetchState<br/>shared fetch refs and flags"]
   PaginationFetch["useTableDataGridPaginationFetch<br/>pagination requests"]
   InfiniteFetch["useTableDataGridInfiniteFetch<br/>infinite datasource"]
   Columns["useTableDataGridColumnDefs<br/>headers to columnDefs"]
@@ -25,17 +27,21 @@ flowchart LR
   Events["emits<br/>update:tableConfig, sort,<br/>row/cell/select/state/filter"]
 
   Host --> Component
+  Component --> Controls
+  Component --> Body
   Component --> Config
   Component --> FetchState
   Component --> PaginationFetch
   Component --> InfiniteFetch
-  Component --> Columns
   Component --> Sizing
   Component --> Selection
-  Component --> Pagination
   Component --> Lifecycle
   FetchState --> PaginationFetch
   FetchState --> InfiniteFetch
+  Controls --> Component
+  Body --> Columns
+  Body --> Pagination
+  Body --> Grid
   Config --> Grid
   Columns --> Grid
   Sizing --> Grid
@@ -52,12 +58,16 @@ flowchart LR
 
 | Area | File | Owns |
 | --- | --- | --- |
-| Wrapper orchestration | [`src/components/TableDataGrid.vue`](../src/components/TableDataGrid.vue) | Template, AG Grid wiring, toolbar state, event handlers, and composable coordination |
+| Wrapper orchestration | [`src/components/TableDataGrid.vue`](../src/components/TableDataGrid.vue) | Public props/emits/slots, top-level state wiring, refresh mode selection, and composable coordination |
+| Controls surface | [`src/components/TableDataGridControls.vue`](../src/components/TableDataGridControls.vue) | Toolbar visibility, outside actions, Teleported search/filters, and toolbar slot props |
+| Grid surface | [`src/components/TableDataGridBody.vue`](../src/components/TableDataGridBody.vue) | AG Grid instance, row model selection, pagination controls, AG Grid event forwarding |
+| Toolbar rendering | [`src/components/TableDataGridToolbar.vue`](../src/components/TableDataGridToolbar.vue) | Toolbar layout, toolbar slots, bulk actions, filters/search placement, column visibility trigger |
+| Filters and search | [`src/components/TableDataGridFilters.vue`](../src/components/TableDataGridFilters.vue), [`src/components/TableDataGridSearch.vue`](../src/components/TableDataGridSearch.vue) | KFilterGroup wiring, forwarded custom filter slots, search input |
 | Public contract | [`src/types/index.ts`](../src/types/index.ts) | Header, config, fetcher, row key, selection, slot, and attribute types |
 | Config state | [`src/composables/useTableDataGridConfig.ts`](../src/composables/useTableDataGridConfig.ts) | Internal active config, resolved config, applying config to AG Grid, emitting config updates |
 | Config translation | [`src/utils/tableConfig.ts`](../src/utils/tableConfig.ts), [`src/utils/tablePreferencesInterop.ts`](../src/utils/tablePreferencesInterop.ts) | Defaults, normalization, semantic equality, AG Grid `ColumnState` conversion, table preference conversion |
 | Fetch request helpers | [`src/utils/fetchers.ts`](../src/utils/fetchers.ts) | Pure sort, cursor-block, next-page, and infinite-last-row decisions |
-| Fetch state | [`src/composables/useTableDataGridFetchState.ts`](../src/composables/useTableDataGridFetchState.ts) | Shared row, datasource, page, pending, fetched, and fetch-error refs used by both fetch modes and table state |
+| Fetch state | [`src/composables/useTableDataGridFetchState.ts`](../src/composables/useTableDataGridFetchState.ts) | Shared row, datasource, page, pending, fetched, next-page, and fetch-error flag refs used by both fetch modes and table state |
 | Pagination fetch lifecycle | [`src/composables/useTableDataGridPaginationFetch.ts`](../src/composables/useTableDataGridPaginationFetch.ts) | Pagination requests, result commits, unknown-total next-page state, stale request guards |
 | Infinite fetch lifecycle | [`src/composables/useTableDataGridInfiniteFetch.ts`](../src/composables/useTableDataGridInfiniteFetch.ts) | Infinite datasource creation, cursor tracking, sequential block gating, stale datasource guards |
 | Grid sync helpers | [`src/utils/gridSync.ts`](../src/utils/gridSync.ts) | Pure layout snapshots, config-refresh params, visibility-change checks, selection-column checks |
@@ -81,7 +91,7 @@ flowchart LR
 | `fetcher` | Host to table | Loads rows for either pagination mode or infinite mode |
 | `tableConfig` | Host to table | Optional controlled state for persisted table preferences |
 | `update:tableConfig` | Table to host | Emits user or grid changes that should be persisted by the host |
-| `v-model:filterSelection` | Two-way | Canonical active filter state passed to the fetcher |
+| `v-model:filter-selection` | Two-way | Canonical active filter state passed to the fetcher |
 | Slots by column key | Host to table | Custom cell rendering |
 | Toolbar/filter/state slots | Host to table | Custom table chrome and empty/error states |
 | Row/cell/select/filter/sort/state events | Table to host | Notifications for user interaction and table lifecycle |
@@ -143,7 +153,7 @@ flowchart TD
   Fetcher["consumer fetcher(params)"]
   PageCommit["commitPaginationResult<br/>rowData, totalRows, currentPage"]
   GridCommit["AG Grid successCallback<br/>data, lastRow"]
-  State["isFetching, hasFetched,<br/>fetchError, rowData"]
+  State["isFetching, hasFetched,<br/>hasFetchError, rowData"]
 
   Refresh --> Mode
   Mode -->|"pagination"| Page
@@ -237,19 +247,18 @@ The boundary rule is: use utilities for deterministic calculations that only nee
 
 ## Rendering states
 
-The component renders table states in this order:
+Visible table chrome and the public `state` event are related but intentionally separate. Visible chrome is controlled by the host-owned `loading` and `error` props first:
 
 1. Host-forced `loading` shows the loading skeleton unless host-forced `error` is also true.
 2. Host-forced `error` shows the error state.
-3. AG Grid receives internal `isFetching` and shows its loading UI while grid-owned requests are in flight.
-4. Completed fetch with no rows shows the empty state.
-5. Otherwise, the loaded grid and pagination render.
+3. Completed fetch with no rows shows the empty state.
+4. Otherwise, the grid surface renders. AG Grid receives internal `isFetching` and shows grid-owned loading UI while requests are in flight.
 
 `rowData` is still populated in infinite mode for the first block. That lets the wrapper decide whether to show empty/error states even though AG Grid owns infinite scrolling.
 
-Fetcher rejections are caught and tracked as internal fetch state so the `state` event can report request failures without exposing raw rejection values to rendering composables. The host app owns request error policy and should set the `error` prop when a fetch failure should render error chrome. A background fetch or later infinite block failure does not emit `loading` or `error` while existing rows remain rendered; the table remains in `success` with `hasData: true`.
+Fetcher rejections are caught and tracked as a boolean `hasFetchError` flag so the `state` event can report request failures without storing or exposing raw rejection values. The host app owns request error policy and should set the `error` prop when a fetch failure should render error chrome. A background fetch or later infinite block failure does not emit `loading` or `error` while existing rows remain rendered; the table remains in `success` with `hasData: true`.
 
-| State value | Meaning |
+| Emitted state value | Meaning |
 | --- | --- |
 | `loading` | Host-forced loading, or no data has rendered yet while the first fetch is pending |
 | `error` | Host-forced error, or fetch failure with no rendered rows |
