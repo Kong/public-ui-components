@@ -71,7 +71,7 @@ describe('useTableDataGridColumnDefs', () => {
 
     resolvedTableConfig.value = {
       columnOrder: ['status', 'name'],
-      columnVisibility: { name: true },
+      columns: { name: { visible: true } },
     }
     expect(columnDefs.value).toBe(initialColumnDefs)
 

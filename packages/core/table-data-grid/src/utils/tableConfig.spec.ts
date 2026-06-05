@@ -3,6 +3,7 @@ import type { GridApi } from 'ag-grid-community'
 import type { TableDataGridHeader } from '../types'
 import {
   buildColumnStateFromConfig,
+  createDefaultTableDataGridConfig,
   createResolvedTableConfig,
   getConfigFromGrid,
   mergeColumnOrder,
@@ -24,22 +25,37 @@ describe('table config utilities', () => {
 
   it('normalizes partial table config values without mutating input', () => {
     const partialConfig = {
-      columnVisibility: { status: false },
+      columns: { status: { visible: false } },
       pageSize: 50,
     }
 
     expect(normalizeTableConfig(partialConfig)).toEqual({
       columnOrder: [],
-      columnVisibility: { status: false },
-      columnWidths: {},
-      pinnedColumns: {},
+      columns: { status: { visible: false } },
       sortColumnKey: undefined,
       sortColumnOrder: undefined,
       pageSize: 50,
     })
     expect(partialConfig).toEqual({
-      columnVisibility: { status: false },
+      columns: { status: { visible: false } },
       pageSize: 50,
+    })
+  })
+
+  it('creates default table config from header defaults', () => {
+    expect(createDefaultTableDataGridConfig({
+      headers: [
+        { key: 'name', label: 'Name', visible: false },
+        { key: 'status', label: 'Status', hideable: false, visible: false },
+      ],
+      pageSize: 25,
+    })).toEqual({
+      columnOrder: ['name', 'status'],
+      columns: {
+        name: { visible: false },
+        status: { visible: true },
+      },
+      pageSize: 25,
     })
   })
 
@@ -52,33 +68,21 @@ describe('table config utilities', () => {
       pageSize: 25,
       config: {
         columnOrder: ['status', 'stale'],
-        columnVisibility: {
-          status: false,
-          stale: false,
-        },
-        columnWidths: {
-          name: 200,
-          stale: 100,
-        },
-        pinnedColumns: {
-          method: 'right',
-          stale: 'left',
+        columns: {
+          status: { visible: false },
+          stale: { visible: false, width: 100, pinned: 'left' },
+          name: { width: 200 },
+          method: { pinned: 'right' },
         },
         sortColumnKey: 'stale',
         sortColumnOrder: 'asc',
       },
     })).toEqual({
       columnOrder: ['status', 'name', 'method'],
-      columnVisibility: {
-        name: true,
-        status: false,
-        method: true,
-      },
-      columnWidths: {
-        name: 200,
-      },
-      pinnedColumns: {
-        method: 'right',
+      columns: {
+        status: { visible: false },
+        name: { visible: true, width: 200 },
+        method: { visible: true, pinned: 'right' },
       },
       pageSize: 25,
       sortColumnKey: undefined,
@@ -91,14 +95,40 @@ describe('table config utilities', () => {
       headers,
       pageSize: 25,
       config: {
-        columnVisibility: {
-          name: false,
-          status: false,
+        columns: {
+          name: { visible: false },
+          status: { visible: false },
         },
       },
-    }).columnVisibility).toEqual({
-      name: true,
-      status: false,
+    }).columns).toEqual({
+      name: { visible: true },
+      status: { visible: false },
+    })
+  })
+
+  it('uses header visibility as the default column visibility', () => {
+    expect(createResolvedTableConfig({
+      headers: [
+        { key: 'name', label: 'Name', visible: false },
+        { key: 'status', label: 'Status' },
+      ],
+      pageSize: 25,
+    }).columns).toEqual({
+      name: { visible: false },
+      status: { visible: true },
+    })
+  })
+
+  it('keeps non-hideable columns visible when header visibility is false', () => {
+    expect(createResolvedTableConfig({
+      headers: [
+        { key: 'name', label: 'Name', hideable: false, visible: false },
+        { key: 'status', label: 'Status', visible: false },
+      ],
+      pageSize: 25,
+    }).columns).toEqual({
+      name: { visible: true },
+      status: { visible: false },
     })
   })
 
@@ -115,9 +145,9 @@ describe('table config utilities', () => {
       headers,
       config: normalizeTableConfig({
         columnOrder: ['status', 'name'],
-        columnVisibility: { status: false },
-        columnWidths: { status: 120 },
-        pinnedColumns: { status: 'right' },
+        columns: {
+          status: { visible: false, width: 120, pinned: 'right' },
+        },
         sortColumnKey: 'status',
         sortColumnOrder: 'asc',
       }),
@@ -144,7 +174,7 @@ describe('table config utilities', () => {
       headers,
       config: normalizeTableConfig({
         columnOrder: ['name', 'status'],
-        pinnedColumns: { name: false },
+        columns: { name: { pinned: false } },
       }),
     }).find(column => column.colId === 'name')?.pinned).toBe(null)
   })
@@ -160,17 +190,17 @@ describe('table config utilities', () => {
 
     expect(getConfigFromGrid({ api, headers, pageSize: 25 })).toEqual({
       columnOrder: ['name', 'status'],
-      columnVisibility: {
-        name: true,
-        status: false,
-      },
-      columnWidths: {
-        name: 180,
-        status: 120,
-      },
-      pinnedColumns: {
-        name: 'left',
-        status: false,
+      columns: {
+        name: {
+          visible: true,
+          width: 180,
+          pinned: 'left',
+        },
+        status: {
+          visible: false,
+          width: 120,
+          pinned: false,
+        },
       },
       sortColumnKey: 'status',
       sortColumnOrder: 'desc',
@@ -197,23 +227,23 @@ describe('table config utilities', () => {
       normalizeTableConfig(),
     )).toBe(true)
     expect(normalizedTableConfigsEqual(
-      normalizeTableConfig({ columnVisibility: { name: true } }),
-      normalizeTableConfig({ columnVisibility: { name: false } }),
+      normalizeTableConfig({ columns: { name: { visible: true } } }),
+      normalizeTableConfig({ columns: { name: { visible: false } } }),
     )).toBe(false)
     expect(normalizedTableConfigsEqual(
       normalizeTableConfig({ columnOrder: ['name', 'status'] }),
       normalizeTableConfig({ columnOrder: ['status', 'name'] }),
     )).toBe(false)
     expect(normalizedTableConfigsEqual(
-      normalizeTableConfig({ columnWidths: { name: 100 } }),
-      normalizeTableConfig({ columnWidths: { name: 120 } }),
+      normalizeTableConfig({ columns: { name: { width: 100 } } }),
+      normalizeTableConfig({ columns: { name: { width: 120 } } }),
     )).toBe(false)
     expect(normalizedTableConfigsEqual(
-      normalizeTableConfig({ pinnedColumns: { name: 'left' } }),
-      normalizeTableConfig({ pinnedColumns: { name: false } }),
+      normalizeTableConfig({ columns: { name: { pinned: 'left' } } }),
+      normalizeTableConfig({ columns: { name: { pinned: false } } }),
     )).toBe(false)
     expect(normalizedTableConfigsEqual(
-      normalizeTableConfig({ pinnedColumns: { name: false } }),
+      normalizeTableConfig({ columns: { name: { pinned: false } } }),
       normalizeTableConfig(),
     )).toBe(false)
     expect(normalizedTableConfigsEqual(

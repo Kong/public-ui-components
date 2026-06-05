@@ -271,7 +271,23 @@ const saveTableConfig = (config: TableDataGridConfig) => {
 }
 ```
 
-Config fields are optional overrides. For example, `columnVisibility: { latency: false }` hides only that column while the rest default to visible.
+Config fields are optional overrides. Per-column layout state is nested under `columns`:
+
+```ts
+const tableConfig = ref<TableDataGridConfig>({
+  columnOrder: ['name', 'status', 'latency'],
+  columns: {
+    latency: { visible: false },
+    status: { width: 160, pinned: 'right' },
+    name: { pinned: false },
+  },
+  pageSize: 25,
+})
+```
+
+Header options describe the initial/default column state. `tableConfig` describes the current table state and any host-provided overrides that should be replayed or persisted.
+
+`columns[key].visible` hides or shows a hideable column, `columns[key].width` stores the column width in pixels, and `columns[key].pinned` stores `'left'`, `'right'`, or `false`. Omitted `visible` values fall back to `headers[].visible ?? true`; when `hideable: false`, visibility is not configurable and the column stays visible. Omitted `width` values fall back to the header width or the table's normal column fitting behavior. Omitted `pinned` values fall back to the header `pinned` value or unpinned. `pinned: false` explicitly unpins a column even when the matching header has a default `pinned` value.
 
 Host applications can map Kongponents `tablePreferences` into `tableConfig` with the exported conversion helpers:
 
@@ -480,6 +496,7 @@ Use `outside-search` and `outside-filters` to move built-in controls to Teleport
 | `label` | `string` | - | Header label. |
 | `sortable` | `boolean` | `false` | Enables AG Grid sorting and wrapper sort payload updates for the column. |
 | `hideable` | `boolean` | `true` | Allows the column visibility menu to hide or show the column. |
+| `visible` | `boolean` | `true` | Initial/default visibility for a hideable column. Ignored when `hideable: false`; non-hideable columns stay visible. |
 | `hideLabel` | `boolean` | `false` | Hides the visual header label while keeping the column key and slot mapping. |
 | `disableRowClick` | `boolean` | `false` | Suppresses `row:click` when clicks originate from this column without changing selection behavior. |
 | `tooltip` | `string` | - | Header tooltip text and fallback cell tooltip text. |
@@ -545,6 +562,7 @@ Use a template ref on `TableDataGrid` to call these methods.
 - `TableDataGridPinnedState`
 - `TableDataGridState`
 - `TableDataGridStatePayload`
+- `TableDataGridColumnConfig`
 - `TableDataGridConfig`
 - `TableDataGridHeader`
 - `TableDataGridFetcherParams`

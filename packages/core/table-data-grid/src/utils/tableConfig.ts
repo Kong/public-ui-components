@@ -1,4 +1,5 @@
 import type {
+  TableDataGridColumnConfig,
   TableDataGridConfig,
   TableDataGridHeader,
   TableDataGridPinnedState,
@@ -16,9 +17,10 @@ export const createDefaultTableDataGridConfig = <Row extends Record<string, any>
   pageSize: number
 }): TableDataGridConfig => ({
   columnOrder: headers.map(header => header.key),
-  columnVisibility: Object.fromEntries(headers.map(header => [header.key, true])),
-  columnWidths: {},
-  pinnedColumns: {},
+  columns: Object.fromEntries(headers.map(header => [
+    header.key,
+    { visible: getDefaultColumnVisibility(header) },
+  ])),
   pageSize,
 })
 
@@ -31,7 +33,7 @@ export const getSortKey = (config: TableDataGridSort): string => {
 }
 
 export const hasConfiguredColumnWidths = (config: TableDataGridConfig): boolean => (
-  Object.keys(config.columnWidths ?? {}).length > 0
+  Object.values(config.columns ?? {}).some(column => typeof column.width === 'number')
 )
 
 export const createResolvedTableConfig = <Row extends Record<string, any>>({
@@ -49,9 +51,7 @@ export const createResolvedTableConfig = <Row extends Record<string, any>>({
 
   return {
     columnOrder: mergeColumnOrder(normalized.columnOrder ?? [], defaults.columnOrder ?? []),
-    columnVisibility: resolveColumnVisibility(normalized, headers),
-    columnWidths: resolveColumnWidths(normalized, headerKeys),
-    pinnedColumns: resolvePinnedColumns(normalized, headerKeys),
+    columns: resolveColumns(normalized, headers),
     ...resolveSort(normalized, headerKeys),
     pageSize: normalized.pageSize ?? pageSize,
   }
@@ -61,43 +61,44 @@ export const normalizeTableConfig = (
   config?: Partial<TableDataGridConfig>,
 ): TableDataGridConfig => ({
   columnOrder: [...(config?.columnOrder ?? [])],
-  columnVisibility: { ...(config?.columnVisibility ?? {}) },
-  columnWidths: { ...(config?.columnWidths ?? {}) },
-  pinnedColumns: { ...(config?.pinnedColumns ?? {}) },
+  columns: cloneColumns(config?.columns),
   sortColumnKey: config?.sortColumnKey,
   sortColumnOrder: config?.sortColumnOrder,
   pageSize: config?.pageSize,
 })
 
-const resolveColumnVisibility = <Row extends Record<string, any>>(
+const resolveColumns = <Row extends Record<string, any>>(
   config: TableDataGridConfig,
   headers: Array<TableDataGridHeader<Row>>,
-): Record<string, boolean> => {
+): Record<string, TableDataGridColumnConfig> => {
   const headerKeys = new Set(headers.map(header => header.key))
-  const defaults = Object.fromEntries(headers.map(header => [header.key, true]))
+  const configuredColumns = filterRecordByKeys(config.columns, headerKeys)
 
-  const configuredVisibility = filterRecordByKeys(config.columnVisibility, headerKeys)
-
-  return headers.reduce<Record<string, boolean>>((acc, header) => {
-    acc[header.key] = isColumnHideable(header) ? configuredVisibility[header.key] ?? defaults[header.key] : true
+  return headers.reduce<Record<string, TableDataGridColumnConfig>>((acc, header) => {
+    const configuredColumn = configuredColumns[header.key] ?? {}
+    acc[header.key] = {
+      ...configuredColumn,
+      visible: resolveColumnVisibility({
+        configuredColumn,
+        header,
+      }),
+    }
     return acc
   }, {})
 }
 
-const resolveColumnWidths = <Row extends Record<string, any>>(
-  config: TableDataGridConfig,
-  headersOrKeys: Array<TableDataGridHeader<Row>> | Set<string>,
-): Record<string, number> => filterRecordByKeys(
-  config.columnWidths,
-  getHeaderKeySet(headersOrKeys),
-)
+const getDefaultColumnVisibility = <Row extends Record<string, any>>(
+  header: TableDataGridHeader<Row>,
+) => isColumnHideable(header) ? header.visible ?? true : true
 
-const resolvePinnedColumns = <Row extends Record<string, any>>(
-  config: TableDataGridConfig,
-  headersOrKeys: Array<TableDataGridHeader<Row>> | Set<string>,
-): Record<string, TableDataGridPinnedState> => filterRecordByKeys(
-  config.pinnedColumns,
-  getHeaderKeySet(headersOrKeys),
+const resolveColumnVisibility = <Row extends Record<string, any>>({
+  configuredColumn,
+  header,
+}: {
+  configuredColumn: TableDataGridColumnConfig
+  header: TableDataGridHeader<Row>
+}) => (
+  isColumnHideable(header) ? configuredColumn.visible ?? getDefaultColumnVisibility(header) : true
 )
 
 const resolveSort = <Row extends Record<string, any>>(
@@ -125,7 +126,7 @@ const resolveSort = <Row extends Record<string, any>>(
  * into the parent when the persisted config is already structurally identical.
  * Reference equality is not enough because every normalization/grid read creates
  * fresh arrays and records. Keep this wrapper around isEqual so callers compare
- * only the synced config fields, and so explicit pinnedColumns false entries stay
+ * only the synced config fields, and so explicit pinned false entries stay
  * meaningful: false unpins a header that may otherwise be pinned by default.
  */
 export const normalizedTableConfigsEqual = (
@@ -133,9 +134,7 @@ export const normalizedTableConfigsEqual = (
   right: TableDataGridConfig,
 ): boolean => (
   isEqual(left.columnOrder ?? [], right.columnOrder ?? [])
-    && isEqual(left.columnVisibility ?? {}, right.columnVisibility ?? {})
-    && isEqual(left.columnWidths ?? {}, right.columnWidths ?? {})
-    && isEqual(left.pinnedColumns ?? {}, right.pinnedColumns ?? {})
+    && isEqual(left.columns ?? {}, right.columns ?? {})
     && left.sortColumnKey === right.sortColumnKey
     && left.sortColumnOrder === right.sortColumnOrder
     && left.pageSize === right.pageSize
@@ -172,6 +171,54 @@ const getHeaderKeySet = <Row extends Record<string, any>>(
   ? headersOrKeys
   : new Set(headersOrKeys.map(header => header.key))
 
+const cloneColumns = (
+  columns?: Record<string, TableDataGridColumnConfig>,
+): Record<string, TableDataGridColumnConfig> => (
+  Object.fromEntries(Object.entries(columns ?? {}).map(([key, column]) => [key, { ...column }]))
+)
+
+export const getColumnVisibility = (
+  config: TableDataGridConfig,
+): Record<string, boolean> => (
+  Object.fromEntries(
+    Object.entries(config.columns ?? {})
+      .filter((entry): entry is [string, TableDataGridColumnConfig & { visible: boolean }] => (
+        typeof entry[1].visible === 'boolean'
+      ))
+      .map(([key, column]) => [key, column.visible]),
+  )
+)
+
+export const getColumnWidths = (
+  config: TableDataGridConfig,
+): Record<string, number> => (
+  Object.fromEntries(
+    Object.entries(config.columns ?? {})
+      .filter((entry): entry is [string, TableDataGridColumnConfig & { width: number }] => (
+        typeof entry[1].width === 'number'
+      ))
+      .map(([key, column]) => [key, column.width]),
+  )
+)
+
+const getColumnStateHide = (visible?: boolean) => (
+  typeof visible === 'boolean' ? !visible : undefined
+)
+
+const getColumnStatePinned = (pinned?: TableDataGridPinnedState) => (
+  pinned || null
+)
+
+const getColumnStateSort = ({
+  columnKey,
+  config,
+}: {
+  columnKey: string
+  config: TableDataGridConfig
+}) => (
+  config.sortColumnKey === columnKey && config.sortColumnOrder ? config.sortColumnOrder : null
+)
+
 export const buildColumnStateFromConfig = <Row extends Record<string, any>>({
   config,
   headers,
@@ -182,9 +229,7 @@ export const buildColumnStateFromConfig = <Row extends Record<string, any>>({
   isColumnOrderResolved?: boolean
 }): ColumnState[] => {
   const columnOrder = config.columnOrder ?? []
-  const columnWidths = config.columnWidths ?? {}
-  const columnVisibility = config.columnVisibility ?? {}
-  const pinnedColumns = config.pinnedColumns ?? {}
+  const columns = config.columns ?? {}
   const headersByKey = new Map(headers.map(header => [header.key, header]))
   const orderedKeys = isColumnOrderResolved
     ? columnOrder
@@ -192,16 +237,20 @@ export const buildColumnStateFromConfig = <Row extends Record<string, any>>({
 
   return orderedKeys.map((key) => {
     const header = headersByKey.get(key)
-    const width = columnWidths[key] ?? header?.width
-    const pinned = pinnedColumns[key] ?? header?.pinned
-    const visible = columnVisibility[key]
+    const column = columns[key] ?? {}
+    const width = column.width ?? header?.width
+    const pinned = column.pinned ?? header?.pinned
+    const visible = column.visible
 
     return {
       colId: key,
-      hide: typeof visible === 'boolean' ? !visible : undefined,
+      hide: getColumnStateHide(visible),
       width,
-      pinned: pinned || null,
-      sort: config.sortColumnKey === key && config.sortColumnOrder ? config.sortColumnOrder : null,
+      pinned: getColumnStatePinned(pinned),
+      sort: getColumnStateSort({
+        columnKey: key,
+        config,
+      }),
     }
   })
 }
@@ -221,14 +270,11 @@ export const getConfigFromGrid = <Row extends Record<string, any>>({
 
   return {
     columnOrder: columnState.map(column => column.colId).filter(Boolean),
-    columnVisibility: Object.fromEntries(columnState.map(column => [column.colId, !column.hide])),
-    columnWidths: Object.fromEntries(columnState
-      .filter(column => typeof column.width === 'number')
-      .map(column => [column.colId, column.width as number])),
-    pinnedColumns: Object.fromEntries(columnState.map(column => [
-      column.colId,
-      column.pinned === 'left' || column.pinned === 'right' ? column.pinned : false,
-    ])),
+    columns: Object.fromEntries(columnState.map(column => [column.colId, {
+      visible: !column.hide,
+      ...(typeof column.width === 'number' ? { width: column.width } : {}),
+      pinned: column.pinned === 'left' || column.pinned === 'right' ? column.pinned : false,
+    }])),
     sortColumnKey: sortColumn?.colId,
     sortColumnOrder: sortColumn?.sort === 'asc' || sortColumn?.sort === 'desc' ? sortColumn.sort : undefined,
     pageSize,

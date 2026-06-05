@@ -314,10 +314,13 @@ Then bind the converted config:
 
 Review persisted defaults while migrating:
 
-- `columnWidths` and `columnVisibility` keys should still match header keys.
+- Kongponents `TablePreferences.columnWidths` and `TablePreferences.columnVisibility` keys should still match header keys; `toTableDataGridConfig()` converts them to `TableDataGridConfig.columns[key].width` and `TableDataGridConfig.columns[key].visible`.
 - `headers[].hidable` must be renamed to `headers[].hideable`.
+- Use `headers[].visible = false` when a hideable column should start hidden by default. `tableConfig.columns[key].visible` is the current/persisted state and overrides that default after user or host changes.
+- Visibility is not applicable to `hideable: false` columns; they resolve to visible regardless of `headers[].visible` or `tableConfig.columns[key].visible`.
 - `pageSize` should be set through `pageSize` or `tableConfig.pageSize`, not `initialFetcherParams.pageSize`.
-- `TableDataGridConfig` can also persist `columnOrder` and `pinnedColumns`; these fields do not exist in `KTableData` preferences.
+- `TableDataGridConfig` can also persist top-level `columnOrder` and `columns[key].pinned`; pinning does not exist in `KTableData` preferences.
+- `columns[key].pinned = false` explicitly unpins a column even when the matching header has a default `pinned` value.
 
 ## Slots and interaction migration
 

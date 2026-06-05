@@ -6,6 +6,7 @@ import {
   buildColumnStateFromConfig,
   createResolvedTableConfig,
   getConfigFromGrid,
+  getColumnVisibility,
   normalizedTableConfigsEqual,
   normalizeTableConfig,
 } from '../utils/tableConfig'
@@ -33,7 +34,7 @@ export const useTableDataGridConfig = <Row extends Record<string, any>>({
     headers: resolvedHeaders.value,
     pageSize: resolvedDefaultPageSize.value,
   }))
-  const resolvedColumnVisibility = computed(() => resolvedTableConfig.value.columnVisibility ?? {})
+  const resolvedColumnVisibility = computed(() => getColumnVisibility(resolvedTableConfig.value))
   const resolvedSort = computed(() => ({
     sortColumnKey: resolvedTableConfig.value.sortColumnKey,
     sortColumnOrder: resolvedTableConfig.value.sortColumnOrder,
@@ -50,9 +51,24 @@ export const useTableDataGridConfig = <Row extends Record<string, any>>({
   }
 
   const patchTableConfig = (partial: Partial<TableDataGridConfig>) => {
+    const resolvedColumns = resolvedTableConfig.value.columns ?? {}
+    const partialColumns = partial.columns ?? {}
+
     updateTableConfig({
       ...resolvedTableConfig.value,
       ...partial,
+      columns: Object.fromEntries(
+        Array.from(new Set([
+          ...Object.keys(resolvedColumns),
+          ...Object.keys(partialColumns),
+        ])).map(key => [
+          key,
+          {
+            ...resolvedColumns[key],
+            ...partialColumns[key],
+          },
+        ]),
+      ),
     })
   }
 

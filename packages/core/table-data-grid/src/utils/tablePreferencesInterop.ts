@@ -1,5 +1,6 @@
 import type { TableDataGridConfig } from '../types'
 import type { TablePreferences, TableSortPayload } from '@kong/kongponents'
+import { getColumnVisibility, getColumnWidths } from './tableConfig'
 
 const compactRecord = <Value>(
   record: Partial<Record<string, Value>> | undefined,
@@ -15,13 +16,27 @@ const compactRecord = <Value>(
 
 export const toTableDataGridConfig = (
   tablePreferences?: TablePreferences,
-): TableDataGridConfig => ({
-  pageSize: tablePreferences?.pageSize,
-  sortColumnKey: tablePreferences?.sortColumnKey || undefined,
-  sortColumnOrder: tablePreferences?.sortColumnOrder,
-  columnWidths: compactRecord(tablePreferences?.columnWidths),
-  columnVisibility: compactRecord(tablePreferences?.columnVisibility),
-})
+): TableDataGridConfig => {
+  const columnWidths = compactRecord(tablePreferences?.columnWidths)
+  const columnVisibility = compactRecord(tablePreferences?.columnVisibility)
+  const columnKeys = new Set([
+    ...Object.keys(columnWidths),
+    ...Object.keys(columnVisibility),
+  ])
+
+  return {
+    pageSize: tablePreferences?.pageSize,
+    sortColumnKey: tablePreferences?.sortColumnKey || undefined,
+    sortColumnOrder: tablePreferences?.sortColumnOrder,
+    columns: Object.fromEntries(Array.from(columnKeys).map(key => [
+      key,
+      {
+        ...(typeof columnVisibility[key] === 'boolean' ? { visible: columnVisibility[key] } : {}),
+        ...(typeof columnWidths[key] === 'number' ? { width: columnWidths[key] } : {}),
+      },
+    ])),
+  }
+}
 
 export const toTablePreferences = (
   tableDataGridConfig?: TableDataGridConfig,
@@ -29,8 +44,8 @@ export const toTablePreferences = (
   pageSize: tableDataGridConfig?.pageSize,
   sortColumnKey: tableDataGridConfig?.sortColumnKey || undefined,
   sortColumnOrder: tableDataGridConfig?.sortColumnOrder,
-  columnWidths: { ...(tableDataGridConfig?.columnWidths ?? {}) },
-  columnVisibility: { ...(tableDataGridConfig?.columnVisibility ?? {}) },
+  columnWidths: getColumnWidths(tableDataGridConfig ?? {}),
+  columnVisibility: getColumnVisibility(tableDataGridConfig ?? {}),
 })
 
 export const toTableSortPayload = (

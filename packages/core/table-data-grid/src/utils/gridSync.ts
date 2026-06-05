@@ -5,13 +5,11 @@ import type {
   TableDataGridSort,
 } from '../types'
 import isEqual from 'lodash-es/isEqual'
-import { getSortKey } from './tableConfig'
+import { getColumnVisibility, getSortKey } from './tableConfig'
 
 export const createLayoutSnapshot = (config: TableDataGridConfig): TableDataGridConfig => ({
   columnOrder: config.columnOrder,
-  columnVisibility: config.columnVisibility,
-  columnWidths: config.columnWidths,
-  pinnedColumns: config.pinnedColumns,
+  columns: config.columns,
   sortColumnKey: undefined,
   sortColumnOrder: undefined,
   pageSize: undefined,
@@ -61,8 +59,8 @@ export const hasColumnVisibilityChanged = ({
   nextConfig: TableDataGridConfig
   previousConfig: TableDataGridConfig
 }) => {
-  const nextColumnVisibility = nextConfig.columnVisibility ?? {}
-  const previousColumnVisibility = previousConfig.columnVisibility ?? {}
+  const nextColumnVisibility = getColumnVisibility(nextConfig)
+  const previousColumnVisibility = getColumnVisibility(previousConfig)
   return !isEqual(nextColumnVisibility, previousColumnVisibility)
 }
 

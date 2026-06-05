@@ -24,12 +24,10 @@ describe('useTableDataGridColumnSizing', () => {
 
   const defaultResolvedConfig: TableDataGridConfig = {
     columnOrder: ['name', 'status'],
-    columnVisibility: {
-      name: true,
-      status: true,
+    columns: {
+      name: { visible: true },
+      status: { visible: true },
     },
-    columnWidths: {},
-    pinnedColumns: {},
     pageSize: 25,
   }
 
@@ -129,7 +127,10 @@ describe('useTableDataGridColumnSizing', () => {
       isApplyingTableConfig: true,
       configFromGrid: {
         ...defaultResolvedConfig,
-        columnWidths: { name: 200 },
+        columns: {
+          ...defaultResolvedConfig.columns,
+          name: { visible: true, width: 200 },
+        },
       },
     })
 
@@ -143,16 +144,16 @@ describe('useTableDataGridColumnSizing', () => {
     const { sizing, updateTableConfig } = mountColumnSizing({
       resolvedTableConfig: {
         ...defaultResolvedConfig,
-        columnWidths: {
-          name: 160,
-          status: 140,
+        columns: {
+          name: { visible: true, width: 160 },
+          status: { visible: true, width: 140 },
         },
       },
       configFromGrid: {
         ...defaultResolvedConfig,
-        columnWidths: {
-          name: 180,
-          status: 120,
+        columns: {
+          name: { visible: true, width: 180 },
+          status: { visible: true, width: 120 },
         },
       },
     })
@@ -165,20 +166,17 @@ describe('useTableDataGridColumnSizing', () => {
   it('emits the full grid config when layout-side-effect changes include layout state', () => {
     const gridConfig = {
       ...defaultResolvedConfig,
-      columnWidths: {
-        name: 180,
-        status: 120,
-      },
-      pinnedColumns: {
-        name: 'left' as const,
+      columns: {
+        name: { visible: true, width: 180, pinned: 'left' as const },
+        status: { visible: true, width: 120 },
       },
     }
     const { sizing, updateTableConfig } = mountColumnSizing({
       resolvedTableConfig: {
         ...defaultResolvedConfig,
-        columnWidths: {
-          name: 160,
-          status: 140,
+        columns: {
+          name: { visible: true, width: 160 },
+          status: { visible: true, width: 140 },
         },
       },
       configFromGrid: gridConfig,
@@ -195,9 +193,9 @@ describe('useTableDataGridColumnSizing', () => {
     })
     const configuredWidthsConfig = {
       ...defaultResolvedConfig,
-      columnWidths: {
-        name: 500,
-        status: 500,
+      columns: {
+        name: { visible: true, width: 500 },
+        status: { visible: true, width: 500 },
       },
     }
     const { sizing } = mountColumnSizing({
@@ -218,9 +216,9 @@ describe('useTableDataGridColumnSizing', () => {
     })
     const autoFittedConfig = {
       ...defaultResolvedConfig,
-      columnWidths: {
-        name: 500,
-        status: 500,
+      columns: {
+        name: { visible: true, width: 500 },
+        status: { visible: true, width: 500 },
       },
     }
     const { configFromGridRef, sizing } = mountColumnSizing({
@@ -266,9 +264,9 @@ describe('useTableDataGridColumnSizing', () => {
     })
     const configuredWidthsConfig = {
       ...defaultResolvedConfig,
-      columnWidths: {
-        name: 500,
-        status: 500,
+      columns: {
+        name: { visible: true, width: 500 },
+        status: { visible: true, width: 500 },
       },
     }
     const { sizing } = mountColumnSizing({

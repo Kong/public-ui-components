@@ -22,7 +22,7 @@
       @filter:close="onFilterClose"
       @filter:open="onFilterOpen"
       @refresh="refresh"
-      @update:column-visibility="columnVisibility => patchTableConfig({ columnVisibility })"
+      @update:column-visibility="patchColumnVisibility"
     >
       <template
         v-for="(_, slotName) in $slots"
@@ -419,6 +419,18 @@ const onFilterOpen = (filterKey: string) => {
 
 const onFilterClose = (filterKey: string) => {
   emit('filter:close', filterKey)
+}
+
+const patchColumnVisibility = (columnVisibility: Record<string, boolean>) => {
+  patchTableConfig({
+    columns: Object.fromEntries(Object.entries(columnVisibility).map(([key, visible]) => [
+      key,
+      {
+        ...(resolvedTableConfig.value.columns?.[key] ?? {}),
+        visible,
+      },
+    ])),
+  })
 }
 
 defineExpose<{

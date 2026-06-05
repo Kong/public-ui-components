@@ -8,6 +8,7 @@ import type {
   GridApi,
   ISizeColumnsToFitParams,
 } from 'ag-grid-community'
+import { getColumnWidths } from './tableConfig'
 
 const DEFAULT_AUTO_FIT_MIN_WIDTH = 120
 
@@ -224,7 +225,7 @@ const getRequiredHeaderWidth = <Row extends Record<string, any>>(
 ) => {
   const minWidth = getColumnFitMinWidth(header)
   const configuredWidth = honorConfiguredColumnWidths
-    ? resolvedTableConfig.columnWidths?.[header.key] ?? header.width
+    ? resolvedTableConfig.columns?.[header.key]?.width ?? header.width
     : undefined
 
   return Math.max(configuredWidth ?? minWidth, minWidth)
@@ -240,7 +241,7 @@ const getRequiredVisibleHeaderWidth = <Row extends Record<string, any>>({
   resolvedTableConfig: TableDataGridConfig
 }) => {
   return headers
-    .filter(header => resolvedTableConfig.columnVisibility?.[header.key] !== false)
+    .filter(header => resolvedTableConfig.columns?.[header.key]?.visible !== false)
     .reduce((total, header) => total + getRequiredHeaderWidth(header, {
       honorConfiguredColumnWidths,
       resolvedTableConfig,
@@ -312,8 +313,21 @@ export const getConfigForColumnWidthChangeDetection = ({
     return gridConfig
   }
 
+  const resolvedColumnWidths = getColumnWidths(resolvedTableConfig)
+
   return {
     ...gridConfig,
-    columnWidths: resolvedTableConfig.columnWidths,
+    columns: Object.fromEntries(Object.entries(gridConfig.columns ?? {}).map(([key, column]) => {
+      const columnWithoutWidth = { ...column }
+      delete columnWithoutWidth.width
+
+      return [
+        key,
+        {
+          ...columnWithoutWidth,
+          ...(typeof resolvedColumnWidths[key] === 'number' ? { width: resolvedColumnWidths[key] } : {}),
+        },
+      ]
+    })),
   }
 }

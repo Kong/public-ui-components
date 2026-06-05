@@ -10,7 +10,7 @@ import type { GridApi } from 'ag-grid-community'
 import type { Ref } from 'vue'
 import { computed, onBeforeUnmount } from 'vue'
 import isEqual from 'lodash-es/isEqual'
-import { hasConfiguredColumnWidths, normalizedTableConfigsEqual } from '../utils/tableConfig'
+import { getColumnWidths, hasConfiguredColumnWidths, normalizedTableConfigsEqual } from '../utils/tableConfig'
 import {
   canDisplayedColumnsFit,
   createConstrainedFitColumnWidths,
@@ -64,7 +64,7 @@ export const useTableDataGridColumnSizing = <Row extends Record<string, any>>({
       return false
     }
 
-    return isEqual(resolvedTableConfig.value.columnWidths ?? {}, lastAutoFittedColumnWidths)
+    return isEqual(getColumnWidths(resolvedTableConfig.value), lastAutoFittedColumnWidths)
   }
 
   const shouldHonorConfiguredColumnWidthsAfterDisplayedColumnsChange = () => {
@@ -154,7 +154,7 @@ export const useTableDataGridColumnSizing = <Row extends Record<string, any>>({
     }
 
     if (columnWidthChangeSource === 'layout-side-effect' && areResolvedColumnWidthsLastAutoFitted()) {
-      lastAutoFittedColumnWidths = gridConfig.columnWidths
+      lastAutoFittedColumnWidths = getColumnWidths(gridConfig)
     }
     updateTableConfig(gridConfig)
   }
@@ -185,7 +185,7 @@ export const useTableDataGridColumnSizing = <Row extends Record<string, any>>({
         honorConfiguredColumnWidths: getHonorConfiguredColumnWidths(),
       })
       if (persistFittedConfig && didFitColumns) {
-        lastAutoFittedColumnWidths = getGridConfig(api).columnWidths
+        lastAutoFittedColumnWidths = getColumnWidths(getGridConfig(api))
       }
       if (persistFittedConfig) {
         persistGridConfigChange()
@@ -230,7 +230,7 @@ export const useTableDataGridColumnSizing = <Row extends Record<string, any>>({
       honorConfiguredColumnWidths: hasPropColumnWidths.value,
     })
     if (didFitColumns || !hasPropColumnWidths.value) {
-      lastAutoFittedColumnWidths = getGridConfig(api).columnWidths
+      lastAutoFittedColumnWidths = getColumnWidths(getGridConfig(api))
     }
     hasGridMounted = true
   }

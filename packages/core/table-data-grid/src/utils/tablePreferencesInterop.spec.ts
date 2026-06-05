@@ -21,11 +21,9 @@ describe('table preferences interop utilities', () => {
       pageSize: 50,
       sortColumnKey: 'name',
       sortColumnOrder: 'asc',
-      columnWidths: {
-        name: 240,
-      },
-      columnVisibility: {
-        status: false,
+      columns: {
+        name: { width: 240 },
+        status: { visible: false },
       },
     })
   })
@@ -36,14 +34,9 @@ describe('table preferences interop utilities', () => {
       sortColumnKey: 'status',
       sortColumnOrder: 'desc',
       columnOrder: ['status', 'name'],
-      columnWidths: {
-        status: 120,
-      },
-      columnVisibility: {
-        name: true,
-      },
-      pinnedColumns: {
-        status: 'left',
+      columns: {
+        status: { width: 120, pinned: 'left' },
+        name: { visible: true },
       },
     })).toEqual({
       pageSize: 50,

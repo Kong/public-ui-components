@@ -87,9 +87,9 @@ flowchart LR
 
 | Contract | Direction | Purpose |
 | --- | --- | --- |
-| `headers` | Host to table | Defines column identity, labels, sortability, visibility rules, sizing defaults, filters, pinning defaults, and AG Grid passthrough options |
+| `headers` | Host to table | Defines column identity, labels, sortability, initial/default visibility, sizing defaults, filters, pinning defaults, and AG Grid passthrough options |
 | `fetcher` | Host to table | Loads rows for either pagination mode or infinite mode |
-| `tableConfig` | Host to table | Optional controlled state for persisted table preferences |
+| `tableConfig` | Host to table | Optional controlled state for current and persisted table preferences |
 | `update:tableConfig` | Table to host | Emits user or grid changes that should be persisted by the host |
 | `v-model:filter-selection` | Two-way | Canonical active filter state passed to the fetcher |
 | Slots by column key | Host to table | Custom cell rendering |
@@ -101,14 +101,16 @@ flowchart LR
 | Field | Meaning |
 | --- | --- |
 | `columnOrder` | Ordered header keys |
-| `columnVisibility` | Header key to visible boolean |
-| `columnWidths` | Header key to pixel width |
-| `pinnedColumns` | Header key to `'left'`, `'right'`, or `false` |
+| `columns[key].visible` | Per-column visible boolean |
+| `columns[key].width` | Per-column pixel width |
+| `columns[key].pinned` | Per-column `'left'`, `'right'`, or `false` pin state |
 | `sortColumnKey` | Active sort column key |
 | `sortColumnOrder` | Active sort order |
 | `pageSize` | Active page size |
 
-`pinnedColumns[key] = false` is meaningful. It represents an explicit unpin, which is different from omitting the key when a header has a default `pinned` value.
+Header options are defaults. `tableConfig` is the current state layer. For example, `headers[].visible = false` initializes a hideable column as hidden, while `tableConfig.columns[key].visible` records or overrides the current visibility state. Visibility is not configurable for `hideable: false` columns, so those columns resolve to visible regardless of header or config visibility values.
+
+`columns[key].pinned = false` is meaningful. It represents an explicit unpin, which is different from omitting the field when a header has a default `pinned` value.
 
 ## Config lifecycle
 
@@ -237,7 +239,7 @@ The boundary rule is: use utilities for deterministic calculations that only nee
 | Apply built-in filter | `onFilterApply` | Updates `filterSelection`, refreshes | Emits `filter:apply` |
 | Apply custom filter slot | `onFilterApply` | Leaves host-owned custom filter state intact, refreshes next tick | Emits `filter:apply` |
 | Clear filter | `onFilterClear` | Same ownership rules as apply | Emits `filter:clear` |
-| Toggle column visibility | `columnVisibilityModel` | Patches config and schedules a fit after displayed columns change | Emits `update:tableConfig` |
+| Toggle column visibility | `columnVisibilityModel` | Patches `columns[key].visible` and schedules a fit after displayed columns change | Emits `update:tableConfig` |
 | Resize column | `onColumnResize` | Persists widths only for finished non-`sizeColumnsToFit` resizes | Emits `update:tableConfig` |
 | Pin or move column | `onColumnPinned` / `onColumnLayoutChange` | Reads grid config while filtering layout-only width noise | Emits `update:tableConfig` when meaningful |
 | Select row | `onSelectionChange` | Tracks rows and keys, refreshes changed cells | Emits `row:select` |
@@ -319,7 +321,7 @@ Components import internal composables through `src/composables/index.ts` as a n
 | If changing... | Keep the change near... | Notes |
 | --- | --- | --- |
 | Public props, emits, or exported types | `src/types/index.ts`, `TableDataGrid.vue`, README | Treat as public API unless intentionally breaking |
-| Config normalization or equality | `src/utils/tableConfig.ts` | Preserve explicit `pinnedColumns[key] = false` semantics |
+| Config normalization or equality | `src/utils/tableConfig.ts` | Preserve explicit `columns[key].pinned = false` semantics |
 | Sort/page-size-driven refreshes | `useTableDataGridConfigSync` | Sort and page size are config changes that trigger fetch refresh |
 | Pagination fetch behavior | `useTableDataGridPaginationFetch` | Preserve stale pagination request guards and commit rules |
 | Infinite fetch behavior | `useTableDataGridInfiniteFetch` | Preserve cursor sequencing, block gating, and stale datasource guards |

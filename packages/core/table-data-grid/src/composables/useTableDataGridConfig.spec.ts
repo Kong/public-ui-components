@@ -41,21 +41,19 @@ describe('useTableDataGridConfig', () => {
 
     config.updateTableConfig({
       columnOrder: ['status', 'name'],
-      columnVisibility: { status: false },
+      columns: { status: { visible: false } },
       pageSize: 50,
     })
     config.updateTableConfig({
       columnOrder: ['status', 'name'],
-      columnVisibility: { status: false },
+      columns: { status: { visible: false } },
       pageSize: 50,
     })
 
     expect(emitTableConfigUpdate).toHaveBeenCalledOnce()
     expect(emitTableConfigUpdate).toHaveBeenCalledWith({
       columnOrder: ['status', 'name'],
-      columnVisibility: { status: false },
-      columnWidths: {},
-      pinnedColumns: {},
+      columns: { status: { visible: false } },
       sortColumnKey: undefined,
       sortColumnOrder: undefined,
       pageSize: 50,
@@ -71,7 +69,7 @@ describe('useTableDataGridConfig', () => {
 
     tableConfig.value = {
       columnOrder: ['status', 'name'],
-      columnVisibility: { status: false },
+      columns: { status: { visible: false } },
       pageSize: 50,
     }
     await nextTick()
@@ -88,20 +86,21 @@ describe('useTableDataGridConfig', () => {
     const { config, emitTableConfigUpdate } = createConfig({
       tableConfig: ref({
         columnOrder: ['status'],
-        columnVisibility: { status: false },
+        columns: { status: { visible: false, width: 120, pinned: 'right' } },
       }),
     })
 
-    config.patchTableConfig({ pageSize: 10 })
+    config.patchTableConfig({
+      columns: { status: { visible: true } },
+      pageSize: 10,
+    })
 
     expect(emitTableConfigUpdate).toHaveBeenCalledWith({
       columnOrder: ['status', 'name'],
-      columnVisibility: {
-        name: true,
-        status: false,
+      columns: {
+        status: { visible: true, width: 120, pinned: 'right' },
+        name: { visible: true },
       },
-      columnWidths: {},
-      pinnedColumns: {},
       sortColumnKey: undefined,
       sortColumnOrder: undefined,
       pageSize: 10,
@@ -121,7 +120,7 @@ describe('useTableDataGridConfig', () => {
     const { config } = createConfig({
       tableConfig: ref({
         columnOrder: ['status', 'name'],
-        columnVisibility: { status: false },
+        columns: { status: { visible: false } },
         sortColumnKey: 'status',
         sortColumnOrder: 'desc',
       }),
@@ -150,17 +149,17 @@ describe('useTableDataGridConfig', () => {
 
     expect(config.getGridConfig(api)).toEqual({
       columnOrder: ['name', 'status'],
-      columnVisibility: {
-        name: true,
-        status: false,
-      },
-      columnWidths: {
-        name: 200,
-        status: 120,
-      },
-      pinnedColumns: {
-        name: 'left',
-        status: false,
+      columns: {
+        name: {
+          visible: true,
+          width: 200,
+          pinned: 'left',
+        },
+        status: {
+          visible: false,
+          width: 120,
+          pinned: false,
+        },
       },
       sortColumnKey: 'status',
       sortColumnOrder: 'desc',

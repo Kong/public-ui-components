@@ -19,12 +19,10 @@ type TestRow = {
 describe('useTableDataGridConfigSync', () => {
   const defaultResolvedConfig: TableDataGridConfig = {
     columnOrder: ['name', 'status'],
-    columnVisibility: {
-      name: true,
-      status: true,
+    columns: {
+      name: { visible: true },
+      status: { visible: true },
     },
-    columnWidths: {},
-    pinnedColumns: {},
     pageSize: 25,
   }
 
@@ -179,9 +177,9 @@ describe('useTableDataGridConfigSync', () => {
 
     resolvedTableConfigRef.value = {
       ...defaultResolvedConfig,
-      columnVisibility: {
-        name: true,
-        status: false,
+      columns: {
+        ...defaultResolvedConfig.columns,
+        status: { visible: false },
       },
     }
     await nextTick()

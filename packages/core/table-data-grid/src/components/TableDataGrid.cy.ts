@@ -96,13 +96,11 @@ const createNameFilterSelection = (value: string): FilterGroupSelection => ({
 
 const tableConfig: TableDataGridConfig = {
   columnOrder: ['name', 'status', 'latency'],
-  columnVisibility: {
-    name: true,
-    status: true,
-    latency: true,
+  columns: {
+    name: { visible: true },
+    status: { visible: true },
+    latency: { visible: true },
   },
-  columnWidths: {},
-  pinnedColumns: {},
   pageSize: 15,
 }
 const secondPageFetcherParams = {
@@ -332,8 +330,10 @@ describe('<TableDataGrid />', () => {
     cy.getTestId('table-data-grid-header-status').should('not.exist')
     cy.getTestId('status-cell').should('not.exist')
     cy.get('@updateTableConfig').should('have.been.calledWithMatch', {
-      columnVisibility: {
-        status: false,
+      columns: {
+        status: {
+          visible: false,
+        },
       },
     })
   }
@@ -393,9 +393,12 @@ describe('<TableDataGrid />', () => {
     cy.then(() => {
       hostConfig.value = {
         ...hostConfig.value,
-        columnVisibility: {
-          ...hostConfig.value.columnVisibility,
-          [columnKey]: false,
+        columns: {
+          ...hostConfig.value.columns,
+          [columnKey]: {
+            ...(hostConfig.value.columns?.[columnKey] ?? {}),
+            visible: false,
+          },
         },
       }
     })
@@ -614,8 +617,12 @@ describe('<TableDataGrid />', () => {
           ...tableConfig,
           sortColumnKey: 'latency',
           sortColumnOrder: 'desc',
-          pinnedColumns: {
-            name: 'left',
+          columns: {
+            ...tableConfig.columns,
+            name: {
+              ...tableConfig.columns?.name,
+              pinned: 'left',
+            },
           },
         },
       })
@@ -654,10 +661,12 @@ describe('<TableDataGrid />', () => {
       cy.then(() => {
         hostConfig.value = {
           ...tableConfig,
-          columnVisibility: {
-            name: true,
-            status: false,
-            latency: true,
+          columns: {
+            ...tableConfig.columns,
+            status: {
+              ...tableConfig.columns?.status,
+              visible: false,
+            },
           },
         }
       })
@@ -680,8 +689,12 @@ describe('<TableDataGrid />', () => {
       cy.then(() => {
         hostConfig.value = {
           ...tableConfig,
-          pinnedColumns: {
-            status: 'right',
+          columns: {
+            ...tableConfig.columns,
+            status: {
+              ...tableConfig.columns?.status,
+              pinned: 'right',
+            },
           },
         }
       })
@@ -706,8 +719,10 @@ describe('<TableDataGrid />', () => {
         gridApi?.setColumnsPinned(['status'], 'left')
       })
       cy.get('@updateTableConfig').should('have.been.calledWithMatch', {
-        pinnedColumns: {
-          status: 'left',
+        columns: {
+          status: {
+            pinned: 'left',
+          },
         },
       })
       cy.wrap(null).should(() => {
@@ -731,8 +746,12 @@ describe('<TableDataGrid />', () => {
       cy.then(() => {
         hostConfig.value = {
           ...tableConfig,
-          pinnedColumns: {
-            name: false,
+          columns: {
+            ...tableConfig.columns,
+            name: {
+              ...tableConfig.columns?.name,
+              pinned: false,
+            },
           },
         }
       })
@@ -771,8 +790,10 @@ describe('<TableDataGrid />', () => {
         fetcher: createPaginatedFetcher(),
         config: {
           columnOrder: ['latency'],
-          columnVisibility: {
-            status: false,
+          columns: {
+            status: {
+              visible: false,
+            },
           },
           pageSize: 10,
         },
@@ -844,7 +865,7 @@ describe('<TableDataGrid />', () => {
       waitForColumnSizing()
       cy.then(() => {
         expectColumnsToFillGrid(gridApi!)
-        expect(latestConfig?.columnVisibility?.status).to.equal(false)
+        expect(latestConfig?.columns?.status?.visible).to.equal(false)
       })
 
       cy.then(() => {
@@ -915,17 +936,14 @@ describe('<TableDataGrid />', () => {
         config: {
           ...tableConfig,
           columnOrder: ['name', 'route', 'method', 'status', 'latency', 'asyncValue', 'region'],
-          columnVisibility: {
-            name: true,
-            route: true,
-            method: true,
-            status: true,
-            latency: true,
-            asyncValue: true,
-            region: true,
-          },
-          pinnedColumns: {
-            name: 'left',
+          columns: {
+            name: { visible: true, pinned: 'left' },
+            route: { visible: true },
+            method: { visible: true },
+            status: { visible: true },
+            latency: { visible: true },
+            asyncValue: { visible: true },
+            region: { visible: true },
           },
         },
         onGridReady: (api) => {
@@ -938,9 +956,12 @@ describe('<TableDataGrid />', () => {
       cy.then(() => {
         hostConfig.value = {
           ...hostConfig.value,
-          columnVisibility: {
-            ...hostConfig.value.columnVisibility,
-            region: true,
+          columns: {
+            ...hostConfig.value.columns,
+            region: {
+              ...(hostConfig.value.columns?.region ?? {}),
+              visible: true,
+            },
           },
         }
       })
@@ -964,14 +985,11 @@ describe('<TableDataGrid />', () => {
         config: {
           ...tableConfig,
           columnOrder: ['name', 'route', 'status', 'latency'],
-          columnVisibility: {
-            name: true,
-            route: true,
-            status: true,
-            latency: true,
-          },
-          pinnedColumns: {
-            route: 'left',
+          columns: {
+            name: { visible: true },
+            route: { visible: true, pinned: 'left' },
+            status: { visible: true },
+            latency: { visible: true },
           },
         },
         onGridReady: (api) => {
@@ -1080,9 +1098,12 @@ describe('<TableDataGrid />', () => {
       cy.then(() => {
         hostConfig.value = {
           ...hostConfig.value,
-          columnVisibility: {
-            ...hostConfig.value.columnVisibility,
-            latency: false,
+          columns: {
+            ...hostConfig.value.columns,
+            latency: {
+              ...(hostConfig.value.columns?.latency ?? {}),
+              visible: false,
+            },
           },
         }
       })
@@ -1090,9 +1111,12 @@ describe('<TableDataGrid />', () => {
       cy.then(() => {
         hostConfig.value = {
           ...hostConfig.value,
-          pinnedColumns: {
-            ...hostConfig.value.pinnedColumns,
-            status: 'left',
+          columns: {
+            ...hostConfig.value.columns,
+            status: {
+              ...(hostConfig.value.columns?.status ?? {}),
+              pinned: 'left',
+            },
           },
         }
       })
@@ -1321,10 +1345,10 @@ describe('<TableDataGrid />', () => {
       mountTable({
         config: {
           ...tableConfig,
-          columnWidths: {
-            name: 900,
-            status: 120,
-            latency: 140,
+          columns: {
+            name: { visible: true, width: 900 },
+            status: { visible: true, width: 120 },
+            latency: { visible: true, width: 140 },
           },
         },
         onGridReady: (api) => {
@@ -1350,13 +1374,10 @@ describe('<TableDataGrid />', () => {
         config: {
           ...tableConfig,
           columnOrder: ['status', 'name', 'latency'],
-          columnWidths: {
-            name: 220,
-            status: 120,
-            latency: 140,
-          },
-          pinnedColumns: {
-            status: 'left',
+          columns: {
+            name: { visible: true, width: 220 },
+            status: { visible: true, width: 120, pinned: 'left' },
+            latency: { visible: true, width: 140 },
           },
         },
         onGridReady: (api) => {
@@ -1376,17 +1397,14 @@ describe('<TableDataGrid />', () => {
             ...(hostConfig.value.columnOrder ?? []),
             wideHeader.key,
           ],
-          columnVisibility: {
-            ...hostConfig.value.columnVisibility,
-            [wideHeader.key]: true,
-          },
-          columnWidths: {
-            ...hostConfig.value.columnWidths,
-            [wideHeader.key]: 900,
-          },
-          pinnedColumns: {
-            ...hostConfig.value.pinnedColumns,
-            [wideHeader.key]: false,
+          columns: {
+            ...hostConfig.value.columns,
+            [wideHeader.key]: {
+              ...(hostConfig.value.columns?.[wideHeader.key] ?? {}),
+              visible: true,
+              width: 900,
+              pinned: false,
+            },
           },
         }
       })
@@ -1427,13 +1445,16 @@ describe('<TableDataGrid />', () => {
             ...(hostConfig.value.columnOrder ?? []),
             ...addedHeaders.map(header => header.key),
           ],
-          columnVisibility: {
-            ...hostConfig.value.columnVisibility,
-            ...Object.fromEntries(addedHeaders.map(header => [header.key, true])),
-          },
-          columnWidths: {
-            ...hostConfig.value.columnWidths,
-            ...Object.fromEntries(addedHeaders.map(header => [header.key, header.width ?? 0])),
+          columns: {
+            ...hostConfig.value.columns,
+            ...Object.fromEntries(addedHeaders.map(header => [
+              header.key,
+              {
+                ...(hostConfig.value.columns?.[header.key] ?? {}),
+                visible: true,
+                width: header.width ?? 0,
+              },
+            ])),
           },
         }
       })
@@ -1468,10 +1489,10 @@ describe('<TableDataGrid />', () => {
       const { hostConfig } = mountSyncedTable({
         config: {
           ...tableConfig,
-          columnWidths: {
-            name: 220,
-            status: 120,
-            latency: 140,
+          columns: {
+            name: { visible: true, width: 220 },
+            status: { visible: true, width: 120 },
+            latency: { visible: true, width: 140 },
           },
         },
         onGridReady: (api) => {
@@ -1483,7 +1504,11 @@ describe('<TableDataGrid />', () => {
       cy.then(() => {
         hostConfig.value = {
           ...tableConfig,
-          columnWidths: {},
+          columns: {
+            name: { visible: true },
+            status: { visible: true },
+            latency: { visible: true },
+          },
         }
       })
       waitForColumnSizing()
@@ -1527,10 +1552,10 @@ describe('<TableDataGrid />', () => {
       mountTable({
         config: {
           ...tableConfig,
-          columnWidths: {
-            name: 220,
-            status: 120,
-            latency: 140,
+          columns: {
+            name: { visible: true, width: 220 },
+            status: { visible: true, width: 120 },
+            latency: { visible: true, width: 140 },
           },
         },
         onGridReady: (api) => {
@@ -1581,9 +1606,9 @@ describe('<TableDataGrid />', () => {
         config: {
           ...tableConfig,
           columnOrder: ['name', 'status', 'latency', 'actions'],
-          columnVisibility: {
-            ...tableConfig.columnVisibility,
-            actions: true,
+          columns: {
+            ...tableConfig.columns,
+            actions: { visible: true },
           },
         },
         headers: [
@@ -2306,6 +2331,23 @@ describe('<TableDataGrid />', () => {
   })
 
   describe('column visibility menu', () => {
+    it('uses header visible false as the initial visibility for hideable columns', () => {
+      mountTable({
+        headers: [
+          headers[0],
+          { ...headers[1], visible: false },
+          ...headers.slice(2),
+        ],
+        useTableConfig: false,
+      })
+
+      cy.contains('Gateway service').should('be.visible')
+      cy.getTestId('table-data-grid-header-status').should('not.exist')
+      cy.getTestId('status-cell').should('not.exist')
+      cy.getTestId('column-visibility-trigger').click()
+      cy.getTestId('column-visibility-status').find('input').should('not.be.checked')
+    })
+
     it('updates table config when a column is hidden from the menu', () => {
       const onUpdateTableConfig = cy.stub().as('updateTableConfig')
 

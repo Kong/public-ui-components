@@ -29,15 +29,10 @@ describe('column sizing utilities', () => {
 
   const resolvedConfig: TableDataGridConfig = {
     columnOrder: ['name', 'status'],
-    columnVisibility: {
-      name: true,
-      status: true,
+    columns: {
+      name: { visible: true, width: 180 },
+      status: { visible: true, width: 120 },
     },
-    columnWidths: {
-      name: 180,
-      status: 120,
-    },
-    pinnedColumns: {},
     pageSize: 25,
   }
 
@@ -110,9 +105,9 @@ describe('column sizing utilities', () => {
       headers,
       resolvedTableConfig: {
         ...resolvedConfig,
-        columnWidths: {
-          name: 500,
-          status: 500,
+        columns: {
+          name: { visible: true, width: 500 },
+          status: { visible: true, width: 500 },
         },
       },
       honorConfiguredColumnWidths: true,
@@ -122,9 +117,9 @@ describe('column sizing utilities', () => {
   it('ignores width-only layout side effects for change detection', () => {
     const gridConfig = {
       ...resolvedConfig,
-      columnWidths: {
-        name: 200,
-        status: 100,
+      columns: {
+        name: { visible: true, width: 200 },
+        status: { visible: true, width: 100 },
       },
     }
 

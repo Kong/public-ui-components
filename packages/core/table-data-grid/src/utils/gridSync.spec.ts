@@ -10,15 +10,9 @@ import {
 describe('grid sync utilities', () => {
   const baseConfig: TableDataGridConfig = {
     columnOrder: ['name', 'status'],
-    columnVisibility: {
-      name: true,
-      status: true,
-    },
-    columnWidths: {
-      name: 180,
-    },
-    pinnedColumns: {
-      name: 'left',
+    columns: {
+      name: { visible: true, width: 180, pinned: 'left' },
+      status: { visible: true },
     },
     pageSize: 25,
     sortColumnKey: 'name',
@@ -28,15 +22,9 @@ describe('grid sync utilities', () => {
   it('creates layout-only config snapshots', () => {
     expect(createLayoutSnapshot(baseConfig)).toEqual({
       columnOrder: ['name', 'status'],
-      columnVisibility: {
-        name: true,
-        status: true,
-      },
-      columnWidths: {
-        name: 180,
-      },
-      pinnedColumns: {
-        name: 'left',
+      columns: {
+        name: { visible: true, width: 180, pinned: 'left' },
+        status: { visible: true },
       },
       pageSize: undefined,
       sortColumnKey: undefined,
@@ -72,7 +60,10 @@ describe('grid sync utilities', () => {
     expect(hasColumnVisibilityChanged({
       nextConfig: {
         ...baseConfig,
-        columnVisibility: { name: true, status: false },
+        columns: {
+          ...baseConfig.columns,
+          status: { visible: false },
+        },
       },
       previousConfig: baseConfig,
     })).toBe(true)

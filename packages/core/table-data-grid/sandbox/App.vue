@@ -320,7 +320,7 @@
                 <strong>{{ column.label }}</strong>
                 <KCheckbox
                   label="Visible"
-                  :model-value="tableConfig.columnVisibility?.[column.key] ?? true"
+                  :model-value="tableConfig.columns?.[column.key]?.visible ?? true"
                   @update:model-value="setColumnVisibility(column.key, $event)"
                 />
               </div>
@@ -329,7 +329,7 @@
                 <KSelect
                   :items="pinnedColumnOptions"
                   label="Pinned"
-                  :model-value="tableConfig.pinnedColumns?.[column.key] || 'none'"
+                  :model-value="tableConfig.columns?.[column.key]?.pinned || 'none'"
                   @update:model-value="setPinnedColumn(column.key, $event)"
                 />
               </div>
@@ -350,6 +350,11 @@
                 <KCheckbox
                   v-model="column.hideable"
                   label="Hideable"
+                />
+                <KCheckbox
+                  v-model="column.visible"
+                  :disabled="column.hideable === false"
+                  label="Default visible"
                 />
                 <KCheckbox
                   v-model="column.hideLabel"
@@ -426,8 +431,9 @@
 
 <script setup lang="ts">
 import type {
-  TableDataGridConfig,
   TableDataGridCellAttrs,
+  TableDataGridColumnConfig,
+  TableDataGridConfig,
   TableDataGridFetcherParams,
   TableDataGridFetcherResult,
   TableDataGridHeader,
@@ -700,6 +706,7 @@ const createDefaultColumnSettings = (): Array<TableDataGridHeader<MockRow>> => {
     draggable: true,
     hideable: true,
     resizable: true,
+    visible: true,
     ...column,
   }))
 }
@@ -712,11 +719,12 @@ const createDefaultTableConfig = (): TableDataGridConfig => {
       headers: columns,
       pageSize: defaultPageSize,
     }),
-    pinnedColumns: columns.reduce<Record<string, TableDataGridPinnedState>>((pinnedColumns, column) => {
-      if (column.pinned) {
-        pinnedColumns[column.key] = column.pinned
+    columns: columns.reduce<Record<string, TableDataGridColumnConfig>>((columnConfig, column) => {
+      columnConfig[column.key] = {
+        visible: true,
+        ...(column.pinned ? { pinned: column.pinned } : {}),
       }
-      return pinnedColumns
+      return columnConfig
     }, {}),
   }
 }
@@ -773,17 +781,14 @@ const addWideColumn = async () => {
       ...(tableConfig.value.columnOrder ?? []),
       column.key,
     ],
-    columnVisibility: {
-      ...tableConfig.value.columnVisibility,
-      [column.key]: true,
-    },
-    columnWidths: {
-      ...tableConfig.value.columnWidths,
-      [column.key]: generatedColumnWidth,
-    },
-    pinnedColumns: {
-      ...tableConfig.value.pinnedColumns,
-      [column.key]: false,
+    columns: {
+      ...tableConfig.value.columns,
+      [column.key]: {
+        ...(tableConfig.value.columns?.[column.key] ?? {}),
+        visible: true,
+        width: generatedColumnWidth,
+        pinned: false,
+      },
     },
   }
 
@@ -1112,19 +1117,29 @@ const handleCellClick = ({ row, columnKey, value }: { row: MockRow, columnKey: s
 const setColumnVisibility = (key: string, visible: boolean) => {
   tableConfig.value = {
     ...tableConfig.value,
-    columnVisibility: {
-      ...tableConfig.value.columnVisibility,
-      [key]: visible,
+    columns: {
+      ...tableConfig.value.columns,
+      [key]: {
+        ...(tableConfig.value.columns?.[key] ?? {}),
+        visible,
+      },
     },
   }
 }
 
+const getPinnedColumnConfigValue = (value: string | null): TableDataGridPinnedState => (
+  value && isPinnedColumnValue(value) ? value : false
+)
+
 const setPinnedColumn = (key: string, value: string | null) => {
   tableConfig.value = {
     ...tableConfig.value,
-    pinnedColumns: {
-      ...tableConfig.value.pinnedColumns,
-      [key]: value && isPinnedColumnValue(value) ? value : false,
+    columns: {
+      ...tableConfig.value.columns,
+      [key]: {
+        ...(tableConfig.value.columns?.[key] ?? {}),
+        pinned: getPinnedColumnConfigValue(value),
+      },
     },
   }
 }

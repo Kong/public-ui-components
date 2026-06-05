@@ -31,11 +31,15 @@ export type TableDataGridToolbarSlotProps<Row extends Record<string, any> = Reco
   refresh: () => void
 }
 
+export type TableDataGridColumnConfig = {
+  visible?: boolean
+  width?: number
+  pinned?: TableDataGridPinnedState
+}
+
 export type TableDataGridConfig = {
   columnOrder?: string[]
-  columnVisibility?: Record<string, boolean>
-  columnWidths?: Record<string, number>
-  pinnedColumns?: Record<string, TableDataGridPinnedState>
+  columns?: Record<string, TableDataGridColumnConfig>
   sortColumnKey?: string
   sortColumnOrder?: TableDataGridSortColumnOrder
   pageSize?: number
@@ -49,6 +53,7 @@ export type TableDataGridHeader<Row extends Record<string, any> = Record<string,
   hideLabel?: boolean
   disableRowClick?: boolean
   tooltip?: string
+  visible?: boolean
   width?: number
   minWidth?: number
   maxWidth?: number
