@@ -8,14 +8,14 @@ import { computed, watch } from 'vue'
 /**
  * Owns user-visible table state derivation.
  *
- * It does not mutate fetch state. Fetch refs and external loading/error props
- * are inputs; the derived state controls empty/error/loading rendering and the
- * public `state` event payload.
+ * It does not mutate fetch state. Host-forced loading/error props control
+ * rendered chrome; shared fetch-state signals keep the public `state` event in
+ * sync with request lifecycle and fetch failures.
  */
 export const useTableDataGridState = <Row extends Record<string, any>>({
   emitState,
   error,
-  fetchError,
+  hasFetchError,
   hasFetched,
   isFetching,
   loading,
@@ -23,14 +23,15 @@ export const useTableDataGridState = <Row extends Record<string, any>>({
 }: {
   emitState: (payload: TableDataGridStatePayload) => void
   error: Readonly<Ref<boolean>>
-  fetchError: Readonly<Ref<unknown>>
+  hasFetchError: Readonly<Ref<boolean>>
   hasFetched: Readonly<Ref<boolean>>
   isFetching: Readonly<Ref<boolean>>
   loading: Readonly<Ref<boolean>>
   rowData: Readonly<ShallowRef<Row[]>>
 }) => {
   const hasRows = computed(() => rowData.value.length > 0)
-  const shouldShowErrorState = computed(() => error.value || (Boolean(fetchError.value) && !hasRows.value))
+  const shouldShowErrorState = computed(() => error.value)
+  const shouldEmitFetchErrorState = computed(() => hasFetchError.value && !hasRows.value)
   const shouldEmitLoadingState = computed(() => (
     loading.value || (!hasRows.value && (!hasFetched.value || isFetching.value))
   ))
@@ -38,14 +39,19 @@ export const useTableDataGridState = <Row extends Record<string, any>>({
     hasFetched.value
       && !isFetching.value
       && !hasRows.value
+      && !loading.value
       && !shouldShowErrorState.value
   ))
   const datatableState = computed<TableDataGridState>(() => {
+    if (shouldShowErrorState.value) {
+      return 'error'
+    }
+
     if (shouldEmitLoadingState.value) {
       return 'loading'
     }
 
-    if (shouldShowErrorState.value) {
+    if (shouldEmitFetchErrorState.value) {
       return 'error'
     }
 

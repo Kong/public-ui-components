@@ -496,6 +496,15 @@ describe('<TableDataGrid />', () => {
         .and('contain.text', 'There was an error loading table data.')
     })
 
+    it('renders loading state when the loading prop is set', () => {
+      mountTable({
+        loading: true,
+      })
+
+      cy.getTestId('table-data-grid-loading').should('be.visible')
+      cy.get('.table-data-grid-grid').should('not.exist')
+    })
+
     it('renders custom empty and error states', () => {
       mountTable({
         fetcher: cy.stub().resolves({ data: [], total: 0 }),
@@ -527,7 +536,7 @@ describe('<TableDataGrid />', () => {
       cy.getTestId('table-data-grid-empty').should('contain.text', 'No data')
     })
 
-    it('renders error state and emits state for a failed first infinite block', () => {
+    it('emits state for a failed first infinite block', () => {
       const onState = cy.stub().as('state')
 
       mountTable({
@@ -536,7 +545,7 @@ describe('<TableDataGrid />', () => {
         onState,
       })
 
-      cy.getTestId('table-data-grid-error').should('contain.text', 'Unable to load data')
+      cy.getTestId('table-data-grid-error').should('not.exist')
       cy.get('@state').should('have.been.calledWithMatch', {
         state: 'error',
         hasData: false,
@@ -575,7 +584,7 @@ describe('<TableDataGrid />', () => {
         },
       }))
 
-      cy.getTestId('table-data-grid-error').should('contain.text', 'Unable to load data')
+      cy.getTestId('table-data-grid-empty').should('contain.text', 'No data')
       cy.then(() => {
         hostRefreshKey.value += 1
       })

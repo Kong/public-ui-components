@@ -34,9 +34,11 @@ export type TableDataGridFetchParams = {
 type TableDataGridFetchState<Row extends Record<string, any>> = {
   currentPage: Ref<number>
   datasource: Ref<IDatasource | undefined>
-  fetchError: Ref<unknown>
+  // Promise rejection reasons can be any JavaScript value; consumers must not inspect shape.
+  fetchError: Ref<unknown | undefined>
   hasFetched: Ref<boolean>
   hasNextPageWhenTotalUnknown: Ref<boolean>
+  isFetching: Readonly<Ref<boolean>>
   markFetchFinished: (options?: { markFetched?: boolean }) => void
   markFetchStarted: () => void
   resetFetched: () => void

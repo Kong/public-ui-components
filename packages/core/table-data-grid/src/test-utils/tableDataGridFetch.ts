@@ -3,8 +3,8 @@ import type {
   TableDataGridFetchModeSources,
   TableDataGridFetchParams,
 } from '../types/internal'
-import type { IDatasource } from 'ag-grid-community'
-import { computed, ref, shallowRef, type Ref } from 'vue'
+import { computed, type Ref } from 'vue'
+import { useTableDataGridFetchState } from '../composables/useTableDataGridFetchState'
 
 export type TestRow = {
   id: string
@@ -54,56 +54,16 @@ export const createFetchHarness = ({
   fetcher: Ref<TableDataGridFetcher<TestRow>>
   params: TableDataGridFetchParams
 }) => {
-  const pendingFetchCount = ref(0)
-  const currentPage = ref(1)
-  const datasource = ref<IDatasource>()
-  const fetchError = ref<unknown>()
-  const hasFetched = ref(false)
-  const hasNextPageWhenTotalUnknown = ref(false)
-  const rowData = shallowRef<TestRow[]>([])
-  const totalRows = ref<number>()
-
-  const markFetchStarted = () => {
-    fetchError.value = undefined
-    pendingFetchCount.value += 1
-  }
-
-  const markFetchFinished = ({ markFetched = true }: { markFetched?: boolean } = {}) => {
-    pendingFetchCount.value = Math.max(0, pendingFetchCount.value - 1)
-    if (!markFetched) {
-      return
-    }
-
-    hasFetched.value = true
-  }
-
-  const resetFetched = () => {
-    hasFetched.value = false
-  }
-
-  const state: TableDataGridFetchModeSources<TestRow>['state'] = {
-    currentPage,
-    datasource,
-    fetchError,
-    hasFetched,
-    hasNextPageWhenTotalUnknown,
-    markFetchStarted,
-    markFetchFinished,
-    rowData,
-    totalRows,
-  }
-  const isFetching = computed(() => pendingFetchCount.value > 0)
+  const fetchState = useTableDataGridFetchState<TestRow>()
 
   const sources: TableDataGridFetchModeSources<TestRow> = {
     fetcher,
     params,
-    state,
+    state: fetchState,
   }
 
   return {
-    isFetching,
-    resetFetched,
     sources,
-    ...state,
+    ...fetchState,
   }
 }

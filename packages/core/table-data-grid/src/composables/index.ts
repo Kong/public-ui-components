@@ -7,6 +7,7 @@ import { useTableDataGridSelection } from './useTableDataGridSelection'
 import { useTableDataGridColumnLayoutSync } from './useTableDataGridColumnLayoutSync'
 import { useTableDataGridConfigSync } from './useTableDataGridConfigSync'
 import { useTableDataGridGridLifecycle } from './useTableDataGridGridLifecycle'
+import { useTableDataGridFetchState } from './useTableDataGridFetchState'
 import { useTableDataGridInfiniteFetch } from './useTableDataGridInfiniteFetch'
 import { useTableDataGridInteractions } from './useTableDataGridInteractions'
 import { useTableDataGridPaginationFetch } from './useTableDataGridPaginationFetch'
@@ -23,6 +24,7 @@ export default {
   useTableDataGridColumnLayoutSync,
   useTableDataGridConfigSync,
   useTableDataGridGridLifecycle,
+  useTableDataGridFetchState,
   useTableDataGridInfiniteFetch,
   useTableDataGridInteractions,
   useTableDataGridPaginationFetch,

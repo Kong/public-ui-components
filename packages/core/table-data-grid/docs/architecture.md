@@ -13,6 +13,7 @@ flowchart LR
   Host["Host app<br/>headers, fetcher, tableConfig,<br/>filterSelection, slots"]
   Component["TableDataGrid.vue<br/>orchestration and template"]
   Config["useTableDataGridConfig<br/>controlled config state"]
+  FetchState["useTableDataGridFetchState<br/>shared fetch refs"]
   PaginationFetch["useTableDataGridPaginationFetch<br/>pagination requests"]
   InfiniteFetch["useTableDataGridInfiniteFetch<br/>infinite datasource"]
   Columns["useTableDataGridColumnDefs<br/>headers to columnDefs"]
@@ -25,6 +26,7 @@ flowchart LR
 
   Host --> Component
   Component --> Config
+  Component --> FetchState
   Component --> PaginationFetch
   Component --> InfiniteFetch
   Component --> Columns
@@ -32,6 +34,8 @@ flowchart LR
   Component --> Selection
   Component --> Pagination
   Component --> Lifecycle
+  FetchState --> PaginationFetch
+  FetchState --> InfiniteFetch
   Config --> Grid
   Columns --> Grid
   Sizing --> Grid
@@ -53,6 +57,7 @@ flowchart LR
 | Config state | [`src/composables/useTableDataGridConfig.ts`](../src/composables/useTableDataGridConfig.ts) | Internal active config, resolved config, applying config to AG Grid, emitting config updates |
 | Config translation | [`src/utils/tableConfig.ts`](../src/utils/tableConfig.ts), [`src/utils/tablePreferencesInterop.ts`](../src/utils/tablePreferencesInterop.ts) | Defaults, normalization, semantic equality, AG Grid `ColumnState` conversion, table preference conversion |
 | Fetch request helpers | [`src/utils/fetchers.ts`](../src/utils/fetchers.ts) | Pure sort, cursor-block, next-page, and infinite-last-row decisions |
+| Fetch state | [`src/composables/useTableDataGridFetchState.ts`](../src/composables/useTableDataGridFetchState.ts) | Shared row, datasource, page, pending, fetched, and fetch-error refs used by both fetch modes and table state |
 | Pagination fetch lifecycle | [`src/composables/useTableDataGridPaginationFetch.ts`](../src/composables/useTableDataGridPaginationFetch.ts) | Pagination requests, result commits, unknown-total next-page state, stale request guards |
 | Infinite fetch lifecycle | [`src/composables/useTableDataGridInfiniteFetch.ts`](../src/composables/useTableDataGridInfiniteFetch.ts) | Infinite datasource creation, cursor tracking, sequential block gating, stale datasource guards |
 | Grid sync helpers | [`src/utils/gridSync.ts`](../src/utils/gridSync.ts) | Pure layout snapshots, config-refresh params, visibility-change checks, selection-column checks |
@@ -163,7 +168,7 @@ Stale response protection is split by mode:
 | `latestPaginationRequestId` | Pagination | Older page requests committing after a newer refresh |
 | `latestInfiniteDatasourceId` | Infinite | Older datasource block requests resolving after sort/filter/mode changes |
 
-Pure fetch decisions live in `src/utils/fetchers.ts`. The fetch composables still own reactive refs, datasource construction, async request ordering, and commits into Vue/AG Grid state.
+Pure fetch decisions live in `src/utils/fetchers.ts`. `useTableDataGridFetchState` owns the reactive refs shared across modes. The mode-specific fetch composables own datasource construction, async request ordering, and commits into Vue/AG Grid state.
 
 ## Column definition and sizing split
 
@@ -234,19 +239,20 @@ The boundary rule is: use utilities for deterministic calculations that only nee
 
 The component renders table states in this order:
 
-1. External `loading` prop shows the loading skeleton.
-2. External `error` prop or first-block fetch failure with no rows shows the error state.
-3. Completed fetch with no rows and no error shows the empty state.
-4. Otherwise, the toolbar, grid, and pagination render.
+1. Host-forced `loading` shows the loading skeleton unless host-forced `error` is also true.
+2. Host-forced `error` shows the error state.
+3. AG Grid receives internal `isFetching` and shows its loading UI while grid-owned requests are in flight.
+4. Completed fetch with no rows shows the empty state.
+5. Otherwise, the loaded grid and pagination render.
 
 `rowData` is still populated in infinite mode for the first block. That lets the wrapper decide whether to show empty/error states even though AG Grid owns infinite scrolling.
 
-The `state` event follows the same user-visible state policy. A background fetch or later infinite block failure does not emit `loading` or `error` while existing rows remain rendered; the table remains in `success` with `hasData: true`.
+Fetcher rejections are caught and tracked as internal fetch state so the `state` event can report request failures without exposing raw rejection values to rendering composables. The host app owns request error policy and should set the `error` prop when a fetch failure should render error chrome. A background fetch or later infinite block failure does not emit `loading` or `error` while existing rows remain rendered; the table remains in `success` with `hasData: true`.
 
 | State value | Meaning |
 | --- | --- |
-| `loading` | External loading, or no data has rendered yet while the first fetch is pending |
-| `error` | External error or first-block fetch failure with no rendered rows |
+| `loading` | Host-forced loading, or no data has rendered yet while the first fetch is pending |
+| `error` | Host-forced error, or fetch failure with no rendered rows |
 | `empty` | Fetch completed, no rows, no error |
 | `success` | Data is available or the table has otherwise completed a non-empty state |
 
@@ -325,4 +331,4 @@ Column sizing and controlled config behavior are AG Grid integration points, so 
 | Width reset and auto-fit | Distinguish real configured widths from wrapper-generated fitted widths |
 | Pagination and infinite mode | Keep fetch params and stale response guards correct |
 | Slot refresh and selection | Preserve renderer state when AG Grid reuses renderer instances |
-| State events | Keep emitted `state` aligned with the rendered loading, error, empty, and success chrome |
+| State events | Keep emitted `state` aligned with host-forced states, first-load fetch failures, and background-fetch success behavior |

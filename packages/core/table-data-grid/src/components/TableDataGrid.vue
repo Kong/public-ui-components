@@ -37,7 +37,7 @@
     </TableDataGridControls>
 
     <KSkeleton
-      v-if="loading"
+      v-if="loading && !error"
       data-testid="table-data-grid-loading"
       type="table"
     />
@@ -136,19 +136,15 @@ import type {
 } from '../types'
 import type {
   GridApi,
-  IDatasource,
   RowClickedEvent,
 } from 'ag-grid-community'
 import type { FilterGroupSelection } from '@kong/kongponents'
 import { useElementSize } from '@vueuse/core'
-import { computed, nextTick, ref, shallowRef, toRef } from 'vue'
+import { computed, nextTick, ref, toRef } from 'vue'
 import TableDataGridBody from './TableDataGridBody.vue'
 import TableDataGridControls from './TableDataGridControls.vue'
 import composables from '../composables'
-import type {
-  TableDataGridFetchModeSources,
-  TableDataGridFetchParams,
-} from '../types/internal'
+import type { TableDataGridFetchParams } from '../types/internal'
 import type { RefreshOptions } from '../utils/fetchers'
 
 const DEFAULT_PAGE_SIZE = 25
@@ -237,18 +233,22 @@ const datatableElement = ref<HTMLElement>()
 const { width: datatableWidth } = useElementSize(datatableElement, { width: 0, height: 0 }, { box: 'border-box' })
 const searchQuery = ref(initialFetcherParams.search ?? '')
 const gridApi = ref<GridApi<Row>>()
-const datasource = ref<IDatasource>()
-const currentPage = ref(1)
-const hasFetched = ref(false)
-const hasNextPageWhenTotalUnknown = ref(false)
-const pendingFetchCount = ref(0)
-const fetchError = ref<unknown>()
-const rowData = shallowRef<Row[]>([])
-const totalRows = ref<number>()
 const isApplyingInitialColumnState = ref(false)
 const isApplyingTableConfig = ref(false)
-const isFetching = computed(() => pendingFetchCount.value > 0)
 const resolvedRowKey = computed<TableDataGridRowKey<Row>>(() => rowKey ?? DEFAULT_ROW_KEY as TableDataGridRowKey<Row>)
+
+const fetchState = composables.useTableDataGridFetchState<Row>()
+
+const {
+  currentPage,
+  datasource,
+  fetchError,
+  hasFetched,
+  hasNextPageWhenTotalUnknown,
+  isFetching,
+  rowData,
+  totalRows,
+} = fetchState
 
 const {
   activePageSize,
@@ -267,29 +267,7 @@ const {
   tableConfig: toRef(() => tableConfig),
 })
 
-const fetchState: TableDataGridFetchModeSources<Row>['state'] = {
-  datasource,
-  currentPage,
-  fetchError,
-  hasFetched,
-  hasNextPageWhenTotalUnknown,
-  markFetchStarted: () => {
-    fetchError.value = undefined
-    pendingFetchCount.value += 1
-  },
-  markFetchFinished: ({ markFetched = true }: { markFetched?: boolean } = {}) => {
-    // Guards against an extra finish call after an interrupted or rejected request path.
-    pendingFetchCount.value = Math.max(0, pendingFetchCount.value - 1)
-    if (markFetched) {
-      hasFetched.value = true
-    }
-  },
-  resetFetched: () => {
-    hasFetched.value = false
-  },
-  rowData,
-  totalRows,
-}
+const hasFetchError = computed(() => Boolean(fetchError.value))
 
 const fetchParams: TableDataGridFetchParams = {
   mode: toRef(() => mode),
@@ -411,11 +389,20 @@ const {
 } = composables.useTableDataGridState<Row>({
   emitState: payload => emit('state', payload),
   error: toRef(() => error),
-  fetchError,
+  hasFetchError,
   hasFetched,
   isFetching,
   loading: toRef(() => loading),
   rowData,
+})
+
+composables.useTableDataGridRefreshTriggers({
+  datatableWidth,
+  enableSearch: toRef(() => enableSearch),
+  handleDatatableWidthChange: sizing.handleDatatableWidthChange,
+  refresh,
+  refreshKey: toRef(() => refreshKey),
+  searchQuery,
 })
 
 const onFilterApply = (filterKey: string, selectionValue: FilterGroupSelection) => {
@@ -435,15 +422,6 @@ const onFilterOpen = (filterKey: string) => {
 const onFilterClose = (filterKey: string) => {
   emit('filter:close', filterKey)
 }
-
-composables.useTableDataGridRefreshTriggers({
-  datatableWidth,
-  enableSearch: toRef(() => enableSearch),
-  handleDatatableWidthChange: sizing.handleDatatableWidthChange,
-  refresh,
-  refreshKey: toRef(() => refreshKey),
-  searchQuery,
-})
 
 defineExpose<{
   refresh: () => void

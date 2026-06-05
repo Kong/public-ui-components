@@ -11,7 +11,7 @@ describe('useTableDataGridState', () => {
   const mountState = () => {
     const emitState = vi.fn()
     const error = ref(false)
-    const fetchError = ref<unknown>()
+    const hasFetchError = ref(false)
     const hasFetched = ref(false)
     const isFetching = ref(false)
     const loading = ref(false)
@@ -23,7 +23,7 @@ describe('useTableDataGridState', () => {
         state = useTableDataGridState<TestRow>({
           emitState,
           error,
-          fetchError,
+          hasFetchError,
           hasFetched,
           isFetching,
           loading,
@@ -37,7 +37,7 @@ describe('useTableDataGridState', () => {
     return {
       emitState,
       error,
-      fetchError,
+      hasFetchError,
       hasFetched,
       isFetching,
       loading,
@@ -51,7 +51,7 @@ describe('useTableDataGridState', () => {
     const {
       emitState,
       error,
-      fetchError,
+      hasFetchError,
       hasFetched,
       isFetching,
       loading,
@@ -103,17 +103,18 @@ describe('useTableDataGridState', () => {
 
     isFetching.value = false
     rowData.value = []
-    fetchError.value = new Error('failed')
+    hasFetchError.value = true
     await nextTick()
-    expect(state.shouldShowErrorState.value).toBe(true)
+    expect(state.shouldShowErrorState.value).toBe(false)
     expect(emitState).toHaveBeenLastCalledWith({
       state: 'error',
       hasData: false,
     })
 
-    fetchError.value = undefined
+    hasFetchError.value = false
     error.value = true
     await nextTick()
+    expect(state.shouldShowErrorState.value).toBe(true)
     expect(emitState).toHaveBeenLastCalledWith({
       state: 'error',
       hasData: false,

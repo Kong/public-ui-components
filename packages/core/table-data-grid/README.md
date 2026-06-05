@@ -373,6 +373,7 @@ Use `headers[].agGridColumnOptions.cellClass` or `headers[].agGridColumnOptions.
   :error="hasError"
   :fetcher="fetchRows"
   :headers="headers"
+  :loading="isLoading"
 >
   <template #empty-state>
     <KEmptyState title="No requests found" />
@@ -386,6 +387,8 @@ Use `headers[].agGridColumnOptions.cellClass` or `headers[].agGridColumnOptions.
   </template>
 </TableDataGrid>
 ```
+
+Use `loading` and `error` when the host app needs to force visible table state. Fetcher rejections are caught by the grid and emitted through the `state` event, but the host app owns request error policy and should set `error` when it wants to render error chrome.
 
 ### Toolbar Composition
 
@@ -451,8 +454,8 @@ Use `outside-search` and `outside-filters` to move built-in controls to Teleport
 | `rowKey` | `Extract<keyof Row, string>` | No | `'id'` | Row field used for AG Grid row identity and exposed selection methods. Pick a unique, stable field so row selection and row updates stay attached to the same logical row. Missing values are treated as an empty string, so duplicate or missing keys can collide and break identity-sensitive behavior. |
 | `pageSize` | `number` | No | `25` | Default page or block size when `tableConfig.pageSize` is not set. |
 | `initialFetcherParams` | `{ search?: string }` | No | `{}` | Initial fetcher params currently limited to `search`. |
-| `loading` | `boolean` | No | `false` | Shows the table skeleton before rendering the grid. |
-| `error` | `boolean` | No | `false` | Shows the error state instead of the grid. |
+| `loading` | `boolean` | No | `false` | Shows the table loading skeleton and hides the grid while host-owned loading work is in progress. |
+| `error` | `boolean` | No | `false` | Shows the error state instead of the grid. Host apps should set this when they want fetch or request failures to render error chrome. |
 | `enableSearch` | `boolean` | No | `false` | Renders the built-in search input and passes debounced search changes to the fetcher. |
 | `outsideSearch` | `string \| HTMLElement` | No | - | Vue Teleport target for the built-in search input. |
 | `outsideFilters` | `string \| HTMLElement` | No | - | Vue Teleport target for the built-in filters. |
@@ -502,7 +505,7 @@ Use `outside-search` and `outside-filters` to move built-in controls to Teleport
 | `row:select` | `Row[]` | The selected row set changes. |
 | `update:tableConfig` | `TableDataGridConfig` | User interaction or wrapper-managed refitting changes table config state. |
 | `sort` | `{ sortColumnKey?: string, sortColumnOrder?: 'asc' \| 'desc' }` | Sort state changes before the updated table config is emitted. |
-| `state` | `{ state: 'loading' \| 'error' \| 'success' \| 'empty', hasData: boolean }` | The rendered table state changes. Background refetches and later infinite-block failures keep emitting `success` while existing rows remain visible. |
+| `state` | `{ state: 'loading' \| 'error' \| 'success' \| 'empty', hasData: boolean }` | The table state changes. Host-forced loading/error props and first-load fetch failures can emit loading/error; background refetches and later infinite-block failures keep emitting `success` while existing rows remain visible. |
 | `grid:ready` | `GridApi<Row>` | AG Grid is ready and the wrapper has applied initial column state. |
 | `filter:apply` | `(filterKey: string, selection: FilterGroupSelection)` | KFilterGroup emits apply. Default filters update `v-model:filter-selection`; custom filter slots must write their selected value to the model in the host. |
 | `filter:clear` | `(filterKey: string, selection: FilterGroupSelection)` | KFilterGroup emits clear. Default filters update `v-model:filter-selection`; custom filter slots must clear their value from the model in the host. |
