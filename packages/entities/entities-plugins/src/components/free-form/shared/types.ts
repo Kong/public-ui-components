@@ -1,6 +1,5 @@
 import type { FormSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
-import type { PluginValidityChangeEvent } from '../../../types'
 import type { Component, ComponentPublicInstance, Ref, Slot } from 'vue'
 import { type LabelAttributes } from '@kong/kongponents'
 
@@ -220,7 +219,7 @@ export type PluginConfigurationBaseProps<T extends Record<string, any> = Record<
 }
 
 export type PluginFormLayoutProps<T extends FreeFormPluginData = FreeFormPluginData> = PluginConfigurationBaseProps<T> & {
-  onValidityChange?: (event: PluginValidityChangeEvent) => void
+  onValidityChange?: (event: { model: string, valid: boolean, error?: Error | string }) => void
   isEditing: boolean
   /**
    * Hide the built-in form/code switcher. Plugins that own a custom switcher
