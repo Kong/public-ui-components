@@ -1063,7 +1063,7 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectVaultFormConfig | KongManagerVaultFormConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config?.app === 'konnect' && !config?.controlPlaneId) return false
+      if (config?.app === 'konnect' && config?.apiType !== 'aiGateway' && !config?.controlPlaneId) return false
       if (config?.app === 'kongManager' && typeof config?.workspace !== 'string') return false
       if (config?.apiType === 'aiGateway' && !config?.aiGatewayId) return false
       if (!config?.cancelRoute) return false
