@@ -50,6 +50,7 @@
             </span>
             <div
               v-if="showFavoriteButton"
+              :key="favoriteButtonKey"
               class="favorite-button-container"
             >
               <KTooltip
@@ -143,7 +144,20 @@ const isBackToString = computed((): boolean => typeof backTo === 'string')
 
 const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.label)
 const showFavoriteButton = computed((): boolean => isEntityPage.value && !!pageShortcutsContext && 'onFavoriteToggle' in pageShortcutsContext && typeof pageShortcutsContext.onFavoriteToggle === 'function')
-const isFavorite = computed((): boolean => !!pageShortcutsContext && 'isFavorite' in pageShortcutsContext && pageShortcutsContext.isFavorite === true)
+const favoriteButtonKey = ref<number>(0)
+/**
+ * pageShortcutsContext has both isFavorite and isPageFavorite properties.
+ * isFavorite is a boolean that indicates if the page is favorited.
+ * isPageFavorite is a function that returns a boolean that indicates if the page is favorited.
+ * We need to check both properties.
+ */
+const isFavorite = computed((): boolean =>
+  !!pageShortcutsContext &&
+  (('isFavorite' in pageShortcutsContext &&
+  pageShortcutsContext.isFavorite === true) ||
+  ('isPageFavorite' in pageShortcutsContext &&
+  typeof pageShortcutsContext.isPageFavorite === 'function' &&
+  pageShortcutsContext.isPageFavorite())))
 
 /** Handle navigation back via the backTo prop */
 const navigateBack = async () => {
@@ -220,6 +234,7 @@ const debouncedEntityPageVisit = useDebounceFn(() => {
  */
 watch([() => pageShortcutData, () => route?.fullPath], () => {
   debouncedEntityPageVisit()
+  favoriteButtonKey.value++
 }, { immediate: true, deep: true })
 </script>
 
