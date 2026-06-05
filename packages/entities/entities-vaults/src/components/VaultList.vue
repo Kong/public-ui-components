@@ -304,11 +304,15 @@ const fields: BaseTableHeaders = {
   tags: { label: t('vaults.list.table_headers.tags'), sortable: false },
 }
 // AI Gateway uses labels (not exposed this version) instead of tags, so hide the column.
+// AI Gateway also uses field-name-accurate labels: prefix→Name, name→Type.
 const tableHeaders = computed<BaseTableHeaders>(() => {
   if (isAiGateway.value) {
-    const rest = { ...fields }
-    delete rest.tags
-    return rest
+    const { description, name, prefix } = fields
+    return {
+      prefix: { ...prefix, label: t('vaults.list.table_headers.prefix_ai_gateway') },
+      name,
+      description,
+    }
   }
   return fields
 })

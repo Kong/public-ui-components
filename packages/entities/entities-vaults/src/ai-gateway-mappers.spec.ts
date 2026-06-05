@@ -162,7 +162,7 @@ describe('fromAiGatewayVault', () => {
     expect(r).toEqual({
       id: 'v1', created_at: 1, updated_at: 2,
       name: VaultProviders.ENV, prefix: 'env-vault', description: 'd',
-      config: { prefix: 'MY_' }, tags: [],
+      config: { prefix: 'MY_' },
     })
   })
 

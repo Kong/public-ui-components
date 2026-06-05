@@ -957,13 +957,13 @@
           v-model.trim="form.fields.prefix"
           autocomplete="off"
           data-testid="vault-form-prefix"
-          :help="t('form.fields.prefix.help')"
-          :label="t('form.fields.prefix.label')"
+          :help="t(isAiGateway ? 'form.fields.prefix_ai_gateway.help' : 'form.fields.prefix.help')"
+          :label="t(isAiGateway ? 'form.fields.prefix_ai_gateway.label' : 'form.fields.prefix.label')"
           :label-attributes="{
-            info: t('form.fields.prefix.tooltip'),
+            info: t(isAiGateway ? 'form.fields.prefix_ai_gateway.tooltip' : 'form.fields.prefix.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
-          :placeholder="t('form.fields.prefix.placeholder')"
+          :placeholder="t(isAiGateway ? 'form.fields.prefix_ai_gateway.placeholder' : 'form.fields.prefix.placeholder')"
           :readonly="form.isReadonly"
           required
           type="text"

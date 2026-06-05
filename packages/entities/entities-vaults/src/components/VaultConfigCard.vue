@@ -107,13 +107,14 @@ const { getPropValue } = useHelpers()
 const configSchema = computed<Partial<VaultConfigurationSchema>>(() => ({
   id: {},
   name: {
-    label: t('labels.vault_type'),
+    label: t(isAiGateway.value ? 'labels.vault_type_ai_gateway' : 'labels.vault_type'),
   },
   updated_at: {},
   created_at: {},
   prefix: {
     order: 5,
     section: ConfigurationSchemaSection.Basic,
+    label: isAiGateway.value ? t('labels.vault_name_ai_gateway') : undefined,
   },
   description: {
     order: 6,
@@ -138,10 +139,14 @@ const codeBlockRecordFormatter = (record: Record<string, any>) => {
       maskedConfig[key] = SENSITIVE_MASK
     }
   })
-  return {
-    ...record,
-    config: maskedConfig,
+  const masked: Record<string, any> = { ...record, config: maskedConfig }
+  if (isAiGateway.value) {
+    // Restore AI Gateway field names so the code view matches the actual API response.
+    const result: Record<string, any> = { ...masked, type: masked.name, name: masked.prefix }
+    delete result.prefix
+    return result
   }
+  return masked
 }
 
 const getMetadataLabel = (propKey: string) => {

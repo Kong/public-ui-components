@@ -171,6 +171,5 @@ export const fromAiGatewayVault = (apiVault: Record<string, any>): Record<string
     prefix: apiVault?.name,
     description: apiVault?.description ?? '',
     config,
-    tags: [],
   }
 }
