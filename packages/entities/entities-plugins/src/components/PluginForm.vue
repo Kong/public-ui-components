@@ -1113,12 +1113,13 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 }
 
 const initScopeFields = (): void => {
-  const supportServiceScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
-  const supportRouteScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
-  const supportConsumerScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
+  const pluginType = isClonedPlugin.value && clonedSourcePlugin.value ? clonedSourcePlugin.value : props.pluginType
+  const supportServiceScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
+  const supportRouteScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
+  const supportConsumerScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
   const supportConsumerGroupScope = props.config.disableConsumerGroupScope
     ? false
-    : (PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
+    : (PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
   // check whether the plugin is scoped
   const consumerScoped = (props.config.entityType === 'consumers' && !!props.config.entityId) || !!record.value?.consumer?.id
   const consumerGroupScoped = (props.config.entityType === 'consumer_groups' && !!props.config.entityId) || !!record.value?.consumer_group?.id
