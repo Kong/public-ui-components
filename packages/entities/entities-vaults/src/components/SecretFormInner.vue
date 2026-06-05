@@ -86,7 +86,8 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectSecretFormConfig): boolean => {
       if (!config || config.app !== 'konnect') return false
-      if (!config.controlPlaneId || !config.cancelRoute) return false
+      if (config.apiType !== 'aiGateway' && !config.controlPlaneId) return false
+      if (!config.cancelRoute) return false
       if (config.apiType === 'aiGateway' && !config.aiGatewayId) return false
       return true
     },
