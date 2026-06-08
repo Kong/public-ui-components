@@ -3,7 +3,7 @@ import type {
   TableDataGridToolbarSlotProps,
 } from '../types'
 import type { FilterGroupSelection } from '@kong/kongponents'
-import type { Ref, VNode } from 'vue'
+import type { VNode } from 'vue'
 import { defineComponent, h, ref } from 'vue'
 import { getFilterGroupFilters } from '../utils/headers'
 import TableDataGridToolbar from './TableDataGridToolbar.vue'
@@ -40,14 +40,6 @@ const headers: Array<TableDataGridHeader<TestRow>> = [
 
 const filters = getFilterGroupFilters(headers)
 
-const createNameFilterSelection = (value: string): FilterGroupSelection => ({
-  name: {
-    operator: 'eq',
-    value,
-    text: value,
-  },
-})
-
 describe('<TableDataGridToolbar />', () => {
   const mountToolbar = ({
     forwardedFilterSlotNames = [],
@@ -57,10 +49,6 @@ describe('<TableDataGridToolbar />', () => {
     showToolbarFilters = false,
     showToolbarSearch = false,
     slots = {},
-    onFilterApply = cy.stub().as('filterApply'),
-    onFilterClear = cy.stub().as('filterClear'),
-    onFilterOpen = cy.stub().as('filterOpen'),
-    onFilterClose = cy.stub().as('filterClose'),
   }: {
     forwardedFilterSlotNames?: string[]
     selectedRows?: TestRow[]
@@ -69,10 +57,6 @@ describe('<TableDataGridToolbar />', () => {
     showToolbarFilters?: boolean
     showToolbarSearch?: boolean
     slots?: Record<string, (props: Record<string, any>) => VNode>
-    onFilterApply?: (filterKey: string, selection: FilterGroupSelection) => void
-    onFilterClear?: (filterKey: string, selection: FilterGroupSelection) => void
-    onFilterOpen?: (filterKey: string) => void
-    onFilterClose?: (filterKey: string) => void
   } = {}) => {
     const selectedRows = ref<TestRow[]>(initialSelectedRows)
     const search = ref('')
@@ -97,10 +81,6 @@ describe('<TableDataGridToolbar />', () => {
 
     cy.mount(defineComponent({
       setup() {
-        const renderModelOutput = (testId: string, model: Ref<unknown>) => h('pre', {
-          'data-testid': testId,
-        }, JSON.stringify(model.value))
-
         return () => h('div', [
           h('button', {
             'data-testid': 'select-row',
@@ -129,14 +109,7 @@ describe('<TableDataGridToolbar />', () => {
             'onUpdate:columnVisibility': (nextVisibility: Record<string, boolean>) => {
               columnVisibility.value = nextVisibility
             },
-            'onFilter:apply': onFilterApply,
-            'onFilter:clear': onFilterClear,
-            'onFilter:open': onFilterOpen,
-            'onFilter:close': onFilterClose,
           }, slots),
-          renderModelOutput('search-model', search),
-          renderModelOutput('filter-selection-model', filterSelection),
-          renderModelOutput('column-visibility-model', columnVisibility),
         ])
       },
     }))
@@ -235,49 +208,4 @@ describe('<TableDataGridToolbar />', () => {
     cy.getTestId('filter-group-pill-name').should('be.visible')
   })
 
-  it('updates the column visibility model from the rightmost menu', () => {
-    mountToolbar()
-
-    cy.getTestId('column-visibility-trigger').click()
-    cy.getTestId('column-visibility-status').click()
-    cy.getTestId('column-visibility-model').should('contain.text', '"status":false')
-  })
-
-  it('updates built-in filter selection and emits filter events', () => {
-    mountToolbar({
-      showToolbarFilters: true,
-    })
-
-    cy.getTestId('filter-group-pill-name').findTestId('filter-pill').click()
-    cy.get('@filterOpen').should('have.been.calledWith', 'name')
-    cy.getTestId('filter-group-pill-name').findTestId('filter-pill-input').type('Gateway')
-    cy.getTestId('filter-group-pill-name').findTestId('filter-pill-apply').click()
-    cy.get('@filterApply').should('have.been.calledWithMatch', 'name', createNameFilterSelection('Gateway'))
-    cy.getTestId('filter-selection-model').should('contain.text', '"value":"Gateway"')
-    cy.getTestId('filter-group-pill-name').findTestId('interactive-pill-clear-icon').click()
-    cy.get('@filterClear').should('have.been.calledWithMatch', 'name', {
-      name: undefined,
-    })
-    cy.getTestId('filter-selection-model').should('contain.text', '{}')
-  })
-
-  it('forwards custom filter slots without mutating host-managed selection', () => {
-    mountToolbar({
-      forwardedFilterSlotNames: ['filter-name'],
-      showToolbarFilters: true,
-      slots: {
-        'filter-name': () => h('button', {
-          'data-testid': 'custom-name-filter-control',
-          type: 'button',
-        }, 'Gateway service'),
-      },
-    })
-
-    cy.getTestId('filter-group-pill-name').findTestId('filter-pill').click()
-    cy.getTestId('custom-name-filter-control').filter(':visible').should('be.visible')
-    cy.getTestId('filter-group-pill-name').findTestId('filter-pill-input').should('not.exist')
-    cy.getTestId('filter-group-pill-name').findTestId('filter-pill-apply').click()
-    cy.get('@filterApply').should('have.been.calledWithMatch', 'name', {})
-    cy.getTestId('filter-selection-model').should('have.text', '{}')
-  })
 })

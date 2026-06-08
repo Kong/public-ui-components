@@ -29,6 +29,10 @@ const createNameFilterSelection = (value: string): FilterGroupSelection => ({
   },
 })
 
+const closeFilterPopover = () => {
+  cy.get('body').click(0, 0)
+}
+
 describe('<TableDataGridFilters />', () => {
   const mountFilters = ({
     forwardedFilterSlotNames = [],
@@ -92,7 +96,7 @@ describe('<TableDataGridFilters />', () => {
     })
 
     cy.getTestId('filter-group-pill-name').findTestId('filter-pill').click()
-    cy.get('body').click(0, 0)
+    closeFilterPopover()
     cy.get('@filterClose').should('have.been.calledWith', 'name')
     cy.getTestId('filter-group-pill-name').findTestId('interactive-pill-clear-icon').click()
     cy.get('@filterClear').should('have.been.calledWithMatch', 'name', {

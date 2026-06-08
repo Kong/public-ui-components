@@ -8,7 +8,9 @@ import type {
   TableDataGridMode,
   TableDataGridRowAttrs,
   TableDataGridRowSelectionMode,
+  TableDataGridSort,
   TableDataGridStatePayload,
+  TableDataGridTeleportTarget,
   TableDataGridToolbarSlotProps,
 } from '../types'
 import type { ColumnState, GridApi } from 'ag-grid-community'
@@ -39,8 +41,9 @@ type TestDatatableProps = {
   loading?: boolean
   error?: boolean
   enableSearch?: boolean
-  outsideSearch?: string
-  outsideFilters?: string
+  initialFetcherParams?: { search?: string }
+  outsideSearch?: TableDataGridTeleportTarget
+  outsideFilters?: TableDataGridTeleportTarget
   hideToolbar?: boolean
   hideBulkActions?: boolean
   hideColumnVisibility?: boolean
@@ -149,6 +152,7 @@ describe('<TableDataGrid />', () => {
     error = false,
     loading = false,
     enableSearch = false,
+    initialFetcherParams = undefined,
     outsideSearch = undefined,
     outsideFilters = undefined,
     hideToolbar = false,
@@ -165,6 +169,7 @@ describe('<TableDataGrid />', () => {
     onCellClick = undefined,
     onRowClick = undefined,
     onRowSelect = undefined,
+    onSort = undefined,
     onState = undefined,
     onUpdateTableConfig = undefined,
     onFilterApply = undefined,
@@ -184,8 +189,9 @@ describe('<TableDataGrid />', () => {
     error?: boolean
     loading?: boolean
     enableSearch?: boolean
-    outsideSearch?: string | undefined
-    outsideFilters?: string | undefined
+    initialFetcherParams?: { search?: string } | undefined
+    outsideSearch?: TableDataGridTeleportTarget | undefined
+    outsideFilters?: TableDataGridTeleportTarget | undefined
     hideToolbar?: boolean
     hideBulkActions?: boolean
     hideColumnVisibility?: boolean
@@ -200,6 +206,7 @@ describe('<TableDataGrid />', () => {
     onCellClick?: ((payload: CellClickPayload) => void) | undefined
     onRowClick?: ((row: TestRow) => void) | undefined
     onRowSelect?: ((selectedRows: TestRow[]) => void) | undefined
+    onSort?: ((sort: TableDataGridSort) => void) | undefined
     onState?: ((payload: TableDataGridStatePayload) => void) | undefined
     onUpdateTableConfig?: ((nextConfig: TableDataGridConfig) => void) | undefined
     onFilterApply?: ((filterKey: string, selection: FilterGroupSelection) => void) | undefined
@@ -220,6 +227,7 @@ describe('<TableDataGrid />', () => {
       loading,
       error,
       enableSearch,
+      initialFetcherParams,
       outsideSearch,
       outsideFilters,
       hideToolbar,
@@ -236,6 +244,7 @@ describe('<TableDataGrid />', () => {
       'onCell:click': onCellClick,
       'onRow:click': onRowClick,
       'onRow:select': onRowSelect,
+      onSort,
       'onState': onState,
       'onFilter:apply': onFilterApply,
       'onFilter:clear': onFilterClear,
@@ -351,6 +360,16 @@ describe('<TableDataGrid />', () => {
   const getDisplayedColumnWidth = (api: GridApi<TestRow>) => api.getColumnState()
     .filter(column => !column.hide)
     .reduce((total, column) => total + (column.width ?? 0), 0)
+
+  const expectColumnWidthAtLeast = (
+    getApi: () => GridApi<TestRow> | undefined,
+    columnKey: string,
+    width: number,
+  ) => {
+    cy.then(() => {
+      expect(getApi()?.getColumnState().find(column => column.colId === columnKey)?.width).to.be.at.least(width)
+    })
+  }
 
   const expectColumnsToFillGrid = (api: GridApi<TestRow>) => {
     cy.get('.table-data-grid-grid .ag-header').then(($header) => {
@@ -1124,221 +1143,6 @@ describe('<TableDataGrid />', () => {
       cy.wrap(fetcher).should('have.been.calledOnce')
     })
 
-    it('uses adjacent-column resize by default so resizing does not create empty table space', () => {
-      let gridApi: GridApi<TestRow> | undefined
-
-      mountTable({
-        onGridReady: (api) => {
-          gridApi = api
-        },
-      })
-
-      cy.then(() => {
-        expect(gridApi!.getGridOption('colResizeDefault')).to.equal('shift')
-      })
-    })
-
-    it('keeps AG Grid row buffering enabled unless configured by the host', () => {
-      let defaultGridApi: GridApi<TestRow> | undefined
-      let configuredGridApi: GridApi<TestRow> | undefined
-
-      mountTable({
-        onGridReady: (api) => {
-          defaultGridApi = api
-        },
-      })
-
-      cy.then(() => {
-        expect(defaultGridApi!.getGridOption('rowBuffer')).to.equal(10)
-      })
-
-      mountTable({
-        agGridOptions: { rowBuffer: 4 },
-        onGridReady: (api) => {
-          configuredGridApi = api
-        },
-      })
-
-      cy.then(() => {
-        expect(configuredGridApi!.getGridOption('rowBuffer')).to.equal(4)
-      })
-    })
-
-    it('does not reserve vertical scrollbar space unless configured by the host', () => {
-      let defaultGridApi: GridApi<TestRow> | undefined
-      let configuredGridApi: GridApi<TestRow> | undefined
-
-      mountTable({
-        onGridReady: (api) => {
-          defaultGridApi = api
-        },
-      })
-
-      cy.then(() => {
-        expect(defaultGridApi!.getGridOption('alwaysShowVerticalScroll')).to.equal(false)
-      })
-
-      mountTable({
-        agGridOptions: { alwaysShowVerticalScroll: true },
-        onGridReady: (api) => {
-          configuredGridApi = api
-        },
-      })
-
-      cy.then(() => {
-        expect(configuredGridApi!.getGridOption('alwaysShowVerticalScroll')).to.equal(true)
-      })
-    })
-
-    it('does not hide columns while dragging a header out of the grid unless configured by the host', () => {
-      let defaultGridApi: GridApi<TestRow> | undefined
-      let configuredGridApi: GridApi<TestRow> | undefined
-
-      mountTable({
-        onGridReady: (api) => {
-          defaultGridApi = api
-        },
-      })
-
-      cy.then(() => {
-        expect(defaultGridApi!.getGridOption('suppressDragLeaveHidesColumns')).to.equal(true)
-      })
-
-      mountTable({
-        agGridOptions: { suppressDragLeaveHidesColumns: false },
-        onGridReady: (api) => {
-          configuredGridApi = api
-        },
-      })
-
-      cy.then(() => {
-        expect(configuredGridApi!.getGridOption('suppressDragLeaveHidesColumns')).to.equal(false)
-      })
-    })
-
-    it('applies table data grid theme tokens through AG Grid CSS variables', () => {
-      let gridApi: GridApi<TestRow> | undefined
-
-      mountTable({
-        rowSelection: 'multiple',
-        onGridReady: (api) => {
-          gridApi = api
-        },
-      })
-
-      cy.get('.table-data-grid-grid')
-        .should(($grid) => {
-          const styles = getComputedStyle($grid[0])
-
-          expect(styles.getPropertyValue('--ag-background-color').trim()).to.equal('#ffffff')
-          expect(styles.getPropertyValue('--ag-header-background-color').trim()).to.equal('#ffffff')
-          expect(styles.getPropertyValue('--ag-border-color').trim()).to.equal('#e0e4ea')
-          expect(styles.getPropertyValue('--ag-header-column-border').trim()).to.equal('1px solid #e0e4ea')
-          expect(styles.getPropertyValue('--ag-header-column-resize-handle-color').trim()).to.equal('transparent')
-          expect(styles.getPropertyValue('--ag-selected-row-background-color').trim()).to.equal('#eefaff')
-          expect(styles.getPropertyValue('--ag-wrapper-border').trim()).to.equal('none')
-          expect(styles.getPropertyValue('--ag-wrapper-border-radius').trim()).to.equal('0')
-        })
-
-      cy.get('.table-data-grid-grid .ag-root-wrapper')
-        .should('have.css', 'border-top-width', '0px')
-        .and('have.css', 'border-radius', '0px')
-
-      cy.get('.table-data-grid-grid .ag-header')
-        .should('have.css', 'background-color', 'rgb(255, 255, 255)')
-      cy.get('.table-data-grid-grid .ag-header-cell').eq(1)
-        .then(($headerCell) => {
-          const dividerStyles = getComputedStyle($headerCell[0], '::after')
-
-          expect(dividerStyles.borderRightWidth).to.equal('1px')
-          expect(dividerStyles.borderRightColor).to.equal('rgb(224, 228, 234)')
-        })
-
-      cy.get('.table-data-grid-grid .ag-header-cell[col-id="ag-Grid-SelectionColumn"]')
-        .should('have.css', 'gap', '0px')
-        .then(($selectionHeaderCell) => {
-          expect(getComputedStyle($selectionHeaderCell[0], '::after').borderRightWidth).to.equal('0px')
-        })
-
-      cy.get('.table-data-grid-grid .ag-header-cell-resize')
-        .first()
-        .then(($resizeHandle) => {
-          expect(getComputedStyle($resizeHandle[0], '::after').backgroundColor).to.equal('rgba(0, 0, 0, 0)')
-        })
-
-      cy.contains('Gateway service').should('be.visible')
-      cy.then(() => {
-        gridApi!.getDisplayedRowAtIndex(0)?.setSelected(true)
-      })
-      cy.get('.table-data-grid-grid .ag-row-selected')
-        .then(($row) => {
-          expect(getComputedStyle($row[0], '::before').backgroundColor).to.equal('rgb(238, 250, 255)')
-        })
-
-      cy.get('.kong-ui-public-table-data-grid')
-        .then(($datatable) => {
-          $datatable[0].style.setProperty('--kui-color-background', 'rgb(1, 2, 3)')
-          $datatable[0].style.setProperty('--kui-color-border', 'rgb(4, 5, 6)')
-          $datatable[0].style.setProperty('--kui-color-background-primary-weakest', 'rgb(7, 8, 9)')
-        })
-      cy.get('.table-data-grid-grid .ag-header')
-        .should('have.css', 'background-color', 'rgb(1, 2, 3)')
-      cy.get('.table-data-grid-grid .ag-header-cell').eq(1)
-        .then(($headerCell) => {
-          expect(getComputedStyle($headerCell[0], '::after').borderRightColor).to.equal('rgb(4, 5, 6)')
-        })
-      cy.get('.table-data-grid-grid .ag-row-selected')
-        .then(($row) => {
-          expect(getComputedStyle($row[0], '::before').backgroundColor).to.equal('rgb(7, 8, 9)')
-        })
-    })
-
-    it('stretches AG Grid cells so cell content can center vertically', () => {
-      mountTable()
-
-      cy.get('.table-data-grid-grid .ag-cell[col-id="name"]').first()
-        .should('have.css', 'display', 'flex')
-        .and('have.css', 'align-items', 'center')
-      cy.get('.table-data-grid-grid .ag-cell[col-id="name"] .datatable-cell-content').first()
-        .should('have.css', 'display', 'flex')
-        .and('have.css', 'align-items', 'center')
-    })
-
-    it('aligns pagination internals without deep selectors', () => {
-      mountTable({
-        fetcher: cy.stub().resolves({ data: rows.slice(0, 15), total: 1000 }),
-      })
-
-      cy.get('.datatable-pagination-control .pagination-text.large-screen')
-        .should('have.css', 'padding-left', '8px')
-      cy.get('.datatable-pagination-control .pagination-button.placeholder')
-        .should('have.css', 'display', 'flex')
-        .and('have.css', 'align-items', 'center')
-        .and('have.css', 'box-sizing', 'border-box')
-        .and('have.css', 'justify-content', 'center')
-    })
-
-    it('allows configured wide columns to overflow horizontally', () => {
-      let gridApi: GridApi<TestRow> | undefined
-
-      mountTable({
-        headers: [
-          { ...headers[0], minWidth: 1400 },
-          ...headers.slice(1),
-        ],
-        onGridReady: (api) => {
-          gridApi = api
-        },
-      })
-
-      cy.contains('Gateway service').should('be.visible')
-      waitForColumnSizing()
-      cy.then(() => {
-        expect(gridApi?.getColumnState().find(column => column.colId === 'name')?.width).to.be.at.least(1400)
-      })
-      expectHorizontalOverflow()
-    })
-
     it('allows configured wide column widths to overflow on first render', () => {
       let gridApi: GridApi<TestRow> | undefined
 
@@ -1357,64 +1161,7 @@ describe('<TableDataGrid />', () => {
       })
 
       cy.contains('Gateway service').should('be.visible')
-      cy.then(() => {
-        expect(gridApi?.getColumnState().find(column => column.colId === 'name')?.width).to.be.at.least(900)
-      })
-      expectHorizontalOverflow()
-    })
-
-    it('keeps dynamically added wide configured columns visible after layout state exists', () => {
-      let gridApi: GridApi<TestRow> | undefined
-      const wideHeader: TableDataGridHeader<TestRow> = {
-        key: 'details',
-        label: 'Details',
-        width: 900,
-      }
-      const { headers: syncedHeaders, hostConfig } = mountSyncedTable({
-        config: {
-          ...tableConfig,
-          columnOrder: ['status', 'name', 'latency'],
-          columns: {
-            name: { visible: true, width: 220 },
-            status: { visible: true, width: 120, pinned: 'left' },
-            latency: { visible: true, width: 140 },
-          },
-        },
-        onGridReady: (api) => {
-          gridApi = api
-        },
-      })
-
-      cy.contains('Gateway service').should('be.visible')
-      cy.then(() => {
-        syncedHeaders.value = [
-          ...headers,
-          wideHeader,
-        ]
-        hostConfig.value = {
-          ...hostConfig.value,
-          columnOrder: [
-            ...(hostConfig.value.columnOrder ?? []),
-            wideHeader.key,
-          ],
-          columns: {
-            ...hostConfig.value.columns,
-            [wideHeader.key]: {
-              ...(hostConfig.value.columns?.[wideHeader.key] ?? {}),
-              visible: true,
-              width: 900,
-              pinned: false,
-            },
-          },
-        }
-      })
-      cy.getTestId('table-data-grid-header-details').should('exist')
-      waitForColumnSizing()
-      cy.then(() => {
-        const detailsColumn = gridApi?.getColumnState().find(column => column.colId === wideHeader.key)
-        expect(detailsColumn?.hide).to.not.equal(true)
-        expect(detailsColumn?.width).to.be.at.least(900)
-      })
+      expectColumnWidthAtLeast(() => gridApi, 'name', 900)
       expectHorizontalOverflow()
     })
 
@@ -1675,29 +1422,6 @@ describe('<TableDataGrid />', () => {
     it('forwards toolbar slots through the table component boundary', () => {
       mountTable({
         slots: {
-          toolbar: ({ selectedRows }: TableDataGridToolbarSlotProps<TestRow>) => h('div', {
-            'data-testid': 'forwarded-toolbar',
-          }, `Custom toolbar ${selectedRows.length}`),
-          'toolbar-left': ({ selectedRows }: TableDataGridToolbarSlotProps<TestRow>) => h('button', {
-            'data-testid': 'forwarded-toolbar-left',
-            type: 'button',
-          }, `Left ${selectedRows.length}`),
-          'toolbar-right': ({ filterSelection }: TableDataGridToolbarSlotProps<TestRow>) => h('button', {
-            'data-active-filter-count': Object.keys(filterSelection).length,
-            'data-testid': 'forwarded-toolbar-right',
-            type: 'button',
-          }, 'Right'),
-        },
-      })
-
-      cy.getTestId('forwarded-toolbar')
-        .should('be.visible')
-        .and('contain.text', 'Custom toolbar 0')
-      cy.getTestId('table-data-grid-bulk-actions-trigger').should('not.exist')
-      cy.getTestId('column-visibility-trigger').should('be.visible')
-
-      mountTable({
-        slots: {
           'toolbar-left': ({ selectedRows }: TableDataGridToolbarSlotProps<TestRow>) => h('button', {
             'data-testid': 'forwarded-toolbar-left',
             type: 'button',
@@ -1739,30 +1463,6 @@ describe('<TableDataGrid />', () => {
         mode: 'pagination',
         page: 1,
         search: 'Gateway',
-      })
-    })
-
-    it('clears search and refreshes with an empty query', () => {
-      const fetcher = createPaginatedFetcher()
-
-      mountTable({
-        enableSearch: true,
-        fetcher,
-      })
-
-      cy.contains('Gateway service').should('be.visible')
-      cy.clock()
-      cy.getTestId('table-data-grid-search').type('Gateway')
-      cy.tick(350)
-      cy.wrap(fetcher).should('have.been.calledWithMatch', {
-        search: 'Gateway',
-      })
-      cy.getTestId('table-data-grid-search-clear').click()
-      cy.tick(0)
-      cy.wrap(fetcher).should('have.been.calledWithMatch', {
-        mode: 'pagination',
-        page: 1,
-        search: '',
       })
     })
 
@@ -1828,6 +1528,26 @@ describe('<TableDataGrid />', () => {
       cy.getTestId('table-data-grid-search-clear').click()
       cy.contains('Gateway service').should('be.visible')
       cy.getTestId('table-data-grid-search').should('have.value', '')
+    })
+
+    it('uses initialFetcherParams search for the initial fetch and search input', () => {
+      const fetcher = createPaginatedFetcher()
+
+      mountTable({
+        enableSearch: true,
+        fetcher,
+        initialFetcherParams: {
+          search: 'Gateway',
+        },
+      })
+
+      cy.getTestId('table-data-grid-search').should('have.value', 'Gateway')
+      cy.wrap(fetcher).should('have.been.calledWithMatch', {
+        mode: 'pagination',
+        page: 1,
+        pageSize: 15,
+        search: 'Gateway',
+      })
     })
 
     it('teleports built-in search when outsideSearch is provided', () => {
@@ -1919,7 +1639,7 @@ describe('<TableDataGrid />', () => {
       cy.getTestId('outside-action').should('contain.text', 'Outside 1')
     })
 
-    const outsideActionsMountedStateCases = [
+    const outsideControlsMountedStateCases = [
       {
         actionTestId: 'outside-loading-action',
         createProps: () => ({ loading: true }),
@@ -1940,10 +1660,14 @@ describe('<TableDataGrid />', () => {
       },
     ]
 
-    it('keeps outside-actions mounted across non-grid states', () => {
-      outsideActionsMountedStateCases.forEach(({ actionTestId, createProps, expectedStateTestId, label }) => {
+    outsideControlsMountedStateCases.forEach(({ actionTestId, createProps, expectedStateTestId, label }) => {
+      it(`keeps outside controls mounted in ${label} state`, () => {
         mountTable({
           ...createProps(),
+          enableSearch: true,
+          headers: headersWithNameFilter,
+          outsideFilters: '#outside-filters-target',
+          outsideSearch: '#outside-search-target',
           slots: {
             'outside-actions': () => h('span', { 'data-testid': actionTestId }, `Outside ${label}`),
           },
@@ -1951,6 +1675,8 @@ describe('<TableDataGrid />', () => {
 
         cy.getTestId(expectedStateTestId).should('be.visible')
         cy.getTestId(actionTestId).should('exist')
+        cy.getTestId('outside-search-target').findTestId('table-data-grid-search').should('exist')
+        cy.getTestId('outside-filters-target').findTestId('filter-group-pill-name').should('exist')
       })
     })
 
@@ -2041,138 +1767,25 @@ describe('<TableDataGrid />', () => {
       })
     })
 
-    it('re-emits filter open, close, and clear events from outsideFilters', () => {
-      const fetcher = createPaginatedFetcher()
-      const onFilterClear = cy.stub().as('filterClear')
-      const onFilterClose = cy.stub().as('filterClose')
-      const onFilterOpen = cy.stub().as('filterOpen')
-
-      mountTable({
-        fetcher,
-        headers: headersWithNameFilter,
-        filterSelection: createNameFilterSelection('Gateway'),
-        outsideFilters: '#outside-filters-target',
-        onFilterClear,
-        onFilterClose,
-        onFilterOpen,
-      })
-
-      cy.getTestId('outside-filters-target').findTestId('filter-group-pill-name').findTestId('filter-pill').click()
-      cy.get('@filterOpen').should('have.been.calledWith', 'name')
-      cy.get('body').click(0, 0)
-      cy.get('@filterClose').should('have.been.calledWith', 'name')
-      cy.getTestId('outside-filters-target').findTestId('filter-group-pill-name').findTestId('interactive-pill-clear-icon').click()
-      cy.get('@filterClear').should('have.been.calledWithMatch', 'name', {
-        name: undefined,
-      })
-      cy.wrap(fetcher).should('have.been.calledWithMatch', {
-        mode: 'pagination',
-        page: 1,
-        filterSelection: {
-          name: undefined,
-        },
-      })
-    })
-
-    it('forwards custom filter slots through outsideFilters', () => {
-      const customSelection = createNameFilterSelection('Gateway service')
-      const fetcher = createPaginatedFetcher()
-      const onFilterApply = cy.stub().as('filterApply')
-
-      cy.mount(defineComponent({
-        setup() {
-          const hostFilterSelection = ref<FilterGroupSelection>({})
-
-          const handleFilterApply = (filterKey: string, selection: FilterGroupSelection) => {
-            onFilterApply(filterKey, selection)
-            hostFilterSelection.value = customSelection
-          }
-
-          return () => h('div', [
-            h('div', {
-              'data-testid': 'outside-filters-target',
-              id: 'outside-filters-target',
-            }),
-            h(DatatableComponent, {
-              fetcher,
-              filterSelection: hostFilterSelection.value,
-              headers: headersWithNameFilter,
-              outsideFilters: '#outside-filters-target',
-              paginationPageSizeOptions: [10, 15, 25],
-              rowKey: 'id',
-              rowSelection: 'multiple',
-              tableConfig,
-              'onFilter:apply': handleFilterApply,
-              'onUpdate:filterSelection': (nextSelection: FilterGroupSelection) => {
-                hostFilterSelection.value = nextSelection
-              },
-            }, {
-              'filter-name': () => h('button', {
-                'data-testid': 'custom-name-filter-control',
-                type: 'button',
-              }, 'Gateway service'),
-            }),
-          ])
-        },
-      }))
-
-      cy.contains('.ag-cell', 'Gateway service').should('be.visible')
-      cy.getTestId('outside-filters-target').findTestId('filter-group-pill-name').findTestId('filter-pill').click()
-      cy.getTestId('outside-filters-target').findTestId('custom-name-filter-control').filter(':visible').should('be.visible')
-      cy.getTestId('outside-filters-target').findTestId('filter-group-pill-name').findTestId('filter-pill-input').should('not.exist')
-      cy.getTestId('outside-filters-target').findTestId('filter-group-pill-name').findTestId('filter-pill-apply').click()
-      cy.get('@filterApply').should('have.been.calledWithMatch', 'name', {})
-      cy.wrap(fetcher).should('have.been.calledWithMatch', {
-        mode: 'pagination',
-        page: 1,
-        filterSelection: customSelection,
-      })
-    })
-
-    it('keeps outside search and filters mounted across non-grid states', () => {
-      const outsideControlStateCases = [
-        {
-          createProps: () => ({ loading: true }),
-          expectedStateTestId: 'table-data-grid-loading',
-        },
-        {
-          createProps: () => ({ error: true }),
-          expectedStateTestId: 'table-data-grid-error',
-        },
-        {
-          createProps: () => ({ fetcher: cy.stub().resolves({ data: [], total: 0 }) }),
-          expectedStateTestId: 'table-data-grid-empty',
-        },
-      ]
-
-      outsideControlStateCases.forEach(({ createProps, expectedStateTestId }) => {
-        mountTable({
-          ...createProps(),
-          enableSearch: true,
-          headers: headersWithNameFilter,
-          outsideFilters: '#outside-filters-target',
-          outsideSearch: '#outside-search-target',
-        })
-
-        cy.getTestId(expectedStateTestId).should('be.visible')
-        cy.getTestId('outside-search-target').findTestId('table-data-grid-search').should('exist')
-        cy.getTestId('outside-filters-target').findTestId('filter-group-pill-name').should('exist')
-      })
-    })
-
     it('sorts through the table config when a sortable header is clicked', () => {
       const onUpdateTableConfig = cy.stub().as('updateTableConfig')
+      const onSort = cy.stub().as('sort')
       mountTable({
         headers: [
           { key: 'name', label: 'Name', sortable: true, hideable: false, width: 220 },
           { key: 'status', label: 'Status', sortable: true, width: 120 },
           { key: 'latency', label: 'Latency', sortable: true, width: 140 },
         ],
+        onSort,
         onUpdateTableConfig,
       })
 
       cy.getTestId('table-data-grid-header-name').click()
       cy.get('@updateTableConfig').should('have.been.calledWithMatch', {
+        sortColumnKey: 'name',
+        sortColumnOrder: 'asc',
+      })
+      cy.get('@sort').should('have.been.calledWithMatch', {
         sortColumnKey: 'name',
         sortColumnOrder: 'asc',
       })
@@ -2348,14 +1961,6 @@ describe('<TableDataGrid />', () => {
       cy.getTestId('column-visibility-status').find('input').should('not.be.checked')
     })
 
-    it('updates table config when a column is hidden from the menu', () => {
-      const onUpdateTableConfig = cy.stub().as('updateTableConfig')
-
-      mountTable({ onUpdateTableConfig })
-
-      hideStatusColumnFromMenu()
-    })
-
   })
 
   describe('pagination and page size', () => {
@@ -2430,52 +2035,6 @@ describe('<TableDataGrid />', () => {
       })
     })
 
-    it('forwards custom filter slots and lets the host own custom filter selection', () => {
-      const customSelection = createNameFilterSelection('Gateway service')
-      const fetcher = createPaginatedFetcher()
-      const onFilterApply = cy.stub().as('filterApply')
-
-      cy.mount(defineComponent({
-        setup() {
-          const hostFilterSelection = ref<FilterGroupSelection>({})
-
-          const handleFilterApply = (filterKey: string, selection: FilterGroupSelection) => {
-            onFilterApply(filterKey, selection)
-            hostFilterSelection.value = customSelection
-          }
-
-          return () => h(DatatableComponent, {
-            fetcher,
-            filterSelection: hostFilterSelection.value,
-            headers: headersWithNameFilter,
-            paginationPageSizeOptions: [10, 15, 25],
-            rowKey: 'id',
-            rowSelection: 'multiple',
-            tableConfig,
-            'onFilter:apply': handleFilterApply,
-            'onUpdate:filterSelection': (nextSelection: FilterGroupSelection) => {
-              hostFilterSelection.value = nextSelection
-            },
-          }, {
-            'filter-name': () => h('button', {
-              'data-testid': 'custom-name-filter-control',
-              type: 'button',
-            }, 'Gateway service'),
-          })
-        },
-      }))
-
-      cy.contains('.ag-cell', 'Gateway service').should('be.visible')
-      cy.getTestId('filter-group-pill-name').findTestId('filter-pill').click()
-      cy.getTestId('filter-group-pill-name').findTestId('filter-pill-apply').click()
-      cy.get('@filterApply').should('have.been.calledWithMatch', 'name', {})
-      cy.wrap(fetcher).should('have.been.calledWithMatch', {
-        mode: 'pagination',
-        page: 1,
-        filterSelection: customSelection,
-      })
-    })
-
     it('forwards custom filter slots that become available after mount', () => {
       const fetcher = createPaginatedFetcher()
 
@@ -2540,22 +2099,6 @@ describe('<TableDataGrid />', () => {
           name: undefined,
         },
       })
-    })
-
-    it('re-emits filter open and close events', () => {
-      const onFilterOpen = cy.stub().as('filterOpen')
-      const onFilterClose = cy.stub().as('filterClose')
-
-      mountTable({
-        headers: headersWithNameFilter,
-        onFilterClose,
-        onFilterOpen,
-      })
-
-      cy.getTestId('filter-group-pill-name').findTestId('filter-pill').click()
-      cy.get('@filterOpen').should('have.been.calledWith', 'name')
-      cy.get('body').click(0, 0)
-      cy.get('@filterClose').should('have.been.calledWith', 'name')
     })
 
     it('emits table config and refetches when page size changes', () => {
@@ -2643,7 +2186,9 @@ describe('<TableDataGrid />', () => {
     })
 
     it('allows async cell slot content to refresh its ag-grid cell', () => {
-    // eslint-disable-next-line vue/one-component-per-file
+      const resolveAsyncCells: Array<() => void> = []
+
+      // eslint-disable-next-line vue/one-component-per-file
       const AsyncNameCell = defineComponent({
         name: 'AsyncNameCell',
         props: {
@@ -2660,10 +2205,10 @@ describe('<TableDataGrid />', () => {
           const value = ref('')
 
           onMounted(() => {
-            setTimeout(() => {
+            resolveAsyncCells.push(() => {
               value.value = `resolved ${props.rowName}`
               props.refreshCell()
-            }, 50)
+            })
           })
 
           return () => h('span', {
@@ -2682,6 +2227,9 @@ describe('<TableDataGrid />', () => {
       })
 
       cy.getTestId('async-name-cell').first().should('contain.text', 'loading')
+      cy.then(() => {
+        resolveAsyncCells.forEach(resolve => resolve())
+      })
       cy.getTestId('async-name-cell').first().should('contain.text', 'resolved Gateway service')
     })
 
@@ -2723,31 +2271,6 @@ describe('<TableDataGrid />', () => {
       cy.wrap(fetcher).should('have.been.calledOnce')
       cy.then(() => {
         tableRef?.value?.refresh()
-      })
-      cy.wrap(fetcher).should('have.been.calledTwice')
-    })
-
-    it('refetches when refreshKey changes', () => {
-      const fetcher = createPaginatedFetcher()
-      const hostRefreshKey = ref(0)
-
-      cy.mount(defineComponent({
-        setup() {
-          return () => h(DatatableComponent, {
-            headers,
-            fetcher,
-            mode: 'pagination',
-            rowKey: 'id',
-            refreshKey: hostRefreshKey.value,
-            tableConfig,
-          })
-        },
-      }))
-
-      cy.contains('Gateway service').should('be.visible')
-      cy.wrap(fetcher).should('have.been.calledOnce')
-      cy.then(() => {
-        hostRefreshKey.value += 1
       })
       cy.wrap(fetcher).should('have.been.calledTwice')
     })

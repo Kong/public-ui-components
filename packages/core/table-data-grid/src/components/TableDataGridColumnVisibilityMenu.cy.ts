@@ -65,17 +65,12 @@ describe('<TableDataGridColumnVisibilityMenu />', () => {
     cy.getTestId('column-visibility-route').should('be.visible')
   })
 
-  it('updates column visibility when a column item is clicked', () => {
-    mountAndOpenMenu()
+  it('updates column visibility from column item and checkbox interactions', () => {
+    mountAndOpenMenu({ latency: false })
 
     cy.getTestId('column-visibility-status').click()
     cy.getTestId('column-visibility-status').find('input').should('not.be.checked')
     cy.getTestId('column-visibility-model').should('contain.text', '"status":false')
-  })
-
-  it('updates column visibility when a checkbox is clicked', () => {
-    mountAndOpenMenu({ latency: false })
-
     cy.getTestId('column-visibility-latency').find('input').check({ force: true })
     cy.getTestId('column-visibility-model').should('contain.text', '"latency":true')
   })
