@@ -309,6 +309,10 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
 })
 
 const timestampAxisTitle = computed(() => {
+  if (props.chartData.meta.datasource === 'platform') {
+    return i18n.t('timestampAxisTitles.platform')
+  }
+
   const granularity = msToGranularity(Number(props.chartData.meta.granularity_ms))
 
   if (!granularity) {
