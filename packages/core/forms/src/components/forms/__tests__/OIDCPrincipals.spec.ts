@@ -147,6 +147,63 @@ describe('OIDCPrincipals', () => {
     })
   })
 
+  describe('identifier claim transformation', () => {
+    it('splits identifier claim by dot into a list', () => {
+      const onModelUpdated = vi.fn()
+      const wrapper = mountComponent({
+        'config-principals-directory': 'custom-plugin',
+        'config-principals-principal_claim': null,
+      }, { onModelUpdated })
+      const formModel = wrapper.props('formModel')
+
+      ;(wrapper.vm as any).handleIdentifierClaimChange('user.employee_id')
+
+      expect(formModel['config-principals-principal_claim']).toEqual(['user', 'employee_id'])
+      expect(onModelUpdated).toHaveBeenCalled()
+    })
+  })
+
+  describe('client selection array behavior', () => {
+    it('handleClientChange updates the correct index in config-client_id', () => {
+      const onModelUpdated = vi.fn()
+      const wrapper = mountComponent({
+        'config-client_id': ['client-a'],
+      }, { onModelUpdated })
+      const formModel = wrapper.props('formModel')
+
+      ;(wrapper.vm as any).handleClientChange(0, 'client-b')
+
+      expect(formModel['config-client_id']).toEqual(['client-b'])
+      expect(onModelUpdated).toHaveBeenCalled()
+    })
+
+    it('addClientRow pushes a null entry to config-client_id', () => {
+      const onModelUpdated = vi.fn()
+      const wrapper = mountComponent({
+        'config-client_id': ['client-a'],
+      }, { onModelUpdated })
+      const formModel = wrapper.props('formModel')
+
+      ;(wrapper.vm as any).addClientRow()
+
+      expect(formModel['config-client_id']).toEqual(['client-a', null])
+      expect(onModelUpdated).toHaveBeenCalled()
+    })
+
+    it('removeClientRow splices the entry at the given index', () => {
+      const onModelUpdated = vi.fn()
+      const wrapper = mountComponent({
+        'config-client_id': ['client-a', 'client-b', 'client-c'],
+      }, { onModelUpdated })
+      const formModel = wrapper.props('formModel')
+
+      ;(wrapper.vm as any).removeClientRow(1)
+
+      expect(formModel['config-client_id']).toEqual(['client-a', 'client-c'])
+      expect(onModelUpdated).toHaveBeenCalled()
+    })
+  })
+
   describe('edit after creation (principals fields populated)', () => {
     it('infers Kong Identity mode when config-principals-enabled is true', () => {
       const wrapper = mountComponent({
@@ -154,30 +211,17 @@ describe('OIDCPrincipals', () => {
         'config-issuer': 'https://my-issuer.example.com',
       })
 
-      // Should show Kong Identity UI (selects, issuer input)
+      // Should show Kong Identity UI (selects)
       expect(wrapper.find('[data-testid="principals-directory-select"]').exists()).toBe(true)
-      expect(wrapper.find('[data-testid="principals-issuer"]').exists()).toBe(true)
     })
 
-    it('issuer field is rendered with disabled attribute', () => {
-      const wrapper = mountComponent({
-        'config-principals-enabled': true,
-        'config-issuer': 'https://my-issuer.example.com',
-      })
-
-      const issuerWrapper = wrapper.find('[data-testid="principals-issuer"]')
-      expect(issuerWrapper.exists()).toBe(true)
-      // KInput receives the disabled prop — verify via component attributes
-      expect(issuerWrapper.attributes('disabled')).toBeDefined()
-    })
-
-    it('pre-selects the first client_id in edit mode', () => {
+    it('clientIdArray computed returns existing client_id array for edit mode', () => {
       const wrapper = mountComponent({
         'config-principals-enabled': true,
         'config-client_id': ['client-abc'],
       })
 
-      expect((wrapper.vm as any).selectedClientId).toBe('client-abc')
+      expect((wrapper.vm as any).clientIdArray).toEqual(['client-abc'])
     })
   })
 
@@ -208,6 +252,103 @@ describe('OIDCPrincipals', () => {
       // and common fields have values
       expect(wrapper.find('.stub-vfg').exists()).toBe(true)
       expect(wrapper.find('[data-testid="principals-directory-select"]').exists()).toBe(false)
+    })
+
+    it('defaults lookup method to the first option when principal fields are empty', () => {
+      const wrapper = mountComponent({
+        'config-principals-directory': 'default',
+        'config-principals-principal_claim': null,
+        'config-principals-principal_by': undefined,
+      })
+
+      expect((wrapper.vm as any).selectedLookupMethod).toBe('kong-identity')
+    })
+  })
+
+  describe('lookup method switching', () => {
+    it('selecting kong-identity clears principal_by and principal_claim', () => {
+      const onModelUpdated = vi.fn()
+      const wrapper = mountComponent({
+        'config-principals-directory': 'custom-plugin',
+        'config-principals-principal_by': 'Customer_ID',
+        'config-principals-principal_claim': ['user', 'employee_id'],
+      }, { onModelUpdated })
+      const formModel = wrapper.props('formModel')
+
+      ;(wrapper.vm as any).updateField('config-principals-directory', 'kong-identity')
+
+      expect(formModel['config-principals-principal_by']).toBeNull()
+      expect(formModel['config-principals-principal_claim']).toBeNull()
+      expect((wrapper.vm as any).selectedLookupMethod).toBe('kong-identity')
+      expect(onModelUpdated).toHaveBeenCalled()
+    })
+
+    it('selecting custom-plugin does not clear principal fields', () => {
+      const onModelUpdated = vi.fn()
+      const wrapper = mountComponent({
+        'config-principals-directory': 'kong-identity',
+        'config-principals-principal_by': null,
+        'config-principals-principal_claim': null,
+      }, { onModelUpdated })
+      const formModel = wrapper.props('formModel')
+
+      ;(wrapper.vm as any).updateField('config-principals-directory', 'custom-plugin')
+
+      expect((wrapper.vm as any).selectedLookupMethod).toBe('custom-plugin')
+      expect(formModel['config-principals-principal_by']).toBeNull()
+      expect(formModel['config-principals-principal_claim']).toBeNull()
+    })
+  })
+
+  describe('identifier claim escaping', () => {
+    it('parses simple dot notation into array parts', () => {
+      const wrapper = mountComponent()
+      const vm = wrapper.vm as any
+
+      vm.handleIdentifierClaimChange('user.name')
+
+      const formModel = wrapper.props('formModel')
+      expect(formModel['config-principals-principal_claim']).toEqual(['user', 'name'])
+    })
+
+    it('parses escaped dots as literal dots within a part', () => {
+      const wrapper = mountComponent()
+      const vm = wrapper.vm as any
+
+      vm.handleIdentifierClaimChange('user.name\\.first')
+
+      const formModel = wrapper.props('formModel')
+      expect(formModel['config-principals-principal_claim']).toEqual(['user', 'name.first'])
+    })
+
+    it('handles empty input', () => {
+      const wrapper = mountComponent()
+      const vm = wrapper.vm as any
+
+      vm.handleIdentifierClaimChange('')
+
+      const formModel = wrapper.props('formModel')
+      expect(formModel['config-principals-principal_claim']).toEqual([])
+    })
+
+    it('displays array with literal dots using escape notation', () => {
+      const wrapper = mountComponent({
+        'config-principals-principal_claim': ['user', 'name.first'],
+      })
+      const vm = wrapper.vm as any
+
+      expect(vm.getIdentifierClaimInputValue()).toBe('user.name\\.first')
+    })
+
+    it('round-trips complex claim correctly', () => {
+      const wrapper = mountComponent()
+      const vm = wrapper.vm as any
+
+      vm.handleIdentifierClaimChange('org\\.name.user.id\\.v2')
+
+      const formModel = wrapper.props('formModel')
+      expect(formModel['config-principals-principal_claim']).toEqual(['org.name', 'user', 'id.v2'])
+      expect(vm.getIdentifierClaimInputValue()).toBe('org\\.name.user.id\\.v2')
     })
   })
 })

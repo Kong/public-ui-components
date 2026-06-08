@@ -31,6 +31,7 @@
             :form-options="formOptions"
             :form-schema="formSchema"
             :on-model-updated="onModelUpdated"
+            @mode-change="handlePrincipalsModeChange"
           />
           <VueFormGenerator
             v-else-if="displayForm"
@@ -40,26 +41,41 @@
             @model-updated="onModelUpdated"
           />
 
-          <KLabel>Auth methods</KLabel>
-          <div class="auth-method-container">
-            <div
-              v-for="(method) in authMethods"
-              :key="method.value"
-              class="auth-method"
-            >
-              <KCheckbox
-                v-model="method.prop"
-                @change="evt => handleUpdate(evt, method.value)"
-              >
-                {{ method.label }}
-              </KCheckbox>
+          <KLabel>Authentication methods</KLabel>
+          <KMultiselect
+            :key="principalsMode"
+            class="auth-methods-multiselect"
+            data-testid="auth-methods-multiselect"
+            :items="authMethodItems"
+            :model-value="selectedAuthMethods"
+            placeholder="Select authentication methods"
+            @update:model-value="handleAuthMethodsSelect"
+          />
+          <p class="auth-methods-hint">
+            Configure which OAuth and OpenID Connect features are supported.
+          </p>
+
+          <div class="session-management-section">
+            <KLabel>Session management</KLabel>
+            <div class="session-radio-group">
+              <KRadio
+                v-model="sessionManagement"
+                data-testid="session-radio-use"
+                description="Issue a session cookie after successful authentication. Subsequent requests use the session instead of re-authenticating with the identity provider."
+                label="Use sessions"
+                :selected-value="true"
+                @change="handleSessionChange(true)"
+              />
+              <KRadio
+                v-model="sessionManagement"
+                data-testid="session-radio-no-use"
+                description="Authenticate each request using the configured authentication flow."
+                label="Do not use sessions"
+                :selected-value="false"
+                @change="handleSessionChange(false)"
+              />
             </div>
           </div>
-          <KInputSwitch
-            v-model="sessionManagement"
-            label="Enable Session Management"
-            @change="handleUpdate"
-          />
         </div>
       </template>
       <template #authorization>
@@ -209,6 +225,7 @@ export default {
       init: false,
       authMethods: [],
       sessionManagement: false,
+      principalsMode: null,
       globalFields: null,
       commonFieldsSchema: null,
       authFieldsSchema: null,
@@ -248,6 +265,19 @@ export default {
     },
     isKonnect() {
       return this.formsConfig?.app === 'konnect'
+    },
+    authMethodItems() {
+      const KONG_IDENTITY_METHODS = ['bearer', 'client_credentials', 'introspection', 'userinfo']
+      const methods = this.principalsMode === 'kong-identity'
+        ? this.authMethods.filter(m => KONG_IDENTITY_METHODS.includes(m.value))
+        : this.authMethods
+      return methods.map(m => ({
+        label: m.label,
+        value: m.value,
+      }))
+    },
+    selectedAuthMethods() {
+      return this.authMethods.filter(m => m.prop).map(m => m.value)
     },
   },
   watch: {
@@ -449,6 +479,59 @@ export default {
       this.formModel['config-auth_methods'] = this.getAuthMethodsValue(prop, evt)
       this.onModelUpdated()
     },
+    handleAuthMethodsSelect(selectedValues) {
+      // Update authMethods prop state
+      for (const method of this.authMethods) {
+        method.prop = selectedValues.includes(method.value)
+      }
+      // Build the final array including session if enabled
+      const arr = [...selectedValues]
+      if (this.sessionManagement) {
+        arr.push('session')
+      }
+      // eslint-disable-next-line vue/no-mutating-props
+      this.formModel['config-auth_methods'] = arr
+      this.onModelUpdated()
+    },
+    handleSessionChange(value) {
+      this.sessionManagement = value
+      // Rebuild auth_methods with or without 'session'
+      const arr = this.authMethods.filter(m => m.prop).map(m => m.value)
+      if (value) {
+        arr.push('session')
+      }
+      // eslint-disable-next-line vue/no-mutating-props
+      this.formModel['config-auth_methods'] = arr
+      this.onModelUpdated()
+    },
+    handlePrincipalsModeChange(mode) {
+      this.principalsMode = mode
+      const KONG_IDENTITY_METHODS = ['bearer', 'client_credentials', 'introspection', 'userinfo']
+      if (mode === 'kong-identity') {
+        // Auto-select only the 4 Kong Identity methods
+        for (const method of this.authMethods) {
+          method.prop = KONG_IDENTITY_METHODS.includes(method.value)
+        }
+        const arr = [...KONG_IDENTITY_METHODS]
+        if (this.sessionManagement) {
+          arr.push('session')
+        }
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-auth_methods'] = arr
+        this.onModelUpdated()
+      } else {
+        // External mode: select all auth methods by default, including session
+        this.sessionManagement = true
+        for (const method of this.authMethods) {
+          method.prop = true
+        }
+        const arr = this.authMethods.map(m => m.value)
+        arr.push('session')
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-auth_methods'] = arr
+        this.onModelUpdated()
+      }
+    },
   },
 }
 </script>
@@ -480,6 +563,26 @@ export default {
       margin-bottom: 8px;
       width: 50%;
     }
+  }
+
+  .auth-methods-multiselect {
+    margin-bottom: var(--kui-space-40, $kui-space-40);
+  }
+
+  .auth-methods-hint {
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    margin: var(--kui-space-20, $kui-space-20) 0 0;
+  }
+
+  .session-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-40, $kui-space-40);
+  }
+
+  .session-radio-label {
+    font-weight: 600;
   }
 
   .k-switch {

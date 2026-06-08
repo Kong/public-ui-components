@@ -61,6 +61,7 @@
       <KSelect
         class="principals-directory-select"
         data-testid="principals-directory-select"
+        enable-filtering
         :items="kongIdentityServerItems"
         label="Authorization Server"
         :loading="kongIdentityServersLoading"
@@ -86,57 +87,125 @@
         </template>
       </KSelect>
 
-      <KSelect
-        class="principals-client-select"
-        data-testid="principals-client-select"
-        :disabled="!selectedServer"
-        :items="clientItems"
-        label="Client"
-        :loading="clientsLoading"
-        :model-value="selectedClientId"
-        placeholder="Select a client"
-        @update:model-value="handleClientChange"
+      <div
+        v-for="(clientId, index) in clientIdArray"
+        :key="index"
+        class="client-row"
+        :class="{ 'client-row-with-label': index === 0 }"
       >
-        <template #dropdown-footer-text>
-          <div
-            class="create-action"
-            data-testid="create-client-action"
-            @click.stop="leavePromptType = 'client'"
-          >
-            <AddIcon :size="KUI_ICON_SIZE_20" />
-            <div class="create-action-content">
-              <span>Create client</span>
-              <div class="create-action-hint">
-                You'll need to return here after creating a client. Your progress won't be saved.
+        <KSelect
+          class="principals-client-select"
+          data-testid="principals-client-select"
+          :disabled="!selectedServer"
+          enable-filtering
+          :items="getClientItemsForRow(index)"
+          :label="index === 0 ? 'Client' : undefined"
+          :loading="clientsLoading"
+          :model-value="clientId"
+          placeholder="Select a client"
+          @update:model-value="handleClientChange(index, $event)"
+        >
+          <template #dropdown-footer-text>
+            <div
+              class="create-action"
+              data-testid="create-client-action"
+              @click.stop="leavePromptType = 'client'"
+            >
+              <AddIcon :size="KUI_ICON_SIZE_20" />
+              <div class="create-action-content">
+                <span>Create client</span>
+                <div class="create-action-hint">
+                  You'll need to return here after creating a client. Your progress won't be saved.
+                </div>
               </div>
             </div>
-          </div>
-        </template>
-      </KSelect>
+          </template>
+        </KSelect>
+        <div class="principals-client-secret-wrapper">
+          <KInput
+            class="principals-client-secret"
+            data-testid="principals-client-secret"
+            :disabled="!selectedServer"
+            :label="index === 0 ? 'Client secret' : undefined"
+            :model-value="clientSecretArray[index]"
+            placeholder="e.g., your-client-secret"
+            show-password-mask-toggle
+            type="password"
+            @update:model-value="handleClientSecretChange(index, $event)"
+          />
+          <component
+            :is="autofillSlot"
+            v-if="autofillSlot"
+            :schema="{ model: 'config-client_secret', referenceable: true }"
+            :update="(val) => handleClientSecretChange(index, val)"
+            :value="clientSecretArray[index]"
+          />
+        </div>
+        <button
+          class="remove-client-btn"
+          data-testid="remove-client-action"
+          type="button"
+          @click="removeClientRow(index)"
+        >
+          <TrashIcon :size="KUI_ICON_SIZE_30" />
+        </button>
+      </div>
 
-      <KInput
-        data-testid="principals-client-secret"
-        :disabled="!selectedServer"
-        label="Client secret"
-        :model-value="formModel['config-client_secret']"
-        placeholder="e.g., your-client-secret"
-        type="password"
-        @update:model-value="updateField('config-client_secret', $event)"
-      />
-
-      <KInput
-        data-testid="principals-issuer"
-        disabled
-        label="Issuer"
-        :model-value="formModel['config-issuer']"
-        placeholder="Automatically deciphered based on the selected auth server"
-      />
+      <div
+        class="add-client-inline"
+        :class="{ 'add-client-inline-disabled': !selectedServer }"
+        data-testid="add-client-action"
+        @click="!selectedServer ? null : addClientRow()"
+      >
+        + Add client
+      </div>
 
       <KCollapse
         class="principals-advanced-settings"
         data-testid="principals-advanced-settings"
         trigger-label="Show additional settings"
       >
+        <div class="principals-field-group">
+          <KSelect
+            class="principals-lookup-method-select"
+            data-testid="principals-lookup-method"
+            :items="lookupMethodItems"
+            label="Principal lookup method"
+            :model-value="selectedLookupMethod"
+            placeholder="Select a principal directory"
+            @update:model-value="updateField('config-principals-directory', $event)"
+          >
+            <template #item-template="{ item }">
+              <div class="lookup-method-item">
+                <div class="lookup-method-item-label">
+                  {{ item.label }}
+                </div>
+                <div class="lookup-method-item-description">
+                  {{ item.description }}
+                </div>
+              </div>
+            </template>
+          </KSelect>
+
+          <template v-if="selectedLookupMethod === 'custom-plugin'">
+            <KInput
+              data-testid="principals-custom-identity-name"
+              help="Enter the custom identity name used to look up the principal. Kong matches the value from the token claim to a principal with the same custom identity name and value."
+              label="Custom Identity name"
+              :model-value="formModel['config-principals-principal_by']"
+              placeholder="e.g., Customer_ID"
+              @update:model-value="updateField('config-principals-principal_by', $event)"
+            />
+            <KInput
+              data-testid="principals-identifier-claim"
+              help="Enter the token claim used to identify the principal. Use dot notation for nested claims (for example, workload.id). Escape periods in claim names with \ (for example, workload\.id)."
+              label="Identifier claim"
+              :model-value="getIdentifierClaimInputValue()"
+              placeholder="e.g., user.employee_id"
+              @update:model-value="handleIdentifierClaimChange($event)"
+            />
+          </template>
+        </div>
         <div class="principals-field-group">
           <KLabel>If principal lookup fails</KLabel>
           <KRadio
@@ -167,7 +236,7 @@
             <template #description>
               Use the consumer linked to the authenticated principal so existing consumer-based plugins and policies continue to work.
               <a
-                href="https://developer.konghq.com/how-to/create-centrally-managed-consumer/"
+                href="https://developer.konghq.com/identity/principals/"
                 rel="noopener noreferrer"
                 target="_blank"
               >Learn how to link a consumer.</a>
@@ -184,7 +253,12 @@
           >
             Use linked consumer groups
             <template #description>
-              Use consumer groups associated with the linked consumer so existing consumer group policies and plugins continue to work. This setting applies only when  <b>Use linked consumer</b> is enabled.
+              Use consumer groups linked to the authenticated principal so existing consumer group policies and plugins continue to work. Consumer groups can be linked through principal metadata.
+              <a
+                href="https://developer.konghq.com/identity/principals/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >Learn how to link a consumer group.</a>
             </template>
           </KCheckbox>
         </div>
@@ -212,10 +286,10 @@
 
 <script>
 import VueFormGenerator from '../FormGenerator.vue'
-import { FORMS_CONFIG } from '../../const'
+import { FORMS_CONFIG, AUTOFILL_SLOT } from '../../const'
 import { useAxios } from '@kong-ui-public/entities-shared'
-import { AddIcon, KeyIcon, WorldIcon } from '@kong/icons'
-import { KUI_ICON_SIZE_20, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import { AddIcon, KeyIcon, TrashIcon, WorldIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_20, KUI_ICON_SIZE_30, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const MODE_KONG_IDENTITY = 'kong-identity'
 const MODE_EXTERNAL = 'external'
@@ -223,22 +297,45 @@ const MODE_EXTERNAL = 'external'
 // TODO: Replace with the actual endpoint once the API is ready
 const KONG_IDENTITY_SERVERS_ENDPOINT = '/v1/auth-servers/_computed'
 
-const PRINCIPALS_FIELD_MODELS = new Set([
-  'config-principals-enabled',
-  'config-principals-directory',
-  'config-principals-principal_by',
-  'config-principals-principal_claim',
-  'config-principals-match_consumer',
-  'config-principals-match_consumer_groups',
-  'config-principals-error_on_miss',
-])
-
 // External-auth-server (commonFields) field models — kept in sync with OIDCForm.
 const COMMON_FIELD_MODELS = new Set([
   'config-client_id',
   'config-client_secret',
   'config-issuer',
 ])
+
+const lookupMethodItems = [
+  {
+    label: 'Kong Identity client',
+    value: 'kong-identity',
+    description: 'Match principals using the client ID from the token subject (sub) claim.',
+  },
+  {
+    label: 'Custom claim',
+    value: 'custom-plugin',
+    description: 'Match principals using a custom JWT claim.',
+  },
+]
+
+const hasValue = value => {
+  if (value === undefined || value === null || value === '') {
+    return false
+  }
+
+  if (Array.isArray(value)) {
+    return value.length > 0
+  }
+
+  return true
+}
+
+const inferInitialLookupMethod = (formModel) => {
+  if (hasValue(formModel['config-principals-principal_claim']) || hasValue(formModel['config-principals-principal_by'])) {
+    return 'custom-plugin'
+  }
+
+  return 'kong-identity'
+}
 
 // Decide the initial radio mode from the existing record.
 const inferInitialMode = (formModel) => {
@@ -252,11 +349,15 @@ const inferInitialMode = (formModel) => {
 
 export default {
   name: 'OIDCPrincipals',
-  components: { VueFormGenerator, AddIcon, KeyIcon, WorldIcon },
+  components: { VueFormGenerator, AddIcon, KeyIcon, TrashIcon, WorldIcon },
   inject: {
     formsConfig: {
       from: FORMS_CONFIG,
       default: () => ({}),
+    },
+    autofillSlot: {
+      from: AUTOFILL_SLOT,
+      default: undefined,
     },
   },
   props: {
@@ -281,18 +382,21 @@ export default {
       required: true,
     },
   },
+  emits: ['mode-change'],
   data() {
     return {
       MODE_KONG_IDENTITY,
       MODE_EXTERNAL,
+      lookupMethodItems,
       KUI_ICON_SIZE_20,
+      KUI_ICON_SIZE_30,
       KUI_ICON_SIZE_40,
       selectedMode: inferInitialMode(this.formModel),
+      selectedLookupMethod: inferInitialLookupMethod(this.formModel),
       kongIdentityServers: [],
       kongIdentityServersLoading: false,
       clients: [],
       clientsLoading: false,
-      selectedClientId: null,
       selectedServer: null,
       leavePromptType: null,
     }
@@ -304,14 +408,20 @@ export default {
     clientItems() {
       return this.clients.map(c => ({ label: c.name, value: c.client_id || c.id }))
     },
+    clientIdArray() {
+      const ids = this.formModel['config-client_id']
+      if (Array.isArray(ids) && ids.length > 0) return ids
+      return [null]
+    },
+    clientSecretArray() {
+      const secrets = this.formModel['config-client_secret']
+      if (Array.isArray(secrets) && secrets.length > 0) return secrets
+      return [null]
+    },
   },
   mounted() {
+    this.$emit('mode-change', this.selectedMode)
     this.fetchKongIdentityServers()
-    // Pre-select the first client_id if it exists (for edit mode)
-    const clientIds = this.formModel['config-client_id']
-    if (Array.isArray(clientIds) && clientIds.length > 0) {
-      this.selectedClientId = clientIds[0]
-    }
   },
   methods: {
     async fetchKongIdentityServers() {
@@ -355,16 +465,82 @@ export default {
         this.updateField('config-issuer', this.selectedServer.issuer)
       }
       // Reset client selection when server changes
-      this.selectedClientId = null
+      this.updateField('config-client_id', [null])
+      this.updateField('config-client_secret', [null])
       this.clients = []
       this.clientsLoading = !!serverId
       if (serverId) {
         this.fetchClients(serverId)
       }
     },
-    handleClientChange(clientId) {
-      this.selectedClientId = clientId
-      this.updateField('config-client_id', [clientId])
+    handleClientChange(index, clientId) {
+      const clientIds = Array.isArray(this.formModel['config-client_id'])
+        ? [...this.formModel['config-client_id']]
+        : []
+      clientIds[index] = clientId
+      this.updateField('config-client_id', clientIds)
+    },
+    addClientRow() {
+      const clientIds = Array.isArray(this.formModel['config-client_id'])
+        ? [...this.formModel['config-client_id']]
+        : []
+      clientIds.push(null)
+      this.updateField('config-client_id', clientIds)
+
+      const secrets = Array.isArray(this.formModel['config-client_secret'])
+        ? [...this.formModel['config-client_secret']]
+        : []
+      secrets.push(null)
+      this.updateField('config-client_secret', secrets)
+    },
+    removeClientRow(index) {
+      const clientIds = Array.isArray(this.formModel['config-client_id'])
+        ? [...this.formModel['config-client_id']]
+        : []
+      clientIds.splice(index, 1)
+      this.updateField('config-client_id', clientIds)
+
+      const secrets = Array.isArray(this.formModel['config-client_secret'])
+        ? [...this.formModel['config-client_secret']]
+        : []
+      secrets.splice(index, 1)
+      this.updateField('config-client_secret', secrets)
+    },
+    handleClientSecretChange(index, value) {
+      const secrets = Array.isArray(this.formModel['config-client_secret'])
+        ? [...this.formModel['config-client_secret']]
+        : []
+      secrets[index] = value
+      this.updateField('config-client_secret', secrets)
+    },
+    getClientItemsForRow(index) {
+      const selectedIds = this.clientIdArray
+      return this.clientItems.map(item => ({
+        ...item,
+        disabled: selectedIds.some((id, i) => i !== index && id === item.value),
+      }))
+    },
+    getIdentifierClaimInputValue() {
+      const claim = this.formModel['config-principals-principal_claim']
+      if (Array.isArray(claim)) {
+        // Escape literal dots within each part before joining
+        return claim.map(part => part.replace(/\./g, '\\.')).join('.')
+      }
+      return claim || ''
+    },
+    handleIdentifierClaimChange(rawValue) {
+      const value = typeof rawValue === 'string' ? rawValue.trim() : ''
+      if (!value) {
+        this.updateField('config-principals-principal_claim', [])
+        return
+      }
+
+      // Split on unescaped dots (dots not preceded by \), then unescape \. → .
+      const parts = value.split(/(?<!\\)\./).map(part => part.replace(/\\\./g, '.').trim()).filter(Boolean)
+      this.updateField('config-principals-principal_claim', parts)
+    },
+    syncLookupMethod() {
+      this.selectedLookupMethod = inferInitialLookupMethod(this.formModel)
     },
     handleMatchConsumerChange(checked) {
       this.updateField('config-principals-match_consumer', checked)
@@ -375,6 +551,18 @@ export default {
     updateField(field, value) {
       // eslint-disable-next-line vue/no-mutating-props
       this.formModel[field] = value
+      if (field === 'config-principals-directory') {
+        this.selectedLookupMethod = value
+        // Clear custom claim fields when switching back to kong-identity
+        if (value !== 'custom-plugin') {
+          // eslint-disable-next-line vue/no-mutating-props
+          this.formModel['config-principals-principal_by'] = null
+          // eslint-disable-next-line vue/no-mutating-props
+          this.formModel['config-principals-principal_claim'] = null
+        }
+      } else if (field === 'config-principals-principal_claim' || field === 'config-principals-principal_by') {
+        this.syncLookupMethod()
+      }
       this.onModelUpdated()
     },
     handleLeaveConfirmed() {
@@ -426,12 +614,19 @@ export default {
         this.formModel['config-principals-match_consumer'] = true
         // eslint-disable-next-line vue/no-mutating-props
         this.formModel['config-principals-match_consumer_groups'] = true
+        // Clear client fields
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-client_id'] = null
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-client_secret'] = null
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-issuer'] = null
         // Reset local state
         this.selectedServer = null
-        this.selectedClientId = null
         this.clients = []
       }
       this.onModelUpdated()
+      this.$emit('mode-change', newMode)
     },
   },
 }
@@ -468,6 +663,10 @@ export default {
     gap: var(--kui-space-70, $kui-space-70);
   }
 
+  .principals-lookup-method-select :deep(.k-label) {
+    margin-top: 0;
+  }
+
   .k-label {
     margin-top: var(--kui-space-0, $kui-space-0);
   }
@@ -486,6 +685,21 @@ export default {
   gap: var(--kui-space-40, $kui-space-40);
 }
 
+.lookup-method-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-10, $kui-space-10);
+}
+
+.lookup-method-item-label {
+  color: var(--kui-color-text, $kui-color-text);
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+}
+
+.lookup-method-item-description {
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+}
+
 .create-action {
   align-items: flex-start;
   color: var(--kui-color-text-primary, $kui-color-text-primary);
@@ -502,12 +716,80 @@ export default {
   }
 }
 
+.create-action-disabled {
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  cursor: default;
+}
+
+.client-row {
+  align-items: flex-start;
+  display: flex;
+  gap: var(--kui-space-40, $kui-space-40);
+  margin-top: var(--kui-space-40, $kui-space-40);
+
+  .principals-client-select {
+    flex: 1;
+    margin-top: 0;
+  }
+
+  .principals-client-secret-wrapper {
+    flex: 1;
+  }
+
+  .principals-client-secret {
+    width: 100%;
+  }
+}
+
+.remove-client-btn {
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  margin-top: var(--kui-space-30, $kui-space-30);
+  padding: var(--kui-space-20, $kui-space-20);
+
+  &:hover {
+    color: var(--kui-color-text-danger, $kui-color-text-danger);
+  }
+}
+
+.client-row-with-label .remove-client-btn {
+  margin-top: 60px;
+}
+
+.add-client-inline {
+  align-items: center;
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
+  cursor: pointer;
+  display: flex;
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+  gap: var(--kui-space-20, $kui-space-20);
+}
+
+.add-client-inline-disabled {
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  cursor: default;
+  pointer-events: none;
+}
+
 :deep(.create-action) {
   cursor: pointer;
 }
 
-.principals-directory-select,
+.principals-directory-select {
+  :deep(.dropdown-footer.dropdown-footer-sticky) {
+    pointer-events: auto;
+  }
+}
+
 .principals-client-select {
+  margin-top: var(--kui-space-40, $kui-space-40);
+
   :deep(.dropdown-footer.dropdown-footer-sticky) {
     pointer-events: auto;
   }
