@@ -315,6 +315,9 @@
     "daily": "@timestamp per day",
     "weekly": "@timestamp per week"
   },
+  "timestampAxisTitles": {
+    "platform": "@timestamp created at"
+  },
   "topNTable": {
     "nameLabel": "Name",
     "defaultEmptyStateTitle": "No data to display",
