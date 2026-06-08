@@ -157,7 +157,7 @@ const isFavorite = computed((): boolean =>
   pageShortcutsContext.isFavorite === true) ||
   ('isPageFavorite' in pageShortcutsContext &&
   typeof pageShortcutsContext.isPageFavorite === 'function' &&
-  pageShortcutsContext.isPageFavorite())))
+  pageShortcutsContext.isPageFavorite(pageShortcutData))))
 
 /** Handle navigation back via the backTo prop */
 const navigateBack = async () => {
