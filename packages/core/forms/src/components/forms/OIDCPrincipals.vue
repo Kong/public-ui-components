@@ -338,8 +338,10 @@ const inferInitialLookupMethod = (formModel) => {
 }
 
 // Decide the initial radio mode from the existing record.
-const inferInitialMode = (formModel) => {
+const inferInitialMode = (formModel, isEditing) => {
   if (formModel['config-principals-enabled'] === true) return MODE_KONG_IDENTITY
+  // On edit, respect principals-enabled=false as External mode
+  if (isEditing && formModel['config-principals-enabled'] === false) return MODE_EXTERNAL
   for (const key of COMMON_FIELD_MODELS) {
     const v = formModel[key]
     if (v !== undefined && v !== null && v !== '') return MODE_EXTERNAL
@@ -381,6 +383,10 @@ export default {
       type: Function,
       required: true,
     },
+    isEditing: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['mode-change'],
   data() {
@@ -391,13 +397,14 @@ export default {
       KUI_ICON_SIZE_20,
       KUI_ICON_SIZE_30,
       KUI_ICON_SIZE_40,
-      selectedMode: inferInitialMode(this.formModel),
+      selectedMode: inferInitialMode(this.formModel, this.isEditing),
       selectedLookupMethod: inferInitialLookupMethod(this.formModel),
       kongIdentityServers: [],
       kongIdentityServersLoading: false,
       clients: [],
       clientsLoading: false,
       selectedServer: null,
+      restoringServer: false,
       leavePromptType: null,
     }
   },
@@ -420,6 +427,12 @@ export default {
     },
   },
   mounted() {
+    // On create, Kong Identity is the default mode — ensure principals-enabled
+    // is set to true so the payload is correct.
+    if (!this.isEditing && this.selectedMode === MODE_KONG_IDENTITY) {
+      // eslint-disable-next-line vue/no-mutating-props
+      this.formModel['config-principals-enabled'] = true
+    }
     this.$emit('mode-change', this.selectedMode)
     this.fetchKongIdentityServers()
   },
@@ -434,9 +447,11 @@ export default {
         // If editing with an existing issuer, try to match a server
         const issuer = this.formModel['config-issuer']
         if (issuer && !this.selectedServer) {
-          this.selectedServer = this.kongIdentityServers.find(s => s.issuer === issuer) || null
-          if (this.selectedServer) {
-            this.fetchClients(this.selectedServer.id)
+          const matched = this.kongIdentityServers.find(s => s.issuer === issuer) || null
+          if (matched) {
+            this.restoringServer = true
+            this.selectedServer = matched
+            this.fetchClients(matched.id)
           }
         }
       } catch {
@@ -459,6 +474,11 @@ export default {
       }
     },
     handleServerChange(serverId) {
+      // Skip if this is the KSelect reacting to programmatic selectedServer restore
+      if (this.restoringServer) {
+        this.restoringServer = false
+        return
+      }
       // Find the selected server and prefill issuer
       this.selectedServer = this.kongIdentityServers.find(s => s.id === serverId) || null
       if (this.selectedServer?.issuer) {

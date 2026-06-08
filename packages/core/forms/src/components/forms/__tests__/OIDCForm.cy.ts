@@ -114,10 +114,17 @@ const OIDCModelWithPrincipals = {
   'config-principals-error_on_miss': false,
 }
 
+const requiredProps = {
+  isEditing: false,
+  onModelUpdated: () => {},
+  onPartialToggled: () => {},
+}
+
 describe('<OIDCForm />', () => {
   it('should render redis fields as common fields when enableRedisPartial is not passed', () => {
     cy.mount(OIDCForm, {
       props: {
+        ...requiredProps,
         formSchema: OIDCFormSchema,
         formModel: OIDCModel,
       },
@@ -159,6 +166,7 @@ describe('<OIDCForm />', () => {
     ).as('getRedisEEPartial')
     cy.mount(OIDCForm, {
       props: {
+        ...requiredProps,
         formSchema: OIDCFormSchema,
         formModel: OIDCModel,
         enableRedisPartial: true,
@@ -190,9 +198,23 @@ describe('<OIDCForm />', () => {
   })
 
   describe('Kong Identity principals', () => {
+    beforeEach(() => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v1/auth-servers/_computed`,
+        },
+        {
+          statusCode: 200,
+          body: { data: [] },
+        },
+      ).as('getAuthServers')
+    })
+
     it('should render principals section in Konnect when schema has principals fields', () => {
       cy.mount(OIDCForm, {
         props: {
+          ...requiredProps,
           formSchema: OIDCFormSchemaWithPrincipals,
           formModel: OIDCModelWithPrincipals,
         },
@@ -209,6 +231,7 @@ describe('<OIDCForm />', () => {
     it('should not render principals section in Kong Manager', () => {
       cy.mount(OIDCForm, {
         props: {
+          ...requiredProps,
           formSchema: OIDCFormSchemaWithPrincipals,
           formModel: OIDCModelWithPrincipals,
         },
@@ -225,6 +248,7 @@ describe('<OIDCForm />', () => {
     it('should not render principals section in Konnect when schema has no principals fields', () => {
       cy.mount(OIDCForm, {
         props: {
+          ...requiredProps,
           formSchema: OIDCFormSchema,
           formModel: OIDCModel,
         },

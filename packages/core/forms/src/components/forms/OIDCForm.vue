@@ -30,6 +30,7 @@
             :form-model="formModel"
             :form-options="formOptions"
             :form-schema="formSchema"
+            :is-editing="isEditing"
             :on-model-updated="onModelUpdated"
             @mode-change="handlePrincipalsModeChange"
           />
