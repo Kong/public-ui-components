@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.18.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.2...@kong-ui-public/analytics-chart@10.18.3) (2026-06-08)
+
+
+### Bug Fixes
+
+* render platform timestamp axis title ([#3424](https://github.com/Kong/public-ui-components/issues/3424)) ([973bdf4](https://github.com/Kong/public-ui-components/commit/973bdf45d58c0fa0c7716024d6db14e58f9505be))
+
+
+
+
+
 ## [10.18.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.1...@kong-ui-public/analytics-chart@10.18.2) (2026-06-05)
 
 
