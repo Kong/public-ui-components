@@ -15,12 +15,6 @@
   </div>
 </template>
 
-<script lang="ts">
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'
-
-ModuleRegistry.registerModules([AllCommunityModule])
-</script>
-
 <script setup lang="ts" generic="Row extends object">
 import type {
   TableDataGridFetcher,
@@ -29,8 +23,10 @@ import type {
 } from '../types'
 import type { ColDef, GridReadyEvent } from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
-import { themeQuartz } from 'ag-grid-community'
+import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-community'
 import { computed, ref, shallowRef, toRef, watch } from 'vue'
+
+ModuleRegistry.registerModules([AllCommunityModule])
 
 const {
   agGridOptions = {},
