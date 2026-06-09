@@ -40,6 +40,30 @@
     data-testid="ff-advanced-fields-container"
     hide-general-fields
   >
+    <div
+      v-if="isKonnect && hasPrincipals && selectedMode === 'kong-identity' && hasPrincipalsErrorOnMiss"
+      class="kong-identity-error-on-miss"
+    >
+      <KLabel data-testid="ff-principals-error-on-miss-label">
+        {{ i18n.t('custom_field.kong_identity.error_on_miss_label') }}
+      </KLabel>
+      <KRadio
+        data-testid="principals-error-on-miss-true"
+        :description="i18n.t('custom_field.kong_identity.error_on_miss_reject_description')"
+        :label="i18n.t('custom_field.kong_identity.error_on_miss_reject_label')"
+        :model-value="principalsErrorOnMiss"
+        :selected-value="true"
+        @update:model-value="handleErrorOnMissChange"
+      />
+      <KRadio
+        data-testid="principals-error-on-miss-false"
+        :description="i18n.t('custom_field.kong_identity.error_on_miss_continue_description')"
+        :label="i18n.t('custom_field.kong_identity.error_on_miss_continue_label')"
+        :model-value="principalsErrorOnMiss"
+        :selected-value="false"
+        @update:model-value="handleErrorOnMissChange"
+      />
+    </div>
     <ObjectField
       as-child
       name="config"
@@ -58,6 +82,7 @@ import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealms
 import { useFormShared } from '../../free-form/shared/composables'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useAxios } from '@kong-ui-public/entities-shared'
+import { KLabel, KRadio } from '@kong/kongponents'
 import { FETCHED_REALMS_KEY } from '../key-auth-identity-realms/const'
 import { BEFORE_SAVE_KEY } from '../../free-form/shared/const'
 import composables from '../../../composables'
@@ -75,6 +100,16 @@ const isKonnect = computed(() => appConfig?.app === 'konnect')
 const { axiosInstance } = useAxios(appConfig?.axiosRequestConfig)
 
 const { formData, getSchema } = useFormShared()
+
+const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
+
+const principalsErrorOnMiss = computed(() => formData.config?.principals?.error_on_miss ?? true)
+
+function handleErrorOnMissChange(value: boolean) {
+  if (formData.config?.principals) {
+    formData.config.principals.error_on_miss = value
+  }
+}
 
 // Fetch realms from API only when the Konnect identity realms field is relevant
 type KonnectRealmResponse = { data: Array<{ id: string, name: string }>, meta: { next: string | null } }
@@ -251,6 +286,12 @@ const advancedOmit = computed(() => {
   font-size: var(--kui-font-size-20, $kui-font-size-20);
   margin-bottom: 0;
   margin-top: var(--kui-space-30, $kui-space-30);
+}
+
+.kong-identity-error-on-miss {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-40, $kui-space-40);
 }
 
 .ff-advanced-fields-container {

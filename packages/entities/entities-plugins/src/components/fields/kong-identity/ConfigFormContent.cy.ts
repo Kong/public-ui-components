@@ -571,7 +571,7 @@ describe('ConfigFormContent', () => {
           config: { principals: { enabled: true, directory: 'default', error_on_miss: false }, identity_realms: null },
         })
 
-        cy.getTestId('principals-error-on-miss-true').click()
+        cy.getTestId('principals-error-on-miss-true').click({ force: true })
 
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
           return val.config?.principals?.error_on_miss === true
@@ -583,7 +583,7 @@ describe('ConfigFormContent', () => {
           config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
         })
 
-        cy.getTestId('principals-error-on-miss-false').click()
+        cy.getTestId('principals-error-on-miss-false').click({ force: true })
 
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
           return val.config?.principals?.error_on_miss === false

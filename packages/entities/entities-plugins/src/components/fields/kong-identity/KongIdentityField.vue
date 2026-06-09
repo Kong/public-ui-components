@@ -67,31 +67,6 @@
         </KRadio>
       </template>
     </div>
-
-    <div
-      v-if="selectedMode === 'kong-identity' && hasPrincipalsErrorOnMiss"
-      class="kong-identity-error-on-miss"
-    >
-      <KLabel data-testid="ff-principals-error-on-miss-label">
-        {{ t('custom_field.kong_identity.error_on_miss_label') }}
-      </KLabel>
-      <KRadio
-        data-testid="principals-error-on-miss-true"
-        :description="t('custom_field.kong_identity.error_on_miss_reject_description')"
-        :label="t('custom_field.kong_identity.error_on_miss_reject_label')"
-        :model-value="principalsErrorOnMiss"
-        :selected-value="true"
-        @update:model-value="handleErrorOnMissChange"
-      />
-      <KRadio
-        data-testid="principals-error-on-miss-false"
-        :description="t('custom_field.kong_identity.error_on_miss_continue_description')"
-        :label="t('custom_field.kong_identity.error_on_miss_continue_label')"
-        :model-value="principalsErrorOnMiss"
-        :selected-value="false"
-        @update:model-value="handleErrorOnMissChange"
-      />
-    </div>
   </div>
 </template>
 
@@ -116,18 +91,6 @@ const { i18n } = composables.useI18n()
 const { t } = i18n
 
 const { formData, getSchema, getEmptyOrDefault } = useFormShared()
-
-const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
-
-const principalsErrorOnMiss = computed(() => {
-  return formData.config?.principals?.error_on_miss ?? true
-})
-
-function handleErrorOnMissChange(value: boolean) {
-  if (formData.config?.principals) {
-    formData.config.principals.error_on_miss = value
-  }
-}
 
 // Determine if schema has identity_realms
 const identityRealmsInSchema = computed(() => {
@@ -208,13 +171,6 @@ function handleModeChange(mode: AuthMode) {
   &:hover {
     text-decoration: underline;
   }
-}
-
-.kong-identity-error-on-miss {
-  display: flex;
-  flex-direction: column;
-  gap: var(--kui-space-40, $kui-space-40);
-  margin-top: var(--kui-space-60, $kui-space-60);
 }
 
 .kong-identity-options {
