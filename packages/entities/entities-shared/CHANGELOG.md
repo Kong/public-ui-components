@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.49.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.48.0...@kong-ui-public/entities-shared@3.49.0) (2026-06-09)
+
+
+### Features
+
+* **entities-shared:** add SentitiveInput ([#3425](https://github.com/Kong/public-ui-components/issues/3425)) ([d69e41a](https://github.com/Kong/public-ui-components/commit/d69e41ad6c05d760354e2ea30cdd638c9539493c))
+
+
+
+
+
 # [3.48.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.47.6...@kong-ui-public/entities-shared@3.48.0) (2026-06-01)
 
 
