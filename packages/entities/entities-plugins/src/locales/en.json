@@ -1203,7 +1203,13 @@
       "consumers_description_key_auth": "Use consumer-managed API keys. Consumers provide their API key in a request header, query parameter, or request body to authenticate requests.",
       "consumers_description_basic_auth": "Use consumer-managed Basic Auth credentials. Consumers authenticate requests using a username and password.",
       "centrally_managed_label": "Centrally managed consumers",
-      "centrally_managed_description": "Authenticate centrally managed consumers in Konnect using identity realms. Identity realms are scoped to the control plane by default."
+      "centrally_managed_description": "Authenticate centrally managed consumers in Konnect using identity realms. Identity realms are scoped to the control plane by default.",
+      "identity_realms_required": "To use Centrally managed consumers, you must select at least one realm.",
+      "error_on_miss_label": "If principal lookup fails",
+      "error_on_miss_reject_label": "Reject the request",
+      "error_on_miss_reject_description": "Treat the request as unauthenticated if Kong Identity cannot resolve the principal.",
+      "error_on_miss_continue_label": "Continue without a principal",
+      "error_on_miss_continue_description": "Allow the request to continue without resolving a principal."
     }
   },
   "sp": {
