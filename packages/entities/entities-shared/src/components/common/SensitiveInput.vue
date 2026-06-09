@@ -220,6 +220,7 @@ const handleGenerate = async () => {
 // below), reusing KInput's own formula: `calc(space-50 + after-width + space-40)`.
 const rootElement = ref<HTMLElement>()
 let resizeObserver: ResizeObserver | undefined
+let rafId: number | undefined
 
 // Mirrors KInput's pre-measurement default (`space-50 + icon-size-40 + space-40`)
 // so the padding doesn't jump on the first frame.
@@ -236,7 +237,9 @@ onMounted(() => {
   const afterContent = rootElement.value?.querySelector<HTMLElement>('.after-content-wrapper')
 
   // Re-measure whenever the after-content wrapper resizes (e.g. its content swaps).
-  resizeObserver = new ResizeObserver(() => syncInputPadding())
+  resizeObserver = new ResizeObserver(() => {
+    rafId = window.requestAnimationFrame(() => syncInputPadding())
+  })
   if (afterContent) {
     resizeObserver.observe(afterContent)
   }
@@ -245,6 +248,9 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   resizeObserver?.disconnect()
+  if (rafId !== undefined) {
+    window.cancelAnimationFrame(rafId)
+  }
 })
 </script>
 
