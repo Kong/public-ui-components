@@ -8,6 +8,7 @@
       :entity-type="SupportedEntityType.Vault"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
+      :record-resolver="recordResolver"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
       @fetch:success="(entity: any) => $emit('fetch:success', entity)"
       @loading="(val: boolean) => $emit('loading', val)"
@@ -39,8 +40,9 @@ import {
 } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
 import type { PropType } from 'vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import endpoints from '../vaults-endpoints'
+import { fromAiGatewayVault } from '../ai-gateway-mappers'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { KongManagerVaultEntityConfig, KonnectVaultEntityConfig, VaultConfigurationSchema } from '../types'
 import composables from '../composables'
@@ -59,8 +61,9 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectVaultEntityConfig | KongManagerVaultEntityConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
+      if (config.app === 'konnect' && config.apiType !== 'aiGateway' && !config.controlPlaneId) return false
       if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (config.apiType === 'aiGateway' && !config.aiGatewayId) return false
       if (!config.entityId) return false
       return true
     },
@@ -82,37 +85,52 @@ const props = defineProps({
   },
 })
 
-const SENSITIVE_KEYS = ['token', 'approle_secret_id', 'api_key', 'aws_access_key_id', 'aws_secret_access_key', 'aws_auth_nonce']
+// Keys masked in the displayed config. The record is reverse-mapped to gateway field
+// names (via recordResolver) before rendering, so gateway names cover AI Gateway too.
+const SENSITIVE_KEYS = ['token', 'approle_secret_id', 'api_key', 'aws_access_key_id', 'aws_secret_access_key', 'aws_auth_nonce', 'cert_auth_cert_key', 'oauth2_client_secret']
 const SENSITIVE_MASK = '************'
-const fetchUrl = computed((): string => endpoints.form[props.config?.app]?.edit)
+
+const isAiGateway = computed((): boolean => props.config.apiType === 'aiGateway')
+const fetchUrl = computed((): string => {
+  const url = isAiGateway.value ? endpoints.form.aiGateway?.edit : endpoints.form[props.config?.app]?.edit
+  return url?.replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
+})
+
+// AI Gateway returns a different vault shape; reshape it to the gateway-named record the
+// schema and config slot expect.
+const recordResolver = (data: Record<string, any>) => isAiGateway.value ? fromAiGatewayVault(data) : data
 
 const { i18n: { t } } = composables.useI18n()
 const { convertKeyToTitle } = useStringHelpers()
 const { getPropValue } = useHelpers()
 
-const configSchema = ref<VaultConfigurationSchema>({
+const configSchema = computed<Partial<VaultConfigurationSchema>>(() => ({
   id: {},
   name: {
-    label: t('labels.vault_type'),
+    label: t(isAiGateway.value ? 'labels.vault_type_ai_gateway' : 'labels.vault_type'),
   },
   updated_at: {},
   created_at: {},
   prefix: {
     order: 5,
     section: ConfigurationSchemaSection.Basic,
+    label: isAiGateway.value ? t('labels.vault_name_ai_gateway') : undefined,
   },
   description: {
     order: 6,
     section: ConfigurationSchemaSection.Basic,
   },
-  tags: {
-    order: 7,
-  },
+  // AI Gateway uses labels (not exposed this version) instead of tags.
+  ...(isAiGateway.value ? {} : {
+    tags: {
+      order: 7,
+    },
+  }),
   config: {
     order: 8,
     type: ConfigurationSchemaType.Json,
   },
-})
+}))
 
 const codeBlockRecordFormatter = (record: Record<string, any>) => {
   const maskedConfig = { ...record.config }
@@ -121,10 +139,14 @@ const codeBlockRecordFormatter = (record: Record<string, any>) => {
       maskedConfig[key] = SENSITIVE_MASK
     }
   })
-  return {
-    ...record,
-    config: maskedConfig,
+  const masked: Record<string, any> = { ...record, config: maskedConfig }
+  if (isAiGateway.value) {
+    // Restore AI Gateway field names so the code view matches the actual API response.
+    const result: Record<string, any> = { ...masked, type: masked.name, name: masked.prefix }
+    delete result.prefix
+    return result
   }
+  return masked
 }
 
 const getMetadataLabel = (propKey: string) => {
