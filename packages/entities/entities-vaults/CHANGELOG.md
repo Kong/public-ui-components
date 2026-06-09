@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.8.5...@kong-ui-public/entities-vaults@4.9.0) (2026-06-09)
+
+
+### Features
+
+* **entities-vaults:** support ai gateway vault ([#3407](https://github.com/Kong/public-ui-components/issues/3407)) ([7449ec5](https://github.com/Kong/public-ui-components/commit/7449ec57ff9d9ea938a607f32dd6ff0493d53cb3))
+
+
+
+
+
 ## [4.8.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.8.4...@kong-ui-public/entities-vaults@4.8.5) (2026-06-01)
 
 
