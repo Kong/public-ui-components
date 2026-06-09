@@ -60,7 +60,7 @@ describe('<SensitiveInput />', () => {
   })
 
   describe('generate key', () => {
-    it('hides the Generate key action when no generateKey prop is provided', () => {
+    it('hides the Generate key action when no generator prop is provided', () => {
       cy.mount(SensitiveInput, {
         props: { modelValue: '' },
       })
@@ -68,13 +68,13 @@ describe('<SensitiveInput />', () => {
       cy.getTestId('sensitive-input-generate').should('not.exist')
     })
 
-    it('calls generateKey, writes the value back, reveals it and emits "generated"', () => {
+    it('calls the generator, writes the value back, reveals it and emits "generated"', () => {
       const generate = cy.stub().as('generate').resolves('generated-key-123')
 
       cy.mount(SensitiveInput, {
         props: {
           modelValue: '',
-          generateKey: generate,
+          generator: generate,
           'onUpdate:modelValue': (value: string) => {
             Cypress.vueWrapper.setProps({ modelValue: value })
           },
@@ -107,6 +107,25 @@ describe('<SensitiveInput />', () => {
       cy.getTestId('sensitive-input-hint').should('contain.text', oneTimeHint)
       cy.getTestId('sensitive-input-copy').should('be.visible')
       input().should('have.attr', 'type', 'text')
+    })
+  })
+
+  describe('custom labels', () => {
+    it('overrides the rotate, generate and hint texts via the labels prop', () => {
+      const labels = {
+        rotateLabel: 'Rotate password',
+        generateLabel: 'Generate password',
+        hintLabel: 'The password is shown only once.',
+      }
+
+      cy.mount(SensitiveInput, {
+        props: { modelValue: 'secret', mode: 'edit', generator: () => 'x', showOneTimeHint: true, labels },
+      })
+
+      cy.getTestId('sensitive-input-hint').should('contain.text', labels.hintLabel)
+      cy.getTestId('sensitive-input-rotate').should('contain.text', labels.rotateLabel)
+      cy.getTestId('sensitive-input-rotate').click()
+      cy.getTestId('sensitive-input-generate').should('contain.text', labels.generateLabel)
     })
   })
 })

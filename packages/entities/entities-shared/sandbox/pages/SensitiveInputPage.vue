@@ -13,7 +13,7 @@
       <h3>Create mode with Generate key</h3>
       <SensitiveInput
         v-model="generateValue"
-        :generate-key="generateKey"
+        :generator="generateKey"
         label="API key"
       />
       <pre>modelValue: {{ generateValue }}</pre>
@@ -23,7 +23,7 @@
       <h3>Edit mode (starts masked → Rotate key)</h3>
       <SensitiveInput
         v-model="editValue"
-        :generate-key="generateKey"
+        :generator="generateKey"
         label="API key"
         mode="edit"
       />
@@ -44,7 +44,7 @@
       <h3>One-time hint (shown after the "generated" event fires)</h3>
       <SensitiveInput
         v-model="hintValue"
-        :generate-key="generateKey"
+        :generator="generateKey"
         label="API key"
         :show-one-time-hint="showHint"
         @generated="showHint = true"

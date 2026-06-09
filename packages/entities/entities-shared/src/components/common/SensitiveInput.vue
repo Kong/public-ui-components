@@ -29,13 +29,13 @@
           size="small"
           @click="enterEditing"
         >
-          {{ t('sensitiveInput.rotateKey') }}
+          {{ rotateLabel }}
         </KButton>
 
         <!-- Editing: optional Generate key action + visibility toggle -->
         <template v-else>
           <KButton
-            v-if="generateKey"
+            v-if="generator"
             appearance="tertiary"
             class="sensitive-input-action"
             data-testid="sensitive-input-generate"
@@ -43,7 +43,7 @@
             size="small"
             @click="handleGenerate"
           >
-            {{ t('sensitiveInput.generateKey') }}
+            {{ generateLabel }}
           </KButton>
           <component
             :is="revealed ? VisibilityOffIcon : VisibilityIcon"
@@ -72,7 +72,7 @@
         :size="KUI_ICON_SIZE_40"
       />
       <span class="sensitive-input-hint-text">
-        {{ t('sensitiveInput.oneTimeHint') }}
+        {{ hintLabel }}
       </span>
       <KClipboardProvider v-slot="{ copyToClipboard }">
         <KButton
@@ -94,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { CopyIcon, InfoIcon, VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
 import {
   KUI_COLOR_TEXT_INFO,
@@ -103,14 +103,16 @@ import {
   KUI_SPACE_50,
 } from '@kong/design-tokens'
 import composables from '../../composables'
+import type { SensitiveInputLabels } from '../../types'
 
 const MASKED_VALUE = '••••••••••••••'
 
 const {
   modelValue,
   mode = 'create',
-  generateKey,
+  generator,
   showOneTimeHint = false,
+  labels,
   label,
   labelAttributes,
   placeholder,
@@ -133,12 +135,18 @@ const {
    * written back through v-model and revealed. Generation logic (local crypto
    * or a backend call) lives with the caller.
    */
-  generateKey?: () => string | Promise<string>
+  generator?: () => string | Promise<string>
   /**
    * Caller-controlled one-time hint banner ("The key is shown only once…")
    * with a Copy action. When `true` the value is also revealed in plain text.
    */
   showOneTimeHint?: boolean
+  /**
+   * Overrides for the built-in UI texts, so the component can be reused for
+   * other credential types (passwords, tokens, …). Any omitted label falls
+   * back to its default. The input placeholder is configured via `placeholder`.
+   */
+  labels?: SensitiveInputLabels
   label?: string
   labelAttributes?: Record<string, any>
   placeholder?: string
@@ -170,6 +178,11 @@ const isMasked = computed(() => internalMode.value === 'masked')
 const maskedValue = MASKED_VALUE
 const resolvedPlaceholder = computed(() => placeholder ?? t('sensitiveInput.placeholder'))
 
+// UI texts fall back to the i18n defaults when not overridden via `labels`.
+const rotateLabel = computed(() => labels?.rotateLabel ?? t('sensitiveInput.rotateKey'))
+const generateLabel = computed(() => labels?.generateLabel ?? t('sensitiveInput.generateKey'))
+const hintLabel = computed(() => labels?.hintLabel ?? t('sensitiveInput.oneTimeHint'))
+
 // Masked state always renders as plain dots; otherwise the value follows the
 // visibility toggle.
 const inputType = computed<'text' | 'password'>(() => {
@@ -197,13 +210,13 @@ const toggleReveal = () => {
 }
 
 const handleGenerate = async () => {
-  if (!generateKey || isGenerating.value) return
+  if (!generator || isGenerating.value) return
 
   isGenerating.value = true
   emit('generate')
 
   try {
-    const key = await generateKey()
+    const key = await generator()
     emit('update:modelValue', key)
     revealed.value = true
     emit('generated', key)
@@ -218,7 +231,7 @@ const handleGenerate = async () => {
 // becomes stale. We observe the rendered after-content wrapper and drive the
 // input's `padding-right` ourselves (via the `inputPaddingRight` CSS binding
 // below), reusing KInput's own formula: `calc(space-50 + after-width + space-40)`.
-const rootElement = ref<HTMLElement>()
+const rootElement = useTemplateRef<HTMLElement>('rootElement')
 let resizeObserver: ResizeObserver | undefined
 let rafId: number | undefined
 

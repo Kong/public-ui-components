@@ -15,7 +15,7 @@ An input component (built on top of `KInput`) for entering sensitive fields such
 
 - Behaves like a regular `KInput` when creating a resource, with a built-in visibility toggle to reveal or mask the value.
 - When editing an existing resource, starts in a read-only masked state with a "Rotate key" action that switches the field to the editable state.
-- Optional "Generate key" action — only shown when a `generateKey` callback is provided, so the value can be generated locally or fetched from a backend, depending on the host application.
+- Optional "Generate key" action — only shown when a `generator` callback is provided, so the value can be generated locally or fetched from a backend, depending on the host application.
 - Optional one-time hint banner ("The key is shown only once…") with a Copy action, displayed under the host application's control.
 
 ## Requirements
@@ -46,7 +46,7 @@ The sensitive value. Bound via `v-model`.
 
 Determines the initial state. `'create'` starts in the editable state. `'edit'` starts in a read-only masked state and shows a "Rotate key" action that switches the field to the editable state — use this when editing an existing resource, where the backend typically does not return the plaintext value.
 
-#### `generateKey`
+#### `generator`
 
 - type: `() => string | Promise<string>`
 - required: `false`
@@ -60,6 +60,13 @@ When provided, a "Generate key" action is shown in the editable state. The retur
 - default: `false`
 
 When `true`, a one-time hint banner ("The key is shown only once. Copy it now and store it securely.") with a Copy action is rendered below the input, and the value is revealed in plain text. This is controlled by the host application (for example, after a successful save), and is not toggled automatically when a key is generated.
+
+#### `labels`
+
+- type: `SensitiveInputLabels`
+- required: `false`
+
+Overrides for the built-in UI texts, so the component can be reused for other credential types (passwords, tokens, …). Any omitted label falls back to its default. Available keys: `rotateLabel`, `generateLabel`, `hintLabel`. The input placeholder is configured separately via the `placeholder` prop.
 
 #### Other props
 
@@ -77,11 +84,11 @@ Emitted when the user clicks "Rotate key" and the field enters the editable stat
 
 #### generate
 
-Emitted when key generation starts (immediately before `generateKey` is awaited).
+Emitted when key generation starts (immediately before `generator` is awaited).
 
 #### generated
 
-Emitted with the generated key once `generateKey` resolves.
+Emitted with the generated key once `generator` resolves.
 
 ### Usage example
 
@@ -91,7 +98,7 @@ Emitted with the generated key once `generateKey` resolves.
     v-model="apiKey"
     label="API key"
     mode="edit"
-    :generate-key="generateKey"
+    :generator="generateKey"
     :show-one-time-hint="showHint"
     @generated="onGenerated"
   />
@@ -121,4 +128,6 @@ Please also refer to the [sandbox](../sandbox/pages/SensitiveInputPage.vue).
 
 ## TypeScript interfaces
 
-Currently we don't have any TypeScript interfaces exported from this component.
+```ts
+import type { SensitiveInputLabels } from '@kong-ui-public/entities-shared'
+```
