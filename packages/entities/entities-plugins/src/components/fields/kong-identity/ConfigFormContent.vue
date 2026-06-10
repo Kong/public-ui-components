@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, nextTick, onMounted, provide, ref, watch } from 'vue'
+import { computed, inject, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue'
 import ObjectField from '../../free-form/shared/ObjectField.vue'
 import AdvancedFields from '../../free-form/shared/AdvancedFields.vue'
 import KongIdentityField from './KongIdentityField.vue'
@@ -84,7 +84,7 @@ import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import { KLabel, KRadio } from '@kong/kongponents'
 import { FETCHED_REALMS_KEY } from '../key-auth-identity-realms/const'
-import { BEFORE_SAVE_KEY } from '../../free-form/shared/const'
+import { BEFORE_SAVE_KEY } from '../../const'
 import composables from '../../../composables'
 
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
@@ -226,13 +226,14 @@ const realmValidationVisible = computed(() =>
 )
 
 // Before-save guard: block submission and reveal the error if no realm is selected
-registerBeforeSave?.(() => {
+const unregisterBeforeSave = registerBeforeSave?.(() => {
   if (realmValidationError.value) {
     realmSubmitAttempted.value = true
     return false
   }
   return true
 })
+onUnmounted(() => unregisterBeforeSave?.())
 
 const realmRequired = computed(() => !!getSchema('$.config.realm')?.required)
 

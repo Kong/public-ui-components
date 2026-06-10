@@ -2,7 +2,7 @@ import { h } from 'vue'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import Form from '../../free-form/shared/Form.vue'
 import ConfigFormContent from './ConfigFormContent.vue'
-import { BEFORE_SAVE_KEY } from '../../free-form/shared/const'
+import { BEFORE_SAVE_KEY } from '../../const'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 
 // Schema with both principals and identity_realms (like key-auth)
@@ -264,7 +264,9 @@ function mountContent(schema: FormSchema, options: { isKonnect: boolean, hasExis
     global: {
       provide: {
         [FORMS_CONFIG]: formsConfig,
-        [BEFORE_SAVE_KEY as symbol]: (cb: () => boolean) => beforeSaveCallbacks.push(cb),
+        [BEFORE_SAVE_KEY as symbol]: (cb: () => boolean) => {
+          beforeSaveCallbacks.push(cb); return () => {}
+        },
       },
     },
   })
