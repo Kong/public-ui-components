@@ -2,7 +2,7 @@
 
 Reusable Vue wrapper around AG Grid for Kong table data grids.
 
-This initial package version supports a basic first-page fetcher and AG Grid rendering. Features such as pagination controls, infinite scroll, row selection, toolbar controls, filtering, search, sorting, column visibility, slottable cells, persistent state, and movable or pinnable columns are intentionally out of scope for the first PR.
+This initial package version supports a basic first-page fetcher and AG Grid rendering.
 
 ## Usage
 

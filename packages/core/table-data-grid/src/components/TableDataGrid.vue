@@ -92,7 +92,7 @@ watch(
     toRef(() => pageSize),
   ],
   () => {
-    void fetchRows()
+    fetchRows()
   },
   { immediate: true },
 )
