@@ -95,7 +95,8 @@
       "lodash-es@<=4.17.23": ">=4.18.0",
       "lodash@<=4.17.23": ">=4.18.0",
       "axios@<1.15.0": ">=1.16.1",
-      "tmp@<0.2.6": ">=0.2.6"
+      "tmp@<0.2.6": ">=0.2.6",
+      "shell-quote@>=1.1.0 <=1.8.3": ">=1.8.4"
     },
     "onlyBuiltDependencies": [
       "@evilmartians/lefthook",
