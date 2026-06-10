@@ -1,6 +1,6 @@
 import type { GridApi, GridOptions } from 'ag-grid-community'
 
-export type TableDataGridMode = 'pagination'
+export type TableDataGridMode = 'infinite'
 
 export type TableDataGridHeader<Row extends object = Record<string, unknown>> = {
   key: Extract<keyof Row, string>
@@ -10,11 +10,20 @@ export type TableDataGridHeader<Row extends object = Record<string, unknown>> = 
   maxWidth?: number
 }
 
+type TableDataGridCursorParams = {
+  cursor?: unknown
+  offset?: never
+}
+
+type TableDataGridOffsetParams = {
+  cursor?: never
+  offset?: number
+}
+
 export type TableDataGridFetcherParams = {
   mode: TableDataGridMode
-  page: number
   pageSize: number
-}
+} & (TableDataGridCursorParams | TableDataGridOffsetParams)
 
 export type TableDataGridFetcherResult<Row extends object = Record<string, unknown>> = {
   data: Row[]

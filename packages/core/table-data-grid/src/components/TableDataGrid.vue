@@ -66,8 +66,8 @@ const fetchRows = async () => {
 
   try {
     const result = await fetcher({
-      mode: 'pagination',
-      page: 1,
+      mode: 'infinite',
+      offset: 0,
       pageSize,
     })
 

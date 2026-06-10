@@ -48,8 +48,8 @@ describe('<TableDataGrid />', () => {
     cy.contains('.ag-cell', 'Portal app').should('be.visible')
     cy.contains('.ag-cell', 'Inactive').should('be.visible')
     cy.wrap(fetcher).should('have.been.calledOnceWith', {
-      mode: 'pagination',
-      page: 1,
+      mode: 'infinite',
+      offset: 0,
       pageSize: 15,
     })
   })

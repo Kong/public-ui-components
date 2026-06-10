@@ -2,7 +2,7 @@
 
 Reusable Vue wrapper around AG Grid for Kong table data grids.
 
-This initial package version supports a basic first-page fetcher and AG Grid rendering.
+This initial package version supports a basic infinite-placeholder fetcher and AG Grid rendering.
 
 ## Usage
 
@@ -34,8 +34,8 @@ const rows: Row[] = [
   { id: 'row-1', name: 'Gateway service', status: 'Active' },
 ]
 
-const fetchRows: TableDataGridFetcher<Row> = async ({ mode, page, pageSize }) => ({
-  data: rows,
+const fetchRows: TableDataGridFetcher<Row> = async ({ offset = 0, pageSize }) => ({
+  data: rows.slice(offset, offset + pageSize),
   total: rows.length,
 })
 </script>
@@ -46,18 +46,19 @@ const fetchRows: TableDataGridFetcher<Row> = async ({ mode, page, pageSize }) =>
 | Prop | Type | Required | Default | Notes |
 | --- | --- | --- | --- | --- |
 | `headers` | `Array<TableDataGridHeader<Row>>` | Yes | - | Basic column definitions mapped to AG Grid columns. |
-| `fetcher` | `TableDataGridFetcher<Row>` | Yes | - | Async row loader called with the initial first-page fetch params. |
+| `fetcher` | `TableDataGridFetcher<Row>` | Yes | - | Async row loader called with the initial infinite-placeholder fetch params. |
 | `pageSize` | `number` | No | `25` | Page size sent to the basic fetcher. No pagination controls are rendered in this PR. |
 | `agGridOptions` | `TableDataGridGridOptions<Row>` | No | `{}` | Pass-through for lower-level AG Grid options. Keep this narrow until the package owns more grid behavior. |
 
 ## Fetcher Contract
 
-The initial fetcher mirrors the package's future pagination-oriented shape but only performs the first fetch.
+The initial fetcher uses the package's future infinite-scroll-oriented shape but only performs the first fetch.
 
 ```ts
 type TableDataGridFetcherParams = {
-  mode: 'pagination'
-  page: number
+  mode: 'infinite'
+  cursor?: unknown
+  offset?: number
   pageSize: number
 }
 
@@ -70,6 +71,8 @@ type TableDataGridFetcher<Row> = (
   params: TableDataGridFetcherParams,
 ) => Promise<TableDataGridFetcherResult<Row>>
 ```
+
+`offset` is the numeric starting row for offset/limit APIs. `cursor` is an opaque positioning token for cursor-based APIs. These fields are optional because consumers generally use one positioning model or the other. This initial version passes `offset: 0` for a single fetch; real infinite-scroll sequencing will be added later.
 
 ## Header Options
 
