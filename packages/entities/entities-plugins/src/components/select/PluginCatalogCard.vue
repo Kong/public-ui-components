@@ -15,7 +15,7 @@
             <PluginIcon
               :alt="plugin.name"
               class="plugin-card-icon"
-              :name="plugin.id"
+              :name="pluginIconName"
               :size="55"
             />
             <span :class="{ 'non-custom-title': !isCustomPlugin }">
@@ -47,15 +47,17 @@
 
               <template #items>
                 <KDropdownItem
+                  v-if="hasEditAction"
                   data-testid="edit-plugin-schema"
                   @click.stop.prevent="handleCustomEdit(plugin.name, plugin.customPluginType!)"
                 >
                   {{ t('actions.edit') }}
                 </KDropdownItem>
                 <KDropdownItem
+                  v-if="hasDeleteAction"
                   danger
                   data-testid="delete-plugin-schema"
-                  has-divider
+                  :has-divider="hasEditAction"
                   @click.stop.prevent="handleCustomDelete"
                 >
                   {{ t('actions.delete') }}
@@ -131,11 +133,19 @@ const props = defineProps<{
    * Plugin to display in the card
    */
   plugin: PluginType
+  canDeleteCustomPlugin?: boolean
+  canDeleteClonedPlugin?: boolean
+  canEditCustomPlugin?: boolean
+  canEditClonedPlugin?: boolean
 }>()
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
+const pluginIconName = computed((): string => {
+  return props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromRef
+    ? props.plugin.clonedFromRef
+    : props.plugin.id
+})
 const customPluginBadges = computed((): string[] => {
   if (!isCustomPlugin.value || isCreateCustomPlugin.value) {
     return []
@@ -152,7 +162,25 @@ const customPluginBadges = computed((): string[] => {
   return [t('plugins.select.installed_custom_badge')]
 })
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
-const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && controlPlaneId.value))
+const hasEditRoute = computed((): boolean => typeof props.config.getCustomEditRoute === 'function')
+const isClonedCustomPlugin = computed((): boolean => props.plugin.customPluginType === 'cloned')
+const canDeleteCurrentPlugin = computed((): boolean => {
+  return isClonedCustomPlugin.value ? !!props.canDeleteClonedPlugin : !!props.canDeleteCustomPlugin
+})
+const canEditCurrentPlugin = computed((): boolean => {
+  return isClonedCustomPlugin.value ? !!props.canEditClonedPlugin : !!props.canEditCustomPlugin
+})
+const canManageCustomPlugin = computed((): boolean => {
+  return !(props.config.app === 'kongManager' && props.plugin.customPluginType === 'schema')
+})
+const hasEditAction = computed((): boolean => canEditCurrentPlugin.value && hasEditRoute.value)
+const hasDeleteAction = computed((): boolean => canDeleteCurrentPlugin.value)
+const hasActions = computed((): boolean => !!(
+  isCustomPlugin.value
+  && !isCreateCustomPlugin.value
+  && canManageCustomPlugin.value
+  && (hasDeleteAction.value || hasEditAction.value)
+))
 
 const pluginCardLink = computed(() => {
   if (isDisabled.value) {
@@ -173,10 +201,10 @@ const pluginCardLink = computed(() => {
  * Custom Plugin logic
  */
 const isCreateCustomPlugin = computed((): boolean => props.plugin.id === 'custom-plugin-create')
-const isCustomPlugin = computed((): boolean => props.config.app === 'konnect' && props.plugin.group === PluginGroup.CUSTOM_PLUGINS)
+const isCustomPlugin = computed((): boolean => props.plugin.group === PluginGroup.CUSTOM_PLUGINS)
 
 const handleCustomDelete = (): void => {
-  if (props.config.app === 'konnect') {
+  if (isCustomPlugin.value) {
     emit('custom-plugin-delete')
   }
 }
@@ -258,6 +286,7 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
       flex-direction: column;
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       -webkit-line-clamp: 4;
+      line-clamp: 4;
       line-height: var(--kui-line-height-30, $kui-line-height-30);
       overflow: hidden;
       text-align: left;

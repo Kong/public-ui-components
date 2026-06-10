@@ -129,17 +129,35 @@
         aria-live="polite"
         class="plugins-results-container"
       >
+        <KAlert
+          v-if="customPluginsListError"
+          appearance="warning"
+          class="custom-plugins-warning"
+          :message="customPluginsListError"
+        />
         <PluginCatalogListView
           v-if="isListView"
+          :can-delete-cloned-plugin="usercanDeleteClonedPlugin"
+          :can-delete-custom-plugin="usercanDeleteCustomPlugin"
+          :can-edit-cloned-plugin="usercanEditClonedPlugin"
+          :can-edit-custom-plugin="usercanEditCustomPlugin"
           :config="config"
           :plugin-list="filteredPlugins"
-          @delete:success="(name: string) => $emit('delete-custom:success', name)"
+          @delete:failed="handleCustomPluginDeleteFailure"
+          @delete:start="handleCustomPluginDeleteStart"
+          @delete:success="handleCustomPluginDeleteSuccess"
         />
         <PluginCatalogGrid
           v-else
+          :can-delete-cloned-plugin="usercanDeleteClonedPlugin"
+          :can-delete-custom-plugin="usercanDeleteCustomPlugin"
+          :can-edit-cloned-plugin="usercanEditClonedPlugin"
+          :can-edit-custom-plugin="usercanEditCustomPlugin"
           :config="config"
           :plugin-list="filteredPlugins"
-          @delete:success="(name: string) => $emit('delete-custom:success', name)"
+          @delete:failed="handleCustomPluginDeleteFailure"
+          @delete:start="handleCustomPluginDeleteStart"
+          @delete:success="handleCustomPluginDeleteSuccess"
           @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
         />
       </section>
@@ -148,28 +166,34 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, unref, useTemplateRef, watch, type MaybeRef } from 'vue'
+import { isAxiosError } from 'axios'
 import {
+  type ClonedPluginSchema,
   PluginGroup,
   PluginScope,
   PluginFeaturedArray,
   PluginGroupArraySortedAlphabetically,
   type CustomPluginSupportLevel,
+  type CustomPluginType,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
   type PluginType,
   type DisabledPlugin,
   type PluginCardList,
   type StreamingCustomPluginSchema,
+  type CustomPluginDeletePayload,
 } from '../types'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
 import PluginCatalogGrid from './select/PluginCatalogGrid.vue'
 import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
+import { fetchAllPages } from '../composables/useCustomPluginApi'
 import { KUI_ICON_COLOR_PRIMARY } from '@kong/design-tokens'
 import { GridIcon, ListIcon } from '@kong/icons'
 import { lcsRecursive } from '../utils/helper'
 import PluginCatalogListView from './select/PluginCatalogListView.vue'
+import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -179,6 +203,15 @@ const emit = defineEmits<{
 
 type PluginCardListExtended = PluginCardList & {
   'Query Result'?: PluginType[]
+}
+
+type DeletedCustomPlugin = CustomPluginDeletePayload
+
+interface DeleteSnapshot {
+  availablePlugins: string[]
+  streamingCustomPlugins: StreamingCustomPluginSchema[]
+  clonedCustomPlugins: ClonedPluginSchema[]
+  group?: string
 }
 
 const { i18n: { t } } = composables.useI18n()
@@ -193,8 +226,19 @@ const props = withDefaults(defineProps<{
   highlightedPluginIds?: string[]
   customPluginSupport?: CustomPluginSupportLevel
   availableOnServer?: boolean
+  canDeleteCustomPlugin?: () => boolean | Promise<boolean>
+  canReadCustomPlugin?: () => boolean | Promise<boolean>
+  canEditCustomPlugin?: () => boolean | Promise<boolean>
+  canDeleteClonedPlugin?: () => boolean | Promise<boolean>
+  canReadClonedPlugin?: () => boolean | Promise<boolean>
+  canEditClonedPlugin?: () => boolean | Promise<boolean>
 }>(), {
   availableOnServer: true,
+  customPluginSupport: 'none',
+  canDeleteCustomPlugin: async () => true,
+  canReadCustomPlugin: async () => true,
+  canEditCustomPlugin: async () => true,
+  canReadClonedPlugin: async () => true,
 })
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -208,12 +252,40 @@ const typeFilter = ref(Object.fromEntries(PluginFeaturedArray.concat(PluginGroup
 const isLoading = ref(true)
 const hasError = ref(false)
 const fetchErrorMessage = ref('')
+const customPluginsListError = ref('')
 const availablePlugins = ref<string[]>([]) // all available plugins
 const streamingCustomPlugins = ref<StreamingCustomPluginSchema[]>([])
+const clonedCustomPlugins = ref<ClonedPluginSchema[]>([])
 const pluginsList = ref<PluginCardList>({})
 const existingEntityPlugins = ref<string[]>([])
+const optimisticDeleteSnapshots = ref<Map<string, DeleteSnapshot>>(new Map())
 const isListView = ref(false)
+const abortController = ref<AbortController | null>(null)
+const hasMounted = ref(false)
 const viewModeIcon = computed(() => (isListView.value ? GridIcon : ListIcon))
+const enabledClonedPlugin = inject<MaybeRef<boolean>>(PLUGIN_FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, false)
+const isClonedPluginFeatureEnabled = computed(() => unref(enabledClonedPlugin))
+
+const normalizeCustomPluginSupport = (support: CustomPluginSupportLevel): Set<CustomPluginType> => {
+  if (support === 'none' || support === 'disabled') {
+    return new Set()
+  }
+
+  return new Set(Array.isArray(support) ? support : [support])
+}
+
+const normalizedCustomPluginSupport = computed<Set<CustomPluginType>>(() => normalizeCustomPluginSupport(props.customPluginSupport))
+const customPluginSupportKey = computed(() => [...normalizedCustomPluginSupport.value].sort().join('|'))
+const isStreamingCustomPluginSupported = computed(() => normalizedCustomPluginSupport.value.has('streaming'))
+const isClonedCustomPluginSupported = computed(() => isClonedPluginFeatureEnabled.value && normalizedCustomPluginSupport.value.has('cloned'))
+
+const isRequestCancelled = (error: unknown): boolean => {
+  return isAxiosError(error) && error.code === 'ERR_CANCELED'
+}
+
+const isClonedPluginLicenseError = (error: unknown): boolean => {
+  return getMessageFromError(error).toLowerCase().includes('requires a license')
+}
 
 const availablePluginsUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePlugins}`
@@ -228,12 +300,30 @@ const availablePluginsUrl = computed((): string => {
 })
 
 const streamingPluginsUrl = computed<string | null>(() => {
-  if (props.config.app === 'konnect' && props.customPluginSupport === 'streaming') {
-    return `${props.config.apiBaseUrl}${endpoints.select[props.config.app].streamingCustomPlugins}`
-      .replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-      .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+  if (isStreamingCustomPluginSupported.value) {
+    let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].streamingCustomPlugins}`
+
+    if (props.config.app === 'konnect') {
+      url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+    }
+
+    return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
-  // Kong Manager and other support level does not support streaming custom plugins now
+
+  return null
+})
+
+const clonedPluginsUrl = computed<string | null>(() => {
+  if (isClonedCustomPluginSupported.value) {
+    let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].clonedPlugins}`
+
+    if (props.config.app === 'konnect') {
+      url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+    }
+
+    return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+  }
+
   return null
 })
 
@@ -312,7 +402,7 @@ const filteredPlugins = computed((): PluginCardListExtended => {
     }, new Map<string, PluginType>()).values(),
   )
 
-  return uniqueResults.length ? { 'Query Result': uniqueResults } : { }
+  return uniqueResults.length || optimisticDeleteSnapshots.value.size ? { 'Query Result': uniqueResults } : { }
 })
 
 const hasFilteredResults = computed((): boolean => {
@@ -330,6 +420,13 @@ const clearTypeFilter = (): void => {
 }
 
 const buildPluginList = (): PluginCardList => {
+  const clonedPluginMap = new Map(clonedCustomPlugins.value.map(p => [p.name, p]))
+  const streamingPluginSet = new Set(streamingCustomPlugins.value.map(p => p.name))
+  const allCustomPluginNames = new Set<string>([
+    ...streamingPluginSet,
+    ...clonedPluginMap.keys(),
+  ])
+
   // If availableOnServer is false, we included unavailable plugins from pluginMeta in addition to available plugins
   // returning an array of unique plugin ids
   // either grab all plugins from metadata file or use list of available plugins provided by API
@@ -337,6 +434,7 @@ const buildPluginList = (): PluginCardList => {
     [
       ...Object.keys({ ...(!props.availableOnServer ? pluginMetaData : {}) }),
       ...availablePlugins.value,
+      ...allCustomPluginNames,
     ],
   )]
     // Used to filter out ignored plugins, seems we don't need it anymore
@@ -347,29 +445,31 @@ const buildPluginList = (): PluginCardList => {
         return plugin
       }
 
+      const pluginName = clonedPluginMap.has(plugin) ? clonedPluginMap.get(plugin)!.ref : plugin
+
       if (props.config.entityType === 'services') {
-        const isNotServicePlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.SERVICE))
+        const isNotServicePlugin = (pluginMetaData[pluginName] && !pluginMetaData[pluginName].scope.includes(PluginScope.SERVICE))
         if (isNotServicePlugin) {
           return false
         }
       }
 
       if (props.config.entityType === 'routes') {
-        const isNotRoutePlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.ROUTE))
+        const isNotRoutePlugin = (pluginMetaData[pluginName] && !pluginMetaData[pluginName].scope.includes(PluginScope.ROUTE))
         if (isNotRoutePlugin) {
           return false
         }
       }
 
       if (props.config.entityType === 'consumer_groups') {
-        const isNotConsumerGroupPlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.CONSUMER_GROUP))
+        const isNotConsumerGroupPlugin = (pluginMetaData[pluginName] && !pluginMetaData[pluginName].scope.includes(PluginScope.CONSUMER_GROUP))
         if (isNotConsumerGroupPlugin) {
           return false
         }
       }
 
       if (props.config.entityType === 'consumers') {
-        const isNotConsumerPlugin = (pluginMetaData[plugin] && !pluginMetaData[plugin].scope.includes(PluginScope.CONSUMER))
+        const isNotConsumerPlugin = (pluginMetaData[pluginName] && !pluginMetaData[pluginName].scope.includes(PluginScope.CONSUMER))
         if (isNotConsumerPlugin) {
           return false
         }
@@ -380,19 +480,26 @@ const buildPluginList = (): PluginCardList => {
     // build the actual card list
     .reduce((list: PluginCardList, pluginId: string) => {
       const pluginName = (pluginMetaData[pluginId] && pluginMetaData[pluginId].name) || pluginId
+      const clonedPlugin = clonedPluginMap.get(pluginId)
+      const isStreamingPlugin = streamingPluginSet.has(pluginId)
       const plugin: PluginType = {
         ...pluginMetaData[pluginId],
         id: pluginId,
         name: pluginName,
-        available: availablePlugins.value.includes(pluginId),
+        available: availablePlugins.value.includes(pluginId) || !!clonedPlugin || isStreamingPlugin,
         disabledMessage: '',
         group: pluginMetaData[pluginId]?.group || PluginGroup.CUSTOM_PLUGINS,
       }
 
       if (plugin.group === PluginGroup.CUSTOM_PLUGINS) {
-        plugin.customPluginType = streamingCustomPlugins.value.find(sp => sp.name === pluginId)
-          ? 'streaming'
-          : 'schema'
+        if (clonedPlugin) {
+          plugin.customPluginType = 'cloned'
+          plugin.clonedFromRef = clonedPlugin.ref
+        } else if (isStreamingPlugin) {
+          plugin.customPluginType = 'streaming'
+        } else {
+          plugin.customPluginType = 'schema'
+        }
       }
 
       if (props.disabledPlugins) {
@@ -454,56 +561,236 @@ watch((isLoading), (loading: boolean) => {
   emit('loading', loading)
 })
 
-onMounted(async () => {
-  searchFilterInput.value?.input?.focus()
+const usercanEditCustomPlugin = ref(false)
+const usercanDeleteCustomPlugin = ref(false)
+const usercanReadCustomPlugin = ref(false)
+const usercanEditClonedPlugin = ref(false)
+const usercanDeleteClonedPlugin = ref(false)
+const usercanReadClonedPlugin = ref(false)
+
+const loadPermissions = async (): Promise<void> => {
+  const [
+    canEditCustom,
+    canDeleteCustom,
+    canReadCustom,
+    canEditCloned,
+    canDeleteCloned,
+    canReadCloned,
+  ] = await Promise.all([
+    props.canEditCustomPlugin(),
+    props.canDeleteCustomPlugin(),
+    props.canReadCustomPlugin(),
+    props.canEditClonedPlugin ? props.canEditClonedPlugin() : Promise.resolve(null),
+    props.canDeleteClonedPlugin ? props.canDeleteClonedPlugin() : Promise.resolve(null),
+    props.canReadClonedPlugin(),
+  ])
+
+  usercanEditCustomPlugin.value = canEditCustom
+  usercanDeleteCustomPlugin.value = canDeleteCustom
+  usercanReadCustomPlugin.value = canReadCustom
+  usercanEditClonedPlugin.value = canEditCloned ?? canEditCustom
+  usercanDeleteClonedPlugin.value = canDeleteCloned ?? canDeleteCustom
+  usercanReadClonedPlugin.value = canReadCloned
+}
+
+const loadEntityPlugins = async (signal?: AbortSignal): Promise<void> => {
+  if (!fetchEntityPluginsUrl.value) {
+    existingEntityPlugins.value = []
+    return
+  }
 
   try {
-    const { data } = await axiosInstance.get(availablePluginsUrl.value)
+    const { data: { data } } = await axiosInstance.get(fetchEntityPluginsUrl.value, { signal })
+
+    if (data?.length) {
+      existingEntityPlugins.value = data.reduce((plugins: string[], plugin: Record<string, any>) => {
+        if (plugin.name) {
+          plugins.push(plugin.name)
+        }
+
+        return plugins
+      }, [])
+    }
+  } catch (error) {
+    if (!isRequestCancelled(error)) {
+      existingEntityPlugins.value = []
+    }
+  }
+}
+
+const loadCustomPlugins = async (signal?: AbortSignal): Promise<void> => {
+  const requests: Array<Promise<void>> = []
+
+  if (streamingPluginsUrl.value && usercanReadCustomPlugin.value) {
+    requests.push(
+      fetchAllPages<StreamingCustomPluginSchema>(axiosInstance, streamingPluginsUrl.value, signal)
+        .then((plugins): void => {
+          streamingCustomPlugins.value = plugins
+          return undefined
+        })
+        .catch((error) => {
+          if (isRequestCancelled(error)) {
+            return
+          }
+
+          if (!customPluginsListError.value) {
+            customPluginsListError.value = getMessageFromError(error) ?? t('plugins.select.tabs.custom.fetch_error')
+          }
+        }),
+    )
+  }
+
+  if (clonedPluginsUrl.value && usercanReadClonedPlugin.value) {
+    requests.push(
+      fetchAllPages<ClonedPluginSchema>(axiosInstance, clonedPluginsUrl.value, signal)
+        .then((plugins): void => {
+          clonedCustomPlugins.value = plugins
+          return undefined
+        })
+        .catch((error) => {
+          if (isRequestCancelled(error)) {
+            return
+          }
+
+          const isLicenseError = isClonedPluginLicenseError(error)
+          if (isLicenseError || !customPluginsListError.value) {
+            customPluginsListError.value = isLicenseError
+              ? t('plugins.select.tabs.custom.license_required')
+              : getMessageFromError(error) ?? t('plugins.select.tabs.custom.fetch_error')
+          }
+        }),
+    )
+  }
+
+  requests.push(loadEntityPlugins(signal))
+
+  await Promise.allSettled(requests)
+}
+
+const loadPlugins = async (): Promise<void> => {
+  abortController.value?.abort()
+  abortController.value = new AbortController()
+
+  isLoading.value = true
+  hasError.value = false
+  fetchErrorMessage.value = ''
+  customPluginsListError.value = ''
+  availablePlugins.value = []
+  streamingCustomPlugins.value = []
+  clonedCustomPlugins.value = []
+  existingEntityPlugins.value = []
+
+  try {
+    const { data } = await axiosInstance.get(availablePluginsUrl.value, { signal: abortController.value.signal })
 
     if (props.config.app === 'konnect') {
       const { names: allAvailablePlugins } = data
       availablePlugins.value = allAvailablePlugins || []
-      if (streamingPluginsUrl.value) {
-        // fetch streaming custom plugins for plugin type partition
-        const { data: streamingCustomPluginsData } = await axiosInstance.get<{ data: StreamingCustomPluginSchema[] }>(streamingPluginsUrl.value)
-        streamingCustomPlugins.value = streamingCustomPluginsData.data || []
-      }
     } else if (props.config.app === 'kongManager') {
       const { plugins: { available_on_server: aPlugins } } = data
       availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
     }
+
+    await loadCustomPlugins(abortController.value.signal)
+    pluginsList.value = buildPluginList()
   } catch (error: any) {
-    hasError.value = true
-    fetchErrorMessage.value = getMessageFromError(error)
-  }
-
-  // fetch scoped entity to check for pre-existing plugins
-  if (fetchEntityPluginsUrl.value) {
-    try {
-      const { data: { data } } = await axiosInstance.get(fetchEntityPluginsUrl.value)
-
-      if (data?.length) {
-        const eplugins = data.reduce((plugins: string[], plugin: Record<string, any>) => {
-          if (plugin.name) {
-            plugins.push(plugin.name)
-          }
-
-          return plugins
-        }, [])
-
-        existingEntityPlugins.value = existingEntityPlugins.value.concat(eplugins)
-      }
-    } catch {
-      // no op if it fails, backend will catch if they try to create
-      // duplicate plugins
+    if (!isRequestCancelled(error)) {
+      hasError.value = true
+      fetchErrorMessage.value = getMessageFromError(error)
+    }
+  } finally {
+    if (!abortController.value?.signal.aborted) {
+      isLoading.value = false
     }
   }
+}
 
-  if (!hasError.value) {
-    pluginsList.value = buildPluginList()
+const handleCustomPluginDeleteSuccess = ({ name, customPluginType }: DeletedCustomPlugin): void => {
+  if (!name) {
+    return
   }
 
-  isLoading.value = false
+  optimisticDeleteSnapshots.value.delete(name)
+  removeDeletedCustomPlugin({ name, customPluginType })
+  emit('delete-custom:success', name)
+}
+
+const handleCustomPluginDeleteStart = (plugin: DeletedCustomPlugin): void => {
+  if (!plugin.name) {
+    return
+  }
+
+  if (!optimisticDeleteSnapshots.value.has(plugin.name)) {
+    optimisticDeleteSnapshots.value.set(plugin.name, {
+      availablePlugins: [...availablePlugins.value],
+      streamingCustomPlugins: [...streamingCustomPlugins.value],
+      clonedCustomPlugins: [...clonedCustomPlugins.value],
+      group: plugin.group,
+    })
+  }
+
+  removeDeletedCustomPlugin(plugin)
+}
+
+const handleCustomPluginDeleteFailure = ({ name }: DeletedCustomPlugin): void => {
+  const snapshot = optimisticDeleteSnapshots.value.get(name)
+  if (!snapshot) {
+    return
+  }
+
+  availablePlugins.value = snapshot.availablePlugins
+  streamingCustomPlugins.value = snapshot.streamingCustomPlugins
+  clonedCustomPlugins.value = snapshot.clonedCustomPlugins
+  optimisticDeleteSnapshots.value.delete(name)
+  pluginsList.value = buildPluginList()
+}
+
+const removeDeletedCustomPlugin = ({ name, customPluginType }: DeletedCustomPlugin): void => {
+  availablePlugins.value = availablePlugins.value.filter((pluginName) => pluginName !== name)
+
+  if (!customPluginType || customPluginType === 'streaming') {
+    streamingCustomPlugins.value = streamingCustomPlugins.value.filter((plugin) => plugin.name !== name)
+  }
+
+  if (!customPluginType || customPluginType === 'cloned') {
+    clonedCustomPlugins.value = clonedCustomPlugins.value.filter((plugin) => plugin.name !== name)
+  }
+
+  pluginsList.value = buildPluginList()
+
+  const pendingGroup = optimisticDeleteSnapshots.value.get(name)?.group
+  if (pendingGroup && !pluginsList.value[pendingGroup]) {
+    pluginsList.value[pendingGroup] = []
+  }
+}
+
+onMounted(async () => {
+  hasMounted.value = true
+  searchFilterInput.value?.input?.focus()
+  await loadPermissions()
+  await loadPlugins()
+})
+
+watch(
+  () => [
+    props.config.app === 'konnect' ? props.config.controlPlaneId : undefined,
+    props.config.workspace,
+    props.config.entityType,
+    props.config.entityId,
+    props.config.app === 'kongManager' ? props.config.gatewayInfo?.edition : undefined,
+    customPluginSupportKey.value,
+    isClonedPluginFeatureEnabled.value,
+  ],
+  async () => {
+    if (hasMounted.value) {
+      await loadPermissions()
+      await loadPlugins()
+    }
+  },
+)
+
+onBeforeUnmount(() => {
+  abortController.value?.abort()
 })
 
 
@@ -586,6 +873,10 @@ onMounted(async () => {
         height: 24px;
         width: 24px;
       }
+    }
+
+    .custom-plugins-warning {
+      margin-bottom: var(--kui-space-80, $kui-space-80);
     }
   }
 }

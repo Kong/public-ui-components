@@ -48,6 +48,7 @@
 <script setup lang="ts">
 import { ref, computed, type PropType } from 'vue'
 import {
+  type CustomPluginDeletePayload,
   type CustomPluginType,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
@@ -73,7 +74,12 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['closed', 'proceed'])
+const emit = defineEmits<{
+  closed: []
+  proceed: []
+  'delete:start': [plugin: CustomPluginDeletePayload]
+  'delete:failed': [plugin: CustomPluginDeletePayload]
+}>()
 
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = useErrors()
@@ -129,12 +135,16 @@ const handleSubmit = async (): Promise<void> => {
   }
 
   try {
+    emit('delete:start', props.plugin)
+
     if (requestUrl.value) {
       await axiosInstance.delete(requestUrl.value)
     }
 
     emit('proceed')
   } catch (err: unknown) {
+    emit('delete:failed', props.plugin)
+
     if (isPluginSchemaInUseError(err)) {
       isPluginSchemaInUse.value = true
     } else {

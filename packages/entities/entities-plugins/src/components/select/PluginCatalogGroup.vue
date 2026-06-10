@@ -20,6 +20,10 @@
     <PluginCatalogCard
       v-for="plugin in displayedPlugins"
       :key="`plugin-card-${plugin.id}`"
+      :can-delete-cloned-plugin="canDeleteClonedPlugin"
+      :can-delete-custom-plugin="canDeleteCustomPlugin"
+      :can-edit-cloned-plugin="canEditClonedPlugin"
+      :can-edit-custom-plugin="canEditCustomPlugin"
       :config="config"
       :plugin="plugin"
       @custom-plugin-delete="handleCustomPluginDelete(plugin)"
@@ -50,6 +54,8 @@
     :config="config"
     :plugin="selectedPlugin"
     @closed="handleClose"
+    @delete:failed="emit('delete:failed', $event)"
+    @delete:start="emit('delete:start', $event)"
     @proceed="handleClose(true)"
   />
 </template>
@@ -59,7 +65,7 @@ import { computed, ref } from 'vue'
 import composables from '../../composables'
 import PluginCatalogCard from './PluginCatalogCard.vue'
 import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginSchemaModal.vue'
-import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginType } from '../../types'
+import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginType, CustomPluginDeletePayload } from '../../types'
 import { KUI_COLOR_TEXT_DECORATIVE_PURPLE } from '@kong/design-tokens'
 import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, TrafficIcon, TransformationIcon, MoneyIcon } from '@kong/icons'
 import { GATEWAY_VERSION_TIMESTAMP_MAP, PluginGroup } from '@kong-ui-public/entities-plugins-metadata'
@@ -76,6 +82,10 @@ const props = defineProps<{
    * Plugins to display in the grid
    */
   plugins: PluginType[]
+  canDeleteCustomPlugin?: boolean
+  canDeleteClonedPlugin?: boolean
+  canEditCustomPlugin?: boolean
+  canEditClonedPlugin?: boolean
   /**
    * Whether to show all plugins without collapsing
    */
@@ -116,7 +126,9 @@ const groupIcon = computed(() => {
 const emit = defineEmits<{
   'plugin-clicked': [plugin: PluginType]
   'revalidate': []
-  'delete:success': [pluginName: string]
+  'delete:success': [plugin: CustomPluginDeletePayload]
+  'delete:start': [plugin: CustomPluginDeletePayload]
+  'delete:failed': [plugin: CustomPluginDeletePayload]
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -157,7 +169,10 @@ const handleCustomPluginDelete = (plugin: PluginType): void => {
 const handleClose = (revalidate?: boolean): void => {
   if (revalidate) {
     emit('revalidate')
-    emit('delete:success', selectedPlugin.value?.name || '')
+    emit('delete:success', {
+      name: selectedPlugin.value?.name || '',
+      customPluginType: selectedPlugin.value?.customPluginType,
+    })
   }
 
   openDeleteModal.value = false
