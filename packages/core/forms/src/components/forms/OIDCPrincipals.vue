@@ -144,10 +144,11 @@
         <button
           class="remove-client-btn"
           data-testid="remove-client-action"
+          :disabled="isRemoveClientDisabled"
           type="button"
           @click="removeClientRow(index)"
         >
-          <TrashIcon :size="KUI_ICON_SIZE_30" />
+          <CloseIcon :size="KUI_ICON_SIZE_30" />
         </button>
       </div>
 
@@ -172,8 +173,8 @@
             :items="lookupMethodItems"
             label="Principal lookup method"
             :model-value="selectedLookupMethod"
-            placeholder="Select a principal directory"
-            @update:model-value="updateField('config-principals-directory', $event)"
+            placeholder="Select a lookup method"
+            @update:model-value="handleLookupMethodChange"
           >
             <template #item-template="{ item }">
               <div class="lookup-method-item">
@@ -187,7 +188,7 @@
             </template>
           </KSelect>
 
-          <template v-if="selectedLookupMethod === 'custom-plugin'">
+          <template v-if="selectedLookupMethod === 'custom-identity'">
             <KInput
               data-testid="principals-custom-identity-name"
               help="Enter the custom identity name used to look up the principal. Kong matches the value from the token claim to a principal with the same custom identity name and value."
@@ -288,7 +289,7 @@
 import VueFormGenerator from '../FormGenerator.vue'
 import { FORMS_CONFIG, AUTOFILL_SLOT } from '../../const'
 import { useAxios } from '@kong-ui-public/entities-shared'
-import { AddIcon, KeyIcon, TrashIcon, WorldIcon } from '@kong/icons'
+import { AddIcon, CloseIcon, KeyIcon, WorldIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20, KUI_ICON_SIZE_30, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const MODE_KONG_IDENTITY = 'kong-identity'
@@ -312,7 +313,7 @@ const lookupMethodItems = [
   },
   {
     label: 'Custom claim',
-    value: 'custom-plugin',
+    value: 'custom-identity',
     description: 'Match principals using a custom JWT claim.',
   },
 ]
@@ -331,7 +332,7 @@ const hasValue = value => {
 
 const inferInitialLookupMethod = (formModel) => {
   if (hasValue(formModel['config-principals-principal_claim']) || hasValue(formModel['config-principals-principal_by'])) {
-    return 'custom-plugin'
+    return 'custom-identity'
   }
 
   return 'kong-identity'
@@ -351,7 +352,7 @@ const inferInitialMode = (formModel, isEditing) => {
 
 export default {
   name: 'OIDCPrincipals',
-  components: { VueFormGenerator, AddIcon, KeyIcon, TrashIcon, WorldIcon },
+  components: { VueFormGenerator, AddIcon, CloseIcon, KeyIcon, WorldIcon },
   inject: {
     formsConfig: {
       from: FORMS_CONFIG,
@@ -425,6 +426,9 @@ export default {
       if (Array.isArray(secrets) && secrets.length > 0) return secrets
       return [null]
     },
+    isRemoveClientDisabled() {
+      return !this.selectedServer || this.clientIdArray.length <= 1
+    },
   },
   mounted() {
     // On create, Kong Identity is the default mode — ensure principals-enabled
@@ -433,7 +437,9 @@ export default {
       // eslint-disable-next-line vue/no-mutating-props
       this.formModel['config-principals-enabled'] = true
     }
-    this.$emit('mode-change', this.selectedMode)
+    if (!this.isEditing) {
+      this.$nextTick(() => this.$emit('mode-change', this.selectedMode))
+    }
     this.fetchKongIdentityServers()
   },
   methods: {
@@ -514,6 +520,8 @@ export default {
       this.updateField('config-client_secret', secrets)
     },
     removeClientRow(index) {
+      if (this.clientIdArray.length <= 1) return
+
       const clientIds = Array.isArray(this.formModel['config-client_id'])
         ? [...this.formModel['config-client_id']]
         : []
@@ -568,19 +576,20 @@ export default {
         this.updateField('config-principals-match_consumer_groups', false)
       }
     },
+    handleLookupMethodChange(value) {
+      this.selectedLookupMethod = value
+      if (value !== 'custom-identity') {
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-principals-principal_by'] = null
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-principals-principal_claim'] = null
+        this.onModelUpdated()
+      }
+    },
     updateField(field, value) {
       // eslint-disable-next-line vue/no-mutating-props
       this.formModel[field] = value
-      if (field === 'config-principals-directory') {
-        this.selectedLookupMethod = value
-        // Clear custom claim fields when switching back to kong-identity
-        if (value !== 'custom-plugin') {
-          // eslint-disable-next-line vue/no-mutating-props
-          this.formModel['config-principals-principal_by'] = null
-          // eslint-disable-next-line vue/no-mutating-props
-          this.formModel['config-principals-principal_claim'] = null
-        }
-      } else if (field === 'config-principals-principal_claim' || field === 'config-principals-principal_by') {
+      if (field === 'config-principals-principal_claim' || field === 'config-principals-principal_by') {
         this.syncLookupMethod()
       }
       this.onModelUpdated()
@@ -774,6 +783,15 @@ export default {
 
   &:hover {
     color: var(--kui-color-text-danger, $kui-color-text-danger);
+  }
+
+  &:disabled {
+    color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+    cursor: not-allowed;
+  }
+
+  &:disabled:hover {
+    color: var(--kui-color-text-disabled, $kui-color-text-disabled);
   }
 }
 

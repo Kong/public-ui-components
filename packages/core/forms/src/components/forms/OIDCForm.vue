@@ -42,41 +42,67 @@
             @model-updated="onModelUpdated"
           />
 
-          <KLabel>Authentication methods</KLabel>
-          <KMultiselect
-            :key="principalsMode"
-            class="auth-methods-multiselect"
-            data-testid="auth-methods-multiselect"
-            :items="authMethodItems"
-            :model-value="selectedAuthMethods"
-            placeholder="Select authentication methods"
-            @update:model-value="handleAuthMethodsSelect"
-          />
-          <p class="auth-methods-hint">
-            Configure which OAuth and OpenID Connect features are supported.
-          </p>
+          <template v-if="useNewAuthMethodsField">
+            <KLabel>Authentication methods</KLabel>
+            <KMultiselect
+              :key="principalsMode"
+              class="auth-methods-multiselect"
+              data-testid="auth-methods-multiselect"
+              :items="authMethodItems"
+              :model-value="selectedAuthMethods"
+              placeholder="Select authentication methods"
+              @update:model-value="handleAuthMethodsSelect"
+            />
+            <p class="auth-methods-hint">
+              Configure which OAuth and OpenID Connect features are supported.
+            </p>
 
-          <div class="session-management-section">
-            <KLabel>Session management</KLabel>
-            <div class="session-radio-group">
-              <KRadio
-                v-model="sessionManagement"
-                data-testid="session-radio-use"
-                description="Issue a session cookie after successful authentication. Subsequent requests use the session instead of re-authenticating with the identity provider."
-                label="Use sessions"
-                :selected-value="true"
-                @change="handleSessionChange(true)"
-              />
-              <KRadio
-                v-model="sessionManagement"
-                data-testid="session-radio-no-use"
-                description="Authenticate each request using the configured authentication flow."
-                label="Do not use sessions"
-                :selected-value="false"
-                @change="handleSessionChange(false)"
-              />
+            <div class="session-management-section">
+              <KLabel>Session management</KLabel>
+              <div class="session-radio-group">
+                <KRadio
+                  v-model="sessionManagement"
+                  data-testid="session-radio-use"
+                  description="Issue a session cookie after successful authentication. Subsequent requests use the session instead of re-authenticating with the identity provider."
+                  label="Use sessions"
+                  :selected-value="true"
+                  @change="handleSessionChange(true)"
+                />
+                <KRadio
+                  v-model="sessionManagement"
+                  data-testid="session-radio-no-use"
+                  description="Authenticate each request using the configured authentication flow."
+                  label="Do not use sessions"
+                  :selected-value="false"
+                  @change="handleSessionChange(false)"
+                />
+              </div>
             </div>
-          </div>
+          </template>
+          <template v-else>
+            <KLabel>Auth methods</KLabel>
+            <div class="auth-method-container">
+              <div
+                v-for="method in authMethods"
+                :key="method.value"
+                class="auth-method"
+              >
+                <KCheckbox
+                  v-model="method.prop"
+                  :data-testid="`auth-method-checkbox-${method.value}`"
+                  @change="evt => handleUpdate(evt, method.value)"
+                >
+                  {{ method.label }}
+                </KCheckbox>
+              </div>
+            </div>
+            <KInputSwitch
+              v-model="sessionManagement"
+              data-testid="session-management-switch"
+              label="Enable Session Management"
+              @change="handleUpdate"
+            />
+          </template>
         </div>
       </template>
       <template #authorization>
@@ -167,6 +193,8 @@ const AUTH_FIELD_MODELS = new Set([
   'config-groups_required',
   'config-authenticated_groups_claim',
 ])
+
+const KONG_IDENTITY_METHODS = ['bearer', 'client_credentials', 'introspection', 'userinfo']
 
 export default {
   name: 'OIDCForm',
@@ -267,8 +295,10 @@ export default {
     isKonnect() {
       return this.formsConfig?.app === 'konnect'
     },
+    useNewAuthMethodsField() {
+      return this.isKonnect
+    },
     authMethodItems() {
-      const KONG_IDENTITY_METHODS = ['bearer', 'client_credentials', 'introspection', 'userinfo']
       const methods = this.principalsMode === 'kong-identity'
         ? this.authMethods.filter(m => KONG_IDENTITY_METHODS.includes(m.value))
         : this.authMethods
@@ -507,8 +537,11 @@ export default {
     },
     handlePrincipalsModeChange(mode) {
       this.principalsMode = mode
-      const KONG_IDENTITY_METHODS = ['bearer', 'client_credentials', 'introspection', 'userinfo']
+
       if (mode === 'kong-identity') {
+        if (!this.isEditing) {
+          this.sessionManagement = true
+        }
         // Auto-select only the 4 Kong Identity methods
         for (const method of this.authMethods) {
           method.prop = KONG_IDENTITY_METHODS.includes(method.value)

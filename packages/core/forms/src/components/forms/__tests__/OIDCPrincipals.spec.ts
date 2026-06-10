@@ -154,7 +154,7 @@ describe('OIDCPrincipals', () => {
     it('splits identifier claim by dot into a list', () => {
       const onModelUpdated = vi.fn()
       const wrapper = mountComponent({
-        'config-principals-directory': 'custom-plugin',
+        'config-principals-directory': 'default',
         'config-principals-principal_claim': null,
       }, { onModelUpdated })
       const formModel = wrapper.props('formModel')
@@ -167,6 +167,38 @@ describe('OIDCPrincipals', () => {
   })
 
   describe('client selection array behavior', () => {
+    it('disables remove client action when client row is disabled or last remaining row', async () => {
+      const wrapper = mountComponent()
+
+      expect(wrapper.find('[data-testid="remove-client-action"]').attributes('disabled')).toBeDefined()
+
+      ;(wrapper.vm as any).selectedServer = { id: 'server-1', name: 'Server 1' }
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.find('[data-testid="remove-client-action"]').attributes('disabled')).toBeDefined()
+
+      const wrapperWithMultipleRows = mountComponent({
+        'config-client_id': ['client-a', 'client-b'],
+      })
+      ;(wrapperWithMultipleRows.vm as any).selectedServer = { id: 'server-1', name: 'Server 1' }
+      await wrapperWithMultipleRows.vm.$nextTick()
+
+      expect(wrapperWithMultipleRows.find('[data-testid="remove-client-action"]').attributes('disabled')).toBeUndefined()
+    })
+
+    it('does not remove the last remaining client row', () => {
+      const onModelUpdated = vi.fn()
+      const wrapper = mountComponent({
+        'config-client_id': ['client-a'],
+      }, { onModelUpdated })
+      const formModel = wrapper.props('formModel')
+
+      ;(wrapper.vm as any).removeClientRow(0)
+
+      expect(formModel['config-client_id']).toEqual(['client-a'])
+      expect(onModelUpdated).not.toHaveBeenCalled()
+    })
+
     it('handleClientChange updates the correct index in config-client_id', () => {
       const onModelUpdated = vi.fn()
       const wrapper = mountComponent({
@@ -272,32 +304,34 @@ describe('OIDCPrincipals', () => {
     it('selecting kong-identity clears principal_by and principal_claim', () => {
       const onModelUpdated = vi.fn()
       const wrapper = mountComponent({
-        'config-principals-directory': 'custom-plugin',
+        'config-principals-directory': 'default',
         'config-principals-principal_by': 'Customer_ID',
         'config-principals-principal_claim': ['user', 'employee_id'],
       }, { onModelUpdated })
       const formModel = wrapper.props('formModel')
 
-      ;(wrapper.vm as any).updateField('config-principals-directory', 'kong-identity')
+      ;(wrapper.vm as any).handleLookupMethodChange('kong-identity')
 
       expect(formModel['config-principals-principal_by']).toBeNull()
       expect(formModel['config-principals-principal_claim']).toBeNull()
+      expect(formModel['config-principals-directory']).toBe('default')
       expect((wrapper.vm as any).selectedLookupMethod).toBe('kong-identity')
       expect(onModelUpdated).toHaveBeenCalled()
     })
 
-    it('selecting custom-plugin does not clear principal fields', () => {
+    it('selecting custom-identity does not clear principal fields', () => {
       const onModelUpdated = vi.fn()
       const wrapper = mountComponent({
-        'config-principals-directory': 'kong-identity',
+        'config-principals-directory': 'default',
         'config-principals-principal_by': null,
         'config-principals-principal_claim': null,
       }, { onModelUpdated })
       const formModel = wrapper.props('formModel')
 
-      ;(wrapper.vm as any).updateField('config-principals-directory', 'custom-plugin')
+      ;(wrapper.vm as any).handleLookupMethodChange('custom-identity')
 
-      expect((wrapper.vm as any).selectedLookupMethod).toBe('custom-plugin')
+      expect((wrapper.vm as any).selectedLookupMethod).toBe('custom-identity')
+      expect(formModel['config-principals-directory']).toBe('default')
       expect(formModel['config-principals-principal_by']).toBeNull()
       expect(formModel['config-principals-principal_claim']).toBeNull()
     })
@@ -442,36 +476,5 @@ describe('OIDCPrincipals', () => {
 
       wrapper.unmount()
     })
-
-    // it('matches existing issuer to a server on mount when editing', async () => {
-    //   mockGet.mockImplementation((url: string) => {
-    //     if (url.includes('/auth-servers/_computed')) {
-    //       return Promise.resolve({ data: { data: mockServers } })
-    //     }
-    //     if (url.includes('/clients')) {
-    //       return Promise.resolve({ data: { data: mockClients } })
-    //     }
-    //     return Promise.resolve({ data: { data: [] } })
-    //   })
-
-    //   const wrapper = mountComponent({
-    //     'config-issuer': 'https://auth2.example.com',
-    //   })
-    //   await flushPromises()
-    //   await flushPromises()
-    //   await flushPromises()
-
-    //   // Debug
-    //   const calls = mockGet.mock.calls.map(c => c[0])
-    //   console.log('mockGet calls:', JSON.stringify(calls))
-    //   console.log('call count:', mockGet.mock.calls.length)
-
-    //   const vm = wrapper.vm as any
-    //   console.log('kongIdentityServers:', JSON.stringify(vm.kongIdentityServers))
-    //   console.log('kongIdentityServersLoading:', vm.kongIdentityServersLoading)
-    //   expect(vm.kongIdentityServers).toEqual(mockServers)
-    //   expect(vm.selectedServer).toEqual(mockServers[1])
-    //   expect(vm.clients).toEqual(mockClients)
-    // })
   })
 })

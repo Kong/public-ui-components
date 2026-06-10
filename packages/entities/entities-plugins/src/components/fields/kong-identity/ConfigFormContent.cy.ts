@@ -460,6 +460,24 @@ describe('ConfigFormContent', () => {
       cy.getTestId('ff-kong-identity-field').should('not.exist')
     })
 
+    it('hides principals and identity_realms fields while keeping defaults in data', () => {
+      mountContent(schemaWithRealms, { isKonnect: false }, {
+        config: {
+          principals: { enabled: false, directory: 'default' },
+          identity_realms: null,
+        },
+      })
+
+      cy.getTestId('ff-kong-identity-field').should('not.exist')
+      cy.getTestId('ff-object-config.principals').should('not.exist')
+      cy.getTestId('ff-array-config.identity_realms').should('not.exist')
+      cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+        return val.config?.principals?.enabled === false
+          && val.config?.principals?.directory === 'default'
+          && val.config?.identity_realms === null
+      }))
+    })
+
     it('does not show Kong Identity selector without principals in schema', () => {
       mountContent(schemaWithoutPrincipals, { isKonnect: false })
 
