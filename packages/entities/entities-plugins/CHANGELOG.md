@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.210.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.210.6...@kong-ui-public/entities-plugins@9.210.7) (2026-06-10)
+
+
+### Bug Fixes
+
+* **entities-plugins:** show inline realm error ([#3426](https://github.com/Kong/public-ui-components/issues/3426)) ([3d96af2](https://github.com/Kong/public-ui-components/commit/3d96af2219601d8760760496f799322141ddaf1d))
+
+
+
+
+
 ## [9.210.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.210.5...@kong-ui-public/entities-plugins@9.210.6) (2026-06-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
