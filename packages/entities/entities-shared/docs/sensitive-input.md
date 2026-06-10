@@ -34,7 +34,8 @@ An input component (built on top of `KInput`) for entering sensitive fields such
 #### `modelValue`
 
 - type: `String`
-- required: `true`
+- required: `false`
+- default: `''`
 
 The sensitive value. Bound via `v-model`.
 
