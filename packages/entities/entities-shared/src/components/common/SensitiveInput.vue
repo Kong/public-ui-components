@@ -108,7 +108,7 @@ import type { SensitiveInputLabels } from '../../types'
 const MASKED_VALUE = '••••••••••••••'
 
 const {
-  modelValue,
+  modelValue = '',
   mode = 'create',
   generator,
   showOneTimeHint = false,
@@ -124,7 +124,7 @@ const {
   errorMessage,
 } = defineProps<{
   /** The sensitive value, bound via v-model. */
-  modelValue: string
+  modelValue?: string
   /**
    * `create` starts editable; `edit` starts masked (read-only) and reveals a
    * "Rotate key" action that switches the field to the editable state.
