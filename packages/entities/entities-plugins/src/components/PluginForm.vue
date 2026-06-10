@@ -218,6 +218,7 @@ import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
+import { BEFORE_SAVE_KEY } from './const'
 import type { GlobalAction } from './free-form/shared/types'
 import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
@@ -428,6 +429,15 @@ provide(REDIS_PARTIAL_INFO, {
   redisType: pluginPartialType,
   redisPath: pluginRedisPath,
   isEditing: isEditing.value,
+})
+
+const beforeSaveCallbacks: Array<() => boolean> = []
+provide(BEFORE_SAVE_KEY, (cb: () => boolean) => {
+  beforeSaveCallbacks.push(cb)
+  return () => {
+    const i = beforeSaveCallbacks.indexOf(cb)
+    if (i !== -1) beforeSaveCallbacks.splice(i, 1)
+  }
 })
 
 const isDeckCustomizationVisible = ref(false)
@@ -1464,6 +1474,11 @@ const viewConfigurationRecord = computed(() => {
 
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
+  // Run before-save guards; any callback returning false blocks submission
+  if (!beforeSaveCallbacks.every(cb => cb())) {
+    return
+  }
+
   if (form.clientErrorMessage) {
     // if there are still client errors, don't submit the form
     return
