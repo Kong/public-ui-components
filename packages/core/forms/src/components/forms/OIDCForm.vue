@@ -328,6 +328,41 @@ export default {
                   })
                   break
                 }
+                case 'config-token_exchange-subject_token_issuers': {
+                  if (Array.isArray(field.items?.schema?.fields)) {
+                    const itemFields = field.items.schema.fields
+                    // Add help text to verify_signature and conditional visibility to jwks_uri
+                    const verifySignatureField = itemFields.find(f => f.model === 'verify_signature')
+                    const jwksUriField = itemFields.find(f => f.model === 'jwks_uri')
+
+                    if (verifySignatureField) {
+                      verifySignatureField.checkboxLabel = verifySignatureField.label
+                      verifySignatureField.label = undefined
+                      verifySignatureField.checkboxDescription = (model) => model.verify_signature === true
+                        ? 'JSON Web Keys are automatically fetched from the issuer\'s well-known endpoint. Enter a JWKS URI below to override this.'
+                        : undefined
+                    }
+                    if (jwksUriField) {
+                      jwksUriField.visible = (model) => model.verify_signature === true
+                    }
+
+                    // Move jwks_uri to directly after verify_signature
+                    if (verifySignatureField && jwksUriField) {
+                      const vsIndex = itemFields.indexOf(verifySignatureField)
+                      const jwksIndex = itemFields.indexOf(jwksUriField)
+                      if (jwksIndex !== vsIndex + 1) {
+                        itemFields.splice(jwksIndex, 1)
+                        itemFields.splice(vsIndex + 1, 0, jwksUriField)
+                      }
+                    }
+                  }
+
+                  fields.push({
+                    ...field,
+                    newElementButtonLabel: '+ Add Subject Token Issuer',
+                  })
+                  break
+                }
                 case 'config-session_redis_cluster_nodes': {
                   fields.push({
                     ...field,
