@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts" setup>
+import DOMPurify from 'dompurify'
 import { computed, toRefs, type PropType } from 'vue'
 import composables from '../../composables'
 
@@ -83,8 +84,7 @@ const { getFieldID, value: inputValue, clearValidationErrors } = composables.use
 
 const tooltipHtml = computed(() => {
   if (!props.schema.help) return ''
-  // Strip all <p> and </p> tags to avoid extra margins/spacing in tooltip
-  return props.schema.help.replace(/<\/?p>/g, '').trim()
+  return DOMPurify.sanitize(props.schema.help.replace(/<\/?p>/g, '').trim())
 })
 
 const checkboxDescription = computed(() => {
