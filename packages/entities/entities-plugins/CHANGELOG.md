@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.211.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.210.11...@kong-ui-public/entities-plugins@9.211.0) (2026-06-11)
+
+
+### Features
+
+* **entities-plugins:** add dynamic freeform layout ([#3411](https://github.com/Kong/public-ui-components/issues/3411)) ([3fc37d4](https://github.com/Kong/public-ui-components/commit/3fc37d4a939a4fca1969a0d59dcb6a05758e0184))
+
+
+
+
+
 ## [9.210.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.210.10...@kong-ui-public/entities-plugins@9.210.11) (2026-06-11)
 
 
