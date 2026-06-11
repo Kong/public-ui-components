@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.17...@kong-ui-public/monaco-editor@0.22.18) (2026-06-11)
+
+
+### Bug Fixes
+
+* **monaco-editor:** adjust z-index values for toolbar and split pane [KHCP-20406] ([#3441](https://github.com/Kong/public-ui-components/issues/3441)) ([befb142](https://github.com/Kong/public-ui-components/commit/befb142dcc3133988c2e9f392ecf918392c67107))
+
+
+
+
+
 ## [0.22.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.16...@kong-ui-public/monaco-editor@0.22.17) (2026-06-11)
 
 
