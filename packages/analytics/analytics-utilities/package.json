@@ -70,6 +70,6 @@
     "@kong/design-tokens": "1.22.2",
     "ajv": "^8.20.0",
     "json-schema-to-ts": "^3.1.1",
-    "vue": "^3.5.34"
+    "vue": "^3.5.35"
   }
 }
