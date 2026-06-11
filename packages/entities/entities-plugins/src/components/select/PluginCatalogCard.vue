@@ -73,8 +73,18 @@
           :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
         >
           <div
-            v-if="plugin.description || customPluginBadges.length"
+            v-if="plugin.description"
           >
+            <div
+              :title="plugin.description"
+            >
+              {{ plugin.description }}
+            </div>
+          </div>
+        </div>
+        <div class="plugin-card-footer">
+          <div>{{ isCreateCustomPlugin ? t('actions.create_custom') : t('actions.configure') }}</div>
+          <div class="plugin-card-footer-extra">
             <div
               v-if="customPluginBadges.length"
               class="custom-plugin-badges"
@@ -87,18 +97,8 @@
                 {{ badge }}
               </KBadge>
             </div>
-
-            <div
-              v-if="plugin.description"
-              :title="plugin.description"
-            >
-              {{ plugin.description }}
-            </div>
+            <slot name="footer-extra" />
           </div>
-        </div>
-        <div class="plugin-card-footer">
-          <div>{{ isCreateCustomPlugin ? t('actions.create_custom') : t('actions.configure') }}</div>
-          <slot name="footer-extra" />
         </div>
       </RouterLink>
     </KTooltip>
@@ -286,13 +286,6 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
       line-height: var(--kui-line-height-30, $kui-line-height-30);
       overflow: hidden;
       text-align: left;
-
-      .custom-plugin-badges {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--kui-space-40, $kui-space-40);
-        margin-bottom: var(--kui-space-40, $kui-space-40);
-      }
     }
 
     .plugin-card-footer {
@@ -302,6 +295,23 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
       justify-content: space-between;
       text-align: center;
+
+      .plugin-card-footer-extra,
+      .custom-plugin-badges {
+        align-items: center;
+        display: flex;
+        gap: var(--kui-space-40, $kui-space-40);
+      }
+
+      .plugin-card-footer-extra {
+        justify-content: flex-end;
+        min-width: 0;
+      }
+
+      .custom-plugin-badges {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
     }
 
     &.disabled * {
