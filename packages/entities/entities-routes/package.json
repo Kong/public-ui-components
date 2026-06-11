@@ -38,7 +38,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "axios": "^1.16.1",
     "vite-plugin-monaco-editor": "^1.1.0",
-    "vue": "^3.5.34",
+    "vue": "^3.5.35",
     "vue-router": "^5.1.0"
   },
   "scripts": {
