@@ -1,5 +1,5 @@
 <template>
-  <StandardLayout
+  <DynamicLayout
     v-bind="props"
     :form-config="formConfig"
     :plugin-config-description="t('plugins.free-form.metering-and-billing.sections.plugin_config.description')"
@@ -196,7 +196,7 @@
         />
       </div>
     </AdvancedFields>
-  </StandardLayout>
+  </DynamicLayout>
 </template>
 
 <script setup lang="ts">
@@ -204,7 +204,7 @@ import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME, FORMS_CONFIG } from '@kong-ui-public
 import { computed, inject, provide, ref } from 'vue'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import { KLabel } from '@kong/kongponents'
-import StandardLayout from '../../shared/layout/StandardLayout.vue'
+import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
 import Field from '../../shared/Field.vue'
 import BooleanField from '../../shared/BooleanField.vue'
@@ -217,7 +217,7 @@ import CollapsibleSection from '../../shared/CollapsibleSection.vue'
 import StringField from '../../shared/StringField.vue'
 import useI18n from '../../../../composables/useI18n'
 
-import type { Props } from '../../shared/layout/StandardLayout.vue'
+import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
 
 const props = defineProps<Props>()
 
