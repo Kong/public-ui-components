@@ -65,7 +65,7 @@ import { computed, ref } from 'vue'
 import composables from '../../composables'
 import PluginCatalogCard from './PluginCatalogCard.vue'
 import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginSchemaModal.vue'
-import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginType, CustomPluginDeletePayload } from '../../types'
+import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginDeletePayload } from '../../types'
 import { KUI_COLOR_TEXT_DECORATIVE_PURPLE } from '@kong/design-tokens'
 import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, TrafficIcon, TransformationIcon, MoneyIcon } from '@kong/icons'
 import { GATEWAY_VERSION_TIMESTAMP_MAP, PluginGroup } from '@kong-ui-public/entities-plugins-metadata'
@@ -155,13 +155,14 @@ function handleShowAll() {
 }
 
 const openDeleteModal = ref(false)
-const selectedPlugin = ref<{ name: string, id: string, customPluginType?: CustomPluginType } | null>(null)
+const selectedPlugin = ref<(CustomPluginDeletePayload & { id: string }) | null>(null)
 
 const handleCustomPluginDelete = (plugin: PluginType): void => {
   openDeleteModal.value = true
   selectedPlugin.value = {
     id: plugin.id,
     name: plugin.name,
+    group: plugin.group,
     customPluginType: plugin.customPluginType,
   }
 }
@@ -171,6 +172,7 @@ const handleClose = (revalidate?: boolean): void => {
     emit('revalidate')
     emit('delete:success', {
       name: selectedPlugin.value?.name || '',
+      group: selectedPlugin.value?.group,
       customPluginType: selectedPlugin.value?.customPluginType,
     })
   }

@@ -569,28 +569,37 @@ const usercanDeleteClonedPlugin = ref(false)
 const usercanReadClonedPlugin = ref(false)
 
 const loadPermissions = async (): Promise<void> => {
-  const [
-    canEditCustom,
-    canDeleteCustom,
-    canReadCustom,
-    canEditCloned,
-    canDeleteCloned,
-    canReadCloned,
-  ] = await Promise.all([
-    props.canEditCustomPlugin(),
-    props.canDeleteCustomPlugin(),
-    props.canReadCustomPlugin(),
-    props.canEditClonedPlugin ? props.canEditClonedPlugin() : Promise.resolve(null),
-    props.canDeleteClonedPlugin ? props.canDeleteClonedPlugin() : Promise.resolve(null),
-    props.canReadClonedPlugin(),
-  ])
+  try {
+    const [
+      canEditCustom,
+      canDeleteCustom,
+      canReadCustom,
+      canEditCloned,
+      canDeleteCloned,
+      canReadCloned,
+    ] = await Promise.all([
+      props.canEditCustomPlugin(),
+      props.canDeleteCustomPlugin(),
+      props.canReadCustomPlugin(),
+      props.canEditClonedPlugin ? props.canEditClonedPlugin() : Promise.resolve(null),
+      props.canDeleteClonedPlugin ? props.canDeleteClonedPlugin() : Promise.resolve(null),
+      props.canReadClonedPlugin(),
+    ])
 
-  usercanEditCustomPlugin.value = canEditCustom
-  usercanDeleteCustomPlugin.value = canDeleteCustom
-  usercanReadCustomPlugin.value = canReadCustom
-  usercanEditClonedPlugin.value = canEditCloned ?? canEditCustom
-  usercanDeleteClonedPlugin.value = canDeleteCloned ?? canDeleteCustom
-  usercanReadClonedPlugin.value = canReadCloned
+    usercanEditCustomPlugin.value = canEditCustom
+    usercanDeleteCustomPlugin.value = canDeleteCustom
+    usercanReadCustomPlugin.value = canReadCustom
+    usercanEditClonedPlugin.value = canEditCloned ?? canEditCustom
+    usercanDeleteClonedPlugin.value = canDeleteCloned ?? canDeleteCustom
+    usercanReadClonedPlugin.value = canReadCloned
+  } catch {
+    usercanEditCustomPlugin.value = false
+    usercanDeleteCustomPlugin.value = false
+    usercanReadCustomPlugin.value = false
+    usercanEditClonedPlugin.value = false
+    usercanDeleteClonedPlugin.value = false
+    usercanReadClonedPlugin.value = false
+  }
 }
 
 const loadEntityPlugins = async (signal?: AbortSignal): Promise<void> => {
@@ -669,7 +678,8 @@ const loadCustomPlugins = async (signal?: AbortSignal): Promise<void> => {
 
 const loadPlugins = async (): Promise<void> => {
   abortController.value?.abort()
-  abortController.value = new AbortController()
+  const controller = new AbortController()
+  abortController.value = controller
 
   isLoading.value = true
   hasError.value = false
@@ -681,7 +691,7 @@ const loadPlugins = async (): Promise<void> => {
   existingEntityPlugins.value = []
 
   try {
-    const { data } = await axiosInstance.get(availablePluginsUrl.value, { signal: abortController.value.signal })
+    const { data } = await axiosInstance.get(availablePluginsUrl.value, { signal: controller.signal })
 
     if (props.config.app === 'konnect') {
       const { names: allAvailablePlugins } = data
@@ -691,7 +701,7 @@ const loadPlugins = async (): Promise<void> => {
       availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
     }
 
-    await loadCustomPlugins(abortController.value.signal)
+    await loadCustomPlugins(controller.signal)
     pluginsList.value = buildPluginList()
   } catch (error: any) {
     if (!isRequestCancelled(error)) {
@@ -699,7 +709,7 @@ const loadPlugins = async (): Promise<void> => {
       fetchErrorMessage.value = getMessageFromError(error)
     }
   } finally {
-    if (!abortController.value?.signal.aborted) {
+    if (abortController.value === controller && !controller.signal.aborted) {
       isLoading.value = false
     }
   }

@@ -187,11 +187,8 @@ const pluginCardLink = computed(() => {
     return {}
   }
 
-  if (isCustomPlugin.value) {
-    const konnectConfig = props.config as KonnectPluginSelectConfig
-    if (isCreateCustomPlugin.value && konnectConfig.createCustomRoute) {
-      return konnectConfig.createCustomRoute
-    }
+  if (isCustomPlugin.value && isCreateCustomPlugin.value && props.config.createCustomRoute) {
+    return props.config.createCustomRoute
   }
 
   return props.config.getCreateRoute(props.plugin.id)
@@ -210,9 +207,8 @@ const handleCustomDelete = (): void => {
 }
 
 const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
-  const konnectConfig = props.config as KonnectPluginSelectConfig
-  if (props.config.app === 'konnect' && typeof konnectConfig.getCustomEditRoute === 'function') {
-    router.push(konnectConfig.getCustomEditRoute(pluginName, type))
+  if (typeof props.config.getCustomEditRoute === 'function') {
+    router.push(props.config.getCustomEditRoute(pluginName, type))
   }
 }
 

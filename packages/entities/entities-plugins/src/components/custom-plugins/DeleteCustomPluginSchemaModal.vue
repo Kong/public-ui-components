@@ -49,7 +49,6 @@
 import { ref, computed, type PropType } from 'vue'
 import {
   type CustomPluginDeletePayload,
-  type CustomPluginType,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
 } from '../../types'
@@ -69,7 +68,7 @@ const props = defineProps({
     },
   },
   plugin: {
-    type: Object as PropType<{ name: string, id: string, customPluginType?: CustomPluginType }>,
+    type: Object as PropType<CustomPluginDeletePayload & { id: string }>,
     required: true,
   },
 })

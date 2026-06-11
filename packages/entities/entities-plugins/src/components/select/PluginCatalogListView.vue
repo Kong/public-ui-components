@@ -23,7 +23,7 @@
         >
           <PluginIcon
             :data-testid="`plugin-catalog-list-view-${row.plugin!.id}-icon`"
-            :name="row.plugin!.id"
+            :name="getPluginIconName(row.plugin!)"
             :size="20"
           />
           <span
@@ -127,7 +127,6 @@ import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
 import type {
   PluginType,
-  CustomPluginType,
   KongManagerPluginSelectConfig,
   KonnectPluginSelectConfig,
   PluginCardList,
@@ -208,7 +207,13 @@ const paginatedPageSize = ref<number>(10)
 const currentPage = ref<number>(1)
 const sortedRows = ref(tableRows.value)
 const openDeleteModal = ref(false)
-const selectedPlugin = ref<{ name: string, id: string, customPluginType?: CustomPluginType } | null>(null)
+const selectedPlugin = ref<(CustomPluginDeletePayload & { id: string }) | null>(null)
+
+const getPluginIconName = (plugin: PluginType): string => {
+  return plugin.customPluginType === 'cloned' && plugin.clonedFromRef
+    ? plugin.clonedFromRef
+    : plugin.id
+}
 
 const isClonedPlugin = (plugin?: PluginType): boolean => plugin?.customPluginType === 'cloned'
 
@@ -243,6 +248,7 @@ const handleCustomPluginDelete = (plugin: PluginType): void => {
   selectedPlugin.value = {
     id: plugin.id,
     name: plugin.name,
+    group: plugin.group,
     customPluginType: plugin.customPluginType,
   }
 }
@@ -252,6 +258,7 @@ const handleClose = (revalidate?: boolean): void => {
     emit('revalidate')
     emit('delete:success', {
       name: selectedPlugin.value?.name || '',
+      group: selectedPlugin.value?.group,
       customPluginType: selectedPlugin.value?.customPluginType,
     })
   }
