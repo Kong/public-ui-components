@@ -34,8 +34,6 @@
           :config="config"
           :name="group"
           :plugins="pluginList[group as keyof PluginCardList] || []"
-          @delete:failed="(plugin: DeletedCustomPlugin) => emit('delete:failed', plugin)"
-          @delete:start="(plugin: DeletedCustomPlugin) => emit('delete:start', plugin)"
           @delete:success="(plugin: DeletedCustomPlugin) => emit('delete:success', plugin)"
           @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
         />
@@ -50,8 +48,6 @@
         :config="config"
         :plugins="pluginList['Query Result'] || []"
         show-all-card
-        @delete:failed="(plugin: DeletedCustomPlugin) => emit('delete:failed', plugin)"
-        @delete:start="(plugin: DeletedCustomPlugin) => emit('delete:start', plugin)"
         @delete:success="(plugin: DeletedCustomPlugin) => emit('delete:success', plugin)"
         @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
       />
@@ -92,8 +88,6 @@ const displayGroups = PluginFeaturedArray.concat(PluginGroupArraySortedAlphabeti
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType): void
   (e: 'delete:success', plugin: DeletedCustomPlugin): void
-  (e: 'delete:start', plugin: DeletedCustomPlugin): void
-  (e: 'delete:failed', plugin: DeletedCustomPlugin): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()

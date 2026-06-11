@@ -76,8 +76,6 @@ const props = defineProps({
 const emit = defineEmits<{
   closed: []
   proceed: []
-  'delete:start': [plugin: CustomPluginDeletePayload]
-  'delete:failed': [plugin: CustomPluginDeletePayload]
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -134,16 +132,12 @@ const handleSubmit = async (): Promise<void> => {
   }
 
   try {
-    emit('delete:start', props.plugin)
-
     if (requestUrl.value) {
       await axiosInstance.delete(requestUrl.value)
     }
 
     emit('proceed')
   } catch (err: unknown) {
-    emit('delete:failed', props.plugin)
-
     if (isPluginSchemaInUseError(err)) {
       isPluginSchemaInUse.value = true
     } else {

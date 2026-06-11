@@ -367,9 +367,22 @@ describe('<PluginCatalog />', {
     cy.getTestId('custom-plugin-actions').should('not.exist')
   })
 
-  it('should remove a deleted custom plugin from the catalog without refetching the list', () => {
+  it('should reload custom plugins after deleting a custom plugin', () => {
     interceptKonnect()
     let deleteRequestCompleted = false
+
+    cy.intercept(
+      {
+        method: 'GET',
+        pathname: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins`,
+      },
+      (req) => {
+        req.reply({
+          statusCode: 200,
+          body: deleteRequestCompleted ? { data: [] } : konnectStreamingCustomPlugins,
+        })
+      },
+    ).as('getStreamingCustomPlugins')
 
     cy.intercept(
       {
@@ -404,15 +417,15 @@ describe('<PluginCatalog />', {
       cy.getTestId('modal-action-button').click()
     })
 
-    cy.getTestId('plugin-1-card').should('not.exist').then(() => {
+    cy.getTestId('plugin-1-card').should('be.visible').then(() => {
       expect(deleteRequestCompleted).to.equal(false)
     })
     cy.wait('@deleteStreamingCustomPlugin')
+    cy.get('@getStreamingCustomPlugins.all').should('have.length', 2)
     cy.getTestId('plugin-1-card').should('not.exist')
-    cy.get('@getStreamingCustomPlugins.all').should('have.length', 1)
   })
 
-  it('should restore a custom plugin if delete fails after the optimistic update', () => {
+  it('should keep a custom plugin visible if delete fails', () => {
     interceptKonnect()
 
     cy.intercept(
@@ -442,7 +455,7 @@ describe('<PluginCatalog />', {
       cy.getTestId('modal-action-button').click()
     })
 
-    cy.getTestId('plugin-1-card').should('not.exist')
+    cy.getTestId('plugin-1-card').should('be.visible')
     cy.wait('@deleteStreamingCustomPlugin')
     cy.getTestId('plugin-1-card').should('be.visible')
     cy.get('@getStreamingCustomPlugins.all').should('have.length', 1)

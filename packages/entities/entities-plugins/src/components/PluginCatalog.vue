@@ -143,8 +143,6 @@
           :can-edit-custom-plugin="usercanEditCustomPlugin"
           :config="config"
           :plugin-list="filteredPlugins"
-          @delete:failed="handleCustomPluginDeleteFailure"
-          @delete:start="handleCustomPluginDeleteStart"
           @delete:success="handleCustomPluginDeleteSuccess"
         />
         <PluginCatalogGrid
@@ -155,8 +153,6 @@
           :can-edit-custom-plugin="usercanEditCustomPlugin"
           :config="config"
           :plugin-list="filteredPlugins"
-          @delete:failed="handleCustomPluginDeleteFailure"
-          @delete:start="handleCustomPluginDeleteStart"
           @delete:success="handleCustomPluginDeleteSuccess"
           @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
         />
@@ -207,13 +203,6 @@ type PluginCardListExtended = PluginCardList & {
 
 type DeletedCustomPlugin = CustomPluginDeletePayload
 
-interface DeleteSnapshot {
-  availablePlugins: string[]
-  streamingCustomPlugins: StreamingCustomPluginSchema[]
-  clonedCustomPlugins: ClonedPluginSchema[]
-  group?: string
-}
-
 const { i18n: { t } } = composables.useI18n()
 const { pluginMetaData } = composables.usePluginMetaData()
 const { getMessageFromError } = useErrors()
@@ -258,7 +247,6 @@ const streamingCustomPlugins = ref<StreamingCustomPluginSchema[]>([])
 const clonedCustomPlugins = ref<ClonedPluginSchema[]>([])
 const pluginsList = ref<PluginCardList>({})
 const existingEntityPlugins = ref<string[]>([])
-const optimisticDeleteSnapshots = ref<Map<string, DeleteSnapshot>>(new Map())
 const isListView = ref(false)
 const abortController = ref<AbortController | null>(null)
 const hasMounted = ref(false)
@@ -402,7 +390,7 @@ const filteredPlugins = computed((): PluginCardListExtended => {
     }, new Map<string, PluginType>()).values(),
   )
 
-  return uniqueResults.length || optimisticDeleteSnapshots.value.size ? { 'Query Result': uniqueResults } : { }
+  return uniqueResults.length ? { 'Query Result': uniqueResults } : { }
 })
 
 const hasFilteredResults = computed((): boolean => {
@@ -715,63 +703,13 @@ const loadPlugins = async (): Promise<void> => {
   }
 }
 
-const handleCustomPluginDeleteSuccess = ({ name, customPluginType }: DeletedCustomPlugin): void => {
+const handleCustomPluginDeleteSuccess = async ({ name }: DeletedCustomPlugin): Promise<void> => {
   if (!name) {
     return
   }
 
-  optimisticDeleteSnapshots.value.delete(name)
-  removeDeletedCustomPlugin({ name, customPluginType })
   emit('delete-custom:success', name)
-}
-
-const handleCustomPluginDeleteStart = (plugin: DeletedCustomPlugin): void => {
-  if (!plugin.name) {
-    return
-  }
-
-  if (!optimisticDeleteSnapshots.value.has(plugin.name)) {
-    optimisticDeleteSnapshots.value.set(plugin.name, {
-      availablePlugins: [...availablePlugins.value],
-      streamingCustomPlugins: [...streamingCustomPlugins.value],
-      clonedCustomPlugins: [...clonedCustomPlugins.value],
-      group: plugin.group,
-    })
-  }
-
-  removeDeletedCustomPlugin(plugin)
-}
-
-const handleCustomPluginDeleteFailure = ({ name }: DeletedCustomPlugin): void => {
-  const snapshot = optimisticDeleteSnapshots.value.get(name)
-  if (!snapshot) {
-    return
-  }
-
-  availablePlugins.value = snapshot.availablePlugins
-  streamingCustomPlugins.value = snapshot.streamingCustomPlugins
-  clonedCustomPlugins.value = snapshot.clonedCustomPlugins
-  optimisticDeleteSnapshots.value.delete(name)
-  pluginsList.value = buildPluginList()
-}
-
-const removeDeletedCustomPlugin = ({ name, customPluginType }: DeletedCustomPlugin): void => {
-  availablePlugins.value = availablePlugins.value.filter((pluginName) => pluginName !== name)
-
-  if (!customPluginType || customPluginType === 'streaming') {
-    streamingCustomPlugins.value = streamingCustomPlugins.value.filter((plugin) => plugin.name !== name)
-  }
-
-  if (!customPluginType || customPluginType === 'cloned') {
-    clonedCustomPlugins.value = clonedCustomPlugins.value.filter((plugin) => plugin.name !== name)
-  }
-
-  pluginsList.value = buildPluginList()
-
-  const pendingGroup = optimisticDeleteSnapshots.value.get(name)?.group
-  if (pendingGroup && !pluginsList.value[pendingGroup]) {
-    pluginsList.value[pendingGroup] = []
-  }
+  await loadPlugins()
 }
 
 onMounted(async () => {

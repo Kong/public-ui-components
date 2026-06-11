@@ -54,8 +54,6 @@
     :config="config"
     :plugin="selectedPlugin"
     @closed="handleClose"
-    @delete:failed="emit('delete:failed', $event)"
-    @delete:start="emit('delete:start', $event)"
     @proceed="handleClose(true)"
   />
 </template>
@@ -127,8 +125,6 @@ const emit = defineEmits<{
   'plugin-clicked': [plugin: PluginType]
   'revalidate': []
   'delete:success': [plugin: CustomPluginDeletePayload]
-  'delete:start': [plugin: CustomPluginDeletePayload]
-  'delete:failed': [plugin: CustomPluginDeletePayload]
 }>()
 
 const { i18n: { t } } = composables.useI18n()

@@ -112,8 +112,6 @@
     :config="config"
     :plugin="selectedPlugin"
     @closed="handleClose"
-    @delete:failed="emit('delete:failed', $event)"
-    @delete:start="emit('delete:start', $event)"
     @proceed="handleClose(true)"
   />
 </template>
@@ -142,8 +140,6 @@ interface TableSortPayload {
 const emit = defineEmits<{
   'revalidate': []
   'delete:success': [plugin: CustomPluginDeletePayload]
-  'delete:start': [plugin: CustomPluginDeletePayload]
-  'delete:failed': [plugin: CustomPluginDeletePayload]
 }>()
 
 const props = defineProps<{
