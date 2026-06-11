@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.21...@kong-ui-public/entities-consumer-groups@4.5.22) (2026-06-11)
+
+
+### Bug Fixes
+
+* **entities-consumer-groups:** hydrate edit consumers ([#3430](https://github.com/Kong/public-ui-components/issues/3430)) ([e8009be](https://github.com/Kong/public-ui-components/commit/e8009beb6c29c9f5ac84efa0d50a0dbe908bdc57))
+
+
+
+
+
 ## [4.5.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.20...@kong-ui-public/entities-consumer-groups@4.5.21) (2026-06-11)
 
 
