@@ -90,7 +90,7 @@
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { computed, inject, toRef, useAttrs } from 'vue'
 import type { InputProps, LabelAttributes } from '@kong/kongponents'
-import useI18n from '../../../composables/useI18n'
+import useI18n from '../../../composables/useFreeformI18n'
 import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from '../shared/utils'

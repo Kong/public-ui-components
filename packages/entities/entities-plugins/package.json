@@ -27,7 +27,12 @@
     "./filler/playwright": {
       "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/filler/playwright/index.d.ts",
       "import": "./dist/filler/playwright/index.js"
-    }
+    },
+    "./freeform": {
+      "types": "./dist/types/freeform.d.ts",
+      "import": "./dist/freeform/index.js"
+    },
+    "./freeform/style.css": "./dist/freeform/style.css"
   },
   "publishConfig": {
     "access": "public"
@@ -93,8 +98,10 @@
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
-    "build": "run-s typecheck build:package build:types build:endpoints build:filler",
+    "build": "run-s typecheck build:package build:types build:endpoints build:filler build:freeform",
     "build:package": "vite build -m production",
+    "build:freeform": "vite build -c vite.config.freeform.ts",
+    "build:freeform:analyzer": "BUILD_VISUALIZER='entities/entities-plugins/freeform' vite build -c vite.config.freeform.ts",
     "build:analyzer": "BUILD_VISUALIZER='entities/entities-plugins' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:endpoints": "tsc -p './tsconfig.endpoints.json'",
@@ -139,6 +146,7 @@
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
+    "dompurify": "^3.4.3",
     "lodash-es": "^4.18.1",
     "marked": "^14.1.4"
   }
