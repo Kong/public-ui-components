@@ -1847,7 +1847,7 @@ const getPayload = computed((): Record<string, any> => {
     const config: Record<string, any> = { ...aiPayload.config }
     const AI_WRITE_ONLY = ['token', 'client_secret', 'secret_access_key', 'api_key', 'key']
     AI_WRITE_ONLY.forEach(field => {
-      if (field in config && !config[field]) delete config[field]
+      if (field in config && isEmpty(config[field])) delete config[field]
     })
     return { ...aiPayload, config }
   }

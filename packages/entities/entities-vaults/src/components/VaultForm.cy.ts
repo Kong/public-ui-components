@@ -1438,5 +1438,49 @@ describe('<VaultForm />', () => {
         expect(request.body.config).to.have.property('prefix', 'dev2')
       })
     })
+
+    it('omits blank write-only fields from PUT body when editing an AI Gateway vault', () => {
+      // The server does not return write-only fields (e.g. Conjur api_key) on GET.
+      // Submitting without filling them must not send an empty value that would clear the secret.
+      cy.intercept(
+        { method: 'GET', url: `${aiVaultsUrl}/*` },
+        {
+          statusCode: 200,
+          body: {
+            id: '1',
+            type: 'conjur',
+            name: 'conjur-vault',
+            config: {
+              endpoint_url: 'https://conjur.example.com',
+              login: 'my-login',
+              account: 'my-account',
+              // api_key intentionally absent — write-only, not returned by server
+            },
+          },
+        },
+      ).as('getAiVault')
+      cy.intercept(
+        { method: 'PUT', url: `${aiVaultsUrl}/*` },
+        {
+          statusCode: 200,
+          body: { id: '1', type: 'conjur', name: 'conjur-vault-edited', config: {} },
+        },
+      ).as('updateAiVault')
+
+      cy.mount(VaultForm, {
+        props: { config: baseConfigAiGateway, vaultId: '1' },
+      })
+
+      cy.wait('@getAiVault')
+      // Make a non-write-only change to enable the submit button
+      cy.getTestId('vault-form-prefix').clear()
+      cy.getTestId('vault-form-prefix').type('conjur-vault-edited')
+      cy.getTestId('vault-edit-form-submit').click()
+
+      cy.wait('@updateAiVault').then(({ request }) => {
+        expect(request.body).to.have.property('type', 'conjur')
+        expect(request.body.config).to.not.have.property('api_key')
+      })
+    })
   })
 })
