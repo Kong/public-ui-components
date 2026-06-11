@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/core",
-  "version": "1.11.24",
+  "version": "1.11.25",
   "type": "module",
   "main": "./dist/core.umd.js",
   "module": "./dist/core.es.js",
