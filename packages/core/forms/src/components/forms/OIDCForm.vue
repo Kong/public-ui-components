@@ -357,10 +357,7 @@ export default {
                     }
                   }
 
-                  fields.push({
-                    ...field,
-                    newElementButtonLabel: '+ Add Subject Token Issuer',
-                  })
+                  fields.push(field)
                   break
                 }
                 case 'config-session_redis_cluster_nodes': {
