@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.49.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.1...@kong-ui-public/entities-shared@3.49.2) (2026-06-10)
+
+
+### Bug Fixes
+
+* **entities-shared:** make SensitiveInput modelValue optional ([#3428](https://github.com/Kong/public-ui-components/issues/3428)) ([03a0c4f](https://github.com/Kong/public-ui-components/commit/03a0c4fa6780a65c00b37271eb752c1f3a56a016))
+
+
+
+
+
 ## [3.49.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.0...@kong-ui-public/entities-shared@3.49.1) (2026-06-09)
 
 
