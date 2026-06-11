@@ -14,6 +14,7 @@
 
   <Form
     ref="form"
+    v-bind="attrs"
     class="ff-standard-layout"
     :config="realFormConfig"
     :data="(prunedData as T)"
@@ -219,43 +220,16 @@
 </template>
 
 <script lang="ts">
-export type Props<T extends FreeFormPluginData = any> = {
-  generalInfoTitle?: string
-  generalInfoDescription?: string
-  pluginConfigTitle?: string
-  pluginConfigDescription?: string
-  /** FreeForm Schema */
-  schema: FormSchema
+export interface Props<T extends FreeFormPluginData = any> extends PluginFormLayoutProps<T> {
   /** VFG schema */
   formSchema: any
-  /** The **initial** entire plugin model, never update */
-  model: T
   /** VFG form model */
   formModel: Record<string, any>
-  isEditing: boolean
-  /** Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority */
-  onFormChange: (value: Partial<T>, fields?: string[]) => void
-  onValidityChange?: (event: PluginValidityChangeEvent) => void
-  /**
-   * Hide the built-in form/code switcher. Plugins that own a custom switcher
-   * (e.g. Datakit's flow/code control) should set this to true to avoid
-   * rendering duplicate controls into #plugin-form-page-actions.
-   */
-  hideEditorModeSwitcher?: boolean
-  /** FreeForm configuration */
-  formConfig?: FormConfig<T>
-  renderRules?: RenderRules
-  fieldRenderers?: PluginFieldRenderer[]
-  pluginName: string
-  /** Konnect-managed Redis UI, from plugin form config */
-  isKonnectManagedRedisEnabled?: boolean
-  /** Whether the plugin is being created for a portal developer */
-  developer?: boolean
 }
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, inject, nextTick, ref, useTemplateRef, useId } from 'vue'
+import { computed, inject, nextTick, ref, useAttrs, useTemplateRef, useId } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
 import { KRadio, KSegmentedControl, KTooltip } from '@kong/kongponents'
@@ -265,11 +239,10 @@ import { FEATURE_FLAGS } from '../../../../constants'
 import Form from '../Form.vue'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
-import type { PluginValidityChangeEvent } from '../../../../types'
 import SwitchField from '../SwitchField.vue'
 import ScopeEntityField from '../ScopeEntityField.vue'
 import { normalizeMatch } from '../utils'
-import type { FieldRenderer as PluginFieldRenderer, FormConfig, RenderRules } from '../types'
+import type { FieldRenderer as PluginFieldRenderer, FormConfig } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
@@ -280,6 +253,9 @@ import StringField from '../StringField.vue'
 import CodeEditor from '../CodeEditor.vue'
 import ConditionField from './ConditionField.vue'
 import useI18n from '../../../../composables/useI18n'
+import type { PluginFormLayoutProps } from './provider'
+
+defineOptions({ inheritAttrs: false })
 
 const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   // plugin specific config
@@ -306,6 +282,7 @@ const instanceId = useId()
 const { i18n: { t } } = useI18n()
 
 const { hideEditorModeSwitcher = false, ...props } = defineProps<Props<T>>()
+const attrs = useAttrs()
 const configFieldRenderers = computed<PluginFieldRenderer[]>(() => props.fieldRenderers ?? [])
 
 const enableCodeMode = inject<boolean>(FEATURE_FLAGS.KM_2262_CODE_MODE, false)
