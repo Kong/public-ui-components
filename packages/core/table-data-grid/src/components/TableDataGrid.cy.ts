@@ -49,7 +49,6 @@ describe('<TableDataGrid />', () => {
     cy.contains('.ag-cell', 'Inactive').should('be.visible')
     cy.wrap(fetcher).should('have.been.calledOnceWith', {
       mode: 'infinite',
-      offset: 0,
       pageSize: 15,
     })
   })
