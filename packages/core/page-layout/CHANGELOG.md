@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.37...@kong-ui-public/page-layout@0.2.38) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** align vue-router versions ([#3432](https://github.com/Kong/public-ui-components/issues/3432)) ([5adc5dd](https://github.com/Kong/public-ui-components/commit/5adc5ddbfe47d65faab890cd0e84b7ef1f64120e))
+
+
+
+
+
 ## [0.2.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.36...@kong-ui-public/page-layout@0.2.37) (2026-06-09)
 
 

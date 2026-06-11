@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/page-layout",
-  "version": "0.2.37",
+  "version": "0.2.38",
   "type": "module",
   "main": "./dist/page-layout.umd.js",
   "module": "./dist/page-layout.es.js",
@@ -44,7 +44,7 @@
     "@kong/icons": "^1.56.0",
     "@kong/kongponents": "9.56.2",
     "vue": "^3.5.34",
-    "vue-router": "^5.0.7"
+    "vue-router": "^5.1.0"
   },
   "repository": {
     "type": "git",

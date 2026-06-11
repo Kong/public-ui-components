@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.21...@kong-ui-public/entities-consumer-groups@4.5.22) (2026-06-11)
+
+
+### Bug Fixes
+
+* **entities-consumer-groups:** hydrate edit consumers ([#3430](https://github.com/Kong/public-ui-components/issues/3430)) ([e8009be](https://github.com/Kong/public-ui-components/commit/e8009beb6c29c9f5ac84efa0d50a0dbe908bdc57))
+
+
+
+
+
+## [4.5.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.20...@kong-ui-public/entities-consumer-groups@4.5.21) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** align vue-router versions ([#3432](https://github.com/Kong/public-ui-components/issues/3432)) ([5adc5dd](https://github.com/Kong/public-ui-components/commit/5adc5ddbfe47d65faab890cd0e84b7ef1f64120e))
+
+
+
+
+
 ## [4.5.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.5.19...@kong-ui-public/entities-consumer-groups@4.5.20) (2026-06-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups

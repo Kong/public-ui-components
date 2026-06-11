@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-data-plane-nodes",
-  "version": "0.6.51",
+  "version": "0.6.52",
   "type": "module",
   "main": "./dist/entities-data-plane-nodes.umd.js",
   "module": "./dist/entities-data-plane-nodes.es.js",
@@ -37,7 +37,7 @@
     "@kong/kongponents": "9.56.2",
     "axios": "^1.16.1",
     "vue": "^3.5.34",
-    "vue-router": "^5.0.7"
+    "vue-router": "^5.1.0"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",

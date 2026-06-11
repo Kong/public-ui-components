@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-snis",
-  "version": "3.12.17",
+  "version": "3.12.18",
   "type": "module",
   "main": "./dist/entities-snis.umd.js",
   "module": "./dist/entities-snis.es.js",
@@ -37,7 +37,7 @@
     "@kong/kongponents": "9.56.2",
     "axios": "^1.16.1",
     "vue": "^3.5.34",
-    "vue-router": "^5.0.7"
+    "vue-router": "^5.1.0"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",

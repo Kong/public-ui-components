@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/forms",
-  "version": "4.25.8",
+  "version": "4.25.9",
   "type": "module",
   "main": "./dist/forms.umd.js",
   "module": "./dist/forms.es.js",
@@ -70,7 +70,8 @@
     "@kong/kongponents": "9.56.2",
     "@types/lodash-es": "^4.17.12",
     "axios": "^1.16.1",
-    "pug": "^3.0.4"
+    "pug": "^3.0.4",
+    "vue-router": "^5.1.0"
   },
   "distSizeChecker": {
     "errorLimit": "1.2MB"

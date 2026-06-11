@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.8.20...@kong-ui-public/entities-consumer-credentials@3.8.21) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** align vue-router versions ([#3432](https://github.com/Kong/public-ui-components/issues/3432)) ([5adc5dd](https://github.com/Kong/public-ui-components/commit/5adc5ddbfe47d65faab890cd0e84b7ef1f64120e))
+
+
+
+
+
 ## [3.8.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.8.19...@kong-ui-public/entities-consumer-credentials@3.8.20) (2026-06-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials
