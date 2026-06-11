@@ -139,19 +139,19 @@
           </template>
 
           <template #feature-icon-feature-1>
-            <ClipboardIcon />
+            <ClipboardIcon decorative />
           </template>
 
           <template #feature-icon-feature-2>
-            <RefreshIcon />
+            <RefreshIcon decorative />
           </template>
 
           <template #feature-icon-feature-3>
-            <DatabaseIcon />
+            <DatabaseIcon decorative />
           </template>
 
           <template #feature-icon-feature-4>
-            <RefreshIcon />
+            <RefreshIcon decorative />
           </template>
 
           <template #action-button-icon>

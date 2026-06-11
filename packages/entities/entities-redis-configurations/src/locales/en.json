@@ -389,7 +389,7 @@
         "description": "Configure and deploy managed Redis instances alongside your data planes for seamless plugin integration."
       },
       "feature_4": {
-        "title": "Share Redis configuration ",
+        "title": "Share Redis configuration",
         "description": "Share Redis configuration settings across multiple data planes and regions."
       }
     }
