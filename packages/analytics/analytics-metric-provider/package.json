@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "@kong/icons": "^1.56.0",
+    "@kong/icons": "^1.58.0",
     "approximate-number": "^3.0.1",
     "axios": "^1.16.1",
     "swrv": "^1.2.0"
@@ -60,14 +60,14 @@
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.56.2"
+    "@kong/kongponents": "^9.59.0"
   },
   "devDependencies": {
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.22.2",
-    "@kong/kongponents": "9.56.2",
+    "@kong/design-tokens": "1.23.0",
+    "@kong/kongponents": "9.59.0",
     "pinia": ">= 3.0.4 < 4"
   }
 }
