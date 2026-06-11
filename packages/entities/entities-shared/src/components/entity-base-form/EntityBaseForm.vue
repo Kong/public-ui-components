@@ -163,7 +163,7 @@ import type { PropType } from 'vue'
 import { computed, ref, onBeforeMount, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
-import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
+import type { BaseFormConfigTab, KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
 import { SupportedEntityTypesArray, SupportedEntityType } from '../../types'
 import composables from '../../composables'
 import type { BadgeAppearance, Tab } from '@kong/kongponents'
@@ -334,6 +334,14 @@ const props = defineProps({
     type: String as PropType<SupportedEntityType>,
     default: undefined,
   },
+  /**
+   * Hide tabs from the configuration slideout (eg. ['yaml']).
+   */
+  tabsToHide: {
+    type: Array as PropType<BaseFormConfigTab[]>,
+    required: false,
+    default: () => [],
+  },
 })
 
 const router = useRouter()
@@ -410,34 +418,47 @@ const handleClickSave = (): void => {
   emit('submit')
 }
 
-const tabs = ref<Tab[]>([
-  {
-    title: t('baseForm.configuration.json'),
-    hash: '#json',
-  },
-  {
-    title: t('baseForm.configuration.yaml'),
-    hash: '#yaml',
-  },
-])
+// Tabs built in display order, then filtered by `tabsToHide`
+const tabs = computed<Tab[]>(() => {
+  const items: Tab[] = [
+    {
+      title: t('baseForm.configuration.json'),
+      hash: '#json',
+    },
+    {
+      title: t('baseForm.configuration.yaml'),
+      hash: '#yaml',
+    },
+  ]
 
-// terraform is only available for konnect entities and non-Other entity types
-if (props.config.app === 'konnect' && props.entityType !== SupportedEntityType.Other) {
-  // insert terraform as the third option
-  tabs.value.splice(1, 0, {
-    title: t('baseForm.configuration.terraform'),
-    hash: '#terraform',
-  })
-}
+  // terraform is only available for konnect entities and non-Other entity types
+  if (props.config.app === 'konnect' && props.entityType !== SupportedEntityType.Other) {
+    // insert terraform as the third option
+    items.splice(1, 0, {
+      title: t('baseForm.configuration.terraform'),
+      hash: '#terraform',
+    })
+  }
 
-if (isDeckEnabled.value) {
-  tabs.value.push({
-    title: t('baseForm.configuration.deck'),
-    hash: '#deck',
-  })
-}
+  if (isDeckEnabled.value) {
+    items.push({
+      title: t('baseForm.configuration.deck'),
+      hash: '#deck',
+    })
+  }
 
-const configTab = ref(tabs.value[0].hash)
+  const hidden = new Set(props.tabsToHide.map(tab => `#${tab}`))
+  return items.filter(item => !hidden.has(item.hash as string))
+})
+
+const configTab = ref(tabs.value[0]?.hash)
+
+// Keep the active tab valid when the available tabs change (eg. via `tabsToHide`)
+watch(tabs, (newTabs) => {
+  if (!newTabs.some(tab => tab.hash === configTab.value)) {
+    configTab.value = newTabs[0]?.hash
+  }
+})
 
 watch(() => isLoading.value, (val: boolean) => {
   // Emit the loading state for the host app
