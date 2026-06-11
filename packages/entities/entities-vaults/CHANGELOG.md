@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.9.3...@kong-ui-public/entities-vaults@4.9.4) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** align vue-router versions ([#3432](https://github.com/Kong/public-ui-components/issues/3432)) ([5adc5dd](https://github.com/Kong/public-ui-components/commit/5adc5ddbfe47d65faab890cd0e84b7ef1f64120e))
+
+
+
+
+
 ## [4.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.9.2...@kong-ui-public/entities-vaults@4.9.3) (2026-06-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

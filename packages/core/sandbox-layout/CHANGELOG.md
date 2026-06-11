@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.4.18...@kong-ui-public/sandbox-layout@2.4.19) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** align vue-router versions ([#3432](https://github.com/Kong/public-ui-components/issues/3432)) ([5adc5dd](https://github.com/Kong/public-ui-components/commit/5adc5ddbfe47d65faab890cd0e84b7ef1f64120e))
+
+
+
+
+
 ## [2.4.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.4.17...@kong-ui-public/sandbox-layout@2.4.18) (2026-06-09)
 
 
