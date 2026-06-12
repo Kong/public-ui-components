@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.213.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.212.0...@kong-ui-public/entities-plugins@9.213.0) (2026-06-12)
+
+
+### Features
+
+* **entities-plugins:** conditional fields for oidc ([#3433](https://github.com/Kong/public-ui-components/issues/3433)) ([bb819d8](https://github.com/Kong/public-ui-components/commit/bb819d8fb648bf9dd8d493000beecebcedbd1007))
+
+
+
+
+
 # [9.212.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.211.2...@kong-ui-public/entities-plugins@9.212.0) (2026-06-12)
 
 

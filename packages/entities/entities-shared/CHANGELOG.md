@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.50.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.6...@kong-ui-public/entities-shared@3.50.0) (2026-06-12)
+
+
+### Features
+
+* use SensitiveInput in vault form ([#3440](https://github.com/Kong/public-ui-components/issues/3440)) ([ce47380](https://github.com/Kong/public-ui-components/commit/ce47380dc13ca3d5b64f918eadbaca3491cc2520))
+
+
+
+
+
 ## [3.49.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.5...@kong-ui-public/entities-shared@3.49.6) (2026-06-11)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

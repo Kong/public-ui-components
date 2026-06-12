@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.26.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.25.12...@kong-ui-public/forms@4.26.0) (2026-06-12)
+
+
+### Features
+
+* **entities-plugins:** conditional fields for oidc ([#3433](https://github.com/Kong/public-ui-components/issues/3433)) ([bb819d8](https://github.com/Kong/public-ui-components/commit/bb819d8fb648bf9dd8d493000beecebcedbd1007))
+
+
+
+
+
 ## [4.25.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.25.11...@kong-ui-public/forms@4.25.12) (2026-06-11)
 
 **Note:** Version bump only for package @kong-ui-public/forms
