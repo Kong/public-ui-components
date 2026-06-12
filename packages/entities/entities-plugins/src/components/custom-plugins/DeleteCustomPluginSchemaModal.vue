@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { ref, computed, type PropType } from 'vue'
 import {
-  type CustomPluginType,
+  type CustomPluginDeletePayload,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
 } from '../../types'
@@ -68,12 +68,15 @@ const props = defineProps({
     },
   },
   plugin: {
-    type: Object as PropType<{ name: string, id: string, customPluginType?: CustomPluginType }>,
+    type: Object as PropType<CustomPluginDeletePayload & { id: string }>,
     required: true,
   },
 })
 
-const emit = defineEmits(['closed', 'proceed'])
+const emit = defineEmits<{
+  closed: []
+  proceed: []
+}>()
 
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = useErrors()

@@ -548,6 +548,12 @@ export const konnectStreamingCustomPlugins = {
   ],
 }
 
+export const konnectClonedCustomPlugins = {
+  data: [
+    { id: '4e26ba5a-9c6b-4e79-9501-0e0bd9ade0ad', name: 'rate-limiting-clone', ref: 'rate-limiting', priority: null, tags: null },
+  ],
+}
+
 /**
  * Form page data
  */

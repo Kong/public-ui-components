@@ -526,7 +526,7 @@ describe('<CustomPluginForm />', () => {
       ).as('getClonedPlugin')
 
       cy.intercept(
-        'PATCH',
+        'PUT',
         `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/cloned-plugins/my-cloned-plugin`,
         {
           statusCode: 200,
