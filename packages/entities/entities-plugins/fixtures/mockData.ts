@@ -548,6 +548,18 @@ export const konnectStreamingCustomPlugins = {
   ],
 }
 
+export const kmStreamingCustomPlugins = {
+  data: [
+    { id: 'km-stream-001', name: 'km-streaming-plugin', schema: 'schema text', handler: 'handler text', created_at: 1710000000 },
+  ],
+}
+
+export const kmClonedCustomPlugins = {
+  data: [
+    { id: 'km-cloned-001', name: 'km-cloned-plugin', ref: 'rate-limiting', created_at: 1710000001 },
+  ],
+}
+
 /**
  * Form page data
  */

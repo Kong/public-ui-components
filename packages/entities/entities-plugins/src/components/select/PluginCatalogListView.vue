@@ -61,7 +61,7 @@
         #more-actions="{ row }"
       >
         <div
-          v-if="row.plugin?.customPluginType"
+          v-if="row.plugin?.customPluginType && (canEditRow(row.plugin) || canDeleteRow(row.plugin))"
           class="plugin-more-action-cell"
           data-testid="plugin-catalog-list-view-more-actions"
         >
@@ -74,15 +74,17 @@
           >
             <template #items>
               <KDropdownItem
+                v-if="canEditRow(row.plugin)"
                 data-testid="edit-plugin-schema"
-                :item="{ label: t('actions.edit'), to: (config as KonnectPluginSelectConfig).getCustomEditRoute?.(row.plugin!.name, row.plugin!.customPluginType!) }"
+                :item="{ label: t('actions.edit'), to: props.config.getCustomEditRoute?.(row.plugin!.name, row.plugin!.customPluginType!) }"
               >
                 {{ t('actions.edit') }}
               </KDropdownItem>
               <KDropdownItem
+                v-if="canDeleteRow(row.plugin)"
                 danger
                 data-testid="delete-plugin-schema"
-                has-divider
+                :has-divider="canEditRow(row.plugin)"
                 @click="() => handleCustomPluginDelete(row.plugin!)"
               >
                 {{ t('actions.delete') }}
@@ -107,7 +109,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
+import type { ComputedRef } from 'vue'
 import composables from '../../composables'
 import { MoreIcon } from '@kong/icons'
 import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginSchemaModal.vue'
@@ -119,7 +122,9 @@ import type {
   KongManagerPluginSelectConfig,
   KonnectPluginSelectConfig,
   PluginCardList,
+  PluginCatalogPermissions,
 } from '../../types'
+import { PLUGIN_CATALOG_PERMISSIONS_KEY } from '../../constants'
 
 interface TableSortPayload {
   prevKey: string
@@ -139,9 +144,37 @@ const props = defineProps<{
 
 const { i18n: { t } } = composables.useI18n()
 
+const DEFAULT_PERMISSIONS: PluginCatalogPermissions = {
+  canReadCustomPlugin: true,
+  canUpdateCustomPlugin: true,
+  canDeleteCustomPlugin: true,
+  canReadClonedPlugin: true,
+  canUpdateClonedPlugin: true,
+  canDeleteClonedPlugin: true,
+}
+const injectedPerms = inject<ComputedRef<PluginCatalogPermissions>>(PLUGIN_CATALOG_PERMISSIONS_KEY)
+const permissions = computed(() => injectedPerms?.value ?? DEFAULT_PERMISSIONS)
+
+const isClonedType = (type?: string) => type === 'cloned' || type === 'schema'
+const canEditRow = (plugin?: PluginType | null): boolean => {
+  if (!plugin?.customPluginType) return false
+  // schema plugins in KM are installed plugins — not manageable, no RBAC control
+  if (props.config.app === 'kongManager' && plugin.customPluginType === 'schema') return false
+  return isClonedType(plugin.customPluginType)
+    ? permissions.value.canUpdateClonedPlugin
+    : permissions.value.canUpdateCustomPlugin
+}
+const canDeleteRow = (plugin?: PluginType | null): boolean => {
+  if (!plugin?.customPluginType) return false
+  // schema plugins in KM are installed plugins — not manageable, no RBAC control
+  if (props.config.app === 'kongManager' && plugin.customPluginType === 'schema') return false
+  return isClonedType(plugin.customPluginType)
+    ? permissions.value.canDeleteClonedPlugin
+    : permissions.value.canDeleteCustomPlugin
+}
 
 const showMoreActions = computed(() => {
-  return paginatedData.value.some(row => Boolean(row.plugin?.customPluginType))
+  return paginatedData.value.some(row => Boolean(row.plugin?.customPluginType) && (canEditRow(row.plugin) || canDeleteRow(row.plugin)))
 })
 
 const headers = computed(() => {
