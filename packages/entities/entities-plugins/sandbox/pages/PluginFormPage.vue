@@ -102,6 +102,7 @@ useProvideExperimentalFreeForms([
   'solace-upstream',
   'opentelemetry',
   'acl',
+  'acme',
   'request-transformer',
   'upstream-oauth',
   'cors',
@@ -114,6 +115,11 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'injection-protection',
+  'json-threat-protection',
+  'opa',
+  'tls-handshake-modifier',
+  'tls-metadata-headers',
 ])
 
 const enableDeckConfigCustomization = ref(false)
