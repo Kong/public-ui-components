@@ -114,6 +114,10 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'jq',
+  'kafka-upstream',
+  'azure-functions',
+  'openwhisk',
 ])
 
 const enableDeckConfigCustomization = ref(false)
