@@ -299,7 +299,13 @@ export default {
       return this.isKonnect
     },
     authMethodItems() {
-      const methods = this.principalsMode === 'kong-identity'
+      // principalsMode is set on create and on user toggles; on edit it stays
+      // null (the principals child doesn't emit), so fall back to the saved
+      // config to decide whether to restrict the list to Kong Identity methods.
+      const isKongIdentity = this.principalsMode !== null
+        ? this.principalsMode === 'kong-identity'
+        : this.formModel['config-principals-enabled'] === true
+      const methods = isKongIdentity
         ? this.authMethods.filter(m => KONG_IDENTITY_METHODS.includes(m.value))
         : this.authMethods
       return methods.map(m => ({

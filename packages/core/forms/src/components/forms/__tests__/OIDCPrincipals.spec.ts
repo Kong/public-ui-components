@@ -117,6 +117,54 @@ describe('OIDCPrincipals', () => {
     })
   })
 
+  describe('external mode client rows', () => {
+    // isEditing + principals-enabled=false forces External mode (see inferInitialMode)
+    const externalProps = { isEditing: true }
+    const externalModel = { 'config-principals-enabled': false }
+
+    it('renders one client row with id + secret inputs and a single add control', () => {
+      const wrapper = mountComponent(externalModel, externalProps)
+
+      expect(wrapper.find('[data-testid="external-client-id"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="external-client-secret"]').exists()).toBe(true)
+      // A single "+ Add client" control governs the paired row, not one per field
+      expect(wrapper.findAll('[data-testid="add-external-client-action"]')).toHaveLength(1)
+    })
+
+    it('+ Add client appends an entry to both client_id and client_secret arrays', async () => {
+      const onModelUpdated = vi.fn()
+      const wrapper = mountComponent(externalModel, { ...externalProps, onModelUpdated })
+      const formModel = wrapper.props('formModel')
+
+      await wrapper.find('[data-testid="add-external-client-action"]').trigger('click')
+
+      expect(formModel['config-client_id']).toHaveLength(2)
+      expect(formModel['config-client_secret']).toHaveLength(2)
+      expect(onModelUpdated).toHaveBeenCalled()
+    })
+
+    it('remove control is disabled with a single row and removes a row when multiple exist', async () => {
+      const wrapper = mountComponent({
+        ...externalModel,
+        'config-client_id': ['a', 'b'],
+        'config-client_secret': ['sa', 'sb'],
+      }, externalProps)
+      const formModel = wrapper.props('formModel')
+
+      const removeButtons = wrapper.findAll('[data-testid="remove-external-client-action"]')
+      expect(removeButtons).toHaveLength(2)
+
+      await removeButtons[1].trigger('click')
+
+      expect(formModel['config-client_id']).toEqual(['a'])
+      expect(formModel['config-client_secret']).toEqual(['sa'])
+
+      // With one row left, the remaining remove control is disabled
+      const remaining = wrapper.find('[data-testid="remove-external-client-action"]')
+      expect(remaining.attributes('disabled')).toBeDefined()
+    })
+  })
+
   describe('checkbox cascade', () => {
     it('unchecking match_consumer unchecks match_consumer_groups', () => {
       const onModelUpdated = vi.fn()
@@ -286,6 +334,31 @@ describe('OIDCPrincipals', () => {
       // Should show VueFormGenerator (External mode) since principals-enabled is undefined
       // and common fields have values
       expect(wrapper.find('.stub-vfg').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="principals-directory-select"]').exists()).toBe(false)
+    })
+
+    it('infers External mode on edit when principals-enabled is absent and no common fields are set', () => {
+      // Legacy plugin predating the principals feature: no principals-* fields,
+      // and no client/issuer either. On edit this must NOT default to Kong
+      // Identity (a legacy plugin cannot be KI).
+      const wrapper = mount(OIDCPrincipals, {
+        props: {
+          ...baseProps,
+          isEditing: true,
+          formModel: {
+            'config-client_id': null,
+            'config-client_secret': null,
+            'config-issuer': null,
+          },
+        },
+        global: {
+          provide: {
+            [FORMS_CONFIG]: formsConfig,
+          },
+        },
+      })
+
+      expect((wrapper.vm as any).selectedMode).toBe('external')
       expect(wrapper.find('[data-testid="principals-directory-select"]').exists()).toBe(false)
     })
 

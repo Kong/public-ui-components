@@ -80,7 +80,7 @@
             <div class="create-action-content">
               <span>Create authorization server</span>
               <div class="create-action-hint">
-                You’ll need to return here after creating a auth server. Your progress won’t be saved.
+                You’ll need to return here after creating an authorization server. Your progress won’t be saved.
               </div>
             </div>
           </div>
@@ -142,6 +142,7 @@
           />
         </div>
         <button
+          aria-label="Remove client"
           class="remove-client-btn"
           data-testid="remove-client-action"
           :disabled="isRemoveClientDisabled"
@@ -266,13 +267,78 @@
       </KCollapse>
     </template>
 
-    <VueFormGenerator
-      v-else
-      :model="formModel"
-      :options="formOptions"
-      :schema="commonFieldsSchema"
-      @model-updated="onModelUpdated"
-    />
+    <template v-else>
+      <div
+        v-for="(clientId, index) in clientIdArray"
+        :key="index"
+        class="client-row"
+        :class="{ 'client-row-with-label': index === 0 }"
+      >
+        <div class="external-client-field">
+          <KInput
+            class="external-client-input"
+            data-testid="external-client-id"
+            :label="index === 0 ? 'Client id' : undefined"
+            :label-attributes="{ info: externalClientIdField?.help }"
+            :model-value="clientIdArray[index]"
+            placeholder="e.g., kong-gateway-client"
+            @update:model-value="handleClientChange(index, $event)"
+          />
+          <component
+            :is="autofillSlot"
+            v-if="autofillSlot"
+            :schema="{ model: 'config-client_id', referenceable: true }"
+            :update="(val) => handleClientChange(index, val)"
+            :value="clientIdArray[index]"
+          />
+        </div>
+        <div class="external-client-field">
+          <KInput
+            class="external-client-input"
+            data-testid="external-client-secret"
+            :label="index === 0 ? 'Client secret' : undefined"
+            :label-attributes="{ info: externalClientSecretField?.help }"
+            :model-value="clientSecretArray[index]"
+            placeholder="e.g., your-client-secret"
+            show-password-mask-toggle
+            type="password"
+            @update:model-value="handleClientSecretChange(index, $event)"
+          />
+          <component
+            :is="autofillSlot"
+            v-if="autofillSlot"
+            :schema="{ model: 'config-client_secret', referenceable: true }"
+            :update="(val) => handleClientSecretChange(index, val)"
+            :value="clientSecretArray[index]"
+          />
+        </div>
+        <button
+          aria-label="Remove client"
+          class="remove-client-btn"
+          data-testid="remove-external-client-action"
+          :disabled="clientIdArray.length <= 1"
+          type="button"
+          @click="removeClientRow(index)"
+        >
+          <CloseIcon :size="KUI_ICON_SIZE_30" />
+        </button>
+      </div>
+
+      <div
+        class="add-client-inline"
+        data-testid="add-external-client-action"
+        @click="addClientRow()"
+      >
+        + Add client
+      </div>
+
+      <VueFormGenerator
+        :model="formModel"
+        :options="formOptions"
+        :schema="issuerFieldsSchema"
+        @model-updated="onModelUpdated"
+      />
+    </template>
 
     <KPrompt
       action-button-text="Leave page"
@@ -342,7 +408,7 @@ const inferInitialLookupMethod = (formModel) => {
 const inferInitialMode = (formModel, isEditing) => {
   if (formModel['config-principals-enabled'] === true) return MODE_KONG_IDENTITY
   // On edit, respect principals-enabled=false as External mode
-  if (isEditing && formModel['config-principals-enabled'] === false) return MODE_EXTERNAL
+  if (isEditing && formModel['config-principals-enabled'] !== true) return MODE_EXTERNAL
   for (const key of COMMON_FIELD_MODELS) {
     const v = formModel[key]
     if (v !== undefined && v !== null && v !== '') return MODE_EXTERNAL
@@ -410,6 +476,18 @@ export default {
     }
   },
   computed: {
+    // External-mode schema for the issuer field only — client_id/client_secret
+    // are rendered as paired rows below, so VFG only handles issuer here.
+    issuerFieldsSchema() {
+      const fields = (this.commonFieldsSchema?.fields ?? []).filter(f => f.model === 'config-issuer')
+      return { ...this.commonFieldsSchema, fields }
+    },
+    externalClientIdField() {
+      return (this.commonFieldsSchema?.fields ?? []).find(f => f.model === 'config-client_id')
+    },
+    externalClientSecretField() {
+      return (this.commonFieldsSchema?.fields ?? []).find(f => f.model === 'config-client_secret')
+    },
     kongIdentityServerItems() {
       return this.kongIdentityServers.map(s => ({ label: s.name, value: s.id }))
     },
@@ -507,30 +585,24 @@ export default {
       this.updateField('config-client_id', clientIds)
     },
     addClientRow() {
-      const clientIds = Array.isArray(this.formModel['config-client_id'])
-        ? [...this.formModel['config-client_id']]
-        : []
+      // Base off the normalized arrays so the virtualized first row (when the
+      // model is still null) is preserved instead of being dropped.
+      const clientIds = [...this.clientIdArray]
       clientIds.push(null)
       this.updateField('config-client_id', clientIds)
 
-      const secrets = Array.isArray(this.formModel['config-client_secret'])
-        ? [...this.formModel['config-client_secret']]
-        : []
+      const secrets = [...this.clientSecretArray]
       secrets.push(null)
       this.updateField('config-client_secret', secrets)
     },
     removeClientRow(index) {
       if (this.clientIdArray.length <= 1) return
 
-      const clientIds = Array.isArray(this.formModel['config-client_id'])
-        ? [...this.formModel['config-client_id']]
-        : []
+      const clientIds = [...this.clientIdArray]
       clientIds.splice(index, 1)
       this.updateField('config-client_id', clientIds)
 
-      const secrets = Array.isArray(this.formModel['config-client_secret'])
-        ? [...this.formModel['config-client_secret']]
-        : []
+      const secrets = [...this.clientSecretArray]
       secrets.splice(index, 1)
       this.updateField('config-client_secret', secrets)
     },
@@ -567,9 +639,6 @@ export default {
       const parts = value.split(/(?<!\\)\./).map(part => part.replace(/\\\./g, '.').trim()).filter(Boolean)
       this.updateField('config-principals-principal_claim', parts)
     },
-    syncLookupMethod() {
-      this.selectedLookupMethod = inferInitialLookupMethod(this.formModel)
-    },
     handleMatchConsumerChange(checked) {
       this.updateField('config-principals-match_consumer', checked)
       if (!checked) {
@@ -589,9 +658,6 @@ export default {
     updateField(field, value) {
       // eslint-disable-next-line vue/no-mutating-props
       this.formModel[field] = value
-      if (field === 'config-principals-principal_claim' || field === 'config-principals-principal_by') {
-        this.syncLookupMethod()
-      }
       this.onModelUpdated()
     },
     handleLeaveConfirmed() {
@@ -817,6 +883,16 @@ export default {
 
 :deep(.create-action) {
   cursor: pointer;
+}
+
+// External auth server mode: client_id + client_secret share a row.
+.external-client-field {
+  flex: 1;
+  min-width: 0;
+
+  .external-client-input {
+    width: 100%;
+  }
 }
 
 .principals-directory-select {
