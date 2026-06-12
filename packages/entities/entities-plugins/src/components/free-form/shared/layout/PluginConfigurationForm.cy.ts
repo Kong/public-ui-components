@@ -1,7 +1,7 @@
 import { h } from 'vue'
 import PluginConfigurationForm from './PluginConfigurationForm.vue'
 import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../../constants'
-import type { FormSchema } from 'src/types/plugins/form-schema.ts'
+import type { FormSchema } from 'src/types/plugins/form-schema'
 
 const createSchema = () => ({
   type: 'record',
