@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.213.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.213.1...@kong-ui-public/entities-plugins@9.213.2) (2026-06-12)
+
+
+### Bug Fixes
+
+* **entities-plugins:** pass empty array for identity_realms ([#3442](https://github.com/Kong/public-ui-components/issues/3442)) ([1851b8b](https://github.com/Kong/public-ui-components/commit/1851b8b0eb7f6acea7546d9d6b073fa7427594e3))
+
+
+
+
+
 ## [9.213.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.213.0...@kong-ui-public/entities-plugins@9.213.1) (2026-06-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
