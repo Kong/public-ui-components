@@ -14,7 +14,9 @@ type UseFetchStateResult = {
   state: Readonly<Ref<fetchState>>
 }
 
-const defaultHasData = <Row>(data: Row[] | undefined): boolean => (
+type FetchStateData<Row> = readonly Row[] | undefined
+
+const defaultHasData = <Row>(data: FetchStateData<Row>): boolean => (
   Boolean(data?.length)
 )
 
@@ -33,10 +35,10 @@ const defaultHasData = <Row>(data: Row[] | undefined): boolean => (
  * definition of meaningful data.
  */
 export default function useFetchState<Row>(
-  data: Readonly<Ref<Row[] | undefined>>,
+  data: Readonly<Ref<FetchStateData<Row>>>,
   error: Readonly<Ref<unknown>>,
   isFetching: Readonly<Ref<boolean>>,
-  hasDataCallback: (data: Row[] | undefined) => boolean = defaultHasData,
+  hasDataCallback: (data: FetchStateData<Row>) => boolean = defaultHasData,
 ): UseFetchStateResult {
   const hasData = computed<boolean>(() => hasDataCallback(data.value))
 

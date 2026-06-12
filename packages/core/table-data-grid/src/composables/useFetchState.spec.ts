@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import { describe, expect, it } from 'vitest'
-import { isReadonly, ref } from 'vue'
+import { isReadonly, ref, shallowRef } from 'vue'
 import useFetchState, { fetchState } from './useFetchState'
 
 type TestRow = {
@@ -12,7 +12,7 @@ type TestCase = {
   data?: TestRow[]
   error?: unknown
   expectedHasData: boolean
-  expected: fetchState
+  expectedState: fetchState
   isFetching: boolean
   name: string
 }
@@ -21,70 +21,73 @@ const createRows = (length: number): TestRow[] => (
   Array.from({ length }, (_, index) => ({ id: `${index + 1}` }))
 )
 
+// Documents state precedence for a derived fetch-state helper:
+// meaningful data wins over loading/error, fetching wins before first data,
+// and resolved empty data still means the fetch completed successfully.
 const stateCases: TestCase[] = [
   {
-    name: 'no data, no error, not fetching',
+    name: 'nothing has resolved and no request is pending',
     expectedHasData: false,
-    expected: fetchState.PENDING,
+    expectedState: fetchState.PENDING,
     isFetching: false,
   },
   {
-    name: 'no data, no error, fetching',
+    name: 'nothing has resolved and a request is pending',
     expectedHasData: false,
-    expected: fetchState.LOADING,
+    expectedState: fetchState.LOADING,
     isFetching: true,
   },
   {
-    name: 'no data, error, not fetching',
+    name: 'nothing has resolved and the latest request failed',
     error: new Error('failed'),
     expectedHasData: false,
-    expected: fetchState.ERROR,
+    expectedState: fetchState.ERROR,
     isFetching: false,
   },
   {
-    name: 'empty data, no error, not fetching',
+    name: 'an empty result has resolved',
     data: [],
     expectedHasData: false,
-    expected: fetchState.SUCCESS,
+    expectedState: fetchState.SUCCESS,
     isFetching: false,
   },
   {
-    name: 'empty data, no error, fetching',
+    name: 'an empty result exists but a request is pending',
     data: [],
     expectedHasData: false,
-    expected: fetchState.LOADING,
+    expectedState: fetchState.LOADING,
     isFetching: true,
   },
   {
-    name: 'data, no error, not fetching',
+    name: 'rows have resolved',
     data: createRows(1),
     expectedHasData: true,
-    expected: fetchState.SUCCESS,
+    expectedState: fetchState.SUCCESS,
     isFetching: false,
   },
   {
-    name: 'data, no error, fetching',
+    name: 'rows exist and another request is pending',
     data: createRows(1),
     expectedHasData: true,
-    expected: fetchState.SUCCESS,
+    expectedState: fetchState.SUCCESS,
     isFetching: true,
   },
   {
-    name: 'data, error, not fetching',
+    name: 'rows exist and a later request failed',
     data: createRows(1),
     error: new Error('failed'),
     expectedHasData: true,
-    expected: fetchState.SUCCESS,
+    expectedState: fetchState.SUCCESS,
     isFetching: false,
   },
 ]
 
 describe('useFetchState', () => {
-  it.each(stateCases)('returns $expected for $name', ({
+  it.each(stateCases)('classifies fetch state as $expectedState when $name', ({
     data: initialData,
     error: initialError,
     expectedHasData,
-    expected,
+    expectedState,
     isFetching: initialIsFetching,
   }) => {
     const data = ref<TestRow[] | undefined>(initialData)
@@ -94,10 +97,10 @@ describe('useFetchState', () => {
     const { hasData, state } = useFetchState(data, error, isFetching)
 
     expect(hasData.value).toBe(expectedHasData)
-    expect(state.value).toBe(expected)
+    expect(state.value).toBe(expectedState)
   })
 
-  it('derives state reactively from data, error, and isFetching refs', () => {
+  it('updates the derived state when source refs change', () => {
     const data = ref<TestRow[] | undefined>(undefined)
     const error = ref<unknown>(undefined)
     const isFetching = ref(false)
@@ -119,7 +122,7 @@ describe('useFetchState', () => {
     expect(state.value).toBe(fetchState.SUCCESS)
   })
 
-  it('supports a custom data detector without owning fetch lifecycle state', () => {
+  it('uses a custom hasData detector without owning fetch lifecycle state', () => {
     const data = ref<TestRow[] | undefined>([{ id: 'one', visible: false }])
     const error = ref<unknown>(undefined)
     const isFetching = ref(false)
@@ -129,6 +132,8 @@ describe('useFetchState', () => {
 
     const { hasData, state } = useFetchState(data, error, isFetching, hasVisibleData)
 
+    // The custom detector only controls hasData. The fetch state is still
+    // SUCCESS because a result has resolved and there is no pending request.
     expect(hasData.value).toBe(false)
     expect(state.value).toBe(fetchState.SUCCESS)
 
@@ -137,7 +142,21 @@ describe('useFetchState', () => {
     expect(state.value).toBe(fetchState.SUCCESS)
   })
 
-  it('returns readonly state and hasData refs to callers', () => {
+  it('accepts readonly row data refs returned by fetch composables', () => {
+    // Fetch orchestration composables return readonly row refs so callers can
+    // observe rows without mutating fetch-owned data.
+    const data = shallowRef<readonly TestRow[] | undefined>([{ id: 'one' }])
+    const error = ref<unknown>(undefined)
+    const isFetching = ref(false)
+    const hasOneRow = (rows: readonly TestRow[] | undefined): boolean => rows?.length === 1
+
+    const { hasData, state } = useFetchState(data, error, isFetching, hasOneRow)
+
+    expect(hasData.value).toBe(true)
+    expect(state.value).toBe(fetchState.SUCCESS)
+  })
+
+  it('exposes readonly derived refs to callers', () => {
     const data = ref<TestRow[] | undefined>(undefined)
     const error = ref<unknown>(undefined)
     const isFetching = ref(false)

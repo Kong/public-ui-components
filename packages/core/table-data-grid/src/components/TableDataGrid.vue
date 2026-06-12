@@ -4,10 +4,14 @@
     data-testid="table-data-grid"
   >
     <AgGridVue
+      :cache-block-size="pageSize"
       class="table-data-grid-grid"
       :column-defs="columnDefs"
+      :datasource="datasource"
       :grid-options="agGridOptions"
-      :row-data="rowData"
+      :infinite-initial-row-count="1"
+      :loading="isFetching"
+      row-model-type="infinite"
       :suppress-cell-focus="true"
       :theme="themeQuartz"
       @grid-ready="onGridReady"
@@ -23,29 +27,35 @@ import type {
 } from '../types'
 import type { ColDef, GridReadyEvent } from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
-import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-community'
-import { computed, ref, shallowRef, toRef, watch } from 'vue'
+import {
+  AllCommunityModule,
+  InfiniteRowModelModule,
+  ModuleRegistry,
+  themeQuartz,
+} from 'ag-grid-community'
+import { computed } from 'vue'
+import { useFetchInfinite } from '../composables/useFetchInfinite'
+import useFetchState from '../composables/useFetchState'
 
-ModuleRegistry.registerModules([AllCommunityModule])
+ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
 
 const {
   agGridOptions = {},
   fetcher,
   headers,
   pageSize = 25,
+  refreshKey,
 } = defineProps<{
   headers: Array<TableDataGridHeader<Row>>
   fetcher: TableDataGridFetcher<Row>
   pageSize?: number
+  refreshKey?: string | number | boolean
   agGridOptions?: TableDataGridGridOptions<Row>
 }>()
 
 const emit = defineEmits<{
   (e: 'grid:ready', api: GridReadyEvent<Row>['api']): void
 }>()
-
-const rowData = shallowRef<Row[]>([])
-const latestFetchId = ref(0)
 
 const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
   const columnDef: ColDef<Row> = {
@@ -60,41 +70,23 @@ const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
   return columnDef
 }))
 
-const fetchRows = async () => {
-  const fetchId = latestFetchId.value + 1
-  latestFetchId.value = fetchId
+const resetKey = computed(() => [fetcher, pageSize, refreshKey])
+const fetchRows: TableDataGridFetcher<Row> = params => fetcher(params)
+const {
+  data,
+  datasource,
+  error,
+  isFetching,
+} = useFetchInfinite({
+  fetcher: fetchRows,
+  resetKey,
+})
 
-  try {
-    const result = await fetcher({
-      mode: 'infinite',
-      pageSize,
-    })
-
-    if (fetchId === latestFetchId.value) {
-      rowData.value = result.data
-    }
-  } catch (error) {
-    if (fetchId === latestFetchId.value) {
-      rowData.value = []
-    }
-    console.error(error)
-  }
-}
+useFetchState(data, error, isFetching)
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   emit('grid:ready', event.api)
 }
-
-watch(
-  [
-    toRef(() => fetcher),
-    toRef(() => pageSize),
-  ],
-  () => {
-    fetchRows()
-  },
-  { immediate: true },
-)
 </script>
 
 <style lang="scss" scoped>
