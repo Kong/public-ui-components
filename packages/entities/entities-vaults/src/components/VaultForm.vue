@@ -9,6 +9,7 @@
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
       :is-readonly="form.isReadonly"
+      :tabs-to-hide="config.apiType === 'aiGateway' ? ['terraform', 'deck'] : []"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"
       @fetch:success="updateFormValues"
@@ -306,6 +307,7 @@
               class="vault-form-config-auth-method-container"
             >
               <KInput
+                v-if="!isAiGateway"
                 v-model.trim="configFields[VaultProviders.HCV].token"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-token"
@@ -314,6 +316,15 @@
                 required
                 show-password-mask-toggle
                 type="password"
+              />
+              <SensitiveInput
+                v-else
+                v-model="configFields[VaultProviders.HCV].token"
+                data-testid="vault-form-config-hcv-token"
+                :label="t('form.config.hcv.fields.token.label')"
+                :mode="sensitiveInputMode"
+                :readonly="form.isReadonly"
+                :required="sensitiveInputMode === 'create'"
               />
             </div>
             <div
@@ -387,6 +398,7 @@
                 type="password"
               />
               <KInput
+                v-if="!isAiGateway"
                 v-model.trim="configFields[VaultProviders.HCV].aws_secret_access_key"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-aws_secret_access_key"
@@ -394,6 +406,14 @@
                 :readonly="form.isReadonly"
                 show-password-mask-toggle
                 type="password"
+              />
+              <SensitiveInput
+                v-else
+                v-model="configFields[VaultProviders.HCV].aws_secret_access_key"
+                data-testid="vault-form-config-hcv-aws_secret_access_key"
+                :label="t('form.config.hcv.fields.aws_secret_access_key.label')"
+                :mode="sensitiveInputMode"
+                :readonly="form.isReadonly"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].aws_sts_endpoint_url"
@@ -622,6 +642,7 @@
                 required
               />
               <KInput
+                v-if="!isAiGateway"
                 v-model.trim="configFields[VaultProviders.HCV].oauth2_client_secret"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-oauth2_client_secret"
@@ -630,6 +651,15 @@
                 required
                 show-password-mask-toggle
                 type="password"
+              />
+              <SensitiveInput
+                v-else
+                v-model="configFields[VaultProviders.HCV].oauth2_client_secret"
+                data-testid="vault-form-config-hcv-oauth2_client_secret"
+                :label="t('form.config.hcv.fields.oauth2_client_secret.label')"
+                :mode="sensitiveInputMode"
+                :readonly="form.isReadonly"
+                :required="sensitiveInputMode === 'create'"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].jwt_role"
@@ -836,6 +866,7 @@
               type="text"
             />
             <KInput
+              v-if="!isAiGateway"
               v-model.trim="configFields[VaultProviders.CONJUR].api_key"
               autocomplete="off"
               data-testid="vault-form-config-conjur-api_key"
@@ -848,6 +879,19 @@
               required
               show-password-mask-toggle
               type="password"
+            />
+            <SensitiveInput
+              v-else
+              v-model="configFields[VaultProviders.CONJUR].api_key"
+              data-testid="vault-form-config-conjur-api_key"
+              :label="t('form.config.conjur.fields.api_key.label')"
+              :label-attributes="{
+                info: t('form.config.conjur.fields.api_key.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :mode="sensitiveInputMode"
+              :readonly="form.isReadonly"
+              :required="sensitiveInputMode === 'create'"
             />
             <KCheckbox
               v-if="config.base64FieldAvailable"
@@ -1002,6 +1046,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   SupportedEntityType,
+  SensitiveInput,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -1419,6 +1464,8 @@ const formType = computed((): EntityBaseFormType => props.vaultId
   ? EntityBaseFormType.Edit
   : EntityBaseFormType.Create)
 
+const sensitiveInputMode = computed((): 'edit' | 'create' => formType.value === EntityBaseFormType.Edit ? 'edit' : 'create')
+
 const fetchUrl = computed<string>(() => withAiGatewayId(endpoints.form[endpointKey.value]?.edit))
 
 // On edit, the provider/type cannot be changed for Kong Manager or AI Gateway vaults.
@@ -1578,6 +1625,10 @@ const isVaultConfigValid = computed((): boolean => {
       }
       // token is not needed if auth method is not token
       if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.TOKEN && key === 'token') {
+        return false
+      }
+      // In AI Gateway edit mode, write-only fields are optional: a blank value keeps the existing secret.
+      if (isAiGateway.value && formType.value === EntityBaseFormType.Edit && ['token', 'oauth2_client_secret', 'cert_auth_cert_key'].includes(key)) {
         return false
       }
       // approle_role_id and approle_response_wrapping don't need to be verified if auth method is not approle
@@ -1788,7 +1839,19 @@ const getPayload = computed((): Record<string, any> => {
   }
 
   // Remap the gateway-shaped payload to the AI Gateway request body at the boundary only.
-  return isAiGateway.value ? toAiGatewayVaultPayload(payload) : payload
+  if (!isAiGateway.value) return payload
+  const aiPayload = toAiGatewayVaultPayload(payload)
+  // In edit mode, write-only fields are not returned by GET; omit them when blank so the
+  // existing secret is preserved (sending an empty string would clear it on the server).
+  if (formType.value === EntityBaseFormType.Edit) {
+    const config: Record<string, any> = { ...aiPayload.config }
+    const AI_WRITE_ONLY = ['token', 'client_secret', 'secret_access_key', 'api_key', 'key']
+    AI_WRITE_ONLY.forEach(field => {
+      if (field in config && isEmpty(config[field])) delete config[field]
+    })
+    return { ...aiPayload, config }
+  }
+  return aiPayload
 })
 
 const payloadWithConfigStoreId = computed<Record<string, any>>(() => (
