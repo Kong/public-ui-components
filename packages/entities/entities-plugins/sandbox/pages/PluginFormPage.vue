@@ -114,6 +114,11 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'confluent',
+  'confluent-consume',
+  'degraphql',
+  'grpc-gateway',
+  'grpc-web',
 ])
 
 const enableDeckConfigCustomization = ref(false)
