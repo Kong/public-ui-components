@@ -114,6 +114,11 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'hmac-auth',
+  'key-auth-enc',
+  'ldap-auth',
+  'ldap-auth-advanced',
+  'oauth2-introspection',
 ])
 
 const enableDeckConfigCustomization = ref(false)
