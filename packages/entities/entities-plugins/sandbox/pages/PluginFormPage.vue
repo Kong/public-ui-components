@@ -114,6 +114,12 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'ai-llm-as-judge',
+  'ai-lakera-guard',
+  'ai-mcp-oauth2',
+  'ai-sanitizer',
+  'ai-rag-injector',
+  'ai-semantic-response-guard',
 ])
 
 const enableDeckConfigCustomization = ref(false)
