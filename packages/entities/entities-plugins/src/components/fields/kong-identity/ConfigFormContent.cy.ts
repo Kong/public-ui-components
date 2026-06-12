@@ -427,7 +427,7 @@ describe('ConfigFormContent', () => {
         cy.getTestId('kong-identity-mode-consumers').closest('.k-radio').click()
 
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
-          return val.config?.identity_realms === null
+          return Array.isArray(val.config?.identity_realms) && val.config.identity_realms.length === 0
         }))
       })
 
@@ -443,7 +443,7 @@ describe('ConfigFormContent', () => {
         cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
 
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
-          return val.config?.identity_realms === null
+          return Array.isArray(val.config?.identity_realms) && val.config.identity_realms.length === 0
             && val.config?.principals?.enabled === true
         }))
       })
