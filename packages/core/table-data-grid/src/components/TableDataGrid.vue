@@ -62,7 +62,8 @@ import {
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
+import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import useFetchState from '../composables/useFetchState'
 
@@ -130,51 +131,11 @@ const shouldShowEmptyState = computed<boolean>(() => (
   && !hasData.value
 ))
 
-watch(
-  () => ({
-    hasData: hasData.value,
-    hostError,
-    state: fetchLifecycleState.value,
-  }),
-  ({ hasData, hostError, state }) => {
-    if (hostError) {
-      emit('state', {
-        hasData,
-        state: 'error',
-      })
-
-      return
-    }
-
-    if (state === fetchState.PENDING) {
-      return
-    }
-
-    if (state === fetchState.LOADING) {
-      emit('state', {
-        hasData,
-        state: 'loading',
-      })
-
-      return
-    }
-
-    if (state === fetchState.ERROR) {
-      emit('state', {
-        hasData,
-        state: 'error',
-      })
-
-      return
-    }
-
-    emit('state', {
-      hasData,
-      state: 'success',
-    })
-  },
-  { immediate: true },
-)
+useEmitState({
+  emitState: payload => emit('state', payload),
+  fetchLifecycleState,
+  hasData,
+})
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   emit('grid:ready', event.api)
