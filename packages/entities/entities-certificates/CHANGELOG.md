@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.14.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.14.14...@kong-ui-public/entities-certificates@3.14.15) (2026-06-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @peculiar/x509 to v2 ([#3186](https://github.com/Kong/public-ui-components/issues/3186)) ([5cff330](https://github.com/Kong/public-ui-components/commit/5cff330eb89eaae26ef7c4d96f3a5277bc9c3b42))
+
+
+
+
+
 ## [3.14.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.14.13...@kong-ui-public/entities-certificates@3.14.14) (2026-06-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates
