@@ -17,7 +17,6 @@ type TestTableDataGridProps = {
   headers: Array<TableDataGridHeader<TestRow>>
   fetcher: TableDataGridFetcher<TestRow>
   error?: boolean
-  loading?: boolean
   onState?: (payload: TableDataGridStatePayload) => void
   pageSize?: number
   refreshKey?: string | number | boolean
@@ -206,23 +205,7 @@ describe('<TableDataGrid />', () => {
     })
   })
 
-  it('renders host loading as a full table replacement', () => {
-    const fetcher = cy.stub().resolves({
-      data: rows,
-      total: rows.length,
-    })
-
-    mountTestTableDataGrid({
-      fetcher,
-      loading: true,
-    })
-
-    cy.getTestId('table-data-grid-loading').should('be.visible')
-    cy.get('.table-data-grid-grid').should('not.exist')
-    cy.wrap(fetcher).should('not.have.been.called')
-  })
-
-  it('renders host error ahead of host loading', () => {
+  it('renders host error as a full table replacement', () => {
     const fetcher = cy.stub().resolves({
       data: rows,
       total: rows.length,
@@ -231,13 +214,11 @@ describe('<TableDataGrid />', () => {
     mountTestTableDataGrid({
       error: true,
       fetcher,
-      loading: true,
     })
 
     cy.getTestId('table-error-state')
       .should('contain.text', 'An error occurred')
       .and('contain.text', 'Data cannot be displayed due to an error.')
-    cy.getTestId('table-data-grid-loading').should('not.exist')
     cy.get('.table-data-grid-grid').should('not.exist')
   })
 
@@ -334,6 +315,32 @@ describe('<TableDataGrid />', () => {
     cy.get('@state').should('have.been.calledWithMatch', {
       state: 'success',
       hasData: true,
+    })
+  })
+
+  it('does not emit loading while waiting for the first fetch to start', () => {
+    const eventOrder: string[] = []
+    const onState = cy.stub().callsFake(() => {
+      eventOrder.push('state')
+    }).as('state')
+    const fetcher = cy.stub().callsFake(() => {
+      eventOrder.push('fetcher')
+
+      return new Promise(() => undefined)
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      onState,
+    })
+
+    cy.wrap(fetcher).should('have.been.calledOnce')
+    cy.get('@state').should('have.been.calledWithMatch', {
+      state: 'loading',
+      hasData: false,
+    })
+    cy.then(() => {
+      expect(eventOrder).to.deep.equal(['fetcher', 'state'])
     })
   })
 })

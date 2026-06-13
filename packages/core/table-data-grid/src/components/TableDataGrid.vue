@@ -17,12 +17,6 @@
       </slot>
     </div>
 
-    <KSkeleton
-      v-else-if="loading"
-      data-testid="table-data-grid-loading"
-      type="table"
-    />
-
     <div
       v-else-if="shouldShowEmptyState"
       class="table-empty-state"
@@ -58,7 +52,6 @@ import type {
   TableDataGridFetcher,
   TableDataGridGridOptions,
   TableDataGridHeader,
-  TableDataGridState,
   TableDataGridStatePayload,
 } from '../types'
 import type { ColDef, GridReadyEvent } from 'ag-grid-community'
@@ -80,13 +73,11 @@ const {
   error: hostError = false,
   fetcher,
   headers,
-  loading = false,
   pageSize = 25,
   refreshKey,
 } = defineProps<{
   headers: Array<TableDataGridHeader<Row>>
   fetcher: TableDataGridFetcher<Row>
-  loading?: boolean
   error?: boolean
   pageSize?: number
   refreshKey?: string | number | boolean
@@ -133,28 +124,8 @@ const {
   state: fetchLifecycleState,
 } = useFetchState(data, fetchError, isFetching)
 
-const publicState = computed<TableDataGridState>(() => {
-  if (hostError) {
-    return 'error'
-  }
-
-  if (
-    loading
-    || fetchLifecycleState.value === fetchState.PENDING
-    || fetchLifecycleState.value === fetchState.LOADING
-  ) {
-    return 'loading'
-  }
-
-  if (fetchLifecycleState.value === fetchState.ERROR) {
-    return 'error'
-  }
-
-  return 'success'
-})
-
 const shouldShowEmptyState = computed<boolean>(() => (
-  publicState.value === 'success'
+  fetchLifecycleState.value === fetchState.SUCCESS
   && data.value !== undefined
   && !hasData.value
 ))
@@ -162,9 +133,46 @@ const shouldShowEmptyState = computed<boolean>(() => (
 watch(
   () => ({
     hasData: hasData.value,
-    state: publicState.value,
+    hostError,
+    state: fetchLifecycleState.value,
   }),
-  payload => emit('state', payload),
+  ({ hasData, hostError, state }) => {
+    if (hostError) {
+      emit('state', {
+        hasData,
+        state: 'error',
+      })
+
+      return
+    }
+
+    if (state === fetchState.PENDING) {
+      return
+    }
+
+    if (state === fetchState.LOADING) {
+      emit('state', {
+        hasData,
+        state: 'loading',
+      })
+
+      return
+    }
+
+    if (state === fetchState.ERROR) {
+      emit('state', {
+        hasData,
+        state: 'error',
+      })
+
+      return
+    }
+
+    emit('state', {
+      hasData,
+      state: 'success',
+    })
+  },
   { immediate: true },
 )
 
