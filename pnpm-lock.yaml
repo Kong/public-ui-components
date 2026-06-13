@@ -820,6 +820,9 @@ importers:
         specifier: ^34.3.1
         version: 34.3.1(vue@3.5.34(typescript@5.9.3))
     devDependencies:
+      '@kong/kongponents':
+        specifier: ^9.56.2
+        version: 9.56.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
       vue:
         specifier: 3.5.34
         version: 3.5.34(typescript@5.9.3)

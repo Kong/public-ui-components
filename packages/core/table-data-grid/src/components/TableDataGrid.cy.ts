@@ -1,5 +1,10 @@
-import type { TableDataGridFetcher, TableDataGridHeader } from '../types'
+import type {
+  TableDataGridFetcher,
+  TableDataGridHeader,
+  TableDataGridStatePayload,
+} from '../types'
 import type { DefineComponent } from 'vue'
+import { h } from 'vue'
 import TableDataGrid from './TableDataGrid.vue'
 
 type TestRow = {
@@ -11,8 +16,16 @@ type TestRow = {
 type TestTableDataGridProps = {
   headers: Array<TableDataGridHeader<TestRow>>
   fetcher: TableDataGridFetcher<TestRow>
+  error?: boolean
+  loading?: boolean
+  onState?: (payload: TableDataGridStatePayload) => void
   pageSize?: number
   refreshKey?: string | number | boolean
+}
+
+type TestTableDataGridSlots = {
+  'empty-state'?: () => unknown
+  'error-state'?: () => unknown
 }
 
 type TestVueWrapper = {
@@ -49,7 +62,10 @@ const createResetFetcher = () => cy.stub().callsFake(({ pageSize }) => Promise.r
 
 const TestTableDataGrid = TableDataGrid as unknown as DefineComponent<TestTableDataGridProps>
 
-const mountTestTableDataGrid = (props: Omit<TestTableDataGridProps, 'headers'>) => {
+const mountTestTableDataGrid = ({
+  slots,
+  ...props
+}: Omit<TestTableDataGridProps, 'headers'> & { slots?: TestTableDataGridSlots }) => {
   let vueWrapper: TestVueWrapper
 
   cy.mount(TestTableDataGrid, {
@@ -57,6 +73,7 @@ const mountTestTableDataGrid = (props: Omit<TestTableDataGridProps, 'headers'>) 
       headers,
       ...props,
     },
+    slots,
   }).then(({ wrapper }) => {
     vueWrapper = wrapper
   })
@@ -186,6 +203,137 @@ describe('<TableDataGrid />', () => {
         pageSize: 10,
         cursor: undefined,
       })
+    })
+  })
+
+  it('renders host loading as a full table replacement', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      loading: true,
+    })
+
+    cy.getTestId('table-data-grid-loading').should('be.visible')
+    cy.get('.table-data-grid-grid').should('not.exist')
+    cy.wrap(fetcher).should('not.have.been.called')
+  })
+
+  it('renders host error ahead of host loading', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      error: true,
+      fetcher,
+      loading: true,
+    })
+
+    cy.getTestId('table-error-state')
+      .should('contain.text', 'An error occurred')
+      .and('contain.text', 'Data cannot be displayed due to an error.')
+    cy.getTestId('table-data-grid-loading').should('not.exist')
+    cy.get('.table-data-grid-grid').should('not.exist')
+  })
+
+  it('renders an empty state after the first block succeeds with no rows', () => {
+    const onState = cy.stub().as('state')
+    const fetcher = cy.stub().resolves({
+      data: [],
+      hasMore: false,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      onState,
+    })
+
+    cy.getTestId('table-empty-state')
+      .should('be.visible')
+      .and('contain.text', 'No Data')
+      .and('contain.text', 'There is no data to display.')
+    cy.get('@state').should('have.been.calledWithMatch', {
+      state: 'success',
+      hasData: false,
+    })
+  })
+
+  it('renders a custom empty state slot', () => {
+    const fetcher = cy.stub().resolves({
+      data: [],
+      hasMore: false,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      slots: {
+        'empty-state': () => h('div', { 'data-testid': 'custom-empty-state' }, 'Nothing matched'),
+      },
+    })
+
+    cy.getTestId('custom-empty-state').should('contain.text', 'Nothing matched')
+    cy.getTestId('table-empty-state').should('contain.text', 'Nothing matched')
+  })
+
+  it('renders a custom error state slot', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      error: true,
+      fetcher,
+      slots: {
+        'error-state': () => h('div', { 'data-testid': 'custom-error-state' }, 'Try again later'),
+      },
+    })
+
+    cy.getTestId('custom-error-state').should('contain.text', 'Try again later')
+    cy.getTestId('table-error-state').should('contain.text', 'Try again later')
+  })
+
+  it('emits error state for a failed first block without rendering visible error UI', () => {
+    const onState = cy.stub().as('state')
+    const fetcher = cy.stub().rejects(new Error('failed'))
+
+    mountTestTableDataGrid({
+      fetcher,
+      onState,
+    })
+
+    cy.getTestId('table-error-state').should('not.exist')
+    cy.get('@state').should('have.been.calledWithMatch', {
+      state: 'error',
+      hasData: false,
+    })
+  })
+
+  it('emits loading and success state for fetched rows', () => {
+    const onState = cy.stub().as('state')
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      onState,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.get('@state').should('have.been.calledWithMatch', {
+      state: 'loading',
+      hasData: false,
+    })
+    cy.get('@state').should('have.been.calledWithMatch', {
+      state: 'success',
+      hasData: true,
     })
   })
 })

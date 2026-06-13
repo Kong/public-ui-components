@@ -3,7 +3,41 @@
     class="kong-ui-public-table-data-grid"
     data-testid="table-data-grid"
   >
+    <div
+      v-if="hostError"
+      class="table-error-state"
+      data-testid="table-error-state"
+    >
+      <slot name="error-state">
+        <KEmptyState
+          icon-variant="error"
+          message="Data cannot be displayed due to an error."
+          title="An error occurred"
+        />
+      </slot>
+    </div>
+
+    <KSkeleton
+      v-else-if="loading"
+      data-testid="table-data-grid-loading"
+      type="table"
+    />
+
+    <div
+      v-else-if="shouldShowEmptyState"
+      class="table-empty-state"
+      data-testid="table-empty-state"
+    >
+      <slot name="empty-state">
+        <KEmptyState
+          message="There is no data to display."
+          title="No Data"
+        />
+      </slot>
+    </div>
+
     <AgGridVue
+      v-else
       :cache-block-size="pageSize"
       class="table-data-grid-grid"
       :column-defs="columnDefs"
@@ -24,6 +58,8 @@ import type {
   TableDataGridFetcher,
   TableDataGridGridOptions,
   TableDataGridHeader,
+  TableDataGridState,
+  TableDataGridStatePayload,
 } from '../types'
 import type { ColDef, GridReadyEvent } from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
@@ -33,7 +69,7 @@ import {
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import useFetchState from '../composables/useFetchState'
 
@@ -41,20 +77,30 @@ ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
 
 const {
   agGridOptions = {},
+  error: hostError = false,
   fetcher,
   headers,
+  loading = false,
   pageSize = 25,
   refreshKey,
 } = defineProps<{
   headers: Array<TableDataGridHeader<Row>>
   fetcher: TableDataGridFetcher<Row>
+  loading?: boolean
+  error?: boolean
   pageSize?: number
   refreshKey?: string | number | boolean
   agGridOptions?: TableDataGridGridOptions<Row>
 }>()
 
+defineSlots<{
+  'empty-state': () => unknown
+  'error-state': () => unknown
+}>()
+
 const emit = defineEmits<{
   (e: 'grid:ready', api: GridReadyEvent<Row>['api']): void
+  (e: 'state', payload: TableDataGridStatePayload): void
 }>()
 
 const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
@@ -75,14 +121,53 @@ const fetchRows: TableDataGridFetcher<Row> = params => fetcher(params)
 const {
   data,
   datasource,
-  error,
+  error: fetchError,
   isFetching,
 } = useFetchInfinite({
   fetcher: fetchRows,
   resetKey,
 })
 
-useFetchState(data, error, isFetching)
+const {
+  fetchState,
+  hasData,
+  state: fetchLifecycleState,
+} = useFetchState(data, fetchError, isFetching)
+
+const publicState = computed<TableDataGridState>(() => {
+  if (hostError) {
+    return 'error'
+  }
+
+  if (
+    loading
+    || fetchLifecycleState.value === fetchState.PENDING
+    || fetchLifecycleState.value === fetchState.LOADING
+  ) {
+    return 'loading'
+  }
+
+  if (fetchLifecycleState.value === fetchState.ERROR) {
+    return 'error'
+  }
+
+  return 'success'
+})
+
+const shouldShowEmptyState = computed<boolean>(() => (
+  publicState.value === 'success'
+  && data.value !== undefined
+  && !hasData.value
+))
+
+watch(
+  () => ({
+    hasData: hasData.value,
+    state: publicState.value,
+  }),
+  payload => emit('state', payload),
+  { immediate: true },
+)
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   emit('grid:ready', event.api)
