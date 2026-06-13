@@ -117,14 +117,13 @@ const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
 }))
 
 const resetKey = computed(() => [fetcher, pageSize, refreshKey])
-const fetchRows: TableDataGridFetcher<Row> = params => fetcher(params)
 const {
   data,
   datasource,
   error: fetchError,
   isFetching,
 } = useFetchInfinite({
-  fetcher: fetchRows,
+  fetcher,
   resetKey,
 })
 
