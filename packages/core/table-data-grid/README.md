@@ -59,7 +59,6 @@ const fetchRows: TableDataGridFetcher<Row> = async ({ offset = 0, pageSize }) =>
 | `headers` | `Array<TableDataGridHeader<Row>>` | Yes | - | Basic column definitions mapped to AG Grid columns. |
 | `fetcher` | `TableDataGridFetcher<Row>` | Yes | - | Async row loader called with the initial infinite-placeholder fetch params. |
 | `pageSize` | `number` | No | `25` | Page size sent to the basic fetcher. No pagination controls are rendered in this PR. |
-| `agGridOptions` | `TableDataGridGridOptions<Row>` | No | `{}` | Pass-through for lower-level AG Grid options. Keep this narrow until the package owns more grid behavior. |
 
 ## Fetcher Contract
 
@@ -113,5 +112,4 @@ No slots are part of the initial public contract.
 - `TableDataGridFetcherParams`
 - `TableDataGridFetcherResult`
 - `TableDataGridFetcher`
-- `TableDataGridGridOptions`
 - `TableDataGridReadyPayload`

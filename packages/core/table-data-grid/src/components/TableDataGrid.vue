@@ -36,7 +36,7 @@
       class="table-data-grid-grid"
       :column-defs="columnDefs"
       :datasource="datasource"
-      :grid-options="agGridOptions"
+      :default-col-def="defaultColDef"
       :infinite-initial-row-count="1"
       :loading="isFetching"
       row-model-type="infinite"
@@ -50,7 +50,6 @@
 <script setup lang="ts" generic="Row extends object">
 import type {
   TableDataGridFetcher,
-  TableDataGridGridOptions,
   TableDataGridHeader,
   TableDataGridStatePayload,
 } from '../types'
@@ -70,7 +69,6 @@ import useFetchState from '../composables/useFetchState'
 ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
 
 const {
-  agGridOptions = {},
   error: hostError = false,
   fetcher,
   headers,
@@ -82,7 +80,6 @@ const {
   error?: boolean
   pageSize?: number
   refreshKey?: string | number | boolean
-  agGridOptions?: TableDataGridGridOptions<Row>
 }>()
 
 defineSlots<{
@@ -94,6 +91,12 @@ const emit = defineEmits<{
   (e: 'grid:ready', api: GridReadyEvent<Row>['api']): void
   (e: 'state', payload: TableDataGridStatePayload): void
 }>()
+
+const defaultColDef: ColDef<Row> = {
+  resizable: false,
+  sortable: false,
+  suppressMovable: true,
+}
 
 const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
   const columnDef: ColDef<Row> = {

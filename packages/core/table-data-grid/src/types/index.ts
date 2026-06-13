@@ -1,4 +1,4 @@
-import type { GridApi, GridOptions } from 'ag-grid-community'
+import type { GridApi } from 'ag-grid-community'
 
 export type TableDataGridMode = 'infinite'
 export type TableDataGridRow = Record<string, unknown>
@@ -33,7 +33,5 @@ export type TableDataGridFetcherResult<Row extends object = TableDataGridRow> = 
 export type TableDataGridFetcher<Row extends object = TableDataGridRow> = (
   params: TableDataGridInfiniteFetcherParams,
 ) => Promise<TableDataGridFetcherResult<Row>>
-
-export type TableDataGridGridOptions<Row extends object = TableDataGridRow> = GridOptions<Row>
 
 export type TableDataGridReadyPayload<Row extends object = TableDataGridRow> = GridApi<Row>
