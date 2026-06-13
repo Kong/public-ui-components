@@ -220,7 +220,7 @@ describe('useFetchInfinite', () => {
 
     expect(staleSuccessCallback).not.toHaveBeenCalled()
     expect(staleFailCallback).not.toHaveBeenCalled()
-    expect(data.value).toEqual([])
+    expect(data.value).toBeUndefined()
     expect(error.value).toBeUndefined()
     expect(isFetching.value).toBe(true)
 

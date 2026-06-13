@@ -4,6 +4,17 @@ Reusable Vue wrapper around AG Grid for Kong table data grids.
 
 This initial package version supports a basic infinite-placeholder fetcher and AG Grid rendering.
 
+## Peer Dependencies
+
+Consumers must provide `vue` and `@kong/kongponents`. The host app should register Kongponents and load its styles because TableDataGrid presentation states render Kongponents components.
+
+```ts
+import Kongponents from '@kong/kongponents'
+import '@kong/kongponents/dist/style.css'
+
+app.use(Kongponents)
+```
+
 ## Usage
 
 ```vue

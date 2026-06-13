@@ -2,6 +2,12 @@ import type { GridApi, GridOptions } from 'ag-grid-community'
 
 export type TableDataGridMode = 'infinite'
 export type TableDataGridRow = Record<string, unknown>
+export type TableDataGridState = 'loading' | 'success' | 'error'
+
+export type TableDataGridStatePayload = {
+  state: TableDataGridState
+  hasData: boolean
+}
 
 export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
   key: Extract<keyof Row, string>

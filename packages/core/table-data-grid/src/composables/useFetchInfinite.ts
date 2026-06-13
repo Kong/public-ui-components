@@ -46,7 +46,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   const blockCompletionMap = new Map<number, BlockCompletion>()
   const latestDatasourceId = ref(0)
   const datasource = shallowRef<IDatasource>()
-  const data = shallowRef<Row[]>([])
+  const data = shallowRef<Row[] | undefined>()
   const error = shallowRef<unknown>()
   const pendingFetchCount = ref(0)
   const isFetching = ref(false)
@@ -191,7 +191,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
     latestDatasourceId.value = datasourceId
     cursorMap.clear()
     blockCompletionMap.clear()
-    data.value = []
+    data.value = undefined
     error.value = undefined
     pendingFetchCount.value = 0
     syncIsFetching()
