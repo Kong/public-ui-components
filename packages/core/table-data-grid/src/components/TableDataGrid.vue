@@ -127,7 +127,6 @@ const {
 
 const shouldShowEmptyState = computed<boolean>(() => (
   fetchLifecycleState.value === fetchState.SUCCESS
-  && data.value !== undefined
   && !hasData.value
 ))
 
