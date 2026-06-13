@@ -168,32 +168,37 @@
               :key="entry.id"
               class="fetch-history-card"
             >
-              <dl class="fetch-history-summary">
-                <div>
-                  <dt>Request</dt>
-                  <dd>{{ entry.fetchCount }}</dd>
-                </div>
-                <div>
-                  <dt>Page size</dt>
-                  <dd>{{ entry.request.pageSize }}</dd>
-                </div>
-                <div>
-                  <dt>Request cursor</dt>
-                  <dd>{{ formatCursor(entry.request.cursor) }}</dd>
-                </div>
-                <div>
-                  <dt>Response cursor</dt>
-                  <dd>{{ formatCursor(entry.responseCursor) }}</dd>
-                </div>
-                <div>
-                  <dt>Rows</dt>
-                  <dd>{{ entry.rowsReturned }}</dd>
-                </div>
-                <div>
-                  <dt>Time</dt>
-                  <dd>{{ entry.time }}</dd>
-                </div>
-              </dl>
+              <KCollapse
+                v-model="collapsedFetchHistoryItems[entry.id]"
+                :title="entry.title"
+              >
+                <dl class="fetch-history-summary">
+                  <div>
+                    <dt>Request</dt>
+                    <dd>{{ entry.fetchCount }}</dd>
+                  </div>
+                  <div>
+                    <dt>Page size</dt>
+                    <dd>{{ entry.request.pageSize }}</dd>
+                  </div>
+                  <div>
+                    <dt>Request cursor</dt>
+                    <dd>{{ formatCursor(entry.request.cursor) }}</dd>
+                  </div>
+                  <div>
+                    <dt>Response cursor</dt>
+                    <dd>{{ formatCursor(entry.responseCursor) }}</dd>
+                  </div>
+                  <div>
+                    <dt>Rows</dt>
+                    <dd>{{ entry.rowsReturned }}</dd>
+                  </div>
+                  <div>
+                    <dt>Time</dt>
+                    <dd>{{ entry.time }}</dd>
+                  </div>
+                </dl>
+              </KCollapse>
             </KCard>
 
             <p
@@ -248,6 +253,7 @@ type FetchHistoryEntry = {
   request: TableDataGridInfiniteFetcherParams
   responseCursor?: unknown
   rowsReturned: number
+  title: string
   time: string
 }
 
@@ -279,6 +285,7 @@ const fetchCount = ref(0)
 const lastRequest = ref<TableDataGridInfiniteFetcherParams>()
 const lastResponseCursor = ref<unknown>()
 const fetchHistory = ref<FetchHistoryEntry[]>([])
+const collapsedFetchHistoryItems = ref<Record<string, boolean>>({})
 const eventLog = ref<EventLogEntry[]>([])
 const collapsedSections = ref<Record<SandboxSectionId, boolean>>({
   fetchDebug: false,
@@ -356,6 +363,7 @@ const clearFetchHistory = () => {
   lastRequest.value = undefined
   lastResponseCursor.value = undefined
   fetchHistory.value = []
+  collapsedFetchHistoryItems.value = {}
 }
 
 const refreshRows = () => {
@@ -395,13 +403,22 @@ const recordFetch = ({
     request,
     responseCursor,
     rowsReturned,
+    title: `Fetch ${nextFetchCount} - cursor ${formatCursor(request.cursor)}`,
     time: new Date().toLocaleTimeString(),
   }
+  const nextFetchHistory = [...fetchHistory.value, entry].slice(-8)
+  const nextFetchHistoryIds = new Set(nextFetchHistory.map(entry => entry.id))
 
   fetchCount.value = nextFetchCount
   lastRequest.value = request
   lastResponseCursor.value = responseCursor
-  fetchHistory.value = [...fetchHistory.value, entry].slice(-8)
+  collapsedFetchHistoryItems.value = Object.fromEntries(
+    Object.entries({
+      ...collapsedFetchHistoryItems.value,
+      [entry.id]: true,
+    }).filter(([entryId]) => nextFetchHistoryIds.has(entryId)),
+  )
+  fetchHistory.value = nextFetchHistory
 }
 
 const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor }) => {
