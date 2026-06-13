@@ -71,7 +71,8 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@peculiar/x509": "^2.0.0"
+    "@peculiar/x509": "^2.0.0",
+    "reflect-metadata": "^0.2.2"
   },
   "distSizeChecker": {
     "errorLimit": "1.5MB"

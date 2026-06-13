@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { KeyUsagesExtension, KeyUsageFlags, SubjectAlternativeNameExtension, X509Certificate } from '@peculiar/x509'
 import type { JsonGeneralName, JsonGeneralNames } from '@peculiar/x509'
 import type { X509Meta } from '../types'
