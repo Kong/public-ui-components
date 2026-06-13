@@ -82,6 +82,24 @@ const mountTestTableDataGrid = ({
   }
 }
 
+const scrollToSecondBlock = ({
+  fetcher,
+  onState,
+}: {
+  fetcher: TableDataGridFetcher<TestRow>
+  onState?: (payload: TableDataGridStatePayload) => void
+}) => {
+  mountTestTableDataGrid({
+    fetcher,
+    onState,
+    pageSize: 15,
+  })
+
+  cy.contains('.ag-cell', 'Service 1').should('be.visible')
+  cy.get('.ag-body-viewport').scrollTo('bottom')
+  cy.wrap(fetcher).should('have.been.calledTwice')
+}
+
 describe('<TableDataGrid />', () => {
   it('fetches the first infinite block and renders AG Grid headers and data', () => {
     const fetcher = cy.stub().resolves({
@@ -129,18 +147,7 @@ describe('<TableDataGrid />', () => {
         hasMore: true,
       })
 
-    cy.mount(TestTableDataGrid, {
-      props: {
-        fetcher,
-        headers,
-        pageSize: 15,
-      },
-    })
-
-    cy.contains('.ag-cell', 'Service 1').should('be.visible')
-    cy.get('.ag-body-viewport').scrollTo('bottom')
-
-    cy.wrap(fetcher).should('have.been.calledTwice')
+    scrollToSecondBlock({ fetcher })
     cy.then(() => {
       const firstParams = fetcher.firstCall.args[0]
       const secondParams = fetcher.secondCall.args[0]
@@ -315,6 +322,53 @@ describe('<TableDataGrid />', () => {
     cy.get('@state').should('have.been.calledWithMatch', {
       state: 'success',
       hasData: true,
+    })
+  })
+
+  it('emits loading and success state for later infinite blocks', () => {
+    const firstBlockRows = createRows(1, 15)
+    const secondBlockRows = createRows(16, 15)
+    const onState = cy.stub().as('state')
+    let resolveSecondBlock: (result: {
+      data: TestRow[]
+      hasMore: boolean
+    }) => void
+    const secondBlockPromise = new Promise<{
+      data: TestRow[]
+      hasMore: boolean
+    }>((resolve) => {
+      resolveSecondBlock = resolve
+    })
+    const fetcher = cy.stub()
+      .onFirstCall()
+      .resolves({
+        cursor: 'next-cursor',
+        data: firstBlockRows,
+        hasMore: true,
+      })
+      .onSecondCall()
+      .returns(secondBlockPromise)
+
+    scrollToSecondBlock({ fetcher, onState })
+    cy.get('@state').should('have.been.calledWithMatch', {
+      state: 'loading',
+      hasData: true,
+    })
+
+    cy.then(() => {
+      resolveSecondBlock({
+        data: secondBlockRows,
+        hasMore: false,
+      })
+    })
+
+    cy.contains('.ag-cell', 'Service 16').should('be.visible')
+    cy.get('@state').should((state) => {
+      const successEvents = state.getCalls().filter(call => (
+        call.args[0].state === 'success' && call.args[0].hasData === true
+      ))
+
+      expect(successEvents).to.have.length.greaterThan(1)
     })
   })
 

@@ -22,8 +22,9 @@ const createRows = (length: number): TestRow[] => (
 )
 
 // Documents state precedence for a derived fetch-state helper:
-// meaningful data wins over loading/error, fetching wins before first data,
-// and resolved empty data still means the fetch completed successfully.
+// active fetches report loading even when rows already exist, meaningful data
+// still wins over later errors, and resolved empty data still means the fetch
+// completed successfully.
 const stateCases: TestCase[] = [
   {
     name: 'nothing has resolved and no request is pending',
@@ -69,7 +70,7 @@ const stateCases: TestCase[] = [
     name: 'rows exist and another request is pending',
     data: createRows(1),
     expectedHasData: true,
-    expectedState: fetchState.SUCCESS,
+    expectedState: fetchState.LOADING,
     isFetching: true,
   },
   {
@@ -113,7 +114,7 @@ describe('useFetchState', () => {
     expect(state.value).toBe(fetchState.LOADING)
 
     data.value = [{ id: 'one' }]
-    expect(state.value).toBe(fetchState.SUCCESS)
+    expect(state.value).toBe(fetchState.LOADING)
 
     isFetching.value = false
     expect(state.value).toBe(fetchState.SUCCESS)

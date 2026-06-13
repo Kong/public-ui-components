@@ -47,12 +47,12 @@ export default function useFetchState<Row>(
     const hasResolvedData = dataValue !== undefined
     const hasError = error.value !== undefined && error.value !== null
 
-    if (hasData.value) {
-      return fetchState.SUCCESS
-    }
-
     if (isFetching.value) {
       return fetchState.LOADING
+    }
+
+    if (hasData.value) {
+      return fetchState.SUCCESS
     }
 
     if (hasError) {
