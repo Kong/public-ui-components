@@ -3,6 +3,7 @@ import type {
   TableDataGridHeader,
   TableDataGridStatePayload,
 } from '../types'
+import type { GridApi } from 'ag-grid-community'
 import type { DefineComponent } from 'vue'
 import { h } from 'vue'
 import TableDataGrid from './TableDataGrid.vue'
@@ -13,18 +14,20 @@ type TestRow = {
   status: string
 }
 
-type TestTableDataGridProps = {
-  headers: Array<TableDataGridHeader<TestRow>>
-  fetcher: TableDataGridFetcher<TestRow>
-  error?: boolean
-  onState?: (payload: TableDataGridStatePayload) => void
-  pageSize?: number
-  refreshKey?: string | number | boolean
-}
-
 type TestTableDataGridSlots = {
   'empty-state'?: () => unknown
   'error-state'?: () => unknown
+}
+
+type MountTableOptions = {
+  fetcher: TableDataGridFetcher<TestRow>
+  headers?: Array<TableDataGridHeader<TestRow>>
+  error?: boolean
+  onGridReady?: (api: GridApi<TestRow>) => void
+  onState?: (payload: TableDataGridStatePayload) => void
+  pageSize?: number
+  refreshKey?: string | number | boolean
+  slots?: TestTableDataGridSlots
 }
 
 type TestVueWrapper = {
@@ -59,17 +62,20 @@ const createResetFetcher = () => cy.stub().callsFake(({ pageSize }) => Promise.r
   hasMore: false,
 }))
 
-const TestTableDataGrid = TableDataGrid as unknown as DefineComponent<TestTableDataGridProps>
+const TestTableDataGrid = TableDataGrid as unknown as DefineComponent
 
 const mountTestTableDataGrid = ({
+  headers: tableHeaders = headers,
+  onGridReady,
   slots,
   ...props
-}: Omit<TestTableDataGridProps, 'headers'> & { slots?: TestTableDataGridSlots }) => {
+}: MountTableOptions) => {
   let vueWrapper: TestVueWrapper
 
   cy.mount(TestTableDataGrid, {
     props: {
-      headers,
+      headers: tableHeaders,
+      'onGrid:ready': onGridReady,
       ...props,
     },
     slots,
@@ -80,6 +86,70 @@ const mountTestTableDataGrid = ({
   return {
     setProps: (nextProps: Record<string, unknown>) => cy.then(() => vueWrapper.setProps(nextProps)),
   }
+}
+
+const getDisplayedColumnWidth = (api: GridApi<TestRow>) => api.getColumnState()
+  .filter(column => !column.hide)
+  .reduce((total, column) => total + (column.width ?? 0), 0)
+
+const getColumnWidthsById = (api: GridApi<TestRow> | undefined) => Object.fromEntries(
+  api?.getColumnState().map(column => [column.colId, column.width]) ?? [],
+) as Record<string, number | undefined>
+
+const expectColumnsToFillGrid = (api: GridApi<TestRow>) => {
+  cy.get('.table-data-grid-grid .ag-header').then(($header) => {
+    const displayedColumnWidth = getDisplayedColumnWidth(api)
+
+    expect(displayedColumnWidth).to.be.greaterThan($header[0].clientWidth - 20)
+    expect(displayedColumnWidth).to.be.lessThan($header[0].clientWidth + 20)
+  })
+}
+
+const expectHorizontalOverflow = () => {
+  cy.get('.table-data-grid-grid .ag-center-cols-viewport').then(($viewport) => {
+    expect($viewport[0].scrollWidth).to.be.greaterThan($viewport[0].clientWidth)
+  })
+}
+
+const mountTableWithGridApi = ({
+  fetcher,
+  headers: tableHeaders,
+}: {
+  fetcher: TableDataGridFetcher<TestRow>
+  headers: Array<TableDataGridHeader<TestRow>>
+}) => {
+  let gridApi: GridApi<TestRow> | undefined
+
+  mountTestTableDataGrid({
+    fetcher,
+    headers: tableHeaders,
+    onGridReady: (api) => {
+      gridApi = api
+    },
+  })
+
+  return () => gridApi
+}
+
+const expectRenderedColumnWidths = (
+  getGridApi: () => GridApi<TestRow> | undefined,
+  assertWidths: ({
+    gridApi,
+    widthsByColumn,
+  }: {
+    gridApi: GridApi<TestRow> | undefined
+    widthsByColumn: Record<string, number | undefined>
+  }) => void,
+) => {
+  cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+  cy.then(() => {
+    const gridApi = getGridApi()
+
+    assertWidths({
+      gridApi,
+      widthsByColumn: getColumnWidthsById(gridApi),
+    })
+  })
 }
 
 const scrollToSecondBlock = ({
@@ -284,6 +354,78 @@ describe('<TableDataGrid />', () => {
 
     cy.getTestId('custom-error-state').should('contain.text', 'Try again later')
     cy.getTestId('table-error-state').should('contain.text', 'Try again later')
+  })
+
+  it('fits columns to available width when headers do not configure width constraints', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+    const getGridApi = mountTableWithGridApi({ fetcher, headers })
+
+    expectRenderedColumnWidths(getGridApi, ({ gridApi }) => {
+      expect(gridApi).to.not.equal(undefined)
+      expectColumnsToFillGrid(gridApi!)
+    })
+  })
+
+  it('preserves explicit column widths and allows horizontal overflow', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+    const getGridApi = mountTableWithGridApi({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', width: 900 },
+        { key: 'status', label: 'Status', width: 600 },
+      ],
+    })
+
+    expectRenderedColumnWidths(getGridApi, ({ widthsByColumn }) => {
+      expect(widthsByColumn.name).to.equal(900)
+      expect(widthsByColumn.status).to.equal(600)
+    })
+    expectHorizontalOverflow()
+  })
+
+  it('uses minWidth as a lower bound without disabling default column fill', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+    const getGridApi = mountTableWithGridApi({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', minWidth: 280 },
+        { key: 'status', label: 'Status', minWidth: 160 },
+      ],
+    })
+
+    expectRenderedColumnWidths(getGridApi, ({ gridApi, widthsByColumn }) => {
+      expect(widthsByColumn.name).to.be.at.least(280)
+      expect(widthsByColumn.status).to.be.at.least(160)
+      expectColumnsToFillGrid(gridApi!)
+    })
+  })
+
+  it('does not apply default flex sizing to columns with maxWidth', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+    const getGridApi = mountTableWithGridApi({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', maxWidth: 600 },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    expectRenderedColumnWidths(getGridApi, ({ gridApi, widthsByColumn }) => {
+      expect(widthsByColumn.name).to.equal(200)
+      expectColumnsToFillGrid(gridApi!)
+    })
   })
 
   it('emits error state for a failed first block without rendering visible error UI', () => {

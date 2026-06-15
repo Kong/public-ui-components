@@ -185,13 +185,18 @@ Use the `empty-state` slot to replace the default empty content. Use the
 
 ## Header Options
 
+Columns without a `width` or `maxWidth` fill the available table width by
+default. Use `width` for an explicit initial pixel width, `minWidth` for a
+lower bound on either flexible or fixed columns, and `maxWidth` when a column
+should opt out of the default flexible fill behavior.
+
 | Field | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `key` | `Extract<keyof Row, string>` | Yes | Row property read for the cell value and used as the AG Grid column id. |
 | `label` | `string` | Yes | Header label rendered by AG Grid. |
-| `width` | `number` | No | Initial AG Grid column width in pixels. |
-| `minWidth` | `number` | No | Minimum AG Grid column width in pixels. |
-| `maxWidth` | `number` | No | Maximum AG Grid column width in pixels. |
+| `width` | `number` | No | Explicit initial AG Grid column width in pixels. Columns with `width` do not receive default flex sizing. |
+| `minWidth` | `number` | No | Minimum AG Grid column width in pixels. Columns with only `minWidth` still fill available width by default. |
+| `maxWidth` | `number` | No | Maximum AG Grid column width in pixels. Columns with `maxWidth` do not receive default flex sizing. |
 
 ## Events
 

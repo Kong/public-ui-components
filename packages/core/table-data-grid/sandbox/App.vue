@@ -294,10 +294,10 @@ const collapsedSections = ref<Record<SandboxSectionId, boolean>>({
 })
 
 const headers: Array<TableDataGridHeader<SandboxRow>> = [
-  { key: 'name', label: 'Name', width: 240 },
-  { key: 'status', label: 'Status', width: 140 },
-  { key: 'latency', label: 'Latency', width: 140 },
-  { key: 'region', label: 'Region', width: 160 },
+  { key: 'name', label: 'Name', minWidth: 220 },
+  { key: 'status', label: 'Status', minWidth: 140 },
+  { key: 'latency', label: 'Latency', minWidth: 140 },
+  { key: 'region', label: 'Region', minWidth: 140 },
 ]
 
 const generatedRows: SandboxRow[] = Array.from({ length: 140 }, (_, index) => {

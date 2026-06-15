@@ -101,6 +101,7 @@ const defaultColDef: ColDef<Row> = {
 const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
   const columnDef: ColDef<Row> = {
     colId: header.key,
+    flex: !header.width && !header.maxWidth ? 1 : undefined,
     headerName: header.label,
     maxWidth: header.maxWidth,
     minWidth: header.minWidth,
