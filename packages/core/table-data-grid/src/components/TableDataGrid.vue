@@ -11,8 +11,8 @@
       <slot name="error-state">
         <KEmptyState
           icon-variant="error"
-          message="Data cannot be displayed due to an error."
-          title="An error occurred"
+          :message="t('errorState.message')"
+          :title="t('errorState.title')"
         />
       </slot>
     </div>
@@ -24,8 +24,8 @@
     >
       <slot name="empty-state">
         <KEmptyState
-          message="There is no data to display."
-          title="No Data"
+          :message="t('emptyState.message')"
+          :title="t('emptyState.title')"
         />
       </slot>
     </div>
@@ -64,6 +64,7 @@ import {
 import { computed } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
+import useI18n from '../composables/useI18n'
 import useFetchState from '../composables/useFetchState'
 
 ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
@@ -91,6 +92,8 @@ const emit = defineEmits<{
   (e: 'grid:ready', api: GridReadyEvent<Row>['api']): void
   (e: 'state', payload: TableDataGridStatePayload): void
 }>()
+
+const { i18n: { t } } = useI18n()
 
 const defaultColDef: ColDef<Row> = {
   resizable: false,
