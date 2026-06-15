@@ -39,6 +39,8 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/kongponents": "9.59.0",
     "vue": "^3.5.35"
   },
   "repository": {
@@ -59,6 +61,8 @@
     "errorLimit": "500KB"
   },
   "peerDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/kongponents": "^9.59.0",
     "vue": "^3.5.35"
   },
   "dependencies": {

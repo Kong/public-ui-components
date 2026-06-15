@@ -824,6 +824,12 @@ importers:
         specifier: ^34.3.1
         version: 34.3.1(vue@3.5.35(typescript@5.9.3))
     devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../i18n
+      '@kong/kongponents':
+        specifier: 9.59.0
+        version: 9.59.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.1.0(@vue/compiler-sfc@3.5.35)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3)))(vite@8.0.16(@types/node@25.9.0)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.99.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.35(typescript@5.9.3)))(vue@3.5.35(typescript@5.9.3))
       vue:
         specifier: 3.5.35
         version: 3.5.35(typescript@5.9.3)
