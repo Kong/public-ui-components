@@ -409,6 +409,26 @@ describe('<TableDataGrid />', () => {
     })
   })
 
+  it('uses unconstrained columns to fill space left by fixed-width columns', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+    const getGridApi = mountTableWithGridApi({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', width: 240 },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    expectRenderedColumnWidths(getGridApi, ({ gridApi, widthsByColumn }) => {
+      expect(widthsByColumn.name).to.equal(240)
+      expect(widthsByColumn.status).to.be.greaterThan(240)
+      expectColumnsToFillGrid(gridApi!)
+    })
+  })
+
   it('does not apply default flex sizing to columns with maxWidth', () => {
     const fetcher = cy.stub().resolves({
       data: rows,

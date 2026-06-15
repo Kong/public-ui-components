@@ -101,6 +101,7 @@ const defaultColDef: ColDef<Row> = {
 const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
   const columnDef: ColDef<Row> = {
     colId: header.key,
+    // Headers without explicit width constraints should fill available space.
     flex: !header.width && !header.maxWidth ? 1 : undefined,
     headerName: header.label,
     maxWidth: header.maxWidth,
