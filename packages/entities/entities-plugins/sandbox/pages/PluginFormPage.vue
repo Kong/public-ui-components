@@ -114,6 +114,11 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'websocket-size-limit',
+  'websocket-validator',
+  'xml-threat-protection',
+  'upstream-timeout',
+  'forward-proxy',
 ])
 
 const enableDeckConfigCustomization = ref(false)
