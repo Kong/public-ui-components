@@ -30,11 +30,12 @@
         :size="16"
       />
       <slot
+        v-if="slots.actions"
         :data="data"
-        name="status"
+        name="actions"
       />
       <KDropdown
-        v-if="!isImplicit"
+        v-else-if="!isImplicit"
         class="menu"
         :disabled="readonly"
         :kpop-attributes="{
@@ -280,7 +281,7 @@
     </div>
 
     <div
-      v-if="$slots.latency"
+      v-if="slots.latency"
       class="footer"
     >
       <slot
@@ -294,7 +295,7 @@
 <script setup lang="ts">
 import type { EdgeId, FieldName, NodeInstance, NonEmptyArray } from '../../types'
 
-import { computed, watch } from 'vue'
+import { computed, useSlots, watch } from 'vue'
 import { KTooltip, KButton, KDropdown, KDropdownItem } from '@kong/kongponents'
 import { createI18n } from '@kong-ui-public/i18n'
 import {
@@ -342,6 +343,8 @@ const {
   propertiesPanelOpen,
   branchGroups,
 } = useEditorStore()
+
+const slots = useSlots()
 
 const meta = computed(() => getNodeMeta(data.type))
 

@@ -58,9 +58,9 @@
           :error="invalidConfigNodeIds.has(data.id)"
           :readonly="mode !== 'edit'"
         >
-          <template #status="s">
+          <template #actions="s">
             <slot
-              name="node-status"
+              name="node-actions"
               v-bind="s"
             />
           </template>

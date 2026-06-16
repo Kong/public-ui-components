@@ -37,8 +37,8 @@
         :phase="phase"
         @node-click="onNodeClick"
       >
-        <template #node-status>
-          <span class="node-status">&#x2713; ok</span>
+        <template #node-actions>
+          <span class="node-actions">&#x2713; ok</span>
         </template>
         <template #node-latency>
           <span class="node-latency">12 ms</span>
@@ -176,7 +176,7 @@ function onNodeClick(node: NodeInstance) {
     }
   }
 
-  .node-status {
+  .node-actions {
     color: var(--kui-color-text-success, #08742b);
     font-size: var(--kui-font-size-20, 11px);
   }
