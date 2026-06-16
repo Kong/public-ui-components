@@ -170,7 +170,8 @@ function getDraggedNodeType(event: DragEvent): string | undefined {
 
 function onNodeClick(event: NodeMouseEvent) {
   if (mode === 'debugger') {
-    if (event?.node?.type !== 'group') emit('node-click', event.node.data as NodeInstance)
+    // Emit the full node-data for debugger mode, used in consumer apps
+    emit('node-click', event.node.data as NodeInstance)
     return
   }
 
