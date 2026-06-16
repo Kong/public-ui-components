@@ -68,7 +68,7 @@
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/monaco-editor": "workspace:^",
-    "@kong/design-tokens": "1.23.0",
+    "@kong/design-tokens": "1.23.1-pr.665.3947d19.0",
     "@kong/icons": "^1.56.0",
     "@kong/kongponents": "9.56.0",
     "@peculiar/x509": "^2.0.0",

@@ -626,7 +626,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       gap: var(--kui-space-30, $kui-space-30);
       justify-self: start;
       max-width: 100%;
-      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
       max-width: calc(100% - var(--kui-space-30, $kui-space-30));
       position: relative;
 
@@ -698,7 +698,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       &.connecting::after,
       &:hover::after {
         background-color: var(--kui-color-background-primary, $kui-color-background-primary);
-        /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+        /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
         box-shadow: 0 0 0 1px var(--kui-color-background-primary, $kui-color-background-primary);
       }
     }

@@ -620,7 +620,7 @@ onBeforeUnmount(() => {
 }
 
 .sidebar-level-divider {
-  /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+  /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
   background-color: var(--kui-navigation-color-border-divider, $kui-navigation-color-border-divider);
   height: 1px;
   margin: var(--kui-space-80, $kui-space-80) auto;

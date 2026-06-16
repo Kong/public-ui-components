@@ -185,7 +185,7 @@ const Form = computed(() => {
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     display: flex;
     gap: var(--kui-space-30, $kui-space-30);
-    /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+    /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
     height: calc(var(--kui-line-height-40, $kui-line-height-40) + var(--kui-space-40, $kui-space-40) * 2);
     margin-bottom: var(--kui-space-60, $kui-space-60);
     padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);

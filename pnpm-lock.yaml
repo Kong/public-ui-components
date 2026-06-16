@@ -40,14 +40,20 @@ importers:
         specifier: ^2.1.6
         version: 2.1.6
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/eslint-config-kong-ui':
         specifier: ^1.6.2
         version: 1.6.2(@typescript-eslint/parser@8.50.0(eslint@9.39.4(jiti@2.5.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.5.1))(typescript@5.9.3)
+      '@kong/eslint-plugin-design-tokens':
+        specifier: 0.0.2-pr.665.3947d19.0
+        version: 0.0.2-pr.665.3947d19.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
+      '@kong/stylelint-plugin-design-tokens':
+        specifier: 0.0.2-pr.665.3947d19.0
+        version: 0.0.2-pr.665.3947d19.0(stylelint@17.12.0(typescript@5.9.3))
       '@stylistic/stylelint-plugin':
         specifier: ^5.1.0
         version: 5.1.0(stylelint@17.12.0(typescript@5.9.3))
@@ -245,8 +251,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/sandbox-layout
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -300,8 +306,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -346,8 +352,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -374,8 +380,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       ajv:
         specifier: ^8.20.0
         version: 8.20.0
@@ -423,8 +429,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/sandbox-layout
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -481,8 +487,8 @@ importers:
         version: 4.5.0
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -527,8 +533,8 @@ importers:
         version: 3.5.34(typescript@5.9.3)
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       axios:
         specifier: ^1.16.1
         version: 1.16.1
@@ -549,8 +555,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -564,8 +570,8 @@ importers:
   packages/core/entities-config-editor:
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -576,8 +582,8 @@ importers:
   packages/core/error-boundary:
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -607,8 +613,8 @@ importers:
         specifier: 1.6.0-rc.1
         version: 1.6.0-rc.1
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -656,8 +662,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -714,8 +720,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -754,8 +760,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -776,8 +782,8 @@ importers:
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
     devDependencies:
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -801,8 +807,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -826,8 +832,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -853,8 +859,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -880,8 +886,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -907,8 +913,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -934,8 +940,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -961,8 +967,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -1012,8 +1018,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -1079,8 +1085,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/monaco-editor
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -1181,8 +1187,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -1221,8 +1227,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -1261,8 +1267,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/monaco-editor
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -1306,8 +1312,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -1333,8 +1339,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/icons':
         specifier: ^1.56.0
         version: 1.56.0(vue@3.5.34(typescript@5.9.3))
@@ -1364,8 +1370,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -1389,8 +1395,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -1423,8 +1429,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.23.0
-        version: 1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))
+        specifier: 1.23.1-pr.665.3947d19.0
+        version: 1.23.1-pr.665.3947d19.0
       '@kong/kongponents':
         specifier: 9.56.0
         version: 9.56.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))
@@ -2720,23 +2726,25 @@ packages:
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
 
-  '@kong/design-tokens@1.23.0':
-    resolution: {integrity: sha512-DKBmwvBb4FEb/L+Og3YziJSNr9fF67V2wit/ZIiSt+vldUT/Rc14H6nQf5yr/bxVJTqxaEL2Z5mN7tvDNKftdw==}
+  '@kong/design-tokens@1.23.1-pr.665.3947d19.0':
+    resolution: {integrity: sha512-z20oxWlUUInpRkTng2rk2L6OxP65IdnbQJ6QybfqQW0zXBam0JY1LuxPymD9zXdUTBOU797Hpz4fmABzLHO78A==}
     engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
-    peerDependencies:
-      eslint: ^9.0.0
-      vue-eslint-parser: '>=10.2.0'
-    peerDependenciesMeta:
-      eslint:
-        optional: true
-      vue-eslint-parser:
-        optional: true
 
   '@kong/eslint-config-kong-ui@1.6.2':
     resolution: {integrity: sha512-e1ExwzkIYStLyY5W0UkWumUJMVNliCph1BS+4IM9HOll7BarKMdu4yyQQWbNVkkgvtq5cl09Lm31EZ8BfYJyLQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       eslint: '>= 9.37.0'
+
+  '@kong/eslint-plugin-design-tokens@0.0.2-pr.665.3947d19.0':
+    resolution: {integrity: sha512-KqXalfCaTZFoRshft3iJfo0lPQp8cPszxFg23TizKM3vF7nKv8m4FiuislvBK6Svi350viE1vSDhiTofOioMuQ==}
+    engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
+    peerDependencies:
+      eslint: ^9.0.0
+      vue-eslint-parser: '>=10.2.0'
+    peerDependenciesMeta:
+      vue-eslint-parser:
+        optional: true
 
   '@kong/icons@1.56.0':
     resolution: {integrity: sha512-AXUfIwDpko15fIJVyvArI1N4H+Aw0xdFXOBivxHa6GlhVX1RtRn3rJfu/GrTBTwVskZPp4yAUV06aTjmKaiwZg==}
@@ -2767,6 +2775,12 @@ packages:
 
   '@kong/sdk-portal-js@2.16.0':
     resolution: {integrity: sha512-+BGhyen5I9eB+HgQlavWa0H9+3vr/YMpPV3j9y49wTWExZfvOK6Dm3AH7R1o4wUIGu0ap7D8j92rAW1Tq5DgZA==}
+
+  '@kong/stylelint-plugin-design-tokens@0.0.2-pr.665.3947d19.0':
+    resolution: {integrity: sha512-qdmGDFSAqHXBKAo0Q/AdDo2VAGXQ5hH0kCjE39oCckxprtfZUdy1dxs2yrt9GRQDhITUDLra071P3ujZJdFGZQ==}
+    engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
+    peerDependencies:
+      stylelint: '>=14.0.0'
 
   '@kong/swagger-ui-kong-theme-universal@4.3.3':
     resolution: {integrity: sha512-g89NLf7Vu19BJ157fVUkLIrjzTmNE74zGfzktK2rxdZgIUegt4VBDsG8K0MAxDwQELQqSK3kPkamgdD9j1eV3Q==}
@@ -12355,10 +12369,7 @@ snapshots:
 
   '@kong/atc-router@1.6.0-rc.1': {}
 
-  '@kong/design-tokens@1.23.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))':
-    optionalDependencies:
-      eslint: 9.39.4(jiti@2.5.1)
-      vue-eslint-parser: 10.2.0(eslint@9.39.4(jiti@2.5.1))
+  '@kong/design-tokens@1.23.1-pr.665.3947d19.0': {}
 
   '@kong/eslint-config-kong-ui@1.6.2(@typescript-eslint/parser@8.50.0(eslint@9.39.4(jiti@2.5.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.5.1))(typescript@5.9.3)':
     dependencies:
@@ -12379,6 +12390,12 @@ snapshots:
       - '@typescript-eslint/parser'
       - supports-color
       - typescript
+
+  '@kong/eslint-plugin-design-tokens@0.0.2-pr.665.3947d19.0(eslint@9.39.4(jiti@2.5.1))(vue-eslint-parser@10.2.0(eslint@9.39.4(jiti@2.5.1)))':
+    dependencies:
+      eslint: 9.39.4(jiti@2.5.1)
+    optionalDependencies:
+      vue-eslint-parser: 10.2.0(eslint@9.39.4(jiti@2.5.1))
 
   '@kong/icons@1.56.0(vue@3.5.34(typescript@5.9.3))':
     dependencies:
@@ -12460,6 +12477,10 @@ snapshots:
     transitivePeerDependencies:
       - debug
       - supports-color
+
+  '@kong/stylelint-plugin-design-tokens@0.0.2-pr.665.3947d19.0(stylelint@17.12.0(typescript@5.9.3))':
+    dependencies:
+      stylelint: 17.12.0(typescript@5.9.3)
 
   '@kong/swagger-ui-kong-theme-universal@4.3.3(@babel/core@7.28.0)(axios@1.16.1)(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.59.0)(vue-router@5.0.7(@vue/compiler-sfc@3.5.34)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3)))(vue@3.5.34(typescript@5.9.3))':
     dependencies:
