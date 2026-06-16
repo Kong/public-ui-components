@@ -6,19 +6,19 @@
     <VueFlow
       :id="flowId"
       class="flow"
-      :class="{ readonly: mode !== 'edit', debugger: mode === 'debugger' }"
+      :class="{ readonly: mode !== 'edit', 'not-draggable': !draggable }"
       :connect-on-click="false"
-      :elements-selectable="mode === 'edit' || mode === 'debugger'"
+      :elements-selectable="mode === 'edit'"
       :max-zoom="MAX_ZOOM_LEVEL"
       :min-zoom="MIN_ZOOM_LEVEL"
       :multi-selection-key-code="null"
       :nodes-connectable="mode === 'edit'"
-      :nodes-draggable="mode === 'edit'"
-      :pan-on-drag="mode === 'edit' || mode === 'debugger' ? undefined : false"
-      :pan-on-scroll="mode === 'edit' ? undefined : false"
-      :zoom-on-double-click="mode === 'edit' ? undefined : false"
-      :zoom-on-pinch="mode === 'edit' || mode === 'debugger' ? undefined : false"
-      :zoom-on-scroll="mode === 'edit' || mode === 'debugger' ? undefined : false"
+      :nodes-draggable="draggable"
+      :pan-on-drag="mode === 'preview' ? false : undefined"
+      :pan-on-scroll="mode !== 'edit' ? false : undefined"
+      :zoom-on-double-click="mode !== 'edit' ? false : undefined"
+      :zoom-on-pinch="mode !== 'edit' ? false : undefined"
+      :zoom-on-scroll="mode !== 'edit' ? false : undefined"
       @dragover="onDragOver"
       @drop="onDrop"
       @node-click="onNodeClick"
@@ -107,7 +107,7 @@ import type { Component } from 'vue'
 
 import type { DragPayload, NodeInstance, NodePhase } from '../types'
 
-const { flowId, phase, mode } = defineProps<{
+const { flowId, phase, mode, disableDrag, autoLayoutOnInit, emitNodeClick } = defineProps<{
   flowId: string
   phase: NodePhase
   /**
@@ -115,9 +115,14 @@ const { flowId, phase, mode } = defineProps<{
    * - edit: Flow editor page
    * - view: Config detail page
    * - preview: Plugin edit page preview
-   * - debugger: Read-only inspection view with trackpad zoom/pan, node-click emit, and auto-layout on init
    */
-  mode: 'edit' | 'view' | 'preview' | 'debugger'
+  mode: 'edit' | 'view' | 'preview'
+  /** When true, disable node dragging even in edit mode. Default false. */
+  disableDrag?: boolean
+  /** When true, run auto-layout + fitView once nodes are initialized. Default false. */
+  autoLayoutOnInit?: boolean
+  /** When true, node clicks emit the `node-click` event and skip the default edit flow. Default false. */
+  emitNodeClick?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -125,6 +130,8 @@ const emit = defineEmits<{
   'nodes-change': [] // Omitting the changes as we don't use them currently
   'node-click': [node: NodeInstance]
 }>()
+
+const draggable = computed(() => mode === 'edit' && !disableDrag)
 
 const flowCanvas = useTemplateRef('flowCanvas')
 const flowCanvasRect = useElementBounding(flowCanvas)
@@ -169,8 +176,7 @@ function getDraggedNodeType(event: DragEvent): string | undefined {
 }
 
 function onNodeClick(event: NodeMouseEvent) {
-  if (mode === 'debugger') {
-    // Emit the full node-data for debugger mode, used in consumer apps
+  if (emitNodeClick) {
     emit('node-click', event.node.data as NodeInstance)
     return
   }
@@ -234,8 +240,7 @@ function onDrop(e: DragEvent) {
 
 async function onNodesInitialized() {
   emit('initialized')
-  // for mode=debugger, we want to auto-layout and fit-view after the nodes are initialized.
-  if (mode !== 'debugger') return
+  if (!autoLayoutOnInit) return
   // Same double-setTimeout pattern used by FlowPanels.vue to let VueFlow measure nodes first
   setTimeout(async () => {
     await autoLayout(false)
@@ -323,8 +328,7 @@ defineExpose({ autoLayout, fitView })
       }
     }
 
-    &:not(.readonly),
-    &.debugger {
+    &:not(.readonly) {
       :deep(.vue-flow__node) {
         &:hover:not(.selected, :has(.value-indicator:hover)) .dk-flow-node {
           border-color: var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
@@ -336,11 +340,11 @@ defineExpose({ autoLayout, fitView })
       }
     }
 
-    &.readonly:not(.debugger) * {
+    &.readonly * {
       cursor: default;
     }
 
-    &.debugger {
+    &.not-draggable {
       :deep(.dk-flow-node) {
         cursor: pointer;
       }

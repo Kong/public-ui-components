@@ -32,8 +32,11 @@
     <div class="canvas-container">
       <FlowCanvas
         :key="`${selectedFixtureId || selectedExampleId}-${phase}`"
+        :auto-layout-on-init="true"
+        :disable-drag="true"
+        :emit-node-click="true"
         :flow-id="flowId"
-        mode="debugger"
+        mode="edit"
         :phase="phase"
         @node-click="onNodeClick"
       >
