@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.17.2...@kong-ui-public/analytics-utilities@12.18.0) (2026-06-16)
+
+
+### Features
+
+* **analytics-utilities:** add table tile schema contract ([#3449](https://github.com/Kong/public-ui-components/issues/3449)) ([c602b7c](https://github.com/Kong/public-ui-components/commit/c602b7ced7066d2697caed5d99fb6661dd909dc8))
+
+
+
+
+
 ## [12.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.17.1...@kong-ui-public/analytics-utilities@12.17.2) (2026-06-11)
 
 
