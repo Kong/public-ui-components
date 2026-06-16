@@ -6,19 +6,19 @@
     <VueFlow
       :id="flowId"
       class="flow"
-      :class="{ readonly: mode !== 'edit', 'not-draggable': !draggable }"
+      :class="{ readonly: mode !== 'edit', 'node-clickable': isNodeClickable }"
       :connect-on-click="false"
-      :elements-selectable="mode === 'edit'"
+      :elements-selectable="mode === 'edit' || elementsSelectable"
       :max-zoom="MAX_ZOOM_LEVEL"
       :min-zoom="MIN_ZOOM_LEVEL"
       :multi-selection-key-code="null"
-      :nodes-connectable="mode === 'edit' && !disableNodeConnect"
-      :nodes-draggable="draggable"
+      :nodes-connectable="mode === 'edit'"
+      :nodes-draggable="mode === 'edit'"
       :pan-on-drag="mode === 'preview' ? false : undefined"
-      :pan-on-scroll="mode !== 'edit' ? false : undefined"
-      :zoom-on-double-click="mode !== 'edit' ? false : undefined"
-      :zoom-on-pinch="mode !== 'edit' ? false : undefined"
-      :zoom-on-scroll="mode !== 'edit' ? false : undefined"
+      :pan-on-scroll="mode !== 'edit' && !enableZoom ? false : undefined"
+      :zoom-on-double-click="mode !== 'edit' && !enableZoom ? false : undefined"
+      :zoom-on-pinch="mode !== 'edit' && !enableZoom ? false : undefined"
+      :zoom-on-scroll="mode !== 'edit' && !enableZoom ? false : undefined"
       @dragover="onDragOver"
       @drop="onDrop"
       @node-click="onNodeClick"
@@ -107,7 +107,7 @@ import type { Component } from 'vue'
 
 import type { DragPayload, NodeInstance, NodePhase } from '../types'
 
-const { flowId, phase, mode, disableDrag, disableNodeConnect, autoLayoutOnInit, emitNodeClick } = defineProps<{
+const { flowId, phase, mode, elementsSelectable, enableZoom, isNodeClickable, autoLayoutOnInit } = defineProps<{
   flowId: string
   phase: NodePhase
   /**
@@ -117,14 +117,14 @@ const { flowId, phase, mode, disableDrag, disableNodeConnect, autoLayoutOnInit, 
    * - preview: Plugin edit page preview
    */
   mode: 'edit' | 'view' | 'preview'
-  /** When true, disable node dragging even in edit mode. Default false. */
-  disableDrag?: boolean
-  /** When true, disable node connecting even in edit mode. Default false. */
-  disableNodeConnect?: boolean
+  /** When true, nodes are selectable (always true in edit mode). Default false. */
+  elementsSelectable?: boolean
+  /** When true, enable pan-on-scroll and all zoom interactions (always true in edit mode). Default false. */
+  enableZoom?: boolean
+  /** When true, node clicks emit `node-click` and show cursor:pointer. Default false. */
+  isNodeClickable?: boolean
   /** When true, run auto-layout + fitView once nodes are initialized. Default false. */
   autoLayoutOnInit?: boolean
-  /** When true, node clicks emit the `node-click` event and skip the default edit flow. Default false. */
-  emitNodeClick?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -132,8 +132,6 @@ const emit = defineEmits<{
   'nodes-change': [] // Omitting the changes as we don't use them currently
   'node-click': [node: NodeInstance]
 }>()
-
-const draggable = computed(() => mode === 'edit' && !disableDrag)
 
 const flowCanvas = useTemplateRef('flowCanvas')
 const flowCanvasRect = useElementBounding(flowCanvas)
@@ -178,7 +176,7 @@ function getDraggedNodeType(event: DragEvent): string | undefined {
 }
 
 function onNodeClick(event: NodeMouseEvent) {
-  if (emitNodeClick) {
+  if (isNodeClickable) {
     emit('node-click', event.node.data as NodeInstance)
     return
   }
@@ -330,7 +328,8 @@ defineExpose({ autoLayout, fitView })
       }
     }
 
-    &:not(.readonly) {
+    &:not(.readonly),
+    &.node-clickable {
       :deep(.vue-flow__node) {
         &:hover:not(.selected, :has(.value-indicator:hover)) .dk-flow-node {
           border-color: var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
@@ -342,11 +341,11 @@ defineExpose({ autoLayout, fitView })
       }
     }
 
-    &.readonly * {
+    &.readonly:not(.node-clickable) * {
       cursor: default;
     }
 
-    &.not-draggable {
+    &.node-clickable {
       :deep(.dk-flow-node) {
         cursor: pointer;
       }

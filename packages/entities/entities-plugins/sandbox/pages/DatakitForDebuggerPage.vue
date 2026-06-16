@@ -33,11 +33,11 @@
       <FlowCanvas
         :key="`${selectedFixtureId || selectedExampleId}-${phase}`"
         :auto-layout-on-init="true"
-        :disable-drag="true"
-        :disable-node-connect="true"
-        :emit-node-click="true"
+        :elements-selectable="true"
+        :enable-zoom="true"
         :flow-id="flowId"
-        mode="edit"
+        :is-node-clickable="true"
+        mode="view"
         :phase="phase"
         @node-click="onNodeClick"
       >
