@@ -34,13 +34,14 @@
         :key="`${selectedFixtureId || selectedExampleId}-${phase}`"
         :auto-layout-on-init="true"
         :disable-drag="true"
+        :disable-node-connect="true"
         :emit-node-click="true"
         :flow-id="flowId"
         mode="edit"
         :phase="phase"
         @node-click="onNodeClick"
       >
-        <template #node-status>
+        <template #node-actions>
           <span class="node-status">&#x2713; ok</span>
         </template>
         <template #node-latency>

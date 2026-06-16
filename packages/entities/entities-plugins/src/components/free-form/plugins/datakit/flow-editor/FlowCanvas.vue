@@ -12,7 +12,7 @@
       :max-zoom="MAX_ZOOM_LEVEL"
       :min-zoom="MIN_ZOOM_LEVEL"
       :multi-selection-key-code="null"
-      :nodes-connectable="mode === 'edit'"
+      :nodes-connectable="mode === 'edit' && !disableNodeConnect"
       :nodes-draggable="draggable"
       :pan-on-drag="mode === 'preview' ? false : undefined"
       :pan-on-scroll="mode !== 'edit' ? false : undefined"
@@ -58,9 +58,9 @@
           :error="invalidConfigNodeIds.has(data.id)"
           :readonly="mode !== 'edit'"
         >
-          <template #status="s">
+          <template #actions="s">
             <slot
-              name="node-status"
+              name="node-actions"
               v-bind="s"
             />
           </template>
@@ -107,7 +107,7 @@ import type { Component } from 'vue'
 
 import type { DragPayload, NodeInstance, NodePhase } from '../types'
 
-const { flowId, phase, mode, disableDrag, autoLayoutOnInit, emitNodeClick } = defineProps<{
+const { flowId, phase, mode, disableDrag, disableNodeConnect, autoLayoutOnInit, emitNodeClick } = defineProps<{
   flowId: string
   phase: NodePhase
   /**
@@ -119,6 +119,8 @@ const { flowId, phase, mode, disableDrag, autoLayoutOnInit, emitNodeClick } = de
   mode: 'edit' | 'view' | 'preview'
   /** When true, disable node dragging even in edit mode. Default false. */
   disableDrag?: boolean
+  /** When true, disable node connecting even in edit mode. Default false. */
+  disableNodeConnect?: boolean
   /** When true, run auto-layout + fitView once nodes are initialized. Default false. */
   autoLayoutOnInit?: boolean
   /** When true, node clicks emit the `node-click` event and skip the default edit flow. Default false. */
