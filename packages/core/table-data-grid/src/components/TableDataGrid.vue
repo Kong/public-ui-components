@@ -3,11 +3,43 @@
     class="kong-ui-public-table-data-grid"
     data-testid="table-data-grid"
   >
+    <div
+      v-if="hostError"
+      class="table-error-state"
+      data-testid="table-error-state"
+    >
+      <slot name="error-state">
+        <KEmptyState
+          icon-variant="error"
+          :message="t('errorState.message')"
+          :title="t('errorState.title')"
+        />
+      </slot>
+    </div>
+
+    <div
+      v-else-if="shouldShowEmptyState"
+      class="table-empty-state"
+      data-testid="table-empty-state"
+    >
+      <slot name="empty-state">
+        <KEmptyState
+          :message="t('emptyState.message')"
+          :title="t('emptyState.title')"
+        />
+      </slot>
+    </div>
+
     <AgGridVue
+      v-else
+      :cache-block-size="pageSize"
       class="table-data-grid-grid"
       :column-defs="columnDefs"
-      :grid-options="agGridOptions"
-      :row-data="rowData"
+      :datasource="datasource"
+      :default-col-def="defaultColDef"
+      :infinite-initial-row-count="1"
+      :loading="isFetching"
+      row-model-type="infinite"
       :suppress-cell-focus="true"
       :theme="themeQuartz"
       @grid-ready="onGridReady"
@@ -18,38 +50,62 @@
 <script setup lang="ts" generic="Row extends object">
 import type {
   TableDataGridFetcher,
-  TableDataGridGridOptions,
   TableDataGridHeader,
+  TableDataGridStatePayload,
 } from '../types'
 import type { ColDef, GridReadyEvent } from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
-import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-community'
-import { computed, ref, shallowRef, toRef, watch } from 'vue'
+import {
+  AllCommunityModule,
+  InfiniteRowModelModule,
+  ModuleRegistry,
+  themeQuartz,
+} from 'ag-grid-community'
+import { computed } from 'vue'
+import { useEmitState } from '../composables/useEmitState'
+import { useFetchInfinite } from '../composables/useFetchInfinite'
+import useI18n from '../composables/useI18n'
+import useFetchState from '../composables/useFetchState'
 
-ModuleRegistry.registerModules([AllCommunityModule])
+ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule])
 
 const {
-  agGridOptions = {},
+  error: hostError = false,
   fetcher,
   headers,
   pageSize = 25,
+  refreshKey,
 } = defineProps<{
   headers: Array<TableDataGridHeader<Row>>
   fetcher: TableDataGridFetcher<Row>
+  error?: boolean
   pageSize?: number
-  agGridOptions?: TableDataGridGridOptions<Row>
+  refreshKey?: string | number | boolean
+}>()
+
+defineSlots<{
+  'empty-state': () => unknown
+  'error-state': () => unknown
 }>()
 
 const emit = defineEmits<{
   (e: 'grid:ready', api: GridReadyEvent<Row>['api']): void
+  (e: 'state', payload: TableDataGridStatePayload): void
 }>()
 
-const rowData = shallowRef<Row[]>([])
-const latestFetchId = ref(0)
+const { i18n: { t } } = useI18n()
+
+const defaultColDef: ColDef<Row> = {
+  resizable: false,
+  sortable: false,
+  suppressMovable: true,
+}
 
 const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
   const columnDef: ColDef<Row> = {
     colId: header.key,
+    // Headers without explicit width constraints should fill available space.
+    flex: !header.width && !header.maxWidth ? 1 : undefined,
     headerName: header.label,
     maxWidth: header.maxWidth,
     minWidth: header.minWidth,
@@ -60,42 +116,37 @@ const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
   return columnDef
 }))
 
-const fetchRows = async () => {
-  const fetchId = latestFetchId.value + 1
-  latestFetchId.value = fetchId
+const resetKey = computed(() => [fetcher, pageSize, refreshKey])
+const {
+  data,
+  datasource,
+  error: fetchError,
+  isFetching,
+} = useFetchInfinite({
+  fetcher,
+  resetKey,
+})
 
-  try {
-    const result = await fetcher({
-      mode: 'infinite',
-      offset: 0,
-      pageSize,
-    })
+const {
+  fetchState,
+  hasData,
+  state: fetchLifecycleState,
+} = useFetchState(data, fetchError, isFetching)
 
-    if (fetchId === latestFetchId.value) {
-      rowData.value = result.data
-    }
-  } catch (error) {
-    if (fetchId === latestFetchId.value) {
-      rowData.value = []
-    }
-    console.error(error)
-  }
-}
+const shouldShowEmptyState = computed<boolean>(() => (
+  fetchLifecycleState.value === fetchState.SUCCESS
+  && !hasData.value
+))
+
+useEmitState({
+  emitState: payload => emit('state', payload),
+  fetchLifecycleState,
+  hasData,
+})
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   emit('grid:ready', event.api)
 }
-
-watch(
-  [
-    toRef(() => fetcher),
-    toRef(() => pageSize),
-  ],
-  () => {
-    fetchRows()
-  },
-  { immediate: true },
-)
 </script>
 
 <style lang="scss" scoped>
