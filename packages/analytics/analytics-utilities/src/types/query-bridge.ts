@@ -1,4 +1,13 @@
-import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4, AgenticExploreQuery, PlatformExploreQuery } from './explore'
+import type {
+  BasicExploreQuery,
+  ExploreQuery,
+  AiExploreQuery,
+  ExploreResultV4,
+  AgenticExploreQuery,
+  PlatformExploreQuery,
+  PlatformTabularQuery,
+  PlatformTabularResponse,
+} from './explore'
 import type { AnalyticsConfigV2 } from './analytics-config'
 import type { DatasourceConfig } from './datasource-config'
 import type { Component } from 'vue'
@@ -38,6 +47,9 @@ export interface StaticConfig {
 export interface AnalyticsBridge {
   // Issue queries to the KAnalytics API
   queryFn: (query: DatasourceAwareQuery, abortController: AbortController) => Promise<ExploreResultV4>
+
+  // Issue tabular queries to the platform tabular explore API
+  tabularQueryFn?: (query: PlatformTabularQuery, abortController: AbortController) => Promise<PlatformTabularResponse>
 
   // Determine the current org's analytics config
   configFn: () => Promise<AnalyticsConfigV2>
