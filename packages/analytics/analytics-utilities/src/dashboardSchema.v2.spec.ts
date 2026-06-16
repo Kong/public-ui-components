@@ -142,11 +142,129 @@ describe('dashboardSchema.v2', () => {
     ],
   }
 
+  const tableDataGridTile = {
+    type: 'table',
+    id: 'routes-table',
+    definition: {
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['name', 'control_plane', 'gateway_service', 'env', 'team', 'region'],
+        filters: [
+          {
+            field: 'control_plane',
+            operator: 'in',
+            value: ['16add929-6b9f-4e65-9285-7dfb6f0153d2'],
+          },
+          {
+            field: 'env',
+            operator: 'in',
+            value: ['prod'],
+          },
+        ],
+        cursor: 'eyJh',
+        page_size: 50,
+      },
+      chart: {
+        type: 'top_n',
+      },
+    },
+    layout: {
+      position: {
+        col: 1,
+        row: 1,
+      },
+      size: {
+        cols: 2,
+        rows: 2,
+      },
+    },
+  }
+
   it('accepts platform queries with arbitrary strings at runtime', () => {
     expect(validatePlatformQuerySchema(platformQuery)).toBe(true)
     expect(validateValidDashboardQuery(platformQuery)).toBe(true)
     expect(validateDashboardConfigSchema(dashboardConfig)).toBe(true)
     expect(validateDashboardConfigSchema(mixedDashboardConfig)).toBe(true)
+  })
+
+  it('accepts table tiles with tabular explore query shape', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        tableDataGridTile,
+      ],
+    })).toBe(true)
+  })
+
+  it('accepts table tiles with only the platform datasource', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          definition: {
+            query: {
+              datasource: 'platform',
+            },
+            chart: {
+              type: 'top_n',
+            },
+          },
+        },
+      ],
+    })).toBe(true)
+  })
+
+  it('rejects table tiles with a top-level query', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          query: {
+            entity: 'route',
+            columns: ['name', 'control_plane'],
+            page_size: 50,
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it.each([
+    ['invalid entity', { entity: 1 }],
+    ['missing datasource', { datasource: undefined }],
+    ['invalid datasource', { datasource: 'api_usage' }],
+    ['empty columns', { columns: [] }],
+    ['invalid columns', { columns: ['name', 1] }],
+    ['invalid page size', { page_size: '50' }],
+    ['invalid cursor', { cursor: 50 }],
+    ['invalid filter', { filters: [{ field: 'env', value: ['prod'] }] }],
+  ])('rejects table tiles with %s', (_description, queryOverrides) => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          definition: {
+            query: {
+              ...tableDataGridTile.definition.query,
+              ...queryOverrides,
+            },
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('rejects table tiles without chart definitions', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          definition: {
+            query: tableDataGridTile.definition.query,
+          },
+        },
+      ],
+    })).toBe(false)
   })
 
   it('accepts top_n entity link mappings', () => {
