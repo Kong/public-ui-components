@@ -1,3 +1,5 @@
+import DatakitReadOnlyCanvas from './components/free-form/plugins/datakit/DatakitReadOnlyCanvas.vue'
+import NodeBadge from './components/free-form/plugins/datakit/flow-editor/node/NodeBadge.vue'
 import CustomPluginForm from './components/CustomPluginForm.vue'
 import PluginForm from './components/PluginForm.vue'
 import PluginList from './components/PluginList.vue'
@@ -12,6 +14,8 @@ import pluginEndpoints from './plugins-endpoints'
 const { usePluginMetaData, useProvideExperimentalFreeForms } = composables
 
 export {
+  DatakitReadOnlyCanvas,
+  NodeBadge,
   CustomPluginForm,
   PluginForm,
   PluginList,

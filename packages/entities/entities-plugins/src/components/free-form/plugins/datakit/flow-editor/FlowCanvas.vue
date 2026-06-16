@@ -6,24 +6,24 @@
     <VueFlow
       :id="flowId"
       class="flow"
-      :class="{ readonly: mode !== 'edit' }"
+      :class="{ readonly: mode !== 'edit', debugger: mode === 'debugger' }"
       :connect-on-click="false"
-      :elements-selectable="mode === 'edit'"
+      :elements-selectable="mode === 'edit' || mode === 'debugger'"
       :max-zoom="MAX_ZOOM_LEVEL"
       :min-zoom="MIN_ZOOM_LEVEL"
       :multi-selection-key-code="null"
       :nodes-connectable="mode === 'edit'"
       :nodes-draggable="mode === 'edit'"
-      :pan-on-drag="mode === 'preview' ? false : undefined"
-      :pan-on-scroll="mode !== 'edit' ? false : undefined"
-      :zoom-on-double-click="mode !== 'edit' ? false : undefined"
-      :zoom-on-pinch="mode !== 'edit' ? false : undefined"
-      :zoom-on-scroll="mode !== 'edit' ? false : undefined"
+      :pan-on-drag="mode === 'edit' || mode === 'debugger' ? undefined : false"
+      :pan-on-scroll="mode === 'edit' ? undefined : false"
+      :zoom-on-double-click="mode === 'edit' ? undefined : false"
+      :zoom-on-pinch="mode === 'edit' || mode === 'debugger' ? undefined : false"
+      :zoom-on-scroll="mode === 'edit' || mode === 'debugger' ? undefined : false"
       @dragover="onDragOver"
       @drop="onDrop"
       @node-click="onNodeClick"
       @nodes-change="emit('nodes-change')"
-      @nodes-initialized="emit('initialized')"
+      @nodes-initialized="onNodesInitialized"
     >
       <Background />
       <Controls
@@ -57,7 +57,20 @@
           :data
           :error="invalidConfigNodeIds.has(data.id)"
           :readonly="mode !== 'edit'"
-        />
+        >
+          <template #status="s">
+            <slot
+              name="node-status"
+              v-bind="s"
+            />
+          </template>
+          <template #latency="s">
+            <slot
+              name="node-latency"
+              v-bind="s"
+            />
+          </template>
+        </FlowNode>
       </template>
       <template #node-group="{ data }">
         <GroupNode
@@ -92,7 +105,7 @@ import '@vue-flow/core/dist/theme-default.css'
 import type { NodeMouseEvent } from '@vue-flow/core'
 import type { Component } from 'vue'
 
-import type { DragPayload, NodePhase } from '../types'
+import type { DragPayload, NodeInstance, NodePhase } from '../types'
 
 const { flowId, phase, mode } = defineProps<{
   flowId: string
@@ -102,13 +115,15 @@ const { flowId, phase, mode } = defineProps<{
    * - edit: Flow editor page
    * - view: Config detail page
    * - preview: Plugin edit page preview
+   * - debugger: Read-only inspection view with trackpad zoom/pan, node-click emit, and auto-layout on init
    */
-  mode: 'edit' | 'view' | 'preview'
+  mode: 'edit' | 'view' | 'preview' | 'debugger'
 }>()
 
 const emit = defineEmits<{
   initialized: []
   'nodes-change': [] // Omitting the changes as we don't use them currently
+  'node-click': [node: NodeInstance]
 }>()
 
 const flowCanvas = useTemplateRef('flowCanvas')
@@ -154,6 +169,11 @@ function getDraggedNodeType(event: DragEvent): string | undefined {
 }
 
 function onNodeClick(event: NodeMouseEvent) {
+  if (mode === 'debugger') {
+    if (event?.node?.type !== 'group') emit('node-click', event.node.data as NodeInstance)
+    return
+  }
+
   if (mode !== 'edit') {
     return
   }
@@ -209,6 +229,17 @@ function onDrop(e: DragEvent) {
   selectNode(nodeId)
   propertiesPanelOpen.value = true
   endPanelDrag()
+}
+
+async function onNodesInitialized() {
+  emit('initialized')
+  // for mode=debugger, we want to auto-layout and fit-view after the nodes are initialized.
+  if (mode !== 'debugger') return
+  // Same double-setTimeout pattern used by FlowPanels.vue to let VueFlow measure nodes first
+  setTimeout(async () => {
+    await autoLayout(false)
+    setTimeout(() => fitView(), 0)
+  }, 0)
 }
 
 async function onClickAutoLayout() {
@@ -291,7 +322,8 @@ defineExpose({ autoLayout, fitView })
       }
     }
 
-    &:not(.readonly) {
+    &:not(.readonly),
+    &.debugger {
       :deep(.vue-flow__node) {
         &:hover:not(.selected, :has(.value-indicator:hover)) .dk-flow-node {
           border-color: var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
@@ -303,8 +335,14 @@ defineExpose({ autoLayout, fitView })
       }
     }
 
-    &.readonly * {
+    &.readonly:not(.debugger) * {
       cursor: default;
+    }
+
+    &.debugger {
+      :deep(.dk-flow-node) {
+        cursor: pointer;
+      }
     }
 
     :deep(.vue-flow__edge) {
