@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.214.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.213.2...@kong-ui-public/entities-plugins@9.214.0) (2026-06-16)
+
+
+### Features
+
+* **entities-plugins:** export freeform rendering primitives as dedicated subpath ([#3403](https://github.com/Kong/public-ui-components/issues/3403)) ([f8328a3](https://github.com/Kong/public-ui-components/commit/f8328a364ce776cd6bfb4888020da7634f208964))
+
+
+
+
+
 ## [9.213.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.213.1...@kong-ui-public/entities-plugins@9.213.2) (2026-06-12)
 
 
