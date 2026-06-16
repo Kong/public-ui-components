@@ -69,9 +69,8 @@
 import { computed, ref, useId, watch } from 'vue'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 import { KCodeBlock, KSegmentedControl, KSelect } from '@kong/kongponents'
-import FlowCanvas from '../../src/components/free-form/plugins/datakit/flow-editor/FlowCanvas.vue'
 import NodeBadge from '../../src/components/free-form/plugins/datakit/flow-editor/node/NodeBadge.vue'
-import { provideEditorStore, useEditorStore } from '../../src/components/free-form/plugins/datakit/composables'
+import { FlowCanvas, provideEditorStore, useEditorStore } from '../../src'
 import examples from '../../src/components/free-form/plugins/datakit/examples'
 import type { DatakitPluginData, NodeInstance, NodePhase } from '../../src/components/free-form/plugins/datakit/types'
 
