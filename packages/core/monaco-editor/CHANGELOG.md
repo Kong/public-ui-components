@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.18...@kong-ui-public/monaco-editor@0.22.19) (2026-06-17)
+
+
+### Bug Fixes
+
+* **deps:** update shiki monorepo to v4 ([#3457](https://github.com/Kong/public-ui-components/issues/3457)) ([95add7d](https://github.com/Kong/public-ui-components/commit/95add7d377810dd15758ac70e2edfc299b61476a))
+
+
+
+
+
 ## [0.22.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.17...@kong-ui-public/monaco-editor@0.22.18) (2026-06-11)
 
 

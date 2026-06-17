@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.215.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.215.0...@kong-ui-public/entities-plugins@9.215.1) (2026-06-17)
+
+
+### Bug Fixes
+
+* **deps:** update shiki monorepo to v4 ([#3457](https://github.com/Kong/public-ui-components/issues/3457)) ([95add7d](https://github.com/Kong/public-ui-components/commit/95add7d377810dd15758ac70e2edfc299b61476a))
+* **deps:** update vueuse monorepo to v14 ([#3458](https://github.com/Kong/public-ui-components/issues/3458)) ([1008c08](https://github.com/Kong/public-ui-components/commit/1008c0864cf118f2a93e503d3efb391bd14d7987))
+
+
+
+
+
 # [9.215.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.214.0...@kong-ui-public/entities-plugins@9.215.0) (2026-06-17)
 
 

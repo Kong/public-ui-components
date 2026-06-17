@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.50.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.50.0...@kong-ui-public/entities-shared@3.50.1) (2026-06-17)
+
+
+### Bug Fixes
+
+* **deps:** update shiki monorepo to v4 ([#3457](https://github.com/Kong/public-ui-components/issues/3457)) ([95add7d](https://github.com/Kong/public-ui-components/commit/95add7d377810dd15758ac70e2edfc299b61476a))
+
+
+
+
+
 # [3.50.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.6...@kong-ui-public/entities-shared@3.50.0) (2026-06-12)
 
 

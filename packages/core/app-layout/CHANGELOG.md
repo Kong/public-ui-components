@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.29...@kong-ui-public/app-layout@4.11.30) (2026-06-17)
+
+
+### Bug Fixes
+
+* **deps:** update vueuse monorepo to v14 ([#3458](https://github.com/Kong/public-ui-components/issues/3458)) ([1008c08](https://github.com/Kong/public-ui-components/commit/1008c0864cf118f2a93e503d3efb391bd14d7987))
+
+
+
+
+
 ## [4.11.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.28...@kong-ui-public/app-layout@4.11.29) (2026-06-11)
 
 
