@@ -297,7 +297,7 @@
 <script setup lang="ts">
 import type { EdgeId, FieldName, NodeInstance, NonEmptyArray } from '../../types'
 
-import { computed, useSlots, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { KTooltip, KButton, KDropdown, KDropdownItem } from '@kong/kongponents'
 import { createI18n } from '@kong-ui-public/i18n'
 import {
@@ -330,6 +330,12 @@ const { data, readonly } = defineProps<{
   readonly?: boolean
 }>()
 
+const slots = defineSlots<{
+  actions?: (props: { data: NodeInstance }) => any
+  'before-handles'?: (props: { data: NodeInstance }) => any
+  'after-handles'?: (props: { data: NodeInstance }) => any
+}>()
+
 const { t } = createI18n<typeof english>('en-us', english)
 
 // FlowNode can be used in some tree that does not provide a flow store
@@ -345,8 +351,6 @@ const {
   propertiesPanelOpen,
   branchGroups,
 } = useEditorStore()
-
-const slots = useSlots()
 
 const meta = computed(() => getNodeMeta(data.type))
 
