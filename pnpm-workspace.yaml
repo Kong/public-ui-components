@@ -44,7 +44,6 @@ onlyBuiltDependencies:
   - 'cypress'
   - 'es5-ext'
   - 'esbuild'
-  - 'nx'
   - 'swagger-ui'
   - 'tree-sitter'
   - 'tree-sitter-json'
