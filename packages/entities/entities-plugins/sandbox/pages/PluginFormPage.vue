@@ -114,6 +114,11 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'pre-function',
+  'ip-restriction',
+  'post-function',
+  'bot-detection',
+  'request-size-limiting',
 ])
 
 const enableDeckConfigCustomization = ref(false)
