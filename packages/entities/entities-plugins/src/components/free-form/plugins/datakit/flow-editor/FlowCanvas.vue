@@ -100,7 +100,7 @@ import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
 import { useElementBounding, useEventListener } from '@vueuse/core'
-import { computed, defineSlots, useTemplateRef } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 
 import useI18n from '../../../../../composables/useI18n'
 import { useHotkeys } from './composables/useHotkeys'
