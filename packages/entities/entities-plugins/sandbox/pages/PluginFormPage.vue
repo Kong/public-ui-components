@@ -93,13 +93,17 @@ useProvideExperimentalFreeForms([
   'exit-transformer',
   'file-log',
   'http-log',
+  'kafka-log',
   'request-transformer-advanced',
   'response-transformer',
   'response-transformer-advanced',
   'correlation-id',
   'solace-consume',
+  'confluent-consume',
+  'kafka-consume',
   'solace-log',
   'solace-upstream',
+  'kafka-upstream',
   'opentelemetry',
   'acl',
   'request-transformer',
@@ -114,6 +118,7 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'confluent',
 ])
 
 const enableDeckConfigCustomization = ref(false)
