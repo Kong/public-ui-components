@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.216.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.215.2...@kong-ui-public/entities-plugins@9.216.0) (2026-06-17)
+
+
+### Features
+
+* **entities-plugins:** add ki in oidc ([#3398](https://github.com/Kong/public-ui-components/issues/3398)) ([a6c6532](https://github.com/Kong/public-ui-components/commit/a6c6532f043dccabdc206e1d37b805d2f58fd753))
+
+
+
+
+
 ## [9.215.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.215.1...@kong-ui-public/entities-plugins@9.215.2) (2026-06-17)
 
 
