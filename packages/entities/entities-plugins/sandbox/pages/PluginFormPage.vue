@@ -114,6 +114,10 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'app-dynamics',
+  'datadog',
+  'statsd',
+  'zipkin',
 ])
 
 const enableDeckConfigCustomization = ref(false)
