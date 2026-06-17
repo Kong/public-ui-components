@@ -33,7 +33,7 @@
       <FlowCanvas
         :key="`${selectedFixtureId || selectedExampleId}-${phase}`"
         :flow-id="flowId"
-        mode="debugger"
+        mode="inspect"
         :phase="phase"
         @node-click="onNodeClick"
       >

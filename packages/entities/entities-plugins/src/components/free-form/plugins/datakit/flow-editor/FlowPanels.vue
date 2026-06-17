@@ -117,7 +117,7 @@ const { inactive, mode, resizable } = defineProps<{
    * - view: Config detail page
    * - preview: Plugin edit page preview
    */
-  mode: 'edit' | 'view' | 'preview' | 'debugger'
+  mode: 'edit' | 'view' | 'preview' | 'inspect'
   resizable?: boolean
 }>()
 

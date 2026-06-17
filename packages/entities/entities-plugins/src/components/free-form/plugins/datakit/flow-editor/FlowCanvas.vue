@@ -6,19 +6,15 @@
     <VueFlow
       :id="flowId"
       class="flow"
-      :class="{ readonly: mode !== 'edit', debugger: mode === 'debugger' }"
+      :class="{ readonly: mode !== 'edit', inspect: mode === 'inspect' }"
+      v-bind="interactiveViewportProps"
       :connect-on-click="false"
-      :elements-selectable="mode === 'edit' || mode === 'debugger'"
+      :elements-selectable="mode === 'edit' || mode === 'inspect'"
       :max-zoom="MAX_ZOOM_LEVEL"
       :min-zoom="MIN_ZOOM_LEVEL"
       :multi-selection-key-code="null"
       :nodes-connectable="mode === 'edit'"
       :nodes-draggable="mode === 'edit'"
-      :pan-on-drag="mode === 'edit' || mode === 'debugger' ? undefined : false"
-      :pan-on-scroll="mode === 'edit' ? undefined : false"
-      :zoom-on-double-click="mode === 'edit' ? undefined : false"
-      :zoom-on-pinch="mode === 'edit' || mode === 'debugger' ? undefined : false"
-      :zoom-on-scroll="mode === 'edit' || mode === 'debugger' ? undefined : false"
       @dragover="onDragOver"
       @drop="onDrop"
       @node-click="onNodeClick"
@@ -115,9 +111,9 @@ const { flowId, phase, mode } = defineProps<{
    * - edit: Flow editor page
    * - view: Config detail page
    * - preview: Plugin edit page preview
-   * - debugger: Read-only inspection view with trackpad zoom/pan, node-click emit, and auto-layout on init
+   * - inspect: Read-only inspection view with trackpad zoom/pan, node-click emit, and auto-layout on init
    */
-  mode: 'edit' | 'view' | 'preview' | 'debugger'
+  mode: 'edit' | 'view' | 'preview' | 'inspect'
 }>()
 
 const emit = defineEmits<{
@@ -129,6 +125,18 @@ const emit = defineEmits<{
 const flowCanvas = useTemplateRef('flowCanvas')
 const flowCanvasRect = useElementBounding(flowCanvas)
 const { i18n: { t } } = useI18n()
+
+const interactiveViewportProps = computed(() => {
+  const isInteractive = mode === 'edit' || mode === 'inspect'
+
+  return {
+    panOnDrag: isInteractive ? undefined : false,
+    panOnScroll: isInteractive ? undefined : false,
+    zoomOnDoubleClick: isInteractive ? undefined : false,
+    zoomOnPinch: isInteractive ? undefined : false,
+    zoomOnScroll: isInteractive ? undefined : false,
+  }
+})
 
 const {
   vueFlowStore,
@@ -169,8 +177,8 @@ function getDraggedNodeType(event: DragEvent): string | undefined {
 }
 
 function onNodeClick(event: NodeMouseEvent) {
-  if (mode === 'debugger') {
-    // Emit the full node-data for debugger mode, used in consumer apps
+  if (mode === 'inspect') {
+    // Emit the full node-data for inspect mode, used in consumer apps
     emit('node-click', event.node.data as NodeInstance)
     return
   }
@@ -234,8 +242,8 @@ function onDrop(e: DragEvent) {
 
 async function onNodesInitialized() {
   emit('initialized')
-  // for mode=debugger, we want to auto-layout and fit-view after the nodes are initialized.
-  if (mode !== 'debugger') return
+  // for mode=inspect, we want to auto-layout and fit-view after the nodes are initialized.
+  if (mode !== 'inspect') return
   // Same double-setTimeout pattern used by FlowPanels.vue to let VueFlow measure nodes first
   setTimeout(async () => {
     await autoLayout(false)
@@ -324,7 +332,7 @@ defineExpose({ autoLayout, fitView })
     }
 
     &:not(.readonly),
-    &.debugger {
+    &.inspect {
       :deep(.vue-flow__node) {
         &:hover:not(.selected, :has(.value-indicator:hover)) .dk-flow-node {
           border-color: var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
@@ -336,11 +344,11 @@ defineExpose({ autoLayout, fitView })
       }
     }
 
-    &.readonly:not(.debugger) * {
+    &.readonly:not(.inspect) * {
       cursor: default;
     }
 
-    &.debugger {
+    &.inspect {
       :deep(.dk-flow-node) {
         cursor: pointer;
       }
