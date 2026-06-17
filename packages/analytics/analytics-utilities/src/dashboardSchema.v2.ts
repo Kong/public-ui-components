@@ -220,6 +220,16 @@ export const topNTableSchema = {
 
 export type TopNTableOptions = FromSchemaWithOptions<typeof topNTableSchema>
 
+export const tableDataGridConfigSchema = {
+  type: 'object',
+  properties: {
+    title: chartTitle,
+  },
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TableDataGridConfigOptions = FromSchemaWithOptions<typeof tableDataGridConfigSchema>
+
 export const metricCardSchema = {
   type: 'object',
   properties: {
@@ -650,8 +660,7 @@ const dashboardTileChartSchema = {
   ],
 } as const satisfies JSONSchema
 
-// Note: `datasource` may need to end up somewhere else for sane type definitions?
-export const tileDefinitionSchema = {
+const chartRendererTileDefinitionSchema = {
   type: 'object',
   properties: {
     query: validDashboardQuery,
@@ -661,19 +670,28 @@ export const tileDefinitionSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TileDefinition = FromSchemaWithOptions<typeof tileDefinitionSchema>
+export type ChartRendererTileDefinition = FromSchemaWithOptions<typeof chartRendererTileDefinitionSchema>
 
-export const tableTileDefinitionSchema = {
+const tableRendererTileDefinitionSchema = {
   type: 'object',
   properties: {
     query: tableDataGridQuerySchema,
-    chart: dashboardTileChartSchema,
+    config: tableDataGridConfigSchema,
   },
-  required: ['query', 'chart'],
+  required: ['query', 'config'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TableTileDefinition = FromSchemaWithOptions<typeof tableTileDefinitionSchema>
+export type TableRendererTileDefinition = FromSchemaWithOptions<typeof tableRendererTileDefinitionSchema>
+
+export const tileDefinitionSchema = {
+  anyOf: [
+    chartRendererTileDefinitionSchema,
+    tableRendererTileDefinitionSchema,
+  ],
+} as const satisfies JSONSchema
+
+export type TileDefinition = FromSchemaWithOptions<typeof tileDefinitionSchema>
 
 export const tileLayoutSchema = {
   type: 'object',
@@ -724,7 +742,7 @@ export const chartTileConfigSchema = {
       type: 'string',
       enum: ['chart'],
     },
-    definition: tileDefinitionSchema,
+    definition: chartRendererTileDefinitionSchema,
     layout: tileLayoutSchema,
     id: {
       type: 'string',
@@ -734,8 +752,6 @@ export const chartTileConfigSchema = {
   required: ['type', 'definition', 'layout'],
   additionalProperties: false,
 } as const satisfies JSONSchema
-
-export type TileConfig = FromSchemaWithOptions<typeof chartTileConfigSchema>
 
 export const tableTileConfigSchema = {
   type: 'object',
@@ -744,7 +760,7 @@ export const tableTileConfigSchema = {
       type: 'string',
       enum: ['table'],
     },
-    definition: tableTileDefinitionSchema,
+    definition: tableRendererTileDefinitionSchema,
     layout: tileLayoutSchema,
     id: {
       type: 'string',
@@ -755,8 +771,6 @@ export const tableTileConfigSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TableTileConfig = FromSchemaWithOptions<typeof tableTileConfigSchema>
-
 export const tileConfigSchema = {
   anyOf: [
     chartTileConfigSchema,
@@ -764,7 +778,7 @@ export const tileConfigSchema = {
   ],
 } as const satisfies JSONSchema
 
-export type DashboardTileConfig = FromSchemaWithOptions<typeof tileConfigSchema>
+export type TileConfig = FromSchemaWithOptions<typeof tileConfigSchema>
 
 export const dashboardConfigSchema = {
   type: 'object',
@@ -798,8 +812,4 @@ export const dashboardConfigSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type DashboardConfigWithTableTiles = FromSchemaWithOptions<typeof dashboardConfigSchema>
-
-export type DashboardConfig = Omit<DashboardConfigWithTableTiles, 'tiles'> & {
-  tiles: TileConfig[]
-}
+export type DashboardConfig = FromSchemaWithOptions<typeof dashboardConfigSchema>

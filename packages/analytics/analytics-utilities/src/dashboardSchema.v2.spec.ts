@@ -165,8 +165,8 @@ describe('dashboardSchema.v2', () => {
         cursor: 'eyJh',
         page_size: 50,
       },
-      chart: {
-        type: 'top_n',
+      config: {
+        title: 'Routes',
       },
     },
     layout: {
@@ -205,13 +205,28 @@ describe('dashboardSchema.v2', () => {
             query: {
               datasource: 'platform',
             },
-            chart: {
-              type: 'top_n',
-            },
+            config: {},
           },
         },
       ],
     })).toBe(true)
+  })
+
+  it('rejects table tile config fields other than title', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          definition: {
+            ...tableDataGridTile.definition,
+            config: {
+              title: 'Routes',
+              description: 'Extra config is not supported',
+            },
+          },
+        },
+      ],
+    })).toBe(false)
   })
 
   it('rejects table tiles with a top-level query', () => {
@@ -244,6 +259,7 @@ describe('dashboardSchema.v2', () => {
         {
           ...tableDataGridTile,
           definition: {
+            config: tableDataGridTile.definition.config,
             query: {
               ...tableDataGridTile.definition.query,
               ...queryOverrides,
@@ -254,7 +270,7 @@ describe('dashboardSchema.v2', () => {
     })).toBe(false)
   })
 
-  it('rejects table tiles without chart definitions', () => {
+  it('rejects table tiles without config definitions', () => {
     expect(validateDashboardConfigSchema({
       tiles: [
         {

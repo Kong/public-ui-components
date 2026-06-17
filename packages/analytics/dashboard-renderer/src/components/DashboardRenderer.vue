@@ -32,10 +32,10 @@
       >
         <template #tile="{ tile }">
           <div
-            v-if="tile.meta.chart.type === 'slottable'"
+            v-if="isSlottableTile(tile)"
             class="tile-container slottable-tile"
           >
-            <slot :name="tile.meta.chart.id" />
+            <slot :name="getSlottableSlotName(tile)" />
           </div>
           <DashboardTile
             v-else
@@ -50,6 +50,7 @@
             :is-fullscreen="isFullscreen"
             :query-ready="queryReady"
             :tile-id="tile.id"
+            :tile-type="tile.type"
             @duplicate-tile="onDuplicateTile(tile)"
             @edit-tile="onEditTile(tile)"
             @remove-tile="onRemoveTile(tile)"
@@ -66,8 +67,10 @@ import type { DashboardRendererContext, GridTile, TileZoomEvent } from '../types
 import type {
   AllFilters,
   AnalyticsBridge,
+  ChartRendererTileDefinition,
   DashboardConfig,
   SlottableOptions,
+  TableRendererTileDefinition,
   TileConfig,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
@@ -134,9 +137,11 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
   return model.value.tiles.map((tile: TileConfig) => {
     let tileMeta = tile.definition
 
-    if ('description' in tileMeta.chart) {
+    const chart = (tileMeta as ChartRendererTileDefinition).chart
+    if (tile.type === 'chart' && 'description' in chart) {
+      const chartMeta = tileMeta as ChartRendererTileDefinition
       // Replace tokens in tile descriptions
-      const description = tileMeta.chart.description?.replace(TIMEFRAME_TOKEN, () => {
+      const description = chart.description?.replace(TIMEFRAME_TOKEN, () => {
         const { timeSpec } = internalContext.value
         const timeSpecKey = timeSpec.type === 'absolute' ? 'custom' : timeSpec.time_range
         const key = `renderer.trendRange.${timeSpecKey}`
@@ -153,12 +158,12 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
       })
 
       tileMeta = {
-        ...tileMeta,
+        ...chartMeta,
         chart: {
-          ...tileMeta.chart,
+          ...chart,
           description,
         },
-      }
+      } as TileDefinition
     }
 
     if (internalContext.value.editable && !tile.id) {
@@ -186,24 +191,60 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
   emit('edit-tile', tile)
 }
 
+const isSlottableTile = (tile: GridTile<TileDefinition>): boolean => {
+  return tile.type === 'chart' && (tile.meta as ChartRendererTileDefinition).chart.type === 'slottable'
+}
+
 const isSlottable = (chart: any): chart is SlottableOptions => {
   return chart.type === 'slottable'
 }
 
+const getSlottableSlotName = (tile: GridTile<TileDefinition>): string | undefined => {
+  const chart = (tile.meta as ChartRendererTileDefinition).chart
+  return isSlottable(chart) ? chart.id : undefined
+}
+
 const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
   try {
-    const chart = isSlottable(tile.meta.chart)
-      ? { ...tile.meta.chart }
-      : {
-        ...tile.meta.chart,
-        chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
+    if (tile.type === 'table') {
+      const tableMeta = tile.meta as TableRendererTileDefinition
+      const config = {
+        ...tableMeta.config,
+        title: tableMeta.config.title ? `Copy of ${tableMeta.config.title}` : '',
       }
 
-    const newTile: TileConfig = {
+      const newTile = {
+        id: crypto.randomUUID(),
+        type: 'table',
+        definition: {
+          ...tableMeta,
+          config,
+        },
+        layout: {
+          position: {
+            col: 0,
+            row: 0,
+          },
+          size: tile.layout.size,
+        },
+      } as TileConfig
+
+      model.value.tiles.push(JSON.parse(JSON.stringify(newTile)))
+      return
+    }
+
+    const chartMeta = tile.meta as ChartRendererTileDefinition
+    const chart = isSlottable(chartMeta.chart)
+      ? { ...chartMeta.chart }
+      : {
+        ...chartMeta.chart,
+        chart_title: chartMeta.chart.chart_title ? `Copy of ${chartMeta.chart.chart_title}` : '',
+      }
+
+    const baseTile = {
       id: crypto.randomUUID(),
-      type: 'chart',
       definition: {
-        ...tile.meta,
+        ...chartMeta,
         chart,
       },
       layout: {
@@ -214,6 +255,12 @@ const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
         size: tile.layout.size,
       },
     }
+
+    const newTile = {
+      ...baseTile,
+      type: 'chart',
+      definition: baseTile.definition,
+    } as TileConfig
 
     // deep cloning to avoid duplicated references
     model.value.tiles.push(JSON.parse(JSON.stringify(newTile)))

@@ -3,6 +3,7 @@ import { defineComponent, h, nextTick } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
+import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
@@ -10,6 +11,7 @@ import type { DashboardRendererContextInternal } from '../types'
 import type { TileDefinition } from '@kong-ui-public/analytics-utilities'
 
 vi.mock('./TimeseriesChartRenderer.vue', () => ({
+  // eslint-disable-next-line vue/one-component-per-file
   default: defineComponent({
     name: 'TimeseriesChartRenderer',
     props: {
@@ -52,6 +54,41 @@ vi.mock('./TimeseriesChartRenderer.vue', () => ({
         'data-testid': 'timeseries-renderer-stub',
         'data-explore-link': props.exploreLink === undefined ? 'undefined' : String(props.exploreLink),
         'data-requests-link': props.requestsLink === undefined ? 'undefined' : String(props.requestsLink),
+      })
+    },
+  }),
+}))
+
+vi.mock('./TableDataGridRenderer.vue', () => ({
+  // eslint-disable-next-line vue/one-component-per-file
+  default: defineComponent({
+    name: 'TableDataGridRenderer',
+    props: {
+      context: {
+        type: Object,
+        required: true,
+      },
+      height: {
+        type: Number,
+        required: true,
+      },
+      query: {
+        type: Object,
+        required: true,
+      },
+      queryReady: {
+        type: Boolean,
+        required: true,
+      },
+      refreshCounter: {
+        type: Number,
+        required: true,
+      },
+    },
+    emits: ['loading-change'],
+    setup() {
+      return () => h('div', {
+        'data-testid': 'table-data-grid-renderer-stub',
       })
     },
   }),
@@ -212,5 +249,98 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     await flushPromises()
 
     expect(wrapper.findTestId('time-range-badge').exists()).toBe(false)
+  })
+})
+
+describe('<DashboardTile /> table tiles', () => {
+  beforeEach(() => {
+    setupPiniaTestStore()
+    const analyticsConfigStore = useAnalyticsConfigStore()
+    analyticsConfigStore.analyticsConfig = { analytics: { percentiles: true } } as any
+  })
+
+  it('dispatches table tiles to the table data grid renderer', () => {
+    const tableDefinition: TileDefinition = {
+      config: {
+        title: 'Table Tile',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['control_plane'],
+      },
+    }
+
+    const wrapper = mount(DashboardTile, {
+      props: {
+        context: mockContext,
+        definition: tableDefinition,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+        tileType: 'table',
+      },
+      shallow: true,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+        stubs: {
+          TableDataGridRenderer: false,
+        },
+      },
+    })
+
+    expect(wrapper.findComponent(TableDataGridRenderer).exists()).toBe(true)
+    expect(wrapper.findComponent(TimeseriesChartRenderer).exists()).toBe(false)
+    expect(wrapper.findComponent(TableDataGridRenderer).props()).toMatchObject({
+      context: mockContext,
+      query: tableDefinition.query,
+      queryReady: true,
+      refreshCounter: 0,
+    })
+  })
+
+  it('shows editable tile actions for table tiles', () => {
+    const tableDefinition: TileDefinition = {
+      config: {
+        title: 'Table Tile',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['control_plane'],
+      },
+    }
+
+    const wrapper = mount(DashboardTile, {
+      props: {
+        context: {
+          ...mockContext,
+          editable: true,
+        },
+        definition: tableDefinition,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+        tileType: 'table',
+      },
+      shallow: true,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+        stubs: {
+          TableDataGridRenderer: false,
+        },
+      },
+    })
+
+    expect(wrapper.findTestId('tile-actions-1').exists()).toBe(true)
+    expect(wrapper.findTestId('edit-tile-1').exists()).toBe(true)
+    expect(wrapper.findTestId('kebab-action-menu-1').exists()).toBe(true)
+    expect(wrapper.findTestId('chart-jump-to-explore-1').exists()).toBe(false)
+    expect(wrapper.findTestId('chart-jump-to-requests-1').exists()).toBe(false)
+    expect(wrapper.findTestId('chart-csv-export-1').exists()).toBe(false)
   })
 })

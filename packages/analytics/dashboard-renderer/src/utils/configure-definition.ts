@@ -34,6 +34,10 @@ const processTileForBasicTier = (tile: TileConfig): TileConfig | undefined => {
  * @returns The updated tile configuration object.
  */
 const processTileForAdvancedTier = (tile: TileConfig): TileConfig => {
+  if (tile.type === 'table') {
+    return tile
+  }
+
   const query = tile.definition?.query
 
   if (!query) {
