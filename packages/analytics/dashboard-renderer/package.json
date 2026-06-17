@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "8.11.3",
+  "version": "8.11.12",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",
@@ -47,14 +47,14 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "1.22.2",
-    "@kong/icons": "^1.56.0",
-    "@kong/kongponents": "9.56.2",
+    "@kong/design-tokens": "1.23.0",
+    "@kong/icons": "^1.58.0",
+    "@kong/kongponents": "9.59.0",
     "ajv": "^8.20.0",
     "cypress-real-events": "^1.15.0",
     "pinia": ">= 3.0.4 < 4",
     "swrv": "^1.2.0",
-    "vue": "^3.5.34"
+    "vue": "^3.5.35"
   },
   "repository": {
     "type": "git",
@@ -80,8 +80,8 @@
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.56.0",
-    "@kong/kongponents": "^9.56.2",
+    "@kong/icons": "^1.58.0",
+    "@kong/kongponents": "^9.59.0",
     "swrv": "^1.2.0",
     "vue": ">= 3.3.13 < 4"
   },

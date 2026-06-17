@@ -23,7 +23,7 @@
         >
           <PluginIcon
             :data-testid="`plugin-catalog-list-view-${row.plugin!.id}-icon`"
-            :name="row.plugin!.id"
+            :name="getPluginIconName(row.plugin!)"
             :size="20"
           />
           <span
@@ -31,6 +31,14 @@
             data-testid="plugin-catalog-list-view-name-text"
             :title="row.name"
           >{{ row.name }}</span>
+          <KBadge
+            v-if="row.badge"
+            appearance="info"
+            class="plugin-name-badge"
+            data-testid="plugin-catalog-list-view-custom-badge"
+          >
+            {{ row.badge }}
+          </KBadge>
         </span>
       </template>
       <template #description="{ row }">
@@ -61,7 +69,7 @@
         #more-actions="{ row }"
       >
         <div
-          v-if="row.plugin?.customPluginType"
+          v-if="hasMoreActions(row.plugin)"
           class="plugin-more-action-cell"
           data-testid="plugin-catalog-list-view-more-actions"
         >
@@ -74,15 +82,17 @@
           >
             <template #items>
               <KDropdownItem
+                v-if="canEditPlugin(row.plugin)"
                 data-testid="edit-plugin-schema"
                 :item="{ label: t('actions.edit'), to: (config as KonnectPluginSelectConfig).getCustomEditRoute?.(row.plugin!.name, row.plugin!.customPluginType!) }"
               >
                 {{ t('actions.edit') }}
               </KDropdownItem>
               <KDropdownItem
+                v-if="canDeletePlugin(row.plugin)"
                 danger
                 data-testid="delete-plugin-schema"
-                has-divider
+                :has-divider="canEditPlugin(row.plugin)"
                 @click="() => handleCustomPluginDelete(row.plugin!)"
               >
                 {{ t('actions.delete') }}
@@ -115,10 +125,10 @@ import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
 import type {
   PluginType,
-  CustomPluginType,
   KongManagerPluginSelectConfig,
   KonnectPluginSelectConfig,
   PluginCardList,
+  CustomPluginDeletePayload,
 } from '../../types'
 
 interface TableSortPayload {
@@ -129,19 +139,38 @@ interface TableSortPayload {
 
 const emit = defineEmits<{
   'revalidate': []
-  'delete:success': [pluginName: string]
+  'delete:success': [plugin: CustomPluginDeletePayload]
 }>()
 
 const props = defineProps<{
   config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig
   pluginList?: PluginCardList
+  canDeleteCustomPlugin?: boolean
+  canDeleteClonedPlugin?: boolean
+  canEditCustomPlugin?: boolean
+  canEditClonedPlugin?: boolean
 }>()
 
 const { i18n: { t } } = composables.useI18n()
 
+const getCustomPluginBadge = (plugin: PluginType): string => {
+  if (plugin.customPluginType === 'cloned' && plugin.clonedFromRef) {
+    return t('plugins.select.cloned_from_badge', { link: plugin.clonedFromRef })
+  }
+
+  if (plugin.customPluginType === 'streaming') {
+    return t('plugins.select.streamed_custom_badge')
+  }
+
+  if (plugin.customPluginType) {
+    return t('plugins.select.installed_custom_badge')
+  }
+
+  return ''
+}
 
 const showMoreActions = computed(() => {
-  return paginatedData.value.some(row => Boolean(row.plugin?.customPluginType))
+  return paginatedData.value.some(row => hasMoreActions(row.plugin))
 })
 
 const headers = computed(() => {
@@ -165,6 +194,7 @@ const tableRows = computed(() => {
     id: plugin!.id,
     name: plugin!.name,
     description: plugin!.description,
+    badge: getCustomPluginBadge(plugin!),
     plugin,
   }))
 })
@@ -173,13 +203,48 @@ const paginatedPageSize = ref<number>(10)
 const currentPage = ref<number>(1)
 const sortedRows = ref(tableRows.value)
 const openDeleteModal = ref(false)
-const selectedPlugin = ref<{ name: string, id: string, customPluginType?: CustomPluginType } | null>(null)
+const selectedPlugin = ref<(CustomPluginDeletePayload & { id: string }) | null>(null)
+
+const getPluginIconName = (plugin: PluginType): string => {
+  return plugin.customPluginType === 'cloned' && plugin.clonedFromRef
+    ? plugin.clonedFromRef
+    : plugin.id
+}
+
+const isClonedPlugin = (plugin?: PluginType): boolean => plugin?.customPluginType === 'cloned'
+
+const canDeletePlugin = (plugin?: PluginType): boolean => {
+  if (!plugin?.customPluginType) {
+    return false
+  }
+
+  if (props.config.app === 'kongManager' && plugin.customPluginType === 'schema') {
+    return false
+  }
+
+  return isClonedPlugin(plugin) ? !!props.canDeleteClonedPlugin : !!props.canDeleteCustomPlugin
+}
+
+const canEditPlugin = (plugin?: PluginType): boolean => {
+  if (!plugin?.customPluginType || typeof props.config.getCustomEditRoute !== 'function') {
+    return false
+  }
+
+  if (props.config.app === 'kongManager' && plugin.customPluginType === 'schema') {
+    return false
+  }
+
+  return isClonedPlugin(plugin) ? !!props.canEditClonedPlugin : !!props.canEditCustomPlugin
+}
+
+const hasMoreActions = (plugin?: PluginType): boolean => canDeletePlugin(plugin) || canEditPlugin(plugin)
 
 const handleCustomPluginDelete = (plugin: PluginType): void => {
   openDeleteModal.value = true
   selectedPlugin.value = {
     id: plugin.id,
     name: plugin.name,
+    group: plugin.group,
     customPluginType: plugin.customPluginType,
   }
 }
@@ -187,7 +252,11 @@ const handleCustomPluginDelete = (plugin: PluginType): void => {
 const handleClose = (revalidate?: boolean): void => {
   if (revalidate) {
     emit('revalidate')
-    emit('delete:success', selectedPlugin.value?.name || '')
+    emit('delete:success', {
+      name: selectedPlugin.value?.name || '',
+      group: selectedPlugin.value?.group,
+      customPluginType: selectedPlugin.value?.customPluginType,
+    })
   }
 
   openDeleteModal.value = false
@@ -248,10 +317,15 @@ const onSort = (sortPayload: TableSortPayload) => {
   white-space: nowrap;
 }
 
+.plugin-name-badge {
+  margin-left: 8px;
+}
+
 .plugin-description-cell {
   -webkit-box-orient: vertical;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -38,17 +38,17 @@
 
               <template #items>
                 <KDropdownItem
-                  v-if="canEditCurrentPlugin && hasEditRoute"
+                  v-if="hasEditAction"
                   data-testid="edit-plugin-schema"
                   @click.stop="handleCustomEdit(plugin.name, plugin.customPluginType!)"
                 >
                   {{ t('actions.edit') }}
                 </KDropdownItem>
                 <KDropdownItem
-                  v-if="canDeleteCurrentPlugin"
+                  v-if="hasDeleteAction"
                   danger
                   data-testid="delete-plugin-schema"
-                  has-divider
+                  :has-divider="hasEditAction"
                   @click.stop="handleCustomDelete"
                 >
                   {{ t('actions.delete') }}
@@ -214,12 +214,14 @@ const canManageCustomPlugin = computed((): boolean => {
     && props.plugin.customPluginType === 'schema'
   )
 })
+const hasEditAction = computed((): boolean => canEditCurrentPlugin.value && hasEditRoute.value)
+const hasDeleteAction = computed((): boolean => canDeleteCurrentPlugin.value)
 const hasActions = computed((): boolean => !!(
   isCustomPlugin.value
   && !isCreateCustomPlugin.value
   && canManageCustomPlugin.value
   && props.navigateOnClick
-  && (canDeleteCurrentPlugin.value || (canEditCurrentPlugin.value && hasEditRoute.value))
+  && (hasDeleteAction.value || hasEditAction.value)
 ))
 
 const handleCreateClick = (): void => {

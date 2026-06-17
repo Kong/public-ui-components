@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-certificates",
-  "version": "3.14.7",
+  "version": "3.14.16",
   "type": "module",
   "main": "./dist/entities-certificates.umd.js",
   "module": "./dist/entities-certificates.es.js",
@@ -24,8 +24,8 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.56.0",
-    "@kong/kongponents": "^9.56.2",
+    "@kong/icons": "^1.58.0",
+    "@kong/kongponents": "^9.59.0",
     "axios": "^1.16.1",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.6.4 || ^5.0.6"
@@ -34,12 +34,12 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.22.2",
-    "@kong/icons": "^1.56.0",
-    "@kong/kongponents": "9.56.2",
+    "@kong/design-tokens": "1.23.0",
+    "@kong/icons": "^1.58.0",
+    "@kong/kongponents": "9.59.0",
     "axios": "^1.16.1",
-    "vue": "^3.5.34",
-    "vue-router": "^5.0.7"
+    "vue": "^3.5.35",
+    "vue-router": "^5.1.0"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
@@ -71,7 +71,8 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@peculiar/x509": "^1.14.3"
+    "@peculiar/x509": "^2.0.0",
+    "reflect-metadata": "^0.2.2"
   },
   "distSizeChecker": {
     "errorLimit": "1.5MB"

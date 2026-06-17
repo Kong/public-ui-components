@@ -569,7 +569,7 @@ const viewConfigFetchUrl = computed<string>(() => {
 
 const viewConfigRequestMethod = computed<'post' | 'put' | 'patch'>(() => {
   if (!editMode.value) return 'post'
-  if (state.fields.pluginType === 'cloned') return 'patch'
+  if (state.fields.pluginType === 'cloned') return props.config.app === 'konnect' ? 'put' : 'patch'
   if (props.config.app === 'kongManager' && state.fields.pluginType === 'streamed') return 'patch'
   return 'put'
 })

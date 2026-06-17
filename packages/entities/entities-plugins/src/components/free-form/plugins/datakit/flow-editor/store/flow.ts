@@ -24,7 +24,7 @@ import { parseGroupId } from './helpers'
 import { useEditorStore } from './store'
 
 import type { Connection, FitViewParams, GraphNode, Node, NodeSelectionChange, XYPosition } from '@vue-flow/core'
-import type { MaybeRefOrGetter } from '@vueuse/core'
+import type { MaybeRefOrGetter } from 'vue'
 
 import type {
   EdgeId,

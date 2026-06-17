@@ -1,5 +1,5 @@
 <template>
-  <StandardLayout
+  <DynamicLayout
     v-bind="props"
     :render-rules="renderRules"
   >
@@ -25,7 +25,7 @@
     </template>
 
     <ConfigForm />
-  </StandardLayout>
+  </DynamicLayout>
 </template>
 
 <script setup lang="ts">
@@ -34,10 +34,10 @@ import { provide } from 'vue'
 
 import ConfigForm from '../../Common/ConfigForm.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
-import StandardLayout from '../../shared/layout/StandardLayout.vue'
+import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
 import KeysetField from './KeysetField.vue'
 
-import type { Props } from '../../shared/layout/StandardLayout.vue'
+import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
 import type { RenderRules } from '../../shared/types'
 
 const props = defineProps<Props>()

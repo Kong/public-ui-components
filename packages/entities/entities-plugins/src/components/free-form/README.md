@@ -35,7 +35,9 @@ free-form/
 │   ├── EntityChecksAlert.vue # Validation constraint alerts
 │   ├── composables/         # Vue composables (core logic, including map entry tracking)
 │   ├── layout/              # Layout components
-│   │   ├── StandardLayout.vue  # Shared layout with form/code modes
+│   │   ├── DynamicLayout.vue   # Runtime-selected layout wrapper
+│   │   ├── StandardLayout.vue  # Default API Gateway layout with form/code modes
+│   │   ├── provider.ts         # Layout injection key and provider helper
 │   │   └── ConditionField.vue  # Optional condition editor in General Info
 │   ├── types.ts             # Core type definitions
 │   ├── const.ts             # Injection keys (REDIS_PARTIAL_INFO, FORM_EDITING)
@@ -183,11 +185,13 @@ Constraints:
 
 ## Layout
 
-All plugin forms use `StandardLayout` (`shared/layout/StandardLayout.vue`) as the unified layout component. In form mode it provides a 3-step structure:
+Plugin forms use `DynamicLayout` (`shared/layout/DynamicLayout.vue`) as the layout entry point. It renders a host-provided layout from `FREE_FORM_PLUGIN_LAYOUT` when one is available, and otherwise falls back to `StandardLayout` (`shared/layout/StandardLayout.vue`). Layouts that need the common free-form `Form` wrapper can compose `PluginConfigurationForm` (`shared/layout/PluginConfigurationForm.vue`) and provide their own surrounding product-specific blocks. The default StandardLayout form mode provides a 3-step structure:
 
 1. **Plugin Scope** — Global vs Scoped (service/route/consumer/consumer_group) via radio buttons + ScopeEntityField for entity selection
 2. **Plugin Configuration** — Free-form rendered config fields via default slot
 3. **General Info** — enabled, instance_name, tags, protocols, condition
+
+Consuming apps can call `useProvideFreeFormPluginLayout()` to replace the layout shell for free-form plugin forms.
 
 ## Plugin-Specific Forms
 
@@ -240,10 +244,10 @@ Simple plugins and custom plugins follow different patterns:
 
 1. **Simple config module**: `plugins/<name>.ts` exports `definePluginConfig({...})` and relies on `CommonForm`
 2. **Folder-based custom form**: `plugins/<name>/index.ts` exports a config that points to `[Plugin]Form.vue`
-3. **Main wrapper**: custom forms usually use `StandardLayout`
+3. **Main wrapper**: custom forms usually use `DynamicLayout`
 4. **Config form**: `ConfigForm.vue` is optional and only exists when plugin-specific composition is needed
 5. **Data hooks**: some custom forms use `prepareFormData()` and custom change handling, but simple configs do not
-6. **Autofill slot**: forms built on `StandardLayout` typically provide `AUTOFILL_SLOT` for vault secret picker integration
+6. **Autofill slot**: forms built on `DynamicLayout` typically provide `AUTOFILL_SLOT` for vault secret picker integration
 
 ## Integration with Parent System
 
@@ -367,6 +371,52 @@ filler.fillField('config.host', 'example.com')
 | `composables/form-context.ts` | Central state; changes affect data flow everywhere |
 | `composables/render-rules.ts` | Bundle/dependency logic; changes affect field visibility |
 
+## Standalone Usage (`@kong-ui-public/entities-plugins/freeform`)
+
+The freeform rendering engine is published as a dedicated subpath export. It contains only the schema-driven field rendering primitives — no plugin registry, no layout, no scope selectors. This makes it suitable for building custom plugin form UIs (e.g. in a different MFE) without pulling in the full entities-plugins bundle.
+
+### Installation
+
+```ts
+import { Form, FieldRenderer, FIELD_RENDERERS } from '@kong-ui-public/entities-plugins/freeform'
+import type { FormSchema, RenderRules } from '@kong-ui-public/entities-plugins/freeform'
+
+import '@kong-ui-public/entities-plugins/freeform/style.css'
+```
+
+### Basic Usage
+
+```vue
+<template>
+  <form @submit.prevent="handleSubmit">
+    <!-- freeform config fields -->
+    <Form
+      ref="formRef"
+      :schema="pluginSchema"
+      :data="formData"
+      @change="formData = $event"
+    />
+
+    <button type="submit">Save</button>
+  </form>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Form } from '@kong-ui-public/entities-plugins/freeform'
+import type { FormSchema } from '@kong-ui-public/entities-plugins/freeform'
+
+const props = defineProps<{ pluginSchema: FormSchema }>()
+const formData = ref({})
+const formRef = ref<InstanceType<typeof Form>>()
+
+function handleSubmit() {
+  const value = formRef.value?.getValue()
+  // submit value
+}
+</script>
+```
+
 ## Reference
 
 ### Injection Keys
@@ -376,6 +426,7 @@ filler.fillField('config.host', 'example.com')
 | `FORMS_CONFIG` | App config (konnect / kongManager) | `PluginEntityForm.vue` |
 | `REDIS_PARTIAL_INFO` | Redis partial state | Layout components |
 | `FORM_EDITING` | Edit mode flag | Layout components |
+| `FREE_FORM_PLUGIN_LAYOUT` | Optional host-provided free-form layout component | Consuming app |
 | `FIELD_RENDERERS` | Slot name for custom renderers | `Form.vue` |
 | `FIELD_RENDERER_SLOTS` | Inherited parent slots | `Form.vue` |
 | `FEATURE_FLAGS.*` | Feature toggles | Consuming app |

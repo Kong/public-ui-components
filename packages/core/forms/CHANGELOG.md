@@ -3,6 +3,108 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.27.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.26.2...@kong-ui-public/forms@4.27.0) (2026-06-17)
+
+
+### Features
+
+* **entities-plugins:** add ki in oidc ([#3398](https://github.com/Kong/public-ui-components/issues/3398)) ([a6c6532](https://github.com/Kong/public-ui-components/commit/a6c6532f043dccabdc206e1d37b805d2f58fd753))
+
+
+
+
+
+## [4.26.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.26.1...@kong-ui-public/forms@4.26.2) (2026-06-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3460](https://github.com/Kong/public-ui-components/issues/3460)) ([ada535b](https://github.com/Kong/public-ui-components/commit/ada535b334ce2b82985a9a65b9056e58a5037ed1))
+
+
+
+
+
+## [4.26.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.26.0...@kong-ui-public/forms@4.26.1) (2026-06-17)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+# [4.26.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.25.12...@kong-ui-public/forms@4.26.0) (2026-06-12)
+
+
+### Features
+
+* **entities-plugins:** conditional fields for oidc ([#3433](https://github.com/Kong/public-ui-components/issues/3433)) ([bb819d8](https://github.com/Kong/public-ui-components/commit/bb819d8fb648bf9dd8d493000beecebcedbd1007))
+
+
+
+
+
+## [4.25.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.25.11...@kong-ui-public/forms@4.25.12) (2026-06-11)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.25.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.25.10...@kong-ui-public/forms@4.25.11) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [4.25.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.25.9...@kong-ui-public/forms@4.25.10) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [4.25.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.25.8...@kong-ui-public/forms@4.25.9) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** align vue-router versions ([#3432](https://github.com/Kong/public-ui-components/issues/3432)) ([5adc5dd](https://github.com/Kong/public-ui-components/commit/5adc5ddbfe47d65faab890cd0e84b7ef1f64120e))
+
+
+
+
+
+## [4.25.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.25.7...@kong-ui-public/forms@4.25.8) (2026-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.25.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.25.6...@kong-ui-public/forms@4.25.7) (2026-06-09)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3421](https://github.com/Kong/public-ui-components/issues/3421)) ([dce7110](https://github.com/Kong/public-ui-components/commit/dce7110653a339bd0d27b5a45311fd53429b4aa1))
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3364](https://github.com/Kong/public-ui-components/issues/3364)) ([aa0634c](https://github.com/Kong/public-ui-components/commit/aa0634ce51d03542a03c133b49b12194b0f3f8de))
+
+
+
+
+
 ## [4.25.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.25.5...@kong-ui-public/forms@4.25.6) (2026-06-09)
 
 **Note:** Version bump only for package @kong-ui-public/forms

@@ -3,6 +3,91 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.50.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.50.0...@kong-ui-public/entities-shared@3.50.1) (2026-06-17)
+
+
+### Bug Fixes
+
+* **deps:** update shiki monorepo to v4 ([#3457](https://github.com/Kong/public-ui-components/issues/3457)) ([95add7d](https://github.com/Kong/public-ui-components/commit/95add7d377810dd15758ac70e2edfc299b61476a))
+
+
+
+
+
+# [3.50.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.6...@kong-ui-public/entities-shared@3.50.0) (2026-06-12)
+
+
+### Features
+
+* use SensitiveInput in vault form ([#3440](https://github.com/Kong/public-ui-components/issues/3440)) ([ce47380](https://github.com/Kong/public-ui-components/commit/ce47380dc13ca3d5b64f918eadbaca3491cc2520))
+
+
+
+
+
+## [3.49.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.5...@kong-ui-public/entities-shared@3.49.6) (2026-06-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.49.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.4...@kong-ui-public/entities-shared@3.49.5) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [3.49.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.3...@kong-ui-public/entities-shared@3.49.4) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [3.49.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.2...@kong-ui-public/entities-shared@3.49.3) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** align vue-router versions ([#3432](https://github.com/Kong/public-ui-components/issues/3432)) ([5adc5dd](https://github.com/Kong/public-ui-components/commit/5adc5ddbfe47d65faab890cd0e84b7ef1f64120e))
+
+
+
+
+
+## [3.49.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.1...@kong-ui-public/entities-shared@3.49.2) (2026-06-10)
+
+
+### Bug Fixes
+
+* **entities-shared:** make SensitiveInput modelValue optional ([#3428](https://github.com/Kong/public-ui-components/issues/3428)) ([03a0c4f](https://github.com/Kong/public-ui-components/commit/03a0c4fa6780a65c00b37271eb752c1f3a56a016))
+
+
+
+
+
+## [3.49.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.49.0...@kong-ui-public/entities-shared@3.49.1) (2026-06-09)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3364](https://github.com/Kong/public-ui-components/issues/3364)) ([aa0634c](https://github.com/Kong/public-ui-components/commit/aa0634ce51d03542a03c133b49b12194b0f3f8de))
+
+
+
+
+
 # [3.49.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.48.0...@kong-ui-public/entities-shared@3.49.0) (2026-06-09)
 
 

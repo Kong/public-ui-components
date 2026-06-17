@@ -1,9 +1,7 @@
-import type { PluginFormConfig } from './types'
-
-import type { Component } from 'vue'
+import type { PluginFormConfig, PluginFormLayoutComponent } from './types'
 
 export interface ResolvedPluginFormConfig extends PluginFormConfig {
-  component: Component
+  component: PluginFormLayoutComponent<any>
   experimental: boolean
   fieldRenderers: NonNullable<PluginFormConfig['fieldRenderers']>
 }
@@ -65,7 +63,7 @@ export function getPluginConfig(pluginName: string): ResolvedPluginFormConfig | 
 export function getFreeFormComponent(
   pluginName: string,
   experimentalWhitelist: string[],
-): Component | undefined {
+): PluginFormLayoutComponent<any> | undefined {
   const pluginConfig = getPluginConfig(pluginName)
 
   if (!pluginConfig) {

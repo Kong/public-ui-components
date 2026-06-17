@@ -3,6 +3,82 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.13.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.23...@kong-ui-public/entities-keys@3.13.24) (2026-06-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.13.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.22...@kong-ui-public/entities-keys@3.13.23) (2026-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.13.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.21...@kong-ui-public/entities-keys@3.13.22) (2026-06-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.13.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.20...@kong-ui-public/entities-keys@3.13.21) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [3.13.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.19...@kong-ui-public/entities-keys@3.13.20) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [3.13.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.18...@kong-ui-public/entities-keys@3.13.19) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** align vue-router versions ([#3432](https://github.com/Kong/public-ui-components/issues/3432)) ([5adc5dd](https://github.com/Kong/public-ui-components/commit/5adc5ddbfe47d65faab890cd0e84b7ef1f64120e))
+
+
+
+
+
+## [3.13.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.17...@kong-ui-public/entities-keys@3.13.18) (2026-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.13.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.16...@kong-ui-public/entities-keys@3.13.17) (2026-06-09)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3364](https://github.com/Kong/public-ui-components/issues/3364)) ([aa0634c](https://github.com/Kong/public-ui-components/commit/aa0634ce51d03542a03c133b49b12194b0f3f8de))
+
+
+
+
+
 ## [3.13.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.15...@kong-ui-public/entities-keys@3.13.16) (2026-06-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-keys

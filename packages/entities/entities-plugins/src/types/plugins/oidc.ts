@@ -23,6 +23,8 @@ export interface TokenExchange {
     } | null
 
     issuer?: string
+    jwks_uri?: string
+    verify_signature?: boolean
   }> | null
 }
 

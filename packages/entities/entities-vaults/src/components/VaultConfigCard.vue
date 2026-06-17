@@ -7,6 +7,7 @@
       :config-schema="configSchema"
       :entity-type="SupportedEntityType.Vault"
       :fetch-url="fetchUrl"
+      :formats-to-hide="config.apiType === 'aiGateway' ? ['terraform', 'deck'] : []"
       :hide-title="hideTitle"
       :record-resolver="recordResolver"
       @fetch:error="(err: any) => $emit('fetch:error', err)"

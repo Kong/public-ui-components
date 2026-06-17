@@ -22,6 +22,18 @@ describe('<SensitiveInput />', () => {
         .should('not.be.undefined')
     })
 
+    it('defaults to an empty value when modelValue is omitted', () => {
+      cy.mount(SensitiveInput, {
+        props: {},
+      })
+
+      input().should('have.value', '')
+      input().should('not.have.attr', 'readonly')
+      input().type('my-secret')
+      cy.then(() => Cypress.vueWrapper.emitted('update:modelValue'))
+        .should('not.be.undefined')
+    })
+
     it('masks the value by default and toggles visibility with the eye icon', () => {
       cy.mount(SensitiveInput, {
         props: { modelValue: 'super-secret' },

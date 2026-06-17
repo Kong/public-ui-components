@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.10.0...@kong-ui-public/entities-vaults@4.10.1) (2026-06-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+# [4.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.9.7...@kong-ui-public/entities-vaults@4.10.0) (2026-06-12)
+
+
+### Features
+
+* use SensitiveInput in vault form ([#3440](https://github.com/Kong/public-ui-components/issues/3440)) ([ce47380](https://github.com/Kong/public-ui-components/commit/ce47380dc13ca3d5b64f918eadbaca3491cc2520))
+
+
+
+
+
+## [4.9.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.9.6...@kong-ui-public/entities-vaults@4.9.7) (2026-06-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.9.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.9.5...@kong-ui-public/entities-vaults@4.9.6) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [4.9.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.9.4...@kong-ui-public/entities-vaults@4.9.5) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [4.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.9.3...@kong-ui-public/entities-vaults@4.9.4) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** align vue-router versions ([#3432](https://github.com/Kong/public-ui-components/issues/3432)) ([5adc5dd](https://github.com/Kong/public-ui-components/commit/5adc5ddbfe47d65faab890cd0e84b7ef1f64120e))
+
+
+
+
+
+## [4.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.9.2...@kong-ui-public/entities-vaults@4.9.3) (2026-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [4.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.9.1...@kong-ui-public/entities-vaults@4.9.2) (2026-06-09)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3364](https://github.com/Kong/public-ui-components/issues/3364)) ([aa0634c](https://github.com/Kong/public-ui-components/commit/aa0634ce51d03542a03c133b49b12194b0f3f8de))
+
+
+
+
+
 ## [4.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.9.0...@kong-ui-public/entities-vaults@4.9.1) (2026-06-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

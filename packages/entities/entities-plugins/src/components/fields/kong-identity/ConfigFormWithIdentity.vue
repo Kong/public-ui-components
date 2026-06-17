@@ -1,16 +1,16 @@
 <template>
-  <StandardLayout v-bind="props">
+  <DynamicLayout v-bind="props">
     <ConfigFormContent />
-  </StandardLayout>
+  </DynamicLayout>
 </template>
 
 <script setup lang="ts">
 import { provide } from 'vue'
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
-import StandardLayout from '../../free-form/shared/layout/StandardLayout.vue'
+import DynamicLayout from '../../free-form/shared/layout/DynamicLayout.vue'
 import ConfigFormContent from './ConfigFormContent.vue'
 
-import type { Props } from '../../free-form/shared/layout/StandardLayout.vue'
+import type { PluginFormLayoutProps as Props } from '../../free-form/shared/layout/provider'
 
 const props = defineProps<Props>()
 

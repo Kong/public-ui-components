@@ -26,39 +26,83 @@
 
           <OIDCPrincipals
             v-if="isKonnect && hasPrincipalsFields"
+            :common-fields-schema="commonFieldsSchema"
             :form-model="formModel"
             :form-options="formOptions"
             :form-schema="formSchema"
+            :is-editing="isEditing"
             :on-model-updated="onModelUpdated"
+            @mode-change="handlePrincipalsModeChange"
           />
           <VueFormGenerator
-            v-if="displayForm"
+            v-else-if="displayForm"
             :model="formModel"
             :options="formOptions"
             :schema="commonFieldsSchema"
             @model-updated="onModelUpdated"
           />
 
-          <KLabel>Auth methods</KLabel>
-          <div class="auth-method-container">
-            <div
-              v-for="(method) in authMethods"
-              :key="method.value"
-              class="auth-method"
-            >
-              <KCheckbox
-                v-model="method.prop"
-                @change="evt => handleUpdate(evt, method.value)"
-              >
-                {{ method.label }}
-              </KCheckbox>
+          <template v-if="useNewAuthMethodsField">
+            <KLabel>Authentication methods</KLabel>
+            <KMultiselect
+              :key="principalsMode"
+              class="auth-methods-multiselect"
+              data-testid="auth-methods-multiselect"
+              :items="authMethodItems"
+              :model-value="selectedAuthMethods"
+              placeholder="Select authentication methods"
+              @update:model-value="handleAuthMethodsSelect"
+            />
+            <p class="auth-methods-hint">
+              Configure which OAuth and OpenID Connect features are supported.
+            </p>
+
+            <div class="session-management-section">
+              <KLabel>Session management</KLabel>
+              <div class="session-radio-group">
+                <KRadio
+                  v-model="sessionManagement"
+                  data-testid="session-radio-use"
+                  description="Issue a session cookie after successful authentication. Subsequent requests use the session instead of re-authenticating with the identity provider."
+                  label="Use sessions"
+                  :selected-value="true"
+                  @change="handleSessionChange(true)"
+                />
+                <KRadio
+                  v-model="sessionManagement"
+                  data-testid="session-radio-no-use"
+                  description="Authenticate each request using the configured authentication flow."
+                  label="Do not use sessions"
+                  :selected-value="false"
+                  @change="handleSessionChange(false)"
+                />
+              </div>
             </div>
-          </div>
-          <KInputSwitch
-            v-model="sessionManagement"
-            label="Enable Session Management"
-            @change="handleUpdate"
-          />
+          </template>
+          <template v-else>
+            <KLabel>Auth methods</KLabel>
+            <div class="auth-method-container">
+              <div
+                v-for="method in authMethods"
+                :key="method.value"
+                class="auth-method"
+              >
+                <KCheckbox
+                  v-model="method.prop"
+                  :data-testid="`auth-method-checkbox-${method.value}`"
+                  @change="evt => handleUpdate(evt, method.value)"
+                >
+                  {{ method.label }}
+                </KCheckbox>
+              </div>
+            </div>
+            <KInputSwitch
+              v-model="sessionManagement"
+              data-testid="session-management-switch"
+              label="Enable Session Management"
+              @change="handleUpdate"
+            />
+          </template>
         </div>
       </template>
       <template #authorization>
@@ -150,6 +194,8 @@ const AUTH_FIELD_MODELS = new Set([
   'config-authenticated_groups_claim',
 ])
 
+const KONG_IDENTITY_METHODS = ['bearer', 'client_credentials', 'introspection', 'userinfo']
+
 export default {
   name: 'OIDCForm',
   components: { VueFormGenerator, OIDCPrincipals },
@@ -208,6 +254,7 @@ export default {
       init: false,
       authMethods: [],
       sessionManagement: false,
+      principalsMode: null,
       globalFields: null,
       commonFieldsSchema: null,
       authFieldsSchema: null,
@@ -247,6 +294,27 @@ export default {
     },
     isKonnect() {
       return this.formsConfig?.app === 'konnect'
+    },
+    useNewAuthMethodsField() {
+      return this.isKonnect
+    },
+    authMethodItems() {
+      // principalsMode is set on create and on user toggles; on edit it stays
+      // null (the principals child doesn't emit), so fall back to the saved
+      // config to decide whether to restrict the list to Kong Identity methods.
+      const isKongIdentity = this.principalsMode !== null
+        ? this.principalsMode === 'kong-identity'
+        : this.formModel['config-principals-enabled'] === true
+      const methods = isKongIdentity
+        ? this.authMethods.filter(m => KONG_IDENTITY_METHODS.includes(m.value))
+        : this.authMethods
+      return methods.map(m => ({
+        label: m.label,
+        value: m.value,
+      }))
+    },
+    selectedAuthMethods() {
+      return this.authMethods.filter(m => m.prop).map(m => m.value)
     },
   },
   watch: {
@@ -326,6 +394,38 @@ export default {
                     ...Array.isArray(field.items?.schema?.fields)
                     && field.items.schema.fields.map(itemField => ({ ...itemField, label: itemField.model })),
                   })
+                  break
+                }
+                case 'config-token_exchange-subject_token_issuers': {
+                  if (Array.isArray(field.items?.schema?.fields)) {
+                    const itemFields = field.items.schema.fields
+                    // Add help text to verify_signature and conditional visibility to jwks_uri
+                    const verifySignatureField = itemFields.find(f => f.model === 'verify_signature')
+                    const jwksUriField = itemFields.find(f => f.model === 'jwks_uri')
+
+                    if (verifySignatureField) {
+                      verifySignatureField.checkboxLabel = verifySignatureField.label
+                      verifySignatureField.label = undefined
+                      verifySignatureField.checkboxDescription = (model) => model.verify_signature === true
+                        ? 'JSON Web Keys are automatically fetched from the issuer\'s well-known endpoint. Enter a JWKS URI below to override this.'
+                        : undefined
+                    }
+                    if (jwksUriField) {
+                      jwksUriField.visible = (model) => model.verify_signature === true
+                    }
+
+                    // Move jwks_uri to directly after verify_signature
+                    if (verifySignatureField && jwksUriField) {
+                      const vsIndex = itemFields.indexOf(verifySignatureField)
+                      const jwksIndex = itemFields.indexOf(jwksUriField)
+                      if (jwksIndex !== vsIndex + 1) {
+                        itemFields.splice(jwksIndex, 1)
+                        itemFields.splice(vsIndex + 1, 0, jwksUriField)
+                      }
+                    }
+                  }
+
+                  fields.push(field)
                   break
                 }
                 case 'config-session_redis_cluster_nodes': {
@@ -448,6 +548,62 @@ export default {
       this.formModel['config-auth_methods'] = this.getAuthMethodsValue(prop, evt)
       this.onModelUpdated()
     },
+    handleAuthMethodsSelect(selectedValues) {
+      // Update authMethods prop state
+      for (const method of this.authMethods) {
+        method.prop = selectedValues.includes(method.value)
+      }
+      // Build the final array including session if enabled
+      const arr = [...selectedValues]
+      if (this.sessionManagement) {
+        arr.push('session')
+      }
+      // eslint-disable-next-line vue/no-mutating-props
+      this.formModel['config-auth_methods'] = arr
+      this.onModelUpdated()
+    },
+    handleSessionChange(value) {
+      this.sessionManagement = value
+      // Rebuild auth_methods with or without 'session'
+      const arr = this.authMethods.filter(m => m.prop).map(m => m.value)
+      if (value) {
+        arr.push('session')
+      }
+      // eslint-disable-next-line vue/no-mutating-props
+      this.formModel['config-auth_methods'] = arr
+      this.onModelUpdated()
+    },
+    handlePrincipalsModeChange(mode) {
+      this.principalsMode = mode
+
+      if (mode === 'kong-identity') {
+        if (!this.isEditing) {
+          this.sessionManagement = true
+        }
+        // Auto-select only the 4 Kong Identity methods
+        for (const method of this.authMethods) {
+          method.prop = KONG_IDENTITY_METHODS.includes(method.value)
+        }
+        const arr = [...KONG_IDENTITY_METHODS]
+        if (this.sessionManagement) {
+          arr.push('session')
+        }
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-auth_methods'] = arr
+        this.onModelUpdated()
+      } else {
+        // External mode: select all auth methods by default, including session
+        this.sessionManagement = true
+        for (const method of this.authMethods) {
+          method.prop = true
+        }
+        const arr = this.authMethods.map(m => m.value)
+        arr.push('session')
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-auth_methods'] = arr
+        this.onModelUpdated()
+      }
+    },
   },
 }
 </script>
@@ -479,6 +635,26 @@ export default {
       margin-bottom: 8px;
       width: 50%;
     }
+  }
+
+  .auth-methods-multiselect {
+    margin-bottom: var(--kui-space-40, $kui-space-40);
+  }
+
+  .auth-methods-hint {
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    margin: var(--kui-space-20, $kui-space-20) 0 0;
+  }
+
+  .session-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-40, $kui-space-40);
+  }
+
+  .session-radio-label {
+    font-weight: 600;
   }
 
   .k-switch {

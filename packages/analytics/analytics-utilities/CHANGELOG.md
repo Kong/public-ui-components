@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.17.2...@kong-ui-public/analytics-utilities@12.18.0) (2026-06-16)
+
+
+### Features
+
+* **analytics-utilities:** add table tile schema contract ([#3449](https://github.com/Kong/public-ui-components/issues/3449)) ([c602b7c](https://github.com/Kong/public-ui-components/commit/c602b7ced7066d2697caed5d99fb6661dd909dc8))
+
+
+
+
+
+## [12.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.17.1...@kong-ui-public/analytics-utilities@12.17.2) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [12.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.17.0...@kong-ui-public/analytics-utilities@12.17.1) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
 # [12.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.16.3...@kong-ui-public/analytics-utilities@12.17.0) (2026-06-03)
 
 
