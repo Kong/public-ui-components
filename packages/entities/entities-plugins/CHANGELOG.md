@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.215.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.214.0...@kong-ui-public/entities-plugins@9.215.0) (2026-06-17)
+
+
+### Features
+
+* **entities-plugins:** migrate confluent and kafka plugins to freeform ([#3446](https://github.com/Kong/public-ui-components/issues/3446)) ([f2ac062](https://github.com/Kong/public-ui-components/commit/f2ac062a8e38b446a0dadc7111f3c259c28111c8))
+
+
+
+
+
 # [9.214.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.213.2...@kong-ui-public/entities-plugins@9.214.0) (2026-06-16)
 
 
