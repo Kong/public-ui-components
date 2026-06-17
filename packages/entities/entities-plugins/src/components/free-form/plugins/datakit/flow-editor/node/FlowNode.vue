@@ -82,6 +82,12 @@
       </KDropdown>
     </div>
 
+    <slot
+      v-if="slots['before-handles']"
+      :data="data"
+      name="before-handles"
+    />
+
     <div
       class="handles"
       :class="{ reversed: isReversed }"
@@ -280,15 +286,11 @@
       </div>
     </div>
 
-    <div
-      v-if="slots.latency"
-      class="footer"
-    >
-      <slot
-        :data="data"
-        name="latency"
-      />
-    </div>
+    <slot
+      v-if="slots['after-handles']"
+      :data="data"
+      name="after-handles"
+    />
   </div>
 </template>
 
@@ -557,12 +559,6 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
     .menu {
       visibility: hidden;
     }
-  }
-
-  .footer {
-    border-top: 1px solid var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
-    margin-top: var(--kui-space-40, $kui-space-40);
-    padding: var(--kui-space-30, $kui-space-30) var(--kui-space-40, $kui-space-40) 0;
   }
 
   .body {

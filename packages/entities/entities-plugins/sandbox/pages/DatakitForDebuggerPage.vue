@@ -40,7 +40,7 @@
         <template #node-actions>
           <span class="node-actions">&#x2713; ok</span>
         </template>
-        <template #node-latency>
+        <template #node-before-handles>
           <span class="node-latency">12 ms</span>
         </template>
       </FlowCanvas>

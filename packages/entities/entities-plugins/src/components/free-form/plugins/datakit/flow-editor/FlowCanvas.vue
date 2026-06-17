@@ -54,16 +54,22 @@
           :error="invalidConfigNodeIds.has(data.id)"
           :readonly="mode !== 'edit'"
         >
-          <template #actions="s">
+          <template #before-handles="props">
             <slot
-              name="node-actions"
-              v-bind="s"
+              name="node-before-handles"
+              v-bind="props"
             />
           </template>
-          <template #latency="s">
+          <template #actions="props">
             <slot
-              name="node-latency"
-              v-bind="s"
+              name="node-actions"
+              v-bind="props"
+            />
+          </template>
+          <template #after-handles="props">
+            <slot
+              name="node-after-handles"
+              v-bind="props"
             />
           </template>
         </FlowNode>
