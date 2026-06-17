@@ -85,6 +85,7 @@ provide(FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, true)
 provideDeckCommandEditor()
 
 useProvideExperimentalFreeForms([
+  'ai-rate-limiting-advanced',
   'rate-limiting-advanced',
   'service-protection',
   'prometheus',
@@ -114,6 +115,10 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'ai-proxy-advanced',
+  'ai-proxy',
+  'ai-prompt-decorator',
+  'ai-prompt-guard',
 ])
 
 const enableDeckConfigCustomization = ref(false)
