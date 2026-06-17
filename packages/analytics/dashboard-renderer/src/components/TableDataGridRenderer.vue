@@ -114,6 +114,10 @@ const onState = (payload: TableDataGridStatePayload) => {
 
 <style scoped lang="scss">
 .table-data-grid-renderer {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   min-height: 0;
+  padding-bottom: var(--kui-space-20, 8px);
 }
 </style>

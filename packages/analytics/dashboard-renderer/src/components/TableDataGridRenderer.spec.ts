@@ -149,6 +149,12 @@ describe('TableDataGridRenderer', () => {
     expect(wrapper.findTestId('table-data-grid-stub').exists()).toBe(false)
   })
 
+  it('applies the dashboard tile height to the table wrapper', () => {
+    const wrapper = mountRenderer()
+
+    expect(wrapper.get('.table-data-grid-renderer').attributes('style')).toContain('height: 320px')
+  })
+
   it('passes translated headers, page size, refresh key, and fetcher to TableDataGrid', async () => {
     const wrapper = mountRenderer()
     await flushPromises()

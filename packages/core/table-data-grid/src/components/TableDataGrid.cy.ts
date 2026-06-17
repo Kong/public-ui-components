@@ -5,7 +5,7 @@ import type {
 } from '../types'
 import type { GridApi } from 'ag-grid-community'
 import type { DefineComponent } from 'vue'
-import { h } from 'vue'
+import { defineComponent, h } from 'vue'
 import TableDataGrid from './TableDataGrid.vue'
 
 type TestRow = {
@@ -111,6 +111,38 @@ const expectHorizontalOverflow = () => {
   })
 }
 
+const expectElementHeight = (selector: string, height: number) => {
+  cy.get(selector).then(($element) => {
+    expect($element[0].getBoundingClientRect().height).to.be.closeTo(height, 1)
+  })
+}
+
+const mountTableInFixedHeightContainer = ({
+  fetcher,
+  height,
+}: {
+  fetcher: TableDataGridFetcher<TestRow>
+  height: number
+}) => {
+  cy.mount(defineComponent({
+    name: 'FixedHeightTableDataGridTest',
+    setup() {
+      return () => h('div', {
+        'data-testid': 'fixed-height-parent',
+        style: {
+          height: `${height}px`,
+          width: '640px',
+        },
+      }, [
+        h(TestTableDataGrid, {
+          fetcher,
+          headers,
+        }),
+      ])
+    },
+  }))
+}
+
 const mountTableWithGridApi = ({
   fetcher,
   headers: tableHeaders,
@@ -197,6 +229,44 @@ describe('<TableDataGrid />', () => {
       mode: 'infinite',
       pageSize: 15,
       cursor: undefined,
+    })
+  })
+
+  it('fills a taller parent height by default', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTableInFixedHeightContainer({
+      fetcher,
+      height: 520,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    expectElementHeight('[data-testid="fixed-height-parent"]', 520)
+    expectElementHeight('[data-testid="table-data-grid"]', 520)
+    cy.get('.table-data-grid-grid').then(($grid) => {
+      expect($grid[0].getBoundingClientRect().height).to.be.greaterThan(500)
+    })
+  })
+
+  it('shrinks with a shorter parent without forcing a 360px minimum height', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTableInFixedHeightContainer({
+      fetcher,
+      height: 240,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    expectElementHeight('[data-testid="fixed-height-parent"]', 240)
+    expectElementHeight('[data-testid="table-data-grid"]', 240)
+    cy.get('.table-data-grid-grid').then(($grid) => {
+      expect($grid[0].getBoundingClientRect().height).to.be.lessThan(240)
     })
   })
 

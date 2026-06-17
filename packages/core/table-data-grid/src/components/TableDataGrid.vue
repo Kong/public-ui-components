@@ -155,7 +155,8 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   display: flex;
   flex-direction: column;
-  min-height: 360px;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
   width: 100%;
 }
@@ -171,8 +172,8 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   --ag-wrapper-border-radius: 0;
   /* stylelint-enable custom-property-pattern */
 
-  flex: 1 1 360px;
-  min-height: 360px;
+  flex: 1 1 auto;
+  min-height: 0;
   width: 100%;
 }
 
