@@ -93,6 +93,7 @@ useProvideExperimentalFreeForms([
   'exit-transformer',
   'file-log',
   'http-log',
+  'tcp-log',
   'request-transformer-advanced',
   'response-transformer',
   'response-transformer-advanced',
@@ -114,6 +115,10 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'kafka-log',
+  'loggly',
+  'syslog',
+  'udp-log',
 ])
 
 const enableDeckConfigCustomization = ref(false)
