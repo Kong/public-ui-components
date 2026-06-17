@@ -1,10 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { DashboardRendererContextInternal } from '../types'
-import type { PlatformTabularResponse, TableDataGridQuery } from '@kong-ui-public/analytics-utilities'
+import type { DatasourceAwareTabularQuery, PlatformTabularResponse } from '@kong-ui-public/analytics-utilities'
 import {
-  buildTableDataGridHeaders,
-  mapTabularResponseRecords,
-  toTableDataGridFetcher,
+  tableDataGridFetcherByDatasource,
+  tableDataGridHeadersByDatasource,
 } from './table-data-grid-renderer'
 
 const context: DashboardRendererContextInternal = {
@@ -63,7 +62,7 @@ describe('table data grid renderer utilities', () => {
 
     const canTranslate = (key: string): boolean => key !== 'chartLabels.unknown_column'
 
-    expect(buildTableDataGridHeaders({
+    expect(tableDataGridHeadersByDatasource.platform({
       columns: ['control_plane', 'gateway_service', 'unknown_column'],
       translate,
       canTranslate,
@@ -74,40 +73,28 @@ describe('table data grid renderer utilities', () => {
     ])
   })
 
-  it('maps display names without mutating the response records', () => {
-    const mappedRecords = mapTabularResponseRecords(response)
-
-    expect(mappedRecords).toEqual([
-      {
-        control_plane: 'Control Plane One',
-        gateway_service: 'service-id',
-        status_code: 200,
-        request_count: null,
-      },
-    ])
-    expect(response.records[0].control_plane).toBe('cp-id')
-  })
-
-  it('fetches tabular data without posting datasource and with merged filters, cursor, and page size', async () => {
+  it('selects the platform fetcher and fetches tabular data with a datasource-aware query', async () => {
     const tabularQueryFn = vi.fn().mockResolvedValue(response)
     const abortController = new AbortController()
-    const query: TableDataGridQuery = {
+    const query: DatasourceAwareTabularQuery = {
       datasource: 'platform',
-      entity: 'route',
-      columns: ['control_plane', 'gateway_service'],
-      cursor: 'initial-cursor',
-      filters: [
-        {
-          field: 'route',
-          operator: 'in',
-          value: ['route-id'],
-        },
-      ],
-      page_size: 100,
+      query: {
+        entity: 'route',
+        columns: ['control_plane', 'gateway_service'],
+        cursor: 'initial-cursor',
+        filters: [
+          {
+            field: 'route',
+            operator: 'in',
+            value: ['route-id'],
+          },
+        ],
+        page_size: 100,
+      },
     }
     const stripUnknownFilters = vi.fn(({ filters }) => filters)
     const onResponseColumns = vi.fn()
-    const fetcher = toTableDataGridFetcher({
+    const fetcher = tableDataGridFetcherByDatasource[query.datasource]({
       abortController,
       context,
       onResponseColumns,
@@ -132,6 +119,7 @@ describe('table data grid renderer utilities', () => {
       cursor: 'next-page',
       hasMore: true,
     })
+    expect(response.records[0].control_plane).toBe('cp-id')
 
     expect(stripUnknownFilters).toHaveBeenCalledWith({
       datasource: 'platform',
@@ -149,22 +137,25 @@ describe('table data grid renderer utilities', () => {
       ],
     })
     expect(tabularQueryFn).toHaveBeenCalledWith({
-      entity: 'route',
-      columns: ['control_plane', 'gateway_service'],
-      cursor: 'request-cursor',
-      filters: [
-        {
-          field: 'route',
-          operator: 'in',
-          value: ['route-id'],
-        },
-        {
-          field: 'gateway_service',
-          operator: 'in',
-          value: ['service-1'],
-        },
-      ],
-      page_size: 50,
+      datasource: 'platform',
+      query: {
+        entity: 'route',
+        columns: ['control_plane', 'gateway_service'],
+        cursor: 'request-cursor',
+        filters: [
+          {
+            field: 'route',
+            operator: 'in',
+            value: ['route-id'],
+          },
+          {
+            field: 'gateway_service',
+            operator: 'in',
+            value: ['service-1'],
+          },
+        ],
+        page_size: 50,
+      },
     }, abortController)
     expect(onResponseColumns).toHaveBeenCalledWith(['control_plane', 'gateway_service', 'status_code', 'request_count'])
   })
@@ -177,13 +168,16 @@ describe('table data grid renderer utilities', () => {
         cursor: undefined,
       },
     } satisfies PlatformTabularResponse)
-    const fetcher = toTableDataGridFetcher({
-      abortController: new AbortController(),
-      context,
+    const query: DatasourceAwareTabularQuery = {
+      datasource: 'platform',
       query: {
-        datasource: 'platform',
         cursor: 'initial-cursor',
       },
+    }
+    const fetcher = tableDataGridFetcherByDatasource[query.datasource]({
+      abortController: new AbortController(),
+      context,
+      query,
       stripUnknownFilters: ({ filters }) => filters,
       tabularQueryFn,
     })
@@ -197,18 +191,23 @@ describe('table data grid renderer utilities', () => {
     })
 
     expect(tabularQueryFn).toHaveBeenCalledWith(expect.objectContaining({
-      cursor: 'initial-cursor',
-      page_size: 25,
+      datasource: 'platform',
+      query: expect.objectContaining({
+        cursor: 'initial-cursor',
+        page_size: 25,
+      }),
     }), expect.any(AbortController))
   })
 
   it('throws a clear error when the tabular bridge function is unavailable', async () => {
-    const fetcher = toTableDataGridFetcher({
+    const query: DatasourceAwareTabularQuery = {
+      datasource: 'platform',
+      query: {},
+    }
+    const fetcher = tableDataGridFetcherByDatasource[query.datasource]({
       abortController: new AbortController(),
       context,
-      query: {
-        datasource: 'platform',
-      },
+      query,
       stripUnknownFilters: ({ filters }) => filters,
       tabularQueryFn: undefined,
     })

@@ -1,7 +1,7 @@
 import type {
   AllFilters,
   TimeRangeV4,
-  ValidDashboardQuery,
+  ValidDashboardChartQuery,
 } from '@kong-ui-public/analytics-utilities'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
@@ -25,7 +25,7 @@ export interface DashboardRendererContextInternal extends Required<DashboardRend
 }
 
 export interface RendererProps<T> {
-  query: ValidDashboardQuery
+  query: ValidDashboardChartQuery
   context: DashboardRendererContextInternal
   queryReady: boolean
   chartOptions: T

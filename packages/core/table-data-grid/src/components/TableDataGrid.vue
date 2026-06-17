@@ -153,6 +153,7 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
 .kong-ui-public-table-data-grid {
   border: 1px solid var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   height: 100%;

@@ -7,6 +7,7 @@ import {
   dashboardConfigSchema,
   llmUsageSchema,
   agenticUsageSchema,
+  validDashboardChartQuery,
   validDashboardQuery,
   platformQuerySchema,
 } from './dashboardSchema.v2'
@@ -28,6 +29,7 @@ import {
 } from './types'
 
 const ajv = new Ajv({ allowUnionTypes: true })
+const validateValidDashboardChartQuery = ajv.compile(validDashboardChartQuery)
 const validateValidDashboardQuery = ajv.compile(validDashboardQuery)
 const validatePlatformQuerySchema = ajv.compile(platformQuerySchema)
 const validateDashboardConfigSchema = ajv.compile(dashboardConfigSchema)
@@ -189,11 +191,30 @@ describe('dashboardSchema.v2', () => {
   })
 
   it('accepts table tiles with tabular explore query shape', () => {
+    expect(validateValidDashboardQuery(tableDataGridTile.definition.query)).toBe(true)
+    expect(validateValidDashboardChartQuery(tableDataGridTile.definition.query)).toBe(false)
     expect(validateDashboardConfigSchema({
       tiles: [
         tableDataGridTile,
       ],
     })).toBe(true)
+  })
+
+  it('rejects chart tiles with tabular explore query shape', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          type: 'chart',
+          definition: {
+            query: tableDataGridTile.definition.query,
+            chart: {
+              type: 'horizontal_bar',
+            },
+          },
+        },
+      ],
+    })).toBe(false)
   })
 
   it('accepts table tiles with only the platform datasource', () => {

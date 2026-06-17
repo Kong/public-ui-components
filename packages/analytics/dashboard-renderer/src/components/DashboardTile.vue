@@ -348,7 +348,6 @@ const componentData = computed(() => {
       component: TableDataGridRenderer,
       rendererProps: {
         context: props.context,
-        height: props.height - PADDING_SIZE * 2,
         query: definition.query,
         queryReady: props.queryReady,
         refreshCounter: refreshCounter.value,
@@ -678,6 +677,12 @@ defineExpose({ getExportData })
     margin: 0;
     overflow: hidden;
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
+
+    &.type-table {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
 
     &.type-golden_signals {
       padding: 0;

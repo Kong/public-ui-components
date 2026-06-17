@@ -6,9 +6,10 @@ import type {
   AnalyticsBridge,
   AnalyticsConfigV2,
   DatasourceAwareQuery,
+  DatasourceAwareTabularQuery,
   ExploreResultV4,
-  PlatformTabularQuery,
   PlatformTabularRecord,
+  PlatformTabularQuery,
   PlatformTabularResponse,
 } from '@kong-ui-public/analytics-utilities'
 import { EntityLink } from '@kong-ui-public/entities-shared'
@@ -223,9 +224,10 @@ const getNextTabularCursor = ({
   startIndex + recordsLength < totalRecords ? `sandbox-routes:${startIndex + recordsLength}` : undefined
 )
 
-const tabularQueryFn = async (query: PlatformTabularQuery): Promise<PlatformTabularResponse> => {
-  console.log('Querying tabular data:', query)
+const tabularQueryFn = async (datasourceAwareQuery: DatasourceAwareTabularQuery): Promise<PlatformTabularResponse> => {
+  console.log('Querying tabular data:', datasourceAwareQuery)
 
+  const query = datasourceAwareQuery.query
   const columns = getTabularColumns(query)
   const pageSize = getTabularPageSize(query)
   const filteredRecords = sandboxTabularRecords.filter(record => matchesTabularFilters(record, query))

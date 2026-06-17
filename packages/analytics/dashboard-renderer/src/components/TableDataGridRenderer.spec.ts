@@ -6,10 +6,14 @@ import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
 import type {
   AnalyticsBridge,
+  PlatformTabularQuery,
   PlatformTabularResponse,
-  TableDataGridQuery,
 } from '@kong-ui-public/analytics-utilities'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
+
+type PlatformTabularTileQuery = PlatformTabularQuery & {
+  datasource: 'platform'
+}
 
 const tableDataGridProps = vi.hoisted(() => vi.fn())
 
@@ -68,7 +72,7 @@ const context: DashboardRendererContextInternal = {
   zoomable: false,
 }
 
-const query: TableDataGridQuery = {
+const query: PlatformTabularTileQuery = {
   datasource: 'platform',
   entity: 'route',
   columns: ['control_plane'],
@@ -98,17 +102,21 @@ const response: PlatformTabularResponse = {
 }
 
 const mountRenderer = ({
+  height = 320,
+  omitHeight = false,
   queryOverride,
   queryBridge,
   queryReady = true,
 }: {
-  queryOverride?: TableDataGridQuery
+  height?: number
+  omitHeight?: boolean
+  queryOverride?: PlatformTabularTileQuery
   queryBridge?: Partial<AnalyticsBridge>
   queryReady?: boolean
 } = {}) => mount(TableDataGridRenderer, {
   props: {
     context,
-    height: 320,
+    ...(omitHeight ? {} : { height }),
     query: queryOverride ?? query,
     queryReady,
     refreshCounter: 3,
@@ -153,6 +161,14 @@ describe('TableDataGridRenderer', () => {
     const wrapper = mountRenderer()
 
     expect(wrapper.get('.table-data-grid-renderer').attributes('style')).toContain('height: 320px')
+  })
+
+  it('uses parent-owned height when no explicit height is provided', () => {
+    const wrapper = mountRenderer({
+      omitHeight: true,
+    })
+
+    expect(wrapper.get('.table-data-grid-renderer').attributes('style')).toBeUndefined()
   })
 
   it('passes translated headers, page size, refresh key, and fetcher to TableDataGrid', async () => {

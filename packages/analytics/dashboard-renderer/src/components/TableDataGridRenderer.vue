@@ -1,7 +1,7 @@
 <template>
   <div
     class="table-data-grid-renderer"
-    :style="{ height: `${height}px` }"
+    :style="rendererStyle"
   >
     <KSkeleton
       v-if="!queryReady"
@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import type { DashboardRendererContextInternal } from '../types'
-import type { AnalyticsBridge, TableDataGridQuery } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsBridge, DatasourceAwareTabularQuery, PlatformTabularQuery } from '@kong-ui-public/analytics-utilities'
 import type {
   TableDataGridFetcher,
 } from '@kong-ui-public/table-data-grid'
@@ -33,11 +33,14 @@ import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store
 import composables from '../composables'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import {
-  buildTableDataGridHeaders,
-  toTableDataGridFetcher,
+  tableDataGridFetcherByDatasource,
+  tableDataGridHeadersByDatasource,
 } from '../utils/table-data-grid-renderer'
 
 type TableDataGridRow = Record<string, unknown>
+type PlatformTabularTileQuery = PlatformTabularQuery & {
+  datasource: 'platform'
+}
 type TableDataGridStatePayload = {
   state: 'loading' | 'success' | 'error'
   hasData: boolean
@@ -45,8 +48,8 @@ type TableDataGridStatePayload = {
 
 const props = defineProps<{
   context: DashboardRendererContextInternal
-  height: number
-  query: TableDataGridQuery
+  height?: number
+  query: PlatformTabularTileQuery
   queryReady: boolean
   refreshCounter: number
 }>()
@@ -62,11 +65,23 @@ const abortController = new AbortController()
 const responseMetaColumns = ref<string[]>([])
 const hasError = ref(false)
 
+const rendererStyle = computed(() => props.height === undefined ? undefined : { height: `${props.height}px` })
+const datasourceAwareQuery = computed<DatasourceAwareTabularQuery>(() => ({
+  datasource: props.query.datasource,
+  query: {
+    columns: props.query.columns,
+    cursor: props.query.cursor,
+    entity: props.query.entity,
+    filters: props.query.filters,
+    page_size: props.query.page_size,
+  },
+}))
+
 onUnmounted(() => {
   abortController.abort()
 })
 
-const headers = computed(() => buildTableDataGridHeaders({
+const headers = computed(() => tableDataGridHeadersByDatasource[props.query.datasource]({
   // Query columns are preferred for stable configured headers. Response meta columns
   // are only a safety fallback for configs that omit query columns.
   columns: props.query.columns?.length ? props.query.columns : responseMetaColumns.value,
@@ -75,13 +90,13 @@ const headers = computed(() => buildTableDataGridHeaders({
 }))
 
 const fetcher = computed<TableDataGridFetcher<TableDataGridRow>>(() => {
-  const fetchRows = toTableDataGridFetcher({
+  const fetchRows = tableDataGridFetcherByDatasource[datasourceAwareQuery.value.datasource]({
     abortController,
     context: props.context,
     onResponseColumns: columns => {
       responseMetaColumns.value = columns
     },
-    query: props.query,
+    query: datasourceAwareQuery.value,
     stripUnknownFilters: ({ datasource, filters }) => datasourceConfigStore.stripUnknownFilters({
       datasource,
       filters,
@@ -117,6 +132,7 @@ const onState = (payload: TableDataGridStatePayload) => {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  height: 100%;
   min-height: 0;
   padding-bottom: var(--kui-space-20, 8px);
 }

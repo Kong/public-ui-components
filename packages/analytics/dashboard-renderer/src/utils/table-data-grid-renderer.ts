@@ -2,9 +2,9 @@ import type { DashboardRendererContextInternal } from '../types'
 import type {
   AllFilters,
   AnalyticsBridge,
+  DatasourceAwareTabularQuery,
   PlatformExploreFilterAll,
   PlatformTabularResponse,
-  TableDataGridQuery,
 } from '@kong-ui-public/analytics-utilities'
 import type {
   TableDataGridFetcher,
@@ -24,16 +24,27 @@ type StripUnknownFilters = (args: {
   datasource: 'platform'
   filters: AllFilters[]
 }) => PlatformExploreFilterAll[]
-
-export const buildTableDataGridHeaders = ({
-  canTranslate,
-  columns,
-  translate,
-}: {
+type TableDataGridFetcherBuilderArgs = {
+  abortController: AbortController
+  context: DashboardRendererContextInternal
+  onResponseColumns?: (columns: string[]) => void
+  query: DatasourceAwareTabularQuery
+  stripUnknownFilters: StripUnknownFilters
+  tabularQueryFn: AnalyticsBridge['tabularQueryFn']
+}
+type TableDataGridFetcherBuilder = (args: TableDataGridFetcherBuilderArgs) => TableDataGridFetcher<TableDataGridRow>
+type TableDataGridHeadersBuilderArgs = {
   canTranslate: CanTranslate
   columns: string[]
   translate: Translate
-}): Array<TableDataGridHeader<TableDataGridRow>> => columns.map(column => {
+}
+type TableDataGridHeadersBuilder = (args: TableDataGridHeadersBuilderArgs) => Array<TableDataGridHeader<TableDataGridRow>>
+
+const platformQueryToTableDataGridHeaders = ({
+  canTranslate,
+  columns,
+  translate,
+}: TableDataGridHeadersBuilderArgs): Array<TableDataGridHeader<TableDataGridRow>> => columns.map(column => {
   const labelKey = `chartLabels.${column}`
 
   return {
@@ -42,7 +53,7 @@ export const buildTableDataGridHeaders = ({
   }
 })
 
-export const mapTabularResponseRecords = (
+const platformTabularResponseToTableDataGridRows = (
   response: PlatformTabularResponse,
 ): TableDataGridRow[] => response.records.map(record => {
   const mappedRecord: TableDataGridRow = { ...record }
@@ -61,26 +72,20 @@ export const mapTabularResponseRecords = (
   return mappedRecord
 })
 
-export const toTableDataGridFetcher = ({
+const platformQueryToTableDataGridFetcher = ({
   abortController,
   context,
   onResponseColumns,
   query,
   stripUnknownFilters,
   tabularQueryFn,
-}: {
-  abortController: AbortController
-  context: DashboardRendererContextInternal
-  onResponseColumns?: (columns: string[]) => void
-  query: TableDataGridQuery
-  stripUnknownFilters: StripUnknownFilters
-  tabularQueryFn: AnalyticsBridge['tabularQueryFn']
-}): TableDataGridFetcher<TableDataGridRow> => async ({ cursor, pageSize }): Promise<TableDataGridFetcherResult<TableDataGridRow>> => {
+}: TableDataGridFetcherBuilderArgs): TableDataGridFetcher<TableDataGridRow> => async ({ cursor, pageSize }): Promise<TableDataGridFetcherResult<TableDataGridRow>> => {
   if (!tabularQueryFn) {
     throw new Error('AnalyticsBridge.tabularQueryFn is not defined')
   }
 
-  const queryFilters = (query.filters ?? []) as AllFilters[]
+  const platformQuery = query.query
+  const queryFilters = (platformQuery.filters ?? []) as AllFilters[]
   const mergedFilters = stripUnknownFilters({
     datasource: 'platform',
     filters: [
@@ -90,11 +95,14 @@ export const toTableDataGridFetcher = ({
   })
 
   const response = await tabularQueryFn({
-    columns: query.columns,
-    cursor: cursor === undefined ? query.cursor : String(cursor),
-    entity: query.entity,
-    filters: mergedFilters,
-    page_size: pageSize,
+    datasource: query.datasource,
+    query: {
+      columns: platformQuery.columns,
+      cursor: cursor === undefined ? platformQuery.cursor : String(cursor),
+      entity: platformQuery.entity,
+      filters: mergedFilters,
+      page_size: pageSize,
+    },
   }, abortController)
 
   if (response.meta.columns?.length) {
@@ -102,10 +110,18 @@ export const toTableDataGridFetcher = ({
   }
 
   const result: TableDataGridFetcherResultWithCursor<TableDataGridRow> = {
-    data: mapTabularResponseRecords(response),
+    data: platformTabularResponseToTableDataGridRows(response),
     cursor: response.meta.cursor,
     hasMore: Boolean(response.meta.cursor),
   }
 
   return result
 }
+
+export const tableDataGridFetcherByDatasource = {
+  platform: platformQueryToTableDataGridFetcher,
+} satisfies Record<DatasourceAwareTabularQuery['datasource'], TableDataGridFetcherBuilder>
+
+export const tableDataGridHeadersByDatasource = {
+  platform: platformQueryToTableDataGridHeaders,
+} satisfies Record<DatasourceAwareTabularQuery['datasource'], TableDataGridHeadersBuilder>

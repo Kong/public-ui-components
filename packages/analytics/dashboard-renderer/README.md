@@ -29,7 +29,7 @@ Render Analytics charts on a page from a JSON definition.
 - A plugin providing an `AnalyticsBridge` must be installed in the root of the application.
   - This plugin must `provide` the necessary methods to adhere to the [AnalyticsBridge](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-bridge.ts) interface defined in `@kong-ui-public/analytics-utilities`.
   - The plugin's query method is in charge of passing the query to the correct API for the host app's environment.
-  - For `table` tiles, the plugin must provide `tabularQueryFn`; the renderer passes the table query fields to that function and renders the returned records.
+  - For `table` tiles, the plugin must provide `tabularQueryFn`; the renderer passes a datasource-aware tabular query to that function and renders the returned records.
   - See the sandbox plugin [sandbox-query-provider.ts](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/sandbox/sandbox-query-provider.ts) for an example that simply returns static data rather than consuming an API.
 - The host application must supply peer dependencies for:
   - `@kong-ui-public/analytics-chart`
@@ -452,12 +452,12 @@ type TileDefinition = ChartTileDefinition | TableTileDefinition
 
 interface ChartTileDefinition {
   chart: ChartOptions         // Configuration for the chart type and options
-  query: ValidDashboardQuery  // Configuration for the data query
+  query: ValidDashboardChartQuery  // Configuration for the chart data query
 }
 
 interface TableTileDefinition {
   config: TableTileConfig     // Configuration for the table tile
-  query: TableTileQuery       // Configuration for the tabular query
+  query: PlatformTabularQuery & { datasource: 'platform' } // Configuration for the platform tabular query
 }
 ```
 
@@ -498,8 +498,7 @@ interface TableTileConfig {
   title?: string
 }
 
-interface TableTileQuery {
-  datasource: 'platform'
+interface PlatformTabularQuery {
   entity?: string
   columns?: string[]
   filters?: PlatformExploreFilterAll[]
@@ -510,7 +509,7 @@ interface TableTileQuery {
 
 `definition.query.columns` controls the visible table columns. If columns are omitted, the renderer can fall back to response `meta.columns` after the first tabular response. `definition.config.title` controls the tile title.
 
-The dashboard config query includes `datasource: 'platform'`, but the host application's `AnalyticsBridge.tabularQueryFn` receives only the tabular query fields: `entity`, `columns`, `filters`, `page_size`, and `cursor`.
+The dashboard config query includes `datasource: 'platform'`. The host application's `AnalyticsBridge.tabularQueryFn` receives a datasource-aware tabular query, currently `{ datasource: 'platform', query: { entity, columns, filters, page_size, cursor } }`.
 
 The renderer replaces raw record values with display labels when the tabular response includes a matching `meta.display[column][value].name`. Missing display entries and `null` values are rendered unchanged.
 

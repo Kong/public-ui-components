@@ -136,9 +136,10 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
 const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
   return model.value.tiles.map((tile: TileConfig) => {
     let tileMeta = tile.definition
+    const tileType = tile.type ?? 'chart'
 
     const chart = (tileMeta as ChartRendererTileDefinition).chart
-    if (tile.type === 'chart' && 'description' in chart) {
+    if (tileType === 'chart' && 'description' in chart) {
       const chartMeta = tileMeta as ChartRendererTileDefinition
       // Replace tokens in tile descriptions
       const description = chart.description?.replace(TIMEFRAME_TOKEN, () => {
@@ -177,7 +178,7 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
     return {
       layout: tile.layout,
       meta: tileMeta,
-      type: tile.type,
+      type: tileType,
       // Add a unique key to each tile internally.
       id: tile.id ?? crypto.randomUUID(),
     }

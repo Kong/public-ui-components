@@ -29,7 +29,7 @@ vi.mock('./TimeseriesChartRenderer.vue', () => ({
       },
       height: {
         type: Number,
-        required: true,
+        default: undefined,
       },
       query: {
         type: Object,
@@ -70,7 +70,7 @@ vi.mock('./TableDataGridRenderer.vue', () => ({
       },
       height: {
         type: Number,
-        required: true,
+        default: undefined,
       },
       query: {
         type: Object,
@@ -299,6 +299,7 @@ describe('<DashboardTile /> table tiles', () => {
       queryReady: true,
       refreshCounter: 0,
     })
+    expect(wrapper.findComponent(TableDataGridRenderer).props('height')).toBeUndefined()
   })
 
   it('shows editable tile actions for table tiles', () => {

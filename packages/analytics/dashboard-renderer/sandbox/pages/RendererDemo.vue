@@ -471,7 +471,7 @@ h2 {
 .controls {
   align-items: center;
   display: flex;
-  gap: $kui-space-50;
+  gap: var(--kui-space-50, $kui-space-50);
   margin: 10px 0;
 }
 

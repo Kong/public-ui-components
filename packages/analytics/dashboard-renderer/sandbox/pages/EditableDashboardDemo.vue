@@ -65,7 +65,6 @@ import type {
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
-import { watchDebounced } from '@vueuse/core'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 const editableSwitch = ref(true)
@@ -311,10 +310,6 @@ const addTile = () => {
     },
   })
 }
-
-watchDebounced(() => dashboardConfig.value.tiles, (newValue) => {
-  console.log('update tiles', newValue)
-}, { deep: true, debounce: 300 })
 
 const handleZoom = (zoomEvent: TileZoomEvent) => {
   console.log('tile-time-range-zoom', zoomEvent)

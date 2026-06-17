@@ -5,7 +5,7 @@ import type {
 } from '../types'
 import type { GridApi } from 'ag-grid-community'
 import type { DefineComponent } from 'vue'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, nextTick, reactive } from 'vue'
 import TableDataGrid from './TableDataGrid.vue'
 
 type TestRow = {
@@ -28,10 +28,6 @@ type MountTableOptions = {
   pageSize?: number
   refreshKey?: string | number | boolean
   slots?: TestTableDataGridSlots
-}
-
-type TestVueWrapper = {
-  setProps: (props: Record<string, unknown>) => Promise<void>
 }
 
 const headers: Array<TableDataGridHeader<TestRow>> = [
@@ -70,21 +66,34 @@ const mountTestTableDataGrid = ({
   slots,
   ...props
 }: MountTableOptions) => {
-  let vueWrapper: TestVueWrapper
-
-  cy.mount(TestTableDataGrid, {
-    props: {
-      headers: tableHeaders,
-      'onGrid:ready': onGridReady,
-      ...props,
-    },
-    slots,
-  }).then(({ wrapper }) => {
-    vueWrapper = wrapper
+  const componentProps = reactive<Record<string, unknown>>({
+    headers: tableHeaders,
+    'onGrid:ready': onGridReady,
+    ...props,
   })
 
+  // eslint-disable-next-line vue/one-component-per-file -- Cypress harness component is scoped to this test file.
+  cy.mount(defineComponent({
+    name: 'TableDataGridTestHarness',
+    setup() {
+      return () => h('div', {
+        'data-testid': 'table-data-grid-test-parent',
+        style: {
+          height: '520px',
+          width: '640px',
+        },
+      }, [
+        h(TestTableDataGrid, componentProps, slots),
+      ])
+    },
+  }))
+
   return {
-    setProps: (nextProps: Record<string, unknown>) => cy.then(() => vueWrapper.setProps(nextProps)),
+    setProps: (nextProps: Record<string, unknown>) => cy.then(() => {
+      Object.assign(componentProps, nextProps)
+
+      return nextTick()
+    }),
   }
 }
 
@@ -124,6 +133,7 @@ const mountTableInFixedHeightContainer = ({
   fetcher: TableDataGridFetcher<TestRow>
   height: number
 }) => {
+  // eslint-disable-next-line vue/one-component-per-file -- Cypress harness component is scoped to this test file.
   cy.mount(defineComponent({
     name: 'FixedHeightTableDataGridTest',
     setup() {
@@ -209,12 +219,9 @@ describe('<TableDataGrid />', () => {
       total: rows.length,
     })
 
-    cy.mount(TestTableDataGrid, {
-      props: {
-        fetcher,
-        headers,
-        pageSize: 15,
-      },
+    mountTestTableDataGrid({
+      fetcher,
+      pageSize: 15,
     })
 
     cy.get('.kong-ui-public-table-data-grid').should('be.visible')

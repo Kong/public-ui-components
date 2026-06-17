@@ -606,7 +606,7 @@ export const platformQuerySchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export const tableDataGridQuerySchema = {
+export const platformTabularQuerySchema = {
   type: 'object',
   description: 'A query to launch at the platform tabular explore API',
   properties: {
@@ -638,10 +638,25 @@ export const tableDataGridQuerySchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TableDataGridQuery = FromSchemaWithOptions<typeof tableDataGridQuerySchema>
+const validDashboardChartQuerySchemas = [
+  apiUsageQuerySchema,
+  basicQuerySchema,
+  llmUsageSchema,
+  agenticUsageSchema,
+  platformQuerySchema,
+] as const
+
+export const validDashboardChartQuery = {
+  anyOf: validDashboardChartQuerySchemas,
+} as const satisfies JSONSchema
+
+export type ValidDashboardChartQuery = FromSchemaWithOptions<typeof validDashboardChartQuery>
 
 export const validDashboardQuery = {
-  anyOf: [apiUsageQuerySchema, basicQuerySchema, llmUsageSchema, agenticUsageSchema, platformQuerySchema],
+  anyOf: [
+    ...validDashboardChartQuerySchemas,
+    platformTabularQuerySchema,
+  ],
 } as const satisfies JSONSchema
 
 export type ValidDashboardQuery = FromSchemaWithOptions<typeof validDashboardQuery>
@@ -663,7 +678,7 @@ const dashboardTileChartSchema = {
 const chartRendererTileDefinitionSchema = {
   type: 'object',
   properties: {
-    query: validDashboardQuery,
+    query: validDashboardChartQuery,
     chart: dashboardTileChartSchema,
   },
   required: ['query', 'chart'],
@@ -675,7 +690,7 @@ export type ChartRendererTileDefinition = FromSchemaWithOptions<typeof chartRend
 const tableRendererTileDefinitionSchema = {
   type: 'object',
   properties: {
-    query: tableDataGridQuerySchema,
+    query: platformTabularQuerySchema,
     config: tableDataGridConfigSchema,
   },
   required: ['query', 'config'],
