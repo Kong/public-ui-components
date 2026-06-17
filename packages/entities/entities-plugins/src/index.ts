@@ -52,11 +52,13 @@ export type {
   ResolvedPluginFormConfig,
 } from './components/free-form/shared/plugin-registry'
 
+export { provideEditorStore, useEditorStore } from './components/free-form/plugins/datakit/composables'
+
+export type { DatakitPluginData, NodeInstance, NodePhase } from './components/free-form/plugins/datakit/types'
+
 export * from './types'
 
 export { pluginEndpoints }
-
-export { provideEditorStore, useEditorStore } from './components/free-form/plugins/datakit/composables'
 
 export * from './constants'
 
