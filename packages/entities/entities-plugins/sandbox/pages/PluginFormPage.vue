@@ -114,6 +114,9 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'ai-a2a-proxy',
+  'ai-azure-content-safety',
+  'ai-gcp-model-armor',
 ])
 
 const enableDeckConfigCustomization = ref(false)
