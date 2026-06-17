@@ -98,6 +98,7 @@ useProvideExperimentalFreeForms([
   'response-transformer-advanced',
   'correlation-id',
   'solace-consume',
+  'confluent-consume',
   'solace-log',
   'solace-upstream',
   'opentelemetry',
@@ -107,6 +108,7 @@ useProvideExperimentalFreeForms([
   'cors',
   'proxy-cache',
   'proxy-cache-advanced',
+  'graphql-proxy-cache-advanced',
   'header-cert-auth',
   'session',
   'oauth2',
@@ -114,6 +116,9 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'ace',
+  'kafka-consume',
+  'standard-webhooks',
 ])
 
 const enableDeckConfigCustomization = ref(false)
