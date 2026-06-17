@@ -99,11 +99,6 @@ const init = async () => {
         name: 'free-form',
         component: () => import('./pages/FreeFormPage.vue'),
       },
-      {
-        path: '/datakit-debugger',
-        name: 'datakit-debugger',
-        component: () => import('./pages/DatakitForDebuggerPage.vue'),
-      },
     ],
   })
 
