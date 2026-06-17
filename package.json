@@ -74,9 +74,6 @@
     "vue-router": "^5.1.0",
     "vue-tsc": "^3.3.3"
   },
-  "workspaces": [
-    "packages/*/*"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Kong/public-ui-components"
