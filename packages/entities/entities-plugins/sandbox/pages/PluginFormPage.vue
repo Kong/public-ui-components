@@ -114,6 +114,11 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'ai-semantic-cache',
+  'ai-prompt-template',
+  'ai-semantic-prompt-guard',
+  'ai-request-transformer',
+  'ai-response-transformer',
 ])
 
 const enableDeckConfigCustomization = ref(false)
