@@ -54,19 +54,28 @@
           :error="invalidConfigNodeIds.has(data.id)"
           :readonly="mode !== 'edit'"
         >
-          <template #before-handles>
+          <template
+            v-if="slots['node-before-handles']"
+            #before-handles
+          >
             <slot
               :data="data"
               name="node-before-handles"
             />
           </template>
-          <template #actions>
+          <template
+            v-if="slots['node-actions']"
+            #actions
+          >
             <slot
               :data="data"
               name="node-actions"
             />
           </template>
-          <template #after-handles>
+          <template
+            v-if="slots['node-after-handles']"
+            #after-handles
+          >
             <slot
               :data="data"
               name="node-after-handles"
@@ -91,7 +100,7 @@ import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
 import { useElementBounding, useEventListener } from '@vueuse/core'
-import { computed, useTemplateRef } from 'vue'
+import { computed, defineSlots, useTemplateRef } from 'vue'
 
 import useI18n from '../../../../../composables/useI18n'
 import { useHotkeys } from './composables/useHotkeys'
@@ -120,6 +129,12 @@ const { flowId, phase, mode } = defineProps<{
    * - inspect: Read-only inspection view with trackpad zoom/pan, node-click emit, and auto-layout on init
    */
   mode: 'edit' | 'view' | 'preview' | 'inspect'
+}>()
+
+const slots = defineSlots<{
+  'node-before-handles'?: (props: { data: NodeInstance }) => any
+  'node-actions'?: (props: { data: NodeInstance }) => any
+  'node-after-handles'?: (props: { data: NodeInstance }) => any
 }>()
 
 const emit = defineEmits<{
