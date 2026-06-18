@@ -2,6 +2,7 @@ import type {
   AllFilters,
   TimeRangeV4,
   ValidDashboardChartQuery,
+  ValidDashboardTableQuery,
 } from '@kong-ui-public/analytics-utilities'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
@@ -24,7 +25,7 @@ export interface DashboardRendererContextInternal extends Required<DashboardRend
   showTileZoomActions: boolean
 }
 
-export interface RendererProps<T> {
+export interface ChartRendererProps<T> {
   query: ValidDashboardChartQuery
   context: DashboardRendererContextInternal
   queryReady: boolean
@@ -33,4 +34,12 @@ export interface RendererProps<T> {
   refreshCounter: number
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
+}
+
+export interface TableRendererProps {
+  query: ValidDashboardTableQuery
+  context: DashboardRendererContextInternal
+  queryReady: boolean
+  height?: number
+  refreshCounter: number
 }

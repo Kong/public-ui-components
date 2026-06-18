@@ -9,6 +9,7 @@ import {
   agenticUsageSchema,
   validDashboardChartQuery,
   validDashboardQuery,
+  validDashboardTableQuery,
   platformQuerySchema,
 } from './dashboardSchema.v2'
 import {
@@ -31,6 +32,7 @@ import {
 const ajv = new Ajv({ allowUnionTypes: true })
 const validateValidDashboardChartQuery = ajv.compile(validDashboardChartQuery)
 const validateValidDashboardQuery = ajv.compile(validDashboardQuery)
+const validateValidDashboardTableQuery = ajv.compile(validDashboardTableQuery)
 const validatePlatformQuerySchema = ajv.compile(platformQuerySchema)
 const validateDashboardConfigSchema = ajv.compile(dashboardConfigSchema)
 const validateApiUsageQuerySchema = ajv.compile(apiUsageQuerySchema)
@@ -192,6 +194,7 @@ describe('dashboardSchema.v2', () => {
 
   it('accepts table tiles with tabular explore query shape', () => {
     expect(validateValidDashboardQuery(tableDataGridTile.definition.query)).toBe(true)
+    expect(validateValidDashboardTableQuery(tableDataGridTile.definition.query)).toBe(true)
     expect(validateValidDashboardChartQuery(tableDataGridTile.definition.query)).toBe(false)
     expect(validateDashboardConfigSchema({
       tiles: [
@@ -201,6 +204,8 @@ describe('dashboardSchema.v2', () => {
   })
 
   it('rejects chart tiles with tabular explore query shape', () => {
+    expect(validateValidDashboardTableQuery(platformQuery)).toBe(false)
+
     expect(validateDashboardConfigSchema({
       tiles: [
         {
@@ -275,6 +280,11 @@ describe('dashboardSchema.v2', () => {
     ['invalid cursor', { cursor: 50 }],
     ['invalid filter', { filters: [{ field: 'env', value: ['prod'] }] }],
   ])('rejects table tiles with %s', (_description, queryOverrides) => {
+    expect(validateValidDashboardTableQuery({
+      ...tableDataGridTile.definition.query,
+      ...queryOverrides,
+    })).toBe(false)
+
     expect(validateDashboardConfigSchema({
       tiles: [
         {

@@ -6,14 +6,10 @@ import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
 import type {
   AnalyticsBridge,
-  PlatformTabularQuery,
   PlatformTabularResponse,
+  ValidDashboardTableQuery,
 } from '@kong-ui-public/analytics-utilities'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
-
-type PlatformTabularTileQuery = PlatformTabularQuery & {
-  datasource: 'platform'
-}
 
 const tableDataGridProps = vi.hoisted(() => vi.fn())
 
@@ -72,7 +68,7 @@ const context: DashboardRendererContextInternal = {
   zoomable: false,
 }
 
-const query: PlatformTabularTileQuery = {
+const query: ValidDashboardTableQuery = {
   datasource: 'platform',
   entity: 'route',
   columns: ['control_plane'],
@@ -110,7 +106,7 @@ const mountRenderer = ({
 }: {
   height?: number
   omitHeight?: boolean
-  queryOverride?: PlatformTabularTileQuery
+  queryOverride?: ValidDashboardTableQuery
   queryBridge?: Partial<AnalyticsBridge>
   queryReady?: boolean
 } = {}) => mount(TableDataGridRenderer, {

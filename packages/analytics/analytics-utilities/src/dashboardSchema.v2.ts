@@ -652,10 +652,20 @@ export const validDashboardChartQuery = {
 
 export type ValidDashboardChartQuery = FromSchemaWithOptions<typeof validDashboardChartQuery>
 
+const validDashboardTableQuerySchemas = [
+  platformTabularQuerySchema,
+] as const
+
+export const validDashboardTableQuery = {
+  anyOf: validDashboardTableQuerySchemas,
+} as const satisfies JSONSchema
+
+export type ValidDashboardTableQuery = FromSchemaWithOptions<typeof validDashboardTableQuery>
+
 export const validDashboardQuery = {
   anyOf: [
     ...validDashboardChartQuerySchemas,
-    platformTabularQuerySchema,
+    ...validDashboardTableQuerySchemas,
   ],
 } as const satisfies JSONSchema
 
@@ -690,7 +700,7 @@ export type ChartRendererTileDefinition = FromSchemaWithOptions<typeof chartRend
 const tableRendererTileDefinitionSchema = {
   type: 'object',
   properties: {
-    query: platformTabularQuerySchema,
+    query: validDashboardTableQuery,
     config: tableDataGridConfigSchema,
   },
   required: ['query', 'config'],

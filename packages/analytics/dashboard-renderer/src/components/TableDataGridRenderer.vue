@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContextInternal } from '../types'
-import type { AnalyticsBridge, DatasourceAwareTabularQuery, PlatformTabularQuery } from '@kong-ui-public/analytics-utilities'
+import type { TableRendererProps } from '../types'
+import type { AnalyticsBridge, DatasourceAwareTabularQuery } from '@kong-ui-public/analytics-utilities'
 import type {
   TableDataGridFetcher,
 } from '@kong-ui-public/table-data-grid'
@@ -38,21 +38,12 @@ import {
 } from '../utils/table-data-grid-renderer'
 
 type TableDataGridRow = Record<string, unknown>
-type PlatformTabularTileQuery = PlatformTabularQuery & {
-  datasource: 'platform'
-}
 type TableDataGridStatePayload = {
   state: 'loading' | 'success' | 'error'
   hasData: boolean
 }
 
-const props = defineProps<{
-  context: DashboardRendererContextInternal
-  height?: number
-  query: PlatformTabularTileQuery
-  queryReady: boolean
-  refreshCounter: number
-}>()
+const props = defineProps<TableRendererProps>()
 
 const emit = defineEmits<{
   (e: 'loading-change', isLoading: boolean): void
