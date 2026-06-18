@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { DashboardRendererContextInternal } from '../types'
-import type { DatasourceAwareTabularQuery, PlatformTabularResponse } from '@kong-ui-public/analytics-utilities'
+import type { PlatformDatasourceTabularQuery, PlatformTabularResponse } from '@kong-ui-public/analytics-utilities'
 import {
   tableDataGridFetcherByDatasource,
   tableDataGridHeadersByDatasource,
@@ -76,7 +76,7 @@ describe('table data grid renderer utilities', () => {
   it('selects the platform fetcher and fetches tabular data with a datasource-aware query', async () => {
     const tabularQueryFn = vi.fn().mockResolvedValue(response)
     const abortController = new AbortController()
-    const query: DatasourceAwareTabularQuery = {
+    const query: PlatformDatasourceTabularQuery = {
       datasource: 'platform',
       query: {
         entity: 'route',
@@ -92,21 +92,18 @@ describe('table data grid renderer utilities', () => {
         page_size: 100,
       },
     }
-    const stripUnknownFilters = vi.fn(({ filters }) => filters)
     const onResponseColumns = vi.fn()
-    const fetcher = tableDataGridFetcherByDatasource[query.datasource]({
+    const stripUnknownFilters = vi.fn(({ filters }) => filters)
+
+    await expect(tableDataGridFetcherByDatasource[query.datasource]({
       abortController,
       context,
+      cursor: 'request-cursor',
       onResponseColumns,
+      pageSize: 50,
       query,
       stripUnknownFilters,
       tabularQueryFn,
-    })
-
-    await expect(fetcher({
-      mode: 'infinite',
-      pageSize: 50,
-      cursor: 'request-cursor',
     })).resolves.toEqual({
       data: [
         {
@@ -168,23 +165,19 @@ describe('table data grid renderer utilities', () => {
         cursor: undefined,
       },
     } satisfies PlatformTabularResponse)
-    const query: DatasourceAwareTabularQuery = {
+    const query: PlatformDatasourceTabularQuery = {
       datasource: 'platform',
       query: {
         cursor: 'initial-cursor',
       },
     }
-    const fetcher = tableDataGridFetcherByDatasource[query.datasource]({
+    await expect(tableDataGridFetcherByDatasource[query.datasource]({
       abortController: new AbortController(),
       context,
+      pageSize: 25,
       query,
       stripUnknownFilters: ({ filters }) => filters,
       tabularQueryFn,
-    })
-
-    await expect(fetcher({
-      mode: 'infinite',
-      pageSize: 25,
     })).resolves.toMatchObject({
       cursor: undefined,
       hasMore: false,
@@ -200,21 +193,18 @@ describe('table data grid renderer utilities', () => {
   })
 
   it('throws a clear error when the tabular bridge function is unavailable', async () => {
-    const query: DatasourceAwareTabularQuery = {
+    const query: PlatformDatasourceTabularQuery = {
       datasource: 'platform',
       query: {},
     }
-    const fetcher = tableDataGridFetcherByDatasource[query.datasource]({
+
+    await expect(tableDataGridFetcherByDatasource[query.datasource]({
       abortController: new AbortController(),
       context,
+      pageSize: 25,
       query,
       stripUnknownFilters: ({ filters }) => filters,
       tabularQueryFn: undefined,
-    })
-
-    await expect(fetcher({
-      mode: 'infinite',
-      pageSize: 25,
     })).rejects.toThrow('AnalyticsBridge.tabularQueryFn is not defined')
   })
 })

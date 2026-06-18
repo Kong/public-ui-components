@@ -268,12 +268,29 @@ describe('<DashboardTile /> table tiles', () => {
         datasource: 'platform',
         entity: 'route',
         columns: ['control_plane'],
+        filters: [
+          {
+            field: 'route',
+            operator: 'in',
+            value: ['route-id'],
+          },
+        ],
       },
+    }
+    const tableContext = {
+      ...mockContext,
+      filters: [
+        {
+          field: 'control_plane',
+          operator: 'in',
+          value: ['cp-id'],
+        },
+      ],
     }
 
     const wrapper = mount(DashboardTile, {
       props: {
-        context: mockContext,
+        context: tableContext,
         definition: tableDefinition,
         queryReady: true,
         refreshCounter: 0,
@@ -294,7 +311,7 @@ describe('<DashboardTile /> table tiles', () => {
     expect(wrapper.findComponent(TableDataGridRenderer).exists()).toBe(true)
     expect(wrapper.findComponent(TimeseriesChartRenderer).exists()).toBe(false)
     expect(wrapper.findComponent(TableDataGridRenderer).props()).toMatchObject({
-      context: mockContext,
+      context: tableContext,
       query: tableDefinition.query,
       queryReady: true,
       refreshCounter: 0,

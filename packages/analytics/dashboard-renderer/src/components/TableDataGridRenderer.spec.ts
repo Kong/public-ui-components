@@ -12,6 +12,7 @@ import type {
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
 const tableDataGridProps = vi.hoisted(() => vi.fn())
+const isReady = vi.hoisted(() => vi.fn())
 
 vi.mock('@kong-ui-public/table-data-grid', () => ({
   TableDataGrid: defineComponent({
@@ -134,8 +135,10 @@ const mountRenderer = ({
 describe('TableDataGridRenderer', () => {
   beforeEach(() => {
     tableDataGridProps.mockClear()
+    isReady.mockReset()
+    isReady.mockResolvedValue(undefined)
     vi.mocked(useDatasourceConfigStore).mockReturnValue({
-      isReady: vi.fn().mockResolvedValue(undefined),
+      isReady,
       stripUnknownFilters: ({ filters }: { filters: unknown[] }) => filters,
     } as any)
   })
@@ -186,7 +189,11 @@ describe('TableDataGridRenderer', () => {
   })
 
   it('uses response columns as header fallback after the first fetch', async () => {
+    const tabularQueryFn = vi.fn().mockResolvedValue(response)
     const wrapper = mountRenderer({
+      queryBridge: {
+        tabularQueryFn,
+      },
       queryOverride: {
         datasource: 'platform',
         page_size: 25,
@@ -203,6 +210,8 @@ describe('TableDataGridRenderer', () => {
     })
     await flushPromises()
 
+    expect(isReady).toHaveBeenCalledOnce()
+    expect(isReady.mock.invocationCallOrder[0]).toBeLessThan(tabularQueryFn.mock.invocationCallOrder[0])
     expect(wrapper.getTestId('table-data-grid-stub').text()).toBe('Control plane')
   })
 

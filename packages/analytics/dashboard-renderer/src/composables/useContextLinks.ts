@@ -3,7 +3,7 @@ import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
 import type { DeepReadonly, Ref } from 'vue'
-import type { AiExploreAggregations, AiExploreQuery, AllFilters, ChartRendererTileDefinition, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AllFilters, ChartTileDefinition, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContextInternal } from '../types'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
@@ -26,7 +26,7 @@ export default function useContextLinks(
   }: {
     queryBridge: AnalyticsBridge | undefined
     context: Readonly<Ref<DeepReadonly<DashboardRendererContextInternal>>>
-    definition: Readonly<Ref<DeepReadonly<ChartRendererTileDefinition>>>
+    definition: Readonly<Ref<DeepReadonly<ChartTileDefinition>>>
     chartData: Readonly<Ref<DeepReadonly<ExploreResultV4 | undefined>>>
   },
 ) {

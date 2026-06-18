@@ -179,8 +179,8 @@ import type {
   AllFilters,
   TileConfig,
   TileDefinition,
-  TableRendererTileDefinition,
-  ChartRendererTileDefinition,
+  TableTileDefinition,
+  ChartTileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
@@ -253,8 +253,8 @@ const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
 const isTableTile = computed((): boolean => props.tileType === 'table')
 
-const chartDefinition = computed<ChartRendererTileDefinition>(() => props.definition as ChartRendererTileDefinition)
-const tableDefinition = computed<TableRendererTileDefinition>(() => props.definition as TableRendererTileDefinition)
+const chartDefinition = computed<ChartTileDefinition>(() => props.definition as ChartTileDefinition)
+const tableDefinition = computed<TableTileDefinition>(() => props.definition as TableTileDefinition)
 const chart = computed(() => chartDefinition.value.chart)
 const chartTitle = computed<string | undefined>(() => 'chart_title' in chart.value ? chart.value.chart_title : undefined)
 const tileTitle = computed<string | undefined>(() => isTableTile.value ? tableDefinition.value?.config.title : chartTitle.value)
@@ -342,13 +342,11 @@ const componentEventHandlers = computed(() => ({
 
 const componentData = computed(() => {
   if (isTableTile.value) {
-    const definition = tableDefinition.value
-
     return {
       component: TableDataGridRenderer,
       rendererProps: {
         context: props.context,
-        query: definition.query,
+        query: tableDefinition.value.query,
         queryReady: props.queryReady,
         refreshCounter: refreshCounter.value,
       },

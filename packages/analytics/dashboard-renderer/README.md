@@ -216,7 +216,7 @@ const config: DashboardConfig = {
       }
     },
     {
-      // Slottable tile
+      // Slottable is a chart tile variant selected by definition.chart.type
       type: 'chart',
       definition: {
         chart: {

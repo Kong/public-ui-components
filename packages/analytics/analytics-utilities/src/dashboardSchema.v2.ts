@@ -685,7 +685,7 @@ const dashboardTileChartSchema = {
   ],
 } as const satisfies JSONSchema
 
-const chartRendererTileDefinitionSchema = {
+const chartTileDefinitionSchema = {
   type: 'object',
   properties: {
     query: validDashboardChartQuery,
@@ -695,9 +695,9 @@ const chartRendererTileDefinitionSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type ChartRendererTileDefinition = FromSchemaWithOptions<typeof chartRendererTileDefinitionSchema>
+export type ChartTileDefinition = FromSchemaWithOptions<typeof chartTileDefinitionSchema>
 
-const tableRendererTileDefinitionSchema = {
+const tableTileDefinitionSchema = {
   type: 'object',
   properties: {
     query: validDashboardTableQuery,
@@ -707,12 +707,12 @@ const tableRendererTileDefinitionSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TableRendererTileDefinition = FromSchemaWithOptions<typeof tableRendererTileDefinitionSchema>
+export type TableTileDefinition = FromSchemaWithOptions<typeof tableTileDefinitionSchema>
 
 export const tileDefinitionSchema = {
   anyOf: [
-    chartRendererTileDefinitionSchema,
-    tableRendererTileDefinitionSchema,
+    chartTileDefinitionSchema,
+    tableTileDefinitionSchema,
   ],
 } as const satisfies JSONSchema
 
@@ -767,7 +767,7 @@ export const chartTileConfigSchema = {
       type: 'string',
       enum: ['chart'],
     },
-    definition: chartRendererTileDefinitionSchema,
+    definition: chartTileDefinitionSchema,
     layout: tileLayoutSchema,
     id: {
       type: 'string',
@@ -785,7 +785,7 @@ export const tableTileConfigSchema = {
       type: 'string',
       enum: ['table'],
     },
-    definition: tableRendererTileDefinitionSchema,
+    definition: tableTileDefinitionSchema,
     layout: tileLayoutSchema,
     id: {
       type: 'string',

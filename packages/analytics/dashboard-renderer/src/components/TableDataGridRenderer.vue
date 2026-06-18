@@ -23,9 +23,7 @@
 <script setup lang="ts">
 import type { TableRendererProps } from '../types'
 import type { AnalyticsBridge, DatasourceAwareTabularQuery } from '@kong-ui-public/analytics-utilities'
-import type {
-  TableDataGridFetcher,
-} from '@kong-ui-public/table-data-grid'
+import type { TableDataGridFetcher } from '@kong-ui-public/table-data-grid'
 import { computed, inject, onUnmounted, ref } from 'vue'
 import { TableDataGrid } from '@kong-ui-public/table-data-grid'
 import '@kong-ui-public/table-data-grid/dist/style.css'
@@ -37,11 +35,11 @@ import {
   tableDataGridHeadersByDatasource,
 } from '../utils/table-data-grid-renderer'
 
-type TableDataGridRow = Record<string, unknown>
 type TableDataGridStatePayload = {
   state: 'loading' | 'success' | 'error'
   hasData: boolean
 }
+type TableDataGridRow = Record<string, unknown>
 
 const props = defineProps<TableRendererProps>()
 
@@ -80,32 +78,33 @@ const headers = computed(() => tableDataGridHeadersByDatasource[props.query.data
   canTranslate: key => i18n.te(key as any),
 }))
 
-const fetcher = computed<TableDataGridFetcher<TableDataGridRow>>(() => {
-  const fetchRows = tableDataGridFetcherByDatasource[datasourceAwareQuery.value.datasource]({
-    abortController,
-    context: props.context,
-    onResponseColumns: columns => {
-      responseMetaColumns.value = columns
-    },
-    query: datasourceAwareQuery.value,
-    stripUnknownFilters: ({ datasource, filters }) => datasourceConfigStore.stripUnknownFilters({
-      datasource,
-      filters,
-    }),
-    tabularQueryFn: queryBridge?.tabularQueryFn,
-  })
-
-  return async (params) => {
-    try {
-      await datasourceConfigStore.isReady()
-      const result = await fetchRows(params)
-      hasError.value = false
-
-      return result
-    } catch (error) {
-      hasError.value = true
-      throw error
+const fetcher = computed<TableDataGridFetcher<TableDataGridRow>>(() => async ({ cursor, pageSize }) => {
+  try {
+    await datasourceConfigStore.isReady()
+    const fetcher = tableDataGridFetcherByDatasource[datasourceAwareQuery.value.datasource]
+    if (!fetcher) {
+      throw new Error(`No table data grid fetcher found for datasource: ${datasourceAwareQuery.value.datasource}`)
     }
+
+    const result = await fetcher({
+      abortController,
+      context: props.context,
+      cursor,
+      pageSize,
+      query: datasourceAwareQuery.value,
+      onResponseColumns: columns => {
+        responseMetaColumns.value = columns
+      },
+      stripUnknownFilters: datasourceConfigStore.stripUnknownFilters,
+      tabularQueryFn: queryBridge?.tabularQueryFn,
+    })
+
+    hasError.value = false
+
+    return result
+  } catch (error) {
+    hasError.value = true
+    throw error
   }
 })
 

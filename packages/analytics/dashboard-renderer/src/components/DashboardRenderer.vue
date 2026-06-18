@@ -67,10 +67,10 @@ import type { DashboardRendererContext, GridTile, TileZoomEvent } from '../types
 import type {
   AllFilters,
   AnalyticsBridge,
-  ChartRendererTileDefinition,
+  ChartTileDefinition,
   DashboardConfig,
   SlottableOptions,
-  TableRendererTileDefinition,
+  TableTileDefinition,
   TileConfig,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
@@ -138,9 +138,9 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
     let tileMeta = tile.definition
     const tileType = tile.type ?? 'chart'
 
-    const chart = (tileMeta as ChartRendererTileDefinition).chart
+    const chart = (tileMeta as ChartTileDefinition).chart
     if (tileType === 'chart' && 'description' in chart) {
-      const chartMeta = tileMeta as ChartRendererTileDefinition
+      const chartMeta = tileMeta as ChartTileDefinition
       // Replace tokens in tile descriptions
       const description = chart.description?.replace(TIMEFRAME_TOKEN, () => {
         const { timeSpec } = internalContext.value
@@ -193,7 +193,7 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
 }
 
 const isSlottableTile = (tile: GridTile<TileDefinition>): boolean => {
-  return tile.type === 'chart' && (tile.meta as ChartRendererTileDefinition).chart.type === 'slottable'
+  return tile.type === 'chart' && (tile.meta as ChartTileDefinition).chart.type === 'slottable'
 }
 
 const isSlottable = (chart: any): chart is SlottableOptions => {
@@ -201,14 +201,14 @@ const isSlottable = (chart: any): chart is SlottableOptions => {
 }
 
 const getSlottableSlotName = (tile: GridTile<TileDefinition>): string | undefined => {
-  const chart = (tile.meta as ChartRendererTileDefinition).chart
+  const chart = (tile.meta as ChartTileDefinition).chart
   return isSlottable(chart) ? chart.id : undefined
 }
 
 const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
   try {
     if (tile.type === 'table') {
-      const tableMeta = tile.meta as TableRendererTileDefinition
+      const tableMeta = tile.meta as TableTileDefinition
       const config = {
         ...tableMeta.config,
         title: tableMeta.config.title ? `Copy of ${tableMeta.config.title}` : '',
@@ -234,7 +234,7 @@ const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
       return
     }
 
-    const chartMeta = tile.meta as ChartRendererTileDefinition
+    const chartMeta = tile.meta as ChartTileDefinition
     const chart = isSlottable(chartMeta.chart)
       ? { ...chartMeta.chart }
       : {
