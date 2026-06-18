@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.1.2...@kong-ui-public/table-data-grid@0.1.3) (2026-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update ag-grid monorepo to v35 ([#3454](https://github.com/Kong/public-ui-components/issues/3454)) ([c7db38a](https://github.com/Kong/public-ui-components/commit/c7db38a6546ea4e0f9740256a98052a3f9b28d55))
+
+
+
+
+
 ## [0.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.1.1...@kong-ui-public/table-data-grid@0.1.2) (2026-06-15)
 
 **Note:** Version bump only for package @kong-ui-public/table-data-grid
