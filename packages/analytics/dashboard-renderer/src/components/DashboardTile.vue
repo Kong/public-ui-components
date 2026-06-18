@@ -70,12 +70,12 @@
       </div>
 
       <div
-        v-if="canShowTitleActions"
+        v-if="canShowHeaderActions"
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
       >
         <EditIcon
-          v-if="canShowTileActions && context.editable && !isFullscreen"
+          v-if="canShowHeaderActions && context.editable && !isFullscreen"
           class="edit-icon"
           :color="KUI_COLOR_TEXT_NEUTRAL"
           :data-testid="`edit-tile-${tileId}`"
@@ -83,7 +83,7 @@
           @click="editTile"
         />
         <KDropdown
-          v-if="canShowTileActions && kebabMenuHasItems && !isFullscreen"
+          v-if="canShowHeaderActions && kebabMenuHasItems && !isFullscreen"
           class="dropdown"
           :data-testid="`chart-action-menu-${tileId}`"
           :kpop-attributes="{ placement: 'bottom-end' }"
@@ -309,14 +309,17 @@ watch(() => props.definition, async (newValue, oldValue) => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const canShowTileActions = computed((): boolean => isTableTile.value || canShowKebabMenu.value)
-
 const kebabMenuHasItems = computed((): boolean => isTableTile.value
   ? props.context.editable
   : !!exploreLinkKebabMenu.value || canExportCsv.value || props.context.editable)
 
-const canShowTitleActions = computed((): boolean => !props.hideActions && canShowTileActions.value && (kebabMenuHasItems.value || props.context.editable))
-const hasTitleActions = computed<boolean>(() => canShowTitleActions.value && kebabMenuHasItems.value && !props.isFullscreen)
+// Chart header actions are driven by chart-only affordances: context links, CSV export, and editable tile controls.
+const canShowChartHeaderActions = computed((): boolean => !isTableTile.value && canShowKebabMenu.value && kebabMenuHasItems.value)
+// Table header actions are limited to editable tile controls; table tiles do not expose chart links or CSV export here.
+const canShowTableHeaderActions = computed((): boolean => isTableTile.value && props.context.editable)
+// The shared header action container is hidden when tile actions are globally disabled.
+const canShowHeaderActions = computed((): boolean => !props.hideActions && (canShowChartHeaderActions.value || canShowTableHeaderActions.value))
+const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !props.isFullscreen)
 const hasSignalsDescription = computed<boolean>(() => !isTableTile.value && chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
@@ -427,7 +430,7 @@ const hasTileHeader = computed<boolean>(() => {
 
   return [
     Boolean(tileTitle.value),
-    hasTitleActions.value,
+    hasHeaderActions.value,
     Boolean(badgeData.value),
     hasSignalsDescription.value,
     props.showRefresh,
