@@ -199,6 +199,8 @@ function getDraggedNodeType(event: DragEvent): string | undefined {
 
 function onNodeClick(event: NodeMouseEvent) {
   if (mode === 'inspect') {
+    if (event?.node?.type === 'group')
+      return
     // Emit the full node-data for inspect mode, used in consumer apps
     emit('node-click', event.node.data as NodeInstance)
     return
