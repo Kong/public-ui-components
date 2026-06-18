@@ -71,8 +71,8 @@ onUnmounted(() => {
 })
 
 const headers = computed(() => tableDataGridHeadersByDatasource[props.query.datasource]({
-  // Query columns are preferred for stable configured headers. Response meta columns
-  // are only a safety fallback for configs that omit query columns.
+  // query.columns are optional in the API. If not provided, backend will return default columns.
+  // If query columns are not provided, fallback to using columns from the response metadata for header configuration.
   columns: props.query.columns?.length ? props.query.columns : responseMetaColumns.value,
   translate: key => i18n.t(key as any) as string,
   canTranslate: key => i18n.te(key as any),
