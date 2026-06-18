@@ -817,11 +817,11 @@ importers:
   packages/core/table-data-grid:
     dependencies:
       ag-grid-community:
-        specifier: ^34.3.1
-        version: 34.3.1
+        specifier: ^35.3.1
+        version: 35.3.1
       ag-grid-vue3:
-        specifier: ^34.3.1
-        version: 34.3.1(vue@3.5.35(typescript@5.9.3))
+        specifier: ^35.3.1
+        version: 35.3.1(vue@3.5.35(typescript@5.9.3))
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -4580,14 +4580,14 @@ packages:
   add-stream@1.0.0:
     resolution: {integrity: sha512-qQLMr+8o0WC4FZGQTcJiKBVC59JylcPSrTtk6usvmIDFUOCKegapy1VHQwRbFMOFyb/inzUVqHs+eMYKDM1YeQ==}
 
-  ag-charts-types@12.3.1:
-    resolution: {integrity: sha512-5216xYoawnvMXDFI6kTpPku+mH0Csiwu/FE7lsAm8Z22HEN6ciSG/V7g+IrpLWncELqksgENebCTP75PZ3CsHA==}
+  ag-charts-types@13.3.1:
+    resolution: {integrity: sha512-m37eUe4g//swvGh8PWMlYQH3gknjSsPeW4sQwBhM3/auGAHmN0wvxEWlrdAn98pBPg4HoKbtOy+yf7gPCYsnvQ==}
 
-  ag-grid-community@34.3.1:
-    resolution: {integrity: sha512-PwlrPudsFOzGumphi2y9ihWeaUlIwKhOra/MXu2LjeV2U8DgLLcYS8CartE5Hszhn1poJHawwI9HWrxlKliwdw==}
+  ag-grid-community@35.3.1:
+    resolution: {integrity: sha512-Wmkd/xYTCbAApcZZO74nBggZCnd/oX753NY3MJ4zYARVpfBHRWWhIBJ2sFTFKbDWwHZOWsx3YT9+kkyeuyLKlw==}
 
-  ag-grid-vue3@34.3.1:
-    resolution: {integrity: sha512-DSurKDsOPk8zX+goy4BsDcAi4wSXP4hZ/YtGc2cQTvh72ceTCqrVxAitI2CB/MfDkvvB05ybbpa4wPxWEmxchw==}
+  ag-grid-vue3@35.3.1:
+    resolution: {integrity: sha512-zbx6k2WIeIBhzgbiHjZbPaA2y7n1qOzK81nrdwlAhkRnIU3LL6nu1ZGpvShpyYyYKr6OQlwLl/q0IYuTmxJEdg==}
     peerDependencies:
       vue: ^3.5.0
 
@@ -15019,15 +15019,15 @@ snapshots:
 
   add-stream@1.0.0: {}
 
-  ag-charts-types@12.3.1: {}
+  ag-charts-types@13.3.1: {}
 
-  ag-grid-community@34.3.1:
+  ag-grid-community@35.3.1:
     dependencies:
-      ag-charts-types: 12.3.1
+      ag-charts-types: 13.3.1
 
-  ag-grid-vue3@34.3.1(vue@3.5.35(typescript@5.9.3)):
+  ag-grid-vue3@35.3.1(vue@3.5.35(typescript@5.9.3)):
     dependencies:
-      ag-grid-community: 34.3.1
+      ag-grid-community: 35.3.1
       vue: 3.5.35(typescript@5.9.3)
 
   agent-base@6.0.2:
