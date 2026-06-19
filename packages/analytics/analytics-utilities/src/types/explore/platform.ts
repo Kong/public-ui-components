@@ -32,12 +32,12 @@ export type PlatformTabularRecord = Record<string, string | number | boolean | n
 
 export interface PlatformTabularResponseMeta {
   query_id: string
-  entity?: string
-  columns?: string[]
-  page_size?: number
+  entity: string
+  columns: string[]
+  page_size: number
+  display: DisplayBlob
   cursor?: string
   datasource?: 'platform'
-  display: DisplayBlob
 }
 
 export interface PlatformTabularResponse {
