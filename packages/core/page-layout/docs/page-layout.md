@@ -128,6 +128,26 @@ Optional slot for a custom page title. Use it when the default `<h1>` needs to b
 
 An optional slot rendered immediately after the page title `<h1>`, inline within the title row. Use this slot to place badges, status indicators, or other inline content that should appear next to the title.
 
+#### `tab-${tab.key}` (dynamic)
+
+A dynamic, per-tab slot for customizing the rendered content of a specific tab in the tab bar. The slot name is constructed as `tab-` followed by the tab's `key`. If a matching slot is not provided for a given tab, the tab's `label` is rendered instead.
+
+The slot exposes the corresponding `PageLayoutTab` object as a scoped slot prop:
+
+```html
+<template>
+  <PageLayout
+    :tabs="tabs"
+    title="My Control Plane"
+  >
+    <template #tab-routes="{ tab }">
+      {{ tab.label }}
+      <KBadge appearance="info">12</KBadge>
+    </template>
+  </PageLayout>
+</template>
+```
+
 ### Usage example
 
 #### With tabs

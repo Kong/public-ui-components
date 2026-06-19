@@ -106,6 +106,31 @@ describe('<PageLayout />', () => {
     cy.getTestId(titleTestId).should('be.visible').and('contain.text', titleText)
   })
 
+  it('forwards content from the dynamic `tab-${key}` slot to PageLayoutTabs', () => {
+    const tabs = [
+      { key: 'overview', label: 'Overview', to: '/overview' },
+      { key: 'settings', label: 'Settings', to: '/settings' },
+    ]
+
+    mountWithRouter(PageLayout, {
+      props: {
+        title: 'Test Page Title',
+        tabs,
+      },
+      slots: {
+        'tab-overview': '<span data-testid="custom-overview-tab">Custom Overview</span>',
+      },
+    })
+
+    cy.getTestId('page-layout-tab-overview')
+      .findTestId('custom-overview-tab')
+      .should('be.visible')
+      .and('contain.text', 'Custom Overview')
+    cy.getTestId('page-layout-tab-settings')
+      .should('be.visible')
+      .and('contain.text', 'Settings')
+  })
+
   it('renders content passed in through title-after slot', () => {
     const titleAfterTestId = 'page-layout-slotted-title-after'
     const titleAfterText = 'Title after'

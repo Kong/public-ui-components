@@ -179,6 +179,46 @@ describe('<PageLayoutTabs />', () => {
     cy.getTestId('tabs-overflow-dropdown-button').should('not.exist')
   })
 
+  it('renders custom content via the dynamic `tab-${key}` slot', () => {
+    const tabs = [
+      { key: 'overview', label: 'Overview', to: '/overview' },
+      { key: 'settings', label: 'Settings', to: '/settings' },
+    ]
+
+    cy.mount(PageLayoutTabs, {
+      props: {
+        tabs,
+      },
+      slots: {
+        'tab-overview': '<span data-testid="custom-overview">Custom Overview</span>',
+      },
+    })
+
+    cy.getTestId('page-layout-tab-overview')
+      .findTestId('custom-overview')
+      .should('be.visible')
+      .and('contain.text', 'Custom Overview')
+    // Tabs without a matching slot fall back to the label
+    cy.getTestId('page-layout-tab-settings')
+      .should('be.visible')
+      .and('contain.text', 'Settings')
+  })
+
+  it('exposes the tab as a slot prop on the dynamic `tab-${key}` slot', () => {
+    const tabs = [
+      { key: 'overview', label: 'Overview', to: '/overview' },
+    ]
+
+    cy.mount(defineComponent({
+      setup: () => () => h(PageLayoutTabs, { tabs }, {
+        'tab-overview': ({ tab }: { tab: PageLayoutTab }) =>
+          h('span', { 'data-testid': 'slot-prop-label' }, tab.label),
+      }),
+    }))
+
+    cy.getTestId('slot-prop-label').should('be.visible').and('contain.text', 'Overview')
+  })
+
   it('uses the navigateTo injectable to navigate to the tab', () => {
     const navigateToStub = cy.stub().as('navigateTo')
 

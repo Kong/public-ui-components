@@ -92,7 +92,17 @@
       <PageLayoutTabs
         v-if="hasTabs"
         :tabs="tabs"
-      />
+      >
+        <template
+          v-for="tab in tabs"
+          #[`tab-${tab.key}`]="slotProps"
+        >
+          <slot
+            :name="`tab-${tab.key}`"
+            v-bind="slotProps"
+          />
+        </template>
+      </PageLayoutTabs>
     </div>
 
     <div
