@@ -25,10 +25,18 @@
   },
   "chartLabels": {
     "control_plane": "Control plane",
+    "data_plane_node_version": "Data plane node version",
+    "env": "Environment",
     "gateway_service": "Gateway service",
+    "hostname": "Hostname",
+    "plugin": "Plugin",
+    "plugin_name": "Plugin name",
+    "plugin_scope": "Plugin scope",
+    "region": "Region",
     "request_count": "Request count",
     "route": "Route",
-    "status_code": "Status code"
+    "status_code": "Status code",
+    "team": "Team"
   },
   "jumpToExplore": "Explore",
   "jumpToRequests": "View requests",
