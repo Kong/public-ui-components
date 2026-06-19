@@ -39,7 +39,7 @@
   "devDependencies": {
     "@kong/atc-router": "1.6.0-rc.1",
     "@kong/design-tokens": "1.23.0",
-    "@kong/kongponents": "9.59.0",
+    "@kong/kongponents": "9.60.0",
     "@types/uuid": "^11.0.0",
     "monaco-editor": "^0.55.1",
     "vite-plugin-monaco-editor": "^1.1.0",
@@ -74,7 +74,7 @@
     "@kong-ui-public/core": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.58.0",
+    "@kong/icons": "^1.59.0",
     "uuid": "^14.0.0"
   }
 }
