@@ -70,7 +70,6 @@ import type {
   ChartTileDefinition,
   DashboardConfig,
   SlottableOptions,
-  TableTileDefinition,
   TileConfig,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
@@ -86,6 +85,10 @@ import {
   INJECT_QUERY_PROVIDER,
   TIMEFRAME_TOKEN,
 } from '../constants'
+import {
+  duplicateChartTile,
+  duplicateTableTile,
+} from '../utils/duplicate-tile'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const {
@@ -207,61 +210,9 @@ const getSlottableSlotName = (tile: GridTile<TileDefinition>): string | undefine
 
 const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
   try {
-    if (tile.type === 'table') {
-      const tableMeta = tile.meta as TableTileDefinition
-      const config = {
-        ...tableMeta.config,
-        title: tableMeta.config.title ? `Copy of ${tableMeta.config.title}` : '',
-      }
-
-      const newTile = {
-        id: crypto.randomUUID(),
-        type: 'table',
-        definition: {
-          ...tableMeta,
-          config,
-        },
-        layout: {
-          position: {
-            col: 0,
-            row: 0,
-          },
-          size: tile.layout.size,
-        },
-      } as TileConfig
-
-      model.value.tiles.push(JSON.parse(JSON.stringify(newTile)))
-      return
-    }
-
-    const chartMeta = tile.meta as ChartTileDefinition
-    const chart = isSlottable(chartMeta.chart)
-      ? { ...chartMeta.chart }
-      : {
-        ...chartMeta.chart,
-        chart_title: chartMeta.chart.chart_title ? `Copy of ${chartMeta.chart.chart_title}` : '',
-      }
-
-    const baseTile = {
-      id: crypto.randomUUID(),
-      definition: {
-        ...chartMeta,
-        chart,
-      },
-      layout: {
-        position: {
-          col: 0,
-          row: 0,
-        },
-        size: tile.layout.size,
-      },
-    }
-
-    const newTile = {
-      ...baseTile,
-      type: 'chart',
-      definition: baseTile.definition,
-    } as TileConfig
+    const newTile = tile.type === 'table'
+      ? duplicateTableTile(tile)
+      : duplicateChartTile(tile)
 
     // deep cloning to avoid duplicated references
     model.value.tiles.push(JSON.parse(JSON.stringify(newTile)))
