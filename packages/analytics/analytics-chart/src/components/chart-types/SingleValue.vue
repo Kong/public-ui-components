@@ -5,7 +5,7 @@
     data-testid="single-value-parent"
   >
     <KEmptyState
-      v-if="singleValue === null"
+      v-if="invalidState"
       class="single-value-error"
       data-testid="single-value-error"
       icon-variant="error"
@@ -45,7 +45,7 @@
         >
           <component
             :is="trendIcon"
-            v-if="polarity !== 0"
+            v-if="noTrendButShowTrend || polarity !== 0"
             :color="colorAttribute(polarity)"
             :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
           />
@@ -74,7 +74,7 @@ import type { AnalyticsExploreRecord, ExploreResultV4, AllAggregations } from '@
 
 import { computed, onMounted } from 'vue'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
-import { changePolarity, metricChange, defineIcon, calculateChange, useTrendRange } from '@kong-ui-public/analytics-metric-provider'
+import { changePolarity, metricChange, defineIcon, calculateChange, useTrendRange, buildDeltaMapping } from '@kong-ui-public/analytics-metric-provider'
 import { EqualIcon } from '@kong/icons'
 import {
   KUI_COLOR_TEXT_DANGER_STRONG,
@@ -121,6 +121,20 @@ const props = defineProps({
 
 const alignmentClass = computed(() => `align-${props.leftAlign ? 'left' : props.alignX}`)
 
+const topLevelKey = 't1'
+const secondLevelKey = 't2'
+const trendData = computed(() => {
+  return buildDeltaMapping(props.data, props.showTrend, { topLevelKey, secondLevelKey })
+})
+
+const trendPrevious = computed<undefined | number>(() => {
+  return trendData.value?.previous?.[topLevelKey]?.[secondLevelKey]
+})
+
+const trendCurrent = computed<undefined | number>(() => {
+  return trendData.value?.current?.[topLevelKey]?.[secondLevelKey]
+})
+
 const records = computed<AnalyticsExploreRecord[]>(() => props.data.data)
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
 const formattedMetricName = computed((): string => {
@@ -137,13 +151,18 @@ const metricUnit = computed((): string | undefined => {
 
   return undefined
 })
+
 // by default, display metric units for requests per minute, latency
 const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute'
   || !!metricName.value?.includes('_latency_')
   || metricName.value === 'error_rate')
 
 const previousValue = computed<number | null>(() => {
-  if (!props.showTrend || records.value.length < 2 || !metricName.value) {
+  if (props.showTrend) {
+    return trendPrevious.value ?? null
+  }
+
+  if (records.value.length < 2 || !metricName.value) {
     return null
   }
 
@@ -157,20 +176,15 @@ const previousValue = computed<number | null>(() => {
 })
 
 const singleValue = computed<number | null>(() => {
-  if (!metricName.value) {
+  if (props.showTrend) {
+    return trendCurrent.value ?? null
+  }
+
+  if (records.value.length < 1 || !metricName.value) {
     return null
   }
 
-  // With trend: need 2 records (previous at [0], current at [1])
-  // Without trend: need 1 record (current at [0])
-  const requiredRecords = props.showTrend ? 2 : 1
-  const currentIndex = props.showTrend ? 1 : 0
-
-  if (records.value.length < requiredRecords) {
-    return null
-  }
-
-  const value = records.value[currentIndex].event[metricName.value]
+  const value = records.value[0].event[metricName.value]
 
   // Check if value is actually a number
   if (typeof value !== 'number' || isNaN(value)) {
@@ -180,11 +194,18 @@ const singleValue = computed<number | null>(() => {
   return value
 })
 
+const invalidState = computed<boolean>(() => {
+  return props.data?.data?.length === undefined // no data defined
+    || props.data?.data?.length === 0 // no data at all
+    || (!props.showTrend && singleValue.value === null) // not trend and doesn't have single value
+    || (props.showTrend && previousValue.value === null && singleValue.value === null) // trend and doesn't have any value
+})
+
 const formattedValue = computed((): string => {
   const value = singleValue.value
 
   if (value === null) {
-    return ''
+    return '-'
   }
 
   const rawUnit = metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined
@@ -212,10 +233,38 @@ const formattedValue = computed((): string => {
   return value.toLocaleString('en-US', { maximumFractionDigits: decimalPoints })
 })
 
+const noTrendButShowTrend = computed(() => props.showTrend && props.data?.data?.length < 2)
 const change = computed(() => calculateChange(singleValue.value ?? 0, previousValue.value ?? 0) || 0)
-const polarity = computed(() => changePolarity(change.value, true, props.increaseIsBad)) // Assume hasTrendAccess=true
+const polarity = computed(() => {
+  if (!props.showTrend) {
+    return 0 // not relevant unless we're showing a trend
+  }
+
+  if (props.data?.data?.length < 2) {
+    if (trendPrevious.value === undefined) {
+      return 0 // we can't determine the polarity change because we had no previous data
+    }
+
+    if (trendCurrent.value === undefined) {
+      return props.increaseIsBad ? 1 : -1 // we have previous data, but no current, so it dropped 100%
+    }
+  }
+
+  return changePolarity(change.value, true, props.increaseIsBad)
+})
 const trendIcon = computed(() => defineIcon(polarity.value, props.increaseIsBad))
-const formattedChange = computed(() => metricChange(change.value, true, i18n.t('singleValue.trend.not_available')))
+const formattedChange = computed(() => {
+  if (props.showTrend && props.data?.data?.length < 2) {
+    if (trendPrevious.value === undefined) {
+      return i18n.t('singleValue.trend.not_available')
+    }
+
+    if (trendCurrent.value === undefined) {
+      return metricChange(-1, true, i18n.t('singleValue.trend.not_available'))
+    }
+  }
+  return metricChange(change.value, props.data?.data?.length === 2, i18n.t('singleValue.trend.not_available'))
+})
 const trendRange = useTrendRange(computed(() => props.showTrend), undefined, computed(() => props.data.meta))
 
 const textColor = (polarityNum: number) => {
@@ -246,8 +295,9 @@ const colorAttribute = (polarityNum: number) => {
 onMounted(() => {
   if (!props.showTrend && props.data?.data?.length > 1) {
     console.warn('SingleValue chart should only be used with a single data point. Data length:', props.data.data.length)
-  } else if (props.showTrend && props.data?.data?.length !== 2) {
-    console.warn('SingleValue with trend expects exactly 2 data points. Data length:', props.data.data.length)
+  } else if (props.showTrend && props.data?.data?.length > 2) {
+    // because 1 data point is when we don't have any previous data to compare against
+    console.warn('SingleValue with trend expects at least 1 data point, usually 2. Data length:', props.data.data.length)
   }
 })
 </script>
