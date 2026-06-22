@@ -170,6 +170,7 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   --ag-header-column-border: 1px solid var(--kui-color-border, #{$kui-color-border});
   --ag-header-column-border-height: 30%;
   --ag-header-column-resize-handle-color: transparent;
+  --ag-header-font-weight: var(--kui-font-weight-semibold, #{$kui-font-weight-semibold});
   --ag-wrapper-border: none;
   --ag-wrapper-border-radius: 0;
   /* stylelint-enable custom-property-pattern */

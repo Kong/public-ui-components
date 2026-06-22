@@ -36,7 +36,8 @@
     "request_count": "Request count",
     "route": "Route",
     "status_code": "Status code",
-    "team": "Team"
+    "team": "Team",
+    "name": "Name"
   },
   "jumpToExplore": "Explore",
   "jumpToRequests": "View requests",
