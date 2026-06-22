@@ -382,6 +382,9 @@ describe('<OIDCForm />', () => {
     })
 
     it('should not update principals directory when changing principal lookup method', () => {
+      cy.intercept('GET', '**/v2/directories*', { statusCode: 200, body: { data: [{ id: 'dir-1', name: 'default' }] } }).as('getDirs')
+      cy.intercept('GET', '**/v2/directories/*/principals*', { statusCode: 200, body: { data: [{ id: 'p-1' }] } }).as('getPrincipals')
+
       const formModel = {
         ...OIDCModelWithPrincipals,
         'config-principals-enabled': true,
@@ -402,6 +405,8 @@ describe('<OIDCForm />', () => {
           },
         },
       })
+
+      cy.wait(['@getDirs', '@getPrincipals'])
 
       cy.getTestId('oidc-principals-section').within(() => {
         cy.getTestId('collapse-trigger-label').click()
