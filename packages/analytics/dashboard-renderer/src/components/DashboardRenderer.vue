@@ -31,6 +31,7 @@
         @update-tiles="handleUpdateTiles"
       >
         <template #tile="{ tile }">
+          <!-- eslint-disable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
           <div
             v-if="isSlottableTile(tile)"
             class="tile-container slottable-tile"
@@ -57,6 +58,7 @@
             @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
           />
         </template>
+        <!-- eslint-enable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
       </component>
     </div>
   </div>
