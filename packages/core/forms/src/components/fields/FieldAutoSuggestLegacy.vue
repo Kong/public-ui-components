@@ -58,7 +58,7 @@ import { FIELD_STATES } from '../../const'
 
 const requestResultsLimit = 50
 
-export default {
+export default /** @type {import('vue').DefineComponent<any, any, any>} */ ({
   mixins: [abstractField],
   inject: [FORMS_API_KEY],
   emits: ['model-updated'],
