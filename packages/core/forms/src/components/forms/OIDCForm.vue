@@ -32,6 +32,8 @@
             :form-schema="formSchema"
             :is-editing="isEditing"
             :on-model-updated="onModelUpdated"
+            @click:create="(payload) => $emit('click:create', payload)"
+            @click:learn-more="(entity) => $emit('click:learn-more', entity)"
             @mode-change="handlePrincipalsModeChange"
           />
           <VueFormGenerator
@@ -249,6 +251,7 @@ export default {
       default: () => { },
     },
   },
+  emits: ['click:create', 'click:learn-more'],
   data() {
     return {
       init: false,

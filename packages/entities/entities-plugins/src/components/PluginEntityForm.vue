@@ -51,6 +51,8 @@
         :on-model-updated="onModelUpdated"
         :on-partial-toggled="onPartialToggled"
         :show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
+        @click:create="(payload: KongIdentityCreateEvent) => $emit('click:create', payload)"
+        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
       >
         <template
           v-if="enableVaultSecretPicker"
@@ -138,7 +140,7 @@ import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
-import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
+import type { KongIdentityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import CommonForm from './free-form/Common'
 import type { GlobalAction } from './free-form/shared/types'
@@ -159,6 +161,8 @@ const emit = defineEmits<{
   (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
   (e: 'validity-change', payload: PluginValidityChangeEvent): void
+  (e: 'click:create', payload: KongIdentityCreateEvent): void
+  (e: 'click:learn-more', entity: string): void
 }>()
 
 const props = defineProps({

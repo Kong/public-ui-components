@@ -550,4 +550,140 @@ describe('OIDCPrincipals', () => {
       wrapper.unmount()
     })
   })
+
+  describe('principals creation guide (Konnect)', () => {
+    const konnectConfig = { apiBaseUrl: '/us', app: 'konnect' }
+
+    // Route the shared axios mock by URL: the directory list, that directory's
+    // principals, and the auth-servers lookup (fetchKongIdentityServers) run on mount.
+    const mockKongIdentity = ({ principals = [], directory = { id: 'dir-1', name: 'default' } }: {
+      principals?: any[]
+      directory?: { id: string, name: string } | null
+    } = {}) => {
+      mockGet.mockImplementation((url: string) => {
+        if (/\/v2\/directories\/[^/]+\/principals/.test(url)) {
+          return Promise.resolve({ data: { data: principals } })
+        }
+        if (url.includes('/v2/directories')) {
+          return Promise.resolve({ data: { data: directory ? [directory] : [] } })
+        }
+        return Promise.resolve({ data: { data: [] } })
+      })
+    }
+
+    const mountKonnect = (formModelOverrides = {}, propsOverrides = {}) =>
+      mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel(formModelOverrides), ...propsOverrides },
+        global: { provide: { [FORMS_CONFIG]: konnectConfig } },
+      })
+
+    it('queries the directory then its principals with page[size]=1 on mount', async () => {
+      mockKongIdentity({ principals: [] })
+      mountKonnect()
+      await flushPromises()
+
+      expect(mockGet).toHaveBeenCalledWith('/us/v2/directories', { params: { 'page[size]': 1 } })
+      expect(mockGet).toHaveBeenCalledWith('/us/v2/directories/dir-1/principals', { params: { 'page[size]': 1 } })
+    })
+
+    it('shows the guide and disables the principal fields when the directory has no principals', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(true)
+    })
+
+    it('hides the guide and enables the principal fields when the directory has principals', async () => {
+      mockKongIdentity({ principals: [{ id: 'p1' }] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
+    })
+
+    it('adopts config-principals-directory from the API response on create (not hardcoded "default")', async () => {
+      mockKongIdentity({ principals: [], directory: { id: 'dir-9', name: 'my-directory' } })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      expect(wrapper.props('formModel')['config-principals-directory']).toBe('my-directory')
+    })
+
+    it('does not overwrite a saved config-principals-directory on edit', async () => {
+      mockKongIdentity({ principals: [{ id: 'p1' }], directory: { id: 'dir-9', name: 'my-directory' } })
+      const wrapper = mountKonnect({ 'config-principals-directory': 'saved-dir' }, { isEditing: true })
+      await flushPromises()
+
+      expect(wrapper.props('formModel')['config-principals-directory']).toBe('saved-dir')
+    })
+
+    it('does not look up principals when there is no directory, and keeps the guide visible', async () => {
+      mockKongIdentity({ directory: null })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/principals'), expect.anything())
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+    })
+
+    it('opens the leave-page prompt on Create principal and emits click:create on confirm', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      // Clicking opens the leave-page confirmation; the event fires only on confirm
+      await wrapper.find('[data-testid="principals-create-principal"]').trigger('click')
+      expect((wrapper.vm as any).leavePromptType).toBe('principal')
+      expect(wrapper.emitted('click:create')).toBeUndefined()
+
+      ;(wrapper.vm as any).handleLeaveConfirmed()
+      expect(wrapper.emitted('click:create')?.[0]).toEqual([{ type: 'principal' }])
+    })
+
+    it('emits click:learn-more with "kong-identity" when Learn more is clicked', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      await wrapper.find('[data-testid="principals-learn-more"]').trigger('click')
+      expect(wrapper.emitted('click:learn-more')?.[0]).toEqual(['kong-identity'])
+    })
+
+    it('emits click:create with type "auth-server" when the create-auth-server prompt is confirmed', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      ;(wrapper.vm as any).leavePromptType = 'authServer'
+      ;(wrapper.vm as any).handleLeaveConfirmed()
+      expect(wrapper.emitted('click:create')?.[0]).toEqual([{ type: 'auth-server' }])
+    })
+
+    it('emits click:create with type "client" and the selected auth server id', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      ;(wrapper.vm as any).selectedServer = { id: 'srv-1' }
+      ;(wrapper.vm as any).leavePromptType = 'client'
+      ;(wrapper.vm as any).handleLeaveConfirmed()
+      expect(wrapper.emitted('click:create')?.[0]).toEqual([{ type: 'client', authServerId: 'srv-1' }])
+    })
+
+    it('does not query principals, show the guide, or disable fields outside Konnect', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: { provide: { [FORMS_CONFIG]: { apiBaseUrl: '/us' } } }, // no app: 'konnect'
+      })
+      await flushPromises()
+
+      expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v2/directories'), expect.anything())
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
+    })
+  })
 })

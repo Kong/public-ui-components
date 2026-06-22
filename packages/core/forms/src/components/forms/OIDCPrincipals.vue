@@ -7,12 +7,10 @@
       Who should manage authentication and credentials?
     </div>
     <div class="principals-description">
-      Use Consumers for Consumer-based authentication. Use Kong Identity for principal-based authentication and advanced integrations.
-      <a
-        href="https://developer.konghq.com/plugins/openid-connect/"
-        rel="noopener noreferrer"
-        target="_blank"
-      >Learn more.</a>
+      Use External auth server to continue using your existing OAuth provider and authentication workflows. Use Kong Identity to adopt a newer principal-based model that centralizes and simplifies identity and authentication management.
+      <KExternalLink href="https://developer.konghq.com/plugins/openid-connect/">
+        Learn more.
+      </KExternalLink>
     </div>
 
     <div
@@ -33,7 +31,7 @@
             Kong Identity
           </div>
           <div class="auth-mode-card-description">
-            Use Kong Identity for principal-based authentication and advanced integrations.
+            Use Kong Identity to authenticate OpenID Connect tokens and map requests to a Kong Identity principal. The authenticated principal is added to the request context for advanced integrations.
           </div>
         </div>
       </KRadio>
@@ -51,16 +49,48 @@
             External auth server
           </div>
           <div class="auth-mode-card-description">
-            Authenticate against an external OpenID Connect issuer.
+            Connect to your existing identity provider to manage authentication outside of Kong.
           </div>
         </div>
       </KRadio>
     </div>
 
     <template v-if="selectedMode === MODE_KONG_IDENTITY">
+      <div
+        v-if="principalsGuideVisible"
+        class="principals-create-guide"
+        data-testid="principals-create-guide"
+      >
+        <div class="principals-create-guide-title">
+          Add principals
+        </div>
+        <div class="principals-create-guide-description">
+          Get more value from OAuth 2.0 integration by creating principals in Kong Identity. Associate principals with this authorization server and its clients to enable principal-based authentication across Kong products.
+        </div>
+        <div class="principals-create-guide-actions">
+          <KButton
+            appearance="primary"
+            data-testid="principals-create-principal"
+            @click="leavePromptType = 'principal'"
+          >
+            <AddIcon decorative />
+            Create principal
+          </KButton>
+          <KButton
+            appearance="secondary"
+            data-testid="principals-learn-more"
+            @click="$emit('click:learn-more', 'kong-identity')"
+          >
+            <BookIcon decorative />
+            Learn more
+          </KButton>
+        </div>
+      </div>
+
       <KSelect
         class="principals-directory-select"
         data-testid="principals-directory-select"
+        :disabled="principalsFieldsDisabled"
         enable-filtering
         :items="kongIdentityServerItems"
         label="Authorization Server"
@@ -96,7 +126,7 @@
         <KSelect
           class="principals-client-select"
           data-testid="principals-client-select"
-          :disabled="!selectedServer"
+          :disabled="principalsFieldsDisabled || !selectedServer"
           enable-filtering
           :items="getClientItemsForRow(index)"
           :label="index === 0 ? 'Client' : undefined"
@@ -125,7 +155,7 @@
           <KInput
             class="principals-client-secret"
             data-testid="principals-client-secret"
-            :disabled="!selectedServer"
+            :disabled="principalsFieldsDisabled || !selectedServer"
             :label="index === 0 ? 'Client secret' : undefined"
             :model-value="clientSecretArray[index]"
             placeholder="e.g., your-client-secret"
@@ -155,9 +185,9 @@
 
       <div
         class="add-client-inline"
-        :class="{ 'add-client-inline-disabled': !selectedServer }"
+        :class="{ 'add-client-inline-disabled': principalsFieldsDisabled || !selectedServer }"
         data-testid="add-client-action"
-        @click="!selectedServer ? null : addClientRow()"
+        @click="(principalsFieldsDisabled || !selectedServer) ? null : addClientRow()"
       >
         + Add client
       </div>
@@ -171,6 +201,7 @@
           <KSelect
             class="principals-lookup-method-select"
             data-testid="principals-lookup-method"
+            :disabled="principalsFieldsDisabled"
             :items="lookupMethodItems"
             label="Principal lookup method"
             :model-value="selectedLookupMethod"
@@ -192,6 +223,7 @@
           <template v-if="selectedLookupMethod === 'custom-identity'">
             <KInput
               data-testid="principals-custom-identity-name"
+              :disabled="principalsFieldsDisabled"
               help="Enter the custom identity name used to look up the principal. Kong matches the value from the token claim to a principal with the same custom identity name and value."
               label="Custom Identity name"
               :model-value="formModel['config-principals-principal_by']"
@@ -200,6 +232,7 @@
             />
             <KInput
               data-testid="principals-identifier-claim"
+              :disabled="principalsFieldsDisabled"
               help="Enter the token claim used to identify the principal. Use dot notation for nested claims (for example, workload.id). Escape periods in claim names with \ (for example, workload\.id)."
               label="Identifier claim"
               :model-value="getIdentifierClaimInputValue()"
@@ -213,6 +246,7 @@
           <KRadio
             data-testid="principals-error-on-miss-true"
             description="Treat the request as unauthenticated if Kong Identity cannot resolve the principal."
+            :disabled="principalsFieldsDisabled"
             label="Reject the request"
             :model-value="formModel['config-principals-error_on_miss']"
             :selected-value="true"
@@ -221,6 +255,7 @@
           <KRadio
             data-testid="principals-error-on-miss-false"
             description="Allow the request to continue without resolving a principal."
+            :disabled="principalsFieldsDisabled"
             label="Continue without a principal"
             :model-value="formModel['config-principals-error_on_miss']"
             :selected-value="false"
@@ -231,6 +266,7 @@
         <div class="principals-field-group">
           <KCheckbox
             data-testid="principals-match-consumer"
+            :disabled="principalsFieldsDisabled"
             :model-value="formModel['config-principals-match_consumer']"
             @update:model-value="handleMatchConsumerChange($event)"
           >
@@ -249,7 +285,7 @@
         <div class="principals-field-group">
           <KCheckbox
             data-testid="principals-match-consumer-groups"
-            :disabled="!formModel['config-principals-match_consumer']"
+            :disabled="principalsFieldsDisabled || !formModel['config-principals-match_consumer']"
             :model-value="formModel['config-principals-match_consumer_groups']"
             @update:model-value="updateField('config-principals-match_consumer_groups', $event)"
           >
@@ -355,7 +391,7 @@
 import VueFormGenerator from '../FormGenerator.vue'
 import { FORMS_CONFIG, AUTOFILL_SLOT } from '../../const'
 import { useAxios } from '@kong-ui-public/entities-shared'
-import { AddIcon, CloseIcon, KeyIcon, WorldIcon } from '@kong/icons'
+import { AddIcon, BookIcon, CloseIcon, KeyIcon, WorldIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20, KUI_ICON_SIZE_30, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
 const MODE_KONG_IDENTITY = 'kong-identity'
@@ -418,7 +454,7 @@ const inferInitialMode = (formModel, isEditing) => {
 
 export default {
   name: 'OIDCPrincipals',
-  components: { VueFormGenerator, AddIcon, CloseIcon, KeyIcon, WorldIcon },
+  components: { VueFormGenerator, AddIcon, BookIcon, CloseIcon, KeyIcon, WorldIcon },
   inject: {
     formsConfig: {
       from: FORMS_CONFIG,
@@ -455,7 +491,7 @@ export default {
       default: false,
     },
   },
-  emits: ['mode-change'],
+  emits: ['mode-change', 'click:learn-more', 'click:create'],
   data() {
     return {
       MODE_KONG_IDENTITY,
@@ -473,6 +509,9 @@ export default {
       selectedServer: null,
       restoringServer: false,
       leavePromptType: null,
+      // Principals existence lookup (Konnect Kong Identity directory)
+      principalsLoading: false,
+      hasPrincipals: false,
     }
   },
   computed: {
@@ -505,7 +544,20 @@ export default {
       return [null]
     },
     isRemoveClientDisabled() {
-      return !this.selectedServer || this.clientIdArray.length <= 1
+      return this.principalsFieldsDisabled || !this.selectedServer || this.clientIdArray.length <= 1
+    },
+    // Kong Identity directories/principals are a Konnect-only concept.
+    isKonnect() {
+      return this.formsConfig?.app === 'konnect'
+    },
+    // Until at least one principal exists in the directory (or while we're still
+    // checking), the principal-config fields are meaningless, so disable them and
+    // surface the "Add principals" guide instead.
+    principalsFieldsDisabled() {
+      return this.isKonnect && (this.principalsLoading || !this.hasPrincipals)
+    },
+    principalsGuideVisible() {
+      return this.isKonnect && !this.principalsLoading && !this.hasPrincipals
     },
   },
   mounted() {
@@ -519,8 +571,48 @@ export default {
       this.$nextTick(() => this.$emit('mode-change', this.selectedMode))
     }
     this.fetchKongIdentityServers()
+    if (this.selectedMode === MODE_KONG_IDENTITY) {
+      // On create, adopt the directory name from the API; on edit, keep the stored value.
+      this.fetchPrincipalsState({ setDirectory: !this.isEditing })
+    }
   },
   methods: {
+    // `setDirectory` is true on create/switch into Kong Identity (we adopt the directory
+    // name returned by the API); on edit-load it stays false so the saved value is kept.
+    async fetchPrincipalsState({ setDirectory = false } = {}) {
+      // Kong Identity directories are a Konnect-only concept.
+      if (this.formsConfig?.app !== 'konnect') return
+      try {
+        this.principalsLoading = true
+        const { axiosInstance } = useAxios(this.formsConfig?.axiosRequestConfig)
+        const base = this.formsConfig.apiBaseUrl
+        // Only need the single directory backing this config.
+        const dirResp = await axiosInstance.get(`${base}/v2/directories`, { params: { 'page[size]': 1 } })
+        const directory = dirResp?.data?.data?.[0]
+        if (!directory) {
+          this.hasPrincipals = false
+          return
+        }
+        // Store the resolved directory name so principals.directory matches the directory
+        // we check against (instead of a hardcoded 'default').
+        if (setDirectory) {
+          // eslint-disable-next-line vue/no-mutating-props
+          this.formModel['config-principals-directory'] = directory.name
+          this.onModelUpdated()
+        }
+        // Only need to know whether at least one principal exists.
+        const principalsResp = await axiosInstance.get(
+          `${base}/v2/directories/${directory.id}/principals`,
+          { params: { 'page[size]': 1 } },
+        )
+        this.hasPrincipals = (principalsResp?.data?.data?.length ?? 0) > 0
+      } catch {
+        // On failure fall back to the empty state so the user can still create a principal.
+        this.hasPrincipals = false
+      } finally {
+        this.principalsLoading = false
+      }
+    },
     async fetchKongIdentityServers() {
       try {
         this.kongIdentityServersLoading = true
@@ -663,18 +755,14 @@ export default {
     handleLeaveConfirmed() {
       const type = this.leavePromptType
       this.leavePromptType = null
-      const geoApiServerUrl = this.formsConfig?.geoApiServerUrl
-      const geo = geoApiServerUrl
-        ? new URL(geoApiServerUrl).hostname.split('.')[0]
-        : (this.formsConfig?.apiBaseUrl?.match(/^\/([^/]+)/)?.[1] || 'us')
+      // The consuming app owns navigation to the create pages; we only confirm intent
+      // (unsaved-changes prompt) and emit. Client creation needs the auth server context.
       if (type === 'authServer') {
-        const url = this.formsConfig?.createAuthServerUrl || `${window.location.origin}/${geo}/identity/create-auth-server`
-        document.location.href = url
+        this.$emit('click:create', { type: 'auth-server' })
       } else if (type === 'client') {
-        const url = this.formsConfig?.createClientUrl
-          ? this.formsConfig.createClientUrl(this.selectedServer?.id)
-          : `${window.location.origin}/${geo}/identity/auth-servers/${this.selectedServer?.id}/create-auth-server-client`
-        document.location.href = url
+        this.$emit('click:create', { type: 'client', authServerId: this.selectedServer?.id })
+      } else if (type === 'principal') {
+        this.$emit('click:create', { type: 'principal' })
       }
     },
     handleModeChange(newMode) {
@@ -690,13 +778,13 @@ export default {
         // eslint-disable-next-line vue/no-mutating-props
         this.formModel['config-principals-enabled'] = true
         // eslint-disable-next-line vue/no-mutating-props
-        this.formModel['config-principals-directory'] = 'default'
-        // eslint-disable-next-line vue/no-mutating-props
         this.formModel['config-principals-error_on_miss'] = true
         // eslint-disable-next-line vue/no-mutating-props
         this.formModel['config-principals-match_consumer'] = true
         // eslint-disable-next-line vue/no-mutating-props
         this.formModel['config-principals-match_consumer_groups'] = true
+        // Re-check principals and adopt the directory name from the API (not hardcoded)
+        this.fetchPrincipalsState({ setDirectory: true })
       } else {
         // Disable principals but keep directory as 'default'
         // eslint-disable-next-line vue/no-mutating-props
@@ -747,6 +835,35 @@ export default {
   a {
     display: inline;
   }
+}
+
+.principals-create-guide {
+  align-items: center;
+  background-color: var(--kui-color-background-decorative-purple-weakest, $kui-color-background-decorative-purple-weakest);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-40, $kui-space-40);
+  margin-bottom: var(--kui-space-60, $kui-space-60);
+  padding: var(--kui-space-80, $kui-space-80);
+  text-align: center;
+}
+
+.principals-create-guide-title {
+  color: var(--kui-color-text, $kui-color-text);
+  font-size: var(--kui-font-size-40, $kui-font-size-40);
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+}
+
+.principals-create-guide-description {
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  max-width: 640px;
+}
+
+.principals-create-guide-actions {
+  display: flex;
+  gap: var(--kui-space-40, $kui-space-40);
+  margin-top: var(--kui-space-20, $kui-space-20);
 }
 
 .principals-advanced-settings {

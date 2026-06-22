@@ -74,14 +74,20 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
   isKonnectManagedRedisEnabled?: boolean
   /** When true, CP is a Cloud Gateway */
   isCloudGateway?: boolean
-  /** URL to navigate to when creating a new Kong Identity auth server */
-  createAuthServerUrl?: string
-  /** Function that returns the URL to navigate to when creating a new Kong Identity client */
-  createClientUrl?: (authServerId: string) => string
 }
 
 /** Kong Manager Plugin form config */
 export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig { }
+
+/**
+ * Payload for the `click:create` event emitted from the OIDC/Kong Identity principals UI.
+ * The consuming app navigates to the matching create page; `authServerId` is provided when
+ * creating a client (scoped to the selected auth server).
+ */
+export interface KongIdentityCreateEvent {
+  type: 'principal' | 'auth-server' | 'client'
+  authServerId?: string
+}
 
 export interface PluginFormFields {
   enabled: boolean
