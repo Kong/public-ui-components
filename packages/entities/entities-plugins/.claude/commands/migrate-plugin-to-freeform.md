@@ -468,3 +468,77 @@ node playwright/helpers/migrate-plugin.mjs \
 ```
 
 Confirm `capturedRequests[].body` matches expectations and `submitError` is null.
+
+---
+
+## Step 12 — Post-Migration Cleanup (Remove VFG Patches)
+
+Once the plugin is fully migrated to Freeform, its VFG schema file (if any) should be deleted. These files exist solely to patch VFG behavior and serve no purpose under Freeform.
+
+### 12.1 — Check if the plugin has a VFG schema patch
+
+```bash
+ls packages/entities/entities-plugins/src/definitions/schemas/ | grep -i "<plugin-name>"
+```
+
+If a file exists (e.g. `KafkaConsume.ts`, `Confluent.ts`), read it and look for:
+- `shamefullyTransformPayload` — the main patch entrypoint
+- Custom VFG field overrides (e.g. `type: 'textarea'`, `ArrayInputFieldSchema`)
+
+### 12.2 — Understand what the patch does
+
+`shamefullyTransformPayload` is called unconditionally in `PluginForm.vue` regardless of the rendering engine. After Freeform migration, it continues to run but is typically a no-op because:
+
+- **VFG empty-object patterns** (e.g. `emptyConfluent311`, `emptyConfluent312`, empty `oauthbearer` initializers) are VFG-specific artifacts that Freeform never generates → safe to delete.
+- **Auth-mode field cleanup** (deleting unused `oauth2`/`basic` sub-objects based on `authentication.mode`) may still be relevant if the Freeform form does not null-out hidden fields on mode change → verify with a submit test before deleting.
+
+### 12.3 — Delete the schema file
+
+```bash
+rm packages/entities/entities-plugins/src/definitions/schemas/<PluginName>.ts
+```
+
+### 12.4 — Remove its import and entry from `useSchemas.ts`
+
+In `src/composables/useSchemas.ts`:
+1. Delete the `import { <pluginSchema> } from '../definitions/schemas/<PluginName>'` line.
+2. Delete the corresponding `'<plugin-name>': { ...<pluginSchema> }` block from the `customSchemas` object.
+
+### 12.5 — Delete the plugin's type file (if it only existed for VFG)
+
+Check `src/types/plugins/`:
+```bash
+ls packages/entities/entities-plugins/src/types/plugins/ | grep -i "<plugin-name>"
+```
+
+If the type file only defines a schema interface (e.g. `KafkaConsumeSchema extends CommonSchemaFields`) and is not used anywhere outside VFG, delete it:
+```bash
+rm packages/entities/entities-plugins/src/types/plugins/<plugin-name>.ts
+```
+
+### 12.6 — Remove the type from `plugin-form.ts`
+
+In `src/types/plugin-form.ts`:
+1. Delete the `import type { <PluginNameSchema> } from './plugins/<plugin-name>'` line.
+2. Delete the `'<plugin-name>': <PluginNameSchema>` entry from the `CustomSchemas` interface.
+
+### 12.7 — Remove unused helper functions
+
+If the deleted schema was the only consumer of helpers in `src/utils/helper.ts` (e.g. `stripEmptyBasicFields`, `removeOauthbearer`, and their associated interfaces/constants), remove those too.
+
+Verify no other files import them first:
+```bash
+grep -rn "stripEmptyBasicFields\|removeOauthbearer" \
+  packages/entities/entities-plugins/src/ --include="*.ts" --include="*.vue"
+```
+
+If the output is empty (or only the helper file itself), delete the dead code from `helper.ts`.
+
+### 12.8 — Verify no dangling references
+
+```bash
+grep -rn "<pluginSchema>\|<PluginNameSchema>" \
+  packages/entities/entities-plugins/src/ --include="*.ts" --include="*.vue"
+```
+
+Should return no output.
