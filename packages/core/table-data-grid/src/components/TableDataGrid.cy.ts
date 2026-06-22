@@ -273,7 +273,7 @@ describe('<TableDataGrid />', () => {
     expectElementHeight('[data-testid="fixed-height-parent"]', 240)
     expectElementHeight('[data-testid="table-data-grid"]', 240)
     cy.get('.table-data-grid-grid').then(($grid) => {
-      expect($grid[0].getBoundingClientRect().height).to.be.lessThan(240)
+      expect($grid[0].getBoundingClientRect().height).to.be.at.most(240)
     })
   })
 

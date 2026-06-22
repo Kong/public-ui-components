@@ -151,7 +151,7 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
 
 <style lang="scss" scoped>
 .kong-ui-public-table-data-grid {
-  border: 1px solid var(--kui-color-border, $kui-color-border);
+  border: none;
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   box-sizing: border-box;
   display: flex;
@@ -168,6 +168,7 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   --ag-border-color: var(--kui-color-border, #{$kui-color-border});
   --ag-header-background-color: var(--kui-color-background, #{$kui-color-background});
   --ag-header-column-border: 1px solid var(--kui-color-border, #{$kui-color-border});
+  --ag-header-column-border-height: 30%;
   --ag-header-column-resize-handle-color: transparent;
   --ag-wrapper-border: none;
   --ag-wrapper-border-radius: 0;
