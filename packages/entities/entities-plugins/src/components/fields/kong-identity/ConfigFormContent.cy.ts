@@ -803,7 +803,7 @@ describe('ConfigFormContent', () => {
 
         // Clicking opens the leave-page confirmation; the event must not fire yet
         cy.getTestId('kong-identity-create-principal').should('not.be.disabled').click()
-        cy.getTestId('kong-identity-create-principal-prompt').should('be.visible')
+        cy.getTestId('modal-action-button').should('be.visible')
         cy.get('@onCreatePrincipalSpy').should('not.have.been.called')
 
         // Proceeding through the prompt emits the event
