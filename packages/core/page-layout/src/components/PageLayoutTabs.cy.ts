@@ -289,29 +289,6 @@ describe('<PageLayoutTabs />', () => {
     cy.get('@navigateTo').should('have.been.calledWith', tabs[0].to)
   })
 
-  it('uses the navigateTo injectable to navigate to the tab on Space key press', () => {
-    const navigateToStub = cy.stub().as('navigateTo')
-
-    const tabs = [
-      { key: 'tab', label: 'Tab', to: '/tab' },
-    ]
-
-    cy.mount(PageLayoutTabs, {
-      props: {
-        tabs,
-      },
-      global: {
-        provide: {
-          'app:navigateTo': navigateToStub,
-        },
-      },
-    })
-
-    cy.getTestId('page-layout-tab-tab').trigger('keydown', { key: ' ' })
-
-    cy.get('@navigateTo').should('have.been.calledWith', tabs[0].to)
-  })
-
   it('does not use the navigateTo injectable if the tab.to is not a string on Enter key press', () => {
     const navigateToStub = cy.stub().as('navigateTo')
 
@@ -332,31 +309,6 @@ describe('<PageLayoutTabs />', () => {
     })
 
     cy.getTestId('page-layout-tab-tab').trigger('keydown', { key: 'Enter' })
-
-    cy.get('@navigateTo').should('not.have.been.called')
-    cy.wrap(router).its('currentRoute').its('value').its('name').should('eq', 'tab')
-  })
-
-  it('does not use the navigateTo injectable if the tab.to is not a string on Space key press', () => {
-    const navigateToStub = cy.stub().as('navigateTo')
-
-    const tabs = [
-      { key: 'tab', label: 'Tab', to: { name: 'tab' } },
-    ]
-
-    cy.mount(PageLayoutTabs, {
-      props: {
-        tabs,
-      },
-      global: {
-        plugins: [router],
-        provide: {
-          'app:navigateTo': navigateToStub,
-        },
-      },
-    })
-
-    cy.getTestId('page-layout-tab-tab').trigger('keydown', { key: ' ' })
 
     cy.get('@navigateTo').should('not.have.been.called')
     cy.wrap(router).its('currentRoute').its('value').its('name').should('eq', 'tab')

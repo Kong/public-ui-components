@@ -22,7 +22,6 @@
           tabindex="0"
           @click.prevent="onTabNavigation(tab)"
           @keydown.enter.prevent="onTabNavigation(tab)"
-          @keydown.space.prevent="onTabNavigation(tab)"
         >
           <slot
             :name="`tab-${tab.key}`"

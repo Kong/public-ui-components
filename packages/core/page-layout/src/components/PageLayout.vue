@@ -28,7 +28,6 @@
               tabindex="0"
               @click.prevent="navigateBack"
               @keydown.enter.prevent="navigateBack"
-              @keydown.space.prevent="navigateBack"
             >
               <ArrowTopLeftIcon
                 decorative
