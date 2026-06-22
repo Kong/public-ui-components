@@ -107,6 +107,8 @@ describe('<PageLayout />', () => {
   })
 
   it('forwards content from the dynamic `tab-${key}` slot to PageLayoutTabs', () => {
+    const overviewTabTestId = 'custom-overview-tab'
+    const overviewTabText = 'Custom Overview'
     const tabs = [
       { key: 'overview', label: 'Overview', to: '/overview' },
       { key: 'settings', label: 'Settings', to: '/settings' },
@@ -118,17 +120,17 @@ describe('<PageLayout />', () => {
         tabs,
       },
       slots: {
-        'tab-overview': '<span data-testid="custom-overview-tab">Custom Overview</span>',
+        'tab-overview': `<span data-testid="${overviewTabTestId}">${overviewTabText}</span>`,
       },
     })
 
     cy.getTestId('page-layout-tab-overview')
-      .findTestId('custom-overview-tab')
+      .findTestId(overviewTabTestId)
       .should('be.visible')
-      .and('contain.text', 'Custom Overview')
+      .and('contain.text', overviewTabText)
     cy.getTestId('page-layout-tab-settings')
       .should('be.visible')
-      .and('contain.text', 'Settings')
+      .and('contain.text', tabs[1].label)
   })
 
   it('renders content passed in through title-after slot', () => {

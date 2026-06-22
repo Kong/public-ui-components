@@ -24,12 +24,12 @@ describe('<PageLayoutTabs />', () => {
     cy.getTestId('page-layout-tabs').should('be.visible')
     cy.getTestId('page-layout-tab-overview')
       .should('be.visible')
-      .and('contain.text', 'Overview')
-      .and('have.attr', 'href', '/overview')
+      .and('contain.text', tabs[0].label)
+      .and('have.attr', 'href', tabs[0].to)
     cy.getTestId('page-layout-tab-settings')
       .should('be.visible')
-      .and('contain.text', 'Settings')
-      .and('have.attr', 'href', '/settings')
+      .and('contain.text', tabs[1].label)
+      .and('have.attr', 'href', tabs[1].to)
   })
 
   it('handles overflow correctly with overflowing tab showing in dropdown', () => {
@@ -62,10 +62,11 @@ describe('<PageLayoutTabs />', () => {
     cy.getTestId('tabs-overflow-dropdown-button').click()
 
     // The last tab should be in the dropdown
+    const lastTab = tabs[tabs.length - 1]
     cy.getTestId('tabs-overflow-dropdown-popover')
-      .findTestId('page-layout-tab-tab8')
+      .findTestId(`page-layout-tab-${lastTab.key}`)
       .should('be.visible')
-      .and('have.attr', 'href', '/tab8')
+      .and('have.attr', 'href', lastTab.to)
   })
 
   it('recomputes the tab layout when the tabs prop changes', () => {
@@ -180,6 +181,8 @@ describe('<PageLayoutTabs />', () => {
   })
 
   it('renders custom content via the dynamic `tab-${key}` slot', () => {
+    const customOverviewTestId = 'custom-overview'
+    const customOverviewText = 'Custom Overview'
     const tabs = [
       { key: 'overview', label: 'Overview', to: '/overview' },
       { key: 'settings', label: 'Settings', to: '/settings' },
@@ -190,21 +193,22 @@ describe('<PageLayoutTabs />', () => {
         tabs,
       },
       slots: {
-        'tab-overview': '<span data-testid="custom-overview">Custom Overview</span>',
+        'tab-overview': `<span data-testid="${customOverviewTestId}">${customOverviewText}</span>`,
       },
     })
 
     cy.getTestId('page-layout-tab-overview')
-      .findTestId('custom-overview')
+      .findTestId(customOverviewTestId)
       .should('be.visible')
-      .and('contain.text', 'Custom Overview')
+      .and('contain.text', customOverviewText)
     // Tabs without a matching slot fall back to the label
     cy.getTestId('page-layout-tab-settings')
       .should('be.visible')
-      .and('contain.text', 'Settings')
+      .and('contain.text', tabs[1].label)
   })
 
   it('exposes the tab as a slot prop on the dynamic `tab-${key}` slot', () => {
+    const slotPropLabelTestId = 'slot-prop-label'
     const tabs = [
       { key: 'overview', label: 'Overview', to: '/overview' },
     ]
@@ -212,11 +216,11 @@ describe('<PageLayoutTabs />', () => {
     cy.mount(defineComponent({
       setup: () => () => h(PageLayoutTabs, { tabs }, {
         'tab-overview': ({ tab }: { tab: PageLayoutTab }) =>
-          h('span', { 'data-testid': 'slot-prop-label' }, tab.label),
+          h('span', { 'data-testid': slotPropLabelTestId }, tab.label),
       }),
     }))
 
-    cy.getTestId('slot-prop-label').should('be.visible').and('contain.text', 'Overview')
+    cy.getTestId(slotPropLabelTestId).should('be.visible').and('contain.text', tabs[0].label)
   })
 
   it('uses the navigateTo injectable to navigate to the tab', () => {
