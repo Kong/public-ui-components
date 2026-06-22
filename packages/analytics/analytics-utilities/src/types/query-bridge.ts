@@ -39,6 +39,13 @@ export interface PlatformDatasourceQuery {
 
 export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | AgenticDatasourceQuery | PlatformDatasourceQuery
 
+export interface PlatformDatasourceTabularQuery {
+  datasource: 'platform'
+  query: PlatformTabularQuery
+}
+
+export type DatasourceAwareTabularQuery = PlatformDatasourceTabularQuery
+
 // All flags in this interface should be optional; defaults are as documented.
 export interface StaticConfig {
   increaseCsvExportLimit?: boolean // default: true
@@ -49,7 +56,7 @@ export interface AnalyticsBridge {
   queryFn: (query: DatasourceAwareQuery, abortController: AbortController) => Promise<ExploreResultV4>
 
   // Issue tabular queries to the platform tabular explore API
-  tabularQueryFn?: (query: PlatformTabularQuery, abortController: AbortController) => Promise<PlatformTabularResponse>
+  tabularQueryFn?: (query: DatasourceAwareTabularQuery, abortController: AbortController) => Promise<PlatformTabularResponse>
 
   // Determine the current org's analytics config
   configFn: () => Promise<AnalyticsConfigV2>
