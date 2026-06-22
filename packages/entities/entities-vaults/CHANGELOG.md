@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.10.2...@kong-ui-public/entities-vaults@4.10.3) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
 ## [4.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.10.1...@kong-ui-public/entities-vaults@4.10.2) (2026-06-19)
 
 

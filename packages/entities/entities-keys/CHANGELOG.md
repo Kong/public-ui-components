@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.13.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.25...@kong-ui-public/entities-keys@3.13.26) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
 ## [3.13.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.24...@kong-ui-public/entities-keys@3.13.25) (2026-06-19)
 
 

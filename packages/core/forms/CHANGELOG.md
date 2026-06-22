@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.27.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.27.1...@kong-ui-public/forms@4.27.2) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
 ## [4.27.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.27.0...@kong-ui-public/forms@4.27.1) (2026-06-19)
 
 
