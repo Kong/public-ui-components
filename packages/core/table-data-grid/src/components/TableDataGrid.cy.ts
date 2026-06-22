@@ -5,7 +5,7 @@ import type {
 } from '../types'
 import type { GridApi } from 'ag-grid-community'
 import type { DefineComponent } from 'vue'
-import { h } from 'vue'
+import { defineComponent, h, nextTick, reactive } from 'vue'
 import TableDataGrid from './TableDataGrid.vue'
 
 type TestRow = {
@@ -28,10 +28,6 @@ type MountTableOptions = {
   pageSize?: number
   refreshKey?: string | number | boolean
   slots?: TestTableDataGridSlots
-}
-
-type TestVueWrapper = {
-  setProps: (props: Record<string, unknown>) => Promise<void>
 }
 
 const headers: Array<TableDataGridHeader<TestRow>> = [
@@ -70,21 +66,34 @@ const mountTestTableDataGrid = ({
   slots,
   ...props
 }: MountTableOptions) => {
-  let vueWrapper: TestVueWrapper
-
-  cy.mount(TestTableDataGrid, {
-    props: {
-      headers: tableHeaders,
-      'onGrid:ready': onGridReady,
-      ...props,
-    },
-    slots,
-  }).then(({ wrapper }) => {
-    vueWrapper = wrapper
+  const componentProps = reactive<Record<string, unknown>>({
+    headers: tableHeaders,
+    'onGrid:ready': onGridReady,
+    ...props,
   })
 
+  // eslint-disable-next-line vue/one-component-per-file -- Cypress harness component is scoped to this test file.
+  cy.mount(defineComponent({
+    name: 'TableDataGridTestHarness',
+    setup() {
+      return () => h('div', {
+        'data-testid': 'table-data-grid-test-parent',
+        style: {
+          height: '520px',
+          width: '640px',
+        },
+      }, [
+        h(TestTableDataGrid, componentProps, slots),
+      ])
+    },
+  }))
+
   return {
-    setProps: (nextProps: Record<string, unknown>) => cy.then(() => vueWrapper.setProps(nextProps)),
+    setProps: (nextProps: Record<string, unknown>) => cy.then(() => {
+      Object.assign(componentProps, nextProps)
+
+      return nextTick()
+    }),
   }
 }
 
@@ -109,6 +118,39 @@ const expectHorizontalOverflow = () => {
   cy.get('.table-data-grid-grid .ag-center-cols-viewport').then(($viewport) => {
     expect($viewport[0].scrollWidth).to.be.greaterThan($viewport[0].clientWidth)
   })
+}
+
+const expectElementHeight = (selector: string, height: number) => {
+  cy.get(selector).then(($element) => {
+    expect($element[0].getBoundingClientRect().height).to.be.closeTo(height, 1)
+  })
+}
+
+const mountTableInFixedHeightContainer = ({
+  fetcher,
+  height,
+}: {
+  fetcher: TableDataGridFetcher<TestRow>
+  height: number
+}) => {
+  // eslint-disable-next-line vue/one-component-per-file -- Cypress harness component is scoped to this test file.
+  cy.mount(defineComponent({
+    name: 'FixedHeightTableDataGridTest',
+    setup() {
+      return () => h('div', {
+        'data-testid': 'fixed-height-parent',
+        style: {
+          height: `${height}px`,
+          width: '640px',
+        },
+      }, [
+        h(TestTableDataGrid, {
+          fetcher,
+          headers,
+        }),
+      ])
+    },
+  }))
 }
 
 const mountTableWithGridApi = ({
@@ -177,12 +219,9 @@ describe('<TableDataGrid />', () => {
       total: rows.length,
     })
 
-    cy.mount(TestTableDataGrid, {
-      props: {
-        fetcher,
-        headers,
-        pageSize: 15,
-      },
+    mountTestTableDataGrid({
+      fetcher,
+      pageSize: 15,
     })
 
     cy.get('.kong-ui-public-table-data-grid').should('be.visible')
@@ -197,6 +236,44 @@ describe('<TableDataGrid />', () => {
       mode: 'infinite',
       pageSize: 15,
       cursor: undefined,
+    })
+  })
+
+  it('fills a taller parent height by default', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTableInFixedHeightContainer({
+      fetcher,
+      height: 520,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    expectElementHeight('[data-testid="fixed-height-parent"]', 520)
+    expectElementHeight('[data-testid="table-data-grid"]', 520)
+    cy.get('.table-data-grid-grid').then(($grid) => {
+      expect($grid[0].getBoundingClientRect().height).to.be.greaterThan(500)
+    })
+  })
+
+  it('shrinks with a shorter parent without forcing a 360px minimum height', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTableInFixedHeightContainer({
+      fetcher,
+      height: 240,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    expectElementHeight('[data-testid="fixed-height-parent"]', 240)
+    expectElementHeight('[data-testid="table-data-grid"]', 240)
+    cy.get('.table-data-grid-grid').then(($grid) => {
+      expect($grid[0].getBoundingClientRect().height).to.be.at.most(240)
     })
   })
 

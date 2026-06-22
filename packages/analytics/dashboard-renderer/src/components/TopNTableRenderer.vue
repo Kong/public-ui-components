@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RendererProps } from '../types'
+import type { ChartRendererProps } from '../types'
 import type { AnalyticsBridge, TopNTableOptions } from '@kong-ui-public/analytics-utilities'
 import { CP_ID_TOKEN, ENTITY_ID_TOKEN, INJECT_QUERY_PROVIDER } from '../constants'
 import { TopNTable } from '@kong-ui-public/analytics-chart'
@@ -41,7 +41,7 @@ import QueryDataProvider from './QueryDataProvider.vue'
 import { computed, defineAsyncComponent, inject } from 'vue'
 import FallbackEntityLink from './FallbackEntityLink.vue'
 
-const props = defineProps<RendererProps<TopNTableOptions>>()
+const props = defineProps<ChartRendererProps<TopNTableOptions>>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 

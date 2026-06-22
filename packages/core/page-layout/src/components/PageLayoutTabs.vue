@@ -233,7 +233,7 @@ watch(() => tabs, () => {
     gap: var(--kui-space-70, $kui-space-70);
     list-style: none;
     margin: var(--kui-space-0, $kui-space-0);
-    /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+    /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
     margin-bottom: calc(-1 * var(--kui-border-width-10, $kui-border-width-10)); // Make sure the border of the active (or hovered) tab overlaps the border of the tabs navbar
     max-width: 100%;
     padding: var(--kui-space-0, $kui-space-0);

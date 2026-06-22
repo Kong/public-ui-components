@@ -11,7 +11,7 @@
             class="ff-collapsible-section-toggle-btn-trigger-icon"
             :class="{ 'collapse-expanded': expanded }"
             decorative
-            :size="KUI_ICON_SIZE_30"
+            :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
           />
         </button>
         <KLabel class="ff-collapsible-section-label">

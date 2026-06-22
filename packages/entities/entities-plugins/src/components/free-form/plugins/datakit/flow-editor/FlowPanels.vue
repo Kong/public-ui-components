@@ -360,12 +360,12 @@ watch(
     }
 
     &.request:before, &.response:before {
-      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
       background-color: var(--kui-color-border, $kui-color-border);
-      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
       bottom: calc(-1 * var(--kui-border-width-10, $kui-border-width-10));
       content: '';
-      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
       height: var(--kui-border-width-10, $kui-border-width-10);
       left: 0;
       position: absolute;
@@ -399,7 +399,7 @@ watch(
 
       &:after {
         $height: 5px;
-        /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+        /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
         background-color: var(--kui-color-border, $kui-color-border);
         content: '';
         display: block;
@@ -420,7 +420,7 @@ watch(
 
     &:before {
       $height: 1px;
-      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
       background-color: var(--kui-color-border, $kui-color-border);
       content: '';
       display: block;

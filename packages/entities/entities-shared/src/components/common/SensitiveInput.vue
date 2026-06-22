@@ -52,7 +52,7 @@
             color="currentColor"
             data-testid="sensitive-input-toggle"
             role="button"
-            :size="KUI_ICON_SIZE_40"
+            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
             tabindex="0"
             @click="toggleReveal"
             @keydown.enter.space.prevent="toggleReveal"
@@ -68,8 +68,8 @@
     >
       <InfoIcon
         class="sensitive-input-hint-icon"
-        :color="KUI_COLOR_TEXT_INFO"
-        :size="KUI_ICON_SIZE_40"
+        :color="`var(--kui-color-text-info, ${KUI_COLOR_TEXT_INFO})`"
+        :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
       />
       <span class="sensitive-input-hint-text">
         {{ hintLabel }}
@@ -84,7 +84,7 @@
         >
           <CopyIcon
             color="currentColor"
-            :size="KUI_ICON_SIZE_40"
+            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
           />
           {{ t('sensitiveInput.copy') }}
         </KButton>

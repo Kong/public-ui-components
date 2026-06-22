@@ -32,7 +32,7 @@
             >
               <ArrowTopLeftIcon
                 decorative
-                :size="KUI_ICON_SIZE_30"
+                :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
               />
             </component>
             <span
@@ -68,7 +68,7 @@
                   <component
                     :is="isFavorite ? StarFillIcon : StarIcon"
                     decorative
-                    :size="KUI_ICON_SIZE_30"
+                    :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
                   />
                 </button>
               </KTooltip>
