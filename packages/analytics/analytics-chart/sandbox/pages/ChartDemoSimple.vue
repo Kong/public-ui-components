@@ -276,7 +276,13 @@
         title="Top 5 Routes"
       >
         <template #name="{ record }">
-          <a href="#">{{ record.name }}</a>
+          <a
+            v-if="record.name !== 'empty'"
+            href="#"
+          >
+            {{ record.name }}
+          </a>
+          <span v-else><i>{{ record.name }}</i></span>
         </template>
       </TopNTable>
     </div>
@@ -334,6 +340,7 @@ const topNRouteDisplay = {
   'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca': { name: '8b1db (default)', deleted: false },
   'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b': { name: 'dp-mock-us-dev (default)', deleted: false },
   'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4': { name: 'dp-mock-msg-per-sec-us-dev (default)', deleted: false },
+  'empty': { name: 'empty', deleted: false },
 }
 
 const topNGatewayServiceDisplay = {
@@ -353,31 +360,31 @@ const topNMetricScenarios: MetricScenario[] = [
     kind: 'count',
     metricKey: 'request_count',
     unit: 'count',
-    values: [9_483, 5_587, 5_583, 1_485, 309],
+    values: [9_483, 5_587, 5_583, 1_485, 309, 9_001],
   },
   {
     kind: 'ms',
     metricKey: 'response_latency_average',
     unit: 'ms',
-    values: [12.345, 9.8, 7.23, 3.456, 1.001],
+    values: [12.345, 9.8, 7.23, 3.456, 1.001, 9.001],
   },
   {
     kind: 'bytes',
     metricKey: 'response_size_average',
     unit: 'bytes',
-    values: [1_048_576, 512_000, 2_048, 128, 1],
+    values: [1_048_576, 512_000, 2_048, 128, 1, 9_001],
   },
   {
     kind: 'usd',
     metricKey: 'cost',
     unit: 'usd',
-    values: [12.3, 3.99, 0.00005, 0.42, 0.1],
+    values: [12.3, 3.99, 0.00005, 0.42, 0.1, 90.01],
   },
   {
     kind: 'rpm',
     metricKey: 'requests_per_minute',
     unit: 'count/minute',
-    values: [98_765, 43_210, 2_100, 987, 12],
+    values: [98_765, 43_210, 2_100, 987, 12, 9_001],
   },
 ]
 
