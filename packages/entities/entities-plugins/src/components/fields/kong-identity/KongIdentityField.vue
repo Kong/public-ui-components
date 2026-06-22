@@ -129,7 +129,9 @@ function handleModeChange(mode: AuthMode) {
   model.value = mode
 
   switch (mode) {
-    case 'kong-identity':
+    case 'kong-identity': {
+      // `directory` is a placeholder; ConfigFormContent resolves the real directory name
+      // from the shared /v2/directories lookup and overwrites it on entering this mode.
       formData.config.principals = { ...getEmptyOrDefault('$.config.principals'), enabled: true, directory: 'default' }
       if (identityRealmsInSchema.value) {
         formData.config.identity_realms = []
@@ -138,6 +140,7 @@ function handleModeChange(mode: AuthMode) {
         formData.config.realm = null
       }
       break
+    }
     case 'consumers': {
       const principalsRequired = !!getSchema('$.config.principals')?.required
       formData.config.principals = principalsRequired ? getEmptyOrDefault('$.config.principals') : null

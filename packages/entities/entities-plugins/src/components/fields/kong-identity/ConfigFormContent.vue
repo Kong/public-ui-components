@@ -34,6 +34,14 @@
       {{ i18n.t('custom_field.kong_identity.identity_realms_required') }}
     </p>
   </div>
+  <PrincipalsCreationGuide
+    v-if="isKonnect && hasPrincipals && selectedMode === 'kong-identity'"
+    class="kong-identity-principals-section"
+    :loading="principalsLoading"
+    :show-panel="principalsShowPanel"
+    @click:create-principal="emit('click:create-principal')"
+    @click:learn-more="(entity: string) => emit('click:learn-more', entity)"
+  />
 
   <AdvancedFields
     class="ff-advanced-fields-container"
@@ -50,6 +58,7 @@
       <KRadio
         data-testid="principals-error-on-miss-true"
         :description="i18n.t('custom_field.kong_identity.error_on_miss_reject_description')"
+        :disabled="principalsPanelVisible"
         :label="i18n.t('custom_field.kong_identity.error_on_miss_reject_label')"
         :model-value="principalsErrorOnMiss"
         :selected-value="true"
@@ -58,6 +67,7 @@
       <KRadio
         data-testid="principals-error-on-miss-false"
         :description="i18n.t('custom_field.kong_identity.error_on_miss_continue_description')"
+        :disabled="principalsPanelVisible"
         :label="i18n.t('custom_field.kong_identity.error_on_miss_continue_label')"
         :model-value="principalsErrorOnMiss"
         :selected-value="false"
@@ -79,6 +89,7 @@ import ObjectField from '../../free-form/shared/ObjectField.vue'
 import AdvancedFields from '../../free-form/shared/AdvancedFields.vue'
 import KongIdentityField from './KongIdentityField.vue'
 import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealmsField.vue'
+import PrincipalsCreationGuide from './PrincipalsCreationGuide.vue'
 import { useFormShared } from '../../free-form/shared/composables'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useAxios } from '@kong-ui-public/entities-shared'
@@ -91,6 +102,11 @@ import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-
 import type { MultiselectItem } from '@kong/kongponents'
 import type { AxiosResponse } from 'axios'
 
+const emit = defineEmits<{
+  'click:learn-more': [entity: string]
+  'click:create-principal': []
+}>()
+
 const registerBeforeSave = inject(BEFORE_SAVE_KEY)
 
 const { i18n } = composables.useI18n()
@@ -102,6 +118,67 @@ const { axiosInstance } = useAxios(appConfig?.axiosRequestConfig)
 const { formData, getSchema } = useFormShared()
 
 const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
+
+// Kong Identity directory lookup (Konnect only). A single /v2/directories call drives two
+// things: the directory NAME is stored on config.principals.directory, and the directory ID
+// is used to check whether any principals already exist. When none do we show the "create
+// your first principal" panel; while that panel is shown (or the lookup is still loading)
+// there are no principals to configure, so error_on_miss is meaningless and must be disabled.
+const principalsLoading = ref(false)
+const principalsHasPrincipals = ref(false)
+
+const principalsShowPanel = computed(() => !principalsLoading.value && !principalsHasPrincipals.value)
+
+// True whenever the field renders something (skeleton or empty-state panel), i.e. there
+// are no confirmed stored principals yet — used to disable error_on_miss.
+const principalsPanelVisible = computed(() =>
+  isKonnect.value
+  && hasPrincipals.value
+  && selectedMode.value === 'kong-identity'
+  && (principalsLoading.value || principalsShowPanel.value),
+)
+
+type ListResponse<T> = { data?: T[] }
+type Directory = { id: string, name: string }
+
+// `setDirectory` is only true on a genuine switch into Kong Identity mode (create flow);
+// on edit-load the directory is already stored and must not be overwritten.
+const fetchPrincipalsState = async ({ setDirectory }: { setDirectory: boolean }) => {
+  // Kong Identity directories are a Konnect-only concept.
+  if (appConfig?.app !== 'konnect') return
+
+  try {
+    principalsLoading.value = true
+    const dirResp = await axiosInstance.get<ListResponse<Directory>>(
+      `${appConfig.apiBaseUrl}/v2/directories`,
+      { params: { 'page[size]': 1 } },
+    )
+    const directory = dirResp?.data?.data?.[0]
+
+    if (!directory) {
+      principalsHasPrincipals.value = false
+      return
+    }
+
+    // Store the resolved directory name so it matches the directory we check principals
+    // against (the two can no longer disagree).
+    if (setDirectory && formData.config?.principals) {
+      formData.config.principals.directory = directory.name
+    }
+
+    // Only need to know whether at least one principal exists, so request a single item.
+    const principalsResp = await axiosInstance.get<ListResponse<unknown>>(
+      `${appConfig.apiBaseUrl}/v2/directories/${directory.id}/principals`,
+      { params: { 'page[size]': 1 } },
+    )
+    principalsHasPrincipals.value = (principalsResp?.data?.data?.length ?? 0) > 0
+  } catch {
+    // On failure fall back to the empty state so the user can still create a principal.
+    principalsHasPrincipals.value = false
+  } finally {
+    principalsLoading.value = false
+  }
+}
 
 const principalsErrorOnMiss = computed(() => formData.config?.principals?.error_on_miss ?? true)
 
@@ -174,6 +251,19 @@ function hasActualRealm(realms: any[] | null | undefined): boolean {
 }
 
 const selectedMode = ref<'consumers' | 'kong-identity' | 'centrally-managed'>(detectInitialMode())
+
+// Run the directory/principals lookup each time the user enters Kong Identity mode.
+// `prev === false` means a real user switch (create flow) so we adopt the directory name;
+// the immediate run (`prev` is undefined, i.e. edit-load) only checks principals and leaves
+// the stored directory intact. Declared after `selectedMode`/`hasPrincipals` because the
+// immediate run reads them synchronously during setup.
+watch(
+  () => isKonnect.value && hasPrincipals.value && selectedMode.value === 'kong-identity',
+  (active, prev) => {
+    if (active) fetchPrincipalsState({ setDirectory: prev === false })
+  },
+  { immediate: true },
+)
 
 // Show validation error when centrally-managed mode is active but no real realm is selected
 const realmValidationError = computed(() =>
@@ -293,6 +383,11 @@ const advancedOmit = computed(() => {
   display: flex;
   flex-direction: column;
   gap: var(--kui-space-40, $kui-space-40);
+}
+
+.kong-identity-principals-section + .ff-advanced-fields-container {
+  border-top: none;
+  padding-top: 0;
 }
 
 .ff-advanced-fields-container {

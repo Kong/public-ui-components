@@ -1,6 +1,9 @@
 <template>
   <DynamicLayout v-bind="props">
-    <ConfigFormContent />
+    <ConfigFormContent
+      @click:create-principal="emit('click:create-principal')"
+      @click:learn-more="(entity: string) => emit('click:learn-more', entity)"
+    />
   </DynamicLayout>
 </template>
 
@@ -13,6 +16,11 @@ import ConfigFormContent from './ConfigFormContent.vue'
 import type { PluginFormLayoutProps as Props } from '../../free-form/shared/layout/provider'
 
 const props = defineProps<Props>()
+
+const emit = defineEmits<{
+  'click:learn-more': [entity: string]
+  'click:create-principal': []
+}>()
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any

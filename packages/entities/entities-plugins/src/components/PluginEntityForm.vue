@@ -25,6 +25,8 @@
         :plugin-name="formModel.name"
         :render-rules="pluginConfig?.renderRules"
         :schema="freeformSchema"
+        @click:create-principal="() => $emit('click:create-principal')"
+        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
       >
         <template
@@ -158,6 +160,8 @@ const emit = defineEmits<{
   ): void
   (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
+  (e: 'click:learn-more', entity: string): void
+  (e: 'click:create-principal'): void
   (e: 'validity-change', payload: PluginValidityChangeEvent): void
 }>()
 

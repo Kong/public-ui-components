@@ -56,6 +56,8 @@
         :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
+        @click:create-principal="() => $emit('click:create-principal')"
+        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
@@ -249,6 +251,8 @@ const emit = defineEmits<{
   ): void
   (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
+  (e: 'click:learn-more', entity: string): void
+  (e: 'click:create-principal'): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

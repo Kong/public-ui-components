@@ -1209,7 +1209,11 @@
       "error_on_miss_reject_label": "Reject the request",
       "error_on_miss_reject_description": "Treat the request as unauthenticated if Kong Identity cannot resolve the principal.",
       "error_on_miss_continue_label": "Continue without a principal",
-      "error_on_miss_continue_description": "Allow the request to continue without resolving a principal."
+      "error_on_miss_continue_description": "Allow the request to continue without resolving a principal.",
+      "configure_title": "Configure Kong Identity",
+      "configure_description": "Kong Identity uses principals to represent authenticated users, services, or applications. Create your first principal in Kong Identity to start using principal-based authentication.",
+      "create_principal": "Create principal",
+      "configure_learn_more": "Learn more"
     }
   },
   "sp": {
