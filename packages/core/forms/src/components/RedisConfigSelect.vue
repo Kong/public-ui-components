@@ -20,7 +20,7 @@
       enable-filtering
       :filter-function="() => true"
       :items="availableRedisConfigs"
-      :loading="loadingRedisConfigs"
+      :loading="(loadingRedisConfigs as any)"
       :model-value="defaultRedisConfigItem"
       :placeholder="redisSelectPlaceholderText"
       @change="(item) => redisConfigSelected(item?.value)"
