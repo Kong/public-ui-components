@@ -105,6 +105,7 @@
                     deleted: row.deleted,
                     dimension: displayKey,
                     dimensions: row.dimensions,
+                    isEmpty: row.id === 'empty',
                   }"
                 >
                   {{ row.name }}
@@ -487,6 +488,7 @@ const getDimensionSlotRecord = (row: TopNRow, key: string) => {
     deleted: dimension?.deleted || false,
     dimension: key,
     dimensions: row.dimensions,
+    isEmpty: dimension?.id === 'empty',
   }
 }
 

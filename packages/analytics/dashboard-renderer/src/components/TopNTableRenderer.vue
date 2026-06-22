@@ -15,7 +15,7 @@
         #name="{ record }"
       >
         <AsyncEntityLink
-          v-if="getEntityLink(record)"
+          v-if="!record.isEmpty && getEntityLink(record)"
           :entity-link-data="{
             id: record.id,
             label: record.name,
@@ -24,7 +24,8 @@
           :external-link="parseLink(record)"
         />
         <template v-else>
-          {{ record.name }}
+          <i v-if="record.name === 'empty'">{{ record.name }}</i>
+          <span v-else>{{ record.name }}</span>
         </template>
       </template>
     </TopNTable>
