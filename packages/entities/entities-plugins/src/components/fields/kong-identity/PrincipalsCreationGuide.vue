@@ -18,7 +18,7 @@
       <KButton
         appearance="primary"
         data-testid="kong-identity-create-principal"
-        @click="emit('click:create-principal')"
+        @click="showLeavePrompt = true"
       >
         <AddIcon decorative />
         {{ t('custom_field.kong_identity.create_principal') }}
@@ -35,10 +35,21 @@
       </KButton>
     </template>
   </KEmptyState>
+
+  <KPrompt
+    :action-button-text="t('custom_field.kong_identity.leave_prompt_action')"
+    data-testid="kong-identity-create-principal-prompt"
+    :message="t('custom_field.kong_identity.leave_prompt_message')"
+    :title="t('custom_field.kong_identity.leave_prompt_title')"
+    :visible="showLeavePrompt"
+    @cancel="showLeavePrompt = false"
+    @proceed="handleCreatePrincipal"
+  />
 </template>
 
 <script lang="ts" setup>
-import { KButton, KEmptyState } from '@kong/kongponents'
+import { ref } from 'vue'
+import { KButton, KEmptyState, KPrompt } from '@kong/kongponents'
 import { AddIcon, BookIcon } from '@kong/icons'
 import composables from '../../../composables'
 
@@ -59,6 +70,14 @@ const emit = defineEmits<{
 
 const { i18n } = composables.useI18n()
 const { t } = i18n
+
+// Creating a principal navigates away from the form; confirm before losing unsaved changes.
+const showLeavePrompt = ref(false)
+
+const handleCreatePrincipal = () => {
+  showLeavePrompt.value = false
+  emit('click:create-principal')
+}
 </script>
 
 <style lang="scss" scoped>

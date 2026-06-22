@@ -796,13 +796,29 @@ describe('ConfigFormContent', () => {
         cy.getTestId('kong-identity-principals-panel').should('not.exist')
       })
 
-      it('emits "click:create-principal" when the create button is clicked', () => {
+      it('emits "click:create-principal" only after confirming the leave-page prompt', () => {
         mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
 
+        // Clicking opens the leave-page confirmation; the event must not fire yet
         cy.getTestId('kong-identity-create-principal').should('not.be.disabled').click()
+        cy.getTestId('kong-identity-create-principal-prompt').should('be.visible')
+        cy.get('@onCreatePrincipalSpy').should('not.have.been.called')
+
+        // Proceeding through the prompt emits the event
+        cy.getTestId('modal-action-button').click()
         cy.get('@onCreatePrincipalSpy').should('have.been.calledOnce')
+      })
+
+      it('does not emit "click:create-principal" when the leave-page prompt is cancelled', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
+
+        selectKongIdentity()
+
+        cy.getTestId('kong-identity-create-principal').click()
+        cy.getTestId('modal-cancel-button').click()
+        cy.get('@onCreatePrincipalSpy').should('not.have.been.called')
       })
 
       it('emits "click:learn-more" to open the Learning Hub when "Learn more" is clicked', () => {

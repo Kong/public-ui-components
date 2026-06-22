@@ -1213,7 +1213,10 @@
       "configure_title": "Configure Kong Identity",
       "configure_description": "Kong Identity uses principals to represent authenticated users, services, or applications. Create your first principal in Kong Identity to start using principal-based authentication.",
       "create_principal": "Create principal",
-      "configure_learn_more": "Learn more"
+      "configure_learn_more": "Learn more",
+      "leave_prompt_title": "Leave this page?",
+      "leave_prompt_message": "Your unsaved changes will be lost if you continue.",
+      "leave_prompt_action": "Leave page"
     }
   },
   "sp": {
