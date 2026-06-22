@@ -41,7 +41,7 @@
                   icon
                   size="small"
                 >
-                  <MoreIcon :size="KUI_ICON_SIZE_30" />
+                  <MoreIcon :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`" />
                 </KButton>
               </template>
 

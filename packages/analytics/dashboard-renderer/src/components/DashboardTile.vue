@@ -36,7 +36,7 @@
             v-if="isAgedOutQuery"
             #icon
           >
-            <WarningIcon :size="KUI_ICON_SIZE_20" />
+            <WarningIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
           </template>
           <span class="badge-text">
             {{ badgeData }}
@@ -57,13 +57,13 @@
           <ProgressIcon
             v-if="loadingChartData"
             role="button"
-            :size="KUI_ICON_SIZE_60"
+            :size="`var(--kui-icon-size-60, ${KUI_ICON_SIZE_60})`"
             tabindex="0"
           />
           <RefreshIcon
             v-else
             role="button"
-            :size="KUI_ICON_SIZE_60"
+            :size="`var(--kui-icon-size-60, ${KUI_ICON_SIZE_60})`"
             tabindex="0"
           />
         </KButton>
@@ -77,9 +77,9 @@
         <EditIcon
           v-if="canShowKebabMenu && context.editable && !isFullscreen"
           class="edit-icon"
-          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
           :data-testid="`edit-tile-${tileId}`"
-          :size="KUI_ICON_SIZE_40"
+          :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
           @click="editTile"
         />
         <KDropdown
@@ -90,9 +90,9 @@
         >
           <MoreIcon
             class="kebab-action-menu"
-            :color="KUI_COLOR_TEXT_NEUTRAL"
+            :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
             :data-testid="`kebab-action-menu-${tileId}`"
-            :size="KUI_ICON_SIZE_40"
+            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
           />
           <template #items>
             <KDropdownItem
