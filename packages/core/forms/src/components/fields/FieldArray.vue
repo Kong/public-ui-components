@@ -160,7 +160,7 @@ import FieldSelect from './FieldSelect.vue'
 import FieldStringArray from './FieldStringArray.vue'
 import abstractField from './abstractField'
 
-export default /** @type {import('vue').DefineComponent<any, any, any>} */ ({
+export default {
   name: 'FieldArray',
   components: {
     FieldArrayItem,

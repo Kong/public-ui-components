@@ -32,7 +32,7 @@ import { getFieldState } from '../../utils/autoSuggest'
 import { FORMS_API_KEY, FIELD_STATES } from '../../const'
 import english from '../../locales/en.json'
 
-export default /** @type {import('vue').DefineComponent<any, any, any>} */ ({
+export default {
   components: {
     FieldScopedEntitySelect,
   },
