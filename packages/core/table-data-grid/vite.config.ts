@@ -10,6 +10,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     lib: {
       name: `kong-ui-public-${sanitizedPackageName}`,
       entry: resolve(__dirname, './src/index.ts'),
+      cssFileName: 'style',
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
     rollupOptions: {

@@ -65,7 +65,6 @@ import type {
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
-import { watchDebounced } from '@vueuse/core'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 const editableSwitch = ref(true)
@@ -79,6 +78,38 @@ const context = computed<DashboardRendererContext>(() => ({
 const dashboardConfig = ref <DashboardConfig>({
   tile_height: 167,
   tiles: [
+    {
+      type: 'table',
+      id: crypto.randomUUID(),
+      definition: {
+        config: {
+          title: 'Platform routes',
+        },
+        query: {
+          datasource: 'platform',
+          entity: 'route',
+          columns: ['name', 'control_plane', 'gateway_service', 'env', 'team', 'region'],
+          filters: [
+            {
+              field: 'env',
+              operator: 'in',
+              value: ['prod'],
+            },
+          ],
+          page_size: 25,
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 4,
+        },
+        size: {
+          cols: 6,
+          rows: 3,
+        },
+      },
+    } satisfies TileConfig,
     {
       type: 'chart',
       id: crypto.randomUUID(),
@@ -212,6 +243,9 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
   }
 
   dashboardConfig.value.tiles = dashboardConfig.value.tiles.map(t => {
+    if (t.type !== 'chart') {
+      return t
+    }
 
     const newType = chartTypeToggleMap[t.definition.chart.type] || t.definition.chart.type
 
@@ -276,10 +310,6 @@ const addTile = () => {
     },
   })
 }
-
-watchDebounced(() => dashboardConfig.value.tiles, (newValue) => {
-  console.log('update tiles', newValue)
-}, { deep: true, debounce: 300 })
 
 const handleZoom = (zoomEvent: TileZoomEvent) => {
   console.log('tile-time-range-zoom', zoomEvent)

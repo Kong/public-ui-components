@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.18.0...@kong-ui-public/analytics-utilities@12.19.0) (2026-06-22)
+
+
+### Features
+
+* **dashboard-renderer:** render table tiles ([#3462](https://github.com/Kong/public-ui-components/issues/3462)) ([5e8a32f](https://github.com/Kong/public-ui-components/commit/5e8a32f4c9c265d4f5d1b2e79f7de222fc757962))
+
+
+
+
+
 # [12.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.17.2...@kong-ui-public/analytics-utilities@12.18.0) (2026-06-16)
 
 

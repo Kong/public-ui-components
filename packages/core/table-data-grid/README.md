@@ -21,26 +21,32 @@ app.use(Kongponents)
 
 ## Usage
 
+`TableDataGrid` fills the height of its parent container by default. Place it in
+a parent with an explicit height, or in a flex layout where the parent owns the
+available height, so the grid can expand and shrink with its container.
+
 ```vue
 <template>
-  <KButton @click="refreshRows">
-    Refresh rows
-  </KButton>
+  <div class="rows-panel">
+    <KButton @click="refreshRows">
+      Refresh rows
+    </KButton>
 
-  <TableDataGrid
-    :fetcher="fetchRows"
-    :headers="headers"
-    :page-size="25"
-    :refresh-key="refreshKey"
-    @state="handleState"
-  >
-    <template #empty-state>
-      <KEmptyState
-        message="Try changing filters or refreshing the dataset."
-        title="No rows found"
-      />
-    </template>
-  </TableDataGrid>
+    <TableDataGrid
+      :fetcher="fetchRows"
+      :headers="headers"
+      :page-size="25"
+      :refresh-key="refreshKey"
+      @state="handleState"
+    >
+      <template #empty-state>
+        <KEmptyState
+          message="Try changing filters or refreshing the dataset."
+          title="No rows found"
+        />
+      </template>
+    </TableDataGrid>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -91,6 +97,15 @@ const handleState = (payload: TableDataGridStatePayload) => {
   lastState.value = payload
 }
 </script>
+
+<style scoped>
+.rows-panel {
+  display: flex;
+  flex-direction: column;
+  height: 480px;
+  min-height: 0;
+}
+</style>
 ```
 
 ## Props

@@ -35,9 +35,9 @@ export interface PlatformTabularResponseMeta {
   entity: string
   columns: string[]
   page_size: number
-  cursor?: string
-  datasource: 'platform'
   display: DisplayBlob
+  cursor?: string
+  datasource?: 'platform'
 }
 
 export interface PlatformTabularResponse {

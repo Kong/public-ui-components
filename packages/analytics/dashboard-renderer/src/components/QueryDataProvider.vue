@@ -41,7 +41,7 @@
 import type {
   AnalyticsBridge,
   ExploreResultV4,
-  ValidDashboardQuery,
+  ValidDashboardChartQuery,
 } from '@kong-ui-public/analytics-utilities'
 import type { QueryError } from '@kong-ui-public/analytics-chart'
 import type { DashboardRendererContextInternal } from '../types'
@@ -58,7 +58,7 @@ import { VisibilityOffIcon, WarningOutlineIcon } from '@kong/icons'
 const props = defineProps<{
   context: DashboardRendererContextInternal
   limitOverride?: number
-  query: ValidDashboardQuery
+  query: ValidDashboardChartQuery
   queryReady: boolean
   refreshCounter: number
 }>()

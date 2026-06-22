@@ -90,7 +90,7 @@ const { internalContext, queryReady } = composables.useDashboardInternalContext(
 })
 
 const chartNotConfigured = computed(() => {
-  return !definition?.query?.metrics || definition.query.metrics.length === 0
+  return !('metrics' in definition.query) || !definition.query.metrics || definition.query.metrics.length === 0
 })
 
 const height = ref<number>(DEFAULT_TILE_HEIGHT)
