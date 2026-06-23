@@ -65,7 +65,7 @@ defineProps<{
 const emit = defineEmits<{
   'click:learn-more': [entity: string]
   /** Emitted when the user clicks "Create principal"; the consuming app owns navigation */
-  'click:create-principal': []
+  'click:create-entity': [payload: { type: 'principal' }]
 }>()
 
 const { i18n } = composables.useI18n()
@@ -76,7 +76,7 @@ const showLeavePrompt = ref(false)
 
 const handleCreatePrincipal = () => {
   showLeavePrompt.value = false
-  emit('click:create-principal')
+  emit('click:create-entity', { type: 'principal' })
 }
 </script>
 

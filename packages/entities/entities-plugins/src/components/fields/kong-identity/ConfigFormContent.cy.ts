@@ -282,7 +282,7 @@ function mountContent(
       }, {
         default: () => h(ConfigFormContent, {
           'onClick:learn-more': onLearnMoreSpy,
-          'onClick:create-principal': onCreatePrincipalSpy,
+          'onClick:create-entity': onCreatePrincipalSpy,
         }),
       }),
     ), {
@@ -796,7 +796,7 @@ describe('ConfigFormContent', () => {
         cy.getTestId('kong-identity-principals-panel').should('not.exist')
       })
 
-      it('emits "click:create-principal" only after confirming the leave-page prompt', () => {
+      it('emits "click:create-entity" only after confirming the leave-page prompt', () => {
         mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
@@ -811,7 +811,7 @@ describe('ConfigFormContent', () => {
         cy.get('@onCreatePrincipalSpy').should('have.been.calledOnce')
       })
 
-      it('does not emit "click:create-principal" when the leave-page prompt is cancelled', () => {
+      it('does not emit "click:create-entity" when the leave-page prompt is cancelled', () => {
         mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()

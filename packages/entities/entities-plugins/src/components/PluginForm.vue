@@ -56,7 +56,7 @@
         :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
-        @click:create-principal="() => $emit('click:create-principal')"
+        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
         @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
         @loading="(val: boolean) => formLoading = val"
@@ -215,6 +215,7 @@ import {
   type PluginOrdering,
   type CustomSchemas,
   type PluginValidityChangeEvent,
+  type EntityCreateEvent,
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
@@ -252,7 +253,7 @@ const emit = defineEmits<{
   (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
   (e: 'click:learn-more', entity: string): void
-  (e: 'click:create-principal'): void
+  (e: 'click:create-entity', payload: EntityCreateEvent): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

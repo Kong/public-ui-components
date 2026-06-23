@@ -39,7 +39,7 @@
     class="kong-identity-principals-section"
     :loading="principalsLoading"
     :show-panel="principalsShowPanel"
-    @click:create-principal="emit('click:create-principal')"
+    @click:create-entity="(payload) => emit('click:create-entity', payload)"
     @click:learn-more="(entity: string) => emit('click:learn-more', entity)"
   />
 
@@ -101,10 +101,11 @@ import composables from '../../../composables'
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { MultiselectItem } from '@kong/kongponents'
 import type { AxiosResponse } from 'axios'
+import type { EntityCreateEvent } from '../../../types'
 
 const emit = defineEmits<{
   'click:learn-more': [entity: string]
-  'click:create-principal': []
+  'click:create-entity': [payload: EntityCreateEvent]
 }>()
 
 const registerBeforeSave = inject(BEFORE_SAVE_KEY)
