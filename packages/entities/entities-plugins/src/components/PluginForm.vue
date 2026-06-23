@@ -56,7 +56,7 @@
         :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
-        @click:create="(payload: KongIdentityCreateEvent) => $emit('click:create', payload)"
+        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
         @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
         @loading="(val: boolean) => formLoading = val"
@@ -215,7 +215,7 @@ import {
   type PluginOrdering,
   type CustomSchemas,
   type PluginValidityChangeEvent,
-  type KongIdentityCreateEvent,
+  type EntityCreateEvent,
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
@@ -252,7 +252,7 @@ const emit = defineEmits<{
   ): void
   (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
-  (e: 'click:create', payload: KongIdentityCreateEvent): void
+  (e: 'click:create-entity', payload: EntityCreateEvent): void
   (e: 'click:learn-more', entity: string): void
 }>()
 

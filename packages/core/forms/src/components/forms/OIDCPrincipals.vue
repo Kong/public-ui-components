@@ -55,42 +55,50 @@
       </KRadio>
     </div>
 
-    <template v-if="selectedMode === MODE_KONG_IDENTITY">
-      <div
-        v-if="principalsGuideVisible"
-        class="principals-create-guide"
-        data-testid="principals-create-guide"
-      >
-        <div class="principals-create-guide-title">
-          Add principals
-        </div>
-        <div class="principals-create-guide-description">
-          Get more value from OAuth 2.0 integration by creating principals in Kong Identity. Associate principals with this authorization server and its clients to enable principal-based authentication across Kong products.
-        </div>
-        <div class="principals-create-guide-actions">
-          <KButton
-            appearance="primary"
-            data-testid="principals-create-principal"
-            @click="leavePromptType = 'principal'"
-          >
-            <AddIcon decorative />
-            Create principal
-          </KButton>
-          <KButton
-            appearance="secondary"
-            data-testid="principals-learn-more"
-            @click="$emit('click:learn-more', 'kong-identity')"
-          >
-            <BookIcon decorative />
-            Learn more
-          </KButton>
-        </div>
+    <!-- While the first directory/principals lookup is in flight, show a skeleton in place of
+         the guide (cold fetch only — cached refreshes stay silent). -->
+    <KSkeleton
+      v-if="principalsSkeletonVisible"
+      class="principals-create-guide-skeleton"
+      data-testid="principals-create-guide-loading"
+    />
+    <!-- Add/Create Principals guide: principal lookup runs after token verification in
+         either mode, so the empty-directory guide applies to Kong Identity and External alike. -->
+    <div
+      v-else-if="principalsGuideVisible"
+      class="principals-create-guide"
+      data-testid="principals-create-guide"
+    >
+      <div class="principals-create-guide-title">
+        Add principals
       </div>
+      <div class="principals-create-guide-description">
+        Get more value from OAuth 2.0 integration by creating principals in Kong Identity. Associate principals with this authorization server and its clients to enable principal-based authentication across Kong products.
+      </div>
+      <div class="principals-create-guide-actions">
+        <KButton
+          appearance="primary"
+          data-testid="principals-create-principal"
+          @click="leavePromptType = 'principal'"
+        >
+          <AddIcon decorative />
+          Create principal
+        </KButton>
+        <KButton
+          appearance="secondary"
+          data-testid="principals-learn-more"
+          @click="$emit('click:learn-more', 'kong-identity')"
+        >
+          <BookIcon decorative />
+          Learn more
+        </KButton>
+      </div>
+    </div>
 
+    <template v-if="selectedMode === MODE_KONG_IDENTITY">
       <KSelect
         class="principals-directory-select"
         data-testid="principals-directory-select"
-        :disabled="principalsFieldsDisabled"
         enable-filtering
         :items="kongIdentityServerItems"
         label="Authorization Server"
@@ -126,7 +134,7 @@
         <KSelect
           class="principals-client-select"
           data-testid="principals-client-select"
-          :disabled="principalsFieldsDisabled || !selectedServer"
+          :disabled="!selectedServer"
           enable-filtering
           :items="getClientItemsForRow(index)"
           :label="index === 0 ? 'Client' : undefined"
@@ -155,7 +163,7 @@
           <KInput
             class="principals-client-secret"
             data-testid="principals-client-secret"
-            :disabled="principalsFieldsDisabled || !selectedServer"
+            :disabled="!selectedServer"
             :label="index === 0 ? 'Client secret' : undefined"
             :model-value="clientSecretArray[index]"
             placeholder="e.g., your-client-secret"
@@ -185,122 +193,20 @@
 
       <div
         class="add-client-inline"
-        :class="{ 'add-client-inline-disabled': principalsFieldsDisabled || !selectedServer }"
+        :class="{ 'add-client-inline-disabled': !selectedServer }"
         data-testid="add-client-action"
-        @click="(principalsFieldsDisabled || !selectedServer) ? null : addClientRow()"
+        @click="(!selectedServer) ? null : addClientRow()"
       >
         + Add client
       </div>
 
-      <KCollapse
-        class="principals-advanced-settings"
-        data-testid="principals-advanced-settings"
-        trigger-label="Show additional settings"
+      <PrincipalLookupSettings
+        :disabled="principalsFieldsDisabled"
+        :form-model="formModel"
+        :on-model-updated="onModelUpdated"
       >
-        <div class="principals-field-group">
-          <KSelect
-            class="principals-lookup-method-select"
-            data-testid="principals-lookup-method"
-            :disabled="principalsFieldsDisabled"
-            :items="lookupMethodItems"
-            label="Principal lookup method"
-            :model-value="selectedLookupMethod"
-            placeholder="Select a lookup method"
-            @update:model-value="handleLookupMethodChange"
-          >
-            <template #item-template="{ item }">
-              <div class="lookup-method-item">
-                <div class="lookup-method-item-label">
-                  {{ item.label }}
-                </div>
-                <div class="lookup-method-item-description">
-                  {{ item.description }}
-                </div>
-              </div>
-            </template>
-          </KSelect>
-
-          <template v-if="selectedLookupMethod === 'custom-identity'">
-            <KInput
-              data-testid="principals-custom-identity-name"
-              :disabled="principalsFieldsDisabled"
-              help="Enter the custom identity name used to look up the principal. Kong matches the value from the token claim to a principal with the same custom identity name and value."
-              label="Custom Identity name"
-              :model-value="formModel['config-principals-principal_by']"
-              placeholder="e.g., Customer_ID"
-              @update:model-value="updateField('config-principals-principal_by', $event)"
-            />
-            <KInput
-              data-testid="principals-identifier-claim"
-              :disabled="principalsFieldsDisabled"
-              help="Enter the token claim used to identify the principal. Use dot notation for nested claims (for example, workload.id). Escape periods in claim names with \ (for example, workload\.id)."
-              label="Identifier claim"
-              :model-value="getIdentifierClaimInputValue()"
-              placeholder="e.g., user.employee_id"
-              @update:model-value="handleIdentifierClaimChange($event)"
-            />
-          </template>
-        </div>
-        <div class="principals-field-group">
-          <KLabel>If principal lookup fails</KLabel>
-          <KRadio
-            data-testid="principals-error-on-miss-true"
-            description="Treat the request as unauthenticated if Kong Identity cannot resolve the principal."
-            :disabled="principalsFieldsDisabled"
-            label="Reject the request"
-            :model-value="formModel['config-principals-error_on_miss']"
-            :selected-value="true"
-            @change="updateField('config-principals-error_on_miss', true)"
-          />
-          <KRadio
-            data-testid="principals-error-on-miss-false"
-            description="Allow the request to continue without resolving a principal."
-            :disabled="principalsFieldsDisabled"
-            label="Continue without a principal"
-            :model-value="formModel['config-principals-error_on_miss']"
-            :selected-value="false"
-            @change="updateField('config-principals-error_on_miss', false)"
-          />
-        </div>
-
-        <div class="principals-field-group">
-          <KCheckbox
-            data-testid="principals-match-consumer"
-            :disabled="principalsFieldsDisabled"
-            :model-value="formModel['config-principals-match_consumer']"
-            @update:model-value="handleMatchConsumerChange($event)"
-          >
-            Use linked consumers
-            <template #description>
-              Use the consumer linked to the authenticated principal so existing consumer-based plugins and policies continue to work.
-              <a
-                href="https://developer.konghq.com/identity/principals/"
-                rel="noopener noreferrer"
-                target="_blank"
-              >Learn how to link a consumer.</a>
-            </template>
-          </KCheckbox>
-        </div>
-
-        <div class="principals-field-group">
-          <KCheckbox
-            data-testid="principals-match-consumer-groups"
-            :disabled="principalsFieldsDisabled || !formModel['config-principals-match_consumer']"
-            :model-value="formModel['config-principals-match_consumer_groups']"
-            @update:model-value="updateField('config-principals-match_consumer_groups', $event)"
-          >
-            Use linked consumer groups
-            <template #description>
-              Use consumer groups linked to the authenticated principal so existing consumer group policies and plugins continue to work. Consumer groups can be linked through principal metadata.
-              <a
-                href="https://developer.konghq.com/identity/principals/"
-                rel="noopener noreferrer"
-                target="_blank"
-              >Learn how to link a consumer group.</a>
-            </template>
-          </KCheckbox>
-        </div>
-      </KCollapse>
+        <slot name="advanced-fields" />
+      </PrincipalLookupSettings>
     </template>
 
     <template v-else>
@@ -374,6 +280,18 @@
         :schema="issuerFieldsSchema"
         @model-updated="onModelUpdated"
       />
+
+      <!-- Principal lookup is optional for external auth servers: the in-collapse toggle opts
+           in, then it runs after token verification using the same engine as Kong Identity. -->
+      <PrincipalLookupSettings
+        :disabled="principalsFieldsDisabled"
+        :form-model="formModel"
+        :on-enabled-change="handleUsePrincipalLookupChange"
+        :on-model-updated="onModelUpdated"
+        show-enable-toggle
+      >
+        <slot name="advanced-fields" />
+      </PrincipalLookupSettings>
     </template>
 
     <KPrompt
@@ -389,6 +307,7 @@
 
 <script>
 import VueFormGenerator from '../FormGenerator.vue'
+import PrincipalLookupSettings from './PrincipalLookupSettings.vue'
 import { FORMS_CONFIG, AUTOFILL_SLOT } from '../../const'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import { AddIcon, BookIcon, CloseIcon, KeyIcon, WorldIcon } from '@kong/icons'
@@ -400,61 +319,23 @@ const MODE_EXTERNAL = 'external'
 // TODO: Replace with the actual endpoint once the API is ready
 const KONG_IDENTITY_SERVERS_ENDPOINT = '/v1/auth-servers/_computed'
 
-// External-auth-server (commonFields) field models — kept in sync with OIDCForm.
-const COMMON_FIELD_MODELS = new Set([
-  'config-client_id',
-  'config-client_secret',
-  'config-issuer',
-])
+// Kong Identity auth servers are hosted under the identity.konghq domain; an issuer that
+// does not match is an external IdP.
+const KONG_IDENTITY_ISSUER_MARKER = 'identity.konghq'
 
-const lookupMethodItems = [
-  {
-    label: 'Kong Identity client',
-    value: 'kong-identity',
-    description: 'Match principals using the client ID from the token subject (sub) claim.',
-  },
-  {
-    label: 'Custom claim',
-    value: 'custom-identity',
-    description: 'Match principals using a custom JWT claim.',
-  },
-]
+const isKongIdentityIssuer = (issuer) =>
+  typeof issuer === 'string' && issuer.includes(KONG_IDENTITY_ISSUER_MARKER)
 
-const hasValue = value => {
-  if (value === undefined || value === null || value === '') {
-    return false
-  }
-
-  if (Array.isArray(value)) {
-    return value.length > 0
-  }
-
-  return true
-}
-
-const inferInitialLookupMethod = (formModel) => {
-  if (hasValue(formModel['config-principals-principal_claim']) || hasValue(formModel['config-principals-principal_by'])) {
-    return 'custom-identity'
-  }
-
-  return 'kong-identity'
-}
-
-// Decide the initial radio mode from the existing record.
+// Decide the initial radio mode from the existing record. On edit we infer the auth source
+// from the issuer; on create we default to Kong Identity and let the user toggle the radios.
 const inferInitialMode = (formModel, isEditing) => {
-  if (formModel['config-principals-enabled'] === true) return MODE_KONG_IDENTITY
-  // On edit, respect principals-enabled=false as External mode
-  if (isEditing && formModel['config-principals-enabled'] !== true) return MODE_EXTERNAL
-  for (const key of COMMON_FIELD_MODELS) {
-    const v = formModel[key]
-    if (v !== undefined && v !== null && v !== '') return MODE_EXTERNAL
-  }
-  return MODE_KONG_IDENTITY
+  if (!isEditing) return MODE_KONG_IDENTITY
+  return isKongIdentityIssuer(formModel['config-issuer']) ? MODE_KONG_IDENTITY : MODE_EXTERNAL
 }
 
 export default {
   name: 'OIDCPrincipals',
-  components: { VueFormGenerator, AddIcon, BookIcon, CloseIcon, KeyIcon, WorldIcon },
+  components: { VueFormGenerator, PrincipalLookupSettings, AddIcon, BookIcon, CloseIcon, KeyIcon, WorldIcon },
   inject: {
     formsConfig: {
       from: FORMS_CONFIG,
@@ -491,17 +372,15 @@ export default {
       default: false,
     },
   },
-  emits: ['mode-change', 'click:learn-more', 'click:create'],
+  emits: ['mode-change', 'click:learn-more', 'click:create-entity'],
   data() {
     return {
       MODE_KONG_IDENTITY,
       MODE_EXTERNAL,
-      lookupMethodItems,
       KUI_ICON_SIZE_20,
       KUI_ICON_SIZE_30,
       KUI_ICON_SIZE_40,
       selectedMode: inferInitialMode(this.formModel, this.isEditing),
-      selectedLookupMethod: inferInitialLookupMethod(this.formModel),
       kongIdentityServers: [],
       kongIdentityServersLoading: false,
       clients: [],
@@ -512,6 +391,9 @@ export default {
       // Principals existence lookup (Konnect Kong Identity directory)
       principalsLoading: false,
       hasPrincipals: false,
+      // Cached directory from the first /v2/directories fetch so mode switches and the
+      // external opt-in toggle refresh silently (no loading flash) and apply the name instantly.
+      cachedDirectory: null,
     }
   },
   computed: {
@@ -544,11 +426,16 @@ export default {
       return [null]
     },
     isRemoveClientDisabled() {
-      return this.principalsFieldsDisabled || !this.selectedServer || this.clientIdArray.length <= 1
+      return !this.selectedServer || this.clientIdArray.length <= 1
     },
     // Kong Identity directories/principals are a Konnect-only concept.
     isKonnect() {
       return this.formsConfig?.app === 'konnect'
+    },
+    // Whether principal lookup is on. Kong Identity mode pins this true; External mode
+    // controls it with the "Use principal lookup" toggle (config-principals-enabled).
+    principalsEnabled() {
+      return this.formModel['config-principals-enabled'] === true
     },
     // Until at least one principal exists in the directory (or while we're still
     // checking), the principal-config fields are meaningless, so disable them and
@@ -556,24 +443,31 @@ export default {
     principalsFieldsDisabled() {
       return this.isKonnect && (this.principalsLoading || !this.hasPrincipals)
     },
+    // Show the "Add principals" guide only when lookup is on and the directory has none.
     principalsGuideVisible() {
-      return this.isKonnect && !this.principalsLoading && !this.hasPrincipals
+      return this.isKonnect && this.principalsEnabled && !this.principalsLoading && !this.hasPrincipals
+    },
+    // While the first (cold) directory/principals lookup is in flight, show a skeleton in
+    // place of the guide. Cached refreshes don't set principalsLoading, so they stay silent.
+    principalsSkeletonVisible() {
+      return this.isKonnect && this.principalsEnabled && this.principalsLoading
     },
   },
   mounted() {
-    // On create, Kong Identity is the default mode — ensure principals-enabled
-    // is set to true so the payload is correct.
-    if (!this.isEditing && this.selectedMode === MODE_KONG_IDENTITY) {
-      // eslint-disable-next-line vue/no-mutating-props
-      this.formModel['config-principals-enabled'] = true
-    }
+    // Kong Identity is the principal-based model, so it turns lookup on by default on create.
+    // External auth is opt-in (the "Use principal lookup" toggle), so it stays off until asked.
     if (!this.isEditing) {
+      if (this.selectedMode === MODE_KONG_IDENTITY) {
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-principals-enabled'] = true
+      }
       this.$nextTick(() => this.$emit('mode-change', this.selectedMode))
     }
     this.fetchKongIdentityServers()
-    if (this.selectedMode === MODE_KONG_IDENTITY) {
-      // On create, adopt the directory name from the API; on edit, keep the stored value.
-      this.fetchPrincipalsState({ setDirectory: !this.isEditing })
+    // Check the directory's principals whenever lookup is on (KI always; External once opted
+    // in). Only adopt the fetched directory name in Kong Identity create.
+    if (this.formModel['config-principals-enabled'] === true) {
+      this.fetchPrincipalsState({ setDirectory: !this.isEditing && this.selectedMode === MODE_KONG_IDENTITY })
     }
   },
   methods: {
@@ -582,8 +476,17 @@ export default {
     async fetchPrincipalsState({ setDirectory = false } = {}) {
       // Kong Identity directories are a Konnect-only concept.
       if (this.formsConfig?.app !== 'konnect') return
+      // Apply the cached directory name instantly so the field isn't empty during a refresh.
+      if (setDirectory && this.cachedDirectory) {
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-principals-directory'] = this.cachedDirectory.name
+        this.onModelUpdated()
+      }
       try {
-        this.principalsLoading = true
+        // Only show the loading skeleton on the first (cold) fetch; cached refreshes are silent.
+        if (!this.cachedDirectory) {
+          this.principalsLoading = true
+        }
         const { axiosInstance } = useAxios(this.formsConfig?.axiosRequestConfig)
         const base = this.formsConfig.apiBaseUrl
         // Only need the single directory backing this config.
@@ -593,6 +496,7 @@ export default {
           this.hasPrincipals = false
           return
         }
+        this.cachedDirectory = directory
         // Store the resolved directory name so principals.directory matches the directory
         // we check against (instead of a hardcoded 'default').
         if (setDirectory) {
@@ -712,45 +616,17 @@ export default {
         disabled: selectedIds.some((id, i) => i !== index && id === item.value),
       }))
     },
-    getIdentifierClaimInputValue() {
-      const claim = this.formModel['config-principals-principal_claim']
-      if (Array.isArray(claim)) {
-        // Escape literal dots within each part before joining
-        return claim.map(part => part.replace(/\./g, '\\.')).join('.')
-      }
-      return claim || ''
-    },
-    handleIdentifierClaimChange(rawValue) {
-      const value = typeof rawValue === 'string' ? rawValue.trim() : ''
-      if (!value) {
-        this.updateField('config-principals-principal_claim', [])
-        return
-      }
-
-      // Split on unescaped dots (dots not preceded by \), then unescape \. → .
-      const parts = value.split(/(?<!\\)\./).map(part => part.replace(/\\\./g, '.').trim()).filter(Boolean)
-      this.updateField('config-principals-principal_claim', parts)
-    },
-    handleMatchConsumerChange(checked) {
-      this.updateField('config-principals-match_consumer', checked)
-      if (!checked) {
-        this.updateField('config-principals-match_consumer_groups', false)
-      }
-    },
-    handleLookupMethodChange(value) {
-      this.selectedLookupMethod = value
-      if (value !== 'custom-identity') {
-        // eslint-disable-next-line vue/no-mutating-props
-        this.formModel['config-principals-principal_by'] = null
-        // eslint-disable-next-line vue/no-mutating-props
-        this.formModel['config-principals-principal_claim'] = null
-        this.onModelUpdated()
-      }
-    },
     updateField(field, value) {
       // eslint-disable-next-line vue/no-mutating-props
       this.formModel[field] = value
       this.onModelUpdated()
+    },
+    handleUsePrincipalLookupChange(enabled) {
+      this.updateField('config-principals-enabled', enabled)
+      // On opt-in, check the default directory so the guide/gate reflect reality.
+      if (enabled) {
+        this.fetchPrincipalsState({ setDirectory: false })
+      }
     },
     handleLeaveConfirmed() {
       const type = this.leavePromptType
@@ -758,11 +634,11 @@ export default {
       // The consuming app owns navigation to the create pages; we only confirm intent
       // (unsaved-changes prompt) and emit. Client creation needs the auth server context.
       if (type === 'authServer') {
-        this.$emit('click:create', { type: 'auth-server' })
+        this.$emit('click:create-entity', { type: 'auth-server' })
       } else if (type === 'client') {
-        this.$emit('click:create', { type: 'client', authServerId: this.selectedServer?.id })
+        this.$emit('click:create-entity', { type: 'client', authServerId: this.selectedServer?.id })
       } else if (type === 'principal') {
-        this.$emit('click:create', { type: 'principal' })
+        this.$emit('click:create-entity', { type: 'principal' })
       }
     },
     handleModeChange(newMode) {
@@ -786,7 +662,8 @@ export default {
         // Re-check principals and adopt the directory name from the API (not hardcoded)
         this.fetchPrincipalsState({ setDirectory: true })
       } else {
-        // Disable principals but keep directory as 'default'
+        // External auth server: principal lookup is opt-in (the "Use principal lookup"
+        // toggle), so it starts off; the directory stays 'default' until the user opts in.
         // eslint-disable-next-line vue/no-mutating-props
         this.formModel['config-principals-enabled'] = false
         // eslint-disable-next-line vue/no-mutating-props
@@ -832,8 +709,11 @@ export default {
   color: var(--kui-color-text-neutral, $kui-color-text-neutral);
   margin-bottom: var(--kui-space-50, $kui-space-50);
 
+  // inline-flex keeps the "Learn more" text and its external-link icon on the same line
+  // (so the icon wraps together with the text instead of dropping to its own line).
   a {
-    display: inline;
+    align-items: center;
+    display: inline-flex;
   }
 }
 
@@ -990,6 +870,7 @@ export default {
   font-size: var(--kui-font-size-30, $kui-font-size-30);
   font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
   gap: var(--kui-space-20, $kui-space-20);
+  margin-top: var(--kui-space-40, $kui-space-40);
 }
 
 .add-client-inline-disabled {
