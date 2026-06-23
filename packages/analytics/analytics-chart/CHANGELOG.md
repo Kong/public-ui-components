@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.18.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.11...@kong-ui-public/analytics-chart@10.18.12) (2026-06-23)
+
+
+### Bug Fixes
+
+* **analytics:** display empty rows without entity links [MA-5070] ([#3478](https://github.com/Kong/public-ui-components/issues/3478)) ([c946256](https://github.com/Kong/public-ui-components/commit/c946256b140255b20a9a62a1c2dc8431da0d74cb))
+
+
+
+
+
 ## [10.18.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.10...@kong-ui-public/analytics-chart@10.18.11) (2026-06-22)
 
 
