@@ -82,6 +82,60 @@ describe('<SingleValue />', () => {
     cy.getTestId('single-value-trend').should('be.visible')
   })
 
+  it('when showing trend and only have a current result, displays that value and show indeterminate change', () => {
+    const exploreResult = buildExploreResult({ previous: 100, current: 250 })
+    const resultOneValue = {
+      ...exploreResult,
+      data: [
+        exploreResult.data[1], // the current data
+      ],
+    }
+
+    cy.mount(SingleValue, {
+      props: {
+        data: resultOneValue,
+        showTrend: true,
+      },
+    })
+
+    const expected = parseFloat(
+      exploreResult.data[1].event.request_per_minute.toFixed(2),
+    )
+
+    cy.getTestId('single-value-chart')
+      .should('be.visible')
+      .contains(expected)
+
+    cy.getTestId('single-value-trend').should('be.visible')
+    cy.get('.trend-change').should('have.class', 'neutral').and('have.text', 'Not available')
+    cy.get('.trend-change .indeterminate-small-icon').should('exist')
+  })
+
+  it('when showing trend and only have a previous result, display - and show -100% change', () => {
+    const exploreResult = buildExploreResult({ previous: 100, current: 250 })
+    const resultOneValue = {
+      ...exploreResult,
+      data: [
+        exploreResult.data[0], // the previous data
+      ],
+    }
+
+    cy.mount(SingleValue, {
+      props: {
+        data: resultOneValue,
+        showTrend: true,
+      },
+    })
+
+    cy.getTestId('single-value-chart')
+      .should('be.visible')
+      .contains('-')
+
+    cy.getTestId('single-value-trend').should('be.visible')
+    cy.get('.trend-change').should('have.class', 'negative').and('have.text', '100.00%')
+    cy.get('.trend-change .trend-down-icon').should('exist')
+  })
+
   it('treats a non-numeric value as empty and shows the error state', () => {
     const exploreResult = buildExploreResult({ previous: 100, current: 250 })
     // @ts-expect-error - this is intentionally invalid for the test
