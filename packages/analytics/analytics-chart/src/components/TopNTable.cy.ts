@@ -1,4 +1,3 @@
-import { h } from 'vue'
 import TopNTable from './TopNTable.vue'
 
 const ROUTE_ID = 'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6'
@@ -209,6 +208,67 @@ const THREE_DIMENSION_TABLE_DATA = {
       },
     }
   }),
+}
+
+const EMPTY_ROUTE_DISPLAY = {
+  ...ROUTE_DISPLAY_V2,
+  empty: {
+    name: 'empty',
+    deleted: false,
+  },
+}
+
+const EMPTY_ROW_TABLE_DATA = {
+  ...TABLE_DATA_V2,
+  meta: {
+    ...TABLE_DATA_V2.meta,
+    display: {
+      ROUTE: EMPTY_ROUTE_DISPLAY,
+    },
+  },
+  data: [
+    {
+      event: {
+        REQUEST_COUNT: 9483,
+        ROUTE: ROUTE_ID,
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+    {
+      event: {
+        REQUEST_COUNT: 9001,
+        ROUTE: 'empty',
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+  ],
+}
+
+const EMPTY_DIMENSION_TABLE_DATA = {
+  ...MULTI_DIMENSION_TABLE_DATA,
+  meta: {
+    ...MULTI_DIMENSION_TABLE_DATA.meta,
+    display: {
+      ROUTE: ROUTE_DISPLAY_V2,
+      GATEWAY_SERVICE: {
+        ...SERVICE_DISPLAY,
+        empty: {
+          name: 'empty',
+          deleted: false,
+        },
+      },
+    },
+  },
+  data: [
+    {
+      event: {
+        REQUEST_COUNT: 9483,
+        ROUTE: ROUTE_ID,
+        GATEWAY_SERVICE: 'empty',
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+  ],
 }
 
 const TITLE = 'Top 5 Routes'
@@ -592,6 +652,48 @@ describe('<TopNTable />', () => {
         cy.get('td').eq(2).should('contain.text', '1')
         cy.get('td').eq(3).should('contain.text', '0')
         cy.get('td').eq(4).should('contain.text', '100 ms')
+      })
+    })
+  })
+
+  describe('empty rows', () => {
+    it('flags the primary dimension cell as empty for an "empty" id', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: EMPTY_ROW_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+        slots: {
+          name: `<template #name="params">
+                  {{ params.record.isEmpty }}
+                 </template>
+          `,
+        },
+      })
+
+      cy.get(`[data-testid="row-${ROUTE_ID}"]`).should('contain.text', 'false')
+      cy.get('[data-testid="row-empty"]').should('contain.text', 'true')
+    })
+
+    it('flags an additional dimension cell as empty for an "empty" id', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: EMPTY_DIMENSION_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+        slots: {
+          name: `<template #name="params">
+                  {{ params.record.dimension }}={{ params.record.isEmpty }}
+                 </template>
+          `,
+        },
+      })
+
+      cy.get('tbody tr').first().within(() => {
+        cy.get('td').eq(0).should('contain.text', 'ROUTE=false')
+        cy.get('td').eq(1).should('contain.text', 'GATEWAY_SERVICE=true')
       })
     })
   })
