@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.46...@kong-ui-public/analytics-metric-provider@11.4.0) (2026-06-23)
+
+
+### Features
+
+* **analytics:** support single result in trend queries [MA-5139] ([#3464](https://github.com/Kong/public-ui-components/issues/3464)) ([a8a81ea](https://github.com/Kong/public-ui-components/commit/a8a81ea05c6a852313d2688bd47a19fed7c6d649))
+
+
+
+
+
 ## [11.3.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.3.45...@kong-ui-public/analytics-metric-provider@11.3.46) (2026-06-23)
 
 
