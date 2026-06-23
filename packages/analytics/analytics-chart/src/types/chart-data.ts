@@ -200,6 +200,7 @@ export interface TopNTableRecord {
     name: string
     deleted: boolean
   }>
+  isEmpty?: boolean
 }
 
 export interface SparklineDataset {
