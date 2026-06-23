@@ -175,7 +175,6 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectBaseEntityConfig | KongManagerBaseEntityConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
       if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
       if (!config.entityId) return false
       return true

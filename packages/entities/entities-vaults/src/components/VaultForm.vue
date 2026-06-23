@@ -1873,7 +1873,8 @@ const createConfigStore = async (): Promise<string | undefined> => {
       .replace(/{controlPlaneId}/gi, (props.config as KonnectVaultFormConfig)?.controlPlaneId || '')
       .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 
-    const response = await axiosInstance.post<KonnectConfigStore>(requestUrl)
+    const body = isAiGateway.value ? { name: form.fields.prefix } : undefined
+    const response = await axiosInstance.post<KonnectConfigStore>(requestUrl, body)
 
     return response?.data.id
   } catch (error: any) {
