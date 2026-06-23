@@ -76,7 +76,9 @@
           name="memory.dictionary_name"
         />
 
-        <div v-if="localStrategy === 'redis'">
+        <div
+          v-if="localStrategy === 'redis' && enableRedisPartial"
+        >
           <KLabel>
             {{ t('plugins.free-form.datakit.flow_editor.panel_segments.resources.cache.select_redis_configuration') }}
           </KLabel>
@@ -107,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import yaml from 'js-yaml'
 import { codeToHtml } from 'shiki'
 import {
@@ -119,6 +121,7 @@ import { AddIcon, DatabaseIcon, MoreIcon } from '@kong/icons'
 import {
   RedisConfigurationSelector,
 } from '@kong-ui-public/entities-redis-configurations'
+import { REDIS_PARTIAL_INFO } from '../../../../shared/const'
 import composables from '../../../../../../composables'
 import Field from '../../../../shared/Field.vue'
 import RadioField from '../../../../shared/RadioField.vue'
@@ -144,11 +147,17 @@ const field = useField<FormData['cache']>('cache')
 
 if (field.error) throw new Error('No cache schema')
 
+const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
+const enableRedisPartial = computed(() => !!redisPartialInfo)
+
 const modalVisible = ref(false)
 const { i18n: { t } } = composables.useI18n()
 const canSubmit = computed(() => {
-  if (localStrategy.value === 'redis' && !formData.cache!.partial_id && !formData.cache!.redis) {
-    return false
+  if (localStrategy.value === 'redis') {
+    if (enableRedisPartial.value) {
+      return !!(formData.cache?.partial_id || formData.cache?.redis)
+    }
+    return !!formData.cache?.redis
   }
   return true
 })
