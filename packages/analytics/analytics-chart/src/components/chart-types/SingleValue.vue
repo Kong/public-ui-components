@@ -158,21 +158,10 @@ const displayMetricUnit = computed((): boolean => metricName.value === 'request_
   || metricName.value === 'error_rate')
 
 const previousValue = computed<number | null>(() => {
-  if (props.showTrend) {
-    return trendPrevious.value ?? null
+  if (props.showTrend && trendPrevious.value !== undefined) {
+    return trendPrevious.value
   }
-
-  if (records.value.length < 2 || !metricName.value) {
-    return null
-  }
-
-  const value = records.value[0].event[metricName.value]
-
-  if (typeof value !== 'number' || isNaN(value)) {
-    return null
-  }
-
-  return value
+  return null
 })
 
 const singleValue = computed<number | null>(() => {
@@ -296,8 +285,7 @@ onMounted(() => {
   if (!props.showTrend && props.data?.data?.length > 1) {
     console.warn('SingleValue chart should only be used with a single data point. Data length:', props.data.data.length)
   } else if (props.showTrend && props.data?.data?.length > 2) {
-    // because 1 data point is when we don't have any previous data to compare against
-    console.warn('SingleValue with trend expects at least 1 data point, usually 2. Data length:', props.data.data.length)
+    console.warn('SingleValue with trend expects 2 or fewer data points. Instead got:', props.data.data.length)
   }
 })
 </script>

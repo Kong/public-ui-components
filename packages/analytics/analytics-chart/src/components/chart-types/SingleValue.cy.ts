@@ -131,9 +131,9 @@ describe('<SingleValue />', () => {
       .should('be.visible')
       .contains('-')
 
-    // cy.getTestId('single-value-trend').should('be.visible')
-    // cy.get('.trend-change').should('have.class', 'neutral').and('have.text', 'Not available')
-    // cy.get('.trend-change .trend-up-icon').should('exist')
+    cy.getTestId('single-value-trend').should('be.visible')
+    cy.get('.trend-change').should('have.class', 'negative').and('have.text', '100.00%')
+    cy.get('.trend-change .trend-down-icon').should('exist')
   })
 
   it('treats a non-numeric value as empty and shows the error state', () => {
