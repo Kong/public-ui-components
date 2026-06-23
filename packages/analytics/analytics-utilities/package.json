@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "approximate-number": "^3.0.1",
-    "date-fns": "^4.1.0",
+    "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "lodash.clonedeep": "^4.5.0"
   },
