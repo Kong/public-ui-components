@@ -29,8 +29,13 @@
         :color="`var(--kui-color-text-danger, ${KUI_COLOR_TEXT_DANGER})`"
         :size="16"
       />
+      <slot
+        v-if="slots.actions"
+        :data="data"
+        name="actions"
+      />
       <KDropdown
-        v-if="!isImplicit"
+        v-else-if="!isImplicit"
         class="menu"
         :disabled="readonly"
         :kpop-attributes="{
@@ -76,6 +81,12 @@
         </template>
       </KDropdown>
     </div>
+
+    <slot
+      v-if="slots['before-handles']"
+      :data="data"
+      name="before-handles"
+    />
 
     <div
       class="handles"
@@ -274,6 +285,12 @@
         </div>
       </div>
     </div>
+
+    <slot
+      v-if="slots['after-handles']"
+      :data="data"
+      name="after-handles"
+    />
   </div>
 </template>
 
@@ -311,6 +328,12 @@ const { data, readonly } = defineProps<{
   data: NodeInstance
   error?: boolean
   readonly?: boolean
+}>()
+
+const slots = defineSlots<{
+  actions?: (props: { data: NodeInstance }) => any
+  'before-handles'?: (props: { data: NodeInstance }) => any
+  'after-handles'?: (props: { data: NodeInstance }) => any
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)

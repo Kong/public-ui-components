@@ -1,3 +1,5 @@
+import FlowCanvas from './components/free-form/plugins/datakit/flow-editor/FlowCanvas.vue'
+import NodeBadge from './components/free-form/plugins/datakit/flow-editor/node/NodeBadge.vue'
 import CustomPluginForm from './components/CustomPluginForm.vue'
 import PluginForm from './components/PluginForm.vue'
 import PluginList from './components/PluginList.vue'
@@ -15,6 +17,8 @@ import pluginEndpoints from './plugins-endpoints'
 const { usePluginMetaData, useProvideExperimentalFreeForms } = composables
 
 export {
+  FlowCanvas,
+  NodeBadge,
   CustomPluginForm,
   PluginForm,
   PluginList,
@@ -47,6 +51,10 @@ export {
 export type {
   ResolvedPluginFormConfig,
 } from './components/free-form/shared/plugin-registry'
+
+export { provideEditorStore, useEditorStore } from './components/free-form/plugins/datakit/composables'
+
+export type { DatakitPluginData, NodeInstance, NodePhase } from './components/free-form/plugins/datakit/types'
 
 export * from './types'
 
