@@ -165,8 +165,6 @@ const emit = defineEmits<{
   (e: 'click:learn-more', entity: string): void
   (e: 'click:create-entity', payload: EntityCreateEvent): void
   (e: 'validity-change', payload: PluginValidityChangeEvent): void
-  (e: 'click:create-entity', payload: EntityCreateEvent): void
-  (e: 'click:learn-more', entity: string): void
 }>()
 
 const props = defineProps({
