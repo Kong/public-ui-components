@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.218.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.217.0...@kong-ui-public/entities-plugins@9.218.0) (2026-06-23)
+
+
+### Features
+
+* **debugger:** Initial changes to show datakit in debugger, with mode=inspect ([#3447](https://github.com/Kong/public-ui-components/issues/3447)) ([78f6f94](https://github.com/Kong/public-ui-components/commit/78f6f948982ad9707b24a69efe66979ee37e36d4))
+
+
+
+
+
 # [9.217.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.216.4...@kong-ui-public/entities-plugins@9.217.0) (2026-06-23)
 
 
