@@ -91,7 +91,7 @@
         </div>
 
         <div
-          v-if="localStrategy === 'redis' && !formData.cache?.partial_id && redisConfigYaml"
+          v-if="localStrategy === 'redis' && enableRedisPartial && !formData.cache?.partial_id && redisConfigYaml"
           class="dk-cache-inline-redis"
         >
           <div>{{ t('plugins.free-form.datakit.flow_editor.panel_segments.resources.cache.inline_config_preview') }}</div>
@@ -103,13 +103,35 @@
             @code-block-render="highlight"
           />
         </div>
+
+        <div
+          v-if="localStrategy === 'redis' && !enableRedisPartial"
+          class="dk-cache-redis-editor"
+        >
+          <KLabel>
+            {{ t('plugins.free-form.datakit.flow_editor.panel_segments.resources.cache.inline_config') }}
+          </KLabel>
+          <MonacoEditor
+            v-model="redisYaml"
+            appearance="standalone"
+            class="redis-editor"
+            language="yaml"
+            theme="light"
+          />
+          <p
+            v-if="redisYamlError"
+            class="redis-editor-error"
+          >
+            {{ redisYamlError }}
+          </p>
+        </div>
       </div>
     </KModal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, shallowRef, watch } from 'vue'
 import yaml from 'js-yaml'
 import { codeToHtml } from 'shiki'
 import {
@@ -121,6 +143,8 @@ import { AddIcon, DatabaseIcon, MoreIcon } from '@kong/icons'
 import {
   RedisConfigurationSelector,
 } from '@kong-ui-public/entities-redis-configurations'
+import { MonacoEditor } from '@kong-ui-public/monaco-editor'
+import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 import { REDIS_PARTIAL_INFO } from '../../../../shared/const'
 import composables from '../../../../../../composables'
 import Field from '../../../../shared/Field.vue'
@@ -129,6 +153,8 @@ import { useField, useFormShared } from '../../../../shared/composables'
 
 import type { CodeBlockEventData } from '@kong/kongponents'
 import type { CacheConfigFormData } from '../../types'
+
+const DEFAULT_REDIS_YAML = yaml.dump({ host: '127.0.0.1', port: 6379 }, { indent: 2 })
 
 export type FormData = { cache?: CacheConfigFormData | null }
 
@@ -150,6 +176,9 @@ if (field.error) throw new Error('No cache schema')
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 const enableRedisPartial = computed(() => !!redisPartialInfo)
 
+const redisYaml = shallowRef('')
+const redisYamlError = ref('')
+
 const modalVisible = ref(false)
 const { i18n: { t } } = composables.useI18n()
 const canSubmit = computed(() => {
@@ -157,7 +186,7 @@ const canSubmit = computed(() => {
     if (enableRedisPartial.value) {
       return !!(formData.cache?.partial_id || formData.cache?.redis)
     }
-    return !!formData.cache?.redis
+    return !!formData.cache?.redis && !redisYamlError.value
   }
   return true
 })
@@ -170,6 +199,29 @@ const redisConfigYaml = computed(() => {
     indent: 2,
     noRefs: true,
   })
+})
+
+// Initialize the editor content when the modal opens or when switching to redis strategy
+watch([modalVisible, localStrategy], ([visible, strategy]) => {
+  if (visible && strategy === 'redis' && !enableRedisPartial.value) {
+    redisYaml.value = redisConfigYaml.value || DEFAULT_REDIS_YAML
+    redisYamlError.value = ''
+  }
+})
+
+// Parse YAML and update formData on editor changes
+watch(redisYaml, (yamlStr) => {
+  if (!enableRedisPartial.value && localStrategy.value === 'redis') {
+    try {
+      const parsed = yaml.load(yamlStr, { json: true })
+      if (parsed && typeof parsed === 'object') {
+        formData.cache!.redis = parsed as CacheConfigFormData['redis']
+        redisYamlError.value = ''
+      }
+    } catch (e: unknown) {
+      redisYamlError.value = ((e as Error).message?.split('\n')[0]) || 'Invalid YAML'
+    }
+  }
 })
 
 const handleOpen = () => {
@@ -256,6 +308,23 @@ async function highlight({ codeElement, language, code }: CodeBlockEventData) {
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-20, $kui-space-20);
+  }
+
+  .dk-cache-redis-editor {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-20, $kui-space-20);
+
+    .redis-editor {
+      height: 200px;
+      width: 100%;
+    }
+
+    .redis-editor-error {
+      color: var(--kui-color-text-danger, $kui-color-text-danger);
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      margin: 0;
+    }
   }
 }
 </style>
