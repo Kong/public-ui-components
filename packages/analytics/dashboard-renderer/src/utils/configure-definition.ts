@@ -34,6 +34,11 @@ const processTileForBasicTier = (tile: TileConfig): TileConfig | undefined => {
  * @returns The updated tile configuration object.
  */
 const processTileForAdvancedTier = (tile: TileConfig): TileConfig => {
+  if (tile.type === 'table') {
+    // Table tiles use the platform tabular datasource and skip chart datasource migration.
+    return tile
+  }
+
   const query = tile.definition?.query
 
   if (!query) {

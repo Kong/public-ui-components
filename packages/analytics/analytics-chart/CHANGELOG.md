@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.18.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.11...@kong-ui-public/analytics-chart@10.18.12) (2026-06-23)
+
+
+### Bug Fixes
+
+* **analytics:** display empty rows without entity links [MA-5070] ([#3478](https://github.com/Kong/public-ui-components/issues/3478)) ([c946256](https://github.com/Kong/public-ui-components/commit/c946256b140255b20a9a62a1c2dc8431da0d74cb))
+
+
+
+
+
+## [10.18.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.10...@kong-ui-public/analytics-chart@10.18.11) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
+## [10.18.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.9...@kong-ui-public/analytics-chart@10.18.10) (2026-06-22)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [10.18.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.8...@kong-ui-public/analytics-chart@10.18.9) (2026-06-19)
 
 

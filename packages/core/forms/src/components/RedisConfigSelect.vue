@@ -20,7 +20,7 @@
       enable-filtering
       :filter-function="() => true"
       :items="availableRedisConfigs"
-      :loading="loadingRedisConfigs"
+      :loading="(loadingRedisConfigs as any)"
       :model-value="defaultRedisConfigItem"
       :placeholder="redisSelectPlaceholderText"
       @change="(item) => redisConfigSelected(item?.value)"
@@ -64,7 +64,7 @@
           data-testid="new-redis-config-area"
           @click="$emit('showNewPartialModal')"
         >
-          <AddIcon :size="KUI_ICON_SIZE_20" />
+          <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
           <span>{{ createNewRedisConfigurationFooterText }}</span>
         </div>
       </template>

@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.2...@kong-ui-public/dashboard-renderer@8.12.3) (2026-06-23)
+
+
+### Bug Fixes
+
+* **analytics:** display empty rows without entity links [MA-5070] ([#3478](https://github.com/Kong/public-ui-components/issues/3478)) ([c946256](https://github.com/Kong/public-ui-components/commit/c946256b140255b20a9a62a1c2dc8431da0d74cb))
+
+
+
+
+
+## [8.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.1...@kong-ui-public/dashboard-renderer@8.12.2) (2026-06-23)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.0...@kong-ui-public/dashboard-renderer@8.12.1) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
+# [8.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.13...@kong-ui-public/dashboard-renderer@8.12.0) (2026-06-22)
+
+
+### Features
+
+* **dashboard-renderer:** render table tiles ([#3462](https://github.com/Kong/public-ui-components/issues/3462)) ([5e8a32f](https://github.com/Kong/public-ui-components/commit/5e8a32f4c9c265d4f5d1b2e79f7de222fc757962))
+
+
+
+
+
 ## [8.11.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.12...@kong-ui-public/dashboard-renderer@8.11.13) (2026-06-19)
 
 

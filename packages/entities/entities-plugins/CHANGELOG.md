@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.218.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.217.0...@kong-ui-public/entities-plugins@9.218.0) (2026-06-23)
+
+
+### Features
+
+* **debugger:** Initial changes to show datakit in debugger, with mode=inspect ([#3447](https://github.com/Kong/public-ui-components/issues/3447)) ([78f6f94](https://github.com/Kong/public-ui-components/commit/78f6f948982ad9707b24a69efe66979ee37e36d4))
+
+
+
+
+
+# [9.217.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.216.4...@kong-ui-public/entities-plugins@9.217.0) (2026-06-23)
+
+
+### Features
+
+* **entities-plugins:** add Kong Identity principals creation guide ([#3472](https://github.com/Kong/public-ui-components/issues/3472)) ([4f6a43b](https://github.com/Kong/public-ui-components/commit/4f6a43b9c8e71aabe8807da593f5d88a8df4739e))
+
+
+
+
+
+## [9.216.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.216.3...@kong-ui-public/entities-plugins@9.216.4) (2026-06-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.216.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.216.2...@kong-ui-public/entities-plugins@9.216.3) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
 ## [9.216.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.216.1...@kong-ui-public/entities-plugins@9.216.2) (2026-06-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

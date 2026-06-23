@@ -10,8 +10,8 @@
     >
       <div class="cache-item-key">
         <DatabaseIcon
-          :color="KUI_COLOR_TEXT_NEUTRAL"
-          :size="KUI_ICON_SIZE_30"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+          :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
         />
         <div class="cache-item-key-text">
           {{ strategy }}
@@ -22,7 +22,7 @@
           appearance="tertiary"
           icon
         >
-          <MoreIcon :color="KUI_COLOR_TEXT" />
+          <MoreIcon :color="`var(--kui-color-text, ${KUI_COLOR_TEXT})`" />
         </KButton>
 
         <template #items>

@@ -26,7 +26,7 @@
         @change="handleModeChange"
       >
         <div class="auth-mode-card-content">
-          <KeyIcon :size="KUI_ICON_SIZE_40" />
+          <KeyIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
           <div class="auth-mode-card-label">
             Kong Identity
           </div>
@@ -44,7 +44,7 @@
         @change="handleModeChange"
       >
         <div class="auth-mode-card-content">
-          <WorldIcon :size="KUI_ICON_SIZE_40" />
+          <WorldIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
           <div class="auth-mode-card-label">
             External auth server
           </div>
@@ -114,7 +114,7 @@
             data-testid="create-auth-server-action"
             @click.stop="leavePromptType = 'authServer'"
           >
-            <AddIcon :size="KUI_ICON_SIZE_20" />
+            <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
             <div class="create-action-content">
               <span>Create authorization server</span>
               <div class="create-action-hint">
@@ -149,7 +149,7 @@
               data-testid="create-client-action"
               @click.stop="leavePromptType = 'client'"
             >
-              <AddIcon :size="KUI_ICON_SIZE_20" />
+              <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
               <div class="create-action-content">
                 <span>Create client</span>
                 <div class="create-action-hint">
@@ -187,7 +187,7 @@
           type="button"
           @click="removeClientRow(index)"
         >
-          <CloseIcon :size="KUI_ICON_SIZE_30" />
+          <CloseIcon :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`" />
         </button>
       </div>
 
@@ -262,7 +262,7 @@
           type="button"
           @click="removeClientRow(index)"
         >
-          <CloseIcon :size="KUI_ICON_SIZE_30" />
+          <CloseIcon :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`" />
         </button>
       </div>
 

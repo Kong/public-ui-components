@@ -7,7 +7,9 @@ import {
   dashboardConfigSchema,
   llmUsageSchema,
   agenticUsageSchema,
+  validDashboardChartQuery,
   validDashboardQuery,
+  validDashboardTableQuery,
   platformQuerySchema,
 } from './dashboardSchema.v2'
 import {
@@ -28,7 +30,9 @@ import {
 } from './types'
 
 const ajv = new Ajv({ allowUnionTypes: true })
+const validateValidDashboardChartQuery = ajv.compile(validDashboardChartQuery)
 const validateValidDashboardQuery = ajv.compile(validDashboardQuery)
+const validateValidDashboardTableQuery = ajv.compile(validDashboardTableQuery)
 const validatePlatformQuerySchema = ajv.compile(platformQuerySchema)
 const validateDashboardConfigSchema = ajv.compile(dashboardConfigSchema)
 const validateApiUsageQuerySchema = ajv.compile(apiUsageQuerySchema)
@@ -165,8 +169,8 @@ describe('dashboardSchema.v2', () => {
         cursor: 'eyJh',
         page_size: 50,
       },
-      chart: {
-        type: 'top_n',
+      config: {
+        title: 'Routes',
       },
     },
     layout: {
@@ -189,11 +193,33 @@ describe('dashboardSchema.v2', () => {
   })
 
   it('accepts table tiles with tabular explore query shape', () => {
+    expect(validateValidDashboardQuery(tableDataGridTile.definition.query)).toBe(true)
+    expect(validateValidDashboardTableQuery(tableDataGridTile.definition.query)).toBe(true)
+    expect(validateValidDashboardChartQuery(tableDataGridTile.definition.query)).toBe(false)
     expect(validateDashboardConfigSchema({
       tiles: [
         tableDataGridTile,
       ],
     })).toBe(true)
+  })
+
+  it('rejects chart tiles with tabular explore query shape', () => {
+    expect(validateValidDashboardTableQuery(platformQuery)).toBe(false)
+
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          type: 'chart',
+          definition: {
+            query: tableDataGridTile.definition.query,
+            chart: {
+              type: 'horizontal_bar',
+            },
+          },
+        },
+      ],
+    })).toBe(false)
   })
 
   it('accepts table tiles with only the platform datasource', () => {
@@ -205,13 +231,28 @@ describe('dashboardSchema.v2', () => {
             query: {
               datasource: 'platform',
             },
-            chart: {
-              type: 'top_n',
-            },
+            config: {},
           },
         },
       ],
     })).toBe(true)
+  })
+
+  it('rejects table tile config fields other than title', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          definition: {
+            ...tableDataGridTile.definition,
+            config: {
+              title: 'Routes',
+              description: 'Extra config is not supported',
+            },
+          },
+        },
+      ],
+    })).toBe(false)
   })
 
   it('rejects table tiles with a top-level query', () => {
@@ -239,11 +280,17 @@ describe('dashboardSchema.v2', () => {
     ['invalid cursor', { cursor: 50 }],
     ['invalid filter', { filters: [{ field: 'env', value: ['prod'] }] }],
   ])('rejects table tiles with %s', (_description, queryOverrides) => {
+    expect(validateValidDashboardTableQuery({
+      ...tableDataGridTile.definition.query,
+      ...queryOverrides,
+    })).toBe(false)
+
     expect(validateDashboardConfigSchema({
       tiles: [
         {
           ...tableDataGridTile,
           definition: {
+            config: tableDataGridTile.definition.config,
             query: {
               ...tableDataGridTile.definition.query,
               ...queryOverrides,
@@ -254,7 +301,7 @@ describe('dashboardSchema.v2', () => {
     })).toBe(false)
   })
 
-  it('rejects table tiles without chart definitions', () => {
+  it('rejects table tiles without config definitions', () => {
     expect(validateDashboardConfigSchema({
       tiles: [
         {

@@ -36,7 +36,7 @@
           selected-value="consumers"
           @update:model-value="handleModeChange"
         >
-          <TeamIcon :size="KUI_ICON_SIZE_50" />
+          <TeamIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
         </KRadio>
 
         <KRadio
@@ -50,7 +50,7 @@
           selected-value="centrally-managed"
           @update:model-value="handleModeChange"
         >
-          <AccountTreeIcon :size="KUI_ICON_SIZE_50" />
+          <AccountTreeIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
         </KRadio>
 
         <KRadio
@@ -63,7 +63,7 @@
           selected-value="kong-identity"
           @update:model-value="handleModeChange"
         >
-          <KeyIcon :size="KUI_ICON_SIZE_50" />
+          <KeyIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
         </KRadio>
       </template>
     </div>
@@ -129,7 +129,9 @@ function handleModeChange(mode: AuthMode) {
   model.value = mode
 
   switch (mode) {
-    case 'kong-identity':
+    case 'kong-identity': {
+      // `directory` is a placeholder; ConfigFormContent resolves the real directory name
+      // from the shared /v2/directories lookup and overwrites it on entering this mode.
       formData.config.principals = { ...getEmptyOrDefault('$.config.principals'), enabled: true, directory: 'default' }
       if (identityRealmsInSchema.value) {
         formData.config.identity_realms = []
@@ -138,6 +140,7 @@ function handleModeChange(mode: AuthMode) {
         formData.config.realm = null
       }
       break
+    }
     case 'consumers': {
       const principalsRequired = !!getSchema('$.config.principals')?.required
       formData.config.principals = principalsRequired ? getEmptyOrDefault('$.config.principals') : null

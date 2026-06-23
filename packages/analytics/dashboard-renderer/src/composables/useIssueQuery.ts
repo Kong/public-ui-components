@@ -1,7 +1,7 @@
 import {
   type AllFilters, type AnalyticsBridge, type DatasourceAwareQuery, type ExploreFilterAll, type ExploreQuery,
   type TimeRangeV4,
-  type ValidDashboardQuery,
+  type ValidDashboardChartQuery,
 } from '@kong-ui-public/analytics-utilities'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import type { DashboardRendererContextInternal } from '../types'
@@ -21,7 +21,7 @@ export default function useIssueQuery() {
     abortController.abort()
   })
 
-  const issueQuery = async (query: ValidDashboardQuery, context: DashboardRendererContextInternal, limitOverride?: number) => {
+  const issueQuery = async (query: ValidDashboardChartQuery, context: DashboardRendererContextInternal, limitOverride?: number) => {
     if (!queryBridge) {
       throw new Error('Query bridge is not defined')
     }

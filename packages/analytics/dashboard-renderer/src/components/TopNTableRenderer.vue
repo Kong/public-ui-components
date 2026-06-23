@@ -15,7 +15,7 @@
         #name="{ record }"
       >
         <AsyncEntityLink
-          v-if="getEntityLink(record)"
+          v-if="!record.isEmpty && getEntityLink(record)"
           :entity-link-data="{
             id: record.id,
             label: record.name,
@@ -24,7 +24,8 @@
           :external-link="parseLink(record)"
         />
         <template v-else>
-          {{ record.name }}
+          <i v-if="record.name === 'empty'">{{ record.name }}</i>
+          <span v-else>{{ record.name }}</span>
         </template>
       </template>
     </TopNTable>
@@ -32,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RendererProps } from '../types'
+import type { ChartRendererProps } from '../types'
 import type { AnalyticsBridge, TopNTableOptions } from '@kong-ui-public/analytics-utilities'
 import { CP_ID_TOKEN, ENTITY_ID_TOKEN, INJECT_QUERY_PROVIDER } from '../constants'
 import { TopNTable } from '@kong-ui-public/analytics-chart'
@@ -41,7 +42,7 @@ import QueryDataProvider from './QueryDataProvider.vue'
 import { computed, defineAsyncComponent, inject } from 'vue'
 import FallbackEntityLink from './FallbackEntityLink.vue'
 
-const props = defineProps<RendererProps<TopNTableOptions>>()
+const props = defineProps<ChartRendererProps<TopNTableOptions>>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 

@@ -7,7 +7,7 @@
     <div class="group-icon-wrapper">
       <component
         :is="groupIcon"
-        :color="KUI_COLOR_TEXT_DECORATIVE_PURPLE"
+        :color="`var(--kui-color-text-decorative-purple, ${KUI_COLOR_TEXT_DECORATIVE_PURPLE})`"
       />
     </div>
 

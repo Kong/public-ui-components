@@ -153,8 +153,8 @@
                     </td>
                     <td v-if="isPluginTypeSupported('cloned')">
                       <ClearIcon
-                        :color="KUI_COLOR_TEXT_NEUTRAL"
-                        :size="KUI_ICON_SIZE_30"
+                        :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+                        :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
                       />
                     </td>
                   </tr>
@@ -180,8 +180,8 @@
                     </th>
                     <td v-if="isPluginTypeSupported('installed')">
                       <ClearIcon
-                        :color="KUI_COLOR_TEXT_NEUTRAL"
-                        :size="KUI_ICON_SIZE_30"
+                        :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+                        :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
                       />
                     </td>
                     <td v-if="isPluginTypeSupported('streamed')">
@@ -207,20 +207,20 @@
                     </th>
                     <td v-if="isPluginTypeSupported('installed')">
                       <CheckCircleIcon
-                        :color="KUI_COLOR_TEXT_SUCCESS"
-                        :size="KUI_ICON_SIZE_30"
+                        :color="`var(--kui-color-text-success, ${KUI_COLOR_TEXT_SUCCESS})`"
+                        :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
                       />
                     </td>
                     <td v-if="isPluginTypeSupported('streamed')">
                       <ClearIcon
-                        :color="KUI_COLOR_TEXT_NEUTRAL"
-                        :size="KUI_ICON_SIZE_30"
+                        :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+                        :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
                       />
                     </td>
                     <td v-if="isPluginTypeSupported('cloned')">
                       <ClearIcon
-                        :color="KUI_COLOR_TEXT_NEUTRAL"
-                        :size="KUI_ICON_SIZE_30"
+                        :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+                        :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
                       />
                     </td>
                   </tr>
