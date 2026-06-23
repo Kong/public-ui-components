@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.217.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.216.4...@kong-ui-public/entities-plugins@9.217.0) (2026-06-23)
+
+
+### Features
+
+* **entities-plugins:** add Kong Identity principals creation guide ([#3472](https://github.com/Kong/public-ui-components/issues/3472)) ([4f6a43b](https://github.com/Kong/public-ui-components/commit/4f6a43b9c8e71aabe8807da593f5d88a8df4739e))
+
+
+
+
+
 ## [9.216.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.216.3...@kong-ui-public/entities-plugins@9.216.4) (2026-06-23)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
