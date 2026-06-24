@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.43...@kong-ui-public/page-layout@0.3.0) (2026-06-24)
+
+
+### Features
+
+* **page-layout:** add tab slot and tweak styling [KHCP-20703] ([#3470](https://github.com/Kong/public-ui-components/issues/3470)) ([0d8fe0d](https://github.com/Kong/public-ui-components/commit/0d8fe0d6c2cc0ab23bc3ba9589da113a8e894534))
+
+
+
+
+
 ## [0.2.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.2.42...@kong-ui-public/page-layout@0.2.43) (2026-06-22)
 
 
