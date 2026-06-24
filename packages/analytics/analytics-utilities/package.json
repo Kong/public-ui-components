@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-utilities",
-  "version": "12.19.1",
+  "version": "12.19.2",
   "type": "module",
   "main": "./dist/vitals-utilities.umd.js",
   "module": "./dist/vitals-utilities.es.js",
@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "approximate-number": "^3.0.1",
-    "date-fns": "^4.1.0",
+    "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "lodash.clonedeep": "^4.5.0"
   },

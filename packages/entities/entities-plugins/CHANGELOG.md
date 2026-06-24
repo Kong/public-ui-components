@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.219.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.218.5...@kong-ui-public/entities-plugins@9.219.0) (2026-06-24)
+
+
+### Features
+
+* **entities-plugins:** gate Kong Identity principals UI behind khcp-20393 flag ([#3489](https://github.com/Kong/public-ui-components/issues/3489)) ([1e2f274](https://github.com/Kong/public-ui-components/commit/1e2f274b2f11c6e2b2a12b2c11190b506ad9e0c6))
+
+
+
+
+
+## [9.218.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.218.4...@kong-ui-public/entities-plugins@9.218.5) (2026-06-24)
+
+
+### Bug Fixes
+
+* **entities-plugins:** revert [#3473](https://github.com/Kong/public-ui-components/issues/3473) ([#3490](https://github.com/Kong/public-ui-components/issues/3490)) ([5a6410e](https://github.com/Kong/public-ui-components/commit/5a6410e31e35e034da68a10c426ef7dc5ebad122))
+
+
+
+
+
+## [9.218.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.218.3...@kong-ui-public/entities-plugins@9.218.4) (2026-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.218.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.218.2...@kong-ui-public/entities-plugins@9.218.3) (2026-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.218.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.218.1...@kong-ui-public/entities-plugins@9.218.2) (2026-06-24)
+
+
+### Bug Fixes
+
+* **datakit:** support environments without Redis partial (AI Gateway policy) ([#3483](https://github.com/Kong/public-ui-components/issues/3483)) ([b31bc0b](https://github.com/Kong/public-ui-components/commit/b31bc0b797826df1b1c556b8f1070a6d72ba4512))
+
+
+
+
+
+## [9.218.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.218.0...@kong-ui-public/entities-plugins@9.218.1) (2026-06-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3436](https://github.com/Kong/public-ui-components/issues/3436)) ([50801c8](https://github.com/Kong/public-ui-components/commit/50801c82e6d7f71324aeab8209d9a212af5fe8a6))
+
+
+
+
+
 # [9.218.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.217.0...@kong-ui-public/entities-plugins@9.218.0) (2026-06-23)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-key-sets",
-  "version": "3.11.27",
+  "version": "3.11.29",
   "type": "module",
   "main": "./dist/entities-key-sets.umd.js",
   "module": "./dist/entities-key-sets.es.js",
@@ -34,7 +34,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.59.0",
     "@kong/kongponents": "9.60.0",
-    "axios": "^1.16.1",
+    "axios": "^1.17.0",
     "vue": "^3.5.35",
     "vue-router": "^5.1.0"
   },

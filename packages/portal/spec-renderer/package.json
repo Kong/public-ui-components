@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/spec-renderer",
-  "version": "2.6.26",
+  "version": "2.6.27",
   "type": "module",
   "main": "./dist/spec-renderer.umd.js",
   "module": "./dist/spec-renderer.es.js",
@@ -54,7 +54,7 @@
     "vue": "^3.5.35"
   },
   "dependencies": {
-    "@kong-ui-public/swagger-ui-web-component": "workspace:^0.12.25",
+    "@kong-ui-public/swagger-ui-web-component": "workspace:^0.12.26",
     "@kong/icons": "^1.59.0",
     "lodash.clonedeep": "^4.5.0",
     "uuid": "^14.0.0"

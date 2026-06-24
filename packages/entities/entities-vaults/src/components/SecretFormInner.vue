@@ -191,7 +191,11 @@ const submitData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, payload.value)
     } else if (formType.value === 'edit') {
-      response = await axiosInstance.put(submitUrl.value, payload.value)
+      // AI Gateway does not allow updating the `key` field, so omit it from the payload
+      const editPayload = props.config.apiType === 'aiGateway'
+        ? { value: payload.value.value }
+        : payload.value
+      response = await axiosInstance.put(submitUrl.value, editPayload)
     }
 
     updateFormValues(response?.data)

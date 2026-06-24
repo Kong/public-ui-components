@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-consumer-credentials",
-  "version": "3.8.29",
+  "version": "3.8.31",
   "type": "module",
   "main": "./dist/entities-consumer-credentials.umd.js",
   "module": "./dist/entities-consumer-credentials.es.js",
@@ -35,7 +35,7 @@
     "@kong/design-tokens": "2.0.0",
     "@kong/icons": "^1.59.0",
     "@kong/kongponents": "9.60.0",
-    "axios": "^1.16.1",
+    "axios": "^1.17.0",
     "vue": "^3.5.35",
     "vue-router": "^5.1.0"
   },

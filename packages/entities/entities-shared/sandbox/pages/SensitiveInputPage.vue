@@ -51,6 +51,24 @@
       />
       <pre>modelValue: {{ hintValue }}</pre>
     </section>
+
+    <section>
+      <h3>Alert slot (shown after the "rotate" event fires)</h3>
+      <SensitiveInput
+        v-model="rotateAlertValue"
+        label="API key"
+        mode="edit"
+        @rotate="showRotateAlert = true"
+      >
+        <template #alert>
+          <KAlert
+            v-if="showRotateAlert"
+            message="Once saved, the key value will not be visible."
+          />
+        </template>
+      </SensitiveInput>
+      <pre>modelValue: {{ rotateAlertValue }}</pre>
+    </section>
   </div>
 </template>
 
@@ -64,6 +82,8 @@ const editValue = ref('')
 const editNoGenerateValue = ref('')
 const hintValue = ref('')
 const showHint = ref(false)
+const rotateAlertValue = ref('')
+const showRotateAlert = ref(false)
 
 const generateKey = (): string => {
   const bytes = new Uint8Array(24)

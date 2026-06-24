@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "9.218.0",
+  "version": "9.219.0",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -88,7 +88,7 @@
     "@vue-flow/core": "^1.48.2",
     "@vueuse/core": "^14.3.0",
     "@vueuse/integrations": "^14.3.0",
-    "axios": "^1.16.1",
+    "axios": "^1.17.0",
     "monaco-editor": "^0.55.1",
     "nanoid": "^5.1.11",
     "reflect-metadata": "^0.2.2",
