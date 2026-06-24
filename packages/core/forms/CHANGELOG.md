@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.28.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.27.5...@kong-ui-public/forms@4.28.0) (2026-06-24)
+
+
+### Features
+
+* **entities-plugins:** gate Kong Identity principals UI behind khcp-20393 flag ([#3489](https://github.com/Kong/public-ui-components/issues/3489)) ([1e2f274](https://github.com/Kong/public-ui-components/commit/1e2f274b2f11c6e2b2a12b2c11190b506ad9e0c6))
+
+
+
+
+
 ## [4.27.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.27.4...@kong-ui-public/forms@4.27.5) (2026-06-24)
 
 **Note:** Version bump only for package @kong-ui-public/forms
