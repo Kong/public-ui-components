@@ -1719,5 +1719,12 @@ async function getClonedPlugin(clonedPluginName: string): Promise<void> {
     justify-content: flex-end;
     margin-bottom: var(--kui-space-60, $kui-space-60);
   }
+
+  :deep(.k-slideout .slideout-container) {
+    /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
+    height: calc(100vh - var(--kui-konnect-header-height));
+    /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
+    top: var(--kui-konnect-header-height);
+  }
 }
 </style>
