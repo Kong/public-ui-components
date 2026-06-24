@@ -252,8 +252,8 @@ const emit = defineEmits<{
   ): void
   (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
-  (e: 'click:learn-more', entity: string): void
   (e: 'click:create-entity', payload: EntityCreateEvent): void
+  (e: 'click:learn-more', entity: string): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

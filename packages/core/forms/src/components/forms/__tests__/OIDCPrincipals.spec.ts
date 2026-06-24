@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import OIDCPrincipals from '../OIDCPrincipals.vue'
+import PrincipalLookupSettings from '../PrincipalLookupSettings.vue'
 import { FORMS_CONFIG } from '../../../const'
 
 // Stub VueFormGenerator to avoid rendering real form fields in External mode
@@ -71,7 +72,7 @@ describe('OIDCPrincipals', () => {
   })
 
   describe('mode toggle data changes', () => {
-    it('switching to External sets principals-enabled to false and resets local state', async () => {
+    it('switching to External turns principal lookup off (opt-in)', async () => {
       const onModelUpdated = vi.fn()
       const wrapper = mountComponent({}, { onModelUpdated })
       const formModel = wrapper.props('formModel')
@@ -83,7 +84,7 @@ describe('OIDCPrincipals', () => {
       const externalRadio = wrapper.find('[data-testid="oidc-auth-mode-external"]')
       await externalRadio.trigger('change')
 
-      // The component calls handleModeChange which sets these values
+      // External auth is opt-in: principal lookup starts off until the user enables it.
       expect(formModel['config-principals-enabled']).toBe(false)
       expect(formModel['config-principals-directory']).toBe('default')
       expect(onModelUpdated).toHaveBeenCalled()
@@ -96,10 +97,10 @@ describe('OIDCPrincipals', () => {
         'config-client_id': ['my-client'],
         'config-client_secret': 'secret',
         'config-issuer': 'https://issuer.example.com',
-      }, { onModelUpdated })
+      }, { isEditing: true, onModelUpdated })
       const formModel = wrapper.props('formModel')
 
-      // Starts in External mode
+      // Starts in External mode (edit-load with a non-Kong-Identity issuer)
       expect(wrapper.find('.stub-vfg').exists()).toBe(true)
 
       // Call handleModeChange directly (KRadio event plumbing is a Kongponents concern)
@@ -114,6 +115,50 @@ describe('OIDCPrincipals', () => {
       expect(formModel['config-client_secret']).toBeNull()
       expect(formModel['config-issuer']).toBeNull()
       expect(onModelUpdated).toHaveBeenCalled()
+    })
+  })
+
+  describe('principal lookup availability', () => {
+    it('renders the principal lookup settings in Kong Identity mode', () => {
+      const wrapper = mountComponent()
+
+      expect(wrapper.findComponent(PrincipalLookupSettings).exists()).toBe(true)
+    })
+
+    it('shows a "Use principal lookup" toggle in External mode', () => {
+      // Edit-load with a non-Kong-Identity issuer starts the form in External mode
+      const wrapper = mountComponent(
+        { 'config-issuer': 'https://idp.example.com' },
+        { isEditing: true },
+      )
+
+      expect(wrapper.find('.stub-vfg').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="use-principal-lookup"]').exists()).toBe(true)
+    })
+
+    it('opting in via the toggle enables principal lookup', async () => {
+      const wrapper = mountComponent(
+        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
+        { isEditing: true },
+      )
+
+      // Settings are always rendered in External (disabled, not hidden) — the toggle opts in.
+      expect(wrapper.findComponent(PrincipalLookupSettings).exists()).toBe(true)
+      expect((wrapper.props('formModel') as any)['config-principals-enabled']).toBe(false)
+
+      ;(wrapper.vm as any).handleUsePrincipalLookupChange(true)
+      await wrapper.vm.$nextTick()
+
+      expect((wrapper.props('formModel') as any)['config-principals-enabled']).toBe(true)
+    })
+
+    it('switching to External turns principal lookup off by default (opt-in)', () => {
+      const wrapper = mountComponent()
+      const formModel = wrapper.props('formModel')
+
+      ;(wrapper.vm as any).handleModeChange('external')
+
+      expect(formModel['config-principals-enabled']).toBe(false)
     })
   })
 
@@ -162,55 +207,6 @@ describe('OIDCPrincipals', () => {
       // With one row left, the remaining remove control is disabled
       const remaining = wrapper.find('[data-testid="remove-external-client-action"]')
       expect(remaining.attributes('disabled')).toBeDefined()
-    })
-  })
-
-  describe('checkbox cascade', () => {
-    it('unchecking match_consumer unchecks match_consumer_groups', () => {
-      const onModelUpdated = vi.fn()
-      const wrapper = mountComponent({
-        'config-principals-match_consumer': true,
-        'config-principals-match_consumer_groups': true,
-      }, { onModelUpdated })
-      const formModel = wrapper.props('formModel')
-
-      // Call the handler directly (avoids KCollapse visibility / KCheckbox DOM issues)
-      ;(wrapper.vm as any).handleMatchConsumerChange(false)
-
-      expect(formModel['config-principals-match_consumer']).toBe(false)
-      expect(formModel['config-principals-match_consumer_groups']).toBe(false)
-      expect(onModelUpdated).toHaveBeenCalled()
-    })
-
-    it('checking match_consumer does not automatically re-check match_consumer_groups', () => {
-      const onModelUpdated = vi.fn()
-      const wrapper = mountComponent({
-        'config-principals-match_consumer': false,
-        'config-principals-match_consumer_groups': false,
-      }, { onModelUpdated })
-      const formModel = wrapper.props('formModel')
-
-      ;(wrapper.vm as any).handleMatchConsumerChange(true)
-
-      expect(formModel['config-principals-match_consumer']).toBe(true)
-      // consumer groups remains unchecked — user must re-enable explicitly
-      expect(formModel['config-principals-match_consumer_groups']).toBe(false)
-    })
-  })
-
-  describe('identifier claim transformation', () => {
-    it('splits identifier claim by dot into a list', () => {
-      const onModelUpdated = vi.fn()
-      const wrapper = mountComponent({
-        'config-principals-directory': 'default',
-        'config-principals-principal_claim': null,
-      }, { onModelUpdated })
-      const formModel = wrapper.props('formModel')
-
-      ;(wrapper.vm as any).handleIdentifierClaimChange('user.employee_id')
-
-      expect(formModel['config-principals-principal_claim']).toEqual(['user', 'employee_id'])
-      expect(onModelUpdated).toHaveBeenCalled()
     })
   })
 
@@ -288,11 +284,11 @@ describe('OIDCPrincipals', () => {
   })
 
   describe('edit after creation (principals fields populated)', () => {
-    it('infers Kong Identity mode when config-principals-enabled is true', () => {
+    it('infers Kong Identity mode on edit when the issuer is a Kong Identity domain', () => {
       const wrapper = mountComponent({
         'config-principals-enabled': true,
-        'config-issuer': 'https://my-issuer.example.com',
-      })
+        'config-issuer': 'https://acme.identity.konghq.com',
+      }, { isEditing: true })
 
       // Should show Kong Identity UI (selects)
       expect(wrapper.find('[data-testid="principals-directory-select"]').exists()).toBe(true)
@@ -309,19 +305,18 @@ describe('OIDCPrincipals', () => {
   })
 
   describe('edit existing plugin before schema change (no principals fields)', () => {
-    it('infers External mode when principals fields are absent but common fields have values', () => {
-      // Simulate a plugin created before principals was added to the schema:
-      // No config-principals-* fields exist, but config-client_id and config-issuer are set
+    it('infers External mode on edit when the issuer is not a Kong Identity domain', () => {
+      // A plugin whose issuer points at a customer IdP (not identity.konghq) is External.
       const formModel = {
         'config-client_id': null,
         'config-client_secret': null,
         'config-issuer': 'https://legacy-issuer.example.com',
-        // principals fields are completely absent (undefined)
       }
 
       const wrapper = mount(OIDCPrincipals, {
         props: {
           ...baseProps,
+          isEditing: true,
           formModel,
         },
         global: {
@@ -331,8 +326,7 @@ describe('OIDCPrincipals', () => {
         },
       })
 
-      // Should show VueFormGenerator (External mode) since principals-enabled is undefined
-      // and common fields have values
+      // Should show VueFormGenerator (External mode)
       expect(wrapper.find('.stub-vfg').exists()).toBe(true)
       expect(wrapper.find('[data-testid="principals-directory-select"]').exists()).toBe(false)
     })
@@ -360,105 +354,6 @@ describe('OIDCPrincipals', () => {
 
       expect((wrapper.vm as any).selectedMode).toBe('external')
       expect(wrapper.find('[data-testid="principals-directory-select"]').exists()).toBe(false)
-    })
-
-    it('defaults lookup method to the first option when principal fields are empty', () => {
-      const wrapper = mountComponent({
-        'config-principals-directory': 'default',
-        'config-principals-principal_claim': null,
-        'config-principals-principal_by': undefined,
-      })
-
-      expect((wrapper.vm as any).selectedLookupMethod).toBe('kong-identity')
-    })
-  })
-
-  describe('lookup method switching', () => {
-    it('selecting kong-identity clears principal_by and principal_claim', () => {
-      const onModelUpdated = vi.fn()
-      const wrapper = mountComponent({
-        'config-principals-directory': 'default',
-        'config-principals-principal_by': 'Customer_ID',
-        'config-principals-principal_claim': ['user', 'employee_id'],
-      }, { onModelUpdated })
-      const formModel = wrapper.props('formModel')
-
-      ;(wrapper.vm as any).handleLookupMethodChange('kong-identity')
-
-      expect(formModel['config-principals-principal_by']).toBeNull()
-      expect(formModel['config-principals-principal_claim']).toBeNull()
-      expect(formModel['config-principals-directory']).toBe('default')
-      expect((wrapper.vm as any).selectedLookupMethod).toBe('kong-identity')
-      expect(onModelUpdated).toHaveBeenCalled()
-    })
-
-    it('selecting custom-identity does not clear principal fields', () => {
-      const onModelUpdated = vi.fn()
-      const wrapper = mountComponent({
-        'config-principals-directory': 'default',
-        'config-principals-principal_by': null,
-        'config-principals-principal_claim': null,
-      }, { onModelUpdated })
-      const formModel = wrapper.props('formModel')
-
-      ;(wrapper.vm as any).handleLookupMethodChange('custom-identity')
-
-      expect((wrapper.vm as any).selectedLookupMethod).toBe('custom-identity')
-      expect(formModel['config-principals-directory']).toBe('default')
-      expect(formModel['config-principals-principal_by']).toBeNull()
-      expect(formModel['config-principals-principal_claim']).toBeNull()
-    })
-  })
-
-  describe('identifier claim escaping', () => {
-    it('parses simple dot notation into array parts', () => {
-      const wrapper = mountComponent()
-      const vm = wrapper.vm as any
-
-      vm.handleIdentifierClaimChange('user.name')
-
-      const formModel = wrapper.props('formModel')
-      expect(formModel['config-principals-principal_claim']).toEqual(['user', 'name'])
-    })
-
-    it('parses escaped dots as literal dots within a part', () => {
-      const wrapper = mountComponent()
-      const vm = wrapper.vm as any
-
-      vm.handleIdentifierClaimChange('user.name\\.first')
-
-      const formModel = wrapper.props('formModel')
-      expect(formModel['config-principals-principal_claim']).toEqual(['user', 'name.first'])
-    })
-
-    it('handles empty input', () => {
-      const wrapper = mountComponent()
-      const vm = wrapper.vm as any
-
-      vm.handleIdentifierClaimChange('')
-
-      const formModel = wrapper.props('formModel')
-      expect(formModel['config-principals-principal_claim']).toEqual([])
-    })
-
-    it('displays array with literal dots using escape notation', () => {
-      const wrapper = mountComponent({
-        'config-principals-principal_claim': ['user', 'name.first'],
-      })
-      const vm = wrapper.vm as any
-
-      expect(vm.getIdentifierClaimInputValue()).toBe('user.name\\.first')
-    })
-
-    it('round-trips complex claim correctly', () => {
-      const wrapper = mountComponent()
-      const vm = wrapper.vm as any
-
-      vm.handleIdentifierClaimChange('org\\.name.user.id\\.v2')
-
-      const formModel = wrapper.props('formModel')
-      expect(formModel['config-principals-principal_claim']).toEqual(['org.name', 'user', 'id.v2'])
-      expect(vm.getIdentifierClaimInputValue()).toBe('org\\.name.user.id\\.v2')
     })
   })
 
@@ -548,6 +443,212 @@ describe('OIDCPrincipals', () => {
       expect(formModel['config-issuer']).toBe('https://auth2.example.com')
 
       wrapper.unmount()
+    })
+  })
+
+  describe('principals creation guide (Konnect)', () => {
+    const konnectConfig = { apiBaseUrl: '/us', app: 'konnect' }
+
+    // Route the shared axios mock by URL: the directory list, that directory's
+    // principals, and the auth-servers lookup (fetchKongIdentityServers) run on mount.
+    const mockKongIdentity = ({ principals = [], directory = { id: 'dir-1', name: 'default' } }: {
+      principals?: any[]
+      directory?: { id: string, name: string } | null
+    } = {}) => {
+      mockGet.mockImplementation((url: string) => {
+        if (/\/v2\/directories\/[^/]+\/principals/.test(url)) {
+          return Promise.resolve({ data: { data: principals } })
+        }
+        if (url.includes('/v2/directories')) {
+          return Promise.resolve({ data: { data: directory ? [directory] : [] } })
+        }
+        return Promise.resolve({ data: { data: [] } })
+      })
+    }
+
+    const mountKonnect = (formModelOverrides = {}, propsOverrides = {}) =>
+      mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel(formModelOverrides), ...propsOverrides },
+        global: { provide: { [FORMS_CONFIG]: konnectConfig } },
+      })
+
+    it('queries the directory then its principals with page[size]=1 on mount', async () => {
+      mockKongIdentity({ principals: [] })
+      mountKonnect()
+      await flushPromises()
+
+      expect(mockGet).toHaveBeenCalledWith('/us/v2/directories', { params: { 'page[size]': 1 } })
+      expect(mockGet).toHaveBeenCalledWith('/us/v2/directories/dir-1/principals', { params: { 'page[size]': 1 } })
+    })
+
+    it('caches the directory so a warm refresh does not flash the loading skeleton', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      const vm = wrapper.vm as any
+      expect(vm.cachedDirectory).toEqual({ id: 'dir-1', name: 'default' })
+
+      // A subsequent refresh (directory already cached) must not toggle the loading skeleton.
+      const refresh = vm.fetchPrincipalsState({ setDirectory: false })
+      expect(vm.principalsLoading).toBe(false)
+      await refresh
+      expect(vm.principalsLoading).toBe(false)
+    })
+
+    it('shows the guide and disables the principal fields when the directory has no principals', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(true)
+    })
+
+    it('hides the guide and enables the principal fields when the directory has principals', async () => {
+      mockKongIdentity({ principals: [{ id: 'p1' }] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
+    })
+
+    it('adopts config-principals-directory from the API response on create (not hardcoded "default")', async () => {
+      mockKongIdentity({ principals: [], directory: { id: 'dir-9', name: 'my-directory' } })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      expect(wrapper.props('formModel')['config-principals-directory']).toBe('my-directory')
+    })
+
+    it('does not overwrite a saved config-principals-directory on edit', async () => {
+      mockKongIdentity({ principals: [{ id: 'p1' }], directory: { id: 'dir-9', name: 'my-directory' } })
+      const wrapper = mountKonnect({ 'config-principals-directory': 'saved-dir' }, { isEditing: true })
+      await flushPromises()
+
+      expect(wrapper.props('formModel')['config-principals-directory']).toBe('saved-dir')
+    })
+
+    it('does not look up principals when there is no directory, and keeps the guide visible', async () => {
+      mockKongIdentity({ directory: null })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/principals'), expect.anything())
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+    })
+
+    it('opens the leave-page prompt on Create principal and emits click:create-entity on confirm', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      // Clicking opens the leave-page confirmation; the event fires only on confirm
+      await wrapper.find('[data-testid="principals-create-principal"]').trigger('click')
+      expect((wrapper.vm as any).leavePromptType).toBe('principal')
+      expect(wrapper.emitted('click:create-entity')).toBeUndefined()
+
+      ;(wrapper.vm as any).handleLeaveConfirmed()
+      expect(wrapper.emitted('click:create-entity')?.[0]).toEqual([{ type: 'principal' }])
+    })
+
+    it('emits click:learn-more with "kong-identity" when Learn more is clicked', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      await wrapper.find('[data-testid="principals-learn-more"]').trigger('click')
+      expect(wrapper.emitted('click:learn-more')?.[0]).toEqual(['kong-identity'])
+    })
+
+    it('emits click:create-entity with type "auth-server" when the create-auth-server prompt is confirmed', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      ;(wrapper.vm as any).leavePromptType = 'authServer'
+      ;(wrapper.vm as any).handleLeaveConfirmed()
+      expect(wrapper.emitted('click:create-entity')?.[0]).toEqual([{ type: 'auth-server' }])
+    })
+
+    it('emits click:create-entity with type "client" and the selected auth server id', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      ;(wrapper.vm as any).selectedServer = { id: 'srv-1' }
+      ;(wrapper.vm as any).leavePromptType = 'client'
+      ;(wrapper.vm as any).handleLeaveConfirmed()
+      expect(wrapper.emitted('click:create-entity')?.[0]).toEqual([{ type: 'client', authServerId: 'srv-1' }])
+    })
+
+    it('does not query principals, show the guide, or disable fields outside Konnect', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: { provide: { [FORMS_CONFIG]: { apiBaseUrl: '/us' } } }, // no app: 'konnect'
+      })
+      await flushPromises()
+
+      expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v2/directories'), expect.anything())
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
+    })
+
+    it('shows the guide in External mode when lookup is on and the directory is empty', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect(
+        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': true },
+        { isEditing: true },
+      )
+      await flushPromises()
+
+      expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(true)
+    })
+
+    it('shows the guide in External mode when the directory is empty, even with lookup off', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect(
+        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
+        { isEditing: true },
+      )
+      await flushPromises()
+
+      // No principals → the guide is shown inside the additional settings to set up Kong
+      // Identity, regardless of the (disabled) toggle.
+      expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+    })
+
+    it('disables the External "Use principal lookup" toggle when the directory has no principals', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect(
+        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
+        { isEditing: true },
+      )
+      await flushPromises()
+
+      // External checks the directory on mount even with lookup off; the toggle binds its
+      // :disabled to principalsFieldsDisabled, which is true when there are no principals.
+      expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(true)
+    })
+
+    it('enables the External toggle when the directory has at least one principal', async () => {
+      mockKongIdentity({ principals: [{ id: 'p1' }] })
+      const wrapper = mountKonnect(
+        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
+        { isEditing: true },
+      )
+      await flushPromises()
+
+      expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
+      // Principals exist → no setup guide.
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
     })
   })
 })
