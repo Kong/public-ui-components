@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.220.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.219.1...@kong-ui-public/entities-plugins@9.220.0) (2026-06-24)
+
+
+### Features
+
+* **entities-plugins:** add Kong Identity principals guide for OIDC plugin ([#3476](https://github.com/Kong/public-ui-components/issues/3476)) ([4155214](https://github.com/Kong/public-ui-components/commit/4155214dad23b0cdf9cac83ffd42745ee74b8013))
+
+
+
+
+
 ## [9.219.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.219.0...@kong-ui-public/entities-plugins@9.219.1) (2026-06-24)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
