@@ -8,6 +8,7 @@ An input component (built on top of `KInput`) for entering sensitive fields such
   - [Install](#install)
   - [Props](#props)
   - [Events](#events)
+  - [Slots](#slots)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
 
@@ -90,6 +91,30 @@ Emitted when key generation starts (immediately before `generator` is awaited).
 #### generated
 
 Emitted with the generated key once `generator` resolves.
+
+### Slots
+
+#### alert
+
+Rendered at the bottom of the component. Use it to display additional content such as a `KAlert` — for example, surfacing a notice after the `rotate` event fires.
+
+```html
+<template>
+  <SensitiveInput
+    v-model="apiKey"
+    label="API key"
+    mode="edit"
+    @rotate="showAlert = true"
+  >
+    <template #alert>
+      <KAlert
+        v-if="showAlert"
+        message="Once saved, the key value will not be visible."
+      />
+    </template>
+  </SensitiveInput>
+</template>
+```
 
 ### Usage example
 
