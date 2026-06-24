@@ -27,7 +27,7 @@
           class="sensitive-input-action"
           data-testid="sensitive-input-rotate"
           size="small"
-          @click="enterEditing"
+          @click="enterEditing(true)"
         >
           {{ rotateLabel }}
         </KButton>
@@ -202,11 +202,18 @@ const handleInput = (value: string) => {
   emit('update:modelValue', value)
 }
 
-const enterEditing = () => {
+// `emitRotate` defaults to true so the "Rotate key" button click emits `rotate`.
+// The exposed `enterEditing` wrapper passes false to switch state silently.
+const enterEditing = (emitRotate = true) => {
   internalMode.value = 'editing'
   revealed.value = false
-  emit('rotate')
+  if (emitRotate) emit('rotate')
 }
+
+defineExpose({
+  /** Switch to the editable state programmatically, WITHOUT emitting `rotate`. */
+  enterEditing: () => enterEditing(false),
+})
 
 const toggleReveal = () => {
   revealed.value = !revealed.value

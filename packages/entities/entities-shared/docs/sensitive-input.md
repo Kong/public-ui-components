@@ -9,6 +9,7 @@ An input component (built on top of `KInput`) for entering sensitive fields such
   - [Props](#props)
   - [Events](#events)
   - [Slots](#slots)
+  - [Exposed methods](#exposed-methods)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
 
@@ -114,6 +115,36 @@ Rendered at the bottom of the component. Use it to display additional content su
     </template>
   </SensitiveInput>
 </template>
+```
+
+### Exposed methods
+
+#### enterEditing
+
+Switches the field from the masked state to the editable state programmatically — the same state change as clicking the "Rotate key" button, but **without** emitting the `rotate` event. Access it via a template ref.
+
+```html
+<template>
+  <SensitiveInput
+    ref="sensitiveInputRef"
+    v-model="apiKey"
+    label="API key"
+    mode="edit"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { SensitiveInput } from '@kong-ui-public/entities-shared'
+
+const apiKey = ref('')
+const sensitiveInputRef = ref<InstanceType<typeof SensitiveInput>>()
+
+// Enter the editable state without triggering the `rotate` event.
+const startEditing = () => {
+  sensitiveInputRef.value?.enterEditing()
+}
+</script>
 ```
 
 ### Usage example
