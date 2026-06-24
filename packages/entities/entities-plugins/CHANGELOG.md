@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.218.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.218.1...@kong-ui-public/entities-plugins@9.218.2) (2026-06-24)
+
+
+### Bug Fixes
+
+* **datakit:** support environments without Redis partial (AI Gateway policy) ([#3483](https://github.com/Kong/public-ui-components/issues/3483)) ([b31bc0b](https://github.com/Kong/public-ui-components/commit/b31bc0b797826df1b1c556b8f1070a6d72ba4512))
+
+
+
+
+
 ## [9.218.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.218.0...@kong-ui-public/entities-plugins@9.218.1) (2026-06-23)
 
 
