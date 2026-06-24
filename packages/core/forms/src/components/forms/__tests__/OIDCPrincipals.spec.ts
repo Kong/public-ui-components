@@ -609,7 +609,7 @@ describe('OIDCPrincipals', () => {
       expect((wrapper.vm as any).principalsFieldsDisabled).toBe(true)
     })
 
-    it('does not show the guide in External mode when lookup is off', async () => {
+    it('shows the guide in External mode when the directory is empty, even with lookup off', async () => {
       mockKongIdentity({ principals: [] })
       const wrapper = mountKonnect(
         { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
@@ -617,7 +617,37 @@ describe('OIDCPrincipals', () => {
       )
       await flushPromises()
 
+      // No principals → the guide is shown inside the additional settings to set up Kong
+      // Identity, regardless of the (disabled) toggle.
       expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+    })
+
+    it('disables the External "Use principal lookup" toggle when the directory has no principals', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect(
+        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
+        { isEditing: true },
+      )
+      await flushPromises()
+
+      // External checks the directory on mount even with lookup off; the toggle binds its
+      // :disabled to principalsFieldsDisabled, which is true when there are no principals.
+      expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(true)
+    })
+
+    it('enables the External toggle when the directory has at least one principal', async () => {
+      mockKongIdentity({ principals: [{ id: 'p1' }] })
+      const wrapper = mountKonnect(
+        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
+        { isEditing: true },
+      )
+      await flushPromises()
+
+      expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
+      // Principals exist → no setup guide.
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
     })
   })

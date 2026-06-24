@@ -58,14 +58,14 @@
     <!-- While the first directory/principals lookup is in flight, show a skeleton in place of
          the guide (cold fetch only — cached refreshes stay silent). -->
     <KSkeleton
-      v-if="principalsSkeletonVisible"
+      v-if="principalsSkeletonVisible && selectedMode === MODE_KONG_IDENTITY"
       class="principals-create-guide-skeleton"
       data-testid="principals-create-guide-loading"
     />
     <!-- Add/Create Principals guide: principal lookup runs after token verification in
          either mode, so the empty-directory guide applies to Kong Identity and External alike. -->
     <div
-      v-else-if="principalsGuideVisible"
+      v-else-if="principalsGuideVisible && selectedMode === MODE_KONG_IDENTITY"
       class="principals-create-guide"
       data-testid="principals-create-guide"
     >
@@ -290,6 +290,45 @@
         :on-model-updated="onModelUpdated"
         show-enable-toggle
       >
+        <!-- No directory / no principals: guide the user to set up Kong Identity, inside the
+             additional settings (the toggle above is disabled in this state). -->
+        <template #banner>
+          <KSkeleton
+            v-if="isKonnect && principalsLoading"
+            class="principals-create-guide-skeleton"
+            data-testid="principals-create-guide-loading"
+          />
+          <div
+            v-else-if="isKonnect && !hasPrincipals"
+            class="principals-create-guide"
+            data-testid="principals-create-guide"
+          >
+            <div class="principals-create-guide-title">
+              Add principals
+            </div>
+            <div class="principals-create-guide-description">
+              Get more value from OAuth 2.0 integration by creating principals in Kong Identity. Associate principals with this authorization server and its clients to enable principal-based authentication across Kong products.
+            </div>
+            <div class="principals-create-guide-actions">
+              <KButton
+                appearance="primary"
+                data-testid="principals-create-principal"
+                @click="leavePromptType = 'principal'"
+              >
+                <AddIcon decorative />
+                Create principal
+              </KButton>
+              <KButton
+                appearance="secondary"
+                data-testid="principals-learn-more"
+                @click="$emit('click:learn-more', 'kong-identity')"
+              >
+                <BookIcon decorative />
+                Learn more
+              </KButton>
+            </div>
+          </div>
+        </template>
         <slot name="advanced-fields" />
       </PrincipalLookupSettings>
     </template>
@@ -464,11 +503,10 @@ export default {
       this.$nextTick(() => this.$emit('mode-change', this.selectedMode))
     }
     this.fetchKongIdentityServers()
-    // Check the directory's principals whenever lookup is on (KI always; External once opted
-    // in). Only adopt the fetched directory name in Kong Identity create.
-    if (this.formModel['config-principals-enabled'] === true) {
-      this.fetchPrincipalsState({ setDirectory: !this.isEditing && this.selectedMode === MODE_KONG_IDENTITY })
-    }
+    // Check the directory's principals in both modes so the External "Use principal lookup"
+    // toggle can be disabled when there's no directory / no principals. Only adopt the fetched
+    // directory name in Kong Identity create.
+    this.fetchPrincipalsState({ setDirectory: !this.isEditing && this.selectedMode === MODE_KONG_IDENTITY })
   },
   methods: {
     // `setDirectory` is true on create/switch into Kong Identity (we adopt the directory
@@ -622,11 +660,9 @@ export default {
       this.onModelUpdated()
     },
     handleUsePrincipalLookupChange(enabled) {
+      // The directory/principals are already checked on mount (and cached), so toggling
+      // lookup on/off just flips the flag — no extra network request.
       this.updateField('config-principals-enabled', enabled)
-      // On opt-in, check the default directory so the guide/gate reflect reality.
-      if (enabled) {
-        this.fetchPrincipalsState({ setDirectory: false })
-      }
     },
     handleLeaveConfirmed() {
       const type = this.leavePromptType

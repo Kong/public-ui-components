@@ -4,12 +4,14 @@
     data-testid="principals-advanced-settings"
     trigger-label="Show additional settings"
   >
+    <slot name="banner" />
     <div
       v-if="showEnableToggle"
       class="principals-field-group"
     >
       <KInputSwitch
         data-testid="use-principal-lookup"
+        :disabled="disabled"
         label="Use principal lookup"
         :model-value="lookupEnabled"
         @update:model-value="handleEnableToggle"
