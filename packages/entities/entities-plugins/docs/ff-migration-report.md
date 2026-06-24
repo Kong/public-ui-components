@@ -3,7 +3,7 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-06-22T03:10:43.727Z
+> Generated: 2026-06-24T07:12:55.273Z
 
 ## Summary
 
