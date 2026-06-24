@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.52.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.51.1...@kong-ui-public/entities-shared@3.52.0) (2026-06-24)
+
+
+### Features
+
+* **entities-shared:** add the alert slot ([#3488](https://github.com/Kong/public-ui-components/issues/3488)) ([1b3aa0e](https://github.com/Kong/public-ui-components/commit/1b3aa0e354cb6682cbc1be53b302c672c9efdc69))
+
+
+
+
+
 ## [3.51.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.51.0...@kong-ui-public/entities-shared@3.51.1) (2026-06-23)
 
 
