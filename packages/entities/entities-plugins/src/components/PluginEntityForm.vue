@@ -48,6 +48,7 @@
         :form-model="formModel"
         :form-options="formOptions"
         :form-schema="formSchema"
+        :identity-principals-ui-enabled="identityPrincipalsUiEnabled"
         :is-editing="editing"
         :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :on-model-updated="onModelUpdated"
@@ -261,6 +262,11 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() => {
 })
 
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
+
+// Identity Principals UI feature flag. Free-form plugins (basic-auth, key-auth) read this
+// directly via inject in ConfigFormContent; OIDC embeds its own VueFormGenerator, so it's
+// passed through as a prop (mirroring is-konnect-managed-redis-enabled).
+const identityPrincipalsUiEnabled = inject<boolean>(PLUGIN_FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 

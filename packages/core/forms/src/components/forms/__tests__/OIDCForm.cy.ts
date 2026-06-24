@@ -118,6 +118,8 @@ const requiredProps = {
   isEditing: false,
   onModelUpdated: () => {},
   onPartialToggled: () => {},
+  // khcp-20393 Identity Principals UI flag — on by default so the principals specs render it.
+  identityPrincipalsUiEnabled: true,
 }
 
 describe('<OIDCForm />', () => {
@@ -411,6 +413,58 @@ describe('<OIDCForm />', () => {
 
       cy.getTestId('principals-custom-identity-name').should('exist')
       cy.wrap(formModel).its('config-principals-directory').should('equal', 'default')
+    })
+
+    it('should not render principals section in Konnect when the Identity Principals UI flag is off', () => {
+      cy.mount(OIDCForm, {
+        props: {
+          ...requiredProps,
+          identityPrincipalsUiEnabled: false,
+          formSchema: OIDCFormSchemaWithPrincipals,
+          formModel: OIDCModelWithPrincipals,
+        },
+        global: {
+          provide: {
+            'kong-ui-forms-config': baseConfigKonnect,
+          },
+        },
+      })
+
+      // Legacy rendering: principals section hidden, plain common-fields form shown instead
+      cy.getTestId('oidc-principals-section').should('not.exist')
+      cy.getTestId('oidc-auth-mode-radio-group').should('not.exist')
+    })
+
+    it('preserves an existing modified principals config (does not reset to default) when the flag is off', () => {
+      // Edit-load: principals was customized while the flag was on; flag-off must not clobber it.
+      const formModel = {
+        ...OIDCModelWithPrincipals,
+        id: 'plugin-id',
+        'config-principals-enabled': true,
+        'config-principals-directory': 'my-custom-dir',
+        'config-principals-error_on_miss': true,
+      }
+
+      cy.mount(OIDCForm, {
+        props: {
+          ...requiredProps,
+          identityPrincipalsUiEnabled: false,
+          isEditing: true,
+          formSchema: OIDCFormSchemaWithPrincipals,
+          formModel,
+        },
+        global: {
+          provide: {
+            'kong-ui-forms-config': baseConfigKonnect,
+          },
+        },
+      })
+
+      // UI hidden, but the saved principals values are left untouched in the model.
+      cy.getTestId('oidc-principals-section').should('not.exist')
+      cy.wrap(formModel).its('config-principals-enabled').should('equal', true)
+      cy.wrap(formModel).its('config-principals-directory').should('equal', 'my-custom-dir')
+      cy.wrap(formModel).its('config-principals-error_on_miss').should('equal', true)
     })
 
     it('should not render principals section in Konnect when schema has no principals fields', () => {

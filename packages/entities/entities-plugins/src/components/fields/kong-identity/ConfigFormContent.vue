@@ -96,6 +96,7 @@ import { useAxios } from '@kong-ui-public/entities-shared'
 import { KLabel, KRadio } from '@kong/kongponents'
 import { FETCHED_REALMS_KEY } from '../key-auth-identity-realms/const'
 import { BEFORE_SAVE_KEY } from '../../const'
+import { FEATURE_FLAGS } from '../../../constants'
 import composables from '../../../composables'
 
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
@@ -196,7 +197,13 @@ provide(FETCHED_REALMS_KEY, fetchedRealms)
 // Auto-detect from schema
 const identityRealmsInSchema = computed(() => !!getSchema('$.config.identity_realms'))
 
-const hasPrincipals = computed(() => !!getSchema('$.config.principals'))
+// Feature-flagged: when the consuming app hasn't enabled the Identity Principals UI,
+// behave as if `principals` isn't in the schema — every piece of the new UI keys off
+// `hasPrincipals`, so the form falls back to the legacy rendering (and `principals`
+// keeps its prefilled schema default, submitted as-is).
+const identityPrincipalsUiEnabled = inject<boolean>(FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
+
+const hasPrincipals = computed(() => identityPrincipalsUiEnabled && !!getSchema('$.config.principals'))
 
 function detectInitialMode(): 'consumers' | 'kong-identity' | 'centrally-managed' {
   if (formData.config?.principals?.enabled) return 'kong-identity'

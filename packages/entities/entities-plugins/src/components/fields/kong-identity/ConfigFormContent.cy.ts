@@ -3,6 +3,7 @@ import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import Form from '../../free-form/shared/Form.vue'
 import ConfigFormContent from './ConfigFormContent.vue'
 import { BEFORE_SAVE_KEY } from '../../const'
+import { FEATURE_FLAGS } from '../../../constants'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 
 // Schema with both principals and identity_realms (like key-auth)
@@ -245,6 +246,8 @@ function mountContent(
     hasDefaultDirectory?: boolean
     hasPrincipals?: boolean
     lookupDelay?: number
+    /** khcp-20393 Identity Principals UI flag. Defaults to on so the new-UI specs render it. */
+    identityPrincipalsUiEnabled?: boolean
   },
   data?: Record<string, any>,
 ) {
@@ -289,6 +292,7 @@ function mountContent(
     global: {
       provide: {
         [FORMS_CONFIG]: formsConfig,
+        [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: options.identityPrincipalsUiEnabled !== false,
         [BEFORE_SAVE_KEY as symbol]: (cb: () => boolean) => {
           beforeSaveCallbacks.push(cb); return () => {}
         },
@@ -337,6 +341,36 @@ describe('ConfigFormContent', () => {
         mountContent(schemaWithoutPrincipals, { isKonnect: true })
 
         cy.getTestId('ff-kong-identity-field').should('not.exist')
+      })
+
+      it('hides the Kong Identity principals UI when the feature flag is off, even with principals in schema', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, identityPrincipalsUiEnabled: false })
+
+        // Legacy rendering: none of the new principals UI is shown
+        cy.getTestId('ff-kong-identity-field').should('not.exist')
+        cy.getTestId('kong-identity-principals-panel').should('not.exist')
+        cy.getTestId('ff-principals-error-on-miss-label').should('not.exist')
+      })
+
+      it('preserves an existing modified principals config (does not reset to default) when the flag is off', () => {
+        // Edit-load: the plugin was previously configured with Kong Identity principals while
+        // the flag was on. Re-opening it with the flag off must NOT clobber that saved config.
+        mountContent(schemaWithRealms, { isKonnect: true, identityPrincipalsUiEnabled: false }, {
+          config: {
+            principals: { enabled: true, directory: 'my-custom-dir', error_on_miss: false },
+            identity_realms: null,
+          },
+        })
+
+        // The principals UI is hidden...
+        cy.getTestId('ff-kong-identity-field').should('not.exist')
+
+        // ...but the saved principals is emitted unchanged — not replaced with the schema default.
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return val.config?.principals?.enabled === true
+            && val.config?.principals?.directory === 'my-custom-dir'
+            && val.config?.principals?.error_on_miss === false
+        }))
       })
 
       it('defaults to "consumers" mode when no principals data', () => {
