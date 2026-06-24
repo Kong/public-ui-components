@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.19.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.19.1...@kong-ui-public/analytics-chart@10.19.2) (2026-06-24)
+
+
+### Bug Fixes
+
+* let single value chart determine error cases for itself ([#3493](https://github.com/Kong/public-ui-components/issues/3493)) ([a939786](https://github.com/Kong/public-ui-components/commit/a939786c51d6b9dff55aed63c38ef00664569daf))
+
+
+
+
+
 ## [10.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.19.0...@kong-ui-public/analytics-chart@10.19.1) (2026-06-24)
 
 
