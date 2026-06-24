@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.19.0...@kong-ui-public/analytics-chart@10.19.1) (2026-06-24)
+
+
+### Bug Fixes
+
+* **analytics-chart:** use sentence case for Agentic metric and group-by labels [MA-4954] ([#3494](https://github.com/Kong/public-ui-components/issues/3494)) ([fb44dc2](https://github.com/Kong/public-ui-components/commit/fb44dc2ba50aa345391ba446b0ee8de3efe21bd8))
+* **analytics:** use correct method to determine legend visibility [MA-5104] ([#3484](https://github.com/Kong/public-ui-components/issues/3484)) ([b847e83](https://github.com/Kong/public-ui-components/commit/b847e8358aa808d60ceeabb563fc9dbd68109805))
+
+
+
+
+
 # [10.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.13...@kong-ui-public/analytics-chart@10.19.0) (2026-06-23)
 
 
