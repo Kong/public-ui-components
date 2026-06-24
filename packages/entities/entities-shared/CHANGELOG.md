@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.53.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.52.0...@kong-ui-public/entities-shared@3.53.0) (2026-06-24)
+
+
+### Features
+
+* **entities-shared:** expose enterEditing ([#3491](https://github.com/Kong/public-ui-components/issues/3491)) ([966b100](https://github.com/Kong/public-ui-components/commit/966b10074c699d618965b6facc4f865db0bc626b))
+
+
+
+
+
 # [3.52.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.51.1...@kong-ui-public/entities-shared@3.52.0) (2026-06-24)
 
 
