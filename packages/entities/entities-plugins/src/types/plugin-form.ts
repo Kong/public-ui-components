@@ -22,8 +22,12 @@ import type { SAMLSchema } from './plugins/saml'
 import type { OasValidationSchema } from './plugins/oas-validation'
 import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
 import type { InjectionProtectionSchema } from './plugins/injection-protection'
+import type { KafkaUpstreamSchema } from './plugins/kafka-upstream'
 import type { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
 import type { genKeyAuthEncSchema } from '../definitions/schemas/KeyAuthEnc'
+import type { ConfluentSchema } from './plugins/confluent'
+import type { ConfluentConsumeSchema } from './plugins/confluent-consume'
+import type { KafkaConsumeSchema } from './plugins/kafka-consume'
 import type { SolaceConsumeSchema } from './plugins/solace-consume'
 import type { SolaceUpstreamSchema } from './plugins/solace-upstream'
 import type { OIDCSchema } from './plugins/oidc'
@@ -267,8 +271,13 @@ export interface CustomSchemas {
   'oas-validation': OasValidationSchema
   'upstream-oauth': UpstreamOauthSchema
   'injection-protection': InjectionProtectionSchema
+  'kafka-upstream': KafkaUpstreamSchema
   'key-auth': ReturnType<typeof genKeyAuthSchema>
   'key-auth-enc': ReturnType<typeof genKeyAuthEncSchema>
+  'confluent': ConfluentSchema
+  'confluent-consume': ConfluentConsumeSchema
+  'kafka-consume': KafkaConsumeSchema
+  'kafka-log': CommonSchemaFields
   'openid-connect': OIDCSchema
   'opentelemetry': OTELSchema
   'konnect-application-auth': KonnectApplicationAuthSchema
