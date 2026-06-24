@@ -244,6 +244,15 @@ export default {
       type: Boolean,
       default: false,
     },
+    /**
+     * Identity Principals UI feature flag (khcp-20393). When false, behave as if the
+     * `principals` fields aren't in the schema — the Kong Identity principals section is
+     * hidden and the legacy common-fields form renders instead.
+     */
+    identityPrincipalsUiEnabled: {
+      type: Boolean,
+      default: false,
+    },
     showNewPartialModal: {
       type: Function,
       default: () => { },
@@ -288,7 +297,7 @@ export default {
       return (this.formModel.id && this.isEditing) || !this.isEditing
     },
     hasPrincipalsFields() {
-      return this.formSchema.fields?.some(
+      return this.identityPrincipalsUiEnabled && this.formSchema.fields?.some(
         (field) => PRINCIPALS_FIELD_MODELS.has(field.model),
       )
     },
