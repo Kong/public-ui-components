@@ -90,6 +90,9 @@
         </KButton>
       </KClipboardProvider>
     </div>
+
+    <!-- Caller-controlled slot for additional content (e.g. an alert). -->
+    <slot name="alert" />
   </div>
 </template>
 
