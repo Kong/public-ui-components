@@ -461,6 +461,21 @@ const filtersFn = <T extends readonly string[] | undefined>(filterableDimensions
   },
 } as const satisfies JSONSchema)
 
+export const filterablePlatformPresetFilterDimensions = [
+  'control_plane',
+  'gateway_service',
+  'realm',
+  'route',
+  'plugin',
+  'plugin_name',
+  'plugin_scope',
+  'data_plane_node_version',
+  'env',
+  'team',
+  'region',
+  'hostname',
+] as const
+
 const platformFiltersFn = () => ({
   type: 'array',
   description: 'A list of filters to apply to the platform query',
@@ -826,6 +841,7 @@ export const dashboardConfigSchema = {
         ...filterableBasicExploreDimensions,
         ...filterableAiExploreDimensions,
         ...filterableAgenticExploreDimensions,
+        ...filterablePlatformPresetFilterDimensions,
       ]),
     ]),
     template_id: {

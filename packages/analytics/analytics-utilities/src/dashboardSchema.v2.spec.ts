@@ -11,6 +11,7 @@ import {
   validDashboardQuery,
   validDashboardTableQuery,
   platformQuerySchema,
+  filterablePlatformPresetFilterDimensions,
 } from './dashboardSchema.v2'
 import {
   agenticExploreAggregations,
@@ -47,6 +48,13 @@ describe('dashboardSchema.v2', () => {
       ...filterableBasicExploreDimensions,
       ...filterableAiExploreDimensions,
       ...filterableAgenticExploreDimensions,
+    ]),
+  ]
+
+  const presetFilterableDimensions = [
+    ...new Set([
+      ...sharedPresetFilterableDimensions,
+      ...filterablePlatformPresetFilterDimensions,
     ]),
   ]
 
@@ -406,10 +414,13 @@ describe('dashboardSchema.v2', () => {
     expect(platformQuerySchema.properties.filters.items.oneOf[1].properties.operator.enum).toBeUndefined()
   })
 
-  it('keeps shared preset filters strict and operator enums intact', () => {
-    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.field.enum).toEqual(sharedPresetFilterableDimensions)
-    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.field.enum).toEqual(sharedPresetFilterableDimensions)
+  it('includes platform fields in the strict preset filter enum and preserves operator enums', () => {
+    // oneOf[0] is the value-bearing filter shape: { field, operator, value }.
+    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.field.enum).toEqual(presetFilterableDimensions)
     expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.operator.enum).toEqual(exploreFilterTypesV2)
+
+    // oneOf[1] is the no-value filter shape: { field, operator }.
+    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.field.enum).toEqual(presetFilterableDimensions)
     expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.operator.enum).toEqual(requestFilterTypeEmptyV2)
     expect(barChartSchema.properties.type.enum).toEqual(['horizontal_bar', 'vertical_bar'])
   })
