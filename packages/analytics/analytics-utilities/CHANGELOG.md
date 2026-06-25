@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.19.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.19.2...@kong-ui-public/analytics-utilities@12.19.3) (2026-06-25)
+
+
+### Bug Fixes
+
+* Allow platform preset filters ([#3498](https://github.com/Kong/public-ui-components/issues/3498)) ([d24309b](https://github.com/Kong/public-ui-components/commit/d24309b4a3b827eb040c6bfab66df82dfbe9df48))
+
+
+
+
+
 ## [12.19.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.19.1...@kong-ui-public/analytics-utilities@12.19.2) (2026-06-23)
 
 
