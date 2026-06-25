@@ -109,8 +109,23 @@
       </template>
     </EntityFormBlock>
 
+    <!-- Multi-section plugin configuration: one numbered step block per section -->
+    <template v-if="editorMode === 'form' && configSections?.length">
+      <EntityFormBlock
+        v-for="(section, index) in configSections"
+        :key="section.name"
+        :data-testid="`form-section-${section.name}`"
+        :description="section.description"
+        :step="2 + index"
+        :title="section.title"
+      >
+        <slot :name="`section-${section.name}`" />
+      </EntityFormBlock>
+    </template>
+
+    <!-- Default single plugin configuration step (back-compatible) -->
     <EntityFormBlock
-      v-if="editorMode === 'form'"
+      v-else-if="editorMode === 'form'"
       data-testid="form-section-plugin-config"
       :description="pluginConfigDescription ?? t('plugins.form.sections.plugin_config.description')"
       :step="2"
@@ -144,7 +159,7 @@
       v-if="editorMode === 'form'"
       data-testid="form-section-general-info"
       :description="t('plugins.form.sections.plugin_general_info.description')"
-      :step="3"
+      :step="generalInfoStep"
       :title="t('plugins.form.sections.general_info.title')"
     >
       <SwitchField
@@ -300,7 +315,15 @@ const slots = defineSlots<{
   'plugin-config-description'?: () => any
   'plugin-config-extra'?: () => any
   'field-renderers'?: () => any
+  /** Content slots for multi-section layouts (`configSections`) */
+  [sectionSlot: `section-${string}`]: (() => any) | undefined
 }>()
+
+/**
+ * General Info is the last numbered step. In default single-config mode it is
+ * step 3; in multi-section mode it follows the configured sections.
+ */
+const generalInfoStep = computed(() => 2 + (props.configSections?.length ?? 1))
 
 const scopeWrapperAttrs = computed(() => {
   if (scopeSchema.value?.disabled) {
