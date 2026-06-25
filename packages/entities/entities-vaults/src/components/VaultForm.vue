@@ -1032,6 +1032,21 @@
           :readonly="form.isReadonly"
           type="text"
         />
+        <KCollapse
+          v-if="isAiGateway"
+          v-model="labelsCollapsed"
+          class="vault-form-labels-collapse"
+          data-testid="vault-form-labels-collapse"
+          :trigger-label="t('form.fields.labels.show_labels')"
+        >
+          <LabelForm
+            v-model="form.fields.labelList"
+            data-testid="vault-form-label-form"
+            :disabled="form.isReadonly"
+            focus-to-last-key
+            :title="null"
+          />
+        </KCollapse>
       </EntityFormSection>
     </EntityBaseForm>
   </div>
@@ -1062,6 +1077,7 @@ import type {
   AzureCertsVaultConfig,
   VaultState,
   VaultStateFields,
+  VaultLabelItem,
   KongManagerVaultFormConfig,
   KonnectVaultFormConfig,
   VaultPayload,
@@ -1087,6 +1103,8 @@ import {
   ConjourIcon,
   FolderIcon,
 } from '@kong/icons'
+import { LabelForm, labelMapToList } from '@kong-ui/labels'
+import '@kong-ui/labels/dist/style.css'
 
 interface ConfigFields {
   [VaultProviders.ENV]: KongVaultConfig
@@ -1150,6 +1168,7 @@ const form = reactive<VaultState>({
     prefix: '',
     description: '',
     tags: '',
+    labelList: [],
   },
   isReadonly: false,
   errorMessage: '',
@@ -1159,11 +1178,14 @@ const originalFields = reactive<VaultStateFields>({
   prefix: '',
   description: '',
   tags: '',
+  labelList: [],
 })
 
 const vaultProvider = ref<VaultProviders>(props.config.app === 'konnect' ? VaultProviders.KONNECT : VaultProviders.ENV)
 const originalVaultProvider = ref<VaultProviders | null>(null)
 const configStoreId = ref<string>()
+
+const labelsCollapsed = ref<boolean>(true)
 
 const isAvailableTTLConfig = computed(() => {
   return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE, VaultProviders.CONJUR, VaultProviders.FS, VaultProviders.AZURE_CERTS].includes(vaultProvider.value)
@@ -1547,7 +1569,14 @@ const updateFormValues = (rawData: Record<string, any>): void => {
   const tags = data?.item?.tags || data?.tags || []
   form.fields.tags = tags?.join(', ') || ''
 
+  if (isAiGateway.value) {
+    const labelsRecord: Record<string, string> = data?.labels ?? {}
+    form.fields.labelList = labelMapToList(labelsRecord)
+    labelsCollapsed.value = form.fields.labelList.length === 0
+  }
+
   Object.assign(originalFields, form.fields)
+  originalFields.labelList = form.fields.labelList.map((l: VaultLabelItem) => ({ ...l }))
 
   const config = data?.item?.config || data?.config || null
   if (config && (Object.keys(config).length || data?.name === VaultProviders.KONNECT)) {
@@ -1841,6 +1870,13 @@ const getPayload = computed((): Record<string, any> => {
   // Remap the gateway-shaped payload to the AI Gateway request body at the boundary only.
   if (!isAiGateway.value) return payload
   const aiPayload = toAiGatewayVaultPayload(payload)
+  // Attach labels (AI Gateway only): skip empty keys and deduplicate by key.
+  const labelsMap: Record<string, string> = {}
+  for (const label of form.fields.labelList) {
+    const k = label.key.trim()
+    if (k) labelsMap[k] = label.value.trim()
+  }
+  if (Object.keys(labelsMap).length > 0) aiPayload.labels = labelsMap
   // In edit mode, write-only fields are not returned by GET; omit them when blank so the
   // existing secret is preserved (sending an empty string would clear it on the server).
   if (formType.value === EntityBaseFormType.Edit) {
@@ -1953,6 +1989,10 @@ const saveFormData = async (): Promise<void> => {
         width: 100%;
       }
     }
+  }
+
+  .vault-form-labels-collapse {
+    margin-top: var(--kui-space-60, $kui-space-60);
   }
 
   .vault-form {

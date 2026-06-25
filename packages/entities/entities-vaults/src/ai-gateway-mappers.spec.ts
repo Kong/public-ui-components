@@ -20,7 +20,7 @@ describe('stripNullish', () => {
 })
 
 describe('toAiGatewayVaultPayload', () => {
-  it('maps top-level fields (name→type, prefix→name) and drops tags', () => {
+  it('maps top-level fields (name→type, prefix→name), drops tags, omits labels when none', () => {
     const result = toAiGatewayVaultPayload(basePayload({
       name: VaultProviders.ENV,
       prefix: 'env-vault',
@@ -35,6 +35,7 @@ describe('toAiGatewayVaultPayload', () => {
     })
     expect(result).not.toHaveProperty('tags')
     expect(result).not.toHaveProperty('prefix')
+    expect(result).not.toHaveProperty('labels')
   })
 
   it('coerces empty/null description to an empty string (AI Gateway description is non-nullable)', () => {
@@ -153,7 +154,7 @@ describe('toAiGatewayVaultPayload', () => {
 })
 
 describe('fromAiGatewayVault', () => {
-  it('maps type→name, name→prefix, no tags, preserves timestamps', () => {
+  it('maps type→name, name→prefix, preserves timestamps, returns empty labels when none', () => {
     const r = fromAiGatewayVault({
       id: 'v1', created_at: 1, updated_at: 2,
       type: VaultProviders.ENV, name: 'env-vault', description: 'd',
@@ -162,8 +163,18 @@ describe('fromAiGatewayVault', () => {
     expect(r).toEqual({
       id: 'v1', created_at: 1, updated_at: 2,
       name: VaultProviders.ENV, prefix: 'env-vault', description: 'd',
+      labels: {},
       config: { prefix: 'MY_' },
     })
+  })
+
+  it('passes through labels from the API response', () => {
+    const r = fromAiGatewayVault({
+      id: 'v1', type: VaultProviders.ENV, name: 'e', description: '',
+      labels: { env: 'prod', team: 'platform' },
+      config: {},
+    })
+    expect(r.labels).toEqual({ env: 'prod', team: 'platform' })
   })
 
   it('re-injects auth_method for conjur', () => {

@@ -308,6 +308,13 @@ export type AiHcvConfigPayload = AiHcvCommonConfig & (
   AiHcvAwsIamConfig | AiHcvAwsEc2Config | AiHcvAzureConfig
 )
 
+/** A single label key-value pair used in the form's internal state. Compatible with Label from @kong-ui/labels. */
+export interface VaultLabelItem {
+  id: number | string
+  key: string
+  value: string
+}
+
 /** Kong AI Gateway vault request body (create/update). */
 export interface AiVaultPayload {
   type: VaultProviders
@@ -315,12 +322,15 @@ export interface AiVaultPayload {
   // AI Gateway `description` is a non-nullable string; sent as '' when empty.
   description: string
   config: Record<string, any>
+  labels?: Record<string, string>
 }
 
 export interface VaultStateFields {
   prefix: string
   description: string
   tags: string
+  /** AI Gateway only: list of label key-value pairs. */
+  labelList: VaultLabelItem[]
 }
 
 export interface VaultState {
