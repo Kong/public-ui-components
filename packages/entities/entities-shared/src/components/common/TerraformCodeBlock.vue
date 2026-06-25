@@ -43,6 +43,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  entityId: {
+    type: String,
+    default: '',
+  },
   subEntityType: {
     // only for event gateway entities
     type: String,
@@ -286,7 +290,9 @@ const buildTerraformCode = (record: Record<string, any>): string => {
     const pluginType = props.credentialType.replace(/-/g, '_') || (modifiedRecord.name + '').replace(/-/g, '_')
     delete modifiedRecord.name
 
-    content += `resource "konnect_gateway_plugin_${pluginType}" "my_${pluginType}" {\n`
+    content += props.credentialType
+      ? `resource "konnect_gateway_${pluginType}" "my_${pluginType}" {\n`
+      : `resource "konnect_gateway_plugin_${pluginType}" "my_${pluginType}" {\n`
   } else if (isIdentityEntity.value) {
     content += `resource "konnect_${resolvedEntityType.value}" "my_${resolvedEntityType.value}" {\n`
     content += `${SINGLE_INDENT}provider = konnect-beta\n`
@@ -303,6 +309,9 @@ const buildTerraformCode = (record: Record<string, any>): string => {
   // Add-ons use `owner` blocks, so skip generic root `control_plane_id`
   if (!isEventGatewayEntity.value && !isIdentityEntity.value && resolvedEntityType.value !== CLOUD_GATEWAY_ADDON_ENTITY_TYPE) {
     content += `${SINGLE_INDENT}control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id\n`
+    if (props.credentialType && props.entityId) {
+      content += `${SINGLE_INDENT}consumer_id = "${props.entityId}"\n`
+    }
   } else if (parentEntityType) { // parent entity information if scoped
     content += `${SINGLE_INDENT}${parentEntityType} = {\n`
     content += `${SINGLE_INDENT}${SINGLE_INDENT}id = konnect_gateway_${parentEntityType}.my_${parentEntityType}.id\n`
