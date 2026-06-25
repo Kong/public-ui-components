@@ -461,7 +461,7 @@ const filtersFn = <T extends readonly string[] | undefined>(filterableDimensions
   },
 } as const satisfies JSONSchema)
 
-const filterablePlatformPresetFilterDimensions = [
+export const filterablePlatformPresetFilterDimensions = [
   'control_plane',
   'gateway_service',
   'realm',

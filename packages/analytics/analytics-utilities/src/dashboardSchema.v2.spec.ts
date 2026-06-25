@@ -11,6 +11,7 @@ import {
   validDashboardQuery,
   validDashboardTableQuery,
   platformQuerySchema,
+  filterablePlatformPresetFilterDimensions,
 } from './dashboardSchema.v2'
 import {
   agenticExploreAggregations,
@@ -49,24 +50,11 @@ describe('dashboardSchema.v2', () => {
       ...filterableAgenticExploreDimensions,
     ]),
   ]
-  const platformPresetFilterableDimensions = [
-    'control_plane',
-    'gateway_service',
-    'realm',
-    'route',
-    'plugin',
-    'plugin_name',
-    'plugin_scope',
-    'data_plane_node_version',
-    'env',
-    'team',
-    'region',
-    'hostname',
-  ]
+
   const presetFilterableDimensions = [
     ...new Set([
       ...sharedPresetFilterableDimensions,
-      ...platformPresetFilterableDimensions,
+      ...filterablePlatformPresetFilterDimensions,
     ]),
   ]
 
