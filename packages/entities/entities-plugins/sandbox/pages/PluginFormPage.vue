@@ -126,6 +126,7 @@ const FeatureFlagProvider = defineComponent({
 provideDeckCommandEditor()
 
 useProvideExperimentalFreeForms([
+  'governance',
   'rate-limiting-advanced',
   'service-protection',
   'prometheus',
