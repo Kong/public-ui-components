@@ -62,7 +62,7 @@
         <div
           class="new-redis-config-area"
           data-testid="new-redis-config-area"
-          @click="$emit('showNewPartialModal')"
+          @click="onCreateNew"
         >
           <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
           <span>{{ createNewRedisConfigurationFooterText }}</span>
@@ -82,10 +82,22 @@
   >
     {{ redisFetchErrorDisplayText }}
   </p>
+  <div
+    v-if="inlineRedisCreate?.enabled"
+    :id="PLUGIN_INLINE_REDIS_CREATE_MOUNT_ID"
+    class="plugin-inline-redis-create-mount"
+    data-testid="plugin-inline-redis-create-mount"
+  />
 </template>
 
 <script setup lang="ts">
-import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY } from '../const'
+import {
+  FORMS_CONFIG,
+  PLUGIN_INLINE_REDIS_CREATE_KEY,
+  PLUGIN_INLINE_REDIS_CREATE_MOUNT_ID,
+  REDIS_PARTIAL_FETCHER_KEY,
+} from '../const'
+import type { PluginInlineRedisCreateContext } from '../types/plugin-inline-redis-create'
 import { onBeforeMount, inject, computed, ref, watch, type Ref, type PropType } from 'vue'
 import {
   useAxios,
@@ -111,24 +123,11 @@ import {
 } from '../utils/redisPartialManagedSource'
 import RedisConfigCard from './RedisConfigCard.vue'
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'showNewPartialModal'): void
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)
-
-const redisPartialFetcherKey: Ref<number, number> | undefined = inject(REDIS_PARTIAL_FETCHER_KEY)
-
-const endpoints = {
-  konnect: {
-    getOne: '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}/partials/{id}',
-    getAll: '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}/partials',
-  },
-  kongManager: {
-    getOne: '/{workspace}/partials/{id}',
-    getAll: '/{workspace}/partials',
-  },
-}
 
 const props = defineProps({
   defaultRedisConfigItem: {
@@ -158,6 +157,29 @@ const props = defineProps({
     default: false,
   },
 })
+
+const redisPartialFetcherKey: Ref<number, number> | undefined = inject(REDIS_PARTIAL_FETCHER_KEY)
+const inlineRedisCreate = inject<PluginInlineRedisCreateContext | null>(PLUGIN_INLINE_REDIS_CREATE_KEY, null)
+
+const onCreateNew = () => {
+  if (inlineRedisCreate?.enabled) {
+    inlineRedisCreate.open(props.redisType !== 'all' ? props.redisType : undefined)
+    return
+  }
+
+  emit('showNewPartialModal')
+}
+
+const endpoints = {
+  konnect: {
+    getOne: '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}/partials/{id}',
+    getAll: '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}/partials',
+  },
+  kongManager: {
+    getOne: '/{workspace}/partials/{id}',
+    getAll: '/{workspace}/partials',
+  },
+}
 
 const selectedRedisConfig = ref(null)
 const { getMessageFromError } = useErrors()
@@ -308,6 +330,19 @@ watch(() => redisPartialFetcherKey?.value, async (key) => {
   if (key)
     await loadConfigs()
 })
+
+watch(
+  [() => inlineRedisCreate?.selectAfterCreate.value, () => redisPartialFetcherKey?.value],
+  async ([created]) => {
+    if (!created || !inlineRedisCreate) {
+      return
+    }
+
+    await loadConfigs()
+    await redisConfigSelected(created.id)
+    inlineRedisCreate.selectAfterCreate.value = undefined
+  },
+)
 
 onBeforeMount(() => {
   // load config should not block selecting a default config

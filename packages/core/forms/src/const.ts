@@ -6,6 +6,11 @@ export const REDIS_PARTIAL_FETCHER_KEY = 'redis-partial-list-fetcher-key'
 
 export const REDIS_PARTIAL_INFO = 'redis-partial-info'
 
+/** Host app provides inline Redis create UI for Konnect plugin forms */
+export const PLUGIN_INLINE_REDIS_CREATE_KEY = 'plugin-inline-redis-create'
+
+export const PLUGIN_INLINE_REDIS_CREATE_MOUNT_ID = 'plugin-inline-redis-create-mount'
+
 /** Used by `template` and `slot` */
 export const AUTOFILL_SLOT_NAME = 'autofill'
 
