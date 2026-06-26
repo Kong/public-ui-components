@@ -26,6 +26,11 @@ const init = async () => {
         component: () => import('./pages/RedisConfigurationFormModalPage.vue'),
       },
       {
+        path: '/redis-configuration/selector',
+        name: 'redis-configuration-selector',
+        component: () => import('./pages/RedisConfigurationSelectorPage.vue'),
+      },
+      {
         path: '/redis-configuration/edit/:id',
         name: 'edit-redis-configuration',
         component: () => import('./pages/RedisConfigurationFormPage.vue'),

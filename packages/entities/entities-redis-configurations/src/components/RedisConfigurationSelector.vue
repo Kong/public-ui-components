@@ -58,11 +58,20 @@
     </template>
   </KSelect>
 
-  <!-- New Redis Configuration Modal -->
-  <RedisConfigurationFormModal
+  <RedisInlineCreate
+    v-if="isKonnectManagedRedisEnabled"
+    :open="createOpen"
     :partial-type="redisType"
-    :visible="isModalVisible"
-    @created="onPartialCreated"
+    @close="createOpen = false"
+    @created="onCreated"
+    @toast="payload => emit('toast', payload)"
+  />
+
+  <RedisConfigurationFormModal
+    v-else
+    :partial-type="redisType"
+    :visible="createOpen"
+    @created="onCreated"
     @modal-close="onModalClose"
     @toast="payload => emit('toast', payload)"
   />
@@ -76,6 +85,7 @@ import type { SelectItem } from '@kong/kongponents'
 import { useRedisConfigurationSelector } from '../composables/useRedisConfigurationSelector'
 import useI18n from '../composables/useI18n'
 import RedisConfigurationFormModal from './RedisConfigurationFormModal.vue'
+import RedisInlineCreate from './RedisInlineCreate.vue'
 import type { RedisConfigurationResponse } from '../types'
 
 defineOptions({
@@ -99,7 +109,7 @@ const {
   showCreateButton?: boolean
   /** Text for the create new configuration button */
   createButtonText?: string
-  /** Konnect managed Redis UI (grouping, managed rows). When false- flat list for KM/ legacy Konnect */
+  /** Konnect managed Redis UI (grouping, managed rows, inline create). When false- flat list + modal for KM/legacy Konnect */
   isKonnectManagedRedisEnabled?: boolean
 }>()
 
@@ -128,8 +138,7 @@ const {
   isKonnectManagedRedisEnabled,
 })
 
-// Modal state
-const isModalVisible = ref(false)
+const createOpen = ref(false)
 
 const onSelectionChange = (item: SelectItem<string | number> | null) => {
   emit('update:modelValue', item === null ? undefined : String(item.value))
@@ -137,19 +146,17 @@ const onSelectionChange = (item: SelectItem<string | number> | null) => {
 }
 
 const onCreateNew = () => {
-  isModalVisible.value = true
+  createOpen.value = true
 }
 
-// Modal event handlers
 const onModalClose = () => {
-  isModalVisible.value = false
+  createOpen.value = false
   emit('modal-close')
 }
 
-// After successful create- close modal, refetch options, select the new partial
-const onPartialCreated = (data: RedisConfigurationResponse) => {
-  isModalVisible.value = false
-  loadItems() // Refresh the list
+const onCreated = (data: RedisConfigurationResponse) => {
+  createOpen.value = false
+  loadItems()
   onSelectionChange({
     name: data.name,
     value: data.id,
@@ -165,7 +172,7 @@ watch(error, (newError) => {
 <style lang="scss" scoped>
 .redis-config-select-trigger {
   :deep(.k-label) {
-    margin-top: 0;
+    margin-top: var(--kui-space-0, $kui-space-0);
   }
 
   .empty-redis-config {

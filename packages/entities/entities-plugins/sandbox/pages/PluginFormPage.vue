@@ -182,6 +182,8 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   experimentalRenders: {
     keyAuthIdentityRealms: true,
   },
+  isKonnectManagedRedisEnabled: true,
+  isCloudGateway: true,
   enableDeckTab: {
     ...enableDeckConfigCustomization.value && {
       customization: {

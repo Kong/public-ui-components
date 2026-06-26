@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { inferRedisPartialManagedSource, isKonnectManagedRedisEnabled } from './helpers'
+import { inferRedisPartialManagedSource, isKonnectManagedRedisEnabled, isManagedLayout } from './helpers'
 import { REDIS_CONFIGURATION_SOURCE } from './types'
 
 describe('Infer Partial Source', () => {
@@ -64,5 +64,27 @@ describe('isKonnectManagedRedisEnabled', () => {
         isCloudGateway: false,
       }),
     ).toBe(false)
+  })
+})
+
+describe('isManagedLayout', () => {
+  it('is true for Konnect when managed FF is on', () => {
+    expect(isManagedLayout({
+      app: 'konnect',
+      isKonnectManagedRedisEnabled: true,
+    })).toBe(true)
+    expect(isManagedLayout({
+      app: 'konnect',
+      useKonnectManagedRedisUi: true,
+    })).toBe(true)
+  })
+
+  it('is false for Kong Manager or when FF is off', () => {
+    expect(isManagedLayout({ app: 'kongManager' })).toBe(false)
+    expect(isManagedLayout({
+      app: 'konnect',
+      isKonnectManagedRedisEnabled: false,
+      useKonnectManagedRedisUi: false,
+    })).toBe(false)
   })
 })

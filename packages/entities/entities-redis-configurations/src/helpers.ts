@@ -17,15 +17,29 @@ type KonnectManagedRedisFlags = {
   app: 'konnect' | 'kongManager'
   isKonnectManagedRedisEnabled?: boolean
   isCloudGateway?: boolean
+  useKonnectManagedRedisUi?: boolean
 }
 
-/** Konnect + FF + Cloud Gateway: enables Konnect-managed redis UI; otherwise partials-only */
+/** Konnect + FF + Cloud Gateway: gates list/selector API behavior and inline create */
 export const isKonnectManagedRedisEnabled = (config: KonnectManagedRedisFlags): boolean => {
   return (
     config.app === 'konnect' &&
     !!config.isKonnectManagedRedisEnabled &&
     config.isCloudGateway === true
   )
+}
+
+/** Konnect managed form layout (step blocks, full-width sections) */
+export const isManagedLayout = (config: KonnectManagedRedisFlags): boolean => {
+  if (config.app !== 'konnect') {
+    return false
+  }
+
+  if (typeof config.useKonnectManagedRedisUi === 'boolean') {
+    return config.useKonnectManagedRedisUi
+  }
+
+  return !!config.isKonnectManagedRedisEnabled
 }
 
 export const shallowCopyWithId = <T extends Record<any, any>>(node: T): Identifiable<T> => {

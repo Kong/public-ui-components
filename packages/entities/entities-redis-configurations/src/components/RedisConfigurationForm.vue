@@ -1,11 +1,11 @@
 <template>
   <div
     class="kong-ui-entities-redis-configurations-form"
-    :class="{ 'managed-konnect-layout': isManagedKonnectLayout }"
+    :class="{ 'managed-konnect-layout': isManagedLayout(config) }"
   >
     <EntityBaseForm
       :action-teleport-target="actionTeleportTarget"
-      :align-action-button-to-left="isManagedKonnectLayout"
+      :align-action-button-to-left="isManagedLayout(config)"
       :can-submit="canSubmit"
       :config="config"
       :edit-id="partialId"
@@ -15,7 +15,7 @@
       :form-fields="formField"
       :is-readonly="form.readonly"
       :slidout-top-offset="slidoutTopOffset"
-      :wrapper-component="isManagedKonnectLayout ? 'div' : 'KCard'"
+      :wrapper-component="isManagedLayout(config) ? 'div' : 'KCard'"
       @cancel="cancelHandler"
       @code-block-tab-change="(tab: string) => codeBlockType = tab"
       @fetch:error="fetchErrorHandler"
@@ -40,8 +40,8 @@
       </KAlert>
 
       <component
-        :is="isManagedKonnectLayout ? EntityFormBlock : 'div'"
-        v-bind="isManagedKonnectLayout ? { step: 2 + managedLayoutStepOffset, title: t('form.managed_layout.configuration') } : {}"
+        :is="withSteps ? EntityFormBlock : 'div'"
+        v-bind="withSteps ? { step: 2 + stepOffset, title: t('form.managed_layout.configuration') } : {}"
       >
         <!-- type section -->
         <EntityFormSection
@@ -67,7 +67,7 @@
 
         <!-- general section -->
         <EntityFormSection
-          v-if="!isManagedKonnectLayout"
+          v-if="!isManagedLayout(config)"
           data-testid="redis-general-section"
           :description="t('form.sections.general.description')"
           :title="t('form.sections.general.title')"
@@ -458,11 +458,10 @@
         </EntityFormSection>
       </component>
 
-      <EntityFormBlock
-        v-if="isManagedKonnectLayout"
-        class="managed-layout-general-block"
-        :step="3 + managedLayoutStepOffset"
-        :title="t('form.managed_layout.general_information')"
+      <component
+        :is="withSteps ? EntityFormBlock : 'div'"
+        v-if="isManagedLayout(config)"
+        v-bind="withSteps ? { class: 'managed-layout-general-block', step: 3 + stepOffset, title: t('form.managed_layout.general_information') } : {}"
       >
         <EntityFormSection
           data-testid="redis-general-section"
@@ -486,7 +485,7 @@
             :readonly="form.readonly"
           />
         </EntityFormSection>
-      </EntityFormBlock>
+      </component>
     </EntityBaseForm>
   </div>
 
@@ -535,7 +534,7 @@ import SentinelNodes from './SentinelNodes.vue'
 import CloudAuthFields from './CloudAuthFields.vue'
 import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
 import { DEFAULT_REDIS_TYPE } from '../constants'
-import { mapRedisTypeToPartialType } from '../helpers'
+import { mapRedisTypeToPartialType, isManagedLayout } from '../helpers'
 
 import type { PropType } from 'vue'
 import type {
@@ -585,6 +584,11 @@ const props = defineProps({
     type: String as PropType<PartialType>,
     default: '',
   },
+  /** Embedded in a plugin form (no step numbers) */
+  inline: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -604,23 +608,11 @@ const router = useRouter()
 
 const codeBlockType = ref<string>('json')
 
-const isManagedKonnectLayout = computed<boolean>(() => {
-  if (props.config.app !== 'konnect') {
-    return false
-  }
+const withSteps = computed(() => isManagedLayout(props.config) && !props.inline)
 
-  // Keep backward compatibility: if UI-only flag is omitted, follow behavior flag
-  if (typeof props.config.useKonnectManagedRedisUi === 'boolean') {
-    return props.config.useKonnectManagedRedisUi
-  }
-
-  return !!props.config.isKonnectManagedRedisEnabled
-})
-
-// For non-cloud gateways, the selector hides managed step 1, so compress steps down:
-// so step 2 becomes 1 and step 3 becomes 2
-const managedLayoutStepOffset = computed<number>(() => (
-  (props.config as any).isCloudGateway === false ? -1 : 0
+// Non-cloud gateways skip managed step 1 in the selector, so renumber 2 as 1 and 3 as 2
+const stepOffset = computed(() => (
+  (props.config as KonnectRedisConfigurationFormConfig).isCloudGateway === false ? -1 : 0
 ))
 
 const isReferenceable = computed<{ host: boolean, port: boolean, serverName: boolean }>(() => {

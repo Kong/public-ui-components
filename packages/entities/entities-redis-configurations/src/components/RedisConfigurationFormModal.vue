@@ -10,7 +10,7 @@
     <RedisConfigurationForm
       :action-teleport-target="modalActionTeleportTarget"
       :config="realFormConfig"
-      :disabled-partial-type="disabledPartialType"
+      :disabled-partial-type="partialType === PartialType.REDIS_CE ? PartialType.REDIS_EE : PartialType.REDIS_CE"
       :slidout-top-offset="0"
       @cancel="handleClose"
       @error="onError"
@@ -56,34 +56,15 @@ const emit = defineEmits<{
 
 const { i18n: { t } } = useI18n()
 const formConfig = inject<KonnectBaseFormConfig | KongManagerBaseFormConfig>(FORMS_CONFIG)!
-const realFormConfig = computed(() => {
-  return {
-    ...formConfig,
-    cancelRoute: undefined,
-    /**
-     * Konnect-managed layout in RedisConfigurationForm is gated by isManagedKonnectLayout.In Konnect it is
-     * true when useKonnectManagedRedisUi === true, otherwise when isKonnectManagedRedisEnabled is
-     * truthy. useKonnectManagedRedisUi- false is sufficient for current code; also set
-     * isKonnectManagedRedisEnabled: false for clarity and future-proofing. useRedisConfigurationForm
-     * does not use these flags for API URLs or payloads
-     */
-    useKonnectManagedRedisUi: false,
-    isKonnectManagedRedisEnabled: false,
-  }
-})
+const realFormConfig = computed(() => ({
+  ...formConfig,
+  cancelRoute: undefined,
+  // Modal uses legacy card layout; inline panel keeps injected Konnect flags
+  useKonnectManagedRedisUi: false,
+  isKonnectManagedRedisEnabled: false,
+}))
 const { getMessageFromError } = useErrors()
 const id = useId()
-
-const disabledPartialType = computed(() => {
-  switch (partialType) {
-    case PartialType.REDIS_CE:
-      return PartialType.REDIS_EE
-    case PartialType.REDIS_EE:
-      return PartialType.REDIS_CE
-    default:
-      return undefined
-  }
-})
 
 const modalVisible = ref(false)
 const modalActionTeleportTarget = ref<string>()
@@ -134,7 +115,7 @@ watch(
   }
 
   :deep(.modal-container .modal-content) {
-    padding: 0;
+    padding: var(--kui-space-0, $kui-space-0);
   }
 
   :deep(.vault-secret-picker .modal-container .modal-content) {
@@ -151,7 +132,7 @@ watch(
   width: 100%;
 
   :deep(.form-actions) {
-    margin: 0
+    margin: var(--kui-space-0, $kui-space-0);
   }
 }
 </style>
