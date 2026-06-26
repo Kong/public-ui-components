@@ -158,7 +158,11 @@ const isFavorite = computed((): boolean =>
   !!pageShortcutsContext &&
   (('isFavorite' in pageShortcutsContext &&
   typeof pageShortcutsContext.isFavorite === 'function' &&
-  pageShortcutsContext.isFavorite(pageShortcutData) === true)))
+  pageShortcutsContext.isFavorite(pageShortcutData) === true) ||
+  // TODO: Remove this once isPageFavorite() is removed from the context
+  ('isPageFavorite' in pageShortcutsContext &&
+  typeof pageShortcutsContext.isPageFavorite === 'function' &&
+  pageShortcutsContext.isPageFavorite(pageShortcutData) === true)))
 
 /** Handle navigation back via the backTo prop */
 const navigateBack = async () => {
