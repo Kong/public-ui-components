@@ -58,8 +58,16 @@
     </template>
   </KSelect>
 
-  <!-- New Redis Configuration Modal -->
+  <div
+    v-if="inlineRedisCreate?.enabled"
+    :id="PLUGIN_INLINE_REDIS_CREATE_MOUNT_ID"
+    class="plugin-inline-redis-create-mount"
+    data-testid="plugin-inline-redis-create-mount"
+  />
+
+  <!-- Legacy modal when inline create is not enabled (Kong Manager / FF off) -->
   <RedisConfigurationFormModal
+    v-if="!useInlineCreate"
     :partial-type="redisType"
     :visible="isModalVisible"
     @created="onPartialCreated"
@@ -69,10 +77,15 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { watch, ref, inject, computed } from 'vue'
 import { AddIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
 import type { SelectItem } from '@kong/kongponents'
+import {
+  PLUGIN_INLINE_REDIS_CREATE_KEY,
+  PLUGIN_INLINE_REDIS_CREATE_MOUNT_ID,
+  type PluginInlineRedisCreateContext,
+} from '@kong-ui-public/forms'
 import { useRedisConfigurationSelector } from '../composables/useRedisConfigurationSelector'
 import useI18n from '../composables/useI18n'
 import RedisConfigurationFormModal from './RedisConfigurationFormModal.vue'
@@ -128,7 +141,13 @@ const {
   isKonnectManagedRedisEnabled,
 })
 
-// Modal state
+const inlineRedisCreate = inject<PluginInlineRedisCreateContext | null>(PLUGIN_INLINE_REDIS_CREATE_KEY, null)
+
+const useInlineCreate = computed(() =>
+  isKonnectManagedRedisEnabled && !!inlineRedisCreate?.enabled,
+)
+
+// Modal state (legacy path only)
 const isModalVisible = ref(false)
 
 const onSelectionChange = (item: SelectItem<string | number> | null) => {
@@ -137,6 +156,11 @@ const onSelectionChange = (item: SelectItem<string | number> | null) => {
 }
 
 const onCreateNew = () => {
+  if (useInlineCreate.value) {
+    inlineRedisCreate!.open(redisType)
+    return
+  }
+
   isModalVisible.value = true
 }
 
@@ -160,6 +184,23 @@ const onPartialCreated = (data: RedisConfigurationResponse) => {
 watch(error, (newError) => {
   emit('error-change', newError ? new Error(String(newError)) : null)
 })
+
+watch(
+  () => inlineRedisCreate?.selectAfterCreate.value,
+  async (created) => {
+    if (!created || !inlineRedisCreate) {
+      return
+    }
+
+    await loadItems()
+    onSelectionChange({
+      name: created.name,
+      value: created.id,
+      label: created.name,
+    })
+    inlineRedisCreate.selectAfterCreate.value = undefined
+  },
+)
 </script>
 
 <style lang="scss" scoped>
