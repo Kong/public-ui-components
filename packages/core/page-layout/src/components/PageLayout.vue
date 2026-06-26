@@ -362,9 +362,9 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
   .page-layout-content {
     background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     display: flex;
-    flex: 1;
     flex-direction: column;
     gap: var(--kui-space-50, $kui-space-50);
+    height: 100%;
     padding: var(--kui-space-60, $kui-space-60);
 
     &.has-nested-page-layout {
