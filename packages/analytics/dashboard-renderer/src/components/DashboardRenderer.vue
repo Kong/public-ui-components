@@ -312,14 +312,14 @@ defineExpose({
   }
 
   &.is-fullscreen {
-    background-color: white;
+    background-color: var(--kui-color-background, $kui-color-background);
 
     .fullscreen-header {
       margin-bottom: var(--kui-space-60, $kui-space-60);
     }
 
     .layout {
-      background-color: white;
+      background-color: var(--kui-color-background, $kui-color-background);
       padding: var(--kui-space-60, $kui-space-60);
       transform: v-bind(scale);
       transform-origin: top;

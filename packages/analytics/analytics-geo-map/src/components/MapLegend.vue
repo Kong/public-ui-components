@@ -38,7 +38,7 @@ const {
 
 <style scoped lang="scss">
 .legend {
-  background: white;
+  background: var(--kui-color-background, $kui-color-background);
   border: 1px solid var(--kui-color-border, $kui-color-border);
   display: flex;
   flex-direction: column;
