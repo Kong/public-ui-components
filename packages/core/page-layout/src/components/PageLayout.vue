@@ -246,12 +246,10 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
 <style lang="scss" scoped>
 .kong-ui-public-page-layout {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
   font-family: var(--kui-font-family-text, $kui-font-family-text);
-  height: 100%;
 
   .page-layout-header {
+    background-color: var(--kui-color-background, $kui-color-background);
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-40, $kui-space-40);
@@ -364,7 +362,6 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-50, $kui-space-50);
-    height: 100%;
     padding: var(--kui-space-60, $kui-space-60);
 
     &.has-nested-page-layout {
