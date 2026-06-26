@@ -16,10 +16,12 @@ describe('<DashboardTilePreview />', () => {
   })
 
   const setup = async ({
+    definition: definitionOverride,
     editable,
     wrappedInDivWithHeight,
     metrics = ['response_size_p99'],
   }: {
+    definition?: TileDefinition
     editable?: boolean
     wrappedInDivWithHeight?: number
     metrics?: any[]
@@ -33,7 +35,7 @@ describe('<DashboardTilePreview />', () => {
       }),
     }
 
-    const definition: TileDefinition = {
+    const definition: TileDefinition = definitionOverride ?? {
       chart: {
         type: 'horizontal_bar',
       },
@@ -178,10 +180,36 @@ describe('<DashboardTilePreview />', () => {
     })
   })
 
+  it('passes chart definitions to DashboardTile as chart tiles', () => {
+    setup()
+    expectTilePropIs('tileType', 'chart')
+  })
+
   it('shows the "Chart not configured" empty state when metrics are not provided', () => {
     setup({ metrics: [] })
     cy.getTestId('chart-not-configured-empty-state').should('exist')
     cy.getTestId('test-stub').should('not.exist')
+  })
+
+  it('passes definitions with config to DashboardTile as table tiles', () => {
+    const definition: TileDefinition = {
+      config: {
+        title: 'Routes',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['name', 'control_plane'],
+      },
+    }
+
+    setup({ definition })
+
+    cy.getTestId('chart-not-configured-empty-state').should('not.exist')
+    cy.getTestId('test-stub').should('exist')
+    expectPreviewPropIs('definition', definition)
+    expectTilePropIs('definition', definition)
+    expectTilePropIs('tileType', 'table')
   })
 
   it('forwards getExportData to child DashboardTile', () => {

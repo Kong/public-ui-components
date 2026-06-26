@@ -4,6 +4,24 @@
     title="Tile Preview"
   >
     <template #controls>
+      <h2>Examples</h2>
+      <div class="example-actions">
+        <KButton
+          appearance="secondary"
+          size="small"
+          @click="loadChartExample"
+        >
+          Chart
+        </KButton>
+        <KButton
+          appearance="secondary"
+          size="small"
+          @click="loadTableExample"
+        >
+          Table
+        </KButton>
+      </div>
+
       <h2>Tile Definition (required)</h2>
       <textarea
         v-model="definitionText"
@@ -47,16 +65,49 @@ import type {
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
-const contextText = ref(`{
-  "filters": [],
-  "timeSpec": {
-    type": "relative",
-    time_range": "24h",
+const stringifyExample = (value: unknown): string => JSON.stringify(value, null, 2)
+
+const chartDefinitionExample = {
+  chart: {
+    type: 'vertical_bar',
+    chart_title: 'Chart title (using mock data)',
   },
-  "tz": "utc",
-  "refreshInterval": 0,
-  "editable": true,
-}`)
+  query: {
+    datasource: 'api_usage',
+    dimensions: ['status_code_grouped'],
+    metrics: ['request_count'],
+  },
+}
+
+const tableDefinitionExample = {
+  config: {
+    title: 'Platform routes',
+  },
+  query: {
+    datasource: 'platform',
+    entity: 'route',
+    columns: ['name', 'control_plane', 'gateway_service', 'env', 'team', 'region'],
+    filters: [
+      {
+        field: 'env',
+        operator: 'in',
+        value: ['prod'],
+      },
+    ],
+    page_size: 25,
+  },
+}
+
+const contextText = ref(stringifyExample({
+  filters: [],
+  timeSpec: {
+    type: 'relative',
+    time_range: '24h',
+  },
+  tz: 'utc',
+  refreshInterval: 0,
+  editable: true,
+}))
 const context = computed<DashboardRendererContext>(() => {
   try {
     return JSON.parse(contextText.value)
@@ -67,17 +118,7 @@ const context = computed<DashboardRendererContext>(() => {
   }
 })
 
-const definitionText = ref(`{
-  "chart": {
-    "type": "vertical_bar",
-    "chart_title": "Chart title (using mock data)"
-  },
-  "query": {
-    "datasource": "api_usage",
-    "dimensions": ["status_code_grouped"],
-    "metrics": ["request_count"]
-  }
-}`)
+const definitionText = ref(stringifyExample(chartDefinitionExample))
 const definition = computed<TileDefinition>(() => {
   try {
     return JSON.parse(definitionText.value)
@@ -94,6 +135,14 @@ const globalFilters = computed<AllFilters[]>(() => {
     return []
   }
 })
+
+const loadChartExample = () => {
+  definitionText.value = stringifyExample(chartDefinitionExample)
+}
+
+const loadTableExample = () => {
+  definitionText.value = stringifyExample(tableDefinitionExample)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -101,13 +150,18 @@ const globalFilters = computed<AllFilters[]>(() => {
   height: 500px;
 }
 
+.example-actions {
+  display: flex;
+  gap: var(--kui-space-40, $kui-space-40);
+}
+
 textarea {
-  background-color: $kui-color-background-neutral-weakest;
-  border: 1px solid $kui-color-border-neutral-weak;
+  background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+  border: 1px solid var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
   border-radius: 4px;
   color: #333333;
   font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
-  font-size: $kui-font-size-20;
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
   line-height: 1.5;
   overflow: auto;
   padding: 10px;
