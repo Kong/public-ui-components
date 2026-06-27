@@ -29,6 +29,7 @@
       :query-ready="queryReady"
       show-refresh
       :tile-id="randomId"
+      :tile-type="tileType"
       @chart-data="onChartData"
       @tile-bounds-change="onBoundsChange"
       @tile-time-range-zoom="onZoom"
@@ -89,7 +90,17 @@ const { internalContext, queryReady } = composables.useDashboardInternalContext(
   preview: computed(() => preview),
 })
 
+const isTableDefinition = (definition: TileDefinition): boolean => {
+  return 'config' in definition
+}
+
+const tileType = computed<'chart' | 'table'>(() => isTableDefinition(definition) ? 'table' : 'chart')
+
 const chartNotConfigured = computed(() => {
+  if (isTableDefinition(definition)) {
+    return false
+  }
+
   return !('metrics' in definition.query) || !definition.query.metrics || definition.query.metrics.length === 0
 })
 
