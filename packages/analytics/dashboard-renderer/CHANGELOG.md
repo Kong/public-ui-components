@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.12.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.11...@kong-ui-public/dashboard-renderer@8.12.12) (2026-06-29)
+
+
+### Bug Fixes
+
+* bg color changes & shortcuts context refactor [KHCP-20980] ([#3506](https://github.com/Kong/public-ui-components/issues/3506)) ([f52457c](https://github.com/Kong/public-ui-components/commit/f52457ca897ea8fbcacfccc5c621b866f51da007))
+
+
+
+
+
 ## [8.12.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.10...@kong-ui-public/dashboard-renderer@8.12.11) (2026-06-29)
 
 
