@@ -390,7 +390,7 @@ describe('<DashboardTile /> table tiles', () => {
     expect(wrapper.findTestId('chart-csv-export-1').exists()).toBe(false)
   })
 
-  it('shows explore links for non-editable table tiles', async () => {
+  it('shows table explore links when edit actions are hidden', async () => {
     const tableDefinition: TileDefinition = {
       chart: {
         type: 'table',
