@@ -313,12 +313,8 @@ const kebabMenuHasItems = computed((): boolean => isTableTile.value
   ? !!exploreLinkKebabMenu.value || props.context.editable
   : !!exploreLinkKebabMenu.value || canExportCsv.value || props.context.editable)
 
-// Chart header actions are driven by chart-only affordances: context links, CSV export, and editable tile controls.
-const canShowChartHeaderActions = computed((): boolean => !isTableTile.value && canShowKebabMenu.value && kebabMenuHasItems.value)
-// Table header actions allow Explore links and editable tile controls, but not API Requests or CSV export.
-const canShowTableHeaderActions = computed((): boolean => isTableTile.value && canShowKebabMenu.value && kebabMenuHasItems.value)
 // The shared header action container is hidden when tile actions are globally disabled.
-const canShowHeaderActions = computed((): boolean => !props.hideActions && (canShowChartHeaderActions.value || canShowTableHeaderActions.value))
+const canShowHeaderActions = computed((): boolean => !props.hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
 const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !props.isFullscreen)
 const hasSignalsDescription = computed<boolean>(() => !isTableTile.value && chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
 
