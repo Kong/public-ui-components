@@ -196,6 +196,7 @@ import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
+import { isTableChartDefinition } from '../utils/tile-definition'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
@@ -251,7 +252,7 @@ const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
-const isTableTile = computed((): boolean => props.definition.chart.type === 'table')
+const isTableTile = computed((): boolean => isTableChartDefinition(props.definition))
 
 const chartDefinition = computed<ChartTileDefinition>(() => props.definition as ChartTileDefinition)
 const tableDefinition = computed<TableChartTileDefinition>(() => props.definition as TableChartTileDefinition)

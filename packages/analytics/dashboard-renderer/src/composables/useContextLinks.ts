@@ -6,6 +6,7 @@ import type { DeepReadonly, Ref } from 'vue'
 import type { AiExploreAggregations, AiExploreQuery, AllFilters, AnalyticsBridge, ChartTileDefinition, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TableChartTileDefinition, TimeRangeV4, ValidDashboardTableQuery } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContextInternal } from '../types'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
+import { isTableChartDefinition } from '../utils/tile-definition'
 
 const EXPLORE_DATASOURCES = [
   'basic',
@@ -17,10 +18,6 @@ const EXPLORE_DATASOURCES = [
 ] as const
 
 type ExploreDatasource = typeof EXPLORE_DATASOURCES[number]
-
-const isTableChartDefinition = (
-  currentDefinition: ChartTileDefinition | TableChartTileDefinition,
-): currentDefinition is TableChartTileDefinition => currentDefinition.chart.type === 'table'
 
 const isExploreDatasource = (datasource: unknown): datasource is ExploreDatasource => {
   return EXPLORE_DATASOURCES.includes(datasource as ExploreDatasource)

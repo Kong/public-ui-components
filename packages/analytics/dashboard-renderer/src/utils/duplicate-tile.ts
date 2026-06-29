@@ -1,10 +1,9 @@
 import type { GridTile } from '../types'
 import type {
-  ChartTileDefinition,
-  TableChartTileDefinition,
   TileConfig,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
+import { isTableChartDefinition } from './tile-definition'
 
 /**
  * Creates a chart tile copy with a new id, origin position, preserved size, and
@@ -14,47 +13,34 @@ import type {
  * @returns A chart tile config ready to be inserted into the dashboard.
  */
 export const duplicateChartTile = (tile: GridTile<TileDefinition>): TileConfig => {
-  const { chart } = tile.meta
-
-  if (chart.type === 'table') {
-    const tableMeta = tile.meta as TableChartTileDefinition
-
-    return {
-      id: crypto.randomUUID(),
-      type: 'chart',
-      definition: {
-        ...tableMeta,
-        chart: {
-          ...chart,
-          title: chart.title ? `Copy of ${chart.title}` : '',
-        },
+  let duplicatedDefinition: TileDefinition
+  if (isTableChartDefinition(tile.meta)) {
+    duplicatedDefinition = {
+      ...tile.meta,
+      chart: {
+        ...tile.meta.chart,
+        title: tile.meta.chart.title ? `Copy of ${tile.meta.chart.title}` : '',
       },
-      layout: {
-        position: {
-          col: 0,
-          row: 0,
-        },
-        size: tile.layout.size,
+    }
+  } else if (tile.meta.chart.type === 'slottable') {
+    duplicatedDefinition = {
+      ...tile.meta,
+      chart: { ...tile.meta.chart },
+    }
+  } else {
+    duplicatedDefinition = {
+      ...tile.meta,
+      chart: {
+        ...tile.meta.chart,
+        chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
       },
     }
   }
 
-  const chartMeta = tile.meta as ChartTileDefinition
-  const chartTitle = 'chart_title' in chart ? chart.chart_title : undefined
-  const duplicatedChart = chart.type === 'slottable'
-    ? { ...chart }
-    : {
-      ...chart,
-      chart_title: chartTitle ? `Copy of ${chartTitle}` : '',
-    }
-
   return {
     id: crypto.randomUUID(),
     type: 'chart',
-    definition: {
-      ...chartMeta,
-      chart: duplicatedChart,
-    },
+    definition: duplicatedDefinition,
     layout: {
       position: {
         col: 0,
