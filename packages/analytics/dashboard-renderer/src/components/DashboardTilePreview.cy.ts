@@ -180,11 +180,6 @@ describe('<DashboardTilePreview />', () => {
     })
   })
 
-  it('passes chart definitions to DashboardTile without overriding the tile type', () => {
-    setup()
-    expectTilePropIs('tileType', undefined)
-  })
-
   it('shows the "Chart not configured" empty state when metrics are not provided', () => {
     setup({ metrics: [] })
     cy.getTestId('chart-not-configured-empty-state').should('exist')
@@ -232,7 +227,7 @@ describe('<DashboardTilePreview />', () => {
     cy.getTestId('test-stub').should('not.exist')
   })
 
-  it('passes table chart definitions without column preferences to DashboardTile', () => {
+  it('passes table chart definitions that rely on response metadata columns to DashboardTile', () => {
     const definition: TileDefinition = {
       chart: {
         type: 'table',

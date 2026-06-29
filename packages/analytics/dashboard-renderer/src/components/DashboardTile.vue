@@ -284,7 +284,7 @@ const {
 } = composables.useContextLinks({
   queryBridge,
   chartData: readonly(chartData),
-  definition: readonly(toRef(props, 'definition')),
+  definition: toRef(props, 'definition'),
   context: readonly(toRef(props, 'context')),
 })
 
