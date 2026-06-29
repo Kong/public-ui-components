@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/page-layout",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "main": "./dist/page-layout.umd.js",
   "module": "./dist/page-layout.es.js",

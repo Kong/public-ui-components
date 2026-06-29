@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/table-data-grid",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "main": "./dist/table-data-grid.umd.js",
   "module": "./dist/table-data-grid.es.js",
