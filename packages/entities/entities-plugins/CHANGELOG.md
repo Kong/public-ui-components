@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.221.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.220.0...@kong-ui-public/entities-plugins@9.221.0) (2026-06-29)
+
+
+### Features
+
+* **entities-plugins:** support multi-section config layout in free-form StandardLayout ([#3495](https://github.com/Kong/public-ui-components/issues/3495)) ([d558112](https://github.com/Kong/public-ui-components/commit/d558112f8793cb5881f5e8b49f1aa6199bcbef1f))
+
+
+
+
+
 # [9.220.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.219.1...@kong-ui-public/entities-plugins@9.220.0) (2026-06-24)
 
 
