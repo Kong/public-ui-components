@@ -329,12 +329,13 @@ describe('ConfigFormContent', () => {
         cy.getTestId('kong-identity-mode-centrally-managed').should('not.exist')
       })
 
-      it('hides centrally managed when schema has identity_realms but no realms exist', () => {
+      it('shows centrally managed when schema has identity_realms even if no realms exist yet', () => {
+        // Launch decision: the option is shown unconditionally; hiding it is a fast-follow.
         mountContent(schemaWithRealms, { isKonnect: true, hasExistingRealms: false })
 
         cy.getTestId('kong-identity-mode-kong-identity').should('exist')
         cy.getTestId('kong-identity-mode-consumers').should('exist')
-        cy.getTestId('kong-identity-mode-centrally-managed').should('not.exist')
+        cy.getTestId('kong-identity-mode-centrally-managed').should('exist')
       })
 
       it('does not show Kong Identity selector when schema has no principals (backward compat)', () => {
