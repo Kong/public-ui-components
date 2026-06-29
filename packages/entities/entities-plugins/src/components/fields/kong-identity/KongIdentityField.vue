@@ -98,7 +98,11 @@ const identityRealmsInSchema = computed(() => {
   return !!getSchema('$.config.identity_realms')
 })
 
-const showCentrallyManaged = computed(() => identityRealmsInSchema.value && !!props.hasExistingRealms)
+// Launch decision: Centrally Managed is shown unconditionally whenever the schema
+// supports identity_realms — we intentionally do NOT hide it when no realms exist yet.
+// Hiding it (platform-wide) is deferred to a fast-follow; `hasExistingRealms` is kept
+// wired up so that follow-up can re-gate without re-plumbing the realm fetch.
+const showCentrallyManaged = computed(() => identityRealmsInSchema.value)
 
 const descriptionText = computed(() => {
   return identityRealmsInSchema.value
