@@ -77,6 +77,7 @@ function mountComposable({
   datasource = 'api_usage',
   metrics = ['request_count'],
   explicitGranularity,
+  query,
   queryFilters = [],
   contextFilters = [],
   timeRange,
@@ -90,6 +91,7 @@ function mountComposable({
   datasource?: string
   metrics?: string[]
   explicitGranularity?: string | undefined
+  query?: Record<string, unknown>
   queryFilters?: any[]
   contextFilters?: any[]
   timeRange?: any
@@ -111,7 +113,7 @@ function mountComposable({
 
   const definition = computed(() => ({
     chart: { type: chartType },
-    query: {
+    query: query ?? {
       datasource,
       metrics,
       dimensions: ['gateway_service'],
@@ -276,6 +278,28 @@ describe('useContextLinks', () => {
 
     const params = new URLSearchParams((wrapper.vm.exploreLinkKebabMenu as string).split('?')[1])
     expect(params.get('d')).toBe('platform')
+  })
+
+  it('builds explore link for table charts with the tabular query shape', async () => {
+    const tableQuery = {
+      datasource: 'platform',
+      entity: 'route',
+      columns: ['name', 'control_plane'],
+      filters: [makeFilter('control_plane')],
+    }
+    const { wrapper } = mountComposable({
+      chartType: 'table',
+      query: tableQuery,
+    })
+    await flushPromises()
+
+    const params = new URLSearchParams((wrapper.vm.exploreLinkKebabMenu as string).split('?')[1])
+    expect(params.get('d')).toBe('platform')
+    expect(params.get('c')).toBe('table')
+    expect(JSON.parse(params.get('q')!)).toEqual(tableQuery)
+    expect(wrapper.vm.canGenerateRequestsLink).toBe(false)
+    expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+    expect(wrapper.vm.requestsLinkZoomActions).toBeUndefined()
   })
 
   it('does not generate requests drilldown for platform tiles', async () => {

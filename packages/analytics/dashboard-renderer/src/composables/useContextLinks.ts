@@ -3,7 +3,7 @@ import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
 import type { DeepReadonly, Ref } from 'vue'
-import type { AiExploreAggregations, AiExploreQuery, AllFilters, AnalyticsBridge, ChartTileDefinition, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AllFilters, AnalyticsBridge, ChartTileDefinition, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TableChartTileDefinition, TimeRangeV4, ValidDashboardTableQuery } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContextInternal } from '../types'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
@@ -25,7 +25,7 @@ export default function useContextLinks(
   }: {
     queryBridge: AnalyticsBridge | undefined
     context: Readonly<Ref<DeepReadonly<DashboardRendererContextInternal>>>
-    definition: Readonly<Ref<DeepReadonly<ChartTileDefinition>>>
+    definition: Readonly<Ref<DeepReadonly<ChartTileDefinition | TableChartTileDefinition>>>
     chartData: Readonly<Ref<DeepReadonly<ExploreResultV4 | undefined>>>
   },
 ) {
@@ -38,6 +38,7 @@ export default function useContextLinks(
   const analyticsConfigStore = useAnalyticsConfigStore()
   const datasourceConfigStore = useDatasourceConfigStore()
   const { stripUnknownFilters, loading: datasourceConfigLoading } = storeToRefs(datasourceConfigStore)
+  const isTableChart = computed(() => definition.value.chart.type === 'table')
 
   onMounted(async () => {
     // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
@@ -60,7 +61,7 @@ export default function useContextLinks(
     return true
   })
 
-  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && definition.value.query.datasource !== 'platform' && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
+  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && !isTableChart.value && definition.value.query.datasource !== 'llm_usage' && definition.value.query.datasource !== 'platform' && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
   const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && EXPLORE_DATASOURCES.includes(definition.value.query.datasource as any) && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
 
   const chartDataGranularity = computed(() => {
@@ -68,9 +69,14 @@ export default function useContextLinks(
   })
 
   const datasourceScopedFilters = computed(() => {
-    const filters = [...context.value.filters, ...definition.value.query.filters ?? []] as AllFilters[]
-    const metrics = definition.value.query.metrics
-    const datasource = definition.value.query?.datasource ?? 'api_usage'
+    if (isTableChart.value) {
+      return []
+    }
+
+    const chartDefinition = definition.value as DeepReadonly<ChartTileDefinition>
+    const filters = [...context.value.filters, ...chartDefinition.query.filters ?? []] as AllFilters[]
+    const metrics = chartDefinition.query.metrics
+    const datasource = chartDefinition.query?.datasource ?? 'api_usage'
 
     return stripUnknownFilters.value({
       datasource,
@@ -86,21 +92,26 @@ export default function useContextLinks(
       return ''
     }
 
-    const filters = datasourceScopedFilters.value as AllFilters[]
-    const timeRange = definition.value.query.time_range as TimeRangeV4 || context.value.timeSpec
-    const exploreQuery = buildExploreQuery(timeRange, filters)
+    if (isTableChart.value) {
+      return buildExploreLink((definition.value as DeepReadonly<TableChartTileDefinition>).query)
+    }
+
+    const chartDefinition = definition.value as DeepReadonly<ChartTileDefinition>
+    const timeRange = chartDefinition.query.time_range as TimeRangeV4 || context.value.timeSpec
+    const exploreQuery = buildExploreQuery(timeRange, datasourceScopedFilters.value as AllFilters[])
     return buildExploreLink(exploreQuery)
   })
 
   const requestsLinkKebabMenu = computed(() => {
-    if (!canGenerateRequestsLink.value || !canShowKebabMenu.value) {
+    if (isTableChart.value || !canGenerateRequestsLink.value || !canShowKebabMenu.value) {
       return ''
     }
 
     const filters = datasourceScopedFilters.value as AllFilters[]
+    const chartDefinition = definition.value as DeepReadonly<ChartTileDefinition>
 
     const requestsQuery = buildRequestsQueryKebabMenu(
-      definition.value.query.time_range as TimeRangeV4 || context.value.timeSpec,
+      chartDefinition.query.time_range as TimeRangeV4 || context.value.timeSpec,
       filters,
     )
 
@@ -140,19 +151,20 @@ export default function useContextLinks(
   }
 
   const buildExploreQuery = (timeRange: TimeRangeV4, filters: DeepReadonly<AllFilters[]>) => {
-    const dimensions = definition.value.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
+    const chartDefinition = definition.value as DeepReadonly<ChartTileDefinition>
+    const dimensions = chartDefinition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
     const exploreQuery: ExploreQuery | AiExploreQuery = {
       filters: filters,
-      metrics: definition.value.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
+      metrics: chartDefinition.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
       dimensions: dimensions,
       time_range: timeRange,
-      granularity: definition.value.query.granularity || chartDataGranularity.value,
+      granularity: chartDefinition.query.granularity || chartDataGranularity.value,
     } as ExploreQuery | AiExploreQuery
 
     return exploreQuery
   }
 
-  const buildExploreLink = (exploreQuery: ExploreQuery | AiExploreQuery) => {
+  const buildExploreLink = (exploreQuery: ExploreQuery | AiExploreQuery | DeepReadonly<ValidDashboardTableQuery>) => {
     if (!canGenerateExploreLink.value) {
       return ''
     }

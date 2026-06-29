@@ -94,6 +94,32 @@ vi.mock('./TableDataGridRenderer.vue', () => ({
   }),
 }))
 
+const dropdownSlotStubs = {
+  // eslint-disable-next-line vue/one-component-per-file
+  KDropdown: defineComponent({
+    setup(_, { slots }) {
+      return () => h('div', [
+        slots.default?.(),
+        slots.items?.(),
+      ])
+    },
+  }),
+  // eslint-disable-next-line vue/one-component-per-file
+  KDropdownItem: defineComponent({
+    props: {
+      item: {
+        type: Object,
+        default: undefined,
+      },
+    },
+    setup(props, { slots }) {
+      return () => h('a', {
+        href: (props.item as { to?: string } | undefined)?.to,
+      }, slots.default?.() ?? (props.item as { label?: string } | undefined)?.label)
+    },
+  }),
+}
+
 const mockQueryProvider = {
   exploreBaseUrl: async () => 'http://test.com/explore',
   requestsBaseUrl: async () => 'http://test.com/requests',
@@ -261,7 +287,8 @@ describe('<DashboardTile /> table tiles', () => {
 
   it('dispatches table tiles to the table data grid renderer', () => {
     const tableDefinition: TileDefinition = {
-      config: {
+      chart: {
+        type: 'table',
         title: 'Table Tile',
       },
       query: {
@@ -295,7 +322,6 @@ describe('<DashboardTile /> table tiles', () => {
         queryReady: true,
         refreshCounter: 0,
         tileId: '1',
-        tileType: 'table',
       },
       shallow: true,
       global: {
@@ -319,9 +345,10 @@ describe('<DashboardTile /> table tiles', () => {
     expect(wrapper.findComponent(TableDataGridRenderer).props('height')).toBeUndefined()
   })
 
-  it('shows editable tile actions for table tiles', () => {
+  it('shows editable tile actions and explore links for table tiles', async () => {
     const tableDefinition: TileDefinition = {
-      config: {
+      chart: {
+        type: 'table',
         title: 'Table Tile',
       },
       query: {
@@ -341,7 +368,6 @@ describe('<DashboardTile /> table tiles', () => {
         queryReady: true,
         refreshCounter: 0,
         tileId: '1',
-        tileType: 'table',
       },
       shallow: true,
       global: {
@@ -349,16 +375,61 @@ describe('<DashboardTile /> table tiles', () => {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider,
         },
         stubs: {
+          ...dropdownSlotStubs,
           TableDataGridRenderer: false,
         },
       },
     })
+    await flushPromises()
 
     expect(wrapper.findTestId('tile-actions-1').exists()).toBe(true)
     expect(wrapper.findTestId('edit-tile-1').exists()).toBe(true)
     expect(wrapper.findTestId('kebab-action-menu-1').exists()).toBe(true)
-    expect(wrapper.findTestId('chart-jump-to-explore-1').exists()).toBe(false)
+    expect(wrapper.findTestId('chart-jump-to-explore-1').exists()).toBe(true)
     expect(wrapper.findTestId('chart-jump-to-requests-1').exists()).toBe(false)
     expect(wrapper.findTestId('chart-csv-export-1').exists()).toBe(false)
+  })
+
+  it('shows explore links for non-editable table tiles', async () => {
+    const tableDefinition: TileDefinition = {
+      chart: {
+        type: 'table',
+        title: 'Table Tile',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['control_plane'],
+      },
+    }
+
+    const wrapper = mount(DashboardTile, {
+      props: {
+        context: {
+          ...mockContext,
+          editable: false,
+        },
+        definition: tableDefinition,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      shallow: true,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+        stubs: {
+          ...dropdownSlotStubs,
+          TableDataGridRenderer: false,
+        },
+      },
+    })
+    await flushPromises()
+
+    expect(wrapper.findTestId('tile-actions-1').exists()).toBe(true)
+    expect(wrapper.findTestId('edit-tile-1').exists()).toBe(false)
+    expect(wrapper.findTestId('chart-jump-to-explore-1').exists()).toBe(true)
+    expect(wrapper.findTestId('chart-jump-to-requests-1').exists()).toBe(false)
   })
 })

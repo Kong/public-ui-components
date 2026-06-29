@@ -96,7 +96,7 @@
           />
           <template #items>
             <KDropdownItem
-              v-if="!isTableTile && !!exploreLinkKebabMenu"
+              v-if="!!exploreLinkKebabMenu"
               :data-testid="`chart-jump-to-explore-${tileId}`"
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLinkKebabMenu }"
             />
@@ -179,7 +179,7 @@ import type {
   AllFilters,
   TileConfig,
   TileDefinition,
-  TableTileDefinition,
+  TableChartTileDefinition,
   ChartTileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 
@@ -251,13 +251,13 @@ const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
-const isTableTile = computed((): boolean => props.tileType === 'table')
+const isTableTile = computed((): boolean => props.definition.chart.type === 'table')
 
 const chartDefinition = computed<ChartTileDefinition>(() => props.definition as ChartTileDefinition)
-const tableDefinition = computed<TableTileDefinition>(() => props.definition as TableTileDefinition)
+const tableDefinition = computed<TableChartTileDefinition>(() => props.definition as TableChartTileDefinition)
 const chart = computed(() => chartDefinition.value.chart)
 const chartTitle = computed<string | undefined>(() => 'chart_title' in chart.value ? chart.value.chart_title : undefined)
-const tileTitle = computed<string | undefined>(() => isTableTile.value ? tableDefinition.value?.config.title : chartTitle.value)
+const tileTitle = computed<string | undefined>(() => isTableTile.value ? tableDefinition.value.chart.title : chartTitle.value)
 const tileDescription = computed<string | undefined>(() => !isTableTile.value && 'description' in chart.value ? chart.value.description : undefined)
 const tileTypeClass = computed<string>(() => isTableTile.value ? 'table' : chart.value.type)
 const isSlottableTile = computed<boolean>(() => !isTableTile.value && chart.value.type === 'slottable')
@@ -284,7 +284,7 @@ const {
 } = composables.useContextLinks({
   queryBridge,
   chartData: readonly(chartData),
-  definition: readonly(chartDefinition),
+  definition: readonly(toRef(props, 'definition')),
   context: readonly(toRef(props, 'context')),
 })
 
@@ -310,19 +310,19 @@ watch(() => props.definition, async (newValue, oldValue) => {
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
 const kebabMenuHasItems = computed((): boolean => isTableTile.value
-  ? props.context.editable
+  ? !!exploreLinkKebabMenu.value || props.context.editable
   : !!exploreLinkKebabMenu.value || canExportCsv.value || props.context.editable)
 
 // Chart header actions are driven by chart-only affordances: context links, CSV export, and editable tile controls.
 const canShowChartHeaderActions = computed((): boolean => !isTableTile.value && canShowKebabMenu.value && kebabMenuHasItems.value)
-// Table header actions are limited to editable tile controls; table tiles do not expose chart links or CSV export here.
-const canShowTableHeaderActions = computed((): boolean => isTableTile.value && props.context.editable)
+// Table header actions allow Explore links and editable tile controls, but not API Requests or CSV export.
+const canShowTableHeaderActions = computed((): boolean => isTableTile.value && canShowKebabMenu.value && kebabMenuHasItems.value)
 // The shared header action container is hidden when tile actions are globally disabled.
 const canShowHeaderActions = computed((): boolean => !props.hideActions && (canShowChartHeaderActions.value || canShowTableHeaderActions.value))
 const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !props.isFullscreen)
 const hasSignalsDescription = computed<boolean>(() => !isTableTile.value && chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
 
-const rendererLookup: Record<DashboardTileType, Component | undefined> = {
+const rendererLookup: Record<Exclude<DashboardTileType, 'table'>, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
   'horizontal_bar': BarChartRenderer,
