@@ -79,10 +79,11 @@ const dashboardConfig = ref <DashboardConfig>({
   tile_height: 167,
   tiles: [
     {
-      type: 'table',
+      type: 'chart',
       id: crypto.randomUUID(),
       definition: {
-        config: {
+        chart: {
+          type: 'table',
           title: 'Platform routes',
         },
         query: {
@@ -228,7 +229,7 @@ const dashboardConfig = ref <DashboardConfig>({
 const onEditTile = (tile: GridTile<TileDefinition>) => {
   console.log('@edit-tile', tile)
 
-  const chartTypeToggleMap: Record<DashboardTileType, DashboardTileType> = {
+  const chartTypeToggleMap: Record<Exclude<DashboardTileType, 'table'>, DashboardTileType> = {
     timeseries_line: 'timeseries_bar',
     timeseries_bar: 'timeseries_line',
     horizontal_bar: 'vertical_bar',
@@ -247,9 +248,13 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
       return t
     }
 
-    const newType = chartTypeToggleMap[t.definition.chart.type] || t.definition.chart.type
-
     if (t.id === tile.id) {
+      if (t.definition.chart.type === 'table') {
+        return t
+      }
+
+      const newType = chartTypeToggleMap[t.definition.chart.type]
+
       return {
         ...t,
         definition: {

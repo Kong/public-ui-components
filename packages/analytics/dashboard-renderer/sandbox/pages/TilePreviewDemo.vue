@@ -80,7 +80,8 @@ const chartDefinitionExample = {
 }
 
 const tableDefinitionExample = {
-  config: {
+  chart: {
+    type: 'table',
     title: 'Platform routes',
   },
   query: {
