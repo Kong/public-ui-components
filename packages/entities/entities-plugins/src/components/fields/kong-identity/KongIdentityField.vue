@@ -84,7 +84,6 @@ defineOptions({ name: 'KongIdentityField' })
 
 const props = defineProps<{
   identityRealmsInSchema?: boolean
-  hasExistingRealms?: boolean
   loadingRealms?: boolean
 }>()
 const { i18n } = composables.useI18n()
@@ -100,8 +99,7 @@ const identityRealmsInSchema = computed(() => {
 
 // Launch decision: Centrally Managed is shown unconditionally whenever the schema
 // supports identity_realms — we intentionally do NOT hide it when no realms exist yet.
-// Hiding it (platform-wide) is deferred to a fast-follow; `hasExistingRealms` is kept
-// wired up so that follow-up can re-gate without re-plumbing the realm fetch.
+// Hiding it (platform-wide) is deferred to a fast-follow.
 const showCentrallyManaged = computed(() => identityRealmsInSchema.value)
 
 const descriptionText = computed(() => {

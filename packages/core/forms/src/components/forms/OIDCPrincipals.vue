@@ -791,11 +791,7 @@ export default {
     gap: var(--kui-space-70, $kui-space-70);
   }
 
-  .principals-lookup-method-select :deep(.k-label) {
-    margin-top: 0;
-  }
-
-  .k-label {
+  :deep(.k-label) {
     margin-top: var(--kui-space-0, $kui-space-0);
   }
 }

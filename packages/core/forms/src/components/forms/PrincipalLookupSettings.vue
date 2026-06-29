@@ -41,6 +41,7 @@
       </KSelect>
 
       <KInput
+        class="principals-identifier-claim-input"
         data-testid="principals-identifier-claim"
         :disabled="fieldsDisabled"
         :help="identifierClaimHelp"
@@ -52,6 +53,7 @@
 
       <template v-if="selectedLookupMethod === 'custom-identity'">
         <KInput
+          class="principals-custom-identity-name-input"
           data-testid="principals-custom-identity-name"
           :disabled="fieldsDisabled"
           help="Enter the custom identity name used to look up the principal. Kong matches the value from the token claim to a principal with the same custom identity name and value."
@@ -282,16 +284,17 @@ export default {
   .principals-lookup-method-select :deep(.k-label) {
     margin-top: 0;
   }
-
-  .k-label {
-    margin-top: var(--kui-space-0, $kui-space-0);
-  }
 }
 
 .principals-field-group {
   display: flex;
   flex-direction: column;
   gap: var(--kui-space-40, $kui-space-40);
+
+  .principals-identifier-claim-input,
+  .principals-custom-identity-name-input {
+    margin-top: var(--kui-space-40, $kui-space-40);
+  }
 }
 
 .lookup-method-item {
