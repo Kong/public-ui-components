@@ -87,10 +87,7 @@ import {
   INJECT_QUERY_PROVIDER,
   TIMEFRAME_TOKEN,
 } from '../constants'
-import {
-  duplicateChartTile,
-  duplicateTableTile,
-} from '../utils/duplicate-tile'
+import { duplicateChartTile } from '../utils/duplicate-tile'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const {
@@ -212,9 +209,7 @@ const getSlottableSlotName = (tile: GridTile<TileDefinition>): string | undefine
 
 const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
   try {
-    const newTile = tile.type === 'table'
-      ? duplicateTableTile(tile)
-      : duplicateChartTile(tile)
+    const newTile = duplicateChartTile(tile)
 
     // deep cloning to avoid duplicated references
     model.value.tiles.push(JSON.parse(JSON.stringify(newTile)))

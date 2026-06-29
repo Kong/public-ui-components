@@ -1,60 +1,51 @@
 import type { GridTile } from '../types'
 import type {
   ChartTileDefinition,
-  TableTileDefinition,
+  TableChartTileDefinition,
   TileConfig,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 
-const isSlottable = (chart: ChartTileDefinition['chart']) => {
-  return chart.type === 'slottable'
-}
-
-/**
- * Creates a table tile copy with a new id, origin position, preserved size, and
- * a copied table config whose title is prefixed when present.
- *
- * @param tile The existing dashboard grid tile to duplicate.
- * @returns A table tile config ready to be inserted into the dashboard.
- */
-export const duplicateTableTile = (tile: GridTile<TileDefinition>): TileConfig => {
-  const tableMeta = tile.meta as TableTileDefinition
-  const config = {
-    ...tableMeta.config,
-    title: tableMeta.config.title ? `Copy of ${tableMeta.config.title}` : '',
-  }
-
-  return {
-    id: crypto.randomUUID(),
-    type: 'table',
-    definition: {
-      ...tableMeta,
-      config,
-    },
-    layout: {
-      position: {
-        col: 0,
-        row: 0,
-      },
-      size: tile.layout.size,
-    },
-  }
-}
-
 /**
  * Creates a chart tile copy with a new id, origin position, preserved size, and
- * copied chart metadata. Non-slottable chart titles are prefixed when present.
+ * copied chart metadata. Chart titles are prefixed when supported.
  *
  * @param tile The existing dashboard grid tile to duplicate.
  * @returns A chart tile config ready to be inserted into the dashboard.
  */
 export const duplicateChartTile = (tile: GridTile<TileDefinition>): TileConfig => {
+  const { chart } = tile.meta
+
+  if (chart.type === 'table') {
+    const tableMeta = tile.meta as TableChartTileDefinition
+
+    return {
+      id: crypto.randomUUID(),
+      type: 'chart',
+      definition: {
+        ...tableMeta,
+        chart: {
+          ...chart,
+          title: chart.title ? `Copy of ${chart.title}` : '',
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: tile.layout.size,
+      },
+    }
+  }
+
   const chartMeta = tile.meta as ChartTileDefinition
-  const chart = isSlottable(chartMeta.chart)
-    ? { ...chartMeta.chart }
+  const chartTitle = 'chart_title' in chart ? chart.chart_title : undefined
+  const duplicatedChart = chart.type === 'slottable'
+    ? { ...chart }
     : {
-      ...chartMeta.chart,
-      chart_title: chartMeta.chart.chart_title ? `Copy of ${chartMeta.chart.chart_title}` : '',
+      ...chart,
+      chart_title: chartTitle ? `Copy of ${chartTitle}` : '',
     }
 
   return {
@@ -62,7 +53,7 @@ export const duplicateChartTile = (tile: GridTile<TileDefinition>): TileConfig =
     type: 'chart',
     definition: {
       ...chartMeta,
-      chart,
+      chart: duplicatedChart,
     },
     layout: {
       position: {

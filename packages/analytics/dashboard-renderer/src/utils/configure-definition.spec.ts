@@ -39,6 +39,23 @@ describe('configureAllowedDefinition', () => {
     },
   }
 
+  const mockTableChartTile: TileConfig = {
+    id: 'table_chart_tile_1',
+    type: 'chart',
+    layout: {
+      size: { cols: 3, rows: 2 },
+      position: { col: 0, row: 2 },
+    },
+    definition: {
+      chart: { type: 'table', title: 'Routes' },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['route'],
+      },
+    },
+  }
+
   const mockTileWithoutQuery: TileConfig = {
     id: 'no_query_tile',
     type: 'chart',
@@ -106,6 +123,18 @@ describe('configureAllowedDefinition', () => {
       expect(result.tiles[1].definition?.query?.datasource).toBe('api_usage')
     })
 
+    it('should preserve table chart tabular queries', () => {
+      const config: DashboardConfig = {
+        tiles: [mockTableChartTile],
+        tile_height: 167,
+      }
+
+      const result = configureAllowedDefinition(config, true)
+
+      expect(result.tiles).toHaveLength(1)
+      expect(result.tiles[0]).toEqual(mockTableChartTile)
+    })
+
     it('should maintain original tile positions', () => {
       const config: DashboardConfig = {
         tiles: [mockBasicTile, mockApiUsageTile],
@@ -154,6 +183,27 @@ describe('configureAllowedDefinition', () => {
 
       expect(result.tiles).toHaveLength(1)
       expect(result.tiles[0].id).toBe('no_query_tile')
+    })
+
+    it('should keep platform table chart tiles', () => {
+      const config: DashboardConfig = {
+        tiles: [mockTableChartTile, mockApiUsageTile],
+        tile_height: 167,
+      }
+
+      const result = configureAllowedDefinition(config, false)
+
+      expect(result.tiles).toHaveLength(1)
+      expect(result.tiles[0]).toEqual({
+        ...mockTableChartTile,
+        layout: {
+          ...mockTableChartTile.layout,
+          position: {
+            col: 0,
+            row: 0,
+          },
+        },
+      })
     })
 
     it('should reposition tiles after filtering', () => {
