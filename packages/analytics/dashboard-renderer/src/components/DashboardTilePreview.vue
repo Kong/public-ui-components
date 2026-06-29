@@ -93,7 +93,7 @@ const isTableDefinition = computed((): boolean => definition.chart.type === 'tab
 
 const chartNotConfigured = computed(() => {
   if (isTableDefinition.value) {
-    return !('columns' in definition.query) || !definition.query.columns?.length
+    return 'columns' in definition.query && !definition.query.columns?.length
   }
 
   return !('metrics' in definition.query) || !definition.query.metrics || definition.query.metrics.length === 0

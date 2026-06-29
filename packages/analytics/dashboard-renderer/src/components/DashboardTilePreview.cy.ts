@@ -232,6 +232,25 @@ describe('<DashboardTilePreview />', () => {
     cy.getTestId('test-stub').should('not.exist')
   })
 
+  it('passes table chart definitions without column preferences to DashboardTile', () => {
+    const definition: TileDefinition = {
+      chart: {
+        type: 'table',
+        title: 'Routes',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+      },
+    }
+
+    setup({ definition })
+
+    cy.getTestId('chart-not-configured-empty-state').should('not.exist')
+    cy.getTestId('test-stub').should('exist')
+    expectTilePropIs('definition', definition)
+  })
+
   it('forwards getExportData to child DashboardTile', () => {
     const mockExportData = {
       data: [{ event: { request_count: 42 }, timestamp: '2024-01-01T00:00:00Z' }],

@@ -58,7 +58,7 @@ describe('dashboardSchema.v2', () => {
     ]),
   ]
 
-  const platformQuery = {
+  const platformChartQuery = {
     datasource: 'platform',
     metrics: ['custom_metric_name'],
     dimensions: ['custom_dimension_name'],
@@ -77,7 +77,7 @@ describe('dashboardSchema.v2', () => {
         type: 'chart',
         definition: {
           query: {
-            ...platformQuery,
+            ...platformChartQuery,
           },
           chart: {
             type: 'horizontal_bar',
@@ -195,8 +195,8 @@ describe('dashboardSchema.v2', () => {
   }
 
   it('accepts platform queries with arbitrary strings at runtime', () => {
-    expect(validatePlatformQuerySchema(platformQuery)).toBe(true)
-    expect(validateValidDashboardQuery(platformQuery)).toBe(true)
+    expect(validatePlatformQuerySchema(platformChartQuery)).toBe(true)
+    expect(validateValidDashboardQuery(platformChartQuery)).toBe(true)
     expect(validateDashboardConfigSchema(dashboardConfig)).toBe(true)
     expect(validateDashboardConfigSchema(mixedDashboardConfig)).toBe(true)
   })
@@ -213,7 +213,7 @@ describe('dashboardSchema.v2', () => {
   })
 
   it('rejects non-table chart tiles with tabular explore query shape', () => {
-    expect(validateValidDashboardTableQuery(platformQuery)).toBe(false)
+    expect(validateValidDashboardTableQuery(platformChartQuery)).toBe(false)
 
     expect(validateDashboardConfigSchema({
       tiles: [
@@ -232,15 +232,15 @@ describe('dashboardSchema.v2', () => {
   })
 
   it('rejects table chart tiles with chart query shape', () => {
-    expect(validateValidDashboardChartQuery(platformQuery)).toBe(true)
-    expect(validateValidDashboardTableQuery(platformQuery)).toBe(false)
+    expect(validateValidDashboardChartQuery(platformChartQuery)).toBe(true)
+    expect(validateValidDashboardTableQuery(platformChartQuery)).toBe(false)
 
     expect(validateDashboardConfigSchema({
       tiles: [
         {
           ...tableChartTile,
           definition: {
-            query: platformQuery,
+            query: platformChartQuery,
             chart: {
               type: 'table',
               title: 'Routes',
