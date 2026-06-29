@@ -154,8 +154,8 @@ describe('dashboardSchema.v2', () => {
     ],
   }
 
-  const tableDataGridTile = {
-    type: 'table',
+  const tableChartTile = {
+    type: 'chart',
     id: 'routes-table',
     definition: {
       query: {
@@ -177,7 +177,8 @@ describe('dashboardSchema.v2', () => {
         cursor: 'eyJh',
         page_size: 50,
       },
-      config: {
+      chart: {
+        type: 'table',
         title: 'Routes',
       },
     },
@@ -200,27 +201,27 @@ describe('dashboardSchema.v2', () => {
     expect(validateDashboardConfigSchema(mixedDashboardConfig)).toBe(true)
   })
 
-  it('accepts table tiles with tabular explore query shape', () => {
-    expect(validateValidDashboardQuery(tableDataGridTile.definition.query)).toBe(true)
-    expect(validateValidDashboardTableQuery(tableDataGridTile.definition.query)).toBe(true)
-    expect(validateValidDashboardChartQuery(tableDataGridTile.definition.query)).toBe(false)
+  it('accepts table chart tiles with tabular explore query shape', () => {
+    expect(validateValidDashboardQuery(tableChartTile.definition.query)).toBe(true)
+    expect(validateValidDashboardTableQuery(tableChartTile.definition.query)).toBe(true)
+    expect(validateValidDashboardChartQuery(tableChartTile.definition.query)).toBe(false)
     expect(validateDashboardConfigSchema({
       tiles: [
-        tableDataGridTile,
+        tableChartTile,
       ],
     })).toBe(true)
   })
 
-  it('rejects chart tiles with tabular explore query shape', () => {
+  it('rejects non-table chart tiles with tabular explore query shape', () => {
     expect(validateValidDashboardTableQuery(platformQuery)).toBe(false)
 
     expect(validateDashboardConfigSchema({
       tiles: [
         {
-          ...tableDataGridTile,
+          ...tableChartTile,
           type: 'chart',
           definition: {
-            query: tableDataGridTile.definition.query,
+            query: tableChartTile.definition.query,
             chart: {
               type: 'horizontal_bar',
             },
@@ -230,32 +231,19 @@ describe('dashboardSchema.v2', () => {
     })).toBe(false)
   })
 
-  it('accepts table tiles with only the platform datasource', () => {
-    expect(validateDashboardConfigSchema({
-      tiles: [
-        {
-          ...tableDataGridTile,
-          definition: {
-            query: {
-              datasource: 'platform',
-            },
-            config: {},
-          },
-        },
-      ],
-    })).toBe(true)
-  })
+  it('rejects table chart tiles with chart query shape', () => {
+    expect(validateValidDashboardChartQuery(platformQuery)).toBe(true)
+    expect(validateValidDashboardTableQuery(platformQuery)).toBe(false)
 
-  it('rejects table tile config fields other than title', () => {
     expect(validateDashboardConfigSchema({
       tiles: [
         {
-          ...tableDataGridTile,
+          ...tableChartTile,
           definition: {
-            ...tableDataGridTile.definition,
-            config: {
+            query: platformQuery,
+            chart: {
+              type: 'table',
               title: 'Routes',
-              description: 'Extra config is not supported',
             },
           },
         },
@@ -263,11 +251,64 @@ describe('dashboardSchema.v2', () => {
     })).toBe(false)
   })
 
-  it('rejects table tiles with a top-level query', () => {
+  it('rejects the old top-level table tile encoding', () => {
     expect(validateDashboardConfigSchema({
       tiles: [
         {
-          ...tableDataGridTile,
+          ...tableChartTile,
+          type: 'table',
+          definition: {
+            query: tableChartTile.definition.query,
+            config: {
+              title: 'Routes',
+            },
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('accepts table chart tiles with only the platform datasource', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
+          definition: {
+            query: {
+              datasource: 'platform',
+            },
+            chart: {
+              type: 'table',
+            },
+          },
+        },
+      ],
+    })).toBe(true)
+  })
+
+  it('rejects table chart fields other than title', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
+          definition: {
+            ...tableChartTile.definition,
+            chart: {
+              type: 'table',
+              title: 'Routes',
+              description: 'Extra table chart field is not supported',
+            },
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('rejects table chart tiles with a top-level query', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
           query: {
             entity: 'route',
             columns: ['name', 'control_plane'],
@@ -287,20 +328,20 @@ describe('dashboardSchema.v2', () => {
     ['invalid page size', { page_size: '50' }],
     ['invalid cursor', { cursor: 50 }],
     ['invalid filter', { filters: [{ field: 'env', value: ['prod'] }] }],
-  ])('rejects table tiles with %s', (_description, queryOverrides) => {
+  ])('rejects table chart tiles with %s', (_description, queryOverrides) => {
     expect(validateValidDashboardTableQuery({
-      ...tableDataGridTile.definition.query,
+      ...tableChartTile.definition.query,
       ...queryOverrides,
     })).toBe(false)
 
     expect(validateDashboardConfigSchema({
       tiles: [
         {
-          ...tableDataGridTile,
+          ...tableChartTile,
           definition: {
-            config: tableDataGridTile.definition.config,
+            chart: tableChartTile.definition.chart,
             query: {
-              ...tableDataGridTile.definition.query,
+              ...tableChartTile.definition.query,
               ...queryOverrides,
             },
           },
@@ -309,13 +350,13 @@ describe('dashboardSchema.v2', () => {
     })).toBe(false)
   })
 
-  it('rejects table tiles without config definitions', () => {
+  it('rejects table tile definitions without chart definitions', () => {
     expect(validateDashboardConfigSchema({
       tiles: [
         {
-          ...tableDataGridTile,
+          ...tableChartTile,
           definition: {
-            query: tableDataGridTile.definition.query,
+            query: tableChartTile.definition.query,
           },
         },
       ],
