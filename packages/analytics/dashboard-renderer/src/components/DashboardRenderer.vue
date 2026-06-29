@@ -301,7 +301,7 @@ defineExpose({
   position: relative;
 
   .tile-container {
-    background: var(--kui-color-background-transparent, $kui-color-background-transparent);
+    background: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 100%;
@@ -312,14 +312,14 @@ defineExpose({
   }
 
   &.is-fullscreen {
-    background-color: white;
+    background-color: var(--kui-color-background, $kui-color-background);
 
     .fullscreen-header {
       margin-bottom: var(--kui-space-60, $kui-space-60);
     }
 
     .layout {
-      background-color: white;
+      background-color: var(--kui-color-background, $kui-color-background);
       padding: var(--kui-space-60, $kui-space-60);
       transform: v-bind(scale);
       transform-origin: top;
