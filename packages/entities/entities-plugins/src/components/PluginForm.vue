@@ -1663,6 +1663,10 @@ async function getClonedPlugin(clonedPluginName: string): Promise<void> {
 .kong-ui-entities-plugin-form-container {
   width: 100%;
 
+  :deep(.kong-ui-entity-base-form) {
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+  }
+
   .form-action-button {
     margin-left: var(--kui-space-60, $kui-space-60);
   }
