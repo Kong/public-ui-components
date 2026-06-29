@@ -154,16 +154,12 @@ const isBackToString = computed((): boolean => typeof backTo === 'string')
 const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.label)
 const showFavoriteButton = computed((): boolean => isEntityPage.value && !!pageShortcutsContext && 'onFavoriteToggle' in pageShortcutsContext && typeof pageShortcutsContext.onFavoriteToggle === 'function')
 const favoriteButtonKey = ref<number>(0)
-/**
- * pageShortcutsContext has both isFavorite and isPageFavorite properties.
- * isFavorite is a boolean that indicates if the page is favorited.
- * isPageFavorite is a function that returns a boolean that indicates if the page is favorited.
- * We need to check both properties.
- */
 const isFavorite = computed((): boolean =>
   !!pageShortcutsContext &&
   (('isFavorite' in pageShortcutsContext &&
-  pageShortcutsContext.isFavorite === true) ||
+  typeof pageShortcutsContext.isFavorite === 'function' &&
+  pageShortcutsContext.isFavorite(pageShortcutData) === true) ||
+  // TODO: Remove this once isPageFavorite() is removed from the context
   ('isPageFavorite' in pageShortcutsContext &&
   typeof pageShortcutsContext.isPageFavorite === 'function' &&
   pageShortcutsContext.isPageFavorite(pageShortcutData) === true)))
@@ -234,6 +230,7 @@ onUnmounted(() => {
 const debouncedEntityPageVisit = useDebounceFn(() => {
   if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
     pageShortcutsContext.onEntityPageVisit({ ...pageShortcutData, path: pageShortcutData?.path || route?.fullPath })
+    favoriteButtonKey.value++
   }
 }, 500)
 
@@ -243,7 +240,6 @@ const debouncedEntityPageVisit = useDebounceFn(() => {
  */
 watch([() => pageShortcutData, () => route?.fullPath], () => {
   debouncedEntityPageVisit()
-  favoriteButtonKey.value++
 }, { immediate: true, deep: true })
 </script>
 
@@ -253,6 +249,7 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
   font-family: var(--kui-font-family-text, $kui-font-family-text);
 
   .page-layout-header {
+    background-color: var(--kui-color-background, $kui-color-background);
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-40, $kui-space-40);
@@ -361,6 +358,7 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
   }
 
   .page-layout-content {
+    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-50, $kui-space-50);

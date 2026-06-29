@@ -440,7 +440,7 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 
   .chart-truncation-warning {
     align-items: center;
-    background-color: white;
+    background-color: var(--kui-color-background, $kui-color-background);
     display: flex;
     justify-content: flex-start;
     left: 0;
