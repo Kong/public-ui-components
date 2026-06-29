@@ -36,12 +36,21 @@ describe('PrincipalLookupSettings', () => {
       expect((wrapper.vm as any).selectedLookupMethod).toBe('kong-identity')
     })
 
-    it('infers custom-identity when principal_by or principal_claim is set', () => {
+    it('infers custom-identity when principal_by is set', () => {
       const wrapper = mountComponent({
         'config-principals-principal_by': 'Customer_ID',
       })
 
       expect((wrapper.vm as any).selectedLookupMethod).toBe('custom-identity')
+    })
+
+    it('infers kong-identity when only principal_claim is set (OIDC lookup against a non-sub claim)', () => {
+      const wrapper = mountComponent({
+        'config-principals-principal_by': null,
+        'config-principals-principal_claim': ['user', 'employee_id'],
+      })
+
+      expect((wrapper.vm as any).selectedLookupMethod).toBe('kong-identity')
     })
   })
 

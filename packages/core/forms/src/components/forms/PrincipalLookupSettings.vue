@@ -40,8 +40,20 @@
         </template>
       </KSelect>
 
+      <KInput
+        class="principals-identifier-claim-input"
+        data-testid="principals-identifier-claim"
+        :disabled="fieldsDisabled"
+        :help="identifierClaimHelp"
+        label="Identifier claim"
+        :model-value="getIdentifierClaimInputValue()"
+        placeholder="e.g., user.employee_id"
+        @update:model-value="handleIdentifierClaimChange($event)"
+      />
+
       <template v-if="selectedLookupMethod === 'custom-identity'">
         <KInput
+          class="principals-custom-identity-name-input"
           data-testid="principals-custom-identity-name"
           :disabled="fieldsDisabled"
           help="Enter the custom identity name used to look up the principal. Kong matches the value from the token claim to a principal with the same custom identity name and value."
@@ -49,15 +61,6 @@
           :model-value="formModel['config-principals-principal_by']"
           placeholder="e.g., Customer_ID"
           @update:model-value="updateField('config-principals-principal_by', $event)"
-        />
-        <KInput
-          data-testid="principals-identifier-claim"
-          :disabled="fieldsDisabled"
-          help="Enter the token claim used to identify the principal. Use dot notation for nested claims (for example, workload.id). Escape periods in claim names with \ (for example, workload\.id)."
-          label="Identifier claim"
-          :model-value="getIdentifierClaimInputValue()"
-          placeholder="e.g., user.employee_id"
-          @update:model-value="handleIdentifierClaimChange($event)"
         />
       </template>
     </div>
@@ -132,7 +135,7 @@ const lookupMethodItems = [
   {
     label: 'Kong Identity client',
     value: 'kong-identity',
-    description: 'Match principals using the client ID from the token subject (sub) claim.',
+    description: 'Match principals using a token claim, defaulting to the subject (sub) claim.',
   },
   {
     label: 'Custom claim',
@@ -154,7 +157,10 @@ const hasValue = value => {
 }
 
 const inferInitialLookupMethod = (formModel) => {
-  if (hasValue(formModel['config-principals-principal_claim']) || hasValue(formModel['config-principals-principal_by'])) {
+  // principal_by is the true discriminator: it's only set for a custom-identity
+  // (type=custom) lookup. A principal_claim on its own is just an OIDC lookup
+  // against a non-`sub` claim, which is still the kong-identity method.
+  if (hasValue(formModel['config-principals-principal_by'])) {
     return 'custom-identity'
   }
 
@@ -204,6 +210,15 @@ export default {
     // Fields are inert when lookup is off, and otherwise follow the directory/principals gate.
     fieldsDisabled() {
       return this.disabled || !this.lookupEnabled
+    },
+    // principal_claim is the value source in both modes (default `sub`), but in
+    // custom-identity mode that value is matched against the Custom Identity name,
+    // so call out the pairing there.
+    identifierClaimHelp() {
+      const lead = this.selectedLookupMethod === 'custom-identity'
+        ? 'The token claim whose value is matched against the Custom Identity name below.'
+        : 'The token claim used to look up the principal.'
+      return `${lead} Leave empty to use the subject (sub) claim. Use dot notation for nested claims (for example, workload.id); escape literal periods with \\ (for example, workload\\.id).`
     },
   },
   methods: {
@@ -269,16 +284,17 @@ export default {
   .principals-lookup-method-select :deep(.k-label) {
     margin-top: 0;
   }
-
-  .k-label {
-    margin-top: var(--kui-space-0, $kui-space-0);
-  }
 }
 
 .principals-field-group {
   display: flex;
   flex-direction: column;
   gap: var(--kui-space-40, $kui-space-40);
+
+  .principals-identifier-claim-input,
+  .principals-custom-identity-name-input {
+    margin-top: var(--kui-space-40, $kui-space-40);
+  }
 }
 
 .lookup-method-item {

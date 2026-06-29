@@ -11,7 +11,6 @@
     v-if="isKonnect && hasPrincipals"
     v-model="selectedMode"
     class="kong-identity-section"
-    :has-existing-realms="hasExistingRealms"
     :identity-realms-in-schema="identityRealmsInSchema"
     :loading-realms="isLoadingRealms"
   />
@@ -158,7 +157,6 @@ function handleErrorOnMissChange(value: boolean) {
 type KonnectRealmResponse = { data: Array<{ id: string, name: string }>, meta: { next: string | null } }
 
 const fetchedRealms = ref<MultiselectItem[]>([])
-const hasExistingRealms = ref(false)
 const isLoadingRealms = ref(false)
 
 const fetchRealms = async () => {
@@ -181,9 +179,8 @@ const fetchRealms = async () => {
     } while (nextUrl)
 
     fetchedRealms.value = items
-    hasExistingRealms.value = items.length > 0
   } catch {
-    hasExistingRealms.value = false
+    fetchedRealms.value = []
   } finally {
     isLoadingRealms.value = false
   }

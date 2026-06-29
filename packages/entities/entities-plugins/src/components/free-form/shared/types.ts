@@ -218,9 +218,32 @@ export type PluginConfigurationBaseProps<T extends Record<string, any> = Record<
   isKonnectManagedRedisEnabled?: boolean
 }
 
+/**
+ * Describes one numbered configuration step in a multi-section plugin layout.
+ * Content for each section is provided by the layout consumer via a
+ * `#section-<name>` slot.
+ */
+export interface ConfigSection {
+  /** Unique section key; the layout renders content from the `#section-<name>` slot */
+  name: string
+  /** Step block title */
+  title?: string
+  /** Step block description */
+  description?: string
+}
+
 export type PluginFormLayoutProps<T extends FreeFormPluginData = FreeFormPluginData> = PluginConfigurationBaseProps<T> & {
   onValidityChange?: (event: { model: string, valid: boolean, error?: Error | string }) => void
   isEditing: boolean
+  /**
+   * Optional multi-section configuration layout. When provided, the single
+   * "Plugin Configuration" step is replaced by one numbered step block per
+   * section (steps 2..N), each rendered via its `#section-<name>` slot, and the
+   * General Info step is renumbered to `2 + configSections.length`. When
+   * omitted, the layout renders the default single config step (step 2) using
+   * the default slot — i.e. existing plugins are unaffected.
+   */
+  configSections?: ConfigSection[]
   /**
    * Hide the built-in form/code switcher. Plugins that own a custom switcher
    * (e.g. Datakit's flow/code control) should set this to true to avoid
