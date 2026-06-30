@@ -1700,10 +1700,6 @@ async function getClonedPlugin(clonedPluginName: string): Promise<void> {
   }
 
   &.new-form-layout {
-    :deep(.kong-ui-entity-base-form) {
-      background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
-    }
-
     .plugin-form-actions {
       flex-direction: row-reverse;
       gap: var(--kui-space-60, $kui-space-60);

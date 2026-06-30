@@ -530,6 +530,7 @@ defineExpose({
   }
 
   &.new-form-layout {
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
     border: none;
     padding: 0;
 
