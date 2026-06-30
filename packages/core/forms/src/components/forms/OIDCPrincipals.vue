@@ -530,7 +530,7 @@ export default {
         // Only need the single directory backing this config.
         const dirResp = await axiosInstance.get(`${base}/v2/directories`, {
           params: { 'page[size]': 1 },
-          validateStatus: (s) => s === 200 || s === 401,
+          validateStatus: (s) => s === 401 || (s >= 200 && s < 300),
         })
         if (dirResp.status === 401) {
           this.$emit('kong-identity-unavailable')
@@ -568,7 +568,7 @@ export default {
         const { axiosInstance } = useAxios(this.formsConfig?.axiosRequestConfig)
         const url = `${this.formsConfig.apiBaseUrl}${KONG_IDENTITY_SERVERS_ENDPOINT}`
         const resp = await axiosInstance.get(url, {
-          validateStatus: (s) => s === 200 || s === 401,
+          validateStatus: (s) => s === 401 || (s >= 200 && s < 300),
         })
         if (resp.status === 401) {
           this.$emit('kong-identity-unavailable')
