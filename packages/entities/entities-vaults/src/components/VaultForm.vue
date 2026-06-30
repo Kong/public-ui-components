@@ -1032,21 +1032,13 @@
           :readonly="form.isReadonly"
           type="text"
         />
-        <KCollapse
+        <slot
           v-if="isAiGateway"
-          v-model="labelsCollapsed"
-          class="vault-form-labels-collapse"
-          data-testid="vault-form-labels-collapse"
-          :trigger-label="t('form.fields.labels.show_labels')"
-        >
-          <LabelForm
-            v-model="form.fields.labelList"
-            data-testid="vault-form-label-form"
-            :disabled="form.isReadonly"
-            focus-to-last-key
-            :title="null"
-          />
-        </KCollapse>
+          :disabled="form.isReadonly"
+          :label-list="form.fields.labelList"
+          name="labels"
+          :update-label-list="updateLabelList"
+        />
       </EntityFormSection>
     </EntityBaseForm>
   </div>
@@ -1103,8 +1095,6 @@ import {
   ConjourIcon,
   FolderIcon,
 } from '@kong/icons'
-import { LabelForm, labelMapToList } from '@kong-ui/labels'
-import '@kong-ui/labels/dist/style.css'
 
 interface ConfigFields {
   [VaultProviders.ENV]: KongVaultConfig
@@ -1147,6 +1137,18 @@ const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
 }>()
 
+defineSlots<{
+  /**
+   * AI Gateway only. The slot receives the current label list, the readonly state,
+   * and a setter to write changes back into the form.
+   */
+  labels?(props: {
+    labelList: VaultLabelItem[]
+    disabled: boolean
+    updateLabelList: (labelList: VaultLabelItem[]) => void
+  }): any
+}>()
+
 const { i18nT, i18n: { t } } = composables.useI18n()
 const router = useRouter()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -1185,7 +1187,14 @@ const vaultProvider = ref<VaultProviders>(props.config.app === 'konnect' ? Vault
 const originalVaultProvider = ref<VaultProviders | null>(null)
 const configStoreId = ref<string>()
 
-const labelsCollapsed = ref<boolean>(true)
+// Ids only need to be unique within the list for the consuming labels UI to key rows.
+let labelIdSeq = 0
+const labelMapToList = (labels: Record<string, string>): VaultLabelItem[] =>
+  Object.entries(labels).map(([key, value]) => ({ id: `label-${labelIdSeq++}`, key, value }))
+
+const updateLabelList = (labelList: VaultLabelItem[]): void => {
+  form.fields.labelList = labelList
+}
 
 const isAvailableTTLConfig = computed(() => {
   return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE, VaultProviders.CONJUR, VaultProviders.FS, VaultProviders.AZURE_CERTS].includes(vaultProvider.value)
@@ -1572,7 +1581,6 @@ const updateFormValues = (rawData: Record<string, any>): void => {
   if (isAiGateway.value) {
     const labelsRecord: Record<string, string> = data?.labels ?? {}
     form.fields.labelList = labelMapToList(labelsRecord)
-    labelsCollapsed.value = form.fields.labelList.length === 0
   }
 
   Object.assign(originalFields, form.fields)
@@ -1989,10 +1997,6 @@ const saveFormData = async (): Promise<void> => {
         width: 100%;
       }
     }
-  }
-
-  .vault-form-labels-collapse {
-    margin-top: var(--kui-space-60, $kui-space-60);
   }
 
   .vault-form {
