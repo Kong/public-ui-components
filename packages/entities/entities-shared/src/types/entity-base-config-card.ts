@@ -170,6 +170,7 @@ export interface DefaultCommonFieldsConfigurationSchema {
   updated_at: ConfigurationSchemaItem
   created_at: ConfigurationSchemaItem
   tags: ConfigurationSchemaItem
+  labels: ConfigurationSchemaItem
   partials: ConfigurationSchemaItem
 }
 
