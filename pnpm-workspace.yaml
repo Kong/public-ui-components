@@ -1,5 +1,20 @@
 packages:
   - 'packages/*/*'
+
+# Hoisting
+shamefullyHoist: true
+
+# Peer dependencies
+strictPeerDependencies: false
+autoInstallPeers: true
+
+# Build scripts
+sideEffectsCache: false # Ensure the postinstall script of the lefthook package is executed and hooks are installed
+
+# Package manager version enforcement (replaces manage-package-manager-versions=true)
+# "download" is the v11 default: download declared version if current doesn't match
+pmOnFail: download
+
 # Require a package to be published at least 12 days (17280 minutes) before it can be installed
 # minimumReleaseAge: 17280
 minimumReleaseAgeExclude:
@@ -37,17 +52,18 @@ overrides:
   undici@>=7.0.0 <7.28.0: '>=7.28.0 <8.0.0'
   linkify-it@<=5.0.0: '>=5.0.1'
 
-onlyBuiltDependencies:
-  - '@evilmartians/lefthook'
-  - '@parcel/watcher'
-  - '@swc/core'
-  - 'core-js'
-  - 'core-js-pure'
-  - 'cypress'
-  - 'es5-ext'
-  - 'esbuild'
-  - 'swagger-ui'
-  - 'tree-sitter'
-  - 'tree-sitter-json'
-  - 'tree-sitter-yaml'
-  - 'vue-demi'
+allowBuilds:
+  '@evilmartians/lefthook': true
+  '@parcel/watcher': true
+  '@swc/core': true
+  'core-js': true
+  'core-js-pure': true
+  'cypress': true
+  'es5-ext': true
+  'esbuild': true
+  'nx': false
+  'swagger-ui': true
+  'tree-sitter': true
+  'tree-sitter-json': true
+  'tree-sitter-yaml': true
+  'vue-demi': true
