@@ -40,29 +40,29 @@
         </template>
       </KSelect>
 
-      <KInput
-        class="principals-identifier-claim-input"
-        data-testid="principals-identifier-claim"
-        :disabled="fieldsDisabled"
-        :help="identifierClaimHelp"
-        label="Identifier claim"
-        :model-value="getIdentifierClaimInputValue()"
-        placeholder="e.g., user.employee_id"
-        @update:model-value="handleIdentifierClaimChange($event)"
-      />
-
       <template v-if="selectedLookupMethod === 'custom-identity'">
         <KInput
           class="principals-custom-identity-name-input"
           data-testid="principals-custom-identity-name"
           :disabled="fieldsDisabled"
           help="Enter the custom identity name used to look up the principal. Kong matches the value from the token claim to a principal with the same custom identity name and value."
-          label="Custom Identity name"
+          label="Custom identity name"
           :model-value="formModel['config-principals-principal_by']"
           placeholder="e.g., Customer_ID"
           @update:model-value="updateField('config-principals-principal_by', $event)"
         />
       </template>
+
+      <KInput
+        class="principals-token-claim-input"
+        data-testid="principals-token-claim"
+        :disabled="fieldsDisabled"
+        :help="tokenClaimHelp"
+        label="Token claim"
+        :model-value="getTokenClaimInputValue()"
+        placeholder="e.g., user.employee_id"
+        @update:model-value="handleTokenClaimChange($event)"
+      />
     </div>
     <div class="principals-field-group">
       <KLabel>If principal lookup fails</KLabel>
@@ -212,13 +212,14 @@ export default {
       return this.disabled || !this.lookupEnabled
     },
     // principal_claim is the value source in both modes (default `sub`), but in
-    // custom-identity mode that value is matched against the Custom Identity name,
+    // custom-identity mode that value is matched against the Custom identity name,
     // so call out the pairing there.
-    identifierClaimHelp() {
-      const lead = this.selectedLookupMethod === 'custom-identity'
-        ? 'The token claim whose value is matched against the Custom Identity name below.'
-        : 'The token claim used to look up the principal.'
-      return `${lead} Leave empty to use the subject (sub) claim. Use dot notation for nested claims (for example, workload.id); escape literal periods with \\ (for example, workload\\.id).`
+    tokenClaimHelp() {
+      const dotNotation = 'Use dot notation for nested claims (for example, workload.id); escape literal periods with \\ (for example, workload\\.id).'
+      if (this.selectedLookupMethod === 'custom-identity') {
+        return `The token claim whose value is matched against the Custom identity name. Defaults to the subject (sub) claim, but you can specify a different claim if needed. ${dotNotation}`
+      }
+      return `Defaults to the subject (sub) claim, but you can specify a different token claim if needed. ${dotNotation}`
     },
   },
   methods: {
@@ -227,15 +228,20 @@ export default {
         this.onEnabledChange(enabled)
       }
     },
-    getIdentifierClaimInputValue() {
+    getTokenClaimInputValue() {
       const claim = this.formModel['config-principals-principal_claim']
-      if (Array.isArray(claim)) {
+      if (Array.isArray(claim) && claim.length > 0) {
         // Escape literal dots within each part before joining
         return claim.map(part => part.replace(/\./g, '\\.')).join('.')
       }
-      return claim || ''
+      if (typeof claim === 'string' && claim) {
+        return claim
+      }
+      // Pre-fill the gateway default so users recognize `sub` is used when left unset.
+      // The model stays empty until edited; an empty principal_claim already resolves to `sub`.
+      return 'sub'
     },
-    handleIdentifierClaimChange(rawValue) {
+    handleTokenClaimChange(rawValue) {
       const value = typeof rawValue === 'string' ? rawValue.trim() : ''
       if (!value) {
         this.updateField('config-principals-principal_claim', [])
@@ -291,7 +297,7 @@ export default {
   flex-direction: column;
   gap: var(--kui-space-40, $kui-space-40);
 
-  .principals-identifier-claim-input,
+  .principals-token-claim-input,
   .principals-custom-identity-name-input {
     margin-top: var(--kui-space-40, $kui-space-40);
   }

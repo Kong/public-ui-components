@@ -117,12 +117,12 @@ describe('PrincipalLookupSettings', () => {
     })
   })
 
-  describe('identifier claim escaping', () => {
+  describe('token claim escaping', () => {
     it('parses simple dot notation into array parts', () => {
       const onModelUpdated = vi.fn()
       const wrapper = mountComponent({ 'config-principals-principal_claim': null }, { onModelUpdated })
 
-      ;(wrapper.vm as any).handleIdentifierClaimChange('user.employee_id')
+      ;(wrapper.vm as any).handleTokenClaimChange('user.employee_id')
 
       expect(wrapper.props('formModel')['config-principals-principal_claim']).toEqual(['user', 'employee_id'])
       expect(onModelUpdated).toHaveBeenCalled()
@@ -131,7 +131,7 @@ describe('PrincipalLookupSettings', () => {
     it('parses escaped dots as literal dots within a part', () => {
       const wrapper = mountComponent()
 
-      ;(wrapper.vm as any).handleIdentifierClaimChange('user.name\\.first')
+      ;(wrapper.vm as any).handleTokenClaimChange('user.name\\.first')
 
       expect(wrapper.props('formModel')['config-principals-principal_claim']).toEqual(['user', 'name.first'])
     })
@@ -139,9 +139,14 @@ describe('PrincipalLookupSettings', () => {
     it('handles empty input', () => {
       const wrapper = mountComponent()
 
-      ;(wrapper.vm as any).handleIdentifierClaimChange('')
+      ;(wrapper.vm as any).handleTokenClaimChange('')
 
       expect(wrapper.props('formModel')['config-principals-principal_claim']).toEqual([])
+    })
+
+    it('pre-fills the default `sub` claim when none is set', () => {
+      expect((mountComponent({ 'config-principals-principal_claim': null }).vm as any).getTokenClaimInputValue()).toBe('sub')
+      expect((mountComponent({ 'config-principals-principal_claim': [] }).vm as any).getTokenClaimInputValue()).toBe('sub')
     })
 
     it('displays array with literal dots using escape notation', () => {
@@ -149,18 +154,18 @@ describe('PrincipalLookupSettings', () => {
         'config-principals-principal_claim': ['user', 'name.first'],
       })
 
-      expect((wrapper.vm as any).getIdentifierClaimInputValue()).toBe('user.name\\.first')
+      expect((wrapper.vm as any).getTokenClaimInputValue()).toBe('user.name\\.first')
     })
 
     it('round-trips complex claim correctly', () => {
       const wrapper = mountComponent()
       const vm = wrapper.vm as any
 
-      vm.handleIdentifierClaimChange('org\\.name.user.id\\.v2')
+      vm.handleTokenClaimChange('org\\.name.user.id\\.v2')
 
       const formModel = wrapper.props('formModel')
       expect(formModel['config-principals-principal_claim']).toEqual(['org.name', 'user', 'id.v2'])
-      expect(vm.getIdentifierClaimInputValue()).toBe('org\\.name.user.id\\.v2')
+      expect(vm.getTokenClaimInputValue()).toBe('org\\.name.user.id\\.v2')
     })
   })
 
