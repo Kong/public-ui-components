@@ -334,7 +334,7 @@ describe('<PluginForm />', () => {
 
     it('should use legacy form when useLegacyForm in the plugin metadata is true', () => {
       interceptKMSchema({ mockData: schemaAiProxy })
-      const pluginType = 'ai-prompt-decorator'
+      const pluginType = 'ai-prompt-template'
 
       cy.mount(PluginForm, {
         props: {
@@ -1313,7 +1313,7 @@ describe('<PluginForm />', () => {
     })
 
     it('should use legacy form when useLegacyForm in the plugin metadata is true', () => {
-      const pluginType = 'ai-prompt-decorator'
+      const pluginType = 'ai-prompt-template'
       interceptKonnectSchema({ mockData: schemaAiProxy })
 
       cy.mount(PluginForm, {
