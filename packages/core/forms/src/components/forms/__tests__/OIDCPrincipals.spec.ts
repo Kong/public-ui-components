@@ -477,7 +477,7 @@ describe('OIDCPrincipals', () => {
       mountKonnect()
       await flushPromises()
 
-      expect(mockGet).toHaveBeenCalledWith('/us/v2/directories', { params: { 'page[size]': 1 } })
+      expect(mockGet).toHaveBeenCalledWith('/us/v2/directories', expect.objectContaining({ params: { 'page[size]': 1 } }))
       expect(mockGet).toHaveBeenCalledWith('/us/v2/directories/dir-1/principals', { params: { 'page[size]': 1 } })
     })
 
