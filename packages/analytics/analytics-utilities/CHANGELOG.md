@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.19.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.19.4...@kong-ui-public/analytics-utilities@12.19.5) (2026-06-30)
+
+
+### Bug Fixes
+
+* table tiles encoded as chart tile types ([#3502](https://github.com/Kong/public-ui-components/issues/3502)) ([c6d9749](https://github.com/Kong/public-ui-components/commit/c6d97495a4467e2cce7627c4238d9953be44610f))
+
+
+
+
+
 ## [12.19.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.19.3...@kong-ui-public/analytics-utilities@12.19.4) (2026-06-29)
 
 

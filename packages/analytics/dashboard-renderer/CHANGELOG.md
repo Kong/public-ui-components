@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.12.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.15...@kong-ui-public/dashboard-renderer@8.12.16) (2026-06-30)
+
+
+### Bug Fixes
+
+* table tiles encoded as chart tile types ([#3502](https://github.com/Kong/public-ui-components/issues/3502)) ([c6d9749](https://github.com/Kong/public-ui-components/commit/c6d97495a4467e2cce7627c4238d9953be44610f))
+
+
+
+
+
 ## [8.12.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.14...@kong-ui-public/dashboard-renderer@8.12.15) (2026-06-30)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
