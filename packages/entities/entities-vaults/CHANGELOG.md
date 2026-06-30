@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.11.5...@kong-ui-public/entities-vaults@4.12.0) (2026-06-30)
+
+
+### Features
+
+* **entities-vaults:** add labels support to AI Gateway vault form ([#3497](https://github.com/Kong/public-ui-components/issues/3497)) ([5ae0bc5](https://github.com/Kong/public-ui-components/commit/5ae0bc5c185a083d6eb78b92addff0f4421a6851))
+
+
+
+
+
 ## [4.11.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.11.4...@kong-ui-public/entities-vaults@4.11.5) (2026-06-29)
 
 
