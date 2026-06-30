@@ -31,6 +31,7 @@ const labelDictionary: Record<string, string> = {
   gcp: 'GCP',
   azure: 'Azure',
   acl: 'ACL',
+  acls: 'ACLs',
   cookie: 'Cookie',
   ai: 'AI',
   awsgateway: 'AWS Gateway',
