@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.222.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.222.3...@kong-ui-public/entities-plugins@9.222.4) (2026-06-30)
+
+
+### Bug Fixes
+
+* **entities-plugins:** scope freeform filler enum selection to its own popover ([#3513](https://github.com/Kong/public-ui-components/issues/3513)) ([de31fd3](https://github.com/Kong/public-ui-components/commit/de31fd359144bb258ddcaced1f571ecccdb850f5))
+
+
+
+
+
 ## [9.222.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.222.2...@kong-ui-public/entities-plugins@9.222.3) (2026-06-30)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
