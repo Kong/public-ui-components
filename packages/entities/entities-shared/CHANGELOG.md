@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.53.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.53.2...@kong-ui-public/entities-shared@3.53.3) (2026-06-30)
+
+
+### Bug Fixes
+
+* **entities-shared:** labels display ([#3511](https://github.com/Kong/public-ui-components/issues/3511)) ([199f193](https://github.com/Kong/public-ui-components/commit/199f193c6a78353561078e49a80f32fd48320912))
+
+
+
+
+
 ## [3.53.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.53.1...@kong-ui-public/entities-shared@3.53.2) (2026-06-30)
 
 
