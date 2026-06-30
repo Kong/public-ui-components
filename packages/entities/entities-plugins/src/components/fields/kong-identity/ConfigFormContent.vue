@@ -238,7 +238,7 @@ const fetchPrincipalsState = async () => {
     }
     const dirResp = await axiosInstance.get<ListResponse<Directory>>(
       `${appConfig.apiBaseUrl}/v2/directories`,
-      { params: { 'page[size]': 1 }, validateStatus: (s: number) => s === 200 || s === 401 },
+      { params: { 'page[size]': 1 }, validateStatus: (s: number) => s === 401 || (s >= 200 && s < 300) },
     )
     if (dirResp.status === 401) {
       principalsApiAvailable.value = false
