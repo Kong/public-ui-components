@@ -358,6 +358,68 @@ describe('Filler - Cypress', () => {
       cy.get('[data-testid="ff-map-container-functions.1"] [data-testid^="ff-functions.kid:"]').should('have.value', 'line1\nline2\nline3')
     })
 
+    it('enum: scoped selection ignores identically-named options from other enum fields', () => {
+      // Two enum fields each having 'openai' as a valid value — the old global
+      // selector would match 2 elements and throw "can only be called on a single element".
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            format: {
+              type: 'string',
+              one_of: ['openai', 'ollama'],
+              default: 'openai',
+            },
+          },
+          {
+            provider: {
+              type: 'string',
+              one_of: ['openai', 'cohere'],
+              default: 'openai',
+            },
+          },
+        ],
+      }
+
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
+
+      const filler = createFiller(schema)
+      // Selecting 'ollama' on the first field must not accidentally hit 'openai'
+      // in the second field's popover.
+      filler.fillField('format', 'ollama')
+      filler.fillField('provider', 'cohere')
+
+      cy.getTestId('ff-format').should('have.value', 'ollama')
+      cy.getTestId('ff-provider').should('have.value', 'cohere')
+    })
+
+    it('array: add-item button click succeeds even when sticky tabs cover the button', () => {
+      // The hosts array has default items; fillField adds new ones via the
+      // add-item button. With scrollIntoView + force:true this works even when
+      // a sticky header overlaps the button center.
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            hosts: {
+              type: 'array',
+              elements: {
+                type: 'string',
+              },
+            },
+          },
+        ],
+      }
+
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
+
+      const filler = createFiller(schema)
+      filler.fillField('hosts', ['alpha.example.com', 'beta.example.com'])
+
+      cy.getTestId('ff-hosts.0').should('have.value', 'alpha.example.com')
+      cy.getTestId('ff-hosts.1').should('have.value', 'beta.example.com')
+    })
+
     it('should fill json field', () => {
       const schema: FormSchema = {
         type: 'record',

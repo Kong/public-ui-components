@@ -15,6 +15,10 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
   cy.get(fieldSelector).scrollIntoView()
   cy.get(fieldSelector).click(actionOptions.click)
 
+  // Scope all option interactions to this field's own popover to avoid matching
+  // identically-named options from other enum fields on the same form.
+  const popoverSelector = selectors.selectTrigger(fieldKey)
+
   // Select each value within the dropdown
   for (const optionValue of fieldSchema.one_of ?? (fieldSchema as SetFieldSchema).elements?.one_of ?? []) {
     if (optionValue !== undefined && optionValue !== null) {
@@ -24,7 +28,7 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
 
       // clear default value
       if (isMulti) {
-        cy.get(itemSelector).within(($el) => {
+        cy.get(popoverSelector).find(itemSelector).within(($el) => {
           if ($el.find('button.selected').length > 0) {
             cy.get('button').click() // Value can't be selected when force: true is set, not sure why
           }
@@ -32,7 +36,7 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
       }
 
       if (values.includes(optionValue)) {
-        cy.get(itemSelector).click() // Value can't be selected when force: true is set, not sure why
+        cy.get(popoverSelector).find(itemSelector).click() // Value can't be selected when force: true is set, not sure why
       }
     }
   }

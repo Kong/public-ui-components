@@ -30,9 +30,11 @@ export async function fillArray(option: ArrayHandlerOption): Promise<void> {
 
     // Add items and fill each one
     for (let i = 0; i < value.length; i++) {
-      // Click add button to add more items
+      // Click add button to add more items; scrollIntoView + force:true prevents
+      // sticky-tabs headers from blocking the click.
       const addBtnSelector = selectors.arrayAddBtn(fieldKey)
-      await page.locator(addBtnSelector).click()
+      await page.locator(addBtnSelector).scrollIntoViewIfNeeded()
+      await page.locator(addBtnSelector).click({ force: true })
 
       await onFillItem(i, value[i])
     }
