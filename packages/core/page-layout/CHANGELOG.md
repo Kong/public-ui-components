@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.3.3...@kong-ui-public/page-layout@0.3.4) (2026-06-30)
+
+
+### Bug Fixes
+
+* add tab link style ([#3514](https://github.com/Kong/public-ui-components/issues/3514)) ([386fbfc](https://github.com/Kong/public-ui-components/commit/386fbfce64348b229968f6f2ea778d8bdb957ebf))
+
+
+
+
+
 ## [0.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.3.2...@kong-ui-public/page-layout@0.3.3) (2026-06-30)
 
 
