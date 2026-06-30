@@ -202,7 +202,7 @@ importers:
         specifier: workspace:^
         version: link:../analytics-utilities
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@types/file-saver':
         specifier: ^2.0.7
@@ -299,7 +299,7 @@ importers:
         specifier: workspace:^
         version: link:../analytics-utilities
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       geobuf:
         specifier: ^3.0.2
@@ -333,7 +333,7 @@ importers:
         specifier: workspace:^
         version: link:../../core/core
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.38(typescript@5.9.3))
       approximate-number:
         specifier: ^3.0.1
@@ -438,7 +438,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -477,7 +477,7 @@ importers:
   packages/core/app-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@vueuse/core':
         specifier: ^14.3.0
@@ -551,7 +551,7 @@ importers:
         specifier: workspace:^
         version: link:../../entities/entities-shared
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/markdown':
         specifier: 1.9.10
@@ -591,7 +591,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       vue:
         specifier: ^3.5.35
@@ -609,7 +609,7 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       uuid:
         specifier: ^14.0.0
@@ -646,7 +646,7 @@ importers:
   packages/core/forms:
     dependencies:
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       dompurify:
         specifier: ^3.4.8
@@ -732,7 +732,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -772,7 +772,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -787,7 +787,7 @@ importers:
   packages/core/sandbox-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
     devDependencies:
       '@kong/design-tokens':
@@ -866,7 +866,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -893,7 +893,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -920,7 +920,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -947,7 +947,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -974,7 +974,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -1001,7 +1001,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -1025,7 +1025,7 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -1052,7 +1052,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -1122,7 +1122,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -1224,7 +1224,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -1264,7 +1264,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -1304,7 +1304,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -1349,7 +1349,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -1376,7 +1376,7 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.60.6
@@ -1450,7 +1450,7 @@ importers:
         specifier: workspace:^0.12.26
         version: link:../swagger-ui-web-component
       '@kong/icons':
-        specifier: ^1.59.1
+        specifier: ^1.60.0
         version: 1.60.0(vue@3.5.35(typescript@5.9.3))
       lodash.clonedeep:
         specifier: ^4.5.0

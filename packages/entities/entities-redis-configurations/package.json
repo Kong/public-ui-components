@@ -44,7 +44,7 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "2.0.1",
-    "@kong/icons": "^1.59.1",
+    "@kong/icons": "^1.60.0",
     "@kong/kongponents": "9.60.6",
     "@types/uuid": "^11.0.0",
     "axios": "^1.17.0",

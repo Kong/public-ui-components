@@ -32,7 +32,7 @@
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.59.1",
+    "@kong/icons": "^1.60.0",
     "@kong/kongponents": "9.60.6",
     "axios": "^1.17.0",
     "vue": "^3.5.35",
