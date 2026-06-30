@@ -1032,6 +1032,13 @@
           :readonly="form.isReadonly"
           type="text"
         />
+        <slot
+          v-if="isAiGateway"
+          :disabled="form.isReadonly"
+          :label-list="form.fields.labelList"
+          name="labels"
+          :update-label-list="updateLabelList"
+        />
       </EntityFormSection>
     </EntityBaseForm>
   </div>
@@ -1062,6 +1069,7 @@ import type {
   AzureCertsVaultConfig,
   VaultState,
   VaultStateFields,
+  VaultLabelItem,
   KongManagerVaultFormConfig,
   KonnectVaultFormConfig,
   VaultPayload,
@@ -1129,6 +1137,18 @@ const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
 }>()
 
+defineSlots<{
+  /**
+   * AI Gateway only. The slot receives the current label list, the readonly state,
+   * and a setter to write changes back into the form.
+   */
+  labels?(props: {
+    labelList: VaultLabelItem[]
+    disabled: boolean
+    updateLabelList: (labelList: VaultLabelItem[]) => void
+  }): any
+}>()
+
 const { i18nT, i18n: { t } } = composables.useI18n()
 const router = useRouter()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -1150,6 +1170,7 @@ const form = reactive<VaultState>({
     prefix: '',
     description: '',
     tags: '',
+    labelList: [],
   },
   isReadonly: false,
   errorMessage: '',
@@ -1159,11 +1180,21 @@ const originalFields = reactive<VaultStateFields>({
   prefix: '',
   description: '',
   tags: '',
+  labelList: [],
 })
 
 const vaultProvider = ref<VaultProviders>(props.config.app === 'konnect' ? VaultProviders.KONNECT : VaultProviders.ENV)
 const originalVaultProvider = ref<VaultProviders | null>(null)
 const configStoreId = ref<string>()
+
+// Ids only need to be unique within the list for the consuming labels UI to key rows.
+let labelIdSeq = 0
+const labelMapToList = (labels: Record<string, string>): VaultLabelItem[] =>
+  Object.entries(labels).map(([key, value]) => ({ id: `label-${labelIdSeq++}`, key, value }))
+
+const updateLabelList = (labelList: VaultLabelItem[]): void => {
+  form.fields.labelList = labelList
+}
 
 const isAvailableTTLConfig = computed(() => {
   return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE, VaultProviders.CONJUR, VaultProviders.FS, VaultProviders.AZURE_CERTS].includes(vaultProvider.value)
@@ -1547,7 +1578,13 @@ const updateFormValues = (rawData: Record<string, any>): void => {
   const tags = data?.item?.tags || data?.tags || []
   form.fields.tags = tags?.join(', ') || ''
 
+  if (isAiGateway.value) {
+    const labelsRecord: Record<string, string> = data?.labels ?? {}
+    form.fields.labelList = labelMapToList(labelsRecord)
+  }
+
   Object.assign(originalFields, form.fields)
+  originalFields.labelList = form.fields.labelList.map((l: VaultLabelItem) => ({ ...l }))
 
   const config = data?.item?.config || data?.config || null
   if (config && (Object.keys(config).length || data?.name === VaultProviders.KONNECT)) {
@@ -1841,6 +1878,13 @@ const getPayload = computed((): Record<string, any> => {
   // Remap the gateway-shaped payload to the AI Gateway request body at the boundary only.
   if (!isAiGateway.value) return payload
   const aiPayload = toAiGatewayVaultPayload(payload)
+  // Attach labels (AI Gateway only): skip empty keys and deduplicate by key.
+  const labelsMap: Record<string, string> = {}
+  for (const label of form.fields.labelList) {
+    const k = label.key.trim()
+    if (k) labelsMap[k] = label.value.trim()
+  }
+  if (Object.keys(labelsMap).length > 0) aiPayload.labels = labelsMap
   // In edit mode, write-only fields are not returned by GET; omit them when blank so the
   // existing secret is preserved (sending an empty string would clear it on the server).
   if (formType.value === EntityBaseFormType.Edit) {

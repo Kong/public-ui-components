@@ -106,7 +106,7 @@ const toAiHcvConfig = (gwConfig: Record<string, any>): Record<string, any> => {
  * Forward mapper: gateway-shaped request body (the existing VaultForm.getPayload
  * output) → Kong AI Gateway vault request body.
  * - provider `name` → `type`; identifier `prefix` → `name`
- * - `tags` dropped (labels are not exposed this version)
+ * - `tags` dropped; `labels` passed through when present
  * - hcv config field names remapped per auth method; conjur drops `auth_method`
  * - null/undefined config values omitted
  */
@@ -151,7 +151,7 @@ const fromAiHcvConfig = (aiConfig: Record<string, any>): Record<string, any> => 
  * - `type` → `name`; `name` → `prefix`
  * - hcv config field names remapped back; conjur re-injects `auth_method: 'api_key'`
  * - `config_store_id` preserved for konnect
- * - no `tags` (labels are not exposed this version)
+ * - `labels` passed through from the API response
  */
 export const fromAiGatewayVault = (apiVault: Record<string, any>): Record<string, any> => {
   const provider = apiVault?.type
@@ -170,6 +170,7 @@ export const fromAiGatewayVault = (apiVault: Record<string, any>): Record<string
     name: provider,
     prefix: apiVault?.name,
     description: apiVault?.description ?? '',
+    labels: apiVault?.labels ?? {},
     config,
   }
 }
