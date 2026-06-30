@@ -74,7 +74,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong/design-tokens": "2.0.1",
-    "@kong/icons": "^1.59.1",
+    "@kong/icons": "^1.60.0",
     "@kong/kongponents": "9.60.6",
     "@peculiar/x509": "^2.0.0",
     "@playwright/experimental-ct-vue": "^1.60.0",
