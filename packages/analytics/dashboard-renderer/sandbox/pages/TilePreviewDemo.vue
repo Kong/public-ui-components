@@ -82,7 +82,7 @@ const chartDefinitionExample = {
 const tableDefinitionExample = {
   chart: {
     type: 'table',
-    title: 'Platform routes',
+    chart_title: 'Platform routes',
   },
   query: {
     datasource: 'platform',

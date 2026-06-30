@@ -15,25 +15,27 @@ import { isTableChartDefinition } from './tile-definition'
 export const duplicateChartTile = (tile: GridTile<TileDefinition>): TileConfig => {
   let duplicatedDefinition: TileDefinition
   if (isTableChartDefinition(tile.meta)) {
+    const { chart } = tile.meta
+
     duplicatedDefinition = {
       ...tile.meta,
       chart: {
-        ...tile.meta.chart,
-        title: tile.meta.chart.title ? `Copy of ${tile.meta.chart.title}` : '',
+        ...chart,
+        chart_title: chart.chart_title ? `Copy of ${chart.chart_title}` : '',
       },
     }
-  } else if (tile.meta.chart.type === 'slottable') {
-    duplicatedDefinition = {
-      ...tile.meta,
-      chart: { ...tile.meta.chart },
-    }
-  } else {
+  } else if ('chart_title' in tile.meta.chart) {
     duplicatedDefinition = {
       ...tile.meta,
       chart: {
         ...tile.meta.chart,
         chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
       },
+    }
+  } else {
+    duplicatedDefinition = {
+      ...tile.meta,
+      chart: { ...tile.meta.chart },
     }
   }
 

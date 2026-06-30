@@ -228,7 +228,7 @@ export const tableChartSchema = {
       type: 'string',
       enum: ['table'],
     },
-    title: chartTitle,
+    chart_title: chartTitle,
   },
   required: ['type'],
   additionalProperties: false,

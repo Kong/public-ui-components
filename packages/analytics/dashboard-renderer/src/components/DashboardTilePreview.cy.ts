@@ -190,7 +190,7 @@ describe('<DashboardTilePreview />', () => {
     const definition: TileDefinition = {
       chart: {
         type: 'table',
-        title: 'Routes',
+        chart_title: 'Routes',
       },
       query: {
         datasource: 'platform',
@@ -212,7 +212,7 @@ describe('<DashboardTilePreview />', () => {
     const definition: TileDefinition = {
       chart: {
         type: 'table',
-        title: 'Routes',
+        chart_title: 'Routes',
       },
       query: {
         datasource: 'platform',
@@ -231,7 +231,7 @@ describe('<DashboardTilePreview />', () => {
     const definition: TileDefinition = {
       chart: {
         type: 'table',
-        title: 'Routes',
+        chart_title: 'Routes',
       },
       query: {
         datasource: 'platform',

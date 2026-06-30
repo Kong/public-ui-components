@@ -47,7 +47,7 @@ describe('configureAllowedDefinition', () => {
       position: { col: 0, row: 2 },
     },
     definition: {
-      chart: { type: 'table', title: 'Routes' },
+      chart: { type: 'table', chart_title: 'Routes' },
       query: {
         datasource: 'platform',
         entity: 'route',

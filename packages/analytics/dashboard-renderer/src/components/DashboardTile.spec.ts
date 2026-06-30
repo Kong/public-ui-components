@@ -289,7 +289,7 @@ describe('<DashboardTile /> table tiles', () => {
     const tableDefinition: TileDefinition = {
       chart: {
         type: 'table',
-        title: 'Table Tile',
+        chart_title: 'Table Tile',
       },
       query: {
         datasource: 'platform',
@@ -349,7 +349,7 @@ describe('<DashboardTile /> table tiles', () => {
     const tableDefinition: TileDefinition = {
       chart: {
         type: 'table',
-        title: 'Table Tile',
+        chart_title: 'Table Tile',
       },
       query: {
         datasource: 'platform',
@@ -394,7 +394,7 @@ describe('<DashboardTile /> table tiles', () => {
     const tableDefinition: TileDefinition = {
       chart: {
         type: 'table',
-        title: 'Table Tile',
+        chart_title: 'Table Tile',
       },
       query: {
         datasource: 'platform',

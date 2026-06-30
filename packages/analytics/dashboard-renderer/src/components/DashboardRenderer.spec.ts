@@ -170,7 +170,7 @@ describe('<DashboardRenderer /> table tiles', () => {
           definition: {
             chart: {
               type: 'table',
-              title: 'Routes',
+              chart_title: 'Routes',
             },
             query: {
               datasource: 'platform',
@@ -218,7 +218,7 @@ describe('<DashboardRenderer /> table tiles', () => {
     expect(model.tiles[1].type).toBe('chart')
     expect(model.tiles[1].definition.chart).toEqual({
       type: 'table',
-      title: 'Copy of Routes',
+      chart_title: 'Copy of Routes',
     })
     expect(model.tiles[1].definition.query).toMatchObject({
       datasource: 'platform',

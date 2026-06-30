@@ -496,7 +496,7 @@ Table visuals are chart tiles with `type: 'chart'` on the tile itself and `defin
 ```typescript
 interface TableChartOptions {
   type: 'table'
-  title?: string
+  chart_title?: string
 }
 
 interface PlatformTabularQuery {
@@ -508,7 +508,7 @@ interface PlatformTabularQuery {
 }
 ```
 
-`definition.query.columns` controls the visible table columns. If columns are omitted, the renderer can fall back to response `meta.columns` after the first tabular response. `definition.chart.title` controls the tile title.
+`definition.query.columns` controls the visible table columns. If columns are omitted, the renderer can fall back to response `meta.columns` after the first tabular response. `definition.chart.chart_title` controls the tile title.
 
 The dashboard config query includes `datasource: 'platform'`. The host application's `AnalyticsBridge.tabularQueryFn` receives a datasource-aware tabular query, currently `{ datasource: 'platform', query: { entity, columns, filters, page_size, cursor } }`.
 
@@ -522,7 +522,7 @@ const tableTile: TileConfig = {
   definition: {
     chart: {
       type: 'table',
-      title: 'Platform routes',
+      chart_title: 'Platform routes',
     },
     query: {
       datasource: 'platform',

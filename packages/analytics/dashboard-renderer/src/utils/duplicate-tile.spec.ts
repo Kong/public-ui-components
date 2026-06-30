@@ -26,7 +26,7 @@ it('duplicates table tiles with a copied title and reset position', () => {
       },
       chart: {
         type: 'table',
-        title: 'Routes',
+        chart_title: 'Routes',
       },
     },
   }
@@ -38,7 +38,7 @@ it('duplicates table tiles with a copied title and reset position', () => {
       query: tile.meta.query,
       chart: {
         type: 'table',
-        title: 'Copy of Routes',
+        chart_title: 'Copy of Routes',
       },
     },
     layout: {

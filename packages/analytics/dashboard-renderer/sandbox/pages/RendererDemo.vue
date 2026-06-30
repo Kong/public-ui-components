@@ -110,7 +110,7 @@ const dashboardConfig = ref<DashboardConfig>({
       definition: {
         chart: {
           type: 'table',
-          title: 'Platform routes',
+          chart_title: 'Platform routes',
         },
         query: {
           datasource: 'platform',

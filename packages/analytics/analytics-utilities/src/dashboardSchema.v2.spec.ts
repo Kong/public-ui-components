@@ -179,7 +179,7 @@ describe('dashboardSchema.v2', () => {
       },
       chart: {
         type: 'table',
-        title: 'Routes',
+        chart_title: 'Routes',
       },
     },
     layout: {
@@ -243,7 +243,7 @@ describe('dashboardSchema.v2', () => {
             query: platformChartQuery,
             chart: {
               type: 'table',
-              title: 'Routes',
+              chart_title: 'Routes',
             },
           },
         },
@@ -286,7 +286,25 @@ describe('dashboardSchema.v2', () => {
     })).toBe(true)
   })
 
-  it('rejects table chart fields other than title', () => {
+  it('rejects table chart fields other than chart_title', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
+          definition: {
+            ...tableChartTile.definition,
+            chart: {
+              type: 'table',
+              chart_title: 'Routes',
+              description: 'Extra table chart field is not supported',
+            },
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('rejects table chart title fields that do not use chart_title', () => {
     expect(validateDashboardConfigSchema({
       tiles: [
         {
@@ -296,7 +314,6 @@ describe('dashboardSchema.v2', () => {
             chart: {
               type: 'table',
               title: 'Routes',
-              description: 'Extra table chart field is not supported',
             },
           },
         },

@@ -101,7 +101,7 @@
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="!isTableTile && !!requestsLinkKebabMenu"
+              v-if="!isTableChartDefinition(definition) && !!requestsLinkKebabMenu"
               :data-testid="`chart-jump-to-requests-${tileId}`"
               :item="{ label: i18n.t('jumpToRequests'), to: requestsLinkKebabMenu }"
             />
@@ -179,8 +179,6 @@ import type {
   AllFilters,
   TileConfig,
   TileDefinition,
-  TableChartTileDefinition,
-  ChartTileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
@@ -252,18 +250,16 @@ const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
-const isTableTile = computed((): boolean => isTableChartDefinition(props.definition))
 
-const chartDefinition = computed<ChartTileDefinition>(() => props.definition as ChartTileDefinition)
-const tableDefinition = computed<TableChartTileDefinition>(() => props.definition as TableChartTileDefinition)
-const chart = computed(() => chartDefinition.value.chart)
-const chartTitle = computed<string | undefined>(() => 'chart_title' in chart.value ? chart.value.chart_title : undefined)
-const tileTitle = computed<string | undefined>(() => isTableTile.value ? tableDefinition.value.chart.title : chartTitle.value)
-const tileDescription = computed<string | undefined>(() => !isTableTile.value && 'description' in chart.value ? chart.value.description : undefined)
-const tileTypeClass = computed<string>(() => isTableTile.value ? 'table' : chart.value.type)
-const isSlottableTile = computed<boolean>(() => !isTableTile.value && chart.value.type === 'slottable')
+const chart = computed(() => props.definition.chart)
+const tileTitle = computed<string | undefined>(() => {
+  return 'chart_title' in chart.value ? chart.value.chart_title : undefined
+})
+const tileDescription = computed<string | undefined>(() => !isTableChartDefinition(props.definition) && 'description' in chart.value ? chart.value.description : undefined)
+const tileTypeClass = computed<string>(() => isTableChartDefinition(props.definition) ? 'table' : chart.value.type)
+const isSlottableTile = computed<boolean>(() => !isTableChartDefinition(props.definition) && chart.value.type === 'slottable')
 const canExportCsv = computed<boolean>(() => {
-  if (isTableTile.value) {
+  if (isTableChartDefinition(props.definition)) {
     return false
   }
 
@@ -310,14 +306,14 @@ watch(() => props.definition, async (newValue, oldValue) => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const kebabMenuHasItems = computed((): boolean => isTableTile.value
+const kebabMenuHasItems = computed((): boolean => isTableChartDefinition(props.definition)
   ? !!exploreLinkKebabMenu.value || props.context.editable
   : !!exploreLinkKebabMenu.value || canExportCsv.value || props.context.editable)
 
 // The shared header action container is hidden when tile actions are globally disabled.
 const canShowHeaderActions = computed((): boolean => !props.hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
 const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !props.isFullscreen)
-const hasSignalsDescription = computed<boolean>(() => !isTableTile.value && chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
+const hasSignalsDescription = computed<boolean>(() => !isTableChartDefinition(props.definition) && chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
 
 const rendererLookup: Record<Exclude<DashboardTileType, 'table'>, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
@@ -341,12 +337,14 @@ const componentEventHandlers = computed(() => ({
 }))
 
 const componentData = computed(() => {
-  if (isTableTile.value) {
+  const definition = props.definition
+
+  if (isTableChartDefinition(definition)) {
     return {
       component: TableDataGridRenderer,
       rendererProps: {
         context: props.context,
-        query: tableDefinition.value.query,
+        query: definition.query,
         queryReady: props.queryReady,
         refreshCounter: refreshCounter.value,
       },
@@ -361,7 +359,6 @@ const componentData = computed(() => {
 
   // Ideally, Typescript would ensure that the prop types of the renderers match
   // the props that they're going to receive.  Unfortunately, actually doing this seems difficult.
-  const definition = chartDefinition.value
   const component = rendererLookup[definition.chart.type]
 
   const supportsRequests = !!(component as any)?.emits?.includes('select-chart-range')
@@ -390,11 +387,11 @@ const componentData = computed(() => {
 })
 
 const badgeData = computed<string | null>(() => {
-  if (isTableTile.value) {
+  if (isTableChartDefinition(props.definition)) {
     return null
   }
 
-  const query = chartDefinition.value.query
+  const query = props.definition.query
   const timeRange = query?.time_range
 
   // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
@@ -439,15 +436,15 @@ const chartDataGranularity = computed(() => {
 })
 
 const isTimeSeriesChart = computed(() => {
-  return !isTableTile.value && ['timeseries_line', 'timeseries_bar'].includes(chart.value.type)
+  return !isTableChartDefinition(props.definition) && ['timeseries_line', 'timeseries_bar'].includes(chart.value.type)
 })
 
 const isAgedOutQuery = computed(() => {
-  if (!isTimeSeriesChart.value || !props.queryReady || loadingChartData.value) {
+  if (isTableChartDefinition(props.definition) || !isTimeSeriesChart.value || !props.queryReady || loadingChartData.value) {
     return false
   }
 
-  const savedGranularity = chartDefinition.value.query.granularity
+  const savedGranularity = props.definition.query.granularity
 
   if (!savedGranularity || !chartDataGranularity.value) {
     return false
@@ -458,7 +455,7 @@ const isAgedOutQuery = computed(() => {
 
 const agedOutWarning = computed(() => {
   const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
-  const savedGranularity = chartDefinition.value.query.granularity ?? 'unknown'
+  const savedGranularity = isTableChartDefinition(props.definition) ? 'unknown' : props.definition.query.granularity ?? 'unknown'
 
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
@@ -472,14 +469,14 @@ const agedOutWarning = computed(() => {
  * @returns Array of scoped filter objects to a datasource
  */
 const datasourceScopedFilters = computed(() => {
-  if (isTableTile.value) {
+  if (isTableChartDefinition(props.definition)) {
     return []
   }
 
-  const filters = [...props.context.filters, ...chartDefinition.value.query.filters ?? []] as AllFilters[]
-  const metrics = chartDefinition.value.query.metrics
+  const filters = [...props.context.filters, ...props.definition.query.filters ?? []] as AllFilters[]
+  const metrics = props.definition.query.metrics
   // TODO: default to api_usage until datasource is made required
-  const datasource = chartDefinition.value.query.datasource ?? 'api_usage'
+  const datasource = props.definition.query.datasource ?? 'api_usage'
 
   return stripUnknownFilters.value({
     datasource,
