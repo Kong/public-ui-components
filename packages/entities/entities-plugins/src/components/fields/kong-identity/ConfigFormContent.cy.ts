@@ -248,6 +248,8 @@ function mountContent(
     lookupDelay?: number
     /** khcp-20393 Identity Principals UI flag. Defaults to on so the new-UI specs render it. */
     identityPrincipalsUiEnabled?: boolean
+    /** Override the HTTP status code returned by the /v2/directories stub (default 200). */
+    directoriesStatusCode?: number
   },
   data?: Record<string, any>,
 ) {
@@ -266,10 +268,14 @@ function mountContent(
 
   const beforeSaveCallbacks: Array<() => boolean> = []
   // Mock the Kong Identity directories + principals APIs
-  const directoriesResponse = options.hasDefaultDirectory !== false
-    ? { data: [{ id: 'dir-default', name: 'default' }] }
-    : { data: [] }
-  cy.intercept('GET', '**/v2/directories*', { body: directoriesResponse, delay: options.lookupDelay }).as('fetchDirectories')
+  if (options.directoriesStatusCode) {
+    cy.intercept('GET', '**/v2/directories*', { statusCode: options.directoriesStatusCode }).as('fetchDirectories')
+  } else {
+    const directoriesResponse = options.hasDefaultDirectory !== false
+      ? { data: [{ id: 'dir-default', name: 'default' }] }
+      : { data: [] }
+    cy.intercept('GET', '**/v2/directories*', { body: directoriesResponse, delay: options.lookupDelay }).as('fetchDirectories')
+  }
 
   const principalsResponse = options.hasPrincipals
     ? { data: [{ id: 'principal-1' }] }
@@ -709,36 +715,33 @@ describe('ConfigFormContent', () => {
 
     describe('API unavailability (401)', () => {
       it('hides the Kong Identity section when /v2/directories returns 401', () => {
-        cy.intercept('GET', '**/v2/directories*', { statusCode: 401 }).as('fetchDirectories401')
-        mountContent(schemaWithRealms, { isKonnect: true })
+        mountContent(schemaWithRealms, { isKonnect: true, directoriesStatusCode: 401 })
 
-        cy.wait('@fetchDirectories401')
+        cy.wait('@fetchDirectories')
         cy.getTestId('ff-kong-identity-field').should('not.exist')
         cy.getTestId('kong-identity-principals-panel').should('not.exist')
         cy.getTestId('ff-principals-error-on-miss-label').should('not.exist')
       })
 
-      it('does not show the empty-state panel on 401 but does show it on other errors', () => {
-        // 500 → should still show the "add first principal" panel
-        cy.intercept('GET', '**/v2/directories*', { statusCode: 500 }).as('fetchDirectories500')
-        mountContent(schemaWithRealms, { isKonnect: true }, {
+      it('does not hide the Kong Identity section on non-401 errors', () => {
+        // 500 → section stays visible (falls back to empty-state panel)
+        mountContent(schemaWithRealms, { isKonnect: true, directoriesStatusCode: 500 }, {
           config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
         })
 
-        cy.wait('@fetchDirectories500')
+        cy.wait('@fetchDirectories')
         cy.getTestId('kong-identity-principals-panel').should('be.visible')
       })
 
       it('preserves saved principals config on 401 (edit)', () => {
-        cy.intercept('GET', '**/v2/directories*', { statusCode: 401 }).as('fetchDirectories401')
-        mountContent(schemaWithRealms, { isKonnect: true }, {
+        mountContent(schemaWithRealms, { isKonnect: true, directoriesStatusCode: 401 }, {
           config: {
             principals: { enabled: true, directory: 'my-custom-dir', error_on_miss: false },
             identity_realms: null,
           },
         })
 
-        cy.wait('@fetchDirectories401')
+        cy.wait('@fetchDirectories')
         cy.getTestId('ff-kong-identity-field').should('not.exist')
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
           return val.config?.principals?.enabled === true
