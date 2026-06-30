@@ -411,7 +411,7 @@ export default {
       default: false,
     },
   },
-  emits: ['mode-change', 'click:learn-more', 'click:create-entity'],
+  emits: ['mode-change', 'click:learn-more', 'click:create-entity', 'kong-identity-unavailable'],
   data() {
     return {
       MODE_KONG_IDENTITY,
@@ -528,7 +528,14 @@ export default {
         const { axiosInstance } = useAxios(this.formsConfig?.axiosRequestConfig)
         const base = this.formsConfig.apiBaseUrl
         // Only need the single directory backing this config.
-        const dirResp = await axiosInstance.get(`${base}/v2/directories`, { params: { 'page[size]': 1 } })
+        const dirResp = await axiosInstance.get(`${base}/v2/directories`, {
+          params: { 'page[size]': 1 },
+          validateStatus: (s) => s === 200 || s === 401,
+        })
+        if (dirResp.status === 401) {
+          this.$emit('kong-identity-unavailable')
+          return
+        }
         const directory = dirResp?.data?.data?.[0]
         if (!directory) {
           this.hasPrincipals = false
@@ -560,7 +567,13 @@ export default {
         this.kongIdentityServersLoading = true
         const { axiosInstance } = useAxios(this.formsConfig?.axiosRequestConfig)
         const url = `${this.formsConfig.apiBaseUrl}${KONG_IDENTITY_SERVERS_ENDPOINT}`
-        const resp = await axiosInstance.get(url)
+        const resp = await axiosInstance.get(url, {
+          validateStatus: (s) => s === 200 || s === 401,
+        })
+        if (resp.status === 401) {
+          this.$emit('kong-identity-unavailable')
+          return
+        }
         this.kongIdentityServers = resp.data?.data ?? []
         // If editing with an existing issuer, try to match a server
         const issuer = this.formModel['config-issuer']

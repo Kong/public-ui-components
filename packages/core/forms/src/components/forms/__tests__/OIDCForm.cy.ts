@@ -506,6 +506,51 @@ describe('<OIDCForm />', () => {
     })
   })
 
+  describe('API unavailability (401)', () => {
+    it('hides the principals section and shows the regular form when auth-servers returns 401', () => {
+      cy.intercept(
+        { method: 'GET', url: `${baseConfigKonnect.apiBaseUrl}/v1/auth-servers/_computed` },
+        { statusCode: 401 },
+      ).as('getAuthServers401')
+
+      cy.mount(OIDCForm, {
+        props: {
+          ...requiredProps,
+          formSchema: OIDCFormSchemaWithPrincipals,
+          formModel: OIDCModelWithPrincipals,
+        },
+        global: { provide: { 'kong-ui-forms-config': baseConfigKonnect } },
+      })
+
+      cy.wait('@getAuthServers401')
+      cy.getTestId('oidc-principals-section').should('not.exist')
+      cy.getTestId('oidc-auth-mode-radio-group').should('not.exist')
+    })
+
+    it('hides the principals section when /v2/directories returns 401', () => {
+      cy.intercept(
+        { method: 'GET', url: `${baseConfigKonnect.apiBaseUrl}/v1/auth-servers/_computed` },
+        { statusCode: 200, body: { data: [] } },
+      ).as('getAuthServers')
+      cy.intercept(
+        { method: 'GET', url: `${baseConfigKonnect.apiBaseUrl}/v2/directories*` },
+        { statusCode: 401 },
+      ).as('getDirectories401')
+
+      cy.mount(OIDCForm, {
+        props: {
+          ...requiredProps,
+          formSchema: OIDCFormSchemaWithPrincipals,
+          formModel: OIDCModelWithPrincipals,
+        },
+        global: { provide: { 'kong-ui-forms-config': baseConfigKonnect } },
+      })
+
+      cy.wait('@getDirectories401')
+      cy.getTestId('oidc-principals-section').should('not.exist')
+    })
+  })
+
   describe('Token Exchange subject_token_issuers', () => {
     const verifySignatureDescription = 'JSON Web Keys are automatically fetched from the issuer\'s well-known endpoint. Enter a JWKS URI below to override this.'
 

@@ -706,6 +706,47 @@ describe('ConfigFormContent', () => {
         }))
       })
     })
+
+    describe('API unavailability (401)', () => {
+      it('hides the Kong Identity section when /v2/directories returns 401', () => {
+        cy.intercept('GET', '**/v2/directories*', { statusCode: 401 }).as('fetchDirectories401')
+        mountContent(schemaWithRealms, { isKonnect: true })
+
+        cy.wait('@fetchDirectories401')
+        cy.getTestId('ff-kong-identity-field').should('not.exist')
+        cy.getTestId('kong-identity-principals-panel').should('not.exist')
+        cy.getTestId('ff-principals-error-on-miss-label').should('not.exist')
+      })
+
+      it('does not show the empty-state panel on 401 but does show it on other errors', () => {
+        // 500 → should still show the "add first principal" panel
+        cy.intercept('GET', '**/v2/directories*', { statusCode: 500 }).as('fetchDirectories500')
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
+        })
+
+        cy.wait('@fetchDirectories500')
+        cy.getTestId('kong-identity-principals-panel').should('be.visible')
+      })
+
+      it('preserves saved principals config on 401 (edit)', () => {
+        cy.intercept('GET', '**/v2/directories*', { statusCode: 401 }).as('fetchDirectories401')
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: {
+            principals: { enabled: true, directory: 'my-custom-dir', error_on_miss: false },
+            identity_realms: null,
+          },
+        })
+
+        cy.wait('@fetchDirectories401')
+        cy.getTestId('ff-kong-identity-field').should('not.exist')
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return val.config?.principals?.enabled === true
+            && val.config?.principals?.directory === 'my-custom-dir'
+            && val.config?.principals?.error_on_miss === false
+        }))
+      })
+    })
   })
 
   describe('Kong Manager', () => {

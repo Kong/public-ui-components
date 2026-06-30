@@ -145,6 +145,10 @@ type Directory = { id: string, name: string }
 // Cached after the first fetch so mode switches never trigger a second network request.
 const cachedDirectory = ref<Directory | null>(null)
 
+// Set to false when the principals API returns 401, meaning the feature is not available for
+// this org/plan. Hides the entire Kong Identity section, same as the feature flag being off.
+const principalsApiAvailable = ref(true)
+
 const principalsErrorOnMiss = computed(() => formData.config?.principals?.error_on_miss ?? true)
 
 function handleErrorOnMissChange(value: boolean) {
@@ -200,7 +204,7 @@ const identityRealmsInSchema = computed(() => !!getSchema('$.config.identity_rea
 // keeps its prefilled schema default, submitted as-is).
 const identityPrincipalsUiEnabled = inject<boolean>(FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
 
-const hasPrincipals = computed(() => identityPrincipalsUiEnabled && !!getSchema('$.config.principals'))
+const hasPrincipals = computed(() => identityPrincipalsUiEnabled && !!getSchema('$.config.principals') && principalsApiAvailable.value)
 
 function detectInitialMode(): 'consumers' | 'kong-identity' | 'centrally-managed' {
   if (formData.config?.principals?.enabled) return 'kong-identity'
@@ -234,8 +238,12 @@ const fetchPrincipalsState = async () => {
     }
     const dirResp = await axiosInstance.get<ListResponse<Directory>>(
       `${appConfig.apiBaseUrl}/v2/directories`,
-      { params: { 'page[size]': 1 } },
+      { params: { 'page[size]': 1 }, validateStatus: (s: number) => s === 200 || s === 401 },
     )
+    if (dirResp.status === 401) {
+      principalsApiAvailable.value = false
+      return
+    }
     const directory = dirResp?.data?.data?.[0]
     if (!directory) {
       principalsHasPrincipals.value = false

@@ -34,6 +34,7 @@
             :on-model-updated="onModelUpdated"
             @click:create-entity="(payload) => $emit('click:create-entity', payload)"
             @click:learn-more="(entity) => $emit('click:learn-more', entity)"
+            @kong-identity-unavailable="handleKongIdentityUnavailable"
             @mode-change="handlePrincipalsModeChange"
           >
             <!-- Authentication methods + Session management live inside the principals
@@ -262,6 +263,7 @@ export default {
       authMethods: [],
       sessionManagement: false,
       principalsMode: null,
+      kongIdentityApiAvailable: true,
       globalFields: null,
       commonFieldsSchema: null,
       authFieldsSchema: null,
@@ -295,7 +297,7 @@ export default {
       return (this.formModel.id && this.isEditing) || !this.isEditing
     },
     hasPrincipalsFields() {
-      return this.identityPrincipalsUiEnabled && this.formSchema.fields?.some(
+      return this.identityPrincipalsUiEnabled && this.kongIdentityApiAvailable && this.formSchema.fields?.some(
         (field) => PRINCIPALS_FIELD_MODELS.has(field.model),
       )
     },
@@ -579,6 +581,9 @@ export default {
       // eslint-disable-next-line vue/no-mutating-props
       this.formModel['config-auth_methods'] = arr
       this.onModelUpdated()
+    },
+    handleKongIdentityUnavailable() {
+      this.kongIdentityApiAvailable = false
     },
     handlePrincipalsModeChange(mode) {
       this.principalsMode = mode
