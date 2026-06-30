@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.34...@kong-ui-public/app-layout@4.11.35) (2026-06-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.60.0 ([#3509](https://github.com/Kong/public-ui-components/issues/3509)) ([64c9a2a](https://github.com/Kong/public-ui-components/commit/64c9a2a3e9adbef1f5313d71b5100cf19e427850))
+
+
+
+
+
 ## [4.11.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.33...@kong-ui-public/app-layout@4.11.34) (2026-06-29)
 
 
