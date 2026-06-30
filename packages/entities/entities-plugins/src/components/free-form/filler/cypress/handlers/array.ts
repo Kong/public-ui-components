@@ -33,9 +33,11 @@ export function fillArray(option: ArrayHandlerOption): void {
 
       // Add items and fill each one
       for (let i = 0; i < value.length; i++) {
-        // Click add button to add more items
+        // Click add button to add more items; scrollIntoView + force:true prevents
+        // sticky-tabs headers from blocking the click.
         const addBtnSelector = selectors.arrayAddBtn(fieldKey)
-        cy.get(addBtnSelector).click()
+        cy.get(addBtnSelector).scrollIntoView()
+        cy.get(addBtnSelector).click({ force: true })
 
         // Fill the item
         onFillItem(i, value[i])
