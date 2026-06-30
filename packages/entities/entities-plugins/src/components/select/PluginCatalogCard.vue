@@ -219,6 +219,7 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
   display: flex;
 
   .plugin-select-card {
+    background-color: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     box-sizing: border-box;
