@@ -50,10 +50,10 @@
     "@shikijs/engine-javascript": "^4.2.0",
     "@shikijs/langs": "^4.2.0",
     "@shikijs/themes": "^4.2.0",
-    "axios": "^1.17.0",
+    "axios": "^1.18.0",
     "monaco-editor": "^0.55.1",
     "shiki": "^4.2.0",
-    "vue": "^3.5.35",
+    "vue": "^3.5.38",
     "vue-router": "^5.1.0"
   },
   "scripts": {
