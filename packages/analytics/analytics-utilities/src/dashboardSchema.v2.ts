@@ -50,6 +50,13 @@ const allowCsvExport = {
   type: 'boolean',
 } as const
 
+const entityLinks = {
+  type: 'object',
+  additionalProperties: {
+    type: 'string',
+  },
+} as const satisfies JSONSchema
+
 const chartDatasetColorsSchema = {
   type: ['object', 'array'],
   items: {
@@ -205,12 +212,23 @@ export const topNTableSchema = {
     entity_link: {
       type: 'string',
     },
+    entity_links: entityLinks,
   },
   required: ['type'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
 export type TopNTableOptions = FromSchemaWithOptions<typeof topNTableSchema>
+
+export const tableDataGridConfigSchema = {
+  type: 'object',
+  properties: {
+    title: chartTitle,
+  },
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TableDataGridConfigOptions = FromSchemaWithOptions<typeof tableDataGridConfigSchema>
 
 export const metricCardSchema = {
   type: 'object',
@@ -382,7 +400,7 @@ const dimensionsFn = <T extends readonly string[] | undefined>(dimensions?: T) =
   type: 'array',
   description: 'List of attributes or entity types to group by.',
   minItems: 0,
-  maxItems: 2,
+  maxItems: 3,
   items: {
     type: 'string',
     ...(dimensions ? { enum: dimensions } : {}),
@@ -442,6 +460,21 @@ const filtersFn = <T extends readonly string[] | undefined>(filterableDimensions
     ],
   },
 } as const satisfies JSONSchema)
+
+export const filterablePlatformPresetFilterDimensions = [
+  'control_plane',
+  'gateway_service',
+  'realm',
+  'route',
+  'plugin',
+  'plugin_name',
+  'plugin_scope',
+  'data_plane_node_version',
+  'env',
+  'team',
+  'region',
+  'hostname',
+] as const
 
 const platformFiltersFn = () => ({
   type: 'array',
@@ -588,33 +621,114 @@ export const platformQuerySchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
+export const platformTabularQuerySchema = {
+  type: 'object',
+  description: 'A query to launch at the platform tabular explore API',
+  properties: {
+    datasource: {
+      type: 'string',
+      enum: [
+        'platform',
+      ],
+    },
+    entity: {
+      type: 'string',
+    },
+    columns: {
+      type: 'array',
+      minItems: 1,
+      items: {
+        type: 'string',
+      },
+    },
+    filters: platformFiltersFn(),
+    cursor: {
+      type: 'string',
+    },
+    page_size: {
+      type: 'number',
+    },
+  },
+  required: ['datasource'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+const validDashboardChartQuerySchemas = [
+  apiUsageQuerySchema,
+  basicQuerySchema,
+  llmUsageSchema,
+  agenticUsageSchema,
+  platformQuerySchema,
+] as const
+
+export const validDashboardChartQuery = {
+  anyOf: validDashboardChartQuerySchemas,
+} as const satisfies JSONSchema
+
+export type ValidDashboardChartQuery = FromSchemaWithOptions<typeof validDashboardChartQuery>
+
+const validDashboardTableQuerySchemas = [
+  platformTabularQuerySchema,
+] as const
+
+export const validDashboardTableQuery = {
+  anyOf: validDashboardTableQuerySchemas,
+} as const satisfies JSONSchema
+
+export type ValidDashboardTableQuery = FromSchemaWithOptions<typeof validDashboardTableQuery>
+
 export const validDashboardQuery = {
-  anyOf: [apiUsageQuerySchema, basicQuerySchema, llmUsageSchema, agenticUsageSchema, platformQuerySchema],
+  anyOf: [
+    ...validDashboardChartQuerySchemas,
+    ...validDashboardTableQuerySchemas,
+  ],
 } as const satisfies JSONSchema
 
 export type ValidDashboardQuery = FromSchemaWithOptions<typeof validDashboardQuery>
 
-// Note: `datasource` may need to end up somewhere else for sane type definitions?
-export const tileDefinitionSchema = {
+const dashboardTileChartSchema = {
+  anyOf: [
+    barChartSchema,
+    gaugeChartSchema,
+    donutChartSchema,
+    timeseriesChartSchema,
+    metricCardSchema,
+    topNTableSchema,
+    slottableSchema,
+    singleValueSchema,
+    choroplethMapSchema,
+  ],
+} as const satisfies JSONSchema
+
+const chartTileDefinitionSchema = {
   type: 'object',
   properties: {
-    query: validDashboardQuery,
-    chart: {
-      anyOf: [
-        barChartSchema,
-        gaugeChartSchema,
-        donutChartSchema,
-        timeseriesChartSchema,
-        metricCardSchema,
-        topNTableSchema,
-        slottableSchema,
-        singleValueSchema,
-        choroplethMapSchema,
-      ],
-    },
+    query: validDashboardChartQuery,
+    chart: dashboardTileChartSchema,
   },
   required: ['query', 'chart'],
   additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type ChartTileDefinition = FromSchemaWithOptions<typeof chartTileDefinitionSchema>
+
+const tableTileDefinitionSchema = {
+  type: 'object',
+  properties: {
+    query: validDashboardTableQuery,
+    config: tableDataGridConfigSchema,
+  },
+  required: ['query', 'config'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type TableTileDefinition = FromSchemaWithOptions<typeof tableTileDefinitionSchema>
+
+export const tileDefinitionSchema = {
+  anyOf: [
+    chartTileDefinitionSchema,
+    tableTileDefinitionSchema,
+  ],
 } as const satisfies JSONSchema
 
 export type TileDefinition = FromSchemaWithOptions<typeof tileDefinitionSchema>
@@ -661,14 +775,14 @@ export const tileLayoutSchema = {
 
 export type TileLayout = FromSchemaWithOptions<typeof tileLayoutSchema>
 
-export const tileConfigSchema = {
+export const chartTileConfigSchema = {
   type: 'object',
   properties: {
     type: {
       type: 'string',
       enum: ['chart'],
     },
-    definition: tileDefinitionSchema,
+    definition: chartTileDefinitionSchema,
     layout: tileLayoutSchema,
     id: {
       type: 'string',
@@ -677,6 +791,31 @@ export const tileConfigSchema = {
   },
   required: ['type', 'definition', 'layout'],
   additionalProperties: false,
+} as const satisfies JSONSchema
+
+export const tableTileConfigSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['table'],
+    },
+    definition: tableTileDefinitionSchema,
+    layout: tileLayoutSchema,
+    id: {
+      type: 'string',
+      description: 'Unique identifier for the tile.  If not provided, one will be generated.',
+    },
+  },
+  required: ['type', 'definition', 'layout'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export const tileConfigSchema = {
+  anyOf: [
+    chartTileConfigSchema,
+    tableTileConfigSchema,
+  ],
 } as const satisfies JSONSchema
 
 export type TileConfig = FromSchemaWithOptions<typeof tileConfigSchema>
@@ -702,6 +841,7 @@ export const dashboardConfigSchema = {
         ...filterableBasicExploreDimensions,
         ...filterableAiExploreDimensions,
         ...filterableAgenticExploreDimensions,
+        ...filterablePlatformPresetFilterDimensions,
       ]),
     ]),
     template_id: {

@@ -3,6 +3,253 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.19.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.19.4...@kong-ui-public/analytics-chart@10.19.5) (2026-06-29)
+
+
+### Bug Fixes
+
+* bg color changes & shortcuts context refactor [KHCP-20980] ([#3506](https://github.com/Kong/public-ui-components/issues/3506)) ([f52457c](https://github.com/Kong/public-ui-components/commit/f52457ca897ea8fbcacfccc5c621b866f51da007))
+
+
+
+
+
+## [10.19.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.19.3...@kong-ui-public/analytics-chart@10.19.4) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
+## [10.19.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.19.2...@kong-ui-public/analytics-chart@10.19.3) (2026-06-25)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.19.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.19.1...@kong-ui-public/analytics-chart@10.19.2) (2026-06-24)
+
+
+### Bug Fixes
+
+* let single value chart determine error cases for itself ([#3493](https://github.com/Kong/public-ui-components/issues/3493)) ([a939786](https://github.com/Kong/public-ui-components/commit/a939786c51d6b9dff55aed63c38ef00664569daf))
+
+
+
+
+
+## [10.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.19.0...@kong-ui-public/analytics-chart@10.19.1) (2026-06-24)
+
+
+### Bug Fixes
+
+* **analytics-chart:** use sentence case for Agentic metric and group-by labels [MA-4954] ([#3494](https://github.com/Kong/public-ui-components/issues/3494)) ([fb44dc2](https://github.com/Kong/public-ui-components/commit/fb44dc2ba50aa345391ba446b0ee8de3efe21bd8))
+* **analytics:** use correct method to determine legend visibility [MA-5104] ([#3484](https://github.com/Kong/public-ui-components/issues/3484)) ([b847e83](https://github.com/Kong/public-ui-components/commit/b847e8358aa808d60ceeabb563fc9dbd68109805))
+
+
+
+
+
+# [10.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.13...@kong-ui-public/analytics-chart@10.19.0) (2026-06-23)
+
+
+### Features
+
+* **analytics:** support single result in trend queries [MA-5139] ([#3464](https://github.com/Kong/public-ui-components/issues/3464)) ([a8a81ea](https://github.com/Kong/public-ui-components/commit/a8a81ea05c6a852313d2688bd47a19fed7c6d649))
+
+
+
+
+
+## [10.18.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.12...@kong-ui-public/analytics-chart@10.18.13) (2026-06-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3436](https://github.com/Kong/public-ui-components/issues/3436)) ([50801c8](https://github.com/Kong/public-ui-components/commit/50801c82e6d7f71324aeab8209d9a212af5fe8a6))
+
+
+
+
+
+## [10.18.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.11...@kong-ui-public/analytics-chart@10.18.12) (2026-06-23)
+
+
+### Bug Fixes
+
+* **analytics:** display empty rows without entity links [MA-5070] ([#3478](https://github.com/Kong/public-ui-components/issues/3478)) ([c946256](https://github.com/Kong/public-ui-components/commit/c946256b140255b20a9a62a1c2dc8431da0d74cb))
+
+
+
+
+
+## [10.18.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.10...@kong-ui-public/analytics-chart@10.18.11) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
+## [10.18.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.9...@kong-ui-public/analytics-chart@10.18.10) (2026-06-22)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.18.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.8...@kong-ui-public/analytics-chart@10.18.9) (2026-06-19)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3469](https://github.com/Kong/public-ui-components/issues/3469)) ([767d24f](https://github.com/Kong/public-ui-components/commit/767d24f30756acf44f69f96bbb696b6947e3cb17))
+
+
+
+
+
+## [10.18.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.7...@kong-ui-public/analytics-chart@10.18.8) (2026-06-16)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.18.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.6...@kong-ui-public/analytics-chart@10.18.7) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [10.18.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.5...@kong-ui-public/analytics-chart@10.18.6) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [10.18.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.4...@kong-ui-public/analytics-chart@10.18.5) (2026-06-11)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.18.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.3...@kong-ui-public/analytics-chart@10.18.4) (2026-06-09)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3364](https://github.com/Kong/public-ui-components/issues/3364)) ([aa0634c](https://github.com/Kong/public-ui-components/commit/aa0634ce51d03542a03c133b49b12194b0f3f8de))
+
+
+
+
+
+## [10.18.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.2...@kong-ui-public/analytics-chart@10.18.3) (2026-06-08)
+
+
+### Bug Fixes
+
+* render platform timestamp axis title ([#3424](https://github.com/Kong/public-ui-components/issues/3424)) ([973bdf4](https://github.com/Kong/public-ui-components/commit/973bdf45d58c0fa0c7716024d6db14e58f9505be))
+
+
+
+
+
+## [10.18.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.1...@kong-ui-public/analytics-chart@10.18.2) (2026-06-05)
+
+
+### Bug Fixes
+
+* **analytics-chart:** add i18n messages for event-gateway dimensions [KM-2686] ([#3412](https://github.com/Kong/public-ui-components/issues/3412)) ([6ca0659](https://github.com/Kong/public-ui-components/commit/6ca06594f4bece1a0e71d6ee814df849f4f92b61))
+
+
+
+
+
+## [10.18.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.18.0...@kong-ui-public/analytics-chart@10.18.1) (2026-06-03)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+# [10.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.15...@kong-ui-public/analytics-chart@10.18.0) (2026-06-03)
+
+
+### Features
+
+* **analytics-chart:** support multiple dimensions in TopN table ([#3401](https://github.com/Kong/public-ui-components/issues/3401)) ([3c57957](https://github.com/Kong/public-ui-components/commit/3c57957d6f3effb3b83cf257b57599d406ee2008))
+
+
+
+
+
+## [10.17.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.14...@kong-ui-public/analytics-chart@10.17.15) (2026-06-02)
+
+
+### Bug Fixes
+
+* **analytics-chart:** add i18n messages for event-gateway charts ([#3374](https://github.com/Kong/public-ui-components/issues/3374)) ([b4450a4](https://github.com/Kong/public-ui-components/commit/b4450a4c2c3904eb4495ade7aa91ca139985b56d))
+
+
+
+
+
+## [10.17.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.13...@kong-ui-public/analytics-chart@10.17.14) (2026-06-02)
+
+
+### Bug Fixes
+
+* **analytics-chart:** pass increaseIsBad to defineIcon in SingleValue ([#3404](https://github.com/Kong/public-ui-components/issues/3404)) ([a731e2e](https://github.com/Kong/public-ui-components/commit/a731e2e7eff4380db4e41addb95ea0d6a1ec1a0f))
+
+
+
+
+
+## [10.17.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.12...@kong-ui-public/analytics-chart@10.17.13) (2026-06-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.17.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.11...@kong-ui-public/analytics-chart@10.17.12) (2026-06-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.56.0 ([#3396](https://github.com/Kong/public-ui-components/issues/3396)) ([13336a9](https://github.com/Kong/public-ui-components/commit/13336a9be92e452d4bd217e65d6450778d47844f))
+
+
+
+
+
 ## [10.17.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.17.10...@kong-ui-public/analytics-chart@10.17.11) (2026-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

@@ -9,6 +9,7 @@
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
       :is-readonly="form.isReadonly"
+      :tabs-to-hide="config.apiType === 'aiGateway' ? ['terraform', 'deck'] : []"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"
       @fetch:success="updateFormValues"
@@ -306,6 +307,7 @@
               class="vault-form-config-auth-method-container"
             >
               <KInput
+                v-if="!isAiGateway"
                 v-model.trim="configFields[VaultProviders.HCV].token"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-token"
@@ -314,6 +316,15 @@
                 required
                 show-password-mask-toggle
                 type="password"
+              />
+              <SensitiveInput
+                v-else
+                v-model="configFields[VaultProviders.HCV].token"
+                data-testid="vault-form-config-hcv-token"
+                :label="t('form.config.hcv.fields.token.label')"
+                :mode="sensitiveInputMode"
+                :readonly="form.isReadonly"
+                :required="sensitiveInputMode === 'create'"
               />
             </div>
             <div
@@ -387,6 +398,7 @@
                 type="password"
               />
               <KInput
+                v-if="!isAiGateway"
                 v-model.trim="configFields[VaultProviders.HCV].aws_secret_access_key"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-aws_secret_access_key"
@@ -394,6 +406,14 @@
                 :readonly="form.isReadonly"
                 show-password-mask-toggle
                 type="password"
+              />
+              <SensitiveInput
+                v-else
+                v-model="configFields[VaultProviders.HCV].aws_secret_access_key"
+                data-testid="vault-form-config-hcv-aws_secret_access_key"
+                :label="t('form.config.hcv.fields.aws_secret_access_key.label')"
+                :mode="sensitiveInputMode"
+                :readonly="form.isReadonly"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].aws_sts_endpoint_url"
@@ -622,6 +642,7 @@
                 required
               />
               <KInput
+                v-if="!isAiGateway"
                 v-model.trim="configFields[VaultProviders.HCV].oauth2_client_secret"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-oauth2_client_secret"
@@ -630,6 +651,15 @@
                 required
                 show-password-mask-toggle
                 type="password"
+              />
+              <SensitiveInput
+                v-else
+                v-model="configFields[VaultProviders.HCV].oauth2_client_secret"
+                data-testid="vault-form-config-hcv-oauth2_client_secret"
+                :label="t('form.config.hcv.fields.oauth2_client_secret.label')"
+                :mode="sensitiveInputMode"
+                :readonly="form.isReadonly"
+                :required="sensitiveInputMode === 'create'"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].jwt_role"
@@ -836,6 +866,7 @@
               type="text"
             />
             <KInput
+              v-if="!isAiGateway"
               v-model.trim="configFields[VaultProviders.CONJUR].api_key"
               autocomplete="off"
               data-testid="vault-form-config-conjur-api_key"
@@ -848,6 +879,19 @@
               required
               show-password-mask-toggle
               type="password"
+            />
+            <SensitiveInput
+              v-else
+              v-model="configFields[VaultProviders.CONJUR].api_key"
+              data-testid="vault-form-config-conjur-api_key"
+              :label="t('form.config.conjur.fields.api_key.label')"
+              :label-attributes="{
+                info: t('form.config.conjur.fields.api_key.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :mode="sensitiveInputMode"
+              :readonly="form.isReadonly"
+              :required="sensitiveInputMode === 'create'"
             />
             <KCheckbox
               v-if="config.base64FieldAvailable"
@@ -957,13 +1001,13 @@
           v-model.trim="form.fields.prefix"
           autocomplete="off"
           data-testid="vault-form-prefix"
-          :help="t('form.fields.prefix.help')"
-          :label="t('form.fields.prefix.label')"
+          :help="t(isAiGateway ? 'form.fields.prefix_ai_gateway.help' : 'form.fields.prefix.help')"
+          :label="t(isAiGateway ? 'form.fields.prefix_ai_gateway.label' : 'form.fields.prefix.label')"
           :label-attributes="{
-            info: t('form.fields.prefix.tooltip'),
+            info: t(isAiGateway ? 'form.fields.prefix_ai_gateway.tooltip' : 'form.fields.prefix.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
-          :placeholder="t('form.fields.prefix.placeholder')"
+          :placeholder="t(isAiGateway ? 'form.fields.prefix_ai_gateway.placeholder' : 'form.fields.prefix.placeholder')"
           :readonly="form.isReadonly"
           required
           type="text"
@@ -978,6 +1022,7 @@
           :readonly="form.isReadonly"
         />
         <KInput
+          v-if="!isAiGateway"
           v-model.trim="form.fields.tags"
           autocomplete="off"
           data-testid="vault-form-tags"
@@ -1001,6 +1046,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   SupportedEntityType,
+  SensitiveInput,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -1030,6 +1076,7 @@ import {
 import { useRouter } from 'vue-router'
 import type { AxiosError, AxiosResponse } from 'axios'
 import endpoints from '../vaults-endpoints'
+import { toAiGatewayVaultPayload, fromAiGatewayVault } from '../ai-gateway-mappers'
 import {
   KongIcon,
   CodeIcon,
@@ -1061,8 +1108,9 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectVaultFormConfig | KongManagerVaultFormConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config?.app === 'konnect' && !config?.controlPlaneId) return false
+      if (config?.app === 'konnect' && config?.apiType !== 'aiGateway' && !config?.controlPlaneId) return false
       if (config?.app === 'kongManager' && typeof config?.workspace !== 'string') return false
+      if (config?.apiType === 'aiGateway' && !config?.aiGatewayId) return false
       if (!config?.cancelRoute) return false
       return true
     },
@@ -1085,6 +1133,17 @@ const { i18nT, i18n: { t } } = composables.useI18n()
 const router = useRouter()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
+
+// AI Gateway runs on Konnect (app === 'konnect') but targets a different vault API.
+const isAiGateway = computed((): boolean => props.config.apiType === 'aiGateway')
+// Endpoint bucket to use: 'aiGateway' overrides the app-based key.
+const endpointKey = computed<'konnect' | 'kongManager' | 'aiGateway'>(() => isAiGateway.value ? 'aiGateway' : props.config.app)
+// entities-shared only substitutes {controlPlaneId}/{workspace}/{id}; the AI Gateway
+// id placeholder must be replaced by us before any URL is used.
+const withAiGatewayId = (url: string): string => url.replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
+// HashiCorp Vault `protocol` default: AI Gateway spec defaults to 'https'; the Kong API
+// Gateway form keeps its historical 'http' default.
+const defaultHcvProtocol = isAiGateway.value ? 'https' : 'http'
 
 const form = reactive<VaultState>({
   fields: {
@@ -1111,6 +1170,20 @@ const isAvailableTTLConfig = computed(() => {
 })
 
 const providers = computed<Array<{ label: string, value: VaultProviders }>>(() => {
+  // AI Gateway supports a fixed provider set (no azure-certs / fs) and gates nothing
+  // behind the gateway feature flags.
+  if (isAiGateway.value) {
+    return [
+      { label: t('form.config.konnect.label'), value: VaultProviders.KONNECT },
+      { label: t('form.config.env.label'), value: VaultProviders.ENV },
+      { label: t('form.config.aws.label'), value: VaultProviders.AWS },
+      { label: t('form.config.gcp.label'), value: VaultProviders.GCP },
+      { label: t('form.config.hcv.label'), value: VaultProviders.HCV },
+      { label: t('form.config.azure.label'), value: VaultProviders.AZURE },
+      { label: t('form.config.conjur.label'), value: VaultProviders.CONJUR },
+    ]
+  }
+
   return [
     ...(
       props.config.app === 'konnect'
@@ -1198,7 +1271,7 @@ const configFields = reactive<ConfigFields>({
     ...base64FieldConfig,
   } as GCPVaultConfig,
   [VaultProviders.HCV]: {
-    protocol: 'http',
+    protocol: defaultHcvProtocol,
     host: '127.0.0.1',
     port: 8200,
     mount: 'secret',
@@ -1285,7 +1358,7 @@ const originalConfigFields = reactive<ConfigFields>({
     ...base64FieldConfig,
   } as GCPVaultConfig,
   [VaultProviders.HCV]: {
-    protocol: 'http',
+    protocol: defaultHcvProtocol,
     host: '127.0.0.1',
     port: 8200,
     mount: 'secret',
@@ -1391,9 +1464,12 @@ const formType = computed((): EntityBaseFormType => props.vaultId
   ? EntityBaseFormType.Edit
   : EntityBaseFormType.Create)
 
-const fetchUrl = computed<string>(() => endpoints.form[props.config?.app]?.edit)
+const sensitiveInputMode = computed((): 'edit' | 'create' => formType.value === EntityBaseFormType.Edit ? 'edit' : 'create')
 
-const vaultProviderDisabled = computed<boolean>(() => formType.value === EntityBaseFormType.Edit && props.config.app === 'kongManager')
+const fetchUrl = computed<string>(() => withAiGatewayId(endpoints.form[endpointKey.value]?.edit))
+
+// On edit, the provider/type cannot be changed for Kong Manager or AI Gateway vaults.
+const vaultProviderDisabled = computed<boolean>(() => formType.value === EntityBaseFormType.Edit && (props.config.app === 'kongManager' || isAiGateway.value))
 const isOtherProvidersSupported = computed<boolean>(() => props.config.app === 'konnect' || useGatewayFeatureSupported({
   gatewayInfo: props.config.gatewayInfo,
   // vault name can only be `env` in Gateway Community Edition
@@ -1460,7 +1536,11 @@ const getProviderDescription = (providerName: VaultProviders) => {
   }
 }
 
-const updateFormValues = (data: Record<string, any>): void => {
+const updateFormValues = (rawData: Record<string, any>): void => {
+  // AI Gateway returns a different vault shape (type/name/renamed hcv fields);
+  // normalize it to the gateway shape the rest of this function expects.
+  const data = isAiGateway.value ? fromAiGatewayVault(rawData?.item ?? rawData) : rawData
+
   form.fields.prefix = data?.item?.prefix || data?.prefix || ''
   form.fields.description = data?.item?.description || data?.description || ''
 
@@ -1547,6 +1627,10 @@ const isVaultConfigValid = computed((): boolean => {
       if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.TOKEN && key === 'token') {
         return false
       }
+      // In AI Gateway edit mode, write-only fields are optional: a blank value keeps the existing secret.
+      if (isAiGateway.value && formType.value === EntityBaseFormType.Edit && ['token', 'oauth2_client_secret', 'cert_auth_cert_key'].includes(key)) {
+        return false
+      }
       // approle_role_id and approle_response_wrapping don't need to be verified if auth method is not approle
       if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.APP_ROLE && (key === 'approle_role_id' || key === 'approle_response_wrapping')) {
         return false
@@ -1617,13 +1701,13 @@ const changesExist = computed((): boolean => (JSON.stringify(form.fields) !== JS
  * Build the submit URL
  */
 const submitUrl = computed<string>(() => {
-  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value]}`
+  let url = `${props.config.apiBaseUrl}${endpoints.form[endpointKey.value][formType.value]}`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
-  return url
+  return withAiGatewayId(url)
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, props.vaultId ?? '') // Always replace the id when editing
 })
@@ -1754,7 +1838,20 @@ const getPayload = computed((): Record<string, any> => {
     },
   }
 
-  return payload
+  // Remap the gateway-shaped payload to the AI Gateway request body at the boundary only.
+  if (!isAiGateway.value) return payload
+  const aiPayload = toAiGatewayVaultPayload(payload)
+  // In edit mode, write-only fields are not returned by GET; omit them when blank so the
+  // existing secret is preserved (sending an empty string would clear it on the server).
+  if (formType.value === EntityBaseFormType.Edit) {
+    const config: Record<string, any> = { ...aiPayload.config }
+    const AI_WRITE_ONLY = ['token', 'client_secret', 'secret_access_key', 'api_key', 'key']
+    AI_WRITE_ONLY.forEach(field => {
+      if (field in config && isEmpty(config[field])) delete config[field]
+    })
+    return { ...aiPayload, config }
+  }
+  return aiPayload
 })
 
 const payloadWithConfigStoreId = computed<Record<string, any>>(() => (
@@ -1771,11 +1868,13 @@ const createConfigStore = async (): Promise<string | undefined> => {
   try {
     form.isReadonly = true
 
-    const requestUrl = `${props.config.apiBaseUrl}${endpoints.form.konnect.createConfigStore}`
+    // createConfigStore only applies to the konnect provider flow (konnect / AI Gateway apps).
+    const requestUrl = withAiGatewayId(`${props.config.apiBaseUrl}${endpoints.form[isAiGateway.value ? 'aiGateway' : 'konnect'].createConfigStore}`)
       .replace(/{controlPlaneId}/gi, (props.config as KonnectVaultFormConfig)?.controlPlaneId || '')
       .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 
-    const response = await axiosInstance.post<KonnectConfigStore>(requestUrl)
+    const body = isAiGateway.value ? { name: form.fields.prefix } : undefined
+    const response = await axiosInstance.post<KonnectConfigStore>(requestUrl, body)
 
     return response?.data.id
   } catch (error: any) {

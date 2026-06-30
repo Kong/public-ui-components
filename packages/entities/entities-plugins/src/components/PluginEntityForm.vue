@@ -25,6 +25,8 @@
         :plugin-name="formModel.name"
         :render-rules="pluginConfig?.renderRules"
         :schema="freeformSchema"
+        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
+        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
       >
         <template
@@ -46,11 +48,14 @@
         :form-model="formModel"
         :form-options="formOptions"
         :form-schema="formSchema"
+        :identity-principals-ui-enabled="identityPrincipalsUiEnabled"
         :is-editing="editing"
         :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :on-model-updated="onModelUpdated"
         :on-partial-toggled="onPartialToggled"
         :show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
+        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
+        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
       >
         <template
           v-if="enableVaultSecretPicker"
@@ -138,14 +143,14 @@ import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
-import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
+import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import CommonForm from './free-form/Common'
 import type { GlobalAction } from './free-form/shared/types'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/shared/schema-enhancement'
 import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/shared/plugin-registry'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
-import type { FormSchema } from '../types/plugins/form-schema'
+import type { ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '../types/plugins/form-schema'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -158,6 +163,8 @@ const emit = defineEmits<{
   ): void
   (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
+  (e: 'click:learn-more', entity: string): void
+  (e: 'click:create-entity', payload: EntityCreateEvent): void
   (e: 'validity-change', payload: PluginValidityChangeEvent): void
 }>()
 
@@ -257,6 +264,11 @@ const isKonnectManagedRedisEnabled = computed<boolean>(() => {
 })
 
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
+
+// Identity Principals UI feature flag. Free-form plugins (basic-auth, key-auth) read this
+// directly via inject in ConfigFormContent; OIDC embeds its own VueFormGenerator, so it's
+// passed through as a prop (mirroring is-konnect-managed-redis-enabled).
+const identityPrincipalsUiEnabled = inject<boolean>(PLUGIN_FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
@@ -818,9 +830,92 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
   })
 }
 
+// Walks a config value alongside its raw-schema subtree and drops keys that aren't in
+// the schema's `fields[]`. Deprecated `shorthand_fields` live in their own array on each
+// record, never in `fields[]`, so they fall out naturally — preventing the backend from
+// re-filling canonical fields (e.g. `redis.password`) from stale shorthand values.
+//
+// Polymorphic records (e.g. datakit's `nodes[]` whose actual field set is chosen by a
+// `subschema_key` + `subschema_definitions` discriminator) are deliberately NOT dispatched:
+// Kong schemas treat the discriminator field and other implicit common fields (e.g. `name`)
+// as runtime-required but don't always declare them inside each concrete subschema. Walking
+// with the concrete subschema would over-strip those fields. Such records have no declared
+// `fields[]` on the element schema itself, so they pass through the array branch unchanged.
+const stripUnknownConfigFields = (value: any, subschema: UnionFieldSchema | undefined): any => {
+  if (!subschema) return value
+
+  // Array (or set — Kong `set` values are JSON arrays with the same `elements` schema shape).
+  // Recurse into each element when the schema declares an `elements` subschema. Primitive
+  // elements (e.g. `{ type: 'string' }`) are safe — the recursive call hits the early
+  // `typeof value !== 'object'` return. Records without declared `fields[]` (polymorphic
+  // `subschema_definitions`) pass through via the `!Array.isArray(fields)` guard below.
+  if (Array.isArray(value)) {
+    const elements = (subschema as ArrayFieldSchema).elements
+    if (elements) {
+      return value.map((item) => stripUnknownConfigFields(item, elements))
+    }
+    return value
+  }
+
+  // Primitive or null — nothing to strip.
+  if (!value || typeof value !== 'object') return value
+
+  // Map — recurse into each value with the values-subschema.
+  // Map KEYS are user-defined and remain opaque; only values get walked.
+  // Covers map-of-records, map-of-arrays, and nested maps uniformly.
+  // Primitive-valued maps (e.g. string → string) are safe: the recursive call
+  // hits the early `!value || typeof value !== 'object'` return.
+  if ((subschema as MapFieldSchema).type === 'map' && (subschema as MapFieldSchema).values) {
+    const valuesSchema = (subschema as MapFieldSchema).values as UnionFieldSchema
+    const result: Record<string, any> = {}
+    for (const key of Object.keys(value)) {
+      result[key] = stripUnknownConfigFields(value[key], valuesSchema)
+    }
+    return result
+  }
+
+  // Record with no declared `fields[]` (e.g. primitive-valued `map`) — pass through.
+  if (!Array.isArray((subschema as RecordFieldSchema).fields)) return value
+
+  const fieldByName = new Map<string, UnionFieldSchema | undefined>()
+  for (const fieldDef of (subschema as RecordFieldSchema).fields) {
+    const name = fieldDef && Object.keys(fieldDef)[0]
+    if (name) fieldByName.set(name, fieldDef[name])
+  }
+
+  const result: Record<string, any> = {}
+  for (const key of Object.keys(value)) {
+    const childSchema = fieldByName.get(key)
+    if (!childSchema) continue // unknown — drop (shorthand_field or stale alias)
+    result[key] = stripUnknownConfigFields(value[key], childSchema)
+  }
+  return result
+}
+
+const getConfigSubschema = (): UnionFieldSchema | undefined => {
+  const fields = props.rawSchema?.fields
+  if (!Array.isArray(fields)) return undefined
+  const configField = fields.find((f: Record<string, any>) => f?.config)
+  return configField?.config
+}
+
+// Plugins whose schemas use polymorphic-record patterns (e.g. datakit's `nodes[].type`
+// dispatch) declare `name`/`type` as implicit common fields that the FE schema model can't
+// reliably recover from `subschema_definitions` alone. Skip the strip entirely for them —
+// the walker would over-strip those implicit fields and break the payload.
+const STRIP_BYPASS_PLUGINS = new Set(['datakit'])
+
+// Mirrors the cloned-plugin resolution at line 475 — `_sourcePlugin` wins for clones so a
+// `datakit-clone` plugin is also recognized as datakit for strip-bypass purposes.
+const effectivePluginName = computed(() => (props.schema?._sourcePlugin || formModel.name) as string | undefined)
+
 const freeformData = shallowRef<Record<string, any>>(props.record)
 const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[]) => {
-  freeformData.value = value
+  const unknownFieldStripped = !STRIP_BYPASS_PLUGINS.has(effectivePluginName.value as string)
+    ? { ...value, config: stripUnknownConfigFields(value.config, getConfigSubschema()) }
+    : value
+
+  freeformData.value = unknownFieldStripped
 
   const newModel = { ...formModel }
 
@@ -832,7 +927,7 @@ const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[]) => 
   emit('model-updated', {
     // config change should also update the form model
     // otherwise the submit button will be disabled
-    model: { ...newModel, ...value },
+    model: { ...newModel, ...unknownFieldStripped },
     originalModel,
     data: getModel(fields),
   })

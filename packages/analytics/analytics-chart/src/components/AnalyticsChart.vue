@@ -17,7 +17,7 @@
       >
         <WarningIcon
           :color="`var(--kui-color-text-warning, ${KUI_COLOR_TEXT_WARNING})`"
-          :size="KUI_ICON_SIZE_40"
+          :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
         />
         <template #content>
           <div class="tooltip-content">
@@ -309,6 +309,10 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
 })
 
 const timestampAxisTitle = computed(() => {
+  if (props.chartData.meta.datasource === 'platform') {
+    return i18n.t('timestampAxisTitles.platform')
+  }
+
   const granularity = msToGranularity(Number(props.chartData.meta.granularity_ms))
 
   if (!granularity) {
@@ -436,7 +440,7 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 
   .chart-truncation-warning {
     align-items: center;
-    background-color: white;
+    background-color: var(--kui-color-background, $kui-color-background);
     display: flex;
     justify-content: flex-start;
     left: 0;

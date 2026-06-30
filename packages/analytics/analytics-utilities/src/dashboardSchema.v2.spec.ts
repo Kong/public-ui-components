@@ -7,8 +7,11 @@ import {
   dashboardConfigSchema,
   llmUsageSchema,
   agenticUsageSchema,
+  validDashboardChartQuery,
   validDashboardQuery,
+  validDashboardTableQuery,
   platformQuerySchema,
+  filterablePlatformPresetFilterDimensions,
 } from './dashboardSchema.v2'
 import {
   agenticExploreAggregations,
@@ -28,7 +31,9 @@ import {
 } from './types'
 
 const ajv = new Ajv({ allowUnionTypes: true })
+const validateValidDashboardChartQuery = ajv.compile(validDashboardChartQuery)
 const validateValidDashboardQuery = ajv.compile(validDashboardQuery)
+const validateValidDashboardTableQuery = ajv.compile(validDashboardTableQuery)
 const validatePlatformQuerySchema = ajv.compile(platformQuerySchema)
 const validateDashboardConfigSchema = ajv.compile(dashboardConfigSchema)
 const validateApiUsageQuerySchema = ajv.compile(apiUsageQuerySchema)
@@ -43,6 +48,13 @@ describe('dashboardSchema.v2', () => {
       ...filterableBasicExploreDimensions,
       ...filterableAiExploreDimensions,
       ...filterableAgenticExploreDimensions,
+    ]),
+  ]
+
+  const presetFilterableDimensions = [
+    ...new Set([
+      ...sharedPresetFilterableDimensions,
+      ...filterablePlatformPresetFilterDimensions,
     ]),
   ]
 
@@ -142,11 +154,241 @@ describe('dashboardSchema.v2', () => {
     ],
   }
 
+  const tableDataGridTile = {
+    type: 'table',
+    id: 'routes-table',
+    definition: {
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['name', 'control_plane', 'gateway_service', 'env', 'team', 'region'],
+        filters: [
+          {
+            field: 'control_plane',
+            operator: 'in',
+            value: ['16add929-6b9f-4e65-9285-7dfb6f0153d2'],
+          },
+          {
+            field: 'env',
+            operator: 'in',
+            value: ['prod'],
+          },
+        ],
+        cursor: 'eyJh',
+        page_size: 50,
+      },
+      config: {
+        title: 'Routes',
+      },
+    },
+    layout: {
+      position: {
+        col: 1,
+        row: 1,
+      },
+      size: {
+        cols: 2,
+        rows: 2,
+      },
+    },
+  }
+
   it('accepts platform queries with arbitrary strings at runtime', () => {
     expect(validatePlatformQuerySchema(platformQuery)).toBe(true)
     expect(validateValidDashboardQuery(platformQuery)).toBe(true)
     expect(validateDashboardConfigSchema(dashboardConfig)).toBe(true)
     expect(validateDashboardConfigSchema(mixedDashboardConfig)).toBe(true)
+  })
+
+  it('accepts table tiles with tabular explore query shape', () => {
+    expect(validateValidDashboardQuery(tableDataGridTile.definition.query)).toBe(true)
+    expect(validateValidDashboardTableQuery(tableDataGridTile.definition.query)).toBe(true)
+    expect(validateValidDashboardChartQuery(tableDataGridTile.definition.query)).toBe(false)
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        tableDataGridTile,
+      ],
+    })).toBe(true)
+  })
+
+  it('rejects chart tiles with tabular explore query shape', () => {
+    expect(validateValidDashboardTableQuery(platformQuery)).toBe(false)
+
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          type: 'chart',
+          definition: {
+            query: tableDataGridTile.definition.query,
+            chart: {
+              type: 'horizontal_bar',
+            },
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('accepts table tiles with only the platform datasource', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          definition: {
+            query: {
+              datasource: 'platform',
+            },
+            config: {},
+          },
+        },
+      ],
+    })).toBe(true)
+  })
+
+  it('rejects table tile config fields other than title', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          definition: {
+            ...tableDataGridTile.definition,
+            config: {
+              title: 'Routes',
+              description: 'Extra config is not supported',
+            },
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('rejects table tiles with a top-level query', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          query: {
+            entity: 'route',
+            columns: ['name', 'control_plane'],
+            page_size: 50,
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it.each([
+    ['invalid entity', { entity: 1 }],
+    ['missing datasource', { datasource: undefined }],
+    ['invalid datasource', { datasource: 'api_usage' }],
+    ['empty columns', { columns: [] }],
+    ['invalid columns', { columns: ['name', 1] }],
+    ['invalid page size', { page_size: '50' }],
+    ['invalid cursor', { cursor: 50 }],
+    ['invalid filter', { filters: [{ field: 'env', value: ['prod'] }] }],
+  ])('rejects table tiles with %s', (_description, queryOverrides) => {
+    expect(validateValidDashboardTableQuery({
+      ...tableDataGridTile.definition.query,
+      ...queryOverrides,
+    })).toBe(false)
+
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          definition: {
+            config: tableDataGridTile.definition.config,
+            query: {
+              ...tableDataGridTile.definition.query,
+              ...queryOverrides,
+            },
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('rejects table tiles without config definitions', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableDataGridTile,
+          definition: {
+            query: tableDataGridTile.definition.query,
+          },
+        },
+      ],
+    })).toBe(false)
+  })
+
+  it('accepts top_n entity link mappings', () => {
+    const topNEntityLinksConfig = {
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: strictQuery,
+            chart: {
+              type: 'top_n',
+              entity_link: 'https://example.com/routes/{entity-id}',
+              entity_links: {
+                route: 'https://example.com/routes/{entity-id}',
+                gateway_service: 'https://example.com/services/{entity-id}',
+              },
+            },
+          },
+        },
+      ],
+    }
+
+    expect(validateDashboardConfigSchema(topNEntityLinksConfig)).toBe(true)
+  })
+
+  it('accepts dashboard queries with three dimensions', () => {
+    const topNThreeDimensionConfig = {
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: {
+              ...strictQuery,
+              dimensions: ['route', 'gateway_service', 'consumer'],
+            },
+            chart: {
+              type: 'top_n',
+            },
+          },
+        },
+      ],
+    }
+
+    expect(validateValidDashboardQuery(topNThreeDimensionConfig.tiles[0].definition.query)).toBe(true)
+    expect(validateDashboardConfigSchema(topNThreeDimensionConfig)).toBe(true)
+  })
+
+  it('rejects top_n entity link mappings with non-string values', () => {
+    const topNEntityLinksConfig = {
+      ...dashboardConfig,
+      tiles: [
+        {
+          ...dashboardConfig.tiles[0],
+          definition: {
+            query: strictQuery,
+            chart: {
+              type: 'top_n',
+              entity_links: {
+                route: 1,
+              },
+            },
+          },
+        },
+      ],
+    }
+
+    expect(validateDashboardConfigSchema(topNEntityLinksConfig)).toBe(false)
   })
 
   it.each([
@@ -172,10 +414,13 @@ describe('dashboardSchema.v2', () => {
     expect(platformQuerySchema.properties.filters.items.oneOf[1].properties.operator.enum).toBeUndefined()
   })
 
-  it('keeps shared preset filters strict and operator enums intact', () => {
-    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.field.enum).toEqual(sharedPresetFilterableDimensions)
-    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.field.enum).toEqual(sharedPresetFilterableDimensions)
+  it('includes platform fields in the strict preset filter enum and preserves operator enums', () => {
+    // oneOf[0] is the value-bearing filter shape: { field, operator, value }.
+    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.field.enum).toEqual(presetFilterableDimensions)
     expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.operator.enum).toEqual(exploreFilterTypesV2)
+
+    // oneOf[1] is the no-value filter shape: { field, operator }.
+    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.field.enum).toEqual(presetFilterableDimensions)
     expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.operator.enum).toEqual(requestFilterTypeEmptyV2)
     expect(barChartSchema.properties.type.enum).toEqual(['horizontal_bar', 'vertical_bar'])
   })

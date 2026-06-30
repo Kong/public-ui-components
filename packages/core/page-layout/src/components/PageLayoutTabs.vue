@@ -22,9 +22,13 @@
           tabindex="0"
           @click.prevent="onTabNavigation(tab)"
           @keydown.enter.prevent="onTabNavigation(tab)"
-          @keydown.space.prevent="onTabNavigation(tab)"
         >
-          {{ tab.label }}
+          <slot
+            :name="`tab-${tab.key}`"
+            :tab="tab"
+          >
+            {{ tab.label }}
+          </slot>
         </component>
       </li>
       <!-- Overflowing items dropdown -->
@@ -42,9 +46,10 @@
           >
             {{ t('tabs.more_button.label') }}
 
-            <span class="overflowing-items-count">
-              {{ tabs.length - displayedTabsCount }}
-            </span>
+            <ChevronDownIcon
+              decorative
+              :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
+            />
           </button>
 
           <template #items>
@@ -59,7 +64,14 @@
                 to: overflowingTab.to,
               }"
               :selected="overflowingTab.active"
-            />
+            >
+              <slot
+                :name="`tab-${overflowingTab.key}`"
+                :tab="overflowingTab"
+              >
+                {{ overflowingTab.label }}
+              </slot>
+            </KDropdownItem>
           </template>
         </KDropdown>
       </li>
@@ -84,9 +96,10 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, wa
 import { useRouter } from 'vue-router'
 import type { PageLayoutTabsProps, PageLayoutTab } from '../types'
 import composables from '../composables'
-import { KUI_SPACE_60 } from '@kong/design-tokens'
+import { KUI_SPACE_60, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { useResizeObserver } from '@vueuse/core'
 import { inject } from 'vue'
+import { ChevronDownIcon } from '@kong/icons'
 
 const {
   tabs = [],
@@ -219,7 +232,7 @@ watch(() => tabs, () => {
     gap: var(--kui-space-70, $kui-space-70);
     list-style: none;
     margin: var(--kui-space-0, $kui-space-0);
-    /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+    /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
     margin-bottom: calc(-1 * var(--kui-border-width-10, $kui-border-width-10)); // Make sure the border of the active (or hovered) tab overlaps the border of the tabs navbar
     max-width: 100%;
     padding: var(--kui-space-0, $kui-space-0);
@@ -264,25 +277,7 @@ watch(() => tabs, () => {
         }
 
         &.overflow-dropdown-trigger {
-          color: var(--kui-color-text, $kui-color-text);
           font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium) !important;
-
-          .overflowing-items-count {
-            background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
-            border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
-            color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-            font-size: 11px; // TODO: use token?
-            font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-            line-height: 12px; // TODO: use token?
-            padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
-          }
-
-          &.active {
-            .overflowing-items-count {
-              background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
-              color: var(--kui-color-text-primary, $kui-color-text-primary);
-            }
-          }
         }
       }
     }

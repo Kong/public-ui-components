@@ -38,6 +38,7 @@ Shared components for Kong entities.
 - `EntityLink`
 - `EntityToggleModal`
 - `EntityBaseConfigCard`
+- `SensitiveInput`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
 
@@ -80,6 +81,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 - [`<EntityLink.vue />`](docs/entity-link.md)
 - [`<EntityToggleModal.vue />`](docs/entity-toggle-modal.md)
 - [`<EntityBaseConfigCard.vue />`](docs/entity-base-config-card.md)
+- [`<SensitiveInput.vue />`](docs/sensitive-input.md)
 
 ## Individual composables documentation
 

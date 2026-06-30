@@ -20,52 +20,59 @@
     </p>
 
     <div class="kong-identity-options">
-      <KRadio
-        card
-        card-orientation="horizontal"
-        data-testid="kong-identity-mode-consumers"
-        :description="consumersDescription"
-        :label="t('custom_field.kong_identity.consumers_label')"
-        :model-value="selectedMode"
-        selected-value="consumers"
-        @update:model-value="handleModeChange"
-      >
-        <TeamIcon :size="KUI_ICON_SIZE_50" />
-      </KRadio>
+      <KSkeletonBox
+        v-if="loadingRealms"
+        class="kong-identity-options-skeleton"
+      />
 
-      <KRadio
-        v-if="showCentrallyManaged"
-        card
-        card-orientation="horizontal"
-        data-testid="kong-identity-mode-centrally-managed"
-        :description="t('custom_field.kong_identity.centrally_managed_description')"
-        :label="t('custom_field.kong_identity.centrally_managed_label')"
-        :model-value="selectedMode"
-        selected-value="centrally-managed"
-        @update:model-value="handleModeChange"
-      >
-        <AccountTreeIcon :size="KUI_ICON_SIZE_50" />
-      </KRadio>
+      <template v-else>
+        <KRadio
+          card
+          card-orientation="horizontal"
+          data-testid="kong-identity-mode-consumers"
+          :description="consumersDescription"
+          :label="t('custom_field.kong_identity.consumers_label')"
+          :model-value="selectedMode"
+          selected-value="consumers"
+          @update:model-value="handleModeChange"
+        >
+          <TeamIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
+        </KRadio>
 
-      <KRadio
-        card
-        card-orientation="horizontal"
-        data-testid="kong-identity-mode-kong-identity"
-        :description="kongIdentityDescription"
-        :label="t('custom_field.kong_identity.kong_identity_label')"
-        :model-value="selectedMode"
-        selected-value="kong-identity"
-        @update:model-value="handleModeChange"
-      >
-        <KeyIcon :size="KUI_ICON_SIZE_50" />
-      </KRadio>
+        <KRadio
+          v-if="showCentrallyManaged"
+          card
+          card-orientation="horizontal"
+          data-testid="kong-identity-mode-centrally-managed"
+          :description="t('custom_field.kong_identity.centrally_managed_description')"
+          :label="t('custom_field.kong_identity.centrally_managed_label')"
+          :model-value="selectedMode"
+          selected-value="centrally-managed"
+          @update:model-value="handleModeChange"
+        >
+          <AccountTreeIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
+        </KRadio>
+
+        <KRadio
+          card
+          card-orientation="horizontal"
+          data-testid="kong-identity-mode-kong-identity"
+          :description="kongIdentityDescription"
+          :label="t('custom_field.kong_identity.kong_identity_label')"
+          :model-value="selectedMode"
+          selected-value="kong-identity"
+          @update:model-value="handleModeChange"
+        >
+          <KeyIcon :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`" />
+        </KRadio>
+      </template>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { KLabel, KRadio } from '@kong/kongponents'
+import { KLabel, KRadio, KSkeletonBox } from '@kong/kongponents'
 import { TeamIcon, AccountTreeIcon, KeyIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import { useFormShared } from '../../free-form/shared/composables'
@@ -77,12 +84,12 @@ defineOptions({ name: 'KongIdentityField' })
 
 const props = defineProps<{
   identityRealmsInSchema?: boolean
-  hasExistingRealms?: boolean
+  loadingRealms?: boolean
 }>()
 const { i18n } = composables.useI18n()
 const { t } = i18n
 
-const { formData, getSchema } = useFormShared()
+const { formData, getSchema, getEmptyOrDefault } = useFormShared()
 
 // Determine if schema has identity_realms
 const identityRealmsInSchema = computed(() => {
@@ -90,7 +97,10 @@ const identityRealmsInSchema = computed(() => {
   return !!getSchema('$.config.identity_realms')
 })
 
-const showCentrallyManaged = computed(() => identityRealmsInSchema.value && !!props.hasExistingRealms)
+// Launch decision: Centrally Managed is shown unconditionally whenever the schema
+// supports identity_realms — we intentionally do NOT hide it when no realms exist yet.
+// Hiding it (platform-wide) is deferred to a fast-follow.
+const showCentrallyManaged = computed(() => identityRealmsInSchema.value)
 
 const descriptionText = computed(() => {
   return identityRealmsInSchema.value
@@ -121,25 +131,32 @@ function handleModeChange(mode: AuthMode) {
   model.value = mode
 
   switch (mode) {
-    case 'kong-identity':
-      formData.config.principals = { enabled: true, directory: 'default' }
+    case 'kong-identity': {
+      // `directory` is a placeholder; ConfigFormContent resolves the real directory name
+      // from the shared /v2/directories lookup and overwrites it on entering this mode.
+      formData.config.principals = { ...getEmptyOrDefault('$.config.principals'), enabled: true, directory: 'default' }
       if (identityRealmsInSchema.value) {
-        formData.config.identity_realms = null
+        formData.config.identity_realms = []
       }
       if (!getSchema('$.config.realm')?.required) {
         formData.config.realm = null
       }
       break
-    case 'consumers':
-      formData.config.principals = null
+    }
+    case 'consumers': {
+      const principalsRequired = !!getSchema('$.config.principals')?.required
+      formData.config.principals = principalsRequired ? getEmptyOrDefault('$.config.principals') : null
       if (identityRealmsInSchema.value) {
-        formData.config.identity_realms = null
+        formData.config.identity_realms = []
       }
       break
-    case 'centrally-managed':
-      formData.config.principals = null
+    }
+    case 'centrally-managed': {
+      const principalsRequired = !!getSchema('$.config.principals')?.required
+      formData.config.principals = principalsRequired ? getEmptyOrDefault('$.config.principals') : null
       formData.config.identity_realms = [{ scope: 'cp', id: null, region: null }]
       break
+    }
   }
 }
 </script>
@@ -165,6 +182,11 @@ function handleModeChange(mode: AuthMode) {
   display: flex;
   gap: var(--kui-space-50, $kui-space-50);
   margin-top: var(--kui-space-40, $kui-space-40);
+
+  .kong-identity-options-skeleton {
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    width: 100%;
+  }
 
   :deep(.k-radio.radio-card) {
     flex: 1;

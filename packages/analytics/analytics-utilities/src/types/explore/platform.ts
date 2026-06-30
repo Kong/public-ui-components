@@ -1,4 +1,5 @@
 import type { BasicExploreQuery } from './basic'
+import type { DisplayBlob } from './result'
 
 export interface PlatformExploreInFilterV2 {
   operator: string
@@ -17,4 +18,29 @@ export interface PlatformExploreQuery extends Omit<BasicExploreQuery, 'metrics' 
   metrics?: string[]
   dimensions?: string[]
   filters?: PlatformExploreFilterAll[]
+}
+
+export interface PlatformTabularQuery {
+  entity?: string
+  columns?: string[]
+  filters?: PlatformExploreFilterAll[]
+  cursor?: string
+  page_size?: number
+}
+
+export type PlatformTabularRecord = Record<string, string | number | boolean | null>
+
+export interface PlatformTabularResponseMeta {
+  query_id: string
+  entity: string
+  columns: string[]
+  page_size: number
+  display: DisplayBlob
+  cursor?: string
+  datasource?: 'platform'
+}
+
+export interface PlatformTabularResponse {
+  records: PlatformTabularRecord[]
+  meta: PlatformTabularResponseMeta
 }

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-config-editor",
-  "version": "0.3.31",
+  "version": "0.3.37",
   "type": "module",
   "main": "./dist/entities-config-editor.umd.js",
   "module": "./dist/entities-config-editor.es.js",
@@ -39,9 +39,9 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.22.2",
-    "@kong/kongponents": "9.56.0",
-    "vue": "^3.5.34"
+    "@kong/design-tokens": "2.0.1",
+    "@kong/kongponents": "9.60.6",
+    "vue": "^3.5.35"
   },
   "repository": {
     "type": "git",
@@ -61,7 +61,7 @@
     "errorLimit": "200KB"
   },
   "peerDependencies": {
-    "@kong/kongponents": "9.56.0",
-    "vue": "^3.5.34"
+    "@kong/kongponents": "9.60.6",
+    "vue": "^3.5.35"
   }
 }

@@ -7,6 +7,7 @@ export const reportChartTypes = [
   'donut',
   'single_value',
   'top_n',
+  'table',
 ] as const
 
 export type ReportChartTypes = typeof reportChartTypes[number]

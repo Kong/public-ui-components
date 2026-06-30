@@ -8,20 +8,20 @@
     :data-testid="`tile-${tileId}`"
   >
     <div
-      v-if="hasTileHeader && definition.chart.type !== 'slottable'"
+      v-if="hasTileHeader && !isSlottableTile"
       class="tile-header"
     >
       <KTooltip
         class="title-tooltip"
         :disabled="!isTitleTruncated"
         max-width="500"
-        :text="definition.chart.chart_title"
+        :text="tileTitle"
       >
         <div
           ref="titleRef"
           class="title"
         >
-          {{ definition.chart.chart_title }}
+          {{ tileTitle }}
         </div>
       </KTooltip>
 
@@ -36,7 +36,7 @@
             v-if="isAgedOutQuery"
             #icon
           >
-            <WarningIcon :size="KUI_ICON_SIZE_20" />
+            <WarningIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
           </template>
           <span class="badge-text">
             {{ badgeData }}
@@ -57,56 +57,56 @@
           <ProgressIcon
             v-if="loadingChartData"
             role="button"
-            :size="KUI_ICON_SIZE_60"
+            :size="`var(--kui-icon-size-60, ${KUI_ICON_SIZE_60})`"
             tabindex="0"
           />
           <RefreshIcon
             v-else
             role="button"
-            :size="KUI_ICON_SIZE_60"
+            :size="`var(--kui-icon-size-60, ${KUI_ICON_SIZE_60})`"
             tabindex="0"
           />
         </KButton>
       </div>
 
       <div
-        v-if="canShowTitleActions"
+        v-if="canShowHeaderActions"
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
       >
         <EditIcon
-          v-if="canShowKebabMenu && context.editable && !isFullscreen"
+          v-if="canShowHeaderActions && context.editable && !isFullscreen"
           class="edit-icon"
-          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
           :data-testid="`edit-tile-${tileId}`"
-          :size="KUI_ICON_SIZE_40"
+          :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
           @click="editTile"
         />
         <KDropdown
-          v-if="canShowKebabMenu && kebabMenuHasItems && !isFullscreen"
+          v-if="canShowHeaderActions && kebabMenuHasItems && !isFullscreen"
           class="dropdown"
           :data-testid="`chart-action-menu-${tileId}`"
           :kpop-attributes="{ placement: 'bottom-end' }"
         >
           <MoreIcon
             class="kebab-action-menu"
-            :color="KUI_COLOR_TEXT_NEUTRAL"
+            :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
             :data-testid="`kebab-action-menu-${tileId}`"
-            :size="KUI_ICON_SIZE_40"
+            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
           />
           <template #items>
             <KDropdownItem
-              v-if="!!exploreLinkKebabMenu"
+              v-if="!isTableTile && !!exploreLinkKebabMenu"
               :data-testid="`chart-jump-to-explore-${tileId}`"
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="!!requestsLinkKebabMenu"
+              v-if="!isTableTile && !!requestsLinkKebabMenu"
               :data-testid="`chart-jump-to-requests-${tileId}`"
               :item="{ label: i18n.t('jumpToRequests'), to: requestsLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="!('allow_csv_export' in definition.chart) || definition.chart.allow_csv_export"
+              v-if="canExportCsv"
               class="chart-export-button"
               :data-testid="`chart-csv-export-${tileId}`"
               @click="exportCsv"
@@ -136,11 +136,11 @@
         </KDropdown>
       </div>
       <div
-        v-else-if="'description' in definition.chart"
+        v-else-if="tileDescription"
         class="header-description"
         :data-testid="`tile-description-${tileId}`"
       >
-        {{ definition.chart.description }}
+        {{ tileDescription }}
       </div>
       <CsvExportModal
         v-if="exportModalVisible"
@@ -152,7 +152,7 @@
     </div>
     <div
       class="tile-content"
-      :class="`type-${definition.chart.type}`"
+      :class="`type-${tileTypeClass}`"
       :data-testid="`tile-content-${tileId}`"
     >
       <component
@@ -177,7 +177,10 @@ import type {
   ExploreQuery,
   ExploreResultV4,
   AllFilters,
+  TileConfig,
   TileDefinition,
+  TableTileDefinition,
+  ChartTileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
@@ -191,6 +194,7 @@ import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
+import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
@@ -212,11 +216,13 @@ const props = withDefaults(defineProps<{
   queryReady: boolean
   showRefresh?: boolean
   tileId: string | number
+  tileType?: TileConfig['type']
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
   hideActions: false,
   hideZoomActions: false,
   showRefresh: false,
+  tileType: 'chart',
 })
 
 const refreshCounter = defineModel<number>('refreshCounter', { default: 0 })
@@ -245,6 +251,23 @@ const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
+const isTableTile = computed((): boolean => props.tileType === 'table')
+
+const chartDefinition = computed<ChartTileDefinition>(() => props.definition as ChartTileDefinition)
+const tableDefinition = computed<TableTileDefinition>(() => props.definition as TableTileDefinition)
+const chart = computed(() => chartDefinition.value.chart)
+const chartTitle = computed<string | undefined>(() => 'chart_title' in chart.value ? chart.value.chart_title : undefined)
+const tileTitle = computed<string | undefined>(() => isTableTile.value ? tableDefinition.value?.config.title : chartTitle.value)
+const tileDescription = computed<string | undefined>(() => !isTableTile.value && 'description' in chart.value ? chart.value.description : undefined)
+const tileTypeClass = computed<string>(() => isTableTile.value ? 'table' : chart.value.type)
+const isSlottableTile = computed<boolean>(() => !isTableTile.value && chart.value.type === 'slottable')
+const canExportCsv = computed<boolean>(() => {
+  if (isTableTile.value) {
+    return false
+  }
+
+  return !('allow_csv_export' in chart.value) || chart.value.allow_csv_export !== false
+})
 
 const {
   exploreLinkKebabMenu,
@@ -261,7 +284,7 @@ const {
 } = composables.useContextLinks({
   queryBridge,
   chartData: readonly(chartData),
-  definition: readonly(toRef(props, 'definition')),
+  definition: readonly(chartDefinition),
   context: readonly(toRef(props, 'context')),
 })
 
@@ -286,9 +309,18 @@ watch(() => props.definition, async (newValue, oldValue) => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const canShowTitleActions = computed((): boolean => canShowKebabMenu.value && !props.hideActions && (kebabMenuHasItems.value || props.context.editable))
+const kebabMenuHasItems = computed((): boolean => isTableTile.value
+  ? props.context.editable
+  : !!exploreLinkKebabMenu.value || canExportCsv.value || props.context.editable)
 
-const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || ('allow_csv_export' in props.definition.chart ? props.definition.chart.allow_csv_export : true) || props.context.editable)
+// Chart header actions are driven by chart-only affordances: context links, CSV export, and editable tile controls.
+const canShowChartHeaderActions = computed((): boolean => !isTableTile.value && canShowKebabMenu.value && kebabMenuHasItems.value)
+// Table header actions are limited to editable tile controls; table tiles do not expose chart links or CSV export here.
+const canShowTableHeaderActions = computed((): boolean => isTableTile.value && props.context.editable)
+// The shared header action container is hidden when tile actions are globally disabled.
+const canShowHeaderActions = computed((): boolean => !props.hideActions && (canShowChartHeaderActions.value || canShowTableHeaderActions.value))
+const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !props.isFullscreen)
+const hasSignalsDescription = computed<boolean>(() => !isTableTile.value && chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
@@ -308,24 +340,44 @@ const componentEventHandlers = computed(() => ({
   ...(componentData.value?.rendererEvents.supportsRequests ? { 'select-chart-range': onSelectChartRange } : {}),
   ...(componentData.value?.rendererEvents.supportsZoom ? { 'zoom-time-range': onZoom } : {}),
   ...(componentData.value?.rendererEvents.supportsBounds ? { 'bounds-change': onBoundsChange } : {}),
+  ...(componentData.value?.rendererEvents.supportsLoadingChange ? { 'loading-change': onLoadingChange } : {}),
 }))
 
 const componentData = computed(() => {
+  if (isTableTile.value) {
+    return {
+      component: TableDataGridRenderer,
+      rendererProps: {
+        context: props.context,
+        query: tableDefinition.value.query,
+        queryReady: props.queryReady,
+        refreshCounter: refreshCounter.value,
+      },
+      rendererEvents: {
+        supportsRequests: false,
+        supportsZoom: false,
+        supportsBounds: false,
+        supportsLoadingChange: true,
+      },
+    }
+  }
+
   // Ideally, Typescript would ensure that the prop types of the renderers match
   // the props that they're going to receive.  Unfortunately, actually doing this seems difficult.
-  const component = rendererLookup[props.definition.chart.type]
+  const definition = chartDefinition.value
+  const component = rendererLookup[definition.chart.type]
 
   const supportsRequests = !!(component as any)?.emits?.includes('select-chart-range')
   const supportsZoom = !!(component as any)?.emits?.includes('zoom-time-range')
-  const supportsBounds = props.definition.chart.type === 'choropleth_map' // can't lookup with emits as this is an async renderer
+  const supportsBounds = definition.chart.type === 'choropleth_map' // can't lookup with emits as this is an async renderer
 
   return component && {
     component,
     rendererProps: {
-      query: props.definition.query,
+      query: definition.query,
       context: props.context,
       queryReady: props.queryReady,
-      chartOptions: props.definition.chart,
+      chartOptions: definition.chart,
       height: props.height - PADDING_SIZE * 2,
       refreshCounter: refreshCounter.value,
       requestsLink: props.hideZoomActions ? undefined : requestsLinkZoomActions.value,
@@ -335,12 +387,17 @@ const componentData = computed(() => {
       supportsRequests,
       supportsZoom,
       supportsBounds,
+      supportsLoadingChange: false,
     },
   }
 })
 
 const badgeData = computed<string | null>(() => {
-  const query = props.definition.query
+  if (isTableTile.value) {
+    return null
+  }
+
+  const query = chartDefinition.value.query
   const timeRange = query?.time_range
 
   // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
@@ -367,22 +424,17 @@ const badgeData = computed<string | null>(() => {
 })
 
 const hasTileHeader = computed<boolean>(() => {
-  if (props.definition.chart.type === 'slottable') {
+  if (isSlottableTile.value) {
     return false
   }
 
-  // @ts-ignore this is erroring because of slottable
-  const hasTitle = Boolean(props.definition.chart.chart_title)
-
-  const hasSignalsDescription = props.definition.chart.type === 'golden_signals' && Boolean(props.definition.chart.description)
-
-  const hasRefresh = props.showRefresh
-
-  const hasMenu = canShowTitleActions.value && kebabMenuHasItems.value && !props.isFullscreen
-
-  const hasBadge = Boolean(badgeData.value)
-
-  return hasTitle || hasMenu || hasBadge || hasSignalsDescription || hasRefresh
+  return [
+    Boolean(tileTitle.value),
+    hasHeaderActions.value,
+    Boolean(badgeData.value),
+    hasSignalsDescription.value,
+    props.showRefresh,
+  ].some(Boolean)
 })
 
 const chartDataGranularity = computed(() => {
@@ -390,7 +442,7 @@ const chartDataGranularity = computed(() => {
 })
 
 const isTimeSeriesChart = computed(() => {
-  return ['timeseries_line', 'timeseries_bar'].includes(props.definition.chart.type)
+  return !isTableTile.value && ['timeseries_line', 'timeseries_bar'].includes(chart.value.type)
 })
 
 const isAgedOutQuery = computed(() => {
@@ -398,7 +450,7 @@ const isAgedOutQuery = computed(() => {
     return false
   }
 
-  const savedGranularity = props.definition?.query?.granularity
+  const savedGranularity = chartDefinition.value.query.granularity
 
   if (!savedGranularity || !chartDataGranularity.value) {
     return false
@@ -409,7 +461,7 @@ const isAgedOutQuery = computed(() => {
 
 const agedOutWarning = computed(() => {
   const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
-  const savedGranularity = props.definition?.query?.granularity ?? 'unknown'
+  const savedGranularity = chartDefinition.value.query.granularity ?? 'unknown'
 
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
@@ -423,10 +475,14 @@ const agedOutWarning = computed(() => {
  * @returns Array of scoped filter objects to a datasource
  */
 const datasourceScopedFilters = computed(() => {
-  const filters = [...props.context.filters, ...props.definition.query.filters ?? []] as AllFilters[]
-  const metrics = props.definition.query.metrics
+  if (isTableTile.value) {
+    return []
+  }
+
+  const filters = [...props.context.filters, ...chartDefinition.value.query.filters ?? []] as AllFilters[]
+  const metrics = chartDefinition.value.query.metrics
   // TODO: default to api_usage until datasource is made required
-  const datasource = props.definition?.query?.datasource ?? 'api_usage'
+  const datasource = chartDefinition.value.query.datasource ?? 'api_usage'
 
   return stripUnknownFilters.value({
     datasource,
@@ -451,6 +507,10 @@ const onChartData = (data: ExploreResultV4) => {
   chartData.value = data
   loadingChartData.value = false
   emit('chart-data', data)
+}
+
+const onLoadingChange = (isLoading: boolean) => {
+  loadingChartData.value = isLoading
 }
 
 const hideExportModal = () => {
@@ -618,6 +678,12 @@ defineExpose({ getExportData })
     margin: 0;
     overflow: hidden;
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
+
+    &.type-table {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
 
     &.type-golden_signals {
       padding: 0;
