@@ -3,7 +3,6 @@ import type { GridTile } from '../types'
 import type { TileDefinition } from '@kong-ui-public/analytics-utilities'
 import {
   duplicateChartTile,
-  duplicateTableTile,
 } from './duplicate-tile'
 
 afterEach(() => {
@@ -14,7 +13,7 @@ it('duplicates table tiles with a copied title and reset position', () => {
   vi.spyOn(crypto, 'randomUUID').mockReturnValue('table-copy-id')
   const tile: GridTile<TileDefinition> = {
     id: 'table-tile',
-    type: 'table',
+    type: 'chart',
     layout: {
       position: { col: 3, row: 4 },
       size: { cols: 4, rows: 3 },
@@ -24,21 +23,22 @@ it('duplicates table tiles with a copied title and reset position', () => {
         datasource: 'platform',
         entity: 'route',
         columns: ['route'],
-        filters: [],
       },
-      config: {
-        title: 'Routes',
+      chart: {
+        type: 'table',
+        chart_title: 'Routes',
       },
     },
   }
 
-  expect(duplicateTableTile(tile)).toEqual({
+  expect(duplicateChartTile(tile)).toEqual({
     id: 'table-copy-id',
-    type: 'table',
+    type: 'chart',
     definition: {
       query: tile.meta.query,
-      config: {
-        title: 'Copy of Routes',
+      chart: {
+        type: 'table',
+        chart_title: 'Copy of Routes',
       },
     },
     layout: {

@@ -96,12 +96,12 @@
           />
           <template #items>
             <KDropdownItem
-              v-if="!isTableTile && !!exploreLinkKebabMenu"
+              v-if="!!exploreLinkKebabMenu"
               :data-testid="`chart-jump-to-explore-${tileId}`"
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="!isTableTile && !!requestsLinkKebabMenu"
+              v-if="!isTableChartDefinition(definition) && !!requestsLinkKebabMenu"
               :data-testid="`chart-jump-to-requests-${tileId}`"
               :item="{ label: i18n.t('jumpToRequests'), to: requestsLinkKebabMenu }"
             />
@@ -152,7 +152,7 @@
     </div>
     <div
       class="tile-content"
-      :class="`type-${tileTypeClass}`"
+      :class="`type-${tileType}-${chart.type}`"
       :data-testid="`tile-content-${tileId}`"
     >
       <component
@@ -179,8 +179,6 @@ import type {
   AllFilters,
   TileConfig,
   TileDefinition,
-  TableTileDefinition,
-  ChartTileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
@@ -196,6 +194,7 @@ import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
+import { isTableChartDefinition } from '../utils/tile-definition'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
@@ -251,18 +250,15 @@ const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
-const isTableTile = computed((): boolean => props.tileType === 'table')
 
-const chartDefinition = computed<ChartTileDefinition>(() => props.definition as ChartTileDefinition)
-const tableDefinition = computed<TableTileDefinition>(() => props.definition as TableTileDefinition)
-const chart = computed(() => chartDefinition.value.chart)
-const chartTitle = computed<string | undefined>(() => 'chart_title' in chart.value ? chart.value.chart_title : undefined)
-const tileTitle = computed<string | undefined>(() => isTableTile.value ? tableDefinition.value?.config.title : chartTitle.value)
-const tileDescription = computed<string | undefined>(() => !isTableTile.value && 'description' in chart.value ? chart.value.description : undefined)
-const tileTypeClass = computed<string>(() => isTableTile.value ? 'table' : chart.value.type)
-const isSlottableTile = computed<boolean>(() => !isTableTile.value && chart.value.type === 'slottable')
+const chart = computed(() => props.definition.chart)
+const tileTitle = computed<string | undefined>(() => {
+  return 'chart_title' in chart.value ? chart.value.chart_title : undefined
+})
+const tileDescription = computed<string | undefined>(() => 'description' in chart.value ? chart.value.description : undefined)
+const isSlottableTile = computed<boolean>(() => chart.value.type === 'slottable')
 const canExportCsv = computed<boolean>(() => {
-  if (isTableTile.value) {
+  if (isTableChartDefinition(props.definition)) {
     return false
   }
 
@@ -284,7 +280,7 @@ const {
 } = composables.useContextLinks({
   queryBridge,
   chartData: readonly(chartData),
-  definition: readonly(chartDefinition),
+  definition: toRef(props, 'definition'),
   context: readonly(toRef(props, 'context')),
 })
 
@@ -309,18 +305,12 @@ watch(() => props.definition, async (newValue, oldValue) => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const kebabMenuHasItems = computed((): boolean => isTableTile.value
-  ? props.context.editable
-  : !!exploreLinkKebabMenu.value || canExportCsv.value || props.context.editable)
+const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || canExportCsv.value || props.context.editable)
 
-// Chart header actions are driven by chart-only affordances: context links, CSV export, and editable tile controls.
-const canShowChartHeaderActions = computed((): boolean => !isTableTile.value && canShowKebabMenu.value && kebabMenuHasItems.value)
-// Table header actions are limited to editable tile controls; table tiles do not expose chart links or CSV export here.
-const canShowTableHeaderActions = computed((): boolean => isTableTile.value && props.context.editable)
 // The shared header action container is hidden when tile actions are globally disabled.
-const canShowHeaderActions = computed((): boolean => !props.hideActions && (canShowChartHeaderActions.value || canShowTableHeaderActions.value))
+const canShowHeaderActions = computed((): boolean => !props.hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
 const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !props.isFullscreen)
-const hasSignalsDescription = computed<boolean>(() => !isTableTile.value && chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
+const hasSignalsDescription = computed<boolean>(() => chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
@@ -331,6 +321,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'donut': DonutChartRenderer,
   'golden_signals': GoldenSignalsRenderer,
   'top_n': TopNTableRenderer,
+  'table': TableDataGridRenderer,
   'slottable': undefined,
   'single_value': SimpleChartRenderer,
   'choropleth_map': GeoMapRendererAsync,
@@ -344,60 +335,50 @@ const componentEventHandlers = computed(() => ({
 }))
 
 const componentData = computed(() => {
-  if (isTableTile.value) {
-    return {
-      component: TableDataGridRenderer,
-      rendererProps: {
-        context: props.context,
-        query: tableDefinition.value.query,
-        queryReady: props.queryReady,
-        refreshCounter: refreshCounter.value,
-      },
-      rendererEvents: {
-        supportsRequests: false,
-        supportsZoom: false,
-        supportsBounds: false,
-        supportsLoadingChange: true,
-      },
-    }
-  }
+  const definition = props.definition
+  const component = rendererLookup[definition.chart.type]
+  const isTableChart = isTableChartDefinition(definition)
 
   // Ideally, Typescript would ensure that the prop types of the renderers match
   // the props that they're going to receive.  Unfortunately, actually doing this seems difficult.
-  const definition = chartDefinition.value
-  const component = rendererLookup[definition.chart.type]
-
   const supportsRequests = !!(component as any)?.emits?.includes('select-chart-range')
   const supportsZoom = !!(component as any)?.emits?.includes('zoom-time-range')
   const supportsBounds = definition.chart.type === 'choropleth_map' // can't lookup with emits as this is an async renderer
+  const supportsLoadingChange = !!(component as any)?.emits?.includes('loading-change')
+  const rendererProps = {
+    query: definition.query,
+    context: props.context,
+    queryReady: props.queryReady,
+    height: props.height - PADDING_SIZE * 2,
+    refreshCounter: refreshCounter.value,
+  }
+  const chartRendererProps = {
+    chartOptions: definition.chart,
+    requestsLink: props.hideZoomActions ? undefined : requestsLinkZoomActions.value,
+    exploreLink: props.hideZoomActions ? undefined : exploreLinkZoomActions.value,
+  }
 
   return component && {
     component,
     rendererProps: {
-      query: definition.query,
-      context: props.context,
-      queryReady: props.queryReady,
-      chartOptions: definition.chart,
-      height: props.height - PADDING_SIZE * 2,
-      refreshCounter: refreshCounter.value,
-      requestsLink: props.hideZoomActions ? undefined : requestsLinkZoomActions.value,
-      exploreLink: props.hideZoomActions ? undefined : exploreLinkZoomActions.value,
+      ...rendererProps,
+      ...(!isTableChart ? chartRendererProps : {}),
     },
     rendererEvents: {
       supportsRequests,
       supportsZoom,
       supportsBounds,
-      supportsLoadingChange: false,
+      supportsLoadingChange,
     },
   }
 })
 
 const badgeData = computed<string | null>(() => {
-  if (isTableTile.value) {
+  if (isTableChartDefinition(props.definition)) {
     return null
   }
 
-  const query = chartDefinition.value.query
+  const query = props.definition.query
   const timeRange = query?.time_range
 
   // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
@@ -442,15 +423,16 @@ const chartDataGranularity = computed(() => {
 })
 
 const isTimeSeriesChart = computed(() => {
-  return !isTableTile.value && ['timeseries_line', 'timeseries_bar'].includes(chart.value.type)
+  return ['timeseries_line', 'timeseries_bar'].includes(chart.value.type)
 })
 
 const isAgedOutQuery = computed(() => {
-  if (!isTimeSeriesChart.value || !props.queryReady || loadingChartData.value) {
+  // Check table definitions first so TypeScript narrows before reading query.granularity.
+  if (isTableChartDefinition(props.definition) || !isTimeSeriesChart.value || !props.queryReady || loadingChartData.value) {
     return false
   }
 
-  const savedGranularity = chartDefinition.value.query.granularity
+  const savedGranularity = props.definition.query.granularity
 
   if (!savedGranularity || !chartDataGranularity.value) {
     return false
@@ -461,7 +443,8 @@ const isAgedOutQuery = computed(() => {
 
 const agedOutWarning = computed(() => {
   const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
-  const savedGranularity = chartDefinition.value.query.granularity ?? 'unknown'
+  // Check table definitions first so TypeScript narrows before reading query.granularity.
+  const savedGranularity = isTableChartDefinition(props.definition) ? 'unknown' : props.definition.query.granularity ?? 'unknown'
 
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
@@ -471,18 +454,17 @@ const agedOutWarning = computed(() => {
 
 /**
  * Derives the subset of context and tile query filters that is relevant for the tile's datasource.
+ * This is used only for chart range-selection zoom action links. Table fetching and kebab Explore
+ * links apply their own filter handling outside this component helper.
  *
  * @returns Array of scoped filter objects to a datasource
  */
 const datasourceScopedFilters = computed(() => {
-  if (isTableTile.value) {
-    return []
-  }
-
-  const filters = [...props.context.filters, ...chartDefinition.value.query.filters ?? []] as AllFilters[]
-  const metrics = chartDefinition.value.query.metrics
+  const definition = props.definition
+  const filters = [...props.context.filters, ...definition.query.filters ?? []] as AllFilters[]
+  const metrics = 'metrics' in definition.query ? definition.query.metrics : undefined
   // TODO: default to api_usage until datasource is made required
-  const datasource = chartDefinition.value.query.datasource ?? 'api_usage'
+  const datasource = definition.query.datasource ?? 'api_usage'
 
   return stripUnknownFilters.value({
     datasource,
@@ -679,13 +661,13 @@ defineExpose({ getExportData })
     overflow: hidden;
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
 
-    &.type-table {
+    &.type-chart-table {
       display: flex;
       flex-direction: column;
       min-height: 0;
     }
 
-    &.type-golden_signals {
+    &.type-chart-golden_signals {
       padding: 0;
     }
   }
@@ -698,7 +680,7 @@ defineExpose({ getExportData })
     .tile-content {
       padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
 
-      &.type-golden_signals {
+      &.type-chart-golden_signals {
         padding: 0;
       }
     }

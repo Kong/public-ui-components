@@ -16,10 +16,12 @@ describe('<DashboardTilePreview />', () => {
   })
 
   const setup = async ({
+    definition: definitionOverride,
     editable,
     wrappedInDivWithHeight,
     metrics = ['response_size_p99'],
   }: {
+    definition?: TileDefinition
     editable?: boolean
     wrappedInDivWithHeight?: number
     metrics?: any[]
@@ -33,7 +35,7 @@ describe('<DashboardTilePreview />', () => {
       }),
     }
 
-    const definition: TileDefinition = {
+    const definition: TileDefinition = definitionOverride ?? {
       chart: {
         type: 'horizontal_bar',
       },
@@ -182,6 +184,66 @@ describe('<DashboardTilePreview />', () => {
     setup({ metrics: [] })
     cy.getTestId('chart-not-configured-empty-state').should('exist')
     cy.getTestId('test-stub').should('not.exist')
+  })
+
+  it('passes table chart definitions to DashboardTile without showing the chart empty state', () => {
+    const definition: TileDefinition = {
+      chart: {
+        type: 'table',
+        chart_title: 'Routes',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['name', 'control_plane'],
+      },
+    }
+
+    setup({ definition })
+
+    cy.getTestId('chart-not-configured-empty-state').should('not.exist')
+    cy.getTestId('test-stub').should('exist')
+    expectPreviewPropIs('definition', definition)
+    expectTilePropIs('definition', definition)
+    expectTilePropIs('tileType', undefined)
+  })
+
+  it('shows the "Chart not configured" empty state for table chart definitions without columns', () => {
+    const definition: TileDefinition = {
+      chart: {
+        type: 'table',
+        chart_title: 'Routes',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: [],
+      },
+    }
+
+    setup({ definition })
+
+    cy.getTestId('chart-not-configured-empty-state').should('exist')
+    cy.getTestId('test-stub').should('not.exist')
+  })
+
+  it('passes table chart definitions that rely on response metadata columns to DashboardTile', () => {
+    const definition: TileDefinition = {
+      chart: {
+        type: 'table',
+        chart_title: 'Routes',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+      },
+    }
+
+    setup({ definition })
+
+    cy.getTestId('chart-not-configured-empty-state').should('not.exist')
+    cy.getTestId('test-stub').should('exist')
+    expectTilePropIs('definition', definition)
   })
 
   it('forwards getExportData to child DashboardTile', () => {

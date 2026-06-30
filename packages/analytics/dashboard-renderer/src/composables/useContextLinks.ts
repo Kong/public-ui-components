@@ -3,9 +3,10 @@ import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
 import type { DeepReadonly, Ref } from 'vue'
-import type { AiExploreAggregations, AiExploreQuery, AllFilters, AnalyticsBridge, ChartTileDefinition, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AllFilters, AnalyticsBridge, ChartTileDefinition, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TableChartTileDefinition, TimeRangeV4, ValidDashboardTableQuery } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContextInternal } from '../types'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
+import { isTableChartDefinition } from '../utils/tile-definition'
 
 const EXPLORE_DATASOURCES = [
   'basic',
@@ -16,6 +17,12 @@ const EXPLORE_DATASOURCES = [
   undefined,
 ] as const
 
+type ExploreDatasource = typeof EXPLORE_DATASOURCES[number]
+
+const isExploreDatasource = (datasource: unknown): datasource is ExploreDatasource => {
+  return EXPLORE_DATASOURCES.includes(datasource as ExploreDatasource)
+}
+
 export default function useContextLinks(
   {
     queryBridge,
@@ -25,7 +32,7 @@ export default function useContextLinks(
   }: {
     queryBridge: AnalyticsBridge | undefined
     context: Readonly<Ref<DeepReadonly<DashboardRendererContextInternal>>>
-    definition: Readonly<Ref<DeepReadonly<ChartTileDefinition>>>
+    definition: Readonly<Ref<ChartTileDefinition | TableChartTileDefinition>>
     chartData: Readonly<Ref<DeepReadonly<ExploreResultV4 | undefined>>>
   },
 ) {
@@ -38,6 +45,7 @@ export default function useContextLinks(
   const analyticsConfigStore = useAnalyticsConfigStore()
   const datasourceConfigStore = useDatasourceConfigStore()
   const { stripUnknownFilters, loading: datasourceConfigLoading } = storeToRefs(datasourceConfigStore)
+  const isTableChart = computed(() => isTableChartDefinition(definition.value))
 
   onMounted(async () => {
     // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
@@ -60,17 +68,18 @@ export default function useContextLinks(
     return true
   })
 
-  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && definition.value.query.datasource !== 'platform' && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
-  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && EXPLORE_DATASOURCES.includes(definition.value.query.datasource as any) && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
+  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && !isTableChart.value && definition.value.query.datasource !== 'llm_usage' && definition.value.query.datasource !== 'platform' && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
+  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && isExploreDatasource(definition.value.query.datasource) && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
 
   const chartDataGranularity = computed(() => {
     return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
   })
 
-  const datasourceScopedFilters = computed(() => {
-    const filters = [...context.value.filters, ...definition.value.query.filters ?? []] as AllFilters[]
-    const metrics = definition.value.query.metrics
-    const datasource = definition.value.query?.datasource ?? 'api_usage'
+  const datasourceScopedFilters = computed<AllFilters[]>(() => {
+    const currentDefinition = definition.value
+    const filters = [...context.value.filters, ...currentDefinition.query.filters ?? []] as AllFilters[]
+    const metrics = 'metrics' in currentDefinition.query ? currentDefinition.query.metrics : undefined
+    const datasource = currentDefinition.query?.datasource ?? 'api_usage'
 
     return stripUnknownFilters.value({
       datasource,
@@ -86,9 +95,16 @@ export default function useContextLinks(
       return ''
     }
 
-    const filters = datasourceScopedFilters.value as AllFilters[]
-    const timeRange = definition.value.query.time_range as TimeRangeV4 || context.value.timeSpec
-    const exploreQuery = buildExploreQuery(timeRange, filters)
+    const currentDefinition = definition.value
+    if (isTableChartDefinition(currentDefinition)) {
+      return buildExploreLink({
+        ...currentDefinition.query,
+        filters: datasourceScopedFilters.value as ValidDashboardTableQuery['filters'],
+      })
+    }
+
+    const timeRange = currentDefinition.query.time_range as TimeRangeV4 || context.value.timeSpec
+    const exploreQuery = buildExploreQuery(timeRange, datasourceScopedFilters.value)
     return buildExploreLink(exploreQuery)
   })
 
@@ -97,10 +113,14 @@ export default function useContextLinks(
       return ''
     }
 
-    const filters = datasourceScopedFilters.value as AllFilters[]
+    const filters = datasourceScopedFilters.value
+    const currentDefinition = definition.value
+    if (isTableChartDefinition(currentDefinition)) {
+      return ''
+    }
 
     const requestsQuery = buildRequestsQueryKebabMenu(
-      definition.value.query.time_range as TimeRangeV4 || context.value.timeSpec,
+      currentDefinition.query.time_range as TimeRangeV4 || context.value.timeSpec,
       filters,
     )
 
@@ -139,20 +159,26 @@ export default function useContextLinks(
     }
   }
 
-  const buildExploreQuery = (timeRange: TimeRangeV4, filters: DeepReadonly<AllFilters[]>) => {
-    const dimensions = definition.value.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
+  const buildExploreQuery = (timeRange: TimeRangeV4, filters: AllFilters[]): ExploreQuery | AiExploreQuery => {
+    const currentDefinition = definition.value
+    if (isTableChartDefinition(currentDefinition)) {
+      throw new Error('Cannot build a chart explore query for table chart definitions')
+    }
+
+    const dimensions = [...(currentDefinition.query.dimensions ?? [])] as QueryableExploreDimensions[] | QueryableAiExploreDimensions[]
+    const metrics = [...(currentDefinition.query.metrics ?? [])] as ExploreAggregations[] | AiExploreAggregations[]
     const exploreQuery: ExploreQuery | AiExploreQuery = {
-      filters: filters,
-      metrics: definition.value.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
+      filters,
+      metrics,
       dimensions: dimensions,
       time_range: timeRange,
-      granularity: definition.value.query.granularity || chartDataGranularity.value,
+      granularity: currentDefinition.query.granularity || chartDataGranularity.value || undefined,
     } as ExploreQuery | AiExploreQuery
 
     return exploreQuery
   }
 
-  const buildExploreLink = (exploreQuery: ExploreQuery | AiExploreQuery) => {
+  const buildExploreLink = (exploreQuery: ExploreQuery | AiExploreQuery | DeepReadonly<ValidDashboardTableQuery>) => {
     if (!canGenerateExploreLink.value) {
       return ''
     }

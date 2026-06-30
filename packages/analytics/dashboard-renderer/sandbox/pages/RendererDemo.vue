@@ -106,10 +106,11 @@ const dashboardConfig = ref<DashboardConfig>({
       },
     } satisfies TileConfig,
     {
-      type: 'table',
+      type: 'chart',
       definition: {
-        config: {
-          title: 'Platform routes',
+        chart: {
+          type: 'table',
+          chart_title: 'Platform routes',
         },
         query: {
           datasource: 'platform',
