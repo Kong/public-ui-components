@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.53.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.53.3...@kong-ui-public/entities-shared@3.53.4) (2026-06-30)
+
+
+### Bug Fixes
+
+* **entities:** background color fixes [KHCP-20980] ([#3507](https://github.com/Kong/public-ui-components/issues/3507)) ([1535974](https://github.com/Kong/public-ui-components/commit/1535974cef736b5d078ab5a392457b3348f3a4c1))
+
+
+
+
+
 ## [3.53.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.53.2...@kong-ui-public/entities-shared@3.53.3) (2026-06-30)
 
 
