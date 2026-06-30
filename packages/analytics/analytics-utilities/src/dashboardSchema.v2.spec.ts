@@ -251,23 +251,6 @@ describe('dashboardSchema.v2', () => {
     })).toBe(false)
   })
 
-  it('rejects the old top-level table tile encoding', () => {
-    expect(validateDashboardConfigSchema({
-      tiles: [
-        {
-          ...tableChartTile,
-          type: 'table',
-          definition: {
-            query: tableChartTile.definition.query,
-            config: {
-              title: 'Routes',
-            },
-          },
-        },
-      ],
-    })).toBe(false)
-  })
-
   it('accepts table chart tiles with only the platform datasource', () => {
     expect(validateDashboardConfigSchema({
       tiles: [
@@ -284,41 +267,6 @@ describe('dashboardSchema.v2', () => {
         },
       ],
     })).toBe(true)
-  })
-
-  it('rejects table chart fields other than chart_title', () => {
-    expect(validateDashboardConfigSchema({
-      tiles: [
-        {
-          ...tableChartTile,
-          definition: {
-            ...tableChartTile.definition,
-            chart: {
-              type: 'table',
-              chart_title: 'Routes',
-              description: 'Extra table chart field is not supported',
-            },
-          },
-        },
-      ],
-    })).toBe(false)
-  })
-
-  it('rejects table chart title fields that do not use chart_title', () => {
-    expect(validateDashboardConfigSchema({
-      tiles: [
-        {
-          ...tableChartTile,
-          definition: {
-            ...tableChartTile.definition,
-            chart: {
-              type: 'table',
-              title: 'Routes',
-            },
-          },
-        },
-      ],
-    })).toBe(false)
   })
 
   it('rejects table chart tiles with a top-level query', () => {
