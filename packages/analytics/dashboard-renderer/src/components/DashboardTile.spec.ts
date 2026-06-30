@@ -342,7 +342,7 @@ describe('<DashboardTile /> table tiles', () => {
       queryReady: true,
       refreshCounter: 0,
     })
-    expect(wrapper.findComponent(TableDataGridRenderer).props('height')).toBeUndefined()
+    expect(wrapper.findComponent(TableDataGridRenderer).props('height')).toBeGreaterThan(0)
   })
 
   it('shows editable tile actions and explore links for table tiles', async () => {

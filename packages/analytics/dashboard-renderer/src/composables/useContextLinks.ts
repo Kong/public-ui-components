@@ -77,12 +77,8 @@ export default function useContextLinks(
 
   const datasourceScopedFilters = computed<AllFilters[]>(() => {
     const currentDefinition = definition.value
-    if (isTableChartDefinition(currentDefinition)) {
-      return []
-    }
-
     const filters = [...context.value.filters, ...currentDefinition.query.filters ?? []] as AllFilters[]
-    const metrics = currentDefinition.query.metrics
+    const metrics = 'metrics' in currentDefinition.query ? currentDefinition.query.metrics : undefined
     const datasource = currentDefinition.query?.datasource ?? 'api_usage'
 
     return stripUnknownFilters.value({
@@ -101,7 +97,10 @@ export default function useContextLinks(
 
     const currentDefinition = definition.value
     if (isTableChartDefinition(currentDefinition)) {
-      return buildExploreLink(currentDefinition.query)
+      return buildExploreLink({
+        ...currentDefinition.query,
+        filters: datasourceScopedFilters.value as ValidDashboardTableQuery['filters'],
+      })
     }
 
     const timeRange = currentDefinition.query.time_range as TimeRangeV4 || context.value.timeSpec
@@ -110,7 +109,7 @@ export default function useContextLinks(
   })
 
   const requestsLinkKebabMenu = computed(() => {
-    if (isTableChart.value || !canGenerateRequestsLink.value || !canShowKebabMenu.value) {
+    if (!canGenerateRequestsLink.value || !canShowKebabMenu.value) {
       return ''
     }
 

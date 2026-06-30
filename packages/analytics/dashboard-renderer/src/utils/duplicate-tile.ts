@@ -3,7 +3,6 @@ import type {
   TileConfig,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
-import { isTableChartDefinition } from './tile-definition'
 
 /**
  * Creates a chart tile copy with a new id, origin position, preserved size, and
@@ -13,30 +12,15 @@ import { isTableChartDefinition } from './tile-definition'
  * @returns A chart tile config ready to be inserted into the dashboard.
  */
 export const duplicateChartTile = (tile: GridTile<TileDefinition>): TileConfig => {
-  let duplicatedDefinition: TileDefinition
-  if (isTableChartDefinition(tile.meta)) {
-    const { chart } = tile.meta
+  const duplicatedDefinition = {
+    ...tile.meta,
+    chart: { ...tile.meta.chart },
+  } as TileDefinition
 
-    duplicatedDefinition = {
-      ...tile.meta,
-      chart: {
-        ...chart,
-        chart_title: chart.chart_title ? `Copy of ${chart.chart_title}` : '',
-      },
-    }
-  } else if ('chart_title' in tile.meta.chart) {
-    duplicatedDefinition = {
-      ...tile.meta,
-      chart: {
-        ...tile.meta.chart,
-        chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
-      },
-    }
-  } else {
-    duplicatedDefinition = {
-      ...tile.meta,
-      chart: { ...tile.meta.chart },
-    }
+  if ('chart_title' in duplicatedDefinition.chart) {
+    duplicatedDefinition.chart.chart_title = duplicatedDefinition.chart.chart_title
+      ? `Copy of ${duplicatedDefinition.chart.chart_title}`
+      : ''
   }
 
   return {

@@ -152,7 +152,7 @@
     </div>
     <div
       class="tile-content"
-      :class="`type-${tileTypeClass}`"
+      :class="`type-${tileType}-${chart.type}`"
       :data-testid="`tile-content-${tileId}`"
     >
       <component
@@ -255,9 +255,8 @@ const chart = computed(() => props.definition.chart)
 const tileTitle = computed<string | undefined>(() => {
   return 'chart_title' in chart.value ? chart.value.chart_title : undefined
 })
-const tileDescription = computed<string | undefined>(() => !isTableChartDefinition(props.definition) && 'description' in chart.value ? chart.value.description : undefined)
-const tileTypeClass = computed<string>(() => isTableChartDefinition(props.definition) ? 'table' : chart.value.type)
-const isSlottableTile = computed<boolean>(() => !isTableChartDefinition(props.definition) && chart.value.type === 'slottable')
+const tileDescription = computed<string | undefined>(() => 'description' in chart.value ? chart.value.description : undefined)
+const isSlottableTile = computed<boolean>(() => chart.value.type === 'slottable')
 const canExportCsv = computed<boolean>(() => {
   if (isTableChartDefinition(props.definition)) {
     return false
@@ -306,14 +305,12 @@ watch(() => props.definition, async (newValue, oldValue) => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const kebabMenuHasItems = computed((): boolean => isTableChartDefinition(props.definition)
-  ? !!exploreLinkKebabMenu.value || props.context.editable
-  : !!exploreLinkKebabMenu.value || canExportCsv.value || props.context.editable)
+const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || canExportCsv.value || props.context.editable)
 
 // The shared header action container is hidden when tile actions are globally disabled.
 const canShowHeaderActions = computed((): boolean => !props.hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
 const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !props.isFullscreen)
-const hasSignalsDescription = computed<boolean>(() => !isTableChartDefinition(props.definition) && chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
+const hasSignalsDescription = computed<boolean>(() => chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
 
 const rendererLookup: Record<Exclude<DashboardTileType, 'table'>, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
@@ -344,6 +341,7 @@ const componentData = computed(() => {
       component: TableDataGridRenderer,
       rendererProps: {
         context: props.context,
+        height: props.height - PADDING_SIZE * 2,
         query: definition.query,
         queryReady: props.queryReady,
         refreshCounter: refreshCounter.value,
@@ -436,10 +434,11 @@ const chartDataGranularity = computed(() => {
 })
 
 const isTimeSeriesChart = computed(() => {
-  return !isTableChartDefinition(props.definition) && ['timeseries_line', 'timeseries_bar'].includes(chart.value.type)
+  return ['timeseries_line', 'timeseries_bar'].includes(chart.value.type)
 })
 
 const isAgedOutQuery = computed(() => {
+  // Check table definitions first so TypeScript narrows before reading query.granularity.
   if (isTableChartDefinition(props.definition) || !isTimeSeriesChart.value || !props.queryReady || loadingChartData.value) {
     return false
   }
@@ -455,6 +454,7 @@ const isAgedOutQuery = computed(() => {
 
 const agedOutWarning = computed(() => {
   const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
+  // Check table definitions first so TypeScript narrows before reading query.granularity.
   const savedGranularity = isTableChartDefinition(props.definition) ? 'unknown' : props.definition.query.granularity ?? 'unknown'
 
   return i18n.t('query_aged_out_warning', {
@@ -465,18 +465,17 @@ const agedOutWarning = computed(() => {
 
 /**
  * Derives the subset of context and tile query filters that is relevant for the tile's datasource.
+ * This is used only for chart range-selection zoom action links. Table fetching and kebab Explore
+ * links apply their own filter handling outside this component helper.
  *
  * @returns Array of scoped filter objects to a datasource
  */
 const datasourceScopedFilters = computed(() => {
-  if (isTableChartDefinition(props.definition)) {
-    return []
-  }
-
-  const filters = [...props.context.filters, ...props.definition.query.filters ?? []] as AllFilters[]
-  const metrics = props.definition.query.metrics
+  const definition = props.definition
+  const filters = [...props.context.filters, ...definition.query.filters ?? []] as AllFilters[]
+  const metrics = 'metrics' in definition.query ? definition.query.metrics : undefined
   // TODO: default to api_usage until datasource is made required
-  const datasource = props.definition.query.datasource ?? 'api_usage'
+  const datasource = definition.query.datasource ?? 'api_usage'
 
   return stripUnknownFilters.value({
     datasource,
@@ -673,13 +672,13 @@ defineExpose({ getExportData })
     overflow: hidden;
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
 
-    &.type-table {
+    &.type-chart-table {
       display: flex;
       flex-direction: column;
       min-height: 0;
     }
 
-    &.type-golden_signals {
+    &.type-chart-golden_signals {
       padding: 0;
     }
   }
@@ -692,7 +691,7 @@ defineExpose({ getExportData })
     .tile-content {
       padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
 
-      &.type-golden_signals {
+      &.type-chart-golden_signals {
         padding: 0;
       }
     }

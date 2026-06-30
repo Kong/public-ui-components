@@ -289,6 +289,7 @@ describe('useContextLinks', () => {
     }
     const { wrapper } = mountComposable({
       chartType: 'table',
+      contextFilters: [makeFilter('gateway_service')],
       query: tableQuery,
     })
     await flushPromises()
@@ -296,7 +297,10 @@ describe('useContextLinks', () => {
     const params = new URLSearchParams((wrapper.vm.exploreLinkKebabMenu as string).split('?')[1])
     expect(params.get('d')).toBe('platform')
     expect(params.get('c')).toBe('table')
-    expect(JSON.parse(params.get('q')!)).toEqual(tableQuery)
+    expect(JSON.parse(params.get('q')!)).toEqual({
+      ...tableQuery,
+      filters: [makeFilter('gateway_service'), makeFilter('control_plane')],
+    })
     expect(wrapper.vm.canGenerateRequestsLink).toBe(false)
     expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
     expect(wrapper.vm.requestsLinkZoomActions).toBeUndefined()
