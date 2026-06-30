@@ -312,7 +312,7 @@ const canShowHeaderActions = computed((): boolean => !props.hideActions && canSh
 const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !props.isFullscreen)
 const hasSignalsDescription = computed<boolean>(() => chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
 
-const rendererLookup: Record<Exclude<DashboardTileType, 'table'>, Component | undefined> = {
+const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
   'horizontal_bar': BarChartRenderer,
@@ -321,6 +321,7 @@ const rendererLookup: Record<Exclude<DashboardTileType, 'table'>, Component | un
   'donut': DonutChartRenderer,
   'golden_signals': GoldenSignalsRenderer,
   'top_n': TopNTableRenderer,
+  'table': TableDataGridRenderer,
   'slottable': undefined,
   'single_value': SimpleChartRenderer,
   'choropleth_map': GeoMapRendererAsync,
@@ -335,51 +336,39 @@ const componentEventHandlers = computed(() => ({
 
 const componentData = computed(() => {
   const definition = props.definition
-
-  if (isTableChartDefinition(definition)) {
-    return {
-      component: TableDataGridRenderer,
-      rendererProps: {
-        context: props.context,
-        height: props.height - PADDING_SIZE * 2,
-        query: definition.query,
-        queryReady: props.queryReady,
-        refreshCounter: refreshCounter.value,
-      },
-      rendererEvents: {
-        supportsRequests: false,
-        supportsZoom: false,
-        supportsBounds: false,
-        supportsLoadingChange: true,
-      },
-    }
-  }
+  const component = rendererLookup[definition.chart.type]
+  const isTableChart = isTableChartDefinition(definition)
 
   // Ideally, Typescript would ensure that the prop types of the renderers match
   // the props that they're going to receive.  Unfortunately, actually doing this seems difficult.
-  const component = rendererLookup[definition.chart.type]
-
   const supportsRequests = !!(component as any)?.emits?.includes('select-chart-range')
   const supportsZoom = !!(component as any)?.emits?.includes('zoom-time-range')
   const supportsBounds = definition.chart.type === 'choropleth_map' // can't lookup with emits as this is an async renderer
+  const supportsLoadingChange = !!(component as any)?.emits?.includes('loading-change')
+  const rendererProps = {
+    query: definition.query,
+    context: props.context,
+    queryReady: props.queryReady,
+    height: props.height - PADDING_SIZE * 2,
+    refreshCounter: refreshCounter.value,
+  }
+  const chartRendererProps = {
+    chartOptions: definition.chart,
+    requestsLink: props.hideZoomActions ? undefined : requestsLinkZoomActions.value,
+    exploreLink: props.hideZoomActions ? undefined : exploreLinkZoomActions.value,
+  }
 
   return component && {
     component,
     rendererProps: {
-      query: definition.query,
-      context: props.context,
-      queryReady: props.queryReady,
-      chartOptions: definition.chart,
-      height: props.height - PADDING_SIZE * 2,
-      refreshCounter: refreshCounter.value,
-      requestsLink: props.hideZoomActions ? undefined : requestsLinkZoomActions.value,
-      exploreLink: props.hideZoomActions ? undefined : exploreLinkZoomActions.value,
+      ...rendererProps,
+      ...(!isTableChart ? chartRendererProps : {}),
     },
     rendererEvents: {
       supportsRequests,
       supportsZoom,
       supportsBounds,
-      supportsLoadingChange: false,
+      supportsLoadingChange,
     },
   }
 })
