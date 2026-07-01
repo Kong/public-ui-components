@@ -46,7 +46,7 @@
           :hide-title="false"
           :preserve-code-block-timestamps="true"
           :record-resolver="addOnRecordResolver"
-          @fetch:error="onEntityBaseConfigCardFetchError"
+          @fetch:error="onFetchError"
           @fetch:success="onCacheAddOnLoaded"
           @loading="onLoadingChange"
         >
@@ -103,7 +103,6 @@
           disable-konnect-managed-detail
           :hide-title="false"
           @fetch:error="onFetchError"
-          @fetch:not-found="onFetchNotFound"
           @fetch:success="onPartialLoaded"
           @loading="onLoadingChange"
         >
@@ -126,7 +125,7 @@
       :formats-to-hide="disableKonnectManagedDetail ? ['yaml'] : []"
       :hide-title="hideTitle"
       :record-resolver="recordResolver"
-      @fetch:error="onEntityBaseConfigCardFetchError"
+      @fetch:error="onFetchError"
       @fetch:success="handleData"
       @loading="onLoadingChange"
     >
@@ -146,7 +145,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, onMounted, ref, useId, watch } from 'vue'
-import { isAxiosError, type AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 import type {
   ConfigurationSchema,
   ConfigurationSchemaItem,
@@ -242,14 +241,9 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:error', error: AxiosError): void
-  (e: 'fetch:not-found', error: AxiosError): void
   (e: 'fetch:success', data: RedisConfigurationResponse): void
   (e: 'fetch:managed-add-on-success', data: ManagedCacheAddOn): void
 }>()
-
-const onFetchNotFound = (error: AxiosError): void => {
-  emit('fetch:not-found', error)
-}
 
 const onFetchError = (error: AxiosError): void => {
   emit('fetch:error', error)
@@ -257,16 +251,6 @@ const onFetchError = (error: AxiosError): void => {
 
 const onLoadingChange = (isLoading: boolean): void => {
   emit('loading', isLoading)
-}
-
-// Host app treat `fetch:error` as fatal navigation. After Konnect-managed Redis is deleted,
-// `GET …/add-ons/{id}` returns 404, surface `fetch:not-found` instead
-const onEntityBaseConfigCardFetchError = (error: AxiosError): void => {
-  if (isAxiosError(error) && error.response?.status === 404) {
-    onFetchNotFound(error)
-    return
-  }
-  onFetchError(error)
 }
 
 const { i18n: { t } } = composables.useI18n()
