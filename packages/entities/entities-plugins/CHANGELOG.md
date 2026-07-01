@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.222.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.222.5...@kong-ui-public/entities-plugins@9.222.6) (2026-07-01)
+
+
+### Bug Fixes
+
+* **entities-plugins:** skip shameful on freeform and fix enum filler ([#3515](https://github.com/Kong/public-ui-components/issues/3515)) ([952ea5a](https://github.com/Kong/public-ui-components/commit/952ea5a36c1f572cf147295e54414b4a3940a142))
+
+
+
+
+
 ## [9.222.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.222.4...@kong-ui-public/entities-plugins@9.222.5) (2026-06-30)
 
 
