@@ -656,7 +656,7 @@ describe('OIDCPrincipals', () => {
     const konnectConfig = { apiBaseUrl: '/us', app: 'konnect' }
 
     it('skips the auth-servers fetch when isKongIdentityAuthServersAvailable is false', async () => {
-      const wrapper = mount(OIDCPrincipals, {
+      mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
         global: {
           provide: {
@@ -670,7 +670,7 @@ describe('OIDCPrincipals', () => {
     })
 
     it('skips the directories fetch when isKongIdentityDirectoriesAvailable is false', async () => {
-      const wrapper = mount(OIDCPrincipals, {
+      mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
         global: {
           provide: {
