@@ -979,8 +979,8 @@
             "label": "Plugin failure mode",
             "allow_label": "Allow access",
             "allow_description": "In the case of plugin failure, allow access to feature.",
-            "block_label": "Deny access",
-            "block_description": "In the case of plugin failure, deny access to feature."
+            "deny_label": "Deny access",
+            "deny_description": "In the case of plugin failure, deny access to feature."
           },
           "deny_unknown_customers": {
             "label": "Unknown customer access",

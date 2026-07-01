@@ -109,8 +109,8 @@ onMounted(async () => {
   gap: var(--kui-space-10, $kui-space-10);
 
   &-title {
-    display: flex;
     align-items: center;
+    display: flex;
     gap: var(--kui-space-40, $kui-space-40);
   }
 

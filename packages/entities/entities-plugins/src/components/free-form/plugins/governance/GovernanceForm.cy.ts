@@ -4,13 +4,14 @@ import type { FormSchema } from '../../../../types/plugins/form-schema'
 
 const createSchema = (): FormSchema => ({
   type: 'record',
+  supported_partials: { 'redis-ce': ['config.redis'] },
   fields: [{
     config: {
       type: 'record',
       required: true,
       fields: [
         {
-          subject: {
+          customer: {
             type: 'record',
             required: true,
             fields: [
@@ -18,101 +19,95 @@ const createSchema = (): FormSchema => ({
                 look_up_value_in: {
                   type: 'string',
                   one_of: ['consumer', 'application', 'header', 'query'],
-                  default: 'header',
+                  default: 'consumer',
                 },
               },
-              { field: { type: 'string', default: 'x-customer-id' } },
+              { field: { type: 'string' } },
             ],
           },
         },
         {
           feature: {
             type: 'record',
-            required: true,
             fields: [
-              { key: { type: 'string', default: 'feature-1' } },
+              { key: { type: 'string' } },
             ],
           },
         },
         { credit_balance_required: { type: 'boolean', default: true } },
         { deny_unknown_customers: { type: 'boolean', default: true } },
         {
-          response: {
+          response_codes: {
             type: 'record',
-            required: true,
             fields: [
               {
                 NO_CREDIT_AVAILABLE: {
                   type: 'record',
-                  required: true,
                   fields: [
-                    { message: { type: 'string', default: 'Customer has no credit available.' } },
                     { http_status: { type: 'integer', default: 402 } },
+                    { message: { type: 'string', default: 'Customer has no credit available.' } },
                   ],
                 },
               },
               {
                 USAGE_LIMIT_REACHED: {
                   type: 'record',
-                  required: true,
                   fields: [
-                    { message: { type: 'string', default: 'Customer has reached usage limit for feature.' } },
                     { http_status: { type: 'integer', default: 429 } },
+                    { message: { type: 'string', default: 'Customer has reached usage limit for feature.' } },
                   ],
                 },
               },
               {
                 FEATURE_UNAVAILABLE: {
                   type: 'record',
-                  required: true,
                   fields: [
-                    { message: { type: 'string', default: 'Feature is not available for the customer.' } },
                     { http_status: { type: 'integer', default: 403 } },
+                    { message: { type: 'string', default: 'Feature is not available for the customer.' } },
                   ],
                 },
               },
               {
                 FEATURE_NOT_FOUND: {
                   type: 'record',
-                  required: true,
                   fields: [
-                    { message: { type: 'string', default: 'Feature not found.' } },
                     { http_status: { type: 'integer', default: 403 } },
+                    { message: { type: 'string', default: 'Feature not found.' } },
                   ],
                 },
               },
               {
                 CUSTOMER_NOT_FOUND: {
                   type: 'record',
-                  required: true,
                   fields: [
+                    { http_status: { type: 'integer', default: 404 } },
                     { message: { type: 'string', default: 'Customer is not found by subject.' } },
-                    { http_status: { type: 'integer', default: 403 } },
                   ],
                 },
               },
             ],
           },
         },
-        { governance_endpoint: { type: 'string', default: 'https://us.api.konghq.com/v3/openmeter/governance/query', referenceable: true } },
-        { api_token: { type: 'string', referenceable: true } },
-        // NOTE: ssl_verify, timeout, keepalive are design-driven; pending backend schema confirmation
+        { governance_endpoint: { type: 'string', required: true } },
+        { api_token: { type: 'string', required: true, referenceable: true } },
         { ssl_verify: { type: 'boolean', default: true } },
         { timeout: { type: 'integer', default: 10000 } },
         { keepalive: { type: 'integer', default: 60000 } },
         { sync_rate: { type: 'integer', default: 2 } },
         { refresh_interval: { type: 'integer', default: 30 } },
         { max_stale_seconds: { type: 'integer', default: 60 } },
-        { l1_ttl: { type: 'integer', default: 5 } },
-        { l2_ttl: { type: 'integer', default: 120 } },
-        { fail_policy: { type: 'string', one_of: ['allow', 'block'], default: 'allow' } },
+        { l1_cache_ttl_seconds: { type: 'integer', default: 5 } },
+        { l2_cache_ttl_seconds: { type: 'integer', default: 120 } },
+        { fail_policy: { type: 'string', one_of: ['allow', 'deny'], default: 'allow' } },
         {
           redis: {
             type: 'record',
             fields: [
-              { host: { type: 'string' } },
+              { host: { type: 'string', default: '127.0.0.1' } },
               { port: { type: 'integer', default: 6379 } },
+              { username: { type: 'string' } },
               { password: { type: 'string' } },
+              { database: { type: 'integer', default: 0 } },
             ],
           },
         },
@@ -212,37 +207,37 @@ describe('GovernanceForm - response mapping', () => {
   })
 })
 
-describe('GovernanceForm - subject field visibility', () => {
-  it('shows config.subject.field when look_up_value_in is header', () => {
+describe('GovernanceForm - customer field visibility', () => {
+  it('shows config.customer.field when look_up_value_in is header', () => {
     mountForm({
-      model: { config: { subject: { look_up_value_in: 'header', field: 'x-customer-id' } } },
+      model: { config: { customer: { look_up_value_in: 'header', field: 'x-customer-id' } } },
     })
 
-    cy.getTestId('ff-config.subject.field').should('exist').and('be.visible')
+    cy.getTestId('ff-config.customer.field').should('exist').and('be.visible')
   })
 
-  it('shows config.subject.field when look_up_value_in is query', () => {
+  it('shows config.customer.field when look_up_value_in is query', () => {
     mountForm({
-      model: { config: { subject: { look_up_value_in: 'query', field: 'customer_id' } } },
+      model: { config: { customer: { look_up_value_in: 'query', field: 'customer_id' } } },
     })
 
-    cy.getTestId('ff-config.subject.field').should('exist').and('be.visible')
+    cy.getTestId('ff-config.customer.field').should('exist').and('be.visible')
   })
 
-  it('hides config.subject.field when look_up_value_in is consumer', () => {
+  it('hides config.customer.field when look_up_value_in is consumer', () => {
     mountForm({
-      model: { config: { subject: { look_up_value_in: 'consumer' } } },
+      model: { config: { customer: { look_up_value_in: 'consumer' } } },
     })
 
-    cy.getTestId('ff-config.subject.field').should('not.be.visible')
+    cy.getTestId('ff-config.customer.field').should('not.be.visible')
   })
 
-  it('hides config.subject.field when look_up_value_in is application', () => {
+  it('hides config.customer.field when look_up_value_in is application', () => {
     mountForm({
-      model: { config: { subject: { look_up_value_in: 'application' } } },
+      model: { config: { customer: { look_up_value_in: 'application' } } },
     })
 
-    cy.getTestId('ff-config.subject.field').should('not.be.visible')
+    cy.getTestId('ff-config.customer.field').should('not.be.visible')
   })
 })
 

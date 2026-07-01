@@ -5,10 +5,10 @@
     :form-config="formConfig"
   >
     <template #field-renderers>
-      <!-- Subject: look_up_value_in -->
+      <!-- Customer: look_up_value_in -->
       <FieldRenderer
         v-slot="slotProps"
-        :match="({ path }: { path: string }) => path === 'config.subject.look_up_value_in'"
+        :match="({ path }: { path: string }) => path === 'config.customer.look_up_value_in'"
       >
         <EnumField
           v-bind="slotProps"
@@ -17,10 +17,10 @@
         />
       </FieldRenderer>
 
-      <!-- Subject: field -->
+      <!-- Customer: field -->
       <FieldRenderer
         v-slot="slotProps"
-        :match="({ path }: { path: string }) => path === 'config.subject.field'"
+        :match="({ path }: { path: string }) => path === 'config.customer.field'"
       >
         <StringField
           v-bind="slotProps"
@@ -31,9 +31,6 @@
       </FieldRenderer>
 
       <!-- Connection: ssl_verify -->
-      <!-- NOTE: ssl_verify, timeout, and keepalive are design-driven fields not present
-           in the authoritative YAML schema. Included per design spec; pending backend
-           schema confirmation before the plugin ships. -->
       <FieldRenderer
         v-slot="slotProps"
         :match="({ path }: { path: string }) => path === 'config.ssl_verify'"
@@ -46,7 +43,6 @@
       </FieldRenderer>
 
       <!-- Connection: timeout -->
-      <!-- NOTE: design-driven field, pending backend schema confirmation -->
       <FieldRenderer
         v-slot="slotProps"
         :match="({ path }: { path: string }) => path === 'config.timeout'"
@@ -72,13 +68,13 @@
 
     <!-- ── Section 2: Plugin configuration ────────────────────────────── -->
     <template #section-configuration>
-      <!-- Subject: rendered flat (no collapsible group). `as-child` drops the
+      <!-- Customer: rendered flat (no collapsible group). `as-child` drops the
            ObjectField header; the render-rule keeps `field` visible only for
            header|query. -->
       <div class="ff-governance-subject">
         <ObjectField
           as-child
-          name="config.subject"
+          name="config.customer"
           :render-rules="{
             dependencies: {
               field: ['look_up_value_in', ['header', 'query']],
@@ -140,11 +136,11 @@
             />
             <NumberField
               :label="t('plugins.free-form.governance.fields.l1_ttl.label')"
-              name="config.l1_ttl"
+              name="config.l1_cache_ttl_seconds"
             />
             <NumberField
               :label="t('plugins.free-form.governance.fields.l2_ttl.label')"
-              name="config.l2_ttl"
+              name="config.l2_cache_ttl_seconds"
             />
           </div>
         </CollapsibleSection>
@@ -297,9 +293,9 @@ const failPolicyOptions = computed(() => [
     description: t('plugins.free-form.governance.fields.fail_policy.allow_description'),
   },
   {
-    value: 'block',
-    label: t('plugins.free-form.governance.fields.fail_policy.block_label'),
-    description: t('plugins.free-form.governance.fields.fail_policy.block_description'),
+    value: 'deny',
+    label: t('plugins.free-form.governance.fields.fail_policy.deny_label'),
+    description: t('plugins.free-form.governance.fields.fail_policy.deny_description'),
   },
 ])
 
@@ -350,15 +346,15 @@ const denyUnknownCustomersOptions = computed(() => [
   }
 }
 
-// Cache and sync fields laid out two per row, as designed.
+// Cache and sync fields laid out two per row, as designed. Grid (not flex-wrap)
+// so a lone item on the last row keeps its half-width column instead of
+// stretching to fill the row.
 .ff-governance-cache-sync {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
   gap: var(--kui-space-60, $kui-space-60);
+  grid-template-columns: repeat(2, 1fr);
 
   > * {
-    flex: 1 1 calc(50% - var(--kui-space-60, $kui-space-60));
     min-width: 0;
   }
 }

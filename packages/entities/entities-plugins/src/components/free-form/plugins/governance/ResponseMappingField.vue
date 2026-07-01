@@ -55,23 +55,30 @@ const RESPONSE_KEYS = [
 
 type ResponseKey = typeof RESPONSE_KEYS[number]
 
-const { formData } = useFormShared()
+const { formData, getDefault } = useFormShared()
 
+// `config.response_codes` and its per-code records are not `required` in the
+// plugin schema, so their defaults are not auto-populated on creation. This
+// fixed 5-row table always shows the schema default as a fallback.
 function getHttpStatus(key: ResponseKey): number | string {
-  return get(formData, ['config', 'response', key, 'http_status']) ?? ''
+  return get(formData, ['config', 'response_codes', key, 'http_status'])
+    ?? getDefault(`config.response_codes.${key}.http_status`)
+    ?? ''
 }
 
 function getMessage(key: ResponseKey): string {
-  return get(formData, ['config', 'response', key, 'message']) ?? ''
+  return get(formData, ['config', 'response_codes', key, 'message'])
+    ?? getDefault(`config.response_codes.${key}.message`)
+    ?? ''
 }
 
 function setHttpStatus(key: ResponseKey, value: string | number) {
   const num = typeof value === 'string' ? (value === '' ? null : Number(value)) : value
-  set(formData, ['config', 'response', key, 'http_status'], num)
+  set(formData, ['config', 'response_codes', key, 'http_status'], num)
 }
 
 function setMessage(key: ResponseKey, value: string) {
-  set(formData, ['config', 'response', key, 'message'], value)
+  set(formData, ['config', 'response_codes', key, 'message'], value)
 }
 </script>
 
@@ -82,18 +89,18 @@ function setMessage(key: ResponseKey, value: string) {
   gap: var(--kui-space-40, $kui-space-40);
 
   &-header {
+    border-bottom: 1px solid var(--kui-color-border, $kui-color-border);
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     display: flex;
-    gap: var(--kui-space-60, $kui-space-60);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    gap: var(--kui-space-60, $kui-space-60);
     padding-bottom: var(--kui-space-20, $kui-space-20);
-    border-bottom: 1px solid var(--kui-color-border, $kui-color-border);
   }
 
   &-row {
-    display: flex;
     align-items: center;
+    display: flex;
     gap: var(--kui-space-60, $kui-space-60);
   }
 
