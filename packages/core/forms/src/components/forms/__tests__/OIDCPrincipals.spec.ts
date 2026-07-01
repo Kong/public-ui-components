@@ -652,49 +652,35 @@ describe('OIDCPrincipals', () => {
     })
   })
 
-  describe('API unavailability (401)', () => {
+  describe('KRN permission flags', () => {
     const konnectConfig = { apiBaseUrl: '/us', app: 'konnect' }
 
-    const mountKonnect401 = (formModelOverrides = {}, propsOverrides = {}) =>
-      mount(OIDCPrincipals, {
-        props: { ...baseProps, formModel: buildFormModel(formModelOverrides), ...propsOverrides },
-        global: { provide: { [FORMS_CONFIG]: konnectConfig } },
+    it('skips the auth-servers fetch when isKongIdentityAuthServersAvailable is false', async () => {
+      const wrapper = mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: {
+          provide: {
+            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityAuthServersAvailable: false },
+          },
+        },
       })
-
-    it('emits kong-identity-unavailable when auth-servers returns 401', async () => {
-      mockGet.mockImplementation((url: string) => {
-        if (url.includes('/v1/auth-servers')) return Promise.resolve({ status: 401, data: {} })
-        return Promise.resolve({ data: { data: [] } })
-      })
-
-      const wrapper = mountKonnect401()
       await flushPromises()
 
-      expect(wrapper.emitted('kong-identity-unavailable')).toBeTruthy()
+      expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v1/auth-servers'), expect.anything())
     })
 
-    it('emits kong-identity-unavailable when /v2/directories returns 401', async () => {
-      mockGet.mockImplementation((url: string) => {
-        if (url.includes('/v2/directories')) return Promise.resolve({ status: 401, data: {} })
-        return Promise.resolve({ data: { data: [] } })
+    it('skips the directories fetch when isKongIdentityDirectoriesAvailable is false', async () => {
+      const wrapper = mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: {
+          provide: {
+            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityDirectoriesAvailable: false },
+          },
+        },
       })
-
-      const wrapper = mountKonnect401()
       await flushPromises()
 
-      expect(wrapper.emitted('kong-identity-unavailable')).toBeTruthy()
-    })
-
-    it('does not emit kong-identity-unavailable when /v2/directories returns a non-401 error', async () => {
-      mockGet.mockImplementation((url: string) => {
-        if (url.includes('/v2/directories')) return Promise.reject({ response: { status: 500 } })
-        return Promise.resolve({ data: { data: [] } })
-      })
-
-      const wrapper = mountKonnect401()
-      await flushPromises()
-
-      expect(wrapper.emitted('kong-identity-unavailable')).toBeFalsy()
+      expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v2/directories'), expect.anything())
     })
   })
 })
