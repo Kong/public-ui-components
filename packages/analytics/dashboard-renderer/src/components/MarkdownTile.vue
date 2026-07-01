@@ -11,9 +11,9 @@
       <div class="tile-actions">
         <EditIcon
           class="edit-icon"
-          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
           :data-testid="`edit-tile-${tileId}`"
-          :size="KUI_ICON_SIZE_40"
+          :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
           @click="emit('edit-tile')"
         />
         <KDropdown
@@ -23,9 +23,9 @@
         >
           <MoreIcon
             class="kebab-action-menu"
-            :color="KUI_COLOR_TEXT_NEUTRAL"
+            :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
             :data-testid="`kebab-action-menu-${tileId}`"
-            :size="KUI_ICON_SIZE_40"
+            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
           />
           <template #items>
             <KDropdownItem
