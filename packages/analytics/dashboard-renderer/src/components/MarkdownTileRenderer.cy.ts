@@ -31,7 +31,7 @@ describe('<MarkdownTileRenderer />', () => {
     })
 
     cy.get('.markdown-tile-renderer script').should('not.exist')
-    cy.window().its('__xss').should('equal', undefined)
+    cy.window().then(win => { expect((win as any).__xss).to.be.undefined })
   })
 
   it('does not render inline event handlers', () => {
@@ -42,6 +42,6 @@ describe('<MarkdownTileRenderer />', () => {
     })
 
     cy.get('.markdown-tile-renderer [onerror]').should('not.exist')
-    cy.window().its('__xss2').should('equal', undefined)
+    cy.window().then(win => { expect((win as any).__xss2).to.be.undefined })
   })
 })
