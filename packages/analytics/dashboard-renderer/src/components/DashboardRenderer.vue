@@ -32,8 +32,20 @@
       >
         <template #tile="{ tile }">
           <!-- eslint-disable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
+          <MarkdownTile
+            v-if="tile.type === 'markdown'"
+            class="tile-container"
+            :content="(tile.meta as any).content"
+            :context="internalContext"
+            :hide-actions="!internalContext.showTileActions"
+            :is-fullscreen="isFullscreen"
+            :tile-id="tile.id"
+            @duplicate-tile="onDuplicateTile(tile)"
+            @edit-tile="onEditTile(tile)"
+            @remove-tile="onRemoveTile(tile)"
+          />
           <div
-            v-if="isSlottableTile(tile)"
+            v-else-if="isSlottableTile(tile)"
             class="tile-container slottable-tile"
           >
             <slot :name="getSlottableSlotName(tile)" />
@@ -76,6 +88,7 @@ import type {
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
+import MarkdownTile from './MarkdownTile.vue'
 import type { ComponentPublicInstance } from 'vue'
 import { computed, inject, nextTick, ref } from 'vue'
 import composables from '../composables'
@@ -136,7 +149,23 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
 }
 
 const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
-  return model.value.tiles.map((tile: TileConfig) => {
+  return model.value.tiles.map((tile: TileConfig): GridTile<TileDefinition> => {
+    if (tile.type === 'markdown') {
+      if (internalContext.value.editable && !tile.id) {
+        console.warn(
+          'No id provided for tile. One will be generated automatically,',
+          'however tracking changes to this tile may not work as expected.',
+          tile,
+        )
+      }
+      return {
+        layout: tile.layout,
+        meta: tile.definition as unknown as TileDefinition,
+        type: tile.type,
+        id: tile.id ?? crypto.randomUUID(),
+      }
+    }
+
     let tileMeta = tile.definition
     const tileType = tile.type ?? 'chart'
 
