@@ -411,7 +411,7 @@ export default {
       default: false,
     },
   },
-  emits: ['mode-change', 'click:learn-more', 'click:create-entity', 'kong-identity-unavailable'],
+  emits: ['mode-change', 'click:learn-more', 'click:create-entity'],
   data() {
     return {
       MODE_KONG_IDENTITY,
@@ -514,6 +514,7 @@ export default {
     async fetchPrincipalsState({ setDirectory = false } = {}) {
       // Kong Identity directories are a Konnect-only concept.
       if (this.formsConfig?.app !== 'konnect') return
+      if (this.formsConfig?.isKongIdentityDirectoriesAvailable === false) return
       // Apply the cached directory name instantly so the field isn't empty during a refresh.
       if (setDirectory && this.cachedDirectory) {
         // eslint-disable-next-line vue/no-mutating-props
@@ -530,12 +531,7 @@ export default {
         // Only need the single directory backing this config.
         const dirResp = await axiosInstance.get(`${base}/v2/directories`, {
           params: { 'page[size]': 1 },
-          validateStatus: (s) => s === 401 || (s >= 200 && s < 300),
         })
-        if (dirResp.status === 401) {
-          this.$emit('kong-identity-unavailable')
-          return
-        }
         const directory = dirResp?.data?.data?.[0]
         if (!directory) {
           this.hasPrincipals = false
@@ -563,17 +559,12 @@ export default {
       }
     },
     async fetchKongIdentityServers() {
+      if (this.formsConfig?.isKongIdentityAuthServersAvailable === false) return
       try {
         this.kongIdentityServersLoading = true
         const { axiosInstance } = useAxios(this.formsConfig?.axiosRequestConfig)
         const url = `${this.formsConfig.apiBaseUrl}${KONG_IDENTITY_SERVERS_ENDPOINT}`
-        const resp = await axiosInstance.get(url, {
-          validateStatus: (s) => s === 401 || (s >= 200 && s < 300),
-        })
-        if (resp.status === 401) {
-          this.$emit('kong-identity-unavailable')
-          return
-        }
+        const resp = await axiosInstance.get(url)
         this.kongIdentityServers = resp.data?.data ?? []
         // If editing with an existing issuer, try to match a server
         const issuer = this.formModel['config-issuer']

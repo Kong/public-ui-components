@@ -248,8 +248,8 @@ function mountContent(
     lookupDelay?: number
     /** khcp-20393 Identity Principals UI flag. Defaults to on so the new-UI specs render it. */
     identityPrincipalsUiEnabled?: boolean
-    /** Override the HTTP status code returned by the /v2/directories stub (default 200). */
-    directoriesStatusCode?: number
+    /** KRN permission flag — when false, the Kong Identity principals section is hidden without a fetch. */
+    isKongIdentityDirectoriesAvailable?: boolean
   },
   data?: Record<string, any>,
 ) {
@@ -257,7 +257,7 @@ function mountContent(
   const onLearnMoreSpy = cy.spy().as('onLearnMoreSpy')
   const onCreatePrincipalSpy = cy.spy().as('onCreatePrincipalSpy')
   const formsConfig = options.isKonnect
-    ? { app: 'konnect', apiBaseUrl: 'https://us.api.konghq.com' }
+    ? { app: 'konnect', apiBaseUrl: 'https://us.api.konghq.com', isKongIdentityDirectoriesAvailable: options.isKongIdentityDirectoriesAvailable }
     : { app: 'kongManager' }
 
   // Mock the realms API
@@ -268,14 +268,10 @@ function mountContent(
 
   const beforeSaveCallbacks: Array<() => boolean> = []
   // Mock the Kong Identity directories + principals APIs
-  if (options.directoriesStatusCode) {
-    cy.intercept('GET', '**/v2/directories*', { statusCode: options.directoriesStatusCode }).as('fetchDirectories')
-  } else {
-    const directoriesResponse = options.hasDefaultDirectory !== false
-      ? { data: [{ id: 'dir-default', name: 'default' }] }
-      : { data: [] }
-    cy.intercept('GET', '**/v2/directories*', { body: directoriesResponse, delay: options.lookupDelay }).as('fetchDirectories')
-  }
+  const directoriesResponse = options.hasDefaultDirectory !== false
+    ? { data: [{ id: 'dir-default', name: 'default' }] }
+    : { data: [] }
+  cy.intercept('GET', '**/v2/directories*', { body: directoriesResponse, delay: options.lookupDelay }).as('fetchDirectories')
 
   const principalsResponse = options.hasPrincipals
     ? { data: [{ id: 'principal-1' }] }
@@ -713,35 +709,30 @@ describe('ConfigFormContent', () => {
       })
     })
 
-    describe('API unavailability (401)', () => {
-      it('hides the Kong Identity section when /v2/directories returns 401', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, directoriesStatusCode: 401 })
+    describe('KRN permission flags', () => {
+      it('hides the Kong Identity section when isKongIdentityDirectoriesAvailable is false', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, isKongIdentityDirectoriesAvailable: false })
 
-        cy.wait('@fetchDirectories')
         cy.getTestId('ff-kong-identity-field').should('not.exist')
         cy.getTestId('kong-identity-principals-panel').should('not.exist')
         cy.getTestId('ff-principals-error-on-miss-label').should('not.exist')
       })
 
-      it('does not hide the Kong Identity section on non-401 errors', () => {
-        // 500 → section stays visible (falls back to empty-state panel)
-        mountContent(schemaWithRealms, { isKonnect: true, directoriesStatusCode: 500 }, {
-          config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
-        })
+      it('makes no directories fetch when isKongIdentityDirectoriesAvailable is false', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, isKongIdentityDirectoriesAvailable: false })
 
-        cy.wait('@fetchDirectories')
-        cy.getTestId('kong-identity-principals-panel').should('be.visible')
+        // The intercept exists but should never be triggered
+        cy.get('@fetchDirectories.all').should('have.length', 0)
       })
 
-      it('preserves saved principals config on 401 (edit)', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, directoriesStatusCode: 401 }, {
+      it('preserves saved principals config when isKongIdentityDirectoriesAvailable is false (edit)', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, isKongIdentityDirectoriesAvailable: false }, {
           config: {
             principals: { enabled: true, directory: 'my-custom-dir', error_on_miss: false },
             identity_realms: null,
           },
         })
 
-        cy.wait('@fetchDirectories')
         cy.getTestId('ff-kong-identity-field').should('not.exist')
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
           return val.config?.principals?.enabled === true
