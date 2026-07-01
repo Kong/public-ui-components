@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="kong-ui-consumer-group-entity-config-card"
-    :class="{ 'redis-nested-detail': disableKonnectManagedDetail }"
-  >
+  <div class="kong-ui-consumer-group-entity-config-card">
     <!-- Konnect managed Redis only (FF). Self-managed Redis never uses this; it always uses the legacy card below -->
     <template v-if="isManagedKonnectDetailEnabled">
       <KSkeleton
@@ -17,26 +14,27 @@
         class="managed-konnect-redis-detail"
         data-testid="managed-konnect-redis-detail"
       >
-        <KAlert
-          v-if="isManagedKonnectDetailEnabled && managedAddOnState === 'initializing'"
-          appearance="info"
-          class="redis-managed-state-alert"
-          data-testid="redis-managed-state-alert-initializing"
-          show-icon
+        <KSegmentedControl
+          v-model="activeSegment"
+          class="redis-config-segment"
+          data-testid="managed-redis-config-segment"
+          :options="configSegmentOptions"
+          size="large"
         >
-          {{ t('config_card.managed_state.initializing_alert') }}
-        </KAlert>
-        <KAlert
-          v-else-if="isManagedKonnectDetailEnabled && managedAddOnState === 'terminating'"
-          appearance="danger"
-          class="redis-managed-state-alert"
-          data-testid="redis-managed-state-alert-terminating"
-          show-icon
-        >
-          {{ t('config_card.managed_state.terminating_alert') }}
-        </KAlert>
+          <template #option-label="{ option }">
+            <KTooltip
+              :disabled="isTooltipDisabled(option)"
+              max-width="320"
+              placement="top"
+              :text="partialSegmentTooltip"
+            >
+              <span>{{ option.label }}</span>
+            </KTooltip>
+          </template>
+        </KSegmentedControl>
         <EntityBaseConfigCard
-          :key="addOnIdForCacheFetch"
+          v-if="activeSegment === 'cache'"
+          :key="cacheConfigCardKey"
           :code-block-record-formatter="addOnCodeFmt"
           :code-block-record-resolver="addOnCodeRslv"
           :config="addOnCardRuntimeConfig"
@@ -50,7 +48,7 @@
           :record-resolver="addOnRecordResolver"
           @fetch:error="onEntityBaseConfigCardFetchError"
           @fetch:success="onCacheAddOnLoaded"
-          @loading="(v) => emit('loading', v)"
+          @loading="onLoadingChange"
         >
           <template #title>
             {{ t('config_card.sections.cache_configuration') }}
@@ -98,6 +96,21 @@
             </div>
           </template>
         </EntityBaseConfigCard>
+        <RedisConfigurationConfigCard
+          v-else-if="activeSegment === 'partial'"
+          :config="innerPartialCardConfig"
+          :config-card-doc="configCardDoc"
+          disable-konnect-managed-detail
+          :hide-title="false"
+          @fetch:error="onFetchError"
+          @fetch:not-found="onFetchNotFound"
+          @fetch:success="onPartialLoaded"
+          @loading="onLoadingChange"
+        >
+          <template #title>
+            {{ t('config_card.sections.partial_configuration') }}
+          </template>
+        </RedisConfigurationConfigCard>
       </div>
     </template>
 
@@ -115,7 +128,7 @@
       :record-resolver="recordResolver"
       @fetch:error="onEntityBaseConfigCardFetchError"
       @fetch:success="handleData"
-      @loading="(v) => emit('loading', v)"
+      @loading="onLoadingChange"
     >
       <template #type>
         <div>{{ redisTypeText }}</div>
@@ -132,7 +145,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, onBeforeMount, onMounted, ref, useId } from 'vue'
+import { computed, onBeforeMount, onMounted, ref, useId, watch } from 'vue'
 import { isAxiosError, type AxiosError } from 'axios'
 import type {
   ConfigurationSchema,
@@ -147,7 +160,8 @@ import {
   highlightCodeBlock,
   useAxios,
 } from '@kong-ui-public/entities-shared'
-import { KAlert, KCodeBlock, KSkeleton } from '@kong/kongponents'
+import { KCodeBlock, KSegmentedControl, KSkeleton, KTooltip } from '@kong/kongponents'
+import type { SegmentedControlOption } from '@kong/kongponents'
 import type {
   DetailLayout,
   KonnectRedisConfigurationEntityConfig,
@@ -221,7 +235,7 @@ const props = defineProps({
 })
 
 /**
- * fetch:success` - Koko redis partial (`RedisConfigurationResponse`)
+ * `fetch:success` - Koko redis partial (`RedisConfigurationResponse`)
  * Konnect-managed redis loads Cloud Gateways add-ons as the primary entity; that payload is emitted
  * separately via `fetch:managed-add-on-success` to avoid confusion with legacy partial payload
  */
@@ -233,18 +247,26 @@ const emit = defineEmits<{
   (e: 'fetch:managed-add-on-success', data: ManagedCacheAddOn): void
 }>()
 
-const emitFetchNotFound = (error: AxiosError): void => {
+const onFetchNotFound = (error: AxiosError): void => {
   emit('fetch:not-found', error)
+}
+
+const onFetchError = (error: AxiosError): void => {
+  emit('fetch:error', error)
+}
+
+const onLoadingChange = (isLoading: boolean): void => {
+  emit('loading', isLoading)
 }
 
 // Host app treat `fetch:error` as fatal navigation. After Konnect-managed Redis is deleted,
 // `GET …/add-ons/{id}` returns 404, surface `fetch:not-found` instead
 const onEntityBaseConfigCardFetchError = (error: AxiosError): void => {
   if (isAxiosError(error) && error.response?.status === 404) {
-    emitFetchNotFound(error)
+    onFetchNotFound(error)
     return
   }
-  emit('fetch:error', error)
+  onFetchError(error)
 }
 
 const { i18n: { t } } = composables.useI18n()
@@ -309,9 +331,66 @@ const cloudGatewaysBase = computed((): string => {
 
 const detailLayout = ref<DetailLayout>('legacy')
 const addOnIdForCacheFetch = ref('')
+const linkedPartialId = ref<string | null>(null)
 
 // Add-on state from GET add-on
 const managedAddOnState = ref<CloudGatewaysAddOnState | null>(null)
+
+// EntityBaseConfigCard fetches once on mount; include state so poll transitions refetch cache fields
+const cacheConfigCardKey = computed(
+  () => `${addOnIdForCacheFetch.value}:${managedAddOnState.value ?? 'unknown'}`,
+)
+
+type ConfigSegment = 'cache' | 'partial'
+const activeSegment = ref<ConfigSegment>('cache')
+
+const isPartialReady = computed(() => managedAddOnState.value === 'ready')
+
+const partialSegmentTooltip = computed((): string => {
+  switch (managedAddOnState.value) {
+    case 'initializing':
+      return t('config_card.managed_state.initializing_tooltip')
+    case 'terminating':
+      return t('config_card.managed_state.terminating_tooltip')
+    default:
+      return ''
+  }
+})
+
+const isPartialSegmentTooltipDisabled = computed(
+  () => isPartialReady.value || !partialSegmentTooltip.value,
+)
+
+const isTooltipDisabled = (option: SegmentedControlOption<ConfigSegment>): boolean =>
+  option.value !== 'partial' || isPartialSegmentTooltipDisabled.value
+
+const configSegmentOptions = computed((): Array<SegmentedControlOption<ConfigSegment>> => [
+  { label: t('config_card.sections.cache_configuration'), value: 'cache' },
+  {
+    label: t('config_card.sections.partial_configuration'),
+    value: 'partial',
+    disabled: !isPartialReady.value,
+  },
+])
+
+// Host polls add-on state on the detail page, keep segment in sync, skip while host is still loading
+const hostManagedAddOnState = computed((): CloudGatewaysAddOnState | undefined => {
+  if (!isManagedKonnectDetailEnabled.value || props.config.app !== 'konnect') return undefined
+  return (props.config as KonnectRedisConfigurationEntityConfig).managedAddOnState
+})
+
+watch(hostManagedAddOnState, (state) => {
+  if (state !== undefined) {
+    managedAddOnState.value = state
+  }
+})
+
+// Partial stays disabled until ready
+watch(managedAddOnState, (state) => {
+  if (state !== 'ready') {
+    activeSegment.value = 'cache'
+  }
+})
 
 // The same Cloud Gateway add-on response powers 3 outputs:
 // Structured tab: `addOnRecordResolver` maps and filters API fields for card display
@@ -345,7 +424,7 @@ onMounted(() => {
   }
 
   void (async () => {
-    emit('loading', true)
+    onLoadingChange(true)
 
     const k = props.config as KonnectRedisConfigurationEntityConfig
     const routeEntityId = k.entityId
@@ -361,6 +440,7 @@ onMounted(() => {
 
       if (addOnFromRouteId) {
         addOnIdForCacheFetch.value = addOnFromRouteId.id
+        linkedPartialId.value = getCacheConfigId(addOnFromRouteId) ?? null
         managedAddOnState.value = addOnFromRouteId.state ?? null
         detailLayout.value = 'managed'
         return
@@ -386,6 +466,7 @@ onMounted(() => {
 
         if (addOnForPartial && isManagedCacheAddOn(addOnForPartial)) {
           addOnIdForCacheFetch.value = addOnForPartial.id
+          linkedPartialId.value = routeEntityId
           managedAddOnState.value = addOnForPartial.state ?? null
           detailLayout.value = 'managed'
           return
@@ -394,7 +475,7 @@ onMounted(() => {
     } catch {
       // fall back to legacy partial-only card
     } finally {
-      emit('loading', false)
+      onLoadingChange(false)
     }
 
     detailLayout.value = 'legacy'
@@ -417,6 +498,15 @@ const addOnCardRuntimeConfig = computed((): KonnectRedisConfigurationEntityConfi
   }
 })
 
+const innerPartialCardConfig = computed((): KonnectRedisConfigurationEntityConfig => {
+  const k = props.config as KonnectRedisConfigurationEntityConfig
+  return {
+    ...k,
+    entityId: linkedPartialId.value ?? k.entityId,
+    formatPreferenceKey: k.formatPreferenceKey ? `${k.formatPreferenceKey}_managed_partial` : undefined,
+  }
+})
+
 // Wire add-on JSON- pass through for JSON tab; TR uses `konnect_cloud_gateway_addon` map
 const addOnCodeFmt = (
   record: Record<string, any>,
@@ -435,10 +525,17 @@ const onCacheAddOnLoaded = (data: Record<string, any>): void => {
   setManagedAddOnSchemaFromDisplayRecord(display)
 
   if (isManagedCacheAddOn(row)) {
-    // Keep partial UI in sync when add-on transitions
     managedAddOnState.value = row.state ?? null
+    const partialId = getCacheConfigId(row)
+    if (partialId) {
+      linkedPartialId.value = partialId
+    }
     emit('fetch:managed-add-on-success', row)
   }
+}
+
+const onPartialLoaded = (data: RedisConfigurationResponse): void => {
+  emit('fetch:success', data)
 }
 
 const redisType = ref<RedisType>(DEFAULT_REDIS_TYPE)
@@ -806,8 +903,14 @@ const configSchema = computed<ConfigurationSchema>(() => {
 
 <style lang="scss" scoped>
 .managed-konnect-redis-detail {
-  .redis-managed-state-alert {
+  .redis-config-segment {
     margin-bottom: var(--kui-space-60, $kui-space-60);
+    width: fit-content;
+
+    :deep(.k-segmented-control) {
+      // Override for compact pill layout
+      width: fit-content !important;
+    }
   }
 
   // Fills the config card value column
@@ -839,14 +942,6 @@ const configSchema = computed<ConfigurationSchema>(() => {
     flex: 1;
     min-width: 0;
     width: 75%;
-  }
-
-  :deep(.redis-nested-detail .kong-ui-entity-base-config-card.k-card) {
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-    padding-left: var(--kui-space-0, $kui-space-0);
-    padding-right: var(--kui-space-0, $kui-space-0);
   }
 
   /* JsonArray fieldset legends (e.g. data plane groups): medium weight; keep global JsonCardItem unchanged */

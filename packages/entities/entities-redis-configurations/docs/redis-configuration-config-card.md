@@ -107,7 +107,7 @@ A `@fetch:not-found` event is emitted when the underlying GET returns **404** (f
 
 #### fetch:success
 
-A `@fetch:success` event is emitted when the Koko redis partial is loaded. That's the legacy Konnect/Kong Manager config card. Konnect-managed detail loads the add-on and partial configs instead; use `fetch:managed-add-on-success` for that payload.
+A `@fetch:success` event is emitted when the Koko redis partial loads (`RedisConfigurationResponse`). Legacy Konnect/Kong Manager cards always emit this. Konnect-managed detail emits it from the partial segment when the add-on is `ready`; the cache segment uses `fetch:managed-add-on-success` for the add-on payload.
 
 #### fetch:managed-add-on-success
 
