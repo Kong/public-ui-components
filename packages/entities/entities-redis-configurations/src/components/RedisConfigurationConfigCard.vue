@@ -25,7 +25,7 @@
             <KTooltip
               :disabled="isTooltipDisabled(option)"
               max-width="320"
-              placement="top"
+              placement="right"
               :text="partialSegmentTooltip"
             >
               <span>{{ option.label }}</span>
