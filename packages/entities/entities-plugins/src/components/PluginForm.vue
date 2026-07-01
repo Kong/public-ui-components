@@ -430,6 +430,8 @@ const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
   return 'freeform'
 })
 
+const isFreeFormEngine = computed(() => isFreeForm(props.pluginType, realEngine.value))
+
 provide(REDIS_PARTIAL_INFO, {
   redisType: pluginPartialType,
   redisPath: pluginRedisPath,
@@ -736,7 +738,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // If the field type is 'set', convert it to 'array'
     // Freeform can handle 'set' type with one_of elements as multiselect
     // Todo: create suitable component for 'set' type in freeform and remove this conversion
-    if (scheme.type === 'set' && !(isFreeForm(props.pluginType, realEngine.value) && scheme.elements.one_of)) {
+    if (scheme.type === 'set' && !(isFreeFormEngine.value && scheme.elements.one_of)) {
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
@@ -1501,7 +1503,7 @@ const saveFormData = async (): Promise<void> => {
 
     const payload = JSON.parse(JSON.stringify(getRequestBody.value))
     const customSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
-    if (typeof customSchema?.shamefullyTransformPayload === 'function') {
+    if (!isFreeFormEngine.value && typeof customSchema?.shamefullyTransformPayload === 'function') {
       customSchema.shamefullyTransformPayload({
         originalModel: formFieldsOriginal,
         model: form.fields,
