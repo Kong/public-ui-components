@@ -1,5 +1,5 @@
 import type { StringFieldSchema, NumberLikeFieldSchema, SetFieldSchema } from '../../../../../types/plugins/form-schema'
-import { type HandlerOption, SCROLL_BEHAVIOR } from './types'
+import { type HandlerOption, SCROLL_BEHAVIOR, scrollIntoViewNative } from './types'
 import { selectors } from '../../shared/selectors'
 import { isMultiEnumField } from '../../shared/schema-utils'
 
@@ -11,6 +11,7 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
 
   // Click to open dropdown
   const fieldSelector = selectors.field(fieldKey)
+  scrollIntoViewNative(fieldSelector)
   cy.get(fieldSelector).click(SCROLL_BEHAVIOR)
 
   // Scope all option interactions to this field's own popover to avoid matching

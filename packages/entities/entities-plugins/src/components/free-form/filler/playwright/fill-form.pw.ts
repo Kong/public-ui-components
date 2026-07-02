@@ -366,8 +366,10 @@ test.describe('Filler - Playwright', () => {
     })
 
     test('array: add-item button click succeeds even when sticky tabs cover the button', async ({ mount, page }) => {
-      // scrollIntoViewIfNeeded + force:true lets the click through even when
-      // a sticky header overlaps the button center.
+      // Playwright's own actionability scroll (unlike Cypress's default
+      // scroll-to-top) scrolls the minimum distance needed and re-checks
+      // that the click point isn't obstructed, so no explicit scroll/force
+      // is needed here.
       const schema: FormSchema = {
         type: 'record',
         fields: [

@@ -15,7 +15,7 @@ export async function fillRecord(option: RecordHandlerOption): Promise<void> {
       .locator(objectSwitchSelector)
       .locator('..')
       .locator('[data-testid="switch-control"]')
-      .click({ force: true })
+      .click()
     return
   }
 
@@ -25,7 +25,7 @@ export async function fillRecord(option: RecordHandlerOption): Promise<void> {
       .locator(objectSwitchSelector)
       .locator('..')
       .locator('[data-testid="switch-control"]')
-      .click({ force: true })
+      .click()
 
     // Enabling the switch expands the object's content via SlideTransition
     // (height animates from 0). Filling children immediately can hit them

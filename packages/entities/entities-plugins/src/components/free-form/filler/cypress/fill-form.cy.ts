@@ -383,8 +383,8 @@ describe('Filler - Cypress', () => {
     it('array: add-item button click succeeds even when sticky tabs cover the button', () => {
       // The hosts array has default items; fillField adds new ones via the
       // add-item button. Cypress's default scrollBehavior ('top') would land
-      // the button behind a sticky header; scrollBehavior: 'center' avoids
-      // that collision without needing force.
+      // the button behind a sticky header; scrollIntoViewNative +
+      // SCROLL_BEHAVIOR: 'center' avoids that collision without needing force.
       const schema: FormSchema = {
         type: 'record',
         fields: [
@@ -459,7 +459,7 @@ describe('Filler - Cypress', () => {
       // `position: sticky; top: 0`. Cypress's default scrollBehavior ('top')
       // scrolls the target flush against the viewport top, landing it right
       // behind that sticky header - "not visible ... covered by <ul role=tablist>".
-      // scrollBehavior: 'center' avoids the collision entirely.
+      // scrollIntoViewNative + SCROLL_BEHAVIOR: 'center' avoids the collision entirely.
       const schema: FormSchema = {
         type: 'record',
         fields: [
@@ -497,6 +497,59 @@ describe('Filler - Cypress', () => {
       ])
 
       cy.getTestId('ff-servers.1.host').should('have.value', 'server-1.example.com')
+    })
+
+    it('array: fills a boolean field immediately after its optional parent object expands, further down a long page', () => {
+      // Covers the exact shape of a real failure: a tab-appearance array item
+      // containing an optional (switch-driven) nested object, whose boolean
+      // child field is filled right after the switch expands it. Note: this
+      // does NOT reliably reproduce the SlideTransition race itself (the
+      // animation is too fast locally, and `uncheck()`'s own actionability
+      // retry tends to absorb it) - it only asserts the correct end state.
+      // The race was confirmed and fixed against a real failing GM run; this
+      // test is here for basic structural coverage of the field shape, not
+      // as a regression guard for the timing issue.
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            targets: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    auth: {
+                      type: 'record',
+                      fields: [
+                        { allow_override: { type: 'boolean', default: true } },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      }
+
+      cy.mount(() =>
+        h('div', { style: 'padding-top: 1200px; padding-bottom: 20px' },
+          h(Form, { schema }, {
+            [FIELD_RENDERERS]: () => h(FieldRenderer,
+              { match: ({ path }: { path: string }) => path === 'targets' },
+              { default: (slotProps: any) => h(ArrayField as any, { ...slotProps, appearance: 'tabs', stickyTabs: true }) },
+            ),
+          }),
+        ),
+      )
+
+      const filler = createFiller(schema)
+      filler.fillField('targets', [
+        { auth: { allow_override: false } },
+      ])
+
+      cy.getTestId('ff-targets.0.auth.allow_override').should('not.be.checked')
     })
 
     it('should fill json field', () => {

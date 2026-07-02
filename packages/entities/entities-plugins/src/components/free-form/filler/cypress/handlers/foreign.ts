@@ -1,5 +1,5 @@
 import type { ForeignFieldSchema } from '../../../../../types/plugins/form-schema'
-import { type HandlerOption, SCROLL_BEHAVIOR } from './types'
+import { type HandlerOption, SCROLL_BEHAVIOR, scrollIntoViewNative } from './types'
 import { selectors } from '../../shared/selectors'
 
 export function fillForeign(option: HandlerOption<ForeignFieldSchema>): void {
@@ -8,6 +8,7 @@ export function fillForeign(option: HandlerOption<ForeignFieldSchema>): void {
   const selector = selectors.field(fieldKey)
 
   // For foreign fields, typically need to click to open selector and select item
+  scrollIntoViewNative(selector)
   cy.get(selector).click(SCROLL_BEHAVIOR)
 
   // Handle different value formats
