@@ -1,4 +1,4 @@
-import { handlers, type Handlers, type ActionOptions } from './handlers'
+import { handlers, type Handlers } from './handlers'
 import type {
   FormSchema,
   UnionFieldSchema,
@@ -25,7 +25,7 @@ import {
 
 export interface FillerInstance {
   fill: (data: Record<string, any>) => void
-  fillField: (fieldKey: string, value: any, actionOptions?: ActionOptions) => void
+  fillField: (fieldKey: string, value: any) => void
   schemaMap: Record<string, UnionFieldSchema>
   handlers: Handlers
 }
@@ -43,22 +43,22 @@ export function createFiller(
     }
   }
 
-  function fillFieldByInfo({ handlerType, fieldKey, fieldSchema, value }: FieldToFill, actionOptions?: ActionOptions): void {
+  function fillFieldByInfo({ handlerType, fieldKey, fieldSchema, value }: FieldToFill): void {
     switch (handlerType) {
       case 'string':
-        mergedHandlers.fillString({ fieldKey, fieldSchema: fieldSchema as StringFieldSchema, value, actionOptions })
+        mergedHandlers.fillString({ fieldKey, fieldSchema: fieldSchema as StringFieldSchema, value })
         break
       case 'number':
-        mergedHandlers.fillNumber({ fieldKey, fieldSchema: fieldSchema as NumberLikeFieldSchema, value, actionOptions })
+        mergedHandlers.fillNumber({ fieldKey, fieldSchema: fieldSchema as NumberLikeFieldSchema, value })
         break
       case 'boolean':
-        mergedHandlers.fillBoolean({ fieldKey, fieldSchema: fieldSchema as BooleanFieldSchema, value, actionOptions })
+        mergedHandlers.fillBoolean({ fieldKey, fieldSchema: fieldSchema as BooleanFieldSchema, value })
         break
       case 'enum':
-        mergedHandlers.fillEnum({ fieldKey, fieldSchema: fieldSchema as StringFieldSchema | NumberLikeFieldSchema | SetFieldSchema, value, actionOptions })
+        mergedHandlers.fillEnum({ fieldKey, fieldSchema: fieldSchema as StringFieldSchema | NumberLikeFieldSchema | SetFieldSchema, value })
         break
       case 'tag':
-        mergedHandlers.fillTag({ fieldKey, fieldSchema: fieldSchema as SetFieldSchema, value, actionOptions })
+        mergedHandlers.fillTag({ fieldKey, fieldSchema: fieldSchema as SetFieldSchema, value })
         break
       case 'map':
         mergedHandlers.fillMap({
@@ -71,10 +71,10 @@ export function createFiller(
         })
         break
       case 'json':
-        mergedHandlers.fillJson({ fieldKey, fieldSchema: fieldSchema as JsonFieldSchema, value, actionOptions })
+        mergedHandlers.fillJson({ fieldKey, fieldSchema: fieldSchema as JsonFieldSchema, value })
         break
       case 'foreign':
-        mergedHandlers.fillForeign({ fieldKey, fieldSchema: fieldSchema as ForeignFieldSchema, value, actionOptions })
+        mergedHandlers.fillForeign({ fieldKey, fieldSchema: fieldSchema as ForeignFieldSchema, value })
         break
       case 'array':
         mergedHandlers.fillArray({
@@ -131,7 +131,7 @@ export function createFiller(
     }
   }
 
-  function fillField(fieldKey: string, value: any, actionOptions?: ActionOptions): void {
+  function fillField(fieldKey: string, value: any): void {
     const fieldSchema = ctx.schemaMap[fieldKey]
     if (!fieldSchema) {
       throw new Error(`Field schema for "${fieldKey}" not found in schema map`)
@@ -142,7 +142,7 @@ export function createFiller(
       fieldKey,
       fieldSchema,
       value,
-    }, actionOptions)
+    })
   }
 
   return {

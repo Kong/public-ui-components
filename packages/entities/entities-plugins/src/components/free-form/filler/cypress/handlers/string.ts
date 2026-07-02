@@ -1,19 +1,16 @@
 import type { StringFieldSchema } from '../../../../../types/plugins/form-schema'
 import type { HandlerOption } from './types'
 import { selectors } from '../../shared/selectors'
-import { defaultActionOptions } from './types'
 
 export function fillString(option: HandlerOption<StringFieldSchema>): void {
-  const { fieldKey, value, actionOptions = defaultActionOptions } = option
+  const { fieldKey, value } = option
 
   const selector = selectors.field(fieldKey)
 
   cy.get(selector).then(($el) => {
-    if (actionOptions.clear !== false) {
-      cy.wrap($el).clear(actionOptions.clear)
-    }
+    cy.wrap($el).clear()
     if (value !== undefined && value !== null && value !== '') {
-      cy.wrap($el).type(String(value), actionOptions.type)
+      cy.wrap($el).type(String(value))
     }
   })
 }

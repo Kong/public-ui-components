@@ -1,11 +1,10 @@
 import type { StringFieldSchema, NumberLikeFieldSchema, SetFieldSchema } from '../../../../../types/plugins/form-schema'
 import type { HandlerOption } from './types'
 import { selectors } from '../../shared/selectors'
-import { defaultActionOptions } from './types'
 import { isMultiEnumField } from '../../shared/schema-utils'
 
 export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFieldSchema | SetFieldSchema>): void {
-  const { fieldKey, fieldSchema, value, actionOptions = defaultActionOptions } = option
+  const { fieldKey, fieldSchema, value } = option
 
   const isMulti = isMultiEnumField(fieldSchema)
   const values = isMulti ? (Array.isArray(value) ? value : [value]) : [value]
@@ -13,7 +12,7 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
   // Click to open dropdown
   const fieldSelector = selectors.field(fieldKey)
   cy.get(fieldSelector).scrollIntoView()
-  cy.get(fieldSelector).click(actionOptions.click)
+  cy.get(fieldSelector).click()
 
   // Scope all option interactions to this field's own popover to avoid matching
   // identically-named options from other enum fields on the same form.
@@ -32,14 +31,14 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
         cy.get(popoverSelector).find(itemSelector).within(($el) => {
           if ($el.find('button.selected').length > 0) {
             cy.get('button').scrollIntoView()
-            cy.get('button').click(actionOptions.click)
+            cy.get('button').click({ force: true })
           }
         })
       }
 
       if (values.includes(optionValue)) {
         cy.get(popoverSelector).find(itemSelector).scrollIntoView()
-        cy.get(popoverSelector).find(itemSelector).click(actionOptions.click)
+        cy.get(popoverSelector).find(itemSelector).click()
       }
     }
   }
