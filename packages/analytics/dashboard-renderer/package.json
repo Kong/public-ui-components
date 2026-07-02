@@ -84,12 +84,12 @@
     "@kong-ui-public/table-data-grid": "workspace:^",
     "@kong/icons": "^1.58.0",
     "@kong/kongponents": "^9.59.0",
+    "@kong/markdown": "^1.9.8",
     "swrv": "^1.2.0",
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "@kong/markdown": "^1.9.8",
     "gridstack": "^11.5.1",
     "p-queue": "^8.1.1"
   }
