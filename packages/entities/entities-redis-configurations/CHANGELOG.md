@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.15.51](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.15.50...@kong-ui-public/entities-redis-configurations@1.15.51) (2026-07-02)
+
+
+### Bug Fixes
+
+* **redis-config:** add segmented cache/partial UI [khcp-21001] ([#3517](https://github.com/Kong/public-ui-components/issues/3517)) ([0ad88a1](https://github.com/Kong/public-ui-components/commit/0ad88a15e442843180bcf02ba6cc423db924ef6b))
+
+
+
+
+
 ## [1.15.50](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.15.49...@kong-ui-public/entities-redis-configurations@1.15.50) (2026-07-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
