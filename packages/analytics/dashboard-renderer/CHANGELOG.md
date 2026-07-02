@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.12.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.16...@kong-ui-public/dashboard-renderer@8.12.17) (2026-07-02)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** refresh table preview on query changes ([#3523](https://github.com/Kong/public-ui-components/issues/3523)) ([86e7f13](https://github.com/Kong/public-ui-components/commit/86e7f1380d00d6f341c1aff9a539e85c2b479910))
+
+
+
+
+
 ## [8.12.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.15...@kong-ui-public/dashboard-renderer@8.12.16) (2026-06-30)
 
 
