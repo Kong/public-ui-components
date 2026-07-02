@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.30.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.29.6...@kong-ui-public/forms@4.30.0) (2026-07-02)
+
+
+### Features
+
+* **entities-plugins:** add unauthorization guard for kong identity ([#3510](https://github.com/Kong/public-ui-components/issues/3510)) ([d8eb4e0](https://github.com/Kong/public-ui-components/commit/d8eb4e0b982ca15d68a6e6141dc6f07e4bac1d32))
+
+
+
+
+
 ## [4.29.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.29.5...@kong-ui-public/forms@4.29.6) (2026-06-30)
 
 **Note:** Version bump only for package @kong-ui-public/forms
