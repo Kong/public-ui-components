@@ -248,6 +248,8 @@ function mountContent(
     lookupDelay?: number
     /** khcp-20393 Identity Principals UI flag. Defaults to on so the new-UI specs render it. */
     identityPrincipalsUiEnabled?: boolean
+    /** KRN permission flag — when false, the Kong Identity principals section is hidden without a fetch. */
+    isKongIdentityDirectoriesAvailable?: boolean
   },
   data?: Record<string, any>,
 ) {
@@ -255,7 +257,7 @@ function mountContent(
   const onLearnMoreSpy = cy.spy().as('onLearnMoreSpy')
   const onCreatePrincipalSpy = cy.spy().as('onCreatePrincipalSpy')
   const formsConfig = options.isKonnect
-    ? { app: 'konnect', apiBaseUrl: 'https://us.api.konghq.com' }
+    ? { app: 'konnect', apiBaseUrl: 'https://us.api.konghq.com', isKongIdentityDirectoriesAvailable: options.isKongIdentityDirectoriesAvailable }
     : { app: 'kongManager' }
 
   // Mock the realms API
@@ -703,6 +705,39 @@ describe('ConfigFormContent', () => {
 
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
           return val.config?.principals !== null
+        }))
+      })
+    })
+
+    describe('KRN permission flags', () => {
+      it('hides the Kong Identity section when isKongIdentityDirectoriesAvailable is false', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, isKongIdentityDirectoriesAvailable: false })
+
+        cy.getTestId('ff-kong-identity-field').should('not.exist')
+        cy.getTestId('kong-identity-principals-panel').should('not.exist')
+        cy.getTestId('ff-principals-error-on-miss-label').should('not.exist')
+      })
+
+      it('makes no directories fetch when isKongIdentityDirectoriesAvailable is false', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, isKongIdentityDirectoriesAvailable: false })
+
+        // The intercept exists but should never be triggered
+        cy.get('@fetchDirectories.all').should('have.length', 0)
+      })
+
+      it('preserves saved principals config when isKongIdentityDirectoriesAvailable is false (edit)', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, isKongIdentityDirectoriesAvailable: false }, {
+          config: {
+            principals: { enabled: true, directory: 'my-custom-dir', error_on_miss: false },
+            identity_realms: null,
+          },
+        })
+
+        cy.getTestId('ff-kong-identity-field').should('not.exist')
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return val.config?.principals?.enabled === true
+            && val.config?.principals?.directory === 'my-custom-dir'
+            && val.config?.principals?.error_on_miss === false
         }))
       })
     })

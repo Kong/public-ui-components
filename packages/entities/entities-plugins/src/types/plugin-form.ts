@@ -78,6 +78,18 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
   isKonnectManagedRedisEnabled?: boolean
   /** When true, CP is a Cloud Gateway */
   isCloudGateway?: boolean
+  /**
+   * KRN-based permission flag from the host app (gateway-manager).
+   * When explicitly `false`, the Kong Identity auth-servers section is hidden without
+   * making an API call, avoiding the UI flicker of a reactive 401 guard.
+   */
+  isKongIdentityAuthServersAvailable?: boolean
+  /**
+   * KRN-based permission flag from the host app (gateway-manager).
+   * When explicitly `false`, the Kong Identity principals section is hidden without
+   * making an API call, avoiding the UI flicker of a reactive 401 guard.
+   */
+  isKongIdentityDirectoriesAvailable?: boolean
 }
 
 /** Kong Manager Plugin form config */

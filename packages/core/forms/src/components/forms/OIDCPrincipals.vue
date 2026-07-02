@@ -514,6 +514,7 @@ export default {
     async fetchPrincipalsState({ setDirectory = false } = {}) {
       // Kong Identity directories are a Konnect-only concept.
       if (this.formsConfig?.app !== 'konnect') return
+      if (this.formsConfig?.isKongIdentityDirectoriesAvailable === false) return
       // Apply the cached directory name instantly so the field isn't empty during a refresh.
       if (setDirectory && this.cachedDirectory) {
         // eslint-disable-next-line vue/no-mutating-props
@@ -528,7 +529,9 @@ export default {
         const { axiosInstance } = useAxios(this.formsConfig?.axiosRequestConfig)
         const base = this.formsConfig.apiBaseUrl
         // Only need the single directory backing this config.
-        const dirResp = await axiosInstance.get(`${base}/v2/directories`, { params: { 'page[size]': 1 } })
+        const dirResp = await axiosInstance.get(`${base}/v2/directories`, {
+          params: { 'page[size]': 1 },
+        })
         const directory = dirResp?.data?.data?.[0]
         if (!directory) {
           this.hasPrincipals = false
@@ -556,6 +559,7 @@ export default {
       }
     },
     async fetchKongIdentityServers() {
+      if (this.formsConfig?.isKongIdentityAuthServersAvailable === false) return
       try {
         this.kongIdentityServersLoading = true
         const { axiosInstance } = useAxios(this.formsConfig?.axiosRequestConfig)

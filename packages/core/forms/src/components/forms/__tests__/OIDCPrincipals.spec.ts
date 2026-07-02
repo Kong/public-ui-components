@@ -477,7 +477,7 @@ describe('OIDCPrincipals', () => {
       mountKonnect()
       await flushPromises()
 
-      expect(mockGet).toHaveBeenCalledWith('/us/v2/directories', { params: { 'page[size]': 1 } })
+      expect(mockGet).toHaveBeenCalledWith('/us/v2/directories', expect.objectContaining({ params: { 'page[size]': 1 } }))
       expect(mockGet).toHaveBeenCalledWith('/us/v2/directories/dir-1/principals', { params: { 'page[size]': 1 } })
     })
 
@@ -649,6 +649,38 @@ describe('OIDCPrincipals', () => {
       expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
       // Principals exist → no setup guide.
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
+    })
+  })
+
+  describe('KRN permission flags', () => {
+    const konnectConfig = { apiBaseUrl: '/us', app: 'konnect' }
+
+    it('skips the auth-servers fetch when isKongIdentityAuthServersAvailable is false', async () => {
+      mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: {
+          provide: {
+            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityAuthServersAvailable: false },
+          },
+        },
+      })
+      await flushPromises()
+
+      expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v1/auth-servers'), expect.anything())
+    })
+
+    it('skips the directories fetch when isKongIdentityDirectoriesAvailable is false', async () => {
+      mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: {
+          provide: {
+            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityDirectoriesAvailable: false },
+          },
+        },
+      })
+      await flushPromises()
+
+      expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v2/directories'), expect.anything())
     })
   })
 })

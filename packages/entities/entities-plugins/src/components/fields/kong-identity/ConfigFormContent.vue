@@ -101,7 +101,7 @@ import composables from '../../../composables'
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { MultiselectItem } from '@kong/kongponents'
 import type { AxiosResponse } from 'axios'
-import type { EntityCreateEvent } from '../../../types'
+import type { EntityCreateEvent, KonnectPluginFormConfig } from '../../../types'
 
 const emit = defineEmits<{
   'click:learn-more': [entity: string]
@@ -200,7 +200,11 @@ const identityRealmsInSchema = computed(() => !!getSchema('$.config.identity_rea
 // keeps its prefilled schema default, submitted as-is).
 const identityPrincipalsUiEnabled = inject<boolean>(FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
 
-const hasPrincipals = computed(() => identityPrincipalsUiEnabled && !!getSchema('$.config.principals'))
+const hasPrincipals = computed(() =>
+  identityPrincipalsUiEnabled
+  && !!getSchema('$.config.principals')
+  && (appConfig as KonnectPluginFormConfig)?.isKongIdentityDirectoriesAvailable !== false,
+)
 
 function detectInitialMode(): 'consumers' | 'kong-identity' | 'centrally-managed' {
   if (formData.config?.principals?.enabled) return 'kong-identity'
