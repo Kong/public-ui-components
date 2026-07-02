@@ -32,14 +32,14 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
         cy.get(popoverSelector).find(itemSelector).within(($el) => {
           if ($el.find('button.selected').length > 0) {
             cy.get('button').scrollIntoView()
-            cy.get('button').click() // Value can't be selected when force: true is set, not sure why
+            cy.get('button').click(actionOptions.click)
           }
         })
       }
 
       if (values.includes(optionValue)) {
         cy.get(popoverSelector).find(itemSelector).scrollIntoView()
-        cy.get(popoverSelector).find(itemSelector).click() // Value can't be selected when force: true is set, not sure why
+        cy.get(popoverSelector).find(itemSelector).click(actionOptions.click)
       }
     }
   }
