@@ -26,10 +26,14 @@ export async function fillRecord(option: RecordHandlerOption): Promise<void> {
       .locator('..')
       .locator('[data-testid="switch-control"]')
       .click({ force: true })
-  }
 
-  // eslint-disable-next-line promise/param-names
-  await new Promise(r => setTimeout(r, 300)) // wait for animation
+    // Enabling the switch expands the object's content via SlideTransition
+    // (height animates from 0). Filling children immediately can hit them
+    // mid-transition, when the content container still has height 0.
+    // Wait for it to actually become visible instead of a blind fixed
+    // delay, which can still race under CI load.
+    await page.locator(selectors.objectContent(fieldKey)).waitFor({ state: 'visible' })
+  }
 
   // Fill children fields
   await onFillChildren()

@@ -18,6 +18,13 @@ export function fillRecord(option: RecordHandlerOption): void {
     if (hasSwitch) {
       // Enable the object via switch
       cy.get(objectSwitchSelector).check({ force: true })
+
+      // Enabling the switch expands the object's content via SlideTransition
+      // (height animates from 0). Filling children immediately can hit them
+      // mid-transition, when the content container still has height 0 and
+      // `overflow: hidden`, making its fields fail Cypress's visibility
+      // check. Wait for the container to finish expanding first.
+      cy.get(selectors.objectContent(fieldKey)).should('be.visible')
     }
 
     // Fill children fields

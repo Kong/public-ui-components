@@ -1,5 +1,5 @@
 import type { NumberLikeFieldSchema } from '../../../../../types/plugins/form-schema'
-import type { HandlerOption } from './types'
+import { type HandlerOption, SCROLL_BEHAVIOR } from './types'
 import { selectors } from '../../shared/selectors'
 
 export function fillNumber(option: HandlerOption<NumberLikeFieldSchema>): void {
@@ -8,9 +8,9 @@ export function fillNumber(option: HandlerOption<NumberLikeFieldSchema>): void {
   const selector = selectors.field(fieldKey)
 
   cy.get(selector).then(($el) => {
-    cy.wrap($el).clear()
+    cy.wrap($el).clear(SCROLL_BEHAVIOR)
     if (value !== undefined && value !== null) {
-      cy.wrap($el).type(String(value))
+      cy.wrap($el).type(String(value), SCROLL_BEHAVIOR)
     }
   })
 }

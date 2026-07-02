@@ -1,4 +1,4 @@
-import type { ArrayHandlerOption } from './types'
+import { type ArrayHandlerOption, SCROLL_BEHAVIOR } from './types'
 import { selectors } from '../../shared/selectors'
 
 export function fillArray(option: ArrayHandlerOption): void {
@@ -20,7 +20,7 @@ export function fillArray(option: ArrayHandlerOption): void {
         cy.get('body').then(($body) => {
           const $btn = $body.find(itemRemoveBtnsSelector).first()
           if ($btn.length > 0) {
-            cy.wrap($btn).click()
+            cy.wrap($btn).click(SCROLL_BEHAVIOR)
             removeNext()
           }
         })
@@ -33,11 +33,15 @@ export function fillArray(option: ArrayHandlerOption): void {
 
       // Add items and fill each one
       for (let i = 0; i < value.length; i++) {
-        // Click add button to add more items; scrollIntoView + force:true prevents
-        // sticky-tabs headers from blocking the click.
+        // Click add button to add more items.
         const addBtnSelector = selectors.arrayAddBtn(fieldKey)
-        cy.get(addBtnSelector).scrollIntoView()
-        cy.get(addBtnSelector).click({ force: true })
+        cy.get(addBtnSelector).click(SCROLL_BEHAVIOR)
+
+        // For tab-appearance arrays, the newly added item's fields only exist
+        // while its tab is active (see KTabs' v-if per-tab rendering). Wait for
+        // it to actually become visible before filling it, instead of blindly
+        // typing into whatever tab happens to be active at the time.
+        cy.get(selectors.arrayItem(fieldKey, i)).should('be.visible')
 
         // Fill the item
         onFillItem(i, value[i])
