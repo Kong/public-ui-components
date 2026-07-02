@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.223.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.222.8...@kong-ui-public/entities-plugins@9.223.0) (2026-07-02)
+
+
+### Features
+
+* **entities-plugins:** add unauthorization guard for kong identity ([#3510](https://github.com/Kong/public-ui-components/issues/3510)) ([d8eb4e0](https://github.com/Kong/public-ui-components/commit/d8eb4e0b982ca15d68a6e6141dc6f07e4bac1d32))
+
+
+
+
+
+## [9.222.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.222.7...@kong-ui-public/entities-plugins@9.222.8) (2026-07-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.222.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.222.6...@kong-ui-public/entities-plugins@9.222.7) (2026-07-01)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

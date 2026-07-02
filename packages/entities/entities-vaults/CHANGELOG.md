@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.12.3...@kong-ui-public/entities-vaults@4.12.4) (2026-07-02)
+
+
+### Bug Fixes
+
+* **entities-vaults:** labels display ([#3520](https://github.com/Kong/public-ui-components/issues/3520)) ([19ea08e](https://github.com/Kong/public-ui-components/commit/19ea08e0ac73377c52e699ec40c6a1af3cf65816))
+
+
+
+
+
 ## [4.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.12.2...@kong-ui-public/entities-vaults@4.12.3) (2026-06-30)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

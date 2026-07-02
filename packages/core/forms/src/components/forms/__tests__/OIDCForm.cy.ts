@@ -506,6 +506,43 @@ describe('<OIDCForm />', () => {
     })
   })
 
+  describe('KRN permission flags', () => {
+    it('hides the principals section when isKongIdentityAuthServersAvailable is false', () => {
+      cy.mount(OIDCForm, {
+        props: {
+          ...requiredProps,
+          formSchema: OIDCFormSchemaWithPrincipals,
+          formModel: OIDCModelWithPrincipals,
+        },
+        global: {
+          provide: {
+            'kong-ui-forms-config': { ...baseConfigKonnect, isKongIdentityAuthServersAvailable: false },
+          },
+        },
+      })
+
+      cy.getTestId('oidc-principals-section').should('not.exist')
+      cy.getTestId('oidc-auth-mode-radio-group').should('not.exist')
+    })
+
+    it('hides the principals section when isKongIdentityDirectoriesAvailable is false', () => {
+      cy.mount(OIDCForm, {
+        props: {
+          ...requiredProps,
+          formSchema: OIDCFormSchemaWithPrincipals,
+          formModel: OIDCModelWithPrincipals,
+        },
+        global: {
+          provide: {
+            'kong-ui-forms-config': { ...baseConfigKonnect, isKongIdentityDirectoriesAvailable: false },
+          },
+        },
+      })
+
+      cy.getTestId('oidc-principals-section').should('not.exist')
+    })
+  })
+
   describe('Token Exchange subject_token_issuers', () => {
     const verifySignatureDescription = 'JSON Web Keys are automatically fetched from the issuer\'s well-known endpoint. Enter a JWKS URI below to override this.'
 

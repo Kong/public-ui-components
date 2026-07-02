@@ -114,6 +114,30 @@ describe('<VaultConfigCard/>', () => {
       },
     }
 
+    it('renders labels as key:value badges', () => {
+      const vaultWithLabels = {
+        ...aiHcvVault,
+        labels: { env: 'prod', team: 'platform' },
+      }
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${aiGatewayCardConfig.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/vaults/*`,
+        },
+        { statusCode: 200, body: vaultWithLabels },
+      ).as('getAiVaultWithLabels')
+
+      cy.mount(VaultConfigCard, {
+        props: { config: aiGatewayCardConfig },
+      })
+
+      cy.wait('@getAiVaultWithLabels')
+
+      cy.getTestId('labels-badge-tag-0').should('contain.text', 'env: prod')
+      cy.getTestId('labels-badge-tag-1').should('contain.text', 'team: platform')
+    })
+
     it('fetches from the AI Gateway URL, shows mapped fields, and masks secrets', () => {
       cy.intercept(
         {
