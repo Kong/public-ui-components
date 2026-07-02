@@ -306,12 +306,6 @@ function mountContent(
 describe('ConfigFormContent', () => {
   describe('Konnect', () => {
     describe('Rendering', () => {
-      it('shows Kong Identity selector when schema has principals', () => {
-        mountContent(schemaWithRealms, { isKonnect: true })
-
-        cy.getTestId('ff-kong-identity-field').should('exist')
-      })
-
       it('renders all 3 options when schema has identity_realms and there are existing realms', () => {
         mountContent(schemaWithRealms, { isKonnect: true })
 
@@ -407,6 +401,222 @@ describe('ConfigFormContent', () => {
 
     })
 
+    describe('error_on_miss', () => {
+      it('shows error_on_miss group when kong-identity is selected and schema has error_on_miss', () => {
+        mountContent(
+          schemaWithRealms,
+          { isKonnect: true },
+          {
+            config: {
+              principals: {
+                enabled: true,
+                directory: 'default',
+                error_on_miss: true,
+              },
+              identity_realms: null,
+            },
+          },
+        )
+
+        cy.getTestId('ff-principals-error-on-miss-label').should('exist')
+        cy.getTestId('principals-error-on-miss-true').should('exist')
+        cy.getTestId('principals-error-on-miss-false').should('exist')
+      })
+
+      it('disables error_on_miss while the "create principal" panel is shown (no stored principals)', () => {
+        mountContent(
+          schemaWithRealms,
+          { isKonnect: true, hasPrincipals: false },
+          {
+            config: {
+              principals: {
+                enabled: true,
+                directory: 'default',
+                error_on_miss: true,
+              },
+              identity_realms: null,
+            },
+          },
+        )
+
+        cy.wait('@fetchPrincipals')
+        cy.getTestId('kong-identity-principals-panel').should('be.visible')
+        cy.getTestId('principals-error-on-miss-true').should('be.disabled')
+        cy.getTestId('principals-error-on-miss-false').should(
+          'be.disabled',
+        )
+      })
+
+      it('disables error_on_miss while the principals lookup is loading, then enables it once principals are found', () => {
+        mountContent(
+          schemaWithRealms,
+          { isKonnect: true, hasPrincipals: true, lookupDelay: 500 },
+          {
+            config: {
+              principals: {
+                enabled: true,
+                directory: 'default',
+                error_on_miss: true,
+              },
+              identity_realms: null,
+            },
+          },
+        )
+
+        // While the lookup is in flight the skeleton shows and the field stays disabled
+        cy.getTestId('kong-identity-principals-loading').should(
+          'be.visible',
+        )
+        cy.getTestId('principals-error-on-miss-true').should('be.disabled')
+
+        // Once the default directory is confirmed to have principals, it becomes enabled
+        cy.wait('@fetchPrincipals')
+        cy.getTestId('principals-error-on-miss-true').should('be.enabled')
+      })
+
+      it('hides error_on_miss group when consumers mode is active', () => {
+        mountContent(
+          schemaWithRealms,
+          { isKonnect: true },
+          {
+            config: { principals: null, identity_realms: null },
+          },
+        )
+
+        cy.getTestId('ff-principals-error-on-miss-label').should(
+          'not.exist',
+        )
+      })
+
+      it('does not show error_on_miss group when schema lacks principals.error_on_miss', () => {
+        mountContent(
+          schemaWithoutRealms,
+          { isKonnect: true },
+          {
+            config: { principals: { enabled: true, directory: 'default' } },
+          },
+        )
+
+        cy.getTestId('kong-identity-mode-kong-identity')
+          .closest('.k-radio')
+          .click()
+
+        cy.getTestId('ff-principals-error-on-miss-label').should(
+          'not.exist',
+        )
+      })
+    })
+
+    describe('Kong Identity principals panel', () => {
+      // Switch to Kong Identity mode, which is what reveals the principals panel
+      const selectKongIdentity = () => {
+        cy.getTestId('kong-identity-mode-kong-identity')
+          .closest('.k-radio')
+          .click()
+      }
+
+      it('shows the empty-state panel when the default directory has no principals', () => {
+        mountContent(
+          schemaWithoutRealms,
+          { isKonnect: true, hasPrincipals: false },
+          { config: { principals: { enabled: false } } },
+        )
+
+        selectKongIdentity()
+
+        cy.wait('@fetchPrincipals')
+        cy.getTestId('kong-identity-principals-panel').should('be.visible')
+        cy.getTestId('kong-identity-create-principal').should('exist')
+      })
+
+      it('shows the empty-state panel when there is no default directory', () => {
+        mountContent(
+          schemaWithoutRealms,
+          { isKonnect: true, hasDefaultDirectory: false },
+          { config: { principals: { enabled: false } } },
+        )
+
+        selectKongIdentity()
+
+        cy.wait('@fetchDirectories')
+        cy.getTestId('kong-identity-principals-panel').should('be.visible')
+      })
+
+      it('hides the panel when the default directory already has principals', () => {
+        mountContent(
+          schemaWithoutRealms,
+          { isKonnect: true, hasPrincipals: true },
+          { config: { principals: { enabled: false } } },
+        )
+
+        selectKongIdentity()
+
+        cy.wait('@fetchPrincipals')
+        cy.getTestId('kong-identity-principals-panel').should('not.exist')
+      })
+
+      it('does not show the panel unless Kong Identity mode is selected', () => {
+        mountContent(schemaWithoutRealms, {
+          isKonnect: true,
+          hasPrincipals: false,
+        })
+
+        cy.getTestId('ff-kong-identity-field').should('exist')
+        cy.getTestId('kong-identity-principals-panel').should('not.exist')
+      })
+
+      it('emits "click:create-entity" only after confirming the leave-page prompt', () => {
+        mountContent(
+          schemaWithoutRealms,
+          { isKonnect: true, hasPrincipals: false },
+          { config: { principals: { enabled: false } } },
+        )
+
+        selectKongIdentity()
+
+        // Clicking opens the leave-page confirmation; the event must not fire yet
+        cy.getTestId('kong-identity-create-principal')
+          .should('not.be.disabled')
+          .click()
+        cy.getTestId('modal-action-button').should('be.visible')
+        cy.get('@onCreatePrincipalSpy').should('not.have.been.called')
+
+        // Proceeding through the prompt emits the event
+        cy.getTestId('modal-action-button').click()
+        cy.get('@onCreatePrincipalSpy').should('have.been.calledOnce')
+      })
+
+      it('does not emit "click:create-entity" when the leave-page prompt is cancelled', () => {
+        mountContent(
+          schemaWithoutRealms,
+          { isKonnect: true, hasPrincipals: false },
+          { config: { principals: { enabled: false } } },
+        )
+
+        selectKongIdentity()
+
+        cy.getTestId('kong-identity-create-principal').click()
+        cy.getTestId('modal-cancel-button').click()
+        cy.get('@onCreatePrincipalSpy').should('not.have.been.called')
+      })
+
+      it('emits "click:learn-more" to open the Learning Hub when "Learn more" is clicked', () => {
+        mountContent(
+          schemaWithoutRealms,
+          { isKonnect: true, hasPrincipals: false },
+          { config: { principals: { enabled: false } } },
+        )
+
+        selectKongIdentity()
+
+        cy.getTestId('kong-identity-principals-learn-more').click()
+        cy.get('@onLearnMoreSpy').should(
+          'have.been.calledOnceWith',
+          'kong-identity',
+        )
+      })
+    })
+
     describe('Mode switching', () => {
       it('sets principals when "Kong Identity" is selected', () => {
         mountContent(schemaWithRealms, { isKonnect: true }, {
@@ -447,19 +657,6 @@ describe('ConfigFormContent', () => {
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
           return Array.isArray(val.config?.identity_realms)
             && val.config.identity_realms[0]?.scope === 'cp'
-        }))
-      })
-
-      it('clears principals and sets identity_realms when "Centrally managed" is selected', () => {
-        mountContent(schemaWithRealms, { isKonnect: true }, {
-          config: { principals: { enabled: true, directory: 'default' }, identity_realms: null },
-        })
-
-        cy.getTestId('kong-identity-mode-centrally-managed').closest('.k-radio').click()
-
-        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
-          return val.config?.principals === null
-            && Array.isArray(val.config?.identity_realms)
         }))
       })
 
@@ -589,110 +786,6 @@ describe('ConfigFormContent', () => {
       })
     })
 
-    describe('error_on_miss', () => {
-      it('shows error_on_miss group when kong-identity is selected and schema has error_on_miss', () => {
-        mountContent(schemaWithRealms, { isKonnect: true }, {
-          config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
-        })
-
-        cy.getTestId('ff-principals-error-on-miss-label').should('exist')
-        cy.getTestId('principals-error-on-miss-true').should('exist')
-        cy.getTestId('principals-error-on-miss-false').should('exist')
-      })
-
-      it('disables error_on_miss while the "create principal" panel is shown (no stored principals)', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, hasPrincipals: false }, {
-          config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
-        })
-
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
-        cy.getTestId('kong-identity-principals-panel').should('be.visible')
-        cy.getTestId('principals-error-on-miss-true').should('be.disabled')
-        cy.getTestId('principals-error-on-miss-false').should('be.disabled')
-      })
-
-      it('disables error_on_miss while the principals lookup is loading, then enables it once principals are found', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, hasPrincipals: true, lookupDelay: 500 }, {
-          config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
-        })
-
-        // While the lookup is in flight the skeleton shows and the field stays disabled
-        cy.getTestId('kong-identity-principals-loading').should('be.visible')
-        cy.getTestId('principals-error-on-miss-true').should('be.disabled')
-
-        // Once the default directory is confirmed to have principals, it becomes enabled
-        cy.wait('@fetchPrincipals')
-        cy.getTestId('principals-error-on-miss-true').should('be.enabled')
-      })
-
-      it('keeps error_on_miss enabled when the default directory already has principals', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, hasPrincipals: true }, {
-          config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
-        })
-
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
-        cy.getTestId('kong-identity-principals-panel').should('not.exist')
-        cy.getTestId('principals-error-on-miss-true').should('be.enabled')
-        cy.getTestId('principals-error-on-miss-false').should('be.enabled')
-      })
-
-      it('hides error_on_miss group when consumers mode is active', () => {
-        mountContent(schemaWithRealms, { isKonnect: true }, {
-          config: { principals: null, identity_realms: null },
-        })
-
-        cy.getTestId('ff-principals-error-on-miss-label').should('not.exist')
-      })
-
-      it('hides error_on_miss group when centrally-managed mode is active', () => {
-        mountContent(schemaWithRealms, { isKonnect: true }, {
-          config: { principals: null, identity_realms: null },
-        })
-
-        cy.getTestId('kong-identity-mode-centrally-managed').closest('.k-radio').click()
-
-        cy.getTestId('ff-principals-error-on-miss-label').should('not.exist')
-      })
-
-      it('does not show error_on_miss group when schema lacks principals.error_on_miss', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true }, {
-          config: { principals: { enabled: true, directory: 'default' } },
-        })
-
-        cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
-
-        cy.getTestId('ff-principals-error-on-miss-label').should('not.exist')
-      })
-
-      it('clicking reject radio sets error_on_miss to true', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, hasPrincipals: true }, {
-          config: { principals: { enabled: true, directory: 'default', error_on_miss: false }, identity_realms: null },
-        })
-
-        cy.wait('@fetchPrincipals')
-        cy.getTestId('principals-error-on-miss-true').click({ force: true })
-
-        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
-          return val.config?.principals?.error_on_miss === true
-        }))
-      })
-
-      it('clicking continue radio sets error_on_miss to false', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, hasPrincipals: true }, {
-          config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
-        })
-
-        cy.wait('@fetchPrincipals')
-        cy.getTestId('principals-error-on-miss-false').click({ force: true })
-
-        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
-          return val.config?.principals?.error_on_miss === false
-        }))
-      })
-    })
-
     describe('Required principals behavior', () => {
       it('uses schema default (not null) for principals when required and switching to consumers', () => {
         mountContent(schemaWithRequiredPrincipals, { isKonnect: true }, {
@@ -704,6 +797,85 @@ describe('ConfigFormContent', () => {
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
           return val.config?.principals !== null
         }))
+      })
+    })
+
+    describe('Realm validation', () => {
+      it('does not show validation error immediately when switching to centrally-managed', () => {
+        mountContent(
+          schemaWithRealms,
+          { isKonnect: true },
+          {
+            config: { principals: null, identity_realms: null },
+          },
+        )
+
+        cy.getTestId('kong-identity-mode-centrally-managed')
+          .closest('.k-radio')
+          .click()
+
+        cy.getTestId('identity-realms-validation-error').should(
+          'not.exist',
+        )
+      })
+
+      it('shows validation error after clicking the realm section with no realm selected', () => {
+        mountContent(
+          schemaWithRealms,
+          { isKonnect: true },
+          {
+            config: { principals: null, identity_realms: null },
+          },
+        )
+
+        cy.getTestId('kong-identity-mode-centrally-managed')
+          .closest('.k-radio')
+          .click()
+        cy.getTestId('identity-realms-section').click()
+
+        cy.getTestId('identity-realms-validation-error').should('exist')
+      })
+
+      it('does not show validation error when a valid realm is already selected', () => {
+        mountContent(
+          schemaWithRealms,
+          { isKonnect: true },
+          {
+            config: {
+              principals: null,
+              identity_realms: [{ scope: 'konnect', id: 'realm-1' }],
+            },
+          },
+        )
+
+        cy.getTestId('identity-realms-section').click()
+
+        cy.getTestId('identity-realms-validation-error').should(
+          'not.exist',
+        )
+      })
+
+      it('shows validation error after a blocked submit attempt with no realm selected', () => {
+        const { triggerSave } = mountContent(
+          schemaWithRealms,
+          { isKonnect: true },
+          {
+            config: { principals: null, identity_realms: null },
+          },
+        )
+
+        cy.getTestId('kong-identity-mode-centrally-managed')
+          .closest('.k-radio')
+          .click()
+        cy.getTestId('identity-realms-validation-error').should(
+          'not.exist',
+        )
+
+        cy.then(() => {
+          triggerSave()
+        })
+
+        cy.getTestId('identity-realms-validation-error').should('exist')
       })
     })
   })
@@ -737,133 +909,6 @@ describe('ConfigFormContent', () => {
       mountContent(schemaWithoutPrincipals, { isKonnect: false })
 
       cy.getTestId('ff-kong-identity-field').should('not.exist')
-    })
-  })
-
-  describe('Konnect', () => {
-    describe('Realm validation', () => {
-      it('does not show validation error immediately when switching to centrally-managed', () => {
-        mountContent(schemaWithRealms, { isKonnect: true }, {
-          config: { principals: null, identity_realms: null },
-        })
-
-        cy.getTestId('kong-identity-mode-centrally-managed').closest('.k-radio').click()
-
-        cy.getTestId('identity-realms-validation-error').should('not.exist')
-      })
-
-      it('shows validation error after clicking the realm section with no realm selected', () => {
-        mountContent(schemaWithRealms, { isKonnect: true }, {
-          config: { principals: null, identity_realms: null },
-        })
-
-        cy.getTestId('kong-identity-mode-centrally-managed').closest('.k-radio').click()
-        cy.getTestId('identity-realms-section').click()
-
-        cy.getTestId('identity-realms-validation-error').should('exist')
-      })
-
-      it('does not show validation error when a valid realm is already selected', () => {
-        mountContent(schemaWithRealms, { isKonnect: true }, {
-          config: { principals: null, identity_realms: [{ scope: 'konnect', id: 'realm-1' }] },
-        })
-
-        cy.getTestId('identity-realms-section').click()
-
-        cy.getTestId('identity-realms-validation-error').should('not.exist')
-      })
-
-      it('shows validation error after a blocked submit attempt with no realm selected', () => {
-        const { triggerSave } = mountContent(schemaWithRealms, { isKonnect: true }, {
-          config: { principals: null, identity_realms: null },
-        })
-
-        cy.getTestId('kong-identity-mode-centrally-managed').closest('.k-radio').click()
-        cy.getTestId('identity-realms-validation-error').should('not.exist')
-
-        cy.then(() => {
-          triggerSave()
-        })
-
-        cy.getTestId('identity-realms-validation-error').should('exist')
-      })
-    })
-    describe('Kong Identity principals panel', () => {
-    // Switch to Kong Identity mode, which is what reveals the principals panel
-      const selectKongIdentity = () => {
-        cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
-      }
-
-      it('shows the empty-state panel when the default directory has no principals', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
-
-        selectKongIdentity()
-
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
-        cy.getTestId('kong-identity-principals-panel').should('be.visible')
-        cy.getTestId('kong-identity-create-principal').should('exist')
-      })
-
-      it('shows the empty-state panel when there is no default directory', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasDefaultDirectory: false }, { config: { principals: { enabled: false } } })
-
-        selectKongIdentity()
-
-        cy.wait('@fetchDirectories')
-        cy.getTestId('kong-identity-principals-panel').should('be.visible')
-      })
-
-      it('hides the panel when the default directory already has principals', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: true }, { config: { principals: { enabled: false } } })
-
-        selectKongIdentity()
-
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
-        cy.getTestId('kong-identity-principals-panel').should('not.exist')
-      })
-
-      it('does not show the panel unless Kong Identity mode is selected', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false })
-
-        cy.getTestId('ff-kong-identity-field').should('exist')
-        cy.getTestId('kong-identity-principals-panel').should('not.exist')
-      })
-
-      it('emits "click:create-entity" only after confirming the leave-page prompt', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
-
-        selectKongIdentity()
-
-        // Clicking opens the leave-page confirmation; the event must not fire yet
-        cy.getTestId('kong-identity-create-principal').should('not.be.disabled').click()
-        cy.getTestId('modal-action-button').should('be.visible')
-        cy.get('@onCreatePrincipalSpy').should('not.have.been.called')
-
-        // Proceeding through the prompt emits the event
-        cy.getTestId('modal-action-button').click()
-        cy.get('@onCreatePrincipalSpy').should('have.been.calledOnce')
-      })
-
-      it('does not emit "click:create-entity" when the leave-page prompt is cancelled', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
-
-        selectKongIdentity()
-
-        cy.getTestId('kong-identity-create-principal').click()
-        cy.getTestId('modal-cancel-button').click()
-        cy.get('@onCreatePrincipalSpy').should('not.have.been.called')
-      })
-
-      it('emits "click:learn-more" to open the Learning Hub when "Learn more" is clicked', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
-
-        selectKongIdentity()
-
-        cy.getTestId('kong-identity-principals-learn-more').click()
-        cy.get('@onLearnMoreSpy').should('have.been.calledOnceWith', 'kong-identity')
-      })
     })
   })
 })
