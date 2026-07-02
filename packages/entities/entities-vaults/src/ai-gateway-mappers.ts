@@ -170,7 +170,7 @@ export const fromAiGatewayVault = (apiVault: Record<string, any>): Record<string
     name: provider,
     prefix: apiVault?.name,
     description: apiVault?.description ?? '',
-    labels: apiVault?.labels ?? {},
+    labels: Object.entries(apiVault?.labels ?? {}).map(([k, v]) => `${k}: ${v}`),
     config,
   }
 }
