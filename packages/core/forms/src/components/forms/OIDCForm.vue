@@ -295,9 +295,10 @@ export default {
       return (this.formModel.id && this.isEditing) || !this.isEditing
     },
     hasPrincipalsFields() {
-      return this.identityPrincipalsUiEnabled && this.formSchema.fields?.some(
-        (field) => PRINCIPALS_FIELD_MODELS.has(field.model),
-      )
+      return this.identityPrincipalsUiEnabled
+        && this.formsConfig?.isKongIdentityAuthServersAvailable !== false
+        && this.formsConfig?.isKongIdentityDirectoriesAvailable !== false
+        && this.formSchema.fields?.some((field) => PRINCIPALS_FIELD_MODELS.has(field.model))
     },
     isKonnect() {
       return this.formsConfig?.app === 'konnect'
