@@ -163,18 +163,18 @@ describe('fromAiGatewayVault', () => {
     expect(r).toEqual({
       id: 'v1', created_at: 1, updated_at: 2,
       name: VaultProviders.ENV, prefix: 'env-vault', description: 'd',
-      labels: {},
+      labels: [],
       config: { prefix: 'MY_' },
     })
   })
 
-  it('passes through labels from the API response', () => {
+  it('converts labels object to key: value string array', () => {
     const r = fromAiGatewayVault({
       id: 'v1', type: VaultProviders.ENV, name: 'e', description: '',
       labels: { env: 'prod', team: 'platform' },
       config: {},
     })
-    expect(r.labels).toEqual({ env: 'prod', team: 'platform' })
+    expect(r.labels).toEqual(['env: prod', 'team: platform'])
   })
 
   it('re-injects auth_method for conjur', () => {
