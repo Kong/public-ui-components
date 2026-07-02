@@ -73,20 +73,6 @@ describe('Filler - Cypress', () => {
     cy.getTestId('ff-port').should('have.value', '3000')
   })
 
-  it('should handle custom action options', () => {
-    cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema: basicSchema })))
-
-    const filler = createFiller(basicSchema)
-
-    // First fill with a value
-    filler.fillField('name', 'old-value')
-
-    // Fill without clearing
-    filler.fillField('name', 'new', { clear: false })
-
-    cy.getTestId('ff-name').should('have.value', 'old-valuenew')
-  })
-
   describe('Complex fields', () => {
     it('should fill enum field (single select)', () => {
       const schema: FormSchema = {

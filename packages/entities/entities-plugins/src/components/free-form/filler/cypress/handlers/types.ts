@@ -1,34 +1,19 @@
 import type { UnionFieldSchema } from '../../../../../types/plugins/form-schema'
 
-export interface ActionOptions {
-  type?: Partial<Cypress.TypeOptions>
-  click?: Partial<Cypress.ClickOptions>
-  check?: Partial<Cypress.CheckOptions>
-  clear?: Partial<Cypress.ClearOptions> | false
-}
-
-export const defaultActionOptions: ActionOptions = {
-  type: { force: true },
-  click: { force: true },
-  check: { force: true },
-  clear: { force: true },
-}
-
 export type HandlerOption<T extends UnionFieldSchema = UnionFieldSchema> = {
   fieldKey: string
   fieldSchema: T
   value: any
-  actionOptions?: ActionOptions
 }
 
-export type RecordHandlerOption = Omit<HandlerOption, 'actionOptions'> & {
+export type RecordHandlerOption = HandlerOption & {
   onFillChildren: () => void
 }
 
-export type ArrayHandlerOption = Omit<HandlerOption, 'actionOptions'> & {
+export type ArrayHandlerOption = HandlerOption & {
   onFillItem: (index: number, itemValue: any) => void
 }
 
-export type MapHandlerOption = Omit<HandlerOption, 'actionOptions'> & {
+export type MapHandlerOption = HandlerOption & {
   onFillEntry: (kidId: string, entryValue: any) => void
 }
