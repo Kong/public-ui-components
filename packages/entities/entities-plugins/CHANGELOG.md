@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.223.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.223.1...@kong-ui-public/entities-plugins@9.223.2) (2026-07-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** make freeform filler robust to scroll, animation, and layout timing issues ([#3519](https://github.com/Kong/public-ui-components/issues/3519)) ([208bbc5](https://github.com/Kong/public-ui-components/commit/208bbc59a02681219f12c580309dbb15ae26d8ec))
+
+
+
+
+
 ## [9.223.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.223.0...@kong-ui-public/entities-plugins@9.223.1) (2026-07-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
