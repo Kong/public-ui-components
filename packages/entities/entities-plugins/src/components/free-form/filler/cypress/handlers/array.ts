@@ -1,4 +1,4 @@
-import type { ArrayHandlerOption } from './types'
+import { type ArrayHandlerOption, SCROLL_BEHAVIOR, scrollIntoViewNative } from './types'
 import { selectors } from '../../shared/selectors'
 
 export function fillArray(option: ArrayHandlerOption): void {
@@ -20,7 +20,7 @@ export function fillArray(option: ArrayHandlerOption): void {
         cy.get('body').then(($body) => {
           const $btn = $body.find(itemRemoveBtnsSelector).first()
           if ($btn.length > 0) {
-            cy.wrap($btn).click()
+            cy.wrap($btn).click(SCROLL_BEHAVIOR)
             removeNext()
           }
         })
@@ -33,11 +33,19 @@ export function fillArray(option: ArrayHandlerOption): void {
 
       // Add items and fill each one
       for (let i = 0; i < value.length; i++) {
-        // Click add button to add more items; scrollIntoView + force:true prevents
-        // sticky-tabs headers from blocking the click.
+        // Click add button to add more items.
         const addBtnSelector = selectors.arrayAddBtn(fieldKey)
-        cy.get(addBtnSelector).scrollIntoView()
-        cy.get(addBtnSelector).click({ force: true })
+        scrollIntoViewNative(addBtnSelector)
+        cy.get(addBtnSelector).click(SCROLL_BEHAVIOR)
+
+        // For tab-appearance arrays, a tab's fields only exist in the DOM
+        // while that tab is active (KTabs uses v-if, not v-show, per tab -
+        // see KTabs.vue). So existing IS the signal that this item's tab is
+        // now active; `be.visible` is wrong here since it also demands the
+        // item be scrolled into view and unobstructed by a fixed ancestor,
+        // which is an unrelated concern already handled per-field via
+        // scrollIntoViewNative/SCROLL_BEHAVIOR when each field is actually filled.
+        cy.get(selectors.arrayItem(fieldKey, i)).should('exist')
 
         // Fill the item
         onFillItem(i, value[i])

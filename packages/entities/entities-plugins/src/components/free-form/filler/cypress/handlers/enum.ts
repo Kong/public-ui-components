@@ -1,24 +1,22 @@
 import type { StringFieldSchema, NumberLikeFieldSchema, SetFieldSchema } from '../../../../../types/plugins/form-schema'
-import type { HandlerOption } from './types'
+import { type HandlerOption, SCROLL_BEHAVIOR, scrollIntoViewNative } from './types'
 import { selectors } from '../../shared/selectors'
-import { defaultActionOptions } from './types'
 import { isMultiEnumField } from '../../shared/schema-utils'
 
 export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFieldSchema | SetFieldSchema>): void {
-  const { fieldKey, fieldSchema, value, actionOptions = defaultActionOptions } = option
+  const { fieldKey, fieldSchema, value } = option
 
   const isMulti = isMultiEnumField(fieldSchema)
   const values = isMulti ? (Array.isArray(value) ? value : [value]) : [value]
 
   // Click to open dropdown
   const fieldSelector = selectors.field(fieldKey)
-  cy.get(fieldSelector).scrollIntoView()
-  cy.get(fieldSelector).click(actionOptions.click)
+  scrollIntoViewNative(fieldSelector)
+  cy.get(fieldSelector).click(SCROLL_BEHAVIOR)
 
   // Scope all option interactions to this field's own popover to avoid matching
   // identically-named options from other enum fields on the same form.
   const popoverSelector = selectors.selectTrigger(fieldKey)
-  cy.get(popoverSelector).scrollIntoView()
 
   // Select each value within the dropdown
   for (const optionValue of fieldSchema.one_of ?? (fieldSchema as SetFieldSchema).elements?.one_of ?? []) {
@@ -31,15 +29,13 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
       if (isMulti) {
         cy.get(popoverSelector).find(itemSelector).within(($el) => {
           if ($el.find('button.selected').length > 0) {
-            cy.get('button').scrollIntoView()
-            cy.get('button').click() // Value can't be selected when force: true is set, not sure why
+            cy.get('button').click(SCROLL_BEHAVIOR)
           }
         })
       }
 
       if (values.includes(optionValue)) {
-        cy.get(popoverSelector).find(itemSelector).scrollIntoView()
-        cy.get(popoverSelector).find(itemSelector).click() // Value can't be selected when force: true is set, not sure why
+        cy.get(popoverSelector).find(itemSelector).click(SCROLL_BEHAVIOR)
       }
     }
   }
