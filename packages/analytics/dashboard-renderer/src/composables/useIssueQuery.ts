@@ -42,7 +42,7 @@ export default function useIssueQuery() {
         ...(query.filters ?? []) as AllFilters[],
         ...context.filters,
       ],
-      metrics: query.metrics,
+      queryFields: query.metrics,
     })
 
     // TODO: the cast is necessary because TimeRangeV4 specifies date objects for absolute time ranges.

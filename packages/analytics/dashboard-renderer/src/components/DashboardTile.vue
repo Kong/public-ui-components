@@ -469,7 +469,7 @@ const datasourceScopedFilters = computed(() => {
   return stripUnknownFilters.value({
     datasource,
     filters,
-    metrics,
+    queryFields: metrics,
   })
 })
 

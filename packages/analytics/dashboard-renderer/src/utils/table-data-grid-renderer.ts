@@ -122,6 +122,7 @@ export const tableDataGridFetcherByDatasource = {
         ...((platformQuery.filters ?? []) as AllFilters[]),
         ...context.filters,
       ],
+      queryFields: platformQuery.entity === undefined ? undefined : [platformQuery.entity],
     }) as PlatformTabularQuery['filters']
 
     const response = await tabularQueryFn({

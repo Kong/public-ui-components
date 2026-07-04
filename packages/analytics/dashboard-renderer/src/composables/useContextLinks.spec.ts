@@ -214,7 +214,7 @@ describe('useContextLinks', () => {
     expect(params.get('c')).toBe('line')
   })
 
-  it('forwards metrics to filter stripping when generating dashboard links', async () => {
+  it('forwards query fields to filter stripping when generating dashboard links', async () => {
     const stripUnknownFiltersSpy = vi.fn(mockStripUnknownFilters)
     vi.mocked(useDatasourceConfigStore).mockReturnValueOnce({
       stripUnknownFilters: ref(stripUnknownFiltersSpy),
@@ -231,7 +231,7 @@ describe('useContextLinks', () => {
 
     expect(stripUnknownFiltersSpy).toHaveBeenCalledWith(expect.objectContaining({
       datasource: 'api_usage',
-      metrics: ['request_count', 'request_size'],
+      queryFields: ['request_count', 'request_size'],
     }))
   })
 

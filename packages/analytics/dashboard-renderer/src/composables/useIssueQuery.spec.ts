@@ -135,6 +135,7 @@ describe('useIssueQuery', () => {
     expect(mockStripUnknownFilters).toHaveBeenCalledWith(expect.objectContaining({
       datasource: 'basic',
       filters: [invalidQueryFilter, validContextFilter],
+      queryFields: [],
     }))
     expect(queryFn).toHaveBeenCalledOnce()
     expect(queryFn.mock.calls[0][0]).toMatchObject({
