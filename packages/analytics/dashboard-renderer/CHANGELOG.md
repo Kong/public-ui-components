@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.12.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.18...@kong-ui-public/dashboard-renderer@8.12.19) (2026-07-06)
+
+
+### Bug Fixes
+
+* **analytics:** prune dashboard filters by query fields ([#3526](https://github.com/Kong/public-ui-components/issues/3526)) ([85b4b1e](https://github.com/Kong/public-ui-components/commit/85b4b1e7a10e416b3a3ba2be3d635d06294e3679))
+
+
+
+
+
 ## [8.12.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.17...@kong-ui-public/dashboard-renderer@8.12.18) (2026-07-02)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

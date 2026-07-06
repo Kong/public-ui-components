@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@1.3.31...@kong-ui-public/analytics-config-store@1.3.32) (2026-07-06)
+
+
+### Bug Fixes
+
+* **analytics:** prune dashboard filters by query fields ([#3526](https://github.com/Kong/public-ui-components/issues/3526)) ([85b4b1e](https://github.com/Kong/public-ui-components/commit/85b4b1e7a10e416b3a3ba2be3d635d06294e3679))
+
+
+
+
+
 ## [1.3.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@1.3.30...@kong-ui-public/analytics-config-store@1.3.31) (2026-06-30)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-config-store
