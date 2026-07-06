@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.224.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.224.0...@kong-ui-public/entities-plugins@9.224.1) (2026-07-06)
+
+
+### Bug Fixes
+
+* **entities-plugins:** remove workspace from konnect custom plugin endpoints ([#3531](https://github.com/Kong/public-ui-components/issues/3531)) ([e5a0992](https://github.com/Kong/public-ui-components/commit/e5a09927f3915fbf3a8270ff5bf3f44f692b5489))
+
+
+
+
+
 # [9.224.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.223.4...@kong-ui-public/entities-plugins@9.224.0) (2026-07-05)
 
 
