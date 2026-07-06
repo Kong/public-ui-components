@@ -40,7 +40,7 @@
         >
           <button
             :aria-label="t('tabs.more_button.aria_label')"
-            class="tab-link overflow-dropdown-trigger"
+            class="tab-link"
             :class="{ active: overflowingTabs.find(tab => tab.active) }"
             data-testid="tabs-overflow-dropdown-button"
           >
@@ -278,10 +278,6 @@ watch(() => tabs, () => {
           color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
           font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
           text-decoration: none;
-        }
-
-        &.overflow-dropdown-trigger {
-          font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium) !important;
         }
       }
     }
