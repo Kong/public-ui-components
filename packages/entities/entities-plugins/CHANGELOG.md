@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.224.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.224.1...@kong-ui-public/entities-plugins@9.224.3) (2026-07-06)
+
+
+### Bug Fixes
+
+* **entities-plugins:** transform protected_resource_metadata ([#3532](https://github.com/Kong/public-ui-components/issues/3532)) ([1899fa8](https://github.com/Kong/public-ui-components/commit/1899fa87e1f275983a35f756e2a8b09273d4ec4b))
+
+
+
+
+
 ## [9.224.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.224.1...@kong-ui-public/entities-plugins@9.224.2) (2026-07-06)
 
 
