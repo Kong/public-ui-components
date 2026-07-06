@@ -198,6 +198,7 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
     },
     calloutPreferenceKey: enableDeckCallout.value ? 'konnect-entities-plugin-form-deck-callout-sandbox' : undefined,
   },
+  dataPlaneVersions: ['3.14.0.1', '3.15.0.0'], // For testing the Kong Identity principals DP version alert
 }))
 
 const kongManagerConfig = computed<KongManagerPluginFormConfig>(() => ({

@@ -683,4 +683,89 @@ describe('OIDCPrincipals', () => {
       expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v2/directories'), expect.anything())
     })
   })
+
+  describe('data plane version compatibility alert', () => {
+    const konnectConfig = { apiBaseUrl: '/us', app: 'konnect' }
+
+    const mockKongIdentity = ({ principals = [], directory = { id: 'dir-1', name: 'default' } }: {
+      principals?: any[]
+      directory?: { id: string, name: string } | null
+    } = {}) => {
+      mockGet.mockImplementation((url: string) => {
+        if (/\/v2\/directories\/[^/]+\/principals/.test(url)) {
+          return Promise.resolve({ data: { data: principals } })
+        }
+        if (url.includes('/v2/directories')) {
+          return Promise.resolve({ data: { data: directory ? [directory] : [] } })
+        }
+        return Promise.resolve({ data: { data: [] } })
+      })
+    }
+
+    const mountKonnect = (formModelOverrides = {}, propsOverrides = {}, configOverrides = {}) =>
+      mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel(formModelOverrides), ...propsOverrides },
+        global: { provide: { [FORMS_CONFIG]: { ...konnectConfig, ...configOverrides } } },
+      })
+
+    it('does not show the alert when no data plane versions are provided', async () => {
+      mockKongIdentity({ principals: [{ id: 'p1' }] })
+      const wrapper = mountKonnect()
+      await flushPromises()
+
+      expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(false)
+    })
+
+    it('does not show the alert when all data plane versions meet the minimum', async () => {
+      mockKongIdentity({ principals: [{ id: 'p1' }] })
+      const wrapper = mountKonnect({}, {}, { dataPlaneVersions: ['3.15.0.0', '3.16.1.2'] })
+      await flushPromises()
+
+      expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(false)
+    })
+
+    it('prioritizes the "Add principals" guide over the alert when no principals are configured yet', async () => {
+      mockKongIdentity({ principals: [] })
+      const wrapper = mountKonnect({}, {}, { dataPlaneVersions: ['3.10.0.0'] })
+      await flushPromises()
+
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(false)
+    })
+
+    it('shows the alert once principals are configured but a connected node is below 3.15 in Kong Identity mode', async () => {
+      mockKongIdentity({ principals: [{ id: 'p1' }] })
+      const wrapper = mountKonnect({}, {}, { dataPlaneVersions: ['3.10.0.0'] })
+      await flushPromises()
+
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
+      expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(true)
+    })
+
+    it('shows the alert in External mode when principal lookup is opted in and a connected node is below 3.15', async () => {
+      mockKongIdentity({ principals: [{ id: 'p1' }] })
+      const wrapper = mountKonnect(
+        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': true },
+        { isEditing: true },
+        { dataPlaneVersions: ['3.10.0.0'] },
+      )
+      await flushPromises()
+
+      expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(true)
+    })
+
+    it('does not show the alert in External mode when principal lookup is off', async () => {
+      mockKongIdentity({ principals: [{ id: 'p1' }] })
+      const wrapper = mountKonnect(
+        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
+        { isEditing: true },
+        { dataPlaneVersions: ['3.10.0.0'] },
+      )
+      await flushPromises()
+
+      expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(false)
+    })
+  })
 })

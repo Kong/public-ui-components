@@ -22,6 +22,7 @@
         class="principals-lookup-method-select"
         data-testid="principals-lookup-method"
         :disabled="fieldsDisabled"
+        help="Principal lookup queries Kong Identity for the principal that matches the identity in a verified access token. This enables principal-aware policies and integrations. Requires all data plane nodes to be running version 3.15 or later."
         :items="lookupMethodItems"
         label="Principal lookup method"
         :model-value="selectedLookupMethod"

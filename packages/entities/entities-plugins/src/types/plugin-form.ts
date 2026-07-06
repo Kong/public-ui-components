@@ -90,6 +90,12 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
    * making an API call, avoiding the UI flicker of a reactive 401 guard.
    */
   isKongIdentityDirectoriesAvailable?: boolean
+  /**
+   * Kong Gateway versions of the data plane nodes connected to the current control plane
+   * (deduped). Used to warn when Kong Identity principals — which require Gateway 3.15+ —
+   * are configured but a connected DP node can't process them.
+   */
+  dataPlaneVersions?: string[]
 }
 
 /** Kong Manager Plugin form config */

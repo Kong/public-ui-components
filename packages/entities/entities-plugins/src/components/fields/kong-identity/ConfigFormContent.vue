@@ -36,6 +36,7 @@
   <PrincipalsCreationGuide
     v-if="isKonnect && hasPrincipals && selectedMode === 'kong-identity'"
     class="kong-identity-principals-section"
+    :data-plane-incompatible="hasIncompatibleDataPlane"
     :loading="principalsLoading"
     :show-panel="principalsShowPanel"
     @click:create-entity="(payload) => emit('click:create-entity', payload)"
@@ -107,6 +108,16 @@ const emit = defineEmits<{
   'click:learn-more': [entity: string]
   'click:create-entity': [payload: EntityCreateEvent]
 }>()
+
+// Kong Identity principals require Gateway 3.15+ on the data plane.
+const KONG_IDENTITY_MIN_DP_VERSION = { major: 3, minor: 15 }
+
+function isVersionBelowMinDpVersion(version: string): boolean {
+  const [major, minor] = version.split('.').map(Number)
+  if (Number.isNaN(major) || Number.isNaN(minor)) return false
+  if (major !== KONG_IDENTITY_MIN_DP_VERSION.major) return major < KONG_IDENTITY_MIN_DP_VERSION.major
+  return minor < KONG_IDENTITY_MIN_DP_VERSION.minor
+}
 
 const registerBeforeSave = inject(BEFORE_SAVE_KEY)
 
@@ -204,6 +215,12 @@ const hasPrincipals = computed(() =>
   identityPrincipalsUiEnabled
   && !!getSchema('$.config.principals')
   && (appConfig as KonnectPluginFormConfig)?.isKongIdentityDirectoriesAvailable !== false,
+)
+
+// True when at least one connected data plane node can't process Kong Identity principals
+// (Gateway 3.15+ required). Drives a warning alert, not field hiding.
+const hasIncompatibleDataPlane = computed(() =>
+  ((appConfig as KonnectPluginFormConfig)?.dataPlaneVersions ?? []).some(isVersionBelowMinDpVersion),
 )
 
 function detectInitialMode(): 'consumers' | 'kong-identity' | 'centrally-managed' {

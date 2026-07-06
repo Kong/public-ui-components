@@ -250,6 +250,8 @@ function mountContent(
     identityPrincipalsUiEnabled?: boolean
     /** KRN permission flag — when false, the Kong Identity principals section is hidden without a fetch. */
     isKongIdentityDirectoriesAvailable?: boolean
+    /** Kong Gateway versions of connected data plane nodes. */
+    dataPlaneVersions?: string[]
   },
   data?: Record<string, any>,
 ) {
@@ -257,7 +259,12 @@ function mountContent(
   const onLearnMoreSpy = cy.spy().as('onLearnMoreSpy')
   const onCreatePrincipalSpy = cy.spy().as('onCreatePrincipalSpy')
   const formsConfig = options.isKonnect
-    ? { app: 'konnect', apiBaseUrl: 'https://us.api.konghq.com', isKongIdentityDirectoriesAvailable: options.isKongIdentityDirectoriesAvailable }
+    ? {
+      app: 'konnect',
+      apiBaseUrl: 'https://us.api.konghq.com',
+      isKongIdentityDirectoriesAvailable: options.isKongIdentityDirectoriesAvailable,
+      dataPlaneVersions: options.dataPlaneVersions,
+    }
     : { app: 'kongManager' }
 
   // Mock the realms API
@@ -898,6 +905,54 @@ describe('ConfigFormContent', () => {
 
         cy.getTestId('kong-identity-principals-learn-more').click()
         cy.get('@onLearnMoreSpy').should('have.been.calledOnceWith', 'kong-identity')
+      })
+    })
+
+    describe('Data plane version compatibility alert', () => {
+      const selectKongIdentity = () => {
+        cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
+      }
+
+      it('does not show the alert when no data plane versions are provided', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: true }, { config: { principals: { enabled: false } } })
+
+        selectKongIdentity()
+
+        cy.wait('@fetchDirectories')
+        cy.wait('@fetchPrincipals')
+        cy.getTestId('kong-identity-dp-version-alert').should('not.exist')
+      })
+
+      it('does not show the alert when all data plane versions meet the minimum', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: true, dataPlaneVersions: ['3.15.0.0', '3.16.1.2'] }, { config: { principals: { enabled: false } } })
+
+        selectKongIdentity()
+
+        cy.wait('@fetchDirectories')
+        cy.wait('@fetchPrincipals')
+        cy.getTestId('kong-identity-dp-version-alert').should('not.exist')
+      })
+
+      it('prioritizes the empty-state guide over the alert when no principals are configured yet', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false, dataPlaneVersions: ['3.10.0.0'] }, { config: { principals: { enabled: false } } })
+
+        selectKongIdentity()
+
+        cy.wait('@fetchDirectories')
+        cy.wait('@fetchPrincipals')
+        cy.getTestId('kong-identity-principals-panel').should('be.visible')
+        cy.getTestId('kong-identity-dp-version-alert').should('not.exist')
+      })
+
+      it('shows the alert once principals are configured but a connected node is below 3.15', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: true, dataPlaneVersions: ['3.10.0.0'] }, { config: { principals: { enabled: false } } })
+
+        selectKongIdentity()
+
+        cy.wait('@fetchDirectories')
+        cy.wait('@fetchPrincipals')
+        cy.getTestId('kong-identity-principals-panel').should('not.exist')
+        cy.getTestId('kong-identity-dp-version-alert').should('be.visible')
       })
     })
   })

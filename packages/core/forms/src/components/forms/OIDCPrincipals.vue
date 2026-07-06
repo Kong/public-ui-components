@@ -31,7 +31,7 @@
             Kong Identity
           </div>
           <div class="auth-mode-card-description">
-            Use Kong Identity to authenticate OpenID Connect tokens and map requests to a Kong Identity principal. The authenticated principal is added to the request context for advanced integrations.
+            Use Kong Identity to authenticate OpenID Connect tokens. If all data plane nodes are running version 3.15 or later, you can also map requests to Kong Identity principals for advanced policies and integrations.
           </div>
         </div>
       </KRadio>
@@ -94,6 +94,17 @@
         </KButton>
       </div>
     </div>
+
+    <!-- Shown once principals are configured but a connected DP node can't process them
+         (Gateway 3.15+ required) — mutually exclusive with the "Add principals" guide above. -->
+    <KAlert
+      v-else-if="hasIncompatibleDataPlane && !!principalsEnabled"
+      appearance="warning"
+      class="principals-dp-version-alert"
+      data-testid="oidc-principals-dp-version-alert"
+      message="We detected that one or more data plane nodes are running a version earlier than 3.15. Requests handled by those data plane nodes will use consumers instead of Kong Identity principals."
+      show-icon
+    />
 
     <template v-if="selectedMode === MODE_KONG_IDENTITY">
       <KSelect
@@ -307,7 +318,7 @@
               Add principals
             </div>
             <div class="principals-create-guide-description">
-              Get more value from OAuth 2.0 integration by creating principals in Kong Identity. Associate principals with this authorization server and its clients to enable principal-based authentication across Kong products.
+              Get more value from OAuth 2.0 integration by creating principals in Kong Identity. Associate principals with this authorization server and its clients to enable principal-based authentication across Kong products. Requires data plane nodes to be running version 3.15 or later.
             </div>
             <div class="principals-create-guide-actions">
               <KButton
@@ -364,6 +375,16 @@ const KONG_IDENTITY_ISSUER_MARKER = 'identity.konghq'
 
 const isKongIdentityIssuer = (issuer) =>
   typeof issuer === 'string' && issuer.includes(KONG_IDENTITY_ISSUER_MARKER)
+
+// Kong Identity principals require Gateway 3.15+ on the data plane.
+const KONG_IDENTITY_MIN_DP_VERSION = { major: 3, minor: 15 }
+
+const isVersionBelowMinDpVersion = (version) => {
+  const [major, minor] = version.split('.').map(Number)
+  if (Number.isNaN(major) || Number.isNaN(minor)) return false
+  if (major !== KONG_IDENTITY_MIN_DP_VERSION.major) return major < KONG_IDENTITY_MIN_DP_VERSION.major
+  return minor < KONG_IDENTITY_MIN_DP_VERSION.minor
+}
 
 // Decide the initial radio mode from the existing record. On edit we infer the auth source
 // from the issuer; on create we default to Kong Identity and let the user toggle the radios.
@@ -470,6 +491,11 @@ export default {
     // Kong Identity directories/principals are a Konnect-only concept.
     isKonnect() {
       return this.formsConfig?.app === 'konnect'
+    },
+    // True when at least one connected data plane node can't process Kong Identity
+    // principals (Gateway 3.15+ required). Drives a warning alert, not field hiding.
+    hasIncompatibleDataPlane() {
+      return (this.formsConfig?.dataPlaneVersions ?? []).some(isVersionBelowMinDpVersion)
     },
     // Whether principal lookup is on. Kong Identity mode pins this true; External mode
     // controls it with the "Use principal lookup" toggle (config-principals-enabled).
