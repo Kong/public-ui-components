@@ -545,7 +545,7 @@ const streamingPluginsUrl = computed<string | null>(() => {
     let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].streamingCustomPlugins}`
 
     if (props.config.app === 'konnect') {
-      url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+      return url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
     }
 
     return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
@@ -559,7 +559,7 @@ const clonedPluginsUrl = computed<string | null>(() => {
     let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].clonedPlugins}`
 
     if (props.config.app === 'konnect') {
-      url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+      return url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
     }
 
     return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
