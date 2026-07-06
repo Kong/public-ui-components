@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.3.4...@kong-ui-public/page-layout@0.3.5) (2026-07-06)
+
+
+### Bug Fixes
+
+* **page-layout:** remove reference to is page favorite [KHCP-20905] ([#3537](https://github.com/Kong/public-ui-components/issues/3537)) ([fad0611](https://github.com/Kong/public-ui-components/commit/fad0611d396d5e5723078036a185559dddebe012))
+
+
+
+
+
 ## [0.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.3.3...@kong-ui-public/page-layout@0.3.4) (2026-06-30)
 
 
