@@ -105,7 +105,6 @@ const requestUrl = computed(() => {
 
     return `${props.config.apiBaseUrl}${partialPluginURL}`
       .replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-      .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
       .replace(/{pluginId}/gi, props.plugin.id)
   }
 

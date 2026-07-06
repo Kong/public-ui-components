@@ -1,5 +1,6 @@
 const konnectV1BaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities/v1'
 const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}'
+const konnectNoWorkspaceBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
 const KMBaseApiUrl = '/{workspace}'
 
 export default {
@@ -16,10 +17,10 @@ export default {
   select: {
     konnect: {
       availablePlugins: `${konnectV1BaseApiUrl}/available-plugins`,
-      streamingCustomPlugins: `${konnectBaseApiUrl}/custom-plugins`,
-      clonedPlugins: `${konnectBaseApiUrl}/cloned-plugins`,
-      schemaCustomPluginItem: `${konnectBaseApiUrl}/plugin-schemas/{pluginId}`,
-      streamingCustomPluginItem: `${konnectBaseApiUrl}/custom-plugins/{pluginId}`,
+      streamingCustomPlugins: `${konnectNoWorkspaceBaseApiUrl}/custom-plugins`,
+      clonedPlugins: `${konnectNoWorkspaceBaseApiUrl}/cloned-plugins`,
+      schemaCustomPluginItem: `${konnectNoWorkspaceBaseApiUrl}/plugin-schemas/{pluginId}`,
+      streamingCustomPluginItem: `${konnectNoWorkspaceBaseApiUrl}/custom-plugins/{pluginId}`,
     },
     kongManager: {
       availablePlugins: `${KMBaseApiUrl}/kong`,
@@ -72,16 +73,16 @@ export default {
   customPlugin: {
     konnect: {
       installed: {
-        create: `${konnectBaseApiUrl}/plugin-schemas`,
-        edit: `${konnectBaseApiUrl}/plugin-schemas/{pluginId}`,
+        create: `${konnectNoWorkspaceBaseApiUrl}/plugin-schemas`,
+        edit: `${konnectNoWorkspaceBaseApiUrl}/plugin-schemas/{pluginId}`,
       },
       streamed: {
-        create: `${konnectBaseApiUrl}/custom-plugins`,
-        edit: `${konnectBaseApiUrl}/custom-plugins/{pluginId}`,
+        create: `${konnectNoWorkspaceBaseApiUrl}/custom-plugins`,
+        edit: `${konnectNoWorkspaceBaseApiUrl}/custom-plugins/{pluginId}`,
       },
       cloned: {
-        create: `${konnectBaseApiUrl}/cloned-plugins`,
-        edit: `${konnectBaseApiUrl}/cloned-plugins/{pluginId}`,
+        create: `${konnectNoWorkspaceBaseApiUrl}/cloned-plugins`,
+        edit: `${konnectNoWorkspaceBaseApiUrl}/cloned-plugins/{pluginId}`,
       },
     },
     kongManager: {
