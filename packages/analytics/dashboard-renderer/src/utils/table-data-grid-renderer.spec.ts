@@ -132,6 +132,7 @@ describe('table data grid renderer utilities', () => {
           value: ['service-1'],
         },
       ],
+      queryFields: ['route'],
     })
     expect(tabularQueryFn).toHaveBeenCalledWith({
       datasource: 'platform',

@@ -84,7 +84,7 @@ export default function useContextLinks(
     return stripUnknownFilters.value({
       datasource,
       filters,
-      metrics,
+      queryFields: metrics,
     })
   })
 
