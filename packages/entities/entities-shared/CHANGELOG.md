@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.53.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.53.7...@kong-ui-public/entities-shared@3.53.8) (2026-07-07)
+
+
+### Bug Fixes
+
+* **entities-shared:** config card border color ([#3542](https://github.com/Kong/public-ui-components/issues/3542)) ([bda673a](https://github.com/Kong/public-ui-components/commit/bda673ae073373f131a733bdd6f84c4823e41dd6))
+
+
+
+
+
 ## [3.53.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.53.6...@kong-ui-public/entities-shared@3.53.7) (2026-07-07)
 
 
