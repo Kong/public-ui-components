@@ -46,7 +46,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "2.0.1",
-    "@kong/kongponents": "9.60.6",
+    "@kong/kongponents": "9.60.7",
     "@modyfi/vite-plugin-yaml": "^1.1.1",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/uuid": "^11.0.0",
