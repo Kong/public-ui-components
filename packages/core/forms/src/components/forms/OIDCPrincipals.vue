@@ -13,7 +13,11 @@
       </KExternalLink>
     </div>
 
+    <!-- Requires permission to configure auth servers: without it, Kong Identity mode can't
+         validate the OIDC token, so there's no real choice to offer — skip the picker
+         entirely and go straight to External mode (selectedMode is forced to it already). -->
     <div
+      v-if="hasAuthServersAccess"
       class="oidc-auth-mode-radio-group"
       data-testid="oidc-auth-mode-radio-group"
     >
@@ -95,17 +99,6 @@
       </div>
     </div>
 
-    <!-- Shown once principals are configured but a connected DP node can't process them
-         (Gateway 3.15+ required) — mutually exclusive with the "Add principals" guide above. -->
-    <KAlert
-      v-else-if="hasIncompatibleDataPlane && !!principalsEnabled"
-      appearance="warning"
-      class="principals-dp-version-alert"
-      data-testid="oidc-principals-dp-version-alert"
-      message="We detected that one or more data plane nodes are running a version earlier than 3.15. Requests handled by those data plane nodes will use consumers instead of Kong Identity principals."
-      show-icon
-    />
-
     <template v-if="selectedMode === MODE_KONG_IDENTITY">
       <KSelect
         class="principals-directory-select"
@@ -113,13 +106,20 @@
         enable-filtering
         :items="kongIdentityServerItems"
         label="Authorization Server"
+        :label-attributes="{
+          info: 'The Kong Identity auth server that will act as the OpenID Connect provider for this plugin.',
+          tooltipAttributes: { maxWidth: '300' },
+        }"
         :loading="kongIdentityServersLoading"
         :model-value="selectedServer?.id"
         placeholder="Select an Authorization Server"
         required
         @update:model-value="handleServerChange"
       >
-        <template #dropdown-footer-text>
+        <template
+          v-if="canCreateAuthServer"
+          #dropdown-footer-text
+        >
           <div
             class="create-action"
             data-testid="create-auth-server-action"
@@ -154,7 +154,10 @@
           placeholder="Select a client"
           @update:model-value="handleClientChange(index, $event)"
         >
-          <template #dropdown-footer-text>
+          <template
+            v-if="canCreateAuthServerClient"
+            #dropdown-footer-text
+          >
             <div
               class="create-action"
               data-testid="create-client-action"
@@ -211,10 +214,18 @@
         + Add client
       </div>
 
+      <!-- Principal lookup is opt-in (off by default) in Kong Identity mode too: the
+           in-collapse toggle enables it, then it runs after token verification. The
+           principals-specific content requires directories access; the sibling
+           advanced-fields slot (OIDC auth methods) always renders regardless. -->
       <PrincipalLookupSettings
+        :data-plane-incompatible="hasIncompatibleDataPlane"
         :disabled="principalsFieldsDisabled"
         :form-model="formModel"
+        :on-enabled-change="handleUsePrincipalLookupChange"
         :on-model-updated="onModelUpdated"
+        show-enable-toggle
+        :show-principals-fields="hasPrincipalsAccess"
       >
         <slot name="advanced-fields" />
       </PrincipalLookupSettings>
@@ -232,11 +243,25 @@
             class="external-client-input"
             data-testid="external-client-id"
             :label="index === 0 ? 'Client id' : undefined"
-            :label-attributes="{ info: externalClientIdField?.help }"
+            :label-attributes="{
+              info: !formOptions?.helpAsHtml ? externalClientIdField?.help : undefined,
+              tooltipAttributes: { maxWidth: '300' },
+            }"
             :model-value="clientIdArray[index]"
             placeholder="e.g., kong-gateway-client"
             @update:model-value="handleClientChange(index, $event)"
-          />
+          >
+            <!-- Mirrors FormGroup.vue's helpAsHtml handling: schema help text is raw HTML
+                 (e.g. wrapped in <p>), sanitized and rendered here instead of via
+                 labelAttributes.info (which VFG only treats as plain text). -->
+            <template
+              v-if="formOptions?.helpAsHtml && externalClientIdField?.help"
+              #label-tooltip
+            >
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <div v-html="sanitize(externalClientIdField.help)" />
+            </template>
+          </KInput>
           <component
             :is="autofillSlot"
             v-if="autofillSlot"
@@ -250,13 +275,24 @@
             class="external-client-input"
             data-testid="external-client-secret"
             :label="index === 0 ? 'Client secret' : undefined"
-            :label-attributes="{ info: externalClientSecretField?.help }"
+            :label-attributes="{
+              info: !formOptions?.helpAsHtml ? externalClientSecretField?.help : undefined,
+              tooltipAttributes: { maxWidth: '300' },
+            }"
             :model-value="clientSecretArray[index]"
             placeholder="e.g., your-client-secret"
             show-password-mask-toggle
             type="password"
             @update:model-value="handleClientSecretChange(index, $event)"
-          />
+          >
+            <template
+              v-if="formOptions?.helpAsHtml && externalClientSecretField?.help"
+              #label-tooltip
+            >
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <div v-html="sanitize(externalClientSecretField.help)" />
+            </template>
+          </KInput>
           <component
             :is="autofillSlot"
             v-if="autofillSlot"
@@ -292,14 +328,16 @@
         @model-updated="onModelUpdated"
       />
 
-      <!-- Principal lookup is optional for external auth servers: the in-collapse toggle opts
-           in, then it runs after token verification using the same engine as Kong Identity. -->
+      <!-- Principals-specific content requires directories access; the sibling
+           advanced-fields slot (OIDC auth methods) always renders regardless. -->
       <PrincipalLookupSettings
+        :data-plane-incompatible="hasIncompatibleDataPlane"
         :disabled="principalsFieldsDisabled"
         :form-model="formModel"
         :on-enabled-change="handleUsePrincipalLookupChange"
         :on-model-updated="onModelUpdated"
         show-enable-toggle
+        :show-principals-fields="hasPrincipalsAccess"
       >
         <!-- No directory / no principals: guide the user to set up Kong Identity, inside the
              additional settings (the toggle above is disabled in this state). -->
@@ -356,6 +394,7 @@
 </template>
 
 <script>
+import DOMPurify from 'dompurify'
 import VueFormGenerator from '../FormGenerator.vue'
 import PrincipalLookupSettings from './PrincipalLookupSettings.vue'
 import { FORMS_CONFIG, AUTOFILL_SLOT } from '../../const'
@@ -434,13 +473,16 @@ export default {
   },
   emits: ['mode-change', 'click:learn-more', 'click:create-entity'],
   data() {
+    // Without auth-server permission, Kong Identity mode can't be configured at all, so
+    // land in External mode regardless of what the stored record's issuer would infer.
+    const hasAuthServersAccess = this.formsConfig?.isKongIdentityAuthServersAvailable !== false
     return {
       MODE_KONG_IDENTITY,
       MODE_EXTERNAL,
       KUI_ICON_SIZE_20,
       KUI_ICON_SIZE_30,
       KUI_ICON_SIZE_40,
-      selectedMode: inferInitialMode(this.formModel, this.isEditing),
+      selectedMode: hasAuthServersAccess ? inferInitialMode(this.formModel, this.isEditing) : MODE_EXTERNAL,
       kongIdentityServers: [],
       kongIdentityServersLoading: false,
       clients: [],
@@ -492,6 +534,23 @@ export default {
     isKonnect() {
       return this.formsConfig?.app === 'konnect'
     },
+    // KRN-based permission flags from the host app, each controlling their own field group
+    // independently: without auth-server access, Kong Identity mode isn't offered at all;
+    // without principals access, the Principal lookup settings content isn't shown.
+    hasAuthServersAccess() {
+      return this.formsConfig?.isKongIdentityAuthServersAvailable !== false
+    },
+    hasPrincipalsAccess() {
+      return this.formsConfig?.isKongIdentityPrincipalsAvailable !== false
+    },
+    // Separate, narrower permissions for creating (not just viewing) an auth server or a
+    // client under one — each hides its own "Create..." dropdown action when unavailable.
+    canCreateAuthServer() {
+      return this.formsConfig?.canCreateAuthServer !== false
+    },
+    canCreateAuthServerClient() {
+      return this.formsConfig?.canCreateAuthServerClient !== false
+    },
     // True when at least one connected data plane node can't process Kong Identity
     // principals (Gateway 3.15+ required). Drives a warning alert, not field hiding.
     hasIncompatibleDataPlane() {
@@ -519,13 +578,9 @@ export default {
     },
   },
   mounted() {
-    // Kong Identity is the principal-based model, so it turns lookup on by default on create.
-    // External auth is opt-in (the "Use principal lookup" toggle), so it stays off until asked.
+    // Principal lookup is opt-in (off by default) in both modes via the "Use principal
+    // lookup" toggle, so create doesn't need to force config-principals-enabled either way.
     if (!this.isEditing) {
-      if (this.selectedMode === MODE_KONG_IDENTITY) {
-        // eslint-disable-next-line vue/no-mutating-props
-        this.formModel['config-principals-enabled'] = true
-      }
       this.$nextTick(() => this.$emit('mode-change', this.selectedMode))
     }
     this.fetchKongIdentityServers()
@@ -540,7 +595,7 @@ export default {
     async fetchPrincipalsState({ setDirectory = false } = {}) {
       // Kong Identity directories are a Konnect-only concept.
       if (this.formsConfig?.app !== 'konnect') return
-      if (this.formsConfig?.isKongIdentityDirectoriesAvailable === false) return
+      if (this.formsConfig?.isKongIdentityPrincipalsAvailable === false) return
       // Apply the cached directory name instantly so the field isn't empty during a refresh.
       if (setDirectory && this.cachedDirectory) {
         // eslint-disable-next-line vue/no-mutating-props
@@ -689,6 +744,11 @@ export default {
       this.formModel[field] = value
       this.onModelUpdated()
     },
+    // Mirrors FormGroup.vue's sanitize() — used to render schema help text (raw HTML) via
+    // v-html when formOptions.helpAsHtml is set.
+    sanitize(str) {
+      return DOMPurify.sanitize(str)
+    },
     handleUsePrincipalLookupChange(enabled) {
       // The directory/principals are already checked on mount (and cached), so toggling
       // lookup on/off just flips the flag — no extra network request.
@@ -716,9 +776,10 @@ export default {
         this.formModel['config-client_secret'] = null
         // eslint-disable-next-line vue/no-mutating-props
         this.formModel['config-issuer'] = null
-        // Restore principals defaults
+        // Kong Identity mode: principal lookup is opt-in (the "Use principal lookup"
+        // toggle), so it starts off; other principals defaults are restored regardless.
         // eslint-disable-next-line vue/no-mutating-props
-        this.formModel['config-principals-enabled'] = true
+        this.formModel['config-principals-enabled'] = false
         // eslint-disable-next-line vue/no-mutating-props
         this.formModel['config-principals-error_on_miss'] = true
         // eslint-disable-next-line vue/no-mutating-props
@@ -952,6 +1013,13 @@ export default {
 
   .external-client-input {
     width: 100%;
+  }
+
+  // Schema help text renders as sanitized HTML (see #label-tooltip above) and is commonly
+  // wrapped in a <p>; reset its default browser margin so it doesn't show as blank space
+  // above/below the tooltip text. Matches FormGroup.vue's ":deep(.k-tooltip p) { margin: 0; }".
+  :deep(.k-tooltip p) {
+    margin: 0;
   }
 }
 

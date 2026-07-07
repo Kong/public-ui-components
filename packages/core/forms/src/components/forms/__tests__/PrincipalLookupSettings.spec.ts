@@ -195,4 +195,23 @@ describe('PrincipalLookupSettings', () => {
       expect((wrapper.vm as any).fieldsDisabled).toBe(false)
     })
   })
+
+  describe('data plane version compatibility alert', () => {
+    it('does not show the alert when dataPlaneIncompatible is false', () => {
+      const wrapper = mountComponent({ 'config-principals-enabled': true }, { dataPlaneIncompatible: false })
+
+      expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(false)
+    })
+
+    it('shows the alert above the toggle when lookup is enabled and data plane is incompatible', () => {
+      const wrapper = mountComponent(
+        { 'config-principals-enabled': true },
+        { showEnableToggle: true, dataPlaneIncompatible: true },
+      )
+
+      const html = wrapper.html()
+      expect(html.indexOf('oidc-principals-dp-version-alert')).toBeGreaterThan(-1)
+      expect(html.indexOf('oidc-principals-dp-version-alert')).toBeLessThan(html.indexOf('use-principal-lookup'))
+    })
+  })
 })

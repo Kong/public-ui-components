@@ -214,7 +214,7 @@ const identityPrincipalsUiEnabled = inject<boolean>(FEATURE_FLAGS.KHCP_20393_IDE
 const hasPrincipals = computed(() =>
   identityPrincipalsUiEnabled
   && !!getSchema('$.config.principals')
-  && (appConfig as KonnectPluginFormConfig)?.isKongIdentityDirectoriesAvailable !== false,
+  && (appConfig as KonnectPluginFormConfig)?.isKongIdentityPrincipalsAvailable !== false,
 )
 
 // True when at least one connected data plane node can't process Kong Identity principals

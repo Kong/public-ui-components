@@ -85,11 +85,25 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
    */
   isKongIdentityAuthServersAvailable?: boolean
   /**
-   * KRN-based permission flag from the host app (gateway-manager).
+   * KRN-based permission flag from the host app (gateway-manager). Principals are nested
+   * under a directory but scoped more narrowly, so this is tracked separately from
+   * auth-servers access.
    * When explicitly `false`, the Kong Identity principals section is hidden without
    * making an API call, avoiding the UI flicker of a reactive 401 guard.
    */
-  isKongIdentityDirectoriesAvailable?: boolean
+  isKongIdentityPrincipalsAvailable?: boolean
+  /**
+   * KRN-based permission flag from the host app (gateway-manager).
+   * When explicitly `false`, the "Create authorization server" dropdown action is hidden
+   * (the user can still view/select existing servers via isKongIdentityAuthServersAvailable).
+   */
+  canCreateAuthServer?: boolean
+  /**
+   * KRN-based permission flag from the host app (gateway-manager).
+   * When explicitly `false`, the "Create client" dropdown action is hidden for the
+   * selected authorization server (the user can still view/select existing clients).
+   */
+  canCreateAuthServerClient?: boolean
   /**
    * Kong Gateway versions of the data plane nodes connected to the current control plane
    * (deduped). Used to warn when Kong Identity principals — which require Gateway 3.15+ —

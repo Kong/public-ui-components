@@ -90,7 +90,7 @@ describe('OIDCPrincipals', () => {
       expect(onModelUpdated).toHaveBeenCalled()
     })
 
-    it('switching back to Kong Identity restores principals defaults and clears external fields', async () => {
+    it('switching back to Kong Identity restores principals defaults (lookup off) and clears external fields', async () => {
       const onModelUpdated = vi.fn()
       const wrapper = mountComponent({
         'config-principals-enabled': false,
@@ -107,7 +107,8 @@ describe('OIDCPrincipals', () => {
       ;(wrapper.vm as any).handleModeChange('kong-identity')
       await wrapper.vm.$nextTick()
 
-      expect(formModel['config-principals-enabled']).toBe(true)
+      // Principal lookup is opt-in (off by default) in Kong Identity mode too.
+      expect(formModel['config-principals-enabled']).toBe(false)
       expect(formModel['config-principals-match_consumer']).toBe(true)
       expect(formModel['config-principals-match_consumer_groups']).toBe(true)
       expect(formModel['config-principals-error_on_miss']).toBe(true)
@@ -123,6 +124,21 @@ describe('OIDCPrincipals', () => {
       const wrapper = mountComponent()
 
       expect(wrapper.findComponent(PrincipalLookupSettings).exists()).toBe(true)
+    })
+
+    it('shows a "Use principal lookup" toggle in Kong Identity mode too', () => {
+      const wrapper = mountComponent({ 'config-principals-enabled': false })
+
+      expect((wrapper.vm as any).selectedMode).toBe('kong-identity')
+      expect(wrapper.find('[data-testid="use-principal-lookup"]').exists()).toBe(true)
+    })
+
+    it('does not force principal lookup on when creating in Kong Identity mode (opt-in default)', () => {
+      const wrapper = mountComponent({ 'config-principals-enabled': false })
+      const formModel = wrapper.props('formModel')
+
+      expect((wrapper.vm as any).selectedMode).toBe('kong-identity')
+      expect(formModel['config-principals-enabled']).toBe(false)
     })
 
     it('shows a "Use principal lookup" toggle in External mode', () => {
@@ -669,18 +685,132 @@ describe('OIDCPrincipals', () => {
       expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v1/auth-servers'), expect.anything())
     })
 
-    it('skips the directories fetch when isKongIdentityDirectoriesAvailable is false', async () => {
+    it('skips the directories fetch when isKongIdentityPrincipalsAvailable is false', async () => {
       mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
         global: {
           provide: {
-            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityDirectoriesAvailable: false },
+            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityPrincipalsAvailable: false },
           },
         },
       })
       await flushPromises()
 
       expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v2/directories'), expect.anything())
+    })
+
+    // The "Create authorization server"/"Create client" actions live inside KSelect's
+    // #dropdown-footer-text named slot. Kongponents aren't globally registered in this
+    // Vitest/jsdom setup, so named slots on an unresolved component never render — these
+    // assert on the underlying computed flags instead; DOM-level coverage would need Cypress.
+    it('defaults canCreateAuthServer and canCreateAuthServerClient to true (fail open)', () => {
+      const wrapper = mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: { provide: { [FORMS_CONFIG]: konnectConfig } },
+      })
+
+      expect((wrapper.vm as any).canCreateAuthServer).toBe(true)
+      expect((wrapper.vm as any).canCreateAuthServerClient).toBe(true)
+    })
+
+    it('sets canCreateAuthServer to false when the host explicitly denies it', () => {
+      const wrapper = mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: {
+          provide: {
+            [FORMS_CONFIG]: { ...konnectConfig, canCreateAuthServer: false },
+          },
+        },
+      })
+
+      expect((wrapper.vm as any).canCreateAuthServer).toBe(false)
+      // A separate, unaffected permission — selecting an existing server still works.
+      expect((wrapper.vm as any).canCreateAuthServerClient).toBe(true)
+    })
+
+    it('sets canCreateAuthServerClient to false when the host explicitly denies it', () => {
+      const wrapper = mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: {
+          provide: {
+            [FORMS_CONFIG]: { ...konnectConfig, canCreateAuthServerClient: false },
+          },
+        },
+      })
+
+      expect((wrapper.vm as any).canCreateAuthServerClient).toBe(false)
+      expect((wrapper.vm as any).canCreateAuthServer).toBe(true)
+    })
+
+    it('hides the mode picker and forces External mode when isKongIdentityAuthServersAvailable is false', async () => {
+      const wrapper = mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: {
+          provide: {
+            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityAuthServersAvailable: false },
+          },
+        },
+      })
+      await flushPromises()
+
+      expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect(wrapper.find('[data-testid="oidc-auth-mode-radio-group"]').exists()).toBe(false)
+      expect(wrapper.find('.stub-vfg').exists()).toBe(true)
+    })
+
+    it('still shows the mode picker and Kong Identity mode when isKongIdentityAuthServersAvailable is true', () => {
+      const wrapper = mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: { provide: { [FORMS_CONFIG]: konnectConfig } },
+      })
+
+      expect((wrapper.vm as any).selectedMode).toBe('kong-identity')
+      expect(wrapper.find('[data-testid="oidc-auth-mode-radio-group"]').exists()).toBe(true)
+    })
+
+    it('hides the Principal lookup settings content (but not sibling advanced fields) in Kong Identity mode when isKongIdentityPrincipalsAvailable is false', () => {
+      const wrapper = mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        slots: { 'advanced-fields': '<div data-testid="sibling-advanced-field">Sibling</div>' },
+        global: {
+          provide: {
+            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityPrincipalsAvailable: false },
+          },
+        },
+      })
+
+      expect((wrapper.vm as any).selectedMode).toBe('kong-identity')
+      // The component itself still renders — it hosts the shared "additional settings" collapse
+      // for sibling content (e.g. OIDC auth methods) — only its own principals content is hidden.
+      expect(wrapper.findComponent(PrincipalLookupSettings).exists()).toBe(true)
+      expect(wrapper.find('[data-testid="use-principal-lookup"]').exists()).toBe(false)
+      expect(wrapper.find('[data-testid="principals-lookup-method"]').exists()).toBe(false)
+      expect(wrapper.find('[data-testid="sibling-advanced-field"]').exists()).toBe(true)
+      // Authorization Server field is unaffected — it's gated by auth-server access, not principals access.
+      expect(wrapper.find('[data-testid="principals-directory-select"]').exists()).toBe(true)
+    })
+
+    it('hides the Principal lookup settings content (but not sibling advanced fields) in External mode when isKongIdentityPrincipalsAvailable is false', () => {
+      const wrapper = mount(OIDCPrincipals, {
+        props: {
+          ...baseProps,
+          formModel: buildFormModel({ 'config-issuer': 'https://idp.example.com' }),
+          isEditing: true,
+        },
+        slots: { 'advanced-fields': '<div data-testid="sibling-advanced-field">Sibling</div>' },
+        global: {
+          provide: {
+            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityPrincipalsAvailable: false },
+          },
+        },
+      })
+
+      expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect(wrapper.findComponent(PrincipalLookupSettings).exists()).toBe(true)
+      expect(wrapper.find('[data-testid="use-principal-lookup"]').exists()).toBe(false)
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
+      expect(wrapper.find('[data-testid="sibling-advanced-field"]').exists()).toBe(true)
+      expect(wrapper.find('.stub-vfg').exists()).toBe(true)
     })
   })
 
@@ -724,13 +854,13 @@ describe('OIDCPrincipals', () => {
       expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(false)
     })
 
-    it('prioritizes the "Add principals" guide over the alert when no principals are configured yet', async () => {
+    it('shows the alert alongside the "Add principals" guide when no principals are configured yet (different sections)', async () => {
       mockKongIdentity({ principals: [] })
       const wrapper = mountKonnect({}, {}, { dataPlaneVersions: ['3.10.0.0'] })
       await flushPromises()
 
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
-      expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(false)
+      expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(true)
     })
 
     it('shows the alert once principals are configured but a connected node is below 3.15 in Kong Identity mode', async () => {
@@ -753,19 +883,6 @@ describe('OIDCPrincipals', () => {
 
       expect((wrapper.vm as any).selectedMode).toBe('external')
       expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(true)
-    })
-
-    it('does not show the alert in External mode when principal lookup is off', async () => {
-      mockKongIdentity({ principals: [{ id: 'p1' }] })
-      const wrapper = mountKonnect(
-        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
-        { isEditing: true },
-        { dataPlaneVersions: ['3.10.0.0'] },
-      )
-      await flushPromises()
-
-      expect((wrapper.vm as any).selectedMode).toBe('external')
-      expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(false)
     })
   })
 })

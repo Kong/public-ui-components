@@ -507,7 +507,20 @@ describe('<OIDCForm />', () => {
   })
 
   describe('KRN permission flags', () => {
-    it('hides the principals section when isKongIdentityAuthServersAvailable is false', () => {
+    beforeEach(() => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v1/auth-servers/_computed`,
+        },
+        {
+          statusCode: 200,
+          body: { data: [] },
+        },
+      ).as('getAuthServers')
+    })
+
+    it('hides only the mode picker (not the whole section) when isKongIdentityAuthServersAvailable is false', () => {
       cy.mount(OIDCForm, {
         props: {
           ...requiredProps,
@@ -521,11 +534,20 @@ describe('<OIDCForm />', () => {
         },
       })
 
-      cy.getTestId('oidc-principals-section').should('not.exist')
+      // The section still renders (it hosts sibling advanced fields regardless of this
+      // permission) — only the auth-server-specific mode picker is hidden.
+      cy.getTestId('oidc-principals-section').should('exist')
       cy.getTestId('oidc-auth-mode-radio-group').should('not.exist')
+
+      // Principal lookup (gated by a separate permission) is unaffected.
+      cy.getTestId('oidc-principals-section').within(() => {
+        cy.getTestId('collapse-trigger-label').click()
+      })
+      cy.getTestId('use-principal-lookup').should('exist')
+      cy.getTestId('auth-methods-multiselect').should('exist')
     })
 
-    it('hides the principals section when isKongIdentityDirectoriesAvailable is false', () => {
+    it('hides only the Principal lookup settings (not the whole section) when isKongIdentityPrincipalsAvailable is false', () => {
       cy.mount(OIDCForm, {
         props: {
           ...requiredProps,
@@ -534,12 +556,22 @@ describe('<OIDCForm />', () => {
         },
         global: {
           provide: {
-            'kong-ui-forms-config': { ...baseConfigKonnect, isKongIdentityDirectoriesAvailable: false },
+            'kong-ui-forms-config': { ...baseConfigKonnect, isKongIdentityPrincipalsAvailable: false },
           },
         },
       })
 
-      cy.getTestId('oidc-principals-section').should('not.exist')
+      // The mode picker and Authorization Server field (gated by a separate permission)
+      // are unaffected.
+      cy.getTestId('oidc-principals-section').should('exist')
+      cy.getTestId('oidc-auth-mode-radio-group').should('exist')
+
+      cy.getTestId('oidc-principals-section').within(() => {
+        cy.getTestId('collapse-trigger-label').click()
+      })
+      cy.getTestId('use-principal-lookup').should('not.exist')
+      // Sibling advanced fields (Authentication methods / Session management) still show.
+      cy.getTestId('auth-methods-multiselect').should('exist')
     })
   })
 
