@@ -161,6 +161,7 @@
         v-bind="componentData.rendererProps"
         v-on="componentEventHandlers"
         @chart-data="onChartData"
+        @query-complete="onQueryComplete"
       />
     </div>
   </div>
@@ -489,6 +490,10 @@ const onChartData = (data: ExploreResultV4) => {
   chartData.value = data
   loadingChartData.value = false
   emit('chart-data', data)
+}
+
+const onQueryComplete = () => {
+  loadingChartData.value = false
 }
 
 const onLoadingChange = (isLoading: boolean) => {
