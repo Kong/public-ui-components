@@ -9,7 +9,7 @@
       @update:model-value="handleQueryUpdate"
     >
       <template #before>
-        <IconFilter />
+        <FilterIcon decorative />
       </template>
       <template #after>
         <CloseIcon
@@ -29,7 +29,7 @@
         data-testid="filter-button"
         @click="toggleMenu"
       >
-        <IconFilter />
+        <FilterIcon decorative />
         {{ t('filter.filterButtonText') }} {{ filteredFields.length > 0 ? `(${filteredFields.length})` : '' }}
       </KButton>
       <div
@@ -139,8 +139,8 @@ import { CloseIcon, ChevronDownIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL_WEAK } from '@kong/design-tokens'
 import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../types'
 import composables from '../../composables'
-import IconFilter from '../icons/IconFilter.vue'
 import type { SelectItem, SelectFilterFunctionParams } from '@kong/kongponents'
+import { FilterIcon } from '@kong/icons'
 
 const { i18n: { t } } = composables.useI18n()
 
