@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.3.6...@kong-ui-public/page-layout@0.3.7) (2026-07-07)
+
+
+### Bug Fixes
+
+* **entities-shared:** update entity filter icon [KHCP-21053] ([#3538](https://github.com/Kong/public-ui-components/issues/3538)) ([9c67c77](https://github.com/Kong/public-ui-components/commit/9c67c77279acd42bbbfe6d70c89fb09eb1eb902b))
+
+
+
+
+
 ## [0.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.3.5...@kong-ui-public/page-layout@0.3.6) (2026-07-07)
 
 **Note:** Version bump only for package @kong-ui-public/page-layout
