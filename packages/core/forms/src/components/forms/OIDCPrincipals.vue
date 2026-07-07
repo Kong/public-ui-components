@@ -343,12 +343,12 @@
              additional settings (the toggle above is disabled in this state). -->
         <template #banner>
           <KSkeleton
-            v-if="isKonnect && principalsLoading"
+            v-if="isKonnect && formsConfig?.principalsCreationGuideVisible === undefined"
             class="principals-create-guide-skeleton"
             data-testid="principals-create-guide-loading"
           />
           <div
-            v-else-if="isKonnect && !hasPrincipals"
+            v-else-if="isKonnect && formsConfig?.principalsCreationGuideVisible"
             class="principals-create-guide"
             data-testid="principals-create-guide"
           >
@@ -476,13 +476,14 @@ export default {
     // Without auth-server permission, Kong Identity mode can't be configured at all, so
     // land in External mode regardless of what the stored record's issuer would infer.
     const hasAuthServersAccess = this.formsConfig?.isKongIdentityAuthServersAvailable !== false
+    const initialMode = hasAuthServersAccess ? inferInitialMode(this.formModel, this.isEditing) : MODE_EXTERNAL
     return {
       MODE_KONG_IDENTITY,
       MODE_EXTERNAL,
       KUI_ICON_SIZE_20,
       KUI_ICON_SIZE_30,
       KUI_ICON_SIZE_40,
-      selectedMode: hasAuthServersAccess ? inferInitialMode(this.formModel, this.isEditing) : MODE_EXTERNAL,
+      selectedMode: initialMode,
       kongIdentityServers: [],
       kongIdentityServersLoading: false,
       clients: [],
@@ -490,12 +491,6 @@ export default {
       selectedServer: null,
       restoringServer: false,
       leavePromptType: null,
-      // Principals existence lookup (Konnect Kong Identity directory)
-      principalsLoading: false,
-      hasPrincipals: false,
-      // Cached directory from the first /v2/directories fetch so mode switches and the
-      // external opt-in toggle refresh silently (no loading flash) and apply the name instantly.
-      cachedDirectory: null,
     }
   },
   computed: {
@@ -561,20 +556,34 @@ export default {
     principalsEnabled() {
       return this.formModel['config-principals-enabled'] === true
     },
-    // Until at least one principal exists in the directory (or while we're still
-    // checking), the principal-config fields are meaningless, so disable them and
-    // surface the "Add principals" guide instead.
+    // Fields are meaningful once the user has principals access at all — the host already
+    // guards the whole section on this permission, so this mirrors that rather than trying
+    // to independently track whether principals currently exist (see principalsGuideVisible).
     principalsFieldsDisabled() {
-      return this.isKonnect && (this.principalsLoading || !this.hasPrincipals)
+      return this.isKonnect && !this.hasPrincipalsAccess
     },
-    // Show the "Add principals" guide only when lookup is on and the directory has none.
+    // Host-precomputed: directory access → directory resolved → principals (list) access →
+    // principals list empty → create-principal permission. Only shown once lookup is on.
     principalsGuideVisible() {
-      return this.isKonnect && this.principalsEnabled && !this.principalsLoading && !this.hasPrincipals
+      return this.isKonnect && this.principalsEnabled && this.formsConfig?.principalsCreationGuideVisible === true
     },
-    // While the first (cold) directory/principals lookup is in flight, show a skeleton in
-    // place of the guide. Cached refreshes don't set principalsLoading, so they stay silent.
+    // `undefined` means the host hasn't resolved principalsCreationGuideVisible yet.
     principalsSkeletonVisible() {
-      return this.isKonnect && this.principalsEnabled && this.principalsLoading
+      return this.isKonnect && this.principalsEnabled && this.formsConfig?.principalsCreationGuideVisible === undefined
+    },
+  },
+  watch: {
+    // Handles late-resolving host (principalsDirectoryName becomes available after mount).
+    // Not immediate — the saved edit-load value must not be overwritten on mount;
+    // explicit mode switches are handled by handleModeChange directly.
+    'formsConfig.principalsDirectoryName': {
+      immediate: true,
+      handler(name) {
+        if (this.isEditing || this.selectedMode !== MODE_KONG_IDENTITY || name == null) return
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-principals-directory'] = name
+        this.onModelUpdated()
+      },
     },
   },
   mounted() {
@@ -584,61 +593,8 @@ export default {
       this.$nextTick(() => this.$emit('mode-change', this.selectedMode))
     }
     this.fetchKongIdentityServers()
-    // Check the directory's principals in both modes so the External "Use principal lookup"
-    // toggle can be disabled when there's no directory / no principals. Only adopt the fetched
-    // directory name in Kong Identity create.
-    this.fetchPrincipalsState({ setDirectory: !this.isEditing && this.selectedMode === MODE_KONG_IDENTITY })
   },
   methods: {
-    // `setDirectory` is true on create/switch into Kong Identity (we adopt the directory
-    // name returned by the API); on edit-load it stays false so the saved value is kept.
-    async fetchPrincipalsState({ setDirectory = false } = {}) {
-      // Kong Identity directories are a Konnect-only concept.
-      if (this.formsConfig?.app !== 'konnect') return
-      if (this.formsConfig?.isKongIdentityPrincipalsAvailable === false) return
-      // Apply the cached directory name instantly so the field isn't empty during a refresh.
-      if (setDirectory && this.cachedDirectory) {
-        // eslint-disable-next-line vue/no-mutating-props
-        this.formModel['config-principals-directory'] = this.cachedDirectory.name
-        this.onModelUpdated()
-      }
-      try {
-        // Only show the loading skeleton on the first (cold) fetch; cached refreshes are silent.
-        if (!this.cachedDirectory) {
-          this.principalsLoading = true
-        }
-        const { axiosInstance } = useAxios(this.formsConfig?.axiosRequestConfig)
-        const base = this.formsConfig.apiBaseUrl
-        // Only need the single directory backing this config.
-        const dirResp = await axiosInstance.get(`${base}/v2/directories`, {
-          params: { 'page[size]': 1 },
-        })
-        const directory = dirResp?.data?.data?.[0]
-        if (!directory) {
-          this.hasPrincipals = false
-          return
-        }
-        this.cachedDirectory = directory
-        // Store the resolved directory name so principals.directory matches the directory
-        // we check against (instead of a hardcoded 'default').
-        if (setDirectory) {
-          // eslint-disable-next-line vue/no-mutating-props
-          this.formModel['config-principals-directory'] = directory.name
-          this.onModelUpdated()
-        }
-        // Only need to know whether at least one principal exists.
-        const principalsResp = await axiosInstance.get(
-          `${base}/v2/directories/${directory.id}/principals`,
-          { params: { 'page[size]': 1 } },
-        )
-        this.hasPrincipals = (principalsResp?.data?.data?.length ?? 0) > 0
-      } catch {
-        // On failure fall back to the empty state so the user can still create a principal.
-        this.hasPrincipals = false
-      } finally {
-        this.principalsLoading = false
-      }
-    },
     async fetchKongIdentityServers() {
       if (this.formsConfig?.isKongIdentityAuthServersAvailable === false) return
       try {
@@ -786,8 +742,11 @@ export default {
         this.formModel['config-principals-match_consumer'] = true
         // eslint-disable-next-line vue/no-mutating-props
         this.formModel['config-principals-match_consumer_groups'] = true
-        // Re-check principals and adopt the directory name from the API (not hardcoded)
-        this.fetchPrincipalsState({ setDirectory: true })
+        // Adopt the host-resolved directory name when explicitly switching into Kong Identity.
+        const dir = this.formsConfig?.principalsDirectoryName
+        // eslint-disable-next-line vue/no-mutating-props
+        if (dir != null) this.formModel['config-principals-directory'] = dir
+
       } else {
         // External auth server: principal lookup is opt-in (the "Use principal lookup"
         // toggle), so it starts off; the directory stays 'default' until the user opts in.

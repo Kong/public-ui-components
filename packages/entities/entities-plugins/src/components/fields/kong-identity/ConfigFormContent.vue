@@ -96,6 +96,7 @@ import { useAxios } from '@kong-ui-public/entities-shared'
 import { KLabel, KRadio } from '@kong/kongponents'
 import { FETCHED_REALMS_KEY } from '../key-auth-identity-realms/const'
 import { BEFORE_SAVE_KEY } from '../../const'
+import { FORM_EDITING } from '../../free-form/shared/const'
 import { FEATURE_FLAGS } from '../../../constants'
 import composables from '../../../composables'
 
@@ -120,6 +121,7 @@ function isVersionBelowMinDpVersion(version: string): boolean {
 }
 
 const registerBeforeSave = inject(BEFORE_SAVE_KEY)
+const isEditing = inject(FORM_EDITING)
 
 const { i18n } = composables.useI18n()
 
@@ -131,30 +133,17 @@ const { formData, getSchema } = useFormShared()
 
 const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
 
-// Kong Identity directory lookup (Konnect only). A single /v2/directories call drives two
-// things: the directory NAME is stored on config.principals.directory, and the directory ID
-// is used to check whether any principals already exist. When none do we show the "create
-// your first principal" panel; while that panel is shown (or the lookup is still loading)
-// there are no principals to configure, so error_on_miss is meaningless and must be disabled.
-const principalsLoading = ref(false)
-const principalsHasPrincipals = ref(false)
+// Host-precomputed (see KonnectPluginFormConfig): directory access → directory resolved →
+// principals (list) access on that directory → principals list empty → create-principal
+// permission. `undefined` means the host hasn't resolved this yet.
+const principalsCreationGuideVisible = computed(() => (appConfig as KonnectPluginFormConfig)?.principalsCreationGuideVisible)
 
-const principalsShowPanel = computed(() => !principalsLoading.value && !principalsHasPrincipals.value)
+const principalsShowPanel = computed(() => principalsCreationGuideVisible.value === true)
+const principalsLoading = computed(() => principalsCreationGuideVisible.value === undefined)
 
-// True whenever the field renders something (skeleton or empty-state panel), i.e. there
-// are no confirmed stored principals yet — used to disable error_on_miss.
-const principalsPanelVisible = computed(() =>
-  isKonnect.value
-  && hasPrincipals.value
-  && selectedMode.value === 'kong-identity'
-  && (principalsLoading.value || principalsShowPanel.value),
-)
-
-type ListResponse<T> = { data?: T[] }
-type Directory = { id: string, name: string }
-
-// Cached after the first fetch so mode switches never trigger a second network request.
-const cachedDirectory = ref<Directory | null>(null)
+// Fields are meaningful once the user has principals access at all — mirrors hasPrincipals
+// rather than independently tracking whether principals currently exist.
+const principalsPanelVisible = computed(() => isKonnect.value && !hasPrincipals.value)
 
 const principalsErrorOnMiss = computed(() => formData.config?.principals?.error_on_miss ?? true)
 
@@ -242,66 +231,24 @@ function hasActualRealm(realms: any[] | null | undefined): boolean {
 
 const selectedMode = ref<'consumers' | 'kong-identity' | 'centrally-managed'>(detectInitialMode())
 
-// True when the form loads with an existing kong-identity config (edit flow).
-// Captured synchronously so the async fetch can decide whether to overwrite the saved directory.
-const isEditLoadKongIdentity = selectedMode.value === 'kong-identity'
-
-const fetchPrincipalsState = async () => {
-  if (appConfig?.app !== 'konnect') return
-  try {
-    // Only show the loading skeleton on the first fetch; background refreshes are silent.
-    if (!cachedDirectory.value) {
-      principalsLoading.value = true
+// Create flow: adopt on mount or when host resolves late. Edit-load preserves saved value.
+watch(
+  () => (appConfig as KonnectPluginFormConfig)?.principalsDirectoryName,
+  (name) => {
+    if (isEditing?.value || selectedMode.value !== 'kong-identity' || name == null) return
+    if (formData.config?.principals) {
+      formData.config.principals.directory = name
     }
-    const dirResp = await axiosInstance.get<ListResponse<Directory>>(
-      `${appConfig.apiBaseUrl}/v2/directories`,
-      { params: { 'page[size]': 1 } },
-    )
-    const directory = dirResp?.data?.data?.[0]
-    if (!directory) {
-      principalsHasPrincipals.value = false
-      return
-    }
+  },
+  { immediate: true },
+)
 
-    cachedDirectory.value = directory
-
-    // Apply the directory name if the user is currently in Kong Identity mode and this
-    // is not an edit-load (where the saved directory value must be preserved).
-    if (!isEditLoadKongIdentity && selectedMode.value === 'kong-identity' && formData.config?.principals) {
-      formData.config.principals.directory = directory.name
-    }
-
-    const principalsResp = await axiosInstance.get<ListResponse<unknown>>(
-      `${appConfig.apiBaseUrl}/v2/directories/${directory.id}/principals`,
-      { params: { 'page[size]': 1 } },
-    )
-    principalsHasPrincipals.value = (principalsResp?.data?.data?.length ?? 0) > 0
-  } catch {
-    principalsHasPrincipals.value = false
-  } finally {
-    principalsLoading.value = false
-  }
-}
-
-// Fetch on mount — covers edit-load (already in kong-identity) and pre-warms the
-// cache for create-flow so switching into kong-identity shows data without a second request.
-onMounted(() => {
-  if (isKonnect.value && hasPrincipals.value) {
-    fetchPrincipalsState()
-  }
-})
-
-// When the user switches into Kong Identity, optimistically apply the cached directory
-// name then always re-fetch to refresh the principals status. Skip the fetch only if
-// the mount fetch is still in flight (it will apply the result when it completes).
-watch(selectedMode, (mode) => {
-  if (!isKonnect.value || !hasPrincipals.value || mode !== 'kong-identity') return
-  if (cachedDirectory.value && formData.config?.principals) {
-    formData.config.principals.directory = cachedDirectory.value.name
-  }
-  if (!principalsLoading.value) {
-    fetchPrincipalsState()
-  }
+// Explicit mode switch to kong-identity: adopt directory for both create and edit flows.
+watch(selectedMode, (newMode) => {
+  if (newMode !== 'kong-identity') return
+  const dir = (appConfig as KonnectPluginFormConfig)?.principalsDirectoryName
+  if (dir == null || !formData.config?.principals) return
+  formData.config.principals.directory = dir
 })
 
 // Show validation error when centrally-managed mode is active but no real realm is selected

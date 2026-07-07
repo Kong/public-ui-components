@@ -243,13 +243,14 @@ function mountContent(
   options: {
     isKonnect: boolean
     hasExistingRealms?: boolean
-    hasDefaultDirectory?: boolean
-    hasPrincipals?: boolean
-    lookupDelay?: number
     /** khcp-20393 Identity Principals UI flag. Defaults to on so the new-UI specs render it. */
     identityPrincipalsUiEnabled?: boolean
     /** KRN permission flag — when false, the Kong Identity principals section is hidden without a fetch. */
     isKongIdentityPrincipalsAvailable?: boolean
+    /** Host-resolved directory name (see KonnectPluginFormConfig); host now owns the /v2/directories lookup. */
+    principalsDirectoryName?: string | null
+    /** Host-precomputed "show the Add principals empty-state guide" signal; host now owns this check. */
+    principalsCreationGuideVisible?: boolean
     /** Kong Gateway versions of connected data plane nodes. */
     dataPlaneVersions?: string[]
   },
@@ -263,6 +264,8 @@ function mountContent(
       app: 'konnect',
       apiBaseUrl: 'https://us.api.konghq.com',
       isKongIdentityPrincipalsAvailable: options.isKongIdentityPrincipalsAvailable,
+      principalsDirectoryName: options.principalsDirectoryName,
+      principalsCreationGuideVisible: options.principalsCreationGuideVisible,
       dataPlaneVersions: options.dataPlaneVersions,
     }
     : { app: 'kongManager' }
@@ -274,16 +277,6 @@ function mountContent(
   cy.intercept('GET', '**/v1/realms*', { body: realmsResponse }).as('fetchRealms')
 
   const beforeSaveCallbacks: Array<() => boolean> = []
-  // Mock the Kong Identity directories + principals APIs
-  const directoriesResponse = options.hasDefaultDirectory !== false
-    ? { data: [{ id: 'dir-default', name: 'default' }] }
-    : { data: [] }
-  cy.intercept('GET', '**/v2/directories*', { body: directoriesResponse, delay: options.lookupDelay }).as('fetchDirectories')
-
-  const principalsResponse = options.hasPrincipals
-    ? { data: [{ id: 'principal-1' }] }
-    : { data: [] }
-  cy.intercept('GET', '**/v2/directories/*/principals*', { body: principalsResponse }).as('fetchPrincipals')
 
   cy.mount(() =>
     h('div', { style: 'padding: 20px' },
@@ -609,39 +602,21 @@ describe('ConfigFormContent', () => {
         cy.getTestId('principals-error-on-miss-false').should('exist')
       })
 
-      it('disables error_on_miss while the "create principal" panel is shown (no stored principals)', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, hasPrincipals: false }, {
+      it('keeps error_on_miss enabled regardless of the "Add principals" guide state (host-owned now)', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, principalsCreationGuideVisible: true }, {
           config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
         })
 
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
         cy.getTestId('kong-identity-principals-panel').should('be.visible')
-        cy.getTestId('principals-error-on-miss-true').should('be.disabled')
-        cy.getTestId('principals-error-on-miss-false').should('be.disabled')
-      })
-
-      it('disables error_on_miss while the principals lookup is loading, then enables it once principals are found', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, hasPrincipals: true, lookupDelay: 500 }, {
-          config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
-        })
-
-        // While the lookup is in flight the skeleton shows and the field stays disabled
-        cy.getTestId('kong-identity-principals-loading').should('be.visible')
-        cy.getTestId('principals-error-on-miss-true').should('be.disabled')
-
-        // Once the default directory is confirmed to have principals, it becomes enabled
-        cy.wait('@fetchPrincipals')
         cy.getTestId('principals-error-on-miss-true').should('be.enabled')
+        cy.getTestId('principals-error-on-miss-false').should('be.enabled')
       })
 
-      it('keeps error_on_miss enabled when the default directory already has principals', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, hasPrincipals: true }, {
+      it('keeps error_on_miss enabled when the guide is not shown (principals already exist)', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, principalsCreationGuideVisible: false }, {
           config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
         })
 
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
         cy.getTestId('kong-identity-principals-panel').should('not.exist')
         cy.getTestId('principals-error-on-miss-true').should('be.enabled')
         cy.getTestId('principals-error-on-miss-false').should('be.enabled')
@@ -676,11 +651,10 @@ describe('ConfigFormContent', () => {
       })
 
       it('clicking reject radio sets error_on_miss to true', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, hasPrincipals: true }, {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
           config: { principals: { enabled: true, directory: 'default', error_on_miss: false }, identity_realms: null },
         })
 
-        cy.wait('@fetchPrincipals')
         cy.getTestId('principals-error-on-miss-true').click({ force: true })
 
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
@@ -689,11 +663,10 @@ describe('ConfigFormContent', () => {
       })
 
       it('clicking continue radio sets error_on_miss to false', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, hasPrincipals: true }, {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
           config: { principals: { enabled: true, directory: 'default', error_on_miss: true }, identity_realms: null },
         })
 
-        cy.wait('@fetchPrincipals')
         cy.getTestId('principals-error-on-miss-false').click({ force: true })
 
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
@@ -723,13 +696,6 @@ describe('ConfigFormContent', () => {
         cy.getTestId('ff-kong-identity-field').should('not.exist')
         cy.getTestId('kong-identity-principals-panel').should('not.exist')
         cy.getTestId('ff-principals-error-on-miss-label').should('not.exist')
-      })
-
-      it('makes no directories fetch when isKongIdentityPrincipalsAvailable is false', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, isKongIdentityPrincipalsAvailable: false })
-
-        // The intercept exists but should never be triggered
-        cy.get('@fetchDirectories.all').should('have.length', 0)
       })
 
       it('preserves saved principals config when isKongIdentityPrincipalsAvailable is false (edit)', () => {
@@ -836,45 +802,41 @@ describe('ConfigFormContent', () => {
         cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
       }
 
-      it('shows the empty-state panel when the default directory has no principals', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
+      it('shows the empty-state panel when the host says principalsCreationGuideVisible is true', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, principalsCreationGuideVisible: true }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
 
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
         cy.getTestId('kong-identity-principals-panel').should('be.visible')
         cy.getTestId('kong-identity-create-principal').should('exist')
       })
 
-      it('shows the empty-state panel when there is no default directory', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasDefaultDirectory: false }, { config: { principals: { enabled: false } } })
+      it('hides the panel when the host says principalsCreationGuideVisible is false', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true, principalsCreationGuideVisible: false }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
 
-        cy.wait('@fetchDirectories')
-        cy.getTestId('kong-identity-principals-panel').should('be.visible')
+        cy.getTestId('kong-identity-principals-panel').should('not.exist')
       })
 
-      it('hides the panel when the default directory already has principals', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: true }, { config: { principals: { enabled: false } } })
+      it('shows a loading skeleton while principalsCreationGuideVisible is unresolved (undefined)', () => {
+        mountContent(schemaWithoutRealms, { isKonnect: true }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
 
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
+        cy.getTestId('kong-identity-principals-loading').should('be.visible')
         cy.getTestId('kong-identity-principals-panel').should('not.exist')
       })
 
       it('does not show the panel unless Kong Identity mode is selected', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false })
+        mountContent(schemaWithoutRealms, { isKonnect: true, principalsCreationGuideVisible: true })
 
         cy.getTestId('ff-kong-identity-field').should('exist')
         cy.getTestId('kong-identity-principals-panel').should('not.exist')
       })
 
       it('emits "click:create-entity" only after confirming the leave-page prompt', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
+        mountContent(schemaWithoutRealms, { isKonnect: true, principalsCreationGuideVisible: true }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
 
@@ -889,7 +851,7 @@ describe('ConfigFormContent', () => {
       })
 
       it('does not emit "click:create-entity" when the leave-page prompt is cancelled', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
+        mountContent(schemaWithoutRealms, { isKonnect: true, principalsCreationGuideVisible: true }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
 
@@ -899,7 +861,7 @@ describe('ConfigFormContent', () => {
       })
 
       it('emits "click:learn-more" to open the Learning Hub when "Learn more" is clicked', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false }, { config: { principals: { enabled: false } } })
+        mountContent(schemaWithoutRealms, { isKonnect: true, principalsCreationGuideVisible: true }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
 
@@ -914,43 +876,35 @@ describe('ConfigFormContent', () => {
       }
 
       it('does not show the alert when no data plane versions are provided', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: true }, { config: { principals: { enabled: false } } })
+        mountContent(schemaWithoutRealms, { isKonnect: true, principalsCreationGuideVisible: false }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
 
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
         cy.getTestId('kong-identity-dp-version-alert').should('not.exist')
       })
 
       it('does not show the alert when all data plane versions meet the minimum', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: true, dataPlaneVersions: ['3.15.0.0', '3.16.1.2'] }, { config: { principals: { enabled: false } } })
+        mountContent(schemaWithoutRealms, { isKonnect: true, principalsCreationGuideVisible: false, dataPlaneVersions: ['3.15.0.0', '3.16.1.2'] }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
 
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
         cy.getTestId('kong-identity-dp-version-alert').should('not.exist')
       })
 
       it('prioritizes the empty-state guide over the alert when no principals are configured yet', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: false, dataPlaneVersions: ['3.10.0.0'] }, { config: { principals: { enabled: false } } })
+        mountContent(schemaWithoutRealms, { isKonnect: true, principalsCreationGuideVisible: true, dataPlaneVersions: ['3.10.0.0'] }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
 
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
         cy.getTestId('kong-identity-principals-panel').should('be.visible')
         cy.getTestId('kong-identity-dp-version-alert').should('not.exist')
       })
 
       it('shows the alert once principals are configured but a connected node is below 3.15', () => {
-        mountContent(schemaWithoutRealms, { isKonnect: true, hasPrincipals: true, dataPlaneVersions: ['3.10.0.0'] }, { config: { principals: { enabled: false } } })
+        mountContent(schemaWithoutRealms, { isKonnect: true, principalsCreationGuideVisible: false, dataPlaneVersions: ['3.10.0.0'] }, { config: { principals: { enabled: false } } })
 
         selectKongIdentity()
 
-        cy.wait('@fetchDirectories')
-        cy.wait('@fetchPrincipals')
         cy.getTestId('kong-identity-principals-panel').should('not.exist')
         cy.getTestId('kong-identity-dp-version-alert').should('be.visible')
       })

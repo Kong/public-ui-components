@@ -464,101 +464,81 @@ describe('OIDCPrincipals', () => {
 
   describe('principals creation guide (Konnect)', () => {
     const konnectConfig = { apiBaseUrl: '/us', app: 'konnect' }
+    const KONG_IDENTITY_ISSUER = 'https://identity.konghq.com/oidc'
 
-    // Route the shared axios mock by URL: the directory list, that directory's
-    // principals, and the auth-servers lookup (fetchKongIdentityServers) run on mount.
-    const mockKongIdentity = ({ principals = [], directory = { id: 'dir-1', name: 'default' } }: {
-      principals?: any[]
-      directory?: { id: string, name: string } | null
-    } = {}) => {
-      mockGet.mockImplementation((url: string) => {
-        if (/\/v2\/directories\/[^/]+\/principals/.test(url)) {
-          return Promise.resolve({ data: { data: principals } })
-        }
-        if (url.includes('/v2/directories')) {
-          return Promise.resolve({ data: { data: directory ? [directory] : [] } })
-        }
-        return Promise.resolve({ data: { data: [] } })
-      })
-    }
-
-    const mountKonnect = (formModelOverrides = {}, propsOverrides = {}) =>
+    const mountKonnect = (formModelOverrides = {}, propsOverrides = {}, configOverrides = {}) =>
       mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel(formModelOverrides), ...propsOverrides },
-        global: { provide: { [FORMS_CONFIG]: konnectConfig } },
+        global: { provide: { [FORMS_CONFIG]: { ...konnectConfig, ...configOverrides } } },
       })
 
-    it('queries the directory then its principals with page[size]=1 on mount', async () => {
-      mockKongIdentity({ principals: [] })
-      mountKonnect()
-      await flushPromises()
-
-      expect(mockGet).toHaveBeenCalledWith('/us/v2/directories', expect.objectContaining({ params: { 'page[size]': 1 } }))
-      expect(mockGet).toHaveBeenCalledWith('/us/v2/directories/dir-1/principals', { params: { 'page[size]': 1 } })
-    })
-
-    it('caches the directory so a warm refresh does not flash the loading skeleton', async () => {
-      mockKongIdentity({ principals: [] })
-      const wrapper = mountKonnect()
-      await flushPromises()
-
-      const vm = wrapper.vm as any
-      expect(vm.cachedDirectory).toEqual({ id: 'dir-1', name: 'default' })
-
-      // A subsequent refresh (directory already cached) must not toggle the loading skeleton.
-      const refresh = vm.fetchPrincipalsState({ setDirectory: false })
-      expect(vm.principalsLoading).toBe(false)
-      await refresh
-      expect(vm.principalsLoading).toBe(false)
-    })
-
-    it('shows the guide and disables the principal fields when the directory has no principals', async () => {
-      mockKongIdentity({ principals: [] })
-      const wrapper = mountKonnect()
-      await flushPromises()
+    it('shows the guide when the host says principalsCreationGuideVisible is true', () => {
+      const wrapper = mountKonnect({}, {}, { principalsCreationGuideVisible: true })
 
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
-      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(true)
     })
 
-    it('hides the guide and enables the principal fields when the directory has principals', async () => {
-      mockKongIdentity({ principals: [{ id: 'p1' }] })
-      const wrapper = mountKonnect()
-      await flushPromises()
+    it('hides the guide when the host says principalsCreationGuideVisible is false', () => {
+      const wrapper = mountKonnect({}, {}, { principalsCreationGuideVisible: false })
 
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
-      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
     })
 
-    it('adopts config-principals-directory from the API response on create (not hardcoded "default")', async () => {
-      mockKongIdentity({ principals: [], directory: { id: 'dir-9', name: 'my-directory' } })
+    it('shows a loading skeleton while principalsCreationGuideVisible is unresolved (undefined)', () => {
       const wrapper = mountKonnect()
-      await flushPromises()
+
+      expect(wrapper.find('[data-testid="principals-create-guide-loading"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
+    })
+
+    it('adopts config-principals-directory from the host-resolved name in Kong Identity mode on create', () => {
+      const wrapper = mountKonnect({}, {}, { principalsDirectoryName: 'my-directory' })
 
       expect(wrapper.props('formModel')['config-principals-directory']).toBe('my-directory')
     })
 
-    it('does not overwrite a saved config-principals-directory on edit', async () => {
-      mockKongIdentity({ principals: [{ id: 'p1' }], directory: { id: 'dir-9', name: 'my-directory' } })
-      const wrapper = mountKonnect({ 'config-principals-directory': 'saved-dir' }, { isEditing: true })
-      await flushPromises()
+    it('does not overwrite a saved config-principals-directory on a Kong Identity edit-load', () => {
+      const wrapper = mountKonnect(
+        { 'config-issuer': KONG_IDENTITY_ISSUER, 'config-principals-directory': 'saved-dir' },
+        { isEditing: true },
+        { principalsDirectoryName: 'my-directory' },
+      )
 
+      expect((wrapper.vm as any).selectedMode).toBe('kong-identity')
       expect(wrapper.props('formModel')['config-principals-directory']).toBe('saved-dir')
     })
 
-    it('does not look up principals when there is no directory, and keeps the guide visible', async () => {
-      mockKongIdentity({ directory: null })
-      const wrapper = mountKonnect()
-      await flushPromises()
+    it('adopts the host-resolved directory name once switching into Kong Identity mode after an edit-load', async () => {
+      const wrapper = mountKonnect(
+        { 'config-issuer': KONG_IDENTITY_ISSUER, 'config-principals-directory': 'saved-dir' },
+        { isEditing: true },
+        { principalsDirectoryName: 'my-directory' },
+      )
 
-      expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/principals'), expect.anything())
-      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+      // Simulate leaving and re-entering Kong Identity mode via the radios (v-model sets
+      // selectedMode before @change fires handleModeChange) — no longer the initial edit-load.
+      ;(wrapper.vm as any).selectedMode = 'external'
+      ;(wrapper.vm as any).handleModeChange('external')
+      ;(wrapper.vm as any).selectedMode = 'kong-identity'
+      ;(wrapper.vm as any).handleModeChange('kong-identity')
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.props('formModel')['config-principals-directory']).toBe('my-directory')
+    })
+
+    it('does not adopt a host-resolved directory name in External mode', () => {
+      const wrapper = mountKonnect(
+        { 'config-issuer': 'https://idp.example.com' },
+        { isEditing: true },
+        { principalsDirectoryName: 'my-directory' },
+      )
+
+      expect((wrapper.vm as any).selectedMode).toBe('external')
+      expect(wrapper.props('formModel')['config-principals-directory']).toBe('default')
     })
 
     it('opens the leave-page prompt on Create principal and emits click:create-entity on confirm', async () => {
-      mockKongIdentity({ principals: [] })
-      const wrapper = mountKonnect()
-      await flushPromises()
+      const wrapper = mountKonnect({}, {}, { principalsCreationGuideVisible: true })
 
       // Clicking opens the leave-page confirmation; the event fires only on confirm
       await wrapper.find('[data-testid="principals-create-principal"]').trigger('click')
@@ -570,28 +550,22 @@ describe('OIDCPrincipals', () => {
     })
 
     it('emits click:learn-more with "kong-identity" when Learn more is clicked', async () => {
-      mockKongIdentity({ principals: [] })
-      const wrapper = mountKonnect()
-      await flushPromises()
+      const wrapper = mountKonnect({}, {}, { principalsCreationGuideVisible: true })
 
       await wrapper.find('[data-testid="principals-learn-more"]').trigger('click')
       expect(wrapper.emitted('click:learn-more')?.[0]).toEqual(['kong-identity'])
     })
 
-    it('emits click:create-entity with type "auth-server" when the create-auth-server prompt is confirmed', async () => {
-      mockKongIdentity({ principals: [] })
+    it('emits click:create-entity with type "auth-server" when the create-auth-server prompt is confirmed', () => {
       const wrapper = mountKonnect()
-      await flushPromises()
 
       ;(wrapper.vm as any).leavePromptType = 'authServer'
       ;(wrapper.vm as any).handleLeaveConfirmed()
       expect(wrapper.emitted('click:create-entity')?.[0]).toEqual([{ type: 'auth-server' }])
     })
 
-    it('emits click:create-entity with type "client" and the selected auth server id', async () => {
-      mockKongIdentity({ principals: [] })
+    it('emits click:create-entity with type "client" and the selected auth server id', () => {
       const wrapper = mountKonnect()
-      await flushPromises()
 
       ;(wrapper.vm as any).selectedServer = { id: 'srv-1' }
       ;(wrapper.vm as any).leavePromptType = 'client'
@@ -599,72 +573,58 @@ describe('OIDCPrincipals', () => {
       expect(wrapper.emitted('click:create-entity')?.[0]).toEqual([{ type: 'client', authServerId: 'srv-1' }])
     })
 
-    it('does not query principals, show the guide, or disable fields outside Konnect', async () => {
-      mockKongIdentity({ principals: [] })
+    it('does not show the guide outside Konnect, even if principalsCreationGuideVisible is true', () => {
       const wrapper = mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
-        global: { provide: { [FORMS_CONFIG]: { apiBaseUrl: '/us' } } }, // no app: 'konnect'
+        global: { provide: { [FORMS_CONFIG]: { apiBaseUrl: '/us', principalsCreationGuideVisible: true } } }, // no app: 'konnect'
       })
-      await flushPromises()
 
-      expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v2/directories'), expect.anything())
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
       expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
     })
 
-    it('shows the guide in External mode when lookup is on and the directory is empty', async () => {
-      mockKongIdentity({ principals: [] })
-      const wrapper = mountKonnect(
+    it('shows the guide in External mode when principalsCreationGuideVisible is true, regardless of lookup toggle', () => {
+      const wrapperEnabled = mountKonnect(
         { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': true },
         { isEditing: true },
+        { principalsCreationGuideVisible: true },
       )
-      await flushPromises()
+      expect((wrapperEnabled.vm as any).selectedMode).toBe('external')
+      expect(wrapperEnabled.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
 
-      expect((wrapper.vm as any).selectedMode).toBe('external')
-      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
-      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(true)
-    })
-
-    it('shows the guide in External mode when the directory is empty, even with lookup off', async () => {
-      mockKongIdentity({ principals: [] })
-      const wrapper = mountKonnect(
+      const wrapperDisabled = mountKonnect(
         { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
         { isEditing: true },
+        { principalsCreationGuideVisible: true },
       )
-      await flushPromises()
-
-      // No principals → the guide is shown inside the additional settings to set up Kong
-      // Identity, regardless of the (disabled) toggle.
-      expect((wrapper.vm as any).selectedMode).toBe('external')
-      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+      expect((wrapperDisabled.vm as any).selectedMode).toBe('external')
+      expect(wrapperDisabled.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
     })
+  })
 
-    it('disables the External "Use principal lookup" toggle when the directory has no principals', async () => {
-      mockKongIdentity({ principals: [] })
-      const wrapper = mountKonnect(
-        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
-        { isEditing: true },
-      )
-      await flushPromises()
+  describe('principalsFieldsDisabled', () => {
+    it('is false by default (principals access assumed available)', () => {
+      const wrapper = mountComponent()
 
-      // External checks the directory on mount even with lookup off; the toggle binds its
-      // :disabled to principalsFieldsDisabled, which is true when there are no principals.
-      expect((wrapper.vm as any).selectedMode).toBe('external')
-      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(true)
-    })
-
-    it('enables the External toggle when the directory has at least one principal', async () => {
-      mockKongIdentity({ principals: [{ id: 'p1' }] })
-      const wrapper = mountKonnect(
-        { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': false },
-        { isEditing: true },
-      )
-      await flushPromises()
-
-      expect((wrapper.vm as any).selectedMode).toBe('external')
       expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
-      // Principals exist → no setup guide.
-      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
+    })
+
+    it('is true when isKongIdentityPrincipalsAvailable is false, regardless of guide visibility', () => {
+      const wrapper = mount(OIDCPrincipals, {
+        props: { ...baseProps, formModel: buildFormModel() },
+        global: {
+          provide: {
+            [FORMS_CONFIG]: {
+              apiBaseUrl: '/us',
+              app: 'konnect',
+              isKongIdentityPrincipalsAvailable: false,
+              principalsCreationGuideVisible: false,
+            },
+          },
+        },
+      })
+
+      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(true)
     })
   })
 
@@ -817,69 +777,44 @@ describe('OIDCPrincipals', () => {
   describe('data plane version compatibility alert', () => {
     const konnectConfig = { apiBaseUrl: '/us', app: 'konnect' }
 
-    const mockKongIdentity = ({ principals = [], directory = { id: 'dir-1', name: 'default' } }: {
-      principals?: any[]
-      directory?: { id: string, name: string } | null
-    } = {}) => {
-      mockGet.mockImplementation((url: string) => {
-        if (/\/v2\/directories\/[^/]+\/principals/.test(url)) {
-          return Promise.resolve({ data: { data: principals } })
-        }
-        if (url.includes('/v2/directories')) {
-          return Promise.resolve({ data: { data: directory ? [directory] : [] } })
-        }
-        return Promise.resolve({ data: { data: [] } })
-      })
-    }
-
     const mountKonnect = (formModelOverrides = {}, propsOverrides = {}, configOverrides = {}) =>
       mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel(formModelOverrides), ...propsOverrides },
         global: { provide: { [FORMS_CONFIG]: { ...konnectConfig, ...configOverrides } } },
       })
 
-    it('does not show the alert when no data plane versions are provided', async () => {
-      mockKongIdentity({ principals: [{ id: 'p1' }] })
-      const wrapper = mountKonnect()
-      await flushPromises()
+    it('does not show the alert when no data plane versions are provided', () => {
+      const wrapper = mountKonnect({}, {}, { principalsCreationGuideVisible: false })
 
       expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(false)
     })
 
-    it('does not show the alert when all data plane versions meet the minimum', async () => {
-      mockKongIdentity({ principals: [{ id: 'p1' }] })
-      const wrapper = mountKonnect({}, {}, { dataPlaneVersions: ['3.15.0.0', '3.16.1.2'] })
-      await flushPromises()
+    it('does not show the alert when all data plane versions meet the minimum', () => {
+      const wrapper = mountKonnect({}, {}, { principalsCreationGuideVisible: false, dataPlaneVersions: ['3.15.0.0', '3.16.1.2'] })
 
       expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(false)
     })
 
-    it('shows the alert alongside the "Add principals" guide when no principals are configured yet (different sections)', async () => {
-      mockKongIdentity({ principals: [] })
-      const wrapper = mountKonnect({}, {}, { dataPlaneVersions: ['3.10.0.0'] })
-      await flushPromises()
+    it('shows the alert alongside the "Add principals" guide when no principals are configured yet (different sections)', () => {
+      const wrapper = mountKonnect({}, {}, { principalsCreationGuideVisible: true, dataPlaneVersions: ['3.10.0.0'] })
 
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
       expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(true)
     })
 
-    it('shows the alert once principals are configured but a connected node is below 3.15 in Kong Identity mode', async () => {
-      mockKongIdentity({ principals: [{ id: 'p1' }] })
-      const wrapper = mountKonnect({}, {}, { dataPlaneVersions: ['3.10.0.0'] })
-      await flushPromises()
+    it('shows the alert once principals are configured but a connected node is below 3.15 in Kong Identity mode', () => {
+      const wrapper = mountKonnect({}, {}, { principalsCreationGuideVisible: false, dataPlaneVersions: ['3.10.0.0'] })
 
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
       expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(true)
     })
 
-    it('shows the alert in External mode when principal lookup is opted in and a connected node is below 3.15', async () => {
-      mockKongIdentity({ principals: [{ id: 'p1' }] })
+    it('shows the alert in External mode when principal lookup is opted in and a connected node is below 3.15', () => {
       const wrapper = mountKonnect(
         { 'config-issuer': 'https://idp.example.com', 'config-principals-enabled': true },
         { isEditing: true },
-        { dataPlaneVersions: ['3.10.0.0'] },
+        { principalsCreationGuideVisible: false, dataPlaneVersions: ['3.10.0.0'] },
       )
-      await flushPromises()
 
       expect((wrapper.vm as any).selectedMode).toBe('external')
       expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(true)

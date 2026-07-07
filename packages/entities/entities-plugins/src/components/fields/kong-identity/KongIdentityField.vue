@@ -132,8 +132,8 @@ function handleModeChange(mode: AuthMode) {
 
   switch (mode) {
     case 'kong-identity': {
-      // `directory` is a placeholder; ConfigFormContent resolves the real directory name
-      // from the shared /v2/directories lookup and overwrites it on entering this mode.
+      // `directory` starts as 'default'; ConfigFormContent's selectedMode watcher overwrites it
+      // with the host-resolved principalsDirectoryName once this mode change is detected.
       formData.config.principals = { ...getEmptyOrDefault('$.config.principals'), enabled: true, directory: 'default' }
       if (identityRealmsInSchema.value) {
         formData.config.identity_realms = []

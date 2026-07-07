@@ -8,10 +8,11 @@
 </template>
 
 <script setup lang="ts">
-import { provide } from 'vue'
+import { computed, provide } from 'vue'
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import DynamicLayout from '../../free-form/shared/layout/DynamicLayout.vue'
 import ConfigFormContent from './ConfigFormContent.vue'
+import { FORM_EDITING } from '../../free-form/shared/const'
 
 import type { PluginFormLayoutProps as Props } from '../../free-form/shared/layout/provider'
 import type { EntityCreateEvent } from '../../../types'
@@ -28,4 +29,5 @@ const slots = defineSlots<{
 }>()
 
 provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
+provide(FORM_EDITING, computed(() => props.isEditing))
 </script>
