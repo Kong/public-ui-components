@@ -365,7 +365,8 @@
           },
           "cert_auth_cert_key": {
             "label": "Cert key",
-            "rotateLabel": "Rotate cert key"
+            "rotateLabel": "Rotate cert key",
+            "rotateAlert": "Once saved, the cert key value will not be visible."
           },
           "cert_auth_role_name": {
             "label": "Role name"

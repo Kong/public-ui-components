@@ -631,7 +631,7 @@
               />
               <SensitiveInput
                 v-else
-                v-model.trim="configFields[VaultProviders.HCV].cert_auth_cert_key"
+                v-model="configFields[VaultProviders.HCV].cert_auth_cert_key"
                 data-testid="vault-form-config-hcv-cert_auth_cert_key"
                 :label="t('form.config.hcv.fields.cert_auth_cert_key.label')"
                 :labels="{ rotateLabel: t('form.config.hcv.fields.cert_auth_cert_key.rotateLabel') }"
@@ -644,7 +644,7 @@
                 <template #alert>
                   <KAlert
                     v-if="showCertKeyRotateAlert"
-                    message="Once saved, the cert key value will not be visible."
+                    :message="t('form.config.hcv.fields.cert_auth_cert_key.rotateAlert')"
                   />
                 </template>
               </SensitiveInput>
