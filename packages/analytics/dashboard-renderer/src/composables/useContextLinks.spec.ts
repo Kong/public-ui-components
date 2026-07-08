@@ -14,6 +14,7 @@ vi.mock('@kong-ui-public/analytics-utilities', () => ({
     if (ms === ONE_DAY_MS) return 'daily'
     return 'auto'
   }),
+  isPlatformDatasource: (datasource: unknown) => datasource === 'platform' || datasource === 'platform_usage',
 }))
 
 const analyticsConfig = { analytics: true, percentiles: true }
