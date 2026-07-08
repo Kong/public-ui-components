@@ -608,22 +608,24 @@ export const agenticUsageSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
+const platformDatasourceSchema = {
+  oneOf: [
+    {
+      const: 'platform',
+      deprecated: true,
+      description: "Deprecated: use 'platform_usage'.",
+    },
+    {
+      const: 'platform_usage',
+    },
+  ],
+} as const
+
 export const platformQuerySchema = {
   type: 'object',
   description: "A query to launch at the platform dashboard API. Use datasource 'platform_usage'; 'platform' is accepted for backward compatibility but deprecated.",
   properties: {
-    datasource: {
-      oneOf: [
-        {
-          const: 'platform',
-          deprecated: true,
-          description: "Deprecated: use 'platform_usage'.",
-        } as unknown as JSONSchema,
-        {
-          const: 'platform_usage',
-        },
-      ],
-    },
+    datasource: platformDatasourceSchema,
     metrics: metricsFn(),
     dimensions: dimensionsFn(),
     filters: platformFiltersFn(),
@@ -637,18 +639,7 @@ export const platformTabularQuerySchema = {
   type: 'object',
   description: "A query to launch at the platform tabular explore API. Use datasource 'platform_usage'; 'platform' is accepted for backward compatibility but deprecated.",
   properties: {
-    datasource: {
-      oneOf: [
-        {
-          const: 'platform',
-          deprecated: true,
-          description: "Deprecated: use 'platform_usage'.",
-        } as unknown as JSONSchema,
-        {
-          const: 'platform_usage',
-        },
-      ],
-    },
+    datasource: platformDatasourceSchema,
     entity: {
       type: 'string',
     },

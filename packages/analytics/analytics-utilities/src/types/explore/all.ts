@@ -57,6 +57,7 @@ export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<strin
   api_usage: new Set(filterableExploreDimensions),
   llm_usage: new Set(filterableAiExploreDimensions),
   agentic_usage: new Set(filterableAgenticExploreDimensions),
+  /** @deprecated Use `platform_usage`. */
   platform: new Set(),
   platform_usage: new Set(),
 } as const
