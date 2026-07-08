@@ -1,6 +1,6 @@
 # SensitiveInput.vue
 
-An input component (built on top of `KInput`) for entering sensitive fields such as API keys or tokens.
+An input component for entering sensitive fields such as API keys or tokens. Renders a single-line `KInput` by default, or a multi-line `KTextArea` when `multiline` is set.
 
 - [Features](#features)
 - [Requirements](#requirements)
@@ -19,6 +19,7 @@ An input component (built on top of `KInput`) for entering sensitive fields such
 - When editing an existing resource, starts in a read-only masked state with a "Rotate key" action that switches the field to the editable state.
 - Optional "Generate key" action — only shown when a `generator` callback is provided, so the value can be generated locally or fetched from a backend, depending on the host application.
 - Optional one-time hint banner ("The key is shown only once…") with a Copy action, displayed under the host application's control.
+- Optional multi-line mode (`multiline` prop) that switches the inner input to a `KTextArea` — useful for PEM keys, JWKs, and other multi-line credentials. Because `<textarea>` has no `type="password"`, the visibility toggle is omitted; masking is all-or-nothing (masked dots in edit mode, plain text in create/editing mode).
 
 ## Requirements
 
@@ -71,9 +72,17 @@ When `true`, a one-time hint banner ("The key is shown only once. Copy it now an
 
 Overrides for the built-in UI texts, so the component can be reused for other credential types (passwords, tokens, …). Any omitted label falls back to its default. Available keys: `rotateLabel`, `generateLabel`, `hintLabel`. The input placeholder is configured separately via the `placeholder` prop.
 
+#### `multiline`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+When `true`, the inner input switches from `KInput` to `KTextArea`. The "Rotate key" and "Generate key" actions are moved to a row below the textarea; the visibility toggle is not shown (because `<textarea>` has no `type="password"`).
+
 #### Other props
 
-The following props are forwarded to the underlying `KInput`: `label`, `labelAttributes`, `placeholder`, `help`, `required`, `disabled`, `readonly`, `error`, and `errorMessage`. When `placeholder` is omitted, a default placeholder ("Enter or generate a key") is used in the editable state.
+The following props are supported in both single-line and multiline modes: `label`, `labelAttributes`, `placeholder`, `help`, `required`, `disabled`, `readonly`, `error`, and `errorMessage`. When `placeholder` is omitted, a default placeholder ("Enter or generate a key") is used in the editable state.
 
 ### Events
 

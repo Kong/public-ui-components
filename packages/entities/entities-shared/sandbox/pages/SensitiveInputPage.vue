@@ -53,6 +53,28 @@
     </section>
 
     <section>
+      <h3>Multiline — Create mode</h3>
+      <SensitiveInput
+        v-model="multilineCreateValue"
+        :generator="generateKey"
+        label="Private key"
+        multiline
+      />
+      <pre>modelValue: {{ multilineCreateValue }}</pre>
+    </section>
+
+    <section>
+      <h3>Multiline — Edit mode (starts masked → Rotate key)</h3>
+      <SensitiveInput
+        v-model="multilineEditValue"
+        label="Private key"
+        mode="edit"
+        multiline
+      />
+      <pre>modelValue: {{ multilineEditValue }}</pre>
+    </section>
+
+    <section>
       <h3>Alert slot (shown after the "rotate" event fires)</h3>
       <SensitiveInput
         v-model="rotateAlertValue"
@@ -69,6 +91,25 @@
       </SensitiveInput>
       <pre>modelValue: {{ rotateAlertValue }}</pre>
     </section>
+
+    <section>
+      <h3>Multiline — Alert slot (shown after the "rotate" event fires)</h3>
+      <SensitiveInput
+        v-model="multilineRotateAlertValue"
+        label="Private key"
+        mode="edit"
+        multiline
+        @rotate="showMultilineRotateAlert = true"
+      >
+        <template #alert>
+          <KAlert
+            v-if="showMultilineRotateAlert"
+            message="Once saved, the key value will not be visible."
+          />
+        </template>
+      </SensitiveInput>
+      <pre>modelValue: {{ multilineRotateAlertValue }}</pre>
+    </section>
   </div>
 </template>
 
@@ -84,6 +125,10 @@ const hintValue = ref('')
 const showHint = ref(false)
 const rotateAlertValue = ref('')
 const showRotateAlert = ref(false)
+const multilineCreateValue = ref('')
+const multilineEditValue = ref('')
+const multilineRotateAlertValue = ref('')
+const showMultilineRotateAlert = ref(false)
 
 const generateKey = (): string => {
   const bytes = new Uint8Array(24)

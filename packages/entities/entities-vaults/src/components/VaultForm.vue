@@ -621,6 +621,7 @@
                 required
               />
               <KTextArea
+                v-if="!isAiGateway"
                 v-model.trim="configFields[VaultProviders.HCV].cert_auth_cert_key"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-cert_auth_cert_key"
@@ -628,6 +629,26 @@
                 :readonly="form.isReadonly"
                 required
               />
+              <SensitiveInput
+                v-else
+                v-model="configFields[VaultProviders.HCV].cert_auth_cert_key"
+                data-testid="vault-form-config-hcv-cert_auth_cert_key"
+                :label="t('form.config.hcv.fields.cert_auth_cert_key.label')"
+                :labels="{ rotateLabel: t('form.config.hcv.fields.cert_auth_cert_key.rotateLabel') }"
+                :mode="sensitiveInputMode"
+                multiline
+                placeholder=""
+                :readonly="form.isReadonly"
+                :required="sensitiveInputMode === 'create'"
+                @rotate="showCertKeyRotateAlert = true"
+              >
+                <template #alert>
+                  <KAlert
+                    v-if="showCertKeyRotateAlert"
+                    :message="t('form.config.hcv.fields.cert_auth_cert_key.rotateAlert')"
+                  />
+                </template>
+              </SensitiveInput>
             </div>
             <div
               v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.JWT"
@@ -1496,6 +1517,8 @@ const formType = computed((): EntityBaseFormType => props.vaultId
   : EntityBaseFormType.Create)
 
 const sensitiveInputMode = computed((): 'edit' | 'create' => formType.value === EntityBaseFormType.Edit ? 'edit' : 'create')
+
+const showCertKeyRotateAlert = ref(false)
 
 const fetchUrl = computed<string>(() => withAiGatewayId(endpoints.form[endpointKey.value]?.edit))
 
