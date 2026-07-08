@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.225.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.224.7...@kong-ui-public/entities-plugins@9.225.0) (2026-07-08)
+
+
+### Features
+
+* **entities-plugins:** show data plane not available alert ([#3536](https://github.com/Kong/public-ui-components/issues/3536)) ([6a0e8f1](https://github.com/Kong/public-ui-components/commit/6a0e8f10229fde1d3c7553fca0ed5f51d714ff83))
+
+
+
+
+
 ## [9.224.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.224.6...@kong-ui-public/entities-plugins@9.224.7) (2026-07-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
