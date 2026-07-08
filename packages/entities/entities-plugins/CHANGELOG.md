@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.225.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.225.1...@kong-ui-public/entities-plugins@9.225.2) (2026-07-08)
+
+
+### Bug Fixes
+
+* **plugins:** hide + New Redis in plugin forms ([#3543](https://github.com/Kong/public-ui-components/issues/3543)) ([406c522](https://github.com/Kong/public-ui-components/commit/406c522267d652aae1326f3d670bbe121ee8a123))
+
+
+
+
+
 ## [9.225.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.225.0...@kong-ui-public/entities-plugins@9.225.1) (2026-07-08)
 
 

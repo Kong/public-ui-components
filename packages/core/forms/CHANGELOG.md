@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.31.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.31.1...@kong-ui-public/forms@4.31.2) (2026-07-08)
+
+
+### Bug Fixes
+
+* **plugins:** hide + New Redis in plugin forms ([#3543](https://github.com/Kong/public-ui-components/issues/3543)) ([406c522](https://github.com/Kong/public-ui-components/commit/406c522267d652aae1326f3d670bbe121ee8a123))
+
+
+
+
+
 ## [4.31.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.31.0...@kong-ui-public/forms@4.31.1) (2026-07-08)
 
 **Note:** Version bump only for package @kong-ui-public/forms
