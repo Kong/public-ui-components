@@ -171,10 +171,21 @@ function handleModeChange(mode: AuthMode) {
 
 .kong-identity-learn-more {
   color: var(--kui-color-text-primary, $kui-color-text-primary);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  gap: var(--kui-space-20, $kui-space-20);
+  outline: none;
   text-decoration: none;
 
   &:hover {
-    text-decoration: underline;
+    color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
+  }
+
+  &:focus-visible {
+    color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+  }
+
+  &:active {
+    color: var(--kui-color-text-primary-strongest, $kui-color-text-primary-strongest);
   }
 }
 
