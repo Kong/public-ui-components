@@ -150,6 +150,11 @@ const props = defineProps({
     type: Object as PropType<{ document: DocumentTree, ast: Record<string, any>, markdown?: string, status: 'published' | 'unpublished' }>,
     default: () => null,
   },
+  theme: {
+    type: String,
+    default: 'light',
+    validator: (value: string) => ['light', 'dark'].includes(value),
+  },
 })
 
 watch(() => props.actionSuccess, (newVal: boolean) => {
