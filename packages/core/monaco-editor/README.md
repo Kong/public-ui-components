@@ -200,7 +200,7 @@ interface MonacoEditorToolbarOptions {
     format?: boolean | MonacoEditorActionConfig
     search?: boolean | MonacoEditorActionConfig
     fullScreen?: boolean | MonacoEditorActionConfig
-    
+
     // Custom actions
     [key: string]: boolean | MonacoEditorActionConfig | undefined
   }
@@ -221,16 +221,16 @@ Each action can be configured with the following options:
 interface MonacoEditorActionConfig {
   /** Unique identifier for the action */
   id: string
-  
+
   /** Display label for the action */
   label?: string
-  
+
   /** Icon component for the action button */
   icon?: Component
-  
+
   /** Keybindings associated with the action (e.g., ['Command', 'Shift', 'F']) */
   keybindings?: string[]
-  
+
   /**
    * The action to execute when the button is clicked.
    * Can be:
@@ -238,22 +238,22 @@ interface MonacoEditorActionConfig {
    * - A string ID of a Monaco editor command (e.g., 'editor.action.formatDocument')
    */
   action: string | ((editor: ReturnType<typeof useMonacoEditor>) => void)
-  
+
   /** Where the action should appear in the toolbar */
   placement?: 'left' | 'center' | 'right' // default: 'left'
-  
+
   /** Order of the action within its placement (lower numbers appear first) */
   order?: number // default: 100
-  
+
   /** Group identifier for visual grouping with separators */
   group?: number | string
-  
+
   /** Whether to show this action in the context menu (right-click) */
   showInContextMenu?: boolean // default: true
-  
+
   /** Context menu group identifier */
   contextMenuGroupId?: string // default: 'navigation'
-  
+
   /** Order of the action within its context menu group */
   contextMenuOrder?: number // default: 1
 }
@@ -348,7 +348,7 @@ const code = ref('{"hello": "world"}')
     :toolbar="{
       actions: {
         format: true,
-        
+
         // Custom action with function
         validate: {
           id: 'validateJson',
@@ -365,7 +365,7 @@ const code = ref('{"hello": "world"}')
             }
           },
         },
-        
+
         // Custom action with Monaco command ID
         copyContent: {
           id: 'copyAllContent',
@@ -403,7 +403,7 @@ const code = ref('{"hello": "world"}')
           order: 1,
           group: 'edit',
         },
-        
+
         // View group in the center
         search: {
           placement: 'center',
@@ -415,7 +415,7 @@ const code = ref('{"hello": "world"}')
           order: 2,
           group: 'view',
         },
-        
+
         // Custom actions on the right
         runCode: {
           id: 'runCode',
@@ -784,7 +784,7 @@ export default defineConfig({
       features: ['bracketMatching', 'comment', 'format'],
       shiki: {
         langs: ['json', 'yaml', 'javascript'],
-        themes: ['catppuccin-latte', 'catppuccin-mocha'],
+        themes: ['catppuccin-latte', 'vesper'],
       },
     }),
   ],

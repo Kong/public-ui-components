@@ -35,7 +35,7 @@ Options can be passed in to `@kong-ui-public/monaco-editor/vite-plugin`. They ca
 
 - `shiki` (`object`) - Shiki fine-grained bundle configuration:
   - `langs` (`string[]`) - Languages to include for Shiki syntax highlighting. By default, uses the same languages specified in the `languages` option above.
-  - `themes` (`string[]`) - Themes to include for Shiki syntax highlighting. By default, `catppuccin-latte` and `catppuccin-mocha` are included.
+  - `themes` (`string[]`) - Themes to include for Shiki syntax highlighting. By default, `catppuccin-latte` and `vesper` are included.
 
 ## Example
 
@@ -67,7 +67,7 @@ export default defineConfig({
       ],
       shiki: {
         langs: ['javascript', 'typescript', 'json', 'yaml'],
-        themes: ['catppuccin-latte', 'catppuccin-mocha', 'nord'],
+        themes: ['catppuccin-latte', 'vesper', 'nord'],
       },
     }),
   ],
