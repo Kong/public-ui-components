@@ -34,7 +34,8 @@ export interface AgenticDatasourceQuery {
 
 /** @deprecated Use `PlatformUsageDatasourceQuery`. */
 export interface PlatformDatasourceQuery {
-  datasource: 'platform'
+  /** @deprecated Use `platform_usage`. `platform` will be removed in a future version. */
+  datasource: 'platform' | 'platform_usage'
   query: PlatformExploreQuery
 }
 
