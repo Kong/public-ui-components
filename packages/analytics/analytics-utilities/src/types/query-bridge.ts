@@ -40,7 +40,7 @@ export interface PlatformDatasourceQuery {
 export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | AgenticDatasourceQuery | PlatformDatasourceQuery
 
 export interface PlatformDatasourceTabularQuery {
-  datasource: 'platform'
+  datasource: 'platform' | 'platform_usage'
   query: PlatformTabularQuery
 }
 
