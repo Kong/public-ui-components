@@ -349,10 +349,15 @@ describe('<PageLayout />', () => {
       cy.getTestId('page-layout-favorite-button').should('have.class', 'active')
     })
 
-    it('reflects isFavorite reactively when it changes from false to true', () => {
+    it('reflects isFavorite reactively after clicking the favorite button triggers onFavoriteToggle', () => {
+      const onFavoriteToggle = cy.stub()
+
+      const isFavoritVal = ref(false)
       const ctx = reactive({
-        isFavorite: (() => false) as () => boolean,
-        onFavoriteToggle: () => { },
+        isFavorite: (() => isFavoritVal.value) as () => boolean,
+        onFavoriteToggle: onFavoriteToggle.callsFake(() => {
+          isFavoritVal.value = true
+        }),
         onEntityPageVisit: () => { },
       })
 
@@ -362,10 +367,9 @@ describe('<PageLayout />', () => {
       })
 
       cy.getTestId('page-layout-favorite-button').should('not.have.class', 'active')
-        .then(() => {
-          ctx.isFavorite = () => true
-        })
+        .click()
 
+      cy.wrap(onFavoriteToggle).should('have.been.calledOnce')
       cy.getTestId('page-layout-favorite-button').should('have.class', 'active')
     })
 
