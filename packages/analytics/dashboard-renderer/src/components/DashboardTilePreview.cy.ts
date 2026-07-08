@@ -59,6 +59,7 @@ describe('<DashboardTilePreview />', () => {
         provide: {
           [INJECT_QUERY_PROVIDER]: {
             configFn: () => Promise.resolve(),
+            datasourceConfigFn: () => Promise.resolve([]),
           },
         },
         stubs: {
@@ -286,6 +287,7 @@ describe('<DashboardTilePreview />', () => {
         provide: {
           [INJECT_QUERY_PROVIDER]: {
             configFn: () => Promise.resolve(),
+            datasourceConfigFn: () => Promise.resolve([]),
           },
         },
         stubs: {
@@ -358,6 +360,7 @@ describe('<DashboardTilePreview />', () => {
         provide: {
           [INJECT_QUERY_PROVIDER]: {
             configFn: () => Promise.resolve(),
+            datasourceConfigFn: () => Promise.resolve([]),
           },
         },
         stubs: {
