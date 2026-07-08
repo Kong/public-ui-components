@@ -616,6 +616,7 @@ export const platformQuerySchema = {
       type: 'string',
       enum: [
         'platform',
+        'platform_usage',
       ],
     },
     metrics: metricsFn(),
@@ -635,6 +636,7 @@ export const platformTabularQuerySchema = {
       type: 'string',
       enum: [
         'platform',
+        'platform_usage',
       ],
     },
     entity: {
