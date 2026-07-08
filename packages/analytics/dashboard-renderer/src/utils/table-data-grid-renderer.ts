@@ -70,6 +70,7 @@ const platformTableDataGridHeaders = ({
 
 /** Maps a table tile datasource to the header builder used by TableDataGridRenderer. */
 export const tableDataGridHeadersByDatasource = {
+  /** @deprecated Use `platform_usage`. */
   platform: platformTableDataGridHeaders,
   platform_usage: platformTableDataGridHeaders,
 }
@@ -148,6 +149,7 @@ const platformTableDataGridFetcher = async ({
  * Maps a table tile datasource to the fetcher used by TableDataGridRenderer.
  */
 export const tableDataGridFetcherByDatasource = {
+  /** @deprecated Use `platform_usage`. */
   platform: platformTableDataGridFetcher,
   platform_usage: platformTableDataGridFetcher,
 }

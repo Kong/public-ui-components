@@ -610,13 +610,18 @@ export const agenticUsageSchema = {
 
 export const platformQuerySchema = {
   type: 'object',
-  description: 'A query to launch at the platform dashboard API',
+  description: "A query to launch at the platform dashboard API. Use datasource 'platform_usage'; 'platform' is accepted for backward compatibility but deprecated.",
   properties: {
     datasource: {
-      type: 'string',
-      enum: [
-        'platform',
-        'platform_usage',
+      oneOf: [
+        {
+          const: 'platform',
+          deprecated: true,
+          description: "Deprecated: use 'platform_usage'.",
+        } as unknown as JSONSchema,
+        {
+          const: 'platform_usage',
+        },
       ],
     },
     metrics: metricsFn(),
@@ -630,13 +635,18 @@ export const platformQuerySchema = {
 
 export const platformTabularQuerySchema = {
   type: 'object',
-  description: 'A query to launch at the platform tabular explore API',
+  description: "A query to launch at the platform tabular explore API. Use datasource 'platform_usage'; 'platform' is accepted for backward compatibility but deprecated.",
   properties: {
     datasource: {
-      type: 'string',
-      enum: [
-        'platform',
-        'platform_usage',
+      oneOf: [
+        {
+          const: 'platform',
+          deprecated: true,
+          description: "Deprecated: use 'platform_usage'.",
+        } as unknown as JSONSchema,
+        {
+          const: 'platform_usage',
+        },
       ],
     },
     entity: {

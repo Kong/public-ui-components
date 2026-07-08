@@ -436,7 +436,9 @@ describe('dashboardSchema.v2', () => {
   })
 
   it('loosens only the platform branch', () => {
-    expect(platformQuerySchema.properties.datasource.enum).toEqual(['platform', 'platform_usage'])
+    expect(platformQuerySchema.properties.datasource.oneOf).toHaveLength(2)
+    expect(platformQuerySchema.properties.datasource.oneOf?.[0]).toMatchObject({ const: 'platform', deprecated: true })
+    expect(platformQuerySchema.properties.datasource.oneOf?.[1]).toMatchObject({ const: 'platform_usage' })
     expect(platformQuerySchema.properties.metrics.items.enum).toBeUndefined()
     expect(platformQuerySchema.properties.dimensions.items.enum).toBeUndefined()
     expect(platformQuerySchema.properties.filters.items.oneOf[0].properties.field.enum).toBeUndefined()

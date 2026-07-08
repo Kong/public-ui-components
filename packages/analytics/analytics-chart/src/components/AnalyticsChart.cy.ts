@@ -185,6 +185,20 @@ describe('<AnalyticsChart />', () => {
     })
   })
 
+  it('renders the platform_usage datasource timestamp axis title', () => {
+    mount({
+      chartData: {
+        ...exploreResult,
+        meta: {
+          ...exploreResult.meta,
+          datasource: 'platform_usage',
+        },
+      },
+    }).then(({ wrapper }) => {
+      expect(wrapper.findComponent(TimeSeriesChart).props('dimensionAxesTitle')).to.eq('@timestamp created at')
+    })
+  })
+
   it('shows the empty state with no data', () => {
     mount({
       chartData: emptyExploreResult,

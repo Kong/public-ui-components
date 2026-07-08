@@ -28,6 +28,12 @@ export interface PlatformTabularQuery {
   page_size?: number
 }
 
+export const PLATFORM_DATASOURCES = ['platform', 'platform_usage'] as const
+export type PlatformDatasource = typeof PLATFORM_DATASOURCES[number]
+
+export const isPlatformDatasource = (datasource: unknown): datasource is PlatformDatasource =>
+  (PLATFORM_DATASOURCES as readonly unknown[]).includes(datasource)
+
 export type PlatformTabularRecord = Record<string, string | number | boolean | null>
 
 export interface PlatformTabularResponseMeta {

@@ -183,7 +183,7 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
-import { formatTime, TimePeriods, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
+import { formatTime, isPlatformDatasource, TimePeriods, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
@@ -383,7 +383,7 @@ const badgeData = computed<string | null>(() => {
   const timeRange = query?.time_range
 
   // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
-  if ((query?.datasource === 'platform' || query?.datasource === 'platform_usage') && !query.dimensions?.includes('time')) {
+  if (isPlatformDatasource(query?.datasource) && !query.dimensions?.includes('time')) {
     return i18n.t('renderer.as_of_today')
   }
 
