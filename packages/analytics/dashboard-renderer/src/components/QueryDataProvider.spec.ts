@@ -181,6 +181,23 @@ describe('QueryDataProvider', () => {
     expect(wrapper.findTestId('chart-skeleton').exists()).toBe(false)
   })
 
+  it('shows the skeleton instead of previous data when the query is not ready', async () => {
+    const result = { data: [{ timestamp: 'now' }], meta: {} }
+    const wrapper = mountProvider()
+
+    setSwrvState({ data: result })
+    await flushPromises()
+
+    expect(wrapper.findTestId('slot-content').exists()).toBe(true)
+
+    setSwrvState({ data: undefined, isValidating: true })
+    await wrapper.setProps({ queryReady: false })
+    await flushPromises()
+
+    expect(wrapper.findTestId('slot-content').exists()).toBe(false)
+    expect(wrapper.findTestId('chart-skeleton').exists()).toBe(true)
+  })
+
   it('shows a settled error for the current query even when previous data exists', async () => {
     const result = { data: [{ timestamp: 'now' }], meta: {} }
     const wrapper = mountProvider({ queryFn: vi.fn().mockRejectedValue({ status: 403 }) })

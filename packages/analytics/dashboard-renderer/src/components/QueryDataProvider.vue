@@ -125,7 +125,9 @@ const hasError = computed(() => state.value === STATE.ERROR || !!queryError.valu
 const isLoading = computed(() => !props.queryReady || state.value === STATE.PENDING)
 
 const oldData = ref<ExploreResultV4 | undefined>()
-const displayData = computed(() => v4Data.value ?? oldData.value)
+const displayData = computed(() => {
+  return v4Data.value ?? (props.queryReady && state.value === STATE.PENDING ? oldData.value : undefined)
+})
 
 watch([() => v4Data.value, () => state.value], ([data, state]) => {
   if (data && (state === 'SUCCESS_HAS_DATA' || state === 'SUCCESS') && data !== oldData.value) {
