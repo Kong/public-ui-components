@@ -201,6 +201,31 @@ describe('dashboardSchema.v2', () => {
     expect(validateDashboardConfigSchema(mixedDashboardConfig)).toBe(true)
   })
 
+  it('accepts platform_usage as a datasource for chart queries', () => {
+    const platformUsageChartQuery = { ...platformChartQuery, datasource: 'platform_usage' }
+    expect(validatePlatformQuerySchema(platformUsageChartQuery)).toBe(true)
+    expect(validateValidDashboardQuery(platformUsageChartQuery)).toBe(true)
+    expect(validateDashboardConfigSchema({
+      ...dashboardConfig,
+      tiles: [{ ...dashboardConfig.tiles[0], definition: { ...dashboardConfig.tiles[0].definition, query: platformUsageChartQuery } }],
+    })).toBe(true)
+  })
+
+  it('accepts platform_usage as a datasource for tabular queries', () => {
+    expect(validateValidDashboardTableQuery({ ...tableChartTile.definition.query, datasource: 'platform_usage' })).toBe(true)
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
+          definition: {
+            query: { datasource: 'platform_usage' },
+            chart: { type: 'table' },
+          },
+        },
+      ],
+    })).toBe(true)
+  })
+
   it('accepts table chart tiles with tabular explore query shape', () => {
     expect(validateValidDashboardQuery(tableChartTile.definition.query)).toBe(true)
     expect(validateValidDashboardTableQuery(tableChartTile.definition.query)).toBe(true)
@@ -411,7 +436,7 @@ describe('dashboardSchema.v2', () => {
   })
 
   it('loosens only the platform branch', () => {
-    expect(platformQuerySchema.properties.datasource.enum).toEqual(['platform'])
+    expect(platformQuerySchema.properties.datasource.enum).toEqual(['platform', 'platform_usage'])
     expect(platformQuerySchema.properties.metrics.items.enum).toBeUndefined()
     expect(platformQuerySchema.properties.dimensions.items.enum).toBeUndefined()
     expect(platformQuerySchema.properties.filters.items.oneOf[0].properties.field.enum).toBeUndefined()
