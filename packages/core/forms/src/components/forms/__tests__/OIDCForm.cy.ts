@@ -400,9 +400,6 @@ describe('<OIDCForm />', () => {
     })
 
     it('should not update principals directory when changing principal lookup method', () => {
-      cy.intercept('GET', '**/v2/directories*', { statusCode: 200, body: { data: [{ id: 'dir-1', name: 'default' }] } }).as('getDirs')
-      cy.intercept('GET', '**/v2/directories/*/principals*', { statusCode: 200, body: { data: [{ id: 'p-1' }] } }).as('getPrincipals')
-
       const formModel = {
         ...OIDCModelWithPrincipals,
         'config-principals-enabled': true,
@@ -423,8 +420,6 @@ describe('<OIDCForm />', () => {
           },
         },
       })
-
-      cy.wait(['@getDirs', '@getPrincipals'])
 
       cy.getTestId('oidc-principals-section').within(() => {
         cy.getTestId('collapse-trigger-label').click()
@@ -507,7 +502,20 @@ describe('<OIDCForm />', () => {
   })
 
   describe('KRN permission flags', () => {
-    it('hides the principals section when isKongIdentityAuthServersAvailable is false', () => {
+    beforeEach(() => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v1/auth-servers/_computed`,
+        },
+        {
+          statusCode: 200,
+          body: { data: [] },
+        },
+      ).as('getAuthServers')
+    })
+
+    it('falls back to plain text inputs when isKongIdentityAuthServersAvailable is false', () => {
       cy.mount(OIDCForm, {
         props: {
           ...requiredProps,
@@ -521,11 +529,22 @@ describe('<OIDCForm />', () => {
         },
       })
 
-      cy.getTestId('oidc-principals-section').should('not.exist')
-      cy.getTestId('oidc-auth-mode-radio-group').should('not.exist')
+      // Mode picker still shows — user can still choose Kong Identity mode.
+      cy.getTestId('oidc-principals-section').should('exist')
+      cy.getTestId('oidc-auth-mode-radio-group').should('exist')
+      // Auth server KSelect replaced by plain text issuer input.
+      cy.getTestId('principals-directory-select').should('not.exist')
+      cy.getTestId('kong-identity-issuer-input').should('exist')
+
+      // Principal lookup is unaffected.
+      cy.getTestId('oidc-principals-section').within(() => {
+        cy.getTestId('collapse-trigger-label').click()
+      })
+      cy.getTestId('use-principal-lookup').should('exist')
+      cy.getTestId('auth-methods-multiselect').should('exist')
     })
 
-    it('hides the principals section when isKongIdentityDirectoriesAvailable is false', () => {
+    it('still shows Principal lookup settings when isKongIdentityPrincipalsAvailable is false', () => {
       cy.mount(OIDCForm, {
         props: {
           ...requiredProps,
@@ -534,12 +553,19 @@ describe('<OIDCForm />', () => {
         },
         global: {
           provide: {
-            'kong-ui-forms-config': { ...baseConfigKonnect, isKongIdentityDirectoriesAvailable: false },
+            'kong-ui-forms-config': { ...baseConfigKonnect },
           },
         },
       })
 
-      cy.getTestId('oidc-principals-section').should('not.exist')
+      cy.getTestId('oidc-principals-section').should('exist')
+      cy.getTestId('oidc-auth-mode-radio-group').should('exist')
+
+      cy.getTestId('oidc-principals-section').within(() => {
+        cy.getTestId('collapse-trigger-label').click()
+      })
+      cy.getTestId('use-principal-lookup').should('exist')
+      cy.getTestId('auth-methods-multiselect').should('exist')
     })
   })
 

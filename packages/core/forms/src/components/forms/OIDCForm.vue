@@ -294,10 +294,12 @@ export default {
     displayForm() {
       return (this.formModel.id && this.isEditing) || !this.isEditing
     },
+    // Auth-server access and directories access each independently gate their own field
+    // group inside OIDCPrincipals (the mode radios/Authorization Server field, and the
+    // Principal lookup settings, respectively) — this only decides whether the new UI
+    // renders at all.
     hasPrincipalsFields() {
       return this.identityPrincipalsUiEnabled
-        && this.formsConfig?.isKongIdentityAuthServersAvailable !== false
-        && this.formsConfig?.isKongIdentityDirectoriesAvailable !== false
         && this.formSchema.fields?.some((field) => PRINCIPALS_FIELD_MODELS.has(field.model))
     },
     isKonnect() {

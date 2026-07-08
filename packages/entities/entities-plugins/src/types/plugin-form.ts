@@ -80,16 +80,45 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
   isCloudGateway?: boolean
   /**
    * KRN-based permission flag from the host app (gateway-manager).
-   * When explicitly `false`, the Kong Identity auth-servers section is hidden without
-   * making an API call, avoiding the UI flicker of a reactive 401 guard.
+   * When explicitly `false`, the auth server KSelect falls back to a plain text issuer
+   * input and the client KSelect falls back to a plain text client id input.
    */
   isKongIdentityAuthServersAvailable?: boolean
   /**
    * KRN-based permission flag from the host app (gateway-manager).
-   * When explicitly `false`, the Kong Identity principals section is hidden without
-   * making an API call, avoiding the UI flicker of a reactive 401 guard.
+   * When explicitly `false`, the "Create authorization server" dropdown action is hidden
+   * (the user can still view/select existing servers via isKongIdentityAuthServersAvailable).
    */
-  isKongIdentityDirectoriesAvailable?: boolean
+  canCreateAuthServer?: boolean
+  /**
+   * KRN-based permission flag from the host app (gateway-manager).
+   * When explicitly `false`, the "Create client" dropdown action is hidden for the
+   * selected authorization server (the user can still view/select existing clients).
+   */
+  canCreateAuthServerClient?: boolean
+  /**
+   * Resolved Kong Identity directory name for the current control plane, precomputed by the
+   * host app. The host must already resolve the directory ID to evaluate the KRN-scoped
+   * principals permission below (`krn:idp:.../directories/{id}/principals`), so re-fetching
+   * `/v2/directories` here too would be redundant and subject to the same permission gap.
+   * `undefined` means the host hasn't resolved this yet (drives a loading state); `null`
+   * means resolved but there's no accessible directory.
+   */
+  principalsDirectoryName?: string | null
+  /**
+   * Whether to show the "Add principals" empty-state guide, precomputed by the host app via:
+   * directory access → directory retrieved → principals (list) access on that directory →
+   * principals list is empty → create-principal permission. All must hold for this to be
+   * `true`; there is no other circumstance where it should be. `undefined` means not yet
+   * resolved (drives a loading state).
+   */
+  principalsCreationGuideVisible?: boolean
+  /**
+   * Kong Gateway versions of the data plane nodes connected to the current control plane
+   * (deduped). Used to warn when Kong Identity principals — which require Gateway 3.15+ —
+   * are configured but a connected DP node can't process them.
+   */
+  dataPlaneVersions?: string[]
 }
 
 /** Kong Manager Plugin form config */
