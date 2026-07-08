@@ -47,7 +47,7 @@ export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuer
 
 /** @deprecated Use `PlatformUsageDatasourceTabularQuery`. */
 export interface PlatformDatasourceTabularQuery {
-  datasource: 'platform'
+  datasource: 'platform' | 'platform_usage'
   query: PlatformTabularQuery
 }
 
