@@ -138,7 +138,7 @@ import {
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
+import { computed, inject, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowReactive, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
@@ -443,7 +443,15 @@ provide(FORMS_API_KEY, {
   peek,
 })
 
-provide(FORMS_CONFIG, props.config)
+// shallowReactive keeps the same object identity so all descendants can
+// access properties directly (no .value unwrap needed), while staying live
+// when the host replaces the entire config prop reference (e.g. once an
+// async field like principalsCreationGuideVisible resolves).
+const liveConfig = shallowReactive({ ...(props.config as object) })
+watch(() => props.config, (newConfig) => {
+  Object.assign(liveConfig, newConfig)
+})
+provide(FORMS_CONFIG, liveConfig)
 
 const sharedFormName = ref('')
 const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()
