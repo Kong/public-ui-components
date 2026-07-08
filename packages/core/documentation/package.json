@@ -41,7 +41,7 @@
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong/icons": "^1.60.0",
-    "@kong/markdown": "1.9.10"
+    "@kong/markdown": "1.10.0"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",

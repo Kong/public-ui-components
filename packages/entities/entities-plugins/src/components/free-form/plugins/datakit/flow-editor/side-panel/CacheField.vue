@@ -261,7 +261,7 @@ const handleStrategyChange = () => {
 async function highlight({ codeElement, language, code }: CodeBlockEventData) {
   codeElement.innerHTML = await codeToHtml(code, {
     lang: language,
-    theme: 'catppuccin-mocha',
+    theme: 'material-theme-darker',
     structure: 'inline',
   })
 }
