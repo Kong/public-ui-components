@@ -34,7 +34,7 @@ export interface AgenticDatasourceQuery {
 
 /** @deprecated Use `PlatformUsageDatasourceQuery`. */
 export interface PlatformDatasourceQuery {
-  datasource: 'platform' | 'platform_usage'
+  datasource: 'platform'
   query: PlatformExploreQuery
 }
 
@@ -47,7 +47,7 @@ export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuer
 
 /** @deprecated Use `PlatformUsageDatasourceTabularQuery`. */
 export interface PlatformDatasourceTabularQuery {
-  datasource: 'platform' | 'platform_usage'
+  datasource: 'platform'
   query: PlatformTabularQuery
 }
 
