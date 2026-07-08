@@ -56,6 +56,7 @@
           :model-value="selectedRedisConfigItem"
           :placeholder="redisSelectorPlaceholderText"
           :redis-type="redisType"
+          :show-create-button="!shouldHideNewRedisConfiguration(formConfig)"
           @error-change="onRedisSelectorFetchError"
           @toast="toaster"
           @update:model-value="redisConfigSelected"
@@ -186,6 +187,10 @@ const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.
 const { value: redisFieldsValue, hide } = useField<Redis | undefined>(formRedisPath)
 
 const formConfig: KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
+
+const shouldHideNewRedisConfiguration = (
+  config: (KonnectBaseFormConfig | KongManagerBaseFormConfig) & { isKonnectManagedRedisEnabled?: boolean },
+) => config.app === 'konnect' && !!config.isKonnectManagedRedisEnabled
 
 const redisCardTitle = computed(() =>
   props.isKonnectManagedRedisEnabled ? t('redis.managed_ui.title') : t('redis.title'),

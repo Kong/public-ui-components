@@ -58,7 +58,10 @@
           {{ t('redis.shared_configuration.empty_state') }}
         </div>
       </template>
-      <template #dropdown-footer-text>
+      <template
+        v-if="!shouldHideNewRedisConfiguration(formConfig)"
+        #dropdown-footer-text
+      >
         <div
           class="new-redis-config-area"
           data-testid="new-redis-config-area"
@@ -109,6 +112,7 @@ import {
   type RedisConfigurationSource,
   redisManagedSourceFromTags,
 } from '../utils/redisPartialManagedSource'
+import { shouldHideNewRedisConfiguration } from '../utils/hideNewRedisConfiguration'
 import RedisConfigCard from './RedisConfigCard.vue'
 
 defineEmits<{
