@@ -118,6 +118,7 @@
           <template #description>
             Use the consumer linked to the authenticated principal so existing consumer-based plugins and policies continue to work.
             <a
+              class="principals-learn-more-link"
               href="https://developer.konghq.com/identity/principals/"
               rel="noopener noreferrer"
               target="_blank"
@@ -137,6 +138,7 @@
           <template #description>
             Use consumer groups linked to the authenticated principal so existing consumer group policies and plugins continue to work. Consumer groups can be linked through principal metadata.
             <a
+              class="principals-learn-more-link"
               href="https://developer.konghq.com/identity/principals/"
               rel="noopener noreferrer"
               target="_blank"
@@ -336,6 +338,26 @@ export default {
   .principals-token-claim-input,
   .principals-custom-identity-name-input {
     margin-top: var(--kui-space-40, $kui-space-40);
+  }
+
+  .principals-learn-more-link {
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    gap: var(--kui-space-20, $kui-space-20);
+    outline: none;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
+    }
+
+    &:focus-visible {
+      color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+    }
+
+    &:active {
+      color: var(--kui-color-text-primary-strongest, $kui-color-text-primary-strongest);
+    }
   }
 }
 
