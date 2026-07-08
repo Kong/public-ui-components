@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.54.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.53.8...@kong-ui-public/entities-shared@3.54.0) (2026-07-08)
+
+
+### Features
+
+* **entities-shared:** sensitive input supports multiline ([#3544](https://github.com/Kong/public-ui-components/issues/3544)) ([3763418](https://github.com/Kong/public-ui-components/commit/3763418bcd8bacf46ee85ac0bb04f493262e70e6))
+
+
+
+
+
 ## [3.53.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.53.7...@kong-ui-public/entities-shared@3.53.8) (2026-07-07)
 
 
