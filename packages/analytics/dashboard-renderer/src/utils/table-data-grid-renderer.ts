@@ -2,7 +2,7 @@ import type { DashboardRendererContextInternal } from '../types'
 import type {
   AllFilters,
   AnalyticsBridge,
-  PlatformDatasourceTabularQuery,
+  DatasourceAwareTabularQuery,
   PlatformTabularQuery,
   PlatformTabularResponse,
 } from '@kong-ui-public/analytics-utilities'
@@ -105,7 +105,7 @@ const platformTableDataGridFetcher = async ({
   cursor?: unknown
   onResponseColumns?: (columns: string[]) => void
   pageSize: number
-  query: PlatformDatasourceTabularQuery
+  query: DatasourceAwareTabularQuery
   stripUnknownFilters: StripUnknownFilters
   tabularQueryFn: AnalyticsBridge['tabularQueryFn']
 }): Promise<TableDataGridFetcherResult<TableDataGridRow>> => {

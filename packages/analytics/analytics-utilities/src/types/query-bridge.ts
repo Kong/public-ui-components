@@ -32,19 +32,31 @@ export interface AgenticDatasourceQuery {
   query: AgenticExploreQuery
 }
 
+/** @deprecated Use `PlatformUsageDatasourceQuery`. */
 export interface PlatformDatasourceQuery {
-  datasource: 'platform' | 'platform_usage'
+  datasource: 'platform'
   query: PlatformExploreQuery
 }
 
-export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | AgenticDatasourceQuery | PlatformDatasourceQuery
+export interface PlatformUsageDatasourceQuery {
+  datasource: 'platform_usage'
+  query: PlatformExploreQuery
+}
 
+export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | AgenticDatasourceQuery | PlatformDatasourceQuery | PlatformUsageDatasourceQuery
+
+/** @deprecated Use `PlatformUsageDatasourceTabularQuery`. */
 export interface PlatformDatasourceTabularQuery {
-  datasource: 'platform' | 'platform_usage'
+  datasource: 'platform'
   query: PlatformTabularQuery
 }
 
-export type DatasourceAwareTabularQuery = PlatformDatasourceTabularQuery
+export interface PlatformUsageDatasourceTabularQuery {
+  datasource: 'platform_usage'
+  query: PlatformTabularQuery
+}
+
+export type DatasourceAwareTabularQuery = PlatformDatasourceTabularQuery | PlatformUsageDatasourceTabularQuery
 
 // All flags in this interface should be optional; defaults are as documented.
 export interface StaticConfig {

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { DashboardRendererContextInternal } from '../types'
-import type { PlatformDatasourceTabularQuery, PlatformTabularResponse } from '@kong-ui-public/analytics-utilities'
+import type { PlatformDatasourceTabularQuery, PlatformUsageDatasourceTabularQuery, PlatformTabularResponse } from '@kong-ui-public/analytics-utilities'
 import {
   tableDataGridFetcherByDatasource,
   tableDataGridHeadersByDatasource,
@@ -211,7 +211,7 @@ describe('table data grid renderer utilities', () => {
 
   it('platform_usage fetcher resolves using the same implementation as platform', async () => {
     const tabularQueryFn = vi.fn().mockResolvedValue(response)
-    const query: PlatformDatasourceTabularQuery = {
+    const query: PlatformUsageDatasourceTabularQuery = {
       datasource: 'platform_usage',
       query: { entity: 'route', columns: ['control_plane'], page_size: 10 },
     }
