@@ -86,7 +86,7 @@ type Options = {
      * Themes to include for Shiki syntax highlighting.
      *
      * @type {BundledTheme[]}
-     * @defaultValue ['catppuccin-latte', 'vesper']
+     * @defaultValue ['catppuccin-latte', 'material-theme-darker']
      * @example
      * ```ts
      * // Include the 'nord' theme
@@ -289,7 +289,7 @@ export default function plugin(options?: Options): Plugin {
             .filter((lang): lang is BundledLanguage => lang in bundledLanguages)
 
         return codegen({
-          themes: options?.shiki?.themes || ['catppuccin-latte', 'vesper'],
+          themes: options?.shiki?.themes || ['catppuccin-latte', 'material-theme-darker'],
           engine: 'javascript',
           langs: languageIds,
           typescript: false,

@@ -784,7 +784,7 @@ export default defineConfig({
       features: ['bracketMatching', 'comment', 'format'],
       shiki: {
         langs: ['json', 'yaml', 'javascript'],
-        themes: ['catppuccin-latte', 'vesper'],
+        themes: ['catppuccin-latte', 'material-theme-darker'],
       },
     }),
   ],

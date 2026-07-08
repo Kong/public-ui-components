@@ -5,7 +5,7 @@ import yaml from '@shikijs/langs/yaml'
 import terraform from '@shikijs/langs/terraform'
 import shellscript from '@shikijs/langs/shellscript'
 import powershell from '@shikijs/langs/powershell'
-import vesper from '@shikijs/themes/vesper'
+import materialThemeDarker from '@shikijs/themes/material-theme-darker'
 import catppuccinLatte from '@shikijs/themes/catppuccin-latte'
 import type { HighlighterCore, CodeToHastOptions } from '@shikijs/core'
 
@@ -15,7 +15,7 @@ function getHighlighter(): HighlighterCore {
   if (!highlighter) {
     highlighter = createHighlighterCoreSync({
       langs: [json, yaml, terraform, shellscript, powershell],
-      themes: [vesper, catppuccinLatte],
+      themes: [materialThemeDarker, catppuccinLatte],
       engine: createJavaScriptRegexEngine(),
       langAlias: {
         bash: 'shellscript',
