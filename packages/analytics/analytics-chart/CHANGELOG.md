@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.19.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.19.10...@kong-ui-public/analytics-chart@10.19.11) (2026-07-08)
+
+
+### Bug Fixes
+
+* allow platform and platform_usage for datasource [MA-5024] ([#3547](https://github.com/Kong/public-ui-components/issues/3547)) ([df92c45](https://github.com/Kong/public-ui-components/commit/df92c45b1765c58f0a6aace683a4b15c652d032a))
+
+
+
+
+
 ## [10.19.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.19.9...@kong-ui-public/analytics-chart@10.19.10) (2026-07-08)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
