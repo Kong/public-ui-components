@@ -58,7 +58,6 @@
       <KRadio
         data-testid="principals-error-on-miss-true"
         :description="i18n.t('custom_field.kong_identity.error_on_miss_reject_description')"
-        :disabled="principalsPanelVisible"
         :label="i18n.t('custom_field.kong_identity.error_on_miss_reject_label')"
         :model-value="principalsErrorOnMiss"
         :selected-value="true"
@@ -67,7 +66,6 @@
       <KRadio
         data-testid="principals-error-on-miss-false"
         :description="i18n.t('custom_field.kong_identity.error_on_miss_continue_description')"
-        :disabled="principalsPanelVisible"
         :label="i18n.t('custom_field.kong_identity.error_on_miss_continue_label')"
         :model-value="principalsErrorOnMiss"
         :selected-value="false"
@@ -141,10 +139,6 @@ const principalsCreationGuideVisible = computed(() => (appConfig as KonnectPlugi
 const principalsShowPanel = computed(() => principalsCreationGuideVisible.value === true)
 const principalsLoading = computed(() => principalsCreationGuideVisible.value === undefined)
 
-// Fields are meaningful once the user has principals access at all — mirrors hasPrincipals
-// rather than independently tracking whether principals currently exist.
-const principalsPanelVisible = computed(() => isKonnect.value && !hasPrincipals.value)
-
 const principalsErrorOnMiss = computed(() => formData.config?.principals?.error_on_miss ?? true)
 
 function handleErrorOnMissChange(value: boolean) {
@@ -202,8 +196,7 @@ const identityPrincipalsUiEnabled = inject<boolean>(FEATURE_FLAGS.KHCP_20393_IDE
 
 const hasPrincipals = computed(() =>
   identityPrincipalsUiEnabled
-  && !!getSchema('$.config.principals')
-  && (appConfig as KonnectPluginFormConfig)?.isKongIdentityPrincipalsAvailable !== false,
+  && !!getSchema('$.config.principals'),
 )
 
 // True when at least one connected data plane node can't process Kong Identity principals

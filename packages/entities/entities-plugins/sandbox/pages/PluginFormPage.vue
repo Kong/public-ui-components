@@ -188,9 +188,7 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
     keyAuthIdentityRealms: true,
   },
   // isKongIdentityAuthServersAvailable: false,
-  // isKongIdentityPrincipalsAvailable: false,
   canCreateAuthServer: false,
-  canCreateAuthServerClient: false,
   enableDeckTab: {
     ...enableDeckConfigCustomization.value && {
       customization: {

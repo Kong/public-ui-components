@@ -13,11 +13,7 @@
       </KExternalLink>
     </div>
 
-    <!-- Requires permission to configure auth servers: without it, Kong Identity mode can't
-         validate the OIDC token, so there's no real choice to offer — skip the picker
-         entirely and go straight to External mode (selectedMode is forced to it already). -->
     <div
-      v-if="hasAuthServersAccess"
       class="oidc-auth-mode-radio-group"
       data-testid="oidc-auth-mode-radio-group"
     >
@@ -101,6 +97,7 @@
 
     <template v-if="selectedMode === MODE_KONG_IDENTITY">
       <KSelect
+        v-if="hasAuthServersAccess"
         class="principals-directory-select"
         data-testid="principals-directory-select"
         enable-filtering
@@ -129,12 +126,26 @@
             <div class="create-action-content">
               <span>Create authorization server</span>
               <div class="create-action-hint">
-                You’ll need to return here after creating an authorization server. Your progress won’t be saved.
+                You'll need to return here after creating an authorization server. Your progress won't be saved.
               </div>
             </div>
           </div>
         </template>
       </KSelect>
+      <KInput
+        v-else
+        data-testid="kong-identity-issuer-input"
+        help="You don't have access to browse authorization servers. Enter the issuer URL of your Kong Identity authorization server directly."
+        label="Authorization Server"
+        :label-attributes="{
+          info: 'The Kong Identity auth server that will act as the OpenID Connect provider for this plugin.',
+          tooltipAttributes: { maxWidth: '300' },
+        }"
+        :model-value="formModel['config-issuer']"
+        placeholder="e.g., https://your-auth-server.identity.konghq.com"
+        required
+        @update:model-value="updateField('config-issuer', $event)"
+      />
 
       <div
         v-for="(clientId, index) in clientIdArray"
@@ -142,7 +153,17 @@
         class="client-row"
         :class="{ 'client-row-with-label': index === 0 }"
       >
+        <KInput
+          v-if="!hasAuthServersAccess"
+          class="principals-client-select"
+          data-testid="principals-client-id-input"
+          :label="index === 0 ? 'Client' : undefined"
+          :model-value="clientId"
+          placeholder="e.g., kong-gateway-client"
+          @update:model-value="handleClientChange(index, $event)"
+        />
         <KSelect
+          v-else
           class="principals-client-select"
           data-testid="principals-client-select"
           :disabled="!selectedServer"
@@ -177,7 +198,7 @@
           <KInput
             class="principals-client-secret"
             data-testid="principals-client-secret"
-            :disabled="!selectedServer"
+            :disabled="hasAuthServersAccess && !selectedServer"
             :label="index === 0 ? 'Client secret' : undefined"
             :model-value="clientSecretArray[index]"
             placeholder="e.g., your-client-secret"
@@ -207,9 +228,9 @@
 
       <div
         class="add-client-inline"
-        :class="{ 'add-client-inline-disabled': !selectedServer }"
+        :class="{ 'add-client-inline-disabled': hasAuthServersAccess && !selectedServer }"
         data-testid="add-client-action"
-        @click="(!selectedServer) ? null : addClientRow()"
+        @click="(hasAuthServersAccess && !selectedServer) ? null : addClientRow()"
       >
         + Add client
       </div>
@@ -220,12 +241,10 @@
            advanced-fields slot (OIDC auth methods) always renders regardless. -->
       <PrincipalLookupSettings
         :data-plane-incompatible="hasIncompatibleDataPlane"
-        :disabled="principalsFieldsDisabled"
         :form-model="formModel"
         :on-enabled-change="handleUsePrincipalLookupChange"
         :on-model-updated="onModelUpdated"
         show-enable-toggle
-        :show-principals-fields="hasPrincipalsAccess"
       >
         <slot name="advanced-fields" />
       </PrincipalLookupSettings>
@@ -332,12 +351,10 @@
            advanced-fields slot (OIDC auth methods) always renders regardless. -->
       <PrincipalLookupSettings
         :data-plane-incompatible="hasIncompatibleDataPlane"
-        :disabled="principalsFieldsDisabled"
         :form-model="formModel"
         :on-enabled-change="handleUsePrincipalLookupChange"
         :on-model-updated="onModelUpdated"
         show-enable-toggle
-        :show-principals-fields="hasPrincipalsAccess"
       >
         <!-- No directory / no principals: guide the user to set up Kong Identity, inside the
              additional settings (the toggle above is disabled in this state). -->
@@ -473,10 +490,7 @@ export default {
   },
   emits: ['mode-change', 'click:learn-more', 'click:create-entity'],
   data() {
-    // Without auth-server permission, Kong Identity mode can't be configured at all, so
-    // land in External mode regardless of what the stored record's issuer would infer.
-    const hasAuthServersAccess = this.formsConfig?.isKongIdentityAuthServersAvailable !== false
-    const initialMode = hasAuthServersAccess ? inferInitialMode(this.formModel, this.isEditing) : MODE_EXTERNAL
+    const initialMode = inferInitialMode(this.formModel, this.isEditing)
     return {
       MODE_KONG_IDENTITY,
       MODE_EXTERNAL,
@@ -523,20 +537,15 @@ export default {
       return [null]
     },
     isRemoveClientDisabled() {
-      return !this.selectedServer || this.clientIdArray.length <= 1
+      return (this.hasAuthServersAccess && !this.selectedServer) || this.clientIdArray.length <= 1
     },
     // Kong Identity directories/principals are a Konnect-only concept.
     isKonnect() {
       return this.formsConfig?.app === 'konnect'
     },
-    // KRN-based permission flags from the host app, each controlling their own field group
-    // independently: without auth-server access, Kong Identity mode isn't offered at all;
-    // without principals access, the Principal lookup settings content isn't shown.
+    // Without auth-server access, Kong Identity mode isn't offered at all.
     hasAuthServersAccess() {
       return this.formsConfig?.isKongIdentityAuthServersAvailable !== false
-    },
-    hasPrincipalsAccess() {
-      return this.formsConfig?.isKongIdentityPrincipalsAvailable !== false
     },
     // Separate, narrower permissions for creating (not just viewing) an auth server or a
     // client under one — each hides its own "Create..." dropdown action when unavailable.
@@ -556,12 +565,6 @@ export default {
     principalsEnabled() {
       return this.formModel['config-principals-enabled'] === true
     },
-    // Fields are meaningful once the user has principals access at all — the host already
-    // guards the whole section on this permission, so this mirrors that rather than trying
-    // to independently track whether principals currently exist (see principalsGuideVisible).
-    principalsFieldsDisabled() {
-      return this.isKonnect && !this.hasPrincipalsAccess
-    },
     // Host-precomputed: directory access → directory resolved → principals (list) access →
     // principals list empty → create-principal permission. Only shown once lookup is on.
     principalsGuideVisible() {
@@ -573,8 +576,8 @@ export default {
     },
   },
   watch: {
-    // Handles late-resolving host (principalsDirectoryName becomes available after mount).
-    // Not immediate — the saved edit-load value must not be overwritten on mount;
+    // Immediate so it runs on mount when the host resolves principalsDirectoryName late.
+    // Guards on isEditing so saved edit-load values are never overwritten on mount;
     // explicit mode switches are handled by handleModeChange directly.
     'formsConfig.principalsDirectoryName': {
       immediate: true,

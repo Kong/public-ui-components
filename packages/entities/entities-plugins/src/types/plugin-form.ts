@@ -80,18 +80,10 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
   isCloudGateway?: boolean
   /**
    * KRN-based permission flag from the host app (gateway-manager).
-   * When explicitly `false`, the Kong Identity auth-servers section is hidden without
-   * making an API call, avoiding the UI flicker of a reactive 401 guard.
+   * When explicitly `false`, the auth server KSelect falls back to a plain text issuer
+   * input and the client KSelect falls back to a plain text client id input.
    */
   isKongIdentityAuthServersAvailable?: boolean
-  /**
-   * KRN-based permission flag from the host app (gateway-manager). Principals are nested
-   * under a directory but scoped more narrowly, so this is tracked separately from
-   * auth-servers access.
-   * When explicitly `false`, the Kong Identity principals section is hidden without
-   * making an API call, avoiding the UI flicker of a reactive 401 guard.
-   */
-  isKongIdentityPrincipalsAvailable?: boolean
   /**
    * KRN-based permission flag from the host app (gateway-manager).
    * When explicitly `false`, the "Create authorization server" dropdown action is hidden

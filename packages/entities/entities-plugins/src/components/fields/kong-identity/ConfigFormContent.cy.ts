@@ -245,8 +245,6 @@ function mountContent(
     hasExistingRealms?: boolean
     /** khcp-20393 Identity Principals UI flag. Defaults to on so the new-UI specs render it. */
     identityPrincipalsUiEnabled?: boolean
-    /** KRN permission flag — when false, the Kong Identity principals section is hidden without a fetch. */
-    isKongIdentityPrincipalsAvailable?: boolean
     /** Host-resolved directory name (see KonnectPluginFormConfig); host now owns the /v2/directories lookup. */
     principalsDirectoryName?: string | null
     /** Host-precomputed "show the Add principals empty-state guide" signal; host now owns this check. */
@@ -263,7 +261,6 @@ function mountContent(
     ? {
       app: 'konnect',
       apiBaseUrl: 'https://us.api.konghq.com',
-      isKongIdentityPrincipalsAvailable: options.isKongIdentityPrincipalsAvailable,
       principalsDirectoryName: options.principalsDirectoryName,
       principalsCreationGuideVisible: options.principalsCreationGuideVisible,
       dataPlaneVersions: options.dataPlaneVersions,
@@ -690,23 +687,23 @@ describe('ConfigFormContent', () => {
     })
 
     describe('KRN permission flags', () => {
-      it('hides the Kong Identity section when isKongIdentityPrincipalsAvailable is false', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, isKongIdentityPrincipalsAvailable: false })
+      it('shows the Kong Identity section without any permission flags set', () => {
+        mountContent(schemaWithRealms, { isKonnect: true })
 
-        cy.getTestId('ff-kong-identity-field').should('not.exist')
+        cy.getTestId('ff-kong-identity-field').should('exist')
+        // Creation guide NOT shown — host has not set principalsCreationGuideVisible to true.
         cy.getTestId('kong-identity-principals-panel').should('not.exist')
-        cy.getTestId('ff-principals-error-on-miss-label').should('not.exist')
       })
 
-      it('preserves saved principals config when isKongIdentityPrincipalsAvailable is false (edit)', () => {
-        mountContent(schemaWithRealms, { isKonnect: true, isKongIdentityPrincipalsAvailable: false }, {
+      it('preserves saved principals config (edit)', () => {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
           config: {
             principals: { enabled: true, directory: 'my-custom-dir', error_on_miss: false },
             identity_realms: null,
           },
         })
 
-        cy.getTestId('ff-kong-identity-field').should('not.exist')
+        cy.getTestId('ff-kong-identity-field').should('exist')
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
           return val.config?.principals?.enabled === true
             && val.config?.principals?.directory === 'my-custom-dir'

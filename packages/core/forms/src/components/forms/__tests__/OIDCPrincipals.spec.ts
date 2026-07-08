@@ -580,7 +580,6 @@ describe('OIDCPrincipals', () => {
       })
 
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
-      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
     })
 
     it('shows the guide in External mode when principalsCreationGuideVisible is true, regardless of lookup toggle', () => {
@@ -602,32 +601,6 @@ describe('OIDCPrincipals', () => {
     })
   })
 
-  describe('principalsFieldsDisabled', () => {
-    it('is false by default (principals access assumed available)', () => {
-      const wrapper = mountComponent()
-
-      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(false)
-    })
-
-    it('is true when isKongIdentityPrincipalsAvailable is false, regardless of guide visibility', () => {
-      const wrapper = mount(OIDCPrincipals, {
-        props: { ...baseProps, formModel: buildFormModel() },
-        global: {
-          provide: {
-            [FORMS_CONFIG]: {
-              apiBaseUrl: '/us',
-              app: 'konnect',
-              isKongIdentityPrincipalsAvailable: false,
-              principalsCreationGuideVisible: false,
-            },
-          },
-        },
-      })
-
-      expect((wrapper.vm as any).principalsFieldsDisabled).toBe(true)
-    })
-  })
-
   describe('KRN permission flags', () => {
     const konnectConfig = { apiBaseUrl: '/us', app: 'konnect' }
 
@@ -643,20 +616,6 @@ describe('OIDCPrincipals', () => {
       await flushPromises()
 
       expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v1/auth-servers'), expect.anything())
-    })
-
-    it('skips the directories fetch when isKongIdentityPrincipalsAvailable is false', async () => {
-      mount(OIDCPrincipals, {
-        props: { ...baseProps, formModel: buildFormModel() },
-        global: {
-          provide: {
-            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityPrincipalsAvailable: false },
-          },
-        },
-      })
-      await flushPromises()
-
-      expect(mockGet).not.toHaveBeenCalledWith(expect.stringContaining('/v2/directories'), expect.anything())
     })
 
     // The "Create authorization server"/"Create client" actions live inside KSelect's
@@ -702,7 +661,7 @@ describe('OIDCPrincipals', () => {
       expect((wrapper.vm as any).canCreateAuthServer).toBe(true)
     })
 
-    it('hides the mode picker and forces External mode when isKongIdentityAuthServersAvailable is false', async () => {
+    it('still shows the mode picker in Kong Identity mode when isKongIdentityAuthServersAvailable is false', async () => {
       const wrapper = mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
         global: {
@@ -713,9 +672,17 @@ describe('OIDCPrincipals', () => {
       })
       await flushPromises()
 
-      expect((wrapper.vm as any).selectedMode).toBe('external')
-      expect(wrapper.find('[data-testid="oidc-auth-mode-radio-group"]').exists()).toBe(false)
-      expect(wrapper.find('.stub-vfg').exists()).toBe(true)
+      expect((wrapper.vm as any).selectedMode).toBe('kong-identity')
+      expect(wrapper.find('[data-testid="oidc-auth-mode-radio-group"]').exists()).toBe(true)
+      // Auth server KSelect replaced by plain text issuer input.
+      expect(wrapper.find('[data-testid="principals-directory-select"]').exists()).toBe(false)
+      expect(wrapper.find('[data-testid="kong-identity-issuer-input"]').exists()).toBe(true)
+      // Client KSelect replaced by plain text client id input.
+      expect(wrapper.find('[data-testid="principals-client-select"]').exists()).toBe(false)
+      expect(wrapper.find('[data-testid="principals-client-id-input"]').exists()).toBe(true)
+      // Client secret and Add client are not disabled in fallback mode.
+      expect(wrapper.find('[data-testid="principals-client-secret"]').attributes('disabled')).not.toBe('true')
+      expect(wrapper.find('[data-testid="add-client-action"]').classes()).not.toContain('add-client-inline-disabled')
     })
 
     it('still shows the mode picker and Kong Identity mode when isKongIdentityAuthServersAvailable is true', () => {
@@ -728,29 +695,30 @@ describe('OIDCPrincipals', () => {
       expect(wrapper.find('[data-testid="oidc-auth-mode-radio-group"]').exists()).toBe(true)
     })
 
-    it('hides the Principal lookup settings content (but not sibling advanced fields) in Kong Identity mode when isKongIdentityPrincipalsAvailable is false', () => {
+    it('shows Principal lookup fields in Kong Identity mode', () => {
       const wrapper = mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
         slots: { 'advanced-fields': '<div data-testid="sibling-advanced-field">Sibling</div>' },
         global: {
           provide: {
-            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityPrincipalsAvailable: false },
+            [FORMS_CONFIG]: { ...konnectConfig },
           },
         },
       })
 
       expect((wrapper.vm as any).selectedMode).toBe('kong-identity')
-      // The component itself still renders — it hosts the shared "additional settings" collapse
-      // for sibling content (e.g. OIDC auth methods) — only its own principals content is hidden.
       expect(wrapper.findComponent(PrincipalLookupSettings).exists()).toBe(true)
-      expect(wrapper.find('[data-testid="use-principal-lookup"]').exists()).toBe(false)
-      expect(wrapper.find('[data-testid="principals-lookup-method"]').exists()).toBe(false)
+      // Fields are shown even without principals access.
+      expect(wrapper.find('[data-testid="use-principal-lookup"]').exists()).toBe(true)
+      expect(wrapper.find('[data-testid="principals-lookup-method"]').exists()).toBe(true)
       expect(wrapper.find('[data-testid="sibling-advanced-field"]').exists()).toBe(true)
-      // Authorization Server field is unaffected — it's gated by auth-server access, not principals access.
+      // Auth server select is unaffected — gated by auth-server access, not principals access.
       expect(wrapper.find('[data-testid="principals-directory-select"]').exists()).toBe(true)
+      // Creation guide is NOT shown — host has not set principalsCreationGuideVisible to true.
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
     })
 
-    it('hides the Principal lookup settings content (but not sibling advanced fields) in External mode when isKongIdentityPrincipalsAvailable is false', () => {
+    it('shows Principal lookup fields in External mode', () => {
       const wrapper = mount(OIDCPrincipals, {
         props: {
           ...baseProps,
@@ -760,14 +728,16 @@ describe('OIDCPrincipals', () => {
         slots: { 'advanced-fields': '<div data-testid="sibling-advanced-field">Sibling</div>' },
         global: {
           provide: {
-            [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityPrincipalsAvailable: false },
+            [FORMS_CONFIG]: { ...konnectConfig },
           },
         },
       })
 
       expect((wrapper.vm as any).selectedMode).toBe('external')
       expect(wrapper.findComponent(PrincipalLookupSettings).exists()).toBe(true)
-      expect(wrapper.find('[data-testid="use-principal-lookup"]').exists()).toBe(false)
+      // Fields are shown even without principals access.
+      expect(wrapper.find('[data-testid="use-principal-lookup"]').exists()).toBe(true)
+      // Creation guide is NOT shown — host has not set principalsCreationGuideVisible to true.
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
       expect(wrapper.find('[data-testid="sibling-advanced-field"]').exists()).toBe(true)
       expect(wrapper.find('.stub-vfg').exists()).toBe(true)
