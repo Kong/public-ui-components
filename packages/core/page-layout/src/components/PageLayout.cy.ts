@@ -352,10 +352,11 @@ describe('<PageLayout />', () => {
     it('reflects isFavorite reactively after clicking the favorite button triggers onFavoriteToggle', () => {
       const onFavoriteToggle = cy.stub()
 
+      const isFavoritVal = ref(false)
       const ctx = reactive({
-        isFavorite: (() => false) as () => boolean,
+        isFavorite: (() => isFavoritVal.value) as () => boolean,
         onFavoriteToggle: onFavoriteToggle.callsFake(() => {
-          ctx.isFavorite = () => true
+          isFavoritVal.value = true
         }),
         onEntityPageVisit: () => { },
       })
