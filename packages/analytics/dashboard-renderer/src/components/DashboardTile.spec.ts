@@ -270,6 +270,14 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     expect(badge.text()).toContain('As of today')
   })
 
+  it('shows the as-of-today badge for non-timeseries platform_usage tiles', async () => {
+    const wrapper = mountTile('platform_usage', ['status_code'])
+    await flushPromises()
+
+    const badge = wrapper.getTestId('time-range-badge')
+    expect(badge.text()).toContain('As of today')
+  })
+
   it('does not show the as-of-today badge when the time dimension is present', async () => {
     const wrapper = mountTile('platform', ['time'])
     await flushPromises()

@@ -14,6 +14,7 @@ vi.mock('@kong-ui-public/analytics-utilities', () => ({
     if (ms === ONE_DAY_MS) return 'daily'
     return 'auto'
   }),
+  isPlatformDatasource: (datasource: unknown) => datasource === 'platform' || datasource === 'platform_usage',
 }))
 
 const analyticsConfig = { analytics: true, percentiles: true }
@@ -280,6 +281,19 @@ describe('useContextLinks', () => {
     expect(params.get('d')).toBe('platform')
   })
 
+  it('preserves platform_usage for explore link', async () => {
+    const { wrapper } = mountComposable({
+      datasource: 'platform_usage',
+      queryFilters: [makeFilter('gateway_service')],
+    })
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateExploreLink).toBe(true)
+
+    const params = new URLSearchParams((wrapper.vm.exploreLinkKebabMenu as string).split('?')[1])
+    expect(params.get('d')).toBe('platform_usage')
+  })
+
   it('builds explore link for table charts with the tabular query shape', async () => {
     const tableQuery = {
       datasource: 'platform',
@@ -319,6 +333,19 @@ describe('useContextLinks', () => {
     expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')
   })
 
+  it('does not generate requests drilldown for platform_usage tiles', async () => {
+    const { wrapper } = mountComposable({
+      datasource: 'platform_usage',
+      queryFilters: [makeFilter('shared_field')],
+    })
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateRequestsLink).toBe(false)
+    expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+    expect(wrapper.vm.requestsLinkZoomActions).toBeUndefined()
+    expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')
+  })
+
   it('falls back to api_usage when query datasource is not provided', async () => {
     const { wrapper } = mountComposable({ datasource: undefined })
     await flushPromises()
@@ -337,7 +364,7 @@ describe('useContextLinks', () => {
   })
 
   it('builds explore link for expected datasources', async () => {
-    const datasources = ['api_usage', 'basic', 'llm_usage', 'agentic_usage', 'platform', undefined]
+    const datasources = ['api_usage', 'basic', 'llm_usage', 'agentic_usage', 'platform', 'platform_usage', undefined]
 
     for (const ds of datasources) {
       const { wrapper } = mountComposable({

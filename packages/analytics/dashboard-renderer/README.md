@@ -457,7 +457,7 @@ interface ChartTileDefinition {
 
 interface TableChartTileDefinition {
   chart: TableChartOptions    // Configuration for the table chart
-  query: PlatformTabularQuery & { datasource: 'platform' } // Configuration for the platform tabular query
+  query: PlatformTabularQuery & { datasource: 'platform_usage' } // Configuration for the platform tabular query ('platform' also accepted)
 }
 ```
 
@@ -510,7 +510,7 @@ interface PlatformTabularQuery {
 
 `definition.query.columns` controls the visible table columns. If columns are omitted, the renderer can fall back to response `meta.columns` after the first tabular response. `definition.chart.chart_title` controls the tile title.
 
-The dashboard config query includes `datasource: 'platform'`. The host application's `AnalyticsBridge.tabularQueryFn` receives a datasource-aware tabular query, currently `{ datasource: 'platform', query: { entity, columns, filters, page_size, cursor } }`.
+The dashboard config query uses `datasource: 'platform_usage'` (the canonical value; `'platform'` is also accepted for backward compatibility with persisted dashboards). The host application's `AnalyticsBridge.tabularQueryFn` receives a datasource-aware tabular query, e.g. `{ datasource: 'platform_usage', query: { entity, columns, filters, page_size, cursor } }`.
 
 The renderer replaces raw record values with display labels when the tabular response includes a matching `meta.display[column][value].name`. Missing display entries and `null` values are rendered unchanged.
 
@@ -525,7 +525,7 @@ const tableTile: TileConfig = {
       chart_title: 'Platform routes',
     },
     query: {
-      datasource: 'platform',
+      datasource: 'platform_usage',
       entity: 'route',
       columns: ['name', 'control_plane', 'gateway_service', 'env', 'team', 'region'],
       filters: [
@@ -569,7 +569,7 @@ Chart queries can be configured for these data sources:
 2. `basic`: Uses the basic explore API
 3. `llm_usage`: Uses the AI explore API
 4. `agentic_usage`: Uses the agentic usage explore API
-5. `platform`: Uses the platform dashboard API
+5. `platform_usage`: Uses the platform dashboard API (`platform` is also accepted for backward compatibility)
 
 Chart query fields include:
 - `metrics`: Array of aggregations to collect
@@ -580,7 +580,7 @@ Chart query fields include:
 - `limit`: Number of results to return
 
 Table chart queries use the platform tabular query shape:
-- `datasource`: Must be `platform`
+- `datasource`: Must be `platform_usage` (`platform` is also accepted for backward compatibility)
 - `entity`: Entity collection to query, such as `route`
 - `columns`: Ordered table columns to request and render
 - `filters`: Platform filters to apply before fetching rows
