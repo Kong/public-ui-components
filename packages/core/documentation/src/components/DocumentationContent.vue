@@ -41,6 +41,7 @@
         class="document-holder"
         :hide-publish-toggle="hidePublishToggle"
         :selected-document="selectedDocument"
+        :theme="theme"
         @add="handleAddClick"
         @save-markdown="(content: string) => emit('save-markdown', content)"
         @toggle-published="(data: any) => emit('toggle-published', data)"

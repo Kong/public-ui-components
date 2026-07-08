@@ -9,6 +9,10 @@
         v-model="isCard"
         label="isCard"
       />
+      <KInputSwitch
+        v-model="isDarkMode"
+        label="isDarkMode"
+      />
     </div>
 
     <DocumentationContent
@@ -20,6 +24,7 @@
       :document-list="(documentListResponse.data as DocumentListItem[])"
       entity-id="1234-567-i-love-cats"
       :selected-document="selectedDocument"
+      :theme="isDarkMode ? 'dark' : 'light'"
       @child-change="handleChildChange"
       @delete="handleDelete"
       @document-selection="handleDocSelection"
@@ -56,6 +61,7 @@ interface DocumentListItem {
 const key = ref(0)
 const isAllowedEdit = ref(true)
 const isCard = ref(false)
+const isDarkMode = ref(false)
 
 const selectedDocument = computed((): SelectedDocument => {
   return {
