@@ -349,6 +349,26 @@ describe('<PageLayout />', () => {
       cy.getTestId('page-layout-favorite-button').should('have.class', 'active')
     })
 
+    it('reflects isFavorite reactively when it changes from false to true', () => {
+      const ctx = reactive({
+        isFavorite: (() => false) as () => boolean,
+        onFavoriteToggle: () => { },
+        onEntityPageVisit: () => { },
+      })
+
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.getTestId('page-layout-favorite-button').should('not.have.class', 'active')
+        .then(() => {
+          ctx.isFavorite = () => true
+        })
+
+      cy.getTestId('page-layout-favorite-button').should('have.class', 'active')
+    })
+
     it('calls isFavorite with the provided pageShortcutData', () => {
       const isFavorite = cy.stub().returns(false).as('isFavorite')
       const ctx = reactive({
