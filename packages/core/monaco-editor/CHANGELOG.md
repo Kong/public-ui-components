@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.22.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.24...@kong-ui-public/monaco-editor@0.22.25) (2026-07-08)
+
+
+### Bug Fixes
+
+* **monaco-editor:** swap dark theme ([#3548](https://github.com/Kong/public-ui-components/issues/3548)) ([051e14a](https://github.com/Kong/public-ui-components/commit/051e14a36987c6c75df6986cc6b6594ed03e1977))
+
+
+
+
+
 ## [0.22.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.22.23...@kong-ui-public/monaco-editor@0.22.24) (2026-07-07)
 
 **Note:** Version bump only for package @kong-ui-public/monaco-editor

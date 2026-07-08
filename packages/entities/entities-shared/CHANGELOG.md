@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.54.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.54.0...@kong-ui-public/entities-shared@3.54.1) (2026-07-08)
+
+
+### Bug Fixes
+
+* **monaco-editor:** swap dark theme ([#3548](https://github.com/Kong/public-ui-components/issues/3548)) ([051e14a](https://github.com/Kong/public-ui-components/commit/051e14a36987c6c75df6986cc6b6594ed03e1977))
+
+
+
+
+
 # [3.54.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.53.8...@kong-ui-public/entities-shared@3.54.0) (2026-07-08)
 
 
