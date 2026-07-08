@@ -165,6 +165,7 @@ useProvideExperimentalFreeForms([
   'ai-prompt-decorator',
   'ai-prompt-guard',
   'confluent',
+  'openid-connect',
 ])
 
 const enableDeckConfigCustomization = ref(false)
