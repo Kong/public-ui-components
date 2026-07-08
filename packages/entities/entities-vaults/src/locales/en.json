@@ -364,7 +364,8 @@
             "label": "Cert"
           },
           "cert_auth_cert_key": {
-            "label": "Cert key"
+            "label": "Cert key",
+            "rotateLabel": "Rotate cert key"
           },
           "cert_auth_role_name": {
             "label": "Role name"

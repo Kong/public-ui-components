@@ -4,6 +4,7 @@
     class="kong-ui-public-sensitive-input"
   >
     <KInput
+      v-if="!multiline"
       autocomplete="off"
       data-testid="sensitive-input"
       :disabled="disabled"
@@ -60,6 +61,56 @@
         </template>
       </template>
     </KInput>
+
+    <!-- Multiline mode: KTextArea + action row below (no visibility toggle; textarea has no type="password") -->
+    <template v-else>
+      <KTextArea
+        autocomplete="off"
+        :character-limit="false"
+        data-testid="sensitive-input"
+        :disabled="disabled || undefined"
+        :error="error"
+        :help="help"
+        :label="label"
+        :label-attributes="labelAttributes"
+        :model-value="isMasked ? maskedValue : modelValue"
+        :placeholder="isMasked ? undefined : resolvedPlaceholder"
+        :readonly="isMasked || readonly || undefined"
+        :required="required || undefined"
+        resizable
+        @update:model-value="handleInput"
+      />
+      <p
+        v-if="error && errorMessage"
+        class="sensitive-input-error-message"
+        data-testid="sensitive-input-error-message"
+      >
+        {{ errorMessage }}
+      </p>
+      <div class="sensitive-input-textarea-actions">
+        <KButton
+          v-if="isMasked"
+          appearance="tertiary"
+          class="sensitive-input-action"
+          data-testid="sensitive-input-rotate"
+          size="small"
+          @click="enterEditing(true)"
+        >
+          {{ rotateLabel }}
+        </KButton>
+        <KButton
+          v-else-if="generator"
+          appearance="tertiary"
+          class="sensitive-input-action"
+          data-testid="sensitive-input-generate"
+          :disabled="disabled || isGenerating"
+          size="small"
+          @click="handleGenerate"
+        >
+          {{ generateLabel }}
+        </KButton>
+      </div>
+    </template>
 
     <div
       v-if="showOneTimeHint"
@@ -125,6 +176,7 @@ const {
   readonly = false,
   error = false,
   errorMessage,
+  multiline = false,
 } = defineProps<{
   /** The sensitive value, bound via v-model. */
   modelValue?: string
@@ -159,6 +211,8 @@ const {
   readonly?: boolean
   error?: boolean
   errorMessage?: string
+  /** When true, renders a KTextArea instead of a KInput. */
+  multiline?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -302,6 +356,17 @@ onBeforeUnmount(() => {
   .sensitive-input-toggle {
     color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     cursor: pointer;
+  }
+
+  .sensitive-input-error-message {
+    color: var(--kui-color-text-danger, $kui-color-text-danger);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    margin-top: calc(-1 * var(--kui-space-20, $kui-space-20));
+  }
+
+  .sensitive-input-textarea-actions {
+    display: flex;
+    justify-content: flex-end;
   }
 
   .sensitive-input-hint {
