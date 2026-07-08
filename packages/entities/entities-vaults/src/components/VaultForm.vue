@@ -637,6 +637,7 @@
                 :labels="{ rotateLabel: t('form.config.hcv.fields.cert_auth_cert_key.rotateLabel') }"
                 :mode="sensitiveInputMode"
                 multiline
+                placeholder=""
                 :readonly="form.isReadonly"
                 :required="sensitiveInputMode === 'create'"
                 @rotate="showCertKeyRotateAlert = true"
