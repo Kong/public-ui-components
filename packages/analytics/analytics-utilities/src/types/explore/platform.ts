@@ -37,7 +37,8 @@ export interface PlatformTabularResponseMeta {
   page_size: number
   display: DisplayBlob
   cursor?: string
-  datasource?: 'platform'
+  /** @deprecated Will be `platform_usage` in future responses. */
+  datasource?: 'platform' | 'platform_usage'
 }
 
 export interface PlatformTabularResponse {

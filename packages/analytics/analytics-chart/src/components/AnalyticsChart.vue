@@ -309,7 +309,7 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
 })
 
 const timestampAxisTitle = computed(() => {
-  if (props.chartData.meta.datasource === 'platform') {
+  if (props.chartData.meta.datasource === 'platform' || props.chartData.meta.datasource === 'platform_usage') {
     return i18n.t('timestampAxisTitles.platform')
   }
 

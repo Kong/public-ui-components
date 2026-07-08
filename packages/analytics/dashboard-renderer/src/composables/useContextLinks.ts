@@ -68,7 +68,7 @@ export default function useContextLinks(
     return true
   })
 
-  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && !isTableChart.value && definition.value.query.datasource !== 'llm_usage' && definition.value.query.datasource !== 'platform' && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
+  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && !isTableChart.value && definition.value.query.datasource !== 'llm_usage' && definition.value.query.datasource !== 'platform' && definition.value.query.datasource !== 'platform_usage' && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
   const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && isExploreDatasource(definition.value.query.datasource) && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
 
   const chartDataGranularity = computed(() => {

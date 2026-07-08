@@ -383,7 +383,7 @@ const badgeData = computed<string | null>(() => {
   const timeRange = query?.time_range
 
   // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
-  if (query?.datasource === 'platform' && !query.dimensions?.includes('time')) {
+  if ((query?.datasource === 'platform' || query?.datasource === 'platform_usage') && !query.dimensions?.includes('time')) {
     return i18n.t('renderer.as_of_today')
   }
 
