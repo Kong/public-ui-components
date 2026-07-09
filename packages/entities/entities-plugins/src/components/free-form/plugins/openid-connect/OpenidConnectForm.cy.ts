@@ -339,6 +339,52 @@ describe('OpenidConnectForm', () => {
       // auth_methods is controlled by the auth methods control in Common tab, never a raw ff field
       cy.getTestId('ff-array-config.auth_methods').should('not.exist')
     })
+
+    it('renders upstream/downstream headers as tabbed array fields', () => {
+      mountForm({
+        model: createModel({
+          upstream_headers: [{ header: 'X-User', path: ['user', 'name'] }],
+        }),
+      })
+      clickTab('advanced')
+
+      cy.getTestId('ff-array-tabs-config.upstream_headers').should('exist')
+      cy.getTestId('ff-array-config.upstream_headers').should('contain.text', '#1 Upstream header')
+      // Empty arrays still render in tabs appearance (header + add button only)
+      cy.getTestId('ff-array-config.downstream_headers')
+        .should('have.attr', 'data-appearance', 'tabs')
+    })
+
+    it('renders the error message fields as textareas', () => {
+      cy.getTestId('ff-config.unauthorized_error_message').should('have.prop', 'tagName', 'TEXTAREA')
+      cy.getTestId('ff-config.forbidden_error_message').should('have.prop', 'tagName', 'TEXTAREA')
+    })
+
+    it('renders JWK key-material members as textareas inside client_jwk items', () => {
+      mountForm({
+        model: createModel({
+          client_jwk: [{ kty: 'RSA', n: 'abc', alg: null }],
+        }),
+      })
+      clickTab('advanced')
+
+      cy.getTestId('ff-config.client_jwk.0.n').should('have.prop', 'tagName', 'TEXTAREA')
+      // Short identifier members stay single-line inputs
+      cy.getTestId('ff-config.client_jwk.0.kid').should('have.prop', 'tagName', 'INPUT')
+    })
+
+    it('renders redis sentinel/cluster nodes as tabbed array fields', () => {
+      mountForm({
+        model: createModel({
+          cluster_cache_redis: { cluster_nodes: [{ ip: '127.0.0.1', port: 7000 }] },
+        }),
+      })
+      clickTab('advanced')
+
+      cy.getTestId('ff-array-tabs-config.cluster_cache_redis.cluster_nodes').should('exist')
+      cy.getTestId('ff-array-config.cluster_cache_redis.cluster_nodes')
+        .should('contain.text', '#1 Cluster node')
+    })
   })
 
   // ── H1: Auth methods — Konnect (multiselect + session radios) ─────────────

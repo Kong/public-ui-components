@@ -1,15 +1,20 @@
 <template>
   <div class="oidc-client-jwk-field">
-    <KExternalLink
-      class="oidc-client-jwk-link"
-      href="https://developer.konghq.com/plugins/openid-connect/reference/#schema--config-client-jwk"
-    >
-      {{ t('plugins.free-form.openid-connect.advanced_fields.client_jwk_link_label') }}
-    </KExternalLink>
     <ArrayField
-      hide-label
+      appearance="tabs"
+      :item-label="(_, idx) => `#${idx + 1} Client JWK`"
       :name="name"
-    />
+    >
+      <template #label>
+        {{ t('plugins.free-form.openid-connect.advanced_fields.client_jwk_link_label') }}
+        <KExternalLink
+          class="oidc-client-jwk-link"
+          href="https://developer.konghq.com/plugins/openid-connect/reference/#schema--config-client-jwk"
+        >
+          More info
+        </KExternalLink>
+      </template>
+    </ArrayField>
   </div>
 </template>
 
@@ -32,7 +37,7 @@ const { i18n: { t } } = useI18n()
   gap: var(--kui-space-40, $kui-space-40);
 
   .oidc-client-jwk-link {
-    align-self: flex-start;
+    margin-left: var(--kui-space-20, $kui-space-20);
   }
 }
 </style>

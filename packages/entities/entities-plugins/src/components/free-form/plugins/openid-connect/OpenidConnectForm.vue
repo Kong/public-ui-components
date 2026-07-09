@@ -17,6 +17,27 @@
       >
         <VerifySignatureField v-bind="slotProps" />
       </FieldRenderer>
+      <!-- Record-array fields whose items are easier to work with as tabs -->
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ genericPath }) => genericPath in TABBED_ARRAY_FIELDS"
+      >
+        <ArrayField
+          v-bind="slotProps"
+          appearance="tabs"
+          :item-label="(_: unknown, index: number) => tabbedItemLabel(slotProps.name, index)"
+        />
+      </FieldRenderer>
+      <!-- Long free-text / key-material fields -->
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ genericPath }) => TEXTAREA_FIELDS.has(genericPath)"
+      >
+        <StringField
+          v-bind="slotProps"
+          multiline
+        />
+      </FieldRenderer>
     </template>
 
     <KTabs :tabs="TABS">
@@ -115,9 +136,11 @@ import { computed, inject, onMounted, provide, ref } from 'vue'
 import useI18n from '../../../../composables/useI18n'
 import { FEATURE_FLAGS } from '../../../../constants'
 import StandardLayout from '../../shared/layout/StandardLayout.vue'
+import ArrayField from '../../shared/ArrayField.vue'
 import Field from '../../shared/Field.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
 import ObjectField from '../../shared/ObjectField.vue'
+import StringField from '../../shared/StringField.vue'
 import { FORM_EDITING } from '../../shared/const'
 import type { Props } from '../../shared/layout/StandardLayout.vue'
 import { resetEmptyTokenExchange } from '../../../../definitions/schemas/OIDC'
@@ -218,6 +241,45 @@ const CLIENT_JWK_ITEM_PATH = /^(?:\$\.)?config\.client_jwk\.\d+\.([^.]+)$/
 const formConfig: FormConfig = {
   transformLabel: (label, fieldPath) => CLIENT_JWK_ITEM_PATH.exec(fieldPath)?.[1] ?? label,
 }
+
+// Record-array fields rendered with the tabbed ArrayField, mapped to their item tab
+// titles ('#1 Upstream header', ... matching ClientJwkField's tab titles).
+const TABBED_ARRAY_FIELDS: Record<string, string> = {
+  'config.upstream_headers': 'Upstream header',
+  'config.downstream_headers': 'Downstream header',
+  'config.redis.sentinel_nodes': 'Sentinel node',
+  'config.redis.cluster_nodes': 'Cluster node',
+  'config.cluster_cache_redis.sentinel_nodes': 'Sentinel node',
+  'config.cluster_cache_redis.cluster_nodes': 'Cluster node',
+}
+
+function tabbedItemLabel(name: string, index: number): string {
+  const path = name.startsWith('$.') ? name.slice(2) : name
+  return `#${index + 1} ${TABBED_ARRAY_FIELDS[path]}`
+}
+
+// Fields holding long free text or base64(url) key material — rendered as textareas.
+const TEXTAREA_FIELDS = new Set([
+  // Error response bodies
+  'config.unauthorized_error_message',
+  'config.forbidden_error_message',
+  // JWK key-material members (RSA modulus/exponents, EC coordinates, symmetric keys)
+  'config.client_jwk.*.d',
+  'config.client_jwk.*.dp',
+  'config.client_jwk.*.dq',
+  'config.client_jwk.*.k',
+  'config.client_jwk.*.n',
+  'config.client_jwk.*.oth',
+  'config.client_jwk.*.p',
+  'config.client_jwk.*.q',
+  'config.client_jwk.*.qi',
+  'config.client_jwk.*.r',
+  'config.client_jwk.*.t',
+  'config.client_jwk.*.x',
+  'config.client_jwk.*.y',
+  // Each x5c chain entry is a full base64 DER certificate
+  'config.client_jwk.*.x5c.*',
+])
 
 onMounted(() => {
   const config = (props.model as any)?.config
