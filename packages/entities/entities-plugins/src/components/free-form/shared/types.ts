@@ -260,18 +260,25 @@ export type PluginFormLayoutProps<T extends FreeFormPluginData = FreeFormPluginD
 
 export type PluginFormLayoutComponent<T extends FreeFormPluginData = FreeFormPluginData> = Component<PluginFormLayoutProps<T>>
 
-export interface PluginFormConfig {
-  /**
-   * Whether the plugin is experimental.
-   * Experimental plugins will only be rendered when their names are included in the `EXPERIMENTAL_FREE_FORM_PROVIDER` provider.
-   */
-  experimental?: boolean
+type ComponentBasedConfig = {
   /**
    * Form-level custom component.
-    * Receives `PluginFormLayoutProps`.
-   * @default CommonForm
+   * Receives `PluginFormLayoutProps`.
+   *
+   * A custom component owns its own rendering rules and field renderers: pass
+   * `render-rules` to its layout and register renderers via the `#field-renderers`
+   * slot inside the component instead of configuring them here.
    */
   component: PluginFormLayoutComponent<any>
+  renderRules?: never
+  fieldRenderers?: never
+}
+
+type RuleBasedConfig = {
+  /**
+   * Rendered with the default `CommonForm`.
+   */
+  component?: never
   /**
    * Form-level rendering rules.
    */
@@ -281,3 +288,11 @@ export interface PluginFormConfig {
    */
   fieldRenderers?: FieldRenderer[]
 }
+
+export type PluginFormConfig = {
+  /**
+   * Whether the plugin is experimental.
+   * Experimental plugins will only be rendered when their names are included in the `EXPERIMENTAL_FREE_FORM_PROVIDER` provider.
+   */
+  experimental?: boolean
+} & (ComponentBasedConfig | RuleBasedConfig)

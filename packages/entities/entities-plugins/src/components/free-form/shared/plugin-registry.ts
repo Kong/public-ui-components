@@ -1,9 +1,12 @@
-import type { PluginFormConfig, PluginFormLayoutComponent } from './types'
+import CommonForm from '../Common/CommonForm.vue'
 
-export interface ResolvedPluginFormConfig extends PluginFormConfig {
+import type { FieldRenderer, PluginFormConfig, PluginFormLayoutComponent, RenderRules } from './types'
+
+export interface ResolvedPluginFormConfig {
   component: PluginFormLayoutComponent<any>
   experimental: boolean
-  fieldRenderers: NonNullable<PluginFormConfig['fieldRenderers']>
+  renderRules?: RenderRules
+  fieldRenderers: FieldRenderer[]
 }
 
 type PluginConfigModule = PluginFormConfig
@@ -44,9 +47,9 @@ export function buildPluginConfigRegistry(
     seen.set(pluginName, path)
 
     registry[pluginName] = {
-      ...pluginConfig,
-      component: pluginConfig.component,
+      component: pluginConfig.component ?? CommonForm,
       experimental: pluginConfig.experimental ?? false,
+      renderRules: pluginConfig.renderRules,
       fieldRenderers: pluginConfig.fieldRenderers ?? [],
     }
   }

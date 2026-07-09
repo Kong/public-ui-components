@@ -817,6 +817,119 @@
             "title": "Advanced Configuration Settings",
             "description": "Advanced parameters for manually configuring the OpenID Connect plugin."
           }
+        },
+        "auth_methods": {
+          "label": "Authentication methods",
+          "placeholder": "Select authentication methods",
+          "hint": "Configure which OAuth and OpenID Connect features are supported.",
+          "km_label": "Auth methods",
+          "methods": {
+            "authorization_code": "Authorization code flow",
+            "bearer": "Bearer access token",
+            "client_credentials": "Client credentials grant",
+            "password": "Passwords grant",
+            "introspection": "Introspection",
+            "userinfo": "UserInfo",
+            "kong_oauth2": "Kong OAuth",
+            "refresh_token": "Refresh token"
+          },
+          "session": {
+            "label": "Session management",
+            "switch_label": "Enable Session Management",
+            "use_label": "Use sessions",
+            "use_description": "Issue a session cookie after successful authentication. Subsequent requests use the session instead of re-authenticating with the identity provider.",
+            "no_use_label": "Do not use sessions",
+            "no_use_description": "Authenticate each request using the configured authentication flow."
+          }
+        },
+        "principals": {
+          "header": "Who should manage authentication and credentials?",
+          "description": "Use External auth server to continue using your existing OAuth provider and authentication workflows. Use Kong Identity to adopt a newer principal-based model that centralizes and simplifies identity and authentication management.",
+          "learn_more": "Learn more.",
+          "kong_identity_label": "Kong Identity",
+          "kong_identity_description": "Use Kong Identity to authenticate OpenID Connect tokens. If all data plane nodes are running version 3.15 or later, you can also map requests to Kong Identity principals for advanced policies and integrations.",
+          "external_label": "External auth server",
+          "external_description": "Connect to your existing identity provider to manage authentication outside of Kong.",
+          "guide": {
+            "title": "Add principals",
+            "description": "Get more value from OAuth 2.0 integration by creating principals in Kong Identity. Associate principals with this authorization server and its clients to enable principal-based authentication across Kong products.",
+            "description_external": "Get more value from OAuth 2.0 integration by creating principals in Kong Identity. Associate principals with this authorization server and its clients to enable principal-based authentication across Kong products. Requires data plane nodes to be running version 3.15 or later.",
+            "create": "Create principal",
+            "learn_more": "Learn more"
+          },
+          "auth_server": {
+            "label": "Authorization Server",
+            "info": "The Kong Identity auth server that will act as the OpenID Connect provider for this plugin.",
+            "placeholder": "Select an Authorization Server",
+            "create": "Create authorization server",
+            "create_hint": "You'll need to return here after creating an authorization server. Your progress won't be saved.",
+            "no_access_help": "You don't have access to browse authorization servers. Enter the issuer URL of your Kong Identity authorization server directly.",
+            "issuer_placeholder": "e.g., https://your-auth-server.identity.konghq.com"
+          },
+          "client": {
+            "label": "Client",
+            "id_label": "Client id",
+            "secret_label": "Client secret",
+            "placeholder": "Select a client",
+            "id_placeholder": "e.g., kong-gateway-client",
+            "secret_placeholder": "e.g., your-client-secret",
+            "create": "Create client",
+            "create_hint": "You'll need to return here after creating a client. Your progress won't be saved.",
+            "add": "+ Add client",
+            "remove": "Remove client"
+          },
+          "leave_prompt": {
+            "title": "Leave this page?",
+            "message": "Your unsaved changes will be lost if you continue.",
+            "action": "Leave page"
+          },
+          "dp_version_alert": "We detected that one or more data plane nodes are running a version earlier than 3.15. If principal lookup is enabled, requests handled by those data plane nodes will fail."
+        },
+        "lookup": {
+          "collapse_label": "Show additional settings",
+          "toggle_label": "Use principal lookup",
+          "toggle_info": "Look up the authenticated principal in Kong Identity after token validation. Enable this when the validated token doesn't contain all of the identity data required for authorization or activity logging.",
+          "method": {
+            "label": "Principal lookup method",
+            "placeholder": "Select a lookup method",
+            "help": "Principal lookup queries Kong Identity for the principal that matches the identity in a verified access token. This enables principal-aware policies and integrations. Requires all data plane nodes to be running version 3.15 or later.",
+            "kong_identity_label": "Kong Identity client",
+            "kong_identity_description": "Match principals using a token claim, defaulting to the subject (sub) claim.",
+            "custom_identity_label": "Custom claim",
+            "custom_identity_description": "Match principals using a custom JWT claim."
+          },
+          "custom_identity_name": {
+            "label": "Custom identity name",
+            "help": "Enter the custom identity name used to look up the principal. Kong matches the value from the token claim to a principal with the same custom identity name and value.",
+            "placeholder": "e.g., Customer_ID"
+          },
+          "token_claim": {
+            "label": "Token claim",
+            "placeholder": "e.g., user.employee_id",
+            "help": "Defaults to the subject (sub) claim, but you can specify a different token claim if needed. Use dot notation for nested claims (for example, workload.id); escape literal periods with \\ (for example, workload\\.id).",
+            "help_custom": "The token claim whose value is matched against the Custom identity name. Defaults to the subject (sub) claim, but you can specify a different claim if needed. Use dot notation for nested claims (for example, workload.id); escape literal periods with \\ (for example, workload\\.id)."
+          },
+          "error_on_miss": {
+            "label": "If principal lookup fails",
+            "reject_label": "Reject the request",
+            "reject_description": "Treat the request as unauthenticated if Kong Identity cannot resolve the principal.",
+            "continue_label": "Continue without a principal",
+            "continue_description": "Allow the request to continue without resolving a principal."
+          },
+          "match_consumer": {
+            "label": "Use linked consumers",
+            "description": "Use the consumer linked to the authenticated principal so existing consumer-based plugins and policies continue to work.",
+            "link": "Learn how to link a consumer."
+          },
+          "match_consumer_groups": {
+            "label": "Use linked consumer groups",
+            "description": "Use consumer groups linked to the authenticated principal so existing consumer group policies and plugins continue to work. Consumer groups can be linked through principal metadata.",
+            "link": "Learn how to link a consumer group."
+          }
+        },
+        "advanced_fields": {
+          "client_jwk_link_label": "Client JWK",
+          "verify_signature_description": "JSON Web Keys are automatically fetched from the issuer's well-known endpoint. Enter a JWKS URI below to override this."
         }
       },
       "request-callout": {

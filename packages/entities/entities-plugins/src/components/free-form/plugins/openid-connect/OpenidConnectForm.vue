@@ -1,8 +1,24 @@
 <template>
   <StandardLayout
     v-bind="props"
-    :on-form-change="wrappedOnFormChange"
+    :form-config="formConfig"
+    :render-rules="RENDER_RULES"
   >
+    <template #field-renderers>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }) => path === 'config.client_jwk'"
+      >
+        <ClientJwkField v-bind="slotProps" />
+      </FieldRenderer>
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ genericPath }) => genericPath === 'config.token_exchange.subject_token_issuers.*.verify_signature'"
+      >
+        <VerifySignatureField v-bind="slotProps" />
+      </FieldRenderer>
+    </template>
+
     <KTabs :tabs="TABS">
       <template #common-anchor>
         <span data-testid="oidc-tab-common">Common</span>
@@ -24,21 +40,27 @@
               {{ t('plugins.free-form.openid-connect.tabs.common.description') }}
             </p>
           </div>
-          <Field name="config.client_id" />
-          <Field name="config.client_secret" />
-          <Field name="config.issuer" />
-          <div
-            v-for="[value, label] in AUTH_METHOD_ENTRIES"
-            :key="value"
-            :data-testid="`oidc-auth-method-${value}`"
+
+          <!-- Konnect with Kong Identity principals support: guided Kong Identity /
+               External auth server experience. Auth methods + session management live at
+               the bottom of the principals "additional settings" collapse so there is a
+               single advanced section. -->
+          <PrincipalsSection
+            v-if="showPrincipalsUi"
+            @click:create-entity="(payload) => emit('click:create-entity', payload)"
+            @click:learn-more="(entity) => emit('click:learn-more', entity)"
+            @mode-change="principalsMode = $event"
           >
-            <KCheckbox
-              :model-value="authMethods.includes(value)"
-              @update:model-value="(checked) => handleAuthMethodChange(value, checked)"
-            >
-              {{ label }}
-            </KCheckbox>
-          </div>
+            <AuthMethodsField :principals-mode="principalsMode" />
+          </PrincipalsSection>
+
+          <!-- Kong Manager, or no principals support: plain common fields -->
+          <template v-else>
+            <Field name="config.client_id" />
+            <Field name="config.client_secret" />
+            <Field name="config.issuer" />
+            <AuthMethodsField :principals-mode="principalsMode" />
+          </template>
         </div>
       </template>
 
@@ -86,31 +108,29 @@
 </template>
 
 <script setup lang="ts">
-import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
-import { KCheckbox, KExternalLink, KTabs } from '@kong/kongponents'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME, FORMS_CONFIG } from '@kong-ui-public/forms'
+import { KExternalLink, KTabs } from '@kong/kongponents'
 import { cloneDeep } from 'lodash-es'
-import { onMounted, provide, ref } from 'vue'
+import { computed, inject, onMounted, provide, ref } from 'vue'
 import useI18n from '../../../../composables/useI18n'
+import { FEATURE_FLAGS } from '../../../../constants'
 import StandardLayout from '../../shared/layout/StandardLayout.vue'
 import Field from '../../shared/Field.vue'
+import FieldRenderer from '../../shared/FieldRenderer.vue'
 import ObjectField from '../../shared/ObjectField.vue'
+import { FORM_EDITING } from '../../shared/const'
 import type { Props } from '../../shared/layout/StandardLayout.vue'
 import { resetEmptyTokenExchange } from '../../../../definitions/schemas/OIDC'
 import { migrateConsumerClaim } from './useConsumerClaimMigration'
+import AuthMethodsField from './AuthMethodsField.vue'
+import ClientJwkField from './ClientJwkField.vue'
+import PrincipalsSection from './PrincipalsSection.vue'
+import VerifySignatureField from './VerifySignatureField.vue'
 
-const AUTH_METHOD_LABELS: Record<string, string> = {
-  password: 'Passwords Grant',
-  client_credentials: 'Client Credentials Grant',
-  authorization_code: 'Authorization Code Flow',
-  bearer: 'Bearer Access Token',
-  introspection: 'Introspection',
-  userinfo: 'UserInfo',
-  kong_oauth2: 'Kong OAuth',
-  refresh_token: 'Refresh Token',
-  session: 'Enable Session Management',
-}
-
-const AUTH_METHOD_ENTRIES = Object.entries(AUTH_METHOD_LABELS)
+import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
+import type { EntityCreateEvent } from '../../../../types'
+import type { FormConfig, RenderRules } from '../../shared/types'
+import type { PrincipalsMode } from './types'
 
 const TABS = [
   { hash: '#common', title: 'Common' },
@@ -132,41 +152,71 @@ const ADVANCED_OMIT = [
   'groups_claim',
   'groups_required',
   'authenticated_groups_claim',
+  // Deprecated in favor of consumer_claims (migrated on mount below); consumer_claims
+  // itself stays editable in the Advanced tab.
   'consumer_claim',
-  'consumer_claims',
+  // Kong Identity principals are configured through the guided Common-tab UI on Konnect
+  // and are not user-facing elsewhere — never render the bare record.
+  'principals',
 ]
+
+// JWKs are auto-fetched from the issuer when verify_signature is on; a jwks_uri only
+// applies as an override, so hide it (and null it out) otherwise. The bundle keeps
+// jwks_uri right below verify_signature.
+const RENDER_RULES: RenderRules = {
+  dependencies: {
+    'config.token_exchange.subject_token_issuers.*.jwks_uri':
+      ['config.token_exchange.subject_token_issuers.*.verify_signature', true],
+  },
+  bundles: [
+    [
+      'config.token_exchange.subject_token_issuers.*.verify_signature',
+      'config.token_exchange.subject_token_issuers.*.jwks_uri',
+    ],
+  ],
+}
 
 const { i18n: { t } } = useI18n()
 
 const props = defineProps<Props>()
+
+const emit = defineEmits<{
+  'click:learn-more': [entity: string]
+  'click:create-entity': [payload: EntityCreateEvent]
+}>()
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any
 }>()
 
 provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
+provide(FORM_EDITING, computed(() => props.isEditing))
 
-const authMethods = ref<string[]>((props.model as any)?.config?.auth_methods ?? [])
+const appConfig = inject<KongManagerBaseFormConfig | KonnectBaseFormConfig | undefined>(FORMS_CONFIG)
+const isKonnect = computed(() => appConfig?.app === 'konnect')
 
-function wrappedOnFormChange(value: any, fields?: string[]) {
-  props.onFormChange({
-    ...value,
-    config: {
-      ...value.config,
-      auth_methods: authMethods.value,
-    },
-  }, fields)
-}
+// Feature-flagged: when the consuming app hasn't enabled the Identity Principals UI,
+// behave as if `principals` isn't in the schema and fall back to the plain common fields.
+const identityPrincipalsUiEnabled = inject<boolean>(FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
 
-function handleAuthMethodChange(method: string, checked: boolean) {
-  if (checked) {
-    if (!authMethods.value.includes(method)) {
-      authMethods.value = [...authMethods.value, method]
-    }
-  } else {
-    authMethods.value = authMethods.value.filter(m => m !== method)
-  }
-  props.onFormChange({ config: { auth_methods: authMethods.value } } as any)
+const hasPrincipalsInSchema = computed(() => {
+  const configField = props.schema.fields.find(f => 'config' in f)?.config as { fields?: Array<Record<string, unknown>> } | undefined
+  return !!configField?.fields?.some(f => 'principals' in f)
+})
+
+const showPrincipalsUi = computed(() =>
+  isKonnect.value && identityPrincipalsUiEnabled && hasPrincipalsInSchema.value,
+)
+
+// Set by the user toggling the Kong Identity / External radios; stays null on edit-load
+// so AuthMethodsField falls back to inferring the restriction from the saved issuer.
+const principalsMode = ref<PrincipalsMode | null>(null)
+
+// JWK members (alg, kid, x5t, ...) are case-sensitive technical identifiers — show the
+// raw field name instead of the prettified label.
+const CLIENT_JWK_ITEM_PATH = /^(?:\$\.)?config\.client_jwk\.\d+\.([^.]+)$/
+const formConfig: FormConfig = {
+  transformLabel: (label, fieldPath) => CLIENT_JWK_ITEM_PATH.exec(fieldPath)?.[1] ?? label,
 }
 
 onMounted(() => {
