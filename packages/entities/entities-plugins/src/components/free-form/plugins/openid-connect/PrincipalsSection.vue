@@ -226,14 +226,18 @@
         </button>
       </div>
 
-      <div
+      <KButton
+        appearance="tertiary"
         class="add-client-inline"
-        :class="{ 'add-client-inline-disabled': hasAuthServersAccess && !selectedServer }"
         data-testid="add-client-action"
-        @click="(hasAuthServersAccess && !selectedServer) ? null : addClientRow()"
+        :disabled="hasAuthServersAccess && !selectedServer"
+        icon
+        type="button"
+        @click="addClientRow()"
       >
+        <AddIcon />
         {{ t('plugins.free-form.openid-connect.principals.client.add') }}
-      </div>
+      </KButton>
 
       <!-- Principal lookup is opt-in (off by default) in Kong Identity mode too: the
            in-collapse toggle enables it, then it runs after token verification. -->
@@ -318,13 +322,17 @@
         </button>
       </div>
 
-      <div
+      <KButton
+        appearance="tertiary"
         class="add-client-inline"
         data-testid="add-external-client-action"
+        icon
+        type="button"
         @click="addClientRow()"
       >
+        <AddIcon />
         {{ t('plugins.free-form.openid-connect.principals.client.add') }}
-      </div>
+      </KButton>
 
       <Field name="config.issuer" />
 
@@ -875,24 +883,12 @@ function handleModeChange(newMode: PrincipalsMode) {
 }
 
 .client-row-with-label .remove-client-btn {
-  margin-top: 60px;
+  margin-top: 34px;
 }
 
 .add-client-inline {
-  align-items: center;
-  color: var(--kui-color-text-primary, $kui-color-text-primary);
-  cursor: pointer;
-  display: flex;
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
-  gap: var(--kui-space-20, $kui-space-20);
+  align-self: flex-start;
   margin: var(--kui-space-40, $kui-space-40) 0;
-}
-
-.add-client-inline-disabled {
-  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-  cursor: default;
-  pointer-events: none;
 }
 
 // External auth server mode: client_id + client_secret share a row.

@@ -875,7 +875,7 @@
             "secret_placeholder": "e.g., your-client-secret",
             "create": "Create client",
             "create_hint": "You'll need to return here after creating a client. Your progress won't be saved.",
-            "add": "+ Add client",
+            "add": "Add client",
             "remove": "Remove client"
           },
           "leave_prompt": {
