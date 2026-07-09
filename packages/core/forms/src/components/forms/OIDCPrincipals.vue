@@ -568,11 +568,11 @@ export default {
     // Host-precomputed: directory access → directory resolved → principals (list) access →
     // principals list empty → create-principal permission. Only shown once lookup is on.
     principalsGuideVisible() {
-      return this.isKonnect && this.principalsEnabled && this.formsConfig?.principalsCreationGuideVisible === true
+      return this.isKonnect && this.formsConfig?.principalsCreationGuideVisible === true
     },
     // `undefined` means the host hasn't resolved principalsCreationGuideVisible yet.
     principalsSkeletonVisible() {
-      return this.isKonnect && this.principalsEnabled && this.formsConfig?.principalsCreationGuideVisible === undefined
+      return this.isKonnect && this.formsConfig?.principalsCreationGuideVisible === undefined
     },
   },
   watch: {
