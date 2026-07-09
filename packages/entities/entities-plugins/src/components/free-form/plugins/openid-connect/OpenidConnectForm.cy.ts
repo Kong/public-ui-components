@@ -924,6 +924,35 @@ describe('OpenidConnectForm', () => {
       })
     })
 
+    it('treats escaped periods in the token claim as literal dots', () => {
+      mountPrincipalsForm()
+
+      expandSettings()
+      cy.getTestId('use-principal-lookup').click({ force: true })
+      cy.getTestId('principals-token-claim').clear()
+      cy.getTestId('principals-token-claim').type('workload\\.id')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.principal_claim).to.deep.equal(['workload.id'])
+      })
+    })
+
+    it('unsets the token claim (null, not []) when the input is cleared', () => {
+      mountPrincipalsForm({
+        model: createPrincipalsModel({
+          principals: { ...DEFAULT_PRINCIPALS_MODEL, principal_claim: ['user'] },
+        }),
+      })
+
+      expandSettings()
+      cy.getTestId('use-principal-lookup').click({ force: true })
+      cy.getTestId('principals-token-claim').clear()
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.principal_claim).to.equal(null)
+      })
+    })
+
     it('shows the custom identity name input only for the custom claim lookup method', () => {
       mountPrincipalsForm()
 

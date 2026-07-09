@@ -117,9 +117,10 @@
           v-if="canCreateAuthServer"
           #dropdown-footer-text
         >
-          <div
+          <button
             class="create-action"
             data-testid="create-auth-server-action"
+            type="button"
             @click.stop="leavePromptType = 'authServer'"
           >
             <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
@@ -129,7 +130,7 @@
                 {{ t('plugins.free-form.openid-connect.principals.auth_server.create_hint') }}
               </div>
             </div>
-          </div>
+          </button>
         </template>
       </KSelect>
       <KInput
@@ -179,9 +180,10 @@
             v-if="canCreateAuthServerClient"
             #dropdown-footer-text
           >
-            <div
+            <button
               class="create-action"
               data-testid="create-client-action"
+              type="button"
               @click.stop="leavePromptType = 'client'"
             >
               <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
@@ -191,7 +193,7 @@
                   {{ t('plugins.free-form.openid-connect.principals.client.create_hint') }}
                 </div>
               </div>
-            </div>
+            </button>
           </template>
         </KSelect>
         <div class="principals-client-secret-wrapper">
@@ -826,12 +828,21 @@ function handleModeChange(newMode: PrincipalsMode) {
 
 .create-action {
   align-items: flex-start;
+  background: none;
+  border: none;
   color: var(--kui-color-text-primary, $kui-color-text-primary);
   cursor: pointer;
   display: flex;
+  font-family: inherit;
   font-size: var(--kui-font-size-30, $kui-font-size-30);
   font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
   gap: var(--kui-space-20, $kui-space-20);
+  padding: 0;
+  text-align: left;
+
+  &:focus-visible {
+    box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
+  }
 
   .create-action-hint {
     color: var(--kui-color-text-neutral, $kui-color-text-neutral);

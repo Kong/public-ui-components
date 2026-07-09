@@ -76,7 +76,7 @@
           :disabled="fieldsDisabled"
           :help="tokenClaimHelp"
           :label="t('plugins.free-form.openid-connect.lookup.token_claim.label')"
-          :model-value="tokenClaimInputValue"
+          :model-value="tokenClaimInput"
           :placeholder="t('plugins.free-form.openid-connect.lookup.token_claim.placeholder')"
           @update:model-value="handleTokenClaimChange"
         />
@@ -153,7 +153,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { isEqual } from 'lodash-es'
 import { KAlert, KCheckbox, KCollapse, KInput, KInputSwitch, KLabel, KRadio, KSelect } from '@kong/kongponents'
 import useI18n from '../../../../composables/useI18n'
 import { useFormShared } from '../../shared/composables'
@@ -238,11 +239,10 @@ const tokenClaimHelp = computed(() =>
     : t('plugins.free-form.openid-connect.lookup.token_claim.help'),
 )
 
-const tokenClaimInputValue = computed(() => {
-  const claim = principalClaim.value
+function encodeTokenClaim(claim: string[] | string | null | undefined): string {
   if (Array.isArray(claim) && claim.length > 0) {
-    // Escape literal dots within each part before joining
-    return claim.map(part => part.replace(/\./g, '\\.')).join('.')
+    // Escape literal backslashes and dots within each part before joining
+    return claim.map(part => part.replace(/[\\.]/g, m => `\\${m}`)).join('.')
   }
   if (typeof claim === 'string' && claim) {
     return claim
@@ -250,21 +250,50 @@ const tokenClaimInputValue = computed(() => {
   // Pre-fill the gateway default so users recognize `sub` is used when left unset.
   // The model stays empty until edited; an empty principal_claim already resolves to `sub`.
   return 'sub'
-})
+}
+
+// Split on unescaped dots; `\.` and `\\` are escapes for literal dots/backslashes,
+// any other backslash is kept as-is.
+function parseTokenClaim(value: string): string[] | null {
+  if (!value) return null
+  const parts: string[] = []
+  let current = ''
+  for (let i = 0; i < value.length; i++) {
+    const ch = value[i]
+    if (ch === '\\' && (value[i + 1] === '.' || value[i + 1] === '\\')) {
+      current += value[i + 1]
+      i++
+    } else if (ch === '.') {
+      parts.push(current)
+      current = ''
+    } else {
+      current += ch
+    }
+  }
+  parts.push(current)
+  const result = parts.map(part => part.trim()).filter(Boolean)
+  // Unset rather than `[]`: the schema requires len_min 1 when the claim is present,
+  // and an absent principal_claim already resolves to the gateway default (`sub`).
+  return result.length > 0 ? result : null
+}
+
+// The input binds to the raw string and the model derives from it one-way: re-encoding
+// the display on every keystroke would corrupt in-progress escape sequences (a dangling
+// `\` would round-trip into `\\`).
+const tokenClaimInput = ref(encodeTokenClaim(principalClaim.value))
 
 function handleTokenClaimChange(rawValue: string) {
-  const value = typeof rawValue === 'string' ? rawValue.trim() : ''
-  if (!value) {
-    principalClaim.value = []
-    return
-  }
-
-  // Split on unescaped dots (dots not preceded by \), then unescape \. → .
-  principalClaim.value = value
-    .split(/(?<!\\)\./)
-    .map(part => part.replace(/\\\./g, '.').trim())
-    .filter(Boolean)
+  tokenClaimInput.value = rawValue
+  principalClaim.value = parseTokenClaim(rawValue.trim())
 }
+
+// Re-sync the display only when the model changes from elsewhere (e.g. switching the
+// lookup method clears the claim), never while it reflects the user's own typing.
+watch(principalClaim, (claim) => {
+  if (!isEqual(claim ?? null, parseTokenClaim(tokenClaimInput.value.trim()))) {
+    tokenClaimInput.value = encodeTokenClaim(claim)
+  }
+})
 
 function handleMatchConsumerChange(checked: boolean) {
   matchConsumer.value = checked
