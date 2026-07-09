@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.31.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.31.3...@kong-ui-public/forms@4.31.4) (2026-07-09)
+
+
+### Bug Fixes
+
+* **entities-plugins:** remove principalsEnabled guard for banner ([#3550](https://github.com/Kong/public-ui-components/issues/3550)) ([895ed7b](https://github.com/Kong/public-ui-components/commit/895ed7bfba0c15a9484836d7a627ec2136ecd219))
+
+
+
+
+
 ## [4.31.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.31.2...@kong-ui-public/forms@4.31.3) (2026-07-08)
 
 
