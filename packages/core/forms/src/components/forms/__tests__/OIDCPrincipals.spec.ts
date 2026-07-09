@@ -478,6 +478,16 @@ describe('OIDCPrincipals', () => {
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
     })
 
+    it('shows the guide even when principal lookup is disabled', () => {
+      const wrapper = mountKonnect(
+        { 'config-principals-enabled': false },
+        {},
+        { principalsCreationGuideVisible: true },
+      )
+
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+    })
+
     it('hides the guide when the host says principalsCreationGuideVisible is false', () => {
       const wrapper = mountKonnect({}, {}, { principalsCreationGuideVisible: false })
 
