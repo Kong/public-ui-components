@@ -201,11 +201,6 @@ function handlePanelToggle() {
         background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
         color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
       }
-
-      &.active {
-        background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
-        color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
-      }
     }
   }
 

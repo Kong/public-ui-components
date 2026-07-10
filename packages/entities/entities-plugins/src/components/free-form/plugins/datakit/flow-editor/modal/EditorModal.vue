@@ -93,7 +93,7 @@ function close() {
   }
 
   &.datakit-new-look {
-    background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
+    background-color: var(--kui-color-background, $kui-color-background);
     padding-top: var(--kui-space-0, $kui-space-0);
   }
 }
