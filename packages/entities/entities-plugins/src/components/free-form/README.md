@@ -122,6 +122,8 @@ FormSchema + data props
 
 ### Composables (`shared/composables/`)
 
+All exports below are re-exported from `@kong-ui-public/entities-plugins/freeform` (`render-rules.ts` only exports `renderRuleExactMatch` publicly; `createRenderRuleRegistry` stays internal) — see the "Standalone Usage" section below.
+
 | File | Exports | Purpose |
 |---|---|---|
 | `form-context.ts` | `provideFormShared()`, `useFormShared()` | Central form state: reactive data, schema, config, render rules, getValue/setValue |
@@ -130,8 +132,8 @@ FormSchema + data props
 | `schema.ts` | `useSchemaHelpers()` | Schema introspection: getSchema, getDefault, getSelectItems, getLabelAttributes |
 | `useMapField.ts` | `useMapField()` | KeyId-backed map field state: keys, add/remove/rename, display labels |
 | `labels.ts` | `useLabelPath()`, `useFieldAttrs()` | Label generation with dictionary lookup (IP, SSL, TTL, JWT, etc.) |
-| `render-rules.ts` | `createRenderRuleRegistry()` | Bundles (field grouping/ordering) and dependencies (conditional visibility) |
-| `ancestors.ts` | `useAncestors()` | Access parent field context for nested components |
+| `render-rules.ts` | `createRenderRuleRegistry()`, `renderRuleExactMatch()` | Bundles (field grouping/ordering) and dependencies (conditional visibility) |
+| `ancestors.ts` | `useFieldAncestors()` | Access parent field context for nested components |
 | `constants.ts` | `FIELD_RENDERERS`, `FIELD_RENDERER_SLOTS` | Injection key symbols |
 
 ### Path System
@@ -416,6 +418,30 @@ function handleSubmit() {
 }
 </script>
 ```
+
+### Writing a Custom Field Component
+
+The `shared/composables/` primitives listed above are re-exported from the `freeform` subpath, so a host app can author its own field component that reads and writes a named field's value the same way `SwitchField`/`RadioField` do internally — no `getValue`/`setValue` round-trip needed:
+
+```vue
+<script setup lang="ts">
+import { toRef } from 'vue'
+import { useField } from '@kong-ui-public/entities-plugins/freeform'
+
+const props = defineProps<{ name: string }>()
+const { value } = useField<boolean>(toRef(() => props.name))
+</script>
+
+<template>
+  <input
+    type="checkbox"
+    :checked="value"
+    @change="value = ($event.target as HTMLInputElement).checked"
+  >
+</template>
+```
+
+Register it against a field path with `FieldRenderer`, or place it directly inside a `Form`/layout slot with `name` set to the field's path — both wire into the same reactive form state as the built-in field components.
 
 ## Reference
 
