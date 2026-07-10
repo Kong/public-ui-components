@@ -84,8 +84,11 @@ import FlowEditor from './flow-editor/FlowEditor.vue'
 import {
   DatakitConfigSchema as DatakitConfigCompatSchema,
 } from './schema/compat'
+import { DATAKIT_NEW_LOOK } from '../../../../constants'
 
 defineOptions({ inheritAttrs: false })
+
+const datakitNewLook = inject<boolean>(DATAKIT_NEW_LOOK)
 
 const { t } = createI18n<typeof english>('en-us', english)
 

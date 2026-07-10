@@ -2,6 +2,7 @@ import { KUI_SPACE_40, KUI_SPACE_90 } from '@kong/design-tokens'
 
 import type { LayoutOptions } from './store/flow'
 import type { KeySpec } from './utils'
+import type { InjectionKey } from 'vue'
 
 export const DK_HEADER_HEIGHT = 44
 export const DK_SIDE_PANEL_WIDTH = 220
@@ -48,3 +49,5 @@ export const MIN_ZOOM_LEVEL = 0
 export const SCROLL_DURATION = 200
 
 export const CONFIRM_MODAL_PROVIDE_KEY = Symbol('confirm-modal')
+
+export const DATAKIT_NEW_LOOK: InjectionKey<boolean> = Symbol('DATAKIT_NEW_LOOK')

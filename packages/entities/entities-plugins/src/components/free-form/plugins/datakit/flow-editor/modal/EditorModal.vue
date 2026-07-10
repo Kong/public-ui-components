@@ -2,6 +2,7 @@
   <div
     v-if="open"
     class="dk-editor-modal"
+    :class="{ 'datakit-new-look': datakitNewLook }"
   >
     <EditorNav
       class="nav"
@@ -18,8 +19,8 @@
 
 <script setup lang="ts">
 import { useScrollLock } from '@vueuse/core'
-import { ref, useTemplateRef, watch } from 'vue'
-import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH } from '../constants'
+import { ref, useTemplateRef, watch, inject } from 'vue'
+import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH, DATAKIT_NEW_LOOK } from '../constants'
 import ConflictModal from './ConflictModal.vue'
 
 import EditorNav from './EditorNav.vue'
@@ -28,6 +29,8 @@ import { provideConfirmModal } from '../composables/useConflictConfirm'
 import { useEditorStore } from '../store/store'
 
 import type { OpenConfirm } from './ConflictModal.vue'
+
+const datakitNewLook = inject<boolean>(DATAKIT_NEW_LOOK)
 
 const open = defineModel<boolean>('open')
 const showConfirm = ref(false)
@@ -87,6 +90,11 @@ function close() {
   :deep(*) {
     box-sizing: border-box;
     scrollbar-width: inherit;
+  }
+
+  &.datakit-new-look {
+    background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
+    padding-top: var(--kui-space-0, $kui-space-0);
   }
 }
 </style>
