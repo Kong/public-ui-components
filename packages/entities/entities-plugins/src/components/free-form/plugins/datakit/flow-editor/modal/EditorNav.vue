@@ -177,9 +177,10 @@ function handlePanelToggle() {
         }
       }
 
-      &-toggle {
-        border-color: var(--kui-navigation-color-border, $kui-navigation-color-border);
-      }
+    }
+
+    &-toggle:not(.datakit-new-look) {
+      border-color: var(--kui-navigation-color-border, $kui-navigation-color-border);
     }
 
     &.datakit-new-look {
