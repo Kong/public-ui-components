@@ -44,14 +44,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed, useId, toRef } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed, useId, toRef } from 'vue'
 import { Map } from 'maplibre-gl'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatBoundsLike, MapOptions } from 'maplibre-gl'
 import type { MapFeatureCollection, MetricUnits } from '../types'
 import type { Feature, MultiPolygon, Geometry, GeoJsonProperties, FeatureCollection } from 'geojson'
 import composables from '../composables'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import type { ExploreAggregations, CountryISOA2 } from '@kong-ui-public/analytics-utilities'
+import { CAPTURE_PREPARE_EVENT, CAPTURE_RESTORE_EVENT } from '@kong-ui-public/analytics-utilities'
+import type { ExploreAggregations, CountryISOA2, CapturePrepareDetail } from '@kong-ui-public/analytics-utilities'
 import lakes from '../ne_110m_lakes.json'
 import * as geobuf from 'geobuf'
 import Pbf from 'pbf'
@@ -240,7 +241,55 @@ const emitBounds = () => {
 
 const debouncedEmitBounds = debounce(emitBounds, 300)
 
+// For PDF export the canvas will temporarily be an <img> to allow for
+// snapshotting the draw buffer of WebGL.
+let restoreSnapshot: (() => void) | null = null
+
+async function createCaptureSnapshot(): Promise<void> {
+  const glCanvas = map.value?.getCanvas()
+
+  if (!map.value || !glCanvas) {
+    return
+  }
+
+  // Recreates the drawing buffer for `toDataURL`
+  map.value.redraw()
+
+  const snapshot = new Image()
+  snapshot.src = glCanvas.toDataURL('image/png')
+
+  await snapshot.decode()
+
+  snapshot.style.cssText = `position:absolute;top:0;left:0;width:${glCanvas.clientWidth}px;height:${glCanvas.clientHeight}px;`
+  glCanvas.parentElement?.appendChild(snapshot)
+  glCanvas.style.visibility = 'hidden'
+
+  // Get rid of the <img> element and return the canvas to normal
+  restoreSnapshot = () => {
+    snapshot.remove()
+    glCanvas.style.visibility = ''
+  }
+}
+
+function onCapturePrepare(event: Event): void {
+  (event as CustomEvent<CapturePrepareDetail>).detail?.waitUntil(createCaptureSnapshot())
+}
+
+function onCaptureRestore(): void {
+  restoreSnapshot?.()
+  restoreSnapshot = null
+}
+
+onUnmounted(() => {
+  window.removeEventListener(CAPTURE_PREPARE_EVENT, onCapturePrepare)
+  window.removeEventListener(CAPTURE_RESTORE_EVENT, onCaptureRestore)
+  onCaptureRestore()
+})
+
 onMounted(async () => {
+  window.addEventListener(CAPTURE_PREPARE_EVENT, onCapturePrepare)
+  window.addEventListener(CAPTURE_RESTORE_EVENT, onCaptureRestore)
+
   try {
     const countriesPbfUrl = await countriesPbfUrlPromise
     const response = await fetch(countriesPbfUrl)

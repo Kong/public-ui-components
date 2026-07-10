@@ -33,11 +33,13 @@ export interface PdfExportOptions {
   filename?: string
   /** Dashboard name used in the header */
   title?: string
+  /** Second header line */
+  subtitle?: string
   /** URL to the dashboard in the footer. */
   dashboardUrl?: string
   /** Page orientation. Defaults to 'landscape'. */
   orientation?: 'portrait' | 'landscape'
-  /** Page margin in mm. Defaults to 10. */
+  /** Page margin in mm. Defaults to 4. */
   margin?: number
   /** Scale factor for capture resolution. Higher = better quality, larger file. Defaults to 2. */
   scale?: number
@@ -58,6 +60,8 @@ export type PdfExportStatus = 'idle' | 'preparing' | 'capturing' | 'generating' 
 
 export interface PdfExportState {
   status: PdfExportStatus
+  /** Number of pages in the generated document. Set when status is 'complete'. */
+  pageCount?: number
   error?: unknown
 }
 

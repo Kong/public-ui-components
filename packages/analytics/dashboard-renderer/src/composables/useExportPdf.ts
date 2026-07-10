@@ -1,8 +1,10 @@
 import type { Ref } from 'vue'
 import type { jsPDF } from 'jspdf'
+import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { PdfExportOptions, PdfExportState } from '../types/renderer-types'
 
 import { readonly, ref } from 'vue'
+import { prepareForCapture, restoreAfterCapture } from '@kong-ui-public/analytics-utilities'
 import useI18n from './useI18n'
 
 interface RowBoundary {
@@ -15,11 +17,13 @@ interface PageSlice {
   height: number
 }
 
-const HEADER_HEIGHT_MM = 12
-const FOOTER_HEIGHT_MM = 12
+const HEADER_HEIGHT_MM = 6
+const FOOTER_HEIGHT_MM = 6
+const SUBTITLE_HEIGHT_MM = 4
 
 interface PageMetaContext {
   title?: string
+  subtitle?: string
   dashboardUrl?: string
   generatedAt: string
   branding: string
@@ -27,6 +31,7 @@ interface PageMetaContext {
   pageLabel: string
   pageWidth: number
   pageHeight: number
+  headerHeight: number
   margin: number
 }
 
@@ -49,10 +54,10 @@ export function buildFilename(filename: string | undefined, title: string | unde
 
 function drawPageMeta(pdf: jsPDF, ctx: PageMetaContext): void {
   const { pageWidth, pageHeight, margin } = ctx
-  const headerBaseline = margin + 5
-  const headerRuleY = margin + HEADER_HEIGHT_MM - 3
+  const headerBaseline = margin + 1
+  const headerRuleY = margin + ctx.headerHeight - 3
   const footerRuleY = pageHeight - margin - FOOTER_HEIGHT_MM + 3
-  const footerBaseline = footerRuleY + 5
+  const footerBaseline = footerRuleY + 4
 
   // Header title aligned left, timestamp right
   if (ctx.title) {
@@ -66,6 +71,11 @@ function drawPageMeta(pdf: jsPDF, ctx: PageMetaContext): void {
   pdf.setFontSize(8)
   pdf.setTextColor(120)
   pdf.text(ctx.generatedAt, pageWidth - margin, headerBaseline, { align: 'right' })
+
+  // Subtitle below the header
+  if (ctx.subtitle) {
+    pdf.text(ctx.subtitle, margin, headerBaseline + SUBTITLE_HEIGHT_MM)
+  }
 
   pdf.setDrawColor(220)
   pdf.line(margin, headerRuleY, pageWidth - margin, headerRuleY)
@@ -175,9 +185,10 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
     const {
       filename,
       title,
+      subtitle,
       dashboardUrl,
       orientation = 'landscape',
-      margin = 10,
+      margin = 4,
       scale = 2,
       exclude = ['.tile-actions', '.tooltip', '.popover', '.dropdown-popover'],
       output = 'download',
@@ -205,7 +216,17 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
       ])
 
       exportState.value = { status: 'capturing' }
-      const canvas = await snapdom.toCanvas(element, { scale, exclude })
+
+      // In order to take a snapshot of the map canvas (WebGL under the hood), this will
+      // temporarily transform the draw buffer into an <img> and restore it after capture.
+      // See `captureProtocol` in analytics-utilities
+      const webglSnapshotPlugin: SnapdomPlugin = {
+        name: 'kong-webgl-snapshot',
+        beforeClone: () => prepareForCapture(),
+        afterClone: () => restoreAfterCapture(),
+      }
+
+      const canvas = await snapdom.toCanvas(element, { scale, exclude, plugins: [webglSnapshotPlugin] })
 
       exportState.value = { status: 'generating' }
 
@@ -213,8 +234,9 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
       const pdf = new jsPDF({ orientation, unit: 'mm', format: 'a4' })
       const pageWidth = pdf.internal.pageSize.getWidth()
       const pageHeight = pdf.internal.pageSize.getHeight()
+      const headerHeight = HEADER_HEIGHT_MM + (subtitle ? SUBTITLE_HEIGHT_MM : 0)
       const contentWidth = pageWidth - margin * 2
-      const contentHeight = pageHeight - margin * 2 - HEADER_HEIGHT_MM - FOOTER_HEIGHT_MM
+      const contentHeight = pageHeight - margin * 2 - headerHeight - FOOTER_HEIGHT_MM
 
       const pxPerMm = canvas.width / contentWidth
       const pageHeightPx = contentHeight * pxPerMm
@@ -223,6 +245,7 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
 
       const pageMeta: Omit<PageMetaContext, 'pageLabel'> = {
         title,
+        subtitle,
         dashboardUrl,
         generatedAt: i18n.t('pdfExport.generated', {
           timestamp: now.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }),
@@ -231,6 +254,7 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
         dashboardNote: i18n.t('pdfExport.dashboardNote'),
         pageWidth,
         pageHeight,
+        headerHeight,
         margin,
       }
 
@@ -260,7 +284,7 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
           sliceCanvas.toDataURL('image/png'),
           'PNG',
           margin,
-          margin + HEADER_HEIGHT_MM,
+          margin + headerHeight,
           contentWidth,
           height / pxPerMm,
         )
@@ -274,16 +298,18 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
       if (output === 'blob') {
         // This won't do much for now other than return the type and size of the blob.
         const blob = pdf.output('blob')
-        exportState.value = { status: 'complete' }
+        exportState.value = { status: 'complete', pageCount: pages.length }
 
         return blob
       }
 
       pdf.save(buildFilename(filename, title, now))
-      exportState.value = { status: 'complete' }
+      exportState.value = { status: 'complete', pageCount: pages.length }
     } catch (error) {
       exportState.value = { status: 'error', error }
     } finally {
+      // restore regardless of error
+      restoreAfterCapture()
       await onAfterCapture?.()
     }
 
