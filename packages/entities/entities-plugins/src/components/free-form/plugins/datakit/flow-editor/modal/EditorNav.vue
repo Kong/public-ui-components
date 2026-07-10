@@ -139,7 +139,7 @@ function handlePanelToggle() {
     }
   }
 
-  .nav-item:not(.datakit-new-look) {
+  .nav-item:not(#{".datakit-new-look"}) {
     align-items: center;
     background-color: var(--kui-navigation-color-background, $kui-navigation-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
