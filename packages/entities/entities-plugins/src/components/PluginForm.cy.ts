@@ -19,6 +19,7 @@ import schemaRateLimiting from '../../fixtures/schemas/rate-limiting'
 import PluginForm from './PluginForm.vue'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import { EXPERIMENTAL_FREE_FORM_PROVIDER, FEATURE_FLAGS } from '../constants'
+import { DATAKIT_NEW_LOOK } from './free-form/plugins/datakit/flow-editor/constants'
 
 const baseConfigKonnect: KonnectPluginFormConfig = {
   app: 'konnect',
@@ -2290,6 +2291,39 @@ describe('<PluginForm />', () => {
           cy.wait('@getPluginSchema')
           cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
           cy.get('#condition').should(assertion)
+        })
+      })
+    })
+
+    describe('datakitNewLook prop', () => {
+      it('provides DATAKIT_NEW_LOOK as true when datakitNewLook prop is true', () => {
+        interceptKonnectSchema()
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKonnect,
+            pluginType: 'datakit',
+            datakitNewLook: true,
+          },
+          router,
+        }).then(({ wrapper }) => {
+          const instance = wrapper.getCurrentComponent()
+          expect(instance.provides[DATAKIT_NEW_LOOK as unknown as string]).to.equal(true)
+        })
+      })
+
+      it('provides DATAKIT_NEW_LOOK as false by default', () => {
+        interceptKonnectSchema()
+
+        cy.mount(PluginForm, {
+          props: {
+            config: baseConfigKonnect,
+            pluginType: 'datakit',
+          },
+          router,
+        }).then(({ wrapper }) => {
+          const instance = wrapper.getCurrentComponent()
+          expect(instance.provides[DATAKIT_NEW_LOOK as unknown as string]).to.equal(false)
         })
       })
     })
