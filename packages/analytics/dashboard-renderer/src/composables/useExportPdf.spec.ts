@@ -1,5 +1,30 @@
-import { describe, it, expect } from 'vitest'
-import { buildFilename, calculatePageSlices, getRowBoundaries, slugify } from './useExportPdf'
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest'
+import { ref } from 'vue'
+import { CAPTURE_PREPARE_EVENT, CAPTURE_RESTORE_EVENT } from '@kong-ui-public/analytics-utilities'
+import useExportPdf, { buildFilename, calculatePageSlices, getRowBoundaries, slugify } from './useExportPdf'
+import { snapdom } from '@zumer/snapdom'
+
+vi.mock('@zumer/snapdom', () => ({
+  snapdom: { toCanvas: vi.fn() },
+}))
+
+vi.mock('jspdf', () => ({
+  jsPDF: vi.fn().mockImplementation(() => ({
+    internal: { pageSize: { getWidth: () => 297, getHeight: () => 210 } },
+    addPage: vi.fn(),
+    addImage: vi.fn(),
+    setFont: vi.fn(),
+    setFontSize: vi.fn(),
+    setTextColor: vi.fn(),
+    setDrawColor: vi.fn(),
+    text: vi.fn(),
+    textWithLink: vi.fn(),
+    getTextWidth: () => 10,
+    line: vi.fn(),
+    output: vi.fn(() => new Blob()),
+    save: vi.fn(),
+  })),
+}))
 
 const stubRect = (el: HTMLElement, top: number, height: number) => {
   el.getBoundingClientRect = () => ({
@@ -198,5 +223,82 @@ describe('getRowBoundaries', () => {
     expect(getRowBoundaries(container)).toEqual([
       { top: 100, bottom: 300 },
     ])
+  })
+})
+
+describe('exportPdf WebGL capture protocol', () => {
+  const events: string[] = []
+  const onPrepare = () => {
+    events.push('prepare')
+  }
+  const onRestore = () => {
+    events.push('restore')
+  }
+
+  // Simulates snapdom hooks for beforeClone and afterClone
+  const toCanvasRunningPlugins = (result: () => HTMLCanvasElement) =>
+    async (element: HTMLElement, options: any) => {
+      for (const plugin of options?.plugins ?? []) {
+        await plugin.beforeClone?.({ element, options })
+      }
+
+      for (const plugin of options?.plugins ?? []) {
+        await plugin.afterClone?.({ element, options })
+      }
+
+      return result()
+    }
+
+  const fakeCanvas = () => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 800
+    canvas.height = 600
+
+    return canvas
+  }
+
+  beforeEach(() => {
+    events.length = 0
+    window.addEventListener(CAPTURE_PREPARE_EVENT, onPrepare)
+    window.addEventListener(CAPTURE_RESTORE_EVENT, onRestore)
+
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({ drawImage: vi.fn() } as any)
+    vi.spyOn(HTMLCanvasElement.prototype, 'toDataURL').mockReturnValue('data:image/png;base64,')
+  })
+
+  afterEach(() => {
+    window.removeEventListener(CAPTURE_PREPARE_EVENT, onPrepare)
+    window.removeEventListener(CAPTURE_RESTORE_EVENT, onRestore)
+    vi.restoreAllMocks()
+  })
+
+  it('WebGL beforeClone calls prepare and restores afterwards', async () => {
+    vi.mocked(snapdom.toCanvas).mockImplementation(toCanvasRunningPlugins(fakeCanvas) as any)
+
+    const { exportPdf, exportState } = useExportPdf(ref(document.createElement('div')))
+    await exportPdf({ output: 'blob' })
+
+    expect(exportState.value.status).toBe('complete')
+    expect(events[0]).toBe('prepare')
+    expect(events[1]).toBe('restore')
+    expect(vi.mocked(snapdom.toCanvas).mock.calls[0][1]).toMatchObject({
+      plugins: [expect.objectContaining({ name: 'kong-webgl-snapshot' })],
+    })
+  })
+
+  it('restores canvas when cloning fails', async () => {
+    vi.mocked(snapdom.toCanvas).mockImplementation(async (element: any, options: any) => {
+      for (const plugin of options?.plugins ?? []) {
+        await plugin.beforeClone?.({ element, options })
+      }
+
+      throw new Error('clone failed')
+    })
+
+    const { exportPdf, exportState } = useExportPdf(ref(document.createElement('div')))
+    await exportPdf({ output: 'blob' })
+
+    expect(exportState.value.status).toBe('error')
+    expect(events).toEqual(['prepare', 'restore'])
   })
 })
