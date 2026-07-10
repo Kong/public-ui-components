@@ -139,70 +139,72 @@ function handlePanelToggle() {
     }
   }
 
-  .nav-item:not(#{".datakit-new-look"}) {
-    align-items: center;
-    background-color: var(--kui-navigation-color-background, $kui-navigation-color-background);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    color: var(--kui-navigation-color-text, $kui-navigation-color-text);
-    cursor: pointer;
-    display: flex;
-    height: 36px;
-    justify-content: center;
-    text-decoration: none;
-    transition: color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
-    white-space: nowrap;
-    width: 36px;
+  .nav-item {
+    &:not(.datakit-new-look) {
+      align-items: center;
+      background-color: var(--kui-navigation-color-background, $kui-navigation-color-background);
+      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
+      border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+      color: var(--kui-navigation-color-text, $kui-navigation-color-text);
+      cursor: pointer;
+      display: flex;
+      height: 36px;
+      justify-content: center;
+      text-decoration: none;
+      transition: color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
+      white-space: nowrap;
+      width: 36px;
 
-    &:hover,
-    &:focus-visible {
-      color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
+      &:hover,
+      &:focus-visible {
+        color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
+
+        :deep(svg) {
+          color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
+        }
+      }
+
+      &:focus-visible {
+        box-shadow: var(--kui-navigation-shadow-focus, $kui-navigation-shadow-focus);
+        outline: none;
+      }
 
       :deep(svg) {
-        color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
+        path {
+          color: currentColor;
+          fill: currentColor;
+          transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
+        }
+      }
+
+      &-toggle {
+        border-color: var(--kui-navigation-color-border, $kui-navigation-color-border);
       }
     }
 
-    &:focus-visible {
-      box-shadow: var(--kui-navigation-shadow-focus, $kui-navigation-shadow-focus);
-      outline: none;
-    }
+    &.datakit-new-look {
+      align-items: center;
+      background-color: var(--kui-color-background, $kui-color-background);
+      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
+      border-radius: var(--kui-border-radius-30, $kui-border-radius-30) !important;
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      text-decoration: none;
+      transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease, color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+      white-space: nowrap;
 
-    :deep(svg) {
-      path {
-        color: currentColor;
-        fill: currentColor;
-        transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
+      &:hover,
+      &:focus-visible {
+        background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
+        color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
       }
-    }
 
-    &-toggle {
-      border-color: var(--kui-navigation-color-border, $kui-navigation-color-border);
-    }
-  }
-
-  .nav-item.datakit-new-look {
-    align-items: center;
-    background-color: var(--kui-color-background, $kui-color-background);
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30) !important;
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    text-decoration: none;
-    transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease, color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-    white-space: nowrap;
-
-    &:hover,
-    &:focus-visible {
-      background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
-      color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
-    }
-
-    &.active {
-      background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
-      color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
+      &.active {
+        background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
+        color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
+      }
     }
   }
 
