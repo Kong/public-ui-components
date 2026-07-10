@@ -1,5 +1,5 @@
 <template>
-  <StandardLayout
+  <DynamicLayout
     v-bind="props"
     :form-config="formConfig"
     :render-rules="RENDER_RULES"
@@ -125,7 +125,7 @@
         </div>
       </template>
     </KTabs>
-  </StandardLayout>
+  </DynamicLayout>
 </template>
 
 <script setup lang="ts">
@@ -135,14 +135,13 @@ import { cloneDeep } from 'lodash-es'
 import { computed, inject, onMounted, provide, ref } from 'vue'
 import useI18n from '../../../../composables/useI18n'
 import { FEATURE_FLAGS } from '../../../../constants'
-import StandardLayout from '../../shared/layout/StandardLayout.vue'
+import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
 import ArrayField from '../../shared/ArrayField.vue'
 import Field from '../../shared/Field.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
 import ObjectField from '../../shared/ObjectField.vue'
 import StringField from '../../shared/StringField.vue'
 import { FORM_EDITING } from '../../shared/const'
-import type { Props } from '../../shared/layout/StandardLayout.vue'
 import { resetEmptyTokenExchange } from '../../../../definitions/schemas/OIDC'
 import { migrateConsumerClaim } from './useConsumerClaimMigration'
 import AuthMethodsField from './AuthMethodsField.vue'
@@ -154,6 +153,7 @@ import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-
 import type { EntityCreateEvent } from '../../../../types'
 import type { FormConfig, RenderRules } from '../../shared/types'
 import type { PrincipalsMode } from './types'
+import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
 
 const TABS = [
   { hash: '#common', title: 'Common' },
