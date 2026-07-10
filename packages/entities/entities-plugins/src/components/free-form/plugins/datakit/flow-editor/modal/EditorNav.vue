@@ -1,5 +1,8 @@
 <template>
-  <nav class="dk-editor-nav">
+  <nav
+    class="dk-editor-nav"
+    :class="{ 'datakit-new-look': datakitNewLook }"
+  >
     <div class="top">
       <KTooltip
         v-for="({ label, to, icon, onClick }) in navItems"
@@ -112,6 +115,11 @@ function handlePanelToggle() {
   gap: var(--kui-space-50, $kui-space-50);
   justify-content: space-between;
   padding: 0 var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40);
+
+  &.datakit-new-look {
+    border-right: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    padding: var(--kui-space-40, $kui-space-40);
+  }
 
   .top,
   .bottom {
