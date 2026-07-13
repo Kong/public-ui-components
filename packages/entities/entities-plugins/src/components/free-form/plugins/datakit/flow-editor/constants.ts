@@ -2,7 +2,6 @@ import { KUI_SPACE_40, KUI_SPACE_90 } from '@kong/design-tokens'
 
 import type { LayoutOptions } from './store/flow'
 import type { KeySpec } from './utils'
-import type { InjectionKey } from 'vue'
 
 export const DK_HEADER_HEIGHT = 44
 export const DK_SIDE_PANEL_WIDTH = 220
