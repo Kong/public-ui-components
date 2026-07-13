@@ -19,7 +19,6 @@ import schemaRateLimiting from '../../fixtures/schemas/rate-limiting'
 import PluginForm from './PluginForm.vue'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import { EXPERIMENTAL_FREE_FORM_PROVIDER, FEATURE_FLAGS } from '../constants'
-import { DATAKIT_NEW_LOOK } from './free-form/plugins/datakit/flow-editor/constants'
 
 const baseConfigKonnect: KonnectPluginFormConfig = {
   app: 'konnect',

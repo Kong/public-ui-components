@@ -225,7 +225,6 @@ import { BEFORE_SAVE_KEY } from './const'
 import type { GlobalAction } from './free-form/shared/types'
 import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
-import { DATAKIT_NEW_LOOK } from './free-form/plugins/datakit/flow-editor/constants.ts'
 
 type ScopedEntitiesType = 'consumer' | 'route' | 'service' | 'consumer_group'
 type Permissions = 'canRetrieve' | 'canEdit' | 'canDelete'
