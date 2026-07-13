@@ -1,5 +1,5 @@
 <template>
-  <navclass="dk-editor-nav">
+  <nav class="dk-editor-nav">
     <div class="top">
       <KTooltip
         v-for="({ label, to, icon, onClick }) in navItems"
@@ -56,8 +56,7 @@
         </KTooltip>
       </div>
     </div>
-    </nav>
-  </navclass="dk-editor-nav">
+  </nav>
 </template>
 
 <script setup lang="ts">
