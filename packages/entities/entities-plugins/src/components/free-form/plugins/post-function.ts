@@ -13,6 +13,10 @@ export default definePluginConfig({
         'config.functions.*',
         'config.log.*',
         'config.rewrite.*',
+        'config.ws_handshake.*',
+        'config.ws_client_frame.*',
+        'config.ws_upstream_frame.*',
+        'config.ws_close.*',
       ].includes(genericPath),
       component: StringField,
       propsOverrides: {

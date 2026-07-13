@@ -1,25 +1,28 @@
 import { definePluginConfig } from '../shared/define-plugin-config'
 import StringField from '../shared/StringField.vue'
 
-const LUA_FUNCTION_FIELDS = [
-  'access',
-  'body_filter',
-  'certificate',
-  'functions',
-  'header_filter',
-  'log',
-  'rewrite',
-]
-
 export default definePluginConfig({
   experimental: true,
-  fieldRenderers: LUA_FUNCTION_FIELDS.map((field) => ({
-    match: ({ genericPath }) => genericPath === `config.${field}.*`,
-    component: StringField,
-    propsOverrides: (props) => ({
-      ...props,
-      multiline: true,
-      rows: 3,
-    }),
-  })),
+  fieldRenderers: [
+    {
+      match: ({ genericPath }) => [
+        'config.access.*',
+        'config.body_filter.*',
+        'config.header_filter.*',
+        'config.certificate.*',
+        'config.functions.*',
+        'config.log.*',
+        'config.rewrite.*',
+        'config.ws_handshake.*',
+        'config.ws_client_frame.*',
+        'config.ws_upstream_frame.*',
+        'config.ws_close.*',
+      ].includes(genericPath),
+      component: StringField,
+      propsOverrides: {
+        multiline: true,
+        rows: 3,
+      },
+    },
+  ],
 })
