@@ -260,6 +260,14 @@ export default {
       return `Defaults to the subject (sub) claim, but you can specify a different token claim if needed. ${dotNotation}`
     },
   },
+  created() {
+    // One-time prefill: if principal_claim has never been set, write the gateway
+    // default `sub` into the model so users see it explicitly rather than an
+    // implicit default. Only fires once, on creation — later clears stay cleared.
+    if (!hasValue(this.formModel['config-principals-principal_claim'])) {
+      this.updateField('config-principals-principal_claim', ['sub'])
+    }
+  },
   methods: {
     handleEnableToggle(enabled) {
       if (this.onEnabledChange) {
@@ -275,9 +283,7 @@ export default {
       if (typeof claim === 'string' && claim) {
         return claim
       }
-      // Pre-fill the gateway default so users recognize `sub` is used when left unset.
-      // The model stays empty until edited; an empty principal_claim already resolves to `sub`.
-      return 'sub'
+      return ''
     },
     handleTokenClaimChange(rawValue) {
       const value = typeof rawValue === 'string' ? rawValue.trim() : ''

@@ -252,6 +252,8 @@ describe('OIDCPrincipals', () => {
         'config-client_id': ['client-a'],
       }, { onModelUpdated })
       const formModel = wrapper.props('formModel')
+      // Clear the call from PrincipalLookupSettings' one-time principal_claim prefill on mount.
+      onModelUpdated.mockClear()
 
       ;(wrapper.vm as any).removeClientRow(0)
 
