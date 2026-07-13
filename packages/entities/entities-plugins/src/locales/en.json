@@ -10,6 +10,7 @@
     "edit": "Edit",
     "enable": "Enable",
     "enabled": "Enabled",
+    "disable": "Disable",
     "delete": "Delete",
     "disabled": "Disabled",
     "confirm_delete": "Yes, delete",
@@ -61,7 +62,8 @@
       "exact": "Filter by exact instance name or ID",
       "kongManager": "Filter by exact instance name or ID",
       "select": "Filter plugins",
-      "search_plugins": "Search plugins"
+      "search_plugins": "Search plugins",
+      "search": "Search"
     },
     "filter": {
       "field": {
@@ -89,8 +91,11 @@
           "consumer_group": "Consumer group"
         },
         "id": "ID",
+        "plugin": "Plugin",
         "name": "Name",
         "instance_name": "Instance name",
+        "scope": "Scope",
+        "status": "Status",
         "ordering": "Ordering",
         "ordering_badge": {
           "dynamic": "Dynamic",

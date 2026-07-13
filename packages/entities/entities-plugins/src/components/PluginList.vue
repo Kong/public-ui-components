@@ -21,7 +21,14 @@
     >
       <!-- Filter -->
       <template #toolbar-filter>
+        <PluginFilter
+          v-if="isPluginTableEnhanced"
+          v-model="filterQuery"
+          :entity-id="props.config?.entityId"
+          :entity-type="props.config?.entityType"
+        />
         <EntityFilter
+          v-else
           v-model="filterQuery"
           :config="filterConfig"
         />
@@ -111,7 +118,16 @@
             :name="row.name"
             :size="24"
           />
-          <div class="info-wrapper">
+          <div
+            v-if="isPluginTableEnhanced"
+            class="info-wrapper"
+          >
+            <span class="info-name">{{ pluginMetaData.getDisplayName(row.name) }}</span>
+          </div>
+          <div
+            v-else
+            class="info-wrapper"
+          >
             <span
               v-if="row.instance_name"
               class="info-name"
@@ -128,16 +144,34 @@
         </div>
       </template>
 
+      <template #instanceName="{ row }">
+        {{ row.instance_name || '-' }}
+      </template>
+
       <template #appliedTo="{ row }">
         <KTruncate v-if="aggregateAppliedTo(row).length > 0">
           <PermissionsWrapper
-            v-for="tag in aggregateAppliedTo(row)"
+            v-for="(tag, index) in aggregateAppliedTo(row)"
             :key="tag.badgeText"
             :auth-function="() => checkAppliedToPermission(tag.type, row)"
             force-show
           >
             <template #default="{ isAllowed }">
+              <div v-if="isPluginTableEnhanced">
+                <RouterLink
+                  v-if="isAllowed && tag.type && getScopedEntityViewRoute(tag.type, row)"
+                  class="scope-link"
+                  :to="getScopedEntityViewRoute(tag.type, row)!"
+                >
+                  {{ tag.badgeText }}
+                </RouterLink>
+                <span v-else>
+                  {{ tag.badgeText }}
+                </span>
+                <span v-if="index < aggregateAppliedTo(row).length - 1">, </span>
+              </div>
               <KBadge
+                v-else
                 :class="isAllowed || 'disabled'"
                 @click.stop="isAllowed && tag.type && handleAppliedToClick(tag.type, row)"
               >
@@ -150,7 +184,14 @@
       </template>
 
       <template #enabled="{ row }">
+        <KBadge
+          v-if="isPluginTableEnhanced"
+          :appearance="row.enabled ? 'success' : 'neutral'"
+        >
+          {{ row.enabled ? t('actions.enabled') : t('actions.disabled') }}
+        </KBadge>
         <PermissionsWrapper
+          v-else
           :auth-function="async () => !!(await canEdit(row) && await canToggle(row))"
           force-show
         >
@@ -168,7 +209,17 @@
       </template>
 
       <template #ordering="{ rowValue }">
-        <KBadge :appearance="isEmpty(rowValue) ? 'info' : 'warning'">
+        <span v-if="isPluginTableEnhanced">
+          {{
+            isEmpty(rowValue)
+              ? t('plugins.list.table_headers.ordering_badge.static')
+              : t('plugins.list.table_headers.ordering_badge.dynamic')
+          }}
+        </span>
+        <KBadge
+          v-else
+          :appearance="isEmpty(rowValue) ? 'info' : 'warning'"
+        >
           {{
             isEmpty(rowValue)
               ? t('plugins.list.table_headers.ordering_badge.static')
@@ -215,6 +266,21 @@
             data-testid="action-entity-edit"
             :item="getEditDropdownItem(row)"
           />
+        </PermissionsWrapper>
+        <PermissionsWrapper
+          v-if="isPluginTableEnhanced"
+          :auth-function="async () => !!(await canEdit(row) && await canToggle(row))"
+          force-show
+        >
+          <template #default="{ isAllowed }">
+            <KDropdownItem
+              data-testid="action-entity-toggle-enabled"
+              :disabled="!isAllowed"
+              @click="isAllowed && toggleEnableStatus(row)"
+            >
+              {{ row.enabled ? t('actions.disable') : t('actions.enable') }}
+            </KDropdownItem>
+          </template>
         </PermissionsWrapper>
         <!-- Dynamic Plugin Ordering not supported for consumer/consumer-group plugins -->
         <PermissionsWrapper
@@ -300,6 +366,7 @@ import { AddIcon, BookIcon, PlugIcon } from '@kong/icons'
 
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
+import PluginFilter from './PluginFilter.vue'
 
 import type {
   KongManagerPluginListConfig,
@@ -427,19 +494,43 @@ const isOrderingSupported = props.config.app === 'konnect' || useGatewayFeatureS
 })
 
 /**
+ * Plugin list improvment (Konnect-only): search API, Name/Scope/Status/Ordering columns, KFilterGroup toolbar.
+ * Gated by `config.pluginTableImprovements.filtering` - see PluginTableImprovementFlags for the other
+ * (not yet implemented) flags this list will grow: `sorting`, `bulkActions`.
+ */
+const isPluginTableEnhanced = computed<boolean>(() =>
+  props.config.app === 'konnect' && !!props.config.pluginTableImprovements?.filtering,
+)
+
+/**
  * Table Headers
  */
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
   // the Name column is non-hidable
-  name: { label: t('plugins.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
-}
-// conditional display of Applied To column - hide if on an entity's details page (ie. plugins card on route details view)
-if (!props.config?.entityId) {
-  fields.appliedTo = { label: t('plugins.list.table_headers.applied_to'), sortable: false }
+  name: {
+    label: isPluginTableEnhanced.value ? t('plugins.list.table_headers.plugin') : t('plugins.list.table_headers.name'),
+    searchable: true,
+    sortable: !isPluginTableEnhanced.value,
+    hidable: false,
+  },
 }
 
-fields.enabled = { label: t('plugins.list.table_headers.enabled'), searchable: true, sortable: true }
+if (isPluginTableEnhanced.value) {
+  // New column: the plugin instance's custom name, split out of the combined "Plugin" cell
+  fields.instanceName = { label: t('plugins.list.table_headers.name'), sortable: false }
+}
+
+// conditional display of Applied To/Scope column - hide if on an entity's details page (ie. plugins card on route details view)
+if (!props.config?.entityId) {
+  fields.appliedTo = isPluginTableEnhanced.value
+    ? { label: t('plugins.list.table_headers.scope'), sortable: false }
+    : { label: t('plugins.list.table_headers.applied_to'), sortable: false }
+}
+
+fields.enabled = isPluginTableEnhanced.value
+  ? { label: t('plugins.list.table_headers.status'), sortable: false }
+  : { label: t('plugins.list.table_headers.enabled'), searchable: true, sortable: true }
 
 if (isOrderingSupported) {
   fields.ordering = { label: t('plugins.list.table_headers.ordering'), sortable: true }
@@ -497,11 +588,28 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
+// Only hit the new search endpoint once the user is actually searching
+const isSearchActive = computed((): boolean => isPluginTableEnhanced.value && !!filterQuery.value)
+
+const activeFetcherUrl = computed<string>(() => {
+  if (isSearchActive.value) {
+    const konnectConfig = props.config as KonnectPluginListConfig
+    return `${konnectConfig.apiBaseUrl}${endpoints.search.konnect.all}`
+      .replace(/{controlPlaneId}/gi, konnectConfig.controlPlaneId || '')
+  }
+
+  return fetcherBaseUrl.value
+})
+
 const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
+} = useFetcher(computed(() => ({
+  ...props.config,
+  cacheIdentifier: props.cacheIdentifier,
+  ...(isSearchActive.value ? { isExactMatch: false } : {}),
+})), activeFetcherUrl)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -549,28 +657,25 @@ const checkAppliedToPermission = async (type: ViewRouteType | null, row: EntityR
   return await props.canRetrieveScopedEntity?.(type, row.id)
 }
 
-const handleAppliedToClick = (type: ViewRouteType, row: EntityRow) => {
-  let id = null
+const getScopedEntityId = (type: ViewRouteType, row: EntityRow) => {
+  return row[type]?.id
+}
 
-  switch (type) {
-    case 'route':
-      id = row.route?.id
-      break
-    case 'service':
-      id = row.service?.id
-      break
-    case 'consumer':
-      id = row.consumer?.id
-      break
-    case 'consumer_group':
-      id = row.consumer_group?.id
-      break
-    default:
-      break
-  }
+const getScopedEntityViewRoute = (type: ViewRouteType, row: EntityRow) => {
+  const id = getScopedEntityId(type, row)
 
   if (id && props.config?.getScopedEntityViewRoute) {
-    router.push(props.config.getScopedEntityViewRoute(type, id))
+    return props.config.getScopedEntityViewRoute(type, id)
+  }
+
+  return null
+}
+
+const handleAppliedToClick = (type: ViewRouteType, row: EntityRow) => {
+  const route = getScopedEntityViewRoute(type, row)
+
+  if (route) {
+    router.push(route)
   }
 }
 
@@ -634,7 +739,7 @@ const confirmSwitchEnablement = async () => {
     let filteredTargetEntity: EntityRow | undefined = undefined
     if (filterQuery.value && app === 'konnect') {
       // Fetch the full entity data before updating enablement status
-      // This is needed because in Konnect the data returned from the filtered list endpoint
+      // This is needed because in Konnect the data returned from the filtered/search list endpoint
       // 1. does not contain all the fields required for the PUT request to succeed
       // 2. contains fields that are not recognized in the PUT request payload
       filteredTargetEntity = await axiosInstance.get(url)
@@ -891,6 +996,16 @@ onBeforeMount(async () => {
 
   .k-badge.disabled {
     cursor: default;
+  }
+
+  .scope-link {
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 </style>
