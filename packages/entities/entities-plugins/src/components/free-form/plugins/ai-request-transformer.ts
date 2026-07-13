@@ -7,7 +7,10 @@ export default definePluginConfig({
     {
       match: 'config.prompt',
       component: StringField,
-      propsOverrides: { multiline: true, rows: 4 },
+      propsOverrides: {
+        multiline: true,
+        rows: 4,
+      },
     },
   ],
 })

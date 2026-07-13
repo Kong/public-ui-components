@@ -11,6 +11,7 @@ type PluginConfigModule = PluginFormConfig
 const pluginModules = import.meta.glob([
   '../plugins/*/index.ts',
   '../plugins/*.ts',
+  '!../plugins/_shared/**',
 ], {
   eager: true,
   import: 'default',

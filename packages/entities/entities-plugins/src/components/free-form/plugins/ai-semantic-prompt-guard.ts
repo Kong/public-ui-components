@@ -1,13 +1,8 @@
 import { definePluginConfig } from '../shared/define-plugin-config'
+import { vectordbFieldRenderers, vectordbRenderRules } from './_shared/vectordb'
 
 export default definePluginConfig({
   experimental: true,
-  renderRules: {
-    bundles: [
-      ['config.vectordb.strategy', 'config.vectordb.redis'],
-    ],
-    dependencies: {
-      'config.vectordb.redis': ['config.vectordb.strategy', 'redis'],
-    },
-  },
+  fieldRenderers: vectordbFieldRenderers,
+  renderRules: vectordbRenderRules,
 })
