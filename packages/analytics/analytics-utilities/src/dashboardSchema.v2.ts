@@ -611,12 +611,12 @@ export const agenticUsageSchema = {
 const platformDatasourceSchema = {
   oneOf: [
     {
+      const: 'platform_usage',
+    },
+    {
       const: 'platform',
       deprecated: true,
       description: "Deprecated: use 'platform_usage'.",
-    },
-    {
-      const: 'platform_usage',
     },
   ],
 } as const
