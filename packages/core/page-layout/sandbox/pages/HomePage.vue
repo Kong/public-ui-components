@@ -20,6 +20,23 @@
       <template #title-after>
         <KBadge>Info</KBadge>
       </template>
+      <template #tab-gateway-services="{ tab }">
+        {{ tab.label }}
+
+        <KBadge size="small">
+          2
+        </KBadge>
+      </template>
+      <template #tab-keys="{ tab }">
+        {{ tab.label }}
+
+        <KBadge
+          appearance="decorative"
+          size="small"
+        >
+          New
+        </KBadge>
+      </template>
     </PageLayout>
   </div>
 </template>

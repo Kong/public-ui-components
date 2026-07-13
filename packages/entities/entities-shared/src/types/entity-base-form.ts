@@ -28,3 +28,9 @@ export enum EntityBaseFormType {
   Edit = 'edit',
   Create = 'create',
 }
+
+// Runtime list of every tab in the configuration slideout
+export const BASE_FORM_CONFIG_TABS = ['json', 'yaml', 'terraform', 'deck'] as const
+
+// Union of all configuration slideout tab values
+export type BaseFormConfigTab = (typeof BASE_FORM_CONFIG_TABS)[number]

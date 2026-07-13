@@ -334,7 +334,7 @@ describe('<PluginForm />', () => {
 
     it('should use legacy form when useLegacyForm in the plugin metadata is true', () => {
       interceptKMSchema({ mockData: schemaAiProxy })
-      const pluginType = 'ai-proxy'
+      const pluginType = 'ai-prompt-template'
 
       cy.mount(PluginForm, {
         props: {
@@ -1037,7 +1037,7 @@ describe('<PluginForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/schemas/core-entities/plugins/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/schemas/plugins/*`,
         },
         {
           statusCode: 200,
@@ -1313,7 +1313,7 @@ describe('<PluginForm />', () => {
     })
 
     it('should use legacy form when useLegacyForm in the plugin metadata is true', () => {
-      const pluginType = 'ai-proxy'
+      const pluginType = 'ai-prompt-template'
       interceptKonnectSchema({ mockData: schemaAiProxy })
 
       cy.mount(PluginForm, {
@@ -1770,7 +1770,7 @@ describe('<PluginForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/schemas/core-entities/plugins/cors`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/schemas/plugins/cors`,
         },
         {
           statusCode: 500,
@@ -1972,7 +1972,7 @@ describe('<PluginForm />', () => {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/schemas/core-entities/plugins/*`,
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/schemas/plugins/*`,
         },
         {
           statusCode: 200,

@@ -1,4 +1,13 @@
-import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4, AgenticExploreQuery, PlatformExploreQuery } from './explore'
+import type {
+  BasicExploreQuery,
+  ExploreQuery,
+  AiExploreQuery,
+  ExploreResultV4,
+  AgenticExploreQuery,
+  PlatformExploreQuery,
+  PlatformTabularQuery,
+  PlatformTabularResponse,
+} from './explore'
 import type { AnalyticsConfigV2 } from './analytics-config'
 import type { DatasourceConfig } from './datasource-config'
 import type { Component } from 'vue'
@@ -23,12 +32,31 @@ export interface AgenticDatasourceQuery {
   query: AgenticExploreQuery
 }
 
+/** @deprecated Use `PlatformUsageDatasourceQuery`. */
 export interface PlatformDatasourceQuery {
   datasource: 'platform'
   query: PlatformExploreQuery
 }
 
-export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | AgenticDatasourceQuery | PlatformDatasourceQuery
+export interface PlatformUsageDatasourceQuery {
+  datasource: 'platform_usage'
+  query: PlatformExploreQuery
+}
+
+export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | AgenticDatasourceQuery | PlatformDatasourceQuery | PlatformUsageDatasourceQuery
+
+/** @deprecated Use `PlatformUsageDatasourceTabularQuery`. */
+export interface PlatformDatasourceTabularQuery {
+  datasource: 'platform'
+  query: PlatformTabularQuery
+}
+
+export interface PlatformUsageDatasourceTabularQuery {
+  datasource: 'platform_usage'
+  query: PlatformTabularQuery
+}
+
+export type DatasourceAwareTabularQuery = PlatformDatasourceTabularQuery | PlatformUsageDatasourceTabularQuery
 
 // All flags in this interface should be optional; defaults are as documented.
 export interface StaticConfig {
@@ -38,6 +66,9 @@ export interface StaticConfig {
 export interface AnalyticsBridge {
   // Issue queries to the KAnalytics API
   queryFn: (query: DatasourceAwareQuery, abortController: AbortController) => Promise<ExploreResultV4>
+
+  // Issue tabular queries to the platform tabular explore API
+  tabularQueryFn?: (query: DatasourceAwareTabularQuery, abortController: AbortController) => Promise<PlatformTabularResponse>
 
   // Determine the current org's analytics config
   configFn: () => Promise<AnalyticsConfigV2>

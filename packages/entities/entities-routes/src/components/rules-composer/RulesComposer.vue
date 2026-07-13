@@ -21,8 +21,8 @@
         tooltip-id="route-form-config-tabs-tooltip-traditional"
       >
         <InfoIcon
-          :color="KUI_COLOR_TEXT_NEUTRAL"
-          :size="KUI_ICON_SIZE_30"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+          :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
           tabindex="0"
         />
       </KTooltip>
@@ -41,8 +41,8 @@
         tooltip-id="route-form-config-tabs-tooltip-expressions"
       >
         <InfoIcon
-          :color="KUI_COLOR_TEXT_NEUTRAL"
-          :size="KUI_ICON_SIZE_30"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+          :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
           tabindex="0"
         />
       </KTooltip>

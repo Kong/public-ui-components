@@ -3,27 +3,27 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-05-28T09:48:22.547Z
+> Generated: 2026-07-13T07:59:20.741Z
 
 ## Summary
 
-`██████▓▒▒▒░░░░░░░░░░░░░` **33%**
+`██████▓▓▓▒▒▒▒▒▒▒░░░░░░░` **46%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **37** |
-| ⏳ Pending | **76** |
+| ✅ Migrated | **52** |
+| ⏳ Pending | **61** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **1** |
-| 🔄 In Progress | **3** |
-| ⏸️ Not Started | **13** |
+| 🚀 Ready for Release | **3** |
+| 🔄 In Progress | **7** |
+| ⏸️ Not Started | **7** |
 
 ---
 
@@ -57,13 +57,13 @@
 
 ---
 
-### ⏸️ M3 — AI Proxy Core — Not Started (0/5)
+### 🚀 M3 — AI Proxy Core — Ready for Release (5/5)
 
-- ⏳ `ai-proxy-advanced`
-- ⏳ `ai-proxy`
-- ⏳ `ai-prompt-decorator`
-- ⏳ `ai-prompt-guard`
-- ⏳ `ai-rate-limiting-advanced`
+- ✅ `ai-proxy-advanced`
+- ✅ `ai-proxy`
+- ✅ `ai-prompt-decorator`
+- ✅ `ai-prompt-guard`
+- ✅ `ai-rate-limiting-advanced`
 
 ---
 
@@ -92,13 +92,13 @@
 
 ---
 
-### ⏸️ M6 — Security & Serverless Functions — Not Started (0/5)
+### 🚀 M6 — Security & Serverless Functions — Ready for Release (5/5)
 
-- ⏳ `pre-function`
-- ⏳ `ip-restriction`
-- ⏳ `post-function`
-- ⏳ `bot-detection`
-- ⏳ `request-size-limiting`
+- ✅ `pre-function`
+- ✅ `ip-restriction`
+- ✅ `post-function`
+- ✅ `bot-detection`
+- ✅ `request-size-limiting`
 
 ---
 
@@ -176,11 +176,11 @@
 
 ---
 
-### ⏸️ M14 — Traffic Control: Messaging & Access — Not Started (0/5)
+### 🔄 M14 — Traffic Control: Messaging & Access — In Progress (2/5)
 
 - ⏳ `ace`
-- ⏳ `confluent-consume`
-- ⏳ `kafka-consume`
+- ✅ `confluent-consume`
+- ✅ `kafka-consume`
 - ⏳ `standard-webhooks`
 - ⏳ `graphql-proxy-cache-advanced`
 
@@ -214,9 +214,9 @@
 
 ---
 
-### ⏸️ M18 — Logging — Not Started (0/5)
+### 🔄 M18 — Logging — In Progress (1/5)
 
-- ⏳ `kafka-log`
+- ✅ `kafka-log`
 - ⏳ `loggly`
 - ⏳ `syslog`
 - ⏳ `tcp-log`
@@ -235,19 +235,19 @@
 
 ---
 
-### ⏸️ M20 — Transformations & Serverless — Not Started (0/4)
+### 🔄 M20 — Transformations & Serverless — In Progress (1/4)
 
-- ⏳ `confluent`
+- ✅ `confluent`
 - ⏳ `degraphql`
 - ⏳ `grpc-gateway`
 - ⏳ `grpc-web`
 
 ---
 
-### ⏸️ M21 — Transformations & Serverless (cont.) — Not Started (0/4)
+### 🔄 M21 — Transformations & Serverless (cont.) — In Progress (1/4)
 
 - ⏳ `jq`
-- ⏳ `kafka-upstream`
+- ✅ `kafka-upstream`
 - ⏳ `azure-functions`
 - ⏳ `openwhisk`
 

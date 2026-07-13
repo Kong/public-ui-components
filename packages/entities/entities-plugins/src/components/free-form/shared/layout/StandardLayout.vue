@@ -12,199 +12,192 @@
     />
   </Teleport>
 
-  <Form
+  <PluginConfigurationForm
     ref="form"
+    v-bind="attrs"
     class="ff-standard-layout"
-    :config="realFormConfig"
-    :data="(prunedData as T)"
-    :data-instance-id="instanceId"
-    :data-plugin-name="pluginName"
+    :controlled-fields="FREE_FORM_CONTROLLED_FIELDS"
     data-testid="ff-standard-layout-form"
+    :field-renderers="fieldRenderers"
+    :form-config="formConfig"
+    :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
+    :model="model"
+    :on-form-change="onFormChange"
+    :plugin-name="pluginName"
+    :prepare-form-data="prepareFormData"
     :render-rules="renderRules"
     :schema="freeFormSchema"
-    tag="div"
     @change="handleDataChange"
   >
-    <!-- global field templates -->
-    <template #[FIELD_RENDERERS]>
-      <FieldRenderer
-        v-for="(renderer, index) in configFieldRenderers"
-        :key="`${pluginName}-${index}`"
-        v-slot="slotProps"
-        :match="normalizeMatch(renderer.match)"
-      >
-        <component
-          :is="renderer.component"
-          v-bind="{
-            ...slotProps,
-            ...((typeof renderer.propsOverrides === 'function')
-              ? renderer.propsOverrides(slotProps)
-              : renderer.propsOverrides) ?? {},
-          }"
-        />
-      </FieldRenderer>
-
-      <!-- Redis partial selector -->
-      <FieldRenderer :match="({ path }) => path === redisPartialInfo?.redisPath?.value">
-        <RedisSelector :is-konnect-managed-redis-enabled="props.isKonnectManagedRedisEnabled ?? false" />
-      </FieldRenderer>
-
-      <!-- Custom field renderers from consuming components -->
+    <template #field-renderers>
       <slot name="field-renderers" />
     </template>
 
-    <template v-if="editorMode === 'form'">
-      <!-- Plugin scope -->
-      <EntityFormBlock
-        data-testid="form-section-plugin-scope"
-        :description="generalInfoDescription ?? t('plugins.form.sections.plugin_scope.description')"
-        :step="1"
-        :title="generalInfoTitle ?? t('plugins.form.sections.plugin_scope.title')"
+    <EntityFormBlock
+      v-if="editorMode === 'form'"
+      data-testid="form-section-plugin-scope"
+      :description="generalInfoDescription ?? t('plugins.form.sections.plugin_scope.description')"
+      :step="1"
+      :title="generalInfoTitle ?? t('plugins.form.sections.plugin_scope.title')"
+    >
+      <component
+        :is="scopeSchema?.disabled ? KTooltip : 'div'"
+        v-bind="scopeWrapperAttrs"
       >
-        <component
-          :is="scopeSchema?.disabled ? KTooltip : 'div'"
-          v-bind="scopeWrapperAttrs"
-        >
-          <div class="radio-group">
-            <KRadio
-              v-model="scoped"
-              card
-              card-orientation="horizontal"
-              v-bind="radioGroup[0]"
-              :disabled="scopeSchema?.disabled"
-              :selected-value="false"
-              @update:model-value="handleScopeChange"
-            />
-            <KRadio
-              v-if="radioGroup[1]"
-              v-model="scoped"
-              card
-              card-orientation="horizontal"
-              v-bind="radioGroup[1]"
-              :disabled="scopeSchema?.disabled"
-              :selected-value="true"
-              @update:model-value="handleScopeChange"
-            />
-          </div>
-        </component>
-        <div
-          v-if="scopeEntitiesSchema"
-          v-show="scoped"
-          class="scope-detail"
-        >
-          <ScopeEntityField
-            v-for="scopeField in scopeEntityFields"
-            :key="scopeField.name"
-            :developer="developer"
-            :disabled="scopeField.disabled"
-            :disabled-tooltip="scopeField.disabledTooltip"
-            :entity="scopeField.entity"
-            :fields="scopeField.fields"
-            :help="scopeField.help"
-            :label="scopeField.label"
-            :label-field="scopeField.labelField"
-            :name="scopeField.name"
-            :placeholder="scopeField.placeholder"
+        <div class="radio-group">
+          <KRadio
+            v-model="scoped"
+            card
+            card-orientation="horizontal"
+            v-bind="radioGroup[0]"
+            :disabled="scopeSchema?.disabled"
+            :selected-value="false"
+            @update:model-value="handleScopeChange"
+          />
+          <KRadio
+            v-if="radioGroup[1]"
+            v-model="scoped"
+            card
+            card-orientation="horizontal"
+            v-bind="radioGroup[1]"
+            :disabled="scopeSchema?.disabled"
+            :selected-value="true"
+            @update:model-value="handleScopeChange"
           />
         </div>
-
-        <template
-          v-if="slots['general-info-title']"
-          #title
-        >
-          <slot name="general-info-title" />
-        </template>
-
-        <template
-          v-if="slots['general-info-description']"
-          #description
-        >
-          <slot name="general-info-description" />
-        </template>
-
-        <template
-          v-if="slots['general-info-extra']"
-          #extra
-        >
-          <slot name="general-info-extra" />
-        </template>
-      </EntityFormBlock>
-
-      <!-- Plugin configuration -->
-      <EntityFormBlock
-        data-testid="form-section-plugin-config"
-        :description="pluginConfigDescription ?? t('plugins.form.sections.plugin_config.description')"
-        :step="2"
-        :title="pluginConfigTitle ?? t('plugins.form.sections.plugin_config.title')"
+      </component>
+      <div
+        v-if="scopeEntitiesSchema"
+        v-show="scoped"
+        class="scope-detail"
       >
-        <slot />
+        <ScopeEntityField
+          v-for="scopeField in scopeEntityFields"
+          :key="scopeField.name"
+          :developer="developer"
+          :disabled="scopeField.disabled"
+          :disabled-tooltip="scopeField.disabledTooltip"
+          :entity="scopeField.entity"
+          :fields="scopeField.fields"
+          :help="scopeField.help"
+          :label="scopeField.label"
+          :label-field="scopeField.labelField"
+          :name="scopeField.name"
+          :placeholder="scopeField.placeholder"
+        />
+      </div>
 
-        <template
-          v-if="slots['plugin-config-title']"
-          #title
-        >
-          <slot name="plugin-config-title" />
-        </template>
-
-        <template
-          v-if="slots['plugin-config-description']"
-          #description
-        >
-          <slot name="plugin-config-description" />
-        </template>
-
-        <template
-          v-if="slots['plugin-config-extra']"
-          #extra
-        >
-          <slot name="plugin-config-extra" />
-        </template>
-      </EntityFormBlock>
-
-      <!-- General information -->
-      <EntityFormBlock
-        data-testid="form-section-general-info"
-        :description="t('plugins.form.sections.plugin_general_info.description')"
-        :step="3"
-        :title="t('plugins.form.sections.general_info.title')"
+      <template
+        v-if="slots['general-info-title']"
+        #title
       >
-        <SwitchField
-          v-if="freeFormFieldNames.has('enabled')"
-          :disabled-text="t('plugins.form.fields.plugin_status.text_off')"
-          :enabled-text="t('plugins.form.fields.plugin_status.text_on')"
-          :label="t('plugins.form.fields.plugin_status.label')"
-          name="enabled"
-        />
+        <slot name="general-info-title" />
+      </template>
 
-        <StringField
-          v-if="freeFormFieldNames.has('instance_name')"
-          :label="t('plugins.form.fields.instance_name.label')"
-          name="instance_name"
-          :placeholder="t('plugins.form.fields.instance_name.placeholder')"
-        />
+      <template
+        v-if="slots['general-info-description']"
+        #description
+      >
+        <slot name="general-info-description" />
+      </template>
 
-        <StringArrayField
-          v-if="freeFormFieldNames.has('tags')"
-          :help="t('plugins.form.fields.tags.help')"
-          name="tags"
-          :placeholder="t('plugins.form.fields.tags.placeholder')"
-        />
+      <template
+        v-if="slots['general-info-extra']"
+        #extra
+      >
+        <slot name="general-info-extra" />
+      </template>
+    </EntityFormBlock>
 
-        <Field
-          v-if="freeFormFieldNames.has('protocols')"
-          name="protocols"
-        />
-
-        <KCollapse
-          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'condition')"
-          v-model="advancedCollapsed"
-          data-testid="view-general-info-additional-settings"
-          :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
-        >
-          <ConditionField />
-        </KCollapse>
+    <!-- Multi-section plugin configuration: one numbered step block per section -->
+    <template v-if="editorMode === 'form' && configSections?.length">
+      <EntityFormBlock
+        v-for="(section, index) in configSections"
+        :key="section.name"
+        :data-testid="`form-section-${section.name}`"
+        :description="section.description"
+        :step="2 + index"
+        :title="section.title"
+      >
+        <slot :name="`section-${section.name}`" />
       </EntityFormBlock>
     </template>
+
+    <!-- Default single plugin configuration step (back-compatible) -->
+    <EntityFormBlock
+      v-else-if="editorMode === 'form'"
+      data-testid="form-section-plugin-config"
+      :description="pluginConfigDescription ?? t('plugins.form.sections.plugin_config.description')"
+      :step="2"
+      :title="pluginConfigTitle ?? t('plugins.form.sections.plugin_config.title')"
+    >
+      <slot />
+
+      <template
+        v-if="slots['plugin-config-title']"
+        #title
+      >
+        <slot name="plugin-config-title" />
+      </template>
+
+      <template
+        v-if="slots['plugin-config-description']"
+        #description
+      >
+        <slot name="plugin-config-description" />
+      </template>
+
+      <template
+        v-if="slots['plugin-config-extra']"
+        #extra
+      >
+        <slot name="plugin-config-extra" />
+      </template>
+    </EntityFormBlock>
+
+    <EntityFormBlock
+      v-if="editorMode === 'form'"
+      data-testid="form-section-general-info"
+      :description="t('plugins.form.sections.plugin_general_info.description')"
+      :step="generalInfoStep"
+      :title="t('plugins.form.sections.general_info.title')"
+    >
+      <SwitchField
+        v-if="freeFormFieldNames.has('enabled')"
+        :disabled-text="t('plugins.form.fields.plugin_status.text_off')"
+        :enabled-text="t('plugins.form.fields.plugin_status.text_on')"
+        :label="t('plugins.form.fields.plugin_status.label')"
+        name="enabled"
+      />
+
+      <StringField
+        v-if="freeFormFieldNames.has('instance_name')"
+        :label="t('plugins.form.fields.instance_name.label')"
+        name="instance_name"
+        :placeholder="t('plugins.form.fields.instance_name.placeholder')"
+      />
+
+      <StringArrayField
+        v-if="freeFormFieldNames.has('tags')"
+        :help="t('plugins.form.fields.tags.help')"
+        name="tags"
+        :placeholder="t('plugins.form.fields.tags.placeholder')"
+      />
+
+      <Field
+        v-if="freeFormFieldNames.has('protocols')"
+        name="protocols"
+      />
+
+      <KCollapse
+        v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'condition')"
+        v-model="advancedCollapsed"
+        data-testid="view-general-info-additional-settings"
+        :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
+      >
+        <ConditionField />
+      </KCollapse>
+    </EntityFormBlock>
 
     <EntityFormBlock
       v-if="editorMode === 'code'"
@@ -215,71 +208,40 @@
         <CodeEditor />
       </slot>
     </EntityFormBlock>
-  </Form>
+  </PluginConfigurationForm>
 </template>
 
 <script lang="ts">
-export type Props<T extends FreeFormPluginData = any> = {
-  generalInfoTitle?: string
-  generalInfoDescription?: string
-  pluginConfigTitle?: string
-  pluginConfigDescription?: string
-  /** FreeForm Schema */
-  schema: FormSchema
+export interface Props<T extends FreeFormPluginData = any> extends PluginFormLayoutProps<T> {
   /** VFG schema */
   formSchema: any
-  /** The **initial** entire plugin model, never update */
-  model: T
   /** VFG form model */
   formModel: Record<string, any>
-  isEditing: boolean
-  /** Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority */
-  onFormChange: (value: Partial<T>, fields?: string[]) => void
-  onValidityChange?: (event: PluginValidityChangeEvent) => void
-  /**
-   * Hide the built-in form/code switcher. Plugins that own a custom switcher
-   * (e.g. Datakit's flow/code control) should set this to true to avoid
-   * rendering duplicate controls into #plugin-form-page-actions.
-   */
-  hideEditorModeSwitcher?: boolean
-  /** FreeForm configuration */
-  formConfig?: FormConfig<T>
-  renderRules?: RenderRules
-  fieldRenderers?: PluginFieldRenderer[]
-  pluginName: string
-  /** Konnect-managed Redis UI, from plugin form config */
-  isKonnectManagedRedisEnabled?: boolean
-  /** Whether the plugin is being created for a portal developer */
-  developer?: boolean
 }
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, inject, nextTick, ref, useTemplateRef, useId } from 'vue'
+import { computed, inject, nextTick, ref, useAttrs, useTemplateRef } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
-import { KRadio, KSegmentedControl, KTooltip } from '@kong/kongponents'
+import { KCollapse, KRadio, KSegmentedControl, KTooltip } from '@kong/kongponents'
 import type { SegmentedControlOption } from '@kong/kongponents'
 import { useLocalStorage } from '@vueuse/core'
 import { FEATURE_FLAGS } from '../../../../constants'
-import Form from '../Form.vue'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
-import type { PluginValidityChangeEvent } from '../../../../types'
 import SwitchField from '../SwitchField.vue'
 import ScopeEntityField from '../ScopeEntityField.vue'
-import { normalizeMatch } from '../utils'
-import type { FieldRenderer as PluginFieldRenderer, FormConfig, RenderRules } from '../types'
-import FieldRenderer from '../FieldRenderer.vue'
-import { REDIS_PARTIAL_INFO } from '../const'
-import RedisSelector from '../RedisSelector.vue'
-import { FIELD_RENDERERS, useSchemaExposer } from '../composables'
 import Field from '../Field.vue'
 import StringArrayField from '../StringArrayField.vue'
 import StringField from '../StringField.vue'
 import CodeEditor from '../CodeEditor.vue'
 import ConditionField from './ConditionField.vue'
 import useI18n from '../../../../composables/useI18n'
+import type { PluginFormLayoutProps } from './provider'
+import PluginConfigurationForm from './PluginConfigurationForm.vue'
+
+defineOptions({ inheritAttrs: false })
 
 const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   // plugin specific config
@@ -301,12 +263,10 @@ const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   'service',
 ]
 
-const instanceId = useId()
-
 const { i18n: { t } } = useI18n()
 
 const { hideEditorModeSwitcher = false, ...props } = defineProps<Props<T>>()
-const configFieldRenderers = computed<PluginFieldRenderer[]>(() => props.fieldRenderers ?? [])
+const attrs = useAttrs()
 
 const enableCodeMode = inject<boolean>(FEATURE_FLAGS.KM_2262_CODE_MODE, false)
 
@@ -345,7 +305,6 @@ function handleEditorModeChange(newMode: EditorMode) {
   editorModePreference.value = newMode
 }
 
-const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 const slots = defineSlots<{
   default: () => any
   'code-editor'?: () => any
@@ -356,19 +315,15 @@ const slots = defineSlots<{
   'plugin-config-description'?: () => any
   'plugin-config-extra'?: () => any
   'field-renderers'?: () => any
+  /** Content slots for multi-section layouts (`configSections`) */
+  [sectionSlot: `section-${string}`]: (() => any) | undefined
 }>()
 
-const realFormConfig = computed(() => {
-  return props.formConfig ?? {
-    hasValue: (data?: T): boolean => !!data && Object.keys(data).length > 0,
-    prepareFormData: (data: T): Partial<T> => {
-      if (props.isEditing) return data
-
-      // Init scope-related fields from formModel when creating a new plugin
-      return { ...data, ... getScopesFromFormModel() }
-    },
-  }
-})
+/**
+ * General Info is the last numbered step. In default single-config mode it is
+ * step 3; in multi-section mode it follows the configured sections.
+ */
+const generalInfoStep = computed(() => 2 + (props.configSections?.length ?? 1))
 
 const scopeWrapperAttrs = computed(() => {
   if (scopeSchema.value?.disabled) {
@@ -562,8 +517,14 @@ const scopesCache = ref(
 // `scopeIds` is not reactive. Initialize `scoped` in one shot.
 const scoped = ref(Object.values(scopesCache.value).some(hasScopeId))
 
-const formRef = useTemplateRef('form')
+const formRef = useTemplateRef<any>('form')
 let skipUpdateScopeCache = false
+
+function prepareFormData(data: Partial<T>): Partial<T> {
+  if (props.isEditing) return data
+
+  return { ...data, ... getScopesFromFormModel() }
+}
 
 function handleScopeChange() {
   if (!formRef.value) return
@@ -609,7 +570,6 @@ function handleDataChange(value: T) {
     }
   }
 
-  props.onFormChange(value, FREE_FORM_CONTROLLED_FIELDS)
 }
 
 function updateScopeCache(value: T) {
@@ -639,8 +599,6 @@ function getScopesFromFormModel(): Partial<T> {
   })
   return data
 }
-
-useSchemaExposer(freeFormSchema, instanceId)
 
 const advancedCollapsed = ref(true)
 </script>

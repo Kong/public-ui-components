@@ -1,0 +1,397 @@
+<template>
+  <div
+    ref="rootElement"
+    class="kong-ui-public-sensitive-input"
+  >
+    <KInput
+      v-if="!multiline"
+      autocomplete="off"
+      data-testid="sensitive-input"
+      :disabled="disabled"
+      :error="error"
+      :error-message="errorMessage"
+      :help="help"
+      :label="label"
+      :label-attributes="labelAttributes"
+      :model-value="isMasked ? maskedValue : modelValue"
+      :placeholder="isMasked ? undefined : resolvedPlaceholder"
+      :readonly="isMasked || readonly"
+      :required="required"
+      :type="inputType"
+      @update:model-value="handleInput"
+    >
+      <template #after>
+        <!-- Masked (editing an existing resource): only the Rotate key action -->
+        <KButton
+          v-if="isMasked"
+          appearance="tertiary"
+          class="sensitive-input-action"
+          data-testid="sensitive-input-rotate"
+          size="small"
+          @click="enterEditing(true)"
+        >
+          {{ rotateLabel }}
+        </KButton>
+
+        <!-- Editing: optional Generate key action + visibility toggle -->
+        <template v-else>
+          <KButton
+            v-if="generator"
+            appearance="tertiary"
+            class="sensitive-input-action"
+            data-testid="sensitive-input-generate"
+            :disabled="disabled || isGenerating"
+            size="small"
+            @click="handleGenerate"
+          >
+            {{ generateLabel }}
+          </KButton>
+          <component
+            :is="revealed ? VisibilityOffIcon : VisibilityIcon"
+            :aria-label="revealed ? t('sensitiveInput.hideKey') : t('sensitiveInput.showKey')"
+            class="sensitive-input-toggle"
+            color="currentColor"
+            data-testid="sensitive-input-toggle"
+            role="button"
+            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
+            tabindex="0"
+            @click="toggleReveal"
+            @keydown.enter.space.prevent="toggleReveal"
+          />
+        </template>
+      </template>
+    </KInput>
+
+    <!-- Multiline mode: KTextArea + action row below (no visibility toggle; textarea has no type="password") -->
+    <template v-else>
+      <KTextArea
+        autocomplete="off"
+        :character-limit="false"
+        data-testid="sensitive-input"
+        :disabled="disabled || undefined"
+        :error="error"
+        :help="help"
+        :label="label"
+        :label-attributes="labelAttributes"
+        :model-value="isMasked ? maskedValue : modelValue"
+        :placeholder="isMasked ? undefined : resolvedPlaceholder"
+        :readonly="isMasked || readonly || undefined"
+        :required="required || undefined"
+        resizable
+        @update:model-value="handleInput"
+      />
+      <p
+        v-if="error && errorMessage"
+        class="sensitive-input-error-message"
+        data-testid="sensitive-input-error-message"
+      >
+        {{ errorMessage }}
+      </p>
+      <div class="sensitive-input-textarea-actions">
+        <KButton
+          v-if="isMasked"
+          appearance="tertiary"
+          class="sensitive-input-action"
+          data-testid="sensitive-input-rotate"
+          size="small"
+          @click="enterEditing(true)"
+        >
+          {{ rotateLabel }}
+        </KButton>
+        <KButton
+          v-else-if="generator"
+          appearance="tertiary"
+          class="sensitive-input-action"
+          data-testid="sensitive-input-generate"
+          :disabled="disabled || isGenerating"
+          size="small"
+          @click="handleGenerate"
+        >
+          {{ generateLabel }}
+        </KButton>
+      </div>
+    </template>
+
+    <div
+      v-if="showOneTimeHint"
+      class="sensitive-input-hint"
+      data-testid="sensitive-input-hint"
+    >
+      <InfoIcon
+        class="sensitive-input-hint-icon"
+        :color="`var(--kui-color-text-info, ${KUI_COLOR_TEXT_INFO})`"
+        :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
+      />
+      <span class="sensitive-input-hint-text">
+        {{ hintLabel }}
+      </span>
+      <KClipboardProvider v-slot="{ copyToClipboard }">
+        <KButton
+          appearance="none"
+          class="sensitive-input-action sensitive-input-copy"
+          data-testid="sensitive-input-copy"
+          :icon="true"
+          @click="copyToClipboard(modelValue)"
+        >
+          <CopyIcon
+            color="currentColor"
+            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
+          />
+          {{ t('sensitiveInput.copy') }}
+        </KButton>
+      </KClipboardProvider>
+    </div>
+
+    <!-- Caller-controlled slot for additional content (e.g. an alert). -->
+    <slot name="alert" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { CopyIcon, InfoIcon, VisibilityIcon, VisibilityOffIcon } from '@kong/icons'
+import {
+  KUI_COLOR_TEXT_INFO,
+  KUI_ICON_SIZE_40,
+  KUI_SPACE_40,
+  KUI_SPACE_50,
+} from '@kong/design-tokens'
+import composables from '../../composables'
+import type { SensitiveInputLabels } from '../../types'
+
+const MASKED_VALUE = '••••••••••••••'
+
+const {
+  modelValue = '',
+  mode = 'create',
+  generator,
+  showOneTimeHint = false,
+  labels,
+  label,
+  labelAttributes,
+  placeholder,
+  help,
+  required = false,
+  disabled = false,
+  readonly = false,
+  error = false,
+  errorMessage,
+  multiline = false,
+} = defineProps<{
+  /** The sensitive value, bound via v-model. */
+  modelValue?: string
+  /**
+   * `create` starts editable; `edit` starts masked (read-only) and reveals a
+   * "Rotate key" action that switches the field to the editable state.
+   */
+  mode?: 'create' | 'edit'
+  /**
+   * When provided, a "Generate key" action is shown. The returned value is
+   * written back through v-model and revealed. Generation logic (local crypto
+   * or a backend call) lives with the caller.
+   */
+  generator?: () => string | Promise<string>
+  /**
+   * Caller-controlled one-time hint banner ("The key is shown only once…")
+   * with a Copy action. When `true` the value is also revealed in plain text.
+   */
+  showOneTimeHint?: boolean
+  /**
+   * Overrides for the built-in UI texts, so the component can be reused for
+   * other credential types (passwords, tokens, …). Any omitted label falls
+   * back to its default. The input placeholder is configured via `placeholder`.
+   */
+  labels?: SensitiveInputLabels
+  label?: string
+  labelAttributes?: Record<string, any>
+  placeholder?: string
+  help?: string
+  required?: boolean
+  disabled?: boolean
+  readonly?: boolean
+  error?: boolean
+  errorMessage?: string
+  /** When true, renders a KTextArea instead of a KInput. */
+  multiline?: boolean
+}>()
+
+const emit = defineEmits<{
+  'update:modelValue': [value: string]
+  /** Emitted when the user clicks "Rotate key" and enters the editable state. */
+  rotate: []
+  /** Emitted when key generation starts. */
+  generate: []
+  /** Emitted with the generated key once generation resolves. */
+  generated: [key: string]
+}>()
+
+const { i18n: { t } } = composables.useI18n()
+
+const internalMode = ref<'masked' | 'editing'>(mode === 'edit' ? 'masked' : 'editing')
+const revealed = ref(false)
+const isGenerating = ref(false)
+
+const isMasked = computed(() => internalMode.value === 'masked')
+const maskedValue = MASKED_VALUE
+const resolvedPlaceholder = computed(() => placeholder ?? t('sensitiveInput.placeholder'))
+
+// UI texts fall back to the i18n defaults when not overridden via `labels`.
+const rotateLabel = computed(() => labels?.rotateLabel ?? t('sensitiveInput.rotateKey'))
+const generateLabel = computed(() => labels?.generateLabel ?? t('sensitiveInput.generateKey'))
+const hintLabel = computed(() => labels?.hintLabel ?? t('sensitiveInput.oneTimeHint'))
+
+// Masked state always renders as plain dots; otherwise the value follows the
+// visibility toggle.
+const inputType = computed<'text' | 'password'>(() => {
+  if (isMasked.value) return 'text'
+  return revealed.value ? 'text' : 'password'
+})
+
+// Reveal the value when the caller turns on the one-time hint.
+watch(() => showOneTimeHint, (value) => {
+  if (value) revealed.value = true
+}, { immediate: true })
+
+const handleInput = (value: string) => {
+  emit('update:modelValue', value)
+}
+
+// `emitRotate` defaults to true so the "Rotate key" button click emits `rotate`.
+// The exposed `enterEditing` wrapper passes false to switch state silently.
+const enterEditing = (emitRotate = true) => {
+  internalMode.value = 'editing'
+  revealed.value = false
+  if (emitRotate) emit('rotate')
+}
+
+defineExpose({
+  /** Switch to the editable state programmatically, WITHOUT emitting `rotate`. */
+  enterEditing: () => enterEditing(false),
+})
+
+const toggleReveal = () => {
+  revealed.value = !revealed.value
+}
+
+const handleGenerate = async () => {
+  if (!generator || isGenerating.value) return
+
+  isGenerating.value = true
+  emit('generate')
+
+  try {
+    const key = await generator()
+    emit('update:modelValue', key)
+    revealed.value = true
+    emit('generated', key)
+  } finally {
+    isGenerating.value = false
+  }
+}
+
+// KInput measures the `after` slot width only once on mount to compute the
+// native input's `padding-right`. Since our `after` slot content changes
+// (Rotate key → Generate key + eye → eye only), that one-time measurement
+// becomes stale. We observe the rendered after-content wrapper and drive the
+// input's `padding-right` ourselves (via the `inputPaddingRight` CSS binding
+// below), reusing KInput's own formula: `calc(space-50 + after-width + space-40)`.
+const rootElement = useTemplateRef<HTMLElement>('rootElement')
+let resizeObserver: ResizeObserver | undefined
+let rafId: number | undefined
+
+// Mirrors KInput's pre-measurement default (`space-50 + icon-size-40 + space-40`)
+// so the padding doesn't jump on the first frame.
+const inputPaddingRight = ref(`calc(${KUI_SPACE_50} + ${KUI_ICON_SIZE_40} + ${KUI_SPACE_40})`)
+
+const syncInputPadding = () => {
+  const afterContent = rootElement.value?.querySelector<HTMLElement>('.after-content-wrapper')
+  if (!afterContent) return
+
+  inputPaddingRight.value = `calc(${KUI_SPACE_50} + ${afterContent.offsetWidth}px + ${KUI_SPACE_40})`
+}
+
+onMounted(() => {
+  const afterContent = rootElement.value?.querySelector<HTMLElement>('.after-content-wrapper')
+
+  // Re-measure whenever the after-content wrapper resizes (e.g. its content swaps).
+  resizeObserver = new ResizeObserver(() => {
+    rafId = window.requestAnimationFrame(() => syncInputPadding())
+  })
+  if (afterContent) {
+    resizeObserver.observe(afterContent)
+  }
+  syncInputPadding()
+})
+
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
+  if (rafId !== undefined) {
+    window.cancelAnimationFrame(rafId)
+  }
+})
+</script>
+
+<style lang="scss" scoped>
+.kong-ui-public-sensitive-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-40, $kui-space-40);
+
+  :deep(.after-content-wrapper) {
+    align-items: center;
+    gap: var(--kui-space-20, $kui-space-20) !important;
+  }
+
+  // Override KInput's one-time-measured padding-right with our dynamically computed value
+  :deep(.input) {
+    padding-right: v-bind(inputPaddingRight) !important;
+  }
+
+  .sensitive-input-action {
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    white-space: nowrap;
+  }
+
+  .sensitive-input-toggle {
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    cursor: pointer;
+  }
+
+  .sensitive-input-error-message {
+    color: var(--kui-color-text-danger, $kui-color-text-danger);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    margin-top: calc(-1 * var(--kui-space-20, $kui-space-20));
+  }
+
+  .sensitive-input-textarea-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .sensitive-input-hint {
+    align-items: center;
+    background-color: var(--kui-color-background-info-weakest, $kui-color-background-info-weakest);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    color: var(--kui-color-text-info, $kui-color-text-info);
+    display: flex;
+    gap: var(--kui-space-40, $kui-space-40);
+    padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+
+    .sensitive-input-hint-icon {
+      flex-shrink: 0;
+    }
+
+    .sensitive-input-hint-text {
+      flex: 1;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+    }
+
+    .sensitive-input-copy {
+      display: inline-flex;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      gap: var(--kui-space-20, $kui-space-20);
+    }
+  }
+}
+</style>

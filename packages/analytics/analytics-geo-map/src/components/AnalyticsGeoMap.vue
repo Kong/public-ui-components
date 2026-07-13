@@ -6,8 +6,8 @@
     >
       <slot name="no-location-icon">
         <AnalyticsIcon
-          :color="KUI_ICON_COLOR_NEUTRAL"
-          :size="KUI_ICON_SIZE_60"
+          :color="`var(--kui-icon-color-neutral, ${KUI_ICON_COLOR_NEUTRAL})`"
+          :size="`var(--kui-icon-size-60, ${KUI_ICON_SIZE_60})`"
         />
       </slot>
       <div class="no-location-overlay-title">

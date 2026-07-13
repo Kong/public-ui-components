@@ -41,6 +41,7 @@
         class="document-holder"
         :hide-publish-toggle="hidePublishToggle"
         :selected-document="selectedDocument"
+        :theme="theme"
         @add="handleAddClick"
         @save-markdown="(content: string) => emit('save-markdown', content)"
         @toggle-published="(data: any) => emit('toggle-published', data)"
@@ -149,6 +150,11 @@ const props = defineProps({
   selectedDocument: {
     type: Object as PropType<{ document: DocumentTree, ast: Record<string, any>, markdown?: string, status: 'published' | 'unpublished' }>,
     default: () => null,
+  },
+  theme: {
+    type: String,
+    default: 'light',
+    validator: (value: string) => ['light', 'dark'].includes(value),
   },
 })
 

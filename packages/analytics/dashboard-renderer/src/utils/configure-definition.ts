@@ -4,6 +4,7 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 
 import { DASHBOARD_COLS } from '../constants'
+import { isTableChartDefinition } from './tile-definition'
 
 /**
  * Filters out `api_usage` datasource tiles for `basic` analytics.
@@ -34,6 +35,11 @@ const processTileForBasicTier = (tile: TileConfig): TileConfig | undefined => {
  * @returns The updated tile configuration object.
  */
 const processTileForAdvancedTier = (tile: TileConfig): TileConfig => {
+  if (isTableChartDefinition(tile.definition)) {
+    // Table chart queries use the platform tabular API, so leave their datasource unchanged.
+    return tile
+  }
+
   const query = tile.definition?.query
 
   if (!query) {
