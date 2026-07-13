@@ -10,7 +10,7 @@ export default definePluginConfig({
       propsOverrides: {
         appearance: 'tabs',
         stickyTabs: true,
-        itemLabel: (_: unknown, index: number) => `Target #${index + 1}`,
+        itemLabel: (_: unknown, index: number) => `#${index + 1} Target`,
       },
     },
 
@@ -19,8 +19,7 @@ export default definePluginConfig({
       component: ArrayField as any,
       propsOverrides: {
         appearance: 'tabs',
-        stickyTabs: true,
-        itemLabel: (_: unknown, index: number) => `Allow #${index + 1}`,
+        itemLabel: (_: unknown, index: number) => `#${index + 1} Allow`,
       },
     },
 
@@ -32,8 +31,7 @@ export default definePluginConfig({
       component: ArrayField as any,
       propsOverrides: {
         appearance: 'tabs',
-        stickyTabs: true,
-        itemLabel: (_: unknown, index: number) => `Match #${index + 1}`,
+        itemLabel: (_: unknown, index: number) => `#${index + 1} Match`,
       },
     },
 
@@ -43,7 +41,7 @@ export default definePluginConfig({
       propsOverrides: {
         appearance: 'tabs',
         stickyTabs: true,
-        itemLabel: (_: unknown, index: number) => `Deny #${index + 1}`,
+        itemLabel: (_: unknown, index: number) => `#${index + 1} Deny`,
       },
     },
   ],

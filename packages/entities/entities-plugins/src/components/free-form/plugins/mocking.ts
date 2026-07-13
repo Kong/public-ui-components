@@ -9,7 +9,7 @@ export default definePluginConfig({
       component: StringField,
       propsOverrides: {
         multiline: true,
-        rows: 10,
+        rows: 15,
       },
     },
   ],
