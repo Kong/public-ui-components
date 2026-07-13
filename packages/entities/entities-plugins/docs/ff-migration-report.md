@@ -3,27 +3,27 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-06-24T07:12:55.273Z
+> Generated: 2026-07-13T07:59:20.741Z
 
 ## Summary
 
-`██████▓▒▒▒▒▒▒▒░░░░░░░░░` **37%**
+`██████▓▓▓▒▒▒▒▒▒▒░░░░░░░` **46%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **42** |
-| ⏳ Pending | **71** |
+| ✅ Migrated | **52** |
+| ⏳ Pending | **61** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **1** |
+| 🚀 Ready for Release | **3** |
 | 🔄 In Progress | **7** |
-| ⏸️ Not Started | **9** |
+| ⏸️ Not Started | **7** |
 
 ---
 
@@ -57,13 +57,13 @@
 
 ---
 
-### ⏸️ M3 — AI Proxy Core — Not Started (0/5)
+### 🚀 M3 — AI Proxy Core — Ready for Release (5/5)
 
-- ⏳ `ai-proxy-advanced`
-- ⏳ `ai-proxy`
-- ⏳ `ai-prompt-decorator`
-- ⏳ `ai-prompt-guard`
-- ⏳ `ai-rate-limiting-advanced`
+- ✅ `ai-proxy-advanced`
+- ✅ `ai-proxy`
+- ✅ `ai-prompt-decorator`
+- ✅ `ai-prompt-guard`
+- ✅ `ai-rate-limiting-advanced`
 
 ---
 
@@ -92,13 +92,13 @@
 
 ---
 
-### ⏸️ M6 — Security & Serverless Functions — Not Started (0/5)
+### 🚀 M6 — Security & Serverless Functions — Ready for Release (5/5)
 
-- ⏳ `pre-function`
-- ⏳ `ip-restriction`
-- ⏳ `post-function`
-- ⏳ `bot-detection`
-- ⏳ `request-size-limiting`
+- ✅ `pre-function`
+- ✅ `ip-restriction`
+- ✅ `post-function`
+- ✅ `bot-detection`
+- ✅ `request-size-limiting`
 
 ---
 
