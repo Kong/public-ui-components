@@ -388,6 +388,11 @@ export const PropertyNodeSchema = ConfigNodeBaseSchema.safeExtend({
     .nullish(),
   /** The property name to get/set. */
   property: z.string().min(1).max(255),
+  /**
+   * When true, the property value must exist: in SET mode, input must not be
+   * nil/null; in GET mode, output must not be nil/null.
+   */
+  non_nil: z.boolean().default(false).nullish(),
   inputs: z.never().nullish(),
   outputs: z.never().nullish(),
 }).strict()

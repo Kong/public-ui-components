@@ -1,4 +1,4 @@
-import type { TileLayout } from '@kong-ui-public/analytics-utilities'
+import type { TileConfig, TileLayout } from '@kong-ui-public/analytics-utilities'
 
 export interface TilePosition {
   col: number
@@ -12,7 +12,7 @@ export interface TileSize {
 
 export interface GridTile<T> {
   id: string | number
-  type: 'chart' // Right now we only support one type of tile.
+  type: TileConfig['type']
   layout: TileLayout
   meta: T
 }

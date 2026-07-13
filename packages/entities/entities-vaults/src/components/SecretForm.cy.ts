@@ -276,4 +276,46 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       })
     })
   })
+
+  describe('Kong AI Gateway', () => {
+    const aiGatewayId = 'ai-gw-1234'
+    const baseConfigAiGateway: KonnectSecretFormConfig = {
+      ...baseConfigKonnect,
+      apiType: 'aiGateway',
+      aiGatewayId,
+    }
+
+    it('fetches the vault and POSTs the secret via the AI Gateway URLs', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigAiGateway.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/vaults/${vaultId}`,
+        },
+        { statusCode: 200, body: { id: vaultId, type: 'konnect', name: 'kv-1', config: { config_store_id: configStoreId } } },
+      ).as('getAiVault')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigAiGateway.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/config-stores/${configStoreId}/secrets`,
+        },
+        { statusCode: 201, body: secret },
+      ).as('createAiSecret')
+
+      cy.mount(SecretForm, {
+        props: {
+          config: baseConfigAiGateway,
+          vaultId,
+        },
+      })
+
+      cy.wait('@getAiVault')
+      cy.getTestId('secret-form-key').type('password')
+      cy.getTestId('secret-form-value').type('hunter2')
+      cy.getTestId('other-create-form-submit').click()
+
+      cy.wait('@createAiSecret').then(({ request }) => {
+        expect(request.body).to.deep.equal({ key: 'password', value: 'hunter2' })
+      })
+    })
+  })
 })

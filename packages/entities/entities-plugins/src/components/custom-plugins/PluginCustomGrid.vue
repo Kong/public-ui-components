@@ -45,7 +45,9 @@
             v-for="(plugin, index) in modifiedCustomPlugins"
             :key="`plugin-card-${index}`"
             ref="pluginCardRef"
+            :can-delete-cloned-plugin="canDeleteClonedPlugin"
             :can-delete-custom-plugin="canDeleteCustomPlugin"
+            :can-edit-cloned-plugin="canEditClonedPlugin"
             :can-edit-custom-plugin="canEditCustomPlugin"
             :config="config"
             :navigate-on-click="navigateOnClick"
@@ -108,9 +110,23 @@ const props = defineProps({
     default: false,
   },
   /**
+   * Whether or not user has rights to delete cloned custom plugins
+   */
+  canDeleteClonedPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * Whether or not user has rights to edit custom plugins
    */
   canEditCustomPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Whether or not user has rights to edit cloned custom plugins
+   */
+  canEditClonedPlugin: {
     type: Boolean,
     default: false,
   },

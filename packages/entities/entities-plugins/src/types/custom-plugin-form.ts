@@ -64,6 +64,7 @@ export interface ClonedPluginRequestBody {
 }
 
 export interface ClonedPluginResponse {
+  id?: string
   ref: string
   name: string
   priority: number | null

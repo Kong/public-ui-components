@@ -19,7 +19,7 @@
           <component
             :is="icon"
             decorative
-            :size="KUI_ICON_SIZE_40"
+            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
           />
         </KButton>
       </KTooltip>
@@ -45,12 +45,12 @@
             <ChevronDoubleLeftIcon
               v-if="sidePanelExpanded"
               decorative
-              :size="KUI_ICON_SIZE_40"
+              :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
             />
             <ChevronDoubleRightIcon
               v-else
               decorative
-              :size="KUI_ICON_SIZE_40"
+              :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
             />
           </KButton>
         </KTooltip>

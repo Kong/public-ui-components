@@ -1,8 +1,10 @@
 import PluginCatalog from './PluginCatalog.vue'
 import { PluginGroupArraySortedAlphabetically, type KonnectPluginSelectConfig } from '../types'
 import { PluginGroup } from '@kong-ui-public/entities-plugins-metadata'
+import { FEATURE_FLAGS } from '../constants'
 import {
   konnectAvailablePlugins,
+  konnectClonedCustomPlugins,
   konnectStreamingCustomPlugins,
 } from '../../fixtures/mockData'
 import { createMemoryHistory, createRouter } from 'vue-router'
@@ -57,6 +59,19 @@ describe('<PluginCatalog />', {
         body: konnectStreamingCustomPlugins,
       },
     ).as('getStreamingCustomPlugins')
+  }
+
+  const interceptClonedPlugins = (statusCode = 200) => {
+    cy.intercept(
+      {
+        method: 'GET',
+        pathname: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/cloned-plugins`,
+      },
+      {
+        statusCode,
+        body: statusCode === 200 ? konnectClonedCustomPlugins : { message: 'Unable to load cloned plugins' },
+      },
+    ).as('getClonedPlugins')
   }
 
   beforeEach(() => {
@@ -289,5 +304,187 @@ describe('<PluginCatalog />', {
     cy.getTestId('clear-filter-selection').should('not.be.disabled').click()
     cy.getTestId(`plugin-filter-checkbox-${PluginGroup.TRAFFIC_CONTROL}`).should('not.be.checked')
     cy.getTestId('clear-filter-selection').should('be.disabled')
+  })
+
+  it('should render installed, streamed, and cloned custom plugins in the Custom Plugins group', () => {
+    interceptKonnect()
+    interceptClonedPlugins()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        customPluginSupport: ['schema', 'streaming', 'cloned'],
+      },
+      global: {
+        provide: {
+          [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+        },
+      },
+      router,
+    })
+
+    cy.wait(['@getAvailablePlugins', '@getStreamingCustomPlugins', '@getClonedPlugins'])
+
+    cy.getTestId(`plugin-group-${PluginGroup.CUSTOM_PLUGINS}`).within(() => {
+      cy.getTestId('moesif-card').should('be.visible').contains('Installed custom')
+      cy.getTestId('plugin-1-card').should('be.visible').contains('Streamed custom')
+      cy.getTestId('rate-limiting-clone-card').should('be.visible').contains('Cloned from rate-limiting')
+    })
+  })
+
+  it('should not request or render cloned plugins when the cloned plugin feature flag is disabled', () => {
+    interceptKonnect()
+    interceptClonedPlugins()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        customPluginSupport: ['schema', 'streaming', 'cloned'],
+      },
+      router,
+    })
+
+    cy.wait(['@getAvailablePlugins', '@getStreamingCustomPlugins'])
+    cy.get('@getClonedPlugins.all').should('have.length', 0)
+    cy.getTestId('rate-limiting-clone-card').should('not.exist')
+  })
+
+  it('should hide custom plugin actions when edit and delete permissions are denied', () => {
+    interceptKonnect()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        customPluginSupport: 'streaming',
+        canEditCustomPlugin: () => false,
+        canDeleteCustomPlugin: () => false,
+      },
+      router,
+    })
+
+    cy.wait(['@getAvailablePlugins', '@getStreamingCustomPlugins'])
+    cy.getTestId('plugin-1-card').should('be.visible')
+    cy.getTestId('custom-plugin-actions').should('not.exist')
+  })
+
+  it('should reload custom plugins after deleting a custom plugin', () => {
+    interceptKonnect()
+    let deleteRequestCompleted = false
+
+    cy.intercept(
+      {
+        method: 'GET',
+        pathname: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins`,
+      },
+      (req) => {
+        req.reply({
+          statusCode: 200,
+          body: deleteRequestCompleted ? { data: [] } : konnectStreamingCustomPlugins,
+        })
+      },
+    ).as('getStreamingCustomPlugins')
+
+    cy.intercept(
+      {
+        method: 'DELETE',
+        url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins/plugin-1`,
+      },
+      (req) => {
+        req.on('after:response', () => {
+          deleteRequestCompleted = true
+        })
+
+        req.reply({ statusCode: 204, delay: 1000 })
+      },
+    ).as('deleteStreamingCustomPlugin')
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        customPluginSupport: 'streaming',
+        canEditCustomPlugin: () => false,
+        canDeleteCustomPlugin: () => true,
+      },
+      router,
+    })
+
+    cy.wait(['@getAvailablePlugins', '@getStreamingCustomPlugins'])
+    cy.getTestId('plugin-1-card').should('be.visible')
+    cy.getTestId('plugin-1-card').findTestId('overflow-actions-button').click()
+    cy.getTestId('delete-plugin-schema').filter(':visible').click()
+    cy.getTestId('delete-custom-plugin-schema-modal').within(() => {
+      cy.get('input').type('plugin-1')
+      cy.getTestId('modal-action-button').click()
+    })
+
+    cy.getTestId('plugin-1-card').should('be.visible').then(() => {
+      expect(deleteRequestCompleted).to.equal(false)
+    })
+    cy.wait('@deleteStreamingCustomPlugin')
+    cy.get('@getStreamingCustomPlugins.all').should('have.length', 2)
+    cy.getTestId('plugin-1-card').should('not.exist')
+  })
+
+  it('should keep a custom plugin visible if delete fails', () => {
+    interceptKonnect()
+
+    cy.intercept(
+      {
+        method: 'DELETE',
+        url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins/plugin-1`,
+      },
+      { statusCode: 500, body: { message: 'delete failed' }, delay: 1000 },
+    ).as('deleteStreamingCustomPlugin')
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        customPluginSupport: 'streaming',
+        canEditCustomPlugin: () => false,
+        canDeleteCustomPlugin: () => true,
+      },
+      router,
+    })
+
+    cy.wait(['@getAvailablePlugins', '@getStreamingCustomPlugins'])
+    cy.getTestId('plugin-1-card').should('be.visible')
+    cy.getTestId('plugin-1-card').findTestId('overflow-actions-button').click()
+    cy.getTestId('delete-plugin-schema').filter(':visible').click()
+    cy.getTestId('delete-custom-plugin-schema-modal').within(() => {
+      cy.get('input').type('plugin-1')
+      cy.getTestId('modal-action-button').click()
+    })
+
+    cy.getTestId('plugin-1-card').should('be.visible')
+    cy.wait('@deleteStreamingCustomPlugin')
+    cy.getTestId('plugin-1-card').should('be.visible')
+    cy.get('@getStreamingCustomPlugins.all').should('have.length', 1)
+  })
+
+  it('should keep bundled plugins visible and show a warning when a custom plugin list fails', () => {
+    interceptKonnect()
+
+    cy.intercept(
+      {
+        method: 'GET',
+        pathname: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins`,
+      },
+      {
+        statusCode: 500,
+        body: { message: 'Unable to load streamed plugins' },
+      },
+    ).as('getStreamingCustomPluginsError')
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        customPluginSupport: 'streaming',
+      },
+      router,
+    })
+
+    cy.wait(['@getAvailablePlugins', '@getStreamingCustomPluginsError'])
+    cy.getTestId('basic-auth-card').should('be.visible')
+    cy.contains('Unable to load streamed plugins').should('be.visible')
   })
 })

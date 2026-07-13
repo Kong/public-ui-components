@@ -86,7 +86,9 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectSecretFormConfig): boolean => {
       if (!config || config.app !== 'konnect') return false
-      if (!config.controlPlaneId || !config.cancelRoute) return false
+      if (config.apiType !== 'aiGateway' && !config.controlPlaneId) return false
+      if (!config.cancelRoute) return false
+      if (config.apiType === 'aiGateway' && !config.aiGatewayId) return false
       return true
     },
   },
@@ -128,7 +130,12 @@ const originalFields = reactive<SecretStateFields>({
   value: '',
 })
 
-const fetchUrl = computed<string>(() => endpoints.form[props.config?.app]?.edit
+const formEndpoints = computed(() => props.config.apiType === 'aiGateway'
+  ? endpoints.form.aiGateway
+  : endpoints.form[props.config.app])
+
+const fetchUrl = computed<string>(() => formEndpoints.value?.edit
+  .replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
   .replace(/{id}/gi, props.configStoreId)
   .replace(/{secretId}/gi, props.secretId),
 )
@@ -157,7 +164,8 @@ const formType = computed((): EntityBaseFormType => props.secretId
   : EntityBaseFormType.Create)
 
 const submitUrl = computed<string>(() => {
-  return `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value]}`
+  return `${props.config.apiBaseUrl}${formEndpoints.value[formType.value]}`
+    .replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
     .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, props.configStoreId)
@@ -183,7 +191,11 @@ const submitData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, payload.value)
     } else if (formType.value === 'edit') {
-      response = await axiosInstance.put(submitUrl.value, payload.value)
+      // AI Gateway does not allow updating the `key` field, so omit it from the payload
+      const editPayload = props.config.apiType === 'aiGateway'
+        ? { value: payload.value.value }
+        : payload.value
+      response = await axiosInstance.put(submitUrl.value, editPayload)
     }
 
     updateFormValues(response?.data)
