@@ -332,6 +332,67 @@ test.describe('Filler - Playwright', () => {
       await expect(page.locator('[data-testid="ff-map-container-functions.1"] [data-testid^="ff-functions.kid:"]')).toHaveValue('line1\nline2\nline3')
     })
 
+    test('enum: scoped selection ignores identically-named options from other enum fields', async ({ mount, page }) => {
+      // Two enum fields each having 'openai' as a valid value — the old global
+      // selector would match 2 elements and cause a strict-mode violation.
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            format: {
+              type: 'string',
+              one_of: ['openai', 'ollama'],
+              default: 'openai',
+            },
+          },
+          {
+            provider: {
+              type: 'string',
+              one_of: ['openai', 'cohere'],
+              default: 'openai',
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('format', 'ollama')
+      await filler.fillField('provider', 'cohere')
+
+      await expect(page.getByTestId('ff-format')).toHaveValue('ollama')
+      await expect(page.getByTestId('ff-provider')).toHaveValue('cohere')
+    })
+
+    test('array: add-item button click succeeds even when sticky tabs cover the button', async ({ mount, page }) => {
+      // Playwright's own actionability scroll (unlike Cypress's default
+      // scroll-to-top) scrolls the minimum distance needed and re-checks
+      // that the click point isn't obstructed, so no explicit scroll/force
+      // is needed here.
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            hosts: {
+              type: 'array',
+              elements: {
+                type: 'string',
+              },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('hosts', ['alpha.example.com', 'beta.example.com'])
+
+      await expect(page.locator('[data-testid="ff-hosts.0"]')).toHaveValue('alpha.example.com')
+      await expect(page.locator('[data-testid="ff-hosts.1"]')).toHaveValue('beta.example.com')
+    })
+
     test('should fill json field', async ({ mount, page }) => {
       const schema: FormSchema = {
         type: 'record',

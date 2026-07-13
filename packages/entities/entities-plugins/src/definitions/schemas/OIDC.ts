@@ -1,4 +1,4 @@
-import type { OIDCSchema, TokenExchange, ProofOfPossessionMtlsFromHeader } from '../../types/plugins/oidc'
+import type { OIDCSchema, TokenExchange, ProofOfPossessionMtlsFromHeader, ProtectedResourceMetadata } from '../../types/plugins/oidc'
 import { isEqual } from 'lodash-es'
 
 export function resetEmptyTokenExchange(config?: { token_exchange?: TokenExchange | null }) {
@@ -117,11 +117,39 @@ export const resetEmptyProofOfPossessionMtlsFromHeader = (
   }
 }
 
+export const resetEmptyProtectedResourceMetadata = (
+  config?: { protected_resource_metadata?: ProtectedResourceMetadata | null },
+) => {
+  const metadataConfig = config?.protected_resource_metadata
+
+  if (!metadataConfig) {
+    return
+  }
+
+  // authorization_servers is required with len_min: 1; if empty the whole record is invalid
+  if (!Array.isArray(metadataConfig.authorization_servers) || metadataConfig.authorization_servers.length === 0) {
+    config.protected_resource_metadata = null
+    return
+  }
+
+  // If metadataConfig is equal to the default value, set protected_resource_metadata to null
+  const emptyMetadataConfig: ProtectedResourceMetadata = {
+    authorization_servers: null,
+    scopes_supported: null,
+  }
+
+  if (isEqual(metadataConfig, emptyMetadataConfig)) {
+    config.protected_resource_metadata = null
+    return
+  }
+}
+
 export const oidcSchema: OIDCSchema = {
   shamefullyTransformPayload(params) {
 
     resetEmptyTokenExchange(params.payload.config)
     resetEmptyProofOfPossessionMtlsFromHeader(params.payload.config)
+    resetEmptyProtectedResourceMetadata(params.payload.config)
 
     return params
   },

@@ -1,5 +1,5 @@
 <template>
-  <StandardLayout v-bind="props">
+  <DynamicLayout v-bind="props">
     <template #field-renderers>
       <FieldRenderer
         v-slot="slotProps"
@@ -46,19 +46,19 @@
       name="config"
       reset-label-path="reset"
     />
-  </StandardLayout>
+  </DynamicLayout>
 </template>
 
 <script setup lang="ts">
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
-import StandardLayout from '../../shared/layout/StandardLayout.vue'
+import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
 import ArrayField from '../../shared/ArrayField.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
 import ObjectField from '../../shared/ObjectField.vue'
 import composables from '../../../../composables'
 
-import type { Props } from '../../shared/layout/StandardLayout.vue'
+import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
 import StringArrayField from '../../shared/StringArrayField.vue'
 import MapField from '../../shared/MapField.vue'
 

@@ -21,6 +21,11 @@
       @update:property-key="setConfig('property-key')"
     />
 
+    <BooleanField
+      name="non_nil"
+      @update:model-value="setConfig('non_nil')"
+    />
+
     <NodeFormDivider v-if="writable" />
 
     <InputsField
@@ -41,6 +46,7 @@ import PropertiesField from './PropertiesField.vue'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import { computed, useTemplateRef } from 'vue'
 import EnumField from '../../../../shared/EnumField.vue'
+import BooleanField from '../../../../shared/BooleanField.vue'
 import InputsField from './InputsField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'
 import { extractKeyFromProperty, identifyPropertyHasKey, isReadableProperty, isWritableProperty } from '../node/property'
@@ -57,6 +63,7 @@ const { nodeId } = defineProps<{
 interface PropertyFormData extends BaseFormData {
   property: string | null
   content_type: string | null
+  non_nil?: boolean
 }
 
 const formRef = useTemplateRef('form')

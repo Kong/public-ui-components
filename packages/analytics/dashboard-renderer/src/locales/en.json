@@ -23,6 +23,22 @@
     "defaultFilename": "Chart export",
     "exportAsCsv": "Export as CSV"
   },
+  "chartLabels": {
+    "control_plane": "Control plane",
+    "data_plane_node_version": "Data plane node version",
+    "env": "Environment",
+    "gateway_service": "Gateway service",
+    "hostname": "Hostname",
+    "plugin": "Plugin",
+    "plugin_name": "Plugin name",
+    "plugin_scope": "Plugin scope",
+    "region": "Region",
+    "request_count": "Request count",
+    "route": "Route",
+    "status_code": "Status code",
+    "team": "Team",
+    "name": "Name"
+  },
   "jumpToExplore": "Explore",
   "jumpToRequests": "View requests",
   "query_aged_out_warning": "This tile was configured with {savedGranularity} granularity, which is no longer available. It now shows {currentGranularity} data, the closest available granularity.",

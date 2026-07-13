@@ -3,6 +3,244 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.73](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.72...@kong-ui-public/entities-data-plane-nodes@0.6.73) (2026-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.72](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.71...@kong-ui-public/entities-data-plane-nodes@0.6.72) (2026-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.71](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.70...@kong-ui-public/entities-data-plane-nodes@0.6.71) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.70](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.69...@kong-ui-public/entities-data-plane-nodes@0.6.70) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.69](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.68...@kong-ui-public/entities-data-plane-nodes@0.6.69) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.68](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.67...@kong-ui-public/entities-data-plane-nodes@0.6.68) (2026-07-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.67](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.66...@kong-ui-public/entities-data-plane-nodes@0.6.67) (2026-06-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.66](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.65...@kong-ui-public/entities-data-plane-nodes@0.6.66) (2026-06-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.65](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.64...@kong-ui-public/entities-data-plane-nodes@0.6.65) (2026-06-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.60.0 ([#3509](https://github.com/Kong/public-ui-components/issues/3509)) ([64c9a2a](https://github.com/Kong/public-ui-components/commit/64c9a2a3e9adbef1f5313d71b5100cf19e427850))
+
+
+
+
+
+## [0.6.64](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.63...@kong-ui-public/entities-data-plane-nodes@0.6.64) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
+## [0.6.63](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.62...@kong-ui-public/entities-data-plane-nodes@0.6.63) (2026-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.62](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.61...@kong-ui-public/entities-data-plane-nodes@0.6.62) (2026-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.61](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.60...@kong-ui-public/entities-data-plane-nodes@0.6.61) (2026-06-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3436](https://github.com/Kong/public-ui-components/issues/3436)) ([50801c8](https://github.com/Kong/public-ui-components/commit/50801c82e6d7f71324aeab8209d9a212af5fe8a6))
+
+
+
+
+
+## [0.6.60](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.59...@kong-ui-public/entities-data-plane-nodes@0.6.60) (2026-06-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.59](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.58...@kong-ui-public/entities-data-plane-nodes@0.6.59) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
+## [0.6.58](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.57...@kong-ui-public/entities-data-plane-nodes@0.6.58) (2026-06-19)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3469](https://github.com/Kong/public-ui-components/issues/3469)) ([767d24f](https://github.com/Kong/public-ui-components/commit/767d24f30756acf44f69f96bbb696b6947e3cb17))
+
+
+
+
+
+## [0.6.57](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.56...@kong-ui-public/entities-data-plane-nodes@0.6.57) (2026-06-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.56](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.55...@kong-ui-public/entities-data-plane-nodes@0.6.56) (2026-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.55](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.54...@kong-ui-public/entities-data-plane-nodes@0.6.55) (2026-06-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.54](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.53...@kong-ui-public/entities-data-plane-nodes@0.6.54) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [0.6.53](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.52...@kong-ui-public/entities-data-plane-nodes@0.6.53) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [0.6.52](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.51...@kong-ui-public/entities-data-plane-nodes@0.6.52) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** align vue-router versions ([#3432](https://github.com/Kong/public-ui-components/issues/3432)) ([5adc5dd](https://github.com/Kong/public-ui-components/commit/5adc5ddbfe47d65faab890cd0e84b7ef1f64120e))
+
+
+
+
+
+## [0.6.51](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.50...@kong-ui-public/entities-data-plane-nodes@0.6.51) (2026-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.50](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.49...@kong-ui-public/entities-data-plane-nodes@0.6.50) (2026-06-09)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3364](https://github.com/Kong/public-ui-components/issues/3364)) ([aa0634c](https://github.com/Kong/public-ui-components/commit/aa0634ce51d03542a03c133b49b12194b0f3f8de))
+
+
+
+
+
+## [0.6.49](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.48...@kong-ui-public/entities-data-plane-nodes@0.6.49) (2026-06-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.6.48](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.47...@kong-ui-public/entities-data-plane-nodes@0.6.48) (2026-06-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.56.0 ([#3396](https://github.com/Kong/public-ui-components/issues/3396)) ([13336a9](https://github.com/Kong/public-ui-components/commit/13336a9be92e452d4bd217e65d6450778d47844f))
+
+
+
+
+
 ## [0.6.47](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.6.46...@kong-ui-public/entities-data-plane-nodes@0.6.47) (2026-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
