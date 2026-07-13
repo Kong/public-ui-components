@@ -3,27 +3,27 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-13T07:59:20.741Z
+> Generated: 2026-07-13T08:42:22.548Z
 
 ## Summary
 
-`██████▓▓▓▒▒▒▒▒▒▒░░░░░░░` **46%**
+`██████▓▓▓▓▒▒▒▒▒▒▒░░░░░░` **50%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **52** |
-| ⏳ Pending | **61** |
+| ✅ Migrated | **57** |
+| ⏳ Pending | **56** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **3** |
+| 🚀 Ready for Release | **4** |
 | 🔄 In Progress | **7** |
-| ⏸️ Not Started | **7** |
+| ⏸️ Not Started | **6** |
 
 ---
 
@@ -102,13 +102,13 @@
 
 ---
 
-### ⏸️ M7 — AI Semantic & Transformers — Not Started (0/5)
+### 🚀 M7 — AI Semantic & Transformers — Ready for Release (5/5)
 
-- ⏳ `ai-semantic-cache`
-- ⏳ `ai-prompt-template`
-- ⏳ `ai-semantic-prompt-guard`
-- ⏳ `ai-request-transformer`
-- ⏳ `ai-response-transformer`
+- ✅ `ai-semantic-cache`
+- ✅ `ai-prompt-template`
+- ✅ `ai-semantic-prompt-guard`
+- ✅ `ai-request-transformer`
+- ✅ `ai-response-transformer`
 
 ---
 
