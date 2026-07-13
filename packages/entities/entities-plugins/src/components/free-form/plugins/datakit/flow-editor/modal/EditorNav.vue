@@ -1,8 +1,5 @@
 <template>
-  <nav
-    class="dk-editor-nav"
-    :class="{ 'datakit-new-look': datakitNewLook }"
-  >
+  <navclass="dk-editor-nav">
     <div class="top">
       <KTooltip
         v-for="({ label, to, icon, onClick }) in navItems"
@@ -15,7 +12,6 @@
           :key="label"
           appearance="none"
           class="nav-item"
-          :class="{ 'datakit-new-look': datakitNewLook }"
           icon
           :to="to"
           @click="onClick"
@@ -42,7 +38,6 @@
           <KButton
             appearance="none"
             class="nav-item nav-item-toggle"
-            :class="{ 'datakit-new-look': datakitNewLook }"
             icon
             size="large"
             @click="handlePanelToggle"
@@ -61,7 +56,8 @@
         </KTooltip>
       </div>
     </div>
-  </nav>
+    </nav>
+  </navclass="dk-editor-nav">
 </template>
 
 <script setup lang="ts">
@@ -71,12 +67,9 @@ import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../../locales/en.json'
 import { usePreferences } from '../../composables'
-import { DATAKIT_NEW_LOOK } from '../constants'
 
 import type { EditorModalNavItem } from '../../types'
-import { computed, inject, ref } from 'vue'
-
-const datakitNewLook = inject<boolean>(DATAKIT_NEW_LOOK)
+import { computed, ref } from 'vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -110,16 +103,12 @@ function handlePanelToggle() {
 <style lang="scss" scoped>
 .dk-editor-nav {
   align-items: center;
+  border-right: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   display: flex;
   flex-direction: column;
   gap: var(--kui-space-50, $kui-space-50);
   justify-content: space-between;
-  padding: 0 var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40);
-
-  &.datakit-new-look {
-    border-right: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    padding: var(--kui-space-40, $kui-space-40);
-  }
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40);
 
   .top,
   .bottom {
@@ -148,67 +137,22 @@ function handlePanelToggle() {
   }
 
   .nav-item {
-    &:not(.datakit-new-look) {
-      align-items: center;
-      background-color: var(--kui-navigation-color-background, $kui-navigation-color-background);
-      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
-      border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-      color: var(--kui-navigation-color-text, $kui-navigation-color-text);
-      cursor: pointer;
-      display: flex;
-      height: 36px;
-      justify-content: center;
-      text-decoration: none;
-      transition: color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
-      white-space: nowrap;
-      width: 36px;
+    align-items: center;
+    background-color: var(--kui-color-background, $kui-color-background);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30) !important;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease, color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
+    white-space: nowrap;
 
-      &:hover,
-      &:focus-visible {
-        color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
-
-        :deep(svg) {
-          color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
-        }
-      }
-
-      &:focus-visible {
-        box-shadow: var(--kui-navigation-shadow-focus, $kui-navigation-shadow-focus);
-        outline: none;
-      }
-
-      :deep(svg) {
-        path {
-          color: currentColor;
-          fill: currentColor;
-          transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
-        }
-      }
-
-    }
-
-    &-toggle:not(.datakit-new-look) {
-      border-color: var(--kui-navigation-color-border, $kui-navigation-color-border);
-    }
-
-    &.datakit-new-look {
-      align-items: center;
-      background-color: var(--kui-color-background, $kui-color-background);
-      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
-      border-radius: var(--kui-border-radius-30, $kui-border-radius-30) !important;
-      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      text-decoration: none;
-      transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease, color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
-      white-space: nowrap;
-
-      &:hover,
-      &:focus-visible {
-        background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
-        color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
-      }
+    &:hover,
+    &:focus-visible {
+      background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
+      color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
     }
   }
 

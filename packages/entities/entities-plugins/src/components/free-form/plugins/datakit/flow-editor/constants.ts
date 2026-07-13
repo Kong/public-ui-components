@@ -49,5 +49,3 @@ export const MIN_ZOOM_LEVEL = 0
 export const SCROLL_DURATION = 200
 
 export const CONFIRM_MODAL_PROVIDE_KEY = Symbol('confirm-modal')
-
-export const DATAKIT_NEW_LOOK: InjectionKey<boolean> = Symbol('DATAKIT_NEW_LOOK')

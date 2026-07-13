@@ -372,18 +372,7 @@ const props = defineProps({
     required: false,
     default: undefined,
   },
-
-  /**
-   * Control if the Datakit new look is enabled for the form.
-   * The new look determines color of sidebar and back button in full screen flow editor.
-   */
-  datakitNewLook: {
-    type: Boolean,
-    default: false,
-  },
 })
-
-provide(DATAKIT_NEW_LOOK, props.datakitNewLook)
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
