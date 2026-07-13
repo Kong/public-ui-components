@@ -52,7 +52,7 @@
         data-testid="new-redis-config-area"
         @click="onCreateNew"
       >
-        <AddIcon :size="KUI_ICON_SIZE_20" />
+        <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
         <span>{{ createButtonText || t('selector.create_new') }}</span>
       </div>
     </template>

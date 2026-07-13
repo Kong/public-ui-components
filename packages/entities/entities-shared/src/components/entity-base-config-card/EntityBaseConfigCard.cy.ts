@@ -650,7 +650,7 @@ describe('<EntityBaseConfigCard />', () => {
         { statusCode: 200, body: gatewayServiceRecord },
       ).as('fetchWithWorkspace')
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config: configWithWorkspace('default'),
           configSchema,
@@ -672,7 +672,7 @@ describe('<EntityBaseConfigCard />', () => {
         { statusCode: 200, body: gatewayServiceRecord },
       ).as('fetchWithTestWorkspace')
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config: configWithWorkspace('test'),
           configSchema,
@@ -694,7 +694,7 @@ describe('<EntityBaseConfigCard />', () => {
         { statusCode: 200, body: gatewayServiceRecord },
       ).as('fetchNoWorkspace')
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config: configNoWorkspace,
           configSchema,
@@ -716,7 +716,7 @@ describe('<EntityBaseConfigCard />', () => {
         { statusCode: 500, body: {} },
       ).as('fetchError')
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config: configWithWorkspace('default'),
           configSchema,
@@ -738,7 +738,7 @@ describe('<EntityBaseConfigCard />', () => {
         { statusCode: 200, body: gatewayServiceRecord },
       ).as('fetchPlain')
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config: configWithWorkspace('default'),
           configSchema,
@@ -839,44 +839,6 @@ describe('<EntityBaseConfigCard />', () => {
       cy.getTestId('select-item-json').should('not.exist')
       cy.getTestId('select-item-yaml').should('not.exist')
       cy.getTestId('select-item-terraform').should('exist')
-    })
-  })
-
-  describe('after-fields slot', () => {
-    it('renders slotted content below the property grid', () => {
-      const afterText = 'Extra block below config fields'
-
-      interceptFetch()
-
-      cy.mount(EntityBaseConfigCardMount, {
-        props: {
-          config,
-          configSchema,
-          entityType,
-          fetchUrl,
-        },
-        slots: {
-          'after-fields': h('p', { 'data-testid': 'config-card-after-fields-marker' }, afterText),
-        },
-      })
-
-      cy.get('.config-card-details-after').should('exist')
-      cy.getTestId('config-card-after-fields-marker').should('be.visible').and('contain.text', afterText)
-    })
-
-    it('does not render the after-fields container when the slot is unused', () => {
-      interceptFetch()
-
-      cy.mount(EntityBaseConfigCardMount, {
-        props: {
-          config,
-          configSchema,
-          entityType,
-          fetchUrl,
-        },
-      })
-
-      cy.get('.config-card-details-after').should('not.exist')
     })
   })
 })

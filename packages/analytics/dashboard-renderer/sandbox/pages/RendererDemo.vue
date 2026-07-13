@@ -65,14 +65,12 @@ import { DashboardRenderer } from '../../src'
 import { inject, ref } from 'vue'
 import type {
   DashboardConfig,
-  ExploreAggregations,
   TileConfig,
 } from '@kong-ui-public/analytics-utilities'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import type { Threshold } from '@kong-ui-public/analytics-chart'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
@@ -111,6 +109,38 @@ const dashboardConfig = ref<DashboardConfig>({
       type: 'chart',
       definition: {
         chart: {
+          type: 'table',
+          chart_title: 'Platform routes',
+        },
+        query: {
+          datasource: 'platform',
+          entity: 'route',
+          columns: ['name', 'control_plane', 'gateway_service', 'env', 'team', 'region'],
+          filters: [
+            {
+              field: 'env',
+              operator: 'in',
+              value: ['prod'],
+            },
+          ],
+          page_size: 25,
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 1,
+        },
+        size: {
+          cols: 6,
+          rows: 3,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
           type: 'top_n',
           chart_title: 'Top N chart of mock data',
           description: '{timeframe}',
@@ -123,7 +153,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 1,
+          row: 4,
         },
         size: {
           cols: 3,
@@ -152,7 +182,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 3,
-          row: 1,
+          row: 4,
         },
         size: {
           cols: 3,
@@ -182,7 +212,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 2,
+          row: 5,
         },
         size: {
           cols: 3,
@@ -217,7 +247,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 3,
-          row: 2,
+          row: 5,
         },
         size: {
           cols: 3,
@@ -241,7 +271,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 4,
+          row: 7,
         },
         size: {
           cols: 1,
@@ -263,7 +293,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 1,
-          row: 4,
+          row: 7,
         },
         size: {
           cols: 1,
@@ -285,7 +315,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 2,
-          row: 4,
+          row: 7,
         },
         size: {
           cols: 3,
@@ -309,7 +339,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 5,
+          row: 8,
         },
         size: {
           cols: 3,
@@ -331,7 +361,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 3,
-          row: 5,
+          row: 8,
         },
         size: {
           cols: 2,
@@ -361,7 +391,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 7,
+          row: 10,
         },
         size: {
           cols: 3,
@@ -385,7 +415,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 3,
-          row: 7,
+          row: 10,
         },
         size: {
           cols: 3,
@@ -409,7 +439,7 @@ const dashboardConfig = ref<DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 8,
+          row: 11,
         },
         size: {
           cols: 1,
@@ -440,9 +470,9 @@ h2 {
 }
 
 .controls {
-  align-itmes: center;
+  align-items: center;
   display: flex;
-  gap: $kui-space-50;
+  gap: var(--kui-space-50, $kui-space-50);
   margin: 10px 0;
 }
 

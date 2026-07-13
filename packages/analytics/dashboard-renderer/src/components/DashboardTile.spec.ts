@@ -3,6 +3,7 @@ import { defineComponent, h, nextTick } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
+import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
@@ -10,6 +11,7 @@ import type { DashboardRendererContextInternal } from '../types'
 import type { TileDefinition } from '@kong-ui-public/analytics-utilities'
 
 vi.mock('./TimeseriesChartRenderer.vue', () => ({
+  // eslint-disable-next-line vue/one-component-per-file
   default: defineComponent({
     name: 'TimeseriesChartRenderer',
     props: {
@@ -27,7 +29,7 @@ vi.mock('./TimeseriesChartRenderer.vue', () => ({
       },
       height: {
         type: Number,
-        required: true,
+        default: undefined,
       },
       query: {
         type: Object,
@@ -56,6 +58,67 @@ vi.mock('./TimeseriesChartRenderer.vue', () => ({
     },
   }),
 }))
+
+vi.mock('./TableDataGridRenderer.vue', () => ({
+  // eslint-disable-next-line vue/one-component-per-file
+  default: defineComponent({
+    name: 'TableDataGridRenderer',
+    props: {
+      context: {
+        type: Object,
+        required: true,
+      },
+      height: {
+        type: Number,
+        default: undefined,
+      },
+      query: {
+        type: Object,
+        required: true,
+      },
+      queryReady: {
+        type: Boolean,
+        required: true,
+      },
+      refreshCounter: {
+        type: Number,
+        required: true,
+      },
+    },
+    emits: ['loading-change'],
+    setup() {
+      return () => h('div', {
+        'data-testid': 'table-data-grid-renderer-stub',
+      })
+    },
+  }),
+}))
+
+const dropdownSlotStubs = {
+  // eslint-disable-next-line vue/one-component-per-file
+  KDropdown: defineComponent({
+    setup(_, { slots }) {
+      return () => h('div', [
+        slots.default?.(),
+        slots.items?.(),
+      ])
+    },
+  }),
+  // eslint-disable-next-line vue/one-component-per-file
+  KDropdownItem: defineComponent({
+    props: {
+      item: {
+        type: Object,
+        default: undefined,
+      },
+    },
+    setup(props, { slots }) {
+      return () => h('a', {
+        href: (props.item as { to?: string } | undefined)?.to,
+      }, slots.default?.() ?? (props.item as { label?: string } | undefined)?.label)
+    },
+  }),
+}
 
 const mockQueryProvider = {
   exploreBaseUrl: async () => 'http://test.com/explore',
@@ -207,10 +270,174 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     expect(badge.text()).toContain('As of today')
   })
 
+  it('shows the as-of-today badge for non-timeseries platform_usage tiles', async () => {
+    const wrapper = mountTile('platform_usage', ['status_code'])
+    await flushPromises()
+
+    const badge = wrapper.getTestId('time-range-badge')
+    expect(badge.text()).toContain('As of today')
+  })
+
   it('does not show the as-of-today badge when the time dimension is present', async () => {
     const wrapper = mountTile('platform', ['time'])
     await flushPromises()
 
     expect(wrapper.findTestId('time-range-badge').exists()).toBe(false)
+  })
+})
+
+describe('<DashboardTile /> table tiles', () => {
+  beforeEach(() => {
+    setupPiniaTestStore()
+    const analyticsConfigStore = useAnalyticsConfigStore()
+    analyticsConfigStore.analyticsConfig = { analytics: { percentiles: true } } as any
+  })
+
+  it('dispatches table tiles to the table data grid renderer', () => {
+    const tableDefinition: TileDefinition = {
+      chart: {
+        type: 'table',
+        chart_title: 'Table Tile',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['control_plane'],
+        filters: [
+          {
+            field: 'route',
+            operator: 'in',
+            value: ['route-id'],
+          },
+        ],
+      },
+    }
+    const tableContext = {
+      ...mockContext,
+      filters: [
+        {
+          field: 'control_plane',
+          operator: 'in',
+          value: ['cp-id'],
+        },
+      ],
+    }
+
+    const wrapper = mount(DashboardTile, {
+      props: {
+        context: tableContext,
+        definition: tableDefinition,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      shallow: true,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+        stubs: {
+          TableDataGridRenderer: false,
+        },
+      },
+    })
+
+    expect(wrapper.findComponent(TableDataGridRenderer).exists()).toBe(true)
+    expect(wrapper.findComponent(TimeseriesChartRenderer).exists()).toBe(false)
+    expect(wrapper.findComponent(TableDataGridRenderer).props()).toMatchObject({
+      context: tableContext,
+      query: tableDefinition.query,
+      queryReady: true,
+      refreshCounter: 0,
+    })
+    expect(wrapper.findComponent(TableDataGridRenderer).props('height')).toBeGreaterThan(0)
+  })
+
+  it('shows editable tile actions and explore links for table tiles', async () => {
+    const tableDefinition: TileDefinition = {
+      chart: {
+        type: 'table',
+        chart_title: 'Table Tile',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['control_plane'],
+      },
+    }
+
+    const wrapper = mount(DashboardTile, {
+      props: {
+        context: {
+          ...mockContext,
+          editable: true,
+        },
+        definition: tableDefinition,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      shallow: true,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+        stubs: {
+          ...dropdownSlotStubs,
+          TableDataGridRenderer: false,
+        },
+      },
+    })
+    await flushPromises()
+
+    expect(wrapper.findTestId('tile-actions-1').exists()).toBe(true)
+    expect(wrapper.findTestId('edit-tile-1').exists()).toBe(true)
+    expect(wrapper.findTestId('kebab-action-menu-1').exists()).toBe(true)
+    expect(wrapper.findTestId('chart-jump-to-explore-1').exists()).toBe(true)
+    expect(wrapper.findTestId('chart-jump-to-requests-1').exists()).toBe(false)
+    expect(wrapper.findTestId('chart-csv-export-1').exists()).toBe(false)
+  })
+
+  it('shows table explore links when edit actions are hidden', async () => {
+    const tableDefinition: TileDefinition = {
+      chart: {
+        type: 'table',
+        chart_title: 'Table Tile',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['control_plane'],
+      },
+    }
+
+    const wrapper = mount(DashboardTile, {
+      props: {
+        context: {
+          ...mockContext,
+          editable: false,
+        },
+        definition: tableDefinition,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      shallow: true,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+        stubs: {
+          ...dropdownSlotStubs,
+          TableDataGridRenderer: false,
+        },
+      },
+    })
+    await flushPromises()
+
+    expect(wrapper.findTestId('tile-actions-1').exists()).toBe(true)
+    expect(wrapper.findTestId('edit-tile-1').exists()).toBe(false)
+    expect(wrapper.findTestId('chart-jump-to-explore-1').exists()).toBe(true)
+    expect(wrapper.findTestId('chart-jump-to-requests-1').exists()).toBe(false)
   })
 })

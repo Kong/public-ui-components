@@ -111,7 +111,7 @@ import { useMapField } from './composables/useMapField'
 import Field from './Field.vue'
 import { KCard } from '@kong/kongponents'
 import EnhancedInput from './EnhancedInput.vue'
-import useI18n from '../../../composables/useI18n'
+import useI18n from '../../../composables/useFreeformI18n'
 import StringField from './StringField.vue'
 
 interface MapFieldProps extends BaseFieldProps {

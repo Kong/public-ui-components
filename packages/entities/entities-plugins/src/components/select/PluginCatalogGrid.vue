@@ -27,19 +27,28 @@
         :key="group"
       >
         <PluginCatalogGroup
+          :can-delete-cloned-plugin="canDeleteClonedPlugin"
+          :can-delete-custom-plugin="canDeleteCustomPlugin"
+          :can-edit-cloned-plugin="canEditClonedPlugin"
+          :can-edit-custom-plugin="canEditCustomPlugin"
           :config="config"
           :name="group"
           :plugins="pluginList[group as keyof PluginCardList] || []"
-          @delete:success="(pluginName: string) => emit('delete:success', pluginName)"
+          @delete:success="(plugin: DeletedCustomPlugin) => emit('delete:success', plugin)"
           @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
         />
       </div>
     </template>
-    <div v-if="pluginList?.['Query Result']?.length">
+    <div v-if="pluginList?.['Query Result']">
       <PluginCatalogGroup
+        :can-delete-cloned-plugin="canDeleteClonedPlugin"
+        :can-delete-custom-plugin="canDeleteCustomPlugin"
+        :can-edit-cloned-plugin="canEditClonedPlugin"
+        :can-edit-custom-plugin="canEditCustomPlugin"
         :config="config"
         :plugins="pluginList['Query Result'] || []"
         show-all-card
+        @delete:success="(plugin: DeletedCustomPlugin) => emit('delete:success', plugin)"
         @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
       />
     </div>
@@ -55,8 +64,11 @@ import {
   type KonnectPluginSelectConfig,
   type PluginCardList,
   type PluginType,
+  type CustomPluginDeletePayload,
 } from '../../types'
 import PluginCatalogGroup from './PluginCatalogGroup.vue'
+
+type DeletedCustomPlugin = CustomPluginDeletePayload
 
 defineProps<{
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
@@ -65,13 +77,17 @@ defineProps<{
    * Plugins to display in the grid
    */
   pluginList?: PluginCardList
+  canDeleteCustomPlugin?: boolean
+  canDeleteClonedPlugin?: boolean
+  canEditCustomPlugin?: boolean
+  canEditClonedPlugin?: boolean
 }>()
 
 const displayGroups = PluginFeaturedArray.concat(PluginGroupArraySortedAlphabetically)
 
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType): void
-  (e: 'delete:success', pluginName: string): void
+  (e: 'delete:success', plugin: DeletedCustomPlugin): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()

@@ -220,13 +220,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-proxy': {
     descriptionKey: 'plugins.meta.ai-proxy.description',
     nameKey: 'plugins.meta.ai-proxy.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-proxy'],
   },
   'ai-prompt-decorator': {
     descriptionKey: 'plugins.meta.ai-prompt-decorator.description',
     nameKey: 'plugins.meta.ai-prompt-decorator.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-decorator'],
   },
   'ai-prompt-template': {
@@ -238,7 +236,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-prompt-guard': {
     descriptionKey: 'plugins.meta.ai-prompt-guard.description',
     nameKey: 'plugins.meta.ai-prompt-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-guard'],
   },
   'ai-request-transformer': {
@@ -254,7 +251,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-rate-limiting-advanced': {
     descriptionKey: 'plugins.meta.ai-rate-limiting-advanced.description',
     nameKey: 'plugins.meta.ai-rate-limiting-advanced.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-rate-limiting-advanced'],
   },
   'ai-azure-content-safety': {
