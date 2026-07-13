@@ -3,26 +3,26 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-13T08:42:22.548Z
+> Generated: 2026-07-13T09:03:19.751Z
 
 ## Summary
 
-`██████▓▓▓▓▒▒▒▒▒▒▒░░░░░░` **50%**
+`██████▓▓▓▓▓▒▒▒▒▒▒░░░░░░` **54%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **57** |
-| ⏳ Pending | **56** |
+| ✅ Migrated | **61** |
+| ⏳ Pending | **52** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **4** |
-| 🔄 In Progress | **7** |
+| 🚀 Ready for Release | **5** |
+| 🔄 In Progress | **6** |
 | ⏸️ Not Started | **6** |
 
 ---
@@ -146,13 +146,13 @@
 
 ---
 
-### 🔄 M11 — Traffic Control: Rate Limiting — In Progress (1/5)
+### 🚀 M11 — Traffic Control: Rate Limiting — Ready for Release (5/5)
 
 - ✅ `rate-limiting-advanced`
-- ⏳ `response-ratelimiting`
-- ⏳ `graphql-rate-limiting-advanced`
-- ⏳ `redirect`
-- ⏳ `request-termination`
+- ✅ `response-ratelimiting`
+- ✅ `graphql-rate-limiting-advanced`
+- ✅ `redirect`
+- ✅ `request-termination`
 
 ---
 

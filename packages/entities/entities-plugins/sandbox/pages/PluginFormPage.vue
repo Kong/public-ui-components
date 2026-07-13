@@ -128,6 +128,7 @@ provideDeckCommandEditor()
 useProvideExperimentalFreeForms([
   'ai-rate-limiting-advanced',
   'rate-limiting-advanced',
+  'graphql-rate-limiting-advanced',
   'service-protection',
   'prometheus',
   'metering-and-billing',
@@ -160,6 +161,9 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'response-ratelimiting',
+  'redirect',
+  'request-termination',
   'ai-semantic-cache',
   'ai-prompt-template',
   'ai-semantic-prompt-guard',
