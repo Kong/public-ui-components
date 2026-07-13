@@ -52,6 +52,7 @@
             :query-ready="queryReady"
             :tile-id="tile.id"
             :tile-type="tile.type"
+            @chart-data="onChartData(tile)"
             @duplicate-tile="onDuplicateTile(tile)"
             @edit-tile="onEditTile(tile)"
             @remove-tile="onRemoveTile(tile)"
@@ -101,6 +102,7 @@ const {
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
   (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
+  (e: 'tiles-loaded', done: boolean): void
 }>()
 
 const model = defineModel<DashboardConfig>({ required: true })
@@ -113,7 +115,8 @@ const dashboardContainer = ref()
 const layoutContainer = ref<HTMLElement>()
 const scale = ref('scale(1)')
 
-const { exportPdf, exportState: pdfExportState } = composables.useExportPdf(layoutContainer)
+// Track which tiles (except for slottable tiles) have completed their queries.
+const loadedTileIds = new Set<string>()
 
 // Note: queryBridge is not directly used by the DashboardRenderer component.  It is required by many of the
 // subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
@@ -128,6 +131,18 @@ if (!queryBridge) {
 
 // Enable a request queue on the query bridge for all subcomponents.
 composables.useRequestQueue()
+
+const { exportPdf, exportState: pdfExportState } = composables.useExportPdf(layoutContainer)
+
+const onChartData = (tile: GridTile<TileDefinition>) => {
+  loadedTileIds.add((tile.id as string))
+
+  const expectedCount = gridTiles.value.filter(t => !isSlottableTile(t)).length
+
+  if (loadedTileIds.size >= expectedCount) {
+    emit('tiles-loaded', true)
+  }
+}
 
 const tileSortFn = (a: TileConfig, b: TileConfig) => {
   const rowDiff = a.layout.position.row - b.layout.position.row
@@ -225,9 +240,11 @@ const onRemoveTile = (tile: GridTile<TileDefinition>) => {
   if (gridLayoutRef.value) {
     gridLayoutRef.value.removeWidget(tile.id)
   }
+  loadedTileIds.delete((tile.id as string))
 }
 
 const refreshTiles = () => {
+  loadedTileIds.clear()
   refreshCounter.value++
 }
 
