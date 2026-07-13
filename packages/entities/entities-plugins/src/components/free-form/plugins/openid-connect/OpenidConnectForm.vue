@@ -117,6 +117,7 @@
               {{ t('plugins.free-form.openid-connect.tabs.advanced.description') }}
             </p>
           </div>
+          <Field name="config.redis" />
           <ObjectField
             as-child
             name="config"
@@ -181,6 +182,8 @@ const ADVANCED_OMIT = [
   // Kong Identity principals are configured through the guided Common-tab UI on Konnect
   // and are not user-facing elsewhere — never render the bare record.
   'principals',
+
+  'redis',
 ]
 
 // JWKs are auto-fetched from the issuer when verify_signature is on; a jwks_uri only
