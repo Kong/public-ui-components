@@ -82,7 +82,9 @@ describe('PrincipalLookupSettings', () => {
 
       expect((wrapper.vm as any).selectedLookupMethod).toBe('custom-identity')
       expect(formModel['config-principals-principal_by']).toBeNull()
-      expect(formModel['config-principals-principal_claim']).toBeNull()
+      // principal_claim was already pre-filled with `sub` on mount; switching to
+      // custom-identity doesn't touch it.
+      expect(formModel['config-principals-principal_claim']).toEqual(['sub'])
     })
   })
 
@@ -144,9 +146,23 @@ describe('PrincipalLookupSettings', () => {
       expect(wrapper.props('formModel')['config-principals-principal_claim']).toEqual([])
     })
 
-    it('pre-fills the default `sub` claim when none is set', () => {
-      expect((mountComponent({ 'config-principals-principal_claim': null }).vm as any).getTokenClaimInputValue()).toBe('sub')
-      expect((mountComponent({ 'config-principals-principal_claim': [] }).vm as any).getTokenClaimInputValue()).toBe('sub')
+    it('pre-fills the default `sub` claim into the model when none is set', () => {
+      const nullWrapper = mountComponent({ 'config-principals-principal_claim': null })
+      expect(nullWrapper.props('formModel')['config-principals-principal_claim']).toEqual(['sub'])
+      expect((nullWrapper.vm as any).getTokenClaimInputValue()).toBe('sub')
+
+      const emptyWrapper = mountComponent({ 'config-principals-principal_claim': [] })
+      expect(emptyWrapper.props('formModel')['config-principals-principal_claim']).toEqual(['sub'])
+      expect((emptyWrapper.vm as any).getTokenClaimInputValue()).toBe('sub')
+    })
+
+    it('does not re-prefill after the user explicitly clears the field', () => {
+      const wrapper = mountComponent({ 'config-principals-principal_claim': null })
+
+      ;(wrapper.vm as any).handleTokenClaimChange('')
+
+      expect(wrapper.props('formModel')['config-principals-principal_claim']).toEqual([])
+      expect((wrapper.vm as any).getTokenClaimInputValue()).toBe('')
     })
 
     it('displays array with literal dots using escape notation', () => {
