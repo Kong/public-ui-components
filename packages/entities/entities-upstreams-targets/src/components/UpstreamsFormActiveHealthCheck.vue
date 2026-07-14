@@ -122,7 +122,7 @@
           >
             <TrashIcon
               class="delete-item"
-              :color="localHeaders.length > 1 ? KUI_COLOR_TEXT_DANGER : undefined"
+              :color="localHeaders.length > 1 ? `var(--kui-color-text-danger, ${KUI_COLOR_TEXT_DANGER})` : undefined"
             />
           </KButton>
           <KButton

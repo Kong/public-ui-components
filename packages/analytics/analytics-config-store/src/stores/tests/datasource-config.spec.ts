@@ -430,5 +430,18 @@ describe('useDatasourceConfigStore', () => {
         metrics: ['request_size', 'consumer_count'],
       })).toEqual([])
     })
+
+    it('strips unsupported filters for query fields', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filters = ['status_code', 'gateway_service', 'route'].map(makeFilter)
+
+      expect(store.stripUnknownFilters({
+        datasource: 'api_usage',
+        filters,
+        queryFields: ['error_rate'],
+      })).toEqual([makeFilter('status_code'), makeFilter('route')])
+    })
   })
 })

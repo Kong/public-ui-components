@@ -1,6 +1,7 @@
 // Cypress component test spec file
 import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
+import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import composables from '../composables'
 import { exploreResult, emptyExploreResult, multiDimensionExploreResult } from '../../fixtures/mockData'
 import { INJECT_QUERY_PROVIDER } from '../constants'
@@ -168,6 +169,34 @@ describe('<AnalyticsChart />', () => {
     cy.get('.sub-label').eq(2).should('include.text', '910K')
     cy.get('.label').eq(3).should('include.text', '300')
     cy.get('.sub-label').eq(3).should('include.text', '378K')
+  })
+
+  it('renders the platform datasource timestamp axis title', () => {
+    mount({
+      chartData: {
+        ...exploreResult,
+        meta: {
+          ...exploreResult.meta,
+          datasource: 'platform',
+        },
+      },
+    }).then(({ wrapper }) => {
+      expect(wrapper.findComponent(TimeSeriesChart).props('dimensionAxesTitle')).to.eq('@timestamp created at')
+    })
+  })
+
+  it('renders the platform_usage datasource timestamp axis title', () => {
+    mount({
+      chartData: {
+        ...exploreResult,
+        meta: {
+          ...exploreResult.meta,
+          datasource: 'platform_usage',
+        },
+      },
+    }).then(({ wrapper }) => {
+      expect(wrapper.findComponent(TimeSeriesChart).props('dimensionAxesTitle')).to.eq('@timestamp created at')
+    })
   })
 
   it('shows the empty state with no data', () => {

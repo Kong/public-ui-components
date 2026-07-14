@@ -1,8 +1,41 @@
 import { describe, it, expect } from 'vitest'
 
-import { handleQueryError } from './queryError'
+import { handleQueryError, isCancellationError } from './queryError'
+
+describe('isCancellationError', () => {
+  it('detects axios cancellations', () => {
+    expect(isCancellationError({ code: 'ERR_CANCELED', name: 'CanceledError' })).toBe(true)
+    expect(isCancellationError({ code: 'ERR_CANCELED' })).toBe(true)
+  })
+
+  it('detects fetch aborts', () => {
+    expect(isCancellationError(new DOMException('The user aborted a request.', 'AbortError'))).toBe(true)
+  })
+
+  it('rejects other errors', () => {
+    expect(isCancellationError(new Error('boom'))).toBe(false)
+    expect(isCancellationError({ status: 403 })).toBe(false)
+    expect(isCancellationError(undefined)).toBe(false)
+  })
+})
 
 describe('handleQueryError', () => {
+  it('axios cancellation to canceled', () => {
+    const res = handleQueryError({ code: 'ERR_CANCELED', name: 'CanceledError', message: 'canceled' })
+
+    expect(res.type).toBe('canceled')
+    expect(res.message).toBe('Request canceled')
+    expect(res.status).toBeUndefined()
+    expect(res.details).toBeUndefined()
+  })
+
+  it('abort to canceled', () => {
+    const res = handleQueryError(new DOMException('The user aborted a request.', 'AbortError'))
+
+    expect(res.type).toBe('canceled')
+    expect(res.message).toBe('Request canceled')
+  })
+
   it('403 to forbidden', () => {
     const res = handleQueryError({ status: 403 })
 

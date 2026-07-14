@@ -2,8 +2,19 @@ import type { QueryError } from '../types'
 
 import composables from '../composables'
 
+export const isCancellationError = (error: any): boolean => {
+  return error?.code === 'ERR_CANCELED' || error?.name === 'CanceledError' || error?.name === 'AbortError'
+}
+
 export const handleQueryError = (error: any): QueryError => {
   const { i18n } = composables.useI18n()
+
+  if (isCancellationError(error)) {
+    return {
+      type: 'canceled',
+      message: i18n.t('query_errors.canceled.message'),
+    }
+  }
 
   if (error?.status === 403) {
     return {
@@ -12,7 +23,7 @@ export const handleQueryError = (error: any): QueryError => {
       message: i18n.t('query_errors.forbidden.message'),
       details: i18n.t('query_errors.forbidden.details'),
     }
-  } else if (error?.status === 408) {
+  } else if (error?.status === 408 || error?.message?.includes('timeout')) {
     return {
       status: error.status,
       type: 'timeout',
