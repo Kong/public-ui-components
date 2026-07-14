@@ -3,27 +3,27 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-13T09:03:19.751Z
+> Generated: 2026-07-14T02:10:49.202Z
 
 ## Summary
 
-`██████▓▓▓▓▓▒▒▒▒▒▒░░░░░░` **54%**
+`██████▓▓▓▓▓▓▒▒▒▒▒▒░░░░░` **58%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **61** |
-| ⏳ Pending | **52** |
+| ✅ Migrated | **66** |
+| ⏳ Pending | **47** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **5** |
+| 🚀 Ready for Release | **6** |
 | 🔄 In Progress | **6** |
-| ⏸️ Not Started | **6** |
+| ⏸️ Not Started | **5** |
 
 ---
 
@@ -156,13 +156,13 @@
 
 ---
 
-### ⏸️ M12 — Traffic Control: Validation & Routing — Not Started (0/5)
+### 🚀 M12 — Traffic Control: Validation & Routing — Ready for Release (5/5)
 
-- ⏳ `request-validator`
-- ⏳ `canary`
-- ⏳ `mocking`
-- ⏳ `oas-validation`
-- ⏳ `route-by-header`
+- ✅ `request-validator`
+- ✅ `canary`
+- ✅ `mocking`
+- ✅ `oas-validation`
+- ✅ `route-by-header`
 
 ---
 
