@@ -204,10 +204,7 @@ const serializedQuery = computed<string>(() => {
     params.set('filter[name][contains]', searchText.value)
   }
 
-  if (nestedScopeFilterKey.value && entityId) {
-    // Nested entity page: always scope to that one entity, and the scope pill is hidden
-    params.set(`filter[${nestedScopeFilterKey.value}][eq]`, entityId)
-  } else {
+  if (!nestedScopeFilterKey.value) {
     const scopeSelection = filterGroupSelection.value.scope
     if (typeof scopeSelection?.value === 'string' && scopeSelection.value) {
       params.set('filter[scope][eq]', scopeSelection.value)
@@ -224,6 +221,13 @@ const serializedQuery = computed<string>(() => {
   if (tagsValues.length) {
     // Multiple tags can be concatenated using ',' to mean AND or using '/' to mean OR.
     params.set('tags', tagsValues.join('/'))
+  }
+
+  // On a nested entity page, only scope to that one entity once the user has actually triggered a
+  // search/filter - an otherwise-unfiltered load should keep hitting the plain, already
+  // entity-scoped (by URL path) list endpoint instead of switching to /plugins/search.
+  if (nestedScopeFilterKey.value && entityId && params.toString()) {
+    params.set(`filter[${nestedScopeFilterKey.value}][eq]`, entityId)
   }
 
   return params.toString()
