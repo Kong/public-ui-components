@@ -7,7 +7,6 @@ export const vectordbFieldRenderers: FieldRenderer[] = [
     component: ArrayField as any,
     propsOverrides: {
       appearance: 'tabs',
-      stickyTabs: true,
       itemLabel: (_: unknown, index: number) => ` #${index + 1} Sentinel node`,
     },
   },
@@ -16,7 +15,6 @@ export const vectordbFieldRenderers: FieldRenderer[] = [
     component: ArrayField as any,
     propsOverrides: {
       appearance: 'tabs',
-      stickyTabs: true,
       itemLabel: (_: unknown, index: number) => ` #${index + 1} Cluster node`,
     },
   },
