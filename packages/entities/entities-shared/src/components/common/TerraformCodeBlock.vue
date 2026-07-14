@@ -7,14 +7,15 @@
       :copy-code="unredactedTerraformContent"
       data-dd-privacy="mask"
       language="terraform"
-      theme="dark"
+      :theme="konnectColorMode"
       @code-block-render="highlightCodeBlock"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { type PropType, computed } from 'vue'
+import { computed, inject } from 'vue'
+import type { ComputedRef, PropType } from 'vue'
 import { EventGatewayTypesArray, SupportedEntityType, SupportedEntityTypesArray, IdentityTypesArray } from '../../types'
 import { highlightCodeBlock } from '../../utils/code-block'
 
@@ -49,6 +50,8 @@ const props = defineProps({
     default: '',
   },
 })
+
+const konnectColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const isAddonPayload = computed((): boolean => {
   const record = props.entityRecord

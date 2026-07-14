@@ -16,7 +16,7 @@
       :copy-code="unredactedYamlContent"
       data-dd-privacy="mask"
       language="yaml"
-      theme="dark"
+      :theme="konnectColorMode"
       @code-block-render="highlightCodeBlock"
     />
   </div>
@@ -24,12 +24,12 @@
 
 <script setup lang="ts">
 import yaml from 'js-yaml'
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 
 import { highlightCodeBlock } from '../../utils/code-block'
 import DeckCallout from './DeckCallout.vue'
 
-import type { PropType } from 'vue'
+import type { ComputedRef, PropType } from 'vue'
 
 import type { DeckCalloutPreference } from '../../types'
 
@@ -61,6 +61,8 @@ const emit = defineEmits<{
   'deck-callout:click-cta': []
   'deck-callout:dismiss': []
 }>()
+
+const konnectColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const deckCalloutPreference = ref<DeckCalloutPreference>('visible')
 
