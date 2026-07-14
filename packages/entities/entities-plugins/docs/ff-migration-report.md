@@ -3,27 +3,27 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-14T03:52:32.375Z
+> Generated: 2026-07-14T07:07:10.673Z
 
 ## Summary
 
-`██████▓▓▓▓▓▓▓▓▓▒▒▒▒░░░░` **69%**
+`██████▓▓▓▓▓▓▓▓▓▓▒▒▒▒░░░` **73%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **78** |
-| ⏳ Pending | **35** |
+| ✅ Migrated | **83** |
+| ⏳ Pending | **30** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **9** |
+| 🚀 Ready for Release | **10** |
 | 🔄 In Progress | **4** |
-| ⏸️ Not Started | **4** |
+| ⏸️ Not Started | **3** |
 
 ---
 
@@ -196,13 +196,13 @@
 
 ---
 
-### ⏸️ M16 — Authentication: Extended Methods — Not Started (0/5)
+### 🚀 M16 — Authentication: Extended Methods — Ready for Release (5/5)
 
-- ⏳ `hmac-auth`
-- ⏳ `key-auth-enc`
-- ⏳ `ldap-auth`
-- ⏳ `ldap-auth-advanced`
-- ⏳ `oauth2-introspection`
+- ✅ `hmac-auth`
+- ✅ `key-auth-enc`
+- ✅ `ldap-auth`
+- ✅ `ldap-auth-advanced`
+- ✅ `oauth2-introspection`
 
 ---
 
