@@ -38,6 +38,17 @@
           multiline
         />
       </FieldRenderer>
+
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ genericPath }) => genericPath === 'config.token_exchange.subject_token_issuers'"
+      >
+        <ArrayField
+          v-bind="slotProps"
+          appearance="tabs"
+          :item-label="(_: unknown, index: number) => `#${index + 1} Issuer`"
+        />
+      </FieldRenderer>
     </template>
 
     <KTabs :tabs="TABS">
@@ -191,6 +202,20 @@ const RENDER_RULES: RenderRules = {
   dependencies: {
     'config.token_exchange.subject_token_issuers.*.jwks_uri':
       ['config.token_exchange.subject_token_issuers.*.verify_signature', true],
+
+    'config.cluster_cache_redis.cloud_authentication.aws_cache_name': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'aws'],
+    'config.cluster_cache_redis.cloud_authentication.aws_region': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'aws'],
+    'config.cluster_cache_redis.cloud_authentication.aws_is_serverless': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'aws'],
+    'config.cluster_cache_redis.cloud_authentication.aws_access_key_id': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'aws'],
+    'config.cluster_cache_redis.cloud_authentication.aws_secret_access_key': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'aws'],
+    'config.cluster_cache_redis.cloud_authentication.aws_assume_role_arn': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'aws'],
+    'config.cluster_cache_redis.cloud_authentication.aws_role_session_name': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'aws'],
+
+    'config.cluster_cache_redis.cloud_authentication.gcp_service_account_json': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'gcp'],
+
+    'config.cluster_cache_redis.cloud_authentication.azure_client_id': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'azure'],
+    'config.cluster_cache_redis.cloud_authentication.azure_client_secret': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'azure'],
+    'config.cluster_cache_redis.cloud_authentication.azure_tenant_id': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'azure'],
   },
   bundles: [
     [

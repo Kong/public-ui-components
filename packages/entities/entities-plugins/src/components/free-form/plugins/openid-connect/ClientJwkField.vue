@@ -4,6 +4,7 @@
       appearance="tabs"
       :item-label="(_, idx) => `#${idx + 1} Client JWK`"
       :name="name"
+      sticky-tabs
     >
       <template #label>
         {{ t('plugins.free-form.openid-connect.advanced_fields.client_jwk_link_label') }}
