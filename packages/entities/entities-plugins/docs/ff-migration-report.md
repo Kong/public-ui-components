@@ -3,26 +3,26 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-14T09:06:50.902Z
+> Generated: 2026-07-14T09:59:08.411Z
 
 ## Summary
 
-`██████▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒░` **84%**
+`██████▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░` **87%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **95** |
-| ⏳ Pending | **18** |
+| ✅ Migrated | **98** |
+| ⏳ Pending | **15** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **12** |
-| 🔄 In Progress | **4** |
+| 🚀 Ready for Release | **13** |
+| 🔄 In Progress | **3** |
 | ⏸️ Not Started | **1** |
 
 ---
@@ -235,12 +235,12 @@
 
 ---
 
-### 🔄 M20 — Transformations & Serverless — In Progress (1/4)
+### 🚀 M20 — Transformations & Serverless — Ready for Release (4/4)
 
 - ✅ `confluent`
-- ⏳ `degraphql`
-- ⏳ `grpc-gateway`
-- ⏳ `grpc-web`
+- ✅ `degraphql`
+- ✅ `grpc-gateway`
+- ✅ `grpc-web`
 
 ---
 
