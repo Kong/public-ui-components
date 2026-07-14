@@ -3,27 +3,27 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-14T09:57:45.583Z
+> Generated: 2026-07-14T09:59:08.411Z
 
 ## Summary
 
-`██████▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░░` **81%**
+`██████▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░` **87%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **92** |
-| ⏳ Pending | **21** |
+| ✅ Migrated | **98** |
+| ⏳ Pending | **15** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **12** |
+| 🚀 Ready for Release | **13** |
 | 🔄 In Progress | **3** |
-| ⏸️ Not Started | **2** |
+| ⏸️ Not Started | **1** |
 
 ---
 
@@ -224,14 +224,14 @@
 
 ---
 
-### ⏸️ M19 — Security — Not Started (0/6)
+### 🚀 M19 — Security — Ready for Release (6/6)
 
-- ⏳ `acme`
-- ⏳ `injection-protection`
-- ⏳ `json-threat-protection`
-- ⏳ `opa`
-- ⏳ `tls-handshake-modifier`
-- ⏳ `tls-metadata-headers`
+- ✅ `acme`
+- ✅ `injection-protection`
+- ✅ `json-threat-protection`
+- ✅ `opa`
+- ✅ `tls-handshake-modifier`
+- ✅ `tls-metadata-headers`
 
 ---
 
