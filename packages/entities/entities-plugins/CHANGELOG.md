@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.233.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.232.0...@kong-ui-public/entities-plugins@9.233.0) (2026-07-14)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M14 ([#3389](https://github.com/Kong/public-ui-components/issues/3389)) ([7b54ae2](https://github.com/Kong/public-ui-components/commit/7b54ae25466b1a7364b20f0b6a39ee874c797cfe))
+
+
+
+
+
 # [9.232.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.231.0...@kong-ui-public/entities-plugins@9.232.0) (2026-07-14)
 
 
