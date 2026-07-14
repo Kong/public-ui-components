@@ -12,7 +12,7 @@
         :code="fetcherUrl"
         language="plaintext"
         single-line
-        theme="dark"
+        :theme="konnectColorMode"
       />
     </div>
     <KCodeBlock
@@ -23,14 +23,14 @@
       :copy-code="JSON.stringify(unredactedRecord || jsonContent, null, 2)"
       data-dd-privacy="mask"
       language="json"
-      theme="dark"
+      :theme="konnectColorMode"
       @code-block-render="highlightCodeBlock"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import { computed, inject, type ComputedRef, type PropType } from 'vue'
 import type { BadgeAppearance } from '@kong/kongponents'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
 import { highlightCodeBlock } from '../../utils/code-block'
@@ -65,6 +65,8 @@ const props = defineProps({
     default: null,
   },
 })
+
+const konnectColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const jsonContent = computed((): Record<string, any> => props.entityRecord)
 
