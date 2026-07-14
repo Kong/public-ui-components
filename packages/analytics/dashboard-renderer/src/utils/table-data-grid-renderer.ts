@@ -115,7 +115,7 @@ const platformTableDataGridFetcher = async ({
 
   const platformQuery = query.query
   const filters = stripUnknownFilters({
-    datasource: 'platform',
+    datasource: query.datasource,
     filters: [
       ...((platformQuery.filters ?? []) as AllFilters[]),
       ...context.filters,
