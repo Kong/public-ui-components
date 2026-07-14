@@ -8,7 +8,7 @@
               <div class="toggle-mobile-nav">
                 <MenuIcon
                   role="button"
-                  :size="KUI_ICON_SIZE_50"
+                  :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`"
                   title="Toggle menu"
                   @click="toggleMobileNav"
                 />
@@ -45,7 +45,7 @@
               <div class="toggle-mobile-controls">
                 <CogIcon
                   role="button"
-                  :size="KUI_ICON_SIZE_50"
+                  :size="`var(--kui-icon-size-50, ${KUI_ICON_SIZE_50})`"
                   title="Toggle controls"
                   @click="toggleControls"
                 />

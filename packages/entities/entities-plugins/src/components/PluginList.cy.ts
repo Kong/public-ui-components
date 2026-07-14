@@ -194,6 +194,36 @@ describe('<PluginList />', () => {
         .find('.k-badge.info').should('exist')
     })
 
+    it('should render "Last modified" column with formatted date', () => {
+      cy.mount(PluginList, {
+        props: {
+          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
+        },
+      })
+
+      // basic-auth has updated_at set; cell should show a non-empty formatted date
+      cy.getTestId('basic-auth').find('[data-testid="updated_at"]')
+        .should('exist')
+        .invoke('text')
+        .invoke('trim')
+        .should('not.be.empty')
+        .and('not.equal', 'Invalid Date')
+
+      // acl has no updated_at, falls back to created_at
+      cy.getTestId('acl').find('[data-testid="updated_at"]')
+        .should('exist')
+        .invoke('text')
+        .invoke('trim')
+        .should('not.be.empty')
+        .and('not.equal', 'Invalid Date')
+    })
+
     it('should render tooltip when toogle is disabled and "getToggleDisabledTooltip" provided', () => {
       const kTooltipText = 'Some good reason...'
       cy.mount(PluginList, {
