@@ -132,7 +132,6 @@
 <script setup lang="ts">
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME, FORMS_CONFIG } from '@kong-ui-public/forms'
 import { KExternalLink, KTabs } from '@kong/kongponents'
-import { cloneDeep } from 'lodash-es'
 import { computed, inject, onMounted, provide, ref } from 'vue'
 import useI18n from '../../../../composables/useI18n'
 import { FEATURE_FLAGS } from '../../../../constants'
@@ -143,7 +142,6 @@ import FieldRenderer from '../../shared/FieldRenderer.vue'
 import ObjectField from '../../shared/ObjectField.vue'
 import StringField from '../../shared/StringField.vue'
 import { FORM_EDITING } from '../../shared/const'
-import { resetEmptyTokenExchange } from '../../../../definitions/schemas/OIDC'
 import { migrateConsumerClaim } from './useConsumerClaimMigration'
 import AuthMethodsField from './AuthMethodsField.vue'
 import ClientJwkField from './ClientJwkField.vue'
@@ -296,32 +294,6 @@ onMounted(() => {
     props.onFormChange({ config: { consumer_claims: migratedClaims } } as any)
   }
 
-  // token_exchange cleanup — null out default-shaped token_exchange objects
-  const originalTokenExchange = config?.token_exchange ?? null
-  const tokenExchangeWrapper = { token_exchange: cloneDeep(originalTokenExchange) }
-  resetEmptyTokenExchange(tokenExchangeWrapper as any)
-
-  const cleanupPayload: Record<string, any> = {}
-  let needsCleanup = false
-
-  if (tokenExchangeWrapper.token_exchange === null && originalTokenExchange !== null) {
-    cleanupPayload.token_exchange = null
-    needsCleanup = true
-  }
-
-  // proof_of_possession_mtls_from_header cleanup — null out when ca_certificates is absent or empty
-  const mtls = config?.proof_of_possession_mtls_from_header
-  if (mtls) {
-    const ca = mtls.ca_certificates
-    if (!ca || (Array.isArray(ca) && ca.length === 0)) {
-      cleanupPayload.proof_of_possession_mtls_from_header = null
-      needsCleanup = true
-    }
-  }
-
-  if (needsCleanup) {
-    props.onFormChange({ config: cleanupPayload } as any)
-  }
 })
 </script>
 
