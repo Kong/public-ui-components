@@ -55,6 +55,7 @@
             @duplicate-tile="onDuplicateTile(tile)"
             @edit-tile="onEditTile(tile)"
             @remove-tile="onRemoveTile(tile)"
+            @tile-loaded="onTileLoaded(tile)"
             @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
           />
         </template>
@@ -101,6 +102,7 @@ const {
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
   (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
+  (e: 'tiles-loaded', done: boolean): void
 }>()
 
 const model = defineModel<DashboardConfig>({ required: true })
@@ -110,8 +112,11 @@ const refreshCounter = ref(0)
 const gridLayoutRef = ref<ComponentPublicInstance<DraggableGridLayoutExpose<TileDefinition>> | null>(null)
 
 const dashboardContainer = ref()
-const layoutContainer = ref()
+const layoutContainer = ref<HTMLElement>()
 const scale = ref('scale(1)')
+
+// Track which tiles (except for slottable tiles) have completed their queries.
+const loadedTileIds = new Set<string>()
 
 // Note: queryBridge is not directly used by the DashboardRenderer component.  It is required by many of the
 // subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
@@ -126,6 +131,18 @@ if (!queryBridge) {
 
 // Enable a request queue on the query bridge for all subcomponents.
 composables.useRequestQueue()
+
+const { exportPdf, exportState: pdfExportState } = composables.useExportPdf(layoutContainer)
+
+const onTileLoaded = (tile: GridTile<TileDefinition>) => {
+  loadedTileIds.add((tile.id as string))
+
+  const expectedCount = gridTiles.value.filter(t => !isSlottableTile(t)).length
+
+  if (loadedTileIds.size >= expectedCount) {
+    emit('tiles-loaded', true)
+  }
+}
 
 const tileSortFn = (a: TileConfig, b: TileConfig) => {
   const rowDiff = a.layout.position.row - b.layout.position.row
@@ -223,9 +240,11 @@ const onRemoveTile = (tile: GridTile<TileDefinition>) => {
   if (gridLayoutRef.value) {
     gridLayoutRef.value.removeWidget(tile.id)
   }
+  loadedTileIds.delete((tile.id as string))
 }
 
 const refreshTiles = () => {
+  loadedTileIds.clear()
   refreshCounter.value++
 }
 
@@ -288,6 +307,8 @@ const { internalContext, queryReady } = composables.useDashboardInternalContext(
 defineExpose({
   refresh: refreshTiles,
   toggleFullscreen,
+  exportPdf,
+  pdfExportState,
 })
 </script>
 
