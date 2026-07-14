@@ -3,26 +3,26 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-14T02:35:38.013Z
+> Generated: 2026-07-14T03:19:57.949Z
 
 ## Summary
 
-`██████▓▓▓▓▓▓▓▒▒▒▒▒▒░░░░` **63%**
+`██████▓▓▓▓▓▓▓▓▒▒▒▒▒░░░░` **65%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **71** |
-| ⏳ Pending | **42** |
+| ✅ Migrated | **74** |
+| ⏳ Pending | **39** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **7** |
-| 🔄 In Progress | **6** |
+| 🚀 Ready for Release | **8** |
+| 🔄 In Progress | **5** |
 | ⏸️ Not Started | **4** |
 
 ---
@@ -176,13 +176,13 @@
 
 ---
 
-### 🔄 M14 — Traffic Control: Messaging & Access — In Progress (2/5)
+### 🚀 M14 — Traffic Control: Messaging & Access — Ready for Release (5/5)
 
-- ⏳ `ace`
+- ✅ `ace`
 - ✅ `confluent-consume`
 - ✅ `kafka-consume`
-- ⏳ `standard-webhooks`
-- ⏳ `graphql-proxy-cache-advanced`
+- ✅ `standard-webhooks`
+- ✅ `graphql-proxy-cache-advanced`
 
 ---
 
