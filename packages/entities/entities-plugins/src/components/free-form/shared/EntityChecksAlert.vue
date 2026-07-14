@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { EntityCheck } from '../../../types/plugins/form-schema'
-import useI18n from '../../../composables/useI18n'
+import useI18n from '../../../composables/useFreeformI18n'
 import { defaultLabelFormatter } from './composables'
 
 const { entityChecks, visibleFields } = defineProps<{

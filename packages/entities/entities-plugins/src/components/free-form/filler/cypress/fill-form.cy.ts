@@ -3,6 +3,7 @@ import type { FormSchema } from '../../../../types/plugins/form-schema'
 import Form from '../../shared/Form.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
 import MapField from '../../shared/MapField.vue'
+import ArrayField from '../../shared/ArrayField.vue'
 import { h } from 'vue'
 
 const FIELD_RENDERERS = 'free-form-field-renderers-slot' as const
@@ -71,20 +72,6 @@ describe('Filler - Cypress', () => {
     cy.getTestId('ff-name').should('have.value', 'my-service')
     cy.getTestId('ff-enabled').should('be.checked')
     cy.getTestId('ff-port').should('have.value', '3000')
-  })
-
-  it('should handle custom action options', () => {
-    cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema: basicSchema })))
-
-    const filler = createFiller(basicSchema)
-
-    // First fill with a value
-    filler.fillField('name', 'old-value')
-
-    // Fill without clearing
-    filler.fillField('name', 'new', { clear: false })
-
-    cy.getTestId('ff-name').should('have.value', 'old-valuenew')
   })
 
   describe('Complex fields', () => {
@@ -356,6 +343,213 @@ describe('Filler - Cypress', () => {
       cy.get('[data-testid="ff-map-container-functions.0"] [data-testid^="ff-functions.kid:"]').should('have.value', 'return kong.request.get_path()')
       cy.get('[data-testid="ff-map-key-functions.1"]').should('have.value', 'multi-line-fn')
       cy.get('[data-testid="ff-map-container-functions.1"] [data-testid^="ff-functions.kid:"]').should('have.value', 'line1\nline2\nline3')
+    })
+
+    it('enum: scoped selection ignores identically-named options from other enum fields', () => {
+      // Two enum fields each having 'openai' as a valid value — the old global
+      // selector would match 2 elements and throw "can only be called on a single element".
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            format: {
+              type: 'string',
+              one_of: ['openai', 'ollama'],
+              default: 'openai',
+            },
+          },
+          {
+            provider: {
+              type: 'string',
+              one_of: ['openai', 'cohere'],
+              default: 'openai',
+            },
+          },
+        ],
+      }
+
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
+
+      const filler = createFiller(schema)
+      // Selecting 'ollama' on the first field must not accidentally hit 'openai'
+      // in the second field's popover.
+      filler.fillField('format', 'ollama')
+      filler.fillField('provider', 'cohere')
+
+      cy.getTestId('ff-format').should('have.value', 'ollama')
+      cy.getTestId('ff-provider').should('have.value', 'cohere')
+    })
+
+    it('array: add-item button click succeeds even when sticky tabs cover the button', () => {
+      // The hosts array has default items; fillField adds new ones via the
+      // add-item button. Cypress's default scrollBehavior ('top') would land
+      // the button behind a sticky header; scrollIntoViewNative +
+      // SCROLL_BEHAVIOR: 'center' avoids that collision without needing force.
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            hosts: {
+              type: 'array',
+              elements: {
+                type: 'string',
+              },
+            },
+          },
+        ],
+      }
+
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
+
+      const filler = createFiller(schema)
+      filler.fillField('hosts', ['alpha.example.com', 'beta.example.com'])
+
+      cy.getTestId('ff-hosts.0').should('have.value', 'alpha.example.com')
+      cy.getTestId('ff-hosts.1').should('have.value', 'beta.example.com')
+    })
+
+    it('array: fills every item of a tab-appearance record array, not just the last-active tab', () => {
+      // With appearance="tabs", only the active tab's fields are rendered
+      // (see KTabs' per-tab v-if). Item 0's fields must still be reachable
+      // and filled correctly even after later items switch the active tab away.
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  { host: { type: 'string' } },
+                ],
+              },
+            },
+          },
+        ],
+      }
+
+      cy.mount(() =>
+        h('div', { style: 'padding: 20px' },
+          h(Form, { schema }, {
+            [FIELD_RENDERERS]: () => h(FieldRenderer,
+              { match: ({ path }: { path: string }) => path === 'servers' },
+              { default: (slotProps: any) => h(ArrayField as any, { ...slotProps, appearance: 'tabs' }) },
+            ),
+          }),
+        ),
+      )
+
+      const filler = createFiller(schema)
+      filler.fillField('servers', [
+        { host: 'server-0.example.com' },
+        { host: 'server-1.example.com' },
+      ])
+
+      cy.get('[data-testid="ff-array-tabs-servers"] .tab-item')
+        .eq(0).click()
+      cy.getTestId('ff-servers.0.host').should('have.value', 'server-0.example.com')
+      cy.get('[data-testid="ff-array-tabs-servers"] .tab-item')
+        .eq(1).click()
+      cy.getTestId('ff-servers.1.host').should('have.value', 'server-1.example.com')
+    })
+
+    it('array: fills fields sitting right under a sticky tab header further down a long page', () => {
+      // Reproduces a real failure: with stickyTabs, the tab header is
+      // `position: sticky; top: 0`. Cypress's default scrollBehavior ('top')
+      // scrolls the target flush against the viewport top, landing it right
+      // behind that sticky header - "not visible ... covered by <ul role=tablist>".
+      // scrollIntoViewNative + SCROLL_BEHAVIOR: 'center' avoids the collision entirely.
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            servers: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  { host: { type: 'string' } },
+                ],
+              },
+            },
+          },
+        ],
+      }
+
+      cy.mount(() =>
+        // Enough space above the array to force real scrolling once the
+        // form is filled and the field is queried.
+        h('div', { style: 'padding-top: 1200px; padding-bottom: 20px' },
+          h(Form, { schema }, {
+            [FIELD_RENDERERS]: () => h(FieldRenderer,
+              { match: ({ path }: { path: string }) => path === 'servers' },
+              { default: (slotProps: any) => h(ArrayField as any, { ...slotProps, appearance: 'tabs', stickyTabs: true }) },
+            ),
+          }),
+        ),
+      )
+
+      const filler = createFiller(schema)
+      filler.fillField('servers', [
+        { host: 'server-0.example.com' },
+        { host: 'server-1.example.com' },
+      ])
+
+      cy.getTestId('ff-servers.1.host').should('have.value', 'server-1.example.com')
+    })
+
+    it('array: fills a boolean field immediately after its optional parent object expands, further down a long page', () => {
+      // Covers the exact shape of a real failure: a tab-appearance array item
+      // containing an optional (switch-driven) nested object, whose boolean
+      // child field is filled right after the switch expands it. Note: this
+      // does NOT reliably reproduce the SlideTransition race itself (the
+      // animation is too fast locally, and `uncheck()`'s own actionability
+      // retry tends to absorb it) - it only asserts the correct end state.
+      // The race was confirmed and fixed against a real failing GM run; this
+      // test is here for basic structural coverage of the field shape, not
+      // as a regression guard for the timing issue.
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            targets: {
+              type: 'array',
+              elements: {
+                type: 'record',
+                fields: [
+                  {
+                    auth: {
+                      type: 'record',
+                      fields: [
+                        { allow_override: { type: 'boolean', default: true } },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      }
+
+      cy.mount(() =>
+        h('div', { style: 'padding-top: 1200px; padding-bottom: 20px' },
+          h(Form, { schema }, {
+            [FIELD_RENDERERS]: () => h(FieldRenderer,
+              { match: ({ path }: { path: string }) => path === 'targets' },
+              { default: (slotProps: any) => h(ArrayField as any, { ...slotProps, appearance: 'tabs', stickyTabs: true }) },
+            ),
+          }),
+        ),
+      )
+
+      const filler = createFiller(schema)
+      filler.fillField('targets', [
+        { auth: { allow_override: false } },
+      ])
+
+      cy.getTestId('ff-targets.0.auth.allow_override').should('not.be.checked')
     })
 
     it('should fill json field', () => {

@@ -20,5 +20,10 @@
         Custom Plugin Form
       </router-link>
     </li>
+    <li>
+      <router-link :to="{ name: 'plugin-catalog' }">
+        Plugin catalog
+      </router-link>
+    </li>
   </ul>
 </template>

@@ -493,4 +493,51 @@ describe('<SecretList />', () => {
       cy.get('.kong-ui-entities-secrets-list').should('be.visible')
     })
   })
+
+  describe('Kong AI Gateway', () => {
+    const aiGatewayId = 'ai-gw-1234'
+    const baseConfigAiGateway: KonnectSecretListConfig = {
+      ...baseConfigKonnect,
+      apiType: 'aiGateway',
+      aiGatewayId,
+    }
+
+    it('fetches the vault and its secrets via the AI Gateway URLs', () => {
+      createRouter({
+        routes: [{ path: '/', name: 'list-secret', component: { template: '<div>ListPage</div>' } }],
+        history: createMemoryHistory(),
+      })
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigAiGateway.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/vaults/${vaultId}`,
+        },
+        { statusCode: 200, body: { id: vaultId, type: 'konnect', name: 'kv-1', config: { config_store_id: configStoreId } } },
+      ).as('getAiVault')
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigAiGateway.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/config-stores/${configStoreId}/secrets*`,
+        },
+        { statusCode: 200, body: secrets },
+      ).as('getAiSecrets')
+
+      cy.mount(SecretList, {
+        props: {
+          cacheIdentifier: `secret-list-${uuidv4()}`,
+          config: baseConfigAiGateway,
+          vaultId,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+        },
+      })
+
+      cy.wait('@getAiVault')
+      cy.wait('@getAiSecrets')
+      cy.get('.kong-ui-entities-secrets-list').should('be.visible')
+      cy.get('td').contains('secret-1').should('be.visible')
+    })
+  })
 })

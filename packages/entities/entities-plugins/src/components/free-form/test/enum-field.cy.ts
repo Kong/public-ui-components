@@ -58,9 +58,14 @@ function assertLastChange(expected: Record<string, unknown>) {
 }
 
 function removeSelectedValue(value: string) {
+  // Avoid `.findTestId()` here: it wraps the matched badge with `cy.wrap()`,
+  // which pins a specific DOM node and breaks Cypress's ability to requery
+  // the chain if KMultiselect re-renders its badges mid-retry (flaky
+  // "subject is no longer attached to the DOM" failures). Using `.find()`
+  // directly keeps this a single retryable chain rooted at `cy.getTestId()`.
   cy.getTestId(`ff-${FIELD_NAME}`)
     .contains('.multiselect-selection-badge', new RegExp(value, 'i'))
-    .findTestId('badge-dismiss-button')
+    .find('[data-testid="badge-dismiss-button"]')
     .click()
 }
 

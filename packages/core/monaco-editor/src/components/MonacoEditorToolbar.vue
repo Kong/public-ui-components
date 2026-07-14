@@ -258,7 +258,7 @@ $defaultHeight: 44px;
   padding-right: var(--kui-space-40, $kui-space-40);
   position: sticky;
   top: 0;
-  z-index: 3; // Keep over the sidebars
+  z-index: 2; // Keep over the sidebars
 
 
   &-left,

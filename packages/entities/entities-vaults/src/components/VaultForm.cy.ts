@@ -1358,4 +1358,129 @@ describe('<VaultForm />', () => {
       cy.wait('@createVaultNoWorkspace')
     })
   })
+
+  describe('Kong AI Gateway', () => {
+    const aiGatewayId = 'ai-gw-1234'
+    const baseConfigAiGateway: KonnectVaultFormConfig = {
+      ...baseConfigKonnect,
+      apiType: 'aiGateway',
+      aiGatewayId,
+    }
+    const aiVaultsUrl = `${baseConfigAiGateway.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/vaults`
+
+    it('hides the tags input and excludes azure-certs / fs providers', () => {
+      cy.mount(VaultForm, {
+        props: { config: baseConfigAiGateway },
+      })
+
+      cy.getTestId('vault-form-prefix').should('be.visible')
+      cy.getTestId('vault-form-tags').should('not.exist')
+
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-konnect').should('exist')
+      cy.getTestId('vault-form-provider-env').should('exist')
+      cy.getTestId('vault-form-provider-aws').should('exist')
+      cy.getTestId('vault-form-provider-gcp').should('exist')
+      cy.getTestId('vault-form-provider-hcv').should('exist')
+      cy.getTestId('vault-form-provider-azure').should('exist')
+      cy.getTestId('vault-form-provider-conjur').should('exist')
+      cy.getTestId('vault-form-provider-azure-certs').should('not.exist')
+      cy.getTestId('vault-form-provider-fs').should('not.exist')
+    })
+
+    it('POSTs an AI Gateway-shaped body (type/name, no tags) on create', () => {
+      cy.intercept(
+        { method: 'POST', url: aiVaultsUrl },
+        { statusCode: 201, body: { id: '1', type: 'env', name: 'prefix-1', config: { prefix: 'dev' } } },
+      ).as('createAiVault')
+
+      cy.mount(VaultForm, {
+        props: { config: baseConfigAiGateway },
+      })
+
+      // Select env provider and fill required fields
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-env').click({ force: true })
+      cy.getTestId('vault-form-prefix').type('prefix-1')
+      cy.getTestId('vault-form-config-kong-prefix').type('dev')
+      cy.getTestId('vault-create-form-submit').click()
+
+      cy.wait('@createAiVault').then(({ request }) => {
+        expect(request.body).to.have.property('type', 'env')
+        expect(request.body).to.have.property('name', 'prefix-1')
+        expect(request.body).to.not.have.property('prefix')
+        expect(request.body).to.not.have.property('tags')
+        expect(request.body.config).to.have.property('prefix', 'dev')
+      })
+    })
+
+    it('PUTs to the AI Gateway vault URL on edit', () => {
+      cy.intercept(
+        { method: 'GET', url: `${aiVaultsUrl}/*` },
+        { statusCode: 200, body: { id: '1', type: 'env', name: 'prefix-1', config: { prefix: 'dev' } } },
+      ).as('getAiVault')
+      cy.intercept(
+        { method: 'PUT', url: `${aiVaultsUrl}/*` },
+        { statusCode: 200, body: { id: '1', type: 'env', name: 'prefix-1', config: { prefix: 'dev2' } } },
+      ).as('updateAiVault')
+
+      cy.mount(VaultForm, {
+        props: { config: baseConfigAiGateway, vaultId: '1' },
+      })
+
+      cy.wait('@getAiVault')
+      cy.getTestId('vault-form-config-kong-prefix').clear()
+      cy.getTestId('vault-form-config-kong-prefix').type('dev2')
+      cy.getTestId('vault-edit-form-submit').click()
+
+      cy.wait('@updateAiVault').then(({ request }) => {
+        expect(request.body).to.have.property('type', 'env')
+        expect(request.body.config).to.have.property('prefix', 'dev2')
+      })
+    })
+
+    it('omits blank write-only fields from PUT body when editing an AI Gateway vault', () => {
+      // The server does not return write-only fields (e.g. Conjur api_key) on GET.
+      // Submitting without filling them must not send an empty value that would clear the secret.
+      cy.intercept(
+        { method: 'GET', url: `${aiVaultsUrl}/*` },
+        {
+          statusCode: 200,
+          body: {
+            id: '1',
+            type: 'conjur',
+            name: 'conjur-vault',
+            config: {
+              endpoint_url: 'https://conjur.example.com',
+              login: 'my-login',
+              account: 'my-account',
+              // api_key intentionally absent — write-only, not returned by server
+            },
+          },
+        },
+      ).as('getAiVault')
+      cy.intercept(
+        { method: 'PUT', url: `${aiVaultsUrl}/*` },
+        {
+          statusCode: 200,
+          body: { id: '1', type: 'conjur', name: 'conjur-vault-edited', config: {} },
+        },
+      ).as('updateAiVault')
+
+      cy.mount(VaultForm, {
+        props: { config: baseConfigAiGateway, vaultId: '1' },
+      })
+
+      cy.wait('@getAiVault')
+      // Make a non-write-only change to enable the submit button
+      cy.getTestId('vault-form-prefix').clear()
+      cy.getTestId('vault-form-prefix').type('conjur-vault-edited')
+      cy.getTestId('vault-edit-form-submit').click()
+
+      cy.wait('@updateAiVault').then(({ request }) => {
+        expect(request.body).to.have.property('type', 'conjur')
+        expect(request.body.config).to.not.have.property('api_key')
+      })
+    })
+  })
 })

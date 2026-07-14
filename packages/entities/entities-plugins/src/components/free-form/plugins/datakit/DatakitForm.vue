@@ -27,8 +27,8 @@
     </KSegmentedControl>
   </Teleport>
 
-  <StandardLayout
-    v-bind="props"
+  <DynamicLayout
+    v-bind="{ ...attrs, ...props }"
     class="dk-form"
     :editor-mode="layoutEditorMode"
     hide-editor-mode-switcher
@@ -56,7 +56,7 @@
       <!-- eslint-disable-next-line vue/no-v-html -->
       <span v-html="description" />
     </template>
-  </StandardLayout>
+  </DynamicLayout>
 </template>
 
 <script setup lang="ts">
@@ -64,10 +64,10 @@ import type { SegmentedControlOption } from '@kong/kongponents'
 import type { Component } from 'vue'
 import type { ZodError } from 'zod'
 
-import type { Props } from '../../shared/layout/StandardLayout.vue'
+import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
 import type { EditorMode, DatakitPluginData } from './types'
 
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch, useAttrs } from 'vue'
 import { escape } from 'lodash-es'
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
@@ -76,7 +76,7 @@ import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../../types'
 
 import english from '../../../../locales/en.json'
-import StandardLayout from '../../shared/layout/StandardLayout.vue'
+import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
 import FlowEditor from './flow-editor/FlowEditor.vue'
@@ -85,9 +85,12 @@ import {
   DatakitConfigSchema as DatakitConfigCompatSchema,
 } from './schema/compat'
 
+defineOptions({ inheritAttrs: false })
+
 const { t } = createI18n<typeof english>('en-us', english)
 
 const props = defineProps<Props<DatakitPluginData>>()
+const attrs = useAttrs()
 
 // provided by consumer apps
 const formConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!

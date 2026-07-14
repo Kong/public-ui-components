@@ -14,6 +14,7 @@ vi.mock('@kong-ui-public/analytics-utilities', () => ({
     if (ms === ONE_DAY_MS) return 'daily'
     return 'auto'
   }),
+  isPlatformDatasource: (datasource: unknown) => datasource === 'platform' || datasource === 'platform_usage',
 }))
 
 const analyticsConfig = { analytics: true, percentiles: true }
@@ -77,6 +78,7 @@ function mountComposable({
   datasource = 'api_usage',
   metrics = ['request_count'],
   explicitGranularity,
+  query,
   queryFilters = [],
   contextFilters = [],
   timeRange,
@@ -90,6 +92,7 @@ function mountComposable({
   datasource?: string
   metrics?: string[]
   explicitGranularity?: string | undefined
+  query?: Record<string, unknown>
   queryFilters?: any[]
   contextFilters?: any[]
   timeRange?: any
@@ -111,7 +114,7 @@ function mountComposable({
 
   const definition = computed(() => ({
     chart: { type: chartType },
-    query: {
+    query: query ?? {
       datasource,
       metrics,
       dimensions: ['gateway_service'],
@@ -212,7 +215,7 @@ describe('useContextLinks', () => {
     expect(params.get('c')).toBe('line')
   })
 
-  it('forwards metrics to filter stripping when generating dashboard links', async () => {
+  it('forwards query fields to filter stripping when generating dashboard links', async () => {
     const stripUnknownFiltersSpy = vi.fn(mockStripUnknownFilters)
     vi.mocked(useDatasourceConfigStore).mockReturnValueOnce({
       stripUnknownFilters: ref(stripUnknownFiltersSpy),
@@ -229,7 +232,7 @@ describe('useContextLinks', () => {
 
     expect(stripUnknownFiltersSpy).toHaveBeenCalledWith(expect.objectContaining({
       datasource: 'api_usage',
-      metrics: ['request_count', 'request_size'],
+      queryFields: ['request_count', 'request_size'],
     }))
   })
 
@@ -278,9 +281,61 @@ describe('useContextLinks', () => {
     expect(params.get('d')).toBe('platform')
   })
 
+  it('preserves platform_usage for explore link', async () => {
+    const { wrapper } = mountComposable({
+      datasource: 'platform_usage',
+      queryFilters: [makeFilter('gateway_service')],
+    })
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateExploreLink).toBe(true)
+
+    const params = new URLSearchParams((wrapper.vm.exploreLinkKebabMenu as string).split('?')[1])
+    expect(params.get('d')).toBe('platform_usage')
+  })
+
+  it('builds explore link for table charts with the tabular query shape', async () => {
+    const tableQuery = {
+      datasource: 'platform',
+      entity: 'route',
+      columns: ['name', 'control_plane'],
+      filters: [makeFilter('control_plane')],
+    }
+    const { wrapper } = mountComposable({
+      chartType: 'table',
+      contextFilters: [makeFilter('gateway_service')],
+      query: tableQuery,
+    })
+    await flushPromises()
+
+    const params = new URLSearchParams((wrapper.vm.exploreLinkKebabMenu as string).split('?')[1])
+    expect(params.get('d')).toBe('platform')
+    expect(params.get('c')).toBe('table')
+    expect(JSON.parse(params.get('q')!)).toEqual({
+      ...tableQuery,
+      filters: [makeFilter('gateway_service'), makeFilter('control_plane')],
+    })
+    expect(wrapper.vm.canGenerateRequestsLink).toBe(false)
+    expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+    expect(wrapper.vm.requestsLinkZoomActions).toBeUndefined()
+  })
+
   it('does not generate requests drilldown for platform tiles', async () => {
     const { wrapper } = mountComposable({
       datasource: 'platform',
+      queryFilters: [makeFilter('shared_field')],
+    })
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateRequestsLink).toBe(false)
+    expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+    expect(wrapper.vm.requestsLinkZoomActions).toBeUndefined()
+    expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')
+  })
+
+  it('does not generate requests drilldown for platform_usage tiles', async () => {
+    const { wrapper } = mountComposable({
+      datasource: 'platform_usage',
       queryFilters: [makeFilter('shared_field')],
     })
     await flushPromises()
@@ -309,7 +364,7 @@ describe('useContextLinks', () => {
   })
 
   it('builds explore link for expected datasources', async () => {
-    const datasources = ['api_usage', 'basic', 'llm_usage', 'agentic_usage', 'platform', undefined]
+    const datasources = ['api_usage', 'basic', 'llm_usage', 'agentic_usage', 'platform', 'platform_usage', undefined]
 
     for (const ds of datasources) {
       const { wrapper } = mountComposable({

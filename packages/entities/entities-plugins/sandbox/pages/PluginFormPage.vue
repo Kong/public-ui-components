@@ -10,6 +10,21 @@
         v-model="enableDeckCallout"
         label="Show decK config callout above YAML config"
       />
+
+      <!-- One switch per feature flag — choose which to open/close; any change remounts the forms. -->
+      <KCollapse
+        class="feature-flags-collapse"
+        trigger-label="Feature flags"
+      >
+        <div class="feature-flags-list">
+          <KInputSwitch
+            v-for="flagKey in Object.keys(featureFlags)"
+            :key="flagKey"
+            v-model="featureFlags[flagKey]"
+            :label="flagKey"
+          />
+        </div>
+      </KCollapse>
     </div>
 
     <div
@@ -17,35 +32,41 @@
       class="actions"
     />
 
-    <h2>Konnect API</h2>
-    <PluginForm
-      :config="konnectConfig"
-      enable-redis-partial
-      enable-vault-secret-picker
-      :engine="pluginFormEngine"
-      :plugin-id="id"
-      :plugin-type="plugin"
-      use-custom-names-for-plugin
-      @global-action="handleGlobalAction"
-      @update="onUpdate"
-    />
+    <!-- Keyed on the whole flag map so flipping any switch remounts the forms and re-runs `provide`. -->
+    <FeatureFlagProvider
+      :key="JSON.stringify(featureFlags)"
+      :flags="featureFlags"
+    >
+      <h2>Konnect API</h2>
+      <PluginForm
+        :config="konnectConfig"
+        enable-redis-partial
+        enable-vault-secret-picker
+        :engine="pluginFormEngine"
+        :plugin-id="id"
+        :plugin-type="plugin"
+        use-custom-names-for-plugin
+        @global-action="handleGlobalAction"
+        @update="onUpdate"
+      />
 
-    <h2>Kong Manager API</h2>
-    <PluginForm
-      :config="kongManagerConfig"
-      enable-redis-partial
-      enable-vault-secret-picker
-      :engine="pluginFormEngine"
-      :plugin-id="id"
-      :plugin-type="plugin"
-      @global-action="handleGlobalAction"
-      @update="onUpdate"
-    />
+      <h2>Kong Manager API</h2>
+      <PluginForm
+        :config="kongManagerConfig"
+        enable-redis-partial
+        enable-vault-secret-picker
+        :engine="pluginFormEngine"
+        :plugin-id="id"
+        :plugin-type="plugin"
+        @global-action="handleGlobalAction"
+        @update="onUpdate"
+      />
+    </FeatureFlagProvider>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, provide, ref } from 'vue'
+import { computed, defineComponent, provide, ref, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
@@ -76,16 +97,38 @@ defineProps({
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefined
-provide(FEATURE_FLAGS.KM_2262_CODE_MODE, true)
-provide(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, true)
-provide(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, true)
-provide(FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, true)
-provide(FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, true)
+// All feature flags provided to the plugin forms, editable at runtime via the sandbox switches.
+// `provide` captures a plain value once, so to flip any flag live we re-provide on change: the
+// generic FeatureFlagProvider re-runs `provide` in its setup whenever it remounts, and we force
+// that remount by keying it on the whole flag map — so toggling any flag updates the forms.
+const featureFlags = ref<Record<string, boolean>>({
+  [FEATURE_FLAGS.KM_2262_CODE_MODE]: true,
+  [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: true,
+  [FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES]: true,
+  [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
+  [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+  [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: true,
+})
+
+const FeatureFlagProvider = defineComponent({
+  name: 'FeatureFlagProvider',
+  props: {
+    flags: { type: Object as PropType<Record<string, boolean>>, default: () => ({}) },
+  },
+  setup(props, { slots }) {
+    for (const [key, value] of Object.entries(props.flags)) {
+      provide(key, value)
+    }
+    return () => slots.default?.()
+  },
+})
 
 provideDeckCommandEditor()
 
 useProvideExperimentalFreeForms([
+  'ai-rate-limiting-advanced',
   'rate-limiting-advanced',
+  'graphql-rate-limiting-advanced',
   'service-protection',
   'prometheus',
   'metering-and-billing',
@@ -93,13 +136,17 @@ useProvideExperimentalFreeForms([
   'exit-transformer',
   'file-log',
   'http-log',
+  'kafka-log',
   'request-transformer-advanced',
   'response-transformer',
   'response-transformer-advanced',
   'correlation-id',
   'solace-consume',
+  'confluent-consume',
+  'kafka-consume',
   'solace-log',
   'solace-upstream',
+  'kafka-upstream',
   'opentelemetry',
   'acl',
   'request-transformer',
@@ -107,6 +154,7 @@ useProvideExperimentalFreeForms([
   'cors',
   'proxy-cache',
   'proxy-cache-advanced',
+  'graphql-proxy-cache-advanced',
   'header-cert-auth',
   'session',
   'oauth2',
@@ -114,9 +162,48 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
-  'openid-connect',
   'saml',
   'vault-auth',
+  'hmac-auth',
+  'key-auth-enc',
+  'ldap-auth',
+  'ldap-auth-advanced',
+  'oauth2-introspection',
+  'app-dynamics',
+  'datadog',
+  'statsd',
+  'zipkin',
+  'ace',
+  'kafka-consume',
+  'standard-webhooks',
+  'websocket-size-limit',
+  'websocket-validator',
+  'xml-threat-protection',
+  'upstream-timeout',
+  'forward-proxy',
+  'request-validator',
+  'canary',
+  'mocking',
+  'oas-validation',
+  'route-by-header',
+  'response-ratelimiting',
+  'redirect',
+  'request-termination',
+  'ai-semantic-cache',
+  'ai-prompt-template',
+  'ai-semantic-prompt-guard',
+  'ai-request-transformer',
+  'ai-response-transformer',
+  'pre-function',
+  'ip-restriction',
+  'post-function',
+  'bot-detection',
+  'request-size-limiting',
+  'ai-proxy-advanced',
+  'ai-proxy',
+  'ai-prompt-decorator',
+  'ai-prompt-guard',
+  'confluent',
 ])
 
 const enableDeckConfigCustomization = ref(false)
@@ -139,6 +226,8 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   experimentalRenders: {
     keyAuthIdentityRealms: true,
   },
+  // isKongIdentityAuthServersAvailable: false,
+  canCreateAuthServer: false,
   enableDeckTab: {
     ...enableDeckConfigCustomization.value && {
       customization: {
@@ -150,6 +239,9 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
     },
     calloutPreferenceKey: enableDeckCallout.value ? 'konnect-entities-plugin-form-deck-callout-sandbox' : undefined,
   },
+  dataPlaneVersions: ['3.14.0.1', '3.15.0.0'], // For testing the Kong Identity principals DP version alert
+  principalsDirectoryName: 'my-directory', // Sandbox: simulate host-resolved directory name
+  principalsCreationGuideVisible: false, // Sandbox: false = principals exist; true = show creation guide
 }))
 
 const kongManagerConfig = computed<KongManagerPluginFormConfig>(() => ({
@@ -196,10 +288,22 @@ const handleGlobalAction = (action: GlobalAction, payload: any) => {
   }
 
   .sandbox-controls {
+    align-items: flex-start;
     display: flex;
     flex-direction: row;
     gap: 20px;
     margin-bottom: 20px;
+  }
+
+  .feature-flags-collapse {
+    margin: 0;
+  }
+
+  .feature-flags-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 12px;
   }
 }
 </style>

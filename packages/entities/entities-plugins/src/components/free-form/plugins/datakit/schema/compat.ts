@@ -189,6 +189,7 @@ const JsonToXmlNodeSchema = ConfigNodeBaseSchema.safeExtend({
 const PropertyNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('property'),
   content_type: z.string().nullish(),
+  non_nil: z.boolean().nullish(),
   property: z.string().nullish(),
   inputs: z.never().nullish(),
   outputs: z.never().nullish(),

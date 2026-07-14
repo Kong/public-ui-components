@@ -6,24 +6,20 @@
     <VueFlow
       :id="flowId"
       class="flow"
-      :class="{ readonly: mode !== 'edit' }"
+      :class="{ readonly: mode !== 'edit', inspect: mode === 'inspect' }"
+      v-bind="interactiveViewportProps"
       :connect-on-click="false"
-      :elements-selectable="mode === 'edit'"
+      :elements-selectable="mode === 'edit' || mode === 'inspect'"
       :max-zoom="MAX_ZOOM_LEVEL"
       :min-zoom="MIN_ZOOM_LEVEL"
       :multi-selection-key-code="null"
       :nodes-connectable="mode === 'edit'"
       :nodes-draggable="mode === 'edit'"
-      :pan-on-drag="mode === 'preview' ? false : undefined"
-      :pan-on-scroll="mode !== 'edit' ? false : undefined"
-      :zoom-on-double-click="mode !== 'edit' ? false : undefined"
-      :zoom-on-pinch="mode !== 'edit' ? false : undefined"
-      :zoom-on-scroll="mode !== 'edit' ? false : undefined"
       @dragover="onDragOver"
       @drop="onDrop"
       @node-click="onNodeClick"
       @nodes-change="emit('nodes-change')"
-      @nodes-initialized="emit('initialized')"
+      @nodes-initialized="onNodesInitialized"
     >
       <Background />
       <Controls
@@ -57,7 +53,35 @@
           :data
           :error="invalidConfigNodeIds.has(data.id)"
           :readonly="mode !== 'edit'"
-        />
+        >
+          <template
+            v-if="slots['node-before-handles']"
+            #before-handles
+          >
+            <slot
+              :data="data"
+              name="node-before-handles"
+            />
+          </template>
+          <template
+            v-if="slots['node-actions']"
+            #actions
+          >
+            <slot
+              :data="data"
+              name="node-actions"
+            />
+          </template>
+          <template
+            v-if="slots['node-after-handles']"
+            #after-handles
+          >
+            <slot
+              :data="data"
+              name="node-after-handles"
+            />
+          </template>
+        </FlowNode>
       </template>
       <template #node-group="{ data }">
         <GroupNode
@@ -92,7 +116,7 @@ import '@vue-flow/core/dist/theme-default.css'
 import type { NodeMouseEvent } from '@vue-flow/core'
 import type { Component } from 'vue'
 
-import type { DragPayload, NodePhase } from '../types'
+import type { DragPayload, NodeInstance, NodePhase } from '../types'
 
 const { flowId, phase, mode } = defineProps<{
   flowId: string
@@ -102,18 +126,38 @@ const { flowId, phase, mode } = defineProps<{
    * - edit: Flow editor page
    * - view: Config detail page
    * - preview: Plugin edit page preview
+   * - inspect: Read-only inspection view with trackpad zoom/pan, node-click emit, and auto-layout on init
    */
-  mode: 'edit' | 'view' | 'preview'
+  mode: 'edit' | 'view' | 'preview' | 'inspect'
+}>()
+
+const slots = defineSlots<{
+  'node-before-handles'?: (props: { data: NodeInstance }) => any
+  'node-actions'?: (props: { data: NodeInstance }) => any
+  'node-after-handles'?: (props: { data: NodeInstance }) => any
 }>()
 
 const emit = defineEmits<{
   initialized: []
   'nodes-change': [] // Omitting the changes as we don't use them currently
+  'node-click': [node: NodeInstance]
 }>()
 
 const flowCanvas = useTemplateRef('flowCanvas')
 const flowCanvasRect = useElementBounding(flowCanvas)
 const { i18n: { t } } = useI18n()
+
+const interactiveViewportProps = computed(() => {
+  const isInteractive = mode === 'edit' || mode === 'inspect'
+
+  return {
+    panOnDrag: isInteractive ? undefined : false,
+    panOnScroll: isInteractive ? undefined : false,
+    zoomOnDoubleClick: isInteractive ? undefined : false,
+    zoomOnPinch: isInteractive ? undefined : false,
+    zoomOnScroll: isInteractive ? undefined : false,
+  }
+})
 
 const {
   vueFlowStore,
@@ -154,6 +198,14 @@ function getDraggedNodeType(event: DragEvent): string | undefined {
 }
 
 function onNodeClick(event: NodeMouseEvent) {
+  if (mode === 'inspect') {
+    if (event?.node?.type === 'group')
+      return
+    // Emit the full node-data for inspect mode, used in consumer apps
+    emit('node-click', event.node.data as NodeInstance)
+    return
+  }
+
   if (mode !== 'edit') {
     return
   }
@@ -209,6 +261,17 @@ function onDrop(e: DragEvent) {
   selectNode(nodeId)
   propertiesPanelOpen.value = true
   endPanelDrag()
+}
+
+async function onNodesInitialized() {
+  emit('initialized')
+  // for mode=inspect, we want to auto-layout and fit-view after the nodes are initialized.
+  if (mode !== 'inspect') return
+  // Same double-setTimeout pattern used by FlowPanels.vue to let VueFlow measure nodes first
+  setTimeout(async () => {
+    await autoLayout(false)
+    setTimeout(() => fitView(), 0)
+  }, 0)
 }
 
 async function onClickAutoLayout() {
@@ -291,7 +354,8 @@ defineExpose({ autoLayout, fitView })
       }
     }
 
-    &:not(.readonly) {
+    &:not(.readonly),
+    &.inspect {
       :deep(.vue-flow__node) {
         &:hover:not(.selected, :has(.value-indicator:hover)) .dk-flow-node {
           border-color: var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
@@ -303,8 +367,14 @@ defineExpose({ autoLayout, fitView })
       }
     }
 
-    &.readonly * {
+    &.readonly:not(.inspect) * {
       cursor: default;
+    }
+
+    &.inspect {
+      :deep(.dk-flow-node) {
+        cursor: pointer;
+      }
     }
 
     :deep(.vue-flow__edge) {

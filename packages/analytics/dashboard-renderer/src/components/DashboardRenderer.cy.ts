@@ -7,6 +7,7 @@ import type {
   DatasourceAwareQuery,
   DatasourceConfig,
   ExploreFilterAll,
+  ExploreQuery,
   ExploreResultV4,
   TileConfig,
   Timeframe,
@@ -110,44 +111,77 @@ describe('<DashboardRenderer />', () => {
     setActivePinia(createPinia())
   })
 
+  const routeAndGatewayServiceExploreResponse: ExploreResultV4 = {
+    ...routeExploreResponse,
+    meta: {
+      ...routeExploreResponse.meta,
+      display: {
+        ...routeExploreResponse.meta.display,
+        gateway_service: {
+          'service-1': { name: 'Gateway Service 1', deleted: false },
+          'service-2': { name: 'Gateway Service 2', deleted: false },
+        },
+      },
+    },
+    data: routeExploreResponse.data.map((record, index) => {
+      return {
+        ...record,
+        event: {
+          ...record.event,
+          gateway_service: index === 0 ? 'service-1' : 'service-2',
+        },
+      }
+    }),
+  }
+
+  const getRouteResponse = (dimensions: ExploreQuery['dimensions']): ExploreResultV4 => {
+    return dimensions?.includes('gateway_service') ? routeAndGatewayServiceExploreResponse : routeExploreResponse
+  }
+
+  const getTimeSeriesResponse = (query: ExploreQuery): ExploreResultV4 => {
+    if (query.metrics?.[0] === 'request_count') {
+      // Traffic + Error rate cards
+      return nonTsExploreResponse
+    }
+
+    if (query.metrics?.[0] === 'response_latency_p99' && query.metrics.length === 1) {
+      // Latency metrics card
+      return timeSeriesExploreResponse
+    }
+
+    // Timeseries Line chart
+    return generateSingleMetricTimeSeriesData(
+      { name: 'TotalRequests', unit: 'count' },
+      { status_code: query.metrics as string[] },
+    ) as ExploreResultV4
+  }
+
+  const getCrossSectionalResponse = (): ExploreResultV4 => {
+    // Dimensions to use if query is not provided
+    const dimensionMap = { status_code: ['1XX', '2XX', '3XX', '4XX', '5XX'] }
+
+    return generateCrossSectionalData(
+      [
+        { name: 'TotalRequests', unit: 'count' },
+      ],
+      dimensionMap,
+    ) as ExploreResultV4
+  }
+
   const mockQueryProvider = (opts?: MockOptions): AnalyticsBridge => {
     const queryFn = (dsAwareQuery: DatasourceAwareQuery): Promise<ExploreResultV4> => {
       const { query } = dsAwareQuery as AdvancedDatasourceQuery
+      const dimensions = query.dimensions || []
 
-      // Dimensions to use if query is not provided
-      const dimensionMap = { status_code: ['1XX', '2XX', '3XX', '4XX', '5XX'] }
-
-      if (query.dimensions && query.dimensions.findIndex(d => d === 'route') > -1) {
-        return Promise.resolve(routeExploreResponse)
+      if (dimensions.includes('route')) {
+        return Promise.resolve(getRouteResponse(dimensions))
       }
 
-      if (query.dimensions && query.dimensions.findIndex(d => d === 'time') > -1) {
-        if (query.metrics && query.metrics[0] === 'request_count') {
-        // Traffic + Error rate cards
-          return Promise.resolve(nonTsExploreResponse)
-        } else if (query.metrics && query.metrics[0] === 'response_latency_p99' && query.metrics.length === 1) {
-        // Latency metrics card
-          return Promise.resolve(timeSeriesExploreResponse)
-        } else {
-        // Timeseries Line chart
-          const timeSeriesResponse = generateSingleMetricTimeSeriesData(
-            { name: 'TotalRequests', unit: 'count' },
-            { status_code: query.metrics as string[] },
-          ) as ExploreResultV4
-
-          return Promise.resolve(timeSeriesResponse)
-        }
-      } else {
-      // Bar charts (non-time series)
-        const nonTimeSeriesResponse = generateCrossSectionalData(
-          [
-            { name: 'TotalRequests', unit: 'count' },
-          ],
-          dimensionMap,
-        ) as ExploreResultV4
-
-        return Promise.resolve(nonTimeSeriesResponse)
+      if (dimensions.includes('time')) {
+        return Promise.resolve(getTimeSeriesResponse(query))
       }
+
+      return Promise.resolve(getCrossSectionalResponse())
     }
 
     const configFn = (): Promise<AnalyticsConfigV2> => {
@@ -483,6 +517,185 @@ describe('<DashboardRenderer />', () => {
 
     // Check value of href attribute
     cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > [data-testid="entity-link-parent"] > a').should('have.attr', 'href').and('eq', 'https://test.com/cp/b486fb30-e058-4b5f-85c2-495ec26ba522/entity/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
+  })
+
+  it('Renders a dashboard with a TopNTable with EntityLinks mapped by dimension', () => {
+    const customTimeframe = datePickerSelectionToTimeframe({
+      timePeriodsKey: 'custom',
+      start: new Date('2024-03-03T21:10:28.969Z'),
+      end: new Date('2024-03-06T21:10:28.969Z'),
+    }) as Timeframe
+
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: customTimeframe.v4Query(),
+      },
+      modelValue: {
+        tiles: [
+          {
+            definition: {
+              chart: {
+                type: 'top_n',
+                entity_links: {
+                  route: `https://test.com/routes/${ENTITY_ID_TOKEN}`,
+                  gateway_service: `https://test.com/services/${ENTITY_ID_TOKEN}`,
+                },
+              },
+              query: {
+                datasource: 'basic',
+                dimensions: ['route', 'gateway_service'],
+              },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 0,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          },
+        ],
+      },
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: true }),
+        },
+      },
+    })
+
+    cy.get('tbody tr').first().within(() => {
+      cy.get('td').eq(0).find('[data-testid="entity-link-parent"] > a')
+        .should('have.attr', 'href')
+        .and('eq', 'https://test.com/routes/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
+
+      cy.get('td').eq(1).find('[data-testid="entity-link-parent"] > a')
+        .should('have.attr', 'href')
+        .and('eq', 'https://test.com/services/service-1')
+    })
+  })
+
+  it('Prefers TopNTable EntityLinks mapped by dimension over the legacy EntityLink', () => {
+    const customTimeframe = datePickerSelectionToTimeframe({
+      timePeriodsKey: 'custom',
+      start: new Date('2024-03-03T21:10:28.969Z'),
+      end: new Date('2024-03-06T21:10:28.969Z'),
+    }) as Timeframe
+
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: customTimeframe.v4Query(),
+      },
+      modelValue: {
+        tiles: [
+          {
+            definition: {
+              chart: {
+                type: 'top_n',
+                entity_link: `https://test.com/legacy/${ENTITY_ID_TOKEN}`,
+                entity_links: {
+                  route: `https://test.com/routes/${ENTITY_ID_TOKEN}`,
+                },
+              },
+              query: {
+                datasource: 'basic',
+                dimensions: ['route'],
+              },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 0,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          },
+        ],
+      },
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: true }),
+        },
+      },
+    })
+
+    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > [data-testid="entity-link-parent"] > a')
+      .should('have.attr', 'href')
+      .and('eq', 'https://test.com/routes/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
+  })
+
+  it('Uses the legacy TopNTable EntityLink only for the primary dimension', () => {
+    const customTimeframe = datePickerSelectionToTimeframe({
+      timePeriodsKey: 'custom',
+      start: new Date('2024-03-03T21:10:28.969Z'),
+      end: new Date('2024-03-06T21:10:28.969Z'),
+    }) as Timeframe
+
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: customTimeframe.v4Query(),
+      },
+      modelValue: {
+        tiles: [
+          {
+            definition: {
+              chart: {
+                type: 'top_n',
+                entity_link: `https://test.com/routes/${ENTITY_ID_TOKEN}`,
+              },
+              query: {
+                datasource: 'basic',
+                dimensions: ['route', 'gateway_service'],
+              },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 0,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          },
+        ],
+      },
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: true }),
+        },
+      },
+    })
+
+    cy.get('tbody tr').first().within(() => {
+      cy.get('td').eq(0).find('[data-testid="entity-link-parent"] > a')
+        .should('have.attr', 'href')
+        .and('eq', 'https://test.com/routes/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
+
+      cy.get('td').eq(1).should('contain.text', 'Gateway Service 1')
+      cy.get('td').eq(1).find('a').should('not.exist')
+    })
   })
 
   it('Renders a dashboard with a TopNTable with fallback EntityLinks', () => {
