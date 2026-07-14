@@ -172,7 +172,6 @@ useProvideExperimentalFreeForms([
   'metering-and-billing',
   'mocking',
   'mtls-auth',
-  'mtls-auth',
   'oas-validation',
   'oauth2-introspection',
   'oauth2',
