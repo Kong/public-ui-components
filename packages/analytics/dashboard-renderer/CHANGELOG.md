@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.27...@kong-ui-public/dashboard-renderer@8.13.0) (2026-07-14)
+
+
+### Features
+
+* **analytics:** export dashboard to pdf [MA-5195] ([#3055](https://github.com/Kong/public-ui-components/issues/3055)) ([61f57ab](https://github.com/Kong/public-ui-components/commit/61f57ab7d6f3d01ba02d3b338049cfed8a08cf1d))
+
+
+
+
+
 ## [8.12.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.26...@kong-ui-public/dashboard-renderer@8.12.27) (2026-07-13)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
