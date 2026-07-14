@@ -326,7 +326,7 @@ const addTile = () => {
 const exportPdf = () => {
   dashboardRendererRef.value?.exportPdf({
     title: 'Sandbox Editable Dashboard',
-    dashboardUrl: 'https://cloud.konghq.com/analytics/dashboards?ref=pdf',
+    dashboardUrl: 'https://cloud.konghq.com/analytics/dashboards?utm_source=pdf',
   })
 }
 

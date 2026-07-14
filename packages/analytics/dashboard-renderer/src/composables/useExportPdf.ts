@@ -4,6 +4,7 @@ import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { PdfExportOptions, PdfExportState } from '../types/renderer-types'
 
 import { readonly, ref } from 'vue'
+import { format } from 'date-fns'
 import { prepareForCapture, restoreAfterCapture } from '@kong-ui-public/analytics-utilities'
 import useI18n from './useI18n'
 
@@ -45,11 +46,9 @@ export function slugify(value: string): string {
 
 export function buildFilename(filename: string | undefined, title: string | undefined, now: Date): string {
   const base = filename || (title && slugify(title)) || 'dashboard-export'
-  const yyyy = now.getFullYear()
-  const mm = String(now.getMonth() + 1).padStart(2, '0')
-  const dd = String(now.getDate()).padStart(2, '0')
+  const dateString = format(now, 'yyyy-MM-dd')
 
-  return `${base}-${yyyy}-${mm}-${dd}.pdf`
+  return `${base}-${dateString}.pdf`
 }
 
 function drawPageMeta(pdf: jsPDF, ctx: PageMetaContext): void {
@@ -188,6 +187,7 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
       subtitle,
       dashboardUrl,
       orientation = 'landscape',
+      pageSize = 'letter',
       margin = 4,
       scale = 2,
       exclude = ['.tile-actions', '.tooltip', '.popover', '.dropdown-popover'],
@@ -231,7 +231,7 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
       exportState.value = { status: 'generating' }
 
       const now = new Date()
-      const pdf = new jsPDF({ orientation, unit: 'mm', format: 'a4' })
+      const pdf = new jsPDF({ orientation, unit: 'mm', format: pageSize })
       const pageWidth = pdf.internal.pageSize.getWidth()
       const pageHeight = pdf.internal.pageSize.getHeight()
       const headerHeight = HEADER_HEIGHT_MM + (subtitle ? SUBTITLE_HEIGHT_MM : 0)

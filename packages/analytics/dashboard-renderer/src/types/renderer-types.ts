@@ -39,6 +39,8 @@ export interface PdfExportOptions {
   dashboardUrl?: string
   /** Page orientation. Defaults to 'landscape'. */
   orientation?: 'portrait' | 'landscape'
+  /** Page size. Defaults to 'letter'. */
+  pageSize?: 'letter' | 'a4'
   /** Page margin in mm. Defaults to 4. */
   margin?: number
   /** Scale factor for capture resolution. Higher = better quality, larger file. Defaults to 2. */
