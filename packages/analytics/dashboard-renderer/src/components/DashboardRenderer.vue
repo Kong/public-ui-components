@@ -52,10 +52,10 @@
             :query-ready="queryReady"
             :tile-id="tile.id"
             :tile-type="tile.type"
-            @chart-data="onChartData(tile)"
             @duplicate-tile="onDuplicateTile(tile)"
             @edit-tile="onEditTile(tile)"
             @remove-tile="onRemoveTile(tile)"
+            @tile-loaded="onTileLoaded(tile)"
             @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
           />
         </template>
@@ -134,7 +134,7 @@ composables.useRequestQueue()
 
 const { exportPdf, exportState: pdfExportState } = composables.useExportPdf(layoutContainer)
 
-const onChartData = (tile: GridTile<TileDefinition>) => {
+const onTileLoaded = (tile: GridTile<TileDefinition>) => {
   loadedTileIds.add((tile.id as string))
 
   const expectedCount = gridTiles.value.filter(t => !isSlottableTile(t)).length

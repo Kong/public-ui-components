@@ -233,6 +233,7 @@ const refresh = () => {
 
 const emit = defineEmits<{
   (e: 'chart-data', chartData: ExploreResultV4): void
+  (e: 'tile-loaded'): void
   (e: 'edit-tile', tile: TileDefinition): void
   (e: 'duplicate-tile', tile: TileDefinition): void
   (e: 'remove-tile', tile: TileDefinition): void
@@ -490,14 +491,20 @@ const onChartData = (data: ExploreResultV4) => {
   chartData.value = data
   loadingChartData.value = false
   emit('chart-data', data)
+  emit('tile-loaded')
 }
 
 const onQueryComplete = () => {
   loadingChartData.value = false
+  emit('tile-loaded')
 }
 
 const onLoadingChange = (isLoading: boolean) => {
   loadingChartData.value = isLoading
+
+  if (!isLoading) {
+    emit('tile-loaded')
+  }
 }
 
 const hideExportModal = () => {
