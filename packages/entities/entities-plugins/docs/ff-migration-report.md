@@ -3,26 +3,26 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-14T03:19:57.949Z
+> Generated: 2026-07-14T03:52:32.375Z
 
 ## Summary
 
-`██████▓▓▓▓▓▓▓▓▒▒▒▒▒░░░░` **65%**
+`██████▓▓▓▓▓▓▓▓▓▒▒▒▒░░░░` **69%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **74** |
-| ⏳ Pending | **39** |
+| ✅ Migrated | **78** |
+| ⏳ Pending | **35** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **8** |
-| 🔄 In Progress | **5** |
+| 🚀 Ready for Release | **9** |
+| 🔄 In Progress | **4** |
 | ⏸️ Not Started | **4** |
 
 ---
@@ -186,12 +186,12 @@
 
 ---
 
-### 🔄 M15 — Analytics, Monitoring & Monetization — In Progress (1/5)
+### 🚀 M15 — Analytics, Monitoring & Monetization — Ready for Release (5/5)
 
-- ⏳ `app-dynamics`
-- ⏳ `datadog`
-- ⏳ `statsd`
-- ⏳ `zipkin`
+- ✅ `app-dynamics`
+- ✅ `datadog`
+- ✅ `statsd`
+- ✅ `zipkin`
 - ✅ `metering-and-billing`
 
 ---
