@@ -19,7 +19,7 @@
           :key="`${source}-${target}`"
           class="connection"
         >
-          <AddIcon :color="KUI_COLOR_BACKGROUND_SUCCESS" />
+          <AddIcon :color="`var(--kui-color-background-success, ${KUI_COLOR_BACKGROUND_SUCCESS})`" />
           {{ source }} → {{ target }}
         </div>
         <div
@@ -27,7 +27,7 @@
           :key="`${source}-${target}`"
           class="connection"
         >
-          <RemoveIcon :color="KUI_COLOR_TEXT_DANGER" />
+          <RemoveIcon :color="`var(--kui-color-text-danger, ${KUI_COLOR_TEXT_DANGER})`" />
           {{ source }} → {{ target }}
         </div>
       </div>

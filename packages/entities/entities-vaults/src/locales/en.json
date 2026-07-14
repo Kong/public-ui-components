@@ -34,6 +34,7 @@
       },
       "table_headers": {
         "prefix": "Prefix",
+        "prefix_ai_gateway": "Name",
         "name": "Vault type",
         "description": "Description",
         "tags": "Tags",
@@ -90,7 +91,9 @@
     "success_brief": "Successfully copied to clipboard"
   },
   "labels": {
-    "vault_type": "Vault type"
+    "vault_type": "Vault type",
+    "vault_type_ai_gateway": "Type",
+    "vault_name_ai_gateway": "Name"
   },
   "form": {
     "sections": {
@@ -109,6 +112,12 @@
         "placeholder": "Enter a unique prefix for this vault",
         "help": "e.g. my-vault",
         "tooltip": "The reference prefix. You need this prefix to access secrets stored in this vault. For example, {vault://<your-prefix>/<some-secret>}."
+      },
+      "prefix_ai_gateway": {
+        "label": "Name",
+        "placeholder": "Enter a unique name for this vault",
+        "help": "e.g. my-vault",
+        "tooltip": "The reference name. You need this name to access secrets stored in this vault. For example, {vault://<your-name>/<some-secret>}."
       },
       "description": {
         "label": "Description",
@@ -355,7 +364,9 @@
             "label": "Cert"
           },
           "cert_auth_cert_key": {
-            "label": "Cert key"
+            "label": "Cert key",
+            "rotateLabel": "Rotate cert key",
+            "rotateAlert": "Once saved, the cert key value will not be visible."
           },
           "cert_auth_role_name": {
             "label": "Role name"

@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.11.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.28...@kong-ui-public/core@1.11.29) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
+## [1.11.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.27...@kong-ui-public/core@1.11.28) (2026-06-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3436](https://github.com/Kong/public-ui-components/issues/3436)) ([50801c8](https://github.com/Kong/public-ui-components/commit/50801c82e6d7f71324aeab8209d9a212af5fe8a6))
+
+
+
+
+
+## [1.11.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.26...@kong-ui-public/core@1.11.27) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
+## [1.11.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.25...@kong-ui-public/core@1.11.26) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [1.11.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.24...@kong-ui-public/core@1.11.25) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
 ## [1.11.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.23...@kong-ui-public/core@1.11.24) (2026-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/core

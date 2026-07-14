@@ -32,13 +32,15 @@ import { getCurrentInstance, nextTick, ref, type App, type Ref } from 'vue'
 describe('useContextLinks', () => {
   let app: App | undefined
   let configFn: Mock
+  let datasourceConfigFn: Mock
 
   beforeEach(() => {
     vi.clearAllMocks()
     configFn = vi.fn(() => Promise.resolve({}))
+    datasourceConfigFn = vi.fn(() => Promise.resolve([]))
     app = setupPiniaTestStore({ createVueApp: true })
     if (app) {
-      app.provide(INJECT_QUERY_PROVIDER, { configFn })
+      app.provide(INJECT_QUERY_PROVIDER, { configFn, datasourceConfigFn })
     }
   })
 
@@ -93,6 +95,9 @@ describe('useContextLinks', () => {
 
       return Promise.resolve({})
     })
+    datasourceConfigFn.mockImplementation(() =>
+      isLoading ? new Promise(() => {}) : Promise.resolve([]),
+    )
 
     let internalContext: Ref<DashboardRendererContextInternal>
     let queryReady: Ref<boolean>

@@ -1,4 +1,4 @@
-import type { MapHandlerOption } from './types'
+import { type MapHandlerOption, SCROLL_BEHAVIOR, scrollIntoViewNative } from './types'
 import { selectors } from '../../shared/selectors'
 
 function extractKidId(testId: string | undefined, fieldKey: string): string {
@@ -25,7 +25,7 @@ export function fillMap(option: MapHandlerOption): void {
     cy.get('body').then(($body) => {
       const $btn = $body.find(mapRemoveBtnsSelector).first()
       if ($btn.length > 0) {
-        cy.wrap($btn).click()
+        cy.wrap($btn).click(SCROLL_BEHAVIOR)
         removeNext()
       }
     })
@@ -44,10 +44,14 @@ export function fillMap(option: MapHandlerOption): void {
   for (let i = 0; i < entries.length; i++) {
     const [key, val] = entries[i]
 
-    cy.get(selectors.mapAddBtn(fieldKey)).click()
+    const addBtnSelector = selectors.mapAddBtn(fieldKey)
+    scrollIntoViewNative(addBtnSelector)
+    cy.get(addBtnSelector).click(SCROLL_BEHAVIOR)
 
-    cy.get(selectors.mapKey(fieldKey, i)).clear({ force: true })
-    cy.get(selectors.mapKey(fieldKey, i)).type(String(key), { force: true })
+    const mapKeySelector = selectors.mapKey(fieldKey, i)
+    scrollIntoViewNative(mapKeySelector)
+    cy.get(mapKeySelector).clear(SCROLL_BEHAVIOR)
+    cy.get(mapKeySelector).type(String(key), SCROLL_BEHAVIOR)
 
     cy.get(selectors.mapContainer(fieldKey, i))
       .find(`[data-testid*="${fieldKey}.kid:"]`)
