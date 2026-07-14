@@ -162,6 +162,8 @@ useProvideExperimentalFreeForms([
   'mtls-auth',
   'basic-auth',
   'key-auth',
+  'saml',
+  'vault-auth',
   'hmac-auth',
   'key-auth-enc',
   'ldap-auth',
