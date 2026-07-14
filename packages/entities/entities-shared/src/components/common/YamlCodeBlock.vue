@@ -12,6 +12,7 @@
     <KCodeBlock
       v-if="props.entityRecord"
       id="yaml-codeblock"
+      :key="konnectColorMode"
       :code="yamlContent"
       :copy-code="unredactedYamlContent"
       data-dd-privacy="mask"

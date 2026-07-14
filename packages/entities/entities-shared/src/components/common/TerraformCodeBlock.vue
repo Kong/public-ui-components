@@ -3,6 +3,7 @@
     <KCodeBlock
       v-if="props.entityRecord"
       id="terraform-codeblock"
+      :key="konnectColorMode"
       :code="terraformContent"
       :copy-code="unredactedTerraformContent"
       data-dd-privacy="mask"

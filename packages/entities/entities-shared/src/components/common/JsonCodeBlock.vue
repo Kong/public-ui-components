@@ -10,6 +10,7 @@
       </KBadge>
       <KCodeBlock
         id="json-endpoint-codeblock"
+        :key="konnectColorMode"
         :code="fetcherUrl"
         language="plaintext"
         single-line
@@ -19,6 +20,7 @@
     <KCodeBlock
       v-if="entityRecord"
       id="json-codeblock"
+      :key="konnectColorMode"
       :class="{ 'json-content': fetcherUrl }"
       :code="JSON.stringify(jsonContent, null, 2)"
       :copy-code="JSON.stringify(unredactedRecord || jsonContent, null, 2)"
