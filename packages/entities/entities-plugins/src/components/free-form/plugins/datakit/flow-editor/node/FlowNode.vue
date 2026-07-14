@@ -26,11 +26,16 @@
       <WarningIcon
         v-if="error"
         class="error-icon"
-        :color="KUI_COLOR_TEXT_DANGER"
+        :color="`var(--kui-color-text-danger, ${KUI_COLOR_TEXT_DANGER})`"
         :size="16"
       />
+      <slot
+        v-if="slots.actions"
+        :data="data"
+        name="actions"
+      />
       <KDropdown
-        v-if="!isImplicit"
+        v-else-if="!isImplicit"
         class="menu"
         :disabled="readonly"
         :kpop-attributes="{
@@ -47,7 +52,7 @@
           icon
           size="small"
         >
-          <MoreIcon :color="KUI_COLOR_TEXT" />
+          <MoreIcon :color="`var(--kui-color-text, ${KUI_COLOR_TEXT})`" />
         </KButton>
         <template #items>
           <KDropdownItem
@@ -76,6 +81,12 @@
         </template>
       </KDropdown>
     </div>
+
+    <slot
+      v-if="slots['before-handles']"
+      :data="data"
+      name="before-handles"
+    />
 
     <div
       class="handles"
@@ -115,12 +126,12 @@
               <template v-if="hasInputFields">
                 <UnfoldMoreIcon
                   v-if="!inputsExpanded"
-                  :size="KUI_ICON_SIZE_20"
+                  :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`"
                 />
                 <UnfoldLessIcon
                   v-if="inputsExpanded"
-                  :color="inputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
-                  :size="KUI_ICON_SIZE_20"
+                  :color="inputsCollapsible ? undefined : `var(--kui-color-text-disabled, ${KUI_COLOR_TEXT_DISABLED})`"
+                  :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`"
                 />
               </template>
             </div>
@@ -187,12 +198,12 @@
               <template v-if="hasOutputFields">
                 <UnfoldMoreIcon
                   v-if="!outputsExpanded"
-                  :size="KUI_ICON_SIZE_20"
+                  :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`"
                 />
                 <UnfoldLessIcon
                   v-if="outputsExpanded"
-                  :color="outputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
-                  :size="KUI_ICON_SIZE_20"
+                  :color="outputsCollapsible ? undefined : `var(--kui-color-text-disabled, ${KUI_COLOR_TEXT_DISABLED})`"
+                  :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`"
                 />
               </template>
             </div>
@@ -274,6 +285,12 @@
         </div>
       </div>
     </div>
+
+    <slot
+      v-if="slots['after-handles']"
+      :data="data"
+      name="after-handles"
+    />
   </div>
 </template>
 
@@ -311,6 +328,12 @@ const { data, readonly } = defineProps<{
   data: NodeInstance
   error?: boolean
   readonly?: boolean
+}>()
+
+const slots = defineSlots<{
+  actions?: (props: { data: NodeInstance }) => any
+  'before-handles'?: (props: { data: NodeInstance }) => any
+  'after-handles'?: (props: { data: NodeInstance }) => any
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -626,7 +649,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       gap: var(--kui-space-30, $kui-space-30);
       justify-self: start;
       max-width: 100%;
-      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
       max-width: calc(100% - var(--kui-space-30, $kui-space-30));
       position: relative;
 
@@ -698,7 +721,7 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       &.connecting::after,
       &:hover::after {
         background-color: var(--kui-color-background-primary, $kui-color-background-primary);
-        /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+        /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
         box-shadow: 0 0 0 1px var(--kui-color-background-primary, $kui-color-background-primary);
       }
     }

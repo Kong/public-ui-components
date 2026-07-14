@@ -24,7 +24,7 @@ import { parseGroupId } from './helpers'
 import { useEditorStore } from './store'
 
 import type { Connection, FitViewParams, GraphNode, Node, NodeSelectionChange, XYPosition } from '@vue-flow/core'
-import type { MaybeRefOrGetter } from '@vueuse/core'
+import type { MaybeRefOrGetter } from 'vue'
 
 import type {
   EdgeId,
@@ -258,7 +258,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             type: 'flow',
             position,
             data: node,
-            deletable: !isImplicitNode(node),
+            deletable: !readonly && !isImplicitNode(node),
             parentNode: parentResolved ? parentGroup.id : undefined,
             zIndex: zLayerDepth * DK_FLOW_Z_LAYER_STEP + DK_FLOW_NODE_Z_OFFSET,
           }

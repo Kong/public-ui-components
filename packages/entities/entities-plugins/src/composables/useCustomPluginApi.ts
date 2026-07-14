@@ -176,7 +176,8 @@ export function useCustomPluginApi(options: UseCustomPluginApiOptions) {
   const updateClonedPlugin = async (originName: string, body: ClonedPluginRequestBody): Promise<ClonedPluginResponse> => {
     const { aliasName: alias, priority, sourcePlugin: ref } = body
     const url = buildUrl(endpoints.customPlugin[options.app].cloned.edit, originName)
-    const { data } = await axiosInstance.patch<ClonedPluginResponse>(url, {
+    const method = options.app === 'konnect' ? 'put' : 'patch'
+    const { data } = await axiosInstance[method]<ClonedPluginResponse>(url, {
       ref,
       priority,
       name: alias,

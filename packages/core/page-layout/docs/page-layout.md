@@ -128,6 +128,26 @@ Optional slot for a custom page title. Use it when the default `<h1>` needs to b
 
 An optional slot rendered immediately after the page title `<h1>`, inline within the title row. Use this slot to place badges, status indicators, or other inline content that should appear next to the title.
 
+#### `tab-${tab.key}` (dynamic)
+
+A dynamic, per-tab slot for customizing the rendered content of a specific tab in the tab bar. The slot name is constructed as `tab-` followed by the tab's `key`. If a matching slot is not provided for a given tab, the tab's `label` is rendered instead.
+
+The slot exposes the corresponding `PageLayoutTab` object as a scoped slot prop:
+
+```html
+<template>
+  <PageLayout
+    :tabs="tabs"
+    title="My Control Plane"
+  >
+    <template #tab-routes="{ tab }">
+      {{ tab.label }}
+      <KBadge appearance="info">12</KBadge>
+    </template>
+  </PageLayout>
+</template>
+```
+
 ### Usage example
 
 #### With tabs
@@ -335,8 +355,8 @@ Provide this prop to mark the page as an entity page. The `label` field is the d
 
 The host application must `provide('app:pageShortcutsContext', ctx)` a reactive object (typically created via `reactive()`). `PageLayout` interacts with it as follows:
 
-- **`isFavorite`** — reactive boolean. When `true`, the star button renders as a filled star (and its aria-label switches to "Remove page from shortcuts"). The host is responsible for keeping this in sync with the user's favorites list whenever the route changes.
-- **`onFavoriteToggle(pageShortcutData)`** — called when the user clicks the star button. Receives the current page's `PageShortcutData` with `path` resolved (either the value from the prop, or the current route's `fullPath` as a fallback). The host should toggle the favorite state for the current page and update `isFavorite` accordingly.
+- **`isFavorite(pageShortcutData)`** — function returning a boolean. Receives the current page's `PageShortcutData` and returns `true` when that page is currently favorited, in which case the star button renders as a filled star (and its aria-label switches to "Remove page from shortcuts"). Because the context is reactive, the returned value updates automatically as the host's favorites list changes.
+- **`onFavoriteToggle(pageShortcutData)`** — called when the user clicks the star button. Receives the current page's `PageShortcutData` with `path` resolved (either the value from the prop, or the current route's `fullPath` as a fallback). The host should toggle the favorite state for the current page so that `isFavorite` reflects the new state.
 - **`onEntityPageVisit(pageShortcutData)`** — called when an entity page is visited (or when `pageShortcutData` changes). The host typically uses this to record the visit in a "Recents" list. To avoid double-counting in nested-PageLayout scenarios, this callback is only invoked from the **innermost** (non-nested) `PageLayout`, and is deferred via `nextTick()` so nested-layout detection has settled first.
 
 #### Example host setup
@@ -349,10 +369,10 @@ const favorites = ref<PageShortcutData[]>([])
 const recents = ref<PageShortcutData[]>([])
 
 const pageShortcutsContext = reactive({
-  isFavorite: false,
+  isFavorite: (data: PageShortcutData) => favorites.value.some((f) => f.path === data.path),
   onFavoriteToggle: (data: PageShortcutData) => {
-    // toggle `data` in `favorites` (e.g. dedupe by `path`),
-    // then update `pageShortcutsContext.isFavorite` to match
+    // toggle `data` in `favorites` (e.g. dedupe by `path`);
+    // `isFavorite` will reflect the change automatically
   },
   onEntityPageVisit: (data: PageShortcutData) => {
     // prepend `data` to `recents`, dedupe by `path`, cap length, etc.
@@ -393,8 +413,8 @@ The shape `PageLayout` expects when injecting `app:pageShortcutsContext`. Only `
 
 ```ts
 interface PageShortcutsContext {
-  /** Whether the current page is currently favorited */
-  isFavorite: boolean
+  /** Returns whether the given page is currently favorited */
+  isFavorite: (data: PageShortcutData) => boolean
   /** Called when the user clicks the favorite star button. Receives the current page's shortcut data with `path` resolved. */
   onFavoriteToggle: (data: PageShortcutData) => void
   /** Called when an entity page is visited or its shortcut data changes */

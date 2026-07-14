@@ -78,7 +78,7 @@ Creates a filler instance.
 **`filler.fill(data)`**
 Fills entire form. Skips `undefined` values.
 
-**`filler.fillField(fieldKey, value, options?)`**
+**`filler.fillField(fieldKey, value)`**
 Fills a single field. Use dot notation for nested fields: `'config.timeout'`, `'servers.0.host'`.
 
 ## Development

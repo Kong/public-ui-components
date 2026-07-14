@@ -1,9 +1,8 @@
-import type { MetricCardDef } from '../types'
+import type { MetricCardDef, ChronologicalMappedMetrics } from '../types'
 import type { MetricCardType } from '../enums'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
-import type { ChronologicalMappedMetrics } from './useMetricFetcher'
-import { DEFAULT_KEY } from './useMetricFetcher'
+import { DEFAULT_KEY } from '../constants'
 
 export interface BuilderOptions {
   cardType: MetricCardType

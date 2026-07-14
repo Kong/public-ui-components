@@ -32,23 +32,23 @@
                   icon
                   size="small"
                 >
-                  <MoreIcon :size="KUI_ICON_SIZE_30" />
+                  <MoreIcon :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`" />
                 </KButton>
               </template>
 
               <template #items>
                 <KDropdownItem
-                  v-if="canEditCustomPlugin && hasEditRoute"
+                  v-if="hasEditAction"
                   data-testid="edit-plugin-schema"
                   @click.stop="handleCustomEdit(plugin.name, plugin.customPluginType!)"
                 >
                   {{ t('actions.edit') }}
                 </KDropdownItem>
                 <KDropdownItem
-                  v-if="canDeleteCustomPlugin"
+                  v-if="hasDeleteAction"
                   danger
                   data-testid="delete-plugin-schema"
-                  has-divider
+                  :has-divider="hasEditAction"
                   @click.stop="handleCustomDelete"
                 >
                   {{ t('actions.delete') }}
@@ -147,9 +147,23 @@ const props = defineProps({
     default: false,
   },
   /**
+   * Whether or not user has rights to delete cloned custom plugins
+   */
+  canDeleteClonedPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * Whether or not user has rights to edit custom plugins
    */
   canEditCustomPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Whether or not user has rights to edit cloned custom plugins
+   */
+  canEditClonedPlugin: {
     type: Boolean,
     default: false,
   },
@@ -187,18 +201,27 @@ const customPluginBadges = computed((): string[] => {
 })
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
 const hasEditRoute = computed((): boolean => typeof props.config.getCustomEditRoute === 'function')
+const isClonedCustomPlugin = computed((): boolean => props.plugin.customPluginType === 'cloned')
+const canDeleteCurrentPlugin = computed((): boolean => {
+  return isClonedCustomPlugin.value ? props.canDeleteClonedPlugin : props.canDeleteCustomPlugin
+})
+const canEditCurrentPlugin = computed((): boolean => {
+  return isClonedCustomPlugin.value ? props.canEditClonedPlugin : props.canEditCustomPlugin
+})
 const canManageCustomPlugin = computed((): boolean => {
   return !(
     props.config.app === 'kongManager'
     && props.plugin.customPluginType === 'schema'
   )
 })
+const hasEditAction = computed((): boolean => canEditCurrentPlugin.value && hasEditRoute.value)
+const hasDeleteAction = computed((): boolean => canDeleteCurrentPlugin.value)
 const hasActions = computed((): boolean => !!(
   isCustomPlugin.value
   && !isCreateCustomPlugin.value
   && canManageCustomPlugin.value
   && props.navigateOnClick
-  && (props.canDeleteCustomPlugin || (props.canEditCustomPlugin && hasEditRoute.value))
+  && (hasDeleteAction.value || hasEditAction.value)
 ))
 
 const handleCreateClick = (): void => {
@@ -254,6 +277,7 @@ const handleCustomClick = (): void => {
   display: flex;
 
   .plugin-select-card {
+    background-color: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     box-sizing: border-box;

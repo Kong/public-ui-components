@@ -56,21 +56,9 @@
       "cache_configuration": "Cache configuration",
       "partial_configuration": "Partial configuration"
     },
-    "collapse": {
-      "show_partial": "Show partial configuration",
-      "hide_partial": "Hide partial configuration"
-    },
-    "partial": {
-      "format_label": "Format:",
-      "format_structured": "Structured",
-      "format_json": "JSON",
-      "format_terraform": "Terraform",
-      "provisioning_value": "Provisioning cache...",
-      "terminating_value": "Terminating cache..."
-    },
     "managed_state": {
-      "initializing_alert": "We're provisioning your instance. The partial configuration will update when provisioning is complete. This can take up to 20 minutes.",
-      "terminating_alert": "This instance is being deleted and all data will be lost. This can take up to 20 minutes."
+      "initializing_tooltip": "We're provisioning your instance. The partial configuration will update when provisioning is complete. This can take up to 20 minutes.",
+      "terminating_tooltip": "This instance is being deleted and all data will be lost. This can take up to 20 minutes."
     },
     "managed_dpg": {
       "entry_heading": "Data plane group {n}"
@@ -383,6 +371,14 @@
       "feature_2": {
         "title": "Sync across plugins",
         "description": "Edits to your configuration will be cascaded automatically to all associated plugins."
+      },
+      "feature_3": {
+        "title": "Deploy Konnect Managed Cache",
+        "description": "Configure and deploy managed Redis instances alongside your data planes for seamless plugin integration."
+      },
+      "feature_4": {
+        "title": "Share Redis configuration",
+        "description": "Share Redis configuration settings across multiple data planes and regions."
       }
     }
   }

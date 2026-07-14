@@ -17,3 +17,6 @@ export interface PageLayoutTabsProps {
   tabs?: PageLayoutTab[]
 }
 
+export interface PageLayoutTabsSlots {
+  [key: `tab-${string}`]: (props: { tab: PageLayoutTab }) => any
+}
