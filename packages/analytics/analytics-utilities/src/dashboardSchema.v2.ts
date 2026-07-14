@@ -802,7 +802,42 @@ export const chartTileConfigSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export const tileConfigSchema = chartTileConfigSchema
+export type ChartTileConfig = FromSchemaWithOptions<typeof chartTileConfigSchema>
+
+export const markdownTileDefinitionSchema = {
+  type: 'object',
+  properties: {
+    content: { type: 'string' },
+  },
+  required: ['content'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type MarkdownTileDefinition = FromSchemaWithOptions<typeof markdownTileDefinitionSchema>
+
+export const markdownTileConfigSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['markdown'],
+    },
+    definition: markdownTileDefinitionSchema,
+    layout: tileLayoutSchema,
+    id: {
+      type: 'string',
+      description: 'Unique identifier for the tile.  If not provided, one will be generated.',
+    },
+  },
+  required: ['type', 'definition', 'layout'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type MarkdownTileConfig = FromSchemaWithOptions<typeof markdownTileConfigSchema>
+
+export const tileConfigSchema = {
+  oneOf: [chartTileConfigSchema, markdownTileConfigSchema],
+} as const satisfies JSONSchema
 
 export type TileConfig = FromSchemaWithOptions<typeof tileConfigSchema>
 

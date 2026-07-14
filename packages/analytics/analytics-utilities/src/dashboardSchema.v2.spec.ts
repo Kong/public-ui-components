@@ -8,6 +8,8 @@ import {
   llmUsageSchema,
   agenticUsageSchema,
   validDashboardChartQuery,
+  markdownTileDefinitionSchema,
+  markdownTileConfigSchema,
   validDashboardQuery,
   validDashboardTableQuery,
   platformQuerySchema,
@@ -485,5 +487,53 @@ describe('dashboardSchema.v2', () => {
       ...invalidStrictQuery,
       datasource: 'agentic_usage',
     })).toBe(false)
+  })
+
+  describe('markdown tile schemas', () => {
+    const validateMarkdownTileDefinitionSchema = ajv.compile(markdownTileDefinitionSchema)
+    const validateMarkdownTileConfigSchema = ajv.compile(markdownTileConfigSchema)
+
+    it('accepts a valid markdown tile definition', () => {
+      expect(validateMarkdownTileDefinitionSchema({
+        content: '## Hello\n\nThis is a **markdown** tile.',
+      })).toBe(true)
+    })
+
+    it('rejects a markdown tile definition missing content', () => {
+      expect(validateMarkdownTileDefinitionSchema({})).toBe(false)
+    })
+
+    it('rejects a markdown tile definition with extra properties', () => {
+      expect(validateMarkdownTileDefinitionSchema({
+        content: 'Some notes.',
+        unknown_field: true,
+      })).toBe(false)
+    })
+
+    it('accepts a valid markdown tile config', () => {
+      expect(validateMarkdownTileConfigSchema({
+        type: 'markdown',
+        definition: { content: '## Notes' },
+        layout: {
+          position: { col: 0, row: 0 },
+          size: { cols: 3, rows: 2 },
+        },
+      })).toBe(true)
+    })
+
+    it('accepts a markdown tile within a full dashboard config', () => {
+      expect(validateDashboardConfigSchema({
+        tiles: [
+          {
+            type: 'markdown',
+            definition: { content: '## Notes' },
+            layout: {
+              position: { col: 0, row: 0 },
+              size: { cols: 3, rows: 2 },
+            },
+          },
+        ],
+      })).toBe(true)
+    })
   })
 })
