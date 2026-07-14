@@ -3,27 +3,27 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-05-28T09:48:22.547Z
+> Generated: 2026-07-14T09:57:45.583Z
 
 ## Summary
 
-`██████▓▒▒▒░░░░░░░░░░░░░` **33%**
+`██████▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░░` **81%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **37** |
-| ⏳ Pending | **76** |
+| ✅ Migrated | **92** |
+| ⏳ Pending | **21** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **1** |
+| 🚀 Ready for Release | **12** |
 | 🔄 In Progress | **3** |
-| ⏸️ Not Started | **13** |
+| ⏸️ Not Started | **2** |
 
 ---
 
@@ -57,13 +57,13 @@
 
 ---
 
-### ⏸️ M3 — AI Proxy Core — Not Started (0/5)
+### 🚀 M3 — AI Proxy Core — Ready for Release (5/5)
 
-- ⏳ `ai-proxy-advanced`
-- ⏳ `ai-proxy`
-- ⏳ `ai-prompt-decorator`
-- ⏳ `ai-prompt-guard`
-- ⏳ `ai-rate-limiting-advanced`
+- ✅ `ai-proxy-advanced`
+- ✅ `ai-proxy`
+- ✅ `ai-prompt-decorator`
+- ✅ `ai-prompt-guard`
+- ✅ `ai-rate-limiting-advanced`
 
 ---
 
@@ -92,23 +92,23 @@
 
 ---
 
-### ⏸️ M6 — Security & Serverless Functions — Not Started (0/5)
+### 🚀 M6 — Security & Serverless Functions — Ready for Release (5/5)
 
-- ⏳ `pre-function`
-- ⏳ `ip-restriction`
-- ⏳ `post-function`
-- ⏳ `bot-detection`
-- ⏳ `request-size-limiting`
+- ✅ `pre-function`
+- ✅ `ip-restriction`
+- ✅ `post-function`
+- ✅ `bot-detection`
+- ✅ `request-size-limiting`
 
 ---
 
-### ⏸️ M7 — AI Semantic & Transformers — Not Started (0/5)
+### 🚀 M7 — AI Semantic & Transformers — Ready for Release (5/5)
 
-- ⏳ `ai-semantic-cache`
-- ⏳ `ai-prompt-template`
-- ⏳ `ai-semantic-prompt-guard`
-- ⏳ `ai-request-transformer`
-- ⏳ `ai-response-transformer`
+- ✅ `ai-semantic-cache`
+- ✅ `ai-prompt-template`
+- ✅ `ai-semantic-prompt-guard`
+- ✅ `ai-request-transformer`
+- ✅ `ai-response-transformer`
 
 ---
 
@@ -146,81 +146,81 @@
 
 ---
 
-### 🔄 M11 — Traffic Control: Rate Limiting — In Progress (1/5)
+### 🚀 M11 — Traffic Control: Rate Limiting — Ready for Release (5/5)
 
 - ✅ `rate-limiting-advanced`
-- ⏳ `response-ratelimiting`
-- ⏳ `graphql-rate-limiting-advanced`
-- ⏳ `redirect`
-- ⏳ `request-termination`
+- ✅ `response-ratelimiting`
+- ✅ `graphql-rate-limiting-advanced`
+- ✅ `redirect`
+- ✅ `request-termination`
 
 ---
 
-### ⏸️ M12 — Traffic Control: Validation & Routing — Not Started (0/5)
+### 🚀 M12 — Traffic Control: Validation & Routing — Ready for Release (5/5)
 
-- ⏳ `request-validator`
-- ⏳ `canary`
-- ⏳ `mocking`
-- ⏳ `oas-validation`
-- ⏳ `route-by-header`
-
----
-
-### ⏸️ M13 — Traffic Control: WebSocket & Timeouts — Not Started (0/5)
-
-- ⏳ `websocket-size-limit`
-- ⏳ `websocket-validator`
-- ⏳ `xml-threat-protection`
-- ⏳ `upstream-timeout`
-- ⏳ `forward-proxy`
+- ✅ `request-validator`
+- ✅ `canary`
+- ✅ `mocking`
+- ✅ `oas-validation`
+- ✅ `route-by-header`
 
 ---
 
-### ⏸️ M14 — Traffic Control: Messaging & Access — Not Started (0/5)
+### 🚀 M13 — Traffic Control: WebSocket & Timeouts — Ready for Release (5/5)
 
-- ⏳ `ace`
-- ⏳ `confluent-consume`
-- ⏳ `kafka-consume`
-- ⏳ `standard-webhooks`
-- ⏳ `graphql-proxy-cache-advanced`
+- ✅ `websocket-size-limit`
+- ✅ `websocket-validator`
+- ✅ `xml-threat-protection`
+- ✅ `upstream-timeout`
+- ✅ `forward-proxy`
 
 ---
 
-### 🔄 M15 — Analytics, Monitoring & Monetization — In Progress (1/5)
+### 🚀 M14 — Traffic Control: Messaging & Access — Ready for Release (5/5)
 
-- ⏳ `app-dynamics`
-- ⏳ `datadog`
-- ⏳ `statsd`
-- ⏳ `zipkin`
+- ✅ `ace`
+- ✅ `confluent-consume`
+- ✅ `kafka-consume`
+- ✅ `standard-webhooks`
+- ✅ `graphql-proxy-cache-advanced`
+
+---
+
+### 🚀 M15 — Analytics, Monitoring & Monetization — Ready for Release (5/5)
+
+- ✅ `app-dynamics`
+- ✅ `datadog`
+- ✅ `statsd`
+- ✅ `zipkin`
 - ✅ `metering-and-billing`
 
 ---
 
-### ⏸️ M16 — Authentication: Extended Methods — Not Started (0/5)
+### 🚀 M16 — Authentication: Extended Methods — Ready for Release (5/5)
 
-- ⏳ `hmac-auth`
-- ⏳ `key-auth-enc`
-- ⏳ `ldap-auth`
-- ⏳ `ldap-auth-advanced`
-- ⏳ `oauth2-introspection`
+- ✅ `hmac-auth`
+- ✅ `key-auth-enc`
+- ✅ `ldap-auth`
+- ✅ `ldap-auth-advanced`
+- ✅ `oauth2-introspection`
 
 ---
 
-### ⏸️ M17 — Authentication: OpenID & Enterprise — Not Started (0/3)
+### 🔄 M17 — Authentication: OpenID & Enterprise — In Progress (2/3)
 
 - ⏳ `openid-connect`
-- ⏳ `saml`
-- ⏳ `vault-auth`
+- ✅ `saml`
+- ✅ `vault-auth`
 
 ---
 
-### ⏸️ M18 — Logging — Not Started (0/5)
+### 🚀 M18 — Logging — Ready for Release (5/5)
 
-- ⏳ `kafka-log`
-- ⏳ `loggly`
-- ⏳ `syslog`
-- ⏳ `tcp-log`
-- ⏳ `udp-log`
+- ✅ `kafka-log`
+- ✅ `loggly`
+- ✅ `syslog`
+- ✅ `tcp-log`
+- ✅ `udp-log`
 
 ---
 
@@ -235,19 +235,19 @@
 
 ---
 
-### ⏸️ M20 — Transformations & Serverless — Not Started (0/4)
+### 🚀 M20 — Transformations & Serverless — Ready for Release (4/4)
 
-- ⏳ `confluent`
-- ⏳ `degraphql`
-- ⏳ `grpc-gateway`
-- ⏳ `grpc-web`
+- ✅ `confluent`
+- ✅ `degraphql`
+- ✅ `grpc-gateway`
+- ✅ `grpc-web`
 
 ---
 
-### ⏸️ M21 — Transformations & Serverless (cont.) — Not Started (0/4)
+### 🔄 M21 — Transformations & Serverless (cont.) — In Progress (1/4)
 
 - ⏳ `jq`
-- ⏳ `kafka-upstream`
+- ✅ `kafka-upstream`
 - ⏳ `azure-functions`
 - ⏳ `openwhisk`
 

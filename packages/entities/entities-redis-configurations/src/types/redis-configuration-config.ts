@@ -2,6 +2,7 @@ import type {
   KonnectBaseEntityConfig,
   KongManagerBaseEntityConfig,
 } from '@kong-ui-public/entities-shared'
+import type { CloudGatewaysAddOnState } from './cloud-gateways-add-on'
 
 /** Konnect-managed Redis config card: deternine detail branch that's active */
 export type DetailLayout = 'legacy' | 'resolving' | 'managed'
@@ -20,6 +21,11 @@ export interface KonnectRedisConfigurationEntityConfig extends KonnectBaseEntity
   isCloudGateway?: boolean
   cloudGatewaysApiBaseUrl?: string
   controlPlaneGeo?: string
+  /**
+   * Add-on state from the host page (GM polls every 30s while initializing/terminating).
+   * Config card uses this for the Partial segment; don't pass until add-on is resolved
+   */
+  managedAddOnState?: CloudGatewaysAddOnState
 }
 
 /** Kong Manager redis configuration entity config */

@@ -355,7 +355,7 @@ export default {
 <style lang="scss" scoped>
 .config-card-details-row {
   align-items: center;
-  border-bottom: v-bind('isJsonArray ? "none" : `solid ${KUI_BORDER_WIDTH_10} ${KUI_COLOR_BORDER}`');
+  border-bottom: v-bind('isJsonArray ? "none" : `solid var(--kui-border-width-10, ${KUI_BORDER_WIDTH_10}) var(--kui-color-border, ${KUI_COLOR_BORDER})`');
   box-sizing: border-box;
   display: v-bind('isJson && itemHasValue ? "block" : "flex"');
   padding: var(--kui-space-60, $kui-space-60);

@@ -160,5 +160,14 @@
       "generate": "Generate",
       "generating": "Generating…"
     }
+  },
+  "sensitiveInput": {
+    "rotateKey": "Rotate key",
+    "generateKey": "Generate key",
+    "placeholder": "Enter or generate a key",
+    "oneTimeHint": "The key is shown only once. Copy it now and store it securely.",
+    "copy": "Copy",
+    "showKey": "Show key",
+    "hideKey": "Hide key"
   }
 }

@@ -71,7 +71,7 @@
             >
               <InfoIcon
                 :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
-                :size="KUI_ICON_SIZE_30"
+                :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
               />
             </KTooltip>
           </div>

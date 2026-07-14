@@ -59,7 +59,7 @@ import { computed, inject, toRef } from 'vue'
 import type { NumberLikeFieldSchema } from 'src/types/plugins/form-schema'
 import EnhancedInput from './EnhancedInput.vue'
 import type { BaseFieldProps } from './types'
-import useI18n from '../../../composables/useI18n'
+import useI18n from '../../../composables/useFreeformI18n'
 
 export interface NumberFieldProps extends InputProps, BaseFieldProps {
   showVaultSecretPicker?: boolean

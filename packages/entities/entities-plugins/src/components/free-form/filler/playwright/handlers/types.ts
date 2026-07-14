@@ -6,17 +6,16 @@ export type HandlerOption<T extends UnionFieldSchema = UnionFieldSchema> = {
   fieldKey: string
   fieldSchema: T
   value: any
-  typeOptions?: { delay?: number }
 }
 
-export type RecordHandlerOption = Omit<HandlerOption, 'typeOptions'> & {
+export type RecordHandlerOption = HandlerOption & {
   onFillChildren: () => Promise<void>
 }
 
-export type ArrayHandlerOption = Omit<HandlerOption, 'typeOptions'> & {
+export type ArrayHandlerOption = HandlerOption & {
   onFillItem: (index: number, itemValue: any) => Promise<void>
 }
 
-export type MapHandlerOption = Omit<HandlerOption, 'typeOptions'> & {
+export type MapHandlerOption = HandlerOption & {
   onFillEntry: (kidId: string, entryValue: any) => Promise<void>
 }
