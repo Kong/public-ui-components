@@ -3,27 +3,27 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-14T08:00:57.431Z
+> Generated: 2026-07-14T09:06:50.902Z
 
 ## Summary
 
-`██████▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒░░` **75%**
+`██████▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒░` **84%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **85** |
-| ⏳ Pending | **28** |
+| ✅ Migrated | **95** |
+| ⏳ Pending | **18** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **10** |
-| 🔄 In Progress | **5** |
-| ⏸️ Not Started | **2** |
+| 🚀 Ready for Release | **12** |
+| 🔄 In Progress | **4** |
+| ⏸️ Not Started | **1** |
 
 ---
 
@@ -214,24 +214,24 @@
 
 ---
 
-### 🔄 M18 — Logging — In Progress (1/5)
+### 🚀 M18 — Logging — Ready for Release (5/5)
 
 - ✅ `kafka-log`
-- ⏳ `loggly`
-- ⏳ `syslog`
-- ⏳ `tcp-log`
-- ⏳ `udp-log`
+- ✅ `loggly`
+- ✅ `syslog`
+- ✅ `tcp-log`
+- ✅ `udp-log`
 
 ---
 
-### ⏸️ M19 — Security — Not Started (0/6)
+### 🚀 M19 — Security — Ready for Release (6/6)
 
-- ⏳ `acme`
-- ⏳ `injection-protection`
-- ⏳ `json-threat-protection`
-- ⏳ `opa`
-- ⏳ `tls-handshake-modifier`
-- ⏳ `tls-metadata-headers`
+- ✅ `acme`
+- ✅ `injection-protection`
+- ✅ `json-threat-protection`
+- ✅ `opa`
+- ✅ `tls-handshake-modifier`
+- ✅ `tls-metadata-headers`
 
 ---
 
