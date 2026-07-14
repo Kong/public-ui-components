@@ -62,14 +62,20 @@
       class="top-n-table"
       data-testid="top-n-table"
     >
-      <table class="top-n-table-table">
+      <table
+        class="top-n-table-table"
+        :class="{ 'top-n-table-table--multi-dimension': hasMultipleDimensions }"
+      >
         <thead data-testid="top-n-table-header">
           <tr class="top-n-table-header-row">
             <th
               v-for="header in tableHeaders"
               :key="header.key"
               class="top-n-table-header-cell"
-              :class="{ 'top-n-table-header-cell-metric': header.key !== 'name' }"
+              :class="{
+                'top-n-table-header-cell-metric': header.type === 'metric',
+                'top-n-table-header-cell-dimension-compact': isCompactDimensionHeader(header),
+              }"
               data-testid="top-n-table-header-column"
             >
               <span class="table-header-label">
@@ -82,11 +88,14 @@
         <tbody>
           <tr
             v-for="row in tableData"
-            :key="row.id"
+            :key="row.rowKey"
             class="top-n-table-row"
           >
-            <!-- Name / dimension column -->
-            <td class="top-n-table-cell top-n-table-cell--name">
+            <!-- Primary dimension column -->
+            <td
+              class="top-n-table-cell top-n-table-cell--name"
+              :class="{ 'top-n-table-cell-dimension-compact': hasMultipleDimensions }"
+            >
               <span :data-testid="`row-${row.id}`">
                 <slot
                   name="name"
@@ -95,11 +104,28 @@
                     name: row.name,
                     deleted: row.deleted,
                     dimension: displayKey,
+                    dimensions: row.dimensions,
+                    isEmpty: row.id === 'empty',
                   }"
                 >
                   {{ row.name }}
                 </slot>
               </span>
+            </td>
+
+            <!-- Additional dimension columns -->
+            <td
+              v-for="header in additionalDimensionHeaders"
+              :key="header.key"
+              class="top-n-table-cell top-n-table-cell--dimension"
+              :class="{ 'top-n-table-cell-dimension-compact': !isLastDimensionHeader(header) }"
+            >
+              <slot
+                name="name"
+                :record="getDimensionSlotRecord(row, header.key)"
+              >
+                {{ getDimensionDisplayValue(row, header.key) }}
+              </slot>
             </td>
 
             <!-- Metric columns (primary 'value' + additional metrics) -->
@@ -146,15 +172,27 @@ import { isNoSuffixMetric } from '../utils'
 type TableHeader = {
   key: string
   label: string
+  type: 'dimension' | 'metric'
+}
+
+type TopNDimensionValue = {
+  dimension: string
+  id: string
+  name: string
+  deleted: boolean
 }
 
 type TopNRow = {
   id: string
+  rowKey: string
   name: string
   value?: string
   deleted: boolean
+  dimensions: TopNDimensionValue[]
   original: AnalyticsExploreRecord
 } & Record<string, unknown>
+
+const MAX_DIMENSIONS = 3
 
 const props = withDefaults(defineProps<{
   title?: string
@@ -177,12 +215,24 @@ const { formatUnit } = unitFormatter({ i18n })
 const records = computed((): AnalyticsExploreRecord[] => props.data.data)
 const hasData = computed((): boolean => !!(records.value?.length))
 
-const displayKey = computed((): string => {
+const displayKeys = computed((): string[] => {
   if (!props.data.meta?.display) {
-    return ''
+    return []
   }
 
-  return Object.keys(props.data.meta.display)?.[0] || ''
+  return Object.keys(props.data.meta.display).slice(0, MAX_DIMENSIONS)
+})
+
+const displayKey = computed((): string => {
+  return displayKeys.value[0] || ''
+})
+
+const hasMultipleDimensions = computed((): boolean => {
+  return displayKeys.value.length > 1
+})
+
+const lastDimensionKey = computed((): string => {
+  return displayKeys.value[displayKeys.value.length - 1] || ''
 })
 
 const displayRecord = computed(() => {
@@ -210,27 +260,30 @@ const columnName = computed((): string => {
     return ''
   }
 
-  return i18n.t(`chartLabels.${columnKey.value}` as any) || columnKey.value
+  return getChartLabel(columnKey.value)
 })
 
 /**
  * Headers:
- * - First column: dimension "Name"
- * - Second column: primary metric "value" for backwards compatibility
+ * - Dimension columns: "Name" for single-dimension responses, translated
+ *   dimension labels for multi-dimension responses.
+ * - Primary metric column: "value" for backwards compatibility
  * - Additional columns: one per extra metric, keyed by metric name
  */
 const tableHeaders = computed<TableHeader[]>(() => {
-  const headers: TableHeader[] = [
-    {
-      key: 'name',
-      label: i18n.t('topNTable.nameLabel') as string,
-    },
-  ]
+  const headers: TableHeader[] = displayKeys.value.map((key) => {
+    return {
+      key,
+      label: hasMultipleDimensions.value ? getChartLabel(key) : i18n.t('topNTable.nameLabel') as string,
+      type: 'dimension',
+    }
+  })
 
   if (columnKey.value) {
     headers.push({
       key: 'value',
       label: columnName.value,
+      type: 'metric',
     })
   }
 
@@ -239,11 +292,10 @@ const tableHeaders = computed<TableHeader[]>(() => {
       return
     }
 
-    const label = i18n.t(`chartLabels.${metricKey}` as any) || metricKey
-
     headers.push({
       key: metricKey,
-      label,
+      label: getChartLabel(metricKey),
+      type: 'metric',
     })
   })
 
@@ -256,13 +308,37 @@ const tableHeaders = computed<TableHeader[]>(() => {
  * additional metrics.
  */
 const metricHeaders = computed<TableHeader[]>(() => {
-  return tableHeaders.value.filter((header) => header.key !== 'name')
+  return tableHeaders.value.filter((header) => header.type === 'metric')
 })
+
+const additionalDimensionHeaders = computed<TableHeader[]>(() => {
+  return tableHeaders.value.filter((header) => header.type === 'dimension').slice(1)
+})
+
+const isLastDimensionHeader = (header: TableHeader): boolean => {
+  return header.type === 'dimension' && header.key === lastDimensionKey.value
+}
+
+const isCompactDimensionHeader = (header: TableHeader): boolean => {
+  return hasMultipleDimensions.value && header.type === 'dimension' && !isLastDimensionHeader(header)
+}
 
 const getId = (record: AnalyticsExploreRecord): string => {
   const event = record.event
 
   return String(event[displayKey.value])
+}
+
+const getDimensionValue = (record: AnalyticsExploreRecord, key: string): TopNDimensionValue => {
+  const id = String(record.event[key])
+  const idRecord = props.data.meta?.display?.[key]?.[id]
+
+  return {
+    dimension: key,
+    id,
+    name: idRecord?.name || '-',
+    deleted: !!idRecord?.deleted,
+  }
 }
 
 const getName = (record: AnalyticsExploreRecord): string => {
@@ -335,12 +411,16 @@ const tableData = computed<TopNRow[]>(() => {
   }
 
   return records.value.map((entry) => {
-    const id = getId(entry)
+    const dimensions = displayKeys.value.map((key) => getDimensionValue(entry, key))
+    const primaryDimension = dimensions[0]
+    const id = primaryDimension?.id || getId(entry)
 
     const row: TopNRow = {
       id,
-      name: getName(entry),
+      rowKey: dimensions.map((dimension) => `${dimension.dimension}:${dimension.id}`).join('|') || id,
+      name: primaryDimension?.name || getName(entry),
       deleted: getDeleted(entry),
+      dimensions,
       original: entry,
     }
 
@@ -367,7 +447,7 @@ const errorMessage = computed((): string => {
 
   if (!props.data.meta) {
     return i18n.t('topNTable.errors.meta') as string
-  } else if (displayKey.value && !Object.keys(displayRecord.value).length) {
+  } else if (displayKeys.value.some((key) => !Object.keys(props.data.meta.display[key] || {}).length)) {
     return i18n.t('topNTable.errors.display') as string
   } else if (!columnKey.value) {
     return i18n.t('topNTable.errors.metricNames') as string
@@ -393,6 +473,27 @@ const getRowMetricDisplayValue = (row: TopNRow, key: string): string => {
   }
 
   return String(value)
+}
+
+const getDimensionDisplayValue = (row: TopNRow, key: string): string => {
+  return row.dimensions.find((dimension) => dimension.dimension === key)?.name || '–'
+}
+
+const getDimensionSlotRecord = (row: TopNRow, key: string) => {
+  const dimension = row.dimensions.find((rowDimension) => rowDimension.dimension === key)
+
+  return {
+    id: dimension?.id || '',
+    name: dimension?.name || '–',
+    deleted: dimension?.deleted || false,
+    dimension: key,
+    dimensions: row.dimensions,
+    isEmpty: dimension?.id === 'empty',
+  }
+}
+
+const getChartLabel = (key: string): string => {
+  return i18n.te(`chartLabels.${key}` as any) ? i18n.t(`chartLabels.${key}` as any) as string : key
 }
 
 const translateChartUnit = (unit: string, value: number): string => {
@@ -482,6 +583,8 @@ const translateChartUnit = (unit: string, value: number): string => {
     }
 
     &-header-cell-metric,
+    &-header-cell-dimension-compact,
+    &-cell-dimension-compact,
     &-cell-metric {
       white-space: nowrap;
       width: 1%;
@@ -495,6 +598,11 @@ const translateChartUnit = (unit: string, value: number): string => {
         color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
         font-size: var(--kui-font-size-30, $kui-font-size-30);
         min-width: 200px;
+        padding-right: var(--kui-space-80, $kui-space-80);
+      }
+
+      &-dimension-compact {
+        min-width: 110px;
         padding-right: var(--kui-space-80, $kui-space-80);
       }
     }

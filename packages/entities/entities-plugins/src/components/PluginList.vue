@@ -181,6 +181,10 @@
         <TableTags :tags="rowValue" />
       </template>
 
+      <template #updated_at="{ row, rowValue }">
+        {{ formatUnixTimeStamp(rowValue ?? row.created_at) }}
+      </template>
+
       <!-- Row actions -->
       <template #actions="{ row }">
         <KClipboardProvider v-slot="{ copyToClipboard }">
@@ -398,7 +402,7 @@ const props = defineProps({
   },
 })
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -442,6 +446,7 @@ if (isOrderingSupported) {
 }
 
 fields.tags = { label: t('plugins.list.table_headers.tags'), sortable: false }
+fields.updated_at = { label: t('plugins.list.table_headers.updated_at'), sortable: true }
 
 const tableHeaders: BaseTableHeaders = fields
 

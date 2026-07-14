@@ -56,6 +56,8 @@
         :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
+        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
+        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
@@ -213,11 +215,13 @@ import {
   type PluginOrdering,
   type CustomSchemas,
   type PluginValidityChangeEvent,
+  type EntityCreateEvent,
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
+import { BEFORE_SAVE_KEY } from './const'
 import type { GlobalAction } from './free-form/shared/types'
 import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
@@ -248,6 +252,8 @@ const emit = defineEmits<{
   ): void
   (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
+  (e: 'click:create-entity', payload: EntityCreateEvent): void
+  (e: 'click:learn-more', entity: string): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -424,10 +430,21 @@ const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
   return 'freeform'
 })
 
+const isFreeFormEngine = computed(() => isFreeForm(props.pluginType, realEngine.value))
+
 provide(REDIS_PARTIAL_INFO, {
   redisType: pluginPartialType,
   redisPath: pluginRedisPath,
   isEditing: isEditing.value,
+})
+
+const beforeSaveCallbacks: Array<() => boolean> = []
+provide(BEFORE_SAVE_KEY, (cb: () => boolean) => {
+  beforeSaveCallbacks.push(cb)
+  return () => {
+    const i = beforeSaveCallbacks.indexOf(cb)
+    if (i !== -1) beforeSaveCallbacks.splice(i, 1)
+  }
 })
 
 const isDeckCustomizationVisible = ref(false)
@@ -721,7 +738,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // If the field type is 'set', convert it to 'array'
     // Freeform can handle 'set' type with one_of elements as multiselect
     // Todo: create suitable component for 'set' type in freeform and remove this conversion
-    if (scheme.type === 'set' && !(isFreeForm(props.pluginType, realEngine.value) && scheme.elements.one_of)) {
+    if (scheme.type === 'set' && !(isFreeFormEngine.value && scheme.elements.one_of)) {
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
@@ -1113,12 +1130,13 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 }
 
 const initScopeFields = (): void => {
-  const supportServiceScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
-  const supportRouteScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
-  const supportConsumerScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
+  const pluginType = isClonedPlugin.value && clonedSourcePlugin.value ? clonedSourcePlugin.value : props.pluginType
+  const supportServiceScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
+  const supportRouteScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
+  const supportConsumerScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
   const supportConsumerGroupScope = props.config.disableConsumerGroupScope
     ? false
-    : (PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
+    : (PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
   // check whether the plugin is scoped
   const consumerScoped = (props.config.entityType === 'consumers' && !!props.config.entityId) || !!record.value?.consumer?.id
   const consumerGroupScoped = (props.config.entityType === 'consumer_groups' && !!props.config.entityId) || !!record.value?.consumer_group?.id
@@ -1463,6 +1481,11 @@ const viewConfigurationRecord = computed(() => {
 
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
+  // Run before-save guards; any callback returning false blocks submission
+  if (!beforeSaveCallbacks.every(cb => cb())) {
+    return
+  }
+
   if (form.clientErrorMessage) {
     // if there are still client errors, don't submit the form
     return
@@ -1480,7 +1503,7 @@ const saveFormData = async (): Promise<void> => {
 
     const payload = JSON.parse(JSON.stringify(getRequestBody.value))
     const customSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
-    if (typeof customSchema?.shamefullyTransformPayload === 'function') {
+    if (!isFreeFormEngine.value && typeof customSchema?.shamefullyTransformPayload === 'function') {
       customSchema.shamefullyTransformPayload({
         originalModel: formFieldsOriginal,
         model: form.fields,

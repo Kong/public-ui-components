@@ -20,7 +20,7 @@
       enable-filtering
       :filter-function="() => true"
       :items="availableRedisConfigs"
-      :loading="loadingRedisConfigs"
+      :loading="(loadingRedisConfigs as any)"
       :model-value="defaultRedisConfigItem"
       :placeholder="redisSelectPlaceholderText"
       @change="(item) => redisConfigSelected(item?.value)"
@@ -58,13 +58,16 @@
           {{ t('redis.shared_configuration.empty_state') }}
         </div>
       </template>
-      <template #dropdown-footer-text>
+      <template
+        v-if="!shouldHideNewRedisConfiguration(formConfig)"
+        #dropdown-footer-text
+      >
         <div
           class="new-redis-config-area"
           data-testid="new-redis-config-area"
           @click="$emit('showNewPartialModal')"
         >
-          <AddIcon :size="KUI_ICON_SIZE_20" />
+          <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
           <span>{{ createNewRedisConfigurationFooterText }}</span>
         </div>
       </template>
@@ -109,6 +112,7 @@ import {
   type RedisConfigurationSource,
   redisManagedSourceFromTags,
 } from '../utils/redisPartialManagedSource'
+import { shouldHideNewRedisConfiguration } from '../utils/hideNewRedisConfiguration'
 import RedisConfigCard from './RedisConfigCard.vue'
 
 defineEmits<{

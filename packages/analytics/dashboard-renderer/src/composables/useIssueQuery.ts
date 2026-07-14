@@ -1,7 +1,7 @@
 import {
   type AllFilters, type AnalyticsBridge, type DatasourceAwareQuery, type ExploreFilterAll, type ExploreQuery,
   type TimeRangeV4,
-  type ValidDashboardQuery,
+  type ValidDashboardChartQuery,
 } from '@kong-ui-public/analytics-utilities'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import type { DashboardRendererContextInternal } from '../types'
@@ -14,17 +14,22 @@ export default function useIssueQuery() {
   const datasourceConfigStore = useDatasourceConfigStore()
   const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
 
-  // Ensure that any pending requests are canceled on unmount.
-  const abortController = new AbortController()
+  // Ensure that any pending requests are canceled when superseded or on unmount.
+  let abortController: AbortController | null = null
 
   onUnmounted(() => {
-    abortController.abort()
+    abortController?.abort()
   })
 
-  const issueQuery = async (query: ValidDashboardQuery, context: DashboardRendererContextInternal, limitOverride?: number) => {
+  const issueQuery = async (query: ValidDashboardChartQuery, context: DashboardRendererContextInternal, limitOverride?: number) => {
     if (!queryBridge) {
       throw new Error('Query bridge is not defined')
     }
+
+    // This will abort any previous query and pass a new controller to the bridge.
+    abortController?.abort()
+    const controller = new AbortController()
+    abortController = controller
 
     await datasourceConfigStore.isReady()
 
@@ -42,7 +47,7 @@ export default function useIssueQuery() {
         ...(query.filters ?? []) as AllFilters[],
         ...context.filters,
       ],
-      metrics: query.metrics,
+      queryFields: query.metrics,
     })
 
     // TODO: the cast is necessary because TimeRangeV4 specifies date objects for absolute time ranges.
@@ -74,7 +79,7 @@ export default function useIssueQuery() {
       },
     } as DatasourceAwareQuery
 
-    return queryBridge.queryFn(mergedQuery, abortController)
+    return queryBridge.queryFn(mergedQuery, controller)
   }
 
   return { issueQuery }

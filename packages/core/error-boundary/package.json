@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/error-boundary",
-  "version": "2.3.11",
+  "version": "2.3.18",
   "type": "module",
   "main": "./dist/error-boundary.umd.js",
   "module": "./dist/error-boundary.es.js",
@@ -39,9 +39,9 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.22.2",
-    "@kong/icons": "^1.55.0",
-    "vue": "^3.5.34"
+    "@kong/design-tokens": "2.0.1",
+    "@kong/icons": "^1.60.0",
+    "vue": "^3.5.35"
   },
   "repository": {
     "type": "git",

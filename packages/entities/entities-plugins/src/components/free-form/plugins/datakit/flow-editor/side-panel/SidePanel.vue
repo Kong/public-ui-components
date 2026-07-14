@@ -98,7 +98,7 @@ onMounted(() => {
     color: var(--kui-color-text, $kui-color-text);
     font-size: var(--kui-font-size-40, $kui-font-size-40);
     font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-    /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+    /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
     left: var(--kui-space-40, $kui-space-40);
     margin: 0;
     position: absolute;
