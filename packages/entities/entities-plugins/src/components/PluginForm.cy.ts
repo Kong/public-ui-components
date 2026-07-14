@@ -2294,5 +2294,4 @@ describe('<PluginForm />', () => {
       })
     })
   })
-
 })
