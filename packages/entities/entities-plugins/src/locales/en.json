@@ -63,12 +63,14 @@
       "kongManager": "Filter by exact instance name or ID",
       "select": "Filter plugins",
       "search_plugins": "Search plugins",
-      "search": "Search"
+      "search": "Search",
+      "tags_filter": "Type a tag and press Enter"
     },
     "filter": {
       "field": {
         "enabled": "Enabled"
-      }
+      },
+      "tags_invalid": "Tags can't contain commas, slashes, or leading/trailing spaces"
     },
     "no_results": "No results found for \"{filter}\""
   },

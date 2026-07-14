@@ -23,15 +23,63 @@
     <KFilterGroup
       v-model="filterGroupSelection"
       :filters="pluginFilterGroupFilters"
-      @apply="overrideDelimiter"
-    />
+      @apply="onFilterApply"
+      @clear="onFilterClear"
+      @open="onFilterOpen"
+    >
+      <template #filter-tags>
+        <div class="plugin-tags-filter">
+          <KInput
+            v-model="tagInputText"
+            autocomplete="off"
+            data-testid="tags-filter-input"
+            :error="!!tagInputError"
+            :error-message="tagInputError"
+            :placeholder="t('search.placeholder.tags_filter')"
+            @keydown.enter.prevent="addPendingTag"
+          >
+            <template #after>
+              <ArrowTopLeftIcon
+                class="plugin-tags-filter-add"
+                data-testid="tags-filter-add"
+                role="button"
+                tabindex="0"
+                @click="addPendingTag"
+                @keydown.enter.prevent="addPendingTag"
+              />
+            </template>
+          </KInput>
+          <div
+            v-if="pendingTags.length"
+            class="plugin-tags-filter-badges"
+          >
+            <KBadge
+              v-for="tag in pendingTags"
+              :key="tag"
+              :icon-before="false"
+            >
+              {{ tag }}
+              <template #icon>
+                <CloseIcon
+                  data-testid="tags-filter-remove-tag"
+                  role="button"
+                  tabindex="0"
+                  @click="removePendingTag(tag)"
+                  @keydown.enter.prevent="removePendingTag(tag)"
+                />
+              </template>
+            </KBadge>
+          </div>
+        </div>
+      </template>
+    </KFilterGroup>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import type { FilterGroupFilters, FilterGroupSelection } from '@kong/kongponents'
-import { CloseIcon, SearchIcon } from '@kong/icons'
+import { ArrowTopLeftIcon, CloseIcon, SearchIcon } from '@kong/icons'
 import composables from '../composables'
 import { PluginScope } from '../types'
 import type { EntityType } from '../types'
@@ -69,6 +117,38 @@ const modelValue = defineModel<string>({ required: true })
 
 const searchText = ref('')
 const filterGroupSelection = ref<FilterGroupSelection>({})
+
+// Working state for the custom `tags` filter popover (see `#filter-tags` slot below) - the tag
+// badges the user has built up before hitting Apply. KFilterGroup can't derive a selection for
+// a slot-overridden filter itself, so this is synced into `filterGroupSelection.tags` on apply.
+const tagInputText = ref('')
+const pendingTags = ref<string[]>([])
+
+// Tag validation: unicode letters/numbers and most ASCII symbols are allowed,
+// but no commas (used as the tag-list delimiter), slashes, control characters,
+// or leading/trailing spaces. Interior spaces between characters are fine.
+const TAG_PATTERN = /^(?:[\x21-\x2B\x2D\x2E\x30-\x7E\p{N}\p{L}]+(?: *[\x21-\x2B\x2D\x2E\x30-\x7E\p{N}\p{L}])*)?$/u
+
+const tagInputError = computed(() => (
+  tagInputText.value && !TAG_PATTERN.test(tagInputText.value)
+    ? t('search.filter.tags_invalid')
+    : ''
+))
+
+const addPendingTag = () => {
+  const tag = tagInputText.value
+  if (!tag || !TAG_PATTERN.test(tag)) {
+    return
+  }
+  if (!pendingTags.value.includes(tag)) {
+    pendingTags.value.push(tag)
+  }
+  tagInputText.value = ''
+}
+
+const removePendingTag = (tag: string) => {
+  pendingTags.value = pendingTags.value.filter((pendingTag) => pendingTag !== tag)
+}
 
 const pluginFilterGroupFilters = computed<FilterGroupFilters>(() => {
   const scopeFilter: FilterGroupFilters = nestedScopeFilterKey.value
@@ -142,7 +222,8 @@ const serializedQuery = computed<string>(() => {
   const tagsSelection = filterGroupSelection.value.tags
   const tagsValues = Array.isArray(tagsSelection?.value) ? tagsSelection.value : []
   if (tagsValues.length) {
-    params.set('tags', tagsValues.join(','))
+    // Multiple tags can be concatenated using ',' to mean AND or using '/' to mean OR.
+    params.set('tags', tagsValues.join('/'))
   }
 
   return params.toString()
@@ -157,14 +238,45 @@ watch(modelValue, (value) => {
   if (!value) {
     searchText.value = ''
     filterGroupSelection.value = {}
+    tagInputText.value = ''
+    pendingTags.value = []
   }
 })
 
-const overrideDelimiter = (appliedFilterKey: string, selection: FilterGroupSelection) => {
+const onFilterOpen = (openedFilterKey: string) => {
+  if (openedFilterKey === 'tags') {
+    const currentValue = filterGroupSelection.value.tags?.value
+    pendingTags.value = Array.isArray(currentValue) ? [...currentValue] : []
+    tagInputText.value = ''
+  }
+}
+
+const onFilterApply = (appliedFilterKey: string, selection: FilterGroupSelection) => {
+  if (appliedFilterKey === 'tags') {
+    if (pendingTags.value.length) {
+      selection.tags = {
+        operator: 'eq',
+        operatorDelimiter: ': ',
+        value: [...pendingTags.value],
+        text: pendingTags.value.join(', '),
+      }
+    } else {
+      delete selection.tags
+    }
+    return
+  }
+
   const appliedFilter = selection[appliedFilterKey]
   if (appliedFilter) {
     // Override the default `=` delimiter
     appliedFilter.operatorDelimiter = ': '
+  }
+}
+
+const onFilterClear = (clearedFilterKey: string) => {
+  if (clearedFilterKey === 'tags') {
+    pendingTags.value = []
+    tagInputText.value = ''
   }
 }
 </script>
@@ -181,6 +293,23 @@ const overrideDelimiter = (appliedFilterKey: string, selection: FilterGroupSelec
 
   .plugin-search-clear {
     cursor: pointer;
+  }
+}
+
+.plugin-tags-filter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-60, $kui-space-60);
+
+  .plugin-tags-filter-add {
+    cursor: pointer;
+    transform: scaleY(-1);
+  }
+
+  .plugin-tags-filter-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kui-space-40, $kui-space-40);
   }
 }
 </style>
