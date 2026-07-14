@@ -4,12 +4,13 @@ import type {
   AllFilters,
   TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
+import { storeToRefs } from 'pinia'
 import {
   DEFAULT_TILE_REFRESH_INTERVAL_MS,
   FULLSCREEN_LONG_REFRESH_INTERVAL_MS,
   FULLSCREEN_SHORT_REFRESH_INTERVAL_MS,
 } from '../constants'
-import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
+import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
 export default function useDashboardInternalContext({
   context,
@@ -26,6 +27,9 @@ export default function useDashboardInternalContext({
   queryReady: Readonly<Ref<boolean>>
 } {
   const configStore = useAnalyticsConfigStore()
+  const datasourceStore = useDatasourceConfigStore()
+  const { loading: configloading } = storeToRefs(configStore)
+  const { loading: datasourceLoading } = storeToRefs(datasourceStore)
 
   const timeSpec = computed<TimeRangeV4>(() => {
     if (context.value.timeSpec) {
@@ -111,7 +115,7 @@ export default function useDashboardInternalContext({
   })
 
   const queryReady = computed<boolean>(() => {
-    return !!context.value.timeSpec || !configStore.loading
+    return !!context.value.timeSpec || (!configloading.value && !datasourceLoading.value)
   })
 
   return {

@@ -194,6 +194,13 @@ export interface TopNTableRecord {
   name: string
   deleted: boolean
   dimension: string
+  dimensions?: Array<{
+    dimension: string
+    id: string
+    name: string
+    deleted: boolean
+  }>
+  isEmpty?: boolean
 }
 
 export interface SparklineDataset {

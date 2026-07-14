@@ -28,11 +28,10 @@
               tabindex="0"
               @click.prevent="navigateBack"
               @keydown.enter.prevent="navigateBack"
-              @keydown.space.prevent="navigateBack"
             >
               <ArrowTopLeftIcon
                 decorative
-                :size="KUI_ICON_SIZE_30"
+                :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
               />
             </component>
             <span
@@ -50,22 +49,28 @@
             </span>
             <div
               v-if="showFavoriteButton"
+              :key="favoriteButtonKey"
               class="favorite-button-container"
             >
-              <button
-                :aria-label="isFavorite ? t('favorite_button.remove_shortcut') : t('favorite_button.save_shortcut')"
-                class="favorite-button"
-                :class="{ 'active': isFavorite }"
-                data-testid="page-layout-favorite-button"
-                type="button"
-                @click="onFavoriteButtonClick"
+              <KTooltip
+                placement="right"
+                :text="isFavorite ? t('favorite_button.remove_shortcut') : t('favorite_button.save_shortcut')"
               >
-                <component
-                  :is="isFavorite ? StarFillIcon : StarIcon"
-                  decorative
-                  :size="KUI_ICON_SIZE_30"
-                />
-              </button>
+                <button
+                  :aria-label="isFavorite ? t('favorite_button.remove_shortcut') : t('favorite_button.save_shortcut')"
+                  class="favorite-button"
+                  :class="{ 'active': isFavorite }"
+                  data-testid="page-layout-favorite-button"
+                  type="button"
+                  @click="onFavoriteButtonClick"
+                >
+                  <component
+                    :is="isFavorite ? StarFillIcon : StarIcon"
+                    decorative
+                    :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
+                  />
+                </button>
+              </KTooltip>
             </div>
             <div
               v-if="$slots['title-after']"
@@ -86,7 +91,17 @@
       <PageLayoutTabs
         v-if="hasTabs"
         :tabs="tabs"
-      />
+      >
+        <template
+          v-for="tab in tabs"
+          #[`tab-${tab.key}`]="slotProps"
+        >
+          <slot
+            :name="`tab-${tab.key}`"
+            v-bind="slotProps"
+          />
+        </template>
+      </PageLayoutTabs>
     </div>
 
     <div
@@ -138,7 +153,12 @@ const isBackToString = computed((): boolean => typeof backTo === 'string')
 
 const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.label)
 const showFavoriteButton = computed((): boolean => isEntityPage.value && !!pageShortcutsContext && 'onFavoriteToggle' in pageShortcutsContext && typeof pageShortcutsContext.onFavoriteToggle === 'function')
-const isFavorite = computed((): boolean => !!pageShortcutsContext && 'isFavorite' in pageShortcutsContext && pageShortcutsContext.isFavorite === true)
+const favoriteButtonKey = ref<number>(0)
+const isFavorite = computed((): boolean =>
+  !!pageShortcutsContext &&
+  (('isFavorite' in pageShortcutsContext &&
+  typeof pageShortcutsContext.isFavorite === 'function' &&
+  pageShortcutsContext.isFavorite(pageShortcutData) === true)))
 
 /** Handle navigation back via the backTo prop */
 const navigateBack = async () => {
@@ -206,6 +226,7 @@ onUnmounted(() => {
 const debouncedEntityPageVisit = useDebounceFn(() => {
   if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
     pageShortcutsContext.onEntityPageVisit({ ...pageShortcutData, path: pageShortcutData?.path || route?.fullPath })
+    favoriteButtonKey.value++
   }
 }, 500)
 
@@ -224,6 +245,7 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
   font-family: var(--kui-font-family-text, $kui-font-family-text);
 
   .page-layout-header {
+    background-color: var(--kui-color-background, $kui-color-background);
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-40, $kui-space-40);
@@ -289,6 +311,7 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
 
           .favorite-button-container {
             align-self: center;
+            display: flex;
             margin-left: var(--kui-space-20, $kui-space-20);
 
             .favorite-button {
@@ -331,6 +354,7 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
   }
 
   .page-layout-content {
+    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-50, $kui-space-50);

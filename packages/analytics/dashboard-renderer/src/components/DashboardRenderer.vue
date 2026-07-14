@@ -31,11 +31,12 @@
         @update-tiles="handleUpdateTiles"
       >
         <template #tile="{ tile }">
+          <!-- eslint-disable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
           <div
-            v-if="tile.meta.chart.type === 'slottable'"
+            v-if="isSlottableTile(tile)"
             class="tile-container slottable-tile"
           >
-            <slot :name="tile.meta.chart.id" />
+            <slot :name="getSlottableSlotName(tile)" />
           </div>
           <DashboardTile
             v-else
@@ -50,12 +51,14 @@
             :is-fullscreen="isFullscreen"
             :query-ready="queryReady"
             :tile-id="tile.id"
+            :tile-type="tile.type"
             @duplicate-tile="onDuplicateTile(tile)"
             @edit-tile="onEditTile(tile)"
             @remove-tile="onRemoveTile(tile)"
             @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
           />
         </template>
+        <!-- eslint-enable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
       </component>
     </div>
   </div>
@@ -66,6 +69,7 @@ import type { DashboardRendererContext, GridTile, TileZoomEvent } from '../types
 import type {
   AllFilters,
   AnalyticsBridge,
+  ChartTileDefinition,
   DashboardConfig,
   SlottableOptions,
   TileConfig,
@@ -83,6 +87,7 @@ import {
   INJECT_QUERY_PROVIDER,
   TIMEFRAME_TOKEN,
 } from '../constants'
+import { duplicateChartTile } from '../utils/duplicate-tile'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const {
@@ -133,10 +138,13 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
 const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
   return model.value.tiles.map((tile: TileConfig) => {
     let tileMeta = tile.definition
+    const tileType = tile.type ?? 'chart'
 
-    if ('description' in tileMeta.chart) {
+    const chart = (tileMeta as ChartTileDefinition).chart
+    if (tileType === 'chart' && 'description' in chart) {
+      const chartMeta = tileMeta as ChartTileDefinition
       // Replace tokens in tile descriptions
-      const description = tileMeta.chart.description?.replace(TIMEFRAME_TOKEN, () => {
+      const description = chart.description?.replace(TIMEFRAME_TOKEN, () => {
         const { timeSpec } = internalContext.value
         const timeSpecKey = timeSpec.type === 'absolute' ? 'custom' : timeSpec.time_range
         const key = `renderer.trendRange.${timeSpecKey}`
@@ -153,12 +161,12 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
       })
 
       tileMeta = {
-        ...tileMeta,
+        ...chartMeta,
         chart: {
-          ...tileMeta.chart,
+          ...chart,
           description,
         },
-      }
+      } as TileDefinition
     }
 
     if (internalContext.value.editable && !tile.id) {
@@ -172,7 +180,7 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
     return {
       layout: tile.layout,
       meta: tileMeta,
-      type: tile.type,
+      type: tileType,
       // Add a unique key to each tile internally.
       id: tile.id ?? crypto.randomUUID(),
     }
@@ -186,34 +194,22 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
   emit('edit-tile', tile)
 }
 
+const isSlottableTile = (tile: GridTile<TileDefinition>): boolean => {
+  return tile.type === 'chart' && (tile.meta as ChartTileDefinition).chart.type === 'slottable'
+}
+
 const isSlottable = (chart: any): chart is SlottableOptions => {
   return chart.type === 'slottable'
 }
 
+const getSlottableSlotName = (tile: GridTile<TileDefinition>): string | undefined => {
+  const chart = (tile.meta as ChartTileDefinition).chart
+  return isSlottable(chart) ? chart.id : undefined
+}
+
 const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
   try {
-    const chart = isSlottable(tile.meta.chart)
-      ? { ...tile.meta.chart }
-      : {
-        ...tile.meta.chart,
-        chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
-      }
-
-    const newTile: TileConfig = {
-      id: crypto.randomUUID(),
-      type: 'chart',
-      definition: {
-        ...tile.meta,
-        chart,
-      },
-      layout: {
-        position: {
-          col: 0,
-          row: 0,
-        },
-        size: tile.layout.size,
-      },
-    }
+    const newTile = duplicateChartTile(tile)
 
     // deep cloning to avoid duplicated references
     model.value.tiles.push(JSON.parse(JSON.stringify(newTile)))
@@ -300,7 +296,7 @@ defineExpose({
   position: relative;
 
   .tile-container {
-    background: var(--kui-color-background-transparent, $kui-color-background-transparent);
+    background: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 100%;
@@ -311,14 +307,14 @@ defineExpose({
   }
 
   &.is-fullscreen {
-    background-color: white;
+    background-color: var(--kui-color-background, $kui-color-background);
 
     .fullscreen-header {
       margin-bottom: var(--kui-space-60, $kui-space-60);
     }
 
     .layout {
-      background-color: white;
+      background-color: var(--kui-color-background, $kui-color-background);
       padding: var(--kui-space-60, $kui-space-60);
       transform: v-bind(scale);
       transform-origin: top;

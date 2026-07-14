@@ -97,7 +97,8 @@
           "static": "Static"
         },
         "enabled": "Enabled",
-        "tags": "Tags"
+        "tags": "Tags",
+        "updated_at": "Last modified"
       },
       "empty_state": {
         "title": "Configure a new plugin",
@@ -807,6 +808,9 @@
         "entity_name": "Request callout",
         "by_lua_placeholder": "Enter Lua script here..."
       },
+      "jwt-signer": {
+        "keyset_url_required": "Provide a valid HTTP/HTTPS URL to ensure signing works correctly when \"{signingField}\" is enabled and \"{headerField}\" is set."
+      },
       "metering-and-billing": {
         "sections": {
           "plugin_config": {
@@ -1193,14 +1197,28 @@
       "description_with_realms": "Use Consumers or centrally managed consumers for Consumer-based authentication. Use Kong Identity for principal-based authentication and advanced integrations.",
       "description_without_realms": "Use Consumers for Consumer-based authentication. Use Kong Identity for principal-based authentication and advanced integrations.",
       "learn_more": "Learn more.",
+      "incompatible_data_plane_alert": "We detected that one or more data plane nodes are running a version earlier than 3.15. Requests handled by those data plane nodes will use consumers instead of Kong Identity principals.",
       "kong_identity_label": "Kong Identity",
-      "kong_identity_description_key_auth": "Use Kong Identity to authenticate API keys and map requests to a Kong Identity principal. The authenticated principal is added to the request context for advanced integrations.",
-      "kong_identity_description_basic_auth": "Use Kong Identity to authenticate Basic Auth credentials and map requests to a Kong Identity principal. The authenticated principal is added to the request context for advanced integrations.",
+      "kong_identity_description_key_auth": "Use Kong Identity to authenticate API keys and map requests to Kong Identity principals for advanced integrations. Data plane nodes running versions earlier than 3.15 continue using consumers.",
+      "kong_identity_description_basic_auth": "Use Kong Identity to authenticate Basic Auth credentials and map requests to Kong Identity principals for advanced integrations. Data plane nodes running versions earlier than 3.15 continue using consumers.",
       "consumers_label": "Consumers",
       "consumers_description_key_auth": "Use consumer-managed API keys. Consumers provide their API key in a request header, query parameter, or request body to authenticate requests.",
       "consumers_description_basic_auth": "Use consumer-managed Basic Auth credentials. Consumers authenticate requests using a username and password.",
       "centrally_managed_label": "Centrally managed consumers",
-      "centrally_managed_description": "Authenticate centrally managed consumers in Konnect using identity realms. Identity realms are scoped to the control plane by default."
+      "centrally_managed_description": "Authenticate centrally managed consumers in Konnect using identity realms. Identity realms are scoped to the control plane by default.",
+      "identity_realms_required": "To use centrally managed consumers, you must select at least one Centrally managed consumer realm.",
+      "error_on_miss_label": "If principal lookup fails",
+      "error_on_miss_reject_label": "Reject the request",
+      "error_on_miss_reject_description": "Treat the request as unauthenticated if Kong Identity cannot resolve the principal.",
+      "error_on_miss_continue_label": "Continue without a principal",
+      "error_on_miss_continue_description": "Allow the request to continue without resolving a principal.",
+      "configure_title": "Configure Kong Identity",
+      "configure_description": "Kong Identity uses principals to represent authenticated services or applications. Create your first principal in Kong Identity to start using principal-based authentication. On data plane nodes running versions earlier than 3.15, authentication continues using consumers.",
+      "create_principal": "Create principal",
+      "configure_learn_more": "Learn more",
+      "leave_prompt_title": "Leave this page?",
+      "leave_prompt_message": "Your unsaved changes will be lost if you continue.",
+      "leave_prompt_action": "Leave page"
     }
   },
   "sp": {

@@ -17,6 +17,7 @@ import TerraformCodeBlock from './components/common/TerraformCodeBlock.vue'
 import YamlCodeBlock from './components/common/YamlCodeBlock.vue'
 import DeckCodeBlock from './components/common/DeckCodeBlock.vue'
 import GeneratePatModal from './components/common/GeneratePatModal.vue'
+import SensitiveInput from './components/common/SensitiveInput.vue'
 import TableTags from './components/common/TableTags.vue'
 import composables from './composables'
 
@@ -24,7 +25,7 @@ import composables from './composables'
 const { useAxios, useDeleteUrlBuilder, useBaseEntityDeckOptions, useBaseFormDeckOptions, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider, useTableState } = composables
 
 // Components
-export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityFormBlock, EntityLink, EntityEmptyState, JsonCodeBlock, TerraformCodeBlock, YamlCodeBlock, DeckCodeBlock, GeneratePatModal, TableTags }
+export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityFormBlock, EntityLink, EntityEmptyState, JsonCodeBlock, TerraformCodeBlock, YamlCodeBlock, DeckCodeBlock, GeneratePatModal, SensitiveInput, TableTags }
 
 // Composables
 export { useAxios, useDeleteUrlBuilder, useBaseEntityDeckOptions, useBaseFormDeckOptions, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider, useTableState }

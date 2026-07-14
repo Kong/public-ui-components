@@ -39,6 +39,7 @@ const props = defineProps({
     validator: (config: KonnectSecretListConfig): boolean => {
       if (!config || config?.app !== 'konnect') return false
       if (!config.createRoute || !config.getEditRoute) return false
+      if (config.apiType === 'aiGateway' && !config.aiGatewayId) return false
       return true
     },
   },
@@ -83,8 +84,13 @@ const handleDeleteSuccess = (route: SecretEntityRow): void => {
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const configStoreId = ref<string>('')
 
+const getVaultEndpoint = computed<string>(() => props.config.apiType === 'aiGateway'
+  ? endpoints.getVault.aiGateway
+  : endpoints.getVault[props.config.app])
+
 const fetchVaultUrl = computed<string>(() => {
-  return `${props.config.apiBaseUrl}${endpoints.getVault[props.config.app]}`
+  return `${props.config.apiBaseUrl}${getVaultEndpoint.value}`
+    .replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
     .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, props.vaultId)
