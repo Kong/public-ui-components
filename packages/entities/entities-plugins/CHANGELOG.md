@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.239.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.239.0...@kong-ui-public/entities-plugins@9.239.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit flow editor new look [KHCP-21053] ([#3554](https://github.com/Kong/public-ui-components/issues/3554)) ([9c2d43a](https://github.com/Kong/public-ui-components/commit/9c2d43aaadbd085a7a7e3bde066e1ce7e267d1fa))
+
+
+
+
+
 # [9.239.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.238.0...@kong-ui-public/entities-plugins@9.239.0) (2026-07-14)
 
 
