@@ -3,6 +3,7 @@
     <div
       v-if="fetcherUrl"
       class="json-endpoint"
+      :class="{ 'konnect-color-mode': config.app === 'konnect' }"
     >
       <KBadge :appearance="requestMethod">
         {{ requestMethod }}
@@ -92,12 +93,16 @@ const displayedCharLength = computed((): number => {
 
 .json-endpoint {
   align-items: baseline;
-  background-color: var(--kui-color-background, $kui-color-background);
+  background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
   border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-inverse, $kui-color-border-inverse);
   border-top-left-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   border-top-right-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   display: flex;
   padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+
+  &.konnect-color-mode {
+    background-color: var(--kui-color-background, $kui-color-background);
+  }
 
   .k-code-block {
     flex: auto;
