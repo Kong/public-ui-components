@@ -10,6 +10,21 @@
         v-model="enableDeckCallout"
         label="Show decK config callout above YAML config"
       />
+
+      <!-- One switch per feature flag — choose which to open/close; any change remounts the forms. -->
+      <KCollapse
+        class="feature-flags-collapse"
+        trigger-label="Feature flags"
+      >
+        <div class="feature-flags-list">
+          <KInputSwitch
+            v-for="flagKey in Object.keys(featureFlags)"
+            :key="flagKey"
+            v-model="featureFlags[flagKey]"
+            :label="flagKey"
+          />
+        </div>
+      </KCollapse>
     </div>
 
     <div
@@ -17,35 +32,41 @@
       class="actions"
     />
 
-    <h2>Konnect API</h2>
-    <PluginForm
-      :config="konnectConfig"
-      enable-redis-partial
-      enable-vault-secret-picker
-      :engine="pluginFormEngine"
-      :plugin-id="id"
-      :plugin-type="plugin"
-      use-custom-names-for-plugin
-      @global-action="handleGlobalAction"
-      @update="onUpdate"
-    />
+    <!-- Keyed on the whole flag map so flipping any switch remounts the forms and re-runs `provide`. -->
+    <FeatureFlagProvider
+      :key="JSON.stringify(featureFlags)"
+      :flags="featureFlags"
+    >
+      <h2>Konnect API</h2>
+      <PluginForm
+        :config="konnectConfig"
+        enable-redis-partial
+        enable-vault-secret-picker
+        :engine="pluginFormEngine"
+        :plugin-id="id"
+        :plugin-type="plugin"
+        use-custom-names-for-plugin
+        @global-action="handleGlobalAction"
+        @update="onUpdate"
+      />
 
-    <h2>Kong Manager API</h2>
-    <PluginForm
-      :config="kongManagerConfig"
-      enable-redis-partial
-      enable-vault-secret-picker
-      :engine="pluginFormEngine"
-      :plugin-id="id"
-      :plugin-type="plugin"
-      @global-action="handleGlobalAction"
-      @update="onUpdate"
-    />
+      <h2>Kong Manager API</h2>
+      <PluginForm
+        :config="kongManagerConfig"
+        enable-redis-partial
+        enable-vault-secret-picker
+        :engine="pluginFormEngine"
+        :plugin-id="id"
+        :plugin-type="plugin"
+        @global-action="handleGlobalAction"
+        @update="onUpdate"
+      />
+    </FeatureFlagProvider>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, provide, ref } from 'vue'
+import { computed, defineComponent, provide, ref, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
@@ -76,47 +97,131 @@ defineProps({
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefined
-provide(FEATURE_FLAGS.KM_2262_CODE_MODE, true)
-provide(FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, true)
-provide(FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES, true)
-provide(FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, true)
-provide(FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, true)
+// All feature flags provided to the plugin forms, editable at runtime via the sandbox switches.
+// `provide` captures a plain value once, so to flip any flag live we re-provide on change: the
+// generic FeatureFlagProvider re-runs `provide` in its setup whenever it remounts, and we force
+// that remount by keying it on the whole flag map — so toggling any flag updates the forms.
+const featureFlags = ref<Record<string, boolean>>({
+  [FEATURE_FLAGS.KM_2262_CODE_MODE]: true,
+  [FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314]: true,
+  [FEATURE_FLAGS.KM_2446_DATAKIT_JWT_NODES]: true,
+  [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
+  [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
+  [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: true,
+})
+
+const FeatureFlagProvider = defineComponent({
+  name: 'FeatureFlagProvider',
+  props: {
+    flags: { type: Object as PropType<Record<string, boolean>>, default: () => ({}) },
+  },
+  setup(props, { slots }) {
+    for (const [key, value] of Object.entries(props.flags)) {
+      provide(key, value)
+    }
+    return () => slots.default?.()
+  },
+})
 
 provideDeckCommandEditor()
 
 useProvideExperimentalFreeForms([
-  'rate-limiting-advanced',
-  'service-protection',
-  'prometheus',
-  'metering-and-billing',
-  'aws-lambda',
-  'exit-transformer',
-  'file-log',
-  'http-log',
-  'request-transformer-advanced',
-  'response-transformer',
-  'response-transformer-advanced',
-  'correlation-id',
-  'solace-consume',
-  'solace-log',
-  'solace-upstream',
-  'opentelemetry',
+  'ace',
   'acl',
-  'request-transformer',
-  'upstream-oauth',
-  'cors',
-  'proxy-cache',
-  'proxy-cache-advanced',
-  'header-cert-auth',
-  'session',
-  'oauth2',
-  'jwe-decrypt',
-  'mtls-auth',
-  'basic-auth',
-  'key-auth',
+  'acme',
   'ai-a2a-proxy',
   'ai-azure-content-safety',
   'ai-gcp-model-armor',
+  'ai-prompt-decorator',
+  'ai-prompt-guard',
+  'ai-prompt-template',
+  'ai-proxy-advanced',
+  'ai-proxy',
+  'ai-rate-limiting-advanced',
+  'ai-request-transformer',
+  'ai-response-transformer',
+  'ai-semantic-cache',
+  'ai-semantic-prompt-guard',
+  'app-dynamics',
+  'aws-lambda',
+  'azure-functions',
+  'basic-auth',
+  'bot-detection',
+  'canary',
+  'confluent-consume',
+  'confluent',
+  'correlation-id',
+  'cors',
+  'datadog',
+  'degraphql',
+  'exit-transformer',
+  'file-log',
+  'forward-proxy',
+  'graphql-proxy-cache-advanced',
+  'graphql-rate-limiting-advanced',
+  'grpc-gateway',
+  'grpc-web',
+  'header-cert-auth',
+  'hmac-auth',
+  'http-log',
+  'injection-protection',
+  'ip-restriction',
+  'jq',
+  'json-threat-protection',
+  'jwe-decrypt',
+  'kafka-consume',
+  'kafka-log',
+  'kafka-upstream',
+  'key-auth-enc',
+  'key-auth',
+  'ldap-auth-advanced',
+  'ldap-auth',
+  'loggly',
+  'metering-and-billing',
+  'mocking',
+  'mtls-auth',
+  'oas-validation',
+  'oauth2-introspection',
+  'oauth2',
+  'opa',
+  'opentelemetry',
+  'openwhisk',
+  'post-function',
+  'pre-function',
+  'prometheus',
+  'proxy-cache-advanced',
+  'proxy-cache',
+  'rate-limiting-advanced',
+  'redirect',
+  'request-size-limiting',
+  'request-termination',
+  'request-transformer-advanced',
+  'request-transformer',
+  'request-validator',
+  'response-ratelimiting',
+  'response-transformer-advanced',
+  'response-transformer',
+  'route-by-header',
+  'saml',
+  'service-protection',
+  'session',
+  'solace-consume',
+  'solace-log',
+  'solace-upstream',
+  'standard-webhooks',
+  'statsd',
+  'syslog',
+  'tcp-log',
+  'tls-handshake-modifier',
+  'tls-metadata-headers',
+  'udp-log',
+  'upstream-oauth',
+  'upstream-timeout',
+  'vault-auth',
+  'websocket-size-limit',
+  'websocket-validator',
+  'xml-threat-protection',
+  'zipkin',
 ])
 
 const enableDeckConfigCustomization = ref(false)
@@ -139,6 +244,8 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   experimentalRenders: {
     keyAuthIdentityRealms: true,
   },
+  // isKongIdentityAuthServersAvailable: false,
+  canCreateAuthServer: false,
   enableDeckTab: {
     ...enableDeckConfigCustomization.value && {
       customization: {
@@ -150,6 +257,9 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
     },
     calloutPreferenceKey: enableDeckCallout.value ? 'konnect-entities-plugin-form-deck-callout-sandbox' : undefined,
   },
+  dataPlaneVersions: ['3.14.0.1', '3.15.0.0'], // For testing the Kong Identity principals DP version alert
+  principalsDirectoryName: 'my-directory', // Sandbox: simulate host-resolved directory name
+  principalsCreationGuideVisible: false, // Sandbox: false = principals exist; true = show creation guide
 }))
 
 const kongManagerConfig = computed<KongManagerPluginFormConfig>(() => ({
@@ -196,10 +306,22 @@ const handleGlobalAction = (action: GlobalAction, payload: any) => {
   }
 
   .sandbox-controls {
+    align-items: flex-start;
     display: flex;
     flex-direction: row;
     gap: 20px;
     margin-bottom: 20px;
+  }
+
+  .feature-flags-collapse {
+    margin: 0;
+  }
+
+  .feature-flags-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 12px;
   }
 }
 </style>

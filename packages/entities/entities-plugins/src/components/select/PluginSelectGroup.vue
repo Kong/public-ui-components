@@ -23,7 +23,9 @@
           v-for="plugin in props.plugins"
           :key="`plugin-card-${plugin.id}`"
           ref="pluginCardRef"
+          :can-delete-cloned-plugin="canDeleteClonedPlugin"
           :can-delete-custom-plugin="canDeleteCustomPlugin"
+          :can-edit-cloned-plugin="canEditClonedPlugin"
           :can-edit-custom-plugin="canEditCustomPlugin"
           :config="config"
           :navigate-on-click="navigateOnClick"
@@ -91,7 +93,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  canDeleteClonedPlugin: {
+    type: Boolean,
+    default: false,
+  },
   canEditCustomPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  canEditClonedPlugin: {
     type: Boolean,
     default: false,
   },

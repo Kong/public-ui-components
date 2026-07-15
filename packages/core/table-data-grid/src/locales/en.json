@@ -1,0 +1,10 @@
+{
+  "emptyState": {
+    "title": "No Data",
+    "message": "There is no data to display."
+  },
+  "errorState": {
+    "title": "An error occurred",
+    "message": "Data cannot be displayed due to an error."
+  }
+}

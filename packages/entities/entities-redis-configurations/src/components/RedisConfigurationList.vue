@@ -128,18 +128,7 @@
           :action-button-text="emptyStateActionText"
           :action-button-visible="userCanCreate"
           data-testid="redis-entity-empty-state"
-          :features="[
-            {
-              key: 'feature-1',
-              title: t('list.empty_state.feature_1.title'),
-              description: t('list.empty_state.feature_1.description'),
-            },
-            {
-              key: 'feature-2',
-              title: t('list.empty_state.feature_2.title'),
-              description: t('list.empty_state.feature_2.description'),
-            },
-          ]"
+          :features="emptyStateFeatures"
           icon-background
           :message="emptyStateDescription"
           :title="emptyStateTitle"
@@ -150,11 +139,19 @@
           </template>
 
           <template #feature-icon-feature-1>
-            <ClipboardIcon />
+            <ClipboardIcon decorative />
           </template>
 
           <template #feature-icon-feature-2>
-            <RefreshIcon />
+            <RefreshIcon decorative />
+          </template>
+
+          <template #feature-icon-feature-3>
+            <DatabaseIcon decorative />
+          </template>
+
+          <template #feature-icon-feature-4>
+            <RefreshIcon decorative />
           </template>
 
           <template #action-button-icon>
@@ -264,7 +261,7 @@ import {
 } from '@kong-ui-public/entities-shared'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
+import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon, DatabaseIcon } from '@kong/icons'
 import { KAlert, KExternalLink } from '@kong/kongponents'
 
 import { getCpgRedisAlertMessageKey, shouldShowCpgRedisAlert } from '../cpgRedisAlert'
@@ -888,6 +885,38 @@ const emptyStateActionText = computed<string>(() => {
   }
 
   return t('list.action')
+})
+
+const emptyStateFeatures = computed(() => {
+  const features = [
+    {
+      key: 'feature-1',
+      title: t('list.empty_state.feature_1.title'),
+      description: t('list.empty_state.feature_1.description'),
+    },
+    {
+      key: 'feature-2',
+      title: t('list.empty_state.feature_2.title'),
+      description: t('list.empty_state.feature_2.description'),
+    },
+  ]
+
+  if (useKonnectManagedRedisUi.value) {
+    features.push(
+      {
+        key: 'feature-3',
+        title: t('list.empty_state.feature_3.title'),
+        description: t('list.empty_state.feature_3.description'),
+      },
+      {
+        key: 'feature-4',
+        title: t('list.empty_state.feature_4.title'),
+        description: t('list.empty_state.feature_4.description'),
+      },
+    )
+  }
+
+  return features
 })
 
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
