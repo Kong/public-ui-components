@@ -128,7 +128,6 @@
               {{ t('plugins.free-form.openid-connect.tabs.advanced.description') }}
             </p>
           </div>
-          <Field name="config.redis" />
           <ObjectField
             as-child
             name="config"
@@ -191,8 +190,6 @@ const ADVANCED_OMIT = [
   // Kong Identity principals are configured through the guided Common-tab UI on Konnect
   // and are not user-facing elsewhere — never render the bare record.
   'principals',
-
-  'redis',
 ]
 
 // JWKs are auto-fetched from the issuer when verify_signature is on; a jwks_uri only
@@ -216,12 +213,15 @@ const RENDER_RULES: RenderRules = {
     'config.cluster_cache_redis.cloud_authentication.azure_client_id': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'azure'],
     'config.cluster_cache_redis.cloud_authentication.azure_client_secret': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'azure'],
     'config.cluster_cache_redis.cloud_authentication.azure_tenant_id': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'azure'],
+
+    'config.redis': ['config.session_storage', 'redis'],
   },
   bundles: [
     [
       'config.token_exchange.subject_token_issuers.*.verify_signature',
       'config.token_exchange.subject_token_issuers.*.jwks_uri',
     ],
+    ['config.session_storage', 'config.redis'],
   ],
 }
 

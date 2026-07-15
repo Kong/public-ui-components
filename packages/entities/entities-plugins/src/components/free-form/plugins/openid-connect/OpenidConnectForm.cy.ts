@@ -1033,3 +1033,42 @@ describe('token_exchange subject_token_issuers jwks_uri', () => {
     cy.getTestId('ff-config.token_exchange.subject_token_issuers.0.jwks_uri').should('be.visible')
   })
 })
+
+// ── Q: config.redis conditional visibility based on session_storage ────────────
+
+describe('config.redis visibility based on session_storage', () => {
+  it('hides config.redis when session_storage is not redis', () => {
+    mountForm({
+      model: createModel({ session_storage: 'cookie' }),
+    })
+
+    clickTab('advanced')
+
+    cy.getTestId('redis-config-card').should('not.be.visible')
+  })
+
+  it('shows config.redis when session_storage is redis', () => {
+    mountForm({
+      model: createModel({ session_storage: 'redis' }),
+    })
+
+    clickTab('advanced')
+
+    cy.getTestId('redis-config-card').should('be.visible')
+  })
+
+  it('shows config.redis after switching session_storage to redis', () => {
+    mountForm({
+      model: createModel({ session_storage: 'cookie' }),
+    })
+
+    clickTab('advanced')
+
+    cy.getTestId('redis-config-card').should('not.be.visible')
+
+    cy.getTestId('ff-config.session_storage').first().click()
+    cy.get('[data-testid="select-item-redis"]:visible').click()
+
+    cy.getTestId('redis-config-card').should('be.visible')
+  })
+})
