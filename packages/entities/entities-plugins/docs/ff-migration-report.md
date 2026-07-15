@@ -3,26 +3,26 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-15T06:25:48.203Z
+> Generated: 2026-07-15T06:35:43.624Z
 
 ## Summary
 
-`██████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒` **98%**
+`██████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒` **99%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **112** |
-| ✅ Migrated | **110** |
-| ⏳ Pending | **2** |
+| ✅ Migrated | **111** |
+| ⏳ Pending | **1** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **15** |
-| 🔄 In Progress | **2** |
+| 🚀 Ready for Release | **16** |
+| 🔄 In Progress | **1** |
 | ⏸️ Not Started | **0** |
 
 ---
@@ -252,10 +252,10 @@
 
 ---
 
-### 🔄 M22 — AI: Guardrails — In Progress (4/5)
+### 🚀 M22 — AI: Guardrails — Ready for Release (5/5)
 
 - ✅ `ai-a2a-proxy`
-- ⏳ `ai-aws-guardrails`
+- ✅ `ai-aws-guardrails`
 - ✅ `ai-azure-content-safety`
 - ✅ `ai-custom-guardrail`
 - ✅ `ai-gcp-model-armor`
