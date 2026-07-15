@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.243.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.242.0...@kong-ui-public/entities-plugins@9.243.0) (2026-07-15)
+
+
+### Features
+
+* **entities-plugins:** migrate statsd-advanced ([#3559](https://github.com/Kong/public-ui-components/issues/3559)) ([7bebb5d](https://github.com/Kong/public-ui-components/commit/7bebb5dab73f492a81c0e68299fb2826549f6bbd))
+
+
+
+
+
 # [9.242.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.241.0...@kong-ui-public/entities-plugins@9.242.0) (2026-07-15)
 
 
