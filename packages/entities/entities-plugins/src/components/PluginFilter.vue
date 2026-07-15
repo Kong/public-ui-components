@@ -79,6 +79,9 @@
         </div>
       </template>
       <template #filter-scope>
+        <!-- TODO: the search API's filter.scope.eq only accepts a single value (no OR/"one-of"
+          operator for scope as of the current SDK) - single-select until the backend supports
+          filtering by more than one scope at once. -->
         <KSelect
           v-model="pendingScope"
           data-testid="scope-filter-select"
@@ -146,11 +149,6 @@ const filterGroupSelection = ref<FilterGroupSelection>({})
 const searchInput = useTemplateRef('search-input')
 const tagsInput = useTemplateRef('tags-input')
 
-// Working state for the custom `scope`/`status` filter popovers (see `#filter-scope` and
-// `#filter-status` slots below) - KFilterGroup's default select/radio rendering can't be
-// restyled (e.g. dropping the "Value" label, custom placeholder, radios instead of a select),
-// so both filters are fully slot-overridden and their selection is synced manually on apply,
-// the same way the `tags` filter already works.
 const pendingScope = ref<string | null>(null)
 const pendingStatus = ref<string | null>(null)
 
@@ -222,11 +220,6 @@ const pluginFilterGroupFilters = computed<FilterGroupFilters>(() => {
         label: t('plugins.list.table_headers.scope'),
         operators: ['eq'],
         pinned: true,
-        // TODO: the search API's filter.scope.eq only accepts a single value (no OR/"one-of"
-        // operator for scope as of the current SDK) - single-select until the backend supports
-        // filtering by more than one scope at once.
-        multiple: false,
-        options: scopeOptions.value,
       },
     }
 
@@ -236,7 +229,7 @@ const pluginFilterGroupFilters = computed<FilterGroupFilters>(() => {
       label: t('plugins.list.table_headers.status'),
       operators: ['eq'],
       pinned: true,
-      options: statusOptions.value,
+      maxWidth: 350,
     },
     tags: {
       label: t('plugins.list.table_headers.tags'),
@@ -305,60 +298,69 @@ watch(modelValue, (value) => {
 })
 
 const onFilterOpen = (openedFilterKey: string) => {
-  if (openedFilterKey === 'tags') {
-    const currentValue = filterGroupSelection.value.tags?.value
-    pendingTags.value = Array.isArray(currentValue) ? [...currentValue] : []
-    tagInputText.value = ''
-  } else if (openedFilterKey === 'scope') {
-    const currentValue = filterGroupSelection.value.scope?.value
-    pendingScope.value = typeof currentValue === 'string' ? currentValue : null
-  } else if (openedFilterKey === 'status') {
-    const currentValue = filterGroupSelection.value.status?.value
-    pendingStatus.value = typeof currentValue === 'string' ? currentValue : null
+  switch (openedFilterKey) {
+    case 'tags': {
+      const currentValue = filterGroupSelection.value.tags?.value
+      pendingTags.value = Array.isArray(currentValue) ? [...currentValue] : []
+      tagInputText.value = ''
+      return
+    }
+
+    case 'scope': {
+      const currentValue = filterGroupSelection.value.scope?.value
+      pendingScope.value = typeof currentValue === 'string' ? currentValue : null
+      return
+    }
+
+    case 'status': {
+      const currentValue = filterGroupSelection.value.status?.value
+      pendingStatus.value = typeof currentValue === 'string' ? currentValue : null
+    }
   }
 }
 
 const onFilterApply = (appliedFilterKey: string, selection: FilterGroupSelection) => {
-  if (appliedFilterKey === 'tags') {
-    if (pendingTags.value.length) {
-      selection.tags = {
-        operator: 'eq',
-        operatorDelimiter: ': ',
-        value: [...pendingTags.value],
-        text: pendingTags.value.join(', '),
+  switch (appliedFilterKey) {
+    case 'tags':
+      if (pendingTags.value.length) {
+        selection.tags = {
+          operator: 'eq',
+          operatorDelimiter: ': ',
+          value: [...pendingTags.value],
+          text: pendingTags.value.join(', '),
+        }
+      } else {
+        delete selection.tags
       }
-    } else {
-      delete selection.tags
-    }
-    return
-  }
+      return
 
-  if (appliedFilterKey === 'scope') {
-    const selectedOption = scopeOptions.value.find((option) => option.value === pendingScope.value)
-    if (selectedOption) {
-      selection.scope = {
-        operator: 'eq',
-        operatorDelimiter: ': ',
-        value: selectedOption.value,
-        text: selectedOption.label,
+    case 'scope': {
+      const selectedOption = scopeOptions.value.find((option) => option.value === pendingScope.value)
+      if (selectedOption) {
+        selection.scope = {
+          operator: 'eq',
+          operatorDelimiter: ': ',
+          value: selectedOption.value,
+          text: selectedOption.label,
+        }
+      } else {
+        delete selection.scope
       }
-    } else {
-      delete selection.scope
+      return
     }
-    return
-  }
 
-  if (appliedFilterKey === 'status') {
-    const selectedOption = statusOptions.value.find((option) => option.value === pendingStatus.value)
-    if (selectedOption) {
-      selection.status = {
-        operator: 'eq',
-        operatorDelimiter: ': ',
-        value: selectedOption.value,
-        text: selectedOption.label,
+    case 'status': {
+      const selectedOption = statusOptions.value.find((option) => option.value === pendingStatus.value)
+      if (selectedOption) {
+        selection.status = {
+          operator: 'eq',
+          operatorDelimiter: ': ',
+          value: selectedOption.value,
+          text: selectedOption.label,
+        }
+      } else {
+        delete selection.status
       }
-    } else {
-      delete selection.status
     }
   }
 }
