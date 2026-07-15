@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.31.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.31.4...@kong-ui-public/forms@4.31.5) (2026-07-13)
+
+
+### Bug Fixes
+
+* **forms:** pre-fill principal_claim with sub as real model value ([#3555](https://github.com/Kong/public-ui-components/issues/3555)) ([708a4b4](https://github.com/Kong/public-ui-components/commit/708a4b4a452ec1030af330d8e507161695b5295b))
+
+
+
+
+
+## [4.31.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.31.3...@kong-ui-public/forms@4.31.4) (2026-07-09)
+
+
+### Bug Fixes
+
+* **entities-plugins:** remove principalsEnabled guard for banner ([#3550](https://github.com/Kong/public-ui-components/issues/3550)) ([895ed7b](https://github.com/Kong/public-ui-components/commit/895ed7bfba0c15a9484836d7a627ec2136ecd219))
+
+
+
+
+
 ## [4.31.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.31.2...@kong-ui-public/forms@4.31.3) (2026-07-08)
 
 

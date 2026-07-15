@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.51...@kong-ui-public/analytics-geo-map@1.6.0) (2026-07-14)
+
+
+### Features
+
+* **analytics:** export dashboard to pdf [MA-5195] ([#3055](https://github.com/Kong/public-ui-components/issues/3055)) ([61f57ab](https://github.com/Kong/public-ui-components/commit/61f57ab7d6f3d01ba02d3b338049cfed8a08cf1d))
+
+
+
+
+
+## [1.5.51](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.50...@kong-ui-public/analytics-geo-map@1.5.51) (2026-07-13)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
 ## [1.5.50](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.5.49...@kong-ui-public/analytics-geo-map@1.5.50) (2026-07-08)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-geo-map

@@ -3,6 +3,187 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.239.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.239.0...@kong-ui-public/entities-plugins@9.239.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit flow editor new look [KHCP-21053] ([#3554](https://github.com/Kong/public-ui-components/issues/3554)) ([9c2d43a](https://github.com/Kong/public-ui-components/commit/9c2d43aaadbd085a7a7e3bde066e1ce7e267d1fa))
+
+
+
+
+
+# [9.239.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.238.0...@kong-ui-public/entities-plugins@9.239.0) (2026-07-14)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M20 ([#3392](https://github.com/Kong/public-ui-components/issues/3392)) ([f190c67](https://github.com/Kong/public-ui-components/commit/f190c67b6848b6293d52cc98739c93a2a192f43e))
+
+
+
+
+
+# [9.238.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.237.0...@kong-ui-public/entities-plugins@9.238.0) (2026-07-14)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M19 ([#3386](https://github.com/Kong/public-ui-components/issues/3386)) ([ecfb26c](https://github.com/Kong/public-ui-components/commit/ecfb26c67abe01ed2007a67b40644d68aafdfb9d))
+
+
+
+
+
+# [9.237.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.236.0...@kong-ui-public/entities-plugins@9.237.0) (2026-07-14)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M18 ([#3382](https://github.com/Kong/public-ui-components/issues/3382)) ([936d43e](https://github.com/Kong/public-ui-components/commit/936d43e497ad04f75ad6f757cc14d67f954b929f))
+
+
+
+
+
+# [9.236.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.235.0...@kong-ui-public/entities-plugins@9.236.0) (2026-07-14)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M17 ([#3385](https://github.com/Kong/public-ui-components/issues/3385)) ([461ea07](https://github.com/Kong/public-ui-components/commit/461ea07e72cc2c906afe345b9d6a6b4c5c9926d4))
+
+
+
+
+
+# [9.235.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.234.0...@kong-ui-public/entities-plugins@9.235.0) (2026-07-14)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M16 ([#3388](https://github.com/Kong/public-ui-components/issues/3388)) ([e9d81b9](https://github.com/Kong/public-ui-components/commit/e9d81b9128d07dd46c98a4f0c2d920b168663a2b))
+
+
+
+
+
+# [9.234.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.233.0...@kong-ui-public/entities-plugins@9.234.0) (2026-07-14)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M15 ([#3387](https://github.com/Kong/public-ui-components/issues/3387)) ([97f6ea7](https://github.com/Kong/public-ui-components/commit/97f6ea7a624e8de40ec2ede19434ffb0fa21ebc1))
+
+
+
+
+
+# [9.233.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.232.0...@kong-ui-public/entities-plugins@9.233.0) (2026-07-14)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M14 ([#3389](https://github.com/Kong/public-ui-components/issues/3389)) ([7b54ae2](https://github.com/Kong/public-ui-components/commit/7b54ae25466b1a7364b20f0b6a39ee874c797cfe))
+
+
+
+
+
+# [9.232.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.231.0...@kong-ui-public/entities-plugins@9.232.0) (2026-07-14)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M13 ([#3384](https://github.com/Kong/public-ui-components/issues/3384)) ([5a2cea9](https://github.com/Kong/public-ui-components/commit/5a2cea9094913c81f48e2e6a241c9a2695e6fc79))
+
+
+
+
+
+# [9.231.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.230.0...@kong-ui-public/entities-plugins@9.231.0) (2026-07-14)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M12 ([#3390](https://github.com/Kong/public-ui-components/issues/3390)) ([9fdf5a9](https://github.com/Kong/public-ui-components/commit/9fdf5a90eb63914912d6737d933677db4a9a476f))
+
+
+
+
+
+# [9.230.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.229.0...@kong-ui-public/entities-plugins@9.230.0) (2026-07-13)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M11 ([#3380](https://github.com/Kong/public-ui-components/issues/3380)) ([f159d68](https://github.com/Kong/public-ui-components/commit/f159d68667f19b50b285f1ce05acea7a65016e56))
+
+
+
+
+
+# [9.229.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.228.0...@kong-ui-public/entities-plugins@9.229.0) (2026-07-13)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M7 ([#3379](https://github.com/Kong/public-ui-components/issues/3379)) ([354acf2](https://github.com/Kong/public-ui-components/commit/354acf2b46f3d20814ba0509afd40225daad17ff))
+
+
+
+
+
+# [9.228.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.227.1...@kong-ui-public/entities-plugins@9.228.0) (2026-07-13)
+
+
+### Features
+
+* **entities-plugins:** migrate plugin to freeform M6 ([#3378](https://github.com/Kong/public-ui-components/issues/3378)) ([959a1e9](https://github.com/Kong/public-ui-components/commit/959a1e9cec62b3305643d71a97ed7ab5846bcb51))
+
+
+
+
+
+## [9.227.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.227.0...@kong-ui-public/entities-plugins@9.227.1) (2026-07-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.227.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.226.0...@kong-ui-public/entities-plugins@9.227.0) (2026-07-10)
+
+
+### Features
+
+* **entities-plugins:** expose freeform field composables from the freeform subpath ([#3553](https://github.com/Kong/public-ui-components/issues/3553)) ([7cac396](https://github.com/Kong/public-ui-components/commit/7cac39635003ea07f2829094ccb8a32cd9748921))
+
+
+
+
+
+# [9.226.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.225.4...@kong-ui-public/entities-plugins@9.226.0) (2026-07-10)
+
+
+### Features
+
+* **entities-plugins:** add modified_at column in plugin list ([#3552](https://github.com/Kong/public-ui-components/issues/3552)) ([75dbda8](https://github.com/Kong/public-ui-components/commit/75dbda8d55b965dec5be2f46a2ac5b1a2e09f547))
+
+
+
+
+
+## [9.225.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.225.3...@kong-ui-public/entities-plugins@9.225.4) (2026-07-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.225.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.225.2...@kong-ui-public/entities-plugins@9.225.3) (2026-07-08)
 
 

@@ -1,3 +1,4 @@
+export * from './captureProtocol'
 export * from './constants'
 export * from './dashboardSchema.v2'
 export * from './types'

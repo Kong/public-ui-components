@@ -20,6 +20,13 @@
         >
           Add tile
         </KButton>
+        <KButton
+          appearance="primary"
+          size="small"
+          @click="exportPdf"
+        >
+          Export as PDF
+        </KButton>
         <KInputSwitch
           v-model="editableSwitch"
           label="Editable"
@@ -313,6 +320,13 @@ const addTile = () => {
         rows: 2,
       },
     },
+  })
+}
+
+const exportPdf = () => {
+  dashboardRendererRef.value?.exportPdf({
+    title: 'Sandbox Editable Dashboard',
+    dashboardUrl: 'https://cloud.konghq.com/analytics/dashboards?utm_source=pdf',
   })
 }
 

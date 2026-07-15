@@ -12,7 +12,7 @@ export { default as StringArrayField } from './components/free-form/shared/Strin
 export { default as JsonField } from './components/free-form/shared/JsonField.vue'
 export { default as ForeignField } from './components/free-form/shared/ForeignField.vue'
 export { default as MapField } from './components/free-form/shared/MapField.vue'
-export { FIELD_RENDERERS } from './components/free-form/shared/composables'
+export * from './components/free-form/shared/composables'
 export { renderRuleExactMatch } from './components/free-form/shared/composables/render-rules'
 export type { FormSchema, UnionFieldSchema, NamedFieldSchema } from './types/plugins/form-schema'
 export type { RenderRules, FormConfig } from './components/free-form/shared/types'

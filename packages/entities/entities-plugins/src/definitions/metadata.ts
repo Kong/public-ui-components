@@ -241,13 +241,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-request-transformer': {
     descriptionKey: 'plugins.meta.ai-request-transformer.description',
     nameKey: 'plugins.meta.ai-request-transformer.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-request-transformer'],
   },
   'ai-response-transformer': {
     descriptionKey: 'plugins.meta.ai-response-transformer.description',
     nameKey: 'plugins.meta.ai-response-transformer.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-response-transformer'],
   },
   'ai-rate-limiting-advanced': {
@@ -522,13 +520,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-semantic-cache': {
     descriptionKey: 'plugins.meta.ai-semantic-cache.description',
     nameKey: 'plugins.meta.ai-semantic-cache.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-cache'],
   },
   'ai-semantic-prompt-guard': {
     descriptionKey: 'plugins.meta.ai-semantic-prompt-guard.description',
     nameKey: 'plugins.meta.ai-semantic-prompt-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-prompt-guard'],
   },
   'header-cert-auth': {

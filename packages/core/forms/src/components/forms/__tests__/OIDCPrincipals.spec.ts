@@ -252,6 +252,8 @@ describe('OIDCPrincipals', () => {
         'config-client_id': ['client-a'],
       }, { onModelUpdated })
       const formModel = wrapper.props('formModel')
+      // Clear the call from PrincipalLookupSettings' one-time principal_claim prefill on mount.
+      onModelUpdated.mockClear()
 
       ;(wrapper.vm as any).removeClientRow(0)
 
@@ -474,6 +476,16 @@ describe('OIDCPrincipals', () => {
 
     it('shows the guide when the host says principalsCreationGuideVisible is true', () => {
       const wrapper = mountKonnect({}, {}, { principalsCreationGuideVisible: true })
+
+      expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
+    })
+
+    it('shows the guide even when principal lookup is disabled', () => {
+      const wrapper = mountKonnect(
+        { 'config-principals-enabled': false },
+        {},
+        { principalsCreationGuideVisible: true },
+      )
 
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(true)
     })

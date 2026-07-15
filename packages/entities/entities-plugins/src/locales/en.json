@@ -97,7 +97,8 @@
           "static": "Static"
         },
         "enabled": "Enabled",
-        "tags": "Tags"
+        "tags": "Tags",
+        "updated_at": "Last modified"
       },
       "empty_state": {
         "title": "Configure a new plugin",

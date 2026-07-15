@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.20.2...@kong-ui-public/analytics-utilities@12.21.0) (2026-07-14)
+
+
+### Features
+
+* **analytics:** export dashboard to pdf [MA-5195] ([#3055](https://github.com/Kong/public-ui-components/issues/3055)) ([61f57ab](https://github.com/Kong/public-ui-components/commit/61f57ab7d6f3d01ba02d3b338049cfed8a08cf1d))
+* spike consumer_group dimension ([#3558](https://github.com/Kong/public-ui-components/issues/3558)) ([37902e9](https://github.com/Kong/public-ui-components/commit/37902e9ed43aef73c0459bae11d4d92f7f47b3d1))
+
+
+
+
+
+## [12.20.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.20.1...@kong-ui-public/analytics-utilities@12.20.2) (2026-07-13)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
 ## [12.20.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.19.5...@kong-ui-public/analytics-utilities@12.20.1) (2026-07-08)
 
 
