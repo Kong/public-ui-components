@@ -45,8 +45,8 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "2.0.1",
-    "@kong/kongponents": "9.60.7",
+    "@kong/design-tokens": "3.0.1",
+    "@kong/kongponents": "9.61.1",
     "@modyfi/vite-plugin-yaml": "^1.1.1",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/uuid": "^11.0.0",
@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "@kong-ui-public/swagger-ui-web-component": "workspace:^0.12.26",
-    "@kong/icons": "^1.60.0",
+    "@kong/icons": "^1.61.2",
     "lodash.clonedeep": "^4.5.0",
     "uuid": "^14.0.0"
   },
