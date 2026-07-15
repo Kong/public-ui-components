@@ -1,6 +1,7 @@
 <template>
   <div class="plugin-filter">
     <KInput
+      ref="search-input"
       v-model="searchText"
       autocomplete="off"
       class="plugin-search-input"
@@ -16,7 +17,9 @@
           class="plugin-search-clear"
           role="button"
           tabindex="0"
-          @click="searchText = ''"
+          @click="clearSearchText"
+          @keydown.enter.prevent="clearSearchText"
+          @keydown.space.prevent="clearSearchText"
         />
       </template>
     </KInput>
@@ -30,6 +33,7 @@
       <template #filter-tags>
         <div class="plugin-tags-filter">
           <KInput
+            ref="tags-input"
             v-model="tagInputText"
             autocomplete="off"
             data-testid="tags-filter-input"
@@ -46,6 +50,7 @@
                 tabindex="0"
                 @click="addPendingTag"
                 @keydown.enter.prevent="addPendingTag"
+                @keydown.space.prevent="addPendingTag"
               />
             </template>
           </KInput>
@@ -66,6 +71,7 @@
                   tabindex="0"
                   @click="removePendingTag(tag)"
                   @keydown.enter.prevent="removePendingTag(tag)"
+                  @keydown.space.prevent="removePendingTag(tag)"
                 />
               </template>
             </KBadge>
@@ -77,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, useTemplateRef, watch } from 'vue'
 import type { FilterGroupFilters, FilterGroupSelection } from '@kong/kongponents'
 import { ArrowTopLeftIcon, CloseIcon, SearchIcon } from '@kong/icons'
 import composables from '../composables'
@@ -117,6 +123,8 @@ const modelValue = defineModel<string>({ required: true })
 
 const searchText = ref('')
 const filterGroupSelection = ref<FilterGroupSelection>({})
+const searchInput = useTemplateRef('search-input')
+const tagsInput = useTemplateRef('tags-input')
 
 // Working state for the custom `tags` filter popover (see `#filter-tags` slot below) - the tag
 // badges the user has built up before hitting Apply. KFilterGroup can't derive a selection for
@@ -135,15 +143,30 @@ const tagInputError = computed(() => (
     : ''
 ))
 
+const focusSearchInput = () => {
+  searchInput.value?.input?.focus()
+}
+
+const focusTagsInput = () => {
+  tagsInput.value?.input?.focus()
+}
+
+const clearSearchText = () => {
+  searchText.value = ''
+  focusSearchInput()
+}
+
 const addPendingTag = () => {
   const tag = tagInputText.value
   if (!tag || !TAG_PATTERN.test(tag)) {
+    focusTagsInput()
     return
   }
   if (!pendingTags.value.includes(tag)) {
     pendingTags.value.push(tag)
   }
   tagInputText.value = ''
+  focusTagsInput()
 }
 
 const removePendingTag = (tag: string) => {
