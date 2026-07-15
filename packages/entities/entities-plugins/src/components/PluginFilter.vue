@@ -78,13 +78,33 @@
           </div>
         </div>
       </template>
+      <template #filter-scope>
+        <KSelect
+          v-model="pendingScope"
+          data-testid="scope-filter-select"
+          :items="scopeOptions"
+          :placeholder="t('search.placeholder.scope_filter')"
+        />
+      </template>
+      <template #filter-status>
+        <div class="plugin-status-filter">
+          <KRadio
+            v-for="option in statusOptions"
+            :key="option.value"
+            v-model="pendingStatus"
+            data-testid="status-filter-radio"
+            :label="option.label"
+            :selected-value="option.value"
+          />
+        </div>
+      </template>
     </KFilterGroup>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, useTemplateRef, watch } from 'vue'
-import type { FilterGroupFilters, FilterGroupSelection } from '@kong/kongponents'
+import type { FilterGroupFilters, FilterGroupSelection, FilterOption } from '@kong/kongponents'
 import { ArrowTopLeftIcon, CloseIcon, SearchIcon } from '@kong/icons'
 import composables from '../composables'
 import { PluginScope } from '../types'
@@ -125,6 +145,27 @@ const searchText = ref('')
 const filterGroupSelection = ref<FilterGroupSelection>({})
 const searchInput = useTemplateRef('search-input')
 const tagsInput = useTemplateRef('tags-input')
+
+// Working state for the custom `scope`/`status` filter popovers (see `#filter-scope` and
+// `#filter-status` slots below) - KFilterGroup's default select/radio rendering can't be
+// restyled (e.g. dropping the "Value" label, custom placeholder, radios instead of a select),
+// so both filters are fully slot-overridden and their selection is synced manually on apply,
+// the same way the `tags` filter already works.
+const pendingScope = ref<string | null>(null)
+const pendingStatus = ref<string | null>(null)
+
+const scopeOptions = computed<FilterOption[]>(() => [
+  { label: t('plugins.list.table_headers.applied_to_badges.route'), value: PluginScope.ROUTE },
+  { label: t('plugins.list.table_headers.applied_to_badges.service'), value: PluginScope.SERVICE },
+  { label: t('plugins.list.table_headers.applied_to_badges.consumer'), value: PluginScope.CONSUMER },
+  { label: t('plugins.list.table_headers.applied_to_badges.consumer_group'), value: PluginScope.CONSUMER_GROUP },
+  { label: t('plugins.list.table_headers.applied_to_badges.global'), value: PluginScope.GLOBAL },
+])
+
+const statusOptions = computed<FilterOption[]>(() => [
+  { label: t('actions.enabled'), value: 'true' },
+  { label: t('actions.disabled'), value: 'false' },
+])
 
 // Working state for the custom `tags` filter popover (see `#filter-tags` slot below) - the tag
 // badges the user has built up before hitting Apply. KFilterGroup can't derive a selection for
@@ -185,13 +226,7 @@ const pluginFilterGroupFilters = computed<FilterGroupFilters>(() => {
         // operator for scope as of the current SDK) - single-select until the backend supports
         // filtering by more than one scope at once.
         multiple: false,
-        options: [
-          { label: t('plugins.list.table_headers.applied_to_badges.route'), value: PluginScope.ROUTE },
-          { label: t('plugins.list.table_headers.applied_to_badges.service'), value: PluginScope.SERVICE },
-          { label: t('plugins.list.table_headers.applied_to_badges.consumer'), value: PluginScope.CONSUMER },
-          { label: t('plugins.list.table_headers.applied_to_badges.consumer_group'), value: PluginScope.CONSUMER_GROUP },
-          { label: t('plugins.list.table_headers.applied_to_badges.global'), value: PluginScope.GLOBAL },
-        ],
+        options: scopeOptions.value,
       },
     }
 
@@ -201,10 +236,7 @@ const pluginFilterGroupFilters = computed<FilterGroupFilters>(() => {
       label: t('plugins.list.table_headers.status'),
       operators: ['eq'],
       pinned: true,
-      options: [
-        { label: t('actions.enabled'), value: 'true' },
-        { label: t('actions.disabled'), value: 'false' },
-      ],
+      options: statusOptions.value,
     },
     tags: {
       label: t('plugins.list.table_headers.tags'),
@@ -267,6 +299,8 @@ watch(modelValue, (value) => {
     filterGroupSelection.value = {}
     tagInputText.value = ''
     pendingTags.value = []
+    pendingScope.value = null
+    pendingStatus.value = null
   }
 })
 
@@ -275,6 +309,12 @@ const onFilterOpen = (openedFilterKey: string) => {
     const currentValue = filterGroupSelection.value.tags?.value
     pendingTags.value = Array.isArray(currentValue) ? [...currentValue] : []
     tagInputText.value = ''
+  } else if (openedFilterKey === 'scope') {
+    const currentValue = filterGroupSelection.value.scope?.value
+    pendingScope.value = typeof currentValue === 'string' ? currentValue : null
+  } else if (openedFilterKey === 'status') {
+    const currentValue = filterGroupSelection.value.status?.value
+    pendingStatus.value = typeof currentValue === 'string' ? currentValue : null
   }
 }
 
@@ -293,10 +333,33 @@ const onFilterApply = (appliedFilterKey: string, selection: FilterGroupSelection
     return
   }
 
-  const appliedFilter = selection[appliedFilterKey]
-  if (appliedFilter) {
-    // Override the default `=` delimiter
-    appliedFilter.operatorDelimiter = ': '
+  if (appliedFilterKey === 'scope') {
+    const selectedOption = scopeOptions.value.find((option) => option.value === pendingScope.value)
+    if (selectedOption) {
+      selection.scope = {
+        operator: 'eq',
+        operatorDelimiter: ': ',
+        value: selectedOption.value,
+        text: selectedOption.label,
+      }
+    } else {
+      delete selection.scope
+    }
+    return
+  }
+
+  if (appliedFilterKey === 'status') {
+    const selectedOption = statusOptions.value.find((option) => option.value === pendingStatus.value)
+    if (selectedOption) {
+      selection.status = {
+        operator: 'eq',
+        operatorDelimiter: ': ',
+        value: selectedOption.value,
+        text: selectedOption.label,
+      }
+    } else {
+      delete selection.status
+    }
   }
 }
 
@@ -304,6 +367,10 @@ const onFilterClear = (clearedFilterKey: string) => {
   if (clearedFilterKey === 'tags') {
     pendingTags.value = []
     tagInputText.value = ''
+  } else if (clearedFilterKey === 'scope') {
+    pendingScope.value = null
+  } else if (clearedFilterKey === 'status') {
+    pendingStatus.value = null
   }
 }
 </script>
@@ -338,5 +405,11 @@ const onFilterClear = (clearedFilterKey: string) => {
     flex-wrap: wrap;
     gap: var(--kui-space-40, $kui-space-40);
   }
+}
+
+.plugin-status-filter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-40, $kui-space-40);
 }
 </style>

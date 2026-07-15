@@ -64,7 +64,8 @@
       "select": "Filter plugins",
       "search_plugins": "Search plugins",
       "search": "Search",
-      "tags_filter": "Type part of a tag and press Enter"
+      "tags_filter": "Type part of a tag and press Enter",
+      "scope_filter": "Select a scope"
     },
     "filter": {
       "field": {
