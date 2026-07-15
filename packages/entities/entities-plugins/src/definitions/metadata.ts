@@ -645,7 +645,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-gcp-model-armor': {
     descriptionKey: 'plugins.meta.ai-gcp-model-armor.description',
     nameKey: 'plugins.meta.ai-gcp-model-armor.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-gcp-model-armor'],
   },
   'ai-mcp-oauth2': {
