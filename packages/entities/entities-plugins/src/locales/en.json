@@ -10,6 +10,7 @@
     "edit": "Edit",
     "enable": "Enable",
     "enabled": "Enabled",
+    "disable": "Disable",
     "delete": "Delete",
     "disabled": "Disabled",
     "confirm_delete": "Yes, delete",
@@ -61,12 +62,16 @@
       "exact": "Filter by exact instance name or ID",
       "kongManager": "Filter by exact instance name or ID",
       "select": "Filter plugins",
-      "search_plugins": "Search plugins"
+      "search_plugins": "Search plugins",
+      "search": "Search",
+      "tags_filter": "Type part of a tag and press Enter",
+      "scope_filter": "Select a scope"
     },
     "filter": {
       "field": {
         "enabled": "Enabled"
-      }
+      },
+      "tags_invalid": "Tags can't contain commas, slashes, or leading/trailing spaces"
     },
     "no_results": "No results found for \"{filter}\""
   },
@@ -89,8 +94,11 @@
           "consumer_group": "Consumer group"
         },
         "id": "ID",
+        "plugin": "Plugin",
         "name": "Name",
         "instance_name": "Instance name",
+        "scope": "Scope",
+        "status": "Status",
         "ordering": "Ordering",
         "ordering_badge": {
           "dynamic": "Dynamic",

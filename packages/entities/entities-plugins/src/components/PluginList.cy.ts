@@ -1121,4 +1121,177 @@ describe('<PluginList />', () => {
       cy.get('.kong-ui-entities-plugins-list').should('be.visible')
     })
   })
+
+  describe('plugin list redesign (isPluginTableEnhanced)', () => {
+    const redesignConfig: KonnectPluginListConfig = {
+      ...baseConfigKonnect,
+      pluginTableImprovements: { filtering: true },
+    }
+
+    it('omitting the flag keeps hitting the plain list endpoint, not /plugins/search', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins*`,
+        },
+        { statusCode: 200, body: plugins },
+      ).as('plainList')
+
+      cy.mount(PluginList, {
+        props: {
+          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
+        },
+      })
+
+      cy.wait('@plainList')
+      cy.get('table thead th').eq(0).should('contain.text', 'Name')
+      cy.get('table thead th').eq(1).should('contain.text', 'Applied to')
+      cy.get('.kong-ui-entity-filter-input').should('exist')
+    })
+
+    it('a plain unfiltered load keeps hitting the plain list endpoint, only switching to /plugins/search once the user actually searches/filters', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins*`,
+        },
+        (req) => {
+          // The search endpoint's path is a sub-path of the plain list URL pattern above - only stub the plain one here
+          if (!req.url.includes('/plugins/search')) {
+            req.reply({ statusCode: 200, body: plugins })
+          }
+        },
+      ).as('plainListRedesign')
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins/search*`,
+        },
+        { statusCode: 200, body: { data: plugins.data, offset: null } },
+      ).as('searchPlugins')
+
+      cy.mount(PluginList, {
+        props: {
+          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          config: redesignConfig,
+          canCreate: () => false,
+          canEdit: () => true,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => true,
+        },
+      })
+
+      // Plain load, nothing searched/filtered yet - plain endpoint, not /plugins/search
+      cy.wait('@plainListRedesign')
+
+      // Column headers: Plugin, Name, Scope, Status, Ordering, Tags, Actions
+      cy.get('table thead th').eq(0).should('contain.text', 'Plugin')
+      cy.get('table thead th').eq(1).should('contain.text', 'Name')
+      cy.get('table thead th').eq(2).should('contain.text', 'Scope')
+      cy.get('table thead th').eq(3).should('contain.text', 'Status')
+      cy.get('table thead th').eq(4).should('contain.text', 'Ordering')
+
+      // Legacy EntityFilter accordion is gone, replaced by a plain search input + KFilterGroup
+      cy.get('.kong-ui-entity-filter-input').should('not.exist')
+      cy.getTestId('search-input').filter(':visible').should('have.length', 1).should('have.attr', 'placeholder', 'Search')
+
+      // Name column shows instance_name / "-" when absent
+      cy.getTestId('basic-auth').find('[data-testid="instanceName"]').should('contain.text', 'instance-1')
+      cy.getTestId('acl').find('[data-testid="instanceName"]').should('contain.text', '-')
+
+      // Scope column is plain text, no badge - but still supports multiple values (comma-separated) and
+      // clickable links to the scoped entity, same as the legacy Applied To badges
+      cy.getTestId('basic-auth').find('[data-testid="appliedTo"] .k-badge').should('not.exist')
+      cy.getTestId('basic-auth').find('[data-testid="appliedTo"]')
+        .should('contain.text', 'Route')
+        .should('contain.text', 'Consumer')
+        .should('contain.text', 'Consumer group')
+        .find('.scope-link').should('have.length', 3)
+      cy.getTestId('acl').find('[data-testid="appliedTo"]')
+        .should('contain.text', 'Global')
+        .find('.scope-link').should('not.exist')
+
+      // Status column is a read-only badge, no switch
+      cy.getTestId('basic-auth').find('[data-testid="enabled"] .k-input-switch').should('not.exist')
+      cy.getTestId('basic-auth').find('[data-testid="enabled"] .k-badge').should('contain.text', 'Disabled')
+      cy.getTestId('acl').find('[data-testid="enabled"] .k-badge').should('contain.text', 'Enabled')
+
+      // Ordering column is plain text, no badge
+      cy.getTestId('basic-auth').find('[data-testid="ordering"] .k-badge').should('not.exist')
+      cy.getTestId('basic-auth').find('[data-testid="ordering"]').should('contain.text', 'Dynamic')
+
+      // Typing a search query is what actually switches the fetcher over to /plugins/search
+      cy.getTestId('search-input').filter(':visible').type('basic')
+      cy.wait('@searchPlugins').its('request.url').should('include', 'filter%5Bname%5D%5Bcontains%5D=basic')
+      cy.getTestId('search-input').filter(':visible').clear()
+
+      // add padding on right to the container to make the overflow actions button visible
+      cy.get('.kong-ui-entities-plugins-list').invoke('css', 'padding-right', '300px')
+
+      cy.get('[data-testid="basic-auth"] [data-testid="dropdown-trigger"]').click()
+      cy.scrollTo('100%', 0)
+      // Dropdown content is teleported out of the row's DOM subtree - only the open row's is visible
+      cy.getTestId('action-entity-toggle-enabled').filter(':visible').should('contain.text', 'Enable')
+      // eslint-disable-next-line cypress/unsafe-to-chain-command
+      cy.getTestId('action-entity-toggle-enabled').filter(':visible').click().then(() => {
+        cy.get('.k-modal').should('exist').should('contain.text', 'Enable plugin')
+      })
+    })
+
+    it('scopes the request to the entity and hides the Scope column/pill on a nested entity page', () => {
+      const nestedConfig: KonnectPluginListConfig = {
+        ...redesignConfig,
+        entityType: 'routes',
+        entityId: 'route-1',
+      }
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/routes/route-1/plugins*`,
+        },
+        { statusCode: 200, body: plugins },
+      ).as('plainForEntity')
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins/search*`,
+        },
+        { statusCode: 200, body: { data: plugins.data, offset: null } },
+      ).as('searchPluginsNested')
+
+      cy.mount(PluginList, {
+        props: {
+          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          config: nestedConfig,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
+        },
+      })
+
+      // Plain nested-page load, nothing searched yet - the plain forEntity endpoint already scopes
+      // to the entity via its URL path, so no need to hit /plugins/search until the user searches
+      cy.wait('@plainForEntity')
+      cy.get('table thead th').should('not.contain.text', 'Scope')
+
+      // Once the user searches, the request goes through /plugins/search and still carries the
+      // entity scope (now as a forced, hidden filter param) alongside the free-text search
+      cy.getTestId('search-input').filter(':visible').type('basic')
+      cy.wait('@searchPluginsNested').its('request.url')
+        .should('include', 'filter%5Broute%5D%5Beq%5D=route-1')
+        .and('include', 'filter%5Bname%5D%5Bcontains%5D=basic')
+    })
+  })
 })

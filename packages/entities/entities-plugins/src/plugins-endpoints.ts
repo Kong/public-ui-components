@@ -14,6 +14,11 @@ export default {
       forEntity: `${KMBaseApiUrl}/{entityType}/{entityId}/plugins`,
     },
   },
+  search: {
+    konnect: {
+      all: `${konnectNoWorkspaceBaseApiUrl}/plugins/search`,
+    },
+  },
   select: {
     konnect: {
       availablePlugins: `${konnectV1BaseApiUrl}/available-plugins`,
