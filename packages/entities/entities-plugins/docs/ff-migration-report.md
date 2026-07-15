@@ -3,26 +3,26 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-14T09:59:08.411Z
+> Generated: 2026-07-15T03:43:12.567Z
 
 ## Summary
 
-`██████▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░` **87%**
+`██████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░` **89%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
-| 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **98** |
-| ⏳ Pending | **15** |
+| 📦 Total Kong Inc plugins | **112** |
+| ✅ Migrated | **100** |
+| ⏳ Pending | **12** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **13** |
-| 🔄 In Progress | **3** |
+| 🚀 Ready for Release | **14** |
+| 🔄 In Progress | **2** |
 | ⏸️ Not Started | **1** |
 
 ---
@@ -244,12 +244,11 @@
 
 ---
 
-### 🔄 M21 — Transformations & Serverless (cont.) — In Progress (1/4)
+### 🚀 M21 — Transformations & Serverless (cont.) — Ready for Release (3/3)
 
-- ⏳ `jq`
+- ✅ `jq`
 - ✅ `kafka-upstream`
-- ⏳ `azure-functions`
-- ⏳ `openwhisk`
+- ✅ `azure-functions`
 
 ---
 
