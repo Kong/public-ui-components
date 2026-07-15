@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { compare } from 'compare-versions'
 import composables from '..'
 
@@ -156,6 +156,7 @@ describe('useGatewayFeatureSupported', () => {
       })
 
       it('returns false with invalid version', () => {
+        const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
         const supported = useGatewayFeatureSupported({
           gatewayInfo: {
             edition,
@@ -166,6 +167,9 @@ describe('useGatewayFeatureSupported', () => {
             community: ['2.8', '3.4'],
           },
         })
+
+        expect(errorSpy).toHaveBeenCalledTimes(1)
+        errorSpy.mockRestore()
 
         expect(supported).toBe(false)
       })

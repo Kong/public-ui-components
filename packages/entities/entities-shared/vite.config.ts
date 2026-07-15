@@ -25,6 +25,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         entryName === 'index'
           ? `${sanitizedPackageName}.${format}.js`
           : `${entryName}.${format}.js`,
+      cssFileName: 'style',
     },
     rollupOptions: {
       external: [

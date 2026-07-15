@@ -12,6 +12,12 @@ const sanitizedPackageName = sanitizePackageName(packageName)
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
   build: {
+    /**
+     * Adds target: 'esnext' because Vite v7 bumps esbuild to 0.28.1, which breaks
+     * `vite-plugin-top-level-await` fallback re-transform step when no explicit
+     * build.target is set.
+     */
+    target: 'esnext',
     lib: {
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
       // Example: name: 'kong-ui-public-demo-component'
@@ -19,6 +25,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       name: `kong-ui-public-${sanitizedPackageName}`,
       entry: resolve(__dirname, './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+      cssFileName: 'style',
     },
     rollupOptions: {
       external: [
