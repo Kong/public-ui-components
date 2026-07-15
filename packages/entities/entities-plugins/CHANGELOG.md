@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.244.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.243.0...@kong-ui-public/entities-plugins@9.244.0) (2026-07-15)
+
+
+### Features
+
+* **entities-plugins:** redesign Konnect plugin list (search API, Name/Scope/Status columns) ([#3551](https://github.com/Kong/public-ui-components/issues/3551)) ([f2bdb94](https://github.com/Kong/public-ui-components/commit/f2bdb945c05d53fd80532d84fa44ac4733b47782))
+
+
+
+
+
 # [9.243.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.242.0...@kong-ui-public/entities-plugins@9.243.0) (2026-07-15)
 
 
