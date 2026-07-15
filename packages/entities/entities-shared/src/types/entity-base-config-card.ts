@@ -42,6 +42,11 @@ export enum SupportedEntityType {
   // If entityType is 'other' terraform scripts will not be available
   // Note: This is currently only supported by EntityBaseForm not EntityBaseConfigCard!!
   Other = 'other',
+  // Custom plugin variants — used only for slideout deck YAML key generation.
+  // Values map directly to decK YAML collection keys via `entityType + 's'`.
+  PluginSchema = 'plugin_schema',
+  CustomPlugin = 'custom_plugin',
+  ClonedPlugin = 'cloned_plugin',
 }
 
 export const SupportedEntityTypesArray = Object.values(SupportedEntityType)
@@ -55,6 +60,9 @@ export const SupportedEntityDeckArray = [
   SupportedEntityType.Key,
   SupportedEntityType.KeySet,
   SupportedEntityType.Plugin,
+  SupportedEntityType.PluginSchema,
+  SupportedEntityType.CustomPlugin,
+  SupportedEntityType.ClonedPlugin,
   SupportedEntityType.Route,
   SupportedEntityType.Upstream,
   SupportedEntityType.Target,
@@ -162,6 +170,7 @@ export interface DefaultCommonFieldsConfigurationSchema {
   updated_at: ConfigurationSchemaItem
   created_at: ConfigurationSchemaItem
   tags: ConfigurationSchemaItem
+  labels: ConfigurationSchemaItem
   partials: ConfigurationSchemaItem
 }
 

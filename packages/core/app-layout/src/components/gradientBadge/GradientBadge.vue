@@ -53,11 +53,11 @@ defineProps({
     .gradient-badge-content {
       background: none;
       color: var(--kui-color-text, $kui-color-text);
-      // stylelint-disable-next-line @kong/design-tokens/use-proper-token
+      // stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token
       padding: calc(var(--kui-space-10, $kui-space-10) + var(--kui-border-width-10, $kui-border-width-10)) calc(var(--kui-space-20, $kui-space-20) + var(--kui-border-width-10, $kui-border-width-10)); // add border width to padding to keep size the same
 
       &.large {
-        // stylelint-disable-next-line @kong/design-tokens/use-proper-token
+        // stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token
         padding: calc(var(--kui-space-20, $kui-space-20) + var(--kui-border-width-10, $kui-border-width-10)) calc(var(--kui-space-40, $kui-space-40) + var(--kui-border-width-10, $kui-border-width-10)); // add border width to padding to keep size the same
       }
     }

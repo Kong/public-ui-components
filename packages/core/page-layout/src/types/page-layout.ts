@@ -42,5 +42,9 @@ export interface PageLayoutSlots {
   /**
    * Title after slot for page title after content
    */
-  'title-after'(): any
+  'title-after'?(): any
+  /**
+   * Per-tab slot for customizing the rendering of a specific tab. Slot name is `tab-${tab.key}`.
+   */
+  [key: `tab-${string}`]: (props: { tab: PageLayoutTab }) => any
 }

@@ -301,6 +301,7 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
 
     &.has-toolbar {
       max-height: calc(100vh - $toolbar-height); // 44px for the toolbar height
+      z-index: 1; // Ensure elements are above the toolbar background
     }
 
     &.is-dragging-pane {

@@ -78,10 +78,65 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
   isKonnectManagedRedisEnabled?: boolean
   /** When true, CP is a Cloud Gateway */
   isCloudGateway?: boolean
+  /**
+   * KRN-based permission flag from the host app (gateway-manager).
+   * When explicitly `false`, the auth server KSelect falls back to a plain text issuer
+   * input and the client KSelect falls back to a plain text client id input.
+   */
+  isKongIdentityAuthServersAvailable?: boolean
+  /**
+   * KRN-based permission flag from the host app (gateway-manager).
+   * When explicitly `false`, the "Create authorization server" dropdown action is hidden
+   * (the user can still view/select existing servers via isKongIdentityAuthServersAvailable).
+   */
+  canCreateAuthServer?: boolean
+  /**
+   * KRN-based permission flag from the host app (gateway-manager).
+   * When explicitly `false`, the "Create client" dropdown action is hidden for the
+   * selected authorization server (the user can still view/select existing clients).
+   */
+  canCreateAuthServerClient?: boolean
+  /**
+   * Resolved Kong Identity directory name for the current control plane, precomputed by the
+   * host app. The host must already resolve the directory ID to evaluate the KRN-scoped
+   * principals permission below (`krn:idp:.../directories/{id}/principals`), so re-fetching
+   * `/v2/directories` here too would be redundant and subject to the same permission gap.
+   * `undefined` means the host hasn't resolved this yet (drives a loading state); `null`
+   * means resolved but there's no accessible directory.
+   */
+  principalsDirectoryName?: string | null
+  /**
+   * Whether to show the "Add principals" empty-state guide, precomputed by the host app via:
+   * directory access → directory retrieved → principals (list) access on that directory →
+   * principals list is empty → create-principal permission. All must hold for this to be
+   * `true`; there is no other circumstance where it should be. `undefined` means not yet
+   * resolved (drives a loading state).
+   */
+  principalsCreationGuideVisible?: boolean
+  /**
+   * Kong Gateway versions of the data plane nodes connected to the current control plane
+   * (deduped). Used to warn when Kong Identity principals — which require Gateway 3.15+ —
+   * are configured but a connected DP node can't process them.
+   */
+  dataPlaneVersions?: string[]
 }
 
 /** Kong Manager Plugin form config */
 export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig { }
+
+/**
+ * Payload for the `click:create-entity` event emitted from the Kong Identity principals UI.
+ * The consuming app navigates to the matching create page; `authServerId` is provided when
+ * creating a client (scoped to the selected auth server).
+ */
+export type EntityCreateEvent = {
+  type: 'principal'
+} | {
+  type: 'auth-server'
+} | {
+  type: 'client'
+  authServerId?: string
+}
 
 export interface PluginFormFields {
   enabled: boolean

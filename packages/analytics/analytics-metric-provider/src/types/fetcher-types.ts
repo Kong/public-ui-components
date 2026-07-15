@@ -5,6 +5,15 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import type { Ref } from 'vue'
 
+import type { DEFAULT_KEY } from '../constants'
+
+export type MappedMetrics = Record<string | typeof DEFAULT_KEY, Record<string | typeof DEFAULT_KEY, number>>
+
+export interface ChronologicalMappedMetrics {
+  current: MappedMetrics
+  previous: MappedMetrics
+}
+
 export interface MetricFetcherOptions {
   datasource: Ref<QueryDatasource>
   metrics: Ref<ExploreAggregations[]>
