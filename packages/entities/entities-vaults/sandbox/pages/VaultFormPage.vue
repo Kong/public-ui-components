@@ -14,6 +14,14 @@
     @error="onError"
     @update="onUpdate"
   />
+
+  <h2>Kong AI Gateway API</h2>
+  <VaultForm
+    :config="aiGatewayConfig"
+    :vault-id="vaultId"
+    @error="onError"
+    @update="onUpdate"
+  />
 </template>
 
 <script setup lang="ts">
@@ -67,6 +75,26 @@ const kongManagerConfig = ref<KongManagerVaultFormConfig>({
   hcvCertMethodAvailable: true,
   hcvJwtMethodAvailable: true,
   hcvSslVerifyAvailable: true,
+})
+
+const aiGatewayId = import.meta.env.VITE_KONNECT_AI_GATEWAY_ID || 'demo-ai-gateway-id'
+
+const aiGatewayConfig = ref<KonnectVaultFormConfig>({
+  app: 'konnect',
+  apiType: 'aiGateway',
+  aiGatewayId,
+  apiBaseUrl: '/us/kong-api',
+  controlPlaneId,
+  cancelRoute: { name: 'vault-list' },
+  // Feature flags below don't gate AI Gateway providers, but are required by the type.
+  azureVaultProviderAvailable: true,
+  ttl: true,
+  hcvAppRoleMethodAvailable: true,
+  hcvCspAuthMethodsAvailable: true,
+  hcvSslVerifyAvailable: true,
+  hcvCertMethodAvailable: true,
+  hcvJwtMethodAvailable: true,
+  base64FieldAvailable: true,
 })
 
 const onError = (error: AxiosError) => {

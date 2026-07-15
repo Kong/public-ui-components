@@ -19,7 +19,7 @@
           <component
             :is="icon"
             decorative
-            :size="KUI_ICON_SIZE_40"
+            :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
           />
         </KButton>
       </KTooltip>
@@ -45,12 +45,12 @@
             <ChevronDoubleLeftIcon
               v-if="sidePanelExpanded"
               decorative
-              :size="KUI_ICON_SIZE_40"
+              :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
             />
             <ChevronDoubleRightIcon
               v-else
               decorative
-              :size="KUI_ICON_SIZE_40"
+              :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
             />
           </KButton>
         </KTooltip>
@@ -102,11 +102,12 @@ function handlePanelToggle() {
 <style lang="scss" scoped>
 .dk-editor-nav {
   align-items: center;
+  border-right: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   display: flex;
   flex-direction: column;
   gap: var(--kui-space-50, $kui-space-50);
   justify-content: space-between;
-  padding: 0 var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40);
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40) var(--kui-space-40, $kui-space-40);
 
   .top,
   .bottom {
@@ -136,43 +137,21 @@ function handlePanelToggle() {
 
   .nav-item {
     align-items: center;
-    background-color: var(--kui-navigation-color-background, $kui-navigation-color-background);
+    background-color: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
-    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
-    color: var(--kui-navigation-color-text, $kui-navigation-color-text);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30) !important;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     cursor: pointer;
     display: flex;
-    height: 36px;
     justify-content: center;
     text-decoration: none;
-    transition: color var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
+    transition: background-color var(--kui-animation-duration-20, $kui-animation-duration-20) ease, color var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
     white-space: nowrap;
-    width: 36px;
 
     &:hover,
     &:focus-visible {
-      color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
-
-      :deep(svg) {
-        color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
-      }
-    }
-
-    &:focus-visible {
-      box-shadow: var(--kui-navigation-shadow-focus, $kui-navigation-shadow-focus);
-      outline: none;
-    }
-
-    :deep(svg) {
-      path {
-        color: currentColor;
-        fill: currentColor;
-        transition: all var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
-      }
-    }
-
-    &-toggle {
-      border-color: var(--kui-navigation-color-border, $kui-navigation-color-border);
+      background-color: var(--kui-color-background-primary-weaker, $kui-color-background-primary-weaker);
+      color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
     }
   }
 

@@ -118,6 +118,13 @@ export interface FieldRules {
 export type CustomPluginType = 'schema' | 'streaming' | 'cloned'
 export type CustomPluginSupportLevel = 'none' | 'disabled' | CustomPluginType | CustomPluginType[]
 
+export interface CustomPluginDeletePayload {
+  id?: string
+  name: string
+  group?: string
+  customPluginType?: CustomPluginType
+}
+
 export type PluginMetaData<I18nMessageSource = void> = {
   nameKey: I18nMessageSource extends void ? string : PathToDotNotation<I18nMessageSource, string>
   name: string // A display name of the Plugin.

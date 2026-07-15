@@ -484,6 +484,7 @@ export const routeExploreResponse: ExploreResultV4 = {
         'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8b1db7eb-5c3c-489c-9344-eb0b272019ca': { name: '8b1db (default)', deleted: false },
         'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:8f3f6808-a723-4793-8444-f2046961226b': { name: 'dp-mock-us-dev (default)', deleted: false },
         'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9': { name: 'GetMeASongRoute (default)', deleted: false },
+        'empty': { name: 'empty', deleted: false },
       },
     },
     end: '2023-08-17T18:00:53.000Z',
@@ -531,6 +532,13 @@ export const routeExploreResponse: ExploreResultV4 = {
       event: {
         request_count: 309,
         route: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:2a3e9d21-804b-4b3b-ab7e-c6f002dadbf4',
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+    {
+      event: {
+        request_count: 9001,
+        route: 'empty',
       },
       timestamp: '2023-08-17T17:55:53.000Z',
     },

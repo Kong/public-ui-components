@@ -9,6 +9,7 @@ export const queryableExploreDimensions = [
   'bot_info_detection_reason',
   'bot_info_ban_type',
   'consumer',
+  'consumer_group',
   'country_code',
   'upstream_status_code',
   'upstream_status_code_grouped',
