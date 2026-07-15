@@ -18,6 +18,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       cssFileName: 'style',
     },
   },
+  test: {
+    env: { TZ: 'UTC' },
+  },
 }))
 
 // If we are trying to preview a build of the local `package/i18n/sandbox` directory,

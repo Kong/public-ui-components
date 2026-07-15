@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import FieldObjectAdvanced from '../FieldObjectAdvanced.vue'
+import Kongponents from '@kong/kongponents'
 
 const schema = {
   type: 'object-advanced',
@@ -17,6 +18,9 @@ describe('FieldObjectAdvanced', () => {
             'config-limits-header-2': 'X-Gruce-Limit',
           },
           schema,
+        },
+        global: {
+          plugins: [Kongponents],
         },
       })
 
@@ -51,6 +55,9 @@ describe('FieldObjectAdvanced', () => {
                 }],
             },
           },
+        },
+        global: {
+          plugins: [Kongponents],
         },
       })
 
@@ -107,7 +114,9 @@ describe('FieldObjectAdvanced', () => {
             order: 0,
             disabled: false,
           },
-
+        },
+        global: {
+          plugins: [Kongponents],
         },
       })
 
@@ -140,6 +149,9 @@ describe('FieldObjectAdvanced', () => {
               }],
             },
           },
+        },
+        global: {
+          plugins: [Kongponents],
         },
       })
 
