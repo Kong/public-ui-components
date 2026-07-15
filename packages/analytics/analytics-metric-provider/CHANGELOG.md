@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.4.9...@kong-ui-public/analytics-metric-provider@11.5.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
 ## [11.4.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.4.8...@kong-ui-public/analytics-metric-provider@11.4.9) (2026-07-14)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider

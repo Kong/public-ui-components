@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.30...@kong-ui-public/spec-renderer@2.7.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
 ## [2.6.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.6.29...@kong-ui-public/spec-renderer@2.6.30) (2026-07-07)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.245.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.244.0...@kong-ui-public/entities-plugins@9.245.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
 # [9.244.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.243.0...@kong-ui-public/entities-plugins@9.244.0) (2026-07-15)
 
 

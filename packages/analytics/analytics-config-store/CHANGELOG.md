@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@1.3.35...@kong-ui-public/analytics-config-store@1.4.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
 ## [1.3.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@1.3.34...@kong-ui-public/analytics-config-store@1.3.35) (2026-07-14)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-config-store

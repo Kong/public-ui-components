@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.4.26...@kong-ui-public/sandbox-layout@2.5.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
 ## [2.4.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.4.25...@kong-ui-public/sandbox-layout@2.4.26) (2026-07-07)
 
 **Note:** Version bump only for package @kong-ui-public/sandbox-layout
