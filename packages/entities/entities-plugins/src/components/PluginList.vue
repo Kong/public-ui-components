@@ -22,7 +22,7 @@
       <!-- Filter -->
       <template #toolbar-filter>
         <PluginFilter
-          v-if="isPluginTableEnhanced"
+          v-if="isPluginFilterEnhanced"
           v-model="filterQuery"
           :entity-id="props.config?.entityId"
           :entity-type="props.config?.entityType"
@@ -119,7 +119,7 @@
             :size="24"
           />
           <div
-            v-if="isPluginTableEnhanced"
+            v-if="isPluginFilterEnhanced"
             class="info-wrapper"
           >
             <span class="info-name">{{ pluginMetaData.getDisplayName(row.name) }}</span>
@@ -157,7 +157,7 @@
             force-show
           >
             <template #default="{ isAllowed }">
-              <div v-if="isPluginTableEnhanced">
+              <div v-if="isPluginFilterEnhanced">
                 <RouterLink
                   v-if="isAllowed && tag.type && getScopedEntityViewRoute(tag.type, row)"
                   class="scope-link"
@@ -185,7 +185,7 @@
 
       <template #enabled="{ row }">
         <KBadge
-          v-if="isPluginTableEnhanced"
+          v-if="isPluginFilterEnhanced"
           :appearance="row.enabled ? 'success' : 'neutral'"
         >
           {{ row.enabled ? t('actions.enabled') : t('actions.disabled') }}
@@ -209,7 +209,7 @@
       </template>
 
       <template #ordering="{ rowValue }">
-        <span v-if="isPluginTableEnhanced">
+        <span v-if="isPluginFilterEnhanced">
           {{
             isEmpty(rowValue)
               ? t('plugins.list.table_headers.ordering_badge.static')
@@ -268,7 +268,7 @@
           />
         </PermissionsWrapper>
         <PermissionsWrapper
-          v-if="isPluginTableEnhanced"
+          v-if="isPluginFilterEnhanced"
           :auth-function="async () => !!(await canEdit(row) && await canToggle(row))"
           force-show
         >
@@ -498,7 +498,7 @@ const isOrderingSupported = props.config.app === 'konnect' || useGatewayFeatureS
  * Gated by `config.pluginTableImprovements.filtering` - see PluginTableImprovementFlags for the other
  * (not yet implemented) flags this list will grow: `sorting`, `bulkActions`.
  */
-const isPluginTableEnhanced = computed<boolean>(() =>
+const isPluginFilterEnhanced = computed<boolean>(() =>
   props.config.app === 'konnect' && !!props.config.pluginTableImprovements?.filtering,
 )
 
@@ -509,26 +509,26 @@ const disableSorting = computed((): boolean => props.config.app !== 'kongManager
 const fields: BaseTableHeaders = {
   // the Name column is non-hidable
   name: {
-    label: isPluginTableEnhanced.value ? t('plugins.list.table_headers.plugin') : t('plugins.list.table_headers.name'),
+    label: isPluginFilterEnhanced.value ? t('plugins.list.table_headers.plugin') : t('plugins.list.table_headers.name'),
     searchable: true,
-    sortable: !isPluginTableEnhanced.value,
+    sortable: !isPluginFilterEnhanced.value,
     hidable: false,
   },
 }
 
-if (isPluginTableEnhanced.value) {
+if (isPluginFilterEnhanced.value) {
   // New column: the plugin instance's custom name, split out of the combined "Plugin" cell
   fields.instanceName = { label: t('plugins.list.table_headers.name'), sortable: false }
 }
 
 // conditional display of Applied To/Scope column - hide if on an entity's details page (ie. plugins card on route details view)
 if (!props.config?.entityId) {
-  fields.appliedTo = isPluginTableEnhanced.value
+  fields.appliedTo = isPluginFilterEnhanced.value
     ? { label: t('plugins.list.table_headers.scope'), sortable: false }
     : { label: t('plugins.list.table_headers.applied_to'), sortable: false }
 }
 
-fields.enabled = isPluginTableEnhanced.value
+fields.enabled = isPluginFilterEnhanced.value
   ? { label: t('plugins.list.table_headers.status'), sortable: false }
   : { label: t('plugins.list.table_headers.enabled'), searchable: true, sortable: true }
 
@@ -589,7 +589,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 })
 
 // Only hit the new search endpoint once the user is actually searching
-const isSearchActive = computed((): boolean => isPluginTableEnhanced.value && !!filterQuery.value)
+const isSearchActive = computed((): boolean => isPluginFilterEnhanced.value && !!filterQuery.value)
 
 const activeFetcherUrl = computed<string>(() => {
   if (isSearchActive.value) {
