@@ -134,6 +134,18 @@ describe('calculatePageSlices', () => {
       { startY: 0, height: 300 },
     ])
   })
+
+  it('gives an oversized row its own page instead of cramming later rows in with it', () => {
+    const rows = [
+      { top: 0, bottom: 900 }, // taller than a 400px page
+      { top: 900, bottom: 1000 },
+    ]
+
+    expect(calculatePageSlices(rows, 1000, 400, 1)).toEqual([
+      { startY: 0, height: 900 },
+      { startY: 900, height: 100 },
+    ])
+  })
 })
 
 describe('getRowBoundaries', () => {
