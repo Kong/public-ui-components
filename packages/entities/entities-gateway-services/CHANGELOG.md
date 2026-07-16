@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.21.0...@kong-ui-public/entities-gateway-services@3.22.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
 # [3.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.20.42...@kong-ui-public/entities-gateway-services@3.21.0) (2026-07-15)
 
 
