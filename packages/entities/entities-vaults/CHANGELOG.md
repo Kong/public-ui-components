@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.15.0...@kong-ui-public/entities-vaults@4.15.1) (2026-07-16)
+
+
+### Bug Fixes
+
+* **entities-vaults:** fields should be optional ([#3563](https://github.com/Kong/public-ui-components/issues/3563)) ([13d6502](https://github.com/Kong/public-ui-components/commit/13d6502d84b9268e5417eff73d78f12af9c6d3f4))
+
+
+
+
+
 # [4.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.14.0...@kong-ui-public/entities-vaults@4.15.0) (2026-07-16)
 
 
