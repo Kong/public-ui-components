@@ -4,7 +4,6 @@ import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { PdfExportOptions, PdfExportState } from '../types/renderer-types'
 
 import { readonly, ref } from 'vue'
-import { format } from 'date-fns'
 import { prepareForCapture, restoreAfterCapture } from '@kong-ui-public/analytics-utilities'
 import useI18n from './useI18n'
 
@@ -34,21 +33,6 @@ interface PageMetaContext {
   pageHeight: number
   headerHeight: number
   margin: number
-}
-
-export function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-export function buildFilename(filename: string | undefined, title: string | undefined, now: Date): string {
-  const base = filename || (title && slugify(title)) || 'dashboard-export'
-  const dateString = format(now, 'yyyy-MM-dd')
-
-  return `${base}-${dateString}.pdf`
 }
 
 function drawPageMeta(pdf: jsPDF, ctx: PageMetaContext): void {
@@ -189,7 +173,7 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
 
   async function exportPdf(options: PdfExportOptions = {}): Promise<Blob | undefined> {
     const {
-      filename,
+      filename = 'dashboard-export',
       title,
       subtitle,
       dashboardUrl,
@@ -316,7 +300,7 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
         return blob
       }
 
-      pdf.save(buildFilename(filename, title, now))
+      pdf.save(filename)
       exportState.value = { status: 'complete', pageCount: pages.length }
     } catch (error) {
       exportState.value = { status: 'error', error }

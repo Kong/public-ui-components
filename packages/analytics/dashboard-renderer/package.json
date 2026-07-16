@@ -90,7 +90,6 @@
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@zumer/snapdom": "^2.6.0",
-    "date-fns": "^4.4.0",
     "gridstack": "^11.5.1",
     "jspdf": "^4.2.1",
     "p-queue": "^8.1.1"
