@@ -1,120 +1,6 @@
 import GovernanceForm from './GovernanceForm.vue'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
-import type { FormSchema } from '../../../../types/plugins/form-schema'
-
-const createSchema = (): FormSchema => ({
-  type: 'record',
-  supported_partials: { 'redis-ce': ['config.redis'] },
-  fields: [{
-    config: {
-      type: 'record',
-      required: true,
-      fields: [
-        {
-          customer: {
-            type: 'record',
-            required: true,
-            fields: [
-              {
-                look_up_value_in: {
-                  type: 'string',
-                  one_of: ['consumer', 'application', 'header', 'query'],
-                  default: 'consumer',
-                },
-              },
-              { field: { type: 'string' } },
-            ],
-          },
-        },
-        {
-          feature: {
-            type: 'record',
-            fields: [
-              { key: { type: 'string' } },
-            ],
-          },
-        },
-        { credit_balance_required: { type: 'boolean', default: true } },
-        { deny_unknown_customers: { type: 'boolean', default: true } },
-        {
-          response_codes: {
-            type: 'record',
-            fields: [
-              {
-                NO_CREDIT_AVAILABLE: {
-                  type: 'record',
-                  fields: [
-                    { http_status: { type: 'integer', default: 402 } },
-                    { message: { type: 'string', default: 'Customer has no credit available.' } },
-                  ],
-                },
-              },
-              {
-                USAGE_LIMIT_REACHED: {
-                  type: 'record',
-                  fields: [
-                    { http_status: { type: 'integer', default: 429 } },
-                    { message: { type: 'string', default: 'Customer has reached usage limit for feature.' } },
-                  ],
-                },
-              },
-              {
-                FEATURE_UNAVAILABLE: {
-                  type: 'record',
-                  fields: [
-                    { http_status: { type: 'integer', default: 403 } },
-                    { message: { type: 'string', default: 'Feature is not available for the customer.' } },
-                  ],
-                },
-              },
-              {
-                FEATURE_NOT_FOUND: {
-                  type: 'record',
-                  fields: [
-                    { http_status: { type: 'integer', default: 403 } },
-                    { message: { type: 'string', default: 'Feature not found.' } },
-                  ],
-                },
-              },
-              {
-                CUSTOMER_NOT_FOUND: {
-                  type: 'record',
-                  fields: [
-                    { http_status: { type: 'integer', default: 404 } },
-                    { message: { type: 'string', default: 'Customer is not found by subject.' } },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-        { governance_endpoint: { type: 'string', required: true } },
-        { api_token: { type: 'string', required: true, referenceable: true } },
-        { ssl_verify: { type: 'boolean', default: true } },
-        { timeout: { type: 'integer', default: 10000 } },
-        { keepalive: { type: 'integer', default: 60000 } },
-        { sync_rate: { type: 'integer', default: 2 } },
-        { refresh_interval: { type: 'integer', default: 30 } },
-        { max_stale_seconds: { type: 'integer', default: 60 } },
-        { l1_cache_ttl_seconds: { type: 'integer', default: 5 } },
-        { l2_cache_ttl_seconds: { type: 'integer', default: 120 } },
-        { fail_policy: { type: 'string', one_of: ['allow', 'deny'], default: 'allow' } },
-        {
-          redis: {
-            type: 'record',
-            fields: [
-              { host: { type: 'string', default: '127.0.0.1' } },
-              { port: { type: 'integer', default: 6379 } },
-              { username: { type: 'string' } },
-              { password: { type: 'string' } },
-              { database: { type: 'integer', default: 0 } },
-            ],
-          },
-        },
-      ],
-    },
-  }],
-})
+import governanceSchema from '../../../../../fixtures/schemas/governance'
 
 const mountForm = (options: {
   isEditing?: boolean
@@ -130,7 +16,7 @@ const mountForm = (options: {
 
   cy.mount(GovernanceForm as any, {
     props: {
-      schema: createSchema(),
+      schema: governanceSchema,
       formSchema: {},
       formModel: {},
       model,
@@ -169,35 +55,23 @@ describe('GovernanceForm - multi-section layout', () => {
 })
 
 describe('GovernanceForm - response mapping', () => {
-  it('renders all 5 response code values as readonly inputs', () => {
+  it('renders code values, editable http_status and message inputs for each response code', () => {
     mountForm({})
 
-    // Expand the Advanced Fields in governance section first
-    cy.getTestId('view-advanced').first().click()
-
+    cy.getTestId('ff-governance-advanced-settings').click()
+    // check all 5 response code values
     cy.getTestId('ff-response-mapping-code-NO_CREDIT_AVAILABLE').should('exist')
     cy.getTestId('ff-response-mapping-code-USAGE_LIMIT_REACHED').should('exist')
     cy.getTestId('ff-response-mapping-code-FEATURE_UNAVAILABLE').should('exist')
     cy.getTestId('ff-response-mapping-code-FEATURE_NOT_FOUND').should('exist')
     cy.getTestId('ff-response-mapping-code-CUSTOMER_NOT_FOUND').should('exist')
-  })
-
-  it('renders editable http_status inputs for each response code', () => {
-    mountForm({})
-
-    cy.getTestId('view-advanced').first().click()
 
     cy.getTestId('ff-response-mapping-status-NO_CREDIT_AVAILABLE').should('exist')
     cy.getTestId('ff-response-mapping-status-USAGE_LIMIT_REACHED').should('exist')
     cy.getTestId('ff-response-mapping-status-FEATURE_UNAVAILABLE').should('exist')
     cy.getTestId('ff-response-mapping-status-FEATURE_NOT_FOUND').should('exist')
     cy.getTestId('ff-response-mapping-status-CUSTOMER_NOT_FOUND').should('exist')
-  })
 
-  it('renders editable message inputs for each response code', () => {
-    mountForm({})
-
-    cy.getTestId('view-advanced').first().click()
 
     cy.getTestId('ff-response-mapping-message-NO_CREDIT_AVAILABLE').should('exist')
     cy.getTestId('ff-response-mapping-message-USAGE_LIMIT_REACHED').should('exist')

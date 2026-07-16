@@ -112,7 +112,7 @@
       <!-- Cache & sync settings (in AdvancedFields, grouped under a collapse) -->
       <AdvancedFields
         class="ff-governance-advanced-fields-container"
-        data-testid="ff-governance-advanced-fields-container"
+        data-testid="ff-governance-config-advanced-fields"
         hide-general-fields
       >
         <div>
