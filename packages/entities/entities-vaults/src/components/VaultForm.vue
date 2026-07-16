@@ -337,7 +337,6 @@
                 data-testid="vault-form-config-hcv-kube_role"
                 :label="t('form.config.hcv.fields.kube_role.label')"
                 :readonly="form.isReadonly"
-                required
                 type="text"
               />
               <KInput
@@ -354,7 +353,6 @@
                 data-testid="vault-form-config-hcv-kube_api_token_file"
                 :label="t('form.config.hcv.fields.kube_api_token_file.label')"
                 :readonly="form.isReadonly"
-                required
                 type="text"
               />
             </div>
@@ -610,7 +608,6 @@
                 data-testid="vault-form-config-hcv-cert_auth_role_name"
                 :label="t('form.config.hcv.fields.cert_auth_role_name.label')"
                 :readonly="form.isReadonly"
-                required
               />
               <KTextArea
                 v-model.trim="configFields[VaultProviders.HCV].cert_auth_cert"
@@ -1639,6 +1636,9 @@ const isVaultConfigValid = computed((): boolean => {
           'ttl',
           'neg_ttl',
           'resurrect_ttl',
+          'kube_role',
+          'kube_api_token_file',
+          'cert_auth_role_name',
           'kube_auth_path',
           'approle_auth_path',
           'approle_secret_id',
@@ -1652,10 +1652,6 @@ const isVaultConfigValid = computed((): boolean => {
           'gcp_login_path',
         ].includes(key)
       ) {
-        return false
-      }
-      // kube_role and kube_api_token_file are not needed if auth method is not kubernetes
-      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.K8S && (key === 'kube_role' || key === 'kube_api_token_file')) {
         return false
       }
       // Skip CSP auth fields entirely when the CSP auth-method feature flag is off.
@@ -1698,7 +1694,7 @@ const isVaultConfigValid = computed((): boolean => {
       if (configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE && key === 'approle_response_wrapping' && typeof (configFields[vaultProvider.value] as HCVVaultConfig)[key] === 'boolean') {
         return false
       }
-      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.CERT && ['cert_auth_role_name', 'cert_auth_cert', 'cert_auth_cert_key'].includes(key)) {
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.CERT && ['cert_auth_cert', 'cert_auth_cert_key'].includes(key)) {
         return false
       }
       if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.JWT && ['oauth2_client_id', 'oauth2_client_secret', 'jwt_role', 'oauth2_token_endpoint'].includes(key)) {

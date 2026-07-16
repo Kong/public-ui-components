@@ -455,9 +455,6 @@ describe('<VaultForm />', () => {
 
       cy.getTestId('vault-form-config-hcv-auth_method').click()
       cy.get('[data-testid="select-item-kubernetes"] button').click()
-      cy.getTestId('vault-create-form-submit').should('be.disabled')
-      cy.getTestId('vault-form-config-hcv-kube_role').type('role')
-      cy.getTestId('vault-form-config-hcv-kube_api_token_file').type('file.txt')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       cy.getTestId('vault-form-config-hcv-auth_method').click()
@@ -976,9 +973,6 @@ describe('<VaultForm />', () => {
 
       cy.getTestId('vault-form-config-hcv-auth_method').click()
       cy.get('[data-testid="select-item-kubernetes"] button').click()
-      cy.getTestId('vault-create-form-submit').should('be.disabled')
-      cy.getTestId('vault-form-config-hcv-kube_role').type('role')
-      cy.getTestId('vault-form-config-hcv-kube_api_token_file').type('file.txt')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       cy.getTestId('vault-form-config-hcv-auth_method').click()
