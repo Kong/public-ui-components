@@ -23,7 +23,7 @@ import BananaSplit from '../icons/BananaSplit.vue'
 .kong-ui-app-error {
   align-items: center;
   background-color: var(--kui-color-background, $kui-color-background);
-  border-top: var(--kui-border-width-20, $kui-border-width-20) solid #00abd2;
+  border-top: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-accent, $kui-color-border-accent);
   display: flex;
   flex-direction: column;
   margin: var(--kui-space-90, $kui-space-90) var(--kui-space-auto, $kui-space-auto) var(--kui-space-0, $kui-space-0);
@@ -45,8 +45,11 @@ import BananaSplit from '../icons/BananaSplit.vue'
 
   .kong-ui-app-error-content {
     animation: .75s cubic-bezier(.785, .135, .15, .86) forwards fadeIn;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
     opacity: 0;
     padding: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
+    text-align: center;
 
     @media (min-width: $kui-breakpoint-phablet) {
       padding: var(--kui-space-0, $kui-space-0) var(--kui-space-90, $kui-space-90);
@@ -55,6 +58,14 @@ import BananaSplit from '../icons/BananaSplit.vue'
     @media (prefers-reduced-motion) {
       animation: none;
       opacity: 1;
+    }
+
+    h1, h2, h3, h4 {
+      color: var(--kui-color-text, $kui-color-text);
+      font-size: var(--kui-font-size-80, $kui-font-size-80);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      margin-bottom: var(--kui-space-60, $kui-space-60);
+      margin-top: var(--kui-space-0, $kui-space-0);
     }
   }
 }
