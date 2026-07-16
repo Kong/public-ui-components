@@ -88,22 +88,20 @@
       <FeatureSelectField />
 
       <!-- Connection -->
-      <CollapsibleSection
-        v-model:expanded="connectionExpanded"
-        :label="t('plugins.free-form.governance.sections.connection.title')"
-      >
-        <StringField
-          :help="t('plugins.free-form.governance.fields.governance_endpoint.help')"
-          name="config.governance_endpoint"
-        />
-        <Field name="config.api_token" />
-        <Field name="config.ssl_verify" />
-        <div class="ff-governance-inline-row">
-          <Field name="config.timeout" />
-          <Field name="config.keepalive" />
-        </div>
-      </CollapsibleSection>
+      <h3 class="ff-governance-connection-heading">
+        {{ t('plugins.free-form.governance.sections.connection.title') }}
+      </h3>
 
+      <StringField
+        :help="t('plugins.free-form.governance.fields.governance_endpoint.help')"
+        name="config.governance_endpoint"
+      />
+      <Field name="config.api_token" />
+      <Field name="config.ssl_verify" />
+      <div class="ff-governance-inline-row">
+        <Field name="config.timeout" />
+        <Field name="config.keepalive" />
+      </div>
       <!-- Redis — shared (partial) vs dedicated. Rendering a Field at the redis
            path lets PluginConfigurationForm's built-in renderer swap in
            RedisSelector. Requires the schema to declare
@@ -117,10 +115,10 @@
         data-testid="ff-governance-advanced-fields-container"
         hide-general-fields
       >
-        <CollapsibleSection
-          v-model:expanded="cacheSyncExpanded"
-          :label="t('plugins.free-form.governance.sections.cache_sync.title')"
-        >
+        <div>
+          <h3 class="ff-governance-cache-sync-heading">
+            {{ t('plugins.free-form.governance.sections.cache_sync.title') }}
+          </h3>
           <div class="ff-governance-cache-sync">
             <NumberField
               :label="t('plugins.free-form.governance.fields.sync_rate.label')"
@@ -143,7 +141,7 @@
               name="config.l2_cache_ttl_seconds"
             />
           </div>
-        </CollapsibleSection>
+        </div>
       </AdvancedFields>
     </template>
 
@@ -172,23 +170,25 @@
         hide-general-fields
       >
         <!-- Response mapping — fixed 5 rows, editable status/message -->
-        <CollapsibleSection
-          v-model:expanded="responseMappingExpanded"
-          :label="t('plugins.free-form.governance.fields.response.label')"
-        >
+
+        <div>
+          <h3 class="ff-governance-response-mapping-heading">
+            {{ t('plugins.free-form.governance.fields.response.label') }}
+          </h3>
           <ResponseMappingField />
-        </CollapsibleSection>
+        </div>
 
         <!-- deny_unknown_customers — collapsible group of Allow/Deny cards -->
-        <CollapsibleSection
-          v-model:expanded="unknownCustomerExpanded"
-          :label="t('plugins.free-form.governance.fields.deny_unknown_customers.label')"
-        >
+
+        <div>
+          <h3 class="ff-governance-deny-unknown-customers-heading">
+            {{ t('plugins.free-form.governance.fields.deny_unknown_customers.label') }}
+          </h3>
           <CardRadioField
             name="config.deny_unknown_customers"
             :options="denyUnknownCustomersOptions"
           />
-        </CollapsibleSection>
+        </div>
       </AdvancedFields>
     </template>
   </DynamicLayout>
@@ -196,7 +196,7 @@
 
 <script setup lang="ts">
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME, FORMS_CONFIG } from '@kong-ui-public/forms'
-import { computed, inject, provide, ref } from 'vue'
+import { computed, inject, provide } from 'vue'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
@@ -206,7 +206,6 @@ import EnumField from '../../shared/EnumField.vue'
 import NumberField from '../../shared/NumberField.vue'
 import StringField from '../../shared/StringField.vue'
 import ObjectField from '../../shared/ObjectField.vue'
-import CollapsibleSection from '../../shared/CollapsibleSection.vue'
 import AdvancedFields from '../../shared/AdvancedFields.vue'
 import useI18n from '../../../../composables/useI18n'
 import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
@@ -265,12 +264,6 @@ const configSections: ConfigSection[] = [
   },
 ]
 
-// Section expand states
-const connectionExpanded = ref(true)
-const cacheSyncExpanded = ref(true)
-const responseMappingExpanded = ref(true)
-const unknownCustomerExpanded = ref(true)
-
 // ── Card-radio option sets (static, translated at setup time) ─────────────
 
 const creditBalanceOptions = computed(() => [
@@ -326,6 +319,24 @@ const denyUnknownCustomersOptions = computed(() => [
     flex: 1 1 calc(50% - var(--kui-space-60, $kui-space-60));
     min-width: 0;
   }
+}
+
+.ff-governance-connection-heading,
+.ff-governance-cache-sync-heading,
+.ff-governance-deny-unknown-customers-heading,
+.ff-governance-response-mapping-heading {
+  font-size: var(--kui-font-size-40, $kui-font-size-40);
+  font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+  margin-bottom: var(--kui-space-50, $kui-space-50);
+}
+
+.ff-governance-deny-unknown-customers-heading {
+  margin-top: 0;
+}
+
+.ff-governance-connection-heading {
+  margin-bottom: 0;
+  margin-top: 0;
 }
 
 .ff-governance-inline-row {

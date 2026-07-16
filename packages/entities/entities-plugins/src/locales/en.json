@@ -950,7 +950,7 @@
             "load_error": "Could not load features from the governance service."
           },
           "governance_endpoint": {
-            "help": "The URL of the governance query endpoint. For Konnect, use the regional endpoint from your Metering & Billing settings."
+            "help": "For Konnect Metering & Billing, use the regional endpoint for Metering & Billing Query Governance Access. For self-hosted OpenMeter, use the Query Governance Access endpoint of your self-hosted instance."
           },
           "ssl_verify": {
             "label": "Verify TLS certificate",
@@ -979,9 +979,9 @@
           },
           "credit_balance_required": {
             "label": "Credit balance lookup",
-            "yes_label": "Required",
+            "yes_label": "Yes",
             "yes_description": "A credit balance above zero is required for access to this feature.",
-            "no_label": "Not required",
+            "no_label": "No",
             "no_description": "Customers can access this feature regardless of their credit balance."
           },
           "fail_policy": {

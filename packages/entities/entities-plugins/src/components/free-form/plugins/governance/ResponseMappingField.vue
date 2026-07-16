@@ -90,9 +90,9 @@ function setMessage(key: ResponseKey, value: string) {
 
   &-header {
     border-bottom: 1px solid var(--kui-color-border, $kui-color-border);
-    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    color: var(--kui-color-text, $kui-color-text);
     display: flex;
-    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     gap: var(--kui-space-60, $kui-space-60);
     padding-bottom: var(--kui-space-20, $kui-space-20);
