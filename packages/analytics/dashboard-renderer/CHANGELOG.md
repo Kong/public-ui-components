@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.0...@kong-ui-public/dashboard-renderer@8.15.1) (2026-07-16)
+
+
+### Bug Fixes
+
+* **analytics:** adjust for the actual scale of pdf canvas [MA-5230] ([#3564](https://github.com/Kong/public-ui-components/issues/3564)) ([9f0972d](https://github.com/Kong/public-ui-components/commit/9f0972d9036ed89a196d3c7ccc015cb7bfcc9f1d))
+
+
+
+
+
 # [8.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.14.0...@kong-ui-public/dashboard-renderer@8.15.0) (2026-07-16)
 
 
