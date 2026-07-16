@@ -404,9 +404,6 @@ importers:
       '@zumer/snapdom':
         specifier: ^2.6.0
         version: 2.15.0
-      date-fns:
-        specifier: ^4.4.0
-        version: 4.4.0
       gridstack:
         specifier: ^11.5.1
         version: 11.5.1

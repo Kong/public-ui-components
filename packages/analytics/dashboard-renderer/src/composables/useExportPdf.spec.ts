@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest'
 import { ref } from 'vue'
 import { CAPTURE_PREPARE_EVENT, CAPTURE_RESTORE_EVENT } from '@kong-ui-public/analytics-utilities'
-import useExportPdf, { buildFilename, calculatePageSlices, getRowBoundaries, slugify } from './useExportPdf'
+import useExportPdf, { calculatePageSlices, getRowBoundaries } from './useExportPdf'
 import { snapdom } from '@zumer/snapdom'
 
 vi.mock('@zumer/snapdom', () => ({
@@ -39,37 +39,6 @@ const stubRect = (el: HTMLElement, top: number, height: number) => {
     toJSON: () => ({}),
   } as DOMRect)
 }
-
-describe('slugify', () => {
-  it('lowercases and replaces non-alphanumerics with hyphens', () => {
-    expect(slugify('API Usage Dashboard')).toBe('api-usage-dashboard')
-    expect(slugify('  My  (test) dashboard!  ')).toBe('my-test-dashboard')
-  })
-
-  it('collapses consecutive separators and trims leading/trailing hyphens', () => {
-    expect(slugify('--a__b--')).toBe('a-b')
-  })
-})
-
-describe('buildFilename', () => {
-  const now = new Date(2026, 6, 8)
-
-  it('appends the date to an explicit filename', () => {
-    expect(buildFilename('my-report', 'Ignored Title', now)).toBe('my-report-2026-07-08.pdf')
-  })
-
-  it('slugifies the title when no filename is given', () => {
-    expect(buildFilename(undefined, 'API Usage Dashboard', now)).toBe('api-usage-dashboard-2026-07-08.pdf')
-  })
-
-  it('falls back to dashboard-export when neither is given', () => {
-    expect(buildFilename(undefined, undefined, now)).toBe('dashboard-export-2026-07-08.pdf')
-  })
-
-  it('prepends zeros to single-digit months and days', () => {
-    expect(buildFilename('x', undefined, new Date(2026, 0, 5))).toBe('x-2026-01-05.pdf')
-  })
-})
 
 describe('calculatePageSlices', () => {
   it('slices at fixed page height intervals when there are no row boundaries', () => {
