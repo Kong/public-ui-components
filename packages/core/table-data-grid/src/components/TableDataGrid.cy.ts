@@ -20,6 +20,7 @@ type TestTableDataGridSlots = {
 }
 
 type MountTableOptions = {
+  containerStyle?: Record<string, string>
   fetcher: TableDataGridFetcher<TestRow>
   headers?: Array<TableDataGridHeader<TestRow>>
   error?: boolean
@@ -61,6 +62,7 @@ const createResetFetcher = () => cy.stub().callsFake(({ pageSize }) => Promise.r
 const TestTableDataGrid = TableDataGrid as unknown as DefineComponent
 
 const mountTestTableDataGrid = ({
+  containerStyle,
   headers: tableHeaders = headers,
   onGridReady,
   slots,
@@ -81,6 +83,7 @@ const mountTestTableDataGrid = ({
         style: {
           height: '520px',
           width: '640px',
+          ...containerStyle,
         },
       }, [
         h(TestTableDataGrid, componentProps, slots),
@@ -237,6 +240,25 @@ describe('<TableDataGrid />', () => {
       pageSize: 15,
       cursor: undefined,
     })
+  })
+
+  it('uses Kong theme text colors for AG Grid headers and cells', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      containerStyle: {
+        '--kui-color-text-neutral': '#123456',
+        '--kui-color-text': '#abcdef',
+      },
+      fetcher,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.contains('.ag-header-cell-text', 'Name').should('have.css', 'color', 'rgb(18, 52, 86)')
+    cy.contains('.ag-cell', 'Gateway service').should('have.css', 'color', 'rgb(171, 205, 239)')
   })
 
   it('fills a taller parent height by default', () => {

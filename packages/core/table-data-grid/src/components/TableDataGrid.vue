@@ -166,11 +166,13 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   /* stylelint-disable custom-property-pattern -- AG Grid theme variables must use AG Grid's --ag-* namespace. */
   --ag-background-color: var(--kui-color-background, #{$kui-color-background});
   --ag-border-color: var(--kui-color-border, #{$kui-color-border});
+  --ag-foreground-color: var(--kui-color-text, #{$kui-color-text});
   --ag-header-background-color: var(--kui-color-background, #{$kui-color-background});
   --ag-header-column-border: 1px solid var(--kui-color-border, #{$kui-color-border});
   --ag-header-column-border-height: 30%;
   --ag-header-column-resize-handle-color: transparent;
   --ag-header-font-weight: var(--kui-font-weight-semibold, #{$kui-font-weight-semibold});
+  --ag-header-text-color: var(--kui-color-text-neutral, #{$kui-color-text-neutral});
   --ag-wrapper-border: none;
   --ag-wrapper-border-radius: 0;
   /* stylelint-enable custom-property-pattern */
