@@ -46,6 +46,7 @@ const konnectConfig = ref<KonnectVaultFormConfig>({
   azureVaultProviderAvailable: true,
   azureCertsVaultProviderAvailable: true,
   ttl: true,
+  hcvCertMethodAvailable: true,
   hcvAppRoleMethodAvailable: true,
   hcvCspAuthMethodsAvailable: true,
   hcvSslVerifyAvailable: true,
