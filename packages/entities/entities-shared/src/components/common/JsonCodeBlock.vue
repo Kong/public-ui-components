@@ -90,7 +90,7 @@ const displayedCharLength = computed((): number => {
 
 .json-endpoint {
   align-items: baseline;
-  background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
+  background-color: var(--kui-color-background, $kui-color-background);
   border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-inverse, $kui-color-border-inverse);
   border-top-left-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   border-top-right-radius: var(--kui-border-radius-40, $kui-border-radius-40);
