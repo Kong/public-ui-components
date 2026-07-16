@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.13.0...@kong-ui-public/app-layout@4.13.1) (2026-07-16)
+
+
+### Bug Fixes
+
+* **app-layout:** app error themed styles ([#3567](https://github.com/Kong/public-ui-components/issues/3567)) ([abd8164](https://github.com/Kong/public-ui-components/commit/abd8164cdcff10d292608b2ead11cf699617a2df))
+
+
+
+
+
 # [4.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.12.0...@kong-ui-public/app-layout@4.13.0) (2026-07-16)
 
 
