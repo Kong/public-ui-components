@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.15.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.1...@kong-ui-public/dashboard-renderer@8.15.2) (2026-07-16)
+
+
+### Bug Fixes
+
+* **analytics:** remove filename build method and unused date-fns ([#3565](https://github.com/Kong/public-ui-components/issues/3565)) ([7828408](https://github.com/Kong/public-ui-components/commit/7828408d2e2cfb695a5aa1784b4d3d52c767c9a4))
+
+
+
+
+
 ## [8.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.0...@kong-ui-public/dashboard-renderer@8.15.1) (2026-07-16)
 
 
