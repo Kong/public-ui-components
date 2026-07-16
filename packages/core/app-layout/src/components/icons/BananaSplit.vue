@@ -26,7 +26,7 @@
       stroke-width=".854"
     /><g
       clip-path="url(#a)"
-      stroke="#169FCC"
+      :stroke="bananaColor"
       stroke-miterlimit="10"
       stroke-width="1.42"
     >
@@ -42,3 +42,10 @@
     </defs>
   </svg>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { KUI_COLOR_BACKGROUND_ACCENT } from '@kong/design-tokens'
+
+const bananaColor = computed(() => `var(--kui-color-background-accent, ${KUI_COLOR_BACKGROUND_ACCENT})`)
+</script>
