@@ -197,9 +197,13 @@ const mountForm = (options: MountOptions = {}) => {
 }
 
 // Konnect + principals schema + feature flag, with auth servers API stubbed.
-const mountPrincipalsForm = (options: MountOptions = {}, servers: Array<Record<string, any>> = []) => {
+const mountPrincipalsForm = (
+  options: MountOptions = {},
+  servers: Array<Record<string, any>> = [],
+  clients: Array<Record<string, any>> = [],
+) => {
   cy.intercept('GET', '**/v1/auth-servers/_computed', { body: { data: servers } }).as('getAuthServers')
-  cy.intercept('GET', '**/v1/auth-servers/*/clients', { body: { data: [] } }).as('getAuthServerClients')
+  cy.intercept('GET', '**/v1/auth-servers/*/clients', { body: { data: clients } }).as('getAuthServerClients')
 
   mountForm({
     withPrincipals: true,
@@ -827,10 +831,9 @@ describe('OpenidConnectForm', () => {
       }, [
         { id: 'server-1', name: 'My Auth Server', issuer: 'https://my-server.us.identity.konghq.com' },
         { id: 'server-2', name: 'Other Auth Server', issuer: 'https://other-server.us.identity.konghq.com' },
+      ], [
+        { id: 'client-1', name: 'My Client', client_id: 'client-1-id' },
       ])
-      cy.intercept('GET', '**/v1/auth-servers/*/clients', {
-        body: { data: [{ id: 'client-1', name: 'My Client', client_id: 'client-1-id' }] },
-      }).as('getAuthServerClients')
 
       // The existing issuer matches server-1, so the select auto-restores it (no click
       // needed) and its clients are fetched — mode is inferred as Kong Identity, the saved
