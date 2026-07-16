@@ -1784,9 +1784,9 @@ const getPayload = computed((): Record<string, any> => {
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN && { token: configFields[VaultProviders.HCV].token }),
     // For Kong Admin API, when auth_method is kubernetes, token must be in the request body and its value has to be null
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.K8S && {
-      kube_role: configFields[VaultProviders.HCV].kube_role,
+      kube_role: configFields[VaultProviders.HCV].kube_role || undefined,
       kube_auth_path: configFields[VaultProviders.HCV].kube_auth_path || undefined,
-      kube_api_token_file: configFields[VaultProviders.HCV].kube_api_token_file,
+      kube_api_token_file: configFields[VaultProviders.HCV].kube_api_token_file || undefined,
       token: null,
     }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.AWS_IAM && {
@@ -1826,7 +1826,7 @@ const getPayload = computed((): Record<string, any> => {
       approle_response_wrapping: configFields[VaultProviders.HCV].approle_response_wrapping ?? false,
     }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.CERT && {
-      cert_auth_role_name: configFields[VaultProviders.HCV].cert_auth_role_name,
+      cert_auth_role_name: configFields[VaultProviders.HCV].cert_auth_role_name || undefined,
       cert_auth_cert: configFields[VaultProviders.HCV].cert_auth_cert,
       cert_auth_cert_key: configFields[VaultProviders.HCV].cert_auth_cert_key,
     }),
