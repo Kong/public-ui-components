@@ -6,6 +6,7 @@ A form component for Vaults.
 - [Usage](#usage)
   - [Install](#install)
   - [Props](#props)
+  - [Slots](#slots)
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
@@ -132,6 +133,24 @@ The base konnect or kongManger config.
 
 If showing the `Edit` type form, the ID of the Vault.
 
+### Slots
+
+#### `labels`
+
+A scoped slot for rendering the labels editor. **Only rendered in AI Gateway mode** (`config.apiType === 'aiGateway'`).
+
+Slot props:
+
+- `labelList`
+  - type: `VaultLabelItem[]`
+  - The current list of label key-value pairs. In edit mode it is hydrated from the fetched vault before the slot is rendered.
+- `disabled`
+  - type: `Boolean`
+  - Whether the form is read-only.
+- `updateLabelList`
+  - type: `Function`
+  - Setter `(labelList: VaultLabelItem[]) => void` to write edited labels back into the form state.
+
 ### Events
 
 #### error
@@ -168,6 +187,7 @@ import type {
   HCVVaultConfigPayload,
   VaultPayload,
   VaultStateFields,
-  VaultState
+  VaultState,
+  VaultLabelItem
 } from '@kong-ui-public/entities-vaults'
 ```

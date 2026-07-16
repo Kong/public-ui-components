@@ -14,7 +14,7 @@
       :fetcher="fetcher"
       :headers="headers"
       :page-size="query.page_size"
-      :refresh-key="refreshCounter"
+      :refresh-key="tableRefreshKey"
       @state="onState"
     />
   </div>
@@ -63,6 +63,21 @@ const datasourceAwareQuery = computed<DatasourceAwareTabularQuery>(() => ({
     entity: props.query.entity,
     filters: props.query.filters,
     page_size: props.query.page_size,
+  },
+}))
+const tableRefreshKey = computed(() => JSON.stringify({
+  refreshCounter: props.refreshCounter,
+  query: {
+    columns: props.query.columns,
+    datasource: props.query.datasource,
+    entity: props.query.entity,
+    filters: props.query.filters,
+    page_size: props.query.page_size,
+  },
+  context: {
+    filters: props.context.filters,
+    timeSpec: props.context.timeSpec,
+    tz: props.context.tz,
   },
 }))
 

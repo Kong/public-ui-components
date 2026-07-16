@@ -19,6 +19,12 @@
     "delete": "Delete",
     "as_of_today": "As of today"
   },
+  "pdfExport": {
+    "branding": "Kong Konnect",
+    "generated": "Generated {timestamp}",
+    "dashboardNote": "For a live, interactive experience, open this dashboard in Konnect",
+    "pageOf": "{page} / {total}"
+  },
   "csvExport": {
     "defaultFilename": "Chart export",
     "exportAsCsv": "Export as CSV"

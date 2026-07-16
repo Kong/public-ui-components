@@ -121,7 +121,6 @@ const configSchema = computed<Partial<VaultConfigurationSchema>>(() => ({
     order: 6,
     section: ConfigurationSchemaSection.Basic,
   },
-  // AI Gateway uses labels (not exposed this version) instead of tags.
   ...(isAiGateway.value ? {} : {
     tags: {
       order: 7,

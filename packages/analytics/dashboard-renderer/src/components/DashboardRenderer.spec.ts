@@ -159,17 +159,18 @@ describe('Dashboard schemas', () => {
 })
 
 describe('<DashboardRenderer /> table tiles', () => {
-  it('preserves table tile type when duplicating', async () => {
+  it('preserves table chart shape when duplicating', async () => {
     setupPiniaTestStore()
 
     const model: DashboardConfig = {
       tiles: [
         {
           id: 'table-1',
-          type: 'table',
+          type: 'chart',
           definition: {
-            config: {
-              title: 'Routes',
+            chart: {
+              type: 'table',
+              chart_title: 'Routes',
             },
             query: {
               datasource: 'platform',
@@ -214,9 +215,10 @@ describe('<DashboardRenderer /> table tiles', () => {
     await wrapper.getTestId('duplicate-dashboard-tile-table-1').trigger('click')
 
     expect(model.tiles).toHaveLength(2)
-    expect(model.tiles[1].type).toBe('table')
-    expect(model.tiles[1].definition.config).toEqual({
-      title: 'Copy of Routes',
+    expect(model.tiles[1].type).toBe('chart')
+    expect(model.tiles[1].definition.chart).toEqual({
+      type: 'table',
+      chart_title: 'Copy of Routes',
     })
     expect(model.tiles[1].definition.query).toMatchObject({
       datasource: 'platform',

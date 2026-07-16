@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="kong-ui-consumer-group-entity-config-card"
-    :class="{ 'redis-nested-detail': disableKonnectManagedDetail }"
-  >
+  <div class="kong-ui-consumer-group-entity-config-card">
     <!-- Konnect managed Redis only (FF). Self-managed Redis never uses this; it always uses the legacy card below -->
     <template v-if="isManagedKonnectDetailEnabled">
       <KSkeleton
@@ -17,26 +14,27 @@
         class="managed-konnect-redis-detail"
         data-testid="managed-konnect-redis-detail"
       >
-        <KAlert
-          v-if="isManagedKonnectDetailEnabled && managedAddOnState === 'initializing'"
-          appearance="info"
-          class="redis-managed-state-alert"
-          data-testid="redis-managed-state-alert-initializing"
-          show-icon
+        <KSegmentedControl
+          v-model="activeSegment"
+          class="redis-config-segment"
+          data-testid="managed-redis-config-segment"
+          :options="configSegmentOptions"
+          size="large"
         >
-          {{ t('config_card.managed_state.initializing_alert') }}
-        </KAlert>
-        <KAlert
-          v-else-if="isManagedKonnectDetailEnabled && managedAddOnState === 'terminating'"
-          appearance="danger"
-          class="redis-managed-state-alert"
-          data-testid="redis-managed-state-alert-terminating"
-          show-icon
-        >
-          {{ t('config_card.managed_state.terminating_alert') }}
-        </KAlert>
+          <template #option-label="{ option }">
+            <KTooltip
+              :disabled="isTooltipDisabled(option)"
+              max-width="320"
+              placement="right"
+              :text="partialSegmentTooltip"
+            >
+              <span>{{ option.label }}</span>
+            </KTooltip>
+          </template>
+        </KSegmentedControl>
         <EntityBaseConfigCard
-          :key="addOnIdForCacheFetch"
+          v-if="activeSegment === 'cache'"
+          :key="cacheConfigCardKey"
           :code-block-record-formatter="addOnCodeFmt"
           :code-block-record-resolver="addOnCodeRslv"
           :config="addOnCardRuntimeConfig"
@@ -48,9 +46,9 @@
           :hide-title="false"
           :preserve-code-block-timestamps="true"
           :record-resolver="addOnRecordResolver"
-          @fetch:error="onEntityBaseConfigCardFetchError"
+          @fetch:error="onFetchError"
           @fetch:success="onCacheAddOnLoaded"
-          @loading="(v) => emit('loading', v)"
+          @loading="onLoadingChange"
         >
           <template #title>
             {{ t('config_card.sections.cache_configuration') }}
@@ -97,117 +95,21 @@
               </template>
             </div>
           </template>
-          <!-- Spinner while add-on is initializing/terminating; full partial card when state is ready -->
-          <template #after-fields>
-            <KCollapse
-              v-model="partialSectionCollapsed"
-              class="redis-kcollapse"
-              data-testid="managed-redis-partial-collapse"
-              trigger-alignment="leading"
-            >
-              <template #trigger="{ isCollapsed, toggle }">
-                <KButton
-                  appearance="tertiary"
-                  class="redis-collapse-trigger"
-                  data-testid="redis-collapse-trigger"
-                  type="button"
-                  @click="toggle()"
-                >
-                  <ChevronUpIcon
-                    v-if="!isCollapsed"
-                    decorative
-                    :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
-                  />
-                  <ChevronRightIcon
-                    v-else
-                    decorative
-                    :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
-                  />
-                  {{ partialCollapseTriggerLabel }}
-                </KButton>
-              </template>
-              <div class="redis-expand-body">
-                <!-- Initializing/terminating Add on: keep partial header + format control, but render placeholder content -->
-                <div
-                  v-if="!partialSectionCollapsed && showPartialTransitionalUi"
-                  class="redis-provisioning"
-                  :data-redis-kind="partialTransitionalKind"
-                  data-testid="redis-provisioning"
-                >
-                  <div class="redis-head">
-                    <span class="redis-title">
-                      {{ t('config_card.sections.partial_configuration') }}
-                    </span>
-                    <div class="redis-actions">
-                      <KLabel class="redis-format-label">
-                        {{ t('config_card.partial.format_label') }}
-                      </KLabel>
-                      <KSelect
-                        v-model="partialTransitionalFormat"
-                        data-testid="managed-redis-partial-format-select"
-                        :items="partialTransitionalFormatItems"
-                      />
-                    </div>
-                  </div>
-
-                  <div
-                    v-if="partialTransitionalFormat === 'structured'"
-                    class="redis-transitional"
-                  >
-                    <div
-                      v-for="field in partialTransitionalFields"
-                      :key="field.key"
-                      class="redis-row"
-                    >
-                      <div class="redis-lbl">
-                        {{ field.label }}
-                      </div>
-                      <div class="redis-val">
-                        <ProgressIcon
-                          decorative
-                        />
-                        <span>{{ partialTransitionalMessage }}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    v-else
-                    class="redis-code"
-                  >
-                    <!-- Reuse ready-state code block components so JSON/TR styling stays identical -->
-                    <JsonCodeBlock
-                      v-if="partialTransitionalFormat === 'json'"
-                      :config="innerPartialCardConfig"
-                      :entity-record="partialTransitionalCodeRecord"
-                    />
-                    <TerraformCodeBlock
-                      v-else
-                      :entity-record="partialTransitionalCodeRecord"
-                      :entity-type="SupportedEntityType.Partial"
-                    />
-                  </div>
-                </div>
-
-                <RedisConfigurationConfigCard
-                  v-else-if="!partialSectionCollapsed"
-                  :config="innerPartialCardConfig"
-                  :config-card-doc="configCardDoc"
-                  disable-konnect-managed-detail
-                  :hide-title="false"
-                  @fetch:error="(e) => emit('fetch:error', e)"
-                  @fetch:not-found="emitFetchNotFound"
-                  @fetch:success="onPartialNestedLoaded"
-                  @loading="(v) => emit('loading', v)"
-                >
-                  <template #title>
-                    {{ t('config_card.sections.partial_configuration') }}
-                  </template>
-                </RedisConfigurationConfigCard>
-              </div>
-            </KCollapse>
-          </template>
         </EntityBaseConfigCard>
+        <RedisConfigurationConfigCard
+          v-else-if="activeSegment === 'partial'"
+          :config="innerPartialCardConfig"
+          :config-card-doc="configCardDoc"
+          disable-konnect-managed-detail
+          :hide-title="false"
+          @fetch:error="onFetchError"
+          @fetch:success="onPartialLoaded"
+          @loading="onLoadingChange"
+        >
+          <template #title>
+            {{ t('config_card.sections.partial_configuration') }}
+          </template>
+        </RedisConfigurationConfigCard>
       </div>
     </template>
 
@@ -223,9 +125,9 @@
       :formats-to-hide="disableKonnectManagedDetail ? ['yaml'] : []"
       :hide-title="hideTitle"
       :record-resolver="recordResolver"
-      @fetch:error="onEntityBaseConfigCardFetchError"
+      @fetch:error="onFetchError"
       @fetch:success="handleData"
-      @loading="(v) => emit('loading', v)"
+      @loading="onLoadingChange"
     >
       <template #type>
         <div>{{ redisTypeText }}</div>
@@ -243,7 +145,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, onMounted, ref, useId, watch } from 'vue'
-import { isAxiosError, type AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 import type {
   ConfigurationSchema,
   ConfigurationSchemaItem,
@@ -253,15 +155,12 @@ import {
   ConfigurationSchemaSection,
   ConfigurationSchemaType,
   EntityBaseConfigCard,
-  JsonCodeBlock,
   SupportedEntityType,
-  TerraformCodeBlock,
   highlightCodeBlock,
   useAxios,
 } from '@kong-ui-public/entities-shared'
-import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { ChevronRightIcon, ChevronUpIcon, ProgressIcon } from '@kong/icons'
-import { KAlert, KButton, KCodeBlock, KCollapse, KLabel, KSelect, KSkeleton } from '@kong/kongponents'
+import { KCodeBlock, KSegmentedControl, KSkeleton, KTooltip } from '@kong/kongponents'
+import type { SegmentedControlOption } from '@kong/kongponents'
 import type {
   DetailLayout,
   KonnectRedisConfigurationEntityConfig,
@@ -327,7 +226,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  /** Nested partial card only: skips managed (add-on + collapse) layout */
+  /** Nested partial card only: skips managed (add-on + segment) layout */
   disableKonnectManagedDetail: {
     type: Boolean,
     default: false,
@@ -335,30 +234,23 @@ const props = defineProps({
 })
 
 /**
- * fetch:success` - Koko redis partial (`RedisConfigurationResponse`)
+ * `fetch:success` - Koko redis partial (`RedisConfigurationResponse`)
  * Konnect-managed redis loads Cloud Gateways add-ons as the primary entity; that payload is emitted
  * separately via `fetch:managed-add-on-success` to avoid confusion with legacy partial payload
  */
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:error', error: AxiosError): void
-  (e: 'fetch:not-found', error: AxiosError): void
   (e: 'fetch:success', data: RedisConfigurationResponse): void
   (e: 'fetch:managed-add-on-success', data: ManagedCacheAddOn): void
 }>()
 
-const emitFetchNotFound = (error: AxiosError): void => {
-  emit('fetch:not-found', error)
+const onFetchError = (error: AxiosError): void => {
+  emit('fetch:error', error)
 }
 
-// Host app treat `fetch:error` as fatal navigation. After Konnect-managed Redis is deleted,
-// `GET …/add-ons/{id}` returns 404, surface `fetch:not-found` instead
-const onEntityBaseConfigCardFetchError = (error: AxiosError): void => {
-  if (isAxiosError(error) && error.response?.status === 404) {
-    emitFetchNotFound(error)
-    return
-  }
-  emit('fetch:error', error)
+const onLoadingChange = (isLoading: boolean): void => {
+  emit('loading', isLoading)
 }
 
 const { i18n: { t } } = composables.useI18n()
@@ -423,121 +315,66 @@ const cloudGatewaysBase = computed((): string => {
 
 const detailLayout = ref<DetailLayout>('legacy')
 const addOnIdForCacheFetch = ref('')
-const linkedPartialIdForCollapse = ref<string | null>(null)
-const partialSectionCollapsed = ref(true)
+const linkedPartialId = ref<string | null>(null)
 
 // Add-on state from GET add-on
 const managedAddOnState = ref<CloudGatewaysAddOnState | null>(null)
 
-const showNestedPartialConfiguration = computed((): boolean => {
-  const state = managedAddOnState.value
-  if (state === 'ready') {
-    return true
-  }
-
-  if (state === null) {
-    return !!linkedPartialIdForCollapse.value
-  }
-
-  if (state === 'initializing' || state === 'terminating') {
-    return false
-  }
-
-  return !!linkedPartialIdForCollapse.value
-})
-
-// Spinner row instead of nested partial when add-on is not in Ready state
-const showPartialTransitionalUi = computed((): boolean => !showNestedPartialConfiguration.value)
-
-const partialTransitionalKind = computed((): 'provisioning' | 'terminating' => (
-  managedAddOnState.value === 'terminating' ? 'terminating' : 'provisioning'
-))
-
-const isPartialNonReadyState = computed((): boolean =>
-  managedAddOnState.value === 'initializing' || managedAddOnState.value === 'terminating',
+// EntityBaseConfigCard fetches once on mount; include state so poll transitions refetch cache fields
+const cacheConfigCardKey = computed(
+  () => `${addOnIdForCacheFetch.value}:${managedAddOnState.value ?? 'unknown'}`,
 )
 
-const partialTransitionalMessage = computed((): string =>
-  partialTransitionalKind.value === 'terminating'
-    ? t('config_card.partial.terminating_value')
-    : t('config_card.partial.provisioning_value'),
-)
+type ConfigSegment = 'cache' | 'partial'
+const activeSegment = ref<ConfigSegment>('cache')
 
-// Placeholder field keys for managed-cache partial only (not self-managed Redis variants)
-const partialTransitionalFieldKeys = [
-  'id',
-  'name',
-  'type',
-  'cluster_max_redirections',
-  'connection_is_proxied',
-  'database',
-  'host',
-  'port',
-  'ssl',
-  'ssl_verify',
-  'keepalive_backlog',
-  'keepalive_pool_size',
-  'read_timeout',
-  'send_timeout',
-  'connect_timeout',
-  'cloud_authentication',
-] as const
+const isPartialReady = computed(() => managedAddOnState.value === 'ready')
 
-const partialTransitionalFields = computed((): Array<{ key: string, label: string }> => {
-  // Keep placeholder rows aligned with the legacy partial schema labels
-  return partialTransitionalFieldKeys
-    .filter((key) => key !== 'cloud_authentication' || konnectCloudAuthAvailable.value)
-    .map((key) => ({
-      key,
-      label: configSchema.value[key]?.label || key,
-    }))
+const partialSegmentTooltip = computed((): string => {
+  switch (managedAddOnState.value) {
+    case 'initializing':
+      return t('config_card.managed_state.initializing_tooltip')
+    case 'terminating':
+      return t('config_card.managed_state.terminating_tooltip')
+    default:
+      return ''
+  }
 })
 
-// Konnect managed Redis partial collapse
-type PartialTransitionalFormat = 'structured' | 'json' | 'terraform'
+const isPartialSegmentTooltipDisabled = computed(
+  () => isPartialReady.value || !partialSegmentTooltip.value,
+)
 
-const partialTransitionalFormat = ref<PartialTransitionalFormat>('structured')
+const isTooltipDisabled = (option: SegmentedControlOption<ConfigSegment>): boolean =>
+  option.value !== 'partial' || isPartialSegmentTooltipDisabled.value
 
-const partialTransitionalFormatItems = computed((): Array<{ label: string, value: PartialTransitionalFormat }> => [
-  { label: t('config_card.partial.format_structured'), value: 'structured' },
-  { label: t('config_card.partial.format_json'), value: 'json' },
-  { label: t('config_card.partial.format_terraform'), value: 'terraform' },
+const configSegmentOptions = computed((): Array<SegmentedControlOption<ConfigSegment>> => [
+  { label: t('config_card.sections.cache_configuration'), value: 'cache' },
+  {
+    label: t('config_card.sections.partial_configuration'),
+    value: 'partial',
+    disabled: !isPartialReady.value,
+  },
 ])
 
-const partialTransitionalCodeRecord = computed((): Record<string, string> => {
-  // Code-format placeholders are string-only because syntax highlighters can't render Vue spinners inline
-  const msg = partialTransitionalMessage.value
-  return Object.fromEntries(partialTransitionalFields.value.map(({ key }) => [key, msg]))
+// Host polls add-on state on the detail page, keep segment in sync, skip while host is still loading
+const hostManagedAddOnState = computed((): CloudGatewaysAddOnState | undefined => {
+  if (!isManagedKonnectDetailEnabled.value || props.config.app !== 'konnect') return undefined
+  return (props.config as KonnectRedisConfigurationEntityConfig).managedAddOnState
 })
 
-const partialFormatPreferenceKey = computed((): string | undefined =>
-  innerPartialCardConfig.value.formatPreferenceKey,
-)
-
-watch(partialTransitionalFormat, (format: PartialTransitionalFormat) => {
-  if (partialFormatPreferenceKey.value) {
-    localStorage.setItem(partialFormatPreferenceKey.value, format)
+watch(hostManagedAddOnState, (state) => {
+  if (state !== undefined) {
+    managedAddOnState.value = state
   }
 })
 
-watch(partialTransitionalFormatItems, (items) => {
-  const allowed = items.map(item => item.value)
-  if (!allowed.includes(partialTransitionalFormat.value)) {
-    partialTransitionalFormat.value = items[0]?.value ?? 'structured'
+// Partial stays disabled until ready
+watch(managedAddOnState, (state) => {
+  if (state !== 'ready') {
+    activeSegment.value = 'cache'
   }
 })
-
-watch(isPartialNonReadyState, (isNonReady) => {
-  if (isNonReady) {
-    partialSectionCollapsed.value = true
-  }
-})
-
-const partialCollapseTriggerLabel = computed((): string =>
-  partialSectionCollapsed.value
-    ? t('config_card.collapse.show_partial')
-    : t('config_card.collapse.hide_partial'),
-)
 
 // The same Cloud Gateway add-on response powers 3 outputs:
 // Structured tab: `addOnRecordResolver` maps and filters API fields for card display
@@ -570,27 +407,8 @@ onMounted(() => {
     return
   }
 
-  // Partial format (Structured /JSON /TR): use the same localStorage key as the nested
-  // EntityBaseConfigCard (`innerPartialCardConfig.formatPreferenceKey`) so the user's choice
-  // while provisioning matches the tab when the add-on becomes ready
-  const formatItems = partialTransitionalFormatItems.value
-  const fallbackFormat = formatItems[0]?.value ?? 'structured'
-  const preferenceKey = partialFormatPreferenceKey.value
-
-  if (!preferenceKey) {
-    partialTransitionalFormat.value = fallbackFormat
-  } else {
-    const storedFormat = localStorage.getItem(preferenceKey) as PartialTransitionalFormat | null
-    if (storedFormat && formatItems.some(item => item.value === storedFormat)) {
-      partialTransitionalFormat.value = storedFormat
-    } else {
-      partialTransitionalFormat.value = fallbackFormat
-    }
-    localStorage.setItem(preferenceKey, partialTransitionalFormat.value)
-  }
-
   void (async () => {
-    emit('loading', true)
+    onLoadingChange(true)
 
     const k = props.config as KonnectRedisConfigurationEntityConfig
     const routeEntityId = k.entityId
@@ -606,12 +424,8 @@ onMounted(() => {
 
       if (addOnFromRouteId) {
         addOnIdForCacheFetch.value = addOnFromRouteId.id
-        linkedPartialIdForCollapse.value = getCacheConfigId(addOnFromRouteId) ?? null
-        // Lifecycle state from prefetch
+        linkedPartialId.value = getCacheConfigId(addOnFromRouteId) ?? null
         managedAddOnState.value = addOnFromRouteId.state ?? null
-        partialSectionCollapsed.value = isPartialNonReadyState.value
-          ? true
-          : linkedPartialIdForCollapse.value !== null
         detailLayout.value = 'managed'
         return
       }
@@ -636,10 +450,8 @@ onMounted(() => {
 
         if (addOnForPartial && isManagedCacheAddOn(addOnForPartial)) {
           addOnIdForCacheFetch.value = addOnForPartial.id
-          linkedPartialIdForCollapse.value = routeEntityId
-          // Route opened with Koko partial id; same lifecycle rules as direct add-on
+          linkedPartialId.value = routeEntityId
           managedAddOnState.value = addOnForPartial.state ?? null
-          partialSectionCollapsed.value = true
           detailLayout.value = 'managed'
           return
         }
@@ -647,7 +459,7 @@ onMounted(() => {
     } catch {
       // fall back to legacy partial-only card
     } finally {
-      emit('loading', false)
+      onLoadingChange(false)
     }
 
     detailLayout.value = 'legacy'
@@ -670,13 +482,11 @@ const addOnCardRuntimeConfig = computed((): KonnectRedisConfigurationEntityConfi
   }
 })
 
-// Runtime config for nested partial card
 const innerPartialCardConfig = computed((): KonnectRedisConfigurationEntityConfig => {
   const k = props.config as KonnectRedisConfigurationEntityConfig
-  const partialId = linkedPartialIdForCollapse.value ?? k.entityId
   return {
     ...k,
-    entityId: partialId,
+    entityId: linkedPartialId.value ?? k.entityId,
     formatPreferenceKey: k.formatPreferenceKey ? `${k.formatPreferenceKey}_managed_partial` : undefined,
   }
 })
@@ -699,18 +509,16 @@ const onCacheAddOnLoaded = (data: Record<string, any>): void => {
   setManagedAddOnSchemaFromDisplayRecord(display)
 
   if (isManagedCacheAddOn(row)) {
-    // Keep partial UI in sync when add-on transitions
     managedAddOnState.value = row.state ?? null
-    const nextLinkedPartialId = getCacheConfigId(row) ?? null
-    if (nextLinkedPartialId && linkedPartialIdForCollapse.value !== nextLinkedPartialId) {
-      linkedPartialIdForCollapse.value = nextLinkedPartialId
+    const partialId = getCacheConfigId(row)
+    if (partialId) {
+      linkedPartialId.value = partialId
     }
     emit('fetch:managed-add-on-success', row)
   }
 }
 
-// Nested legacy partial config card
-const onPartialNestedLoaded = (data: RedisConfigurationResponse) => {
+const onPartialLoaded = (data: RedisConfigurationResponse): void => {
   emit('fetch:success', data)
 }
 
@@ -1079,8 +887,14 @@ const configSchema = computed<ConfigurationSchema>(() => {
 
 <style lang="scss" scoped>
 .managed-konnect-redis-detail {
-  .redis-managed-state-alert {
+  .redis-config-segment {
     margin-bottom: var(--kui-space-60, $kui-space-60);
+    width: fit-content;
+
+    :deep(.k-segmented-control) {
+      // Override for compact pill layout
+      width: fit-content !important;
+    }
   }
 
   // Fills the config card value column
@@ -1114,114 +928,9 @@ const configSchema = computed<ConfigurationSchema>(() => {
     width: 75%;
   }
 
-  :deep(.config-card-details-after) {
-    padding-left: var(--kui-space-0, $kui-space-0);
-    padding-top: var(--kui-space-60, $kui-space-60);
-  }
-
-  :deep(.redis-kcollapse .collapse-heading) {
-    margin-bottom: var(--kui-space-0, $kui-space-0);
-  }
-
-  :deep(.redis-kcollapse .collapse-hidden-content) {
-    margin-top: var(--kui-space-0, $kui-space-0);
-  }
-
-  :deep(.redis-nested-detail .kong-ui-entity-base-config-card.k-card) {
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-    padding-left: var(--kui-space-0, $kui-space-0);
-    padding-right: var(--kui-space-0, $kui-space-0);
-  }
-
   /* JsonArray fieldset legends (e.g. data plane groups): medium weight; keep global JsonCardItem unchanged */
   :deep(.config-card-fieldset-title b) {
     font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
   }
-
-  /* Tertiary KButton: no hover/active highlight */
-  :deep(.redis-collapse-trigger) {
-    &:hover:not(:disabled),
-    &:active:not(:disabled) {
-      background-color: transparent !important;
-      box-shadow: none !important;
-      color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
-    }
-  }
-}
-
-.redis-expand-body {
-  margin-top: var(--kui-space-0, $kui-space-0);
-}
-
-.redis-provisioning {
-  width: 100%;
-}
-
-.redis-head {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: var(--kui-space-60, $kui-space-60);
-}
-
-.redis-title {
-  color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
-  font-size: var(--kui-font-size-40, $kui-font-size-40);
-  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-}
-
-.redis-actions {
-  align-items: center;
-  display: flex;
-  gap: var(--kui-space-40, $kui-space-40);
-}
-
-.redis-format-label {
-  margin-bottom: var(--kui-space-0, $kui-space-0);
-}
-
-.redis-transitional {
-  border-top: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
-  width: 100%;
-}
-
-.redis-row {
-  border-bottom: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
-  display: flex;
-  width: 100%;
-}
-
-.redis-lbl {
-  box-sizing: border-box;
-  color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-  padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-60, var(--kui-space-0, $kui-space-0));
-  width: 25%;
-}
-
-.redis-val {
-  align-items: center;
-  box-sizing: border-box;
-  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
-  display: flex;
-  gap: var(--kui-space-30, $kui-space-30);
-  min-height: 48px;
-  padding: var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0);
-  width: 75%;
-}
-
-.redis-val > span:last-child {
-  min-width: 0;
-  overflow-wrap: anywhere;
-  width: 100%;
-}
-
-.redis-code {
-  border-top: solid var(--kui-border-width-10, $kui-border-width-10) var(--kui-color-border, $kui-color-border);
-  padding-top: var(--kui-space-40, $kui-space-40);
-  width: 100%;
 }
 </style>

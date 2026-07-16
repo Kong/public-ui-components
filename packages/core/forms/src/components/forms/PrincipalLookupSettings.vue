@@ -4,125 +4,153 @@
     data-testid="principals-advanced-settings"
     trigger-label="Show additional settings"
   >
-    <slot name="banner" />
-    <div
-      v-if="showEnableToggle"
-      class="principals-field-group"
-    >
-      <KInputSwitch
-        data-testid="use-principal-lookup"
-        :disabled="disabled"
-        label="Use principal lookup"
-        :model-value="lookupEnabled"
-        @update:model-value="handleEnableToggle"
+    <!-- Principal-lookup-specific content requires directories access; sibling advanced
+         settings (e.g. OIDC auth methods, in the default slot below) are unrelated and
+         always render regardless of this permission. -->
+    <template v-if="showPrincipalsFields">
+      <slot name="banner" />
+      <KAlert
+        v-if="dataPlaneIncompatible"
+        appearance="warning"
+        class="principals-dp-version-alert"
+        data-testid="oidc-principals-dp-version-alert"
+        message="We detected that one or more data plane nodes are running a version earlier than 3.15. If principal lookup is enabled, requests handled by those data plane nodes will fail."
+        show-icon
       />
-    </div>
-    <div class="principals-field-group">
-      <KSelect
-        class="principals-lookup-method-select"
-        data-testid="principals-lookup-method"
-        :disabled="fieldsDisabled"
-        :items="lookupMethodItems"
-        label="Principal lookup method"
-        :model-value="selectedLookupMethod"
-        placeholder="Select a lookup method"
-        @update:model-value="handleLookupMethodChange"
+      <div
+        v-if="showEnableToggle"
+        class="principals-field-group"
       >
-        <template #item-template="{ item }">
-          <div class="lookup-method-item">
-            <div class="lookup-method-item-label">
-              {{ item.label }}
+        <KInputSwitch
+          data-testid="use-principal-lookup"
+          :disabled="disabled"
+          :model-value="lookupEnabled"
+          @update:model-value="handleEnableToggle"
+        >
+          <template #label>
+            <KLabel
+              info="Look up the authenticated principal in Kong Identity after token validation. Enable this when the validated token doesn’t contain all of the identity data required for authorization or activity logging."
+              :tooltip-attributes="{ maxWidth: '300' }"
+            >
+              Use principal lookup
+            </KLabel>
+          </template>
+        </KInputSwitch>
+      </div>
+      <div class="principals-field-group">
+        <KSelect
+          class="principals-lookup-method-select"
+          data-testid="principals-lookup-method"
+          :disabled="fieldsDisabled"
+          help="Principal lookup queries Kong Identity for the principal that matches the identity in a verified access token. This enables principal-aware policies and integrations. Requires all data plane nodes to be running version 3.15 or later."
+          :items="lookupMethodItems"
+          label="Principal lookup method"
+          :model-value="selectedLookupMethod"
+          placeholder="Select a lookup method"
+          @update:model-value="handleLookupMethodChange"
+        >
+          <template #item-template="{ item }">
+            <div class="lookup-method-item">
+              <div class="lookup-method-item-label">
+                {{ item.label }}
+              </div>
+              <div class="lookup-method-item-description">
+                {{ item.description }}
+              </div>
             </div>
-            <div class="lookup-method-item-description">
-              {{ item.description }}
-            </div>
-          </div>
-        </template>
-      </KSelect>
+          </template>
+        </KSelect>
 
-      <template v-if="selectedLookupMethod === 'custom-identity'">
+        <template v-if="selectedLookupMethod === 'custom-identity'">
+          <KInput
+            class="principals-custom-identity-name-input"
+            data-testid="principals-custom-identity-name"
+            :disabled="fieldsDisabled"
+            help="Enter the custom identity name used to look up the principal. Kong matches the value from the token claim to a principal with the same custom identity name and value."
+            label="Custom identity name"
+            :model-value="formModel['config-principals-principal_by']"
+            placeholder="e.g., Customer_ID"
+            @update:model-value="updateField('config-principals-principal_by', $event)"
+          />
+        </template>
+
         <KInput
-          data-testid="principals-custom-identity-name"
+          class="principals-token-claim-input"
+          data-testid="principals-token-claim"
           :disabled="fieldsDisabled"
-          help="Enter the custom identity name used to look up the principal. Kong matches the value from the token claim to a principal with the same custom identity name and value."
-          label="Custom Identity name"
-          :model-value="formModel['config-principals-principal_by']"
-          placeholder="e.g., Customer_ID"
-          @update:model-value="updateField('config-principals-principal_by', $event)"
-        />
-        <KInput
-          data-testid="principals-identifier-claim"
-          :disabled="fieldsDisabled"
-          help="Enter the token claim used to identify the principal. Use dot notation for nested claims (for example, workload.id). Escape periods in claim names with \ (for example, workload\.id)."
-          label="Identifier claim"
-          :model-value="getIdentifierClaimInputValue()"
+          :help="tokenClaimHelp"
+          label="Token claim"
+          :model-value="getTokenClaimInputValue()"
           placeholder="e.g., user.employee_id"
-          @update:model-value="handleIdentifierClaimChange($event)"
+          @update:model-value="handleTokenClaimChange($event)"
         />
-      </template>
-    </div>
-    <div class="principals-field-group">
-      <KLabel>If principal lookup fails</KLabel>
-      <KRadio
-        data-testid="principals-error-on-miss-true"
-        description="Treat the request as unauthenticated if Kong Identity cannot resolve the principal."
-        :disabled="fieldsDisabled"
-        label="Reject the request"
-        :model-value="formModel['config-principals-error_on_miss']"
-        :selected-value="true"
-        @change="updateField('config-principals-error_on_miss', true)"
-      />
-      <KRadio
-        data-testid="principals-error-on-miss-false"
-        description="Allow the request to continue without resolving a principal."
-        :disabled="fieldsDisabled"
-        label="Continue without a principal"
-        :model-value="formModel['config-principals-error_on_miss']"
-        :selected-value="false"
-        @change="updateField('config-principals-error_on_miss', false)"
-      />
-    </div>
+      </div>
+      <div class="principals-field-group">
+        <KLabel>If principal lookup fails</KLabel>
+        <KRadio
+          data-testid="principals-error-on-miss-true"
+          description="Treat the request as unauthenticated if Kong Identity cannot resolve the principal."
+          :disabled="fieldsDisabled"
+          label="Reject the request"
+          :model-value="formModel['config-principals-error_on_miss']"
+          :selected-value="true"
+          @change="updateField('config-principals-error_on_miss', true)"
+        />
+        <KRadio
+          data-testid="principals-error-on-miss-false"
+          description="Allow the request to continue without resolving a principal."
+          :disabled="fieldsDisabled"
+          label="Continue without a principal"
+          :model-value="formModel['config-principals-error_on_miss']"
+          :selected-value="false"
+          @change="updateField('config-principals-error_on_miss', false)"
+        />
+      </div>
 
-    <div class="principals-field-group">
-      <KCheckbox
-        data-testid="principals-match-consumer"
-        :disabled="fieldsDisabled"
-        :model-value="formModel['config-principals-match_consumer']"
-        @update:model-value="handleMatchConsumerChange($event)"
-      >
-        Use linked consumers
-        <template #description>
-          Use the consumer linked to the authenticated principal so existing consumer-based plugins and policies continue to work.
-          <a
-            href="https://developer.konghq.com/identity/principals/"
-            rel="noopener noreferrer"
-            target="_blank"
-          >Learn how to link a consumer.</a>
-        </template>
-      </KCheckbox>
-    </div>
+      <div class="principals-field-group">
+        <KCheckbox
+          data-testid="principals-match-consumer"
+          :disabled="fieldsDisabled"
+          :model-value="formModel['config-principals-match_consumer']"
+          @update:model-value="handleMatchConsumerChange($event)"
+        >
+          Use linked consumers
+          <template #description>
+            Use the consumer linked to the authenticated principal so existing consumer-based plugins and policies continue to work.
+            <a
+              class="principals-learn-more-link"
+              href="https://developer.konghq.com/identity/principals/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >Learn how to link a consumer.</a>
+          </template>
+        </KCheckbox>
+      </div>
 
-    <div class="principals-field-group">
-      <KCheckbox
-        data-testid="principals-match-consumer-groups"
-        :disabled="fieldsDisabled || !formModel['config-principals-match_consumer']"
-        :model-value="formModel['config-principals-match_consumer_groups']"
-        @update:model-value="updateField('config-principals-match_consumer_groups', $event)"
-      >
-        Use linked consumer groups
-        <template #description>
-          Use consumer groups linked to the authenticated principal so existing consumer group policies and plugins continue to work. Consumer groups can be linked through principal metadata.
-          <a
-            href="https://developer.konghq.com/identity/principals/"
-            rel="noopener noreferrer"
-            target="_blank"
-          >Learn how to link a consumer group.</a>
-        </template>
-      </KCheckbox>
-    </div>
+      <div class="principals-field-group">
+        <KCheckbox
+          data-testid="principals-match-consumer-groups"
+          :disabled="fieldsDisabled || !formModel['config-principals-match_consumer']"
+          :model-value="formModel['config-principals-match_consumer_groups']"
+          @update:model-value="updateField('config-principals-match_consumer_groups', $event)"
+        >
+          Use linked consumer groups
+          <template #description>
+            Use consumer groups linked to the authenticated principal so existing consumer group policies and plugins continue to work. Consumer groups can be linked through principal metadata.
+            <a
+              class="principals-learn-more-link"
+              href="https://developer.konghq.com/identity/principals/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >Learn how to link a consumer group.</a>
+          </template>
+        </KCheckbox>
+      </div>
+    </template>
 
     <!-- Host slot for sibling advanced settings (e.g. OIDC auth methods) so the form
-         shows a single "additional settings" section instead of multiple collapses. -->
+         shows a single "additional settings" section instead of multiple collapses.
+         Always rendered — unrelated to principals/directories access. -->
     <slot />
   </KCollapse>
 </template>
@@ -132,7 +160,7 @@ const lookupMethodItems = [
   {
     label: 'Kong Identity client',
     value: 'kong-identity',
-    description: 'Match principals using the client ID from the token subject (sub) claim.',
+    description: 'Match principals using a token claim, defaulting to the subject (sub) claim.',
   },
   {
     label: 'Custom claim',
@@ -154,7 +182,10 @@ const hasValue = value => {
 }
 
 const inferInitialLookupMethod = (formModel) => {
-  if (hasValue(formModel['config-principals-principal_claim']) || hasValue(formModel['config-principals-principal_by'])) {
+  // principal_by is the true discriminator: it's only set for a custom-identity
+  // (type=custom) lookup. A principal_claim on its own is just an OIDC lookup
+  // against a non-`sub` claim, which is still the kong-identity method.
+  if (hasValue(formModel['config-principals-principal_by'])) {
     return 'custom-identity'
   }
 
@@ -178,17 +209,30 @@ export default {
       type: Boolean,
       default: false,
     },
-    // External mode renders a "Use principal lookup" opt-in toggle; Kong Identity mode
-    // pins lookup on and omits it.
+    // Whether to render the "Use principal lookup" opt-in toggle. Both Kong Identity and
+    // External modes render it; lookup is off by default in either mode until enabled here.
     showEnableToggle: {
       type: Boolean,
       default: false,
     },
-    // Called when the opt-in toggle changes (External mode); the parent owns flipping
+    // Called when the opt-in toggle changes; the parent owns flipping
     // config-principals-enabled and re-checking the directory.
     onEnabledChange: {
       type: Function,
       default: undefined,
+    },
+    // Whether a connected data plane node can't process Kong Identity principals
+    // (Gateway 3.15+ required). Shown above the toggle once lookup is enabled.
+    dataPlaneIncompatible: {
+      type: Boolean,
+      default: false,
+    },
+    // Whether the principal-lookup-specific content (banner, toggle, lookup method,
+    // error-on-miss, linked consumer settings) renders at all — gated by directories
+    // access at the call site. The default slot (e.g. OIDC auth methods) is unaffected.
+    showPrincipalsFields: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {
@@ -205,6 +249,24 @@ export default {
     fieldsDisabled() {
       return this.disabled || !this.lookupEnabled
     },
+    // principal_claim is the value source in both modes (default `sub`), but in
+    // custom-identity mode that value is matched against the Custom identity name,
+    // so call out the pairing there.
+    tokenClaimHelp() {
+      const dotNotation = 'Use dot notation for nested claims (for example, workload.id); escape literal periods with \\ (for example, workload\\.id).'
+      if (this.selectedLookupMethod === 'custom-identity') {
+        return `The token claim whose value is matched against the Custom identity name. Defaults to the subject (sub) claim, but you can specify a different claim if needed. ${dotNotation}`
+      }
+      return `Defaults to the subject (sub) claim, but you can specify a different token claim if needed. ${dotNotation}`
+    },
+  },
+  created() {
+    // One-time prefill: if principal_claim has never been set, write the gateway
+    // default `sub` into the model so users see it explicitly rather than an
+    // implicit default. Only fires once, on creation — later clears stay cleared.
+    if (!hasValue(this.formModel['config-principals-principal_claim'])) {
+      this.updateField('config-principals-principal_claim', ['sub'])
+    }
   },
   methods: {
     handleEnableToggle(enabled) {
@@ -212,15 +274,18 @@ export default {
         this.onEnabledChange(enabled)
       }
     },
-    getIdentifierClaimInputValue() {
+    getTokenClaimInputValue() {
       const claim = this.formModel['config-principals-principal_claim']
-      if (Array.isArray(claim)) {
+      if (Array.isArray(claim) && claim.length > 0) {
         // Escape literal dots within each part before joining
         return claim.map(part => part.replace(/\./g, '\\.')).join('.')
       }
-      return claim || ''
+      if (typeof claim === 'string' && claim) {
+        return claim
+      }
+      return ''
     },
-    handleIdentifierClaimChange(rawValue) {
+    handleTokenClaimChange(rawValue) {
       const value = typeof rawValue === 'string' ? rawValue.trim() : ''
       if (!value) {
         this.updateField('config-principals-principal_claim', [])
@@ -269,16 +334,37 @@ export default {
   .principals-lookup-method-select :deep(.k-label) {
     margin-top: 0;
   }
-
-  .k-label {
-    margin-top: var(--kui-space-0, $kui-space-0);
-  }
 }
 
 .principals-field-group {
   display: flex;
   flex-direction: column;
   gap: var(--kui-space-40, $kui-space-40);
+
+  .principals-token-claim-input,
+  .principals-custom-identity-name-input {
+    margin-top: var(--kui-space-40, $kui-space-40);
+  }
+
+  .principals-learn-more-link {
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    gap: var(--kui-space-20, $kui-space-20);
+    outline: none;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
+    }
+
+    &:focus-visible {
+      color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+    }
+
+    &:active {
+      color: var(--kui-color-text-primary-strongest, $kui-color-text-primary-strongest);
+    }
+  }
 }
 
 .lookup-method-item {

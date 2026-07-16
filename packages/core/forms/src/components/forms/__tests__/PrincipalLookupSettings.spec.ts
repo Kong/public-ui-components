@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
+import { beforeAll, describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import PrincipalLookupSettings from '../PrincipalLookupSettings.vue'
+import Kongponents from '@kong/kongponents'
 
 function buildFormModel(overrides = {}) {
   return {
@@ -22,10 +23,23 @@ function mountComponent(formModelOverrides = {}, propsOverrides: Record<string, 
       onModelUpdated: vi.fn(),
       ...propsOverrides,
     },
+    global: {
+      plugins: [Kongponents],
+    },
   })
 }
 
 describe('PrincipalLookupSettings', () => {
+  beforeAll(() => {
+    class ResizeObserver {
+      constructor() {}
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    }
+    (global as any).ResizeObserver = ResizeObserver
+  })
+
   describe('initial lookup method', () => {
     it('defaults to kong-identity when principal fields are empty', () => {
       const wrapper = mountComponent({
@@ -36,12 +50,21 @@ describe('PrincipalLookupSettings', () => {
       expect((wrapper.vm as any).selectedLookupMethod).toBe('kong-identity')
     })
 
-    it('infers custom-identity when principal_by or principal_claim is set', () => {
+    it('infers custom-identity when principal_by is set', () => {
       const wrapper = mountComponent({
         'config-principals-principal_by': 'Customer_ID',
       })
 
       expect((wrapper.vm as any).selectedLookupMethod).toBe('custom-identity')
+    })
+
+    it('infers kong-identity when only principal_claim is set (OIDC lookup against a non-sub claim)', () => {
+      const wrapper = mountComponent({
+        'config-principals-principal_by': null,
+        'config-principals-principal_claim': ['user', 'employee_id'],
+      })
+
+      expect((wrapper.vm as any).selectedLookupMethod).toBe('kong-identity')
     })
   })
 
@@ -73,7 +96,9 @@ describe('PrincipalLookupSettings', () => {
 
       expect((wrapper.vm as any).selectedLookupMethod).toBe('custom-identity')
       expect(formModel['config-principals-principal_by']).toBeNull()
-      expect(formModel['config-principals-principal_claim']).toBeNull()
+      // principal_claim was already pre-filled with `sub` on mount; switching to
+      // custom-identity doesn't touch it.
+      expect(formModel['config-principals-principal_claim']).toEqual(['sub'])
     })
   })
 
@@ -108,12 +133,12 @@ describe('PrincipalLookupSettings', () => {
     })
   })
 
-  describe('identifier claim escaping', () => {
+  describe('token claim escaping', () => {
     it('parses simple dot notation into array parts', () => {
       const onModelUpdated = vi.fn()
       const wrapper = mountComponent({ 'config-principals-principal_claim': null }, { onModelUpdated })
 
-      ;(wrapper.vm as any).handleIdentifierClaimChange('user.employee_id')
+      ;(wrapper.vm as any).handleTokenClaimChange('user.employee_id')
 
       expect(wrapper.props('formModel')['config-principals-principal_claim']).toEqual(['user', 'employee_id'])
       expect(onModelUpdated).toHaveBeenCalled()
@@ -122,7 +147,7 @@ describe('PrincipalLookupSettings', () => {
     it('parses escaped dots as literal dots within a part', () => {
       const wrapper = mountComponent()
 
-      ;(wrapper.vm as any).handleIdentifierClaimChange('user.name\\.first')
+      ;(wrapper.vm as any).handleTokenClaimChange('user.name\\.first')
 
       expect(wrapper.props('formModel')['config-principals-principal_claim']).toEqual(['user', 'name.first'])
     })
@@ -130,9 +155,28 @@ describe('PrincipalLookupSettings', () => {
     it('handles empty input', () => {
       const wrapper = mountComponent()
 
-      ;(wrapper.vm as any).handleIdentifierClaimChange('')
+      ;(wrapper.vm as any).handleTokenClaimChange('')
 
       expect(wrapper.props('formModel')['config-principals-principal_claim']).toEqual([])
+    })
+
+    it('pre-fills the default `sub` claim into the model when none is set', () => {
+      const nullWrapper = mountComponent({ 'config-principals-principal_claim': null })
+      expect(nullWrapper.props('formModel')['config-principals-principal_claim']).toEqual(['sub'])
+      expect((nullWrapper.vm as any).getTokenClaimInputValue()).toBe('sub')
+
+      const emptyWrapper = mountComponent({ 'config-principals-principal_claim': [] })
+      expect(emptyWrapper.props('formModel')['config-principals-principal_claim']).toEqual(['sub'])
+      expect((emptyWrapper.vm as any).getTokenClaimInputValue()).toBe('sub')
+    })
+
+    it('does not re-prefill after the user explicitly clears the field', () => {
+      const wrapper = mountComponent({ 'config-principals-principal_claim': null })
+
+      ;(wrapper.vm as any).handleTokenClaimChange('')
+
+      expect(wrapper.props('formModel')['config-principals-principal_claim']).toEqual([])
+      expect((wrapper.vm as any).getTokenClaimInputValue()).toBe('')
     })
 
     it('displays array with literal dots using escape notation', () => {
@@ -140,18 +184,18 @@ describe('PrincipalLookupSettings', () => {
         'config-principals-principal_claim': ['user', 'name.first'],
       })
 
-      expect((wrapper.vm as any).getIdentifierClaimInputValue()).toBe('user.name\\.first')
+      expect((wrapper.vm as any).getTokenClaimInputValue()).toBe('user.name\\.first')
     })
 
     it('round-trips complex claim correctly', () => {
       const wrapper = mountComponent()
       const vm = wrapper.vm as any
 
-      vm.handleIdentifierClaimChange('org\\.name.user.id\\.v2')
+      vm.handleTokenClaimChange('org\\.name.user.id\\.v2')
 
       const formModel = wrapper.props('formModel')
       expect(formModel['config-principals-principal_claim']).toEqual(['org.name', 'user', 'id.v2'])
-      expect(vm.getIdentifierClaimInputValue()).toBe('org\\.name.user.id\\.v2')
+      expect(vm.getTokenClaimInputValue()).toBe('org\\.name.user.id\\.v2')
     })
   })
 
@@ -179,6 +223,25 @@ describe('PrincipalLookupSettings', () => {
     it('enables the lookup fields when principals are enabled and not gated', () => {
       const wrapper = mountComponent({ 'config-principals-enabled': true }, { disabled: false })
       expect((wrapper.vm as any).fieldsDisabled).toBe(false)
+    })
+  })
+
+  describe('data plane version compatibility alert', () => {
+    it('does not show the alert when dataPlaneIncompatible is false', () => {
+      const wrapper = mountComponent({ 'config-principals-enabled': true }, { dataPlaneIncompatible: false })
+
+      expect(wrapper.find('[data-testid="oidc-principals-dp-version-alert"]').exists()).toBe(false)
+    })
+
+    it('shows the alert above the toggle when lookup is enabled and data plane is incompatible', () => {
+      const wrapper = mountComponent(
+        { 'config-principals-enabled': true },
+        { showEnableToggle: true, dataPlaneIncompatible: true },
+      )
+
+      const html = wrapper.html()
+      expect(html.indexOf('oidc-principals-dp-version-alert')).toBeGreaterThan(-1)
+      expect(html.indexOf('oidc-principals-dp-version-alert')).toBeLessThan(html.indexOf('use-principal-lookup'))
     })
   })
 })

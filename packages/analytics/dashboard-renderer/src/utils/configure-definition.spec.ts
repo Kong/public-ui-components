@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { configureAllowedDefinition } from './configure-definition'
 import type { DashboardConfig, TileConfig } from '@kong-ui-public/analytics-utilities'
 
@@ -35,6 +35,23 @@ describe('configureAllowedDefinition', () => {
         metrics: ['kong_latency_average'],
         datasource: 'api_usage',
         dimensions: ['data_plane_node'],
+      },
+    },
+  }
+
+  const mockTableChartTile: TileConfig = {
+    id: 'table_chart_tile_1',
+    type: 'chart',
+    layout: {
+      size: { cols: 3, rows: 2 },
+      position: { col: 0, row: 2 },
+    },
+    definition: {
+      chart: { type: 'table', chart_title: 'Routes' },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['route'],
       },
     },
   }
@@ -106,6 +123,18 @@ describe('configureAllowedDefinition', () => {
       expect(result.tiles[1].definition?.query?.datasource).toBe('api_usage')
     })
 
+    it('should preserve table chart tabular queries', () => {
+      const config: DashboardConfig = {
+        tiles: [mockTableChartTile],
+        tile_height: 167,
+      }
+
+      const result = configureAllowedDefinition(config, true)
+
+      expect(result.tiles).toHaveLength(1)
+      expect(result.tiles[0]).toEqual(mockTableChartTile)
+    })
+
     it('should maintain original tile positions', () => {
       const config: DashboardConfig = {
         tiles: [mockBasicTile, mockApiUsageTile],
@@ -132,12 +161,15 @@ describe('configureAllowedDefinition', () => {
 
   describe('Basic Analytics (Advanced Disabled)', () => {
     it('should filter out api_usage datasource tiles', () => {
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {})
       const config: DashboardConfig = {
         tiles: [mockBasicTile, mockApiUsageTile],
         tile_height: 167,
       }
 
       const result = configureAllowedDefinition(config, false)
+      expect(warnMock).toHaveBeenCalledOnce()
+      warnMock.mockRestore()
 
       expect(result.tiles).toHaveLength(1)
       expect(result.tiles[0].id).toBe('basic_tile_1')
@@ -145,18 +177,46 @@ describe('configureAllowedDefinition', () => {
     })
 
     it('should keep tiles without queries', () => {
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {})
       const config: DashboardConfig = {
         tiles: [mockTileWithoutQuery, mockApiUsageTile],
         tile_height: 167,
       }
 
       const result = configureAllowedDefinition(config, false)
+      expect(warnMock).toHaveBeenCalledOnce()
+      warnMock.mockRestore()
 
       expect(result.tiles).toHaveLength(1)
       expect(result.tiles[0].id).toBe('no_query_tile')
     })
 
+    it('should keep platform table chart tiles', () => {
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const config: DashboardConfig = {
+        tiles: [mockTableChartTile, mockApiUsageTile],
+        tile_height: 167,
+      }
+
+      const result = configureAllowedDefinition(config, false)
+      expect(warnMock).toHaveBeenCalledOnce()
+      warnMock.mockRestore()
+
+      expect(result.tiles).toHaveLength(1)
+      expect(result.tiles[0]).toEqual({
+        ...mockTableChartTile,
+        layout: {
+          ...mockTableChartTile.layout,
+          position: {
+            col: 0,
+            row: 0,
+          },
+        },
+      })
+    })
+
     it('should reposition tiles after filtering', () => {
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {})
       const tile1: TileConfig = {
         ...mockBasicTile,
         id: 'tile_1',
@@ -197,6 +257,8 @@ describe('configureAllowedDefinition', () => {
       }
 
       const result = configureAllowedDefinition(config, false)
+      expect(warnMock).toHaveBeenCalledOnce()
+      warnMock.mockRestore()
 
       expect(result.tiles).toHaveLength(2)
       // First tile should be at position (0, 0)
@@ -279,12 +341,15 @@ describe('configureAllowedDefinition', () => {
     })
 
     it('should return empty tiles array when all tiles are filtered', () => {
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {})
       const config: DashboardConfig = {
         tiles: [mockApiUsageTile],
         tile_height: 167,
       }
 
       const result = configureAllowedDefinition(config, false)
+      expect(warnMock).toHaveBeenCalledOnce()
+      warnMock.mockRestore()
 
       expect(result.tiles).toHaveLength(0)
     })
@@ -333,17 +398,21 @@ describe('configureAllowedDefinition', () => {
     })
 
     it('should preserve tile layout size during repositioning', () => {
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {})
       const config: DashboardConfig = {
         tiles: [mockBasicTile, mockApiUsageTile],
         tile_height: 167,
       }
 
       const result = configureAllowedDefinition(config, false)
+      expect(warnMock).toHaveBeenCalledOnce()
+      warnMock.mockRestore()
 
       expect(result.tiles[0].layout?.size).toEqual({ cols: 3, rows: 2 })
     })
 
     it('should handle mixed datasources correctly in basic tier', () => {
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {})
       const customTile: TileConfig = {
         ...mockBasicTile,
         id: 'custom_tile',
@@ -362,6 +431,8 @@ describe('configureAllowedDefinition', () => {
       }
 
       const result = configureAllowedDefinition(config, false)
+      expect(warnMock).toHaveBeenCalledOnce()
+      warnMock.mockRestore()
 
       expect(result.tiles).toHaveLength(2)
       expect(result.tiles[0].definition?.query?.datasource).toBe('basic')
@@ -452,6 +523,7 @@ describe('configureAllowedDefinition', () => {
     })
 
     it('should correctly process dashboard for basic tier', () => {
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {})
       const runtimeInstancesConfig: DashboardConfig = {
         tiles: [
           {
@@ -493,6 +565,8 @@ describe('configureAllowedDefinition', () => {
       }
 
       const result = configureAllowedDefinition(runtimeInstancesConfig, false)
+      expect(warnMock).toHaveBeenCalledOnce()
+      warnMock.mockRestore()
 
       // Only the basic tile should remain
       expect(result.tiles).toHaveLength(1)

@@ -84,7 +84,6 @@ defineOptions({ name: 'KongIdentityField' })
 
 const props = defineProps<{
   identityRealmsInSchema?: boolean
-  hasExistingRealms?: boolean
   loadingRealms?: boolean
 }>()
 const { i18n } = composables.useI18n()
@@ -98,7 +97,10 @@ const identityRealmsInSchema = computed(() => {
   return !!getSchema('$.config.identity_realms')
 })
 
-const showCentrallyManaged = computed(() => identityRealmsInSchema.value && !!props.hasExistingRealms)
+// Launch decision: Centrally Managed is shown unconditionally whenever the schema
+// supports identity_realms — we intentionally do NOT hide it when no realms exist yet.
+// Hiding it (platform-wide) is deferred to a fast-follow.
+const showCentrallyManaged = computed(() => identityRealmsInSchema.value)
 
 const descriptionText = computed(() => {
   return identityRealmsInSchema.value
@@ -130,8 +132,8 @@ function handleModeChange(mode: AuthMode) {
 
   switch (mode) {
     case 'kong-identity': {
-      // `directory` is a placeholder; ConfigFormContent resolves the real directory name
-      // from the shared /v2/directories lookup and overwrites it on entering this mode.
+      // `directory` starts as 'default'; ConfigFormContent's selectedMode watcher overwrites it
+      // with the host-resolved principalsDirectoryName once this mode change is detected.
       formData.config.principals = { ...getEmptyOrDefault('$.config.principals'), enabled: true, directory: 'default' }
       if (identityRealmsInSchema.value) {
         formData.config.identity_realms = []
@@ -169,10 +171,21 @@ function handleModeChange(mode: AuthMode) {
 
 .kong-identity-learn-more {
   color: var(--kui-color-text-primary, $kui-color-text-primary);
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  gap: var(--kui-space-20, $kui-space-20);
+  outline: none;
   text-decoration: none;
 
   &:hover {
-    text-decoration: underline;
+    color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
+  }
+
+  &:focus-visible {
+    color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+  }
+
+  &:active {
+    color: var(--kui-color-text-primary-strongest, $kui-color-text-primary-strongest);
   }
 }
 

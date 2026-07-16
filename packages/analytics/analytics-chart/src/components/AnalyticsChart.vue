@@ -108,7 +108,7 @@ import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DonutChart from './chart-types/DonutChart.vue'
 import { computed, provide, toRef } from 'vue'
-import { msToGranularity } from '@kong-ui-public/analytics-utilities'
+import { isPlatformDatasource, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { hasMillisecondTimestamps, defaultStatusCodeColors, isNoSuffixMetric } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
@@ -309,7 +309,7 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
 })
 
 const timestampAxisTitle = computed(() => {
-  if (props.chartData.meta.datasource === 'platform') {
+  if (isPlatformDatasource(props.chartData.meta.datasource)) {
     return i18n.t('timestampAxisTitles.platform')
   }
 
@@ -440,7 +440,7 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 
   .chart-truncation-warning {
     align-items: center;
-    background-color: white;
+    background-color: var(--kui-color-background, $kui-color-background);
     display: flex;
     justify-content: flex-start;
     left: 0;

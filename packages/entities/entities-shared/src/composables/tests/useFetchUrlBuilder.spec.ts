@@ -92,6 +92,26 @@ describe('useFetchUrlBuilder()', () => {
     expect(builder(query)).toBe('http://foo.bar/entity/testQuery')
   })
 
+  it('should apply fuzzy multi-field passthrough for konnect when isExactMatch is explicitly false', () => {
+    const config = {
+      apiBaseUrl: '/',
+      app: 'konnect',
+      controlPlaneId: 'default',
+      isExactMatch: false,
+    } as KonnectConfig
+
+    const builder = useFetchUrlBuilder(config, 'http://foo.bar/entity')
+
+    const query: TableDataFetcherParams = {
+      page: 1,
+      pageSize: 10,
+      offset: '0',
+      query: 'filter[name][contains]=foo&filter[enabled]=true',
+    }
+
+    expect(builder(query)).toBe('http://foo.bar/entity?filter%5Bname%5D%5Bcontains%5D=foo&filter%5Benabled%5D=true&size=10')
+  })
+
   it('should preserve base URL query params in the exact match URL for konnect', () => {
     const config = {
       apiBaseUrl: '/',

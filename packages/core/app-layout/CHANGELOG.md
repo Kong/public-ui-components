@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.12.0...@kong-ui-public/app-layout@4.13.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [4.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.36...@kong-ui-public/app-layout@4.12.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+## [4.11.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.35...@kong-ui-public/app-layout@4.11.36) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.11.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.34...@kong-ui-public/app-layout@4.11.35) (2026-06-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.60.0 ([#3509](https://github.com/Kong/public-ui-components/issues/3509)) ([64c9a2a](https://github.com/Kong/public-ui-components/commit/64c9a2a3e9adbef1f5313d71b5100cf19e427850))
+
+
+
+
+
+## [4.11.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.33...@kong-ui-public/app-layout@4.11.34) (2026-06-29)
+
+
+### Bug Fixes
+
+* bg color changes & shortcuts context refactor [KHCP-20980] ([#3506](https://github.com/Kong/public-ui-components/issues/3506)) ([f52457c](https://github.com/Kong/public-ui-components/commit/f52457ca897ea8fbcacfccc5c621b866f51da007))
+
+
+
+
+
+## [4.11.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.32...@kong-ui-public/app-layout@4.11.33) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
 ## [4.11.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.11.31...@kong-ui-public/app-layout@4.11.32) (2026-06-22)
 
 

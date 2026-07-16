@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.4.0...@kong-ui-public/document-viewer@2.5.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [2.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.3.40...@kong-ui-public/document-viewer@2.4.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+## [2.3.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.3.39...@kong-ui-public/document-viewer@2.3.40) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/document-viewer
+
+
+
+
+
+## [2.3.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.3.38...@kong-ui-public/document-viewer@2.3.39) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
 ## [2.3.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.3.37...@kong-ui-public/document-viewer@2.3.38) (2026-06-22)
 
 

@@ -220,13 +220,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-proxy': {
     descriptionKey: 'plugins.meta.ai-proxy.description',
     nameKey: 'plugins.meta.ai-proxy.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-proxy'],
   },
   'ai-prompt-decorator': {
     descriptionKey: 'plugins.meta.ai-prompt-decorator.description',
     nameKey: 'plugins.meta.ai-prompt-decorator.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-decorator'],
   },
   'ai-prompt-template': {
@@ -238,25 +236,21 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-prompt-guard': {
     descriptionKey: 'plugins.meta.ai-prompt-guard.description',
     nameKey: 'plugins.meta.ai-prompt-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-guard'],
   },
   'ai-request-transformer': {
     descriptionKey: 'plugins.meta.ai-request-transformer.description',
     nameKey: 'plugins.meta.ai-request-transformer.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-request-transformer'],
   },
   'ai-response-transformer': {
     descriptionKey: 'plugins.meta.ai-response-transformer.description',
     nameKey: 'plugins.meta.ai-response-transformer.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-response-transformer'],
   },
   'ai-rate-limiting-advanced': {
     descriptionKey: 'plugins.meta.ai-rate-limiting-advanced.description',
     nameKey: 'plugins.meta.ai-rate-limiting-advanced.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-rate-limiting-advanced'],
   },
   'ai-azure-content-safety': {
@@ -526,13 +520,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-semantic-cache': {
     descriptionKey: 'plugins.meta.ai-semantic-cache.description',
     nameKey: 'plugins.meta.ai-semantic-cache.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-cache'],
   },
   'ai-semantic-prompt-guard': {
     descriptionKey: 'plugins.meta.ai-semantic-prompt-guard.description',
     nameKey: 'plugins.meta.ai-semantic-prompt-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-prompt-guard'],
   },
   'header-cert-auth': {
@@ -653,25 +645,21 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-gcp-model-armor': {
     descriptionKey: 'plugins.meta.ai-gcp-model-armor.description',
     nameKey: 'plugins.meta.ai-gcp-model-armor.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-gcp-model-armor'],
   },
   'ai-mcp-oauth2': {
     descriptionKey: 'plugins.meta.ai-mcp-oauth2.description',
     nameKey: 'plugins.meta.ai-mcp-oauth2.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-mcp-oauth2'],
   },
   'ai-semantic-response-guard': {
     descriptionKey: 'plugins.meta.ai-semantic-response-guard.description',
     nameKey: 'plugins.meta.ai-semantic-response-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-response-guard'],
   },
   'ai-lakera-guard': {
     descriptionKey: 'plugins.meta.ai-lakera-guard.description',
     nameKey: 'plugins.meta.ai-lakera-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-lakera-guard'],
   },
   'ai-a2a-proxy': {

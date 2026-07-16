@@ -1,9 +1,10 @@
 // Vitest unit test spec file
 
-import { describe, it, expect, vi } from 'vitest'
+import { beforeAll, describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import OIDCForm from '../OIDCForm.vue'
 import { OIDCFormSchema, OIDCModel } from './OIDCSchema'
+import Kongponents from '@kong/kongponents'
 
 const baseProps = {
   formSchema: OIDCFormSchema,
@@ -12,12 +13,25 @@ const baseProps = {
 }
 
 describe('<PluginForms />', () => {
+  beforeAll(() => {
+    class ResizeObserver {
+      constructor() {}
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    }
+    (global as any).ResizeObserver = ResizeObserver
+  })
+
   it('renders', () => {
     const wrapper = mount(OIDCForm, {
       props: {
         ...baseProps,
         formModel: { ...OIDCModel },
         onModelUpdated: vi.fn(),
+      },
+      global: {
+        plugins: [Kongponents],
       },
     })
 
@@ -38,6 +52,9 @@ describe('<PluginForms />', () => {
           ...baseProps,
           formModel,
           onModelUpdated,
+        },
+        global: {
+          plugins: [Kongponents],
         },
       })
 
@@ -62,6 +79,9 @@ describe('<PluginForms />', () => {
           formModel,
           onModelUpdated,
         },
+        global: {
+          plugins: [Kongponents],
+        },
       })
 
       expect(formModel['config-consumer_claims']).toEqual([['sub']])
@@ -82,6 +102,9 @@ describe('<PluginForms />', () => {
           formModel,
           onModelUpdated,
         },
+        global: {
+          plugins: [Kongponents],
+        },
       })
 
       expect(formModel['config-consumer_claims']).toEqual(['username'])
@@ -100,6 +123,9 @@ describe('<PluginForms />', () => {
           ...baseProps,
           formModel,
           onModelUpdated,
+        },
+        global: {
+          plugins: [Kongponents],
         },
       })
 

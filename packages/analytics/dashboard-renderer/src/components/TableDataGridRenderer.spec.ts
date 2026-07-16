@@ -10,6 +10,7 @@ import type {
   ValidDashboardTableQuery,
 } from '@kong-ui-public/analytics-utilities'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
+import type { TableDataGridFetcher } from '@kong-ui-public/table-data-grid'
 
 const tableDataGridProps = vi.hoisted(() => vi.fn())
 const isReady = vi.hoisted(() => vi.fn())
@@ -132,6 +133,60 @@ const mountRenderer = ({
   },
 })
 
+const mountRendererWithTabularSpy = async () => {
+  const tabularQueryFn = vi.fn().mockResolvedValue(response)
+  const wrapper = mountRenderer({
+    queryBridge: {
+      tabularQueryFn,
+    },
+  })
+  await flushPromises()
+
+  return {
+    tabularQueryFn,
+    wrapper,
+  }
+}
+
+const getTableDataGridProps = (wrapper: ReturnType<typeof mountRenderer>) => wrapper.findComponent({ name: 'TableDataGrid' }).props()
+
+const fetchFirstPage = async (wrapper: ReturnType<typeof mountRenderer>) => {
+  const fetcher = getTableDataGridProps(wrapper).fetcher as TableDataGridFetcher
+
+  await fetcher({
+    mode: 'infinite',
+    pageSize: 50,
+  })
+  await flushPromises()
+}
+
+const expectFirstPageTabularQuery = async ({
+  expectedCallCount = 1,
+  expectedQuery,
+  initialRefreshKey,
+  tabularQueryFn,
+  wrapper,
+}: {
+  expectedCallCount?: number
+  expectedQuery: Record<string, unknown>
+  initialRefreshKey: unknown
+  tabularQueryFn: ReturnType<typeof vi.fn>
+  wrapper: ReturnType<typeof mountRenderer>
+}) => {
+  expect(getTableDataGridProps(wrapper).refreshKey).not.toBe(initialRefreshKey)
+
+  await fetchFirstPage(wrapper)
+
+  expect(tabularQueryFn).toHaveBeenCalledTimes(expectedCallCount)
+  expect(tabularQueryFn).toHaveBeenNthCalledWith(expectedCallCount, {
+    datasource: 'platform',
+    query: expect.objectContaining({
+      cursor: undefined,
+      ...expectedQuery,
+    }),
+  }, expect.any(AbortController))
+}
+
 describe('TableDataGridRenderer', () => {
   beforeEach(() => {
     tableDataGridProps.mockClear()
@@ -183,9 +238,160 @@ describe('TableDataGridRenderer', () => {
         },
       ],
       pageSize: 50,
-      refreshKey: 3,
+      refreshKey: expect.stringContaining('"refreshCounter":3'),
     }))
     expect(tableDataGridProps.mock.calls[0][0].fetcher).toEqual(expect.any(Function))
+  })
+
+  it('updates the table refresh key when the table query entity changes', async () => {
+    const { tabularQueryFn, wrapper } = await mountRendererWithTabularSpy()
+    const initialRefreshKey = getTableDataGridProps(wrapper).refreshKey
+
+    await wrapper.setProps({
+      query: {
+        ...query,
+        entity: 'service',
+      },
+    })
+    await flushPromises()
+
+    await expectFirstPageTabularQuery({
+      expectedQuery: {
+        entity: 'service',
+      },
+      initialRefreshKey,
+      tabularQueryFn,
+      wrapper,
+    })
+  })
+
+  it('includes updated columns in the refetched table query', async () => {
+    const { tabularQueryFn, wrapper } = await mountRendererWithTabularSpy()
+    const initialRefreshKey = getTableDataGridProps(wrapper).refreshKey
+
+    await wrapper.setProps({
+      query: {
+        ...query,
+        columns: ['name', 'control_plane'],
+      },
+    })
+    await flushPromises()
+
+    await expectFirstPageTabularQuery({
+      expectedQuery: {
+        columns: ['name', 'control_plane'],
+      },
+      initialRefreshKey,
+      tabularQueryFn,
+      wrapper,
+    })
+  })
+
+  it('resets pagination cursor state when table filters change', async () => {
+    const { tabularQueryFn, wrapper } = await mountRendererWithTabularSpy()
+    const initialRefreshKey = getTableDataGridProps(wrapper).refreshKey
+
+    const fetcher = getTableDataGridProps(wrapper).fetcher as TableDataGridFetcher
+    await fetcher({
+      mode: 'infinite',
+      pageSize: 50,
+      cursor: 'next-page',
+    })
+    await flushPromises()
+
+    await wrapper.setProps({
+      query: {
+        ...query,
+        filters: [
+          {
+            field: 'control_plane',
+            operator: 'in',
+            value: ['cp-id'],
+          },
+        ],
+      },
+    })
+    await flushPromises()
+
+    await expectFirstPageTabularQuery({
+      expectedCallCount: 2,
+      expectedQuery: {
+        filters: [
+          {
+            field: 'control_plane',
+            operator: 'in',
+            value: ['cp-id'],
+          },
+        ],
+      },
+      initialRefreshKey,
+      tabularQueryFn,
+      wrapper,
+    })
+    expect(tabularQueryFn).toHaveBeenNthCalledWith(1, {
+      datasource: 'platform',
+      query: expect.objectContaining({
+        cursor: 'next-page',
+      }),
+    }, expect.any(AbortController))
+  })
+
+  it('refetches from the first page when the effective table context changes', async () => {
+    const { tabularQueryFn, wrapper } = await mountRendererWithTabularSpy()
+    const initialRefreshKey = getTableDataGridProps(wrapper).refreshKey
+
+    await wrapper.setProps({
+      context: {
+        ...context,
+        filters: [
+          {
+            field: 'gateway_service',
+            operator: 'in',
+            value: ['service-id'],
+          },
+        ],
+        timeSpec: {
+          type: 'relative',
+          time_range: '1h',
+        },
+        tz: 'America/Vancouver',
+      },
+    })
+    await flushPromises()
+
+    await expectFirstPageTabularQuery({
+      expectedQuery: {
+        filters: [
+          {
+            field: 'gateway_service',
+            operator: 'in',
+            value: ['service-id'],
+          },
+        ],
+      },
+      initialRefreshKey,
+      tabularQueryFn,
+      wrapper,
+    })
+  })
+
+  it('does not refetch when non-query table renderer props change', async () => {
+    const { tabularQueryFn, wrapper } = await mountRendererWithTabularSpy()
+    const initialRefreshKey = getTableDataGridProps(wrapper).refreshKey
+
+    await wrapper.setProps({
+      context: {
+        ...context,
+        editable: true,
+        showTileActions: false,
+        zoomable: true,
+      },
+      height: 480,
+    })
+    await flushPromises()
+
+    expect(getTableDataGridProps(wrapper).refreshKey).toBe(initialRefreshKey)
+    expect(tabularQueryFn).not.toHaveBeenCalled()
   })
 
   it('uses response columns as header fallback after the first fetch', async () => {

@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.4.0...@kong-ui-public/error-boundary@2.5.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [2.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.3.18...@kong-ui-public/error-boundary@2.4.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+## [2.3.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.3.17...@kong-ui-public/error-boundary@2.3.18) (2026-06-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.60.0 ([#3509](https://github.com/Kong/public-ui-components/issues/3509)) ([64c9a2a](https://github.com/Kong/public-ui-components/commit/64c9a2a3e9adbef1f5313d71b5100cf19e427850))
+
+
+
+
+
+## [2.3.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.3.16...@kong-ui-public/error-boundary@2.3.17) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
 ## [2.3.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.3.15...@kong-ui-public/error-boundary@2.3.16) (2026-06-22)
 
 

@@ -11,6 +11,7 @@ import {
   validDashboardQuery,
   validDashboardTableQuery,
   platformQuerySchema,
+  filterablePlatformPresetFilterDimensions,
 } from './dashboardSchema.v2'
 import {
   agenticExploreAggregations,
@@ -50,7 +51,14 @@ describe('dashboardSchema.v2', () => {
     ]),
   ]
 
-  const platformQuery = {
+  const presetFilterableDimensions = [
+    ...new Set([
+      ...sharedPresetFilterableDimensions,
+      ...filterablePlatformPresetFilterDimensions,
+    ]),
+  ]
+
+  const platformChartQuery = {
     datasource: 'platform',
     metrics: ['custom_metric_name'],
     dimensions: ['custom_dimension_name'],
@@ -69,7 +77,7 @@ describe('dashboardSchema.v2', () => {
         type: 'chart',
         definition: {
           query: {
-            ...platformQuery,
+            ...platformChartQuery,
           },
           chart: {
             type: 'horizontal_bar',
@@ -146,8 +154,8 @@ describe('dashboardSchema.v2', () => {
     ],
   }
 
-  const tableDataGridTile = {
-    type: 'table',
+  const tableChartTile = {
+    type: 'chart',
     id: 'routes-table',
     definition: {
       query: {
@@ -169,8 +177,9 @@ describe('dashboardSchema.v2', () => {
         cursor: 'eyJh',
         page_size: 50,
       },
-      config: {
-        title: 'Routes',
+      chart: {
+        type: 'table',
+        chart_title: 'Routes',
       },
     },
     layout: {
@@ -186,33 +195,58 @@ describe('dashboardSchema.v2', () => {
   }
 
   it('accepts platform queries with arbitrary strings at runtime', () => {
-    expect(validatePlatformQuerySchema(platformQuery)).toBe(true)
-    expect(validateValidDashboardQuery(platformQuery)).toBe(true)
+    expect(validatePlatformQuerySchema(platformChartQuery)).toBe(true)
+    expect(validateValidDashboardQuery(platformChartQuery)).toBe(true)
     expect(validateDashboardConfigSchema(dashboardConfig)).toBe(true)
     expect(validateDashboardConfigSchema(mixedDashboardConfig)).toBe(true)
   })
 
-  it('accepts table tiles with tabular explore query shape', () => {
-    expect(validateValidDashboardQuery(tableDataGridTile.definition.query)).toBe(true)
-    expect(validateValidDashboardTableQuery(tableDataGridTile.definition.query)).toBe(true)
-    expect(validateValidDashboardChartQuery(tableDataGridTile.definition.query)).toBe(false)
+  it('accepts platform_usage as a datasource for chart queries', () => {
+    const platformUsageChartQuery = { ...platformChartQuery, datasource: 'platform_usage' }
+    expect(validatePlatformQuerySchema(platformUsageChartQuery)).toBe(true)
+    expect(validateValidDashboardQuery(platformUsageChartQuery)).toBe(true)
+    expect(validateDashboardConfigSchema({
+      ...dashboardConfig,
+      tiles: [{ ...dashboardConfig.tiles[0], definition: { ...dashboardConfig.tiles[0].definition, query: platformUsageChartQuery } }],
+    })).toBe(true)
+  })
+
+  it('accepts platform_usage as a datasource for tabular queries', () => {
+    expect(validateValidDashboardTableQuery({ ...tableChartTile.definition.query, datasource: 'platform_usage' })).toBe(true)
     expect(validateDashboardConfigSchema({
       tiles: [
-        tableDataGridTile,
+        {
+          ...tableChartTile,
+          definition: {
+            query: { datasource: 'platform_usage' },
+            chart: { type: 'table' },
+          },
+        },
       ],
     })).toBe(true)
   })
 
-  it('rejects chart tiles with tabular explore query shape', () => {
-    expect(validateValidDashboardTableQuery(platformQuery)).toBe(false)
+  it('accepts table chart tiles with tabular explore query shape', () => {
+    expect(validateValidDashboardQuery(tableChartTile.definition.query)).toBe(true)
+    expect(validateValidDashboardTableQuery(tableChartTile.definition.query)).toBe(true)
+    expect(validateValidDashboardChartQuery(tableChartTile.definition.query)).toBe(false)
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        tableChartTile,
+      ],
+    })).toBe(true)
+  })
+
+  it('rejects non-table chart tiles with tabular explore query shape', () => {
+    expect(validateValidDashboardTableQuery(platformChartQuery)).toBe(false)
 
     expect(validateDashboardConfigSchema({
       tiles: [
         {
-          ...tableDataGridTile,
+          ...tableChartTile,
           type: 'chart',
           definition: {
-            query: tableDataGridTile.definition.query,
+            query: tableChartTile.definition.query,
             chart: {
               type: 'horizontal_bar',
             },
@@ -222,32 +256,19 @@ describe('dashboardSchema.v2', () => {
     })).toBe(false)
   })
 
-  it('accepts table tiles with only the platform datasource', () => {
-    expect(validateDashboardConfigSchema({
-      tiles: [
-        {
-          ...tableDataGridTile,
-          definition: {
-            query: {
-              datasource: 'platform',
-            },
-            config: {},
-          },
-        },
-      ],
-    })).toBe(true)
-  })
+  it('rejects table chart tiles with chart query shape', () => {
+    expect(validateValidDashboardChartQuery(platformChartQuery)).toBe(true)
+    expect(validateValidDashboardTableQuery(platformChartQuery)).toBe(false)
 
-  it('rejects table tile config fields other than title', () => {
     expect(validateDashboardConfigSchema({
       tiles: [
         {
-          ...tableDataGridTile,
+          ...tableChartTile,
           definition: {
-            ...tableDataGridTile.definition,
-            config: {
-              title: 'Routes',
-              description: 'Extra config is not supported',
+            query: platformChartQuery,
+            chart: {
+              type: 'table',
+              chart_title: 'Routes',
             },
           },
         },
@@ -255,11 +276,29 @@ describe('dashboardSchema.v2', () => {
     })).toBe(false)
   })
 
-  it('rejects table tiles with a top-level query', () => {
+  it('accepts table chart tiles with only the platform datasource', () => {
     expect(validateDashboardConfigSchema({
       tiles: [
         {
-          ...tableDataGridTile,
+          ...tableChartTile,
+          definition: {
+            query: {
+              datasource: 'platform',
+            },
+            chart: {
+              type: 'table',
+            },
+          },
+        },
+      ],
+    })).toBe(true)
+  })
+
+  it('rejects table chart tiles with a top-level query', () => {
+    expect(validateDashboardConfigSchema({
+      tiles: [
+        {
+          ...tableChartTile,
           query: {
             entity: 'route',
             columns: ['name', 'control_plane'],
@@ -279,20 +318,20 @@ describe('dashboardSchema.v2', () => {
     ['invalid page size', { page_size: '50' }],
     ['invalid cursor', { cursor: 50 }],
     ['invalid filter', { filters: [{ field: 'env', value: ['prod'] }] }],
-  ])('rejects table tiles with %s', (_description, queryOverrides) => {
+  ])('rejects table chart tiles with %s', (_description, queryOverrides) => {
     expect(validateValidDashboardTableQuery({
-      ...tableDataGridTile.definition.query,
+      ...tableChartTile.definition.query,
       ...queryOverrides,
     })).toBe(false)
 
     expect(validateDashboardConfigSchema({
       tiles: [
         {
-          ...tableDataGridTile,
+          ...tableChartTile,
           definition: {
-            config: tableDataGridTile.definition.config,
+            chart: tableChartTile.definition.chart,
             query: {
-              ...tableDataGridTile.definition.query,
+              ...tableChartTile.definition.query,
               ...queryOverrides,
             },
           },
@@ -301,13 +340,13 @@ describe('dashboardSchema.v2', () => {
     })).toBe(false)
   })
 
-  it('rejects table tiles without config definitions', () => {
+  it('rejects table tile definitions without chart definitions', () => {
     expect(validateDashboardConfigSchema({
       tiles: [
         {
-          ...tableDataGridTile,
+          ...tableChartTile,
           definition: {
-            query: tableDataGridTile.definition.query,
+            query: tableChartTile.definition.query,
           },
         },
       ],
@@ -397,7 +436,9 @@ describe('dashboardSchema.v2', () => {
   })
 
   it('loosens only the platform branch', () => {
-    expect(platformQuerySchema.properties.datasource.enum).toEqual(['platform'])
+    expect(platformQuerySchema.properties.datasource.oneOf).toHaveLength(2)
+    expect(platformQuerySchema.properties.datasource.oneOf?.[0]).toMatchObject({ const: 'platform_usage' })
+    expect(platformQuerySchema.properties.datasource.oneOf?.[1]).toMatchObject({ const: 'platform', deprecated: true })
     expect(platformQuerySchema.properties.metrics.items.enum).toBeUndefined()
     expect(platformQuerySchema.properties.dimensions.items.enum).toBeUndefined()
     expect(platformQuerySchema.properties.filters.items.oneOf[0].properties.field.enum).toBeUndefined()
@@ -406,10 +447,13 @@ describe('dashboardSchema.v2', () => {
     expect(platformQuerySchema.properties.filters.items.oneOf[1].properties.operator.enum).toBeUndefined()
   })
 
-  it('keeps shared preset filters strict and operator enums intact', () => {
-    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.field.enum).toEqual(sharedPresetFilterableDimensions)
-    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.field.enum).toEqual(sharedPresetFilterableDimensions)
+  it('includes platform fields in the strict preset filter enum and preserves operator enums', () => {
+    // oneOf[0] is the value-bearing filter shape: { field, operator, value }.
+    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.field.enum).toEqual(presetFilterableDimensions)
     expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[0].properties.operator.enum).toEqual(exploreFilterTypesV2)
+
+    // oneOf[1] is the no-value filter shape: { field, operator }.
+    expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.field.enum).toEqual(presetFilterableDimensions)
     expect(dashboardConfigSchema.properties.preset_filters.items.oneOf[1].properties.operator.enum).toEqual(requestFilterTypeEmptyV2)
     expect(barChartSchema.properties.type.enum).toEqual(['horizontal_bar', 'vertical_bar'])
   })

@@ -36,6 +36,15 @@
     </template>
   </KEmptyState>
 
+  <KAlert
+    v-else-if="dataPlaneIncompatible"
+    appearance="warning"
+    class="kong-identity-dp-version-alert"
+    data-testid="kong-identity-dp-version-alert"
+    :message="t('custom_field.kong_identity.incompatible_data_plane_alert')"
+    show-icon
+  />
+
   <KPrompt
     :action-button-text="t('custom_field.kong_identity.leave_prompt_action')"
     data-testid="kong-identity-create-principal-prompt"
@@ -49,7 +58,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { KButton, KEmptyState, KPrompt } from '@kong/kongponents'
+import { KAlert, KButton, KEmptyState, KPrompt } from '@kong/kongponents'
 import { AddIcon, BookIcon } from '@kong/icons'
 import composables from '../../../composables'
 
@@ -60,6 +69,8 @@ defineProps<{
   loading?: boolean
   /** Whether to show the "create your first principal" empty-state panel */
   showPanel?: boolean
+  /** Whether a connected data plane node can't process Kong Identity principals (Gateway 3.15+ required) */
+  dataPlaneIncompatible?: boolean
 }>()
 
 const emit = defineEmits<{

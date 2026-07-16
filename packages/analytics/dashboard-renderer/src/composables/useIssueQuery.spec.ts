@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, ref } from 'vue'
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import useIssueQuery from './useIssueQuery'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { AllFilters, AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
@@ -135,6 +135,7 @@ describe('useIssueQuery', () => {
     expect(mockStripUnknownFilters).toHaveBeenCalledWith(expect.objectContaining({
       datasource: 'basic',
       filters: [invalidQueryFilter, validContextFilter],
+      queryFields: [],
     }))
     expect(queryFn).toHaveBeenCalledOnce()
     expect(queryFn.mock.calls[0][0]).toMatchObject({
@@ -142,5 +143,36 @@ describe('useIssueQuery', () => {
         filters: [validContextFilter],
       },
     })
+  })
+
+  it('aborts the previous occurring query when a new one is issued', async () => {
+    const queryFn = vi.fn().mockReturnValue(new Promise(() => {}))
+    const wrapper = mountComposable({
+      queryFn,
+    } as any)
+
+    const query: any = { metrics: [], dimensions: [], filters: [] }
+    wrapper.vm.issueQuery(query, context)
+    wrapper.vm.issueQuery(query, context)
+    await flushPromises()
+
+    expect(queryFn).toHaveBeenCalledTimes(2)
+    expect((queryFn.mock.calls[0][1] as AbortController).signal.aborted).toBe(true)
+    expect((queryFn.mock.calls[1][1] as AbortController).signal.aborted).toBe(false)
+  })
+
+  it('aborts the query on unmount', async () => {
+    const queryFn = vi.fn().mockReturnValue(new Promise(() => {}))
+    const wrapper = mountComposable({
+      queryFn,
+    } as any)
+
+    wrapper.vm.issueQuery({ metrics: [], dimensions: [], filters: [] } as any, context)
+    await flushPromises()
+    const controller = queryFn.mock.calls[0][1] as AbortController
+    expect(controller.signal.aborted).toBe(false)
+
+    wrapper.unmount()
+    expect(controller.signal.aborted).toBe(true)
   })
 })

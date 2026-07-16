@@ -122,6 +122,101 @@ describe('<SensitiveInput />', () => {
     })
   })
 
+  describe('multiline mode', () => {
+    const textarea = () => cy.get('textarea')
+
+    describe('create mode', () => {
+      it('renders an editable textarea with no eye icon or rotate button', () => {
+        cy.mount(SensitiveInput, {
+          props: { modelValue: '', multiline: true },
+        })
+
+        textarea().should('not.have.attr', 'readonly')
+        cy.getTestId('sensitive-input-toggle').should('not.exist')
+        cy.getTestId('sensitive-input-rotate').should('not.exist')
+      })
+
+      it('emits update:modelValue while typing', () => {
+        cy.mount(SensitiveInput, {
+          props: { modelValue: '', multiline: true },
+        })
+
+        textarea().type('my-secret')
+        cy.then(() => Cypress.vueWrapper.emitted('update:modelValue'))
+          .should('not.be.undefined')
+      })
+
+      it('hides the Generate button when no generator prop is provided', () => {
+        cy.mount(SensitiveInput, {
+          props: { modelValue: '', multiline: true },
+        })
+
+        cy.getTestId('sensitive-input-generate').should('not.exist')
+      })
+
+      it('calls the generator, writes the value back and emits "generated"', () => {
+        const generate = cy.stub().as('generate').resolves('generated-key-123')
+
+        cy.mount(SensitiveInput, {
+          props: {
+            modelValue: '',
+            multiline: true,
+            generator: generate,
+            'onUpdate:modelValue': (value: string) => {
+              Cypress.vueWrapper.setProps({ modelValue: value })
+            },
+          },
+        })
+
+        cy.getTestId('sensitive-input-generate').click()
+        cy.get('@generate').should('have.been.calledOnce')
+        textarea().should('have.value', 'generated-key-123')
+        cy.then(() => Cypress.vueWrapper.emitted('generated'))
+          .should('deep.equal', [['generated-key-123']])
+      })
+    })
+
+    describe('edit mode', () => {
+      it('starts masked and read-only with a Rotate key button', () => {
+        cy.mount(SensitiveInput, {
+          props: { modelValue: '', multiline: true, mode: 'edit' },
+        })
+
+        textarea().should('have.attr', 'readonly')
+        cy.getTestId('sensitive-input-rotate').should('contain.text', rotateLabel)
+        cy.getTestId('sensitive-input-toggle').should('not.exist')
+      })
+
+      it('switches to editable state and emits "rotate" when Rotate is clicked', () => {
+        cy.mount(SensitiveInput, {
+          props: { modelValue: '', multiline: true, mode: 'edit' },
+        })
+
+        cy.getTestId('sensitive-input-rotate').click()
+        cy.then(() => Cypress.vueWrapper.emitted('rotate')).should('have.length', 1)
+        cy.getTestId('sensitive-input-rotate').should('not.exist')
+        textarea().should('not.have.attr', 'readonly')
+      })
+    })
+
+    it('renders the one-time hint banner with a Copy action', () => {
+      cy.mount(SensitiveInput, {
+        props: { modelValue: 'a-key', multiline: true, showOneTimeHint: true },
+      })
+
+      cy.getTestId('sensitive-input-hint').should('contain.text', oneTimeHint)
+      cy.getTestId('sensitive-input-copy').should('be.visible')
+    })
+
+    it('renders the error message when error and errorMessage are both set', () => {
+      cy.mount(SensitiveInput, {
+        props: { modelValue: '', multiline: true, error: true, errorMessage: 'This field is required' },
+      })
+
+      cy.getTestId('sensitive-input-error-message').should('contain.text', 'This field is required')
+    })
+  })
+
   describe('custom labels', () => {
     it('overrides the rotate, generate and hint texts via the labels prop', () => {
       const labels = {

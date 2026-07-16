@@ -31,6 +31,7 @@ export const dashboardTileTypes = [
   'timeseries_bar',
   'golden_signals',
   'top_n',
+  'table',
   'slottable',
   'single_value',
   'choropleth_map',
@@ -220,15 +221,20 @@ export const topNTableSchema = {
 
 export type TopNTableOptions = FromSchemaWithOptions<typeof topNTableSchema>
 
-export const tableDataGridConfigSchema = {
+export const tableChartSchema = {
   type: 'object',
   properties: {
-    title: chartTitle,
+    type: {
+      type: 'string',
+      enum: ['table'],
+    },
+    chart_title: chartTitle,
   },
+  required: ['type'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TableDataGridConfigOptions = FromSchemaWithOptions<typeof tableDataGridConfigSchema>
+export type TableChartOptions = FromSchemaWithOptions<typeof tableChartSchema>
 
 export const metricCardSchema = {
   type: 'object',
@@ -461,6 +467,21 @@ const filtersFn = <T extends readonly string[] | undefined>(filterableDimensions
   },
 } as const satisfies JSONSchema)
 
+export const filterablePlatformPresetFilterDimensions = [
+  'control_plane',
+  'gateway_service',
+  'realm',
+  'route',
+  'plugin',
+  'plugin_name',
+  'plugin_scope',
+  'data_plane_node_version',
+  'env',
+  'team',
+  'region',
+  'hostname',
+] as const
+
 const platformFiltersFn = () => ({
   type: 'array',
   description: 'A list of filters to apply to the platform query',
@@ -587,16 +608,24 @@ export const agenticUsageSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
+const platformDatasourceSchema = {
+  oneOf: [
+    {
+      const: 'platform_usage',
+    },
+    {
+      const: 'platform',
+      deprecated: true,
+      description: "Deprecated: use 'platform_usage'.",
+    },
+  ],
+} as const
+
 export const platformQuerySchema = {
   type: 'object',
-  description: 'A query to launch at the platform dashboard API',
+  description: "A query to launch at the platform dashboard API. Use datasource 'platform_usage'; 'platform' is accepted for backward compatibility but deprecated.",
   properties: {
-    datasource: {
-      type: 'string',
-      enum: [
-        'platform',
-      ],
-    },
+    datasource: platformDatasourceSchema,
     metrics: metricsFn(),
     dimensions: dimensionsFn(),
     filters: platformFiltersFn(),
@@ -608,14 +637,9 @@ export const platformQuerySchema = {
 
 export const platformTabularQuerySchema = {
   type: 'object',
-  description: 'A query to launch at the platform tabular explore API',
+  description: "A query to launch at the platform tabular explore API. Use datasource 'platform_usage'; 'platform' is accepted for backward compatibility but deprecated.",
   properties: {
-    datasource: {
-      type: 'string',
-      enum: [
-        'platform',
-      ],
-    },
+    datasource: platformDatasourceSchema,
     entity: {
       type: 'string',
     },
@@ -697,22 +721,22 @@ const chartTileDefinitionSchema = {
 
 export type ChartTileDefinition = FromSchemaWithOptions<typeof chartTileDefinitionSchema>
 
-const tableTileDefinitionSchema = {
+const tableChartTileDefinitionSchema = {
   type: 'object',
   properties: {
     query: validDashboardTableQuery,
-    config: tableDataGridConfigSchema,
+    chart: tableChartSchema,
   },
-  required: ['query', 'config'],
+  required: ['query', 'chart'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export type TableTileDefinition = FromSchemaWithOptions<typeof tableTileDefinitionSchema>
+export type TableChartTileDefinition = FromSchemaWithOptions<typeof tableChartTileDefinitionSchema>
 
 export const tileDefinitionSchema = {
   anyOf: [
     chartTileDefinitionSchema,
-    tableTileDefinitionSchema,
+    tableChartTileDefinitionSchema,
   ],
 } as const satisfies JSONSchema
 
@@ -767,7 +791,7 @@ export const chartTileConfigSchema = {
       type: 'string',
       enum: ['chart'],
     },
-    definition: chartTileDefinitionSchema,
+    definition: tileDefinitionSchema,
     layout: tileLayoutSchema,
     id: {
       type: 'string',
@@ -778,30 +802,7 @@ export const chartTileConfigSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export const tableTileConfigSchema = {
-  type: 'object',
-  properties: {
-    type: {
-      type: 'string',
-      enum: ['table'],
-    },
-    definition: tableTileDefinitionSchema,
-    layout: tileLayoutSchema,
-    id: {
-      type: 'string',
-      description: 'Unique identifier for the tile.  If not provided, one will be generated.',
-    },
-  },
-  required: ['type', 'definition', 'layout'],
-  additionalProperties: false,
-} as const satisfies JSONSchema
-
-export const tileConfigSchema = {
-  anyOf: [
-    chartTileConfigSchema,
-    tableTileConfigSchema,
-  ],
-} as const satisfies JSONSchema
+export const tileConfigSchema = chartTileConfigSchema
 
 export type TileConfig = FromSchemaWithOptions<typeof tileConfigSchema>
 
@@ -826,6 +827,7 @@ export const dashboardConfigSchema = {
         ...filterableBasicExploreDimensions,
         ...filterableAiExploreDimensions,
         ...filterableAgenticExploreDimensions,
+        ...filterablePlatformPresetFilterDimensions,
       ]),
     ]),
     template_id: {

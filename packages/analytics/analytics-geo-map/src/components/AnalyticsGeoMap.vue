@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed, useId, toRef } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed, useId, toRef } from 'vue'
 import { Map } from 'maplibre-gl'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatBoundsLike, MapOptions } from 'maplibre-gl'
 import type { MapFeatureCollection, MetricUnits } from '../types'
@@ -52,6 +52,7 @@ import type { Feature, MultiPolygon, Geometry, GeoJsonProperties, FeatureCollect
 import composables from '../composables'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import type { ExploreAggregations, CountryISOA2 } from '@kong-ui-public/analytics-utilities'
+import { registerWebglCapture } from '@kong-ui-public/analytics-utilities'
 import lakes from '../ne_110m_lakes.json'
 import * as geobuf from 'geobuf'
 import Pbf from 'pbf'
@@ -239,6 +240,17 @@ const emitBounds = () => {
 }
 
 const debouncedEmitBounds = debounce(emitBounds, 300)
+
+// For PDF export the WebGL canvas is temporarily swapped for a static <img> so
+// its draw buffer can be captured
+const stopWebglCapture = registerWebglCapture(
+  () => map.value?.getCanvas(),
+  { redraw: () => map.value?.redraw() },
+)
+
+onUnmounted(() => {
+  stopWebglCapture()
+})
 
 onMounted(async () => {
   try {

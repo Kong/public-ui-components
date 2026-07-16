@@ -220,7 +220,7 @@ describe('<PageLayout />', () => {
     it('only the innermost PageLayout invokes onEntityPageVisit when nested', () => {
       const onEntityPageVisit = cy.stub().as('onEntityPageVisit')
       const ctx = reactive({
-        isFavorite: false,
+        isFavorite: () => false,
         onFavoriteToggle: () => { },
         onEntityPageVisit,
       })
@@ -272,7 +272,7 @@ describe('<PageLayout />', () => {
 
     it('does not render the favorite button when only pageShortcutsContext is provided', () => {
       const ctx = reactive({
-        isFavorite: false,
+        isFavorite: () => false,
         onFavoriteToggle: () => { },
         onEntityPageVisit: () => { },
       })
@@ -287,7 +287,7 @@ describe('<PageLayout />', () => {
 
     it('does not render the favorite button when pageShortcutData is missing required fields', () => {
       const ctx = reactive({
-        isFavorite: false,
+        isFavorite: () => false,
         onFavoriteToggle: () => { },
         onEntityPageVisit: () => { },
       })
@@ -303,7 +303,7 @@ describe('<PageLayout />', () => {
 
     it('does not render the favorite button when context lacks onFavoriteToggle', () => {
       const ctx = reactive({
-        isFavorite: false,
+        isFavorite: () => false,
         onEntityPageVisit: () => { },
       })
 
@@ -317,7 +317,7 @@ describe('<PageLayout />', () => {
 
     it('renders the favorite button when both pageShortcutData and pageShortcutsContext are provided', () => {
       const ctx = reactive({
-        isFavorite: false,
+        isFavorite: () => false,
         onFavoriteToggle: () => { },
         onEntityPageVisit: () => { },
       })
@@ -334,9 +334,9 @@ describe('<PageLayout />', () => {
         .should('exist')
     })
 
-    it('reflects isFavorite=true with the filled star icon', () => {
+    it('reflects isFavorite returning true with the filled star icon', () => {
       const ctx = reactive({
-        isFavorite: true,
+        isFavorite: () => true,
         onFavoriteToggle: () => { },
         onEntityPageVisit: () => { },
       })
@@ -349,12 +349,16 @@ describe('<PageLayout />', () => {
       cy.getTestId('page-layout-favorite-button').should('have.class', 'active')
     })
 
-    it('reflects isFavorite=true with the filled star icon when isPageFavorite is provided', () => {
+    it('reflects isFavorite reactively after clicking the favorite button triggers onFavoriteToggle', () => {
+      const onFavoriteToggle = cy.stub()
+
+      const isFavoritVal = ref(false)
       const ctx = reactive({
-        isFavorite: false,
-        onFavoriteToggle: () => { },
+        isFavorite: (() => isFavoritVal.value) as () => boolean,
+        onFavoriteToggle: onFavoriteToggle.callsFake(() => {
+          isFavoritVal.value = true
+        }),
         onEntityPageVisit: () => { },
-        isPageFavorite: () => true,
       })
 
       mountWithRouter(PageLayout, {
@@ -362,13 +366,33 @@ describe('<PageLayout />', () => {
         global: { provide: { 'app:pageShortcutsContext': ctx } },
       })
 
+      cy.getTestId('page-layout-favorite-button').should('not.have.class', 'active')
+        .click()
+
+      cy.wrap(onFavoriteToggle).should('have.been.calledOnce')
       cy.getTestId('page-layout-favorite-button').should('have.class', 'active')
+    })
+
+    it('calls isFavorite with the provided pageShortcutData', () => {
+      const isFavorite = cy.stub().returns(false).as('isFavorite')
+      const ctx = reactive({
+        isFavorite,
+        onFavoriteToggle: () => { },
+        onEntityPageVisit: () => { },
+      })
+
+      mountWithRouter(PageLayout, {
+        props: { title: 'Test Page Title', pageShortcutData: validShortcutData },
+        global: { provide: { 'app:pageShortcutsContext': ctx } },
+      })
+
+      cy.get('@isFavorite').should('have.been.calledWith', validShortcutData)
     })
 
     it('calls onFavoriteToggle when the favorite button is clicked', () => {
       const onFavoriteToggle = cy.stub().as('onFavoriteToggle')
       const ctx = reactive({
-        isFavorite: false,
+        isFavorite: () => false,
         onFavoriteToggle,
         onEntityPageVisit: () => { },
       })
@@ -386,7 +410,7 @@ describe('<PageLayout />', () => {
     it('calls onEntityPageVisit on mount with the provided pageShortcutData', () => {
       const onEntityPageVisit = cy.stub().as('onEntityPageVisit')
       const ctx = reactive({
-        isFavorite: false,
+        isFavorite: () => false,
         onFavoriteToggle: () => { },
         onEntityPageVisit,
       })
@@ -403,7 +427,7 @@ describe('<PageLayout />', () => {
     it('calls onEntityPageVisit again when pageShortcutData changes', () => {
       const onEntityPageVisit = cy.stub().as('onEntityPageVisit')
       const ctx = reactive({
-        isFavorite: false,
+        isFavorite: () => false,
         onFavoriteToggle: () => { },
         onEntityPageVisit,
       })
@@ -431,7 +455,7 @@ describe('<PageLayout />', () => {
 
     it('does not call onEntityPageVisit when context is missing the callback', () => {
       const ctx = reactive({
-        isFavorite: false,
+        isFavorite: () => false,
         onFavoriteToggle: () => { },
       })
 
