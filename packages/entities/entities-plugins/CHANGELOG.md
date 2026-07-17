@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.247.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.247.0...@kong-ui-public/entities-plugins@9.247.1) (2026-07-17)
+
+
+### Bug Fixes
+
+* **entities-plugins:** refactor free-form hidden-path projection (KM-2182) ([#3571](https://github.com/Kong/public-ui-components/issues/3571)) ([9d5926b](https://github.com/Kong/public-ui-components/commit/9d5926bc1199c7b3e00a1361225555f365151519))
+
+
+
+
+
 # [9.247.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.246.1...@kong-ui-public/entities-plugins@9.247.0) (2026-07-17)
 
 
