@@ -750,6 +750,67 @@ describe('Render Rules', () => {
     })
   })
 
+  describe('Output projection', () => {
+    // Locks the ordering invariant in `getValue()`: hidden fields are pruned in
+    // the internal kid-space *before* `keyIdMap.deserialize()` renames map keys.
+    // If pruning ran after deserialize, the concrete kid path stored in
+    // `hiddenPaths` (`config.entries.kid:N.secret`) would no longer match the
+    // deserialized tree (`config.entries.primary.secret`) and the hidden field
+    // would leak into the emitted payload.
+    it('resets a hidden field inside a map value, keyed by its real name', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                {
+                  entries: {
+                    type: 'map',
+                    values: {
+                      type: 'record',
+                      fields: [
+                        { strategy: { type: 'string' } },
+                        { secret: { type: 'string' } },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }
+
+      const renderRules: RenderRules = {
+        dependencies: {
+          // `#` addresses the map value; secret is shown only when strategy === 'redis'
+          'config.entries.#.secret': ['config.entries.#.strategy', 'redis'],
+        },
+      }
+
+      const onChangeSpy = cy.spy().as('onChangeSpy')
+
+      cy.mount(Form, {
+        props: {
+          schema,
+          renderRules,
+          data: { config: { entries: { primary: { strategy: 'local', secret: 'leak' } } } },
+          onChange: onChangeSpy,
+        },
+      })
+
+      // secret is hidden (strategy !== 'redis') → must be null in the output,
+      // and the entry must be keyed by 'primary' (proving deserialize ran and
+      // kid-space matching worked).
+      cy.get('@onChangeSpy').should('have.been.calledWith', Cypress.sinon.match((value: any) => {
+        const entry = value?.config?.entries?.primary
+        return !!entry && entry.strategy === 'local' && entry.secret === null
+      }))
+    })
+  })
+
   describe('Reactivity', () => {
     describe('Props change reactivity', () => {
       it('should react to renderRules prop changes at runtime', () => {

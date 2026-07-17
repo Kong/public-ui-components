@@ -1,4 +1,4 @@
-import { cloneDeep, get, isEqual, isFunction, omit, set } from 'lodash-es'
+import { cloneDeep, isEqual, isFunction, omit } from 'lodash-es'
 import { createInjectionState } from '@vueuse/core'
 import { createRenderRuleRegistry } from './render-rules'
 import { FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
@@ -92,24 +92,17 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
      * Get transformed form data
      */
     function getValue(): T {
-      const value = toValue(innerData)
-      const nextValue = cloneDeep(value)
+      const nextValue = cloneDeep(toValue(innerData))
 
-      // Set hidden paths to default or null
+      // Reset hidden fields to their empty-or-default value by walking the tree
+      // top-down, so a hidden subtree is dropped wholesale and no missing parent
+      // is ever auto-created (replaces the KM-2182 `parentExists` workaround).
       if (hiddenPaths.value.size > 0) {
-        for (const path of hiddenPaths.value) {
-          const pathArray = utils.toArray(path)
-
-          // Check if the parent path exists before setting
-          // This is a temporary fix to prevent lodash set() from auto-creating intermediate objects
-          // todo(KM-2182): Refactor data layer to listen to data source changes and clean up hiddenPaths accordingly
-          const parentPath = pathArray.slice(0, -1)
-          const parentExists = parentPath.length === 0 || get(nextValue, parentPath) != null
-
-          if (parentExists) {
-            set(nextValue, pathArray, getEmptyOrDefaultFromSchema(path))
-          }
-        }
+        utils.pruneHiddenPaths(
+          nextValue,
+          isFieldHidden,
+          getEmptyOrDefaultFromSchema,
+        )
       }
 
       return keyIdMap.deserialize(nextValue)
