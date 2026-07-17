@@ -91,7 +91,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
      * Get transformed form data
      */
     function getValue(): T {
-      const nextValue = cloneDeep(toValue(innerData))
+      const nextValue = keyIdMap.deserialize(innerData)
 
       // Reset hidden fields to their empty-or-default value by walking the tree
       // top-down, so a hidden subtree is dropped wholesale and no missing parent
@@ -100,11 +100,15 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
         utils.pruneHiddenPaths(
           nextValue,
           isFieldHidden,
-          getEmptyOrDefaultFromSchema,
+          // `getEmptyOrDefault` may hand back a `schema.default` reference
+          // verbatim (see `createFieldDefault`). Clone it so the emitted tree
+          // never aliases the schema — previously the post-prune `deserialize`
+          // pass provided this isolation for free.
+          (path) => cloneDeep(getEmptyOrDefaultFromSchema(path)),
         )
       }
 
-      return keyIdMap.deserialize(nextValue)
+      return nextValue
     }
 
     // Emit changes when the inner data changes
