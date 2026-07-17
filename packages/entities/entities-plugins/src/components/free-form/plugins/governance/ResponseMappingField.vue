@@ -18,18 +18,15 @@
         />
       </div>
       <div class="ff-response-mapping-col ff-response-mapping-col--status">
-        <KInput
-          :data-testid="`ff-response-mapping-status-${key}`"
-          :model-value="getHttpStatus(key)"
-          type="number"
-          @update:model-value="setHttpStatus(key, $event)"
+        <NumberField
+          label=""
+          :name="`config.response_codes.${key}.http_status`"
         />
       </div>
       <div class="ff-response-mapping-col ff-response-mapping-col--message">
-        <KInput
-          :data-testid="`ff-response-mapping-message-${key}`"
-          :model-value="getMessage(key)"
-          @update:model-value="setMessage(key, $event)"
+        <StringField
+          label=""
+          :name="`config.response_codes.${key}.message`"
         />
       </div>
     </div>
@@ -38,13 +35,16 @@
 
 <script setup lang="ts">
 import { KInput } from '@kong/kongponents'
+import NumberField from '../../shared/NumberField.vue'
+import StringField from '../../shared/StringField.vue'
 import { get, set } from 'lodash-es'
 import { useFormShared } from '../../shared/composables'
 import useI18n from '../../../../composables/useI18n'
 
 const { i18n: { t } } = useI18n()
 
-/** Fixed set of response code keys defined by the plugin schema. */
+// Fixed set of response code keys defined by the plugin schema. Each cell is
+// bound by path to the free-form NumberField/StringField.
 const RESPONSE_KEYS = [
   'NO_CREDIT_AVAILABLE',
   'USAGE_LIMIT_REACHED',
@@ -53,32 +53,20 @@ const RESPONSE_KEYS = [
   'CUSTOMER_NOT_FOUND',
 ] as const
 
-type ResponseKey = typeof RESPONSE_KEYS[number]
-
 const { formData, getDefault } = useFormShared()
 
 // `config.response_codes` and its per-code records are not `required` in the
-// plugin schema, so their defaults are not auto-populated on creation. This
-// fixed 5-row table always shows the schema default as a fallback.
-function getHttpStatus(key: ResponseKey): number | string {
-  return get(formData, ['config', 'response_codes', key, 'http_status'])
-    ?? getDefault(`config.response_codes.${key}.http_status`)
-    ?? ''
-}
-
-function getMessage(key: ResponseKey): string {
-  return get(formData, ['config', 'response_codes', key, 'message'])
-    ?? getDefault(`config.response_codes.${key}.message`)
-    ?? ''
-}
-
-function setHttpStatus(key: ResponseKey, value: string | number) {
-  const num = typeof value === 'string' ? (value === '' ? null : Number(value)) : value
-  set(formData, ['config', 'response_codes', key, 'http_status'], num)
-}
-
-function setMessage(key: ResponseKey, value: string) {
-  set(formData, ['config', 'response_codes', key, 'message'], value)
+// plugin schema, so their defaults are not auto-populated by the form's
+// init-time seeding. Seed them here (synchronously, before the child fields
+// mount) so NumberField/StringField display the schema defaults and bind by
+// path as usual. Existing values (edit mode) are left untouched.
+for (const key of RESPONSE_KEYS) {
+  for (const sub of ['http_status', 'message'] as const) {
+    const path = ['config', 'response_codes', key, sub]
+    if (get(formData, path) == null) {
+      set(formData, path, getDefault(`config.response_codes.${key}.${sub}`))
+    }
+  }
 }
 </script>
 

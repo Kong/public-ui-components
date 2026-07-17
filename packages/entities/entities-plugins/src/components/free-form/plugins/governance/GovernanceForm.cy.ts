@@ -66,18 +66,18 @@ describe('GovernanceForm - response mapping', () => {
     cy.getTestId('ff-response-mapping-code-FEATURE_NOT_FOUND').should('exist')
     cy.getTestId('ff-response-mapping-code-CUSTOMER_NOT_FOUND').should('exist')
 
-    cy.getTestId('ff-response-mapping-status-NO_CREDIT_AVAILABLE').should('exist')
-    cy.getTestId('ff-response-mapping-status-USAGE_LIMIT_REACHED').should('exist')
-    cy.getTestId('ff-response-mapping-status-FEATURE_UNAVAILABLE').should('exist')
-    cy.getTestId('ff-response-mapping-status-FEATURE_NOT_FOUND').should('exist')
-    cy.getTestId('ff-response-mapping-status-CUSTOMER_NOT_FOUND').should('exist')
+    cy.getTestId('ff-config.response_codes.NO_CREDIT_AVAILABLE.http_status').should('exist')
+    cy.getTestId('ff-config.response_codes.USAGE_LIMIT_REACHED.http_status').should('exist')
+    cy.getTestId('ff-config.response_codes.FEATURE_UNAVAILABLE.http_status').should('exist')
+    cy.getTestId('ff-config.response_codes.FEATURE_NOT_FOUND.http_status').should('exist')
+    cy.getTestId('ff-config.response_codes.CUSTOMER_NOT_FOUND.http_status').should('exist')
 
 
-    cy.getTestId('ff-response-mapping-message-NO_CREDIT_AVAILABLE').should('exist')
-    cy.getTestId('ff-response-mapping-message-USAGE_LIMIT_REACHED').should('exist')
-    cy.getTestId('ff-response-mapping-message-FEATURE_UNAVAILABLE').should('exist')
-    cy.getTestId('ff-response-mapping-message-FEATURE_NOT_FOUND').should('exist')
-    cy.getTestId('ff-response-mapping-message-CUSTOMER_NOT_FOUND').should('exist')
+    cy.getTestId('ff-config.response_codes.NO_CREDIT_AVAILABLE.message').should('exist')
+    cy.getTestId('ff-config.response_codes.USAGE_LIMIT_REACHED.message').should('exist')
+    cy.getTestId('ff-config.response_codes.FEATURE_UNAVAILABLE.message').should('exist')
+    cy.getTestId('ff-config.response_codes.FEATURE_NOT_FOUND.message').should('exist')
+    cy.getTestId('ff-config.response_codes.CUSTOMER_NOT_FOUND.message').should('exist')
   })
 })
 

@@ -914,10 +914,10 @@
           },
           "governance": {
             "title": "Governance settings",
-            "description": "Configure access control behaviour and response codes."
+            "description": "Configure access control behavior and response codes."
           },
           "subject": {
-            "title": "Who's access to govern (subject)"
+            "title": "Whose access to govern (subject)"
           },
           "feature": {
             "title": "Feature"
@@ -935,7 +935,7 @@
         },
         "fields": {
           "look_up_value_in": {
-            "label": "Who's access to govern (Look up subject in)",
+            "label": "Whose access to govern (Look up subject in)",
             "help": "Where to find the customer identifier in the request."
           },
           "subject_field": {
