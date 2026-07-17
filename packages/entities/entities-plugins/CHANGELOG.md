@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.247.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.246.1...@kong-ui-public/entities-plugins@9.247.0) (2026-07-17)
+
+
+### Features
+
+* **entities-plugins:** add governance free-form plugin ([#3496](https://github.com/Kong/public-ui-components/issues/3496)) ([d8e50ad](https://github.com/Kong/public-ui-components/commit/d8e50ad0b04db3d1cb3fa492898d1d075f1f30e5))
+
+
+
+
+
 ## [9.246.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.246.0...@kong-ui-public/entities-plugins@9.246.1) (2026-07-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
