@@ -770,6 +770,7 @@ describe('Render Rules', () => {
                 {
                   entries: {
                     type: 'map',
+                    keys: { type: 'string' },
                     values: {
                       type: 'record',
                       fields: [
@@ -809,6 +810,61 @@ describe('Render Rules', () => {
       cy.get('@onChangeSpy').should('have.been.calledWith', Cypress.sinon.match((value: any) => {
         const entry = value?.config?.entries?.primary
         return !!entry && entry.strategy === 'local' && entry.secret === null
+      }))
+    })
+
+    // Companion to the test above with the dependency SATISFIED: the map-nested
+    // field must stay visible and keep its value. This is the case that only
+    // works when the dependency's actual value is read with a kid-keyed path
+    // that matches `innerData` — i.e. pruning happens before `deserialize`.
+    it('keeps a shown field inside a map value, keyed by its real name', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                {
+                  entries: {
+                    type: 'map',
+                    keys: { type: 'string' },
+                    values: {
+                      type: 'record',
+                      fields: [
+                        { strategy: { type: 'string' } },
+                        { secret: { type: 'string' } },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }
+
+      const renderRules: RenderRules = {
+        dependencies: {
+          'config.entries.#.secret': ['config.entries.#.strategy', 'redis'],
+        },
+      }
+
+      const onChangeSpy = cy.spy().as('onChangeSpy')
+
+      cy.mount(Form, {
+        props: {
+          schema,
+          renderRules,
+          // strategy === 'redis' → secret is shown and must be preserved
+          data: { config: { entries: { primary: { strategy: 'redis', secret: 'keep' } } } },
+          onChange: onChangeSpy,
+        },
+      })
+
+      cy.get('@onChangeSpy').should('have.been.calledWith', Cypress.sinon.match((value: any) => {
+        const entry = value?.config?.entries?.primary
+        return !!entry && entry.strategy === 'redis' && entry.secret === 'keep'
       }))
     })
   })

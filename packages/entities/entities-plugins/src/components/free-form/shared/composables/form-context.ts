@@ -91,24 +91,26 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
      * Get transformed form data
      */
     function getValue(): T {
-      const nextValue = keyIdMap.deserialize(innerData)
+      const nextValue = cloneDeep(toValue(innerData))
 
       // Reset hidden fields to their empty-or-default value by walking the tree
       // top-down, so a hidden subtree is dropped wholesale and no missing parent
       // is ever auto-created (replaces the KM-2182 `parentExists` workaround).
+      //
+      // NOTE: pruning MUST run here, on the still-serialized (kid-keyed) tree,
+      // before `deserialize` renames map keys. `isFieldHidden` reads each
+      // dependency's actual value from `innerData` (kid-keyed) with a concrete
+      // path; pruning a name-keyed tree would feed it name-keyed paths that miss
+      // inside maps, silently mis-evaluating visibility for map-nested fields.
       if (hasDependencies.value) {
         utils.pruneHiddenPaths(
           nextValue,
           isFieldHidden,
-          // `getEmptyOrDefault` may hand back a `schema.default` reference
-          // verbatim (see `createFieldDefault`). Clone it so the emitted tree
-          // never aliases the schema — previously the post-prune `deserialize`
-          // pass provided this isolation for free.
-          (path) => cloneDeep(getEmptyOrDefaultFromSchema(path)),
+          getEmptyOrDefaultFromSchema,
         )
       }
 
-      return nextValue
+      return keyIdMap.deserialize(nextValue)
     }
 
     // Emit changes when the inner data changes
