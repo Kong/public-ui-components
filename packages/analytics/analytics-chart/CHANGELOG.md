@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.21.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.21.0...@kong-ui-public/analytics-chart@10.21.1) (2026-07-17)
+
+
+### Bug Fixes
+
+* **analytics:** use dimensionId for dataset keys [MA-4992] ([#3568](https://github.com/Kong/public-ui-components/issues/3568)) ([f5fbd5d](https://github.com/Kong/public-ui-components/commit/f5fbd5d2ecafa739e2ad36f384a1aafb88ecfbdb))
+
+
+
+
+
 # [10.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.20.0...@kong-ui-public/analytics-chart@10.21.0) (2026-07-16)
 
 
