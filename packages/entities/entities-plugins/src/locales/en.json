@@ -603,6 +603,10 @@
       "metering-and-billing": {
         "name": "Metering & Billing",
         "description": "Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with Konnect Metering & Billing."
+      },
+      "governance": {
+        "name": "Governance",
+        "description": "Enforce feature-level access control and credit-balance gating for API consumers. Integrates with Konnect Metering & Billing to allow or deny requests based on customer entitlements."
       }
     },
     "fields": {
@@ -899,6 +903,115 @@
           },
           "keepalive": {
             "label": "Connection keep-alive (ms)"
+          }
+        }
+      },
+      "governance": {
+        "sections": {
+          "configuration": {
+            "title": "Plugin configuration",
+            "description": "Configure the Governance plugin subject, feature, and connection settings."
+          },
+          "governance": {
+            "title": "Governance settings",
+            "description": "Configure access control behavior and response codes."
+          },
+          "subject": {
+            "title": "Whose access to govern (subject)"
+          },
+          "feature": {
+            "title": "Feature"
+          },
+          "connection": {
+            "title": "Connection",
+            "description": "Configure how the plugin connects to the governance query endpoint."
+          },
+          "redis": {
+            "title": "Redis"
+          },
+          "cache_sync": {
+            "title": "Cache and sync"
+          }
+        },
+        "fields": {
+          "look_up_value_in": {
+            "label": "Whose access to govern (Look up subject in)",
+            "help": "Where to find the customer identifier in the request."
+          },
+          "subject_field": {
+            "label": "Subject field name",
+            "placeholder": "e.g., x-customer-id",
+            "help": "Name of the header or query parameter that carries the customer identifier."
+          },
+          "feature_key": {
+            "label": "Feature to govern access",
+            "help": "Feature that will control access to the scope where the plugin is applied.",
+            "metered_badge": "Metered feature",
+            "load_error": "Could not load features from the governance service."
+          },
+          "governance_endpoint": {
+            "help": "For Konnect Metering & Billing, use the regional endpoint for Metering & Billing Query Governance Access. For self-hosted OpenMeter, use the Query Governance Access endpoint of your self-hosted instance."
+          },
+          "ssl_verify": {
+            "label": "Verify TLS certificate",
+            "description": "Disable only for local development with self-signed certificates."
+          },
+          "timeout": {
+            "label": "Request timeout (ms)"
+          },
+          "keepalive": {
+            "label": "Connection keep-alive (ms)"
+          },
+          "sync_rate": {
+            "label": "Sync rate (s)"
+          },
+          "refresh_interval": {
+            "label": "Refresh interval (s)"
+          },
+          "max_stale_seconds": {
+            "label": "Max stale seconds"
+          },
+          "l1_ttl": {
+            "label": "L1 TTL (s)"
+          },
+          "l2_ttl": {
+            "label": "L2 TTL (s)"
+          },
+          "credit_balance_required": {
+            "label": "Credit balance lookup",
+            "yes_label": "Yes",
+            "yes_description": "A credit balance above zero is required for access to this feature.",
+            "no_label": "No",
+            "no_description": "Customers can access this feature regardless of their credit balance."
+          },
+          "fail_policy": {
+            "label": "Plugin failure mode",
+            "allow_label": "Allow access",
+            "allow_description": "In the case of plugin failure, allow access to feature.",
+            "deny_label": "Deny access",
+            "deny_description": "In the case of plugin failure, deny access to feature."
+          },
+          "deny_unknown_customers": {
+            "label": "Unknown customer access",
+            "allow_label": "Allow access",
+            "allow_description": "The gateway will allow access for unknown customers.",
+            "deny_label": "Deny access",
+            "deny_description": "The gateway will deny access for unknown customers."
+          },
+          "response": {
+            "label": "Response mapping",
+            "columns": {
+              "code": "Response code",
+              "status": "Status code",
+              "message": "Message"
+            },
+            "defaults": {
+              "NO_CREDIT_AVAILABLE": "Customer has no credit available.",
+              "USAGE_LIMIT_REACHED": "Customer has reached usage limit for feature.",
+              "FEATURE_UNAVAILABLE": "Feature is not available for the customer.",
+              "FEATURE_NOT_FOUND": "Feature not found.",
+              "CUSTOMER_NOT_FOUND": "Customer is not found by subject."
+            }
           }
         }
       },
