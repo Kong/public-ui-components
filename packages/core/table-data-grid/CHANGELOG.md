@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.3.0...@kong-ui-public/table-data-grid@0.3.1) (2026-07-18)
+
+
+### Bug Fixes
+
+* **table-data-grid:** use theme-aware text colors ([#3566](https://github.com/Kong/public-ui-components/issues/3566)) ([4765c39](https://github.com/Kong/public-ui-components/commit/4765c3928234c7b0667164cb757e461ffe8cc6aa))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.2.3...@kong-ui-public/table-data-grid@0.3.0) (2026-07-16)
 
 
