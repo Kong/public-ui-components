@@ -92,6 +92,6 @@
     "@zumer/snapdom": "^2.6.0",
     "gridstack": "^11.5.1",
     "jspdf": "^4.2.1",
-    "p-queue": "^8.1.1"
+    "p-queue": "^9.3.1"
   }
 }
