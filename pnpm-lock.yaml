@@ -18,7 +18,7 @@ overrides:
   lodash@<=4.17.23: '>=4.18.0'
   axios@<1.15.0: '>=1.18.0'
   tmp@<0.2.6: '>=0.2.7'
-  shell-quote@>=1.1.0 <=1.8.3: '>=1.8.4'
+  shell-quote@>=1.1.0 <=1.8.3: '>=1.9.0'
   ws@>=8.0.0 <8.21.0: '>=8.21.0'
   undici@>=7.0.0 <7.28.0: '>=7.28.0 <9.0.0'
   linkify-it@<=5.0.0: '>=5.0.1'
@@ -9947,10 +9947,6 @@ packages:
     resolution: {integrity: sha512-w1aiOKwKuRgtwAReIIj89puqg+I7GvX4IbLrvmhXbzQsj1+Zwi4VO3+fa6ZF91TWSjIxoEkKnMeHcLEODK5ZXA==}
     engines: {node: '>= 0.4'}
 
-  shell-quote@1.8.4:
-    resolution: {integrity: sha512-VsC6n6vz1ihYYyZZwX7YZSF5l5x36ca17OC+a69h94YqB7X6XLwf+5MOgynYir2SLFUbl8gIYvBo8K8RoNQ6bQ==}
-    engines: {node: '>= 0.4'}
-
   shiki-codegen@4.2.0:
     resolution: {integrity: sha512-KTvg81k/NwZHGnSh9GOFG9ivJNrfvDSyN4RhqT/y27VlIEtQBE0QJds81XTRQZRaGoU5BgCxAcai255Nnhoylw==}
     engines: {node: '>=20'}
@@ -16408,7 +16404,7 @@ snapshots:
 
   curl-to-har@1.0.1:
     dependencies:
-      shell-quote: 1.8.4
+      shell-quote: 1.10.0
       underscore: 1.13.8
       underscore.string: 3.3.6
 
@@ -19961,7 +19957,7 @@ snapshots:
       picomatch: 4.0.5
       pidtree: 0.6.0
       read-package-json-fast: 6.0.0
-      shell-quote: 1.8.4
+      shell-quote: 1.10.0
       which: 7.0.0
 
   npm-run-path@4.0.1:
@@ -21460,8 +21456,6 @@ snapshots:
   shebang-regex@3.0.0: {}
 
   shell-quote@1.10.0: {}
-
-  shell-quote@1.8.4: {}
 
   shiki-codegen@4.2.0:
     dependencies:
