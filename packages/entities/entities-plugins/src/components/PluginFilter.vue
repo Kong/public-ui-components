@@ -79,10 +79,7 @@
         </div>
       </template>
       <template #filter-scope>
-        <!-- TODO: the search API's filter.scope.eq only accepts a single value (no OR/"one-of"
-          operator for scope as of the current SDK) - single-select until the backend supports
-          filtering by more than one scope at once. -->
-        <KSelect
+        <KMultiselect
           v-model="pendingScope"
           data-testid="scope-filter-select"
           :items="scopeOptions"
@@ -149,7 +146,7 @@ const filterGroupSelection = ref<FilterGroupSelection>({})
 const searchInput = useTemplateRef('search-input')
 const tagsInput = useTemplateRef('tags-input')
 
-const pendingScope = ref<string | null>(null)
+const pendingScope = ref<string[]>([])
 const pendingStatus = ref<string | null>(null)
 
 const scopeOptions = computed<FilterOption[]>(() => [
@@ -220,6 +217,7 @@ const pluginFilterGroupFilters = computed<FilterGroupFilters>(() => {
         label: t('plugins.list.table_headers.scope'),
         operators: ['eq'],
         pinned: true,
+        multiple: true,
       },
     }
 
@@ -254,8 +252,13 @@ const serializedQuery = computed<string>(() => {
 
   if (!nestedScopeFilterKey.value) {
     const scopeSelection = filterGroupSelection.value.scope
-    if (typeof scopeSelection?.value === 'string' && scopeSelection.value) {
-      params.set('filter[scope][eq]', scopeSelection.value)
+    const scopeValues = Array.isArray(scopeSelection?.value)
+      ? scopeSelection.value
+      : typeof scopeSelection?.value === 'string' && scopeSelection.value
+        ? [scopeSelection.value]
+        : []
+    if (scopeValues.length) {
+      params.set('filter[scope][oeq]', scopeValues.join(','))
     }
   }
 
@@ -292,7 +295,7 @@ watch(modelValue, (value) => {
     filterGroupSelection.value = {}
     tagInputText.value = ''
     pendingTags.value = []
-    pendingScope.value = null
+    pendingScope.value = []
     pendingStatus.value = null
   }
 })
@@ -308,7 +311,11 @@ const onFilterOpen = (openedFilterKey: string) => {
 
     case 'scope': {
       const currentValue = filterGroupSelection.value.scope?.value
-      pendingScope.value = typeof currentValue === 'string' ? currentValue : null
+      pendingScope.value = Array.isArray(currentValue)
+        ? [...currentValue]
+        : typeof currentValue === 'string' && currentValue
+          ? [currentValue]
+          : []
       return
     }
 
@@ -335,13 +342,13 @@ const onFilterApply = (appliedFilterKey: string, selection: FilterGroupSelection
       return
 
     case 'scope': {
-      const selectedOption = scopeOptions.value.find((option) => option.value === pendingScope.value)
-      if (selectedOption) {
+      const selectedOptions = scopeOptions.value.filter((option) => pendingScope.value.includes(option.value))
+      if (selectedOptions.length) {
         selection.scope = {
           operator: 'eq',
           operatorDelimiter: ': ',
-          value: selectedOption.value,
-          text: selectedOption.label,
+          value: selectedOptions.map((option) => option.value),
+          text: selectedOptions.map((option) => option.label).join(', '),
         }
       } else {
         delete selection.scope
@@ -370,7 +377,7 @@ const onFilterClear = (clearedFilterKey: string) => {
     pendingTags.value = []
     tagInputText.value = ''
   } else if (clearedFilterKey === 'scope') {
-    pendingScope.value = null
+    pendingScope.value = []
   } else if (clearedFilterKey === 'status') {
     pendingStatus.value = null
   }
