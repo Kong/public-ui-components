@@ -118,7 +118,7 @@ const expectColumnsToFillGrid = (api: GridApi<TestRow>) => {
 }
 
 const expectHorizontalOverflow = () => {
-  cy.get('.table-data-grid-grid .ag-center-cols-viewport').then(($viewport) => {
+  cy.get('.table-data-grid-grid .ag-grid-viewport').then(($viewport) => {
     expect($viewport[0].scrollWidth).to.be.greaterThan($viewport[0].clientWidth)
   })
 }
@@ -204,14 +204,22 @@ const scrollToSecondBlock = ({
   fetcher: TableDataGridFetcher<TestRow>
   onState?: (payload: TableDataGridStatePayload) => void
 }) => {
+  let gridApi: GridApi<TestRow> | undefined
+
   mountTestTableDataGrid({
     fetcher,
+    onGridReady: (api) => {
+      gridApi = api
+    },
     onState,
     pageSize: 15,
   })
 
   cy.contains('.ag-cell', 'Service 1').should('be.visible')
-  cy.get('.ag-body-viewport').scrollTo('bottom')
+  cy.then(() => {
+    expect(gridApi).to.not.equal(undefined)
+    gridApi!.ensureIndexVisible(15, 'bottom')
+  })
   cy.wrap(fetcher).should('have.been.calledTwice')
 }
 
