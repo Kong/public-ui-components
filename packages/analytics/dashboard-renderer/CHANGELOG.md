@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.15.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.4...@kong-ui-public/dashboard-renderer@8.15.5) (2026-07-21)
+
+
+### Bug Fixes
+
+* **analytics:** embed fonts when exporting dashboard as PDF ([#3581](https://github.com/Kong/public-ui-components/issues/3581)) ([5a3eaee](https://github.com/Kong/public-ui-components/commit/5a3eaeef03cc8d5a50c7a4cea7c3660179a999c4))
+
+
+
+
+
 ## [8.15.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.3...@kong-ui-public/dashboard-renderer@8.15.4) (2026-07-18)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
