@@ -840,11 +840,11 @@ importers:
   packages/core/table-data-grid:
     dependencies:
       ag-grid-community:
-        specifier: ^35.3.1
-        version: 35.3.1
+        specifier: ^36.0.0
+        version: 36.0.1
       ag-grid-vue3:
-        specifier: ^35.3.1
-        version: 35.3.1(vue@3.5.38(typescript@5.9.3))
+        specifier: ^36.0.0
+        version: 36.0.1(vue@3.5.38(typescript@5.9.3))
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -4666,16 +4666,19 @@ packages:
   add-stream@1.0.0:
     resolution: {integrity: sha512-qQLMr+8o0WC4FZGQTcJiKBVC59JylcPSrTtk6usvmIDFUOCKegapy1VHQwRbFMOFyb/inzUVqHs+eMYKDM1YeQ==}
 
-  ag-charts-types@13.3.1:
-    resolution: {integrity: sha512-m37eUe4g//swvGh8PWMlYQH3gknjSsPeW4sQwBhM3/auGAHmN0wvxEWlrdAn98pBPg4HoKbtOy+yf7gPCYsnvQ==}
+  ag-charts-types@14.0.1:
+    resolution: {integrity: sha512-fGNDptlNzaQDqDoZxAYeLtBrV8sIXE1iRXX9s5W+/drobP3Ig2fhdAOlKp3IIrHlbiKZUiuhraqT0D4IYVyM4w==}
 
-  ag-grid-community@35.3.1:
-    resolution: {integrity: sha512-Wmkd/xYTCbAApcZZO74nBggZCnd/oX753NY3MJ4zYARVpfBHRWWhIBJ2sFTFKbDWwHZOWsx3YT9+kkyeuyLKlw==}
+  ag-grid-community@36.0.1:
+    resolution: {integrity: sha512-wQetUqoY6SBCtKzDjsYkImiGpM4+hU7S5/NvxcCAO6liL6mSRXlEvCHdQZUfj6amuhsdjVlGK1C8e+B54EyDTQ==}
 
-  ag-grid-vue3@35.3.1:
-    resolution: {integrity: sha512-zbx6k2WIeIBhzgbiHjZbPaA2y7n1qOzK81nrdwlAhkRnIU3LL6nu1ZGpvShpyYyYKr6OQlwLl/q0IYuTmxJEdg==}
+  ag-grid-vue3@36.0.1:
+    resolution: {integrity: sha512-7zCbpnYL49IVgdiKnVDAXE/nFHlMANqxLCRzv+9+lPxzpRlOOENbuRpRVrOSyS4mdkI1aXIUvDBileihfCIzog==}
     peerDependencies:
       vue: ^3.5.32
+
+  ag-stack@36.0.1:
+    resolution: {integrity: sha512-FsrO55fl7EDToQVgRDaTF1+QKWpfJK1nxTxTavkkfHeq6Kei4skAeP0MsjXm7zECjfyHczlwmWvp+KN7KHnlYQ==}
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -15384,16 +15387,19 @@ snapshots:
 
   add-stream@1.0.0: {}
 
-  ag-charts-types@13.3.1: {}
+  ag-charts-types@14.0.1: {}
 
-  ag-grid-community@35.3.1:
+  ag-grid-community@36.0.1:
     dependencies:
-      ag-charts-types: 13.3.1
+      ag-charts-types: 14.0.1
+      ag-stack: 36.0.1
 
-  ag-grid-vue3@35.3.1(vue@3.5.38(typescript@5.9.3)):
+  ag-grid-vue3@36.0.1(vue@3.5.38(typescript@5.9.3)):
     dependencies:
-      ag-grid-community: 35.3.1
+      ag-grid-community: 36.0.1
       vue: 3.5.38(typescript@5.9.3)
+
+  ag-stack@36.0.1: {}
 
   agent-base@6.0.2:
     dependencies:
