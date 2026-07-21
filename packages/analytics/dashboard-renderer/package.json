@@ -90,8 +90,13 @@
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@zumer/snapdom": "^2.6.0",
+    "date-fns-tz": "^3.2.0",
+    "file-saver": "^2.0.5",
     "gridstack": "^11.5.1",
     "jspdf": "^4.2.1",
+    "lodash.mapkeys": "^4.6.0",
+    "lodash.pick": "^4.4.0",
+    "papaparse": "^5.5.3",
     "p-queue": "^9.3.1"
   }
 }

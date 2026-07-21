@@ -405,15 +405,30 @@ importers:
       '@zumer/snapdom':
         specifier: ^2.6.0
         version: 2.15.0
+      date-fns-tz:
+        specifier: ^3.2.0
+        version: 3.2.0(date-fns@4.4.0)
+      file-saver:
+        specifier: ^2.0.5
+        version: 2.0.5
       gridstack:
         specifier: ^11.5.1
         version: 11.5.1
       jspdf:
         specifier: ^4.2.1
         version: 4.2.1
+      lodash.mapkeys:
+        specifier: ^4.6.0
+        version: 4.6.0
+      lodash.pick:
+        specifier: ^4.4.0
+        version: 4.4.0
       p-queue:
         specifier: ^9.3.1
         version: 9.3.2
+      papaparse:
+        specifier: ^5.5.3
+        version: 5.5.3
     devDependencies:
       '@kong-ui-public/analytics-chart':
         specifier: workspace:^
