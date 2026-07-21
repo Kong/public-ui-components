@@ -16,7 +16,7 @@ export default {
   },
   search: {
     konnect: {
-      all: `${konnectNoWorkspaceBaseApiUrl}/plugins/search`,
+      all: `${konnectBaseApiUrl}/plugins/search`,
     },
   },
   select: {

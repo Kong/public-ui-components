@@ -596,6 +596,7 @@ const activeFetcherUrl = computed<string>(() => {
     const konnectConfig = props.config as KonnectPluginListConfig
     return `${konnectConfig.apiBaseUrl}${endpoints.search.konnect.all}`
       .replace(/{controlPlaneId}/gi, konnectConfig.controlPlaneId || '')
+      .replace(/\/{workspace}/gi, konnectConfig.workspace ? `/${konnectConfig.workspace}` : '')
   }
 
   return fetcherBaseUrl.value
