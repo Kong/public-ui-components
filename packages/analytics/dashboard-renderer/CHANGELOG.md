@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.15.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.6...@kong-ui-public/dashboard-renderer@8.15.7) (2026-07-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency p-queue to v9 ([#3456](https://github.com/Kong/public-ui-components/issues/3456)) ([19c54d7](https://github.com/Kong/public-ui-components/commit/19c54d741cf21b3292fedd0fb8b0a46a6c599a9c)), closes [/github.com/sindresorhus/p-queue/releases#release-v9](https://github.com//github.com/sindresorhus/p-queue/releases/issues/release-v9)
+
+
+
+
+
 ## [8.15.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.5...@kong-ui-public/dashboard-renderer@8.15.6) (2026-07-21)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
