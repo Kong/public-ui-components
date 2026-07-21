@@ -202,6 +202,46 @@ test.describe('Filler - Playwright', () => {
       await expect(page.locator('[data-testid="ff-config.port"]')).toHaveValue('6379')
     })
 
+    test('record: re-filling an already-enabled optional object does not collapse it', async ({ mount, page }) => {
+      // Regression test: fillRecord used to unconditionally .click() the
+      // switch-control, which toggles it off when the object was already
+      // enabled (e.g. from a prior fill simulating create, then updating the
+      // same form). That collapses the object's SlideTransition content via
+      // v-if="expanded", detaching any child element the filler is about to
+      // interact with - this is what broke KM's kafka-upstream edit-form test
+      // (updating a nested `authentication` record that already had a value).
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            auth: {
+              type: 'record',
+              fields: [
+                { username: { type: 'string' } },
+                { password: { type: 'string' } },
+              ],
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+
+      // First fill enables the switch from scratch (simulates create).
+      await filler.fillField('auth', { username: 'alice', password: 'secret1' })
+      await expect(page.locator('[data-testid="ff-object-switch-auth"]').locator('..').locator('[data-testid="switch-control"]')).toBeChecked()
+      await expect(page.getByTestId('ff-auth.username')).toHaveValue('alice')
+
+      // Second fill (simulates editing an existing record): the object is
+      // already enabled and must stay that way, with children still reachable.
+      await filler.fillField('auth', { username: 'bob', password: 'secret2' })
+      await expect(page.locator('[data-testid="ff-object-switch-auth"]').locator('..').locator('[data-testid="switch-control"]')).toBeChecked()
+      await expect(page.getByTestId('ff-auth.username')).toHaveValue('bob')
+      await expect(page.getByTestId('ff-auth.password')).toHaveValue('secret2')
+    })
+
     test('should fill map field (key-value pairs)', async ({ mount, page }) => {
       const schema: FormSchema = {
         type: 'record',
