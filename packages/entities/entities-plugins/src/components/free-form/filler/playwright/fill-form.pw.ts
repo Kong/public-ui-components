@@ -425,6 +425,50 @@ test.describe('Filler - Playwright', () => {
       await expect(page.locator('[data-testid="ff-json-metadata"]')).toBeVisible()
     })
 
+    test('should fill foreign field with a raw id string', async ({ mount, page }) => {
+      // ForeignField.vue is a plain text input - the id is typed directly,
+      // there is no select-item popover to click (unlike EnumField).
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            vault: {
+              type: 'foreign',
+              reference: 'vaults',
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('vault', 'a5b875e6-2db1-4cbc-9f34-c5d11604cdc5')
+
+      await expect(page.getByTestId('ff-vault')).toHaveValue('a5b875e6-2db1-4cbc-9f34-c5d11604cdc5')
+    })
+
+    test('should fill foreign field from an { id } object value', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            consumer: {
+              type: 'foreign',
+              reference: 'consumers',
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('consumer', { id: 'b1c2d3e4-0000-0000-0000-000000000000' })
+
+      await expect(page.getByTestId('ff-consumer')).toHaveValue('b1c2d3e4-0000-0000-0000-000000000000')
+    })
+
     test('should fill entire form with nested data', async ({ mount, page }) => {
       const schema: FormSchema = {
         type: 'record',

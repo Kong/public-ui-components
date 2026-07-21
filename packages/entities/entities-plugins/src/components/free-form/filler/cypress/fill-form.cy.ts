@@ -584,6 +584,50 @@ describe('Filler - Cypress', () => {
       cy.get('[data-testid="ff-json-metadata"]').should('exist')
     })
 
+    it('should fill foreign field with a raw id string', () => {
+      // ForeignField.vue is a plain text input - the id is typed directly,
+      // there is no select-item popover to click (unlike EnumField).
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            vault: {
+              type: 'foreign',
+              reference: 'vaults',
+            },
+          },
+        ],
+      }
+
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
+
+      const filler = createFiller(schema)
+      filler.fillField('vault', 'a5b875e6-2db1-4cbc-9f34-c5d11604cdc5')
+
+      cy.getTestId('ff-vault').should('have.value', 'a5b875e6-2db1-4cbc-9f34-c5d11604cdc5')
+    })
+
+    it('should fill foreign field from an { id } object value', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            consumer: {
+              type: 'foreign',
+              reference: 'consumers',
+            },
+          },
+        ],
+      }
+
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
+
+      const filler = createFiller(schema)
+      filler.fillField('consumer', { id: 'b1c2d3e4-0000-0000-0000-000000000000' })
+
+      cy.getTestId('ff-consumer').should('have.value', 'b1c2d3e4-0000-0000-0000-000000000000')
+    })
+
     it('should fill entire form with nested data', () => {
       const schema: FormSchema = {
         type: 'record',
