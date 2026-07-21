@@ -264,6 +264,8 @@ describe('exportPdf WebGL capture protocol', () => {
     expect(events[1]).toBe('restore')
     expect(vi.mocked(snapdom.toCanvas).mock.calls[0][1]).toMatchObject({
       embedFonts: true,
+      exclude: ['.tile-actions', '.tooltip', '.popover', '.dropdown-popover'],
+      excludeMode: 'remove',
       plugins: [expect.objectContaining({ name: 'kong-webgl-snapshot' })],
     })
   })

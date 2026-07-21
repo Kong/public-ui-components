@@ -218,6 +218,7 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
       const canvas = await snapdom.toCanvas(element, {
         scale,
         exclude,
+        excludeMode: 'remove',
         embedFonts: true,
         plugins: [webglSnapshotPlugin],
       })
