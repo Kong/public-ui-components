@@ -206,6 +206,44 @@ describe('Filler - Cypress', () => {
       cy.get('[data-testid="ff-config.port"]').should('have.value', '6379')
     })
 
+    it('record: re-filling an already-enabled optional object does not collapse it', () => {
+      // Companion to the playwright regression test: cypress's fillRecord already
+      // uses .check()/.uncheck() (idempotent - no-op if already in that state),
+      // so it doesn't have the playwright handler's bug (a plain .click() that
+      // re-toggles, and thus collapses, an already-enabled object). Kept here as
+      // regression coverage so it stays that way.
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            auth: {
+              type: 'record',
+              fields: [
+                { username: { type: 'string' } },
+                { password: { type: 'string' } },
+              ],
+            },
+          },
+        ],
+      }
+
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
+
+      const filler = createFiller(schema)
+
+      // First fill enables the switch from scratch (simulates create).
+      filler.fillField('auth', { username: 'alice', password: 'secret1' })
+      cy.get('[data-testid="ff-object-switch-auth"]').should('be.checked')
+      cy.getTestId('ff-auth.username').should('have.value', 'alice')
+
+      // Second fill (simulates editing an existing record): the object is
+      // already enabled and must stay that way, with children still reachable.
+      filler.fillField('auth', { username: 'bob', password: 'secret2' })
+      cy.get('[data-testid="ff-object-switch-auth"]').should('be.checked')
+      cy.getTestId('ff-auth.username').should('have.value', 'bob')
+      cy.getTestId('ff-auth.password').should('have.value', 'secret2')
+    })
+
     it('should fill map field (key-value pairs)', () => {
       const schema: FormSchema = {
         type: 'record',
