@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.57.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.0...@kong-ui-public/entities-shared@3.57.1) (2026-07-21)
+
+
+### Bug Fixes
+
+* **debugger:** latency table colors ([#3582](https://github.com/Kong/public-ui-components/issues/3582)) ([44f0d7f](https://github.com/Kong/public-ui-components/commit/44f0d7f8695cb07f5af618eea48203f55219c1f2))
+
+
+
+
+
 # [3.57.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.56.0...@kong-ui-public/entities-shared@3.57.0) (2026-07-16)
 
 
