@@ -184,7 +184,7 @@ import type {
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
 import { formatTime, isPlatformDatasource, TimePeriods, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
-import { CsvExportModal } from '@kong-ui-public/analytics-chart'
+import CsvExportModal from './CsvExportModal.vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
