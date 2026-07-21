@@ -73,6 +73,6 @@
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong/icons": "^1.61.2",
-    "geobuf": "^3.0.2"
+    "geobuf": "^4.0.0"
   }
 }
