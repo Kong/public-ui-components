@@ -197,6 +197,22 @@ const expectRenderedColumnWidths = (
   })
 }
 
+const expectCellContentGeometry = ({
+  overflowing,
+  value,
+}: {
+  overflowing: boolean
+  value: string
+}) => {
+  cy.contains('.table-data-grid-cell-content', value).then(($content) => {
+    if (overflowing) {
+      expect($content[0].scrollWidth).to.be.greaterThan($content[0].clientWidth)
+    } else {
+      expect($content[0].scrollWidth).to.be.at.most($content[0].clientWidth)
+    }
+  })
+}
+
 const scrollToSecondBlock = ({
   fetcher,
   onState,
@@ -267,6 +283,151 @@ describe('<TableDataGrid />', () => {
     cy.contains('.ag-cell', 'Gateway service').should('be.visible')
     cy.contains('.ag-header-cell-text', 'Name').should('have.css', 'color', 'rgb(18, 52, 86)')
     cy.contains('.ag-cell', 'Gateway service').should('have.css', 'color', 'rgb(171, 205, 239)')
+  })
+
+  it('truncates overflowing cell content and shows the full value in a tooltip', () => {
+    const longName = 'A gateway service name that is much wider than its table column'
+    const fetcher = cy.stub().resolves({
+      data: [{ ...rows[0], name: longName }],
+      total: 1,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', width: 160 },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    expectCellContentGeometry({ overflowing: true, value: longName })
+    cy.contains('.table-data-grid-cell-content', longName)
+      .should('have.css', 'overflow', 'hidden')
+      .and('have.css', 'text-overflow', 'ellipsis')
+      .and('have.css', 'white-space', 'nowrap')
+
+    cy.contains('.table-data-grid-cell-content', longName).trigger('mouseenter')
+
+    cy.contains('.popover', longName)
+      .should('be.visible')
+      .and(($tooltip) => {
+        expect($tooltip.closest('.ag-cell')).to.have.length(0)
+      })
+  })
+
+  it('does not show a tooltip when the full cell value fits', () => {
+    const fetcher = cy.stub().resolves({
+      data: [rows[0]],
+      total: 1,
+    })
+
+    mountTestTableDataGrid({ fetcher })
+
+    expectCellContentGeometry({ overflowing: false, value: rows[0].name })
+    cy.contains('.table-data-grid-cell-content', rows[0].name).trigger('mouseenter')
+
+    cy.contains('.popover', rows[0].name).should('not.exist')
+  })
+
+  it('keeps the tooltip anchored after AG Grid virtualizes rows while scrolling', () => {
+    const virtualizedRows = createRows(1, 50).map(row => ({
+      ...row,
+      name: `${row.name} has intentionally long content that overflows the column`,
+    }))
+    const scrolledName = virtualizedRows[30].name
+    const fetcher = cy.stub().resolves({
+      data: virtualizedRows,
+      total: virtualizedRows.length,
+    })
+    let gridApi: GridApi<TestRow> | undefined
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', width: 160 },
+        { key: 'status', label: 'Status' },
+      ],
+      onGridReady: (api) => {
+        gridApi = api
+      },
+      pageSize: virtualizedRows.length,
+    })
+
+    cy.contains('.table-data-grid-cell-content', virtualizedRows[0].name).should('be.visible')
+    cy.then(() => gridApi?.ensureIndexVisible(30, 'middle'))
+    expectCellContentGeometry({ overflowing: true, value: scrolledName })
+    cy.contains('.table-data-grid-cell-content', scrolledName)
+      .should('be.visible')
+    cy.contains('.table-data-grid-cell-content', scrolledName).trigger('mouseenter')
+
+    cy.contains('.popover', scrolledName)
+      .should('be.visible')
+      .then(($tooltip) => {
+        cy.contains('.table-data-grid-cell-content', scrolledName).then(($content) => {
+          const contentRect = $content[0].getBoundingClientRect()
+          const tooltipRect = $tooltip[0].getBoundingClientRect()
+
+          expect($tooltip.parent()[0]).to.equal($content[0].ownerDocument.body)
+          expect(tooltipRect.left).to.be.closeTo(contentRect.left, 1)
+          expect(tooltipRect.top).to.be.closeTo(contentRect.bottom, 1)
+        })
+      })
+  })
+
+  it('updates truncation and tooltip content when AG Grid refreshes a reused cell renderer', () => {
+    const refreshedName = 'A refreshed gateway service name that overflows its table column'
+    const refreshedRows = [{ ...rows[0] }]
+    const fetcher = cy.stub().resolves({
+      data: refreshedRows,
+      total: 1,
+    })
+    const getGridApi = mountTableWithGridApi({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', width: 160 },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    expectCellContentGeometry({ overflowing: false, value: rows[0].name })
+    cy.then(() => {
+      refreshedRows[0].name = refreshedName
+      getGridApi()?.refreshCells({ force: true })
+    })
+
+    cy.contains('.table-data-grid-cell-content', refreshedName).should('be.visible')
+    expectCellContentGeometry({ overflowing: true, value: refreshedName })
+    cy.contains('.table-data-grid-cell-content', refreshedName).trigger('mouseenter')
+
+    cy.contains('.popover', refreshedName).should('be.visible')
+  })
+
+  it('clears the tooltip when a column resize makes the full cell value fit', () => {
+    const longName = 'A gateway service name that initially overflows its table column'
+    const fetcher = cy.stub().resolves({
+      data: [{ ...rows[0], name: longName }],
+      total: 1,
+    })
+    const getGridApi = mountTableWithGridApi({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', width: 160 },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    expectCellContentGeometry({ overflowing: true, value: longName })
+
+    cy.then(() => {
+      getGridApi()?.setColumnWidths([{ key: 'name', newWidth: 600 }])
+    })
+    expectCellContentGeometry({ overflowing: false, value: longName })
+    cy.window().then(win => new Promise<void>((resolve) => {
+      win.requestAnimationFrame(() => win.requestAnimationFrame(() => resolve()))
+    }))
+    cy.contains('.table-data-grid-cell-content', longName).trigger('mouseenter')
+
+    cy.contains('.popover', longName).should('not.exist')
   })
 
   it('fills a taller parent height by default', () => {
