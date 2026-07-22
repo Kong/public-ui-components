@@ -44,14 +44,13 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     const {
       useCurrentRules: useCurrentRenderRules,
       createComputedRules: createComputedRenderRules,
-      hiddenPaths,
+      hasDependencies,
       isFieldHidden,
-    } = createRenderRuleRegistry(() => onChange?.(getValue()), schemaHelpers.getSchemaMap)
+    } = createRenderRuleRegistry(schemaHelpers.getSchemaMap, () => innerData)
 
     const rootRenderRules = useCurrentRenderRules({
       fieldPath: utils.rootSymbol,
       rules: propsRenderRules,
-      parentValue: innerData,
     })
 
     function setValue(newData: T) {
@@ -97,7 +96,13 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       // Reset hidden fields to their empty-or-default value by walking the tree
       // top-down, so a hidden subtree is dropped wholesale and no missing parent
       // is ever auto-created (replaces the KM-2182 `parentExists` workaround).
-      if (hiddenPaths.value.size > 0) {
+      //
+      // NOTE: pruning MUST run here, on the still-serialized (kid-keyed) tree,
+      // before `deserialize` renames map keys. `isFieldHidden` reads each
+      // dependency's actual value from `innerData` (kid-keyed) with a concrete
+      // path; pruning a name-keyed tree would feed it name-keyed paths that miss
+      // inside maps, silently mis-evaluating visibility for map-nested fields.
+      if (hasDependencies.value) {
         utils.pruneHiddenPaths(
           nextValue,
           isFieldHidden,

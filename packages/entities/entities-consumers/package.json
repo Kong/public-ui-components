@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-consumers",
-  "version": "4.6.1",
+  "version": "4.6.2",
   "type": "module",
   "main": "./dist/entities-consumers.umd.js",
   "module": "./dist/entities-consumers.es.js",
@@ -32,9 +32,9 @@
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "3.0.1",
+    "@kong/design-tokens": "3.0.3",
     "@kong/icons": "^1.61.2",
-    "@kong/kongponents": "9.61.1",
+    "@kong/kongponents": "9.61.5",
     "axios": "^1.17.0",
     "vue": "^3.5.35",
     "vue-router": "^5.1.0"
