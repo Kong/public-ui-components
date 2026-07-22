@@ -15,6 +15,7 @@ import type {
   ArrayLikeFieldSchema,
   FormSchema,
   RecordFieldSchema,
+  StringFieldSchema,
   UnionFieldSchema,
   MapFieldSchema,
 } from '../../../../types/plugins/form-schema'
@@ -181,6 +182,16 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
     // Use explicit default if provided
     if (schema.default !== undefined) {
       return schema.default
+    }
+
+    // The backend generates a value for this field when it's absent from the
+    // request (Kong schema's `auto = true`). Defaulting it to an explicit
+    // null here would submit `null` for an untouched field, which fails
+    // schema validation ("required field missing") instead of letting the
+    // backend auto-generate it - so omit the key entirely until the user
+    // actually provides a value.
+    if ((schema as StringFieldSchema).auto) {
+      return undefined
     }
 
     // Create structures when forced or for required fields

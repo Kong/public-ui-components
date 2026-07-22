@@ -7,15 +7,15 @@ export function fillForeign(option: HandlerOption<ForeignFieldSchema>): void {
 
   const selector = selectors.field(fieldKey)
 
-  // For foreign fields, typically need to click to open selector and select item
-  scrollIntoViewNative(selector)
-  cy.get(selector).click(SCROLL_BEHAVIOR)
-
-  // Handle different value formats
+  // ForeignField.vue renders a plain text input where the referenced entity's
+  // id is typed directly - there is no dropdown/select-item popover to pick from.
   const itemValue = typeof value === 'object' && value?.id ? value.id : value
 
-  if (itemValue) {
-    // Look for select item with the id
-    cy.get(`[data-testid="select-item-${itemValue}"]`).click(SCROLL_BEHAVIOR)
-  }
+  scrollIntoViewNative(selector)
+  cy.get(selector).then(($el) => {
+    cy.wrap($el).clear(SCROLL_BEHAVIOR)
+    if (itemValue) {
+      cy.wrap($el).type(String(itemValue), SCROLL_BEHAVIOR)
+    }
+  })
 }
