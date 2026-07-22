@@ -30,7 +30,15 @@ export async function fillRecord(option: RecordHandlerOption): Promise<void> {
     const shouldBeChecked = option.value !== null && option.value !== undefined
 
     if (isChecked !== shouldBeChecked) {
-      await switchControl.click({ force: true })
+      // Deliberately NOT `force: true`: this needs Playwright's actionability
+      // wait (visible, stable, scrolled into view, receives events), since the
+      // switch has often just been revealed (e.g. by expanding the advanced
+      // fields section) and hasn't settled into its final position yet. `force`
+      // skips that wait and clicks at a stale/off-screen coordinate, which is a
+      // silent no-op - the switch never toggles and the later `waitFor` below
+      // times out. A plain click still avoids the `.check()/.uncheck()` verification
+      // problem described above, since we already gate on `isChecked !== shouldBeChecked`.
+      await switchControl.click()
 
       if (shouldBeChecked) {
         // Enabling the switch expands the object's content via SlideTransition
