@@ -58,7 +58,7 @@
     "date-fns": "^4.4.0"
   },
   "devDependencies": {
-    "@kong/design-tokens": "3.0.1",
+    "@kong/design-tokens": "3.0.3",
     "axios": "^1.17.0"
   }
 }
