@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.247.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.247.3...@kong-ui-public/entities-plugins@9.247.4) (2026-07-22)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix freeform filler foreign fields, record switches, and auto-generated field defaults ([#3577](https://github.com/Kong/public-ui-components/issues/3577)) ([a1a0b71](https://github.com/Kong/public-ui-components/commit/a1a0b718ba9a5d40edc92ee6a9599f59f7bb3228))
+
+
+
+
+
 ## [9.247.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.247.2...@kong-ui-public/entities-plugins@9.247.3) (2026-07-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
