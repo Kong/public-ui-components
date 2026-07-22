@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.248.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.247.7...@kong-ui-public/entities-plugins@9.248.0) (2026-07-22)
+
+
+### Features
+
+* **entities-plugins:** scope multiselect and workspace-aware plugin search ([#3579](https://github.com/Kong/public-ui-components/issues/3579)) ([fb2c1d1](https://github.com/Kong/public-ui-components/commit/fb2c1d13dcac806351b60789d5148e900f2c03cf))
+
+
+
+
+
 ## [9.247.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.247.6...@kong-ui-public/entities-plugins@9.247.7) (2026-07-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
