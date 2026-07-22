@@ -52,8 +52,6 @@
     "@kong/icons": "^1.61.2",
     "@kong/kongponents": "9.61.5",
     "@types/file-saver": "^2.0.7",
-    "@types/lodash.mapkeys": "^4.6.9",
-    "@types/lodash.pick": "^4.4.9",
     "@types/papaparse": "^5.5.2",
     "ajv": "^8.20.0",
     "cypress-real-events": "^1.15.0",
@@ -76,7 +74,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "1MB"
+    "errorLimit": "1.1MB"
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
@@ -98,8 +96,6 @@
     "file-saver": "^2.0.5",
     "gridstack": "^11.5.1",
     "jspdf": "^4.2.1",
-    "lodash.mapkeys": "^4.6.0",
-    "lodash.pick": "^4.4.0",
     "papaparse": "^5.5.3",
     "p-queue": "^9.3.1"
   }

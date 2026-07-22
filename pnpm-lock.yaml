@@ -423,12 +423,6 @@ importers:
       jspdf:
         specifier: ^4.2.1
         version: 4.2.1
-      lodash.mapkeys:
-        specifier: ^4.6.0
-        version: 4.6.0
-      lodash.pick:
-        specifier: ^4.4.0
-        version: 4.4.0
       p-queue:
         specifier: ^9.3.1
         version: 9.3.2
@@ -475,12 +469,6 @@ importers:
       '@types/file-saver':
         specifier: ^2.0.7
         version: 2.0.7
-      '@types/lodash.mapkeys':
-        specifier: ^4.6.9
-        version: 4.6.9
-      '@types/lodash.pick':
-        specifier: ^4.4.9
-        version: 4.4.9
       '@types/papaparse':
         specifier: ^5.5.2
         version: 5.5.2
