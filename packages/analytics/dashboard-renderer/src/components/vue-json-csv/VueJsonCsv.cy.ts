@@ -56,6 +56,28 @@ describe('<VueJsonCsv />', () => {
     })
   })
 
+  // Field names come from API-provided chart metadata, so __proto__ must remain CSV data instead of changing the exported row prototype.
+  it('treats __proto__ as CSV data without changing the exported row prototype', () => {
+    cy.mount(VueJsonCsv, {
+      props: {
+        data: [{ ['__proto__']: 'own-value', excluded: 'excluded-value' }],
+        labels: { ['__proto__']: '__proto__' },
+        fields: ['__proto__'],
+        testing: true,
+      },
+    })
+
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
+    cy.getTestId('export-csv').click().then(() => {
+      const exported = Cypress.vueWrapper.emitted('export-started')?.[0]?.[0][0]
+
+      expect(Object.hasOwn(exported, '__proto__')).to.equal(true)
+      expect(exported.__proto__).to.equal('own-value')
+      expect(Object.hasOwn(exported, 'excluded')).to.equal(false)
+      expect(Object.getPrototypeOf(exported)).to.equal(Object.prototype)
+    })
+  })
+
   it('writes a UTF-8 BOM, delimiter, and Excel separator', () => {
     cy.mount(VueJsonCsv, {
       props: {

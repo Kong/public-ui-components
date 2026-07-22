@@ -10,8 +10,6 @@
 
 <script setup lang="ts">
 import { computed, type ComputedRef, type PropType } from 'vue'
-import mapKeys from 'lodash.mapkeys'
-import pick from 'lodash.pick'
 import { saveAs } from 'file-saver'
 import { unparse } from 'papaparse'
 import { ValidType, type CsvData, type CsvKeyValuePair } from '../../types/csv-export'
@@ -68,37 +66,37 @@ const exportableData: ComputedRef<CsvData | null> = computed(() => {
   return filteredData.length ? filteredData : null
 })
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-const labelsFunctionGenerator = (): Function => {
-  const labels: any = props.labels
+const labelsFunctionGenerator = (): ((item: CsvKeyValuePair) => CsvKeyValuePair) => {
+  const labels = props.labels
 
-  if (typeof props.fields as ValidType !== ValidType.Object) {
+  if (typeof props.fields !== ValidType.Object) {
     throw new Error('Labels needs to be a object containing key / value pairs.')
   }
 
-  if (typeof labels as ValidType === ValidType.Object) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-    return (item: Function) => mapKeys(item, (_, key) => labels[key] || key)
+  if (labels !== null && typeof labels === ValidType.Object) {
+    return item => Object.fromEntries(
+      Object.entries(item).map(([key, value]) => [labels[key] || key, value]),
+    )
   }
 
-  // @ts-ignore: valid return
   return item => item
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-const fieldsFunctionGenerator = (): Function => {
-  const fields: any = props.fields
+const fieldsFunctionGenerator = (): ((item: CsvKeyValuePair) => CsvKeyValuePair) => {
+  const fields = props.fields
 
-  if (typeof props.fields as ValidType !== ValidType.Object && !Array.isArray(fields)) {
+  if (typeof props.fields !== ValidType.Object && !Array.isArray(fields)) {
     throw new Error('Fields needs to be an array of strings.')
   }
 
   if (Array.isArray(fields)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-    return (item: Function) => pick(item, fields)
+    return item => Object.fromEntries(
+      fields
+        .filter(field => field in item)
+        .map(field => [field, item[field]]),
+    )
   }
 
-  // @ts-ignore: valid return type
   return item => item
 }
 
