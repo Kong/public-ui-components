@@ -1,4 +1,3 @@
-<!-- TODO: Remove this deprecated analytics-chart CSV export file after consumers migrate to @kong-ui-public/dashboard-renderer. MA-5236: https://konghq.atlassian.net/browse/MA-5236 -->
 <template>
   <div>
     <VueJsonCsv
@@ -14,7 +13,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { CsvData } from '../types'
+import type { CsvData } from '../types/csv-export'
 import VueJsonCsv from './vue-json-csv/VueJsonCsv.vue'
 
 const props = defineProps<{

@@ -1,4 +1,3 @@
-<!-- TODO: Remove this deprecated analytics-chart CSV export file after consumers migrate to @kong-ui-public/dashboard-renderer. MA-5236: https://konghq.atlassian.net/browse/MA-5236 -->
 <template>
   <div class="kong-ui-public-csv-export-modal">
     <KModal
@@ -33,15 +32,13 @@
             class="vitals-table"
             :fetcher="fetcher"
             :fetcher-cache-key="String(fetcherCacheKey)"
-            :headers="tableData?.headers || []"
+            :headers="tableData.headers"
             hide-pagination
             :row-hover="false"
             :sortable="false"
           >
             <template #empty-state>
-              <KEmptyState
-                :action-button-visible="false"
-              >
+              <KEmptyState :action-button-visible="false">
                 <template #title>
                   <h5>{{ i18n.t('csvExport.noDataRange') }}</h5>
                 </template>
@@ -106,19 +103,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, toRef } from 'vue'
-
-import {
-  KUI_ICON_SIZE_30,
-  KUI_COLOR_TEXT_NEUTRAL,
-} from '@kong/design-tokens'
+import { computed, ref, watch } from 'vue'
+import { format } from 'date-fns-tz'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { InfoIcon } from '@kong/icons'
-import type { AllAggregations, ExploreExportState, ExploreResultV4, GroupByResult, RecordEvent } from '@kong-ui-public/analytics-utilities'
-import { EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
+import {
+  EXPORT_RECORD_LIMIT,
+  formatTimestamp,
+  type AllAggregations,
+  type ExploreExportState,
+  type ExploreResultV4,
+  type GroupByResult,
+  type RecordEvent,
+} from '@kong-ui-public/analytics-utilities'
 import DownloadCsv from './DownloadCsv.vue'
 import composables from '../composables'
-import { format } from 'date-fns-tz'
-import type { CsvData, Header, TimeseriesColumn } from '../types'
+import type { CsvData, Header, TimeseriesColumn } from '../types/csv-export'
 
 const { i18n } = composables.useI18n()
 
@@ -143,7 +143,15 @@ const selectedRange = computed(() => {
     return ''
   }
 
-  return composables.useChartSelectedRange(toRef(props.exportState, 'chartData'))
+  if (!props.exportState.chartData?.meta) {
+    return ''
+  }
+
+  const { start, end } = props.exportState.chartData.meta
+
+  return start && end
+    ? `${formatTimestamp(new Date(start))} - ${formatTimestamp(new Date(end), { includeTZ: true })}`
+    : ''
 })
 
 const previewMessage = computed(() => {
@@ -204,21 +212,17 @@ const tableData = computed(() => {
     ]
   }
 
-  const dimensions = ('display' in props.exportState.chartData.meta) && props.exportState.chartData.meta?.display
-    ? props.exportState.chartData.meta?.display
+  const dimensions = ('display' in props.exportState.chartData.meta) && props.exportState.chartData.meta.display
+    ? props.exportState.chartData.meta.display
     : {}
 
   const displayHeaders: Header[] = [
     ...timeseriesColumns,
-
-    // `dimensions` are present in v1 and v2 explore meta
     ...Object.keys(dimensions).map(key => ({
       // @ts-ignore - dynamic i18n key
       label: i18n.t(`chartLabels.${key}`),
       key,
     })),
-
-    // `metricNames` are common to all explore versions
     ...props.exportState.chartData.meta.metric_names.map((key: AllAggregations) => ({
       // @ts-ignore - dynamic i18n key
       label: i18n.t(`chartLabels.${key}`),
@@ -226,24 +230,15 @@ const tableData = computed(() => {
     })),
   ]
 
-  interface AccumulatorRow {
-    [key: string]: string
-  }
-
-  const csvHeaders: Record<string, string> = displayHeaders.reduce((accum: AccumulatorRow, h: TimeseriesColumn) => {
-    accum[h.key] = h.label
-
-    return accum
+  const csvHeaders = displayHeaders.reduce<Record<string, string>>((headers, header) => {
+    headers[header.key] = header.label
+    return headers
   }, {})
 
-  return {
-    headers: displayHeaders,
-    csvHeaders,
-    rows,
-  }
+  return { headers: displayHeaders, csvHeaders, rows }
 })
 
-const fetcher = async (): Promise<any> => {
+const fetcher = async () => {
   if (props.exportState.status !== 'success') {
     return { total: 0, data: [] }
   }
@@ -256,7 +251,6 @@ const fetcher = async (): Promise<any> => {
   }
 }
 
-// Parent component could send new data while modal is open
 watch(tableData, () => {
   fetcherCacheKey.value++
 })
@@ -286,7 +280,7 @@ watch(tableData, () => {
     .k-table {
       thead {
         border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-        height: auto;   // Match KTable legacy styling
+        height: auto;
       }
     }
 

@@ -51,6 +51,8 @@
     "@kong/design-tokens": "3.0.3",
     "@kong/icons": "^1.61.2",
     "@kong/kongponents": "9.61.5",
+    "@types/file-saver": "^2.0.7",
+    "@types/papaparse": "^5.5.2",
     "ajv": "^8.20.0",
     "cypress-real-events": "^1.15.0",
     "pinia": ">= 3.0.4 < 4",
@@ -72,7 +74,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "1MB"
+    "errorLimit": "1.1MB"
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
@@ -90,8 +92,11 @@
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@zumer/snapdom": "^2.6.0",
+    "date-fns-tz": "^3.2.0",
+    "file-saver": "^2.0.5",
     "gridstack": "^11.5.1",
     "jspdf": "^4.2.1",
+    "papaparse": "^5.5.3",
     "p-queue": "^9.3.1"
   }
 }
