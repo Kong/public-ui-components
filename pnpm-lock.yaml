@@ -661,7 +661,7 @@ importers:
         specifier: ^1.61.2
         version: 1.61.2(vue@3.5.38(typescript@5.9.3))
       dompurify:
-        specifier: ^3.4.8
+        specifier: ^3.4.11
         version: 3.4.12
       fecha:
         specifier: ^4.2.3
@@ -1109,7 +1109,7 @@ importers:
         specifier: workspace:^
         version: link:../../core/forms
       dompurify:
-        specifier: ^3.4.8
+        specifier: ^3.4.11
         version: 3.4.12
       lodash-es:
         specifier: ^4.18.1
@@ -19412,7 +19412,7 @@ snapshots:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.13
       dayjs: 1.11.21
-      dompurify: 3.4.11
+      dompurify: 3.4.12
       elkjs: 0.9.3
       katex: 0.16.47
       khroma: 2.1.0
@@ -19440,7 +19440,7 @@ snapshots:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.14
       dayjs: 1.11.21
-      dompurify: 3.4.11
+      dompurify: 3.4.12
       es-toolkit: 1.49.0
       katex: 0.16.47
       khroma: 2.1.0
