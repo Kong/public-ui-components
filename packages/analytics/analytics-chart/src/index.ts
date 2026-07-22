@@ -7,6 +7,8 @@ export { AnalyticsChart, SimpleChart, TopNTable, SparklineChart }
 
 /**
  * @deprecated Import CsvExportModal from '@kong-ui-public/dashboard-renderer' instead.
+ * TODO: Remove this deprecated analytics-chart export after consumers migrate to
+ * @kong-ui-public/dashboard-renderer. MA-5236: https://konghq.atlassian.net/browse/MA-5236
  */
 export { default as CsvExportModal } from './components/CsvExportModal.vue'
 

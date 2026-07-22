@@ -1,3 +1,4 @@
+<!-- TODO: Remove this deprecated analytics-chart CSV export file after consumers migrate to @kong-ui-public/dashboard-renderer. MA-5236: https://konghq.atlassian.net/browse/MA-5236 -->
 <template>
   <div class="kong-ui-public-csv-export-modal">
     <KModal
