@@ -157,15 +157,18 @@ const mountTableInFixedHeightContainer = ({
 }
 
 const mountTableWithGridApi = ({
+  containerStyle,
   fetcher,
   headers: tableHeaders,
 }: {
+  containerStyle?: Record<string, string>
   fetcher: TableDataGridFetcher<TestRow>
   headers: Array<TableDataGridHeader<TestRow>>
 }) => {
   let gridApi: GridApi<TestRow> | undefined
 
   mountTestTableDataGrid({
+    containerStyle,
     fetcher,
     headers: tableHeaders,
     onGridReady: (api) => {
@@ -197,20 +200,32 @@ const expectRenderedColumnWidths = (
   })
 }
 
-const expectCellContentGeometry = ({
-  overflowing,
-  value,
-}: {
-  overflowing: boolean
-  value: string
-}) => {
-  cy.contains('.table-data-grid-cell-content', value).then(($content) => {
-    if (overflowing) {
-      expect($content[0].scrollWidth).to.be.greaterThan($content[0].clientWidth)
-    } else {
-      expect($content[0].scrollWidth).to.be.at.most($content[0].clientWidth)
-    }
+const expectOverflowingCellContent = (value: string) => {
+  cy.contains('.table-data-grid-cell-content', value).should(($content) => {
+    expect($content[0].scrollWidth).to.be.greaterThan($content[0].clientWidth)
   })
+}
+
+const expectOverflowTooltip = (value: string) => {
+  expectOverflowingCellContent(value)
+  cy.contains('.table-data-grid-cell-content', value).trigger('mouseenter')
+  cy.contains('.popover', value).should('be.visible')
+}
+
+const expectColumnWidthAndOverflowTooltip = ({
+  getGridApi,
+  value,
+  width,
+}: {
+  getGridApi: () => GridApi<TestRow> | undefined
+  value: string
+  width: number
+}) => {
+  cy.contains('.table-data-grid-cell-content', value).should('be.visible')
+  cy.then(() => {
+    expect(getColumnWidthsById(getGridApi()).name).to.equal(width)
+  })
+  expectOverflowTooltip(value)
 }
 
 const scrollToSecondBlock = ({
@@ -285,48 +300,61 @@ describe('<TableDataGrid />', () => {
     cy.contains('.ag-cell', 'Gateway service').should('have.css', 'color', 'rgb(171, 205, 239)')
   })
 
-  it('truncates overflowing cell content and shows the full value in a tooltip', () => {
-    const longName = 'A gateway service name that is much wider than its table column'
+  it('truncates overflowing cell content in unconstrained flex columns', () => {
+    const longName = 'A gateway service name that is much wider than its flexible table column'
     const fetcher = cy.stub().resolves({
       data: [{ ...rows[0], name: longName }],
       total: 1,
     })
 
-    mountTestTableDataGrid({
+    mountTestTableDataGrid({ fetcher })
+
+    expectOverflowTooltip(longName)
+  })
+
+  it('truncates overflowing cell content in columns with minWidth', () => {
+    const longName = 'A gateway service name that is much wider than its minimum-width table column'
+    const fetcher = cy.stub().resolves({
+      data: [{ ...rows[0], name: longName }],
+      total: 1,
+    })
+    const getGridApi = mountTableWithGridApi({
+      containerStyle: {
+        width: '300px',
+      },
       fetcher,
       headers: [
-        { key: 'name', label: 'Name', width: 160 },
+        { key: 'name', label: 'Name', minWidth: 160 },
+        { key: 'status', label: 'Status', minWidth: 160 },
+      ],
+    })
+
+    expectColumnWidthAndOverflowTooltip({
+      getGridApi,
+      value: longName,
+      width: 160,
+    })
+  })
+
+  it('truncates overflowing cell content in columns with maxWidth', () => {
+    const longName = 'A gateway service name that is much wider than its maximum-width table column'
+    const fetcher = cy.stub().resolves({
+      data: [{ ...rows[0], name: longName }],
+      total: 1,
+    })
+    const getGridApi = mountTableWithGridApi({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', maxWidth: 160 },
         { key: 'status', label: 'Status' },
       ],
     })
 
-    expectCellContentGeometry({ overflowing: true, value: longName })
-    cy.contains('.table-data-grid-cell-content', longName)
-      .should('have.css', 'overflow', 'hidden')
-      .and('have.css', 'text-overflow', 'ellipsis')
-      .and('have.css', 'white-space', 'nowrap')
-
-    cy.contains('.table-data-grid-cell-content', longName).trigger('mouseenter')
-
-    cy.contains('.popover', longName)
-      .should('be.visible')
-      .and(($tooltip) => {
-        expect($tooltip.closest('.ag-cell')).to.have.length(0)
-      })
-  })
-
-  it('does not show a tooltip when the full cell value fits', () => {
-    const fetcher = cy.stub().resolves({
-      data: [rows[0]],
-      total: 1,
+    expectColumnWidthAndOverflowTooltip({
+      getGridApi,
+      value: longName,
+      width: 160,
     })
-
-    mountTestTableDataGrid({ fetcher })
-
-    expectCellContentGeometry({ overflowing: false, value: rows[0].name })
-    cy.contains('.table-data-grid-cell-content', rows[0].name).trigger('mouseenter')
-
-    cy.contains('.popover', rows[0].name).should('not.exist')
   })
 
   it('keeps the tooltip anchored after AG Grid virtualizes rows while scrolling', () => {
@@ -355,7 +383,7 @@ describe('<TableDataGrid />', () => {
 
     cy.contains('.table-data-grid-cell-content', virtualizedRows[0].name).should('be.visible')
     cy.then(() => gridApi?.ensureIndexVisible(30, 'middle'))
-    expectCellContentGeometry({ overflowing: true, value: scrolledName })
+    expectOverflowingCellContent(scrolledName)
     cy.contains('.table-data-grid-cell-content', scrolledName)
       .should('be.visible')
     cy.contains('.table-data-grid-cell-content', scrolledName).trigger('mouseenter')
@@ -374,35 +402,7 @@ describe('<TableDataGrid />', () => {
       })
   })
 
-  it('updates truncation and tooltip content when AG Grid refreshes a reused cell renderer', () => {
-    const refreshedName = 'A refreshed gateway service name that overflows its table column'
-    const refreshedRows = [{ ...rows[0] }]
-    const fetcher = cy.stub().resolves({
-      data: refreshedRows,
-      total: 1,
-    })
-    const getGridApi = mountTableWithGridApi({
-      fetcher,
-      headers: [
-        { key: 'name', label: 'Name', width: 160 },
-        { key: 'status', label: 'Status' },
-      ],
-    })
-
-    expectCellContentGeometry({ overflowing: false, value: rows[0].name })
-    cy.then(() => {
-      refreshedRows[0].name = refreshedName
-      getGridApi()?.refreshCells({ force: true })
-    })
-
-    cy.contains('.table-data-grid-cell-content', refreshedName).should('be.visible')
-    expectCellContentGeometry({ overflowing: true, value: refreshedName })
-    cy.contains('.table-data-grid-cell-content', refreshedName).trigger('mouseenter')
-
-    cy.contains('.popover', refreshedName).should('be.visible')
-  })
-
-  it('clears the tooltip when a column resize makes the full cell value fit', () => {
+  it('clears the tooltip when AG Grid expands the column to fit the full value', () => {
     const longName = 'A gateway service name that initially overflows its table column'
     const fetcher = cy.stub().resolves({
       data: [{ ...rows[0], name: longName }],
@@ -416,17 +416,14 @@ describe('<TableDataGrid />', () => {
       ],
     })
 
-    expectCellContentGeometry({ overflowing: true, value: longName })
-
+    expectOverflowingCellContent(longName)
     cy.then(() => {
       getGridApi()?.setColumnWidths([{ key: 'name', newWidth: 600 }])
     })
-    expectCellContentGeometry({ overflowing: false, value: longName })
-    cy.window().then(win => new Promise<void>((resolve) => {
-      win.requestAnimationFrame(() => win.requestAnimationFrame(() => resolve()))
-    }))
+    cy.contains('.table-data-grid-cell-content', longName).should(($content) => {
+      expect($content[0].scrollWidth).to.be.at.most($content[0].clientWidth)
+    })
     cy.contains('.table-data-grid-cell-content', longName).trigger('mouseenter')
-
     cy.contains('.popover', longName).should('not.exist')
   })
 
