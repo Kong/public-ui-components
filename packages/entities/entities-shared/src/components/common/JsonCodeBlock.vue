@@ -96,7 +96,7 @@ const displayedCharLength = computed((): number => {
   border-top-right-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   display: flex;
   gap: var(--kui-space-30, $kui-space-30);
-  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
 
   .k-code-block {
     flex: auto;
