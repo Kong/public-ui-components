@@ -301,11 +301,16 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
 
           .page-layout-title-wrapper {
             > * {
+              -webkit-box-orient: vertical;
               color: var(--kui-color-text, $kui-color-text);
+              display: -webkit-box;
               font-size: var(--kui-font-size-50, $kui-font-size-50);
               font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+              -webkit-line-clamp: 1;
+              line-clamp: 1;
               line-height: var(--kui-line-height-40, $kui-line-height-40);
               margin: var(--kui-space-0, $kui-space-0);
+              overflow: hidden;
             }
           }
 
