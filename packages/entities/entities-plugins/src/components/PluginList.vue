@@ -544,10 +544,8 @@ const tableHeaders: BaseTableHeaders = fields
 /**
  * Fetcher & Filtering
  */
-const fetcherBaseUrl = computed<string>(() => {
-  let url = props.config.entityType
-    ? `${props.config.apiBaseUrl}${endpoints.list[props.config.app].forEntity}`
-    : `${props.config.apiBaseUrl}${endpoints.list[props.config.app].all}`
+const buildFetcherUrl = (endpoint: string): string => {
+  let url = `${props.config.apiBaseUrl}${endpoint}`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
@@ -557,7 +555,13 @@ const fetcherBaseUrl = computed<string>(() => {
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{entityType}/gi, props.config?.entityType || '')
     .replace(/{entityId}/gi, props.config?.entityId || '')
-})
+}
+
+const fetcherBaseUrl = computed<string>(() => buildFetcherUrl(
+  props.config.entityType
+    ? endpoints.list[props.config.app].forEntity
+    : endpoints.list[props.config.app].all,
+))
 
 const filterQuery = ref<string>('')
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
@@ -593,10 +597,7 @@ const isSearchActive = computed((): boolean => isPluginFilterEnhanced.value && !
 
 const activeFetcherUrl = computed<string>(() => {
   if (isSearchActive.value) {
-    const konnectConfig = props.config as KonnectPluginListConfig
-    return `${konnectConfig.apiBaseUrl}${endpoints.search.konnect.all}`
-      .replace(/{controlPlaneId}/gi, konnectConfig.controlPlaneId || '')
-      .replace(/\/{workspace}/gi, konnectConfig.workspace ? `/${konnectConfig.workspace}` : '')
+    return buildFetcherUrl(endpoints.list.konnect.search)
   }
 
   return fetcherBaseUrl.value
