@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.3.4...@kong-ui-public/table-data-grid@0.3.5) (2026-07-23)
+
+
+### Bug Fixes
+
+* **table-data-grid:** show tooltips for truncated cells ([#3598](https://github.com/Kong/public-ui-components/issues/3598)) ([7163383](https://github.com/Kong/public-ui-components/commit/716338315dbcc47a40fb2e2f100c9717328e9354))
+
+
+
+
+
 ## [0.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.3.3...@kong-ui-public/table-data-grid@0.3.4) (2026-07-23)
 
 **Note:** Version bump only for package @kong-ui-public/table-data-grid
