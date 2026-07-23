@@ -88,11 +88,11 @@
     "@vue-flow/core": "^1.48.2",
     "@vueuse/core": "^14.3.0",
     "@vueuse/integrations": "^14.3.0",
-    "axios": "^1.17.0",
+    "axios": "^1.18.1",
     "monaco-editor": "^0.55.1",
-    "nanoid": "^5.1.11",
+    "nanoid": "^5.1.16",
     "reflect-metadata": "^0.2.2",
-    "vue": "^3.5.35",
+    "vue": "^3.5.39",
     "vue-router": "^5.1.0",
     "zod": "^4.4.3"
   },
@@ -146,7 +146,7 @@
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
-    "dompurify": "^3.4.8",
+    "dompurify": "^3.4.11",
     "lodash-es": "^4.18.1",
     "marked": "^14.1.4"
   }
