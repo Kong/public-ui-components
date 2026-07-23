@@ -45,7 +45,7 @@
     "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong/design-tokens": "3.0.3",
     "@kong/icons": "^1.61.2",
-    "@kong/kongponents": "9.61.5",
+    "@kong/kongponents": "9.61.6",
     "@shikijs/core": "^4.2.0",
     "@shikijs/engine-javascript": "^4.2.0",
     "@shikijs/langs": "^4.2.0",
