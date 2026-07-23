@@ -26,7 +26,7 @@
     "@evilmartians/lefthook": "^2.1.9",
     "@kong/design-tokens": "3.0.3",
     "@kong/eslint-config-kong-ui": "^1.7.1",
-    "@kong/kongponents": "9.61.5",
+    "@kong/kongponents": "9.61.6",
     "@kong/stylelint-plugin-design-tokens": "^2.0.0",
     "@stylistic/stylelint-plugin": "^5.2.0",
     "@types/flat": "^5.0.5",
