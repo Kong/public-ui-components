@@ -3,6 +3,7 @@
     <KTooltip
       class="table-data-grid-cell-tooltip"
       :disabled="!isOverflowing"
+      :kpop-attributes="{ popoverDelay: 400 }"
       max-width="300"
       placement="bottom-start"
       target="body"
