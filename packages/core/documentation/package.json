@@ -52,8 +52,8 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "3.0.3",
     "@kong/kongponents": "9.61.5",
-    "axios": "^1.17.0",
-    "vue": "^3.5.35"
+    "axios": "^1.18.1",
+    "vue": "^3.5.39"
   },
   "repository": {
     "type": "git",

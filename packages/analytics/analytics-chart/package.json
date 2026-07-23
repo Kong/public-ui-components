@@ -35,8 +35,8 @@
     "lodash.mapkeys": "^4.6.0",
     "lodash.pick": "^4.4.0",
     "lodash.pickby": "^4.6.0",
-    "papaparse": "^5.5.3",
-    "vue": "^3.5.35"
+    "papaparse": "^5.5.4",
+    "vue": "^3.5.39"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
@@ -83,8 +83,8 @@
     "chartjs-plugin-annotation": "^3.1.0",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
-    "uuid": "^14.0.0",
-    "vue-chartjs": "^5.3.3"
+    "uuid": "^14.0.1",
+    "vue-chartjs": "^5.3.4"
   },
   "distSizeChecker": {
     "warningLimit": "1.6MB",
