@@ -90,12 +90,13 @@ const displayedCharLength = computed((): number => {
 
 .json-endpoint {
   align-items: baseline;
-  background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
+  background-color: var(--kui-color-background, $kui-color-background);
   border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-inverse, $kui-color-border-inverse);
   border-top-left-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   border-top-right-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   display: flex;
-  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+  gap: var(--kui-space-30, $kui-space-30);
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
 
   .k-code-block {
     flex: auto;
