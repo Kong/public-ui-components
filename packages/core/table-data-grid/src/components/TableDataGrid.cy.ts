@@ -157,15 +157,18 @@ const mountTableInFixedHeightContainer = ({
 }
 
 const mountTableWithGridApi = ({
+  containerStyle,
   fetcher,
   headers: tableHeaders,
 }: {
+  containerStyle?: Record<string, string>
   fetcher: TableDataGridFetcher<TestRow>
   headers: Array<TableDataGridHeader<TestRow>>
 }) => {
   let gridApi: GridApi<TestRow> | undefined
 
   mountTestTableDataGrid({
+    containerStyle,
     fetcher,
     headers: tableHeaders,
     onGridReady: (api) => {
@@ -195,6 +198,34 @@ const expectRenderedColumnWidths = (
       widthsByColumn: getColumnWidthsById(gridApi),
     })
   })
+}
+
+const expectOverflowingCellContent = (value: string) => {
+  cy.contains('.table-data-grid-cell-content', value).should(($content) => {
+    expect($content[0].scrollWidth).to.be.greaterThan($content[0].clientWidth)
+  })
+}
+
+const expectOverflowTooltip = (value: string) => {
+  expectOverflowingCellContent(value)
+  cy.contains('.table-data-grid-cell-content', value).trigger('mouseenter')
+  cy.contains('.popover', value).should('be.visible')
+}
+
+const expectColumnWidthAndOverflowTooltip = ({
+  getGridApi,
+  value,
+  width,
+}: {
+  getGridApi: () => GridApi<TestRow> | undefined
+  value: string
+  width: number
+}) => {
+  cy.contains('.table-data-grid-cell-content', value).should('be.visible')
+  cy.then(() => {
+    expect(getColumnWidthsById(getGridApi()).name).to.equal(width)
+  })
+  expectOverflowTooltip(value)
 }
 
 const scrollToSecondBlock = ({
@@ -267,6 +298,133 @@ describe('<TableDataGrid />', () => {
     cy.contains('.ag-cell', 'Gateway service').should('be.visible')
     cy.contains('.ag-header-cell-text', 'Name').should('have.css', 'color', 'rgb(18, 52, 86)')
     cy.contains('.ag-cell', 'Gateway service').should('have.css', 'color', 'rgb(171, 205, 239)')
+  })
+
+  it('truncates overflowing cell content in unconstrained flex columns', () => {
+    const longName = 'A gateway service name that is much wider than its flexible table column'
+    const fetcher = cy.stub().resolves({
+      data: [{ ...rows[0], name: longName }],
+      total: 1,
+    })
+
+    mountTestTableDataGrid({ fetcher })
+
+    expectOverflowTooltip(longName)
+  })
+
+  it('truncates overflowing cell content in columns with minWidth', () => {
+    const longName = 'A gateway service name that is much wider than its minimum-width table column'
+    const fetcher = cy.stub().resolves({
+      data: [{ ...rows[0], name: longName }],
+      total: 1,
+    })
+    const getGridApi = mountTableWithGridApi({
+      containerStyle: {
+        width: '300px',
+      },
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', minWidth: 160 },
+        { key: 'status', label: 'Status', minWidth: 160 },
+      ],
+    })
+
+    expectColumnWidthAndOverflowTooltip({
+      getGridApi,
+      value: longName,
+      width: 160,
+    })
+  })
+
+  it('truncates overflowing cell content in columns with maxWidth', () => {
+    const longName = 'A gateway service name that is much wider than its maximum-width table column'
+    const fetcher = cy.stub().resolves({
+      data: [{ ...rows[0], name: longName }],
+      total: 1,
+    })
+    const getGridApi = mountTableWithGridApi({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', maxWidth: 160 },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    expectColumnWidthAndOverflowTooltip({
+      getGridApi,
+      value: longName,
+      width: 160,
+    })
+  })
+
+  it('keeps the tooltip anchored after AG Grid virtualizes rows while scrolling', () => {
+    const virtualizedRows = createRows(1, 50).map(row => ({
+      ...row,
+      name: `${row.name} has intentionally long content that overflows the column`,
+    }))
+    const scrolledName = virtualizedRows[30].name
+    const fetcher = cy.stub().resolves({
+      data: virtualizedRows,
+      total: virtualizedRows.length,
+    })
+    let gridApi: GridApi<TestRow> | undefined
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', width: 160 },
+        { key: 'status', label: 'Status' },
+      ],
+      onGridReady: (api) => {
+        gridApi = api
+      },
+      pageSize: virtualizedRows.length,
+    })
+
+    cy.contains('.table-data-grid-cell-content', virtualizedRows[0].name).should('be.visible')
+    cy.then(() => gridApi?.ensureIndexVisible(30, 'middle'))
+    expectOverflowingCellContent(scrolledName)
+    cy.contains('.table-data-grid-cell-content', scrolledName)
+      .should('be.visible')
+    cy.contains('.table-data-grid-cell-content', scrolledName).trigger('mouseenter')
+
+    cy.contains('.popover', scrolledName)
+      .should('be.visible')
+      .then(($tooltip) => {
+        cy.contains('.table-data-grid-cell-content', scrolledName).then(($content) => {
+          const contentRect = $content[0].getBoundingClientRect()
+          const tooltipRect = $tooltip[0].getBoundingClientRect()
+
+          expect($tooltip.parent()[0]).to.equal($content[0].ownerDocument.body)
+          expect(tooltipRect.left).to.be.closeTo(contentRect.left, 1)
+          expect(tooltipRect.top).to.be.closeTo(contentRect.bottom, 1)
+        })
+      })
+  })
+
+  it('clears the tooltip when AG Grid expands the column to fit the full value', () => {
+    const longName = 'A gateway service name that initially overflows its table column'
+    const fetcher = cy.stub().resolves({
+      data: [{ ...rows[0], name: longName }],
+      total: 1,
+    })
+    const getGridApi = mountTableWithGridApi({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', width: 160 },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    expectOverflowingCellContent(longName)
+    cy.then(() => {
+      getGridApi()?.setColumnWidths([{ key: 'name', newWidth: 600 }])
+    })
+    cy.contains('.table-data-grid-cell-content', longName).should(($content) => {
+      expect($content[0].scrollWidth).to.be.at.most($content[0].clientWidth)
+    })
+    cy.contains('.table-data-grid-cell-content', longName).trigger('mouseenter')
+    cy.contains('.popover', longName).should('not.exist')
   })
 
   it('fills a taller parent height by default', () => {

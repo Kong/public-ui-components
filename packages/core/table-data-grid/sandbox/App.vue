@@ -237,6 +237,7 @@ import { computed, ref } from 'vue'
 import { TableDataGrid } from '../src'
 
 type SandboxRow = {
+  description: string
   id: string
   name: string
   status: string
@@ -295,6 +296,7 @@ const collapsedSections = ref<Record<SandboxSectionId, boolean>>({
 
 const headers: Array<TableDataGridHeader<SandboxRow>> = [
   { key: 'name', label: 'Name', minWidth: 220 },
+  { key: 'description', label: 'Description', width: 240 },
   { key: 'status', label: 'Status', minWidth: 140 },
   { key: 'latency', label: 'Latency', minWidth: 140 },
   { key: 'region', label: 'Region', minWidth: 140 },
@@ -304,6 +306,7 @@ const generatedRows: SandboxRow[] = Array.from({ length: 140 }, (_, index) => {
   const rowNumber = index + 1
 
   return {
+    description: `This deliberately long description for Service ${rowNumber} demonstrates cell truncation and the full-content tooltip on hover.`,
     id: `row-${rowNumber}`,
     latency: 35 + ((index * 29) % 800),
     name: `Service ${rowNumber}`,
@@ -561,9 +564,10 @@ const toggleSectionOnHeaderClick = (sectionId: SandboxSectionId, event: MouseEve
   min-width: 0;
 
   :deep(.kong-ui-public-table-data-grid) {
-    flex: 0 0 760px;
+    flex: 1 1 auto;
     height: 760px;
     min-height: 0;
+    width: 100%;
   }
 }
 

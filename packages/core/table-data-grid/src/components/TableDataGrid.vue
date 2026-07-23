@@ -62,6 +62,7 @@ import {
   themeQuartz,
 } from 'ag-grid-community'
 import { computed } from 'vue'
+import TableDataGridCellRenderer from './TableDataGridCellRenderer.vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import useI18n from '../composables/useI18n'
@@ -96,6 +97,7 @@ const emit = defineEmits<{
 const { i18n: { t } } = useI18n()
 
 const defaultColDef: ColDef<Row> = {
+  cellRenderer: TableDataGridCellRenderer,
   resizable: false,
   sortable: false,
   suppressMovable: true,
@@ -185,5 +187,12 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
 .table-data-grid-grid :global(.ag-cell) {
   align-items: center;
   display: flex;
+  min-width: 0;
+}
+
+.table-data-grid-grid :global(.ag-cell-wrapper),
+.table-data-grid-grid :global(.ag-cell-value) {
+  min-width: 0;
+  width: 100%;
 }
 </style>
