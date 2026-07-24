@@ -258,6 +258,9 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
       padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 
       .page-header-start {
+        // Allow this flex item to shrink below its content size so the title can truncate
+        min-width: 0;
+
         .header-breadcrumbs {
           &:deep(.breadcrumbs-item-container) {
             // Override first breadcrumb padding left
@@ -300,12 +303,19 @@ watch([() => pageShortcutData, () => route?.fullPath], () => {
           }
 
           .page-layout-title-wrapper {
+            // Allow this flex item to shrink so its child title can truncate with an ellipsis
+            min-width: 0;
+            overflow: hidden;
+
             > * {
               color: var(--kui-color-text, $kui-color-text);
               font-size: var(--kui-font-size-50, $kui-font-size-50);
               font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
               line-height: var(--kui-line-height-40, $kui-line-height-40);
               margin: var(--kui-space-0, $kui-space-0);
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
           }
 
