@@ -214,6 +214,10 @@ const RENDER_RULES: RenderRules = {
     'config.cluster_cache_redis.cloud_authentication.azure_client_secret': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'azure'],
     'config.cluster_cache_redis.cloud_authentication.azure_tenant_id': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'azure'],
 
+    'config.cluster_cache_redis.cloud_authentication.oauth': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'oauth'],
+    'config.cluster_cache_redis.cloud_authentication.oauth.username': ['config.cluster_cache_redis.cloud_authentication.oauth.grant_type', 'password'],
+    'config.cluster_cache_redis.cloud_authentication.oauth.password': ['config.cluster_cache_redis.cloud_authentication.oauth.grant_type', 'password'],
+
     'config.redis': ['config.session_storage', 'redis'],
   },
   bundles: [
