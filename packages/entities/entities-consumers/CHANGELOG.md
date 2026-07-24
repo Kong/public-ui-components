@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.6.3...@kong-ui-public/entities-consumers@4.7.0) (2026-07-24)
+
+
+### Features
+
+* **entities-*:** add search in workspace for routes, services and consumers ([#3600](https://github.com/Kong/public-ui-components/issues/3600)) ([9ae6133](https://github.com/Kong/public-ui-components/commit/9ae6133d43bb098f261f1186b0f089069ced389a))
+
+
+
+
+
 ## [4.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.6.2...@kong-ui-public/entities-consumers@4.6.3) (2026-07-23)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumers

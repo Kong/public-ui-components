@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.249.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.248.1...@kong-ui-public/entities-plugins@9.249.0) (2026-07-24)
+
+
+### Features
+
+* **entities-*:** add search in workspace for routes, services and consumers ([#3600](https://github.com/Kong/public-ui-components/issues/3600)) ([9ae6133](https://github.com/Kong/public-ui-components/commit/9ae6133d43bb098f261f1186b0f089069ced389a))
+
+
+
+
+
 ## [9.248.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.248.0...@kong-ui-public/entities-plugins@9.248.1) (2026-07-23)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
