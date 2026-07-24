@@ -41,5 +41,9 @@ export const vectordbRenderRules: RenderRules = {
     'config.vectordb.redis.cloud_authentication.azure_client_id': ['config.vectordb.redis.cloud_authentication.auth_provider', 'azure'],
     'config.vectordb.redis.cloud_authentication.azure_client_secret': ['config.vectordb.redis.cloud_authentication.auth_provider', 'azure'],
     'config.vectordb.redis.cloud_authentication.azure_tenant_id': ['config.vectordb.redis.cloud_authentication.auth_provider', 'azure'],
+
+    'config.vectordb.redis.cloud_authentication.oauth': ['config.vectordb.redis.cloud_authentication.auth_provider', 'oauth'],
+    'config.vectordb.redis.cloud_authentication.oauth.username': ['config.vectordb.redis.cloud_authentication.oauth.grant_type', 'password'],
+    'config.vectordb.redis.cloud_authentication.oauth.password': ['config.vectordb.redis.cloud_authentication.oauth.grant_type', 'password'],
   },
 }
