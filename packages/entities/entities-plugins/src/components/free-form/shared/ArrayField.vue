@@ -29,7 +29,12 @@
         :data-testid="`ff-label-${field.path.value}`"
         :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
-        {{ fieldAttrs.label }}
+        <slot
+          :label="fieldAttrs.label"
+          name="label"
+        >
+          {{ fieldAttrs.label }}
+        </slot>
         <template
           v-if="fieldAttrs.labelAttributes?.info"
           #tooltip
@@ -205,6 +210,7 @@ defineSlots<{
     /** for named slot, the field name use `fieldName` instead */
     fieldName: string
   }): any
+  label(props: { label: string }): any
   tooltip(): any
 }>()
 

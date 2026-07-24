@@ -191,6 +191,7 @@ useProvideExperimentalFreeForms([
   'oauth2-introspection',
   'oauth2',
   'opa',
+  'openid-connect',
   'opentelemetry',
   'openwhisk',
   'post-function',
