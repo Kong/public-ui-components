@@ -33,7 +33,6 @@
     "@types/js-yaml": "^4.0.9",
     "@types/jsdom": "^28.0.3",
     "@types/node": "^24.13.2",
-    "@types/uuid": "^11.0.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
     "@vitest/ui": "^3.2.6",
