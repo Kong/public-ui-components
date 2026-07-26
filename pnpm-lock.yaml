@@ -27,7 +27,7 @@ overrides:
   tar@<=7.5.18: '>=7.5.19'
   brace-expansion@<1.1.16: '>=1.1.16 <2.0.0'
   brace-expansion@>=2.0.0 <2.1.2: '>=2.1.2 <6.0.0'
-  brace-expansion@>=3.0.0 <5.0.7: '>=5.0.7'
+  brace-expansion@>=3.0.0 <5.0.7: '>=5.0.8'
   immutable@>=5.0.0-beta.1 <5.1.8: '>=5.1.8'
   immutable@<4.3.9: '>=4.3.9 <5.0.0'
 
@@ -5002,6 +5002,10 @@ packages:
   brace-expansion@5.0.7:
     resolution: {integrity: sha512-7oFy703dxfY3/NLxC1fh2SUCQ0H9rmAY+5EpDVfXjUTTs+HEwR2nYaqLv+GWcTsumwxPfiz6CzCNkwXwBUwqCA==}
     engines: {node: 18 || 20 || >=22}
+
+  brace-expansion@5.0.8:
+    resolution: {integrity: sha512-JZyDyq3D4AUifKTPOB7DELf6XsB3WdPuNxCtob1vFXPsSXhdAiHBWJ/tJ8HAc9aH84BK+5JFZLNkJKx3G9kzQg==}
+    engines: {node: 20 || >=22}
 
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
@@ -15791,6 +15795,10 @@ snapshots:
     dependencies:
       balanced-match: 4.0.4
 
+  brace-expansion@5.0.8:
+    dependencies:
+      balanced-match: 4.0.4
+
   braces@3.0.3:
     dependencies:
       fill-range: 7.1.1
@@ -19626,11 +19634,11 @@ snapshots:
 
   minimatch@10.2.4:
     dependencies:
-      brace-expansion: 5.0.7
+      brace-expansion: 5.0.8
 
   minimatch@10.2.5:
     dependencies:
-      brace-expansion: 5.0.7
+      brace-expansion: 5.0.8
 
   minimatch@3.1.4:
     dependencies:
@@ -19642,7 +19650,7 @@ snapshots:
 
   minimatch@5.1.9:
     dependencies:
-      brace-expansion: 2.1.2
+      brace-expansion: 5.0.7
 
   minimatch@7.4.9:
     dependencies:
@@ -21261,7 +21269,7 @@ snapshots:
       '@bufbuild/protobuf': 2.13.0
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
-      immutable: 4.3.9
+      immutable: 5.1.9
       rxjs: 7.8.2
       supports-color: 8.1.1
       varint: 6.0.0
