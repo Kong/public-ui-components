@@ -8,15 +8,11 @@ export default {
     konnect: {
       all: `${konnectBaseApiUrl}/plugins`,
       forEntity: `${konnectBaseApiUrl}/{entityType}/{entityId}/plugins`,
+      search: `${konnectBaseApiUrl}/plugins/search`,
     },
     kongManager: {
       all: `${KMBaseApiUrl}/plugins`,
       forEntity: `${KMBaseApiUrl}/{entityType}/{entityId}/plugins`,
-    },
-  },
-  search: {
-    konnect: {
-      all: `${konnectBaseApiUrl}/plugins/search`,
     },
   },
   select: {
