@@ -137,6 +137,10 @@ const redisRenderRules: RenderRules = {
     'cloud_authentication.azure_client_id': ['cloud_authentication.auth_provider', 'azure'],
     'cloud_authentication.azure_client_secret': ['cloud_authentication.auth_provider', 'azure'],
     'cloud_authentication.azure_tenant_id': ['cloud_authentication.auth_provider', 'azure'],
+
+    'cloud_authentication.oauth': ['cloud_authentication.auth_provider', 'oauth'],
+    'cloud_authentication.oauth.username': ['cloud_authentication.oauth.grant_type', 'password'],
+    'cloud_authentication.oauth.password': ['cloud_authentication.oauth.grant_type', 'password'],
   },
 }
 
