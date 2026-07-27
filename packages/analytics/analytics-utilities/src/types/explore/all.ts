@@ -7,7 +7,7 @@ import { filterableAgenticExploreDimensions, type AgenticExploreAggregations, ty
 import { filterableManagedCacheExploreDimensions, type FilterableManagedCacheExploreDimensions, type ManagedCacheExploreAggregations, type ManagedCacheExploreFilterAll } from './managed-cache'
 
 export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | AgenticExploreAggregations | ManagedCacheExploreAggregations
-export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | AgenticExploreFilterAll | PlatformExploreFilterAll
+export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | AgenticExploreFilterAll | PlatformExploreFilterAll | ManagedCacheExploreFilterAll
 export type AllFilterableDimensionsAndMetrics = FilterableExploreDimensions
   | FilterableAiExploreDimensions
   | FilterableBasicExploreDimensions
