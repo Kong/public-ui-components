@@ -28,7 +28,7 @@ export const managedCacheExploreAggregations = [
   'cache_eviction_rate',
   'cache_expiration_rate',
   'cache_memory_utilization',
-  'cache_items'
+  'cache_items',
 ] as const
 
 export type ManagedCacheExploreAggregations = typeof managedCacheExploreAggregations[number]
