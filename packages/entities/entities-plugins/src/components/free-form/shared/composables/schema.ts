@@ -64,8 +64,17 @@ export function buildRecordSchemaMap(recordSchema: RecordFieldSchema, pathPrefix
 export function buildArraySchemaMap(arraySchema: ArrayFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
   const schemaMap: Record<string, UnionFieldSchema> = {}
   if (arraySchema.elements) {
-    const elementProps = arraySchema.elements
+    let elementProps = arraySchema.elements
     const elementPath = utils.resolve(pathPrefix, utils.arraySymbol)
+
+    // In kong-ee, `encrypted` on an array field (e.g. openid-connect's introspection_headers_values)
+    // is expected/by-design and means every element must be encrypted, not just the array itself.
+    // The schema puts `encrypted` on the array field rather than nested in `elements`, so propagate
+    // it down to string elements here.
+    if (arraySchema.encrypted && elementProps.type === 'string') {
+      elementProps = { ...elementProps, encrypted: true }
+    }
+
     schemaMap[elementPath] = elementProps
 
     if (elementProps.type === 'record' && Array.isArray(elementProps.fields)) {
