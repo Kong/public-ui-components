@@ -2,12 +2,13 @@ import { makeFilterable } from './util'
 import type { BasicExploreEmptyFilterV2, BasicExploreInFilterV2, BasicExploreQuery } from './basic'
 
 export const queryableManagedCacheExploreDimensions = [
-  'network',
-  'region',
-  'provider',
-  'managed_cache',
-  'data_plane_group',
   'control_plane',
+  'data_plane_group',
+  'managed_cache',
+  'network',
+  'provider',
+  'region',
+  'time',
 ] as const
 
 export type QueryableManagedCacheExploreDimensions = typeof queryableManagedCacheExploreDimensions[number]
@@ -27,8 +28,8 @@ export interface ManagedCacheExploreEmptyFilterV2 extends Omit<BasicExploreEmpty
 export const managedCacheExploreAggregations = [
   'cache_eviction_rate',
   'cache_expiration_rate',
-  'cache_memory_utilization',
   'cache_items',
+  'cache_memory_utilization',
 ] as const
 
 export type ManagedCacheExploreAggregations = typeof managedCacheExploreAggregations[number]
