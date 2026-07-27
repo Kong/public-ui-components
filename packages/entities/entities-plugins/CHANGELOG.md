@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.250.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.249.2...@kong-ui-public/entities-plugins@9.250.0) (2026-07-27)
+
+
+### Features
+
+* **entities-plugins:** add OAuth authentication support for Redis configuration ([#3602](https://github.com/Kong/public-ui-components/issues/3602)) ([3f81a38](https://github.com/Kong/public-ui-components/commit/3f81a3803004afc9f9e8639f7b1246c71bd8848d))
+
+
+
+
+
 ## [9.249.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.249.1...@kong-ui-public/entities-plugins@9.249.2) (2026-07-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
