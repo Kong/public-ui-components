@@ -4,13 +4,15 @@ import { type ExploreAggregations, type ExploreFilterAll, type FilterableExplore
 import { type FilterableRequestDimensions, type FilterableRequestMetrics, type FilterableRequestWildcardDimensions } from './requests'
 import { type PlatformExploreFilterAll } from './platform'
 import { filterableAgenticExploreDimensions, type AgenticExploreAggregations, type AgenticExploreFilterAll, type FilterableAgenticExploreDimensions } from './agentic'
+import type { FilterableManagedCacheExploreDimensions, ManagedCacheExploreFilterAll } from './managed-cache'
 
-export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | AgenticExploreAggregations
+export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | AgenticExploreAggregations | ManagedCacheExploreAggregations
 export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | AgenticExploreFilterAll | PlatformExploreFilterAll
 export type AllFilterableDimensionsAndMetrics = FilterableExploreDimensions
   | FilterableAiExploreDimensions
   | FilterableBasicExploreDimensions
   | FilterableAgenticExploreDimensions
+  | FilterableManagedCacheExploreDimensions
   | FilterableRequestDimensions
   | FilterableRequestMetrics
   | FilterableRequestWildcardDimensions
@@ -30,6 +32,7 @@ export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
   /** @deprecated Use `platform_usage`. */
   platform: PlatformExploreFilterAll
   platform_usage: PlatformExploreFilterAll
+  managed_cache_usage: ManagedCacheExploreFilterAll
 }
 
 /**
