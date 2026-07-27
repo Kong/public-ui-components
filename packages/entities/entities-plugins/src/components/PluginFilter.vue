@@ -226,8 +226,8 @@ const pluginFilterGroupFilters = computed<FilterGroupFilters>(() => {
       pinned: true,
       maxWidth: 350,
       options: [
-        { value: 'true', label: 'Enabled' },
-        { value: 'false', label: 'Disabled' },
+        { value: 'true', label: t('actions.enabled') },
+        { value: 'false', label: t('actions.disabled') },
       ],
     },
     tags: {
