@@ -28,8 +28,8 @@ export interface ManagedCacheExploreEmptyFilterV2 extends Omit<BasicExploreEmpty
 export const managedCacheExploreAggregations = [
   'cache_eviction_rate',
   'cache_expiration_rate',
-  'cache_items',
-  'cache_memory_utilization',
+  'cache_items_average',
+  'cache_memory_utilization_max',
 ] as const
 
 export type ManagedCacheExploreAggregations = typeof managedCacheExploreAggregations[number]
