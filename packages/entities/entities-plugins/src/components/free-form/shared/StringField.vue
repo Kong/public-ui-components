@@ -132,9 +132,7 @@ const { value: fieldValue, hide, ...field } = useField<string | null>(toRef(() =
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 
 function handleUpdate(value: string) {
-  const trimmedValue = value.trim()
-
-  fieldValue!.value = trimmedValue === '' ? null : trimmedValue
+  fieldValue!.value = value === '' ? null : value
   emit('update:modelValue', fieldValue!.value)
 }
 
