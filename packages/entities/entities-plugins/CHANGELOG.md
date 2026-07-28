@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.250.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.250.2...@kong-ui-public/entities-plugins@9.250.3) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities-plugins:** propagate array-level encrypted flag to string elements ([#3613](https://github.com/Kong/public-ui-components/issues/3613)) ([8e57ad3](https://github.com/Kong/public-ui-components/commit/8e57ad32eeab954025c02b7ff183085925302e09))
+
+
+
+
+
 ## [9.250.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.250.1...@kong-ui-public/entities-plugins@9.250.2) (2026-07-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
