@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.250.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.250.4...@kong-ui-public/entities-plugins@9.250.5) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities-plugins:** stop trimming string field input ([#3619](https://github.com/Kong/public-ui-components/issues/3619)) ([8f226e8](https://github.com/Kong/public-ui-components/commit/8f226e8761a0563146940cfb32251ee27b3e2c6d))
+
+
+
+
+
 ## [9.250.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.250.3...@kong-ui-public/entities-plugins@9.250.4) (2026-07-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
