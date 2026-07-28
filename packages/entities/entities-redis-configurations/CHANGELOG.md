@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.10...@kong-ui-public/entities-redis-configurations@1.18.0) (2026-07-28)
+
+
+### Features
+
+* **redis:** cloud auth supports oauth ([#3612](https://github.com/Kong/public-ui-components/issues/3612)) ([429e60f](https://github.com/Kong/public-ui-components/commit/429e60f632672ebeb03b906d142eb7a9808f9abd))
+
+
+
+
+
 ## [1.17.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.9...@kong-ui-public/entities-redis-configurations@1.17.10) (2026-07-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
