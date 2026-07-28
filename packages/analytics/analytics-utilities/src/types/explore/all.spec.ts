@@ -43,14 +43,22 @@ describe('stripUnknownFilters', () => {
     value: ['foo'],
   }
 
+  // a filter that's only in the managed_cache_usage datasource
+  const managedCacheFilter = {
+    operator: 'in',
+    field: 'region',
+    value: ['foo'],
+  }
+
   it.each([
     ['basic', [basicFilter]],
     ['api_usage', [basicFilter, advancedFilter]],
     ['llm_usage', [llmFilter]],
     ['agentic_usage', [basicFilter, advancedFilter, mcpFilter]],
+    ['managed_cache_usage', [managedCacheFilter]],
   ])('Strips only unknown filters for datasource "%s"', (datasource, expected) => {
     // @ts-ignore these are the correct strings to use
-    const result = stripUnknownFilters(datasource, [unknownFilter, basicFilter, advancedFilter, llmFilter, mcpFilter])
+    const result = stripUnknownFilters(datasource, [unknownFilter, basicFilter, advancedFilter, llmFilter, mcpFilter, managedCacheFilter])
     expect(result).toEqual(expected)
   })
 
