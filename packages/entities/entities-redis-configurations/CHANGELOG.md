@@ -3,6 +3,97 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.18.0...@kong-ui-public/entities-redis-configurations@1.18.1) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+# [1.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.10...@kong-ui-public/entities-redis-configurations@1.18.0) (2026-07-28)
+
+
+### Features
+
+* **redis:** cloud auth supports oauth ([#3612](https://github.com/Kong/public-ui-components/issues/3612)) ([429e60f](https://github.com/Kong/public-ui-components/commit/429e60f632672ebeb03b906d142eb7a9808f9abd))
+
+
+
+
+
+## [1.17.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.9...@kong-ui-public/entities-redis-configurations@1.17.10) (2026-07-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.17.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.8...@kong-ui-public/entities-redis-configurations@1.17.9) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.17.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.7...@kong-ui-public/entities-redis-configurations@1.17.8) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.17.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.6...@kong-ui-public/entities-redis-configurations@1.17.7) (2026-07-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.17.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.5...@kong-ui-public/entities-redis-configurations@1.17.6) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.17.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.4...@kong-ui-public/entities-redis-configurations@1.17.5) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.17.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.3...@kong-ui-public/entities-redis-configurations@1.17.4) (2026-07-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.17.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.2...@kong-ui-public/entities-redis-configurations@1.17.3) (2026-07-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
+## [1.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.1...@kong-ui-public/entities-redis-configurations@1.17.2) (2026-07-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
 ## [1.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.17.0...@kong-ui-public/entities-redis-configurations@1.17.1) (2026-07-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations

@@ -124,6 +124,8 @@ export interface ArrayLikeFieldSchema extends FieldSchema {
   elements: UnionFieldSchema
   len_min?: number
   len_max?: number
+
+  encrypted?: boolean
 }
 
 export interface ArrayFieldSchema extends ArrayLikeFieldSchema {

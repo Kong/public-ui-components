@@ -1,4 +1,4 @@
-import { computed, onBeforeUnmount, readonly, ref, toValue, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, toValue, watch } from 'vue'
 import { generalizePath } from './schema'
 import { get, isEqual } from 'lodash-es'
 import * as utils from '../utils'
@@ -33,10 +33,35 @@ export function renderRuleExactMatch<T>(value: T): { [RENDER_RULE_EXACT_MATCH]: 
   return { [RENDER_RULE_EXACT_MATCH]: value }
 }
 
-export function createRenderRuleRegistry(onChange: () => void, getSchemaMap: () => Record<string, UnionFieldSchema>) {
+/**
+ * Evaluates whether a dependency condition is satisfied.
+ * - `renderRuleExactMatch(value)` → exact deep equality (dependency field holds an array).
+ * - array → any-of: satisfied when the actual value matches any element.
+ * - anything else → exact deep equality.
+ */
+export function meetsDependency(actual: unknown, expected: unknown): boolean {
+  const isExactWrapper = typeof expected === 'object'
+    && expected !== null
+    && RENDER_RULE_EXACT_MATCH in (expected as object)
+
+  if (isExactWrapper) {
+    return isEqual(actual, (expected as Record<typeof RENDER_RULE_EXACT_MATCH, unknown>)[RENDER_RULE_EXACT_MATCH])
+  }
+  if (Array.isArray(expected)) {
+    return expected.some((v: unknown) => isEqual(actual, v))
+  }
+  return isEqual(actual, expected)
+}
+
+export function createRenderRuleRegistry(
+  getSchemaMap: () => Record<string, UnionFieldSchema>,
+  getFormData: () => Record<string, any>,
+) {
   type RenderRulesMap = Record<string, RenderRules>
   const registry = ref<RenderRulesMap>({})
-  const hiddenPaths = ref<Set<string>>(new Set())
+  // Fields the host form manages itself (ObjectField `omit`), keyed by the
+  // registering field's concrete path. Such fields are never hidden by rules.
+  const omittedRegistry = ref<Record<string, string[]>>({})
 
   /**
    * Validates that all fields in a bundle/dependency are at the same level
@@ -250,7 +275,7 @@ export function createRenderRuleRegistry(onChange: () => void, getSchemaMap: () 
    * @throws {Error} If fields in bundle/dependency are at different levels
    * @throws {Error} If dependencies have cycles
    */
-  const flattenedRules = computed<RenderRulesMap>(() => {
+  function buildFlattenedRules(): RenderRulesMap {
     const result: RenderRulesMap = {}
 
     // Iterate through each rule in the registry
@@ -326,6 +351,21 @@ export function createRenderRuleRegistry(onChange: () => void, getSchemaMap: () 
     validateNoCycleInDeps(result)
 
     return result
+  }
+
+  /**
+   * Flattened rules for the whole form. Rule validation (bundle size, same
+   * level, cycles) throws inside `buildFlattenedRules`; we catch it here so
+   * that invalid rules degrade to "no rules" (fields render normally) with a
+   * console error, instead of crashing every consumer that reads this value.
+   */
+  const flattenedRules = computed<RenderRulesMap>(() => {
+    try {
+      return buildFlattenedRules()
+    } catch (error) {
+      console.error('Invalid render rules:', error instanceof Error ? error.message : String(error))
+      return {}
+    }
   })
 
   function getRules(fieldPath?: string): RenderRules | undefined {
@@ -354,97 +394,101 @@ export function createRenderRuleRegistry(onChange: () => void, getSchemaMap: () 
     })
   }
 
+  /**
+   * Whether any dependency rule exists at all — lets consumers skip visibility
+   * work entirely for the common case of forms without conditional fields.
+   */
+  const hasDependencies = computed(() =>
+    Object.values(flattenedRules.value).some(
+      rule => rule.dependencies && Object.keys(rule.dependencies).length > 0,
+    ),
+  )
+
   function useCurrentRules(options: {
     fieldPath: MaybeRefOrGetter<string>
     rules?: MaybeRefOrGetter<RenderRules | undefined>
-    parentValue?: MaybeRefOrGetter<unknown>
     omittedFields?: MaybeRefOrGetter<string[] | undefined>
   }) {
     const {
       fieldPath,
       rules,
-      parentValue,
       omittedFields,
     } = options
-    // Watch for changes in rules or fieldPath
+
+    // Register/unregister this field's rules and omitted children by path.
+    // Visibility itself is derived lazily by `isFieldHidden`, so there is no
+    // imperative hidden-state to keep in sync here.
     watch([
       () => toValue(rules),
       () => toValue(fieldPath),
-    ], ([newRules, path], [, oldPath]) => {
-      // Set new rules
+      () => toValue(omittedFields),
+    ], ([newRules, path, omitted], [, oldPath]) => {
       if (newRules) {
         registry.value[path] = newRules
       } else {
         delete registry.value[path]
       }
 
+      if (omitted && omitted.length) {
+        omittedRegistry.value[path] = [...omitted]
+      } else {
+        delete omittedRegistry.value[path]
+      }
+
       // Clean up old path
       if (oldPath && oldPath !== path) {
         delete registry.value[oldPath]
+        delete omittedRegistry.value[oldPath]
       }
     }, { immediate: true, deep: true })
 
     const computedRules = createComputedRules(fieldPath)
 
-    watch(
-      [
-        () => toValue(parentValue),
-        () => toValue(computedRules)?.dependencies,
-        () => toValue(fieldPath),
-        () => toValue(omittedFields),
-      ],
-      ([parent, deps, path, omitted]) => {
-        if (!deps || !parent) return
-
-        Object.entries(deps).forEach(([fieldName, [depField, expectedDepFieldValue]]) => {
-          // Skip omitted fields
-          if (omitted?.includes(fieldName)) return
-
-          const actualDepFieldValue = get(parent, depField)
-          const sourceFieldPath = path
-            ? utils.removeRootSymbol(utils.resolve(path, fieldName))
-            : fieldName
-
-          // Skip if dependency condition is met:
-          // - array → any-of (common case: string field, show when value matches any element)
-          // - renderRuleExactMatch(value) → exact deep equality (rare case: field itself holds an array)
-          // - anything else → exact deep equality
-          const isExactWrapper = typeof expectedDepFieldValue === 'object' && expectedDepFieldValue !== null && RENDER_RULE_EXACT_MATCH in expectedDepFieldValue
-          const meetsCondition = isExactWrapper
-            ? isEqual(actualDepFieldValue, (expectedDepFieldValue as Record<typeof RENDER_RULE_EXACT_MATCH, unknown>)[RENDER_RULE_EXACT_MATCH])
-            : Array.isArray(expectedDepFieldValue)
-              ? expectedDepFieldValue.some((v: unknown) => isEqual(actualDepFieldValue, v))
-              : isEqual(actualDepFieldValue, expectedDepFieldValue)
-          if (meetsCondition) {
-            hiddenPaths.value.delete(sourceFieldPath) // Unhide the field
-            onChange()
-            return
-          }
-
-          hiddenPaths.value.add(sourceFieldPath) // Mark field as hidden
-          onChange()
-        })
-      },
-      { deep: true, immediate: true },
-    )
-
     // Clean up on unmount
     onBeforeUnmount(() => {
       const path = toValue(fieldPath)
       delete registry.value[path]
+      delete omittedRegistry.value[path]
     })
 
     return computedRules
   }
 
+  /**
+   * Pure visibility check: a field is hidden when a dependency rule targets it
+   * and the dependency's current value does not satisfy the condition.
+   *
+   * Derived on demand from the flattened rules and the live form data, so any
+   * reactive consumer (e.g. a field's `hide` computed, or `getValue`) tracks the
+   * exact dependency value it reads and re-evaluates when that value changes.
+   */
   function isFieldHidden(fieldPath: string): boolean {
-    return hiddenPaths.value.has(fieldPath)
+    const parts = utils.toArray(fieldPath)
+    if (!parts.length) return false
+
+    const fieldName = parts[parts.length - 1]
+    const parentPath = utils.resolve(...parts.slice(0, -1)) // '' for root-level fields
+
+    // Fields the host form manages itself are never hidden by render rules.
+    if (omittedRegistry.value[parentPath]?.includes(fieldName)) return false
+
+    const rulesKey = parentPath === ''
+      ? utils.rootSymbol
+      : generalizePath(parentPath, getSchemaMap())
+    const dependency = flattenedRules.value[rulesKey]?.dependencies?.[fieldName]
+    if (!dependency) return false
+
+    const [depName, expectedValue] = dependency
+    const depPath = parentPath ? utils.resolve(parentPath, depName) : depName
+    const actualValue = get(getFormData(), utils.toArray(depPath))
+
+    return !meetsDependency(actualValue, expectedValue)
   }
 
   return {
     useCurrentRules,
     createComputedRules,
-    hiddenPaths: readonly(hiddenPaths),
+    hasDependencies,
     isFieldHidden,
   }
 }

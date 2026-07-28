@@ -1135,7 +1135,7 @@ describe('<PluginList />', () => {
           url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins*`,
         },
         { statusCode: 200, body: plugins },
-      ).as('plainList')
+      ).as('listPlugins')
 
       cy.mount(PluginList, {
         props: {
@@ -1149,7 +1149,7 @@ describe('<PluginList />', () => {
         },
       })
 
-      cy.wait('@plainList')
+      cy.wait('@listPlugins')
       cy.get('table thead th').eq(0).should('contain.text', 'Name')
       cy.get('table thead th').eq(1).should('contain.text', 'Applied to')
       cy.get('.kong-ui-entity-filter-input').should('exist')
@@ -1167,7 +1167,7 @@ describe('<PluginList />', () => {
             req.reply({ statusCode: 200, body: plugins })
           }
         },
-      ).as('plainListRedesign')
+      ).as('listPlugins')
 
       cy.intercept(
         {
@@ -1190,7 +1190,7 @@ describe('<PluginList />', () => {
       })
 
       // Plain load, nothing searched/filtered yet - plain endpoint, not /plugins/search
-      cy.wait('@plainListRedesign')
+      cy.wait('@listPlugins')
 
       // Column headers: Plugin, Name, Scope, Status, Ordering, Tags, Actions
       cy.get('table thead th').eq(0).should('contain.text', 'Plugin')
@@ -1246,6 +1246,55 @@ describe('<PluginList />', () => {
       })
     })
 
+    it('filters by multiple scopes using oeq', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins*`,
+        },
+        (req) => {
+          if (!req.url.includes('/plugins/search')) {
+            req.reply({ statusCode: 200, body: plugins })
+          }
+        },
+      ).as('listPlugins')
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins/search*`,
+        },
+        { statusCode: 200, body: { data: plugins.data, offset: null } },
+      ).as('searchPlugins')
+
+      cy.mount(PluginList, {
+        props: {
+          cacheIdentifier: `plugin-list-${uuidv4()}`,
+          config: redesignConfig,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+          canToggle: () => false,
+        },
+      })
+
+      cy.wait('@listPlugins')
+
+      cy.getTestId('filter-group-pill-scope').find('[data-testid="interactive-pill-trigger"]').click()
+      cy.getTestId('scope-filter-select').click()
+      cy.get('.multiselect-popover [data-testid="multiselect-item-route"]').click()
+      cy.get('.multiselect-popover [data-testid="multiselect-item-service"]').click()
+      cy.get('body').type('{esc}')
+      cy.getTestId('filter-pill-apply').filter(':visible').click()
+
+      cy.wait('@searchPlugins').its('request.url').then((url) => {
+        const params = new URL(url).searchParams
+
+        expect(params.get('filter[scope][oeq]')).to.equal('route,service')
+      })
+    })
+
     it('scopes the request to the entity and hides the Scope column/pill on a nested entity page', () => {
       const nestedConfig: KonnectPluginListConfig = {
         ...redesignConfig,
@@ -1267,7 +1316,7 @@ describe('<PluginList />', () => {
           url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/plugins/search*`,
         },
         { statusCode: 200, body: { data: plugins.data, offset: null } },
-      ).as('searchPluginsNested')
+      ).as('searchPlugins')
 
       cy.mount(PluginList, {
         props: {
@@ -1289,7 +1338,7 @@ describe('<PluginList />', () => {
       // Once the user searches, the request goes through /plugins/search and still carries the
       // entity scope (now as a forced, hidden filter param) alongside the free-text search
       cy.getTestId('search-input').filter(':visible').type('basic')
-      cy.wait('@searchPluginsNested').its('request.url')
+      cy.wait('@searchPlugins').its('request.url')
         .should('include', 'filter%5Broute%5D%5Beq%5D=route-1')
         .and('include', 'filter%5Bname%5D%5Bcontains%5D=basic')
     })

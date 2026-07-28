@@ -1,7 +1,11 @@
 <template>
-  <div class="config-card-details-row">
+  <div
+    class="config-card-details-row"
+    :class="{ 'json-array-item': isJsonArray, 'json-item': isJson && itemHasValue }"
+  >
     <div
       class="config-card-details-label"
+      :class="{ 'json-item-label': isJson && itemHasValue, 'slim-label': slim }"
       :data-testid="`${item.key}-label`"
     >
       <slot
@@ -34,6 +38,7 @@
 
     <div
       class="config-card-details-value"
+      :class="{ 'json-item-value': isJson && itemHasValue, 'slim-value': slim }"
       :data-testid="`${item.key}-property-value`"
     >
       <slot
@@ -343,7 +348,6 @@ const { isTruncated } = composables.useTruncationDetector(textContent as Ref<HTM
 </script>
 
 <script lang="ts">
-import { KUI_BORDER_WIDTH_10, KUI_COLOR_BORDER } from '@kong/design-tokens'
 import { highlightCodeBlock } from '../../utils/code-block'
 // Must explicitly define components so <component :is="type"> works
 export default {
@@ -355,17 +359,33 @@ export default {
 <style lang="scss" scoped>
 .config-card-details-row {
   align-items: center;
-  border-bottom: v-bind('isJsonArray ? "none" : `solid var(--kui-border-width-10, ${KUI_BORDER_WIDTH_10}) var(--kui-color-border, ${KUI_COLOR_BORDER})`');
+  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   box-sizing: border-box;
-  display: v-bind('isJson && itemHasValue ? "block" : "flex"');
+  display: flex;
   padding: var(--kui-space-60, $kui-space-60);
   padding-left: 0;
   width: 100%;
 
+  &.json-array-item {
+    border-bottom: none;
+  }
+
+  &.json-item {
+    display: block;
+  }
+
   .config-card-details-label {
     box-sizing: border-box;
     padding-right: var(--kui-space-60, $kui-space-60);
-    width: v-bind('isJson && itemHasValue ? "100%" : props.slim ? "50%" : "25%"');
+    width: 25%;
+
+    &.json-item-label {
+      width: 100%;
+    }
+
+    &.slim-label {
+      width: 50%;
+    }
 
     label {
       color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
@@ -388,7 +408,15 @@ export default {
 
   .config-card-details-value {
     box-sizing: border-box;
-    width: v-bind('isJson && itemHasValue ? "100%" : props.slim ? "50%" : "75%"');
+    width: 75%;
+
+    &.json-item-value {
+      width: 100%;
+    }
+
+    &.slim-value {
+      width: 50%;
+    }
 
     .truncated {
       display: inline-block;

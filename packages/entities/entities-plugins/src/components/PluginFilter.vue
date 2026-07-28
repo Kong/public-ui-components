@@ -27,10 +27,8 @@
       v-model="filterGroupSelection"
       :filters="pluginFilterGroupFilters"
       @apply="onFilterApply"
-      @clear="onFilterClear"
-      @open="onFilterOpen"
     >
-      <template #filter-tags>
+      <template #filter-tags="{ value, setValue }">
         <div class="plugin-tags-filter">
           <KInput
             ref="tags-input"
@@ -40,7 +38,7 @@
             :error="!!tagInputError"
             :error-message="tagInputError"
             :placeholder="t('search.placeholder.tags_filter')"
-            @keydown.enter.prevent="addPendingTag"
+            @keydown.enter.prevent="addPendingTag(value as string[], setValue)"
           >
             <template #after>
               <ArrowTopLeftIcon
@@ -48,18 +46,17 @@
                 data-testid="tags-filter-add"
                 role="button"
                 tabindex="0"
-                @click="addPendingTag"
-                @keydown.enter.prevent="addPendingTag"
-                @keydown.space.prevent="addPendingTag"
+                @click="addPendingTag(value as string[], setValue)"
+                @keydown.enter.prevent="addPendingTag(value as string[], setValue)"
+                @keydown.space.prevent="addPendingTag(value as string[], setValue)"
               />
             </template>
           </KInput>
           <div
-            v-if="pendingTags.length"
             class="plugin-tags-filter-badges"
           >
             <KBadge
-              v-for="tag in pendingTags"
+              v-for="tag in value"
               :key="tag"
               :icon-before="false"
             >
@@ -69,35 +66,34 @@
                   data-testid="tags-filter-remove-tag"
                   role="button"
                   tabindex="0"
-                  @click="removePendingTag(tag)"
-                  @keydown.enter.prevent="removePendingTag(tag)"
-                  @keydown.space.prevent="removePendingTag(tag)"
+                  @click="removePendingTag(tag, value as string[], setValue)"
+                  @keydown.enter.prevent="removePendingTag(tag, value as string[], setValue)"
+                  @keydown.space.prevent="removePendingTag(tag, value as string[], setValue)"
                 />
               </template>
             </KBadge>
           </div>
         </div>
       </template>
-      <template #filter-scope>
-        <!-- TODO: the search API's filter.scope.eq only accepts a single value (no OR/"one-of"
-          operator for scope as of the current SDK) - single-select until the backend supports
-          filtering by more than one scope at once. -->
-        <KSelect
-          v-model="pendingScope"
+      <template #filter-scope="{ value, setValue, options }">
+        <KMultiselect
           data-testid="scope-filter-select"
-          :items="scopeOptions"
+          :items="options"
+          :model-value="(value as string[])"
           :placeholder="t('search.placeholder.scope_filter')"
+          @update:model-value="setValue($event, valuesToText($event, options!))"
         />
       </template>
-      <template #filter-status>
+      <template #filter-status="{ value, setValue, options }">
         <div class="plugin-status-filter">
           <KRadio
-            v-for="option in statusOptions"
+            v-for="option in options"
             :key="option.value"
-            v-model="pendingStatus"
             data-testid="status-filter-radio"
             :label="option.label"
+            :model-value="(value as string)"
             :selected-value="option.value"
+            @update:model-value="setValue($event, option.label)"
           />
         </div>
       </template>
@@ -149,27 +145,13 @@ const filterGroupSelection = ref<FilterGroupSelection>({})
 const searchInput = useTemplateRef('search-input')
 const tagsInput = useTemplateRef('tags-input')
 
-const pendingScope = ref<string | null>(null)
-const pendingStatus = ref<string | null>(null)
+const valuesToText = (values: string[], options: FilterOption[]): string => {
+  return values
+    .map((value) => options.find((option) => option.value === value)!.label)
+    .join(', ')
+}
 
-const scopeOptions = computed<FilterOption[]>(() => [
-  { label: t('plugins.list.table_headers.applied_to_badges.route'), value: PluginScope.ROUTE },
-  { label: t('plugins.list.table_headers.applied_to_badges.service'), value: PluginScope.SERVICE },
-  { label: t('plugins.list.table_headers.applied_to_badges.consumer'), value: PluginScope.CONSUMER },
-  { label: t('plugins.list.table_headers.applied_to_badges.consumer_group'), value: PluginScope.CONSUMER_GROUP },
-  { label: t('plugins.list.table_headers.applied_to_badges.global'), value: PluginScope.GLOBAL },
-])
-
-const statusOptions = computed<FilterOption[]>(() => [
-  { label: t('actions.enabled'), value: 'true' },
-  { label: t('actions.disabled'), value: 'false' },
-])
-
-// Working state for the custom `tags` filter popover (see `#filter-tags` slot below) - the tag
-// badges the user has built up before hitting Apply. KFilterGroup can't derive a selection for
-// a slot-overridden filter itself, so this is synced into `filterGroupSelection.tags` on apply.
 const tagInputText = ref('')
-const pendingTags = ref<string[]>([])
 
 // Tag validation: unicode letters/numbers and most ASCII symbols are allowed,
 // but no commas (used as the tag-list delimiter), slashes, control characters,
@@ -195,21 +177,26 @@ const clearSearchText = () => {
   focusSearchInput()
 }
 
-const addPendingTag = () => {
+const addPendingTag = (value: string[], setValue: (value: string[], text: string) => void) => {
   const tag = tagInputText.value
   if (!tag || !TAG_PATTERN.test(tag)) {
     focusTagsInput()
     return
   }
-  if (!pendingTags.value.includes(tag)) {
-    pendingTags.value.push(tag)
+  if (!value) {
+    value = []
+  }
+  if (!value.includes(tag)) {
+    value.push(tag)
   }
   tagInputText.value = ''
   focusTagsInput()
+  setValue(value, value.join(', '))
 }
 
-const removePendingTag = (tag: string) => {
-  pendingTags.value = pendingTags.value.filter((pendingTag) => pendingTag !== tag)
+const removePendingTag = (tag: string, value: string[], setValue: (value: string[], text: string) => void) => {
+  const newValue = value.filter((pendingTag) => pendingTag !== tag)
+  setValue(newValue, newValue.join(', '))
 }
 
 const pluginFilterGroupFilters = computed<FilterGroupFilters>(() => {
@@ -220,6 +207,14 @@ const pluginFilterGroupFilters = computed<FilterGroupFilters>(() => {
         label: t('plugins.list.table_headers.scope'),
         operators: ['eq'],
         pinned: true,
+        multiple: true,
+        options: [
+          { label: t('plugins.list.table_headers.applied_to_badges.route'), value: PluginScope.ROUTE },
+          { label: t('plugins.list.table_headers.applied_to_badges.service'), value: PluginScope.SERVICE },
+          { label: t('plugins.list.table_headers.applied_to_badges.consumer'), value: PluginScope.CONSUMER },
+          { label: t('plugins.list.table_headers.applied_to_badges.consumer_group'), value: PluginScope.CONSUMER_GROUP },
+          { label: t('plugins.list.table_headers.applied_to_badges.global'), value: PluginScope.GLOBAL },
+        ],
       },
     }
 
@@ -230,6 +225,10 @@ const pluginFilterGroupFilters = computed<FilterGroupFilters>(() => {
       operators: ['eq'],
       pinned: true,
       maxWidth: 350,
+      options: [
+        { value: 'true', label: t('actions.enabled') },
+        { value: 'false', label: t('actions.disabled') },
+      ],
     },
     tags: {
       label: t('plugins.list.table_headers.tags'),
@@ -254,8 +253,13 @@ const serializedQuery = computed<string>(() => {
 
   if (!nestedScopeFilterKey.value) {
     const scopeSelection = filterGroupSelection.value.scope
-    if (typeof scopeSelection?.value === 'string' && scopeSelection.value) {
-      params.set('filter[scope][eq]', scopeSelection.value)
+    const scopeValues = Array.isArray(scopeSelection?.value)
+      ? scopeSelection.value
+      : typeof scopeSelection?.value === 'string' && scopeSelection.value
+        ? [scopeSelection.value]
+        : []
+    if (scopeValues.length) {
+      params.set('filter[scope][oeq]', scopeValues.join(','))
     }
   }
 
@@ -291,88 +295,13 @@ watch(modelValue, (value) => {
     searchText.value = ''
     filterGroupSelection.value = {}
     tagInputText.value = ''
-    pendingTags.value = []
-    pendingScope.value = null
-    pendingStatus.value = null
   }
 })
 
-const onFilterOpen = (openedFilterKey: string) => {
-  switch (openedFilterKey) {
-    case 'tags': {
-      const currentValue = filterGroupSelection.value.tags?.value
-      pendingTags.value = Array.isArray(currentValue) ? [...currentValue] : []
-      tagInputText.value = ''
-      return
-    }
-
-    case 'scope': {
-      const currentValue = filterGroupSelection.value.scope?.value
-      pendingScope.value = typeof currentValue === 'string' ? currentValue : null
-      return
-    }
-
-    case 'status': {
-      const currentValue = filterGroupSelection.value.status?.value
-      pendingStatus.value = typeof currentValue === 'string' ? currentValue : null
-    }
-  }
-}
-
 const onFilterApply = (appliedFilterKey: string, selection: FilterGroupSelection) => {
-  switch (appliedFilterKey) {
-    case 'tags':
-      if (pendingTags.value.length) {
-        selection.tags = {
-          operator: 'eq',
-          operatorDelimiter: ': ',
-          value: [...pendingTags.value],
-          text: pendingTags.value.join(', '),
-        }
-      } else {
-        delete selection.tags
-      }
-      return
-
-    case 'scope': {
-      const selectedOption = scopeOptions.value.find((option) => option.value === pendingScope.value)
-      if (selectedOption) {
-        selection.scope = {
-          operator: 'eq',
-          operatorDelimiter: ': ',
-          value: selectedOption.value,
-          text: selectedOption.label,
-        }
-      } else {
-        delete selection.scope
-      }
-      return
-    }
-
-    case 'status': {
-      const selectedOption = statusOptions.value.find((option) => option.value === pendingStatus.value)
-      if (selectedOption) {
-        selection.status = {
-          operator: 'eq',
-          operatorDelimiter: ': ',
-          value: selectedOption.value,
-          text: selectedOption.label,
-        }
-      } else {
-        delete selection.status
-      }
-    }
-  }
-}
-
-const onFilterClear = (clearedFilterKey: string) => {
-  if (clearedFilterKey === 'tags') {
-    pendingTags.value = []
-    tagInputText.value = ''
-  } else if (clearedFilterKey === 'scope') {
-    pendingScope.value = null
-  } else if (clearedFilterKey === 'status') {
-    pendingStatus.value = null
+  const appliedFilter = selection[appliedFilterKey]
+  if (appliedFilter) {
+    appliedFilter.operatorDelimiter = ': '
   }
 }
 </script>

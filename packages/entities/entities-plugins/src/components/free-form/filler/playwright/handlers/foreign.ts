@@ -6,15 +6,14 @@ export async function fillForeign(option: HandlerOption<ForeignFieldSchema>): Pr
   const { page, fieldKey, value } = option
 
   const selector = selectors.field(fieldKey)
+  const element = page.locator(selector)
 
-  // For foreign fields, typically need to click to open selector and select item
-  await page.locator(selector).click()
-
-  // Handle different value formats
+  // ForeignField.vue renders a plain text input where the referenced entity's
+  // id is typed directly - there is no dropdown/select-item popover to pick from.
   const itemValue = typeof value === 'object' && value?.id ? value.id : value
 
+  await element.clear()
   if (itemValue) {
-    // Look for select item with the id
-    await page.locator(`[data-testid="select-item-${itemValue}"]`).click()
+    await element.fill(String(itemValue))
   }
 }

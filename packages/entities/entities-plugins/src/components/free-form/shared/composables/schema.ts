@@ -15,6 +15,7 @@ import type {
   ArrayLikeFieldSchema,
   FormSchema,
   RecordFieldSchema,
+  StringFieldSchema,
   UnionFieldSchema,
   MapFieldSchema,
 } from '../../../../types/plugins/form-schema'
@@ -64,8 +65,17 @@ export function buildRecordSchemaMap(recordSchema: RecordFieldSchema, pathPrefix
 export function buildArraySchemaMap(arraySchema: ArrayFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
   const schemaMap: Record<string, UnionFieldSchema> = {}
   if (arraySchema.elements) {
-    const elementProps = arraySchema.elements
+    let elementProps = arraySchema.elements
     const elementPath = utils.resolve(pathPrefix, utils.arraySymbol)
+
+    // In kong-ee, `encrypted` on an array field (e.g. openid-connect's introspection_headers_values)
+    // is expected/by-design and means every element must be encrypted, not just the array itself.
+    // The schema puts `encrypted` on the array field rather than nested in `elements`, so propagate
+    // it down to string elements here.
+    if (arraySchema.encrypted && elementProps.type === 'string') {
+      elementProps = { ...elementProps, encrypted: true }
+    }
+
     schemaMap[elementPath] = elementProps
 
     if (elementProps.type === 'record' && Array.isArray(elementProps.fields)) {
@@ -181,6 +191,16 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
     // Use explicit default if provided
     if (schema.default !== undefined) {
       return schema.default
+    }
+
+    // The backend generates a value for this field when it's absent from the
+    // request (Kong schema's `auto = true`). Defaulting it to an explicit
+    // null here would submit `null` for an untouched field, which fails
+    // schema validation ("required field missing") instead of letting the
+    // backend auto-generate it - so omit the key entirely until the user
+    // actually provides a value.
+    if ((schema as StringFieldSchema).auto) {
+      return undefined
     }
 
     // Create structures when forced or for required fields

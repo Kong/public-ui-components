@@ -215,7 +215,13 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
         afterClone: () => restoreAfterCapture(),
       }
 
-      const canvas = await snapdom.toCanvas(element, { scale, exclude, plugins: [webglSnapshotPlugin] })
+      const canvas = await snapdom.toCanvas(element, {
+        scale,
+        exclude,
+        excludeMode: 'remove',
+        embedFonts: true,
+        plugins: [webglSnapshotPlugin],
+      })
 
       // Measure the rendered rows and the real scale after the snapdom captures
       // the canvas. If the capture is oversized, snapdom will scale it down to fit

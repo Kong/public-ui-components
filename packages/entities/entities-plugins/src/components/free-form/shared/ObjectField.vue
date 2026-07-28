@@ -174,7 +174,6 @@ const currentRenderRules = useCurrentRenderRules({
   fieldPath: field.path!,
   rules: toRef(props, 'renderRules'),
   omittedFields: toRef(() => omit),
-  parentValue: fieldValue!,
 })
 
 const added = defineModel<boolean>('added', { default: undefined })

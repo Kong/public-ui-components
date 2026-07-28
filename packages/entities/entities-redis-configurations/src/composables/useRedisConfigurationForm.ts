@@ -3,7 +3,7 @@ import { EntityBaseFormType, useAxios, useErrors } from '@kong-ui-public/entitie
 import { isEqual } from 'lodash-es'
 
 import { getRedisType, mapRedisTypeToPartialType, standardize as s, pickCloudAuthFields } from '../helpers'
-import { RedisType } from '../types'
+import { RedisType, AuthProvider } from '../types'
 import { DEFAULT_REDIS_TYPE, DEFAULT_FIELDS } from '../constants'
 import endpoints from '../partials-endpoints'
 
@@ -74,16 +74,22 @@ export const useRedisConfigurationForm = (options: Options) => {
 
     const { config: fieldValues } = form.fields
 
+    const cloudAuth = fieldValues.cloud_authentication
+    const isCloudAuthValid =
+      (cloudAuth?.auth_provider !== AuthProvider.AWS || !!cloudAuth.aws_cache_name)
+      && (cloudAuth?.auth_provider !== AuthProvider.OAUTH
+        || (!!cloudAuth.oauth?.token_endpoint && !!cloudAuth.oauth?.client_id && !!cloudAuth.oauth?.client_secret))
+
     switch (redisType.value) {
       case RedisType.HOST_PORT_CE:
       case RedisType.HOST_PORT_EE:
         return (!!fieldValues.host && fieldValues.host.length > 0)
           && isPortValid(fieldValues.port)
-          && (fieldValues.cloud_authentication?.auth_provider !== 'aws' || !!fieldValues.cloud_authentication.aws_cache_name)
+          && isCloudAuthValid
       case RedisType.CLUSTER:
         return !!fieldValues.cluster_nodes.length
           && fieldValues.cluster_nodes.every((node) => node.ip.length > 0)
-          && (fieldValues.cloud_authentication?.auth_provider !== 'aws' || !!fieldValues.cloud_authentication.aws_cache_name)
+          && isCloudAuthValid
       case RedisType.SENTINEL:
         return !!fieldValues.sentinel_nodes.length
           && fieldValues.sentinel_nodes.every((node) => node.host.length > 0)
@@ -95,12 +101,47 @@ export const useRedisConfigurationForm = (options: Options) => {
     }
   })
 
+  const getOauthConfig = () => {
+    const oauth = form.fields.config.cloud_authentication?.oauth
+    if (!oauth) {
+      return null
+    }
+    const standardized = {
+      auth_method: oauth.auth_method,
+      client_id: s.str(oauth.client_id, null),
+      client_secret: s.str(oauth.client_secret, null),
+      client_secret_jwt_alg: oauth.client_secret_jwt_alg,
+      grant_type: oauth.grant_type,
+      password: s.str(oauth.password, null),
+      redis_username: s.str(oauth.redis_username, null),
+      redis_username_claim: s.str(oauth.redis_username_claim, null),
+      scopes: oauth.scopes?.length ? oauth.scopes : null,
+      ssl_verify: oauth.ssl_verify,
+      timeout: s.int(oauth.timeout, null),
+      token_endpoint: s.str(oauth.token_endpoint, null),
+      token_headers: Object.keys(oauth.token_headers ?? {}).length ? oauth.token_headers : null,
+      token_post_args: Object.keys(oauth.token_post_args ?? {}).length ? oauth.token_post_args : null,
+      username: s.str(oauth.username, null),
+    }
+    // Konnect rejects null values; the top-level removeNullValues in submit() is shallow, so strip nested nulls here
+    return config.app === 'konnect' ? s.removeNullValues(standardized) : standardized
+  }
+
   const getCloudAuthConfig = () => {
     if (!options.cloudAuthAvailable) {
       return undefined
     }
     const cloudAuth = pickCloudAuthFields(form.fields.config.cloud_authentication)
-    return cloudAuth?.auth_provider ? {
+    if (!cloudAuth?.auth_provider) {
+      return null
+    }
+    if (cloudAuth.auth_provider === AuthProvider.OAUTH) {
+      return {
+        auth_provider: cloudAuth.auth_provider,
+        oauth: getOauthConfig(),
+      }
+    }
+    return {
       auth_provider: cloudAuth.auth_provider,
       aws_cache_name: s.str(cloudAuth.aws_cache_name, null),
       aws_region: s.str(cloudAuth.aws_region, null),
@@ -113,7 +154,7 @@ export const useRedisConfigurationForm = (options: Options) => {
       azure_client_id: s.str(cloudAuth.azure_client_id, null),
       azure_client_secret: s.str(cloudAuth.azure_client_secret, null),
       azure_tenant_id: s.str(cloudAuth.azure_tenant_id, null),
-    } : null
+    }
   }
 
   const payload = computed(() => {

@@ -163,6 +163,7 @@ useProvideExperimentalFreeForms([
   'exit-transformer',
   'file-log',
   'forward-proxy',
+  'governance',
   'graphql-proxy-cache-advanced',
   'graphql-rate-limiting-advanced',
   'grpc-gateway',

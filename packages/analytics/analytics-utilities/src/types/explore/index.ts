@@ -7,6 +7,7 @@ export * from './platform'
 export * from './result'
 export * from './all'
 export * from './agentic'
+export * from './managed-cache'
 
 // To add a new datasource:
 // - Create a new file for the datasource and export it from this file.

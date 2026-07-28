@@ -848,6 +848,44 @@ describe('<GatewayServiceList />', () => {
       cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
     })
 
+    it('uses workspace-scoped search URL when filtering with workspace', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services*`,
+        },
+        (req) => {
+          if (!req.url.includes('/services/search')) {
+            req.reply({ statusCode: 200, body: gatewayServices })
+          }
+        },
+      ).as('getWithWorkspace')
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services/search*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('searchWithWorkspace')
+
+      cy.mount(GatewayServiceList, {
+        props: {
+          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithWorkspace')
+      cy.get('.kong-ui-entity-filter-input input').type('gateway-service-1')
+      cy.wait('@searchWithWorkspace').its('request.url').should('include', '/services/search')
+    })
+
     it('uses non-default workspace name in fetch URL', () => {
       const configWithWorkspace = { ...baseConfigKonnect, workspace: 'my-workspace' }
       cy.intercept(

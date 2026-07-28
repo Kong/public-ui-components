@@ -62,6 +62,7 @@ import {
   themeQuartz,
 } from 'ag-grid-community'
 import { computed } from 'vue'
+import TableDataGridCellRenderer from './TableDataGridCellRenderer.vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import useI18n from '../composables/useI18n'
@@ -96,6 +97,7 @@ const emit = defineEmits<{
 const { i18n: { t } } = useI18n()
 
 const defaultColDef: ColDef<Row> = {
+  cellRenderer: TableDataGridCellRenderer,
   resizable: false,
   sortable: false,
   suppressMovable: true,
@@ -166,11 +168,13 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
   /* stylelint-disable custom-property-pattern -- AG Grid theme variables must use AG Grid's --ag-* namespace. */
   --ag-background-color: var(--kui-color-background, #{$kui-color-background});
   --ag-border-color: var(--kui-color-border, #{$kui-color-border});
+  --ag-foreground-color: var(--kui-color-text, #{$kui-color-text});
   --ag-header-background-color: var(--kui-color-background, #{$kui-color-background});
   --ag-header-column-border: 1px solid var(--kui-color-border, #{$kui-color-border});
   --ag-header-column-border-height: 30%;
   --ag-header-column-resize-handle-color: transparent;
   --ag-header-font-weight: var(--kui-font-weight-semibold, #{$kui-font-weight-semibold});
+  --ag-header-text-color: var(--kui-color-text-neutral, #{$kui-color-text-neutral});
   --ag-wrapper-border: none;
   --ag-wrapper-border-radius: 0;
   /* stylelint-enable custom-property-pattern */
@@ -183,5 +187,12 @@ const onGridReady = (event: GridReadyEvent<Row>) => {
 .table-data-grid-grid :global(.ag-cell) {
   align-items: center;
   display: flex;
+  min-width: 0;
+}
+
+.table-data-grid-grid :global(.ag-cell-wrapper),
+.table-data-grid-grid :global(.ag-cell-value) {
+  min-width: 0;
+  width: 100%;
 }
 </style>

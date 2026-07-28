@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.5.5...@kong-ui-public/page-layout@0.5.6) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/page-layout
+
+
+
+
+
+## [0.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.5.4...@kong-ui-public/page-layout@0.5.5) (2026-07-27)
+
+**Note:** Version bump only for package @kong-ui-public/page-layout
+
+
+
+
+
+## [0.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.5.3...@kong-ui-public/page-layout@0.5.4) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/page-layout
+
+
+
+
+
+## [0.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.5.2...@kong-ui-public/page-layout@0.5.3) (2026-07-24)
+
+
+### Bug Fixes
+
+* **page-layout:** truncate title at first line ([#3601](https://github.com/Kong/public-ui-components/issues/3601)) ([49c9736](https://github.com/Kong/public-ui-components/commit/49c97369d04f9985bfec33404f02ee950ffb47bb))
+
+
+
+
+
+## [0.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.5.1...@kong-ui-public/page-layout@0.5.2) (2026-07-23)
+
+**Note:** Version bump only for package @kong-ui-public/page-layout
+
+
+
+
+
+## [0.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.5.0...@kong-ui-public/page-layout@0.5.1) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/page-layout
+
+
+
+
+
 # [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/page-layout@0.4.0...@kong-ui-public/page-layout@0.5.0) (2026-07-16)
 
 

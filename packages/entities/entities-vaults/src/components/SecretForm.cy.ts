@@ -82,8 +82,8 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('other-create-form-submit').should('be.disabled')
       // enables save when required fields have values
       cy.getTestId('secret-form-key').type('bicycle-kick')
-      cy.getTestId('secret-form-value').clear()
-      cy.getTestId('secret-form-value').type('101')
+      cy.getTestId('secret-form-value').find('textarea').clear()
+      cy.getTestId('secret-form-value').find('textarea').type('101')
       cy.getTestId('other-create-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('secret-form-key').clear()
@@ -111,7 +111,9 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       // form fields
       cy.getTestId('secret-form-key').should('be.disabled')
       cy.getTestId('secret-form-key').should('have.value', secret.key)
-      cy.getTestId('secret-form-value').should('have.value', '')
+      // the value is masked and read-only until the user rotates it
+      cy.getTestId('sensitive-input-rotate').should('be.visible')
+      cy.getTestId('secret-form-value').find('textarea').should('have.attr', 'readonly')
     })
 
     it('should correctly handle button state - edit', () => {
@@ -132,11 +134,14 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('other-edit-form-submit').should('be.visible')
       cy.getTestId('other-edit-form-cancel').should('be.enabled')
       cy.getTestId('other-edit-form-submit').should('be.disabled')
+      // the value starts masked; rotate to make it editable
+      cy.getTestId('sensitive-input-rotate').click()
+      cy.getTestId('secret-form-value').find('textarea').should('not.have.attr', 'readonly')
       // enables save when form has changes
-      cy.getTestId('secret-form-value').type('ubiquitous')
+      cy.getTestId('secret-form-value').find('textarea').type('ubiquitous')
       cy.getTestId('other-edit-form-submit').should('be.enabled')
       // disables save when form changes are undone
-      cy.getTestId('secret-form-value').clear()
+      cy.getTestId('secret-form-value').find('textarea').clear()
       cy.getTestId('other-edit-form-submit').should('be.disabled')
     })
 
@@ -310,7 +315,7 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       cy.wait('@getAiVault')
       cy.getTestId('secret-form-key').type('password')
-      cy.getTestId('secret-form-value').type('hunter2')
+      cy.getTestId('secret-form-value').find('textarea').type('hunter2')
       cy.getTestId('other-create-form-submit').click()
 
       cy.wait('@createAiSecret').then(({ request }) => {

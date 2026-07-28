@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.3.6...@kong-ui-public/table-data-grid@0.3.7) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
+## [0.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.3.5...@kong-ui-public/table-data-grid@0.3.6) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
+## [0.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.3.4...@kong-ui-public/table-data-grid@0.3.5) (2026-07-23)
+
+
+### Bug Fixes
+
+* **table-data-grid:** show tooltips for truncated cells ([#3598](https://github.com/Kong/public-ui-components/issues/3598)) ([7163383](https://github.com/Kong/public-ui-components/commit/716338315dbcc47a40fb2e2f100c9717328e9354))
+
+
+
+
+
+## [0.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.3.3...@kong-ui-public/table-data-grid@0.3.4) (2026-07-23)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
+## [0.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.3.2...@kong-ui-public/table-data-grid@0.3.3) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/table-data-grid
+
+
+
+
+
+## [0.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.3.1...@kong-ui-public/table-data-grid@0.3.2) (2026-07-21)
+
+
+### Bug Fixes
+
+* **deps:** update ag-grid monorepo to v36 ([#3541](https://github.com/Kong/public-ui-components/issues/3541)) ([b021127](https://github.com/Kong/public-ui-components/commit/b0211276516cb937964a17c484b183572dc0864b))
+
+
+
+
+
+## [0.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.3.0...@kong-ui-public/table-data-grid@0.3.1) (2026-07-18)
+
+
+### Bug Fixes
+
+* **table-data-grid:** use theme-aware text colors ([#3566](https://github.com/Kong/public-ui-components/issues/3566)) ([4765c39](https://github.com/Kong/public-ui-components/commit/4765c3928234c7b0667164cb757e461ffe8cc6aa))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/table-data-grid@0.2.3...@kong-ui-public/table-data-grid@0.3.0) (2026-07-16)
 
 
