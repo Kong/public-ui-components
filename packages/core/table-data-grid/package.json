@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.62.1",
+    "@kong/kongponents": "9.63.0",
     "vue": "^3.5.35"
   },
   "repository": {
@@ -62,7 +62,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.59.0",
+    "@kong/kongponents": "^9.63.0",
     "vue": "^3.5.35"
   },
   "dependencies": {
