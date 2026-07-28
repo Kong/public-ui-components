@@ -14,6 +14,23 @@ export enum AuthProvider {
   AWS = 'aws',
   GCP = 'gcp',
   AZURE = 'azure',
+  OAUTH = 'oauth',
+}
+
+export enum OauthAuthMethod {
+  CLIENT_SECRET_BASIC = 'client_secret_basic',
+  CLIENT_SECRET_JWT = 'client_secret_jwt',
+  CLIENT_SECRET_POST = 'client_secret_post',
+}
+
+export enum OauthGrantType {
+  CLIENT_CREDENTIALS = 'client_credentials',
+  PASSWORD = 'password',
+}
+
+export enum OauthClientSecretJwtAlg {
+  HS256 = 'HS256',
+  HS512 = 'HS512',
 }
 
 export type SentinelNode = {
@@ -69,6 +86,23 @@ export type RedisConfigurationConfigDTO = {
     azure_client_id: string | null
     azure_client_secret: string | null
     azure_tenant_id: string | null
+    oauth?: {
+      auth_method: OauthAuthMethod | null
+      client_id: string | null
+      client_secret: string | null
+      client_secret_jwt_alg: OauthClientSecretJwtAlg | null
+      grant_type: OauthGrantType | null
+      password: string | null
+      redis_username: string | null
+      redis_username_claim: string | null
+      scopes: string[] | null
+      ssl_verify: boolean | null
+      timeout: number | null
+      token_endpoint: string | null
+      token_headers: Record<string, string> | null
+      token_post_args: Record<string, string> | null
+      username: string | null
+    } | null
   } | null
 }
 
