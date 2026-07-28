@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.24.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.24.0...@kong-ui-public/analytics-utilities@12.24.1) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities:** json config block background [KHCP-21211] ([#3621](https://github.com/Kong/public-ui-components/issues/3621)) ([38e1bfb](https://github.com/Kong/public-ui-components/commit/38e1bfb5ca98eb1c08a6dbab2338c35d921ed227))
+
+
+
+
+
 # [12.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.23.3...@kong-ui-public/analytics-utilities@12.24.0) (2026-07-28)
 
 
