@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.57.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.9...@kong-ui-public/entities-shared@3.57.10) (2026-07-29)
+
+
+### Bug Fixes
+
+* **entities:** cap code block height and skip highlighting for large configs [KM-2992] ([#3628](https://github.com/Kong/public-ui-components/issues/3628)) ([2fd9191](https://github.com/Kong/public-ui-components/commit/2fd919103fb9ff77f2c54dc19c7051261593749e))
+
+
+
+
+
 ## [3.57.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.8...@kong-ui-public/entities-shared@3.57.9) (2026-07-29)
 
 
