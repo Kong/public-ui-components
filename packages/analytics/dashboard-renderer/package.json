@@ -48,7 +48,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong-ui-public/table-data-grid": "workspace:^",
-    "@kong/design-tokens": "3.1.2",
+    "@kong/design-tokens": "3.1.5",
     "@kong/icons": "^1.61.2",
     "@kong/kongponents": "9.63.0",
     "ajv": "^8.20.0",
