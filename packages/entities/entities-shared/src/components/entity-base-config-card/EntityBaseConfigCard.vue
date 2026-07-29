@@ -27,6 +27,13 @@
           class="sensitive-fields-checkbox"
           data-testid="sensitive-fields-checkbox"
           :label="t('baseConfigCard.actions.sensitive_fields')"
+          :label-attributes="{
+            info: t('baseConfigCard.actions.sensitive_fields_tooltip'),
+            tooltipAttributes: {
+              maxWidth: '200',
+              placement: 'top',
+            },
+          }"
         />
 
         <div class="row">
