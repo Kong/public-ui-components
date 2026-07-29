@@ -11,6 +11,7 @@
         id="json-endpoint-codeblock"
         :code="fetcherUrl"
         language="plaintext"
+        :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
         single-line
         theme="dark"
       />
@@ -23,6 +24,7 @@
       :copy-code="JSON.stringify(unredactedRecord || jsonContent, null, 2)"
       data-dd-privacy="mask"
       language="json"
+      :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
       theme="dark"
       @code-block-render="highlightCodeBlock"
     />
@@ -30,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import { CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT } from '../../constants'
 import { computed, type PropType } from 'vue'
 import type { BadgeAppearance } from '@kong/kongponents'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'

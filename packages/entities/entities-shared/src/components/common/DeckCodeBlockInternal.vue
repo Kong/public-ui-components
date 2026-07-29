@@ -84,6 +84,7 @@
       :copy-code="unredactedDeckCommand"
       data-dd-privacy="mask"
       :language="shell"
+      :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
       :theme="isCustomizing ? 'light' : 'dark'"
       @code-block-render="highlightCodeBlock"
     />
@@ -121,6 +122,7 @@
 </template>
 
 <script setup lang="ts">
+import { CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT } from '../../constants'
 import { InfoIcon, LanguageBashIcon, LanguageShellIcon } from '@kong/icons'
 import { KExternalLink } from '@kong/kongponents'
 import yaml from 'js-yaml'
