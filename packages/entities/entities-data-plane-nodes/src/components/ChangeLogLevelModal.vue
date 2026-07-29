@@ -1,262 +1,150 @@
 <template>
   <KModal
-    :action-button-disabled="actionButtonDisabled"
-    :action-button-text="actionButtonText"
+    :action-button-disabled="isSaving || !expirationValid || props.nodes.length === 0"
+    :action-button-text="i18n.t('modal.save')"
+    :cancel-button-disabled="isSaving"
+    :cancel-button-text="i18n.t('modal.cancel')"
     data-testid="change-log-level-modal"
-    :hide-cancel-button="true"
-    :hide-close-icon="modalEditStage === 'submitting'"
+    :hide-close-icon="isSaving"
     max-width="640px"
-    :title="title"
+    :title="i18n.t('modal.title')"
     :visible="visible"
-    @cancel="closeAndReset"
-    @proceed="onProceed"
+    @cancel="onCancel"
+    @proceed="save"
   >
-    <KSelect
-      v-if="modalEditStage === 'edit'"
-      v-model="targetLogLevel"
-      class="log-level-select"
-      data-testid="log-level-select"
-      :items="logLevelCandidates"
-      :label="i18n.t('modal.select_log_level_title')"
-    />
+    <div class="change-log-level-modal-content">
+      <p class="description">
+        {{ i18n.t('modal.description') }}
+      </p>
 
-    <div class="explanation-wrapper">
-      <KLabel>{{ i18n.t(`log_level.${targetLogLevel}`) }}</KLabel>
-      <div>{{ explanation.explanation }}</div>
-      <div
-        v-if="explanation.warning"
-        class="warning-message"
-        data-testid="log-level-warning-message"
-      >
-        {{ explanation.warning }}
-      </div>
+      <KAlert
+        appearance="warning"
+        data-testid="log-level-warning"
+        :message="i18n.t('modal.warning')"
+        show-icon
+      />
+
+      <KSelect
+        v-model="targetLogLevel"
+        data-testid="log-level-select"
+        :items="logLevelItems"
+        :kpop-attributes="{ 'data-testid': 'log-level-select-popover' }"
+        :label="i18n.t('modal.log_level_label')"
+      />
+
+      <KInput
+        v-model.number="expiration"
+        data-testid="expiration-input"
+        :error="!expirationValid"
+        :help="i18n.t('modal.expiration.help')"
+        :label="i18n.t('modal.expiration.label')"
+        :label-attributes="{
+          info: i18n.t('modal.expiration.tooltip'),
+          tooltipAttributes: { maxWidth: '340px' },
+        }"
+        max="3600"
+        min="1"
+        type="number"
+      />
+
+      <KAlert
+        v-if="errorMessage"
+        appearance="danger"
+        data-testid="log-level-error"
+        :message="errorMessage"
+      />
     </div>
-
-    <div class="revert-after-wrapper">
-      <KLabel>{{ i18n.t('modal.revert_to_default_after.label') }}</KLabel>
-      <div class="time">
-        <KInput
-          v-model="revertAfterString"
-          class="time-input"
-          data-testid="log-level-timeout"
-          :disabled="modalEditStage !== 'edit'"
-          :error="revertAfter <= 0 || isNaN(revertAfter)"
-          min="1"
-          type="number"
-        />
-        <span class="seconds">{{ i18n.t('modal.revert_to_default_after.seconds') }}</span>
-        <span
-          class="formatted-time"
-          data-testid="log-level-timeout-formatted"
-        >{{ friendlyTime }}</span>
-      </div>
-    </div>
-
-    <table
-      class="data-plane-node-list"
-      data-testid="data-plane-node-list"
-    >
-      <thead>
-        <th class="data-plane-node-col">
-          {{ i18n.t('modal.dp_list.header.host') }}
-        </th>
-        <th class="data-plane-node-col">
-          {{ i18n.t('modal.dp_list.header.action') }}
-        </th>
-        <th>{{ i18n.t('modal.dp_list.header.status') }}</th>
-      </thead>
-
-      <tbody>
-        <CLLModalNodeRow
-          v-for="node in props.instanceList"
-          :key="node.id"
-          :ref="el => setHostListNodeItemRefs(node.id, el as any)"
-          :check-log-level="checkDataPlaneLogLevel"
-          :data-plane-id="node.id"
-          :data-testid="`data-plane-node-list-row-${node.id}`"
-          :has-dll-capability="node.hasDLLCapability ?? true"
-          :hostname="node.hostname"
-          :log-level-hint="props.instanceLogLevel?.get(node.id)"
-          :target-log-level="targetLogLevel"
-        />
-      </tbody>
-    </table>
   </KModal>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useAxios, useErrors } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
-import CLLModalNodeRow from './CLLModalNodeRow.vue'
-import { LogLevel, type DataPlaneNodeCommon } from '../types'
-import type { AsyncScheduler, AsyncSchedulerOptions } from '../composables'
+import endpoints from '../data-plane-nodes-endpoints'
+import { LogLevel, LOG_LEVELS } from '../types'
+import type { ChangeLogLevelConfig, LogLevelOperationPayload } from '../types'
 
 defineOptions({
   name: 'ChangeLogLevelModal',
 })
 
 const props = defineProps<{
-  instanceList: Array<Pick<DataPlaneNodeCommon, 'id' | 'hostname'> & { hasDLLCapability?: boolean }>
-  instanceLogLevel: Map<string /* instanceId */, LogLevel>
-  requests: {
-    scheduler?: AsyncScheduler | AsyncSchedulerOptions | null // default to { maxConcurrentAsyncs: 10 }
-    getDataPlaneLogLevel: (instanceId: string) => Promise<LogLevel>
-    setDataPlaneLogLevel: (instanceId: string, logLevel: LogLevel, revertAfter: number) => Promise<void>
-  }
+  config: ChangeLogLevelConfig
+  nodes: Array<{ id: string, hostname: string }>
+}>()
+
+const emit = defineEmits<{
+  success: []
 }>()
 
 const visible = defineModel<boolean>('visible')
 
-const initialLogLevel = LogLevel.Notice
-
 const { i18n } = composables.useI18n()
+const { axiosInstance } = useAxios(props.config.axiosRequestConfig)
+const { getMessageFromError } = useErrors()
 
-const modalEditStage = ref<'edit' | 'submitting' | 'submitted'>('edit')
+const DEFAULT_LOG_LEVEL = LogLevel.Notice
+const DEFAULT_EXPIRATION = 600 // seconds (10 minutes)
 
-const targetLogLevel = ref<LogLevel>(initialLogLevel)
-const revertAfterString = ref<string>('60')
-const revertAfter = computed(() => Math.floor(Number(revertAfterString.value)))
-const capableInstanceList = computed(() => props.instanceList.filter(node => node.hasDLLCapability !== false))
+const targetLogLevel = ref<LogLevel>(DEFAULT_LOG_LEVEL)
+const expiration = ref<number>(DEFAULT_EXPIRATION)
+const isSaving = ref<boolean>(false)
+const errorMessage = ref<string>('')
 
-const title = computed(() => {
-  const summary = capableInstanceList.value.length === 1
-    ? i18n.t('modal.change_log_level.summary_with_name', { name: capableInstanceList.value[0].hostname })
-    : i18n.t('modal.change_log_level.summary_with_number', { number: `${capableInstanceList.value.length}` })
-  return i18n.t('modal.change_log_level.title', { summary })
-})
+const logLevelItems = computed(() => LOG_LEVELS.map((level) => ({
+  label: i18n.t(`log_level.${level}`),
+  value: level,
+})))
 
-const actionButtonDisabled = computed(() => {
-  return modalEditStage.value === 'submitting' ||
-    isNaN(revertAfter.value) || revertAfter.value <= 0 ||
-    capableInstanceList.value.length === 0
-})
+const expirationValid = computed(() =>
+  Number.isInteger(expiration.value) && expiration.value >= 1 && expiration.value <= 3600)
 
-const logLevelCandidates = composables.useLogLevelCandidateSelectItems({
-  initialSelected: initialLogLevel,
-})
-
-const explanation = composables.useLogLevelExplanation(targetLogLevel)
-const friendlyTime = composables.useFriendlyRevertTime(revertAfter)
-
-const asyncScheduler = composables.useAsyncScheduler(
-  props.requests.scheduler === undefined
-    ? { maxConcurrentAsyncs: 10 }
-    : props.requests.scheduler,
-)
-
-const { checkDataPlaneLogLevel } = composables.useDataPlaneLogLevelChecker({
-  getDataPlaneLogLevel: props.requests.getDataPlaneLogLevel,
-  setDataPlaneLogLevel: props.requests.setDataPlaneLogLevel,
-  requestExecutor: asyncScheduler.schedule,
-})
-
-// workaround for https://github.com/vuejs/core/issues/9617
-// use ref directly when the issue get fixed
-const hostNodeCompRefs = new Map<string, InstanceType<typeof CLLModalNodeRow>>()
-const setHostListNodeItemRefs = (dataPlaneId: string, ref: InstanceType<typeof CLLModalNodeRow> | null) => {
-  if (ref === null) {
-    hostNodeCompRefs.delete(dataPlaneId)
-  } else {
-    hostNodeCompRefs.set(dataPlaneId, ref)
+const buildUrl = (template: string): string => {
+  let url = `${props.config.apiBaseUrl}${template}`
+  if (props.config.app === 'konnect') {
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId)
   }
+  return url
 }
 
-const onProceed = async () => {
-  if (modalEditStage.value !== 'edit') {
-    closeAndReset()
-    return
-  }
-
-  modalEditStage.value = 'submitting'
-
-  const promises = Array.from(hostNodeCompRefs.values()).map(comp => {
-    return comp.updateLogLevel(targetLogLevel.value, revertAfter.value)
-  })
+const save = async () => {
+  errorMessage.value = ''
+  isSaving.value = true
 
   try {
-    await Promise.all(promises)
-  } catch (error) {
-    console.error('Failed to update log level', error)
+    const url = buildUrl(endpoints.logLevel[props.config.app].update)
+    const payload: LogLevelOperationPayload = {
+      log_level: targetLogLevel.value,
+      ttl: expiration.value,
+      targets: { node_ids: props.nodes.map((node) => node.id) },
+    }
+    await axiosInstance.post(url, payload)
+    emit('success')
+  } catch (error: any) {
+    errorMessage.value = getMessageFromError(error)
   } finally {
-    modalEditStage.value = 'submitted'
+    isSaving.value = false
   }
 }
 
-const closeAndReset = () => {
+const onCancel = () => {
   visible.value = false
-  revertAfterString.value = '60'
-  modalEditStage.value = 'edit'
-  targetLogLevel.value = initialLogLevel
+  targetLogLevel.value = DEFAULT_LOG_LEVEL
+  expiration.value = DEFAULT_EXPIRATION
+  errorMessage.value = ''
 }
-
-const actionButtonText = computed(() => {
-  switch (modalEditStage.value) {
-    case 'submitting':
-      return i18n.t('modal.action_button.submitting')
-    case 'submitted':
-      return i18n.t('modal.action_button.ok')
-    default:
-      return i18n.t('modal.action_button.confirm')
-  }
-})
 </script>
 
 <style lang="scss" scoped>
-.log-level-select,
-.explanation-wrapper {
-  margin-bottom: var(--kui-space-70, $kui-space-70);
-}
+.change-log-level-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kui-space-70, $kui-space-70);
 
-.explanation-wrapper {
-  :deep(.k-label) {
-    margin-bottom: 0 !important;
+  .description {
+    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+    margin: 0;
   }
-
-  .warning-message {
-    color: var(--kui-color-text-danger, $kui-color-text-danger);
-  }
-}
-
-.revert-after-wrapper {
-  margin-bottom: var(--kui-space-40, $kui-space-40);
-
-  .time {
-    align-items: center;
-    display: flex;
-
-    .time-input {
-      margin-right: var(--kui-space-40, $kui-space-40);
-      width: 80px;
-    }
-
-    .seconds {
-      color: var(--kui-color-text, $kui-color-text);
-    }
-
-    .formatted-time {
-      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-      font-style: italic;
-      margin-left: var(--kui-space-130, $kui-space-130);
-    }
-  }
-}
-
-.data-plane-node-list {
-  th, td {
-    color: var(--kui-color-text, $kui-color-text);
-  }
-
-  thead {
-    text-align: left;
-
-    th {
-      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-      line-height: var(--kui-line-height-70, $kui-line-height-70);
-    }
-  }
-}
-
-.data-plane-node-col {
-  width: 40%;
 }
 </style>
