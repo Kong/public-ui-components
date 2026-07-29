@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.8.10...@kong-ui-public/entities-data-plane-nodes@1.1.0) (2026-07-29)
+
+
+### Features
+
+* **dp-nodes:** change log level modal ([#3618](https://github.com/Kong/public-ui-components/issues/3618)) ([d2fcc09](https://github.com/Kong/public-ui-components/commit/d2fcc090d45962cac2d6841b048351906fcebad7))
+
+
+
+
+
 ## [0.8.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.8.9...@kong-ui-public/entities-data-plane-nodes@0.8.10) (2026-07-29)
 
 
