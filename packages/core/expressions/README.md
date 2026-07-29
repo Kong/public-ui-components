@@ -16,35 +16,34 @@ Reusable components to support [Kong's expressions language](https://developer.k
 ## Requirements
 
 - `vue` must be initialized in the host application
-- [`monaco-editor`](https://www.npmjs.com/package/monaco-editor) is required as a dependency in the host application
-- [`vite-plugin-monaco-editor`](https://www.npmjs.com/package/vite-plugin-monaco-editor) is a required Vite plugin to bundle the Monaco Editor and its web workers
+- [`@kong-ui-public/monaco-editor`](https://www.npmjs.com/package/@kong-ui-public/monaco-editor) is required to provide Monaco Editor runtime support and the Vite plugin used to bundle Monaco Editor and its web workers
 - [`@kong-ui-public/forms`](https://www.npmjs.com/package/@kong-ui-public/forms) is an optional dependency required for the `RouterPlaygroundModal` component
 
 ## Usage
 
 ### Install
 
-Install required `devDependencies` in your host application:
+Install the required Monaco Editor package in your host application:
 
 ```sh
-yarn add -D vite-plugin-monaco-editor
+yarn add @kong-ui-public/monaco-editor
 ```
 
-Enable the `vite-plugin-monaco-editor` plugin. Your Vite config should look like this:
+Enable the Monaco Editor Vite plugin from `@kong-ui-public/monaco-editor`. Your Vite config should look like this:
 
 ```ts
-import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+import monaco from '@kong-ui-public/monaco-editor/vite-plugin'
 
 export default defineConfig({
   // ...
   plugins: [
-    monacoEditorPlugin({}),
+    monaco({}),
   ],
   // ...
 }
 ```
 
-For more information on configuring the `vite-plugin-monaco-editor` plugin, you should refer to their [readme docs](https://github.com/vdesjs/vite-plugin-monaco-editor/blob/master/README.md).
+For more information on configuring languages, editor features, Shiki languages, and Shiki themes, refer to the [`@kong-ui-public/monaco-editor` Vite plugin docs](../monaco-editor/vite-plugin/README.md).
 
 ### Import and use
 
