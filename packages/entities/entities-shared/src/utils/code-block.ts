@@ -1,7 +1,12 @@
 import { codeToHtml } from './shiki'
 import type { CodeBlockEventData } from '@kong/kongponents'
+import { SHIKI_MAX_HIGHLIGHT_LENGTH } from '../constants'
 
 export function highlightCodeBlock({ codeElement, code, language }: CodeBlockEventData) {
+  if (code.length > SHIKI_MAX_HIGHLIGHT_LENGTH) {
+    return
+  }
+
   /*
    * Emit both palettes so appearance is driven by the Konnect theme, not a prop: shiki inlines
    * the light colors on each token and adds a `--shiki-dark` custom property. A single scoped
