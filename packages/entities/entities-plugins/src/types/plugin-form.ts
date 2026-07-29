@@ -125,9 +125,10 @@ export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBa
 export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig { }
 
 /**
- * Payload for the `click:create-entity` event emitted from the Kong Identity principals UI.
- * The consuming app navigates to the matching create page; `authServerId` is provided when
- * creating a client (scoped to the selected auth server).
+ * Payload for the `click:create-entity` event. The consuming app navigates to the
+ * matching create page. Emitted from the Kong Identity principals UI (`principal`,
+ * `auth-server`, `client`) and from the governance feature select (`feature`);
+ * `authServerId` is provided when creating a client (scoped to the selected auth server).
  */
 export type EntityCreateEvent = {
   type: 'principal'
@@ -136,6 +137,8 @@ export type EntityCreateEvent = {
 } | {
   type: 'client'
   authServerId?: string
+} | {
+  type: 'feature'
 }
 
 export interface PluginFormFields {

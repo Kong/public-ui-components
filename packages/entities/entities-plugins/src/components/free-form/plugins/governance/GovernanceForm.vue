@@ -85,7 +85,7 @@
       </div>
 
       <!-- Feature — async select backed by the OpenMeter features endpoint. -->
-      <FeatureSelectField />
+      <FeatureSelectField @click:create-entity="(payload) => emit('click:create-entity', payload)" />
 
       <!-- Connection -->
       <h3 class="ff-governance-connection-heading">
@@ -210,11 +210,16 @@ import AdvancedFields from '../../shared/AdvancedFields.vue'
 import useI18n from '../../../../composables/useI18n'
 import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
 import type { ConfigSection } from '../../shared/types'
+import type { EntityCreateEvent } from '../../../../types'
 import ResponseMappingField from './ResponseMappingField.vue'
 import CardRadioField from './CardRadioField.vue'
 import FeatureSelectField from './FeatureSelectField.vue'
 
 const props = defineProps<Props>()
+
+const emit = defineEmits<{
+  'click:create-entity': [payload: EntityCreateEvent]
+}>()
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any

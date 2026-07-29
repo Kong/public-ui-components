@@ -946,7 +946,7 @@
           "feature_key": {
             "label": "Feature to govern access",
             "help": "Feature that will control access to the scope where the plugin is applied.",
-            "metered_badge": "Metered feature",
+            "create_feature": "+ Create feature",
             "load_error": "Could not load features from the governance service."
           },
           "governance_endpoint": {

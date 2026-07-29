@@ -2,11 +2,19 @@ import type { RouteLocationRaw } from 'vue-router'
 import type { KonnectConfig, KongManagerConfig } from './index'
 import type { DeckConfigOptions } from './deck'
 
+/** Metering & billing related configuration, consumed by governance/metering plugin forms */
+export interface MeteringConfig {
+  /** Endpoint the governance FeatureSelectField fetches the OpenMeter features list from */
+  featuresEndpoint?: string
+}
+
 export interface BaseFormConfig {
   /** Route to return to if canceling create/edit an entity */
   cancelRoute?: RouteLocationRaw
   /** If showing an edit form, the ID of the entity to edit */
   editId?: string
+  /** Metering & billing related configuration */
+  metering?: MeteringConfig
 }
 
 /** Konnect base form config */
