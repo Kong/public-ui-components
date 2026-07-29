@@ -1,352 +1,175 @@
-import { mockDataPlane } from '../fixtures/data-planes'
-import { LogLevel } from '../types'
 import ChangeLogLevelModal from './ChangeLogLevelModal.vue'
+import type { ChangeLogLevelConfig } from '../types'
 
-type ArrayElement<A> = A extends ReadonlyArray<infer T> ? T : never
+const nodes = [
+  { id: 'node-1', hostname: 'dp-1' },
+  { id: 'node-2', hostname: 'dp-2' },
+]
 
-interface CLLModalInstanceWithLogLevel extends ArrayElement<InstanceType<typeof ChangeLogLevelModal>['$props']['instanceList']> {
-  logLevel?: LogLevel
+const konnectConfig: ChangeLogLevelConfig = {
+  app: 'konnect',
+  apiBaseUrl: '/us/kong-api',
+  controlPlaneId: '1234-cp',
 }
 
-const LOG_LEVEL_DISPLAY_NAMES: Record<string, string> = {
-  [LogLevel.Critical]: 'Critical',
-  [LogLevel.Debug]: 'Debug',
-  [LogLevel.Error]: 'Error',
-  [LogLevel.Info]: 'Info',
-  [LogLevel.Notice]: 'Notice',
-  [LogLevel.Warn]: 'Warn',
+const kongManagerConfig: ChangeLogLevelConfig = {
+  app: 'kongManager',
+  apiBaseUrl: '/kong-manager',
 }
+
+const cases = [
+  {
+    name: 'Konnect',
+    config: konnectConfig,
+    url: `${konnectConfig.apiBaseUrl}/v2/control-planes/1234-cp/nodes/log-level-operations`,
+  },
+  {
+    name: 'Kong Manager',
+    config: kongManagerConfig,
+    url: `${kongManagerConfig.apiBaseUrl}/debug/cluster/data-planes/log-level-operations`,
+  },
+]
+
+const actionButton = '.k-modal .footer-actions button[data-testid="modal-action-button"]'
+const cancelButton = '.k-modal .footer-actions button[data-testid="modal-cancel-button"]'
 
 describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 }, () => {
-  it('should render an empty list', () => {
-    cy.mount(ChangeLogLevelModal, {
-      props: {
-        visible: true,
-        instanceList: [],
-        instanceLogLevel: new Map(),
-        requests: {
-          getDataPlaneLogLevel: () => {},
-          setDataPlaneLogLevel: () => {},
-        },
-      },
-    })
-
-    cy.getTestId('data-plane-node-list').should('be.visible')
-    cy.getTestId('data-plane-node-list').find('tbody tr').should('have.length', 0)
-    cy.getTestId('change-log-level-modal').find('.footer-actions button').should('be.disabled')
-  })
-
-  it('should render a list with all DPs without DLL capability', () => {
-    const instanceList: CLLModalInstanceWithLogLevel[] = [
-      { ...mockDataPlane(), hasDLLCapability: false },
-      { ...mockDataPlane(), hasDLLCapability: false },
-      { ...mockDataPlane(), hasDLLCapability: false },
-    ]
-
-    const getDataPlaneLogLevel = cy.stub()
-
-    cy.mount(ChangeLogLevelModal, {
-      props: {
-        visible: true,
-        instanceList,
-        instanceLogLevel: new Map(),
-        requests: {
-          getDataPlaneLogLevel,
-          setDataPlaneLogLevel: () => {},
-        },
-      },
-    })
-
-    cy.getTestId('data-plane-node-list').should('be.visible')
-    cy.getTestId('data-plane-node-list').find('tbody tr').should('have.length', 3)
-    cy.getTestId('change-log-level-modal').find('.footer-actions button').should('be.disabled')
-
-    for (const instance of instanceList) {
-      cy.getTestId(`data-plane-node-list-row-${instance.id}`).as(`instanceRow_${instance.id}`).scrollIntoView()
-      cy.get(`@instanceRow_${instance.id}`).should('be.visible')
-      cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-action').should('contain.text', 'N/A')
-      cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status').should('contain.text', 'Not supported')
-    }
-
-    cy.wrap(getDataPlaneLogLevel).should('not.be.called')
-  })
-
-  it('should render correct formatted timeout', () => {
-    cy.mount(ChangeLogLevelModal, {
-      props: {
-        visible: true,
-        instanceList: [],
-        instanceLogLevel: new Map(),
-        requests: {
-          getDataPlaneLogLevel: () => {},
-          setDataPlaneLogLevel: () => {},
-        },
-      },
-    })
-
-    cy.getTestId('log-level-timeout').clear()
-    cy.getTestId('log-level-timeout-formatted').should('have.text', '')
-
-    cy.getTestId('log-level-timeout').type('61')
-    cy.getTestId('log-level-timeout-formatted').should('contain.text', '1 min 1 sec')
-
-    cy.getTestId('log-level-timeout').clear()
-    cy.getTestId('log-level-timeout').type('233')
-    cy.getTestId('log-level-timeout-formatted').should('contain.text', '3 min 53 sec')
-
-    cy.getTestId('log-level-timeout').clear()
-    cy.getTestId('log-level-timeout').type('0')
-    cy.getTestId('log-level-timeout').should('have.attr', 'aria-invalid')
-
-    cy.getTestId('log-level-timeout').clear()
-    cy.getTestId('log-level-timeout').type('-1')
-    cy.getTestId('log-level-timeout').should('have.attr', 'aria-invalid')
-  })
-
-  it('should render correct list content', () => {
-    const instanceList: CLLModalInstanceWithLogLevel[] = [
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Critical },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Debug },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Error },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Info },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Notice },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Warn },
-    ]
-
-    const getDataPlaneLogLevel = cy.spy(async (instanceId:string) => {
-      await new Promise((resolve) => setTimeout(resolve, 100 + 500 * Math.random()))
-      return instanceList.find(({ id }) => instanceId === id)?.logLevel
-    })
-
-    cy.mount(ChangeLogLevelModal, {
-      props: {
-        visible: true,
-        instanceList,
-        instanceLogLevel: new Map(),
-        requests: {
-          getDataPlaneLogLevel,
-          setDataPlaneLogLevel: () => {},
-        },
-      },
-    })
-
-    cy.getTestId('data-plane-node-list').should('be.visible')
-    cy.getTestId('data-plane-node-list').find('tbody tr').should('have.length', instanceList.length)
-    cy.getTestId('change-log-level-modal').find('.footer-actions button').should('be.enabled')
-
-    for (const logLevel of Object.keys(LOG_LEVEL_DISPLAY_NAMES)) {
-      cy.getTestId('log-level-select').click()
-      cy.getTestId(`select-item-${logLevel}`).click()
-
-      if (logLevel === LogLevel.Debug) {
-        cy.getTestId('log-level-warning-message').should('be.visible')
+  cases.forEach(({ name, config, url }) => {
+    describe(name, () => {
+      const interceptSubmission = (opts: { status?: number, delay?: number, body?: Record<string, any> } = {}): void => {
+        cy.intercept('POST', url, {
+          statusCode: opts.status ?? 200,
+          body: opts.body ?? {},
+          delay: opts.delay,
+        }).as('submit')
       }
 
-      for (const instance of instanceList) {
-        cy.getTestId(`data-plane-node-list-row-${instance.id}`).as(`instanceRow_${instance.id}`).scrollIntoView()
-        cy.get(`@instanceRow_${instance.id}`).should('be.visible')
-        cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-action-current-level')
-          .should('contain.text', LOG_LEVEL_DISPLAY_NAMES[instance.logLevel!])
-        if (instance.logLevel !== logLevel) {
-          cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-action-target-level')
-            .should('contain.text', LOG_LEVEL_DISPLAY_NAMES[logLevel])
-        }
-        cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status').should('contain.text', 'Pending')
-      }
-    }
-  })
+      it('renders the form fields, the always-on warning, and the action buttons', () => {
+        cy.mount(ChangeLogLevelModal, {
+          props: { config, visible: true, nodes },
+        })
 
-  it('should render correct list with DPs without DLL capability', () => {
-    const instanceList: CLLModalInstanceWithLogLevel[] = [
-      { ...mockDataPlane(), hasDLLCapability: false },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Debug },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Error },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Info },
-      { ...mockDataPlane(), hasDLLCapability: false },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Notice },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Warn },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Warn },
-    ]
+        cy.getTestId('change-log-level-modal').find('.modal-container').should('be.visible')
+        cy.getTestId('log-level-warning').should('be.visible')
+        cy.getTestId('log-level-select').should('be.visible')
+        cy.getTestId('expiration-input').should('be.visible')
+        cy.get(actionButton).should('be.visible')
+        cy.get(cancelButton).should('be.visible')
+        // No error until a request fails
+        cy.getTestId('log-level-error').should('not.exist')
+      })
 
-    const getDataPlaneLogLevel = cy.spy(async (instanceId:string) => {
-      await new Promise((resolve) => setTimeout(resolve, 100 + 500 * Math.random()))
-      return instanceList.find(({ id }) => instanceId === id)?.logLevel
+      it('disables Save when the expiration is out of the 1-3600 range', () => {
+        cy.mount(ChangeLogLevelModal, {
+          props: { config, visible: true, nodes },
+        })
+
+        cy.get(actionButton).should('be.enabled')
+
+        cy.getTestId('expiration-input').clear()
+        cy.getTestId('expiration-input').type('0')
+        cy.get(actionButton).should('be.disabled')
+
+        cy.getTestId('expiration-input').clear()
+        cy.getTestId('expiration-input').type('4000')
+        cy.get(actionButton).should('be.disabled')
+
+        cy.getTestId('expiration-input').clear()
+        cy.getTestId('expiration-input').type('120')
+        cy.get(actionButton).should('be.enabled')
+      })
+
+      it('disables Save when there are no nodes', () => {
+        cy.mount(ChangeLogLevelModal, {
+          props: { config, visible: true, nodes: [] },
+        })
+
+        cy.get(actionButton).should('be.disabled')
+      })
+
+      it('sends the batch request with the default values and emits "success"', () => {
+        interceptSubmission()
+
+        cy.mount(ChangeLogLevelModal, {
+          props: { config, visible: true, nodes, onSuccess: cy.spy().as('successSpy') },
+        })
+
+        cy.get(actionButton).click()
+
+        cy.wait('@submit').then(({ request }) => {
+          expect(request.body).to.deep.equal({
+            log_level: 'notice',
+            ttl: 600,
+            targets: { node_ids: ['node-1', 'node-2'] },
+          })
+        })
+
+        cy.get('@successSpy').should('have.been.calledOnce')
+        // The modal does not close itself - the host controls visibility.
+        cy.getTestId('change-log-level-modal').find('.modal-container').should('be.visible')
+        cy.getTestId('log-level-error').should('not.exist')
+      })
+
+      it('sends the selected log level and expiration', () => {
+        interceptSubmission()
+
+        cy.mount(ChangeLogLevelModal, {
+          props: { config, visible: true, nodes },
+        })
+
+        cy.getTestId('log-level-select').click()
+        cy.getTestId('log-level-select-popover').find('button[value="debug"]').click()
+
+        cy.getTestId('expiration-input').clear()
+        cy.getTestId('expiration-input').type('120')
+
+        cy.get(actionButton).click()
+
+        cy.wait('@submit').then(({ request }) => {
+          expect(request.body).to.deep.equal({
+            log_level: 'debug',
+            ttl: 120,
+            targets: { node_ids: ['node-1', 'node-2'] },
+          })
+        })
+      })
+
+      it('disables Save while the request is in flight', () => {
+        interceptSubmission({ delay: 300 })
+
+        cy.mount(ChangeLogLevelModal, {
+          props: { config, visible: true, nodes },
+        })
+
+        cy.get(actionButton).click()
+        cy.get(actionButton).should('be.disabled')
+
+        cy.wait('@submit')
+        cy.get(actionButton).should('be.enabled')
+      })
+
+      it('shows a danger alert with the error message when the request fails', () => {
+        interceptSubmission({ status: 500, body: { message: 'Something went wrong' } })
+
+        cy.mount(ChangeLogLevelModal, {
+          props: { config, visible: true, nodes, onSuccess: cy.spy().as('successSpy') },
+        })
+
+        cy.get(actionButton).click()
+        cy.wait('@submit')
+
+        cy.getTestId('log-level-error').should('be.visible').and('contain.text', 'Something went wrong')
+        cy.get('@successSpy').should('not.have.been.called')
+      })
+
+      it('emits update:visible=false on cancel', () => {
+        cy.mount(ChangeLogLevelModal, {
+          props: { config, visible: true, nodes, 'onUpdate:visible': cy.spy().as('visibleSpy') },
+        })
+
+        cy.get(cancelButton).click()
+        cy.get('@visibleSpy').should('have.been.calledWith', false)
+      })
     })
-
-    cy.mount(ChangeLogLevelModal, {
-      props: {
-        visible: true,
-        instanceList,
-        instanceLogLevel: new Map(),
-        requests: {
-          getDataPlaneLogLevel,
-          setDataPlaneLogLevel: () => {},
-        },
-      },
-    })
-
-    for (const instance of instanceList) {
-      cy.getTestId(`data-plane-node-list-row-${instance.id}`).as(`instanceRow_${instance.id}`).scrollIntoView()
-      cy.get(`@instanceRow_${instance.id}`).should('be.visible')
-      cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status')
-        .should('contain.text', instance.hasDLLCapability ? 'Pending' : 'Not supported')
-    }
-
-    cy.wrap(getDataPlaneLogLevel).should('have.callCount', 6)
-    for (const instance of instanceList.filter((instance) => !instance.hasDLLCapability)) {
-      cy.wrap(getDataPlaneLogLevel).should('not.have.been.calledWith', instance.id)
-    }
-  })
-
-  it('should successfully change log level', () => {
-    const instanceList: CLLModalInstanceWithLogLevel[] = [
-      { ...mockDataPlane(), hasDLLCapability: false },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Debug },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Error },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Info },
-      { ...mockDataPlane(), hasDLLCapability: false },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Notice },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Warn },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Warn },
-    ]
-
-    const instanceLogLevel = new Map<string, LogLevel>()
-
-    const getDataPlaneLogLevel = cy.spy(async (instanceId:string) => {
-      await new Promise((resolve) => setTimeout(resolve, 100 + 500 * Math.random()))
-      return instanceList.find(({ id }) => instanceId === id)?.logLevel
-    })
-
-    const setDataPlaneLogLevel = cy.spy(async (instanceId: string, logLevel: LogLevel, revertAfter: number) => {
-      await new Promise((resolve) => setTimeout(resolve, 100 + 500 * Math.random()))
-      instanceLogLevel.set(instanceId, logLevel)
-    })
-
-    cy.mount(ChangeLogLevelModal, {
-      props: {
-        visible: true,
-        instanceList,
-        instanceLogLevel,
-        requests: {
-          getDataPlaneLogLevel,
-          setDataPlaneLogLevel,
-        },
-      },
-    })
-
-    for (const instance of instanceList) {
-      cy.getTestId(`data-plane-node-list-row-${instance.id}`).as(`instanceRow_${instance.id}`).scrollIntoView()
-      cy.get(`@instanceRow_${instance.id}`).should('be.visible')
-      cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status')
-        .should('contain.text', instance.hasDLLCapability ? 'Pending' : 'Not supported')
-    }
-
-    cy.wrap(getDataPlaneLogLevel).should('have.callCount', 6)
-
-    for (const instance of instanceList.filter((instance) => !instance.hasDLLCapability)) {
-      cy.wrap(getDataPlaneLogLevel).should('not.have.been.calledWith', instance.id)
-    }
-
-    cy.getTestId('change-log-level-modal').find('.footer-actions button').should('be.enabled').click()
-
-    for (const instance of instanceList) {
-      cy.get(`@instanceRow_${instance.id}`).scrollIntoView()
-      cy.get(`@instanceRow_${instance.id}`).should('be.visible')
-      if (instance.hasDLLCapability) {
-        cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-action-current-level')
-          .should('contain.text', 'Notice')
-      } else {
-        cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-action')
-          .should('contain.text', 'N/A')
-      }
-
-      cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status')
-        .should('contain.text', instance.hasDLLCapability ? 'Succeed' : 'Not supported')
-    }
-
-    for (const instance of instanceList) {
-      cy.wrap(setDataPlaneLogLevel).should(
-        instance.hasDLLCapability ? 'have.been.calledWith' : 'not.have.been.calledWith',
-        instance.id,
-        LogLevel.Notice,
-      )
-    }
-  })
-
-  it('should partially change log level', () => {
-    const instanceList: CLLModalInstanceWithLogLevel[] = [
-      { ...mockDataPlane(), hasDLLCapability: false },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Debug },
-      { ...mockDataPlane(), hasDLLCapability: true, logLevel: LogLevel.Error },
-    ]
-
-    const instanceLogLevel = new Map<string, LogLevel>()
-
-    const getDataPlaneLogLevel = cy.spy(async (instanceId:string) => {
-      await new Promise((resolve) => setTimeout(resolve, 100 + 500 * Math.random()))
-      return instanceList.find(({ id }) => instanceId === id)?.logLevel
-    })
-
-    const setDataPlaneLogLevel = cy.spy(async (instanceId: string, logLevel: LogLevel, revertAfter: number) => {
-      if (instanceId === instanceList[instanceList.length - 1].id) {
-        throw new Error('Failed to change log level')
-      }
-      await new Promise((resolve) => setTimeout(resolve, 100 + 500 * Math.random()))
-      instanceLogLevel.set(instanceId, logLevel)
-    })
-
-    cy.mount(ChangeLogLevelModal, {
-      props: {
-        visible: true,
-        instanceList,
-        instanceLogLevel,
-        requests: {
-          getDataPlaneLogLevel,
-          setDataPlaneLogLevel,
-        },
-      },
-    })
-
-    for (const instance of instanceList) {
-      cy.getTestId(`data-plane-node-list-row-${instance.id}`).as(`instanceRow_${instance.id}`).scrollIntoView()
-      cy.get(`@instanceRow_${instance.id}`).should('be.visible')
-      cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status')
-        .should('contain.text', instance.hasDLLCapability ? 'Pending' : 'Not supported')
-    }
-
-    for (const instance of instanceList.filter((instance) => !instance.hasDLLCapability)) {
-      cy.wrap(getDataPlaneLogLevel).should('not.have.been.calledWith', instance.id)
-    }
-
-    cy.getTestId('change-log-level-modal').find('.footer-actions button').should('be.enabled').click()
-
-    for (const instance of instanceList) {
-      cy.get(`@instanceRow_${instance.id}`).scrollIntoView()
-      cy.get(`@instanceRow_${instance.id}`).should('be.visible')
-      if (instance.hasDLLCapability) {
-        cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-action-current-level')
-          .should('contain.text', instance.id === instanceList[instanceList.length - 1].id
-            ? LOG_LEVEL_DISPLAY_NAMES[instanceList[instanceList.length - 1].logLevel!]
-            : 'Notice')
-      } else {
-        cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-action')
-          .should('contain.text', 'N/A')
-      }
-
-      cy.get(`@instanceRow_${instance.id}`).findTestId('log-change-status')
-        .should('contain.text', instance.id === instanceList[instanceList.length - 1].id
-          ? 'Failure'
-          : instance.hasDLLCapability
-            ? 'Succeed'
-            : 'Not supported')
-    }
-
-    for (const instance of instanceList) {
-      cy.wrap(setDataPlaneLogLevel).should(
-        instance.hasDLLCapability ? 'have.been.calledWith' : 'not.have.been.calledWith',
-        instance.id,
-        LogLevel.Notice,
-      )
-    }
   })
 })

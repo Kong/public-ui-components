@@ -1,68 +1,77 @@
 # `ChangeLogLevelModal.vue`
 
-A modal used to change the log level for a group of Data Plane nodes.
+A modal used to temporarily change the log level for a group of Data Plane nodes. The user picks a
+target log level and an expiration (TTL, in seconds), after which the nodes revert to their default
+log level.
+
+On **Save**, a single batch request is sent to update the log level for all `nodes`:
+
+- Konnect: `POST /v2/control-planes/{controlPlaneId}/nodes/log-level-operations`
+- Kong Manager: `POST /debug/cluster/data-planes/log-level-operations`
+- body: `{ log_level, ttl, targets: { node_ids } }`
+
+While the request is in flight the Save button is disabled. On success the component emits
+[`success`](#events); on failure it renders a danger alert with the error message at the bottom of
+the modal.
 
 - [Requirements](#requirements)
 - [Usage](#usage)
-  - [Install](#install)
   - [Props](#props)
+  - [Events](#events)
   - [Usage example](#usage-example)
 
 ## Requirements
 
 - `vue` must be initialized in the host application
-- `@kong/kongponents` must be added as a dependency in the host application, globally available via the Vue Plugin installation, and the package's style imports must be added in the app entry file. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
+- `@kong/kongponents` must be added as a dependency in the host application, globally available via
+  the Vue Plugin installation, and the package's style imports must be added in the app entry file.
+  [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
 
 ## Usage
 
-### Install
-[See instructions for installing the `@kong-ui-public/entities-data-plane-nodes` package.](../README.md#install)
-
 ### Props
 
-#### `instanceList`
+#### `visible`
 
-The list of Data Plane nodes to change the log level for. All instances will be displayed in the modal as a list,
-and the log level will be changed for all instances when the form is submitted. For data plane node that doesn't
-have the capability to change the log level, the log level will not be changed and rendered as "unsupported".
+Controls whether the modal is shown. Supports two-way binding via `v-model:visible`.
 
-- type: `Array<Pick<DataPlaneNodeCommon, 'id' | 'hostname'> & { hasDLLCapability?: boolean }>`
+- type: `boolean`
+- required: `false`
+
+#### `config`
+
+The configuration that tells the modal which API to call. A discriminated union on `app`:
+
+- type: `ChangeLogLevelConfig`
+- required: `true`
+- properties:
+  - `app`: `'konnect' | 'kongManager'` - Which product the host application is.
+  - `apiBaseUrl`: `string` - The base URL requests are prefixed with.
+  - `controlPlaneId`: `string` - Required when `app` is `'konnect'`; the target control plane ID.
+  - `axiosRequestConfig`: `AxiosRequestConfig` (optional) - Passed through to the axios instance.
+
+#### `nodes`
+
+The list of Data Plane nodes to change the log level for. Their `id`s are sent as
+`targets.node_ids` in the request.
+
+- type: `Array<{ id: string, hostname: string }>`
 - required: `true`
 - properties:
   - `id`: `string` - The ID of the Data Plane node.
   - `hostname`: `string` - The hostname of the Data Plane node.
-  - `hasDLLCapability`: `boolean` - Whether the Data Plane node has the Dynamic Log Level capability. If not provided, the capability will be assumed to be `true`.
 
-#### `initialLogLevel`
+### Events
 
-The initial log level to display in the form. This should be the log level that is currently set for all instances in the `instanceList`.
-We recommend providing the log level as a prop to ensure that the modal can display the correct log level for all instances in first render.
-If log level of some instance is not provided, the modal will raise a request to retrieve the log level of that instance.
+#### `success`
 
-- type: `Map<string /* dataPlaneNodeId */, LogLevel>`
-- required: `true`
+Emitted after the log-level request succeeds. The modal does **not** close itself — the host
+application controls visibility via `v-model:visible`.
 
-#### `requests`
-
-- required: `true`
-
-An object containing the requests infrastructure to be used by the modal. The object should contain the following properties:
-
-- `scheduler`: The scheduler to be used by the modal to handle large number of async requests. Use the `useAsyncScheduler` composable internally. Please refer to the [composables documentation](./use-async-scheduler.md) for more information.
-  - type: `AsyncScheduler | AsyncSchedulerOptions | null`
-  - default: `{ maxConcurrentAsyncs: 10 }`
-  - required: `false`
-  
-- `getDataPlaneLogLevel`: The function to be used to retrieve the log level of a Data Plane node.
-  - type: `(dataPlaneNodeId: string) => Promise<LogLevel>`
-  - required: `true`
-
-- `setDataPlaneLogLevel`: The function to be used to set the log level of a Data Plane node.
-  - type: `(dataPlaneNodeIdstring, logLevel: LogLevel, revertAfter: number) => Promise<void>`
-  - required: `true`
+- payload: none
 
 ### Usage example
 
-Please refer to the [sandbox](../sandbox/pages/ChangeLogLevel.vue). The page is accessible by visiting `/change-log-level-modal` route in the sandbox.
-
+Please refer to the [sandbox](../sandbox/pages/ChangeLogLevel.vue). The page is accessible by
+visiting the `/change-log-level-modal` route in the sandbox.
