@@ -33,11 +33,6 @@ export interface AgenticDatasourceQuery {
   query: AgenticExploreQuery
 }
 
-export interface AgenticDatasourceQuery {
-  datasource: 'agentic_usage'
-  query: AgenticExploreQuery
-}
-
 export interface ManagedCacheDatasourceQuery {
   datasource: 'managed_cache_usage'
   query: ManagedCacheExploreQuery
