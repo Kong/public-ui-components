@@ -18,6 +18,7 @@ export const queryableRequestDimensions = [
   'bot_info_ja4_fingerprint',
   'bot_info_ban_type',
   'bot_info_header_names',
+  'cache_status',
   'client_ip',
   'consumer',
   'consumer_group',
