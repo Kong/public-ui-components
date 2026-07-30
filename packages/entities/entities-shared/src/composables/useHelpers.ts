@@ -157,8 +157,8 @@ export default function useHelpers() {
       // recursively redact array values
       return value.map((item: unknown) => redactByApiSchema(item, {
         ...elementSchema,
-        // pass down encryption flag since array children inherit from parent
-        encrypted: fieldSchema.encrypted,
+        // encryption set if either parent or child is encrypted
+        encrypted: Boolean(fieldSchema.encrypted || elementSchema.encrypted),
       }))
     }
 
