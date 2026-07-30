@@ -9,11 +9,14 @@ import {
   filterableAiExploreDimensions,
   filterableBasicExploreDimensions,
   filterableExploreDimensions,
+  filterableManagedCacheExploreDimensions,
   granularityValues,
+  managedCacheExploreAggregations,
   queryableAgenticExploreDimensions,
   queryableAiExploreDimensions,
   queryableBasicExploreDimensions,
   queryableExploreDimensions,
+  queryableManagedCacheExploreDimensions,
   requestFilterTypeEmptyV2,
 } from './types'
 import { COUNTRIES } from './types/country-codes'
@@ -635,6 +638,25 @@ export const platformQuerySchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
+export const managedCacheUsageSchema = {
+  type: 'object',
+  description: 'A query to launch at the Managed Cache explore API',
+  properties: {
+    datasource: {
+      type: 'string',
+      enum: [
+        'managed_cache_usage',
+      ],
+    },
+    metrics: metricsFn(managedCacheExploreAggregations),
+    dimensions: dimensionsFn(queryableManagedCacheExploreDimensions),
+    filters: filtersFn(filterableManagedCacheExploreDimensions),
+    ...baseQueryProperties,
+  },
+  required: ['datasource'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
 export const platformTabularQuerySchema = {
   type: 'object',
   description: "A query to launch at the platform tabular explore API. Use datasource 'platform_usage'; 'platform' is accepted for backward compatibility but deprecated.",
@@ -668,6 +690,7 @@ const validDashboardChartQuerySchemas = [
   llmUsageSchema,
   agenticUsageSchema,
   platformQuerySchema,
+  managedCacheUsageSchema,
 ] as const
 
 export const validDashboardChartQuery = {
@@ -828,6 +851,7 @@ export const dashboardConfigSchema = {
         ...filterableAiExploreDimensions,
         ...filterableAgenticExploreDimensions,
         ...filterablePlatformPresetFilterDimensions,
+        ...filterableManagedCacheExploreDimensions,
       ]),
     ]),
     template_id: {

@@ -7,6 +7,7 @@ import type {
   PlatformExploreQuery,
   PlatformTabularQuery,
   PlatformTabularResponse,
+  ManagedCacheExploreQuery,
 } from './explore'
 import type { AnalyticsConfigV2 } from './analytics-config'
 import type { DatasourceConfig } from './datasource-config'
@@ -32,6 +33,17 @@ export interface AgenticDatasourceQuery {
   query: AgenticExploreQuery
 }
 
+export interface AgenticDatasourceQuery {
+  datasource: 'agentic_usage'
+  query: AgenticExploreQuery
+}
+
+export interface ManagedCacheDatasourceQuery {
+  datasource: 'managed_cache_usage'
+  query: ManagedCacheExploreQuery
+}
+
+
 /** @deprecated Use `PlatformUsageDatasourceQuery`. */
 export interface PlatformDatasourceQuery {
   datasource: 'platform'
@@ -43,7 +55,7 @@ export interface PlatformUsageDatasourceQuery {
   query: PlatformExploreQuery
 }
 
-export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | AgenticDatasourceQuery | PlatformDatasourceQuery | PlatformUsageDatasourceQuery
+export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | AgenticDatasourceQuery | PlatformDatasourceQuery | PlatformUsageDatasourceQuery | ManagedCacheDatasourceQuery
 
 /** @deprecated Use `PlatformUsageDatasourceTabularQuery`. */
 export interface PlatformDatasourceTabularQuery {
