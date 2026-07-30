@@ -271,7 +271,6 @@ watch(tableData, () => {
     }
 
     .text-muted {
-      color: rgba(0, 0, 0, 0.45) !important;
       font-size: var(--kui-font-size-30, $kui-font-size-30);
     }
 
