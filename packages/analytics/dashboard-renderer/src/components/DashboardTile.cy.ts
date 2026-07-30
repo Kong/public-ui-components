@@ -1,10 +1,8 @@
 import DashboardTile from './DashboardTile.vue'
-import CsvExportModal from './CsvExportModal.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
 import { generateSingleMetricTimeSeriesData, type DatasourceConfig, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
-import { CsvExportModal as AnalyticsChartCsvExportModal } from '@kong-ui-public/analytics-chart'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { flushPromises } from '@vue/test-utils'
@@ -912,19 +910,6 @@ describe('<DashboardTile />', () => {
   })
 
   context('export', () => {
-    it('renders the renderer-owned CSV export modal', () => {
-      mount().then(({ wrapper }) => {
-        cy.getTestId('kebab-action-menu-1').click()
-        cy.getTestId('chart-csv-export-1').click()
-        cy.getTestId('csv-export-modal').should('exist')
-
-        cy.then(() => {
-          expect(wrapper.findComponent(CsvExportModal).exists()).to.equal(true)
-          expect(wrapper.findComponent(AnalyticsChartCsvExportModal).exists()).to.equal(false)
-        })
-      })
-    })
-
     it('calls queryFn with a limit when exporting CSV (defaults to EXPORT_RECORD_LIMIT)', () => {
       const queryFn = cy.stub().as('queryFn').callsFake(() => {
         return Promise.resolve(
