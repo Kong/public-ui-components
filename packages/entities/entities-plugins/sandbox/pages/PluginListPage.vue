@@ -61,6 +61,8 @@ const konnectConfig = ref<KonnectPluginListConfig>({
   apiBaseUrl: '/us/kong-api',
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
+  // Sandbox override for local testing of the redesigned plugin list (search API, Name/Scope/Status/Ordering columns, KFilterGroup toolbar)
+  pluginTableImprovements: { filtering: true },
   createRoute: { name: 'select-plugin' },
   getViewRoute: (plugin: EntityRow) => ({ name: 'view-plugin', params: { id: plugin.id, plugin: plugin.name } }),
   getEditRoute: (plugin: EntityRow) => ({ name: 'edit-plugin', params: { id: plugin.id, plugin: plugin.name } }),

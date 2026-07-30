@@ -3,27 +3,27 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-14T09:59:08.411Z
+> Generated: 2026-07-15T06:35:43.624Z
 
 ## Summary
 
-`██████▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░` **87%**
+`██████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒` **99%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
-| 📦 Total Kong Inc plugins | **113** |
-| ✅ Migrated | **98** |
-| ⏳ Pending | **15** |
+| 📦 Total Kong Inc plugins | **112** |
+| ✅ Migrated | **111** |
+| ⏳ Pending | **1** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **13** |
-| 🔄 In Progress | **3** |
-| ⏸️ Not Started | **1** |
+| 🚀 Ready for Release | **16** |
+| 🔄 In Progress | **1** |
+| ⏸️ Not Started | **0** |
 
 ---
 
@@ -244,31 +244,30 @@
 
 ---
 
-### 🔄 M21 — Transformations & Serverless (cont.) — In Progress (1/4)
+### 🚀 M21 — Transformations & Serverless (cont.) — Ready for Release (3/3)
 
-- ⏳ `jq`
+- ✅ `jq`
 - ✅ `kafka-upstream`
-- ⏳ `azure-functions`
-- ⏳ `openwhisk`
+- ✅ `azure-functions`
 
 ---
 
-### 🔄 M22 — AI: Guardrails — In Progress (1/5)
+### 🚀 M22 — AI: Guardrails — Ready for Release (5/5)
 
-- ⏳ `ai-a2a-proxy`
-- ⏳ `ai-aws-guardrails`
-- ⏳ `ai-azure-content-safety`
+- ✅ `ai-a2a-proxy`
+- ✅ `ai-aws-guardrails`
+- ✅ `ai-azure-content-safety`
 - ✅ `ai-custom-guardrail`
-- ⏳ `ai-gcp-model-armor`
+- ✅ `ai-gcp-model-armor`
 
 ---
 
-### ⏸️ M23 — AI: Advanced Safety & RAG — Not Started (0/7)
+### 🚀 M23 — AI: Advanced Safety & RAG — Ready for Release (7/7)
 
-- ⏳ `ai-llm-as-judge`
-- ⏳ `ai-lakera-guard`
-- ⏳ `ai-mcp-oauth2`
-- ⏳ `ai-sanitizer`
-- ⏳ `ai-prompt-compressor`
-- ⏳ `ai-rag-injector`
-- ⏳ `ai-semantic-response-guard`
+- ✅ `ai-llm-as-judge`
+- ✅ `ai-lakera-guard`
+- ✅ `ai-mcp-oauth2`
+- ✅ `ai-sanitizer`
+- ✅ `ai-prompt-compressor`
+- ✅ `ai-rag-injector`
+- ✅ `ai-semantic-response-guard`

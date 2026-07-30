@@ -12,7 +12,11 @@ export default function useFetchUrlBuilder(
 ) {
   const isExactMatch = computed((): boolean => {
     const configValue = toValue(config)
-    return configValue.app === 'konnect' || !!configValue.isExactMatch
+    if (typeof configValue.isExactMatch === 'boolean') {
+      return configValue.isExactMatch
+    }
+    // defaults to false for kongManager and true for konnect
+    return configValue.app === 'konnect'
   })
 
   // Construct a URL object, adding the current `window.location.origin` if the path begins with a slash

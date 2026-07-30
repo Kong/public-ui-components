@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.5.6...@kong-ui-public/split-pane@0.5.7) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/split-pane
+
+
+
+
+
+## [0.5.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.5.5...@kong-ui-public/split-pane@0.5.6) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities:** json config block background [KHCP-21211] ([#3621](https://github.com/Kong/public-ui-components/issues/3621)) ([38e1bfb](https://github.com/Kong/public-ui-components/commit/38e1bfb5ca98eb1c08a6dbab2338c35d921ed227))
+
+
+
+
+
+## [0.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.5.4...@kong-ui-public/split-pane@0.5.5) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/split-pane
+
+
+
+
+
+## [0.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.5.3...@kong-ui-public/split-pane@0.5.4) (2026-07-27)
+
+**Note:** Version bump only for package @kong-ui-public/split-pane
+
+
+
+
+
+## [0.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.5.2...@kong-ui-public/split-pane@0.5.3) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/split-pane
+
+
+
+
+
+## [0.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.5.1...@kong-ui-public/split-pane@0.5.2) (2026-07-23)
+
+**Note:** Version bump only for package @kong-ui-public/split-pane
+
+
+
+
+
+## [0.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.5.0...@kong-ui-public/split-pane@0.5.1) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/split-pane
+
+
+
+
+
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.4.0...@kong-ui-public/split-pane@0.5.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.31...@kong-ui-public/split-pane@0.4.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
 ## [0.3.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.3.30...@kong-ui-public/split-pane@0.3.31) (2026-07-07)
 
 **Note:** Version bump only for package @kong-ui-public/split-pane

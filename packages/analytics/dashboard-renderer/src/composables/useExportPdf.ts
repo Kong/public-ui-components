@@ -4,7 +4,6 @@ import type { SnapdomPlugin } from '@zumer/snapdom'
 import type { PdfExportOptions, PdfExportState } from '../types/renderer-types'
 
 import { readonly, ref } from 'vue'
-import { format } from 'date-fns'
 import { prepareForCapture, restoreAfterCapture } from '@kong-ui-public/analytics-utilities'
 import useI18n from './useI18n'
 
@@ -34,21 +33,6 @@ interface PageMetaContext {
   pageHeight: number
   headerHeight: number
   margin: number
-}
-
-export function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-export function buildFilename(filename: string | undefined, title: string | undefined, now: Date): string {
-  const base = filename || (title && slugify(title)) || 'dashboard-export'
-  const dateString = format(now, 'yyyy-MM-dd')
-
-  return `${base}-${dateString}.pdf`
 }
 
 function drawPageMeta(pdf: jsPDF, ctx: PageMetaContext): void {
@@ -102,6 +86,7 @@ function drawPageMeta(pdf: jsPDF, ctx: PageMetaContext): void {
   pdf.text(ctx.pageLabel, pageWidth - margin, footerBaseline, { align: 'right' })
 }
 
+// Measures the top and bottom of every tile row relative to the container.
 export function getRowBoundaries(container: HTMLElement): RowBoundary[] {
   const gridLayout = container.querySelector<HTMLElement>('.kong-ui-public-grid-layout, .grid-stack')
 
@@ -115,7 +100,6 @@ export function getRowBoundaries(container: HTMLElement): RowBoundary[] {
     return []
   }
 
-  // This will measure relative to the grid-stack container
   const containerTop = container.getBoundingClientRect().top
 
   const rowMap = new Map<number, number>()
@@ -142,6 +126,7 @@ export function calculatePageSlices(
   scale: number,
 ): PageSlice[] {
   if (!rows.length) {
+    // Fall back to fixed page height slices
     const pages: PageSlice[] = []
     let y = 0
 
@@ -155,22 +140,28 @@ export function calculatePageSlices(
   }
 
   const pages: PageSlice[] = []
-  let pageStartY = 0
+  let startY = 0
 
-  for (let i = 0; i < rows.length; i++) {
-    const rowTopPx = rows[i].top * scale
-    const rowBottomPx = rows[i].bottom * scale
+  for (const row of rows) {
+    const top = row.top * scale
+    const bottom = row.bottom * scale
 
-    // Would this row exceed the current page?
-    if (rowBottomPx - pageStartY > pageHeightPx && pageStartY < rowTopPx) {
-      // Close the current page at the top of this row
-      pages.push({ startY: pageStartY, height: rowTopPx - pageStartY })
-      pageStartY = rowTopPx
+    // Does this row fit on the page that started at startY?
+    if (bottom - startY > pageHeightPx) {
+      if (top > startY) {
+        // Close the page at the top of this row so the row moves to the next page.
+        pages.push({ startY, height: top - startY })
+        startY = top
+      } else {
+        // The row alone is taller than a page
+        pages.push({ startY, height: bottom - startY })
+        startY = bottom
+      }
     }
   }
 
-  if (pageStartY < canvasHeight) {
-    pages.push({ startY: pageStartY, height: canvasHeight - pageStartY })
+  if (startY < canvasHeight) {
+    pages.push({ startY, height: canvasHeight - startY })
   }
 
   return pages
@@ -182,7 +173,7 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
 
   async function exportPdf(options: PdfExportOptions = {}): Promise<Blob | undefined> {
     const {
-      filename,
+      filename = 'dashboard-export',
       title,
       subtitle,
       dashboardUrl,
@@ -208,8 +199,6 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
       exportState.value = { status: 'preparing' }
       await onBeforeCapture?.()
 
-      const rowBoundaries = getRowBoundaries(element)
-
       const [{ snapdom }, { jsPDF }] = await Promise.all([
         import('@zumer/snapdom'),
         import('jspdf'),
@@ -226,7 +215,21 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
         afterClone: () => restoreAfterCapture(),
       }
 
-      const canvas = await snapdom.toCanvas(element, { scale, exclude, plugins: [webglSnapshotPlugin] })
+      const canvas = await snapdom.toCanvas(element, {
+        scale,
+        exclude,
+        excludeMode: 'remove',
+        embedFonts: true,
+        plugins: [webglSnapshotPlugin],
+      })
+
+      // Measure the rendered rows and the real scale after the snapdom captures
+      // the canvas. If the capture is oversized, snapdom will scale it down to fit
+      // within the requested size, so derive the actual scale from the produced canvas
+      // rather than trusting the `scale` option.
+      const rowBoundaries = getRowBoundaries(element)
+      const elementWidth = element.getBoundingClientRect().width
+      const realScale = elementWidth ? canvas.width / elementWidth : scale
 
       exportState.value = { status: 'generating' }
 
@@ -241,7 +244,7 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
       const pxPerMm = canvas.width / contentWidth
       const pageHeightPx = contentHeight * pxPerMm
 
-      const pages = calculatePageSlices(rowBoundaries, canvas.height, pageHeightPx, scale)
+      const pages = calculatePageSlices(rowBoundaries, canvas.height, pageHeightPx, realScale)
 
       const pageMeta: Omit<PageMetaContext, 'pageLabel'> = {
         title,
@@ -303,7 +306,7 @@ function useExportPdf(layoutContainerRef: Ref<HTMLElement | undefined>) {
         return blob
       }
 
-      pdf.save(buildFilename(filename, title, now))
+      pdf.save(filename)
       exportState.value = { status: 'complete', pageCount: pages.length }
     } catch (error) {
       exportState.value = { status: 'error', error }

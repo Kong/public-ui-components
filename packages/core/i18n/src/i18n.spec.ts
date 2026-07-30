@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest'
+import { describe, it, expect, beforeAll, vi } from 'vitest'
 import useI18n, { createI18n } from './i18n'
 
 const english = {
@@ -209,20 +209,17 @@ describe('i18n', () => {
 
   describe('createI18nEx', () => {
     it('should call custom errorhandler', () => {
-      let counter = 0
+      const onError = vi.fn()
       const { t } = createI18n<typeof english>(
         'en-us',
         english,
         {
-          onError: (err: any) => {
-            console.error(err)
-            counter++
-          },
+          onError: onError,
           isGlobal: true,
         })
       // @ts-ignore: allow invalid key
       t('unknown-key')
-      expect(counter).toEqual(1)
+      expect(onError).toHaveBeenCalledTimes(1)
     })
   })
 })

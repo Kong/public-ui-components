@@ -570,6 +570,17 @@ const recordResolver = (payload: Record<string, any>): AddOnRecord => {
       true,
     ) : null
 
+  // The flat display drops nested objects; keep the whole `oauth` record so it renders as a JSON code block
+  if (
+    cloudAuthForDisplay &&
+    rawCloudAuth !== null &&
+    typeof rawCloudAuth === 'object' &&
+    !Array.isArray(rawCloudAuth) &&
+    rawCloudAuth.oauth
+  ) {
+    cloudAuthForDisplay.oauth = rawCloudAuth.oauth as AddOnValue
+  }
+
   return {
     id: row.id,
     name: row.name,

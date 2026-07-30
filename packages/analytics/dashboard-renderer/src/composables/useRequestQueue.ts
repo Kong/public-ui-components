@@ -36,7 +36,7 @@ const useRequestQueue = () => {
     ...queryBridge,
     queryFnOverride: true,
     queryFn: (query, abortController) => queue.add(() =>
-      queryBridge.queryFn(query, abortController), { throwOnTimeout: true }),
+      queryBridge.queryFn(query, abortController)),
   }
 
   provide(INJECT_QUERY_PROVIDER, newQueryBridge)
