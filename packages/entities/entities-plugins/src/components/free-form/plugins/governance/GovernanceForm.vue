@@ -1,5 +1,16 @@
 <template>
+  <!-- Not configurable in Kong Manager yet — show a notice instead of the form.
+       `onValidityChange(valid: false)` blocks saving (see script). -->
+  <KAlert
+    v-if="isKongManager"
+    appearance="info"
+    class="ff-governance-unavailable"
+    data-testid="ff-governance-unavailable"
+    :message="t('plugins.free-form.governance.unavailable_kong_manager')"
+  />
+
   <DynamicLayout
+    v-else
     v-bind="props"
     :config-sections="configSections"
     :form-config="formConfig"
@@ -102,12 +113,15 @@
         <Field name="config.timeout" />
         <Field name="config.keepalive" />
       </div>
-      <!-- Redis — shared (partial) vs dedicated. Rendering a Field at the redis
-           path lets PluginConfigurationForm's built-in renderer swap in
-           RedisSelector. Requires the schema to declare
-           `supported_partials: { 'redis-ce': ['config.redis'] }` so the partial
-           machinery resolves this path. -->
-      <Field name="config.redis" />
+      <!-- Redis — shared (partial) vs dedicated. Rendered directly (rather than via
+           `<Field name="config.redis" />`) so we can pass `borderless`, which drops
+           the surrounding KCard chrome to sit flush in the form. Still requires the
+           schema to declare `supported_partials: { 'redis-ce': ['config.redis'] }`
+           so REDIS_PARTIAL_INFO resolves this path. -->
+      <RedisSelector
+        borderless
+        :is-konnect-managed-redis-enabled="props.isKonnectManagedRedisEnabled ?? false"
+      />
 
       <!-- Cache & sync settings (in AdvancedFields, grouped under a collapse) -->
       <AdvancedFields
@@ -196,7 +210,8 @@
 
 <script setup lang="ts">
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME, FORMS_CONFIG } from '@kong-ui-public/forms'
-import { computed, inject, provide } from 'vue'
+import { computed, inject, onUnmounted, provide } from 'vue'
+import { BEFORE_SAVE_KEY } from '../../../const'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
@@ -207,6 +222,7 @@ import NumberField from '../../shared/NumberField.vue'
 import StringField from '../../shared/StringField.vue'
 import ObjectField from '../../shared/ObjectField.vue'
 import AdvancedFields from '../../shared/AdvancedFields.vue'
+import RedisSelector from '../../shared/RedisSelector.vue'
 import useI18n from '../../../../composables/useI18n'
 import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
 import type { ConfigSection } from '../../shared/types'
@@ -230,6 +246,15 @@ provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
 const { i18n: { t } } = useI18n()
 
 const appConfig = inject<KonnectBaseFormConfig | KongManagerBaseFormConfig | undefined>(FORMS_CONFIG)
+
+// Governance isn't configurable in Kong Manager yet — render a notice instead of the
+// form (see template) and block Save via a before-save guard. Using the guard rather
+// than onValidityChange avoids surfacing a second, duplicate error alert.
+const isKongManager = computed(() => appConfig?.app === 'kongManager')
+
+const registerBeforeSave = inject(BEFORE_SAVE_KEY)
+const unregisterBeforeSave = registerBeforeSave?.(() => !isKongManager.value)
+onUnmounted(() => unregisterBeforeSave?.())
 
 const governanceEndpointUrl = computed(() => {
   const geo = (appConfig as KonnectBaseFormConfig)?.geoApiServerUrl
@@ -354,9 +379,6 @@ const denyUnknownCustomersOptions = computed(() => [
 }
 
 .ff-governance-advanced-fields-container {
-  border-top: 1px solid var(--kui-color-border, $kui-color-border);
-  padding-top: var(--kui-space-70, $kui-space-70);
-
   :deep(.collapse-heading) {
     margin: 0;
   }

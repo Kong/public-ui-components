@@ -7,12 +7,13 @@ const mountForm = (options: {
   model?: Record<string, any>
   geoApiServerUrl?: string
   app?: 'konnect' | 'kongManager'
+  metering?: { featuresEndpoint?: string, canListFeatures?: boolean }
 }) => {
-  const { isEditing = false, model = {}, geoApiServerUrl, app = 'konnect' } = options
+  const { isEditing = false, model = {}, geoApiServerUrl, app = 'konnect', metering } = options
 
   const formsConfig = app === 'konnect'
-    ? { app: 'konnect' as const, apiBaseUrl: '/us/kong-api', controlPlaneId: '123', ...(geoApiServerUrl ? { geoApiServerUrl } : {}) }
-    : { app: 'kongManager' as const, apiBaseUrl: '/kong-manager' }
+    ? { app: 'konnect' as const, apiBaseUrl: '/us/kong-api', controlPlaneId: '123', ...(geoApiServerUrl ? { geoApiServerUrl } : {}), ...(metering ? { metering } : {}) }
+    : { app: 'kongManager' as const, apiBaseUrl: '/kong-manager', ...(metering ? { metering } : {}) }
 
   cy.mount(GovernanceForm as any, {
     props: {
@@ -112,6 +113,54 @@ describe('GovernanceForm - customer field visibility', () => {
     })
 
     cy.getTestId('ff-config.customer.field').should('not.be.visible')
+  })
+})
+
+describe('GovernanceForm - feature select', () => {
+  const featuresEndpoint = '/us/kong-api/v3/openmeter/features'
+
+  it('lists features from the configured metering endpoint, showing key and name', () => {
+    cy.intercept('GET', featuresEndpoint, {
+      statusCode: 200,
+      body: {
+        data: [
+          { key: 'api_calls', name: 'API calls' },
+          { key: 'active_users', name: 'Active users' },
+        ],
+      },
+    }).as('features')
+
+    mountForm({ metering: { featuresEndpoint } })
+
+    cy.wait('@features')
+
+    // Open the select and assert the option renders both key (title) and name (description)
+    cy.get('[data-testid="ff-config.feature.key"]').click()
+    cy.get('[data-testid="ff-enum-config.feature.key-items"]')
+      .find('[data-testid="select-item-api_calls"]')
+      .should('contain.text', 'api_calls')
+      .and('contain.text', 'API calls')
+  })
+
+  it('disables the feature select and shows an alert when the user cannot list features', () => {
+    // Should not query the endpoint at all when the user can't list features
+    cy.intercept('GET', featuresEndpoint, cy.spy().as('featuresRequest'))
+
+    mountForm({ metering: { featuresEndpoint, canListFeatures: false } })
+
+    cy.getTestId('ff-feature-unavailable').should('be.visible')
+    cy.getTestId('ff-config.feature.key').findTestId('select-input').should('be.disabled')
+    cy.get('@featuresRequest').should('not.have.been.called')
+  })
+})
+
+describe('GovernanceForm - Kong Manager', () => {
+  it('shows an unavailable notice and does not render the config form', () => {
+    mountForm({ app: 'kongManager' })
+
+    cy.getTestId('ff-governance-unavailable').should('be.visible')
+    cy.getTestId('form-section-configuration').should('not.exist')
+    cy.getTestId('form-section-governance').should('not.exist')
   })
 })
 

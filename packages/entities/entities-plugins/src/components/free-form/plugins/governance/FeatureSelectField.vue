@@ -1,15 +1,17 @@
 <template>
-  <!-- Kong Manager (self-hosted) has no OpenMeter features endpoint to browse, so
-       the feature key is entered as free text instead of selected from a list. -->
-  <StringField
-    v-if="isKongManager"
-    :help="t('plugins.free-form.governance.fields.feature_key.help')"
-    :label="t('plugins.free-form.governance.fields.feature_key.label')"
-    name="config.feature.key"
+  <!-- When the user can't list features (Metering & Billing not enabled / no access),
+       the select is disabled and this alert points them to enable it in Konnect. -->
+  <KAlert
+    v-if="!canListFeatures"
+    appearance="warning"
+    class="ff-feature-unavailable"
+    data-testid="ff-feature-unavailable"
+    :message="t('plugins.free-form.governance.fields.feature_key.unavailable')"
+    show-icon
   />
 
   <EnumField
-    v-else
+    :disabled="!canListFeatures"
     enable-filtering
     :help="t('plugins.free-form.governance.fields.feature_key.help')"
     :items="allItems"
@@ -30,17 +32,21 @@
       </div>
     </template>
 
-    <!-- Create action, pinned to the dropdown footer. Emits up to the host app,
-         which owns the creation flow (e.g. navigating to a create page). -->
-    <template #dropdown-footer-text>
-      <div
-        class="ff-feature-create"
-        data-testid="ff-feature-create-action"
-        @click="emit('click:create-entity', { type: 'feature' })"
-      >
-        <span>{{ t('plugins.free-form.governance.fields.feature_key.create_feature') }}</span>
-      </div>
-    </template>
+    <!--
+      Create action, pinned to the dropdown footer — hidden for now. Emits up to the
+      host app (FeatureSelectField → GovernanceForm → host `click:create-entity`),
+      which owns the creation flow; the plumbing stays wired for when it's re-enabled.
+
+      <template #dropdown-footer-text>
+        <div
+          class="ff-feature-create"
+          data-testid="ff-feature-create-action"
+          @click="emit('click:create-entity', { type: 'feature' })"
+        >
+          <span>{{ t('plugins.free-form.governance.fields.feature_key.create_feature') }}</span>
+        </div>
+      </template>
+    -->
   </EnumField>
 </template>
 
@@ -51,12 +57,12 @@ import type { SelectItem } from '@kong/kongponents'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useAxios, type KonnectBaseFormConfig, type KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import EnumField from '../../shared/EnumField.vue'
-import StringField from '../../shared/StringField.vue'
 import { useFormShared } from '../../shared/composables'
 import useI18n from '../../../../composables/useI18n'
 import type { EntityCreateEvent } from '../../../../types'
 
-const emit = defineEmits<{
+// Declared for the create action (commented out below); GovernanceForm forwards it to the host.
+defineEmits<{
   'click:create-entity': [payload: EntityCreateEvent]
 }>()
 
@@ -66,7 +72,10 @@ const appConfig = inject<KonnectBaseFormConfig | KongManagerBaseFormConfig | und
 const { axiosInstance } = useAxios(appConfig?.axiosRequestConfig)
 const { formData } = useFormShared()
 
-const isKongManager = computed(() => appConfig?.app === 'kongManager')
+// Host precomputes whether the user can list features (Metering & Billing enabled +
+// permission). Only an explicit `false` disables the field — omitted/true = allowed.
+// Guards the feature-list query only; unrelated to the (commented-out) create action.
+const canListFeatures = computed(() => appConfig?.metering?.canListFeatures !== false)
 
 // Each item carries the feature `name` alongside label/value for the option template.
 const items = ref<Array<SelectItem<string>>>([])
@@ -92,9 +101,9 @@ const allItems = computed<Array<SelectItem<string>>>(() => {
 })
 
 async function loadFeatures() {
-  // Kong Manager renders a plain input, and there's nothing to fetch when the host
-  // app hasn't configured a features endpoint — keep the current value selectable.
-  if (isKongManager.value || !featuresUrl.value) return
+  // Nothing to fetch when the user can't list features or the host hasn't configured
+  // a features endpoint — keep the current value selectable via `allItems`.
+  if (!canListFeatures.value || !featuresUrl.value) return
 
   loading.value = true
   try {
@@ -124,7 +133,8 @@ onMounted(loadFeatures)
   gap: var(--kui-space-10, $kui-space-10);
 
   &-key {
-    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    color: var(--kui-color-text, $kui-color-text);
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
   }
 
   &-name {

@@ -271,6 +271,7 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   metering: {
     // Endpoint the governance FeatureSelectField fetches the OpenMeter features list from
     featuresEndpoint: '/us/kong-api/v3/openmeter/features',
+    canListFeatures: false,
   },
 }))
 
@@ -288,7 +289,7 @@ const kongManagerConfig = computed<KongManagerPluginFormConfig>(() => ({
   viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer_group', params: { id: consumerGroupId } }),
   viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
   deckCalloutPreferenceKey: enableDeckCallout.value ? 'kong-manager-entities-plugin-form-deck-callout-sandbox' : undefined,
-  // Kong Manager renders the governance feature key as a plain input, so no metering config is needed.
+  // Governance isn't configurable in Kong Manager yet (the form shows a notice), so no metering config is needed.
 }))
 
 const onUpdate = (payload: Record<string, any>) => {

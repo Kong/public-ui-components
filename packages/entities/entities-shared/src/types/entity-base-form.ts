@@ -6,6 +6,13 @@ import type { DeckConfigOptions } from './deck'
 export interface MeteringConfig {
   /** Endpoint the governance FeatureSelectField fetches the OpenMeter features list from */
   featuresEndpoint?: string
+  /**
+   * Whether the current user can list OpenMeter features (precomputed by the host app,
+   * e.g. from Metering & Billing being enabled and the relevant permission). When
+   * explicitly `false`, the governance feature select is disabled and an info alert
+   * guides the user to enable Metering & Billing in Konnect. Omitted/`true` = allowed.
+   */
+  canListFeatures?: boolean
 }
 
 export interface BaseFormConfig {

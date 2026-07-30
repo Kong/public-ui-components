@@ -38,13 +38,6 @@
         v-bind="item"
       />
     </template>
-
-    <template
-      v-if="$slots['dropdown-footer-text']"
-      #dropdown-footer-text
-    >
-      <slot name="dropdown-footer-text" />
-    </template>
   </SelectComponent>
 </template>
 
