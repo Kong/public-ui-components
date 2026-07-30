@@ -1,4 +1,3 @@
-// TODO: Remove these deprecated analytics-chart CSV export types after consumers migrate to @kong-ui-public/dashboard-renderer. MA-5236: https://konghq.atlassian.net/browse/MA-5236
 export interface CsvKeyValuePair {
   [key: string]: string
 }
