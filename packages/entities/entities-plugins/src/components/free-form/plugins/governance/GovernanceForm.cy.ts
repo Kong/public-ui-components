@@ -149,7 +149,8 @@ describe('GovernanceForm - feature select', () => {
     mountForm({ metering: { featuresEndpoint, canListFeatures: false } })
 
     cy.getTestId('ff-feature-unavailable').should('be.visible')
-    cy.getTestId('ff-config.feature.key').findTestId('select-input').should('be.disabled')
+    // EnumField's testid is `ff-${path}` (see EnumField.vue); when disabled it resolves to the input itself
+    cy.getTestId('ff-config.feature.key').should('be.disabled')
     cy.get('@featuresRequest').should('not.have.been.called')
   })
 })
