@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.6.11...@kong-ui-public/expressions@1.7.0) (2026-07-30)
+
+
+### Features
+
+* **expressions:** migrate editor to @kong-ui-public/monaco-editor ([#3620](https://github.com/Kong/public-ui-components/issues/3620)) ([82e4e3a](https://github.com/Kong/public-ui-components/commit/82e4e3a6590adacf790cb6fd0b3de967a2b61e77))
+
+
+
+
+
 ## [1.6.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.6.10...@kong-ui-public/expressions@1.6.11) (2026-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/expressions
