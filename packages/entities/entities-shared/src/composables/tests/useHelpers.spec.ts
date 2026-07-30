@@ -150,6 +150,15 @@ describe('redactByApiSchema()', () => {
     expect(redactByApiSchema(['secret-1', 'secret-2'], fieldSchema)).toEqual([REDACTED_MASK, REDACTED_MASK])
   })
 
+  it('preserves elements.encrypted when parent array encrypted is unset', () => {
+    const fieldSchema = {
+      type: 'array',
+      elements: { type: 'string', encrypted: true },
+    }
+
+    expect(redactByApiSchema(['secret-1', 'secret-2'], fieldSchema)).toEqual([REDACTED_MASK, REDACTED_MASK])
+  })
+
   it('recursively redacts arrays of records', () => {
     const firstName = 'one'
     const secondName = 'two'
@@ -172,6 +181,111 @@ describe('redactByApiSchema()', () => {
       { token: REDACTED_MASK, name: firstName },
       { token: REDACTED_MASK, name: secondName },
     ])
+  })
+
+  it('redacts set elements and inherits parent encrypted flag', () => {
+    const fieldSchema = {
+      type: 'set',
+      encrypted: true,
+      elements: { type: 'string' },
+    }
+
+    expect(redactByApiSchema(['secret-1', 'secret-2'], fieldSchema)).toEqual([REDACTED_MASK, REDACTED_MASK])
+  })
+
+  it('preserves elements.encrypted when parent set encrypted is unset', () => {
+    const fieldSchema = {
+      type: 'set',
+      elements: { type: 'string', encrypted: true },
+    }
+
+    expect(redactByApiSchema(['secret-1', 'secret-2'], fieldSchema)).toEqual([REDACTED_MASK, REDACTED_MASK])
+  })
+
+  it('recursively redacts sets of records', () => {
+    const firstName = 'one'
+    const secondName = 'two'
+    const value = [
+      { token: 'abc', name: firstName },
+      { token: 'def', name: secondName },
+    ]
+    const fieldSchema = {
+      type: 'set',
+      elements: {
+        type: 'record',
+        fields: [
+          { token: { type: 'string', encrypted: true } },
+          { name: { type: 'string' } },
+        ],
+      },
+    }
+
+    expect(redactByApiSchema(value, fieldSchema)).toEqual([
+      { token: REDACTED_MASK, name: firstName },
+      { token: REDACTED_MASK, name: secondName },
+    ])
+  })
+
+  it('redacts map values and inherits parent encrypted flag', () => {
+    const fieldSchema = {
+      type: 'map',
+      encrypted: true,
+      keys: { type: 'string' },
+      values: { type: 'string' },
+    }
+
+    expect(redactByApiSchema({ alpha: 'secret-1', beta: 'secret-2' }, fieldSchema)).toEqual({
+      alpha: REDACTED_MASK,
+      beta: REDACTED_MASK,
+    })
+  })
+
+  it('preserves values.encrypted when parent map encrypted is unset', () => {
+    const fieldSchema = {
+      type: 'map',
+      keys: { type: 'string' },
+      values: { type: 'string', encrypted: true },
+    }
+
+    expect(redactByApiSchema({ alpha: 'secret-1', beta: 'secret-2' }, fieldSchema)).toEqual({
+      alpha: REDACTED_MASK,
+      beta: REDACTED_MASK,
+    })
+  })
+
+  it('recursively redacts map values that are records', () => {
+    const firstLabel = 'one'
+    const secondLabel = 'two'
+    const value = {
+      first: { token: 'abc', label: firstLabel },
+      second: { token: 'def', label: secondLabel },
+    }
+    const fieldSchema = {
+      type: 'map',
+      keys: { type: 'string' },
+      values: {
+        type: 'record',
+        fields: [
+          { token: { type: 'string', encrypted: true } },
+          { label: { type: 'string' } },
+        ],
+      },
+    }
+
+    expect(redactByApiSchema(value, fieldSchema)).toEqual({
+      first: { token: REDACTED_MASK, label: firstLabel },
+      second: { token: REDACTED_MASK, label: secondLabel },
+    })
+  })
+
+  it('leaves map values unchanged when values schema is missing', () => {
+    const value = { alpha: 'secret-1', beta: 'secret-2' }
+    const fieldSchema = {
+      type: 'map',
+      keys: { type: 'string' },
+    }
+
+    expect(redactByApiSchema(value, fieldSchema)).toEqual(value)
   })
 
   it('returns the original value for unsupported schema types', () => {
