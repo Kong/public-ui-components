@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
-import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+import monacoEditorPlugin from '@kong-ui-public/monaco-editor/vite-plugin'
 import topLevelAwait from 'vite-plugin-top-level-await'
 import wasm from 'vite-plugin-wasm'
 import sharedViteConfig, { sanitizePackageName } from '../../../vite.config.shared'
@@ -32,6 +32,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/core',
         '@kong-ui-public/forms',
         '@kong-ui-public/forms/dist/style.css',
+        '@kong-ui-public/monaco-editor',
         '@kong/icons',
         'monaco-editor',
         'uuid',
@@ -43,11 +44,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     topLevelAwait({
       promiseExportName: 'asyncInit',
     }),
-    // This plugin is only used in the sandbox & testing environment
-    // It generates extra files in dist folder which are not need in library build
-    ...(process.env.USE_SANDBOX
-      ? [((monacoEditorPlugin as any).default as typeof monacoEditorPlugin)({})]
-      : []),
+    monacoEditorPlugin({
+      languages: ['json'],
+    }),
   ],
 }))
 
