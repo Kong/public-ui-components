@@ -479,16 +479,18 @@ const { redactByConfigSchema, redactByApiSchema, isObjectRecord, getApiSchemaFie
 
 const redactedCodeBlockRecord = computed((): Record<string, any> => {
   const source = codeBlockRecordFromApi.value || record.value
-  let rec = redactByConfigSchema(source, props.configSchema) as Record<string, any>
+  let rec = source
 
   if (isObjectRecord(source) && Array.isArray(schema?.value?.fields)) {
     const schemaRedactedRecord: Record<string, any> = {}
     for (const key in source) {
       const fieldSchema = getApiSchemaField(schema?.value?.fields, key)
-      schemaRedactedRecord[key] = fieldSchema ? redactByApiSchema(source[key], fieldSchema) : rec[key]
+      schemaRedactedRecord[key] = fieldSchema ? redactByApiSchema(source[key], fieldSchema) : source[key]
     }
     rec = schemaRedactedRecord
   }
+
+  rec = redactByConfigSchema(rec, props.configSchema) as Record<string, any>
 
   return props.codeBlockRecordResolver ? props.codeBlockRecordResolver(rec) : rec
 })
