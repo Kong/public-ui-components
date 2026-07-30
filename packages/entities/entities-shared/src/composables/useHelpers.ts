@@ -132,22 +132,35 @@ export default function useHelpers() {
       return fieldSchema.encrypted ? REDACTED_MASK : value
     }
 
-    if (fieldSchema.type === 'record') {
+    if (fieldSchema.type === 'record' || fieldSchema.type === 'map') {
       if (!isObjectRecord(value)) {
         return value
+      }
+
+      if (fieldSchema.type === 'map' && !fieldSchema.values) {
+        // Do I need this? could I just fall through to record handling?
+        return { ...value }
       }
 
       // recursively redact child fields
       const output: Record<string, any> = {}
       for (const key in value) {
-        const childFieldSchema = getApiSchemaField(fieldSchema.fields, key)
-        output[key] = childFieldSchema ? redactByApiSchema(value[key], childFieldSchema) : value[key]
+        if (fieldSchema.type === 'record') {
+          const childFieldSchema = getApiSchemaField(fieldSchema.fields, key)
+          output[key] = childFieldSchema ? redactByApiSchema(value[key], childFieldSchema) : value[key]
+        } else if (fieldSchema.type === 'map') {
+          const valueSchema = fieldSchema.values
+          output[key] = redactByApiSchema(value[key], {
+            ...valueSchema,
+            encrypted: Boolean(fieldSchema.encrypted || valueSchema.encrypted),
+          })
+        }
       }
 
       return output
     }
 
-    if (fieldSchema.type === 'array' && Array.isArray(value)) {
+    if ((fieldSchema.type === 'array' || fieldSchema.type === 'set') && Array.isArray(value)) {
       const elementSchema = fieldSchema.elements
 
       if (!elementSchema) {
