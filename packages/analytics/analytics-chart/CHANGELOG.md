@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.21.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.21.11...@kong-ui-public/analytics-chart@10.21.12) (2026-07-30)
+
+
+### Bug Fixes
+
+* **analytics:** csv export modal text color ([#3632](https://github.com/Kong/public-ui-components/issues/3632)) ([008f736](https://github.com/Kong/public-ui-components/commit/008f7367d71c9f5173956a554d21a523f370e39e))
+
+
+
+
+
 ## [10.21.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.21.10...@kong-ui-public/analytics-chart@10.21.11) (2026-07-29)
 
 
