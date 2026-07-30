@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "8.15.24",
+  "version": "8.16.0",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",
@@ -96,7 +96,7 @@
     "file-saver": "^2.0.5",
     "gridstack": "^11.5.1",
     "jspdf": "^4.2.1",
-    "papaparse": "^5.5.3",
-    "p-queue": "^9.3.1"
+    "p-queue": "^9.3.1",
+    "papaparse": "^5.5.3"
   }
 }

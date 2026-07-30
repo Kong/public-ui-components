@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.24...@kong-ui-public/dashboard-renderer@8.16.0) (2026-07-30)
+
+
+### Features
+
+* **dashboard-renderer:** own CSV export flow [MA-5029] ([#3596](https://github.com/Kong/public-ui-components/issues/3596)) ([06cf0fa](https://github.com/Kong/public-ui-components/commit/06cf0fa7c345bed2104aa8dfb6a3b02edff6244f))
+
+
+
+
+
 ## [8.15.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.23...@kong-ui-public/dashboard-renderer@8.15.24) (2026-07-30)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
