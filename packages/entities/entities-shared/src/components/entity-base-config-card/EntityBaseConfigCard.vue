@@ -27,6 +27,13 @@
           class="sensitive-fields-checkbox"
           data-testid="sensitive-fields-checkbox"
           :label="t('baseConfigCard.actions.sensitive_fields')"
+          :label-attributes="{
+            info: t('baseConfigCard.actions.sensitive_fields_tooltip'),
+            tooltipAttributes: {
+              maxWidth: '200',
+              placement: 'top',
+            },
+          }"
         />
 
         <div class="row">
@@ -312,6 +319,7 @@ const props = defineProps({
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { convertKeyToTitle } = composables.useStringHelpers()
+const schema = composables.useSchema()
 
 composables.useSubSchema(props.pluginConfigKey) // reduce the schema to only the plugin config
 
@@ -466,14 +474,23 @@ const codeBlockRecordFromApi = computed((): Record<string, any> | undefined => {
 
 // redact sensitive fields by default
 const showSensitiveFields = ref(false)
-const redactedCodeBlockRecord = computed((): Record<string, any> => {
-  const rec = { ...(codeBlockRecordFromApi.value || record.value) }
 
-  for (const key in rec) {
-    if (props.configSchema[key]?.type === ConfigurationSchemaType.Redacted) {
-      rec[key] = '********'
+const { redactByConfigSchema, redactByApiSchema, isObjectRecord, getApiSchemaField } = composables.useHelpers()
+
+const redactedCodeBlockRecord = computed((): Record<string, any> => {
+  const source = codeBlockRecordFromApi.value || record.value
+  let rec = source
+
+  if (isObjectRecord(source) && Array.isArray(schema?.value?.fields)) {
+    const schemaRedactedRecord: Record<string, any> = {}
+    for (const key in source) {
+      const fieldSchema = getApiSchemaField(schema?.value?.fields, key)
+      schemaRedactedRecord[key] = fieldSchema ? redactByApiSchema(source[key], fieldSchema) : source[key]
     }
+    rec = schemaRedactedRecord
   }
+
+  rec = redactByConfigSchema(rec, props.configSchema) as Record<string, any>
 
   return props.codeBlockRecordResolver ? props.codeBlockRecordResolver(rec) : rec
 })
