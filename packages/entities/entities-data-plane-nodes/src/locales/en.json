@@ -10,7 +10,12 @@
     },
     "warning": "Higher log levels can significantly increase log volume and disk usage. Use them only while troubleshooting.",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "done": "Done",
+    "status_title": "Change log level status",
+    "node_host": "Node host",
+    "status": "Status",
+    "status_note": "Updates typically reach all data plane nodes in about 5 seconds. Keep this modal open to monitor progress while the update is in progress."
   },
   "log_level": {
     "debug": "Debug",
@@ -19,5 +24,13 @@
     "warn": "Warn",
     "error": "Error",
     "crit": "Critical"
+  },
+  "operation_status": {
+    "in_progress": "In progress",
+    "applied": "Applied",
+    "reverted": "Reverted",
+    "superseded": "Superseded",
+    "failed": "Failed",
+    "unsupported": "Unsupported"
   }
 }

@@ -6,8 +6,9 @@
   <ChangeLogLevelModal
     v-model:visible="visible"
     :config="config"
+    :get-node-detail-route="getNodeDetailRoute"
     :nodes="nodes"
-    @success="visible = false"
+    @close="visible = false"
   />
 </template>
 
@@ -27,4 +28,6 @@ const nodes = [
   { id: '1', hostname: 'localhost-1' },
   { id: '2', hostname: 'localhost-2' },
 ]
+
+const getNodeDetailRoute = (nodeId: string): string => `${window.location.origin}/data-plane-nodes/${nodeId}`
 </script>
