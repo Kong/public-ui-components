@@ -235,7 +235,7 @@ function onLegacyValueChange(newValue: Record<string, unknown> | null) {
 
   &-item-complex {
 
-    :deep(> .card-content) {
+    :deep(> .k-card .card-content) {
       align-items: flex-start;
       flex-direction: row;
       gap: var(--kui-space-40, $kui-space-40);
