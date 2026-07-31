@@ -4,6 +4,7 @@
     data-testid="plugin-code-editor"
   >
     <MonacoEditor
+      :key="activeColorMode"
       ref="editor"
       v-model="code"
       class="editor"

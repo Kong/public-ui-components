@@ -20,6 +20,7 @@
       </template>
     </KAlert>
     <MonacoEditor
+      :key="activeColorMode"
       ref="editor"
       v-model="code"
       appearance="standalone"

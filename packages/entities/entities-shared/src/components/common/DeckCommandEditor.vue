@@ -1,6 +1,7 @@
 <template>
   <div class="deck-command-editor-wrapper">
     <MonacoEditor
+      :key="activeColorMode"
       v-model="code"
       appearance="standalone"
       class="deck-command-editor"

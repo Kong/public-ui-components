@@ -112,6 +112,7 @@
             {{ t('plugins.free-form.datakit.flow_editor.panel_segments.resources.cache.inline_config') }}
           </KLabel>
           <MonacoEditor
+            :key="activeColorMode"
             v-model="redisYaml"
             appearance="standalone"
             class="redis-editor"
