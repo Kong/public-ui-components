@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.59.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.58.0...@kong-ui-public/entities-shared@3.59.0) (2026-07-31)
+
+
+### Features
+
+* **entities-shared:** deep sensitive fields [khcp-20573] ([#3622](https://github.com/Kong/public-ui-components/issues/3622)) ([d717146](https://github.com/Kong/public-ui-components/commit/d717146220c1de6e9058c7fd7ee4eda6f70c01e9))
+
+
+
+
+
 # [3.58.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.10...@kong-ui-public/entities-shared@3.58.0) (2026-07-31)
 
 
