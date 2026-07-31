@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.251.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.251.1...@kong-ui-public/entities-plugins@9.251.2) (2026-07-31)
+
+
+### Bug Fixes
+
+* **entities:** monaco editors active color mode theme [KHCP-21398] ([#3635](https://github.com/Kong/public-ui-components/issues/3635)) ([3070af9](https://github.com/Kong/public-ui-components/commit/3070af964f912248238b293ecfb88bc508ed891b))
+
+
+
+
+
 ## [9.251.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.251.0...@kong-ui-public/entities-plugins@9.251.1) (2026-07-31)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.7.2...@kong-ui-public/expressions@1.7.3) (2026-07-31)
+
+
+### Bug Fixes
+
+* **entities:** monaco editors active color mode theme [KHCP-21398] ([#3635](https://github.com/Kong/public-ui-components/issues/3635)) ([3070af9](https://github.com/Kong/public-ui-components/commit/3070af964f912248238b293ecfb88bc508ed891b))
+
+
+
+
+
 ## [1.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.7.1...@kong-ui-public/expressions@1.7.2) (2026-07-31)
 
 **Note:** Version bump only for package @kong-ui-public/expressions

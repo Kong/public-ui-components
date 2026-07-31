@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.59.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.59.0...@kong-ui-public/entities-shared@3.59.1) (2026-07-31)
+
+
+### Bug Fixes
+
+* **entities:** monaco editors active color mode theme [KHCP-21398] ([#3635](https://github.com/Kong/public-ui-components/issues/3635)) ([3070af9](https://github.com/Kong/public-ui-components/commit/3070af964f912248238b293ecfb88bc508ed891b))
+
+
+
+
+
 # [3.59.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.58.0...@kong-ui-public/entities-shared@3.59.0) (2026-07-31)
 
 
