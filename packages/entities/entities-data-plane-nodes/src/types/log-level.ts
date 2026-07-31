@@ -22,3 +22,24 @@ export interface LogLevelOperationPayload {
   ttl: number
   targets: { node_ids: string[] }
 }
+
+export interface LogLevelOperationResponse {
+  id: string
+}
+
+export type LogLevelOperationStatus =
+  | 'in_progress'
+  | 'applied'
+  | 'reverted'
+  | 'superseded'
+  | 'failed'
+  | 'unsupported'
+
+export interface LogLevelOperationResult {
+  node_id: string
+  status: LogLevelOperationStatus
+}
+
+export interface LogLevelOperationResultsResponse {
+  data: LogLevelOperationResult[]
+}
