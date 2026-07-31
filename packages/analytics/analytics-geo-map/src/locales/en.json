@@ -31,7 +31,8 @@
     "request_size_p99": "Request size (p99)",
     "request_size_p95": "Request size (p95)",
     "request_size_p50": "Request size (p50)",
-    "request_size_sum": "Request size (sum)"
+    "request_size_sum": "Request size (sum)",
+    "cache_hit_rate": "Cache hit rate"
   },
   "cooperative_gestures": {
     "windows_zoom_help_text": "Use Ctrl + Scroll to zoom the map",
