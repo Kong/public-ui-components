@@ -32,21 +32,21 @@
       </div>
     </template>
 
-    <!--
-      Create action, pinned to the dropdown footer — hidden for now. Emits up to the
-      host app (FeatureSelectField → GovernanceForm → host `click:create-entity`),
-      which owns the creation flow; the plumbing stays wired for when it's re-enabled.
-
-      <template #dropdown-footer-text>
-        <div
-          class="ff-feature-create"
-          data-testid="ff-feature-create-action"
-          @click="emit('click:create-entity', { type: 'feature' })"
-        >
-          <span>{{ t('plugins.free-form.governance.fields.feature_key.create_feature') }}</span>
-        </div>
-      </template>
-    -->
+    <!-- New-feature action, pinned to the dropdown footer. Shown only when the host
+         says the user can create features. Emits up to the host app (FeatureSelectField
+         → GovernanceForm → host `click:create-entity`), which owns the creation flow. -->
+    <template
+      v-if="canCreateFeature"
+      #dropdown-footer-text
+    >
+      <div
+        class="ff-feature-create"
+        data-testid="ff-feature-create-action"
+        @click="emit('click:create-entity', { type: 'feature' })"
+      >
+        <span>{{ t('plugins.free-form.governance.fields.feature_key.create_feature') }}</span>
+      </div>
+    </template>
   </EnumField>
 </template>
 
@@ -61,8 +61,8 @@ import { useFormShared } from '../../shared/composables'
 import useI18n from '../../../../composables/useI18n'
 import type { EntityCreateEvent } from '../../../../types'
 
-// Declared for the create action (commented out below); GovernanceForm forwards it to the host.
-defineEmits<{
+// The new-feature action emits this; GovernanceForm forwards it to the host app.
+const emit = defineEmits<{
   'click:create-entity': [payload: EntityCreateEvent]
 }>()
 
@@ -74,8 +74,12 @@ const { formData } = useFormShared()
 
 // Host precomputes whether the user can list features (Metering & Billing enabled +
 // permission). Only an explicit `false` disables the field — omitted/true = allowed.
-// Guards the feature-list query only; unrelated to the (commented-out) create action.
+// Guards the feature-list query only.
 const canListFeatures = computed(() => appConfig?.metering?.canListFeatures !== false)
+
+// Host precomputes whether the user can create features. Only an explicit `false`
+// hides the "New feature" action — omitted/true = shown.
+const canCreateFeature = computed(() => appConfig?.metering?.canCreateFeature !== false)
 
 // Each item carries the feature `name` alongside label/value for the option template.
 const items = ref<Array<SelectItem<string>>>([])

@@ -13,6 +13,12 @@ export interface MeteringConfig {
    * guides the user to enable Metering & Billing in Konnect. Omitted/`true` = allowed.
    */
   canListFeatures?: boolean
+  /**
+   * Whether the current user can create OpenMeter features (precomputed by the host app).
+   * When explicitly `false`, the "New feature" action in the governance feature select is
+   * hidden. Omitted/`true` = shown; clicking it emits `click:create-entity`.
+   */
+  canCreateFeature?: boolean
 }
 
 export interface BaseFormConfig {

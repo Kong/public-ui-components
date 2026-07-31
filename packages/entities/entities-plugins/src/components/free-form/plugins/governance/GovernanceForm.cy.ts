@@ -7,7 +7,7 @@ const mountForm = (options: {
   model?: Record<string, any>
   geoApiServerUrl?: string
   app?: 'konnect' | 'kongManager'
-  metering?: { featuresEndpoint?: string, canListFeatures?: boolean }
+  metering?: { featuresEndpoint?: string, canListFeatures?: boolean, canCreateFeature?: boolean }
 }) => {
   const { isEditing = false, model = {}, geoApiServerUrl, app = 'konnect', metering } = options
 
@@ -24,6 +24,7 @@ const mountForm = (options: {
       isEditing,
       pluginName: 'governance',
       onFormChange: cy.spy().as('onFormChange'),
+      'onClick:create-entity': cy.spy().as('onCreateEntity'),
     },
     global: {
       provide: {
@@ -152,6 +153,36 @@ describe('GovernanceForm - feature select', () => {
     // EnumField's testid is `ff-${path}` (see EnumField.vue); when disabled it resolves to the input itself
     cy.getTestId('ff-config.feature.key').should('be.disabled')
     cy.get('@featuresRequest').should('not.have.been.called')
+  })
+
+  it('shows the create-feature action and emits click:create-entity when the user can create features', () => {
+    cy.intercept('GET', featuresEndpoint, {
+      statusCode: 200,
+      body: { data: [{ key: 'api_calls', name: 'API calls' }] },
+    }).as('features')
+
+    // canCreateFeature omitted → action shown
+    mountForm({ metering: { featuresEndpoint } })
+
+    cy.wait('@features')
+
+    cy.get('[data-testid="ff-config.feature.key"]').click()
+    cy.getTestId('ff-feature-create-action').should('be.visible').click()
+    cy.get('@onCreateEntity').should('have.been.calledOnceWith', { type: 'feature' })
+  })
+
+  it('hides the create-feature action when the user cannot create features', () => {
+    cy.intercept('GET', featuresEndpoint, {
+      statusCode: 200,
+      body: { data: [{ key: 'api_calls', name: 'API calls' }] },
+    }).as('features')
+
+    mountForm({ metering: { featuresEndpoint, canCreateFeature: false } })
+
+    cy.wait('@features')
+
+    cy.get('[data-testid="ff-config.feature.key"]').click()
+    cy.getTestId('ff-feature-create-action').should('not.exist')
   })
 })
 

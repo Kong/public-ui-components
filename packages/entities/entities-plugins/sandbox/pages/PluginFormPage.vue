@@ -271,7 +271,7 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   metering: {
     // Endpoint the governance FeatureSelectField fetches the OpenMeter features list from
     featuresEndpoint: '/us/kong-api/v3/openmeter/features',
-    canListFeatures: false,
+    // canListFeatures: false,
   },
 }))
 
