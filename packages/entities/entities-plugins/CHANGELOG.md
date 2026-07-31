@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.251.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.250.11...@kong-ui-public/entities-plugins@9.251.0) (2026-07-31)
+
+
+### Features
+
+* **entities-plugins:** governance feature select updates ([#3629](https://github.com/Kong/public-ui-components/issues/3629)) ([983cd6d](https://github.com/Kong/public-ui-components/commit/983cd6d22018ad39abe061deac81cae295d419eb))
+
+
+
+
+
 ## [9.250.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.250.10...@kong-ui-public/entities-plugins@9.250.11) (2026-07-30)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

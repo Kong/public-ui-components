@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.58.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.10...@kong-ui-public/entities-shared@3.58.0) (2026-07-31)
+
+
+### Features
+
+* **entities-plugins:** governance feature select updates ([#3629](https://github.com/Kong/public-ui-components/issues/3629)) ([983cd6d](https://github.com/Kong/public-ui-components/commit/983cd6d22018ad39abe061deac81cae295d419eb))
+
+
+
+
+
 ## [3.57.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.9...@kong-ui-public/entities-shared@3.57.10) (2026-07-29)
 
 
