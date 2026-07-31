@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.22.0...@kong-ui-public/analytics-chart@10.23.0) (2026-07-31)
+
+
+### Features
+
+* add cache translations MA-5131 ([#3636](https://github.com/Kong/public-ui-components/issues/3636)) ([7a9eec7](https://github.com/Kong/public-ui-components/commit/7a9eec756e21df2f02639d1750b3536afd79095c))
+
+
+
+
+
 # [10.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.21.13...@kong-ui-public/analytics-chart@10.22.0) (2026-07-30)
 
 
