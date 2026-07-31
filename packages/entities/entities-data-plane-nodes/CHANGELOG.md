@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@1.1.1...@kong-ui-public/entities-data-plane-nodes@1.2.0) (2026-07-31)
+
+
+### Features
+
+* **dp-nodes:** poll operation results ([#3633](https://github.com/Kong/public-ui-components/issues/3633)) ([cf7a982](https://github.com/Kong/public-ui-components/commit/cf7a9829e2affde640831bb04e294946914d1660))
+
+
+
+
+
 ## [1.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@1.1.0...@kong-ui-public/entities-data-plane-nodes@1.1.1) (2026-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
