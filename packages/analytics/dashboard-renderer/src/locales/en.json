@@ -214,7 +214,17 @@
     "request_type": "Request type",
     "topic_name": "Topic name",
     "partition_index": "Partition index",
-    "api_key": "API key"
+    "api_key": "API key",
+    "data_plane_group": "Data plane group",
+    "managed_cache": "Managed cache",
+    "network": "Network",
+    "provider": "Provider",
+    "cache_eviction_rate": "Cache eviction rate",
+    "cache_expiration_rate": "Cache expiration rate",
+    "cache_items_average": "Cache items (avg)",
+    "cache_memory_utilization_max": "Cache memory utilization (max)",
+    "cache_status": "Cache status",
+    "cache_hit_rate": "Cache hit rate"
   },
   "jumpToExplore": "Explore",
   "jumpToRequests": "View requests",
