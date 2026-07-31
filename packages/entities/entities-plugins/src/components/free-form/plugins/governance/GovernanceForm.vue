@@ -1,6 +1,6 @@
 <template>
   <!-- Not configurable in Kong Manager yet — show a notice instead of the form.
-       `onValidityChange(valid: false)` blocks saving (see script). -->
+       Saving is blocked via a before-save guard (BEFORE_SAVE_KEY; see script). -->
   <KAlert
     v-if="isKongManager"
     appearance="info"
