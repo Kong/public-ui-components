@@ -1,5 +1,6 @@
 <template>
   <MonacoEditor
+    :key="activeColorMode"
     ref="monacoEditor"
     v-model="expression"
     appearance="standalone"
@@ -8,6 +9,7 @@
     :options="editorOptions"
     :show-empty-state="false"
     :show-loading-state="false"
+    :theme="activeColorMode"
     @ready="onReady"
   />
 </template>
@@ -18,12 +20,15 @@ import { useDebounce } from '@kong-ui-public/core'
 import type { AstType, Schema as AtcSchema, ParseResult, ParseResultOk } from '@kong/atc-router'
 import { Parser } from '@kong/atc-router'
 import * as monaco from 'monaco-editor'
-import { computed, ref, toRef, useTemplateRef, watch } from 'vue'
+import { computed, inject, ref, toRef, useTemplateRef, watch } from 'vue'
 import { buildLanguageId, getTokensRange, locateStringLhsIdent, locateToken, registerLanguage, scanTokenBackward, scanTokensBidirectional, TokenType, transformTokens } from '../monaco'
 import { createSchema, type Schema } from '../schema'
 import type { ProvideCompletionItems, RhsValueCompletion } from '../types'
+import type { ComputedRef } from 'vue'
 
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
+
+const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const { debounce } = useDebounce()
 

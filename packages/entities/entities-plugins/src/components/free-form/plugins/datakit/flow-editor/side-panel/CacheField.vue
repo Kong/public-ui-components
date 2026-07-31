@@ -112,11 +112,12 @@
             {{ t('plugins.free-form.datakit.flow_editor.panel_segments.resources.cache.inline_config') }}
           </KLabel>
           <MonacoEditor
+            :key="activeColorMode"
             v-model="redisYaml"
             appearance="standalone"
             class="redis-editor"
             language="yaml"
-            theme="light"
+            :theme="activeColorMode"
           />
           <p
             v-if="redisYamlError"
@@ -151,8 +152,11 @@ import Field from '../../../../shared/Field.vue'
 import RadioField from '../../../../shared/RadioField.vue'
 import { useField, useFormShared } from '../../../../shared/composables'
 
+import type { ComputedRef } from 'vue'
 import type { CodeBlockEventData } from '@kong/kongponents'
 import type { CacheConfigFormData } from '../../types'
+
+const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const DEFAULT_REDIS_YAML = yaml.dump({ host: '127.0.0.1', port: 6379 }, { indent: 2 })
 
