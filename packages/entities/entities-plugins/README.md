@@ -7,6 +7,7 @@ Plugin entity components.
 - [Usage](#usage)
   - [Install](#install)
   - [Registration](#registration)
+  - [Color mode (light/dark theme)](#color-mode-lightdark-theme)
 - [Individual component documentation](#individual-component-documentation)
 
 ## Requirements
@@ -41,6 +42,20 @@ Import the component(s) in your host application as well as the package styles
 ```ts
 import { PluginList, PluginSelect, PluginForm, PluginConfigCard } from '@kong-ui-public/entities-plugins'
 import '@kong-ui-public/entities-plugins/dist/style.css'
+```
+
+### Color mode (light/dark theme)
+
+Components in this package that embed a Monaco-based editor (for example the plugin free-form code editors) automatically match the host application's active color mode. To enable this, the host application should `provide` a `ComputedRef<'light' | 'dark'>` under the `app:konnectColorMode` injection key. When provided, the editors reactively switch between their light and dark themes as the value changes. When the key is not provided, the editors fall back to the `'light'` theme.
+
+```ts
+// In the host application (e.g. within your root component's setup)
+import { computed, provide } from 'vue'
+
+// `isDarkMode` is however your app tracks its current theme
+const colorMode = computed<'light' | 'dark'>(() => (isDarkMode.value ? 'dark' : 'light'))
+
+provide('app:konnectColorMode', colorMode)
 ```
 
 ## Individual component documentation
