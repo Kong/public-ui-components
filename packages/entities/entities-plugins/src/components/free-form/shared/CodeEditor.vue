@@ -9,7 +9,7 @@
       class="editor"
       language="yaml"
       :options="monacoOptions"
-      theme="light"
+      :theme="activeColorMode"
       @ready="handleEditorReady"
     />
   </div>
@@ -21,7 +21,7 @@ import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 import { omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
-import { inject, shallowRef, toRaw } from 'vue'
+import { computed, inject, shallowRef, toRaw, type ComputedRef } from 'vue'
 
 import { useFormShared } from '../shared/composables'
 import { useCodeLensProviders } from './composables/code-lens-providers'
@@ -29,6 +29,8 @@ import { useCodeLensProviders } from './composables/code-lens-providers'
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../../types'
+
+const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const config = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!
 const { formData, setValue } = useFormShared()

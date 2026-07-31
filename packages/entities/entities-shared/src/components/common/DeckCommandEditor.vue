@@ -6,7 +6,7 @@
       class="deck-command-editor"
       :language="language"
       :options="monacoOptions"
-      theme="light"
+      :theme="activeColorMode"
     />
     <div class="deck-command-copy-button">
       <KCodeBlockIconButton
@@ -31,6 +31,10 @@ import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 import composables from '../../composables'
 
 import type * as monaco from 'monaco-editor'
+import { computed, inject } from 'vue'
+import type { ComputedRef } from 'vue'
+
+const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 defineProps<{
   language: 'bash' | 'powershell'
