@@ -138,7 +138,6 @@ export default function useHelpers() {
       }
 
       if (fieldSchema.type === 'map' && !fieldSchema.values) {
-        // Do I need this? could I just fall through to record handling?
         return { ...value }
       }
 
@@ -187,7 +186,7 @@ export default function useHelpers() {
    * @returns the redacted record
    */
   const redactByConfigSchema = (value: unknown, configSchema: ConfigurationSchema): unknown => {
-  // recursively redact arrays of records
+    // recursively redact arrays of records
     if (Array.isArray(value)) {
       return value.map((item: unknown) => redactByConfigSchema(item, configSchema))
     }
@@ -199,7 +198,7 @@ export default function useHelpers() {
     // redact record child fields
     const output: Record<string, any> = {}
     for (const key in value) {
-    // regular string field redaction
+      // regular string field redaction
       if (configSchema[key]?.type === ConfigurationSchemaType.Redacted) {
         output[key] = REDACTED_MASK
         continue
