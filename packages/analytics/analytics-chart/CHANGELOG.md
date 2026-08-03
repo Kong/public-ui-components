@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.23.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.1...@kong-ui-public/analytics-chart@10.23.2) (2026-08-03)
+
+
+### Bug Fixes
+
+* ops/min -> ops/minute ([#3641](https://github.com/Kong/public-ui-components/issues/3641)) ([1f5862d](https://github.com/Kong/public-ui-components/commit/1f5862d11cfef03c9f46a0a48012c891f75dd2f4))
+
+
+
+
+
 ## [10.23.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.0...@kong-ui-public/analytics-chart@10.23.1) (2026-08-03)
 
 
