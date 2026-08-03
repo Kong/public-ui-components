@@ -851,6 +851,7 @@ export const dashboardConfigSchema = {
         ...filterableAiExploreDimensions,
         ...filterableAgenticExploreDimensions,
         ...filterablePlatformPresetFilterDimensions,
+        ...filterableManagedCacheExploreDimensions,
       ]),
     ]),
     template_id: {
