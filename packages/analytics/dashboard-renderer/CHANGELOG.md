@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.1...@kong-ui-public/dashboard-renderer@8.17.2) (2026-08-03)
+
+
+### Bug Fixes
+
+* managed cache fixes MA-5130 ([#3640](https://github.com/Kong/public-ui-components/issues/3640)) ([77e3c8d](https://github.com/Kong/public-ui-components/commit/77e3c8dc596e873f51b71502315922d21cf24aa7))
+
+
+
+
+
 ## [8.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.0...@kong-ui-public/dashboard-renderer@8.17.1) (2026-07-31)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
