@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.251.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.251.2...@kong-ui-public/entities-plugins@9.251.3) (2026-08-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix omit exemption clobbering across sibling ObjectFields at the same path ([#3637](https://github.com/Kong/public-ui-components/issues/3637)) ([cd52898](https://github.com/Kong/public-ui-components/commit/cd5289849ecd47d3d863e553af7915af4cfe39b9))
+
+
+
+
+
 ## [9.251.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.251.1...@kong-ui-public/entities-plugins@9.251.2) (2026-07-31)
 
 
