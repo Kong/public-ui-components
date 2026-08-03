@@ -4,6 +4,7 @@ import type {
   AiExploreQuery,
   ExploreResultV4,
   AgenticExploreQuery,
+  ManagedCacheExploreQuery,
   PlatformExploreQuery,
   PlatformTabularQuery,
   PlatformTabularResponse,
@@ -32,6 +33,11 @@ export interface AgenticDatasourceQuery {
   query: AgenticExploreQuery
 }
 
+export interface ManagedCacheDatasourceQuery {
+  datasource: 'managed_cache_usage'
+  query: ManagedCacheExploreQuery
+}
+
 /** @deprecated Use `PlatformUsageDatasourceQuery`. */
 export interface PlatformDatasourceQuery {
   datasource: 'platform'
@@ -43,7 +49,7 @@ export interface PlatformUsageDatasourceQuery {
   query: PlatformExploreQuery
 }
 
-export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | AgenticDatasourceQuery | PlatformDatasourceQuery | PlatformUsageDatasourceQuery
+export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery | AgenticDatasourceQuery | ManagedCacheDatasourceQuery | PlatformDatasourceQuery | PlatformUsageDatasourceQuery
 
 /** @deprecated Use `PlatformUsageDatasourceTabularQuery`. */
 export interface PlatformDatasourceTabularQuery {
