@@ -15,7 +15,8 @@
     "count/minute": "rpm",
     "requests": "request{plural}",
     "token count": "token{plural}",
-    "%": "%"
+    "%": "%",
+    "ops/min": "ops/min"
   },
   "csvExport" :{
     "dataError": "Error loading data",
