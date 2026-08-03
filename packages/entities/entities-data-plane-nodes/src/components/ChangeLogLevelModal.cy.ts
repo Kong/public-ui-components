@@ -71,28 +71,42 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
         cy.getTestId('log-level-warning').should('be.visible')
         cy.getTestId('log-level-select').should('be.visible')
         cy.getTestId('expiration-input').should('be.visible')
+        cy.getTestId('expiration-unit-select').should('be.visible')
         cy.get(actionButton).should('be.visible')
         cy.get(cancelButton).should('be.visible')
         // No error until a request fails
         cy.getTestId('log-level-error').should('not.exist')
       })
 
-      it('disables Save when the expiration is out of the 1-3600 range', () => {
+      const selectExpirationUnit = (unit: 'seconds' | 'mins'): void => {
+        cy.getTestId('expiration-unit-select').click()
+        cy.getTestId('expiration-unit-select-popover').find(`button[value="${unit}"]`).click()
+      }
+
+      it('disables Save when the expiration (in seconds) is out of the 1-3600 range', () => {
         mountModal()
 
+        // Default is 10 mins (600s) - within range.
         cy.get(actionButton).should('be.enabled')
 
         cy.getTestId('expiration-input').clear()
         cy.getTestId('expiration-input').type('0')
         cy.get(actionButton).should('be.disabled')
 
+        // 61 mins is 3660s - above the 3600s ceiling.
+        cy.getTestId('expiration-input').clear()
+        cy.getTestId('expiration-input').type('61')
+        cy.get(actionButton).should('be.disabled')
+
+        // Switching the unit keeps the number (61) but re-validates: 61s is within range.
+        selectExpirationUnit('seconds')
+        cy.getTestId('expiration-input').should('have.value', '61')
+        cy.get(actionButton).should('be.enabled')
+
+        // 4000s is above the 3600s ceiling.
         cy.getTestId('expiration-input').clear()
         cy.getTestId('expiration-input').type('4000')
         cy.get(actionButton).should('be.disabled')
-
-        cy.getTestId('expiration-input').clear()
-        cy.getTestId('expiration-input').type('120')
-        cy.get(actionButton).should('be.enabled')
       })
 
       it('disables Save when there are no nodes', () => {
@@ -122,7 +136,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
         cy.getTestId('change-log-level-modal').find('.modal-container').should('be.visible')
       })
 
-      it('sends the selected log level and expiration', () => {
+      it('sends the selected log level and expiration in seconds', () => {
         interceptSubmission()
         interceptResults()
 
@@ -133,6 +147,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
 
         cy.getTestId('expiration-input').clear()
         cy.getTestId('expiration-input').type('120')
+        selectExpirationUnit('seconds')
 
         cy.get(actionButton).click()
 
@@ -143,6 +158,31 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
             targets: { node_ids: ['node-1', 'node-2'] },
           })
         })
+      })
+
+      it('converts the expiration to seconds when the unit is minutes', () => {
+        interceptSubmission()
+        interceptResults()
+
+        mountModal()
+
+        cy.getTestId('expiration-input').clear()
+        cy.getTestId('expiration-input').type('5')
+        // Unit defaults to mins, so 5 mins -> 300s.
+
+        cy.get(actionButton).click()
+
+        cy.wait('@submit').then(({ request }) => {
+          expect(request.body.ttl).to.equal(300)
+        })
+      })
+
+      it('links "Learn more" to the Kong Gateway logs documentation', () => {
+        mountModal()
+
+        cy.getTestId('log-level-learn-more')
+          .should('be.visible')
+          .and('have.attr', 'href', 'https://developer.konghq.com/gateway/logs/')
       })
 
       it('disables Save while the request is in flight', () => {
