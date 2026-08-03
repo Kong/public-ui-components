@@ -28,28 +28,59 @@
         show-icon
       />
 
-      <KSelect
-        v-model="targetLogLevel"
-        data-testid="log-level-select"
-        :items="logLevelItems"
-        :kpop-attributes="{ 'data-testid': 'log-level-select-popover' }"
-        :label="i18n.t('modal.log_level_label')"
-      />
+      <div class="log-level-field">
+        <KSelect
+          v-model="targetLogLevel"
+          data-testid="log-level-select"
+          :items="logLevelItems"
+          :kpop-attributes="{ 'data-testid': 'log-level-select-popover' }"
+          :label="i18n.t('modal.log_level_label')"
+        />
+        <p class="field-help">
+          {{ i18n.t('modal.log_level_help') }}
+          <KExternalLink
+            data-testid="log-level-learn-more"
+            hide-icon
+            :href="LOG_LEVEL_DOCS_URL"
+          >
+            {{ i18n.t('modal.learn_more') }}
+          </KExternalLink>
+        </p>
+      </div>
 
-      <KInput
-        v-model.number="expiration"
-        data-testid="expiration-input"
-        :error="!expirationValid"
-        :help="i18n.t('modal.expiration.help')"
-        :label="i18n.t('modal.expiration.label')"
-        :label-attributes="{
-          info: i18n.t('modal.expiration.tooltip'),
-          tooltipAttributes: { maxWidth: '340px' },
-        }"
-        max="3600"
-        min="1"
-        type="number"
-      />
+      <div class="expiration-field">
+        <KLabel
+          class="expiration-label"
+          :info="i18n.t('modal.expiration.tooltip')"
+          :tooltip-attributes="{ maxWidth: '340px' }"
+        >
+          {{ i18n.t('modal.expiration.label') }}
+        </KLabel>
+        <div class="expiration-inputs">
+          <KInput
+            v-model.number="expiration"
+            class="expiration-value"
+            data-testid="expiration-input"
+            :error="!expirationValid"
+            :max="expirationUnit === 'mins' ? 60 : 3600"
+            min="1"
+            type="number"
+          />
+          <KSelect
+            v-model="expirationUnit"
+            data-testid="expiration-unit-select"
+            :items="expirationUnitItems"
+            :kpop-attributes="{ 'data-testid': 'expiration-unit-select-popover' }"
+            width="140"
+          />
+        </div>
+        <p
+          class="field-help"
+          :class="{ 'field-help-error': !expirationValid }"
+        >
+          {{ expirationHelp }}
+        </p>
+      </div>
 
       <KAlert
         v-if="errorMessage"
@@ -144,9 +175,13 @@ const { i18n } = composables.useI18n()
 const { axiosInstance } = useAxios(props.config.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
 
+type ExpirationUnit = 'seconds' | 'mins'
+
 const DEFAULT_LOG_LEVEL = LogLevel.Notice
-const DEFAULT_EXPIRATION = 600 // seconds (10 minutes)
+const DEFAULT_EXPIRATION_VALUE = 10
+const DEFAULT_EXPIRATION_UNIT: ExpirationUnit = 'mins'
 const POLL_INTERVAL_MS = 2000
+const LOG_LEVEL_DOCS_URL = 'https://developer.konghq.com/gateway/logs/'
 
 const STATUS_APPEARANCE: Record<LogLevelOperationStatus, BadgeAppearance> = {
   in_progress: 'info',
@@ -168,7 +203,8 @@ const STATUS_ICON: Record<LogLevelOperationStatus, Component> = {
 
 const stage = ref<'edit' | 'status'>('edit')
 const targetLogLevel = ref<LogLevel>(DEFAULT_LOG_LEVEL)
-const expiration = ref<number>(DEFAULT_EXPIRATION)
+const expiration = ref<number>(DEFAULT_EXPIRATION_VALUE)
+const expirationUnit = ref<ExpirationUnit>(DEFAULT_EXPIRATION_UNIT)
 const isSaving = ref<boolean>(false)
 const errorMessage = ref<string>('')
 const operationId = ref<string>('')
@@ -185,8 +221,19 @@ const logLevelItems = computed(() => LOG_LEVELS.map((level) => ({
   value: level,
 })))
 
+const expirationUnitItems = computed(() => [
+  { label: i18n.t('modal.expiration.unit.mins'), value: 'mins' },
+  { label: i18n.t('modal.expiration.unit.seconds'), value: 'seconds' },
+])
+
+// The TTL sent to the API is always expressed in seconds, regardless of the selected unit.
+const expirationSeconds = computed(() =>
+  expirationUnit.value === 'mins' ? expiration.value * 60 : expiration.value)
+
+const expirationHelp = computed(() => i18n.t(`modal.expiration.help.${expirationUnit.value}`))
+
 const expirationValid = computed(() =>
-  Number.isInteger(expiration.value) && expiration.value >= 1 && expiration.value <= 3600)
+  Number.isInteger(expiration.value) && expirationSeconds.value >= 1 && expirationSeconds.value <= 3600)
 
 const title = computed(() =>
   stage.value === 'status' ? i18n.t('modal.status_title') : i18n.t('modal.title'))
@@ -267,7 +314,7 @@ const save = async () => {
     const url = buildUrl(endpoints.logLevel[props.config.app].update)
     const payload: LogLevelOperationPayload = {
       log_level: targetLogLevel.value,
-      ttl: expiration.value,
+      ttl: expirationSeconds.value,
       targets: { node_ids: props.nodes.map((node) => node.id) },
     }
     const { data } = await axiosInstance.post<LogLevelOperationResponse>(url, payload)
@@ -301,7 +348,8 @@ const reset = () => {
   clearPolling()
   stage.value = 'edit'
   targetLogLevel.value = DEFAULT_LOG_LEVEL
-  expiration.value = DEFAULT_EXPIRATION
+  expiration.value = DEFAULT_EXPIRATION_VALUE
+  expirationUnit.value = DEFAULT_EXPIRATION_UNIT
   errorMessage.value = ''
   operationId.value = ''
   statusByNodeId.value = {}
@@ -327,6 +375,31 @@ onBeforeUnmount(clearPolling)
   .description {
     color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
     margin: 0;
+  }
+
+  .field-help {
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+    margin: var(--kui-space-40, $kui-space-40) 0 0 !important;
+
+    &.field-help-error {
+      color: var(--kui-color-text-danger, $kui-color-text-danger);
+    }
+  }
+
+  .expiration-label {
+    display: flex;
+  }
+
+  .expiration-inputs {
+    align-items: flex-start;
+    display: inline-flex;
+    gap: var(--kui-space-40, $kui-space-40);
+
+    .expiration-value {
+      width: 140px;
+    }
   }
 }
 
