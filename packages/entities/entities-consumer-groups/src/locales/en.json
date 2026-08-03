@@ -61,7 +61,7 @@
       "copy": "Failed to copy to clipboard",
       "add": "The consumer could not be added to some groups at this time.",
       "already_added": "The consumer is already in this consumer group",
-      "add_consumer": "An unexpected error occurred while adding consumers. Please try again.",
+      "add_consumer": "An unexpected error occurred while adding consumers. Try again.",
       "remove_consumer": "An unexpected error occurred while removing consumers. Please try again."
     },
     "copy": {
