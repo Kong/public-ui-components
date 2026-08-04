@@ -357,34 +357,29 @@ const filteredPlugins = computed((): PluginCardListExtended => {
     return filtered
   }
 
-  const results: PluginCardList = JSON.parse(JSON.stringify(filtered))
-
-  // Score every matching plugin so we can both rank and highlight the matches.
-  const scored: Array<{ plugin: PluginType, score: number }> = []
-  for (const type in results) {
-    for (const plugin of results[type] ?? []) {
+  // A plugin can appear under multiple keys (e.g. featured + its own group), so
+  // collect name matches into one id-keyed map to flatten and de-duplicate.
+  // Matching is name-only; plugin ids are not searched. Duplicates share the
+  // same name (hence the same score), so first-seen wins.
+  const matches = new Map<string, { plugin: PluginType, score: number }>()
+  for (const group of Object.values(filtered)) {
+    for (const plugin of group ?? []) {
+      if (matches.has(plugin.id)) {
+        continue
+      }
       const match = matchPluginName(query, plugin.name)
       if (match.matched) {
-        plugin.matchedIndices = match.indices
-        scored.push({ plugin, score: match.score })
-      } else if (query === plugin.id.toLowerCase()) {
-        plugin.matchedIndices = []
-        scored.push({ plugin, score: Number.MAX_SAFE_INTEGER })
+        // shallow clone so we can attach highlight data without mutating the source
+        matches.set(plugin.id, {
+          plugin: { ...plugin, matchedIndices: match.indices },
+          score: match.score,
+        })
       }
     }
   }
 
-  // dedupe by id (keeping the strongest score), then rank: stronger match first,
-  // ties broken alphabetically for a stable order.
-  const byId = new Map<string, { plugin: PluginType, score: number }>()
-  for (const entry of scored) {
-    const existing = byId.get(entry.plugin.id)
-    if (!existing || entry.score < existing.score) {
-      byId.set(entry.plugin.id, entry)
-    }
-  }
-
-  const uniqueResults = Array.from(byId.values())
+  // rank: stronger match first, ties broken alphabetically for a stable order
+  const uniqueResults = Array.from(matches.values())
     .sort((a, b) => a.score - b.score || a.plugin.name.localeCompare(b.plugin.name))
     .map(entry => entry.plugin)
 

@@ -26,7 +26,7 @@ const segments = computed(() => buildHighlightSegments(props.text, props.indices
 
 <style lang="scss" scoped>
 .highlighted-match {
-  background-color: var(--kui-color-background-warning-weakest, $kui-color-background-warning-weakest);
+  background-color: var(--kui-color-background-warning-weaker, $kui-color-background-warning-weaker);
   border-radius: var(--kui-border-radius-10, $kui-border-radius-10);
   color: inherit;
   font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);

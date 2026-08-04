@@ -153,7 +153,9 @@ function subsequenceIndices(query: string, chars: string[]): number[] | null {
  *
  * Ranking, strongest first:
  *  - prefix: the name starts with the query
- *  - acronym: the query matches the leading letters of consecutive words
+ *  - acronym: the query is a subsequence of the words' leading letters, in
+ *    order (intervening words may be skipped, e.g. "ae" matches
+ *    "Access Control Enforcement")
  *  - substring: the query appears as a consecutive run
  *  - subsequence: the query letters appear in order but scattered
  */
