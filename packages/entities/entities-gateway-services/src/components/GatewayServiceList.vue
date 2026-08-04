@@ -231,6 +231,7 @@
 
     <EntityDeleteModal
       :action-pending="isDeletePending"
+      :confirm-disabled="requiresForceDelete && !forceDeleteConfirmed"
       :description="t('actions.delete.description')"
       :entity-name="gatewayServiceToBeDeleted && (gatewayServiceToBeDeleted.name || gatewayServiceToBeDeleted.id)"
       :entity-type="EntityTypes.GatewayService"
@@ -239,7 +240,20 @@
       :visible="isDeleteModalVisible"
       @cancel="hideDeleteModal"
       @proceed="deleteRow"
-    />
+    >
+      <template
+        v-if="hasRelatedEntities"
+        #extra
+      >
+        <p>{{ relatedEntitiesMessage }}</p>
+        <KCheckbox
+          v-if="requiresForceDelete"
+          v-model="forceDeleteConfirmed"
+          data-testid="gateway-service-delete-force-checkbox"
+          :label="t('actions.delete.related_entities.force_delete_checkbox')"
+        />
+      </template>
+    </EntityDeleteModal>
   </div>
 </template>
 
@@ -646,10 +660,75 @@ const deleteModalError = ref<string>('')
 
 const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 
-const confirmDelete = (row: EntityRow): void => {
+// Number of routes/plugins currently attached to the gateway service being deleted (Konnect only)
+const relatedRoutesCount = ref<number>(0)
+const relatedPluginsCount = ref<number>(0)
+const forceDeleteConfirmed = ref<boolean>(false)
+
+const hasRelatedEntities = computed((): boolean => relatedRoutesCount.value > 0 || relatedPluginsCount.value > 0)
+// A service that still has routes attached requires an explicit force delete confirmation
+const requiresForceDelete = computed((): boolean => relatedRoutesCount.value > 0)
+
+const relatedEntitiesMessage = computed((): string => {
+  const routeCount = relatedRoutesCount.value
+  const pluginCount = relatedPluginsCount.value
+
+  if (routeCount > 0 && pluginCount > 0) {
+    return t('actions.delete.related_entities.both', {
+      routeCount,
+      route: t('actions.delete.related_entities.route', { count: routeCount }),
+      pluginCount,
+      plugin: t('actions.delete.related_entities.plugin', { count: pluginCount }),
+    })
+  }
+
+  if (routeCount > 0) {
+    return t('actions.delete.related_entities.routes_only', {
+      routeCount,
+      route: t('actions.delete.related_entities.route', { count: routeCount }),
+    })
+  }
+
+  return t('actions.delete.related_entities.plugins_only', {
+    pluginCount,
+    plugin: t('actions.delete.related_entities.plugin', { count: pluginCount }),
+  })
+})
+
+// Cap on the number of related entities we'll count before showing the delete modal
+const RELATED_ENTITIES_FETCH_SIZE = 1000
+
+const fetchRelatedEntityCount = async (endpoint: string, serviceId: string): Promise<number> => {
+  const url = buildFetcherUrl(endpoint).replace(/{id}/gi, serviceId)
+
+  try {
+    const { data } = await axiosInstance.get(url, { params: { size: RELATED_ENTITIES_FETCH_SIZE } })
+
+    return data?.data?.length ?? 0
+  } catch {
+    // If the count can't be determined, fall back to the existing (no-related-entities) behavior
+    return 0
+  }
+}
+
+const confirmDelete = async (row: EntityRow): Promise<void> => {
   gatewayServiceToBeDeleted.value = row
-  isDeleteModalVisible.value = true
   deleteModalError.value = ''
+  forceDeleteConfirmed.value = false
+  relatedRoutesCount.value = 0
+  relatedPluginsCount.value = 0
+
+  if (props.config.app === 'konnect') {
+    const [routesCount, pluginsCount] = await Promise.all([
+      fetchRelatedEntityCount(endpoints.relatedEntities.konnect.routes, row.id as string),
+      fetchRelatedEntityCount(endpoints.relatedEntities.konnect.plugins, row.id as string),
+    ])
+
+    relatedRoutesCount.value = routesCount
+    relatedPluginsCount.value = pluginsCount
+  }
+
+  isDeleteModalVisible.value = true
 }
 
 const hideDeleteModal = (): void => {
@@ -665,7 +744,9 @@ const deleteRow = async (): Promise<void> => {
   isDeletePending.value = true
 
   try {
-    await axiosInstance.delete(buildDeleteUrl(gatewayServiceToBeDeleted.value.id))
+    await axiosInstance.delete(buildDeleteUrl(gatewayServiceToBeDeleted.value.id), {
+      ...(requiresForceDelete.value ? { params: { force: true } } : {}),
+    })
 
     // Emit the success event for the host app
     emit('delete:success', gatewayServiceToBeDeleted.value)

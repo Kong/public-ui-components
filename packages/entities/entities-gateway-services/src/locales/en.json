@@ -11,7 +11,15 @@
     "delete": {
       "title": "Delete a gateway service",
       "description": "Deleting this gateway service will also remove any associated plugins. This action cannot be reversed.",
-      "menu_label": "Delete"
+      "menu_label": "Delete",
+      "related_entities": {
+        "both": "This gateway service currently has {routeCount} {route} and {pluginCount} {plugin}.",
+        "routes_only": "This gateway service currently has {routeCount} {route}.",
+        "plugins_only": "This gateway service currently has {pluginCount} {plugin}.",
+        "route": "{count, plural, one {route} other {routes}}",
+        "plugin": "{count, plural, one {plugin} other {plugins}}",
+        "force_delete_checkbox": "Force delete all entities"
+      }
     }
   },
   "search": {
