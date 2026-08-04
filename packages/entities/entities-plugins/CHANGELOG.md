@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.252.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.251.4...@kong-ui-public/entities-plugins@9.252.0) (2026-08-04)
+
+
+### Features
+
+* **entities-plugins:** add OIDC freeform ([#3254](https://github.com/Kong/public-ui-components/issues/3254)) ([67db312](https://github.com/Kong/public-ui-components/commit/67db3127a66979f66cbabf7d61866f4e30bd2f62))
+
+
+
+
+
 ## [9.251.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.251.3...@kong-ui-public/entities-plugins@9.251.4) (2026-08-04)
 
 
