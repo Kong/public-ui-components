@@ -664,12 +664,21 @@ const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 const relatedRoutesCount = ref<number>(0)
 const relatedPluginsCount = ref<number>(0)
 const forceDeleteConfirmed = ref<boolean>(false)
+// If the related-entities check fails, fail closed: treat the service as if it has routes
+// attached rather than silently allowing an unprotected delete
+const relatedEntitiesCheckFailed = ref<boolean>(false)
 
-const hasRelatedEntities = computed((): boolean => relatedRoutesCount.value > 0 || relatedPluginsCount.value > 0)
-// A service that still has routes attached requires an explicit force delete confirmation
-const requiresForceDelete = computed((): boolean => relatedRoutesCount.value > 0)
+const hasRelatedEntities = computed((): boolean =>
+  relatedEntitiesCheckFailed.value || relatedRoutesCount.value > 0 || relatedPluginsCount.value > 0)
+// A service that still has routes attached (or whose related-entities count couldn't be verified)
+// requires an explicit force delete confirmation
+const requiresForceDelete = computed((): boolean => relatedEntitiesCheckFailed.value || relatedRoutesCount.value > 0)
 
 const relatedEntitiesMessage = computed((): string => {
+  if (relatedEntitiesCheckFailed.value) {
+    return t('actions.delete.related_entities.check_failed')
+  }
+
   const routeCount = relatedRoutesCount.value
   const pluginCount = relatedPluginsCount.value
 
@@ -700,15 +709,10 @@ const RELATED_ENTITIES_FETCH_SIZE = 1000
 
 const fetchRelatedEntityCount = async (endpoint: string, serviceId: string): Promise<number> => {
   const url = buildFetcherUrl(endpoint).replace(/{id}/gi, serviceId)
+  const { data } = await axiosInstance.get(url, { params: { size: RELATED_ENTITIES_FETCH_SIZE } })
 
-  try {
-    const { data } = await axiosInstance.get(url, { params: { size: RELATED_ENTITIES_FETCH_SIZE } })
-
-    return data?.data?.length ?? 0
-  } catch {
-    // If the count can't be determined, fall back to the existing (no-related-entities) behavior
-    return 0
-  }
+  // Prefer a server-provided total if the endpoint returns one; it may exceed the fetched page size
+  return data?.total ?? data?.data?.length ?? 0
 }
 
 const confirmDelete = async (row: EntityRow): Promise<void> => {
@@ -717,15 +721,20 @@ const confirmDelete = async (row: EntityRow): Promise<void> => {
   forceDeleteConfirmed.value = false
   relatedRoutesCount.value = 0
   relatedPluginsCount.value = 0
+  relatedEntitiesCheckFailed.value = false
 
   if (props.config.app === 'konnect') {
-    const [routesCount, pluginsCount] = await Promise.all([
-      fetchRelatedEntityCount(endpoints.relatedEntities.konnect.routes, row.id as string),
-      fetchRelatedEntityCount(endpoints.relatedEntities.konnect.plugins, row.id as string),
-    ])
+    try {
+      const [routesCount, pluginsCount] = await Promise.all([
+        fetchRelatedEntityCount(endpoints.relatedEntities.konnect.routes, row.id as string),
+        fetchRelatedEntityCount(endpoints.relatedEntities.konnect.plugins, row.id as string),
+      ])
 
-    relatedRoutesCount.value = routesCount
-    relatedPluginsCount.value = pluginsCount
+      relatedRoutesCount.value = routesCount
+      relatedPluginsCount.value = pluginsCount
+    } catch {
+      relatedEntitiesCheckFailed.value = true
+    }
   }
 
   isDeleteModalVisible.value = true
@@ -745,7 +754,9 @@ const deleteRow = async (): Promise<void> => {
 
   try {
     await axiosInstance.delete(buildDeleteUrl(gatewayServiceToBeDeleted.value.id), {
-      ...(requiresForceDelete.value ? { params: { force: true } } : {}),
+      // Only ever send force=true when the user has explicitly confirmed it via the checkbox,
+      // not merely because routes/plugins were detected
+      ...(forceDeleteConfirmed.value ? { params: { force: true } } : {}),
     })
 
     // Emit the success event for the host app

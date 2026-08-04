@@ -927,6 +927,49 @@ describe('<GatewayServiceList />', () => {
 
       cy.wait('@deleteService').its('request.url').should('not.include', 'force')
     })
+
+    it('prefers a server-provided total over the fetched page length', () => {
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/routes*` },
+        { statusCode: 200, body: { data: [{ id: 'route-1' }], total: 5 } },
+      ).as('getRoutes')
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/plugins*` },
+        { statusCode: 200, body: { data: [] } },
+      ).as('getPlugins')
+
+      openDeleteModal()
+
+      cy.get(`${modal} .extra`).should('contain.text', '5 routes')
+    })
+
+    it('fails closed and requires force delete when the related-entities check errors out', () => {
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/routes*` },
+        { statusCode: 500, body: {} },
+      ).as('getRoutes')
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/plugins*` },
+        { statusCode: 200, body: { data: [] } },
+      ).as('getPlugins')
+      cy.intercept(
+        { method: 'DELETE', url: `${servicesUrl}/${serviceId}*` },
+        { statusCode: 204 },
+      ).as('deleteService')
+
+      openDeleteModal()
+
+      cy.get(`${modal} .extra`).should('be.visible')
+      cy.getTestId('gateway-service-delete-force-checkbox').should('exist')
+
+      cy.getTestId('confirmation-input').type(serviceName)
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('be.disabled')
+
+      cy.getTestId('gateway-service-delete-force-checkbox').click()
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled').click()
+
+      cy.wait('@deleteService').its('request.url').should('include', 'force=true')
+    })
   })
 
   describe('Konnect - workspace URL building', () => {

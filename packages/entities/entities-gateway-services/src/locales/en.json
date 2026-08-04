@@ -16,6 +16,7 @@
         "both": "This gateway service currently has {routeCount} {route} and {pluginCount} {plugin}.",
         "routes_only": "This gateway service currently has {routeCount} {route}.",
         "plugins_only": "This gateway service currently has {pluginCount} {plugin}.",
+        "check_failed": "We couldn't verify whether this gateway service has routes or plugins attached. Check the box below to force delete it anyway.",
         "route": "{count, plural, one {route} other {routes}}",
         "plugin": "{count, plural, one {plugin} other {plugins}}",
         "force_delete_checkbox": "Force delete all entities"
