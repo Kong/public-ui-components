@@ -18,6 +18,7 @@ Monorepo for **open-source** Kong UI components and utilities.
   - [Preview sandbox build](#preview-sandbox-build)
   - [Build for production](#build-for-production)
   - [Committing Changes](#committing-changes)
+  - [Agentic Reviewer](#agentic-reviewer)
   - [Generating type interface documentation](#generating-type-interface-documentation)
   - [Preview components](#preview-components)
   - [Running consuming application with local copy of the package](#running-consuming-application-with-local-copy-of-the-package)
@@ -193,6 +194,10 @@ For more information on different components that compose our commit messages, p
 - A `pre-push` hook is used that runs `stylelint` and `eslint` before allowing you to push your changes to the repository
 
 Additionally, CI will use `commitlint` to validate the commits associated with a PR in the `Lint and Validate` job.
+
+### Agentic reviewer
+
+[View the reference for the `/muthur` agentic reviewer](./docs/agentic-reviewer.md)
 
 ### Generating type interface documentation
 
