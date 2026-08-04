@@ -35,12 +35,16 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
   const { default: defaultSlot, ...slots } = useSlots()
   const inheritSlots = inject(FIELD_RENDERER_SLOTS)
 
+  // Reserved UI slots declared by the field components themselves (e.g. ArrayField's
+  // `label`/`tooltip`) — never treated as child-field renderer slots.
+  const RESERVED_SLOTS = [FIELD_RENDERERS, 'item', 'label', 'tooltip']
+
   const mergedSlots = computed(() => {
     const inheritSlotsValue = toValue(inheritSlots)
     const sm = getSchemaMap()
     // Set relative path to each slot key
     const childSlots: Record<string, Slot<any> | undefined> = Object.keys(slots)
-      .filter(k => k !== FIELD_RENDERERS && k !== 'item')
+      .filter(k => !RESERVED_SLOTS.includes(k))
       .reduce((res, key) => {
         const newKey = generalizePath(utils.resolve(toValue(path), key), sm)
         return { ...res, [newKey]: slots[key] }
