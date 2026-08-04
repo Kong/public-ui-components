@@ -58,25 +58,47 @@
     </template>
   </KSelect>
 
-  <!-- New Redis Configuration Modal -->
+  <!-- Konnect + FF + non-cloud -->
+  <div
+    v-if="useInlineCreate && createOpen"
+    class="redis-inline-create"
+    data-testid="redis-inline-create"
+  >
+    <RedisConfigurationForm
+      :config="inlineFormConfig"
+      :disabled-partial-type="redisType === PartialType.REDIS_CE ? PartialType.REDIS_EE : PartialType.REDIS_CE"
+      :slidout-top-offset="0"
+      @cancel="createOpen = false"
+      @error="onInlineError"
+      @update="onCreated"
+    />
+  </div>
+
+  <!-- KM/legacy Konnect -->
   <RedisConfigurationFormModal
+    v-else-if="!useInlineCreate"
     :partial-type="redisType"
-    :visible="isModalVisible"
-    @created="onPartialCreated"
+    :visible="createOpen"
+    @created="onCreated"
     @modal-close="onModalClose"
     @toast="payload => emit('toast', payload)"
   />
 </template>
 
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { computed, inject, watch, ref } from 'vue'
 import { AddIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { SelectItem } from '@kong/kongponents'
 import { useRedisConfigurationSelector } from '../composables/useRedisConfigurationSelector'
 import useI18n from '../composables/useI18n'
+import RedisConfigurationForm from './RedisConfigurationForm.vue'
 import RedisConfigurationFormModal from './RedisConfigurationFormModal.vue'
-import type { RedisConfigurationResponse } from '../types'
+import { PartialType, type KonnectRedisConfigurationFormConfig, type RedisConfigurationResponse } from '../types'
+
+import type { AxiosError } from 'axios'
 
 defineOptions({
   inheritAttrs: false,
@@ -116,6 +138,25 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t } } = useI18n()
+const { getMessageFromError } = useErrors()
+
+const formConfig = inject<(KonnectBaseFormConfig | KongManagerBaseFormConfig) & {
+  isKonnectManagedRedisEnabled?: boolean
+  isCloudGateway?: boolean
+}>(FORMS_CONFIG)!
+
+const useInlineCreate = computed(() => (
+  formConfig.app === 'konnect' &&
+  !!formConfig.isKonnectManagedRedisEnabled &&
+  formConfig.isCloudGateway === false
+))
+
+const inlineFormConfig = computed(() => ({
+  ...formConfig,
+  cancelRoute: undefined,
+  useKonnectManagedRedisUi: true,
+  isCloudGateway: false,
+} as KonnectRedisConfigurationFormConfig))
 
 const {
   items,
@@ -128,8 +169,7 @@ const {
   isKonnectManagedRedisEnabled,
 })
 
-// Modal state
-const isModalVisible = ref(false)
+const createOpen = ref(false)
 
 const onSelectionChange = (item: SelectItem<string | number> | null) => {
   emit('update:modelValue', item === null ? undefined : String(item.value))
@@ -137,24 +177,36 @@ const onSelectionChange = (item: SelectItem<string | number> | null) => {
 }
 
 const onCreateNew = () => {
-  isModalVisible.value = true
+  createOpen.value = true
 }
 
-// Modal event handlers
 const onModalClose = () => {
-  isModalVisible.value = false
+  createOpen.value = false
   emit('modal-close')
 }
 
-// After successful create- close modal, refetch options, select the new partial
-const onPartialCreated = (data: RedisConfigurationResponse) => {
-  isModalVisible.value = false
-  loadItems() // Refresh the list
+const onInlineError = (error: AxiosError) => {
+  emit('toast', {
+    message: getMessageFromError(error),
+    appearance: 'danger',
+  })
+}
+
+const onCreated = (data: RedisConfigurationResponse) => {
+  createOpen.value = false
+  loadItems()
   onSelectionChange({
     name: data.name,
     value: data.id,
     label: data.name,
   })
+
+  if (useInlineCreate.value) {
+    emit('toast', {
+      message: t('form.partial_created_success_message'),
+      appearance: 'success',
+    })
+  }
 }
 
 watch(error, (newError) => {
@@ -196,5 +248,9 @@ watch(error, (newError) => {
     font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
     line-height: var(--kui-line-height-40, $kui-line-height-40);
   }
+}
+
+.redis-inline-create {
+  margin-top: var(--kui-space-60, $kui-space-60);
 }
 </style>

@@ -204,9 +204,17 @@ const { value: redisFieldsValue, hide } = useField<Redis | undefined>(formRedisP
 
 const formConfig: KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
 
+// hide create only for Konnect + FF + Cloud Gateway
 const shouldHideNewRedisConfiguration = (
-  config: (KonnectBaseFormConfig | KongManagerBaseFormConfig) & { isKonnectManagedRedisEnabled?: boolean },
-) => config.app === 'konnect' && !!config.isKonnectManagedRedisEnabled
+  config: (KonnectBaseFormConfig | KongManagerBaseFormConfig) & {
+    isKonnectManagedRedisEnabled?: boolean
+    isCloudGateway?: boolean
+  },
+) => (
+  config.app === 'konnect' &&
+  !!config.isKonnectManagedRedisEnabled &&
+  config.isCloudGateway === true
+)
 
 const redisCardTitle = computed(() =>
   props.isKonnectManagedRedisEnabled ? t('redis.managed_ui.title') : t('redis.title'),
