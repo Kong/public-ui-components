@@ -8,10 +8,7 @@
     @cancel="emit('dismiss', false)"
     @proceed="handleProceed"
   >
-    <KAlert
-      appearance="warning"
-      class="import-requests-alert"
-    >
+    <KAlert appearance="warning">
       <i18n-t
         keypath="requestImport.warning"
         tag="p"
@@ -23,30 +20,39 @@
     </KAlert>
 
     <MonacoEditor
+      :key="activeColorMode"
       ref="editors"
       v-model="json"
+      appearance="standalone"
       class="json-editor"
       data-testid="import-requests-editor"
       language="json"
       :options="options"
+      :show-empty-state="false"
+      :show-loading-state="false"
+      :theme="activeColorMode"
     />
 
     <KAlert
       v-if="errorMessage"
       appearance="danger"
-      class="import-requests-error"
       :message="errorMessage"
     />
   </KModal>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { transformCheckRequest } from '../utils'
-import MonacoEditor from './MonacoEditor.vue'
+import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 import type { Request } from '../definitions'
 import type * as Monaco from 'monaco-editor'
 import composables from '../composables'
+import type { ComputedRef } from 'vue'
+
+import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
+
+const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const { i18n, i18nT } = composables.useI18n()
 
@@ -136,20 +142,14 @@ const handleProceed = () => {
 
 <style lang="scss" scoped>
 .import-requests-modal {
-  .import-requests-alert {
-    margin-bottom: var(--kui-space-60, $kui-space-60);
-  }
-
-  .import-requests-error {
-    margin-top: var(--kui-space-60, $kui-space-60);
+  :deep(.modal-content) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-60, $kui-space-60);
   }
 
   .json-editor {
-    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 500px;
-    overflow: hidden;
-    width: 100%;
   }
 
   .warning {

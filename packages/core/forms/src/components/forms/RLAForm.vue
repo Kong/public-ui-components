@@ -149,7 +149,7 @@
     >
       <template #label-tooltip>
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-html="identifierField && identifierField.help" />
+        <div v-html="identifierField?.help ? DOMPurify.sanitize(identifierField.help) : undefined" />
       </template>
     </KSelect>
 
@@ -232,6 +232,7 @@
 import { createI18n } from '@kong-ui-public/i18n'
 import { AddIcon, RemoveIcon } from '@kong/icons'
 import type { SelectItem } from '@kong/kongponents'
+import DOMPurify from 'dompurify'
 import cloneDeep from 'lodash-es/cloneDeep'
 import { computed, nextTick, provide, ref, useSlots, watch } from 'vue'
 import VueFormGenerator from '../FormGenerator.vue'

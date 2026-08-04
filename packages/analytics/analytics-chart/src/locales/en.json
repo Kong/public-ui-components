@@ -15,7 +15,8 @@
     "count/minute": "rpm",
     "requests": "request{plural}",
     "token count": "token{plural}",
-    "%": "%"
+    "%": "%",
+    "ops/minute": "ops/minute"
   },
   "csvExport" :{
     "dataError": "Error loading data",
@@ -220,7 +221,18 @@
     "request_type": "Request type",
     "topic_name": "Topic name",
     "partition_index": "Partition index",
-    "api_key": "API key"
+    "api_key": "API key",
+    "data_plane_group": "Data plane group",
+    "managed_cache": "Managed cache",
+    "network": "Network",
+    "provider": "Provider",
+    "region": "Region",
+    "cache_eviction_rate": "Cache eviction rate",
+    "cache_expiration_rate": "Cache expiration rate",
+    "cache_items_average": "Cache items (avg)",
+    "cache_memory_utilization_max": "Cache memory utilization (max)",
+    "cache_status": "Cache status",
+    "cache_hit_rate": "Cache hit rate"
   },
   "metricAxisTitles": {
     "error_rate": "Error rate in {unit}",
@@ -303,7 +315,11 @@
     "route_count": "Route count",
     "consumer_count": "Consumer count",
     "plugin_count": "Plugin count",
-    "node_count": "Data plane node count"
+    "node_count": "Data plane node count",
+    "cache_eviction_rate": "Cache eviction rate in {unit}",
+    "cache_expiration_rate": "Cache expiration rate in {unit}",
+    "cache_items_average": "Cache items (avg) in {unit}",
+    "cache_memory_utilization_max": "Cache memory utilization (max) in {unit}"
   },
   "granularityAxisTitles": {
     "tenSecondly": "@timestamp per 10 seconds",

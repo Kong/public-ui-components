@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.25.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.0...@kong-ui-public/analytics-utilities@12.25.1) (2026-08-03)
+
+
+### Bug Fixes
+
+* managed cache fixes MA-5130 ([#3640](https://github.com/Kong/public-ui-components/issues/3640)) ([77e3c8d](https://github.com/Kong/public-ui-components/commit/77e3c8dc596e873f51b71502315922d21cf24aa7))
+
+
+
+
+
+# [12.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.24.2...@kong-ui-public/analytics-utilities@12.25.0) (2026-07-30)
+
+
+### Features
+
+* cache-status MA-5131 ([#3630](https://github.com/Kong/public-ui-components/issues/3630)) ([272469d](https://github.com/Kong/public-ui-components/commit/272469d8344b030170c775494c7ff6919120c45f))
+
+
+
+
+
 ## [12.24.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.24.1...@kong-ui-public/analytics-utilities@12.24.2) (2026-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities

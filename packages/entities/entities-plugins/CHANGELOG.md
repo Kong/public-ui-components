@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.251.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.251.2...@kong-ui-public/entities-plugins@9.251.3) (2026-08-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix omit exemption clobbering across sibling ObjectFields at the same path ([#3637](https://github.com/Kong/public-ui-components/issues/3637)) ([cd52898](https://github.com/Kong/public-ui-components/commit/cd5289849ecd47d3d863e553af7915af4cfe39b9))
+
+
+
+
+
+## [9.251.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.251.1...@kong-ui-public/entities-plugins@9.251.2) (2026-07-31)
+
+
+### Bug Fixes
+
+* **entities:** monaco editors active color mode theme [KHCP-21398] ([#3635](https://github.com/Kong/public-ui-components/issues/3635)) ([3070af9](https://github.com/Kong/public-ui-components/commit/3070af964f912248238b293ecfb88bc508ed891b))
+
+
+
+
+
+## [9.251.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.251.0...@kong-ui-public/entities-plugins@9.251.1) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.251.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.250.11...@kong-ui-public/entities-plugins@9.251.0) (2026-07-31)
+
+
+### Features
+
+* **entities-plugins:** governance feature select updates ([#3629](https://github.com/Kong/public-ui-components/issues/3629)) ([983cd6d](https://github.com/Kong/public-ui-components/commit/983cd6d22018ad39abe061deac81cae295d419eb))
+
+
+
+
+
+## [9.250.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.250.10...@kong-ui-public/entities-plugins@9.250.11) (2026-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.250.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.250.9...@kong-ui-public/entities-plugins@9.250.10) (2026-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

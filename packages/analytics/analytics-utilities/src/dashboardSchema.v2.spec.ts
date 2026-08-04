@@ -23,6 +23,7 @@ import {
   filterableAiExploreDimensions,
   filterableBasicExploreDimensions,
   filterableExploreDimensions,
+  filterableManagedCacheExploreDimensions,
   queryableAgenticExploreDimensions,
   queryableAiExploreDimensions,
   queryableBasicExploreDimensions,
@@ -55,6 +56,7 @@ describe('dashboardSchema.v2', () => {
     ...new Set([
       ...sharedPresetFilterableDimensions,
       ...filterablePlatformPresetFilterDimensions,
+      ...filterableManagedCacheExploreDimensions,
     ]),
   ]
 

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/expressions",
-  "version": "1.6.11",
+  "version": "1.7.3",
   "type": "module",
   "module": "./dist/expressions.es.js",
   "types": "dist/types/index.d.ts",
@@ -41,7 +41,6 @@
     "@kong/design-tokens": "3.1.5",
     "@kong/kongponents": "9.63.0",
     "monaco-editor": "^0.55.1",
-    "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-top-level-await": "^1.6.0",
     "vite-plugin-wasm": "^3.6.0",
     "vue": "^3.5.35"
@@ -73,6 +72,7 @@
     "@kong-ui-public/core": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
+    "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong/icons": "^1.62.0",
     "uuid": "^14.0.0"
   }

@@ -1036,6 +1036,7 @@
         }
       },
       "governance": {
+        "unavailable_kong_manager": "The Governance plugin can't be configured in Kong Manager yet.",
         "sections": {
           "configuration": {
             "title": "Plugin configuration",
@@ -1075,7 +1076,8 @@
           "feature_key": {
             "label": "Feature to govern access",
             "help": "Feature that will control access to the scope where the plugin is applied.",
-            "metered_badge": "Metered feature",
+            "create_feature": "+ Create new feature",
+            "unavailable": "You don't have access to metering features. Enable Metering & Billing in your Konnect organization to configure the feature to govern.",
             "load_error": "Could not load features from the governance service."
           },
           "governance_endpoint": {

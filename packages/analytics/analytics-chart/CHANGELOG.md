@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.23.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.1...@kong-ui-public/analytics-chart@10.23.2) (2026-08-03)
+
+
+### Bug Fixes
+
+* ops/min -> ops/minute ([#3641](https://github.com/Kong/public-ui-components/issues/3641)) ([1f5862d](https://github.com/Kong/public-ui-components/commit/1f5862d11cfef03c9f46a0a48012c891f75dd2f4))
+
+
+
+
+
+## [10.23.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.0...@kong-ui-public/analytics-chart@10.23.1) (2026-08-03)
+
+
+### Bug Fixes
+
+* managed cache fixes MA-5130 ([#3640](https://github.com/Kong/public-ui-components/issues/3640)) ([77e3c8d](https://github.com/Kong/public-ui-components/commit/77e3c8dc596e873f51b71502315922d21cf24aa7))
+
+
+
+
+
+# [10.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.22.0...@kong-ui-public/analytics-chart@10.23.0) (2026-07-31)
+
+
+### Features
+
+* add cache translations MA-5131 ([#3636](https://github.com/Kong/public-ui-components/issues/3636)) ([7a9eec7](https://github.com/Kong/public-ui-components/commit/7a9eec756e21df2f02639d1750b3536afd79095c))
+
+
+
+
+
+# [10.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.21.13...@kong-ui-public/analytics-chart@10.22.0) (2026-07-30)
+
+
+### Features
+
+* **dashboard-renderer:** own CSV export flow [MA-5029] ([#3596](https://github.com/Kong/public-ui-components/issues/3596)) ([06cf0fa](https://github.com/Kong/public-ui-components/commit/06cf0fa7c345bed2104aa8dfb6a3b02edff6244f))
+
+
+
+
+
+## [10.21.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.21.12...@kong-ui-public/analytics-chart@10.21.13) (2026-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.21.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.21.11...@kong-ui-public/analytics-chart@10.21.12) (2026-07-30)
+
+
+### Bug Fixes
+
+* **analytics:** csv export modal text color ([#3632](https://github.com/Kong/public-ui-components/issues/3632)) ([008f736](https://github.com/Kong/public-ui-components/commit/008f7367d71c9f5173956a554d21a523f370e39e))
+
+
+
+
+
 ## [10.21.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.21.10...@kong-ui-public/analytics-chart@10.21.11) (2026-07-29)
 
 

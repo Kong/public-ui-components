@@ -9,11 +9,14 @@ import {
   filterableAiExploreDimensions,
   filterableBasicExploreDimensions,
   filterableExploreDimensions,
+  filterableManagedCacheExploreDimensions,
   granularityValues,
+  managedCacheExploreAggregations,
   queryableAgenticExploreDimensions,
   queryableAiExploreDimensions,
   queryableBasicExploreDimensions,
   queryableExploreDimensions,
+  queryableManagedCacheExploreDimensions,
   requestFilterTypeEmptyV2,
 } from './types'
 import { COUNTRIES } from './types/country-codes'
@@ -608,6 +611,25 @@ export const agenticUsageSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
+export const managedCacheUsageQuerySchema = {
+  type: 'object',
+  description: 'A query to launch at the Managed Cache explore API',
+  properties: {
+    datasource: {
+      type: 'string',
+      enum: [
+        'managed_cache_usage',
+      ],
+    },
+    metrics: metricsFn(managedCacheExploreAggregations),
+    dimensions: dimensionsFn(queryableManagedCacheExploreDimensions),
+    filters: filtersFn(filterableManagedCacheExploreDimensions),
+    ...baseQueryProperties,
+  },
+  required: ['datasource'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
 const platformDatasourceSchema = {
   oneOf: [
     {
@@ -667,6 +689,7 @@ const validDashboardChartQuerySchemas = [
   basicQuerySchema,
   llmUsageSchema,
   agenticUsageSchema,
+  managedCacheUsageQuerySchema,
   platformQuerySchema,
 ] as const
 
@@ -828,6 +851,7 @@ export const dashboardConfigSchema = {
         ...filterableAiExploreDimensions,
         ...filterableAgenticExploreDimensions,
         ...filterablePlatformPresetFilterDimensions,
+        ...filterableManagedCacheExploreDimensions,
       ]),
     ]),
     template_id: {
