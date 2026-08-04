@@ -880,6 +880,7 @@ describe('<GatewayServiceList />', () => {
 
       openDeleteModal()
 
+      cy.get(`${modal} .message`).should('contain.text', `Are you sure you want to delete this service ${serviceName}? This action cannot be reversed.`)
       cy.get(`${modal} .extra`).should('not.exist')
       cy.getTestId('gateway-service-delete-force-checkbox').should('not.exist')
 
@@ -919,7 +920,7 @@ describe('<GatewayServiceList />', () => {
 
       openDeleteModal()
 
-      cy.get(`${modal} .extra`).should('contain.text', '1 plugin')
+      cy.get(`${modal} .extra`).should('contain.text', '1 associated plugin will be deleted')
       cy.getTestId('gateway-service-delete-force-checkbox').should('not.exist')
 
       cy.getTestId('confirmation-input').type(serviceName)

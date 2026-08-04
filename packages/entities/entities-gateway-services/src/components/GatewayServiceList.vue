@@ -232,7 +232,6 @@
     <EntityDeleteModal
       :action-pending="isDeletePending"
       :confirm-disabled="requiresForceDelete && !forceDeleteConfirmed"
-      :description="t('actions.delete.description')"
       :entity-name="gatewayServiceToBeDeleted && (gatewayServiceToBeDeleted.name || gatewayServiceToBeDeleted.id)"
       :entity-type="EntityTypes.GatewayService"
       :error="deleteModalError"
@@ -241,6 +240,17 @@
       @cancel="hideDeleteModal"
       @proceed="deleteRow"
     >
+      <template #message>
+        <i18nT
+          class="message"
+          keypath="actions.delete.confirm_message"
+          tag="p"
+        >
+          <template #entityName>
+            <strong>{{ gatewayServiceToBeDeleted && (gatewayServiceToBeDeleted.name || gatewayServiceToBeDeleted.id) }}</strong>
+          </template>
+        </i18nT>
+      </template>
       <template
         v-if="hasRelatedEntities"
         #extra
@@ -369,7 +379,7 @@ const props = defineProps({
   },
 })
 
-const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
+const { i18n: { t, formatUnixTimeStamp }, i18nT } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
