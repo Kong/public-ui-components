@@ -1,62 +1,67 @@
 <template>
-  <KSelect
-    class="redis-config-select-trigger"
-    enable-filtering
-    :filter-function="() => true"
-    :items="items"
-    :loading="loading"
-    :model-value="modelValue"
-    :placeholder="placeholder || t('selector.placeholder')"
-    v-bind="$attrs"
-    @change="onSelectionChange"
-    @query-change="onQueryChange"
+  <div
+    ref="selectEl"
+    class="redis-config-select-wrap"
   >
-    <template #selected-item-template="{ item }">
-      <div class="selected-redis-config">
-        {{ (item as SelectItem).name }}
-      </div>
-    </template>
-    <template #item-template="{ item }">
-      <div
-        class="plugin-form-redis-configuration-dropdown-item"
-        :data-testid="`redis-configuration-dropdown-item-${item.name}`"
-      >
-        <span
-          class="select-item-name"
-          data-testid="selected-redis-config"
-        >{{ item.name }}</span>
-        <!-- Omit badge when tag is unset -->
-        <KBadge
-          v-if="item.tag"
-          appearance="info"
-          class="select-item-label"
-        >
-          {{ item.tag }}
-        </KBadge>
-      </div>
-    </template>
-    <template #empty>
-      <div
-        class="empty-redis-config"
-        data-testid="empty-redis-config"
-      >
-        {{ emptyStateText || t('selector.empty_state') }}
-      </div>
-    </template>
-    <template
-      v-if="showCreateButton"
-      #dropdown-footer-text
+    <KSelect
+      class="redis-config-select-trigger"
+      enable-filtering
+      :filter-function="() => true"
+      :items="items"
+      :loading="loading"
+      :model-value="modelValue"
+      :placeholder="placeholder || t('selector.placeholder')"
+      v-bind="$attrs"
+      @change="onSelectionChange"
+      @query-change="onQueryChange"
     >
-      <div
-        class="new-redis-config-area"
-        data-testid="new-redis-config-area"
-        @click="onCreateNew"
+      <template #selected-item-template="{ item }">
+        <div class="selected-redis-config">
+          {{ (item as SelectItem).name }}
+        </div>
+      </template>
+      <template #item-template="{ item }">
+        <div
+          class="plugin-form-redis-configuration-dropdown-item"
+          :data-testid="`redis-configuration-dropdown-item-${item.name}`"
+        >
+          <span
+            class="select-item-name"
+            data-testid="selected-redis-config"
+          >{{ item.name }}</span>
+          <!-- Omit badge when tag is unset -->
+          <KBadge
+            v-if="item.tag"
+            appearance="info"
+            class="select-item-label"
+          >
+            {{ item.tag }}
+          </KBadge>
+        </div>
+      </template>
+      <template #empty>
+        <div
+          class="empty-redis-config"
+          data-testid="empty-redis-config"
+        >
+          {{ emptyStateText || t('selector.empty_state') }}
+        </div>
+      </template>
+      <template
+        v-if="showCreateButton"
+        #dropdown-footer-text
       >
-        <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
-        <span>{{ createButtonText || t('selector.create_new') }}</span>
-      </div>
-    </template>
-  </KSelect>
+        <div
+          class="new-redis-config-area"
+          data-testid="new-redis-config-area"
+          @click="onCreateNew"
+        >
+          <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
+          <span>{{ createButtonText || t('selector.create_new') }}</span>
+        </div>
+      </template>
+    </KSelect>
+  </div>
 
   <!-- Konnect + FF + non-cloud -->
   <div
@@ -86,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, watch, ref } from 'vue'
+import { computed, inject, nextTick, watch, ref } from 'vue'
 import { AddIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
 import { FORMS_CONFIG, shouldInlineRedisCreate } from '@kong-ui-public/forms'
@@ -166,6 +171,7 @@ const {
 })
 
 const createOpen = ref(false)
+const selectEl = ref<HTMLElement | null>(null)
 
 const onSelectionChange = (item: SelectItem<string | number> | null) => {
   emit('update:modelValue', item === null ? undefined : String(item.value))
@@ -201,6 +207,10 @@ const onCreated = (data: RedisConfigurationResponse) => {
     emit('toast', {
       message: t('form.partial_created_success_message'),
       appearance: 'success',
+    })
+    // Inline form unmounts above; scroll back into view
+    nextTick(() => {
+      selectEl.value?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     })
   }
 }

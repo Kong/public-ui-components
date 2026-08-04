@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="selectEl"
     class="redis-config-select"
     data-testid="redis-config-select"
   >
@@ -106,7 +107,7 @@
 
 <script setup lang="ts">
 import { FORMS_CONFIG, REDIS_CONFIGURATION_FORM, REDIS_PARTIAL_FETCHER_KEY } from '../const'
-import { onBeforeMount, inject, computed, ref, watch, type Component, type Ref, type PropType } from 'vue'
+import { onBeforeMount, inject, computed, ref, watch, nextTick, type Component, type Ref, type PropType } from 'vue'
 import {
   useAxios,
   useDebouncedFilter,
@@ -188,6 +189,7 @@ const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig | KonnectBa
 
 const useInlineCreate = computed(() => shouldInlineRedisCreate(formConfig) && !!RedisConfigurationForm)
 const createOpen = ref(false)
+const selectEl = ref<HTMLElement | null>(null)
 
 const inlineFormConfig = computed(() => ({
   ...formConfig,
@@ -218,6 +220,10 @@ const onInlineCreated = (data: { id: string }) => {
   }
   props.updateRedisModel(data.id)
   redisConfigSelected(data.id)
+  // Inline form unmounts below; scroll back into view
+  nextTick(() => {
+    selectEl.value?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  })
 }
 
 const pageSize = '1000' // the API returns all partials, so we have to set a high page size to filter them on the frontend
