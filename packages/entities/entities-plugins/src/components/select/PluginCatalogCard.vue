@@ -19,7 +19,10 @@
               :size="55"
             />
             <span :class="{ 'non-custom-title': !isCustomPlugin }">
-              {{ plugin.name }}
+              <HighlightedText
+                :indices="plugin.matchedIndices"
+                :text="plugin.name"
+              />
             </span>
           </div>
 
@@ -119,6 +122,7 @@ import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { MoreIcon } from '@kong/icons'
 import composables from '../../composables'
 import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
+import HighlightedText from './HighlightedText.vue'
 
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType) : void

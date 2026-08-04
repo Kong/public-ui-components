@@ -187,7 +187,7 @@ import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared
 import { fetchAllPages } from '../composables/useCustomPluginApi'
 import { KUI_ICON_COLOR_PRIMARY } from '@kong/design-tokens'
 import { GridIcon, ListIcon } from '@kong/icons'
-import { lcsRecursive } from '../utils/helper'
+import { matchPluginName } from '../utils/helper'
 import PluginCatalogListView from './select/PluginCatalogListView.vue'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 
@@ -359,36 +359,34 @@ const filteredPlugins = computed((): PluginCardListExtended => {
 
   const results: PluginCardList = JSON.parse(JSON.stringify(filtered))
 
-  for (const type in filtered) {
-    const matches = filtered[type]?.filter((plugin: PluginType) => {
-      const fields = [
-        plugin.name.toLowerCase(),
-        plugin.id.toLowerCase(),
-        // plugin.group.toLowerCase(),
-      ]
-      return fields.some(field => {
-        const lcs = lcsRecursive(query, field)
-        return lcs.length === query.length
-      })
-    }) || []
-    if (!matches.length) {
-      delete results[type]
-    } else {
-      results[type] = matches
+  // Score every matching plugin so we can both rank and highlight the matches.
+  const scored: Array<{ plugin: PluginType, score: number }> = []
+  for (const type in results) {
+    for (const plugin of results[type] ?? []) {
+      const match = matchPluginName(query, plugin.name)
+      if (match.matched) {
+        plugin.matchedIndices = match.indices
+        scored.push({ plugin, score: match.score })
+      } else if (query === plugin.id.toLowerCase()) {
+        plugin.matchedIndices = []
+        scored.push({ plugin, score: Number.MAX_SAFE_INTEGER })
+      }
     }
   }
 
-  const queryResults = Object.values(results)
-    .flat()
-    .filter((p): p is PluginType => Boolean(p))
+  // dedupe by id (keeping the strongest score), then rank: stronger match first,
+  // ties broken alphabetically for a stable order.
+  const byId = new Map<string, { plugin: PluginType, score: number }>()
+  for (const entry of scored) {
+    const existing = byId.get(entry.plugin.id)
+    if (!existing || entry.score < existing.score) {
+      byId.set(entry.plugin.id, entry)
+    }
+  }
 
-  // dedupe by id preserving first-seen order using Map + Array.from
-  const uniqueResults = Array.from(
-    queryResults.reduce((m, plugin) => {
-      if (!m.has(plugin.id)) m.set(plugin.id, plugin)
-      return m
-    }, new Map<string, PluginType>()).values(),
-  )
+  const uniqueResults = Array.from(byId.values())
+    .sort((a, b) => a.score - b.score || a.plugin.name.localeCompare(b.plugin.name))
+    .map(entry => entry.plugin)
 
   return uniqueResults.length ? { 'Query Result': uniqueResults } : { }
 })
