@@ -89,7 +89,7 @@
 import { computed, inject, watch, ref } from 'vue'
 import { AddIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG, shouldInlineRedisCreate } from '@kong-ui-public/forms'
 import { useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { SelectItem } from '@kong/kongponents'
 import { useRedisConfigurationSelector } from '../composables/useRedisConfigurationSelector'
@@ -145,11 +145,7 @@ const formConfig = inject<(KonnectBaseFormConfig | KongManagerBaseFormConfig) & 
   isCloudGateway?: boolean
 }>(FORMS_CONFIG)!
 
-const useInlineCreate = computed(() => (
-  formConfig.app === 'konnect' &&
-  !!formConfig.isKonnectManagedRedisEnabled &&
-  formConfig.isCloudGateway === false
-))
+const useInlineCreate = computed(() => shouldInlineRedisCreate(formConfig))
 
 const inlineFormConfig = computed(() => ({
   ...formConfig,

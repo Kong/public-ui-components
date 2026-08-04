@@ -59,13 +59,13 @@
         </div>
       </template>
       <template
-        v-if="!shouldHideNewRedisConfiguration(formConfig)"
+        v-if="!shouldHideNewRedis(formConfig)"
         #dropdown-footer-text
       >
         <div
           class="new-redis-config-area"
           data-testid="new-redis-config-area"
-          @click="$emit('showNewPartialModal')"
+          @click="onCreateNew"
         >
           <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
           <span>{{ createNewRedisConfigurationFooterText }}</span>
@@ -73,6 +73,23 @@
       </template>
     </KSelect>
   </div>
+
+  <!-- Konnect + FF + non-cloud: managed form inline (injected to avoid forms-redis cycle) -->
+  <div
+    v-if="useInlineCreate && createOpen && RedisConfigurationForm"
+    class="redis-inline-create"
+    data-testid="redis-inline-create"
+  >
+    <component
+      :is="RedisConfigurationForm"
+      :config="inlineFormConfig"
+      :disabled-partial-type="disabledPartialType"
+      :slidout-top-offset="0"
+      @cancel="createOpen = false"
+      @update="onInlineCreated"
+    />
+  </div>
+
   <RedisConfigCard
     v-if="selectedRedisConfig"
     :config-fields="selectedRedisConfig"
@@ -88,8 +105,8 @@
 </template>
 
 <script setup lang="ts">
-import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY } from '../const'
-import { onBeforeMount, inject, computed, ref, watch, type Ref, type PropType } from 'vue'
+import { FORMS_CONFIG, REDIS_CONFIGURATION_FORM, REDIS_PARTIAL_FETCHER_KEY } from '../const'
+import { onBeforeMount, inject, computed, ref, watch, type Component, type Ref, type PropType } from 'vue'
 import {
   useAxios,
   useDebouncedFilter,
@@ -112,16 +129,17 @@ import {
   type RedisConfigurationSource,
   redisManagedSourceFromTags,
 } from '../utils/redisPartialManagedSource'
-import { shouldHideNewRedisConfiguration } from '../utils/hideNewRedisConfiguration'
+import { shouldHideNewRedis, shouldInlineRedisCreate } from '../utils/hideNewRedisConfiguration'
 import RedisConfigCard from './RedisConfigCard.vue'
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'showNewPartialModal'): void
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const redisPartialFetcherKey: Ref<number, number> | undefined = inject(REDIS_PARTIAL_FETCHER_KEY)
+const RedisConfigurationForm = inject<Component | null>(REDIS_CONFIGURATION_FORM, null)
 
 const endpoints = {
   konnect: {
@@ -167,6 +185,41 @@ const selectedRedisConfig = ref(null)
 const { getMessageFromError } = useErrors()
 
 const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig | KonnectBaseTableConfig | KongManagerBaseTableConfig = inject(FORMS_CONFIG)!
+
+const useInlineCreate = computed(() => shouldInlineRedisCreate(formConfig) && !!RedisConfigurationForm)
+const createOpen = ref(false)
+
+const inlineFormConfig = computed(() => ({
+  ...formConfig,
+  cancelRoute: undefined,
+  useKonnectManagedRedisUi: true,
+  isCloudGateway: false,
+}))
+
+const disabledPartialType = computed(() => {
+  if (props.redisType === 'redis-ce') return 'redis-ee'
+  if (props.redisType === 'redis-ee') return 'redis-ce'
+  return undefined
+})
+
+const onCreateNew = () => {
+  if (useInlineCreate.value) {
+    createOpen.value = true
+    return
+  }
+  // KM/legacy Konnect
+  emit('showNewPartialModal')
+}
+
+const onInlineCreated = (data: { id: string }) => {
+  createOpen.value = false
+  if (redisPartialFetcherKey) {
+    redisPartialFetcherKey.value++
+  }
+  props.updateRedisModel(data.id)
+  redisConfigSelected(data.id)
+}
+
 const pageSize = '1000' // the API returns all partials, so we have to set a high page size to filter them on the frontend
 const {
   debouncedQueryChange: debouncedRedisConfigsQuery,
@@ -200,7 +253,7 @@ const redisSelectPlaceholderText = computed(() =>
 )
 
 const createNewRedisConfigurationFooterText = computed(() =>
-  props.isKonnectManagedRedisEnabled
+  props.isKonnectManagedRedisEnabled || shouldInlineRedisCreate(formConfig)
     ? t('redis.managed_ui.shared_configuration.create_new_configuration')
     : t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(props.redisType as PartialType) }),
 )
@@ -368,5 +421,9 @@ onBeforeMount(() => {
 
 .redis-shared-config-error-message {
   color: var(--kui-color-text-danger, $kui-color-text-danger);
+}
+
+.redis-inline-create {
+  margin-top: var(--kui-space-60, $kui-space-60);
 }
 </style>

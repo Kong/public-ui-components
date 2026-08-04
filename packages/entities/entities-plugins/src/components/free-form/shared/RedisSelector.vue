@@ -65,7 +65,7 @@
           :model-value="selectedRedisConfigItem"
           :placeholder="redisSelectorPlaceholderText"
           :redis-type="redisType"
-          :show-create-button="!shouldHideNewRedisConfiguration(formConfig)"
+          :show-create-button="!shouldHideNewRedis(formConfig)"
           @error-change="onRedisSelectorFetchError"
           @toast="toaster"
           @update:model-value="redisConfigSelected"
@@ -110,7 +110,7 @@ import RedisConfigCard from './RedisConfigCard.vue'
 import { onBeforeMount, inject, computed, ref, watch } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG, shouldHideNewRedis, shouldInlineRedisCreate } from '@kong-ui-public/forms'
 import { KCard } from '@kong/kongponents'
 import { useAxios, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RedisPartialType, Redis, RenderRules } from './types'
@@ -204,18 +204,6 @@ const { value: redisFieldsValue, hide } = useField<Redis | undefined>(formRedisP
 
 const formConfig: KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
 
-// hide create only for Konnect + FF + Cloud Gateway
-const shouldHideNewRedisConfiguration = (
-  config: (KonnectBaseFormConfig | KongManagerBaseFormConfig) & {
-    isKonnectManagedRedisEnabled?: boolean
-    isCloudGateway?: boolean
-  },
-) => (
-  config.app === 'konnect' &&
-  !!config.isKonnectManagedRedisEnabled &&
-  config.isCloudGateway === true
-)
-
 const redisCardTitle = computed(() =>
   props.isKonnectManagedRedisEnabled ? t('redis.managed_ui.title') : t('redis.title'),
 )
@@ -245,7 +233,9 @@ const dedicatedRedisRadioLabel = computed(() =>
 )
 
 const redisSelectorCreateButtonText = computed(() =>
-  props.isKonnectManagedRedisEnabled ? t('redis.managed_ui.selector.create_new') : undefined,
+  props.isKonnectManagedRedisEnabled || shouldInlineRedisCreate(formConfig)
+    ? t('redis.managed_ui.selector.create_new')
+    : undefined,
 )
 
 const redisSelectorPlaceholderText = computed(() =>

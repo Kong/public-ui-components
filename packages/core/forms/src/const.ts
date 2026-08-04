@@ -6,6 +6,8 @@ export const REDIS_PARTIAL_FETCHER_KEY = 'redis-partial-list-fetcher-key'
 
 export const REDIS_PARTIAL_INFO = 'redis-partial-info'
 
+export const REDIS_CONFIGURATION_FORM = 'kong-ui-redis-configuration-form'
+
 /** Used by `template` and `slot` */
 export const AUTOFILL_SLOT_NAME = 'autofill'
 

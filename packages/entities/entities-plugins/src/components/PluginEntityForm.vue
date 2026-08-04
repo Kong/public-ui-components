@@ -130,6 +130,7 @@ import {
   AUTOFILL_SLOT_NAME,
   FORMS_API_KEY,
   FORMS_CONFIG,
+  REDIS_CONFIGURATION_FORM,
   customFields,
   getSharedFormName,
   sharedForms,
@@ -137,6 +138,8 @@ import {
   type AutofillSlotProps,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
+import { RedisConfigurationForm } from '@kong-ui-public/entities-redis-configurations'
+import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { computed, inject, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowReactive, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
@@ -452,6 +455,9 @@ watch(() => props.config, (newConfig) => {
   Object.assign(liveConfig, newConfig)
 })
 provide(FORMS_CONFIG, liveConfig)
+
+// VFG RedisConfigSelect injects this for non-cloud + FF inline create
+provide(REDIS_CONFIGURATION_FORM, RedisConfigurationForm)
 
 const sharedFormName = ref('')
 const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()

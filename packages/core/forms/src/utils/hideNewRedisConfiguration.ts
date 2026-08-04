@@ -5,14 +5,21 @@ type PluginFormsConfig = (KonnectBaseFormConfig | KongManagerBaseFormConfig) & {
   isCloudGateway?: boolean
 }
 
-/**
- * Hide "+ New Redis" in plugin forms when Konnect-managed Redis is available on Cloud Gateway.
- * Non-cloud Konnect (FF on) still shows create >>> inline form. KM/legacy Konnect (FF off) unchanged.
- */
-export function shouldHideNewRedisConfiguration(config: PluginFormsConfig): boolean {
+/** Hide "+ New Redis" for Konnect + FF + Cloud Gateway.
+ * Non-cloud + FF still shows create. */
+export function shouldHideNewRedis(config: PluginFormsConfig): boolean {
   return (
     config.app === 'konnect' &&
     !!config.isKonnectManagedRedisEnabled &&
     config.isCloudGateway === true
+  )
+}
+
+/** Konnect + FF + non-cloud: inline managed create, else KM/legacy modal */
+export function shouldInlineRedisCreate(config: PluginFormsConfig): boolean {
+  return (
+    config.app === 'konnect' &&
+    !!config.isKonnectManagedRedisEnabled &&
+    config.isCloudGateway === false
   )
 }

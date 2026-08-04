@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { shouldHideNewRedisConfiguration } from './hideNewRedisConfiguration'
+import { shouldHideNewRedis } from './hideNewRedisConfiguration'
 
-describe('shouldHideNewRedisConfiguration', () => {
+describe('shouldHideNewRedis', () => {
   it('is true for Konnect when managed-redis FF is enabled on Cloud Gateway', () => {
-    expect(shouldHideNewRedisConfiguration({
+    expect(shouldHideNewRedis({
       app: 'konnect',
       apiBaseUrl: '/us/kong-api',
       controlPlaneId: 'cp-1',
@@ -14,7 +14,7 @@ describe('shouldHideNewRedisConfiguration', () => {
   })
 
   it('is false for Konnect when managed-redis FF is enabled on non-cloud gateway', () => {
-    expect(shouldHideNewRedisConfiguration({
+    expect(shouldHideNewRedis({
       app: 'konnect',
       apiBaseUrl: '/us/kong-api',
       controlPlaneId: 'cp-1',
@@ -24,7 +24,7 @@ describe('shouldHideNewRedisConfiguration', () => {
   })
 
   it('is false for Konnect when managed-redis FF is disabled', () => {
-    expect(shouldHideNewRedisConfiguration({
+    expect(shouldHideNewRedis({
       app: 'konnect',
       apiBaseUrl: '/us/kong-api',
       controlPlaneId: 'cp-1',
@@ -34,7 +34,7 @@ describe('shouldHideNewRedisConfiguration', () => {
   })
 
   it('is false for Kong Manager', () => {
-    expect(shouldHideNewRedisConfiguration({
+    expect(shouldHideNewRedis({
       app: 'kongManager',
       apiBaseUrl: '/kong-manager',
       workspace: 'default',
