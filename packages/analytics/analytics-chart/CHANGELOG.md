@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.23.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.3...@kong-ui-public/analytics-chart@10.23.4) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.23.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.2...@kong-ui-public/analytics-chart@10.23.3) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.23.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.1...@kong-ui-public/analytics-chart@10.23.2) (2026-08-03)
+
+
+### Bug Fixes
+
+* ops/min -> ops/minute ([#3641](https://github.com/Kong/public-ui-components/issues/3641)) ([1f5862d](https://github.com/Kong/public-ui-components/commit/1f5862d11cfef03c9f46a0a48012c891f75dd2f4))
+
+
+
+
+
+## [10.23.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.0...@kong-ui-public/analytics-chart@10.23.1) (2026-08-03)
+
+
+### Bug Fixes
+
+* managed cache fixes MA-5130 ([#3640](https://github.com/Kong/public-ui-components/issues/3640)) ([77e3c8d](https://github.com/Kong/public-ui-components/commit/77e3c8dc596e873f51b71502315922d21cf24aa7))
+
+
+
+
+
+# [10.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.22.0...@kong-ui-public/analytics-chart@10.23.0) (2026-07-31)
+
+
+### Features
+
+* add cache translations MA-5131 ([#3636](https://github.com/Kong/public-ui-components/issues/3636)) ([7a9eec7](https://github.com/Kong/public-ui-components/commit/7a9eec756e21df2f02639d1750b3536afd79095c))
+
+
+
+
+
 # [10.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.21.13...@kong-ui-public/analytics-chart@10.22.0) (2026-07-30)
 
 

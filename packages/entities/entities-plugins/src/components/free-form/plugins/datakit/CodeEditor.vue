@@ -20,13 +20,14 @@
       </template>
     </KAlert>
     <MonacoEditor
+      :key="activeColorMode"
       ref="editor"
       v-model="code"
       appearance="standalone"
       class="editor"
       language="yaml"
       :options="monacoOptions"
-      theme="light"
+      :theme="activeColorMode"
       @ready="handleEditorReady"
     />
 
@@ -43,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, toRaw } from 'vue'
+import { computed, inject, shallowRef, toRaw } from 'vue'
 import { isEqual, omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
@@ -58,9 +59,12 @@ import { useFormShared } from '../../shared/composables'
 import examples from './examples'
 import { extractors } from './config-extractors'
 
+import type { ComputedRef } from 'vue'
 import type { YAMLException } from 'js-yaml'
 import type { DatakitPluginData } from './types'
 import type { DatakitExample } from './examples'
+
+const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const { t } = createI18n<typeof english>('en-us', english)
 type TranslationKey = Parameters<typeof t>[0]

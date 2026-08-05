@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.59.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.59.2...@kong-ui-public/entities-shared@3.59.3) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.59.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.59.1...@kong-ui-public/entities-shared@3.59.2) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.59.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.59.0...@kong-ui-public/entities-shared@3.59.1) (2026-07-31)
+
+
+### Bug Fixes
+
+* **entities:** monaco editors active color mode theme [KHCP-21398] ([#3635](https://github.com/Kong/public-ui-components/issues/3635)) ([3070af9](https://github.com/Kong/public-ui-components/commit/3070af964f912248238b293ecfb88bc508ed891b))
+
+
+
+
+
+# [3.59.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.58.0...@kong-ui-public/entities-shared@3.59.0) (2026-07-31)
+
+
+### Features
+
+* **entities-shared:** deep sensitive fields [khcp-20573] ([#3622](https://github.com/Kong/public-ui-components/issues/3622)) ([d717146](https://github.com/Kong/public-ui-components/commit/d717146220c1de6e9058c7fd7ee4eda6f70c01e9))
+
+
+
+
+
+# [3.58.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.10...@kong-ui-public/entities-shared@3.58.0) (2026-07-31)
+
+
+### Features
+
+* **entities-plugins:** governance feature select updates ([#3629](https://github.com/Kong/public-ui-components/issues/3629)) ([983cd6d](https://github.com/Kong/public-ui-components/commit/983cd6d22018ad39abe061deac81cae295d419eb))
+
+
+
+
+
 ## [3.57.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.9...@kong-ui-public/entities-shared@3.57.10) (2026-07-29)
 
 

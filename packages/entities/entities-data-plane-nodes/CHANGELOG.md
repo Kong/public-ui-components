@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@1.4.1...@kong-ui-public/entities-data-plane-nodes@1.4.2) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [1.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@1.4.0...@kong-ui-public/entities-data-plane-nodes@1.4.1) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+# [1.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@1.3.0...@kong-ui-public/entities-data-plane-nodes@1.4.0) (2026-08-04)
+
+
+### Features
+
+* **dp-nodes:** sort by status ([#3645](https://github.com/Kong/public-ui-components/issues/3645)) ([dd63abd](https://github.com/Kong/public-ui-components/commit/dd63abd20ae4a615157801ddee9ba1d855048ff7))
+
+
+
+
+
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@1.2.3...@kong-ui-public/entities-data-plane-nodes@1.3.0) (2026-08-03)
+
+
+### Features
+
+* **dp-nodes:** switch expiration unit ([#3639](https://github.com/Kong/public-ui-components/issues/3639)) ([6ab8dd9](https://github.com/Kong/public-ui-components/commit/6ab8dd9a685ea74886fb20bdfce8af1ba13fe5bd))
+
+
+
+
+
+## [1.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@1.2.2...@kong-ui-public/entities-data-plane-nodes@1.2.3) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [1.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@1.2.1...@kong-ui-public/entities-data-plane-nodes@1.2.2) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [1.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@1.2.0...@kong-ui-public/entities-data-plane-nodes@1.2.1) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
 # [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@1.1.1...@kong-ui-public/entities-data-plane-nodes@1.2.0) (2026-07-31)
 
 

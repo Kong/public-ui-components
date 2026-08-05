@@ -1,6 +1,6 @@
 import { computed, onBeforeUnmount, ref, toValue, watch } from 'vue'
 import { generalizePath } from './schema'
-import { get, isEqual } from 'lodash-es'
+import { get, isEqual, uniqueId } from 'lodash-es'
 import * as utils from '../utils'
 
 import type { MaybeRefOrGetter } from 'vue'
@@ -60,8 +60,37 @@ export function createRenderRuleRegistry(
   type RenderRulesMap = Record<string, RenderRules>
   const registry = ref<RenderRulesMap>({})
   // Fields the host form manages itself (ObjectField `omit`), keyed by the
-  // registering field's concrete path. Such fields are never hidden by rules.
-  const omittedRegistry = ref<Record<string, string[]>>({})
+  // registering field's concrete path, then by registrant instance id. A
+  // field only counts as host-managed if EVERY currently-registered instance
+  // at that path omits it — i.e. no registered `ObjectField` renders it at
+  // all. More than one `ObjectField` can legitimately register at the same
+  // path with *different, complementary* omit lists — e.g. `ConfigForm.vue`
+  // splits one `config` node into a "default visible" and an "advanced"
+  // `ObjectField`, each omitting the other's fields so together they still
+  // render every field. Every registrant (even one that omits nothing) is
+  // tracked with its own (possibly empty) list so that the field it *does*
+  // render correctly vetoes the "nobody renders this" exemption; taking the
+  // union instead would exempt every field under the path, since the two
+  // complementary lists between them cover all of them.
+  const omittedRegistry = ref<Record<string, Record<string, string[]>>>({})
+
+  function setOmittedForPath(path: string, instanceId: string, omitted: string[] | undefined): void {
+    omittedRegistry.value[path] = { ...omittedRegistry.value[path], [instanceId]: omitted ? [...omitted] : [] }
+  }
+
+  function clearOmittedForPath(path: string, instanceId: string): void {
+    const forPath = omittedRegistry.value[path]
+    if (!forPath || !(instanceId in forPath)) return
+
+    const rest = { ...forPath }
+    delete rest[instanceId]
+
+    if (Object.keys(rest).length) {
+      omittedRegistry.value[path] = rest
+    } else {
+      delete omittedRegistry.value[path]
+    }
+  }
 
   /**
    * Validates that all fields in a bundle/dependency are at the same level
@@ -415,6 +444,11 @@ export function createRenderRuleRegistry(
       omittedFields,
     } = options
 
+    // Identifies this registrant within `omittedRegistry` so that another
+    // `ObjectField` registering `omit` at the same path (see `ConfigForm.vue`)
+    // adds its own list instead of clobbering this one.
+    const instanceId = uniqueId('omit-')
+
     // Register/unregister this field's rules and omitted children by path.
     // Visibility itself is derived lazily by `isFieldHidden`, so there is no
     // imperative hidden-state to keep in sync here.
@@ -429,16 +463,12 @@ export function createRenderRuleRegistry(
         delete registry.value[path]
       }
 
-      if (omitted && omitted.length) {
-        omittedRegistry.value[path] = [...omitted]
-      } else {
-        delete omittedRegistry.value[path]
-      }
+      setOmittedForPath(path, instanceId, omitted)
 
       // Clean up old path
       if (oldPath && oldPath !== path) {
         delete registry.value[oldPath]
-        delete omittedRegistry.value[oldPath]
+        clearOmittedForPath(oldPath, instanceId)
       }
     }, { immediate: true, deep: true })
 
@@ -448,7 +478,7 @@ export function createRenderRuleRegistry(
     onBeforeUnmount(() => {
       const path = toValue(fieldPath)
       delete registry.value[path]
-      delete omittedRegistry.value[path]
+      clearOmittedForPath(path, instanceId)
     })
 
     return computedRules
@@ -469,8 +499,15 @@ export function createRenderRuleRegistry(
     const fieldName = parts[parts.length - 1]
     const parentPath = utils.resolve(...parts.slice(0, -1)) // '' for root-level fields
 
-    // Fields the host form manages itself are never hidden by render rules.
-    if (omittedRegistry.value[parentPath]?.includes(fieldName)) return false
+    // Fields the host form manages itself are never hidden by render rules —
+    // but only if NO registrant at this path renders the field. If even one
+    // registered `ObjectField` doesn't omit it, that instance renders it, so
+    // it stays governed by the normal dependency rules below.
+    const omittedForParent = omittedRegistry.value[parentPath]
+    if (omittedForParent) {
+      const lists = Object.values(omittedForParent)
+      if (lists.length && lists.every(list => list.includes(fieldName))) return false
+    }
 
     const rulesKey = parentPath === ''
       ? utils.rootSymbol

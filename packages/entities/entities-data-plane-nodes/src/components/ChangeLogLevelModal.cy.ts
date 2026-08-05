@@ -71,28 +71,42 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
         cy.getTestId('log-level-warning').should('be.visible')
         cy.getTestId('log-level-select').should('be.visible')
         cy.getTestId('expiration-input').should('be.visible')
+        cy.getTestId('expiration-unit-select').should('be.visible')
         cy.get(actionButton).should('be.visible')
         cy.get(cancelButton).should('be.visible')
         // No error until a request fails
         cy.getTestId('log-level-error').should('not.exist')
       })
 
-      it('disables Save when the expiration is out of the 1-3600 range', () => {
+      const selectExpirationUnit = (unit: 'seconds' | 'mins'): void => {
+        cy.getTestId('expiration-unit-select').click()
+        cy.getTestId('expiration-unit-select-popover').find(`button[value="${unit}"]`).click()
+      }
+
+      it('disables Save when the expiration (in seconds) is out of the 1-3600 range', () => {
         mountModal()
 
+        // Default is 10 mins (600s) - within range.
         cy.get(actionButton).should('be.enabled')
 
         cy.getTestId('expiration-input').clear()
         cy.getTestId('expiration-input').type('0')
         cy.get(actionButton).should('be.disabled')
 
+        // 61 mins is 3660s - above the 3600s ceiling.
+        cy.getTestId('expiration-input').clear()
+        cy.getTestId('expiration-input').type('61')
+        cy.get(actionButton).should('be.disabled')
+
+        // Switching the unit keeps the number (61) but re-validates: 61s is within range.
+        selectExpirationUnit('seconds')
+        cy.getTestId('expiration-input').should('have.value', '61')
+        cy.get(actionButton).should('be.enabled')
+
+        // 4000s is above the 3600s ceiling.
         cy.getTestId('expiration-input').clear()
         cy.getTestId('expiration-input').type('4000')
         cy.get(actionButton).should('be.disabled')
-
-        cy.getTestId('expiration-input').clear()
-        cy.getTestId('expiration-input').type('120')
-        cy.get(actionButton).should('be.enabled')
       })
 
       it('disables Save when there are no nodes', () => {
@@ -122,7 +136,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
         cy.getTestId('change-log-level-modal').find('.modal-container').should('be.visible')
       })
 
-      it('sends the selected log level and expiration', () => {
+      it('sends the selected log level and expiration in seconds', () => {
         interceptSubmission()
         interceptResults()
 
@@ -133,6 +147,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
 
         cy.getTestId('expiration-input').clear()
         cy.getTestId('expiration-input').type('120')
+        selectExpirationUnit('seconds')
 
         cy.get(actionButton).click()
 
@@ -143,6 +158,31 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
             targets: { node_ids: ['node-1', 'node-2'] },
           })
         })
+      })
+
+      it('converts the expiration to seconds when the unit is minutes', () => {
+        interceptSubmission()
+        interceptResults()
+
+        mountModal()
+
+        cy.getTestId('expiration-input').clear()
+        cy.getTestId('expiration-input').type('5')
+        // Unit defaults to mins, so 5 mins -> 300s.
+
+        cy.get(actionButton).click()
+
+        cy.wait('@submit').then(({ request }) => {
+          expect(request.body.ttl).to.equal(300)
+        })
+      })
+
+      it('links "Learn more" to the Kong Gateway logs documentation', () => {
+        mountModal()
+
+        cy.getTestId('log-level-learn-more')
+          .should('be.visible')
+          .and('have.attr', 'href', 'https://developer.konghq.com/gateway/logs/')
       })
 
       it('disables Save while the request is in flight', () => {
@@ -235,6 +275,114 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
         cy.get('@results.all').then((calls) => {
           expect(calls.length, 'no more polls after reopen').to.equal(counts.atReopen!)
         })
+      })
+
+      const statusOrder = (): Cypress.Chainable<Array<string | null>> =>
+        cy.getTestId('log-level-status-table')
+          .find('tbody tr [data-testid^="log-level-status-"]')
+          .then(($els) => Cypress._.map($els, (el) => el.getAttribute('data-testid')))
+
+      const sortNodes = [
+        { id: 'n-applied', hostname: 'dp-applied' },
+        { id: 'n-failed', hostname: 'dp-failed' },
+        { id: 'n-in-progress', hostname: 'dp-in-progress' },
+        { id: 'n-reverted', hostname: 'dp-reverted' },
+        { id: 'n-unsupported', hostname: 'dp-unsupported' },
+        { id: 'n-superseded', hostname: 'dp-superseded' },
+      ]
+
+      const sortResults = [{
+        data: [
+          { node_id: 'n-applied', status: 'applied' },
+          { node_id: 'n-failed', status: 'failed' },
+          { node_id: 'n-in-progress', status: 'in_progress' },
+          { node_id: 'n-reverted', status: 'reverted' },
+          { node_id: 'n-unsupported', status: 'unsupported' },
+          { node_id: 'n-superseded', status: 'superseded' },
+        ],
+      }] as Array<{ data: LogLevelOperationResult[] }>
+
+      it('sorts the status column by the custom rank order, cycling asc -> desc -> unsorted', () => {
+        interceptSubmission()
+        interceptResults(sortResults)
+
+        mountModal({ nodes: sortNodes })
+
+        cy.get(actionButton).click()
+        cy.wait('@results')
+
+        // Natural order (unsorted) matches the `nodes` prop order.
+        statusOrder().should('deep.equal', [
+          'log-level-status-applied',
+          'log-level-status-failed',
+          'log-level-status-in_progress',
+          'log-level-status-reverted',
+          'log-level-status-unsupported',
+          'log-level-status-superseded',
+        ])
+
+        cy.get('[data-testid="table-header-status"]').click()
+        statusOrder().should('deep.equal', [
+          'log-level-status-failed',
+          'log-level-status-unsupported',
+          'log-level-status-reverted',
+          'log-level-status-superseded',
+          'log-level-status-applied',
+          'log-level-status-in_progress',
+        ])
+
+        cy.get('[data-testid="table-header-status"]').click()
+        statusOrder().should('deep.equal', [
+          'log-level-status-in_progress',
+          'log-level-status-applied',
+          'log-level-status-superseded',
+          'log-level-status-reverted',
+          'log-level-status-unsupported',
+          'log-level-status-failed',
+        ])
+
+        // Third click clears the sort - back to natural order.
+        cy.get('[data-testid="table-header-status"]').click()
+        statusOrder().should('deep.equal', [
+          'log-level-status-applied',
+          'log-level-status-failed',
+          'log-level-status-in_progress',
+          'log-level-status-reverted',
+          'log-level-status-unsupported',
+          'log-level-status-superseded',
+        ])
+      })
+
+      it('does not emit any events when sorting the status column', () => {
+        const sortResultsNoErrors = [{
+          data: [
+            { node_id: 'node-1', status: 'applied' },
+            { node_id: 'node-2', status: 'reverted' },
+          ],
+        }] as Array<{ data: LogLevelOperationResult[] }>
+
+        interceptSubmission()
+        interceptResults(sortResultsNoErrors)
+
+        mountModal({
+          onSuccess: cy.spy().as('successSpy'),
+          onClose: cy.spy().as('closeSpy'),
+          onNodeError: cy.spy().as('nodeErrorSpy'),
+        })
+
+        cy.get(actionButton).click()
+        cy.wait('@results')
+
+        // "success" already fired once from Save - capture that baseline before sorting.
+        cy.get('@successSpy').its('callCount').then((countBeforeSort) => {
+          cy.get('[data-testid="table-header-status"]').click() // asc
+          cy.get('[data-testid="table-header-status"]').click() // desc
+          cy.get('[data-testid="table-header-status"]').click() // unsorted
+
+          cy.get('@successSpy').its('callCount').should('equal', countBeforeSort)
+        })
+        cy.get('@closeSpy').should('not.have.been.called')
+        cy.get('@nodeErrorSpy').should('not.have.been.called')
       })
 
       it('renders a status badge per node from the polled results', () => {

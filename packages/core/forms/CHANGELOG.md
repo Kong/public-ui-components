@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.33.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.15...@kong-ui-public/forms@4.33.16) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.33.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.14...@kong-ui-public/forms@4.33.15) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.33.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.13...@kong-ui-public/forms@4.33.14) (2026-08-04)
+
+
+### Bug Fixes
+
+* **entities-plugins:** sanitize legacy VFG hint/help HTML to prevent XSS ([#3643](https://github.com/Kong/public-ui-components/issues/3643)) ([43fc285](https://github.com/Kong/public-ui-components/commit/43fc285af4c6e6c45cd675a3c7fb4e534681c6be))
+
+
+
+
+
+## [4.33.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.12...@kong-ui-public/forms@4.33.13) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.33.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.11...@kong-ui-public/forms@4.33.12) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.33.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.10...@kong-ui-public/forms@4.33.11) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.33.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.9...@kong-ui-public/forms@4.33.10) (2026-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/forms

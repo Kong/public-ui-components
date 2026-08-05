@@ -46,6 +46,7 @@
         :plugin-id="id"
         :plugin-type="plugin"
         use-custom-names-for-plugin
+        @click:create-entity="onCreateEntity"
         @global-action="handleGlobalAction"
         @update="onUpdate"
       />
@@ -75,7 +76,7 @@ import { FEATURE_FLAGS } from '../../src/constants'
 import { ToastManager } from '@kong/kongponents'
 import { provideDeckCommandEditor } from '@kong-ui-public/entities-shared/deck-editor'
 
-import type { KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
+import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
 import type { GlobalAction } from '../../src/components/free-form/shared/types'
 
 const toaster = new ToastManager()
@@ -108,6 +109,7 @@ const featureFlags = ref<Record<string, boolean>>({
   [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
   [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
   [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: true,
+  [FEATURE_FLAGS.KM_3034_FEATURES_316]: true,
 })
 
 const FeatureFlagProvider = defineComponent({
@@ -191,6 +193,7 @@ useProvideExperimentalFreeForms([
   'oauth2-introspection',
   'oauth2',
   'opa',
+  'openid-connect',
   'opentelemetry',
   'openwhisk',
   'post-function',
@@ -267,6 +270,11 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   dataPlaneVersions: ['3.14.0.1', '3.15.0.0'], // For testing the Kong Identity principals DP version alert
   principalsDirectoryName: 'my-directory', // Sandbox: simulate host-resolved directory name
   principalsCreationGuideVisible: false, // Sandbox: false = principals exist; true = show creation guide
+  metering: {
+    // Endpoint the governance FeatureSelectField fetches the OpenMeter features list from
+    featuresEndpoint: '/us/kong-api/v3/openmeter/features',
+    // canListFeatures: false,
+  },
 }))
 
 const kongManagerConfig = computed<KongManagerPluginFormConfig>(() => ({
@@ -283,12 +291,18 @@ const kongManagerConfig = computed<KongManagerPluginFormConfig>(() => ({
   viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer_group', params: { id: consumerGroupId } }),
   viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
   deckCalloutPreferenceKey: enableDeckCallout.value ? 'kong-manager-entities-plugin-form-deck-callout-sandbox' : undefined,
+  // Governance isn't configurable in Kong Manager yet (the form shows a notice), so no metering config is needed.
 }))
 
 const onUpdate = (payload: Record<string, any>) => {
   console.log('update', payload)
 
   router.push({ name: 'list-plugin' })
+}
+
+// Host app owns create-entity flows (e.g. the governance "Create feature" action)
+const onCreateEntity = (payload: EntityCreateEvent) => {
+  console.log('create entity', payload)
 }
 
 const handleGlobalAction = (action: GlobalAction, payload: any) => {

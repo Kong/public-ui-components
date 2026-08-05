@@ -924,6 +924,62 @@ describe('Render Rules', () => {
         return !!config && config.redis === 'keep-me' && config.other === null
       }))
     })
+
+    // Regression test for `ConfigForm.vue`'s default-visible/advanced split:
+    // two sibling ObjectFields register at the SAME path, each omitting the
+    // other's fields so together they still render every field. `omit` here
+    // means "not rendered by THIS instance", not "host-managed / exempt from
+    // all rules" — a field must stay governed by its dependency rule as long
+    // as at least one sibling actually renders it.
+    it('keeps a field subject to its dependency rule when a sibling ObjectField at the same path omits it', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                { strategy: { type: 'string' } },
+                { redis: { type: 'string' } },
+                { other: { type: 'string' } },
+              ],
+            },
+          },
+        ],
+      }
+
+      const renderRules: RenderRules = {
+        dependencies: {
+          'config.redis': ['config.strategy', 'redis'],
+        },
+      }
+
+      const onChangeSpy = cy.spy().as('onChangeSpy')
+
+      cy.mount(Form, {
+        props: {
+          schema,
+          renderRules,
+          data: { config: { strategy: 'local', redis: 'keep-me', other: 'kept' } },
+          onChange: onChangeSpy,
+        },
+        slots: {
+          default: () => [
+            h(ObjectField, { key: 'a', name: 'config', omit: ['redis'] }),
+            h(ObjectField, { key: 'b', name: 'config', omit: ['strategy', 'other'] }),
+          ],
+        },
+      })
+
+      cy.getTestId('ff-config.strategy').type('x')
+
+      cy.get('@onChangeSpy').should('have.been.calledWith', Cypress.sinon.match((value: any) => {
+        const config = value?.config
+        // redis is rendered by the second ObjectField (not omitted there), so
+        // its dependency rule still applies and it gets reset to null.
+        return !!config && config.redis === null && config.other === 'kept'
+      }))
+    })
   })
 
   describe('Reactivity', () => {

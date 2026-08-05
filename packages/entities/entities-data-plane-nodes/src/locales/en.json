@@ -3,10 +3,19 @@
     "title": "Change log level temporarily",
     "description": "Choose how much information Kong Gateway writes to its logs. Changes automatically revert when the TTL expires.",
     "log_level_label": "Log level",
+    "log_level_help": "Selecting a log level captures logs at the selected level and all lower-severity levels.",
+    "learn_more": "Learn more",
     "expiration": {
       "label": "Expiration",
-      "tooltip": "The duration (in seconds) before the log level automatically reverts to its default value.",
-      "help": "Enter a value between 1 second and 1 hour (3,600 seconds)."
+      "tooltip": "The duration before the log level automatically reverts to its default value.",
+      "help": {
+        "seconds": "Enter a value between 1 second and 3600 seconds.",
+        "mins": "Enter a value between 1 minute and 60 minutes."
+      },
+      "unit": {
+        "seconds": "secs",
+        "mins": "mins"
+      }
     },
     "warning": "Higher log levels can significantly increase log volume and disk usage. Use them only while troubleshooting.",
     "save": "Save",
@@ -15,7 +24,7 @@
     "status_title": "Change log level status",
     "node_host": "Node host",
     "status": "Status",
-    "status_note": "Updates typically reach all data plane nodes in about 5 seconds. Keep this modal open to monitor progress while the update is in progress."
+    "status_note": "Updates typically reach all data plane nodes in about 5 seconds. Monitor progress here while the update is in progress."
   },
   "log_level": {
     "debug": "Debug",

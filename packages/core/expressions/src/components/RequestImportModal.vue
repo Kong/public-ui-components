@@ -20,6 +20,7 @@
     </KAlert>
 
     <MonacoEditor
+      :key="activeColorMode"
       ref="editors"
       v-model="json"
       appearance="standalone"
@@ -29,6 +30,7 @@
       :options="options"
       :show-empty-state="false"
       :show-loading-state="false"
+      :theme="activeColorMode"
     />
 
     <KAlert
@@ -40,14 +42,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { transformCheckRequest } from '../utils'
 import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 import type { Request } from '../definitions'
 import type * as Monaco from 'monaco-editor'
 import composables from '../composables'
+import type { ComputedRef } from 'vue'
 
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
+
+const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const { i18n, i18nT } = composables.useI18n()
 
