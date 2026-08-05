@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.254.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.253.0...@kong-ui-public/entities-plugins@9.254.0) (2026-08-05)
+
+
+### Features
+
+* **entities-plugins:** add kong.client.principal properties to DataKit property node ([#3651](https://github.com/Kong/public-ui-components/issues/3651)) ([7525e2f](https://github.com/Kong/public-ui-components/commit/7525e2ff762ed79dbfc9f1d84a6ff6b846337c25))
+
+
+
+
+
 # [9.253.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.252.0...@kong-ui-public/entities-plugins@9.253.0) (2026-08-05)
 
 
