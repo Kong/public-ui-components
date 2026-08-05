@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.254.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.254.2...@kong-ui-public/entities-plugins@9.254.3) (2026-08-05)
+
+
+### Bug Fixes
+
+* **entities-plugins:** map field styles ([#3634](https://github.com/Kong/public-ui-components/issues/3634)) ([3dfc24a](https://github.com/Kong/public-ui-components/commit/3dfc24a6e88e7e58446af3fca9fb648af89dcd3e))
+
+
+
+
+
 ## [9.254.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.254.1...@kong-ui-public/entities-plugins@9.254.2) (2026-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
