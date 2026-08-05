@@ -49,7 +49,9 @@
       <KCollapse
         v-model="advancedCollapsed"
         data-testid="dk-advanced-configuration-collapse"
-        :trigger-label="t('plugins.free-form.datakit.advanced_configuration.show_label')"
+        :trigger-label="advancedCollapsed
+          ? t('plugins.free-form.datakit.advanced_configuration.show_label')
+          : t('plugins.free-form.datakit.advanced_configuration.hide_label')"
       >
         <CaCertificatesField />
       </KCollapse>
