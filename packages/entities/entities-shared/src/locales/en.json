@@ -161,6 +161,9 @@
       "generating": "Generating…"
     }
   },
+  "onboardingCard": {
+    "dismissLabel": "Dismiss"
+  },
   "sensitiveInput": {
     "rotateKey": "Rotate key",
     "generateKey": "Generate key",

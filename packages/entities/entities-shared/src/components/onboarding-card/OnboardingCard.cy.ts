@@ -83,6 +83,18 @@ describe('<OnboardingCard />', () => {
     cy.get('@onClick').should('have.been.calledOnce')
   })
 
+  it('renders an item without `to`, `href`, or `onClick` as a non-interactive element', () => {
+    const staticItems: OnboardingCardItem[] = [
+      { ...items[1] },
+    ]
+
+    cy.mount(OnboardingCard, {
+      props: { title: 'Welcome', items: staticItems },
+    })
+
+    cy.getTestId('onboarding-item-0').should('not.match', 'button').and('not.match', 'a')
+  })
+
   it('renders a `vertical` item with a centered, stacked layout', () => {
     const verticalItems: OnboardingCardItem[] = [
       { icon: AddIcon, title: 'View all', description: 'See everything', variant: 'vertical', onClick: () => {} },
@@ -103,6 +115,14 @@ describe('<OnboardingCard />', () => {
 
     cy.getTestId('onboarding-card-close').click()
     cy.then(() => Cypress.vueWrapper.emitted('dismiss')).should('have.length', 1)
+  })
+
+  it('renders the close button with an accessible label', () => {
+    cy.mount(OnboardingCard, {
+      props: { title: 'Welcome', items: [] },
+    })
+
+    cy.getTestId('onboarding-card-close').should('have.attr', 'aria-label', 'Dismiss')
   })
 
   it('does not render the close button when dismissible is false', () => {

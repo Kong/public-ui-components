@@ -25,6 +25,7 @@
     >
       <KButton
         appearance="none"
+        :aria-label="t('onboardingCard.dismissLabel')"
         data-testid="onboarding-card-close"
         icon
         @click="$emit('dismiss')"
@@ -91,14 +92,21 @@
           <ReuseItemCard :item="item" />
         </a>
         <button
-          v-else
+          v-else-if="item.onClick"
           class="onboarding-item-wrapper"
           :data-testid="`onboarding-item-${index}`"
           type="button"
-          @click="item.onClick?.()"
+          @click="item.onClick()"
         >
           <ReuseItemCard :item="item" />
         </button>
+        <div
+          v-else
+          class="onboarding-item-wrapper is-static"
+          :data-testid="`onboarding-item-${index}`"
+        >
+          <ReuseItemCard :item="item" />
+        </div>
       </template>
     </div>
   </KCard>
@@ -120,7 +128,10 @@ import {
   KUI_ICON_SIZE_50,
 } from '@kong/design-tokens'
 import { createReusableTemplate } from '@vueuse/core'
+import composables from '../../composables'
 import type { OnboardingCardItem, OnboardingCardItemAppearance } from '../../types'
+
+const { i18n: { t } } = composables.useI18n()
 
 const {
   title,
@@ -194,7 +205,11 @@ const ICON_APPEARANCE_COLORS: Record<OnboardingCardItemAppearance, { background:
     text-align: left;
     text-decoration: none;
 
-    &:hover .onboarding-item {
+    &.is-static {
+      cursor: default;
+    }
+
+    &:not(.is-static):hover .onboarding-item {
       border-color: var(--kui-color-border-primary, $kui-color-border-primary);
       box-shadow: var(--kui-shadow, $kui-shadow);
     }
