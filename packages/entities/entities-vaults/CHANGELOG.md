@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.16.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.16.15...@kong-ui-public/entities-vaults@4.16.16) (2026-08-05)
+
+
+### Bug Fixes
+
+* **entities-vaults:** add underline ([#3657](https://github.com/Kong/public-ui-components/issues/3657)) ([9577949](https://github.com/Kong/public-ui-components/commit/9577949057dd36f1dd6f3a58b761b3661ae70096))
+
+
+
+
+
 ## [4.16.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.16.14...@kong-ui-public/entities-vaults@4.16.15) (2026-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
