@@ -4,12 +4,13 @@
     class="redis-config-select-wrap"
   >
     <KSelect
+      :key="useInlineCreate && createOpen ? 'redis-select-creating' : 'redis-select'"
       class="redis-config-select-trigger"
       enable-filtering
       :filter-function="() => true"
       :items="items"
       :loading="loading"
-      :model-value="modelValue"
+      :model-value="useInlineCreate && createOpen ? undefined : modelValue"
       :placeholder="placeholder || t('selector.placeholder')"
       v-bind="$attrs"
       @change="onSelectionChange"
@@ -174,7 +175,20 @@ const createOpen = ref(false)
 const selectEl = ref<HTMLElement | null>(null)
 
 const onSelectionChange = (item: SelectItem<string | number> | null) => {
-  emit('update:modelValue', item === null ? undefined : String(item.value))
+  // Inline create only, remount clears the select
+  if (item === null) {
+    if (useInlineCreate.value && createOpen.value) return
+    emit('update:modelValue', undefined)
+    emit('change', null)
+    return
+  }
+
+  // Inline create only, picking an existing redis dismisses the form
+  if (useInlineCreate.value) {
+    createOpen.value = false
+  }
+
+  emit('update:modelValue', String(item.value))
   emit('change', item as SelectItem | null)
 }
 

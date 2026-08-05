@@ -16,15 +16,16 @@
     <div class="shared-redis-config-title" />
     <!-- TODO: Refactor this select to use the packages/entities/entities-redis-configurations/src/components/RedisConfigurationSelector.vue -->
     <KSelect
+      :key="createOpen ? 'redis-select-creating' : 'redis-select'"
       class="redis-config-select-trigger"
       data-testid="redis-config-select-trigger"
       enable-filtering
       :filter-function="() => true"
       :items="availableRedisConfigs"
       :loading="(loadingRedisConfigs as any)"
-      :model-value="defaultRedisConfigItem"
+      :model-value="createOpen ? undefined : defaultRedisConfigItem"
       :placeholder="redisSelectPlaceholderText"
-      @change="(item) => redisConfigSelected(item?.value)"
+      @change="onSelectChange"
       @query-change="debouncedRedisConfigsQuery"
     >
       <template #selected-item-template="{ item }">
@@ -211,6 +212,14 @@ const onCreateNew = () => {
   }
   // KM/legacy Konnect
   emit('showNewPartialModal')
+}
+
+// Close inline create when a redis is picked (createOpen is only set for inline path)
+const onSelectChange = (item: SelectItem | null) => {
+  if (!item?.value) return
+
+  createOpen.value = false
+  redisConfigSelected(item.value)
 }
 
 const onInlineCreated = (data: { id: string }) => {
