@@ -1156,9 +1156,9 @@
         },
         "ca_certificates": {
           "label": "CA Certificates",
+          "tooltip": "Array of CA Certificate object UUIDs used to build the trust store for verifying the TLS certificate of servers contacted by call nodes. Applies only when a node's ssl_verify is enabled (the default). When set, the referenced CA certificates replace (they do not augment) the global lua_ssl_trusted_certificate trust set for those requests; when unset or empty, the global trust set is used.",
           "placeholder": "Select CA certificates",
-          "empty": "No certificates found",
-          "footer": "Type to search for more certificates"
+          "empty": "No certificates found"
         },
         "description_code": "Configure this plugin by using YAML configuration. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
         "description_flow": "Build flows visually with a drag-and-drop editor for Datakit. Visualize node connections, inputs, and outputs as you design.",

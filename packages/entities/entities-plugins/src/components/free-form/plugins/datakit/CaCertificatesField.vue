@@ -4,17 +4,35 @@
     autosuggest
     clearable
     data-testid="dk-ca-certificates-field"
-    :dropdown-footer-text="additionalRecordsExist ? t('plugins.free-form.datakit.ca_certificates.footer') : undefined"
     :items="certItems"
     :label="t('plugins.free-form.datakit.ca_certificates.label')"
+    :label-attributes="({
+      info: t('plugins.free-form.datakit.ca_certificates.tooltip'),
+      tooltipAttributes: { maxWidth: '400' },
+    } as any)"
     :loading="loadingCertificates"
     :placeholder="t('plugins.free-form.datakit.ca_certificates.placeholder')"
     @query-change="debouncedQueryChange"
   >
     <template #item-template="{ item }">
       <div class="dk-ca-cert-item">
-        <div class="dk-ca-cert-item-id">
-          {{ item.label }}
+        <div class="dk-ca-cert-item-header">
+          <div class="dk-ca-cert-item-id">
+            {{ item.label }}
+          </div>
+          <div
+            v-if="(item as CertificateItem).tags?.length"
+            class="dk-ca-cert-item-tags"
+          >
+            <KBadge
+              v-for="tag in (item as CertificateItem).tags"
+              :key="tag"
+              appearance="neutral"
+              size="small"
+            >
+              {{ tag }}
+            </KBadge>
+          </div>
         </div>
         <div
           v-if="(item as CertificateItem).subject"
@@ -33,7 +51,7 @@
 <script setup lang="ts">
 import { computed, inject, onBeforeMount, ref, watch } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
-import { KMultiselect } from '@kong/kongponents'
+import { KBadge, KMultiselect } from '@kong/kongponents'
 import type { MultiselectItem } from '@kong/kongponents'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useDebouncedFilter } from '@kong-ui-public/entities-shared'
@@ -46,6 +64,7 @@ import type { DatakitPluginData } from './types'
 
 interface CertificateItem extends MultiselectItem {
   subject?: string
+  tags?: string[]
 }
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -57,17 +76,13 @@ const { formData, setValue } = useFormShared<DatakitPluginData>()
 const {
   debouncedQueryChange: debouncedFilterQueryChange,
   loading: loadingCertificates,
-  allRecords: allCertificates,
   results,
   loadItems,
-} = useDebouncedFilter(formConfig, endpoints.certificates[formConfig.app])
+} = useDebouncedFilter(formConfig, endpoints.caCertificates[formConfig.app])
 
 function debouncedQueryChange(query: string) {
   debouncedFilterQueryChange(query)
 }
-
-// this will only be defined if we were able to initially fetch ALL available records
-const additionalRecordsExist = computed((): boolean => allCertificates.value === undefined)
 
 const selectedIds = computed<string[]>({
   get: () => formData.config?.ca_certificates ?? [],
@@ -110,6 +125,7 @@ const certItems = computed<CertificateItem[]>(() => {
     label: cert.id,
     value: cert.id,
     subject: certSubjects.value[cert.id],
+    tags: cert.tags,
     selected: selectedIds.value.includes(cert.id),
   }))
 })
@@ -121,9 +137,23 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 .dk-ca-cert-item {
+  .dk-ca-cert-item-header {
+    align-items: center;
+    display: flex;
+    gap: var(--kui-space-20, $kui-space-20);
+    justify-content: space-between;
+  }
+
   .dk-ca-cert-item-subject {
     color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     font-size: var(--kui-font-size-20, $kui-font-size-20);
+  }
+
+  .dk-ca-cert-item-tags {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: var(--kui-space-40, $kui-space-40);
   }
 }
 </style>
