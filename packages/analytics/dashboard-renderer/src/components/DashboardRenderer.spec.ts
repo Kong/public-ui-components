@@ -45,7 +45,7 @@ vi.mock('./DashboardTile.vue', () => ({
         required: true,
       },
     },
-    emits: ['duplicate-tile'],
+    emits: ['duplicate-tile', 'tile-loaded'],
     setup(props, { emit }) {
       return () => h('button', {
         'data-testid': `duplicate-dashboard-tile-${props.tileId}`,
@@ -155,6 +155,174 @@ describe('Dashboard schemas', () => {
 
     // Note: Error messages aren't great right now because FromSchema doesn't understand
     // the `discriminator` field, and AJV has limited support for it.
+  })
+
+  it('accepts a config mixing a chart tile and a slottable tile', () => {
+    const definition: any = {
+      tiles: [
+        {
+          type: 'chart',
+          definition: {
+            chart: {
+              type: 'horizontal_bar',
+            },
+            query: {
+              datasource: 'basic',
+            },
+          },
+          layout: {
+            position: {
+              col: 0,
+              row: 0,
+            },
+            size: {
+              cols: 1,
+              rows: 1,
+            },
+          },
+        },
+        {
+          id: 'my-slot',
+          type: 'slottable',
+          layout: {
+            position: {
+              col: 1,
+              row: 0,
+            },
+            size: {
+              cols: 1,
+              rows: 1,
+            },
+          },
+        },
+      ],
+    }
+
+    expect(validate(definition)).toBe(true)
+  })
+})
+
+describe('Slottable tiles', () => {
+  const mountDashboardRenderer = (model: DashboardConfig, slots: Record<string, string>) => {
+    return mount(DashboardRenderer, {
+      props: {
+        context: {},
+        modelValue: model,
+      },
+      slots,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: {
+            configFn: vi.fn().mockResolvedValue({ analytics: { percentiles: true } }),
+            datasourceConfigFn: vi.fn().mockResolvedValue([]),
+            evaluateFeatureFlagFn: vi.fn(),
+            queryFn: vi.fn(),
+          },
+        },
+        stubs: {
+          KAlert: true,
+        },
+      },
+    })
+  }
+
+  it('mounts slottable tiles to the named slot with tile.id', () => {
+    setupPiniaTestStore()
+
+    const model: DashboardConfig = {
+      tiles: [
+        {
+          id: 'my-slot',
+          type: 'slottable',
+          layout: {
+            position: { col: 0, row: 0 },
+            size: { cols: 1, rows: 1 },
+          },
+        },
+      ],
+    }
+
+    const wrapper = mountDashboardRenderer(model, {
+      'my-slot': '<span data-testid="slot-content">hi</span>',
+    })
+
+    expect(wrapper.find('[data-testid="slot-content"]').exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'DashboardTile' }).exists()).toBe(false)
+  })
+
+  it('mounts legacy slottable tiles with definition.chart.id', () => {
+    setupPiniaTestStore()
+
+    const model: DashboardConfig = {
+      tiles: [
+        {
+          id: 'outer-id',
+          type: 'chart',
+          definition: {
+            chart: {
+              type: 'slottable',
+              id: 'legacy-slot',
+            },
+            query: {
+              datasource: 'basic',
+            },
+          },
+          layout: {
+            position: { col: 0, row: 0 },
+            size: { cols: 1, rows: 1 },
+          },
+        },
+      ],
+    }
+
+    const wrapper = mountDashboardRenderer(model, {
+      'legacy-slot': '<span data-testid="slot-content">hi</span>',
+    })
+
+    expect(wrapper.find('[data-testid="slot-content"]').exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'DashboardTile' }).exists()).toBe(false)
+  })
+
+  it('excludes both slottable shapes from the loaded emit count', async () => {
+    setupPiniaTestStore()
+
+    const model: DashboardConfig = {
+      tiles: [
+        {
+          id: 'chart-1',
+          type: 'chart',
+          definition: {
+            chart: {
+              type: 'horizontal_bar',
+            },
+            query: {
+              datasource: 'basic',
+            },
+          },
+          layout: {
+            position: { col: 0, row: 0 },
+            size: { cols: 1, rows: 1 },
+          },
+        },
+        {
+          id: 'my-slot',
+          type: 'slottable',
+          layout: {
+            position: { col: 1, row: 0 },
+            size: { cols: 1, rows: 1 },
+          },
+        },
+      ],
+    }
+
+    const wrapper = mountDashboardRenderer(model, {})
+
+    const dashboardTiles = wrapper.findAllComponents({ name: 'DashboardTile' })
+    expect(dashboardTiles).toHaveLength(1)
+
+    await dashboardTiles[0].vm.$emit('tile-loaded')
+
+    expect(wrapper.emitted('tiles-loaded')).toEqual([[true]])
   })
 })
 
