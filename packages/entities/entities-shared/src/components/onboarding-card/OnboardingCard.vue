@@ -30,7 +30,10 @@
         icon
         @click="$emit('dismiss')"
       >
-        <CloseIcon decorative />
+        <CloseIcon
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+          decorative
+        />
       </KButton>
     </template>
 
@@ -124,6 +127,7 @@ import {
   KUI_COLOR_TEXT_DECORATIVE_AQUA,
   KUI_COLOR_TEXT_DECORATIVE_PURPLE,
   KUI_COLOR_TEXT_NEUTRAL_STRONGER,
+  KUI_COLOR_TEXT_NEUTRAL,
   KUI_COLOR_TEXT_SUCCESS,
   KUI_ICON_SIZE_50,
 } from '@kong/design-tokens'
