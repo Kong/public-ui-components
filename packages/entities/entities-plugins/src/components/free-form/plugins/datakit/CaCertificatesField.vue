@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onBeforeMount, ref, watch } from 'vue'
+import { computed, inject, onBeforeMount } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KBadge, KMultiselect } from '@kong/kongponents'
 import type { MultiselectItem } from '@kong/kongponents'
@@ -97,34 +97,11 @@ const selectedIds = computed<string[]>({
   },
 })
 
-// Certificate `subject` isn't returned by the API — parse it client-side from the PEM `cert` field.
-const certSubjects = ref<Record<string, string>>({})
-
-async function parseSubjects(certs: Array<Record<string, any>>) {
-  const unparsed = certs.filter((cert) => cert.cert && !(cert.id in certSubjects.value))
-  if (!unparsed.length) return
-
-  await import('reflect-metadata')
-  const { X509Certificate } = await import('@peculiar/x509')
-
-  for (const cert of unparsed) {
-    try {
-      certSubjects.value[cert.id] = new X509Certificate(cert.cert).subject
-    } catch {
-      certSubjects.value[cert.id] = ''
-    }
-  }
-}
-
-watch(results, (certs) => {
-  parseSubjects(certs)
-}, { immediate: true })
-
 const certItems = computed<CertificateItem[]>(() => {
   return results.value.map((cert): CertificateItem => ({
     label: cert.id,
     value: cert.id,
-    subject: certSubjects.value[cert.id],
+    subject: cert.metadata?.subject,
     tags: cert.tags,
     selected: selectedIds.value.includes(cert.id),
   }))
