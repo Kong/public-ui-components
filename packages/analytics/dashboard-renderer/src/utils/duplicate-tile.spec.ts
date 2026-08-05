@@ -127,3 +127,24 @@ it('duplicates slottable chart tiles without prefixing a title', () => {
     },
   })
 })
+
+it('duplicates slottable tiles with a new id and reset position', () => {
+  vi.spyOn(crypto, 'randomUUID').mockReturnValue('new-slot-id')
+  const tile: GridTile<TileDefinition> = {
+    id: 'slot-1',
+    type: 'slottable',
+    layout: {
+      position: { col: 3, row: 4 },
+      size: { cols: 2, rows: 1 },
+    },
+  }
+
+  expect(duplicateChartTile(tile)).toEqual({
+    id: 'new-slot-id',
+    type: 'slottable',
+    layout: {
+      position: { col: 0, row: 0 },
+      size: { cols: 2, rows: 1 },
+    },
+  })
+})
