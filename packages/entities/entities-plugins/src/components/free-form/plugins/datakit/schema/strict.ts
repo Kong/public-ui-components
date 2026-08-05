@@ -637,6 +637,7 @@ export const DatakitConfigSchema = z
       .max(64),
     debug: z.boolean().default(false).nullish(),
     resources: ResourcesSchema.nullish(),
+    ca_certificates: z.array(z.string()).nullish(),
   })
   .strict()
   .superRefine((config, ctx) => {

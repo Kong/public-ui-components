@@ -4,6 +4,10 @@ const konnectNoWorkspaceBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-e
 const KMBaseApiUrl = '/{workspace}'
 
 export default {
+  certificates: {
+    konnect: `${konnectBaseApiUrl}/certificates`,
+    kongManager: `${KMBaseApiUrl}/certificates`,
+  },
   list: {
     konnect: {
       all: `${konnectBaseApiUrl}/plugins`,

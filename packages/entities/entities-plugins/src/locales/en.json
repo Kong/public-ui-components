@@ -1150,6 +1150,16 @@
         "plugin_config": {
           "title": "Flow editor"
         },
+        "advanced_configuration": {
+          "title": "Advanced configuration",
+          "show_label": "Show advanced configuration"
+        },
+        "ca_certificates": {
+          "label": "CA Certificates",
+          "placeholder": "Select CA certificates",
+          "empty": "No certificates found",
+          "footer": "Type to search for more certificates"
+        },
         "description_code": "Configure this plugin by using YAML configuration. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
         "description_flow": "Build flows visually with a drag-and-drop editor for Datakit. Visualize node connections, inputs, and outputs as you design.",
         "description_example": "Start with a use case:",
