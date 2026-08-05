@@ -14,7 +14,7 @@ export interface GridTile<T> {
   id: string | number
   type: TileConfig['type']
   layout: TileLayout
-  meta: T
+  meta?: T
 }
 
 export interface Cell<T> {

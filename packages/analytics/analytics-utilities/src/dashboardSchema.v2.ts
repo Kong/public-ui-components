@@ -73,6 +73,8 @@ const chartDatasetColorsSchema = {
 
 export const slottableSchema = {
   type: 'object',
+  deprecated: true,
+  description: 'Deprecated: use the top-level tile shape { type: \'slottable\', id, layout } instead of a chart-level \'slottable\' definition.',
   properties: {
     type: {
       type: 'string',
@@ -84,8 +86,12 @@ export const slottableSchema = {
   },
   required: ['type', 'id'],
   additionalProperties: false,
-} as const satisfies JSONSchema
+} as const
 
+/**
+ * @deprecated Use the top-level `{ type: 'slottable', id, layout }` tile config shape instead
+ * (see `SlottableTileConfig`).
+ */
 export type SlottableOptions = FromSchemaWithOptions<typeof slottableSchema>
 
 export const barChartSchema = {
@@ -825,7 +831,34 @@ export const chartTileConfigSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
-export const tileConfigSchema = chartTileConfigSchema
+export type ChartTileConfig = FromSchemaWithOptions<typeof chartTileConfigSchema>
+
+export const slottableTileConfigSchema = {
+  type: 'object',
+  description: 'A tile that renders arbitrary content into a named slot instead of a chart. The slot name is the tile `id`.',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['slottable'],
+    },
+    id: {
+      type: 'string',
+      description: 'Unique identifier for the tile, and the name of the slot the host application should supply.',
+    },
+    layout: tileLayoutSchema,
+  },
+  required: ['type', 'id', 'layout'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type SlottableTileConfig = FromSchemaWithOptions<typeof slottableTileConfigSchema>
+
+export const tileConfigSchema = {
+  anyOf: [
+    chartTileConfigSchema,
+    slottableTileConfigSchema,
+  ],
+} as const satisfies JSONSchema
 
 export type TileConfig = FromSchemaWithOptions<typeof tileConfigSchema>
 
