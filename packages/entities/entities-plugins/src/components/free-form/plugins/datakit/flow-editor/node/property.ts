@@ -56,6 +56,16 @@ export const KONG_CLIENT_SUPPORTED_PROPERTIES: Record<string, {
     writable: false,
     readable: true,
   },
+  'kong.client.principal': {
+    dataType: 'object',
+    writable: false,
+    readable: true,
+  },
+  'kong.client.principal.{key}': {
+    dataType: 'any',
+    writable: false,
+    readable: true,
+  },
   'kong.request.forwarded_host': {
     dataType: 'string',
     writable: false,

@@ -59,7 +59,8 @@
 import type { SelectItem } from '@kong/kongponents'
 import useI18n from '../../../../../../composables/useI18n'
 import { useFormShared } from '../../../../shared/composables'
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
+import { FEATURE_FLAGS } from '../../../../../../constants'
 import {
   extractKeyFromProperty,
   getPropertyWithoutKey,
@@ -71,6 +72,14 @@ import {
 import type { FieldValidationMethods, ValidatorFn } from '../composables/validation'
 
 const { i18n: { t } } = useI18n()
+
+const enableClientPrincipalProperty = inject<boolean>(
+  FEATURE_FLAGS.KM_3034_FEATURES_316,
+  false,
+)
+
+// `kong.client.principal` and its keyed variant are gated behind KM-3034-features-316.
+const CLIENT_PRINCIPAL_PROPERTIES = ['kong.client.principal', 'kong.client.principal.{key}']
 
 const props = defineProps<{
   validators: {
@@ -96,20 +105,22 @@ const key = ref<string | undefined>(extractKeyFromProperty(formData.property))
 const selectKey = computed(() => formData.property ?? '')
 
 const selectItems = computed<Array<SelectItem<string>>>(() => {
-  return Object.entries(KONG_CLIENT_SUPPORTED_PROPERTIES).map(([prop]) => {
-    const selected = identifyPropertyHasKey(prop)
-      ? formData.property?.startsWith(prop.replace(PROPERTY_KEY_PATTERN, ''))
-      : formData.property === prop
-    const label = selected
-      ? (key.value ? prop.replace(PROPERTY_KEY_PATTERN, key.value) : prop)
-      : prop
+  return Object.entries(KONG_CLIENT_SUPPORTED_PROPERTIES)
+    .filter(([prop]) => enableClientPrincipalProperty || !CLIENT_PRINCIPAL_PROPERTIES.includes(prop))
+    .map(([prop]) => {
+      const selected = identifyPropertyHasKey(prop)
+        ? formData.property?.startsWith(prop.replace(PROPERTY_KEY_PATTERN, ''))
+        : formData.property === prop
+      const label = selected
+        ? (key.value ? prop.replace(PROPERTY_KEY_PATTERN, key.value) : prop)
+        : prop
 
-    return ({
-      label,
-      value: prop,
-      selected,
+      return ({
+        label,
+        value: prop,
+        selected,
+      })
     })
-  })
 })
 
 function handleKeyChange(value: string | undefined) {
