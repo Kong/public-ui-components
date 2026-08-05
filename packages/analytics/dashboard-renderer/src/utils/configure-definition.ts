@@ -13,6 +13,10 @@ import { isTableChartDefinition } from './tile-definition'
  * @returns The updated tile configuration object.
  */
 const processTileForBasicTier = (tile: TileConfig): TileConfig | undefined => {
+  if (tile.type !== 'chart') {
+    return tile
+  }
+
   const query = tile.definition?.query
 
   if (!query) {
@@ -35,6 +39,10 @@ const processTileForBasicTier = (tile: TileConfig): TileConfig | undefined => {
  * @returns The updated tile configuration object.
  */
 const processTileForAdvancedTier = (tile: TileConfig): TileConfig => {
+  if (tile.type !== 'chart') {
+    return tile
+  }
+
   if (isTableChartDefinition(tile.definition)) {
     // Table chart queries use the platform tabular API, so leave their datasource unchanged.
     return tile

@@ -230,6 +230,34 @@ const dashboardConfig = ref <DashboardConfig>({
         },
       },
     } satisfies TileConfig,
+    {
+      id: 'slot-1',
+      type: 'slottable',
+      layout: {
+        position: {
+          col: 0,
+          row: 4,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      id: 'slot-2',
+      type: 'slottable',
+      layout: {
+        position: {
+          col: 3,
+          row: 4,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+        },
+      },
+    } satisfies TileConfig,
   ],
 })
 
