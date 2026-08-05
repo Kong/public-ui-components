@@ -358,16 +358,16 @@ const filteredPlugins = computed((): PluginCardListExtended => {
   }
 
   // A plugin can appear under multiple keys (e.g. featured + its own group), so
-  // collect name matches into one id-keyed map to flatten and de-duplicate.
-  // Matching is name-only; plugin ids are not searched. Duplicates share the
-  // same name (hence the same score), so first-seen wins.
+  // collect matches into one id-keyed map to flatten and de-duplicate. Matching
+  // is on the name (with highlights); id is a strict prefix-only fallback.
+  // Duplicates share the same name/id (hence the same score), so first-seen wins.
   const matches = new Map<string, { plugin: PluginType, score: number }>()
   for (const group of Object.values(filtered)) {
     for (const plugin of group ?? []) {
       if (matches.has(plugin.id)) {
         continue
       }
-      const match = matchPluginName(query, plugin.name)
+      const match = matchPluginName(query, plugin.name, plugin.id)
       if (match.matched) {
         // shallow clone so we can attach highlight data without mutating the source
         matches.set(plugin.id, {

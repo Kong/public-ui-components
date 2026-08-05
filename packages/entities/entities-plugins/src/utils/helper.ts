@@ -113,6 +113,7 @@ const MATCH_TIER_PREFIX = 0 // name starts with the query
 const MATCH_TIER_ACRONYM = 1000 // query matches the leading letters of words in order
 const MATCH_TIER_SUBSTRING = 2000 // query appears as a consecutive substring
 const MATCH_TIER_SUBSEQUENCE = 3000 // query letters appear in order but scattered
+const MATCH_TIER_ID_PREFIX = 4000 // the plugin id starts with the query (name did not match)
 
 const isWordChar = (char: string): boolean => /[a-z0-9]/i.test(char)
 
@@ -158,8 +159,13 @@ function subsequenceIndices(query: string, chars: string[]): number[] | null {
  *    "Access Control Enforcement")
  *  - substring: the query appears as a consecutive run
  *  - subsequence: the query letters appear in order but scattered
+ *
+ * When a `id` is supplied and the name does not match, a stricter fallback is
+ * tried: the plugin id must *start with* the query (e.g. "ai-prompt-decorator").
+ * Id matches are returned with no highlight indices (the UI highlights the name
+ * only) and rank below every name match.
  */
-export function matchPluginName(rawQuery: string, name: string): PluginNameMatch {
+export function matchPluginName(rawQuery: string, name: string, id?: string): PluginNameMatch {
   const query = rawQuery.toLowerCase()
   if (!query) {
     return { matched: true, indices: [], score: 0 }
@@ -192,6 +198,11 @@ export function matchPluginName(rawQuery: string, name: string): PluginNameMatch
   const subseq = subsequenceIndices(query, lcName.split(''))
   if (subseq) {
     return { matched: true, indices: subseq, score: MATCH_TIER_SUBSEQUENCE + subseq[0] }
+  }
+
+  // Tier 4 — id prefix (strict fallback, no highlight)
+  if (id && id.toLowerCase().startsWith(query)) {
+    return { matched: true, indices: [], score: MATCH_TIER_ID_PREFIX }
   }
 
   return { matched: false, indices: [], score: Infinity }
