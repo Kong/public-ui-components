@@ -17,6 +17,17 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
       cssFileName: 'style',
     },
+    rollupOptions: {
+      // Externalize @peculiar/x509 (only used to parse the CA certificate issuer
+      // for Kong Manager, imported on demand) so its ~500KB does not inflate this
+      // package's bundle. It is a regular dependency, resolved by the consumer.
+      external: ['@peculiar/x509'],
+      output: {
+        globals: {
+          '@peculiar/x509': 'x509',
+        },
+      },
+    },
   },
   server: {
     proxy: {
