@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/expressions",
-  "version": "1.7.4",
+  "version": "1.7.6",
   "type": "module",
   "module": "./dist/expressions.es.js",
   "types": "dist/types/index.d.ts",
@@ -38,8 +38,8 @@
   },
   "devDependencies": {
     "@kong/atc-router": "1.6.0-rc.1",
-    "@kong/design-tokens": "3.1.7",
-    "@kong/kongponents": "9.63.0",
+    "@kong/design-tokens": "3.2.2",
+    "@kong/kongponents": "9.64.2",
     "monaco-editor": "^0.55.1",
     "vite-plugin-top-level-await": "^1.6.0",
     "vite-plugin-wasm": "^3.6.0",

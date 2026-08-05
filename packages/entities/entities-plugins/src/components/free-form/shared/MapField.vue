@@ -49,44 +49,46 @@
       }"
       :data-testid="`ff-map-container-${field.path.value}.${index}`"
     >
-      <div class="ff-map-field-fields">
-        <EnhancedInput
-          class="ff-map-field-fields-key"
-          :data-key-input="index"
-          :data-testid="`ff-map-key-${field.path.value}.${index}`"
-          :model-value="name"
-          :placeholder="keyPlaceholder || 'Key'"
-          @keydown.enter.prevent="focus(index)"
-          @update:model-value="(value: string) => updateKey(keyId, value)"
-        />
-
-        <slot :key-id="keyId">
-          <StringField
-            v-if="isStringValue"
-            inline-vault-picker
-            :multiline="appearance?.string?.multiline"
-            :name="keyId"
-            @keydown.enter="handleValueKeydown($event, index)"
+      <div class="ff-map-field-item-content">
+        <div class="ff-map-field-fields">
+          <EnhancedInput
+            class="ff-map-field-fields-key"
+            :data-key-input="index"
+            :data-testid="`ff-map-key-${field.path.value}.${index}`"
+            :model-value="name"
+            :placeholder="keyPlaceholder || 'Key'"
+            @keydown.enter.prevent="focus(index)"
+            @update:model-value="(value: string) => updateKey(keyId, value)"
           />
 
-          <Field
-            v-else
-            :name="keyId"
-          />
-        </slot>
+          <slot :key-id="keyId">
+            <StringField
+              v-if="isStringValue"
+              inline-vault-picker
+              :multiline="appearance?.string?.multiline"
+              :name="keyId"
+              @keydown.enter="handleValueKeydown($event, index)"
+            />
+
+            <Field
+              v-else
+              :name="keyId"
+            />
+          </slot>
+        </div>
+
+        <KTooltip :text="i18n.t('actions.remove_entity', { entity: fieldDisplayName })">
+          <KButton
+            appearance="tertiary"
+            :aria-label="i18n.t('actions.remove_entity', { entity: fieldDisplayName })"
+            :data-testid="`ff-map-remove-btn-${field.path.value}.${index}`"
+            icon
+            @click="removeKey(keyId)"
+          >
+            <CloseIcon />
+          </KButton>
+        </KTooltip>
       </div>
-
-      <KTooltip :text="i18n.t('actions.remove_entity', { entity: fieldDisplayName })">
-        <KButton
-          appearance="tertiary"
-          :aria-label="i18n.t('actions.remove_entity', { entity: fieldDisplayName })"
-          :data-testid="`ff-map-remove-btn-${field.path.value}.${index}`"
-          icon
-          @click="removeKey(keyId)"
-        >
-          <CloseIcon />
-        </KButton>
-      </KTooltip>
     </component>
 
     <KButton
@@ -220,6 +222,11 @@ function onLegacyValueChange(newValue: Record<string, unknown> | null) {
     height: 32px;
   }
 
+  &-item-content {
+    display: flex;
+    width: 100%;
+  }
+
   &-item-simple {
     align-items: center;
     display: flex;
@@ -235,8 +242,9 @@ function onLegacyValueChange(newValue: Record<string, unknown> | null) {
 
   &-item-complex {
 
-    :deep(> .card-content) {
+    .ff-map-field-item-content {
       align-items: flex-start;
+      display: flex;
       flex-direction: row;
       gap: var(--kui-space-40, $kui-space-40);
 
