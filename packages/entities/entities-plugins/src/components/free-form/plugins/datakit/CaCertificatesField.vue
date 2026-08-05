@@ -27,7 +27,6 @@
             <KBadge
               v-for="tag in (item as CertificateItem).tags"
               :key="tag"
-              appearance="neutral"
               size="small"
             >
               {{ tag }}
