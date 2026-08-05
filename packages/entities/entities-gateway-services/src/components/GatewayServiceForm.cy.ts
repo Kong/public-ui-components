@@ -42,7 +42,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         },
         {
           statusCode: 200,
-          body: { data: [{ id: 'ca-cert-1', tags: ['my-ca-cert'] }] },
+          body: { data: [{ id: 'ca-cert-1', tags: ['my-ca-cert'], metadata: { issuer: 'CN=Kong Testing Root CA' } }] },
         },
       ).as('getCaCertificates')
     })
@@ -527,6 +527,49 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         expect(lastCall).to.not.have.property('tls_verify_enabled')
         expect(lastCall).to.not.have.property('tls_verify_value')
         expect(lastCall).to.have.property('tls_verify')
+      })
+    })
+
+    it('should emit selected client & CA certificates in the model-updated payload', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          onModelUpdated: cy.spy().as('onModelUpdatedSpy'),
+        },
+      })
+
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+      // The default (url) mode shows the TLS/CA certificate fields
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
+      cy.wait('@getCertificates')
+      cy.wait('@getCaCertificates')
+
+      // Select a client certificate
+      cy.getTestId('gateway-service-clientCert-select').click()
+      cy.getTestId('select-item-cert-1').click()
+
+      // Select a CA certificate — its issuer is shown as the item description
+      cy.getTestId('gateway-service-ca-certs-select').findTestId('multiselect-trigger').click()
+      cy.get('.multiselect-popover [data-testid="multiselect-item-ca-cert-1"]')
+        .find('.certificate-select-item-issuer')
+        .should('contain.text', 'CN=Kong Testing Root CA')
+      cy.get('.multiselect-popover [data-testid="multiselect-item-ca-cert-1"] .select-item-label').click()
+
+      cy.get('@onModelUpdatedSpy').should('have.been.called')
+      cy.get('@onModelUpdatedSpy').then((spy: any) => {
+        const lastCall = spy.lastCall.args[0]
+        expect(lastCall.client_certificate).to.deep.equal({ id: 'cert-1' })
+        expect(lastCall.ca_certificates).to.deep.equal(['ca-cert-1'])
+      })
+
+      // Clearing both should emit null for each
+      cy.getTestId('gateway-service-clientCert-select').findTestId('select-clear-icon').click()
+      cy.getTestId('gateway-service-ca-certs-select').findTestId('multiselect-clear-icon').click()
+
+      cy.get('@onModelUpdatedSpy').then((spy: any) => {
+        const lastCall = spy.lastCall.args[0]
+        expect(lastCall.client_certificate).to.equal(null)
+        expect(lastCall.ca_certificates).to.equal(null)
       })
     })
   })

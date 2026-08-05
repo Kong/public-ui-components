@@ -348,34 +348,41 @@
                   v-model="form.fields.ca_certificates"
                   autosuggest
                   data-testid="gateway-service-ca-certs-select"
-                  :disabled="form.isReadonly"
                   :error="!!form.formFieldErrors.ca_certificates"
                   :items="displayedCaCertificates"
                   :label="t('gateway_services.form.fields.ca_certificates.label')"
                   :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
                   :loading="caCertificateLoading"
                   :placeholder="t('gateway_services.form.fields.ca_certificates.placeholder')"
+                  :readonly="form.isReadonly"
                   width="100%"
-                  @change="handleValidateAdvancedFields('ca_certificates')"
                   @query-change="debouncedCaCertificateCall"
+                  @update:model-value="handleValidateAdvancedFields('ca_certificates')"
                 >
                   <template #item-template="{ item }">
-                    <div class="certificate-select-item">
-                      <span class="certificate-select-item-id">{{ item.value }}</span>
-                      <div
-                        v-if="getCaCertificateTags(item.value).length"
-                        class="certificate-select-item-tags"
-                      >
-                        <KBadge
-                          v-for="tag in getCaCertificateTags(item.value)"
-                          :key="tag"
-                          appearance="info"
-                          max-width="150"
-                          truncation-tooltip
+                    <div class="certificate-select-item certificate-select-item--stacked">
+                      <div class="certificate-select-item-header">
+                        <span class="certificate-select-item-id">{{ item.value }}</span>
+                        <div
+                          v-if="getCaCertificateTags(item.value).length"
+                          class="certificate-select-item-tags"
                         >
-                          {{ tag }}
-                        </KBadge>
+                          <KBadge
+                            v-for="tag in getCaCertificateTags(item.value)"
+                            :key="tag"
+                            appearance="info"
+                            max-width="150"
+                            truncation-tooltip
+                          >
+                            {{ tag }}
+                          </KBadge>
+                        </div>
                       </div>
+                      <span
+                        v-if="getCaCertificateIssuer(item.value)"
+                        class="certificate-select-item-issuer"
+                        :title="getCaCertificateIssuer(item.value)"
+                      >{{ getCaCertificateIssuer(item.value) }}</span>
                     </div>
                   </template>
                   <template #label-tooltip>
@@ -521,6 +528,7 @@ import type { PropType } from 'vue'
 import { computed, ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosResponse } from 'axios'
+import type * as X509 from '@peculiar/x509'
 import type {
   KonnectGatewayServiceFormConfig,
   KongManagerGatewayServiceFormConfig,
@@ -643,6 +651,56 @@ const {
 // Return the tags for a fetched CA certificate by its ID (empty if not loaded)
 const getCaCertificateTags = (id: string | number): string[] =>
   caCertificateResults.value?.find((cert) => cert.id === id)?.tags ?? []
+
+// CA certificate issuers, resolved lazily and cached by id, shown as the item
+// description. Konnect returns `metadata.issuer` directly; Kong Manager only
+// returns the certificate PEM, so we parse it with x509 — imported on demand so
+// the (~100KB) library is code-split into a lazy chunk and never loaded for
+// Konnect at all.
+const caCertificateIssuers = ref<Record<string, string>>({})
+
+let x509ModulePromise: Promise<typeof X509> | null = null
+const loadX509 = () => {
+  if (!x509ModulePromise) {
+    x509ModulePromise = (async () => {
+      await import('reflect-metadata')
+      return import('@peculiar/x509')
+    })()
+  }
+  return x509ModulePromise
+}
+
+const resolveCaCertificateIssuer = async (cert: Record<string, any>): Promise<void> => {
+  const id = String(cert.id)
+  if (id in caCertificateIssuers.value) {
+    return
+  }
+  // Konnect provides the issuer directly via metadata — no parsing needed
+  if (cert.metadata?.issuer) {
+    caCertificateIssuers.value[id] = cert.metadata.issuer
+    return
+  }
+  // Kong Manager: parse the certificate PEM on demand
+  if (!cert.cert) {
+    caCertificateIssuers.value[id] = ''
+    return
+  }
+  try {
+    const { X509Certificate } = await loadX509()
+    caCertificateIssuers.value[id] = new X509Certificate(cert.cert).issuer
+  } catch {
+    caCertificateIssuers.value[id] = ''
+  }
+}
+
+// Resolve issuers whenever the fetched CA certificates change
+watch(caCertificateResults, (results) => {
+  (results ?? []).forEach((cert) => resolveCaCertificateIssuer(cert))
+}, { immediate: true })
+
+// Return the (cached) issuer for a CA certificate by its ID (empty until resolved)
+const getCaCertificateIssuer = (id: string | number): string =>
+  caCertificateIssuers.value[String(id)] ?? ''
 
 const displayedCaCertificates = computed<MultiselectItem[]>(() => {
   const items: MultiselectItem[] = (caCertificateResults.value ?? []).map((cert) => ({
@@ -1324,6 +1382,27 @@ defineExpose({
       display: flex;
       flex-wrap: wrap;
       gap: var(--kui-space-20, $kui-space-20);
+    }
+
+    // CA certificate items stack the id + tags row above an issuer description
+    &.certificate-select-item--stacked {
+      align-items: stretch;
+      flex-direction: column;
+      gap: var(--kui-space-10, $kui-space-10);
+
+      .certificate-select-item-header {
+        align-items: center;
+        display: flex;
+        gap: var(--kui-space-40, $kui-space-40);
+      }
+
+      .certificate-select-item-issuer {
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
 
