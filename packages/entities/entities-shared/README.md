@@ -15,6 +15,7 @@ Shared components for Kong entities.
 
 ## Features
 
+- Welcome/next-steps card with a grid of action items ([see the OnboardingCard docs for more info](docs/onboarding-card.md))
 - Modal component for entity toggle confirmation ([see the EntityToggleModal docs for more info](docs/entity-toggle-modal.md))
 - Modal component for entity delete confirmation ([see the EntityDeleteModal docs for more info](docs/entity-delete-modal.md))
 - Base table component for entity list views ([see the EntityBaseTable docs for more info](docs/entity-base-table.md))
@@ -29,6 +30,7 @@ Shared components for Kong entities.
 
 ## Included components
 
+- `OnboardingCard`
 - `EntityDeleteModal`
 - `EntityBaseTable`
 - `EntityBaseForm`
@@ -71,6 +73,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 
 ## Individual component documentation
 
+- [`<OnboardingCard.vue />`](docs/onboarding-card.md)
 - [`<EntityDeleteModal.vue />`](docs/entity-delete-modal.md)
 - [`<EntityBaseTable.vue />`](docs/entity-base-table.md)
 - [`<EntityBaseForm.vue />`](docs/entity-base-form.md)
