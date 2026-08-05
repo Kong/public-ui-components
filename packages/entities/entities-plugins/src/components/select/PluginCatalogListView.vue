@@ -30,7 +30,10 @@
             class="plugin-name-text"
             data-testid="plugin-catalog-list-view-name-text"
             :title="row.name"
-          >{{ row.name }}</span>
+          ><HighlightedText
+            :indices="row.plugin?.matchedIndices"
+            :text="row.name"
+          /></span>
           <KBadge
             v-if="row.badge"
             appearance="info"
@@ -123,6 +126,7 @@ import { MoreIcon } from '@kong/icons'
 import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginSchemaModal.vue'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
+import HighlightedText from './HighlightedText.vue'
 import type {
   PluginType,
   KongManagerPluginSelectConfig,

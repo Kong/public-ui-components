@@ -24,7 +24,7 @@
     "status_title": "Change log level status",
     "node_host": "Node host",
     "status": "Status",
-    "status_note": "Updates typically reach all data plane nodes in about 5 seconds. Keep this modal open to monitor progress while the update is in progress."
+    "status_note": "Updates typically reach all data plane nodes in about 5 seconds. Monitor progress here while the update is in progress."
   },
   "log_level": {
     "debug": "Debug",

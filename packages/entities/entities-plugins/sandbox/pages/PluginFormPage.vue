@@ -109,6 +109,7 @@ const featureFlags = ref<Record<string, boolean>>({
   [FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM]: true,
   [FEATURE_FLAGS.KM_2485_CLONED_PLUGINS]: true,
   [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: true,
+  [FEATURE_FLAGS.KM_3034_FEATURES_316]: true,
 })
 
 const FeatureFlagProvider = defineComponent({
@@ -192,6 +193,7 @@ useProvideExperimentalFreeForms([
   'oauth2-introspection',
   'oauth2',
   'opa',
+  'openid-connect',
   'opentelemetry',
   'openwhisk',
   'post-function',

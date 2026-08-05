@@ -145,6 +145,7 @@ export interface PluginType extends PluginMetaData {
   disabledMessage?: string // An optional field for plugin's disabled message.
   customPluginType?: CustomPluginType // custom plugin type
   clonedFromRef?: string
+  matchedIndices?: number[] // character indices in `name` to highlight for the current search query
 }
 
 export type DisabledPlugin = {

@@ -96,11 +96,12 @@
     >
       <KTableView
         class="change-log-level-status-table"
-        :data="rows"
+        :data="sortedRows"
         data-testid="log-level-status-table"
         :headers="statusHeaders"
         hide-pagination
         row-key="id"
+        @sort="onSort"
       >
         <template #host="{ row }">
           <KExternalLink
@@ -151,7 +152,7 @@ import type {
   LogLevelOperationStatus,
 } from '../types'
 import type { Component } from 'vue'
-import type { BadgeAppearance } from '@kong/kongponents'
+import type { BadgeAppearance, TableSortPayload } from '@kong/kongponents'
 
 defineOptions({
   name: 'ChangeLogLevelModal',
@@ -201,6 +202,15 @@ const STATUS_ICON: Record<LogLevelOperationStatus, Component> = {
   unsupported: WarningIcon,
 }
 
+const STATUS_SORT_RANK: Record<LogLevelOperationStatus, number> = {
+  failed: 0,
+  unsupported: 1,
+  reverted: 2,
+  superseded: 3,
+  applied: 4,
+  in_progress: 5,
+}
+
 const stage = ref<'edit' | 'status'>('edit')
 const targetLogLevel = ref<LogLevel>(DEFAULT_LOG_LEVEL)
 const expiration = ref<number>(DEFAULT_EXPIRATION_VALUE)
@@ -209,6 +219,7 @@ const isSaving = ref<boolean>(false)
 const errorMessage = ref<string>('')
 const operationId = ref<string>('')
 const statusByNodeId = ref<Record<string, LogLevelOperationStatus>>({})
+const statusSortOrder = ref<'asc' | 'desc' | null>(null)
 const pollTimeoutId = ref<ReturnType<typeof setTimeout> | null>(null)
 // Whether a polling run is active. Guards against an in-flight request rescheduling after the run
 // was stopped (e.g. the modal was reopened) while its request was still awaiting a response.
@@ -243,7 +254,7 @@ const actionButtonText = computed(() =>
 
 const statusHeaders = computed(() => [
   { key: 'host', label: i18n.t('modal.node_host') },
-  { key: 'status', label: i18n.t('modal.status') },
+  { key: 'status', label: i18n.t('modal.status'), sortable: true },
 ])
 
 const rows = computed(() => props.nodes.map((node) => ({
@@ -251,6 +262,21 @@ const rows = computed(() => props.nodes.map((node) => ({
   hostname: node.hostname,
   status: statusByNodeId.value[node.id] ?? 'in_progress' as LogLevelOperationStatus,
 })))
+
+// Re-derives whenever `rows` changes (e.g. live polling updates) or `statusSortOrder` changes, so an
+// active sort keeps applying correctly as statuses change while the operation is still running.
+const sortedRows = computed(() => {
+  if (!statusSortOrder.value) {
+    return rows.value
+  }
+  const direction = statusSortOrder.value === 'asc' ? 1 : -1
+  // Unknown statuses (e.g. a value the client doesn't recognize yet) sort last regardless of direction,
+  // instead of producing NaN comparisons that leave the order unstable.
+  const rankOf = (status: LogLevelOperationStatus) => STATUS_SORT_RANK[status] ?? Number.MAX_SAFE_INTEGER
+  return [...rows.value].sort(
+    (a, b) => (rankOf(a.status) - rankOf(b.status)) * direction,
+  )
+})
 
 const buildUrl = (template: string, id?: string): string => {
   let url = `${props.config.apiBaseUrl}${template}`
@@ -344,6 +370,10 @@ const onCancel = () => {
   emit('close')
 }
 
+const onSort = (payload: TableSortPayload): void => {
+  statusSortOrder.value = payload.sortColumnKey === 'status' ? payload.sortColumnOrder : null
+}
+
 const reset = () => {
   clearPolling()
   stage.value = 'edit'
@@ -353,6 +383,7 @@ const reset = () => {
   errorMessage.value = ''
   operationId.value = ''
   statusByNodeId.value = {}
+  statusSortOrder.value = null
   erroredNodeIds.clear()
 }
 
@@ -407,6 +438,8 @@ onBeforeUnmount(clearPolling)
   .change-log-level-status-table {
     background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
     border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    max-height: 400px;
+    overflow: auto;
   }
 
   .status-note {
