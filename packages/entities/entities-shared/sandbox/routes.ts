@@ -83,4 +83,10 @@ export const routes: Array<RouteRecordRaw & { label?: string }> = [
     label: 'SensitiveInput',
     component: () => import('./pages/SensitiveInputPage.vue'),
   },
+  {
+    path: '/onboarding-card',
+    name: 'onboarding-card',
+    label: 'OnboardingCard',
+    component: () => import('./pages/OnboardingCardPage.vue'),
+  },
 ]

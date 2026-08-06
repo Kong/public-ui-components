@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.256.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.255.3...@kong-ui-public/entities-plugins@9.256.0) (2026-08-06)
+
+
+### Features
+
+* **entities-plugins:** add allow_when/deny_when modes to ACL plugin form ([#3666](https://github.com/Kong/public-ui-components/issues/3666)) ([3549c31](https://github.com/Kong/public-ui-components/commit/3549c31bc9c0a1a87d4b53a151291dc943d9a498))
+
+
+
+
+
+## [9.255.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.255.2...@kong-ui-public/entities-plugins@9.255.3) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [9.255.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.255.1...@kong-ui-public/entities-plugins@9.255.2) (2026-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.255.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.255.0...@kong-ui-public/entities-plugins@9.255.1) (2026-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.255.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.254.4...@kong-ui-public/entities-plugins@9.255.0) (2026-08-06)
+
+
+### Features
+
+* **entities-plugins:** remove plugin condition beta tag ([#3661](https://github.com/Kong/public-ui-components/issues/3661)) ([bc0b195](https://github.com/Kong/public-ui-components/commit/bc0b195377c2f5cbf99c1286014b5609b2049816))
+
+
+
+
+
 ## [9.254.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.254.3...@kong-ui-public/entities-plugins@9.254.4) (2026-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
