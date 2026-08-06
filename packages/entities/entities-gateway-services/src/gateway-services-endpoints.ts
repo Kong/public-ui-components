@@ -21,4 +21,10 @@ export default {
       edit: `${KMBaseApiUrl}/services/{id}`,
     },
   },
+  relatedEntities: {
+    konnect: {
+      routes: `${konnectBaseApiUrl}/services/{id}/routes`,
+      plugins: `${konnectBaseApiUrl}/services/{id}/plugins`,
+    },
+  },
 }
