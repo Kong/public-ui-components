@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.255.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.254.4...@kong-ui-public/entities-plugins@9.255.0) (2026-08-06)
+
+
+### Features
+
+* **entities-plugins:** remove plugin condition beta tag ([#3661](https://github.com/Kong/public-ui-components/issues/3661)) ([bc0b195](https://github.com/Kong/public-ui-components/commit/bc0b195377c2f5cbf99c1286014b5609b2049816))
+
+
+
+
+
 ## [9.254.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.254.3...@kong-ui-public/entities-plugins@9.254.4) (2026-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
