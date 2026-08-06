@@ -809,7 +809,9 @@
       "acl": {
         "mode": {
           "allow": "Use allow list",
-          "deny": "Use deny list"
+          "deny": "Use deny list",
+          "allow_when": "Use allow expression list",
+          "deny_when": "Use deny expression list"
         }
       },
       "ai-mcp-proxy": {
