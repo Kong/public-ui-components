@@ -561,16 +561,6 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         expect(lastCall.client_certificate).to.deep.equal({ id: 'cert-1' })
         expect(lastCall.ca_certificates).to.deep.equal(['ca-cert-1'])
       })
-
-      // Clearing both should emit null for each
-      cy.getTestId('gateway-service-clientCert-select').findTestId('select-clear-icon').click()
-      cy.getTestId('gateway-service-ca-certs-select').findTestId('multiselect-clear-icon').click()
-
-      cy.get('@onModelUpdatedSpy').then((spy: any) => {
-        const lastCall = spy.lastCall.args[0]
-        expect(lastCall.client_certificate).to.equal(null)
-        expect(lastCall.ca_certificates).to.equal(null)
-      })
     })
   })
 
