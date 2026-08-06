@@ -34,6 +34,7 @@
     "@shikijs/engine-javascript": "^4.2.0",
     "@shikijs/langs": "^4.2.0",
     "@shikijs/themes": "^4.2.0",
+    "@vueuse/core": "^14.3.0",
     "axios": "^1.16.1",
     "monaco-editor": "^0.55.1",
     "shiki": "^4.2.0",
@@ -50,6 +51,7 @@
     "@shikijs/engine-javascript": "^4.2.0",
     "@shikijs/langs": "^4.2.0",
     "@shikijs/themes": "^4.2.0",
+    "@vueuse/core": "^14.3.0",
     "axios": "^1.17.0",
     "monaco-editor": "^0.55.1",
     "shiki": "^4.2.0",
@@ -86,7 +88,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "800KB"
+    "errorLimit": "810KB"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
