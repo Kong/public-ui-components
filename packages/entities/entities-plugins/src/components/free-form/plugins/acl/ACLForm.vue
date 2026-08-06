@@ -5,7 +5,7 @@
     <ObjectField
       as-child
       name="config"
-      :omit="['allow', 'deny']"
+      :omit="['allow', 'deny', 'allow_when', 'deny_when']"
       reset-label-path="reset"
     />
   </DynamicLayout>
