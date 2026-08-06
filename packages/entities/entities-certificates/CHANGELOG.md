@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.16.20...@kong-ui-public/entities-certificates@3.16.21) (2026-08-06)
+
+
+### Bug Fixes
+
+* **entities-certificates:** skip card wrapper for multi-step certificate form layout ([#3667](https://github.com/Kong/public-ui-components/issues/3667)) ([655d481](https://github.com/Kong/public-ui-components/commit/655d481dc27ea2a04d0f9858acf74ed5c4795b28))
+
+
+
+
+
 ## [3.16.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.16.19...@kong-ui-public/entities-certificates@3.16.20) (2026-08-06)
 
 
