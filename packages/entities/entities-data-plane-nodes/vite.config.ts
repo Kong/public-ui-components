@@ -17,6 +17,7 @@ const config = mergeConfig(
         name: `kong-ui-public-${sanitizedPackageName}`,
         entry: resolve(__dirname, './src/index.ts'),
         fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+        cssFileName: 'style',
       },
     },
     server: {

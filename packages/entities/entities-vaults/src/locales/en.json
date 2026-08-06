@@ -80,7 +80,8 @@
         },
         "value": {
           "label": "Value",
-          "placeholder": "Enter value here, can be simple values or multi-line"
+          "placeholder": "Enter value here, can be simple values or multi-line",
+          "rotateLabel": "Rotate value"
         }
       },
       "hint": "Once saved, the secret value will not be visible"

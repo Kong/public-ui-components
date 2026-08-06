@@ -117,6 +117,12 @@
             :config="props.config"
             :readonly="form.readonly"
           />
+          <OauthFields
+            v-if="form.fields.config.cloud_authentication!.auth_provider === AuthProvider.OAUTH"
+            v-model="form.fields.config.cloud_authentication!.oauth!"
+            :config="props.config"
+            :readonly="form.readonly"
+          />
         </EntityFormSection>
 
         <!-- sentinel configuration section -->
@@ -533,6 +539,7 @@ import composables from '../composables'
 import { useVaultSecretPicker } from '../composables/useVaultSecretPicker'
 import SentinelNodes from './SentinelNodes.vue'
 import CloudAuthFields from './CloudAuthFields.vue'
+import OauthFields from './OauthFields.vue'
 import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
 import { DEFAULT_REDIS_TYPE } from '../constants'
 import { mapRedisTypeToPartialType } from '../helpers'
@@ -670,7 +677,7 @@ const typeOptions = computed<SelectItem[]>(() => {
 })
 
 const cloudAuthOptions = computed<SelectItem[]>(() => {
-  return [
+  const options: SelectItem[] = [
     {
       label: t('form.options.auth_provider.aws'),
       value: AuthProvider.AWS,
@@ -684,6 +691,15 @@ const cloudAuthOptions = computed<SelectItem[]>(() => {
       value: AuthProvider.AZURE,
     },
   ]
+
+  if (props.config.oauthCloudAuthAvailable) {
+    options.push({
+      label: t('form.options.auth_provider.oauth'),
+      value: AuthProvider.OAUTH,
+    })
+  }
+
+  return options
 })
 
 const sentinelRoleOptions = [

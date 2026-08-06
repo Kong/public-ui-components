@@ -9,12 +9,14 @@ Shared components for Kong entities.
 - [Usage](#usage)
   - [Install](#install)
   - [Registration](#registration)
+  - [Color mode (light/dark theme)](#color-mode-lightdark-theme)
 - [Individual component documentation](#individual-component-documentation)
 - [Individual composables documentation](#individual-composables-documentation)
 - [Sandbox shared utilities](#sandbox-shared-utilities)
 
 ## Features
 
+- Welcome/next-steps card with a grid of action items ([see the OnboardingCard docs for more info](docs/onboarding-card.md))
 - Modal component for entity toggle confirmation ([see the EntityToggleModal docs for more info](docs/entity-toggle-modal.md))
 - Modal component for entity delete confirmation ([see the EntityDeleteModal docs for more info](docs/entity-delete-modal.md))
 - Base table component for entity list views ([see the EntityBaseTable docs for more info](docs/entity-base-table.md))
@@ -29,6 +31,7 @@ Shared components for Kong entities.
 
 ## Included components
 
+- `OnboardingCard`
 - `EntityDeleteModal`
 - `EntityBaseTable`
 - `EntityBaseForm`
@@ -69,8 +72,23 @@ import { EntityDeleteModal, EntityBaseTable } from '@kong-ui-public/entities-sha
 import '@kong-ui-public/entities-shared/dist/style.css'
 ```
 
+### Color mode (light/dark theme)
+
+Components in this package that embed a Monaco-based editor (for example `DeckCommandEditor`) automatically match the host application's active color mode. To enable this, the host application should `provide` a `ComputedRef<'light' | 'dark'>` under the `app:konnectColorMode` injection key. When provided, the editors reactively switch between their light and dark themes as the value changes. When the key is not provided, the editors fall back to the `'light'` theme.
+
+```ts
+// In the host application (e.g. within your root component's setup)
+import { computed, provide } from 'vue'
+
+// `isDarkMode` is however your app tracks its current theme
+const colorMode = computed<'light' | 'dark'>(() => (isDarkMode.value ? 'dark' : 'light'))
+
+provide('app:konnectColorMode', colorMode)
+```
+
 ## Individual component documentation
 
+- [`<OnboardingCard.vue />`](docs/onboarding-card.md)
 - [`<EntityDeleteModal.vue />`](docs/entity-delete-modal.md)
 - [`<EntityBaseTable.vue />`](docs/entity-base-table.md)
 - [`<EntityBaseForm.vue />`](docs/entity-base-form.md)

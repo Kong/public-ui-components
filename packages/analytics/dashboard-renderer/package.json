@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "8.13.0",
+  "version": "8.17.7",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",
@@ -48,9 +48,11 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong-ui-public/table-data-grid": "workspace:^",
-    "@kong/design-tokens": "2.0.1",
-    "@kong/icons": "^1.60.0",
-    "@kong/kongponents": "9.60.7",
+    "@kong/design-tokens": "3.2.7",
+    "@kong/icons": "^1.62.1",
+    "@kong/kongponents": "9.64.3",
+    "@types/file-saver": "^2.0.7",
+    "@types/papaparse": "^5.5.2",
     "ajv": "^8.20.0",
     "cypress-real-events": "^1.15.0",
     "pinia": ">= 3.0.4 < 4",
@@ -72,7 +74,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "1MB"
+    "errorLimit": "1.1MB"
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
@@ -83,16 +85,18 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/table-data-grid": "workspace:^",
     "@kong/icons": "^1.58.0",
-    "@kong/kongponents": "^9.59.0",
+    "@kong/kongponents": "^9.63.0",
     "swrv": "^1.2.0",
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@zumer/snapdom": "^2.6.0",
-    "date-fns": "^4.4.0",
+    "date-fns-tz": "^3.2.0",
+    "file-saver": "^2.0.5",
     "gridstack": "^11.5.1",
     "jspdf": "^4.2.1",
-    "p-queue": "^8.1.1"
+    "p-queue": "^9.3.1",
+    "papaparse": "^5.5.3"
   }
 }

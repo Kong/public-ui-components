@@ -60,13 +60,18 @@ export default {
       return getFieldState(this.model[this.schema.model], this.associatedEntity || this.entityId, this.bypassSearch)
     },
     associatedEntity() {
-      return this.$route && this.$route.params[this.entity]
+      // Cast to `any`: `this.$route` is typed via vue-router's global augmentation, which is
+      // only a devDependency here. Letting its type leak into this computed's inferred return
+      // makes the component's declaration reference a non-portable pnpm path (TS2742).
+      const route = /** @type {any} */ (this.$route)
+      return route && route.params[this.entity]
     },
     entity() {
       return this.schema.entity
     },
     bypassSearch() {
-      return this.$route && this.$route.query && this.$route.query.no_search
+      const route = /** @type {any} */ (this.$route)
+      return route && route.query && route.query.no_search
     },
     inputFields() {
       return this.schema?.inputValues?.fields || []

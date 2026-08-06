@@ -1,4 +1,4 @@
-import { cloneDeep, get, isEqual, isFunction, omit, set } from 'lodash-es'
+import { cloneDeep, isEqual, isFunction, omit } from 'lodash-es'
 import { createInjectionState } from '@vueuse/core'
 import { createRenderRuleRegistry } from './render-rules'
 import { FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
@@ -44,14 +44,13 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     const {
       useCurrentRules: useCurrentRenderRules,
       createComputedRules: createComputedRenderRules,
-      hiddenPaths,
+      hasDependencies,
       isFieldHidden,
-    } = createRenderRuleRegistry(() => onChange?.(getValue()), schemaHelpers.getSchemaMap)
+    } = createRenderRuleRegistry(schemaHelpers.getSchemaMap, () => innerData)
 
     const rootRenderRules = useCurrentRenderRules({
       fieldPath: utils.rootSymbol,
       rules: propsRenderRules,
-      parentValue: innerData,
     })
 
     function setValue(newData: T) {
@@ -92,24 +91,23 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
      * Get transformed form data
      */
     function getValue(): T {
-      const value = toValue(innerData)
-      const nextValue = cloneDeep(value)
+      const nextValue = cloneDeep(toValue(innerData))
 
-      // Set hidden paths to default or null
-      if (hiddenPaths.value.size > 0) {
-        for (const path of hiddenPaths.value) {
-          const pathArray = utils.toArray(path)
-
-          // Check if the parent path exists before setting
-          // This is a temporary fix to prevent lodash set() from auto-creating intermediate objects
-          // todo(KM-2182): Refactor data layer to listen to data source changes and clean up hiddenPaths accordingly
-          const parentPath = pathArray.slice(0, -1)
-          const parentExists = parentPath.length === 0 || get(nextValue, parentPath) != null
-
-          if (parentExists) {
-            set(nextValue, pathArray, getEmptyOrDefaultFromSchema(path))
-          }
-        }
+      // Reset hidden fields to their empty-or-default value by walking the tree
+      // top-down, so a hidden subtree is dropped wholesale and no missing parent
+      // is ever auto-created (replaces the KM-2182 `parentExists` workaround).
+      //
+      // NOTE: pruning MUST run here, on the still-serialized (kid-keyed) tree,
+      // before `deserialize` renames map keys. `isFieldHidden` reads each
+      // dependency's actual value from `innerData` (kid-keyed) with a concrete
+      // path; pruning a name-keyed tree would feed it name-keyed paths that miss
+      // inside maps, silently mis-evaluating visibility for map-nested fields.
+      if (hasDependencies.value) {
+        utils.pruneHiddenPaths(
+          nextValue,
+          isFieldHidden,
+          getEmptyOrDefaultFromSchema,
+        )
       }
 
       return keyIdMap.deserialize(nextValue)

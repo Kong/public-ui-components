@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
+import { beforeAll, describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import PrincipalLookupSettings from '../PrincipalLookupSettings.vue'
+import Kongponents from '@kong/kongponents'
 
 function buildFormModel(overrides = {}) {
   return {
@@ -22,10 +23,23 @@ function mountComponent(formModelOverrides = {}, propsOverrides: Record<string, 
       onModelUpdated: vi.fn(),
       ...propsOverrides,
     },
+    global: {
+      plugins: [Kongponents],
+    },
   })
 }
 
 describe('PrincipalLookupSettings', () => {
+  beforeAll(() => {
+    class ResizeObserver {
+      constructor() {}
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    }
+    (global as any).ResizeObserver = ResizeObserver
+  })
+
   describe('initial lookup method', () => {
     it('defaults to kong-identity when principal fields are empty', () => {
       const wrapper = mountComponent({

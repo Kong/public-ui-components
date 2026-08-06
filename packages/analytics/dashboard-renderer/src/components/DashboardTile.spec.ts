@@ -6,9 +6,9 @@ import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
-import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import type { DashboardRendererContextInternal } from '../types'
 import type { TileDefinition } from '@kong-ui-public/analytics-utilities'
+import Kongponents from '@kong/kongponents'
 
 vi.mock('./TimeseriesChartRenderer.vue', () => ({
   // eslint-disable-next-line vue/one-component-per-file
@@ -121,6 +121,7 @@ const dropdownSlotStubs = {
 }
 
 const mockQueryProvider = {
+  configFn: () => Promise.resolve({ analytics: { percentiles: true }, requests: null }),
   exploreBaseUrl: async () => 'http://test.com/explore',
   requestsBaseUrl: async () => 'http://test.com/requests',
   datasourceConfigFn: () => Promise.resolve([]),
@@ -185,10 +186,13 @@ const mountTile = (
     },
     shallow: true,
     global: {
+      plugins: [Kongponents],
       provide: {
         [INJECT_QUERY_PROVIDER]: mockQueryProvider,
       },
       stubs: {
+        KBadge: false,
+        KTooltip: false,
         TimeseriesChartRenderer: false,
       },
     },
@@ -198,8 +202,6 @@ const mountTile = (
 describe('<DashboardTile /> zoom requests drilldown', () => {
   beforeEach(() => {
     setupPiniaTestStore()
-    const analyticsConfigStore = useAnalyticsConfigStore()
-    analyticsConfigStore.analyticsConfig = { analytics: { percentiles: true } } as any
   })
 
   it('does not populate requests zoom actions for platform tiles', async () => {
@@ -289,8 +291,6 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
 describe('<DashboardTile /> table tiles', () => {
   beforeEach(() => {
     setupPiniaTestStore()
-    const analyticsConfigStore = useAnalyticsConfigStore()
-    analyticsConfigStore.analyticsConfig = { analytics: { percentiles: true } } as any
   })
 
   it('dispatches table tiles to the table data grid renderer', () => {
@@ -333,6 +333,7 @@ describe('<DashboardTile /> table tiles', () => {
       },
       shallow: true,
       global: {
+        plugins: [Kongponents],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider,
         },
@@ -379,6 +380,7 @@ describe('<DashboardTile /> table tiles', () => {
       },
       shallow: true,
       global: {
+        plugins: [Kongponents],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider,
         },
@@ -424,6 +426,7 @@ describe('<DashboardTile /> table tiles', () => {
       },
       shallow: true,
       global: {
+        plugins: [Kongponents],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider,
         },

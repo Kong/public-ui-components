@@ -1143,16 +1143,15 @@ describe('<DashboardTile />', () => {
       })
     })
 
-    it('getExportData rejects when queryFn fails', () => {
-      const queryFn = cy.stub().as('queryFn').callsFake(() => {
-        return Promise.resolve(
-          generateSingleMetricTimeSeriesData(
-            { name: 'TotalRequests', unit: 'count' },
-            { status_code: ['request_count'] as string[] },
-            { start, end },
-          ) as ExploreResultV4,
-        )
-      })
+    it('shows the export error state when the expanded export query fails', () => {
+      const result = generateSingleMetricTimeSeriesData(
+        { name: 'TotalRequests', unit: 'count' },
+        { status_code: ['request_count'] as string[] },
+        { start, end },
+      ) as ExploreResultV4
+      const queryFn = cy.stub().as('queryFn')
+      queryFn.onFirstCall().resolves(result)
+      queryFn.onSecondCall().rejects(new Error('export failed'))
 
       cy.mount(DashboardTile, {
         props: {
@@ -1167,15 +1166,14 @@ describe('<DashboardTile />', () => {
             [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
           },
         },
-      }).then(({ wrapper }) => {
-        wrapper.vm.getExportData().then(() => {
-          throw new Error('should have rejected')
-        },
-        (err: Error) => err,
-        ).then((err: any) => {
-          expect(err).to.be.instanceOf(Error)
-          expect(err.message).to.equal('export failed')
-        })
+      })
+
+      cy.get('@queryFn').should('have.been.calledOnce').then(() => {
+        cy.getTestId('kebab-action-menu-1').click()
+        cy.getTestId('chart-csv-export-1').click()
+        cy.getTestId('csv-export-modal').should('contain.text', 'Error loading data')
+        cy.getTestId('csv-download-button').should('be.disabled')
+        cy.get('@queryFn').should('have.been.calledTwice')
       })
     })
 

@@ -6,52 +6,37 @@ interface MonarchLanguage extends monaco.languages.IMonarchLanguage {
   keywords: string[]
 }
 
-export const theme = 'kong-expr-theme'
-
 export const buildLanguageId = (schema: Schema) => `kong-expressions-${schema.name}`
 
+/**
+ * Token types emitted by the Monarch tokenizer. Their *values* are standard TextMate
+ * scope names, which serves both concerns with a single vocabulary:
+ *
+ * - **Colouring**: the shared Shiki theme applied by `@kong-ui-public/monaco-editor`
+ *   (e.g. `catppuccin-latte`) already has rules for these scopes, so tokens are coloured
+ *   automatically — no custom Monaco theme is defined or activated, which keeps us clear
+ *   of Shiki's overridden `monaco.editor.setTheme` (it throws on unknown themes).
+ * - **Completion analysis**: the utilities below switch on these same constants (via a
+ *   token's {@link Token.shortType}), so the analysis logic is insulated from the exact
+ *   scope strings — change a value here and both concerns follow.
+ */
 export const TokenType = {
-  IDENT: 'identifier',
-  OPERATOR: 'operator',
-  QUOTE_OPEN: 'quote.open',
-  QUOTE_CLOSE: 'quote.close',
-  STR_LITERAL: 'string.literal',
-  STR_ESCAPE: 'string.escape',
-  STR_INVALID_ESCAPE: 'string.escape.invalid',
-  RAW_STR_OPEN: 'raw-string.open',
-  RAW_STR_CLOSE: 'raw-string.close',
-  IP_V4: 'ip.v4',
-  IP_V6: 'ip.v6',
-  NUMBER: 'number',
-  WHITESPACE: 'whitespace',
-  FUNC_NAME: 'function.name',
-  PAREN_OPEN: 'parentheses.open',
-  PAREN_CLOSE: 'parentheses.close',
-}
-
-export const registerTheme = () => {
-  monaco.editor.defineTheme(theme, {
-    inherit: false,
-    base: 'vs',
-    rules: [
-      { token: TokenType.IDENT, foreground: '#006699' },
-      { token: TokenType.OPERATOR, foreground: '#003694', fontStyle: 'bold' },
-      { token: TokenType.QUOTE_OPEN, foreground: '#009966' },
-      { token: TokenType.QUOTE_CLOSE, foreground: '#009966' },
-      { token: TokenType.RAW_STR_OPEN, foreground: '#009966' },
-      { token: TokenType.RAW_STR_CLOSE, foreground: '#009966' },
-      { token: TokenType.STR_LITERAL, foreground: '#009966' },
-      { token: TokenType.STR_ESCAPE, foreground: '#003694', fontStyle: 'bold' },
-      { token: TokenType.STR_INVALID_ESCAPE, foreground: '#ff3333', fontStyle: 'bold' },
-      { token: TokenType.IP_V4, foreground: '#00abd2' },
-      { token: TokenType.IP_V6, foreground: '#00abd2' },
-      { token: TokenType.NUMBER, foreground: '#009966' },
-      { token: TokenType.FUNC_NAME, foreground: '#6f28ff' },
-    ],
-    colors: {
-      'editor.foreground': '#000000',
-    },
-  })
+  IDENT: 'variable.other.property',
+  OPERATOR: 'keyword.operator',
+  QUOTE_OPEN: 'punctuation.definition.string.begin',
+  QUOTE_CLOSE: 'punctuation.definition.string.end',
+  STR_LITERAL: 'string.quoted.double',
+  STR_ESCAPE: 'constant.character.escape',
+  STR_INVALID_ESCAPE: 'invalid.illegal.escape',
+  RAW_STR_OPEN: 'punctuation.definition.string.raw.begin',
+  RAW_STR_CLOSE: 'punctuation.definition.string.raw.end',
+  IP_V4: 'constant.numeric.ip.v4',
+  IP_V6: 'constant.numeric.ip.v6',
+  NUMBER: 'constant.numeric',
+  WHITESPACE: 'white',
+  FUNC_NAME: 'entity.name.function',
+  PAREN_OPEN: 'punctuation.section.parens.begin',
+  PAREN_CLOSE: 'punctuation.section.parens.end',
 }
 
 export interface Token extends monaco.Token {
@@ -62,14 +47,16 @@ export interface Token extends monaco.Token {
 }
 
 /**
- * Token names are suffixed with the language ID (e.g., `identifier.kong-expressions-http`).
+ * Token types are suffixed with the language ID (e.g. `keyword.operator.kong-expressions-http`).
  *
- * This function removes the language ID suffix from the token type and returns the shortened token
- * type. You can find a list of short token types in the {@link TokenType} object.
+ * This function removes the language ID suffix and returns the shortened token type — one of
+ * the values in the {@link TokenType} object. Because we control what the Monarch tokenizer
+ * emits, stripping the suffix recovers the {@link TokenType} value exactly (no prefix matching
+ * needed).
  *
  * @param languageId the language ID
  * @param fullType the full token type
- * @returns the shortened type or the full type if the full type does not end with the language ID
+ * @returns the shortened type, or the full type if it does not end with the language ID
  */
 export const shortenTokenType = (languageId: string, fullType: string) => {
   if (fullType.endsWith(`.${languageId}`)) {
@@ -375,7 +362,7 @@ export const registerLanguage = (languageId: string, provideCompletionItems?: Pr
 
   disposables.push(
     monaco.languages.registerCompletionItemProvider(languageId, {
-    // additional characters to trigger the following function
+      // additional characters to trigger the following function
       triggerCharacters: ['.', '*', '"'],
 
       // function to generate object autocompletion

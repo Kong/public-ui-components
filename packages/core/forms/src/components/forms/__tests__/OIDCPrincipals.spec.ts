@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeAll, describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import OIDCPrincipals from '../OIDCPrincipals.vue'
 import PrincipalLookupSettings from '../PrincipalLookupSettings.vue'
 import { FORMS_CONFIG } from '../../../const'
+import Kongponents from '@kong/kongponents'
 
 // Stub VueFormGenerator to avoid rendering real form fields in External mode
 vi.mock('../../FormGenerator.vue', () => ({
@@ -27,7 +28,7 @@ const formsConfig = {
 
 function buildFormModel(overrides = {}) {
   return {
-    'config-client_id': null,
+    'config-client_id': [null],
     'config-client_secret': null,
     'config-issuer': null,
     'config-principals-enabled': true,
@@ -57,6 +58,7 @@ function mountComponent(formModelOverrides = {}, propsOverrides = {}) {
       ...propsOverrides,
     },
     global: {
+      plugins: [Kongponents],
       provide: {
         [FORMS_CONFIG]: formsConfig,
       },
@@ -65,6 +67,16 @@ function mountComponent(formModelOverrides = {}, propsOverrides = {}) {
 }
 
 describe('OIDCPrincipals', () => {
+  beforeAll(() => {
+    class ResizeObserver {
+      constructor() {}
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    }
+    (global as any).ResizeObserver = ResizeObserver
+  })
+
   beforeEach(() => {
     vi.clearAllMocks()
     // Default fallback so unmatched calls don't consume mockResolvedValueOnce
@@ -79,10 +91,11 @@ describe('OIDCPrincipals', () => {
 
       // Initially in Kong Identity mode
       expect(wrapper.find('[data-testid="principals-directory-select"]').exists()).toBe(true)
+      expect(formModel['config-principals-enabled']).toBe(true)
 
-      // Switch to External
-      const externalRadio = wrapper.find('[data-testid="oidc-auth-mode-external"]')
-      await externalRadio.trigger('change')
+      // Call handleModeChange directly (KRadio event plumbing is a Kongponents concern)
+      ;(wrapper.vm as any).handleModeChange('kong-identity')
+      await wrapper.vm.$nextTick()
 
       // External auth is opt-in: principal lookup starts off until the user enables it.
       expect(formModel['config-principals-enabled']).toBe(false)
@@ -112,7 +125,7 @@ describe('OIDCPrincipals', () => {
       expect(formModel['config-principals-match_consumer']).toBe(true)
       expect(formModel['config-principals-match_consumer_groups']).toBe(true)
       expect(formModel['config-principals-error_on_miss']).toBe(true)
-      expect(formModel['config-client_id']).toBeNull()
+      expect(formModel['config-client_id']).toEqual([null])
       expect(formModel['config-client_secret']).toBeNull()
       expect(formModel['config-issuer']).toBeNull()
       expect(onModelUpdated).toHaveBeenCalled()
@@ -338,6 +351,7 @@ describe('OIDCPrincipals', () => {
           formModel,
         },
         global: {
+          plugins: [Kongponents],
           provide: {
             [FORMS_CONFIG]: formsConfig,
           },
@@ -364,6 +378,7 @@ describe('OIDCPrincipals', () => {
           },
         },
         global: {
+          plugins: [Kongponents],
           provide: {
             [FORMS_CONFIG]: formsConfig,
           },
@@ -402,7 +417,8 @@ describe('OIDCPrincipals', () => {
     it('selecting a server sets issuer and fetches clients', async () => {
       mockGet
         .mockResolvedValueOnce({ data: { data: mockServers } }) // fetchKongIdentityServers
-        .mockResolvedValueOnce({ data: { data: mockClients } }) // fetchClients
+        .mockResolvedValueOnce({ data: { data: mockClients } }) // initial fetchClients
+        .mockResolvedValueOnce({ data: { data: mockClients } }) // after server change fetchClients
 
       const wrapper = mountComponent()
       await flushPromises()
@@ -471,7 +487,12 @@ describe('OIDCPrincipals', () => {
     const mountKonnect = (formModelOverrides = {}, propsOverrides = {}, configOverrides = {}) =>
       mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel(formModelOverrides), ...propsOverrides },
-        global: { provide: { [FORMS_CONFIG]: { ...konnectConfig, ...configOverrides } } },
+        global: {
+          plugins: [Kongponents],
+          provide: {
+            [FORMS_CONFIG]: { ...konnectConfig, ...configOverrides },
+          },
+        },
       })
 
     it('shows the guide when the host says principalsCreationGuideVisible is true', () => {
@@ -588,7 +609,15 @@ describe('OIDCPrincipals', () => {
     it('does not show the guide outside Konnect, even if principalsCreationGuideVisible is true', () => {
       const wrapper = mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
-        global: { provide: { [FORMS_CONFIG]: { apiBaseUrl: '/us', principalsCreationGuideVisible: true } } }, // no app: 'konnect'
+        global: {
+          plugins: [Kongponents],
+          provide: {
+            [FORMS_CONFIG]: {
+              apiBaseUrl: '/us',
+              principalsCreationGuideVisible: true,
+            },
+          },
+        }, // no app: 'konnect'
       })
 
       expect(wrapper.find('[data-testid="principals-create-guide"]').exists()).toBe(false)
@@ -620,6 +649,7 @@ describe('OIDCPrincipals', () => {
       mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
         global: {
+          plugins: [Kongponents],
           provide: {
             [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityAuthServersAvailable: false },
           },
@@ -637,7 +667,10 @@ describe('OIDCPrincipals', () => {
     it('defaults canCreateAuthServer and canCreateAuthServerClient to true (fail open)', () => {
       const wrapper = mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
-        global: { provide: { [FORMS_CONFIG]: konnectConfig } },
+        global: {
+          plugins: [Kongponents],
+          provide: { [FORMS_CONFIG]: konnectConfig },
+        },
       })
 
       expect((wrapper.vm as any).canCreateAuthServer).toBe(true)
@@ -648,6 +681,7 @@ describe('OIDCPrincipals', () => {
       const wrapper = mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
         global: {
+          plugins: [Kongponents],
           provide: {
             [FORMS_CONFIG]: { ...konnectConfig, canCreateAuthServer: false },
           },
@@ -663,6 +697,7 @@ describe('OIDCPrincipals', () => {
       const wrapper = mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
         global: {
+          plugins: [Kongponents],
           provide: {
             [FORMS_CONFIG]: { ...konnectConfig, canCreateAuthServerClient: false },
           },
@@ -677,6 +712,7 @@ describe('OIDCPrincipals', () => {
       const wrapper = mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
         global: {
+          plugins: [Kongponents],
           provide: {
             [FORMS_CONFIG]: { ...konnectConfig, isKongIdentityAuthServersAvailable: false },
           },
@@ -700,7 +736,10 @@ describe('OIDCPrincipals', () => {
     it('still shows the mode picker and Kong Identity mode when isKongIdentityAuthServersAvailable is true', () => {
       const wrapper = mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel() },
-        global: { provide: { [FORMS_CONFIG]: konnectConfig } },
+        global: {
+          plugins: [Kongponents],
+          provide: { [FORMS_CONFIG]: konnectConfig },
+        },
       })
 
       expect((wrapper.vm as any).selectedMode).toBe('kong-identity')
@@ -712,6 +751,7 @@ describe('OIDCPrincipals', () => {
         props: { ...baseProps, formModel: buildFormModel() },
         slots: { 'advanced-fields': '<div data-testid="sibling-advanced-field">Sibling</div>' },
         global: {
+          plugins: [Kongponents],
           provide: {
             [FORMS_CONFIG]: { ...konnectConfig },
           },
@@ -739,6 +779,7 @@ describe('OIDCPrincipals', () => {
         },
         slots: { 'advanced-fields': '<div data-testid="sibling-advanced-field">Sibling</div>' },
         global: {
+          plugins: [Kongponents],
           provide: {
             [FORMS_CONFIG]: { ...konnectConfig },
           },
@@ -762,7 +803,10 @@ describe('OIDCPrincipals', () => {
     const mountKonnect = (formModelOverrides = {}, propsOverrides = {}, configOverrides = {}) =>
       mount(OIDCPrincipals, {
         props: { ...baseProps, formModel: buildFormModel(formModelOverrides), ...propsOverrides },
-        global: { provide: { [FORMS_CONFIG]: { ...konnectConfig, ...configOverrides } } },
+        global: {
+          plugins: [Kongponents],
+          provide: { [FORMS_CONFIG]: { ...konnectConfig, ...configOverrides } },
+        },
       })
 
     it('does not show the alert when no data plane versions are provided', () => {

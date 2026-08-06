@@ -1,3 +1,4 @@
+<!-- TODO: Remove this deprecated analytics-chart CSV export file after consumers migrate to @kong-ui-public/dashboard-renderer. MA-5236: https://konghq.atlassian.net/browse/MA-5236 -->
 <template>
   <div class="kong-ui-public-csv-export-modal">
     <KModal
@@ -271,7 +272,6 @@ watch(tableData, () => {
     }
 
     .text-muted {
-      color: rgba(0, 0, 0, 0.45) !important;
       font-size: var(--kui-font-size-30, $kui-font-size-30);
     }
 

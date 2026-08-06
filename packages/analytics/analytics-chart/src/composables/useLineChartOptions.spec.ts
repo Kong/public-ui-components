@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import useLineChartOptions from './useLineChartOptions'
-import { ref, computed } from 'vue'
+import { ref, computed, defineComponent, h } from 'vue'
+import { mount } from '@vue/test-utils'
 
 const mockTooltipState = {
   showTooltip: false,
@@ -20,28 +21,44 @@ const mockTooltipState = {
 describe('useLineChartOptions', () => {
 
   it('has no radius without hover when pointsWithoutHover is false', () => {
-    const { options } = useLineChartOptions({
-      tooltipState: mockTooltipState,
-      legendID: 'foo',
-      stacked: ref(false),
-      timeRangeMs: ref(1000),
-      granularity: ref('secondly'),
-      pointsWithoutHover: computed(() => false),
-    })
+    let result: ReturnType<typeof useLineChartOptions>
 
-    expect(options.value.elements.point.radius).toBe(0)
+    // eslint-disable-next-line vue/one-component-per-file
+    mount(defineComponent({
+      setup() {
+        result = useLineChartOptions({
+          tooltipState: mockTooltipState,
+          legendID: 'foo',
+          stacked: ref(false),
+          timeRangeMs: ref(1000),
+          granularity: ref('secondly'),
+          pointsWithoutHover: computed(() => false),
+        })
+        return () => h('div')
+      },
+    }))
+
+    expect(result!.options.value.elements.point.radius).toBe(0)
   })
 
   it('has a radius without hover when pointsWithoutHover is true', () => {
-    const { options } = useLineChartOptions({
-      tooltipState: mockTooltipState,
-      legendID: 'foo',
-      stacked: ref(false),
-      timeRangeMs: ref(1000),
-      granularity: ref('secondly'),
-      pointsWithoutHover: computed(() => true),
-    })
+    let result: ReturnType<typeof useLineChartOptions>
 
-    expect(options.value.elements.point.radius).toBe(3)
+    // eslint-disable-next-line vue/one-component-per-file
+    mount(defineComponent({
+      setup() {
+        result = useLineChartOptions({
+          tooltipState: mockTooltipState,
+          legendID: 'foo',
+          stacked: ref(false),
+          timeRangeMs: ref(1000),
+          granularity: ref('secondly'),
+          pointsWithoutHover: computed(() => true),
+        })
+        return () => h('div')
+      },
+    }))
+
+    expect(result!.options.value.elements.point.radius).toBe(3)
   })
 })

@@ -16,6 +16,7 @@
       :copy-code="unredactedYamlContent"
       data-dd-privacy="mask"
       language="yaml"
+      :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
       theme="dark"
       @code-block-render="highlightCodeBlock"
     />
@@ -23,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import { CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT } from '../../constants'
 import yaml from 'js-yaml'
 import { computed, ref, watch } from 'vue'
 

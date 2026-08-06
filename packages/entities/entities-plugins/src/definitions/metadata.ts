@@ -645,25 +645,21 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-gcp-model-armor': {
     descriptionKey: 'plugins.meta.ai-gcp-model-armor.description',
     nameKey: 'plugins.meta.ai-gcp-model-armor.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-gcp-model-armor'],
   },
   'ai-mcp-oauth2': {
     descriptionKey: 'plugins.meta.ai-mcp-oauth2.description',
     nameKey: 'plugins.meta.ai-mcp-oauth2.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-mcp-oauth2'],
   },
   'ai-semantic-response-guard': {
     descriptionKey: 'plugins.meta.ai-semantic-response-guard.description',
     nameKey: 'plugins.meta.ai-semantic-response-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-response-guard'],
   },
   'ai-lakera-guard': {
     descriptionKey: 'plugins.meta.ai-lakera-guard.description',
     nameKey: 'plugins.meta.ai-lakera-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-lakera-guard'],
   },
   'ai-a2a-proxy': {
@@ -682,6 +678,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.metering-and-billing.description',
     nameKey: 'plugins.meta.metering-and-billing.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['metering-and-billing'],
+  },
+  governance: {
+    descriptionKey: 'plugins.meta.governance.description',
+    nameKey: 'plugins.meta.governance.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['governance'],
   },
 }
 

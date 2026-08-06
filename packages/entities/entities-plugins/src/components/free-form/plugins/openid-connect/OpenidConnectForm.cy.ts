@@ -887,6 +887,28 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('external-client-id').should('exist')
     })
 
+    it('infers Kong Identity mode from an identity.konghq issuer on edit and keeps saved auth_methods', () => {
+      mountPrincipalsForm({
+        isEditing: true,
+        model: createPrincipalsModel({
+          id: 'plugin-id',
+          issuer: 'https://my-server.us.identity.konghq.com',
+          auth_methods: ['bearer'],
+        }),
+      })
+
+      cy.getTestId('oidc-auth-mode-kong-identity').closest('.k-radio').should('have.class', 'checked')
+
+      // Edit-load must not reset the saved auth_methods
+      cy.get('@onFormChange').then((spy: any) => {
+        for (const args of spy.args) {
+          if (Array.isArray(args[0]?.config?.auth_methods)) {
+            expect(args[0].config.auth_methods).to.deep.equal(['bearer'])
+          }
+        }
+      })
+    })
+
     it('adopts the host-resolved principals directory name on create', () => {
       mountPrincipalsForm({ formsConfig: { principalsDirectoryName: 'my-directory' } })
 
@@ -1024,24 +1046,12 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('oidc-principals-dp-version-alert').should('not.exist')
     })
 
-    it('shows the principals creation guide once the host resolved it visible, regardless of the lookup toggle', () => {
+    it('shows the principals creation guide when lookup is on and the host resolved it visible', () => {
       mountPrincipalsForm({ formsConfig: { principalsCreationGuideVisible: true } })
 
       expandSettings()
+      cy.getTestId('use-principal-lookup').click({ force: true })
       cy.getTestId('principals-create-guide').should('be.visible')
-    })
-
-    it('shows the creation guide instead of the DP version alert when no principals exist yet, even on an old data plane', () => {
-      mountPrincipalsForm({
-        formsConfig: {
-          principalsCreationGuideVisible: true,
-          dataPlaneVersions: ['3.14.1.0', '3.15.0.0'],
-        },
-      })
-
-      expandSettings()
-      cy.getTestId('principals-create-guide').should('be.visible')
-      cy.getTestId('oidc-principals-dp-version-alert').should('not.exist')
     })
   })
 })

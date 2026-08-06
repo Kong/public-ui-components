@@ -214,6 +214,10 @@ const RENDER_RULES: RenderRules = {
     'config.cluster_cache_redis.cloud_authentication.azure_client_secret': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'azure'],
     'config.cluster_cache_redis.cloud_authentication.azure_tenant_id': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'azure'],
 
+    'config.cluster_cache_redis.cloud_authentication.oauth': ['config.cluster_cache_redis.cloud_authentication.auth_provider', 'oauth'],
+    'config.cluster_cache_redis.cloud_authentication.oauth.username': ['config.cluster_cache_redis.cloud_authentication.oauth.grant_type', 'password'],
+    'config.cluster_cache_redis.cloud_authentication.oauth.password': ['config.cluster_cache_redis.cloud_authentication.oauth.grant_type', 'password'],
+
     'config.redis': ['config.session_storage', 'redis'],
   },
   bundles: [
@@ -290,19 +294,20 @@ const TEXTAREA_FIELDS = new Set([
   'config.unauthorized_error_message',
   'config.forbidden_error_message',
   // JWK key-material members (RSA modulus/exponents, EC coordinates, symmetric keys)
-  'config.client_jwk.*.d',
-  'config.client_jwk.*.dp',
-  'config.client_jwk.*.dq',
-  'config.client_jwk.*.k',
-  'config.client_jwk.*.n',
-  'config.client_jwk.*.oth',
-  'config.client_jwk.*.p',
-  'config.client_jwk.*.q',
-  'config.client_jwk.*.qi',
-  'config.client_jwk.*.r',
-  'config.client_jwk.*.t',
-  'config.client_jwk.*.x',
-  'config.client_jwk.*.y',
+  // Note: these fields are encrypted in the schema, textarea can not be masked, keep them as password input now.
+  // 'config.client_jwk.*.d',
+  // 'config.client_jwk.*.dp',
+  // 'config.client_jwk.*.dq',
+  // 'config.client_jwk.*.k',
+  // 'config.client_jwk.*.n',
+  // 'config.client_jwk.*.oth',
+  // 'config.client_jwk.*.p',
+  // 'config.client_jwk.*.q',
+  // 'config.client_jwk.*.qi',
+  // 'config.client_jwk.*.r',
+  // 'config.client_jwk.*.t',
+  // 'config.client_jwk.*.x',
+  // 'config.client_jwk.*.y',
   // Each x5c chain entry is a full base64 DER certificate
   'config.client_jwk.*.x5c.*',
 ])

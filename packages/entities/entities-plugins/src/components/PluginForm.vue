@@ -193,6 +193,7 @@ import {
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import { isAxiosError, type AxiosError, type AxiosResponse } from 'axios'
+import DOMPurify from 'dompurify'
 import { marked, type MarkedOptions } from 'marked'
 import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType, inject } from 'vue'
 import { useRouter } from 'vue-router'
@@ -824,7 +825,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // KAG-3347: Add /config-.*/ to cover deep fields like `config.redis.*` in the rate-limiting-advanced plugin
     if (parentKey === 'config' || parentKey.startsWith('config-')) {
       if (schema[key]?.description) {
-        initialFormSchema[field].help = marked.parse(schema[key].description, { mangle: false, headerIds: false } as MarkedOptions)
+        initialFormSchema[field].help = DOMPurify.sanitize(marked.parse(schema[key].description, { mangle: false, headerIds: false } as MarkedOptions) as string)
       }
     }
 
@@ -933,7 +934,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }
 
     if (scheme.hint) {
-      initialFormSchema[field].hint = scheme.hint
+      initialFormSchema[field].hint = DOMPurify.sanitize(scheme.hint)
     }
 
     // Custom frontend schema override
@@ -947,7 +948,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
           initialFormSchema[field] = { help, label, hint, values, referenceable, elements, ...overrides }
           // Eagerly replace the help text because we are overriding
           if (typeof helpOverride === 'string') {
-            initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)
+            initialFormSchema[field].help = DOMPurify.sanitize(marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions) as string)
           }
         }
       })
@@ -970,7 +971,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
           // Only replace the help text when it is not defined because it may have already been
           // overridden by the previous step
           if (itemField.help === undefined && typeof description === 'string') {
-            itemField.help = marked.parse(description, { mangle: false, headerIds: false } as MarkedOptions)
+            itemField.help = DOMPurify.sanitize(marked.parse(description, { mangle: false, headerIds: false } as MarkedOptions) as string)
           }
         }
       }

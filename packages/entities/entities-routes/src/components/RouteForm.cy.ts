@@ -359,6 +359,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-paths-input-1').should('not.exist')
 
           // expressions editor
+          // Monaco has a long cold start without the Vite plugin. Component tests use the global Cypress config,
+          // so the entities-routes Vite plugin cannot be applied here.
+          cy.get('.expression-editor[data-testid="monaco-editor-container"]', { timeout: 20000 })
+            .should('not.have.class', 'loading')
           cy.get('.expression-editor .monaco-editor').should('be.visible')
 
           // base advanced fields

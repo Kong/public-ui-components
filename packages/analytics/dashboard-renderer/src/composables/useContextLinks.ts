@@ -15,6 +15,7 @@ const EXPLORE_DATASOURCES = [
   'agentic_usage',
   'platform',
   'platform_usage',
+  'managed_cache_usage',
   undefined,
 ] as const
 
@@ -69,7 +70,7 @@ export default function useContextLinks(
     return true
   })
 
-  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && !isTableChart.value && definition.value.query.datasource !== 'llm_usage' && !isPlatformDatasource(definition.value.query.datasource) && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
+  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && !isTableChart.value && definition.value.query.datasource !== 'llm_usage' && definition.value.query.datasource !== 'managed_cache_usage' && !isPlatformDatasource(definition.value.query.datasource) && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
   const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && isExploreDatasource(definition.value.query.datasource) && isAdvancedAnalytics.value && !datasourceConfigLoading.value)
 
   const chartDataGranularity = computed(() => {

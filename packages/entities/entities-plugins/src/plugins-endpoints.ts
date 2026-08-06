@@ -8,6 +8,7 @@ export default {
     konnect: {
       all: `${konnectBaseApiUrl}/plugins`,
       forEntity: `${konnectBaseApiUrl}/{entityType}/{entityId}/plugins`,
+      search: `${konnectBaseApiUrl}/plugins/search`,
     },
     kongManager: {
       all: `${KMBaseApiUrl}/plugins`,

@@ -125,7 +125,7 @@ describe('ReferableFieldItem', () => {
     it('should call scrollToField when clicked', async () => {
       const wrapper = mountComponent('config.test_field')
 
-      const scrollToSpy = vi.spyOn(window, 'scrollTo')
+      const scrollToSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
       const mockLabel = appendLabel('config-test_field')
 
       await wrapper.find('.referable-field-link').trigger('click')
@@ -140,7 +140,7 @@ describe('ReferableFieldItem', () => {
     it('should handle missing target element gracefully', async () => {
       const wrapper = mountComponent('config.nonexistent_field')
 
-      const scrollToSpy = vi.spyOn(window, 'scrollTo')
+      const scrollToSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
 
       await wrapper.find('.referable-field-link').trigger('click')
 
@@ -153,7 +153,7 @@ describe('ReferableFieldItem', () => {
     it('should use smooth scroll behavior', async () => {
       const wrapper = mountComponent('config.smooth_field')
 
-      const scrollToSpy = vi.spyOn(window, 'scrollTo')
+      const scrollToSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
       const mockLabel = appendLabel('config-smooth_field')
 
       await wrapper.find('.referable-field-link').trigger('click')
@@ -171,7 +171,7 @@ describe('ReferableFieldItem', () => {
     it('should apply scroll offset', async () => {
       const wrapper = mountComponent('config.offset_field')
 
-      const scrollToSpy = vi.spyOn(window, 'scrollTo')
+      const scrollToSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
       const mockLabel = appendLabel('config-offset_field', true)
 
       await wrapper.find('.referable-field-link').trigger('click')

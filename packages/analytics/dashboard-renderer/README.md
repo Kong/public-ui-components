@@ -9,6 +9,7 @@ Render Analytics charts on a page from a JSON definition.
   - [Example](#example)
   - [Slotted content](#slotted-content)
   - [Auto-fit row content](#auto-fit-row-content)
+- [CsvExportModal](#csvexportmodal)
 - [Editable Dashboard Features](#editable-dashboard-features)
 - [Editable Dashboard Events](#editable-dashboard-events)
 - [Dashboard Config Schema](#dashboard-config-schema)
@@ -364,6 +365,39 @@ watch(() => config.value.tiles, (tiles) => {
   :context="context"
   @edit-tile="handleEditTile"
 />
+```
+
+## CsvExportModal
+
+`CsvExportModal` renders a preview and download action for an export result.
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `exportState` | `ExploreExportState` | Yes | Current loading, error, or successful export data. |
+| `filename` | `string` | Yes | Base name used for the generated CSV file. |
+| `modalDescription` | `string` | No | Replaces the default export description. |
+
+It emits `closeModal` when cancelled; use it in templates as `@close-modal`.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { CsvExportModal } from '@kong-ui-public/dashboard-renderer'
+import type { ExploreExportState } from '@kong-ui-public/analytics-utilities'
+
+const exportModalVisible = ref(false)
+const exportState = ref<ExploreExportState>({ status: 'loading' })
+</script>
+
+<template>
+  <CsvExportModal
+    v-if="exportModalVisible"
+    :export-state="exportState"
+    filename="total-requests"
+    modal-description="Export for audit review."
+    @close-modal="exportModalVisible = false"
+  />
+</template>
 ```
 
 ## Editable Dashboard Features

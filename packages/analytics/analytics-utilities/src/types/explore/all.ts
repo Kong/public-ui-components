@@ -4,19 +4,21 @@ import { type ExploreAggregations, type ExploreFilterAll, type FilterableExplore
 import { type FilterableRequestDimensions, type FilterableRequestMetrics, type FilterableRequestWildcardDimensions } from './requests'
 import { type PlatformExploreFilterAll } from './platform'
 import { filterableAgenticExploreDimensions, type AgenticExploreAggregations, type AgenticExploreFilterAll, type FilterableAgenticExploreDimensions } from './agentic'
+import { filterableManagedCacheExploreDimensions, type FilterableManagedCacheExploreDimensions, type ManagedCacheExploreAggregations, type ManagedCacheExploreFilterAll } from './managed-cache'
 
-export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | AgenticExploreAggregations
-export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | AgenticExploreFilterAll | PlatformExploreFilterAll
+export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | AgenticExploreAggregations | ManagedCacheExploreAggregations
+export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | AgenticExploreFilterAll | PlatformExploreFilterAll | ManagedCacheExploreFilterAll
 export type AllFilterableDimensionsAndMetrics = FilterableExploreDimensions
   | FilterableAiExploreDimensions
   | FilterableBasicExploreDimensions
   | FilterableAgenticExploreDimensions
+  | FilterableManagedCacheExploreDimensions
   | FilterableRequestDimensions
   | FilterableRequestMetrics
   | FilterableRequestWildcardDimensions
 
 // 'platform' is deprecated; use 'platform_usage'.
-export const queryDatasources = ['basic', 'api_usage', 'llm_usage', 'agentic_usage', 'platform', 'platform_usage'] as const
+export const queryDatasources = ['basic', 'api_usage', 'llm_usage', 'agentic_usage', 'platform', 'platform_usage', 'managed_cache_usage'] as const
 
 export type QueryDatasource = typeof queryDatasources[number]
 
@@ -30,6 +32,7 @@ export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
   /** @deprecated Use `platform_usage`. */
   platform: PlatformExploreFilterAll
   platform_usage: PlatformExploreFilterAll
+  managed_cache_usage: ManagedCacheExploreFilterAll
 }
 
 /**
@@ -60,6 +63,7 @@ export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<strin
   /** @deprecated Use `platform_usage`. */
   platform: new Set(),
   platform_usage: new Set(),
+  managed_cache_usage: new Set(filterableManagedCacheExploreDimensions),
 } as const
 
 /**

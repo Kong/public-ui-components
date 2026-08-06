@@ -30,6 +30,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         }
         return `${entryName}.${format}.js`
       },
+      cssFileName: 'style',
     },
     rollupOptions: {
       external: [

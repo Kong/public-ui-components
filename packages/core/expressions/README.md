@@ -7,6 +7,7 @@ Reusable components to support [Kong's expressions language](https://developer.k
 - [Usage](#usage)
   - [Install](#install)
   - [Import and use](#import-and-use)
+  - [Color mode (light/dark theme)](#color-mode-lightdark-theme)
 - [Individual component documentation](#individual-component-documentation)
 
 ## Features
@@ -16,35 +17,34 @@ Reusable components to support [Kong's expressions language](https://developer.k
 ## Requirements
 
 - `vue` must be initialized in the host application
-- [`monaco-editor`](https://www.npmjs.com/package/monaco-editor) is required as a dependency in the host application
-- [`vite-plugin-monaco-editor`](https://www.npmjs.com/package/vite-plugin-monaco-editor) is a required Vite plugin to bundle the Monaco Editor and its web workers
+- [`@kong-ui-public/monaco-editor`](https://www.npmjs.com/package/@kong-ui-public/monaco-editor) is required to provide Monaco Editor runtime support and the Vite plugin used to bundle Monaco Editor and its web workers
 - [`@kong-ui-public/forms`](https://www.npmjs.com/package/@kong-ui-public/forms) is an optional dependency required for the `RouterPlaygroundModal` component
 
 ## Usage
 
 ### Install
 
-Install required `devDependencies` in your host application:
+Install the required Monaco Editor package in your host application:
 
 ```sh
-yarn add -D vite-plugin-monaco-editor
+yarn add @kong-ui-public/monaco-editor
 ```
 
-Enable the `vite-plugin-monaco-editor` plugin. Your Vite config should look like this:
+Enable the Monaco Editor Vite plugin from `@kong-ui-public/monaco-editor`. Your Vite config should look like this:
 
 ```ts
-import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+import monaco from '@kong-ui-public/monaco-editor/vite-plugin'
 
 export default defineConfig({
   // ...
   plugins: [
-    monacoEditorPlugin({}),
+    monaco({}),
   ],
   // ...
 }
 ```
 
-For more information on configuring the `vite-plugin-monaco-editor` plugin, you should refer to their [readme docs](https://github.com/vdesjs/vite-plugin-monaco-editor/blob/master/README.md).
+For more information on configuring languages, editor features, Shiki languages, and Shiki themes, refer to the [`@kong-ui-public/monaco-editor` Vite plugin docs](../monaco-editor/vite-plugin/README.md).
 
 ### Import and use
 
@@ -69,6 +69,20 @@ asyncInit.then(() => {
 ```
 
 You can also make use of Vue's experimental [Suspense](https://vuejs.org/guide/built-ins/suspense.html) component to load async components that use this package.
+
+### Color mode (light/dark theme)
+
+The Monaco-based editors in this package automatically match the host application's active color mode. To enable this, the host application should `provide` a `ComputedRef<'light' | 'dark'>` under the `app:konnectColorMode` injection key. When provided, the editors reactively switch between their light and dark themes as the value changes. When the key is not provided, the editors fall back to the `'light'` theme.
+
+```ts
+// In the host application (e.g. within your root component's setup)
+import { computed, provide } from 'vue'
+
+// `isDarkMode` is however your app tracks its current theme
+const colorMode = computed<'light' | 'dark'>(() => (isDarkMode.value ? 'dark' : 'light'))
+
+provide('app:konnectColorMode', colorMode)
+```
 
 ## Individual component documentation
 

@@ -130,16 +130,10 @@ const emit = defineEmits<{
 
 const { value: fieldValue, hide, ...field } = useField<string | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
-const initialValue = fieldValue?.value
 
 function handleUpdate(value: string) {
-  if (initialValue !== undefined && value === '' && value !== initialValue) {
-    fieldValue!.value = null
-    emit('update:modelValue', null)
-  } else {
-    fieldValue!.value = value.trim()
-    emit('update:modelValue', value.trim())
-  }
+  fieldValue!.value = value === '' ? null : value
+  emit('update:modelValue', fieldValue!.value)
 }
 
 const encrypted = computed(() => {

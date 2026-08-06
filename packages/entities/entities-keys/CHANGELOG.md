@@ -3,6 +3,181 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.15.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.16...@kong-ui-public/entities-keys@3.15.17) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [3.15.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.15...@kong-ui-public/entities-keys@3.15.16) (2026-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.14...@kong-ui-public/entities-keys@3.15.15) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.13...@kong-ui-public/entities-keys@3.15.14) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.12...@kong-ui-public/entities-keys@3.15.13) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.11...@kong-ui-public/entities-keys@3.15.12) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.10...@kong-ui-public/entities-keys@3.15.11) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.9...@kong-ui-public/entities-keys@3.15.10) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.8...@kong-ui-public/entities-keys@3.15.9) (2026-07-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.62.0 ([#3625](https://github.com/Kong/public-ui-components/issues/3625)) ([3c35427](https://github.com/Kong/public-ui-components/commit/3c3542730cdc90bd9ee4e6dfc52b51df4b4f50c2))
+
+
+
+
+
+## [3.15.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.7...@kong-ui-public/entities-keys@3.15.8) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.6...@kong-ui-public/entities-keys@3.15.7) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities:** json config block background [KHCP-21211] ([#3621](https://github.com/Kong/public-ui-components/issues/3621)) ([38e1bfb](https://github.com/Kong/public-ui-components/commit/38e1bfb5ca98eb1c08a6dbab2338c35d921ed227))
+
+
+
+
+
+## [3.15.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.5...@kong-ui-public/entities-keys@3.15.6) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.4...@kong-ui-public/entities-keys@3.15.5) (2026-07-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.3...@kong-ui-public/entities-keys@3.15.4) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.2...@kong-ui-public/entities-keys@3.15.3) (2026-07-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.1...@kong-ui-public/entities-keys@3.15.2) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.15.0...@kong-ui-public/entities-keys@3.15.1) (2026-07-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+# [3.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.14.0...@kong-ui-public/entities-keys@3.15.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [3.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.41...@kong-ui-public/entities-keys@3.14.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+## [3.13.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.40...@kong-ui-public/entities-keys@3.13.41) (2026-07-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
 ## [3.13.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.13.39...@kong-ui-public/entities-keys@3.13.40) (2026-07-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-keys

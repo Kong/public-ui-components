@@ -3,6 +3,202 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.60.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.60.0...@kong-ui-public/entities-shared@3.60.1) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+# [3.60.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.59.3...@kong-ui-public/entities-shared@3.60.0) (2026-08-06)
+
+
+### Features
+
+* **entities-shared:** add OnboardingCard component ([#3658](https://github.com/Kong/public-ui-components/issues/3658)) ([9e8c160](https://github.com/Kong/public-ui-components/commit/9e8c1606d031536d2b154887186d33ff3f0df370))
+
+
+
+
+
+## [3.59.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.59.2...@kong-ui-public/entities-shared@3.59.3) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.59.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.59.1...@kong-ui-public/entities-shared@3.59.2) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.59.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.59.0...@kong-ui-public/entities-shared@3.59.1) (2026-07-31)
+
+
+### Bug Fixes
+
+* **entities:** monaco editors active color mode theme [KHCP-21398] ([#3635](https://github.com/Kong/public-ui-components/issues/3635)) ([3070af9](https://github.com/Kong/public-ui-components/commit/3070af964f912248238b293ecfb88bc508ed891b))
+
+
+
+
+
+# [3.59.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.58.0...@kong-ui-public/entities-shared@3.59.0) (2026-07-31)
+
+
+### Features
+
+* **entities-shared:** deep sensitive fields [khcp-20573] ([#3622](https://github.com/Kong/public-ui-components/issues/3622)) ([d717146](https://github.com/Kong/public-ui-components/commit/d717146220c1de6e9058c7fd7ee4eda6f70c01e9))
+
+
+
+
+
+# [3.58.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.10...@kong-ui-public/entities-shared@3.58.0) (2026-07-31)
+
+
+### Features
+
+* **entities-plugins:** governance feature select updates ([#3629](https://github.com/Kong/public-ui-components/issues/3629)) ([983cd6d](https://github.com/Kong/public-ui-components/commit/983cd6d22018ad39abe061deac81cae295d419eb))
+
+
+
+
+
+## [3.57.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.9...@kong-ui-public/entities-shared@3.57.10) (2026-07-29)
+
+
+### Bug Fixes
+
+* **entities:** cap code block height and skip highlighting for large configs [KM-2992] ([#3628](https://github.com/Kong/public-ui-components/issues/3628)) ([2fd9191](https://github.com/Kong/public-ui-components/commit/2fd919103fb9ff77f2c54dc19c7051261593749e))
+
+
+
+
+
+## [3.57.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.8...@kong-ui-public/entities-shared@3.57.9) (2026-07-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.62.0 ([#3625](https://github.com/Kong/public-ui-components/issues/3625)) ([3c35427](https://github.com/Kong/public-ui-components/commit/3c3542730cdc90bd9ee4e6dfc52b51df4b4f50c2))
+
+
+
+
+
+## [3.57.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.7...@kong-ui-public/entities-shared@3.57.8) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.57.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.6...@kong-ui-public/entities-shared@3.57.7) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities:** json config block background [KHCP-21211] ([#3621](https://github.com/Kong/public-ui-components/issues/3621)) ([38e1bfb](https://github.com/Kong/public-ui-components/commit/38e1bfb5ca98eb1c08a6dbab2338c35d921ed227))
+
+
+
+
+
+## [3.57.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.5...@kong-ui-public/entities-shared@3.57.6) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.57.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.4...@kong-ui-public/entities-shared@3.57.5) (2026-07-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.57.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.3...@kong-ui-public/entities-shared@3.57.4) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.57.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.2...@kong-ui-public/entities-shared@3.57.3) (2026-07-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.57.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.1...@kong-ui-public/entities-shared@3.57.2) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+## [3.57.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.57.0...@kong-ui-public/entities-shared@3.57.1) (2026-07-21)
+
+
+### Bug Fixes
+
+* **debugger:** latency table colors ([#3582](https://github.com/Kong/public-ui-components/issues/3582)) ([44f0d7f](https://github.com/Kong/public-ui-components/commit/44f0d7f8695cb07f5af618eea48203f55219c1f2))
+
+
+
+
+
+# [3.57.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.56.0...@kong-ui-public/entities-shared@3.57.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [3.56.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.55.0...@kong-ui-public/entities-shared@3.56.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+# [3.55.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.54.1...@kong-ui-public/entities-shared@3.55.0) (2026-07-15)
+
+
+### Features
+
+* **entities-plugins:** redesign Konnect plugin list (search API, Name/Scope/Status columns) ([#3551](https://github.com/Kong/public-ui-components/issues/3551)) ([f2bdb94](https://github.com/Kong/public-ui-components/commit/f2bdb945c05d53fd80532d84fa44ac4733b47782))
+
+
+
+
+
 ## [3.54.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.54.0...@kong-ui-public/entities-shared@3.54.1) (2026-07-08)
 
 

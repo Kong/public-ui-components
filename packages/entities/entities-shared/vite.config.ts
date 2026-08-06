@@ -25,11 +25,13 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         entryName === 'index'
           ? `${sanitizedPackageName}.${format}.js`
           : `${entryName}.${format}.js`,
+      cssFileName: 'style',
     },
     rollupOptions: {
       external: [
         '@kong-ui-public/monaco-editor',
         '@kong-ui-public/monaco-editor/dist/runtime/style.css',
+        '@vueuse/core',
         'monaco-editor',
         /^@shikijs\//,
       ],

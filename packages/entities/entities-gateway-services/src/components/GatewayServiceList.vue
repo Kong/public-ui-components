@@ -392,8 +392,8 @@ const tableHeaders: BaseTableHeaders = fields
 /**
  * Fetcher & Filtering
  */
-const fetcherBaseUrl = computed<string>(() => {
-  let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].all}`
+const buildFetcherUrl = (endpoint: string): string => {
+  let url = `${props.config.apiBaseUrl}${endpoint}`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
@@ -401,7 +401,19 @@ const fetcherBaseUrl = computed<string>(() => {
 
   return url
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+}
+
+const fetcherBaseUrl = computed<string>(() => buildFetcherUrl(endpoints.list[props.config.app].all))
+
+const activeFetcherUrl = computed<string>(() => {
+  // Only hit the search endpoint once the user is actually searching in workspace
+  if (props.config.app === 'konnect' && props.config.workspace && filterQuery.value) {
+    return buildFetcherUrl(endpoints.list.konnect.search)
+  }
+
+  return fetcherBaseUrl.value
 })
+
 const baseRequestUrl = computed((): URL => {
   return props.config.apiBaseUrl.startsWith('/')
     ? new URL(`${window.location.origin}${fetcherBaseUrl.value}`)
@@ -433,7 +445,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
+} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), activeFetcherUrl)
 
 const clearFilter = (): void => {
   filterQuery.value = ''

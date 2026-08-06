@@ -57,7 +57,6 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'modern',
         // Inject the @kong/design-tokens SCSS variables to make them available for all components.
         additionalData: '@use "@kong/design-tokens/tokens/scss/variables" as *;',
       },

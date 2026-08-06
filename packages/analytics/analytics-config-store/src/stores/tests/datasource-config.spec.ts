@@ -221,11 +221,14 @@ describe('useDatasourceConfigStore', () => {
   })
 
   it('isReady resolves even if the config fetch fails', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const store = useStore({ reject: true })
 
     await store.isReady()
     expect(store.loading).toBe(false)
     expect(store.datasourceConfig).toEqual([])
+    expect(warnSpy).toHaveBeenCalledTimes(2)
+    warnSpy.mockRestore()
   })
 
   describe('isFilterValidForDatasource', () => {

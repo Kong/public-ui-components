@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { sortFieldsByBundles, normalizeMatch } from './utils'
+import { sortFieldsByBundles, normalizeMatch, pruneHiddenPaths } from './utils'
 import type { NamedFieldSchema } from '../../../types/plugins/form-schema'
 
 describe('sortFieldsByBundles', () => {
@@ -350,6 +350,78 @@ describe('sortFieldsByBundles', () => {
         'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
       ])
     })
+  })
+})
+
+describe('pruneHiddenPaths', () => {
+  // Reset value resolver: default map falls back to null (optional field).
+  const resolver = (defaults: Record<string, unknown> = {}) =>
+    (path: string) => (path in defaults ? defaults[path] : null)
+
+  const hiddenBy = (...paths: string[]) => {
+    const set = new Set(paths)
+    return (path: string) => set.has(path)
+  }
+
+  it('resets a hidden top-level field to its empty-or-default value', () => {
+    const data = { a: 'keep', b: 'secret' }
+    pruneHiddenPaths(data, hiddenBy('b'), resolver())
+
+    expect(data).toEqual({ a: 'keep', b: null })
+  })
+
+  it('leaves visible fields untouched', () => {
+    const data = { a: 'x', b: 'y' }
+    pruneHiddenPaths(data, hiddenBy(), resolver())
+
+    expect(data).toEqual({ a: 'x', b: 'y' })
+  })
+
+  it('resets only the hidden nested field without adding extra keys', () => {
+    const data = { config: { strategy: 'local', host: 'h' } }
+    pruneHiddenPaths(data, hiddenBy('config.host'), resolver())
+
+    expect(data).toEqual({ config: { strategy: 'local', host: null } })
+  })
+
+  it('replaces a hidden record subtree wholesale and never leaks its children', () => {
+    const data = { config: { redis: { host: 'h', port: 6379 } } }
+    pruneHiddenPaths(data, hiddenBy('config.redis'), resolver())
+
+    // redis reset to null; its children (host/port) must not appear anywhere
+    expect(data).toEqual({ config: { redis: null } })
+  })
+
+  it('does not descend into a hidden subtree even if its children are also hidden', () => {
+    const data = { config: { redis: { host: 'h' } } }
+    // Both parent and child hidden; parent wins, child is never processed.
+    pruneHiddenPaths(data, hiddenBy('config.redis', 'config.redis.host'), resolver())
+
+    expect(data).toEqual({ config: { redis: null } })
+  })
+
+  it('does not auto-create a missing parent for a stale deep hidden path (KM-2182)', () => {
+    // config.redis is null, but a stale hidden path points below it.
+    const data = { config: { redis: null } }
+    pruneHiddenPaths(data, hiddenBy('config.redis.host'), resolver())
+
+    // Must stay null — no spurious { redis: { host: ... } } created.
+    expect(data).toEqual({ config: { redis: null } })
+  })
+
+  it('resets a hidden field inside an array item', () => {
+    const data = { callouts: [{ name: 'a', secret: 's' }, { name: 'b', secret: 't' }] }
+    pruneHiddenPaths(data, hiddenBy('callouts.1.secret'), resolver())
+
+    expect(data).toEqual({ callouts: [{ name: 'a', secret: 's' }, { name: 'b', secret: null }] })
+  })
+
+  it('uses the provided default (e.g. required field) as the reset value and does not recurse into it', () => {
+    const data = { config: { opts: { a: 1, b: 2 } } }
+    const defaults = { 'config.opts': { a: 0 } }
+    pruneHiddenPaths(data, hiddenBy('config.opts'), resolver(defaults))
+
+    expect(data).toEqual({ config: { opts: { a: 0 } } })
   })
 })
 

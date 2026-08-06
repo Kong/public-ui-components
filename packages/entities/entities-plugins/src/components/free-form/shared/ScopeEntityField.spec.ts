@@ -76,8 +76,11 @@ describe('ScopeEntityField', () => {
   })
 
   it('clears selectedItem when entity not found (404) and developer=false', async () => {
+    const errorMock = vi.spyOn(console, 'error').mockImplementation(() => {})
     const { wrapper } = createWrapper(false, 404)
     await flushPromises()
+    expect(errorMock).toHaveBeenCalledOnce()
+    errorMock.mockRestore()
 
     const stub = wrapper.findComponent(FieldScopedEntitySelectStub)
     expect(stub.props('selectedItem')).toBeUndefined()

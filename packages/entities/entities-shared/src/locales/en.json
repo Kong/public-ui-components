@@ -44,7 +44,8 @@
       "copy": "Copy JSON",
       "deck_customize": "Customize before copying to CLI",
       "deck_customize_cancel": "Cancel",
-      "sensitive_fields": "Show sensitive fields"
+      "sensitive_fields": "Show sensitive fields",
+      "sensitive_fields_tooltip": "View masked sensitive data in your configurations if any field values have been redacted."
     },
     "sections": {
       "advanced": "Advanced",
@@ -160,6 +161,9 @@
       "generate": "Generate",
       "generating": "Generating…"
     }
+  },
+  "onboardingCard": {
+    "dismissLabel": "Dismiss"
   },
   "sensitiveInput": {
     "rotateKey": "Rotate key",

@@ -32,17 +32,16 @@
           required
           type="text"
         />
-        <KTextArea
+        <SensitiveInput
           v-model.trim="state.fields.value"
-          autocomplete="off"
-          :character-limit="false"
           data-testid="secret-form-value"
           :label="t('secrets.form.fields.value.label')"
+          :labels="{ rotateLabel: t('secrets.form.fields.value.rotateLabel') }"
+          :mode="sensitiveInputMode"
+          multiline
           :placeholder="t('secrets.form.fields.value.placeholder')"
           :readonly="state.readonly"
           required
-          resizable
-          type="text"
         />
         <KAlert
           appearance="warning"
@@ -61,6 +60,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   SupportedEntityType,
+  SensitiveInput,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -162,6 +162,8 @@ const updateFormValues = (data: Record<string, any>): void => {
 const formType = computed((): EntityBaseFormType => props.secretId
   ? EntityBaseFormType.Edit
   : EntityBaseFormType.Create)
+
+const sensitiveInputMode = computed((): 'edit' | 'create' => formType.value === EntityBaseFormType.Edit ? 'edit' : 'create')
 
 const submitUrl = computed<string>(() => {
   return `${props.config.apiBaseUrl}${formEndpoints.value[formType.value]}`

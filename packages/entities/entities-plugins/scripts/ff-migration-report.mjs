@@ -140,7 +140,7 @@ const MILESTONES = [
   {
     id: 'M21',
     name: 'M21 — Transformations & Serverless (cont.)',
-    plugins: ['jq', 'kafka-upstream', 'azure-functions', 'openwhisk'],
+    plugins: ['jq', 'kafka-upstream', 'azure-functions'],
   },
 
   // ── AI ────────────────────────────────────────────────────
@@ -155,6 +155,15 @@ const MILESTONES = [
     plugins: ['ai-llm-as-judge', 'ai-lakera-guard', 'ai-mcp-oauth2', 'ai-sanitizer', 'ai-prompt-compressor', 'ai-rag-injector', 'ai-semantic-response-guard'],
   },
 ]
+
+/**
+ * Plugins excluded from tracking (e.g. no UI to migrate).
+ *
+ * @type {Set<string>}
+ */
+const EXCLUDED_PLUGINS = new Set([
+  'openwhisk', // no UI
+])
 
 /**
  * Milestone IDs that have been deployed to production (Complete status).
@@ -230,6 +239,7 @@ function readLocalPlugins() {
 
 // --- Generate Markdown report ---
 function buildReport(kongPlugins, localSlugs) {
+  kongPlugins = kongPlugins.filter(p => !EXCLUDED_PLUGINS.has(p))
   const kongPluginSet = new Set(kongPlugins)
 
   // Plugins on Kong website not assigned to any configured milestone → Uncategorized

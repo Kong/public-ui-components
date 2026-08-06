@@ -5,6 +5,7 @@ export default {
   list: {
     konnect: {
       all: `${konnectBaseApiUrl}/services`,
+      search: `${konnectBaseApiUrl}/services/search`,
     },
     kongManager: {
       all: `${KMBaseApiUrl}/services`,
