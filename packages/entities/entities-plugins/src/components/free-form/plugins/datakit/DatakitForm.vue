@@ -53,7 +53,7 @@
           ? t('plugins.free-form.datakit.advanced_configuration.show_label')
           : t('plugins.free-form.datakit.advanced_configuration.hide_label')"
       >
-        <CaCertificatesField />
+        <CaCertificatesField name="$.config.ca_certificates" />
       </KCollapse>
     </template>
 

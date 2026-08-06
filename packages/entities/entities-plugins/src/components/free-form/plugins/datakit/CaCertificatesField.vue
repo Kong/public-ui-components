@@ -1,19 +1,28 @@
 <template>
+  <KAlert
+    v-if="field.error"
+    appearance="danger"
+    :message="field.error.message"
+  />
   <KMultiselect
+    v-else
+    v-show="!hide"
     v-model="selectedIds"
+    v-bind="fieldAttrs"
     autosuggest
     clearable
-    data-testid="dk-ca-certificates-field"
+    :data-testid="`ff-${field.path!.value}`"
     :items="certItems"
-    :label="t('plugins.free-form.datakit.ca_certificates.label')"
-    :label-attributes="({
-      info: t('plugins.free-form.datakit.ca_certificates.tooltip'),
-      tooltipAttributes: { maxWidth: '400' },
-    } as any)"
     :loading="loadingCertificates"
-    :placeholder="t('plugins.free-form.datakit.ca_certificates.placeholder')"
     @query-change="debouncedQueryChange"
   >
+    <template
+      v-if="fieldAttrs.labelAttributes?.info"
+      #label-tooltip
+    >
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <div v-html="fieldAttrs.labelAttributes.info" />
+    </template>
     <template #item-template="{ item }">
       <div class="dk-ca-cert-item">
         <div class="dk-ca-cert-item-header">
@@ -41,36 +50,39 @@
         </div>
       </div>
     </template>
-    <template #empty>
-      <div>{{ t('plugins.free-form.datakit.ca_certificates.empty') }}</div>
-    </template>
   </KMultiselect>
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onBeforeMount } from 'vue'
-import { createI18n } from '@kong-ui-public/i18n'
+import { computed, inject, onBeforeMount, toRef } from 'vue'
 import { KBadge, KMultiselect } from '@kong/kongponents'
-import type { MultiselectItem } from '@kong/kongponents'
+import type { LabelAttributes, MultiselectItem } from '@kong/kongponents'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useDebouncedFilter } from '@kong-ui-public/entities-shared'
 
-import english from '../../../../locales/en.json'
 import endpoints from '../../../../plugins-endpoints'
-import { useFormShared } from '../../shared/composables'
+import { useField, useFieldAttrs } from '../../shared/composables'
+import type { BaseFieldProps } from '../../shared/types'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../../types'
-import type { DatakitPluginData } from './types'
 
 interface CertificateItem extends MultiselectItem {
   subject?: string
   tags?: string[]
 }
 
-const { t } = createI18n<typeof english>('en-us', english)
+interface CaCertificatesFieldProps extends BaseFieldProps {
+  labelAttributes?: LabelAttributes
+  required?: boolean
+  placeholder?: string
+}
+
+const props = defineProps<CaCertificatesFieldProps>()
+
+const { value: fieldValue, hide, ...field } = useField<string[] | null>(toRef(() => props.name))
+
+const fieldAttrs = useFieldAttrs(field.path!, toRef(() => props))
 
 const formConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!
-
-const { formData, setValue } = useFormShared<DatakitPluginData>()
 
 const {
   debouncedQueryChange: debouncedFilterQueryChange,
@@ -84,15 +96,9 @@ function debouncedQueryChange(query: string) {
 }
 
 const selectedIds = computed<string[]>({
-  get: () => formData.config?.ca_certificates ?? [],
+  get: () => fieldValue!.value ?? [],
   set: (value) => {
-    setValue({
-      ...formData,
-      config: {
-        ...formData.config,
-        ca_certificates: value.length ? value : null,
-      },
-    })
+    fieldValue!.value = value.length ? value : null
   },
 })
 
