@@ -550,10 +550,10 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       // Select a CA certificate — its issuer is shown as the item description
       cy.getTestId('gateway-service-ca-certs-select').findTestId('multiselect-trigger').click()
-      cy.get('.multiselect-popover [data-testid="multiselect-item-ca-cert-1"]')
+      cy.get('.multiselect-popover [data-testid="multiselect-item-ca-cert-1"]').should('be.visible')
         .find('.certificate-select-item-issuer')
         .should('contain.text', 'CN=Kong Testing Root CA')
-      cy.get('.multiselect-popover [data-testid="multiselect-item-ca-cert-1"] .select-item-label').click()
+      cy.get('.multiselect-popover [data-testid="multiselect-item-ca-cert-1"] button').click()
 
       cy.get('@onModelUpdatedSpy').should('have.been.called')
       cy.get('@onModelUpdatedSpy').then((spy: any) => {
