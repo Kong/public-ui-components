@@ -16,13 +16,6 @@
             {{ t('plugins.form.fields.condition.tooltip') }}
           </template>
         </KTooltip>
-
-        <KBadge
-          appearance="decorative"
-          size="small"
-        >
-          Beta
-        </KBadge>
       </div>
     </KLabel>
 
