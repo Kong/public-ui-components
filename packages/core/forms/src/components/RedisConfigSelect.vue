@@ -59,7 +59,7 @@
         </div>
       </template>
       <template
-        v-if="!shouldHideNewRedisConfiguration(formConfig)"
+        v-if="!hideNewRedis(formConfig)"
         #dropdown-footer-text
       >
         <div
@@ -112,7 +112,7 @@ import {
   type RedisConfigurationSource,
   redisManagedSourceFromTags,
 } from '../utils/redisPartialManagedSource'
-import { shouldHideNewRedisConfiguration } from '../utils/hideNewRedisConfiguration'
+import { hideNewRedis } from '../utils/hideNewRedisConfiguration'
 import RedisConfigCard from './RedisConfigCard.vue'
 
 defineEmits<{
