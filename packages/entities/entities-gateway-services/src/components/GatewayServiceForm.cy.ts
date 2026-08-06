@@ -549,7 +549,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('select-item-cert-1').click()
 
       // Select a CA certificate — its issuer is shown as the item description
-      cy.getTestId('gateway-service-ca-certs-select').findTestId('multiselect-trigger').click()
+      cy.getTestId('gateway-service-ca-certs-select').click()
       cy.get('.multiselect-popover [data-testid="multiselect-item-ca-cert-1"]').should('be.visible')
         .find('.certificate-select-item-issuer')
         .should('contain.text', 'CN=Kong Testing Root CA')
