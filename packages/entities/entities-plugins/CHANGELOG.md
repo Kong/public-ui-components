@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.256.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.255.3...@kong-ui-public/entities-plugins@9.256.0) (2026-08-06)
+
+
+### Features
+
+* **entities-plugins:** add allow_when/deny_when modes to ACL plugin form ([#3666](https://github.com/Kong/public-ui-components/issues/3666)) ([3549c31](https://github.com/Kong/public-ui-components/commit/3549c31bc9c0a1a87d4b53a151291dc943d9a498))
+
+
+
+
+
 ## [9.255.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.255.2...@kong-ui-public/entities-plugins@9.255.3) (2026-08-06)
 
 
