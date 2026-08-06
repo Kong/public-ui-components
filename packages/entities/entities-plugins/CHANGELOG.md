@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.257.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.256.0...@kong-ui-public/entities-plugins@9.257.0) (2026-08-06)
+
+
+### Features
+
+* **entities-plugins:** add ca_certificates advanced config to DataKit ([#3652](https://github.com/Kong/public-ui-components/issues/3652)) ([cd082a5](https://github.com/Kong/public-ui-components/commit/cd082a597e64a310061b115bfae6186cd8962a73))
+
+
+
+
+
 # [9.256.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.255.3...@kong-ui-public/entities-plugins@9.256.0) (2026-08-06)
 
 
