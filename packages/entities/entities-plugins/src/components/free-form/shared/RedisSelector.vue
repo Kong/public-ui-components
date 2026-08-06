@@ -296,8 +296,13 @@ const handleFormRedisPartialData = () => {
 }
 
 const redisConfigSelected = async (val: string | undefined) => {
-  // when selector is cleared, do nothing
-  if (!val) return
+  // Clear select so previous selct isnt left selected
+  if (!val) {
+    selectedRedisConfigItem.value = undefined
+    selectedRedisConfig.value = null
+    partialValue!.value = isFormEditing ? null : undefined
+    return
+  }
 
   selectedRedisConfigItem.value = val
   partialValue!.value = [{ id: val }]
