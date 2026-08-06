@@ -240,26 +240,18 @@
       @cancel="hideDeleteModal"
       @proceed="deleteRow"
     >
-      <template #message>
-        <i18nT
-          class="message"
-          keypath="actions.delete.confirm_message"
-          tag="p"
-        >
-          <template #entityName>
-            <strong>{{ gatewayServiceToBeDeleted && (gatewayServiceToBeDeleted.name || gatewayServiceToBeDeleted.id) }}</strong>
-          </template>
-        </i18nT>
-      </template>
       <template
         v-if="hasRelatedEntities"
         #extra
       >
-        <p>{{ relatedEntitiesMessage }}</p>
+        <p v-if="relatedEntitiesCheckFailed || !requiresForceDelete">
+          {{ relatedEntitiesMessage }}
+        </p>
         <KCheckbox
           v-if="requiresForceDelete"
           v-model="forceDeleteConfirmed"
           data-testid="gateway-service-delete-force-checkbox"
+          :description="t('actions.delete.related_entities.force_delete_help')"
           :label="t('actions.delete.related_entities.force_delete_checkbox')"
         />
       </template>
@@ -379,7 +371,7 @@ const props = defineProps({
   },
 })
 
-const { i18n: { t, formatUnixTimeStamp }, i18nT } = composables.useI18n()
+const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -684,29 +676,13 @@ const hasRelatedEntities = computed((): boolean =>
 // requires an explicit force delete confirmation
 const requiresForceDelete = computed((): boolean => relatedEntitiesCheckFailed.value || relatedRoutesCount.value > 0)
 
+// Only shown when the service has no routes (the checkbox + help text cover the routes case)
 const relatedEntitiesMessage = computed((): string => {
   if (relatedEntitiesCheckFailed.value) {
     return t('actions.delete.related_entities.check_failed')
   }
 
-  const routeCount = relatedRoutesCount.value
   const pluginCount = relatedPluginsCount.value
-
-  if (routeCount > 0 && pluginCount > 0) {
-    return t('actions.delete.related_entities.both', {
-      routeCount,
-      route: t('actions.delete.related_entities.route', { count: routeCount }),
-      pluginCount,
-      plugin: t('actions.delete.related_entities.plugin', { count: pluginCount }),
-    })
-  }
-
-  if (routeCount > 0) {
-    return t('actions.delete.related_entities.routes_only', {
-      routeCount,
-      route: t('actions.delete.related_entities.route', { count: routeCount }),
-    })
-  }
 
   return t('actions.delete.related_entities.plugins_only', {
     pluginCount,

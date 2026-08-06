@@ -880,7 +880,7 @@ describe('<GatewayServiceList />', () => {
 
       openDeleteModal()
 
-      cy.get(`${modal} .message`).should('contain.text', `Are you sure you want to delete this service ${serviceName}? This action cannot be reversed.`)
+      cy.get(`${modal} .message`).should('contain.text', `Are you sure you want to delete this service ${serviceName}?`)
       cy.get(`${modal} .extra`).should('not.exist')
       cy.getTestId('gateway-service-delete-force-checkbox').should('not.exist')
 
@@ -899,7 +899,8 @@ describe('<GatewayServiceList />', () => {
 
       openDeleteModal()
 
-      cy.get(`${modal} .extra`).should('contain.text', '2 routes').and('contain.text', '1 plugin')
+      cy.get(`${modal} .extra`).should('contain.text', 'Force delete')
+        .and('contain.text', 'Check this box to force deletion of all routes and plugins on linked service.')
       cy.getTestId('gateway-service-delete-force-checkbox').should('exist')
 
       cy.getTestId('confirmation-input').type(serviceName)
@@ -930,9 +931,10 @@ describe('<GatewayServiceList />', () => {
     })
 
     it('prefers a server-provided total over the fetched page length', () => {
+      // The routes page happens to come back empty, but the server-reported total says otherwise
       cy.intercept(
         { method: 'GET', url: `${servicesUrl}/${serviceId}/routes*` },
-        { statusCode: 200, body: { data: [{ id: 'route-1' }], total: 5 } },
+        { statusCode: 200, body: { data: [], total: 5 } },
       ).as('getRoutes')
       cy.intercept(
         { method: 'GET', url: `${servicesUrl}/${serviceId}/plugins*` },
@@ -941,7 +943,7 @@ describe('<GatewayServiceList />', () => {
 
       openDeleteModal()
 
-      cy.get(`${modal} .extra`).should('contain.text', '5 routes')
+      cy.getTestId('gateway-service-delete-force-checkbox').should('exist')
     })
 
     it('fails closed and requires force delete when the related-entities check errors out', () => {
