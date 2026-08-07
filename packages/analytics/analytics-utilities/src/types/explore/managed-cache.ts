@@ -7,6 +7,7 @@ export const queryableManagedCacheExploreDimensions = [
   'managed_cache',
   'network',
   'provider',
+  'provider_region',
   'region',
   'time',
 ] as const

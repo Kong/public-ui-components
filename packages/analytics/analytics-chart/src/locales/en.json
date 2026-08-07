@@ -226,6 +226,7 @@
     "managed_cache": "Managed cache",
     "network": "Network",
     "provider": "Provider",
+    "provider_region": "Provider region",
     "region": "Region",
     "cache_eviction_rate": "Cache eviction rate",
     "cache_expiration_rate": "Cache expiration rate",
