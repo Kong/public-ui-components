@@ -15,8 +15,7 @@ import { ValidType } from '../../types'
 import type { CsvData, CsvKeyValuePair } from '../../types'
 import type { ComputedRef, PropType } from 'vue'
 
-import mapKeys from 'lodash.mapkeys'
-import pick from 'lodash.pick'
+import { mapKeys, pick } from 'lodash'
 import { saveAs } from 'file-saver'
 import { unparse } from 'papaparse'
 
