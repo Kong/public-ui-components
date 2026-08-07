@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.23.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.5...@kong-ui-public/analytics-chart@10.23.6) (2026-08-07)
+
+
+### Bug Fixes
+
+* rename region -> provider_region MA-5169 ([#3673](https://github.com/Kong/public-ui-components/issues/3673)) ([6a5782f](https://github.com/Kong/public-ui-components/commit/6a5782f85ec8696aaddb867b884966b9d197ac11))
+
+
+
+
+
 ## [10.23.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.4...@kong-ui-public/analytics-chart@10.23.5) (2026-08-06)
 
 
