@@ -8,6 +8,9 @@ import PluginCatalog from './components/PluginCatalog.vue'
 import PluginSelectGrid from './components/select/PluginSelectGrid.vue'
 import PluginSelectCard from './components/select/PluginSelectCard.vue'
 import PluginConfigCard from './components/PluginConfigCard.vue'
+import AuthPluginOnboardingCard from './components/AuthPluginOnboardingCard.vue'
+import CreateConsumerCredentialForm from './components/CreateConsumerCredentialForm.vue'
+import AddCredentialToConsumerForm from './components/AddCredentialToConsumerForm.vue'
 import CommonForm from './components/free-form/Common/CommonForm.vue'
 import DynamicLayout from './components/free-form/shared/layout/DynamicLayout.vue'
 import PluginConfigurationForm from './components/free-form/shared/layout/PluginConfigurationForm.vue'
@@ -27,6 +30,9 @@ export {
   PluginSelectGrid,
   PluginSelectCard,
   PluginConfigCard,
+  AuthPluginOnboardingCard,
+  CreateConsumerCredentialForm,
+  AddCredentialToConsumerForm,
   CommonForm,
   DynamicLayout,
   PluginConfigurationForm,
