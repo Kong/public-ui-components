@@ -37,6 +37,20 @@ const AUTH_METHOD_LABELS: Record<typeof AUTH_METHOD_VALUES[number], string> = {
 
 const KONG_IDENTITY_METHODS = ['bearer', 'client_credentials', 'introspection', 'userinfo']
 
+// `config.shorthand_fields` holds deprecated aliases the backend keeps in sync with their
+// canonical fields (see PluginEntityForm.vue's stripUnknownConfigFields). They live in a
+// separate array from `fields[]`, so the free-form renderer never builds `ff-*` testids for
+// them. Derive the expected testids from the fixture itself rather than hand-maintaining
+// the ~30-entry list.
+const SHORTHAND_FIELD_TEST_IDS = (() => {
+  const configField = ((schemaOidc as any).fields as any[]).find(f => 'config' in f)
+  return (configField.config.shorthand_fields as any[]).map((entry) => {
+    const [name, def] = Object.entries(entry)[0] as [string, any]
+    const prefix = def.type === 'array' ? 'ff-array-config' : 'ff-config'
+    return `${prefix}.${name}`
+  })
+})()
+
 // Testids for Common tab fields. Array fields render as ArrayField → `ff-array-{path}`;
 // scalar fields render as `ff-{path}`.
 const COMMON_FIELD_PATHS = ['ff-array-config.client_id', 'ff-array-config.client_secret', 'ff-config.issuer'] as const
@@ -183,9 +197,13 @@ const mountForm = (options: MountOptions = {}) => {
 }
 
 // Konnect + principals schema + feature flag, with auth servers API stubbed.
-const mountPrincipalsForm = (options: MountOptions = {}, servers: Array<Record<string, any>> = []) => {
+const mountPrincipalsForm = (
+  options: MountOptions = {},
+  servers: Array<Record<string, any>> = [],
+  clients: Array<Record<string, any>> = [],
+) => {
   cy.intercept('GET', '**/v1/auth-servers/_computed', { body: { data: servers } }).as('getAuthServers')
-  cy.intercept('GET', '**/v1/auth-servers/*/clients', { body: { data: [] } }).as('getAuthServerClients')
+  cy.intercept('GET', '**/v1/auth-servers/*/clients', { body: { data: clients } }).as('getAuthServerClients')
 
   mountForm({
     withPrincipals: true,
@@ -319,8 +337,10 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('ff-array-config.consumer_claims').should('exist')
     })
 
-    it('does not render the deprecated consumer_claim field', () => {
-      cy.getTestId('ff-array-config.consumer_claim').should('not.exist')
+    it('does not render any deprecated config.shorthand_fields entries (e.g. consumer_claim)', () => {
+      for (const testId of SHORTHAND_FIELD_TEST_IDS) {
+        cy.getTestId(testId).should('not.exist')
+      }
     })
 
     it('does not show Common tab fields', () => {
@@ -605,7 +625,8 @@ describe('OpenidConnectForm', () => {
       mountForm()
 
       clickTab('advanced')
-      cy.getTestId('redis-config-card').should('exist')
+      // assert only 1 instance exists in advanced tab, make sure cluster_redis is not rendered with redis selector
+      cy.getTestId('redis-config-card').should('exist').and('have.length', 1)
     })
   })
 
@@ -785,17 +806,49 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('external-client-id').should('have.length', 1)
     })
 
-    it('populates the auth server select from the API and prefills issuer on selection', () => {
-      mountPrincipalsForm({}, [
+    it('on edit, restores the matching auth server + client from the API, infers Kong Identity mode, keeps saved auth_methods, and prefills issuer + client on selection', () => {
+      mountPrincipalsForm({
+        isEditing: true,
+        model: createPrincipalsModel({
+          id: 'plugin-id',
+          issuer: 'https://my-server.us.identity.konghq.com',
+          auth_methods: ['bearer'],
+          client_id: ['client-1-id'],
+        }),
+      }, [
         { id: 'server-1', name: 'My Auth Server', issuer: 'https://my-server.us.identity.konghq.com' },
+        { id: 'server-2', name: 'Other Auth Server', issuer: 'https://other-server.us.identity.konghq.com' },
+      ], [
+        { id: 'client-1', name: 'My Client', client_id: 'client-1-id' },
       ])
 
+      // The existing issuer matches server-1, so the select auto-restores it (no click
+      // needed) and its clients are fetched — mode is inferred as Kong Identity, the saved
+      // client_id stays selected, and the saved auth_methods must survive the edit-load.
       cy.wait('@getAuthServers')
+      cy.wait('@getAuthServerClients')
+
+      cy.getTestId('oidc-auth-mode-kong-identity').closest('.k-radio').should('have.class', 'checked')
+      cy.getTestId('principals-client-select').should('have.value', 'My Client')
+      cy.get('@onFormChange').then((spy: any) => {
+        for (const args of spy.args) {
+          if (Array.isArray(args[0]?.config?.auth_methods)) {
+            expect(args[0].config.auth_methods).to.deep.equal(['bearer'])
+          }
+        }
+      })
+
+      // Switching to a different server resets the client selection and prefills issuer;
+      // picking a client from that server's freshly-fetched list prefills client_id
       cy.getTestId('principals-directory-select').click()
-      cy.getTestId('select-item-server-1').click()
+      cy.getTestId('select-item-server-2').click()
+
+      cy.getTestId('principals-client-select').click()
+      cy.getTestId('select-item-client-1-id').click()
 
       lastFormChange().then((payload) => {
-        expect(payload.config.issuer).to.equal('https://my-server.us.identity.konghq.com')
+        expect(payload.config.issuer).to.equal('https://other-server.us.identity.konghq.com')
+        expect(payload.config.client_id).to.deep.equal(['client-1-id'])
       })
     })
 
@@ -967,14 +1020,14 @@ describe('OpenidConnectForm', () => {
     })
 
     it('shows the DP version alert when a data plane is older than 3.15', () => {
-      mountPrincipalsForm({ formsConfig: { dataPlaneVersions: ['3.14.1', '3.15.0'] } })
+      mountPrincipalsForm({ formsConfig: { dataPlaneVersions: ['3.14.1.0', '3.15.0.0'] } })
 
       expandSettings()
       cy.getTestId('oidc-principals-dp-version-alert').should('be.visible')
     })
 
     it('hides the DP version alert when all data planes are 3.15+', () => {
-      mountPrincipalsForm({ formsConfig: { dataPlaneVersions: ['3.15.0', '3.16.0'] } })
+      mountPrincipalsForm({ formsConfig: { dataPlaneVersions: ['3.15.0.0', '3.16.0.0'] } })
 
       expandSettings()
       cy.getTestId('oidc-principals-dp-version-alert').should('not.exist')
