@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.6...@kong-ui-public/analytics-chart@10.24.0) (2026-08-07)
+
+
+### Features
+
+* **analytics:** support cache_hit_rate and cache_items_average in charts [MA-5132] [MA-5283] ([#3670](https://github.com/Kong/public-ui-components/issues/3670)) ([e33d688](https://github.com/Kong/public-ui-components/commit/e33d6889720d23bf554c903d97e09d322e71fbee))
+
+
+
+
+
 ## [10.23.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.23.5...@kong-ui-public/analytics-chart@10.23.6) (2026-08-07)
 
 
