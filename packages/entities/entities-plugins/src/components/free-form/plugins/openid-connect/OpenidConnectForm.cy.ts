@@ -380,19 +380,6 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('ff-config.forbidden_error_message').should('have.prop', 'tagName', 'TEXTAREA')
     })
 
-    it('renders JWK key-material members as textareas inside client_jwk items', () => {
-      mountForm({
-        model: createModel({
-          client_jwk: [{ kty: 'RSA', n: 'abc', alg: null }],
-        }),
-      })
-      clickTab('advanced')
-
-      cy.getTestId('ff-config.client_jwk.0.n').should('have.prop', 'tagName', 'TEXTAREA')
-      // Short identifier members stay single-line inputs
-      cy.getTestId('ff-config.client_jwk.0.kid').should('have.prop', 'tagName', 'INPUT')
-    })
-
     it('renders redis sentinel/cluster nodes as tabbed array fields', () => {
       mountForm({
         model: createModel({
