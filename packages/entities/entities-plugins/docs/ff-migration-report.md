@@ -3,26 +3,26 @@
 > ⚠️ **Auto-generated — do not edit manually.**
 > To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
-> Generated: 2026-07-15T06:35:43.624Z
+> Generated: 2026-08-07T06:55:53.401Z
 
 ## Summary
 
-`██████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒` **99%**
+`██████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓` **100%**
 > █ complete · ▓ ready for release · ▒ in progress · ░ not started
 
 | Metric | Count |
 |--------|-------|
 | 📦 Total Kong Inc plugins | **112** |
-| ✅ Migrated | **111** |
-| ⏳ Pending | **1** |
+| ✅ Migrated | **112** |
+| ⏳ Pending | **0** |
 
 ### Milestone Status
 
 | Status | Count |
 |--------|-------|
 | ✅ Complete | **6** |
-| 🚀 Ready for Release | **16** |
-| 🔄 In Progress | **1** |
+| 🚀 Ready for Release | **17** |
+| 🔄 In Progress | **0** |
 | ⏸️ Not Started | **0** |
 
 ---
@@ -206,9 +206,9 @@
 
 ---
 
-### 🔄 M17 — Authentication: OpenID & Enterprise — In Progress (2/3)
+### 🚀 M17 — Authentication: OpenID & Enterprise — Ready for Release (3/3)
 
-- ⏳ `openid-connect`
+- ✅ `openid-connect`
 - ✅ `saml`
 - ✅ `vault-auth`
 
