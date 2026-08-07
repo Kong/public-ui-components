@@ -236,6 +236,7 @@
     "cache_hit_rate": "Cache hit rate"
   },
   "metricAxisTitles": {
+    "cache_hit_rate": "Cache hit rate {unit}",
     "error_rate": "Error rate in {unit}",
     "request_count": "Request count",
     "request_per_minute": "Requests per minute",
@@ -319,7 +320,7 @@
     "node_count": "Data plane node count",
     "cache_eviction_rate": "Cache eviction rate in {unit}",
     "cache_expiration_rate": "Cache expiration rate in {unit}",
-    "cache_items_average": "Cache items (avg) in {unit}",
+    "cache_items_average": "Cache items (avg)",
     "cache_memory_utilization_max": "Cache memory utilization (max) in {unit}"
   },
   "granularityAxisTitles": {

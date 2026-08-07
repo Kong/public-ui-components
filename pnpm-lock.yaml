@@ -215,15 +215,6 @@ importers:
       '@types/file-saver':
         specifier: ^2.0.7
         version: 2.0.7
-      '@types/lodash.mapkeys':
-        specifier: ^4.6.9
-        version: 4.6.9
-      '@types/lodash.pick':
-        specifier: ^4.4.9
-        version: 4.4.9
-      '@types/lodash.pickby':
-        specifier: ^4.6.9
-        version: 4.6.9
       '@types/papaparse':
         specifier: ^5.5.2
         version: 5.5.2
@@ -248,6 +239,9 @@ importers:
       date-fns-tz:
         specifier: ^3.2.0
         version: 3.2.0(date-fns@4.4.0)
+      lodash:
+        specifier: ^4.18.1
+        version: 4.18.1
       uuid:
         specifier: ^14.0.0
         version: 14.0.1
@@ -270,15 +264,6 @@ importers:
       file-saver:
         specifier: ^2.0.5
         version: 2.0.5
-      lodash.mapkeys:
-        specifier: ^4.6.0
-        version: 4.6.0
-      lodash.pick:
-        specifier: ^4.4.0
-        version: 4.4.0
-      lodash.pickby:
-        specifier: ^4.6.0
-        version: 4.6.0
       papaparse:
         specifier: ^5.5.3
         version: 5.5.3
@@ -3915,15 +3900,6 @@ packages:
 
   '@types/lodash.isequal@4.5.8':
     resolution: {integrity: sha512-uput6pg4E/tj2LGxCZo9+y27JNyB2OZuuI/T5F+ylVDYuqICLG2/ktjxx0v6GvVntAf8TvEzeQLcV0ffRirXuA==}
-
-  '@types/lodash.mapkeys@4.6.9':
-    resolution: {integrity: sha512-6/ERBCabeDI656LsV+oopLjdnJ/x1PCAE6kkkssH8e4i0K7Pw307noxHCbUc6cAVfTo9vx0Z+k3QZwy1IrUZcA==}
-
-  '@types/lodash.pick@4.4.9':
-    resolution: {integrity: sha512-hDpr96x9xHClwy1KX4/RXRejqjDFTEGbEMT3t6wYSYeFDzxmMnSKB/xHIbktRlPj8Nii2g8L5dtFDRaNFBEzUQ==}
-
-  '@types/lodash.pickby@4.6.9':
-    resolution: {integrity: sha512-SPI248FYnyd3jOxDeJq2vX2UKQnDzqacuqdeOVqwE1MPSk8gN8TA3FcHSMQWLlpBnuHgXvgKInvywbOFbidpJA==}
 
   '@types/lodash@4.17.24':
     resolution: {integrity: sha512-gIW7lQLZbue7lRSWEFql49QJJWThrTFFeIMJdp3eH4tKoxm1OvEPg02rm4wCCSHS0cL3/Fizimb35b7k8atwsQ==}
@@ -7754,21 +7730,11 @@ packages:
   lodash.map@4.6.0:
     resolution: {integrity: sha512-worNHGKLDetmcEYDvh2stPCrrQRkP20E4l0iIS7F8EvzMqBBi7ltvFN5m1HvTf1P7Jk1txKhvFcmYsCr8O2F1Q==}
 
-  lodash.mapkeys@4.6.0:
-    resolution: {integrity: sha512-0Al+hxpYvONWtg+ZqHpa/GaVzxuN3V7Xeo2p+bY06EaK/n+Y9R7nBePPN2o1LxmL0TWQSwP8LYZ008/hc9JzhA==}
-
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
 
   lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
-
-  lodash.pick@4.4.0:
-    resolution: {integrity: sha512-hXt6Ul/5yWjfklSGvLQl8vM//l3FtyHZeuelpzK6mm99pNvN9yTDruNZPEJZD1oWrqo+izBmB7oUfWgcCX7s4Q==}
-    deprecated: This package is deprecated. Use destructuring assignment syntax instead.
-
-  lodash.pickby@4.6.0:
-    resolution: {integrity: sha512-AZV+GsS/6ckvPOVQPXSiFFacKvKB4kOQu6ynt9wz0F3LO4R9Ij4K1ddYsIytDpSgLz88JHd9P+oaLeej5/Sl7Q==}
 
   lodash.truncate@4.4.2:
     resolution: {integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==}
@@ -14274,18 +14240,6 @@ snapshots:
     dependencies:
       '@types/lodash': 4.17.24
 
-  '@types/lodash.mapkeys@4.6.9':
-    dependencies:
-      '@types/lodash': 4.17.24
-
-  '@types/lodash.pick@4.4.9':
-    dependencies:
-      '@types/lodash': 4.17.24
-
-  '@types/lodash.pickby@4.6.9':
-    dependencies:
-      '@types/lodash': 4.17.24
-
   '@types/lodash@4.17.24': {}
 
   '@types/markdown-it@14.1.2':
@@ -18668,15 +18622,9 @@ snapshots:
 
   lodash.map@4.6.0: {}
 
-  lodash.mapkeys@4.6.0: {}
-
   lodash.merge@4.6.2: {}
 
   lodash.once@4.1.1: {}
-
-  lodash.pick@4.4.0: {}
-
-  lodash.pickby@4.6.0: {}
 
   lodash.truncate@4.4.2: {}
 
