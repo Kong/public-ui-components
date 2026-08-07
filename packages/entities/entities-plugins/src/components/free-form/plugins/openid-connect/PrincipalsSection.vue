@@ -538,27 +538,23 @@ const hasAuthServersAccess = computed(() => formsConfig?.isKongIdentityAuthServe
 const canCreateAuthServer = computed(() => formsConfig?.canCreateAuthServer !== false)
 const canCreateAuthServerClient = computed(() => formsConfig?.canCreateAuthServerClient !== false)
 
-// True when at least one connected data plane node can't process Kong Identity
-// principals (Gateway 3.15+ required). Drives a warning alert, not field hiding.
-const hasIncompatibleDataPlane = computed(() =>
-  (formsConfig?.dataPlaneVersions ?? []).some(isVersionBelowMinDpVersion),
-)
-
-// Whether principal lookup is on (the "Use principal lookup" opt-in toggle).
-const principalsEnabled = computed(() => formData.config?.principals?.enabled === true)
-
 // Host-precomputed: directory access → directory resolved → principals (list) access →
 // principals list empty → create-principal permission. `undefined` means the host hasn't
 // resolved it yet.
 const principalsCreationGuideVisible = computed(() => formsConfig?.principalsCreationGuideVisible)
 
-// Only shown once lookup is on.
-const principalsGuideVisible = computed(() =>
-  principalsEnabled.value && principalsCreationGuideVisible.value === true,
-)
+// Shown as soon as the host resolves that no principals exist yet, regardless of whether
+// the "Use principal lookup" toggle is on — the guide is what gets the user to create one.
+const principalsGuideVisible = computed(() => principalsCreationGuideVisible.value === true)
 
-const principalsSkeletonVisible = computed(() =>
-  principalsEnabled.value && principalsCreationGuideVisible.value === undefined,
+const principalsSkeletonVisible = computed(() => principalsCreationGuideVisible.value === undefined)
+
+// True when at least one connected data plane node can't process Kong Identity
+// principals (Gateway 3.15+ required). Drives a warning alert, not field hiding. Suppressed
+// while the creation guide applies — there's nothing to be incompatible with until a
+// principal exists, so the guide takes priority over the DP warning.
+const hasIncompatibleDataPlane = computed(() =>
+  !principalsGuideVisible.value && (formsConfig?.dataPlaneVersions ?? []).some(isVersionBelowMinDpVersion),
 )
 
 // Immediate so it runs on mount when the host resolves principalsDirectoryName late.
