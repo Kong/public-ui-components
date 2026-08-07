@@ -246,9 +246,6 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   // entityType: 'services',
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   cancelRoute: { name: 'list-plugin' },
-  // TODO: remove bfr merge
-  isKonnectManagedRedisEnabled: true,
-  isCloudGateway: false,
   viewServiceRoute: (serviceId: string) => ({ name: 'view-service', params: { id: serviceId } }),
   viewRouteRoute: (routeId: string) => ({ name: 'view-route', params: { id: routeId } }),
   viewConsumerRoute: (consumerId: string) => ({ name: 'view-consumer', params: { id: consumerId } }),
