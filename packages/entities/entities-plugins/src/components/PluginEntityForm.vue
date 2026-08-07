@@ -130,6 +130,7 @@ import {
   AUTOFILL_SLOT_NAME,
   FORMS_API_KEY,
   FORMS_CONFIG,
+  REDIS_CREATE_SLIDEOUT,
   customFields,
   getSharedFormName,
   sharedForms,
@@ -137,10 +138,13 @@ import {
   type AutofillSlotProps,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
+import { RedisConfigurationFormSlideout } from '@kong-ui-public/entities-redis-configurations'
+import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowReactive, shallowRef, watch, type PropType } from 'vue'
+import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowReactive, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
+import { useToaster } from '../composables/useToaster'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
@@ -452,6 +456,12 @@ watch(() => props.config, (newConfig) => {
   Object.assign(liveConfig, newConfig)
 })
 provide(FORMS_CONFIG, liveConfig)
+
+const toaster = useToaster()
+provide(REDIS_CREATE_SLIDEOUT, {
+  component: markRaw(RedisConfigurationFormSlideout),
+  toast: (payload: { message: string, appearance: 'success' | 'danger' }) => toaster(payload),
+})
 
 const sharedFormName = ref('')
 const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()

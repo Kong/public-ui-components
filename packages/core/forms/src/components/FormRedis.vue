@@ -213,7 +213,14 @@ const fieldVisible = (field: any) => {
   return field.visible
 }
 
-const updateRedisModel = async (val: string | number) => {
+const updateRedisModel = async (val: string | number | undefined) => {
+  if (!val) {
+    selectedRedisConfigItem.value = undefined
+    partialsSaved.value = undefined
+    emits('modelUpdated', undefined, 'partials')
+    return
+  }
+
   emits('modelUpdated', [{ id: val, path: props.redisPath }], 'partials')
   partialsSaved.value = [{ id: val, path: props.redisPath }]
   selectedRedisConfigItem.value = val
