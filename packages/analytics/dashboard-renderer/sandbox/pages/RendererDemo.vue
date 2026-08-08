@@ -287,16 +287,8 @@ const dashboardConfig = ref<DashboardConfig>({
       },
     } satisfies TileConfig,
     {
-      type: 'chart',
-      definition: {
-        chart: {
-          type: 'slottable',
-          id: 'slot-1',
-        },
-        query: {
-          datasource: 'basic',
-        },
-      },
+      id: 'slot-1',
+      type: 'slottable',
       layout: {
         position: {
           col: 1,
@@ -309,16 +301,8 @@ const dashboardConfig = ref<DashboardConfig>({
       },
     } satisfies TileConfig,
     {
-      type: 'chart',
-      definition: {
-        chart: {
-          type: 'slottable',
-          id: 'slot-2',
-        },
-        query: {
-          datasource: 'basic',
-        },
-      },
+      id: 'slot-2',
+      type: 'slottable',
       layout: {
         position: {
           col: 2,
