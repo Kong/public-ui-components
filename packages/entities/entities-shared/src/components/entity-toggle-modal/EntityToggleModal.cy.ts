@@ -42,36 +42,37 @@ describe('<EntityToggleModal />', () => {
       })
 
       it('should emit a "cancel" event when clicking cancel button', () => {
-        cy.wrap(Cypress.vueWrapper.emitted('cancel')).should('be.undefined')
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
-        cy.getTestId('modal-cancel-button').click().then(() => {
-          cy.wrap(Cypress.vueWrapper.emitted('cancel')).should('have.length', 1)
+        cy.wrap(null).should(() => {
+          expect(Cypress.vueWrapper.emitted('cancel')).to.be.undefined
+        })
+        cy.getTestId('modal-cancel-button').click()
+        cy.wrap(null).should(() => {
+          expect(Cypress.vueWrapper.emitted('cancel')).to.have.length(1)
         })
       })
 
       it('should emit a "proceed" event after |onConfirm| finish', () => {
-        cy.wrap(Cypress.vueWrapper.emitted('proceed')).should('be.undefined')
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
-        cy.getTestId('modal-action-button').click().then(() => {
-          // proceed should not be emitted immediately
-          cy.wrap(Cypress.vueWrapper.emitted('proceed')).should('be.undefined')
-
-          cy.wait(kConfirmDelay + 10).then(() => {
-            cy.wrap(Cypress.vueWrapper.emitted('proceed')).should('have.length', 1)
-          })
+        cy.wrap(null).should(() => {
+          expect(Cypress.vueWrapper.emitted('proceed')).to.be.undefined
+        })
+        cy.getTestId('modal-action-button').click()
+        cy.wrap(null).should(() => {
+          expect(Cypress.vueWrapper.emitted('proceed')).to.be.undefined
+        })
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(kConfirmDelay + 10)
+        cy.wrap(null).should(() => {
+          expect(Cypress.vueWrapper.emitted('proceed')).to.have.length(1)
         })
       })
 
       it('should disable action button when |onConfirm| is pending', () => {
         cy.getTestId('modal-action-button').should('not.be.disabled')
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
-        cy.getTestId('modal-action-button').click().then(() => {
-          cy.getTestId('modal-action-button').should('be.disabled')
-
-          cy.wait(kConfirmDelay + 10).then(() => {
-            cy.getTestId('modal-action-button').should('not.be.disabled')
-          })
-        })
+        cy.getTestId('modal-action-button').click()
+        cy.getTestId('modal-action-button').should('be.disabled')
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(kConfirmDelay + 10)
+        cy.getTestId('modal-action-button').should('not.be.disabled')
       })
 
       it.skip('should not |onConfirm| more than once when |onConfirm| is pending', () => {

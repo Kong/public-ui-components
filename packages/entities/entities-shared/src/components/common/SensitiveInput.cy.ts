@@ -18,8 +18,9 @@ describe('<SensitiveInput />', () => {
       cy.getTestId('sensitive-input-rotate').should('not.exist')
       input().should('not.have.attr', 'readonly')
       input().type('my-secret')
-      cy.then(() => Cypress.vueWrapper.emitted('update:modelValue'))
-        .should('not.be.undefined')
+      cy.wrap(null).should(() => {
+        expect(Cypress.vueWrapper.emitted('update:modelValue')).to.not.be.undefined
+      })
     })
 
     it('defaults to an empty value when modelValue is omitted', () => {
@@ -30,8 +31,9 @@ describe('<SensitiveInput />', () => {
       input().should('have.value', '')
       input().should('not.have.attr', 'readonly')
       input().type('my-secret')
-      cy.then(() => Cypress.vueWrapper.emitted('update:modelValue'))
-        .should('not.be.undefined')
+      cy.wrap(null).should(() => {
+        expect(Cypress.vueWrapper.emitted('update:modelValue')).to.not.be.undefined
+      })
     })
 
     it('masks the value by default and toggles visibility with the eye icon', () => {
@@ -64,7 +66,9 @@ describe('<SensitiveInput />', () => {
       })
 
       cy.getTestId('sensitive-input-rotate').click()
-      cy.then(() => Cypress.vueWrapper.emitted('rotate')).should('have.length', 1)
+      cy.wrap(null).should(() => {
+        expect(Cypress.vueWrapper.emitted('rotate')).to.have.length(1)
+      })
       cy.getTestId('sensitive-input-rotate').should('not.exist')
       input().should('not.have.attr', 'readonly')
       cy.getTestId('sensitive-input-toggle').should('be.visible')
@@ -97,8 +101,9 @@ describe('<SensitiveInput />', () => {
       cy.get('@generate').should('have.been.calledOnce')
       input().should('have.value', 'generated-key-123')
       input().should('have.attr', 'type', 'text')
-      cy.then(() => Cypress.vueWrapper.emitted('generated'))
-        .should('deep.equal', [['generated-key-123']])
+      cy.wrap(null).should(() => {
+        expect(Cypress.vueWrapper.emitted('generated')).to.deep.equal([['generated-key-123']])
+      })
     })
   })
 
@@ -142,8 +147,9 @@ describe('<SensitiveInput />', () => {
         })
 
         textarea().type('my-secret')
-        cy.then(() => Cypress.vueWrapper.emitted('update:modelValue'))
-          .should('not.be.undefined')
+        cy.wrap(null).should(() => {
+          expect(Cypress.vueWrapper.emitted('update:modelValue')).to.not.be.undefined
+        })
       })
 
       it('hides the Generate button when no generator prop is provided', () => {
@@ -171,8 +177,9 @@ describe('<SensitiveInput />', () => {
         cy.getTestId('sensitive-input-generate').click()
         cy.get('@generate').should('have.been.calledOnce')
         textarea().should('have.value', 'generated-key-123')
-        cy.then(() => Cypress.vueWrapper.emitted('generated'))
-          .should('deep.equal', [['generated-key-123']])
+        cy.wrap(null).should(() => {
+          expect(Cypress.vueWrapper.emitted('generated')).to.deep.equal([['generated-key-123']])
+        })
       })
     })
 
@@ -193,7 +200,9 @@ describe('<SensitiveInput />', () => {
         })
 
         cy.getTestId('sensitive-input-rotate').click()
-        cy.then(() => Cypress.vueWrapper.emitted('rotate')).should('have.length', 1)
+        cy.wrap(null).should(() => {
+          expect(Cypress.vueWrapper.emitted('rotate')).to.have.length(1)
+        })
         cy.getTestId('sensitive-input-rotate').should('not.exist')
         textarea().should('not.have.attr', 'readonly')
       })

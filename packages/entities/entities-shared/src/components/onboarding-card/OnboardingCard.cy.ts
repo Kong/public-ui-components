@@ -114,7 +114,9 @@ describe('<OnboardingCard />', () => {
     })
 
     cy.getTestId('onboarding-card-close').click()
-    cy.then(() => Cypress.vueWrapper.emitted('dismiss')).should('have.length', 1)
+    cy.wrap(null).should(() => {
+      expect(Cypress.vueWrapper.emitted('dismiss')).to.have.length(1)
+    })
   })
 
   it('renders the close button with an accessible label', () => {

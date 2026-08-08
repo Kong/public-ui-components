@@ -101,14 +101,18 @@ describe('<CsvExportModal />', () => {
     cy.get('.selected-range').should('contain.text', 'Exports a CSV of the data represented in the chart.')
     cy.get('.selected-range').should('contain.text', `Time range: ${expectedRange}`)
     cy.get('.vitals-table').should('exist')
-    cy.get('.k-table-data .table thead th').should(th => {
-      expect(Array.from(th, element => element.textContent)).to.deep.equal([
-        'Timestamp',
-        'UTC offset',
-        'Status code',
-        'Request count',
-      ])
-    })
+    cy.get('.k-table-data .table thead th')
+      .should('have.length', 4)
+      .then(($headers) => {
+        const headerTexts = [...$headers].map(element => element.textContent?.trim())
+
+        expect(headerTexts).to.deep.equal([
+          'Timestamp',
+          'UTC offset',
+          'Status code',
+          'Request count',
+        ])
+      })
     cy.get('.k-table-data .table tbody tr').should('have.length', 3)
     cy.getTestId('csv-download-button').should('not.be.disabled')
   })
@@ -125,21 +129,25 @@ describe('<CsvExportModal />', () => {
   })
 
   it('emits closeModal from the footer cancel button', () => {
+    const onCloseModal = cy.spy().as('onCloseModal')
+
     mount({
       exportState: { status: 'loading' },
       filename: 'Total requests',
+      onCloseModal,
     })
 
     cy.get('.cancel-btn').click()
-    cy.then(() => {
-      expect(wrapper.emitted('closeModal')).to.have.length(1)
-    })
+    cy.get('@onCloseModal').should('have.been.calledOnce')
   })
 
   it('emits closeModal from modal cancel and Escape events', () => {
+    const onCloseModal = cy.spy().as('onCloseModal')
+
     mount({
       exportState: { status: 'loading' },
       filename: 'Total requests',
+      onCloseModal,
     })
 
     cy.then(() => {
@@ -147,8 +155,9 @@ describe('<CsvExportModal />', () => {
 
       modal.vm.$emit('cancel')
       modal.vm.$emit('keyup', new KeyboardEvent('keyup', { key: 'Escape' }))
-      expect(wrapper.emitted('closeModal')).to.have.length(2)
     })
+
+    cy.get('@onCloseModal').should('have.been.calledTwice')
   })
 
   it('downloads the populated CSV with its normalized filename', () => {
