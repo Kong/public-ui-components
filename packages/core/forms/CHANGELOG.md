@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.33.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.18...@kong-ui-public/forms@4.33.19) (2026-08-08)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3529](https://github.com/Kong/public-ui-components/issues/3529)) ([a242320](https://github.com/Kong/public-ui-components/commit/a2423201f9a1f496d730795c17b30788f77a303c))
+* **deps:** update dependency dompurify to ^3.4.12 [security] ([#3677](https://github.com/Kong/public-ui-components/issues/3677)) ([7cd8cd6](https://github.com/Kong/public-ui-components/commit/7cd8cd6d7e589f7b21a6824a5c571a443033b00a))
+
+
+
+
+
 ## [4.33.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.17...@kong-ui-public/forms@4.33.18) (2026-08-06)
 
 
