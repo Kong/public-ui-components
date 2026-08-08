@@ -32,7 +32,7 @@ const {
   hasConsumers: boolean
   /** Route to navigate to for creating a consumer with a matching credential/grant. */
   createConsumerTo: RouteLocationRaw
-  /** Route to navigate to for adding a credential/grant to an existing consumer. Required when `hasConsumers` is true. */
+  /** Route to navigate to for adding a credential/grant to an existing consumer. If omitted, only the "create consumer" item is shown. */
   addCredentialTo?: RouteLocationRaw
 }>()
 

@@ -196,7 +196,7 @@
       "title": "Next steps for ACL plugins",
       "subtitle": "Consumers represent the users or applications calling your API. You do this by configuring either an allow list or a deny list with certain consumers or consumer groups.",
       "create_consumer": {
-        "description": "Create a new consumer with a ACL credential to test your plugin configuration."
+        "description": "Create a new consumer with an ACL credential to test your plugin configuration."
       },
       "add_credential": {
         "title": "Add an ACL credential",

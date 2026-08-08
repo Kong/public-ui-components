@@ -143,7 +143,7 @@ loadItems()
   }
 
   /* Temporarily hide the "View Configuration" button, since the code it shows is not correct */
-  :deep(.form-actions) > button:first-of-type {
+  :deep([data-testid$='-form-view-configuration']) {
     display: none;
   }
 }
