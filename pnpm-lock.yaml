@@ -10,7 +10,7 @@ overrides:
   fast-uri@<4.1.2: '>=4.1.2'
   minimatch@>=9.0.0 <9.0.7: '>=10.2.5'
   serialize-javascript@<=7.0.2: '>=7.0.5'
-  dompurify@<3.2.4: '>=3.4.12'
+  dompurify@<3.2.4: '>=3.4.13'
   picomatch@<2.3.2: '>=4.0.4'
   picomatch@>=4.0.0 <4.0.4: '>=4.0.4'
   handlebars@>=4.0.0 <=4.7.8: '>=4.7.9'
@@ -20945,7 +20945,7 @@ snapshots:
       '@bufbuild/protobuf': 2.13.0
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
-      immutable: 4.3.9
+      immutable: 5.1.9
       rxjs: 7.8.2
       supports-color: 8.1.1
       varint: 6.0.0
