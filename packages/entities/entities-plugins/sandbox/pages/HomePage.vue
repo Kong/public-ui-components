@@ -25,5 +25,10 @@
         Plugin catalog
       </router-link>
     </li>
+    <li>
+      <router-link :to="{ name: 'auth-plugin-onboarding-card' }">
+        Auth plugin onboarding card
+      </router-link>
+    </li>
   </ul>
 </template>
