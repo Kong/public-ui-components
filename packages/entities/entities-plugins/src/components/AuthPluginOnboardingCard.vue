@@ -24,7 +24,9 @@ const {
   authMode,
   hasExistingEntity,
   createEntityTo,
+  onCreateEntityClick,
   addCredentialTo,
+  onAddCredentialClick,
 } = defineProps<{
   /** The auth plugin type this banner is shown for. */
   pluginType: AuthOnboardingPluginType
@@ -32,10 +34,14 @@ const {
   authMode: AuthMode
   /** Whether the current control plane/workspace already has at least one entity (consumer or principal, depending on `authMode`) matching the required kind. */
   hasExistingEntity: boolean
-  /** Route to navigate to for creating a consumer/principal with a matching credential/grant. */
-  createEntityTo: RouteLocationRaw
-  /** Route to navigate to for adding a credential/grant to an existing consumer/principal. If omitted, only the "create" item is shown. */
+  /** Route to navigate to for creating a consumer/principal with a matching credential/grant. Mutually exclusive with `onCreateEntityClick`. */
+  createEntityTo?: RouteLocationRaw
+  /** Click handler to run instead of navigating (e.g. to open a modal) when creating a consumer/principal. Mutually exclusive with `createEntityTo`. */
+  onCreateEntityClick?: () => void
+  /** Route to navigate to for adding a credential/grant to an existing consumer/principal. Mutually exclusive with `onAddCredentialClick`. If neither is given, only the "create" item is shown. */
   addCredentialTo?: RouteLocationRaw
+  /** Click handler to run instead of navigating (e.g. to open a modal) when adding a credential/grant. Mutually exclusive with `addCredentialTo`. */
+  onAddCredentialClick?: () => void
 }>()
 
 defineEmits<{
@@ -54,10 +60,11 @@ const items = computed((): OnboardingCardItem[] => {
         ? t('onboarding.create_principal.description')
         : t(`onboarding.${pluginType}.create_consumer.description`),
       to: createEntityTo,
+      onClick: onCreateEntityClick,
     },
   ]
 
-  if (hasExistingEntity && addCredentialTo) {
+  if (hasExistingEntity && (addCredentialTo || onAddCredentialClick)) {
     result.push({
       icon: PasskeyIcon,
       appearance: 'decorative-purple',
@@ -66,6 +73,7 @@ const items = computed((): OnboardingCardItem[] => {
         ? t('onboarding.add_principal_credential.description')
         : t(`onboarding.${pluginType}.add_credential.description`),
       to: addCredentialTo,
+      onClick: onAddCredentialClick,
     })
   }
 

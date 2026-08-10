@@ -69,7 +69,40 @@ describe('<AuthPluginOnboardingCard />', () => {
     cy.getTestId('onboarding-item-1').should('not.match', 'button')
   })
 
-  it('omits the second item entirely when hasExistingEntity is true but no addCredentialTo route is given', () => {
+  it('renders an item as a button and runs the handler when `onCreateEntityClick`/`onAddCredentialClick` is given instead of a route', () => {
+    const onCreateEntityClick = cy.spy().as('createEntitySpy')
+    const onAddCredentialClick = cy.spy().as('addCredentialSpy')
+
+    cy.mount(AuthPluginOnboardingCard, {
+      props: {
+        authMode: 'consumers',
+        hasExistingEntity: true,
+        onAddCredentialClick,
+        onCreateEntityClick,
+        pluginType: 'key-auth',
+      },
+    })
+
+    cy.getTestId('onboarding-item-0').should('match', 'button').click()
+    cy.get('@createEntitySpy').should('have.been.calledOnce')
+
+    cy.getTestId('onboarding-item-1').should('match', 'button').click()
+    cy.get('@addCredentialSpy').should('have.been.calledOnce')
+  })
+
+  it('supports mixing a route for one item with a click handler for the other', () => {
+    const onAddCredentialClick = cy.spy().as('addCredentialSpy')
+
+    cy.mount(AuthPluginOnboardingCard, {
+      props: { authMode: 'consumers', createEntityTo, hasExistingEntity: true, onAddCredentialClick, pluginType: 'key-auth' },
+    })
+
+    cy.getTestId('onboarding-item-0').should('not.match', 'button')
+    cy.getTestId('onboarding-item-1').should('match', 'button').click()
+    cy.get('@addCredentialSpy').should('have.been.calledOnce')
+  })
+
+  it('omits the second item entirely when hasExistingEntity is true but neither addCredentialTo nor onAddCredentialClick is given', () => {
     cy.mount(AuthPluginOnboardingCard, {
       props: { authMode: 'consumers', createEntityTo, hasExistingEntity: true, pluginType: 'key-auth' },
     })

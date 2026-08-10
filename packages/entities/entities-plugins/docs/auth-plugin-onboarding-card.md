@@ -51,10 +51,18 @@ Whether the current control plane/workspace already has at least one entity matc
 #### `createEntityTo`
 
 - type: `RouteLocationRaw`
-- required: `true`
+- required: `false`
 - default: `undefined`
 
-Route to navigate to for creating a consumer/principal with a matching credential/grant.
+Route to navigate to for creating a consumer/principal with a matching credential/grant. Mutually exclusive with `onCreateEntityClick`.
+
+#### `onCreateEntityClick`
+
+- type: `() => void`
+- required: `false`
+- default: `undefined`
+
+Click handler to run instead of navigating (e.g. to open a modal) when creating a consumer/principal. Mutually exclusive with `createEntityTo`.
 
 #### `addCredentialTo`
 
@@ -62,7 +70,15 @@ Route to navigate to for creating a consumer/principal with a matching credentia
 - required: `false`
 - default: `undefined`
 
-Route to navigate to for adding a credential/grant to an existing consumer/principal. If omitted, only the "create" item is shown, regardless of `hasExistingEntity`.
+Route to navigate to for adding a credential/grant to an existing consumer/principal. Mutually exclusive with `onAddCredentialClick`. If neither `addCredentialTo` nor `onAddCredentialClick` is given, only the "create" item is shown, regardless of `hasExistingEntity`.
+
+#### `onAddCredentialClick`
+
+- type: `() => void`
+- required: `false`
+- default: `undefined`
+
+Click handler to run instead of navigating (e.g. to open a modal) when adding a credential/grant. Mutually exclusive with `addCredentialTo`.
 
 ### Events
 
