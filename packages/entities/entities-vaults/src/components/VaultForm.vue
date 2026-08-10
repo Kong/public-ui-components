@@ -1928,24 +1928,15 @@ const payloadWithConfigStoreId = computed<Record<string, any>>(() => (
 ))
 
 const createConfigStore = async (): Promise<string | undefined> => {
-  try {
-    form.isReadonly = true
+  // createConfigStore only applies to the konnect provider flow (konnect / AI Gateway apps).
+  const requestUrl = withAiGatewayId(`${props.config.apiBaseUrl}${endpoints.form[isAiGateway.value ? 'aiGateway' : 'konnect'].createConfigStore}`)
+    .replace(/{controlPlaneId}/gi, (props.config as KonnectVaultFormConfig)?.controlPlaneId || '')
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 
-    // createConfigStore only applies to the konnect provider flow (konnect / AI Gateway apps).
-    const requestUrl = withAiGatewayId(`${props.config.apiBaseUrl}${endpoints.form[isAiGateway.value ? 'aiGateway' : 'konnect'].createConfigStore}`)
-      .replace(/{controlPlaneId}/gi, (props.config as KonnectVaultFormConfig)?.controlPlaneId || '')
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+  const body = isAiGateway.value ? { name: form.fields.prefix } : undefined
+  const response = await axiosInstance.post<KonnectConfigStore>(requestUrl, body)
 
-    const body = isAiGateway.value ? { name: form.fields.prefix } : undefined
-    const response = await axiosInstance.post<KonnectConfigStore>(requestUrl, body)
-
-    return response?.data.id
-  } catch (error: any) {
-    form.errorMessage = getMessageFromError(error)
-    emit('error', error as AxiosError)
-  } finally {
-    form.isReadonly = false
-  }
+  return response?.data.id
 }
 
 const saveFormData = async (): Promise<void> => {
