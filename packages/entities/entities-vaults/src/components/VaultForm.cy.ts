@@ -1351,6 +1351,36 @@ describe('<VaultForm />', () => {
       cy.wait('@createConfigStoreNoWorkspace')
       cy.wait('@createVaultNoWorkspace')
     })
+
+    it('should stop and emit error once when createConfigStore request fails, without firing the vault create request', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores`,
+        },
+        { statusCode: 500, body: {} },
+      ).as('createConfigStoreFailed')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults`,
+        },
+        { statusCode: 201, body: vault },
+      ).as('createVault')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: baseConfigKonnect,
+          onError: cy.spy().as('onErrorSpy'),
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+
+      cy.wait('@createConfigStoreFailed')
+      cy.get('@onErrorSpy').should('have.been.calledOnce')
+      cy.get('@createVault.all').should('have.length', 0)
+    })
   })
 
   describe('Kong AI Gateway', () => {
