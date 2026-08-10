@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.61.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.60.2...@kong-ui-public/entities-shared@3.61.0) (2026-08-10)
+
+
+### Features
+
+* **entities-gateway-services:** require force delete confirmation for services with routes ([#3642](https://github.com/Kong/public-ui-components/issues/3642)) ([8773269](https://github.com/Kong/public-ui-components/commit/87732694f306f944f945d41679770474a95b57b3))
+
+
+
+
+
 ## [3.60.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.60.1...@kong-ui-public/entities-shared@3.60.2) (2026-08-08)
 
 
