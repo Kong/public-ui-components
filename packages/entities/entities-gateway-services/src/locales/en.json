@@ -10,8 +10,14 @@
     "view": "View details",
     "delete": {
       "title": "Delete a gateway service",
-      "description": "Deleting this gateway service will also remove any associated plugins. This action cannot be reversed.",
-      "menu_label": "Delete"
+      "menu_label": "Delete",
+      "related_entities": {
+        "plugins_only": "{pluginCount} associated {plugin} will be deleted along with this gateway service.",
+        "check_failed": "We couldn't verify whether this gateway service has routes or plugins attached. Check the box below to force delete it anyway.",
+        "plugin": "{count, plural, one {plugin} other {plugins}}",
+        "force_delete_checkbox": "Force delete",
+        "force_delete_help": "Check this box to force deletion of all routes and plugins on linked service."
+      }
     }
   },
   "search": {
