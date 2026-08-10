@@ -19,6 +19,7 @@ export const getSharedFormName = (modelName: string): string => {
 
 export * from './const'
 export * from './types'
+export { hideNewRedis } from './utils/hideNewRedisConfiguration'
 export * as abstractField from './components/fields/abstractField'
 
 export { default as composables } from './composables'

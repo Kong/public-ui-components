@@ -100,8 +100,9 @@ const onUpdated = (data: RedisConfigurationResponse) => {
     message: t('form.partial_created_success_message'),
     appearance: 'success',
   })
-  handleClose()
+  // Emit created before close so the selector can skip restoring previous selection
   emit('created', data)
+  handleClose()
 }
 
 const handleClose = () => {

@@ -59,13 +59,13 @@
         </div>
       </template>
       <template
-        v-if="!shouldHideNewRedisConfiguration(formConfig)"
+        v-if="!hideNewRedis(formConfig)"
         #dropdown-footer-text
       >
         <div
           class="new-redis-config-area"
           data-testid="new-redis-config-area"
-          @click="$emit('showNewPartialModal')"
+          @click="onCreateNew"
         >
           <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
           <span>{{ createNewRedisConfigurationFooterText }}</span>
@@ -85,11 +85,21 @@
   >
     {{ redisFetchErrorDisplayText }}
   </p>
+
+  <component
+    :is="redisCreate.component"
+    v-if="redisCreate"
+    :partial-type="slideoutPartialType"
+    :visible="showSlideout"
+    @close="onCreateClose"
+    @created="onPartialCreated"
+    @toast="onSlideoutToast"
+  />
 </template>
 
 <script setup lang="ts">
-import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY } from '../const'
-import { onBeforeMount, inject, computed, ref, watch, type Ref, type PropType } from 'vue'
+import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY, REDIS_CREATE_SLIDEOUT } from '../const'
+import { onBeforeMount, inject, computed, ref, watch, type Ref, type PropType, type Component } from 'vue'
 import {
   useAxios,
   useDebouncedFilter,
@@ -112,16 +122,23 @@ import {
   type RedisConfigurationSource,
   redisManagedSourceFromTags,
 } from '../utils/redisPartialManagedSource'
-import { shouldHideNewRedisConfiguration } from '../utils/hideNewRedisConfiguration'
+import { hideNewRedis } from '../utils/hideNewRedisConfiguration'
 import RedisConfigCard from './RedisConfigCard.vue'
-
-defineEmits<{
-  (e: 'showNewPartialModal'): void
-}>()
 
 const { t } = createI18n<typeof english>('en-us', english)
 
+const emit = defineEmits<{
+  (e: 'showNewPartialModal'): void
+}>()
+
 const redisPartialFetcherKey: Ref<number, number> | undefined = inject(REDIS_PARTIAL_FETCHER_KEY)
+
+type RedisCreateSlideout = {
+  component: Component
+  toast: (payload: { message: string, appearance: 'success' | 'danger' }) => void
+}
+
+const redisCreate = inject<RedisCreateSlideout | null>(REDIS_CREATE_SLIDEOUT, null)
 
 const endpoints = {
   konnect: {
@@ -141,7 +158,7 @@ const props = defineProps({
     default: '',
   },
   updateRedisModel: {
-    type: Function as PropType<(val: string | number) => void>,
+    type: Function as PropType<(val: string | number | undefined) => void>,
     required: true,
   },
   pluginRedisFields: {
@@ -166,7 +183,26 @@ const props = defineProps({
 const selectedRedisConfig = ref(null)
 const { getMessageFromError } = useErrors()
 
-const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig | KonnectBaseTableConfig | KongManagerBaseTableConfig = inject(FORMS_CONFIG)!
+const formConfig = inject(FORMS_CONFIG)! as (KonnectBaseFormConfig | KongManagerBaseFormConfig | KonnectBaseTableConfig | KongManagerBaseTableConfig) & {
+  isKonnectManagedRedisEnabled?: boolean
+  isCloudGateway?: boolean
+}
+
+// Konnect + FF + non-Cloud Gateway + slideout provided → new create form; else legacy modal emit
+const useSlideout = computed(() => (
+  !!redisCreate
+  && formConfig.app === 'konnect'
+  && !!formConfig.isKonnectManagedRedisEnabled
+  && formConfig.isCloudGateway !== true
+))
+
+const slideoutPartialType = computed(() =>
+  props.redisType === 'redis-ce' ? 'redis-ce' : 'redis-ee',
+)
+
+const showSlideout = ref(false)
+const prevId = ref<string>()
+
 const pageSize = '1000' // the API returns all partials, so we have to set a high page size to filter them on the frontend
 const {
   debouncedQueryChange: debouncedRedisConfigsQuery,
@@ -200,7 +236,7 @@ const redisSelectPlaceholderText = computed(() =>
 )
 
 const createNewRedisConfigurationFooterText = computed(() =>
-  props.isKonnectManagedRedisEnabled
+  props.isKonnectManagedRedisEnabled || useSlideout.value
     ? t('redis.managed_ui.shared_configuration.create_new_configuration')
     : t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(props.redisType as PartialType) }),
 )
@@ -290,8 +326,11 @@ const { axiosInstance } = useAxios(formConfig?.axiosRequestConfig)
 
 // Loads full partial detail and merges `config` onto the root object for `RedisConfigCard`; no-op when cleared
 const redisConfigSelected = async (val: string | number | undefined) => {
-  // when selector is cleared, do nothing
-  if (!val) return
+  if (!val) {
+    selectedRedisConfig.value = null
+    props.updateRedisModel(undefined)
+    return
+  }
 
   props.updateRedisModel(val)
   // show all fields in the same level
@@ -305,6 +344,37 @@ const redisConfigSelected = async (val: string | number | undefined) => {
   } catch (error) {
     console.error(error)
   }
+}
+
+const onCreateNew = () => {
+  if (!useSlideout.value) {
+    emit('showNewPartialModal')
+    return
+  }
+
+  prevId.value = props.defaultRedisConfigItem || undefined
+  redisConfigSelected(undefined)
+  showSlideout.value = true
+}
+
+const onCreateClose = () => {
+  showSlideout.value = false
+  if (prevId.value) {
+    const id = prevId.value
+    prevId.value = undefined
+    redisConfigSelected(id)
+  }
+}
+
+const onPartialCreated = async (data: { id: string }) => {
+  prevId.value = undefined
+  showSlideout.value = false
+  await loadConfigs()
+  redisConfigSelected(data.id)
+}
+
+const onSlideoutToast = (payload: { message: string, appearance: 'success' | 'danger' }) => {
+  redisCreate?.toast(payload)
 }
 
 // if a new key is passed by the consuming app, reload the configs
