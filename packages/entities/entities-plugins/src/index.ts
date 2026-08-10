@@ -62,6 +62,8 @@ export { provideEditorStore, useEditorStore } from './components/free-form/plugi
 
 export type { DatakitPluginData, NodeInstance, NodePhase } from './components/free-form/plugins/datakit/types'
 
+export type { AuthMode } from './components/fields/kong-identity/types'
+
 export * from './types'
 
 export { pluginEndpoints }

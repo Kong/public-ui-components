@@ -110,6 +110,14 @@
     "add_credential": {
       "title": "Add a credential"
     },
+    "create_principal": {
+      "title": "Create a principal",
+      "description": "Create a principal with authentication to test your plugin configuration."
+    },
+    "add_principal_credential": {
+      "title": "Add authentication to a principal",
+      "description": "Add authentication credentials to an existing principal."
+    },
     "actions": {
       "save_and_next": "Save and next",
       "skip": "Skip",

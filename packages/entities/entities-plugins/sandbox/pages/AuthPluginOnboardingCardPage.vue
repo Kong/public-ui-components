@@ -7,17 +7,24 @@
         :items="pluginTypeItems"
         label="Plugin type"
       />
+      <KSelect
+        v-model="authMode"
+        class="plugin-type-select"
+        :items="authModeItems"
+        label="Auth mode"
+      />
       <KInputSwitch
-        v-model="hasConsumers"
-        label="Control plane already has consumers"
+        v-model="hasExistingEntity"
+        label="Control plane already has a matching consumer/principal"
       />
     </div>
 
     <AuthPluginOnboardingCard
       v-if="visible"
       :add-credential-to="{ name: 'add-credential-to-consumer-form', params: { plugin: pluginType } }"
-      :create-consumer-to="{ name: 'create-consumer-credential-form', params: { plugin: pluginType } }"
-      :has-consumers="hasConsumers"
+      :auth-mode="authMode"
+      :create-entity-to="{ name: 'create-consumer-credential-form', params: { plugin: pluginType } }"
+      :has-existing-entity="hasExistingEntity"
       :plugin-type="pluginType"
       @dismiss="visible = false"
     />
@@ -33,11 +40,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { AuthPluginOnboardingCard } from '../../src'
-import type { AuthOnboardingPluginType } from '../../src'
+import type { AuthMode, AuthOnboardingPluginType } from '../../src'
 
 const visible = ref(true)
-const hasConsumers = ref(true)
+const hasExistingEntity = ref(true)
 const pluginType = ref<AuthOnboardingPluginType>('key-auth')
+const authMode = ref<AuthMode>('consumers')
 
 const pluginTypeItems = [
   { label: 'key-auth', value: 'key-auth' },
@@ -47,6 +55,12 @@ const pluginTypeItems = [
   { label: 'hmac-auth', value: 'hmac-auth' },
   { label: 'jwt', value: 'jwt' },
   { label: 'acl', value: 'acl' },
+]
+
+const authModeItems = [
+  { label: 'consumers', value: 'consumers' },
+  { label: 'centrally-managed', value: 'centrally-managed' },
+  { label: 'kong-identity', value: 'kong-identity' },
 ]
 </script>
 
