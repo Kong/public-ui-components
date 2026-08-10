@@ -94,9 +94,7 @@
       "username_label": "Username",
       "username_placeholder": "Enter a username",
       "custom_id_label": "Custom ID",
-      "custom_id_placeholder": "Enter a custom ID",
-      "tags_label": "Tags",
-      "tags_placeholder": "Enter tags separated by a comma"
+      "custom_id_placeholder": "Enter a custom ID"
     },
     "choose_consumer": {
       "title": "Choose a consumer",

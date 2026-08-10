@@ -33,8 +33,9 @@
           v-model.trim="consumerFields.tags"
           autocomplete="off"
           data-testid="consumer-form-tags"
-          :label="t('onboarding.consumer_fields.tags_label')"
-          :placeholder="t('onboarding.consumer_fields.tags_placeholder')"
+          :help="t('plugins.form.fields.tags.help')"
+          :label="t('plugins.form.fields.tags.label')"
+          :placeholder="t('plugins.form.fields.tags.placeholder')"
           type="text"
         />
       </EntityFormBlock>
