@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.33.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.20...@kong-ui-public/forms@4.33.21) (2026-08-10)
+
+
+### Bug Fixes
+
+* **plugins:** open new redis create form in slideout [khcp-21412] ([#3669](https://github.com/Kong/public-ui-components/issues/3669)) ([3fa1097](https://github.com/Kong/public-ui-components/commit/3fa109764c10b23f44ee4bf546df045d75956e4a))
+
+
+
+
+
 ## [4.33.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.19...@kong-ui-public/forms@4.33.20) (2026-08-10)
 
 **Note:** Version bump only for package @kong-ui-public/forms
