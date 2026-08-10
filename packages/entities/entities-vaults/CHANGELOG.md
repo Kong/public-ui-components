@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.16.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.16.20...@kong-ui-public/entities-vaults@4.16.21) (2026-08-10)
+
+
+### Bug Fixes
+
+* **entities-vaults:** remove redundant try/catch in createConfigStore ([#3681](https://github.com/Kong/public-ui-components/issues/3681)) ([45f8d67](https://github.com/Kong/public-ui-components/commit/45f8d6774d4dc78e10c1c9d09f950979998e3d84))
+
+
+
+
+
 ## [4.16.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@4.16.19...@kong-ui-public/entities-vaults@4.16.20) (2026-08-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
