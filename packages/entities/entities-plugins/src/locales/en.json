@@ -808,10 +808,58 @@
       },
       "acl": {
         "mode": {
-          "allow": "Use allow list",
-          "deny": "Use deny list",
-          "allow_when": "Use allow expression list",
-          "deny_when": "Use deny expression list"
+          "title": {
+            "label": "Access policy",
+            "description": "Select how requests are authorized. Choose one access policy: allow or deny by ACL group, or define a CEL expression. Only one policy type can be configured at a time."
+          },
+          "allow": {
+            "label": "Allow list",
+            "description": "Allow requests from the specified ACL groups."
+          },
+          "deny": {
+            "label": "Deny list",
+            "description": "Deny requests from the specified ACL groups."
+          },
+          "allow_when": {
+            "label": "Allow expression",
+            "description": "Allow requests when the CEL expression evaluates to true."
+          },
+          "deny_when": {
+            "label": "Deny expression",
+            "description": "Deny requests when the CEL expression evaluates to true."
+          }
+        },
+        "field": {
+          "allow": {
+            "label": "Allowed list",
+            "placeholder": "Enter group names",
+            "add": "Add allow"
+          },
+          "deny": {
+            "label": "Denied list",
+            "placeholder": "Enter group names",
+            "add": "Add deny"
+          },
+          "allow_when": {
+            "label": "Kong plug-in conditional expression",
+            "description": "A Kong plug-in conditional expression is a CEL expression that determines whether the plugin runs for a request. If the expression evaluates to true, the plugin executes. If it evaluates to false, the plugin is skipped.",
+            "placeholder": "eg: 'consumer.username == \"alice\"'",
+            "add": "Add expression",
+            "help": {
+              "learn": "Learn more",
+              "text": "Define a Kong plug-in conditional expression to evaluate each request. The expression must return a boolean value (true or false). {link}"
+            }
+          },
+          "deny_when": {
+            "label": "Kong plug-in conditional expression",
+            "description": "A Kong plug-in conditional expression is a CEL expression that determines whether the plugin runs for a request. If the expression evaluates to true, the plugin executes. If it evaluates to false, the plugin is skipped.",
+            "placeholder": "eg: 'consumer.username == \"alice\"'",
+            "add": "Add expression",
+            "help": {
+              "learn": "Learn more",
+              "text": "Define a Kong plug-in conditional expression to evaluate each request. The expression must return a boolean value (true or false). {link}"
+            }
+          }
         }
       },
       "ai-mcp-proxy": {

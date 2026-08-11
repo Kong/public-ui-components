@@ -60,15 +60,41 @@ describe('<ACLForm /> - mode switching', () => {
   it('shows the correct field label after switching modes (no stale label from a reused Field instance)', () => {
     mountForm()
 
-    cy.getTestId('ff-label-config.allow').should('contain.text', 'Allow')
+    cy.getTestId('ff-label-config.allow').should('contain.text', 'Allowed list')
 
     cy.getTestId('ff-acl-mode-deny').click()
-    cy.getTestId('ff-label-config.deny').should('contain.text', 'Deny')
+    cy.getTestId('ff-label-config.deny').should('contain.text', 'Denied list')
     cy.getTestId('ff-label-config.allow').should('not.exist')
 
     cy.getTestId('ff-acl-mode-allow_when').click()
-    cy.getTestId('ff-label-config.allow_when').should('contain.text', 'Allow when')
+    cy.getTestId('ff-label-config.allow_when').should('contain.text', 'Kong plug-in conditional expression')
     cy.getTestId('ff-label-config.deny').should('not.exist')
+  })
+
+  it('labels the add-item button per mode', () => {
+    mountForm()
+
+    cy.getTestId('ff-add-item-btn-config.allow').should('contain.text', 'Add allow')
+
+    cy.getTestId('ff-acl-mode-deny_when').click()
+    cy.getTestId('ff-add-item-btn-config.deny_when').should('contain.text', 'Add expression')
+  })
+
+  it('renders group modes as inputs and expression modes as textareas with help', () => {
+    mountForm()
+
+    cy.getTestId('ff-add-item-btn-config.allow').click()
+    cy.getTestId('ff-array-item-config.allow.0').find('input').should('exist')
+    cy.getTestId('ff-array-item-config.allow.0').find('textarea').should('not.exist')
+    cy.getTestId('ff-config.allow.0').should('have.attr', 'placeholder', 'Enter group names')
+    cy.getTestId('ff-array-item-config.allow.0').find('a[href]').should('not.exist')
+
+    cy.getTestId('ff-acl-mode-allow_when').click()
+    cy.getTestId('ff-add-item-btn-config.allow_when').click()
+    cy.getTestId('ff-array-item-config.allow_when.0').find('textarea').should('exist')
+    cy.getTestId('ff-array-item-config.allow_when.0')
+      .find('a[href]')
+      .should('contain.text', 'Learn more')
   })
 
   it('clears the previous mode\'s data when switching', () => {
