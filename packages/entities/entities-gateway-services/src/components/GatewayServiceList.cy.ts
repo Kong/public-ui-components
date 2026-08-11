@@ -862,6 +862,7 @@ describe('<GatewayServiceList />', () => {
           canEdit: () => false,
           canDelete: () => true,
           canRetrieve: () => false,
+          enableForceDeleteConfirmation: true,
         },
       })
 
@@ -972,6 +973,46 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled').click()
 
       cy.wait('@deleteService').its('request.url').should('include', 'force=true')
+    })
+
+    it('skips the related-entities check and deletes normally when the feature flag is disabled', () => {
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/routes*` },
+        { statusCode: 200, body: { data: [{ id: 'route-1' }] } },
+      ).as('getRoutes')
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/plugins*` },
+        { statusCode: 200, body: { data: [{ id: 'plugin-1' }] } },
+      ).as('getPlugins')
+      cy.intercept(
+        { method: 'DELETE', url: `${servicesUrl}/${serviceId}*` },
+        { statusCode: 204 },
+      ).as('deleteService')
+
+      // enableForceDeleteConfirmation defaults to false
+      cy.mount(GatewayServiceList, {
+        props: {
+          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => true,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
+      cy.get(`[data-testid="${serviceName}-actions-dropdown-popover"] [data-testid="action-entity-delete"]`).click()
+
+      cy.get('@getRoutes.all').should('have.length', 0)
+      cy.get('@getPlugins.all').should('have.length', 0)
+      cy.get(`${modal} .extra`).should('not.exist')
+      cy.getTestId('gateway-service-delete-force-checkbox').should('not.exist')
+
+      cy.getTestId('confirmation-input').type(serviceName)
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled').click()
+
+      cy.wait('@deleteService').its('request.url').should('not.include', 'force')
     })
   })
 

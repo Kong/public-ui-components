@@ -369,6 +369,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /** Feature flag KM-3028-service-force-delete: when enabled, checks for attached routes/plugins before deleting a Konnect gateway service and requires a force-delete confirmation if any are found */
+  enableForceDeleteConfirmation: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
@@ -671,10 +676,12 @@ const forceDeleteConfirmed = ref<boolean>(false)
 const relatedEntitiesCheckFailed = ref<boolean>(false)
 
 const hasRelatedEntities = computed((): boolean =>
-  relatedEntitiesCheckFailed.value || relatedRoutesCount.value > 0 || relatedPluginsCount.value > 0)
+  props.enableForceDeleteConfirmation &&
+  (relatedEntitiesCheckFailed.value || relatedRoutesCount.value > 0 || relatedPluginsCount.value > 0))
 // A service that still has routes attached (or whose related-entities count couldn't be verified)
 // requires an explicit force delete confirmation
-const requiresForceDelete = computed((): boolean => relatedEntitiesCheckFailed.value || relatedRoutesCount.value > 0)
+const requiresForceDelete = computed((): boolean =>
+  props.enableForceDeleteConfirmation && (relatedEntitiesCheckFailed.value || relatedRoutesCount.value > 0))
 
 // Only shown when the service has no routes (the checkbox + help text cover the routes case)
 const relatedEntitiesMessage = computed((): string => {
@@ -709,7 +716,7 @@ const confirmDelete = async (row: EntityRow): Promise<void> => {
   relatedPluginsCount.value = 0
   relatedEntitiesCheckFailed.value = false
 
-  if (props.config.app === 'konnect') {
+  if (props.enableForceDeleteConfirmation && props.config.app === 'konnect') {
     try {
       const [routesCount, pluginsCount] = await Promise.all([
         fetchRelatedEntityCount(endpoints.relatedEntities.konnect.routes, row.id as string),
