@@ -366,6 +366,47 @@ describe('configureAllowedDefinition', () => {
     })
   })
 
+  describe('slottable tiles', () => {
+    const mockSlottableTile: TileConfig = {
+      id: 'slot_1',
+      type: 'slottable',
+      layout: {
+        size: { cols: 3, rows: 1 },
+        position: { col: 0, row: 0 },
+      },
+    }
+
+    it('keeps slottable tiles in advanced', () => {
+      const config: DashboardConfig = {
+        tiles: [mockSlottableTile],
+        tile_height: 167,
+      }
+
+      const result = configureAllowedDefinition(config, true)
+
+      expect(result.tiles).toHaveLength(1)
+      expect(result.tiles[0]).toEqual(mockSlottableTile)
+    })
+
+    it('keeps slottable tiles in the basic', () => {
+      const warnMock = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const config: DashboardConfig = {
+        tiles: [mockSlottableTile, mockApiUsageTile],
+        tile_height: 167,
+      }
+
+      const result = configureAllowedDefinition(config, false)
+
+      expect(warnMock).toHaveBeenCalledOnce()
+      warnMock.mockRestore()
+
+      expect(result.tiles).toHaveLength(1)
+      expect(result.tiles[0]).toEqual(mockSlottableTile)
+      expect(result.tiles[0].id).toBe('slot_1')
+      expect(result.tiles[0].type).toBe('slottable')
+    })
+  })
+
   describe('Edge Cases', () => {
     it('should handle tiles with missing layout size properties', () => {
       const tileWithoutSize: TileConfig = {

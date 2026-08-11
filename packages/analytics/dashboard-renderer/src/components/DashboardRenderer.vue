@@ -44,7 +44,7 @@
             v-model:refresh-counter="refreshCounter"
             class="tile-container"
             :context="internalContext"
-            :definition="tile.meta"
+            :definition="tile.meta as TileDefinition"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
             :hide-actions="!internalContext.showTileActions"
             :hide-zoom-actions="!internalContext.showTileZoomActions"
@@ -154,6 +154,22 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
 
 const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
   return model.value.tiles.map((tile: TileConfig) => {
+    if (internalContext.value.editable && !tile.id) {
+      console.warn(
+        'No id provided for tile. One will be generated automatically,',
+        'however tracking changes to this tile may not work as expected.',
+        tile,
+      )
+    }
+
+    if (tile.type === 'slottable') {
+      return {
+        layout: tile.layout,
+        type: tile.type,
+        id: tile.id ?? crypto.randomUUID(),
+      }
+    }
+
     let tileMeta = tile.definition
     const tileType = tile.type ?? 'chart'
 
@@ -186,14 +202,6 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
       } as TileDefinition
     }
 
-    if (internalContext.value.editable && !tile.id) {
-      console.warn(
-        'No id provided for tile. One will be generated automatically,',
-        'however tracking changes to this tile may not work as expected.',
-        tile,
-      )
-    }
-
     return {
       layout: tile.layout,
       meta: tileMeta,
@@ -212,7 +220,11 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
 }
 
 const isSlottableTile = (tile: GridTile<TileDefinition>): boolean => {
-  return tile.type === 'chart' && (tile.meta as ChartTileDefinition).chart.type === 'slottable'
+  if (tile.type === 'slottable') {
+    return true
+  }
+
+  return (tile.meta as ChartTileDefinition)?.chart.type === 'slottable'
 }
 
 const isSlottable = (chart: any): chart is SlottableOptions => {
@@ -220,8 +232,13 @@ const isSlottable = (chart: any): chart is SlottableOptions => {
 }
 
 const getSlottableSlotName = (tile: GridTile<TileDefinition>): string | undefined => {
-  const chart = (tile.meta as ChartTileDefinition).chart
-  return isSlottable(chart) ? chart.id : undefined
+  if (tile.type === 'slottable') {
+    return tile.id as string
+  }
+
+  const chart = (tile.meta as ChartTileDefinition)?.chart
+
+  return chart && isSlottable(chart) ? chart.id : undefined
 }
 
 const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
@@ -250,11 +267,19 @@ const refreshTiles = () => {
 
 const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>) => {
   const updatedTiles = tiles.map(tile => {
+    if (tile.type === 'slottable') {
+      return {
+        id: tile.id,
+        type: tile.type,
+        layout: tile.layout,
+      } as TileConfig
+    }
+
     return {
       id: tile.id,
       type: tile.type,
       layout: tile.layout,
-      definition: tile.meta,
+      definition: tile.meta as TileDefinition,
     } as TileConfig
   })
 
