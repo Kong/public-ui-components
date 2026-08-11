@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.24.0...@kong-ui-public/entities-gateway-services@3.25.0) (2026-08-11)
+
+
+### Features
+
+* **entities-gateway-services:** gate force-delete confirmation behind a flag KM-3028 ([#3682](https://github.com/Kong/public-ui-components/issues/3682)) ([0b8b8cc](https://github.com/Kong/public-ui-components/commit/0b8b8cc9ea5c50a7b8f5e7c90b75a49e0c3b8534))
+
+
+
+
+
 # [3.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.23.15...@kong-ui-public/entities-gateway-services@3.24.0) (2026-08-10)
 
 
