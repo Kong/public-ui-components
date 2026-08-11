@@ -7,6 +7,14 @@ export interface KonnectSecretListConfig extends KonnectBaseTableConfig {
   createRoute: RouteLocationRaw
   /** A function that returns the route for editing a secret */
   getEditRoute: (id: string) => RouteLocationRaw
+  /**
+   * Which vault API the secrets belong to.
+   * - 'gateway' (default): Konnect Config Store secrets
+   * - 'aiGateway': Kong AI Gateway secrets
+   */
+  apiType?: 'gateway' | 'aiGateway'
+  /** The AI Gateway id. Required when apiType is 'aiGateway'. */
+  aiGatewayId?: string
 }
 
 export interface SecretEntityRow extends Record<string, any> {

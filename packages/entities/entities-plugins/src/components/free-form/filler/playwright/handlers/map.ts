@@ -1,13 +1,26 @@
-import type { MapFieldSchema } from '../../../../../types/plugins/form-schema'
-import type { HandlerOption } from './types'
+import type { MapHandlerOption } from './types'
 import { selectors } from '../../shared/selectors'
 
-export async function fillMap(option: HandlerOption<MapFieldSchema>): Promise<void> {
-  const { page, fieldKey, value } = option
+function extractKidId(testId: string | null, fieldKey: string): string {
+  if (!testId) {
+    throw new Error(`Unable to find map entry test id for "${fieldKey}"`)
+  }
+
+  const match = testId.match(/kid:\d+/)
+
+  if (!match) {
+    throw new Error(`Unable to extract map entry kid id from test id "${testId}"`)
+  }
+
+  return match[0]
+}
+
+export async function fillMap(option: MapHandlerOption): Promise<void> {
+  const { page, fieldKey, value, onFillEntry } = option
 
   // Clear existing entries
   const removeNext = async () => {
-    const removeBtnSelector = selectors.kvRemoveBtns(fieldKey)
+    const removeBtnSelector = selectors.mapRemoveBtns(fieldKey)
     const removeBtnCount = await page.locator(removeBtnSelector).count()
     if (removeBtnCount === 0) {
       return
@@ -29,20 +42,21 @@ export async function fillMap(option: HandlerOption<MapFieldSchema>): Promise<vo
   for (let i = 0; i < entries.length; i++) {
     const [key, val] = entries[i]
 
-    // Click add button for additional entries
-    const addBtnSelector = selectors.kvAddBtn(fieldKey)
-    await page.locator(addBtnSelector).click()
+    await page.locator(selectors.mapAddBtn(fieldKey)).click()
 
-    // Fill key
-    const keySelector = selectors.kvKey(fieldKey, i)
-    const keyElement = page.locator(keySelector)
+    const containerSelector = selectors.mapContainer(fieldKey, i)
+    const container = page.locator(containerSelector)
+    await container.waitFor()
+
+    const keyElement = page.locator(selectors.mapKey(fieldKey, i))
     await keyElement.clear()
     await keyElement.fill(String(key))
 
-    // Fill value
-    const valueSelector = selectors.kvValue(fieldKey, i)
-    const valueElement = page.locator(valueSelector)
-    await valueElement.clear()
-    await valueElement.fill(String(val))
+    const childField = container.locator(`[data-testid*="${fieldKey}.kid:"]`).first()
+    await childField.waitFor()
+
+    const kidId = extractKidId(await childField.getAttribute('data-testid'), fieldKey)
+
+    await onFillEntry(kidId, val)
   }
 }

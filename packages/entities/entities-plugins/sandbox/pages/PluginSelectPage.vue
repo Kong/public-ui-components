@@ -13,6 +13,7 @@
     <h2>Kong Manager API</h2>
     <PluginSelect
       :config="kongManagerConfig"
+      :custom-plugin-support="['streaming', 'cloned']"
       :highlighted-plugin-ids="highlightedPluginIds"
     />
   </div>
@@ -63,6 +64,14 @@ const kongManagerConfig = ref<KongManagerPluginSelectConfig>({
     name: 'create-plugin',
     params: {
       plugin,
+    },
+  }),
+  createCustomRoute: { name: 'create-custom-plugin' },
+  getCustomEditRoute: (plugin: string, type: CustomPluginType) => ({
+    name: 'edit-custom-plugin',
+    params: {
+      plugin,
+      customPluginType: type,
     },
   }),
 })

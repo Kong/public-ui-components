@@ -23,7 +23,32 @@ export interface TokenExchange {
     } | null
 
     issuer?: string
+    jwks_uri?: string
+    verify_signature?: boolean
   }> | null
+}
+
+export interface ProofOfPossessionMtlsFromHeader {
+  allow_partial_chain?: boolean
+  ca_certificates?: string[]
+  cert_cache_ttl?: number
+  certificate_header_format?: string
+  certificate_header_name?: string
+  http_proxy_host?: string
+  http_proxy_port?: number
+  http_timeout?: number
+  https_proxy_host?: string
+  https_proxy_port?: number
+  revocation_check_mode?: string
+  secure_source?: boolean
+  ssl_verify?: boolean
+}
+
+export interface ProtectedResourceMetadata {
+  resource?: string | null
+  authorization_servers?: string[] | null
+  scopes_supported?: string[] | null
+  metadata_endpoint?: string | null
 }
 
 /**
@@ -32,6 +57,8 @@ export interface TokenExchange {
 export interface OIDCPluginConfig_gte_314 {
   config?: {
     token_exchange?: TokenExchange | null
+    proof_of_possession_mtls_from_header?: ProofOfPossessionMtlsFromHeader | null
+    protected_resource_metadata?: ProtectedResourceMetadata | null
   }
 }
 

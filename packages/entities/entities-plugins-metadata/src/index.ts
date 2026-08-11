@@ -729,6 +729,13 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
     gatewayVersion: '3.14',
   },
+  governance: {
+    name: 'Governance',
+    description: 'Enforce feature-level access control and credit-balance gating for API consumers. Integrates with Konnect Metering & Billing to allow or deny requests based on customer entitlements.',
+    group: PluginGroup.MONETIZATION,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    gatewayVersion: '3.16',
+  },
 } satisfies Record<string, {
   name: string
   description: string
@@ -742,6 +749,7 @@ export const GATEWAY_VERSION_TIMESTAMP_MAP: Record<string, number> = {
   '3.12': 1759519200000,
   '3.13': 1766156460000,
   '3.14': 1774742400000,
+  // todo: add 3.16 release timestamp when available
 }
 
 export type PluginName = keyof typeof PLUGIN_GROUP_AND_SCOPE_MAP

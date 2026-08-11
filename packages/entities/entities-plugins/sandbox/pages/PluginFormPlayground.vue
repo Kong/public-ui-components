@@ -1,5 +1,17 @@
 <template>
   <div class="plugin-form-playground-sandbox">
+    <div class="sandbox-controls">
+      <KInputSwitch
+        v-model="enableDeckConfigCustomization"
+        label="Enable decK configuration customization"
+      />
+
+      <KInputSwitch
+        v-model="enableDeckCallout"
+        label="Show decK config callout above YAML config"
+      />
+    </div>
+
     <KSlideout
       :close-on-blur="false"
       :has-overlay="false"
@@ -43,6 +55,7 @@
       <PluginForm
         :key="formKey"
         :config="konnectConfig"
+        enable-redis-partial
         enable-vault-secret-picker
         :plugin-type="pluginType || ''"
         :schema="schema"
@@ -54,6 +67,7 @@
       <PluginForm
         :key="formKey"
         :config="kongManagerConfig"
+        enable-redis-partial
         enable-vault-secret-picker
         :plugin-type="pluginType || ''"
         :schema="schema"
@@ -81,8 +95,14 @@ import type {
   KonnectPluginFormConfig,
   KongManagerPluginFormConfig,
 } from '../../src'
-import { PluginForm } from '../../src'
+import { PluginForm, useProvideExperimentalFreeForms } from '../../src'
 import { PLUGIN_METADATA } from '../../src/definitions/metadata'
+
+// Opt experimental free-form plugins into rendering in the playground so they
+// can be previewed with a hand-pasted schema (no backend required).
+useProvideExperimentalFreeForms([
+  'governance',
+])
 
 function save(type: 'pluginType' | 'schema', value: unknown) {
   localStorage.setItem(`plugin-form-playground:${type}`, JSON.stringify(value))
@@ -92,6 +112,9 @@ function load(type: 'pluginType' | 'schema', defaultValue?: unknown) {
   const stored = localStorage.getItem(`plugin-form-playground:${type}`)
   return stored ? JSON.parse(stored) : defaultValue
 }
+
+const enableDeckConfigCustomization = ref(false)
+const enableDeckCallout = ref(false)
 
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
@@ -150,7 +173,7 @@ const parseError = computed(() => {
 
 const text = useTemplateRef('text')
 
-const konnectConfig = ref<KonnectPluginFormConfig>({
+const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   app: 'konnect',
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
@@ -163,8 +186,18 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
     keyAuthIdentityRealms: true,
   },
   geoApiServerUrl: 'https://us.api.konghq.tech',
-  enableDeckTab: true,
-})
+  enableDeckTab: {
+    ...enableDeckConfigCustomization.value && {
+      customization: {
+        generateKonnectPat: async () => {
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          return 'kpat_test'
+        },
+      },
+    },
+    calloutPreferenceKey: enableDeckCallout.value ? 'konnect-entities-plugins-form-playground-deck-callout-sandbox' : undefined,
+  },
+}))
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   app: 'kongManager',
@@ -204,6 +237,11 @@ onErrorCaptured((error) => {
   display: flex;
   flex-direction: column;
   padding: 20px;
+
+  * {
+    box-sizing: border-box;
+  }
+
 }
 
 .controls {

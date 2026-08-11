@@ -23,6 +23,9 @@
       "cypress/vue"
     ]
   },
+  "files": [
+    "vitest.setup.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "packages/*/dist"

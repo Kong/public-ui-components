@@ -8,4 +8,4 @@ jobs:
   assign-author:
     runs-on: ubuntu-latest
     steps:
-      - uses: toshimaru/auto-author-assign@0dacdc5221a765732d16834dc6e902cf1562b182
+      - uses: Kong/auto-author-assign@7dbebfbadd984a53a3092c634ae3f8054ed4f81d

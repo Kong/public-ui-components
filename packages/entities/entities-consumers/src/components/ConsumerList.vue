@@ -354,20 +354,29 @@ const handleCreateClick = (): void => {
 /**
  * Fetcher & Filtering
  */
-const fetcherBaseUrl = computed<string>(() => {
-  let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app][isConsumerGroupPage.value ? 'forConsumerGroup' : 'all']}`
+const buildFetcherUrl = (endpoint: string): string => {
+  let url = `${props.config.apiBaseUrl}${endpoint}`
 
   if (props.config.app === 'konnect') {
-    url = url
-      .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-      .replace(/{consumerGroupId}/gi, props.config?.consumerGroupId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-      .replace(/{consumerGroupId}/gi, props.config?.consumerGroupId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{consumerGroupId}/gi, props.config?.consumerGroupId || '')
+}
+
+const fetcherBaseUrl = computed<string>(() => buildFetcherUrl(
+  endpoints.list[props.config.app][isConsumerGroupPage.value ? 'forConsumerGroup' : 'all'],
+))
+
+const activeFetcherUrl = computed<string>(() => {
+  // Only hit the search endpoint once the user is actually searching in workspace
+  if (props.config.app === 'konnect' && props.config.workspace && filterQuery.value) {
+    return buildFetcherUrl(endpoints.list.konnect.search)
+  }
+
+  return fetcherBaseUrl.value
 })
 
 const filterQuery = ref<string>('')
@@ -406,7 +415,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl, dataKeyName)
+} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), activeFetcherUrl, dataKeyName)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -602,16 +611,12 @@ const removeUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].oneForConsumerGroup}`
 
   if (props.config.app === 'konnect') {
-    url = url
-      .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-      .replace(/{consumerGroupId}/gi, props.config?.consumerGroupId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-      .replace(/{consumerGroupId}/gi, props.config?.consumerGroupId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{consumerGroupId}/gi, props.config?.consumerGroupId || '')
 })
 
 const isRemovePending = ref(false)

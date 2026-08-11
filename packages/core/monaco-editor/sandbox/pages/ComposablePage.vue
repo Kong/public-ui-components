@@ -43,13 +43,13 @@ useMonacoEditor(editor, { code, language: 'plaintext' })
 <style lang="scss" scoped>
 .editor-container {
   height: 100%;
-  padding: $kui-space-70;
+  padding: var(--kui-space-70, $kui-space-70);
 }
 
 .tab-container {
   display: flex;
-  gap: $kui-space-60;
-  margin-bottom: $kui-space-60;
+  gap: var(--kui-space-60, $kui-space-60);
+  margin-bottom: var(--kui-space-60, $kui-space-60);
 }
 
 .editor {

@@ -17,6 +17,18 @@
     @fetch:error="onError"
     @fetch:success="onSuccess"
   />
+
+  <h2>Kong AI Gateway</h2>
+  <VaultConfigCard
+    :config="aiGatewayConfig"
+    @fetch:error="onError"
+    @fetch:success="onAiGatewaySuccess"
+  />
+  <SecretList
+    v-if="aiGatewayVaultRecord?.name === VaultProviders.KONNECT"
+    :config="aiGatewayConfigForSecret"
+    :vault-id="id"
+  />
 </template>
 
 <script setup lang="ts">
@@ -65,12 +77,43 @@ const konnectConfigForSecret = ref<KonnectSecretListConfig>({
   }),
 })
 
+const aiGatewayId = import.meta.env.VITE_KONNECT_AI_GATEWAY_ID || 'demo-ai-gateway-id'
+const aiGatewayConfig = ref<KonnectVaultEntityConfig>({
+  app: 'konnect',
+  apiType: 'aiGateway',
+  aiGatewayId,
+  apiBaseUrl: '/us/kong-api',
+  controlPlaneId,
+  entityId: props.id,
+})
+const aiGatewayConfigForSecret = ref<KonnectSecretListConfig>({
+  app: 'konnect',
+  apiType: 'aiGateway',
+  aiGatewayId,
+  apiBaseUrl: '/us/kong-api',
+  controlPlaneId,
+  createRoute: { name: 'create-secret', params: { vaultId: props.id } },
+  isExactMatch: true,
+  getEditRoute: (secretId: string) => ({
+    name: 'edit-secret',
+    params: {
+      vaultId: props.id,
+      secretId,
+    },
+  }),
+})
+
 const konnectVaultRecord = ref<Record<string, any>>()
+const aiGatewayVaultRecord = ref<Record<string, any>>()
 const onError = (error: AxiosError) => {
   console.log(`Error: ${error}`)
 }
 const onSuccess = (payload: Record<string, any>) => {
   konnectVaultRecord.value = payload
   console.log('fetch:success', payload)
+}
+const onAiGatewaySuccess = (payload: Record<string, any>) => {
+  aiGatewayVaultRecord.value = payload
+  console.log('ai-gateway fetch:success', payload)
 }
 </script>

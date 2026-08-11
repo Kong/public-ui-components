@@ -9,18 +9,24 @@
       v-else-if="(formModel.id && editing) || !editing"
       class="entity-form"
     >
+      <!-- Konnect-managed Redis UI for free-form layouts (StandardLayout) -->
       <component
-        :is="(freeForm as any)[freeformName]"
-        v-if="freeformName"
+        :is="freeformComponent"
+        v-if="freeformComponent"
+        :developer="developer"
+        :field-renderers="pluginConfig?.fieldRenderers"
         :form-model="formModel"
         :form-schema="formSchema"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="record"
         :on-form-change="handleFreeFormUpdate"
         :on-validity-change="onValidityChange"
         :plugin-name="formModel.name"
-        :render-rules="PLUGIN_METADATA[formModel.name]?.freeformRenderRules"
+        :render-rules="pluginConfig?.renderRules"
         :schema="freeformSchema"
+        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
+        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
       >
         <template
@@ -34,6 +40,7 @@
           />
         </template>
       </component>
+      <!-- OIDC/ RLA embed their own `VueFormGenerator`, pass the Konnect-managed-Redis flag through -->
       <component
         :is="(sharedForms as any)[sharedFormName]"
         v-else-if="sharedFormName"
@@ -41,10 +48,14 @@
         :form-model="formModel"
         :form-options="formOptions"
         :form-schema="formSchema"
+        :identity-principals-ui-enabled="identityPrincipalsUiEnabled"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :on-model-updated="onModelUpdated"
         :on-partial-toggled="onPartialToggled"
         :show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
+        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
+        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
       >
         <template
           v-if="enableVaultSecretPicker"
@@ -58,10 +69,12 @@
         </template>
       </component>
 
+      <!-- Default schema-driven plugin form- `FormGenerator`- `FormRedis` -->
       <VueFormGenerator
         v-else
         :enable-redis-partial="enableRedisPartial"
         :is-editing="editing"
+        :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
         :model="formModel"
         :options="formOptions"
         :schema="formSchema"
@@ -112,11 +125,12 @@ import {
   VaultSecretPickerProvider,
 } from '@kong-ui-public/entities-vaults'
 import '@kong-ui-public/entities-vaults/dist/style.css'
-import { useAxios, useHelpers } from '@kong-ui-public/entities-shared'
+import { PLUGIN_FORM_LAYOUT_STATE, useAxios, useHelpers } from '@kong-ui-public/entities-shared'
 import {
   AUTOFILL_SLOT_NAME,
   FORMS_API_KEY,
   FORMS_CONFIG,
+  REDIS_CREATE_SLIDEOUT,
   customFields,
   getSharedFormName,
   sharedForms,
@@ -124,33 +138,23 @@ import {
   type AutofillSlotProps,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
+import { RedisConfigurationFormSlideout } from '@kong-ui-public/entities-redis-configurations'
+import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, inject, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
+import { computed, inject, markRaw, onBeforeMount, onBeforeUnmount, provide, reactive, ref, shallowReactive, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
+import { useToaster } from '../composables/useToaster'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
-import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
+import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
-import * as freeForm from './free-form'
+import CommonForm from './free-form/Common'
 import type { GlobalAction } from './free-form/shared/types'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from './free-form/shared/schema-enhancement'
+import { getPluginConfig, type ResolvedPluginFormConfig } from './free-form/shared/plugin-registry'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
-import type { FormSchema } from '../types/plugins/form-schema'
-
-// Need to check for duplicates in sharedForms and freeForm
-// throw an error if there are any
-const sharedFormKeys = Object.keys(sharedForms)
-const freeFormKeys = Object.keys(freeForm)
-
-if (
-  new Set([...sharedFormKeys, ...freeFormKeys]).size !==
-  sharedFormKeys.length + freeFormKeys.length
-) {
-  throw new Error(
-    'Duplicate form component names found in `sharedForms` and `freeForm`',
-  )
-}
+import type { ArrayFieldSchema, FormSchema, MapFieldSchema, RecordFieldSchema, UnionFieldSchema } from '../types/plugins/form-schema'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -163,6 +167,8 @@ const emit = defineEmits<{
   ): void
   (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
+  (e: 'click:learn-more', entity: string): void
+  (e: 'click:create-entity', payload: EntityCreateEvent): void
   (e: 'validity-change', payload: PluginValidityChangeEvent): void
 }>()
 
@@ -243,9 +249,30 @@ const props = defineProps({
     required: false,
     default: undefined,
   },
+
+  /** For Kong Manager portal developers */
+  developer: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const isKonnectManagedRedisEnabled = computed<boolean>(() => {
+  if (props.config.app !== 'konnect') return false
+
+  const konnect = props.config as KonnectPluginFormConfig
+  return (
+    !!konnect.isKonnectManagedRedisEnabled
+    && konnect.isCloudGateway === true
+  )
 })
 
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
+
+// Identity Principals UI feature flag. Free-form plugins (basic-auth, key-auth) read this
+// directly via inject in ConfigFormContent; OIDC embeds its own VueFormGenerator, so it's
+// passed through as a prop (mirroring is-konnect-managed-redis-enabled).
+const identityPrincipalsUiEnabled = inject<boolean>(PLUGIN_FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
@@ -257,19 +284,25 @@ const { parseSchema } = composables.useSchemas({
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
-const { shouldUseFreeForm, getFreeFormName } = composables.useFreeFormResolver()
+const { shouldUseFreeForm, getFreeFormComponent } = composables.useFreeFormResolver()
+const pluginFormLayoutState = inject(PLUGIN_FORM_LAYOUT_STATE)
+const setPluginFormLayoutState = (value: boolean) => {
+  if (pluginFormLayoutState) {
+    pluginFormLayoutState.value = value
+  }
+}
 
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
 
 const mapControlPlane = (url: string) => {
+  let urlString = url
+
   if (props.config.app === 'konnect') {
-    return url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+    urlString = urlString.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   }
 
-  return url
+  return urlString.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
 }
 
 // define endpoints for use by KFG
@@ -414,10 +447,25 @@ provide(FORMS_API_KEY, {
   peek,
 })
 
-provide(FORMS_CONFIG, props.config)
+// shallowReactive keeps the same object identity so all descendants can
+// access properties directly (no .value unwrap needed), while staying live
+// when the host replaces the entire config prop reference (e.g. once an
+// async field like principalsCreationGuideVisible resolves).
+const liveConfig = shallowReactive({ ...(props.config as object) })
+watch(() => props.config, (newConfig) => {
+  Object.assign(liveConfig, newConfig)
+})
+provide(FORMS_CONFIG, liveConfig)
+
+const toaster = useToaster()
+provide(REDIS_CREATE_SLIDEOUT, {
+  component: markRaw(RedisConfigurationFormSlideout),
+  toast: (payload: { message: string, appearance: 'success' | 'danger' }) => toaster(payload),
+})
 
 const sharedFormName = ref('')
-const freeformName = ref<string | undefined>('')
+const pluginConfig = ref<ResolvedPluginFormConfig | undefined>()
+const freeformComponent = shallowRef<any>()
 const form = ref<Record<string, any> | null>(null)
 const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
@@ -440,6 +488,28 @@ const setUpVaultSecretPicker = (setupValue: string, autofillAction: (secretRef: 
 const handleVaultSecretPickerAutofill = (secretRef: string) => {
   vaultSecretPickerAutofillAction.value?.(secretRef)
   vaultSecretPickerSetup.value = false
+}
+
+const syncFormRenderingMode = (pluginName?: string) => {
+  if (!pluginName) {
+    pluginConfig.value = undefined
+    freeformComponent.value = undefined
+    sharedFormName.value = ''
+
+    setPluginFormLayoutState(false)
+
+    return
+  }
+
+  // For cloned plugins, use the source plugin name for rendering decisions
+  const effectivePluginName = props.schema?._sourcePlugin || pluginName
+  pluginConfig.value = getPluginConfig(effectivePluginName)
+  freeformComponent.value = shouldUseFreeForm(effectivePluginName, props.engine)
+    ? (getFreeFormComponent(effectivePluginName) ?? CommonForm)
+    : undefined
+  sharedFormName.value = getSharedFormName(effectivePluginName)
+
+  setPluginFormLayoutState(Boolean(freeformComponent.value))
 }
 
 // This function transforms the form data into the correct structure to be submitted to the API
@@ -666,7 +736,7 @@ const getModel = (freeformFields?: string[]): Record<string, any> => {
   const model: Record<string, any> = unFlattenObject(outputModel)
 
   // Handle the special case of the freeform plugin
-  if (freeformName.value) {
+  if (freeformComponent.value) {
     // remove any freeform fields from the model before merging
     if (freeformFields && freeformFields.length) {
       for (const field of freeformFields) {
@@ -778,9 +848,92 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
   })
 }
 
+// Walks a config value alongside its raw-schema subtree and drops keys that aren't in
+// the schema's `fields[]`. Deprecated `shorthand_fields` live in their own array on each
+// record, never in `fields[]`, so they fall out naturally — preventing the backend from
+// re-filling canonical fields (e.g. `redis.password`) from stale shorthand values.
+//
+// Polymorphic records (e.g. datakit's `nodes[]` whose actual field set is chosen by a
+// `subschema_key` + `subschema_definitions` discriminator) are deliberately NOT dispatched:
+// Kong schemas treat the discriminator field and other implicit common fields (e.g. `name`)
+// as runtime-required but don't always declare them inside each concrete subschema. Walking
+// with the concrete subschema would over-strip those fields. Such records have no declared
+// `fields[]` on the element schema itself, so they pass through the array branch unchanged.
+const stripUnknownConfigFields = (value: any, subschema: UnionFieldSchema | undefined): any => {
+  if (!subschema) return value
+
+  // Array (or set — Kong `set` values are JSON arrays with the same `elements` schema shape).
+  // Recurse into each element when the schema declares an `elements` subschema. Primitive
+  // elements (e.g. `{ type: 'string' }`) are safe — the recursive call hits the early
+  // `typeof value !== 'object'` return. Records without declared `fields[]` (polymorphic
+  // `subschema_definitions`) pass through via the `!Array.isArray(fields)` guard below.
+  if (Array.isArray(value)) {
+    const elements = (subschema as ArrayFieldSchema).elements
+    if (elements) {
+      return value.map((item) => stripUnknownConfigFields(item, elements))
+    }
+    return value
+  }
+
+  // Primitive or null — nothing to strip.
+  if (!value || typeof value !== 'object') return value
+
+  // Map — recurse into each value with the values-subschema.
+  // Map KEYS are user-defined and remain opaque; only values get walked.
+  // Covers map-of-records, map-of-arrays, and nested maps uniformly.
+  // Primitive-valued maps (e.g. string → string) are safe: the recursive call
+  // hits the early `!value || typeof value !== 'object'` return.
+  if ((subschema as MapFieldSchema).type === 'map' && (subschema as MapFieldSchema).values) {
+    const valuesSchema = (subschema as MapFieldSchema).values as UnionFieldSchema
+    const result: Record<string, any> = {}
+    for (const key of Object.keys(value)) {
+      result[key] = stripUnknownConfigFields(value[key], valuesSchema)
+    }
+    return result
+  }
+
+  // Record with no declared `fields[]` (e.g. primitive-valued `map`) — pass through.
+  if (!Array.isArray((subschema as RecordFieldSchema).fields)) return value
+
+  const fieldByName = new Map<string, UnionFieldSchema | undefined>()
+  for (const fieldDef of (subschema as RecordFieldSchema).fields) {
+    const name = fieldDef && Object.keys(fieldDef)[0]
+    if (name) fieldByName.set(name, fieldDef[name])
+  }
+
+  const result: Record<string, any> = {}
+  for (const key of Object.keys(value)) {
+    const childSchema = fieldByName.get(key)
+    if (!childSchema) continue // unknown — drop (shorthand_field or stale alias)
+    result[key] = stripUnknownConfigFields(value[key], childSchema)
+  }
+  return result
+}
+
+const getConfigSubschema = (): UnionFieldSchema | undefined => {
+  const fields = props.rawSchema?.fields
+  if (!Array.isArray(fields)) return undefined
+  const configField = fields.find((f: Record<string, any>) => f?.config)
+  return configField?.config
+}
+
+// Plugins whose schemas use polymorphic-record patterns (e.g. datakit's `nodes[].type`
+// dispatch) declare `name`/`type` as implicit common fields that the FE schema model can't
+// reliably recover from `subschema_definitions` alone. Skip the strip entirely for them —
+// the walker would over-strip those implicit fields and break the payload.
+const STRIP_BYPASS_PLUGINS = new Set(['datakit'])
+
+// Mirrors the cloned-plugin resolution at line 475 — `_sourcePlugin` wins for clones so a
+// `datakit-clone` plugin is also recognized as datakit for strip-bypass purposes.
+const effectivePluginName = computed(() => (props.schema?._sourcePlugin || formModel.name) as string | undefined)
+
 const freeformData = shallowRef<Record<string, any>>(props.record)
 const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[]) => {
-  freeformData.value = value
+  const unknownFieldStripped = !STRIP_BYPASS_PLUGINS.has(effectivePluginName.value as string)
+    ? { ...value, config: stripUnknownConfigFields(value.config, getConfigSubschema()) }
+    : value
+
+  freeformData.value = unknownFieldStripped
 
   const newModel = { ...formModel }
 
@@ -792,7 +945,7 @@ const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[]) => 
   emit('model-updated', {
     // config change should also update the form model
     // otherwise the submit button will be disabled
-    model: { ...newModel, ...value },
+    model: { ...newModel, ...unknownFieldStripped },
     originalModel,
     data: getModel(fields),
   })
@@ -838,7 +991,7 @@ const initFormModel = (): void => {
       }
 
       // main plugin configuration
-      if (freeformName.value) {
+      if (freeformComponent.value) {
         // keep original config from record for freeform plugins
         handleFreeFormUpdate(props.record)
       } else {
@@ -883,27 +1036,23 @@ const initFormModel = (): void => {
 watch(loading, (newLoading) => {
   emit('loading', newLoading)
 })
-
 // if the schema changed we've got to start over and completely rebuild the form model
 watch(() => props.schema, (newSchema, oldSchema) => {
   if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
     return
   }
-  const form: Record<string, any> = parseSchema(newSchema, undefined, undefined, props.engine)
+  const parsedForm: Record<string, any> = parseSchema(newSchema, undefined, undefined, props.engine)
 
-  Object.assign(formModel, form.model)
+  Object.assign(formModel, parsedForm.model)
 
   formSchema.value = {
     fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
       return { ...r, disabled: r.disabled || false }
     }),
   }
-  Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
+  Object.assign(originalModel, JSON.parse(JSON.stringify(parsedForm.model)))
 
-  freeformName.value = shouldUseFreeForm(form.model.name, props.engine)
-    ? getFreeFormName(form.model.name)
-    : undefined
-  sharedFormName.value = getSharedFormName(form.model.name)
+  syncFormRenderingMode(parsedForm.model.name)
 
   initFormModel()
 }, { immediate: true, deep: true })
@@ -913,8 +1062,13 @@ onBeforeMount(() => {
 
   Object.assign(formModel, form.value?.model || {})
   formSchema.value = form.value?.schema || {}
+  syncFormRenderingMode(form.value?.model?.name)
 
   initFormModel()
+})
+
+onBeforeUnmount(() => {
+  setPluginFormLayoutState(false)
 })
 </script>
 

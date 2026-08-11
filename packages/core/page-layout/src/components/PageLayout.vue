@@ -14,34 +14,70 @@
             v-if="breadcrumbs && breadcrumbs.length"
             class="header-breadcrumbs"
             data-testid="page-layout-breadcrumbs"
+            item-max-width="25ch"
             :items="breadcrumbs"
           />
           <div class="title-container">
             <component
               :is="isBackToString ? 'a' : 'router-link'"
               v-if="backTo"
+              v-bind="isBackToString ? { href: backTo } : { to: backTo }"
               :aria-label="t('back_button')"
               class="navigate-back"
               data-testid="page-layout-navigate-back"
-              :href="isBackToString ? backTo : undefined"
               tabindex="0"
-              :to="isBackToString ? undefined : backTo"
               @click.prevent="navigateBack"
               @keydown.enter.prevent="navigateBack"
-              @keydown.space.prevent="navigateBack"
             >
               <ArrowTopLeftIcon
                 decorative
-                :size="KUI_ICON_SIZE_30"
+                :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
               />
             </component>
-            <h1
-              v-if="title"
-              class="page-layout-title"
-              data-testid="page-layout-title"
+            <span
+              v-if="title || $slots.title"
+              class="page-layout-title-wrapper"
             >
-              {{ title }}
-            </h1>
+              <slot name="title">
+                <h1
+                  class="page-layout-title"
+                  data-testid="page-layout-title"
+                >
+                  {{ title }}
+                </h1>
+              </slot>
+            </span>
+            <div
+              v-if="showFavoriteButton"
+              :key="favoriteButtonKey"
+              class="favorite-button-container"
+            >
+              <KTooltip
+                placement="right"
+                :text="isFavorite ? t('favorite_button.remove_shortcut') : t('favorite_button.save_shortcut')"
+              >
+                <button
+                  :aria-label="isFavorite ? t('favorite_button.remove_shortcut') : t('favorite_button.save_shortcut')"
+                  class="favorite-button"
+                  :class="{ 'active': isFavorite }"
+                  data-testid="page-layout-favorite-button"
+                  type="button"
+                  @click="onFavoriteButtonClick"
+                >
+                  <component
+                    :is="isFavorite ? StarFillIcon : StarIcon"
+                    decorative
+                    :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
+                  />
+                </button>
+              </KTooltip>
+            </div>
+            <div
+              v-if="$slots['title-after']"
+              class="title-after-container"
+            >
+              <slot name="title-after" />
+            </div>
           </div>
         </div>
 
@@ -55,7 +91,17 @@
       <PageLayoutTabs
         v-if="hasTabs"
         :tabs="tabs"
-      />
+      >
+        <template
+          v-for="tab in tabs"
+          #[`tab-${tab.key}`]="slotProps"
+        >
+          <slot
+            :name="`tab-${tab.key}`"
+            v-bind="slotProps"
+          />
+        </template>
+      </PageLayoutTabs>
     </div>
 
     <div
@@ -72,13 +118,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide, inject, onUnmounted } from 'vue'
-import type { PageLayoutProps, PageLayoutSlots } from '../types'
+import { computed, ref, provide, inject, onUnmounted, watch } from 'vue'
+import type { DeepReadonly, Reactive } from 'vue'
+import type { PageLayoutProps, PageLayoutSlots, PageShortcutData } from '../types'
 import PageLayoutTabs from './PageLayoutTabs.vue'
 import { nestedPageLayoutInjectionKey } from '../symbols'
-import { ArrowTopLeftIcon } from '@kong/icons'
+import { ArrowTopLeftIcon, StarIcon, StarFillIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { useDebounceFn } from '@vueuse/core'
 import composables from '../composables'
 
 const {
@@ -86,19 +134,31 @@ const {
   title,
   backTo,
   tabs = [],
+  pageShortcutData,
 } = defineProps<PageLayoutProps>()
 
 defineSlots<PageLayoutSlots>()
 
 const navigateTo = inject<((to: string) => Promise<void>) | null>('app:navigateTo', null)
+const pageShortcutsContext = inject<DeepReadonly<Reactive<unknown>> | null>('app:pageShortcutsContext', null)
 
 const { i18n: { t } } = composables.useI18n()
 
 const router = useRouter()
+const route = useRoute()
 
 const hasTabs = computed((): boolean => !!(tabs && tabs.length))
 
 const isBackToString = computed((): boolean => typeof backTo === 'string')
+
+const isEntityPage = computed((): boolean => !!pageShortcutData && !!pageShortcutData.entityType && !!pageShortcutData.label)
+const showFavoriteButton = computed((): boolean => isEntityPage.value && !!pageShortcutsContext && 'onFavoriteToggle' in pageShortcutsContext && typeof pageShortcutsContext.onFavoriteToggle === 'function')
+const favoriteButtonKey = ref<number>(0)
+const isFavorite = computed((): boolean =>
+  !!pageShortcutsContext &&
+  (('isFavorite' in pageShortcutsContext &&
+  typeof pageShortcutsContext.isFavorite === 'function' &&
+  pageShortcutsContext.isFavorite(pageShortcutData) === true)))
 
 /** Handle navigation back via the backTo prop */
 const navigateBack = async () => {
@@ -136,8 +196,8 @@ const navigateBack = async () => {
  *    (nestedCount) is used so the parent only restores its header when all nested
  *    children have unmounted, not just the first one.
  */
-const nestedCount = ref(0)
-const hasNestedPageLayout = computed(() => nestedCount.value > 0)
+const nestedCount = ref<number>(0)
+const hasNestedPageLayout = computed((): boolean => nestedCount.value > 0)
 provide(nestedPageLayoutInjectionKey, (): (() => void) => {
   nestedCount.value++
 
@@ -154,9 +214,29 @@ if (typeof registerNestedPageLayout === 'function') {
   unregisterNestedPageLayout.value = registerNestedPageLayout()
 }
 
+const onFavoriteButtonClick = () => {
+  // Cast to the expected type -- we already checked for the function in the computed property
+  (pageShortcutsContext as { onFavoriteToggle: (pageShortcutData: PageShortcutData) => void }).onFavoriteToggle({ ...pageShortcutData!, path: pageShortcutData?.path || route.fullPath })
+}
+
 onUnmounted(() => {
   unregisterNestedPageLayout.value?.()
 })
+
+const debouncedEntityPageVisit = useDebounceFn(() => {
+  if (!hasNestedPageLayout.value && isEntityPage.value && pageShortcutsContext && 'onEntityPageVisit' in pageShortcutsContext && typeof pageShortcutsContext.onEntityPageVisit === 'function') {
+    pageShortcutsContext.onEntityPageVisit({ ...pageShortcutData, path: pageShortcutData?.path || route?.fullPath })
+    favoriteButtonKey.value++
+  }
+}, 500)
+
+/**
+ * The reason why it has to be a watcher vs onMounted is because sometimes it takes time for the host app router to update the route and set the path properly.
+ * Same applies to label and parentLabel which are often sourced from a store.
+ */
+watch([() => pageShortcutData, () => route?.fullPath], () => {
+  debouncedEntityPageVisit()
+}, { immediate: true, deep: true })
 </script>
 
 <style lang="scss" scoped>
@@ -165,6 +245,7 @@ onUnmounted(() => {
   font-family: var(--kui-font-family-text, $kui-font-family-text);
 
   .page-layout-header {
+    background-color: var(--kui-color-background, $kui-color-background);
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-40, $kui-space-40);
@@ -177,6 +258,9 @@ onUnmounted(() => {
       padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
 
       .page-header-start {
+        // Allow this flex item to shrink below its content size so the title can truncate
+        min-width: 0;
+
         .header-breadcrumbs {
           &:deep(.breadcrumbs-item-container) {
             // Override first breadcrumb padding left
@@ -194,11 +278,12 @@ onUnmounted(() => {
         }
 
         .title-container {
-          align-items: center;
+          align-items: flex-end;
           display: flex;
           gap: var(--kui-space-20, $kui-space-20);
 
-          .navigate-back {
+          .navigate-back,
+          .favorite-button {
             background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
             border: none;
             border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
@@ -217,21 +302,55 @@ onUnmounted(() => {
             }
           }
 
-          .page-layout-title {
-            color: var(--kui-color-text, $kui-color-text);
-            font-size: var(--kui-font-size-50, $kui-font-size-50);
-            font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-            line-height: var(--kui-line-height-40, $kui-line-height-40);
-            margin: var(--kui-space-0, $kui-space-0);
+          .page-layout-title-wrapper {
+            // Allow this flex item to shrink so its child title can truncate with an ellipsis
+            min-width: 0;
+            overflow: hidden;
+
+            > * {
+              color: var(--kui-color-text, $kui-color-text);
+              font-size: var(--kui-font-size-50, $kui-font-size-50);
+              font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+              line-height: var(--kui-line-height-40, $kui-line-height-40);
+              margin: var(--kui-space-0, $kui-space-0);
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+
+          .favorite-button-container {
+            align-self: center;
+            display: flex;
+            margin-left: var(--kui-space-20, $kui-space-20);
+
+            .favorite-button {
+              color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak);
+              padding: var(--kui-space-0, $kui-space-0);
+
+              &:hover {
+                color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+              }
+
+              &.active {
+                color: var(--kui-color-text-warning-weak, $kui-color-text-warning-weak);
+              }
+            }
+          }
+
+          .title-after-container {
+            align-items: flex-end;
+            display: flex;
+            gap: var(--kui-space-30, $kui-space-30);
+            margin-left: var(--kui-space-20, $kui-space-20);
           }
         }
       }
 
       .page-header-actions-container {
-        align-items: flex-end;
+        align-items: center;
         display: flex;
         gap: var(--kui-space-30, $kui-space-30);
-        justify-content: flex-end;
       }
     }
 
@@ -245,6 +364,7 @@ onUnmounted(() => {
   }
 
   .page-layout-content {
+    background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-50, $kui-space-50);

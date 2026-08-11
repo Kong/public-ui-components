@@ -242,7 +242,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
 
       // Add a top border to the ul element, offset from the left and right to prevent overlap
       &:before {
-        /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+        /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
         background-color: var(--kui-navigation-color-border, $kui-navigation-color-border);
         content: '';
         height: 1px;

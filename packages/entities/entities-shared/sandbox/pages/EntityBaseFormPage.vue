@@ -1,5 +1,17 @@
 <template>
   <div class="sandbox-container">
+    <div class="sandbox-controls">
+      <KInputSwitch
+        v-model="enableDeckConfigCustomization"
+        label="Enable decK configuration customization"
+      />
+
+      <KInputSwitch
+        v-model="enableDeckCallout"
+        label="Show decK config callout above YAML config"
+      />
+    </div>
+
     <EntityBaseForm
       :can-submit="canSubmit"
       :config="konnectConfig"
@@ -53,15 +65,28 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const konnectFetchUrl = ref(`/v2/control-planes/${controlPlaneId}/core-entities/services`)
 const entityType = SupportedEntityType.GatewayService
 
-const konnectConfig = ref<KonnectBaseFormConfig>({
+const enableDeckConfigCustomization = ref(false)
+const enableDeckCallout = ref(false)
+
+const konnectConfig = computed<KonnectBaseFormConfig>(() => ({
   app: 'konnect',
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   cancelRoute: { name: '/' },
-  enableDeckTab: true,
+  enableDeckTab: {
+    ...enableDeckConfigCustomization.value && {
+      customization: {
+        generateKonnectPat: async () => {
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          return 'kpat_test'
+        },
+      },
+    },
+    calloutPreferenceKey: enableDeckCallout.value ? 'konnect-entities-base-form-deck-callout-sandbox' : undefined,
+  },
   geoApiServerUrl: 'https://us.api.konghq.tech',
-})
+}))
 
 const canSubmit = computed((): boolean => !!form.fields.name)
 
@@ -86,6 +111,13 @@ const handleCancel = (): void => {
 <style lang="scss" scoped>
 .sandbox-container {
   padding: 40px;
+
+  .sandbox-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
 }
 
 .entity-name {

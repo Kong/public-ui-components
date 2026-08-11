@@ -45,7 +45,10 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    VueDevTools(),
+    // Skip Vue DevTools under Cypress component testing: it registers a global devtools hook that
+    // Cypress's bundled @vue/test-utils wraps on every `cy.mount()` without ever unwrapping, so
+    // `wrapper.emitted()` records each real event once per accumulated wrapper layer across the spec.
+    process.env.CYPRESS ? undefined : VueDevTools(),
   ],
   resolve: {
     // Use this option to force Vite to always resolve listed dependencies to the same copy (from project root)
@@ -57,7 +60,6 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'modern',
         // Inject the @kong/design-tokens SCSS variables to make them available for all components.
         additionalData: '@use "@kong/design-tokens/tokens/scss/variables" as *;',
       },
@@ -114,7 +116,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: [],
+    setupFiles: [path.resolve(__dirname, 'vitest.setup.ts')],
     coverage: {
       reporter: ['text', 'json', 'html'],
     },
@@ -164,7 +166,7 @@ export const getApiProxies = (pathToRoot: string = '../../../.') => {
   const regionalProxies = {}
   // Build the regional API proxies
   for (const region of availableRegions) {
-    // @ts-ignore
+    // @ts-ignore: Ignoring TS error due to dynamic property assignment
     regionalProxies[`^/${region}/kong-api`] = {
       target: (env.VITE_KONNECT_API ?? '').replace(/\{geo\}/, region),
       rewrite: (path: string) => path.replace(`/${region}/kong-api`, ''),

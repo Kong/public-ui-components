@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, type MockInstance } from 'vitest'
 
-import * as contextUtils from '../context'
+import * as contextUtils from '../features/context'
 import { getModelContext, invalidateModelContexts } from './model-contexts'
 
 import type { editor, IDisposable } from 'monaco-editor'
@@ -43,7 +43,7 @@ function mockContext(model: editor.ITextModel): Readonly<ModelContext> {
 
 const parseIntoContextMock = vi.hoisted(() => vi.fn((model: editor.ITextModel) => mockContext(model)))
 
-vi.mock('../context', () => {
+vi.mock('../features/context', () => {
   return {
     parseIntoContext: parseIntoContextMock,
   }

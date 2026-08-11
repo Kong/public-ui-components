@@ -1,2 +1,2 @@
-export * from './data-plane-node'
+export * from './config'
 export * from './log-level'

@@ -1,5 +1,7 @@
 import PageLayoutTabs from './PageLayoutTabs.vue'
+import { defineComponent, h, ref, type Ref } from 'vue'
 import { createRouter, createMemoryHistory } from 'vue-router'
+import type { PageLayoutTab } from '../types'
 
 const router = createRouter({
   history: createMemoryHistory(),
@@ -22,12 +24,12 @@ describe('<PageLayoutTabs />', () => {
     cy.getTestId('page-layout-tabs').should('be.visible')
     cy.getTestId('page-layout-tab-overview')
       .should('be.visible')
-      .and('contain.text', 'Overview')
-      .and('have.attr', 'href', '/overview')
+      .and('contain.text', tabs[0].label)
+      .and('have.attr', 'href', tabs[0].to)
     cy.getTestId('page-layout-tab-settings')
       .should('be.visible')
-      .and('contain.text', 'Settings')
-      .and('have.attr', 'href', '/settings')
+      .and('contain.text', tabs[1].label)
+      .and('have.attr', 'href', tabs[1].to)
   })
 
   it('handles overflow correctly with overflowing tab showing in dropdown', () => {
@@ -60,10 +62,165 @@ describe('<PageLayoutTabs />', () => {
     cy.getTestId('tabs-overflow-dropdown-button').click()
 
     // The last tab should be in the dropdown
+    const lastTab = tabs[tabs.length - 1]
     cy.getTestId('tabs-overflow-dropdown-popover')
-      .findTestId('page-layout-tab-tab8')
+      .findTestId(`page-layout-tab-${lastTab.key}`)
       .should('be.visible')
-      .and('have.attr', 'href', '/tab8')
+      .and('have.attr', 'href', lastTab.to)
+  })
+
+  it('recomputes the tab layout when the tabs prop changes', () => {
+    const initialTabs = [
+      { key: 'tab1', label: 'Tab 1', to: '/tab1' },
+      { key: 'tab2', label: 'Tab 2', to: '/tab2' },
+    ]
+
+    const manyTabs = [
+      { key: 'tab1', label: 'Tab 1', to: '/tab1' },
+      { key: 'tab2', label: 'Tab 2', to: '/tab2' },
+      { key: 'tab3', label: 'Tab 3', to: '/tab3' },
+      { key: 'tab4', label: 'Tab 4', to: '/tab4' },
+      { key: 'tab5', label: 'Tab 5', to: '/tab5' },
+      { key: 'tab6', label: 'Tab 6', to: '/tab6' },
+      { key: 'tab7', label: 'Tab 7', to: '/tab7' },
+      { key: 'tab8', label: 'Tab 8', to: '/tab8' },
+    ]
+
+    cy.viewport(300, 400)
+
+    let vueWrapper: { setProps: (props: Record<string, unknown>) => Promise<void> }
+
+    cy.mount(PageLayoutTabs, {
+      props: {
+        tabs: initialTabs,
+      },
+    }).then(({ wrapper }) => {
+      vueWrapper = wrapper
+    })
+
+    cy.getTestId('tabs-overflow-dropdown-button').should('not.exist')
+
+    cy.then(() => vueWrapper.setProps({ tabs: manyTabs }))
+
+    cy.getTestId('tabs-overflow-dropdown-button').should('be.visible')
+  })
+
+  it('recomputes the tab layout when tabs are pushed into the existing array', () => {
+    const initialTabs: PageLayoutTab[] = [
+      { key: 'tab1', label: 'Tab 1', to: '/tab1' },
+      { key: 'tab2', label: 'Tab 2', to: '/tab2' },
+    ]
+
+    const tabsToAppend: PageLayoutTab[] = [
+      { key: 'tab3', label: 'Tab 3', to: '/tab3' },
+      { key: 'tab4', label: 'Tab 4', to: '/tab4' },
+      { key: 'tab5', label: 'Tab 5', to: '/tab5' },
+      { key: 'tab6', label: 'Tab 6', to: '/tab6' },
+      { key: 'tab7', label: 'Tab 7', to: '/tab7' },
+      { key: 'tab8', label: 'Tab 8', to: '/tab8' },
+    ]
+
+    cy.viewport(300, 400)
+
+    const tabsRef: Ref<PageLayoutTab[]> = ref([...initialTabs])
+
+    cy.mount(defineComponent({
+      setup: () => () => h(PageLayoutTabs, { tabs: tabsRef.value }),
+    }))
+
+    cy.getTestId('tabs-overflow-dropdown-button').should('not.exist')
+
+    cy.then(() => {
+      tabsRef.value.push(...tabsToAppend)
+    })
+
+    cy.getTestId('tabs-overflow-dropdown-button').should('be.visible')
+  })
+
+  it('recomputes the tab layout when its container is resized', () => {
+    const tabs: PageLayoutTab[] = [
+      { key: 'tab1', label: 'Tab 1', to: '/tab1' },
+      { key: 'tab2', label: 'Tab 2', to: '/tab2' },
+      { key: 'tab3', label: 'Tab 3', to: '/tab3' },
+      { key: 'tab4', label: 'Tab 4', to: '/tab4' },
+      { key: 'tab5', label: 'Tab 5', to: '/tab5' },
+      { key: 'tab6', label: 'Tab 6', to: '/tab6' },
+      { key: 'tab7', label: 'Tab 7', to: '/tab7' },
+      { key: 'tab8', label: 'Tab 8', to: '/tab8' },
+    ]
+
+    // Use a wide viewport so the layout is driven by the container width below, not the viewport width
+    cy.viewport(1200, 400)
+
+    const containerWidth = ref('1100px')
+
+    cy.mount(defineComponent({
+      setup: () => () => h(
+        'div',
+        { style: { width: containerWidth.value } },
+        [h(PageLayoutTabs, { tabs })],
+      ),
+    }))
+
+    // All tabs fit in the wide container, so the overflow dropdown should not appear
+    cy.getTestId('tabs-overflow-dropdown-button').should('not.exist')
+
+    // Shrink the container; the ResizeObserver should detect the change and recompute overflow
+    cy.then(() => {
+      containerWidth.value = '300px'
+    })
+
+    cy.getTestId('tabs-overflow-dropdown-button').should('be.visible')
+
+    // Grow the container back; the dropdown should disappear once everything fits again
+    cy.then(() => {
+      containerWidth.value = '1100px'
+    })
+
+    cy.getTestId('tabs-overflow-dropdown-button').should('not.exist')
+  })
+
+  it('renders custom content via the dynamic `tab-${key}` slot', () => {
+    const customOverviewTestId = 'custom-overview'
+    const customOverviewText = 'Custom Overview'
+    const tabs = [
+      { key: 'overview', label: 'Overview', to: '/overview' },
+      { key: 'settings', label: 'Settings', to: '/settings' },
+    ]
+
+    cy.mount(PageLayoutTabs, {
+      props: {
+        tabs,
+      },
+      slots: {
+        'tab-overview': `<span data-testid="${customOverviewTestId}">${customOverviewText}</span>`,
+      },
+    })
+
+    cy.getTestId('page-layout-tab-overview')
+      .findTestId(customOverviewTestId)
+      .should('be.visible')
+      .and('contain.text', customOverviewText)
+    // Tabs without a matching slot fall back to the label
+    cy.getTestId('page-layout-tab-settings')
+      .should('be.visible')
+      .and('contain.text', tabs[1].label)
+  })
+
+  it('exposes the tab as a slot prop on the dynamic `tab-${key}` slot', () => {
+    const slotPropLabelTestId = 'slot-prop-label'
+    const tabs = [
+      { key: 'overview', label: 'Overview', to: '/overview' },
+    ]
+
+    cy.mount(defineComponent({
+      setup: () => () => h(PageLayoutTabs, { tabs }, {
+        'tab-overview': ({ tab }: { tab: PageLayoutTab }) =>
+          h('span', { 'data-testid': slotPropLabelTestId }, tab.label),
+      }),
+    }))
+
+    cy.getTestId(slotPropLabelTestId).should('be.visible').and('contain.text', tabs[0].label)
   })
 
   it('uses the navigateTo injectable to navigate to the tab', () => {
@@ -136,29 +293,6 @@ describe('<PageLayoutTabs />', () => {
     cy.get('@navigateTo').should('have.been.calledWith', tabs[0].to)
   })
 
-  it('uses the navigateTo injectable to navigate to the tab on Space key press', () => {
-    const navigateToStub = cy.stub().as('navigateTo')
-
-    const tabs = [
-      { key: 'tab', label: 'Tab', to: '/tab' },
-    ]
-
-    cy.mount(PageLayoutTabs, {
-      props: {
-        tabs,
-      },
-      global: {
-        provide: {
-          'app:navigateTo': navigateToStub,
-        },
-      },
-    })
-
-    cy.getTestId('page-layout-tab-tab').trigger('keydown', { key: ' ' })
-
-    cy.get('@navigateTo').should('have.been.calledWith', tabs[0].to)
-  })
-
   it('does not use the navigateTo injectable if the tab.to is not a string on Enter key press', () => {
     const navigateToStub = cy.stub().as('navigateTo')
 
@@ -179,31 +313,6 @@ describe('<PageLayoutTabs />', () => {
     })
 
     cy.getTestId('page-layout-tab-tab').trigger('keydown', { key: 'Enter' })
-
-    cy.get('@navigateTo').should('not.have.been.called')
-    cy.wrap(router).its('currentRoute').its('value').its('name').should('eq', 'tab')
-  })
-
-  it('does not use the navigateTo injectable if the tab.to is not a string on Space key press', () => {
-    const navigateToStub = cy.stub().as('navigateTo')
-
-    const tabs = [
-      { key: 'tab', label: 'Tab', to: { name: 'tab' } },
-    ]
-
-    cy.mount(PageLayoutTabs, {
-      props: {
-        tabs,
-      },
-      global: {
-        plugins: [router],
-        provide: {
-          'app:navigateTo': navigateToStub,
-        },
-      },
-    })
-
-    cy.getTestId('page-layout-tab-tab').trigger('keydown', { key: ' ' })
 
     cy.get('@navigateTo').should('not.have.been.called')
     cy.wrap(router).its('currentRoute').its('value').its('name').should('eq', 'tab')

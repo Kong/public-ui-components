@@ -108,13 +108,13 @@
     </template>
 
     <template #sidebar-icon-api-gateway>
-      <RuntimesIcon :size="KUI_ICON_SIZE_40" />
+      <RuntimesIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
     </template>
     <template #sidebar-icon-dev-portal>
-      <DevPortalIcon :size="KUI_ICON_SIZE_40" />
+      <DevPortalIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
     </template>
     <template #sidebar-icon-analytics>
-      <BarChartIcon :size="KUI_ICON_SIZE_40" />
+      <BarChartIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
     </template>
 
     <!-- Default slot content -->

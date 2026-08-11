@@ -1,13 +1,18 @@
 {
-  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": "./src",
     "outDir": "./bin",
+    "module": "ESNext",
     "moduleResolution": "node",
+    "target": "ESNext",
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
     "strict": true,
-    "noEmit": false,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
     "types": [
       "@types/inquirer",
       "@types/node"

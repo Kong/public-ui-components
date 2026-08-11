@@ -1,23 +1,34 @@
 <template>
-  <div
-    ref="root"
+  <MonacoEditor
+    :key="activeColorMode"
+    ref="monacoEditor"
+    v-model="expression"
+    appearance="standalone"
     :class="editorClass"
+    language="plaintext"
+    :options="editorOptions"
+    :show-empty-state="false"
+    :show-loading-state="false"
+    :theme="activeColorMode"
+    @ready="onReady"
   />
 </template>
 
 <script setup lang="ts">
+import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 import { useDebounce } from '@kong-ui-public/core'
 import type { AstType, Schema as AtcSchema, ParseResult, ParseResultOk } from '@kong/atc-router'
 import { Parser } from '@kong/atc-router'
 import * as monaco from 'monaco-editor'
-import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
-import { buildLanguageId, getTokensRange, locateStringLhsIdent, locateToken, registerLanguage, registerTheme, scanTokenBackward, scanTokensBidirectional, theme, TokenType, transformTokens } from '../monaco'
+import { computed, inject, ref, toRef, useTemplateRef, watch } from 'vue'
+import { buildLanguageId, getTokensRange, locateStringLhsIdent, locateToken, registerLanguage, scanTokenBackward, scanTokensBidirectional, TokenType, transformTokens } from '../monaco'
 import { createSchema, type Schema } from '../schema'
 import type { ProvideCompletionItems, RhsValueCompletion } from '../types'
+import type { ComputedRef } from 'vue'
 
-let editor: monaco.editor.IStandaloneCodeEditor | undefined
-let editorModel: monaco.editor.ITextModel
-const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor>()
+import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
+
+const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
 const { debounce } = useDebounce()
 
@@ -49,7 +60,9 @@ const emit = defineEmits<{
   'parse-result-update': [result: ParseResult]
 }>()
 
-const root = ref(null)
+const monacoRef = useTemplateRef('monacoEditor')
+const editor = toRef(() => monacoRef.value?.monacoEditor.editor.value)
+
 const isParsingActive = ref(false)
 const parseResult = ref<ParseResult | undefined>()
 
@@ -57,6 +70,22 @@ const editorClass = computed(() => [
   'expression-editor',
   { invalid: isParsingActive.value && parseResult.value?.status !== 'ok' },
 ])
+
+const editorOptions = computed<monaco.editor.IEditorOptions>(() => ({
+  fixedOverflowWidgets: true,
+  fontSize: 14,
+  lineNumbersMinChars: 3,
+  lineDecorationsWidth: 2,
+  minimap: {
+    enabled: false,
+  },
+  renderValidationDecorations: 'editable',
+  overviewRulerLanes: 0,
+  renderLineHighlightOnlyWhenFocus: true,
+  scrollBeyondLastLine: false,
+  maxTokenizationLineLength: 1000,
+  ...props.editorOptions,
+}))
 
 interface Item {
   property: string
@@ -162,41 +191,21 @@ const provideCompletionItems: ProvideCompletionItems = async (model, position) =
   }
 }
 
-onMounted(() => {
-  registerTheme()
-
-  editor = monaco.editor.create(root.value!, {
-    automaticLayout: true,
-    fixedOverflowWidgets: true,
-    fontSize: 14,
-    lineNumbersMinChars: 3,
-    lineDecorationsWidth: 2,
-    minimap: {
-      enabled: false,
-    },
-    renderValidationDecorations: 'editable',
-    overviewRulerLanes: 0,
-    renderLineHighlightOnlyWhenFocus: true,
-    scrollBeyondLastLine: false,
-    theme,
-    value: expression.value,
-    maxTokenizationLineLength: 1000,
-    editContext: false,
-    ...props.editorOptions,
-  })
-
-  editorRef.value = editor
+const onReady = (editorInstance: monaco.editor.IStandaloneCodeEditor) => {
+  const languageId = buildLanguageId(props.schema)
 
   if (props.defaultShowDetails) {
-    editor.getContribution<Record<string, any> & monaco.editor.IEditorContribution>('editor.contrib.suggestController')
+    editorInstance.getContribution<Record<string, any> & monaco.editor.IEditorContribution>('editor.contrib.suggestController')
       ?.widget?.value._setDetailsVisible(true)
   }
-  editor.onDidChangeModelContent(() => {
-    const model = editor!.getModel()!
-    const value = model.getValue()!
 
-    if (props.rhsValueCompletion) {
-      const position = editor!.getPosition()
+  // rhsValueCompletion: watch content changes to auto-trigger suggestions
+  if (props.rhsValueCompletion) {
+    const rhsValueCompletion = props.rhsValueCompletion
+    editorInstance.onDidChangeModelContent(() => {
+      const model = editorInstance.getModel()!
+      const value = model.getValue()
+      const position = editorInstance.getPosition()
       if (position) {
         const [flatTokens, nestedTokens] = transformTokens(model, monaco.editor.tokenize(value, model.getLanguageId()))
         const token = locateToken(nestedTokens, position.lineNumber - 1, position.column - 2)
@@ -211,8 +220,8 @@ onMounted(() => {
             if (lhsIdentTokenIndex >= 0) {
               const lhsIdentRange = getTokensRange(model, flatTokens, lhsIdentTokenIndex, lhsIdentTokenIndex + 1)
               const lhsIdentValue = model.getValueInRange(lhsIdentRange)
-              if (props.rhsValueCompletion.shouldProvide(lhsIdentValue)) {
-                editor!.getContribution<Record<string, any> & monaco.editor.IEditorContribution>('editor.contrib.suggestController')
+              if (rhsValueCompletion.shouldProvide(lhsIdentValue)) {
+                editorInstance.getContribution<Record<string, any> & monaco.editor.IEditorContribution>('editor.contrib.suggestController')
                   ?.triggerSuggest()
               }
             }
@@ -222,41 +231,30 @@ onMounted(() => {
             break
         }
       }
-    }
-
-    expression.value = value
-  })
-
-  editorModel = editor.getModel()!
-
-  if (props.inactiveUntilFocused) {
-    editor.onDidFocusEditorWidget(() => {
-      if (!isParsingActive.value) {
-        const { languageId } = registerLanguage(buildLanguageId(props.schema), provideCompletionItems)
-        monaco.editor.setModelLanguage(editorModel, languageId)
-        isParsingActive.value = true
-        parseResult.value = parse(expression.value, createSchema(props.schema.definition))
-      }
     })
-  } else {
-    const { languageId } = registerLanguage(buildLanguageId(props.schema), provideCompletionItems)
-    monaco.editor.setModelLanguage(editorModel, languageId)
+  }
+
+  const activateLanguage = () => {
+    registerLanguage(languageId, provideCompletionItems)
+    monaco.editor.setModelLanguage(editorInstance.getModel()!, languageId)
     isParsingActive.value = true
     parseResult.value = parse(expression.value, createSchema(props.schema.definition))
   }
-})
 
-onBeforeUnmount(() => {
-  editor?.dispose()
-})
+  if (props.inactiveUntilFocused) {
+    editorInstance.onDidFocusEditorWidget(() => {
+      if (!isParsingActive.value) {
+        activateLanguage()
+      }
+    })
+  } else {
+    activateLanguage()
+  }
+}
 
-watch(expression, (newExpression) => {
+watch(expression, () => {
   if (!isParsingActive.value) {
     isParsingActive.value = true
-  }
-
-  if (editor !== undefined && editor.getValue() !== newExpression) {
-    editor.setValue(newExpression)
   }
 })
 
@@ -274,6 +272,11 @@ watch([expression, schema], (() => {
 
 watch(() => parseResult.value, (result?: ParseResult) => {
   if (!isParsingActive.value) {
+    return
+  }
+
+  const editorModel = editor.value?.getModel()
+  if (!editorModel) {
     return
   }
 
@@ -342,21 +345,21 @@ watch(() => parseResult.value, (result?: ParseResult) => {
 })
 
 defineExpose({
-  editor: editorRef,
+  editor,
 })
 </script>
 
 <style lang="scss" scoped>
 .expression-editor {
-  border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-  border-radius: 3px;
-  min-height: 200px;
-  overflow: hidden;
-  transition: border-color linear 150ms;
-  width: 100%;
+
+  :deep(.monaco-editor-target) {
+    min-height: 200px;
+    // flex: 1;
+    // min-height: 0;
+  }
 
   &.invalid {
-    border-color: var(--kui-color-border-danger, $kui-color-border-danger);
+    border-color: var(--kui-color-border-danger, $kui-color-border-danger) !important;
   }
 }
 </style>

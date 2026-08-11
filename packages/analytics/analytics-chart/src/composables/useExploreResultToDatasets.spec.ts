@@ -2,6 +2,13 @@ import type { AnalyticsExploreRecord, DisplayBlob, ExploreResultV4, GroupByResul
 import { describe, it, expect } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
+import {
+  KUI_STATUS_COLOR_100,
+  KUI_STATUS_COLOR_200,
+  KUI_STATUS_COLOR_300,
+  KUI_STATUS_COLOR_400,
+  KUI_STATUS_COLOR_500,
+} from '@kong/design-tokens'
 import useExploreResultToDatasets from './useExploreResultToDatasets'
 import { defaultStatusCodeColors } from '../utils'
 
@@ -113,6 +120,56 @@ describe('useVitalsExploreDatasets', () => {
         ],
         isMultiDimension: false,
         isLabelEmpty: [false],
+      },
+    )
+  })
+
+  it('keeps entities with the same name but different ids as separate datasets', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: '2022-01-01T01:01:02Z',
+          event: {
+            request_count: 100,
+            principal: '019e1df4-fb64-7566-8552-de6ea6bb9425',
+          },
+        },
+        {
+          timestamp: '2022-01-01T01:01:02Z',
+          event: {
+            request_count: 50,
+            principal: '019f4222-3849-7d7c-92f5-f42e47fdbe25',
+          },
+        },
+      ],
+      meta: {
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
+        granularity_ms: 8000,
+        display: {
+          principal: {
+            '019e1df4-fb64-7566-8552-de6ea6bb9425': { name: 'dp-mock-principal' },
+            '019f4222-3849-7d7c-92f5-f42e47fdbe25': { name: 'dp-mock-principal' },
+          },
+        },
+        metric_names: ['request_count'],
+        query_id: '',
+        metric_units: { request_count: 'units' },
+        truncated: false,
+        limit: 15,
+      },
+    }))
+    const result = useExploreResultToDatasets({ fill: true }, exploreResult)
+
+    expect(result.value).toEqual(
+      {
+        labels: ['dp-mock-principal', 'dp-mock-principal'],
+        datasets: [
+          { label: 'dp-mock-principal', backgroundColor: '#a86cd5', data: [100, null], isSegmentEmpty: false },
+          { label: 'dp-mock-principal', backgroundColor: '#6a86d2', data: [null, 50], isSegmentEmpty: false },
+        ],
+        isMultiDimension: false,
+        isLabelEmpty: [false, false],
       },
     )
   })
@@ -462,11 +519,11 @@ describe('useVitalsExploreDatasets', () => {
       exploreResult,
     )
 
-    expect(result.value.datasets[0].backgroundColor).toEqual('#80bfff')
-    expect(result.value.datasets[1].backgroundColor).toEqual('#9edca6')
-    expect(result.value.datasets[2].backgroundColor).toEqual('#ffe9b8')
-    expect(result.value.datasets[3].backgroundColor).toEqual('#ffd5b1')
-    expect(result.value.datasets[4].backgroundColor).toEqual('#ffb6b6')
+    expect(result.value.datasets[0].backgroundColor).toEqual(KUI_STATUS_COLOR_100)
+    expect(result.value.datasets[1].backgroundColor).toEqual(KUI_STATUS_COLOR_200)
+    expect(result.value.datasets[2].backgroundColor).toEqual(KUI_STATUS_COLOR_300)
+    expect(result.value.datasets[3].backgroundColor).toEqual(KUI_STATUS_COLOR_400)
+    expect(result.value.datasets[4].backgroundColor).toEqual(KUI_STATUS_COLOR_500)
   })
 
 

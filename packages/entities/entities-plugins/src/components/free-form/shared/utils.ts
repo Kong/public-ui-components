@@ -3,6 +3,7 @@ import type { FlattendRedisConfigurationFields } from './types'
 import type { Field } from '../shared/types'
 import type { NamedFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { toValue, type MaybeRefOrGetter } from 'vue'
+import type { FieldRenderer, Match } from './types'
 
 export function toSelectItems<T extends string | number>(
   items: T[],
@@ -11,6 +12,7 @@ export function toSelectItems<T extends string | number>(
 }
 
 export const arraySymbol = '*'
+export const mapSymbol = '#'
 export const rootSymbol = '$'
 export const separator = '.'
 
@@ -43,6 +45,46 @@ export function removeRootSymbol(path: string) {
     path = resolve(...toArray(path).slice(1))
   }
   return path
+}
+
+/**
+ * Replaces hidden fields in a data tree with their empty-or-default value.
+ *
+ * Walks the tree **top-down**, which gives two structural guarantees the old
+ * flat `hiddenPaths` + lodash `set()` approach could not:
+ * - A hidden node is replaced wholesale and never descended into, so its
+ *   children can never leak into the output.
+ * - Values are only written onto containers that already exist, so a stale or
+ *   deep hidden path can never auto-create intermediate objects (the bug that
+ *   `todo(KM-2182)` used to guard against with a `parentExists` check).
+ *
+ * Mutates `node` in place — callers must pass a clone.
+ *
+ * @param node The (cloned) data tree to prune.
+ * @param isHidden Predicate: is the field at this absolute path hidden?
+ * @param getEmptyOrDefault Resolves the reset value for a hidden path.
+ * @param path Current absolute path; omit at the root.
+ */
+export function pruneHiddenPaths(
+  node: any,
+  isHidden: (path: string) => boolean,
+  getEmptyOrDefault: (path: string) => unknown,
+  path: string = '',
+): void {
+  if (node == null || typeof node !== 'object') return
+
+  const keys = Array.isArray(node)
+    ? node.map((_, index) => String(index))
+    : Object.keys(node)
+
+  for (const key of keys) {
+    const childPath = path ? resolve(path, key) : key
+    if (isHidden(childPath)) {
+      node[key] = getEmptyOrDefault(childPath)
+    } else {
+      pruneHiddenPaths(node[key], isHidden, getEmptyOrDefault, childPath)
+    }
+  }
 }
 
 export function useRedisNonstandardFields(
@@ -233,4 +275,10 @@ export function sortFieldsByBundles(
   }
 
   return result
+}
+
+export function normalizeMatch(match: FieldRenderer['match']): Match {
+  return typeof match === 'string'
+    ? ({ genericPath }) => genericPath === match
+    : match
 }

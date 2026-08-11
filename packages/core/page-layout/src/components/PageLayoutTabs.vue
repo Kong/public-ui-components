@@ -14,18 +14,21 @@
       >
         <component
           :is="typeof tab.to === 'string' ? 'a' : 'router-link'"
+          v-bind="typeof tab.to === 'string' ? { href: tab.to } : { to: tab.to }"
           :aria-current="tab.active ? 'page' : undefined"
           class="tab-link"
           :class="{ 'active': tab.active }"
           :data-testid="tab.dataTestId ? tab.dataTestId : `page-layout-tab-${tab.key}`"
-          :href="typeof tab.to === 'string' ? tab.to : undefined"
           tabindex="0"
-          :to="typeof tab.to === 'string' ? undefined : tab.to"
           @click.prevent="onTabNavigation(tab)"
           @keydown.enter.prevent="onTabNavigation(tab)"
-          @keydown.space.prevent="onTabNavigation(tab)"
         >
-          {{ tab.label }}
+          <slot
+            :name="`tab-${tab.key}`"
+            :tab="tab"
+          >
+            {{ tab.label }}
+          </slot>
         </component>
       </li>
       <!-- Overflowing items dropdown -->
@@ -37,15 +40,16 @@
         >
           <button
             :aria-label="t('tabs.more_button.aria_label')"
-            class="tab-link overflow-dropdown-trigger"
+            class="tab-link"
             :class="{ active: overflowingTabs.find(tab => tab.active) }"
             data-testid="tabs-overflow-dropdown-button"
           >
             {{ t('tabs.more_button.label') }}
 
-            <span class="overflowing-items-count">
-              {{ tabs.length - displayedTabsCount }}
-            </span>
+            <ChevronDownIcon
+              decorative
+              :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
+            />
           </button>
 
           <template #items>
@@ -60,7 +64,14 @@
                 to: overflowingTab.to,
               }"
               :selected="overflowingTab.active"
-            />
+            >
+              <slot
+                :name="`tab-${overflowingTab.key}`"
+                :tab="overflowingTab"
+              >
+                {{ overflowingTab.label }}
+              </slot>
+            </KDropdownItem>
           </template>
         </KDropdown>
       </li>
@@ -81,13 +92,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { PageLayoutTabsProps, PageLayoutTab } from '../types'
 import composables from '../composables'
-import { KUI_SPACE_60 } from '@kong/design-tokens'
-import { useEventListener } from '@vueuse/core'
+import { KUI_SPACE_60, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import { useResizeObserver } from '@vueuse/core'
 import { inject } from 'vue'
+import { ChevronDownIcon } from '@kong/icons'
 
 const {
   tabs = [],
@@ -176,7 +188,7 @@ const handleResize = () => {
 
 onMounted(() => {
   computeTabLayoutOverflow()
-  useEventListener(window, 'resize', handleResize)
+  useResizeObserver(pageLayoutTabsRef, handleResize)
 })
 
 onBeforeUnmount(() => {
@@ -184,6 +196,10 @@ onBeforeUnmount(() => {
     clearTimeout(resizeTimeout)
   }
 })
+
+watch(() => tabs, () => {
+  computeTabLayoutOverflow()
+}, { deep: true })
 </script>
 
 <style lang="scss" scoped>
@@ -216,7 +232,7 @@ onBeforeUnmount(() => {
     gap: var(--kui-space-70, $kui-space-70);
     list-style: none;
     margin: var(--kui-space-0, $kui-space-0);
-    /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+    /* stylelint-disable-next-line @kong/stylelint-plugin-design-tokens/use-proper-token */
     margin-bottom: calc(-1 * var(--kui-border-width-10, $kui-border-width-10)); // Make sure the border of the active (or hovered) tab overlaps the border of the tabs navbar
     max-width: 100%;
     padding: var(--kui-space-0, $kui-space-0);
@@ -242,44 +258,26 @@ onBeforeUnmount(() => {
         gap: var(--kui-space-30, $kui-space-30);
         line-height: var(--kui-line-height-30, $kui-line-height-30);
         padding: var(--kui-space-30, $kui-space-30) var(--kui-space-0, $kui-space-0);
+        text-decoration: none;
         transition: color 0.2s ease-in, border-color 0.2s ease-in, font-weight 0.2s ease-in;
         white-space: nowrap;
 
         &:hover {
           border-bottom: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
           color: var(--kui-color-text, $kui-color-text);
+          text-decoration: none;
         }
 
         &:focus-visible {
           box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
+          text-decoration: none;
         }
 
         &.active {
           border-bottom: var(--kui-border-width-20, $kui-border-width-20) solid var(--kui-color-border-primary, $kui-color-border-primary);
           color: var(--kui-color-text-primary, $kui-color-text-primary) !important;
           font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-        }
-
-        &.overflow-dropdown-trigger {
-          color: var(--kui-color-text, $kui-color-text);
-          font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium) !important;
-
-          .overflowing-items-count {
-            background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
-            border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
-            color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
-            font-size: 11px; // TODO: use token?
-            font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-            line-height: 12px; // TODO: use token?
-            padding: var(--kui-space-10, $kui-space-10) var(--kui-space-30, $kui-space-30);
-          }
-
-          &.active {
-            .overflowing-items-count {
-              background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
-              color: var(--kui-color-text-primary, $kui-color-text-primary);
-            }
-          }
+          text-decoration: none;
         }
       }
     }

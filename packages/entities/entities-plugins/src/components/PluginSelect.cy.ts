@@ -26,7 +26,7 @@ const baseConfigKonnect: KonnectPluginSelectConfig = {
   }),
   // custom plugins
   createCustomRoute: { name: 'create-custom-plugin' },
-  getCustomEditRoute: (plugin: string, type: 'schema' | 'streaming') => ({
+  getCustomEditRoute: (plugin: string, type: 'schema' | 'streaming' | 'cloned') => ({
     name: 'edit-custom-plugin',
     params: {
       control_plane_id: 'abc-123-i-love-cats',
@@ -347,7 +347,8 @@ describe('<PluginSelect />', {
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins`,
+          // Match regardless of pagination query (e.g. `?size=1000`) appended by `fetchAllPages`.
+          pathname: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins`,
         },
         {
           statusCode: 200,

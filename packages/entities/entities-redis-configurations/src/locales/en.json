@@ -1,15 +1,20 @@
 {
   "actions": {
-    "create": "New Redis Configuration",
+    "create": "New Redis configuration",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
     "delete": "Delete",
     "done": "Done",
-    "view": "View Details",
+    "view": "View details",
     "loading": "Loading...",
-    "view_plugin": "View Plugin",
+    "view_plugin": "View plugin",
     "close": "Close"
+  },
+  "cpg_redis": {
+    "alert": "Control plane groups inherit configuration from their member control planes. Define Redis configurations at the control plane group level. To deploy a Konnect-managed Redis instance, use the API.",
+    "member_alert": "This control plane is part of a control plane group. To use a Konnect-managed Redis instance deployed at the control plane group level, you must create a Redis configuration that points to that cache.",
+    "doc_link": "See the documentation"
   },
   "search": {
     "placeholder": "Filter by name",
@@ -24,7 +29,19 @@
   "delete": {
     "title": "Delete Redis configuration",
     "description": "You’re about to delete this item. Are you sure you want to proceed?",
-    "warning": "To delete this configuration, first remove it from all associated plugins."
+    "warning": "To delete this configuration, first remove it from all associated plugins.",
+    "konnect_managed_blocked": {
+      "title": "Delete Konnect-managed cache",
+      "message": "This cache is currently being used by {count} {plugin}. To delete this instance, first remove it from all associated plugins.",
+      "plugin": "{count, plural, one {plugin} other {plugins}}"
+    },
+    "konnect_managed_delete": {
+      "title": "Delete Konnect-managed cache",
+      "description": "Deleting this instance will cause all data to be lost. This action cannot be undone.",
+      "entity_type_label": "Konnect-managed cache",
+      "sure_question": "Are you sure you want to delete this Konnect-managed cache {entityName}?",
+      "confirmation_prompt": "Please enter {promptToken} to confirm your action."
+    }
   },
   "errors": {
     "copy": "Failed to copy to clipboard",
@@ -34,12 +51,40 @@
   "copy": {
     "success": "Copied {val} to clipboard"
   },
+  "config_card": {
+    "sections": {
+      "cache_configuration": "Cache configuration",
+      "partial_configuration": "Partial configuration"
+    },
+    "managed_state": {
+      "initializing_tooltip": "We're provisioning your instance. The partial configuration will update when provisioning is complete. This can take up to 20 minutes.",
+      "terminating_tooltip": "This instance is being deleted and all data will be lost. This can take up to 20 minutes."
+    },
+    "managed_dpg": {
+      "entry_heading": "Data plane group {n}"
+    },
+    "managed_add_on": {
+      "fields": {
+        "type": "Type",
+        "state": "State",
+        "entity_version": "Entity version",
+        "kind": "Kind",
+        "owner": "Owner",
+        "capacity_config": "Capacity configuration",
+        "data_plane_group": "Data plane group",
+        "data_plane_groups": "Data plane groups",
+        "state_metadata": "State metadata",
+        "cache_state_metadata": "Cache state metadata"
+      }
+    }
+  },
   "form": {
-    "redis_partial_modal_title": "Create Redis Configuration",
+    "redis_partial_modal_title": "Create Redis configuration",
     "partial_created_success_message": "Redis configuration created successfully",
     "actions": {
       "save": "Save",
       "cancel": "Cancel",
+      "remove": "Remove",
       "view_configuration": "View configuration"
     },
     "managed_layout": {
@@ -49,7 +94,7 @@
     "sections": {
       "type": {
         "title": "Redis type",
-        "description": "Both Enterprise and Open Source plugins support Redis. Enterprise plugins can connect to a standalone Redis instance (host/port), Cluster, or Sentinel, while Open Source plugins support only a simplified host/port configuration."
+        "description": "Both Enterprise and open source plugins support Redis. Enterprise plugins can connect to a standalone Redis instance (host/port), cluster, or Sentinel, while open source plugins support only a simplified host/port configuration."
       },
       "general": {
         "title": "General information",
@@ -132,7 +177,74 @@
         },
         "azure_tenant_id": {
           "label": "Azure tenant ID",
-          "tooltip": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`."
+          "tooltip": "Azure tenant ID to be used for authentication when `auth_provider` is set to `azure`."
+        }
+      },
+      "oauth": {
+        "key_placeholder": "Key",
+        "value_placeholder": "Value",
+        "token_endpoint": {
+          "label": "Token endpoint",
+          "tooltip": "OAuth 2.0 token endpoint URL used to request access tokens."
+        },
+        "auth_method": {
+          "label": "Auth method",
+          "tooltip": "Client authentication method used against the token endpoint."
+        },
+        "grant_type": {
+          "label": "Grant type",
+          "tooltip": "OAuth 2.0 grant type used to request access tokens."
+        },
+        "client_secret_jwt_alg": {
+          "label": "Client secret JWT algorithm",
+          "tooltip": "Signing algorithm used for `client_secret_jwt` client authentication."
+        },
+        "client_id": {
+          "label": "Client ID",
+          "tooltip": "OAuth 2.0 client ID."
+        },
+        "client_secret": {
+          "label": "Client secret",
+          "tooltip": "OAuth 2.0 client secret."
+        },
+        "password": {
+          "label": "Password",
+          "tooltip": "Resource owner password, used with the `password` grant type."
+        },
+        "username": {
+          "label": "Username",
+          "tooltip": "Resource owner username, used with the `password` grant type."
+        },
+        "redis_username": {
+          "label": "Redis username",
+          "tooltip": "Static Redis ACL username sent with `AUTH <username> <token>`."
+        },
+        "redis_username_claim": {
+          "label": "Redis username claim",
+          "tooltip": "JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID)."
+        },
+        "scopes": {
+          "label": "Scopes",
+          "tooltip": "OAuth 2.0 scopes to request.",
+          "add_button": "Add scope"
+        },
+        "token_headers": {
+          "label": "Token headers",
+          "tooltip": "Additional HTTP headers to send with the token request.",
+          "add_button": "Add header"
+        },
+        "token_post_args": {
+          "label": "Token POST arguments",
+          "tooltip": "Additional POST body arguments to send with the token request.",
+          "add_button": "Add argument"
+        },
+        "timeout": {
+          "label": "Timeout",
+          "tooltip": "Timeout, in milliseconds, for requests to the token endpoint."
+        },
+        "ssl_verify": {
+          "label": "Verify token endpoint certificate",
+          "tooltip": "Whether to verify the TLS certificate of the token endpoint."
         }
       },
       "type": {
@@ -146,7 +258,7 @@
         "label": "Tags",
         "placeholder": "Enter a list of tags separated by comma",
         "help": "e.g. tag1, tag2, tag3",
-        "tooltip": "An optional set of strings associated with the Route for grouping and filtering."
+        "tooltip": "An optional set of strings associated with the redis configuration for grouping and filtering."
       },
       "host": {
         "label": "Host",
@@ -174,7 +286,7 @@
         "tooltip": "If set to true, uses SSL to connect to Redis."
       },
       "ssl_verify": {
-        "label": "SSL Verify",
+        "label": "SSL verify",
         "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure lua_ssl_trusted_certificate in kong. conf to specify the CA (or server) certificate used by your Redis server. You may also need to configure lua_ss1_verify_depth accordingly.",
         "tooltip": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure lua_ssl_trusted_certificate in kong.conf to specify the CA (or server) certificate used by your Redis server. You may also need to configure lua_ssl_verify_depth accordingly."
       },
@@ -232,7 +344,7 @@
       },
       "timeout": {
         "label": "Timeout",
-        "tooltip": "redis schema field `timeout` is deprecated, use `connect_timeout`, `send_timeout` and `read_timeout`"
+        "tooltip": "Redis schema field `timeout` is deprecated, use `connect_timeout`, `send_timeout` and `read_timeout`"
       },
       "connection_is_proxied": {
         "label": "Connection is proxied",
@@ -261,15 +373,31 @@
       "auth_provider": {
         "aws": "AWS",
         "azure": "Azure",
-        "gcp": "GCP"
+        "gcp": "GCP",
+        "oauth": "OAuth"
+      },
+      "oauth": {
+        "auth_method": {
+          "client_secret_basic": "Client secret basic",
+          "client_secret_jwt": "Client secret JWT",
+          "client_secret_post": "Client secret post"
+        },
+        "grant_type": {
+          "client_credentials": "Client credentials",
+          "password": "Password"
+        },
+        "client_secret_jwt_alg": {
+          "HS256": "HS256",
+          "HS512": "HS512"
+        }
       },
       "type": {
         "host_port": "Host/Port",
         "cluster": "Cluster",
         "sentinel": "Sentinel",
-        "open_source": "Open Source",
+        "open_source": "Open source",
         "enterprise": "Enterprise",
-        "suffix_open_source": " (Open Source)",
+        "suffix_open_source": " (Open source)",
         "suffix_enterprise": " (Enterprise)"
       },
       "sentinel_role": {
@@ -293,10 +421,10 @@
     }
   },
   "redis": {
-    "title": "Redis Configurations",
+    "title": "Redis configurations",
     "empty_state": {
       "title_with_managed_konnect": "Redis",
-      "title": "Configure a Redis Configuration",
+      "title": "Configure a Redis configuration",
       "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing."
     }
   },
@@ -315,7 +443,6 @@
     },
     "type": {
       "konnect_managed_redis": "Konnect-managed Redis",
-      "konnect_managed_redis_initializing": "Konnect-managed Redis (Initializing)",
       "self_managed_redis": "Self-managed Redis"
     },
     "empty_state": {
@@ -328,6 +455,14 @@
       "feature_2": {
         "title": "Sync across plugins",
         "description": "Edits to your configuration will be cascaded automatically to all associated plugins."
+      },
+      "feature_3": {
+        "title": "Deploy Konnect Managed Cache",
+        "description": "Configure and deploy managed Redis instances alongside your data planes for seamless plugin integration."
+      },
+      "feature_4": {
+        "title": "Share Redis configuration",
+        "description": "Share Redis configuration settings across multiple data planes and regions."
       }
     }
   }

@@ -81,4 +81,27 @@ describe('<AppPageHeader />', () => {
     cy.getTestId('page-header-actions').should('not.exist')
     cy.getTestId('page-header-section-below').should('not.exist')
   })
+
+  it('omits breadcrumbs and title-before when konnectNavigationNext is true', () => {
+    const iconText = 'title-icons-are-cool'
+
+    cy.mount(AppPageHeader, {
+      props: {
+        title: 'Cats are Cool',
+        breadcrumbs: [{
+          key: 'home',
+          to: { name: 'home' },
+          text: 'Home',
+        }],
+        konnectNavigationNext: true,
+      },
+      slots: {
+        'title-before': iconText,
+      },
+    })
+
+    cy.get('.kong-ui-app-page-header').should('exist')
+    cy.getTestId('page-header-breadcrumbs').should('not.exist')
+    cy.getTestId('page-header-title-before').should('not.exist')
+  })
 })

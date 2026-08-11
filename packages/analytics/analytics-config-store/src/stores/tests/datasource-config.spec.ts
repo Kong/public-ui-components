@@ -221,11 +221,14 @@ describe('useDatasourceConfigStore', () => {
   })
 
   it('isReady resolves even if the config fetch fails', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const store = useStore({ reject: true })
 
     await store.isReady()
     expect(store.loading).toBe(false)
     expect(store.datasourceConfig).toEqual([])
+    expect(warnSpy).toHaveBeenCalledTimes(2)
+    warnSpy.mockRestore()
   })
 
   describe('isFilterValidForDatasource', () => {
@@ -429,6 +432,19 @@ describe('useDatasourceConfigStore', () => {
         filters,
         metrics: ['request_size', 'consumer_count'],
       })).toEqual([])
+    })
+
+    it('strips unsupported filters for query fields', async () => {
+      const store = useStore()
+      await store.isReady()
+
+      const filters = ['status_code', 'gateway_service', 'route'].map(makeFilter)
+
+      expect(store.stripUnknownFilters({
+        datasource: 'api_usage',
+        filters,
+        queryFields: ['error_rate'],
+      })).toEqual([makeFilter('status_code'), makeFilter('route')])
     })
   })
 })

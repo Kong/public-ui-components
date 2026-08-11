@@ -14,7 +14,7 @@ const init = async () => {
     routes: [
       {
         path: '/change-log-level-modal',
-        name: 'consumer-list',
+        name: 'change-log-level-modal',
         component: () => import('./pages/ChangeLogLevel.vue'),
       },
     ],

@@ -11,6 +11,7 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: true,
   hcvAppRoleMethodAvailable: true,
   hcvCertMethodAvailable: true,
@@ -25,6 +26,7 @@ const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: false,
 }
 
@@ -34,6 +36,7 @@ const baseConfigKM: KongManagerVaultFormConfig = {
   apiBaseUrl: '/kong-manager',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: true,
   awsStsEndpointUrlAvailable: true,
   hcvAppRoleMethodAvailable: true,
@@ -49,6 +52,7 @@ const baseConfigKMTurnOffTTL: KongManagerVaultFormConfig = {
   apiBaseUrl: '/kong-manager',
   cancelRoute,
   azureVaultProviderAvailable: false,
+  fsVaultProviderAvailable: false,
   ttl: false,
 }
 
@@ -451,9 +455,6 @@ describe('<VaultForm />', () => {
 
       cy.getTestId('vault-form-config-hcv-auth_method').click()
       cy.get('[data-testid="select-item-kubernetes"] button').click()
-      cy.getTestId('vault-create-form-submit').should('be.disabled')
-      cy.getTestId('vault-form-config-hcv-kube_role').type('role')
-      cy.getTestId('vault-form-config-hcv-kube_api_token_file').type('file.txt')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       cy.getTestId('vault-form-config-hcv-auth_method').click()
@@ -482,6 +483,50 @@ describe('<VaultForm />', () => {
 
       // disables save when required field is cleared - general
       cy.getTestId('vault-form-prefix').clear()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+    })
+
+    it('should show azure-certs fields and validate required fields', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: {
+            ...baseConfigKM,
+            azureCertsVaultProviderAvailable: true,
+          },
+        },
+      })
+
+      cy.get('.kong-ui-entities-vault-form').should('be.visible')
+      cy.getTestId('vault-form-prefix').type(vault.prefix)
+
+      // switch to azure-certs provider
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-azure-certs').click({ force: true })
+
+      // required fields are visible
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('be.visible')
+
+      // optional fields are visible
+      cy.getTestId('vault-form-config-azure-certs-client-id').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-tenant-id').should('be.visible')
+
+      // ttl advanced section is visible
+      cy.getTestId('advanced-fields-collapse').should('be.visible')
+
+      // credentials_prefix has default value AZURE
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('have.value', 'AZURE')
+
+      // ttl has default value 3600
+      cy.getTestId('vault-ttl-input').should('have.value', '3600')
+
+      // submit disabled until vault_uri is filled
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').type('https://my-vault.vault.azure.net')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      // clears vault_uri → submit disabled again
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').clear()
       cy.getTestId('vault-create-form-submit').should('be.disabled')
     })
 
@@ -928,9 +973,6 @@ describe('<VaultForm />', () => {
 
       cy.getTestId('vault-form-config-hcv-auth_method').click()
       cy.get('[data-testid="select-item-kubernetes"] button').click()
-      cy.getTestId('vault-create-form-submit').should('be.disabled')
-      cy.getTestId('vault-form-config-hcv-kube_role').type('role')
-      cy.getTestId('vault-form-config-hcv-kube_api_token_file').type('file.txt')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       cy.getTestId('vault-form-config-hcv-auth_method').click()
@@ -959,6 +1001,50 @@ describe('<VaultForm />', () => {
 
       // disables save when required field is cleared - general
       cy.getTestId('vault-form-prefix').clear()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+    })
+
+    it('should show azure-certs fields and validate required fields', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: {
+            ...baseConfigKonnect,
+            azureCertsVaultProviderAvailable: true,
+          },
+        },
+      })
+
+      cy.get('.kong-ui-entities-vault-form').should('be.visible')
+      cy.getTestId('vault-form-prefix').type(vault.prefix)
+
+      // switch to azure-certs provider
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-azure-certs').click({ force: true })
+
+      // required fields are visible
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('be.visible')
+
+      // optional fields are visible
+      cy.getTestId('vault-form-config-azure-certs-client-id').should('be.visible')
+      cy.getTestId('vault-form-config-azure-certs-tenant-id').should('be.visible')
+
+      // ttl advanced section is visible
+      cy.getTestId('advanced-fields-collapse').should('be.visible')
+
+      // credentials_prefix has default value AZURE
+      cy.getTestId('vault-form-config-azure-certs-credentials-prefix').should('have.value', 'AZURE')
+
+      // ttl has default value 3600
+      cy.getTestId('vault-ttl-input').should('have.value', '3600')
+
+      // submit disabled until vault_uri is filled
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').type('https://my-vault.vault.azure.net')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      // clears vault_uri → submit disabled again
+      cy.getTestId('vault-form-config-azure-certs-vault-uri').clear()
       cy.getTestId('vault-create-form-submit').should('be.disabled')
     })
 
@@ -1097,6 +1183,328 @@ describe('<VaultForm />', () => {
       cy.wait('@updateVault')
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
+    })
+
+    it('hides fs vault option when fsVaultProviderAvailable is false', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      })
+
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-fs').should('not.exist')
+    })
+
+    it('shows fs vault fields and supports submit when fsVaultProviderAvailable is true', () => {
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, fsVaultProviderAvailable: true },
+        },
+      })
+
+      // fs option appears in the provider dropdown
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-fs').should('exist')
+      cy.getTestId('vault-form-provider-fs').click({ force: true })
+
+      // fs config fields are visible
+      cy.getTestId('vault-form-config-fs-prefix').should('be.visible')
+      // advanced TTL section is available for fs
+      cy.getTestId('advanced-fields-collapse').should('be.visible')
+
+      // submit requires both the general prefix and the fs prefix
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-prefix').type(vault.prefix)
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-fs-prefix').type('/etc/secrets')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      // clearing fs prefix disables submit again
+      cy.getTestId('vault-form-config-fs-prefix').clear()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+    })
+  })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in GET URL when loading with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('getVaultWithWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          vaultId: vault.id,
+        },
+      })
+
+      cy.wait('@getVaultWithWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('getVaultWithWorkspace')
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('updateVaultWithWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          vaultId: vault.id,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getVaultWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+        cy.wait('@updateVaultWithWorkspace')
+      })
+    })
+
+    it('omits workspace segment in GET URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vault.id}`,
+        },
+        { statusCode: 200, body: vault },
+      ).as('getVaultNoWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: baseConfigKonnect,
+          vaultId: vault.id,
+        },
+      })
+
+      cy.wait('@getVaultNoWorkspace')
+      cy.getTestId('form-fetch-error').should('not.exist')
+    })
+
+    it('includes workspace in config-store POST and vault POST URLs when creating a Konnect vault', () => {
+      const configStoreId = 'new-config-store-id'
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/default/config-stores`,
+        },
+        { statusCode: 201, body: { id: configStoreId } },
+      ).as('createConfigStoreWithWorkspace')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults`,
+        },
+        { statusCode: 201, body: vault },
+      ).as('createVaultWithWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createConfigStoreWithWorkspace')
+      cy.wait('@createVaultWithWorkspace')
+    })
+
+    it('omits workspace in config-store POST and vault POST URLs when workspace is not provided', () => {
+      const configStoreId = 'new-config-store-id'
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores`,
+        },
+        { statusCode: 201, body: { id: configStoreId } },
+      ).as('createConfigStoreNoWorkspace')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults`,
+        },
+        { statusCode: 201, body: vault },
+      ).as('createVaultNoWorkspace')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createConfigStoreNoWorkspace')
+      cy.wait('@createVaultNoWorkspace')
+    })
+
+    it('should stop and emit error once when createConfigStore request fails, without firing the vault create request', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores`,
+        },
+        { statusCode: 500, body: {} },
+      ).as('createConfigStoreFailed')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults`,
+        },
+        { statusCode: 201, body: vault },
+      ).as('createVault')
+
+      cy.mount(VaultForm, {
+        props: {
+          config: baseConfigKonnect,
+          onError: cy.spy().as('onErrorSpy'),
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+
+      cy.wait('@createConfigStoreFailed')
+      cy.get('@onErrorSpy').should('have.been.calledOnce')
+      cy.get('@createVault.all').should('have.length', 0)
+    })
+  })
+
+  describe('Kong AI Gateway', () => {
+    const aiGatewayId = 'ai-gw-1234'
+    const baseConfigAiGateway: KonnectVaultFormConfig = {
+      ...baseConfigKonnect,
+      apiType: 'aiGateway',
+      aiGatewayId,
+    }
+    const aiVaultsUrl = `${baseConfigAiGateway.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/vaults`
+
+    it('hides the tags input and excludes azure-certs / fs providers', () => {
+      cy.mount(VaultForm, {
+        props: { config: baseConfigAiGateway },
+      })
+
+      cy.getTestId('vault-form-prefix').should('be.visible')
+      cy.getTestId('vault-form-tags').should('not.exist')
+
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-konnect').should('exist')
+      cy.getTestId('vault-form-provider-env').should('exist')
+      cy.getTestId('vault-form-provider-aws').should('exist')
+      cy.getTestId('vault-form-provider-gcp').should('exist')
+      cy.getTestId('vault-form-provider-hcv').should('exist')
+      cy.getTestId('vault-form-provider-azure').should('exist')
+      cy.getTestId('vault-form-provider-conjur').should('exist')
+      cy.getTestId('vault-form-provider-azure-certs').should('not.exist')
+      cy.getTestId('vault-form-provider-fs').should('not.exist')
+    })
+
+    it('POSTs an AI Gateway-shaped body (type/name, no tags) on create', () => {
+      cy.intercept(
+        { method: 'POST', url: aiVaultsUrl },
+        { statusCode: 201, body: { id: '1', type: 'env', name: 'prefix-1', config: { prefix: 'dev' } } },
+      ).as('createAiVault')
+
+      cy.mount(VaultForm, {
+        props: { config: baseConfigAiGateway },
+      })
+
+      // Select env provider and fill required fields
+      cy.getTestId('provider-select').click({ force: true })
+      cy.getTestId('vault-form-provider-env').click({ force: true })
+      cy.getTestId('vault-form-prefix').type('prefix-1')
+      cy.getTestId('vault-form-config-kong-prefix').type('dev')
+      cy.getTestId('vault-create-form-submit').click()
+
+      cy.wait('@createAiVault').then(({ request }) => {
+        expect(request.body).to.have.property('type', 'env')
+        expect(request.body).to.have.property('name', 'prefix-1')
+        expect(request.body).to.not.have.property('prefix')
+        expect(request.body).to.not.have.property('tags')
+        expect(request.body.config).to.have.property('prefix', 'dev')
+      })
+    })
+
+    it('PUTs to the AI Gateway vault URL on edit', () => {
+      cy.intercept(
+        { method: 'GET', url: `${aiVaultsUrl}/*` },
+        { statusCode: 200, body: { id: '1', type: 'env', name: 'prefix-1', config: { prefix: 'dev' } } },
+      ).as('getAiVault')
+      cy.intercept(
+        { method: 'PUT', url: `${aiVaultsUrl}/*` },
+        { statusCode: 200, body: { id: '1', type: 'env', name: 'prefix-1', config: { prefix: 'dev2' } } },
+      ).as('updateAiVault')
+
+      cy.mount(VaultForm, {
+        props: { config: baseConfigAiGateway, vaultId: '1' },
+      })
+
+      cy.wait('@getAiVault')
+      cy.getTestId('vault-form-config-kong-prefix').clear()
+      cy.getTestId('vault-form-config-kong-prefix').type('dev2')
+      cy.getTestId('vault-edit-form-submit').click()
+
+      cy.wait('@updateAiVault').then(({ request }) => {
+        expect(request.body).to.have.property('type', 'env')
+        expect(request.body.config).to.have.property('prefix', 'dev2')
+      })
+    })
+
+    it('omits blank write-only fields from PUT body when editing an AI Gateway vault', () => {
+      // The server does not return write-only fields (e.g. Conjur api_key) on GET.
+      // Submitting without filling them must not send an empty value that would clear the secret.
+      cy.intercept(
+        { method: 'GET', url: `${aiVaultsUrl}/*` },
+        {
+          statusCode: 200,
+          body: {
+            id: '1',
+            type: 'conjur',
+            name: 'conjur-vault',
+            config: {
+              endpoint_url: 'https://conjur.example.com',
+              login: 'my-login',
+              account: 'my-account',
+              // api_key intentionally absent — write-only, not returned by server
+            },
+          },
+        },
+      ).as('getAiVault')
+      cy.intercept(
+        { method: 'PUT', url: `${aiVaultsUrl}/*` },
+        {
+          statusCode: 200,
+          body: { id: '1', type: 'conjur', name: 'conjur-vault-edited', config: {} },
+        },
+      ).as('updateAiVault')
+
+      cy.mount(VaultForm, {
+        props: { config: baseConfigAiGateway, vaultId: '1' },
+      })
+
+      cy.wait('@getAiVault')
+      // Make a non-write-only change to enable the submit button
+      cy.getTestId('vault-form-prefix').clear()
+      cy.getTestId('vault-form-prefix').type('conjur-vault-edited')
+      cy.getTestId('vault-edit-form-submit').click()
+
+      cy.wait('@updateAiVault').then(({ request }) => {
+        expect(request.body).to.have.property('type', 'conjur')
+        expect(request.body.config).to.not.have.property('api_key')
+      })
     })
   })
 })

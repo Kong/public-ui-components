@@ -54,6 +54,7 @@ export default function useDonutChartOptions(chartOptions: DonutChartOptions) {
 
   const options = computed(() => {
     return {
+      cutout: '65%',
       responsive: true,
       maintainAspectRatio: false,
       plugins: {

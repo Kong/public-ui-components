@@ -1,4 +1,4 @@
-const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}'
 const KMBaseApiUrl = '/{workspace}'
 
 export default {
@@ -8,6 +8,7 @@ export default {
       forConsumerGroup:
         `${konnectBaseApiUrl}/consumer_groups/{consumerGroupId}/consumers`,
       oneForConsumerGroup: `${konnectBaseApiUrl}/consumer_groups/{consumerGroupId}/consumers/{consumerId}`,
+      search: `${konnectBaseApiUrl}/consumers/search`,
     },
     kongManager: {
       all: `${KMBaseApiUrl}/consumers`,

@@ -24,6 +24,7 @@ export interface QueryResponseMeta {
   truncated?: boolean
   limit?: number
   query_id: string
+  datasource?: string
 }
 
 export interface GroupByResult {

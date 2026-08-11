@@ -23,34 +23,75 @@
             Parameters for enabling the OpenID Connect plugin. Set these parameters before adding authorization,
             authentication, or other advanced configuration details.
           </div>
-          <VueFormGenerator
-            v-if="displayForm"
-            :model="formModel"
-            :options="formOptions"
-            :schema="commonFieldsSchema"
-            @model-updated="onModelUpdated"
-          />
 
-          <KLabel>Auth Methods</KLabel>
-          <div class="auth-method-container">
-            <div
-              v-for="(method) in authMethods"
-              :key="method.value"
-              class="auth-method"
-            >
-              <KCheckbox
-                v-model="method.prop"
-                @change="evt => handleUpdate(evt, method.value)"
-              >
-                {{ method.label }}
-              </KCheckbox>
-            </div>
-          </div>
-          <KInputSwitch
-            v-model="sessionManagement"
-            label="Enable Session Management"
-            @change="handleUpdate"
-          />
+          <OIDCPrincipals
+            v-if="isKonnect && hasPrincipalsFields"
+            :common-fields-schema="commonFieldsSchema"
+            :form-model="formModel"
+            :form-options="formOptions"
+            :form-schema="formSchema"
+            :is-editing="isEditing"
+            :on-model-updated="onModelUpdated"
+            @click:create-entity="(payload) => $emit('click:create-entity', payload)"
+            @click:learn-more="(entity) => $emit('click:learn-more', entity)"
+            @mode-change="handlePrincipalsModeChange"
+          >
+            <!-- Authentication methods + Session management live inside the principals
+                 "additional settings" collapse so there is a single advanced section. -->
+            <template #advanced-fields>
+              <OIDCAuthMethods
+                :auth-method-items="authMethodItems"
+                :principals-mode="principalsMode"
+                :selected-auth-methods="selectedAuthMethods"
+                :session-management="sessionManagement"
+                @select="handleAuthMethodsSelect"
+                @session-change="handleSessionChange"
+              />
+            </template>
+          </OIDCPrincipals>
+          <template v-else>
+            <VueFormGenerator
+              v-if="displayForm"
+              :model="formModel"
+              :options="formOptions"
+              :schema="commonFieldsSchema"
+              @model-updated="onModelUpdated"
+            />
+
+            <OIDCAuthMethods
+              v-if="useNewAuthMethodsField"
+              :auth-method-items="authMethodItems"
+              :principals-mode="principalsMode"
+              :selected-auth-methods="selectedAuthMethods"
+              :session-management="sessionManagement"
+              @select="handleAuthMethodsSelect"
+              @session-change="handleSessionChange"
+            />
+            <template v-else>
+              <KLabel>Auth methods</KLabel>
+              <div class="auth-method-container">
+                <div
+                  v-for="method in authMethods"
+                  :key="method.value"
+                  class="auth-method"
+                >
+                  <KCheckbox
+                    v-model="method.prop"
+                    :data-testid="`auth-method-checkbox-${method.value}`"
+                    @change="evt => handleUpdate(evt, method.value)"
+                  >
+                    {{ method.label }}
+                  </KCheckbox>
+                </div>
+              </div>
+              <KInputSwitch
+                v-model="sessionManagement"
+                data-testid="session-management-switch"
+                label="Enable Session Management"
+                @change="handleUpdate"
+              />
+            </template>
+          </template>
         </div>
       </template>
       <template #authorization>
@@ -93,6 +134,7 @@
             v-if="displayForm"
             :enable-redis-partial="enableRedisPartial"
             :is-editing="isEditing"
+            :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
             :model="formModel"
             :options="formOptions"
             :schema="advancedFieldsSchema"
@@ -107,15 +149,27 @@
 </template>
 
 <script>
-import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
+import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME, FORMS_CONFIG } from '../../const'
 import composables from '../../composables'
 import VueFormGenerator from '../FormGenerator.vue'
+import OIDCPrincipals from './OIDCPrincipals.vue'
+import OIDCAuthMethods from './OIDCAuthMethods.vue'
 import externalLinks from '../../external-links'
 
 const COMMON_FIELD_MODELS = new Set([
   'config-client_id',
   'config-client_secret',
   'config-issuer',
+])
+
+const PRINCIPALS_FIELD_MODELS = new Set([
+  'config-principals-enabled',
+  'config-principals-directory',
+  'config-principals-principal_by',
+  'config-principals-principal_claim',
+  'config-principals-match_consumer',
+  'config-principals-match_consumer_groups',
+  'config-principals-error_on_miss',
 ])
 
 const AUTH_FIELD_MODELS = new Set([
@@ -130,14 +184,29 @@ const AUTH_FIELD_MODELS = new Set([
   'config-authenticated_groups_claim',
 ])
 
+const KONG_IDENTITY_METHODS = ['bearer', 'client_credentials', 'introspection', 'userinfo']
+
+// Kong Identity auth servers are hosted under the identity.konghq domain; an issuer that
+// does not match is an external IdP. Used to infer the principals mode on edit-load.
+const KONG_IDENTITY_ISSUER_MARKER = 'identity.konghq'
+
+const isKongIdentityIssuer = (issuer) =>
+  typeof issuer === 'string' && issuer.includes(KONG_IDENTITY_ISSUER_MARKER)
+
 export default {
   name: 'OIDCForm',
-  components: { VueFormGenerator },
+  components: { VueFormGenerator, OIDCPrincipals, OIDCAuthMethods },
   provide() {
     // Provide AUTOFILL_SLOT
     return {
       [AUTOFILL_SLOT]: this.$slots?.[AUTOFILL_SLOT_NAME],
     }
+  },
+  inject: {
+    formsConfig: {
+      from: FORMS_CONFIG,
+      default: () => ({}),
+    },
   },
   props: {
     formModel: {
@@ -168,16 +237,31 @@ export default {
       type: Boolean,
       required: false,
     },
+    isKonnectManagedRedisEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * Identity Principals UI feature flag (khcp-20393). When false, behave as if the
+     * `principals` fields aren't in the schema — the Kong Identity principals section is
+     * hidden and the legacy common-fields form renders instead.
+     */
+    identityPrincipalsUiEnabled: {
+      type: Boolean,
+      default: false,
+    },
     showNewPartialModal: {
       type: Function,
       default: () => { },
     },
   },
+  emits: ['click:create-entity', 'click:learn-more'],
   data() {
     return {
       init: false,
       authMethods: [],
       sessionManagement: false,
+      principalsMode: null,
       globalFields: null,
       commonFieldsSchema: null,
       authFieldsSchema: null,
@@ -209,6 +293,38 @@ export default {
   computed: {
     displayForm() {
       return (this.formModel.id && this.isEditing) || !this.isEditing
+    },
+    // Auth-server access and directories access each independently gate their own field
+    // group inside OIDCPrincipals (the mode radios/Authorization Server field, and the
+    // Principal lookup settings, respectively) — this only decides whether the new UI
+    // renders at all.
+    hasPrincipalsFields() {
+      return this.identityPrincipalsUiEnabled
+        && this.formSchema.fields?.some((field) => PRINCIPALS_FIELD_MODELS.has(field.model))
+    },
+    isKonnect() {
+      return this.formsConfig?.app === 'konnect'
+    },
+    useNewAuthMethodsField() {
+      return this.isKonnect
+    },
+    authMethodItems() {
+      // principalsMode is set on create and on user toggles; on edit it stays
+      // null (the principals child doesn't emit), so fall back to the saved issuer
+      // to decide whether to restrict the list to Kong Identity methods.
+      const isKongIdentity = this.principalsMode !== null
+        ? this.principalsMode === 'kong-identity'
+        : isKongIdentityIssuer(this.formModel['config-issuer'])
+      const methods = isKongIdentity
+        ? this.authMethods.filter(m => KONG_IDENTITY_METHODS.includes(m.value))
+        : this.authMethods
+      return methods.map(m => ({
+        label: m.label,
+        value: m.value,
+      }))
+    },
+    selectedAuthMethods() {
+      return this.authMethods.filter(m => m.prop).map(m => m.value)
     },
   },
   watch: {
@@ -268,6 +384,7 @@ export default {
                 && field.model !== 'config-auth_methods'
                 && !COMMON_FIELD_MODELS.has(field.model)
                 && !AUTH_FIELD_MODELS.has(field.model)
+                && !PRINCIPALS_FIELD_MODELS.has(field.model)
                 && (!this.enableRedisPartial || !redisModels.includes(field.model))) // if redis partial is enabled, don't include redis fields in advanced
               || field.model === 'tags',
             )
@@ -287,6 +404,38 @@ export default {
                     ...Array.isArray(field.items?.schema?.fields)
                     && field.items.schema.fields.map(itemField => ({ ...itemField, label: itemField.model })),
                   })
+                  break
+                }
+                case 'config-token_exchange-subject_token_issuers': {
+                  if (Array.isArray(field.items?.schema?.fields)) {
+                    const itemFields = field.items.schema.fields
+                    // Add help text to verify_signature and conditional visibility to jwks_uri
+                    const verifySignatureField = itemFields.find(f => f.model === 'verify_signature')
+                    const jwksUriField = itemFields.find(f => f.model === 'jwks_uri')
+
+                    if (verifySignatureField) {
+                      verifySignatureField.checkboxLabel = verifySignatureField.label
+                      verifySignatureField.label = undefined
+                      verifySignatureField.checkboxDescription = (model) => model.verify_signature === true
+                        ? 'JSON Web Keys are automatically fetched from the issuer\'s well-known endpoint. Enter a JWKS URI below to override this.'
+                        : undefined
+                    }
+                    if (jwksUriField) {
+                      jwksUriField.visible = (model) => model.verify_signature === true
+                    }
+
+                    // Move jwks_uri to directly after verify_signature
+                    if (verifySignatureField && jwksUriField) {
+                      const vsIndex = itemFields.indexOf(verifySignatureField)
+                      const jwksIndex = itemFields.indexOf(jwksUriField)
+                      if (jwksIndex !== vsIndex + 1) {
+                        itemFields.splice(jwksIndex, 1)
+                        itemFields.splice(vsIndex + 1, 0, jwksUriField)
+                      }
+                    }
+                  }
+
+                  fields.push(field)
                   break
                 }
                 case 'config-session_redis_cluster_nodes': {
@@ -313,23 +462,23 @@ export default {
         this.sessionManagement = this.formModel['config-auth_methods'].includes('session')
 
         this.authMethods = [{
-          label: 'Authorization Code Flow',
+          label: 'Authorization code flow',
           value: 'authorization_code',
           hint: 'authorization code flow',
           prop: this.formModel['config-auth_methods'].includes('authorization_code'),
         },
         {
-          label: 'Bearer Access Token',
+          label: 'Bearer access token',
           value: 'bearer',
           hint: 'JWT access token verification',
           prop: this.formModel['config-auth_methods'].includes('bearer'),
         }, {
-          label: 'Client Credentials Grant',
+          label: 'Client credentials grant',
           value: 'client_credentials',
           hint: 'OAuth client credentials grant',
           prop: this.formModel['config-auth_methods'].includes('client_credentials'),
         }, {
-          label: 'Passwords Grant',
+          label: 'Passwords grant',
           value: 'password',
           hint: 'OAuth legacy password grant',
           prop: this.formModel['config-auth_methods'].includes('password'),
@@ -349,7 +498,7 @@ export default {
           hint: 'Kong OAuth plugin issued tokens verification',
           prop: this.formModel['config-auth_methods'].includes('kong_oauth2'),
         }, {
-          label: 'Refresh Token',
+          label: 'Refresh token',
           value: 'refresh_token',
           hint: 'OAuth refresh token grant',
           prop: this.formModel['config-auth_methods'].includes('refresh_token'),
@@ -361,6 +510,18 @@ export default {
             if (f.help === undefined && typeof help === 'string') {
               f.help = help
             }
+          }
+        }
+
+        // Migrate deprecated consumer_claim → consumer_claims
+        // consumer_claim is string[], consumer_claims is string[][]
+        const deprecatedValue = this.formModel['config-consumer_claim']
+        if (deprecatedValue !== undefined && deprecatedValue !== null && deprecatedValue !== '') {
+          if (!this.formModel['config-consumer_claims'] || this.formModel['config-consumer_claims'].length === 0) {
+            const claimArray = Array.isArray(deprecatedValue) ? deprecatedValue : [deprecatedValue]
+            // eslint-disable-next-line vue/no-mutating-props
+            this.formModel['config-consumer_claims'] = [claimArray]
+            this.onModelUpdated()
           }
         }
       }
@@ -397,6 +558,62 @@ export default {
       this.formModel['config-auth_methods'] = this.getAuthMethodsValue(prop, evt)
       this.onModelUpdated()
     },
+    handleAuthMethodsSelect(selectedValues) {
+      // Update authMethods prop state
+      for (const method of this.authMethods) {
+        method.prop = selectedValues.includes(method.value)
+      }
+      // Build the final array including session if enabled
+      const arr = [...selectedValues]
+      if (this.sessionManagement) {
+        arr.push('session')
+      }
+      // eslint-disable-next-line vue/no-mutating-props
+      this.formModel['config-auth_methods'] = arr
+      this.onModelUpdated()
+    },
+    handleSessionChange(value) {
+      this.sessionManagement = value
+      // Rebuild auth_methods with or without 'session'
+      const arr = this.authMethods.filter(m => m.prop).map(m => m.value)
+      if (value) {
+        arr.push('session')
+      }
+      // eslint-disable-next-line vue/no-mutating-props
+      this.formModel['config-auth_methods'] = arr
+      this.onModelUpdated()
+    },
+    handlePrincipalsModeChange(mode) {
+      this.principalsMode = mode
+
+      if (mode === 'kong-identity') {
+        if (!this.isEditing) {
+          this.sessionManagement = true
+        }
+        // Auto-select only the 4 Kong Identity methods
+        for (const method of this.authMethods) {
+          method.prop = KONG_IDENTITY_METHODS.includes(method.value)
+        }
+        const arr = [...KONG_IDENTITY_METHODS]
+        if (this.sessionManagement) {
+          arr.push('session')
+        }
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-auth_methods'] = arr
+        this.onModelUpdated()
+      } else {
+        // External mode: select all auth methods by default, including session
+        this.sessionManagement = true
+        for (const method of this.authMethods) {
+          method.prop = true
+        }
+        const arr = this.authMethods.map(m => m.value)
+        arr.push('session')
+        // eslint-disable-next-line vue/no-mutating-props
+        this.formModel['config-auth_methods'] = arr
+        this.onModelUpdated()
+      }
+    },
   },
 }
 </script>
@@ -428,6 +645,10 @@ export default {
       margin-bottom: 8px;
       width: 50%;
     }
+  }
+
+  .session-radio-label {
+    font-weight: 600;
   }
 
   .k-switch {

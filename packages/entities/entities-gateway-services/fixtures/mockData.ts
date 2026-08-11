@@ -24,6 +24,10 @@ export const gatewayService2 = {
   host: 'example.com',
   port: '443',
   tags: ['tag1', 'tag2'],
+  tls_sans: {
+    dnsnames: ['example.com', 'api.example.com'],
+    uris: ['spiffe://example.com/service'],
+  },
   enabled: false,
 }
 

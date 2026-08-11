@@ -93,7 +93,6 @@ const props = defineProps({
   visible: {
     type: Boolean,
     required: true,
-    default: false,
   },
 })
 
@@ -210,7 +209,7 @@ const addConsumers = async (): Promise<void> => {
       selectedConsumers.value = []
       handleBulkError(results)
     }
-  } catch (_err: any) {
+  } catch {
     error.value = t('consumers.errors.add')
 
     // Emit the error event for the host app
@@ -223,16 +222,12 @@ const addConsumers = async (): Promise<void> => {
 const submitUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].forConsumerGroup}`
   if (props.config.app === 'konnect') {
-    url = url
-      .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-      .replace(/{consumerGroupId}/gi, props.config?.consumerGroupId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-      .replace(/{consumerGroupId}/gi, props.config?.consumerGroupId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{consumerGroupId}/gi, props.config?.consumerGroupId || '')
 })
 
 const addConsumerToGroup = async (consumerId: string): Promise<any> => {

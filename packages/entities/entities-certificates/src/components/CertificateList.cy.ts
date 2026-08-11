@@ -6,7 +6,7 @@ import {
   paginate,
   certificate,
   certificate100,
-  certificateVaultRef,
+  certificateVaultRefCert,
 } from '../../fixtures/mockData'
 import type { FetcherResponse } from '@kong-ui-public/entities-shared'
 import type { Router } from 'vue-router'
@@ -507,7 +507,7 @@ describe('<CertificateList />', () => {
       cy.get(rowWithVaultRef).find('[data-testid="subject"] .content-wrapper').should('contain.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="expiry"]').should('have.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="san"]').should('have.text', '-')
-      cy.get(rowWithVaultRef).find('[data-testid="cert"]').should('contain.text', certificateVaultRef)
+      cy.get(rowWithVaultRef).find('[data-testid="cert"]').should('contain.text', certificateVaultRefCert)
     })
   })
 
@@ -814,7 +814,91 @@ describe('<CertificateList />', () => {
       cy.get(rowWithVaultRef).find('[data-testid="subject"] .content-wrapper').should('contain.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="expiry"]').should('have.text', '-')
       cy.get(rowWithVaultRef).find('[data-testid="san"]').should('have.text', '-')
-      cy.get(rowWithVaultRef).find('[data-testid="cert"]').should('contain.text', certificateVaultRef)
+      cy.get(rowWithVaultRef).find('[data-testid="cert"]').should('contain.text', certificateVaultRefCert)
+    })
+  })
+
+  describe('Konnect - workspace URL building', () => {
+    it('uses workspace-scoped URL when fetching certificates in Konnect', () => {
+      const configWithWorkspace: KonnectCertificateListConfig = {
+        ...baseConfigKonnect,
+        workspace: 'default',
+      }
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${configWithWorkspace.apiBaseUrl}/v2/control-planes/${configWithWorkspace.controlPlaneId}/core-entities/default/certificates*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getCertificatesWithWorkspace')
+
+      cy.mount(CertificateList, {
+        props: {
+          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getCertificatesWithWorkspace')
+      cy.get('.kong-ui-entities-certificates-list').should('be.visible')
+    })
+
+    it('uses non-default workspace name in fetch URL', () => {
+      const configWithMyWorkspace: KonnectCertificateListConfig = {
+        ...baseConfigKonnect,
+        workspace: 'my-workspace',
+      }
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${configWithMyWorkspace.apiBaseUrl}/v2/control-planes/${configWithMyWorkspace.controlPlaneId}/core-entities/my-workspace/certificates*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getCertificatesMyWorkspace')
+
+      cy.mount(CertificateList, {
+        props: {
+          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          config: configWithMyWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getCertificatesMyWorkspace')
+      cy.get('.kong-ui-entities-certificates-list').should('be.visible')
+    })
+
+    it('omits workspace segment in fetch URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/certificates*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getCertificatesNoWorkspace')
+
+      cy.mount(CertificateList, {
+        props: {
+          cacheIdentifier: `certificate-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getCertificatesNoWorkspace')
+      cy.get('.kong-ui-entities-certificates-list').should('be.visible')
     })
   })
 })

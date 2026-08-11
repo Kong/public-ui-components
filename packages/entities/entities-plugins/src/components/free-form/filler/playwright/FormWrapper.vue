@@ -8,7 +8,13 @@ defineProps<{
 </script>
 
 <template>
-  <div style="padding: 20px">
+  <div class="form-wrapper">
     <Form :schema="schema" />
   </div>
 </template>
+
+<style lang="scss" scoped>
+.form-wrapper {
+  padding: 20px;
+}
+</style>

@@ -17,7 +17,7 @@
       >
         <WarningIcon
           :color="`var(--kui-color-text-warning, ${KUI_COLOR_TEXT_WARNING})`"
-          :size="KUI_ICON_SIZE_40"
+          :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
         />
         <template #content>
           <div class="tooltip-content">
@@ -89,7 +89,9 @@
         :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColors"
         :legend-position="legendPosition"
         :legend-values="legendValues"
+        :metric-name="computedMetricName"
         :metric-unit="computedMetricUnit"
+        :show-center-metric="chartOptions.showCenterMetric"
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-dimension-display="dimensionAxesTitle"
         :tooltip-metric-display="tooltipMetricDisplay"
@@ -106,9 +108,9 @@ import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DonutChart from './chart-types/DonutChart.vue'
 import { computed, provide, toRef } from 'vue'
-import { msToGranularity } from '@kong-ui-public/analytics-utilities'
+import { isPlatformDatasource, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
-import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
+import { hasMillisecondTimestamps, defaultStatusCodeColors, isNoSuffixMetric } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
@@ -192,6 +194,14 @@ const computedMetricUnit = computed<string>(() => {
   return Object.values(props.chartData.meta.metric_units)[0]
 })
 
+const computedMetricName = computed<string>(() => {
+  if (!props.chartData.meta?.metric_units) {
+    return ''
+  }
+
+  return Object.keys(props.chartData.meta.metric_units)[0] ?? ''
+})
+
 const showLegendValues = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Hidden)
 
 const { legendValues } = composables.useChartLegendValues(computedChartData, props.chartOptions.type, computedMetricUnit)
@@ -220,7 +230,7 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
   }
 
   const metricName = props.chartData.meta.metric_names[0]
-  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
+  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations] || ''
 
   if (props.chartData.meta.metric_names.length > 1) {
     if (metricName.includes('latency')) {
@@ -238,6 +248,12 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
   }
 
   // @ts-ignore - dynamic i18n key
+  if (isNoSuffixMetric(metricUnit) && i18n.te(`metricAxisTitles.${metricName}`)) {
+    // @ts-ignore - dynamic i18n key
+    return i18n.t(`metricAxisTitles.${metricName}`) || undefined
+  }
+
+  // @ts-ignore - dynamic i18n key
   return i18n.te(`chartLabels.${metricName}`) ? i18n.t(`chartLabels.${metricName}`) : metricName
 })
 
@@ -251,7 +267,7 @@ const metricAxesTitle = computed<string | undefined>(() => {
   }
 
   const metricName = props.chartData.meta.metric_names[0]
-  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
+  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations] || ''
 
   if (props.chartData.meta.metric_names.length > 1) {
     if (metricName.includes('latency')) {
@@ -265,7 +281,11 @@ const metricAxesTitle = computed<string | undefined>(() => {
   }
 
   // @ts-ignore - dynamic i18n key
-  if (i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`)) {
+  if (i18n.te(`metricAxisTitles.${metricName}`) && (isNoSuffixMetric(metricUnit) || i18n.te(`chartUnits.${metricUnit}`))) {
+    if (isNoSuffixMetric(metricUnit)) {
+      // @ts-ignore - dynamic i18n key
+      return i18n.t(`metricAxisTitles.${metricName}`) || undefined
+    }
     // @ts-ignore - dynamic i18n key
     return i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) }) || undefined
   }
@@ -289,6 +309,10 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
 })
 
 const timestampAxisTitle = computed(() => {
+  if (isPlatformDatasource(props.chartData.meta.datasource)) {
+    return i18n.t('timestampAxisTitles.platform')
+  }
+
   const granularity = msToGranularity(Number(props.chartData.meta.granularity_ms))
 
   if (!granularity) {
@@ -416,7 +440,7 @@ provide('legendPosition', toRef(props, 'legendPosition'))
 
   .chart-truncation-warning {
     align-items: center;
-    background-color: white;
+    background-color: var(--kui-color-background, $kui-color-background);
     display: flex;
     justify-content: flex-start;
     left: 0;

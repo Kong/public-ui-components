@@ -79,6 +79,7 @@ defineProps({
 
 <style lang="scss" scoped>
 .app-page-info-section {
+  background-color: var(--kui-color-background, $kui-color-background);
   border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
 
@@ -113,7 +114,6 @@ defineProps({
   }
 
   .app-page-info-section-content {
-    background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
     border-bottom-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-bottom-right-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
@@ -121,26 +121,6 @@ defineProps({
     flex-direction: column;
     gap: var(--kui-space-40, $kui-space-40);
     padding: var(--kui-space-70, $kui-space-70);
-
-    :slotted(.k-table-view) {
-      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-
-      tr.is-scrolled {
-        background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-      }
-
-      td,
-      th {
-        &.sticky-column,
-        &.actions-column {
-          background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest) !important;
-        }
-      }
-    }
-
-    :slotted(.k-empty-state) {
-      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
-    }
   }
 }
 

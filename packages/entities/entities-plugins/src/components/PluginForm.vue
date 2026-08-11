@@ -1,7 +1,7 @@
 <template>
   <div
     class="kong-ui-entities-plugin-form-container"
-    :class="{ 'new-form-layout': enabledNewPluginLayout }"
+    :class="{ 'new-form-layout': usesFreeformLayout }"
   >
     <KSkeleton
       v-if="schemaLoading"
@@ -47,14 +47,17 @@
       <PluginEntityForm
         :config="config"
         :credential="treatAsCredential"
+        :developer="developer"
         :editing="formType === EntityBaseFormType.Edit"
         :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
-        :engine="engine"
+        :engine="realEngine"
         :entity-map="entityMap"
         :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
+        @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
+        @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
@@ -114,6 +117,7 @@
         {{ t('view_configuration.message') }}
       </div>
       <KTabs
+        v-model="configTab"
         data-testid="form-view-configuration-slideout-tabs"
         :tabs="tabs"
       >
@@ -126,7 +130,11 @@
           />
         </template>
         <template #yaml>
-          <YamlCodeBlock :entity-record="viewConfigurationRecord" />
+          <YamlCodeBlock
+            :deck-callout-preference-key="isDeckEnabled ? deckCalloutPreferenceKey : undefined"
+            :entity-record="viewConfigurationRecord"
+            @deck-callout:click-cta="configTab = '#deck'"
+          />
         </template>
         <template #terraform>
           <TerraformCodeBlock
@@ -136,14 +144,30 @@
           />
         </template>
         <template #deck>
+          <div
+            v-if="Boolean(deckCustomizationOptions)"
+            class="button-customize-deck-wrapper"
+          >
+            <KButton
+              appearance="secondary"
+              class="button-customize-deck"
+              @click="isDeckCustomizationVisible = true"
+            >
+              {{ t('plugins.form.button_deck_customize') }}
+            </KButton>
+          </div>
+
           <DeckCodeBlock
             :app="config.app"
             :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
+            :customization-options="deckCustomizationOptions"
             :entity-record="viewConfigurationRecord"
             :entity-type="SupportedEntityType.Plugin"
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :is-customization-modal-visible="isDeckCustomizationVisible"
             :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
-            :workspace="config.app === 'kongManager' ? config.workspace : undefined"
+            :workspace="config.workspace || undefined"
+            @customization-close="isDeckCustomizationVisible = false"
           />
         </template>
       </KTabs>
@@ -161,13 +185,15 @@ import {
   DeckCodeBlock,
   SupportedEntityType,
   useAxios,
+  useBaseFormDeckOptions,
   useErrors,
   useHelpers,
   useStringHelpers,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
-import type { AxiosError, AxiosResponse } from 'axios'
+import { isAxiosError, type AxiosError, type AxiosResponse } from 'axios'
+import DOMPurify from 'dompurify'
 import { marked, type MarkedOptions } from 'marked'
 import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType, inject } from 'vue'
 import { useRouter } from 'vue-router'
@@ -190,13 +216,15 @@ import {
   type PluginOrdering,
   type CustomSchemas,
   type PluginValidityChangeEvent,
+  type EntityCreateEvent,
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
+import { BEFORE_SAVE_KEY } from './const'
 import type { GlobalAction } from './free-form/shared/types'
-import { FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
+import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 
 type ScopedEntitiesType = 'consumer' | 'route' | 'service' | 'consumer_group'
@@ -204,8 +232,11 @@ type Permissions = 'canRetrieve' | 'canEdit' | 'canDelete'
 type ScopedEntityPermission = Partial<Record<Permissions, boolean>>
 type ScopedEntitiesPermissions = Partial<Record<ScopedEntitiesType, ScopedEntityPermission>>
 
-const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => false))
 const enableConditionField = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2306_CONDITION_FIELD_314, false)
+const enabledClonedPlugin = inject<boolean>(PLUGIN_FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, false)
+const usesFreeformLayout = ref(false)
+
+provide(PLUGIN_FORM_LAYOUT_STATE, usesFreeformLayout)
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -222,6 +253,8 @@ const emit = defineEmits<{
   ): void
   (e: 'showNewPartialModal', redisType: string): void
   (e: 'globalAction', name: GlobalAction, payload: any): void
+  (e: 'click:create-entity', payload: EntityCreateEvent): void
+  (e: 'click:learn-more', entity: string): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -246,8 +279,8 @@ const props = defineProps({
   },
   /** The ID of a specific plugin instance. If a valid Plugin ID is provided, it will put the form in Edit mode instead of Create */
   pluginId: {
-    type: String,
-    default: '',
+    type: String as PropType<string | null>,
+    default: null,
   },
 
   /** Rather than using internal logic to determine whether or not to hide scope, force it */
@@ -356,6 +389,17 @@ const { objectsAreEqual } = useHelpers()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
+const { getClonedPlugin: fetchClonedPluginDetail } = composables.useCustomPluginApi({
+  axiosInstance: useAxios({
+    ...(props.config?.axiosRequestConfig ?? {}),
+    konnect: { bypassGlobal404Handler: true }, // force bypassGlobal404Handler for this call
+  } as any).axiosInstance,
+  apiBaseUrl: props.config.apiBaseUrl,
+  app: props.config.app,
+  workspace: (props.config as KongManagerPluginFormConfig).workspace,
+  controlPlaneId: (props.config as KonnectPluginFormConfig).controlPlaneId,
+})
+
 const isToggled = ref(false)
 const isEditing = computed(() => !!props.pluginId)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
@@ -366,11 +410,55 @@ const record = ref<Record<string, any> | undefined>(undefined)
 const configResponse = ref<Record<string, any>>({})
 const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
 const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
+
+const customPluginFreeform = inject(PLUGIN_FEATURE_FLAGS.KM_2503_CUSTOM_PLUGIN_FREEFORM, false)
+
+const clonedSourcePlugin = ref<string | null>(null)
+
+const isClonedPlugin = computed(() => clonedSourcePlugin.value !== null)
+
+const effectivePluginType = computed(() =>
+  (isClonedPlugin.value && clonedSourcePlugin.value) ? clonedSourcePlugin.value : props.pluginType,
+)
+
+const realEngine = computed<'vfg' | 'freeform' | undefined>(() => {
+  if (props.engine) return props.engine
+  if (!customPluginFreeform || !isCustomPlugin.value) return undefined
+  if (isClonedPlugin.value && clonedSourcePlugin.value) {
+    // Cloned plugin: defer to the source plugin's engine.
+    return isFreeForm(clonedSourcePlugin.value) ? 'freeform' : 'vfg'
+  }
+  return 'freeform'
+})
+
+const isFreeFormEngine = computed(() => isFreeForm(props.pluginType, realEngine.value))
+
 provide(REDIS_PARTIAL_INFO, {
   redisType: pluginPartialType,
   redisPath: pluginRedisPath,
   isEditing: isEditing.value,
 })
+
+const beforeSaveCallbacks: Array<() => boolean> = []
+provide(BEFORE_SAVE_KEY, (cb: () => boolean) => {
+  beforeSaveCallbacks.push(cb)
+  return () => {
+    const i = beforeSaveCallbacks.indexOf(cb)
+    if (i !== -1) beforeSaveCallbacks.splice(i, 1)
+  }
+})
+
+const isDeckCustomizationVisible = ref(false)
+
+const {
+  isDeckEnabled,
+  deckCustomizationOptions,
+  deckCalloutPreferenceKey,
+} = useBaseFormDeckOptions(
+  () => props.config,
+  SupportedEntityType.Plugin,
+)
+
 const formLoading = ref(false)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
@@ -409,12 +497,14 @@ if (props.config.app === 'konnect') {
   })
 }
 
-if (props.config.app === 'kongManager' || props.config.enableDeckTab) {
+if (isDeckEnabled.value) {
   tabs.value.push({
     title: t('view_configuration.deck'),
     hash: '#deck',
   })
 }
+
+const configTab = ref(tabs.value[0].hash)
 
 // For array-typed fields, if their elements are deeply nested objects,
 // we need this variable to record the key of the array field.
@@ -618,7 +708,7 @@ const getArrayType = (list: unknown[]): string => {
 
 const buildFormSchema = (parentKey: string, response: Record<string, any>, initialFormSchema: Record<string, any>, arrayNested?: boolean) => {
   let schema = (response && response.fields) || []
-  const pluginSchema = customSchemas[props.pluginType as keyof CustomSchemas]
+  const pluginSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
   const credentialSchema = CREDENTIAL_METADATA[props.pluginType]?.schema?.fields
 
   // schema can either be an object or an array of objects. If it's an array, convert it to an object
@@ -649,7 +739,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // If the field type is 'set', convert it to 'array'
     // Freeform can handle 'set' type with one_of elements as multiselect
     // Todo: create suitable component for 'set' type in freeform and remove this conversion
-    if (scheme.type === 'set' && !(isFreeForm(props.pluginType, props.engine) && scheme.elements.one_of)) {
+    if (scheme.type === 'set' && !(isFreeFormEngine.value && scheme.elements.one_of)) {
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
@@ -735,7 +825,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     // KAG-3347: Add /config-.*/ to cover deep fields like `config.redis.*` in the rate-limiting-advanced plugin
     if (parentKey === 'config' || parentKey.startsWith('config-')) {
       if (schema[key]?.description) {
-        initialFormSchema[field].help = marked.parse(schema[key].description, { mangle: false, headerIds: false } as MarkedOptions)
+        initialFormSchema[field].help = DOMPurify.sanitize(marked.parse(schema[key].description, { mangle: false, headerIds: false } as MarkedOptions) as string)
       }
     }
 
@@ -844,7 +934,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }
 
     if (scheme.hint) {
-      initialFormSchema[field].hint = scheme.hint
+      initialFormSchema[field].hint = DOMPurify.sanitize(scheme.hint)
     }
 
     // Custom frontend schema override
@@ -858,7 +948,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
           initialFormSchema[field] = { help, label, hint, values, referenceable, elements, ...overrides }
           // Eagerly replace the help text because we are overriding
           if (typeof helpOverride === 'string') {
-            initialFormSchema[field].help = marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions)
+            initialFormSchema[field].help = DOMPurify.sanitize(marked.parse(helpOverride, { mangle: false, headerIds: false } as MarkedOptions) as string)
           }
         }
       })
@@ -881,7 +971,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
           // Only replace the help text when it is not defined because it may have already been
           // overridden by the previous step
           if (itemField.help === undefined && typeof description === 'string') {
-            itemField.help = marked.parse(description, { mangle: false, headerIds: false } as MarkedOptions)
+            itemField.help = DOMPurify.sanitize(marked.parse(description, { mangle: false, headerIds: false } as MarkedOptions) as string)
           }
         }
       }
@@ -1041,12 +1131,13 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 }
 
 const initScopeFields = (): void => {
-  const supportServiceScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
-  const supportRouteScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
-  const supportConsumerScope = PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
+  const pluginType = isClonedPlugin.value && clonedSourcePlugin.value ? clonedSourcePlugin.value : props.pluginType
+  const supportServiceScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.SERVICE) ?? true
+  const supportRouteScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.ROUTE) ?? true
+  const supportConsumerScope = PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.CONSUMER) ?? true
   const supportConsumerGroupScope = props.config.disableConsumerGroupScope
     ? false
-    : (PLUGIN_METADATA[props.pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
+    : (PLUGIN_METADATA[pluginType]?.scope.includes(PluginScope.CONSUMER_GROUP) ?? true)
   // check whether the plugin is scoped
   const consumerScoped = (props.config.entityType === 'consumers' && !!props.config.entityId) || !!record.value?.consumer?.id
   const consumerGroupScoped = (props.config.entityType === 'consumer_groups' && !!props.config.entityId) || !!record.value?.consumer_group?.id
@@ -1207,9 +1298,9 @@ const initScopeFields = (): void => {
   }
 
   // apply custom front-end schema if overwriteDefault is true
-  if (customSchemas[props.pluginType as keyof CustomSchemas] && customSchemas[props.pluginType as keyof CustomSchemas].overwriteDefault) {
-    if (Object.hasOwnProperty.call(customSchemas[props.pluginType as keyof CustomSchemas], 'formSchema')) {
-      Object.assign(defaultFormSchema, customSchemas[props.pluginType as keyof CustomSchemas].formSchema)
+  if (customSchemas[effectivePluginType.value as keyof CustomSchemas] && customSchemas[effectivePluginType.value as keyof CustomSchemas].overwriteDefault) {
+    if (Object.hasOwnProperty.call(customSchemas[effectivePluginType.value as keyof CustomSchemas], 'formSchema')) {
+      Object.assign(defaultFormSchema, customSchemas[effectivePluginType.value as keyof CustomSchemas].formSchema)
     }
   }
 }
@@ -1295,6 +1386,9 @@ watch([entityMap, initialized], (newData, oldData) => {
     if (isCustomPlugin.value) {
       initialFormSchema._isCustomPlugin = true
     }
+    if (isClonedPlugin.value && clonedSourcePlugin.value) {
+      initialFormSchema._sourcePlugin = clonedSourcePlugin.value
+    }
     if (pluginPartialType.value) {
       initialFormSchema._supported_redis_partial_type = pluginPartialType.value
     }
@@ -1335,14 +1429,14 @@ const submitUrl = computed((): string => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
+  // replace workspace
+  url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   // replace resource endpoint for credentials
   url = url.replace(/{resourceEndpoint}/gi, resourceEndpoint.value)
   // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.pluginId)
+  url = url.replace(/{id}/gi, props.pluginId ?? '')
   // replace entityType and entityId if scoped
   url = url.replace(/{entityType}/gi, props.config.entityType || '')
   url = url.replace(/{entityId}/gi, props.config.entityId || '')
@@ -1388,6 +1482,11 @@ const viewConfigurationRecord = computed(() => {
 
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
+  // Run before-save guards; any callback returning false blocks submission
+  if (!beforeSaveCallbacks.every(cb => cb())) {
+    return
+  }
+
   if (form.clientErrorMessage) {
     // if there are still client errors, don't submit the form
     return
@@ -1404,8 +1503,8 @@ const saveFormData = async (): Promise<void> => {
     let response: AxiosResponse | undefined
 
     const payload = JSON.parse(JSON.stringify(getRequestBody.value))
-    const customSchema = customSchemas[props.pluginType as keyof CustomSchemas]
-    if (typeof customSchema?.shamefullyTransformPayload === 'function') {
+    const customSchema = customSchemas[effectivePluginType.value as keyof CustomSchemas]
+    if (!isFreeFormEngine.value && typeof customSchema?.shamefullyTransformPayload === 'function') {
       customSchema.shamefullyTransformPayload({
         originalModel: formFieldsOriginal,
         model: form.fields,
@@ -1450,14 +1549,11 @@ const schemaUrl = computed((): string => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // replace the plugin type
-  url = url.replace(/{plugin}/gi, pluginType)
-
   return url
+    .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{plugin}/gi, pluginType) // replace the plugin type
 })
 
 const credentialType = ref('')
@@ -1477,7 +1573,16 @@ onBeforeMount(async () => {
       finalSchema.value = buildFormSchema('', data, {})
       schemaLoading.value = false
     } else { // handling for standard plugins
-      const data = props.schema ?? (await axiosInstance.get(schemaUrl.value)).data
+      // When the cloned-plugin feature flag is on and the plugin isn't a built-in,
+      // resolve its source plugin in parallel with the schema fetch (404 = not a clone).
+      const shouldResolveClone = enabledClonedPlugin && isCustomPlugin.value
+      const schemaPromise: Promise<any> = props.schema
+        ? Promise.resolve(props.schema)
+        : axiosInstance.get(schemaUrl.value).then(res => res.data)
+      const [data] = await Promise.all([
+        schemaPromise,
+        shouldResolveClone ? getClonedPlugin(props.pluginType) : Promise.resolve(),
+      ])
       loadedSchema.value = data
 
       if (data) {
@@ -1525,6 +1630,9 @@ onBeforeMount(async () => {
             }
             // pass whether the plugin is a custom plugin to the form schema
             if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
+            if (isClonedPlugin.value && clonedSourcePlugin.value) {
+              initialFormSchema._sourcePlugin = clonedSourcePlugin.value
+            }
             finalSchema.value = initialFormSchema
           }
         }
@@ -1539,6 +1647,19 @@ onBeforeMount(async () => {
     schemaLoading.value = false
   }
 })
+
+async function getClonedPlugin(clonedPluginName: string): Promise<void> {
+  try {
+    const detail = await fetchClonedPluginDetail(clonedPluginName)
+    clonedSourcePlugin.value = detail?.ref ?? null
+  } catch (error: unknown) {
+    // A 404 means this custom plugin is not a clone — leave clonedSourcePlugin null and stay quiet.
+    if (isAxiosError(error) && error.response?.status === 404) {
+      return
+    }
+    throw error
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -1593,6 +1714,13 @@ onBeforeMount(async () => {
         margin-inline-start: unset!important;
       }
     }
+  }
+
+  .button-customize-deck-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: var(--kui-space-60, $kui-space-60);
   }
 }
 </style>

@@ -75,28 +75,28 @@
       </div>
     </template> -->
     <template #sidebar-icon-overview>
-      <OverviewIcon :size="KUI_ICON_SIZE_40" />
+      <OverviewIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
     </template>
     <template #sidebar-icon-gateway-manager>
-      <RuntimesIcon :size="KUI_ICON_SIZE_40" />
+      <RuntimesIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
     </template>
     <template #sidebar-icon-servicehub>
-      <ServiceHubIcon :size="KUI_ICON_SIZE_40" />
+      <ServiceHubIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
     </template>
     <template #sidebar-icon-mesh-manager>
-      <MeshIcon :size="KUI_ICON_SIZE_40" />
+      <MeshIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
     </template>
     <template #sidebar-icon-dev-portal>
-      <DevPortalIcon :size="KUI_ICON_SIZE_40" />
+      <DevPortalIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
     </template>
     <template #sidebar-icon-analytics>
-      <BarChartIcon :size="KUI_ICON_SIZE_40" />
+      <BarChartIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
     </template>
     <template #sidebar-icon-organization>
-      <PeopleIcon :size="KUI_ICON_SIZE_40" />
+      <PeopleIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
     </template>
     <template #sidebar-icon-settings>
-      <CogIcon :size="KUI_ICON_SIZE_40" />
+      <CogIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
     </template>
     <template #sidebar-footer>
       <div class="sidebar-footer-slot-content">

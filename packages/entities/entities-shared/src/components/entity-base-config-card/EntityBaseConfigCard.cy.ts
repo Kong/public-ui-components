@@ -1,13 +1,16 @@
-import { h } from 'vue'
+import { h, type DefineComponent } from 'vue'
 import type {
   KonnectBaseEntityConfig,
   ConfigurationSchema,
   PluginConfigurationSchema,
 } from '../../types'
-import { ConfigurationSchemaSection, SupportedEntityType } from '../../types'
+import { ConfigurationSchemaSection, ConfigurationSchemaType, SupportedEntityType } from '../../types'
 import { gatewayServiceRecord, pluginRecord, emptyKey, keyWithValue } from '../../../fixtures/mockData'
 import composables from '../../composables'
 import EntityBaseConfigCard from './EntityBaseConfigCard.vue'
+
+/** Cypress `mount` / `findComponent` overloads do not match vue-tsc’s script-setup SFC type */
+const EntityBaseConfigCardMount = EntityBaseConfigCard as unknown as DefineComponent
 
 const { convertKeyToTitle } = composables.useStringHelpers()
 
@@ -30,12 +33,14 @@ const customTooltip = 'Custom tooltip'
 const customLabel = 'CA Certificates'
 const unconfiguredKey = 'client_certificate'
 const untypedKey = 'extra'
+const sensitiveKey = 'host'
 const configSchema: ConfigurationSchema = {
   protocol: {
     section: ConfigurationSchemaSection.Basic,
   },
-  host: {
+  [sensitiveKey]: {
     section: ConfigurationSchemaSection.Basic,
+    type: ConfigurationSchemaType.Redacted,
   },
   path: {
     section: ConfigurationSchemaSection.Basic,
@@ -127,7 +132,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('hides title content when `hideTitle` prop is set', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -143,7 +148,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('displays KSelect to choose Format', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -155,10 +160,70 @@ describe('<EntityBaseConfigCard />', () => {
       cy.getTestId('select-config-format').should('exist')
     })
 
+    it('KCheckbox to show sensitive fields is hidden on structured view', () => {
+      interceptFetch()
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config,
+          configSchema,
+          entityType,
+          fetchUrl,
+        },
+      })
+
+      cy.getTestId('sensitive-fields-checkbox').should('not.exist')
+    })
+
+    it('displays KCheckbox to show sensitive fields on non-structured view', () => {
+      interceptFetch()
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config,
+          configSchema,
+          entityType,
+          fetchUrl,
+        },
+      })
+
+      cy.getTestId('select-config-format').should('be.visible')
+      cy.getTestId('select-config-format').click()
+      cy.getTestId('select-item-json').click()
+
+      cy.getTestId('sensitive-fields-checkbox').should('be.visible')
+    })
+
+    it('redacts/unredacts sensitive fields when KCheckbox is checked/unchecked', () => {
+      interceptFetch()
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config,
+          configSchema,
+          entityType,
+          fetchUrl,
+        },
+      })
+
+      cy.getTestId('select-config-format').should('be.visible')
+      cy.getTestId('select-config-format').click()
+      cy.getTestId('select-item-json').click()
+
+      // redacted by default
+      cy.get('#json-codeblock').findTestId('highlighted-code-block').should('contain.text', `"${sensitiveKey}": "********"`)
+      cy.get('#json-codeblock').findTestId('highlighted-code-block').should('not.contain.text', gatewayServiceRecord.host)
+
+      cy.getTestId('sensitive-fields-checkbox').should('be.visible')
+      cy.getTestId('sensitive-fields-checkbox').click()
+      // unredacted
+      cy.get('#json-codeblock').findTestId('highlighted-code-block').should('contain.text', gatewayServiceRecord.host)
+    })
+
     it('displays KButton with book icon when `configCardDoc` prop is set correctly', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -173,11 +238,11 @@ describe('<EntityBaseConfigCard />', () => {
 
     it('correctly displays common fields', () => {
       const commonFields = ['id', 'name', 'enabled', 'updated_at', 'created_at', 'tags']
-      const commonLabels = ['ID', 'Name', 'Enabled', 'Last Updated', 'Created', 'Tags']
+      const commonLabels = ['ID', 'Name', 'Enabled', 'Last updated', 'Created', 'Tags']
 
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -209,7 +274,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('correctly applies the default values to properties without explicit configurations', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -240,7 +305,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('allows customizing label and label tooltip', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -258,7 +323,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('does not display fields marked `hidden`', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -285,7 +350,7 @@ describe('<EntityBaseConfigCard />', () => {
         },
       ).as('fetchRecord')
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -307,7 +372,7 @@ describe('<EntityBaseConfigCard />', () => {
       const undefinedKey = 'undefined_in_response_object_key'
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema: {
@@ -328,7 +393,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('correctly breaks properties into sections', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -343,7 +408,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('does not display sections with no properties', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -361,7 +426,7 @@ describe('<EntityBaseConfigCard />', () => {
       const expectedOrder = ['retries', 'connect_timeout', 'write_timeout', 'read_timeout']
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -380,7 +445,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('displays properties without an `order` at the end', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -399,7 +464,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('hides plugin section when no `pluginConfigKey` provided', () => {
       interceptPluginFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -416,7 +481,7 @@ describe('<EntityBaseConfigCard />', () => {
       const expectedOrder = ['account_email', 'api_uri', 'cert_type']
       interceptPluginFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -437,7 +502,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('correctly handles properties without an `order`', () => {
       interceptPluginFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -470,7 +535,7 @@ describe('<EntityBaseConfigCard />', () => {
         },
       ).as('fetchRecordError')
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -491,7 +556,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('loading event should be emitted when EntityBaseConfigCard emits loading event', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -502,7 +567,7 @@ describe('<EntityBaseConfigCard />', () => {
       }).then(({ wrapper }) => wrapper)
         .as('vueWrapper')
 
-      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseConfigCard)
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseConfigCardMount)
         .vm.$emit('loading', true))
 
       cy.get('@onLoadingSpy').should('have.been.calledWith', true)
@@ -511,7 +576,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('handles copy json click', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -539,7 +604,7 @@ describe('<EntityBaseConfigCard />', () => {
     it('displays error when invalid key passed through `dataKey` prop', () => {
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -553,6 +618,140 @@ describe('<EntityBaseConfigCard />', () => {
     })
   })
 
+  describe('Konnect workspace URL building', () => {
+    const wsControlPlaneId = '1234-abcd-ilove-cats-too'
+    const wsEntityId = '1234-cats-rule'
+    const wsBaseUrl = '/us/kong-api'
+
+    const workspaceFetchUrl = '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}/services/{id}'
+    const plainFetchUrl = '/v2/control-planes/{controlPlaneId}/core-entities/services/{id}'
+
+    const configWithWorkspace = (workspace: string): KonnectBaseEntityConfig => ({
+      app: 'konnect',
+      apiBaseUrl: wsBaseUrl,
+      controlPlaneId: wsControlPlaneId,
+      workspace,
+      entityId: wsEntityId,
+    })
+
+    const configNoWorkspace: KonnectBaseEntityConfig = {
+      app: 'konnect',
+      apiBaseUrl: wsBaseUrl,
+      controlPlaneId: wsControlPlaneId,
+      entityId: wsEntityId,
+    }
+
+    it('includes workspace name in fetch URL when workspace is provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/default/services/${wsEntityId}`,
+        },
+        { statusCode: 200, body: gatewayServiceRecord },
+      ).as('fetchWithWorkspace')
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config: configWithWorkspace('default'),
+          configSchema,
+          entityType,
+          fetchUrl: workspaceFetchUrl,
+        },
+      })
+
+      cy.wait('@fetchWithWorkspace')
+      cy.getTestId('config-card-fetch-error').should('not.exist')
+    })
+
+    it('uses non-default workspace name in fetch URL', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/test/services/${wsEntityId}`,
+        },
+        { statusCode: 200, body: gatewayServiceRecord },
+      ).as('fetchWithTestWorkspace')
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config: configWithWorkspace('test'),
+          configSchema,
+          entityType,
+          fetchUrl: workspaceFetchUrl,
+        },
+      })
+
+      cy.wait('@fetchWithTestWorkspace')
+      cy.getTestId('config-card-fetch-error').should('not.exist')
+    })
+
+    it('omits workspace segment in fetch URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/services/${wsEntityId}`,
+        },
+        { statusCode: 200, body: gatewayServiceRecord },
+      ).as('fetchNoWorkspace')
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config: configNoWorkspace,
+          configSchema,
+          entityType,
+          fetchUrl: workspaceFetchUrl,
+        },
+      })
+
+      cy.wait('@fetchNoWorkspace')
+      cy.getTestId('config-card-fetch-error').should('not.exist')
+    })
+
+    it('shows fetch error when load fails with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/default/services/${wsEntityId}`,
+        },
+        { statusCode: 500, body: {} },
+      ).as('fetchError')
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config: configWithWorkspace('default'),
+          configSchema,
+          entityType,
+          fetchUrl: workspaceFetchUrl,
+        },
+      })
+
+      cy.wait('@fetchError')
+      cy.getTestId('config-card-fetch-error').should('be.visible')
+    })
+
+    it('ignores workspace config when fetchUrl has no {workspace} placeholder', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsBaseUrl}/v2/control-planes/${wsControlPlaneId}/core-entities/services/${wsEntityId}`,
+        },
+        { statusCode: 200, body: gatewayServiceRecord },
+      ).as('fetchPlain')
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config: configWithWorkspace('default'),
+          configSchema,
+          entityType,
+          fetchUrl: plainFetchUrl,
+        },
+      })
+
+      cy.wait('@fetchPlain')
+      cy.getTestId('config-card-fetch-error').should('not.exist')
+    })
+  })
+
   describe('Slots', () => {
     it('allows slotting label and value', () => {
       const key = 'id'
@@ -561,7 +760,7 @@ describe('<EntityBaseConfigCard />', () => {
 
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -586,7 +785,7 @@ describe('<EntityBaseConfigCard />', () => {
 
       interceptFetch()
 
-      cy.mount(EntityBaseConfigCard, {
+      cy.mount(EntityBaseConfigCardMount, {
         props: {
           config,
           configSchema,
@@ -600,6 +799,46 @@ describe('<EntityBaseConfigCard />', () => {
 
       cy.getTestId(`${key}-label-tooltip`).should('exist')
       cy.getTestId(`${key}-label-tooltip`).should('contain.text', slottedTooltip)
+    })
+  })
+
+  describe('formatsToHide', () => {
+    it('drops listed code formats from the Format dropdown but always keeps structured', () => {
+      interceptFetch()
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config,
+          configSchema,
+          entityType,
+          fetchUrl,
+          formatsToHide: ['yaml'],
+        },
+      })
+
+      cy.getTestId('select-config-format').click()
+      cy.getTestId('select-item-yaml').should('not.exist')
+      cy.getTestId('select-item-json').should('exist')
+      cy.getTestId('select-item-terraform').should('exist')
+    })
+
+    it('can hide several formats at once', () => {
+      interceptFetch()
+
+      cy.mount(EntityBaseConfigCardMount, {
+        props: {
+          config,
+          configSchema,
+          entityType,
+          fetchUrl,
+          formatsToHide: ['json', 'yaml'],
+        },
+      })
+
+      cy.getTestId('select-config-format').click()
+      cy.getTestId('select-item-json').should('not.exist')
+      cy.getTestId('select-item-yaml').should('not.exist')
+      cy.getTestId('select-item-terraform').should('exist')
     })
   })
 })

@@ -6,6 +6,7 @@ A form component for Vaults.
 - [Usage](#usage)
   - [Install](#install)
   - [Props](#props)
+  - [Slots](#slots)
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
@@ -56,10 +57,10 @@ A form component for Vaults.
     - Route to return to when canceling creation of an Vault.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `controlPlaneId`:
     - type: `string`
@@ -73,6 +74,18 @@ A form component for Vaults.
     - default: `undefined`
     - *Specific to Konnect*. Show/hide Azure option.
     - **Note:** This is experimental and not supported by the backend right now
+
+  - `azureCertsVaultProviderAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide the Azure Key Vault Certificates provider option.
+
+  - `fsVaultProviderAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide File system (fs) Vault option.
 
   - `ttl`
     - type: `boolean`
@@ -120,6 +133,24 @@ The base konnect or kongManger config.
 
 If showing the `Edit` type form, the ID of the Vault.
 
+### Slots
+
+#### `labels`
+
+A scoped slot for rendering the labels editor. **Only rendered in AI Gateway mode** (`config.apiType === 'aiGateway'`).
+
+Slot props:
+
+- `labelList`
+  - type: `VaultLabelItem[]`
+  - The current list of label key-value pairs. In edit mode it is hydrated from the fetched vault before the slot is rendered.
+- `disabled`
+  - type: `Boolean`
+  - Whether the form is read-only.
+- `updateLabelList`
+  - type: `Function`
+  - Setter `(labelList: VaultLabelItem[]) => void` to write edited labels back into the form state.
+
 ### Events
 
 #### error
@@ -156,6 +187,7 @@ import type {
   HCVVaultConfigPayload,
   VaultPayload,
   VaultStateFields,
-  VaultState
+  VaultState,
+  VaultLabelItem
 } from '@kong-ui-public/entities-vaults'
 ```

@@ -22,19 +22,21 @@
         {{ i18n.t('renderer.noQueryBridge') }}
       </KAlert>
       <component
-        :is="context.editable && !isFullscreen ? DraggableGridLayout : GridLayout"
+        :is="internalContext.editable && !isFullscreen ? DraggableGridLayout : GridLayout"
         v-else
         ref="gridLayoutRef"
+        :columns="model.columns"
         :tile-height="model.tile_height"
         :tiles="gridTiles"
         @update-tiles="handleUpdateTiles"
       >
         <template #tile="{ tile }">
+          <!-- eslint-disable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
           <div
-            v-if="tile.meta.chart.type === 'slottable'"
+            v-if="isSlottableTile(tile)"
             class="tile-container slottable-tile"
           >
-            <slot :name="tile.meta.chart.id" />
+            <slot :name="getSlottableSlotName(tile)" />
           </div>
           <DashboardTile
             v-else
@@ -42,17 +44,22 @@
             v-model:refresh-counter="refreshCounter"
             class="tile-container"
             :context="internalContext"
-            :definition="tile.meta"
+            :definition="tile.meta as TileDefinition"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+            :hide-actions="!internalContext.showTileActions"
+            :hide-zoom-actions="!internalContext.showTileZoomActions"
             :is-fullscreen="isFullscreen"
             :query-ready="queryReady"
             :tile-id="tile.id"
+            :tile-type="tile.type"
             @duplicate-tile="onDuplicateTile(tile)"
             @edit-tile="onEditTile(tile)"
             @remove-tile="onRemoveTile(tile)"
+            @tile-loaded="onTileLoaded(tile)"
             @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
           />
         </template>
+        <!-- eslint-enable @kong/eslint-plugin-design-tokens/token-constant-requires-css-var -->
       </component>
     </div>
   </div>
@@ -63,15 +70,15 @@ import type { DashboardRendererContext, GridTile, TileZoomEvent } from '../types
 import type {
   AllFilters,
   AnalyticsBridge,
+  ChartTileDefinition,
   DashboardConfig,
   SlottableOptions,
   TileConfig,
   TileDefinition,
-  TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import type { ComponentPublicInstance } from 'vue'
-import { computed, inject, nextTick, ref, toRef } from 'vue'
+import { computed, inject, nextTick, ref } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
@@ -81,16 +88,21 @@ import {
   INJECT_QUERY_PROVIDER,
   TIMEFRAME_TOKEN,
 } from '../constants'
-import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
+import { duplicateChartTile } from '../utils/duplicate-tile'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
-const props = defineProps<{
+const {
+  context,
+  preview = false,
+} = defineProps<{
   context: DashboardRendererContext
+  preview?: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
   (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
+  (e: 'tiles-loaded', done: boolean): void
 }>()
 
 const model = defineModel<DashboardConfig>({ required: true })
@@ -100,8 +112,11 @@ const refreshCounter = ref(0)
 const gridLayoutRef = ref<ComponentPublicInstance<DraggableGridLayoutExpose<TileDefinition>> | null>(null)
 
 const dashboardContainer = ref()
-const layoutContainer = ref()
+const layoutContainer = ref<HTMLElement>()
 const scale = ref('scale(1)')
+
+// Track which tiles (except for slottable tiles) have completed their queries.
+const loadedTileIds = new Set<string>()
 
 // Note: queryBridge is not directly used by the DashboardRenderer component.  It is required by many of the
 // subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
@@ -117,28 +132,17 @@ if (!queryBridge) {
 // Enable a request queue on the query bridge for all subcomponents.
 composables.useRequestQueue()
 
-const configStore = useAnalyticsConfigStore()
+const { exportPdf, exportState: pdfExportState } = composables.useExportPdf(layoutContainer)
 
-const timeSpec = computed<TimeRangeV4>(() => {
-  if (props.context.timeSpec) {
-    return props.context.timeSpec
+const onTileLoaded = (tile: GridTile<TileDefinition>) => {
+  loadedTileIds.add((tile.id as string))
+
+  const expectedCount = gridTiles.value.filter(t => !isSlottableTile(t)).length
+
+  if (loadedTileIds.size >= expectedCount) {
+    emit('tiles-loaded', true)
   }
-
-  return {
-    type: 'relative',
-    time_range: configStore.defaultQueryTimeForOrg,
-  }
-})
-
-const queryReady = computed<boolean>(() => {
-  // In the future, this will need to be determined on a per-tile basis to support pipelining.
-  // For now, it's fine for it to only be global.
-
-  // We're ready to issue queries if we know the time spec.
-  // We know the timespec if we were given the timespec, or if the config store has loaded the org's retention
-  // and we're able to calculate a timespec.
-  return !!props.context.timeSpec || !configStore.loading
-})
+}
 
 const tileSortFn = (a: TileConfig, b: TileConfig) => {
   const rowDiff = a.layout.position.row - b.layout.position.row
@@ -150,12 +154,32 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
 
 const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
   return model.value.tiles.map((tile: TileConfig) => {
-    let tileMeta = tile.definition
+    if (internalContext.value.editable && !tile.id) {
+      console.warn(
+        'No id provided for tile. One will be generated automatically,',
+        'however tracking changes to this tile may not work as expected.',
+        tile,
+      )
+    }
 
-    if ('description' in tileMeta.chart) {
+    if (tile.type === 'slottable') {
+      return {
+        layout: tile.layout,
+        type: tile.type,
+        id: tile.id ?? crypto.randomUUID(),
+      }
+    }
+
+    let tileMeta = tile.definition
+    const tileType = tile.type ?? 'chart'
+
+    const chart = (tileMeta as ChartTileDefinition).chart
+    if (tileType === 'chart' && 'description' in chart) {
+      const chartMeta = tileMeta as ChartTileDefinition
       // Replace tokens in tile descriptions
-      const description = tileMeta.chart.description?.replace(TIMEFRAME_TOKEN, () => {
-        const timeSpecKey = timeSpec.value.type === 'absolute' ? 'custom' : timeSpec.value.time_range
+      const description = chart.description?.replace(TIMEFRAME_TOKEN, () => {
+        const { timeSpec } = internalContext.value
+        const timeSpecKey = timeSpec.type === 'absolute' ? 'custom' : timeSpec.time_range
         const key = `renderer.trendRange.${timeSpecKey}`
 
         // Right now, we basically only support 2 ranges: 24 hours and 30 days.
@@ -170,26 +194,18 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
       })
 
       tileMeta = {
-        ...tileMeta,
+        ...chartMeta,
         chart: {
-          ...tileMeta.chart,
+          ...chart,
           description,
         },
-      }
-    }
-
-    if (props.context.editable && !tile.id) {
-      console.warn(
-        'No id provided for tile. One will be generated automatically,',
-        'however tracking changes to this tile may not work as expected.',
-        tile,
-      )
+      } as TileDefinition
     }
 
     return {
       layout: tile.layout,
       meta: tileMeta,
-      type: tile.type,
+      type: tileType,
       // Add a unique key to each tile internally.
       id: tile.id ?? crypto.randomUUID(),
     }
@@ -203,34 +219,31 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
   emit('edit-tile', tile)
 }
 
+const isSlottableTile = (tile: GridTile<TileDefinition>): boolean => {
+  if (tile.type === 'slottable') {
+    return true
+  }
+
+  return (tile.meta as ChartTileDefinition)?.chart.type === 'slottable'
+}
+
 const isSlottable = (chart: any): chart is SlottableOptions => {
   return chart.type === 'slottable'
 }
 
+const getSlottableSlotName = (tile: GridTile<TileDefinition>): string | undefined => {
+  if (tile.type === 'slottable') {
+    return tile.id as string
+  }
+
+  const chart = (tile.meta as ChartTileDefinition)?.chart
+
+  return chart && isSlottable(chart) ? chart.id : undefined
+}
+
 const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
   try {
-    const chart = isSlottable(tile.meta.chart)
-      ? { ...tile.meta.chart }
-      : {
-        ...tile.meta.chart,
-        chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
-      }
-
-    const newTile: TileConfig = {
-      id: crypto.randomUUID(),
-      type: 'chart',
-      definition: {
-        ...tile.meta,
-        chart,
-      },
-      layout: {
-        position: {
-          col: 0,
-          row: 0,
-        },
-        size: tile.layout.size,
-      },
-    }
+    const newTile = duplicateChartTile(tile)
 
     // deep cloning to avoid duplicated references
     model.value.tiles.push(JSON.parse(JSON.stringify(newTile)))
@@ -244,19 +257,29 @@ const onRemoveTile = (tile: GridTile<TileDefinition>) => {
   if (gridLayoutRef.value) {
     gridLayoutRef.value.removeWidget(tile.id)
   }
+  loadedTileIds.delete((tile.id as string))
 }
 
 const refreshTiles = () => {
+  loadedTileIds.clear()
   refreshCounter.value++
 }
 
 const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>) => {
   const updatedTiles = tiles.map(tile => {
+    if (tile.type === 'slottable') {
+      return {
+        id: tile.id,
+        type: tile.type,
+        layout: tile.layout,
+      } as TileConfig
+    }
+
     return {
       id: tile.id,
       type: tile.type,
       layout: tile.layout,
-      definition: tile.meta,
+      definition: tile.meta as TileDefinition,
     } as TileConfig
   })
 
@@ -299,15 +322,18 @@ const globalFilters = computed<AllFilters[]>(() => {
   return model.value.preset_filters as AllFilters[] ?? []
 })
 
-const { internalContext } = composables.useDashboardInternalContext({
+const { internalContext, queryReady } = composables.useDashboardInternalContext({
   globalFilters,
-  context: toRef(props, 'context'),
+  context: computed(() => context),
   isFullscreen,
+  preview: computed(() => preview),
 })
 
 defineExpose({
   refresh: refreshTiles,
   toggleFullscreen,
+  exportPdf,
+  pdfExportState,
 })
 </script>
 
@@ -316,7 +342,7 @@ defineExpose({
   position: relative;
 
   .tile-container {
-    background: var(--kui-color-background-transparent, $kui-color-background-transparent);
+    background: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 100%;
@@ -327,14 +353,14 @@ defineExpose({
   }
 
   &.is-fullscreen {
-    background-color: white;
+    background-color: var(--kui-color-background, $kui-color-background);
 
     .fullscreen-header {
       margin-bottom: var(--kui-space-60, $kui-space-60);
     }
 
     .layout {
-      background-color: white;
+      background-color: var(--kui-color-background, $kui-color-background);
       padding: var(--kui-space-60, $kui-space-60);
       transform: v-bind(scale);
       transform-origin: top;

@@ -3,6 +3,1418 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.17.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.11...@kong-ui-public/dashboard-renderer@8.17.12) (2026-08-11)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.17.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.10...@kong-ui-public/dashboard-renderer@8.17.11) (2026-08-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.17.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.9...@kong-ui-public/dashboard-renderer@8.17.10) (2026-08-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.17.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.8...@kong-ui-public/dashboard-renderer@8.17.9) (2026-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.17.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.7...@kong-ui-public/dashboard-renderer@8.17.8) (2026-08-07)
+
+
+### Bug Fixes
+
+* rename region -> provider_region MA-5169 ([#3673](https://github.com/Kong/public-ui-components/issues/3673)) ([6a5782f](https://github.com/Kong/public-ui-components/commit/6a5782f85ec8696aaddb867b884966b9d197ac11))
+
+
+
+
+
+## [8.17.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.6...@kong-ui-public/dashboard-renderer@8.17.7) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [8.17.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.5...@kong-ui-public/dashboard-renderer@8.17.6) (2026-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.17.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.4...@kong-ui-public/dashboard-renderer@8.17.5) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.17.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.3...@kong-ui-public/dashboard-renderer@8.17.4) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.17.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.2...@kong-ui-public/dashboard-renderer@8.17.3) (2026-08-03)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.1...@kong-ui-public/dashboard-renderer@8.17.2) (2026-08-03)
+
+
+### Bug Fixes
+
+* managed cache fixes MA-5130 ([#3640](https://github.com/Kong/public-ui-components/issues/3640)) ([77e3c8d](https://github.com/Kong/public-ui-components/commit/77e3c8dc596e873f51b71502315922d21cf24aa7))
+
+
+
+
+
+## [8.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.0...@kong-ui-public/dashboard-renderer@8.17.1) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [8.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.16.2...@kong-ui-public/dashboard-renderer@8.17.0) (2026-07-31)
+
+
+### Features
+
+* add cache translations MA-5131 ([#3636](https://github.com/Kong/public-ui-components/issues/3636)) ([7a9eec7](https://github.com/Kong/public-ui-components/commit/7a9eec756e21df2f02639d1750b3536afd79095c))
+
+
+
+
+
+## [8.16.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.16.1...@kong-ui-public/dashboard-renderer@8.16.2) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.16.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.16.0...@kong-ui-public/dashboard-renderer@8.16.1) (2026-07-31)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [8.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.24...@kong-ui-public/dashboard-renderer@8.16.0) (2026-07-30)
+
+
+### Features
+
+* **dashboard-renderer:** own CSV export flow [MA-5029] ([#3596](https://github.com/Kong/public-ui-components/issues/3596)) ([06cf0fa](https://github.com/Kong/public-ui-components/commit/06cf0fa7c345bed2104aa8dfb6a3b02edff6244f))
+
+
+
+
+
+## [8.15.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.23...@kong-ui-public/dashboard-renderer@8.15.24) (2026-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.22...@kong-ui-public/dashboard-renderer@8.15.23) (2026-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.21...@kong-ui-public/dashboard-renderer@8.15.22) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.20...@kong-ui-public/dashboard-renderer@8.15.21) (2026-07-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.62.0 ([#3625](https://github.com/Kong/public-ui-components/issues/3625)) ([3c35427](https://github.com/Kong/public-ui-components/commit/3c3542730cdc90bd9ee4e6dfc52b51df4b4f50c2))
+
+
+
+
+
+## [8.15.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.19...@kong-ui-public/dashboard-renderer@8.15.20) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.18...@kong-ui-public/dashboard-renderer@8.15.19) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities:** json config block background [KHCP-21211] ([#3621](https://github.com/Kong/public-ui-components/issues/3621)) ([38e1bfb](https://github.com/Kong/public-ui-components/commit/38e1bfb5ca98eb1c08a6dbab2338c35d921ed227))
+
+
+
+
+
+## [8.15.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.17...@kong-ui-public/dashboard-renderer@8.15.18) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.16...@kong-ui-public/dashboard-renderer@8.15.17) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.15...@kong-ui-public/dashboard-renderer@8.15.16) (2026-07-27)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.14...@kong-ui-public/dashboard-renderer@8.15.15) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.13...@kong-ui-public/dashboard-renderer@8.15.14) (2026-07-26)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.12...@kong-ui-public/dashboard-renderer@8.15.13) (2026-07-23)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.11...@kong-ui-public/dashboard-renderer@8.15.12) (2026-07-23)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.10...@kong-ui-public/dashboard-renderer@8.15.11) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.9...@kong-ui-public/dashboard-renderer@8.15.10) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.8...@kong-ui-public/dashboard-renderer@8.15.9) (2026-07-21)
+
+
+### Bug Fixes
+
+* **analytics:** remove excluded classes from dom completely ([#3583](https://github.com/Kong/public-ui-components/issues/3583)) ([c688934](https://github.com/Kong/public-ui-components/commit/c688934d8874d9c5898dc9a3760f84c3d758e54e))
+
+
+
+
+
+## [8.15.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.7...@kong-ui-public/dashboard-renderer@8.15.8) (2026-07-21)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.6...@kong-ui-public/dashboard-renderer@8.15.7) (2026-07-21)
+
+
+### Bug Fixes
+
+* **deps:** update dependency p-queue to v9 ([#3456](https://github.com/Kong/public-ui-components/issues/3456)) ([19c54d7](https://github.com/Kong/public-ui-components/commit/19c54d741cf21b3292fedd0fb8b0a46a6c599a9c)), closes [/github.com/sindresorhus/p-queue/releases#release-v9](https://github.com//github.com/sindresorhus/p-queue/releases/issues/release-v9)
+
+
+
+
+
+## [8.15.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.5...@kong-ui-public/dashboard-renderer@8.15.6) (2026-07-21)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.4...@kong-ui-public/dashboard-renderer@8.15.5) (2026-07-21)
+
+
+### Bug Fixes
+
+* **analytics:** embed fonts when exporting dashboard as PDF ([#3581](https://github.com/Kong/public-ui-components/issues/3581)) ([5a3eaee](https://github.com/Kong/public-ui-components/commit/5a3eaeef03cc8d5a50c7a4cea7c3660179a999c4))
+
+
+
+
+
+## [8.15.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.3...@kong-ui-public/dashboard-renderer@8.15.4) (2026-07-18)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.2...@kong-ui-public/dashboard-renderer@8.15.3) (2026-07-17)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.15.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.1...@kong-ui-public/dashboard-renderer@8.15.2) (2026-07-16)
+
+
+### Bug Fixes
+
+* **analytics:** remove filename build method and unused date-fns ([#3565](https://github.com/Kong/public-ui-components/issues/3565)) ([7828408](https://github.com/Kong/public-ui-components/commit/7828408d2e2cfb695a5aa1784b4d3d52c767c9a4))
+
+
+
+
+
+## [8.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.15.0...@kong-ui-public/dashboard-renderer@8.15.1) (2026-07-16)
+
+
+### Bug Fixes
+
+* **analytics:** adjust for the actual scale of pdf canvas [MA-5230] ([#3564](https://github.com/Kong/public-ui-components/issues/3564)) ([9f0972d](https://github.com/Kong/public-ui-components/commit/9f0972d9036ed89a196d3c7ccc015cb7bfcc9f1d))
+
+
+
+
+
+# [8.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.14.0...@kong-ui-public/dashboard-renderer@8.15.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [8.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.13.1...@kong-ui-public/dashboard-renderer@8.14.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+## [8.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.13.0...@kong-ui-public/dashboard-renderer@8.13.1) (2026-07-15)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [8.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.27...@kong-ui-public/dashboard-renderer@8.13.0) (2026-07-14)
+
+
+### Features
+
+* **analytics:** export dashboard to pdf [MA-5195] ([#3055](https://github.com/Kong/public-ui-components/issues/3055)) ([61f57ab](https://github.com/Kong/public-ui-components/commit/61f57ab7d6f3d01ba02d3b338049cfed8a08cf1d))
+
+
+
+
+
+## [8.12.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.26...@kong-ui-public/dashboard-renderer@8.12.27) (2026-07-13)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.25...@kong-ui-public/dashboard-renderer@8.12.26) (2026-07-08)
+
+
+### Bug Fixes
+
+* allow platform and platform_usage for datasource [MA-5024] ([#3547](https://github.com/Kong/public-ui-components/issues/3547)) ([df92c45](https://github.com/Kong/public-ui-components/commit/df92c45b1765c58f0a6aace683a4b15c652d032a))
+
+
+
+
+
+## [8.12.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.24...@kong-ui-public/dashboard-renderer@8.12.25) (2026-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.23...@kong-ui-public/dashboard-renderer@8.12.24) (2026-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.22...@kong-ui-public/dashboard-renderer@8.12.23) (2026-07-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.21...@kong-ui-public/dashboard-renderer@8.12.22) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.20...@kong-ui-public/dashboard-renderer@8.12.21) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.19...@kong-ui-public/dashboard-renderer@8.12.20) (2026-07-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.18...@kong-ui-public/dashboard-renderer@8.12.19) (2026-07-06)
+
+
+### Bug Fixes
+
+* **analytics:** prune dashboard filters by query fields ([#3526](https://github.com/Kong/public-ui-components/issues/3526)) ([85b4b1e](https://github.com/Kong/public-ui-components/commit/85b4b1e7a10e416b3a3ba2be3d635d06294e3679))
+
+
+
+
+
+## [8.12.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.17...@kong-ui-public/dashboard-renderer@8.12.18) (2026-07-02)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.16...@kong-ui-public/dashboard-renderer@8.12.17) (2026-07-02)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** refresh table preview on query changes ([#3523](https://github.com/Kong/public-ui-components/issues/3523)) ([86e7f13](https://github.com/Kong/public-ui-components/commit/86e7f1380d00d6f341c1aff9a539e85c2b479910))
+
+
+
+
+
+## [8.12.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.15...@kong-ui-public/dashboard-renderer@8.12.16) (2026-06-30)
+
+
+### Bug Fixes
+
+* table tiles encoded as chart tile types ([#3502](https://github.com/Kong/public-ui-components/issues/3502)) ([c6d9749](https://github.com/Kong/public-ui-components/commit/c6d97495a4467e2cce7627c4238d9953be44610f))
+
+
+
+
+
+## [8.12.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.14...@kong-ui-public/dashboard-renderer@8.12.15) (2026-06-30)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.13...@kong-ui-public/dashboard-renderer@8.12.14) (2026-06-30)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.12...@kong-ui-public/dashboard-renderer@8.12.13) (2026-06-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.60.0 ([#3509](https://github.com/Kong/public-ui-components/issues/3509)) ([64c9a2a](https://github.com/Kong/public-ui-components/commit/64c9a2a3e9adbef1f5313d71b5100cf19e427850))
+
+
+
+
+
+## [8.12.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.11...@kong-ui-public/dashboard-renderer@8.12.12) (2026-06-29)
+
+
+### Bug Fixes
+
+* bg color changes & shortcuts context refactor [KHCP-20980] ([#3506](https://github.com/Kong/public-ui-components/issues/3506)) ([f52457c](https://github.com/Kong/public-ui-components/commit/f52457ca897ea8fbcacfccc5c621b866f51da007))
+
+
+
+
+
+## [8.12.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.10...@kong-ui-public/dashboard-renderer@8.12.11) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
+## [8.12.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.9...@kong-ui-public/dashboard-renderer@8.12.10) (2026-06-25)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.8...@kong-ui-public/dashboard-renderer@8.12.9) (2026-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.7...@kong-ui-public/dashboard-renderer@8.12.8) (2026-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.6...@kong-ui-public/dashboard-renderer@8.12.7) (2026-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.5...@kong-ui-public/dashboard-renderer@8.12.6) (2026-06-24)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.4...@kong-ui-public/dashboard-renderer@8.12.5) (2026-06-23)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.3...@kong-ui-public/dashboard-renderer@8.12.4) (2026-06-23)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.2...@kong-ui-public/dashboard-renderer@8.12.3) (2026-06-23)
+
+
+### Bug Fixes
+
+* **analytics:** display empty rows without entity links [MA-5070] ([#3478](https://github.com/Kong/public-ui-components/issues/3478)) ([c946256](https://github.com/Kong/public-ui-components/commit/c946256b140255b20a9a62a1c2dc8431da0d74cb))
+
+
+
+
+
+## [8.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.1...@kong-ui-public/dashboard-renderer@8.12.2) (2026-06-23)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.12.0...@kong-ui-public/dashboard-renderer@8.12.1) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
+# [8.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.13...@kong-ui-public/dashboard-renderer@8.12.0) (2026-06-22)
+
+
+### Features
+
+* **dashboard-renderer:** render table tiles ([#3462](https://github.com/Kong/public-ui-components/issues/3462)) ([5e8a32f](https://github.com/Kong/public-ui-components/commit/5e8a32f4c9c265d4f5d1b2e79f7de222fc757962))
+
+
+
+
+
+## [8.11.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.12...@kong-ui-public/dashboard-renderer@8.11.13) (2026-06-19)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3469](https://github.com/Kong/public-ui-components/issues/3469)) ([767d24f](https://github.com/Kong/public-ui-components/commit/767d24f30756acf44f69f96bbb696b6947e3cb17))
+
+
+
+
+
+## [8.11.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.11...@kong-ui-public/dashboard-renderer@8.11.12) (2026-06-17)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.11.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.10...@kong-ui-public/dashboard-renderer@8.11.11) (2026-06-16)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.11.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.9...@kong-ui-public/dashboard-renderer@8.11.10) (2026-06-12)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.11.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.8...@kong-ui-public/dashboard-renderer@8.11.9) (2026-06-11)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.11.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.7...@kong-ui-public/dashboard-renderer@8.11.8) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [8.11.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.6...@kong-ui-public/dashboard-renderer@8.11.7) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [8.11.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.5...@kong-ui-public/dashboard-renderer@8.11.6) (2026-06-11)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.11.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.4...@kong-ui-public/dashboard-renderer@8.11.5) (2026-06-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.11.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.3...@kong-ui-public/dashboard-renderer@8.11.4) (2026-06-09)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3364](https://github.com/Kong/public-ui-components/issues/3364)) ([aa0634c](https://github.com/Kong/public-ui-components/commit/aa0634ce51d03542a03c133b49b12194b0f3f8de))
+
+
+
+
+
+## [8.11.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.2...@kong-ui-public/dashboard-renderer@8.11.3) (2026-06-09)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.11.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.1...@kong-ui-public/dashboard-renderer@8.11.2) (2026-06-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.11.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.11.0...@kong-ui-public/dashboard-renderer@8.11.1) (2026-06-05)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [8.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.15...@kong-ui-public/dashboard-renderer@8.11.0) (2026-06-03)
+
+
+### Features
+
+* Support TopN entity link mappings ([#3409](https://github.com/Kong/public-ui-components/issues/3409)) ([5dd2dba](https://github.com/Kong/public-ui-components/commit/5dd2dbaf8eee4c9a5e2623b525839f6e8957b22b))
+
+
+
+
+
+## [8.10.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.14...@kong-ui-public/dashboard-renderer@8.10.15) (2026-06-03)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.13...@kong-ui-public/dashboard-renderer@8.10.14) (2026-06-02)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.12...@kong-ui-public/dashboard-renderer@8.10.13) (2026-06-02)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.11...@kong-ui-public/dashboard-renderer@8.10.12) (2026-06-02)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.10...@kong-ui-public/dashboard-renderer@8.10.11) (2026-06-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.56.0 ([#3396](https://github.com/Kong/public-ui-components/issues/3396)) ([13336a9](https://github.com/Kong/public-ui-components/commit/13336a9be92e452d4bd217e65d6450778d47844f))
+
+
+
+
+
+## [8.10.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.9...@kong-ui-public/dashboard-renderer@8.10.10) (2026-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.8...@kong-ui-public/dashboard-renderer@8.10.9) (2026-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.7...@kong-ui-public/dashboard-renderer@8.10.8) (2026-05-27)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.6...@kong-ui-public/dashboard-renderer@8.10.7) (2026-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3361](https://github.com/Kong/public-ui-components/issues/3361)) ([fb2890b](https://github.com/Kong/public-ui-components/commit/fb2890b10622def66cf9db5c067b75fddd9198bb))
+
+
+
+
+
+## [8.10.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.5...@kong-ui-public/dashboard-renderer@8.10.6) (2026-05-25)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.4...@kong-ui-public/dashboard-renderer@8.10.5) (2026-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.3...@kong-ui-public/dashboard-renderer@8.10.4) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.2...@kong-ui-public/dashboard-renderer@8.10.3) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.1...@kong-ui-public/dashboard-renderer@8.10.2) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.10.0...@kong-ui-public/dashboard-renderer@8.10.1) (2026-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [8.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.72...@kong-ui-public/dashboard-renderer@8.10.0) (2026-05-14)
+
+
+### Features
+
+* **dashboard-renderer:** add configurable cols to DashboardConfig ([#3256](https://github.com/Kong/public-ui-components/issues/3256)) ([c8f9eab](https://github.com/Kong/public-ui-components/commit/c8f9eab0431ec0a9ba2ba9e9dc6b8cbd167ef5e7))
+
+
+
+
+
+## [8.9.72](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.71...@kong-ui-public/dashboard-renderer@8.9.72) (2026-05-14)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.71](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.70...@kong-ui-public/dashboard-renderer@8.9.71) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.70](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.69...@kong-ui-public/dashboard-renderer@8.9.70) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.69](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.68...@kong-ui-public/dashboard-renderer@8.9.69) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.68](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.67...@kong-ui-public/dashboard-renderer@8.9.68) (2026-05-13)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.67](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.66...@kong-ui-public/dashboard-renderer@8.9.67) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.66](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.65...@kong-ui-public/dashboard-renderer@8.9.66) (2026-05-12)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.65](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.64...@kong-ui-public/dashboard-renderer@8.9.65) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.64](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.63...@kong-ui-public/dashboard-renderer@8.9.64) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.63](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.62...@kong-ui-public/dashboard-renderer@8.9.63) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.62](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.61...@kong-ui-public/dashboard-renderer@8.9.62) (2026-05-11)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.61](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.60...@kong-ui-public/dashboard-renderer@8.9.61) (2026-05-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.60](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.59...@kong-ui-public/dashboard-renderer@8.9.60) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.59](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.58...@kong-ui-public/dashboard-renderer@8.9.59) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.58](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.57...@kong-ui-public/dashboard-renderer@8.9.58) (2026-05-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.57](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.56...@kong-ui-public/dashboard-renderer@8.9.57) (2026-05-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.56](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.55...@kong-ui-public/dashboard-renderer@8.9.56) (2026-05-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.55](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.54...@kong-ui-public/dashboard-renderer@8.9.55) (2026-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.54](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.53...@kong-ui-public/dashboard-renderer@8.9.54) (2026-05-04)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.53](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.52...@kong-ui-public/dashboard-renderer@8.9.53) (2026-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.52](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.51...@kong-ui-public/dashboard-renderer@8.9.52) (2026-05-01)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.51](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.50...@kong-ui-public/dashboard-renderer@8.9.51) (2026-05-01)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.50](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.49...@kong-ui-public/dashboard-renderer@8.9.50) (2026-05-01)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3211](https://github.com/Kong/public-ui-components/issues/3211)) ([174f605](https://github.com/Kong/public-ui-components/commit/174f605910392130ad1e05e891d0e674bd597116))
+
+
+
+
+
+## [8.9.49](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.48...@kong-ui-public/dashboard-renderer@8.9.49) (2026-04-30)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.48](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.47...@kong-ui-public/dashboard-renderer@8.9.48) (2026-04-29)
+
+
+### Bug Fixes
+
+* vue-router semver range ([#3198](https://github.com/Kong/public-ui-components/issues/3198)) ([0cd024b](https://github.com/Kong/public-ui-components/commit/0cd024bd63c4433238dc42b81677491584c45c9a))
+
+
+
+
+
+## [8.9.47](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.46...@kong-ui-public/dashboard-renderer@8.9.47) (2026-04-28)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.45...@kong-ui-public/dashboard-renderer@8.9.46) (2026-04-27)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.43...@kong-ui-public/dashboard-renderer@8.9.45) (2026-04-26)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.43...@kong-ui-public/dashboard-renderer@8.9.44) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.42...@kong-ui-public/dashboard-renderer@8.9.43) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.42](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.41...@kong-ui-public/dashboard-renderer@8.9.42) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.40...@kong-ui-public/dashboard-renderer@8.9.41) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.39...@kong-ui-public/dashboard-renderer@8.9.40) (2026-04-23)
+
+
+### Bug Fixes
+
+* explore allows zooming actions again ([#3175](https://github.com/Kong/public-ui-components/issues/3175)) ([14418cd](https://github.com/Kong/public-ui-components/commit/14418cdd6090d864b4a05f6058b9e92ce263c14c))
+
+
+
+
+
+## [8.9.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.38...@kong-ui-public/dashboard-renderer@8.9.39) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.52.0 ([#3168](https://github.com/Kong/public-ui-components/issues/3168)) ([bb53126](https://github.com/Kong/public-ui-components/commit/bb531267d6a9f37998ef164995ca590a980be807))
+
+
+
+
+
+## [8.9.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.37...@kong-ui-public/dashboard-renderer@8.9.38) (2026-04-23)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.36...@kong-ui-public/dashboard-renderer@8.9.37) (2026-04-22)
+
+
+### Bug Fixes
+
+* preview should default to false for dashboard tile preview ([#3165](https://github.com/Kong/public-ui-components/issues/3165)) ([f914726](https://github.com/Kong/public-ui-components/commit/f914726557c935004c5b393e0497f75d70bc894a))
+
+
+
+
+
+## [8.9.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.35...@kong-ui-public/dashboard-renderer@8.9.36) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.51.0 ([#3161](https://github.com/Kong/public-ui-components/issues/3161)) ([e31249c](https://github.com/Kong/public-ui-components/commit/e31249c1abf532c946acc4f6f12f089c1beaf7ef))
+
+
+
+
+
+## [8.9.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.34...@kong-ui-public/dashboard-renderer@8.9.35) (2026-04-22)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.33...@kong-ui-public/dashboard-renderer@8.9.34) (2026-04-21)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.32...@kong-ui-public/dashboard-renderer@8.9.33) (2026-04-21)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.31...@kong-ui-public/dashboard-renderer@8.9.32) (2026-04-20)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.30...@kong-ui-public/dashboard-renderer@8.9.31) (2026-04-17)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.29...@kong-ui-public/dashboard-renderer@8.9.30) (2026-04-17)
+
+
+### Bug Fixes
+
+* also do not generate zoom links when "hiding actions" ([#3146](https://github.com/Kong/public-ui-components/issues/3146)) ([87ccd40](https://github.com/Kong/public-ui-components/commit/87ccd40497179ccef3a2fa6bc4ef5528617575cf))
+
+
+
+
+
+## [8.9.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.28...@kong-ui-public/dashboard-renderer@8.9.29) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** refresh renovate all-stable onto main ([#3010](https://github.com/Kong/public-ui-components/issues/3010)) ([c55a51d](https://github.com/Kong/public-ui-components/commit/c55a51d13409413207ea94d5d5e42c64e675e885))
+
+
+
+
+
+## [8.9.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.27...@kong-ui-public/dashboard-renderer@8.9.28) (2026-04-17)
+
+
+### Bug Fixes
+
+* add preview flag to dashboards ([#3139](https://github.com/Kong/public-ui-components/issues/3139)) ([a25643d](https://github.com/Kong/public-ui-components/commit/a25643dcc56c4d8a67790259da6969b7fd289e0e))
+
+
+
+
+
+## [8.9.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.26...@kong-ui-public/dashboard-renderer@8.9.27) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3007](https://github.com/Kong/public-ui-components/issues/3007)) ([69e7d85](https://github.com/Kong/public-ui-components/commit/69e7d856c9802cc728b18b259b632426d5d7a549))
+
+
+
+
+
+## [8.9.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.25...@kong-ui-public/dashboard-renderer@8.9.26) (2026-04-15)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.24...@kong-ui-public/dashboard-renderer@8.9.25) (2026-04-14)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.23...@kong-ui-public/dashboard-renderer@8.9.24) (2026-04-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.22...@kong-ui-public/dashboard-renderer@8.9.23) (2026-04-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.21...@kong-ui-public/dashboard-renderer@8.9.22) (2026-04-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.20...@kong-ui-public/dashboard-renderer@8.9.21) (2026-04-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.19...@kong-ui-public/dashboard-renderer@8.9.20) (2026-04-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.18...@kong-ui-public/dashboard-renderer@8.9.19) (2026-04-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.17...@kong-ui-public/dashboard-renderer@8.9.18) (2026-04-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.16...@kong-ui-public/dashboard-renderer@8.9.17) (2026-04-03)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.9.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.15...@kong-ui-public/dashboard-renderer@8.9.16) (2026-04-02)
+
+
+### Bug Fixes
+
+* missing translations + no units for platform metrics ([#3083](https://github.com/Kong/public-ui-components/issues/3083)) ([43313ee](https://github.com/Kong/public-ui-components/commit/43313eeed3bc681861efd7c9f9514c014c6aa155))
+
+
+
+
+
+## [8.9.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.14...@kong-ui-public/dashboard-renderer@8.9.15) (2026-03-31)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [8.9.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.9.13...@kong-ui-public/dashboard-renderer@8.9.14) (2026-03-27)
 
 

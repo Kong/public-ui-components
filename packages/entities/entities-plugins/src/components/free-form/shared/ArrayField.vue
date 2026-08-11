@@ -19,6 +19,7 @@
     :data-testid="`ff-array-${field.path.value}`"
   >
     <header
+      v-if="!!fieldAttrs.label && !hideLabel"
       class="ff-array-field-header"
       :data-testid="`ff-array-header-${field.path.value}`"
     >
@@ -28,7 +29,12 @@
         :data-testid="`ff-label-${field.path.value}`"
         :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
-        {{ fieldAttrs.label }}
+        <slot
+          :label="fieldAttrs.label"
+          name="label"
+        >
+          {{ fieldAttrs.label }}
+        </slot>
         <template
           v-if="fieldAttrs.labelAttributes?.info"
           #tooltip
@@ -42,7 +48,7 @@
       <KButton
         v-if="appearance === 'tabs'"
         appearance="tertiary"
-        :aria-label="t('actions.add_entity', { entity: fieldName })"
+        :aria-label="realAddItemLabel"
         :data-testid="`ff-add-item-btn-${field.path.value}`"
         icon
         @click="addItem"
@@ -104,13 +110,13 @@
 
       <KButton
         appearance="tertiary"
-        :aria-label="t('actions.add_entity', { entity: fieldName })"
+        :aria-label="realAddItemLabel"
         class="ff-array-field-add-item-btn"
         :data-testid="`ff-add-item-btn-${field.path.value}`"
         @click="addItem"
       >
         <AddIcon />
-        {{ t('actions.add_entity', { entity: fieldName }) }}
+        {{ realAddItemLabel }}
       </KButton>
     </template>
 
@@ -174,7 +180,7 @@ import { useTemplateRef, nextTick, computed, ref, toValue, toRef, useAttrs } fro
 import { AddIcon, TrashIcon, CloseIcon } from '@kong/icons'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
 import { replaceByDictionaryInFieldName, useField, useFieldAttrs, useFormShared, useItemKeys } from './composables'
-import useI18n from '../../../composables/useI18n'
+import useI18n from '../../../composables/useFreeformI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
 import type { ArrayLikeFieldSchema } from '../../../types/plugins/form-schema'
@@ -187,8 +193,13 @@ const props = defineProps<{
   label?: string
   labelAttributes?: LabelAttributes
   itemLabel?: string | ((item: T, index: number) => string)
+  /**
+   * Overrides the "Add {field name}" text (and aria-label) of the add-item button.
+   */
+  addItemLabel?: string
   appearance?: 'default' | 'card' | 'tabs'
   stickyTabs?: boolean | string | number
+  hideLabel?: boolean
 } & BaseFieldProps>()
 
 const emit = defineEmits<{
@@ -203,6 +214,7 @@ defineSlots<{
     /** for named slot, the field name use `fieldName` instead */
     fieldName: string
   }): any
+  label(props: { label: string }): any
   tooltip(): any
 }>()
 
@@ -223,6 +235,9 @@ const fieldName = computed(() => {
   return replaceByDictionaryInFieldName(name)
 })
 
+const realAddItemLabel = computed(() =>
+  props.addItemLabel ?? t('actions.add_entity', { entity: fieldName.value }))
+
 const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])
 
 const { getKey } = useItemKeys('ff-array-field', realItems)
@@ -232,7 +247,7 @@ const realAppearance = computed(() => {
     return props.appearance
   }
 
-  if (subSchema.value.type === 'record') {
+  if (subSchema.value.type === 'record' || subSchema.value.type === 'map') {
     return 'card'
   }
 
@@ -282,6 +297,10 @@ const addItem = async () => {
 const removeItem = async (index: number) => {
   if (Array.isArray(fieldValue!.value)) {
     fieldValue!.value.splice(index, 1)
+
+    if (fieldValue!.value.length === 0 && !fieldAttrs.value.required) {
+      fieldValue!.value = null
+    }
   }
   emit('remove', index)
 
@@ -376,19 +395,14 @@ const stickyTop = computed(() => {
   }
 
   &-default > &-container > &-item {
-    align-items: center;
+    align-items: flex-start;
     flex-direction: row;
     gap: var(--kui-space-40, $kui-space-40);
     padding: 0;
+  }
 
-    // Align delete button to top when using TagField
-    &:has(.ff-tag-field) {
-      align-items: flex-start;
-
-      .ff-array-field-item-remove {
-        margin-top: var(--kui-space-20, $kui-space-20);
-      }
-    }
+  &-item-remove {
+    margin-top: var(--kui-space-20, $kui-space-20);
   }
 
   &-card > &-container > &-item :deep(.card-content) {
@@ -399,10 +413,6 @@ const stickyTop = computed(() => {
     // Align delete button to top when using TagField
     &:has(.ff-tag-field) {
       align-items: flex-start;
-
-      .ff-array-field-item-remove {
-        margin-top: var(--kui-space-20, $kui-space-20);
-      }
     }
   }
 

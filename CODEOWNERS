@@ -37,6 +37,7 @@
 /packages/core/documentation/ @Kong/team-core-ui @Kong/team-konnectx-platform-fe @Kong/team-devx
 /packages/core/entities-config-editor/ @Kong/team-km @Kong/team-core-ui
 /packages/core/expressions/ @Kong/team-km @Kong/team-core-ui
+/packages/core/table-data-grid @Kong/team-data @Kong/team-core-ui
 
 # Portal packages
 /packages/portal/document-viewer/ @Kong/team-devx @Kong/team-core-ui
@@ -58,4 +59,5 @@
 
 # Root
 /pnpm-lock.yaml @kongponents-bot @Kong/team-core-ui @Kong/team-konnectx-fe @Kong/team-data @Kong/team-devx
+/pnpm-workspace.yaml @kongponents-bot @Kong/team-core-ui @Kong/team-konnectx-fe @Kong/team-data @Kong/team-devx
 /package.json @kongponents-bot @Kong/team-core-ui @Kong/team-konnectx-fe @Kong/team-data @Kong/team-devx @Kong/team-konnectx-platform-fe

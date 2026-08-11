@@ -58,10 +58,10 @@ A form component for Redis Configurations.
     - Route to return to when canceling creation of a redis configuration.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `controlPlaneId`:
     - type: `string`
@@ -74,6 +74,12 @@ A form component for Redis Configurations.
     - required: `false`
     - default: `undefined`
     - Whether to show the Cloud Authentication fields.
+
+  - `oauthCloudAuthAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Whether to show the OAuth option in the Cloud Authentication provider selector.
 
   - `isKonnectManagedRedisEnabled`
     - type: `boolean`

@@ -37,6 +37,22 @@
     @delete:success="onDeleteVaultSuccess"
     @error="onError"
   />
+
+  <h2>Kong AI Gateway API</h2>
+  <VaultList
+    v-if="permissions"
+    :key="key"
+    cache-identifier="ai-gateway"
+    :can-create="permissions.canCreate"
+    :can-delete="permissions.canDelete"
+    :can-edit="permissions.canEdit"
+    :can-retrieve="permissions.canRetrieve"
+    :config="aiGatewayConfig"
+    @copy:error="onCopyIdError"
+    @copy:success="onCopyIdSuccess"
+    @delete:success="onDeleteVaultSuccess"
+    @error="onError"
+  />
 </template>
 
 <script setup lang="ts">
@@ -76,6 +92,20 @@ const kongManagerConfig = ref<KongManagerVaultListConfig>({
       type: 'text',
     },
   },
+})
+
+const aiGatewayId = import.meta.env.VITE_KONNECT_AI_GATEWAY_ID || 'demo-ai-gateway-id'
+
+const aiGatewayConfig = ref<KonnectVaultListConfig>({
+  app: 'konnect',
+  apiType: 'aiGateway',
+  aiGatewayId,
+  apiBaseUrl: '/us/kong-api',
+  controlPlaneId,
+  isExactMatch: true,
+  createRoute: { name: 'create-vault' },
+  getViewRoute: (id: string) => ({ name: 'view-vault', params: { id } }),
+  getEditRoute: (id: string) => ({ name: 'edit-vault', params: { id } }),
 })
 
 // Remount the tables in the sandbox when the permission props change; not needed outside of a sandbox

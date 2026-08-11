@@ -925,4 +925,118 @@ describe('<RouteList />', () => {
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('uses workspace-scoped URL when fetching with workspace', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/routes*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getWithWorkspace')
+
+      cy.mount(RouteList, {
+        props: {
+          cacheIdentifier: `route-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithWorkspace')
+      cy.get('.kong-ui-entities-routes-list').should('be.visible')
+    })
+
+    it('uses workspace-scoped search URL when filtering with workspace', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/routes*`,
+        },
+        (req) => {
+          if (!req.url.includes('/routes/search')) {
+            req.reply({ statusCode: 200, body: routes })
+          }
+        },
+      ).as('getWithWorkspace')
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/routes/search*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('searchWithWorkspace')
+
+      cy.mount(RouteList, {
+        props: {
+          cacheIdentifier: `route-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithWorkspace')
+      cy.get('.kong-ui-entity-filter-input input').type('route-1')
+      cy.wait('@searchWithWorkspace').its('request.url').should('include', '/routes/search')
+    })
+
+    it('uses non-default workspace name in fetch URL', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'my-workspace' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/my-workspace/routes*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getWithMyWorkspace')
+
+      cy.mount(RouteList, {
+        props: {
+          cacheIdentifier: `route-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithMyWorkspace')
+      cy.get('.kong-ui-entities-routes-list').should('be.visible')
+    })
+
+    it('omits workspace segment when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/routes*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getNoWorkspace')
+
+      cy.mount(RouteList, {
+        props: {
+          cacheIdentifier: `route-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getNoWorkspace')
+      cy.get('.kong-ui-entities-routes-list').should('be.visible')
+    })
+  })
 })

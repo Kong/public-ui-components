@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import Form from '../../shared/Form.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
-import KeyValueField from '../../shared/KeyValueField.vue'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
+import MapField from '../../shared/MapField.vue'
 
 const props = defineProps<{
   schema: FormSchema
@@ -11,12 +11,12 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div style="padding: 20px">
+  <div class="multiline-form-wrapper">
     <Form :schema="schema">
       <template #free-form-field-renderers-slot>
         <FieldRenderer :match="({ path }) => path === props.fieldName">
           <template #default="slotProps">
-            <KeyValueField
+            <MapField
               v-bind="slotProps"
               :appearance="{ string: { multiline: true } }"
             />
@@ -26,3 +26,9 @@ const props = defineProps<{
     </Form>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.multiline-form-wrapper {
+  padding: 20px;
+}
+</style>

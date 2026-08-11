@@ -25,12 +25,12 @@ describe('<ReferableFieldItem />', () => {
     {
       title: 'renders the field label correctly',
       field: 'config.my_field',
-      expected: 'My Field',
+      expected: 'My field',
     },
     {
       title: 'removes config prefix from label',
       field: 'config.upstream_host',
-      expected: 'Upstream Host',
+      expected: 'Upstream host',
       noPrefix: true,
     },
     {

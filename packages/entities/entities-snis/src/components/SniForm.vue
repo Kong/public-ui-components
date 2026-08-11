@@ -145,9 +145,9 @@ const props = defineProps({
   },
   /** If a valid SNI ID is provided, it will put the form in Edit mode instead of Create */
   sniId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
 })
 
@@ -209,14 +209,11 @@ const submitUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.sniId)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.sniId ?? '') // Always replace the id when editing
 })
 
 const requestBody = computed((): Record<string, any> => {

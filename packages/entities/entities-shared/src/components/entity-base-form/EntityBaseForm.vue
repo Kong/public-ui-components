@@ -3,7 +3,7 @@
     :is="wrapperComponent"
     class="kong-ui-entity-base-form"
     :class="{
-      'new-form-layout': enabledNewPluginLayout && entityType === SupportedEntityType.Plugin,
+      'new-form-layout': pluginFormLayoutEnabled && entityType === SupportedEntityType.Plugin,
     }"
   >
     <!-- Loading -->
@@ -99,6 +99,7 @@
         </slot>
       </div>
       <KTabs
+        v-model="configTab"
         data-testid="form-view-configuration-slideout-tabs"
         :tabs="tabs"
         @change="hash => emit('codeBlockTabChange', hash.replace('#', ''))"
@@ -107,12 +108,16 @@
           <JsonCodeBlock
             :config="config"
             :entity-record="props.formFields"
-            :fetcher-url="fetcherUrl"
-            :request-method="props.editId ? 'put' : 'post'"
+            :fetcher-url="props.slideoutFetchUrl ?? fetcherUrl"
+            :request-method="(props.slideoutRequestMethod ?? (props.editId ? 'put' : 'post')) as BadgeAppearance"
           />
         </template>
         <template #yaml>
-          <YamlCodeBlock :entity-record="props.formFields" />
+          <YamlCodeBlock
+            :deck-callout-preference-key="isDeckEnabled ? deckCalloutPreferenceKey : undefined"
+            :entity-record="props.formFields"
+            @deck-callout:click-cta="configTab = '#deck'"
+          />
         </template>
         <template #terraform>
           <TerraformCodeBlock
@@ -122,14 +127,30 @@
           />
         </template>
         <template #deck>
+          <div
+            v-if="Boolean(deckCustomizationOptions)"
+            class="button-customize-deck-wrapper"
+          >
+            <KButton
+              appearance="secondary"
+              class="button-customize-deck"
+              @click="isDeckCustomizationVisible = true"
+            >
+              {{ t('baseConfigCard.actions.deck_customize') }}
+            </KButton>
+          </div>
+
           <DeckCodeBlock
             :app="config.app"
             :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
+            :customization-options="deckCustomizationOptions"
             :entity-record="props.formFields"
-            :entity-type="entityType as SupportedEntityDeck"
+            :entity-type="((props.slideoutDeckEntityType ?? entityType) as SupportedEntityDeck)"
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :is-customization-modal-visible="isDeckCustomizationVisible"
             :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
-            :workspace="config.app === 'kongManager' ? config.workspace : undefined"
+            :workspace="config.workspace || undefined"
+            @customization-close="isDeckCustomizationVisible = false"
           />
         </template>
       </KTabs>
@@ -142,17 +163,17 @@ import type { PropType } from 'vue'
 import { computed, ref, onBeforeMount, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
-import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
-import { SupportedEntityTypesArray, SupportedEntityType, SupportedEntityDeckArray } from '../../types'
+import type { BaseFormConfigTab, KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
+import { SupportedEntityTypesArray, SupportedEntityType } from '../../types'
 import composables from '../../composables'
-import type { Tab } from '@kong/kongponents'
+import type { BadgeAppearance, Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 import DeckCodeBlock from '../common/DeckCodeBlock.vue'
-import { FEATURE_FLAGS } from '../../constants'
+import { PLUGIN_FORM_LAYOUT_STATE } from '../../constants'
 
-const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => false))
+const pluginFormLayoutEnabled = inject(PLUGIN_FORM_LAYOUT_STATE, ref(false))
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -178,9 +199,9 @@ const props = defineProps({
   },
   /** If a valid edit ID is provided, it will put the form in Edit mode instead of Create */
   editId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
   /**
    * Entity type, required to generate terraform code
@@ -287,6 +308,40 @@ const props = defineProps({
     type: String,
     default: undefined,
   },
+  /**
+   * Override the fetcher URL shown in the slideout code blocks.
+   * Useful when the form manages its own fetching (e.g. CustomPluginForm).
+   * Should be the fully-resolved URL including the API base.
+   */
+  slideoutFetchUrl: {
+    type: String,
+    default: undefined,
+  },
+  /**
+   * Override the HTTP request method shown in the slideout JSON code block.
+   * Defaults to 'put' when editId is set, 'post' otherwise.
+   */
+  slideoutRequestMethod: {
+    type: String as PropType<BadgeAppearance>,
+    default: undefined,
+  },
+  /**
+   * Override the entity type used for the deck code block in the slideout.
+   * Use when the form represents a sub-type (e.g. PluginSchema, CustomPlugin, ClonedPlugin)
+   * that has a different decK YAML collection key than the base entityType.
+   */
+  slideoutDeckEntityType: {
+    type: String as PropType<SupportedEntityType>,
+    default: undefined,
+  },
+  /**
+   * Hide tabs from the configuration slideout (eg. ['yaml']).
+   */
+  tabsToHide: {
+    type: Array as PropType<BaseFormConfigTab[]>,
+    required: false,
+    default: () => [],
+  },
 })
 
 const router = useRouter()
@@ -310,9 +365,9 @@ const fetcherUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
+
+  url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 
   if (!props.editId) {
     // strip placeholder /{id}/ from  post request url
@@ -325,6 +380,17 @@ const fetcherUrl = computed<string>(() => {
 
   return url
 })
+
+const isDeckCustomizationVisible = ref(false)
+
+const {
+  isDeckEnabled,
+  deckCustomizationOptions,
+  deckCalloutPreferenceKey,
+} = composables.useBaseFormDeckOptions(
+  () => props.config,
+  () => props.entityType,
+)
 
 const toggle = (): void => {
   isToggled.value = !isToggled.value
@@ -352,37 +418,47 @@ const handleClickSave = (): void => {
   emit('submit')
 }
 
-const tabs = ref<Tab[]>([
-  {
-    title: t('baseForm.configuration.json'),
-    hash: '#json',
-  },
-  {
-    title: t('baseForm.configuration.yaml'),
-    hash: '#yaml',
-  },
-])
+// Tabs built in display order, then filtered by `tabsToHide`
+const tabs = computed<Tab[]>(() => {
+  const items: Tab[] = [
+    {
+      title: t('baseForm.configuration.json'),
+      hash: '#json',
+    },
+    {
+      title: t('baseForm.configuration.yaml'),
+      hash: '#yaml',
+    },
+  ]
 
-// terraform is only available for konnect entities and non-Other entity types
-if (props.config.app === 'konnect' && props.entityType !== SupportedEntityType.Other) {
-  // insert terraform as the third option
-  tabs.value.splice(1, 0, {
-    title: t('baseForm.configuration.terraform'),
-    hash: '#terraform',
-  })
-}
+  // terraform is only available for konnect entities and non-Other entity types
+  if (props.config.app === 'konnect' && props.entityType !== SupportedEntityType.Other) {
+    // insert terraform as the third option
+    items.splice(1, 0, {
+      title: t('baseForm.configuration.terraform'),
+      hash: '#terraform',
+    })
+  }
 
-// decK is only available for certain entity types
-// https://developer.konghq.com/deck/reference/entities/
-const isSupportedEntity = SupportedEntityDeckArray.includes(props.entityType as any)
-const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckTab
+  if (isDeckEnabled.value) {
+    items.push({
+      title: t('baseForm.configuration.deck'),
+      hash: '#deck',
+    })
+  }
 
-if (isDeckEnabled && isSupportedEntity) {
-  tabs.value.push({
-    title: t('baseForm.configuration.deck'),
-    hash: '#deck',
-  })
-}
+  const hidden = new Set(props.tabsToHide.map(tab => `#${tab}`))
+  return items.filter(item => !hidden.has(item.hash as string))
+})
+
+const configTab = ref(tabs.value[0]?.hash)
+
+// Keep the active tab valid when the available tabs change (eg. via `tabsToHide`)
+watch(tabs, (newTabs) => {
+  if (!newTabs.some(tab => tab.hash === configTab.value)) {
+    configTab.value = newTabs[0]?.hash
+  }
+})
 
 watch(() => isLoading.value, (val: boolean) => {
   // Emit the loading state for the host app
@@ -454,6 +530,7 @@ defineExpose({
   }
 
   &.new-form-layout {
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
     border: none;
     padding: 0;
 
@@ -465,6 +542,13 @@ defineExpose({
     .form-error {
       margin: var(--kui-space-70, $kui-space-70) 0 0 var(--kui-space-60, $kui-space-60);
     }
+  }
+
+  .button-customize-deck-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: var(--kui-space-60, $kui-space-60);
   }
 }
 

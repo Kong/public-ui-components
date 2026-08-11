@@ -1,16 +1,17 @@
 import type { BooleanFieldSchema } from '../../../../../types/plugins/form-schema'
-import type { HandlerOption } from './types'
+import { type HandlerOption, SCROLL_BEHAVIOR, scrollIntoViewNative } from './types'
 import { selectors } from '../../shared/selectors'
-import { defaultActionOptions } from './types'
 
 export function fillBoolean(option: HandlerOption<BooleanFieldSchema>): void {
-  const { fieldKey, value, actionOptions = defaultActionOptions } = option
+  const { fieldKey, value } = option
 
   const selector = selectors.field(fieldKey)
 
+  scrollIntoViewNative(selector)
+
   if (value === true) {
-    cy.get(selector).check(actionOptions.check)
+    cy.get(selector).check(SCROLL_BEHAVIOR)
   } else if (value === false) {
-    cy.get(selector).uncheck(actionOptions.check)
+    cy.get(selector).uncheck(SCROLL_BEHAVIOR)
   }
 }

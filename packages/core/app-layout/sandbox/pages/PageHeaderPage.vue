@@ -6,7 +6,7 @@
       title="Cats are Cool"
     >
       <template #icon-app-layout>
-        <KongIcon :color="KUI_COLOR_TEXT_DECORATIVE_AQUA" />
+        <KongIcon :color="`var(--kui-color-text-decorative-aqua, ${KUI_COLOR_TEXT_DECORATIVE_AQUA})`" />
       </template>
       <template #title-before>
         <TeamIcon class="title-icon" />

@@ -15,6 +15,16 @@
         :options="(options as any)"
         :plugins="(plugins as any)"
       />
+      <div
+        v-if="showCenterMetric && isSummable"
+        class="chart-center-metric"
+      >
+        <span class="chart-center-total">{{ grandTotal }}</span>
+        <span
+          v-if="centerMetricLabel"
+          class="chart-center-unit"
+        >{{ centerMetricLabel }}</span>
+      </div>
       <Teleport to="body">
         <ToolTip
           :absolute-left="tooltipAbsoluteLeft"
@@ -44,10 +54,12 @@ import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import HtmlLegend from '../chart-plugins/ChartLegend.vue'
 import {
   datavisPalette,
-  darkenColor,
+  isSummableMetric,
 } from '../../utils'
 import { Doughnut } from 'vue-chartjs'
+import { color } from 'chart.js/helpers'
 import composables from '../../composables'
+import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
 import type { Chart, ChartDataset, Plugin } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
@@ -57,23 +69,28 @@ const props = withDefaults(defineProps<{
   chartData: KChartData
   tooltipTitle: string
   metricUnit?: string
+  metricName?: string
   legendPosition?: `${ChartLegendPosition}`
   legendValues?: LegendValues
   syntheticsDataKey?: string
   datasetColors?: AnalyticsChartColors | string[]
   tooltipDimensionDisplay?: string
   tooltipMetricDisplay?: string
+  showCenterMetric?: boolean
 }>(), {
   metricUnit: '',
+  metricName: '',
   legendPosition: ChartLegendPosition.Bottom,
   legendValues: undefined,
   syntheticsDataKey: '',
   datasetColors: () => datavisPalette,
   tooltipDimensionDisplay: '',
   tooltipMetricDisplay: '',
+  showCenterMetric: true,
 })
 
 const { translateUnit } = composables.useTranslatedUnits()
+const { i18n } = composables.useI18n()
 
 const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
@@ -121,14 +138,37 @@ const formattedDataset = computed<DonutChartData[]>(() => {
   const formatted = props.chartData.datasets.reduce((acc: any, current: ChartDataset) => {
     acc.labels.push(current.label)
     acc.backgroundColor.push(current.backgroundColor)
-    acc.borderColor.push(darkenColor((current.backgroundColor as string), 50))
+    acc.hoverBorderColor.push(color(current.backgroundColor as string).saturate(0.5).darken(0.15).hexString())
     acc.data.push(current.data.reduce((a, b) => (a as number) + (b as number), 0))
 
     return acc
-  }, { labels: [], backgroundColor: [], borderColor: [], data: [] })
+  }, {
+    labels: [],
+    backgroundColor: [],
+    borderColor: '#ffffff',
+    borderWidth: 1,
+    hoverBorderColor: [],
+    hoverBorderWidth: 1,
+    data: [],
+    hoverOffset: 10,
+  })
 
   return [formatted]
 })
+
+const { formatUnit } = unitFormatter({ i18n })
+
+const isSummable = computed(() => isSummableMetric(props.metricName ?? ''))
+
+const grandTotal = computed(() => {
+  const sum = formattedDataset.value[0]?.data.reduce((a, b) => a + b, 0) ?? 0
+  return formatUnit(sum, props.metricUnit, {
+    approximate: true,
+    translateUnit: (unit, value) => translateUnit(unit, value),
+  }).trim()
+})
+
+const centerMetricLabel = computed(() => props.tooltipMetricDisplay || '')
 
 const mutableData = computed(() => {
   return {
@@ -166,4 +206,30 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number })
 <style lang="scss" scoped>
 @use "../../styles/globals" as *;
 @use "../../styles/chart";
+
+.chart-center-metric {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  .chart-center-total {
+    color: var(--kui-color-text, $kui-color-text);
+    font-size: var(--kui-font-size-70, $kui-font-size-70);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    line-height: 1.1;
+  }
+
+  .chart-center-unit {
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+    margin-top: var(--kui-space-10, $kui-space-10);
+  }
+}
 </style>

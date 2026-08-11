@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-redis-configurations",
-  "version": "1.14.5",
+  "version": "1.18.18",
   "type": "module",
   "main": "./dist/entities-redis-configurations.umd.js",
   "module": "./dist/entities-redis-configurations.es.js",
@@ -43,14 +43,13 @@
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.20.0",
-    "@kong/icons": "^1.48.0",
-    "@kong/kongponents": "9.52.5",
-    "@types/uuid": "^11.0.0",
-    "axios": "^1.13.2",
-    "swrv": "^1.1.0",
-    "vue": "^3.5.27",
-    "vue-router": "^4.6.4"
+    "@kong/design-tokens": "3.2.7",
+    "@kong/icons": "^1.62.1",
+    "@kong/kongponents": "9.64.3",
+    "axios": "^1.17.0",
+    "swrv": "^1.2.0",
+    "vue": "^3.5.35",
+    "vue-router": "^5.2.0"
   },
   "repository": {
     "type": "git",
@@ -67,22 +66,23 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "450KB"
+    "errorLimit": "650KB"
   },
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.48.0",
-    "@kong/kongponents": "9.52.5",
-    "axios": "^1.13.5",
-    "swrv": "^1.1.0",
+    "@kong/icons": "^1.58.0",
+    "@kong/kongponents": "9.64.3",
+    "axios": "^1.16.1",
+    "swrv": "^1.2.0",
     "vue": ">= 3.3.13 < 4",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4 || ^5.0.6"
   },
   "dependencies": {
     "@kong-ui-public/entities-plugins-icon": "workspace:^",
-    "uuid": "^11.1.0"
+    "lodash-es": ">=4.18.0",
+    "uuid": "^14.0.0"
   }
 }

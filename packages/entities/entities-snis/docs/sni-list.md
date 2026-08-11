@@ -74,10 +74,10 @@ A table component for SNIs.
     - Additional message to show when there are no records.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `isExactMatch`:
     - type: `boolean`

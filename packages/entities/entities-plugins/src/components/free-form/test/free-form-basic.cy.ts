@@ -254,7 +254,7 @@ describe('Free Form', () => {
         .should('have.been.calledWith', { name: 'Some Name' })
     })
 
-    describe('KeyValueField', () => {
+    describe('MapField', () => {
       it('should initialize with null value', () => {
         cy.mount(Form, {
           props: {

@@ -1,11 +1,11 @@
 <template>
   <KSkeleton
-    v-if="isLoading || (!v4Data && !hasError)"
+    v-if="(isLoading || (!v4Data && !hasError)) && !displayData"
     class="chart-skeleton"
     type="table"
   />
   <KEmptyState
-    v-else-if="hasError"
+    v-else-if="hasError && !isLoading"
     :action-button-visible="false"
     data-testid="chart-empty-state"
   >
@@ -25,8 +25,8 @@
   </KEmptyState>
 
   <slot
-    v-else-if="v4Data"
-    :data="v4Data"
+    v-else-if="displayData"
+    :data="displayData"
   />
 </template>
 <script setup lang="ts">
@@ -41,7 +41,7 @@
 import type {
   AnalyticsBridge,
   ExploreResultV4,
-  ValidDashboardQuery,
+  ValidDashboardChartQuery,
 } from '@kong-ui-public/analytics-utilities'
 import type { QueryError } from '@kong-ui-public/analytics-chart'
 import type { DashboardRendererContextInternal } from '../types'
@@ -58,14 +58,14 @@ import { VisibilityOffIcon, WarningOutlineIcon } from '@kong/icons'
 const props = defineProps<{
   context: DashboardRendererContextInternal
   limitOverride?: number
-  query: ValidDashboardQuery
+  query: ValidDashboardChartQuery
   queryReady: boolean
   refreshCounter: number
 }>()
 
 const emit = defineEmits<{
   (e: 'chart-data', chartData: ExploreResultV4): void
-  (e: 'queryComplete'): void
+  (e: 'query-complete'): void
 }>()
 
 const { i18n } = composables.useI18n()
@@ -83,19 +83,34 @@ const queryKey = () => {
 }
 
 const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
+  const startKey = queryKey()
+
   try {
     const result = await issueQuery(props.query, props.context, props.limitOverride)
+
+    if (queryKey() !== startKey) {
+      // The original fetch has been superseded by a newer query
+      return undefined
+    }
+
     queryError.value = null
 
     return result
   } catch (e: any) {
+    if (queryKey() !== startKey) {
+      // This will avoid an empty error state when a query has been aborted
+      return undefined
+    }
+
     // Note: The error object will contain a response status property at the root when the analytics bridge
     // detects a 403 or 408 status code. This allows us to provide proper error messages for impacted tiles.
     queryError.value = handleQueryError(e)
 
     throw e
   } finally {
-    emit('queryComplete')
+    if (queryKey() === startKey) {
+      emit('query-complete')
+    }
   }
 }, {
   refreshInterval: props.context.refreshInterval,
@@ -109,8 +124,14 @@ const queryError = ref<QueryError | null>(null)
 const hasError = computed(() => state.value === STATE.ERROR || !!queryError.value)
 const isLoading = computed(() => !props.queryReady || state.value === STATE.PENDING)
 
+const oldData = ref<ExploreResultV4 | undefined>()
+const displayData = computed(() => {
+  return v4Data.value ?? (props.queryReady && state.value === STATE.PENDING ? oldData.value : undefined)
+})
+
 watch([() => v4Data.value, () => state.value], ([data, state]) => {
-  if (data && (state === 'SUCCESS_HAS_DATA' || state === 'SUCCESS')) {
+  if (data && (state === 'SUCCESS_HAS_DATA' || state === 'SUCCESS') && data !== oldData.value) {
+    oldData.value = data
     emit('chart-data', data)
   }
 })

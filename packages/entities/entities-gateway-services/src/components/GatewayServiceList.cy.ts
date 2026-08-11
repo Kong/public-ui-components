@@ -6,6 +6,7 @@ import type { KongManagerGatewayServiceListConfig, KonnectGatewayServiceListConf
 import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
   paginate,
+  gatewayService1,
   gatewayServices,
   gatewayServices100,
 } from '../../fixtures/mockData'
@@ -819,6 +820,313 @@ describe('<GatewayServiceList />', () => {
       cy.get(`${l} tbody tr[data-testid="gateway-service-50"]`).should('exist')
 
       cy.get(`${l} ${p} [data-testid="page-size-dropdown"]`).contains('50 items per page')
+    })
+  })
+
+  describe('delete flow (Konnect)', () => {
+    const serviceId = gatewayService1.id
+    const serviceName = gatewayService1.name
+    const servicesUrl = `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services`
+    const modal = '.kong-ui-entity-delete-modal'
+
+    beforeEach(() => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${servicesUrl}*`,
+        },
+        {
+          statusCode: 200,
+          body: gatewayServices,
+        },
+      )
+    })
+
+    const interceptRelatedEntities = (routes: any[], plugins: any[]) => {
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/routes*` },
+        { statusCode: 200, body: { data: routes } },
+      ).as('getRoutes')
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/plugins*` },
+        { statusCode: 200, body: { data: plugins } },
+      ).as('getPlugins')
+    }
+
+    const openDeleteModal = () => {
+      cy.mount(GatewayServiceList, {
+        props: {
+          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => true,
+          canRetrieve: () => false,
+          enableForceDeleteConfirmation: true,
+        },
+      })
+
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
+      cy.get(`[data-testid="${serviceName}-actions-dropdown-popover"] [data-testid="action-entity-delete"]`).click()
+
+      cy.wait(['@getRoutes', '@getPlugins'])
+    }
+
+    it('keeps the existing behavior when the service has no routes or plugins', () => {
+      interceptRelatedEntities([], [])
+      cy.intercept(
+        { method: 'DELETE', url: `${servicesUrl}/${serviceId}*` },
+        { statusCode: 204 },
+      ).as('deleteService')
+
+      openDeleteModal()
+
+      cy.get(`${modal} .message`).should('contain.text', `Are you sure you want to delete this service ${serviceName}?`)
+      cy.get(`${modal} .extra`).should('not.exist')
+      cy.getTestId('gateway-service-delete-force-checkbox').should('not.exist')
+
+      cy.getTestId('confirmation-input').type(serviceName)
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled').click()
+
+      cy.wait('@deleteService').its('request.url').should('not.include', 'force')
+    })
+
+    it('requires the force-delete checkbox and sends force=true when the service has routes', () => {
+      interceptRelatedEntities([{ id: 'route-1' }, { id: 'route-2' }], [{ id: 'plugin-1' }])
+      cy.intercept(
+        { method: 'DELETE', url: `${servicesUrl}/${serviceId}*` },
+        { statusCode: 204 },
+      ).as('deleteService')
+
+      openDeleteModal()
+
+      cy.get(`${modal} .extra`).should('contain.text', 'Force delete')
+        .and('contain.text', 'Check this box to force deletion of all routes and plugins on linked service.')
+      cy.getTestId('gateway-service-delete-force-checkbox').should('exist')
+
+      cy.getTestId('confirmation-input').type(serviceName)
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('be.disabled')
+
+      cy.getTestId('gateway-service-delete-force-checkbox').click()
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled').click()
+
+      cy.wait('@deleteService').its('request.url').should('include', 'force=true')
+    })
+
+    it('shows the plugin count without a checkbox and deletes without force when the service only has plugins', () => {
+      interceptRelatedEntities([], [{ id: 'plugin-1' }])
+      cy.intercept(
+        { method: 'DELETE', url: `${servicesUrl}/${serviceId}*` },
+        { statusCode: 204 },
+      ).as('deleteService')
+
+      openDeleteModal()
+
+      cy.get(`${modal} .extra`).should('contain.text', '1 associated plugin will be deleted')
+      cy.getTestId('gateway-service-delete-force-checkbox').should('not.exist')
+
+      cy.getTestId('confirmation-input').type(serviceName)
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled').click()
+
+      cy.wait('@deleteService').its('request.url').should('not.include', 'force')
+    })
+
+    it('prefers a server-provided total over the fetched page length', () => {
+      // The routes page happens to come back empty, but the server-reported total says otherwise
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/routes*` },
+        { statusCode: 200, body: { data: [], total: 5 } },
+      ).as('getRoutes')
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/plugins*` },
+        { statusCode: 200, body: { data: [] } },
+      ).as('getPlugins')
+
+      openDeleteModal()
+
+      cy.getTestId('gateway-service-delete-force-checkbox').should('exist')
+    })
+
+    it('fails closed and requires force delete when the related-entities check errors out', () => {
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/routes*` },
+        { statusCode: 500, body: {} },
+      ).as('getRoutes')
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/plugins*` },
+        { statusCode: 200, body: { data: [] } },
+      ).as('getPlugins')
+      cy.intercept(
+        { method: 'DELETE', url: `${servicesUrl}/${serviceId}*` },
+        { statusCode: 204 },
+      ).as('deleteService')
+
+      openDeleteModal()
+
+      cy.get(`${modal} .extra`).should('be.visible')
+      cy.getTestId('gateway-service-delete-force-checkbox').should('exist')
+
+      cy.getTestId('confirmation-input').type(serviceName)
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('be.disabled')
+
+      cy.getTestId('gateway-service-delete-force-checkbox').click()
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled').click()
+
+      cy.wait('@deleteService').its('request.url').should('include', 'force=true')
+    })
+
+    it('skips the related-entities check and deletes normally when the feature flag is disabled', () => {
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/routes*` },
+        { statusCode: 200, body: { data: [{ id: 'route-1' }] } },
+      ).as('getRoutes')
+      cy.intercept(
+        { method: 'GET', url: `${servicesUrl}/${serviceId}/plugins*` },
+        { statusCode: 200, body: { data: [{ id: 'plugin-1' }] } },
+      ).as('getPlugins')
+      cy.intercept(
+        { method: 'DELETE', url: `${servicesUrl}/${serviceId}*` },
+        { statusCode: 204 },
+      ).as('deleteService')
+
+      // enableForceDeleteConfirmation defaults to false
+      cy.mount(GatewayServiceList, {
+        props: {
+          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => true,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
+      cy.get(`[data-testid="${serviceName}-actions-dropdown-popover"] [data-testid="action-entity-delete"]`).click()
+
+      cy.get('@getRoutes.all').should('have.length', 0)
+      cy.get('@getPlugins.all').should('have.length', 0)
+      cy.get(`${modal} .extra`).should('not.exist')
+      cy.getTestId('gateway-service-delete-force-checkbox').should('not.exist')
+
+      cy.getTestId('confirmation-input').type(serviceName)
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled').click()
+
+      cy.wait('@deleteService').its('request.url').should('not.include', 'force')
+    })
+  })
+
+  describe('Konnect - workspace URL building', () => {
+    it('uses workspace-scoped URL when fetching with workspace', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getWithWorkspace')
+
+      cy.mount(GatewayServiceList, {
+        props: {
+          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithWorkspace')
+      cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
+    })
+
+    it('uses workspace-scoped search URL when filtering with workspace', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services*`,
+        },
+        (req) => {
+          if (!req.url.includes('/services/search')) {
+            req.reply({ statusCode: 200, body: gatewayServices })
+          }
+        },
+      ).as('getWithWorkspace')
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/services/search*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('searchWithWorkspace')
+
+      cy.mount(GatewayServiceList, {
+        props: {
+          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithWorkspace')
+      cy.get('.kong-ui-entity-filter-input input').type('gateway-service-1')
+      cy.wait('@searchWithWorkspace').its('request.url').should('include', '/services/search')
+    })
+
+    it('uses non-default workspace name in fetch URL', () => {
+      const configWithWorkspace = { ...baseConfigKonnect, workspace: 'my-workspace' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/my-workspace/services*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getWithMyWorkspace')
+
+      cy.mount(GatewayServiceList, {
+        props: {
+          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithMyWorkspace')
+      cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
+    })
+
+    it('omits workspace segment when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getNoWorkspace')
+
+      cy.mount(GatewayServiceList, {
+        props: {
+          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          config: baseConfigKonnect,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getNoWorkspace')
+      cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
     })
   })
 })

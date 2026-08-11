@@ -1,6 +1,5 @@
 import type { PathToDotNotation } from '@kong-ui-public/i18n'
 import { PluginGroup, PluginScope } from '@kong-ui-public/entities-plugins-metadata'
-import type { RenderRules } from '../components/free-form/shared/types'
 
 export const PluginFeaturedArray = [
   'Featured',
@@ -28,6 +27,7 @@ export const PluginGroupArraySortedAlphabetically = [
   PluginGroup.ANALYTICS_AND_MONITORING,
   PluginGroup.AUTHENTICATION,
   PluginGroup.LOGGING,
+  PluginGroup.MONETIZATION,
   PluginGroup.SECURITY,
   PluginGroup.SERVERLESS,
   PluginGroup.TRAFFIC_CONTROL,
@@ -115,8 +115,15 @@ export interface FieldRules {
   onlyOneOfMutuallyRequired?: string[][][]
 }
 
-export type CustomPluginType = 'schema' | 'streaming'
-export type CustomPluginSupportLevel = 'none' | 'disabled' | CustomPluginType
+export type CustomPluginType = 'schema' | 'streaming' | 'cloned'
+export type CustomPluginSupportLevel = 'none' | 'disabled' | CustomPluginType | CustomPluginType[]
+
+export interface CustomPluginDeletePayload {
+  id?: string
+  name: string
+  group?: string
+  customPluginType?: CustomPluginType
+}
 
 export type PluginMetaData<I18nMessageSource = void> = {
   nameKey: I18nMessageSource extends void ? string : PathToDotNotation<I18nMessageSource, string>
@@ -129,7 +136,6 @@ export type PluginMetaData<I18nMessageSource = void> = {
   useLegacyForm?: boolean // An optional field to use legacy form for the plugin. Default to false.
   fieldRules?: FieldRules
   useUIData?: boolean // An optional field that indicates if the plugin may have associated UI data. (via `?__ui_data`)
-  freeformRenderRules?: RenderRules // An optional field that indicates the free-form render rules for the plugin
 }
 
 export interface PluginType extends PluginMetaData {
@@ -138,6 +144,8 @@ export interface PluginType extends PluginMetaData {
   exists?: boolean // whether the plugin exists already for the current entity
   disabledMessage?: string // An optional field for plugin's disabled message.
   customPluginType?: CustomPluginType // custom plugin type
+  clonedFromRef?: string
+  matchedIndices?: number[] // character indices in `name` to highlight for the current search query
 }
 
 export type DisabledPlugin = {
@@ -175,6 +183,16 @@ export interface StreamingCustomPluginSchema {
   created_at?: number
   updated_at?: number
   tags?: string[]
+}
+
+export interface ClonedPluginSchema {
+  id: string
+  name: string
+  ref: string
+  priority?: number | null
+  created_at?: number
+  updated_at?: number
+  tags?: string[] | null
 }
 
 export { PluginGroup, PluginScope }

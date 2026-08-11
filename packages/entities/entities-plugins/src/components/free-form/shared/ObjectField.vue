@@ -60,11 +60,12 @@
             :class="{ 'collapse-expanded': expanded }"
             :data-testid="`ff-object-toggle-trigger-icon-${field.path.value}`"
             decorative
-            :size="KUI_ICON_SIZE_30"
+            :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
           />
         </button>
 
         <KLabel
+          v-if="!isChildOfMap"
           class="ff-object-field-label"
           :data-testid="`ff-label-${field.path.value}`"
           v-bind="{
@@ -173,7 +174,6 @@ const currentRenderRules = useCurrentRenderRules({
   fieldPath: field.path!,
   rules: toRef(props, 'renderRules'),
   omittedFields: toRef(() => omit),
-  parentValue: fieldValue!,
 })
 
 const added = defineModel<boolean>('added', { default: undefined })
@@ -186,6 +186,16 @@ const isChildOfArray = computed(() => {
     const parent = field.ancestors.value.parent
     if (parent?.path) {
       return getSchema(parent.path)?.type === 'array'
+    }
+  }
+  return false
+})
+
+const isChildOfMap = computed(() => {
+  if (field.ancestors?.value) {
+    const parent = field.ancestors.value.parent
+    if (parent?.path) {
+      return getSchema(parent.path)?.type === 'map'
     }
   }
   return false

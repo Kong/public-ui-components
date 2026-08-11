@@ -57,10 +57,10 @@ A base display component for an entity's record data.
     - Route to return to when canceling creation of an entity.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `controlPlaneId`:
     - type: `string`

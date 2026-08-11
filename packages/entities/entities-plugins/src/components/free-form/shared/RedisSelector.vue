@@ -1,11 +1,20 @@
 <template>
-  <KCard
+  <component
+    :is="borderless ? 'div' : KCard"
     v-if="useRedisPartial"
     v-show="!hide"
     class="redis-config-card"
+    :class="{ 'redis-config-card--borderless': borderless }"
     data-testid="redis-config-card"
-    :title="t('redis.title')"
+    :title="borderless ? undefined : redisCardTitle"
   >
+    <!-- KCard renders `title` in its header; the borderless (div) variant renders it here. -->
+    <div
+      v-if="borderless"
+      class="redis-config-card-title"
+    >
+      {{ redisCardTitle }}
+    </div>
     <div
       class="redis-config-radio-group"
       data-testid="redis-config-radio-group"
@@ -15,17 +24,24 @@
         card
         card-orientation="horizontal"
         data-testid="shared-redis-config-radio"
-        :description="t('redis.shared_configuration.description')"
-        :label="t('redis.shared_configuration.label')"
+        :description="sharedRedisRadioDescription"
+        :label="sharedRedisRadioLabel"
         :selected-value="true"
-      />
+      >
+        <KBadge
+          v-if="isKonnectManagedRedisEnabled"
+          appearance="success"
+        >
+          {{ t('redis.managed_ui.shared_configuration.badge') }}
+        </KBadge>
+      </KRadio>
       <KRadio
         v-model="usePartial"
         card
         card-orientation="horizontal"
         data-testid="dedicated-redis-config-radio"
-        :description="t('redis.dedicated_configuration.description')"
-        :label="t('redis.dedicated_configuration.label')"
+        :description="dedicatedRedisRadioDescription"
+        :label="dedicatedRedisRadioLabel"
         :selected-value="false"
       />
     </div>
@@ -43,12 +59,16 @@
         data-testid="redis-config-select"
       >
         <RedisConfigurationSelector
+          :create-button-text="redisSelectorCreateButtonText"
           data-testid="redis-config-select-trigger"
+          :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
           :model-value="selectedRedisConfigItem"
+          :placeholder="redisSelectorPlaceholderText"
           :redis-type="redisType"
-          @error-change="(err: unknown) => sharedRedisConfigFetchError = err as Error"
+          :show-create-button="!hideNewRedis(formConfig)"
+          @error-change="onRedisSelectorFetchError"
           @toast="toaster"
-          @update:model-value="data => redisConfigSelected(data)"
+          @update:model-value="redisConfigSelected"
         />
       </div>
       <RedisConfigCard
@@ -60,11 +80,7 @@
         class="redis-shared-config-error-message"
         data-testid="redis-config-fetch-error"
       >
-        {{
-          sharedRedisConfigFetchError
-            ? getMessageFromError(sharedRedisConfigFetchError)
-            : t('redis.shared_configuration.error')
-        }}
+        {{ getMessageFromError(sharedRedisConfigFetchError) }}
       </p>
     </div>
     <ObjectField
@@ -76,7 +92,7 @@
       :render-rules="redisRenderRules"
       reset-label-path="reset"
     />
-  </KCard>
+  </component>
   <ObjectField
     v-else
     v-show="!hide"
@@ -94,7 +110,8 @@ import RedisConfigCard from './RedisConfigCard.vue'
 import { onBeforeMount, inject, computed, ref, watch } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { FORMS_CONFIG, hideNewRedis } from '@kong-ui-public/forms'
+import { KCard } from '@kong/kongponents'
 import { useAxios, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RedisPartialType, Redis, RenderRules } from './types'
 import { partialEndpoints, REDIS_PARTIAL_INFO } from './const'
@@ -130,6 +147,10 @@ const redisRenderRules: RenderRules = {
     'cloud_authentication.azure_client_id': ['cloud_authentication.auth_provider', 'azure'],
     'cloud_authentication.azure_client_secret': ['cloud_authentication.auth_provider', 'azure'],
     'cloud_authentication.azure_tenant_id': ['cloud_authentication.auth_provider', 'azure'],
+
+    'cloud_authentication.oauth': ['cloud_authentication.auth_provider', 'oauth'],
+    'cloud_authentication.oauth.username': ['cloud_authentication.oauth.grant_type', 'password'],
+    'cloud_authentication.oauth.password': ['cloud_authentication.oauth.grant_type', 'password'],
   },
 }
 
@@ -138,11 +159,17 @@ interface RedisSelectorProps {
   defaultRedisConfigItem?: string
   redisType?: RedisPartialType
   redisPath?: string
+  /** Set by parent from plugin form config */
+  isKonnectManagedRedisEnabled?: boolean
+  /** Render the partial UI in a plain `div` (no KCard border/chrome) instead of a card */
+  borderless?: boolean
 }
 
 type PartialArray = Array<{ id: string, path?: string | undefined }>
 
-const props = defineProps<RedisSelectorProps>()
+const props = withDefaults(defineProps<RedisSelectorProps>(), {
+  isKonnectManagedRedisEnabled: false,
+})
 
 const toaster = useToaster()
 
@@ -175,9 +202,50 @@ const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.
 
 const { value: redisFieldsValue, hide } = useField<Redis | undefined>(formRedisPath)
 
-const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
+const formConfig: KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
+
+const redisCardTitle = computed(() =>
+  props.isKonnectManagedRedisEnabled ? t('redis.managed_ui.title') : t('redis.title'),
+)
+
+const sharedRedisRadioDescription = computed(() =>
+  props.isKonnectManagedRedisEnabled
+    ? t('redis.managed_ui.shared_configuration.description')
+    : t('redis.shared_configuration.description'),
+)
+
+const sharedRedisRadioLabel = computed(() =>
+  props.isKonnectManagedRedisEnabled
+    ? t('redis.managed_ui.shared_configuration.label')
+    : t('redis.shared_configuration.label'),
+)
+
+const dedicatedRedisRadioDescription = computed(() =>
+  props.isKonnectManagedRedisEnabled
+    ? t('redis.managed_ui.dedicated_configuration.description')
+    : t('redis.dedicated_configuration.description'),
+)
+
+const dedicatedRedisRadioLabel = computed(() =>
+  props.isKonnectManagedRedisEnabled
+    ? t('redis.managed_ui.dedicated_configuration.label')
+    : t('redis.dedicated_configuration.label'),
+)
+
+const redisSelectorCreateButtonText = computed(() =>
+  props.isKonnectManagedRedisEnabled ? t('redis.managed_ui.selector.create_new') : undefined,
+)
+
+const redisSelectorPlaceholderText = computed(() =>
+  props.isKonnectManagedRedisEnabled ? t('redis.managed_ui.selector.placeholder') : undefined,
+)
 
 const sharedRedisConfigFetchError = ref<Error | null>(null)
+
+// Bridges `RedisConfigurationSelector` `@error-change` into local state for the inline error `<p>`
+const onRedisSelectorFetchError = (error: Error | null) => {
+  sharedRedisConfigFetchError.value = error
+}
 
 /**
  * Build URL of getting one partial
@@ -187,11 +255,12 @@ const getOnePartialUrl = (partialId: string | number): string => {
 
   if (formConfig.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, formConfig?.controlPlaneId || '')
-  } else if (formConfig.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, formConfig?.workspace ? `/${formConfig.workspace}` : '')
   }
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, String(partialId))
+
+  url = url
+    .replace(/\/{workspace}/gi, formConfig?.workspace ? `/${formConfig.workspace}` : '')
+    .replace(/{id}/gi, String(partialId)) // Always replace the id when editing
+
   return url
 }
 
@@ -227,8 +296,13 @@ const handleFormRedisPartialData = () => {
 }
 
 const redisConfigSelected = async (val: string | undefined) => {
-  // when selector is cleared, do nothing
-  if (!val) return
+  // Clear select so previous selct isnt left selected
+  if (!val) {
+    selectedRedisConfigItem.value = undefined
+    selectedRedisConfig.value = null
+    partialValue!.value = isFormEditing ? null : undefined
+    return
+  }
 
   selectedRedisConfigItem.value = val
   partialValue!.value = [{ id: val }]
@@ -291,6 +365,17 @@ watch(() => hide?.value, (newHide) => {
   :deep(.radio-card-wrapper) {
     box-sizing: border-box;
   }
+
+  &--borderless {
+    margin-bottom: 0;
+  }
+}
+
+// Title for the borderless (div) variant, mirroring the KCard header.
+.redis-config-card-title {
+  font-size: var(--kui-font-size-40, $kui-font-size-40);
+  font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+  margin-bottom: var(--kui-space-60, $kui-space-60);
 }
 
 .shared-redis-config-title {

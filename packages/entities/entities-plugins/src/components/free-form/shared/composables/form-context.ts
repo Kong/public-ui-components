@@ -1,10 +1,11 @@
-import { cloneDeep, get, isFunction, omit, set } from 'lodash-es'
+import { cloneDeep, isEqual, isFunction, omit } from 'lodash-es'
 import { createInjectionState } from '@vueuse/core'
 import { createRenderRuleRegistry } from './render-rules'
 import { FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
 import { provide, reactive, toRef, toValue, useSlots, watch } from 'vue'
 import { useSchemaHelpers } from './schema'
 import * as utils from '../utils'
+import { useKeyIdMap } from './key-id-map'
 
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import type { FormConfig, MatchMap, RenderRules } from '../types'
@@ -25,7 +26,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       propsRenderRules,
       propsConfig,
     } = options
-    const schemaHelpers = useSchemaHelpers(schema)
+    const {
+      getDefault: getDefaultFromSchema,
+      getEmptyOrDefault: getEmptyOrDefaultFromSchema,
+      ...schemaHelpers
+    } = useSchemaHelpers(schema)
+    const keyIdMap = useKeyIdMap(schemaHelpers.getSchema)
     const fieldRendererRegistry: MatchMap = new Map()
 
     const innerData = reactive<T>({} as T)
@@ -38,21 +44,21 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     const {
       useCurrentRules: useCurrentRenderRules,
       createComputedRules: createComputedRenderRules,
-      hiddenPaths,
+      hasDependencies,
       isFieldHidden,
-    } = createRenderRuleRegistry(() => onChange?.(getValue()))
+    } = createRenderRuleRegistry(schemaHelpers.getSchemaMap, () => innerData)
 
     const rootRenderRules = useCurrentRenderRules({
       fieldPath: utils.rootSymbol,
       rules: propsRenderRules,
-      parentValue: innerData,
     })
 
     function setValue(newData: T) {
       Object.keys(innerData).forEach((key) => {
         delete (innerData as any)[key]
       })
-      Object.assign(innerData, newData)
+      keyIdMap.clear()
+      Object.assign(innerData, keyIdMap.serialize(newData))
     }
 
     /**
@@ -62,7 +68,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       let dataValue: T
 
       if (!propsData || !hasValue(toValue(propsData))) {
-        dataValue = schemaHelpers.getDefault()
+        dataValue = getDefaultFromSchema()
       } else {
         dataValue = cloneDeep(toValue(propsData))
       }
@@ -85,27 +91,26 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
      * Get transformed form data
      */
     function getValue(): T {
-      const value = toValue(innerData)
-      const nextValue = cloneDeep(value)
+      const nextValue = cloneDeep(toValue(innerData))
 
-      // Set hidden paths to default or null
-      if (hiddenPaths.value.size > 0) {
-        for (const path of hiddenPaths.value) {
-          const pathArray = utils.toArray(path)
-
-          // Check if the parent path exists before setting
-          // This is a temporary fix to prevent lodash set() from auto-creating intermediate objects
-          // todo(KM-2182): Refactor data layer to listen to data source changes and clean up hiddenPaths accordingly
-          const parentPath = pathArray.slice(0, -1)
-          const parentExists = parentPath.length === 0 || get(nextValue, parentPath) != null
-
-          if (parentExists) {
-            set(nextValue, pathArray, schemaHelpers.getEmptyOrDefault(path))
-          }
-        }
+      // Reset hidden fields to their empty-or-default value by walking the tree
+      // top-down, so a hidden subtree is dropped wholesale and no missing parent
+      // is ever auto-created (replaces the KM-2182 `parentExists` workaround).
+      //
+      // NOTE: pruning MUST run here, on the still-serialized (kid-keyed) tree,
+      // before `deserialize` renames map keys. `isFieldHidden` reads each
+      // dependency's actual value from `innerData` (kid-keyed) with a concrete
+      // path; pruning a name-keyed tree would feed it name-keyed paths that miss
+      // inside maps, silently mis-evaluating visibility for map-nested fields.
+      if (hasDependencies.value) {
+        utils.pruneHiddenPaths(
+          nextValue,
+          isFieldHidden,
+          getEmptyOrDefaultFromSchema,
+        )
       }
 
-      return nextValue
+      return keyIdMap.deserialize(nextValue)
     }
 
     // Emit changes when the inner data changes
@@ -113,10 +118,32 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       onChange?.(getValue())
     }, { deep: true })
 
+    let hasInitialized = false
     // Sync the inner data when the props data changes
     watch(() => propsData?.value, newData => {
+      // Avoid unnecessary data serialization
+      if (hasInitialized && isEqual(getValue(), toValue(newData))) {
+        return
+      }
+
       initInnerData(newData)
+      hasInitialized = true
     }, { deep: true, immediate: true })
+
+    function serializeIfNeeded(data: any) {
+      if (data != null && typeof data === 'object' && !Array.isArray(data)) {
+        return keyIdMap.serialize(data)
+      }
+      return data
+    }
+
+    function getDefault(path?: string) {
+      return serializeIfNeeded(getDefaultFromSchema(path))
+    }
+
+    function getEmptyOrDefault<T = unknown>(path?: string): T | null {
+      return serializeIfNeeded(getEmptyOrDefaultFromSchema<T>(path))
+    }
 
     return {
       /**
@@ -133,6 +160,9 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       ...schemaHelpers,
       getValue,
       isFieldHidden,
+      keyIdMap,
+      getDefault,
+      getEmptyOrDefault,
     }
   },
 )

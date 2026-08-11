@@ -1,5 +1,7 @@
-import type { UnionFieldSchema } from '../../../types/plugins/form-schema'
-import type { ComponentPublicInstance, Ref, Slot } from 'vue'
+import type { FormSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
+import type { FreeFormPluginData } from '../../../types/plugins/free-form'
+import type { Component, ComponentPublicInstance, Ref, Slot } from 'vue'
+import { type LabelAttributes } from '@kong/kongponents'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
@@ -125,6 +127,7 @@ export type GlobalAction = 'notify'
  * Rules to control the rendering of form fields.
  * Only `Form` and `ObjectField` components can accept these rules
  */
+
 export interface RenderRules {
   /**
    * Bundles of fields to be rendered together.
@@ -146,31 +149,150 @@ export interface RenderRules {
    * Dependencies between fields to control their visibility.
    * - A field will be shown only if its dependency is satisfied.
    * - A field will only have a value if its dependency is satisfied.
-   * - The `fieldValue` will be deeply compared.
    * - Field and its dependency should be in the same level.
    * - Circular dependencies are not allowed.
+   *
+   * The `fieldValue` can be:
+   * - A primitive or plain object — deeply compared with `isEqual`.
+   * - An array — treated as **any-of**: shown when the dependency value matches any element. Suitable for string fields.
+   * - `renderRuleExactMatch(value)` — for rare cases where the dependency field itself holds an array value
+   *   and exact deep equality is required. Using a Symbol-keyed wrapper avoids collision with plain objects.
+   *
    * @example
    * ```ts
+   * import { renderRuleExactMatch } from '../types'
+   *
    * {
    *   'config.redis': ['config.strategy', 'redis'],
+   *   'config.mode': ['config.strategy', ['redis', 'cluster']], // any-of: shown when strategy is 'redis' or 'cluster'
+   *   'config.tags': ['config.required_tags', renderRuleExactMatch(['a', 'b'])], // exact array match
    *   'config.cache.redis': ['config.strategy', 'cache'], // ❌ different levels are not allowed
    *   'config.strategy': ['config.redis', {}], // ❌ circular dependency not allowed
    * }
    * ```
    */
   dependencies?: {
-    [fieldPath: string]: [fieldPath: string, fieldValue: any]
+    [fieldPath: string]: [fieldPath: string, fieldValue: unknown]
   }
 }
 
 export interface BaseFieldProps {
   autofocus?: boolean
   name: string
+  labelAttributes?: LabelAttributes
 }
 
 export type Match = (opt: {
   path: string
+  /**
+   * A generic path pattern that can be used for matching multiple fields,
+   * e.g. `config.callouts.*.redis` can match `config.callouts.1.redis` and `config.callouts.2.redis`.
+   */
+  genericPath: string
   schema: UnionFieldSchema
 }) => boolean
 
 export type MatchMap = Map<Match, Slot<{ name: string }>>
+
+export type PropsOverridesFn = (props: Record<string, unknown>) => Record<string, unknown>
+
+export interface FieldRenderer {
+  match: string | Match
+  component: Component
+  propsOverrides?: Record<string, unknown> | PropsOverridesFn
+}
+
+export type PluginConfigurationBaseProps<T extends Record<string, any> = Record<string, any>> = {
+  /** FreeForm Schema */
+  schema: FormSchema
+  /** The **initial** entire plugin model, never update */
+  model: T
+  /** Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority */
+  onFormChange: (value: Partial<T>, fields?: string[]) => void
+  /** FreeForm configuration */
+  formConfig?: FormConfig<T>
+  renderRules?: RenderRules
+  fieldRenderers?: FieldRenderer[]
+  pluginName: string
+  /** Konnect-managed Redis UI, from plugin form config */
+  isKonnectManagedRedisEnabled?: boolean
+}
+
+/**
+ * Describes one numbered configuration step in a multi-section plugin layout.
+ * Content for each section is provided by the layout consumer via a
+ * `#section-<name>` slot.
+ */
+export interface ConfigSection {
+  /** Unique section key; the layout renders content from the `#section-<name>` slot */
+  name: string
+  /** Step block title */
+  title?: string
+  /** Step block description */
+  description?: string
+}
+
+export type PluginFormLayoutProps<T extends FreeFormPluginData = FreeFormPluginData> = PluginConfigurationBaseProps<T> & {
+  onValidityChange?: (event: { model: string, valid: boolean, error?: Error | string }) => void
+  isEditing: boolean
+  /**
+   * Optional multi-section configuration layout. When provided, the single
+   * "Plugin Configuration" step is replaced by one numbered step block per
+   * section (steps 2..N), each rendered via its `#section-<name>` slot, and the
+   * General Info step is renumbered to `2 + configSections.length`. When
+   * omitted, the layout renders the default single config step (step 2) using
+   * the default slot — i.e. existing plugins are unaffected.
+   */
+  configSections?: ConfigSection[]
+  /**
+   * Hide the built-in form/code switcher. Plugins that own a custom switcher
+   * (e.g. Datakit's flow/code control) should set this to true to avoid
+   * rendering duplicate controls into #plugin-form-page-actions.
+   */
+  hideEditorModeSwitcher?: boolean
+  /** Whether the plugin is being created for a portal developer */
+  developer?: boolean
+  generalInfoTitle?: string
+  generalInfoDescription?: string
+  pluginConfigTitle?: string
+  pluginConfigDescription?: string
+}
+
+export type PluginFormLayoutComponent<T extends FreeFormPluginData = FreeFormPluginData> = Component<PluginFormLayoutProps<T>>
+
+type ComponentBasedConfig = {
+  /**
+   * Form-level custom component.
+   * Receives `PluginFormLayoutProps`.
+   *
+   * A custom component owns its own rendering rules and field renderers: pass
+   * `render-rules` to its layout and register renderers via the `#field-renderers`
+   * slot inside the component instead of configuring them here.
+   */
+  component: PluginFormLayoutComponent<any>
+  renderRules?: never
+  fieldRenderers?: never
+}
+
+type RuleBasedConfig = {
+  /**
+   * Rendered with the default `CommonForm`.
+   */
+  component?: never
+  /**
+   * Form-level rendering rules.
+   */
+  renderRules?: RenderRules
+  /**
+   * Field-level custom renderers.
+   */
+  fieldRenderers?: FieldRenderer[]
+}
+
+export type PluginFormConfig = {
+  /**
+   * Whether the plugin is experimental.
+   * Experimental plugins will only be rendered when their names are included in the `EXPERIMENTAL_FREE_FORM_PROVIDER` provider.
+   */
+  experimental?: boolean
+} & (ComponentBasedConfig | RuleBasedConfig)

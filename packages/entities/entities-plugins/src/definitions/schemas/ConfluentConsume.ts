@@ -1,6 +1,6 @@
 import { ArrayInputFieldSchema } from './ArrayInputFieldSchema'
 import type { ConfluentConsumeSchema } from '../../types/plugins/confluent-consume'
-import { stripEmptyBasicFields, type SchemaRegistry } from '../../utils/helper'
+import { removeOauthbearer, stripEmptyBasicFields, type SchemaRegistry } from '../../utils/helper'
 
 export const confluentConsumeSchema: ConfluentConsumeSchema = {
   'config-message_by_lua_functions': {
@@ -21,5 +21,7 @@ export const confluentConsumeSchema: ConfluentConsumeSchema = {
     payload.config?.topics?.forEach((topic: { schema_registry: SchemaRegistry }) => {
       stripEmptyBasicFields(topic?.schema_registry)
     })
+
+    removeOauthbearer(payload)
   },
 }

@@ -9,8 +9,8 @@ export async function fillBoolean(option: HandlerOption<BooleanFieldSchema>): Pr
   const element = page.locator(selector)
 
   if (value === true) {
-    await element.check({ force: true })
+    await element.check()
   } else if (value === false) {
-    await element.uncheck({ force: true })
+    await element.uncheck()
   }
 }

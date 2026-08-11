@@ -269,16 +269,12 @@ const fetcherBaseUrl = computed((): string => {
   let url: string = `${props.config.apiBaseUrl}${endpoints.list[props.config.app]}`
 
   if (props.config.app === 'konnect') {
-    url = url
-      .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-      .replace(/{upstreamId}/gi, props.config?.upstreamId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-      .replace(/{upstreamId}/gi, props.config?.upstreamId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{upstreamId}/gi, props.config?.upstreamId || '')
 })
 
 const {
@@ -477,14 +473,12 @@ const formConfig = computed((): KonnectTargetFormConfig | KongManagerTargetFormC
     apiBaseUrl: props.config.apiBaseUrl,
     upstreamId: props.config.upstreamId,
     axiosRequestConfig: props.config.axiosRequestConfig,
+    workspace: props.config.workspace,
     ...{
-      // Depending on the app, we need to pass in the control plane ID or workspace
+      // Depending on the app, we need to pass in the control plane ID
       // see KonnectTargetFormConfig and KongManagerTargetFormConfig types
       ...(props.config.app === 'konnect' && {
         controlPlaneId: props.config.controlPlaneId,
-      }),
-      ...(props.config.app === 'kongManager' && {
-        workspace: props.config.workspace,
       }),
     },
   } as KonnectTargetFormConfig | KongManagerTargetFormConfig

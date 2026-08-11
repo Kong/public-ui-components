@@ -15,6 +15,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       name: `kong-ui-public-${sanitizedPackageName}`,
       entry: resolve(__dirname, './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+      cssFileName: 'style',
     },
     rollupOptions: {
       // Make sure to externalize deps that shouldn't be bundled into your library
@@ -24,7 +25,10 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/analytics-metric-provider',
         '@kong-ui-public/analytics-utilities',
         '@kong-ui-public/analytics-geo-map',
+        '@kong-ui-public/table-data-grid',
         'swrv',
+        '@zumer/snapdom',
+        'jspdf',
       ],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
@@ -34,7 +38,10 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
           '@kong-ui-public/analytics-metric-provider': 'kong-ui-public-analytics-metric-provider',
           '@kong-ui-public/analytics-utilities': 'kong-ui-public-analytics-utilities',
           '@kong-ui-public/analytics-geo-map': 'kong-ui-public-analytics-geo-map',
+          '@kong-ui-public/table-data-grid': 'kong-ui-public-table-data-grid',
           swrv: 'swrv',
+          '@zumer/snapdom': 'snapdom',
+          jspdf: 'jspdf',
         },
       },
     },

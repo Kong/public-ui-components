@@ -1,4 +1,5 @@
 import type { AnalyticsExploreV2Result } from '@kong-ui-public/analytics-utilities'
+import { defaultStatusCodeColors, lookupStatusCodeColor } from '../../src/utils/customColors'
 
 export function generateRandomColor() {
   const letters = '0123456789ABCDEF'
@@ -15,6 +16,10 @@ export function rand(min: number, max: number): number {
   min = Math.ceil(min)
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+export function getStatusCodeDatasetColor(dimension: string): string {
+  return defaultStatusCodeColors[dimension] || lookupStatusCodeColor(dimension)
 }
 
 export function isValidJson(str: string): boolean {

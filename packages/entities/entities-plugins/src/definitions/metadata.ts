@@ -29,11 +29,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'basic-auth': {
     descriptionKey: 'plugins.meta.basic-auth.description',
     nameKey: 'plugins.meta.basic-auth.name',
-    freeformRenderRules: {
-      dependencies: {
-        'config.brute_force_protection.redis': ['config.brute_force_protection.strategy', 'redis'],
-      },
-    },
     ...PLUGIN_GROUP_AND_SCOPE_MAP['basic-auth'],
   },
   'hmac-auth': {
@@ -170,14 +165,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.proxy-cache-advanced.description',
     nameKey: 'plugins.meta.proxy-cache-advanced.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['proxy-cache-advanced'],
-    freeformRenderRules: {
-      bundles: [
-        ['config.strategy', 'config.redis'],
-      ],
-      dependencies: {
-        'config.redis': ['config.strategy', 'redis'],
-      },
-    },
   },
   'graphql-proxy-cache-advanced': {
     descriptionKey: 'plugins.meta.graphql-proxy-cache-advanced.description',
@@ -194,14 +181,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.rate-limiting.name',
     fieldRules: {
       atLeastOneOf: [['config.second', 'config.minute', 'config.hour', 'config.day', 'config.month', 'config.year']],
-    },
-    freeformRenderRules: {
-      bundles: [
-        ['config.policy', 'config.redis'],
-      ],
-      dependencies: {
-        'config.redis': ['config.policy', 'redis'],
-      },
     },
     ...PLUGIN_GROUP_AND_SCOPE_MAP['rate-limiting'],
   },
@@ -241,13 +220,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-proxy': {
     descriptionKey: 'plugins.meta.ai-proxy.description',
     nameKey: 'plugins.meta.ai-proxy.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-proxy'],
   },
   'ai-prompt-decorator': {
     descriptionKey: 'plugins.meta.ai-prompt-decorator.description',
     nameKey: 'plugins.meta.ai-prompt-decorator.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-decorator'],
   },
   'ai-prompt-template': {
@@ -259,25 +236,21 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-prompt-guard': {
     descriptionKey: 'plugins.meta.ai-prompt-guard.description',
     nameKey: 'plugins.meta.ai-prompt-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-guard'],
   },
   'ai-request-transformer': {
     descriptionKey: 'plugins.meta.ai-request-transformer.description',
     nameKey: 'plugins.meta.ai-request-transformer.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-request-transformer'],
   },
   'ai-response-transformer': {
     descriptionKey: 'plugins.meta.ai-response-transformer.description',
     nameKey: 'plugins.meta.ai-response-transformer.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-response-transformer'],
   },
   'ai-rate-limiting-advanced': {
     descriptionKey: 'plugins.meta.ai-rate-limiting-advanced.description',
     nameKey: 'plugins.meta.ai-rate-limiting-advanced.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-rate-limiting-advanced'],
   },
   'ai-azure-content-safety': {
@@ -547,13 +520,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-semantic-cache': {
     descriptionKey: 'plugins.meta.ai-semantic-cache.description',
     nameKey: 'plugins.meta.ai-semantic-cache.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-cache'],
   },
   'ai-semantic-prompt-guard': {
     descriptionKey: 'plugins.meta.ai-semantic-prompt-guard.description',
     nameKey: 'plugins.meta.ai-semantic-prompt-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-prompt-guard'],
   },
   'header-cert-auth': {
@@ -573,14 +544,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.upstream-oauth.description',
     nameKey: 'plugins.meta.upstream-oauth.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['upstream-oauth'],
-    freeformRenderRules: {
-      bundles: [
-        ['config.cache.strategy', 'config.cache.redis'],
-      ],
-      dependencies: {
-        'config.cache.redis': ['config.cache.strategy', 'redis'],
-      },
-    },
   },
   'confluent': {
     descriptionKey: 'plugins.meta.confluent.description',
@@ -682,25 +645,21 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'ai-gcp-model-armor': {
     descriptionKey: 'plugins.meta.ai-gcp-model-armor.description',
     nameKey: 'plugins.meta.ai-gcp-model-armor.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-gcp-model-armor'],
   },
   'ai-mcp-oauth2': {
     descriptionKey: 'plugins.meta.ai-mcp-oauth2.description',
     nameKey: 'plugins.meta.ai-mcp-oauth2.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-mcp-oauth2'],
   },
   'ai-semantic-response-guard': {
     descriptionKey: 'plugins.meta.ai-semantic-response-guard.description',
     nameKey: 'plugins.meta.ai-semantic-response-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-response-guard'],
   },
   'ai-lakera-guard': {
     descriptionKey: 'plugins.meta.ai-lakera-guard.description',
     nameKey: 'plugins.meta.ai-lakera-guard.name',
-    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-lakera-guard'],
   },
   'ai-a2a-proxy': {
@@ -719,6 +678,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.metering-and-billing.description',
     nameKey: 'plugins.meta.metering-and-billing.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['metering-and-billing'],
+  },
+  governance: {
+    descriptionKey: 'plugins.meta.governance.description',
+    nameKey: 'plugins.meta.governance.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['governance'],
   },
 }
 

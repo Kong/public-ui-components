@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import FieldObjectAdvanced from '../FieldObjectAdvanced.vue'
+import Kongponents from '@kong/kongponents'
 
 const schema = {
   type: 'object-advanced',
@@ -17,6 +18,9 @@ describe('FieldObjectAdvanced', () => {
             'config-limits-header-2': 'X-Gruce-Limit',
           },
           schema,
+        },
+        global: {
+          plugins: [Kongponents],
         },
       })
 
@@ -51,6 +55,9 @@ describe('FieldObjectAdvanced', () => {
                 }],
             },
           },
+        },
+        global: {
+          plugins: [Kongponents],
         },
       })
 
@@ -107,7 +114,9 @@ describe('FieldObjectAdvanced', () => {
             order: 0,
             disabled: false,
           },
-
+        },
+        global: {
+          plugins: [Kongponents],
         },
       })
 
@@ -141,10 +150,13 @@ describe('FieldObjectAdvanced', () => {
             },
           },
         },
+        global: {
+          plugins: [Kongponents],
+        },
       })
 
       expect(wrapper.find('input[data-testid="keyname-input"]').exists()).toBe(true)
-      expect(wrapper.find('[data-testid="add-key"]').exists()).toBe(true)
+      expect(wrapper.findTestId('add-key').exists()).toBe(true)
     })
   })
 })

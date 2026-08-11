@@ -50,10 +50,10 @@ A config card component for Redis Configurations.
     - An optional configuration object for the underlying Axios request.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `controlPlaneId`:
     - type: `string`
@@ -99,11 +99,15 @@ A `@loading` event is emitted when loading state changes. The event payload is a
 
 #### fetch:error
 
-An `@fetch:error` event is emitted when the component fails to fetch the redis configuration. The event payload is the response error.
+An `@fetch:error` event is emitted when the component fails to fetch the redis configuration (including **404** after a Konnect-managed add-on or linked partial is deleted). Hosts typically check `error.response?.status === 404` to redirect to the list.
 
 #### fetch:success
 
-A `@fetch:success` event is emitted when the redis configuration is successfully fetched. The event payload is the redis configuration object.
+A `@fetch:success` event is emitted when the Koko redis partial loads (`RedisConfigurationResponse`). Legacy Konnect/Kong Manager cards always emit this. Konnect-managed detail emits it from the partial segment when the add-on is `ready`; the cache segment uses `fetch:managed-add-on-success` for the add-on payload.
+
+#### fetch:managed-add-on-success
+
+A `@fetch:managed-add-on-success` event is emitted when Konnect managed-cache mode loads the Cloud Gateways add-on as the primary entity. The payload is the managed cache add-on (`ManagedCacheAddOn`). It is not emitted on the legacy partial-only card.
 
 ### Usage example
 

@@ -30,11 +30,12 @@
           :readonly="state.isReadonly"
           type="text"
         />
-        <div v-if="hideServiceField ? false : !serviceId">
+        <div v-if="!hideServiceField">
           <KSelect
             v-model="state.fields.service_id"
             clearable
             data-testid="route-form-service-id"
+            :disabled="!!serviceId"
             enable-filtering
             :filter-function="() => true"
             :items="availableServices"
@@ -177,15 +178,15 @@ const props = defineProps({
   },
   /** If a valid routeId is provided, it will put the form in Edit mode instead of Create */
   routeId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
-  /** If valid serviceId is provided, don't show service select field */
+  /** If valid serviceId is provided, disable the service select field */
   serviceId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
   /** Whether show or hide EntityFormSection info column */
   hideSectionsInfo: {
@@ -514,19 +515,13 @@ const submitUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value][props.serviceId ? 'forGatewayService' : 'all']}`
 
   if (props.config.app === 'konnect') {
-    url = url
-      .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-      .replace(/{serviceId}/gi, props.serviceId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-      .replace(/{serviceId}/gi, props.serviceId || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
 
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.routeId)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{serviceId}/gi, props.serviceId || '')
+    .replace(/{id}/gi, props.routeId ?? '') // Always replace the id when editing
 })
 
 watch(() => state.fields, () => {
@@ -609,10 +604,11 @@ const fetchServicesErrorMessage = computed((): string => servicesFetchError.valu
 const availableServices = computed((): SelectItem[] => servicesResults.value?.map(el => ({ label: el.id, name: el.name, value: el.id })))
 
 onBeforeMount(async () => {
-  if (!props.hideServiceField && !props.serviceId) {
-    // load services for filtering
+  if (!props.hideServiceField) {
+    // load services so the select can display the selected item even when disabled
     await loadServices()
-  } else {
+  }
+  if (props.serviceId) {
     state.fields.service_id = props.serviceId
   }
 })

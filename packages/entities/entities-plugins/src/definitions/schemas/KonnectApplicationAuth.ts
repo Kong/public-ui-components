@@ -1,5 +1,9 @@
 import type { KonnectApplicationAuthSchema } from '../../types/plugins/konnect-application-auth'
-import { resetEmptyTokenExchange } from './OIDC'
+import {
+  resetEmptyTokenExchange,
+  resetEmptyProofOfPossessionMtlsFromHeader,
+  resetEmptyProtectedResourceMetadata,
+} from './OIDC'
 
 
 export const konnectApplicationAuthSchema: KonnectApplicationAuthSchema = {
@@ -10,6 +14,8 @@ export const konnectApplicationAuthSchema: KonnectApplicationAuthSchema = {
     if (Array.isArray(oidcStrategies)) {
       oidcStrategies.forEach((strategy) => {
         resetEmptyTokenExchange(strategy.config)
+        resetEmptyProofOfPossessionMtlsFromHeader(strategy.config)
+        resetEmptyProtectedResourceMetadata(strategy.config)
       })
     }
 

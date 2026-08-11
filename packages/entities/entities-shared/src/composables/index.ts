@@ -1,5 +1,6 @@
 import useAxios from './useAxios'
 import useDebouncedFilter from './useDebouncedFilter'
+import { useBaseEntityDeckOptions, useBaseFormDeckOptions } from './useDeckOptions'
 import useDeleteUrlBuilder from './useDeleteUrlBuilder'
 import useErrors from './useErrors'
 import useExternalLinkCreator from './useExternalLinkCreator'
@@ -11,7 +12,7 @@ import useI18n from './useI18n'
 import useGatewayFeatureSupported from './useGatewayFeatureSupported'
 import useTruncationDetector from './useTruncationDetector'
 import useValidators from './useValidators'
-import { useSchemaProvider, useSubSchema } from './useSchema'
+import { useSchema, useSchemaProvider, useSubSchema } from './useSchema'
 import useTableState from './useTableState'
 
 // All composables must be exported as part of the default object for Cypress test stubs
@@ -19,6 +20,8 @@ export default {
   useAxios,
   useDebouncedFilter,
   useDeleteUrlBuilder,
+  useBaseEntityDeckOptions,
+  useBaseFormDeckOptions,
   useErrors,
   useExternalLinkCreator,
   useFetcher,
@@ -30,6 +33,7 @@ export default {
   useGatewayFeatureSupported,
   useTruncationDetector,
   useValidators,
+  useSchema,
   useSchemaProvider,
   useSubSchema,
   useTableState,

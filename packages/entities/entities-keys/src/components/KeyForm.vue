@@ -232,9 +232,9 @@ const props = defineProps({
   },
   /** If a valid Key ID is provided, it will put the form in Edit mode instead of Create */
   keyId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
   /** Specific the keyset Id if the key entity is a scoped entity [both create and edit form] */
   keySetId: {
@@ -244,9 +244,9 @@ const props = defineProps({
   },
   /** Pre-select the Key Set field and mark it as read-only [create form only] */
   fixedKeySetId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
   /** Whether to provide x5t field in key form */
   showx5t: {
@@ -325,7 +325,7 @@ const isKeySetFieldClearable = computed<boolean>(() => !isKeySetFieldReadonly.va
 // In create form, set new props.fixedKeySetId to form.fields.key_set to apply the change and mark the field as read-only
 watch(() => props.fixedKeySetId, (newVal) => {
   if (formType.value === EntityBaseFormType.Create) {
-    form.fields.key_set = newVal
+    form.fields.key_set = newVal ?? ''
   }
 }, { immediate: true })
 
@@ -370,15 +370,12 @@ const submitUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.keyId)
-    .replace(/{keySetId}/gi, props.keySetId || '')
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.keyId ?? '') // Always replace the id when editing
+    .replace(/{keySetId}/gi, props.keySetId || '') // Always replace the id when editing
 })
 
 const requestBody = computed((): Record<string, any> => {

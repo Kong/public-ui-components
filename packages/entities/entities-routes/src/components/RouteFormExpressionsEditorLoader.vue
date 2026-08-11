@@ -16,7 +16,7 @@
     :show-expressions-modal-entry="showExpressionsModalEntry"
     @notify="emit('notify', $event)"
   >
-    <RocketIcon :size="KUI_ICON_SIZE_30" />
+    <RocketIcon :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`" />
     <span>{{ t('form.expression_playground.test_link') }}</span>
   </RouteFormExpressionsEditor>
   <slot

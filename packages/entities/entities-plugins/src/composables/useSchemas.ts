@@ -40,13 +40,13 @@ import typedefs from '../definitions/schemas/typedefs'
 import { type CustomSchemas } from '../types'
 import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
-import { getFreeFormName } from '../utils/free-form'
 import type { UnionFieldSchema } from 'src/types/plugins/form-schema'
 import { useExperimentalFreeForms } from './useExperimentalFreeForms'
 import { oidcSchema } from '../definitions/schemas/OIDC'
 import { otelSchema } from '../definitions/schemas/OTEL'
 import { konnectApplicationAuthSchema } from '../definitions/schemas/KonnectApplicationAuth'
 import { aiMCPOauth2Schema } from '../definitions/schemas/AIMCPOauth2'
+import { shouldUseFreeForm } from '../components/free-form/shared/plugin-registry'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -299,7 +299,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
    * @returns {Array} an array of form fields not to render across all entity forms
    */
   const getBlacklist = () => {
-    return ['created_at', 'updated_at', 'id', '_isCustomPlugin', '_supported_redis_partial_type', '_redis_partial_path']
+    return ['created_at', 'updated_at', 'id', '_isCustomPlugin', '_sourcePlugin', '_supported_redis_partial_type', '_redis_partial_path']
   }
 
   /**
@@ -333,7 +333,9 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     })
 
     const pluginName = formModel.name
-    const metadata = PLUGIN_METADATA[pluginName]
+    // For cloned plugins, use the source plugin name for rendering decisions
+    const effectivePluginName = currentSchema._sourcePlugin || pluginName
+    const metadata = PLUGIN_METADATA[effectivePluginName]
 
 
     const redisFields = []
@@ -350,7 +352,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
     formSchema._redis_partial_path = currentSchema._redis_partial_path
 
-    if (getSharedFormName(pluginName) || getFreeFormName(pluginName, experimentalFreeForms) || metadata?.useLegacyForm || options?.credential || engine === 'freeform') {
+    if (getSharedFormName(effectivePluginName) || shouldUseFreeForm(effectivePluginName, experimentalFreeForms, engine) || metadata?.useLegacyForm || options?.credential) {
       /**
        * Do not generate grouped schema when:
        * - The plugin has a custom layout
@@ -723,7 +725,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       // This can be overridden in the field schema
     }
 
-    return convertToDotNotation(capitalize(schema.label || fieldName.replace(/_/g, ' ')))
+    return convertToDotNotation(schema.label || fieldName.replace(/_/g, ' '))
   }
 
   const fieldSchemaHandler = (schema: Record<string, any>, formModel: Record<string, any>) => {

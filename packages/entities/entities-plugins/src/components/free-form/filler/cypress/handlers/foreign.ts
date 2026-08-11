@@ -1,21 +1,21 @@
 import type { ForeignFieldSchema } from '../../../../../types/plugins/form-schema'
-import type { HandlerOption } from './types'
+import { type HandlerOption, SCROLL_BEHAVIOR, scrollIntoViewNative } from './types'
 import { selectors } from '../../shared/selectors'
-import { defaultActionOptions } from './types'
 
 export function fillForeign(option: HandlerOption<ForeignFieldSchema>): void {
-  const { fieldKey, value, actionOptions = defaultActionOptions } = option
+  const { fieldKey, value } = option
 
   const selector = selectors.field(fieldKey)
 
-  // For foreign fields, typically need to click to open selector and select item
-  cy.get(selector).click(actionOptions.click)
-
-  // Handle different value formats
+  // ForeignField.vue renders a plain text input where the referenced entity's
+  // id is typed directly - there is no dropdown/select-item popover to pick from.
   const itemValue = typeof value === 'object' && value?.id ? value.id : value
 
-  if (itemValue) {
-    // Look for select item with the id
-    cy.get(`[data-testid="select-item-${itemValue}"]`).click(actionOptions.click)
-  }
+  scrollIntoViewNative(selector)
+  cy.get(selector).then(($el) => {
+    cy.wrap($el).clear(SCROLL_BEHAVIOR)
+    if (itemValue) {
+      cy.wrap($el).type(String(itemValue), SCROLL_BEHAVIOR)
+    }
+  })
 }

@@ -32,17 +32,16 @@
           required
           type="text"
         />
-        <KTextArea
+        <SensitiveInput
           v-model.trim="state.fields.value"
-          autocomplete="off"
-          :character-limit="false"
           data-testid="secret-form-value"
           :label="t('secrets.form.fields.value.label')"
+          :labels="{ rotateLabel: t('secrets.form.fields.value.rotateLabel') }"
+          :mode="sensitiveInputMode"
+          multiline
           :placeholder="t('secrets.form.fields.value.placeholder')"
           :readonly="state.readonly"
           required
-          resizable
-          type="text"
         />
         <KAlert
           appearance="warning"
@@ -61,6 +60,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   SupportedEntityType,
+  SensitiveInput,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -86,7 +86,9 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectSecretFormConfig): boolean => {
       if (!config || config.app !== 'konnect') return false
-      if (!config.controlPlaneId || !config.cancelRoute) return false
+      if (config.apiType !== 'aiGateway' && !config.controlPlaneId) return false
+      if (!config.cancelRoute) return false
+      if (config.apiType === 'aiGateway' && !config.aiGatewayId) return false
       return true
     },
   },
@@ -128,7 +130,12 @@ const originalFields = reactive<SecretStateFields>({
   value: '',
 })
 
-const fetchUrl = computed<string>(() => endpoints.form[props.config?.app]?.edit
+const formEndpoints = computed(() => props.config.apiType === 'aiGateway'
+  ? endpoints.form.aiGateway
+  : endpoints.form[props.config.app])
+
+const fetchUrl = computed<string>(() => formEndpoints.value?.edit
+  .replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
   .replace(/{id}/gi, props.configStoreId)
   .replace(/{secretId}/gi, props.secretId),
 )
@@ -156,9 +163,13 @@ const formType = computed((): EntityBaseFormType => props.secretId
   ? EntityBaseFormType.Edit
   : EntityBaseFormType.Create)
 
+const sensitiveInputMode = computed((): 'edit' | 'create' => formType.value === EntityBaseFormType.Edit ? 'edit' : 'create')
+
 const submitUrl = computed<string>(() => {
-  return `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value]}`
+  return `${props.config.apiBaseUrl}${formEndpoints.value[formType.value]}`
+    .replace(/{aiGatewayId}/gi, props.config.aiGatewayId || '')
     .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
     .replace(/{id}/gi, props.configStoreId)
     .replace(/{secretId}/gi, props.secretId)
 })
@@ -182,7 +193,11 @@ const submitData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, payload.value)
     } else if (formType.value === 'edit') {
-      response = await axiosInstance.put(submitUrl.value, payload.value)
+      // AI Gateway does not allow updating the `key` field, so omit it from the payload
+      const editPayload = props.config.apiType === 'aiGateway'
+        ? { value: payload.value.value }
+        : payload.value
+      response = await axiosInstance.put(submitUrl.value, editPayload)
     }
 
     updateFormValues(response?.data)

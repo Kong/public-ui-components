@@ -1,6 +1,6 @@
 
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { ClusterNode, Identifiable, PartialType, SentinelNode, AuthProvider } from './redis-configuration'
+import type { ClusterNode, Identifiable, PartialType, SentinelNode, AuthProvider, OauthAuthMethod, OauthClientSecretJwtAlg, OauthGrantType } from './redis-configuration'
 
 export interface BaseRedisConfigurationFormConfig {
   /**
@@ -13,9 +13,17 @@ export interface BaseRedisConfigurationFormConfig {
    */
   useKonnectManagedRedisUi?: boolean
   /**
+   * Konnect only. Required for Cloud Gateway managed Redis behavior.
+   */
+  isCloudGateway?: boolean
+  /**
    * Show/hide cloud authentication configuration fields
    */
   cloudAuthAvailable?: boolean
+  /**
+   * Show/hide the OAuth option in the cloud authentication provider selector
+   */
+  oauthCloudAuthAvailable?: boolean
   /**
    * Whether the port field can accept vault references
    */
@@ -77,6 +85,23 @@ export interface RedisConfigurationFields {
       azure_client_id?: string
       azure_client_secret?: string
       azure_tenant_id?: string
+      oauth?: {
+        auth_method: OauthAuthMethod
+        client_id?: string
+        client_secret?: string
+        client_secret_jwt_alg: OauthClientSecretJwtAlg
+        grant_type: OauthGrantType
+        password?: string
+        redis_username?: string
+        redis_username_claim?: string
+        scopes: string[]
+        ssl_verify: boolean
+        timeout?: number
+        token_endpoint?: string
+        token_headers: Record<string, string>
+        token_post_args: Record<string, string>
+        username?: string
+      }
     }
   }
 }

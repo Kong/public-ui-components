@@ -20,18 +20,46 @@
     <template #actions>
       <div class="config-card-actions">
         <slot name="actions" />
-        <KLabel
-          class="config-format-select-label"
-          data-testid="config-format-select-label"
-        >
-          {{ label }}
-        </KLabel>
-        <KSelect
-          v-model="configFormat"
-          data-testid="select-config-format"
-          :items="configFormatItems"
-          @change="handleChange"
+
+        <KCheckbox
+          v-if="configFormat !== 'structured'"
+          v-model="showSensitiveFields"
+          class="sensitive-fields-checkbox"
+          data-testid="sensitive-fields-checkbox"
+          :label="t('baseConfigCard.actions.sensitive_fields')"
+          :label-attributes="{
+            info: t('baseConfigCard.actions.sensitive_fields_tooltip'),
+            tooltipAttributes: {
+              maxWidth: '200',
+              placement: 'top',
+            },
+          }"
         />
+
+        <div class="row">
+          <KLabel
+            class="config-format-select-label"
+            data-testid="config-format-select-label"
+          >
+            {{ label }}
+          </KLabel>
+          <KSelect
+            v-model="configFormat"
+            data-testid="select-config-format"
+            :items="configFormatItems"
+            @change="handleChange"
+          />
+        </div>
+
+        <KButton
+          v-if="configFormat === 'deck' && Boolean(deckCustomizationOptions)"
+          appearance="secondary"
+          class="button-customize-deck"
+          data-testid="config-deck-customize-button"
+          @click="isDeckCustomizationVisible = true"
+        >
+          {{ t('baseConfigCard.actions.deck_customize') }}
+        </KButton>
 
         <KButton
           v-if="configCardDoc"
@@ -45,7 +73,7 @@
             target="_blank"
           >
             <BookIcon
-              :size="KUI_ICON_SIZE_40"
+              :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
             />
           </a>
         </KButton>
@@ -77,17 +105,22 @@
       class="config-card-details-section"
     >
       <ConfigCardDisplay
+        :code-block-record="codeBlockRecordFromApi"
         :code-block-record-formatter="codeBlockRecordFormatter"
+        :code-block-record-redacted="!showSensitiveFields ? redactedCodeBlockRecord : undefined"
         :config="config"
         :entity-type="entityType"
         :fetcher-url="fetcherUrl"
         :format="configFormat"
+        :is-deck-customization-visible="isDeckCustomizationVisible"
+        :preserve-code-block-timestamps="preserveCodeBlockTimestamps"
         :prop-list-types="propListTypes"
         :property-collections="propertyLists"
         :record="record"
         :sub-entity-type="subEntityType"
+        @deck-customization:close="isDeckCustomizationVisible = false"
+        @request-deck-format="configFormat = 'deck'"
       >
-        <!-- Pass all the slots from GrandParent to Child components -->
         <template
           v-for="slotKey in Object.keys($slots)"
           :key="slotKey"
@@ -112,15 +145,17 @@ import type {
   KonnectBaseEntityConfig,
   KongManagerBaseEntityConfig,
   ConfigurationSchema,
+  ConfigCardCodeFormat,
+  ConfigCardFormat,
   PluginConfigurationSchema,
   RecordItem,
   DefaultCommonFieldsConfigurationSchema,
   SupportedEntityType,
   PolicyConfigurationSchema,
 } from '../../types'
-import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray, SupportedEntityDeckArray } from '../../types'
+import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray } from '../../types'
 import composables from '../../composables'
-import ConfigCardDisplay, { type CodeFormat, type Format } from './ConfigCardDisplay.vue'
+import ConfigCardDisplay from './ConfigCardDisplay.vue'
 import { BookIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import type { HeaderTag } from '@kong/kongponents'
@@ -129,7 +164,7 @@ const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:success', data: Record<string, any>): void
   (e: 'fetch:error', error: AxiosError): void
-  (e: 'configFormatChange', format: Format): void
+  (e: 'configFormatChange', format: ConfigCardFormat): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props
@@ -140,7 +175,6 @@ const props = defineProps({
     required: true,
     validator: (config: KonnectBaseEntityConfig | KongManagerBaseEntityConfig): boolean => {
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
       if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
       if (!config.entityId) return false
       return true
@@ -217,17 +251,33 @@ const props = defineProps({
    * This prop only works if dataKey is not provided.
    */
   recordResolver: {
-    type: Function as PropType<(data: any) => any>,
+    type: Function as PropType<(data: Record<string, any>) => Record<string, any>>,
     required: false,
-    default: (data: any) => data,
+    default: (data: Record<string, any>) => data,
   },
   /**
    * A function to format the entity record before displaying it in the code block.
    */
   codeBlockRecordFormatter: {
-    type: Function as PropType<(entityRecord: Record<string, any>, format: CodeFormat) => Record<string, any>>,
+    type: Function as PropType<(entityRecord: Record<string, any>, format: ConfigCardCodeFormat) => Record<string, any>>,
     required: false,
     default: (entityRecord: Record<string, any>) => entityRecord,
+  },
+  /**
+   * JSON tab show the same nested shape the GET returned
+   */
+  codeBlockRecordResolver: {
+    type: Function as PropType<(rawData: Record<string, any>) => Record<string, any>>,
+    required: false,
+    default: undefined,
+  },
+  /**
+   * When true, code blocks keep `created_at`/ `updated_at` (default strips them per KHCP-9837)
+   */
+  preserveCodeBlockTimestamps: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
   /**
    * Boolean to control card title visibility.
@@ -256,77 +306,102 @@ const props = defineProps({
     type: String as PropType<HeaderTag>,
     default: 'h2',
   },
+  /**
+   * Hide entries from the Format dropdown (eg. ['yaml']). Structured view is always shown
+   */
+  formatsToHide: {
+    type: Array as PropType<ConfigCardCodeFormat[]>,
+    required: false,
+    default: () => [],
+  },
 })
 
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { convertKeyToTitle } = composables.useStringHelpers()
+const schema = composables.useSchema()
 
 composables.useSubSchema(props.pluginConfigKey) // reduce the schema to only the plugin config
 
 const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
-const configFormatItems = [
-  {
-    label: t('baseConfigCard.general.structuredFormat'),
-    value: 'structured',
-    selected: true,
-  },
-  {
-    label: t('baseForm.configuration.json'),
-    value: 'json',
-  },
-  {
-    label: t('baseForm.configuration.yaml'),
-    value: 'yaml',
-  },
-]
+const isDeckCustomizationVisible = ref(false)
 
-// terraform only supported in konnect
-if (props.config.app === 'konnect') {
-  // insert terraform as the third option
-  configFormatItems.splice(2, 0, {
-    label: t('baseForm.configuration.terraform'),
-    value: 'terraform',
-  })
-}
-// decK is only available for certain entity types
-// https://developer.konghq.com/deck/reference/entities/
-const isSupportedEntity = SupportedEntityDeckArray.includes(props.entityType as any)
-const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckConfig
-if (isDeckEnabled && isSupportedEntity) {
-  configFormatItems.push({
-    label: t('baseForm.configuration.deck'),
-    value: 'deck',
-  })
-}
+const {
+  isDeckEnabled,
+  deckCustomizationOptions,
+} = composables.useBaseEntityDeckOptions(
+  () => props.config,
+  () => props.entityType,
+)
 
-const DEFAULT_FORMAT = configFormatItems[0].value as Format
+/** KSelect items: built in display order, then filtered by `formatsToHide` */
+const configFormatItems = computed(() => {
+  const items: Array<{ label: string, value: ConfigCardFormat, selected?: boolean }> = [
+    {
+      label: t('baseConfigCard.general.structuredFormat'),
+      value: 'structured',
+      selected: true,
+    },
+    {
+      label: t('baseForm.configuration.json'),
+      value: 'json',
+    },
+    {
+      label: t('baseForm.configuration.yaml'),
+      value: 'yaml',
+    },
+  ]
 
-const configFormat = ref<Format>(DEFAULT_FORMAT)
+  // terraform only supported in konnect
+  if (props.config.app === 'konnect') {
+    // insert terraform as the third option
+    items.splice(2, 0, {
+      label: t('baseForm.configuration.terraform'),
+      value: 'terraform',
+    })
+  }
+
+  if (isDeckEnabled.value) {
+    items.push({
+      label: t('baseForm.configuration.deck'),
+      value: 'deck',
+    })
+  }
+
+  const hidden = new Set(props.formatsToHide)
+  return items.filter((item) => item.value === 'structured' || !hidden.has(item.value as ConfigCardCodeFormat))
+})
+
+// Initial tab matches the first format item- `structured`.onMounted may replace this from localStorage
+// when `config.formatPreferenceKey` is set
+const configFormat = ref<ConfigCardFormat>('structured')
 
 const handleChange = (payload: any): void => {
   configFormat.value = payload?.value
   emit('configFormatChange', configFormat.value)
 }
 
-const persistFormat = (localStorageKey: string, format: Format): void => {
+const persistFormat = (localStorageKey: string, format: ConfigCardFormat): void => {
   localStorage.setItem(localStorageKey, format)
 }
 
-watch(configFormat, (format: Format) => {
+watch(configFormat, (format: ConfigCardFormat) => {
   if (props.config.formatPreferenceKey) {
     persistFormat(props.config.formatPreferenceKey, format)
   }
 })
 
+// Restore last format from localStorage if still allowed and not removed by `formatsToHide`
+// Otherwise fall back to the first dropdown option (always `structured`)
 onMounted(() => {
   if (props.config.formatPreferenceKey) {
     const storedFormat = localStorage.getItem(props.config.formatPreferenceKey)
-    if (storedFormat && configFormatItems.some(item => item.value === storedFormat)) {
-      configFormat.value = storedFormat as Format
+    const items = configFormatItems.value
+    if (storedFormat && items.some(item => item.value === storedFormat)) {
+      configFormat.value = storedFormat as ConfigCardFormat
     } else {
-      configFormat.value = DEFAULT_FORMAT
+      configFormat.value = items[0]?.value as ConfigCardFormat ?? 'structured'
     }
     persistFormat(props.config.formatPreferenceKey, configFormat.value)
   }
@@ -369,6 +444,11 @@ const DEFAULT_BASIC_FIELDS_CONFIGURATION: DefaultCommonFieldsConfigurationSchema
     order: -1, // the last property displayed
     section: ConfigurationSchemaSection.Basic,
   },
+  labels: {
+    type: ConfigurationSchemaType.BadgeTag,
+    order: -1, // the last property displayed
+    section: ConfigurationSchemaSection.Basic,
+  },
   partials: {
     type: ConfigurationSchemaType.LinkInternal,
     label: t('baseConfigCard.commonFields.partial_label'),
@@ -381,6 +461,39 @@ const isLoading = ref(false)
 const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
 const record = ref<Record<string, any>>({})
+// Raw API payload for code tabs, structured tab always reads `record` (from `recordResolver`)
+const rawFetchedData = ref<Record<string, any> | null>(null)
+
+// Optional resolver for JSON/YAML/TR/deck tabs; fallback is `record` when omitted
+const codeBlockRecordFromApi = computed((): Record<string, any> | undefined => {
+  if (!props.codeBlockRecordResolver || rawFetchedData.value == null) {
+    return undefined
+  }
+  return props.codeBlockRecordResolver(rawFetchedData.value)
+})
+
+// redact sensitive fields by default
+const showSensitiveFields = ref(false)
+
+const { redactByConfigSchema, redactByApiSchema, isObjectRecord, getApiSchemaField } = composables.useHelpers()
+
+const redactedCodeBlockRecord = computed((): Record<string, any> => {
+  const source = codeBlockRecordFromApi.value || record.value
+  let rec = source
+
+  if (isObjectRecord(source) && Array.isArray(schema?.value?.fields)) {
+    const schemaRedactedRecord: Record<string, any> = {}
+    for (const key in source) {
+      const fieldSchema = getApiSchemaField(schema?.value?.fields, key)
+      schemaRedactedRecord[key] = fieldSchema ? redactByApiSchema(source[key], fieldSchema) : source[key]
+    }
+    rec = schemaRedactedRecord
+  }
+
+  rec = redactByConfigSchema(rec, props.configSchema) as Record<string, any>
+
+  return props.codeBlockRecordResolver ? props.codeBlockRecordResolver(rec) : rec
+})
 
 // Handle sorting by 'order' prop
 const orderedRecordArray = computed((): RecordItem[] => {
@@ -532,6 +645,7 @@ const orderedPolicyConfigArray = computed((): RecordItem[] => {
   }).filter(item => !item.hidden) // strip hidden fields
 })
 
+// Split ordered rows by schema section so ConfigCardDisplay can render basic vs advanced vs plugin vs policy
 const propertyLists = computed((): { basic: RecordItem[], advanced: RecordItem[], plugin: RecordItem[], policy: RecordItem[] } => {
   return {
     basic: orderedRecordArray.value?.filter((orderedItem: RecordItem) => orderedItem.section === ConfigurationSchemaSection.Basic),
@@ -571,14 +685,11 @@ const fetcherUrl = computed<string>(() => {
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
-  // Always replace the id for editing
-  url = url.replace(/{id}/gi, props.config.entityId)
-
   return url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{id}/gi, props.config.entityId) // Always replace the id for editing
 })
 
 watch(isLoading, (loading: boolean) => {
@@ -592,6 +703,8 @@ onBeforeMount(async () => {
 
   try {
     const { data } = await axiosInstance.get(fetcherUrl.value)
+    // Stash raw payload before `recordResolver` reshape it
+    rawFetchedData.value = data
 
     if (props.dataKey) {
       if (typeof data[props.dataKey] !== 'undefined') {
@@ -615,6 +728,7 @@ onBeforeMount(async () => {
 
     emit('fetch:success', data)
   } catch (error: any) {
+    rawFetchedData.value = null // avoid showing stale JSON after a failed refetch
     const parsedError = getMessageFromError(error)
     // Custom logic here for 404 - if error message is `code 5` fallback to default error message
     fetchErrorMessage.value = !parsedError.startsWith('code') ? parsedError : t('baseConfigCard.errors.load')
@@ -632,10 +746,24 @@ onBeforeMount(async () => {
   .config-card-actions {
     align-items: center;
     display: flex;
+    gap: var(--kui-space-60, $kui-space-60);
+
+    .row {
+      align-items: center;
+      display: flex;
+    }
 
     .config-format-select-label {
       margin-bottom: var(--kui-space-0, $kui-space-0);
       margin-right: var(--kui-space-40, $kui-space-40);
+    }
+
+    .sensitive-fields-checkbox {
+      align-items: center;
+
+      :deep(.checkbox-label) {
+        width: max-content;
+      }
     }
   }
 

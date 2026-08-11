@@ -19,7 +19,6 @@
       :entity="entity"
       :field-disabled="disabled"
       :fields="searchFields"
-      :initial-item-selected="initialValueSelected"
       :label-field="labelField"
       :placeholder="loading ? t('actions.loading_spinner') : (placeholder || fieldAttrs.placeholder)"
       :selected-item="selectedItem"
@@ -47,7 +46,7 @@ import { useField, useFieldAttrs } from './composables'
 import type { BaseFieldProps } from './types'
 import type { SelectItem } from '@kong/kongponents'
 import type { EntityData } from '@kong-ui-public/forms'
-import composables from '../../../composables'
+import useI18n from '../../../composables/useI18n'
 
 type ForeignFieldValue = { id: string } | null
 
@@ -62,6 +61,8 @@ interface ScopeEntityFieldProps extends BaseFieldProps {
   placeholder?: string
   help?: string
   disabled?: boolean
+  /** Whether the plugin is being created for a portal developer (consumer may not appear in consumers API) */
+  developer?: boolean
 }
 
 const {
@@ -72,10 +73,11 @@ const {
   disabled,
   placeholder,
   help,
+  developer,
   ...props
 } = defineProps<ScopeEntityFieldProps>()
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t } } = useI18n()
 
 const { value: fieldValue, hide, ...field } = useField<ForeignFieldValue>(toRef(() => name))
 
@@ -93,10 +95,6 @@ const allowUuidSearch = computed(() => fields.includes('id'))
 // --- Edit mode: fetch the currently selected entity ---
 const loading = ref(false)
 const selectedItem = ref<SelectItem<string> | undefined>()
-const initialItem = ref<SelectItem<string> | undefined>()
-const initialValueSelected = computed(() => {
-  return (fieldValue?.value?.id ?? '') === (initialItem.value?.value ?? '')
-})
 
 onMounted(async () => {
   const currentId = fieldValue?.value?.id
@@ -108,6 +106,12 @@ onMounted(async () => {
       validateStatus: (status: number) => (status >= 200 && status < 300) || status === 404,
     })
     if (res.status === 404) {
+      if (developer) {
+        // Developer consumers may not appear in the consumers API; use the known ID as fallback
+        const item: SelectItem<string> = { label: currentId, value: currentId }
+        selectedItem.value = item
+        return
+      }
       throw new Error(`Entity of type ${entity} with id ${currentId} not found`)
     }
     const entityData: EntityData = res.data
@@ -116,7 +120,6 @@ onMounted(async () => {
       label: entityData[labelField] ?? entityData.id,
       value: entityData.id,
     }
-    initialItem.value = item
     selectedItem.value = item
   } catch (err) {
     console.error('Failed to load selected entity:', err)

@@ -4,7 +4,10 @@
       v-if="props.entityRecord"
       id="terraform-codeblock"
       :code="terraformContent"
+      :copy-code="unredactedTerraformContent"
+      data-dd-privacy="mask"
       language="terraform"
+      :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
       theme="dark"
       @code-block-render="highlightCodeBlock"
     />
@@ -12,17 +15,26 @@
 </template>
 
 <script setup lang="ts">
+import { CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT } from '../../constants'
 import { type PropType, computed } from 'vue'
-import { EventGatewayTypesArray, type SupportedEntityType, SupportedEntityTypesArray, IdentityTypesArray } from '../../types'
+import { EventGatewayTypesArray, SupportedEntityType, SupportedEntityTypesArray, IdentityTypesArray } from '../../types'
 import { highlightCodeBlock } from '../../utils/code-block'
 
 const SINGLE_INDENT = '  '
+const HEREDOC_DELIMITER = 'TF_MULTILINE_EOT'
+// Resource name for Konnect managed cache add-ons
+const CLOUD_GATEWAY_ADDON_ENTITY_TYPE = 'cloud_gateway_addon'
 
 const props = defineProps({
-  /** A record to indicate the entity's configuration, used to populate the Terraform code block */
+  /** A record to indicate the entity's configuration, the visible code content (may be redacted) */
   entityRecord: {
     type: Object as PropType<Record<string, any>>,
     required: true,
+  },
+  /** The unredacted record, used for copy actions */
+  unredactedRecord: {
+    type: Object as PropType<Record<string, any>>,
+    default: null,
   },
   entityType: {
     type: String as PropType<SupportedEntityType>,
@@ -40,20 +52,56 @@ const props = defineProps({
   },
 })
 
+const isAddonPayload = computed((): boolean => {
+  const record = props.entityRecord
+  if (!record || typeof record !== 'object') {
+    return false
+  }
+
+  const config = record.config
+  if (!config || typeof config !== 'object') {
+    return false
+  }
+
+  // Support both raw API shape (`capacity_config`) and helper-shaped TF args (`managed_cache`)
+  return typeof config.managed_cache !== 'undefined' || typeof config.capacity_config !== 'undefined'
+})
+
+const resolvedEntityType = computed((): string => {
+  if (typeof props.entityType === 'string' && props.entityType.length > 0) {
+    return props.entityType
+  }
+
+  // Fallback prevents `konnect_gateway_undefined` headers in mixed host/runtime versions
+  return isAddonPayload.value
+    ? CLOUD_GATEWAY_ADDON_ENTITY_TYPE
+    : SupportedEntityType.Partial
+})
+
 const isEventGatewayEntity = computed(() => {
-  return EventGatewayTypesArray.includes(props.entityType)
+  return EventGatewayTypesArray.includes(resolvedEntityType.value)
 })
 
 const isIdentityEntity = computed(() => {
-  return IdentityTypesArray.includes(props.entityType)
+  return IdentityTypesArray.includes(resolvedEntityType.value)
 })
+
+const buildStringLiteral = (value: string, indent: string): string => {
+  if (value.includes('\n')) {
+    const contentIndent = indent + SINGLE_INDENT
+    const indentedLines = value.split('\n').map(line => `${contentIndent}${line}`).join('\n')
+    return `<<-${HEREDOC_DELIMITER}\n${indentedLines}\n${contentIndent}${HEREDOC_DELIMITER}`
+  }
+  const escaped = value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+  return `"${escaped}"`
+}
 
 const buildBasicValString = (value: string | number | boolean, key: string): string => {
   const indent = SINGLE_INDENT
   let content = ''
 
   if (typeof value === 'string') {
-    content += `${indent}${key} = "${value}"\n`
+    content += `${indent}${key} = ${buildStringLiteral(value, indent)}\n`
   } else { // boolean or number
     content += `${indent}${key} = ${String(value !== undefined && value !== null ? value : '')}\n`
   }
@@ -101,13 +149,10 @@ const buildObjectStr = (value: Record<string, any>, key?: string, additionalInde
       valueContent = '{\n'
       valueContent += buildObjectStr(v, undefined, indent)
       valueContent += `${indent}${SINGLE_INDENT}}`
-    } else { // string, number, boolean, or null/undefined -> string
+    } else if (typeof v === 'string') {
+      valueContent = buildStringLiteral(v, indent + SINGLE_INDENT)
+    } else { // number, boolean, or null/undefined -> string
       valueContent = String(v !== undefined && v !== null ? v : '')
-    }
-
-    if (typeof v === 'string') {
-      // double quote strings
-      valueContent = `"${valueContent}"`
     }
 
     content += `${indent}${SINGLE_INDENT}${k} = ${valueContent}\n`
@@ -139,8 +184,8 @@ const buildArrayStr = (arr: any[], key?: string, additionalIndent = ''): string 
       content += buildObjectStr(item, undefined, indent)
       content += `${indent}${SINGLE_INDENT}}`
     } else if (typeof item === 'string') {
-      content += `${indent}${SINGLE_INDENT}"${item}"`
-    } else { // string, number, boolean, or null/undefined -> string
+      content += `${indent}${SINGLE_INDENT}${buildStringLiteral(item, indent + SINGLE_INDENT)}`
+    } else { // number, boolean, or null/undefined -> string
       content += `${indent}${SINGLE_INDENT}${String(item !== undefined && item !== null ? item : '')}`
     }
 
@@ -183,11 +228,11 @@ const generateConfig = (record: Record<string, any>): string => {
   return escapeTerraformInterpolation(content)
 }
 
-const terraformContent = computed((): string => {
+const buildTerraformCode = (record: Record<string, any>): string => {
   // filter out null/undefined values since terraform doesn't accept them
   // this logic isn't recursive, so manually handle nested config object
-  const modifiedRecord = Object.fromEntries(Object.entries(props.entityRecord).filter(([, value]) => value !== null && value !== undefined))
-  const modifiedConfig = props.entityRecord.config ? Object.fromEntries(Object.entries(props.entityRecord?.config).filter(([, value]) => value !== null && value !== undefined)) : undefined
+  const modifiedRecord = Object.fromEntries(Object.entries(record).filter(([, value]) => value !== null && value !== undefined))
+  const modifiedConfig = record.config ? Object.fromEntries(Object.entries(record?.config).filter(([, value]) => value !== null && value !== undefined)) : undefined
   if (modifiedConfig) {
     modifiedRecord.config = modifiedConfig
   }
@@ -233,11 +278,11 @@ const terraformContent = computed((): string => {
   if (isEventGatewayEntity.value) {
     // special handling for event gateways
     const entityName = props.subEntityType
-      ? `${props.entityType}_${props.subEntityType}`
-      : props.entityType
+      ? `${resolvedEntityType.value}_${props.subEntityType}`
+      : resolvedEntityType.value
     content += `resource "konnect_event_gateway_${entityName}" "my_eventgateway${entityName.replaceAll('_', '')}" {\n`
     content += `${SINGLE_INDENT}provider = konnect-beta \n` // remove this line if provider changes
-  } else if (props.entityType === 'plugin') {
+  } else if (resolvedEntityType.value === SupportedEntityType.Plugin) {
     // plugin type is specified separately
     //clone and convert '-' to '_' since terraform doesn't allow '-'
     const pluginType = props.credentialType.replace(/-/g, '_') || (modifiedRecord.name + '').replace(/-/g, '_')
@@ -245,17 +290,20 @@ const terraformContent = computed((): string => {
 
     content += `resource "konnect_gateway_plugin_${pluginType}" "my_${pluginType}" {\n`
   } else if (isIdentityEntity.value) {
-    content += `resource "konnect_${props.entityType}" "my_${props.entityType}" {\n`
+    content += `resource "konnect_${resolvedEntityType.value}" "my_${resolvedEntityType.value}" {\n`
     content += `${SINGLE_INDENT}provider = konnect-beta\n`
+  } else if (isAddonPayload.value || resolvedEntityType.value === CLOUD_GATEWAY_ADDON_ENTITY_TYPE) {
+    // Managed cache uses a dedicated provider resource name
+    content += 'resource "konnect_cloud_gateway_addon" "managed_cache" {\n'
   } else { // generic entity
-    content += `resource "konnect_gateway_${props.entityType}" "my_${props.entityType}" {\n`
+    content += `resource "konnect_gateway_${resolvedEntityType.value}" "my_${resolvedEntityType.value}" {\n`
   }
 
   // main config
   content += generateConfig(modifiedRecord)
 
-  // control plane id
-  if (!isEventGatewayEntity.value && !isIdentityEntity.value) {
+  // Add-ons use `owner` blocks, so skip generic root `control_plane_id`
+  if (!isEventGatewayEntity.value && !isIdentityEntity.value && resolvedEntityType.value !== CLOUD_GATEWAY_ADDON_ENTITY_TYPE) {
     content += `${SINGLE_INDENT}control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id\n`
   } else if (parentEntityType) { // parent entity information if scoped
     content += `${SINGLE_INDENT}${parentEntityType} = {\n`
@@ -266,5 +314,13 @@ const terraformContent = computed((): string => {
   content += '}\n'
 
   return content
+}
+
+const terraformContent = computed((): string => {
+  return buildTerraformCode(props.entityRecord)
+})
+
+const unredactedTerraformContent = computed((): string => {
+  return buildTerraformCode(props.unredactedRecord || props.entityRecord)
 })
 </script>

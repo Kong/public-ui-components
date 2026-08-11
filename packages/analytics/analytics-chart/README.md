@@ -9,9 +9,6 @@ Dynamic chart component for kong analytics.
   - [Usage Example](#usage-example-analyticschart)
 - [SimpleChart](#SimpleChart)
   - [Usage Example](#usage-example-simplechart)
-- [CsvExportModal](#CsvExportModal)
-  - [Events](#CsvExportModal-events)
-  - [Usage Example](#usage-example-csvexportmodal)
 
 ## Features
 
@@ -111,6 +108,14 @@ yarn add @kong-ui-public/analytics-chart
 - required: `false`
 - default: `false`
 - Enable zooming on timeseries charts
+
+#### `showCenterMetric` (donut only)
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+- When `true` and `chartOptions.type` is `'donut'`, displays the summed total value in the center of the chart along with a label derived from the metric name (e.g. "Request count").
+- Only renders for summable metric units (`count`, `requests`, `usd`, `token count`). Automatically hidden for non-summable units such as `ms` or `bytes`.
 
 ### Events
 `@zoom-time-range` - event emitted representing a new time range on zoom selection see [AbsoluteTimeRangeV4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore/common.ts#L33)
@@ -307,102 +312,8 @@ export default defineComponent({
 
 ## CsvExportModal
 
-### Props
+`CsvExportModal` from `@kong-ui-public/analytics-chart` is deprecated and remains available for compatibility. For new integrations, use [`CsvExportModal` from dashboard-renderer](../dashboard-renderer/README.md#csvexportmodal).
 
-#### `chartData`
-
-Chart data to be exported
-
-- type: [ExploreResultV4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore-v4.ts)
-- required: `true`
-
-#### `filename`
-
-Resulting csv filename
-
-- type: `string`
-- required: `true`
-
-#### `modalDescription`
-
-Desctiption text that appears in the modal
-
-- type: `string`
-- required: `false`
-- default: `'Exports a CSV of the data represented in the chart.'`
-
-### CsvExportModal Events
-
-`@toggle-modal` event is emitted when the modal is toggled (dismissed)
-
-### Usage Example CsvExportModal
-
-```html
-
-<template>
-  <button @click.prevent="exportCsv">
-    Export to CSV
-  </button>
-
-  <CsvExportModal
-    v-if="exportModalVisible"
-    :chart-data="chartData"
-    filename="exportCsvFilename"
-    @toggle-modal="setModalVisibility"
-  />
-</template>
-
-<script setup lang="ts">
-
-import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { CsvExportModal } from '@kong-ui-public/analytics-chart'
-
-const exportModalVisible = ref(false)
-
-const setModalVisibility = (val: boolean) => {
-  exportModalVisible.value = val
-}
-const exportCsv = () => {
-  setModalVisibility(true)
-}
-
-const chartData = ref<ExploreResultV4>({
-  data: [
-    {
-      timestamp: '2023-04-24T10:27:22.798Z',
-      event: {
-        Service: 'service-a-id',
-        TotalRequests: 849,
-      },
-    },
-    {
-      timestamp: '2023-04-24T10:27:22.798Z',
-      event: {
-        Service: 'service-b-id',
-        TotalRequests: 5434,
-      },
-    },
-  ],
-  meta: {
-    start: '2023-04-24T10:27:22.798Z',
-    end: '2023-04-24T16:27:22.798Z',
-    granularity_ms: 3600000,
-    query_id: '12345',
-    display: {
-      Service: {
-        'service-a-id': { name: 'Service A' },
-        'service-b-id': { name: 'Service B' }
-      },
-    },
-    metric_names: ['TotalRequests'],
-    metric_units: {
-      TotalRequests: 'requests',
-    },
-  },
-})
-
-const fileName = ref('exportFilename')
-
-</script>
-
+```ts
+import { CsvExportModal } from '@kong-ui-public/dashboard-renderer'
 ```

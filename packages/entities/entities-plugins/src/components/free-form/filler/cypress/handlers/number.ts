@@ -1,19 +1,18 @@
 import type { NumberLikeFieldSchema } from '../../../../../types/plugins/form-schema'
-import type { HandlerOption } from './types'
+import { type HandlerOption, SCROLL_BEHAVIOR, scrollIntoViewNative } from './types'
 import { selectors } from '../../shared/selectors'
-import { defaultActionOptions } from './types'
 
 export function fillNumber(option: HandlerOption<NumberLikeFieldSchema>): void {
-  const { fieldKey, value, actionOptions = defaultActionOptions } = option
+  const { fieldKey, value } = option
 
   const selector = selectors.field(fieldKey)
 
+  scrollIntoViewNative(selector)
+
   cy.get(selector).then(($el) => {
-    if (actionOptions.clear !== false) {
-      cy.wrap($el).clear(actionOptions.clear)
-    }
+    cy.wrap($el).clear(SCROLL_BEHAVIOR)
     if (value !== undefined && value !== null) {
-      cy.wrap($el).type(String(value), actionOptions.type)
+      cy.wrap($el).type(String(value), SCROLL_BEHAVIOR)
     }
   })
 }

@@ -1,6 +1,6 @@
 <template>
   <div
-    v-for="i in 5"
+    v-for="i in 3"
     :key="i"
     class="page-content-block"
   />
@@ -8,8 +8,8 @@
 
 <style lang="scss" scoped>
 .page-content-block {
-  background-color: $kui-color-background-neutral-weak;
-  border-radius: $kui-border-radius-30;
+  background-color: var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak);
+  border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   height: 20vh;
 }
 </style>

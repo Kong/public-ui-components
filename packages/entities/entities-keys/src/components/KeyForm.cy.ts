@@ -1119,4 +1119,73 @@ describe('<KeyForm />', () => {
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in POST URL when creating with workspace config', () => {
+      cy.intercept(
+        { method: 'GET', url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/key-sets*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/keys`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createKeyWithWorkspace')
+
+      cy.mount(KeyForm, {
+        props: { config: { ...baseConfigKonnect, workspace: 'default' } },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createKeyWithWorkspace')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        { method: 'GET', url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/key-sets*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        { method: 'GET', url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/keys/${key1.id}` },
+        { statusCode: 200, body: key1 },
+      )
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/keys/${key1.id}`,
+        },
+        { statusCode: 200, body: key1 },
+      ).as('updateKeyWithWorkspace')
+
+      cy.mount(KeyForm, {
+        props: { config: { ...baseConfigKonnect, workspace: 'default' }, keyId: key1.id },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@updateKeyWithWorkspace')
+    })
+
+    it('omits workspace segment in POST URL when workspace is not provided', () => {
+      cy.intercept(
+        { method: 'GET', url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/key-sets*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/keys`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createKeyNoWorkspace')
+
+      cy.mount(KeyForm, {
+        props: { config: baseConfigKonnect },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createKeyNoWorkspace')
+    })
+  })
 })

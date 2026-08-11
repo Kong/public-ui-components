@@ -1,0 +1,22 @@
+{
+  "actions": {
+    "add_entity": "Add {entity}",
+    "remove_entity": "Remove {entity}"
+  },
+  "plugins": {
+    "form": {
+      "field_rules": {
+        "at_least_one_of": "At least one of the following values is required: {parameters}.",
+        "mutually_required": "These values must be used together: {parameters}.",
+        "mutually_exclusive": "Only one of these values can be used: {parameters}."
+      }
+    },
+    "free-form": {
+      "tag_helper": "Use comma to separate values. eg: value1, value2",
+      "foreign_placeholder": "Enter a UUID of {entity}",
+      "vault_picker": {
+        "component_error": "The vault secret picker is not available"
+      }
+    }
+  }
+}

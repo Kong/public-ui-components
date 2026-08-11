@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.41.2",
+  "version": "3.61.0",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -12,7 +12,12 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-shared.es.js",
-      "require": "./dist/entities-shared.umd.js"
+      "require": "./dist/entities-shared.cjs.js"
+    },
+    "./deck-editor": {
+      "types": "./dist/types/deck-editor.d.ts",
+      "import": "./dist/deck-editor.es.js",
+      "require": "./dist/deck-editor.cjs.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -22,26 +27,36 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.48.0",
-    "@kong/kongponents": "^9.52.5",
-    "@shikijs/core": "^3.21.0",
-    "@shikijs/engine-javascript": "^3.21.0",
-    "axios": "^1.13.5",
-    "shiki": "^3.21.0",
+    "@kong-ui-public/monaco-editor": "workspace:^",
+    "@kong/icons": "^1.58.0",
+    "@kong/kongponents": "^9.63.0",
+    "@shikijs/core": "^4.2.0",
+    "@shikijs/engine-javascript": "^4.2.0",
+    "@shikijs/langs": "^4.2.0",
+    "@shikijs/themes": "^4.2.0",
+    "@vueuse/core": "^14.3.0",
+    "axios": "^1.16.1",
+    "monaco-editor": "^0.55.1",
+    "shiki": "^4.2.0",
     "vue": ">= 3.3.13 < 4",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4 || ^5.0.6"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.20.0",
-    "@kong/icons": "^1.48.0",
-    "@kong/kongponents": "9.52.5",
-    "@shikijs/core": "^3.21.0",
-    "@shikijs/engine-javascript": "^3.21.0",
-    "axios": "^1.13.2",
-    "shiki": "^3.21.0",
-    "vue": "^3.5.27",
-    "vue-router": "^4.6.4"
+    "@kong-ui-public/monaco-editor": "workspace:^",
+    "@kong/design-tokens": "3.2.7",
+    "@kong/icons": "^1.62.1",
+    "@kong/kongponents": "9.64.3",
+    "@shikijs/core": "^4.3.1",
+    "@shikijs/engine-javascript": "^4.3.1",
+    "@shikijs/langs": "^4.3.1",
+    "@shikijs/themes": "^4.3.1",
+    "@vueuse/core": "^14.3.0",
+    "axios": "^1.17.0",
+    "monaco-editor": "^0.55.1",
+    "shiki": "^4.3.1",
+    "vue": "^3.5.35",
+    "vue-router": "^5.2.0"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
@@ -73,7 +88,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "680KB"
+    "errorLimit": "810KB"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",

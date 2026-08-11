@@ -1,10 +1,11 @@
-const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
+const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}'
 const KMBaseApiUrl = '/{workspace}'
 
 export default {
   list: {
     konnect: {
       all: `${konnectBaseApiUrl}/services`,
+      search: `${konnectBaseApiUrl}/services/search`,
     },
     kongManager: {
       all: `${KMBaseApiUrl}/services`,
@@ -18,6 +19,12 @@ export default {
     kongManager: {
       create: `${KMBaseApiUrl}/services`,
       edit: `${KMBaseApiUrl}/services/{id}`,
+    },
+  },
+  relatedEntities: {
+    konnect: {
+      routes: `${konnectBaseApiUrl}/services/{id}/routes`,
+      plugins: `${konnectBaseApiUrl}/services/{id}/plugins`,
     },
   },
 }

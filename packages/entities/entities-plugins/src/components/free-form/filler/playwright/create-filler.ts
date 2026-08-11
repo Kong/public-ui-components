@@ -16,6 +16,7 @@ import {
   walkFields,
   getHandlerType,
   getArrayItemInfo,
+  getMapEntryInfo,
   isRecordArrayItem,
   type FillerContext,
   type FieldToFill,
@@ -23,13 +24,9 @@ import {
   type RecordFieldSchema,
 } from '../shared/field-walker'
 
-export interface TypeOptions {
-  delay?: number
-}
-
 export interface FillerInstance {
   fill: (data: Record<string, any>) => Promise<void>
-  fillField: (fieldKey: string, value: any, typeOptions?: TypeOptions) => Promise<void>
+  fillField: (fieldKey: string, value: any) => Promise<void>
   schemaMap: Record<string, UnionFieldSchema>
   handlers: Handlers
 }
@@ -48,31 +45,39 @@ export function createFiller(
     }
   }
 
-  async function fillFieldByInfo({ handlerType, fieldKey, fieldSchema, value }: FieldToFill, typeOptions?: TypeOptions): Promise<void> {
+  async function fillFieldByInfo({ handlerType, fieldKey, fieldSchema, value }: FieldToFill): Promise<void> {
     switch (handlerType) {
       case 'string':
-        await mergedHandlers.fillString({ page, fieldKey, fieldSchema: fieldSchema as StringFieldSchema, value, typeOptions })
+        await mergedHandlers.fillString({ page, fieldKey, fieldSchema: fieldSchema as StringFieldSchema, value })
         break
       case 'number':
-        await mergedHandlers.fillNumber({ page, fieldKey, fieldSchema: fieldSchema as NumberLikeFieldSchema, value, typeOptions })
+        await mergedHandlers.fillNumber({ page, fieldKey, fieldSchema: fieldSchema as NumberLikeFieldSchema, value })
         break
       case 'boolean':
-        await mergedHandlers.fillBoolean({ page, fieldKey, fieldSchema: fieldSchema as BooleanFieldSchema, value, typeOptions })
+        await mergedHandlers.fillBoolean({ page, fieldKey, fieldSchema: fieldSchema as BooleanFieldSchema, value })
         break
       case 'enum':
-        await mergedHandlers.fillEnum({ page, fieldKey, fieldSchema: fieldSchema as StringFieldSchema | NumberLikeFieldSchema | SetFieldSchema, value, typeOptions })
+        await mergedHandlers.fillEnum({ page, fieldKey, fieldSchema: fieldSchema as StringFieldSchema | NumberLikeFieldSchema | SetFieldSchema, value })
         break
       case 'tag':
-        await mergedHandlers.fillTag({ page, fieldKey, fieldSchema: fieldSchema as SetFieldSchema, value, typeOptions })
+        await mergedHandlers.fillTag({ page, fieldKey, fieldSchema: fieldSchema as SetFieldSchema, value })
         break
       case 'map':
-        await mergedHandlers.fillMap({ page, fieldKey, fieldSchema: fieldSchema as MapFieldSchema, value, typeOptions })
+        await mergedHandlers.fillMap({
+          page,
+          fieldKey,
+          fieldSchema: fieldSchema as MapFieldSchema,
+          value,
+          onFillEntry: async (kidId: string, entryValue: any) => {
+            await handleMapEntry(ctx, fieldKey, kidId, entryValue)
+          },
+        })
         break
       case 'json':
-        await mergedHandlers.fillJson({ page, fieldKey, fieldSchema: fieldSchema as JsonFieldSchema, value, typeOptions })
+        await mergedHandlers.fillJson({ page, fieldKey, fieldSchema: fieldSchema as JsonFieldSchema, value })
         break
       case 'foreign':
-        await mergedHandlers.fillForeign({ page, fieldKey, fieldSchema: fieldSchema as ForeignFieldSchema, value, typeOptions })
+        await mergedHandlers.fillForeign({ page, fieldKey, fieldSchema: fieldSchema as ForeignFieldSchema, value })
         break
       case 'array':
         await mergedHandlers.fillArray({
@@ -114,13 +119,24 @@ export function createFiller(
     }
   }
 
+  async function handleMapEntry(ctx: FillerContext, fieldKey: string, kidId: string, entryValue: any): Promise<void> {
+    const { entryKey, entrySchema } = getMapEntryInfo(fieldKey, kidId, ctx)
+
+    await fillFieldByInfo({
+      handlerType: getHandlerType(entrySchema),
+      fieldKey: entryKey,
+      fieldSchema: entrySchema,
+      value: entryValue,
+    })
+  }
+
   async function fill(data: Record<string, any>): Promise<void> {
     if (schema.fields && Array.isArray(schema.fields)) {
       await fillFields(schema.fields, data)
     }
   }
 
-  async function fillField(fieldKey: string, value: any, typeOptions?: TypeOptions): Promise<void> {
+  async function fillField(fieldKey: string, value: any): Promise<void> {
     const fieldSchema = ctx.schemaMap[fieldKey]
     if (!fieldSchema) {
       throw new Error(`Field schema for "${fieldKey}" not found in schema map`)
@@ -131,7 +147,7 @@ export function createFiller(
       fieldKey,
       fieldSchema,
       value,
-    }, typeOptions)
+    })
   }
 
   return {

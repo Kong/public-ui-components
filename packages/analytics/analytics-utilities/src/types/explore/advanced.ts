@@ -5,7 +5,12 @@ import { basicExploreAggregations, queryableBasicExploreDimensions } from './bas
 export const queryableExploreDimensions = [
   ...queryableBasicExploreDimensions,
   'application',
+  'bot_info_action',
+  'bot_info_detection_reason',
+  'bot_info_ban_type',
+  'cache_status',
   'consumer',
+  'consumer_group',
   'country_code',
   'upstream_status_code',
   'upstream_status_code_grouped',
@@ -13,6 +18,7 @@ export const queryableExploreDimensions = [
   'data_plane_node_version',
   'realm',
   'portal_api',
+  'principal',
 ] as const
 
 export type QueryableExploreDimensions = typeof queryableExploreDimensions[number]
@@ -31,6 +37,7 @@ export interface ExploreEmptyFilterV2 extends Omit<BasicExploreEmptyFilterV2, 'f
 
 export const exploreAggregations = [
   ...basicExploreAggregations,
+  'cache_hit_rate',
   'response_latency_p99',
   'response_latency_p95',
   'response_latency_p50',
@@ -42,6 +49,10 @@ export const exploreAggregations = [
   'kong_latency_p95',
   'kong_latency_p50',
   'kong_latency_average',
+  'kong_internal_latency_p99',
+  'kong_internal_latency_p95',
+  'kong_internal_latency_p50',
+  'kong_internal_latency_average',
   'response_size_p99',
   'response_size_p95',
   'response_size_p50',

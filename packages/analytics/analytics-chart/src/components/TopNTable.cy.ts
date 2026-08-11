@@ -1,9 +1,12 @@
-import { h } from 'vue'
 import TopNTable from './TopNTable.vue'
 
 const ROUTE_ID = 'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6'
 const ROUTE_NAME = 'GetMeAKongDefault (secondaryRuntime)'
 const DELETED_NAME = 'No longer extant entity'
+const SERVICE_ID = 'service-1'
+const SERVICE_NAME = 'Gateway Service 1'
+const CONSUMER_ID = 'consumer-1'
+const CONSUMER_NAME = 'Consumer 1'
 
 const ROUTE_DISPLAY_V2 = {
   [ROUTE_ID]: {
@@ -27,6 +30,29 @@ const ROUTE_DISPLAY_V2 = {
     deleted: false,
   },
 }
+
+const SERVICE_DISPLAY = {
+  [SERVICE_ID]: {
+    name: SERVICE_NAME,
+    deleted: false,
+  },
+  'service-2': {
+    name: 'Gateway Service 2',
+    deleted: false,
+  },
+}
+
+const CONSUMER_DISPLAY = {
+  [CONSUMER_ID]: {
+    name: CONSUMER_NAME,
+    deleted: false,
+  },
+  'consumer-2': {
+    name: 'Consumer 2',
+    deleted: false,
+  },
+}
+
 const TABLE_RECORDS = [
   {
     event: {
@@ -125,6 +151,126 @@ const MULTI_METRIC_TABLE_DATA = {
   data: MULTI_METRIC_TABLE_RECORDS,
 }
 
+const MULTI_DIMENSION_TABLE_DATA = {
+  meta: {
+    display: {
+      ROUTE: ROUTE_DISPLAY_V2,
+      GATEWAY_SERVICE: SERVICE_DISPLAY,
+    },
+    end: '2023-08-17T18:00:53.000Z',
+    granularity_ms: 300000,
+    limit: 50,
+    metric_names: [
+      'REQUEST_COUNT',
+    ],
+    metric_units: {
+      REQUEST_COUNT: 'count',
+    },
+    query_id: 'ef7602a5-43c4-457a-921c-576f9bf716d5',
+    start: '2023-08-17T17:55:53.000Z',
+    truncated: false,
+  },
+  data: [
+    {
+      event: {
+        REQUEST_COUNT: 9483,
+        ROUTE: ROUTE_ID,
+        GATEWAY_SERVICE: SERVICE_ID,
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+    {
+      event: {
+        REQUEST_COUNT: 5587,
+        ROUTE: 'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9',
+        GATEWAY_SERVICE: 'service-2',
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+  ],
+}
+
+const THREE_DIMENSION_TABLE_DATA = {
+  meta: {
+    ...MULTI_DIMENSION_TABLE_DATA.meta,
+    display: {
+      ROUTE: ROUTE_DISPLAY_V2,
+      GATEWAY_SERVICE: SERVICE_DISPLAY,
+      consumer: CONSUMER_DISPLAY,
+    },
+  },
+  data: MULTI_DIMENSION_TABLE_DATA.data.map((entry, index) => {
+    return {
+      ...entry,
+      event: {
+        ...entry.event,
+        consumer: index === 0 ? CONSUMER_ID : 'consumer-2',
+      },
+    }
+  }),
+}
+
+const EMPTY_ROUTE_DISPLAY = {
+  ...ROUTE_DISPLAY_V2,
+  empty: {
+    name: 'empty',
+    deleted: false,
+  },
+}
+
+const EMPTY_ROW_TABLE_DATA = {
+  ...TABLE_DATA_V2,
+  meta: {
+    ...TABLE_DATA_V2.meta,
+    display: {
+      ROUTE: EMPTY_ROUTE_DISPLAY,
+    },
+  },
+  data: [
+    {
+      event: {
+        REQUEST_COUNT: 9483,
+        ROUTE: ROUTE_ID,
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+    {
+      event: {
+        REQUEST_COUNT: 9001,
+        ROUTE: 'empty',
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+  ],
+}
+
+const EMPTY_DIMENSION_TABLE_DATA = {
+  ...MULTI_DIMENSION_TABLE_DATA,
+  meta: {
+    ...MULTI_DIMENSION_TABLE_DATA.meta,
+    display: {
+      ROUTE: ROUTE_DISPLAY_V2,
+      GATEWAY_SERVICE: {
+        ...SERVICE_DISPLAY,
+        empty: {
+          name: 'empty',
+          deleted: false,
+        },
+      },
+    },
+  },
+  data: [
+    {
+      event: {
+        REQUEST_COUNT: 9483,
+        ROUTE: ROUTE_ID,
+        GATEWAY_SERVICE: 'empty',
+      },
+      timestamp: '2023-08-17T17:55:53.000Z',
+    },
+  ],
+}
+
 const TITLE = 'Top 5 Routes'
 const DESCRIPTION = 'Last 30-Day Summary'
 
@@ -217,6 +363,131 @@ describe('<TopNTable />', () => {
 
     cy.get('.kong-ui-public-top-n-table').should('be.visible')
     cy.get('tbody tr').last().should('contain', 'deleted')
+  })
+
+  describe('dimensions', () => {
+    it('keeps the name header for single-dimension responses', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: TABLE_DATA_V2,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+      })
+
+      cy.getTestId('top-n-table-header-column').first().should('contain.text', 'Name')
+      cy.getTestId('top-n-table-header-column').first().should('not.have.class', 'top-n-table-header-cell-dimension-compact')
+      cy.get('tbody tr').first().within(() => {
+        cy.get('td').first().should('contain.text', ROUTE_NAME)
+        cy.get('td').first().should('not.have.class', 'top-n-table-cell-dimension-compact')
+      })
+    })
+
+    it('renders dimension labels as headers when multiple dimensions are present', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: MULTI_DIMENSION_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+      })
+
+      cy.getTestId('top-n-table-header-column').should('have.length', 3)
+      cy.getTestId('top-n-table-header-column').eq(0).should('contain.text', 'Route')
+      cy.getTestId('top-n-table-header-column').eq(1).should('contain.text', 'Gateway service')
+      cy.getTestId('top-n-table-header-column').eq(2).should('contain.text', 'Request count')
+      cy.getTestId('top-n-table-header-column').eq(0).should('have.class', 'top-n-table-header-cell-dimension-compact')
+      cy.getTestId('top-n-table-header-column').eq(1).should('not.have.class', 'top-n-table-header-cell-dimension-compact')
+    })
+
+    it('renders one cell per dimension before metric cells', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: MULTI_DIMENSION_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+      })
+
+      cy.get('tbody tr').first().within(() => {
+        cy.get('td').should('have.length', 3)
+        cy.get('td').eq(0).should('contain.text', ROUTE_NAME)
+        cy.get('td').eq(1).should('contain.text', SERVICE_NAME)
+        cy.get('td').eq(2).should('contain.text', '9.4K')
+        cy.get('td').eq(0).should('have.class', 'top-n-table-cell-dimension-compact')
+        cy.get('td').eq(1).should('not.have.class', 'top-n-table-cell-dimension-compact')
+      })
+    })
+
+    it('provides all dimensions to the name slot payload', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: MULTI_DIMENSION_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+        slots: {
+          name: `<template #name="params">
+                  {{ params.record.dimension }}:{{ params.record.dimensions.length }}:{{ params.record.dimensions[1].dimension }}:{{ params.record.dimensions[1].id }}:{{ params.record.dimensions[1].name }}
+                 </template>
+          `,
+        },
+      })
+
+      cy.get(`[data-testid="row-${ROUTE_ID}"]`).should('contain', `ROUTE:2:GATEWAY_SERVICE:${SERVICE_ID}:${SERVICE_NAME}`)
+    })
+
+    it('uses the name slot for additional dimension cells', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: MULTI_DIMENSION_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+        slots: {
+          name: `<template #name="params">
+                  {{ params.record.dimension }}={{ params.record.name }}
+                 </template>
+          `,
+        },
+      })
+
+      cy.get('tbody tr').first().within(() => {
+        cy.get('td').eq(0).should('contain.text', `ROUTE=${ROUTE_NAME}`)
+        cy.get('td').eq(1).should('contain.text', `GATEWAY_SERVICE=${SERVICE_NAME}`)
+        cy.get('td').eq(2).should('contain.text', '9.4K')
+      })
+    })
+
+    it('supports rendering three dimensions before metric cells', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: THREE_DIMENSION_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+      })
+
+      cy.getTestId('top-n-table-header-column').should('have.length', 4)
+      cy.getTestId('top-n-table-header-column').eq(0).should('contain.text', 'Route')
+      cy.getTestId('top-n-table-header-column').eq(1).should('contain.text', 'Gateway service')
+      cy.getTestId('top-n-table-header-column').eq(2).should('contain.text', 'Consumer')
+      cy.getTestId('top-n-table-header-column').eq(3).should('contain.text', 'Request count')
+      cy.getTestId('top-n-table-header-column').eq(0).should('have.class', 'top-n-table-header-cell-dimension-compact')
+      cy.getTestId('top-n-table-header-column').eq(1).should('have.class', 'top-n-table-header-cell-dimension-compact')
+      cy.getTestId('top-n-table-header-column').eq(2).should('not.have.class', 'top-n-table-header-cell-dimension-compact')
+
+      cy.get('tbody tr').first().within(() => {
+        cy.get('td').should('have.length', 4)
+        cy.get('td').eq(0).should('contain.text', ROUTE_NAME)
+        cy.get('td').eq(1).should('contain.text', SERVICE_NAME)
+        cy.get('td').eq(2).should('contain.text', CONSUMER_NAME)
+        cy.get('td').eq(3).should('contain.text', '9.4K')
+        cy.get('td').eq(0).should('have.class', 'top-n-table-cell-dimension-compact')
+        cy.get('td').eq(1).should('have.class', 'top-n-table-cell-dimension-compact')
+        cy.get('td').eq(2).should('not.have.class', 'top-n-table-cell-dimension-compact')
+      })
+    })
   })
 
   describe('formatting', () => {
@@ -381,6 +652,48 @@ describe('<TopNTable />', () => {
         cy.get('td').eq(2).should('contain.text', '1')
         cy.get('td').eq(3).should('contain.text', '0')
         cy.get('td').eq(4).should('contain.text', '100 ms')
+      })
+    })
+  })
+
+  describe('empty rows', () => {
+    it('flags the primary dimension cell as empty for an "empty" id', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: EMPTY_ROW_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+        slots: {
+          name: `<template #name="params">
+                  {{ params.record.isEmpty }}
+                 </template>
+          `,
+        },
+      })
+
+      cy.get(`[data-testid="row-${ROUTE_ID}"]`).should('contain.text', 'false')
+      cy.get('[data-testid="row-empty"]').should('contain.text', 'true')
+    })
+
+    it('flags an additional dimension cell as empty for an "empty" id', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: EMPTY_DIMENSION_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+        slots: {
+          name: `<template #name="params">
+                  {{ params.record.dimension }}={{ params.record.isEmpty }}
+                 </template>
+          `,
+        },
+      })
+
+      cy.get('tbody tr').first().within(() => {
+        cy.get('td').eq(0).should('contain.text', 'ROUTE=false')
+        cy.get('td').eq(1).should('contain.text', 'GATEWAY_SERVICE=true')
       })
     })
   })

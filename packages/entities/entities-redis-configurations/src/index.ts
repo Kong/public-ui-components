@@ -3,6 +3,7 @@ import RedisConfigurationList from './components/RedisConfigurationList.vue'
 import RedisConfigurationConfigCard from './components/RedisConfigurationConfigCard.vue'
 import RedisConfigurationSelector from './components/RedisConfigurationSelector.vue'
 import RedisConfigurationFormModal from './components/RedisConfigurationFormModal.vue'
+import RedisConfigurationFormSlideout from './components/RedisConfigurationFormSlideout.vue'
 import LinkedPlugins from './components/LinkedPluginList.vue'
 import DeleteWarningModal from './components/DeleteWarningModal.vue'
 
@@ -12,6 +13,7 @@ export {
   RedisConfigurationConfigCard,
   RedisConfigurationSelector,
   RedisConfigurationFormModal,
+  RedisConfigurationFormSlideout,
   LinkedPlugins,
   DeleteWarningModal,
 }

@@ -1,0 +1,391 @@
+<template>
+  <div
+    ref="flowCanvas"
+    class="dk-flow-canvas"
+  >
+    <VueFlow
+      :id="flowId"
+      class="flow"
+      :class="{ readonly: mode !== 'edit', inspect: mode === 'inspect' }"
+      v-bind="interactiveViewportProps"
+      :connect-on-click="false"
+      :elements-selectable="mode === 'edit' || mode === 'inspect'"
+      :max-zoom="MAX_ZOOM_LEVEL"
+      :min-zoom="MIN_ZOOM_LEVEL"
+      :multi-selection-key-code="null"
+      :nodes-connectable="mode === 'edit'"
+      :nodes-draggable="mode === 'edit'"
+      @dragover="onDragOver"
+      @drop="onDrop"
+      @node-click="onNodeClick"
+      @nodes-change="emit('nodes-change')"
+      @nodes-initialized="onNodesInitialized"
+    >
+      <Background />
+      <Controls
+        :fit-view-params="fitViewParams"
+        position="bottom-left"
+        :show-fit-view="false"
+        :show-interactive="false"
+        :show-zoom="false"
+      >
+        <KTooltip
+          v-for="control in controls"
+          :key="control.name"
+          placement="right"
+          :text="t(`plugins.free-form.datakit.flow_editor.actions.${control.name}`)"
+        >
+          <ControlButton
+            :disabled="control.disabled"
+            @click.stop="control.action"
+          >
+            <component
+              :is="control.icon"
+              :size="18"
+            />
+          </ControlButton>
+        </KTooltip>
+      </Controls>
+
+      <!-- To not use the default node style -->
+      <template #node-flow="{ data }">
+        <FlowNode
+          :data
+          :error="invalidConfigNodeIds.has(data.id)"
+          :readonly="mode !== 'edit'"
+        >
+          <template
+            v-if="slots['node-before-handles']"
+            #before-handles
+          >
+            <slot
+              :data="data"
+              name="node-before-handles"
+            />
+          </template>
+          <template
+            v-if="slots['node-actions']"
+            #actions
+          >
+            <slot
+              :data="data"
+              name="node-actions"
+            />
+          </template>
+          <template
+            v-if="slots['node-after-handles']"
+            #after-handles
+          >
+            <slot
+              :data="data"
+              name="node-after-handles"
+            />
+          </template>
+        </FlowNode>
+      </template>
+      <template #node-group="{ data }">
+        <GroupNode
+          :active="activeGroupId === data.id"
+          :data
+        />
+      </template>
+    </VueFlow>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { AddIcon, AutoLayoutIcon, FullscreenIcon, RemoveIcon } from '@kong/icons'
+import { KTooltip } from '@kong/kongponents'
+import { Background } from '@vue-flow/background'
+import { ControlButton, Controls } from '@vue-flow/controls'
+import { VueFlow } from '@vue-flow/core'
+import { useElementBounding, useEventListener } from '@vueuse/core'
+import { computed, useTemplateRef } from 'vue'
+
+import useI18n from '../../../../../composables/useI18n'
+import { useHotkeys } from './composables/useHotkeys'
+import { DK_DATA_TRANSFER_MIME_TYPE, MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
+import FlowNode from './node/FlowNode.vue'
+import GroupNode from './node/GroupNode.vue'
+import { provideFlowStore } from './store/flow'
+
+import '@vue-flow/controls/dist/style.css'
+import '@vue-flow/core/dist/style.css'
+import '@vue-flow/core/dist/theme-default.css'
+
+import type { NodeMouseEvent } from '@vue-flow/core'
+import type { Component } from 'vue'
+
+import type { DragPayload, NodeInstance, NodePhase } from '../types'
+
+const { flowId, phase, mode } = defineProps<{
+  flowId: string
+  phase: NodePhase
+  /**
+   * Mode of the flow editor
+   * - edit: Flow editor page
+   * - view: Config detail page
+   * - preview: Plugin edit page preview
+   * - inspect: Read-only inspection view with trackpad zoom/pan, node-click emit, and auto-layout on init
+   */
+  mode: 'edit' | 'view' | 'preview' | 'inspect'
+}>()
+
+const slots = defineSlots<{
+  'node-before-handles'?: (props: { data: NodeInstance }) => any
+  'node-actions'?: (props: { data: NodeInstance }) => any
+  'node-after-handles'?: (props: { data: NodeInstance }) => any
+}>()
+
+const emit = defineEmits<{
+  initialized: []
+  'nodes-change': [] // Omitting the changes as we don't use them currently
+  'node-click': [node: NodeInstance]
+}>()
+
+const flowCanvas = useTemplateRef('flowCanvas')
+const flowCanvasRect = useElementBounding(flowCanvas)
+const { i18n: { t } } = useI18n()
+
+const interactiveViewportProps = computed(() => {
+  const isInteractive = mode === 'edit' || mode === 'inspect'
+
+  return {
+    panOnDrag: isInteractive ? undefined : false,
+    panOnScroll: isInteractive ? undefined : false,
+    zoomOnDoubleClick: isInteractive ? undefined : false,
+    zoomOnPinch: isInteractive ? undefined : false,
+    zoomOnScroll: isInteractive ? undefined : false,
+  }
+})
+
+const {
+  vueFlowStore,
+  editorStore,
+  autoLayout,
+  fitViewParams,
+  fitView,
+  selectNode,
+  placeToRight,
+  scrollRightToReveal,
+  groupDrop,
+} = provideFlowStore({
+  phase,
+  flowId,
+  layoutOptions: {
+    viewport: {
+      width: flowCanvasRect.width,
+      height: flowCanvasRect.height,
+    },
+  },
+  readonly: mode !== 'edit',
+})
+
+const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode, commit: commitHistory, selectPortalEdge } = editorStore
+const { screenToFlowCoordinate, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
+const {
+  activeGroupId,
+  startPanelDrag,
+  endPanelDrag,
+  updateActiveGroup,
+  attachNodeToActiveGroup,
+} = groupDrop
+
+function getDraggedNodeType(event: DragEvent): string | undefined {
+  const format = event.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
+  if (!format) return undefined
+  return format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
+}
+
+function onNodeClick(event: NodeMouseEvent) {
+  if (mode === 'inspect') {
+    if (event?.node?.type === 'group')
+      return
+    // Emit the full node-data for inspect mode, used in consumer apps
+    emit('node-click', event.node.data as NodeInstance)
+    return
+  }
+
+  if (mode !== 'edit') {
+    return
+  }
+
+  if (event?.node?.type === 'group') {
+    selectNode(undefined)
+    selectPortalEdge(undefined)
+    return
+  }
+
+  propertiesPanelOpen.value = true
+}
+
+function onDragOver(e: DragEvent) {
+  if (mode !== 'edit') return
+
+  e.preventDefault()
+  updateActiveGroup(screenToFlowCoordinate({ x: e.clientX, y: e.clientY }))
+}
+
+function onDrop(e: DragEvent) {
+  if (mode !== 'edit') return
+
+  const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
+  if (!data) return
+
+  e.preventDefault()
+
+  const payload = JSON.parse(data) as DragPayload
+  if (payload.action !== 'create-node') return
+
+  const projected = screenToFlowCoordinate({ x: e.clientX, y: e.clientY })
+
+  const { type, anchor } = payload.data
+  const newNode = {
+    type,
+    phase,
+    position: {
+      x: projected.x - anchor.offsetX,
+      y: projected.y - anchor.offsetY,
+    },
+  }
+
+  const nodeId = addNode(newNode, false)
+
+  if (!nodeId) {
+    endPanelDrag()
+    return
+  }
+
+  attachNodeToActiveGroup(nodeId)
+  commitHistory()
+  selectNode(nodeId)
+  propertiesPanelOpen.value = true
+  endPanelDrag()
+}
+
+async function onNodesInitialized() {
+  emit('initialized')
+  // for mode=inspect, we want to auto-layout and fit-view after the nodes are initialized.
+  if (mode !== 'inspect') return
+  // Same double-setTimeout pattern used by FlowPanels.vue to let VueFlow measure nodes first
+  setTimeout(async () => {
+    await autoLayout(false)
+    setTimeout(() => fitView(), 0)
+  }, 0)
+}
+
+async function onClickAutoLayout() {
+  await autoLayout()
+  setTimeout(() => fitView(), 0) // Have to use `setTimeout` here
+}
+
+type ControlAction = 'zoom_in' | 'zoom_out' | 'fit_view' | 'auto_layout'
+type Control = {
+  name: ControlAction
+  icon: Component
+  action: () => void
+  disabled?: boolean
+}
+
+const controls = computed<Control[]>(() => {
+  if (mode === 'preview') return []
+
+  const result: Control[] = [
+    { name: 'zoom_in', icon: AddIcon, action: zoomIn, disabled: viewport.value.zoom >= maxZoom.value },
+    { name: 'zoom_out', icon: RemoveIcon, action: zoomOut, disabled: viewport.value.zoom <= minZoom.value },
+    { name: 'fit_view', icon: FullscreenIcon, action: fitView },
+  ]
+
+  if (mode === 'edit') {
+    result.push({ name: 'auto_layout', icon: AutoLayoutIcon, action: onClickAutoLayout })
+  }
+
+  return result
+})
+
+if (mode === 'edit') {
+  useEventListener('dragstart', (e: DragEvent) => {
+    const nodeType = getDraggedNodeType(e)
+    if (!nodeType) return
+    startPanelDrag()
+  })
+
+  useEventListener('dragend', () => {
+    endPanelDrag()
+  })
+}
+
+async function duplicate() {
+  const node = selectedNode.value
+  if (mode !== 'edit' || !node || node.phase !== phase) return
+
+  const nodeId = duplicateNode(node.id, placeToRight(node.id))
+
+  if (!nodeId) return
+
+  await selectNode(nodeId)
+  propertiesPanelOpen.value = true
+  scrollRightToReveal(nodeId)
+}
+
+useHotkeys({
+  enabled: computed(() => !!selectedNode.value && mode === 'edit' && selectedNode.value.phase === phase),
+  duplicate,
+})
+
+defineExpose({ autoLayout, fitView })
+</script>
+
+<style lang="scss" scoped>
+.dk-flow-canvas {
+  background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+  height: 100%;
+  position: relative;
+  width: 100%;
+
+  .flow {
+    :deep(.vue-flow__controls-button) {
+      // Ensure it works in both the sandbox and host apps
+      box-sizing: content-box;
+
+      svg {
+        max-height: unset;
+        max-width: unset;
+      }
+    }
+
+    &:not(.readonly),
+    &.inspect {
+      :deep(.vue-flow__node) {
+        &:hover:not(.selected, :has(.value-indicator:hover)) .dk-flow-node {
+          border-color: var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
+        }
+
+        &.selected .dk-flow-node {
+          border-color: var(--kui-color-border-primary, $kui-color-border-primary);
+        }
+      }
+    }
+
+    &.readonly:not(.inspect) * {
+      cursor: default;
+    }
+
+    &.inspect {
+      :deep(.dk-flow-node) {
+        cursor: pointer;
+      }
+    }
+
+    :deep(.vue-flow__edge) {
+      .vue-flow__edge-path {
+        stroke-dasharray: 5;
+      }
+    }
+
+    :deep(.vue-flow__connection) {
+      stroke-dasharray: 5;
+    }
+  }
+}
+</style>

@@ -2,7 +2,7 @@
   <div :class="['request-card', { active: props.active }]">
     <CloseIcon
       class="close-btn"
-      :size="KUI_ICON_SIZE_30"
+      :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
       @click="emit('remove')"
     />
     <div class="badges">

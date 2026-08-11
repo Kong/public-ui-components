@@ -1,26 +1,30 @@
 <template>
   <div class="json-config config-card-code-block">
     <div
-      v-if="props.fetcherUrl"
+      v-if="fetcherUrl"
       class="json-endpoint"
     >
-      <KBadge :appearance="props.requestMethod">
-        {{ props.requestMethod }}
+      <KBadge :appearance="requestMethod">
+        {{ requestMethod }}
       </KBadge>
       <KCodeBlock
         id="json-endpoint-codeblock"
-        :code="props.fetcherUrl"
+        :code="fetcherUrl"
         language="plaintext"
+        :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
         single-line
         theme="dark"
       />
     </div>
     <KCodeBlock
-      v-if="props.entityRecord"
+      v-if="entityRecord"
       id="json-codeblock"
-      :class="{ 'json-content': props.fetcherUrl }"
+      :class="{ 'json-content': fetcherUrl }"
       :code="JSON.stringify(jsonContent, null, 2)"
+      :copy-code="JSON.stringify(unredactedRecord || jsonContent, null, 2)"
+      data-dd-privacy="mask"
       language="json"
+      :max-height="CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT"
       theme="dark"
       @code-block-render="highlightCodeBlock"
     />
@@ -28,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import { CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT } from '../../constants'
 import { computed, type PropType } from 'vue'
 import type { BadgeAppearance } from '@kong/kongponents'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
@@ -46,16 +51,21 @@ const props = defineProps({
     required: false,
     default: '',
   },
-  /** A record to indicate the entity's configuration, used to populate the JSON code block */
-  entityRecord: {
-    type: Object as PropType<Record<string, any>>,
-    required: true,
-  },
   /** HTTP request method like GET, POST, PUT, used to make the api call. */
   requestMethod: {
     type: String as PropType<BadgeAppearance>,
     required: false,
     default: '',
+  },
+  /** A record to indicate the entity's configuration, the visible code content (may be redacted) */
+  entityRecord: {
+    type: Object as PropType<Record<string, any>>,
+    required: true,
+  },
+  /** The unredacted record, used for copy actions */
+  unredactedRecord: {
+    type: Object as PropType<Record<string, any>>,
+    default: null,
   },
 })
 
@@ -83,12 +93,13 @@ const displayedCharLength = computed((): number => {
 
 .json-endpoint {
   align-items: baseline;
-  background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
+  background-color: var(--kui-color-background, $kui-color-background);
   border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-inverse, $kui-color-border-inverse);
   border-top-left-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   border-top-right-radius: var(--kui-border-radius-40, $kui-border-radius-40);
   display: flex;
-  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+  gap: var(--kui-space-30, $kui-space-30);
+  padding: var(--kui-space-40, $kui-space-40) var(--kui-space-0, $kui-space-0);
 
   .k-code-block {
     flex: auto;

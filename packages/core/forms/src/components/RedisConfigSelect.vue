@@ -4,13 +4,13 @@
     data-testid="redis-config-select"
   >
     <KLabel
-      :info="isCustomPlugin ? t('redis.custom_plugin.tooltip') : t('redis.shared_configuration.tooltip', { type: getPartialTypeDisplay(redisType as PartialType) })"
+      :info="labelTooltipText"
       :tooltip-attributes="{
         maxWidth: '300',
         placement: 'top',
       }"
     >
-      {{ t('redis.shared_configuration.title') }}
+      {{ sharedConfigurationHeadingText }}
     </KLabel>
     <div class="shared-redis-config-title" />
     <!-- TODO: Refactor this select to use the packages/entities/entities-redis-configurations/src/components/RedisConfigurationSelector.vue -->
@@ -20,9 +20,9 @@
       enable-filtering
       :filter-function="() => true"
       :items="availableRedisConfigs"
-      :loading="loadingRedisConfigs"
+      :loading="(loadingRedisConfigs as any)"
       :model-value="defaultRedisConfigItem"
-      :placeholder="t('redis.shared_configuration.selector.placeholder')"
+      :placeholder="redisSelectPlaceholderText"
       @change="(item) => redisConfigSelected(item?.value)"
       @query-change="debouncedRedisConfigsQuery"
     >
@@ -40,7 +40,9 @@
             class="select-item-name"
             data-testid="selected-redis-config"
           >{{ item.name }}</span>
+          <!-- Omit badge when tag is unset -->
           <KBadge
+            v-if="item.tag"
             appearance="info"
             class="select-item-label"
           >
@@ -56,14 +58,17 @@
           {{ t('redis.shared_configuration.empty_state') }}
         </div>
       </template>
-      <template #dropdown-footer-text>
+      <template
+        v-if="!hideNewRedis(formConfig)"
+        #dropdown-footer-text
+      >
         <div
           class="new-redis-config-area"
           data-testid="new-redis-config-area"
-          @click="$emit('showNewPartialModal')"
+          @click="onCreateNew"
         >
-          <AddIcon :size="KUI_ICON_SIZE_20" />
-          <span>{{ t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(redisType as PartialType) }) }}</span>
+          <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
+          <span>{{ createNewRedisConfigurationFooterText }}</span>
         </div>
       </template>
     </KSelect>
@@ -78,13 +83,23 @@
     class="redis-shared-config-error-message"
     data-testid="redis-config-fetch-error"
   >
-    {{ sharedRedisConfigFetchError || t('redis.shared_configuration.error') }}
+    {{ redisFetchErrorDisplayText }}
   </p>
+
+  <component
+    :is="redisCreate.component"
+    v-if="redisCreate"
+    :partial-type="slideoutPartialType"
+    :visible="showSlideout"
+    @close="onCreateClose"
+    @created="onPartialCreated"
+    @toast="onSlideoutToast"
+  />
 </template>
 
 <script setup lang="ts">
-import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY } from '../const'
-import { onBeforeMount, inject, computed, ref, watch, type Ref, type PropType } from 'vue'
+import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY, REDIS_CREATE_SLIDEOUT } from '../const'
+import { onBeforeMount, inject, computed, ref, watch, type Ref, type PropType, type Component } from 'vue'
 import {
   useAxios,
   useDebouncedFilter,
@@ -100,22 +115,35 @@ import { createI18n } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
 import { getRedisType, getPartialTypeDisplay } from '../utils/redisPartial'
 import type { PartialType, RedisConfigurationFields } from '../types'
-import type { SelectItem } from '@kong/kongponents'
+import type { SelectEntry, SelectItem } from '@kong/kongponents'
 import type { Field } from '../composables/useRedisPartial'
+import {
+  REDIS_CONFIGURATION_SOURCE,
+  type RedisConfigurationSource,
+  redisManagedSourceFromTags,
+} from '../utils/redisPartialManagedSource'
+import { hideNewRedis } from '../utils/hideNewRedisConfiguration'
 import RedisConfigCard from './RedisConfigCard.vue'
-
-defineEmits<{
-  (e: 'showNewPartialModal'): void
-}>()
 
 const { t } = createI18n<typeof english>('en-us', english)
 
+const emit = defineEmits<{
+  (e: 'showNewPartialModal'): void
+}>()
+
 const redisPartialFetcherKey: Ref<number, number> | undefined = inject(REDIS_PARTIAL_FETCHER_KEY)
+
+type RedisCreateSlideout = {
+  component: Component
+  toast: (payload: { message: string, appearance: 'success' | 'danger' }) => void
+}
+
+const redisCreate = inject<RedisCreateSlideout | null>(REDIS_CREATE_SLIDEOUT, null)
 
 const endpoints = {
   konnect: {
-    getOne: '/v2/control-planes/{controlPlaneId}/core-entities/partials/{id}',
-    getAll: '/v2/control-planes/{controlPlaneId}/core-entities/partials',
+    getOne: '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}/partials/{id}',
+    getAll: '/v2/control-planes/{controlPlaneId}/core-entities/{workspace}/partials',
   },
   kongManager: {
     getOne: '/{workspace}/partials/{id}',
@@ -130,7 +158,7 @@ const props = defineProps({
     default: '',
   },
   updateRedisModel: {
-    type: Function as PropType<(val: string | number) => void>,
+    type: Function as PropType<(val: string | number | undefined) => void>,
     required: true,
   },
   pluginRedisFields: {
@@ -145,12 +173,36 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /** Enables Konnect-managed Redis grouping and copy in this select (from FormRedis/plugin form) */
+  isKonnectManagedRedisEnabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const selectedRedisConfig = ref(null)
 const { getMessageFromError } = useErrors()
 
-const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig | KonnectBaseTableConfig | KongManagerBaseTableConfig = inject(FORMS_CONFIG)!
+const formConfig = inject(FORMS_CONFIG)! as (KonnectBaseFormConfig | KongManagerBaseFormConfig | KonnectBaseTableConfig | KongManagerBaseTableConfig) & {
+  isKonnectManagedRedisEnabled?: boolean
+  isCloudGateway?: boolean
+}
+
+// Konnect + FF + non-Cloud Gateway + slideout provided → new create form; else legacy modal emit
+const useSlideout = computed(() => (
+  !!redisCreate
+  && formConfig.app === 'konnect'
+  && !!formConfig.isKonnectManagedRedisEnabled
+  && formConfig.isCloudGateway !== true
+))
+
+const slideoutPartialType = computed(() =>
+  props.redisType === 'redis-ce' ? 'redis-ce' : 'redis-ee',
+)
+
+const showSlideout = ref(false)
+const prevId = ref<string>()
+
 const pageSize = '1000' // the API returns all partials, so we have to set a high page size to filter them on the frontend
 const {
   debouncedQueryChange: debouncedRedisConfigsQuery,
@@ -165,6 +217,34 @@ const {
 
 const sharedRedisConfigFetchError = computed(() => redisConfigsFetchError.value ? getMessageFromError(redisConfigsFetchError.value) : '')
 
+const labelTooltipText = computed(() =>
+  props.isCustomPlugin
+    ? t('redis.custom_plugin.tooltip')
+    : t('redis.shared_configuration.tooltip', { type: getPartialTypeDisplay(props.redisType as PartialType) }),
+)
+
+const sharedConfigurationHeadingText = computed(() =>
+  props.isKonnectManagedRedisEnabled
+    ? t('redis.managed_ui.shared_configuration.title')
+    : t('redis.shared_configuration.title'),
+)
+
+const redisSelectPlaceholderText = computed(() =>
+  props.isKonnectManagedRedisEnabled
+    ? t('redis.managed_ui.shared_configuration.selector.placeholder')
+    : t('redis.shared_configuration.selector.placeholder'),
+)
+
+const createNewRedisConfigurationFooterText = computed(() =>
+  props.isKonnectManagedRedisEnabled || useSlideout.value
+    ? t('redis.managed_ui.shared_configuration.create_new_configuration')
+    : t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(props.redisType as PartialType) }),
+)
+
+const redisFetchErrorDisplayText = computed(() =>
+  sharedRedisConfigFetchError.value || t('redis.shared_configuration.error'),
+)
+
 /**
  * Build URL of getting one partial
  */
@@ -173,33 +253,84 @@ const getOnePartialUrl = (partialId: string | number): string => {
 
   if (formConfig.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, formConfig?.controlPlaneId || '')
-  } else if (formConfig.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, formConfig?.workspace ? `/${formConfig.workspace}` : '')
   }
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, String(partialId))
+
+  url = url
+    .replace(/\/{workspace}/gi, formConfig?.workspace ? `/${formConfig.workspace}` : '')
+    .replace(/{id}/gi, String(partialId)) // Always replace the id when editing
+
   return url
 }
 
-const availableRedisConfigs = computed((): SelectItem[] => {
-  const configs = (redisConfigsResults.value || [])
-    .map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: getRedisType(el as RedisConfigurationFields) }))
-    // filter out non-redis configs
-    // this is needed because the API returns all partials, not just redis configurations.
-    .filter(partial => partial.type === 'redis-ce' || partial.type === 'redis-ee')
+type RedisSelectItem = SelectItem<string> & { source?: RedisConfigurationSource, type?: string, tag?: string }
+
+// Map partials list API rows to KSelect items; adds `source` + grouped sections when Konnect-managed FF is on
+const redisConfigItems = computed((): RedisSelectItem[] => {
+  const configs: RedisSelectItem[] = (redisConfigsResults.value || [])
+    .map((listItem) => {
+      const partial = listItem as RedisConfigurationFields
+      const managedSource = props.isKonnectManagedRedisEnabled
+        ? redisManagedSourceFromTags(partial)
+        : undefined // skip when legacy UI
+      const isKonnectManagedRow = managedSource === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED
+
+      return {
+        ...(props.isKonnectManagedRedisEnabled && managedSource ? { source: managedSource } : {}), // only attach `source` in managed mode
+        label: listItem.id,
+        name: listItem.name,
+        value: listItem.id,
+        type: listItem.type,
+        tag: props.isKonnectManagedRedisEnabled && isKonnectManagedRow
+          ? undefined // hide type badge for managed rows
+          : getRedisType(partial),
+      }
+    })
+    .filter((row) => row.type === 'redis-ce' || row.type === 'redis-ee') // drop non-Redis partials
 
   if (props.redisType !== 'all') {
-    // filter redis configs by redis type supported by the plugin
-    return configs.filter((el) => el.type === props.redisType)
+    return configs.filter((row) => row.type === props.redisType) // plugin may only allow redis-ce or redis-ee
   }
   return configs
 })
 
+// Legacy UI- flat `SelectItem[]`. Konnect-managed UI- `SelectEntry[]` with Konnect-managed vs self-managed groups
+const availableRedisConfigs = computed((): SelectEntry[] => {
+  const items = redisConfigItems.value
+
+  if (!props.isKonnectManagedRedisEnabled) {
+    return items // no `source` field on rows,treat as a flat list
+  }
+
+  const konnectManagedItems = items.filter((item) => item.source === REDIS_CONFIGURATION_SOURCE.KONNECT_MANAGED)
+  const selfManagedItems = items.filter((item) => item.source === REDIS_CONFIGURATION_SOURCE.SELF_MANAGED)
+  const groups: SelectEntry[] = []
+
+  if (konnectManagedItems.length > 0) {
+    groups.push({
+      label: t('redis.managed_ui.groups.konnect_managed'),
+      items: konnectManagedItems,
+    })
+  }
+
+  if (selfManagedItems.length > 0) {
+    groups.push({
+      label: t('redis.managed_ui.groups.self_managed'),
+      items: selfManagedItems,
+    })
+  }
+
+  return groups
+})
+
 const { axiosInstance } = useAxios(formConfig?.axiosRequestConfig)
 
+// Loads full partial detail and merges `config` onto the root object for `RedisConfigCard`; no-op when cleared
 const redisConfigSelected = async (val: string | number | undefined) => {
-  // when selector is cleared, do nothing
-  if (!val) return
+  if (!val) {
+    selectedRedisConfig.value = null
+    props.updateRedisModel(undefined)
+    return
+  }
 
   props.updateRedisModel(val)
   // show all fields in the same level
@@ -213,6 +344,37 @@ const redisConfigSelected = async (val: string | number | undefined) => {
   } catch (error) {
     console.error(error)
   }
+}
+
+const onCreateNew = () => {
+  if (!useSlideout.value) {
+    emit('showNewPartialModal')
+    return
+  }
+
+  prevId.value = props.defaultRedisConfigItem || undefined
+  redisConfigSelected(undefined)
+  showSlideout.value = true
+}
+
+const onCreateClose = () => {
+  showSlideout.value = false
+  if (prevId.value) {
+    const id = prevId.value
+    prevId.value = undefined
+    redisConfigSelected(id)
+  }
+}
+
+const onPartialCreated = async (data: { id: string }) => {
+  prevId.value = undefined
+  showSlideout.value = false
+  await loadConfigs()
+  redisConfigSelected(data.id)
+}
+
+const onSlideoutToast = (payload: { message: string, appearance: 'success' | 'danger' }) => {
+  redisCreate?.toast(payload)
 }
 
 // if a new key is passed by the consuming app, reload the configs
@@ -269,11 +431,6 @@ onBeforeMount(() => {
   }
 
   .selected-redis-config {
-    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-    line-height: var(--kui-line-height-40, $kui-line-height-40);
-  }
-
-  .plugin-form-selected-redis-config {
     font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
     line-height: var(--kui-line-height-40, $kui-line-height-40);
   }

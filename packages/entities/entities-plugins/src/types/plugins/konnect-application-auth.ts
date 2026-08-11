@@ -1,4 +1,4 @@
-import type { TokenExchange } from './oidc'
+import type { TokenExchange, ProofOfPossessionMtlsFromHeader, ProtectedResourceMetadata } from './oidc'
 import type { CommonSchemaFields } from './shared'
 
 export interface KonnectApplicationAuthConfig_gte_314 {
@@ -7,6 +7,8 @@ export interface KonnectApplicationAuthConfig_gte_314 {
       openid_connect?: Array<{
         config?: {
           token_exchange?: TokenExchange | null
+          proof_of_possession_mtls_from_header?: ProofOfPossessionMtlsFromHeader | null
+          protected_resource_metadata?: ProtectedResourceMetadata | null
         }
       }> | null
     } | null

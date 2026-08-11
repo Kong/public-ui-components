@@ -55,6 +55,12 @@ A form component for Certificates.
     - default: `undefined`
     - Route to return to when canceling creation of an Certificate.
 
+  - `azureCertsVaultAvailable`:
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide the Azure Key Vault Certificates source type option in the certificate form.
+
   - `sniListRoute`:
     - type: `RouteLocationRaw`
     - required: `false`
@@ -62,10 +68,10 @@ A form component for Certificates.
     - Route of listing SNIs.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `controlPlaneId`:
     - type: `string`

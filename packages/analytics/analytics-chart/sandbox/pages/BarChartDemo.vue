@@ -213,9 +213,7 @@ import {
 } from '../../src'
 import type { AnalyticsExploreRecord, DimensionMap, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions } from '../../src/types'
-import { isValidJson, rand } from '../utils/utils'
-import { lookupDatavisColor } from '../../src/utils'
-import { lookupStatusCodeColor } from '../../src/utils/customColors'
+import { getStatusCodeDatasetColor, isValidJson, rand } from '../utils/utils'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { generateCrossSectionalData } from '@kong-ui-public/analytics-utilities'
 import CodeText from '../CodeText.vue'
@@ -277,7 +275,7 @@ const dimensionItems = [{
 
 // Short labels
 const statusCodeLabels = [
-  '500', '200', '300', '400', 'empty',
+  '500', '200', '300', '400', '____OTHER____', 'empty',
 ]
 
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
@@ -336,7 +334,7 @@ const exploreResult = computed<ExploreResultV4>(() => {
   }
 })
 
-const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))
+const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: getStatusCodeDatasetColor(dimension) }), {}))
 
 const updateSelectedColor = (event: Event, label: string) => {
   colorPalette.value[label] = (event.target as HTMLInputElement).value
@@ -354,7 +352,7 @@ const addDataset = () => {
   if (multiDimensionToggle.value) {
     const statusCode = `${rand(100, 599)}`
     statusCodeDimensionValues.value.add(statusCode)
-    colorPalette.value[statusCode] = lookupStatusCodeColor(statusCode)
+    colorPalette.value[statusCode] = getStatusCodeDatasetColor(statusCode)
 
     const service = `Service${rand(1, 100)}`
     serviceDimensionValues.value.add(service)
@@ -381,7 +379,7 @@ watch(multiDimensionToggle, () => {
   serviceDimensionValues.value = new Set(Array(1).fill(0).map(() => `Service${rand(1, 100)}`))
   statusCodeDimensionValues.value = new Set(statusCodeLabels)
 
-  colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {})
+  colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: getStatusCodeDatasetColor(dimension) }), {})
 })
 </script>
 
@@ -398,7 +396,7 @@ watch(multiDimensionToggle, () => {
 }
 
 .data-container {
-  margin-top: $kui-space-100;
+  margin-top: var(--kui-space-100, $kui-space-100);
 }
 
 </style>

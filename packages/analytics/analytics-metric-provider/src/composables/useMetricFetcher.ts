@@ -2,25 +2,13 @@ import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type {
   ExploreQuery,
-  QueryableExploreDimensions,
   ExploreResultV4,
 } from '@kong-ui-public/analytics-utilities'
-import type { MetricFetcherOptions } from '../types'
+import type { ChronologicalMappedMetrics, MetricFetcherOptions } from '../types'
 import { MAX_ANALYTICS_REQUEST_RETRIES } from '../constants'
 import composables from '.'
 import { useSwrvState } from '@kong-ui-public/core'
-
-export const DEFAULT_KEY = Symbol('default')
-export type MappedMetrics = Record<string | typeof DEFAULT_KEY, Record<string | typeof DEFAULT_KEY, number>>
-
-// This dimension is special: metric cards are never going to group on this dimension
-// except in order to determine traffic and error rate information.
-const ERROR_RATE_DIMENSION: QueryableExploreDimensions = 'status_code_grouped'
-
-export interface ChronologicalMappedMetrics {
-  current: MappedMetrics
-  previous: MappedMetrics
-}
+import { buildDeltaMapping } from '../utilities'
 
 export interface FetcherResult {
   isLoading: Ref<boolean>
@@ -28,64 +16,6 @@ export interface FetcherResult {
   raw: Ref<ExploreResultV4 | undefined>
   mapped: Ref<ChronologicalMappedMetrics>
   trendRange: Ref<string>
-}
-
-const setMetric = (result: ChronologicalMappedMetrics, time: 'previous' | 'current', topLevelKey: string | typeof DEFAULT_KEY, secondLevelKey: string | typeof DEFAULT_KEY, metricValue: number) => {
-  if (!result[time][topLevelKey]) {
-    result[time][topLevelKey] = {} as Record<string | typeof DEFAULT_KEY, number>
-  }
-  result[time][topLevelKey][secondLevelKey] = metricValue
-}
-
-export function buildDeltaMapping(result: ExploreResultV4, withTrend: boolean): ChronologicalMappedMetrics {
-  // We should always have metric names in the result; if they're not present, just pick something that won't crash.
-  const metricName = result.meta.metric_names?.[0] || ''
-
-  // Figure out the first expected timestamp.
-  const queriedStartTime = new Date(result.meta.start).getTime()
-
-  // We only ever have 2 dimensions in the response if the second dimension is STATUS_CODE_GROUPED.
-  // TIME doesn't show up in the response.
-  // Assert that this is the case; raise a reportable error if not.
-  const dimensionNames = Object.keys(result.meta.display || {})
-  const hasErrorRateDimension = !!dimensionNames.find(k => k === ERROR_RATE_DIMENSION)
-  const keyDimension = dimensionNames.find(k => k !== ERROR_RATE_DIMENSION)
-
-  if (dimensionNames.length > 2 || (dimensionNames.length > 1 && !hasErrorRateDimension)) {
-    console.error("Don't know how to work with provided dimensions:", dimensionNames)
-    return {
-      previous: { [DEFAULT_KEY]: { [DEFAULT_KEY]: 0 } },
-      current: { [DEFAULT_KEY]: { [DEFAULT_KEY]: 0 } },
-    }
-  }
-
-  // Go through each record and add it to the correct group.
-  // Explore always returns results sorted in ascending order by time.
-  return result.data.reduce<ChronologicalMappedMetrics>((result, record) => {
-    const metricValue = record.event[metricName] as number
-
-    // If we have dimensions, then index the results based on the dimension name.
-    // If we don't have dimensions, insert a synthetic key (DEFAULT_KEY).
-    const topLevelKey = keyDimension ? record.event[keyDimension] as string : DEFAULT_KEY
-
-    // If we have the error rate key, then index the 2nd level results based on that.
-    // Otherwise, insert a synthetic key (DEFAULT_KEY).
-    const secondLevelKey = hasErrorRateDimension ? record.event[ERROR_RATE_DIMENSION] as string : DEFAULT_KEY
-
-    // The records are in ascending order, so the first record is the earliest.
-    // If the timestamp of the current record is the same as the query start date, it belongs to
-    // the previous group, otherwise it belongs to the current group.
-    if (new Date(record.timestamp).getTime() === queriedStartTime && withTrend) {
-      setMetric(result, 'previous', topLevelKey, secondLevelKey, metricValue)
-    } else {
-      setMetric(result, 'current', topLevelKey, secondLevelKey, metricValue)
-    }
-
-    return result
-  }, {
-    previous: {},
-    current: {},
-  } as ChronologicalMappedMetrics)
 }
 
 export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherResult {

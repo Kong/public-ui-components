@@ -46,8 +46,8 @@ import type {
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
-import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { DEFAULT_TILE_HEIGHT } from '../constants'
+import { isTableChartDefinition } from '../utils/tile-definition'
 
 const root = useTemplateRef('root')
 const tileRef = useTemplateRef('dashboard-tile')
@@ -57,10 +57,12 @@ const {
   context,
   definition,
   globalFilters = [],
+  preview = false,
 } = defineProps<{
   context: DashboardRendererContext
   definition: TileDefinition
   globalFilters?: AllFilters[]
+  preview?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -82,18 +84,20 @@ const onBoundsChange = (e: TileBoundsChangeEvent) => {
 }
 
 const { i18n } = composables.useI18n()
-const { internalContext } = composables.useDashboardInternalContext({
+const { internalContext, queryReady } = composables.useDashboardInternalContext({
   globalFilters: toRef(() => globalFilters),
   context: toRef(() => context),
+  preview: computed(() => preview),
 })
 
-const configStore = useAnalyticsConfigStore()
-const queryReady = computed<boolean>(() => {
-  return !!context.timeSpec || !configStore.loading
-})
+const isTableDefinition = computed((): boolean => isTableChartDefinition(definition))
 
 const chartNotConfigured = computed(() => {
-  return !definition?.query?.metrics || definition.query.metrics.length === 0
+  if (isTableDefinition.value) {
+    return 'columns' in definition.query && !definition.query.columns?.length
+  }
+
+  return !('metrics' in definition.query) || !definition.query.metrics || definition.query.metrics.length === 0
 })
 
 const height = ref<number>(DEFAULT_TILE_HEIGHT)

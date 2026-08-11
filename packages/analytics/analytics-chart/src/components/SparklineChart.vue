@@ -3,7 +3,7 @@
     <div
       v-if="!hasData"
       class="no-data"
-      data-testId="sparkline-empty"
+      data-testid="sparkline-empty"
     >
       <slot name="empty">
         {{ i18n.t('sparkline_no_data') }}
@@ -13,7 +13,7 @@
       v-else-if="type === 'sparkline_bar'"
       :chart-id="chartId"
       :data="chartData"
-      data-testId="sparkline-bar"
+      data-testid="sparkline-bar"
       :options="(options as any)"
       :plugins="plugins as Plugin<'bar'>[]"
     />
@@ -21,7 +21,7 @@
       v-else-if="type === 'sparkline_line' || type === 'sparkline_step'"
       :chart-id="chartId"
       :data="chartData"
-      :data-testId="type === 'sparkline_line' ? 'sparkline-line' : 'sparkline-step'"
+      :data-testid="type === 'sparkline_line' ? 'sparkline-line' : 'sparkline-step'"
       :options="(options as any)"
       :plugins="plugins as Plugin<'line'>[]"
     />

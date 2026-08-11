@@ -9,7 +9,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { RendererProps } from '../types'
+import type { ChartRendererProps } from '../types'
 import type { MetricCardOptions } from '@kong-ui-public/analytics-utilities'
 import { MetricsProvider, MetricsConsumer } from '@kong-ui-public/analytics-metric-provider'
 import { computed } from 'vue'
@@ -19,7 +19,7 @@ import type { ExploreFilterAll } from '@kong-ui-public/analytics-utilities'
 // in a convenient interface.
 type ProviderProps = InstanceType<typeof MetricsProvider>['$props']
 
-const props = defineProps<RendererProps<MetricCardOptions>>()
+const props = defineProps<ChartRendererProps<MetricCardOptions>>()
 
 const options = computed<ProviderProps>(() => {
   const datasource = props.query?.datasource

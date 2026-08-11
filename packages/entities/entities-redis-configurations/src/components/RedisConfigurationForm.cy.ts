@@ -488,7 +488,7 @@ describe('<RedisConfigurationForm />', {
 
         cy.wait('@getRedisConfiguration')
 
-        cy.getTestId('redis-type-select-popover').should('contain.text', 'Host/Port (Open Source)')
+        cy.getTestId('redis-type-select-popover').should('contain.text', 'Host/Port (Open source)')
 
         // button state
         cy.getTestId('partial-edit-form-submit').should('be.visible')
@@ -770,6 +770,107 @@ describe('<RedisConfigurationForm />', {
           expect(config.cloud_authentication.aws_region).to.not.exist
           // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           expect(config.cloud_authentication.aws_is_serverless).to.not.exist
+        })
+      })
+
+      it('should not offer the oauth provider option unless oauthCloudAuthAvailable is set', () => {
+        stubCreateEdit()
+        interceptDetail()
+        interceptLinkedPlugins()
+
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+          },
+        })
+
+        cy.getTestId('redis-auth-provider-select').click()
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.AWS}"]`)
+          .should('exist')
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.OAUTH}"]`)
+          .should('not.exist')
+      })
+
+      it('should reveal oauth fields when oauth is selected', () => {
+        stubCreateEdit()
+        interceptDetail()
+        interceptLinkedPlugins()
+
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config: { ...config, oauthCloudAuthAvailable: true },
+          },
+        })
+
+        cy.getTestId('redis-name-input').type('test')
+
+        cy.getTestId('redis-auth-provider-select').click()
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.OAUTH}"]`)
+          .click()
+
+        // OAuth-specific fields are shown, AWS fields are not
+        cy.getTestId('redis-oauth-token_endpoint-input').should('be.visible')
+        cy.getTestId('redis-oauth-auth_method-select').should('be.visible')
+        cy.getTestId('redis-aws_cache_name-input').should('not.exist')
+
+        // token_endpoint, client_id and client_secret are all required to submit
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
+        cy.getTestId('redis-oauth-token_endpoint-input').type('https://idp.example.com/token')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
+        cy.getTestId('redis-oauth-client_id-input').type('my-client')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
+        cy.getTestId('redis-oauth-client_secret-input').type('shhh')
+        cy.getTestId('partial-create-form-submit').should('not.be.disabled')
+      })
+
+      it('should include oauth fields in request when oauth is selected', () => {
+        stubCreateEdit()
+        interceptDetail()
+        interceptLinkedPlugins()
+
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config: { ...config, oauthCloudAuthAvailable: true },
+          },
+        })
+
+        cy.getTestId('redis-name-input').type('test')
+
+        cy.getTestId('redis-auth-provider-select').click()
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.OAUTH}"]`)
+          .click()
+
+        cy.getTestId('redis-oauth-token_endpoint-input').type('https://idp.example.com/token')
+        cy.getTestId('redis-oauth-client_id-input').type('my-client')
+        cy.getTestId('redis-oauth-client_secret-input').type('shhh')
+
+        // add a scope
+        cy.getTestId('redis-oauth-scopes-add').click()
+        cy.getTestId('redis-oauth-scopes-input').type('read')
+
+        // add a token header
+        cy.getTestId('redis-oauth-token_headers-add').click()
+        cy.getTestId('redis-oauth-token_headers-key-input').type('X-Env')
+        cy.getTestId('redis-oauth-token_headers-value-input').type('prod')
+
+        cy.getTestId('partial-create-form-submit').click()
+
+        cy.wait('@createRedisConfiguration').then(({ request }) => {
+          const { body: { config } } = request
+          const { oauth } = config.cloud_authentication
+          expect(config.cloud_authentication.auth_provider).to.equal(AuthProvider.OAUTH)
+          expect(oauth.token_endpoint).to.equal('https://idp.example.com/token')
+          expect(oauth.client_id).to.equal('my-client')
+          expect(oauth.client_secret).to.equal('shhh')
+          expect(oauth.auth_method).to.equal('client_secret_post')
+          expect(oauth.grant_type).to.equal('client_credentials')
+          expect(oauth.ssl_verify).to.equal(true)
+          expect(oauth.scopes).to.deep.equal(['read'])
+          expect(oauth.token_headers).to.deep.equal({ 'X-Env': 'prod' })
         })
       })
 
@@ -1202,4 +1303,75 @@ describe('<RedisConfigurationForm />', {
     })
 
   }
+
+  describe('Konnect - workspace URL building', () => {
+    const partialId = 'workspace-test-partial-id'
+
+    it('includes workspace in POST URL when creating with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/partials`,
+        },
+        { statusCode: 201, body: { id: partialId } },
+      ).as('createPartialWithWorkspace')
+
+      cy.mount(RedisConfigurationForm, {
+        props: { config: { ...baseConfigKonnect, workspace: 'default' } },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+      cy.wait('@createPartialWithWorkspace')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/partials/${partialId}`,
+        },
+        { statusCode: 200, body: redisConfigurationCE },
+      ).as('getPartialWithWorkspace')
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/partials/${partialId}/links*`,
+        },
+        { statusCode: 200, body: { data: [], next: null, count: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/partials/${partialId}`,
+        },
+        { statusCode: 200, body: redisConfigurationCE },
+      ).as('updatePartialWithWorkspace')
+
+      cy.mount(RedisConfigurationForm, {
+        props: { config: { ...baseConfigKonnect, workspace: 'default' }, partialId },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getPartialWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+        cy.wait('@updatePartialWithWorkspace')
+      })
+    })
+
+    it('omits workspace segment in POST URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials`,
+        },
+        { statusCode: 201, body: { id: partialId } },
+      ).as('createPartialNoWorkspace')
+
+      cy.mount(RedisConfigurationForm, {
+        props: { config: baseConfigKonnect },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+      cy.wait('@createPartialNoWorkspace')
+    })
+  })
 })

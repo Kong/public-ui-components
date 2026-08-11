@@ -25,7 +25,9 @@
           class="select-item-name"
           data-testid="selected-redis-config"
         >{{ item.name }}</span>
+        <!-- Omit badge when tag is unset -->
         <KBadge
+          v-if="item.tag"
           appearance="info"
           class="select-item-label"
         >
@@ -50,30 +52,39 @@
         data-testid="new-redis-config-area"
         @click="onCreateNew"
       >
-        <AddIcon :size="KUI_ICON_SIZE_20" />
-        <span>{{ createButtonText || t('selector.create_new') }}</span>
+        <AddIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
+        <span>{{ createButtonText || (useSlideout ? t('list.action_with_managed_konnect') : t('selector.create_new')) }}</span>
       </div>
     </template>
   </KSelect>
 
-  <!-- New Redis Configuration Modal -->
+  <RedisConfigurationFormSlideout
+    :partial-type="redisType"
+    :visible="showSlideout"
+    @close="onCreateClose"
+    @created="onPartialCreated"
+    @toast="payload => emit('toast', payload)"
+  />
+
   <RedisConfigurationFormModal
     :partial-type="redisType"
-    :visible="isModalVisible"
+    :visible="showModal"
     @created="onPartialCreated"
-    @modal-close="onModalClose"
+    @modal-close="onCreateClose"
     @toast="payload => emit('toast', payload)"
   />
 </template>
 
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { AddIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
 import type { SelectItem } from '@kong/kongponents'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useRedisConfigurationSelector } from '../composables/useRedisConfigurationSelector'
 import useI18n from '../composables/useI18n'
 import RedisConfigurationFormModal from './RedisConfigurationFormModal.vue'
+import RedisConfigurationFormSlideout from './RedisConfigurationFormSlideout.vue'
 import type { RedisConfigurationResponse } from '../types'
 
 defineOptions({
@@ -83,6 +94,8 @@ defineOptions({
 const {
   redisType = 'redis-ee',
   showCreateButton = true,
+  isKonnectManagedRedisEnabled = false,
+  modelValue,
 } = defineProps<{
   /** The selected redis configuration ID */
   modelValue?: string
@@ -96,6 +109,8 @@ const {
   showCreateButton?: boolean
   /** Text for the create new configuration button */
   createButtonText?: string
+  /** Konnect managed Redis UI (grouping, managed rows). When false- flat list for KM/ legacy Konnect */
+  isKonnectManagedRedisEnabled?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -112,6 +127,19 @@ const emit = defineEmits<{
 
 const { i18n: { t } } = useI18n()
 
+const formConfig = inject(FORMS_CONFIG) as {
+  app: string
+  isKonnectManagedRedisEnabled?: boolean
+  isCloudGateway?: boolean
+}
+
+// Konnect + FF + non-Cloud Gateway show new managed create form in slideout; else legacy modal
+const useSlideout = computed(() => (
+  formConfig.app === 'konnect'
+  && !!formConfig.isKonnectManagedRedisEnabled
+  && formConfig.isCloudGateway !== true
+))
+
 const {
   items,
   loading,
@@ -120,31 +148,47 @@ const {
   loadItems,
 } = useRedisConfigurationSelector({
   redisType,
+  isKonnectManagedRedisEnabled,
 })
 
-// Modal state
-const isModalVisible = ref(false)
+const showModal = ref(false)
+const showSlideout = ref(false)
+// Selection before "+ New Redis"; restored if create is cancel
+const prevId = ref<string>()
 
-// Event handlers
-const onSelectionChange = (item: SelectItem<string> | null) => {
-  const value = item?.value
-  emit('update:modelValue', value as string)
-  emit('change', item)
+const onSelectionChange = (item: SelectItem<string | number> | null) => {
+  emit('update:modelValue', item === null ? undefined : String(item.value))
+  emit('change', item as SelectItem | null)
 }
 
 const onCreateNew = () => {
-  isModalVisible.value = true
+  prevId.value = modelValue
+  onSelectionChange(null)
+  emit('create-new')
+  if (useSlideout.value) {
+    showSlideout.value = true
+  } else {
+    showModal.value = true
+  }
 }
 
-// Modal event handlers
-const onModalClose = () => {
-  isModalVisible.value = false
+const onCreateClose = () => {
+  showModal.value = false
+  showSlideout.value = false
+
+  if (prevId.value) {
+    const id = prevId.value
+    prevId.value = undefined
+    emit('update:modelValue', id)
+  }
   emit('modal-close')
 }
 
 const onPartialCreated = (data: RedisConfigurationResponse) => {
-  isModalVisible.value = false
-  loadItems() // Refresh the list
+  prevId.value = undefined
+  showModal.value = false
+  showSlideout.value = false
+  loadItems()
   onSelectionChange({
     name: data.name,
     value: data.id,

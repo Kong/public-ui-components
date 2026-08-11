@@ -1261,4 +1261,128 @@ describe('<ConsumerList />', () => {
         cy.getTestId(confirmationModalQuery).should('exist')
       })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    const wsConfig: KonnectConsumerListConfig = {
+      app: 'konnect',
+      controlPlaneId: '1234-abcd-ilove-cats',
+      apiBaseUrl: '/us/kong-api',
+      isExactMatch: false,
+      createRoute: 'create-consumer',
+      getViewRoute: () => 'view-consumer',
+      getEditRoute: () => 'edit-consumer',
+    }
+
+    it('uses workspace-scoped URL when fetching with workspace', () => {
+      const configWithWorkspace = { ...wsConfig, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsConfig.apiBaseUrl}/v2/control-planes/${wsConfig.controlPlaneId}/core-entities/default/consumers*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getWithWorkspace')
+
+      cy.mount(ConsumerList, {
+        props: {
+          cacheIdentifier: `consumer-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithWorkspace')
+      cy.get('.kong-ui-entities-consumers-list').should('be.visible')
+    })
+
+    it('uses workspace-scoped search URL when filtering with workspace', () => {
+      const configWithWorkspace = { ...wsConfig, workspace: 'default' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsConfig.apiBaseUrl}/v2/control-planes/${wsConfig.controlPlaneId}/core-entities/default/consumers*`,
+        },
+        (req) => {
+          if (!req.url.includes('/consumers/search')) {
+            req.reply({ statusCode: 200, body: { data: consumers5, total: consumers5.length } })
+          }
+        },
+      ).as('getWithWorkspace')
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsConfig.apiBaseUrl}/v2/control-planes/${wsConfig.controlPlaneId}/core-entities/default/consumers/search*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('searchWithWorkspace')
+
+      cy.mount(ConsumerList, {
+        props: {
+          cacheIdentifier: `consumer-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithWorkspace')
+      cy.get('.kong-ui-entity-filter-input input').type('consumer.1')
+      cy.wait('@searchWithWorkspace').its('request.url').should('include', '/consumers/search')
+    })
+
+    it('uses non-default workspace name in fetch URL', () => {
+      const configWithWorkspace = { ...wsConfig, workspace: 'my-workspace' }
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsConfig.apiBaseUrl}/v2/control-planes/${wsConfig.controlPlaneId}/core-entities/my-workspace/consumers*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getWithMyWorkspace')
+
+      cy.mount(ConsumerList, {
+        props: {
+          cacheIdentifier: `consumer-list-${uuidv4()}`,
+          config: configWithWorkspace,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getWithMyWorkspace')
+      cy.get('.kong-ui-entities-consumers-list').should('be.visible')
+    })
+
+    it('omits workspace segment when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${wsConfig.apiBaseUrl}/v2/control-planes/${wsConfig.controlPlaneId}/core-entities/consumers*`,
+        },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      ).as('getNoWorkspace')
+
+      cy.mount(ConsumerList, {
+        props: {
+          cacheIdentifier: `consumer-list-${uuidv4()}`,
+          config: wsConfig,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => false,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.wait('@getNoWorkspace')
+      cy.get('.kong-ui-entities-consumers-list').should('be.visible')
+    })
+  })
 })

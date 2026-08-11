@@ -71,7 +71,7 @@ export function* walkFields(
 
     if (fieldValue === undefined) continue
 
-    const path = generalizePath(fieldKey)
+    const path = generalizePath(fieldKey, ctx.schemaMap)
     const fieldSchema = ctx.schemaMap[path]
 
     if (!fieldSchema) {
@@ -96,7 +96,7 @@ export function getArrayItemInfo(
   ctx: FillerContext,
 ): { itemKey: string, itemSchema: UnionFieldSchema } {
   const itemKey = resolve(fieldKey, String(index))
-  const itemPath = generalizePath(itemKey)
+  const itemPath = generalizePath(itemKey, ctx.schemaMap)
   const itemSchema = ctx.schemaMap[itemPath]
 
   if (!itemSchema) {
@@ -104,6 +104,25 @@ export function getArrayItemInfo(
   }
 
   return { itemKey, itemSchema }
+}
+
+/**
+ * Get entry info for map iteration
+ */
+export function getMapEntryInfo(
+  fieldKey: string,
+  kidId: string,
+  ctx: FillerContext,
+): { entryKey: string, entrySchema: UnionFieldSchema } {
+  const entryKey = resolve(fieldKey, kidId)
+  const entryPath = generalizePath(entryKey, ctx.schemaMap)
+  const entrySchema = ctx.schemaMap[entryPath]
+
+  if (!entrySchema) {
+    throw new Error(`Map entry schema for "${entryKey}" not found in schema map`)
+  }
+
+  return { entryKey, entrySchema }
 }
 
 /**

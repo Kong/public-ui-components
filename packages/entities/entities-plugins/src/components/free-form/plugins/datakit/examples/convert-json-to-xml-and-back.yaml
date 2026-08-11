@@ -1,0 +1,17 @@
+debug: true
+nodes:
+- name: JSON_XML
+  type: json_to_xml
+  attributes_block_name: '#attr'
+  input: request.body
+- name: CALL
+  type: call
+  url: http://localhost:7180
+  method: POST
+  inputs:
+    body: JSON_XML
+- name: XML_JSON
+  type: xml_to_json
+  input: CALL.body
+  attributes_block_name: '#attr'
+  output: response.body

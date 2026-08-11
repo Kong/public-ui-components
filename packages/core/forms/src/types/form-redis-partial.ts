@@ -18,6 +18,8 @@ export type ClusterNode = {
 export interface RedisConfigurationFields {
   name: string
   type: PartialType
+  /** Konnect list API may include tags (e.g. managed-cache markers); omitted for typical self-managed rows */
+  tags?: string[]
   config: {
     cluster_max_redirections: number
     cluster_nodes: Array<Identifiable<ClusterNode>>

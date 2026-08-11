@@ -82,8 +82,8 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('other-create-form-submit').should('be.disabled')
       // enables save when required fields have values
       cy.getTestId('secret-form-key').type('bicycle-kick')
-      cy.getTestId('secret-form-value').clear()
-      cy.getTestId('secret-form-value').type('101')
+      cy.getTestId('secret-form-value').find('textarea').clear()
+      cy.getTestId('secret-form-value').find('textarea').type('101')
       cy.getTestId('other-create-form-submit').should('be.enabled')
       // disables save when required field is cleared
       cy.getTestId('secret-form-key').clear()
@@ -111,7 +111,9 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       // form fields
       cy.getTestId('secret-form-key').should('be.disabled')
       cy.getTestId('secret-form-key').should('have.value', secret.key)
-      cy.getTestId('secret-form-value').should('have.value', '')
+      // the value is masked and read-only until the user rotates it
+      cy.getTestId('sensitive-input-rotate').should('be.visible')
+      cy.getTestId('secret-form-value').find('textarea').should('have.attr', 'readonly')
     })
 
     it('should correctly handle button state - edit', () => {
@@ -132,11 +134,14 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('other-edit-form-submit').should('be.visible')
       cy.getTestId('other-edit-form-cancel').should('be.enabled')
       cy.getTestId('other-edit-form-submit').should('be.disabled')
+      // the value starts masked; rotate to make it editable
+      cy.getTestId('sensitive-input-rotate').click()
+      cy.getTestId('secret-form-value').find('textarea').should('not.have.attr', 'readonly')
       // enables save when form has changes
-      cy.getTestId('secret-form-value').type('ubiquitous')
+      cy.getTestId('secret-form-value').find('textarea').type('ubiquitous')
       cy.getTestId('other-edit-form-submit').should('be.enabled')
       // disables save when form changes are undone
-      cy.getTestId('secret-form-value').clear()
+      cy.getTestId('secret-form-value').find('textarea').clear()
       cy.getTestId('other-edit-form-submit').should('be.disabled')
     })
 
@@ -176,6 +181,146 @@ describe('<SecretForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('form-fetch-error').should('be.visible')
       // form hidden
       cy.get('.kong-ui-entities-secret-form form').should('not.exist')
+    })
+  })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in vault and POST URLs when creating with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vaultId}`,
+        },
+        { statusCode: 200, body: { config: { config_store_id: configStoreId } } },
+      ).as('getVaultWithWorkspace')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/default/config-stores/${configStoreId}/secrets`,
+        },
+        { statusCode: 201, body: secret },
+      ).as('createSecretWithWorkspace')
+
+      cy.mount(SecretForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          vaultId,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getVaultWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+        cy.wait('@createSecretWithWorkspace')
+      })
+    })
+
+    it('includes workspace in vault and GET/PUT URLs when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/default/vaults/${vaultId}`,
+        },
+        { statusCode: 200, body: { config: { config_store_id: configStoreId } } },
+      ).as('getVaultWithWorkspace')
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/default/config-stores/${configStoreId}/secrets/${secret.key}`,
+        },
+        { statusCode: 200, body: secret },
+      ).as('getSecretWithWorkspace')
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/default/config-stores/${configStoreId}/secrets/${secret.key}`,
+        },
+        { statusCode: 200, body: secret },
+      ).as('updateSecretWithWorkspace')
+
+      cy.mount(SecretForm, {
+        props: {
+          config: { ...baseConfigKonnect, workspace: 'default' },
+          vaultId,
+          secretId: secret.key,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getVaultWithWorkspace')
+      cy.wait('@getSecretWithWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+        cy.wait('@updateSecretWithWorkspace')
+      })
+    })
+
+    it('omits workspace segment in vault and POST URLs when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/vaults/${vaultId}`,
+        },
+        { statusCode: 200, body: { config: { config_store_id: configStoreId } } },
+      ).as('getVaultNoWorkspace')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/config-stores/${configStoreId}/secrets`,
+        },
+        { statusCode: 201, body: secret },
+      ).as('createSecretNoWorkspace')
+
+      cy.mount(SecretForm, {
+        props: {
+          config: baseConfigKonnect,
+          vaultId,
+        },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.wait('@getVaultNoWorkspace').then(() => {
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent({ name: 'EntityBaseForm' }).vm.$emit('submit'))
+        cy.wait('@createSecretNoWorkspace')
+      })
+    })
+  })
+
+  describe('Kong AI Gateway', () => {
+    const aiGatewayId = 'ai-gw-1234'
+    const baseConfigAiGateway: KonnectSecretFormConfig = {
+      ...baseConfigKonnect,
+      apiType: 'aiGateway',
+      aiGatewayId,
+    }
+
+    it('fetches the vault and POSTs the secret via the AI Gateway URLs', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigAiGateway.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/vaults/${vaultId}`,
+        },
+        { statusCode: 200, body: { id: vaultId, type: 'konnect', name: 'kv-1', config: { config_store_id: configStoreId } } },
+      ).as('getAiVault')
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${baseConfigAiGateway.apiBaseUrl}/v1/ai-gateways/${aiGatewayId}/config-stores/${configStoreId}/secrets`,
+        },
+        { statusCode: 201, body: secret },
+      ).as('createAiSecret')
+
+      cy.mount(SecretForm, {
+        props: {
+          config: baseConfigAiGateway,
+          vaultId,
+        },
+      })
+
+      cy.wait('@getAiVault')
+      cy.getTestId('secret-form-key').type('password')
+      cy.getTestId('secret-form-value').find('textarea').type('hunter2')
+      cy.getTestId('other-create-form-submit').click()
+
+      cy.wait('@createAiSecret').then(({ request }) => {
+        expect(request.body).to.deep.equal({ key: 'password', value: 'hunter2' })
+      })
     })
   })
 })

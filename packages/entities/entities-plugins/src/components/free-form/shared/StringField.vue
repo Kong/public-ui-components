@@ -45,20 +45,44 @@
       >
         <slot name="help" />
       </template>
+
+      <!-- inline vault picker -->
+      <template
+        v-if="!multiline && inlineVaultPicker"
+        #after
+      >
+        <component
+          :is="autofillSlot"
+          v-if="autofillSlot && realShowVaultSecretPicker"
+          :schema="schema"
+          :update="handleUpdate"
+          :value="fieldValue ?? ''"
+        />
+        <KAlert
+          v-if="realShowVaultSecretPicker && !autofillSlot"
+          appearance="warning"
+          :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+          :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+        />
+      </template>
     </EnhancedInput>
-    <component
-      :is="autofillSlot"
-      v-if="autofillSlot && realShowVaultSecretPicker"
-      :schema="schema"
-      :update="handleUpdate"
-      :value="fieldValue ?? ''"
-    />
-    <KAlert
-      v-if="realShowVaultSecretPicker && !autofillSlot"
-      appearance="warning"
-      :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
-      :message="i18n.t('plugins.free-form.vault_picker.component_error')"
-    />
+
+    <!-- block vault picker -->
+    <template v-if="!inlineVaultPicker">
+      <component
+        :is="autofillSlot"
+        v-if="autofillSlot && realShowVaultSecretPicker"
+        :schema="schema"
+        :update="handleUpdate"
+        :value="fieldValue ?? ''"
+      />
+      <KAlert
+        v-if="realShowVaultSecretPicker && !autofillSlot"
+        appearance="warning"
+        :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+        :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+      />
+    </template>
   </div>
 </template>
 
@@ -66,7 +90,7 @@
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { computed, inject, toRef, useAttrs } from 'vue'
 import type { InputProps, LabelAttributes } from '@kong/kongponents'
-import useI18n from '../../../composables/useI18n'
+import useI18n from '../../../composables/useFreeformI18n'
 import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from '../shared/utils'
@@ -90,6 +114,7 @@ interface StringFieldProps extends InputProps, BaseFieldProps {
   type?: string
   placeholder?: string
   inputId?: string
+  inlineVaultPicker?: boolean
 }
 
 const {
@@ -105,16 +130,10 @@ const emit = defineEmits<{
 
 const { value: fieldValue, hide, ...field } = useField<string | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
-const initialValue = fieldValue?.value
 
 function handleUpdate(value: string) {
-  if (initialValue !== undefined && value === '' && value !== initialValue) {
-    fieldValue!.value = null
-    emit('update:modelValue', null)
-  } else {
-    fieldValue!.value = value.trim()
-    emit('update:modelValue', value.trim())
-  }
+  fieldValue!.value = value === '' ? null : value
+  emit('update:modelValue', fieldValue!.value)
 }
 
 const encrypted = computed(() => {

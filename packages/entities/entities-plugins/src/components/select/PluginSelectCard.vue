@@ -32,23 +32,23 @@
                   icon
                   size="small"
                 >
-                  <MoreIcon :size="KUI_ICON_SIZE_30" />
+                  <MoreIcon :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`" />
                 </KButton>
               </template>
 
               <template #items>
                 <KDropdownItem
-                  v-if="canDeleteCustomPlugin"
+                  v-if="hasEditAction"
                   data-testid="edit-plugin-schema"
                   @click.stop="handleCustomEdit(plugin.name, plugin.customPluginType!)"
                 >
                   {{ t('actions.edit') }}
                 </KDropdownItem>
                 <KDropdownItem
-                  v-if="canDeleteCustomPlugin"
+                  v-if="hasDeleteAction"
                   danger
                   data-testid="delete-plugin-schema"
-                  has-divider
+                  :has-divider="hasEditAction"
                   @click.stop="handleCustomDelete"
                 >
                   {{ t('actions.delete') }}
@@ -68,16 +68,25 @@
           <PluginIcon
             :alt="plugin.name"
             class="plugin-card-icon"
-            :name="plugin.id"
+            :name="pluginIconName"
             :size="55"
           />
           <div
-            v-if="plugin.description || (isCustomPlugin && !isCreateCustomPlugin)"
+            v-if="plugin.description || customPluginBadges.length"
             class="plugin-card-text"
           >
-            <p v-if="isCustomPlugin && !isCreateCustomPlugin">
-              {{ t('plugins.select.custom_badge_text') }}
-            </p>
+            <div
+              v-if="customPluginBadges.length"
+              class="custom-plugin-badges"
+            >
+              <KBadge
+                v-for="badge in customPluginBadges"
+                :key="badge"
+                appearance="info"
+              >
+                {{ badge }}
+              </KBadge>
+            </div>
 
             <p
               v-if="plugin.description"
@@ -138,9 +147,23 @@ const props = defineProps({
     default: false,
   },
   /**
+   * Whether or not user has rights to delete cloned custom plugins
+   */
+  canDeleteClonedPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  /**
    * Whether or not user has rights to edit custom plugins
    */
   canEditCustomPlugin: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Whether or not user has rights to edit cloned custom plugins
+   */
+  canEditClonedPlugin: {
     type: Boolean,
     default: false,
   },
@@ -156,9 +179,50 @@ const props = defineProps({
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
+const pluginIconName = computed((): string => {
+  return props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromRef
+    ? props.plugin.clonedFromRef
+    : props.plugin.id
+})
+const customPluginBadges = computed((): string[] => {
+  if (!isCustomPlugin.value || isCreateCustomPlugin.value) {
+    return []
+  }
+
+  if (props.plugin.customPluginType === 'cloned' && props.plugin.clonedFromRef) {
+    return [t('plugins.select.cloned_from_badge', { link: props.plugin.clonedFromRef })]
+  }
+
+  if (props.plugin.customPluginType === 'streaming') {
+    return [t('plugins.select.streamed_custom_badge')]
+  }
+
+  return [t('plugins.select.installed_custom_badge')]
+})
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
-const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && props.navigateOnClick && controlPlaneId.value && (props.canDeleteCustomPlugin || props.canEditCustomPlugin)))
+const hasEditRoute = computed((): boolean => typeof props.config.getCustomEditRoute === 'function')
+const isClonedCustomPlugin = computed((): boolean => props.plugin.customPluginType === 'cloned')
+const canDeleteCurrentPlugin = computed((): boolean => {
+  return isClonedCustomPlugin.value ? props.canDeleteClonedPlugin : props.canDeleteCustomPlugin
+})
+const canEditCurrentPlugin = computed((): boolean => {
+  return isClonedCustomPlugin.value ? props.canEditClonedPlugin : props.canEditCustomPlugin
+})
+const canManageCustomPlugin = computed((): boolean => {
+  return !(
+    props.config.app === 'kongManager'
+    && props.plugin.customPluginType === 'schema'
+  )
+})
+const hasEditAction = computed((): boolean => canEditCurrentPlugin.value && hasEditRoute.value)
+const hasDeleteAction = computed((): boolean => canDeleteCurrentPlugin.value)
+const hasActions = computed((): boolean => !!(
+  isCustomPlugin.value
+  && !isCreateCustomPlugin.value
+  && canManageCustomPlugin.value
+  && props.navigateOnClick
+  && (hasDeleteAction.value || hasEditAction.value)
+))
 
 const handleCreateClick = (): void => {
   router.push(props.config.getCreateRoute(props.plugin.id))
@@ -180,27 +244,27 @@ const emitPluginData = (): void => {
  * Custom Plugin logic
  */
 const isCreateCustomPlugin = computed((): boolean => props.plugin.id === 'custom-plugin-create')
-const isCustomPlugin = computed((): boolean => props.config.app === 'konnect' && props.plugin.group === PluginGroup.CUSTOM_PLUGINS)
+const isCustomPlugin = computed((): boolean => props.plugin.group === PluginGroup.CUSTOM_PLUGINS)
 
 const handleCustomDelete = (): void => {
-  if (props.config.app === 'konnect') {
+  if (isCustomPlugin.value) {
     emit('custom-plugin-delete')
   }
 }
 
 const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
-  const konnectConfig = props.config as KonnectPluginSelectConfig
-  if (props.config.app === 'konnect' && typeof konnectConfig.getCustomEditRoute === 'function' && konnectConfig.getCustomEditRoute) {
-    router.push(konnectConfig.getCustomEditRoute(pluginName, type))
+  const pluginSelectConfig = props.config as KonnectPluginSelectConfig | KongManagerPluginSelectConfig
+  if (typeof pluginSelectConfig.getCustomEditRoute === 'function') {
+    router.push(pluginSelectConfig.getCustomEditRoute(pluginName, type))
   }
 }
 
 const handleCustomClick = (): void => {
   // handle custom plugin card click only
-  if (!isDisabled.value && props.config.app === 'konnect') {
-    const konnectConfig = props.config as KonnectPluginSelectConfig
-    if (isCreateCustomPlugin.value && konnectConfig.createCustomRoute) {
-      router.push(konnectConfig.createCustomRoute)
+  if (!isDisabled.value && isCustomPlugin.value) {
+    const pluginSelectConfig = props.config as KonnectPluginSelectConfig | KongManagerPluginSelectConfig
+    if (isCreateCustomPlugin.value && pluginSelectConfig.createCustomRoute) {
+      router.push(pluginSelectConfig.createCustomRoute)
     } else if (isCustomPlugin.value) {
       handleCreateClick()
     }
@@ -213,6 +277,7 @@ const handleCustomClick = (): void => {
   display: flex;
 
   .plugin-select-card {
+    background-color: var(--kui-color-background, $kui-color-background);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     box-sizing: border-box;
@@ -269,7 +334,15 @@ const handleCustomClick = (): void => {
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
       -webkit-line-clamp: 3;
+      line-clamp: 3;
       overflow: hidden;
+    }
+
+    .custom-plugin-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--kui-space-40, $kui-space-40);
+      margin-bottom: var(--kui-space-40, $kui-space-40);
     }
 
     .plugin-card-body {

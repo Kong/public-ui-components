@@ -15,8 +15,8 @@
     <template #before>
       <slot name="before">
         <SearchIcon
-          :color="KUI_COLOR_TEXT_NEUTRAL"
-          :size="KUI_ICON_SIZE_40"
+          :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+          :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`"
         />
       </slot>
     </template>
@@ -109,7 +109,6 @@ const {
   fields?: string[]
   selectedItem?: SelectItem<string>
   selectedItemLoading?: boolean
-  initialItemSelected?: boolean
   domId: string
   id: string
   entity: string

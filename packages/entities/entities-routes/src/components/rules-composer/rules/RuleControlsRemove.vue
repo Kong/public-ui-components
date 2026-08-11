@@ -8,7 +8,7 @@
     @click="emit('remove')"
   >
     <CloseIcon
-      :color="disabled ? KUI_COLOR_TEXT_DISABLED : KUI_COLOR_TEXT_PRIMARY"
+      :color="disabled ? `var(--kui-color-text-disabled, ${KUI_COLOR_TEXT_DISABLED})` : `var(--kui-color-text-primary, ${KUI_COLOR_TEXT_PRIMARY})`"
     />
   </KButton>
 </template>

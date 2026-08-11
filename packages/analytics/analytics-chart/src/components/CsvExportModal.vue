@@ -1,3 +1,4 @@
+<!-- TODO: Remove this deprecated analytics-chart CSV export file after consumers migrate to @kong-ui-public/dashboard-renderer. MA-5236: https://konghq.atlassian.net/browse/MA-5236 -->
 <template>
   <div class="kong-ui-public-csv-export-modal">
     <KModal
@@ -71,7 +72,7 @@
             >
               <InfoIcon
                 :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
-                :size="KUI_ICON_SIZE_30"
+                :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
               />
             </KTooltip>
           </div>
@@ -271,7 +272,6 @@ watch(tableData, () => {
     }
 
     .text-muted {
-      color: rgba(0, 0, 0, 0.45) !important;
       font-size: var(--kui-font-size-30, $kui-font-size-30);
     }
 

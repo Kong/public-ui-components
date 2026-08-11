@@ -1,5 +1,8 @@
+import { h } from 'vue'
 import Form from '../shared/Form.vue'
+import ObjectField from '../shared/ObjectField.vue'
 import type { FormSchema } from '../../../types/plugins/form-schema'
+import { renderRuleExactMatch } from '../shared/composables/render-rules'
 import type { RenderRules } from '../shared/types'
 
 const fieldPrefix = 'field'
@@ -374,6 +377,91 @@ describe('Render Rules', () => {
       })
     })
 
+    describe('Array any-of dependencies', () => {
+      it('should toggle visibility when switching between matching and non-matching values', () => {
+        const schema = createSchema('a', 'b')
+
+        const renderRules: RenderRules = {
+          dependencies: {
+            [getFieldName('b')]: [getFieldName('a'), ['valueA', 'valueB']],
+          },
+        }
+
+        cy.mount(Form, { props: { schema, renderRules } })
+
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
+
+        cy.getTestId(getFieldTestId(getFieldName('a'))).type('valueA')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('be.visible')
+
+        cy.getTestId(getFieldTestId(getFieldName('a'))).clear()
+        cy.getTestId(getFieldTestId(getFieldName('a'))).type('other')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
+
+        cy.getTestId(getFieldTestId(getFieldName('a'))).clear()
+        cy.getTestId(getFieldTestId(getFieldName('a'))).type('valueB')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('be.visible')
+      })
+    })
+
+    describe('Exact array value dependencies', () => {
+      it('should show field when dependency exactly equals the specified array', () => {
+        const schema = createSchema('a', 'b')
+
+        const renderRules: RenderRules = {
+          dependencies: {
+            [getFieldName('b')]: [getFieldName('a'), renderRuleExactMatch(['x', 'y'])],
+          },
+        }
+
+        cy.mount(Form, {
+          props: {
+            schema,
+            renderRules,
+            data: { [getFieldName('a')]: ['x', 'y'] },
+          },
+        })
+
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('be.visible')
+      })
+
+      it('should hide field when dependency is a partial match of the array', () => {
+        const schema = createSchema('a', 'b')
+
+        const renderRules: RenderRules = {
+          dependencies: {
+            [getFieldName('b')]: [getFieldName('a'), renderRuleExactMatch(['x', 'y'])],
+          },
+        }
+
+        cy.mount(Form, {
+          props: {
+            schema,
+            renderRules,
+            data: { [getFieldName('a')]: ['x'] },
+          },
+        })
+
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
+      })
+
+      it('should not treat { type: "exact" } as any-of when dependency value is a plain string element', () => {
+        const schema = createSchema('a', 'b')
+
+        const renderRules: RenderRules = {
+          dependencies: {
+            [getFieldName('b')]: [getFieldName('a'), renderRuleExactMatch(['x', 'y'])],
+          },
+        }
+
+        cy.mount(Form, { props: { schema, renderRules } })
+
+        // 'x' is an element of the array but should NOT satisfy an exact-match against ['x', 'y']
+        cy.getTestId(getFieldTestId(getFieldName('a'))).type('x')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
+      })
+    })
+
     describe('Dependency value cleanup', () => {
       it('should clear field value when dependency is not satisfied', () => {
         const schema = createSchema('a', 'b')
@@ -661,6 +749,236 @@ describe('Render Rules', () => {
 
         // TODO: Verify console error message when validation is implemented
       })
+    })
+  })
+
+  describe('Output projection', () => {
+    // Locks the ordering invariant in `getValue()`: hidden fields are pruned in
+    // the internal kid-space *before* `keyIdMap.deserialize()` renames map keys.
+    // If pruning ran after deserialize, the concrete kid path stored in
+    // `hiddenPaths` (`config.entries.kid:N.secret`) would no longer match the
+    // deserialized tree (`config.entries.primary.secret`) and the hidden field
+    // would leak into the emitted payload.
+    it('resets a hidden field inside a map value, keyed by its real name', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                {
+                  entries: {
+                    type: 'map',
+                    keys: { type: 'string' },
+                    values: {
+                      type: 'record',
+                      fields: [
+                        { strategy: { type: 'string' } },
+                        { secret: { type: 'string' } },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }
+
+      const renderRules: RenderRules = {
+        dependencies: {
+          // `#` addresses the map value; secret is shown only when strategy === 'redis'
+          'config.entries.#.secret': ['config.entries.#.strategy', 'redis'],
+        },
+      }
+
+      const onChangeSpy = cy.spy().as('onChangeSpy')
+
+      cy.mount(Form, {
+        props: {
+          schema,
+          renderRules,
+          data: { config: { entries: { primary: { strategy: 'local', secret: 'leak' } } } },
+          onChange: onChangeSpy,
+        },
+      })
+
+      // secret is hidden (strategy !== 'redis') → must be null in the output,
+      // and the entry must be keyed by 'primary' (proving deserialize ran and
+      // kid-space matching worked).
+      cy.get('@onChangeSpy').should('have.been.calledWith', Cypress.sinon.match((value: any) => {
+        const entry = value?.config?.entries?.primary
+        return !!entry && entry.strategy === 'local' && entry.secret === null
+      }))
+    })
+
+    // Companion to the test above with the dependency SATISFIED: the map-nested
+    // field must stay visible and keep its value. This is the case that only
+    // works when the dependency's actual value is read with a kid-keyed path
+    // that matches `innerData` — i.e. pruning happens before `deserialize`.
+    it('keeps a shown field inside a map value, keyed by its real name', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                {
+                  entries: {
+                    type: 'map',
+                    keys: { type: 'string' },
+                    values: {
+                      type: 'record',
+                      fields: [
+                        { strategy: { type: 'string' } },
+                        { secret: { type: 'string' } },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }
+
+      const renderRules: RenderRules = {
+        dependencies: {
+          'config.entries.#.secret': ['config.entries.#.strategy', 'redis'],
+        },
+      }
+
+      const onChangeSpy = cy.spy().as('onChangeSpy')
+
+      cy.mount(Form, {
+        props: {
+          schema,
+          renderRules,
+          // strategy === 'redis' → secret is shown and must be preserved
+          data: { config: { entries: { primary: { strategy: 'redis', secret: 'keep' } } } },
+          onChange: onChangeSpy,
+        },
+      })
+
+      cy.get('@onChangeSpy').should('have.been.calledWith', Cypress.sinon.match((value: any) => {
+        const entry = value?.config?.entries?.primary
+        return !!entry && entry.strategy === 'redis' && entry.secret === 'keep'
+      }))
+    })
+  })
+
+  describe('Omitted fields', () => {
+    // Fields excluded from an ObjectField via `omit` are managed by the host
+    // form, so render-rule dependencies must never hide or reset them — even
+    // when a non-omitted sibling under the same condition IS hidden. Locks the
+    // omittedRegistry branch introduced when visibility became purely derived.
+    it('never hides/resets an omitted field, while a non-omitted sibling still resets', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                { strategy: { type: 'string' } },
+                { redis: { type: 'string' } },
+                { other: { type: 'string' } },
+              ],
+            },
+          },
+        ],
+      }
+
+      const renderRules: RenderRules = {
+        dependencies: {
+          // both are shown only when strategy === 'redis'
+          'config.redis': ['config.strategy', 'redis'],
+          'config.other': ['config.strategy', 'redis'],
+        },
+      }
+
+      const onChangeSpy = cy.spy().as('onChangeSpy')
+
+      cy.mount(Form, {
+        props: {
+          schema,
+          renderRules,
+          data: { config: { strategy: 'local', redis: 'keep-me', other: 'drop-me' } },
+          onChange: onChangeSpy,
+        },
+        slots: {
+          // `redis` is omitted here → host-managed, must survive the dependency
+          default: () => h(ObjectField, { name: 'config', omit: ['redis'] }),
+        },
+      })
+
+      // Interact so an emit happens with the omit registration already in place
+      // (avoids depending on initial-emit vs. child-mount ordering).
+      cy.getTestId('ff-config.strategy').type('x')
+
+      cy.get('@onChangeSpy').should('have.been.calledWith', Cypress.sinon.match((value: any) => {
+        const config = value?.config
+        // redis omitted → preserved; other not omitted, dependency unmet → reset to null
+        return !!config && config.redis === 'keep-me' && config.other === null
+      }))
+    })
+
+    // Regression test for `ConfigForm.vue`'s default-visible/advanced split:
+    // two sibling ObjectFields register at the SAME path, each omitting the
+    // other's fields so together they still render every field. `omit` here
+    // means "not rendered by THIS instance", not "host-managed / exempt from
+    // all rules" — a field must stay governed by its dependency rule as long
+    // as at least one sibling actually renders it.
+    it('keeps a field subject to its dependency rule when a sibling ObjectField at the same path omits it', () => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            config: {
+              type: 'record',
+              fields: [
+                { strategy: { type: 'string' } },
+                { redis: { type: 'string' } },
+                { other: { type: 'string' } },
+              ],
+            },
+          },
+        ],
+      }
+
+      const renderRules: RenderRules = {
+        dependencies: {
+          'config.redis': ['config.strategy', 'redis'],
+        },
+      }
+
+      const onChangeSpy = cy.spy().as('onChangeSpy')
+
+      cy.mount(Form, {
+        props: {
+          schema,
+          renderRules,
+          data: { config: { strategy: 'local', redis: 'keep-me', other: 'kept' } },
+          onChange: onChangeSpy,
+        },
+        slots: {
+          default: () => [
+            h(ObjectField, { key: 'a', name: 'config', omit: ['redis'] }),
+            h(ObjectField, { key: 'b', name: 'config', omit: ['strategy', 'other'] }),
+          ],
+        },
+      })
+
+      cy.getTestId('ff-config.strategy').type('x')
+
+      cy.get('@onChangeSpy').should('have.been.calledWith', Cypress.sinon.match((value: any) => {
+        const config = value?.config
+        // redis is rendered by the second ObjectField (not omitted there), so
+        // its dependency rule still applies and it gets reset to null.
+        return !!config && config.redis === null && config.other === 'kept'
+      }))
     })
   })
 

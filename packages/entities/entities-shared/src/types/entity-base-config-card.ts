@@ -1,3 +1,4 @@
+import type { DeckConfigOptions } from './deck'
 import type { KonnectConfig, KongManagerConfig } from './index'
 
 /**
@@ -20,6 +21,9 @@ export enum SupportedEntityType {
   Target = 'target',
   Vault = 'vault',
   Partial = 'partial',
+  // Cloud Gateways add-on drives TR header `konnect_cloud_gateway_addon`
+  // and skips generic pattern
+  CloudGatewayAddon = 'cloud_gateway_addon',
   BackendCluster = 'backend_cluster',
   VirtualCluster = 'virtual_cluster',
   Listener = 'listener',
@@ -38,6 +42,11 @@ export enum SupportedEntityType {
   // If entityType is 'other' terraform scripts will not be available
   // Note: This is currently only supported by EntityBaseForm not EntityBaseConfigCard!!
   Other = 'other',
+  // Custom plugin variants — used only for slideout deck YAML key generation.
+  // Values map directly to decK YAML collection keys via `entityType + 's'`.
+  PluginSchema = 'plugin_schema',
+  CustomPlugin = 'custom_plugin',
+  ClonedPlugin = 'cloned_plugin',
 }
 
 export const SupportedEntityTypesArray = Object.values(SupportedEntityType)
@@ -51,6 +60,9 @@ export const SupportedEntityDeckArray = [
   SupportedEntityType.Key,
   SupportedEntityType.KeySet,
   SupportedEntityType.Plugin,
+  SupportedEntityType.PluginSchema,
+  SupportedEntityType.CustomPlugin,
+  SupportedEntityType.ClonedPlugin,
   SupportedEntityType.Route,
   SupportedEntityType.Upstream,
   SupportedEntityType.Target,
@@ -59,6 +71,10 @@ export const SupportedEntityDeckArray = [
 ] as const
 
 export type SupportedEntityDeck = typeof SupportedEntityDeckArray[number]
+
+export function isSupportedDeckEntityType(entityType: SupportedEntityType): boolean {
+  return (SupportedEntityDeckArray as readonly SupportedEntityType[]).includes(entityType)
+}
 
 export const EventGatewayTypesArray = ['backend_cluster', 'virtual_cluster', 'listener', 'produce_policy', 'consume_policy', 'cluster_policy', 'listener_policy', 'schema_registry', 'static_key', 'tls_trust_bundle']
 
@@ -78,11 +94,17 @@ export interface BaseEntityConfig {
 
 /** Konnect base form config */
 export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig {
-  enableDeckConfig?: boolean
+  enableDeckConfig?: boolean | DeckConfigOptions
 }
 
 /** Kong Manager base form config */
-export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig { }
+export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig {
+  /**
+   * The localStorage key to use while persisting the visibility preference for the
+   * decK format callout. Omitting this will hide the callout in any case.
+   */
+  deckCalloutPreferenceKey?: string
+}
 
 export enum ConfigurationSchemaType {
   ID = 'id',
@@ -148,6 +170,7 @@ export interface DefaultCommonFieldsConfigurationSchema {
   updated_at: ConfigurationSchemaItem
   created_at: ConfigurationSchemaItem
   tags: ConfigurationSchemaItem
+  labels: ConfigurationSchemaItem
   partials: ConfigurationSchemaItem
 }
 
@@ -158,3 +181,12 @@ export interface ComponentAttrsData {
   text?: string
   additionalComponent?: string
 }
+
+// Runtime list of every option in the config card Format control
+export const CONFIG_CARD_FORMATS = ['structured', 'yaml', 'json', 'terraform', 'deck'] as const
+
+// Union of all format values, including structured property grid
+export type ConfigCardFormat = (typeof CONFIG_CARD_FORMATS)[number]
+
+// JSON/ YAML/ TR/ Deck tabs only- excludes structured (used for `codeBlockRecordFormatter`)
+export type ConfigCardCodeFormat = Exclude<ConfigCardFormat, 'structured'>

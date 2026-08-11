@@ -74,7 +74,7 @@
           :filename="fileName"
           :max-height="700"
           mode="read"
-          theme="light"
+          :theme="(theme as 'light' | 'dark')"
           @cancel="restoreOriginalDocument"
           @mode="(mode: MarkdownMode) => handleMarkdownUiModeChange(mode)"
           @save="(payload: EmitUpdatePayload) => {
@@ -129,6 +129,11 @@ const props = defineProps({
   selectedDocument: {
     type: Object as PropType<{ document: DocumentTree, ast: Record<string, any>, markdown?: string, status: 'published' | 'unpublished' }>,
     default: () => null,
+  },
+  theme: {
+    type: String,
+    default: 'light',
+    validator: (value: string) => ['light', 'dark'].includes(value),
   },
 })
 

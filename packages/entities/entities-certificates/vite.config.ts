@@ -15,6 +15,18 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       name: `kong-ui-public-${sanitizedPackageName}`,
       entry: resolve(__dirname, './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+      cssFileName: 'style',
+    },
+    rollupOptions: {
+      external: [
+        '@kong-ui-public/entities-vaults/dist/style.css',
+        '@kong-ui-public/entities-vaults',
+      ],
+      output: {
+        globals: {
+          '@kong-ui-public/entities-vaults': 'kong-ui-public-entities-vaults',
+        },
+      },
     },
   },
   server: {

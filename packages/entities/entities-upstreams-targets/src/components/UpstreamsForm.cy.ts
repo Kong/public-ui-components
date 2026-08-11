@@ -256,7 +256,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('.name-select input').should('have.value', upstreamsResponseFull.name)
       cy.getTestId('upstreams-form-host-header').should('have.value', upstreamsResponseFull.host_header)
       cy.getTestId('upstreams-form-tags').should('have.value', upstreamsResponseFull.tags?.join(', '))
-      cy.get('.algorithm-select input').should('have.value', 'Least Connections')
+      cy.get('.algorithm-select input').should('have.value', 'Least connections')
       cy.getTestId('upstreams-form-slots').should('have.value', upstreamsResponseFull.slots.toString())
       cy.get('.hash-on-select input').should('have.value', 'Consumer')
       cy.get('.hash-fallback-select input').should('have.value', 'Path')
@@ -676,7 +676,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('.name-select input').should('have.value', upstreamsResponseFull.name)
       cy.getTestId('upstreams-form-host-header').should('have.value', upstreamsResponseFull.host_header)
       cy.getTestId('upstreams-form-tags').should('have.value', upstreamsResponseFull.tags?.join(', '))
-      cy.get('.algorithm-select input').should('have.value', 'Least Connections')
+      cy.get('.algorithm-select input').should('have.value', 'Least connections')
       cy.getTestId('upstreams-form-slots').should('have.value', upstreamsResponseFull.slots.toString())
       cy.get('.hash-on-select input').should('have.value', 'Consumer')
       cy.get('.hash-fallback-select input').should('have.value', 'Path')
@@ -900,6 +900,87 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
         const { body: { healthchecks } } = interception.request
         expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","healthy":{"interval":5,"successes":5,"http_statuses":[200,302]},"unhealthy":{"interval":5,"timeouts":5,"tcp_failures":5,"http_failures":5,"http_statuses":[429,404,500,501,502,503,504,505]},"timeout":1,"concurrency":10,"http_path":"/","headers":{"header1":["v1","v2"]}},"passive":{"type":"http","healthy":{"successes":0},"unhealthy":{"timeouts":0,"tcp_failures":0,"http_failures":0}}}'))
       })
+    })
+  })
+
+  describe('Konnect - workspace URL building', () => {
+    it('includes workspace in POST URL when creating with workspace config', () => {
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/services*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/certificates*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/upstreams`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createUpstreamWithWorkspace')
+
+      cy.mount(UpstreamsForm, {
+        props: { config: { ...konnectConfig, workspace: 'default' } },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createUpstreamWithWorkspace')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/services*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/certificates*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/upstreams/${upstreamsResponse.id}` },
+        { statusCode: 200, body: upstreamsResponse },
+      )
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/upstreams/${upstreamsResponse.id}`,
+        },
+        { statusCode: 200, body: upstreamsResponse },
+      ).as('updateUpstreamWithWorkspace')
+
+      cy.mount(UpstreamsForm, {
+        props: { config: { ...konnectConfig, workspace: 'default' }, upstreamId: upstreamsResponse.id },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@updateUpstreamWithWorkspace')
+    })
+
+    it('omits workspace segment in POST URL when workspace is not provided', () => {
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/services*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        { method: 'GET', url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/certificates*` },
+        { statusCode: 200, body: { data: [], total: 0 } },
+      )
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/upstreams`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createUpstreamNoWorkspace')
+
+      cy.mount(UpstreamsForm, {
+        props: { config: konnectConfig },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createUpstreamNoWorkspace')
     })
   })
 })

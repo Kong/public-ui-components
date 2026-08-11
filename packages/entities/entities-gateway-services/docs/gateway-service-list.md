@@ -80,10 +80,10 @@ A table component for gateway services.
     - *Specific to Konnect*. A function that returns the route for the belonged control plane.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `isExactMatch`:
     - type: `boolean`

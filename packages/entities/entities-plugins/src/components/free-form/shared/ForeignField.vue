@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { computed, ref, toRef, useAttrs } from 'vue'
 import type { InputProps, LabelAttributes } from '@kong/kongponents'
-import useI18n from '../../../composables/useI18n'
+import useI18n from '../../../composables/useFreeformI18n'
 import EnhancedInput from './EnhancedInput.vue'
 
 import { getName } from './utils'

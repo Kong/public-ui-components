@@ -2,6 +2,10 @@ import type {
   KonnectBaseEntityConfig,
   KongManagerBaseEntityConfig,
 } from '@kong-ui-public/entities-shared'
+import type { CloudGatewaysAddOnState } from './cloud-gateways-add-on'
+
+/** Konnect-managed Redis config card: deternine detail branch that's active */
+export type DetailLayout = 'legacy' | 'resolving' | 'managed'
 
 export interface BsseRedisConfigurationEntityConfig {
   /**
@@ -10,7 +14,19 @@ export interface BsseRedisConfigurationEntityConfig {
   cloudAuthAvailable?: boolean
 }
 /** Konnect redis configuration entity config */
-export interface KonnectRedisConfigurationEntityConfig extends KonnectBaseEntityConfig, BsseRedisConfigurationEntityConfig { }
+export interface KonnectRedisConfigurationEntityConfig extends KonnectBaseEntityConfig, BsseRedisConfigurationEntityConfig {
+  /** FF (same as list). With `isCloudGateway: true`, enables Konnect-managed Redis detail (add-on + partial strip) */
+  isKonnectManagedRedisEnabled?: boolean
+  /** Must be `true`, not omitted on Cloud Gateway CPss so detail matches list; if omitted will have legacy partial-only card */
+  isCloudGateway?: boolean
+  cloudGatewaysApiBaseUrl?: string
+  controlPlaneGeo?: string
+  /**
+   * Add-on state from the host page (GM polls every 30s while initializing/terminating).
+   * Config card uses this for the Partial segment; don't pass until add-on is resolved
+   */
+  managedAddOnState?: CloudGatewaysAddOnState
+}
 
 /** Kong Manager redis configuration entity config */
 export interface KongManagerRedisConfigurationEntityConfig extends KongManagerBaseEntityConfig, BsseRedisConfigurationEntityConfig { }

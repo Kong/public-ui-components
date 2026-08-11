@@ -9,7 +9,7 @@
       @update:model-value="handleQueryUpdate"
     >
       <template #before>
-        <IconFilter />
+        <FilterIcon decorative />
       </template>
       <template #after>
         <CloseIcon
@@ -29,7 +29,7 @@
         data-testid="filter-button"
         @click="toggleMenu"
       >
-        <IconFilter />
+        <FilterIcon decorative />
         {{ t('filter.filterButtonText') }} {{ filteredFields.length > 0 ? `(${filteredFields.length})` : '' }}
       </KButton>
       <div
@@ -63,7 +63,7 @@
             <ChevronDownIcon
               class="menu-item-expand-icon"
               :class="{ expanded: expandedFields.has(field.value) }"
-              :color="KUI_COLOR_TEXT_NEUTRAL_WEAK"
+              :color="`var(--kui-color-text-neutral-weak, ${KUI_COLOR_TEXT_NEUTRAL_WEAK})`"
             />
           </span>
           <div
@@ -79,11 +79,13 @@
             <KSelect
               v-if="config.schema?.[field.value]?.type === 'select'"
               :id="getFieldId(field.value)"
-              v-model="searchParams[field.value]"
               :enable-filtering="enableFiltering(field.value)"
+              :enable-item-creation="config.schema?.[field.value]?.enableItemCreation"
               :filter-function="(params: SelectFilterFunctionParams<string | number>) => handleFilter(field.value, params)"
               :items="getFieldOptions(field.value)"
+              :model-value="searchParams[field.value]"
               :placeholder="t('filter.selectPlaceholder')"
+              @change="(item) => handleSelectChange(field.value, item)"
             />
             <KInput
               v-else
@@ -137,8 +139,8 @@ import { CloseIcon, ChevronDownIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL_WEAK } from '@kong/design-tokens'
 import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../types'
 import composables from '../../composables'
-import IconFilter from '../icons/IconFilter.vue'
 import type { SelectItem, SelectFilterFunctionParams } from '@kong/kongponents'
+import { FilterIcon } from '@kong/icons'
 
 const { i18n: { t } } = composables.useI18n()
 
@@ -271,6 +273,12 @@ const handleFilter = (
     return true
   }
   return fieldSchema.filterFunction(params)
+}
+
+const handleSelectChange = (field: string, item: (SelectItem & { custom?: boolean }) | null) => {
+  searchParams.value[field] = item
+    ? item.custom ? String(item.label) : String(item.value)
+    : ''
 }
 </script>
 

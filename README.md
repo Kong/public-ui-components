@@ -18,6 +18,7 @@ Monorepo for **open-source** Kong UI components and utilities.
   - [Preview sandbox build](#preview-sandbox-build)
   - [Build for production](#build-for-production)
   - [Committing Changes](#committing-changes)
+  - [Agentic Reviewer](#agentic-reviewer)
   - [Generating type interface documentation](#generating-type-interface-documentation)
   - [Preview components](#preview-components)
   - [Running consuming application with local copy of the package](#running-consuming-application-with-local-copy-of-the-package)
@@ -120,7 +121,7 @@ pnpm --filter "@kong-ui-public/{package-name}" run typecheck
 
 Run Component or Unit tests.
 
-#### File naming convensions
+#### File naming conventions
 
 - Unit test files should be named `*.spec.ts` and will be run with Vitest
 - Component test files should be named `*.cy.ts` and will be run with Cypress component test runner.
@@ -137,6 +138,24 @@ pnpm --filter "@kong-ui-public/{package-name}" run test:unit
 
 # Unit tests (with UI)
 pnpm --filter "@kong-ui-public/{package-name}" run test:unit:open
+```
+
+#### Test Helpers
+
+A global `getTestId` helper is available in all Vitest unit tests via `vitest.setup.ts`. It lets you find elements by `data-testid` without the verbose attribute selector:
+
+```ts
+// Before
+wrapper.find('[data-testid="my-component"]')
+
+// After
+wrapper.getTestId('my-component')
+```
+
+The helper is added to both `VueWrapper` and `DOMWrapper` prototypes, so it also works on nested results:
+
+```ts
+wrapper.getTestId('parent').getTestId('child')
 ```
 
 ### Preview sandbox build
@@ -175,6 +194,10 @@ For more information on different components that compose our commit messages, p
 - A `pre-push` hook is used that runs `stylelint` and `eslint` before allowing you to push your changes to the repository
 
 Additionally, CI will use `commitlint` to validate the commits associated with a PR in the `Lint and Validate` job.
+
+### Agentic reviewer
+
+[View the reference for the `/muthur` agentic reviewer](./docs/agentic-reviewer.md)
 
 ### Generating type interface documentation
 

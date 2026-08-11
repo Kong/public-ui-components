@@ -393,4 +393,66 @@ describe('<ConsumerForm/>', () => {
       })
     })
   })
+
+  describe('Konnect - workspace URL building', () => {
+    const consumerId = '1234-1234-asdf-asdf'
+
+    it('includes workspace in POST URL when creating with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumers`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createConsumerWithWorkspace')
+
+      cy.mount(ConsumerForm, {
+        props: { config: { ...konnectConfig, workspace: 'default' } },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createConsumerWithWorkspace')
+    })
+
+    it('includes workspace in PUT URL when editing with workspace config', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumers/${consumerId}`,
+        },
+        { statusCode: 200, body: {} },
+      )
+      cy.intercept(
+        {
+          method: 'PUT',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/default/consumers/${consumerId}`,
+        },
+        { statusCode: 200, body: {} },
+      ).as('updateConsumerWithWorkspace')
+
+      cy.mount(ConsumerForm, {
+        props: { config: { ...konnectConfig, workspace: 'default' }, consumerId },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@updateConsumerWithWorkspace')
+    })
+
+    it('omits workspace segment in POST URL when workspace is not provided', () => {
+      cy.intercept(
+        {
+          method: 'POST',
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/consumers`,
+        },
+        { statusCode: 201, body: {} },
+      ).as('createConsumerNoWorkspace')
+
+      cy.mount(ConsumerForm, {
+        props: { config: konnectConfig },
+      }).then(({ wrapper }) => wrapper).as('vueWrapper')
+
+      cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm).vm.$emit('submit'))
+      cy.wait('@createConsumerNoWorkspace')
+    })
+  })
 })

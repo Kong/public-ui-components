@@ -1,4 +1,8 @@
-import { RedisType } from './types'
+import { RedisType, OauthAuthMethod, OauthClientSecretJwtAlg, OauthGrantType } from './types'
+
+// Developer docs: Konnect-managed Redis
+export const MANAGED_CACHE_FOR_REDIS_DOC_URL = 'https://developer.konghq.com/dedicated-cloud-gateways/reference/#managed-cache-for-redis'
+
 import type { ClusterNode, RedisConfigurationFormState, SentinelNode } from './types'
 
 export const DEFAULT_CLUSTER_NODE: Readonly<ClusterNode> = {
@@ -37,5 +41,15 @@ export const DEFAULT_FIELDS: Readonly<RedisConfigurationFormState['fields']['con
   timeout: 2000,
   cloud_authentication: {
     aws_is_serverless: true,
+    oauth: {
+      auth_method: OauthAuthMethod.CLIENT_SECRET_POST,
+      client_secret_jwt_alg: OauthClientSecretJwtAlg.HS512,
+      grant_type: OauthGrantType.CLIENT_CREDENTIALS,
+      ssl_verify: true,
+      timeout: 10000,
+      scopes: [],
+      token_headers: {},
+      token_post_args: {},
+    },
   },
 }

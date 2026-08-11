@@ -1,3 +1,4 @@
+import { h } from 'vue'
 import StandardLayout from './StandardLayout.vue'
 import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../../constants'
 
@@ -235,6 +236,89 @@ describe('<StandardLayout />', () => {
 
     // Code editor section should not exist
     cy.get('.plugin-code-editor').should('not.exist')
+  })
+
+  it('should own plugin configuration block slots', () => {
+    cy.mount(StandardLayout as any, {
+      props: {
+        schema: createBaseSchema(),
+        formSchema: createFormSchema(),
+        model: createBaseModel(),
+        formModel: { enabled: true },
+        isEditing: false,
+        onFormChange: cy.spy(),
+        pluginName: 'test-plugin',
+      },
+      slots: {
+        default: () => h('div', { 'data-testid': 'plugin-config-fields' }, 'Plugin config fields'),
+        'plugin-config-title': () => h('span', { 'data-testid': 'custom-config-title' }, 'Custom config title'),
+        'plugin-config-description': () => h('span', { 'data-testid': 'custom-config-description' }, 'Custom config description'),
+        'plugin-config-extra': () => h('button', { 'data-testid': 'custom-config-extra' }, 'Extra action'),
+      },
+    })
+
+    cy.getTestId('form-section-plugin-config').should('exist')
+    cy.getTestId('plugin-config-fields').should('contain.text', 'Plugin config fields')
+    cy.getTestId('custom-config-title').should('contain.text', 'Custom config title')
+    cy.getTestId('custom-config-description').should('contain.text', 'Custom config description')
+    cy.getTestId('custom-config-extra').should('contain.text', 'Extra action')
+  })
+
+  describe('Multi-section configuration (configSections)', () => {
+    const mountMultiSection = () => {
+      cy.mount(StandardLayout as any, {
+        props: {
+          schema: createBaseSchema(),
+          formSchema: createFormSchema(),
+          model: createBaseModel(),
+          formModel: { enabled: true },
+          isEditing: false,
+          onFormChange: cy.spy(),
+          pluginName: 'test-plugin',
+          configSections: [
+            { name: 'configuration', title: 'Plugin configuration', description: 'First section' },
+            { name: 'governance', title: 'Governance settings', description: 'Second section' },
+          ],
+        },
+        slots: {
+          'section-configuration': () => h('div', { 'data-testid': 'section-configuration-content' }, 'Configuration fields'),
+          'section-governance': () => h('div', { 'data-testid': 'section-governance-content' }, 'Governance fields'),
+        },
+      })
+    }
+
+    it('should render one numbered step block per section', () => {
+      mountMultiSection()
+
+      // The default single config block must NOT render
+      cy.getTestId('form-section-plugin-config').should('not.exist')
+
+      // Each section renders its own block with content from its slot
+      cy.getTestId('form-section-configuration').should('exist')
+        .find('[data-testid="form-block-step"]').should('contain.text', '2')
+      cy.getTestId('section-configuration-content').should('contain.text', 'Configuration fields')
+
+      cy.getTestId('form-section-governance').should('exist')
+        .find('[data-testid="form-block-step"]').should('contain.text', '3')
+      cy.getTestId('section-governance-content').should('contain.text', 'Governance fields')
+    })
+
+    it('should renumber the General Info step after the configured sections', () => {
+      mountMultiSection()
+
+      // 2 sections -> General Info is step 4
+      cy.getTestId('form-section-general-info')
+        .find('[data-testid="form-block-step"]').should('contain.text', '4')
+    })
+
+    it('should keep the default single config block and step 3 General Info when configSections is omitted', () => {
+      mountStandardLayout()
+
+      cy.getTestId('form-section-plugin-config').should('exist')
+        .find('[data-testid="form-block-step"]').should('contain.text', '2')
+      cy.getTestId('form-section-general-info')
+        .find('[data-testid="form-block-step"]').should('contain.text', '3')
+    })
   })
 
   it('should show code editor and hide form sections when editorMode is code', () => {

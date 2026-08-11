@@ -1,10 +1,15 @@
+import type { DefineComponent } from 'vue'
 import RedisConfigurationConfigCard from './RedisConfigurationConfigCard.vue'
 import {
   redisConfigurationCE,
   redisConfigurationHostPortEE,
   redisConfigurationCluster,
   redisConfigurationSentinel,
+  redisConfigurationOauth,
 } from '../../fixtures/mockData'
+
+/** Cypress `mount` / `findComponent` overloads do not match vue-tsc’s script-setup SFC type */
+const MountableRedisConfigurationConfigCard = RedisConfigurationConfigCard as unknown as DefineComponent
 
 import type {
   KonnectRedisConfigurationEntityConfig,
@@ -69,7 +74,7 @@ describe('<RedisConfigurationConfigCard/>', {
       it('emits loading event when EntityBaseConfigCard emits loading event', () => {
         interceptGetRedisConfiguration()
 
-        cy.mount(RedisConfigurationConfigCard, {
+        cy.mount(MountableRedisConfigurationConfigCard, {
           props: {
             config: app === 'Konnect' ? konnectConfig : kmConfig,
             onLoading: cy.spy().as('onLoadingSpy'),
@@ -79,7 +84,7 @@ describe('<RedisConfigurationConfigCard/>', {
 
         cy.wait('@getRedisConfiguration')
 
-        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(RedisConfigurationConfigCard)
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(MountableRedisConfigurationConfigCard)
           .vm.$emit('loading', true))
 
         cy.get('@onLoadingSpy').should('have.been.calledWith', true)
@@ -88,7 +93,7 @@ describe('<RedisConfigurationConfigCard/>', {
       it('emits fetch:error event when EntityBaseConfigCard emits fetch:error event', () => {
         interceptGetRedisConfiguration()
 
-        cy.mount(RedisConfigurationConfigCard, {
+        cy.mount(MountableRedisConfigurationConfigCard, {
           props: {
             config: app === 'Konnect' ? konnectConfig : kmConfig,
             'onFetch:error': cy.spy().as('onError'),
@@ -98,7 +103,7 @@ describe('<RedisConfigurationConfigCard/>', {
 
         cy.wait('@getRedisConfiguration')
 
-        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(RedisConfigurationConfigCard)
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(MountableRedisConfigurationConfigCard)
           .vm.$emit('fetch:error', { message: 'text' }))
 
         cy.get('@onError').should('have.been.calledWith', { message: 'text' })
@@ -107,7 +112,7 @@ describe('<RedisConfigurationConfigCard/>', {
       it('emits fetch:success event when EntityBaseConfigCard emits fetch:success event', () => {
         interceptGetRedisConfiguration()
 
-        cy.mount(RedisConfigurationConfigCard, {
+        cy.mount(MountableRedisConfigurationConfigCard, {
           props: {
             config: app === 'Konnect' ? konnectConfig : kmConfig,
             'onFetch:success': cy.spy().as('onFetch'),
@@ -117,7 +122,7 @@ describe('<RedisConfigurationConfigCard/>', {
 
         cy.wait('@getRedisConfiguration')
 
-        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(RedisConfigurationConfigCard)
+        cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(MountableRedisConfigurationConfigCard)
           .vm.$emit('fetch:success'))
 
         cy.get('@onFetch').should('have.been.called')
@@ -127,7 +132,7 @@ describe('<RedisConfigurationConfigCard/>', {
         it('only shows host/port CE fields', () => {
           interceptGetRedisConfiguration()
 
-          cy.mount(RedisConfigurationConfigCard, {
+          cy.mount(MountableRedisConfigurationConfigCard, {
             props: {
               config: app === 'Konnect' ? konnectConfig : kmConfig,
             },
@@ -169,7 +174,7 @@ describe('<RedisConfigurationConfigCard/>', {
         it('only shows host/port EE fields', () => {
           interceptGetRedisConfiguration({ body: redisConfigurationHostPortEE })
 
-          cy.mount(RedisConfigurationConfigCard, {
+          cy.mount(MountableRedisConfigurationConfigCard, {
             props: {
               config: app === 'Konnect'
                 ? { ...konnectConfig, entityId: redisConfigurationHostPortEE.id }
@@ -213,7 +218,7 @@ describe('<RedisConfigurationConfigCard/>', {
         it('only shows Cluster EE fields', () => {
           interceptGetRedisConfiguration({ body: redisConfigurationCluster })
 
-          cy.mount(RedisConfigurationConfigCard, {
+          cy.mount(MountableRedisConfigurationConfigCard, {
             props: {
               config: app === 'Konnect'
                 ? { ...konnectConfig, entityId: redisConfigurationCluster.id }
@@ -257,7 +262,7 @@ describe('<RedisConfigurationConfigCard/>', {
         it('only shows Sentinel EE fields', () => {
           interceptGetRedisConfiguration({ body: redisConfigurationSentinel })
 
-          cy.mount(RedisConfigurationConfigCard, {
+          cy.mount(MountableRedisConfigurationConfigCard, {
             props: {
               config: app === 'Konnect'
                 ? { ...konnectConfig, entityId: redisConfigurationSentinel.id }
@@ -301,7 +306,7 @@ describe('<RedisConfigurationConfigCard/>', {
         it('only shows AWS fields in cloud auth', () => {
           interceptGetRedisConfiguration()
 
-          cy.mount(RedisConfigurationConfigCard, {
+          cy.mount(MountableRedisConfigurationConfigCard, {
             props: {
               config: app === 'Konnect' ? konnectConfig : kmConfig,
             },
@@ -334,6 +339,28 @@ describe('<RedisConfigurationConfigCard/>', {
           fieldsShouldNotExist.forEach((field) => {
             cy.getTestId(field).should('not.exist')
           })
+        })
+
+        it('renders the whole oauth record as a code block', () => {
+          interceptGetRedisConfiguration({ body: redisConfigurationOauth })
+
+          cy.mount(MountableRedisConfigurationConfigCard, {
+            props: {
+              config: app === 'Konnect' ? konnectConfig : kmConfig,
+            },
+          })
+
+          cy.wait('@getRedisConfiguration')
+
+          // auth_provider stays a flat row; the nested oauth record is shown as a single JSON code block
+          cy.getTestId('auth_provider-label').should('exist')
+          cy.getTestId('oauth-json-code').should('exist')
+          cy.getTestId('oauth-json-code').should('contain.text', 'token_endpoint')
+          cy.getTestId('oauth-json-code').should('contain.text', 'https://idp.example.com/token')
+
+          // oauth sub-fields are NOT flattened into their own rows
+          cy.getTestId('token_endpoint-label').should('not.exist')
+          cy.getTestId('auth_method-label').should('not.exist')
         })
       })
     })

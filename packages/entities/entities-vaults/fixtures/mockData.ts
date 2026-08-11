@@ -162,3 +162,60 @@ export const secretsResponse: FetcherRawResponse = {
   data: secrets2,
   total: secrets2.length,
 }
+
+/* ----------------------------------------------------------------------------
+ * Kong AI Gateway fixtures (provider in `type`, identifier in `name`, no `tags`)
+ * -------------------------------------------------------------------------- */
+
+export const aiGatewayId = 'ai-gw-1234'
+
+// List of AI Gateway vaults in their native (un-normalized) API shape.
+export const aiGatewayVaultsResponse: FetcherRawResponse = {
+  data: [
+    {
+      id: '1',
+      type: 'hcv',
+      name: 'hcv-1',
+      description: 'HashiCorp Vault',
+      config: {
+        protocol: 'https',
+        host: '127.0.0.1',
+        port: 8200,
+        mount: 'secret',
+        kv: 'v1',
+        auth_method: 'token',
+      },
+    },
+    {
+      id: '2',
+      type: 'aws',
+      name: 'aws-1',
+      description: 'AWS Secrets Manager',
+      config: { region: 'us-east-1', role_session_name: 'KongVault' },
+    },
+    {
+      id: '3',
+      type: 'konnect',
+      name: 'kv-1',
+      description: 'Konnect Config Store',
+      config: { config_store_id: konnectConfigStoreId },
+    },
+    {
+      id: '4',
+      type: 'env',
+      name: 'env-1',
+      description: 'Environment Variables',
+      config: { prefix: 'MY_' },
+    },
+  ],
+  total: 4,
+}
+
+// A single AI Gateway konnect-provider vault (for config card / secret fetch).
+export const aiGatewayVault = {
+  id: '1',
+  type: 'konnect',
+  name: 'kv-1',
+  description: 'Konnect Config Store',
+  config: { config_store_id: konnectConfigStoreId },
+}

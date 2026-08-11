@@ -1,4 +1,5 @@
 import type { Node as JSONNode } from 'jsonc-parser'
+import type { editor } from 'monaco-editor'
 import type { Document as YAMLDocument } from 'yaml'
 
 export interface AbstractModelContext {
@@ -28,3 +29,5 @@ export interface YAMLModelContext extends AbstractModelContext {
 }
 
 export type ModelContext = JSONModelContext | YAMLModelContext | DefaultModelContext
+
+export type ModelContextGetter = (model: editor.ITextModel) => ModelContext | Promise<ModelContext>

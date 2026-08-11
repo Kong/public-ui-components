@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RendererProps } from '../types'
+import type { ChartRendererProps } from '../types'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { computed } from 'vue'
 import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
@@ -43,7 +43,7 @@ import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
 import composables from '../composables'
 import type { AbsoluteTimeRangeV4, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 
-const props = defineProps<RendererProps<any> & { extraProps?: Record<string, any> }>()
+const props = defineProps<ChartRendererProps<any> & { extraProps?: Record<string, any> }>()
 const emit = defineEmits<{
   (e: 'edit-tile'): void
   (e: 'chart-data', chartData: ExploreResultV4): void

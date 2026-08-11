@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { formatTime } from './format'
 
 describe('formatTime', () => {
@@ -19,7 +19,10 @@ describe('formatTime', () => {
   })
 
   it('rejects invalid values', () => {
+    const errorMock = vi.spyOn(console, 'error').mockImplementation(() => {})
     expect(formatTime('blah')).toBe('(invalid date)')
+    expect(errorMock).toHaveBeenCalledOnce()
+    errorMock.mockRestore()
   })
 
   it('can format short timestamp', () => {

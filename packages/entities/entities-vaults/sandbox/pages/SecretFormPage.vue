@@ -7,6 +7,15 @@
     @error="onError"
     @update="onUpdate"
   />
+
+  <h2>Kong AI Gateway API</h2>
+  <SecretForm
+    :config="aiGatewayConfig"
+    :secret-id="secretId"
+    :vault-id="vaultId"
+    @error="onError"
+    @update="onUpdate"
+  />
 </template>
 
 <script setup lang="ts">
@@ -27,6 +36,17 @@ const konnectConfig = ref<KonnectSecretFormConfig>({
   app: 'konnect',
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
+  controlPlaneId,
+  cancelRoute: { name: 'view-vault', params: { id: vaultId.value } },
+})
+
+const aiGatewayId = import.meta.env.VITE_KONNECT_AI_GATEWAY_ID || 'demo-ai-gateway-id'
+
+const aiGatewayConfig = ref<KonnectSecretFormConfig>({
+  app: 'konnect',
+  apiType: 'aiGateway',
+  aiGatewayId,
+  apiBaseUrl: '/us/kong-api',
   controlPlaneId,
   cancelRoute: { name: 'view-vault', params: { id: vaultId.value } },
 })

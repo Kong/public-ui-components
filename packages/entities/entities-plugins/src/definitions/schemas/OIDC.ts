@@ -1,4 +1,4 @@
-import type { OIDCSchema, TokenExchange } from '../../types/plugins/oidc'
+import type { OIDCSchema, TokenExchange, ProofOfPossessionMtlsFromHeader, ProtectedResourceMetadata } from '../../types/plugins/oidc'
 import { isEqual } from 'lodash-es'
 
 export function resetEmptyTokenExchange(config?: { token_exchange?: TokenExchange | null }) {
@@ -49,6 +49,13 @@ export function resetEmptyTokenExchange(config?: { token_exchange?: TokenExchang
         empty_scopes: false,
       },
     },
+    {
+      cache: {},
+      request: {
+        audience: null,
+        scopes: null,
+      },
+    },
   ]
 
   // If token_exchange is equal to the default value, set token_exchange to null
@@ -79,10 +86,70 @@ export function resetEmptyTokenExchange(config?: { token_exchange?: TokenExchang
   return config
 }
 
+export const resetEmptyProofOfPossessionMtlsFromHeader = (
+  config?: { proof_of_possession_mtls_from_header?: ProofOfPossessionMtlsFromHeader | null },
+) => {
+  const mtlsConfig = config?.proof_of_possession_mtls_from_header
+
+  if (!mtlsConfig) {
+    return
+  }
+
+  // If ca_certificates is not an array or an empty array, set proof_of_possession_mtls_from_header to null
+  if (!Array.isArray(mtlsConfig.ca_certificates) || mtlsConfig.ca_certificates.length === 0) {
+    config.proof_of_possession_mtls_from_header = null
+    return
+  }
+
+  // If mtlsConfig is equal to the default value, set proof_of_possession_mtls_from_header to null
+  const emptyMtlsConfig: ProofOfPossessionMtlsFromHeader = {
+    allow_partial_chain: false,
+    cert_cache_ttl: 60000,
+    certificate_header_format: 'url_encoded',
+    http_timeout: 30000,
+    revocation_check_mode: 'IGNORE_CA_ERROR',
+    secure_source: true,
+    ssl_verify: true,
+  }
+
+  if (isEqual(mtlsConfig, emptyMtlsConfig)) {
+    config.proof_of_possession_mtls_from_header = null
+  }
+}
+
+export const resetEmptyProtectedResourceMetadata = (
+  config?: { protected_resource_metadata?: ProtectedResourceMetadata | null },
+) => {
+  const metadataConfig = config?.protected_resource_metadata
+
+  if (!metadataConfig) {
+    return
+  }
+
+  // authorization_servers is required with len_min: 1; if empty the whole record is invalid
+  if (!Array.isArray(metadataConfig.authorization_servers) || metadataConfig.authorization_servers.length === 0) {
+    config.protected_resource_metadata = null
+    return
+  }
+
+  // If metadataConfig is equal to the default value, set protected_resource_metadata to null
+  const emptyMetadataConfig: ProtectedResourceMetadata = {
+    authorization_servers: null,
+    scopes_supported: null,
+  }
+
+  if (isEqual(metadataConfig, emptyMetadataConfig)) {
+    config.protected_resource_metadata = null
+    return
+  }
+}
+
 export const oidcSchema: OIDCSchema = {
   shamefullyTransformPayload(params) {
 
     resetEmptyTokenExchange(params.payload.config)
+    resetEmptyProofOfPossessionMtlsFromHeader(params.payload.config)
+    resetEmptyProtectedResourceMetadata(params.payload.config)
 
     return params
   },

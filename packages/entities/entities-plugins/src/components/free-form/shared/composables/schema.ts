@@ -1,6 +1,7 @@
 import { computed, toValue } from 'vue'
 import { marked } from 'marked'
 import * as utils from '../utils'
+import DOMPurify from 'dompurify'
 
 const SHARED_LABEL_ATTRIBUTES = {
   tooltipAttributes: {
@@ -9,7 +10,15 @@ const SHARED_LABEL_ATTRIBUTES = {
   },
 } as const
 
-import type { ArrayFieldSchema, ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../../types/plugins/form-schema'
+import type {
+  ArrayFieldSchema,
+  ArrayLikeFieldSchema,
+  FormSchema,
+  RecordFieldSchema,
+  StringFieldSchema,
+  UnionFieldSchema,
+  MapFieldSchema,
+} from '../../../../types/plugins/form-schema'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { MaybeRefOrGetter } from 'vue'
 
@@ -21,12 +30,14 @@ export function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''
     Object.assign(schemaMap, buildRecordSchemaMap(recordSchema, pathPrefix))
   } else if (schema.type === 'array' && schema.elements) {
     Object.assign(schemaMap, buildArraySchemaMap(schema, pathPrefix))
+  } else if (schema.type === 'map' && schema.values) {
+    Object.assign(schemaMap, buildMapSchemaMap(schema as MapFieldSchema, pathPrefix))
   }
 
   return schemaMap
 }
 
-function buildRecordSchemaMap(recordSchema: RecordFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
+export function buildRecordSchemaMap(recordSchema: RecordFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
   const schemaMap: Record<string, UnionFieldSchema> = {}
   if (Array.isArray(recordSchema.fields)) {
     for (const fieldDef of recordSchema.fields) {
@@ -42,17 +53,29 @@ function buildRecordSchemaMap(recordSchema: RecordFieldSchema, pathPrefix: strin
       } else if (fieldProps.type === 'array' && fieldProps.elements) {
         const subMap = buildArraySchemaMap(fieldProps, fieldPath)
         Object.assign(schemaMap, subMap)
+      } else if (fieldProps.type === 'map' && (fieldProps as MapFieldSchema).values) {
+        const subMap = buildMapSchemaMap(fieldProps as MapFieldSchema, fieldPath)
+        Object.assign(schemaMap, subMap)
       }
     }
   }
   return schemaMap
 }
 
-function buildArraySchemaMap(arraySchema: ArrayFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
+export function buildArraySchemaMap(arraySchema: ArrayFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
   const schemaMap: Record<string, UnionFieldSchema> = {}
   if (arraySchema.elements) {
-    const elementProps = arraySchema.elements
+    let elementProps = arraySchema.elements
     const elementPath = utils.resolve(pathPrefix, utils.arraySymbol)
+
+    // In kong-ee, `encrypted` on an array field (e.g. openid-connect's introspection_headers_values)
+    // is expected/by-design and means every element must be encrypted, not just the array itself.
+    // The schema puts `encrypted` on the array field rather than nested in `elements`, so propagate
+    // it down to string elements here.
+    if (arraySchema.encrypted && elementProps.type === 'string') {
+      elementProps = { ...elementProps, encrypted: true }
+    }
+
     schemaMap[elementPath] = elementProps
 
     if (elementProps.type === 'record' && Array.isArray(elementProps.fields)) {
@@ -61,19 +84,67 @@ function buildArraySchemaMap(arraySchema: ArrayFieldSchema, pathPrefix: string =
     } else if (elementProps.type === 'array' && elementProps.elements) {
       const subMap = buildArraySchemaMap(elementProps, elementPath)
       Object.assign(schemaMap, subMap)
+    } else if (elementProps.type === 'map' && (elementProps as MapFieldSchema).values) {
+      const subMap = buildMapSchemaMap(elementProps as MapFieldSchema, elementPath)
+      Object.assign(schemaMap, subMap)
     }
   }
   return schemaMap
 }
 
+export function buildMapSchemaMap(mapSchema: MapFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
+  const schemaMap: Record<string, UnionFieldSchema> = {}
+  const valuePath = utils.resolve(pathPrefix, utils.mapSymbol)
+  schemaMap[valuePath] = mapSchema.values
+
+  // Recurse into value schema if it has children
+  if (mapSchema.values.type === 'record' && Array.isArray((mapSchema.values as RecordFieldSchema).fields)) {
+    const subMap = buildRecordSchemaMap(mapSchema.values as RecordFieldSchema, valuePath)
+    Object.assign(schemaMap, subMap)
+  } else if ((mapSchema.values.type === 'array' || mapSchema.values.type === 'set') && (mapSchema.values as ArrayFieldSchema).elements) {
+    const subMap = buildArraySchemaMap(mapSchema.values as ArrayFieldSchema, valuePath)
+    Object.assign(schemaMap, subMap)
+  } else if (mapSchema.values.type === 'map' && (mapSchema.values as MapFieldSchema).values) {
+    const subMap = buildMapSchemaMap(mapSchema.values as MapFieldSchema, valuePath)
+    Object.assign(schemaMap, subMap)
+  }
+
+  return schemaMap
+}
+
+
 /**
- * 'a.0.b.1.c' => 'a.*.b.*.c'
+ * Generalizes a concrete path to a schema-compatible path.
+ *
+ * - Numeric segments are replaced with `*` (array index placeholder).
+ * - Map key segments are replaced with `#` (map key placeholder)
+ *   by walking the path and consulting the schema at each level.
+ *
+ * @example
+ * generalizePath('a.0.b.1.c', schemaMap) // => 'a.*.b.*.c'
+ * generalizePath('map.foo.field', schemaMap) // => 'map.#.field'
  */
-export function generalizePath(p: string) {
-  const parts = utils
-    .toArray(p)
-    .map(node => /^\d+$/.test(node) ? utils.arraySymbol : node)
-  return utils.resolve(...parts)
+export function generalizePath(p: string, schemaMap: Record<string, UnionFieldSchema>) {
+  const parts = utils.toArray(p)
+  const result: string[] = []
+
+  for (let i = 0; i < parts.length; i++) {
+    const node = parts[i]
+
+    // Check if the parent path points to a map type in the schema
+    const parentPath = result.length > 0 ? utils.resolve(...result) : ''
+    const parentSchema = parentPath ? schemaMap[parentPath] : undefined
+
+    if (parentSchema?.type === 'map') {
+      result.push(utils.mapSymbol)
+    } else if (parentSchema?.type === 'array') {
+      result.push(utils.arraySymbol)
+    } else {
+      result.push(node)
+    }
+  }
+
+  return utils.resolve(...result)
 }
 
 export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFieldSchema>) {
@@ -93,8 +164,16 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
    */
   function getSchema(): FormSchema
   function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path: string): T | undefined
-  function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path?: string): T | UnionFieldSchema | undefined {
-    return path == null ? schemaValue : schemaMap.value?.[generalizePath(path)]
+  function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path?: string): T | FormSchema | undefined {
+    if (path) {
+      let generalizedPath = generalizePath(path, schemaMap.value || {})
+      if (generalizedPath.startsWith(`${utils.rootSymbol}${utils.separator}`)) {
+        // `$.config.field` -> `config.field`
+        generalizedPath = generalizedPath.slice(2)
+      }
+      return schemaMap.value?.[generalizedPath] as T | undefined
+    }
+    return schemaValue as FormSchema
   }
 
   /**
@@ -112,6 +191,16 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
     // Use explicit default if provided
     if (schema.default !== undefined) {
       return schema.default
+    }
+
+    // The backend generates a value for this field when it's absent from the
+    // request (Kong schema's `auto = true`). Defaulting it to an explicit
+    // null here would submit `null` for an untouched field, which fails
+    // schema validation ("required field missing") instead of letting the
+    // backend auto-generate it - so omit the key entirely until the user
+    // actually provides a value.
+    if ((schema as StringFieldSchema).auto) {
+      return undefined
     }
 
     // Create structures when forced or for required fields
@@ -170,7 +259,8 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
 
   function getLabelAttributes(fieldPath: string): LabelAttributes {
     const schema = getSchema(fieldPath)
-    const info = schema?.description ? marked.parse(schema.description, { async: false }) : undefined
+    const info = schema?.description ? DOMPurify.sanitize(marked.parse(schema.description, { async: false })) : undefined
+
     return {
       ...SHARED_LABEL_ATTRIBUTES,
       'data-testid': `ff-label-${fieldPath}`,
@@ -212,7 +302,7 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
   /**
    * Get empty value or default based on whether the field is required
    */
-  function getEmptyOrDefault(path?: string): unknown {
+  function getEmptyOrDefault<T = unknown>(path?: string): T | null {
     const schema = (getSchema as any)(path)
     const isRequired = schema?.required
     return isRequired ? getDefault(path) : null

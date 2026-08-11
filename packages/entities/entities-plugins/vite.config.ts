@@ -10,7 +10,7 @@ const sanitizedPackageName = sanitizePackageName(packageName)
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
   plugins: [monaco({
-    languages: ['yaml'],
+    languages: ['powershell', 'shell', 'yaml'],
   })],
   build: {
     lib: {
@@ -19,6 +19,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       name: `kong-ui-public-${sanitizedPackageName}`,
       entry: resolve(__dirname, './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+      cssFileName: 'style',
     },
     rollupOptions: {
       external: [
@@ -34,6 +35,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/monaco-editor',
         '@kong-ui-public/monaco-editor/dist/runtime/style.css',
         '@kong-ui-public/forms',
+        '@kong-ui-public/forms/dist/style.css',
         '@vue-flow/background',
         '@vue-flow/controls',
         '@vue-flow/controls/dist/style.css',
@@ -43,6 +45,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@vueuse/core',
         '@vueuse/integrations',
         'marked',
+        'dompurify',
         'monaco-editor',
         '@kong-ui-public/entities-plugins-icon',
         'zod',
@@ -55,6 +58,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // Add the API proxies to inject the Authorization header
       ...getApiProxies(),
     },
+  },
+  test: {
+    setupFiles: ['./test/setup.ts'],
   },
 }))
 

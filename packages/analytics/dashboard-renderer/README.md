@@ -9,12 +9,15 @@ Render Analytics charts on a page from a JSON definition.
   - [Example](#example)
   - [Slotted content](#slotted-content)
   - [Auto-fit row content](#auto-fit-row-content)
+- [CsvExportModal](#csvexportmodal)
 - [Editable Dashboard Features](#editable-dashboard-features)
 - [Editable Dashboard Events](#editable-dashboard-events)
 - [Dashboard Config Schema](#dashboard-config-schema)
+  - [Tile Config](#tile-config)
   - [Tile Definition](#tile-definition)
   - [Chart Options](#chart-options)
   - [Chart Types](#chart-types)
+  - [Table Chart Configuration](#table-chart-configuration)
   - [Common Chart Properties](#common-chart-properties)
   - [Query Configuration](#query-configuration)
   - [Time Range Configuration](#time-range-configuration)
@@ -27,6 +30,7 @@ Render Analytics charts on a page from a JSON definition.
 - A plugin providing an `AnalyticsBridge` must be installed in the root of the application.
   - This plugin must `provide` the necessary methods to adhere to the [AnalyticsBridge](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/query-bridge.ts) interface defined in `@kong-ui-public/analytics-utilities`.
   - The plugin's query method is in charge of passing the query to the correct API for the host app's environment.
+  - For table chart tiles, the plugin must provide `tabularQueryFn`; the renderer passes a datasource-aware tabular query to that function and renders the returned records.
   - See the sandbox plugin [sandbox-query-provider.ts](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/sandbox/sandbox-query-provider.ts) for an example that simply returns static data rather than consuming an API.
 - The host application must supply peer dependencies for:
   - `@kong-ui-public/analytics-chart`
@@ -95,6 +99,7 @@ const config: DashboardConfig = {
   tiles: [
     {
       id: 'unique-tile-id', // Required for editable dashboards
+      type: 'chart',
       definition: {
         chart: {
           type: 'horizontal_bar',
@@ -119,6 +124,7 @@ const config: DashboardConfig = {
       }
     },
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'top_n',
@@ -160,7 +166,7 @@ const onZoom = async (tileZoomEvent: TileZoomEvent) => {
   v-model="config"
   :context="context"
 >
-  <!-- use the `id` set in the tile config for the slot name -->
+  <!-- use the top-level tile `id` for the slot name -->
   <template #slot-1>
     <div>
       <h3>Custom Slot</h3>
@@ -186,6 +192,7 @@ const config: DashboardConfig = {
   tiles: [
     {
       // Line chart
+      type: 'chart',
       definition: {
         chart: {
           type: 'timeseries_line',
@@ -210,14 +217,9 @@ const config: DashboardConfig = {
       }
     },
     {
-      // Slottable tile
-      definition: {
-        chart: {
-          type: 'slottable',
-          id: 'slot-1' // slot name
-        },
-        query: {},
-      },
+      // Slottable tile renders content into the named slot matching `id`.
+      id: 'slot-1', // slot name
+      type: 'slottable',
       layout: {
         // Position at column 3, row 0
         position: {
@@ -225,6 +227,29 @@ const config: DashboardConfig = {
           row: 0,
         },
         // Spans 3 columns and 1 rows
+        size: {
+          cols: 3,
+          rows: 1,
+        }
+      }
+    },
+    {
+      // Deprecated: legacy chart-based slottable tile. The slot name comes from
+      // `definition.chart.id`, not the top-level tile `id`. Use the top-level
+      // `{ type: 'slottable', id, layout }` shape above instead.
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'slottable',
+          id: 'slot-2' // slot name
+        },
+        query: {},
+      },
+      layout: {
+        position: {
+          col: 3,
+          row: 1,
+        },
         size: {
           cols: 3,
           rows: 1,
@@ -259,6 +284,7 @@ const context: DashboardRendererContext = {
 const config: DashboardConfig = {
   tiles: [
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'top_n',
@@ -280,6 +306,7 @@ const config: DashboardConfig = {
       },
     },
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'top_n',
@@ -320,6 +347,7 @@ const config = ref<DashboardConfig>({
   tiles: [
     {
       id: 'unique-tile-id', // Required for editable dashboards
+      type: 'chart',
       definition: {
         chart: {
           type: 'horizontal_bar',
@@ -354,6 +382,39 @@ watch(() => config.value.tiles, (tiles) => {
   :context="context"
   @edit-tile="handleEditTile"
 />
+```
+
+## CsvExportModal
+
+`CsvExportModal` renders a preview and download action for an export result.
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `exportState` | `ExploreExportState` | Yes | Current loading, error, or successful export data. |
+| `filename` | `string` | Yes | Base name used for the generated CSV file. |
+| `modalDescription` | `string` | No | Replaces the default export description. |
+
+It emits `closeModal` when cancelled; use it in templates as `@close-modal`.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { CsvExportModal } from '@kong-ui-public/dashboard-renderer'
+import type { ExploreExportState } from '@kong-ui-public/analytics-utilities'
+
+const exportModalVisible = ref(false)
+const exportState = ref<ExploreExportState>({ status: 'loading' })
+</script>
+
+<template>
+  <CsvExportModal
+    v-if="exportModalVisible"
+    :export-state="exportState"
+    filename="total-requests"
+    modal-description="Export for audit review."
+    @close-modal="exportModalVisible = false"
+  />
+</template>
 ```
 
 ## Editable Dashboard Features
@@ -418,6 +479,7 @@ The root configuration type for a dashboard.
 interface DashboardConfig {
   tiles: TileConfig[]         // Array of tile configurations
   tile_height?: number         // Optional height of each tile in pixels
+  columns?: number             // Optional number of grid columns (default: 6)
 }
 ```
 
@@ -426,19 +488,27 @@ Configuration for individual dashboard tiles.
 
 ```typescript
 interface TileConfig {
-  definition: TileDefinition   // The tile's chart and query configuration
+  type: 'chart'                // The top-level tile kind
+  definition: TileDefinition   // The tile's renderer-specific definition
   layout: TileLayout           // The tile's position and size in the grid
   id?: string                  // Optional unique identifier (required for editable dashboards)
 }
 ```
 
 ### Tile Definition
-Configuration for the chart and query within a tile.
+Configuration for the renderer and query within a tile.
 
 ```typescript
-interface TileDefinition {
-  chart: ChartOptions         // Configuration for the chart type and options
-  query: ValidDashboardQuery  // Configuration for the data query
+type TileDefinition = ChartTileDefinition | TableChartTileDefinition
+
+interface ChartTileDefinition {
+  chart: ChartOptions         // Configuration for a non-table chart type and options
+  query: ValidDashboardChartQuery  // Configuration for the chart data query
+}
+
+interface TableChartTileDefinition {
+  chart: TableChartOptions    // Configuration for the table chart
+  query: PlatformTabularQuery & { datasource: 'platform_usage' } // Configuration for the platform tabular query ('platform' also accepted)
 }
 ```
 
@@ -466,9 +536,71 @@ The following chart types are supported:
 - `timeseries_bar`: Bar chart for time series data
 - `golden_signals`: Metric cards showing key performance indicators
 - `top_n`: Table showing top N results
-- `slottable`: Custom content slot
+- `slottable` *(deprecated chart-level variant, use the top-level `{ type: 'slottable', id, layout }` tile instead of `definition.chart.type: 'slottable'`)*: Custom content slot
 
 Each chart type has its own configuration schema with specific options.
+
+### Table Chart Configuration
+
+Table visuals are chart tiles with `type: 'chart'` on the tile itself and `definition.chart.type: 'table'`. Their `definition.query` uses the platform tabular query shape and renders through `TableDataGridRenderer`.
+
+```typescript
+interface TableChartOptions {
+  type: 'table'
+  chart_title?: string
+}
+
+interface PlatformTabularQuery {
+  entity?: string
+  columns?: string[]
+  filters?: PlatformExploreFilterAll[]
+  page_size?: number
+  cursor?: string
+}
+```
+
+`definition.query.columns` controls the visible table columns. If columns are omitted, the renderer can fall back to response `meta.columns` after the first tabular response. `definition.chart.chart_title` controls the tile title.
+
+The dashboard config query uses `datasource: 'platform_usage'` (the canonical value; `'platform'` is also accepted for backward compatibility with persisted dashboards). The host application's `AnalyticsBridge.tabularQueryFn` receives a datasource-aware tabular query, e.g. `{ datasource: 'platform_usage', query: { entity, columns, filters, page_size, cursor } }`.
+
+The renderer replaces raw record values with display labels when the tabular response includes a matching `meta.display[column][value].name`. Missing display entries and `null` values are rendered unchanged.
+
+Table charts do not expose CSV export or API Requests links. They may expose Explore links when the host application provides the Explore context-link bridge.
+
+```typescript
+const tableTile: TileConfig = {
+  type: 'chart',
+  definition: {
+    chart: {
+      type: 'table',
+      chart_title: 'Platform routes',
+    },
+    query: {
+      datasource: 'platform_usage',
+      entity: 'route',
+      columns: ['name', 'control_plane', 'gateway_service', 'env', 'team', 'region'],
+      filters: [
+        {
+          field: 'env',
+          operator: 'in',
+          value: ['prod'],
+        },
+      ],
+      page_size: 25,
+    },
+  },
+  layout: {
+    position: {
+      col: 0,
+      row: 0,
+    },
+    size: {
+      cols: 6,
+      rows: 3,
+    },
+  },
+}
+```
 
 ### Common Chart Properties
 
@@ -482,19 +614,29 @@ Most chart types support these common properties:
 
 [See here](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore) for explore query types.
 
-Queries can be configured for three different data sources:
+Chart queries can be configured for these data sources:
 
-1. `advanced`: Uses the advanced explore API
+1. `api_usage`: Uses the API usage explore API
 2. `basic`: Uses the basic explore API
-3. `ai`: Uses the AI explore API
+3. `llm_usage`: Uses the AI explore API
+4. `agentic_usage`: Uses the agentic usage explore API
+5. `platform_usage`: Uses the platform dashboard API (`platform` is also accepted for backward compatibility)
 
-Each query type supports:
+Chart query fields include:
 - `metrics`: Array of aggregations to collect
-- `dimensions`: Array of attributes to group by (max 2)
+- `dimensions`: Array of attributes to group by
 - `filters`: Array of query filters
 - `time_range`: Time range configuration (relative or absolute)
 - `granularity`: Time bucket size for temporal queries
 - `limit`: Number of results to return
+
+Table chart queries use the platform tabular query shape:
+- `datasource`: Must be `platform_usage` (`platform` is also accepted for backward compatibility)
+- `entity`: Entity collection to query, such as `route`
+- `columns`: Ordered table columns to request and render
+- `filters`: Platform filters to apply before fetching rows
+- `page_size`: Requested page size for the table fetcher
+- `cursor`: Optional pagination cursor for the initial request
 
 ### Time Range Configuration
 
@@ -547,6 +689,7 @@ interface TileLayout {
 const dashboardConfig: DashboardConfig = {
   tiles: [{
     id: 'requests-by-route',
+    type: 'chart',
     definition: {
       chart: {
         type: 'horizontal_bar',

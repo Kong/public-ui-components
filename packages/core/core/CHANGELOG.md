@@ -3,6 +3,262 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.13.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.13.7...@kong-ui-public/core@1.13.8) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [1.13.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.13.6...@kong-ui-public/core@1.13.7) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.13.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.13.5...@kong-ui-public/core@1.13.6) (2026-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.13.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.13.4...@kong-ui-public/core@1.13.5) (2026-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.13.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.13.3...@kong-ui-public/core@1.13.4) (2026-07-28)
+
+
+### Bug Fixes
+
+* **entities:** json config block background [KHCP-21211] ([#3621](https://github.com/Kong/public-ui-components/issues/3621)) ([38e1bfb](https://github.com/Kong/public-ui-components/commit/38e1bfb5ca98eb1c08a6dbab2338c35d921ed227))
+
+
+
+
+
+## [1.13.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.13.2...@kong-ui-public/core@1.13.3) (2026-07-28)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.13.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.13.1...@kong-ui-public/core@1.13.2) (2026-07-27)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.13.0...@kong-ui-public/core@1.13.1) (2026-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+# [1.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.12.0...@kong-ui-public/core@1.13.0) (2026-07-16)
+
+
+### Features
+
+* **deps:** update kongponents, design tokens, icons ([#3562](https://github.com/Kong/public-ui-components/issues/3562)) ([1c0b3f1](https://github.com/Kong/public-ui-components/commit/1c0b3f1a4ba0ade4927e68865a121a0275eb1866))
+
+
+
+
+
+# [1.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.29...@kong-ui-public/core@1.12.0) (2026-07-15)
+
+
+### Features
+
+* **vite:** upgrade to v7 and standardize css filename ([#3561](https://github.com/Kong/public-ui-components/issues/3561)) ([bd56f14](https://github.com/Kong/public-ui-components/commit/bd56f140e320d85da6c32dfa5886bae64d39c925))
+
+
+
+
+
+## [1.11.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.28...@kong-ui-public/core@1.11.29) (2026-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3482](https://github.com/Kong/public-ui-components/issues/3482)) ([38e1795](https://github.com/Kong/public-ui-components/commit/38e17953709e78642a62bdd88aa0d9e236591986))
+
+
+
+
+
+## [1.11.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.27...@kong-ui-public/core@1.11.28) (2026-06-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3436](https://github.com/Kong/public-ui-components/issues/3436)) ([50801c8](https://github.com/Kong/public-ui-components/commit/50801c82e6d7f71324aeab8209d9a212af5fe8a6))
+
+
+
+
+
+## [1.11.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.26...@kong-ui-public/core@1.11.27) (2026-06-22)
+
+
+### Bug Fixes
+
+* design-tokens eslint and stylelint ([#3477](https://github.com/Kong/public-ui-components/issues/3477)) ([700ad19](https://github.com/Kong/public-ui-components/commit/700ad194ac6a2b9c753c018c4db9319f1cd50232))
+
+
+
+
+
+## [1.11.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.25...@kong-ui-public/core@1.11.26) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3437](https://github.com/Kong/public-ui-components/issues/3437)) ([90ba04a](https://github.com/Kong/public-ui-components/commit/90ba04a1c42f544d98e208517291c98c193b9c0a))
+
+
+
+
+
+## [1.11.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.24...@kong-ui-public/core@1.11.25) (2026-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3435](https://github.com/Kong/public-ui-components/issues/3435)) ([5ef2562](https://github.com/Kong/public-ui-components/commit/5ef25621daf103979e3c399d4233cde0fac2d33d))
+
+
+
+
+
+## [1.11.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.23...@kong-ui-public/core@1.11.24) (2026-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.11.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.22...@kong-ui-public/core@1.11.23) (2026-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3361](https://github.com/Kong/public-ui-components/issues/3361)) ([fb2890b](https://github.com/Kong/public-ui-components/commit/fb2890b10622def66cf9db5c067b75fddd9198bb))
+
+
+
+
+
+## [1.11.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.21...@kong-ui-public/core@1.11.22) (2026-05-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3192](https://github.com/Kong/public-ui-components/issues/3192)) ([547be23](https://github.com/Kong/public-ui-components/commit/547be23b721f0be6c81b2753dd03d945b071881d))
+
+
+
+
+
+## [1.11.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.20...@kong-ui-public/core@1.11.21) (2026-04-26)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.11.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.19...@kong-ui-public/core@1.11.20) (2026-04-25)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.11.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.18...@kong-ui-public/core@1.11.19) (2026-04-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3183](https://github.com/Kong/public-ui-components/issues/3183)) ([d25bc84](https://github.com/Kong/public-ui-components/commit/d25bc844fcff896a64a7940eed78cdc4bc5796b8))
+
+
+
+
+
+## [1.11.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.17...@kong-ui-public/core@1.11.18) (2026-04-23)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3167](https://github.com/Kong/public-ui-components/issues/3167)) ([acaa6a4](https://github.com/Kong/public-ui-components/commit/acaa6a433a5fdf0cdabe20ee6d0948890e19bdd4))
+
+
+
+
+
+## [1.11.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.16...@kong-ui-public/core@1.11.17) (2026-04-22)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3152](https://github.com/Kong/public-ui-components/issues/3152)) ([b4ee165](https://github.com/Kong/public-ui-components/commit/b4ee165d6b026bb4ce48dc40f67dbce0c0e2c02c))
+
+
+
+
+
+## [1.11.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.15...@kong-ui-public/core@1.11.16) (2026-04-17)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3007](https://github.com/Kong/public-ui-components/issues/3007)) ([69e7d85](https://github.com/Kong/public-ui-components/commit/69e7d856c9802cc728b18b259b632426d5d7a549))
+
+
+
+
+
+## [1.11.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.14...@kong-ui-public/core@1.11.15) (2026-04-10)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.11.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.13...@kong-ui-public/core@1.11.14) (2026-04-08)
+
+
+### Bug Fixes
+
+* expose reload method in WIndowComposible [KHCP-20268] ([#3106](https://github.com/Kong/public-ui-components/issues/3106)) ([5f0c5e1](https://github.com/Kong/public-ui-components/commit/5f0c5e1c7126564e273d93d68f1972f456dcfc82))
+
+
+
+
+
 ## [1.11.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.11.12...@kong-ui-public/core@1.11.13) (2026-03-18)
 
 

@@ -71,4 +71,97 @@ describe('<ConfigCardDisplay />', () => {
       cy.get('.deck-config').should('be.visible')
     })
   })
+
+  describe('Code block record processing:', () => {
+    const stubClipboard = () => cy.window().then((win) => {
+      cy.stub(win.navigator.clipboard, 'writeText').as('clipboardWriteText').resolves()
+    })
+
+    const formats: Array<{ format: 'json' | 'yaml' | 'deck', codeBlockId: string }> = [
+      { format: 'json', codeBlockId: 'json-codeblock' },
+      { format: 'yaml', codeBlockId: 'yaml-codeblock' },
+      { format: 'deck', codeBlockId: 'deck-codeblock' },
+    ]
+
+    const buildProps = (format: 'json' | 'yaml' | 'deck', extra: Record<string, any> = {}) => ({
+      format,
+      record,
+      ...(format === 'deck' ? { config: { app: 'konnect' } } : {}),
+      ...extra,
+    })
+
+    formats.forEach(({ format, codeBlockId }) => {
+      describe(`${format} format:`, () => {
+        it('strips created_at and updated_at from the displayed code by default', () => {
+          cy.mount(ConfigCardDisplay, { props: buildProps(format) })
+
+          cy.get(`#${codeBlockId}`).findTestId('highlighted-code-block').should('not.contain.text', 'created_at')
+          cy.get(`#${codeBlockId}`).findTestId('highlighted-code-block').should('not.contain.text', 'updated_at')
+        })
+
+        it('strips created_at and updated_at from the copied (unredacted) code', () => {
+          cy.mount(ConfigCardDisplay, { props: buildProps(format, { codeBlockRecord: record }) })
+
+          stubClipboard()
+          cy.getTestId(`code-block-copy-button-${codeBlockId}`).click()
+          cy.get('@clipboardWriteText').then((stub: any) => {
+            const copied = stub.firstCall.args[0] as string
+            expect(copied).to.not.include('created_at')
+            expect(copied).to.not.include('updated_at')
+          })
+        })
+
+        it('keeps timestamps when `preserveCodeBlockTimestamps` is true', () => {
+          cy.mount(ConfigCardDisplay, { props: buildProps(format, { preserveCodeBlockTimestamps: true }) })
+
+          cy.get(`#${codeBlockId}`).findTestId('highlighted-code-block').should('contain.text', 'created_at')
+          cy.get(`#${codeBlockId}`).findTestId('highlighted-code-block').should('contain.text', 'updated_at')
+        })
+
+        it('uses `codeBlockRecordRedacted` for display and `codeBlockRecord` for copy', () => {
+          const unredacted = { ...record, secret: 'plaintext-secret' }
+          const redacted = { ...record, secret: '********' }
+
+          cy.mount(ConfigCardDisplay, {
+            props: buildProps(format, {
+              codeBlockRecord: unredacted,
+              codeBlockRecordRedacted: redacted,
+            }),
+          })
+
+          cy.get(`#${codeBlockId}`).findTestId('highlighted-code-block').should('contain.text', '********')
+          cy.get(`#${codeBlockId}`).findTestId('highlighted-code-block').should('not.contain.text', 'plaintext-secret')
+
+          stubClipboard()
+          cy.getTestId(`code-block-copy-button-${codeBlockId}`).click()
+          cy.get('@clipboardWriteText').then((stub: any) => {
+            const copied = stub.firstCall.args[0] as string
+            expect(copied).to.include('plaintext-secret')
+            expect(copied).to.not.include('********')
+          })
+        })
+
+        it('applies `codeBlockRecordFormatter` to both displayed and copied content', () => {
+          const formatter = (r: Record<string, any>) => ({ ...r, formatted: 'YES' })
+
+          cy.mount(ConfigCardDisplay, {
+            props: buildProps(format, {
+              codeBlockRecord: record,
+              codeBlockRecordFormatter: formatter,
+            }),
+          })
+
+          cy.get(`#${codeBlockId}`).findTestId('highlighted-code-block').should('contain.text', 'formatted')
+
+          stubClipboard()
+          cy.getTestId(`code-block-copy-button-${codeBlockId}`).click()
+          cy.get('@clipboardWriteText').then((stub: any) => {
+            const copied = stub.firstCall.args[0] as string
+            expect(copied).to.include('formatted')
+            expect(copied).to.include('YES')
+          })
+        })
+      })
+    })
+  })
 })

@@ -223,7 +223,7 @@ export function useMonacoEditor<T extends HTMLElement>(
         ...DEFAULT_MONACO_OPTIONS,
         readOnly: options.readOnly || false,
         language: options.language,
-        theme: editorStates.theme === 'light' ? 'catppuccin-latte' : 'catppuccin-mocha',
+        theme: editorStates.theme === 'light' ? 'catppuccin-latte' : 'material-theme-darker',
         model,
         editContext: false,
         ...options.monacoOptions,

@@ -9,7 +9,7 @@
   <KCheckbox
     v-else
     v-show="!hide"
-    v-bind="fieldAttrs"
+    v-bind="{ ...fieldAttrs, ...$attrs }"
     class="ff-boolean-field"
     :data-autofocus="autofocus ? 'true' : undefined"
     :data-testid="`ff-${field.path.value}`"
@@ -42,6 +42,8 @@ interface InputProps extends BaseFieldProps {
   labelAttributes?: LabelAttributes
   modelValue?: boolean
 }
+
+defineOptions({ inheritAttrs: false })
 
 const { autofocus, name, ...props } = defineProps<InputProps>()
 const { value: fieldValue, hide, emptyOrDefaultValue, ...field } = useField<boolean>(toRef(() => name))

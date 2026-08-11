@@ -95,9 +95,9 @@ const props = defineProps({
   },
   /** The id of the service with which the route is associated */
   serviceId: {
-    type: String,
+    type: String as PropType<string | null>,
     required: false,
-    default: '',
+    default: null,
   },
 })
 
@@ -108,7 +108,7 @@ const serviceName = ref('')
 const isServiceNameLoading = ref(false)
 const fetchUrl = computed<string>(
   () => endpoints.item[props.config?.app]?.[props.serviceId ? 'forGatewayService' : 'all']
-    .replace(/{serviceId}/gi, props.serviceId),
+    .replace(/{serviceId}/gi, props.serviceId ?? ''),
 )
 
 const fetchServiceName = computed<string>(() => endpoints.item[props.config.app]?.getService)
@@ -123,14 +123,12 @@ const handleSuccess = async (entity: any) => {
 
   let url = `${props.config.apiBaseUrl}${fetchServiceName.value}`
   if (props.config.app === 'konnect') {
-    url = url
-      .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-      .replace(/{serviceId}/gi, internalServiceId.value || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url
-      .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-      .replace(/{serviceId}/gi, internalServiceId.value || '')
+    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
   }
+
+  url = url
+    .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
+    .replace(/{serviceId}/gi, internalServiceId.value || '')
 
   try {
     isServiceNameLoading.value = true

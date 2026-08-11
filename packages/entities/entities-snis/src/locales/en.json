@@ -21,11 +21,11 @@
       "table_headers": {
         "name": "Name",
         "id": "ID",
-        "certificate_id": "SSL Certificate ID",
+        "certificate_id": "SSL certificate ID",
         "tags": "Tags"
       },
       "empty_state": {
-        "title": "Configure a New SNI",
+        "title": "Configure a new SNI",
         "description": "SNIs are used to map hostnames to a certificate."
       },
       "empty_state_v2": {
@@ -40,12 +40,12 @@
   "form": {
     "sections": {
       "general": {
-        "title": "General Information",
+        "title": "General information",
         "description": "General information will help identify and manage this SNI."
       },
       "certificate": {
         "title": "Certificate",
-        "description": "Map an existing Certificate object to hostnames"
+        "description": "Map an existing certificate object to hostnames"
       }
     },
     "fields": {
@@ -60,8 +60,8 @@
         "tooltip": "An optional set of strings for grouping and filtering, separated by commas."
       },
       "certificate_id": {
-        "label": "SSL Certificate ID",
-        "placeholder": "Enter or select a Certificate ID",
+        "label": "SSL certificate ID",
+        "placeholder": "Enter or select a certificate ID",
         "footer": "Search by exact ID to find certificates not included in the list"
       }
     }

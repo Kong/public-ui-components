@@ -103,7 +103,7 @@ const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boole
   if (datasetMeta.dataset || segmentIndex === undefined) {
     return chart.isDatasetVisible(datasetIndex)
   } else {
-    return !(datasetMeta.data.length && datasetMeta.data[segmentIndex].hidden)
+    return chart.getDataVisibility(segmentIndex)
   }
 }
 </script>

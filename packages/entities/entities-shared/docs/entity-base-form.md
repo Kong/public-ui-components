@@ -56,10 +56,10 @@ A base form component for entity create/edit views.
     - Route to return to when canceling creation of an entity.
 
   - `workspace`:
-    - type: `string`
-    - required: `true`
+    - type: `string` for Kong Manager, `string | null` for Konnect
+    - required: `true` for Kong Manager, `false` for Konnect
     - default: `undefined`
-    - *Specific to Kong Manager*. Name of the current workspace.
+    - Name of the current workspace.
 
   - `controlPlaneId`:
     - type: `string`
@@ -71,9 +71,9 @@ The base konnect or kongManger config.
 
 #### `editId`
 
-- type: `String`
+- type: `string | null`
 - required: `false`
-- default: `''`
+- default: `null`
 
 If showing the `Edit` type form, the ID of the entity to edit.
 
@@ -137,6 +137,14 @@ Wrapper component to use at component's root level.
 
 Text to display in the Save and Cancel buttons. If not provided, defaults to the localized strings for "Save" and "Cancel".
 
+#### `tabsToHide`
+
+- type: `Array as PropType<BaseFormConfigTab[]>`
+- required: `false`
+- default: `() => []`
+
+Hide tabs from the configuration slideout. Accepts any of `'json'`, `'yaml'`, `'terraform'`, or `'deck'` (e.g. `['yaml']`). Tabs that are otherwise conditionally shown (e.g. `terraform` only for Konnect, `deck` only when enabled) are unaffected unless they would already be visible. If the currently active tab is hidden, the slideout falls back to the first remaining tab.
+
 ### Events
 
 #### loading
@@ -180,6 +188,7 @@ TypeScript interfaces [are available here](https://github.com/Kong/public-ui-com
 ```ts
 import type {
   BaseFormConfig,
+  BaseFormConfigTab,
   KonnectBaseFormConfig,
   KongManagerBaseFormConfig,
   EntityBaseFormType,

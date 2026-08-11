@@ -13,6 +13,11 @@ export interface KongManagerGatewayServiceFormConfig extends KongManagerBaseForm
   cancelRoute: RouteLocationRaw
 }
 
+export interface TlsSans {
+  dnsnames: string[]
+  uris: string[]
+}
+
 export interface GatewayServiceFormFields {
   name: string
   protocol: string
@@ -25,6 +30,7 @@ export interface GatewayServiceFormFields {
   write_timeout: number
   read_timeout: number
   client_certificate: string
+  tls_sans: TlsSans
   ca_certificates: string
   tls_verify_enabled: boolean
   tls_verify_value: boolean
@@ -42,6 +48,8 @@ export interface FormFieldErrors {
   write_timeout: string
   read_timeout: string
   client_certificate: string
+  tls_sans_dnsnames: string
+  tls_sans_uris: string
   ca_certificates: string
   tls_verify_enabled: string
   tls_verify_value: string

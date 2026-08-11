@@ -16,10 +16,10 @@
 
 <script setup lang="ts">
 import BaseAnalyticsChartRenderer from './BaseAnalyticsChartRenderer.vue'
-import type { RendererProps } from '../types'
+import type { ChartRendererProps } from '../types'
 import type { AbsoluteTimeRangeV4, TimeseriesChartOptions } from '@kong-ui-public/analytics-utilities'
 
-defineProps<RendererProps<TimeseriesChartOptions>>()
+defineProps<ChartRendererProps<TimeseriesChartOptions>>()
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
   (e: 'select-chart-range', newTimeRange: AbsoluteTimeRangeV4): void

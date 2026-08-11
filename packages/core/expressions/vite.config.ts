@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
-import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+import monacoEditorPlugin from '@kong-ui-public/monaco-editor/vite-plugin'
 import topLevelAwait from 'vite-plugin-top-level-await'
 import wasm from 'vite-plugin-wasm'
 import sharedViteConfig, { sanitizePackageName } from '../../../vite.config.shared'
@@ -12,6 +12,12 @@ const sanitizedPackageName = sanitizePackageName(packageName)
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
   build: {
+    /**
+     * Adds target: 'esnext' because Vite v7 bumps esbuild to 0.28.1, which breaks
+     * `vite-plugin-top-level-await` fallback re-transform step when no explicit
+     * build.target is set.
+     */
+    target: 'esnext',
     lib: {
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
       // Example: name: 'kong-ui-public-demo-component'
@@ -19,12 +25,14 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       name: `kong-ui-public-${sanitizedPackageName}`,
       entry: resolve(__dirname, './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+      cssFileName: 'style',
     },
     rollupOptions: {
       external: [
         '@kong-ui-public/core',
         '@kong-ui-public/forms',
         '@kong-ui-public/forms/dist/style.css',
+        '@kong-ui-public/monaco-editor',
         '@kong/icons',
         'monaco-editor',
         'uuid',
@@ -36,11 +44,9 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     topLevelAwait({
       promiseExportName: 'asyncInit',
     }),
-    // This plugin is only used in the sandbox & testing environment
-    // It generates extra files in dist folder which are not need in library build
-    ...(process.env.USE_SANDBOX
-      ? [((monacoEditorPlugin as any).default as typeof monacoEditorPlugin)({})]
-      : []),
+    monacoEditorPlugin({
+      languages: ['json'],
+    }),
   ],
 }))
 

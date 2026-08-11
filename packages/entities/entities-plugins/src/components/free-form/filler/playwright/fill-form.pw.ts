@@ -202,6 +202,46 @@ test.describe('Filler - Playwright', () => {
       await expect(page.locator('[data-testid="ff-config.port"]')).toHaveValue('6379')
     })
 
+    test('record: re-filling an already-enabled optional object does not collapse it', async ({ mount, page }) => {
+      // Regression test: fillRecord used to unconditionally .click() the
+      // switch-control, which toggles it off when the object was already
+      // enabled (e.g. from a prior fill simulating create, then updating the
+      // same form). That collapses the object's SlideTransition content via
+      // v-if="expanded", detaching any child element the filler is about to
+      // interact with - this is what broke KM's kafka-upstream edit-form test
+      // (updating a nested `authentication` record that already had a value).
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            auth: {
+              type: 'record',
+              fields: [
+                { username: { type: 'string' } },
+                { password: { type: 'string' } },
+              ],
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+
+      // First fill enables the switch from scratch (simulates create).
+      await filler.fillField('auth', { username: 'alice', password: 'secret1' })
+      await expect(page.locator('[data-testid="ff-object-switch-auth"]').locator('..').locator('[data-testid="switch-control"]')).toBeChecked()
+      await expect(page.getByTestId('ff-auth.username')).toHaveValue('alice')
+
+      // Second fill (simulates editing an existing record): the object is
+      // already enabled and must stay that way, with children still reachable.
+      await filler.fillField('auth', { username: 'bob', password: 'secret2' })
+      await expect(page.locator('[data-testid="ff-object-switch-auth"]').locator('..').locator('[data-testid="switch-control"]')).toBeChecked()
+      await expect(page.getByTestId('ff-auth.username')).toHaveValue('bob')
+      await expect(page.getByTestId('ff-auth.password')).toHaveValue('secret2')
+    })
+
     test('should fill map field (key-value pairs)', async ({ mount, page }) => {
       const schema: FormSchema = {
         type: 'record',
@@ -228,10 +268,10 @@ test.describe('Filler - Playwright', () => {
         'Authorization': 'Bearer token',
       })
 
-      await expect(page.locator('[data-testid="ff-key-headers.0"]')).toHaveValue('Content-Type')
-      await expect(page.locator('[data-testid="ff-value-headers.0"]')).toHaveValue('application/json')
-      await expect(page.locator('[data-testid="ff-key-headers.1"]')).toHaveValue('Authorization')
-      await expect(page.locator('[data-testid="ff-value-headers.1"]')).toHaveValue('Bearer token')
+      await expect(page.locator('[data-testid="ff-map-key-headers.0"]')).toHaveValue('Content-Type')
+      await expect(page.locator('[data-testid="ff-map-container-headers.0"] [data-testid^="ff-headers.kid:"]')).toHaveValue('application/json')
+      await expect(page.locator('[data-testid="ff-map-key-headers.1"]')).toHaveValue('Authorization')
+      await expect(page.locator('[data-testid="ff-map-container-headers.1"] [data-testid^="ff-headers.kid:"]')).toHaveValue('Bearer token')
     })
 
     test('should clear existing map entries before refilling', async ({ mount, page }) => {
@@ -256,9 +296,52 @@ test.describe('Filler - Playwright', () => {
       // Refill should clear previous entries first
       await filler.fillField('headers', { 'X-New': 'new-value' })
 
-      await expect(page.locator('[data-testid^="ff-kv-container-headers"]')).toHaveCount(1)
-      await expect(page.locator('[data-testid="ff-key-headers.0"]')).toHaveValue('X-New')
-      await expect(page.locator('[data-testid="ff-value-headers.0"]')).toHaveValue('new-value')
+      await expect(page.locator('[data-testid^="ff-map-container-headers"]')).toHaveCount(1)
+      await expect(page.locator('[data-testid="ff-map-key-headers.0"]')).toHaveValue('X-New')
+      await expect(page.locator('[data-testid="ff-map-container-headers.0"] [data-testid^="ff-headers.kid:"]')).toHaveValue('new-value')
+    })
+
+    test('should fill map field with record values', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            plugins: {
+              type: 'map',
+              keys: { type: 'string' },
+              values: {
+                type: 'record',
+                fields: [
+                  {
+                    name: {
+                      type: 'string',
+                    },
+                  },
+                  {
+                    route: {
+                      type: 'string',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('plugins', {
+        auth: {
+          name: 'key-auth',
+          route: '/auth',
+        },
+      })
+
+      await expect(page.locator('[data-testid="ff-map-key-plugins.0"]')).toHaveValue('auth')
+      await expect(page.locator('[data-testid="ff-map-container-plugins.0"] [data-testid^="ff-plugins.kid:"][data-testid$=".name"]')).toHaveValue('key-auth')
+      await expect(page.locator('[data-testid="ff-map-container-plugins.0"] [data-testid^="ff-plugins.kid:"][data-testid$=".route"]')).toHaveValue('/auth')
     })
 
     test('should fill multiline map field with both single-line and multiline values', async ({ mount, page }) => {
@@ -283,10 +366,71 @@ test.describe('Filler - Playwright', () => {
         'multi-line-fn': 'line1\nline2\nline3',
       })
 
-      await expect(page.locator('[data-testid="ff-key-functions.0"]')).toHaveValue('single-line-fn')
-      await expect(page.locator('[data-testid="ff-value-functions.0"]')).toHaveValue('return kong.request.get_path()')
-      await expect(page.locator('[data-testid="ff-key-functions.1"]')).toHaveValue('multi-line-fn')
-      await expect(page.locator('[data-testid="ff-value-functions.1"]')).toHaveValue('line1\nline2\nline3')
+      await expect(page.locator('[data-testid="ff-map-key-functions.0"]')).toHaveValue('single-line-fn')
+      await expect(page.locator('[data-testid="ff-map-container-functions.0"] [data-testid^="ff-functions.kid:"]')).toHaveValue('return kong.request.get_path()')
+      await expect(page.locator('[data-testid="ff-map-key-functions.1"]')).toHaveValue('multi-line-fn')
+      await expect(page.locator('[data-testid="ff-map-container-functions.1"] [data-testid^="ff-functions.kid:"]')).toHaveValue('line1\nline2\nline3')
+    })
+
+    test('enum: scoped selection ignores identically-named options from other enum fields', async ({ mount, page }) => {
+      // Two enum fields each having 'openai' as a valid value — the old global
+      // selector would match 2 elements and cause a strict-mode violation.
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            format: {
+              type: 'string',
+              one_of: ['openai', 'ollama'],
+              default: 'openai',
+            },
+          },
+          {
+            provider: {
+              type: 'string',
+              one_of: ['openai', 'cohere'],
+              default: 'openai',
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('format', 'ollama')
+      await filler.fillField('provider', 'cohere')
+
+      await expect(page.getByTestId('ff-format')).toHaveValue('ollama')
+      await expect(page.getByTestId('ff-provider')).toHaveValue('cohere')
+    })
+
+    test('array: add-item button click succeeds even when sticky tabs cover the button', async ({ mount, page }) => {
+      // Playwright's own actionability scroll (unlike Cypress's default
+      // scroll-to-top) scrolls the minimum distance needed and re-checks
+      // that the click point isn't obstructed, so no explicit scroll/force
+      // is needed here.
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            hosts: {
+              type: 'array',
+              elements: {
+                type: 'string',
+              },
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('hosts', ['alpha.example.com', 'beta.example.com'])
+
+      await expect(page.locator('[data-testid="ff-hosts.0"]')).toHaveValue('alpha.example.com')
+      await expect(page.locator('[data-testid="ff-hosts.1"]')).toHaveValue('beta.example.com')
     })
 
     test('should fill json field', async ({ mount, page }) => {
@@ -319,6 +463,50 @@ test.describe('Filler - Playwright', () => {
       await filler.fillField('metadata', { key: 'value', nested: { prop: 123 } })
 
       await expect(page.locator('[data-testid="ff-json-metadata"]')).toBeVisible()
+    })
+
+    test('should fill foreign field with a raw id string', async ({ mount, page }) => {
+      // ForeignField.vue is a plain text input - the id is typed directly,
+      // there is no select-item popover to click (unlike EnumField).
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            vault: {
+              type: 'foreign',
+              reference: 'vaults',
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('vault', 'a5b875e6-2db1-4cbc-9f34-c5d11604cdc5')
+
+      await expect(page.getByTestId('ff-vault')).toHaveValue('a5b875e6-2db1-4cbc-9f34-c5d11604cdc5')
+    })
+
+    test('should fill foreign field from an { id } object value', async ({ mount, page }) => {
+      const schema: FormSchema = {
+        type: 'record',
+        fields: [
+          {
+            consumer: {
+              type: 'foreign',
+              reference: 'consumers',
+            },
+          },
+        ],
+      }
+
+      await mount(FormWrapper, { props: { schema } })
+
+      const filler = createFiller(page, schema)
+      await filler.fillField('consumer', { id: 'b1c2d3e4-0000-0000-0000-000000000000' })
+
+      await expect(page.getByTestId('ff-consumer')).toHaveValue('b1c2d3e4-0000-0000-0000-000000000000')
     })
 
     test('should fill entire form with nested data', async ({ mount, page }) => {
@@ -853,7 +1041,7 @@ test.describe('Filler - Playwright', () => {
         'Content-Type': 'application/json',
       })
 
-      await expect(page.locator('[data-testid="ff-kv-headers"]')).toBeVisible()
+      await expect(page.locator('[data-testid="ff-map-headers"]')).toBeVisible()
     })
   })
 })

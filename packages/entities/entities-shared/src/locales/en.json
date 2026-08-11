@@ -41,23 +41,27 @@
   "baseConfigCard": {
     "title": "Configuration",
     "actions": {
-      "copy": "Copy JSON"
+      "copy": "Copy JSON",
+      "deck_customize": "Customize before copying to CLI",
+      "deck_customize_cancel": "Cancel",
+      "sensitive_fields": "Show sensitive fields",
+      "sensitive_fields_tooltip": "View masked sensitive data in your configurations if any field values have been redacted."
     },
     "sections": {
       "advanced": "Advanced",
-      "plugin": "Plugin Specific Configuration",
-      "policy": "Policy Specific Configuration"
+      "plugin": "Plugin specific configuration",
+      "policy": "Policy specific configuration"
     },
     "commonFields": {
       "id_label": "ID",
       "name_label": "Name",
       "enabled_label": "Enabled",
       "enabled_tooltip": "Enabled is FTW",
-      "updated_at_label": "Last Updated",
+      "updated_at_label": "Last updated",
       "created_at_label": "Created",
       "tags_label": "Tags",
       "link": "Link",
-      "partial_label": "Redis Configuration"
+      "partial_label": "Redis configuration"
     },
     "statusBadge": {
       "enabledLabel": "Enabled",
@@ -119,6 +123,55 @@
       "konnect": "The {token} environment variable must be added first. See {link} for details.",
       "kongManager": "If your Admin API is secured, set up authentication following {link}."
     },
-    "documentation": "the documentation"
+    "documentation": "the documentation",
+    "steps": {
+      "step_1": "Step 1: Export token",
+      "step_2": "Step 2: Apply configuration"
+    },
+    "customization": {
+      "title": "Customize before copying to CLI",
+      "copy_pat": "Make sure to copy your personal access token now. You won't be able to see it again.",
+      "reuse_pat": "Use an existing PAT if you've already generated one.",
+      "generate_pat": "Generate PAT",
+      "footer_reminder": "Changes you make here won't affect your configuration. After you apply changes with decK in the CLI, refresh the page to view them.",
+      "secret_advise": "Command may contain sensitive values. Treat it as a secret."
+    },
+    "copy_tooltip": "Copy"
+  },
+  "deckCallout": {
+    "body": "Want a ready-to-use CLI command? {cta} to view this configuration as a decK sync snippet you can copy directly.",
+    "cta": "Switch to decK format"
+  },
+  "generatePatModal": {
+    "title": "Generate a Personal Access Token",
+    "description": "Personal access tokens are used to authenticate decK commands and Konnect API requests.",
+    "fields": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter token name"
+      },
+      "expiresAt": {
+        "label": "Expiration date",
+        "placeholder": "Select an expiration date",
+        "n_days": "{n} days"
+      }
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "generate": "Generate",
+      "generating": "Generating…"
+    }
+  },
+  "onboardingCard": {
+    "dismissLabel": "Dismiss"
+  },
+  "sensitiveInput": {
+    "rotateKey": "Rotate key",
+    "generateKey": "Generate key",
+    "placeholder": "Enter or generate a key",
+    "oneTimeHint": "The key is shown only once. Copy it now and store it securely.",
+    "copy": "Copy",
+    "showKey": "Show key",
+    "hideKey": "Hide key"
   }
 }
