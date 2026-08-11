@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.259.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.258.5...@kong-ui-public/entities-plugins@9.259.0) (2026-08-11)
+
+
+### Features
+
+* **entities-plugins:** redesign ACL access policy selection ([#3683](https://github.com/Kong/public-ui-components/issues/3683)) ([4efb508](https://github.com/Kong/public-ui-components/commit/4efb508e606185c69e3eb13d0c20b4f91f8b74e6))
+
+
+
+
+
 ## [9.258.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.258.4...@kong-ui-public/entities-plugins@9.258.5) (2026-08-11)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
