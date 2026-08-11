@@ -33,7 +33,7 @@
       :plugin-config-schema="pluginConfigSchema"
       :record-resolver="resolveRecord"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
-      @fetch:success="(entity: any) => $emit('fetch:success', entity)"
+      @fetch:success="handleFetchSuccess"
       @loading="(val: boolean) => $emit('loading', val)"
     >
       <template #name="slotProps">
@@ -51,11 +51,16 @@
 
       <template #consumer="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
+        <KSkeleton
+          v-else-if="showIdAsLink && isReferenceNameLoading('consumer')"
+          data-testid="consumer-name-loader"
+          type="spinner"
+        />
         <InternalLinkItem
           v-else-if="showIdAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
+            value: withReferenceName('consumer', getPropValue('rowValue', slotProps).id),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer')"
@@ -70,11 +75,16 @@
 
       <template #route="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
+        <KSkeleton
+          v-else-if="showIdAsLink && isReferenceNameLoading('route')"
+          data-testid="route-name-loader"
+          type="spinner"
+        />
         <InternalLinkItem
           v-else-if="showIdAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
+            value: withReferenceName('route', getPropValue('rowValue', slotProps).id),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'route')"
@@ -88,11 +98,16 @@
       </template>
       <template #service="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
+        <KSkeleton
+          v-else-if="showIdAsLink && isReferenceNameLoading('service')"
+          data-testid="service-name-loader"
+          type="spinner"
+        />
         <InternalLinkItem
           v-else-if="showIdAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
+            value: withReferenceName('service', getPropValue('rowValue', slotProps).id),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'service')"
@@ -106,11 +121,16 @@
       </template>
       <template #consumer_group="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
+        <KSkeleton
+          v-else-if="showIdAsLink && isReferenceNameLoading('consumer_group')"
+          data-testid="consumer-group-name-loader"
+          type="spinner"
+        />
         <InternalLinkItem
           v-else-if="showIdAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
+            value: withReferenceName('consumer_group', getPropValue('rowValue', slotProps).id),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer_group')"
@@ -388,6 +408,21 @@ const codeBlockRecordFormatter = (record: Record<string, any>) => {
 
 const { getMessageFromError } = useErrors()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+
+const { resolveReferenceNames, withReferenceName, isReferenceNameLoading } = composables.useReferenceEntityNames({
+  config: props.config,
+  axiosInstance,
+  onError: (err: AxiosError) => emit('fetch:error', err),
+})
+
+const handleFetchSuccess = (entity: Record<string, any>) => {
+  emit('fetch:success', entity)
+
+  // Names are only ever displayed via InternalLinkItem, so skip the lookups entirely otherwise.
+  if (props.showIdAsLink) {
+    resolveReferenceNames(entity)
+  }
+}
 
 const schemaUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].pluginSchema}`
