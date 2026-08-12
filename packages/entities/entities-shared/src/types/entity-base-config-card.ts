@@ -1,3 +1,4 @@
+import type { RouteLocationRaw } from 'vue-router'
 import type { DeckConfigOptions } from './deck'
 import type { KonnectConfig, KongManagerConfig } from './index'
 
@@ -161,6 +162,8 @@ export interface PolicyConfigurationSchema extends PluginConfigurationSchema { }
 export interface RecordItem extends ConfigurationSchemaItem {
   key: string
   value: any
+  /** When set, InternalLinkItem renders a real router-link instead of an emit-only button. */
+  to?: RouteLocationRaw
 }
 
 export interface DefaultCommonFieldsConfigurationSchema {
