@@ -1,7 +1,7 @@
 <template>
   <div
     class="metric-card-tile-wrapper"
-    :class="{ 'titled': !!props.chartOptions.chart_title }"
+    :class="{ 'titled': hasTitleBar }"
   >
     <MetricsProvider v-bind="options">
       <MetricsConsumer />
@@ -37,19 +37,26 @@ const options = computed<ProviderProps>(() => {
     refreshCounter: props.refreshCounter,
   }
 })
+
+const hasTitleBar = computed(() => {
+  return Boolean(props.chartOptions.chart_title || props.chartOptions.description)
+})
 </script>
 
 <style scoped lang="scss">
 .metric-card-tile-wrapper {
+  padding: var(--kui-space-60, $kui-space-60);
+
+  &.titled {
+    // this is always true, regardless of breakpoint
+    padding-top: 0;
+  }
+
   @media (min-width: ($kui-breakpoint-phablet - 1px)) {
     align-items: center;
     display: flex;
     height: 100%;
     padding: var(--kui-space-60, $kui-space-60);
-  }
-
-  &.titled {
-    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60);
   }
 }
 </style>
