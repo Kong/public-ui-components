@@ -1,3 +1,5 @@
+import type { Config } from 'stylelint'
+
 export default {
   extends: [
     'stylelint-config-html',
@@ -34,5 +36,4 @@ export default {
     // Disable the following rules
     'no-descending-specificity': null,
   },
-}
-
+} satisfies Config

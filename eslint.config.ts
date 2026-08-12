@@ -1,9 +1,12 @@
+import { defineConfig } from 'eslint/config'
+// @ts-expect-error This package does not export types
 import eslintKongUiConfig from '@kong/eslint-config-kong-ui'
+// @ts-expect-error This package does not export types
 import eslintKongUiConfigCypress from '@kong/eslint-config-kong-ui/cypress'
 
-export default [
+export default defineConfig([
   ...eslintKongUiConfig,
-  ...eslintKongUiConfigCypress.map(config => ({
+  ...eslintKongUiConfigCypress.map((config: any) => ({
     ...config,
     files: [
       '**/cypress/**',
@@ -21,4 +24,4 @@ export default [
       'vue/multi-word-component-names': ['off'],
     },
   },
-]
+])
