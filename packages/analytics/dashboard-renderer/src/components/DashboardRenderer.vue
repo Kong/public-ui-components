@@ -86,9 +86,9 @@ import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import {
   DEFAULT_TILE_HEIGHT,
   INJECT_QUERY_PROVIDER,
-  TIMEFRAME_TOKEN,
 } from '../constants'
 import { duplicateChartTile } from '../utils/duplicate-tile'
+import { tileDescription } from '../utils/tile-definition'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const {
@@ -144,6 +144,22 @@ const onTileLoaded = (tile: GridTile<TileDefinition>) => {
   }
 }
 
+const timeframeLabel = computed<string>(() => {
+  const { timeSpec } = internalContext.value
+  const timeSpecKey = timeSpec.type === 'absolute' ? 'custom' : timeSpec.time_range
+  const key = `renderer.trendRange.${timeSpecKey}`
+
+  // Right now, we basically only support 2 ranges: 24 hours and 30 days.
+  // In case of a misconfiguration, don't render a translation at all.
+  // @ts-ignore: dynamic i18n key
+  if (i18n.te(key)) {
+    // @ts-ignore: dynamic i18n key
+    return i18n.t(key)
+  }
+
+  return ''
+})
+
 const tileSortFn = (a: TileConfig, b: TileConfig) => {
   const rowDiff = a.layout.position.row - b.layout.position.row
   if (rowDiff !== 0) {
@@ -173,32 +189,12 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
     let tileMeta = tile.definition
     const tileType = tile.type ?? 'chart'
 
-    const chart = (tileMeta as ChartTileDefinition).chart
-    if (tileType === 'chart' && 'description' in chart) {
-      const chartMeta = tileMeta as ChartTileDefinition
-      // Replace tokens in tile descriptions
-      const description = chart.description?.replace(TIMEFRAME_TOKEN, () => {
-        const { timeSpec } = internalContext.value
-        const timeSpecKey = timeSpec.type === 'absolute' ? 'custom' : timeSpec.time_range
-        const key = `renderer.trendRange.${timeSpecKey}`
+    const description = tileDescription(tileMeta, timeframeLabel.value)
 
-        // Right now, we basically only support 2 ranges: 24 hours and 30 days.
-        // In case of a misconfiguration, don't render a translation at all.
-        // @ts-ignore: dynamic i18n key
-        if (i18n.te(key)) {
-          // @ts-ignore: dynamic i18n key
-          return i18n.t(key)
-        }
-
-        return ''
-      })
-
+    if (description !== tileMeta.header_description) {
       tileMeta = {
-        ...chartMeta,
-        chart: {
-          ...chart,
-          description,
-        },
+        ...tileMeta,
+        header_description: description,
       } as TileDefinition
     }
 

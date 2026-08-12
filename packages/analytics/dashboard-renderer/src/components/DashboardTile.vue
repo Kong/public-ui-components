@@ -70,6 +70,14 @@
       </div>
 
       <div
+        v-if="tileDescription"
+        class="header-description"
+        :data-testid="`tile-description-${tileId}`"
+      >
+        {{ tileDescription }}
+      </div>
+
+      <div
         v-if="canShowHeaderActions"
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
@@ -134,13 +142,6 @@
             </KDropdownItem>
           </template>
         </KDropdown>
-      </div>
-      <div
-        v-else-if="tileDescription"
-        class="header-description"
-        :data-testid="`tile-description-${tileId}`"
-      >
-        {{ tileDescription }}
       </div>
       <CsvExportModal
         v-if="exportModalVisible"
@@ -257,7 +258,7 @@ const chart = computed(() => props.definition.chart)
 const tileTitle = computed<string | undefined>(() => {
   return 'chart_title' in chart.value ? chart.value.chart_title : undefined
 })
-const tileDescription = computed<string | undefined>(() => 'description' in chart.value ? chart.value.description : undefined)
+const tileDescription = computed<string | undefined>(() => props.definition.header_description)
 const isSlottableTile = computed<boolean>(() => chart.value.type === 'slottable')
 const canExportCsv = computed<boolean>(() => {
   if (isTableChartDefinition(props.definition)) {
@@ -312,7 +313,6 @@ const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value |
 // The shared header action container is hidden when tile actions are globally disabled.
 const canShowHeaderActions = computed((): boolean => !props.hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
 const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !props.isFullscreen)
-const hasSignalsDescription = computed<boolean>(() => chart.value.type === 'golden_signals' && Boolean(tileDescription.value))
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
@@ -415,7 +415,7 @@ const hasTileHeader = computed<boolean>(() => {
     Boolean(tileTitle.value),
     hasHeaderActions.value,
     Boolean(badgeData.value),
-    hasSignalsDescription.value,
+    Boolean(tileDescription.value),
     props.showRefresh,
   ].some(Boolean)
 })
