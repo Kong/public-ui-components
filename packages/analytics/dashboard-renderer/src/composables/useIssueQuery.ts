@@ -42,6 +42,8 @@ export default function useIssueQuery() {
     const datasource = originalDatasource || 'basic'
     const isPlatformQuery = isPlatformDatasource(datasource)
 
+    // TODO(MA-5255): Remove this temporary frontend shim when platform aggregation queries
+    // support `empty` and `not_empty` filters.
     const mergedFilters = stripUnknownFilters.value({
       datasource,
       filters: [
