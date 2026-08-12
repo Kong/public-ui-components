@@ -1,6 +1,6 @@
 import {
   type AllFilters, type AnalyticsBridge, type DatasourceAwareQuery, type ExploreFilterAll, type ExploreQuery,
-  type TimeRangeV4,
+  isPlatformDatasource, requestFilterTypeEmptyV2, type TimeRangeV4,
   type ValidDashboardChartQuery,
 } from '@kong-ui-public/analytics-utilities'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
@@ -40,6 +40,7 @@ export default function useIssueQuery() {
     } = query
 
     const datasource = originalDatasource || 'basic'
+    const isPlatformQuery = isPlatformDatasource(datasource)
 
     const mergedFilters = stripUnknownFilters.value({
       datasource,
@@ -48,7 +49,7 @@ export default function useIssueQuery() {
         ...context.filters,
       ],
       queryFields: query.metrics,
-    })
+    }).filter(({ operator }) => !isPlatformQuery || !requestFilterTypeEmptyV2.some(emptyOperator => emptyOperator === operator))
 
     // TODO: the cast is necessary because TimeRangeV4 specifies date objects for absolute time ranges.
     // If they're coming from a definition, they're strings; should clean this up as part of the dashboard type work.
