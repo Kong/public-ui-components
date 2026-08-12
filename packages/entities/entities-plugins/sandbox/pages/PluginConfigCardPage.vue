@@ -35,6 +35,13 @@ const props = defineProps({
   },
 })
 
+const viewRoutes = {
+  getServiceViewRoute: (id: string) => ({ name: 'view-service', params: { id } }),
+  getRouteViewRoute: (id: string) => ({ name: 'view-route', params: { id } }),
+  getConsumerViewRoute: (id: string) => ({ name: 'view-consumer', params: { id } }),
+  getConsumerGroupViewRoute: (id: string) => ({ name: 'view-consumer_group', params: { id } }),
+}
+
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const konnectConfig = ref<KonnectPluginEntityConfig>({
   app: 'konnect',
@@ -43,6 +50,7 @@ const konnectConfig = ref<KonnectPluginEntityConfig>({
   controlPlaneId,
   entityId: props.id,
   pluginType: props.plugin,
+  ...viewRoutes,
 })
 const kongManagerConfig = ref<KongManagerPluginEntityConfig>({
   app: 'kongManager',
@@ -50,6 +58,7 @@ const kongManagerConfig = ref<KongManagerPluginEntityConfig>({
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   entityId: props.id,
   pluginType: props.plugin,
+  ...viewRoutes,
 })
 
 const onError = (error: AxiosError) => {

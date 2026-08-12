@@ -1,6 +1,14 @@
 <template>
   <div>
+    <router-link
+      v-if="item.to"
+      class="navigation-link"
+      :to="item.to"
+    >
+      {{ item.value || t('baseConfigCard.commonFields.link') }}
+    </router-link>
     <KButton
+      v-else
       appearance="tertiary"
       class="navigation-button"
       @click="$emit('navigation-click', item)"
@@ -33,5 +41,16 @@ const { i18n: { t } } = composables.useI18n()
 :deep(.k-button).navigation-button {
   font-size: 14px;
   font-weight: 400;
+}
+
+.navigation-link {
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 </style>
