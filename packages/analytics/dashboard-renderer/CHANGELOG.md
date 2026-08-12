@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.12...@kong-ui-public/dashboard-renderer@8.18.0) (2026-08-12)
+
+
+### Features
+
+* mobile styles for golden signals ([#3688](https://github.com/Kong/public-ui-components/issues/3688)) ([970416f](https://github.com/Kong/public-ui-components/commit/970416f9956e347fbb665c2bdd7bf442694dc86f))
+
+
+
+
+
 ## [8.17.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.17.11...@kong-ui-public/dashboard-renderer@8.17.12) (2026-08-11)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
