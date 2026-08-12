@@ -42,8 +42,6 @@ export default function useIssueQuery() {
     const datasource = originalDatasource || 'basic'
     const isPlatformQuery = isPlatformDatasource(datasource)
 
-    // TODO(MA-5255): Remove this temporary frontend shim when platform aggregation queries
-    // support `empty` and `not_empty` filters.
     const mergedFilters = stripUnknownFilters.value({
       datasource,
       filters: [
@@ -51,7 +49,10 @@ export default function useIssueQuery() {
         ...context.filters,
       ],
       queryFields: query.metrics,
-    }).filter(({ operator }) => !isPlatformQuery || !requestFilterTypeEmptyV2.some(emptyOperator => emptyOperator === operator))
+    })
+      // TODO(MA-5255): Remove this temporary frontend shim when platform aggregation queries
+      // support `empty` and `not_empty` filters.
+      .filter(({ operator }) => !isPlatformQuery || !requestFilterTypeEmptyV2.some(emptyOperator => emptyOperator === operator))
 
     // TODO: the cast is necessary because TimeRangeV4 specifies date objects for absolute time ranges.
     // If they're coming from a definition, they're strings; should clean this up as part of the dashboard type work.
