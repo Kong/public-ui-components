@@ -623,8 +623,7 @@ describe('slottable tile config', () => {
     expect(validateDashboardConfigSchema({ tiles: [topN] })).toBe(true)
   })
 
-  it('marks the chart-level description as deprecated on top_n and golden_signals', () => {
+  it('marks the chart-level description as deprecated on top_n', () => {
     expect(topNTableSchema.properties.description.deprecated).toBe(true)
-    expect(metricCardSchema.properties.description.deprecated).toBe(true)
   })
 })

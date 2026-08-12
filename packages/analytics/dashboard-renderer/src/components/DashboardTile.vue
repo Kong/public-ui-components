@@ -356,6 +356,7 @@ const componentData = computed(() => {
   }
   const chartRendererProps = {
     chartOptions: definition.chart,
+    headerDescription: tileDescription.value,
     requestsLink: props.hideZoomActions ? undefined : requestsLinkZoomActions.value,
     exploreLink: props.hideZoomActions ? undefined : exploreLinkZoomActions.value,
   }

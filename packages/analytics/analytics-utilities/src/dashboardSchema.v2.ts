@@ -265,7 +265,6 @@ export const metricCardSchema = {
     long_card_titles: {
       type: 'boolean',
     },
-    description: deprecatedDescription,
     percentile_latency: {
       type: 'boolean',
     },

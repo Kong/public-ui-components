@@ -521,7 +521,7 @@ interface TableChartTileDefinition {
 (e.g., `Last 7-day summary`). Only the `24h`, `7d`, and `30d` ranges have summary
 text, for any other range the token expands to nothing and the description is omitted.
 
-> **Deprecated:** `description` on the `top_n` and `golden_signals` chart options is the
+> **Deprecated:** `description` on the `top_n` chart options is the
 > former home of this field. It is still supported (for now), but will be removed the future.
 > Use `header_description` on the tile definition instead.
 
