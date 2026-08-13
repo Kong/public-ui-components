@@ -18,6 +18,7 @@ items, where each item links to a route or triggers a callback (e.g. "Design a r
 
 - Configurable title and optional subtitle
 - Grid of items, each either a `router-link` (via `to`) or a button (via `onClick`)
+- Optional leading icon and trailing `appendIcon` per item
 - Optional `vertical` item variant that stacks the icon/title/description and centers them
 - Optional dismiss/close button
 
@@ -85,6 +86,11 @@ interface OnboardingCardItem {
   appearance?: 'success' | 'decorative-purple' | 'decorative-aqua' | 'neutral'
   title: string
   description?: string
+  /**
+   * Icon component from `@kong/icons` rendered at the trailing edge of the item, e.g. an
+   * external-link indicator for items with an `href`. Optional - omit to render without one.
+   */
+  appendIcon?: Component
   /**
    * Named route (or full route location) to navigate to when the item is clicked.
    * Takes precedence over `href` and `onClick` if more than one is provided.

@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { AddIcon, CogIcon, DocumentIcon } from '@kong/icons'
+import { AddIcon, CogIcon, DocumentIcon, ExternalLinkIcon } from '@kong/icons'
 import type { OnboardingCardItem } from '../../src/types'
 import { OnboardingCard } from '../../src'
 
@@ -46,6 +46,7 @@ const items: OnboardingCardItem[] = [
     title: 'Read the docs',
     description: 'Learn more about this feature',
     href: 'https://developer.konghq.com',
+    appendIcon: ExternalLinkIcon,
   },
   {
     title: 'View all',

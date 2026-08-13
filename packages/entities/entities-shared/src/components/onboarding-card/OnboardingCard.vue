@@ -68,6 +68,14 @@
             {{ item.description }}
           </div>
         </div>
+        <component
+          :is="item.appendIcon"
+          v-if="item.appendIcon"
+          class="onboarding-item-append-icon"
+          :color="`var(--kui-icon-color-neutral, ${KUI_ICON_COLOR_NEUTRAL})`"
+          decorative
+          :size="`var(--kui-icon-size-30, ${KUI_ICON_SIZE_30})`"
+        />
       </KCard>
     </DefineItemCard>
 
@@ -129,6 +137,8 @@ import {
   KUI_COLOR_TEXT_NEUTRAL_STRONGER,
   KUI_COLOR_TEXT_NEUTRAL,
   KUI_COLOR_TEXT_SUCCESS,
+  KUI_ICON_COLOR_NEUTRAL,
+  KUI_ICON_SIZE_30,
   KUI_ICON_SIZE_50,
 } from '@kong/design-tokens'
 import { createReusableTemplate } from '@vueuse/core'
@@ -215,19 +225,18 @@ const ICON_APPEARANCE_COLORS: Record<OnboardingCardItemAppearance, { background:
 
     &:not(.is-static):hover .onboarding-item {
       border-color: var(--kui-color-border-primary, $kui-color-border-primary);
-      box-shadow: var(--kui-shadow, $kui-shadow);
     }
 
     .onboarding-item {
       flex: 1;
 
       :deep(.card-content) {
+        align-items: center;
         display: flex;
         gap: var(--kui-space-50, $kui-space-50);
       }
 
       &:not(.vertical-item) :deep(.card-content) {
-        align-items: flex-start;
         flex-direction: row;
       }
 
@@ -271,6 +280,10 @@ const ICON_APPEARANCE_COLORS: Record<OnboardingCardItemAppearance, { background:
     line-height: var(--kui-line-height-20, $kui-line-height-20);
     margin-top: var(--kui-space-20, $kui-space-20);
     overflow-wrap: break-word;
+  }
+
+  .onboarding-item-append-icon {
+    flex-shrink: 0;
   }
 }
 </style>
