@@ -145,6 +145,107 @@ describe('useIssueQuery', () => {
     })
   })
 
+  // TODO(MA-5255): Remove these tests with the temporary frontend shim when platform
+  // aggregation queries support `empty` and `not_empty` filters.
+  describe('non-table platform aggregation filter shim', () => {
+    it.each(['platform_usage', 'platform'])('strips empty operators from %s query filters', async (datasource) => {
+      const queryFn = vi.fn().mockResolvedValue({})
+      const wrapper = mountComposable({
+        queryFn,
+      } as any)
+      const inFilter = {
+        field: 'name',
+        operator: 'in',
+        value: ['example'],
+      }
+      const notInFilter = {
+        field: 'name',
+        operator: 'not_in',
+        value: ['other'],
+      }
+
+      await wrapper.vm.issueQuery({
+        datasource,
+        metrics: [],
+        dimensions: [],
+        filters: [
+          { field: 'name', operator: 'empty' },
+          { field: 'name', operator: 'not_empty' },
+          inFilter,
+          notInFilter,
+        ],
+      } as any, {
+        ...context,
+        filters: [],
+      })
+
+      expect(queryFn.mock.calls[0][0]).toMatchObject({
+        query: {
+          filters: [inFilter, notInFilter],
+        },
+      })
+    })
+
+    it.each(['platform_usage', 'platform'])('strips empty operators from %s context filters', async (datasource) => {
+      const queryFn = vi.fn().mockResolvedValue({})
+      const wrapper = mountComposable({
+        queryFn,
+      } as any)
+      const inFilter = {
+        field: 'name',
+        operator: 'in',
+        value: ['example'],
+      }
+
+      await wrapper.vm.issueQuery({
+        datasource,
+        metrics: [],
+        dimensions: [],
+        filters: [],
+      } as any, {
+        ...context,
+        filters: [
+          { field: 'name', operator: 'empty' },
+          { field: 'name', operator: 'not_empty' },
+          inFilter,
+        ],
+      })
+
+      expect(queryFn.mock.calls[0][0]).toMatchObject({
+        query: {
+          filters: [inFilter],
+        },
+      })
+    })
+
+    it('preserves empty operators for non-platform datasources', async () => {
+      const queryFn = vi.fn().mockResolvedValue({})
+      const wrapper = mountComposable({
+        queryFn,
+      } as any)
+      const filters = [
+        { field: 'name', operator: 'empty' },
+        { field: 'name', operator: 'not_empty' },
+      ]
+
+      await wrapper.vm.issueQuery({
+        datasource: 'custom_datasource',
+        metrics: [],
+        dimensions: [],
+        filters,
+      } as any, {
+        ...context,
+        filters: [],
+      })
+
+      expect(queryFn.mock.calls[0][0]).toMatchObject({
+        query: {
+          filters,
+        },
+      })
+    })
+  })
+
   it('aborts the previous occurring query when a new one is issued', async () => {
     const queryFn = vi.fn().mockReturnValue(new Promise(() => {}))
     const wrapper = mountComposable({
