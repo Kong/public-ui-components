@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.260.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.259.0...@kong-ui-public/entities-plugins@9.260.0) (2026-08-13)
+
+
+### Features
+
+* **entities-plugins:** add auth plugin onboarding banner + consumer/credential flows ([#3668](https://github.com/Kong/public-ui-components/issues/3668)) ([5bc02e5](https://github.com/Kong/public-ui-components/commit/5bc02e582a4628d645fe4aa971575772303ace45))
+
+
+
+
+
 # [9.259.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.258.5...@kong-ui-public/entities-plugins@9.259.0) (2026-08-11)
 
 
