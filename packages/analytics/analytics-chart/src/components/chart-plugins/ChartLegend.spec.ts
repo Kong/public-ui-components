@@ -1,6 +1,6 @@
 import type { EnhancedLegendItem } from 'src/types'
 
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 
@@ -28,7 +28,17 @@ const createChart = (overrides: {
     dataset: overrides.datasetMeta?.dataset,
     data: overrides.datasetMeta?.data ?? [],
   }),
+  hide: vi.fn(),
+  show: vi.fn(),
+  toggleDataVisibility: vi.fn(),
+  update: vi.fn(),
 })
+
+const createDonutChart = (overrides: Parameters<typeof createChart>[0] = {}) =>
+  createChart({ datasetMeta: { dataset: undefined, data: [{}] }, ...overrides })
+
+const createLineChart = (overrides: Parameters<typeof createChart>[0] = {}) =>
+  createChart({ datasetMeta: { dataset: {}, data: [{}] }, ...overrides })
 
 const wrapChart = (chart: any) => chart === null ? null : { chart }
 
@@ -112,6 +122,91 @@ describe('ChartLegend', () => {
 
       expect(() => mountLegend([legendItem({ index: 5 })], chart)).not.toThrow()
       expect(calledWith).toEqual([5])
+    })
+  })
+
+  describe('handleLegendItemClick', () => {
+    it('toggles visibility for donut charts', async () => {
+      const chart = createDonutChart()
+      const wrapper = mountLegend([legendItem({ index: 0 })], chart)
+
+      await wrapper.get('li').trigger('click')
+
+      expect(chart.toggleDataVisibility).toHaveBeenCalledWith(0)
+      expect(chart.hide).not.toHaveBeenCalled()
+      expect(chart.show).not.toHaveBeenCalled()
+      expect(chart.update).toHaveBeenCalledOnce()
+    })
+
+    it('toggles hidden donut segments back on', async () => {
+      const chart = createDonutChart({ getDataVisibility: () => false })
+      const wrapper = mountLegend([legendItem({ index: 0 })], chart)
+
+      await wrapper.get('li').trigger('click')
+
+      expect(chart.toggleDataVisibility).toHaveBeenCalledWith(0)
+      expect(chart.show).not.toHaveBeenCalled()
+    })
+
+    it('toggles only the clicked donut segment', async () => {
+      const chart = createDonutChart({ datasetMeta: { dataset: undefined, data: [{}, {}, {}] } })
+      const items = [
+        legendItem({ text: 'A', index: 0 }),
+        legendItem({ text: 'B', index: 1 }),
+        legendItem({ text: 'C', index: 2 }),
+      ]
+      const wrapper = mountLegend(items, chart)
+
+      await wrapper.findAll('li')[2].trigger('click')
+
+      expect(chart.toggleDataVisibility).toHaveBeenCalledOnce()
+      expect(chart.toggleDataVisibility).toHaveBeenCalledWith(2)
+    })
+
+    it('hides visible datasets for line and bar charts', async () => {
+      const chart = createLineChart({ isDatasetVisible: () => true })
+      const wrapper = mountLegend([legendItem({ datasetIndex: 1, index: 0 })], chart)
+
+      await wrapper.get('li').trigger('click')
+
+      expect(chart.hide).toHaveBeenCalledWith(1, 0)
+      expect(chart.toggleDataVisibility).not.toHaveBeenCalled()
+      expect(chart.update).toHaveBeenCalledOnce()
+    })
+
+    it('shows hidden datasets for line and bar charts', async () => {
+      const chart = createLineChart({ isDatasetVisible: () => false })
+      const wrapper = mountLegend([legendItem({ datasetIndex: 1, index: 0 })], chart)
+
+      await wrapper.get('li').trigger('click')
+
+      expect(chart.show).toHaveBeenCalledWith(1, 0)
+      expect(chart.toggleDataVisibility).not.toHaveBeenCalled()
+    })
+
+    it('falls back to hide/show when the item has no segment index', async () => {
+      const chart = createChart({ datasetMeta: { dataset: undefined, data: [] } })
+      const wrapper = mountLegend([legendItem({ index: undefined })], chart)
+
+      await wrapper.get('li').trigger('click')
+
+      expect(chart.toggleDataVisibility).not.toHaveBeenCalled()
+      expect(chart.hide).toHaveBeenCalledWith(0, undefined)
+    })
+
+    it('defaults datasetIndex to 0 when the item has none', async () => {
+      const chart = createDonutChart()
+      const wrapper = mountLegend([legendItem({ datasetIndex: undefined, index: 0 })], chart)
+
+      await wrapper.get('li').trigger('click')
+
+      expect(chart.toggleDataVisibility).toHaveBeenCalledWith(0)
+    })
+
+    it('does nothing when chartInstance is null', async () => {
+      const wrapper = mountLegend([legendItem()], null)
+
+      await expect(wrapper.get('li').trigger('click')).resolves.not.toThrow()
     })
   })
 })
