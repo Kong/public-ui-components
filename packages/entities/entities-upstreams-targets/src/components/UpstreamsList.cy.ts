@@ -428,6 +428,7 @@ describe('<UpstreamsList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(UpstreamsList, {
         props: {
           cacheIdentifier,
@@ -438,8 +439,6 @@ describe('<UpstreamsList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getUpstreamsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="upstream-1"]`).should('exist')
@@ -728,6 +727,7 @@ describe('<UpstreamsList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(UpstreamsList, {
         props: {
           cacheIdentifier,
@@ -738,8 +738,6 @@ describe('<UpstreamsList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getUpstreamsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="upstream-1"]`).should('exist')

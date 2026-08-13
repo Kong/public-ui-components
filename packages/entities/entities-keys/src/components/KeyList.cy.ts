@@ -429,6 +429,7 @@ describe('<KeyList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(KeyList, {
         props: {
           cacheIdentifier,
@@ -439,8 +440,6 @@ describe('<KeyList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getKeysMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="key-1"]`).should('exist')
@@ -729,6 +728,7 @@ describe('<KeyList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(KeyList, {
         props: {
           cacheIdentifier,
@@ -739,8 +739,6 @@ describe('<KeyList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getKeysMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="key-1"]`).should('exist')
