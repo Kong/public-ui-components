@@ -27,7 +27,7 @@ describe('useReferenceEntityNames', () => {
       return Promise.resolve({ data: {} })
     })
 
-    const { resolveReferenceNames, withReferenceName } = useReferenceEntityNames({
+    const { resolveReferenceNames, getReferenceName } = useReferenceEntityNames({
       config: konnectConfig,
       axiosInstance: axiosInstance as AxiosInstance,
       onError,
@@ -50,8 +50,8 @@ describe('useReferenceEntityNames', () => {
 
     // wait for both in-flight requests to resolve
     await vi.waitFor(() => {
-      expect(withReferenceName('service', 'service-1')).toBe('service-1/my-service')
-      expect(withReferenceName('route', 'route-1')).toBe('route-1/my-route')
+      expect(getReferenceName('service')).toBe('my-service')
+      expect(getReferenceName('route')).toBe('my-route')
     })
   })
 
@@ -70,7 +70,7 @@ describe('useReferenceEntityNames', () => {
   it('uses username for consumers', async () => {
     vi.mocked(axiosInstance.get).mockResolvedValue({ data: { id: 'consumer-1', username: 'jdoe', custom_id: 'ext-1' } })
 
-    const { resolveReferenceNames, withReferenceName } = useReferenceEntityNames({
+    const { resolveReferenceNames, getReferenceName } = useReferenceEntityNames({
       config: konnectConfig,
       axiosInstance: axiosInstance as AxiosInstance,
       onError,
@@ -79,7 +79,7 @@ describe('useReferenceEntityNames', () => {
     resolveReferenceNames({ consumer: { id: 'consumer-1' } })
 
     await vi.waitFor(() => {
-      expect(withReferenceName('consumer', 'consumer-1')).toBe('consumer-1/jdoe')
+      expect(getReferenceName('consumer')).toBe('jdoe')
     })
   })
 
@@ -89,7 +89,7 @@ describe('useReferenceEntityNames', () => {
       rejectRequest = reject
     }))
 
-    const { resolveReferenceNames, isReferenceNameLoading, withReferenceName } = useReferenceEntityNames({
+    const { resolveReferenceNames, isReferenceNameLoading, getReferenceName } = useReferenceEntityNames({
       config: konnectConfig,
       axiosInstance: axiosInstance as AxiosInstance,
       onError,
@@ -108,7 +108,7 @@ describe('useReferenceEntityNames', () => {
     })
 
     expect(onError).toHaveBeenCalledWith(error)
-    // falls back to bare id since the name never resolved
-    expect(withReferenceName('service', 'service-1')).toBe('service-1')
+    // name never resolved
+    expect(getReferenceName('service')).toBeUndefined()
   })
 })
