@@ -1,6 +1,6 @@
 import type { OnboardingCardItem } from '../../types'
 import OnboardingCard from './OnboardingCard.vue'
-import { AddIcon, CogIcon } from '@kong/icons'
+import { AddIcon, CogIcon, ExternalLinkIcon } from '@kong/icons'
 
 describe('<OnboardingCard />', () => {
   const items: OnboardingCardItem[] = [
@@ -106,6 +106,26 @@ describe('<OnboardingCard />', () => {
 
     cy.getTestId('onboarding-item-0').should('contain.text', 'View all').and('contain.text', 'See everything')
     cy.getTestId('onboarding-item-0').find('svg').should('exist')
+  })
+
+  it('renders an item with an `appendIcon`', () => {
+    const itemsWithAppendIcon: OnboardingCardItem[] = [
+      { ...items[1], appendIcon: ExternalLinkIcon },
+    ]
+
+    cy.mount(OnboardingCard, {
+      props: { title: 'Welcome', items: itemsWithAppendIcon },
+    })
+
+    cy.getTestId('onboarding-item-0').find('svg').should('have.length', 2)
+  })
+
+  it('does not render an append icon when `appendIcon` is omitted', () => {
+    cy.mount(OnboardingCard, {
+      props: { title: 'Welcome', items: [items[1]] },
+    })
+
+    cy.getTestId('onboarding-item-0').find('svg').should('have.length', 1)
   })
 
   it('emits "dismiss" when the close button is clicked', () => {

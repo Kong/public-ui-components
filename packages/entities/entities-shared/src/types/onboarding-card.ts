@@ -14,6 +14,11 @@ export interface OnboardingCardItem {
   title: string
   description?: string
   /**
+   * Icon component from `@kong/icons` rendered at the trailing edge of the item, e.g. an
+   * external-link indicator for items with an `href`. Optional - omit to render without one.
+   */
+  appendIcon?: Component
+  /**
    * Named route (or full route location) to navigate to when the item is clicked.
    * Takes precedence over `href` and `onClick` if more than one is provided.
    */
