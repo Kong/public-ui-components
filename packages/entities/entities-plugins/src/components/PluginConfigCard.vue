@@ -55,8 +55,10 @@
           v-else-if="showIdAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: withReferenceName('consumer', getPropValue('rowValue', slotProps).id),
+            value: getPropValue('rowValue', slotProps).id,
             to: config.getConsumerViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: getReferenceName('consumer'),
+            subtitleLoading: isReferenceNameLoading('consumer'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer')"
@@ -75,8 +77,10 @@
           v-else-if="showIdAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: withReferenceName('route', getPropValue('rowValue', slotProps).id),
+            value: getPropValue('rowValue', slotProps).id,
             to: config.getRouteViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: getReferenceName('route'),
+            subtitleLoading: isReferenceNameLoading('route'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'route')"
@@ -94,8 +98,10 @@
           v-else-if="showIdAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: withReferenceName('service', getPropValue('rowValue', slotProps).id),
+            value: getPropValue('rowValue', slotProps).id,
             to: config.getServiceViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: getReferenceName('service'),
+            subtitleLoading: isReferenceNameLoading('service'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'service')"
@@ -113,8 +119,10 @@
           v-else-if="showIdAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: withReferenceName('consumer_group', getPropValue('rowValue', slotProps).id),
+            value: getPropValue('rowValue', slotProps).id,
             to: config.getConsumerGroupViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: getReferenceName('consumer_group'),
+            subtitleLoading: isReferenceNameLoading('consumer_group'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer_group')"
@@ -393,7 +401,7 @@ const codeBlockRecordFormatter = (record: Record<string, any>) => {
 const { getMessageFromError } = useErrors()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
-const { resolveReferenceNames, withReferenceName } = composables.useReferenceEntityNames({
+const { resolveReferenceNames, getReferenceName, isReferenceNameLoading } = composables.useReferenceEntityNames({
   config: props.config,
   axiosInstance,
   onError: (err: AxiosError) => emit('fetch:error', err),

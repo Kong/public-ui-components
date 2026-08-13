@@ -164,6 +164,10 @@ export interface RecordItem extends ConfigurationSchemaItem {
   value: any
   /** When set, InternalLinkItem renders a real router-link instead of an emit-only button. */
   to?: RouteLocationRaw
+  /** When set, InternalLinkItem renders this as a second line below the link/button text. */
+  subtitle?: string
+  /** When true, InternalLinkItem renders a loading indicator in place of the subtitle. */
+  subtitleLoading?: boolean
 }
 
 export interface DefaultCommonFieldsConfigurationSchema {

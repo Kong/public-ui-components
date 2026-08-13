@@ -64,17 +64,14 @@ export function useReferenceEntityNames({ config, axiosInstance, onError }: UseR
     })
   }
 
-  /** Renders as `id/name` once the name resolves, matching the already-expanded `partials` field format. */
-  const withReferenceName = (field: ReferenceField, id: string): string => {
-    const name = names.value[field]
-    return name ? `${id}/${name}` : id
-  }
+  /** The resolved display name for a reference field, once available - undefined until the lookup completes. */
+  const getReferenceName = (field: ReferenceField): string | undefined => names.value[field] || undefined
 
   const isReferenceNameLoading = (field: ReferenceField): boolean => !!loading.value[field]
 
   return {
     resolveReferenceNames,
-    withReferenceName,
+    getReferenceName,
     isReferenceNameLoading,
   }
 }
