@@ -8,6 +8,10 @@ export default {
     konnect: `${konnectBaseApiUrl}/ca_certificates`,
     kongManager: `${KMBaseApiUrl}/ca_certificates`,
   },
+  consumers: {
+    konnect: `${konnectBaseApiUrl}/consumers`,
+    kongManager: `${KMBaseApiUrl}/consumers`,
+  },
   list: {
     konnect: {
       all: `${konnectBaseApiUrl}/plugins`,

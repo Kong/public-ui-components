@@ -65,6 +65,23 @@ const init = async () => {
         component: () => import('./pages/PluginFormPlayground.vue'),
       },
       {
+        path: '/onboarding/auth-plugin',
+        name: 'auth-plugin-onboarding-card',
+        component: () => import('./pages/AuthPluginOnboardingCardPage.vue'),
+      },
+      {
+        path: '/onboarding/auth-plugin/:plugin/create-consumer',
+        name: 'create-consumer-credential-form',
+        props: true,
+        component: () => import('./pages/CreateConsumerCredentialFormPage.vue'),
+      },
+      {
+        path: '/onboarding/auth-plugin/:plugin/add-credential',
+        name: 'add-credential-to-consumer-form',
+        props: true,
+        component: () => import('./pages/AddCredentialToConsumerFormPage.vue'),
+      },
+      {
         path: '/service/:id',
         name: 'view-service',
         component: () => import('./pages/FallbackPage.vue'),

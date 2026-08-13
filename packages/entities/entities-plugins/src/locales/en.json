@@ -78,6 +78,139 @@
   "labels": {
     "new": "New"
   },
+  "onboarding": {
+    "steps": {
+      "consumer": {
+        "step":"Consumer",
+        "title": "Create a consumer",
+        "description": "Consumers represent the users or applications calling your API. Add a name or tags to help you identify and manage this consumer later."
+      },
+      "credential": {
+        "step":"Credential",
+        "title": "Add a credential"
+      }
+    },
+    "consumer_fields": {
+      "username_label": "Username",
+      "username_placeholder": "Enter a username",
+      "custom_id_label": "Custom ID",
+      "custom_id_placeholder": "Enter a custom ID"
+    },
+    "choose_consumer": {
+      "title": "Choose a consumer",
+      "description": "Choose a consumer to add a credential",
+      "select_label": "Select an existing consumer",
+      "select_placeholder": "Search consumers"
+    },
+    "create_consumer": {
+      "title": "Create a consumer"
+    },
+    "add_credential": {
+      "title": "Add a credential"
+    },
+    "create_principal": {
+      "title": "Create a principal",
+      "description": "Create a principal with authentication to test your plugin configuration."
+    },
+    "add_principal_credential": {
+      "title": "Add authentication to a principal",
+      "description": "Add authentication credentials to an existing principal."
+    },
+    "actions": {
+      "save_and_next": "Save and next",
+      "skip": "Skip",
+      "exit_setup": "Exit setup"
+    },
+    "errors": {
+      "create_consumer": "The consumer could not be created at this time.",
+      "create_credential": "The credential could not be created at this time.",
+      "load_consumers": "Consumers could not be retrieved"
+    },
+    "basic-auth": {
+      "title": "Next steps for basic authentication plugins",
+      "subtitle": "Consumers represent the users or applications calling your API. Create a consumer to assign username and password for authentication.",
+      "create_consumer": {
+        "description": "Create a new consumer with a basic auth credential to test your plugin configuration."
+      },
+      "add_credential": {
+        "title": "Add a basic authentication credential",
+        "description": "Add a basic auth credential to an existing consumer."
+      },
+      "credential_action": "Create credential"
+    },
+    "key-auth": {
+      "title": "Next steps for key authentication plugins",
+      "subtitle": "Consumers represent the users or applications calling your API. Create a consumer to assign API keys for authentication.",
+      "create_consumer": {
+        "description": "Create a new consumer with a key auth credential to test your plugin configuration."
+      },
+      "add_credential": {
+        "title": "Add a key authentication credential",
+        "description": "Add key authentication credentials to an existing consumer."
+      },
+      "credential_action": "Create key"
+    },
+    "key-auth-enc": {
+      "title": "Next steps for key authentication plugins",
+      "subtitle": "Consumers represent the users or applications calling your API. Create a consumer to assign API keys for authentication.",
+      "create_consumer": {
+        "description": "Create a new consumer with a key auth credential to test your plugin configuration."
+      },
+      "add_credential": {
+        "title": "Add a key authentication credential",
+        "description": "Add key authentication credentials to an existing consumer."
+      },
+      "credential_action": "Create key"
+    },
+    "oauth2": {
+      "title": "Next steps for OAuth 2.0 authentication plugins",
+      "subtitle": "Consumers represent the users or applications calling your API. Create a consumer to register an OAuth 2.0 application for authentication.",
+      "create_consumer": {
+        "description": "Create a new consumer with an OAuth 2.0 credential to test your plugin configuration."
+      },
+      "add_credential": {
+        "title": "Add an OAuth 2.0 credential",
+        "description": "Add an OAuth 2.0 credential to an existing consumer."
+      },
+      "credential_action": "Create credential"
+    },
+    "hmac-auth": {
+      "title": "Next steps for HMAC authentication plugins",
+      "subtitle": "Consumers represent the users or applications calling your API. Create a consumer to add usernames and secrets for authentication.",
+      "create_consumer": {
+        "description": "Create a new consumer with a HMAC auth credential to test your plugin configuration."
+      },
+      "add_credential": {
+        "title": "Add a HMAC authentication credential",
+        "description": "Add a HMAC auth credential to an existing consumer."
+      },
+      "credential_action": "Create credential"
+    },
+    "jwt": {
+      "title": "Next steps for JWT plugins",
+      "subtitle": "Consumers represent the users or applications calling your API. Create a consumer to assign JWT credentials (public and secret keys) for authentication.",
+      "create_consumer": {
+        "description": "Create a new consumer with a JWT credential to test your plugin configuration."
+      },
+      "add_credential": {
+        "title": "Add a JWT credential",
+        "description": "Add a JWT credential to an existing consumer."
+      },
+      "credential_action": "Create credential"
+    },
+    "acl": {
+      "title": "Next steps for ACL plugins",
+      "subtitle": "Consumers represent the users or applications calling your API. You do this by configuring either an allow list or a deny list with certain consumers or consumer groups.",
+      "create_consumer": {
+        "description": "Create a new consumer with an ACL credential to test your plugin configuration."
+      },
+      "add_credential": {
+        "title": "Add an ACL credential",
+        "description": "Add an ACL credential to an existing consumer to test your new plugin configuration."
+      },
+      "credential_action": "Add group to consumer"
+    }
+  },
   "plugins": {
     "title": "Plugins",
     "list": {

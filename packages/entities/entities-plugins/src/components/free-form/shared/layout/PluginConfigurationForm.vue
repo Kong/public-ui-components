@@ -78,7 +78,7 @@ const attrs = useAttrs()
 const instanceId = useId()
 const formRef = useTemplateRef('form')
 
-const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
+const redisPartialInfo = inject(REDIS_PARTIAL_INFO, undefined)
 
 const configFieldRenderers = computed<PluginFieldRenderer[]>(() => props.fieldRenderers ?? [])
 
