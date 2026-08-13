@@ -302,6 +302,48 @@ describe('<DashboardTile />', () => {
     cy.get('.title').should('contain.text', 'Test Chart')
   })
 
+  describe('header description', () => {
+    it('renders the header description alongside the header actions', () => {
+      mount({
+        definition: {
+          ...mockTileDefinition,
+          header_description: 'Last 7-day summary',
+        },
+      })
+
+      cy.getTestId('tile-actions-1').should('be.visible')
+      cy.getTestId('tile-description-1').should('be.visible').and('have.text', 'Last 7-day summary')
+    })
+
+    it('renders the tile header for a description with no other header content', () => {
+      mount({
+        definition: {
+          chart: {
+            type: 'top_n',
+          },
+          query: {
+            datasource: 'api_usage',
+            metrics: [],
+            filters: [],
+          },
+          header_description: 'Last 7-day summary',
+        },
+        context: { ...mockContext, editable: false },
+        extraProps: { hideActions: true },
+      })
+
+      cy.get('.tile-header').should('exist')
+      cy.get('.title').should('have.text', '')
+      cy.getTestId('tile-actions-1').should('not.exist')
+      cy.getTestId('tile-description-1').should('be.visible').and('have.text', 'Last 7-day summary')
+    })
+
+    it('does not render a header description when none is configured', () => {
+      mount()
+      cy.getTestId('tile-description-1').should('not.exist')
+    })
+  })
+
   it('should emit chart-data when query resolves', () => {
     const chartDataSpy = cy.spy().as('chartDataSpy')
     const queryFn = cy.stub().as('queryFn').callsFake(() => {

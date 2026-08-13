@@ -1357,4 +1357,89 @@ describe('<DashboardRenderer />', () => {
 
     cy.get('@fullscreen').should('have.been.called')
   })
+
+  describe('tile header description', () => {
+    const headerDescriptionConfig = (definitionOverrides: Record<string, any>): DashboardConfig => ({
+      tile_height: 185,
+      tiles: [
+        {
+          type: 'chart',
+          definition: {
+            chart: {
+              type: 'top_n',
+              chart_title: 'Top N',
+            },
+            query: {
+              datasource: 'basic',
+              metrics: ['request_count'],
+              dimensions: ['route'],
+            },
+            ...definitionOverrides,
+          },
+          layout: {
+            position: { col: 0, row: 0 },
+            size: { cols: 6, rows: 1 },
+          },
+        } as TileConfig,
+      ],
+    })
+
+    const mountWithConfig = (modelValue: DashboardConfig) => {
+      cy.mount(DashboardRenderer, {
+        props: {
+          context: {
+            filters: [],
+            timeSpec: { type: 'relative', time_range: '7d' },
+          },
+          modelValue,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+          },
+        },
+      })
+    }
+
+    it('expands the timeframe token in a tile header description', () => {
+      mountWithConfig(headerDescriptionConfig({ header_description: '{timeframe}' }))
+      cy.get('.header-description').should('have.text', 'Last 7-day summary')
+    })
+
+    // TODO: remove the next two tests once we no longer support the chart-level descriptions.
+    it('still renders the deprecated chart-level description', () => {
+      mountWithConfig(headerDescriptionConfig({
+        chart: { type: 'top_n', chart_title: 'Top N', description: '{timeframe}' },
+      }))
+      cy.get('.header-description').should('have.text', 'Last 7-day summary')
+    })
+
+    it('prefers the tile field over the deprecated chart-level one', () => {
+      mountWithConfig(headerDescriptionConfig({
+        header_description: 'Tile level',
+        chart: { type: 'top_n', chart_title: 'Top N', description: 'Chart level' },
+      }))
+      cy.get('.header-description').should('have.text', 'Tile level')
+    })
+
+    it('omits the header description when the timeframe has no summary text', () => {
+      cy.mount(DashboardRenderer, {
+        props: {
+          context: {
+            filters: [],
+            timeSpec: { type: 'relative', time_range: '1h' },
+          },
+          modelValue: headerDescriptionConfig({ header_description: '{timeframe}' }),
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+          },
+        },
+      })
+
+      cy.get('.title').should('exist')
+      cy.get('.header-description').should('not.exist')
+    })
+  })
 })

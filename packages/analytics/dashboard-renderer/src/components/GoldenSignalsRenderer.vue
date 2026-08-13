@@ -39,7 +39,7 @@ const options = computed<ProviderProps>(() => {
 })
 
 const hasTitleBar = computed(() => {
-  return Boolean(props.chartOptions.chart_title || props.chartOptions.description)
+  return Boolean(props.chartOptions.chart_title || props.headerDescription)
 })
 </script>
 

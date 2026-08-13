@@ -248,8 +248,8 @@ export const summaryDashboardConfig: DashboardConfig = {
         chart: {
           type: 'golden_signals',
           chartTitle: 'Analytics',
-          description: '{timeframe}',
         },
+        header_description: '{timeframe}',
       },
       layout: {
         position: {
@@ -376,8 +376,8 @@ export const simpleConfigNoFilters: DashboardConfig = {
         chart: {
           type: 'golden_signals',
           chartTitle: 'Analytics',
-          description: '{timeframe}',
         },
+        header_description: '{timeframe}',
         query: {
           datasource: 'api_usage',
         },
@@ -430,8 +430,8 @@ export const simpleConfigGlobalFilters: DashboardConfig = {
         chart: {
           type: 'golden_signals',
           chartTitle: 'Analytics',
-          description: '{timeframe}',
         },
+        header_description: '{timeframe}',
         query: {
           datasource: 'api_usage',
         },

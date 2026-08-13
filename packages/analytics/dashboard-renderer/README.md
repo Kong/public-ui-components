@@ -129,8 +129,8 @@ const config: DashboardConfig = {
         chart: {
           type: 'top_n',
           chart_title: 'Top N Table',
-          description: 'Table description',
         },
+        header_description: 'Table description',
         // Top 5 routes by request_count
         query: {
           metrics: ['request_count'],
@@ -289,8 +289,8 @@ const config: DashboardConfig = {
         chart: {
           type: 'top_n',
           chart_title: 'Top N chart of mock data',
-          description: 'Description'
         },
+        header_description: 'Description',
         query: {},
       },
       layout: {
@@ -311,8 +311,8 @@ const config: DashboardConfig = {
         chart: {
           type: 'top_n',
           chart_title: 'Top N chart of mock data',
-          description: 'Description',
         },
+        header_description: 'Description',
         query: {},
       },
       layout: {
@@ -504,13 +504,26 @@ type TileDefinition = ChartTileDefinition | TableChartTileDefinition
 interface ChartTileDefinition {
   chart: ChartOptions         // Configuration for a non-table chart type and options
   query: ValidDashboardChartQuery  // Configuration for the chart data query
+  header_description?: string  // Optional text rendered in the tile header
 }
 
 interface TableChartTileDefinition {
   chart: TableChartOptions    // Configuration for the table chart
   query: PlatformTabularQuery & { datasource: 'platform_usage' } // Configuration for the platform tabular query ('platform' also accepted)
+  header_description?: string  // Optional text rendered in the tile header
 }
 ```
+
+#### Header description
+
+`header_description` renders alongside the tile title in the tile header. It supports the
+`{timeframe}` token, which expands to a summary of the dashboard's active time range
+(e.g., `Last 7-day summary`). Only the `24h`, `7d`, and `30d` ranges have summary
+text, for any other range the token expands to nothing and the description is omitted.
+
+> **Deprecated:** `description` on the `top_n` chart options is the
+> former home of this field. It is still supported (for now), but will be removed the future.
+> Use `header_description` on the tile definition instead.
 
 ### Chart Options
 Chart type and options configuration.

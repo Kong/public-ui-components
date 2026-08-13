@@ -54,6 +54,11 @@ const allowCsvExport = {
   type: 'boolean',
 } as const
 
+const tileHeaderDescription = {
+  type: 'string',
+  description: 'Text rendered in the tile header. Supports the {timeframe} token, ',
+} as const
+
 const entityLinks = {
   type: 'object',
   additionalProperties: {
@@ -218,6 +223,8 @@ export const topNTableSchema = {
     },
     description: {
       type: 'string',
+      deprecated: true,
+      description: 'Deprecated: use `header_description` on the tile definition.',
     },
     entity_link: {
       type: 'string',
@@ -226,7 +233,7 @@ export const topNTableSchema = {
   },
   required: ['type'],
   additionalProperties: false,
-} as const satisfies JSONSchema
+} as const
 
 export type TopNTableOptions = FromSchemaWithOptions<typeof topNTableSchema>
 
@@ -255,9 +262,6 @@ export const metricCardSchema = {
     },
     long_card_titles: {
       type: 'boolean',
-    },
-    description: {
-      type: 'string',
     },
     percentile_latency: {
       type: 'boolean',
@@ -743,6 +747,7 @@ const chartTileDefinitionSchema = {
   properties: {
     query: validDashboardChartQuery,
     chart: dashboardTileChartSchema,
+    header_description: tileHeaderDescription,
   },
   required: ['query', 'chart'],
   additionalProperties: false,
@@ -755,6 +760,7 @@ const tableChartTileDefinitionSchema = {
   properties: {
     query: validDashboardTableQuery,
     chart: tableChartSchema,
+    header_description: tileHeaderDescription,
   },
   required: ['query', 'chart'],
   additionalProperties: false,

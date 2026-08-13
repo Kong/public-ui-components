@@ -14,6 +14,7 @@ import {
   filterablePlatformPresetFilterDimensions,
   slottableSchema,
   slottableTileConfigSchema,
+  topNTableSchema,
 } from './dashboardSchema.v2'
 import {
   agenticExploreAggregations,
@@ -558,5 +559,70 @@ describe('slottable tile config', () => {
 
   it('marks the legacy chart-level slottable schema as deprecated', () => {
     expect(slottableSchema.deprecated).toBe(true)
+  })
+
+  const headerDescriptionChartTile = {
+    type: 'chart',
+    definition: {
+      chart: {
+        type: 'top_n',
+        chart_title: 'Top N',
+      },
+      query: {
+        datasource: 'basic',
+        metrics: ['request_count'],
+        dimensions: ['route'],
+      },
+      header_description: '{timeframe}',
+    },
+    layout: slottableTile.layout,
+  }
+
+  const headerDescriptionTableTile = {
+    type: 'chart',
+    definition: {
+      chart: {
+        type: 'table',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['route'],
+      },
+      header_description: 'Static text',
+    },
+    layout: slottableTile.layout,
+  }
+
+  it('accepts a tile header_description on a chart tile', () => {
+    expect(validateDashboardConfigSchema({ tiles: [headerDescriptionChartTile] })).toBe(true)
+  })
+
+  it('accepts a tile header_description on a table tile', () => {
+    expect(validateDashboardConfigSchema({ tiles: [headerDescriptionTableTile] })).toBe(true)
+  })
+
+  it('rejects a non-string header_description', () => {
+    const invalidTile = {
+      ...headerDescriptionChartTile,
+      definition: { ...headerDescriptionChartTile.definition, header_description: 42 },
+    }
+    expect(validateDashboardConfigSchema({ tiles: [invalidTile] })).toBe(false)
+  })
+
+  it('still accepts the deprecated chart-level description', () => {
+    const topN = {
+      ...headerDescriptionChartTile,
+      definition: {
+        ...headerDescriptionChartTile.definition,
+        chart: { type: 'top_n', chart_title: 'Top N', description: '{timeframe}' },
+        header_description: undefined,
+      },
+    }
+    expect(validateDashboardConfigSchema({ tiles: [topN] })).toBe(true)
+  })
+
+  it('marks the chart-level description as deprecated on top_n', () => {
+    expect(topNTableSchema.properties.description.deprecated).toBe(true)
   })
 })

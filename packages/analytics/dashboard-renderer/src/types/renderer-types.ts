@@ -74,6 +74,7 @@ export interface ChartRendererProps<T> {
   chartOptions: T
   height: number
   refreshCounter: number
+  headerDescription?: string
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
 }

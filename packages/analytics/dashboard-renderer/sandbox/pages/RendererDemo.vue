@@ -95,8 +95,8 @@ const dashboardConfig = ref<DashboardConfig>({
         chart: {
           type: 'golden_signals',
           chart_title: 'Analytics Golden Signals',
-          description: '{timeframe}',
         },
+        header_description: '{timeframe}',
         query: {
           datasource: 'basic',
         },
@@ -150,8 +150,8 @@ const dashboardConfig = ref<DashboardConfig>({
         chart: {
           type: 'top_n',
           chart_title: 'Top N chart of mock data',
-          description: '{timeframe}',
         },
+        header_description: '{timeframe}',
         query: {
           datasource: 'basic',
           limit: 1,
@@ -175,7 +175,7 @@ const dashboardConfig = ref<DashboardConfig>({
         chart: {
           type: 'top_n',
           chart_title: 'Top N chart of mock data',
-          description: 'Description',
+          description: 'Description', // Deprecated: use the tile.definition.header_description instead.
         },
         query: {
           datasource: 'basic',
@@ -366,9 +366,9 @@ const dashboardConfig = ref<DashboardConfig>({
         chart: {
           type: 'top_n',
           chart_title: 'Top N chart of mock data',
-          description: 'Description',
           entity_link: 'https://cloud.konghq.tech/us/analytics/entities/{id}',
         },
+        header_description: 'Description',
         query: {
           datasource: 'basic',
           limit: 3,
