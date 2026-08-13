@@ -422,6 +422,7 @@ describe('<VaultList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(VaultList, {
         props: {
           cacheIdentifier,
@@ -432,8 +433,6 @@ describe('<VaultList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="vault-1"]`).should('exist')
@@ -722,6 +721,7 @@ describe('<VaultList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(VaultList, {
         props: {
           cacheIdentifier,
@@ -732,8 +732,6 @@ describe('<VaultList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getVaultsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="vault-1"]`).should('exist')

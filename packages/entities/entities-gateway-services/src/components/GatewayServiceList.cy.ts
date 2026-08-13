@@ -462,6 +462,7 @@ describe('<GatewayServiceList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(GatewayServiceList, {
         props: {
           cacheIdentifier,
@@ -472,8 +473,6 @@ describe('<GatewayServiceList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getGatewayServicesMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="gateway-service-1"]`).should('exist')
@@ -786,6 +785,7 @@ describe('<GatewayServiceList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(GatewayServiceList, {
         props: {
           cacheIdentifier,
@@ -796,8 +796,6 @@ describe('<GatewayServiceList />', () => {
           canRetrieve: () => false,
         },
       })
-
-      cy.wait('@getGatewayServicesMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="gateway-service-1"]`).should('exist')
