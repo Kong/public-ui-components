@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.10.19...@kong-ui-public/entities-consumer-credentials@3.10.20) (2026-08-13)
+
+
+### Bug Fixes
+
+* **entities:** remove flaky post-remount cy.wait in list page-size tests ([#3692](https://github.com/Kong/public-ui-components/issues/3692)) ([f199150](https://github.com/Kong/public-ui-components/commit/f19915001bc97e08cd2b82cef6a6b29b0493eecf))
+
+
+
+
+
 ## [3.10.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-credentials@3.10.18...@kong-ui-public/entities-consumer-credentials@3.10.19) (2026-08-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-credentials

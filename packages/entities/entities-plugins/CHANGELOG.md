@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.260.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.260.0...@kong-ui-public/entities-plugins@9.260.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* **entities:** remove flaky post-remount cy.wait in list page-size tests ([#3692](https://github.com/Kong/public-ui-components/issues/3692)) ([f199150](https://github.com/Kong/public-ui-components/commit/f19915001bc97e08cd2b82cef6a6b29b0493eecf))
+
+
+
+
+
 # [9.260.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.259.0...@kong-ui-public/entities-plugins@9.260.0) (2026-08-13)
 
 
