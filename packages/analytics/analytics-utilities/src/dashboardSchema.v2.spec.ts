@@ -15,7 +15,6 @@ import {
   slottableSchema,
   slottableTileConfigSchema,
   topNTableSchema,
-  metricCardSchema,
 } from './dashboardSchema.v2'
 import {
   agenticExploreAggregations,

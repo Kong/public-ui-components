@@ -59,12 +59,6 @@ const tileHeaderDescription = {
   description: 'Text rendered in the tile header. Supports the {timeframe} token, ',
 } as const
 
-const deprecatedDescription = {
-  type: 'string',
-  deprecated: true,
-  description: 'Deprecated: use `header_description` on the tile definition.',
-} as const
-
 const entityLinks = {
   type: 'object',
   additionalProperties: {
@@ -227,7 +221,11 @@ export const topNTableSchema = {
       type: 'string',
       enum: ['top_n'],
     },
-    description: deprecatedDescription,
+    description: {
+      type: 'string',
+      deprecated: true,
+      description: 'Deprecated: use `header_description` on the tile definition.',
+    },
     entity_link: {
       type: 'string',
     },
@@ -235,7 +233,7 @@ export const topNTableSchema = {
   },
   required: ['type'],
   additionalProperties: false,
-} as const satisfies JSONSchema
+} as const
 
 export type TopNTableOptions = FromSchemaWithOptions<typeof topNTableSchema>
 
