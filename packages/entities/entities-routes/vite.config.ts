@@ -1,4 +1,5 @@
-import { resolve } from 'path'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, mergeConfig } from 'vite'
 import sharedViteConfig, { getApiProxies, sanitizePackageName } from '../../../vite.config.shared'
 import monacoEditorPlugin from '@kong-ui-public/monaco-editor/vite-plugin'
@@ -14,7 +15,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
       // Example: name: 'kong-ui-public-demo-component'
       name: `kong-ui-public-${sanitizedPackageName}`,
-      entry: resolve(__dirname, './src/index.ts'),
+      entry: resolve(dirname(fileURLToPath(import.meta.url)), './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
       cssFileName: 'style',
     },

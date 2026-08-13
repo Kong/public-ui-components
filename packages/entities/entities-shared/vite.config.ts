@@ -1,5 +1,6 @@
 import sharedViteConfig, { getApiProxies, sanitizePackageName } from '../../../vite.config.shared'
-import { resolve } from 'path'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, mergeConfig } from 'vite'
 import monaco from '@kong-ui-public/monaco-editor/vite-plugin'
 
@@ -18,8 +19,8 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // Example: name: 'kong-ui-public-demo-component'
       name: `kong-ui-public-${sanitizedPackageName}`,
       entry: {
-        index: resolve(__dirname, './src/index.ts'),
-        'deck-editor': resolve(__dirname, './src/deck-editor.ts'),
+        index: resolve(dirname(fileURLToPath(import.meta.url)), './src/index.ts'),
+        'deck-editor': resolve(dirname(fileURLToPath(import.meta.url)), './src/deck-editor.ts'),
       },
       fileName: (format, entryName) =>
         entryName === 'index'

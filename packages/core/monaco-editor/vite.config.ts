@@ -1,5 +1,6 @@
 import sharedViteConfig, { sanitizePackageName } from '../../../vite.config.shared'
-import { resolve } from 'path'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, mergeConfig } from 'vite'
 import Monaco from './vite-plugin'
 
@@ -16,13 +17,13 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // Example: name: 'kong-ui-public-demo-component'
       name: `kong-ui-public-${sanitizedPackageName}`,
       entry: {
-        index: resolve(__dirname, './src/index.ts'),
+        index: resolve(dirname(fileURLToPath(import.meta.url)), './src/index.ts'),
         // IMPORTANT: Splitting singletons as the language-specific entries import
         // the singletons and they are also code split.
-        singletons: resolve(__dirname, './src/singletons/index.ts'),
+        singletons: resolve(dirname(fileURLToPath(import.meta.url)), './src/singletons/index.ts'),
         // Language-specific entry points for code-splitting.
-        'languages/json': resolve(__dirname, './src/languages/json/index.ts'),
-        'languages/yaml': resolve(__dirname, './src/languages/yaml/index.ts'),
+        'languages/json': resolve(dirname(fileURLToPath(import.meta.url)), './src/languages/json/index.ts'),
+        'languages/yaml': resolve(dirname(fileURLToPath(import.meta.url)), './src/languages/yaml/index.ts'),
       },
       fileName: (format, entryName) => {
         if (entryName === 'index') {

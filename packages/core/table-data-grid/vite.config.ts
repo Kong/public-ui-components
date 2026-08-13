@@ -1,5 +1,6 @@
 import sharedViteConfig, { sanitizePackageName } from '../../../vite.config.shared'
-import { resolve } from 'path'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, mergeConfig } from 'vite'
 
 const packageName = 'table-data-grid'
@@ -9,7 +10,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
   build: {
     lib: {
       name: `kong-ui-public-${sanitizedPackageName}`,
-      entry: resolve(__dirname, './src/index.ts'),
+      entry: resolve(dirname(fileURLToPath(import.meta.url)), './src/index.ts'),
       cssFileName: 'style',
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
