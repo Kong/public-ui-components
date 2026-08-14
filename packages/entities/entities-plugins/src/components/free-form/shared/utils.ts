@@ -282,3 +282,30 @@ export function normalizeMatch(match: FieldRenderer['match']): Match {
     ? ({ genericPath }) => genericPath === match
     : match
 }
+
+const CREDENTIAL_SECRET_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+// Largest multiple of the alphabet's length that fits in a byte - bytes at or
+// above it are rejected so `byte % alphabet.length` stays uniformly distributed.
+const CREDENTIAL_SECRET_BYTE_LIMIT = 256 - (256 % CREDENTIAL_SECRET_ALPHABET.length)
+
+/**
+ * Generates a random alphanumeric string resembling the credentials Kong's
+ * admin API auto-generates for `key`/`secret` fields (e.g. key-auth, hmac-auth, JWT).
+ */
+export function generateCredentialSecret(length = 32): string {
+  const bytes = new Uint8Array(length)
+  let result = ''
+
+  while (result.length < length) {
+    crypto.getRandomValues(bytes)
+
+    for (const byte of bytes) {
+      if (result.length >= length) break
+      if (byte >= CREDENTIAL_SECRET_BYTE_LIMIT) continue
+
+      result += CREDENTIAL_SECRET_ALPHABET[byte % CREDENTIAL_SECRET_ALPHABET.length]
+    }
+  }
+
+  return result
+}

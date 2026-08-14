@@ -18,6 +18,7 @@
 import { computed, ref, watch } from 'vue'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
+import CredentialSecretField from './free-form/shared/CredentialSecretField.vue'
 import PluginConfigurationForm from './free-form/shared/layout/PluginConfigurationForm.vue'
 import StringArrayField from './free-form/shared/StringArrayField.vue'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS } from '../definitions/metadata'
@@ -88,6 +89,17 @@ const fieldRenderers: FieldRenderer[] = [
     propsOverrides: {
       help: t('plugins.form.fields.tags.help'),
       placeholder: t('plugins.form.fields.tags.placeholder'),
+    },
+  },
+  {
+    match: 'key',
+    component: CredentialSecretField,
+  },
+  {
+    match: 'secret',
+    component: CredentialSecretField,
+    propsOverrides: {
+      labels: { generateLabel: t('plugins.form.fields.secret.generateLabel') },
     },
   },
 ]

@@ -837,6 +837,9 @@
           "label": "Tags",
           "help": "An optional set of strings for grouping and filtering, separated by commas.",
           "placeholder": "Tag1, Tag2, Tag3"
+        },
+        "secret": {
+          "generateLabel": "Generate secret"
         }
       },
       "scoping": {
