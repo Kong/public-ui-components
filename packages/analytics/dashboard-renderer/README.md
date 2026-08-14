@@ -129,8 +129,8 @@ const config: DashboardConfig = {
         chart: {
           type: 'top_n',
           chart_title: 'Top N Table',
-          description: 'Table description',
         },
+        header_description: 'Table description',
         // Top 5 routes by request_count
         query: {
           metrics: ['request_count'],
@@ -166,7 +166,7 @@ const onZoom = async (tileZoomEvent: TileZoomEvent) => {
   v-model="config"
   :context="context"
 >
-  <!-- use the `id` set in the tile config for the slot name -->
+  <!-- use the top-level tile `id` for the slot name -->
   <template #slot-1>
     <div>
       <h3>Custom Slot</h3>
@@ -217,15 +217,9 @@ const config: DashboardConfig = {
       }
     },
     {
-      // Slottable is a chart tile variant selected by definition.chart.type
-      type: 'chart',
-      definition: {
-        chart: {
-          type: 'slottable',
-          id: 'slot-1' // slot name
-        },
-        query: {},
-      },
+      // Slottable tile renders content into the named slot matching `id`.
+      id: 'slot-1', // slot name
+      type: 'slottable',
       layout: {
         // Position at column 3, row 0
         position: {
@@ -233,6 +227,29 @@ const config: DashboardConfig = {
           row: 0,
         },
         // Spans 3 columns and 1 rows
+        size: {
+          cols: 3,
+          rows: 1,
+        }
+      }
+    },
+    {
+      // Deprecated: legacy chart-based slottable tile. The slot name comes from
+      // `definition.chart.id`, not the top-level tile `id`. Use the top-level
+      // `{ type: 'slottable', id, layout }` shape above instead.
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'slottable',
+          id: 'slot-2' // slot name
+        },
+        query: {},
+      },
+      layout: {
+        position: {
+          col: 3,
+          row: 1,
+        },
         size: {
           cols: 3,
           rows: 1,
@@ -272,8 +289,8 @@ const config: DashboardConfig = {
         chart: {
           type: 'top_n',
           chart_title: 'Top N chart of mock data',
-          description: 'Description'
         },
+        header_description: 'Description',
         query: {},
       },
       layout: {
@@ -294,8 +311,8 @@ const config: DashboardConfig = {
         chart: {
           type: 'top_n',
           chart_title: 'Top N chart of mock data',
-          description: 'Description',
         },
+        header_description: 'Description',
         query: {},
       },
       layout: {
@@ -487,13 +504,26 @@ type TileDefinition = ChartTileDefinition | TableChartTileDefinition
 interface ChartTileDefinition {
   chart: ChartOptions         // Configuration for a non-table chart type and options
   query: ValidDashboardChartQuery  // Configuration for the chart data query
+  header_description?: string  // Optional text rendered in the tile header
 }
 
 interface TableChartTileDefinition {
   chart: TableChartOptions    // Configuration for the table chart
   query: PlatformTabularQuery & { datasource: 'platform_usage' } // Configuration for the platform tabular query ('platform' also accepted)
+  header_description?: string  // Optional text rendered in the tile header
 }
 ```
+
+#### Header description
+
+`header_description` renders alongside the tile title in the tile header. It supports the
+`{timeframe}` token, which expands to a summary of the dashboard's active time range
+(e.g., `Last 7-day summary`). Only the `24h`, `7d`, and `30d` ranges have summary
+text, for any other range the token expands to nothing and the description is omitted.
+
+> **Deprecated:** `description` on the `top_n` chart options is the
+> former home of this field. It is still supported (for now), but will be removed the future.
+> Use `header_description` on the tile definition instead.
 
 ### Chart Options
 Chart type and options configuration.
@@ -519,7 +549,7 @@ The following chart types are supported:
 - `timeseries_bar`: Bar chart for time series data
 - `golden_signals`: Metric cards showing key performance indicators
 - `top_n`: Table showing top N results
-- `slottable`: Custom content slot
+- `slottable` *(deprecated chart-level variant, use the top-level `{ type: 'slottable', id, layout }` tile instead of `definition.chart.type: 'slottable'`)*: Custom content slot
 
 Each chart type has its own configuration schema with specific options.
 

@@ -10,6 +10,7 @@
       :fetch-url="fetchUrl"
       :form-fields="requestBody"
       :is-readonly="form.isReadonly"
+      :wrapper-component="config.azureCertsVaultAvailable ? 'div' : undefined"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
       @fetch:success="initForm"

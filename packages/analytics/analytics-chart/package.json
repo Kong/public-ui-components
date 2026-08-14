@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-chart",
-  "version": "10.23.4",
+  "version": "10.24.2",
   "type": "module",
   "main": "./dist/vitals-chart.umd.js",
   "module": "./dist/vitals-chart.es.js",
@@ -28,12 +28,9 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "3.2.2",
-    "@kong/kongponents": "9.64.2",
+    "@kong/design-tokens": "3.2.7",
+    "@kong/kongponents": "9.64.3",
     "file-saver": "^2.0.5",
-    "lodash.mapkeys": "^4.6.0",
-    "lodash.pick": "^4.4.0",
-    "lodash.pickby": "^4.6.0",
     "papaparse": "^5.5.3",
     "vue": "^3.5.35"
   },
@@ -69,11 +66,8 @@
   "dependencies": {
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "@kong/icons": "^1.62.0",
+    "@kong/icons": "^1.62.1",
     "@types/file-saver": "^2.0.7",
-    "@types/lodash.mapkeys": "^4.6.9",
-    "@types/lodash.pick": "^4.4.9",
-    "@types/lodash.pickby": "^4.6.9",
     "@types/papaparse": "^5.5.2",
     "@vueuse/core": "^14.3.0",
     "approximate-number": "^3.0.1",
@@ -82,6 +76,7 @@
     "chartjs-plugin-annotation": "^3.1.0",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
+    "lodash": "^4.18.1",
     "uuid": "^14.0.0",
     "vue-chartjs": "^5.3.3"
   },

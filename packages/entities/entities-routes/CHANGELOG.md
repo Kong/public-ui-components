@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.26.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.26.12...@kong-ui-public/entities-routes@3.26.13) (2026-08-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.26.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.26.11...@kong-ui-public/entities-routes@3.26.12) (2026-08-13)
+
+
+### Bug Fixes
+
+* **entities:** remove flaky post-remount cy.wait in list page-size tests ([#3692](https://github.com/Kong/public-ui-components/issues/3692)) ([f199150](https://github.com/Kong/public-ui-components/commit/f19915001bc97e08cd2b82cef6a6b29b0493eecf))
+
+
+
+
+
+## [3.26.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.26.10...@kong-ui-public/entities-routes@3.26.11) (2026-08-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.26.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.26.9...@kong-ui-public/entities-routes@3.26.10) (2026-08-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.26.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.26.8...@kong-ui-public/entities-routes@3.26.9) (2026-08-08)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3529](https://github.com/Kong/public-ui-components/issues/3529)) ([a242320](https://github.com/Kong/public-ui-components/commit/a2423201f9a1f496d730795c17b30788f77a303c))
+
+
+
+
+
+## [3.26.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.26.7...@kong-ui-public/entities-routes@3.26.8) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [3.26.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.26.6...@kong-ui-public/entities-routes@3.26.7) (2026-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
 ## [3.26.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.26.5...@kong-ui-public/entities-routes@3.26.6) (2026-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes

@@ -858,9 +858,12 @@ onBeforeMount(async () => {
     row-gap: var(--kui-space-40, $kui-space-40);
   }
 
-  :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-info) {
+  // Keep section headers non-sticky in column layout so descriptions don't cover fields
+  :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-info),
+  :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section .form-section-info.sticky) {
     max-width: none;
-    position: static;
+    position: static !important;
+    top: auto;
   }
 
   :deep(.kong-ui-entity-form-block .kong-ui-entity-form-section:not(:last-child) .form-section-wrapper) {

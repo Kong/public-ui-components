@@ -231,7 +231,7 @@
 
     <EntityDeleteModal
       :action-pending="isDeletePending"
-      :description="t('actions.delete.description')"
+      :confirm-disabled="requiresForceDelete && !forceDeleteConfirmed"
       :entity-name="gatewayServiceToBeDeleted && (gatewayServiceToBeDeleted.name || gatewayServiceToBeDeleted.id)"
       :entity-type="EntityTypes.GatewayService"
       :error="deleteModalError"
@@ -239,7 +239,23 @@
       :visible="isDeleteModalVisible"
       @cancel="hideDeleteModal"
       @proceed="deleteRow"
-    />
+    >
+      <template
+        v-if="hasRelatedEntities"
+        #extra
+      >
+        <p v-if="relatedEntitiesCheckFailed || !requiresForceDelete">
+          {{ relatedEntitiesMessage }}
+        </p>
+        <KCheckbox
+          v-if="requiresForceDelete"
+          v-model="forceDeleteConfirmed"
+          data-testid="gateway-service-delete-force-checkbox"
+          :description="t('actions.delete.related_entities.force_delete_help')"
+          :label="t('actions.delete.related_entities.force_delete_checkbox')"
+        />
+      </template>
+    </EntityDeleteModal>
   </div>
 </template>
 
@@ -350,6 +366,11 @@ const props = defineProps({
     default: false,
   },
   canImportSpecs: {
+    type: Boolean,
+    default: false,
+  },
+  /** Feature flag KM-3028-service-force-delete: when enabled, checks for attached routes/plugins before deleting a Konnect gateway service and requires a force-delete confirmation if any are found */
+  enableForceDeleteConfirmation: {
     type: Boolean,
     default: false,
   },
@@ -646,10 +667,70 @@ const deleteModalError = ref<string>('')
 
 const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 
-const confirmDelete = (row: EntityRow): void => {
+// Number of routes/plugins currently attached to the gateway service being deleted (Konnect only)
+const relatedRoutesCount = ref<number>(0)
+const relatedPluginsCount = ref<number>(0)
+const forceDeleteConfirmed = ref<boolean>(false)
+// If the related-entities check fails, fail closed: treat the service as if it has routes
+// attached rather than silently allowing an unprotected delete
+const relatedEntitiesCheckFailed = ref<boolean>(false)
+
+const hasRelatedEntities = computed((): boolean =>
+  props.enableForceDeleteConfirmation &&
+  (relatedEntitiesCheckFailed.value || relatedRoutesCount.value > 0 || relatedPluginsCount.value > 0))
+// A service that still has routes attached (or whose related-entities count couldn't be verified)
+// requires an explicit force delete confirmation
+const requiresForceDelete = computed((): boolean =>
+  props.enableForceDeleteConfirmation && (relatedEntitiesCheckFailed.value || relatedRoutesCount.value > 0))
+
+// Only shown when the service has no routes (the checkbox + help text cover the routes case)
+const relatedEntitiesMessage = computed((): string => {
+  if (relatedEntitiesCheckFailed.value) {
+    return t('actions.delete.related_entities.check_failed')
+  }
+
+  const pluginCount = relatedPluginsCount.value
+
+  return t('actions.delete.related_entities.plugins_only', {
+    pluginCount,
+    plugin: t('actions.delete.related_entities.plugin', { count: pluginCount }),
+  })
+})
+
+// Cap on the number of related entities we'll count before showing the delete modal
+const RELATED_ENTITIES_FETCH_SIZE = 1000
+
+const fetchRelatedEntityCount = async (endpoint: string, serviceId: string): Promise<number> => {
+  const url = buildFetcherUrl(endpoint).replace(/{id}/gi, serviceId)
+  const { data } = await axiosInstance.get(url, { params: { size: RELATED_ENTITIES_FETCH_SIZE } })
+
+  // Prefer a server-provided total if the endpoint returns one; it may exceed the fetched page size
+  return data?.total ?? data?.data?.length ?? 0
+}
+
+const confirmDelete = async (row: EntityRow): Promise<void> => {
   gatewayServiceToBeDeleted.value = row
-  isDeleteModalVisible.value = true
   deleteModalError.value = ''
+  forceDeleteConfirmed.value = false
+  relatedRoutesCount.value = 0
+  relatedPluginsCount.value = 0
+  relatedEntitiesCheckFailed.value = false
+
+  if (props.enableForceDeleteConfirmation && props.config.app === 'konnect') {
+    try {
+      const [routesCount, pluginsCount] = await Promise.all([
+        fetchRelatedEntityCount(endpoints.relatedEntities.konnect.routes, row.id as string),
+        fetchRelatedEntityCount(endpoints.relatedEntities.konnect.plugins, row.id as string),
+      ])
+
+      relatedRoutesCount.value = routesCount
+      relatedPluginsCount.value = pluginsCount
+    } catch {
+      relatedEntitiesCheckFailed.value = true
+    }
+  }
+
+  isDeleteModalVisible.value = true
 }
 
 const hideDeleteModal = (): void => {
@@ -665,7 +746,11 @@ const deleteRow = async (): Promise<void> => {
   isDeletePending.value = true
 
   try {
-    await axiosInstance.delete(buildDeleteUrl(gatewayServiceToBeDeleted.value.id))
+    await axiosInstance.delete(buildDeleteUrl(gatewayServiceToBeDeleted.value.id), {
+      // Only ever send force=true when the user has explicitly confirmed it via the checkbox,
+      // not merely because routes/plugins were detected
+      ...(forceDeleteConfirmed.value ? { params: { force: true } } : {}),
+    })
 
     // Emit the success event for the host app
     emit('delete:success', gatewayServiceToBeDeleted.value)

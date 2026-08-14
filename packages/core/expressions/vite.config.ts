@@ -1,4 +1,5 @@
-import { resolve } from 'path'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, mergeConfig } from 'vite'
 import monacoEditorPlugin from '@kong-ui-public/monaco-editor/vite-plugin'
 import topLevelAwait from 'vite-plugin-top-level-await'
@@ -23,7 +24,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       // Example: name: 'kong-ui-public-demo-component'
       formats: ['es'],
       name: `kong-ui-public-${sanitizedPackageName}`,
-      entry: resolve(__dirname, './src/index.ts'),
+      entry: resolve(dirname(fileURLToPath(import.meta.url)), './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
       cssFileName: 'style',
     },

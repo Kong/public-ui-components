@@ -44,7 +44,7 @@
             v-model:refresh-counter="refreshCounter"
             class="tile-container"
             :context="internalContext"
-            :definition="tile.meta"
+            :definition="tile.meta as TileDefinition"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
             :hide-actions="!internalContext.showTileActions"
             :hide-zoom-actions="!internalContext.showTileZoomActions"
@@ -86,9 +86,9 @@ import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import {
   DEFAULT_TILE_HEIGHT,
   INJECT_QUERY_PROVIDER,
-  TIMEFRAME_TOKEN,
 } from '../constants'
 import { duplicateChartTile } from '../utils/duplicate-tile'
+import { tileDescription } from '../utils/tile-definition'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const {
@@ -144,6 +144,22 @@ const onTileLoaded = (tile: GridTile<TileDefinition>) => {
   }
 }
 
+const timeframeLabel = computed<string>(() => {
+  const { timeSpec } = internalContext.value
+  const timeSpecKey = timeSpec.type === 'absolute' ? 'custom' : timeSpec.time_range
+  const key = `renderer.trendRange.${timeSpecKey}`
+
+  // Right now, we basically only support 2 ranges: 24 hours and 30 days.
+  // In case of a misconfiguration, don't render a translation at all.
+  // @ts-ignore: dynamic i18n key
+  if (i18n.te(key)) {
+    // @ts-ignore: dynamic i18n key
+    return i18n.t(key)
+  }
+
+  return ''
+})
+
 const tileSortFn = (a: TileConfig, b: TileConfig) => {
   const rowDiff = a.layout.position.row - b.layout.position.row
   if (rowDiff !== 0) {
@@ -154,44 +170,32 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
 
 const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
   return model.value.tiles.map((tile: TileConfig) => {
-    let tileMeta = tile.definition
-    const tileType = tile.type ?? 'chart'
-
-    const chart = (tileMeta as ChartTileDefinition).chart
-    if (tileType === 'chart' && 'description' in chart) {
-      const chartMeta = tileMeta as ChartTileDefinition
-      // Replace tokens in tile descriptions
-      const description = chart.description?.replace(TIMEFRAME_TOKEN, () => {
-        const { timeSpec } = internalContext.value
-        const timeSpecKey = timeSpec.type === 'absolute' ? 'custom' : timeSpec.time_range
-        const key = `renderer.trendRange.${timeSpecKey}`
-
-        // Right now, we basically only support 2 ranges: 24 hours and 30 days.
-        // In case of a misconfiguration, don't render a translation at all.
-        // @ts-ignore: dynamic i18n key
-        if (i18n.te(key)) {
-          // @ts-ignore: dynamic i18n key
-          return i18n.t(key)
-        }
-
-        return ''
-      })
-
-      tileMeta = {
-        ...chartMeta,
-        chart: {
-          ...chart,
-          description,
-        },
-      } as TileDefinition
-    }
-
     if (internalContext.value.editable && !tile.id) {
       console.warn(
         'No id provided for tile. One will be generated automatically,',
         'however tracking changes to this tile may not work as expected.',
         tile,
       )
+    }
+
+    if (tile.type === 'slottable') {
+      return {
+        layout: tile.layout,
+        type: tile.type,
+        id: tile.id ?? crypto.randomUUID(),
+      }
+    }
+
+    let tileMeta = tile.definition
+    const tileType = tile.type ?? 'chart'
+
+    const description = tileDescription(tileMeta, timeframeLabel.value)
+
+    if (description !== tileMeta.header_description) {
+      tileMeta = {
+        ...tileMeta,
+        header_description: description,
+      } as TileDefinition
     }
 
     return {
@@ -212,7 +216,11 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
 }
 
 const isSlottableTile = (tile: GridTile<TileDefinition>): boolean => {
-  return tile.type === 'chart' && (tile.meta as ChartTileDefinition).chart.type === 'slottable'
+  if (tile.type === 'slottable') {
+    return true
+  }
+
+  return (tile.meta as ChartTileDefinition)?.chart.type === 'slottable'
 }
 
 const isSlottable = (chart: any): chart is SlottableOptions => {
@@ -220,8 +228,13 @@ const isSlottable = (chart: any): chart is SlottableOptions => {
 }
 
 const getSlottableSlotName = (tile: GridTile<TileDefinition>): string | undefined => {
-  const chart = (tile.meta as ChartTileDefinition).chart
-  return isSlottable(chart) ? chart.id : undefined
+  if (tile.type === 'slottable') {
+    return tile.id as string
+  }
+
+  const chart = (tile.meta as ChartTileDefinition)?.chart
+
+  return chart && isSlottable(chart) ? chart.id : undefined
 }
 
 const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
@@ -250,11 +263,19 @@ const refreshTiles = () => {
 
 const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>) => {
   const updatedTiles = tiles.map(tile => {
+    if (tile.type === 'slottable') {
+      return {
+        id: tile.id,
+        type: tile.type,
+        layout: tile.layout,
+      } as TileConfig
+    }
+
     return {
       id: tile.id,
       type: tile.type,
       layout: tile.layout,
-      definition: tile.meta,
+      definition: tile.meta as TileDefinition,
     } as TileConfig
   })
 

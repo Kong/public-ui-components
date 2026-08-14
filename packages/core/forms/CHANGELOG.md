@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.33.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.21...@kong-ui-public/forms@4.33.22) (2026-08-13)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.33.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.20...@kong-ui-public/forms@4.33.21) (2026-08-10)
+
+
+### Bug Fixes
+
+* **plugins:** open new redis create form in slideout [khcp-21412] ([#3669](https://github.com/Kong/public-ui-components/issues/3669)) ([3fa1097](https://github.com/Kong/public-ui-components/commit/3fa109764c10b23f44ee4bf546df045d75956e4a))
+
+
+
+
+
+## [4.33.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.19...@kong-ui-public/forms@4.33.20) (2026-08-10)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.33.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.18...@kong-ui-public/forms@4.33.19) (2026-08-08)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3529](https://github.com/Kong/public-ui-components/issues/3529)) ([a242320](https://github.com/Kong/public-ui-components/commit/a2423201f9a1f496d730795c17b30788f77a303c))
+* **deps:** update dependency dompurify to ^3.4.12 [security] ([#3677](https://github.com/Kong/public-ui-components/issues/3677)) ([7cd8cd6](https://github.com/Kong/public-ui-components/commit/7cd8cd6d7e589f7b21a6824a5c571a443033b00a))
+
+
+
+
+
+## [4.33.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.17...@kong-ui-public/forms@4.33.18) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [4.33.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.16...@kong-ui-public/forms@4.33.17) (2026-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.33.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.15...@kong-ui-public/forms@4.33.16) (2026-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/forms

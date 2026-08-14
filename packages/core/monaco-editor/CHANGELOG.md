@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.24.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.11...@kong-ui-public/monaco-editor@0.24.12) (2026-08-08)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3529](https://github.com/Kong/public-ui-components/issues/3529)) ([a242320](https://github.com/Kong/public-ui-components/commit/a2423201f9a1f496d730795c17b30788f77a303c))
+
+
+
+
+
+## [0.24.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.10...@kong-ui-public/monaco-editor@0.24.11) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
 ## [0.24.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.24.9...@kong-ui-public/monaco-editor@0.24.10) (2026-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/monaco-editor

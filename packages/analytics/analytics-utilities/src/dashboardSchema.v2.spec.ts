@@ -12,6 +12,9 @@ import {
   validDashboardTableQuery,
   platformQuerySchema,
   filterablePlatformPresetFilterDimensions,
+  slottableSchema,
+  slottableTileConfigSchema,
+  topNTableSchema,
 } from './dashboardSchema.v2'
 import {
   agenticExploreAggregations,
@@ -41,6 +44,7 @@ const validateApiUsageQuerySchema = ajv.compile(apiUsageQuerySchema)
 const validateBasicQuerySchema = ajv.compile(basicQuerySchema)
 const validateLlmUsageQuerySchema = ajv.compile(llmUsageSchema)
 const validateAgenticUsageQuerySchema = ajv.compile(agenticUsageSchema)
+const validateSlottableTileSchema = ajv.compile(slottableTileConfigSchema)
 
 describe('dashboardSchema.v2', () => {
   const sharedPresetFilterableDimensions = [
@@ -487,5 +491,138 @@ describe('dashboardSchema.v2', () => {
       ...invalidStrictQuery,
       datasource: 'agentic_usage',
     })).toBe(false)
+  })
+})
+
+describe('slottable tile config', () => {
+  const slottableTile = {
+    id: 'slot-1',
+    type: 'slottable',
+    layout: {
+      position: {
+        col: 0,
+        row: 0,
+      },
+      size: {
+        cols: 1,
+        rows: 1,
+      },
+    },
+  }
+
+  const legacyChartSlottableTile = {
+    type: 'chart',
+    definition: {
+      chart: {
+        type: 'slottable',
+        id: 'slot-1',
+      },
+      query: {
+        datasource: 'basic',
+      },
+    },
+    layout: slottableTile.layout,
+  }
+
+  it('accepts a top-level slottable tile shape', () => {
+    expect(validateSlottableTileSchema(slottableTile)).toBe(true)
+    expect(validateDashboardConfigSchema({ tiles: [slottableTile] })).toBe(true)
+  })
+
+  it('rejects a top-level slottable tile with a definition present', () => {
+    const invalidTile = { ...slottableTile, definition: legacyChartSlottableTile.definition }
+    expect(validateSlottableTileSchema(invalidTile)).toBe(false)
+    expect(validateDashboardConfigSchema({ tiles: [invalidTile] })).toBe(false)
+  })
+
+  it('rejects a top-level slottable tile missing an id', () => {
+    const { id, ...invalidTile } = slottableTile
+    expect(validateSlottableTileSchema(invalidTile)).toBe(false)
+    expect(validateDashboardConfigSchema({ tiles: [invalidTile] })).toBe(false)
+  })
+
+  it('rejects a top-level slottable tile missing a layout', () => {
+    const { layout, ...invalidTile } = slottableTile
+    expect(validateSlottableTileSchema(invalidTile)).toBe(false)
+    expect(validateDashboardConfigSchema({ tiles: [invalidTile] })).toBe(false)
+  })
+
+  it('rejects a top-level slottable tile with an unknown property', () => {
+    const invalidTile = { ...slottableTile, foo: 'bar' }
+    expect(validateSlottableTileSchema(invalidTile)).toBe(false)
+    expect(validateDashboardConfigSchema({ tiles: [invalidTile] })).toBe(false)
+  })
+
+  it('validates the legacy chart-based slottable shape', () => {
+    expect(validateDashboardConfigSchema({ tiles: [legacyChartSlottableTile] })).toBe(true)
+  })
+
+  it('marks the legacy chart-level slottable schema as deprecated', () => {
+    expect(slottableSchema.deprecated).toBe(true)
+  })
+
+  const headerDescriptionChartTile = {
+    type: 'chart',
+    definition: {
+      chart: {
+        type: 'top_n',
+        chart_title: 'Top N',
+      },
+      query: {
+        datasource: 'basic',
+        metrics: ['request_count'],
+        dimensions: ['route'],
+      },
+      header_description: '{timeframe}',
+    },
+    layout: slottableTile.layout,
+  }
+
+  const headerDescriptionTableTile = {
+    type: 'chart',
+    definition: {
+      chart: {
+        type: 'table',
+      },
+      query: {
+        datasource: 'platform',
+        entity: 'route',
+        columns: ['route'],
+      },
+      header_description: 'Static text',
+    },
+    layout: slottableTile.layout,
+  }
+
+  it('accepts a tile header_description on a chart tile', () => {
+    expect(validateDashboardConfigSchema({ tiles: [headerDescriptionChartTile] })).toBe(true)
+  })
+
+  it('accepts a tile header_description on a table tile', () => {
+    expect(validateDashboardConfigSchema({ tiles: [headerDescriptionTableTile] })).toBe(true)
+  })
+
+  it('rejects a non-string header_description', () => {
+    const invalidTile = {
+      ...headerDescriptionChartTile,
+      definition: { ...headerDescriptionChartTile.definition, header_description: 42 },
+    }
+    expect(validateDashboardConfigSchema({ tiles: [invalidTile] })).toBe(false)
+  })
+
+  it('still accepts the deprecated chart-level description', () => {
+    const topN = {
+      ...headerDescriptionChartTile,
+      definition: {
+        ...headerDescriptionChartTile.definition,
+        chart: { type: 'top_n', chart_title: 'Top N', description: '{timeframe}' },
+        header_description: undefined,
+      },
+    }
+    expect(validateDashboardConfigSchema({ tiles: [topN] })).toBe(true)
+  })
+
+  it('marks the chart-level description as deprecated on top_n', () => {
+    expect(topNTableSchema.properties.description.deprecated).toBe(true)
   })
 })

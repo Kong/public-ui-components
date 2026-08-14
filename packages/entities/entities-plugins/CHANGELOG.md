@@ -3,6 +3,165 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.260.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.260.1...@kong-ui-public/entities-plugins@9.260.2) (2026-08-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.260.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.260.0...@kong-ui-public/entities-plugins@9.260.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* **entities:** remove flaky post-remount cy.wait in list page-size tests ([#3692](https://github.com/Kong/public-ui-components/issues/3692)) ([f199150](https://github.com/Kong/public-ui-components/commit/f19915001bc97e08cd2b82cef6a6b29b0493eecf))
+
+
+
+
+
+# [9.260.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.259.0...@kong-ui-public/entities-plugins@9.260.0) (2026-08-13)
+
+
+### Features
+
+* **entities-plugins:** add auth plugin onboarding banner + consumer/credential flows ([#3668](https://github.com/Kong/public-ui-components/issues/3668)) ([5bc02e5](https://github.com/Kong/public-ui-components/commit/5bc02e582a4628d645fe4aa971575772303ace45))
+
+
+
+
+
+# [9.259.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.258.5...@kong-ui-public/entities-plugins@9.259.0) (2026-08-11)
+
+
+### Features
+
+* **entities-plugins:** redesign ACL access policy selection ([#3683](https://github.com/Kong/public-ui-components/issues/3683)) ([4efb508](https://github.com/Kong/public-ui-components/commit/4efb508e606185c69e3eb13d0c20b4f91f8b74e6))
+
+
+
+
+
+## [9.258.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.258.4...@kong-ui-public/entities-plugins@9.258.5) (2026-08-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.258.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.258.3...@kong-ui-public/entities-plugins@9.258.4) (2026-08-10)
+
+
+### Bug Fixes
+
+* **plugins:** open new redis create form in slideout [khcp-21412] ([#3669](https://github.com/Kong/public-ui-components/issues/3669)) ([3fa1097](https://github.com/Kong/public-ui-components/commit/3fa109764c10b23f44ee4bf546df045d75956e4a))
+
+
+
+
+
+## [9.258.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.258.2...@kong-ui-public/entities-plugins@9.258.3) (2026-08-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.258.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.258.1...@kong-ui-public/entities-plugins@9.258.2) (2026-08-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.258.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.258.0...@kong-ui-public/entities-plugins@9.258.1) (2026-08-08)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3529](https://github.com/Kong/public-ui-components/issues/3529)) ([a242320](https://github.com/Kong/public-ui-components/commit/a2423201f9a1f496d730795c17b30788f77a303c))
+* **deps:** update dependency dompurify to ^3.4.12 [security] ([#3677](https://github.com/Kong/public-ui-components/issues/3677)) ([7cd8cd6](https://github.com/Kong/public-ui-components/commit/7cd8cd6d7e589f7b21a6824a5c571a443033b00a))
+
+
+
+
+
+# [9.258.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.257.0...@kong-ui-public/entities-plugins@9.258.0) (2026-08-07)
+
+
+### Features
+
+* **entities-plugins:** migrate application registration to freeform ([#3671](https://github.com/Kong/public-ui-components/issues/3671)) ([44f4fa5](https://github.com/Kong/public-ui-components/commit/44f4fa5b6a7ac6512a362a4f46508fa4f420b523))
+
+
+
+
+
+# [9.257.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.256.0...@kong-ui-public/entities-plugins@9.257.0) (2026-08-06)
+
+
+### Features
+
+* **entities-plugins:** add ca_certificates advanced config to DataKit ([#3652](https://github.com/Kong/public-ui-components/issues/3652)) ([cd082a5](https://github.com/Kong/public-ui-components/commit/cd082a597e64a310061b115bfae6186cd8962a73))
+
+
+
+
+
+# [9.256.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.255.3...@kong-ui-public/entities-plugins@9.256.0) (2026-08-06)
+
+
+### Features
+
+* **entities-plugins:** add allow_when/deny_when modes to ACL plugin form ([#3666](https://github.com/Kong/public-ui-components/issues/3666)) ([3549c31](https://github.com/Kong/public-ui-components/commit/3549c31bc9c0a1a87d4b53a151291dc943d9a498))
+
+
+
+
+
+## [9.255.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.255.2...@kong-ui-public/entities-plugins@9.255.3) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [9.255.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.255.1...@kong-ui-public/entities-plugins@9.255.2) (2026-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.255.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.255.0...@kong-ui-public/entities-plugins@9.255.1) (2026-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.255.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.254.4...@kong-ui-public/entities-plugins@9.255.0) (2026-08-06)
+
+
+### Features
+
+* **entities-plugins:** remove plugin condition beta tag ([#3661](https://github.com/Kong/public-ui-components/issues/3661)) ([bc0b195](https://github.com/Kong/public-ui-components/commit/bc0b195377c2f5cbf99c1286014b5609b2049816))
+
+
+
+
+
 ## [9.254.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.254.3...@kong-ui-public/entities-plugins@9.254.4) (2026-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

@@ -1,7 +1,7 @@
 <template>
   <KPrompt
     action-button-appearance="danger"
-    :action-button-disabled="actionPending"
+    :action-button-disabled="actionPending || confirmDisabled"
     action-button-text="Yes, delete"
     :class="['kong-ui-entity-delete-modal', { 'kong-ui-entity-delete-modal-stacked-copy': stackedCopy }]"
     :confirmation-prompt="confirmationPrompt || undefined"
@@ -56,6 +56,12 @@
             </p>
           </slot>
         </div>
+        <div
+          v-if="$slots.extra"
+          class="extra"
+        >
+          <slot name="extra" />
+        </div>
       </div>
     </template>
   </KPrompt>
@@ -99,6 +105,11 @@ const props = defineProps({
     default: '',
   },
   actionPending: {
+    type: Boolean,
+    default: false,
+  },
+  // Disables the confirm button regardless of `actionPending` or the confirmation text, e.g. while a required checkbox is unchecked
+  confirmDisabled: {
     type: Boolean,
     default: false,
   },
@@ -150,6 +161,10 @@ const proceed = () => {
   }
 
   .description {
+    margin-top: var(--kui-space-90, $kui-space-90);
+  }
+
+  .extra {
     margin-top: var(--kui-space-90, $kui-space-90);
   }
 

@@ -324,6 +324,7 @@ export const DatakitConfigSchema = z
     nodes: z.array(ConfigNodeSchema).nullish(),
     debug: z.boolean().nullish(),
     resources: LooseResourcesSchema.nullish(),
+    ca_certificates: z.array(z.string()).nullish(),
   })
   .strict()
   .superRefine((config, ctx) => {

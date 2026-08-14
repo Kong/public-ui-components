@@ -25,4 +25,10 @@ export default {
       getCaCertificates: `${KMBaseApiUrl}/ca_certificates`,
     },
   },
+  relatedEntities: {
+    konnect: {
+      routes: `${konnectBaseApiUrl}/services/{id}/routes`,
+      plugins: `${konnectBaseApiUrl}/services/{id}/plugins`,
+    },
+  },
 }

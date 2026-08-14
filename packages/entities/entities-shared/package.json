@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.59.3",
+  "version": "3.62.0",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -34,6 +34,7 @@
     "@shikijs/engine-javascript": "^4.2.0",
     "@shikijs/langs": "^4.2.0",
     "@shikijs/themes": "^4.2.0",
+    "@vueuse/core": "^14.3.0",
     "axios": "^1.16.1",
     "monaco-editor": "^0.55.1",
     "shiki": "^4.2.0",
@@ -43,18 +44,19 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/monaco-editor": "workspace:^",
-    "@kong/design-tokens": "3.2.2",
-    "@kong/icons": "^1.62.0",
-    "@kong/kongponents": "9.64.2",
-    "@shikijs/core": "^4.2.0",
-    "@shikijs/engine-javascript": "^4.2.0",
-    "@shikijs/langs": "^4.2.0",
-    "@shikijs/themes": "^4.2.0",
+    "@kong/design-tokens": "3.2.7",
+    "@kong/icons": "^1.62.1",
+    "@kong/kongponents": "9.64.3",
+    "@shikijs/core": "^4.3.1",
+    "@shikijs/engine-javascript": "^4.3.1",
+    "@shikijs/langs": "^4.3.1",
+    "@shikijs/themes": "^4.3.1",
+    "@vueuse/core": "^14.3.0",
     "axios": "^1.17.0",
     "monaco-editor": "^0.55.1",
-    "shiki": "^4.2.0",
+    "shiki": "^4.3.1",
     "vue": "^3.5.35",
-    "vue-router": "^5.1.0"
+    "vue-router": "^5.2.0"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
@@ -86,7 +88,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "800KB"
+    "errorLimit": "810KB"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",

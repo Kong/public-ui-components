@@ -5,7 +5,7 @@
   >
     <div class="sandbox-container">
       <br>
-      <div style="display: flex; gap: 5px; margin: 5px;">
+      <div class="controls">
         <KButton
           appearance="primary"
           size="small"
@@ -33,7 +33,7 @@
           size="small"
         />
       </div>
-      <div style="max-height: 800px; overflow-y: auto;">
+      <div class="dashboard-scroll-container">
         <DashboardRenderer
           ref="dashboardRendererRef"
           v-model="dashboardConfig"
@@ -230,6 +230,34 @@ const dashboardConfig = ref <DashboardConfig>({
         },
       },
     } satisfies TileConfig,
+    {
+      id: 'slot-1',
+      type: 'slottable',
+      layout: {
+        position: {
+          col: 0,
+          row: 4,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      id: 'slot-2',
+      type: 'slottable',
+      layout: {
+        position: {
+          col: 3,
+          row: 4,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+        },
+      },
+    } satisfies TileConfig,
   ],
 })
 
@@ -335,3 +363,16 @@ const handleZoom = (zoomEvent: TileZoomEvent) => {
 }
 
 </script>
+
+<style lang="scss" scoped>
+.controls {
+  display: flex;
+  gap: var(--kui-space-30, $kui-space-30);
+  margin: var(--kui-space-30, $kui-space-30);
+}
+
+.dashboard-scroll-container {
+  max-height: 800px;
+  overflow-y: auto;
+}
+</style>

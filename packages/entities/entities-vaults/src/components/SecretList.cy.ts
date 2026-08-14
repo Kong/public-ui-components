@@ -390,6 +390,7 @@ describe('<SecretList />', () => {
 
       // Unmount and mount
       cy.get('@vueWrapper').then(wrapper => wrapper.unmount())
+      cy.get(l).should('not.exist')
       cy.mount(SecretList, {
         props: {
           cacheIdentifier,
@@ -400,8 +401,6 @@ describe('<SecretList />', () => {
           canDelete: () => false,
         },
       })
-
-      cy.wait('@getSecretsMultiPage')
 
       cy.get(`${l} tbody tr`).should('have.length', 15)
       cy.get(`${l} tbody tr[data-testid="secret-1"]`).should('exist')

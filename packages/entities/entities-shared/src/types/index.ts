@@ -5,6 +5,7 @@
 export * from './app-config'
 export * from './base'
 export * from './deck'
+export * from './onboarding-card'
 export * from './entity-delete-modal'
 export * from './entity-base-form'
 export * from './entity-base-table'

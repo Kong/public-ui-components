@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.25.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.25.1...@kong-ui-public/entities-gateway-services@3.25.2) (2026-08-13)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.25.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.25.0...@kong-ui-public/entities-gateway-services@3.25.1) (2026-08-13)
+
+
+### Bug Fixes
+
+* **entities:** remove flaky post-remount cy.wait in list page-size tests ([#3692](https://github.com/Kong/public-ui-components/issues/3692)) ([f199150](https://github.com/Kong/public-ui-components/commit/f19915001bc97e08cd2b82cef6a6b29b0493eecf))
+
+
+
+
+
+# [3.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.24.0...@kong-ui-public/entities-gateway-services@3.25.0) (2026-08-11)
+
+
+### Features
+
+* **entities-gateway-services:** gate force-delete confirmation behind a flag KM-3028 ([#3682](https://github.com/Kong/public-ui-components/issues/3682)) ([0b8b8cc](https://github.com/Kong/public-ui-components/commit/0b8b8cc9ea5c50a7b8f5e7c90b75a49e0c3b8534))
+
+
+
+
+
+# [3.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.23.15...@kong-ui-public/entities-gateway-services@3.24.0) (2026-08-10)
+
+
+### Features
+
+* **entities-gateway-services:** require force delete confirmation for services with routes ([#3642](https://github.com/Kong/public-ui-components/issues/3642)) ([8773269](https://github.com/Kong/public-ui-components/commit/87732694f306f944f945d41679770474a95b57b3))
+
+
+
+
+
+## [3.23.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.23.14...@kong-ui-public/entities-gateway-services@3.23.15) (2026-08-08)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3529](https://github.com/Kong/public-ui-components/issues/3529)) ([a242320](https://github.com/Kong/public-ui-components/commit/a2423201f9a1f496d730795c17b30788f77a303c))
+
+
+
+
+
+## [3.23.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.23.13...@kong-ui-public/entities-gateway-services@3.23.14) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+## [3.23.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.23.12...@kong-ui-public/entities-gateway-services@3.23.13) (2026-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
 ## [3.23.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.23.11...@kong-ui-public/entities-gateway-services@3.23.12) (2026-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

@@ -48,7 +48,7 @@
       <KButton
         v-if="appearance === 'tabs'"
         appearance="tertiary"
-        :aria-label="t('actions.add_entity', { entity: fieldName })"
+        :aria-label="realAddItemLabel"
         :data-testid="`ff-add-item-btn-${field.path.value}`"
         icon
         @click="addItem"
@@ -110,13 +110,13 @@
 
       <KButton
         appearance="tertiary"
-        :aria-label="t('actions.add_entity', { entity: fieldName })"
+        :aria-label="realAddItemLabel"
         class="ff-array-field-add-item-btn"
         :data-testid="`ff-add-item-btn-${field.path.value}`"
         @click="addItem"
       >
         <AddIcon />
-        {{ t('actions.add_entity', { entity: fieldName }) }}
+        {{ realAddItemLabel }}
       </KButton>
     </template>
 
@@ -193,6 +193,10 @@ const props = defineProps<{
   label?: string
   labelAttributes?: LabelAttributes
   itemLabel?: string | ((item: T, index: number) => string)
+  /**
+   * Overrides the "Add {field name}" text (and aria-label) of the add-item button.
+   */
+  addItemLabel?: string
   appearance?: 'default' | 'card' | 'tabs'
   stickyTabs?: boolean | string | number
   hideLabel?: boolean
@@ -230,6 +234,9 @@ const fieldName = computed(() => {
   const name = utils.getName(field.path.value)
   return replaceByDictionaryInFieldName(name)
 })
+
+const realAddItemLabel = computed(() =>
+  props.addItemLabel ?? t('actions.add_entity', { entity: fieldName.value }))
 
 const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])
 

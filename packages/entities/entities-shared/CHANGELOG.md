@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.62.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.61.0...@kong-ui-public/entities-shared@3.62.0) (2026-08-13)
+
+
+### Features
+
+* **entities-shared:** support appendIcon on OnboardingCard items ([#3691](https://github.com/Kong/public-ui-components/issues/3691)) ([0636a90](https://github.com/Kong/public-ui-components/commit/0636a907a49b2bf0965fa821ad250e05bcddbe7d))
+
+
+
+
+
+# [3.61.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.60.2...@kong-ui-public/entities-shared@3.61.0) (2026-08-10)
+
+
+### Features
+
+* **entities-gateway-services:** require force delete confirmation for services with routes ([#3642](https://github.com/Kong/public-ui-components/issues/3642)) ([8773269](https://github.com/Kong/public-ui-components/commit/87732694f306f944f945d41679770474a95b57b3))
+
+
+
+
+
+## [3.60.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.60.1...@kong-ui-public/entities-shared@3.60.2) (2026-08-08)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3529](https://github.com/Kong/public-ui-components/issues/3529)) ([a242320](https://github.com/Kong/public-ui-components/commit/a2423201f9a1f496d730795c17b30788f77a303c))
+
+
+
+
+
+## [3.60.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.60.0...@kong-ui-public/entities-shared@3.60.1) (2026-08-06)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3662](https://github.com/Kong/public-ui-components/issues/3662)) ([6ae03ce](https://github.com/Kong/public-ui-components/commit/6ae03cea16634445849a1b9dd693bb40c86be892))
+
+
+
+
+
+# [3.60.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.59.3...@kong-ui-public/entities-shared@3.60.0) (2026-08-06)
+
+
+### Features
+
+* **entities-shared:** add OnboardingCard component ([#3658](https://github.com/Kong/public-ui-components/issues/3658)) ([9e8c160](https://github.com/Kong/public-ui-components/commit/9e8c1606d031536d2b154887186d33ff3f0df370))
+
+
+
+
+
 ## [3.59.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.59.2...@kong-ui-public/entities-shared@3.59.3) (2026-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

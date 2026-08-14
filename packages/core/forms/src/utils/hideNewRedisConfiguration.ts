@@ -2,9 +2,12 @@ import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-
 
 type PluginFormsConfig = (KonnectBaseFormConfig | KongManagerBaseFormConfig) & {
   isKonnectManagedRedisEnabled?: boolean
+  isCloudGateway?: boolean
 }
 
-// Konnect + managed-redis FF: hide inline "+ New Redis" in plugin forms
-export function shouldHideNewRedisConfiguration(config: PluginFormsConfig): boolean {
-  return config.app === 'konnect' && !!config.isKonnectManagedRedisEnabled
+// Konnect + managed-redis FF + Cloud Gateway: hide "+ New Redis" in plugin forms
+export function hideNewRedis(config: PluginFormsConfig): boolean {
+  return config.app === 'konnect'
+    && !!config.isKonnectManagedRedisEnabled
+    && config.isCloudGateway === true
 }
