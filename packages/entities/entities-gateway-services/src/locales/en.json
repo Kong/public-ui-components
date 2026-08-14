@@ -161,7 +161,8 @@
         },
         "client_certificate": {
           "label": "Client certificate",
-          "placeholder": "Select a certificate",
+          "placeholder": "Enter a certificate ID",
+          "select_placeholder": "Select a certificate",
           "tooltip": "Certificate to be used as client certificate while TLS handshaking to the upstream server."
         },
         "tls_sans_dnsnames": {
@@ -178,7 +179,8 @@
         },
         "ca_certificates": {
           "label": "CA certificates",
-          "placeholder": "Select CA certificates",
+          "placeholder": "Enter a comma separated list of CA certificate IDs",
+          "select_placeholder": "Select CA certificates",
           "tooltip": "Array of {code1} object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate. If set to {code2} when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).",
           "code1": "CA certificate",
           "code2": "null"

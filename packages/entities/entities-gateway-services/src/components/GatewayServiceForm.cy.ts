@@ -280,6 +280,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.mount(GatewayServiceForm, {
         props: {
           config: baseConfigKonnect,
+          isCertificateSelectEnabled: true,
         },
       })
 
@@ -320,6 +321,25 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-tls-sans-uris').should('be.visible')
       cy.getTestId('gateway-service-ca-certs-select').should('not.exist')
       cy.getTestId('gateway-service-tls-verify-checkbox').should('be.visible')
+    })
+
+    it('should fall back to free-text cert inputs when the certificate select feature is disabled', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          // isCertificateSelectEnabled defaults to false
+        },
+      })
+
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
+
+      // The original free-text inputs are shown
+      cy.getTestId('gateway-service-clientCert-input').should('be.visible')
+      cy.getTestId('gateway-service-ca-certs-input').should('be.visible')
+      // The select controls are not rendered
+      cy.getTestId('gateway-service-clientCert-select').should('not.exist')
+      cy.getTestId('gateway-service-ca-certs-select').should('not.exist')
     })
 
     it('should handle error state - failed to load Gateway Service', () => {
@@ -534,6 +554,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.mount(GatewayServiceForm, {
         props: {
           config: baseConfigKonnect,
+          isCertificateSelectEnabled: true,
           onModelUpdated: cy.spy().as('onModelUpdatedSpy'),
         },
       })
@@ -823,6 +844,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.mount(GatewayServiceForm, {
         props: {
           config: baseConfigKM,
+          isCertificateSelectEnabled: true,
         },
       })
 

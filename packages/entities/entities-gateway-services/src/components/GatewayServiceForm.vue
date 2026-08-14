@@ -268,6 +268,7 @@
                 class="gateway-service-form-margin-bottom"
               >
                 <KSelect
+                  v-if="isCertificateSelectEnabled"
                   v-model="form.fields.client_certificate"
                   clearable
                   data-testid="gateway-service-clientCert-select"
@@ -282,7 +283,7 @@
                   }"
                   :loading="certificateLoading"
                   name="clientCert"
-                  :placeholder="t('gateway_services.form.fields.client_certificate.placeholder')"
+                  :placeholder="t('gateway_services.form.fields.client_certificate.select_placeholder')"
                   :readonly="form.isReadonly"
                   width="100%"
                   @query-change="debouncedCertificateCall"
@@ -308,6 +309,23 @@
                     </div>
                   </template>
                 </KSelect>
+                <KInput
+                  v-else
+                  v-model.trim="form.fields.client_certificate"
+                  autocomplete="off"
+                  data-testid="gateway-service-clientCert-input"
+                  :error="!!form.formFieldErrors.client_certificate"
+                  :label="t('gateway_services.form.fields.client_certificate.label')"
+                  :label-attributes="{
+                    info: t('gateway_services.form.fields.client_certificate.tooltip'),
+                    tooltipAttributes: { maxWidth: '400' },
+                  }"
+                  name="clientCert"
+                  :placeholder="t('gateway_services.form.fields.client_certificate.placeholder')"
+                  :readonly="form.isReadonly"
+                  type="text"
+                  @input="handleValidateAdvancedFields('client_certificate')"
+                />
               </div>
 
               <GatewayServiceFormTlsSansField
@@ -345,6 +363,7 @@
                 class="gateway-service-form-margin-bottom"
               >
                 <KMultiselect
+                  v-if="isCertificateSelectEnabled"
                   v-model="form.fields.ca_certificates"
                   autosuggest
                   data-testid="gateway-service-ca-certs-select"
@@ -353,7 +372,7 @@
                   :label="t('gateway_services.form.fields.ca_certificates.label')"
                   :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
                   :loading="caCertificateLoading"
-                  :placeholder="t('gateway_services.form.fields.ca_certificates.placeholder')"
+                  :placeholder="t('gateway_services.form.fields.ca_certificates.select_placeholder')"
                   :readonly="form.isReadonly"
                   width="100%"
                   @query-change="debouncedCaCertificateCall"
@@ -399,6 +418,33 @@
                     </i18nT>
                   </template>
                 </KMultiselect>
+                <KInput
+                  v-else
+                  v-model.trim="caCertificatesText"
+                  autocomplete="off"
+                  data-testid="gateway-service-ca-certs-input"
+                  :error="!!form.formFieldErrors.ca_certificates"
+                  :label="t('gateway_services.form.fields.ca_certificates.label')"
+                  :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
+                  :placeholder="t('gateway_services.form.fields.ca_certificates.placeholder')"
+                  :readonly="form.isReadonly"
+                  type="text"
+                  @input="handleValidateAdvancedFields('ca_certificates')"
+                >
+                  <template #label-tooltip>
+                    <i18nT
+                      keypath="gateway_services.form.fields.ca_certificates.tooltip"
+                      scope="global"
+                    >
+                      <template #code1>
+                        <code>{{ t('gateway_services.form.fields.ca_certificates.code1') }}</code>
+                      </template>
+                      <template #code2>
+                        <code>{{ t('gateway_services.form.fields.ca_certificates.code2') }}</code>
+                      </template>
+                    </i18nT>
+                  </template>
+                </KInput>
               </div>
 
               <div
@@ -603,6 +649,17 @@ const props = defineProps({
     required: false,
     default: true,
   },
+  /**
+   * Feature-flag guard for the client/CA certificate select controls.
+   * When `false` (default), the original free-text inputs are shown instead of
+   * the certificate select / multiselect. Host apps should pass the resolved
+   * feature-flag value here.
+   */
+  isCertificateSelectEnabled: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const isCollapsed = ref(true)
@@ -718,6 +775,17 @@ const displayedCaCertificates = computed<MultiselectItem[]>(() => {
   })
 
   return items
+})
+
+// Comma-separated view of `ca_certificates` for the fallback free-text input
+// (used when the certificate select feature is disabled). Splitting with no
+// filtering keeps the round-trip stable while typing; empty entries are dropped
+// later in the request payload.
+const caCertificatesText = computed<string>({
+  get: () => form.fields.ca_certificates.join(','),
+  set: (val: string) => {
+    form.fields.ca_certificates = val.split(',')
+  },
 })
 
 
@@ -1179,6 +1247,9 @@ const tlsSansPayload = computed(() => {
 })
 
 const getPayload = computed((): Record<string, any> => {
+  // Drop empty entries (the free-text fallback input splits on commas and may
+  // yield blanks); the select/multiselect never produces empties
+  const caCertificates = form.fields.ca_certificates.filter((caCert) => caCert.trim() !== '')
   const requestBody: Record<string, any> = {
     name: form.fields.name || null,
     tags: form.fields.tags ? form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== '') : null,
@@ -1188,7 +1259,7 @@ const getPayload = computed((): Record<string, any> => {
     retries: form.fields.retries,
     host: form.fields.host,
     connect_timeout: form.fields.connect_timeout,
-    ca_certificates: form.fields.ca_certificates.length ? form.fields.ca_certificates : null,
+    ca_certificates: caCertificates.length ? caCertificates : null,
     client_certificate: form.fields.client_certificate ? { id: form.fields.client_certificate } : null,
     tls_sans: tlsSansPayload.value,
     write_timeout: form.fields.write_timeout,
@@ -1328,10 +1399,13 @@ onMounted(() => {
   if (!isEditing.value) {
     form.fields.name = generateServiceName()
   }
-  // Load certificates to populate the client certificate select
-  loadCertificates()
-  // Load CA certificates to populate the CA certificates multiselect
-  loadCaCertificates()
+  // Only fetch certificates when the select controls are enabled
+  if (props.isCertificateSelectEnabled) {
+    // Load certificates to populate the client certificate select
+    loadCertificates()
+    // Load CA certificates to populate the CA certificates multiselect
+    loadCaCertificates()
+  }
 })
 
 defineExpose({

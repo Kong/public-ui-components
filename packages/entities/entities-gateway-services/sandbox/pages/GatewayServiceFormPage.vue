@@ -3,6 +3,7 @@
   <GatewayServiceForm
     :config="konnectConfig"
     :gateway-service-id="id"
+    is-certificate-select-enabled
     @error="onError"
     @update="onUpdate"
   />
@@ -11,6 +12,7 @@
   <GatewayServiceForm
     :config="kongManagerConfig"
     :gateway-service-id="id"
+    is-certificate-select-enabled
     @error="onError"
     @update="onUpdate"
   />
