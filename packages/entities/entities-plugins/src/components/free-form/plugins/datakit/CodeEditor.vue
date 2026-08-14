@@ -52,12 +52,14 @@ import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton, KModal } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
 import { useErrors } from '@kong-ui-public/entities-shared'
-import { MonacoEditor } from '@kong-ui-public/monaco-editor'
+import { getModelContext, MonacoEditor } from '@kong-ui-public/monaco-editor'
+import { findInnermostCollectionAtOffset } from '@kong-ui-public/monaco-editor/languages/yaml'
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 import english from '../../../../locales/en.json'
 import { useFormShared } from '../../shared/composables'
 import examples from './examples'
 import { extractors } from './config-extractors'
+import { orderNodeFields } from './order-node-fields'
 
 import type { ComputedRef } from 'vue'
 import type { YAMLException } from 'js-yaml'
@@ -87,7 +89,7 @@ const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 const LINT_SOURCE = 'YAML Syntax'
 
 function dumpYaml(config: unknown): string {
-  return yaml.dump(toRaw(config), {
+  return yaml.dump(orderNodeFields(toRaw(config)), {
     schema: JSON_SCHEMA,
     noArrayIndent: true,
   })
@@ -113,6 +115,7 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
   }
 
   editorRef.value = editor
+  registerBlockHighlighting(editor)
 
   editor.onDidChangeModelContent(() => {
     try {
@@ -171,6 +174,81 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
   })
 
   focusEnd()
+}
+
+function registerBlockHighlighting(editor: monaco.editor.IStandaloneCodeEditor) {
+  const decorations = editor.createDecorationsCollection()
+  let latestUpdate = 0
+
+  async function update() {
+    const updateId = ++latestUpdate
+    const model = editor.getModel()
+    const position = editor.getPosition()
+
+    if (!model || !position) {
+      decorations.clear()
+      return
+    }
+
+    const isStale = () => updateId !== latestUpdate || editor !== editorRef.value || model.isDisposed()
+    let context = await getModelContext(model)
+
+    if (isStale()) return
+    if (context.altVersionId !== model.getAlternativeVersionId()) {
+      context = await getModelContext(model)
+    }
+    if (isStale()) return
+
+    if (
+      context.altVersionId !== model.getAlternativeVersionId() ||
+      context.isDefault ||
+      context.language !== 'yaml' ||
+      !context.document ||
+      context.document.errors.length
+    ) {
+      decorations.clear()
+      return
+    }
+
+    let offset = model.getOffsetAt(position)
+    const sequenceItemPrefix = model.getLineContent(position.lineNumber).match(/^\s*-\s+/)?.[0]
+
+    // A map item starts after `- `, so the dash itself is outside its AST range.
+    if (sequenceItemPrefix && position.column <= sequenceItemPrefix.length + 1) {
+      offset = model.getOffsetAt({
+        lineNumber: position.lineNumber,
+        column: sequenceItemPrefix.length + 1,
+      })
+    }
+
+    const range = findInnermostCollectionAtOffset(context.document, offset)
+    if (!range) {
+      decorations.clear()
+      return
+    }
+
+    const [start, , end] = range
+    const startLine = model.getPositionAt(start).lineNumber
+    const endLine = model.getPositionAt(Math.max(start, end - 1)).lineNumber
+
+    if (startLine === endLine) {
+      decorations.clear()
+      return
+    }
+
+    decorations.set([{
+      range: new monaco.Range(startLine, 1, endLine, model.getLineMaxColumn(endLine)),
+      options: {
+        className: 'dk-yaml-block-highlight',
+        isWholeLine: true,
+        linesDecorationsClassName: 'dk-yaml-block-highlight-gutter',
+      },
+    }])
+  }
+
+  editor.onDidChangeCursorPosition(() => void update())
+  editor.onDidChangeModelContent(() => void update())
+  void update()
 }
 
 const showConvertModal = shallowRef(false)
@@ -260,6 +338,15 @@ defineExpose({
   .editor {
     height: 684px;
     width: 100%;
+
+    :deep(.dk-yaml-block-highlight) {
+      background-color: var(--kui-color-background-primary-weakest, $kui-color-background-primary-weakest);
+    }
+
+    :deep(.dk-yaml-block-highlight-gutter) {
+      border-left: 2px solid var(--kui-color-border-primary, $kui-color-border-primary);
+      margin-left: 3px;
+    }
   }
 }
 </style>
