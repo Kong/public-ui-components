@@ -105,6 +105,10 @@ const monacoOptions = {
   },
   autoIndent: 'keep',
   editContext: false,
+  guides: {
+    indentation: true,
+    highlightActiveIndentation: true,
+  },
 } as const satisfies Partial<monaco.editor.IStandaloneEditorConstructionOptions>
 
 function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
@@ -261,6 +265,15 @@ defineExpose({
   .editor {
     height: 684px;
     width: 100%;
+
+    // The bundled Shiki themes use very similar colors for active and inactive guides.
+    :deep(.core-guide-indent) {
+      box-shadow: 1px 0 0 0 var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker) inset;
+    }
+
+    :deep(.core-guide-indent.indent-active) {
+      box-shadow: 1px 0 0 0 var(--kui-color-border-primary, $kui-color-border-primary) inset;
+    }
   }
 }
 </style>
