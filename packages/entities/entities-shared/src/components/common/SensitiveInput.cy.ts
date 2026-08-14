@@ -1,3 +1,4 @@
+import { h } from 'vue'
 import SensitiveInput from './SensitiveInput.vue'
 import composables from '../../composables'
 
@@ -214,6 +215,39 @@ describe('<SensitiveInput />', () => {
       })
 
       cy.getTestId('sensitive-input-error-message').should('contain.text', 'This field is required')
+    })
+  })
+
+  describe('label tooltip', () => {
+    it('renders labelAttributes.info as plain text when no label-tooltip slot is provided', () => {
+      cy.mount(SensitiveInput, {
+        props: {
+          modelValue: '',
+          label: 'API key',
+          labelAttributes: { info: 'Plain info text' },
+        },
+      })
+
+      cy.get('.tooltip-trigger-icon').trigger('mouseenter')
+      cy.contains('Plain info text').should('exist')
+    })
+
+    it('renders custom HTML via the label-tooltip slot instead of the plain info text', () => {
+      cy.mount(SensitiveInput, {
+        props: {
+          modelValue: '',
+          label: 'API key',
+          labelAttributes: { info: 'Plain info text' },
+        },
+        slots: {
+          'label-tooltip': () => h('div', {}, [h('strong', {}, 'Bold tooltip')]),
+        },
+      })
+
+      cy.get('.tooltip-trigger-icon').trigger('mouseenter')
+      cy.contains('Bold tooltip').should('exist')
+      cy.get('strong').should('contain.text', 'Bold tooltip')
+      cy.contains('Plain info text').should('not.exist')
     })
   })
 

@@ -13,6 +13,9 @@
         :description="t('onboarding.steps.consumer.description')"
         :title="t('onboarding.steps.consumer.title')"
       >
+        <div class="consumer-note">
+          {{ t('onboarding.steps.consumer.note') }}
+        </div>
         <KInput
           v-model.trim="consumerFields.username"
           autocomplete="off"
@@ -199,6 +202,10 @@ const onSecondaryAction = () => {
   border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   display: flex;
   flex-direction: column;
+
+  .consumer-note {
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+  }
 
   .onboarding-wizard-header {
     border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);

@@ -20,6 +20,13 @@
       :type="inputType"
       @update:model-value="handleInput"
     >
+      <template
+        v-if="$slots['label-tooltip']"
+        #label-tooltip
+      >
+        <slot name="label-tooltip" />
+      </template>
+
       <template #after>
         <!-- Masked (editing an existing resource): only the Rotate key action -->
         <KButton
@@ -79,7 +86,14 @@
         :required="required || undefined"
         resizable
         @update:model-value="handleInput"
-      />
+      >
+        <template
+          v-if="$slots['label-tooltip']"
+          #label-tooltip
+        >
+          <slot name="label-tooltip" />
+        </template>
+      </KTextArea>
       <p
         v-if="error && errorMessage"
         class="sensitive-input-error-message"

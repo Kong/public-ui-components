@@ -104,6 +104,25 @@ Emitted with the generated key once `generator` resolves.
 
 ### Slots
 
+#### label-tooltip
+
+Overrides the label tooltip's content. By default, `labelAttributes.info` is rendered as plain text (the underlying `KLabel` behavior) — use this slot when the info text contains HTML (for example, markdown rendered upstream) that needs to display as formatted content instead of literal tags.
+
+```html
+<template>
+  <SensitiveInput
+    v-model="apiKey"
+    label="API key"
+    :label-attributes="{ info: htmlInfo }"
+  >
+    <template #label-tooltip>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <div v-html="htmlInfo" />
+    </template>
+  </SensitiveInput>
+</template>
+```
+
 #### alert
 
 Rendered at the bottom of the component. Use it to display additional content such as a `KAlert` — for example, surfacing a notice after the `rotate` event fires.
