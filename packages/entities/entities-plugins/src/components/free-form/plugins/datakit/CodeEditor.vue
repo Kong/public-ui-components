@@ -105,10 +105,6 @@ const monacoOptions = {
   },
   autoIndent: 'keep',
   editContext: false,
-  guides: {
-    indentation: true,
-    highlightActiveIndentation: true,
-  },
 } as const satisfies Partial<monaco.editor.IStandaloneEditorConstructionOptions>
 
 function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
