@@ -272,7 +272,7 @@ defineExpose({
     }
 
     :deep(.core-guide-indent.indent-active) {
-      box-shadow: 1px 0 0 0 var(--kui-color-border-primary, $kui-color-border-primary) inset;
+      box-shadow: 1px 0 0 0 var(--kui-color-border-neutral, $kui-color-border-neutral) inset;
     }
   }
 }
