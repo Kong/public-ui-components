@@ -17,7 +17,10 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 pnpm -r run test:unit:open",
     "create-package": "pnpm --filter \"@kong-ui-public/cli\" run create-package",
     "commit": "cz",
-    "lerna": "lerna"
+    "lerna": "lerna",
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
   },
   "devDependencies": {
     "@babel/types": "^8.0.0",
@@ -70,6 +73,7 @@
     "vite": "^7.3.6",
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-vue-devtools": "^8.2.1",
+    "vitepress": "^1.6.4",
     "vitest": "^3.2.6",
     "vue": "^3.5.35",
     "vue-router": "^5.2.0",

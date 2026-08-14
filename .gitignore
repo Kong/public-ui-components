@@ -36,3 +36,6 @@ cypress/downloads/
 .netlify
 # cli bin
 packages/core/cli/bin
+
+# Vitepress cache
+.vitepress/cache
