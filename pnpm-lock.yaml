@@ -277,7 +277,7 @@ importers:
         specifier: workspace:^
         version: link:../analytics-utilities
       pinia:
-        specifier: '>= 3.0.4 < 4'
+        specifier: '>= 3.0.4 < 5'
         version: 3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3))
       vue:
         specifier: 3.5.38
@@ -351,7 +351,7 @@ importers:
         specifier: 9.64.3
         version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       pinia:
-        specifier: '>= 3.0.4 < 4'
+        specifier: '>= 3.0.4 < 5'
         version: 3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3))
 
   packages/analytics/analytics-utilities:
@@ -461,7 +461,7 @@ importers:
         specifier: ^1.15.0
         version: 1.15.0(cypress@15.20.0)
       pinia:
-        specifier: '>= 3.0.4 < 4'
+        specifier: '>= 3.0.4 < 5'
         version: 3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3))
       swrv:
         specifier: ^1.2.0
