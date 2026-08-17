@@ -1002,6 +1002,9 @@ importers:
       '@peculiar/x509':
         specifier: ^2.0.0
         version: 2.0.0
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
     devDependencies:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
@@ -1021,9 +1024,6 @@ importers:
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
-      reflect-metadata:
-        specifier: ^0.2.2
-        version: 0.2.2
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)

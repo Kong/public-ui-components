@@ -19,10 +19,12 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       cssFileName: 'style',
     },
     rollupOptions: {
-      // Externalize @peculiar/x509 (only used to parse the CA certificate issuer
-      // for Kong Manager, imported on demand) so its ~500KB does not inflate this
-      // package's bundle. It is a regular dependency, resolved by the consumer.
-      external: ['@peculiar/x509'],
+      // Externalize @peculiar/x509 and its reflect-metadata polyfill (only used to
+      // parse the CA certificate issuer for Kong Manager, imported on demand) so
+      // they do not inflate this package's bundle. reflect-metadata patches the
+      // global `Reflect` and must stay a single shared copy. Both are regular
+      // dependencies, resolved by the consumer.
+      external: ['@peculiar/x509', 'reflect-metadata'],
       output: {
         globals: {
           '@peculiar/x509': 'x509',

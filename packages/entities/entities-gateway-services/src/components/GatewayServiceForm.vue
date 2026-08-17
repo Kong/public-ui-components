@@ -678,9 +678,14 @@ const {
   results: certificateResults,
 } = useDebouncedFilter(props.config, endpoints.form[props.config.app].getCertificates)
 
+// Map of certificate ID -> tags, rebuilt only when the fetched list changes, so
+// per-item template lookups are O(1) instead of scanning the whole list
+const certificateTagsById = computed<Map<string, string[]>>(() =>
+  new Map((certificateResults.value ?? []).map((cert) => [String(cert.id), cert.tags ?? []])))
+
 // Return the tags for a fetched certificate by its ID (empty if not loaded)
 const getCertificateTags = (id: string | number): string[] =>
-  certificateResults.value?.find((cert) => cert.id === id)?.tags ?? []
+  certificateTagsById.value.get(String(id)) ?? []
 
 const displayedCertificates = computed<SelectItem[]>(() => {
   const items = (certificateResults.value ?? []).map((cert) => ({
@@ -705,9 +710,14 @@ const {
   results: caCertificateResults,
 } = useDebouncedFilter(props.config, endpoints.form[props.config.app].getCaCertificates)
 
+// Map of CA certificate ID -> tags, rebuilt only when the fetched list changes,
+// so per-item template lookups are O(1) instead of scanning the whole list
+const caCertificateTagsById = computed<Map<string, string[]>>(() =>
+  new Map((caCertificateResults.value ?? []).map((cert) => [String(cert.id), cert.tags ?? []])))
+
 // Return the tags for a fetched CA certificate by its ID (empty if not loaded)
 const getCaCertificateTags = (id: string | number): string[] =>
-  caCertificateResults.value?.find((cert) => cert.id === id)?.tags ?? []
+  caCertificateTagsById.value.get(String(id)) ?? []
 
 // CA certificate issuers, resolved lazily and cached by id, shown as the item
 // description. Konnect returns `metadata.issuer` directly; Kong Manager only
@@ -727,32 +737,40 @@ const loadX509 = () => {
   return x509ModulePromise
 }
 
-const resolveCaCertificateIssuer = async (cert: Record<string, any>): Promise<void> => {
-  const id = String(cert.id)
-  if (id in caCertificateIssuers.value) {
+const resolveCaCertificateIssuers = async (certs: Array<Record<string, any>>): Promise<void> => {
+  // Skip certs whose issuer is already resolved
+  const pending = certs.filter((cert) => !(String(cert.id) in caCertificateIssuers.value))
+  if (!pending.length) {
     return
   }
-  // Konnect provides the issuer directly via metadata — no parsing needed
-  if (cert.metadata?.issuer) {
-    caCertificateIssuers.value[id] = cert.metadata.issuer
-    return
-  }
-  // Kong Manager: parse the certificate PEM on demand
-  if (!cert.cert) {
-    caCertificateIssuers.value[id] = ''
-    return
-  }
-  try {
-    const { X509Certificate } = await loadX509()
-    caCertificateIssuers.value[id] = new X509Certificate(cert.cert).issuer
-  } catch {
-    caCertificateIssuers.value[id] = ''
+
+  // The x509 parser is only needed for PEM-only certs (Kong Manager); load it at
+  // most once per batch and only when a cert actually requires parsing
+  let x509: typeof X509 | null = null
+  for (const cert of pending) {
+    const id = String(cert.id)
+    // Konnect provides the issuer directly via metadata — no parsing needed
+    if (cert.metadata?.issuer) {
+      caCertificateIssuers.value[id] = cert.metadata.issuer
+      continue
+    }
+    // Kong Manager: parse the certificate PEM on demand
+    if (!cert.cert) {
+      caCertificateIssuers.value[id] = ''
+      continue
+    }
+    try {
+      x509 ??= await loadX509()
+      caCertificateIssuers.value[id] = new x509.X509Certificate(cert.cert).issuer
+    } catch {
+      caCertificateIssuers.value[id] = ''
+    }
   }
 }
 
 // Resolve issuers whenever the fetched CA certificates change
 watch(caCertificateResults, (results) => {
-  (results ?? []).forEach((cert) => resolveCaCertificateIssuer(cert))
+  resolveCaCertificateIssuers(results ?? [])
 }, { immediate: true })
 
 // Return the (cached) issuer for a CA certificate by its ID (empty until resolved)
