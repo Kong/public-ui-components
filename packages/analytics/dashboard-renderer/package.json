@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "8.18.1",
+  "version": "8.18.3",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",
@@ -55,7 +55,7 @@
     "@types/papaparse": "^5.5.2",
     "ajv": "^8.20.0",
     "cypress-real-events": "^1.15.0",
-    "pinia": ">= 3.0.4 < 4",
+    "pinia": ">= 3.0.4 < 5",
     "swrv": "^1.2.0",
     "vue": "^3.5.35"
   },

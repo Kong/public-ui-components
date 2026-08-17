@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.260.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.260.3...@kong-ui-public/entities-plugins@9.260.4) (2026-08-15)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.260.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.260.2...@kong-ui-public/entities-plugins@9.260.3) (2026-08-14)
+
+
+### Bug Fixes
+
+* **entities-plugins:** replace key input with SensitiveInput ([#3695](https://github.com/Kong/public-ui-components/issues/3695)) ([3966542](https://github.com/Kong/public-ui-components/commit/39665423f3df552c8a5553d42d3f9013d13743f7))
+
+
+
+
+
 ## [9.260.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.260.1...@kong-ui-public/entities-plugins@9.260.2) (2026-08-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.62.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.62.0...@kong-ui-public/entities-shared@3.62.1) (2026-08-14)
+
+
+### Bug Fixes
+
+* **entities-plugins:** replace key input with SensitiveInput ([#3695](https://github.com/Kong/public-ui-components/issues/3695)) ([3966542](https://github.com/Kong/public-ui-components/commit/39665423f3df552c8a5553d42d3f9013d13743f7))
+
+
+
+
+
 # [3.62.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.61.0...@kong-ui-public/entities-shared@3.62.0) (2026-08-13)
 
 

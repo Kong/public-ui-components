@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.18.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.18.2...@kong-ui-public/dashboard-renderer@8.18.3) (2026-08-15)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.18.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.18.1...@kong-ui-public/dashboard-renderer@8.18.2) (2026-08-14)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** strip unsupported platform filters [MA-5344] ([#3690](https://github.com/Kong/public-ui-components/issues/3690)) ([0a30256](https://github.com/Kong/public-ui-components/commit/0a3025656d975623c8fbe840d991040978a36371))
+
+
+
+
+
 ## [8.18.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.18.0...@kong-ui-public/dashboard-renderer@8.18.1) (2026-08-13)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

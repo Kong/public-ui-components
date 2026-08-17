@@ -83,7 +83,8 @@
       "consumer": {
         "step":"Consumer",
         "title": "Create a consumer",
-        "description": "Consumers represent the users or applications calling your API. Add a name or tags to help you identify and manage this consumer later."
+        "description": "Consumers represent the users or applications calling your API. Add a name or tags to help you identify and manage this consumer later.",
+        "note": "A consumer can have both unique username and unique custom ID or one of them."
       },
       "credential": {
         "step":"Credential",
@@ -92,9 +93,9 @@
     },
     "consumer_fields": {
       "username_label": "Username",
-      "username_placeholder": "Enter a username",
+      "username_placeholder": "Enter a unique username",
       "custom_id_label": "Custom ID",
-      "custom_id_placeholder": "Enter a custom ID"
+      "custom_id_placeholder": "Enter a unique custom ID"
     },
     "choose_consumer": {
       "title": "Choose a consumer",
@@ -836,6 +837,9 @@
           "label": "Tags",
           "help": "An optional set of strings for grouping and filtering, separated by commas.",
           "placeholder": "Tag1, Tag2, Tag3"
+        },
+        "secret": {
+          "generateLabel": "Generate secret"
         }
       },
       "scoping": {

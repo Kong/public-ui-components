@@ -44,16 +44,16 @@
     "cross-env": "^10.1.0",
     "cypress": "^15.19.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^9.39.4",
+    "eslint": "^10.8.0",
     "js-yaml": "^4.3.1",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.1",
     "lerna": "^9.0.7",
     "npm-run-all2": "^9.0.1",
     "postcss": "^8.5.23",
     "postcss-custom-properties": "^15.0.1",
     "postcss-html": "^1.8.1",
     "rimraf": "^6.1.3",
-    "rollup-plugin-visualizer": "^6.0.11",
+    "rollup-plugin-visualizer": "^7.0.1",
     "sass": "^1.102.0",
     "stylelint": "^17.14.1",
     "stylelint-config-html": "^1.1.0",
@@ -95,7 +95,7 @@
   },
   "volta": {
     "node": "24.18.0",
-    "pnpm": "10.34.2"
+    "pnpm": "10.34.4"
   },
-  "packageManager": "pnpm@10.34.2"
+  "packageManager": "pnpm@10.34.4"
 }
