@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.24.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.24.4...@kong-ui-public/analytics-chart@10.24.5) (2026-08-17)
+
+
+### Bug Fixes
+
+* **analytics:** correctly toggle visibility of donuts [MA-5286] ([#3693](https://github.com/Kong/public-ui-components/issues/3693)) ([f77a854](https://github.com/Kong/public-ui-components/commit/f77a854c6baff9c7f8aacae0c1febd524c740257))
+
+
+
+
+
 ## [10.24.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.24.3...@kong-ui-public/analytics-chart@10.24.4) (2026-08-15)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
