@@ -79,8 +79,14 @@ const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): 
 
   const chart = (props.chartInstance instanceof Chart) ? props.chartInstance : props.chartInstance.chart
   const visible = isDatasetVisible(datasetIndex, segmentIndex)
+  const meta = chart.getDatasetMeta(datasetIndex)
 
-  if (visible) {
+  if (!meta.dataset && segmentIndex !== undefined) {
+    // Donut charts have exactly 1 dataset, so the datasetIndex is irrelevant here. The visibility
+    // of this "segment" is stored in a different place in chart.js, which is why the `toggleDataVisibility`
+    // method works here. https://www.chartjs.org/docs/latest/developers/api.html#toggledatavisibility-index
+    chart.toggleDataVisibility(segmentIndex)
+  } else if (visible) {
     chart.hide(datasetIndex, segmentIndex)
   } else {
     chart.show(datasetIndex, segmentIndex)
