@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.26.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.7...@kong-ui-public/analytics-utilities@12.26.0) (2026-08-17)
+
+
+### Features
+
+* **analytics-utilities:** add authenticated entity fields [MA-5279] ([#3704](https://github.com/Kong/public-ui-components/issues/3704)) ([c4d6eaa](https://github.com/Kong/public-ui-components/commit/c4d6eaaf11b4f72da0167317e45ec7dc8cf08357))
+
+
+
+
+
 ## [12.25.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.6...@kong-ui-public/analytics-utilities@12.25.7) (2026-08-14)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
