@@ -1,4 +1,4 @@
-import GovernanceForm from './GovernanceForm.vue'
+import EntitlementEnforcementForm from './EntitlementEnforcementForm.vue'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import governanceSchema from '../../../../../fixtures/schemas/governance'
 
@@ -15,7 +15,7 @@ const mountForm = (options: {
     ? { app: 'konnect' as const, apiBaseUrl: '/us/kong-api', controlPlaneId: '123', ...(geoApiServerUrl ? { geoApiServerUrl } : {}), ...(metering ? { metering } : {}) }
     : { app: 'kongManager' as const, apiBaseUrl: '/kong-manager', ...(metering ? { metering } : {}) }
 
-  cy.mount(GovernanceForm as any, {
+  cy.mount(EntitlementEnforcementForm as any, {
     props: {
       schema: governanceSchema,
       formSchema: {},
@@ -34,17 +34,17 @@ const mountForm = (options: {
   })
 }
 
-describe('GovernanceForm - multi-section layout', () => {
+describe('EntitlementEnforcementForm - multi-section layout', () => {
   it('renders the configuration section as step 2', () => {
     mountForm({})
 
     cy.getTestId('form-section-configuration').should('exist')
   })
 
-  it('renders the governance section as step 3', () => {
+  it('renders the entitlement enforcement section as step 3', () => {
     mountForm({})
 
-    cy.getTestId('form-section-governance').should('exist')
+    cy.getTestId('form-section-entitlement-enforcement').should('exist')
   })
 
   it('renders General Info as step 4 (2 + 2 configSections)', () => {
@@ -56,11 +56,11 @@ describe('GovernanceForm - multi-section layout', () => {
   })
 })
 
-describe('GovernanceForm - response mapping', () => {
+describe('EntitlementEnforcementForm - response mapping', () => {
   it('renders code values, editable http_status and message inputs for each response code', () => {
     mountForm({})
 
-    cy.getTestId('ff-governance-advanced-settings').click()
+    cy.getTestId('ff-entitlement-enforcement-advanced-settings').click()
     // check all 5 response code values
     cy.getTestId('ff-response-mapping-code-NO_CREDIT_AVAILABLE').should('exist')
     cy.getTestId('ff-response-mapping-code-USAGE_LIMIT_REACHED').should('exist')
@@ -83,7 +83,7 @@ describe('GovernanceForm - response mapping', () => {
   })
 })
 
-describe('GovernanceForm - customer field visibility', () => {
+describe('EntitlementEnforcementForm - customer field visibility', () => {
   it('shows config.customer.field when look_up_value_in is header', () => {
     mountForm({
       model: { config: { customer: { look_up_value_in: 'header', field: 'x-customer-id' } } },
@@ -117,7 +117,7 @@ describe('GovernanceForm - customer field visibility', () => {
   })
 })
 
-describe('GovernanceForm - feature select', () => {
+describe('EntitlementEnforcementForm - feature select', () => {
   const featuresEndpoint = '/us/kong-api/v3/openmeter/features'
 
   it('lists features from the configured metering endpoint, showing key and name', () => {
@@ -186,17 +186,17 @@ describe('GovernanceForm - feature select', () => {
   })
 })
 
-describe('GovernanceForm - Kong Manager', () => {
+describe('EntitlementEnforcementForm - Kong Manager', () => {
   it('shows an unavailable notice and does not render the config form', () => {
     mountForm({ app: 'kongManager' })
 
-    cy.getTestId('ff-governance-unavailable').should('be.visible')
+    cy.getTestId('ff-entitlement-enforcement-unavailable').should('be.visible')
     cy.getTestId('form-section-configuration').should('not.exist')
-    cy.getTestId('form-section-governance').should('not.exist')
+    cy.getTestId('form-section-entitlement-enforcement').should('not.exist')
   })
 })
 
-describe('GovernanceForm - governance_endpoint prefill', () => {
+describe('EntitlementEnforcementForm - governance_endpoint prefill', () => {
   it('prefills governance_endpoint with regional URL for new Konnect plugin', () => {
     mountForm({ geoApiServerUrl: 'https://us.api.konghq.com' })
 

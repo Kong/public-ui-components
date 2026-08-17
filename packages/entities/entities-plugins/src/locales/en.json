@@ -738,9 +738,9 @@
         "name": "Metering & Billing",
         "description": "Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with Konnect Metering & Billing."
       },
-      "governance": {
-        "name": "Governance",
-        "description": "Enforce feature-level access control and credit-balance gating for API consumers. Integrates with Konnect Metering & Billing to allow or deny requests based on customer entitlements."
+      "entitlement-enforcement": {
+        "name": "Entitlement Enforcement",
+        "description": "Allow or deny API requests based on customer entitlements. Checks feature access, usage limits, and credit balance against Metering & Billing before routing traffic."
       }
     },
     "fields": {
@@ -1223,14 +1223,14 @@
         }
       },
       "governance": {
-        "unavailable_kong_manager": "The Governance plugin can't be configured in Kong Manager yet.",
+        "unavailable_kong_manager": "The Entitlement Enforcement plugin can't be configured in Kong Manager yet.",
         "sections": {
           "configuration": {
             "title": "Plugin configuration",
-            "description": "Configure the Governance plugin subject, feature, and connection settings."
+            "description": "Configure the Entitlement Enforcement plugin subject, feature, and connection settings."
           },
           "governance": {
-            "title": "Governance settings",
+            "title": "Entitlement Enforcement settings",
             "description": "Configure access control behavior and response codes."
           },
           "subject": {

@@ -4,8 +4,8 @@
   <KAlert
     v-if="isKongManager"
     appearance="info"
-    class="ff-governance-unavailable"
-    data-testid="ff-governance-unavailable"
+    class="ff-entitlement-enforcement-unavailable"
+    data-testid="ff-entitlement-enforcement-unavailable"
     :message="t('plugins.free-form.governance.unavailable_kong_manager')"
   />
 
@@ -82,7 +82,7 @@
       <!-- Customer: rendered flat (no collapsible group). `as-child` drops the
            ObjectField header; the render-rule keeps `field` visible only for
            header|query. -->
-      <div class="ff-governance-subject">
+      <div class="ff-entitlement-enforcement-subject">
         <ObjectField
           as-child
           name="config.customer"
@@ -99,7 +99,7 @@
       <FeatureSelectField @click:create-entity="(payload) => emit('click:create-entity', payload)" />
 
       <!-- Connection -->
-      <h3 class="ff-governance-connection-heading">
+      <h3 class="ff-entitlement-enforcement-connection-heading">
         {{ t('plugins.free-form.governance.sections.connection.title') }}
       </h3>
 
@@ -109,7 +109,7 @@
       />
       <Field name="config.api_token" />
       <Field name="config.ssl_verify" />
-      <div class="ff-governance-inline-row">
+      <div class="ff-entitlement-enforcement-inline-row">
         <Field name="config.timeout" />
         <Field name="config.keepalive" />
       </div>
@@ -125,15 +125,15 @@
 
       <!-- Cache & sync settings (in AdvancedFields, grouped under a collapse) -->
       <AdvancedFields
-        class="ff-governance-advanced-fields-container"
-        data-testid="ff-governance-config-advanced-fields"
+        class="ff-entitlement-enforcement-advanced-fields-container"
+        data-testid="ff-entitlement-enforcement-config-advanced-fields"
         hide-general-fields
       >
         <div>
-          <h3 class="ff-governance-cache-sync-heading">
+          <h3 class="ff-entitlement-enforcement-cache-sync-heading">
             {{ t('plugins.free-form.governance.sections.cache_sync.title') }}
           </h3>
-          <div class="ff-governance-cache-sync">
+          <div class="ff-entitlement-enforcement-cache-sync">
             <NumberField
               :label="t('plugins.free-form.governance.fields.sync_rate.label')"
               name="config.sync_rate"
@@ -159,8 +159,8 @@
       </AdvancedFields>
     </template>
 
-    <!-- ── Section 3: Governance settings ─────────────────────────────── -->
-    <template #section-governance>
+    <!-- ── Section 3: Entitlement Enforcement settings ──────────────────── -->
+    <template #section-entitlement-enforcement>
       <!-- credit_balance_required — 2-card boolean radio
            CardRadioField calls useFormShared() internally; rendered inside
            Form.vue's provider context via the slot. -->
@@ -177,16 +177,16 @@
         :options="failPolicyOptions"
       />
 
-      <!-- Advanced settings within governance section -->
+      <!-- Advanced settings within the entitlement enforcement section -->
       <AdvancedFields
-        class="ff-governance-advanced-fields-container"
-        data-testid="ff-governance-advanced-settings"
+        class="ff-entitlement-enforcement-advanced-fields-container"
+        data-testid="ff-entitlement-enforcement-advanced-settings"
         hide-general-fields
       >
         <!-- Response mapping — fixed 5 rows, editable status/message -->
 
         <div>
-          <h3 class="ff-governance-response-mapping-heading">
+          <h3 class="ff-entitlement-enforcement-response-mapping-heading">
             {{ t('plugins.free-form.governance.fields.response.label') }}
           </h3>
           <ResponseMappingField />
@@ -195,7 +195,7 @@
         <!-- deny_unknown_customers — collapsible group of Allow/Deny cards -->
 
         <div>
-          <h3 class="ff-governance-deny-unknown-customers-heading">
+          <h3 class="ff-entitlement-enforcement-deny-unknown-customers-heading">
             {{ t('plugins.free-form.governance.fields.deny_unknown_customers.label') }}
           </h3>
           <CardRadioField
@@ -247,7 +247,7 @@ const { i18n: { t } } = useI18n()
 
 const appConfig = inject<KonnectBaseFormConfig | KongManagerBaseFormConfig | undefined>(FORMS_CONFIG)
 
-// Governance isn't configurable in Kong Manager yet — render a notice instead of the
+// Entitlement Enforcement isn't configurable in Kong Manager yet — render a notice instead of the
 // form (see template) and block Save via a before-save guard. Using the guard rather
 // than onValidityChange avoids surfacing a second, duplicate error alert.
 const isKongManager = computed(() => appConfig?.app === 'kongManager')
@@ -288,7 +288,7 @@ const configSections: ConfigSection[] = [
     description: t('plugins.free-form.governance.sections.configuration.description'),
   },
   {
-    name: 'governance',
+    name: 'entitlement-enforcement',
     title: t('plugins.free-form.governance.sections.governance.title'),
     description: t('plugins.free-form.governance.sections.governance.description'),
   },
@@ -339,7 +339,7 @@ const denyUnknownCustomersOptions = computed(() => [
 <style lang="scss" scoped>
 // `as-child` ObjectField renders the subject fields without a header; lay the
 // two fields (look_up_value_in + field) out side by side on one row.
-.ff-governance-subject :deep(.ff-object-field-as-child) {
+.ff-entitlement-enforcement-subject :deep(.ff-object-field-as-child) {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -351,25 +351,25 @@ const denyUnknownCustomersOptions = computed(() => [
   }
 }
 
-.ff-governance-connection-heading,
-.ff-governance-cache-sync-heading,
-.ff-governance-deny-unknown-customers-heading,
-.ff-governance-response-mapping-heading {
+.ff-entitlement-enforcement-connection-heading,
+.ff-entitlement-enforcement-cache-sync-heading,
+.ff-entitlement-enforcement-deny-unknown-customers-heading,
+.ff-entitlement-enforcement-response-mapping-heading {
   font-size: var(--kui-font-size-40, $kui-font-size-40);
   font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
   margin-bottom: var(--kui-space-50, $kui-space-50);
 }
 
-.ff-governance-deny-unknown-customers-heading {
+.ff-entitlement-enforcement-deny-unknown-customers-heading {
   margin-top: 0;
 }
 
-.ff-governance-connection-heading {
+.ff-entitlement-enforcement-connection-heading {
   margin-bottom: 0;
   margin-top: 0;
 }
 
-.ff-governance-inline-row {
+.ff-entitlement-enforcement-inline-row {
   display: flex;
   gap: var(--kui-space-60, $kui-space-60);
 
@@ -378,7 +378,7 @@ const denyUnknownCustomersOptions = computed(() => [
   }
 }
 
-.ff-governance-advanced-fields-container {
+.ff-entitlement-enforcement-advanced-fields-container {
   :deep(.collapse-heading) {
     margin: 0;
   }
@@ -387,7 +387,7 @@ const denyUnknownCustomersOptions = computed(() => [
 // Cache and sync fields laid out two per row, as designed. Grid (not flex-wrap)
 // so a lone item on the last row keeps its half-width column instead of
 // stretching to fill the row.
-.ff-governance-cache-sync {
+.ff-entitlement-enforcement-cache-sync {
   display: grid;
   gap: var(--kui-space-60, $kui-space-60);
   grid-template-columns: repeat(2, 1fr);
