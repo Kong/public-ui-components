@@ -5,6 +5,7 @@ import { basicExploreAggregations, queryableBasicExploreDimensions } from './bas
 export const queryableExploreDimensions = [
   ...queryableBasicExploreDimensions,
   'application',
+  'authenticated_entity',
   'bot_info_action',
   'bot_info_detection_reason',
   'bot_info_ban_type',
