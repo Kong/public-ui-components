@@ -31,7 +31,7 @@ export interface GatewayServiceFormFields {
   read_timeout: number
   client_certificate: string
   tls_sans: TlsSans
-  ca_certificates: string
+  ca_certificates: string[]
   tls_verify_enabled: boolean
   tls_verify_value: boolean
   tags: string

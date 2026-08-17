@@ -95,6 +95,18 @@ Show/hide `EntityFormSection` component info column.
 Controls whether `tls_sans` input fields are rendered and included in payload generation.
 When set to `false`, `tls_sans` fields are hidden and emitted payload sets `tls_sans` to `undefined`.
 
+#### `isCertificateSelectEnabled`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Feature-flag guard for the client/CA certificate select controls. When `true`, the client
+certificate is chosen from a searchable select and CA certificates from a multiselect (both
+backed by the `/certificates` and `/ca_certificates` endpoints). When `false` (default), the
+original free-text inputs are shown instead (client certificate ID input; comma-separated CA
+certificate IDs input). Host apps should pass their resolved feature-flag value here.
+
 ### Slots
 
 #### `form-actions`

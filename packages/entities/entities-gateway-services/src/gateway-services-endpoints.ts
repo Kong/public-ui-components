@@ -15,10 +15,14 @@ export default {
     konnect: {
       create: `${konnectBaseApiUrl}/services`,
       edit: `${konnectBaseApiUrl}/services/{id}`,
+      getCertificates: `${konnectBaseApiUrl}/certificates`,
+      getCaCertificates: `${konnectBaseApiUrl}/ca_certificates`,
     },
     kongManager: {
       create: `${KMBaseApiUrl}/services`,
       edit: `${KMBaseApiUrl}/services/{id}`,
+      getCertificates: `${KMBaseApiUrl}/certificates`,
+      getCaCertificates: `${KMBaseApiUrl}/ca_certificates`,
     },
   },
   relatedEntities: {
