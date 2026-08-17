@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.26.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.25.3...@kong-ui-public/entities-gateway-services@3.26.0) (2026-08-17)
+
+
+### Features
+
+* **entities-gateway-services:** convert client & CA certificates to select ([#3646](https://github.com/Kong/public-ui-components/issues/3646)) ([3039d33](https://github.com/Kong/public-ui-components/commit/3039d33df56fea32f5817638d76f2da92bd4d222))
+
+
+
+
+
 ## [3.25.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.25.2...@kong-ui-public/entities-gateway-services@3.25.3) (2026-08-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
