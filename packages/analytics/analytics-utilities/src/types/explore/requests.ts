@@ -12,6 +12,7 @@ export const queryableRequestDimensions = [
   'api_product',
   'api_product_version',
   'application',
+  'authenticated_entity',
   'auth_type',
   'bot_info_action',
   'bot_info_detection_reason',
@@ -61,6 +62,7 @@ export const filterableRequestDimensions = makeFilterable(queryableRequestDimens
 export type FilterableRequestDimensions = typeof filterableRequestDimensions[number]
 
 export const queryableRequestWildcardDimensions = [
+  'authenticated_entity',
   'auth_type',
   'client_ip',
   'data_plane_node_version',
