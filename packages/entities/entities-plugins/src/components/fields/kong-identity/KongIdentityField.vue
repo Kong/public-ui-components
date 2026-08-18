@@ -76,6 +76,7 @@ import { KLabel, KRadio, KSkeletonBox } from '@kong/kongponents'
 import { TeamIcon, AccountTreeIcon, KeyIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import { useFormShared } from '../../free-form/shared/composables'
+import { usePluginContext } from '../../free-form/shared/plugin-context'
 import composables from '../../../composables'
 
 import type { AuthMode } from './types'
@@ -97,10 +98,14 @@ const identityRealmsInSchema = computed(() => {
   return !!getSchema('$.config.identity_realms')
 })
 
+// Host opt-out: hides the "Centrally managed consumers" option entirely, regardless of schema.
+const keyAuthContext = usePluginContext('key-auth')
+const identityRealmsEnabled = computed(() => keyAuthContext?.identityRealmsEnabled ?? true)
+
 // Launch decision: Centrally Managed is shown unconditionally whenever the schema
 // supports identity_realms — we intentionally do NOT hide it when no realms exist yet.
 // Hiding it (platform-wide) is deferred to a fast-follow.
-const showCentrallyManaged = computed(() => identityRealmsInSchema.value)
+const showCentrallyManaged = computed(() => identityRealmsInSchema.value && identityRealmsEnabled.value)
 
 const descriptionText = computed(() => {
   return identityRealmsInSchema.value

@@ -16,7 +16,7 @@
   />
 
   <div
-    v-if="isKonnect && identityRealmsInSchema && selectedMode === 'centrally-managed'"
+    v-if="isKonnect && identityRealmsInSchema && identityRealmsEnabled && selectedMode === 'centrally-managed'"
     class="identity-realms-section"
     data-testid="identity-realms-section"
     @click="handleRealmFieldTouch"
@@ -89,6 +89,7 @@ import KongIdentityField from './KongIdentityField.vue'
 import IdentityRealmsField from '../../free-form/plugins/key-auth/IdentityRealmsField.vue'
 import PrincipalsCreationGuide from './PrincipalsCreationGuide.vue'
 import { useFormShared } from '../../free-form/shared/composables'
+import { usePluginContext } from '../../free-form/shared/plugin-context'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import { KLabel, KRadio } from '@kong/kongponents'
@@ -127,6 +128,11 @@ const appConfig = inject<KongManagerBaseFormConfig | KonnectBaseFormConfig | und
 const isKonnect = computed(() => appConfig?.app === 'konnect')
 const { axiosInstance } = useAxios(appConfig?.axiosRequestConfig)
 
+// Host opt-out: disables the identity_realms field, its realms fetch, and the "Centrally
+// managed consumers" mode option entirely, regardless of schema.
+const keyAuthContext = usePluginContext('key-auth')
+const identityRealmsEnabled = computed(() => keyAuthContext?.identityRealmsEnabled ?? true)
+
 const { formData, getSchema } = useFormShared()
 
 const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
@@ -154,7 +160,7 @@ const fetchedRealms = ref<MultiselectItem[]>([])
 const isLoadingRealms = ref(false)
 
 const fetchRealms = async () => {
-  if (appConfig?.app !== 'konnect' || !identityRealmsInSchema.value) return
+  if (appConfig?.app !== 'konnect' || !identityRealmsInSchema.value || !identityRealmsEnabled.value) return
 
   try {
     isLoadingRealms.value = true
@@ -324,7 +330,7 @@ const advancedOmit = computed(() => {
   if (!realmRequired.value && selectedMode.value !== 'kong-identity') {
     advancedSet.add('realm')
   }
-  if (isKonnect.value && identityRealmsInSchema.value && !hasPrincipals.value) {
+  if (isKonnect.value && identityRealmsInSchema.value && identityRealmsEnabled.value && !hasPrincipals.value) {
     advancedSet.add('identity_realms')
   }
 

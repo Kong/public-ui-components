@@ -58,6 +58,16 @@ export type {
   ResolvedPluginFormConfig,
 } from './components/free-form/shared/plugin-registry'
 
+export {
+  providePluginContext,
+  usePluginContext,
+} from './components/free-form/shared/plugin-context'
+
+export type {
+  PluginContextRegistry,
+  PluginName as PluginContextName,
+} from './components/free-form/shared/plugin-context'
+
 export { provideEditorStore, useEditorStore } from './components/free-form/plugins/datakit/composables'
 
 export type { DatakitPluginData, NodeInstance, NodePhase } from './components/free-form/plugins/datakit/types'
