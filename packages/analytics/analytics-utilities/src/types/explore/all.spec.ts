@@ -46,7 +46,7 @@ describe('stripUnknownFilters', () => {
   // a filter that's only in the managed_cache_usage datasource
   const managedCacheFilter = {
     operator: 'in',
-    field: 'region',
+    field: 'provider_region',
     value: ['foo'],
   }
 
