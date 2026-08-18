@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.26.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.26.0...@kong-ui-public/analytics-utilities@12.26.1) (2026-08-18)
+
+
+### Bug Fixes
+
+* rename authenticated_entity -> oidc_credential ([#3708](https://github.com/Kong/public-ui-components/issues/3708)) ([9bd3e6a](https://github.com/Kong/public-ui-components/commit/9bd3e6aec572540fc9999dd4d6e827b848811da2))
+
+
+
+
+
 # [12.26.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.25.7...@kong-ui-public/analytics-utilities@12.26.0) (2026-08-17)
 
 
