@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.26.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.26.0...@kong-ui-public/entities-gateway-services@3.26.1) (2026-08-18)
+
+
+### Bug Fixes
+
+* **entities-gateway-services:** missing delete description in km ([#3707](https://github.com/Kong/public-ui-components/issues/3707)) ([c0e3667](https://github.com/Kong/public-ui-components/commit/c0e36678c0e3d983092f83b0fbf145ab05fbb74c))
+
+
+
+
+
 # [3.26.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.25.3...@kong-ui-public/entities-gateway-services@3.26.0) (2026-08-17)
 
 
