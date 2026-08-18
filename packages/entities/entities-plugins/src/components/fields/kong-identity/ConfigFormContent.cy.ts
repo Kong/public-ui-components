@@ -4,6 +4,7 @@ import Form from '../../free-form/shared/Form.vue'
 import ConfigFormContent from './ConfigFormContent.vue'
 import { BEFORE_SAVE_KEY } from '../../const'
 import { FEATURE_FLAGS } from '../../../constants'
+import { PLUGIN_CONTEXT_KEY } from '../../free-form/shared/plugin-context'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 
 // Schema with both principals and identity_realms (like key-auth)
@@ -251,6 +252,8 @@ function mountContent(
     principalsCreationGuideVisible?: boolean
     /** Kong Gateway versions of connected data plane nodes. */
     dataPlaneVersions?: string[]
+    /** key-auth context: set to `false` to disable the identity_realms flow entirely. */
+    identityRealmsEnabled?: boolean
   },
   data?: Record<string, any>,
 ) {
@@ -295,6 +298,9 @@ function mountContent(
         [BEFORE_SAVE_KEY as symbol]: (cb: () => boolean) => {
           beforeSaveCallbacks.push(cb); return () => {}
         },
+        ...(options.identityRealmsEnabled !== undefined
+          ? { [PLUGIN_CONTEXT_KEY]: { 'key-auth': { identityRealmsEnabled: options.identityRealmsEnabled } } }
+          : {}),
       },
     },
   })
@@ -709,6 +715,41 @@ describe('ConfigFormContent', () => {
             && val.config?.principals?.directory === 'my-custom-dir'
             && val.config?.principals?.error_on_miss === false
         }))
+      })
+    })
+
+    describe('identityRealmsEnabled context (key-auth)', () => {
+      it('hides the "Centrally managed consumers" option when disabled', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, identityRealmsEnabled: false })
+
+        cy.getTestId('kong-identity-mode-consumers').should('exist')
+        cy.getTestId('kong-identity-mode-kong-identity').should('exist')
+        cy.getTestId('kong-identity-mode-centrally-managed').should('not.exist')
+      })
+
+      it('hides the identity_realms field even when saved data is already centrally-managed', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, identityRealmsEnabled: false }, {
+          config: {
+            principals: null,
+            identity_realms: [{ scope: 'realm', id: 'some-id', region: 'us' }],
+          },
+        })
+
+        cy.getTestId('ff-identity-realms-field').should('not.exist')
+        cy.getTestId('ff-array-config.identity_realms').should('not.exist')
+      })
+
+      it('does not fetch realms when disabled', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, identityRealmsEnabled: false })
+
+        cy.get('@fetchRealms.all').should('have.length', 0)
+      })
+
+      it('still shows the option and fetches realms when left unset (defaults to enabled)', () => {
+        mountContent(schemaWithRealms, { isKonnect: true })
+
+        cy.getTestId('kong-identity-mode-centrally-managed').should('exist')
+        cy.wait('@fetchRealms')
       })
     })
   })

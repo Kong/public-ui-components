@@ -70,7 +70,7 @@
 import { computed, defineComponent, provide, ref, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
+import { PluginForm, providePluginContext, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
 import { FEATURE_FLAGS } from '../../src/constants'
 
 import { ToastManager } from '@kong/kongponents'
@@ -126,6 +126,10 @@ const FeatureFlagProvider = defineComponent({
 })
 
 provideDeckCommandEditor()
+
+providePluginContext('key-auth', {
+  identityRealmsEnabled: true,
+})
 
 useProvideExperimentalFreeForms([
   'ace',
