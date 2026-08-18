@@ -4,8 +4,11 @@ import type { BasicExploreEmptyFilterV2, BasicExploreInFilterV2, BasicExploreQue
 export const queryableAiExploreDimensions = [
   'control_plane',
   'control_plane_group',
+  'ai_control_plane',
   'gateway_service',
   'consumer',
+  'ai_consumer',
+  'ai_consumer_group',
   'application',
   'oidc_credential',
   'route',
@@ -21,6 +24,10 @@ export const queryableAiExploreDimensions = [
   'status_code_grouped',
   'ai_plugin',
   'principal',
+  'mcp_server',
+  'model',
+  'agent',
+  'ai_data_plane_node',
 ] as const
 
 export type QueryableAiExploreDimensions = typeof queryableAiExploreDimensions[number]
@@ -41,6 +48,7 @@ export const aiExploreAggregations = [
   'total_tokens',
   'prompt_tokens',
   'completion_tokens',
+  'cached_tokens',
   'ai_request_count',
   'error_rate',
   'cost',
@@ -49,6 +57,7 @@ export const aiExploreAggregations = [
   'llm_latency_average',
   'llm_embeddings_tokens',
   'llm_embeddings_cost',
+  'time_to_first_token_average',
 ] as const
 
 export type AiExploreAggregations = typeof aiExploreAggregations[number]
