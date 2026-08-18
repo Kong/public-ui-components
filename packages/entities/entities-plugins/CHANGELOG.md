@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.262.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.261.0...@kong-ui-public/entities-plugins@9.262.0) (2026-08-18)
+
+
+### Features
+
+* **entities-plugins:** add typed plugin context provide/inject mechanism ([#3706](https://github.com/Kong/public-ui-components/issues/3706)) ([5fc05a9](https://github.com/Kong/public-ui-components/commit/5fc05a9664f0ec098759afa6c77704f861770d30))
+
+
+
+
+
 # [9.261.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.260.5...@kong-ui-public/entities-plugins@9.261.0) (2026-08-18)
 
 
