@@ -44,24 +44,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed, useId, toRef } from 'vue'
-import { Map } from 'maplibre-gl'
+import type { ComputedRef } from 'vue'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatBoundsLike, MapOptions } from 'maplibre-gl'
-import type { MapFeatureCollection, MetricUnits } from '../types'
 import type { Feature, MultiPolygon, Geometry, GeoJsonProperties, FeatureCollection } from 'geojson'
-import composables from '../composables'
-import 'maplibre-gl/dist/maplibre-gl.css'
 import type { ExploreAggregations, CountryISOA2 } from '@kong-ui-public/analytics-utilities'
+import type { MapFeatureCollection, MetricUnits } from '../types'
+import type { MapTooltipData } from './MapTooltip.vue'
+import type { GeoMapColors } from '../utils/colors'
+
+import { inject, ref, onMounted, onUnmounted, watch, computed, useId, toRef } from 'vue'
+import { Map } from 'maplibre-gl'
 import { registerWebglCapture } from '@kong-ui-public/analytics-utilities'
-import lakes from '../ne_110m_lakes.json'
 import * as geobuf from 'geobuf'
 import Pbf from 'pbf'
-import { debounce } from '../utils'
 import { AnalyticsIcon } from '@kong/icons'
-import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER, KUI_ICON_COLOR_NEUTRAL, KUI_ICON_SIZE_60 } from '@kong/design-tokens'
+import { KUI_ICON_COLOR_NEUTRAL, KUI_ICON_SIZE_60 } from '@kong/design-tokens'
+
+import composables from '../composables'
+import { debounce } from '../utils'
+import { geoMapColors } from '../utils/colors'
 import MapLegend from './MapLegend.vue'
-import type { MapTooltipData } from './MapTooltip.vue'
 import MapTooltip from './MapTooltip.vue'
+import lakes from '../ne_110m_lakes.json'
+import 'maplibre-gl/dist/maplibre-gl.css'
 
 const countriesPbfUrlPromise = import('../countries-simple-geo.pbf?url').then(m => m.default)
 
@@ -88,10 +93,14 @@ const emit = defineEmits<{
 }>()
 
 const { i18n } = composables.useI18n()
+
+const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
+
 const { getColor, legendData } = composables.useLegendScale({
   countryMetrics: toRef(() => countryMetrics),
   metric: toRef(() => metric),
   unit: toRef(() => metricUnit),
+  emptyCountryFill: toRef(() => colors.value.emptyCountryFill),
 })
 const { formatMetric } = composables.useMetricFormat({ unit: toRef(() => metricUnit) })
 const tooltipData = ref<MapTooltipData>()
@@ -100,9 +109,12 @@ const map = ref<Map>()
 const geoJsonData = ref<MapFeatureCollection | null>(null)
 const tooltipPosition = ref({ left: '0px', top: '0px' })
 const showTooltip = ref(false)
+const colors = ref<GeoMapColors>(geoMapColors())
+
 const showNoLocationOverlay = computed(() => {
   return Object.keys(countryMetrics).length === 0 && !fitToCountry
 })
+
 const layerPaint = computed(() => ({
   'fill-color': [
     'match',
@@ -121,10 +133,14 @@ const layerPaint = computed(() => ({
         code,
         getColor(metric),
       ])
-      : [KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER, KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER]),
-    KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER, // default color if no match
+      : [colors.value.emptyCountryFill, colors.value.emptyCountryFill]),
+    colors.value.emptyCountryFill, // default color if no match
   ] as DataDrivenPropertyValueSpecification<ColorSpecification>,
   'fill-opacity': 0.7,
+}))
+
+const lakesPaint = computed(() => ({
+  'fill-color': colors.value.waterFill,
 }))
 
 const showLegend = computed(() => {
@@ -283,9 +299,7 @@ onMounted(async () => {
         id: 'lakes-layer',
         type: 'fill',
         source: 'lakes',
-        paint: {
-          'fill-color': '#FFFFFF',
-        },
+        paint: lakesPaint.value,
       })
 
       map.value?.on('mousemove', 'countries-layer', (e) => {
@@ -335,26 +349,21 @@ onMounted(async () => {
   }
 })
 
-watch(() => countryMetrics, () => {
-  if (map.value && map.value.isStyleLoaded()) {
-    if (map.value.getLayer('countries-layer')) {
-      map.value.removeLayer('countries-layer')
-    }
-    map.value.addLayer({
-      id: 'countries-layer',
-      type: 'fill',
-      source: 'countries',
-      paint: layerPaint.value,
-    })
-    map.value.removeLayer('lakes-layer')
-    map.value?.addLayer({
-      id: 'lakes-layer',
-      type: 'fill',
-      source: 'lakes',
-      paint: {
-        'fill-color': '#FFFFFF',
-      },
-    })
+watch(activeColorMode, () => {
+  colors.value = geoMapColors()
+})
+
+watch([layerPaint, lakesPaint], () => {
+  if (!map.value?.isStyleLoaded()) {
+    return
+  }
+
+  if (map.value.getLayer('countries-layer')) {
+    map.value.setPaintProperty('countries-layer', 'fill-color', layerPaint.value['fill-color'])
+  }
+
+  if (map.value.getLayer('lakes-layer')) {
+    map.value.setPaintProperty('lakes-layer', 'fill-color', lakesPaint.value['fill-color'])
   }
 })
 
@@ -408,7 +417,7 @@ watch(() => bounds, (newVal, oldVal) => {
 
   .no-location-overlay {
     align-items: center;
-    background: rgba(255, 255, 255, 0.7);
+    background: color-mix(in srgb, var(--kui-color-background, $kui-color-background) 70%, transparent);
     bottom: 0;
     display: flex;
     flex-direction: column;
