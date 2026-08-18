@@ -232,6 +232,7 @@
     <EntityDeleteModal
       :action-pending="isDeletePending"
       :confirm-disabled="requiresForceDelete && !forceDeleteConfirmed"
+      :description="deleteDescription"
       :entity-name="gatewayServiceToBeDeleted && (gatewayServiceToBeDeleted.name || gatewayServiceToBeDeleted.id)"
       :entity-type="EntityTypes.GatewayService"
       :error="deleteModalError"
@@ -682,6 +683,10 @@ const hasRelatedEntities = computed((): boolean =>
 // requires an explicit force delete confirmation
 const requiresForceDelete = computed((): boolean =>
   props.enableForceDeleteConfirmation && (relatedEntitiesCheckFailed.value || relatedRoutesCount.value > 0))
+
+// Kong Manager doesn't run the related-entities check, so it keeps the generic cascade warning
+const deleteDescription = computed((): string =>
+  props.config.app === 'kongManager' ? t('actions.delete.description') : '')
 
 // Only shown when the service has no routes (the checkbox + help text cover the routes case)
 const relatedEntitiesMessage = computed((): string => {

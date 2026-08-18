@@ -10,6 +10,7 @@
     "view": "View details",
     "delete": {
       "title": "Delete a gateway service",
+      "description": "Deleting this gateway service will also remove any associated plugins. This action cannot be reversed.",
       "menu_label": "Delete",
       "related_entities": {
         "plugins_only": "{pluginCount} associated {plugin} will be deleted along with this gateway service.",

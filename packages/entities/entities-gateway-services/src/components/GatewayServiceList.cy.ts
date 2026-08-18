@@ -1012,6 +1012,52 @@ describe('<GatewayServiceList />', () => {
 
       cy.wait('@deleteService').its('request.url').should('not.include', 'force')
     })
+
+    it('does not show the generic cascade warning', () => {
+      interceptRelatedEntities([], [])
+
+      openDeleteModal()
+
+      cy.get(`${modal} .description`).should('not.exist')
+    })
+  })
+
+  describe('delete flow (Kong Manager)', () => {
+    const serviceName = gatewayService1.name
+    const modal = '.kong-ui-entity-delete-modal'
+
+    it('shows the generic cascade warning', () => {
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/services*`,
+        },
+        {
+          statusCode: 200,
+          body: gatewayServices,
+        },
+      )
+
+      cy.mount(GatewayServiceList, {
+        props: {
+          cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+          config: baseConfigKM,
+          canCreate: () => false,
+          canEdit: () => false,
+          canDelete: () => true,
+          canRetrieve: () => false,
+        },
+      })
+
+      cy.getTestId('row-actions-dropdown-trigger').eq(0).click()
+      cy.get(`[data-testid="${serviceName}-actions-dropdown-popover"] [data-testid="action-entity-delete"]`).click()
+
+      cy.get(`${modal} .description`).should(
+        'contain.text',
+        'Deleting this gateway service will also remove any associated plugins. This action cannot be reversed.',
+      )
+      cy.getTestId('gateway-service-delete-force-checkbox').should('not.exist')
+    })
   })
 
   describe('Konnect - workspace URL building', () => {
