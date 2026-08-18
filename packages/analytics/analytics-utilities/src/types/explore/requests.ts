@@ -12,7 +12,6 @@ export const queryableRequestDimensions = [
   'api_product',
   'api_product_version',
   'application',
-  'authenticated_entity',
   'auth_type',
   'bot_info_action',
   'bot_info_detection_reason',
@@ -36,6 +35,7 @@ export const queryableRequestDimensions = [
   'mcp_method',
   'mcp_session_id',
   'mcp_tool_name',
+  'oidc_credential',
   'portal',
   'principal',
   'realm',
@@ -62,13 +62,13 @@ export const filterableRequestDimensions = makeFilterable(queryableRequestDimens
 export type FilterableRequestDimensions = typeof filterableRequestDimensions[number]
 
 export const queryableRequestWildcardDimensions = [
-  'authenticated_entity',
   'auth_type',
   'client_ip',
   'data_plane_node_version',
   'header_host',
   'header_user_agent',
   'http_method',
+  'oidc_credential',
   'request_id',
   'request_uri',
   'response_header_content_type',
