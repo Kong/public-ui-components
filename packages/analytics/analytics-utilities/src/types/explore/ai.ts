@@ -7,7 +7,7 @@ export const queryableAiExploreDimensions = [
   'gateway_service',
   'consumer',
   'application',
-  'authenticated_entity',
+  'oidc_credential',
   'route',
   'ai_provider',
   'ai_response_model',
