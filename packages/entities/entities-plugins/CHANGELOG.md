@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.261.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.260.5...@kong-ui-public/entities-plugins@9.261.0) (2026-08-18)
+
+
+### Features
+
+* **entities-plugins:** improve Datakit editor readability [KM-3097] ([#3694](https://github.com/Kong/public-ui-components/issues/3694)) ([05f7d19](https://github.com/Kong/public-ui-components/commit/05f7d1906c2a13f03c6b450345e32e305172393a))
+
+
+
+
+
 ## [9.260.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.260.4...@kong-ui-public/entities-plugins@9.260.5) (2026-08-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
