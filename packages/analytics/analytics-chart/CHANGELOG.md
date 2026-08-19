@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.24.8...@kong-ui-public/analytics-chart@10.25.0) (2026-08-19)
+
+
+### Features
+
+* **analytics-chart:** add OIDC credential label ([#3711](https://github.com/Kong/public-ui-components/issues/3711)) ([5624f1a](https://github.com/Kong/public-ui-components/commit/5624f1a260634f614aefedaa28b499a2db7e9770))
+
+
+
+
+
 ## [10.24.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.24.7...@kong-ui-public/analytics-chart@10.24.8) (2026-08-18)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
