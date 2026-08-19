@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.9.10...@kong-ui-public/analytics-geo-map@1.9.11) (2026-08-19)
+
+
+### Bug Fixes
+
+* **analytics:** respect app theme in map colors [MA-5263] ([#3709](https://github.com/Kong/public-ui-components/issues/3709)) ([6e143df](https://github.com/Kong/public-ui-components/commit/6e143df5cb95babca205aa31ab1fa2e4312348a1))
+
+
+
+
+
 ## [1.9.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.9.9...@kong-ui-public/analytics-geo-map@1.9.10) (2026-08-18)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-geo-map
