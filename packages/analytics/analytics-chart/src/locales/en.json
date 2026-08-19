@@ -100,6 +100,7 @@
     "control_plane": "Control plane",
     "control_plane_group": "Control plane group",
     "consumer": "Consumer",
+    "oidc_credential": "OIDC credential",
     "country_code": "Country",
     "country": "Country",
     "data_plane_node": "Data plane node",
