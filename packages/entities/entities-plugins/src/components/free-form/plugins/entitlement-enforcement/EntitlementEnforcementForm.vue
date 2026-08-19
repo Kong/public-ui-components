@@ -105,7 +105,7 @@
 
       <StringField
         :help="t('plugins.free-form.governance.fields.governance_endpoint.help')"
-        name="config.governance_endpoint"
+        name="config.entitlement_access_endpoint"
       />
       <Field name="config.api_token" />
       <Field name="config.ssl_verify" />
@@ -256,12 +256,12 @@ const registerBeforeSave = inject(BEFORE_SAVE_KEY)
 const unregisterBeforeSave = registerBeforeSave?.(() => !isKongManager.value)
 onUnmounted(() => unregisterBeforeSave?.())
 
-const governanceEndpointUrl = computed(() => {
+const entitlementAccessEndpointUrl = computed(() => {
   const geo = (appConfig as KonnectBaseFormConfig)?.geoApiServerUrl
   const region = geo ? new URL(geo).hostname.split('.')[0] : null
   return region
-    ? `https://${region}.api.konghq.com/v3/openmeter/governance/query`
-    : 'https://us.api.konghq.com/v3/openmeter/governance/query'
+    ? `https://${region}.api.konghq.com/v3/openmeter/entitlement-access/query`
+    : 'https://us.api.konghq.com/v3/openmeter/entitlement-access/query'
 })
 
 const formConfig = {
@@ -269,11 +269,11 @@ const formConfig = {
   prepareFormData: (data: any): any => {
     if (props.isEditing) return data
 
-    // Prefill governance_endpoint for new Konnect plugins; Kong Manager has no regional endpoint
-    if ((appConfig as KonnectBaseFormConfig)?.app === 'konnect' && !data?.config?.governance_endpoint) {
+    // Prefill entitlement_access_endpoint for new Konnect plugins; Kong Manager has no regional endpoint
+    if ((appConfig as KonnectBaseFormConfig)?.app === 'konnect' && !data?.config?.entitlement_access_endpoint) {
       return {
         ...data,
-        config: { ...data?.config, governance_endpoint: governanceEndpointUrl.value },
+        config: { ...data?.config, entitlement_access_endpoint: entitlementAccessEndpointUrl.value },
       }
     }
 
@@ -316,9 +316,9 @@ const failPolicyOptions = computed(() => [
     description: t('plugins.free-form.governance.fields.fail_policy.allow_description'),
   },
   {
-    value: 'deny',
-    label: t('plugins.free-form.governance.fields.fail_policy.deny_label'),
-    description: t('plugins.free-form.governance.fields.fail_policy.deny_description'),
+    value: 'block',
+    label: t('plugins.free-form.governance.fields.fail_policy.block_label'),
+    description: t('plugins.free-form.governance.fields.fail_policy.block_description'),
   },
 ])
 

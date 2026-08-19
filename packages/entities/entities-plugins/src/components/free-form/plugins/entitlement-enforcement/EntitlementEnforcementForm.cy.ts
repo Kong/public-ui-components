@@ -1,6 +1,6 @@
 import EntitlementEnforcementForm from './EntitlementEnforcementForm.vue'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
-import governanceSchema from '../../../../../fixtures/schemas/governance'
+import entitlementEnforcementSchema from '../../../../../fixtures/schemas/entitlement-enforcement'
 
 const mountForm = (options: {
   isEditing?: boolean
@@ -17,12 +17,12 @@ const mountForm = (options: {
 
   cy.mount(EntitlementEnforcementForm as any, {
     props: {
-      schema: governanceSchema,
+      schema: entitlementEnforcementSchema,
       formSchema: {},
       formModel: {},
       model,
       isEditing,
-      pluginName: 'governance',
+      pluginName: 'entitlement-enforcement',
       onFormChange: cy.spy().as('onFormChange'),
       'onClick:create-entity': cy.spy().as('onCreateEntity'),
     },
@@ -196,16 +196,16 @@ describe('EntitlementEnforcementForm - Kong Manager', () => {
   })
 })
 
-describe('EntitlementEnforcementForm - governance_endpoint prefill', () => {
-  it('prefills governance_endpoint with regional URL for new Konnect plugin', () => {
+describe('EntitlementEnforcementForm - entitlement_access_endpoint prefill', () => {
+  it('prefills entitlement_access_endpoint with regional URL for new Konnect plugin', () => {
     mountForm({ geoApiServerUrl: 'https://us.api.konghq.com' })
 
-    cy.getTestId('ff-config.governance_endpoint').should('have.value', 'https://us.api.konghq.com/v3/openmeter/governance/query')
+    cy.getTestId('ff-config.entitlement_access_endpoint').should('have.value', 'https://us.api.konghq.com/v3/openmeter/entitlement-access/query')
   })
 
   it('uses fallback us endpoint when geoApiServerUrl is not available', () => {
     mountForm({})
 
-    cy.getTestId('ff-config.governance_endpoint').should('have.value', 'https://us.api.konghq.com/v3/openmeter/governance/query')
+    cy.getTestId('ff-config.entitlement_access_endpoint').should('have.value', 'https://us.api.konghq.com/v3/openmeter/entitlement-access/query')
   })
 })
