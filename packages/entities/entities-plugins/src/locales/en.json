@@ -1298,16 +1298,16 @@
           "credit_balance_required": {
             "label": "Credit balance lookup",
             "yes_label": "Yes",
-            "yes_description": "A credit balance above zero is required for access to this feature.",
+            "yes_description": "Customers must have a positive credit balance to access this feature.",
             "no_label": "No",
             "no_description": "Customers can access this feature regardless of their credit balance."
           },
           "fail_policy": {
             "label": "Plugin failure mode",
             "allow_label": "Allow access",
-            "allow_description": "In the case of plugin failure, allow access to feature.",
+            "allow_description": "If the plugin fails, customers can still access this feature.",
             "block_label": "Block access",
-            "block_description": "In the case of plugin failure, block access to feature."
+            "block_description": "If the plugin fails, customers cannot access this feature."
           },
           "deny_unknown_customers": {
             "label": "Unknown customer access",
