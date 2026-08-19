@@ -23,6 +23,7 @@
     </div>
     <div
       :id="mapContainerId"
+      ref="mapContainer"
       class="analytics-geo-map-container"
     />
     <!-- Legend -->
@@ -105,6 +106,7 @@ const { getColor, legendData } = composables.useLegendScale({
 const { formatMetric } = composables.useMetricFormat({ unit: toRef(() => metricUnit) })
 const tooltipData = ref<MapTooltipData>()
 const mapContainerId = useId()
+const mapContainer = ref<HTMLElement>()
 const map = ref<Map>()
 const geoJsonData = ref<MapFeatureCollection | null>(null)
 const tooltipPosition = ref({ left: '0px', top: '0px' })
@@ -269,6 +271,8 @@ onUnmounted(() => {
 })
 
 onMounted(async () => {
+  colors.value = geoMapColors(mapContainer.value)
+
   try {
     const countriesPbfUrl = await countriesPbfUrlPromise
     const response = await fetch(countriesPbfUrl)
@@ -350,7 +354,7 @@ onMounted(async () => {
 })
 
 watch(activeColorMode, () => {
-  colors.value = geoMapColors()
+  colors.value = geoMapColors(mapContainer.value)
 })
 
 watch([layerPaint, lakesPaint], () => {

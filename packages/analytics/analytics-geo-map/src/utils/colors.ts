@@ -6,17 +6,19 @@ export interface GeoMapColors {
 }
 
 /**
- * Determine the map colors based on the theme applied to the `<html>` element.
+ * Determine the map colors from the `element` and falls back to `<html>`.
  */
-export const geoMapColors = (): GeoMapColors => {
-  if (typeof window === 'undefined' || typeof document === 'undefined') {
+export const geoMapColors = (element?: Element | null): GeoMapColors => {
+  const target = element ?? (typeof document === 'undefined' ? null : document.documentElement)
+
+  if (typeof window === 'undefined' || !target) {
     return {
       emptyCountryFill: KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER,
       waterFill: KUI_COLOR_BACKGROUND,
     }
   }
 
-  const styles = window.getComputedStyle(document.documentElement)
+  const styles = window.getComputedStyle(target)
 
   const getColor = (customProperty: string, fallback: string): string => (
     styles.getPropertyValue(customProperty).trim() || fallback
