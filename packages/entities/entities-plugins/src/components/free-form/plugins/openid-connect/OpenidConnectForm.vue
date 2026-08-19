@@ -38,6 +38,16 @@
           multiline
         />
       </FieldRenderer>
+      <!-- AI Manager requires an explicit cache token salt; other hosts leave it optional/auto-generated. -->
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }) => path === 'config.cache_tokens_salt'"
+      >
+        <StringField
+          v-bind="slotProps"
+          :required="isAiManager"
+        />
+      </FieldRenderer>
 
       <FieldRenderer
         v-slot="slotProps"
@@ -152,6 +162,8 @@ import FieldRenderer from '../../shared/FieldRenderer.vue'
 import ObjectField from '../../shared/ObjectField.vue'
 import StringField from '../../shared/StringField.vue'
 import { FORM_EDITING } from '../../shared/const'
+import { usePluginContext } from '../../shared/plugin-context'
+import { generateCredentialSecret } from '../../shared/utils'
 import { migrateConsumerClaim } from './useConsumerClaimMigration'
 import AuthMethodsField from './AuthMethodsField.vue'
 import ClientJwkField from './ClientJwkField.vue'
@@ -248,6 +260,11 @@ provide(FORM_EDITING, computed(() => props.isEditing))
 const appConfig = inject<KongManagerBaseFormConfig | KonnectBaseFormConfig | undefined>(FORMS_CONFIG)
 const isKonnect = computed(() => appConfig?.app === 'konnect')
 
+// AI Manager relies on cache_tokens_salt to key its own token cache, so it must be
+// explicitly set rather than left to Kong's auto-generation.
+const openidConnectContext = usePluginContext('openid-connect')
+const isAiManager = computed(() => openidConnectContext?.source === 'ai-manager')
+
 // Feature-flagged: when the consuming app hasn't enabled the Identity Principals UI,
 // behave as if `principals` isn't in the schema and fall back to the plain common fields.
 const identityPrincipalsUiEnabled = inject<boolean>(FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI, false)
@@ -324,6 +341,11 @@ onMounted(() => {
     props.onFormChange({ config: { consumer_claims: migratedClaims } } as any)
   }
 
+  // AI Manager needs a real salt from the start (not Kong's server-generated one) so it
+  // can key its token cache before the plugin is ever saved.
+  if (isAiManager.value && !props.isEditing && !config?.cache_tokens_salt) {
+    props.onFormChange({ config: { cache_tokens_salt: generateCredentialSecret(32) } } as any)
+  }
 })
 </script>
 
