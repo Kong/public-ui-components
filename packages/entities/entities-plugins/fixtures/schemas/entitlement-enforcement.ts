@@ -1,8 +1,8 @@
 import type { FormSchema } from '../../src/types/plugins/form-schema'
 
-const governanceSchema: FormSchema = {
+const entitlementEnforcementSchema: FormSchema = {
   type: 'record',
-  supported_partials: { 'redis-ce': ['config.redis'] },
+  supported_partials: { 'redis-ee': ['config.redis'] },
   fields: [{
     config: {
       type: 'record',
@@ -86,7 +86,7 @@ const governanceSchema: FormSchema = {
             ],
           },
         },
-        { governance_endpoint: { type: 'string', required: true } },
+        { entitlement_access_endpoint: { type: 'string', required: true } },
         { api_token: { type: 'string', required: true, referenceable: true } },
         { ssl_verify: { type: 'boolean', default: true } },
         { timeout: { type: 'integer', default: 10000 } },
@@ -96,7 +96,7 @@ const governanceSchema: FormSchema = {
         { max_stale_seconds: { type: 'integer', default: 60 } },
         { l1_cache_ttl_seconds: { type: 'integer', default: 5 } },
         { l2_cache_ttl_seconds: { type: 'integer', default: 120 } },
-        { fail_policy: { type: 'string', one_of: ['allow', 'deny'], default: 'allow' } },
+        { fail_policy: { type: 'string', one_of: ['allow', 'block'], default: 'allow' } },
         {
           redis: {
             type: 'record',
@@ -114,4 +114,4 @@ const governanceSchema: FormSchema = {
   }],
 }
 
-export default governanceSchema
+export default entitlementEnforcementSchema

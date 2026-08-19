@@ -679,10 +679,10 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.metering-and-billing.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['metering-and-billing'],
   },
-  governance: {
-    descriptionKey: 'plugins.meta.governance.description',
-    nameKey: 'plugins.meta.governance.name',
-    ...PLUGIN_GROUP_AND_SCOPE_MAP['governance'],
+  'entitlement-enforcement': {
+    descriptionKey: 'plugins.meta.entitlement-enforcement.description',
+    nameKey: 'plugins.meta.entitlement-enforcement.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['entitlement-enforcement'],
   },
 }
 
