@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.263.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.262.1...@kong-ui-public/entities-plugins@9.263.0) (2026-08-19)
+
+
+### Features
+
+* **entities-plugins:** support AI Manager context for OIDC cache_tokens_salt ([#3710](https://github.com/Kong/public-ui-components/issues/3710)) ([346d3c6](https://github.com/Kong/public-ui-components/commit/346d3c6ac1104ded7c67a42da481cf5bbf1ef714))
+
+
+
+
+
 ## [9.262.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.262.0...@kong-ui-public/entities-plugins@9.262.1) (2026-08-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
