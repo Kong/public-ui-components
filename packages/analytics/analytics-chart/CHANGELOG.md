@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.25.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.25.2...@kong-ui-public/analytics-chart@10.25.3) (2026-08-20)
+
+
+### Bug Fixes
+
+* **analytics:** validate zoom range for time series chart [MA-5288] ([#3715](https://github.com/Kong/public-ui-components/issues/3715)) ([dcb9a1d](https://github.com/Kong/public-ui-components/commit/dcb9a1d6b8832ad6c145763c2920b5e7a5f601d8))
+
+
+
+
+
 ## [10.25.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.25.1...@kong-ui-public/analytics-chart@10.25.2) (2026-08-20)
 
 
