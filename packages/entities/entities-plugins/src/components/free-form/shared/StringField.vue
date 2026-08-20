@@ -97,7 +97,7 @@ import * as utils from '../shared/utils'
 import { useField, useFieldAttrs } from './composables'
 
 import type { StringFieldSchema } from 'src/types/plugins/form-schema'
-import type { BaseFieldProps } from './types'
+import type { BaseFieldProps, EmptyValue } from './types'
 
 defineOptions({
   inheritAttrs: false,
@@ -125,14 +125,14 @@ const {
   ...props
 } = defineProps<StringFieldProps>()
 const emit = defineEmits<{
-  'update:modelValue': [value: string | null]
+  'update:modelValue': [value: string | EmptyValue]
 }>()
 
-const { value: fieldValue, hide, ...field } = useField<string | null>(toRef(() => name))
+const { value: fieldValue, hide, ...field } = useField<string | EmptyValue>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 
 function handleUpdate(value: string) {
-  fieldValue!.value = value === '' ? null : value
+  fieldValue!.value = value === '' ? field.emptyValue!.value : value
   emit('update:modelValue', fieldValue!.value)
 }
 

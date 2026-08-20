@@ -8,7 +8,7 @@ import * as utils from '../utils'
 import { useKeyIdMap } from './key-id-map'
 
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
-import type { FormConfig, MatchMap, RenderRules } from '../types'
+import type { EmptyValue, FormConfig, MatchMap, RenderRules } from '../types'
 import type { FormSchema, UnionFieldSchema } from '../../../../types/plugins/form-schema'
 
 export const [provideFormShared, useOptionalFormShared] = createInjectionState(
@@ -30,7 +30,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       getDefault: getDefaultFromSchema,
       getEmptyOrDefault: getEmptyOrDefaultFromSchema,
       ...schemaHelpers
-    } = useSchemaHelpers(schema)
+    } = useSchemaHelpers(schema, () => propsConfig)
     const keyIdMap = useKeyIdMap(schemaHelpers.getSchema)
     const fieldRendererRegistry: MatchMap = new Map()
 
@@ -141,7 +141,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       return serializeIfNeeded(getDefaultFromSchema(path))
     }
 
-    function getEmptyOrDefault<T = unknown>(path?: string): T | null {
+    function getEmptyOrDefault<T = unknown>(path?: string): T | EmptyValue {
       return serializeIfNeeded(getEmptyOrDefaultFromSchema<T>(path))
     }
 

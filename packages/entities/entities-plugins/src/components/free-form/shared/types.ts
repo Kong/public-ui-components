@@ -19,6 +19,25 @@ export type FormConfig<T extends Record<string, any> = Record<string, any>> = {
    * Sync value after `change` event for every text-like input.
    */
   updateOnChange?: boolean
+  /**
+   * Controls the sentinel value written when a field has no value: initial
+   * defaults for non-required fields, hidden-field resets, and fields the
+   * user actively clears. Defaults to `'null'`, matching the framework's
+   * existing behavior.
+   */
+  emptyFieldValue?: 'null' | 'undefined'
+}
+
+/**
+ * The sentinel written for an "empty" field, per `FormConfig.emptyFieldValue`.
+ */
+export type EmptyValue = null | undefined
+
+/**
+ * Resolves `FormConfig.emptyFieldValue` to the actual sentinel value.
+ */
+export function resolveEmptyFieldValue(emptyFieldValue?: 'null' | 'undefined'): EmptyValue {
+  return emptyFieldValue === 'undefined' ? undefined : null
 }
 
 /**

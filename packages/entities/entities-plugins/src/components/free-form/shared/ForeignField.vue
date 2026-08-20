@@ -34,7 +34,7 @@ import EnhancedInput from './EnhancedInput.vue'
 import { getName } from './utils'
 import { useField, useFieldAttrs } from './composables'
 import type { ForeignFieldSchema } from 'src/types/plugins/form-schema'
-import type { BaseFieldProps } from './types'
+import type { BaseFieldProps, EmptyValue } from './types'
 
 defineOptions({
   inheritAttrs: false,
@@ -43,7 +43,7 @@ defineOptions({
 const attrs = useAttrs()
 const { i18n: { t } } = useI18n()
 
-type ForeignFieldValue = { id: string } | null
+type ForeignFieldValue = { id: string } | EmptyValue
 
 interface ForeignFieldProps extends InputProps, BaseFieldProps {
   labelAttributes?: LabelAttributes
@@ -78,8 +78,8 @@ const rawInputValue = ref(initialValue ?? '')
 
 function handleUpdate(value: string) {
   if (initialValue !== undefined && value === '' && value !== initialValue) {
-    fieldValue!.value = null
-    emit('update:modelValue', null)
+    fieldValue!.value = field.emptyValue!.value
+    emit('update:modelValue', field.emptyValue!.value)
   } else {
     fieldValue!.value = { id: value.trim() }
     emit('update:modelValue', fieldValue!.value)

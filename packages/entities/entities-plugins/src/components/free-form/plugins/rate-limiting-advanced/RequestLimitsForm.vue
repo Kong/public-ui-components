@@ -110,12 +110,13 @@ import useI18n from '../../../../composables/useI18n'
 import { useFormShared, useItemKeys } from '../../shared/composables'
 import RadioField from '../../shared/RadioField.vue'
 import NumberField from '../../shared/NumberField.vue'
+import type { EmptyValue } from '../../shared/types'
 
 const { i18n: { t } } = useI18n()
 
 interface RequestLimit {
-  limit?: number | null
-  windowSize?: number | null
+  limit?: number | EmptyValue
+  windowSize?: number | EmptyValue
 }
 
 type WindowType = 'fixed' | 'sliding'
@@ -123,8 +124,8 @@ type WindowType = 'fixed' | 'sliding'
 interface FormData {
   config?: {
     window_type: WindowType
-    limit?: Array<number | null>
-    window_size?: Array<number | null>
+    limit?: Array<number | EmptyValue>
+    window_size?: Array<number | EmptyValue>
   }
 }
 
@@ -137,7 +138,7 @@ interface UseCase {
   }
 }
 
-const { formData, getSelectItems, getSchema } = useFormShared<FormData>()
+const { formData, getSelectItems, getSchema, getEmptyOrDefault } = useFormShared<FormData>()
 
 const requestLimits = computed<RequestLimit[]>(() => {
   const modelValue = formData.config?.limit?.map((limit, index) => {
@@ -159,14 +160,16 @@ const { getKey } = useItemKeys('request-limits', requestLimits)
 const addRequestLimit = (index: number) => {
   selectedUseCase.value = undefined
   if (!formData.config) return
+  const emptyLimit = getEmptyOrDefault<number>('config.limit.0')
+  const emptyWindowSize = getEmptyOrDefault<number>('config.window_size.0')
   if (!formData.config.limit?.length) {
-    formData.config.limit = [null]
+    formData.config.limit = [emptyLimit]
   }
   if (!formData.config.window_size?.length) {
-    formData.config.window_size = [null]
+    formData.config.window_size = [emptyWindowSize]
   }
-  formData.config.limit.splice(index + 1, 0, null)
-  formData.config.window_size.splice(index + 1, 0, null)
+  formData.config.limit.splice(index + 1, 0, emptyLimit)
+  formData.config.window_size.splice(index + 1, 0, emptyWindowSize)
 }
 
 const removeRequestLimit = (index: number) => {

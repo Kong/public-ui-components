@@ -78,4 +78,66 @@ describe('useSchemaHelpers', () => {
       expect(labelAttributes.info).not.toContain('alert(')
     })
   })
+
+  describe('emptyFieldValue config', () => {
+    const schema: FormSchema = {
+      type: 'record',
+      fields: [
+        { optional_field: { type: 'string' } },
+        { required_field: { type: 'string', required: true } },
+        { auto_field: { type: 'string', auto: true } },
+        { defaulted_field: { type: 'string', default: 'preset' } },
+      ],
+    }
+
+    it('defaults empty fields to null when emptyFieldValue is not provided', () => {
+      const { getDefault, getEmptyOrDefault } = useSchemaHelpers(schema)
+
+      expect(getDefault('optional_field')).toBeNull()
+      expect(getDefault('required_field')).toBeNull()
+      expect(getEmptyOrDefault('optional_field')).toBeNull()
+    })
+
+    it('defaults empty fields to null when emptyFieldValue is explicitly "null"', () => {
+      const { getDefault, getEmptyOrDefault } = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'null' }))
+
+      expect(getDefault('optional_field')).toBeNull()
+      expect(getDefault('required_field')).toBeNull()
+      expect(getEmptyOrDefault('optional_field')).toBeNull()
+    })
+
+    it('defaults empty fields to undefined when emptyFieldValue is "undefined"', () => {
+      const { getDefault, getEmptyOrDefault } = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'undefined' }))
+
+      expect(getDefault('optional_field')).toBeUndefined()
+      expect(getDefault('required_field')).toBeUndefined()
+      expect(getEmptyOrDefault('optional_field')).toBeUndefined()
+    })
+
+    it('keeps auto fields undefined regardless of emptyFieldValue', () => {
+      const nullHelpers = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'null' }))
+      const undefinedHelpers = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'undefined' }))
+
+      expect(nullHelpers.getDefault('auto_field')).toBeUndefined()
+      expect(undefinedHelpers.getDefault('auto_field')).toBeUndefined()
+    })
+
+    it('keeps an explicit schema default regardless of emptyFieldValue', () => {
+      const nullHelpers = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'null' }))
+      const undefinedHelpers = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'undefined' }))
+
+      expect(nullHelpers.getDefault('defaulted_field')).toBe('preset')
+      expect(undefinedHelpers.getDefault('defaulted_field')).toBe('preset')
+    })
+
+    it('getEmptyValue never forces required structure or an explicit default (unlike getEmptyOrDefault)', () => {
+      const { getEmptyValue } = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'null' }))
+      const { getEmptyValue: getUndefinedEmptyValue } = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'undefined' }))
+
+      // getEmptyValue takes no path — it's just the configured sentinel,
+      // used when a user actively clears a field (never the default).
+      expect(getEmptyValue()).toBeNull()
+      expect(getUndefinedEmptyValue()).toBeUndefined()
+    })
+  })
 })

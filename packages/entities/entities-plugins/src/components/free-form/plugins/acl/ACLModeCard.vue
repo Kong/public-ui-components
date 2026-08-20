@@ -94,7 +94,7 @@ const ALL_MODES: AclMode[] = ['allow', 'deny', 'allow_when', 'deny_when']
 // textarea instead of the single-line input the schema type would otherwise get.
 const EXPRESSION_MODES: AclMode[] = ['allow_when', 'deny_when']
 
-const { formData, getLabelAttributes, getSchema } = useFormShared<FreeFormPluginData<AclConfig>>()
+const { formData, getLabelAttributes, getSchema, getEmptyValue } = useFormShared<FreeFormPluginData<AclConfig>>()
 const { i18n: { t }, i18nT } = useI18n()
 
 // allow_when/deny_when are newer additions to the ACL plugin's schema; a Gateway
@@ -162,7 +162,7 @@ function handleModeChange() {
     if (config[m]) {
       cache.value[m] = [...config[m]!]
     }
-    config[m] = null
+    config[m] = getEmptyValue()
   }
 
   // Restore cached data for the selected mode if it exists

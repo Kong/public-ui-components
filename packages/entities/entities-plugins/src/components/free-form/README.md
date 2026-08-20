@@ -126,10 +126,10 @@ All exports below are re-exported from `@kong-ui-public/entities-plugins/freefor
 
 | File | Exports | Purpose |
 |---|---|---|
-| `form-context.ts` | `provideFormShared()`, `useFormShared()` | Central form state: reactive data, schema, config, render rules, getValue/setValue |
-| `field.ts` | `useField(name)` | Individual field state: value, schema, path, renderer, error, ancestors |
+| `form-context.ts` | `provideFormShared()`, `useFormShared()` | Central form state: reactive data, schema, config, render rules, getValue/setValue, getEmptyOrDefault/getEmptyValue |
+| `field.ts` | `useField(name)` | Individual field state: value, schema, path, renderer, error, ancestors, emptyOrDefaultValue, emptyValue |
 | `field-path.ts` | `useFieldPath()` | Calculates absolute dot-notation path from parent context via provide/inject |
-| `schema.ts` | `useSchemaHelpers()` | Schema introspection: getSchema, getDefault, getSelectItems, getLabelAttributes |
+| `schema.ts` | `useSchemaHelpers()` | Schema introspection: getSchema, getDefault, getEmptyOrDefault, getEmptyValue, getSelectItems, getLabelAttributes |
 | `useMapField.ts` | `useMapField()` | KeyId-backed map field state: keys, add/remove/rename, display labels |
 | `labels.ts` | `useLabelPath()`, `useFieldAttrs()` | Label generation with dictionary lookup (IP, SSL, TTL, JWT, etc.) |
 | `render-rules.ts` | `createRenderRuleRegistry()`, `renderRuleExactMatch()` | Bundles (field grouping/ordering) and dependencies (conditional visibility) |
@@ -184,6 +184,34 @@ const renderRules: RenderRules = {
 Constraints:
 - Fields in the same bundle or dependency must be at the same nesting level.
 - Circular references are not allowed (validated at runtime with helpful error messages).
+
+### Empty Field Values
+
+Fields resolve their "no value" representation through `FormConfig.emptyFieldValue`, not a hardcoded `null`:
+
+```typescript
+interface FormConfig<T = Record<string, any>> {
+  /** Sentinel written for an empty/unset field. Defaults to `'null'`. */
+  emptyFieldValue?: 'null' | 'undefined'
+  prepareFormData?: (data: any) => any
+  transformLabel?: (label: string, fieldPath: string) => string
+  hasValue?: (data: T | undefined) => boolean
+  updateOnChange?: boolean
+}
+```
+
+Passed as `<Form :config="{ emptyFieldValue: 'undefined' }">` (or via `PluginConfigurationBaseProps.formConfig` for plugin forms).
+
+Two composables surface the resolved sentinel, for two different scenarios — **picking the wrong one is a common bug**:
+
+| Composable | Backed by | Use for | Required-field behavior |
+|---|---|---|---|
+| `field.emptyOrDefaultValue` | `getEmptyOrDefault(path)` | **Initialization**: new array item (`ArrayField.addItem`), new map entry (`useMapField.addKey`), hidden-field reset | Forces schema structure back in: `[]` / `{}` / an explicit `schema.default` |
+| `field.emptyValue` | `getEmptyValue()` | **User actively clears a value** (`handleUpdate`, mode switches that blank sibling fields) | Always the plain configured sentinel — never re-injects a default or forces structure |
+
+Using `emptyOrDefaultValue` for a clear action is the bug to avoid: it would make a required field with an explicit `schema.default` impossible to empty, since every clear snaps it back to the default. See `StringField.vue`/`NumberField.vue`/`ArrayField.vue`'s `removeItem` for clear-action examples (`emptyValue`) versus `ArrayField.vue`'s `addItem` (`emptyOrDefaultValue`).
+
+**Exception**: some fields have external merge-semantics that require a literal `null` regardless of this config — e.g. the `partials` reset in `service-protection/RedisField.vue` and `datakit/flow-editor/FlowEditor.vue`, where the plugin entity form *merges* free-form data with VFG data and `undefined` wouldn't clear an existing value. These are commented inline where they occur; don't blindly convert every hardcoded `null` to `getEmptyValue()` without checking whether it's one of these.
 
 ## Layout
 
@@ -372,6 +400,7 @@ filler.fillField('config.host', 'example.com')
 | `ObjectField.vue` | Handles record nesting, collapse, entity checks |
 | `composables/form-context.ts` | Central state; changes affect data flow everywhere |
 | `composables/render-rules.ts` | Bundle/dependency logic; changes affect field visibility |
+| `composables/schema.ts` | Default/empty-value resolution (`getDefault`, `getEmptyOrDefault`, `getEmptyValue`); changes affect every field's init and clear behavior |
 
 ## Standalone Usage (`@kong-ui-public/entities-plugins/freeform`)
 
@@ -442,6 +471,8 @@ const { value } = useField<boolean>(toRef(() => props.name))
 ```
 
 Register it against a field path with `FieldRenderer`, or place it directly inside a `Form`/layout slot with `name` set to the field's path — both wire into the same reactive form state as the built-in field components.
+
+When the field needs to write an "empty" value (the user clears it, or a mode switch blanks it), use `emptyValue` from `useField()` instead of hardcoding `null` — see [Empty Field Values](#empty-field-values). Several plugin-specific fields under `plugins/` were written before this existed and had to be retrofitted; new field components should use it from the start.
 
 ## Reference
 
