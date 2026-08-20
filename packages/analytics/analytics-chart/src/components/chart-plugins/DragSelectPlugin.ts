@@ -107,7 +107,7 @@ export class DragSelectPlugin implements Plugin {
 
         const range = selectionRange(chart, this)
 
-        if (range && range.xEnd > range.xStart) {
+        if (range) {
           dispatchEvent('dragSelect', chart, range)
         } else {
           this.clearSelectionArea()
