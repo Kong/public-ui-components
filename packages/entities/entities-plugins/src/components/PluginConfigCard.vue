@@ -33,7 +33,7 @@
       :plugin-config-schema="pluginConfigSchema"
       :record-resolver="resolveRecord"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
-      @fetch:success="(entity: any) => $emit('fetch:success', entity)"
+      @fetch:success="handleFetchSuccess"
       @loading="(val: boolean) => $emit('loading', val)"
     >
       <template #name="slotProps">
@@ -56,6 +56,9 @@
           :item="{
             key: getPropValue('rowValue', slotProps).id,
             value: getPropValue('rowValue', slotProps).id,
+            to: config.getConsumerViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: getReferenceName('consumer'),
+            subtitleLoading: isReferenceNameLoading('consumer'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer')"
@@ -75,6 +78,9 @@
           :item="{
             key: getPropValue('rowValue', slotProps).id,
             value: getPropValue('rowValue', slotProps).id,
+            to: config.getRouteViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: getReferenceName('route'),
+            subtitleLoading: isReferenceNameLoading('route'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'route')"
@@ -93,6 +99,9 @@
           :item="{
             key: getPropValue('rowValue', slotProps).id,
             value: getPropValue('rowValue', slotProps).id,
+            to: config.getServiceViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: getReferenceName('service'),
+            subtitleLoading: isReferenceNameLoading('service'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'service')"
@@ -111,6 +120,9 @@
           :item="{
             key: getPropValue('rowValue', slotProps).id,
             value: getPropValue('rowValue', slotProps).id,
+            to: config.getConsumerGroupViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: getReferenceName('consumer_group'),
+            subtitleLoading: isReferenceNameLoading('consumer_group'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer_group')"
@@ -388,6 +400,21 @@ const codeBlockRecordFormatter = (record: Record<string, any>) => {
 
 const { getMessageFromError } = useErrors()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+
+const { resolveReferenceNames, getReferenceName, isReferenceNameLoading } = composables.useReferenceEntityNames({
+  config: props.config,
+  axiosInstance,
+  onError: (err: AxiosError) => emit('fetch:error', err),
+})
+
+const handleFetchSuccess = (entity: Record<string, any>) => {
+  emit('fetch:success', entity)
+
+  // Names are only ever displayed via InternalLinkItem, so skip the lookups entirely otherwise.
+  if (props.showIdAsLink) {
+    resolveReferenceNames(entity)
+  }
+}
 
 const schemaUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].pluginSchema}`
