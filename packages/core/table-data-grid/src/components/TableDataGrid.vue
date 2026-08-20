@@ -125,7 +125,7 @@ const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
     cellRendererParams: header.cellRendererParams,
     valueFormatter: header.valueFormatter,
     sortable: header.sortable ?? false,
-    // Shows the unsorted-state icon at rest (not just on hover) for sortable columns.
+    // Always show the sort icon on sortable columns.
     unSortIcon: header.sortable ?? false,
   }
 

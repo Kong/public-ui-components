@@ -50,8 +50,7 @@ describe('fetcher utilities', () => {
     expect(resolveSortPayload([{ colId: 'name', sort: 'asc' }])).toEqual([
       { colId: 'name', sort: 'asc' },
     ])
-    // Multi-column sort keeps every entry, ordered by AG Grid's sort priority
-    // (the column sorted first, e.g. via shift-click, comes first).
+    // Multi-column sort keeps every entry, in priority order.
     expect(resolveSortPayload([
       { colId: 'name', sort: 'asc', type: 'default' },
       { colId: 'status', sort: 'desc' },

@@ -15,11 +15,7 @@ export type TableDataGridSortModelItem = {
   sort: 'asc' | 'desc'
 }
 
-/**
- * Active sort state, ordered by priority (first entry sorts first). Empty
- * when unsorted. Supports multi-column sort — a user can shift-click a
- * second sortable header to add a secondary sort key.
- */
+/** Active sort columns, ordered by priority. Empty when unsorted. */
 export type TableDataGridSortPayload = TableDataGridSortModelItem[]
 
 export type TableDataGridRowClickPayload<Row extends object = TableDataGridRow> = Row
@@ -30,20 +26,15 @@ export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
   width?: number
   minWidth?: number
   maxWidth?: number
-  /** Pin the column to the left or right edge of the grid, outside the horizontally-scrolling area. */
+  /** Pins the column to the left or right edge of the grid. */
   pinned?: 'left' | 'right'
-  /** Vue component used to render this column's cells. Defaults to TableDataGrid's tooltip-on-overflow renderer. */
+  /** Vue component used to render this column's cells. */
   cellRenderer?: Component
-  /** Extra props passed to `cellRenderer` in addition to AG Grid's own cell renderer params. */
+  /** Extra props passed to `cellRenderer`. */
   cellRendererParams?: Record<string, unknown>
-  /** Formats the raw cell value for display, e.g. date/number formatting. */
+  /** Formats the raw cell value for display. */
   valueFormatter?: ValueFormatterFunc<Row>
-  /**
-   * Enables sorting UI for this column. Requires the `fetcher` to read
-   * `params.sort` and apply the ordering server-side — under infinite-scroll
-   * mode there is no client-side sort fallback, so a fetcher that ignores
-   * `params.sort` will show sort controls that do not actually reorder data.
-   */
+  /** Enables sorting UI for this column. The `fetcher` must apply `params.sort` server-side. */
   sortable?: boolean
 }
 
