@@ -237,7 +237,7 @@ function handleToggleSwitch() {
   if (added.value) {
     fieldValue!.value = getDefault(field.path!.value)
   } else {
-    fieldValue!.value = null
+    fieldValue!.value = field.emptyValue!.value
   }
 }
 

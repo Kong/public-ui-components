@@ -162,6 +162,7 @@ import { FORM_EDITING } from '../../shared/const'
 
 import type { ComputedRef } from 'vue'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { EmptyValue } from '../../shared/types'
 import type { OidcConfigSubset, OidcPrincipals } from './types'
 
 const { showPrincipalsFields = true, ...props } = defineProps<{
@@ -185,7 +186,7 @@ const isEditingRef = inject<ComputedRef<boolean> | undefined>(FORM_EDITING, unde
 // Read/write formData directly instead of useFormData(): the latter provides its own
 // field path to descendants, which would corrupt relative path resolution for the
 // sibling advanced settings rendered in the default slot (e.g. OIDC auth methods).
-const { formData } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
+const { formData, getEmptyValue } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
 
 function usePrincipalsField<K extends keyof OidcPrincipals>(key: K) {
   return computed<OidcPrincipals[K] | undefined>({
@@ -256,8 +257,8 @@ function encodeTokenClaim(claim: string[] | string | null | undefined): string {
 
 // Split on unescaped dots; `\.` and `\\` are escapes for literal dots/backslashes,
 // any other backslash is kept as-is.
-function parseTokenClaim(value: string): string[] | null {
-  if (!value) return null
+function parseTokenClaim(value: string): string[] | EmptyValue {
+  if (!value) return getEmptyValue()
   const parts: string[] = []
   let current = ''
   for (let i = 0; i < value.length; i++) {
@@ -276,7 +277,7 @@ function parseTokenClaim(value: string): string[] | null {
   const result = parts.map(part => part.trim()).filter(Boolean)
   // Unset rather than `[]`: the schema requires len_min 1 when the claim is present,
   // and an absent principal_claim already resolves to the gateway default (`sub`).
-  return result.length > 0 ? result : null
+  return result.length > 0 ? result : getEmptyValue()
 }
 
 // One-time prefill on create: if principal_claim has never been set, write the gateway
@@ -300,8 +301,12 @@ function handleTokenClaimChange(rawValue: string) {
 
 // Re-sync the display only when the model changes from elsewhere (e.g. switching the
 // lookup method clears the claim), never while it reflects the user's own typing.
+// Both sides are normalized through `?? null` before comparing: `emptyFieldValue:
+// 'undefined'` can make either side `undefined` while the other is `null`, and without
+// this the mismatch would resync the display and clobber in-progress typing.
 watch(principalClaim, (claim) => {
-  if (!isEqual(claim ?? null, parseTokenClaim(tokenClaimInput.value.trim()))) {
+  const parsedInput = parseTokenClaim(tokenClaimInput.value.trim())
+  if (!isEqual(claim ?? null, parsedInput ?? null)) {
     tokenClaimInput.value = encodeTokenClaim(claim)
   }
 })
@@ -316,8 +321,8 @@ function handleMatchConsumerChange(checked: boolean) {
 function handleLookupMethodChange(value: string | null) {
   selectedLookupMethod.value = value ?? 'kong-identity'
   if (value !== 'custom-identity') {
-    principalBy.value = null
-    principalClaim.value = null
+    principalBy.value = getEmptyValue()
+    principalClaim.value = getEmptyValue()
   }
 }
 

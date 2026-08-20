@@ -7,6 +7,7 @@ import { isKid } from './key-id-map'
 import { resolve, getName } from '../utils'
 import { replaceByDictionaryInFieldName } from '.'
 import type { MapFieldSchema } from '../../../../types/plugins/form-schema'
+import type { EmptyValue } from '../types'
 import { isEqual } from 'lodash-es'
 
 export function useMapField<T = unknown, K extends string = string>(
@@ -16,7 +17,7 @@ export function useMapField<T = unknown, K extends string = string>(
    */
   onLegacyValueChange?: (newValue: Record<K, T> | null) => void,
 ) {
-  const { value: fieldValue, ...field } = useField<Record<KeyId, T> | null>(name)
+  const { value: fieldValue, ...field } = useField<Record<KeyId, T> | EmptyValue>(name)
   const { getEmptyOrDefault, keyIdMap } = useFormShared()
   const valueSchema = computed(() => {
     if (!field.path) return
@@ -62,11 +63,9 @@ export function useMapField<T = unknown, K extends string = string>(
     const { [keyId]: _, ...rest } = fieldValue.value || {}
 
     if (Object.keys(rest).length === 0) {
-      if (field.schema?.value?.required) {
-        fieldValue.value = {}
-      } else {
-        fieldValue.value = null
-      }
+      // Required maps stay structurally `{}`; a schema default must not be
+      // re-injected just because the user cleared every entry.
+      fieldValue.value = field.schema?.value?.required ? {} : field.emptyValue!.value
     } else {
       fieldValue.value = rest
     }
