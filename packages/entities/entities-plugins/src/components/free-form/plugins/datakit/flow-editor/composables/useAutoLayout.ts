@@ -1,4 +1,4 @@
-import dagre from '@dagrejs/dagre'
+import { graphlib, layout } from '@dagrejs/dagre'
 import { useVueFlow } from '@vue-flow/core'
 import { nextTick, toValue } from 'vue'
 
@@ -7,7 +7,7 @@ import { isGroupInstance } from '../node/node'
 import { useEditorStore } from '../store/store'
 import { getBoundingRect } from './helpers'
 
-import type { Edge as DagreEdge, Node as DagreNode } from '@dagrejs/dagre'
+import type { Edge as DagreEdge, NodeLabel as DagreNode } from '@dagrejs/dagre'
 import type { GraphNode, Rect } from '@vue-flow/core'
 
 import type { GroupId, GroupInstance, NodeId, NodeInstance, NodePhase } from '../../types'
@@ -277,9 +277,9 @@ export function useAutoLayout(options: useAutoLayoutOptions) {
     const leftGraphNode = leftNode ? (cachedFindNode ?? findNode)(leftNode.id) : undefined
     const rightGraphNode = rightNode ? (cachedFindNode ?? findNode)(rightNode.id) : undefined
 
-    let dagreGraph: dagre.graphlib.Graph | undefined
+    let dagreGraph: graphlib.Graph | undefined
     if (autoNodes.length > 0) {
-      dagreGraph = new dagre.graphlib.Graph({ multigraph: true })
+      dagreGraph = new graphlib.Graph({ multigraph: true })
       dagreGraph.setGraph({
         rankdir: phase === 'request' ? 'LR' : 'RL',
         nodesep: nodeGap,
@@ -314,7 +314,7 @@ export function useAutoLayout(options: useAutoLayoutOptions) {
       virtualEdges?.forEach((edge) => dagreGraph!.setEdge(edge, { points: [] }))
 
       // Layout
-      dagre.layout(dagreGraph)
+      layout(dagreGraph)
     }
 
     const boundingRects: Rect[] = []
@@ -322,8 +322,8 @@ export function useAutoLayout(options: useAutoLayoutOptions) {
     // Positions returned by Dagre are centered
     const normalizePosition = (node: DagreNode) => {
       return {
-        x: node.x - node.width / 2,
-        y: node.y - node.height / 2,
+        x: node.x! - node.width / 2,
+        y: node.y! - node.height / 2,
         width: node.width,
         height: node.height,
       }
@@ -366,11 +366,11 @@ export function useAutoLayout(options: useAutoLayoutOptions) {
     const horizontalSpace = Math.max(
       0,
       Math.min(toValue(viewport?.width) ?? Number.POSITIVE_INFINITY, DEFAULT_VIEWPORT_WIDTH)
-          - centralWidth
-          - 2 * nodeGap
-          - (leftGraphNode?.dimensions?.width ?? 0)
-          - (rightGraphNode?.dimensions?.width ?? 0)
-          - 2 * padding,
+      - centralWidth
+      - 2 * nodeGap
+      - (leftGraphNode?.dimensions?.width ?? 0)
+      - (rightGraphNode?.dimensions?.width ?? 0)
+      - 2 * padding,
     )
 
     const centerY = centralRect.y + centralHeight / 2
