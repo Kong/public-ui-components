@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.27.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.27.0...@kong-ui-public/analytics-utilities@12.27.1) (2026-08-20)
+
+
+### Bug Fixes
+
+* correct field names for AIGW entities [MA-5267] ([#3716](https://github.com/Kong/public-ui-components/issues/3716)) ([a0cb942](https://github.com/Kong/public-ui-components/commit/a0cb9423f65a7d5840478adef744978f1d33e326))
+
+
+
+
+
 # [12.27.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.26.1...@kong-ui-public/analytics-utilities@12.27.0) (2026-08-18)
 
 
