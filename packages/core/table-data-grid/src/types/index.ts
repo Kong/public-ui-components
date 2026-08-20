@@ -1,4 +1,4 @@
-import type { GridApi, ValueFormatterFunc } from 'ag-grid-community'
+import type { GridApi, SortModelItem, ValueFormatterFunc } from 'ag-grid-community'
 import type { Component } from 'vue'
 
 export type TableDataGridMode = 'infinite'
@@ -9,14 +9,6 @@ export type TableDataGridStatePayload = {
   state: TableDataGridState
   hasData: boolean
 }
-
-export type TableDataGridSortModelItem = {
-  colId: string
-  sort: 'asc' | 'desc'
-}
-
-/** Active sort columns, ordered by priority. Empty when unsorted. */
-export type TableDataGridSortPayload = TableDataGridSortModelItem[]
 
 export type TableDataGridRowClickPayload<Row extends object = TableDataGridRow> = Row
 
@@ -42,7 +34,7 @@ export interface TableDataGridInfiniteFetcherParams {
   mode: 'infinite'
   pageSize: number
   cursor?: unknown
-  sort?: TableDataGridSortPayload
+  sort?: SortModelItem[]
 }
 
 export type TableDataGridFetcherResult<Row extends object = TableDataGridRow> = {

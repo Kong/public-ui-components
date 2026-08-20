@@ -6,7 +6,7 @@ import type {
 import type { IDatasource, IGetRowsParams } from 'ag-grid-community'
 import type { Ref } from 'vue'
 import { readonly, ref, shallowRef, watch } from 'vue'
-import { getCursorBlock, resolveInfiniteLastRow, resolveSortPayload } from '../utils/fetchers'
+import { getCursorBlock, resolveInfiniteLastRow } from '../utils/fetchers'
 
 type BlockCompletion = {
   promise: Promise<boolean>
@@ -304,7 +304,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
             mode: 'infinite',
             pageSize,
             cursor,
-            sort: resolveSortPayload(getRowsParams.sortModel),
+            sort: getRowsParams.sortModel,
           })
 
           if (!isLatestDatasource(datasourceId)) {
