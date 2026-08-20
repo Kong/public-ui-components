@@ -969,7 +969,7 @@ describe('<TableDataGrid />', () => {
     cy.wrap(fetcher).should((stub) => {
       const lastCall = stub.args.at(-1)?.[0]
 
-      expect(lastCall.sort).to.deep.equal([{ colId: 'name', sort: 'asc' }])
+      expect(lastCall.sort).to.deep.equal([{ colId: 'name', sort: 'asc', type: 'default' }])
     })
   })
 
@@ -994,8 +994,8 @@ describe('<TableDataGrid />', () => {
       const lastCall = stub.args.at(-1)?.[0]
 
       expect(lastCall.sort).to.deep.equal([
-        { colId: 'name', sort: 'asc' },
-        { colId: 'status', sort: 'asc' },
+        { colId: 'name', sort: 'asc', type: 'default' },
+        { colId: 'status', sort: 'asc', type: 'default' },
       ])
     })
   })
