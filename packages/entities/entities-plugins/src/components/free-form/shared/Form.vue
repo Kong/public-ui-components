@@ -53,7 +53,7 @@ const slots = useSlots()
 const { getSchema, formData, setValue, getValue, rootRenderRules, getEmptyValue } = provideFormShared({
   schema,
   propsData: computed(() => data as T),
-  propsConfig: config as FormConfig,
+  propsConfig: () => config as FormConfig,
   propsRenderRules: toRef(() => renderRules),
   onChange: (value) => emit('change', value as T),
 })

@@ -206,12 +206,14 @@ Two composables surface the resolved sentinel, for two different scenarios — *
 
 | Composable | Backed by | Use for | Required-field behavior |
 |---|---|---|---|
-| `field.emptyOrDefaultValue` | `getEmptyOrDefault(path)` | **Initialization**: new array item (`ArrayField.addItem`), new map entry (`useMapField.addKey`), hidden-field reset | Forces schema structure back in: `[]` / `{}` / an explicit `schema.default` |
+| `field.emptyOrDefaultValue` | `getEmptyOrDefault(path)` | **Initialization**: new map entry (`useMapField.addKey`), hidden-field reset | Forces schema structure back in: `[]` / `{}` / an explicit `schema.default` |
 | `field.emptyValue` | `getEmptyValue()` | **User actively clears a value** (`handleUpdate`, mode switches that blank sibling fields) | Always the plain configured sentinel — never re-injects a default or forces structure |
 
-Using `emptyOrDefaultValue` for a clear action is the bug to avoid: it would make a required field with an explicit `schema.default` impossible to empty, since every clear snaps it back to the default. See `StringField.vue`/`NumberField.vue`/`ArrayField.vue`'s `removeItem` for clear-action examples (`emptyValue`) versus `ArrayField.vue`'s `addItem` (`emptyOrDefaultValue`).
+Using `emptyOrDefaultValue` for a clear action is the bug to avoid: it would make a required field with an explicit `schema.default` impossible to empty, since every clear snaps it back to the default. See `StringField.vue`/`NumberField.vue`/`ArrayField.vue`'s `removeItem` for clear-action examples (`emptyValue`) versus `useMapField.vue`'s `addKey` (`emptyOrDefaultValue`). Note `ArrayField.vue`'s `addItem` calls `getDefault(path)` directly rather than `getEmptyOrDefault` — the two differ for a non-required field with an explicit `schema.default`, so it isn't an equivalent example.
 
 **Exception**: some fields have external merge-semantics that require a literal `null` regardless of this config — e.g. the `partials` reset in `service-protection/RedisField.vue` and `datakit/flow-editor/FlowEditor.vue`, where the plugin entity form *merges* free-form data with VFG data and `undefined` wouldn't clear an existing value. These are commented inline where they occur; don't blindly convert every hardcoded `null` to `getEmptyValue()` without checking whether it's one of these.
+
+**Caveat for the props-data resync guard**: with `emptyFieldValue: 'undefined'`, `getValue()` can return an object with keys whose value is `undefined` (the key is present, per JS semantics, even though the value is omitted from `JSON.stringify`). `form-context.ts`'s resync guard compares `getValue()` against the incoming `data` prop with `isEqual`, which treats `{ a: undefined }` and `{}` as different. If a host round-trips the form's output through something that strips `undefined` keys (a JSON serialize/parse, a store write) before feeding it back in as `data`, the guard will misfire and rebuild the form mid-edit. No consumer in this repo does that today; confirm your round trip preserves `undefined` keys before enabling the flag.
 
 ## Layout
 

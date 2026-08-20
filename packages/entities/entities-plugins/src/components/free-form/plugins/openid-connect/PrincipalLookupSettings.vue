@@ -290,8 +290,12 @@ function handleTokenClaimChange(rawValue: string) {
 
 // Re-sync the display only when the model changes from elsewhere (e.g. switching the
 // lookup method clears the claim), never while it reflects the user's own typing.
+// Both sides are normalized through `?? null` before comparing: `emptyFieldValue:
+// 'undefined'` can make either side `undefined` while the other is `null`, and without
+// this the mismatch would resync the display and clobber in-progress typing.
 watch(principalClaim, (claim) => {
-  if (!isEqual(claim ?? null, parseTokenClaim(tokenClaimInput.value.trim()))) {
+  const parsedInput = parseTokenClaim(tokenClaimInput.value.trim())
+  if (!isEqual(claim ?? null, parsedInput ?? null)) {
     tokenClaimInput.value = encodeTokenClaim(claim)
   }
 })

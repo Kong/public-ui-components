@@ -89,12 +89,15 @@ const { value: fieldValue, hide, ...field } = useField<EnumValue>(
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 function normalizeValue(value: EnumValue): EnumValue {
-  if (isMultiple.value && Array.isArray(value) && value.length === 0 && !fieldAttrs.value.required) {
+  // Required fields are already correctly shaped here (`[]` for a cleared
+  // multiselect, from KMultiselect's own v-model output) — no forcing needed.
+  if (fieldAttrs.value.required) return value
+
+  const isEmptyMultiselect = isMultiple.value && Array.isArray(value) && value.length === 0
+  if (value == null || value === '' || isEmptyMultiselect) {
     return field.emptyValue!.value
   }
 
-  // Required multiselects are already `[]` here (from KMultiselect's own
-  // v-model output) — no structural forcing needed.
   return value
 }
 

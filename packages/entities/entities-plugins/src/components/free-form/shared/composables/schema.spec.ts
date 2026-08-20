@@ -130,6 +130,30 @@ describe('useSchemaHelpers', () => {
       expect(undefinedHelpers.getDefault('defaulted_field')).toBe('preset')
     })
 
+    it('omits keys that resolve to undefined from the whole-form default (getDefault with no path)', () => {
+      const nullHelpers = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'null' }))
+      const undefinedHelpers = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'undefined' }))
+
+      const nullDefault = nullHelpers.getDefault()
+      const undefinedDefault = undefinedHelpers.getDefault()
+
+      // `auto_field` always resolves to undefined and is never a key, regardless of mode.
+      expect('auto_field' in nullDefault).toBe(false)
+      expect('auto_field' in undefinedDefault).toBe(false)
+
+      // In 'null' mode, empty scalars are `null`-valued keys. In 'undefined' mode the
+      // same fields resolve to `undefined` and `createRecordDefault` omits them
+      // entirely — this changes the key set of the initial form data, which is the
+      // highest-impact behavior this option has.
+      expect(nullDefault).toHaveProperty('optional_field', null)
+      expect(nullDefault).toHaveProperty('required_field', null)
+      expect('optional_field' in undefinedDefault).toBe(false)
+      expect('required_field' in undefinedDefault).toBe(false)
+
+      expect(nullDefault.defaulted_field).toBe('preset')
+      expect(undefinedDefault.defaulted_field).toBe('preset')
+    })
+
     it('getEmptyValue never forces required structure or an explicit default (unlike getEmptyOrDefault)', () => {
       const { getEmptyValue } = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'null' }))
       const { getEmptyValue: getUndefinedEmptyValue } = useSchemaHelpers(schema, () => ({ emptyFieldValue: 'undefined' }))

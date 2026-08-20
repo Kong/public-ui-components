@@ -15,7 +15,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
   function createFormShared<T extends Record<string, any> = Record<string, any>>(options: {
     schema: FormSchema | UnionFieldSchema
     propsData?: ComputedRef<T>
-    propsConfig?: FormConfig<T>
+    propsConfig?: MaybeRefOrGetter<FormConfig<T> | undefined>
     propsRenderRules?: MaybeRefOrGetter<RenderRules | undefined>
     onChange?: (newData: T) => void
   }) {
@@ -30,12 +30,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       getDefault: getDefaultFromSchema,
       getEmptyOrDefault: getEmptyOrDefaultFromSchema,
       ...schemaHelpers
-    } = useSchemaHelpers(schema, () => propsConfig)
+    } = useSchemaHelpers(schema, () => toValue(propsConfig))
     const keyIdMap = useKeyIdMap(schemaHelpers.getSchema)
     const fieldRendererRegistry: MatchMap = new Map()
 
     const innerData = reactive<T>({} as T)
-    const config = toRef(() => propsConfig ?? {})
+    const config = toRef(() => toValue(propsConfig) ?? {})
 
     // Init form level field renderer slots
     const slots = useSlots()
