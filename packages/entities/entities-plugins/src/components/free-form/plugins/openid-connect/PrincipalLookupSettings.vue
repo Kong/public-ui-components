@@ -153,12 +153,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { isEqual } from 'lodash-es'
 import { KAlert, KCheckbox, KCollapse, KInput, KInputSwitch, KLabel, KRadio, KSelect } from '@kong/kongponents'
 import useI18n from '../../../../composables/useI18n'
 import { useFormShared } from '../../shared/composables'
+import { FORM_EDITING } from '../../shared/const'
 
+import type { ComputedRef } from 'vue'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import type { OidcConfigSubset, OidcPrincipals } from './types'
 
@@ -177,6 +179,8 @@ const { showPrincipalsFields = true, ...props } = defineProps<{
 }>()
 
 const { i18n: { t } } = useI18n()
+
+const isEditingRef = inject<ComputedRef<boolean> | undefined>(FORM_EDITING, undefined)
 
 // Read/write formData directly instead of useFormData(): the latter provides its own
 // field path to descendants, which would corrupt relative path resolution for the
@@ -247,9 +251,7 @@ function encodeTokenClaim(claim: string[] | string | null | undefined): string {
   if (typeof claim === 'string' && claim) {
     return claim
   }
-  // Pre-fill the gateway default so users recognize `sub` is used when left unset.
-  // The model stays empty until edited; an empty principal_claim already resolves to `sub`.
-  return 'sub'
+  return ''
 }
 
 // Split on unescaped dots; `\.` and `\\` are escapes for literal dots/backslashes,
@@ -275,6 +277,15 @@ function parseTokenClaim(value: string): string[] | null {
   // Unset rather than `[]`: the schema requires len_min 1 when the claim is present,
   // and an absent principal_claim already resolves to the gateway default (`sub`).
   return result.length > 0 ? result : null
+}
+
+// One-time prefill on create: if principal_claim has never been set, write the gateway
+// default `sub` into the model so users see it explicitly rather than an implicit default
+// (and the shown value is the submitted one). Only fires once, on setup — later clears stay
+// cleared. Skipped on edit: an absent claim on a saved record already resolves to `sub`, so
+// writing it would dirty the form on load for no change in behavior.
+if (!isEditingRef?.value && !hasValue(principalClaim.value)) {
+  principalClaim.value = ['sub']
 }
 
 // The input binds to the raw string and the model derives from it one-way: re-encoding

@@ -242,6 +242,7 @@
       <PrincipalLookupSettings
         :data-plane-incompatible="hasIncompatibleDataPlane"
         :form-model="formModel"
+        :is-editing="isEditing"
         :on-enabled-change="handleUsePrincipalLookupChange"
         :on-model-updated="onModelUpdated"
         show-enable-toggle
@@ -352,6 +353,7 @@
       <PrincipalLookupSettings
         :data-plane-incompatible="hasIncompatibleDataPlane"
         :form-model="formModel"
+        :is-editing="isEditing"
         :on-enabled-change="handleUsePrincipalLookupChange"
         :on-model-updated="onModelUpdated"
         show-enable-toggle
