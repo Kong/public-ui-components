@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.264.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.263.2...@kong-ui-public/entities-plugins@9.264.0) (2026-08-20)
+
+
+### Features
+
+* **entities-plugins:** add configurable empty value for FreeForm fields ([#3712](https://github.com/Kong/public-ui-components/issues/3712)) ([f6c66f8](https://github.com/Kong/public-ui-components/commit/f6c66f8cbb51afc3e35c729a0aeb6f0aa60677bc))
+
+
+
+
+
 ## [9.263.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.263.1...@kong-ui-public/entities-plugins@9.263.2) (2026-08-20)
 
 
