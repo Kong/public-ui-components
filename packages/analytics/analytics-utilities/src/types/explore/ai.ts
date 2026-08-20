@@ -4,11 +4,11 @@ import type { BasicExploreEmptyFilterV2, BasicExploreInFilterV2, BasicExploreQue
 export const queryableAiExploreDimensions = [
   'control_plane',
   'control_plane_group',
-  'ai_control_plane',
+  'ai_gateway',
   'gateway_service',
   'consumer',
-  'ai_consumer',
-  'ai_consumer_group',
+  'ai_gateway_consumer',
+  'ai_gateway_consumer_group',
   'application',
   'oidc_credential',
   'route',
@@ -24,10 +24,10 @@ export const queryableAiExploreDimensions = [
   'status_code_grouped',
   'ai_plugin',
   'principal',
-  'mcp_server',
-  'model',
-  'agent',
-  'ai_data_plane_node',
+  'ai_gateway_mcp_server',
+  'ai_gateway_model',
+  'ai_gateway_agent',
+  'ai_gateway_data_plane_node',
 ] as const
 
 export type QueryableAiExploreDimensions = typeof queryableAiExploreDimensions[number]
