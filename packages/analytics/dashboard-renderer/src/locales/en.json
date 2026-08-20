@@ -206,6 +206,8 @@
     "consumer_count": "Consumer count",
     "plugin_count": "Plugin count",
     "node_count": "Data plane node count",
+    "oidc_credential": "OIDC credential",
+    "principal": "Principal",
     "virtual_cluster_id": "Virtual cluster",
     "backend_cluster_id": "Backend cluster",
     "listener_id": "Listener",
