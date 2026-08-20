@@ -33,6 +33,7 @@
           :page-size="pageSize"
           :refresh-key="refreshKey"
           @grid:ready="handleGridReady"
+          @row:click="handleRowClick"
           @state="handleState"
         >
           <template #empty-state>
@@ -295,10 +296,16 @@ const collapsedSections = ref<Record<SandboxSectionId, boolean>>({
 })
 
 const headers: Array<TableDataGridHeader<SandboxRow>> = [
-  { key: 'name', label: 'Name', minWidth: 220 },
+  { key: 'name', label: 'Name', minWidth: 220, pinned: 'left', sortable: true },
   { key: 'description', label: 'Description', width: 240 },
   { key: 'status', label: 'Status', minWidth: 140 },
-  { key: 'latency', label: 'Latency', minWidth: 140 },
+  {
+    key: 'latency',
+    label: 'Latency',
+    minWidth: 140,
+    sortable: true,
+    valueFormatter: params => `${params.value}ms`,
+  },
   { key: 'region', label: 'Region', minWidth: 140 },
 ]
 
@@ -424,21 +431,46 @@ const recordFetch = ({
   fetchHistory.value = nextFetchHistory
 }
 
-const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor }) => {
+const applySort = (rows: SandboxRow[], sort: TableDataGridInfiniteFetcherParams['sort']): SandboxRow[] => {
+  if (!sort?.length) {
+    return rows
+  }
+
+  return [...rows].sort((rowA, rowB) => {
+    for (const { colId, sort: direction } of sort) {
+      const valueA = rowA[colId as keyof SandboxRow]
+      const valueB = rowB[colId as keyof SandboxRow]
+
+      if (valueA === valueB) {
+        continue
+      }
+
+      const comparison = valueA > valueB ? 1 : -1
+
+      return direction === 'desc' ? -comparison : comparison
+    }
+
+    return 0
+  })
+}
+
+const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, sort }) => {
   const request: TableDataGridInfiniteFetcherParams = {
     cursor,
     mode: 'infinite',
     pageSize,
+    sort,
   }
 
   if (fetchDelayMs.value > 0) {
     await wait(fetchDelayMs.value)
   }
 
+  const rows = applySort(activeRows.value, sort)
   const offset = getOffsetFromCursor(cursor)
-  const data = activeRows.value.slice(offset, offset + pageSize)
+  const data = rows.slice(offset, offset + pageSize)
   const nextOffset = offset + data.length
-  const hasMore = nextOffset < activeRows.value.length
+  const hasMore = nextOffset < rows.length
   const responseCursor = hasMore ? createCursor(nextOffset) : undefined
 
   recordFetch({
@@ -462,6 +494,10 @@ const handleGridReady = (api: GridApi<SandboxRow>) => {
   logEvent('grid:ready', {
     displayedRows: api.getDisplayedRowCount(),
   })
+}
+
+const handleRowClick = (row: SandboxRow) => {
+  logEvent('row:click', row)
 }
 
 const refreshAfterControlChange = () => {

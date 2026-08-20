@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getCursorBlock, resolveInfiniteLastRow } from './fetchers'
+import { getCursorBlock, resolveInfiniteLastRow, resolveSortPayload } from './fetchers'
 
 describe('fetcher utilities', () => {
   it('resolves cursor block details from AG Grid row ranges', () => {
@@ -43,5 +43,21 @@ describe('fetcher utilities', () => {
       pageSize: 100,
       total: 250,
     })).toBe(250)
+  })
+
+  it('resolves the sort payload from AG Grid sort model, preserving priority order', () => {
+    expect(resolveSortPayload([])).toEqual([])
+    expect(resolveSortPayload([{ colId: 'name', sort: 'asc' }])).toEqual([
+      { colId: 'name', sort: 'asc' },
+    ])
+    // Multi-column sort keeps every entry, ordered by AG Grid's sort priority
+    // (the column sorted first, e.g. via shift-click, comes first).
+    expect(resolveSortPayload([
+      { colId: 'name', sort: 'asc', type: 'default' },
+      { colId: 'status', sort: 'desc' },
+    ])).toEqual([
+      { colId: 'name', sort: 'asc' },
+      { colId: 'status', sort: 'desc' },
+    ])
   })
 })

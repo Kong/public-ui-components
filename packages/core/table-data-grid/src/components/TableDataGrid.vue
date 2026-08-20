@@ -43,6 +43,7 @@
       :suppress-cell-focus="true"
       :theme="themeQuartz"
       @grid-ready="onGridReady"
+      @row-clicked="onRowClicked"
     />
   </div>
 </template>
@@ -51,9 +52,14 @@
 import type {
   TableDataGridFetcher,
   TableDataGridHeader,
+  TableDataGridRowClickPayload,
   TableDataGridStatePayload,
 } from '../types'
-import type { ColDef, GridReadyEvent } from 'ag-grid-community'
+import type {
+  ColDef,
+  GridReadyEvent,
+  RowClickedEvent,
+} from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
 import {
   AllCommunityModule,
@@ -92,6 +98,7 @@ defineSlots<{
 const emit = defineEmits<{
   (e: 'grid:ready', api: GridReadyEvent<Row>['api']): void
   (e: 'state', payload: TableDataGridStatePayload): void
+  (e: 'row:click', payload: TableDataGridRowClickPayload<Row>): void
 }>()
 
 const { i18n: { t } } = useI18n()
@@ -113,6 +120,13 @@ const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
     minWidth: header.minWidth,
     valueGetter: params => params.data?.[header.key],
     width: header.width,
+    pinned: header.pinned,
+    cellRenderer: header.cellRenderer ?? TableDataGridCellRenderer,
+    cellRendererParams: header.cellRendererParams,
+    valueFormatter: header.valueFormatter,
+    sortable: header.sortable ?? false,
+    // Shows the unsorted-state icon at rest (not just on hover) for sortable columns.
+    unSortIcon: header.sortable ?? false,
   }
 
   return columnDef
@@ -148,6 +162,12 @@ useEmitState({
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
   emit('grid:ready', event.api)
+}
+
+const onRowClicked = (event: RowClickedEvent<Row>) => {
+  if (event.data) {
+    emit('row:click', event.data)
+  }
 }
 </script>
 

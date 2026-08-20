@@ -1,3 +1,6 @@
+import type { TableDataGridSortPayload } from '../types'
+import type { SortModelItem } from 'ag-grid-community'
+
 interface GridRowRange {
   startRow: number
   endRow: number
@@ -68,3 +71,19 @@ export const resolveInfiniteLastRow = ({
 
   return undefined
 }
+
+/**
+ * Translates AG Grid's sort model into TableDataGrid's public sort contract.
+ *
+ * AG Grid's `sortModel` is already ordered by priority (the column sorted
+ * first, e.g. via shift-click, comes first), so this only needs to drop
+ * AG-Grid-internal fields (like `type`) that aren't part of the public
+ * contract.
+ *
+ * @param sortModel AG Grid's active sort model for the request, ordered by
+ * priority.
+ * @returns The active sort columns as `{ colId, sort }[]`, empty when unsorted.
+ */
+export const resolveSortPayload = (sortModel: SortModelItem[]): TableDataGridSortPayload => (
+  sortModel.map(({ colId, sort }) => ({ colId, sort }))
+)

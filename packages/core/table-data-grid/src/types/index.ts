@@ -1,4 +1,5 @@
-import type { GridApi } from 'ag-grid-community'
+import type { GridApi, ValueFormatterFunc } from 'ag-grid-community'
+import type { Component } from 'vue'
 
 export type TableDataGridMode = 'infinite'
 export type TableDataGridRow = Record<string, unknown>
@@ -9,18 +10,48 @@ export type TableDataGridStatePayload = {
   hasData: boolean
 }
 
+export type TableDataGridSortModelItem = {
+  colId: string
+  sort: 'asc' | 'desc'
+}
+
+/**
+ * Active sort state, ordered by priority (first entry sorts first). Empty
+ * when unsorted. Supports multi-column sort — a user can shift-click a
+ * second sortable header to add a secondary sort key.
+ */
+export type TableDataGridSortPayload = TableDataGridSortModelItem[]
+
+export type TableDataGridRowClickPayload<Row extends object = TableDataGridRow> = Row
+
 export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
   key: Extract<keyof Row, string>
   label: string
   width?: number
   minWidth?: number
   maxWidth?: number
+  /** Pin the column to the left or right edge of the grid, outside the horizontally-scrolling area. */
+  pinned?: 'left' | 'right'
+  /** Vue component used to render this column's cells. Defaults to TableDataGrid's tooltip-on-overflow renderer. */
+  cellRenderer?: Component
+  /** Extra props passed to `cellRenderer` in addition to AG Grid's own cell renderer params. */
+  cellRendererParams?: Record<string, unknown>
+  /** Formats the raw cell value for display, e.g. date/number formatting. */
+  valueFormatter?: ValueFormatterFunc<Row>
+  /**
+   * Enables sorting UI for this column. Requires the `fetcher` to read
+   * `params.sort` and apply the ordering server-side — under infinite-scroll
+   * mode there is no client-side sort fallback, so a fetcher that ignores
+   * `params.sort` will show sort controls that do not actually reorder data.
+   */
+  sortable?: boolean
 }
 
 export interface TableDataGridInfiniteFetcherParams {
   mode: 'infinite'
   pageSize: number
   cursor?: unknown
+  sort?: TableDataGridSortPayload
 }
 
 export type TableDataGridFetcherResult<Row extends object = TableDataGridRow> = {

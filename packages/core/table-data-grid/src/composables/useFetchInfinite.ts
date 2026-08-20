@@ -6,7 +6,7 @@ import type {
 import type { IDatasource, IGetRowsParams } from 'ag-grid-community'
 import type { Ref } from 'vue'
 import { readonly, ref, shallowRef, watch } from 'vue'
-import { getCursorBlock, resolveInfiniteLastRow } from '../utils/fetchers'
+import { getCursorBlock, resolveInfiniteLastRow, resolveSortPayload } from '../utils/fetchers'
 
 type BlockCompletion = {
   promise: Promise<boolean>
@@ -299,10 +299,15 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           // for the previous block, because that previous AG Grid range is what
           // produced the backend cursor needed to continue the chain.
           const cursor = blockIndex > 0 ? cursorMap.get(blockIndex - 1) : undefined
+          // AG Grid resets the infinite block cache and re-requests from block 0
+          // whenever sortModel changes, so passing it straight through to the
+          // fetcher is enough for server-side sort — no extra invalidation
+          // wiring is needed here.
           const result = await fetcher({
             mode: 'infinite',
             pageSize,
             cursor,
+            sort: resolveSortPayload(getRowsParams.sortModel),
           })
 
           if (!isLatestDatasource(datasourceId)) {
