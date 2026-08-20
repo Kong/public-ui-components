@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.263.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.263.1...@kong-ui-public/entities-plugins@9.263.2) (2026-08-20)
+
+
+### Bug Fixes
+
+* **entities-plugins, forms:** pre-fill OIDC principal_claim with sub in free-form ([#3714](https://github.com/Kong/public-ui-components/issues/3714)) ([ff81694](https://github.com/Kong/public-ui-components/commit/ff81694bbf3b739b2a5b76db0a6d50ba06cc1b53)), closes [#3555](https://github.com/Kong/public-ui-components/issues/3555)
+
+
+
+
+
 ## [9.263.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.263.0...@kong-ui-public/entities-plugins@9.263.1) (2026-08-20)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
