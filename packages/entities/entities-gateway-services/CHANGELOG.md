@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.27.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.26.1...@kong-ui-public/entities-gateway-services@3.27.0) (2026-08-21)
+
+
+### Features
+
+* **entities-gateway-services:** don't block delete on the force-delete checkbox ([#3720](https://github.com/Kong/public-ui-components/issues/3720)) ([a8f6fbc](https://github.com/Kong/public-ui-components/commit/a8f6fbc55a7a347d893c36afac4cb8d663e2e8d5))
+
+
+
+
+
 ## [3.26.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.26.0...@kong-ui-public/entities-gateway-services@3.26.1) (2026-08-18)
 
 
