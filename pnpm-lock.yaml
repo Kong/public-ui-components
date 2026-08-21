@@ -105,7 +105,7 @@ importers:
         specifier: ^10.1.0
         version: 10.1.0
       cypress:
-        specifier: ^15.19.0
+        specifier: ^15.20.0
         version: 15.20.0
       cz-conventional-changelog:
         specifier: ^3.3.0
@@ -20759,7 +20759,7 @@ snapshots:
 
   slice-ansi@7.1.2:
     dependencies:
-      ansi-styles: 6.2.1
+      ansi-styles: 6.2.3
       is-fullwidth-code-point: 5.1.0
 
   slice-ansi@8.0.0:
