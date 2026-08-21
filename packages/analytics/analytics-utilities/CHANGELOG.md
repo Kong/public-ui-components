@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.28.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.27.1...%40kong-ui-public%2Fanalytics-utilities%4012.28.0) (2026-08-21)
+
+### Features
+
+* add AI GW entities to agentic datasource MA-5365 ([#3729](https://github.com/Kong/public-ui-components/issues/3729)) ([8c7d9ef](https://github.com/Kong/public-ui-components/commit/8c7d9ef54e804d3d48033e06a77e9a3e1dd14695))
+
+
 ## [12.27.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.27.0...@kong-ui-public/analytics-utilities@12.27.1) (2026-08-20)
 
 
