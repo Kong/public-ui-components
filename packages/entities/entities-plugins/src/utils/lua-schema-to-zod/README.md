@@ -36,7 +36,7 @@ field's JSON definition, it maps:
 | Kong DSL | Zod behavior |
 |---|---|
 | `type` (string/number/integer/boolean/array/set/map/record/foreign/json/function) | corresponding Zod type |
-| `required` / `default` | `.optional()` when not `required: true`, `.default()` when a default is present |
+| `required` / `default` | not `required: true` -> `.nullable().optional()` (also `.default()` on top when a default is present); `required: true` -> neither `null` nor `undefined` accepted |
 | `one_of` (string) | `z.enum(...)` | 
 | `one_of` / `not_one_of` (other types) | refinement |
 | `between` | inclusive min/max |
@@ -48,6 +48,14 @@ field's JSON definition, it maps:
 | `match` / `match_all` / `match_none` / `match_any` | translated regex checks, see [Lua patterns](#lua-patterns-are-not-js-regex) |
 | `referenceable: true` | value may also be a `{vault://...}` reference string |
 | `elements` / `keys` / `values` / `fields` | recursively compiled |
+
+Every non-`required: true` field is both nullable and optional, not just
+optional: Kong's own stored/returned plugin config represents "not set" as an
+explicit `null` about as often as by omitting the key, so a schema that only
+accepted `undefined` would reject a lot of real, valid config payloads. A
+field with a `default` still accepts an explicit `null` as-is - the default
+only fills in for a genuinely missing key, matching Kong's own behavior of
+not overriding an explicit null with the field's default.
 
 Anything with an unrecognized `type` or an unhandled keyword falls back to
 `z.unknown()` (or is silently ignored) with a `console.warn`, on purpose -

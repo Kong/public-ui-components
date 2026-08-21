@@ -230,13 +230,23 @@ function buildObjectSchema(fields: LuaNamedField[]): z.ZodObject<any> {
 }
 
 function wrapCommon(schema: z.ZodTypeAny, field: Record<string, any>): z.ZodTypeAny {
+  const isRequired = field.required === true
+
+  // Kong represents "not set" as an explicit `null` in stored/returned config
+  // about as often as by omitting the key entirely - `.optional()` alone
+  // would reject the former, so every non-required field accepts both.
+  let result = isRequired ? schema : schema.nullable()
+
   if (field.default !== undefined) {
-    return schema.default(field.default)
+    // `required: true` + a `default` is a common, valid combination (the
+    // field is "always present" precisely because Kong fills the default
+    // in) - the default applies regardless of `required`.
+    result = result.default(field.default)
+  } else if (!isRequired) {
+    result = result.optional()
   }
-  if (field.required !== true) {
-    return schema.optional()
-  }
-  return schema
+
+  return result
 }
 
 export function compileField(field: LuaField): z.ZodTypeAny {
