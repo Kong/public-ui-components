@@ -827,6 +827,7 @@ onBeforeMount(async () => {
 }
 
 .force-delete-notice {
-  margin-bottom: var(--kui-space-50, $kui-space-50);
+  // Override KModal's own `.modal-content p` margin reset
+  margin-bottom: var(--kui-space-50, $kui-space-50) !important;
 }
 </style>
