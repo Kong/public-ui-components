@@ -94,6 +94,45 @@ describe('luaSchemaToZod (POC)', () => {
     expect(result.protocols).toBeDefined()
   })
 
+  it('accepts explicit `null` on non-required fields, not just an omitted key', () => {
+    // Kong itself represents "not set" as `null` in stored/returned config
+    // about as often as by omitting the key.
+    const zodSchema = luaSchemaToZod(rateLimitingSchema)
+
+    const result = zodSchema.safeParse({
+      config: {
+        fault_tolerant: true,
+        sync_rate: -1,
+        hide_client_headers: false,
+        redis: {},
+        minute: null, // no `required`, no `default` -> should accept null
+        limit_by: null, // has a `default` -> should still accept an explicit null (not be overridden)
+      },
+    })
+
+    expect(result.success).toBe(true)
+    if (result.success) {
+      const data = result.data as any
+      expect(data.config.minute).toBeNull()
+      expect(data.config.limit_by).toBeNull()
+    }
+  })
+
+  it('still rejects `null` on a `required: true` field', () => {
+    const zodSchema = luaSchemaToZod(rateLimitingSchema)
+
+    const result = zodSchema.safeParse({
+      config: {
+        fault_tolerant: null, // required: true -> null is not acceptable
+        sync_rate: -1,
+        hide_client_headers: false,
+        redis: {},
+      },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
   it('does not throw on an unrecognized field type, falls back to unknown()', () => {
     const weirdSchema = { type: 'record' as const, fields: [{ mystery: { type: 'brand-new-type' as any } }] }
     const zodSchema = luaSchemaToZod(weirdSchema)
