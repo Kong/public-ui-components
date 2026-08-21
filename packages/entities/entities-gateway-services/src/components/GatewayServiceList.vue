@@ -231,7 +231,6 @@
 
     <EntityDeleteModal
       :action-pending="isDeletePending"
-      :confirm-disabled="requiresForceDelete && !forceDeleteConfirmed"
       :description="deleteDescription"
       :entity-name="gatewayServiceToBeDeleted && (gatewayServiceToBeDeleted.name || gatewayServiceToBeDeleted.id)"
       :entity-type="EntityTypes.GatewayService"
@@ -248,11 +247,13 @@
         <p v-if="relatedEntitiesCheckFailed || !requiresForceDelete">
           {{ relatedEntitiesMessage }}
         </p>
+        <p v-else>
+          {{ t('actions.delete.related_entities.force_delete_notice') }}
+        </p>
         <KCheckbox
           v-if="requiresForceDelete"
           v-model="forceDeleteConfirmed"
           data-testid="gateway-service-delete-force-checkbox"
-          :description="t('actions.delete.related_entities.force_delete_help')"
           :label="t('actions.delete.related_entities.force_delete_checkbox')"
         />
       </template>
