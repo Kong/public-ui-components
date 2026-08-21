@@ -247,13 +247,17 @@
         <p v-if="relatedEntitiesCheckFailed || !requiresForceDelete">
           {{ relatedEntitiesMessage }}
         </p>
-        <p v-else>
+        <p
+          v-else
+          class="force-delete-notice"
+        >
           {{ t('actions.delete.related_entities.force_delete_notice') }}
         </p>
         <KCheckbox
           v-if="requiresForceDelete"
           v-model="forceDeleteConfirmed"
           data-testid="gateway-service-delete-force-checkbox"
+          :description="t('actions.delete.related_entities.force_delete_help')"
           :label="t('actions.delete.related_entities.force_delete_checkbox')"
         />
       </template>
@@ -820,5 +824,9 @@ onBeforeMount(async () => {
   .kong-ui-entity-filter-input {
     margin-right: var(--kui-space-50, $kui-space-50);
   }
+}
+
+.force-delete-notice {
+  margin-bottom: var(--kui-space-50, $kui-space-50);
 }
 </style>

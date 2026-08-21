@@ -17,6 +17,7 @@
         "check_failed": "We couldn't verify whether this gateway service has routes or plugins attached. Check the box below to force delete it anyway.",
         "plugin": "{count, plural, one {plugin} other {plugins}}",
         "force_delete_checkbox": "Force delete",
+        "force_delete_help": "Check this box to force deletion of all routes and plugins on linked service.",
         "force_delete_notice": "All routes must be deleted before this gateway service can be deleted. To delete the service and all its routes and plugins at once, select Force delete."
       }
     }

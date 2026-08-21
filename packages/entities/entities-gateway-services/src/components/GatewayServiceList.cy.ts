@@ -900,6 +900,7 @@ describe('<GatewayServiceList />', () => {
 
       cy.get(`${modal} .extra`).should('contain.text', 'Force delete')
         .and('contain.text', 'All routes must be deleted before this gateway service can be deleted. To delete the service and all its routes and plugins at once, select Force delete.')
+        .and('contain.text', 'Check this box to force deletion of all routes and plugins on linked service.')
       cy.getTestId('gateway-service-delete-force-checkbox').should('exist')
 
       cy.getTestId('confirmation-input').type(serviceName)

@@ -165,7 +165,7 @@ const proceed = () => {
   }
 
   .extra {
-    margin-top: var(--kui-space-90, $kui-space-90);
+    margin-top: var(--kui-space-60, $kui-space-60);
   }
 
   .body-stacked-copy .description {
