@@ -34,7 +34,7 @@
 
     <!-- New-feature action, pinned to the dropdown footer. Shown only when the host
          says the user can create features. Emits up to the host app (FeatureSelectField
-         → GovernanceForm → host `click:create-entity`), which owns the creation flow. -->
+         → EntitlementEnforcementForm → host `click:create-entity`), which owns the creation flow. -->
     <template
       v-if="canCreateFeature"
       #dropdown-footer-text
@@ -61,7 +61,7 @@ import { useFormShared } from '../../shared/composables'
 import useI18n from '../../../../composables/useI18n'
 import type { EntityCreateEvent } from '../../../../types'
 
-// The new-feature action emits this; GovernanceForm forwards it to the host app.
+// The new-feature action emits this; EntitlementEnforcementForm forwards it to the host app.
 const emit = defineEmits<{
   'click:create-entity': [payload: EntityCreateEvent]
 }>()

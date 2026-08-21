@@ -15,6 +15,7 @@
       :config="kongManagerConfig"
       :custom-plugin-support="['streaming', 'cloned']"
       :highlighted-plugin-ids="highlightedPluginIds"
+      :ignored-plugins="['entitlement-enforcement']"
     />
   </div>
 </template>
