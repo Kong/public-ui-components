@@ -9,7 +9,7 @@ overrides:
   form-data@>=3.0.0 <3.0.4: '>=4.0.6'
   fast-uri@<4.1.2: '>=4.1.2'
   minimatch@>=9.0.0 <9.0.7: '>=10.2.5'
-  serialize-javascript@<=7.0.2: '>=7.0.5'
+  serialize-javascript@<=7.0.2: '>=7.1.0'
   dompurify@<3.2.4: '>=3.4.13'
   picomatch@<2.3.2: '>=4.0.4'
   picomatch@>=4.0.0 <4.0.4: '>=4.0.4'
@@ -17,7 +17,7 @@ overrides:
   path-to-regexp@<0.1.13: '>=8.4.2'
   lodash-es@<=4.17.23: '>=4.18.0'
   lodash@<=4.17.23: '>=4.18.0'
-  axios@<1.15.0: '>=1.18.0'
+  axios@<1.15.0: '>=1.19.0'
   tmp@<0.2.6: '>=0.2.7'
   shell-quote@>=1.1.0 <=1.8.3: '>=1.10.0'
   ws@>=8.0.0 <8.21.0: '>=8.21.0'
@@ -32,7 +32,7 @@ overrides:
   '@eslint/config-array@<0.23.5': '>=0.23.5 <1.0.0'
   immutable@>=5.0.0-beta.1 <5.1.8: '>=5.1.8'
   immutable@<4.3.9: '>=4.3.9 <6.0.0'
-  ip-address@<=10.3.0: '>=10.3.1'
+  ip-address@<=10.3.0: '>=10.5.0'
 
 importers:
 
@@ -66,8 +66,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(stylelint@17.14.1(typescript@5.9.3))
       '@stylistic/stylelint-plugin':
-        specifier: ^5.2.0
-        version: 5.2.0(stylelint@17.14.1(typescript@5.9.3))
+        specifier: ^5.3.0
+        version: 5.3.0(stylelint@17.14.1(typescript@5.9.3))
       '@types/flat':
         specifier: ^5.0.5
         version: 5.0.5
@@ -219,8 +219,8 @@ importers:
         specifier: ^5.5.2
         version: 5.5.2
       '@vueuse/core':
-        specifier: ^14.3.0
-        version: 14.3.0(vue@3.5.38(typescript@5.9.3))
+        specifier: ^14.4.0
+        version: 14.4.0(vue@3.5.38(typescript@5.9.3))
       approximate-number:
         specifier: ^3.0.1
         version: 3.0.1
@@ -329,8 +329,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       swrv:
         specifier: ^1.2.0
         version: 1.2.0(vue@3.5.38(typescript@5.9.3))
@@ -391,8 +391,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/core
       '@zumer/snapdom':
-        specifier: ^2.6.0
-        version: 2.15.0
+        specifier: ^2.23.2
+        version: 2.24.7
       date-fns-tz:
         specifier: ^3.2.0
         version: 3.2.0(date-fns@4.4.0)
@@ -479,8 +479,8 @@ importers:
         specifier: ^2.16.0
         version: 2.16.0
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -491,8 +491,8 @@ importers:
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@vueuse/core':
-        specifier: ^14.3.0
-        version: 14.3.0(vue@3.5.38(typescript@5.9.3))
+        specifier: ^14.4.0
+        version: 14.4.0(vue@3.5.38(typescript@5.9.3))
       focus-trap:
         specifier: ^8.2.1
         version: 8.2.1
@@ -553,8 +553,8 @@ importers:
         specifier: 3.3.0
         version: 3.3.0
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
 
   packages/core/documentation:
     dependencies:
@@ -578,8 +578,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -685,8 +685,8 @@ importers:
         specifier: ^4.17.12
         version: 4.17.12
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       pug:
         specifier: ^3.0.4
         version: 3.0.4
@@ -727,8 +727,8 @@ importers:
         specifier: ^4.3.1
         version: 4.4.2
       '@vueuse/core':
-        specifier: ^14.3.0
-        version: 14.3.0(vue@3.5.38(typescript@5.9.3))
+        specifier: ^14.4.0
+        version: 14.4.0(vue@3.5.38(typescript@5.9.3))
       shiki-codegen:
         specifier: ^4.3.1
         version: 4.4.2
@@ -770,8 +770,8 @@ importers:
   packages/core/page-layout:
     dependencies:
       '@vueuse/core':
-        specifier: ^14.3.0
-        version: 14.3.0(vue@3.5.38(typescript@5.9.3))
+        specifier: ^14.4.0
+        version: 14.4.0(vue@3.5.38(typescript@5.9.3))
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -817,8 +817,8 @@ importers:
         specifier: ^1.58.0
         version: 1.60.0(vue@3.5.38(typescript@5.9.3))
       '@vueuse/core':
-        specifier: ^14.3.0
-        version: 14.3.0(vue@3.5.38(typescript@5.9.3))
+        specifier: ^14.4.0
+        version: 14.4.0(vue@3.5.38(typescript@5.9.3))
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -836,11 +836,11 @@ importers:
   packages/core/table-data-grid:
     dependencies:
       ag-grid-community:
-        specifier: ^36.0.0
-        version: 36.0.1
+        specifier: ^36.1.0
+        version: 36.1.0
       ag-grid-vue3:
-        specifier: ^36.0.0
-        version: 36.0.1(vue@3.5.38(typescript@5.9.3))
+        specifier: ^36.1.0
+        version: 36.1.0(vue@3.5.38(typescript@5.9.3))
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -880,8 +880,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -907,8 +907,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -934,8 +934,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -961,8 +961,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -988,8 +988,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -1022,8 +1022,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -1046,8 +1046,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -1073,8 +1073,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -1173,14 +1173,14 @@ importers:
         specifier: ^1.48.2
         version: 1.48.2(vue@3.5.38(typescript@5.9.3))
       '@vueuse/core':
-        specifier: ^14.3.0
-        version: 14.3.0(vue@3.5.38(typescript@5.9.3))
+        specifier: ^14.4.0
+        version: 14.4.0(vue@3.5.38(typescript@5.9.3))
       '@vueuse/integrations':
-        specifier: ^14.3.0
-        version: 14.3.0(axios@1.18.1)(focus-trap@8.2.1)(sortablejs@1.15.7)(vue@3.5.38(typescript@5.9.3))
+        specifier: ^14.4.0
+        version: 14.4.0(axios@1.19.0)(focus-trap@8.2.1)(sortablejs@1.15.7)(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       monaco-editor:
         specifier: ^0.55.1
         version: 0.55.1
@@ -1245,8 +1245,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       swrv:
         specifier: ^1.2.0
         version: 1.2.0(vue@3.5.38(typescript@5.9.3))
@@ -1285,8 +1285,8 @@ importers:
         specifier: ^4.5.8
         version: 4.5.8
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -1331,11 +1331,11 @@ importers:
         specifier: ^4.3.1
         version: 4.4.2
       '@vueuse/core':
-        specifier: ^14.3.0
-        version: 14.3.0(vue@3.5.38(typescript@5.9.3))
+        specifier: ^14.4.0
+        version: 14.4.0(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       monaco-editor:
         specifier: ^0.55.1
         version: 0.55.1
@@ -1367,8 +1367,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -1394,8 +1394,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -1422,8 +1422,8 @@ importers:
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
-        specifier: ^1.17.0
-        version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^1.19.0
+        version: 1.19.0
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -1497,7 +1497,7 @@ importers:
     dependencies:
       '@kong/swagger-ui-kong-theme-universal':
         specifier: ^4.3.3
-        version: 4.3.3(@babel/core@7.29.7)(axios@1.18.1)(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.62.2)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2))(vue@3.5.38(typescript@5.9.3))
+        version: 4.3.3(@babel/core@7.29.7)(axios@1.19.0)(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.62.2)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2))(vue@3.5.38(typescript@5.9.3))
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -2737,7 +2737,7 @@ packages:
     resolution: {integrity: sha512-C/MFT+OZtyul62ElgHEggqMYPbLjXiRJg5GE3il8MZpaep2D5QV+F5UQ7frbA98TkZCCVBD4LpR0OmiwXKs+tg==}
     engines: {node: '>=v16.20.2'}
     peerDependencies:
-      axios: '>=1.18.0'
+      axios: '>=1.19.0'
       vue: 3.5.38
       vue-router: ^4.2.4
 
@@ -3593,8 +3593,8 @@ packages:
     peerDependencies:
       eslint: ^9.0.0 || ^10.0.0
 
-  '@stylistic/stylelint-plugin@5.2.0':
-    resolution: {integrity: sha512-pfa2PMvlH87qwoOMUH4rqz7x/vuO5Kh+r/R1Pe+/5T8sukDPe/VfF6mbdUGE5gwZPlj5O1X56qw55IZrFFRF0g==}
+  '@stylistic/stylelint-plugin@5.3.0':
+    resolution: {integrity: sha512-xbyxPeaO9Vns6A8/0MQV6PzZ5nNZCoGV4q1ERaNd5EBAKlWt+YcpaPapNYNUkZaiQg98+xPbikdA58ehquJG3g==}
     peerDependencies:
       stylelint: ^17.6.0
 
@@ -4389,16 +4389,16 @@ packages:
   '@vueuse/core@10.11.1':
     resolution: {integrity: sha512-guoy26JQktXPcz+0n3GukWIy/JDNKti9v6VEMu6kV2sYBsWuGiTU8OWdg+ADfUbHg3/3DlqySDe7JmdHrktiww==}
 
-  '@vueuse/core@14.3.0':
-    resolution: {integrity: sha512-aHfz47g0ZhMtTVHmIzMVpJy8ePhhOy68GY5bv110+5DVtZ+W7BsOx+m61UNQqfrWyPztIHIanWa3E2tib3NFIw==}
+  '@vueuse/core@14.4.0':
+    resolution: {integrity: sha512-X4WHz1HlCzCBoYXesUkifzzWBAcZgXG8Fi5iNPQg/epdzOB3gu8Fawj3hvuwYR1nGcXGnvxwYYcUC/71++svtQ==}
     peerDependencies:
       vue: 3.5.38
 
-  '@vueuse/integrations@14.3.0':
-    resolution: {integrity: sha512-76I5FT2ESvCmCaSwapI+a/u/CFtNXmzl9f9lNp1hRtx8vKB8hfiokJr8IvQqcQG5ckGXElyXK516b54ozV3MvA==}
+  '@vueuse/integrations@14.4.0':
+    resolution: {integrity: sha512-oJz9qTgczvA7L1nXQFRU7h8tQbOCoiceqvMMhT9XYMyOGTqLJ2rEa09PON+nD2t48sZUfeOmg4eaWJXV4sZb/w==}
     peerDependencies:
       async-validator: ^4
-      axios: '>=1.18.0'
+      axios: '>=1.19.0'
       change-case: ^5
       drauu: ^0.4
       focus-trap: ^7 || ^8
@@ -4439,14 +4439,14 @@ packages:
   '@vueuse/metadata@10.11.1':
     resolution: {integrity: sha512-IGa5FXd003Ug1qAZmyE8wF3sJ81xGLSqTqtQ6jaVfkeZ4i5kS2mwQF61yhVqojRnenVew5PldLyRgvdl4YYuSw==}
 
-  '@vueuse/metadata@14.3.0':
-    resolution: {integrity: sha512-BwxmbAzwAVF50+MW57GXOUEV61nFBGnlBvrTqj49PqWJu3uw7hdu72ztXeZ33RdZtDY6kO+bfCAE1PCn88Tktw==}
+  '@vueuse/metadata@14.4.0':
+    resolution: {integrity: sha512-swx/255R6JyHZFJhx845iz5CRWDZdCfvkZOpACWc5+c5WHcG24mv8gUT1WIdFQaHt6dq79rvILd9QnCWiyVm9g==}
 
   '@vueuse/shared@10.11.1':
     resolution: {integrity: sha512-LHpC8711VFZlDaYUXEBbFBCQ7GS3dVU9mjOhhMhXP6txTV4EhYQg/KGnQuvt/sPAtoUKq7VVUnL6mVtFoL42sA==}
 
-  '@vueuse/shared@14.3.0':
-    resolution: {integrity: sha512-bZpge9eSXwa4ToSiqJ7j6KRwhAsneMFoSz3LMWKQDkqimm3D/tbFlrklrs/IOqC8tEcYmXQZJ6N0UrjhBirVCg==}
+  '@vueuse/shared@14.4.0':
+    resolution: {integrity: sha512-JRgY90Sz8DDtPMsaDflvPMp9xYk69JZAmbuDvAquUVXKr2gEjqtzGNTTthLfckH0BzBqvnu31gb4a8TGLRe79g==}
     peerDependencies:
       vue: 3.5.38
 
@@ -4508,9 +4508,8 @@ packages:
     resolution: {integrity: sha512-nrUSn7hzt7J6JWgWGz78ZYI8wj+gdIJdk0Ynjpp8l+trkn58Uqsf6RYrYkEK+3X18EX+TNdtJI0WxAtc+L84SQ==}
     hasBin: true
 
-  '@zumer/snapdom@2.15.0':
-    resolution: {integrity: sha512-rdayfg832lYhy2v2DRr4LwzhIT0ZMeGKYicVmtzbji95KhUd7Z1g6/5jTsDEU4q32a6ywbIpAixO45hubsEftQ==}
-    deprecated: Old versions have known fidelity bugs (text re-wrap, width freezing, KaTeX clipping). Upgrade to ^2.22 — drop-in for any 2.x. https://github.com/zumerlab/snapdom/releases
+  '@zumer/snapdom@2.24.7':
+    resolution: {integrity: sha512-RKWP/NoxU5zXO1O1QaIerdb8HYLDrQPSU9G9UMk9XDSevsXwIydDYFnJukrp0BqrckQT+Hbspxx2WERXIF2i9w==}
 
   abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -4551,19 +4550,19 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  ag-charts-types@14.0.1:
-    resolution: {integrity: sha512-fGNDptlNzaQDqDoZxAYeLtBrV8sIXE1iRXX9s5W+/drobP3Ig2fhdAOlKp3IIrHlbiKZUiuhraqT0D4IYVyM4w==}
+  ag-charts-types@14.1.0:
+    resolution: {integrity: sha512-mmzkng88c0l+Z9PvCMowMilhVeNgDU/iMuMemcOQD4BG/qO4vbkxWvyQO0iqju8Dx7YOY81PNzC/RmElQNiVkA==}
 
-  ag-grid-community@36.0.1:
-    resolution: {integrity: sha512-wQetUqoY6SBCtKzDjsYkImiGpM4+hU7S5/NvxcCAO6liL6mSRXlEvCHdQZUfj6amuhsdjVlGK1C8e+B54EyDTQ==}
+  ag-grid-community@36.1.0:
+    resolution: {integrity: sha512-WnvSQ4csRs8gv/b1B0lPHykQXvUJVgi2u5mpY0Aa6dv3pvhDVVqCT8dwUyOeCog4JNPptaXGrOrZ8qP2XoJzVA==}
 
-  ag-grid-vue3@36.0.1:
-    resolution: {integrity: sha512-7zCbpnYL49IVgdiKnVDAXE/nFHlMANqxLCRzv+9+lPxzpRlOOENbuRpRVrOSyS4mdkI1aXIUvDBileihfCIzog==}
+  ag-grid-vue3@36.1.0:
+    resolution: {integrity: sha512-lktl90iQG4xfa9EbLxdNlSARPuQvs8lDSQADRmWt4OB2ZGTnTr18xMh+ApUNS6qVCBoMGAdkKI/5nVTy/3owDA==}
     peerDependencies:
       vue: 3.5.38
 
-  ag-stack@36.0.1:
-    resolution: {integrity: sha512-FsrO55fl7EDToQVgRDaTF1+QKWpfJK1nxTxTavkkfHeq6Kei4skAeP0MsjXm7zECjfyHczlwmWvp+KN7KHnlYQ==}
+  ag-stack@36.1.0:
+    resolution: {integrity: sha512-Kmkf5iRZmyduNx2KtW450j6GbCdJ4ejacSpb1AWl0yrdquRmScLRc1SlLolx6lyCbTBSJGo4tRraKbBzre+GlQ==}
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -4760,6 +4759,9 @@ packages:
 
   axios@1.18.1:
     resolution: {integrity: sha512-3nTvFlvpn9Zu/RkHUqtc7/+al4UpRW5az71ap5zccp6e8RAYEzhMTecX8Dz1wWDYrPpUoB1HAQEGEAEvUr7S9g==}
+
+  axios@1.19.0:
+    resolution: {integrity: sha512-ht/iuYZXEjFxLH/Hkezgd7m6JKlHHXEUSneaDz8uZe1Gj5QZtCnpyDsckvAiEnT89OEbCLmnte4R4sn7P0EKFw==}
 
   babel-code-frame@6.26.0:
     resolution: {integrity: sha512-XqYMR2dfdGMW+hd0IUZ2PwK+fGeFkOxZJ0wY+JaQAHzt1Zx8LcvpiZD2NiGkEG8qx0CfkAOr5xt76d1e8vG90g==}
@@ -7008,8 +7010,8 @@ packages:
   iobuffer@5.4.0:
     resolution: {integrity: sha512-DRebOWuqDvxunfkNJAlc3IzWIPD5xVxwUNbHr7xKB8E6aLJxIPfNX3CoMJghcFjpv6RWQsrcJbghtEwSPoJqMA==}
 
-  ip-address@10.4.0:
-    resolution: {integrity: sha512-oSK96Grm3aP6OrS263xVxbNDGVL7rzBtYdpGqlDG8iQdoenDoTs/nkki+DflYbAEE8Xl6o5YxhxlrKvI3nqKXQ==}
+  ip-address@10.5.0:
+    resolution: {integrity: sha512-R5SnVLJmgYYvf2F2ZgwSBnelz5G4q5AxIC277GDfUaNbrZKNANcBC7RHqYYePlszf4kBolVkJauG0ZjHHFh55g==}
     engines: {node: '>= 12'}
 
   ipaddr.js@1.9.1:
@@ -8683,12 +8685,12 @@ packages:
     resolution: {integrity: sha512-Q8qQfPiZ+THO/3ZrOrO0cJJKfpYCagtMUkXbnEfmgUjwXg6z/WBeOyS9APBBPCTSiDV+s4SwQGu8yFsiMRIudg==}
     engines: {node: '>=4'}
 
-  postcss-selector-parser@7.1.1:
-    resolution: {integrity: sha512-orRsuYpJVw8LdAwqqLykBj9ecS5/cRHlI5+nvTo8LcCKmzDmqVORXtOIYEEQuL9D4BxtA1lm5isAqzQZCoQ6Eg==}
-    engines: {node: '>=4'}
-
   postcss-selector-parser@7.1.4:
     resolution: {integrity: sha512-HeP7D2wyhkR+XaK6v4W8oRF62Dsz4flyuczALJp61GckGm42u1saSSJ/0auvcBqxs3jMRFEcPK34At/0JBKdOg==}
+    engines: {node: '>=4'}
+
+  postcss-selector-parser@7.1.5:
+    resolution: {integrity: sha512-KvvtD7SrlBP7dlgkBghEE3r84CABm5SmV2aNcG4oCA+qDnJ/tvKonFVvwWAyyWUEwxuNawdfEAZKP9zM3oZ2Uw==}
     engines: {node: '>=4'}
 
   postcss-sorting@10.0.0:
@@ -12490,9 +12492,9 @@ snapshots:
     dependencies:
       vue: 3.5.38(typescript@5.9.3)
 
-  '@kong/kongponents@8.127.0(axios@1.18.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2))(vue@3.5.38(typescript@5.9.3))':
+  '@kong/kongponents@8.127.0(axios@1.19.0)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2))(vue@3.5.38(typescript@5.9.3))':
     dependencies:
-      axios: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+      axios: 1.19.0
       date-fns: 2.30.0
       date-fns-tz: 2.0.1(date-fns@2.30.0)
       focus-trap: 7.8.0
@@ -12586,7 +12588,7 @@ snapshots:
       '@kong/icons': 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@mdit-vue/plugin-frontmatter': 3.0.2
       '@sindresorhus/slugify': 3.0.0
-      '@vueuse/core': 14.3.0(vue@3.5.38(typescript@5.9.3))
+      '@vueuse/core': 14.4.0(vue@3.5.38(typescript@5.9.3))
       buffer: 6.0.3
       dompurify: 3.4.13
       html-format: 1.1.7
@@ -12612,7 +12614,7 @@ snapshots:
 
   '@kong/sdk-portal-js@2.16.0':
     dependencies:
-      axios: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+      axios: 1.19.0
     transitivePeerDependencies:
       - debug
       - supports-color
@@ -12621,10 +12623,10 @@ snapshots:
     dependencies:
       stylelint: 17.14.1(typescript@5.9.3)
 
-  '@kong/swagger-ui-kong-theme-universal@4.3.3(@babel/core@7.29.7)(axios@1.18.1)(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.62.2)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2))(vue@3.5.38(typescript@5.9.3))':
+  '@kong/swagger-ui-kong-theme-universal@4.3.3(@babel/core@7.29.7)(axios@1.19.0)(mkdirp@1.0.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.62.2)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2))(vue@3.5.38(typescript@5.9.3))':
     dependencies:
       '@braintree/sanitize-url': 6.0.2
-      '@kong/kongponents': 8.127.0(axios@1.18.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2))(vue@3.5.38(typescript@5.9.3))
+      '@kong/kongponents': 8.127.0(axios@1.19.0)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2))(vue@3.5.38(typescript@5.9.3))
       '@kyleshockey/xml': 1.0.2
       classnames: 2.5.1
       curl-to-har: 1.0.1
@@ -13514,13 +13516,13 @@ snapshots:
       estraverse: 5.3.0
       picomatch: 4.0.5
 
-  '@stylistic/stylelint-plugin@5.2.0(stylelint@17.14.1(typescript@5.9.3))':
+  '@stylistic/stylelint-plugin@5.3.0(stylelint@17.14.1(typescript@5.9.3))':
     dependencies:
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-tokenizer': 4.0.0
       '@csstools/media-query-list-parser': 5.0.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
-      postcss: 8.5.23
-      postcss-selector-parser: 7.1.1
+      postcss: 8.5.26
+      postcss-selector-parser: 7.1.5
       postcss-value-parser: 4.2.0
       style-search: 0.1.0
       stylelint: 17.14.1(typescript@5.9.3)
@@ -13826,7 +13828,7 @@ snapshots:
       '@babel/runtime-corejs3': 7.28.4
       '@swagger-api/apidom-core': 0.99.2
       '@types/ramda': 0.29.12
-      axios: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+      axios: 1.19.0
       minimatch: 7.4.9
       process: 0.11.10
       ramda: 0.30.1
@@ -14773,26 +14775,26 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3))':
+  '@vueuse/core@14.4.0(vue@3.5.38(typescript@5.9.3))':
     dependencies:
       '@types/web-bluetooth': 0.0.21
-      '@vueuse/metadata': 14.3.0
-      '@vueuse/shared': 14.3.0(vue@3.5.38(typescript@5.9.3))
+      '@vueuse/metadata': 14.4.0
+      '@vueuse/shared': 14.4.0(vue@3.5.38(typescript@5.9.3))
       vue: 3.5.38(typescript@5.9.3)
 
-  '@vueuse/integrations@14.3.0(axios@1.18.1)(focus-trap@8.2.1)(sortablejs@1.15.7)(vue@3.5.38(typescript@5.9.3))':
+  '@vueuse/integrations@14.4.0(axios@1.19.0)(focus-trap@8.2.1)(sortablejs@1.15.7)(vue@3.5.38(typescript@5.9.3))':
     dependencies:
-      '@vueuse/core': 14.3.0(vue@3.5.38(typescript@5.9.3))
-      '@vueuse/shared': 14.3.0(vue@3.5.38(typescript@5.9.3))
+      '@vueuse/core': 14.4.0(vue@3.5.38(typescript@5.9.3))
+      '@vueuse/shared': 14.4.0(vue@3.5.38(typescript@5.9.3))
       vue: 3.5.38(typescript@5.9.3)
     optionalDependencies:
-      axios: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+      axios: 1.19.0
       focus-trap: 8.2.1
       sortablejs: 1.15.7
 
   '@vueuse/metadata@10.11.1': {}
 
-  '@vueuse/metadata@14.3.0': {}
+  '@vueuse/metadata@14.4.0': {}
 
   '@vueuse/shared@10.11.1(vue@3.5.38(typescript@5.9.3))':
     dependencies:
@@ -14801,7 +14803,7 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@vueuse/shared@14.3.0(vue@3.5.38(typescript@5.9.3))':
+  '@vueuse/shared@14.4.0(vue@3.5.38(typescript@5.9.3))':
     dependencies:
       vue: 3.5.38(typescript@5.9.3)
 
@@ -14891,7 +14893,7 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  '@zumer/snapdom@2.15.0': {}
+  '@zumer/snapdom@2.24.7': {}
 
   abbrev@1.1.1: {}
 
@@ -14916,19 +14918,19 @@ snapshots:
 
   acorn@8.17.0: {}
 
-  ag-charts-types@14.0.1: {}
+  ag-charts-types@14.1.0: {}
 
-  ag-grid-community@36.0.1:
+  ag-grid-community@36.1.0:
     dependencies:
-      ag-charts-types: 14.0.1
-      ag-stack: 36.0.1
+      ag-charts-types: 14.1.0
+      ag-stack: 36.1.0
 
-  ag-grid-vue3@36.0.1(vue@3.5.38(typescript@5.9.3)):
+  ag-grid-vue3@36.1.0(vue@3.5.38(typescript@5.9.3)):
     dependencies:
-      ag-grid-community: 36.0.1
+      ag-grid-community: 36.1.0
       vue: 3.5.38(typescript@5.9.3)
 
-  ag-stack@36.0.1: {}
+  ag-stack@36.1.0: {}
 
   agent-base@6.0.2(supports-color@7.2.0):
     dependencies:
@@ -15101,6 +15103,16 @@ snapshots:
   aws4@1.13.2: {}
 
   axios@1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0):
+    dependencies:
+      follow-redirects: 1.16.0(debug@4.4.3(supports-color@7.2.0))
+      form-data: 4.0.6
+      https-proxy-agent: 5.0.1(supports-color@7.2.0)
+      proxy-from-env: 2.1.0
+    transitivePeerDependencies:
+      - debug
+      - supports-color
+
+  axios@1.19.0:
     dependencies:
       follow-redirects: 1.16.0(debug@4.4.3(supports-color@7.2.0))
       form-data: 4.0.6
@@ -17735,7 +17747,7 @@ snapshots:
 
   iobuffer@5.4.0: {}
 
-  ip-address@10.4.0: {}
+  ip-address@10.5.0: {}
 
   ipaddr.js@1.9.1: {}
 
@@ -19734,12 +19746,12 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-selector-parser@7.1.1:
+  postcss-selector-parser@7.1.4:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-selector-parser@7.1.4:
+  postcss-selector-parser@7.1.5:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
@@ -20795,7 +20807,7 @@ snapshots:
 
   socks@2.8.7:
     dependencies:
-      ip-address: 10.4.0
+      ip-address: 10.5.0
       smart-buffer: 4.2.0
 
   sortablejs@1.15.7: {}
