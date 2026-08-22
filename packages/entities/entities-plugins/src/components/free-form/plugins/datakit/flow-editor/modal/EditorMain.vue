@@ -111,7 +111,7 @@
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExternalLinkIcon, RedoIcon, UndoIcon } from '@kong/icons'
 import { KButton, KDropdown, KTooltip, KDropdownItem } from '@kong/kongponents'
-import yaml, { JSON_SCHEMA } from 'js-yaml'
+import { load as yamlLoad, JSON_SCHEMA } from 'js-yaml'
 
 import english from '../../../../../../locales/en.json'
 import BooleanField from '../../../../shared/BooleanField.vue'
@@ -140,7 +140,7 @@ function getExampleLabel(i18nKey: string): string {
 }
 
 function selectExample(example: DatakitExample) {
-  const maybeConfig = yaml.load(example.code, {
+  const maybeConfig = yamlLoad(example.code, {
     schema: JSON_SCHEMA,
     json: true,
   })

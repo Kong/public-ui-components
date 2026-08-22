@@ -47,7 +47,7 @@
 import { computed, inject, shallowRef, toRaw } from 'vue'
 import { isEqual, omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
-import yaml, { JSON_SCHEMA } from 'js-yaml'
+import { dump, load, JSON_SCHEMA } from 'js-yaml'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton, KModal } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
@@ -88,7 +88,7 @@ const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 const LINT_SOURCE = 'YAML Syntax'
 
 function dumpYaml(config: unknown): string {
-  return yaml.dump(orderNodeFields(toRaw(config)), {
+  return dump(orderNodeFields(toRaw(config)), {
     schema: JSON_SCHEMA,
     seqNoIndent: true,
   })
@@ -121,7 +121,7 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
 
   editor.onDidChangeModelContent(() => {
     try {
-      const config = yaml.load(editor.getValue() || '', {
+      const config = load(editor.getValue() || '', {
         schema: JSON_SCHEMA,
         json: true,
       })
@@ -209,12 +209,12 @@ function setExampleCode(example: DatakitExample) {
   const newCode = example.code
 
   try {
-    const config = yaml.load(code.value, {
+    const config = load(code.value, {
       schema: JSON_SCHEMA,
       json: true,
     }) as any
 
-    const exampleConfigJson = yaml.load(newCode, {
+    const exampleConfigJson = load(newCode, {
       schema: JSON_SCHEMA,
       json: true,
     }) as any

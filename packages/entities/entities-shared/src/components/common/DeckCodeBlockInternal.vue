@@ -125,7 +125,7 @@
 import { CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT } from '../../constants'
 import { InfoIcon, LanguageBashIcon, LanguageShellIcon } from '@kong/icons'
 import { KExternalLink } from '@kong/kongponents'
-import yaml from 'js-yaml'
+import { dump } from 'js-yaml'
 import { computed, inject, ref, watchEffect } from 'vue'
 
 import composables from '../../composables'
@@ -220,7 +220,7 @@ const buildYaml = (record: Record<string, any>): string => {
     [entityKey]: [filteredRecord],
   }
 
-  return yaml.dump(fullRecord, { quoteStyle: 'double' }).trim()
+  return dump(fullRecord, { quoteStyle: 'double' }).trim()
 }
 
 const yamlContent = computed((): string => {
