@@ -41,7 +41,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "9.64.10",
-    "vue": "^3.5.35"
+    "vue": "^3.5.41"
   },
   "repository": {
     "type": "git",
@@ -66,7 +66,7 @@
     "vue": "^3.5.35"
   },
   "dependencies": {
-    "ag-grid-community": "^36.0.0",
-    "ag-grid-vue3": "^36.0.0"
+    "ag-grid-community": "^36.0.2",
+    "ag-grid-vue3": "^36.0.2"
   }
 }

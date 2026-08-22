@@ -57,7 +57,7 @@
     "cypress-real-events": "^1.15.0",
     "pinia": ">= 3.0.4 < 5",
     "swrv": "^1.2.0",
-    "vue": "^3.5.35"
+    "vue": "^3.5.41"
   },
   "repository": {
     "type": "git",
@@ -96,7 +96,7 @@
     "file-saver": "^2.0.5",
     "gridstack": "^11.5.1",
     "jspdf": "^4.2.1",
-    "p-queue": "^9.3.1",
-    "papaparse": "^5.5.3"
+    "p-queue": "^9.3.3",
+    "papaparse": "^5.5.4"
   }
 }
