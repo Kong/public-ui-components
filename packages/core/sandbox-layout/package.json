@@ -39,8 +39,8 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
-    "@kong/design-tokens": "3.2.7",
-    "@kong/kongponents": "9.64.3",
+    "@kong/design-tokens": "3.2.10",
+    "@kong/kongponents": "9.64.10",
     "vue": "^3.5.35",
     "vue-router": "^5.2.0"
   },
