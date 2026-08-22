@@ -25,6 +25,7 @@ type MountTableOptions = {
   headers?: Array<TableDataGridHeader<TestRow>>
   error?: boolean
   onGridReady?: (api: GridApi<TestRow>) => void
+  onRowClick?: (row: TestRow) => void
   onState?: (payload: TableDataGridStatePayload) => void
   pageSize?: number
   refreshKey?: string | number | boolean
@@ -65,12 +66,14 @@ const mountTestTableDataGrid = ({
   containerStyle,
   headers: tableHeaders = headers,
   onGridReady,
+  onRowClick,
   slots,
   ...props
 }: MountTableOptions) => {
   const componentProps = reactive<Record<string, unknown>>({
     headers: tableHeaders,
     'onGrid:ready': onGridReady,
+    'onRow:click': onRowClick,
     ...props,
   })
 
@@ -278,6 +281,7 @@ describe('<TableDataGrid />', () => {
       mode: 'infinite',
       pageSize: 15,
       cursor: undefined,
+      sort: [],
     })
   })
 
@@ -491,11 +495,13 @@ describe('<TableDataGrid />', () => {
         mode: 'infinite',
         pageSize: 15,
         cursor: undefined,
+        sort: [],
       })
       expect(secondParams).to.deep.equal({
         mode: 'infinite',
         pageSize: 15,
         cursor: 'next-cursor',
+        sort: [],
       })
 
       for (const params of [firstParams, secondParams]) {
@@ -523,6 +529,7 @@ describe('<TableDataGrid />', () => {
         mode: 'infinite',
         pageSize: 15,
         cursor: undefined,
+        sort: [],
       })
     })
   })
@@ -543,6 +550,7 @@ describe('<TableDataGrid />', () => {
         mode: 'infinite',
         pageSize: 10,
         cursor: undefined,
+        sort: [],
       })
     })
   })
@@ -822,6 +830,173 @@ describe('<TableDataGrid />', () => {
     })
     cy.then(() => {
       expect(eventOrder).to.deep.equal(['fetcher', 'state'])
+    })
+  })
+
+  it('pins a column when the header specifies pinned', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+    const getGridApi = mountTableWithGridApi({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', pinned: 'left' },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.then(() => {
+      const columnState = getGridApi()?.getColumnState()
+
+      expect(columnState?.find(column => column.colId === 'name')?.pinned).to.equal('left')
+      expect(columnState?.find(column => column.colId === 'status')?.pinned).to.equal(null)
+    })
+  })
+
+  it('renders a header-supplied custom cell renderer', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+    // eslint-disable-next-line vue/one-component-per-file -- test-only stub scoped to this spec.
+    const CustomStatusRenderer = defineComponent({
+      name: 'CustomStatusRenderer',
+      props: {
+        params: {
+          type: Object,
+          required: true,
+        },
+      },
+      setup(props) {
+        return () => h('span', { 'data-testid': 'custom-status-badge' }, `Badge: ${(props.params as { value: string }).value}`)
+      },
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name' },
+        { key: 'status', label: 'Status', cellRenderer: CustomStatusRenderer },
+      ],
+    })
+
+    cy.getTestId('custom-status-badge').should('contain.text', 'Badge: Active')
+  })
+
+  it('formats cell values with a header-supplied valueFormatter', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name' },
+        {
+          key: 'status',
+          label: 'Status',
+          valueFormatter: params => `Status: ${params.value}`,
+        },
+      ],
+    })
+
+    cy.contains('.table-data-grid-cell-content', 'Status: Active').should('be.visible')
+  })
+
+  it('emits row:click with the clicked row data', () => {
+    const onRowClick = cy.stub().as('rowClick')
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      onRowClick,
+    })
+
+    cy.contains('.ag-row', 'Gateway service').click()
+    cy.get('@rowClick').should('have.been.calledOnceWith', rows[0])
+  })
+
+  it('enables sorting UI only for headers marked sortable', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+    const getGridApi = mountTableWithGridApi({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.then(() => {
+      const columnDefs = getGridApi()?.getColumnDefs() as Array<{ colId?: string, sortable?: boolean, unSortIcon?: boolean }>
+      const nameColumnDef = columnDefs.find(columnDef => columnDef.colId === 'name')
+      const statusColumnDef = columnDefs.find(columnDef => columnDef.colId === 'status')
+
+      expect(nameColumnDef?.sortable).to.equal(true)
+      expect(nameColumnDef?.unSortIcon).to.equal(true)
+      expect(statusColumnDef?.sortable).to.equal(false)
+      expect(statusColumnDef?.unSortIcon).to.equal(false)
+    })
+    cy.contains('.ag-header-cell', 'Name').should('have.class', 'ag-header-cell-sortable')
+    cy.contains('.ag-header-cell', 'Status').should('not.have.class', 'ag-header-cell-sortable')
+  })
+
+  it('passes the clicked sort model to the fetcher for sortable columns', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'status', label: 'Status' },
+      ],
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.contains('.ag-header-cell', 'Name').click()
+    cy.wrap(fetcher).should((stub) => {
+      const lastCall = stub.args.at(-1)?.[0]
+
+      expect(lastCall.sort).to.deep.equal([{ colId: 'name', sort: 'asc', type: 'default' }])
+    })
+  })
+
+  it('passes a multi-column sort model to the fetcher when shift-clicking a second header', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'status', label: 'Status', sortable: true },
+      ],
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.contains('.ag-header-cell', 'Name').click()
+    cy.contains('.ag-header-cell', 'Status').click({ shiftKey: true })
+    cy.wrap(fetcher).should((stub) => {
+      const lastCall = stub.args.at(-1)?.[0]
+
+      expect(lastCall.sort).to.deep.equal([
+        { colId: 'name', sort: 'asc', type: 'default' },
+        { colId: 'status', sort: 'asc', type: 'default' },
+      ])
     })
   })
 })

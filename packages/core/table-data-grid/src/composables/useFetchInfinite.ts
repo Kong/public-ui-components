@@ -299,10 +299,12 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           // for the previous block, because that previous AG Grid range is what
           // produced the backend cursor needed to continue the chain.
           const cursor = blockIndex > 0 ? cursorMap.get(blockIndex - 1) : undefined
+
           const result = await fetcher({
             mode: 'infinite',
             pageSize,
             cursor,
+            sort: getRowsParams.sortModel,
           })
 
           if (!isLatestDatasource(datasourceId)) {
