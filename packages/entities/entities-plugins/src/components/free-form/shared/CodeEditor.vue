@@ -52,7 +52,7 @@ const LINT_SOURCE = 'YAML Syntax'
 function formDataToCode(): string {
   return yaml.dump((omit(toRaw(formData), ['__ui_data'])), {
     schema: JSON_SCHEMA,
-    noArrayIndent: true,
+    seqNoIndent: true,
   })
 }
 

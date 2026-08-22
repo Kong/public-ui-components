@@ -90,7 +90,7 @@ const LINT_SOURCE = 'YAML Syntax'
 function dumpYaml(config: unknown): string {
   return yaml.dump(orderNodeFields(toRaw(config)), {
     schema: JSON_SCHEMA,
-    noArrayIndent: true,
+    seqNoIndent: true,
   })
 }
 

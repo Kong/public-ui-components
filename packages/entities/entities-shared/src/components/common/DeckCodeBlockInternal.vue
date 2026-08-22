@@ -220,7 +220,7 @@ const buildYaml = (record: Record<string, any>): string => {
     [entityKey]: [filteredRecord],
   }
 
-  return yaml.dump(fullRecord, { quotingType: '"' }).trim()
+  return yaml.dump(fullRecord, { quoteStyle: 'double' }).trim()
 }
 
 const yamlContent = computed((): string => {
