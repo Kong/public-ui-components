@@ -54,14 +54,14 @@ importers:
         specifier: ^2.1.9
         version: 2.1.9
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/eslint-config-kong-ui':
         specifier: ^1.7.1
         version: 1.7.1(@typescript-eslint/parser@8.64.0(eslint@10.8.1(jiti@2.5.1))(typescript@5.9.3))(eslint@10.8.1(jiti@2.5.1))(typescript@5.9.3)
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.13.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.13.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       '@kong/stylelint-plugin-design-tokens':
         specifier: ^2.0.0
         version: 2.0.0(stylelint@17.14.1(typescript@5.9.3))
@@ -256,11 +256,11 @@ importers:
         specifier: workspace:^
         version: link:../../core/sandbox-layout
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       file-saver:
         specifier: ^2.0.5
         version: 2.0.5
@@ -299,11 +299,11 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       '@types/geobuf':
         specifier: ^3.0.4
         version: 3.0.4
@@ -345,11 +345,11 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       pinia:
         specifier: '>= 3.0.4 < 5'
         version: 3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3))
@@ -373,8 +373,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       ajv:
         specifier: ^8.20.0
         version: 8.20.0
@@ -440,14 +440,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/table-data-grid
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       '@types/file-saver':
         specifier: ^2.0.7
         version: 2.0.7
@@ -504,11 +504,11 @@ importers:
         version: 4.5.0
     devDependencies:
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -550,8 +550,8 @@ importers:
         version: 3.5.38(typescript@5.9.3)
     devDependencies:
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -565,18 +565,18 @@ importers:
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/markdown':
-        specifier: 1.10.0
-        version: 1.10.0(@types/markdown-it@14.1.2)(vue@3.5.38(typescript@5.9.3))
+        specifier: 1.10.1
+        version: 1.10.1(@types/markdown-it@14.1.2)(vue@3.5.38(typescript@5.9.3))
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -587,11 +587,11 @@ importers:
   packages/core/entities-config-editor:
     devDependencies:
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -599,8 +599,8 @@ importers:
   packages/core/error-boundary:
     devDependencies:
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
@@ -633,11 +633,11 @@ importers:
         specifier: 1.6.0-rc.1
         version: 1.6.0-rc.1
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       monaco-editor:
         specifier: ^0.55.1
         version: 0.55.1
@@ -676,11 +676,11 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -715,8 +715,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -737,14 +737,14 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       '@peculiar/x509':
         specifier: ^2.0.0
         version: 2.0.0
@@ -777,14 +777,14 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -799,11 +799,11 @@ importers:
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
     devDependencies:
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -824,11 +824,11 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -846,8 +846,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       vue:
         specifier: 3.5.38
         version: 3.5.38(typescript@5.9.3)
@@ -871,14 +871,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -898,14 +898,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -925,14 +925,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -952,14 +952,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -979,14 +979,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -1013,14 +1013,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -1043,8 +1043,8 @@ importers:
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -1064,14 +1064,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -1134,14 +1134,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/monaco-editor
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       '@peculiar/x509':
         specifier: ^2.0.0
         version: 2.0.0
@@ -1236,14 +1236,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -1273,14 +1273,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       '@types/lodash.isequal':
         specifier: ^4.5.8
         version: 4.5.8
@@ -1310,14 +1310,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/monaco-editor
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       '@shikijs/core':
         specifier: ^4.3.1
         version: 4.4.2
@@ -1358,14 +1358,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -1385,14 +1385,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/icons':
         specifier: ^1.62.1
         version: 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -1416,11 +1416,11 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       axios:
         specifier: ^1.17.0
         version: 1.18.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
@@ -1441,11 +1441,11 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       '@types/prismjs':
         specifier: ^1.26.6
         version: 1.26.6
@@ -1475,11 +1475,11 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 3.2.10
+        version: 3.2.10
       '@kong/kongponents':
-        specifier: 9.64.3
-        version: 9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
+        specifier: 9.64.10
+        version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.1
         version: 1.1.1(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))
@@ -2701,8 +2701,8 @@ packages:
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
 
-  '@kong/design-tokens@3.2.7':
-    resolution: {integrity: sha512-X4CHdf93CQXJt6GsAZGbpTOeYOO8ToGA0cfcI+8WuBMytEIRXhAq5bByptwWPSZyxjOEtFdVdR/TJKuyyTn4wQ==}
+  '@kong/design-tokens@3.2.10':
+    resolution: {integrity: sha512-HnVvJYVPmCjblXrV2vG7wwOjKYGFPMgVwEDVn1r5Eac//l3sqTINqlPpVE/WyQch5nNiCT1WYGM39B8buo6fuQ==}
     engines: {node: '>=20.19.5', pnpm: '>=10.28.2'}
 
   '@kong/eslint-config-kong-ui@1.7.1':
@@ -2741,15 +2741,15 @@ packages:
       vue: 3.5.38
       vue-router: ^4.2.4
 
-  '@kong/kongponents@9.64.3':
-    resolution: {integrity: sha512-aXYixZdGBW/0BvBcLCxNs+nGE3yqcRy/aLgaldXeQK0WJ5lihpewG4Dc30tuz14komUY+TZcYridnNb4YPD4sA==}
-    engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0 || >=22.14.0', pnpm: '>=10.28.2'}
+  '@kong/kongponents@9.64.10':
+    resolution: {integrity: sha512-ZfxCq9X48nLzhg0Lp0ynJcBbj95X8+Fphqq3fy/jwEZ1RhK5ZxFtMBrh6JRsxSy4ehf/UsdvH+HN+qWNYMtr5Q==}
+    engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0 || >=22.14.0', pnpm: '>=10.34.4'}
     peerDependencies:
       vue: 3.5.38
       vue-router: 4 || 5
 
-  '@kong/markdown@1.10.0':
-    resolution: {integrity: sha512-k1S7pxzCOCFXKHtOCuxlDqsPmR4iAWX0twwaZFR3SvaD7wb2xrmH7tCeVcIjUxKGEnVyncgxvuyChOw97GBK3A==}
+  '@kong/markdown@1.10.1':
+    resolution: {integrity: sha512-TiICt9cI2PGG+HgM7FIblNymv6edULHyOBuzKlDXnGp11DGYavb172C9ehkZeB9/Y5oMHe6GibPPGR4mYSY/Rw==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: 3.5.38
@@ -12457,7 +12457,7 @@ snapshots:
 
   '@kong/atc-router@1.6.0-rc.1': {}
 
-  '@kong/design-tokens@3.2.7': {}
+  '@kong/design-tokens@3.2.10': {}
 
   '@kong/eslint-config-kong-ui@1.7.1(@typescript-eslint/parser@8.64.0(eslint@10.8.1(jiti@2.5.1))(typescript@5.9.3))(eslint@10.8.1(jiti@2.5.1))(typescript@5.9.3)':
     dependencies:
@@ -12510,7 +12510,7 @@ snapshots:
       vue-draggable-next: 2.3.0(sortablejs@1.15.7)(vue@3.5.38(typescript@5.9.3))
       vue-router: 5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2)
 
-  '@kong/kongponents@9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.13.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))':
+  '@kong/kongponents@9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.13.2)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))':
     dependencies:
       '@floating-ui/vue': 1.1.11(vue@3.5.38(typescript@5.9.3))
       '@kong/icons': 1.62.1(vue@3.5.38(typescript@5.9.3))
@@ -12535,7 +12535,7 @@ snapshots:
       - solid-js
       - svelte
 
-  '@kong/kongponents@9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))':
+  '@kong/kongponents@9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))':
     dependencies:
       '@floating-ui/vue': 1.1.11(vue@3.5.38(typescript@5.9.3))
       '@kong/icons': 1.62.1(vue@3.5.38(typescript@5.9.3))
@@ -12560,7 +12560,7 @@ snapshots:
       - solid-js
       - svelte
 
-  '@kong/kongponents@9.64.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))':
+  '@kong/kongponents@9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@8.2.1(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.5.1)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.23)))(vue@3.5.38(typescript@5.9.3))':
     dependencies:
       '@floating-ui/vue': 1.1.11(vue@3.5.38(typescript@5.9.3))
       '@kong/icons': 1.62.1(vue@3.5.38(typescript@5.9.3))
@@ -12585,14 +12585,14 @@ snapshots:
       - solid-js
       - svelte
 
-  '@kong/markdown@1.10.0(@types/markdown-it@14.1.2)(vue@3.5.38(typescript@5.9.3))':
+  '@kong/markdown@1.10.1(@types/markdown-it@14.1.2)(vue@3.5.38(typescript@5.9.3))':
     dependencies:
       '@kong/icons': 1.62.1(vue@3.5.38(typescript@5.9.3))
       '@mdit-vue/plugin-frontmatter': 3.0.2
       '@sindresorhus/slugify': 3.0.0
       '@vueuse/core': 14.3.0(vue@3.5.38(typescript@5.9.3))
       buffer: 6.0.3
-      dompurify: 3.4.11
+      dompurify: 3.4.13
       html-format: 1.1.7
       markdown-it: 14.3.0
       markdown-it-abbr: 2.0.0
@@ -16309,6 +16309,7 @@ snapshots:
   dompurify@3.4.11:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
+    optional: true
 
   dompurify@3.4.13:
     optionalDependencies:
