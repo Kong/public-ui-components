@@ -69,7 +69,7 @@
     "@kong/design-tokens": "3.3.0",
     "@kong/kongponents": "9.64.10",
     "@types/lodash-es": "^4.17.12",
-    "axios": "^1.17.0",
+    "axios": "^1.19.0",
     "pug": "^3.0.4",
     "vue-router": "^5.2.0"
   },

@@ -91,7 +91,7 @@
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "@zumer/snapdom": "^2.6.0",
+    "@zumer/snapdom": "^2.23.2",
     "date-fns-tz": "^3.2.0",
     "file-saver": "^2.0.5",
     "gridstack": "^11.5.1",
