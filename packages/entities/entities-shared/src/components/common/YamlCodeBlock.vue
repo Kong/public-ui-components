@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { CONFIG_CARD_CODE_BLOCK_MAX_HEIGHT } from '../../constants'
-import yaml from 'js-yaml'
+import { dump } from 'js-yaml'
 import { computed, ref, watch } from 'vue'
 
 import { highlightCodeBlock } from '../../utils/code-block'
@@ -70,7 +70,7 @@ const buildYaml = (record: Record<string, any>): string => {
   // filter out null values, empty strings, and empty arrays since decK doesn't accept them [KHCP-10642]
   const filteredRecord = Object.fromEntries(Object.entries(record).filter(([, value]) => value !== null && value !== '' && (Array.isArray(value) ? value.length !== 0 : true)))
   // if empty object, display empty yaml, else convert to yaml and remove any trailing whitespace
-  return (Object.keys(filteredRecord).length === 0 && filteredRecord.constructor === Object) ? '' : yaml.dump(filteredRecord).trim()
+  return (Object.keys(filteredRecord).length === 0 && filteredRecord.constructor === Object) ? '' : dump(filteredRecord).trim()
 }
 
 const yamlContent = computed((): string => {

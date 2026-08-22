@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { MonacoEditor } from '@kong-ui-public/monaco-editor'
-import yaml, { JSON_SCHEMA } from 'js-yaml'
+import { dump, load, JSON_SCHEMA } from 'js-yaml'
 import { omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
 import { computed, inject, shallowRef, toRaw, type ComputedRef } from 'vue'
@@ -50,9 +50,9 @@ const { setup: setupCodeLensProviders } = useCodeLensProviders(config, {
 const LINT_SOURCE = 'YAML Syntax'
 
 function formDataToCode(): string {
-  return yaml.dump((omit(toRaw(formData), ['__ui_data'])), {
+  return dump((omit(toRaw(formData), ['__ui_data'])), {
     schema: JSON_SCHEMA,
-    noArrayIndent: true,
+    seqNoIndent: true,
   })
 }
 
@@ -76,7 +76,7 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
 
   editor.onDidChangeModelContent(() => {
     try {
-      const config = yaml.load(editor.getValue() || '', {
+      const config = load(editor.getValue() || '', {
         schema: JSON_SCHEMA,
         json: true,
       })
