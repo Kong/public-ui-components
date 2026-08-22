@@ -25,7 +25,7 @@ overrides:
   linkify-it@<=5.0.0: '>=5.0.2'
   sigstore@<=4.1.0: '>=5.0.0'
   js-yaml@>=3.0.0 <3.15.1: '>=5.2.3'
-  js-yaml@>=4.0.0 <4.3.1: '>=4.3.1'
+  js-yaml@>=4.0.0 <4.3.1: '>=5.2.3'
   nx@>=20.8.0 <22.7.7: '>=22.7.7'
   tar@<=7.5.18: '>=7.5.21'
   brace-expansion@<5.0.9: '>=5.0.9'
@@ -7311,10 +7311,6 @@ packages:
   js-tokens@9.0.1:
     resolution: {integrity: sha512-mxa9E9ITFOt0ban3j6L5MpjwegGz6lBQmM1IJkWeBZGcMxto50+eWdjC/52xDbS2vy0k7vIMK0Fe2wfL9OQSpQ==}
 
-  js-yaml@4.3.1:
-    resolution: {integrity: sha512-CY6crGq313MX8GkwvB7tzgp99vjQxY1++5y10/BKN/GUfHqWaOGQMNZkBvqSzsZKWk/ijwHlWzzkLulsGHhjWQ==}
-    hasBin: true
-
   js-yaml@5.3.0:
     resolution: {integrity: sha512-muutsYr+e2+d3rTgUGslq5rxbBlUy3cJ61IsHag2QNDQV+7zXWjkUpmALIajhrlLlrgRUiymj6U3zUr/TMK84Q==}
     hasBin: true
@@ -10874,7 +10870,7 @@ packages:
     engines: {node: '>=20.9.0'}
     hasBin: true
     peerDependencies:
-      js-yaml: '>=4.3.1'
+      js-yaml: '>=5.2.3'
       json5: ^2.2.3
       toml: ^3.0.0 || ^4.0.0
       webpack: ^5.101.0
@@ -12729,7 +12725,7 @@ snapshots:
   '@modyfi/vite-plugin-yaml@1.1.1(rollup@4.62.2)(vite@7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))':
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.62.2)
-      js-yaml: 4.3.1
+      js-yaml: 5.3.0
       tosource: 2.0.0-alpha.3
       vite: 7.3.6(@types/node@26.1.1)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0)
     transitivePeerDependencies:
@@ -17994,10 +17990,6 @@ snapshots:
 
   js-tokens@9.0.1: {}
 
-  js-yaml@4.3.1:
-    dependencies:
-      argparse: 2.0.1
-
   js-yaml@5.3.0:
     dependencies:
       argparse: 2.0.1
@@ -21162,7 +21154,7 @@ snapshots:
       deepmerge: 4.3.1
       fast-json-patch: 3.1.1
       is-plain-object: 5.0.0
-      js-yaml: 4.3.1
+      js-yaml: 5.3.0
       node-abort-controller: 3.1.1
       node-fetch-commonjs: 3.3.2
       qs: 6.15.2
@@ -21183,7 +21175,7 @@ snapshots:
       ieee754: 1.2.1
       immutable: 4.3.9
       js-file-download: 0.4.12
-      js-yaml: 4.3.1
+      js-yaml: 5.3.0
       lodash: 4.18.1
       patch-package: 8.0.0
       prop-types: 15.8.1
