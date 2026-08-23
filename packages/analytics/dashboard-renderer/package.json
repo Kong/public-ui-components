@@ -57,7 +57,7 @@
     "cypress-real-events": "^1.15.0",
     "pinia": ">= 3.0.4 < 5",
     "swrv": "^1.2.0",
-    "vue": "^3.5.35"
+    "vue": "^3.5.41"
   },
   "repository": {
     "type": "git",
@@ -91,12 +91,12 @@
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "@zumer/snapdom": "^2.23.2",
+    "@zumer/snapdom": "^2.24.1",
     "date-fns-tz": "^3.2.0",
     "file-saver": "^2.0.5",
     "gridstack": "^11.5.1",
     "jspdf": "^4.2.1",
-    "p-queue": "^9.3.1",
-    "papaparse": "^5.5.3"
+    "p-queue": "^9.3.3",
+    "papaparse": "^5.5.4"
   }
 }
