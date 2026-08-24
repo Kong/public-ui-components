@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.64.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.63.4...%40kong-ui-public%2Fentities-shared%403.64.0) (2026-08-24)
+
+### Features
+
+* **entities-plugins:** rename governance to entitlement enforcement ([#3703](https://github.com/Kong/public-ui-components/issues/3703)) ([b7ab8d4](https://github.com/Kong/public-ui-components/commit/b7ab8d46dfd074e82311404c8d9b9c520785e80e))
+
+
 ## [3.63.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.63.3...%40kong-ui-public%2Fentities-shared%403.63.4) (2026-08-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
