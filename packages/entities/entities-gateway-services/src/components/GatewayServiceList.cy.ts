@@ -889,7 +889,7 @@ describe('<GatewayServiceList />', () => {
       cy.wait('@deleteService').its('request.url').should('not.include', 'force')
     })
 
-    it('requires the force-delete checkbox and sends force=true when the service has routes', () => {
+    it('shows a force-delete checkbox and only sends force=true once it is checked, when the service has routes', () => {
       interceptRelatedEntities([{ id: 'route-1' }, { id: 'route-2' }], [{ id: 'plugin-1' }])
       cy.intercept(
         { method: 'DELETE', url: `${servicesUrl}/${serviceId}*` },
@@ -899,16 +899,34 @@ describe('<GatewayServiceList />', () => {
       openDeleteModal()
 
       cy.get(`${modal} .extra`).should('contain.text', 'Force delete')
+        .and('contain.text', 'All routes must be deleted before this gateway service can be deleted. To delete the service and all its routes and plugins at once, select Force delete.')
         .and('contain.text', 'Check this box to force deletion of all routes and plugins on linked service.')
       cy.getTestId('gateway-service-delete-force-checkbox').should('exist')
 
       cy.getTestId('confirmation-input').type(serviceName)
-      cy.get(`${modal} [data-testid="modal-action-button"]`).should('be.disabled')
+      // The delete button is never disabled by the checkbox — the user can still attempt to delete without it
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled')
 
       cy.getTestId('gateway-service-delete-force-checkbox').click()
-      cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled').click()
+      cy.get(`${modal} [data-testid="modal-action-button"]`).click()
 
       cy.wait('@deleteService').its('request.url').should('include', 'force=true')
+    })
+
+    it('shows the backend error when deleting a service with routes without checking force delete', () => {
+      interceptRelatedEntities([{ id: 'route-1' }], [])
+      cy.intercept(
+        { method: 'DELETE', url: `${servicesUrl}/${serviceId}*` },
+        { statusCode: 400, body: { message: 'Service has routes attached' } },
+      ).as('deleteServiceError')
+
+      openDeleteModal()
+
+      cy.getTestId('confirmation-input').type(serviceName)
+      cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled').click()
+
+      cy.wait('@deleteServiceError').its('request.url').should('not.include', 'force')
+      cy.get(`${modal} .kong-ui-entity-delete-error`).should('contain.text', 'Service has routes attached')
     })
 
     it('shows the plugin count without a checkbox and deletes without force when the service only has plugins', () => {
@@ -965,10 +983,8 @@ describe('<GatewayServiceList />', () => {
       cy.getTestId('gateway-service-delete-force-checkbox').should('exist')
 
       cy.getTestId('confirmation-input').type(serviceName)
-      cy.get(`${modal} [data-testid="modal-action-button"]`).should('be.disabled')
-
       cy.getTestId('gateway-service-delete-force-checkbox').click()
-      cy.get(`${modal} [data-testid="modal-action-button"]`).should('not.be.disabled').click()
+      cy.get(`${modal} [data-testid="modal-action-button"]`).click()
 
       cy.wait('@deleteService').its('request.url').should('include', 'force=true')
     })

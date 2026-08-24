@@ -2,6 +2,7 @@ import { h } from 'vue'
 import Form from '../shared/Form.vue'
 import EnumField from '../shared/EnumField.vue'
 import type { FormSchema } from 'src/types/plugins/form-schema'
+import type { FormConfig } from '../shared/types'
 
 const FIELD_NAME = 'protocols'
 
@@ -27,10 +28,12 @@ function mountEnumForm(options: {
   required?: boolean
   data: Record<string, unknown>
   onUpdate?: (value: string | string[] | null) => void
+  config?: FormConfig
 }) {
   const props = {
     schema: getMultiEnumSchema(options.required),
     data: options.data,
+    config: options.config,
     onChange: cy.spy().as('onChangeSpy'),
   }
 
@@ -116,6 +119,33 @@ describe('EnumField', () => {
 
     cy.get('@onUpdateSpy').should((spy: any) => {
       expect(spy.lastCall?.args[0]).to.equal(null)
+    })
+  })
+
+  describe('emptyFieldValue config', () => {
+    it('should emit undefined when clearing all selections from optional multiselect with emptyFieldValue: undefined', () => {
+      mountEnumForm({
+        data: { [FIELD_NAME]: ['http', 'grpc'] },
+        config: { emptyFieldValue: 'undefined' },
+      })
+
+      removeSelectedValue('http')
+      removeSelectedValue('grpc')
+
+      assertLastChange({ [FIELD_NAME]: undefined })
+    })
+
+    it('should still emit [] when clearing all selections from required multiselect with emptyFieldValue: undefined', () => {
+      mountEnumForm({
+        required: true,
+        data: { [FIELD_NAME]: ['http', 'grpc'] },
+        config: { emptyFieldValue: 'undefined' },
+      })
+
+      removeSelectedValue('http')
+      removeSelectedValue('grpc')
+
+      assertLastChange({ [FIELD_NAME]: [] })
     })
   })
 })

@@ -91,6 +91,32 @@ const selectChartArea = () => {
   })
 }
 
+const DRAG_WAIT = 300
+
+const pressAndHoldChartArea = ({ x, y }: { x: number, y: number }) => {
+  const selector = '.chart-container > canvas'
+
+  cy.get(selector).trigger('mousedown', x, y)
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(DRAG_WAIT)
+  cy.get(selector).trigger('mouseup', x, y)
+}
+
+const dragChartAreaAndReturn = ({ x, y }: { x: number, y: number }) => {
+  const selector = '.chart-container > canvas'
+
+  cy.get(selector).trigger('mousedown', x, y)
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(DRAG_WAIT)
+  cy.get(selector).trigger('mousemove', x + 100, y)
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(100)
+  cy.get(selector).trigger('mousemove', x, y)
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(100)
+  cy.get(selector).trigger('mouseup', x, y)
+}
+
 const mockQueryProvider = {
   evaluateFeatureFlagFn: () => true,
 }
@@ -606,6 +632,81 @@ describe('<AnalyticsChart />', () => {
       cy.get('body').should('have.class', 'no-select')
       cy.get('body').trigger('pointerup', { button: 0 })
       cy.get('body').should('not.have.class', 'no-select')
+    })
+
+    describe('invalid selections', () => {
+      const mountWithAllActions = () => mount({
+        timeseriesZoom: true,
+        exploreLink: { href: '#explore' },
+        requestsLink: { href: '#requests' },
+        onSelectChartRange: cy.spy().as('onSelectChartRange'),
+        onZoomTimeRange: cy.spy().as('onZoomTimeRange'),
+      })
+
+      const expectNoZoomActions = () => {
+        cy.get('.zoom-actions-container').should('not.exist')
+        cy.getTestId('zoom-action-item-zoom-in').should('not.exist')
+        cy.getTestId('zoom-action-item-explore').should('not.exist')
+        cy.getTestId('zoom-action-item-view-requests').should('not.exist')
+        cy.get('@onSelectChartRange').should('not.have.been.called')
+        cy.get('@onZoomTimeRange').should('not.have.been.called')
+      }
+
+      it('offers no zoom actions when pressing and holding on a single point', () => {
+        mountWithAllActions()
+
+        cy.get('.analytics-chart-parent').should('be.visible')
+        cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+        pressAndHoldChartArea({ x: 400, y: 50 })
+
+        expectNoZoomActions()
+      })
+
+      it('offers no zoom actions when a drag returns to its origin', () => {
+        mountWithAllActions()
+
+        cy.get('.analytics-chart-parent').should('be.visible')
+        cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+        dragChartAreaAndReturn({ x: 400, y: 50 })
+
+        expectNoZoomActions()
+      })
+
+      it('does not reuse the previous selection when pressing and holding afterwards', () => {
+        mountWithAllActions()
+
+        cy.get('.analytics-chart-parent').should('be.visible')
+        cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+        selectChartArea()
+        cy.get('@onSelectChartRange').should('have.been.calledOnce')
+        cy.getTestId('zoom-action-item-zoom-in').should('exist')
+
+        cy.get('.zoom-actions-close-icon').click()
+        cy.get('.zoom-actions-container').should('not.exist')
+
+        pressAndHoldChartArea({ x: 400, y: 50 })
+
+        cy.get('.zoom-actions-container').should('not.exist')
+        cy.get('@onSelectChartRange').should('have.been.calledOnce')
+        cy.get('@onZoomTimeRange').should('not.have.been.called')
+      })
+
+      it('still offers zoom actions for a valid selection', () => {
+        mountWithAllActions()
+
+        cy.get('.analytics-chart-parent').should('be.visible')
+        cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+        selectChartArea()
+
+        cy.get('@onSelectChartRange').should('have.been.calledOnce')
+        cy.getTestId('zoom-action-item-zoom-in').should('exist')
+        cy.getTestId('zoom-action-item-explore').should('exist')
+        cy.getTestId('zoom-action-item-view-requests').should('exist')
+      })
     })
   })
 })

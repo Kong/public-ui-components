@@ -33,7 +33,7 @@
       :plugin-config-schema="pluginConfigSchema"
       :record-resolver="resolveRecord"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
-      @fetch:success="(entity: any) => $emit('fetch:success', entity)"
+      @fetch:success="handleFetchSuccess"
       @loading="(val: boolean) => $emit('loading', val)"
     >
       <template #name="slotProps">
@@ -52,10 +52,13 @@
       <template #consumer="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else-if="showIdAsLink"
+          v-else-if="showNameAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
+            value: linkValue('consumer', getPropValue('rowValue', slotProps).id),
+            to: config.getConsumerViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: linkSubtitle('consumer', getPropValue('rowValue', slotProps).id),
+            subtitleLoading: isReferenceNameLoading('consumer'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer')"
@@ -71,10 +74,13 @@
       <template #route="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else-if="showIdAsLink"
+          v-else-if="showNameAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
+            value: linkValue('route', getPropValue('rowValue', slotProps).id),
+            to: config.getRouteViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: linkSubtitle('route', getPropValue('rowValue', slotProps).id),
+            subtitleLoading: isReferenceNameLoading('route'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'route')"
@@ -89,10 +95,13 @@
       <template #service="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else-if="showIdAsLink"
+          v-else-if="showNameAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
+            value: linkValue('service', getPropValue('rowValue', slotProps).id),
+            to: config.getServiceViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: linkSubtitle('service', getPropValue('rowValue', slotProps).id),
+            subtitleLoading: isReferenceNameLoading('service'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'service')"
@@ -107,10 +116,13 @@
       <template #consumer_group="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else-if="showIdAsLink"
+          v-else-if="showNameAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps).id,
-            value: getPropValue('rowValue', slotProps).id,
+            value: linkValue('consumer_group', getPropValue('rowValue', slotProps).id),
+            to: config.getConsumerGroupViewRoute?.(getPropValue('rowValue', slotProps).id),
+            subtitle: linkSubtitle('consumer_group', getPropValue('rowValue', slotProps).id),
+            subtitleLoading: isReferenceNameLoading('consumer_group'),
             type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer_group')"
@@ -125,7 +137,7 @@
       <template #partials="slotProps">
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
-          v-else-if="showIdAsLink"
+          v-else-if="showNameAsLink"
           :item="{
             key: getPropValue('rowValue', slotProps)?.[0]?.id,
             value: getPropValue('rowValue', slotProps)?.[0]?.id + (getPropValue('rowValue', slotProps)?.[0]?.name ? '/' + getPropValue('rowValue', slotProps)?.[0]?.name : ''),
@@ -177,6 +189,7 @@ import DatakitConfigCardCanvas from './free-form/plugins/datakit/DatakitConfigCa
 
 import '@kong-ui-public/entities-shared/dist/style.css'
 
+import type { ReferenceField } from '../composables/useReferenceEntityNames'
 import type {
   ConfigurationSchema,
   PluginConfigurationSchema,
@@ -219,7 +232,7 @@ const props = defineProps({
     default: '',
     required: false,
   },
-  showIdAsLink: {
+  showNameAsLink: {
     type: Boolean,
     default: false,
   },
@@ -388,6 +401,26 @@ const codeBlockRecordFormatter = (record: Record<string, any>) => {
 
 const { getMessageFromError } = useErrors()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+
+const { resolveReferenceNames, getReferenceName, isReferenceNameLoading } = composables.useReferenceEntityNames({
+  config: props.config,
+  axiosInstance,
+  onError: (err: AxiosError) => emit('fetch:error', err),
+})
+
+// The name surfaces as the link once resolved, with the id underneath for reference;
+// falls back to linking the bare id when no name is available.
+const linkValue = (field: ReferenceField, id: string): string => getReferenceName(field) || id
+const linkSubtitle = (field: ReferenceField, id: string): string | undefined => getReferenceName(field) ? id : undefined
+
+const handleFetchSuccess = (entity: Record<string, any>) => {
+  emit('fetch:success', entity)
+
+  // Names are only ever displayed via InternalLinkItem, so skip the lookups entirely otherwise.
+  if (props.showNameAsLink) {
+    resolveReferenceNames(entity)
+  }
+}
 
 const schemaUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].pluginSchema}`

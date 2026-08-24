@@ -185,7 +185,7 @@ import * as utils from './utils'
 import Field from './Field.vue'
 import type { ArrayLikeFieldSchema } from '../../../types/plugins/form-schema'
 import StringArrayField from './StringArrayField.vue'
-import type { BaseFieldProps } from './types'
+import type { BaseFieldProps, EmptyValue } from './types'
 
 const props = defineProps<{
   name: string
@@ -220,7 +220,7 @@ defineSlots<{
 
 const { i18n: { t } } = useI18n()
 const { getDefault, getSchema } = useFormShared()
-const { value: fieldValue, hide, ...field } = useField<T[] | null>(toRef(props, 'name'))
+const { value: fieldValue, hide, ...field } = useField<T[] | EmptyValue>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 const subSchema = computed(() => {
   if (!field.path) throw new Error('Field path is required for sub-schema retrieval')
@@ -298,8 +298,10 @@ const removeItem = async (index: number) => {
   if (Array.isArray(fieldValue!.value)) {
     fieldValue!.value.splice(index, 1)
 
+    // Required arrays stay `[]` (already spliced above); only relax to the
+    // configured empty value when the field is optional.
     if (fieldValue!.value.length === 0 && !fieldAttrs.value.required) {
-      fieldValue!.value = null
+      fieldValue!.value = field.emptyValue!.value
     }
   }
   emit('remove', index)

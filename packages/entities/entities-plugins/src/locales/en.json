@@ -738,16 +738,16 @@
         "name": "Metering & Billing",
         "description": "Meter API requests and AI token usage for usage-based billing. Supports flexible customer identification, custom pricing dimensions, and fine-grained traffic filtering. Integrates natively with Konnect Metering & Billing."
       },
-      "governance": {
-        "name": "Governance",
-        "description": "Enforce feature-level access control and credit-balance gating for API consumers. Integrates with Konnect Metering & Billing to allow or deny requests based on customer entitlements."
+      "entitlement-enforcement": {
+        "name": "Entitlement Enforcement",
+        "description": "Allow or deny API requests based on customer entitlements. Checks feature access, usage limits, and credit balance against Metering & Billing before routing traffic."
       }
     },
     "fields": {
-      "service": "Service ID",
-      "route": "Route ID",
-      "consumer": "Consumer ID",
-      "consumer_group": "Consumer group ID"
+      "service": "Service",
+      "route": "Route",
+      "consumer": "Consumer",
+      "consumer_group": "Consumer group"
     },
     "select": {
       "custom_badge_text": "This plugin is data plane node specific",
@@ -1223,25 +1223,25 @@
         }
       },
       "governance": {
-        "unavailable_kong_manager": "The Governance plugin can't be configured in Kong Manager yet.",
+        "unavailable_kong_manager": "The Entitlement Enforcement plugin can't be configured in Kong Manager yet.",
         "sections": {
           "configuration": {
             "title": "Plugin configuration",
-            "description": "Configure the Governance plugin subject, feature, and connection settings."
+            "description": "Configure the Entitlement Enforcement plugin subject, feature, and connection settings."
           },
           "governance": {
-            "title": "Governance settings",
+            "title": "Entitlement Enforcement settings",
             "description": "Configure access control behavior and response codes."
           },
           "subject": {
-            "title": "Whose access to govern (subject)"
+            "title": "Whose access to enforce (subject)"
           },
           "feature": {
             "title": "Feature"
           },
           "connection": {
             "title": "Connection",
-            "description": "Configure how the plugin connects to the governance query endpoint."
+            "description": "Configure how the plugin connects to the entitlement access endpoint."
           },
           "redis": {
             "title": "Redis"
@@ -1252,7 +1252,7 @@
         },
         "fields": {
           "look_up_value_in": {
-            "label": "Whose access to govern (Look up subject in)",
+            "label": "Whose access to enforce (Look up subject in)",
             "help": "Where to find the customer identifier in the request."
           },
           "subject_field": {
@@ -1261,14 +1261,14 @@
             "help": "Name of the header or query parameter that carries the customer identifier."
           },
           "feature_key": {
-            "label": "Feature to govern access",
+            "label": "Feature to enforce access",
             "help": "Feature that will control access to the scope where the plugin is applied.",
             "create_feature": "+ Create new feature",
-            "unavailable": "You don't have access to metering features. Enable Metering & Billing in your Konnect organization to configure the feature to govern.",
-            "load_error": "Could not load features from the governance service."
+            "unavailable": "You don't have access to metering features. Enable Metering & Billing in your Konnect organization to configure the feature to enforce.",
+            "load_error": "Could not load features from the entitlement enforcement service."
           },
           "governance_endpoint": {
-            "help": "For Konnect Metering & Billing, use the regional endpoint for Metering & Billing Query Governance Access. For self-hosted OpenMeter, use the Query Governance Access endpoint of your self-hosted instance."
+            "help": "For Konnect Metering & Billing, use the regional endpoint for Metering & Billing entitlement access. For self-hosted OpenMeter, use the entitlement access endpoint of your self-hosted instance."
           },
           "ssl_verify": {
             "label": "Verify TLS certificate",
@@ -1298,16 +1298,16 @@
           "credit_balance_required": {
             "label": "Credit balance lookup",
             "yes_label": "Yes",
-            "yes_description": "A credit balance above zero is required for access to this feature.",
+            "yes_description": "Customers must have a positive credit balance to access this feature.",
             "no_label": "No",
             "no_description": "Customers can access this feature regardless of their credit balance."
           },
           "fail_policy": {
             "label": "Plugin failure mode",
             "allow_label": "Allow access",
-            "allow_description": "In the case of plugin failure, allow access to feature.",
-            "deny_label": "Deny access",
-            "deny_description": "In the case of plugin failure, deny access to feature."
+            "allow_description": "If the plugin fails, customers can still access this feature.",
+            "block_label": "Block access",
+            "block_description": "If the plugin fails, customers cannot access this feature."
           },
           "deny_unknown_customers": {
             "label": "Unknown customer access",

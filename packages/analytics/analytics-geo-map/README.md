@@ -7,6 +7,7 @@ Renders provided GeoJSON data into a choropleth style map.
 - [Requirements](#requirements)
 - [Usage](#usage)
   - [Install](#install)
+  - [Color mode (light/dark theme)](#color-mode-lightdark-theme)
   - [Props](#props)
   - [Example](#example)
 
@@ -33,6 +34,26 @@ First, ensure you have `maplibre-gl` installed:
 ```bash
 npm install maplibre-gl
 npm install @kong-ui-public/analytics-geo-map
+```
+
+### Color mode (light/dark theme)
+
+The map fills countries and water with design token colors, because `maplibre-gl` paint
+properties require literal color values rather than `var(--kui-*)`, the component reads those tokens
+off the document.
+
+To keep the map in step with the host's theme, `provide` a `ComputedRef<'light' | 'dark'>` under the
+`app:konnectColorMode` injection key. The component resolves its colors whenever the value
+changes.
+
+```ts
+// In the host application (e.g. within your root component's setup)
+import { computed, provide } from 'vue'
+
+// `isDarkMode` is however your app tracks its current theme
+const colorMode = computed<'light' | 'dark'>(() => (isDarkMode.value ? 'dark' : 'light'))
+
+provide('app:konnectColorMode', colorMode)
 ```
 
 ### Props

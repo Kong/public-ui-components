@@ -117,6 +117,7 @@ function handleDataChange(value: T) {
 defineExpose({
   getValue: () => formRef.value?.getValue(),
   setValue: (value: T) => formRef.value?.setValue(value),
+  getEmptyValue: () => formRef.value?.getEmptyValue(),
 })
 
 useSchemaExposer(() => props.schema, instanceId)

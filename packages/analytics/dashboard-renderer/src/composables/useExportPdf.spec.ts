@@ -9,21 +9,25 @@ vi.mock('@zumer/snapdom', () => ({
 }))
 
 vi.mock('jspdf', () => ({
-  jsPDF: vi.fn().mockImplementation(() => ({
-    internal: { pageSize: { getWidth: () => 297, getHeight: () => 210 } },
-    addPage: vi.fn(),
-    addImage: vi.fn(),
-    setFont: vi.fn(),
-    setFontSize: vi.fn(),
-    setTextColor: vi.fn(),
-    setDrawColor: vi.fn(),
-    text: vi.fn(),
-    textWithLink: vi.fn(),
-    getTextWidth: () => 10,
-    line: vi.fn(),
-    output: vi.fn(() => new Blob()),
-    save: vi.fn(),
-  })),
+  // Must be a `function` expression: since Vitest 4, a mock with an arrow
+  // implementation is not constructible and `new jsPDF()` would throw.
+  jsPDF: vi.fn(function() {
+    return {
+      internal: { pageSize: { getWidth: () => 297, getHeight: () => 210 } },
+      addPage: vi.fn(),
+      addImage: vi.fn(),
+      setFont: vi.fn(),
+      setFontSize: vi.fn(),
+      setTextColor: vi.fn(),
+      setDrawColor: vi.fn(),
+      text: vi.fn(),
+      textWithLink: vi.fn(),
+      getTextWidth: () => 10,
+      line: vi.fn(),
+      output: vi.fn(() => new Blob()),
+      save: vi.fn(),
+    }
+  }),
 }))
 
 const stubRect = (el: HTMLElement, top: number, height: number) => {

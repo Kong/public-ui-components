@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.16.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins-metadata%401.15.1...%40kong-ui-public%2Fentities-plugins-metadata%401.16.0) (2026-08-24)
+
+### Features
+
+* **entities-plugins:** rename governance to entitlement enforcement ([#3703](https://github.com/Kong/public-ui-components/issues/3703)) ([b7ab8d4](https://github.com/Kong/public-ui-components/commit/b7ab8d46dfd074e82311404c8d9b9c520785e80e))
+
+
 ## [1.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.15.0...@kong-ui-public/entities-plugins-metadata@1.15.1) (2026-08-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins-metadata

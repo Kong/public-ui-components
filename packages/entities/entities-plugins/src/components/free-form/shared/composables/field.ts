@@ -23,14 +23,27 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
 }
 
 export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
-  const { getSchema, isFieldHidden, getEmptyOrDefault } = useFormShared()
+  const { getSchema, isFieldHidden, getEmptyOrDefault, getEmptyValue } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
   const { value } = useFormData<TData>(name)
 
   const schema = computed(() => getSchema<TSchema>(fieldPath.value))
   const hide = computed(() => isFieldHidden(fieldPath.value))
+  /**
+   * The default for this field, forcing required-field structure/defaults
+   * back in. Use only for initialization (new array item, new map entry,
+   * hidden-field reset) — never for a user-initiated clear, since it would
+   * make a required field with an explicit `schema.default` impossible to
+   * empty.
+   */
   const emptyOrDefaultValue = computed(() => getEmptyOrDefault<TData>(fieldPath.value))
+  /**
+   * The configured empty-field sentinel on its own (no required/default
+   * awareness). Use this when the user actively clears a field's value.
+   * `TData` is expected to include `EmptyValue` in its declared union.
+   */
+  const emptyValue = computed(() => getEmptyValue() as TData)
 
   if (!schema.value) {
     return {
@@ -49,6 +62,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
      */
     hide,
     emptyOrDefaultValue,
+    emptyValue,
     error: null,
   }
 }

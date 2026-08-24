@@ -21,6 +21,8 @@ import type {
 } from '../../../../types/plugins/form-schema'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { MaybeRefOrGetter } from 'vue'
+import { resolveEmptyFieldValue } from '../types'
+import type { EmptyValue, FormConfig } from '../types'
 
 // Construct a map of all fields in a schema, with their full paths as keys
 export function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
@@ -147,8 +149,22 @@ export function generalizePath(p: string, schemaMap: Record<string, UnionFieldSc
   return utils.resolve(...result)
 }
 
-export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFieldSchema>) {
+export function useSchemaHelpers(
+  schema: MaybeRefOrGetter<FormSchema | UnionFieldSchema>,
+  config?: MaybeRefOrGetter<FormConfig<any> | undefined>,
+) {
   const schemaValue = toValue(schema)
+
+  /**
+   * The sentinel written for an "empty" field (a non-required field with no
+   * value, or a required-but-not-yet-created scalar). Configurable via
+   * `FormConfig.emptyFieldValue`; defaults to `null`, the framework's
+   * long-standing behavior. Not used for `schema.auto` fields (see below) or
+   * explicit `schema.default` values, which have their own fixed semantics.
+   */
+  function resolveEmptyValue(): EmptyValue {
+    return resolveEmptyFieldValue(toValue(config)?.emptyFieldValue)
+  }
 
   const schemaMap = computed(() => {
     if (!schemaValue) {
@@ -212,12 +228,12 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
       } else if (schema.type === 'map') {
         return {}
       } else {
-        return null
+        return resolveEmptyValue()
       }
     }
 
-    // Non-required fields default to null
-    return null
+    // Non-required fields default to the configured empty value
+    return resolveEmptyValue()
   }
 
   /**
@@ -302,10 +318,10 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
   /**
    * Get empty value or default based on whether the field is required
    */
-  function getEmptyOrDefault<T = unknown>(path?: string): T | null {
+  function getEmptyOrDefault<T = unknown>(path?: string): T | EmptyValue {
     const schema = (getSchema as any)(path)
     const isRequired = schema?.required
-    return isRequired ? getDefault(path) : null
+    return isRequired ? getDefault(path) : resolveEmptyValue()
   }
 
   return {
@@ -316,5 +332,14 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
     getLabelAttributes,
     getPlaceholder,
     getEmptyOrDefault,
+    /**
+     * The configured empty-field sentinel on its own, with no schema/path
+     * lookup and no required/default awareness. Use this (not
+     * `getEmptyOrDefault`) whenever the user actively clears a field's value
+     * — `getEmptyOrDefault` forces required-field structure and defaults
+     * back in, which would make it impossible to clear a required field
+     * that has an explicit `schema.default`.
+     */
+    getEmptyValue: resolveEmptyValue,
   }
 }

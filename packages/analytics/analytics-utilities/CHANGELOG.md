@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.28.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.28.1...%40kong-ui-public%2Fanalytics-utilities%4012.28.2) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [12.28.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.28.0...%40kong-ui-public%2Fanalytics-utilities%4012.28.1) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3723](https://github.com/Kong/public-ui-components/issues/3723)) ([df7e955](https://github.com/Kong/public-ui-components/commit/df7e95536ba2f2ea8d46fa1de541b163b5b1c126))
+
+
+# [12.28.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.27.1...%40kong-ui-public%2Fanalytics-utilities%4012.28.0) (2026-08-21)
+
+### Features
+
+* add AI GW entities to agentic datasource MA-5365 ([#3729](https://github.com/Kong/public-ui-components/issues/3729)) ([8c7d9ef](https://github.com/Kong/public-ui-components/commit/8c7d9ef54e804d3d48033e06a77e9a3e1dd14695))
+
+
+## [12.27.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.27.0...@kong-ui-public/analytics-utilities@12.27.1) (2026-08-20)
+
+
+### Bug Fixes
+
+* correct field names for AIGW entities [MA-5267] ([#3716](https://github.com/Kong/public-ui-components/issues/3716)) ([a0cb942](https://github.com/Kong/public-ui-components/commit/a0cb9423f65a7d5840478adef744978f1d33e326))
+
+
+
+
+
 # [12.27.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.26.1...@kong-ui-public/analytics-utilities@12.27.0) (2026-08-18)
 
 

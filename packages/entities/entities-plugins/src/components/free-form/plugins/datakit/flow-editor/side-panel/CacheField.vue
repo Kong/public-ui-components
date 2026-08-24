@@ -133,7 +133,7 @@
 
 <script setup lang="ts">
 import { computed, inject, ref, shallowRef, watch } from 'vue'
-import yaml from 'js-yaml'
+import { dump, load } from 'js-yaml'
 import { codeToHtml } from 'shiki'
 import {
   KUI_COLOR_TEXT_NEUTRAL,
@@ -158,7 +158,7 @@ import type { CacheConfigFormData } from '../../types'
 
 const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
-const DEFAULT_REDIS_YAML = yaml.dump({ host: '127.0.0.1', port: 6379 }, { indent: 2 })
+const DEFAULT_REDIS_YAML = dump({ host: '127.0.0.1', port: 6379 }, { indent: 2 })
 
 export type FormData = { cache?: CacheConfigFormData | null }
 
@@ -199,7 +199,7 @@ const localStrategy = computed(() => field.value.value?.strategy)
 
 const redisConfigYaml = computed(() => {
   if (!field.value.value?.redis) return ''
-  return yaml.dump(field.value.value.redis, {
+  return dump(field.value.value.redis, {
     indent: 2,
     noRefs: true,
   })
@@ -217,7 +217,7 @@ watch([modalVisible, localStrategy], ([visible, strategy]) => {
 watch(redisYaml, (yamlStr) => {
   if (!enableRedisPartial.value && localStrategy.value === 'redis') {
     try {
-      const parsed = yaml.load(yamlStr, { json: true })
+      const parsed = load(yamlStr, { json: true })
       if (parsed && typeof parsed === 'object') {
         formData.cache!.redis = parsed as CacheConfigFormData['redis']
         redisYamlError.value = ''

@@ -43,7 +43,7 @@ import EnhancedInput from './EnhancedInput.vue'
 import * as utils from './utils'
 import { useField, useFieldAttrs } from './composables'
 import type { JsonFieldSchema } from '../../../types/plugins/form-schema'
-import type { BaseFieldProps } from './types'
+import type { BaseFieldProps, EmptyValue } from './types'
 
 defineOptions({
   inheritAttrs: false,
@@ -58,7 +58,7 @@ interface StringFieldProps extends BaseFieldProps {
   labelAttributes?: LabelAttributes
 }
 
-type ValueType = Record<string, any> | string | null
+type ValueType = Record<string, any> | string | EmptyValue
 
 const {
   autofocus,
@@ -76,7 +76,7 @@ const rawInputValue = ref('')
 
 function handleUpdate(value: string) {
   rawInputValue.value = value
-  let finalValue: ValueType = value || null
+  let finalValue: ValueType = value === '' ? field.emptyValue!.value : value
   try {
     const parsedValue = JSON.parse(value)
     if (parsedValue && typeof parsedValue === 'object') {

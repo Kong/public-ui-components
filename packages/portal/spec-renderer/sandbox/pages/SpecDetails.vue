@@ -71,7 +71,6 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-// @ts-ignore - explicit import of yaml content for spec renderer
 import yamlContent from '../test.yaml'
 import type { OperationListItem } from '../../src/types'
 import { SpecDetails } from '../../src'
@@ -132,14 +131,14 @@ h1 {
 }
 
 .component-props {
-  display: flex;
   align-items: center;
+  display: flex;
 }
 
 .component-prop {
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   padding: 0 10px;
 }
 

@@ -43,12 +43,12 @@ import {
   FORMS_API_KEY,
 } from '@kong-ui-public/forms'
 import { useField, useFieldAttrs } from './composables'
-import type { BaseFieldProps } from './types'
+import type { BaseFieldProps, EmptyValue } from './types'
 import type { SelectItem } from '@kong/kongponents'
 import type { EntityData } from '@kong-ui-public/forms'
 import useI18n from '../../../composables/useI18n'
 
-type ForeignFieldValue = { id: string } | null
+type ForeignFieldValue = { id: string } | EmptyValue
 
 interface ScopeEntityFieldProps extends BaseFieldProps {
   /** Kong entity type: 'services', 'routes', 'consumers', 'consumer_groups' */
@@ -123,7 +123,7 @@ onMounted(async () => {
     selectedItem.value = item
   } catch (err) {
     console.error('Failed to load selected entity:', err)
-    fieldValue.value = null
+    fieldValue.value = field.emptyValue!.value
   } finally {
     loading.value = false
   }
@@ -135,7 +135,7 @@ function handleChange(item: SelectItem<string> | null) {
     fieldValue!.value = { id: item.value }
     selectedItem.value = item
   } else {
-    fieldValue!.value = null
+    fieldValue!.value = field.emptyValue!.value
     selectedItem.value = undefined
   }
 }

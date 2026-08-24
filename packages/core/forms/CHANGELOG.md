@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.33.31](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.33.30...%40kong-ui-public%2Fforms%404.33.31) (2026-08-24)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.33.30](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.33.29...%40kong-ui-public%2Fforms%404.33.30) (2026-08-24)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.33.29](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.33.28...%40kong-ui-public%2Fforms%404.33.29) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.33.28](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.33.27...%40kong-ui-public%2Fforms%404.33.28) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3731](https://github.com/Kong/public-ui-components/issues/3731)) ([79e2e2d](https://github.com/Kong/public-ui-components/commit/79e2e2d53fdd6362c899464ee44a27bdf5370a14))
+
+
+## [4.33.27](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.33.26...%40kong-ui-public%2Fforms%404.33.27) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.33.26](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fforms%404.33.25...%40kong-ui-public%2Fforms%404.33.26) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3723](https://github.com/Kong/public-ui-components/issues/3723)) ([df7e955](https://github.com/Kong/public-ui-components/commit/df7e95536ba2f2ea8d46fa1de541b163b5b1c126))
+
+
+## [4.33.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.24...@kong-ui-public/forms@4.33.25) (2026-08-21)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.33.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.23...@kong-ui-public/forms@4.33.24) (2026-08-20)
+
+
+### Bug Fixes
+
+* **entities-plugins, forms:** pre-fill OIDC principal_claim with sub in free-form ([#3714](https://github.com/Kong/public-ui-components/issues/3714)) ([ff81694](https://github.com/Kong/public-ui-components/commit/ff81694bbf3b739b2a5b76db0a6d50ba06cc1b53)), closes [#3555](https://github.com/Kong/public-ui-components/issues/3555)
+
+
+
+
+
 ## [4.33.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.33.22...@kong-ui-public/forms@4.33.23) (2026-08-14)
 
 **Note:** Version bump only for package @kong-ui-public/forms
