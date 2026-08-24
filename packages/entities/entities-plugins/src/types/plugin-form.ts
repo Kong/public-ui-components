@@ -127,7 +127,7 @@ export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongM
 /**
  * Payload for the `click:create-entity` event. The consuming app navigates to the
  * matching create page. Emitted from the Kong Identity principals UI (`principal`,
- * `auth-server`, `client`) and from the governance feature select (`feature`);
+ * `auth-server`, `client`) and from the Entitlement Enforcement feature select (`feature`);
  * `authServerId` is provided when creating a client (scoped to the selected auth server).
  */
 export type EntityCreateEvent = {
