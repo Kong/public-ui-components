@@ -1,58 +1,67 @@
 <template>
-  <SandboxPermissionsControl
-    @update="handlePermissionsUpdate"
-  />
+  <SandboxLayout
+    :links="appLinks"
+    title="Plugin List"
+  >
+    <SandboxPermissionsControl
+      @update="handlePermissionsUpdate"
+    />
 
-  <h2>Konnect Actions Outside</h2>
-  <div id="kong-ui-app-page-header-action-button" />
+    <h2>Konnect Actions Outside</h2>
+    <div id="kong-ui-app-page-header-action-button" />
 
-  <h2>Konnect API</h2>
-  <PluginList
-    v-if="permissions"
-    :key="key"
-    cache-identifier="konnect"
-    :can-configure-dynamic-ordering="permissions.canEdit"
-    :can-create="permissions.canCreate"
-    :can-delete="permissions.canDelete"
-    :can-edit="permissions.canEdit"
-    :can-retrieve="permissions.canRetrieve"
-    :can-toggle="permissions.canEdit"
-    :config="konnectConfig"
-    title="Plugins"
-    use-action-outside
-    @copy:error="onCopyIdError"
-    @copy:success="onCopyIdSuccess"
-    @delete-plugin:success="onDeletePluginSuccess"
-    @error="onError"
-  />
+    <h2>Konnect API</h2>
+    <PluginList
+      v-if="permissions"
+      :key="key"
+      cache-identifier="konnect"
+      :can-configure-dynamic-ordering="permissions.canEdit"
+      :can-create="permissions.canCreate"
+      :can-delete="permissions.canDelete"
+      :can-edit="permissions.canEdit"
+      :can-retrieve="permissions.canRetrieve"
+      :can-toggle="permissions.canEdit"
+      :config="konnectConfig"
+      title="Plugins"
+      use-action-outside
+      @copy:error="onCopyIdError"
+      @copy:success="onCopyIdSuccess"
+      @delete-plugin:success="onDeletePluginSuccess"
+      @error="onError"
+    />
 
-  <h2>Kong Manager API</h2>
-  <PluginList
-    v-if="permissions"
-    :key="key"
-    cache-identifier="kong-manager"
-    :can-configure-dynamic-ordering="permissions.canEdit"
-    :can-create="permissions.canCreate"
-    :can-delete="permissions.canDelete"
-    :can-edit="permissions.canEdit"
-    :can-retrieve="permissions.canRetrieve"
-    :can-toggle="permissions.canEdit"
-    :config="kongManagerConfig"
-    title="Plugins"
-    @copy:error="onCopyIdError"
-    @copy:success="onCopyIdSuccess"
-    @delete-plugin:success="onDeletePluginSuccess"
-    @error="onError"
-  />
+    <h2>Kong Manager API</h2>
+    <PluginList
+      v-if="permissions"
+      :key="key"
+      cache-identifier="kong-manager"
+      :can-configure-dynamic-ordering="permissions.canEdit"
+      :can-create="permissions.canCreate"
+      :can-delete="permissions.canDelete"
+      :can-edit="permissions.canEdit"
+      :can-retrieve="permissions.canRetrieve"
+      :can-toggle="permissions.canEdit"
+      :config="kongManagerConfig"
+      title="Plugins"
+      @copy:error="onCopyIdError"
+      @copy:success="onCopyIdSuccess"
+      @delete-plugin:success="onDeletePluginSuccess"
+      @error="onError"
+    />
+  </SandboxLayout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import type { AxiosError } from 'axios'
+import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { PluginList } from '../../src'
 import type { EntityRow, KongManagerPluginListConfig, KonnectPluginListConfig, CopyEventPayload, ViewRouteType } from '../../src'
 import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+
+// Inject the app-links from the entry file
+const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 

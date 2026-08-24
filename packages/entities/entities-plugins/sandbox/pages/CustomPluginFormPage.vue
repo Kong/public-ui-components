@@ -1,33 +1,42 @@
 <template>
-  <div class="custom-plugin-form-sandbox">
-    <div>
-      <h2>{{ isEditing ? 'Edit' : 'Create' }} Custom Plugin Form (Konnect API)</h2>
-      <CustomPluginForm
-        :config="konnectConfig"
-        :plugin-name="pluginName"
-      />
+  <SandboxLayout
+    :links="appLinks"
+    title="Custom Plugin Form"
+  >
+    <div class="custom-plugin-form-sandbox">
+      <div>
+        <h2>{{ isEditing ? 'Edit' : 'Create' }} Custom Plugin Form (Konnect API)</h2>
+        <CustomPluginForm
+          :config="konnectConfig"
+          :plugin-name="pluginName"
+        />
+      </div>
+      <div>
+        <h2>{{ isEditing ? 'Edit' : 'Create' }} Custom Plugin Form (Kong Manager API)</h2>
+        <KAlert>
+          Kong Manager does not support installed custom plugins
+        </KAlert>
+        <CustomPluginForm
+          :config="kongManagerConfig"
+          :plugin-name="pluginName"
+          :unsupported-types="['installed', 'streamed']"
+        />
+      </div>
     </div>
-    <div>
-      <h2>{{ isEditing ? 'Edit' : 'Create' }} Custom Plugin Form (Kong Manager API)</h2>
-      <KAlert>
-        Kong Manager does not support installed custom plugins
-      </KAlert>
-      <CustomPluginForm
-        :config="kongManagerConfig"
-        :plugin-name="pluginName"
-        :unsupported-types="['installed', 'streamed']"
-      />
-    </div>
-  </div>
+  </SandboxLayout>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
+import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { CustomPluginForm } from '../../src'
 import type { KongManagerCustomPluginFormConfig, KonnectCustomPluginFormConfig } from '../../src'
 
 const route = useRoute()
+
+// Inject the app-links from the entry file
+const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || 'abc-123-def'
 

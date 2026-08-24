@@ -1133,6 +1133,9 @@ importers:
       '@kong-ui-public/monaco-editor':
         specifier: workspace:^
         version: link:../../core/monaco-editor
+      '@kong-ui-public/sandbox-layout':
+        specifier: workspace:^
+        version: link:../../core/sandbox-layout
       '@kong/design-tokens':
         specifier: 3.3.0
         version: 3.3.0

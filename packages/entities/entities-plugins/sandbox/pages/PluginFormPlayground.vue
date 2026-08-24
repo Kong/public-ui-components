@@ -1,6 +1,9 @@
 <template>
-  <div class="plugin-form-playground-sandbox">
-    <div class="sandbox-controls">
+  <SandboxLayout
+    :links="appLinks"
+    title="Plugin Form Playground"
+  >
+    <template #controls>
       <KInputSwitch
         v-model="enableDeckConfigCustomization"
         label="Enable decK configuration customization"
@@ -10,7 +13,7 @@
         v-model="enableDeckCallout"
         label="Show decK config callout above YAML config"
       />
-    </div>
+    </template>
 
     <KSlideout
       :close-on-blur="false"
@@ -78,12 +81,13 @@
       v-else
       class="error"
     >{{ renderError }}</pre>
-  </div>
+  </SandboxLayout>
 </template>
 
 <script setup lang="ts">
 import {
   computed,
+  inject,
   nextTick,
   onErrorCaptured,
   ref,
@@ -91,12 +95,16 @@ import {
   watch,
 } from 'vue'
 import { useRouter } from 'vue-router'
+import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import type {
   KonnectPluginFormConfig,
   KongManagerPluginFormConfig,
 } from '../../src'
 import { PluginForm, useProvideExperimentalFreeForms } from '../../src'
 import { PLUGIN_METADATA } from '../../src/definitions/metadata'
+
+// Inject the app-links from the entry file
+const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 // Opt experimental free-form plugins into rendering in the playground so they
 // can be previewed with a hand-pasted schema (no backend required).
@@ -233,17 +241,6 @@ onErrorCaptured((error) => {
 </script>
 
 <style lang="scss" scoped>
-.plugin-form-playground-sandbox {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-
-  * {
-    box-sizing: border-box;
-  }
-
-}
-
 .controls {
   position: fixed;
   right: 55%;

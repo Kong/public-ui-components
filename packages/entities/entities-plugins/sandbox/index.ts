@@ -2,9 +2,40 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import Kongponents from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
+import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
+import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import '@kong-ui-public/sandbox-layout/dist/style.css'
 import App from './App.vue'
 
 const app = createApp(App)
+
+// Define the sandbox layout links here to inject into your application
+const appLinks: SandboxNavigationItem[] = ([
+  {
+    name: 'PluginList',
+    to: { name: 'list-plugin' },
+  },
+  {
+    name: 'PluginForm Playground',
+    to: { name: 'plugin-form-playground' },
+  },
+  {
+    name: 'Free Form (Mocking Schema)',
+    to: { name: 'free-form' },
+  },
+  {
+    name: 'Custom Plugin Form',
+    to: { name: 'create-custom-plugin' },
+  },
+  {
+    name: 'Plugin catalog',
+    to: { name: 'plugin-catalog' },
+  },
+  {
+    name: 'Auth plugin onboarding card',
+    to: { name: 'auth-plugin-onboarding-card' },
+  },
+])
 
 const init = async () => {
   const router = createRouter({
@@ -119,7 +150,11 @@ const init = async () => {
     ],
   })
 
+  // Provide the app links to the SandboxLayout components
+  app.provide('app-links', appLinks)
+
   app.use(Kongponents)
+  app.component('SandboxLayout', SandboxLayout)
   app.use(router)
   app.mount('#app')
 }

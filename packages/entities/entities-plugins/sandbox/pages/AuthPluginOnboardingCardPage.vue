@@ -1,6 +1,9 @@
 <template>
-  <div class="onboarding-sandbox">
-    <div class="sandbox-controls">
+  <SandboxLayout
+    :links="appLinks"
+    title="Auth Plugin Onboarding Card"
+  >
+    <template #controls>
       <KSelect
         v-model="pluginType"
         class="plugin-type-select"
@@ -17,7 +20,7 @@
         v-model="hasExistingEntity"
         label="Control plane already has a matching consumer/principal"
       />
-    </div>
+    </template>
 
     <AuthPluginOnboardingCard
       v-if="visible"
@@ -34,13 +37,17 @@
     >
       Show card
     </KButton>
-  </div>
+  </SandboxLayout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
+import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { AuthPluginOnboardingCard } from '../../src'
 import type { AuthMode, AuthOnboardingPluginType } from '../../src'
+
+// Inject the app-links from the entry file
+const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const visible = ref(true)
 const hasExistingEntity = ref(true)
@@ -65,20 +72,7 @@ const authModeItems = [
 </script>
 
 <style lang="scss" scoped>
-.onboarding-sandbox {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-
-  .sandbox-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .plugin-type-select {
-    width: 300px;
-  }
+.plugin-type-select {
+  width: 300px;
 }
 </style>

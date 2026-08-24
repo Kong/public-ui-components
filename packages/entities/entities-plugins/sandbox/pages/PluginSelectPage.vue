@@ -1,29 +1,38 @@
 <template>
-  <div class="plugin-select-sandbox">
-    <h2>Konnect API</h2>
-    <PluginSelect
-      :config="konnectConfig"
-      custom-plugin-support="schema"
-      custom-plugins="disabled"
-      :disabled-plugins="{ 'acl': 'ACL is not supported for this entity type' }"
-      :highlighted-plugin-ids="highlightedPluginIds"
-      @delete-custom:success="handleDeleteSuccess"
-    />
+  <SandboxLayout
+    :links="appLinks"
+    title="Select Plugin"
+  >
+    <div class="plugin-select-sandbox">
+      <h2>Konnect API</h2>
+      <PluginSelect
+        :config="konnectConfig"
+        custom-plugin-support="schema"
+        custom-plugins="disabled"
+        :disabled-plugins="{ 'acl': 'ACL is not supported for this entity type' }"
+        :highlighted-plugin-ids="highlightedPluginIds"
+        @delete-custom:success="handleDeleteSuccess"
+      />
 
-    <h2>Kong Manager API</h2>
-    <PluginSelect
-      :config="kongManagerConfig"
-      :custom-plugin-support="['streaming', 'cloned']"
-      :highlighted-plugin-ids="highlightedPluginIds"
-      :ignored-plugins="['entitlement-enforcement']"
-    />
-  </div>
+      <h2>Kong Manager API</h2>
+      <PluginSelect
+        :config="kongManagerConfig"
+        :custom-plugin-support="['streaming', 'cloned']"
+        :highlighted-plugin-ids="highlightedPluginIds"
+        :ignored-plugins="['entitlement-enforcement']"
+      />
+    </div>
+  </SandboxLayout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
+import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import type { KonnectPluginSelectConfig, KongManagerPluginSelectConfig, CustomPluginType } from '../../src'
 import { PluginSelect } from '../../src'
+
+// Inject the app-links from the entry file
+const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 

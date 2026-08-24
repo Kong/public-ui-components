@@ -1,25 +1,34 @@
 <template>
-  <h2>Konnect API</h2>
-  <PluginConfigCard
-    :config="konnectConfig"
-    enable-terraform
-    @fetch:error="onError"
-    @fetch:success="onSuccess"
-  />
+  <SandboxLayout
+    :links="appLinks"
+    title="Plugin Config Card"
+  >
+    <h2>Konnect API</h2>
+    <PluginConfigCard
+      :config="konnectConfig"
+      enable-terraform
+      @fetch:error="onError"
+      @fetch:success="onSuccess"
+    />
 
-  <h2>Kong Manager API</h2>
-  <PluginConfigCard
-    :config="kongManagerConfig"
-    @fetch:error="onError"
-    @fetch:success="onSuccess"
-  />
+    <h2>Kong Manager API</h2>
+    <PluginConfigCard
+      :config="kongManagerConfig"
+      @fetch:error="onError"
+      @fetch:success="onSuccess"
+    />
+  </SandboxLayout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import type { AxiosError } from 'axios'
+import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import type { KonnectPluginEntityConfig, KongManagerPluginEntityConfig } from '../../src'
 import { PluginConfigCard } from '../../src'
+
+// Inject the app-links from the entry file
+const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const props = defineProps({
   /** Grab the Plugin type & id from the route params */
