@@ -107,13 +107,11 @@ describe('useFetchInfinite', () => {
       mode: 'infinite',
       pageSize: 100,
       cursor: undefined,
-      sort: [],
     })
     expect(fetcher).toHaveBeenNthCalledWith(2, {
       mode: 'infinite',
       pageSize: 100,
       cursor: 'cursor-1',
-      sort: [],
     })
     expect(firstBlock.rows).toEqual([{ id: 'one' }])
     expect(firstBlock.lastRow).toBeUndefined()
@@ -151,7 +149,6 @@ describe('useFetchInfinite', () => {
       mode: 'infinite',
       pageSize: 15,
       cursor: 'cursor-1',
-      sort: [],
     })
     expect(secondBlock.lastRow).toBe(30)
   })
@@ -170,7 +167,6 @@ describe('useFetchInfinite', () => {
       mode: 'infinite',
       pageSize: 15,
       cursor: undefined,
-      sort: [],
     })
   })
 

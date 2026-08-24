@@ -1,5 +1,4 @@
-import type { GridApi, SortModelItem, ValueFormatterFunc } from 'ag-grid-community'
-import type { Component } from 'vue'
+import type { GridApi } from 'ag-grid-community'
 
 export type TableDataGridMode = 'infinite'
 export type TableDataGridRow = Record<string, unknown>
@@ -12,29 +11,39 @@ export type TableDataGridStatePayload = {
 
 export type TableDataGridRowClickPayload<Row extends object = TableDataGridRow> = Row
 
+export type TableDataGridCellClickPayload<Row extends object = TableDataGridRow> = {
+  row: Row
+  columnKey: string
+  value: unknown
+}
+
+export type TableDataGridCellSlotProps<Row extends object = TableDataGridRow> = {
+  row: Row
+  rowValue: unknown
+  column: TableDataGridHeader<Row>
+  rowIndex: number
+  selected: boolean
+  refreshCell: () => void
+}
+
 export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
   key: Extract<keyof Row, string>
   label: string
   width?: number
   minWidth?: number
   maxWidth?: number
-  /** Pins the column to the left or right edge of the grid. */
-  pinned?: 'left' | 'right'
-  /** Vue component used to render this column's cells. */
-  cellRenderer?: Component
-  /** Extra props passed to `cellRenderer`. */
-  cellRendererParams?: Record<string, unknown>
-  /** Formats the raw cell value for display. */
-  valueFormatter?: ValueFormatterFunc<Row>
-  /** Enables sorting UI for this column. The `fetcher` must apply `params.sort` server-side. */
-  sortable?: boolean
+  /**
+   * Disables the `row:click` emit for clicks landing inside this column's
+   * cells, e.g. an actions column with its own buttons. AG Grid's own
+   * selection/click mechanics are unaffected.
+   */
+  disableRowClick?: boolean
 }
 
 export interface TableDataGridInfiniteFetcherParams {
   mode: 'infinite'
   pageSize: number
   cursor?: unknown
-  sort?: SortModelItem[]
 }
 
 export type TableDataGridFetcherResult<Row extends object = TableDataGridRow> = {

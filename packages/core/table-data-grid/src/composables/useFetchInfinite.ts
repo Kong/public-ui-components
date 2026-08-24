@@ -304,7 +304,6 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
             mode: 'infinite',
             pageSize,
             cursor,
-            sort: getRowsParams.sortModel,
           })
 
           if (!isLatestDatasource(datasourceId)) {
