@@ -320,6 +320,7 @@ const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
 const { convertKeyToTitle } = composables.useStringHelpers()
 const schema = composables.useSchema()
+const isManagedByEnabled = composables.useManagedByEnabled()
 
 composables.useSubSchema(props.pluginConfigKey) // reduce the schema to only the plugin config
 
@@ -439,6 +440,11 @@ const DEFAULT_BASIC_FIELDS_CONFIGURATION: DefaultCommonFieldsConfigurationSchema
     order: 4,
     section: ConfigurationSchemaSection.Basic,
   },
+  managed_by: {
+    type: ConfigurationSchemaType.ManagedBy,
+    label: t('baseConfigCard.commonFields.managed_by_label'),
+    section: ConfigurationSchemaSection.Advanced,
+  },
   tags: {
     type: ConfigurationSchemaType.BadgeTag,
     order: -1, // the last property displayed
@@ -507,6 +513,9 @@ const orderedRecordArray = computed((): RecordItem[] => {
   const fieldCount = Object.keys(record.value).length
   for (const key in record.value) {
     if (key === '__ui_data') continue // skip ui_data
+    // `managed_by` is behind a feature flag; until it is on, keep it out of the structured view
+    // entirely rather than letting the raw object fall through to a JSON code block.
+    if (key === 'managed_by' && !isManagedByEnabled.value) continue
     const configOrder = props.configSchema?.[key]?.order
     const defaultConfigOrder = DEFAULT_BASIC_FIELDS_CONFIGURATION[key as keyof DefaultCommonFieldsConfigurationSchema]?.order
     // if no order provided, default to end of list
