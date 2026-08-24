@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.30.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.29.0...%40kong-ui-public%2Fanalytics-utilities%4012.30.0) (2026-08-24)
+
+### Features
+
+* add time_per_token metric ([#3743](https://github.com/Kong/public-ui-components/issues/3743)) ([1fb62f4](https://github.com/Kong/public-ui-components/commit/1fb62f497339eda36f91a376522ae3859cf25cca))
+
+
 # [12.29.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.28.2...%40kong-ui-public%2Fanalytics-utilities%4012.29.0) (2026-08-24)
 
 ### Features
