@@ -951,6 +951,56 @@ describe('OpenidConnectForm', () => {
       })
     })
 
+    it('pre-fills the default `sub` token claim into the model when none is set', () => {
+      mountPrincipalsForm()
+
+      expandSettings()
+      cy.getTestId('principals-token-claim').should('have.value', 'sub')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.principal_claim).to.deep.equal(['sub'])
+      })
+    })
+
+    it('keeps a saved token claim instead of pre-filling it', () => {
+      mountPrincipalsForm({
+        isEditing: true,
+        model: createPrincipalsModel({
+          principals: { ...DEFAULT_PRINCIPALS_MODEL, principal_claim: ['user', 'employee_id'] },
+        }),
+      })
+
+      expandSettings()
+      cy.getTestId('principals-token-claim').should('have.value', 'user.employee_id')
+    })
+
+    it('does not pre-fill the token claim when editing a record that has none', () => {
+      mountPrincipalsForm({ isEditing: true })
+
+      expandSettings()
+      cy.getTestId('principals-token-claim').should('have.value', '')
+
+      // Edit-load must leave the saved (unset) claim alone rather than dirtying the form
+      cy.get('@onFormChange').should((spy: any) => {
+        for (const args of spy.args) {
+          expect(args[0]?.config?.principals?.principal_claim ?? null).to.equal(null)
+        }
+      })
+    })
+
+    it('does not re-prefill the token claim after the user clears it', () => {
+      mountPrincipalsForm()
+
+      expandSettings()
+      cy.getTestId('use-principal-lookup').click({ force: true })
+      cy.getTestId('principals-token-claim').clear()
+      cy.getTestId('principals-token-claim').should('have.value', '')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.principal_claim).to.equal(null)
+      })
+    })
+
     it('writes the token claim as a dot-notation path array', () => {
       mountPrincipalsForm()
 

@@ -19,7 +19,7 @@
     :controlled-fields="FREE_FORM_CONTROLLED_FIELDS"
     data-testid="ff-standard-layout-form"
     :field-renderers="fieldRenderers"
-    :form-config="formConfig"
+    :form-config="props.formConfig"
     :is-konnect-managed-redis-enabled="isKonnectManagedRedisEnabled"
     :model="model"
     :on-form-change="onFormChange"
@@ -529,19 +529,19 @@ function prepareFormData(data: Partial<T>): Partial<T> {
 function handleScopeChange() {
   if (!formRef.value) return
 
-  const { getValue, setValue } = formRef.value
+  const { getValue, setValue, getEmptyValue } = formRef.value
   const currentData = getValue() as T
   const nextData = { ...currentData }
 
   if (scoped.value) {
     // restore cached scope ids
     scopeFields.value.forEach((field) => {
-      nextData[field] = scopesCache.value[field] ?? null
+      nextData[field] = scopesCache.value[field] ?? getEmptyValue()
     })
   } else {
     // clear scope ids
     scopeFields.value.forEach((field) => {
-      nextData[field] = null
+      nextData[field] = getEmptyValue()
     })
   }
 

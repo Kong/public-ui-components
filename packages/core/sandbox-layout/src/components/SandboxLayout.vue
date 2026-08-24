@@ -18,6 +18,9 @@
                 :visible="mobileNavIsToggled.value"
                 @close="toggleMobileNav"
               >
+                <div class="nav-theme-picker">
+                  <SandboxThemePicker />
+                </div>
                 <SandboxNavigation @router-link-click="toggleMobileNav" />
               </KSlideout>
             </div>
@@ -64,6 +67,9 @@
     </header>
     <div class="layout">
       <div class="desktop-nav-container">
+        <div class="nav-theme-picker">
+          <SandboxThemePicker />
+        </div>
         <SandboxNavigation />
       </div>
       <div class="sandbox-container">
@@ -84,6 +90,7 @@
 
 <script setup lang="ts">
 import SandboxNavigation from '../components/SandboxNavigation.vue'
+import SandboxThemePicker from '../components/SandboxThemePicker.vue'
 import { provide, computed } from 'vue'
 import { CogIcon, MenuIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_50 } from '@kong/design-tokens'
@@ -169,18 +176,31 @@ const controlsWidth = computed((): string => `${props.controlsMinWidth}px`)
     }
   }
 
-  .sandbox-controls,
-  .desktop-nav-container {
+  .sandbox-controls {
     display: none;
 
-    // Always show nav and controls on desktop
+    // Always show controls on desktop
     @media (min-width: $kui-breakpoint-laptop) {
       display: block;
     }
   }
 
   .desktop-nav-container {
+    display: none;
     min-width: 240px;
+
+    // Always show nav on desktop
+    @media (min-width: $kui-breakpoint-laptop) {
+      display: block;
+    }
+  }
+
+  // Placed above the nav links (not pinned to the container bottom) so it stays
+  // visible without scrolling, however long the page's own nav list grows.
+  .nav-theme-picker {
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    margin-bottom: var(--kui-space-70, $kui-space-70);
+    padding-bottom: var(--kui-space-70, $kui-space-70);
   }
 
   .sandbox-container {

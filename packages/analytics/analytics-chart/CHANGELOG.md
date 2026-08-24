@@ -3,6 +3,101 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.25.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.7...%40kong-ui-public%2Fanalytics-chart%4010.25.8) (2026-08-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.25.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.6...%40kong-ui-public%2Fanalytics-chart%4010.25.7) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3731](https://github.com/Kong/public-ui-components/issues/3731)) ([79e2e2d](https://github.com/Kong/public-ui-components/commit/79e2e2d53fdd6362c899464ee44a27bdf5370a14))
+
+
+## [10.25.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.5...%40kong-ui-public%2Fanalytics-chart%4010.25.6) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.25.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.4...%40kong-ui-public%2Fanalytics-chart%4010.25.5) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3723](https://github.com/Kong/public-ui-components/issues/3723)) ([df7e955](https://github.com/Kong/public-ui-components/commit/df7e95536ba2f2ea8d46fa1de541b163b5b1c126))
+
+
+## [10.25.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.3...%40kong-ui-public%2Fanalytics-chart%4010.25.4) (2026-08-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.25.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.25.2...@kong-ui-public/analytics-chart@10.25.3) (2026-08-20)
+
+
+### Bug Fixes
+
+* **analytics:** validate zoom range for time series chart [MA-5288] ([#3715](https://github.com/Kong/public-ui-components/issues/3715)) ([dcb9a1d](https://github.com/Kong/public-ui-components/commit/dcb9a1d6b8832ad6c145763c2920b5e7a5f601d8))
+
+
+
+
+
+## [10.25.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.25.1...@kong-ui-public/analytics-chart@10.25.2) (2026-08-20)
+
+
+### Bug Fixes
+
+* **analytics-chart:** localize OIDC credential headers ([#3717](https://github.com/Kong/public-ui-components/issues/3717)) ([e47ff9f](https://github.com/Kong/public-ui-components/commit/e47ff9ffec22687180df6f4f2f63ac4b860db37a))
+
+
+
+
+
+## [10.25.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.25.0...@kong-ui-public/analytics-chart@10.25.1) (2026-08-20)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+# [10.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.24.8...@kong-ui-public/analytics-chart@10.25.0) (2026-08-19)
+
+
+### Features
+
+* **analytics-chart:** add OIDC credential label ([#3711](https://github.com/Kong/public-ui-components/issues/3711)) ([5624f1a](https://github.com/Kong/public-ui-components/commit/5624f1a260634f614aefedaa28b499a2db7e9770))
+
+
+
+
+
+## [10.24.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.24.7...@kong-ui-public/analytics-chart@10.24.8) (2026-08-18)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.24.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.24.6...@kong-ui-public/analytics-chart@10.24.7) (2026-08-18)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [10.24.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.24.5...@kong-ui-public/analytics-chart@10.24.6) (2026-08-17)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

@@ -58,7 +58,7 @@ import { useField, useFieldAttrs } from './composables'
 import { computed, inject, toRef } from 'vue'
 import type { NumberLikeFieldSchema } from 'src/types/plugins/form-schema'
 import EnhancedInput from './EnhancedInput.vue'
-import type { BaseFieldProps } from './types'
+import type { BaseFieldProps, EmptyValue } from './types'
 import useI18n from '../../../composables/useFreeformI18n'
 
 export interface NumberFieldProps extends InputProps, BaseFieldProps {
@@ -74,7 +74,7 @@ const {
   name,
   ...props
 } = defineProps<NumberFieldProps>()
-const { value: fieldValue, hide, ...field } = useField<number | string | null>(toRef(() => name))
+const { value: fieldValue, hide, ...field } = useField<number | string | EmptyValue>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const { i18n } = useI18n()
@@ -92,7 +92,7 @@ const between = computed(() => {
 })
 
 const emit = defineEmits<{
-  'update:modelValue': [value: number | string | null]
+  'update:modelValue': [value: number | string | EmptyValue]
 }>()
 
 const initialValue = fieldValue!.value
@@ -111,24 +111,24 @@ const modelValue = computed(() => {
 function handleUpdate(value: string) {
   const normalizedValue = normalizeValue(value)
   if (initialValue !== undefined && value === '' && normalizedValue !== initialValue) {
-    fieldValue!.value = null
-    emit('update:modelValue', null)
+    fieldValue!.value = field.emptyValue!.value
+    emit('update:modelValue', field.emptyValue!.value)
   } else {
     fieldValue!.value = normalizedValue
     emit('update:modelValue', normalizedValue)
   }
 }
 
-function normalizeValue(value: string): number | string | null {
-  if (value === '') return null
+function normalizeValue(value: string): number | string | EmptyValue {
+  if (value === '') return field.emptyValue!.value
 
   const trimmed = value.trim()
-  if (trimmed === '') return null
+  if (trimmed === '') return field.emptyValue!.value
 
   const num = Number(trimmed)
 
   if (!Number.isFinite(num)) {
-    return realShowVaultSecretPicker.value ? value : null
+    return realShowVaultSecretPicker.value ? value : field.emptyValue!.value
   }
 
   return num

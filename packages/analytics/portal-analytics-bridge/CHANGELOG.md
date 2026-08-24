@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.23](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fportal-analytics-bridge%400.5.22...%40kong-ui-public%2Fportal-analytics-bridge%400.5.23) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3731](https://github.com/Kong/public-ui-components/issues/3731)) ([79e2e2d](https://github.com/Kong/public-ui-components/commit/79e2e2d53fdd6362c899464ee44a27bdf5370a14))
+
+
+## [0.5.22](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fportal-analytics-bridge%400.5.21...%40kong-ui-public%2Fportal-analytics-bridge%400.5.22) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/portal-analytics-bridge
+
+
+
+
+
+## [0.5.21](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fportal-analytics-bridge%400.5.20...%40kong-ui-public%2Fportal-analytics-bridge%400.5.21) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/portal-analytics-bridge
+
+
+
+
+
+## [0.5.20](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fportal-analytics-bridge%400.5.19...%40kong-ui-public%2Fportal-analytics-bridge%400.5.20) (2026-08-21)
+
+**Note:** Version bump only for package @kong-ui-public/portal-analytics-bridge
+
+
+
+
+
+## [0.5.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/portal-analytics-bridge@0.5.18...@kong-ui-public/portal-analytics-bridge@0.5.19) (2026-08-20)
+
+**Note:** Version bump only for package @kong-ui-public/portal-analytics-bridge
+
+
+
+
+
+## [0.5.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/portal-analytics-bridge@0.5.17...@kong-ui-public/portal-analytics-bridge@0.5.18) (2026-08-18)
+
+**Note:** Version bump only for package @kong-ui-public/portal-analytics-bridge
+
+
+
+
+
+## [0.5.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/portal-analytics-bridge@0.5.16...@kong-ui-public/portal-analytics-bridge@0.5.17) (2026-08-18)
+
+**Note:** Version bump only for package @kong-ui-public/portal-analytics-bridge
+
+
+
+
+
 ## [0.5.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/portal-analytics-bridge@0.5.15...@kong-ui-public/portal-analytics-bridge@0.5.16) (2026-08-17)
 
 **Note:** Version bump only for package @kong-ui-public/portal-analytics-bridge

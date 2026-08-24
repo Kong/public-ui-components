@@ -36,6 +36,10 @@ watchEffect(() => {
   if (formData.config) {
     // reset partials if strategy not redis
     if (formData.config.strategy !== 'redis') {
+      // Intentionally NOT `FormConfig.emptyFieldValue`-aware: the plugin entity
+      // form *merges* free-form data with VFG data, so `undefined` wouldn't
+      // clear an existing `partials` value — only `null` does. `undefined` is
+      // safe on create, since there's nothing to override yet.
       formData.partials = isFormEditing ? null : undefined
     }
   }

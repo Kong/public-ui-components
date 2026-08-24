@@ -234,6 +234,12 @@ export default {
       type: Boolean,
       default: true,
     },
+    // Whether the form is editing an existing plugin. Suppresses the one-time
+    // principal_claim prefill so a saved record isn't modified on load.
+    isEditing: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -261,10 +267,12 @@ export default {
     },
   },
   created() {
-    // One-time prefill: if principal_claim has never been set, write the gateway
-    // default `sub` into the model so users see it explicitly rather than an
+    // One-time prefill on create: if principal_claim has never been set, write the
+    // gateway default `sub` into the model so users see it explicitly rather than an
     // implicit default. Only fires once, on creation — later clears stay cleared.
-    if (!hasValue(this.formModel['config-principals-principal_claim'])) {
+    // Skipped on edit: an absent claim on a saved record already resolves to `sub`, so
+    // writing it would dirty the form on load for no change in behavior.
+    if (!this.isEditing && !hasValue(this.formModel['config-principals-principal_claim'])) {
       this.updateField('config-principals-principal_claim', ['sub'])
     }
   },

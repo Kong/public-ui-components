@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.6.15...%40kong-ui-public%2Fsandbox-layout%402.7.0) (2026-08-24)
+
+### Features
+
+* **sandbox-layout:** add built-in theme picker to SandboxLayout ([#3741](https://github.com/Kong/public-ui-components/issues/3741)) ([606ece4](https://github.com/Kong/public-ui-components/commit/606ece45e10d6fdde3d0b9504957bd7724019027)), closes [high-contrast](https://github.com/hi/issues/contrast)
+
+
+## [2.6.15](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.6.14...%40kong-ui-public%2Fsandbox-layout%402.6.15) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/sandbox-layout
+
+
+
+
+
+## [2.6.14](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fsandbox-layout%402.6.13...%40kong-ui-public%2Fsandbox-layout%402.6.14) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3723](https://github.com/Kong/public-ui-components/issues/3723)) ([df7e955](https://github.com/Kong/public-ui-components/commit/df7e95536ba2f2ea8d46fa1de541b163b5b1c126))
+
+
 ## [2.6.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/sandbox-layout@2.6.12...@kong-ui-public/sandbox-layout@2.6.13) (2026-08-14)
 
 **Note:** Version bump only for package @kong-ui-public/sandbox-layout
