@@ -744,10 +744,10 @@
       }
     },
     "fields": {
-      "service": "Service ID",
-      "route": "Route ID",
-      "consumer": "Consumer ID",
-      "consumer_group": "Consumer group ID"
+      "service": "Service",
+      "route": "Route",
+      "consumer": "Consumer",
+      "consumer_group": "Consumer group"
     },
     "select": {
       "custom_badge_text": "This plugin is data plane node specific",
