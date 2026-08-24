@@ -47,7 +47,7 @@ const navLinks: SandboxNavigationItem[] = inject(KONG_UI_SANDBOX_LAYOUT_LINKS_IN
     }
 
     a {
-      background: #eee;
+      background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
       border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
       color: var(--kui-color-text-primary, $kui-color-text-primary);
       display: block;
@@ -60,7 +60,7 @@ const navLinks: SandboxNavigationItem[] = inject(KONG_UI_SANDBOX_LAYOUT_LINKS_IN
       white-space: nowrap;
 
       &:hover {
-        background: #ccc;
+        background: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
         color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
       }
 
@@ -82,7 +82,10 @@ const navLinks: SandboxNavigationItem[] = inject(KONG_UI_SANDBOX_LAYOUT_LINKS_IN
 <style lang="scss">
 // Unscoped to control page elements
 html, body {
+  background-color: var(--kui-color-background, $kui-color-background);
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
   margin: 0;
+  min-height: 100%;
   padding: 0;
 }
 </style>
