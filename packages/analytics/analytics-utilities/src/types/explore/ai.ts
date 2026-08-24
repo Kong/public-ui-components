@@ -59,6 +59,7 @@ export const aiExploreAggregations = [
   'llm_embeddings_tokens',
   'llm_embeddings_cost',
   'time_to_first_token_average',
+  'time_per_token_average',
 ] as const
 
 export type AiExploreAggregations = typeof aiExploreAggregations[number]
