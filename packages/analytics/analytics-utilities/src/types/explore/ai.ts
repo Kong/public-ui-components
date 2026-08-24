@@ -24,6 +24,7 @@ export const queryableAiExploreDimensions = [
   'status_code_grouped',
   'ai_plugin',
   'principal',
+  'cache_status',
   'ai_gateway_mcp_server',
   'ai_gateway_model',
   'ai_gateway_agent',
