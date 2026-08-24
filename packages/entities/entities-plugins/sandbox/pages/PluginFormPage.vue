@@ -1,8 +1,5 @@
 <template>
-  <SandboxLayout
-    :links="appLinks"
-    title="Plugin Form"
-  >
+  <SandboxPage title="Plugin Form">
     <template #controls>
       <KInputSwitch
         v-model="enableDeckConfigCustomization"
@@ -66,14 +63,14 @@
         @update="onUpdate"
       />
     </FeatureFlagProvider>
-  </SandboxLayout>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
-import { computed, defineComponent, inject, provide, ref, type PropType } from 'vue'
+import { computed, defineComponent, provide, ref, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
-import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import SandboxPage from '../SandboxPage.vue'
 import { PluginForm, providePluginContext, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
 import { FEATURE_FLAGS } from '../../src/constants'
 
@@ -82,9 +79,6 @@ import { provideDeckCommandEditor } from '@kong-ui-public/entities-shared/deck-e
 
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
 import type { GlobalAction } from '../../src/components/free-form/shared/types'
-
-// Inject the app-links from the entry file
-const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const toaster = new ToastManager()
 

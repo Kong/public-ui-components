@@ -1,8 +1,5 @@
 <template>
-  <SandboxLayout
-    :links="appLinks"
-    title="Auth Plugin Onboarding Card"
-  >
+  <SandboxPage title="Auth Plugin Onboarding Card">
     <template #controls>
       <KSelect
         v-model="pluginType"
@@ -37,17 +34,14 @@
     >
       Show card
     </KButton>
-  </SandboxLayout>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from 'vue'
-import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import { ref } from 'vue'
+import SandboxPage from '../SandboxPage.vue'
 import { AuthPluginOnboardingCard } from '../../src'
 import type { AuthMode, AuthOnboardingPluginType } from '../../src'
-
-// Inject the app-links from the entry file
-const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const visible = ref(true)
 const hasExistingEntity = ref(true)

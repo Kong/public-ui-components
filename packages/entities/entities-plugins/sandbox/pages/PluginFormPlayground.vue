@@ -1,8 +1,5 @@
 <template>
-  <SandboxLayout
-    :links="appLinks"
-    title="Plugin Form Playground"
-  >
+  <SandboxPage title="Plugin Form Playground">
     <template #controls>
       <KInputSwitch
         v-model="enableDeckConfigCustomization"
@@ -81,13 +78,12 @@
       v-else
       class="error"
     >{{ renderError }}</pre>
-  </SandboxLayout>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
 import {
   computed,
-  inject,
   nextTick,
   onErrorCaptured,
   ref,
@@ -95,16 +91,13 @@ import {
   watch,
 } from 'vue'
 import { useRouter } from 'vue-router'
-import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import SandboxPage from '../SandboxPage.vue'
 import type {
   KonnectPluginFormConfig,
   KongManagerPluginFormConfig,
 } from '../../src'
 import { PluginForm, useProvideExperimentalFreeForms } from '../../src'
 import { PLUGIN_METADATA } from '../../src/definitions/metadata'
-
-// Inject the app-links from the entry file
-const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 // Opt experimental free-form plugins into rendering in the playground so they
 // can be previewed with a hand-pasted schema (no backend required).

@@ -1,8 +1,5 @@
 <template>
-  <SandboxLayout
-    :links="appLinks"
-    title="Custom Plugin Form"
-  >
+  <SandboxPage title="Custom Plugin Form">
     <div class="custom-plugin-form-sandbox">
       <div>
         <h2>{{ isEditing ? 'Edit' : 'Create' }} Custom Plugin Form (Konnect API)</h2>
@@ -23,20 +20,17 @@
         />
       </div>
     </div>
-  </SandboxLayout>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import SandboxPage from '../SandboxPage.vue'
 import { CustomPluginForm } from '../../src'
 import type { KongManagerCustomPluginFormConfig, KonnectCustomPluginFormConfig } from '../../src'
 
 const route = useRoute()
-
-// Inject the app-links from the entry file
-const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || 'abc-123-def'
 

@@ -1,8 +1,5 @@
 <template>
-  <SandboxLayout
-    :links="appLinks"
-    title="Add Credential to Consumer"
-  >
+  <SandboxPage title="Add Credential to Consumer">
     <h2>Add consumer & credential ({{ plugin }})</h2>
     <AddCredentialToConsumerForm
       :config="konnectConfig"
@@ -10,18 +7,15 @@
       @cancel="onDone"
       @success="onDone"
     />
-  </SandboxLayout>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import SandboxPage from '../SandboxPage.vue'
 import { AddCredentialToConsumerForm } from '../../src'
 import type { CredentialType, KonnectPluginFormConfig } from '../../src'
-
-// Inject the app-links from the entry file
-const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const { plugin } = defineProps<{ plugin: string }>()
 

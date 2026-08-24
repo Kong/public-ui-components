@@ -1,8 +1,5 @@
 <template>
-  <SandboxLayout
-    :links="appLinks"
-    title="Plugin Config Card"
-  >
+  <SandboxPage title="Plugin Config Card">
     <h2>Konnect API</h2>
     <PluginConfigCard
       :config="konnectConfig"
@@ -17,18 +14,15 @@
       @fetch:error="onError"
       @fetch:success="onSuccess"
     />
-  </SandboxLayout>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from 'vue'
+import { ref } from 'vue'
 import type { AxiosError } from 'axios'
-import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import SandboxPage from '../SandboxPage.vue'
 import type { KonnectPluginEntityConfig, KongManagerPluginEntityConfig } from '../../src'
 import { PluginConfigCard } from '../../src'
-
-// Inject the app-links from the entry file
-const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const props = defineProps({
   /** Grab the Plugin type & id from the route params */

@@ -1,8 +1,5 @@
 <template>
-  <SandboxLayout
-    :links="appLinks"
-    title="Plugin Catalog"
-  >
+  <SandboxPage title="Plugin Catalog">
     <template #controls>
       <div class="plugin-catalog-controls">
         <section class="custom-plugin-support-controls">
@@ -88,17 +85,14 @@
       :highlighted-plugin-ids="highlightedPluginIds"
       @delete-custom:success="handleDeleteSuccess"
     />
-  </SandboxLayout>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
-import { computed, inject, provide, ref } from 'vue'
-import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import { computed, provide, ref } from 'vue'
+import SandboxPage from '../SandboxPage.vue'
 import type { KonnectPluginSelectConfig, CustomPluginSupportLevel, CustomPluginType } from '../../src'
 import { FEATURE_FLAGS, PluginCatalog } from '../../src'
-
-// Inject the app-links from the entry file
-const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 

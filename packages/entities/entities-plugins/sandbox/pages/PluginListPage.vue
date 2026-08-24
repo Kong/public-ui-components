@@ -1,8 +1,5 @@
 <template>
-  <SandboxLayout
-    :links="appLinks"
-    title="Plugin List"
-  >
+  <SandboxPage title="Plugin List">
     <SandboxPermissionsControl
       @update="handlePermissionsUpdate"
     />
@@ -48,20 +45,17 @@
       @delete-plugin:success="onDeletePluginSuccess"
       @error="onError"
     />
-  </SandboxLayout>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from 'vue'
+import { ref } from 'vue'
 import type { AxiosError } from 'axios'
-import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import SandboxPage from '../SandboxPage.vue'
 import { PluginList } from '../../src'
 import type { EntityRow, KongManagerPluginListConfig, KonnectPluginListConfig, CopyEventPayload, ViewRouteType } from '../../src'
 import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
-
-// Inject the app-links from the entry file
-const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 

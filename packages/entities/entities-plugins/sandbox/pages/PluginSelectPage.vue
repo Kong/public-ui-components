@@ -1,8 +1,5 @@
 <template>
-  <SandboxLayout
-    :links="appLinks"
-    title="Select Plugin"
-  >
+  <SandboxPage title="Select Plugin">
     <div class="plugin-select-sandbox">
       <h2>Konnect API</h2>
       <PluginSelect
@@ -22,17 +19,14 @@
         :ignored-plugins="['entitlement-enforcement']"
       />
     </div>
-  </SandboxLayout>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from 'vue'
-import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import { ref } from 'vue'
+import SandboxPage from '../SandboxPage.vue'
 import type { KonnectPluginSelectConfig, KongManagerPluginSelectConfig, CustomPluginType } from '../../src'
 import { PluginSelect } from '../../src'
-
-// Inject the app-links from the entry file
-const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
