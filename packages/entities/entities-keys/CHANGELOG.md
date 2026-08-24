@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.15.29](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-keys%403.15.28...%40kong-ui-public%2Fentities-keys%403.15.29) (2026-08-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
 ## [3.15.28](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-keys%403.15.27...%40kong-ui-public%2Fentities-keys%403.15.28) (2026-08-24)
 
 **Note:** Version bump only for package @kong-ui-public/entities-keys
