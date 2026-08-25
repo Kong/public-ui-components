@@ -1,6 +1,6 @@
 <template>
-  <div class="onboarding-sandbox">
-    <div class="sandbox-controls">
+  <SandboxPage title="Auth Plugin Onboarding Card">
+    <template #controls>
       <KSelect
         v-model="pluginType"
         class="plugin-type-select"
@@ -17,7 +17,7 @@
         v-model="hasExistingEntity"
         label="Control plane already has a matching consumer/principal"
       />
-    </div>
+    </template>
 
     <AuthPluginOnboardingCard
       v-if="visible"
@@ -34,11 +34,12 @@
     >
       Show card
     </KButton>
-  </div>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import SandboxPage from '../SandboxPage.vue'
 import { AuthPluginOnboardingCard } from '../../src'
 import type { AuthMode, AuthOnboardingPluginType } from '../../src'
 
@@ -65,20 +66,7 @@ const authModeItems = [
 </script>
 
 <style lang="scss" scoped>
-.onboarding-sandbox {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-
-  .sandbox-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .plugin-type-select {
-    width: 300px;
-  }
+.plugin-type-select {
+  width: 300px;
 }
 </style>

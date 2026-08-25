@@ -1,6 +1,6 @@
 <template>
-  <div class="plugin-form-sandbox">
-    <div class="sandbox-controls">
+  <SandboxPage title="Plugin Form">
+    <template #controls>
       <KInputSwitch
         v-model="enableDeckConfigCustomization"
         label="Enable decK configuration customization"
@@ -25,7 +25,7 @@
           />
         </div>
       </KCollapse>
-    </div>
+    </template>
 
     <div
       id="plugin-form-page-actions"
@@ -63,13 +63,14 @@
         @update="onUpdate"
       />
     </FeatureFlagProvider>
-  </div>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
 import { computed, defineComponent, provide, ref, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
+import SandboxPage from '../SandboxPage.vue'
 import { PluginForm, providePluginContext, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
 import { FEATURE_FLAGS } from '../../src/constants'
 
@@ -317,36 +318,19 @@ const handleGlobalAction = (action: GlobalAction, payload: any) => {
 </script>
 
 <style lang="scss" scoped>
-.plugin-form-sandbox {
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.feature-flags-collapse {
+  margin: 0;
+}
+
+.feature-flags-list {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-
-  * {
-    box-sizing: border-box;
-  }
-
-  .actions {
-    align-self: flex-end;
-  }
-
-  .sandbox-controls {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-
-  .feature-flags-collapse {
-    margin: 0;
-  }
-
-  .feature-flags-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding-top: 12px;
-  }
+  gap: 12px;
+  padding-top: 12px;
 }
 </style>

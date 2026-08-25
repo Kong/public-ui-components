@@ -1,27 +1,30 @@
 <template>
-  <div class="plugin-select-sandbox">
-    <h2>Konnect API</h2>
-    <PluginSelect
-      :config="konnectConfig"
-      custom-plugin-support="schema"
-      custom-plugins="disabled"
-      :disabled-plugins="{ 'acl': 'ACL is not supported for this entity type' }"
-      :highlighted-plugin-ids="highlightedPluginIds"
-      @delete-custom:success="handleDeleteSuccess"
-    />
+  <SandboxPage title="Select Plugin">
+    <div class="plugin-select-sandbox">
+      <h2>Konnect API</h2>
+      <PluginSelect
+        :config="konnectConfig"
+        custom-plugin-support="schema"
+        custom-plugins="disabled"
+        :disabled-plugins="{ 'acl': 'ACL is not supported for this entity type' }"
+        :highlighted-plugin-ids="highlightedPluginIds"
+        @delete-custom:success="handleDeleteSuccess"
+      />
 
-    <h2>Kong Manager API</h2>
-    <PluginSelect
-      :config="kongManagerConfig"
-      :custom-plugin-support="['streaming', 'cloned']"
-      :highlighted-plugin-ids="highlightedPluginIds"
-      :ignored-plugins="['entitlement-enforcement']"
-    />
-  </div>
+      <h2>Kong Manager API</h2>
+      <PluginSelect
+        :config="kongManagerConfig"
+        :custom-plugin-support="['streaming', 'cloned']"
+        :highlighted-plugin-ids="highlightedPluginIds"
+        :ignored-plugins="['entitlement-enforcement']"
+      />
+    </div>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import SandboxPage from '../SandboxPage.vue'
 import type { KonnectPluginSelectConfig, KongManagerPluginSelectConfig, CustomPluginType } from '../../src'
 import { PluginSelect } from '../../src'
 

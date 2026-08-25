@@ -1,54 +1,57 @@
 <template>
-  <SandboxPermissionsControl
-    @update="handlePermissionsUpdate"
-  />
+  <SandboxPage title="Plugin List">
+    <SandboxPermissionsControl
+      @update="handlePermissionsUpdate"
+    />
 
-  <h2>Konnect Actions Outside</h2>
-  <div id="kong-ui-app-page-header-action-button" />
+    <h2>Konnect Actions Outside</h2>
+    <div id="kong-ui-app-page-header-action-button" />
 
-  <h2>Konnect API</h2>
-  <PluginList
-    v-if="permissions"
-    :key="key"
-    cache-identifier="konnect"
-    :can-configure-dynamic-ordering="permissions.canEdit"
-    :can-create="permissions.canCreate"
-    :can-delete="permissions.canDelete"
-    :can-edit="permissions.canEdit"
-    :can-retrieve="permissions.canRetrieve"
-    :can-toggle="permissions.canEdit"
-    :config="konnectConfig"
-    title="Plugins"
-    use-action-outside
-    @copy:error="onCopyIdError"
-    @copy:success="onCopyIdSuccess"
-    @delete-plugin:success="onDeletePluginSuccess"
-    @error="onError"
-  />
+    <h2>Konnect API</h2>
+    <PluginList
+      v-if="permissions"
+      :key="key"
+      cache-identifier="konnect"
+      :can-configure-dynamic-ordering="permissions.canEdit"
+      :can-create="permissions.canCreate"
+      :can-delete="permissions.canDelete"
+      :can-edit="permissions.canEdit"
+      :can-retrieve="permissions.canRetrieve"
+      :can-toggle="permissions.canEdit"
+      :config="konnectConfig"
+      title="Plugins"
+      use-action-outside
+      @copy:error="onCopyIdError"
+      @copy:success="onCopyIdSuccess"
+      @delete-plugin:success="onDeletePluginSuccess"
+      @error="onError"
+    />
 
-  <h2>Kong Manager API</h2>
-  <PluginList
-    v-if="permissions"
-    :key="key"
-    cache-identifier="kong-manager"
-    :can-configure-dynamic-ordering="permissions.canEdit"
-    :can-create="permissions.canCreate"
-    :can-delete="permissions.canDelete"
-    :can-edit="permissions.canEdit"
-    :can-retrieve="permissions.canRetrieve"
-    :can-toggle="permissions.canEdit"
-    :config="kongManagerConfig"
-    title="Plugins"
-    @copy:error="onCopyIdError"
-    @copy:success="onCopyIdSuccess"
-    @delete-plugin:success="onDeletePluginSuccess"
-    @error="onError"
-  />
+    <h2>Kong Manager API</h2>
+    <PluginList
+      v-if="permissions"
+      :key="key"
+      cache-identifier="kong-manager"
+      :can-configure-dynamic-ordering="permissions.canEdit"
+      :can-create="permissions.canCreate"
+      :can-delete="permissions.canDelete"
+      :can-edit="permissions.canEdit"
+      :can-retrieve="permissions.canRetrieve"
+      :can-toggle="permissions.canEdit"
+      :config="kongManagerConfig"
+      title="Plugins"
+      @copy:error="onCopyIdError"
+      @copy:success="onCopyIdSuccess"
+      @delete-plugin:success="onDeletePluginSuccess"
+      @error="onError"
+    />
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { AxiosError } from 'axios'
+import SandboxPage from '../SandboxPage.vue'
 import { PluginList } from '../../src'
 import type { EntityRow, KongManagerPluginListConfig, KonnectPluginListConfig, CopyEventPayload, ViewRouteType } from '../../src'
 import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'

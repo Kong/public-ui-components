@@ -1,23 +1,26 @@
 <template>
-  <h2>Konnect API</h2>
-  <PluginConfigCard
-    :config="konnectConfig"
-    enable-terraform
-    @fetch:error="onError"
-    @fetch:success="onSuccess"
-  />
+  <SandboxPage title="Plugin Config Card">
+    <h2>Konnect API</h2>
+    <PluginConfigCard
+      :config="konnectConfig"
+      enable-terraform
+      @fetch:error="onError"
+      @fetch:success="onSuccess"
+    />
 
-  <h2>Kong Manager API</h2>
-  <PluginConfigCard
-    :config="kongManagerConfig"
-    @fetch:error="onError"
-    @fetch:success="onSuccess"
-  />
+    <h2>Kong Manager API</h2>
+    <PluginConfigCard
+      :config="kongManagerConfig"
+      @fetch:error="onError"
+      @fetch:success="onSuccess"
+    />
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { AxiosError } from 'axios'
+import SandboxPage from '../SandboxPage.vue'
 import type { KonnectPluginEntityConfig, KongManagerPluginEntityConfig } from '../../src'
 import { PluginConfigCard } from '../../src'
 

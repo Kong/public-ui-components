@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import Kongponents from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
+import '@kong-ui-public/sandbox-layout/dist/style.css'
 import App from './App.vue'
 
 const app = createApp(App)
@@ -11,9 +12,12 @@ const init = async () => {
     history: createWebHistory(),
     routes: [
       {
+        // `SandboxLayout`'s mobile title link and this sandbox's "cancel/back"
+        // routes point at `home` — keep the name resolvable and just redirect
+        // it to the plugin list, which now doubles as this sandbox's home page.
         path: '/',
         name: 'home',
-        component: () => import('./pages/HomePage.vue'),
+        redirect: { name: 'list-plugin' },
       },
       {
         path: '/plugin',

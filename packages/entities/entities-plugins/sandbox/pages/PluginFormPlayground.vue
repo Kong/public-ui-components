@@ -1,6 +1,6 @@
 <template>
-  <div class="plugin-form-playground-sandbox">
-    <div class="sandbox-controls">
+  <SandboxPage title="Plugin Form Playground">
+    <template #controls>
       <KInputSwitch
         v-model="enableDeckConfigCustomization"
         label="Enable decK configuration customization"
@@ -10,7 +10,7 @@
         v-model="enableDeckCallout"
         label="Show decK config callout above YAML config"
       />
-    </div>
+    </template>
 
     <KSlideout
       :close-on-blur="false"
@@ -78,7 +78,7 @@
       v-else
       class="error"
     >{{ renderError }}</pre>
-  </div>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
@@ -91,6 +91,7 @@ import {
   watch,
 } from 'vue'
 import { useRouter } from 'vue-router'
+import SandboxPage from '../SandboxPage.vue'
 import type {
   KonnectPluginFormConfig,
   KongManagerPluginFormConfig,
@@ -233,17 +234,6 @@ onErrorCaptured((error) => {
 </script>
 
 <style lang="scss" scoped>
-.plugin-form-playground-sandbox {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-
-  * {
-    box-sizing: border-box;
-  }
-
-}
-
 .controls {
   position: fixed;
   right: 55%;
