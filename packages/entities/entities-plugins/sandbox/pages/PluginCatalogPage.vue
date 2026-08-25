@@ -83,6 +83,7 @@
       custom-plugins="disabled"
       :disabled-plugins="{ 'acl': 'ACL is not supported for this entity type' }"
       :highlighted-plugin-ids="highlightedPluginIds"
+      :ignored-plugins="['entitlement-enforcement']"
       @delete-custom:success="handleDeleteSuccess"
     />
   </SandboxPage>
