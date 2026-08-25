@@ -212,6 +212,34 @@ should opt out of the default flexible fill behavior.
 | `width` | `number` | No | Explicit initial AG Grid column width in pixels. Columns with `width` do not receive default flex sizing. |
 | `minWidth` | `number` | No | Minimum AG Grid column width in pixels. Columns with only `minWidth` still fill available width by default. |
 | `maxWidth` | `number` | No | Maximum AG Grid column width in pixels. Columns with `maxWidth` do not receive default flex sizing. |
+| `disableRowClick` | `boolean` | No | Suppresses `row:click` for clicks landing in this column's cells, e.g. an actions column. `cell:click` still fires. |
+
+## Custom Cell Content
+
+Columns render custom cell content through a slot named after `header.key`.
+Columns without a matching slot render their raw `rowValue`.
+
+```vue
+<TableDataGrid
+  :fetcher="fetchRows"
+  :headers="headers"
+>
+  <template #status="{ rowValue }">
+    <KBadge :appearance="rowValue === 'active' ? 'success' : 'neutral'">
+      {{ rowValue }}
+    </KBadge>
+  </template>
+</TableDataGrid>
+```
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `row` | `Row` | The full row record backing this cell. |
+| `rowValue` | `unknown` | `row[header.key]`. |
+| `column` | `TableDataGridHeader<Row>` | The header definition for this column. |
+| `rowIndex` | `number` | The row's index in the currently loaded block. |
+| `selected` | `boolean` | Whether the row is currently selected. |
+| `refreshCell` | `() => void` | Forces AG Grid to re-render this cell. |
 
 ## Events
 
@@ -219,6 +247,8 @@ should opt out of the default flexible fill behavior.
 | --- | --- | --- |
 | `grid:ready` | `GridApi<Row>` | AG Grid is ready. |
 | `state` | `{ state: 'loading' \| 'success' \| 'error', hasData: boolean }` | Internal fetch lifecycle changes after the datasource starts requesting rows. |
+| `row:click` | `(row: TableDataGridRowClickPayload<Row>, event: RowClickedEvent<Row>)` | A row is clicked, unless the click landed in a `disableRowClick` column. |
+| `cell:click` | `TableDataGridCellClickPayload<Row>` | Any cell is clicked, including cells in `disableRowClick` columns. |
 
 ## Slots
 
@@ -226,6 +256,7 @@ should opt out of the default flexible fill behavior.
 | --- | --- |
 | `empty-state` | Replaces the default empty state after a successful empty first block. |
 | `error-state` | Replaces the default visible error state when `error` is true. |
+| `[columnKey]` | Renders custom cell content for the column matching `header.key`. See [Custom Cell Content](#custom-cell-content). |
 
 ## Exports
 
@@ -233,6 +264,9 @@ should opt out of the default flexible fill behavior.
 - `TableDataGridMode`
 - `TableDataGridState`
 - `TableDataGridStatePayload`
+- `TableDataGridRowClickPayload`
+- `TableDataGridCellClickPayload`
+- `TableDataGridCellSlotProps`
 - `TableDataGridHeader`
 - `TableDataGridInfiniteFetcherParams`
 - `TableDataGridFetcherResult`

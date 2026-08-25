@@ -32,7 +32,9 @@
           :headers="headers"
           :page-size="pageSize"
           :refresh-key="refreshKey"
+          @cell:click="handleCellClick"
           @grid:ready="handleGridReady"
+          @row:click="handleRowClick"
           @state="handleState"
         >
           <template #empty-state>
@@ -48,6 +50,26 @@
               message="Turn off the host error state to show the grid again."
               title="Sandbox error state"
             />
+          </template>
+
+          <template #status="{ rowValue }">
+            <KBadge :appearance="getStatusBadgeAppearance(rowValue)">
+              {{ rowValue }}
+            </KBadge>
+          </template>
+
+          <template #latency="{ rowValue }">
+            {{ rowValue }}ms
+          </template>
+
+          <template #actions="{ row }">
+            <KButton
+              appearance="tertiary"
+              size="small"
+              @click="handleActionClick(row)"
+            >
+              View
+            </KButton>
           </template>
         </TableDataGrid>
       </section>
@@ -227,16 +249,19 @@
 
 <script setup lang="ts">
 import type {
+  TableDataGridCellClickPayload,
   TableDataGridFetcher,
   TableDataGridHeader,
   TableDataGridInfiniteFetcherParams,
   TableDataGridStatePayload,
 } from '../src'
 import type { GridApi } from 'ag-grid-community'
+import type { BadgeAppearance } from '@kong/kongponents'
 import { computed, ref } from 'vue'
 import { TableDataGrid } from '../src'
 
 type SandboxRow = {
+  actions: string
   description: string
   id: string
   name: string
@@ -297,15 +322,20 @@ const collapsedSections = ref<Record<SandboxSectionId, boolean>>({
 const headers: Array<TableDataGridHeader<SandboxRow>> = [
   { key: 'name', label: 'Name', minWidth: 220 },
   { key: 'description', label: 'Description', width: 240 },
+  // Rendered via the `#status` slot below instead of the raw column value.
   { key: 'status', label: 'Status', minWidth: 140 },
+  // Rendered via the `#latency` slot below instead of the raw column value.
   { key: 'latency', label: 'Latency', minWidth: 140 },
   { key: 'region', label: 'Region', minWidth: 140 },
+  // `disableRowClick` keeps the "View" button's click from also firing `row:click`.
+  { key: 'actions', label: 'Actions', disableRowClick: true, width: 120 },
 ]
 
 const generatedRows: SandboxRow[] = Array.from({ length: 140 }, (_, index) => {
   const rowNumber = index + 1
 
   return {
+    actions: '',
     description: `This deliberately long description for Service ${rowNumber} demonstrates cell truncation and the full-content tooltip on hover.`,
     id: `row-${rowNumber}`,
     latency: 35 + ((index * 29) % 800),
@@ -435,10 +465,11 @@ const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor })
     await wait(fetchDelayMs.value)
   }
 
+  const rows = activeRows.value
   const offset = getOffsetFromCursor(cursor)
-  const data = activeRows.value.slice(offset, offset + pageSize)
+  const data = rows.slice(offset, offset + pageSize)
   const nextOffset = offset + data.length
-  const hasMore = nextOffset < activeRows.value.length
+  const hasMore = nextOffset < rows.length
   const responseCursor = hasMore ? createCursor(nextOffset) : undefined
 
   recordFetch({
@@ -462,6 +493,28 @@ const handleGridReady = (api: GridApi<SandboxRow>) => {
   logEvent('grid:ready', {
     displayedRows: api.getDisplayedRowCount(),
   })
+}
+
+const statusBadgeAppearances: Record<string, BadgeAppearance> = {
+  Active: 'success',
+  Deploying: 'warning',
+  Inactive: 'neutral',
+}
+
+const getStatusBadgeAppearance = (status: unknown): BadgeAppearance => (
+  statusBadgeAppearances[String(status)] ?? 'neutral'
+)
+
+const handleRowClick = (row: SandboxRow) => {
+  logEvent('row:click', row)
+}
+
+const handleCellClick = (payload: TableDataGridCellClickPayload<SandboxRow>) => {
+  logEvent('cell:click', payload)
+}
+
+const handleActionClick = (row: SandboxRow) => {
+  logEvent('actions:view', row)
 }
 
 const refreshAfterControlChange = () => {

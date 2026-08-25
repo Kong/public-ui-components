@@ -35,6 +35,7 @@
       :cache-block-size="pageSize"
       class="table-data-grid-grid"
       :column-defs="columnDefs"
+      :context="gridContext"
       :datasource="datasource"
       :default-col-def="defaultColDef"
       :infinite-initial-row-count="1"
@@ -42,18 +43,26 @@
       row-model-type="infinite"
       :suppress-cell-focus="true"
       :theme="themeQuartz"
+      @cell-clicked="onCellClick"
       @grid-ready="onGridReady"
+      @row-clicked="onRowClick"
     />
   </div>
 </template>
 
 <script setup lang="ts" generic="Row extends object">
 import type {
+  TableDataGridCellClickPayload,
+  TableDataGridCellSlotProps,
   TableDataGridFetcher,
   TableDataGridHeader,
   TableDataGridStatePayload,
 } from '../types'
-import type { ColDef, GridReadyEvent } from 'ag-grid-community'
+import type {
+  ColDef,
+  GridReadyEvent,
+  RowClickedEvent,
+} from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
 import {
   AllCommunityModule,
@@ -61,10 +70,11 @@ import {
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed } from 'vue'
-import TableDataGridCellRenderer from './TableDataGridCellRenderer.vue'
+import { computed, toRef, useSlots } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
+import { useTableDataGridColumnDefs } from '../composables/useTableDataGridColumnDefs'
+import { useTableDataGridInteractions } from '../composables/useTableDataGridInteractions'
 import useI18n from '../composables/useI18n'
 import useFetchState from '../composables/useFetchState'
 
@@ -87,36 +97,36 @@ const {
 defineSlots<{
   'empty-state': () => unknown
   'error-state': () => unknown
+  [columnKey: string]: (props: TableDataGridCellSlotProps<Row>) => unknown
 }>()
 
 const emit = defineEmits<{
   (e: 'grid:ready', api: GridReadyEvent<Row>['api']): void
   (e: 'state', payload: TableDataGridStatePayload): void
+  (e: 'row:click', row: Row, event: RowClickedEvent<Row>): void
+  (e: 'cell:click', payload: TableDataGridCellClickPayload<Row>): void
 }>()
 
 const { i18n: { t } } = useI18n()
 
+const slots = useSlots()
+
+const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
+  headers: toRef(() => headers),
+  slots,
+})
+
+const { onCellClick, onRowClick } = useTableDataGridInteractions<Row>({
+  cellClick: payload => emit('cell:click', payload),
+  headers: toRef(() => headers),
+  rowClick: (row, event) => emit('row:click', row, event),
+})
+
 const defaultColDef: ColDef<Row> = {
-  cellRenderer: TableDataGridCellRenderer,
   resizable: false,
   sortable: false,
   suppressMovable: true,
 }
-
-const columnDefs = computed<Array<ColDef<Row>>>(() => headers.map((header) => {
-  const columnDef: ColDef<Row> = {
-    colId: header.key,
-    // Headers without explicit width constraints should fill available space.
-    flex: !header.width && !header.maxWidth ? 1 : undefined,
-    headerName: header.label,
-    maxWidth: header.maxWidth,
-    minWidth: header.minWidth,
-    valueGetter: params => params.data?.[header.key],
-    width: header.width,
-  }
-
-  return columnDef
-}))
 
 const resetKey = computed(() => [fetcher, pageSize, refreshKey])
 const {
