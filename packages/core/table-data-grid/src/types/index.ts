@@ -23,6 +23,7 @@ export type TableDataGridCellSlotProps<Row extends object = TableDataGridRow> = 
   column: TableDataGridHeader<Row>
   rowIndex: number
   selected: boolean
+  /** Forces AG Grid to re-render this cell. */
   refreshCell: () => void
 }
 
