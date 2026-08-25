@@ -211,6 +211,8 @@ const { sortAlpha, objectsAreEqual } = useHelpers()
 // Latest version of Plugin Select
 const props = withDefaults(defineProps<{
   config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig
+  /** Plugins that should not be displayed */
+  ignoredPlugins?: string[]
   disabledPlugins?: DisabledPlugin
   highlightedPluginIds?: string[]
   customPluginSupport?: CustomPluginSupportLevel
@@ -222,6 +224,7 @@ const props = withDefaults(defineProps<{
   canReadClonedPlugin?: () => boolean | Promise<boolean>
   canEditClonedPlugin?: () => boolean | Promise<boolean>
 }>(), {
+  ignoredPlugins: () => [],
   availableOnServer: true,
   customPluginSupport: 'none',
   canDeleteCustomPlugin: async () => true,
@@ -418,7 +421,8 @@ const buildPluginList = (): PluginCardList => {
       ...allCustomPluginNames,
     ],
   )]
-    // Used to filter out ignored plugins, seems we don't need it anymore
+    // Filter out ignored plugins
+    .filter((plugin: string) => !props.ignoredPlugins.includes(plugin))
     // Filter plugins by entity type if adding scoped plugin
     .filter((plugin: string) => {
       // For Global Plugins
@@ -534,6 +538,12 @@ const buildPluginList = (): PluginCardList => {
 // rebuild the list
 watch(() => props.disabledPlugins, (val, oldVal) => {
   if (!objectsAreEqual(val || {}, oldVal || {}) && !isLoading.value) {
+    pluginsList.value = buildPluginList()
+  }
+})
+
+watch(() => props.ignoredPlugins, (val, oldVal) => {
+  if (!objectsAreEqual(val, oldVal) && !isLoading.value) {
     pluginsList.value = buildPluginList()
   }
 })
