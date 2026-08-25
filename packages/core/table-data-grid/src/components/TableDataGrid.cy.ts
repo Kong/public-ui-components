@@ -869,6 +869,7 @@ describe('<TableDataGrid />', () => {
     cy.getTestId('status-row-index').should('contain.text', '0')
     cy.getTestId('status-selected').should('contain.text', 'false')
 
+    // Mutate the row out-of-band, then use refreshCell to force the stale cell to re-read it.
     cy.then(() => {
       statusRow.status = 'Suspended'
     })
@@ -931,6 +932,7 @@ describe('<TableDataGrid />', () => {
       value: rows[0].status,
     })
 
+    // Non-disabled column: row:click should still fire normally.
     cy.contains('.ag-cell', 'Gateway service').click()
     cy.get('@rowClick').should((stub) => {
       expect(stub.callCount).to.equal(1)
