@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.3.13...%40kong-ui-public%2Ftable-data-grid%400.4.0) (2026-08-25)
+
+### Features
+
+* **table-data-grid:** custom rendering and row click ([#3713](https://github.com/Kong/public-ui-components/issues/3713)) ([89f6865](https://github.com/Kong/public-ui-components/commit/89f686578b43815424576c140143abf5b3e59287))
+
+
 ## [0.3.13](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.3.12...%40kong-ui-public%2Ftable-data-grid%400.3.13) (2026-08-22)
 
 ### Bug Fixes
