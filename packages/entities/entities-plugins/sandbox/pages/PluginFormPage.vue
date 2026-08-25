@@ -166,10 +166,10 @@ useProvideExperimentalFreeForms([
   'cors',
   'datadog',
   'degraphql',
+  'entitlement-enforcement',
   'exit-transformer',
   'file-log',
   'forward-proxy',
-  'governance',
   'graphql-proxy-cache-advanced',
   'graphql-rate-limiting-advanced',
   'grpc-gateway',
@@ -275,7 +275,7 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   principalsDirectoryName: 'my-directory', // Sandbox: simulate host-resolved directory name
   principalsCreationGuideVisible: false, // Sandbox: false = principals exist; true = show creation guide
   metering: {
-    // Endpoint the governance FeatureSelectField fetches the OpenMeter features list from
+    // Endpoint the Entitlement Enforcement FeatureSelectField fetches the OpenMeter features list from
     featuresEndpoint: '/us/kong-api/v3/openmeter/features',
     // canListFeatures: false,
   },
@@ -295,7 +295,7 @@ const kongManagerConfig = computed<KongManagerPluginFormConfig>(() => ({
   viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer_group', params: { id: consumerGroupId } }),
   viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
   deckCalloutPreferenceKey: enableDeckCallout.value ? 'kong-manager-entities-plugin-form-deck-callout-sandbox' : undefined,
-  // Governance isn't configurable in Kong Manager yet (the form shows a notice), so no metering config is needed.
+  // Entitlement Enforcement isn't configurable in Kong Manager yet (the form shows a notice), so no metering config is needed.
 }))
 
 const onUpdate = (payload: Record<string, any>) => {
@@ -304,7 +304,7 @@ const onUpdate = (payload: Record<string, any>) => {
   router.push({ name: 'list-plugin' })
 }
 
-// Host app owns create-entity flows (e.g. the governance "Create feature" action)
+// Host app owns create-entity flows (e.g. the Entitlement Enforcement "Create feature" action)
 const onCreateEntity = (payload: EntityCreateEvent) => {
   console.log('create entity', payload)
 }

@@ -463,7 +463,7 @@ const isEditing = computed(() => isEditingRef?.value ?? false)
 // Read/write formData directly instead of useFormData(): the latter provides its own
 // field path to descendants, which would corrupt relative path resolution for the
 // `<Field name="config.issuer">` and slot content rendered below this component.
-const { formData, getLabelAttributes, getEmptyOrDefault } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
+const { formData, getLabelAttributes, getEmptyOrDefault, getEmptyValue } = useFormShared<FreeFormPluginData<OidcConfigSubset>>()
 
 const issuer = computed<string | null>({
   get: () => formData.config?.issuer ?? null,
@@ -724,9 +724,9 @@ function applyAuthMethodsForMode(mode: PrincipalsMode) {
 function handleModeChange(newMode: PrincipalsMode) {
   // Clear the mode-specific credential fields either way
   if (formData.config) {
-    formData.config.client_id = null
-    formData.config.client_secret = null
-    formData.config.issuer = null
+    formData.config.client_id = getEmptyValue()
+    formData.config.client_secret = getEmptyValue()
+    formData.config.issuer = getEmptyValue()
   }
 
   // Principal lookup is opt-in (the "Use principal lookup" toggle) in both modes, so it

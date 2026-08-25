@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/app-layout",
-  "version": "4.13.14",
+  "version": "4.13.17",
   "type": "module",
   "main": "./dist/app-layout.umd.js",
   "module": "./dist/app-layout.es.js",
@@ -45,14 +45,14 @@
   },
   "dependencies": {
     "@kong/icons": "^1.62.1",
-    "@vueuse/core": "^14.3.0",
+    "@vueuse/core": "^14.4.0",
     "focus-trap": "^8.2.1",
     "focus-trap-vue": "^4.1.0",
     "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
-    "@kong/design-tokens": "3.2.7",
-    "@kong/kongponents": "9.64.3",
+    "@kong/design-tokens": "3.3.0",
+    "@kong/kongponents": "9.64.10",
     "@types/lodash.clonedeep": "^4.5.9",
     "vue": "^3.5.35",
     "vue-router": "^5.2.0"

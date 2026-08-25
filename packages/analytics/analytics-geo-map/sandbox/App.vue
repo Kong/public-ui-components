@@ -65,6 +65,17 @@
               Reset bounds
             </KButton>
           </div>
+
+          <div class="theme-toggle">
+            <KLabel>Theme</KLabel>
+            <KSegmentedControl
+              v-model="theme"
+              :options="[
+                { label: 'Day', value: 'classic-day' },
+                { label: 'Night', value: 'classic-night' },
+              ]"
+            />
+          </div>
         </div>
       </div>
     </KCard>
@@ -91,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, provide, ref, watch } from 'vue'
 import type { MetricUnits } from '../src'
 import { AnalyticsGeoMap, exploreResultToCountryMetrics } from '../src'
 import CodeText from './CodeText.vue'
@@ -109,6 +120,14 @@ function isValidJson(str: string): boolean {
   return true
 }
 
+
+const theme = ref<'classic-day' | 'classic-night'>('classic-day')
+
+watch(theme, (newTheme) => {
+  document.documentElement.setAttribute('data-kui-theme', newTheme)
+}, { immediate: true })
+
+provide('app:konnectColorMode', computed<'light' | 'dark'>(() => theme.value === 'classic-night' ? 'dark' : 'light'))
 
 const items = ref([
   { label: 'US', value: 'US' },
@@ -204,8 +223,8 @@ const importedCountryMetrics = computed(() => {
 
   .row {
     display: flex;
-    gap: 2em;
-    margin-top: 1em;
+    gap: 10px;
+    margin-top: 4px;
 
     .select-countries {
       width: 50%;
@@ -214,8 +233,12 @@ const importedCountryMetrics = computed(() => {
 
   .map-container {
     height: 700px;
-    margin-top: 1em;
+    margin-top: 4px;
     width: 900px;
+  }
+
+  .theme-toggle {
+    margin-top: 4px;
   }
 }
 </style>

@@ -3,6 +3,7 @@ import Form from '../shared/Form.vue'
 import MapField from '../shared/MapField.vue'
 import StringArrayField from '../shared/StringArrayField.vue'
 import type { FormSchema, UnionFieldSchema } from 'src/types/plugins/form-schema'
+import type { FormConfig } from '../shared/types'
 
 const FIELD_NAME = 'kv'
 
@@ -37,6 +38,7 @@ function mountMapForm(options: {
   multiline?: boolean
   oneLine?: boolean
   slotTemplate?: string
+  config?: FormConfig
 }) {
   const useCustomMapField = options.multiline || options.oneLine || options.slotTemplate
 
@@ -54,6 +56,7 @@ function mountMapForm(options: {
     props: {
       schema: options.schema ?? createMapSchema(),
       data: options.data,
+      config: options.config,
       onChange: cy.spy().as('onChangeSpy'),
     },
     ...(useCustomMapField
@@ -284,6 +287,54 @@ describe('MapField', () => {
       cy.getTestId(`ff-map-remove-btn-${FIELD_NAME}.0`).click()
 
       assertLastChange({ kv: null })
+    })
+
+    it('should emit {} instead of the default when removing all entries from required map with a default', () => {
+      mountMapForm({
+        schema: createMapSchema({ required: true, defaultValue: { preset: 'value' } }),
+        data: { kv: { foo: 'bar' } },
+      })
+
+      cy.getTestId(`ff-map-remove-btn-${FIELD_NAME}.0`).click()
+
+      assertLastChange({ kv: {} })
+    })
+
+    it('should emit null instead of the default when removing all entries from optional map with a default', () => {
+      mountMapForm({
+        schema: createMapSchema({ defaultValue: { preset: 'value' } }),
+        data: { kv: { foo: 'bar' } },
+      })
+
+      cy.getTestId(`ff-map-remove-btn-${FIELD_NAME}.0`).click()
+
+      assertLastChange({ kv: null })
+    })
+  })
+
+  describe('emptyFieldValue config', () => {
+    it('should emit undefined when removing all entries from optional map with emptyFieldValue: undefined', () => {
+      mountMapForm({
+        schema: createMapSchema(),
+        data: { kv: { foo: 'bar' } },
+        config: { emptyFieldValue: 'undefined' },
+      })
+
+      cy.getTestId(`ff-map-remove-btn-${FIELD_NAME}.0`).click()
+
+      assertLastChange({ kv: undefined })
+    })
+
+    it('should still emit {} when removing all entries from required map with emptyFieldValue: undefined', () => {
+      mountMapForm({
+        schema: createMapSchema({ required: true }),
+        data: { kv: { foo: 'bar' } },
+        config: { emptyFieldValue: 'undefined' },
+      })
+
+      cy.getTestId(`ff-map-remove-btn-${FIELD_NAME}.0`).click()
+
+      assertLastChange({ kv: {} })
     })
   })
 

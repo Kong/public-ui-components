@@ -62,7 +62,7 @@ import { useDebouncedFilter } from '@kong-ui-public/entities-shared'
 
 import endpoints from '../../../../plugins-endpoints'
 import { useField, useFieldAttrs } from '../../shared/composables'
-import type { BaseFieldProps } from '../../shared/types'
+import type { BaseFieldProps, EmptyValue } from '../../shared/types'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../../types'
 
 interface CertificateItem extends MultiselectItem {
@@ -78,7 +78,7 @@ interface CaCertificatesFieldProps extends BaseFieldProps {
 
 const props = defineProps<CaCertificatesFieldProps>()
 
-const { value: fieldValue, hide, ...field } = useField<string[] | null>(toRef(() => props.name))
+const { value: fieldValue, hide, ...field } = useField<string[] | EmptyValue>(toRef(() => props.name))
 
 const fieldAttrs = useFieldAttrs(field.path!, toRef(() => props))
 
@@ -98,7 +98,7 @@ function debouncedQueryChange(query: string) {
 const selectedIds = computed<string[]>({
   get: () => fieldValue!.value ?? [],
   set: (value) => {
-    fieldValue!.value = value.length ? value : null
+    fieldValue!.value = value.length ? value : field.emptyValue!.value
   },
 })
 

@@ -41,7 +41,7 @@ import EnhancedInput from './EnhancedInput.vue'
 import * as utils from './utils'
 import { useField, useFieldAttrs } from './composables'
 import type { SetFieldSchema } from '../../../types/plugins/form-schema'
-import type { BaseFieldProps } from './types'
+import type { BaseFieldProps, EmptyValue } from './types'
 
 defineOptions({
   inheritAttrs: false,
@@ -63,10 +63,10 @@ const {
   ...props
 } = defineProps<StringFieldProps>()
 const emit = defineEmits<{
-  'update:modelValue': [value: string[] | null]
+  'update:modelValue': [value: string[] | EmptyValue]
 }>()
 
-const { value: fieldValue, hide, ...field } = useField<string[] | null, SetFieldSchema>(toRef(() => name))
+const { value: fieldValue, hide, ...field } = useField<string[] | EmptyValue, SetFieldSchema>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const noEmptyArray = computed(() => field.schema?.value?.len_min && field.schema.value.len_min > 0)
 
@@ -83,7 +83,7 @@ function strToArr(str: string) {
 function handleUpdate(value: string) {
   rawInputValue.value = value
   const values = strToArr(value)
-  const finalValue = (!values.length && noEmptyArray.value) ? null : values
+  const finalValue = (!values.length && noEmptyArray.value) ? field.emptyValue!.value : values
   fieldValue!.value = finalValue
   emit('update:modelValue', finalValue)
 }

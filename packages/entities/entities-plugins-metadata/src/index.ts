@@ -729,9 +729,9 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
     gatewayVersion: '3.14',
   },
-  governance: {
-    name: 'Governance',
-    description: 'Enforce feature-level access control and credit-balance gating for API consumers. Integrates with Konnect Metering & Billing to allow or deny requests based on customer entitlements.',
+  'entitlement-enforcement': {
+    name: 'Entitlement Enforcement',
+    description: 'Allow or deny API requests based on customer entitlements. Checks feature access, usage limits, and credit balance against Metering & Billing before routing traffic.',
     group: PluginGroup.MONETIZATION,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
     gatewayVersion: '3.16',

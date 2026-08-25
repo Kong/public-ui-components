@@ -1,7 +1,7 @@
-import GovernanceForm from './GovernanceForm.vue'
+import EntitlementEnforcementForm from './EntitlementEnforcementForm.vue'
 import { definePluginConfig } from '../../shared/define-plugin-config'
 
 export default definePluginConfig({
   experimental: true,
-  component: GovernanceForm,
+  component: EntitlementEnforcementForm,
 })

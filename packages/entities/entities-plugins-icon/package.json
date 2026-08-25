@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins-icon",
-  "version": "1.7.2",
+  "version": "1.8.0",
   "type": "module",
   "main": "./dist/entities-plugins-icon.umd.js",
   "module": "./dist/entities-plugins-icon.es.js",
@@ -57,7 +57,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "1000KB"
+    "errorLimit": "1100KB"
   },
   "peerDependencies": {
     "@kong-ui-public/entities-plugins-metadata": "workspace:^",

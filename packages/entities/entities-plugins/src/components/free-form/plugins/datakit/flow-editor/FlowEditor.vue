@@ -65,7 +65,8 @@ function onChange(configNodes: ConfigNode[], uiData: DatakitUIData, resources: D
     nextFormData.partials = [{ id: partialId }]
   } else if (nextFormData.partials) {
     // clear partials by setting to null, because plugin entity form **merge** free-form data and VFG data
-    // so undefined won't clear existing partials
+    // so undefined won't clear existing partials. Intentionally NOT
+    // `FormConfig.emptyFieldValue`-aware, for the same reason.
     nextFormData.partials = null
   }
   setValue(nextFormData)

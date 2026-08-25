@@ -170,6 +170,18 @@ describe('PrincipalLookupSettings', () => {
       expect((emptyWrapper.vm as any).getTokenClaimInputValue()).toBe('sub')
     })
 
+    it('does not pre-fill the claim when editing a record that has none', () => {
+      const onModelUpdated = vi.fn()
+      const wrapper = mountComponent(
+        { 'config-principals-principal_claim': null },
+        { isEditing: true, onModelUpdated },
+      )
+
+      expect(wrapper.props('formModel')['config-principals-principal_claim']).toBeNull()
+      expect((wrapper.vm as any).getTokenClaimInputValue()).toBe('')
+      expect(onModelUpdated).not.toHaveBeenCalled()
+    })
+
     it('does not re-prefill after the user explicitly clears the field', () => {
       const wrapper = mountComponent({ 'config-principals-principal_claim': null })
 

@@ -59,11 +59,11 @@ import {
   type MultiselectProps,
 } from '@kong/kongponents'
 import { useField, useFieldAttrs, useFormShared } from './composables'
-import type { BaseFieldProps } from './types'
+import type { BaseFieldProps, EmptyValue } from './types'
 
 type MultipleSelectProps = { multiple: true } & MultiselectProps<string, false>
 type SingleSelectProps = { multiple?: false } & SelectProps<string, false>
-type EnumValue = number | string | string[] | null
+type EnumValue = number | string | string[] | EmptyValue
 
 type EnumFieldProps = {
   labelAttributes?: LabelAttributes
@@ -89,8 +89,13 @@ const { value: fieldValue, hide, ...field } = useField<EnumValue>(
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 function normalizeValue(value: EnumValue): EnumValue {
-  if (isMultiple.value && Array.isArray(value) && value.length === 0 && !fieldAttrs.value.required) {
-    return null
+  // Required fields are already correctly shaped here (`[]` for a cleared
+  // multiselect, from KMultiselect's own v-model output) — no forcing needed.
+  if (fieldAttrs.value.required) return value
+
+  const isEmptyMultiselect = isMultiple.value && Array.isArray(value) && value.length === 0
+  if (value == null || value === '' || isEmptyMultiselect) {
+    return field.emptyValue!.value
   }
 
   return value

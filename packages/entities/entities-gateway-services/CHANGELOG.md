@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.27.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.27.5...%40kong-ui-public%2Fentities-gateway-services%403.27.6) (2026-08-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.27.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.27.4...%40kong-ui-public%2Fentities-gateway-services%403.27.5) (2026-08-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.27.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.27.3...%40kong-ui-public%2Fentities-gateway-services%403.27.4) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.27.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.27.2...%40kong-ui-public%2Fentities-gateway-services%403.27.3) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3731](https://github.com/Kong/public-ui-components/issues/3731)) ([79e2e2d](https://github.com/Kong/public-ui-components/commit/79e2e2d53fdd6362c899464ee44a27bdf5370a14))
+
+
+## [3.27.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.27.1...%40kong-ui-public%2Fentities-gateway-services%403.27.2) (2026-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.27.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-gateway-services%403.27.0...%40kong-ui-public%2Fentities-gateway-services%403.27.1) (2026-08-22)
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#3723](https://github.com/Kong/public-ui-components/issues/3723)) ([df7e955](https://github.com/Kong/public-ui-components/commit/df7e95536ba2f2ea8d46fa1de541b163b5b1c126))
+
+
+# [3.27.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.26.1...@kong-ui-public/entities-gateway-services@3.27.0) (2026-08-21)
+
+
+### Features
+
+* **entities-gateway-services:** don't block delete on the force-delete checkbox ([#3720](https://github.com/Kong/public-ui-components/issues/3720)) ([a8f6fbc](https://github.com/Kong/public-ui-components/commit/a8f6fbc55a7a347d893c36afac4cb8d663e2e8d5))
+
+
+
+
+
 ## [3.26.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.26.0...@kong-ui-public/entities-gateway-services@3.26.1) (2026-08-18)
 
 

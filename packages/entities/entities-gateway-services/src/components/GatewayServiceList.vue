@@ -231,7 +231,6 @@
 
     <EntityDeleteModal
       :action-pending="isDeletePending"
-      :confirm-disabled="requiresForceDelete && !forceDeleteConfirmed"
       :description="deleteDescription"
       :entity-name="gatewayServiceToBeDeleted && (gatewayServiceToBeDeleted.name || gatewayServiceToBeDeleted.id)"
       :entity-type="EntityTypes.GatewayService"
@@ -247,6 +246,12 @@
       >
         <p v-if="relatedEntitiesCheckFailed || !requiresForceDelete">
           {{ relatedEntitiesMessage }}
+        </p>
+        <p
+          v-else
+          class="force-delete-notice"
+        >
+          {{ t('actions.delete.related_entities.force_delete_notice') }}
         </p>
         <KCheckbox
           v-if="requiresForceDelete"
@@ -819,5 +824,10 @@ onBeforeMount(async () => {
   .kong-ui-entity-filter-input {
     margin-right: var(--kui-space-50, $kui-space-50);
   }
+}
+
+.force-delete-notice {
+  // Override KModal's own `.modal-content p` margin reset
+  margin-bottom: var(--kui-space-50, $kui-space-50) !important;
 }
 </style>

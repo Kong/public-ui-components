@@ -197,6 +197,14 @@ const { options } = composables.useLineChartOptions({
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
 
+const isValidZoomRange = (range?: { start: Date, end: Date }) => {
+  if (!range) {
+    return false
+  }
+
+  return range.end.getTime() > range.start.getTime()
+}
+
 /**
      * When in Preview mode, Chart and Legend are vertically stacked, and the
      * Legend list items are allowed to spread horizontally.
@@ -265,15 +273,26 @@ const handleDragSelect = (event: Event) => {
   event.preventDefault()
   event.stopPropagation()
   const { xStart, xEnd } = (event as CustomEvent<DragSelectEventDetail>).detail
-  if (xStart && xEnd) {
-    zoomTimeRange.value = {
-      start: new Date(xStart),
-      end: new Date(xEnd),
-      type: 'absolute',
-    }
-    tooltipData.interactionMode = 'zoom-interactive'
 
-    emit('select-chart-range', zoomTimeRange.value)
+  const selectedRange: AbsoluteTimeRangeV4 = {
+    start: new Date(xStart),
+    end: new Date(xEnd),
+    type: 'absolute',
+  }
+
+  // If the range is empty or invalid, this will cancel the event entirely.
+  if (!isValidZoomRange(selectedRange)) {
+    zoomTimeRange.value = undefined
+    resetTooltipState(false)
+
+    return
+  }
+
+  zoomTimeRange.value = selectedRange
+  tooltipData.interactionMode = 'zoom-interactive'
+
+  if (selectedRange) {
+    emit('select-chart-range', selectedRange)
   }
 }
 
@@ -285,12 +304,10 @@ const handleDragMove = (event: Event) => {
 
   const { xStart, xEnd } = (event as CustomEvent<DragSelectEventDetail>).detail
 
-  if (xStart && xEnd) {
-    zoomTimeRange.value = {
-      start: new Date(xStart),
-      end: new Date(xEnd),
-      type: 'absolute',
-    }
+  zoomTimeRange.value = {
+    start: new Date(xStart),
+    end: new Date(xEnd),
+    type: 'absolute',
   }
 }
 
