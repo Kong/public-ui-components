@@ -1,14 +1,16 @@
-# lua-schema-to-zod (POC)
+# lua-schema-to-zod
 
 Compiles a Kong plugin config schema - the JSON the Admin API dumps for a
 plugin's Lua schema (`GET /schemas/plugins/:name`) - into a [Zod](https://zod.dev)
 schema, so a frontend can validate plugin config at runtime without a round
 trip to the gateway.
 
-**Status: proof of concept.** Not wired into the `free-form` form system, not
-used by any production code path. It exists to answer "is this feasible, and
-how far can it get" - see [Scope](#scope) and [Limitations](#limitations)
-below before reaching for it in real UI.
+Used by the `free-form` plugin config form's code editor
+(`shared/CodeEditor.vue`) to show inline validation markers as you type, and
+to decide whether it's currently safe to switch back to the visual form (see
+[Compat mode](#compat-mode)). It does not replace server-side validation -
+see [Scope](#scope) and [Limitations](#limitations) for exactly what it
+covers and what it deliberately doesn't.
 
 ## Usage
 
@@ -16,7 +18,7 @@ below before reaching for it in real UI.
 import { luaSchemaToZod } from './index'
 
 // `schema` is exactly what the Admin API returns for a plugin's schema
-const zodSchema = luaSchemaToZod(schema)
+const zodSchema = luaSchemaToZod(schema) // same as luaSchemaToZod(schema, 'strict')
 
 const result = zodSchema.safeParse({ config: { minute: 100, policy: 'redis', redis: {} } })
 if (!result.success) {
@@ -26,7 +28,48 @@ if (!result.success) {
 
 `compileField` is also exported if you need to compile a single field
 definition in isolation (e.g. for a one-off input outside a full plugin
-config).
+config); it takes the same optional mode argument as `luaSchemaToZod`.
+
+## Compat mode
+
+`luaSchemaToZod(schema, 'compat')` compiles a second, deliberately relaxed
+schema that answers a different question than `'strict'` does. `'strict'`
+asks "is this config fully valid". `'compat'` asks "would rendering this
+value in the visual form break or show something nonsensically blank" - the
+question that matters when deciding whether it's currently safe to switch
+from the code editor back to the form, without the form crashing or quietly
+showing garbage.
+
+| Kept strict in compat mode (a wrong value here breaks or visibly corrupts rendering) | Relaxed in compat mode (a wrong value here just displays as-is, and the form's own field-level validation can flag it normally) |
+|---|---|
+| `required` / explicit `null` - a missing or null value is completely normal for a form field to show empty, so `required` never applies in compat mode; every field is treated as `.nullable().optional()` | - |
+| Type shape: `record` must be an object, `array`/`set` must be an array, `map` must be an object, `foreign`/`referenceable` must match one of their allowed shapes | `uuid: true` (a non-UUID string still renders fine in a text input) |
+| `one_of` (string/number/boolean/set) - Field.vue renders these as a `<select>`; a value outside the option list renders that select empty, a visible broken state, not just an invalid one | `not_one_of`, `len_min`/`len_max`, `between`, `gt`, `match`/`match_all`/`match_none`/`match_any`, `starts_with` - all pure content/business-rule checks that don't affect whether the value can be displayed |
+| - | `integer` (a float in an "integer" field still displays fine in a number input) |
+
+`elements` (array/set), `keys`/`values` (map), and `fields` (record) are all
+recompiled recursively under the *same* mode - a compat-mode array still
+gets compat-mode items, not strict ones.
+
+### File layout
+
+Unlike the table above might suggest, this isn't one compiler with
+`mode === 'strict'` checks sprinkled through it. `strict` and `compat` are
+two independent, self-contained compilers, in their own files:
+
+- [`compile-strict.ts`](./compile-strict.ts) - the full DSL
+- [`compile-compat.ts`](./compile-compat.ts) - the relaxed rules above
+- [`types.ts`](./types.ts) - the `LuaField`/`LuaFormSchema`/`CompileMode`
+  types shared by both (no behavior, just shapes)
+- [`index.ts`](./index.ts) - the public `luaSchemaToZod`/`compileField`,
+  which just pick one of the two compilers by `mode`
+
+This is the same shape as the `datakit` plugin's `schema/compat.ts` +
+`schema/strict.ts` pair, for the same reason: reading either file top to
+bottom tells the whole story for that mode, with no branching on mode mixed
+into shared logic. The two files necessarily duplicate some structure (type
+dispatch, the recursion shape) - that's an intentional trade, not an
+oversight.
 
 ## Scope
 
@@ -53,9 +96,35 @@ Every non-`required: true` field is both nullable and optional, not just
 optional: Kong's own stored/returned plugin config represents "not set" as an
 explicit `null` about as often as by omitting the key, so a schema that only
 accepted `undefined` would reject a lot of real, valid config payloads. A
-field with a `default` still accepts an explicit `null` as-is - the default
-only fills in for a genuinely missing key, matching Kong's own behavior of
-not overriding an explicit null with the field's default.
+non-required field with a `default` still accepts an explicit `null` as-is -
+the default only fills in for a genuinely missing key, matching Kong's own
+behavior of not overriding an explicit null with the field's default.
+
+A `required: true` field is the opposite on both counts, and says so
+explicitly - by name - rather than falling through to whatever generic
+message its compiled type happens to produce. Every message quotes the
+actual field name (the object key at that nesting level; an array's elements
+are labeled `"<field> item"`, a map's `"<field> key"` / `"<field> value"`)
+rather than a generic "this field":
+
+- missing (`undefined`) -> `"redis" is required`, even if the field also has
+  a `default` (a default only fills in a missing value - it doesn't change
+  whether the field is required)
+- explicit `null` -> `"redis" cannot be null`
+- present and non-null, but the wrong shape -> the type's own message (or the
+  compiler's custom one - see `foreign`/`referenceable` below)
+
+This matters most for `foreign` and `referenceable` fields, both of which
+compile to a `z.union(...)`: Zod reports a bare `"Invalid input"` at the top
+level whenever every branch of a union fails, with the real reason buried
+inside `issue.errors` (which nothing here unpacks). Left alone, a missing or
+`null` required `foreign`/`referenceable` field would say nothing more than
+`"Invalid input"`. The required/null check above runs *before* the union is
+ever evaluated, so those two common cases get a real, named message
+regardless of what the field's own type is; the union is also given its own
+custom `error` message naming the field (e.g. `"consumer" must be a string
+ID, or an object with an "id" property`) for the remaining case - a value
+that's present, non-null, and still the wrong shape.
 
 Anything with an unrecognized `type` or an unhandled keyword falls back to
 `z.unknown()` (or is silently ignored) with a `console.warn`, on purpose -
@@ -70,7 +139,7 @@ less," never "throws and breaks the form."
   `at_least_one_of`, `conditional`, `conditional_at_least_one_of`,
   `only_one_of`, ...) - cross-field rules. These are declarative and *could*
   be compiled into a generic `superRefine` executor (that was the original
-  "Layer 2" proposal), but it's out of scope for this POC.
+  "Layer 2" proposal), but it's out of scope here.
 - **`custom_entity_check`** and field-level **`custom_validator`** - Kong's
   Admin API strips Lua functions before serializing a schema to JSON
   (`kong/api/api_helpers.lua`: any table value of Lua type `"function"` is
@@ -111,7 +180,7 @@ it deliberately bails on:
 - any other unrecognized `%`-escape
 
 Validated against all 231 real Admin-API JSON dumps in
-`kong-konnect/gateway-schema-watcher` at the time this POC was written: every
+`kong-konnect/gateway-schema-watcher` at the time this was written: every
 schema compiled without throwing, and exactly 2 patterns (across all
 plugins) hit the bail-out path - both correctly, on constructs in the list
 above. This isn't a guarantee it'll always be that clean as Kong ships new
@@ -150,7 +219,15 @@ cd packages/entities/entities-plugins
 npx vitest run src/utils/lua-schema-to-zod/
 ```
 
-`index.spec.ts` covers specific behaviors (defaults, `between`, `one_of`,
-`starts_with` + `match_none`, vault references, graceful fallback on unknown
-types) against this package's existing `fixtures/schemas/*`. `smoke.spec.ts`
-just asserts every one of those fixtures compiles without throwing.
+Tests are split to match the file layout:
+
+- `compile-strict.spec.ts` - the full DSL (defaults, `between`, `one_of`,
+  `starts_with` + `match_none`, vault references, required/null messages,
+  graceful fallback on unknown types) against this package's existing
+  `fixtures/schemas/*`
+- `compile-compat.spec.ts` - the relaxed rules from the table above
+- `lua-pattern.spec.ts` - the Lua-pattern-to-JS-regex translator
+- `index.spec.ts` - just checks the public `luaSchemaToZod`/`compileField`
+  route to the right one of the two compilers by `mode`
+- `smoke.spec.ts` - asserts every fixture in `fixtures/schemas/*` compiles
+  without throwing (via the public API, strict mode)
