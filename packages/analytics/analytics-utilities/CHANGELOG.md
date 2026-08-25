@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.31.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.30.0...%40kong-ui-public%2Fanalytics-utilities%4012.31.0) (2026-08-25)
+
+### Features
+
+* add AI entities to API usage ([#3745](https://github.com/Kong/public-ui-components/issues/3745)) ([d84faa9](https://github.com/Kong/public-ui-components/commit/d84faa97684c402195267ba55b460d41d11076dc))
+
+
 # [12.30.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.29.0...%40kong-ui-public%2Fanalytics-utilities%4012.30.0) (2026-08-24)
 
 ### Features
