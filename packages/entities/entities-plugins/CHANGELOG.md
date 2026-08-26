@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.268.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.267.3...%40kong-ui-public%2Fentities-plugins%409.268.0) (2026-08-26)
+
+### Features
+
+* **entities-plugins:** gate plugin config scope name behind a config flag ([#3747](https://github.com/Kong/public-ui-components/issues/3747)) ([e0d369d](https://github.com/Kong/public-ui-components/commit/e0d369d923dc4e108e47f10539177b6ff62705a7))
+
+
 ## [9.267.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.267.2...%40kong-ui-public%2Fentities-plugins%409.267.3) (2026-08-26)
 
 ### Bug Fixes
