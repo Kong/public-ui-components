@@ -1056,12 +1056,22 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('principals-custom-identity-name').should('exist')
     })
 
-    it('unchecking "Use linked consumers" also unchecks consumer groups', () => {
+    it('toggles linked consumers and consumer groups independently', () => {
       mountPrincipalsForm()
 
       expandSettings()
       cy.getTestId('use-principal-lookup').click({ force: true })
       cy.getTestId('principals-match-consumer').uncheck({ force: true })
+
+      // Consumer groups stays enabled and keeps its own value
+      cy.getTestId('principals-match-consumer-groups').should('not.be.disabled').should('be.checked')
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.principals.match_consumer).to.equal(false)
+        expect(payload.config.principals.match_consumer_groups).to.equal(true)
+      })
+
+      cy.getTestId('principals-match-consumer-groups').uncheck({ force: true })
 
       lastFormChange().then((payload) => {
         expect(payload.config.principals.match_consumer).to.equal(false)
