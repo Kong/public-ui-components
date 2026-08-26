@@ -108,7 +108,7 @@
           data-testid="principals-match-consumer"
           :disabled="fieldsDisabled"
           :model-value="matchConsumer ?? false"
-          @update:model-value="handleMatchConsumerChange"
+          @update:model-value="matchConsumer = $event"
         >
           {{ t('plugins.free-form.openid-connect.lookup.match_consumer.label') }}
           <template #description>
@@ -126,7 +126,7 @@
       <div class="principals-field-group">
         <KCheckbox
           data-testid="principals-match-consumer-groups"
-          :disabled="fieldsDisabled || !matchConsumer"
+          :disabled="fieldsDisabled"
           :model-value="matchConsumerGroups ?? false"
           @update:model-value="matchConsumerGroups = $event"
         >
@@ -310,13 +310,6 @@ watch(principalClaim, (claim) => {
     tokenClaimInput.value = encodeTokenClaim(claim)
   }
 })
-
-function handleMatchConsumerChange(checked: boolean) {
-  matchConsumer.value = checked
-  if (!checked) {
-    matchConsumerGroups.value = false
-  }
-}
 
 function handleLookupMethodChange(value: string | null) {
   selectedLookupMethod.value = value ?? 'kong-identity'
