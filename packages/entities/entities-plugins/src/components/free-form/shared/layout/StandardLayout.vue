@@ -9,7 +9,23 @@
       :model-value="editorMode"
       :options="editorModeOptions"
       @update:model-value="handleEditorModeChange"
-    />
+    >
+      <template #option-label="{ option }">
+        <KTooltip :disabled="option.value !== 'code' || compatValid">
+          <template #content>
+            {{ compatMessage }}
+          </template>
+          <div class="ff-editor-mode-option-label">
+            {{ option.label }}
+            <WarningIcon
+              v-if="option.value === 'code' && !compatValid"
+              :color="`var(--kui-color-text-danger, ${KUI_COLOR_TEXT_DANGER})`"
+              :size="16"
+            />
+          </div>
+        </KTooltip>
+      </template>
+    </KSegmentedControl>
   </Teleport>
 
   <PluginConfigurationForm
@@ -205,7 +221,7 @@
       :title="t('plugins.form.sections.code_mode.title')"
     >
       <slot name="code-editor">
-        <CodeEditor />
+        <CodeEditor @compat-change="handleCompatChange" />
       </slot>
     </EntityFormBlock>
   </PluginConfigurationForm>
@@ -221,11 +237,13 @@ export interface Props<T extends FreeFormPluginData = any> extends PluginFormLay
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, inject, nextTick, ref, useAttrs, useTemplateRef } from 'vue'
+import { computed, inject, nextTick, ref, useAttrs, useTemplateRef, watch } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
 import { KCollapse, KRadio, KSegmentedControl, KTooltip } from '@kong/kongponents'
 import type { SegmentedControlOption } from '@kong/kongponents'
+import { WarningIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_DANGER } from '@kong/design-tokens'
 import { useLocalStorage } from '@vueuse/core'
 import { FEATURE_FLAGS } from '../../../../constants'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
@@ -289,16 +307,38 @@ const editorMode = computed<EditorMode>({
 
 const showEditorModeSwitcher = computed(() => enableCodeMode && !hideEditorModeSwitcher)
 
-const editorModeOptions: Array<SegmentedControlOption<EditorMode>> = [
+// Whether the code editor's current content is safe to switch back to the
+// visual form (compat-mode schema check - see CodeEditor.vue's
+// `compat-change` emit and the lua-schema-to-zod README's "Compat mode").
+const compatValid = ref(true)
+const compatMessage = ref('')
+
+function handleCompatChange(result: { valid: boolean, message: string }) {
+  compatValid.value = result.valid
+  compatMessage.value = result.message
+}
+
+// Defensive: compat only ever changes while the code editor is mounted
+// (i.e. while already in 'code' mode), so this shouldn't normally fire -
+// but if it ever does, don't leave the visual form showing while its
+// "Visual" option is disabled.
+watch(compatValid, (valid) => {
+  if (!valid && editorMode.value === 'form') {
+    editorMode.value = 'code'
+  }
+})
+
+const editorModeOptions = computed<Array<SegmentedControlOption<EditorMode>>>(() => [
   {
     label: t('plugins.free-form.editor_mode.visual'),
     value: 'form',
+    disabled: !compatValid.value,
   },
   {
     label: t('plugins.free-form.editor_mode.code'),
     value: 'code',
   },
-]
+])
 
 function handleEditorModeChange(newMode: EditorMode) {
   editorMode.value = newMode
@@ -604,6 +644,12 @@ const advancedCollapsed = ref(true)
 </script>
 
 <style lang="scss" scoped>
+.ff-editor-mode-option-label {
+  align-items: center;
+  display: flex;
+  gap: var(--kui-space-30, $kui-space-30);
+}
+
 .ff-standard-layout {
   display: flex;
   flex-direction: column;
