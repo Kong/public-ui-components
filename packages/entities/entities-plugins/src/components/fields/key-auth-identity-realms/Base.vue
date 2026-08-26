@@ -28,7 +28,7 @@ const props = defineProps<{
 }>()
 
 const model = defineModel<IdentityRealmItem[]>({
-  default: [{ scope: 'cp', id: null, region: null }],
+  default: () => [{ scope: 'cp', id: null, region: null }],
 })
 
 const { i18n } = composables.useI18n()

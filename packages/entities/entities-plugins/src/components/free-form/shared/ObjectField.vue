@@ -90,9 +90,9 @@
       <!-- Switch button -->
       <KInputSwitch
         v-if="!fieldAttrs.required"
-        v-model="added"
         :data-testid="`ff-object-switch-${field.path.value}`"
-        @update:model-value="handleToggleSwitch"
+        :model-value="added as boolean"
+        @update:model-value="(value: boolean) => { added = value; handleToggleSwitch() }"
       />
     </header>
 
@@ -176,9 +176,9 @@ const currentRenderRules = useCurrentRenderRules({
   omittedFields: toRef(() => omit),
 })
 
-const added = defineModel<boolean>('added', { default: undefined })
+const added = defineModel<boolean>('added')
 
-const expanded = defineModel<boolean>('expanded', { default: undefined })
+const expanded = defineModel<boolean>('expanded')
 
 // Determines if the current field is a child element of an array field
 const isChildOfArray = computed(() => {
