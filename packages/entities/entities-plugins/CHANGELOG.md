@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.267.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.267.2...%40kong-ui-public%2Fentities-plugins%409.267.3) (2026-08-26)
+
+### Bug Fixes
+
+* **entities-plugins:** decouple OIDC linked consumer groups from linked consumers ([#3746](https://github.com/Kong/public-ui-components/issues/3746)) ([242daf9](https://github.com/Kong/public-ui-components/commit/242daf922953677d5984f00b3f8574b5c59fbe62))
+
+
 ## [9.267.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.267.1...%40kong-ui-public%2Fentities-plugins%409.267.2) (2026-08-25)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
