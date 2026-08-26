@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.268.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.267.3...%40kong-ui-public%2Fentities-plugins%409.268.0) (2026-08-26)
+
+### Features
+
+* **entities-plugins:** gate plugin config scope name behind a config flag ([#3747](https://github.com/Kong/public-ui-components/issues/3747)) ([e0d369d](https://github.com/Kong/public-ui-components/commit/e0d369d923dc4e108e47f10539177b6ff62705a7))
+
+
+## [9.267.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.267.2...%40kong-ui-public%2Fentities-plugins%409.267.3) (2026-08-26)
+
+### Bug Fixes
+
+* **entities-plugins:** decouple OIDC linked consumer groups from linked consumers ([#3746](https://github.com/Kong/public-ui-components/issues/3746)) ([242daf9](https://github.com/Kong/public-ui-components/commit/242daf922953677d5984f00b3f8574b5c59fbe62))
+
+
+## [9.267.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.267.1...%40kong-ui-public%2Fentities-plugins%409.267.2) (2026-08-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.267.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.267.0...%40kong-ui-public%2Fentities-plugins%409.267.1) (2026-08-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.267.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.266.0...%40kong-ui-public%2Fentities-plugins%409.267.0) (2026-08-24)
+
+### Features
+
+* **entities-plugins:** add entity name for plugin config ([#3685](https://github.com/Kong/public-ui-components/issues/3685)) ([0c461a4](https://github.com/Kong/public-ui-components/commit/0c461a4397e92b5b8abb68c9ae3ce82fd7ad003c))
+
+
+# [9.266.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.265.5...%40kong-ui-public%2Fentities-plugins%409.266.0) (2026-08-24)
+
+### Features
+
+* **entities-plugins:** rename governance to entitlement enforcement ([#3703](https://github.com/Kong/public-ui-components/issues/3703)) ([b7ab8d4](https://github.com/Kong/public-ui-components/commit/b7ab8d46dfd074e82311404c8d9b9c520785e80e))
+
+
 ## [9.265.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.265.4...%40kong-ui-public%2Fentities-plugins%409.265.5) (2026-08-23)
 
 ### Bug Fixes

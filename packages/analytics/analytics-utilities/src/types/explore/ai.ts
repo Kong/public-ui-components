@@ -24,6 +24,7 @@ export const queryableAiExploreDimensions = [
   'status_code_grouped',
   'ai_plugin',
   'principal',
+  'cache_status',
   'ai_gateway_mcp_server',
   'ai_gateway_model',
   'ai_gateway_agent',
@@ -58,6 +59,7 @@ export const aiExploreAggregations = [
   'llm_embeddings_tokens',
   'llm_embeddings_cost',
   'time_to_first_token_average',
+  'time_per_token_average',
 ] as const
 
 export type AiExploreAggregations = typeof aiExploreAggregations[number]

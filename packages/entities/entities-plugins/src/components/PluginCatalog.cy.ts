@@ -179,6 +179,31 @@ describe('<PluginCatalog />', {
 
   })
 
+  it('should correctly hide ignored plugins', () => {
+    const ignoredPlugins = ['basic-auth']
+
+    interceptKonnect()
+
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        ignoredPlugins,
+      },
+      router,
+    })
+
+    cy.wait('@getAvailablePlugins')
+
+    cy.getTestId('plugin-catalog').should('be.visible')
+
+    ignoredPlugins.forEach((pluginName) => {
+      // search for the plugin so it would surface out of its (collapsed) group if it were listed
+      cy.getTestId('plugins-filter-input').clear()
+      cy.getTestId('plugins-filter-input').type(pluginName)
+      cy.getTestId(`${pluginName}-card`).should('not.exist')
+    })
+  })
+
   it('should handle error state - available plugins failed to load', () => {
     cy.intercept(
       {

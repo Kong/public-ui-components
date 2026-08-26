@@ -1,6 +1,6 @@
 <template>
-  <div class="plugin-form-sandbox">
-    <div class="sandbox-controls">
+  <SandboxPage title="Plugin Form">
+    <template #controls>
       <KInputSwitch
         v-model="enableDeckConfigCustomization"
         label="Enable decK configuration customization"
@@ -25,7 +25,7 @@
           />
         </div>
       </KCollapse>
-    </div>
+    </template>
 
     <div
       id="plugin-form-page-actions"
@@ -63,13 +63,14 @@
         @update="onUpdate"
       />
     </FeatureFlagProvider>
-  </div>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
 import { computed, defineComponent, provide, ref, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
+import SandboxPage from '../SandboxPage.vue'
 import { PluginForm, providePluginContext, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
 import { FEATURE_FLAGS } from '../../src/constants'
 
@@ -166,10 +167,10 @@ useProvideExperimentalFreeForms([
   'cors',
   'datadog',
   'degraphql',
+  'entitlement-enforcement',
   'exit-transformer',
   'file-log',
   'forward-proxy',
-  'governance',
   'graphql-proxy-cache-advanced',
   'graphql-rate-limiting-advanced',
   'grpc-gateway',
@@ -275,7 +276,7 @@ const konnectConfig = computed<KonnectPluginFormConfig>(() => ({
   principalsDirectoryName: 'my-directory', // Sandbox: simulate host-resolved directory name
   principalsCreationGuideVisible: false, // Sandbox: false = principals exist; true = show creation guide
   metering: {
-    // Endpoint the governance FeatureSelectField fetches the OpenMeter features list from
+    // Endpoint the Entitlement Enforcement FeatureSelectField fetches the OpenMeter features list from
     featuresEndpoint: '/us/kong-api/v3/openmeter/features',
     // canListFeatures: false,
   },
@@ -295,7 +296,7 @@ const kongManagerConfig = computed<KongManagerPluginFormConfig>(() => ({
   viewConsumerGroupRoute: (consumerGroupId: string) => ({ name: 'view-consumer_group', params: { id: consumerGroupId } }),
   viewCertificateRoute: (certId: string) => ({ name: 'view-certificate', params: { id: certId } }),
   deckCalloutPreferenceKey: enableDeckCallout.value ? 'kong-manager-entities-plugin-form-deck-callout-sandbox' : undefined,
-  // Governance isn't configurable in Kong Manager yet (the form shows a notice), so no metering config is needed.
+  // Entitlement Enforcement isn't configurable in Kong Manager yet (the form shows a notice), so no metering config is needed.
 }))
 
 const onUpdate = (payload: Record<string, any>) => {
@@ -304,7 +305,7 @@ const onUpdate = (payload: Record<string, any>) => {
   router.push({ name: 'list-plugin' })
 }
 
-// Host app owns create-entity flows (e.g. the governance "Create feature" action)
+// Host app owns create-entity flows (e.g. the Entitlement Enforcement "Create feature" action)
 const onCreateEntity = (payload: EntityCreateEvent) => {
   console.log('create entity', payload)
 }
@@ -317,36 +318,19 @@ const handleGlobalAction = (action: GlobalAction, payload: any) => {
 </script>
 
 <style lang="scss" scoped>
-.plugin-form-sandbox {
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.feature-flags-collapse {
+  margin: 0;
+}
+
+.feature-flags-list {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-
-  * {
-    box-sizing: border-box;
-  }
-
-  .actions {
-    align-self: flex-end;
-  }
-
-  .sandbox-controls {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-
-  .feature-flags-collapse {
-    margin: 0;
-  }
-
-  .feature-flags-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding-top: 12px;
-  }
+  gap: 12px;
+  padding-top: 12px;
 }
 </style>

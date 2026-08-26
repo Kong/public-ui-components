@@ -1,29 +1,32 @@
 <template>
-  <div class="custom-plugin-form-sandbox">
-    <div>
-      <h2>{{ isEditing ? 'Edit' : 'Create' }} Custom Plugin Form (Konnect API)</h2>
-      <CustomPluginForm
-        :config="konnectConfig"
-        :plugin-name="pluginName"
-      />
+  <SandboxPage title="Custom Plugin Form">
+    <div class="custom-plugin-form-sandbox">
+      <div>
+        <h2>{{ isEditing ? 'Edit' : 'Create' }} Custom Plugin Form (Konnect API)</h2>
+        <CustomPluginForm
+          :config="konnectConfig"
+          :plugin-name="pluginName"
+        />
+      </div>
+      <div>
+        <h2>{{ isEditing ? 'Edit' : 'Create' }} Custom Plugin Form (Kong Manager API)</h2>
+        <KAlert>
+          Kong Manager does not support installed custom plugins
+        </KAlert>
+        <CustomPluginForm
+          :config="kongManagerConfig"
+          :plugin-name="pluginName"
+          :unsupported-types="['installed', 'streamed']"
+        />
+      </div>
     </div>
-    <div>
-      <h2>{{ isEditing ? 'Edit' : 'Create' }} Custom Plugin Form (Kong Manager API)</h2>
-      <KAlert>
-        Kong Manager does not support installed custom plugins
-      </KAlert>
-      <CustomPluginForm
-        :config="kongManagerConfig"
-        :plugin-name="pluginName"
-        :unsupported-types="['installed', 'streamed']"
-      />
-    </div>
-  </div>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import SandboxPage from '../SandboxPage.vue'
 import { CustomPluginForm } from '../../src'
 import type { KongManagerCustomPluginFormConfig, KonnectCustomPluginFormConfig } from '../../src'
 

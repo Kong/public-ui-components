@@ -67,6 +67,7 @@ export type FilterableRequestDimensions = typeof filterableRequestDimensions[num
 
 export const queryableRequestWildcardDimensions = [
   'auth_type',
+  'cache_status',
   'client_ip',
   'data_plane_node_version',
   'header_host',

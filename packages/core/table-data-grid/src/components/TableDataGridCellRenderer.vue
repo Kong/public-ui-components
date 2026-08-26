@@ -1,5 +1,12 @@
 <template>
-  <span class="table-data-grid-cell-renderer">
+  <component
+    :is="renderCellSlot"
+    v-if="cellSlot"
+  />
+  <span
+    v-else
+    class="table-data-grid-cell-renderer"
+  >
     <KTooltip
       class="table-data-grid-cell-tooltip"
       :disabled="!isOverflowing"
@@ -18,10 +25,17 @@
 </template>
 
 <script setup lang="ts">
+import type { TableDataGridCellSlotProps, TableDataGridHeader } from '../types'
 import type { ICellRendererParams } from 'ag-grid-community'
+import type { Slots } from 'vue'
 import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 
-type CellRendererParams = ICellRendererParams<Record<string, unknown>>
+type CellRendererParams = ICellRendererParams<Record<string, unknown>> & {
+  /** Set internally via `cellRendererParams` so the renderer can resolve the
+   * host slot and build its payload without leaking AG Grid's own `column`. */
+  headerDef?: TableDataGridHeader
+  context?: { cells?: { slots?: Slots } }
+}
 
 defineOptions({
   name: 'TableDataGridCellRenderer',
@@ -41,6 +55,32 @@ const isOverflowing = ref(false)
 const displayValue = computed(() => (
   currentParams.value.valueFormatted ?? String(currentParams.value.value ?? '')
 ))
+
+// A slot named by the column key replaces this cell's default content.
+const cellSlot = computed(() => {
+  const colId = currentParams.value.colDef?.colId
+
+  return colId ? currentParams.value.context?.cells?.slots?.[colId] : undefined
+})
+
+// Props passed to a `[header.key]` slot when the host provides one.
+const slotPayload = computed<TableDataGridCellSlotProps>(() => ({
+  column: currentParams.value.headerDef as TableDataGridHeader,
+  refreshCell: () => {
+    const node = currentParams.value.node
+
+    if (node) {
+      currentParams.value.api.refreshCells({ force: true, rowNodes: [node] })
+    }
+  },
+  row: currentParams.value.data ?? {},
+  rowIndex: currentParams.value.node?.rowIndex ?? 0,
+  rowValue: currentParams.value.value,
+  selected: currentParams.value.node?.isSelected() ?? false,
+}))
+
+// Renders the matched slot's own content in place of the default cell markup.
+const renderCellSlot = () => cellSlot.value?.(slotPayload.value)
 
 let resizeObserver: ResizeObserver | undefined
 let animationFrame: number | undefined

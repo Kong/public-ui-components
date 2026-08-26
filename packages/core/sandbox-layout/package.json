@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/sandbox-layout",
-  "version": "2.6.15",
+  "version": "2.7.0",
   "type": "module",
   "main": "./dist/sandbox-layout.umd.js",
   "module": "./dist/sandbox-layout.es.js",
@@ -59,7 +59,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "200KB"
+    "errorLimit": "300KB"
   },
   "peerDependencies": {
     "vue": ">= 3.3.13 < 4"

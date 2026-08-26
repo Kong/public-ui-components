@@ -1,5 +1,5 @@
 <template>
-  <div class="onboarding-flow-sandbox">
+  <SandboxPage title="Create Consumer & Credential">
     <h2>Create consumer & credential ({{ plugin }})</h2>
     <CreateConsumerCredentialForm
       :config="konnectConfig"
@@ -7,12 +7,13 @@
       @cancel="onDone"
       @success="onDone"
     />
-  </div>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import SandboxPage from '../SandboxPage.vue'
 import { CreateConsumerCredentialForm } from '../../src'
 import type { CredentialType, KonnectPluginFormConfig } from '../../src'
 
@@ -33,8 +34,3 @@ const onDone = (payload?: unknown) => {
 }
 </script>
 
-<style lang="scss" scoped>
-.onboarding-flow-sandbox {
-  padding: 20px;
-}
-</style>

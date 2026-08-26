@@ -1,4 +1,6 @@
 import type {
+  TableDataGridCellClickPayload,
+  TableDataGridCellSlotProps,
   TableDataGridFetcher,
   TableDataGridHeader,
   TableDataGridStatePayload,
@@ -17,6 +19,7 @@ type TestRow = {
 type TestTableDataGridSlots = {
   'empty-state'?: () => unknown
   'error-state'?: () => unknown
+  [slotName: string]: ((props: never) => unknown) | undefined
 }
 
 type MountTableOptions = {
@@ -24,7 +27,9 @@ type MountTableOptions = {
   fetcher: TableDataGridFetcher<TestRow>
   headers?: Array<TableDataGridHeader<TestRow>>
   error?: boolean
+  onCellClick?: (payload: TableDataGridCellClickPayload<TestRow>) => void
   onGridReady?: (api: GridApi<TestRow>) => void
+  onRowClick?: (row: TestRow) => void
   onState?: (payload: TableDataGridStatePayload) => void
   pageSize?: number
   refreshKey?: string | number | boolean
@@ -64,13 +69,17 @@ const TestTableDataGrid = TableDataGrid as unknown as DefineComponent
 const mountTestTableDataGrid = ({
   containerStyle,
   headers: tableHeaders = headers,
+  onCellClick,
   onGridReady,
+  onRowClick,
   slots,
   ...props
 }: MountTableOptions) => {
   const componentProps = reactive<Record<string, unknown>>({
     headers: tableHeaders,
+    'onCell:click': onCellClick,
     'onGrid:ready': onGridReady,
+    'onRow:click': onRowClick,
     ...props,
   })
 
@@ -822,6 +831,115 @@ describe('<TableDataGrid />', () => {
     })
     cy.then(() => {
       expect(eventOrder).to.deep.equal(['fetcher', 'state'])
+    })
+  })
+
+  it('renders a header-supplied custom cell renderer with the full slot payload', () => {
+    const statusRow = { ...rows[0] }
+    const fetcher = cy.stub().resolves({
+      data: [statusRow, rows[1]],
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name' },
+        { key: 'status', label: 'Status' },
+      ],
+      slots: {
+        status: ({ column, refreshCell, row, rowIndex, rowValue, selected }: TableDataGridCellSlotProps<TestRow>) => h(
+          'span',
+          { 'data-testid': 'custom-status-badge' },
+          [
+            h('span', { 'data-testid': 'status-row-name' }, row.name),
+            h('span', { 'data-testid': 'status-row-value' }, String(rowValue)),
+            h('span', { 'data-testid': 'status-column-label' }, column.label),
+            h('span', { 'data-testid': 'status-row-index' }, String(rowIndex)),
+            h('span', { 'data-testid': 'status-selected' }, String(selected)),
+            h('button', { 'data-testid': 'status-refresh-button', onClick: refreshCell }, 'Refresh'),
+          ],
+        ),
+      } as TestTableDataGridSlots,
+    })
+
+    cy.getTestId('status-row-name').should('contain.text', 'Gateway service')
+    cy.getTestId('status-row-value').should('contain.text', 'Active')
+    cy.getTestId('status-column-label').should('contain.text', 'Status')
+    cy.getTestId('status-row-index').should('contain.text', '0')
+    cy.getTestId('status-selected').should('contain.text', 'false')
+
+    // Mutate the row out-of-band, then use refreshCell to force the stale cell to re-read it.
+    cy.then(() => {
+      statusRow.status = 'Suspended'
+    })
+    cy.getTestId('status-refresh-button').first().click()
+    cy.getTestId('status-row-value').first().should('contain.text', 'Suspended')
+  })
+
+  it('emits row:click with the clicked row data and the source event', () => {
+    const onRowClick = cy.stub().as('rowClick')
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      onRowClick,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').click()
+    cy.get('@rowClick').should((stub) => {
+      expect(stub.callCount).to.equal(1)
+      const [row, event] = stub.getCall(0).args
+
+      expect(row).to.equal(rows[0])
+      expect(event).to.have.property('type', 'rowClicked')
+    })
+  })
+
+  it('suppresses row:click but still emits cell:click for disableRowClick columns', () => {
+    const onCellClick = cy.stub().as('cellClick')
+    const onRowClick = cy.stub().as('rowClick')
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name' },
+        { disableRowClick: true, key: 'status', label: 'Status' },
+      ],
+      onCellClick,
+      onRowClick,
+      slots: {
+        status: ({ rowValue }: TableDataGridCellSlotProps<TestRow>) => h(
+          'button',
+          { 'data-testid': 'status-action-button' },
+          `Action: ${rowValue}`,
+        ),
+      } as TestTableDataGridSlots,
+    })
+
+    cy.getTestId('status-action-button').first().click()
+    cy.get('@rowClick').should('not.have.been.called')
+    cy.get('@cellClick').should('have.been.calledOnceWith', {
+      columnKey: 'status',
+      row: rows[0],
+      value: rows[0].status,
+    })
+
+    // Non-disabled column: row:click should still fire normally.
+    cy.contains('.ag-cell', 'Gateway service').click()
+    cy.get('@rowClick').should((stub) => {
+      expect(stub.callCount).to.equal(1)
+      const [row, event] = stub.getCall(0).args
+
+      expect(row).to.equal(rows[0])
+      expect(event).to.have.property('type', 'rowClicked')
     })
   })
 })

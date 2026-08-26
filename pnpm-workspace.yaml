@@ -19,12 +19,6 @@ auditConfig:
     - 'GHSA-fx2h-pf6j-xcff'
 
 overrides:
-  # Pin a single vue version workspace-wide. Without this, kongponents@9.63.0 pulls some
-  # packages (e.g. forms) up to 3.5.40 while others stay on 3.5.38; the two copies have
-  # incompatible Ref/[RefSymbol] brands, breaking cross-package composable/v-model types.
-  # Pinned to 3.5.38 (kongponents peer is ">= 3.5.0 < 4") to match the known-good baseline;
-  # 3.5.40 tightened defineModel typings and breaks generic defineModel usage in entities-plugins.
-  vue: 3.5.41
   form-data@>=3.0.0 <3.0.4: '>=4.0.6'
   fast-uri@<4.1.2: '>=4.1.2'
   minimatch@>=9.0.0 <9.0.7: '>=10.2.6'
@@ -41,10 +35,10 @@ overrides:
   shell-quote@>=1.1.0 <=1.8.3: '>=1.10.0'
   ws@>=8.0.0 <8.21.0: '>=8.21.3'
   undici@>=7.0.0 <7.29.0: '>=7.29.0 <8.0.0'
-  linkify-it@<=5.0.0: '>=5.0.2'
+  linkify-it@<=5.0.0: '>=6.1.0'
   sigstore@<=4.1.0: '>=5.0.0'
   js-yaml@>=3.0.0 <3.15.1: '>=5.2.3'
-  js-yaml@>=4.0.0 <4.3.1: '>=4.3.1'
+  js-yaml@>=4.0.0 <4.3.1: '>=5.2.3'
   nx@>=20.8.0 <22.7.7: '>=22.7.8'
   tar@<=7.5.18: '>=7.5.22'
   brace-expansion@<5.0.9: '>=5.0.9'

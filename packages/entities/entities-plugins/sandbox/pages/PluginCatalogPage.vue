@@ -1,71 +1,73 @@
 <template>
-  <div class="plugin-select-sandbox">
-    <div class="sandbox-controls">
-      <section class="custom-plugin-support-controls">
-        <h3>Custom plugin support</h3>
-        <KCheckbox
-          v-model="supportInstalledCustomPlugin"
-          :disabled="disableCustomPluginSupport"
-          label="Installed custom plugins"
-        />
-        <KCheckbox
-          v-model="supportStreamedCustomPlugin"
-          :disabled="disableCustomPluginSupport"
-          label="Streamed custom plugins"
-        />
-        <KCheckbox
-          v-model="supportClonedPlugin"
-          :disabled="disableCustomPluginSupport"
-          label="Cloned plugins"
-        />
-        <KCheckbox
-          v-model="disableCustomPluginSupport"
-          label="Disabled"
-        />
-      </section>
-
-      <section class="feature-flag-controls">
-        <h3>Feature flags</h3>
-        <KInputSwitch
-          v-model="enableClonedPluginFeatureFlag"
-          label="KM-2485 cloned plugins"
-        />
-      </section>
-
-      <div class="permission-controls">
-        <section>
-          <h3>Custom plugin permissions</h3>
-          <KInputSwitch
-            v-model="allowReadCustomPlugin"
-            label="Read custom plugins"
+  <SandboxPage title="Plugin Catalog">
+    <template #controls>
+      <div class="plugin-catalog-controls">
+        <section class="custom-plugin-support-controls">
+          <h3>Custom plugin support</h3>
+          <KCheckbox
+            v-model="supportInstalledCustomPlugin"
+            :disabled="disableCustomPluginSupport"
+            label="Installed custom plugins"
           />
-          <KInputSwitch
-            v-model="allowEditCustomPlugin"
-            label="Edit custom plugins"
+          <KCheckbox
+            v-model="supportStreamedCustomPlugin"
+            :disabled="disableCustomPluginSupport"
+            label="Streamed custom plugins"
           />
-          <KInputSwitch
-            v-model="allowDeleteCustomPlugin"
-            label="Delete custom plugins"
+          <KCheckbox
+            v-model="supportClonedPlugin"
+            :disabled="disableCustomPluginSupport"
+            label="Cloned plugins"
+          />
+          <KCheckbox
+            v-model="disableCustomPluginSupport"
+            label="Disabled"
           />
         </section>
 
-        <section>
-          <h3>Cloned plugin permissions</h3>
+        <section class="feature-flag-controls">
+          <h3>Feature flags</h3>
           <KInputSwitch
-            v-model="allowReadClonedPlugin"
-            label="Read cloned plugins"
-          />
-          <KInputSwitch
-            v-model="allowEditClonedPlugin"
-            label="Edit cloned plugins"
-          />
-          <KInputSwitch
-            v-model="allowDeleteClonedPlugin"
-            label="Delete cloned plugins"
+            v-model="enableClonedPluginFeatureFlag"
+            label="KM-2485 cloned plugins"
           />
         </section>
+
+        <div class="permission-controls">
+          <section>
+            <h3>Custom plugin permissions</h3>
+            <KInputSwitch
+              v-model="allowReadCustomPlugin"
+              label="Read custom plugins"
+            />
+            <KInputSwitch
+              v-model="allowEditCustomPlugin"
+              label="Edit custom plugins"
+            />
+            <KInputSwitch
+              v-model="allowDeleteCustomPlugin"
+              label="Delete custom plugins"
+            />
+          </section>
+
+          <section>
+            <h3>Cloned plugin permissions</h3>
+            <KInputSwitch
+              v-model="allowReadClonedPlugin"
+              label="Read cloned plugins"
+            />
+            <KInputSwitch
+              v-model="allowEditClonedPlugin"
+              label="Edit cloned plugins"
+            />
+            <KInputSwitch
+              v-model="allowDeleteClonedPlugin"
+              label="Delete cloned plugins"
+            />
+          </section>
+        </div>
       </div>
-    </div>
+    </template>
 
     <h2>Konnect API</h2>
     <PluginCatalog
@@ -81,13 +83,15 @@
       custom-plugins="disabled"
       :disabled-plugins="{ 'acl': 'ACL is not supported for this entity type' }"
       :highlighted-plugin-ids="highlightedPluginIds"
+      :ignored-plugins="['entitlement-enforcement']"
       @delete-custom:success="handleDeleteSuccess"
     />
-  </div>
+  </SandboxPage>
 </template>
 
 <script setup lang="ts">
 import { computed, provide, ref } from 'vue'
+import SandboxPage from '../SandboxPage.vue'
 import type { KonnectPluginSelectConfig, CustomPluginSupportLevel, CustomPluginType } from '../../src'
 import { FEATURE_FLAGS, PluginCatalog } from '../../src'
 
@@ -185,37 +189,29 @@ provide(FEATURE_FLAGS.KM_2485_CLONED_PLUGINS, enableClonedPluginFeatureFlag)
 </script>
 
 <style lang="scss" scoped>
-.plugin-select-sandbox {
+.plugin-catalog-controls {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 20px;
+}
 
-  .sandbox-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 820px;
-  }
+.permission-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+}
 
-  .permission-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-  }
+.custom-plugin-support-controls,
+.feature-flag-controls,
+.permission-controls section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 240px;
 
-  .custom-plugin-support-controls,
-  .feature-flag-controls,
-  .permission-controls section {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    min-width: 240px;
-
-    h3 {
-      font-size: 14px;
-      margin: 0;
-    }
+  h3 {
+    font-size: 14px;
+    margin: 0;
   }
 }
 </style>
