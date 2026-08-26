@@ -53,14 +53,7 @@
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
           v-else-if="showNameAsLink"
-          :item="{
-            key: getPropValue('rowValue', slotProps).id,
-            value: linkValue('consumer', getPropValue('rowValue', slotProps).id),
-            to: config.getConsumerViewRoute?.(getPropValue('rowValue', slotProps).id),
-            subtitle: linkSubtitle('consumer', getPropValue('rowValue', slotProps).id),
-            subtitleLoading: isReferenceNameLoading('consumer'),
-            type: ConfigurationSchemaType.LinkInternal,
-          }"
+          :item="referenceLinkItem('consumer', getPropValue('rowValue', slotProps).id, config.getConsumerViewRoute)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer')"
         />
         <KCopy
@@ -75,14 +68,7 @@
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
           v-else-if="showNameAsLink"
-          :item="{
-            key: getPropValue('rowValue', slotProps).id,
-            value: linkValue('route', getPropValue('rowValue', slotProps).id),
-            to: config.getRouteViewRoute?.(getPropValue('rowValue', slotProps).id),
-            subtitle: linkSubtitle('route', getPropValue('rowValue', slotProps).id),
-            subtitleLoading: isReferenceNameLoading('route'),
-            type: ConfigurationSchemaType.LinkInternal,
-          }"
+          :item="referenceLinkItem('route', getPropValue('rowValue', slotProps).id, config.getRouteViewRoute)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'route')"
         />
         <KCopy
@@ -96,14 +82,7 @@
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
           v-else-if="showNameAsLink"
-          :item="{
-            key: getPropValue('rowValue', slotProps).id,
-            value: linkValue('service', getPropValue('rowValue', slotProps).id),
-            to: config.getServiceViewRoute?.(getPropValue('rowValue', slotProps).id),
-            subtitle: linkSubtitle('service', getPropValue('rowValue', slotProps).id),
-            subtitleLoading: isReferenceNameLoading('service'),
-            type: ConfigurationSchemaType.LinkInternal,
-          }"
+          :item="referenceLinkItem('service', getPropValue('rowValue', slotProps).id, config.getServiceViewRoute)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'service')"
         />
         <KCopy
@@ -117,14 +96,7 @@
         <span v-if="!getPropValue('rowValue', slotProps)">–</span>
         <InternalLinkItem
           v-else-if="showNameAsLink"
-          :item="{
-            key: getPropValue('rowValue', slotProps).id,
-            value: linkValue('consumer_group', getPropValue('rowValue', slotProps).id),
-            to: config.getConsumerGroupViewRoute?.(getPropValue('rowValue', slotProps).id),
-            subtitle: linkSubtitle('consumer_group', getPropValue('rowValue', slotProps).id),
-            subtitleLoading: isReferenceNameLoading('consumer_group'),
-            type: ConfigurationSchemaType.LinkInternal,
-          }"
+          :item="referenceLinkItem('consumer_group', getPropValue('rowValue', slotProps).id, config.getConsumerGroupViewRoute)"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer_group')"
         />
         <KCopy
@@ -193,9 +165,11 @@ import type { ReferenceField } from '../composables/useReferenceEntityNames'
 import type {
   ConfigurationSchema,
   PluginConfigurationSchema,
+  RecordItem,
 } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
 import type { PropType } from 'vue'
+import type { RouteLocationRaw } from 'vue-router'
 
 import type { KongManagerPluginEntityConfig, KonnectPluginEntityConfig } from '../types'
 
@@ -281,6 +255,12 @@ const fetchUrl = computed<string>(() => {
   return url
 })
 
+/**
+ * KM-2996 rollout gate — see `showScopeName` on the config. Read through a computed so a host
+ * that flips it once its flag service resolves re-renders the rows.
+ */
+const scopeNameEnabled = computed<boolean>(() => !!props.config.showScopeName)
+
 // schema for the basic properties
 const configSchema = computed((): ConfigurationSchema => {
   const customSchema: ConfigurationSchema = {}
@@ -300,22 +280,22 @@ const configSchema = computed((): ConfigurationSchema => {
       order: 1.5,
     },
     consumer: {
-      label: t('plugins.fields.consumer'),
+      label: scopeNameEnabled.value ? t('plugins.fields.consumer') : t('plugins.fields.consumer_id'),
       section: ConfigurationSchemaSection.Basic,
       order: 6,
     },
     route: {
-      label: t('plugins.fields.route'),
+      label: scopeNameEnabled.value ? t('plugins.fields.route') : t('plugins.fields.route_id'),
       section: ConfigurationSchemaSection.Basic,
       order: 6,
     },
     service: {
-      label: t('plugins.fields.service'),
+      label: scopeNameEnabled.value ? t('plugins.fields.service') : t('plugins.fields.service_id'),
       section: ConfigurationSchemaSection.Basic,
       order: 6,
     },
     consumer_group: {
-      label: t('plugins.fields.consumer_group'),
+      label: scopeNameEnabled.value ? t('plugins.fields.consumer_group') : t('plugins.fields.consumer_group_id'),
       section: ConfigurationSchemaSection.Basic,
       order: 6,
     },
@@ -408,16 +388,27 @@ const { resolveReferenceNames, getReferenceName, isReferenceNameLoading } = comp
   onError: (err: AxiosError) => emit('fetch:error', err),
 })
 
-// The name surfaces as the link once resolved, with the id underneath for reference;
-// falls back to linking the bare id when no name is available.
-const linkValue = (field: ReferenceField, id: string): string => getReferenceName(field) || id
-const linkSubtitle = (field: ReferenceField, id: string): string | undefined => getReferenceName(field) ? id : undefined
+/**
+ * With `showScopeName` on, the resolved name surfaces as a router-link with the id underneath for
+ * reference, falling back to the bare id until (or unless) a name is available.
+ * With it off, we keep the pre-KM-2996 behavior: the bare id as an emit-only button, no name lookup.
+ */
+const referenceLinkItem = (field: ReferenceField, id: string, getViewRoute?: (id: string) => RouteLocationRaw): RecordItem => ({
+  key: id,
+  value: scopeNameEnabled.value ? getReferenceName(field) || id : id,
+  to: scopeNameEnabled.value ? getViewRoute?.(id) : undefined,
+  subtitle: scopeNameEnabled.value && getReferenceName(field) ? id : undefined,
+  subtitleLoading: scopeNameEnabled.value && isReferenceNameLoading(field),
+  type: ConfigurationSchemaType.LinkInternal,
+})
 
 const handleFetchSuccess = (entity: Record<string, any>) => {
   emit('fetch:success', entity)
 
   // Names are only ever displayed via InternalLinkItem, so skip the lookups entirely otherwise.
-  if (props.showNameAsLink) {
+  // Reads the flag at fetch time: a host that flips `showScopeName` after this point relabels the
+  // rows and renders links, but shows ids until the card refetches.
+  if (scopeNameEnabled.value && props.showNameAsLink) {
     resolveReferenceNames(entity)
   }
 }
