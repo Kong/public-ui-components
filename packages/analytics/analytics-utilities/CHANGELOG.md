@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.31.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.31.0...%40kong-ui-public%2Fanalytics-utilities%4012.31.1) (2026-08-27)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3481](https://github.com/Kong/public-ui-components/issues/3481)) ([ae1eb65](https://github.com/Kong/public-ui-components/commit/ae1eb65939bed13c63627a3c3a911baf9ea2e4ac))
+
+
 # [12.31.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.30.0...%40kong-ui-public%2Fanalytics-utilities%4012.31.0) (2026-08-25)
 
 ### Features

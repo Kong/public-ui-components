@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.19](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-geo-map%401.9.18...%40kong-ui-public%2Fanalytics-geo-map%401.9.19) (2026-08-27)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3481](https://github.com/Kong/public-ui-components/issues/3481)) ([ae1eb65](https://github.com/Kong/public-ui-components/commit/ae1eb65939bed13c63627a3c3a911baf9ea2e4ac))
+
+
 ## [1.9.18](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-geo-map%401.9.17...%40kong-ui-public%2Fanalytics-geo-map%401.9.18) (2026-08-25)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-geo-map
