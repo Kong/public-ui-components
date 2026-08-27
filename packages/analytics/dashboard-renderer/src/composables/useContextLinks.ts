@@ -64,7 +64,7 @@ export default function useContextLinks(
     }
 
     if (chartType === 'top_n') {
-      return context.value.editable || context.value.showTileActions
+      return !!context.value.editable || !!context.value.showTileActions
     }
 
     return true

@@ -313,7 +313,7 @@ watch(() => definition, async (newValue, oldValue) => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || canExportCsv.value || context.editable)
+const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || canExportCsv.value || !!context.editable)
 
 // The shared header action container is hidden when tile actions are globally disabled.
 const canShowHeaderActions = computed((): boolean => !hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
