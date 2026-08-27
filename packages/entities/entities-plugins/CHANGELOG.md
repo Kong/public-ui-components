@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.268.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.268.1...%40kong-ui-public%2Fentities-plugins%409.268.2) (2026-08-27)
+
+### Bug Fixes
+
+* **entities-plugins:** prevent OIDC credential autofill ([#3749](https://github.com/Kong/public-ui-components/issues/3749)) ([638d882](https://github.com/Kong/public-ui-components/commit/638d88283bbf6d4694b85a342ede251eccfcd5b1))
+
+
 ## [9.268.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.268.0...%40kong-ui-public%2Fentities-plugins%409.268.1) (2026-08-27)
 
 ### Bug Fixes
