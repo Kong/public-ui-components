@@ -6,6 +6,33 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
+/**
+ * the options for the highlighting behavior on charts which support click -> drag
+ * highlighting.
+ */
+export type ZoomConfiguration = {
+  /**
+   * If true, no highlighting for zoom is possible
+   * @default false
+   */
+  disabled?: boolean
+  /**
+   * if true, "Zoom in" doesn't appear in the menu
+   * @default false
+   */
+  hideZoomIn?: boolean
+  /**
+   * if true, "Explore" doesn't appear in the menu
+   * @default false
+   */
+  hideExplore?: boolean
+  /**
+   * if true, "view requests" doesn't appear in the menu
+   * @default false
+   */
+  hideRequests?: boolean
+}
+
 export interface DashboardRendererContext {
   filters: AllFilters[]
   timeSpec?: TimeRangeV4
