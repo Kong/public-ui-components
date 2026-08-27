@@ -156,6 +156,7 @@
       >
         <KInput
           v-if="!hasAuthServersAccess"
+          autocomplete="new-password"
           class="principals-client-select"
           data-testid="principals-client-id-input"
           :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.label') : undefined"
@@ -198,6 +199,7 @@
         </KSelect>
         <div class="principals-client-secret-wrapper">
           <KInput
+            autocomplete="new-password"
             class="principals-client-secret"
             data-testid="principals-client-secret"
             :disabled="hasAuthServersAccess && !selectedServer"
@@ -260,6 +262,7 @@
       >
         <div class="external-client-field">
           <KInput
+            autocomplete="new-password"
             class="external-client-input"
             data-testid="external-client-id"
             :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.id_label') : undefined"
@@ -287,6 +290,7 @@
         </div>
         <div class="external-client-field">
           <KInput
+            autocomplete="new-password"
             class="external-client-input"
             data-testid="external-client-secret"
             :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.secret_label') : undefined"

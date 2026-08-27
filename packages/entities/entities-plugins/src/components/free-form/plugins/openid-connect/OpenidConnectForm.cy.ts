@@ -783,8 +783,8 @@ describe('OpenidConnectForm', () => {
 
       cy.getTestId('oidc-auth-mode-external').click({ force: true })
 
-      cy.getTestId('external-client-id').should('exist')
-      cy.getTestId('external-client-secret').should('exist')
+      cy.getTestId('external-client-id').should('have.attr', 'autocomplete', 'new-password')
+      cy.getTestId('external-client-secret').should('have.attr', 'autocomplete', 'new-password')
       cy.getTestId('ff-config.issuer').should('exist')
 
       lastFormChange().then((payload) => {
@@ -857,7 +857,8 @@ describe('OpenidConnectForm', () => {
 
       cy.getTestId('kong-identity-issuer-input').should('exist')
       cy.getTestId('principals-directory-select').should('not.exist')
-      cy.getTestId('principals-client-id-input').should('exist')
+      cy.getTestId('principals-client-id-input').should('have.attr', 'autocomplete', 'new-password')
+      cy.getTestId('principals-client-secret').should('have.attr', 'autocomplete', 'new-password')
     })
 
     it('infers External mode from a non-Kong-Identity issuer on edit', () => {
