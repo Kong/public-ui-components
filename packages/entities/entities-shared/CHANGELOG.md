@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.66.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.65.1...%40kong-ui-public%2Fentities-shared%403.66.0) (2026-08-27)
+
+### Features
+
+* **entities-shared:** support configurable autocomplete ([#3750](https://github.com/Kong/public-ui-components/issues/3750)) ([55825b5](https://github.com/Kong/public-ui-components/commit/55825b590068a2036be081604731c1b2fe43317c))
+
+
 ## [3.65.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.65.0...%40kong-ui-public%2Fentities-shared%403.65.1) (2026-08-27)
 
 ### Bug Fixes
