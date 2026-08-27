@@ -207,24 +207,29 @@ import DonutChartRenderer from './DonutChartRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
-const props = withDefaults(defineProps<{
+const {
+  context,
+  definition,
+  height = DEFAULT_TILE_HEIGHT,
+  hideActions = false,
+  hideZoomActions = false,
+  isFullscreen,
+  queryReady,
+  showRefresh = false,
+  tileId,
+  tileType = 'chart',
+} = defineProps<{
   context: DashboardRendererContextInternal
   definition: TileDefinition
   height?: number
-  isFullscreen?: boolean
   hideActions?: boolean
   hideZoomActions?: boolean
+  isFullscreen?: boolean
   queryReady: boolean
   showRefresh?: boolean
   tileId: string | number
   tileType?: TileConfig['type']
-}>(), {
-  height: DEFAULT_TILE_HEIGHT,
-  hideActions: false,
-  hideZoomActions: false,
-  showRefresh: false,
-  tileType: 'chart',
-})
+}>()
 
 const refreshCounter = defineModel<number>('refreshCounter', { default: 0 })
 const refresh = () => {
@@ -254,14 +259,14 @@ const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
 
-const chart = computed(() => props.definition.chart)
+const chart = computed(() => definition.chart)
 const tileTitle = computed<string | undefined>(() => {
   return 'chart_title' in chart.value ? chart.value.chart_title : undefined
 })
-const tileDescription = computed<string | undefined>(() => props.definition.header_description)
+const tileDescription = computed<string | undefined>(() => definition.header_description)
 const isSlottableTile = computed<boolean>(() => chart.value.type === 'slottable')
 const canExportCsv = computed<boolean>(() => {
-  if (isTableChartDefinition(props.definition)) {
+  if (isTableChartDefinition(definition)) {
     return false
   }
 
@@ -283,13 +288,13 @@ const {
 } = composables.useContextLinks({
   queryBridge,
   chartData: readonly(chartData),
-  definition: toRef(props, 'definition'),
-  context: readonly(toRef(props, 'context')),
+  definition: toRef(() => definition),
+  context: readonly(toRef(() => context)),
 })
 
 const { issueQuery } = composables.useIssueQuery()
 
-watch(() => props.definition, async (newValue, oldValue) => {
+watch(() => definition, async (newValue, oldValue) => {
   await nextTick()
 
   if (titleRef.value) {
@@ -308,11 +313,11 @@ watch(() => props.definition, async (newValue, oldValue) => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || canExportCsv.value || props.context.editable)
+const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || canExportCsv.value || context.editable)
 
 // The shared header action container is hidden when tile actions are globally disabled.
-const canShowHeaderActions = computed((): boolean => !props.hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
-const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !props.isFullscreen)
+const canShowHeaderActions = computed((): boolean => !hideActions && canShowKebabMenu.value && kebabMenuHasItems.value)
+const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && kebabMenuHasItems.value && !isFullscreen)
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
@@ -337,7 +342,6 @@ const componentEventHandlers = computed(() => ({
 }))
 
 const componentData = computed(() => {
-  const definition = props.definition
   const component = rendererLookup[definition.chart.type]
   const isTableChart = isTableChartDefinition(definition)
 
@@ -349,16 +353,16 @@ const componentData = computed(() => {
   const supportsLoadingChange = !!(component as any)?.emits?.includes('loading-change')
   const rendererProps = {
     query: definition.query,
-    context: props.context,
-    queryReady: props.queryReady,
-    height: props.height - PADDING_SIZE * 2,
+    context: context,
+    queryReady: queryReady,
+    height: height - PADDING_SIZE * 2,
     refreshCounter: refreshCounter.value,
   }
   const chartRendererProps = {
     chartOptions: definition.chart,
     headerDescription: tileDescription.value,
-    requestsLink: props.hideZoomActions ? undefined : requestsLinkZoomActions.value,
-    exploreLink: props.hideZoomActions ? undefined : exploreLinkZoomActions.value,
+    requestsLink: hideZoomActions ? undefined : requestsLinkZoomActions.value,
+    exploreLink: hideZoomActions ? undefined : exploreLinkZoomActions.value,
   }
 
   return component && {
@@ -377,11 +381,11 @@ const componentData = computed(() => {
 })
 
 const badgeData = computed<string | null>(() => {
-  if (isTableChartDefinition(props.definition)) {
+  if (isTableChartDefinition(definition)) {
     return null
   }
 
-  const query = props.definition.query
+  const query = definition.query
   const timeRange = query?.time_range
 
   // TODO: Temporary until we have more robust solution for non-timeseries "platform analytics" charts
@@ -417,7 +421,7 @@ const hasTileHeader = computed<boolean>(() => {
     hasHeaderActions.value,
     Boolean(badgeData.value),
     Boolean(tileDescription.value),
-    props.showRefresh,
+    showRefresh,
   ].some(Boolean)
 })
 
@@ -431,11 +435,11 @@ const isTimeSeriesChart = computed(() => {
 
 const isAgedOutQuery = computed(() => {
   // Check table definitions first so TypeScript narrows before reading query.granularity.
-  if (isTableChartDefinition(props.definition) || !isTimeSeriesChart.value || !props.queryReady || loadingChartData.value) {
+  if (isTableChartDefinition(definition) || !isTimeSeriesChart.value || !queryReady || loadingChartData.value) {
     return false
   }
 
-  const savedGranularity = props.definition.query.granularity
+  const savedGranularity = definition.query.granularity
 
   if (!savedGranularity || !chartDataGranularity.value) {
     return false
@@ -447,7 +451,7 @@ const isAgedOutQuery = computed(() => {
 const agedOutWarning = computed(() => {
   const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
   // Check table definitions first so TypeScript narrows before reading query.granularity.
-  const savedGranularity = isTableChartDefinition(props.definition) ? 'unknown' : props.definition.query.granularity ?? 'unknown'
+  const savedGranularity = isTableChartDefinition(definition) ? 'unknown' : definition.query.granularity ?? 'unknown'
 
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
@@ -463,8 +467,7 @@ const agedOutWarning = computed(() => {
  * @returns Array of scoped filter objects to a datasource
  */
 const datasourceScopedFilters = computed(() => {
-  const definition = props.definition
-  const filters = [...props.context.filters, ...definition.query.filters ?? []] as AllFilters[]
+  const filters = [...context.filters, ...definition.query.filters ?? []] as AllFilters[]
   const metrics = 'metrics' in definition.query ? definition.query.metrics : undefined
   // TODO: default to api_usage until datasource is made required
   const datasource = definition.query.datasource ?? 'api_usage'
@@ -477,15 +480,15 @@ const datasourceScopedFilters = computed(() => {
 })
 
 const editTile = () => {
-  emit('edit-tile', props.definition)
+  emit('edit-tile', definition)
 }
 
 const duplicateTile = () => {
-  emit('duplicate-tile', props.definition)
+  emit('duplicate-tile', definition)
 }
 
 const removeTile = () => {
-  emit('remove-tile', props.definition)
+  emit('remove-tile', definition)
 }
 
 const onChartData = (data: ExploreResultV4) => {
@@ -514,14 +517,14 @@ const hideExportModal = () => {
 
 const getExportData = (): Promise<ExploreResultV4> => {
   // goap datasources don't allow limit increases
-  const isGoapDatasource = props.definition.query.datasource?.startsWith('goap')
+  const isGoapDatasource = definition.query.datasource?.startsWith('goap')
 
   // we intentionally default to true if unset
   const queryBridgeIncreases = queryBridge?.staticConfig?.increaseCsvExportLimit !== false
 
   if (queryBridgeIncreases && !isGoapDatasource) {
     // If we're allowed to increase the CSV export limit, issue a new query with an expanded limit.
-    return issueQuery(props.definition.query, props.context, EXPORT_RECORD_LIMIT)
+    return issueQuery(definition.query, context, EXPORT_RECORD_LIMIT)
   } else if (chartData.value) {
     // If we're not allowed to increase the limit, and results are available, use them.
     return Promise.resolve(chartData.value)
@@ -552,7 +555,7 @@ const exportCsv = async () => {
 
 const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
   const zoomEvent: TileZoomEvent = {
-    tileId: props.tileId.toString(),
+    tileId: tileId.toString(),
     timeRange: newTimeRange,
   }
   emit('tile-time-range-zoom', zoomEvent)
@@ -560,7 +563,7 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
 
 const onBoundsChange = (e: Array<[number, number]>) => {
   const boundsEvent: TileBoundsChangeEvent = {
-    tileId: props.tileId.toString(),
+    tileId: tileId.toString(),
     bounds: e,
   }
   emit('tile-bounds-change', boundsEvent)
