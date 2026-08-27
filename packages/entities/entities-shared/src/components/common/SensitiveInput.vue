@@ -5,7 +5,7 @@
   >
     <KInput
       v-if="!multiline"
-      autocomplete="off"
+      autocomplete="new-password"
       data-testid="sensitive-input"
       :disabled="disabled"
       :error="error"
@@ -72,7 +72,7 @@
     <!-- Multiline mode: KTextArea + action row below (no visibility toggle; textarea has no type="password") -->
     <template v-else>
       <KTextArea
-        autocomplete="off"
+        autocomplete="new-password"
         :character-limit="false"
         data-testid="sensitive-input"
         :disabled="disabled || undefined"

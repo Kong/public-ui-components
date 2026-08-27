@@ -17,6 +17,7 @@ describe('<SensitiveInput />', () => {
       })
 
       cy.getTestId('sensitive-input-rotate').should('not.exist')
+      input().should('have.attr', 'autocomplete', 'new-password')
       input().should('not.have.attr', 'readonly')
       input().type('my-secret')
       cy.then(() => Cypress.vueWrapper.emitted('update:modelValue'))
@@ -133,6 +134,7 @@ describe('<SensitiveInput />', () => {
         })
 
         textarea().should('not.have.attr', 'readonly')
+        textarea().should('have.attr', 'autocomplete', 'new-password')
         cy.getTestId('sensitive-input-toggle').should('not.exist')
         cy.getTestId('sensitive-input-rotate').should('not.exist')
       })
