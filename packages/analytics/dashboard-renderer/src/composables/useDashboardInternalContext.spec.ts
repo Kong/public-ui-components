@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { mount } from '@vue/test-utils'
 import useDashboardInternalContext from './useDashboardInternalContext'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
-import type { DashboardRendererContext, DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 import type {
   AllFilters,
   TimeRangeV4,
@@ -99,7 +99,7 @@ describe('useContextLinks', () => {
       isLoading ? new Promise(() => {}) : Promise.resolve([]),
     )
 
-    let internalContext: Ref<DashboardRendererContextInternal>
+    let internalContext: Ref<DashboardRendererContext>
     let queryReady: Ref<boolean>
     const wrapper = mount({
       template: '<div />',

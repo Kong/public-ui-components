@@ -3,7 +3,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { defineComponent, h, nextTick } from 'vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 import type {
   AnalyticsBridge,
   PlatformTabularResponse,
@@ -56,7 +56,7 @@ vi.mock('@kong-ui-public/analytics-config-store', () => ({
   useDatasourceConfigStore: vi.fn(),
 }))
 
-const context: DashboardRendererContextInternal = {
+const context: DashboardRendererContext = {
   filters: [],
   timeSpec: {
     type: 'relative',

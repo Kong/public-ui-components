@@ -44,7 +44,7 @@ import type {
   ValidDashboardChartQuery,
 } from '@kong-ui-public/analytics-utilities'
 import type { QueryError } from '@kong-ui-public/analytics-chart'
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 
 import { computed, inject, ref, watch } from 'vue'
 import useSWRV from 'swrv'
@@ -56,7 +56,7 @@ import { INJECT_QUERY_PROVIDER } from '../constants'
 import { VisibilityOffIcon, WarningOutlineIcon } from '@kong/icons'
 
 const props = defineProps<{
-  context: DashboardRendererContextInternal
+  context: DashboardRendererContext
   limitOverride?: number
   query: ValidDashboardChartQuery
   queryReady: boolean

@@ -4,7 +4,7 @@ import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-publ
 import { storeToRefs } from 'pinia'
 import type { DeepReadonly, Ref } from 'vue'
 import type { AiExploreAggregations, AiExploreQuery, AllFilters, AnalyticsBridge, ChartTileDefinition, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TableChartTileDefinition, TimeRangeV4, ValidDashboardTableQuery } from '@kong-ui-public/analytics-utilities'
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 import { isTableChartDefinition } from '../utils/tile-definition'
 
@@ -33,7 +33,7 @@ export default function useContextLinks(
     chartData,
   }: {
     queryBridge: AnalyticsBridge | undefined
-    context: Readonly<Ref<DeepReadonly<DashboardRendererContextInternal>>>
+    context: Readonly<Ref<DeepReadonly<DashboardRendererContext>>>
     definition: Readonly<Ref<ChartTileDefinition | TableChartTileDefinition>>
     chartData: Readonly<Ref<DeepReadonly<ExploreResultV4 | undefined>>>
   },

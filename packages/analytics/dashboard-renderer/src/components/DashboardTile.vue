@@ -169,7 +169,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContextInternal, TileBoundsChangeEvent, TileZoomEvent } from '../types'
+import type { DashboardRendererContext, TileBoundsChangeEvent, TileZoomEvent } from '../types'
 import type {
   AbsoluteTimeRangeV4,
   AiExploreQuery,
@@ -219,7 +219,7 @@ const {
   tileId,
   tileType = 'chart',
 } = defineProps<{
-  context: DashboardRendererContextInternal
+  context: DashboardRendererContext
   definition: TileDefinition
   height?: number
   hideActions?: boolean

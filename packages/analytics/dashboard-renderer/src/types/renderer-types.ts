@@ -13,16 +13,8 @@ export interface DashboardRendererContext {
   refreshInterval?: number
   editable?: boolean
   showTileActions?: boolean
-}
-
-// The DashboardRenderer component fills in optional values before passing them down to the tile renderers.
-export interface DashboardRendererContextInternal extends Required<DashboardRendererContext> {
-  zoomable: boolean
-  /**
-   * only used internally as controlling this externally is just a matter of
-   * including a zoom handler on the DashboardRenderer component.
-   */
-  showTileZoomActions: boolean
+  zoomable?: boolean
+  showTileZoomActions?: boolean
 }
 
 export interface PdfExportOptions {
@@ -69,7 +61,7 @@ export interface PdfExportState {
 
 export interface ChartRendererProps<T> {
   query: ValidDashboardChartQuery
-  context: DashboardRendererContextInternal
+  context: DashboardRendererContext
   queryReady: boolean
   chartOptions: T
   height: number
@@ -81,7 +73,7 @@ export interface ChartRendererProps<T> {
 
 export interface TableRendererProps {
   query: ValidDashboardTableQuery
-  context: DashboardRendererContextInternal
+  context: DashboardRendererContext
   queryReady: boolean
   height?: number
   refreshCounter: number

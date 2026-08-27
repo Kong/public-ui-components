@@ -6,7 +6,7 @@ import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 import type { TileDefinition } from '@kong-ui-public/analytics-utilities'
 import Kongponents from '@kong/kongponents'
 
@@ -128,7 +128,7 @@ const mockQueryProvider = {
   evaluateFeatureFlagFn: () => true,
 }
 
-const mockContext: DashboardRendererContextInternal = {
+const mockContext: DashboardRendererContext = {
   filters: [],
   timeSpec: {
     type: 'relative',

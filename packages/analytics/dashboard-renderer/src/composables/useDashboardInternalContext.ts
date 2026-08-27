@@ -1,5 +1,5 @@
 import { computed, getCurrentInstance, ref, type Ref, type DeepReadonly } from 'vue'
-import type { DashboardRendererContext, DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 import type {
   AllFilters,
   TimeRangeV4,
@@ -23,7 +23,7 @@ export default function useDashboardInternalContext({
   isFullscreen?: Readonly<Ref<boolean>>
   preview?: Readonly<Ref<boolean>>
 }): {
-  internalContext: Readonly<Ref<DashboardRendererContextInternal>>
+  internalContext: Readonly<Ref<DashboardRendererContext>>
   queryReady: Readonly<Ref<boolean>>
 } {
   const configStore = useAnalyticsConfigStore()
@@ -42,7 +42,7 @@ export default function useDashboardInternalContext({
     }
   })
 
-  const internalContext = computed<DashboardRendererContextInternal>(() => {
+  const internalContext = computed<DashboardRendererContext>(() => {
     let { tz, refreshInterval, editable, showTileActions } = context.value
     const filters = [...(context.value.filters ?? []), ...(globalFilters.value)] as AllFilters[]
 

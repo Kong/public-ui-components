@@ -1,4 +1,4 @@
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 import type {
   AllFilters,
   AnalyticsBridge,
@@ -101,7 +101,7 @@ const platformTableDataGridFetcher = async ({
   tabularQueryFn,
 }: {
   abortController: AbortController
-  context: DashboardRendererContextInternal
+  context: DashboardRendererContext
   cursor?: unknown
   onResponseColumns?: (columns: string[]) => void
   pageSize: number
