@@ -5,7 +5,7 @@
   >
     <KInput
       v-if="!multiline"
-      autocomplete="off"
+      :autocomplete="autocomplete"
       data-testid="sensitive-input"
       :disabled="disabled"
       :error="error"
@@ -72,7 +72,7 @@
     <!-- Multiline mode: KTextArea + action row below (no visibility toggle; textarea has no type="password") -->
     <template v-else>
       <KTextArea
-        autocomplete="off"
+        :autocomplete="autocomplete"
         :character-limit="false"
         data-testid="sensitive-input"
         :disabled="disabled || undefined"
@@ -191,6 +191,7 @@ const {
   error = false,
   errorMessage,
   multiline = false,
+  autocomplete = 'off',
 } = defineProps<{
   /** The sensitive value, bound via v-model. */
   modelValue?: string
@@ -227,6 +228,7 @@ const {
   errorMessage?: string
   /** When true, renders a KTextArea instead of a KInput. */
   multiline?: boolean
+  autocomplete?: 'off' | 'new-password'
 }>()
 
 const emit = defineEmits<{

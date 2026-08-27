@@ -17,10 +17,19 @@ describe('<SensitiveInput />', () => {
       })
 
       cy.getTestId('sensitive-input-rotate').should('not.exist')
+      input().should('have.attr', 'autocomplete', 'off')
       input().should('not.have.attr', 'readonly')
       input().type('my-secret')
       cy.then(() => Cypress.vueWrapper.emitted('update:modelValue'))
         .should('not.be.undefined')
+    })
+
+    it('forwards the autocomplete prop', () => {
+      cy.mount(SensitiveInput, {
+        props: { autocomplete: 'new-password' },
+      })
+
+      input().should('have.attr', 'autocomplete', 'new-password')
     })
 
     it('defaults to an empty value when modelValue is omitted', () => {
@@ -133,8 +142,17 @@ describe('<SensitiveInput />', () => {
         })
 
         textarea().should('not.have.attr', 'readonly')
+        textarea().should('have.attr', 'autocomplete', 'off')
         cy.getTestId('sensitive-input-toggle').should('not.exist')
         cy.getTestId('sensitive-input-rotate').should('not.exist')
+      })
+
+      it('forwards the autocomplete prop', () => {
+        cy.mount(SensitiveInput, {
+          props: { autocomplete: 'new-password', multiline: true },
+        })
+
+        textarea().should('have.attr', 'autocomplete', 'new-password')
       })
 
       it('emits update:modelValue while typing', () => {
