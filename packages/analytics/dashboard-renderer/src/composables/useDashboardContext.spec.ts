@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { mount } from '@vue/test-utils'
-import useDashboardInternalContext from './useDashboardInternalContext'
+import useDashboardContext from './useDashboardContext'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import type { DashboardRendererContext } from '../types'
 import type {
@@ -99,18 +99,18 @@ describe('useContextLinks', () => {
       isLoading ? new Promise(() => {}) : Promise.resolve([]),
     )
 
-    let internalContext: Ref<DashboardRendererContext>
+    let enrichedContext: Ref<DashboardRendererContext>
     let queryReady: Ref<boolean>
     const wrapper = mount({
       template: '<div />',
       setup() {
-        const result = useDashboardInternalContext({
+        const result = useDashboardContext({
           context,
           globalFilters: ref(globalFilters),
           isFullscreen: ref(isFullscreen),
           preview: ref(preview),
         })
-        internalContext = result.internalContext
+        enrichedContext = result.enrichedContext
         queryReady = result.queryReady
       },
     })
@@ -120,14 +120,14 @@ describe('useContextLinks', () => {
     return {
       wrapper,
       // @ts-ignore it's defined in mount, and we await nextTick for it
-      internalContext,
+      enrichedContext,
       // @ts-ignore it's defined in mount, and we await nextTick for it
       queryReady,
     }
   }
 
   it('has sane defaults when the minimum is provided', async () => {
-    const { internalContext } = await setup({ contextFilters: [] })
+    const { enrichedContext } = await setup({ contextFilters: [] })
 
     const configStore = useAnalyticsConfigStore()
     const defaultTimeSpec = {
@@ -135,7 +135,7 @@ describe('useContextLinks', () => {
       time_range: configStore.defaultQueryTimeForOrg,
     }
 
-    expect(internalContext.value).to.deep.eq({
+    expect(enrichedContext.value).to.deep.eq({
       editable: false,
       filters: [],
       refreshInterval: DEFAULT_TILE_REFRESH_INTERVAL_MS,
@@ -149,8 +149,8 @@ describe('useContextLinks', () => {
 
   it('uses the context timeSpec when provided', async () => {
     const timeSpec: TimeRangeV4 = { type: 'relative', time_range: '1h' }
-    const { internalContext, queryReady } = await setup({ contextTimeSpec: timeSpec })
-    expect(internalContext.value).toEqual(expect.objectContaining({ timeSpec }))
+    const { enrichedContext, queryReady } = await setup({ contextTimeSpec: timeSpec })
+    expect(enrichedContext.value).toEqual(expect.objectContaining({ timeSpec }))
     expect(queryReady.value).to.eq(true)
   })
 
@@ -162,21 +162,21 @@ describe('useContextLinks', () => {
 
   it('uses the context tz when provided', async () => {
     const tz:string = 'UTC'
-    const { internalContext } = await setup({ contextTz: tz })
-    expect(internalContext.value).toEqual(expect.objectContaining({ tz }))
+    const { enrichedContext } = await setup({ contextTz: tz })
+    expect(enrichedContext.value).toEqual(expect.objectContaining({ tz }))
   })
 
   it('uses the context editable when provided', async () => {
     const editable = true
-    const { internalContext } = await setup({ contextEditable: editable })
-    expect(internalContext.value).toEqual(expect.objectContaining({ editable }))
+    const { enrichedContext } = await setup({ contextEditable: editable })
+    expect(enrichedContext.value).toEqual(expect.objectContaining({ editable }))
   })
 
   it.each([
     [0], [100], [42], [30000],
   ])('uses the context refreshInterval \'%s\' when provided', async (refreshInterval: number) => {
-    const { internalContext } = await setup({ contextRefreshInterval: refreshInterval })
-    expect(internalContext.value).toEqual(expect.objectContaining({ refreshInterval }))
+    const { enrichedContext } = await setup({ contextRefreshInterval: refreshInterval })
+    expect(enrichedContext.value).toEqual(expect.objectContaining({ refreshInterval }))
   })
 
   it.each([
@@ -208,8 +208,8 @@ describe('useContextLinks', () => {
       end: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes in the future
     } as TimeRangeV4],
   ])('sets the refreshInterval to %s when isFullscreen and timeSpec %s', async (expectedInterval, title, contextTimeSpec) => {
-    const { internalContext } = await setup({ isFullscreen: true, contextTimeSpec })
-    expect(internalContext.value.refreshInterval).toEqual(expectedInterval)
+    const { enrichedContext } = await setup({ isFullscreen: true, contextTimeSpec })
+    expect(enrichedContext.value.refreshInterval).toEqual(expectedInterval)
   })
 
   it.each([
@@ -234,24 +234,24 @@ describe('useContextLinks', () => {
         field: 'status_code', operator: 'in', value: ['test_status_code'],
       }]
 
-    const { internalContext } = await setup({ contextFilters, globalFilters })
-    expect(internalContext.value).toEqual(expect.objectContaining({
+    const { enrichedContext } = await setup({ contextFilters, globalFilters })
+    expect(enrichedContext.value).toEqual(expect.objectContaining({
       filters: [...contextFilters, ...globalFilters],
     }))
   })
 
   it('sets zoomable to true if the node has the onTileTimeRangeZoom prop', async () => {
-    const { internalContext } = await setup({ hasZoomProp: true })
-    expect(internalContext.value.zoomable).to.eq(true)
+    const { enrichedContext } = await setup({ hasZoomProp: true })
+    expect(enrichedContext.value.zoomable).to.eq(true)
   })
 
   it('forces editable to false when preview is true, even if context.editable is true', async () => {
-    const { internalContext } = await setup({ contextEditable: true, preview: true })
-    expect(internalContext.value.editable).to.eq(false)
+    const { enrichedContext } = await setup({ contextEditable: true, preview: true })
+    expect(enrichedContext.value.editable).to.eq(false)
   })
 
   it('forces zoomable to false when preview is true, even if the node has the onTileTimeRangeZoom prop', async () => {
-    const { internalContext } = await setup({ hasZoomProp: true, preview: true })
-    expect(internalContext.value.zoomable).to.eq(false)
+    const { enrichedContext } = await setup({ hasZoomProp: true, preview: true })
+    expect(enrichedContext.value.zoomable).to.eq(false)
   })
 })

@@ -12,7 +12,7 @@ import {
 } from '../constants'
 import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 
-export default function useDashboardInternalContext({
+export default function useDashboardContext({
   context,
   globalFilters = ref([]),
   isFullscreen = ref(false),
@@ -23,12 +23,20 @@ export default function useDashboardInternalContext({
   isFullscreen?: Readonly<Ref<boolean>>
   preview?: Readonly<Ref<boolean>>
 }): {
-  internalContext: Readonly<Ref<DashboardRendererContext>>
+  editable: Readonly<Ref<boolean>>
+  enrichedContext: Readonly<Ref<DashboardRendererContext>>
+  filters: Readonly<Ref<AllFilters[]>>
   queryReady: Readonly<Ref<boolean>>
+  refreshInterval: Readonly<Ref<number>>
+  showTileActions: Readonly<Ref<boolean>>
+  showTileZoomActions: Readonly<Ref<boolean>>
+  timeSpec: Readonly<Ref<TimeRangeV4>>
+  tz: Readonly<Ref<string>>
+  zoomable: Readonly<Ref<boolean>>
 } {
   const configStore = useAnalyticsConfigStore()
   const datasourceStore = useDatasourceConfigStore()
-  const { loading: configloading } = storeToRefs(configStore)
+  const { loading: configLoading } = storeToRefs(configStore)
   const { loading: datasourceLoading } = storeToRefs(datasourceStore)
 
   const timeSpec = computed<TimeRangeV4>(() => {
@@ -42,13 +50,55 @@ export default function useDashboardInternalContext({
     }
   })
 
-  const internalContext = computed<DashboardRendererContext>(() => {
-    let { tz, refreshInterval, editable, showTileActions } = context.value
-    const filters = [...(context.value.filters ?? []), ...(globalFilters.value)] as AllFilters[]
+  const tz = computed<string>(() => {
+    // Get the timezone property from the context if it exists, otherwise use the browser's current timezone.
+    const { tz } = context.value
 
     if (!tz) {
-      tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
+      return (new Intl.DateTimeFormat()).resolvedOptions().timeZone
     }
+
+    return tz
+  })
+
+  const editable = computed<boolean>(() => {
+    // We're not editable if the context.editable is undefined, or if we're currently previewing.
+    const { editable } = context.value
+
+    if (editable === undefined || preview.value) {
+      return false
+    }
+
+    return editable
+  })
+
+  const showTileActions = computed<boolean>(() => {
+    const { showTileActions } = context.value
+
+    if (preview.value) {
+      return false
+    }
+
+    if (showTileActions === undefined) {
+      return true
+    }
+
+    return showTileActions
+  })
+
+  const zoomable = computed<boolean>(() => {
+    // Check if the host app has provided an event handler for zooming.
+    // If there's no handler, disable zooming -- it won't do anything.
+    // Preview mode also disables zooming.
+    return !preview.value && !!getCurrentInstance()?.vnode?.props?.onTileTimeRangeZoom
+  })
+
+  const filters = computed<AllFilters[]>(() => {
+    return [...(context.value.filters ?? []), ...(globalFilters.value)] as AllFilters[]
+  })
+
+  const refreshInterval = computed<number>(() => {
+    let { refreshInterval } = context.value
 
     // Check explicitly against undefined because 0 is a valid refresh interval.
     if (refreshInterval === undefined) {
@@ -89,37 +139,47 @@ export default function useDashboardInternalContext({
       }
     }
 
-    if (editable === undefined || preview.value) {
-      editable = false
-    }
+    return refreshInterval
+  })
 
-    if (showTileActions === undefined) {
-      showTileActions = true
-    }
+  const showTileZoomActions = computed<boolean>(() => {
+    return !preview.value
+  })
 
-    // Check if the host app has provided an event handler for zooming.
-    // If there's no handler, disable zooming -- it won't do anything.
-    // Preview mode also disables zooming.
-    const zoomable = !preview.value && !!getCurrentInstance()?.vnode?.props?.onTileTimeRangeZoom
-
+  const enrichedContext = computed<DashboardRendererContext>(() => {
     return {
-      filters,
-      tz,
+      filters: filters.value,
       timeSpec: timeSpec.value,
-      refreshInterval,
-      editable,
-      showTileActions: showTileActions && !preview.value,
-      showTileZoomActions: !preview.value,
-      zoomable,
+      tz: tz.value,
+      refreshInterval: refreshInterval.value,
+      editable: editable.value,
+      showTileActions: showTileActions.value,
+      showTileZoomActions: showTileZoomActions.value,
+      zoomable: zoomable.value,
     }
   })
 
   const queryReady = computed<boolean>(() => {
-    return !!context.value.timeSpec || (!configloading.value && !datasourceLoading.value)
+    return !configLoading.value && !datasourceLoading.value
   })
 
   return {
-    internalContext,
+    editable,
+    /**
+     * the context with all values enriched with any external circumstances that
+     * may modify how it works applied to it.
+     */
+    enrichedContext,
+    filters,
+    /**
+     * A basic check to see if all configuration has been loaded.
+     */
     queryReady,
+    refreshInterval,
+    showTileActions,
+    showTileZoomActions,
+    timeSpec,
+    tz,
+    zoomable,
   }
 }
