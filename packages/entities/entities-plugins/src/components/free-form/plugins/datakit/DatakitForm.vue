@@ -1,6 +1,7 @@
 <template>
   <Teleport
     v-if="formConfig.app === 'konnect'"
+    defer
     :disabled="!hasTeleportTarget"
     to="#plugin-form-page-actions"
   >
