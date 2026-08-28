@@ -1,7 +1,6 @@
 <template>
-  <Teleport
+  <TeleportWithFallback
     v-if="formConfig.app === 'konnect'"
-    :disabled="!hasTeleportTarget"
     to="#plugin-form-page-actions"
   >
     <KSegmentedControl
@@ -25,7 +24,7 @@
         </KTooltip>
       </template>
     </KSegmentedControl>
-  </Teleport>
+  </TeleportWithFallback>
 
   <DynamicLayout
     v-bind="{ ...attrs, ...props }"
@@ -77,7 +76,7 @@ import type { PluginFormLayoutProps as Props } from '../../shared/layout/provide
 import type { ConfigSection } from '../../shared/types'
 import type { EditorMode, DatakitPluginData } from './types'
 
-import { computed, inject, onMounted, ref, watch, useAttrs } from 'vue'
+import { computed, inject, ref, watch, useAttrs } from 'vue'
 import { escape } from 'lodash-es'
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
@@ -90,6 +89,7 @@ import { FEATURE_FLAGS } from '../../../../constants'
 import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
 import CaCertificatesField from './CaCertificatesField.vue'
 import CodeEditor from './CodeEditor.vue'
+import TeleportWithFallback from './TeleportWithFallback.vue'
 import { usePreferences } from './composables'
 import FlowEditor from './flow-editor/FlowEditor.vue'
 // import { DatakitConfigSchema } from './schema/strict'
@@ -106,12 +106,6 @@ const attrs = useAttrs()
 
 // provided by consumer apps
 const formConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!
-
-// Check if the teleport target exists
-const hasTeleportTarget = ref(false)
-onMounted(() => {
-  hasTeleportTarget.value = !!document.querySelector('#plugin-form-page-actions')
-})
 
 // Editor mode selection
 
