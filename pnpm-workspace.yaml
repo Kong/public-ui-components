@@ -46,6 +46,7 @@ overrides:
   immutable@>=5.0.0-beta.1 <5.1.8: '>=5.1.9'
   immutable@<4.3.9: '>=4.3.9 <6.0.0'
   ip-address@<=10.3.0: '>=10.5.0'
+  pacote@>=11.2.7 <21.5.1: '>=21.5.1'
 
 onlyBuiltDependencies:
   - '@evilmartians/lefthook'
