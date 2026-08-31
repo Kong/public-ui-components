@@ -270,42 +270,21 @@ jobs:
 
           filterStr=$(echo ${versions} | jq -r 'try .[]|"--filter "+.name' | tr '\n' ' ')
 
+          rm -f pnpm-publish-summary.json
+
           if [[ "${filterStr}" != "" ]]; then
-            set +e
-            pnpmPublish=$(pnpm $filterStr publish  --no-git-checks --access public --report-summary --tag "${tag}" 2>pnpm_publish_stderr.txt)
-            publishExitCode=$?
-            set -e
-            echo "::group::DEBUG pnpm publish"
-            echo "exit code: ${publishExitCode}"
-            echo "--- stdout ---"
-            echo "${pnpmPublish}"
-            echo "--- stderr ---"
-            cat pnpm_publish_stderr.txt
-            if [ -f pnpm-publish-summary.json ]; then
-              echo "--- pnpm-publish-summary.json ---"
-              cat pnpm-publish-summary.json
-            fi
-            echo "::endgroup::"
+            pnpm $filterStr publish --no-git-checks --access public --report-summary --tag "${tag}"
           fi
 
-          if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
+          if [[ ! -f pnpm-publish-summary.json ]]; then
             echo "There are no new packages that should be published"
             exit 0
           fi
 
-          npm_instructions=""
-          for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
-          do
-            # KHCP-14702 temp solution till pubsub in internal registry is not implemented
-            name=$(echo ${pkg}|cut -d'@' -f2)
-            version=$(echo ${pkg}|cut -d'@' -f3)
-
-            pkg="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
-            if [ "${npm_instructions}" != "" ]; then
-              npm_instructions="${npm_instructions}\n"
-            fi
-            npm_instructions="${npm_instructions}${pkg}"
-          done
+          # pnpm 11's native publish flow no longer prints npm CLI's "+ name@version"
+          # lines to stdout, so the published package list is read from the
+          # --report-summary JSON file instead.
+          npm_instructions=$(jq -r --arg tag "${tag}" '.publishedPackages[]?|.name+"@"+$tag' pnpm-publish-summary.json)
 
           if [[ -z "${npm_instructions}" ]]; then
             echo "Error creating preview instructions"
