@@ -1,5 +1,5 @@
 import { isTagField, resolve, toArray } from '../shared/utils'
-import { buildAncestor, buildSchemaMap, defaultLabelFormatter, generalizePath } from '../shared/composables'
+import { buildAncestor, buildSchemaMap, defaultLabelFormatter, EXPRESSIONS_FIELD, generalizePath } from '../shared/composables'
 
 import type {
   BooleanFieldSchema,
@@ -40,6 +40,14 @@ export function assertFormRendering(schema: FormSchema, options?: {
   function assertFields(fields: NamedFieldSchema[], prefix?: string) {
     for (const field of fields) {
       const fieldName = Object.keys(field)[0]
+
+      // Mirrors `Form.vue`: the root `expressions` record is a companion to its
+      // sibling record rather than a field, and is rendered inline by each
+      // expressible field it overrides — never as a record of its own.
+      if (!prefix && fieldName === EXPRESSIONS_FIELD) {
+        continue
+      }
+
       const fieldKey = prefix ? resolve(prefix, fieldName) : fieldName
       const path = generalizePath(fieldKey, schemaMap)
       const fieldSchema = schemaMap[path]

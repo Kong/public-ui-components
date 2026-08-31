@@ -49,12 +49,26 @@ export type ConditionalAtLeastOneOfEntityCheck = {
   }
 }
 
+/**
+ * A check the Gateway evaluates with plugin-specific logic across several field
+ * sources (e.g. rate-limiting-advanced validating `config` against
+ * `expressions`). It names no individual fields, so the form has nothing to
+ * render or act on and ignores it — declared here only so real schemas type-check.
+ */
+export type CustomEntityCheck = {
+  custom_entity_check: {
+    field_sources: string[]
+    run_with_missing_fields?: boolean
+  }
+}
+
 export type EntityCheck =
   | AtLeastOneOfEntityCheck
   | MutuallyRequiredEntityCheck
   | MutuallyExclusiveEntityCheck
   | ConditionalEntityCheck
   | ConditionalAtLeastOneOfEntityCheck
+  | CustomEntityCheck
 
 export interface FieldSchema {
   type: FieldSchemaType
@@ -68,6 +82,14 @@ export interface FieldSchema {
   help?: string
 
   entity_checks?: EntityCheck[]
+
+  /**
+   * The Gateway marks a field `expressible` when its value may alternatively be
+   * supplied as an expression evaluated on every request, which takes priority
+   * over the plain value. The expression itself lives in a twin field under the
+   * schema's top-level `expressions` record — see {@link ExpressionFieldSchema}.
+   */
+  expressible?: boolean
 }
 
 export interface StringFieldSchema extends FieldSchema {
@@ -101,6 +123,24 @@ export interface StringFieldSchema extends FieldSchema {
   }
 
   pattern?: string
+}
+
+/**
+ * The twin of an {@link FieldSchema.expressible} field, found under the
+ * top-level `expressions` record at the same relative path — `config.minute`
+ * pairs with `expressions.minute`, and the elements of the array `config.limit`
+ * pair with the elements of `expressions.limit`.
+ *
+ * It always holds the expression source as a string. `expressible_kong_type` is
+ * the type the expression must evaluate to, and `source_field` mirrors the
+ * schema of the field it overrides.
+ *
+ * Not a member of `UnionFieldSchema`: it is structurally a `string` field and is
+ * rendered as one. The extra keys are read through this type where needed.
+ */
+export interface ExpressionFieldSchema extends StringFieldSchema {
+  expressible_kong_type: FieldSchemaType
+  source_field: UnionFieldSchema
 }
 
 export interface NumberLikeFieldSchema extends FieldSchema {

@@ -223,6 +223,7 @@ import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
+import { EXPRESSIONS_FIELD } from './free-form/shared/composables'
 import { BEFORE_SAVE_KEY } from './const'
 import type { GlobalAction } from './free-form/shared/types'
 import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
@@ -742,6 +743,15 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
   // alphabetically sort the schema keys and handle specific configuration for each field type
   Object.keys(schema).sort().forEach(key => {
+    // The root `expressions` record holds the expression twin of every field the
+    // Gateway marks `expressible`. Freeform renders each twin inline beside the
+    // field it overrides (see `ExpressionField`); VFG has no such affordance, and
+    // the generic record walk below would flatten the record into a row of stray
+    // `expressions-*` inputs, so skip it entirely.
+    if (!parentKey && key === EXPRESSIONS_FIELD) {
+      return
+    }
+
     const scheme = schema[key]
     // If the field type is 'set', convert it to 'array'
     // Freeform can handle 'set' type with one_of elements as multiselect

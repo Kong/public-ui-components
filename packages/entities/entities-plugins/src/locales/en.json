@@ -1676,6 +1676,10 @@
       "options": {
         "fixed": "Fixed",
         "sliding": "Sliding"
+      },
+      "descriptions": {
+        "fixed": "Each request counts against one static time bucket, and only that bucket's counter.",
+        "sliding": "Each request counts against a rolling window, weighted by the rate of the window before it."
       }
     },
     "request_limits": {
@@ -1686,7 +1690,10 @@
       "request_number": "Request number",
       "time_interval": "Time interval",
       "interval_determiner": "Every",
-      "seconds": "Seconds"
+      "seconds": "Seconds",
+      "custom": "Custom",
+      "add_limit": "Add limit",
+      "remove_limit": "Remove limit {index}"
     },
     "error_message": {
       "label": "Error message",

@@ -3,6 +3,11 @@ export type FreeFormPluginData<
   TUIData extends Record<string, any> = Record<string, any>,
 > = {
   config?: TConfig
+  /**
+   * Expression twins of the `expressible` fields in `config`, mirroring its
+   * structure. A root-level sibling of `config`, not part of it.
+   */
+  expressions?: Record<string, any> | null
   instance_name?: string
   condition?: string | null
   partials?: Array<{ id: string, path?: string }> | null

@@ -1,4 +1,4 @@
-import { buildSchemaMap, generalizePath } from '../../shared/composables'
+import { buildSchemaMap, generalizePath, isExpressionFieldSchema } from '../../shared/composables'
 import { resolve } from '../../shared/utils'
 import { isEnumField, isTagField } from './schema-utils'
 import { get } from 'lodash-es'
@@ -21,6 +21,8 @@ export type HandlerType =
   | 'tag'
   | 'json'
   | 'foreign'
+  | 'expression'
+  | 'expressionArray'
 
 export interface FieldToFill {
   handlerType: HandlerType
@@ -37,6 +39,17 @@ export interface FillerContext {
  * Determine handler type from field schema
  */
 export function getHandlerType(fieldSchema: UnionFieldSchema): HandlerType {
+  // Checked before the string and array branches: a twin is a string field, but
+  // its input is behind a trigger the handler has to open first, and an array of
+  // twins has no container or add-button of its own — its rows come from the
+  // source array it mirrors.
+  if (isExpressionFieldSchema(fieldSchema)) return 'expression'
+  if (
+    (fieldSchema.type === 'array' || fieldSchema.type === 'set')
+    && isExpressionFieldSchema(fieldSchema.elements)
+  ) {
+    return 'expressionArray'
+  }
   if (isEnumField(fieldSchema)) return 'enum'
 
   switch (fieldSchema.type) {

@@ -21,12 +21,18 @@
       </template>
     </KLabel>
 
-    <div class="horizontal-container">
+    <div
+      class="horizontal-container"
+      :class="{ 'ff-radio-field-cards': card }"
+    >
       <KRadio
         v-for="item of realItems"
         :key="item.value"
         v-model:model-value="field.value.value"
+        :card="card"
         card-orientation="horizontal"
+        :data-testid="`ff-radio-${field.path.value}-${item.value}`"
+        :description="item.description"
         :label="item.label"
         :selected-value="item.value"
         @update:model-value="onChange"
@@ -43,23 +49,33 @@ import type { BaseFieldProps } from './types'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
+/** A `description` only renders in `card` mode, where KRadio has room for it. */
+interface RadioFieldItem extends SelectItem {
+  description?: string
+}
+
 interface EnumFieldProps extends BaseFieldProps {
   labelAttributes?: LabelAttributes
   multiple?: boolean
-  items?: SelectItem[]
+  items?: RadioFieldItem[]
   label?: string
+  /**
+   * Render each option as a selectable card. Use for a small set of choices that
+   * need a description to tell them apart; plain radios otherwise.
+   */
+  card?: boolean
 }
 
 const emit = defineEmits<{
   'update:modelValue': [value: number | string]
 }>()
 
-const { name, items, ...props } = defineProps<EnumFieldProps>()
+const { name, items, card, ...props } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
 const field = useField<number | string>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
-const realItems = computed<SelectItem[]>(() => {
+const realItems = computed<RadioFieldItem[]>(() => {
   if (items) return items
   if (field.path) {
     return getSelectItems(field.path.value)
@@ -78,12 +94,15 @@ const onChange = (v: any) => {
 <style lang="scss" scoped>
 .horizontal-container {
   display: flex;
-  flex-wrap: wrap;
   gap: var(--kui-space-60, $kui-space-60);
 }
 
-:deep(.radio-label) {
-  font-size: var(--kui-font-size-30, $kui-font-size-30);
-  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+// Card options keep KRadio's own label weight, which pairs with the description
+// underneath; plain radios read better at body weight.
+.horizontal-container:not(.ff-radio-field-cards) {
+  :deep(.radio-label) {
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  }
 }
 </style>

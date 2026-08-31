@@ -1,5 +1,6 @@
 import type {
   BooleanFieldSchema,
+  ExpressionFieldSchema,
   FormSchema,
   NumberLikeFieldSchema,
   RecordFieldSchema,
@@ -7,6 +8,7 @@ import type {
   MapFieldSchema,
   ArrayLikeFieldSchema,
   ForeignFieldSchema,
+  UnionFieldSchema,
 } from '../../src/types/plugins/form-schema'
 
 export function buildStringFieldCases(): Array<{ [name: string]: StringFieldSchema }> {
@@ -495,6 +497,105 @@ export function buildForeignFieldCases(): Array<{ [name: string]: ForeignFieldSc
   ]
 }
 
+/**
+ * Fields the Gateway marks `expressible`: their value may alternatively be
+ * supplied as an expression, which takes priority over the plain value. Each
+ * one is paired with a twin under the root `expressions` record built by
+ * `buildExpressionTwinCases()` — the two halves are only meaningful together.
+ *
+ * Wrapped in a record because a twin path mirrors the source path with its first
+ * segment swapped for `expressions`, so a field at the very root has no twin.
+ * Named something other than `config` on purpose: nothing about the convention
+ * is specific to the record real plugin schemas happen to use.
+ */
+export function buildExpressibleFieldCases(): Array<{ [name: string]: RecordFieldSchema }> {
+  return [
+    {
+      expressible: {
+        type: 'record',
+        required: true,
+        description: 'Fields whose value can also be given as an expression',
+        fields: [
+          {
+            number_expressible: {
+              type: 'number',
+              expressible: true,
+              description: 'A number field with an expression alternative',
+              gt: 0,
+            },
+          },
+          {
+            string_expressible: {
+              type: 'string',
+              expressible: true,
+              description: 'A string field with an expression alternative',
+            },
+          },
+          {
+            array_expressible: {
+              type: 'array',
+              expressible: true,
+              description: 'An array field whose elements each take an expression',
+              elements: {
+                type: 'number',
+              },
+            },
+          },
+          {
+            number_plain: {
+              type: 'number',
+              description: 'Not expressible — renders no expression control',
+            },
+          },
+        ],
+      },
+    },
+  ]
+}
+
+/**
+ * The `expressions` record: one twin per expressible field above, at the same
+ * relative path. `Form` never renders this record directly — each entry is
+ * rendered inline by the field it overrides.
+ */
+export function buildExpressionTwinCases(): Array<{ [name: string]: RecordFieldSchema }> {
+  const expression = (
+    kongType: 'number' | 'string',
+    sourceField: UnionFieldSchema,
+  ): ExpressionFieldSchema => ({
+    type: 'string',
+    len_min: 0,
+    len_max: 1024,
+    expressible_kong_type: kongType,
+    source_field: sourceField,
+  })
+
+  return [
+    {
+      expressions: {
+        type: 'record',
+        required: false,
+        fields: [
+          {
+            number_expressible: expression('number', { type: 'number', gt: 0 }),
+          },
+          {
+            string_expressible: expression('string', { type: 'string' }),
+          },
+          {
+            // Mirrors the source array element-wise, so `expressions.array_expressible.0`
+            // overrides `expressible.array_expressible.0`.
+            array_expressible: {
+              type: 'array',
+              elements: expression('number', { type: 'number' }),
+            },
+          },
+        ],
+      },
+    },
+  ]
+}
+
 export function buildMockingSchema(): FormSchema {
   return {
     type: 'record',
@@ -509,6 +610,8 @@ export function buildMockingSchema(): FormSchema {
       ...buildTagFieldCases(),
       ...buildArrayFieldCases(),
       ...buildForeignFieldCases(),
+      ...buildExpressibleFieldCases(),
+      ...buildExpressionTwinCases(),
     ],
   }
 }

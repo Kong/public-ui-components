@@ -9,6 +9,7 @@ import type {
   SetFieldSchema,
   MapFieldSchema,
   JsonFieldSchema,
+  ExpressionFieldSchema,
   ForeignFieldSchema,
 } from '../../../../types/plugins/form-schema'
 import {
@@ -78,6 +79,19 @@ export function createFiller(
         break
       case 'foreign':
         await mergedHandlers.fillForeign({ page, fieldKey, fieldSchema: fieldSchema as ForeignFieldSchema, value })
+        break
+      case 'expression':
+        await mergedHandlers.fillExpression({ page, fieldKey, fieldSchema: fieldSchema as ExpressionFieldSchema, value })
+        break
+      case 'expressionArray':
+        // No container and no add-button: the rows belong to the source array
+        // this one mirrors, so only fill the indices that carry an expression.
+        if (Array.isArray(value)) {
+          for (const [index, itemValue] of value.entries()) {
+            if (itemValue === undefined || itemValue === null) continue
+            await handleArrayItem(ctx, fieldKey, index, itemValue)
+          }
+        }
         break
       case 'array':
         await mergedHandlers.fillArray({

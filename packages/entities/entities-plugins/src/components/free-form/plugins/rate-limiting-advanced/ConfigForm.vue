@@ -18,6 +18,11 @@
       v-if="getSchema('config.counter_key')"
       name="config.counter_key"
     />
+    <!-- Added by a newer Gateway alongside the `expressions` record. -->
+    <Field
+      v-if="getSchema('config.custom_key')"
+      name="config.custom_key"
+    />
     <Field name="config.sync_rate" />
     <Field name="config.namespace" />
     <Field name="config.strategy" />

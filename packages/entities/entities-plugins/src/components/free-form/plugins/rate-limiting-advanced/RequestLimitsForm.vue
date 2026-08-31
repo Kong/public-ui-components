@@ -17,6 +17,7 @@
     <div class="rla-form-request-limits-content">
       <div class="rla-form-window-type">
         <RadioField
+          card
           :items="availableWindowTypes"
           :label="t('sp.window_type.label')"
           name="window_type"
@@ -40,33 +41,40 @@
             >
               <NumberField
                 :name="`$.config.limit.${index}`"
-                :placeholder="t('sp.request_limits.request_number')"
+                :placeholder="t('sp.request_limits.custom')"
               />
               <div>{{ t('sp.request_limits.interval_determiner') }}</div>
               <NumberField
                 :name="`$.config.window_size.${index}`"
-                :placeholder="t('sp.request_limits.time_interval')"
+                :placeholder="t('sp.request_limits.custom')"
               />
               <div>{{ t('sp.request_limits.seconds') }}</div>
             </legend>
 
-            <div class="rla-form-request-limits-actions">
-              <KButton
-                appearance="tertiary"
-                :disabled="requestLimits.length <= 1"
-                @click="() => removeRequestLimit(index)"
-              >
-                <RemoveIcon />
-              </KButton>
-
-              <KButton
-                appearance="tertiary"
-                @click="() => addRequestLimit(index)"
-              >
-                <AddIcon />
-              </KButton>
-            </div>
+            <!-- One limit is the minimum, so a lone row has nothing to remove. -->
+            <KButton
+              v-if="requestLimits.length > 1"
+              appearance="tertiary"
+              :aria-label="t('sp.request_limits.remove_limit', { index: index + 1 })"
+              class="rla-form-request-limits-remove"
+              :data-testid="`rla-form-remove-limit-${index}`"
+              icon
+              @click="() => removeRequestLimit(index)"
+            >
+              <CloseIcon />
+            </KButton>
           </div>
+
+          <!--
+            `config.limit` is expressible element-wise, so the expression belongs
+            to the row rather than to the array. `ExpressionEditor` rather than
+            `ExpressionField`, because this form lays out the value inputs itself
+            — paired with `window_size` — instead of letting the field render them.
+          -->
+          <ExpressionEditor
+            class="rla-form-request-limits-expression"
+            :name="`$.config.limit.${index}`"
+          />
         </div>
       </div>
 
@@ -98,16 +106,28 @@
           </KTooltip>
         </div>
       </div>
+
+      <div class="rla-form-request-limits-add">
+        <KButton
+          appearance="tertiary"
+          data-testid="rla-form-add-limit"
+          @click="addRequestLimit"
+        >
+          <AddIcon />
+          {{ t('sp.request_limits.add_limit') }}
+        </KButton>
+      </div>
     </div>
   </KCard>
 </template>
 
 <script lang="ts" setup>
-import { AddIcon, RemoveIcon } from '@kong/icons'
+import { AddIcon, CloseIcon } from '@kong/icons'
 import { get } from 'lodash-es'
 import { computed, nextTick, ref } from 'vue'
 import useI18n from '../../../../composables/useI18n'
 import { useFormShared, useItemKeys } from '../../shared/composables'
+import ExpressionEditor from '../../shared/ExpressionEditor.vue'
 import RadioField from '../../shared/RadioField.vue'
 import NumberField from '../../shared/NumberField.vue'
 import type { EmptyValue } from '../../shared/types'
@@ -127,6 +147,11 @@ interface FormData {
     limit?: Array<number | EmptyValue>
     window_size?: Array<number | EmptyValue>
   }
+  expressions?: {
+    // The array itself can be unset, and each slot can be empty for a row that
+    // has no expression while a later row does.
+    limit?: Array<string | EmptyValue> | EmptyValue
+  } | EmptyValue
 }
 
 interface UseCase {
@@ -138,7 +163,7 @@ interface UseCase {
   }
 }
 
-const { formData, getSelectItems, getSchema, getEmptyOrDefault } = useFormShared<FormData>()
+const { formData, getSchema, getEmptyOrDefault, getEmptyValue } = useFormShared<FormData>()
 
 const requestLimits = computed<RequestLimit[]>(() => {
   const modelValue = formData.config?.limit?.map((limit, index) => {
@@ -157,36 +182,76 @@ const requestLimits = computed<RequestLimit[]>(() => {
 
 const { getKey } = useItemKeys('request-limits', requestLimits)
 
-const addRequestLimit = (index: number) => {
+/**
+ * The Gateway pairs `expressions.limit` with `config.limit` by position, so any
+ * insert or removal in one has to happen in the other.
+ *
+ * Only runs when the twin array already exists: without it no row has an
+ * expression, nothing can drift, and creating it here would submit a run of
+ * empty slots.
+ */
+const alignExpressionLimits = (mutate: (limits: Array<string | EmptyValue>) => void) => {
+  const limits = formData.expressions?.limit
+  if (Array.isArray(limits)) {
+    mutate(limits)
+  }
+}
+
+const addRequestLimit = () => {
   selectedUseCase.value = undefined
   if (!formData.config) return
   const emptyLimit = getEmptyOrDefault<number>('config.limit.0')
   const emptyWindowSize = getEmptyOrDefault<number>('config.window_size.0')
+  // The list always shows at least one row, even while the arrays are still
+  // empty — materialize that row before appending, so the visible count grows.
   if (!formData.config.limit?.length) {
     formData.config.limit = [emptyLimit]
-  }
-  if (!formData.config.window_size?.length) {
     formData.config.window_size = [emptyWindowSize]
   }
-  formData.config.limit.splice(index + 1, 0, emptyLimit)
-  formData.config.window_size.splice(index + 1, 0, emptyWindowSize)
+  formData.config.limit.push(emptyLimit)
+  formData.config.window_size!.push(emptyWindowSize)
+  alignExpressionLimits((limits) => limits.push(getEmptyValue()))
 }
 
 const removeRequestLimit = (index: number) => {
   if (!formData.config) return
   formData.config.limit!.splice(index, 1)
   formData.config.window_size!.splice(index, 1)
+  alignExpressionLimits((limits) => limits.splice(index, 1))
 }
 
 const windowTypePath = 'config.window_type'
 const defaultValue = getSchema(windowTypePath)?.default
 const windowType = computed<WindowType>(() => get(formData, windowTypePath)!)
 
+const WINDOW_TYPE_LABELS = {
+  fixed: 'sp.window_type.options.fixed',
+  sliding: 'sp.window_type.options.sliding',
+} as const
+
+const WINDOW_TYPE_DESCRIPTIONS = {
+  fixed: 'sp.window_type.descriptions.fixed',
+  sliding: 'sp.window_type.descriptions.sliding',
+} as const
+
+/**
+ * Built from the schema's `one_of` so a Gateway that offers a different set is
+ * honoured, but labelled and described from i18n — `one_of` carries only the raw
+ * values. The default is listed first.
+ */
 const availableWindowTypes = computed(() => {
-  return getSelectItems(windowTypePath)
+  const values = (getSchema(windowTypePath)?.one_of ?? []) as WindowType[]
+
+  return values
+    .filter((value) => value in WINDOW_TYPE_LABELS)
     .sort((a, b) => {
-      return a.value === defaultValue ? -1 : b.value === defaultValue ? 1 : 0
+      return a === defaultValue ? -1 : b === defaultValue ? 1 : 0
     })
+    .map((value) => ({
+      value,
+      label: t(WINDOW_TYPE_LABELS[value]),
+      description: t(WINDOW_TYPE_DESCRIPTIONS[value]),
+    }))
 })
 
 const selectedUseCase = ref<string | undefined>()
@@ -255,12 +320,21 @@ const filteredUseCases = computed<UseCase[]>(() => {
 })
 
 const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
+  // A preset replaces every limit, so the expressions attached to the rows it
+  // replaces go with them.
+  const clearExpressionLimits = () => {
+    if (formData.expressions) {
+      formData.expressions.limit = getEmptyValue()
+    }
+  }
+
   if (useCaseKey === selectedUseCase.value) {
     nextTick(() => {
       selectedUseCase.value = undefined
     })
     formData.config!.limit = []
     formData.config!.window_size = []
+    clearExpressionLimits()
     return
   }
   nextTick(() => {
@@ -268,6 +342,7 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
   })
   formData.config!.limit = [useCase.config.limit]
   formData.config!.window_size = [useCase.config.window_size]
+  clearExpressionLimits()
 }
 </script>
 
@@ -277,19 +352,6 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
     display: flex;
     flex-direction: column;
     gap: var(--kui-space-50, $kui-space-50);
-  }
-
-  .rla-form-window-type {
-    &-radios {
-      display: flex;
-      flex-direction: row;
-      gap: var(--kui-space-70, $kui-space-70);
-
-      :deep(.radio-label) {
-        font-size: var(--kui-font-size-30, $kui-font-size-30);
-        font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
-      }
-    }
   }
 
   &-title {
@@ -310,8 +372,7 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
   }
 
   &-row,
-  &-inputs,
-  &-actions {
+  &-inputs {
     align-items: center;
     display: flex;
     flex-direction: row;
@@ -323,8 +384,13 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
     flex-grow: 1;
   }
 
-  &-actions {
+  &-remove {
     flex-shrink: 0;
+  }
+
+  // `ExpressionEditor` is spacing-neutral, so the row owns the gap to it.
+  &-expression {
+    margin-top: var(--kui-space-40, $kui-space-40);
   }
 
   :deep(.form-group) {
@@ -345,6 +411,18 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
       :deep(.rla-form-request-limits-examples-badge) {
         cursor: pointer;
       }
+    }
+  }
+
+  // Separated from the limits above, since it appends to the whole list rather
+  // than acting on any one row.
+  &-add {
+    border-top: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    padding-top: var(--kui-space-50, $kui-space-50);
+
+    :deep(.k-button) {
+      padding-left: 0;
+      padding-right: 0;
     }
   }
 }
