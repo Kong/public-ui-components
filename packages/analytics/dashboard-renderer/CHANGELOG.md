@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.19.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.18.29...%40kong-ui-public%2Fdashboard-renderer%408.19.0) (2026-08-31)
+
+### Features
+
+* **analytics:** dashboard context type refactors and prop updates [MA-5394] ([#3751](https://github.com/Kong/public-ui-components/issues/3751)) ([e65eddb](https://github.com/Kong/public-ui-components/commit/e65eddb33fc7dc10b7453252c8520b0922b2a364))
+
+
 ## [8.18.29](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.18.28...%40kong-ui-public%2Fdashboard-renderer%408.18.29) (2026-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
