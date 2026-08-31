@@ -48,17 +48,18 @@ overrides:
   ip-address@<=10.3.0: '>=10.5.0'
   pacote@>=11.2.7 <21.5.1: '>=21.5.1 <22.0.0'
 
-onlyBuiltDependencies:
-  - '@evilmartians/lefthook'
-  - '@parcel/watcher'
-  - '@swc/core'
-  - 'core-js'
-  - 'core-js-pure'
-  - 'cypress'
-  - 'es5-ext'
-  - 'esbuild'
-  - 'swagger-ui'
-  - 'tree-sitter'
-  - 'tree-sitter-json'
-  - 'tree-sitter-yaml'
-  - 'vue-demi'
+allowBuilds:
+  '@evilmartians/lefthook': true
+  '@parcel/watcher': true
+  '@swc/core': true
+  core-js: true
+  core-js-pure: true
+  cypress: true
+  es5-ext: true
+  esbuild: true
+  nx: false
+  swagger-ui: true
+  tree-sitter: true
+  tree-sitter-json: true
+  tree-sitter-yaml: true
+  vue-demi: true
