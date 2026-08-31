@@ -55,6 +55,20 @@ describe('<SensitiveInput />', () => {
       cy.getTestId('sensitive-input-toggle').click()
       input().should('have.attr', 'type', 'password')
     })
+
+    it('uses SecretInput masking when opted in', () => {
+      cy.mount(SensitiveInput, {
+        props: { modelValue: 'super-secret', useSecretInput: true },
+      })
+
+      input().should('have.attr', 'type', 'text')
+      input().should('have.css', '-webkit-text-security', 'disc')
+      cy.getTestId('sensitive-input-toggle').click()
+      input().should('have.attr', 'type', 'text')
+      cy.getTestId('sensitive-input-toggle').click()
+      input().should('have.attr', 'type', 'text')
+      input().should('have.css', '-webkit-text-security', 'disc')
+    })
   })
 
   describe('edit mode', () => {

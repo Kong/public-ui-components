@@ -17,6 +17,11 @@ vi.mock('../../FormGenerator.vue', () => ({
 // Configurable mock for useAxios
 const mockGet = vi.fn().mockResolvedValue({ data: { data: [] } })
 vi.mock('@kong-ui-public/entities-shared', () => ({
+  SecretInput: {
+    props: ['modelValue'],
+    emits: ['update:modelValue'],
+    template: '<input v-bind="$attrs" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)">',
+  },
   useAxios: () => ({
     axiosInstance: { get: (...args: any[]) => mockGet(...args) },
   }),

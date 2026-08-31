@@ -25,6 +25,14 @@ A form component for Plugins.
 
 ### Props
 
+#### `useSecretInput`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+When `true`, encrypted free-form fields use `SecretInput`. The default preserves the legacy password input.
+
 #### `config`
 
 - type: `Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>`

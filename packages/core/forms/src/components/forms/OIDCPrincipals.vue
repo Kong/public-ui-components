@@ -195,15 +195,13 @@
           </template>
         </KSelect>
         <div class="principals-client-secret-wrapper">
-          <KInput
+          <SecretInput
             class="principals-client-secret"
             data-testid="principals-client-secret"
             :disabled="hasAuthServersAccess && !selectedServer"
             :label="index === 0 ? 'Client secret' : undefined"
             :model-value="clientSecretArray[index]"
             placeholder="e.g., your-client-secret"
-            show-password-mask-toggle
-            type="password"
             @update:model-value="handleClientSecretChange(index, $event)"
           />
           <component
@@ -291,7 +289,7 @@
           />
         </div>
         <div class="external-client-field">
-          <KInput
+          <SecretInput
             class="external-client-input"
             data-testid="external-client-secret"
             :label="index === 0 ? 'Client secret' : undefined"
@@ -301,8 +299,6 @@
             }"
             :model-value="clientSecretArray[index]"
             placeholder="e.g., your-client-secret"
-            show-password-mask-toggle
-            type="password"
             @update:model-value="handleClientSecretChange(index, $event)"
           >
             <template
@@ -312,7 +308,7 @@
               <!-- eslint-disable-next-line vue/no-v-html -->
               <div v-html="sanitize(externalClientSecretField.help)" />
             </template>
-          </KInput>
+          </SecretInput>
           <component
             :is="autofillSlot"
             v-if="autofillSlot"
@@ -417,7 +413,8 @@ import DOMPurify from 'dompurify'
 import VueFormGenerator from '../FormGenerator.vue'
 import PrincipalLookupSettings from './PrincipalLookupSettings.vue'
 import { FORMS_CONFIG, AUTOFILL_SLOT } from '../../const'
-import { useAxios } from '@kong-ui-public/entities-shared'
+import { SecretInput, useAxios } from '@kong-ui-public/entities-shared'
+import '@kong-ui-public/entities-shared/dist/style.css'
 import { AddIcon, BookIcon, CloseIcon, KeyIcon, WorldIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20, KUI_ICON_SIZE_30, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 
@@ -453,7 +450,7 @@ const inferInitialMode = (formModel, isEditing) => {
 
 export default {
   name: 'OIDCPrincipals',
-  components: { VueFormGenerator, PrincipalLookupSettings, AddIcon, BookIcon, CloseIcon, KeyIcon, WorldIcon },
+  components: { VueFormGenerator, PrincipalLookupSettings, SecretInput, AddIcon, BookIcon, CloseIcon, KeyIcon, WorldIcon },
   inject: {
     formsConfig: {
       from: FORMS_CONFIG,

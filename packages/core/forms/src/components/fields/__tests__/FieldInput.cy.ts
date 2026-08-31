@@ -156,9 +156,12 @@ describe('<FieldTester /> - FieldInput', () => {
 
     cy.get('.field-tester-container').should('exist')
 
-    // check VFG input value and type
+    // check VFG input value and masking
     cy.get(`#${fieldKey}`).should('be.visible')
-    cy.get(`#${fieldKey}`).should('have.value', fieldValue).and('have.attr', 'type', 'password')
+    cy.get(`#${fieldKey}`)
+      .should('have.value', fieldValue)
+      .and('have.attr', 'type', 'text')
+      .and('have.css', '-webkit-text-security', 'disc')
     cy.get('.mask-value-toggle-button').should('be.visible')
 
     // toggle visibility
@@ -169,9 +172,12 @@ describe('<FieldTester /> - FieldInput', () => {
     cy.get(`#${fieldKey}`).type(editText)
     cy.get(`#${fieldKey}`).should('have.value', fieldValue + editText)
 
-    // check VFG input value and type after toggling back
+    // check VFG input value and masking after toggling back
     cy.get('.mask-value-toggle-button').click()
-    cy.get(`#${fieldKey}`).should('have.value', fieldValue + editText).and('have.attr', 'type', 'password')
+    cy.get(`#${fieldKey}`)
+      .should('have.value', fieldValue + editText)
+      .and('have.attr', 'type', 'text')
+      .and('have.css', '-webkit-text-security', 'disc')
     cy.get('.mask-value-toggle-button').should('be.visible')
   })
 })

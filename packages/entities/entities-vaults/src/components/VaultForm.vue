@@ -306,7 +306,7 @@
               v-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN"
               class="vault-form-config-auth-method-container"
             >
-              <KInput
+              <SecretInput
                 v-if="!isAiGateway"
                 v-model.trim="configFields[VaultProviders.HCV].token"
                 autocomplete="off"
@@ -314,8 +314,6 @@
                 :label="t('form.config.hcv.fields.token.label')"
                 :readonly="form.isReadonly"
                 required
-                show-password-mask-toggle
-                type="password"
               />
               <SensitiveInput
                 v-else
@@ -386,24 +384,20 @@
                 :readonly="form.isReadonly"
                 type="text"
               />
-              <KInput
+              <SecretInput
                 v-model.trim="configFields[VaultProviders.HCV].aws_access_key_id"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-aws_access_key_id"
                 :label="t('form.config.hcv.fields.aws_access_key_id.label')"
                 :readonly="form.isReadonly"
-                show-password-mask-toggle
-                type="password"
               />
-              <KInput
+              <SecretInput
                 v-if="!isAiGateway"
                 v-model.trim="configFields[VaultProviders.HCV].aws_secret_access_key"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-aws_secret_access_key"
                 :label="t('form.config.hcv.fields.aws_secret_access_key.label')"
                 :readonly="form.isReadonly"
-                show-password-mask-toggle
-                type="password"
               />
               <SensitiveInput
                 v-else
@@ -451,15 +445,13 @@
                 required
                 type="text"
               />
-              <KInput
+              <SecretInput
                 v-model.trim="configFields[VaultProviders.HCV].aws_auth_nonce"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-aws_auth_nonce"
                 :label="t('form.config.hcv.fields.aws_auth_nonce.label')"
                 :readonly="form.isReadonly"
                 required
-                show-password-mask-toggle
-                type="password"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].aws_login_path"
@@ -575,14 +567,12 @@
                 required
                 type="text"
               />
-              <KInput
+              <SecretInput
                 v-model.trim="configFields[VaultProviders.HCV].approle_secret_id"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-approle_secret_id"
                 :label="t('form.config.hcv.fields.approle_secret_id.label')"
                 :readonly="form.isReadonly"
-                show-password-mask-toggle
-                type="password"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].approle_secret_id_file"
@@ -659,7 +649,7 @@
                 :readonly="form.isReadonly"
                 required
               />
-              <KInput
+              <SecretInput
                 v-if="!isAiGateway"
                 v-model.trim="configFields[VaultProviders.HCV].oauth2_client_secret"
                 autocomplete="off"
@@ -667,8 +657,6 @@
                 :label="t('form.config.hcv.fields.oauth2_client_secret.label')"
                 :readonly="form.isReadonly"
                 required
-                show-password-mask-toggle
-                type="password"
               />
               <SensitiveInput
                 v-else
@@ -883,7 +871,7 @@
               required
               type="text"
             />
-            <KInput
+            <SecretInput
               v-if="!isAiGateway"
               v-model.trim="configFields[VaultProviders.CONJUR].api_key"
               autocomplete="off"
@@ -895,8 +883,6 @@
               }"
               :readonly="form.isReadonly"
               required
-              show-password-mask-toggle
-              type="password"
             />
             <SensitiveInput
               v-else
@@ -1072,6 +1058,7 @@ import {
   EntityBaseFormType,
   SupportedEntityType,
   SensitiveInput,
+  SecretInput,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'

@@ -78,6 +78,12 @@ export const routes: Array<RouteRecordRaw & { label?: string }> = [
     component: () => import('./pages/SandboxPermissionsControlPage.vue'),
   },
   {
+    path: '/secret-input',
+    name: 'secret-input',
+    label: 'SecretInput',
+    component: () => import('./pages/SecretInputPage.vue'),
+  },
+  {
     path: '/sensitive-input',
     name: 'sensitive-input',
     label: 'SensitiveInput',
