@@ -173,7 +173,8 @@ import {
 } from '@kong/design-tokens'
 import composables from '../../composables'
 import type { SensitiveInputLabels } from '../../types'
-import SecretInput from './SecretInput.vue'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import { KInput } from '@kong/kongponents'
 
 const MASKED_VALUE = '••••••••••••••'

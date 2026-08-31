@@ -523,7 +523,9 @@
 <script setup lang="ts">
 import '@kong-ui-public/entities-shared/dist/style.css'
 import '@kong-ui-public/entities-vaults/dist/style.css'
-import { EntityBaseForm, EntityFormBlock, EntityFormSection, SecretInput, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import { EntityBaseForm, EntityFormBlock, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import { ref, computed, onBeforeMount } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
 import { useRouter } from 'vue-router'

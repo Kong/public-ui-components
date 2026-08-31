@@ -37,8 +37,8 @@
 <script lang="ts" setup>
 import { computed, inject, onBeforeMount, onMounted, ref, toRefs, type PropType } from 'vue'
 import { KInput } from '@kong/kongponents'
-import { SecretInput } from '@kong-ui-public/entities-shared'
-import '@kong-ui-public/entities-shared/dist/style.css'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import fecha from 'fecha'
 import type { DebouncedFunc } from 'lodash-es'
 import type { AutofillSlot } from '../../types'

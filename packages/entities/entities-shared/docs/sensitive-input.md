@@ -40,7 +40,7 @@ An input component for entering sensitive fields such as API keys or tokens. Ren
 - required: `false`
 - default: `false`
 
-When `true`, uses `SecretInput`'s text-based masking to avoid browser password autofill. The default preserves the legacy `KInput` behavior.
+When `true`, uses `@kong-ui-public/misc-widgets`' `SecretInput` text-based masking to avoid browser password autofill. The default preserves the legacy `KInput` behavior.
 
 #### `modelValue`
 

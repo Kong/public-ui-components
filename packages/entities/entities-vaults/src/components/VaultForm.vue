@@ -1058,8 +1058,9 @@ import {
   EntityBaseFormType,
   SupportedEntityType,
   SensitiveInput,
-  SecretInput,
 } from '@kong-ui-public/entities-shared'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { PropType } from 'vue'

@@ -166,7 +166,8 @@
 <script lang="ts" setup>
 import { KInput } from '@kong/kongponents'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
-import { SecretInput } from '@kong-ui-public/entities-shared'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import composables from '../composables'
 import { useVaultSecretPicker } from '../composables/useVaultSecretPicker'

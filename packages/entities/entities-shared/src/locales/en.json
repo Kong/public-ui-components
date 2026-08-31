@@ -173,9 +173,5 @@
     "copy": "Copy",
     "showKey": "Show key",
     "hideKey": "Hide key"
-  },
-  "secretInput": {
-    "show": "Show secret",
-    "hide": "Hide secret"
   }
 }

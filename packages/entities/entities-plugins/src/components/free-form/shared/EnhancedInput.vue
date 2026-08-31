@@ -21,8 +21,8 @@
 
 <script setup lang="ts">
 import { KInput, KTextArea } from '@kong/kongponents'
-import { SecretInput } from '@kong-ui-public/entities-shared'
-import '@kong-ui-public/entities-shared/dist/style.css'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import { ref, watch, useSlots, computed, useAttrs } from 'vue'
 import { useFormShared } from './composables'
 
