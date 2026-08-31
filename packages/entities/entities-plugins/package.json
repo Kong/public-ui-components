@@ -149,6 +149,6 @@
     "@kong-ui-public/forms": "workspace:^",
     "dompurify": "^3.4.13",
     "lodash-es": "^4.18.1",
-    "marked": "^18.0.9"
+    "marked": "^18.0.10"
   }
 }
