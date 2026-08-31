@@ -1,5 +1,11 @@
 packages:
   - 'packages/*/*'
+
+shamefullyHoist: true
+strictPeerDependencies: false
+autoInstallPeers: true
+# Ensure the postinstall script of the lefthook package is executed and hooks are installed
+sideEffectsCache: false
 # Require a package to be published at least 12 days (17280 minutes) before it can be installed
 # minimumReleaseAge: 17280
 minimumReleaseAgeExclude:
