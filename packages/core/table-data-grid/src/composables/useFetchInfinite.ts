@@ -65,27 +65,11 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   const datasource = shallowRef<IDatasource>()
   const data = shallowRef<Row[] | undefined>()
   const error = shallowRef<unknown>()
-  const pendingFetchCount = ref(0)
   const isFetching = ref(false)
 
   const isLatestDatasource = (datasourceId: number): boolean => (
     datasourceId === latestDatasourceId.value
   )
-
-  const syncIsFetching = () => {
-    isFetching.value = pendingFetchCount.value > 0
-  }
-
-  const markFetchStarted = () => {
-    error.value = undefined
-    pendingFetchCount.value += 1
-    syncIsFetching()
-  }
-
-  const markFetchFinished = () => {
-    pendingFetchCount.value = Math.max(0, pendingFetchCount.value - 1)
-    syncIsFetching()
-  }
 
   const createBlockCompletion = (blockIndex: number): BlockCompletion => {
     const existingCompletion = blockCompletionMap.get(blockIndex)
@@ -256,6 +240,16 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
    * requests from an older datasource resolve without mutating current state or
    * calling callbacks on the replaced datasource.
    *
+   * Pending-fetch tracking is local to this generation (`pendingFetchCount`
+   * below), not a single counter shared across generations. AG Grid can have
+   * a request from the previous (now superseded) datasource still in flight
+   * when this one is built — e.g. it purges and re-requests its own infinite
+   * cache natively on a header sort click, before this composable's own
+   * resetKey-triggered rebuild runs. That old request's completion must not
+   * affect this generation's `isFetching`: a shared counter incremented by
+   * both generations, but only ever decremented for the latest one, would
+   * permanently overcount and leave `isFetching` stuck `true`.
+   *
    * @returns AG Grid datasource for the latest cursor chain.
    */
   const buildDatasource = (): IDatasource => {
@@ -265,7 +259,18 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
     blockCompletionMap.clear()
     data.value = undefined
     error.value = undefined
-    pendingFetchCount.value = 0
+
+    let pendingFetchCount = 0
+
+    const syncIsFetching = () => {
+      // A superseded generation's own pending count no longer represents
+      // what the exposed `isFetching` should reflect once a newer
+      // generation exists.
+      if (isLatestDatasource(datasourceId)) {
+        isFetching.value = pendingFetchCount > 0
+      }
+    }
+
     syncIsFetching()
 
     return {
@@ -298,7 +303,11 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           return
         }
 
-        markFetchStarted()
+        if (isLatestDatasource(datasourceId)) {
+          error.value = undefined
+        }
+        pendingFetchCount += 1
+        syncIsFetching()
         try {
           // AG Grid schedules blocks by row range, so `blockIndex` is this
           // composable's range-to-cursor bridge: range 0-25 maps to block 0,
@@ -323,7 +332,12 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
 
           if (!isLatestDatasource(datasourceId)) {
             // A reset replaced the datasource while this request was in flight.
-            // Do not call callbacks on the old datasource or mutate current state.
+            // Do not apply this result to current state — but AG Grid's own
+            // row-node block loader still needs a definitive completion signal
+            // for this specific load, or it keeps treating this block as
+            // permanently in flight even after the owning cache was destroyed,
+            // silently blocking later requests for the same block index.
+            getRowsParams.failCallback()
             rejectBlockCompletion(blockIndex, currentBlockCompletion)
             return
           }
@@ -338,7 +352,9 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
         } catch (fetchError) {
           if (!isLatestDatasource(datasourceId)) {
             // The latest datasource will issue its own requests; the stale
-            // failure should not surface as a current-grid error.
+            // failure should not surface as a current-grid error, but AG Grid
+            // still needs the completion signal — see the comment above.
+            getRowsParams.failCallback()
             rejectBlockCompletion(blockIndex, currentBlockCompletion)
             return
           }
@@ -350,9 +366,8 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
             getRowsParams,
           })
         } finally {
-          if (isLatestDatasource(datasourceId)) {
-            markFetchFinished()
-          }
+          pendingFetchCount = Math.max(0, pendingFetchCount - 1)
+          syncIsFetching()
         }
       },
     }

@@ -1025,6 +1025,31 @@ describe('<TableDataGrid />', () => {
     })
   })
 
+  it('keeps rendering rows across many consecutive sort changes', () => {
+    // Regression test: AG Grid's shared row-node block loader tracks each
+    // block request by index. A discarded (superseded) request that never
+    // calls back leaves that tracking permanently "in flight" for that
+    // block, silently blocking every later request for the same index —
+    // so a second (or third, ...) sort change could leave the grid empty
+    // forever even though the fetcher keeps resolving normally.
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: sortableHeaders,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+
+    for (let i = 0; i < 6; i++) {
+      cy.contains('.ag-header-cell', i % 2 === 0 ? 'Name' : 'Status').click()
+      cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    }
+  })
+
   it('never leaves more than one column sorted, even when shift-clicking a second header', () => {
     const fetcher = cy.stub().resolves({
       data: rows,
@@ -1075,5 +1100,24 @@ describe('<TableDataGrid />', () => {
       expect(sortedColumns).to.have.length(1)
       expect(sortedColumns[0].colId).to.equal('status')
     })
+  })
+
+  it('shows the unsorted sort icon on a column with showSortIcon, before any click', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', sortable: true, showSortIcon: true },
+        { key: 'status', label: 'Status', sortable: true },
+      ],
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.contains('.ag-header-cell', 'Name').find('.ag-sort-none-icon').should('be.visible')
+    cy.contains('.ag-header-cell', 'Status').find('.ag-sort-none-icon').should('not.be.visible')
   })
 })

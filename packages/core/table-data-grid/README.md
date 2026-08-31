@@ -222,6 +222,7 @@ should opt out of the default flexible fill behavior.
 | `maxWidth` | `number` | No | Maximum AG Grid column width in pixels. Columns with `maxWidth` do not receive default flex sizing. |
 | `disableRowClick` | `boolean` | No | Suppresses `row:click` for clicks landing in this column's cells, e.g. an actions column. `cell:click` still fires. |
 | `sortable` | `boolean` | No | Enables sorting on this column via AG Grid's built-in header sort control. Only one column can be sorted at a time. |
+| `showSortIcon` | `boolean` | No | Shows the unsorted sort icon on this column even when it isn't the active sort, instead of only on hover or once sorted. Only relevant when `sortable` is true. |
 
 ## Sorting
 

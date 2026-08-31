@@ -326,7 +326,7 @@ const collapsedSections = ref<Record<SandboxSectionId, boolean>>({
 })
 
 const headers: Array<TableDataGridHeader<SandboxRow>> = [
-  { key: 'name', label: 'Name', minWidth: 220, sortable: true },
+  { key: 'name', label: 'Name', minWidth: 220, sortable: true, showSortIcon: true },
   { key: 'description', label: 'Description', width: 240 },
   // Rendered via the `#status` slot below instead of the raw column value.
   { key: 'status', label: 'Status', minWidth: 140, sortable: true },

@@ -43,6 +43,7 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
       maxWidth: header.maxWidth,
       minWidth: header.minWidth,
       sortable: header.sortable,
+      unSortIcon: header.showSortIcon,
       ...(isInitialSortColumn ? { sort: initialSort?.sortColumnOrder, sortIndex: 0 } : {}),
       valueGetter: params => params.data?.[header.key],
       width: header.width,

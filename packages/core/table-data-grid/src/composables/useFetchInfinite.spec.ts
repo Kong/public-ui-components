@@ -223,7 +223,12 @@ describe('useFetchInfinite', () => {
     await staleGetRows
 
     expect(staleSuccessCallback).not.toHaveBeenCalled()
-    expect(staleFailCallback).not.toHaveBeenCalled()
+    // The stale request's data must never reach the grid — but AG Grid still
+    // needs a definitive completion signal for it (failCallback), or its own
+    // block-loader tracking treats this block index as permanently "in
+    // flight" and silently refuses to schedule a later request for the same
+    // index, even against the new (latest) datasource.
+    expect(staleFailCallback).toHaveBeenCalledOnce()
     expect(data.value).toBeUndefined()
     expect(error.value).toBeUndefined()
     expect(isFetching.value).toBe(true)
@@ -310,14 +315,18 @@ describe('useFetchInfinite', () => {
     expect(sortedBlock0.rows).toEqual(createRows('sorted-block-0', 15))
     expect(sortedBlock1.rows).toEqual(createRows('sorted-block-1', 15))
 
-    // The delayed pre-sort request finally resolves — it must be fully
-    // inert: no callbacks, and it must not have been able to contribute a
-    // cursor to the new generation's block chain (already proven above,
-    // since block 1 used 'sorted-cursor-0', not anything from this request).
+    // The delayed pre-sort request finally resolves — its data must be
+    // fully inert: no success callback, and no contribution to the new
+    // generation's block chain (already proven above, since block 1 used
+    // 'sorted-cursor-0', not anything from this request). It still gets a
+    // failCallback, though — AG Grid's own block-loader tracks this specific
+    // load by block index, and never hearing back (success or fail) would
+    // leave that index permanently marked "in flight", silently blocking
+    // any later request for the same index against a future datasource.
     preSortRequest.resolve({ data: createRows('stale-block-0', 15), cursor: 'stale-cursor-0', hasMore: true })
     await preSortGetRows
 
     expect(preSortSuccessCallback).not.toHaveBeenCalled()
-    expect(preSortFailCallback).not.toHaveBeenCalled()
+    expect(preSortFailCallback).toHaveBeenCalledOnce()
   })
 })

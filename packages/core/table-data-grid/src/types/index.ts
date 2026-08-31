@@ -41,6 +41,12 @@ export type TableDataGridHeader<Row extends object = TableDataGridRow> = {
   disableRowClick?: boolean
   /** Enables sorting on this column via AG Grid's built-in header sort control. */
   sortable?: boolean
+  /**
+   * Shows the unsorted sort icon on this column's header even when it isn't
+   * the active sort, instead of only on hover or once sorted. Only relevant
+   * when `sortable` is true.
+   */
+  showSortIcon?: boolean
 }
 
 export type TableDataGridSortDirection = 'asc' | 'desc'
