@@ -2,6 +2,7 @@ import type {
   TableDataGridFetcher,
   TableDataGridFetcherResult,
   TableDataGridRow,
+  TableDataGridSort,
 } from '../types'
 import type { IDatasource, IGetRowsParams } from 'ag-grid-community'
 import type { Ref } from 'vue'
@@ -26,6 +27,12 @@ interface UseFetchInfiniteOptions<Row extends object = TableDataGridRow> {
    * the datasource and clears cursor/block state back to block 0.
    */
   resetKey?: Readonly<Ref<unknown>>
+  /**
+   * Current resolved sort. Read once per datasource build (the component
+   * layer includes sort in `resetKey`, so a sort change always rebuilds the
+   * datasource) and forwarded to every fetcher call for that generation.
+   */
+  sort?: Readonly<Ref<TableDataGridSort | undefined>>
 }
 
 /**
@@ -48,6 +55,7 @@ interface UseFetchInfiniteOptions<Row extends object = TableDataGridRow> {
 export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   fetcher,
   resetKey,
+  sort,
 }: UseFetchInfiniteOptions<Row>) => {
   // AG Grid thinks in row ranges; the public TableDataGrid fetcher thinks in a
   // cursor chain. These maps keep that translation internal to the datasource.
@@ -300,10 +308,17 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           // produced the backend cursor needed to continue the chain.
           const cursor = blockIndex > 0 ? cursorMap.get(blockIndex - 1) : undefined
 
+          // Read live rather than captured at build time: AG Grid can purge
+          // and re-request its infinite cache on this same (pre-swap)
+          // datasource synchronously as part of handling a native header
+          // sort click, before the component's resetKey/sort change has
+          // rebuilt the datasource. Reading live keeps that request's sort
+          // correct instead of stale.
           const result = await fetcher({
             mode: 'infinite',
             pageSize,
             cursor,
+            sort: sort?.value,
           })
 
           if (!isLatestDatasource(datasourceId)) {

@@ -32,10 +32,13 @@
           :headers="headers"
           :page-size="pageSize"
           :refresh-key="refreshKey"
+          :table-config="tableConfig"
           @cell:click="handleCellClick"
           @grid:ready="handleGridReady"
           @row:click="handleRowClick"
+          @sort="handleSort"
           @state="handleState"
+          @update:table-config="handleTableConfigUpdate"
         >
           <template #empty-state>
             <KEmptyState
@@ -250,9 +253,11 @@
 <script setup lang="ts">
 import type {
   TableDataGridCellClickPayload,
+  TableDataGridConfig,
   TableDataGridFetcher,
   TableDataGridHeader,
   TableDataGridInfiniteFetcherParams,
+  TableDataGridSort,
   TableDataGridStatePayload,
 } from '../src'
 import type { GridApi } from 'ag-grid-community'
@@ -307,6 +312,7 @@ const datasetMode = ref<DatasetMode>('generated')
 const showErrorState = ref(false)
 const refreshKey = ref(0)
 const tableResetKey = ref(0)
+const tableConfig = ref<TableDataGridConfig>()
 const fetchCount = ref(0)
 const lastRequest = ref<TableDataGridInfiniteFetcherParams>()
 const lastResponseCursor = ref<unknown>()
@@ -320,12 +326,12 @@ const collapsedSections = ref<Record<SandboxSectionId, boolean>>({
 })
 
 const headers: Array<TableDataGridHeader<SandboxRow>> = [
-  { key: 'name', label: 'Name', minWidth: 220 },
+  { key: 'name', label: 'Name', minWidth: 220, sortable: true },
   { key: 'description', label: 'Description', width: 240 },
   // Rendered via the `#status` slot below instead of the raw column value.
-  { key: 'status', label: 'Status', minWidth: 140 },
+  { key: 'status', label: 'Status', minWidth: 140, sortable: true },
   // Rendered via the `#latency` slot below instead of the raw column value.
-  { key: 'latency', label: 'Latency', minWidth: 140 },
+  { key: 'latency', label: 'Latency', minWidth: 140, sortable: true },
   { key: 'region', label: 'Region', minWidth: 140 },
   // `disableRowClick` keeps the "View" button's click from also firing `row:click`.
   { key: 'actions', label: 'Actions', disableRowClick: true, width: 120 },
@@ -360,6 +366,7 @@ const fetchDebug = computed(() => ({
   pageSize: pageSize.value,
   refreshKey: refreshKey.value,
   showErrorState: showErrorState.value,
+  tableConfig: tableConfig.value,
 }))
 
 const fetchHistoryEntries = computed(() => [...fetchHistory.value].reverse())
@@ -412,6 +419,7 @@ const resetSandbox = () => {
   showErrorState.value = false
   refreshKey.value = 0
   tableResetKey.value += 1
+  tableConfig.value = undefined
   clearFetchHistory()
   clearEventLog()
 }
@@ -454,18 +462,32 @@ const recordFetch = ({
   fetchHistory.value = nextFetchHistory
 }
 
-const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor }) => {
+const sortRows = (rows: SandboxRow[], sort: TableDataGridSort | undefined): SandboxRow[] => {
+  if (!sort?.sortColumnKey) {
+    return rows
+  }
+
+  const key = sort.sortColumnKey as keyof SandboxRow
+  const direction = sort.sortColumnOrder === 'desc' ? -1 : 1
+
+  return [...rows].sort((a, b) => (
+    String(a[key]).localeCompare(String(b[key]), undefined, { numeric: true }) * direction
+  ))
+}
+
+const fetchRows: TableDataGridFetcher<SandboxRow> = async ({ pageSize, cursor, sort }) => {
   const request: TableDataGridInfiniteFetcherParams = {
     cursor,
     mode: 'infinite',
     pageSize,
+    sort,
   }
 
   if (fetchDelayMs.value > 0) {
     await wait(fetchDelayMs.value)
   }
 
-  const rows = activeRows.value
+  const rows = sortRows(activeRows.value, sort)
   const offset = getOffsetFromCursor(cursor)
   const data = rows.slice(offset, offset + pageSize)
   const nextOffset = offset + data.length
@@ -511,6 +533,15 @@ const handleRowClick = (row: SandboxRow) => {
 
 const handleCellClick = (payload: TableDataGridCellClickPayload<SandboxRow>) => {
   logEvent('cell:click', payload)
+}
+
+const handleSort = (payload: TableDataGridSort) => {
+  logEvent('sort', payload)
+}
+
+const handleTableConfigUpdate = (payload: TableDataGridConfig) => {
+  tableConfig.value = payload
+  logEvent('update:tableConfig', payload)
 }
 
 const handleActionClick = (row: SandboxRow) => {
