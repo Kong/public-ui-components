@@ -276,7 +276,7 @@ jobs:
             pnpm $filterStr publish --no-git-checks --access public --report-summary --tag "${tag}"
           fi
 
-          if [[ ! -f pnpm-publish-summary.json ]]; then
+          if [[ ! -f pnpm-publish-summary.json ]] || [[ "$(jq '.publishedPackages | length' pnpm-publish-summary.json)" == "0" ]]; then
             echo "There are no new packages that should be published"
             exit 0
           fi
