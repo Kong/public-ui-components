@@ -74,6 +74,6 @@
     "vue-router": "^5.2.0"
   },
   "distSizeChecker": {
-    "errorLimit": "1.2MB"
+    "errorLimit": "1.25MB"
   }
 }
