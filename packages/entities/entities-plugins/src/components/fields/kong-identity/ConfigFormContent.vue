@@ -133,6 +133,9 @@ const { axiosInstance } = useAxios(appConfig?.axiosRequestConfig)
 const keyAuthContext = usePluginContext('key-auth')
 const identityRealmsEnabled = computed(() => keyAuthContext?.identityRealmsEnabled ?? true)
 
+// Host opt-out: hides the realm field entirely, regardless of whether it's required in the schema.
+const realmsEnabled = computed(() => keyAuthContext?.realmsEnabled ?? true)
+
 const { formData, getSchema } = useFormShared()
 
 const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
@@ -315,7 +318,7 @@ const realmRequired = computed(() => !!getSchema('$.config.realm')?.required)
 // Top section: omit advanced fields + always-hidden identity fields
 const topOmit = computed(() => {
   const omit = ['anonymous', 'principals', 'identity_realms']
-  if (!realmRequired.value) {
+  if (!realmsEnabled.value || !realmRequired.value) {
     omit.push('realm')
   }
   return omit
@@ -327,7 +330,7 @@ const advancedOmit = computed(() => {
   const allFields: string[] = schema?.fields?.map((f: Record<string, unknown>) => Object.keys(f)[0]) ?? []
 
   const advancedSet = new Set(['anonymous'])
-  if (!realmRequired.value && selectedMode.value !== 'kong-identity') {
+  if (realmsEnabled.value && !realmRequired.value && selectedMode.value !== 'kong-identity') {
     advancedSet.add('realm')
   }
   if (isKonnect.value && identityRealmsInSchema.value && identityRealmsEnabled.value && !hasPrincipals.value) {

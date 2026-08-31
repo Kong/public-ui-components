@@ -5,4 +5,10 @@ export interface KeyAuthContext {
    * Defaults to `true` when no context is provided.
    */
   identityRealmsEnabled?: boolean
+
+  /**
+   * Enables the `realm` field. When disabled, the field is hidden regardless of whether
+   * it's required in the schema. Defaults to `true` when no context is provided.
+   */
+  realmsEnabled?: boolean
 }
