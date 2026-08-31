@@ -271,7 +271,21 @@ jobs:
           filterStr=$(echo ${versions} | jq -r 'try .[]|"--filter "+.name' | tr '\n' ' ')
 
           if [[ "${filterStr}" != "" ]]; then
-            pnpmPublish=$(pnpm $filterStr publish  --no-git-checks --access public --report-summary --tag "${tag}")
+            set +e
+            pnpmPublish=$(pnpm $filterStr publish  --no-git-checks --access public --report-summary --tag "${tag}" 2>pnpm_publish_stderr.txt)
+            publishExitCode=$?
+            set -e
+            echo "::group::DEBUG pnpm publish"
+            echo "exit code: ${publishExitCode}"
+            echo "--- stdout ---"
+            echo "${pnpmPublish}"
+            echo "--- stderr ---"
+            cat pnpm_publish_stderr.txt
+            if [ -f pnpm-publish-summary.json ]; then
+              echo "--- pnpm-publish-summary.json ---"
+              cat pnpm-publish-summary.json
+            fi
+            echo "::endgroup::"
           fi
 
           if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
