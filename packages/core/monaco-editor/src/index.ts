@@ -8,6 +8,8 @@ export {
 
 // TODO: Add barrel exports if we have more features in the future
 export * from './features/code-lenses'
+export * from './features/validation'
+export * from './features/zod-validation'
 
 export * from './singletons/model-contexts'
 export * from './types'
