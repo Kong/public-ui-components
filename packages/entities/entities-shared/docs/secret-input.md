@@ -4,6 +4,9 @@
 `-webkit-text-security` on supported browsers, falls back to `type="password"`,
 and provides an accessible reveal toggle.
 
+Consumers must import `@kong-ui-public/entities-shared/dist/style.css`; without
+the package stylesheet, the masking styles do not apply.
+
 ```vue
 <SecretInput
   v-model.trim="password"

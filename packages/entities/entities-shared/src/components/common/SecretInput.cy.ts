@@ -1,4 +1,4 @@
-import { h } from 'vue'
+import { defineComponent, h, ref } from 'vue'
 import SecretInput from './SecretInput.vue'
 
 describe('<SecretInput />', () => {
@@ -16,9 +16,33 @@ describe('<SecretInput />', () => {
     input().should('have.attr', 'type', 'text')
     input().should('have.css', '-webkit-text-security', 'disc')
     input().should('have.attr', 'autocomplete', 'off')
+    input().should('have.attr', 'autocapitalize', 'off')
+    input().should('have.attr', 'autocorrect', 'off')
+    input().should('have.attr', 'spellcheck', 'false')
     cy.getTestId('secret-input-toggle').should('have.attr', 'aria-label', 'Show secret').click()
     input().should('have.css', '-webkit-text-security', 'none')
     cy.getTestId('secret-input-toggle').should('have.attr', 'aria-label', 'Hide secret')
+  })
+
+  it('forwards slots added after mount', () => {
+    cy.mount(defineComponent({
+      setup: () => {
+        const showTooltip = ref(false)
+
+        return () => h('div', [
+          h('button', { onClick: () => {
+            showTooltip.value = true
+          } }, 'Add tooltip'),
+          h(SecretInput, { label: 'Password' }, showTooltip.value
+            ? { 'label-tooltip': () => h('strong', 'Tooltip') }
+            : {}),
+        ])
+      },
+    }))
+
+    cy.contains('button', 'Add tooltip').click()
+    cy.get('.tooltip-trigger-icon').trigger('mouseenter')
+    cy.contains('Tooltip').should('exist')
   })
 
   it('falls back to a password input when text security is unsupported', () => {

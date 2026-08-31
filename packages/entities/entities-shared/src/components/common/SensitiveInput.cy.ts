@@ -64,7 +64,7 @@ describe('<SensitiveInput />', () => {
       input().should('have.attr', 'type', 'text')
       input().should('have.css', '-webkit-text-security', 'disc')
       cy.getTestId('sensitive-input-toggle').click()
-      input().should('have.attr', 'type', 'text')
+      input().should('have.css', '-webkit-text-security', 'none')
       cy.getTestId('sensitive-input-toggle').click()
       input().should('have.attr', 'type', 'text')
       input().should('have.css', '-webkit-text-security', 'disc')

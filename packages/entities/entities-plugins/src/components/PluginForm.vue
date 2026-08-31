@@ -346,7 +346,7 @@ const props = defineProps({
     default: false,
   },
 
-  /** Opt in to SecretInput for encrypted free-form fields. */
+  /** Opt in to SecretInput for generic encrypted free-form fields; purpose-specific password forms migrate directly. */
   useSecretInput: {
     type: Boolean,
     default: false,

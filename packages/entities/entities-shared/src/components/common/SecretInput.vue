@@ -1,9 +1,12 @@
 <template>
   <KInput
     v-bind="$attrs"
+    autocapitalize="off"
     :autocomplete="autocomplete"
+    autocorrect="off"
     :class="{ 'secret-input-masked': maskedModel }"
     :model-value="model"
+    spellcheck="false"
     :type="inputType"
     @copy.capture="blockMaskedExtraction"
     @cut.capture="blockMaskedExtraction"
@@ -11,7 +14,7 @@
     @update:model-value="model = $event"
   >
     <template
-      v-for="(_, name) in forwardedSlots"
+      v-for="(_, name) in forwardedSlots()"
       #[name]="slotProps"
     >
       <slot
@@ -81,9 +84,9 @@ const { i18n: { t } } = composables.useI18n()
 const resolvedShowLabel = computed(() => showLabel ?? t('secretInput.show'))
 const resolvedHideLabel = computed(() => hideLabel ?? t('secretInput.hide'))
 const slots = useSlots()
-const forwardedSlots = computed(() => Object.fromEntries(
+const forwardedSlots = () => Object.fromEntries(
   Object.entries(slots).filter(([name]) => name !== 'after'),
-))
+)
 const supportsTextSecurity = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('-webkit-text-security', 'disc')
 const inputType = computed(() => maskedModel.value && !supportsTextSecurity ? 'password' : 'text')
 

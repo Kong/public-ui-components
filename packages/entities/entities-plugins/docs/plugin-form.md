@@ -31,7 +31,7 @@ A form component for Plugins.
 - required: `false`
 - default: `false`
 
-When `true`, encrypted free-form fields use `SecretInput`. The default preserves the legacy password input.
+When `true`, generic encrypted free-form plugin fields use `SecretInput`. This opt-in preserves compatibility for the generic renderer; purpose-specific password forms are intentionally migrated directly. The default preserves the legacy password input.
 
 #### `config`
 
