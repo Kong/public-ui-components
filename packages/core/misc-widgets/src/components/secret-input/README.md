@@ -18,7 +18,7 @@ the package stylesheet, the masking styles do not apply.
 The input is masked by default and `autocomplete` defaults to `off`. Pass
 `v-model:masked` to control visibility. The `after` slot receives
 `{ masked, toggle }` and renders alongside the built-in toggle; set
-`show-mask-toggle="false"` when custom content should replace it. Ordinary
+`:show-mask-toggle="false"` when custom content should replace it. Ordinary
 `KInput` attributes, listeners, model modifiers, and slots are forwarded.
 
 Copy, cut, and drag are blocked while masked; paste remains available.

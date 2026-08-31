@@ -323,6 +323,7 @@
                 :mode="sensitiveInputMode"
                 :readonly="form.isReadonly"
                 :required="sensitiveInputMode === 'create'"
+                use-secret-input
               />
             </div>
             <div
@@ -406,6 +407,7 @@
                 :label="t('form.config.hcv.fields.aws_secret_access_key.label')"
                 :mode="sensitiveInputMode"
                 :readonly="form.isReadonly"
+                use-secret-input
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].aws_sts_endpoint_url"
@@ -666,6 +668,7 @@
                 :mode="sensitiveInputMode"
                 :readonly="form.isReadonly"
                 :required="sensitiveInputMode === 'create'"
+                use-secret-input
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].jwt_role"
@@ -896,6 +899,7 @@
               :mode="sensitiveInputMode"
               :readonly="form.isReadonly"
               :required="sensitiveInputMode === 'create'"
+              use-secret-input
             />
             <KCheckbox
               v-if="config.base64FieldAvailable"

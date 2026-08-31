@@ -72,7 +72,7 @@ describe('<SecretInput />', () => {
     cy.contains('Tooltip').should('exist')
   })
 
-  it('blocks copy, cut, and drag while masked but allows paste', () => {
+  it('blocks copy, cut, and drag while masked but allows copy when revealed', () => {
     cy.mount(SecretInput, { props: { modelValue: 'super-secret' } })
 
     input().then(($input) => {
@@ -80,6 +80,11 @@ describe('<SecretInput />', () => {
         expect($input[0].dispatchEvent(new Event(name, { bubbles: true, cancelable: true }))).to.equal(false)
       }
       expect($input[0].dispatchEvent(new Event('paste', { bubbles: true, cancelable: true }))).to.equal(true)
+    })
+
+    cy.getTestId('secret-input-toggle').click()
+    input().then(($input) => {
+      expect($input[0].dispatchEvent(new Event('copy', { bubbles: true, cancelable: true }))).to.equal(true)
     })
   })
 
