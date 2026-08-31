@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.269.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.269.0...%40kong-ui-public%2Fentities-plugins%409.269.1) (2026-08-31)
+
+### Bug Fixes
+
+* **entities-plugins:** prevent Datakit teleport errors [KM-3174] ([#3752](https://github.com/Kong/public-ui-components/issues/3752)) ([955ae8a](https://github.com/Kong/public-ui-components/commit/955ae8a718ae5a362e669ecd6f2e8b81a8759eaf))
+
+
 # [9.269.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.268.3...%40kong-ui-public%2Fentities-plugins%409.269.0) (2026-08-31)
 
 ### Features
