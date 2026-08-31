@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.269.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.268.3...%40kong-ui-public%2Fentities-plugins%409.269.0) (2026-08-31)
+
+### Features
+
+* **entities-plugins:** add realmsEnabled context to key-auth [KM-3177] ([#3755](https://github.com/Kong/public-ui-components/issues/3755)) ([f71df6e](https://github.com/Kong/public-ui-components/commit/f71df6e18bf779d3c55a7c8bb7991898731ead9e))
+
+
 ## [9.268.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.268.2...%40kong-ui-public%2Fentities-plugins%409.268.3) (2026-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
