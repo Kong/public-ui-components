@@ -4,7 +4,7 @@ import {
   type ValidDashboardChartQuery,
 } from '@kong-ui-public/analytics-utilities'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 import { inject, onUnmounted } from 'vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { storeToRefs } from 'pinia'
@@ -21,7 +21,7 @@ export default function useIssueQuery() {
     abortController?.abort()
   })
 
-  const issueQuery = async (query: ValidDashboardChartQuery, context: DashboardRendererContextInternal, limitOverride?: number) => {
+  const issueQuery = async (query: ValidDashboardChartQuery, context: DashboardRendererContext, limitOverride?: number) => {
     if (!queryBridge) {
       throw new Error('Query bridge is not defined')
     }
@@ -58,12 +58,12 @@ export default function useIssueQuery() {
     // If they're coming from a definition, they're strings; should clean this up as part of the dashboard type work.
     let time_range = query.time_range as TimeRangeV4 | undefined
 
-    if (!time_range) {
+    if (!time_range && context.timeSpec) {
       time_range = {
         ...context.timeSpec,
         tz: context.tz,
       }
-    } else if (!time_range.tz) {
+    } else if (time_range && !time_range.tz) {
       time_range = {
         ...time_range,
         tz: context.tz,

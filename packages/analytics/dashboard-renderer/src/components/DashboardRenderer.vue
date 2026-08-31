@@ -22,7 +22,7 @@
         {{ i18n.t('renderer.noQueryBridge') }}
       </KAlert>
       <component
-        :is="internalContext.editable && !isFullscreen ? DraggableGridLayout : GridLayout"
+        :is="editable && !isFullscreen ? DraggableGridLayout : GridLayout"
         v-else
         ref="gridLayoutRef"
         :columns="model.columns"
@@ -43,11 +43,11 @@
             :key="isFullscreen ? `${tile.id}-tile` : `${tile.id}-tile-fullscreen`"
             v-model:refresh-counter="refreshCounter"
             class="tile-container"
-            :context="internalContext"
+            :context="enrichedContext"
             :definition="tile.meta as TileDefinition"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
-            :hide-actions="!internalContext.showTileActions"
-            :hide-zoom-actions="!internalContext.showTileZoomActions"
+            :hide-actions="!showTileActions"
+            :hide-zoom-actions="!showTileZoomActions"
             :is-fullscreen="isFullscreen"
             :query-ready="queryReady"
             :tile-id="tile.id"
@@ -145,8 +145,10 @@ const onTileLoaded = (tile: GridTile<TileDefinition>) => {
 }
 
 const timeframeLabel = computed<string>(() => {
-  const { timeSpec } = internalContext.value
-  const timeSpecKey = timeSpec.type === 'absolute' ? 'custom' : timeSpec.time_range
+  const timeSpecKey = timeSpec.value.type === 'absolute'
+    ? 'custom'
+    : timeSpec.value.time_range
+
   const key = `renderer.trendRange.${timeSpecKey}`
 
   // Right now, we basically only support 2 ranges: 24 hours and 30 days.
@@ -170,7 +172,7 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
 
 const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
   return model.value.tiles.map((tile: TileConfig) => {
-    if (internalContext.value.editable && !tile.id) {
+    if (editable.value && !tile.id) {
       console.warn(
         'No id provided for tile. One will be generated automatically,',
         'however tracking changes to this tile may not work as expected.',
@@ -318,7 +320,14 @@ const globalFilters = computed<AllFilters[]>(() => {
   return model.value.preset_filters as AllFilters[] ?? []
 })
 
-const { internalContext, queryReady } = composables.useDashboardInternalContext({
+const {
+  editable,
+  enrichedContext,
+  queryReady,
+  showTileActions,
+  showTileZoomActions,
+  timeSpec,
+} = composables.useDashboardContext({
   globalFilters,
   context: computed(() => context),
   isFullscreen,
