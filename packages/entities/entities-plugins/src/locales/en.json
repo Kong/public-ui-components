@@ -1794,7 +1794,10 @@
         "placeholder": "No file selected",
         "placeholder_edit": "File not changed",
         "button_text": "Select File",
-        "help": "Only Lua based schemas are supported by Konnect. Other plugin modules can be in any language as desired. Learn more"
+        "help": {
+          "text": "Only Lua based schemas are supported by Konnect. Other plugin modules can be in any language as desired. {link}",
+          "link": "Learn more"
+        }
       },
       "handler_file": {
         "label": "Upload handler file",
