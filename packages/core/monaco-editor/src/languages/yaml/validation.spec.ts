@@ -124,4 +124,40 @@ describe('runYAMLValidation', () => {
     expect(issue.range).toBeDefined()
     expect(issue.rangeKind).toBe('ancestor')
   })
+
+  describe('bails out when the document has YAML-level errors', () => {
+    // The `yaml` parser is error-tolerant: `document.toJS()` can still return a
+    // (possibly wrong) value even though `document.errors` is non-empty, so
+    // these all still need an explicit bail-out rather than relying on `toJS()` to throw.
+    it.each([
+      ['duplicate keys', 'foo: 1\nfoo: 2\n'],
+      ['inconsistent indentation', 'foo:\n  bar: 1\n baz: 2\n'],
+      ['tabs used for indentation', 'foo:\n\tbar: 1\n'],
+      ['unclosed flow map', 'foo: {a: 1, b: 2\n'],
+    ])('%s', async (_name, text) => {
+      const model = createFakeModel(text)
+
+      let validateCalled = false
+      const validate: ValidateFn = () => {
+        validateCalled = true
+        return []
+      }
+
+      expect(await runYAMLValidation(model, validate)).toEqual([])
+      expect(validateCalled).toBe(false)
+    })
+
+    it('still runs validation when the document has no errors', async () => {
+      const model = createFakeModel('foo: 1\n')
+
+      let validateCalled = false
+      const validate: ValidateFn = () => {
+        validateCalled = true
+        return []
+      }
+
+      await runYAMLValidation(model, validate)
+      expect(validateCalled).toBe(true)
+    })
+  })
 })

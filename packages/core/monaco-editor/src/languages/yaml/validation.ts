@@ -83,13 +83,21 @@ export async function runYAMLValidation(
   }
 
   const document = context.document
+  if (document.errors.length > 0) {
+    // The YAML parser is error-tolerant: it recovers *some* value even when
+    // the source has syntax errors, so a successful `toJS()` below can't be
+    // trusted on its own. The syntax checker already surfaces these errors;
+    // schema validation just backs off rather than validating a value that
+    // may not reflect what's actually written in the document.
+    return []
+  }
 
   let value: unknown
   try {
     value = document.toJS()
   } catch {
-    // Not cleanly resolvable (e.g. YAML-level errors) - the syntax checker
-    // already surfaces that; schema validation just backs off here.
+    // Not cleanly resolvable - the syntax checker already surfaces that;
+    // schema validation just backs off here.
     return []
   }
 
