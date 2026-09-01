@@ -166,7 +166,9 @@ describe('<FieldTester /> - FieldInput', () => {
 
     // toggle visibility
     cy.get('.mask-value-toggle-button').click()
-    cy.get(`#${fieldKey}`).should('have.value', fieldValue).and('have.attr', 'type', 'text')
+    cy.get(`#${fieldKey}`)
+      .should('have.value', fieldValue)
+      .and('have.css', '-webkit-text-security', 'none')
     cy.get('.mask-value-toggle-button').should('be.visible')
 
     cy.get(`#${fieldKey}`).type(editText)
