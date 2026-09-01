@@ -241,7 +241,6 @@
             :accept="['.lua']"
             :button-text="t('custom_plugin_form.step2_files.schema_file.button_text')"
             data-testid="custom-plugin-schema-upload"
-            :help="t('custom_plugin_form.step2_files.schema_file.help')"
             :label="t('custom_plugin_form.step2_files.schema_file.label')"
             :placeholder="editMode && state.fields.schemaContent
               ? t('custom_plugin_form.step2_files.schema_file.placeholder_edit')
@@ -250,6 +249,18 @@
             @file-added="(files: FileList) => handleFileAdded('schema', files)"
             @file-removed="handleFileRemoved('schema')"
           />
+          <p class="schema-file-help">
+            <i18nT keypath="custom_plugin_form.step2_files.schema_file.help.text">
+              <template #link>
+                <KExternalLink
+                  hide-icon
+                  :href="externalLinks.customPluginInstalled"
+                >
+                  {{ t('custom_plugin_form.step2_files.schema_file.help.link') }}
+                </KExternalLink>
+              </template>
+            </i18nT>
+          </p>
           <div class="plugin-modules-section">
             <KLabel>{{ t('custom_plugin_form.step2_files.plugin_modules.label') }}</KLabel>
             <KAlert
@@ -270,7 +281,6 @@
             :accept="['.lua']"
             :button-text="t('custom_plugin_form.step2_files.schema_file.button_text')"
             data-testid="custom-plugin-schema-upload"
-            :help="t('custom_plugin_form.step2_files.schema_file.help')"
             :label="t('custom_plugin_form.step2_files.schema_file.label')"
             :placeholder="editMode && state.fields.schemaContent
               ? t('custom_plugin_form.step2_files.schema_file.placeholder_edit')
@@ -279,6 +289,18 @@
             @file-added="(files: FileList) => handleFileAdded('schema', files)"
             @file-removed="handleFileRemoved('schema')"
           />
+          <p class="schema-file-help">
+            <i18nT keypath="custom_plugin_form.step2_files.schema_file.help.text">
+              <template #link>
+                <KExternalLink
+                  hide-icon
+                  :href="externalLinks.customPluginStreamed"
+                >
+                  {{ t('custom_plugin_form.step2_files.schema_file.help.link') }}
+                </KExternalLink>
+              </template>
+            </i18nT>
+          </p>
           <KFileUpload
             :accept="['.lua']"
             :button-text="t('custom_plugin_form.step2_files.handler_file.button_text')"
@@ -1006,6 +1028,14 @@ const submitData = async (): Promise<void> => {
   display: flex;
   flex-direction: column;
   gap: var(--kui-space-40, $kui-space-40);
+}
+
+.schema-file-help {
+  color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+  font-size: var(--kui-font-size-20, $kui-font-size-20);
+  line-height: var(--kui-line-height-20, $kui-line-height-20);
+  margin: 0;
+  margin-top: calc(-1 * var(--kui-space-40, $kui-space-40));
 }
 
 .custom-plugin-form-steps {
