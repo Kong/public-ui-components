@@ -83,7 +83,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
         cy.getTestId('expiration-unit-select-popover').find(`button[value="${unit}"]`).click()
       }
 
-      it('disables Save when the expiration (in seconds) is out of the 1-3600 range', () => {
+      it('disables Save when the expiration (in seconds) is out of the 10-3600 range', () => {
         mountModal()
 
         // Default is 10 mins (600s) - within range.
@@ -101,6 +101,16 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
         // Switching the unit keeps the number (61) but re-validates: 61s is within range.
         selectExpirationUnit('seconds')
         cy.getTestId('expiration-input').should('have.value', '61')
+        cy.get(actionButton).should('be.enabled')
+
+        // 9s is below the 10s floor.
+        cy.getTestId('expiration-input').clear()
+        cy.getTestId('expiration-input').type('9')
+        cy.get(actionButton).should('be.disabled')
+
+        // 10s is the lowest accepted value.
+        cy.getTestId('expiration-input').clear()
+        cy.getTestId('expiration-input').type('10')
         cy.get(actionButton).should('be.enabled')
 
         // 4000s is above the 3600s ceiling.

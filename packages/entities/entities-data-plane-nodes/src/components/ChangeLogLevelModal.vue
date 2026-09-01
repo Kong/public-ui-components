@@ -62,8 +62,8 @@
             class="expiration-value"
             data-testid="expiration-input"
             :error="!expirationValid"
-            :max="expirationUnit === 'mins' ? 60 : 3600"
-            min="1"
+            :max="expirationUnit === 'mins' ? MAX_EXPIRATION_MINS : MAX_EXPIRATION_SECONDS"
+            :min="expirationUnit === 'mins' ? MIN_EXPIRATION_MINS : MIN_EXPIRATION_SECONDS"
             type="number"
           />
           <KSelect
@@ -181,6 +181,10 @@ type ExpirationUnit = 'seconds' | 'mins'
 const DEFAULT_LOG_LEVEL = LogLevel.Notice
 const DEFAULT_EXPIRATION_VALUE = 10
 const DEFAULT_EXPIRATION_UNIT: ExpirationUnit = 'mins'
+const MIN_EXPIRATION_SECONDS = 10
+const MAX_EXPIRATION_SECONDS = 3600
+const MIN_EXPIRATION_MINS = 1
+const MAX_EXPIRATION_MINS = 60
 const POLL_INTERVAL_MS = 2000
 const LOG_LEVEL_DOCS_URL = 'https://developer.konghq.com/gateway/logs/'
 
@@ -244,7 +248,9 @@ const expirationSeconds = computed(() =>
 const expirationHelp = computed(() => i18n.t(`modal.expiration.help.${expirationUnit.value}`))
 
 const expirationValid = computed(() =>
-  Number.isInteger(expiration.value) && expirationSeconds.value >= 1 && expirationSeconds.value <= 3600)
+  Number.isInteger(expiration.value)
+  && expirationSeconds.value >= MIN_EXPIRATION_SECONDS
+  && expirationSeconds.value <= MAX_EXPIRATION_SECONDS)
 
 const title = computed(() =>
   stage.value === 'status' ? i18n.t('modal.status_title') : i18n.t('modal.title'))

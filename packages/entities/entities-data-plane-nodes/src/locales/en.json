@@ -9,7 +9,7 @@
       "label": "Expiration",
       "tooltip": "The duration before the log level automatically reverts to its default value.",
       "help": {
-        "seconds": "Enter a value between 1 second and 3600 seconds.",
+        "seconds": "Enter a value between 10 seconds and 3600 seconds.",
         "mins": "Enter a value between 1 minute and 60 minutes."
       },
       "unit": {
