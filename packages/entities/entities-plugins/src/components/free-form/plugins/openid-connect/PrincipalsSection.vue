@@ -506,6 +506,26 @@ const selectedServer = ref<KongIdentityServer | null>(null)
 const leavePromptType = ref<'authServer' | 'client' | 'principal' | null>(null)
 let restoringServer = false
 
+interface KongIdentityModeCache {
+  issuer: string | null
+  clientId: Array<string | null> | null
+  clientSecret: Array<string | null> | null
+  selectedServer: KongIdentityServer | null
+  clients: KongIdentityClient[]
+}
+
+interface ExternalModeCache {
+  issuer: string | null
+  clientId: Array<string | null> | null
+  clientSecret: Array<string | null> | null
+}
+
+// Preserve what the user typed in each mode so toggling back and forth doesn't
+// throw their entries away.
+const kongIdentityCache = ref<KongIdentityModeCache | null>(null)
+const externalCache = ref<ExternalModeCache | null>(null)
+let previousMode: PrincipalsMode = selectedMode.value
+
 const clientIdInfo = computed(() => getLabelAttributes('config.client_id').info)
 const clientSecretInfo = computed(() => getLabelAttributes('config.client_secret').info)
 
@@ -633,8 +653,8 @@ function handleServerChange(serverId: string | null) {
     issuer.value = selectedServer.value.issuer
   }
   // Reset client selection when server changes
-  clientIdValue.value = [null]
-  clientSecretValue.value = [null]
+  clientIdValue.value = null
+  clientSecretValue.value = null
   clients.value = []
   clientsLoading.value = !!serverId
   if (serverId) {
@@ -726,11 +746,51 @@ function applyAuthMethodsForMode(mode: PrincipalsMode) {
 }
 
 function handleModeChange(newMode: PrincipalsMode) {
-  // Clear the mode-specific credential fields either way
-  if (formData.config) {
-    formData.config.client_id = getEmptyValue()
-    formData.config.client_secret = getEmptyValue()
-    formData.config.issuer = getEmptyValue()
+  const oldMode = previousMode
+  previousMode = newMode
+
+  if (oldMode !== newMode) {
+    // Stash what the user entered in the mode being left, so it can be restored if they
+    // toggle back instead of being lost.
+    if (oldMode === MODE_KONG_IDENTITY) {
+      kongIdentityCache.value = {
+        issuer: issuer.value,
+        clientId: clientIdValue.value,
+        clientSecret: clientSecretValue.value,
+        selectedServer: selectedServer.value,
+        clients: clients.value,
+      }
+    } else {
+      externalCache.value = {
+        issuer: issuer.value,
+        clientId: clientIdValue.value,
+        clientSecret: clientSecretValue.value,
+      }
+    }
+
+    // Restore the mode being entered from its cache, or clear if it's never been visited.
+    if (newMode === MODE_KONG_IDENTITY) {
+      const cached = kongIdentityCache.value
+      if (formData.config) {
+        formData.config.issuer = cached?.issuer ?? getEmptyValue()
+        formData.config.client_id = cached?.clientId ?? getEmptyValue()
+        formData.config.client_secret = cached?.clientSecret ?? getEmptyValue()
+      }
+      if (cached?.selectedServer) {
+        restoringServer = true
+      }
+      selectedServer.value = cached?.selectedServer ?? null
+      clients.value = cached?.clients ?? []
+    } else {
+      const cached = externalCache.value
+      if (formData.config) {
+        formData.config.issuer = cached?.issuer ?? getEmptyValue()
+        formData.config.client_id = cached?.clientId ?? getEmptyValue()
+        formData.config.client_secret = cached?.clientSecret ?? getEmptyValue()
+      }
+      selectedServer.value = null
+      clients.value = []
+    }
   }
 
   // Principal lookup is opt-in (the "Use principal lookup" toggle) in both modes, so it
@@ -751,12 +811,6 @@ function handleModeChange(newMode: PrincipalsMode) {
       match_consumer_groups: true,
       directory: dir,
     }
-  }
-
-  if (newMode === MODE_EXTERNAL) {
-    // Reset local state
-    selectedServer.value = null
-    clients.value = []
   }
 
   applyAuthMethodsForMode(newMode)

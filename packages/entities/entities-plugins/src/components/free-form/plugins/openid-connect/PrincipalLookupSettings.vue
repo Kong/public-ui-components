@@ -113,12 +113,13 @@
           {{ t('plugins.free-form.openid-connect.lookup.match_consumer.label') }}
           <template #description>
             {{ t('plugins.free-form.openid-connect.lookup.match_consumer.description') }}
-            <a
+            <KExternalLink
               class="principals-learn-more-link"
               href="https://developer.konghq.com/identity/principals/"
               rel="noopener noreferrer"
+              hide-icon
               target="_blank"
-            >{{ t('plugins.free-form.openid-connect.lookup.match_consumer.link') }}</a>
+            >{{ t('plugins.free-form.openid-connect.lookup.match_consumer.link') }}</KExternalLink>
           </template>
         </KCheckbox>
       </div>
@@ -133,12 +134,13 @@
           {{ t('plugins.free-form.openid-connect.lookup.match_consumer_groups.label') }}
           <template #description>
             {{ t('plugins.free-form.openid-connect.lookup.match_consumer_groups.description') }}
-            <a
+            <KExternalLink
               class="principals-learn-more-link"
               href="https://developer.konghq.com/identity/principals/"
               rel="noopener noreferrer"
+              hide-icon
               target="_blank"
-            >{{ t('plugins.free-form.openid-connect.lookup.match_consumer_groups.link') }}</a>
+            >{{ t('plugins.free-form.openid-connect.lookup.match_consumer_groups.link') }}</KExternalLink>
           </template>
         </KCheckbox>
       </div>
@@ -357,8 +359,6 @@ function handleEnableToggle(enabled: boolean) {
     color: var(--kui-color-text-primary, $kui-color-text-primary);
     font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
     gap: var(--kui-space-20, $kui-space-20);
-    outline: none;
-    text-decoration: none;
 
     &:hover {
       color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
