@@ -115,11 +115,13 @@
             {{ t('plugins.free-form.openid-connect.lookup.match_consumer.description') }}
             <KExternalLink
               class="principals-learn-more-link"
+              hide-icon
               href="https://developer.konghq.com/identity/principals/"
               rel="noopener noreferrer"
-              hide-icon
               target="_blank"
-            >{{ t('plugins.free-form.openid-connect.lookup.match_consumer.link') }}</KExternalLink>
+            >
+              {{ t('plugins.free-form.openid-connect.lookup.match_consumer.link') }}
+            </KExternalLink>
           </template>
         </KCheckbox>
       </div>
@@ -136,11 +138,13 @@
             {{ t('plugins.free-form.openid-connect.lookup.match_consumer_groups.description') }}
             <KExternalLink
               class="principals-learn-more-link"
+              hide-icon
               href="https://developer.konghq.com/identity/principals/"
               rel="noopener noreferrer"
-              hide-icon
               target="_blank"
-            >{{ t('plugins.free-form.openid-connect.lookup.match_consumer_groups.link') }}</KExternalLink>
+            >
+              {{ t('plugins.free-form.openid-connect.lookup.match_consumer_groups.link') }}
+            </KExternalLink>
           </template>
         </KCheckbox>
       </div>
