@@ -67,7 +67,6 @@ const context: DashboardRendererContext = {
   showTileActions: true,
   showTileZoomActions: false,
   tz: 'Etc/UTC',
-  zoomable: false,
 }
 
 const query: ValidDashboardTableQuery = {
@@ -382,9 +381,8 @@ describe('TableDataGridRenderer', () => {
     await wrapper.setProps({
       context: {
         ...context,
-        editable: true,
-        showTileActions: false,
-        zoomable: true,
+        editable: !context.editable,
+        showTileActions: !context.showTileActions,
       },
       height: 480,
     })

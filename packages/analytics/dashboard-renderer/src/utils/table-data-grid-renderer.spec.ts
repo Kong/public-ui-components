@@ -23,7 +23,6 @@ const context: DashboardRendererContext = {
   showTileActions: true,
   showTileZoomActions: false,
   tz: 'Etc/UTC',
-  zoomable: false,
 }
 
 const response: PlatformTabularResponse = {

@@ -151,7 +151,6 @@ const mockContext: DashboardRendererContext = {
   tz: '',
   refreshInterval: 0,
   showTileActions: true,
-  zoomable: false,
 }
 
 const baseDefinition: TileDefinition = {
