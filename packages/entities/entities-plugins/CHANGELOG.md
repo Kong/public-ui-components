@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.269.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.269.1...%40kong-ui-public%2Fentities-plugins%409.269.2) (2026-09-01)
+
+### Bug Fixes
+
+* **entities-plugins:** linkify learn more in custom plugin schema help [KM-3187] ([#3765](https://github.com/Kong/public-ui-components/issues/3765)) ([57d6887](https://github.com/Kong/public-ui-components/commit/57d6887e63c7ac0aa58a06ccdc4a0e7b6033274f))
+
+
 ## [9.269.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.269.0...%40kong-ui-public%2Fentities-plugins%409.269.1) (2026-08-31)
 
 ### Bug Fixes
