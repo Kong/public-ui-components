@@ -16,7 +16,7 @@
         legend-position="bottom"
         :requests-link="requestsLink"
         :synthetics-data-key="chartOptions.synthetics_data_key"
-        :timeseries-zoom="timeseriesZoom"
+        :timeseries-zoom="zoomable"
         tooltip-title=""
         v-bind="extraProps"
         @select-chart-range="emit('select-chart-range', $event)"
@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import type { ChartRendererProps } from '../types'
 import QueryDataProvider from './QueryDataProvider.vue'
-import { computed } from 'vue'
+import { computed, toRef } from 'vue'
 import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
 import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
 import composables from '../composables'
@@ -62,7 +62,9 @@ const options = computed((): AnalyticsChartOptions => ({
   hideTruncationWarning: props.query.limit !== undefined && props.query.limit > 0,
 }))
 
-const timeseriesZoom = computed(() => props.context.zoomable)
+const { zoomable } = composables.useDashboardContext({
+  context: toRef(props, 'context'),
+})
 
 const editTile = () => {
   emit('edit-tile')

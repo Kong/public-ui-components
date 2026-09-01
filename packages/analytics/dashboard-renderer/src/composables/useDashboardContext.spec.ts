@@ -101,6 +101,7 @@ describe('useContextLinks', () => {
 
     let enrichedContext: Ref<DashboardRendererContext>
     let queryReady: Ref<boolean>
+    let zoomable: Ref<boolean>
     const wrapper = mount({
       template: '<div />',
       setup() {
@@ -112,6 +113,7 @@ describe('useContextLinks', () => {
         })
         enrichedContext = result.enrichedContext
         queryReady = result.queryReady
+        zoomable = result.zoomable
       },
     })
 
@@ -123,6 +125,8 @@ describe('useContextLinks', () => {
       enrichedContext,
       // @ts-ignore it's defined in mount, and we await nextTick for it
       queryReady,
+      // @ts-ignore it's defined in mount, and we await nextTick for it
+      zoomable,
     }
   }
 
@@ -143,7 +147,6 @@ describe('useContextLinks', () => {
       showTileZoomActions: true,
       timeSpec: defaultTimeSpec,
       tz: (new Intl.DateTimeFormat()).resolvedOptions().timeZone,
-      zoomable: false,
     })
   })
 
@@ -241,8 +244,8 @@ describe('useContextLinks', () => {
   })
 
   it('sets zoomable to true if the node has the onTileTimeRangeZoom prop', async () => {
-    const { enrichedContext } = await setup({ hasZoomProp: true })
-    expect(enrichedContext.value.zoomable).to.eq(true)
+    const { zoomable } = await setup({ hasZoomProp: true })
+    expect(zoomable.value).to.eq(true)
   })
 
   it('forces editable to false when preview is true, even if context.editable is true', async () => {
@@ -251,7 +254,7 @@ describe('useContextLinks', () => {
   })
 
   it('forces zoomable to false when preview is true, even if the node has the onTileTimeRangeZoom prop', async () => {
-    const { enrichedContext } = await setup({ hasZoomProp: true, preview: true })
-    expect(enrichedContext.value.zoomable).to.eq(false)
+    const { zoomable } = await setup({ hasZoomProp: true, preview: true })
+    expect(zoomable.value).to.eq(false)
   })
 })

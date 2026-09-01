@@ -155,7 +155,6 @@ export default function useDashboardContext({
       editable: editable.value,
       showTileActions: showTileActions.value,
       showTileZoomActions: showTileZoomActions.value,
-      zoomable: zoomable.value,
     }
   })
 

@@ -1248,11 +1248,10 @@ describe('<DashboardRenderer />', () => {
       },
     }).then(({ wrapper }) => {
       const tile = wrapper.findComponent(DashboardTile)
-      const context = tile.props('context') as { editable: boolean, zoomable: boolean }
+      const context = tile.props('context') as { editable: boolean }
 
       expect(tile.exists()).to.eq(true)
       expect(context.editable).to.eq(false)
-      expect(context.zoomable).to.eq(false)
       expect(tile.props('hideZoomActions')).to.eq(true)
       expect(tile.props('hideActions')).to.eq(true)
     })
@@ -1282,11 +1281,10 @@ describe('<DashboardRenderer />', () => {
       },
     }).then(({ wrapper }) => {
       const tile = wrapper.findComponent(DashboardTile)
-      const context = tile.props('context') as { editable: boolean, zoomable: boolean }
+      const context = tile.props('context') as { editable: boolean }
 
       expect(tile.exists()).to.eq(true)
       expect(context.editable).to.eq(true)
-      expect(context.zoomable).to.eq(true)
       expect(tile.props('hideZoomActions')).to.eq(false)
       expect(tile.props('hideActions')).to.eq(false)
     })
