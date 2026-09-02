@@ -1,5 +1,5 @@
 import { computed, getCurrentInstance, ref, type Ref, type DeepReadonly } from 'vue'
-import type { DashboardRendererContext } from '../types'
+import type { DashboardRendererContext, ZoomConfiguration } from '../types'
 import type {
   AllFilters,
   TimeRangeV4,
@@ -29,10 +29,9 @@ export default function useDashboardContext({
   queryReady: Readonly<Ref<boolean>>
   refreshInterval: Readonly<Ref<number>>
   showTileActions: Readonly<Ref<boolean>>
-  showTileZoomActions: Readonly<Ref<boolean>>
   timeSpec: Readonly<Ref<TimeRangeV4>>
   tz: Readonly<Ref<string>>
-  zoomable: Readonly<Ref<boolean>>
+  zoomConfiguration: Readonly<Ref<ZoomConfiguration>>
 } {
   const configStore = useAnalyticsConfigStore()
   const datasourceStore = useDatasourceConfigStore()
@@ -86,13 +85,6 @@ export default function useDashboardContext({
     return showTileActions
   })
 
-  const zoomable = computed<boolean>(() => {
-    // Check if the host app has provided an event handler for zooming.
-    // If there's no handler, disable zooming -- it won't do anything.
-    // Preview mode also disables zooming.
-    return !preview.value && !!getCurrentInstance()?.vnode?.props?.onTileTimeRangeZoom
-  })
-
   const filters = computed<AllFilters[]>(() => {
     return [...(context.value.filters ?? []), ...(globalFilters.value)] as AllFilters[]
   })
@@ -142,10 +134,6 @@ export default function useDashboardContext({
     return refreshInterval
   })
 
-  const showTileZoomActions = computed<boolean>(() => {
-    return !preview.value
-  })
-
   const enrichedContext = computed<DashboardRendererContext>(() => {
     return {
       filters: filters.value,
@@ -159,6 +147,30 @@ export default function useDashboardContext({
 
   const queryReady = computed<boolean>(() => {
     return !configLoading.value && !datasourceLoading.value
+  })
+
+  const zoomable = computed<boolean>(() => {
+    // Check if the host app has provided an event handler for zooming.
+    // If there's no handler, disable zooming -- it won't do anything.
+    // Preview mode also disables zooming.
+    return !preview.value && !!getCurrentInstance()?.vnode?.props?.onTileTimeRangeZoom
+  })
+
+  const showZoomExploreAction = computed<boolean>(() => {
+    return !preview.value
+  })
+
+  const showZoomRequestsAction = computed<boolean>(() => {
+    return !preview.value
+  })
+
+  const zoomConfiguration = computed<ZoomConfiguration>(() => {
+    return {
+      enabled: zoomable.value,
+      showExploreAction: showZoomExploreAction.value,
+      showRequestsAction: showZoomRequestsAction.value,
+      showZoomInAction: zoomable.value,
+    }
   })
 
   return {
@@ -190,12 +202,6 @@ export default function useDashboardContext({
      */
     showTileActions,
     /**
-     * Inferred from whether or not this dashboard is being previewed. If it is
-     * a preview, we don't show the actions displayed in the context menu of the
-     * zoom handler on charts which support it.
-     */
-    showTileZoomActions,
-    /**
      * Equivalent to `enrichedContext.timeSpec`. What time range the dashboard
      * fetches.
      */
@@ -205,9 +211,9 @@ export default function useDashboardContext({
      */
     tz,
     /**
-     * Inferred from the preview state and from whether the DashboardRenderer
-     * component has a handler for the zoom events or not.
+     * All the configuration for how to handle zooming behavior on charts. Fully
+     * inferred from various states.
      */
-    zoomable,
+    zoomConfiguration,
   }
 }

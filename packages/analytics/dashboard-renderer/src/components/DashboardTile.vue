@@ -247,7 +247,7 @@ const {
   tileType?: TileConfig['type']
 }>()
 
-const { showTileZoomActions } = composables.useDashboardContext({
+const { zoomConfiguration } = composables.useDashboardContext({
   context: computed(() => context),
   preview: computed(() => preview),
 })
@@ -382,8 +382,8 @@ const componentData = computed(() => {
   const chartRendererProps = {
     chartOptions: definition.chart,
     headerDescription: tileDescription.value,
-    requestsLink: showTileZoomActions.value ? requestsLinkZoomActions.value : undefined,
-    exploreLink: showTileZoomActions.value ? exploreLinkZoomActions.value : undefined,
+    requestsLink: zoomConfiguration.value.showRequestsAction ? requestsLinkZoomActions.value : undefined,
+    exploreLink: zoomConfiguration.value.showExploreAction ? exploreLinkZoomActions.value : undefined,
   }
 
   return component && {

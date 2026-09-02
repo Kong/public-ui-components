@@ -15,7 +15,7 @@
         legend-position="bottom"
         :requests-link="requestsLink"
         :synthetics-data-key="chartOptions.synthetics_data_key"
-        :timeseries-zoom="zoomable"
+        :timeseries-zoom="zoomConfiguration.enabled"
         tooltip-title=""
         v-bind="extraProps"
         @select-chart-range="emit('select-chart-range', $event)"
@@ -61,7 +61,7 @@ const options = computed((): AnalyticsChartOptions => ({
   hideTruncationWarning: props.query.limit !== undefined && props.query.limit > 0,
 }))
 
-const { zoomable } = composables.useDashboardContext({
+const { zoomConfiguration } = composables.useDashboardContext({
   context: toRef(props, 'context'),
 })
 
