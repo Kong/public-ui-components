@@ -5,6 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  '@types/pbf': npm:pbf@^4.0.1
   axios@>=1.0.0 <1.18.0: ^1.18.0
   brace-expansion@>=4.0.0 <5.0.9: ^5.0.9
   cookie@<0.7.0: ^0.7.0
@@ -3915,9 +3916,6 @@ packages:
 
   '@types/papaparse@5.5.2':
     resolution: {integrity: sha512-gFnFp/JMzLHCwRf7tQHrNnfhN4eYBVYYI897CGX4MY1tzY9l2aLkVyx2IlKZ/SAqDbB3I1AOZW5gTMGGsqWliA==}
-
-  '@types/pbf@3.0.5':
-    resolution: {integrity: sha512-j3pOPiEcWZ34R6a6mN07mUkM4o4Lwf6hPNt8eilOeZhTFbxFXmKhvXl9Y28jotFPaI1bpPDJsbCprUoNke6OrA==}
 
   '@types/prismjs@1.26.6':
     resolution: {integrity: sha512-vqlvI7qlMvcCBbVe0AKAb4f97//Hy0EBTaiW8AalRnG/xAN5zOiWWyrNqNXeq8+KAuvRewjCVY1+IPxk4RdNYw==}
@@ -13816,7 +13814,7 @@ snapshots:
   '@types/geobuf@3.0.4':
     dependencies:
       '@types/geojson': 7946.0.16
-      '@types/pbf': 3.0.5
+      '@types/pbf': pbf@4.0.1
 
   '@types/geojson@7946.0.16': {}
 
@@ -13907,8 +13905,6 @@ snapshots:
   '@types/papaparse@5.5.2':
     dependencies:
       '@types/node': 24.13.2
-
-  '@types/pbf@3.0.5': {}
 
   '@types/prismjs@1.26.6': {}
 
