@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-partials-list">
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
+      :default-table-preferences="defaultTablePreferences"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
@@ -81,6 +82,9 @@
           @click.stop="showLinkedPlugins(row.id)"
         />
         <span v-else />
+      </template>
+      <template #managed_by="{ rowValue }">
+        {{ getManagedByLabel(rowValue) ?? '-' }}
       </template>
 
       <!-- Row actions -->
@@ -258,8 +262,11 @@ import {
   EntityDeleteModal,
   FetcherStatus,
   TableTags,
+  getManagedByFieldLabel,
+  getManagedByLabel,
+  useManagedByEnabled,
 } from '@kong-ui-public/entities-shared'
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch, toValue } from 'vue'
 import { useRouter } from 'vue-router'
 import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon, DatabaseIcon } from '@kong/icons'
 import { KAlert, KExternalLink } from '@kong/kongponents'
@@ -982,11 +989,27 @@ const emptyStateOptions = ref<EmptyStateOptions>({
   title: emptyStateTitle.value,
 })
 
-const tableHeaders = computed<BaseTableHeaders>(() => ({
+// Once the flag is on the column is still opt-in: hidden until a user turns it on from the
+// column visibility menu.
+const defaultTablePreferences = {
+  columnVisibility: {
+    managed_by: false,
+  },
+}
+
+const baseTableHeaders = computed<BaseTableHeaders>(() => ({
   name: { label: t('list.table_headers.name'), searchable: true, hidable: false, sortable: true },
   type: { label: t('list.table_headers.type') },
   ...(!isKonnectManagedRedisEnabled.value && { tags: { label: t('list.table_headers.tags') } }),
   plugins: { label: t('list.table_headers.plugins') },
+}))
+
+// `managed_by` is behind a feature flag; while it is off the column is absent entirely, so it
+// never shows up in the column visibility menu either.
+const isManagedByEnabled = useManagedByEnabled()
+const tableHeaders = computed<BaseTableHeaders>(() => ({
+  ...toValue(baseTableHeaders),
+  ...(isManagedByEnabled.value ? { managed_by: { label: getManagedByFieldLabel(), sortable: false } } : {}),
 }))
 
 const getNavigableRowId = (row: EntityRow): string => {

@@ -395,7 +395,30 @@ const { setTablePreferences, getTablePreferences } = useTablePreferences()
 // Use unique key cacheId (passed down from consuming app and derived from controlPlaneId)
 // for localStorage of user's table preferences across tables, orgs and users
 
-const tablePreferences = ref<TablePreferences>(getTablePreferences(cacheId.value, props.defaultTablePreferences))
+// `getTablePreferences` falls back to `defaultTablePreferences` wholesale, and only when the
+// table has nothing stored at all. That loses the defaults for anyone who has ever loaded the
+// table before a new column existed, and KTable treats a key missing from `columnVisibility` as
+// visible - so a column meant to be hidden by default would show up for every returning user.
+// Merge per key instead: a stored choice always wins, and keys the user has never decided on
+// take the default.
+const resolveTablePreferences = (): TablePreferences => {
+  const stored = getTablePreferences(cacheId.value, props.defaultTablePreferences)
+  const defaultColumnVisibility = props.defaultTablePreferences?.columnVisibility
+
+  if (!defaultColumnVisibility) {
+    return stored
+  }
+
+  return {
+    ...stored,
+    columnVisibility: {
+      ...defaultColumnVisibility,
+      ...stored.columnVisibility,
+    },
+  }
+}
+
+const tablePreferences = ref<TablePreferences>(resolveTablePreferences())
 
 const combinedInitialFetcherParams = computed((): Partial<TableDataFetcherParams<string, string>> => {
   // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default
