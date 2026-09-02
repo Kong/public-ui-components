@@ -171,10 +171,10 @@ const mountTile = (
   dimensions: TileDefinition['query']['dimensions'] = ['time'],
   {
     hideActions = false,
-    hideZoomActions = false,
+    preview = false,
   }: {
     hideActions?: boolean
-    hideZoomActions?: boolean
+    preview?: boolean
   } = {},
 ) => {
   const definition = {
@@ -191,7 +191,7 @@ const mountTile = (
       definition,
       context: mockContext,
       hideActions,
-      hideZoomActions,
+      preview,
       queryReady: true,
       refreshCounter: 0,
       tileId: '1',
@@ -255,8 +255,8 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     expect((wrapper.findComponent(TimeseriesChartRenderer).props('requestsLink') as { href?: string } | undefined)?.href).toContain('http://test.com/requests?q=')
   })
 
-  it('does not populate zoom action links when zoom actions are hidden', async () => {
-    const wrapper = mountTile('api_usage', ['time'], { hideZoomActions: true })
+  it('does not populate zoom action links when the tile is previewing', async () => {
+    const wrapper = mountTile('api_usage', ['time'], { preview: true })
     await flushPromises()
 
     const renderer = wrapper.findComponent(TimeseriesChartRenderer)

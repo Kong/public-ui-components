@@ -65,7 +65,6 @@ const context: DashboardRendererContext = {
   editable: false,
   refreshInterval: 0,
   showTileActions: true,
-  showTileZoomActions: false,
   tz: 'Etc/UTC',
 }
 

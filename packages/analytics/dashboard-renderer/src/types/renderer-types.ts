@@ -13,7 +13,6 @@ export interface DashboardRendererContext {
   refreshInterval?: number
   editable?: boolean
   showTileActions?: boolean
-  showTileZoomActions?: boolean
 }
 
 export interface PdfExportOptions {

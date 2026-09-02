@@ -228,8 +228,8 @@ const {
   definition,
   height = DEFAULT_TILE_HEIGHT,
   hideActions = false,
-  hideZoomActions = false,
   isFullscreen,
+  preview = false,
   queryReady,
   showRefresh = false,
   tileId,
@@ -239,13 +239,18 @@ const {
   definition: TileDefinition
   height?: number
   hideActions?: boolean
-  hideZoomActions?: boolean
   isFullscreen?: boolean
+  preview?: boolean
   queryReady: boolean
   showRefresh?: boolean
   tileId: string | number
   tileType?: TileConfig['type']
 }>()
+
+const { showTileZoomActions } = composables.useDashboardContext({
+  context: computed(() => context),
+  preview: computed(() => preview),
+})
 
 const refreshCounter = defineModel<number>('refreshCounter', { default: 0 })
 const refresh = () => {
@@ -377,8 +382,8 @@ const componentData = computed(() => {
   const chartRendererProps = {
     chartOptions: definition.chart,
     headerDescription: tileDescription.value,
-    requestsLink: hideZoomActions ? undefined : requestsLinkZoomActions.value,
-    exploreLink: hideZoomActions ? undefined : exploreLinkZoomActions.value,
+    requestsLink: showTileZoomActions.value ? requestsLinkZoomActions.value : undefined,
+    exploreLink: showTileZoomActions.value ? exploreLinkZoomActions.value : undefined,
   }
 
   return component && {
