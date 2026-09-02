@@ -26,6 +26,10 @@ auditConfig:
     - 'GHSA-67hx-6x53-jw92'
 
 overrides:
+  # @types/geobuf pulls in @types/pbf, whose bundled pbf typings are stale vs pbf v4
+  # (which now ships its own index.d.ts). Alias it to the real pbf package so both
+  # resolve to identical types.
+  '@types/pbf': npm:pbf@^4.0.1
   axios@>=1.0.0 <1.18.0: ^1.18.0
   brace-expansion@>=4.0.0 <5.0.9: ^5.0.9
   cookie@<0.7.0: ^0.7.0
