@@ -149,7 +149,7 @@
       />
 
       <div
-        v-for="(clientId, index) in clientIdArray"
+        v-for="(clientId, index) in clientIds"
         :key="index"
         class="client-row"
         :class="{ 'client-row-with-label': index === 0 }"
@@ -204,7 +204,7 @@
             data-testid="principals-client-secret"
             :disabled="hasAuthServersAccess && !selectedServer"
             :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.secret_label') : undefined"
-            :model-value="clientSecretArray[index] ?? undefined"
+            :model-value="clientSecrets[index] ?? undefined"
             :placeholder="t('plugins.free-form.openid-connect.principals.client.secret_placeholder')"
             show-password-mask-toggle
             type="password"
@@ -215,7 +215,7 @@
             v-if="autofillSlot"
             :schema="{ model: 'config-client_secret', referenceable: true }"
             :update="(val: string) => handleClientSecretChange(index, val)"
-            :value="clientSecretArray[index]"
+            :value="clientSecrets[index]"
           />
         </div>
         <button
@@ -255,7 +255,7 @@
 
     <template v-else>
       <div
-        v-for="(clientId, index) in clientIdArray"
+        v-for="(clientId, index) in clientIds"
         :key="index"
         class="client-row"
         :class="{ 'client-row-with-label': index === 0 }"
@@ -294,7 +294,7 @@
             class="external-client-input"
             data-testid="external-client-secret"
             :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.secret_label') : undefined"
-            :model-value="clientSecretArray[index] ?? undefined"
+            :model-value="clientSecrets[index] ?? undefined"
             :placeholder="t('plugins.free-form.openid-connect.principals.client.secret_placeholder')"
             show-password-mask-toggle
             type="password"
@@ -313,14 +313,14 @@
             v-if="autofillSlot"
             :schema="{ model: 'config-client_secret', referenceable: true }"
             :update="(val: string) => handleClientSecretChange(index, val)"
-            :value="clientSecretArray[index]"
+            :value="clientSecrets[index]"
           />
         </div>
         <button
           :aria-label="t('plugins.free-form.openid-connect.principals.client.remove')"
           class="remove-client-btn"
           data-testid="remove-external-client-action"
-          :disabled="clientIdArray.length <= 1"
+          :disabled="clientIds.length <= 1"
           type="button"
           @click="removeClientRow(index)"
         >
@@ -476,17 +476,31 @@ const issuer = computed<string | null>({
   },
 })
 
-const clientIdValue = computed<Array<string | null> | null>({
-  get: () => formData.config?.client_id ?? null,
+// A cleared field is `null` on the model but still needs one row on screen, so the getter
+// fabricates `[null]`. The setter is that getter's inverse: a lone empty row is the
+// fabrication coming back (the inputs echo it on re-render) and clears the field again,
+// while extra rows are ones the user actually added and pass through. Writing `null` clears.
+const clientIds = computed<Array<string | null>, Array<string | null> | null>({
+  get: () => {
+    const ids = formData.config?.client_id
+    return Array.isArray(ids) && ids.length > 0 ? ids : [null]
+  },
   set: (value) => {
-    if (formData.config) formData.config.client_id = value
+    if (formData.config) {
+      formData.config.client_id = value && (value.length > 1 || value[0]) ? value : getEmptyValue()
+    }
   },
 })
 
-const clientSecretValue = computed<Array<string | null> | null>({
-  get: () => formData.config?.client_secret ?? null,
+const clientSecrets = computed<Array<string | null>, Array<string | null> | null>({
+  get: () => {
+    const secrets = formData.config?.client_secret
+    return Array.isArray(secrets) && secrets.length > 0 ? secrets : [null]
+  },
   set: (value) => {
-    if (formData.config) formData.config.client_secret = value
+    if (formData.config) {
+      formData.config.client_secret = value && (value.length > 1 || value[0]) ? value : getEmptyValue()
+    }
   },
 })
 
@@ -537,20 +551,8 @@ const clientItems = computed(() =>
   clients.value.map(c => ({ label: c.name, value: c.client_id || c.id })),
 )
 
-const clientIdArray = computed<Array<string | null>>(() => {
-  const ids = clientIdValue.value
-  if (Array.isArray(ids) && ids.length > 0) return ids
-  return [null]
-})
-
-const clientSecretArray = computed<Array<string | null>>(() => {
-  const secrets = clientSecretValue.value
-  if (Array.isArray(secrets) && secrets.length > 0) return secrets
-  return [null]
-})
-
 const isRemoveClientDisabled = computed(() =>
-  (hasAuthServersAccess.value && !selectedServer.value) || clientIdArray.value.length <= 1,
+  (hasAuthServersAccess.value && !selectedServer.value) || clientIds.value.length <= 1,
 )
 
 // Without auth-server access, the Kong Identity server/client dropdowns fall back to
@@ -653,8 +655,8 @@ function handleServerChange(serverId: string | null) {
     issuer.value = selectedServer.value.issuer
   }
   // Reset client selection when server changes
-  clientIdValue.value = null
-  clientSecretValue.value = null
+  clientIds.value = null
+  clientSecrets.value = null
   clients.value = []
   clientsLoading.value = !!serverId
   if (serverId) {
@@ -663,38 +665,36 @@ function handleServerChange(serverId: string | null) {
 }
 
 function handleClientChange(index: number, clientId: string | null) {
-  const clientIds = [...clientIdArray.value]
-  clientIds[index] = clientId
-  clientIdValue.value = clientIds
+  const next = [...clientIds.value]
+  next[index] = clientId
+  clientIds.value = next
 }
 
 function handleClientSecretChange(index: number, value: string) {
-  const secrets = [...clientSecretArray.value]
-  secrets[index] = value
-  clientSecretValue.value = secrets
+  const next = [...clientSecrets.value]
+  next[index] = value
+  clientSecrets.value = next
 }
 
 function addClientRow() {
-  // Base off the normalized arrays so the virtualized first row (when the
-  // model is still null) is preserved instead of being dropped.
-  clientIdValue.value = [...clientIdArray.value, null]
-  clientSecretValue.value = [...clientSecretArray.value, null]
+  clientIds.value = [...clientIds.value, null]
+  clientSecrets.value = [...clientSecrets.value, null]
 }
 
 function removeClientRow(index: number) {
-  if (clientIdArray.value.length <= 1) return
+  if (clientIds.value.length <= 1) return
 
-  const clientIds = [...clientIdArray.value]
-  clientIds.splice(index, 1)
-  clientIdValue.value = clientIds
+  const nextIds = [...clientIds.value]
+  nextIds.splice(index, 1)
+  clientIds.value = nextIds
 
-  const secrets = [...clientSecretArray.value]
-  secrets.splice(index, 1)
-  clientSecretValue.value = secrets
+  const nextSecrets = [...clientSecrets.value]
+  nextSecrets.splice(index, 1)
+  clientSecrets.value = nextSecrets
 }
 
 function getClientItemsForRow(index: number) {
-  const selectedIds = clientIdArray.value
+  const selectedIds = clientIds.value
   return clientItems.value.map(item => ({
     ...item,
     disabled: selectedIds.some((id, i) => i !== index && id === item.value),
@@ -755,16 +755,16 @@ function handleModeChange(newMode: PrincipalsMode) {
     if (oldMode === MODE_KONG_IDENTITY) {
       kongIdentityCache.value = {
         issuer: issuer.value,
-        clientId: clientIdValue.value,
-        clientSecret: clientSecretValue.value,
+        clientId: clientIds.value,
+        clientSecret: clientSecrets.value,
         selectedServer: selectedServer.value,
         clients: clients.value,
       }
     } else {
       externalCache.value = {
         issuer: issuer.value,
-        clientId: clientIdValue.value,
-        clientSecret: clientSecretValue.value,
+        clientId: clientIds.value,
+        clientSecret: clientSecrets.value,
       }
     }
 
