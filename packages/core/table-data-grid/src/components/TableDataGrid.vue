@@ -130,9 +130,13 @@ const { activeTableConfig, activeSort, activePageSize, patchTableConfig } = useT
   tableConfig: toRef(() => tableConfig),
   emitTableConfigUpdate: config => emit('update:tableConfig', config),
   onExternalConfigChange: (config) => {
-    if (gridApi.value) {
-      applySortToGrid(gridApi.value, { sortColumnKey: config.sortColumnKey, sortColumnOrder: config.sortColumnOrder })
+    if (!gridApi.value) {
+      return
     }
+    // Apply the external sort configuration to the grid when it changes.
+    applySortToGrid(gridApi.value, config)
+
+    // add more gridApi.value pushes here as TableDataGridConfig grows
   },
 })
 

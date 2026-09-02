@@ -3,8 +3,8 @@
 Reusable Vue wrapper around AG Grid for Kong table data grids.
 
 This package currently supports AG Grid infinite row loading with a cursor-first
-fetcher contract, basic column definitions, empty/error presentation states, and
-state lifecycle emits.
+fetcher contract, basic column definitions, single-column sorting, empty/error
+presentation states, and state lifecycle emits.
 
 ## Peer Dependencies
 
@@ -147,11 +147,11 @@ type TableDataGridFetcher<Row> = (
 `cursor` is an opaque token returned by the previous response. The first request
 uses `cursor: undefined`; later requests receive the previous response cursor.
 
-`sort` is the current single-column sort, or `undefined` when nothing is
-sorted. A sort change is a request-context change like `refreshKey` or
-`pageSize`: it rebuilds the datasource and restarts the cursor chain from the
-beginning, because a cursor produced under one sort order is not valid under
-another.
+`sort` carries the current single-column sort, with `sortColumnKey` and
+`sortColumnOrder` left `undefined` when nothing is sorted. A sort change is a
+request-context change like `refreshKey` or `pageSize`: it rebuilds the
+datasource and restarts the cursor chain from the beginning, because a cursor
+produced under one sort order is not valid under another.
 
 AG Grid range details are datasource internals. Consumers should not depend on,
 or return, datasource request positions or AG Grid row-count callback values in

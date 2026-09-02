@@ -308,27 +308,21 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           // produced the backend cursor needed to continue the chain.
           const cursor = blockIndex > 0 ? cursorMap.get(blockIndex - 1) : undefined
 
-          // Read live rather than captured at build time: AG Grid can purge
-          // and re-request its infinite cache on this same (pre-swap)
-          // datasource synchronously as part of handling a native header
-          // sort click, before the component's resetKey/sort change has
-          // rebuilt the datasource. Reading live keeps that request's sort
-          // correct instead of stale.
           const result = await fetcher({
             mode: 'infinite',
             pageSize,
             cursor,
+            // Always read the latest sort, not a stale one.
             sort: sort?.value,
           })
 
           if (!isLatestDatasource(datasourceId)) {
             // A reset replaced the datasource while this request was in flight.
-            // Do not apply this result to current state — but AG Grid's own
-            // row-node block loader still needs a definitive completion signal
-            // for this specific load, or it keeps treating this block as
-            // permanently in flight even after the owning cache was destroyed,
-            // silently blocking later requests for the same block index.
+            // Do not call callbacks on the old datasource or mutate current state.
+
+            // Signals AG Grid that this block's request has completed (as a failure).
             getRowsParams.failCallback()
+
             rejectBlockCompletion(blockIndex, currentBlockCompletion)
             return
           }
@@ -342,10 +336,9 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
           })
         } catch (fetchError) {
           if (!isLatestDatasource(datasourceId)) {
-            // The latest datasource will issue its own requests; the stale
-            // failure should not surface as a current-grid error, but AG Grid
-            // still needs the completion signal — see the comment above.
+            // Signals AG Grid that this block's request has completed (as a failure).
             getRowsParams.failCallback()
+
             rejectBlockCompletion(blockIndex, currentBlockCompletion)
             return
           }

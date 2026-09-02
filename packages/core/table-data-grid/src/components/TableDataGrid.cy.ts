@@ -301,7 +301,7 @@ describe('<TableDataGrid />', () => {
       mode: 'infinite',
       pageSize: 15,
       cursor: undefined,
-      sort: undefined,
+      sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
     })
   })
 
@@ -515,13 +515,13 @@ describe('<TableDataGrid />', () => {
         mode: 'infinite',
         pageSize: 15,
         cursor: undefined,
-        sort: undefined,
+        sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
       })
       expect(secondParams).to.deep.equal({
         mode: 'infinite',
         pageSize: 15,
         cursor: 'next-cursor',
-        sort: undefined,
+        sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
       })
 
       for (const params of [firstParams, secondParams]) {
@@ -549,7 +549,7 @@ describe('<TableDataGrid />', () => {
         mode: 'infinite',
         pageSize: 15,
         cursor: undefined,
-        sort: undefined,
+        sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
       })
     })
   })
@@ -570,7 +570,7 @@ describe('<TableDataGrid />', () => {
         mode: 'infinite',
         pageSize: 10,
         cursor: undefined,
-        sort: undefined,
+        sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
       })
     })
   })

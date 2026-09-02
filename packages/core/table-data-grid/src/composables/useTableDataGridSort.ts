@@ -3,15 +3,8 @@ import type { GridApi, SortChangedEvent } from 'ag-grid-community'
 import type { Ref } from 'vue'
 
 /**
- * Translates AG Grid's `sortChanged` event into `TableDataGrid`'s
- * package-owned `sort` shape, and pushes a host- or package-driven sort
- * back onto the grid.
- *
- * A grid-driven event is only acted on when it actually changes the
- * current sort — comparing against `activeSort` (rather than a mutable
- * re-entrancy flag) makes this idempotent, so it also absorbs the echo
- * `sortChanged` event that `applySortToGrid`'s own `applyColumnState` call
- * fires.
+ * Translates AG Grid's `sortChanged` event into `TableDataGrid`'s `sort`
+ * shape, and pushes a sort back onto the grid.
  *
  * @param activeSort Current resolved sort, read from `useTableDataGridConfig`.
  * @param emitSort Called with the new sort whenever a grid interaction changes it.
@@ -41,7 +34,6 @@ export const useTableDataGridSort = <Row extends object = TableDataGridRow>({
       .sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0))
     const latest = sortedColumns[sortedColumns.length - 1]
 
-    // Explicit undefined, not {}, so patchTableConfig's spread merge actually clears the sort.
     const next: TableDataGridSort = latest
       ? { sortColumnKey: latest.colId, sortColumnOrder: latest.sort as TableDataGridSortDirection }
       : { sortColumnKey: undefined, sortColumnOrder: undefined }

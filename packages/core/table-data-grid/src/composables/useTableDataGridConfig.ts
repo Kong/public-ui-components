@@ -69,8 +69,8 @@ export const useTableDataGridConfig = <Row extends object = TableDataGridRow>({
     sortColumnOrder: activeTableConfig.value.sortColumnOrder,
   }))
 
-  // Resolved page size, falling back to the component default.
-  const activePageSize = computed<number>(() => activeTableConfig.value.pageSize ?? pageSize.value)
+  // The host's tableConfig.pageSize wins when present, else the live component default.
+  const activePageSize = computed<number>(() => tableConfigProp.value?.pageSize ?? pageSize.value)
 
   return {
     activeTableConfig: readonly(activeTableConfig),

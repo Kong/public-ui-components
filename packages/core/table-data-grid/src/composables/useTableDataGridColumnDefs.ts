@@ -15,16 +15,6 @@ export const useTableDataGridColumnDefs = <Row extends object = TableDataGridRow
 }: {
   headers: Readonly<Ref<Array<TableDataGridHeader<Row>>>>
   slots: Slots
-  /**
-   * Sort to seed into AG Grid's initial column state, captured once (not a
-   * reactive ref). This only covers the very first render, e.g. a
-   * host-controlled `tableConfig` prop supplied at mount. Ongoing sort sync
-   * after mount goes through `applyColumnState` (see `useTableDataGridSort`),
-   * not through recomputing column defs — AG Grid already reflects a
-   * grid-driven sort change internally, and re-pushing column defs on every
-   * such change would redundantly re-trigger AG Grid's own column state
-   * handling.
-   */
   initialSort?: TableDataGridSort
 }) => {
   // AG Grid's generic passthrough object, copied onto every cell/header renderer.
