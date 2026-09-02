@@ -162,25 +162,52 @@ export default function useDashboardContext({
   })
 
   return {
+    /**
+     * Equivalent to `enrichedContext.editable`, Is the dashboard editable?
+     */
     editable,
     /**
-     * the context with all values enriched with any external circumstances that
-     * may modify how it works applied to it.
+     * The context with all values enriched by any external circumstances passed
+     * into this composable that could override values set in the original context.
      */
     enrichedContext,
+    /**
+     * Equivalent to `enrichedContext.filters`. All filters applied to this dashboard
+     */
     filters,
     /**
      * A basic check to see if all configuration has been loaded.
      */
     queryReady,
+    /**
+     * Equivalent to `enrichedContext.refreshInterval`. How frequently the dashboard
+     * automatically refreshes itself.
+     */
     refreshInterval,
+    /**
+     * Equivalent to `enrichedContext.showTileActions`. Whether or not the tile
+     * displays its context menu in the corner
+     */
     showTileActions,
     /**
-     * should control whether every action other than "zoom in" is visible
+     * Inferred from whether or not this dashboard is being previewed. If it is
+     * a preview, we don't show the actions displayed in the context menu of the
+     * zoom handler on charts which support it.
      */
     showTileZoomActions,
+    /**
+     * Equivalent to `enrichedContext.timeSpec`. What time range the dashboard
+     * fetches.
+     */
     timeSpec,
+    /**
+     * Equivalent to `enrichedContext.tz`. What timezone the dashboard uses.
+     */
     tz,
+    /**
+     * Inferred from the preview state and from whether the DashboardRenderer
+     * component has a handler for the zoom events or not.
+     */
     zoomable,
   }
 }
