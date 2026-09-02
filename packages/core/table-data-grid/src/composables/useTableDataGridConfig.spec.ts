@@ -95,6 +95,28 @@ describe('useTableDataGridConfig', () => {
     expect(emitTableConfigUpdate).not.toHaveBeenCalled()
   })
 
+  it('keeps a grid-driven sort when headers change afterward, uncontrolled', async () => {
+    const tableConfig = ref<TableDataGridConfig | undefined>(undefined)
+    const headersRef = ref(headers)
+
+    const { activeSort, patchTableConfig } = useTableDataGridConfig<TestRow>({
+      headers: headersRef,
+      pageSize: ref(25),
+      tableConfig,
+      emitTableConfigUpdate: vi.fn(),
+    })
+
+    patchTableConfig({ sortColumnKey: 'name', sortColumnOrder: 'asc' })
+    expect(activeSort.value).toEqual({ sortColumnKey: 'name', sortColumnOrder: 'asc' })
+
+    // Uncontrolled: there's no tableConfig prop to re-resolve against, so an
+    // unrelated headers change must not wipe the grid-driven sort above.
+    headersRef.value = [...headers]
+    await nextTick()
+
+    expect(activeSort.value).toEqual({ sortColumnKey: 'name', sortColumnOrder: 'asc' })
+  })
+
   it('never echoes a grid-driven patch back through the prop watcher', async () => {
     const tableConfig = ref<TableDataGridConfig | undefined>(undefined)
     const onExternalConfigChange = vi.fn()

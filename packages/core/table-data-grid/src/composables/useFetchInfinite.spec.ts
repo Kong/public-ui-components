@@ -329,4 +329,47 @@ describe('useFetchInfinite', () => {
     expect(preSortSuccessCallback).not.toHaveBeenCalled()
     expect(preSortFailCallback).toHaveBeenCalledOnce()
   })
+
+  // Regression test: block 0 always bypasses the staleness check in
+  // waitForPreviousBlockCompletion, so a stale generation's datasource object
+  // can still be asked for block 0 well after a newer generation exists and
+  // has already returned to idle. That start must not flip isFetching back
+  // on, since its own completion is guaranteed to skip the matching decrement
+  // (it isn't the latest generation) and would otherwise leave isFetching
+  // stuck true forever.
+  it('does not resurrect isFetching for a stale generation\'s orphaned block-0 request', async () => {
+    const orphanRequest = createDeferred<{ data: TestRow[], cursor: string, hasMore: boolean }>()
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce({ data: createRows('latest-block', 15), cursor: 'latest-cursor', hasMore: false })
+      .mockReturnValueOnce(orphanRequest.promise)
+    const { datasource, isFetching, resetKey } = createInfiniteFetch(fetcher)
+    const staleDatasource = expectDatasource(datasource.value)
+
+    resetKey.value += 1
+    await nextTick()
+
+    const latestDatasource = expectDatasource(datasource.value)
+    expect(latestDatasource).not.toBe(staleDatasource)
+
+    // The latest generation does its own, unrelated fetch and returns to idle.
+    await getDatasourceRows(latestDatasource, { startRow: 0, endRow: 15 })
+    expect(isFetching.value).toBe(false)
+
+    // AG Grid can still call getRows on the superseded datasource object.
+    const orphanFailCallback = vi.fn()
+    const orphanGetRows = staleDatasource.getRows(createGetRowsParams({
+      startRow: 0,
+      endRow: 15,
+      failCallback: orphanFailCallback,
+    })) as Promise<void>
+
+    await nextTick()
+    expect(isFetching.value).toBe(false)
+
+    orphanRequest.resolve({ data: createRows('orphan-block', 15), cursor: 'orphan-cursor', hasMore: true })
+    await orphanGetRows
+
+    expect(orphanFailCallback).toHaveBeenCalledOnce()
+    expect(isFetching.value).toBe(false)
+  })
 })

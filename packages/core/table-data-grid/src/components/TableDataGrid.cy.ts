@@ -1004,6 +1004,46 @@ describe('<TableDataGrid />', () => {
     })
   })
 
+  it('clears the sort on a third click of the same header', () => {
+    const onSort = cy.stub().as('sort')
+    const onUpdateTableConfig = cy.stub().as('updateTableConfig')
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: sortableHeaders,
+      onSort,
+      onUpdateTableConfig,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    // AG Grid's default single-column cycle: asc -> desc -> unsorted.
+    cy.contains('.ag-header-cell', 'Name').click()
+    cy.contains('.ag-header-cell', 'Name').click()
+    cy.contains('.ag-header-cell', 'Name').click()
+
+    cy.then(() => {
+      expect(onSort.callCount).to.equal(3)
+      expect(onSort.lastCall.args[0]).to.deep.equal({ sortColumnKey: undefined, sortColumnOrder: undefined })
+      expect(onUpdateTableConfig.lastCall.args[0]).to.deep.equal({
+        sortColumnKey: undefined,
+        sortColumnOrder: undefined,
+        pageSize: 25,
+      })
+    })
+    cy.wrap(fetcher).should((stub) => {
+      expect(stub.lastCall.args[0]).to.deep.equal({
+        mode: 'infinite',
+        pageSize: 25,
+        cursor: undefined,
+        sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
+      })
+    })
+  })
+
   it('seeds the first fetch with a host-controlled initial tableConfig sort', () => {
     const fetcher = cy.stub().resolves({
       data: rows,
