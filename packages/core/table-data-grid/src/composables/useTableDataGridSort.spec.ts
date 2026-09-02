@@ -45,8 +45,8 @@ describe('useTableDataGridSort', () => {
 
     onSortChanged(createEvent(api))
 
-    expect(emitSort).toHaveBeenCalledWith({})
-    expect(patchTableConfig).toHaveBeenCalledWith({})
+    expect(emitSort).toHaveBeenCalledWith({ sortColumnKey: undefined, sortColumnOrder: undefined })
+    expect(patchTableConfig).toHaveBeenCalledWith({ sortColumnKey: undefined, sortColumnOrder: undefined })
   })
 
   it('is a no-op when the resolved sort already matches activeSort', () => {

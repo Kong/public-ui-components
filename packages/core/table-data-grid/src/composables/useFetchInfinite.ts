@@ -28,9 +28,7 @@ interface UseFetchInfiniteOptions<Row extends object = TableDataGridRow> {
    */
   resetKey?: Readonly<Ref<unknown>>
   /**
-   * Current resolved sort. Read once per datasource build (the component
-   * layer includes sort in `resetKey`, so a sort change always rebuilds the
-   * datasource) and forwarded to every fetcher call for that generation.
+   * Current resolved sort, forwarded to the fetcher.
    */
   sort?: Readonly<Ref<TableDataGridSort | undefined>>
 }
@@ -65,11 +63,27 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
   const datasource = shallowRef<IDatasource>()
   const data = shallowRef<Row[] | undefined>()
   const error = shallowRef<unknown>()
+  const pendingFetchCount = ref(0)
   const isFetching = ref(false)
 
   const isLatestDatasource = (datasourceId: number): boolean => (
     datasourceId === latestDatasourceId.value
   )
+
+  const syncIsFetching = () => {
+    isFetching.value = pendingFetchCount.value > 0
+  }
+
+  const markFetchStarted = () => {
+    error.value = undefined
+    pendingFetchCount.value += 1
+    syncIsFetching()
+  }
+
+  const markFetchFinished = () => {
+    pendingFetchCount.value = Math.max(0, pendingFetchCount.value - 1)
+    syncIsFetching()
+  }
 
   const createBlockCompletion = (blockIndex: number): BlockCompletion => {
     const existingCompletion = blockCompletionMap.get(blockIndex)
@@ -240,16 +254,6 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
    * requests from an older datasource resolve without mutating current state or
    * calling callbacks on the replaced datasource.
    *
-   * Pending-fetch tracking is local to this generation (`pendingFetchCount`
-   * below), not a single counter shared across generations. AG Grid can have
-   * a request from the previous (now superseded) datasource still in flight
-   * when this one is built — e.g. it purges and re-requests its own infinite
-   * cache natively on a header sort click, before this composable's own
-   * resetKey-triggered rebuild runs. That old request's completion must not
-   * affect this generation's `isFetching`: a shared counter incremented by
-   * both generations, but only ever decremented for the latest one, would
-   * permanently overcount and leave `isFetching` stuck `true`.
-   *
    * @returns AG Grid datasource for the latest cursor chain.
    */
   const buildDatasource = (): IDatasource => {
@@ -259,18 +263,7 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
     blockCompletionMap.clear()
     data.value = undefined
     error.value = undefined
-
-    let pendingFetchCount = 0
-
-    const syncIsFetching = () => {
-      // A superseded generation's own pending count no longer represents
-      // what the exposed `isFetching` should reflect once a newer
-      // generation exists.
-      if (isLatestDatasource(datasourceId)) {
-        isFetching.value = pendingFetchCount > 0
-      }
-    }
-
+    pendingFetchCount.value = 0
     syncIsFetching()
 
     return {
@@ -296,18 +289,16 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
         })
 
         if (blockGateResult !== 'ready') {
-          if (blockGateResult === 'failed') {
-            getRowsParams.failCallback()
-          }
-
+          // Both 'failed' and 'stale' still need a completion signal, or AG Grid leaves this block in flight forever.
+          getRowsParams.failCallback()
           return
         }
 
+        // Skip for a stale generation, or isFetching can get stuck true.
         if (isLatestDatasource(datasourceId)) {
-          error.value = undefined
+          markFetchStarted()
         }
-        pendingFetchCount += 1
-        syncIsFetching()
+
         try {
           // AG Grid schedules blocks by row range, so `blockIndex` is this
           // composable's range-to-cursor bridge: range 0-25 maps to block 0,
@@ -366,8 +357,9 @@ export const useFetchInfinite = <Row extends object = TableDataGridRow>({
             getRowsParams,
           })
         } finally {
-          pendingFetchCount = Math.max(0, pendingFetchCount - 1)
-          syncIsFetching()
+          if (isLatestDatasource(datasourceId)) {
+            markFetchFinished()
+          }
         }
       },
     }

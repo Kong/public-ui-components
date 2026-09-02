@@ -4,17 +4,9 @@ import { computed, readonly, ref, watch } from 'vue'
 import { resolveTableConfig, tableConfigsEqual } from '../utils/tableConfig'
 
 /**
- * Owns `TableDataGrid`'s current `tableConfig` state: resolves the
- * host-supplied (or absent) `tableConfig` prop against the current headers
- * and page size, mirrors it into an internal ref, and exposes a single
- * write path (`patchTableConfig`) for grid-driven changes.
- *
- * Grid-driven writes go through `patchTableConfig`, which mutates
- * `activeTableConfig` directly and never touches the prop, so they can
- * never re-trigger the prop watcher below. Host-driven writes (a changed
- * `tableConfig` prop) go through that watcher, which calls
- * `onExternalConfigChange` so the caller can push the change into AG Grid
- * imperatively, since it didn't originate from a grid interaction.
+ * Owns `TableDataGrid`'s current `tableConfig` state, controlled or
+ * uncontrolled, with `patchTableConfig` as the single write path for
+ * grid-driven changes.
  *
  * @param headers Current column headers, used to validate the resolved sort key.
  * @param pageSize Reactive component-level page size default.
@@ -35,21 +27,33 @@ export const useTableDataGridConfig = <Row extends object = TableDataGridRow>({
   emitTableConfigUpdate: (config: TableDataGridConfig) => void
   onExternalConfigChange?: (config: TableDataGridConfig) => void
 }) => {
-  const resolve = (config: TableDataGridConfig | undefined) => (
-    resolveTableConfig({ config, headers: headers.value, pageSize: pageSize.value })
+  // Prop resolved against headers/pageSize. Undefined, and untracked, when uncontrolled.
+  const resolvedPropConfig = computed<TableDataGridConfig | undefined>(() => (
+    tableConfigProp.value
+      ? resolveTableConfig({ config: tableConfigProp.value, headers: headers.value, pageSize: pageSize.value })
+      : undefined
+  ))
+
+  // Single source of truth. Written only by the watcher below or by patchTableConfig.
+  const activeTableConfig = ref<TableDataGridConfig>(
+    resolvedPropConfig.value ?? resolveTableConfig({ config: undefined, headers: headers.value, pageSize: pageSize.value }),
   )
 
-  const activeTableConfig = ref<TableDataGridConfig>(resolve(tableConfigProp.value))
-
-  watch(() => resolve(tableConfigProp.value), (resolved) => {
-    if (!tableConfigsEqual(resolved, activeTableConfig.value)) {
+  // Host-driven sync: a real prop change updates state and notifies the caller to push it into AG Grid.
+  watch(resolvedPropConfig, (resolved) => {
+    if (resolved && !tableConfigsEqual(resolved, activeTableConfig.value)) {
       activeTableConfig.value = resolved
       onExternalConfigChange?.(resolved)
     }
   })
 
+  // Merges a patch into the current config and emits it, only on a real change.
   const patchTableConfig = (patch: Partial<TableDataGridConfig>) => {
-    const next = resolve({ ...activeTableConfig.value, ...patch })
+    const next = resolveTableConfig({
+      config: { ...activeTableConfig.value, ...patch },
+      headers: headers.value,
+      pageSize: pageSize.value,
+    })
 
     if (tableConfigsEqual(next, activeTableConfig.value)) {
       return
@@ -59,11 +63,13 @@ export const useTableDataGridConfig = <Row extends object = TableDataGridRow>({
     emitTableConfigUpdate(next)
   }
 
+  // Sort-only view of activeTableConfig.
   const activeSort = computed<TableDataGridSort>(() => ({
     sortColumnKey: activeTableConfig.value.sortColumnKey,
     sortColumnOrder: activeTableConfig.value.sortColumnOrder,
   }))
 
+  // Resolved page size, falling back to the component default.
   const activePageSize = computed<number>(() => activeTableConfig.value.pageSize ?? pageSize.value)
 
   return {

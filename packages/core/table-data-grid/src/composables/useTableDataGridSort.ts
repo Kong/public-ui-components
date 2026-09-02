@@ -41,9 +41,10 @@ export const useTableDataGridSort = <Row extends object = TableDataGridRow>({
       .sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0))
     const latest = sortedColumns[sortedColumns.length - 1]
 
+    // Explicit undefined, not {}, so patchTableConfig's spread merge actually clears the sort.
     const next: TableDataGridSort = latest
       ? { sortColumnKey: latest.colId, sortColumnOrder: latest.sort as TableDataGridSortDirection }
-      : {}
+      : { sortColumnKey: undefined, sortColumnOrder: undefined }
 
     if (
       next.sortColumnKey === activeSort.value.sortColumnKey

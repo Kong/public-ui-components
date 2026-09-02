@@ -145,9 +145,6 @@ const { onSortChanged, applySortToGrid } = useTableDataGridSort<Row>({
 const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
   headers: toRef(() => headers),
   slots,
-  // A snapshot, not the reactive activeSort: only the initial resolved sort
-  // (e.g. from a host-controlled tableConfig prop at mount) needs seeding
-  // into column defs. See useTableDataGridColumnDefs for why.
   initialSort: activeSort.value,
 })
 
@@ -170,10 +167,7 @@ const resetKey = computed(() => [
   activeTableConfig.value.sortColumnKey,
   activeTableConfig.value.sortColumnOrder,
 ])
-// Omit the field entirely when nothing is sorted, rather than passing an
-// object with both fields undefined, so the fetcher's public `sort` param
-// stays clean for hosts that never enable sorting.
-const fetcherSort = computed(() => (activeSort.value.sortColumnKey ? activeSort.value : undefined))
+
 const {
   data,
   datasource,
@@ -182,7 +176,7 @@ const {
 } = useFetchInfinite({
   fetcher,
   resetKey,
-  sort: fetcherSort,
+  sort: activeSort,
 })
 
 const {
