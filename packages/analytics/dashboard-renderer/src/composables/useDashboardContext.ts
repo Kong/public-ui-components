@@ -154,7 +154,7 @@ export default function useDashboardContext({
       refreshInterval: refreshInterval.value,
       editable: editable.value,
       showTileActions: showTileActions.value,
-      showTileZoomActions: showTileZoomActions.value,
+      ...(context.value.scatterDataFn && { scatterDataFn: context.value.scatterDataFn }),
     }
   })
 
@@ -176,6 +176,9 @@ export default function useDashboardContext({
     queryReady,
     refreshInterval,
     showTileActions,
+    /**
+     * should control whether every action other than "zoom in" is visible
+     */
     showTileZoomActions,
     timeSpec,
     tz,

@@ -16,7 +16,11 @@ export interface DashboardRendererContext {
   refreshInterval?: number
   editable?: boolean
   showTileActions?: boolean
-  showTileZoomActions?: boolean
+  scatterDataFn?: (
+    query: ApiRequestsQuery,
+    context: DashboardRendererContext,
+    abortController: AbortController,
+  ) => Promise<ScatterChartData | undefined>
 }
 
 export interface PdfExportOptions {
