@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.32](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-redis-configurations%401.18.31...%40kong-ui-public%2Fentities-redis-configurations%401.18.32) (2026-09-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
+
+
+
+
+
 ## [1.18.31](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-redis-configurations%401.18.30...%40kong-ui-public%2Fentities-redis-configurations%401.18.31) (2026-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
