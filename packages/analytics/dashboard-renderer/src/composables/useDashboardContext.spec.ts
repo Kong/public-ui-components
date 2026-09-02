@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { mount } from '@vue/test-utils'
 import useDashboardContext from './useDashboardContext'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
-import type { DashboardRendererContext } from '../types'
+import type { DashboardRendererContext, ZoomConfiguration } from '../types'
 import type {
   AllFilters,
   TimeRangeV4,
@@ -101,7 +101,7 @@ describe('useContextLinks', () => {
 
     let enrichedContext: Ref<DashboardRendererContext>
     let queryReady: Ref<boolean>
-    let zoomable: Ref<boolean>
+    let zoomConfiguration: Ref<ZoomConfiguration>
     const wrapper = mount({
       template: '<div />',
       setup() {
@@ -113,7 +113,7 @@ describe('useContextLinks', () => {
         })
         enrichedContext = result.enrichedContext
         queryReady = result.queryReady
-        zoomable = result.zoomable
+        zoomConfiguration = result.zoomConfiguration
       },
     })
 
@@ -126,7 +126,7 @@ describe('useContextLinks', () => {
       // @ts-ignore it's defined in mount, and we await nextTick for it
       queryReady,
       // @ts-ignore it's defined in mount, and we await nextTick for it
-      zoomable,
+      zoomConfiguration,
     }
   }
 
@@ -242,9 +242,9 @@ describe('useContextLinks', () => {
     }))
   })
 
-  it('sets zoomable to true if the node has the onTileTimeRangeZoom prop', async () => {
-    const { zoomable } = await setup({ hasZoomProp: true })
-    expect(zoomable.value).to.eq(true)
+  it('sets zoomConfiguration.enabled to true if the node has the onTileTimeRangeZoom prop', async () => {
+    const { zoomConfiguration } = await setup({ hasZoomProp: true })
+    expect(zoomConfiguration.value.enabled).to.eq(true)
   })
 
   it('forces editable to false when preview is true, even if context.editable is true', async () => {
@@ -252,8 +252,8 @@ describe('useContextLinks', () => {
     expect(enrichedContext.value.editable).to.eq(false)
   })
 
-  it('forces zoomable to false when preview is true, even if the node has the onTileTimeRangeZoom prop', async () => {
-    const { zoomable } = await setup({ hasZoomProp: true, preview: true })
-    expect(zoomable.value).to.eq(false)
+  it('forces zoomConfiguration.enabled to false when preview is true, even if the node has the onTileTimeRangeZoom prop', async () => {
+    const { zoomConfiguration } = await setup({ hasZoomProp: true, preview: true })
+    expect(zoomConfiguration.value.enabled).to.eq(false)
   })
 })
