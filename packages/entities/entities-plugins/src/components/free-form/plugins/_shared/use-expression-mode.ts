@@ -16,7 +16,11 @@ import type { FormSchema, NamedFieldSchema, RecordFieldSchema } from '../../../.
  * @param schema The plugin's raw schema, from `PluginFormLayoutProps`.
  */
 export function useExpressionMode(schema: () => FormSchema) {
-  const enabled = inject<boolean>(FEATURE_FLAGS.KM_3034_FEATURES_316, false)
+  // Defaults to on: `KM-3034-features-316` is not registered in the consuming
+  // app yet, so an absent flag has to mean "show it" or the feature would be
+  // invisible everywhere. Once the flag exists, whatever it provides wins —
+  // including turning this off — and this default should become `false`.
+  const enabled = inject<boolean>(FEATURE_FLAGS.KM_3034_FEATURES_316, true)
 
   const gatedSchema = computed<FormSchema>(() => {
     const value = schema()
