@@ -21,12 +21,15 @@
 
 <script setup lang="ts">
 import { KInput, KTextArea } from '@kong/kongponents'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import { ref, watch, useSlots, computed, useAttrs } from 'vue'
 import { useFormShared } from './composables'
 
 interface Props {
   modelValue?: string
   multiline?: boolean
+  secret?: boolean
 }
 
 const props = defineProps<Props>()
@@ -36,7 +39,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 
-const InputComponent = computed(() => props.multiline ? KTextArea : KInput)
+const InputComponent = computed(() => props.multiline ? KTextArea : props.secret ? SecretInput : KInput)
 const characterLimit = computed(() => {
   return (attrs.characterLimit as number) ?? (props.multiline ? false : undefined)
 })

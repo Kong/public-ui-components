@@ -15,6 +15,7 @@
     :generator="generator ?? generateCredentialSecret"
     mode="create"
     :model-value="fieldValue ?? ''"
+    :use-secret-input="useSecretInput"
     @update:model-value="handleUpdate"
   >
     <template
@@ -30,18 +31,20 @@
 </template>
 
 <script setup lang="ts">
-import { toRef, useAttrs } from 'vue'
+import { computed, inject, toRef, useAttrs } from 'vue'
 import { SensitiveInput } from '@kong-ui-public/entities-shared'
 import type { SensitiveInputLabels } from '@kong-ui-public/entities-shared'
 import { useField, useFieldAttrs } from './composables'
 import { generateCredentialSecret } from './utils'
 import type { BaseFieldProps, EmptyValue } from './types'
+import { USE_SECRET_INPUT_KEY } from '../../../constants'
 
 defineOptions({
   inheritAttrs: false,
 })
 
 const attrs = useAttrs()
+const useSecretInput = inject(USE_SECRET_INPUT_KEY, computed(() => false))
 
 interface CredentialSecretFieldProps extends BaseFieldProps {
   placeholder?: string

@@ -12,11 +12,7 @@
     v-bind="$attrs"
   >
     <EnhancedInput
-      v-bind="{
-        ...fieldAttrs,
-        showPasswordMaskToggle: encrypted,
-        type: encrypted ? 'password' : 'text',
-      }"
+      v-bind="fieldAttrs"
       :id="inputId"
       class="ff-string-field"
       :data-1p-ignore="is1pIgnore"
@@ -28,6 +24,9 @@
       :model-value="fieldValue ?? ''"
       :multiline="multiline"
       :placeholder="placeholder ?? fieldAttrs.placeholder"
+      :secret="encrypted && useSecretInput"
+      :show-password-mask-toggle="encrypted && !useSecretInput"
+      :type="encrypted && !useSecretInput ? 'password' : encrypted ? undefined : 'text'"
       @update:model-value="handleUpdate"
     >
       <template
@@ -92,6 +91,7 @@ import { computed, inject, toRef, useAttrs } from 'vue'
 import type { InputProps, LabelAttributes } from '@kong/kongponents'
 import useI18n from '../../../composables/useFreeformI18n'
 import EnhancedInput from './EnhancedInput.vue'
+import { USE_SECRET_INPUT_KEY } from '../../../constants'
 
 import * as utils from '../shared/utils'
 import { useField, useFieldAttrs } from './composables'
@@ -105,6 +105,7 @@ defineOptions({
 
 const attrs = useAttrs()
 const { i18n } = useI18n()
+const useSecretInput = inject(USE_SECRET_INPUT_KEY, computed(() => false))
 
 interface StringFieldProps extends InputProps, BaseFieldProps {
   labelAttributes?: LabelAttributes

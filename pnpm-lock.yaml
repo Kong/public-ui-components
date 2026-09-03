@@ -662,6 +662,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../i18n
+      '@kong-ui-public/misc-widgets':
+        specifier: workspace:^
+        version: link:../misc-widgets
       '@kong/design-tokens':
         specifier: 3.3.0
         version: 3.3.0
@@ -701,6 +704,12 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../i18n
+      '@kong/design-tokens':
+        specifier: 3.3.0
+        version: 3.3.0
+      '@kong/icons':
+        specifier: ^1.62.1
+        version: 1.62.1(vue@3.5.41(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.64.10
         version: 9.64.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@5.2.0(@vue/compiler-sfc@3.5.41)(esbuild@0.28.1)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.41(typescript@5.9.3)))(rolldown@1.2.3)(rollup@4.62.2)(vite@7.3.6(@types/node@24.13.3)(jiti@2.5.1)(lightningcss@1.33.0)(sass-embedded@1.80.3)(sass@1.102.0)(terser@5.43.1)(yaml@2.9.0))(vue@3.5.41(typescript@5.9.3))(webpack@5.109.2))(vue@3.5.41(typescript@5.9.3))
@@ -1117,6 +1126,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
+      '@kong-ui-public/misc-widgets':
+        specifier: workspace:^
+        version: link:../../core/misc-widgets
       '@kong-ui-public/monaco-editor':
         specifier: workspace:^
         version: link:../../core/monaco-editor
@@ -1225,6 +1237,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
+      '@kong-ui-public/misc-widgets':
+        specifier: workspace:^
+        version: link:../../core/misc-widgets
       '@kong/design-tokens':
         specifier: 3.3.0
         version: 3.3.0
@@ -1296,6 +1311,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
+      '@kong-ui-public/misc-widgets':
+        specifier: workspace:^
+        version: link:../../core/misc-widgets
       '@kong-ui-public/monaco-editor':
         specifier: workspace:^
         version: link:../../core/monaco-editor
@@ -1405,6 +1423,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
+      '@kong-ui-public/misc-widgets':
+        specifier: workspace:^
+        version: link:../../core/misc-widgets
       '@kong/design-tokens':
         specifier: 3.3.0
         version: 3.3.0

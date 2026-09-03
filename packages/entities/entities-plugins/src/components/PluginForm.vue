@@ -56,6 +56,7 @@
         :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
+        :use-secret-input="useSecretInput"
         @click:create-entity="(payload: EntityCreateEvent) => $emit('click:create-entity', payload)"
         @click:learn-more="(entity: string) => $emit('click:learn-more', entity)"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
@@ -341,6 +342,12 @@ const props = defineProps({
    * Control if the vault secret picker is enabled for applicable fields. (referenceable = true)
    */
   enableVaultSecretPicker: {
+    type: Boolean,
+    default: false,
+  },
+
+  /** Opt in to SecretInput for generic encrypted free-form fields; purpose-specific password forms migrate directly. */
+  useSecretInput: {
     type: Boolean,
     default: false,
   },
