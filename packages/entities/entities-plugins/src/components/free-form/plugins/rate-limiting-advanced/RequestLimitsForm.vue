@@ -28,7 +28,7 @@
       <div class="rla-form-request-limits-items">
         <div
           v-for="(requestLimit, index) in requestLimits"
-          :key="getKey(requestLimit, index)"
+          :key="`${getKey(requestLimit, index)}-${presetGeneration}`"
         >
           <KLabel :for="`rla-form-request-limits-item-${index}-legend`">
             {{ t('sp.request_limits.label_index', { index: index + 1 }) }}
@@ -265,6 +265,19 @@ const availableWindowTypes = computed(() => {
 
 const selectedUseCase = ref<string | undefined>()
 
+/**
+ * Bumped whenever a use case replaces the limits, to remount the rows.
+ *
+ * A preset rewrites `config.limit` and clears `expressions.limit` from
+ * outside the rows, but rows are keyed per index, so a surviving one keeps its
+ * component instance — including an `ExpressionEditor` still expanded for the
+ * expression that was just wiped, left showing an empty textarea. Remounting
+ * collapses it. Done here, where the external clear happens, rather than by
+ * watching the value inside the editor, which would also collapse it while the
+ * user is clearing and retyping.
+ */
+const presetGeneration = ref(0)
+
 const USE_CASES: Record<string, UseCase[]> = {
   fixed: [
     {
@@ -336,6 +349,8 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
       formData.expressions.limit = getEmptyValue()
     }
   }
+
+  presetGeneration.value++
 
   if (useCaseKey === selectedUseCase.value) {
     nextTick(() => {

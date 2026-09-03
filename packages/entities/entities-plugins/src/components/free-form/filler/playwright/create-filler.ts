@@ -12,6 +12,7 @@ import type {
   ExpressionFieldSchema,
   ForeignFieldSchema,
 } from '../../../../types/plugins/form-schema'
+import { EXPRESSION_ARRAY_EMPTY } from '../../shared/composables'
 import {
   createContext,
   walkFields,
@@ -88,7 +89,10 @@ export function createFiller(
         // this one mirrors, so only fill the indices that carry an expression.
         if (Array.isArray(value)) {
           for (const [index, itemValue] of value.entries()) {
-            if (itemValue === undefined || itemValue === null) continue
+            // `''` is the sentinel for a slot with no expression, so it is
+            // skipped like an absent one — filling it would open an editor for
+            // a row that has none.
+            if (itemValue === undefined || itemValue === null || itemValue === EXPRESSION_ARRAY_EMPTY) continue
             await handleArrayItem(ctx, fieldKey, index, itemValue)
           }
         }

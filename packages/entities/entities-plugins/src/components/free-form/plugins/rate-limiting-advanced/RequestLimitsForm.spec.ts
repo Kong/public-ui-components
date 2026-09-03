@@ -142,6 +142,22 @@ describe('RequestLimitsForm (rate-limiting-advanced)', () => {
       expect(lastChange().expressions?.limit).toBeUndefined()
     })
 
+    it('closes an open editor when a use case wipes its expression', async () => {
+      const { wrapper } = mountRequestLimits({
+        config: twoLimits.config,
+        expressions: { limit: ['req.size', ''] },
+      })
+
+      // Row 0 starts expanded, seeded from the saved expression.
+      expect(wrapper.findAll('textarea')).toHaveLength(1)
+
+      await wrapper.findAll('.rla-form-request-limits-examples-badge')[0].trigger('click')
+
+      // The preset replaced the limits and cleared the expressions, so no row
+      // should be left showing an editor with nothing in it.
+      expect(wrapper.findAll('textarea')).toHaveLength(0)
+    })
+
     it('drops the expressions when a use case replaces the limits', async () => {
       const { wrapper, lastChange } = mountRequestLimits({
         config: twoLimits.config,

@@ -1260,10 +1260,11 @@ describe('Filler - Cypress', () => {
       })))
 
       const filler = createFiller(expressibleSchema)
-      filler.fill({ expressions: { limit: [null, 'req.size'] } })
+      filler.fill({ expressions: { limit: ['', 'req.size'] } })
 
       cy.getTestId('ff-expressions.limit.1').should('have.value', 'req.size')
-      // Index 0 had no expression, so its editor stays collapsed.
+      // Index 0 holds the empty-slot sentinel, so it is skipped and its editor
+      // stays collapsed rather than being opened on an empty value.
       cy.getTestId('ff-expressions.limit.0').should('not.exist')
       cy.getTestId('ff-expression-add-config.limit.0').should('be.visible')
     })
