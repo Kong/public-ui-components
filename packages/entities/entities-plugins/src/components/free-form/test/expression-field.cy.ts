@@ -198,13 +198,10 @@ describe('ExpressionField', () => {
     cy.getTestId('ff-expression-add-config.limit.1').click()
     cy.getTestId('ff-expressions.limit.1').type('req.size')
 
-    // The twin array is index-aligned with the source array, so an expression on
-    // the second element lands at index 1 and leaves index 0 unset.
-    cy.get('@onChangeSpy').should((spy: any) => {
-      const expressions = spy.lastCall?.args[0]?.expressions
-      expect(expressions.limit[1]).to.equal('req.size')
-      expect(expressions.limit[0] ?? null).to.equal(null)
-    })
+    // The twin array is index-aligned with the source array, so the expression
+    // lands at index 1 and index 0 holds `''` — the Gateway's "no expression"
+    // sentinel, which keeps the slot rather than dropping it.
+    assertLastExpressions({ limit: ['', 'req.size'] })
   })
 
   it('keeps a hidden field\'s expression hidden', () => {
