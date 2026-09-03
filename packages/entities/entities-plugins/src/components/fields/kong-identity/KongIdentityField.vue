@@ -141,7 +141,7 @@ function handleModeChange(mode: AuthMode) {
       // with the host-resolved principalsDirectoryName once this mode change is detected.
       formData.config.principals = { ...getEmptyOrDefault('$.config.principals'), enabled: true, directory: 'default' }
       if (identityRealmsInSchema.value) {
-        formData.config.identity_realms = []
+        formData.config.identity_realms = [{ scope: 'cp' }]
       }
       if (!getSchema('$.config.realm')?.required) {
         formData.config.realm = null
@@ -152,7 +152,7 @@ function handleModeChange(mode: AuthMode) {
       const principalsRequired = !!getSchema('$.config.principals')?.required
       formData.config.principals = principalsRequired ? getEmptyOrDefault('$.config.principals') : null
       if (identityRealmsInSchema.value) {
-        formData.config.identity_realms = []
+        formData.config.identity_realms = [{ scope: 'cp' }]
       }
       break
     }
