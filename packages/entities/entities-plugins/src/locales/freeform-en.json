@@ -20,11 +20,10 @@
       "expression": {
         "add": "Add expression",
         "remove": "Remove expression",
-        "label": "Kong plug-in conditional expression",
+        "label": "Kong plug-in dynamic expression",
         "info": "Supply this value as an expression that is evaluated on every request. When set, it takes priority over the value entered above.",
-        "placeholder": "eg: 'principal.metadata.60s_custom_rate_limit * 2'",
         "help": {
-          "text": "Define a Kong plug-in conditional expression to evaluate each request. The expression must return {type}. {link}",
+          "text": "Define a Kong plug-in dynamic expression to evaluate each request. The expression must return {type}. {link}",
           "learn": "Learn more"
         },
         "returns": {

@@ -142,7 +142,7 @@ describe('ExpressionField', () => {
 
     cy.getTestId('ff-expression-add-config.minute').click()
     cy.getTestId('ff-expression-config.minute')
-      .should('contain.text', 'Kong plug-in conditional expression')
+      .should('contain.text', 'Kong plug-in dynamic expression')
       // Derived from the twin's `expressible_kong_type`, not hardcoded copy.
       .and('contain.text', 'The expression must return a number')
       .and('contain.text', 'Learn more')

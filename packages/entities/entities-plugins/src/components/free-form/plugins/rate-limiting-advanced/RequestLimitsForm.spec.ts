@@ -99,29 +99,38 @@ describe('RequestLimitsForm (rate-limiting-advanced)', () => {
       expect(lastChange().expressions.limit[1]).toBe('req.size * 2')
     })
 
+    it('supplies its own placeholder, which the shared editor has none of', async () => {
+      const { wrapper } = mountRequestLimits(twoLimits)
+
+      await wrapper.get('[data-testid="ff-expression-add-config.limit.0"]').trigger('click')
+
+      expect(wrapper.get('textarea').attributes('placeholder'))
+        .toBe('Define an expression for the limit. eg: ‘principal.metadata.60s_custom_rate_limit * 2’')
+    })
+
     it('keeps the expression aligned with its row when a row above is removed', async () => {
       const { wrapper, lastChange } = mountRequestLimits({
         config: { ...twoLimits.config, limit: [10, 20, 30], window_size: [60, 120, 180] },
-        expressions: { limit: [null, 'req.size', null] },
+        expressions: { limit: ['', 'req.size', ''] },
       })
 
       await wrapper.get('[data-testid="rla-form-remove-limit-0"]').trigger('click')
 
       // The expression belonged to the second row, which is now the first.
       expect(lastChange().config.limit).toEqual([20, 30])
-      expect(lastChange().expressions.limit).toEqual(['req.size', null])
+      expect(lastChange().expressions.limit).toEqual(['req.size', ''])
     })
 
     it('keeps the expression aligned with its row when a row is appended', async () => {
       const { wrapper, lastChange } = mountRequestLimits({
         config: twoLimits.config,
-        expressions: { limit: [null, 'req.size'] },
+        expressions: { limit: ['', 'req.size'] },
       })
 
       await wrapper.get('[data-testid="rla-form-add-limit"]').trigger('click')
 
       expect(lastChange().config.limit).toHaveLength(3)
-      expect(lastChange().expressions.limit).toEqual([null, 'req.size', null])
+      expect(lastChange().expressions.limit).toEqual(['', 'req.size', ''])
     })
 
     it('leaves the twin array unset while no row has an expression', async () => {
@@ -136,7 +145,7 @@ describe('RequestLimitsForm (rate-limiting-advanced)', () => {
     it('drops the expressions when a use case replaces the limits', async () => {
       const { wrapper, lastChange } = mountRequestLimits({
         config: twoLimits.config,
-        expressions: { limit: ['req.size', null] },
+        expressions: { limit: ['req.size', ''] },
       })
 
       const badge = wrapper.findAll('.rla-form-request-limits-examples-badge')[0]

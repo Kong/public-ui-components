@@ -37,9 +37,9 @@ import { useFormShared } from '../../shared/composables'
 import type { RecordFieldSchema } from '../../../../types/plugins/form-schema'
 
 /**
- * `limit_by` first, then the limits it applies to, then the three fields the
- * schema marks required. Everything after `limit_by` is what `CommonForm`'s
- * grouping already surfaced, kept so this form reads the same as before.
+ * `limit_by` and the `custom_key` that overrides it first, then the limits they
+ * apply to, then the three fields the schema marks required — which is what
+ * `CommonForm`'s grouping already surfaced, kept so the rest reads as before.
  *
  * Listed by hand, which is the cost of the explicit order: a field a newer
  * Gateway marks `required` lands in Advanced rather than up here until it is
@@ -47,6 +47,8 @@ import type { RecordFieldSchema } from '../../../../types/plugins/form-schema'
  */
 const PRIMARY_FIELDS = [
   'limit_by',
+  // Overrides the key `limit_by` computes, so it reads directly under it.
+  'custom_key',
   'second',
   'minute',
   'hour',

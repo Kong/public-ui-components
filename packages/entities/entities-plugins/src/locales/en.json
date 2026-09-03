@@ -81,13 +81,13 @@
   "onboarding": {
     "steps": {
       "consumer": {
-        "step":"Consumer",
+        "step": "Consumer",
         "title": "Create a consumer",
         "description": "Consumers represent the users or applications calling your API. Add a name or tags to help you identify and manage this consumer later.",
         "note": "A consumer can have both unique username and unique custom ID or one of them."
       },
       "credential": {
-        "step":"Credential",
+        "step": "Credential",
         "title": "Add a credential"
       }
     },
@@ -1693,7 +1693,8 @@
       "seconds": "Seconds",
       "custom": "Custom",
       "add_limit": "Add limit",
-      "remove_limit": "Remove limit {index}"
+      "remove_limit": "Remove limit {index}",
+      "expression_placeholder": "Define an expression for the limit. eg: ‘principal.metadata.60s_custom_rate_limit * 2’"
     },
     "error_message": {
       "label": "Error message",

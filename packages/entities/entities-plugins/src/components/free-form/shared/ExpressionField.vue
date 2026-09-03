@@ -1,5 +1,13 @@
 <template>
-  <div class="ff-expression-field">
+  <!--
+    Hidden here, not only on the children: both of them hide themselves, but the
+    wrapper would stay a flex item of the fields container and leave that
+    container's inter-field gap behind as a stray hole.
+  -->
+  <div
+    v-show="!hide"
+    class="ff-expression-field"
+  >
     <!--
       The plain value, rendered by whatever component its schema type maps to.
       Deliberately not a `Field`: that would dispatch back here and recurse.
@@ -55,10 +63,11 @@ defineSlots<{
   help?: () => any
 }>()
 
-const { getSchema } = useFormShared()
+const { getSchema, isFieldHidden } = useFormShared()
 
 const path = useFieldPath(toRef(() => name))
 const valueComponent = computed(() => resolveFieldComponent(getSchema(path.value)))
+const hide = computed(() => isFieldHidden(path.value))
 </script>
 
 <style lang="scss" scoped>

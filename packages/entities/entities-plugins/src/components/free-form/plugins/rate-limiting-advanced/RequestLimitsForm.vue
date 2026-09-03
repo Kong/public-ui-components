@@ -74,6 +74,7 @@
           <ExpressionEditor
             class="rla-form-request-limits-expression"
             :name="`$.config.limit.${index}`"
+            :placeholder="t('sp.request_limits.expression_placeholder')"
           />
         </div>
       </div>
@@ -126,7 +127,7 @@ import { AddIcon, CloseIcon } from '@kong/icons'
 import { get } from 'lodash-es'
 import { computed, nextTick, ref } from 'vue'
 import useI18n from '../../../../composables/useI18n'
-import { useFormShared, useItemKeys } from '../../shared/composables'
+import { EXPRESSION_ARRAY_EMPTY, useFormShared, useItemKeys } from '../../shared/composables'
 import ExpressionEditor from '../../shared/ExpressionEditor.vue'
 import RadioField from '../../shared/RadioField.vue'
 import NumberField from '../../shared/NumberField.vue'
@@ -204,13 +205,21 @@ const addRequestLimit = () => {
   const emptyWindowSize = getEmptyOrDefault<number>('config.window_size.0')
   // The list always shows at least one row, even while the arrays are still
   // empty — materialize that row before appending, so the visible count grows.
+  // Guarded independently: code mode can save a model where one of the pair is
+  // set and the other is not, and asserting the second off the first's length
+  // would throw there and leave the button doing nothing.
   if (!formData.config.limit?.length) {
     formData.config.limit = [emptyLimit]
+  }
+  if (!formData.config.window_size?.length) {
     formData.config.window_size = [emptyWindowSize]
   }
   formData.config.limit.push(emptyLimit)
-  formData.config.window_size!.push(emptyWindowSize)
-  alignExpressionLimits((limits) => limits.push(getEmptyValue()))
+  formData.config.window_size.push(emptyWindowSize)
+  // `''`, not the null sentinel: the slot has to hold its position so the
+  // Gateway can pair it with the new limit, which is also what it pads a short
+  // twin array with itself.
+  alignExpressionLimits((limits) => limits.push(EXPRESSION_ARRAY_EMPTY))
 }
 
 const removeRequestLimit = (index: number) => {

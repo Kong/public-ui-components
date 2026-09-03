@@ -27,8 +27,9 @@
         :label-attributes="labelAttributes"
         multiline
         :name="expressionName"
-        :placeholder="placeholder ?? i18n.t('plugins.free-form.expression.placeholder')"
+        :placeholder="placeholder ?? ''"
         :rows="3"
+        @update:model-value="rewriteThroughComposable"
       >
         <template #help>
           <slot name="help">
@@ -73,6 +74,8 @@ import externalLinks from '../../../external-links'
 import * as utils from './utils'
 import { useExpressionField, useFieldPath } from './composables'
 
+import type { EmptyValue } from './types'
+
 defineOptions({ name: 'ExpressionEditor' })
 
 const { name, placeholder } = defineProps<{
@@ -84,7 +87,15 @@ const { name, placeholder } = defineProps<{
    * Renders nothing when that field has no twin in the schema.
    */
   name: string
-  /** Overrides the default placeholder, whose example is rate-limiting shaped. */
+  /**
+   * Example expression to show while the field is empty. There is no default,
+   * on purpose — a useful example is specific to the plugin and the field it
+   * overrides, so a shared one would be wrong for most of them.
+   *
+   * Left unset the field shows nothing rather than falling through to
+   * `useFieldAttrs`, whose fallback would offer the field's own default value
+   * as the placeholder — misleading here, since an expression is not a value.
+   */
   placeholder?: string
 }>()
 
@@ -132,6 +143,17 @@ const labelAttributes = computed(() => ({
   tooltipAttributes: { maxWidth: '300px', placement: 'top' as const },
   'data-testid': `ff-expression-label-${path.value}`,
 }))
+
+/**
+ * `StringField` binds the twin path itself, so its writes bypass this
+ * composable: typing into an untouched slot of a twin array would leave holes
+ * in front of it, and emptying the input would write the form's null sentinel —
+ * neither of which the Gateway accepts. Re-writing the same value through the
+ * composable repairs the array around it. A no-op for a scalar twin.
+ */
+function rewriteThroughComposable(written: string | EmptyValue) {
+  expression.value.value = written
+}
 
 function remove() {
   expression.clear()
