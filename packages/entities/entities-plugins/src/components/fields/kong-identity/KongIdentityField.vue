@@ -152,7 +152,7 @@ function handleModeChange(mode: AuthMode) {
       const principalsRequired = !!getSchema('$.config.principals')?.required
       formData.config.principals = principalsRequired ? getEmptyOrDefault('$.config.principals') : null
       if (identityRealmsInSchema.value) {
-        formData.config.identity_realms = []
+        formData.config.identity_realms = [{ scope: 'cp' }]
       }
       break
     }

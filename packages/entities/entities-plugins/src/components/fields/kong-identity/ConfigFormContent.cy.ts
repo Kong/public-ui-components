@@ -480,7 +480,7 @@ describe('ConfigFormContent', () => {
         }))
       })
 
-      it('clears identity_realms when switching from centrally-managed to consumers', () => {
+      it('restores identity_realms to its default when switching from centrally-managed to consumers', () => {
         mountContent(schemaWithRealms, { isKonnect: true }, {
           config: { principals: null, identity_realms: null },
         })
@@ -492,7 +492,8 @@ describe('ConfigFormContent', () => {
         cy.getTestId('kong-identity-mode-consumers').closest('.k-radio').click()
 
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
-          return Array.isArray(val.config?.identity_realms) && val.config.identity_realms.length === 0
+          return Array.isArray(val.config?.identity_realms) && val.config.identity_realms.length === 1
+            && val.config.identity_realms[0]?.scope === 'cp'
         }))
       })
 
