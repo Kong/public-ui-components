@@ -4,7 +4,8 @@
     :key="field.key"
   >
     <template v-if="field.type !== 'boolean'">
-      <KInput
+      <component
+        :is="field.encrypted ? SecretInput : KInput"
         v-model="model[field.key] as string"
         :data-testid="`redis-${field.key}-input`"
         :label="field.label"
@@ -14,8 +15,6 @@
         }"
         :readonly="readonly"
         :required="field.required ?? false"
-        :show-password-mask-toggle="field.encrypted"
-        :type="field.encrypted ? 'password' : 'text'"
       />
       <VaultSecretPickerProvider
         v-if="field.referenceable"
@@ -49,7 +48,10 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import { KInput } from '@kong/kongponents'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import composables from '../composables'
 import { useVaultSecretPicker } from '../composables/useVaultSecretPicker'
