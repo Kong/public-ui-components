@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.270.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.270.1...%40kong-ui-public%2Fentities-plugins%409.270.2) (2026-09-03)
+
+### Bug Fixes
+
+* **entities-plugins:** respect key-auth context flags when resetting identity_realms/realm ([#3773](https://github.com/Kong/public-ui-components/issues/3773)) ([04e03f4](https://github.com/Kong/public-ui-components/commit/04e03f45d327d8018654038dcf491431a6331b4d))
+
+
 ## [9.270.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.270.0...%40kong-ui-public%2Fentities-plugins%409.270.1) (2026-09-03)
 
 ### Bug Fixes
