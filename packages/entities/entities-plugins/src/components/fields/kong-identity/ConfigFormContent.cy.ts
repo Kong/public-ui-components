@@ -254,6 +254,8 @@ function mountContent(
     dataPlaneVersions?: string[]
     /** key-auth context: set to `false` to disable the identity_realms flow entirely. */
     identityRealmsEnabled?: boolean
+    /** key-auth context: set to `false` to hide/disable the realm field entirely. */
+    realmsEnabled?: boolean
   },
   data?: Record<string, any>,
 ) {
@@ -278,6 +280,10 @@ function mountContent(
 
   const beforeSaveCallbacks: Array<() => boolean> = []
 
+  const keyAuthContext: Record<string, boolean> = {}
+  if (options.identityRealmsEnabled !== undefined) keyAuthContext.identityRealmsEnabled = options.identityRealmsEnabled
+  if (options.realmsEnabled !== undefined) keyAuthContext.realmsEnabled = options.realmsEnabled
+
   cy.mount(() =>
     h('div', { style: 'padding: 20px' },
       h(Form, {
@@ -298,8 +304,8 @@ function mountContent(
         [BEFORE_SAVE_KEY as symbol]: (cb: () => boolean) => {
           beforeSaveCallbacks.push(cb); return () => {}
         },
-        ...(options.identityRealmsEnabled !== undefined
-          ? { [PLUGIN_CONTEXT_KEY]: { 'key-auth': { identityRealmsEnabled: options.identityRealmsEnabled } } }
+        ...(Object.keys(keyAuthContext).length > 0
+          ? { [PLUGIN_CONTEXT_KEY]: { 'key-auth': keyAuthContext } }
           : {}),
       },
     },
@@ -751,6 +757,58 @@ describe('ConfigFormContent', () => {
 
         cy.getTestId('kong-identity-mode-centrally-managed').should('exist')
         cy.wait('@fetchRealms')
+      })
+
+      it('does not clear identity_realms when switching to "Kong Identity" while disabled', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, identityRealmsEnabled: false }, {
+          config: { principals: null, identity_realms: [{ scope: 'cp', id: 'host-managed', region: null }] },
+        })
+
+        cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return Array.isArray(val.config?.identity_realms)
+            && val.config.identity_realms[0]?.id === 'host-managed'
+        }))
+      })
+
+      it('does not clear identity_realms when switching to "Consumers" while disabled', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, identityRealmsEnabled: false }, {
+          config: { principals: { enabled: true, directory: 'default' }, identity_realms: [{ scope: 'cp', id: 'host-managed', region: null }] },
+        })
+
+        cy.getTestId('kong-identity-mode-consumers').closest('.k-radio').click()
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return Array.isArray(val.config?.identity_realms)
+            && val.config.identity_realms[0]?.id === 'host-managed'
+        }))
+      })
+    })
+
+    describe('realmsEnabled context (key-auth)', () => {
+      it('does not clear realm when switching to "Kong Identity" while disabled', () => {
+        mountContent(schemaWithRealms, { isKonnect: true, realmsEnabled: false }, {
+          config: { principals: null, identity_realms: null, realm: 'host-managed-realm' },
+        })
+
+        cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return val.config?.realm === 'host-managed-realm'
+        }))
+      })
+
+      it('still clears realm when switching to "Kong Identity" when left unset (defaults to enabled)', () => {
+        mountContent(schemaWithRealms, { isKonnect: true }, {
+          config: { principals: null, identity_realms: null, realm: 'my-realm' },
+        })
+
+        cy.getTestId('kong-identity-mode-kong-identity').closest('.k-radio').click()
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return val.config?.realm === null
+        }))
       })
     })
   })
