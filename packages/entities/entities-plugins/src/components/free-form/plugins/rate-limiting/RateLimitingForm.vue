@@ -2,6 +2,7 @@
   <DynamicLayout
     v-bind="props"
     :render-rules="renderRules"
+    :schema="gatedSchema"
   >
     <ConfigForm />
   </DynamicLayout>
@@ -12,11 +13,18 @@ import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
 import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
+import { useExpressionMode } from '../_shared/use-expression-mode'
 
 import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
 import type { RenderRules } from '../../shared/types'
 
 const props = defineProps<Props>()
+
+// `second`..`year` and `custom_key` are expressible; gate them with the rest
+// of the 3.16 features.
+// `second`..`year` and `custom_key` are expressible; gate their expression
+// editors with the rest of the 3.16 features, leaving the fields themselves.
+const { gatedSchema } = useExpressionMode(() => props.schema)
 
 // A custom component owns its own render rules, so these live here rather than
 // in the plugin config.

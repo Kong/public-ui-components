@@ -1732,6 +1732,13 @@
           "description": "Each user is allowed 500 requests per hour. \nIf the limit is exceeded and the user receives a 429 error, each additional request within the sliding window (hour) \nwill extend the wait time by about 12 minutes, continuously adjusting as new requests are made."
         }
       }
+    },
+    "custom_key": {
+      "expression_placeholder": "e.g. principal.metadata.ff_id ? principal.metadata.ff_id : principal.id",
+      "expression_help": {
+        "text": "Define a Kong plug-in dynamic expression to determine the counter key for each request. The expression must return a string. {link}",
+        "learn": "Learn more"
+      }
     }
   },
   "custom_plugin_form": {

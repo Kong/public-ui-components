@@ -16,11 +16,11 @@
       :is="valueComponent"
       v-if="valueComponent"
       :autofocus="autofocus"
-      :name="name"
+      :name="absoluteName"
     />
 
     <ExpressionEditor
-      :name="name"
+      :name="absoluteName"
       :placeholder="placeholder"
     >
       <template
@@ -37,6 +37,7 @@
 import { computed, toRef } from 'vue'
 import ExpressionEditor from './ExpressionEditor.vue'
 import { resolveFieldComponent } from './field-dispatch'
+import * as utils from './utils'
 import { useFieldPath, useFormShared } from './composables'
 
 import type { BaseFieldProps } from './types'
@@ -66,6 +67,15 @@ defineSlots<{
 const { getSchema, isFieldHidden } = useFormShared()
 
 const path = useFieldPath(toRef(() => name))
+
+/**
+ * Children are given the resolved path, never the `name` as passed in.
+ * `useFieldPath` above *provides* that path to this subtree, so handing a
+ * relative name down would have it resolved a second time against this field's
+ * own path — `config.custom_key` becoming `config.custom_key.custom_key`. Only
+ * shows up when a plugin places this field itself with a relative name.
+ */
+const absoluteName = computed(() => utils.resolveRoot(path.value))
 const valueComponent = computed(() => resolveFieldComponent(getSchema(path.value)))
 const hide = computed(() => isFieldHidden(path.value))
 </script>

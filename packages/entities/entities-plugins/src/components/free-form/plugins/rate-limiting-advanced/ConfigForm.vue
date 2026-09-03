@@ -8,10 +8,24 @@
       Overrides the key `identifier` computes, so it leads. Added by a newer
       Gateway alongside the `expressions` record, hence the guard.
     -->
-    <Field
+    <ExpressionField
       v-if="getSchema('config.custom_key')"
       name="custom_key"
-    />
+      :placeholder="t('sp.custom_key.expression_placeholder')"
+    >
+      <template #help>
+        <i18nT keypath="sp.custom_key.expression_help.text">
+          <template #link>
+            <KExternalLink
+              hide-icon
+              :href="externalLinks.condition"
+            >
+              {{ t('sp.custom_key.expression_help.learn') }}
+            </KExternalLink>
+          </template>
+        </i18nT>
+      </template>
+    </ExpressionField>
     <Field name="identifier" />
     <RequestLimitsForm />
     <ErrorMessageForm />
@@ -44,7 +58,11 @@
 </template>
 
 <script setup lang="ts">
+import { KExternalLink } from '@kong/kongponents'
 import Field from '../../shared/Field.vue'
+import ExpressionField from '../../shared/ExpressionField.vue'
+import externalLinks from '../../../../external-links'
+import useI18n from '../../../../composables/useI18n'
 import EnumField from '../../shared/EnumField.vue'
 import ObjectField from '../../shared/ObjectField.vue'
 import AdvancedFields from '../../shared/AdvancedFields.vue'
@@ -53,5 +71,6 @@ import ErrorMessageForm from './ErrorMessageForm.vue'
 import RedisField from './RedisField.vue'
 import { useFormShared } from '../../shared/composables'
 
+const { i18n: { t }, i18nT } = useI18n()
 const { getSchema } = useFormShared()
 </script>

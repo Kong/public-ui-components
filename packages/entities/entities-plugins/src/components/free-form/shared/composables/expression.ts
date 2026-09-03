@@ -31,11 +31,29 @@ export function useExpressionField(configPath: MaybeRefOrGetter<string>) {
     : undefined)
 
   /**
-   * Whether this field has an expression twin to render. Schemas with no
-   * `expressions` record — every plugin but rate-limiting and
-   * rate-limiting-advanced today — resolve to `false` and render nothing.
+   * Whether the source field opts into expression mode.
+   *
+   * An expressible *array* carries the marker on the array itself while its
+   * twins are per element, so an element inherits it from its parent.
    */
-  const available = computed(() => isExpressionFieldSchema(schema.value))
+  const expressible = computed(() => {
+    if (getSchema(path.value)?.expressible) return true
+
+    const parts = utils.toArray(path.value)
+    if (parts.length < 2) return false
+
+    const parent = getSchema(utils.resolve(...parts.slice(0, -1)))
+    return parent?.type === 'array' && !!parent.expressible
+  })
+
+  /**
+   * Whether to render an expression for this field. Both halves of the schema
+   * contract have to agree: the source field opts in with `expressible`, and
+   * the `expressions` record declares the twin. Clearing either one turns
+   * expression mode off and leaves the plain field alone — which is how a
+   * plugin gates the feature.
+   */
+  const available = computed(() => expressible.value && isExpressionFieldSchema(schema.value))
 
   const value = computed<string | EmptyValue>({
     get: () => expressionPath.value
