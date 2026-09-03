@@ -13,7 +13,6 @@ import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
 import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
-import { holdsExpression } from '../../shared/composables'
 import { useExpressionMode } from '../_shared/use-expression-mode'
 
 import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
@@ -38,17 +37,6 @@ function handleFormChange(value: Partial<FreeFormPluginData>, fields?: string[])
    */
   if (value.config?.namespace === null) {
     delete value.config.namespace
-  }
-
-  /**
-   * `expressions.limit` is an array paired with `config.limit` by position, so
-   * clearing one row's expression leaves an empty slot behind rather than
-   * shortening the array — and clearing them all leaves a record of nothing but
-   * empty slots. Submit the value the schema defaults it to instead, so a plugin
-   * whose expressions were added and then removed matches one that never had any.
-   */
-  if (value.expressions && !holdsExpression(value.expressions)) {
-    value.expressions = null
   }
 
   props.onFormChange(value, fields)

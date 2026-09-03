@@ -125,7 +125,7 @@
 <script lang="ts" setup>
 import { AddIcon, CloseIcon } from '@kong/icons'
 import { get } from 'lodash-es'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import useI18n from '../../../../composables/useI18n'
 import { EXPRESSION_ARRAY_EMPTY, useFormShared, useItemKeys } from '../../shared/composables'
 import ExpressionEditor from '../../shared/ExpressionEditor.vue'
@@ -164,7 +164,7 @@ interface UseCase {
   }
 }
 
-const { formData, getSchema, getEmptyOrDefault, getEmptyValue } = useFormShared<FormData>()
+const { formData, getSchema, getEmptyOrDefault } = useFormShared<FormData>()
 
 const requestLimits = computed<RequestLimit[]>(() => {
   const modelValue = formData.config?.limit?.map((limit, index) => {
@@ -197,6 +197,28 @@ const alignExpressionLimits = (mutate: (limits: Array<string | EmptyValue>) => v
     mutate(limits)
   }
 }
+
+/**
+ * Unsets the twin array once no row holds an expression.
+ *
+ * Clearing a row leaves an empty slot behind rather than shortening the array,
+ * because the Gateway pairs the two arrays by position — so clearing every row
+ * would otherwise submit a run of empty strings. Dropping the key says the same
+ * thing, and matches a plugin that never carried an expression at all.
+ *
+ * Written into the form's own data, and deliberately NOT by rewriting the value
+ * the form emits. The form compares the payload it last emitted against an
+ * incoming `model` to decide whether that model is a real change, so a payload
+ * that disagrees with the form's state breaks that comparison and the form
+ * re-initializes from the record — reverting the expression just cleared.
+ */
+watch(() => formData.expressions?.limit, (limits) => {
+  if (!Array.isArray(limits)) return
+  // Every "no expression" value is falsy: `''` in a slot, null when unset.
+  if (limits.some(Boolean)) return
+
+  delete formData.expressions!.limit
+}, { deep: true })
 
 const addRequestLimit = () => {
   selectedUseCase.value = undefined
@@ -346,7 +368,7 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
   // replaces go with them.
   const clearExpressionLimits = () => {
     if (formData.expressions) {
-      formData.expressions.limit = getEmptyValue()
+      delete formData.expressions.limit
     }
   }
 

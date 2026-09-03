@@ -168,7 +168,7 @@ describe('RequestLimitsForm (rate-limiting-advanced)', () => {
       await badge.trigger('click')
 
       expect(lastChange().config.limit).toHaveLength(1)
-      expect(lastChange().expressions.limit).toBeNull()
+      expect(lastChange().expressions.limit).toBeUndefined()
     })
   })
 })

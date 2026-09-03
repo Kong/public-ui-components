@@ -27,21 +27,6 @@ export const EXPRESSIONS_FIELD = 'expressions'
 export const EXPRESSION_ARRAY_EMPTY = ''
 
 /**
- * Whether anything inside a twin structure actually holds an expression.
- *
- * "No expression" is `''` for an array slot and null or absent for a scalar, so
- * a twin record built only from those is equivalent to having no `expressions`
- * at all — which is what lets a form that cleared every expression submit the
- * same shape as one that never had any.
- */
-export function holdsExpression(value: unknown): boolean {
-  if (typeof value === 'string') return value !== EXPRESSION_ARRAY_EMPTY
-  if (Array.isArray(value)) return value.some(holdsExpression)
-  if (value && typeof value === 'object') return Object.values(value).some(holdsExpression)
-  return false
-}
-
-/**
  * Maps a field path to the path of its expression twin.
  *
  * The `expressions` record mirrors the structure of the top-level record its

@@ -138,7 +138,7 @@ All exports below are re-exported from `@kong-ui-public/entities-plugins/freefor
 | `labels.ts` | `useLabelPath()`, `useFieldAttrs()` | Label generation with dictionary lookup (IP, SSL, TTL, JWT, etc.) |
 | `render-rules.ts` | `createRenderRuleRegistry()`, `renderRuleExactMatch()` | Bundles (field grouping/ordering) and dependencies (conditional visibility) |
 | `expression.ts` | `useExpressionField()` | One expressible field's twin: value, empty sentinel, array-slot writes, clear |
-| `expression-paths.ts` | `toExpressionPath()`, `toSourcePath()`, `holdsExpression()`, `isExpressionFieldSchema()`, `EXPRESSIONS_FIELD`, `EXPRESSION_ARRAY_EMPTY` | Pure path/schema helpers for the `expressions` convention. Separate from `expression.ts` so `form-context` can use them without an import cycle |
+| `expression-paths.ts` | `toExpressionPath()`, `toSourcePath()`, `isExpressionFieldSchema()`, `EXPRESSIONS_FIELD`, `EXPRESSION_ARRAY_EMPTY` | Pure path/schema helpers for the `expressions` convention. Separate from `expression.ts` so `form-context` can use them without an import cycle |
 | `ancestors.ts` | `useFieldAncestors()` | Access parent field context for nested components |
 | `constants.ts` | `FIELD_RENDERERS`, `FIELD_RENDERER_SLOTS` | Injection key symbols |
 
@@ -239,7 +239,11 @@ The Gateway marks a config field `expressible` when its value can alternatively 
 | Array pairing | **By position, as submitted.** `expressions.limit[i]` drives `config.limit[i]` |
 | Empty array slot | `""` — never `null`. Kong makes every array element `required`, so a null element fails validation. A twin array is emitted at the source array's full length with `""` in every literal slot |
 | Empty scalar twin | The configured `emptyFieldValue` sentinel (absent/null); a scalar has no slot to hold |
+| Twin array with nothing in it | Unset, not a run of `""`. rate-limiting-advanced drops `expressions.limit` once no row holds an expression, so a plugin whose expressions were added and then cleared matches one that never carried any. **Done in the form's own data, never by rewriting the value the form emits** — see the warning below |
 | Gateway re-sorts | rate-limiting-advanced sorts `config.limit` ascending on save and carries each expression with its pair, so the stored index is not necessarily the submitted one. The form does not mirror this — it renders whatever comes back |
+
+> [!WARNING]
+> **Shape the payload in `formData`, never in `onFormChange`.** `form-context.ts` decides whether an incoming `model` is a real change by comparing it against the payload it last emitted (`isEqual(getValue(), newData)`). A payload that disagrees with the form's own state fails that comparison for good, so the next `model` looks like a change and the form re-initializes from it — reverting what the user just did. rate-limiting-advanced unset an all-empty `expressions` record in its `handleFormChange` and clearing an expression silently came back. Mutating `formData` keeps the two in step.
 
 Rendering is entirely schema-driven, so **a plugin needs no configuration to get it**: `Field.vue` dispatches to `ExpressionField` (the plain input plus its expression) for any field whose twin resolves in the schema, and to the normal type mapping otherwise. Schemas without an `expressions` record are unaffected.
 
@@ -257,11 +261,11 @@ Note that `ExpressionField` resolves its own path and hands children the absolut
 
 #### Adopting it in a consuming app
 
-For the default `StandardLayout`, nothing — but three things are worth checking:
+For the default `StandardLayout`, nothing — but four things are worth checking:
 
 1. **The payload gains a root-level `expressions` key** alongside `config`. Anything that whitelists, diffs, or transforms root keys before submitting needs to allow it through.
-2. **Both plugins are `experimental`**, so they render VueFormGenerator (no expression UI at all) unless opted in — `config.experimentalRenders` in Konnect flows, `useProvideExperimentalFreeForms()` locally, or `engine="freeform"`.
-3. **The expression controls sit behind `KM-3034-features-316`**, with the rest of the 3.16 features, and are off by default. Each plugin gates itself with `plugins/_shared/use-expression-mode.ts`, which shadows the `expressible` marker on the schema it renders. Nothing is removed — the fields, their values and the `expressions` record all stay as the Gateway sent them, so every field still renders and its data still round-trips; only the editor beside it goes away.
+2. **Both plugins are `experimental`**, so they render VueFormGenerator (no expression UI at all) unless opted in — `useProvideExperimentalFreeForms([...])` in an ancestor of the form, or `engine="freeform"` on `PluginForm`/`PluginEntityForm`. Not `config.experimentalRenders`; that map feeds schema-level flags such as `keyAuthIdentityRealms`, not the engine choice.
+3. **The expression controls sit behind `KM-3034-features-316`**, with the rest of the 3.16 features. The flag is not registered in the consuming app yet, so the inject defaults to **on** — otherwise the feature would be invisible everywhere; once the flag exists, whatever it provides wins in both directions and that default should become `false`. Each plugin gates itself with `plugins/_shared/use-expression-mode.ts`, which shadows the `expressible` marker on the schema it renders. Nothing is removed — the fields, their values and the `expressions` record all stay as the Gateway sent them, so every field still renders and its data still round-trips; only the editor beside it goes away.
 4. **Konnect currently rejects the payload.** koko compiles the `""` padding and fails with `kcel: compile: ERROR: <input>:1:0: mismatched input '<EOF>'`. The Gateway accepts it; the Gateway's own guards skip `nil`/`null`/`""` before compiling. Until koko does the same, expressions work against a direct Admin API but not through Konnect. Note that no client payload avoids this — the schema right-pads a short array with `""` before validating.
 
 **If you provide your own layout** via `FREE_FORM_PLUGIN_LAYOUT`, you must pass `expressions` through in two places, or every expression control silently disappears with no error:

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, nextTick, ref } from 'vue'
 import RateLimitingAdvancedForm from './RateLimitingAdvancedForm.vue'
 import schema from '../../../../../fixtures/schemas/rate-limiting-advanced'
 import { FEATURE_FLAGS } from '../../../../constants'
@@ -17,16 +17,17 @@ globalThis.ResizeObserver = class {
   disconnect() {}
 } as any
 
-function mountForm(model: Record<string, any> = {}, expressibleFields = true) {
+function mountForm(initialModel: Record<string, any> = {}, expressibleFields = true) {
   const changes: any[] = []
+  const model = ref(initialModel)
 
   const wrapper = mount(defineComponent({
     setup() {
       return () => h(RateLimitingAdvancedForm, {
         schema: schema as unknown as FormSchema,
-        model,
+        model: model.value,
         pluginName: 'rate-limiting-advanced',
-        isEditing: Object.keys(model).length > 0,
+        isEditing: Object.keys(model.value).length > 0,
         onFormChange: (value: any) => changes.push(value),
         formSchema: { fields: [] },
         formModel: {},
@@ -38,7 +39,14 @@ function mountForm(model: Record<string, any> = {}, expressibleFields = true) {
     },
   })
 
-  return { wrapper, lastChange: () => changes[changes.length - 1] }
+  return {
+    wrapper,
+    lastChange: () => changes[changes.length - 1],
+    /** Mirrors a host that hands the emitted value back down as `model`. */
+    setModel: (next: Record<string, any>) => {
+      model.value = next
+    },
+  }
 }
 
 const twoLimits = {
@@ -84,9 +92,56 @@ describe('RateLimitingAdvancedForm — emitted payload', () => {
 
     await wrapper.get('[data-testid="ff-expression-remove-config.limit.0"]').trigger('click')
 
-    // Clearing a row leaves its slot behind, so the record would otherwise be
-    // submitted as nothing but empty strings.
-    expect(lastChange().expressions).toBeNull()
+    // Clearing a row leaves its slot behind, so the array would otherwise be
+    // submitted as nothing but empty strings. Unset says the same thing, and
+    // matches a plugin that never carried an expression at all.
+    expect(lastChange().expressions.limit).toBeUndefined()
+  })
+
+  it('keeps a cleared expression cleared once the host echoes the payload back', async () => {
+    const { wrapper, lastChange, setModel } = mountForm({
+      config: twoLimits,
+      expressions: { limit: ['req.size', ''] },
+    })
+
+    await wrapper.get('[data-testid="ff-expression-remove-config.limit.0"]').trigger('click')
+
+    // A host that re-passes what the form emitted must be a no-op. It is not
+    // when the emitted payload disagrees with the form's own state: the form
+    // treats the echo as a real change and re-initializes from it, putting the
+    // expression the user just deleted straight back.
+    setModel(lastChange())
+    await nextTick()
+    await nextTick()
+
+    expect(lastChange().expressions.limit).toBeUndefined()
+    expect(lastChange().config.limit).toEqual(twoLimits.limit)
+  })
+
+  it('leaves the limits untouched when an expression is cleared', async () => {
+    const { wrapper, lastChange } = mountForm({
+      config: twoLimits,
+      expressions: { limit: ['req.size', ''] },
+    })
+
+    await wrapper.get('[data-testid="ff-expression-remove-config.limit.0"]').trigger('click')
+
+    // The two arrays are paired but independent: editing one row's expression
+    // is not an edit to any limit. Nothing crossed these two before, which is
+    // how a payload that silently dropped the limits went unnoticed.
+    expect(lastChange().config.limit).toEqual(twoLimits.limit)
+    expect(lastChange().config.window_size).toEqual(twoLimits.window_size)
+  })
+
+  it('leaves the limits untouched when an expression is typed', async () => {
+    const { wrapper, lastChange } = mountForm({ config: twoLimits })
+
+    await wrapper.get('[data-testid="ff-expression-add-config.limit.1"]').trigger('click')
+    await wrapper.get('textarea').setValue('principal.metadata.limit')
+
+    expect(lastChange().config.limit).toEqual(twoLimits.limit)
+    expect(lastChange().config.window_size).toEqual(twoLimits.window_size)
+    expect(lastChange().expressions.limit).toEqual(['', 'principal.metadata.limit'])
   })
 
   it('keeps the record while any row still holds an expression', async () => {
