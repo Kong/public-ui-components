@@ -102,6 +102,9 @@ const identityRealmsInSchema = computed(() => {
 const keyAuthContext = usePluginContext('key-auth')
 const identityRealmsEnabled = computed(() => keyAuthContext?.identityRealmsEnabled ?? true)
 
+// Host opt-out: the realm field is hidden entirely, regardless of whether it's required in the schema.
+const realmsEnabled = computed(() => keyAuthContext?.realmsEnabled ?? true)
+
 // Launch decision: Centrally Managed is shown unconditionally whenever the schema
 // supports identity_realms — we intentionally do NOT hide it when no realms exist yet.
 // Hiding it (platform-wide) is deferred to a fast-follow.
@@ -140,10 +143,10 @@ function handleModeChange(mode: AuthMode) {
       // `directory` starts as 'default'; ConfigFormContent's selectedMode watcher overwrites it
       // with the host-resolved principalsDirectoryName once this mode change is detected.
       formData.config.principals = { ...getEmptyOrDefault('$.config.principals'), enabled: true, directory: 'default' }
-      if (identityRealmsInSchema.value) {
+      if (identityRealmsInSchema.value && identityRealmsEnabled.value) {
         formData.config.identity_realms = []
       }
-      if (!getSchema('$.config.realm')?.required) {
+      if (realmsEnabled.value && !getSchema('$.config.realm')?.required) {
         formData.config.realm = null
       }
       break
@@ -151,7 +154,7 @@ function handleModeChange(mode: AuthMode) {
     case 'consumers': {
       const principalsRequired = !!getSchema('$.config.principals')?.required
       formData.config.principals = principalsRequired ? getEmptyOrDefault('$.config.principals') : null
-      if (identityRealmsInSchema.value) {
+      if (identityRealmsInSchema.value && identityRealmsEnabled.value) {
         formData.config.identity_realms = [{ scope: 'cp' }]
       }
       break
