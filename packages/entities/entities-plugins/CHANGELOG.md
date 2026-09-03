@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.270.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.270.0...%40kong-ui-public%2Fentities-plugins%409.270.1) (2026-09-03)
+
+### Bug Fixes
+
+* **entities-plugins:** restore identity_realms default when leaving centrally-managed mode ([#3772](https://github.com/Kong/public-ui-components/issues/3772)) ([18e7a6d](https://github.com/Kong/public-ui-components/commit/18e7a6db246e19ea25f699f59c873852c6b5d7c6))
+
+
 # [9.270.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.269.3...%40kong-ui-public%2Fentities-plugins%409.270.0) (2026-09-03)
 
 ### Features
