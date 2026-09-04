@@ -13,12 +13,14 @@ This package is a good home for random, one-off components that aren't complex a
 ## Components
 
 - [Github Star](src/components/github-star/README.md)
+- [Secret Input](src/components/secret-input/README.md)
 
 ## Requirements
 
 - `vue` must be initialized in the host application
 - `@kong/kongponents` must be available as a `dependency` in the host application, along with the package's style imports. [See here for instructions on installing Kongponents](https://kongponents.konghq.com/#globally-install-all-kongponents).
 - `@kong-ui-public/i18n` must be available as a `dependency` in the host application.
+- `@kong/icons` must be available as a `dependency` in the host application.
 
 ## Usage
 
@@ -40,11 +42,14 @@ You can import individual components locally where they are being used. Don't fo
 
 ```html
 <template>
-  <GithubStar />
+  <SecretInput v-model="secret" />
 </template>
 
 <script setup lang="ts">
-import { GithubStar } from '@kong-ui-public/misc-widgets'
+import { ref } from 'vue'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
 import '@kong-ui-public/misc-widgets/dist/style.css'
+
+const secret = ref('')
 </script>
 ```

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.67.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.66.0...%40kong-ui-public%2Fentities-shared%403.67.0) (2026-09-03)
+
+### Features
+
+* **misc-widgets:** add autofill-resistant SecretInput ([#3759](https://github.com/Kong/public-ui-components/issues/3759)) ([806fa52](https://github.com/Kong/public-ui-components/commit/806fa5276faded1ec8221d765360d23ac38847a4))
+
+
 # [3.66.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-shared%403.65.1...%40kong-ui-public%2Fentities-shared%403.66.0) (2026-08-27)
 
 ### Features

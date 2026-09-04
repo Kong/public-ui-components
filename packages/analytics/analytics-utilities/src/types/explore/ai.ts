@@ -47,6 +47,7 @@ export interface AiExploreEmptyFilterV2 extends Omit<BasicExploreEmptyFilterV2, 
 
 export const aiExploreAggregations = [
   'total_tokens',
+  'total_tokens_per_minute',
   'prompt_tokens',
   'completion_tokens',
   'cached_tokens',

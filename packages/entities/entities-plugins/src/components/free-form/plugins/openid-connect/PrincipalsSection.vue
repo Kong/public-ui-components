@@ -198,7 +198,8 @@
           </template>
         </KSelect>
         <div class="principals-client-secret-wrapper">
-          <KInput
+          <component
+            :is="useSecretInput ? SecretInput : KInput"
             autocomplete="new-password"
             class="principals-client-secret"
             data-testid="principals-client-secret"
@@ -206,8 +207,7 @@
             :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.secret_label') : undefined"
             :model-value="clientSecretArray[index] ?? undefined"
             :placeholder="t('plugins.free-form.openid-connect.principals.client.secret_placeholder')"
-            show-password-mask-toggle
-            type="password"
+            v-bind="useSecretInput ? {} : { showPasswordMaskToggle: true, type: 'password' }"
             @update:model-value="handleClientSecretChange(index, $event)"
           />
           <component
@@ -289,15 +289,15 @@
           />
         </div>
         <div class="external-client-field">
-          <KInput
+          <component
+            :is="useSecretInput ? SecretInput : KInput"
             autocomplete="new-password"
             class="external-client-input"
             data-testid="external-client-secret"
             :label="index === 0 ? t('plugins.free-form.openid-connect.principals.client.secret_label') : undefined"
             :model-value="clientSecretArray[index] ?? undefined"
             :placeholder="t('plugins.free-form.openid-connect.principals.client.secret_placeholder')"
-            show-password-mask-toggle
-            type="password"
+            v-bind="useSecretInput ? {} : { showPasswordMaskToggle: true, type: 'password' }"
             @update:model-value="handleClientSecretChange(index, $event)"
           >
             <template
@@ -307,7 +307,7 @@
               <!-- eslint-disable-next-line vue/no-v-html -->
               <div v-html="clientSecretInfo" />
             </template>
-          </KInput>
+          </component>
           <component
             :is="autofillSlot"
             v-if="autofillSlot"
@@ -407,7 +407,10 @@ import { AddIcon, BookIcon, CloseIcon, KeyIcon, WorldIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20, KUI_ICON_SIZE_30, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { AUTOFILL_SLOT, FORMS_CONFIG, type AutofillSlot } from '@kong-ui-public/forms'
 import { useAxios } from '@kong-ui-public/entities-shared'
+import { SecretInput } from '@kong-ui-public/misc-widgets'
+import '@kong-ui-public/misc-widgets/dist/style.css'
 import useI18n from '../../../../composables/useI18n'
+import { USE_SECRET_INPUT_KEY } from '../../../../constants'
 import Field from '../../shared/Field.vue'
 import { useFormShared } from '../../shared/composables'
 import { FORM_EDITING } from '../../shared/const'
@@ -421,6 +424,8 @@ import type { OidcConfigSubset, OidcPrincipals, PrincipalsMode } from './types'
 
 const MODE_KONG_IDENTITY = 'kong-identity'
 const MODE_EXTERNAL = 'external'
+
+const useSecretInput = inject(USE_SECRET_INPUT_KEY, computed(() => false))
 
 const KONG_IDENTITY_SERVERS_ENDPOINT = '/v1/auth-servers/_computed'
 

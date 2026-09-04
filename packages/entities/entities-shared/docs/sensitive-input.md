@@ -34,6 +34,14 @@ An input component for entering sensitive fields such as API keys or tokens. Ren
 
 ### Props
 
+#### `useSecretInput`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+When `true`, uses `@kong-ui-public/misc-widgets`' `SecretInput` text-based masking to avoid browser password autofill. The default preserves the legacy `KInput` behavior.
+
 #### `modelValue`
 
 - type: `String`

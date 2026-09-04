@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.17.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.16.33...%40kong-ui-public%2Fentities-vaults%404.17.0) (2026-09-03)
+
+### Features
+
+* **misc-widgets:** add autofill-resistant SecretInput ([#3759](https://github.com/Kong/public-ui-components/issues/3759)) ([806fa52](https://github.com/Kong/public-ui-components/commit/806fa5276faded1ec8221d765360d23ac38847a4))
+
+
 ## [4.16.33](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-vaults%404.16.32...%40kong-ui-public%2Fentities-vaults%404.16.33) (2026-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
