@@ -1,6 +1,6 @@
 <template>
   <ExpressionField
-    :name="name"
+    v-bind="props"
     :placeholder="t('sp.custom_key.expression_placeholder')"
   >
     <template #help>
@@ -27,16 +27,15 @@ import useI18n from '../../../../composables/useI18n'
 import type { BaseFieldProps } from '../../shared/types'
 
 /**
- * `custom_key` on rate-limiting and rate-limiting-advanced: the counter key,
- * which is expressible like the limits but overrides the key rather than a
- * limit, so its expression reads differently — its own example and its own help
- * text instead of the shared editor's generic wording.
+ * `config.custom_key`: the counter key, expressible like the limits but
+ * overriding the key rather than a limit, so its expression reads differently —
+ * its own example and help text instead of the shared editor's generic wording.
  *
- * Registered through `fieldRenderers`, which is how a plugin customizes one
- * field. A registered renderer owns the whole field, expression included, so
- * this renders `ExpressionField` rather than just the value input.
+ * `ExpressionField` with wording, so it is registered through `FieldRenderer`
+ * like any other field component. rate-limiting has the same field and imports
+ * this one rather than repeating it.
  */
-defineProps<BaseFieldProps>()
+const props = defineProps<BaseFieldProps>()
 
 const { i18n: { t }, i18nT } = useI18n()
 </script>

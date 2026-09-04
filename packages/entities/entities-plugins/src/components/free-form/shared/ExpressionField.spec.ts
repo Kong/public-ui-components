@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { defineComponent, h } from 'vue'
 import PluginConfigurationForm from './layout/PluginConfigurationForm.vue'
-import CustomKeyField from '../plugins/_shared/CustomKeyField.vue'
+import ExpressionField from './ExpressionField.vue'
 
 import type { FormSchema } from '../../../types/plugins/form-schema'
 
@@ -93,16 +93,18 @@ describe('expressible fields', () => {
     expect(wrapper.find('[data-testid="ff-expression-add-config.minute"]').exists()).toBe(false)
   })
 
-  it('renders both halves for a renderer that owns them, with its own wording', () => {
+  it('is usable as a `fieldRenderers` component, configured by `propsOverrides`', () => {
     const wrapper = mountForm([{
       match: 'config.custom_key',
-      component: CustomKeyField,
+      component: ExpressionField as any,
+      propsOverrides: { placeholder: 'e.g. principal.id' },
     }])
 
-    // The counter key's expression reads differently from a limit's, which is
-    // the reason this field is customized at all.
+    // The field component for an expressible field, registered for one path and
+    // configured through `propsOverrides` — the same shape as `datadog`
+    // registering `ArrayField` for `config.metrics`.
     expect(wrapper.find('[data-testid="ff-config.custom_key"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="ff-expression-add-config.custom_key"]').exists()).toBe(true)
+    expect(wrapper.findAll('[data-testid="ff-expression-add-config.custom_key"]')).toHaveLength(1)
 
     // Sibling fields keep the shared editor.
     expect(wrapper.find('[data-testid="ff-expression-add-config.minute"]').exists()).toBe(true)
