@@ -124,7 +124,20 @@ const mockQueryProvider = {
   configFn: () => Promise.resolve({ analytics: { percentiles: true }, requests: null }),
   exploreBaseUrl: async () => 'http://test.com/explore',
   requestsBaseUrl: async () => 'http://test.com/requests',
-  datasourceConfigFn: () => Promise.resolve([]),
+  datasourceConfigFn: () => Promise.resolve([
+    {
+      name: 'api_usage',
+      showInUI: true,
+      fields: [],
+      timeRangeOptions: ['15m', '1h', '24h', '7d', '30d'],
+    },
+    {
+      name: 'managed_cache_usage',
+      showInUI: true,
+      fields: [],
+      timeRangeOptions: ['15m', '1h', '6h', '12h', '24h', '7d'],
+    },
+  ]),
   evaluateFeatureFlagFn: () => true,
 }
 
@@ -285,6 +298,63 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     await flushPromises()
 
     expect(wrapper.findTestId('time-range-badge').exists()).toBe(false)
+  })
+
+  it('warns when a relative timeframe is unsupported by the datasource', async () => {
+    const wrapper = mountTile('managed_cache_usage')
+    await wrapper.setProps({
+      context: {
+        ...mockContext,
+        timeSpec: {
+          type: 'relative',
+          time_range: '30d',
+        },
+      },
+    })
+    await flushPromises()
+
+    const badge = wrapper.getTestId('unsupported-time-range-badge')
+    const badgeComponent = wrapper.findAllComponents({ name: 'KBadge' })
+      .find(component => component.attributes('data-testid') === 'unsupported-time-range-badge')
+
+    expect(badge.exists()).toBe(true)
+    expect(badgeComponent?.props('tooltip')).toContain('limited to the maximum supported timeframe')
+  })
+
+  it.each([
+    ['managed cache supports the selected timeframe', 'managed_cache_usage', '7d'],
+    ['another datasource supports the selected timeframe', 'api_usage', '30d'],
+  ] as const)('does not show the unsupported timeframe warning when %s', async (_, datasource, timeRange) => {
+    const wrapper = mountTile(datasource)
+    await wrapper.setProps({
+      context: {
+        ...mockContext,
+        timeSpec: {
+          type: 'relative',
+          time_range: timeRange,
+        },
+      },
+    })
+    await flushPromises()
+
+    expect(wrapper.findTestId('unsupported-time-range-badge').exists()).toBe(false)
+  })
+
+  it('warns when an absolute timeframe exceeds the datasource maximum', async () => {
+    const wrapper = mountTile('managed_cache_usage')
+    await wrapper.setProps({
+      context: {
+        ...mockContext,
+        timeSpec: {
+          type: 'absolute',
+          start: new Date('2024-01-01T00:00:00Z'),
+          end: new Date('2024-01-09T00:00:00Z'),
+        },
+      },
+    })
+    await flushPromises()
+
+    expect(wrapper.findTestId('unsupported-time-range-badge').exists()).toBe(true)
   })
 })
 

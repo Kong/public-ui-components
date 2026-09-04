@@ -27,6 +27,20 @@
 
       <div class="badge-container">
         <KBadge
+          v-if="rangeUnsupported"
+          appearance="warning"
+          data-testid="unsupported-time-range-badge"
+          :tooltip="i18n.t('unsupported_time_range_warning')"
+          :tooltip-attributes="{ maxWidth: '320px' }"
+        >
+          <template #icon>
+            <WarningIcon :size="`var(--kui-icon-size-20, ${KUI_ICON_SIZE_20})`" />
+          </template>
+          <span class="badge-text">
+            {{ i18n.t('unsupported_time_range_badge') }}
+          </span>
+        </KBadge>
+        <KBadge
           v-if="badgeData"
           data-testid="time-range-badge"
           :tooltip="isAgedOutQuery ? agedOutWarning : undefined"
@@ -181,6 +195,7 @@ import type {
   AllFilters,
   TileConfig,
   TileDefinition,
+  TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
@@ -197,6 +212,7 @@ import TopNTableRenderer from './TopNTableRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
 import { isTableChartDefinition } from '../utils/tile-definition'
+import { isTimeRangeUnsupported } from '../utils/time-range-support'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
@@ -250,7 +266,7 @@ const emit = defineEmits<{
 const GeoMapRendererAsync = defineAsyncComponent(() => import('./GeoMapRenderer.vue'))
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const datasourceConfigStore = useDatasourceConfigStore()
-const { stripUnknownFilters } = storeToRefs(datasourceConfigStore)
+const { datasourceConfigMap, stripUnknownFilters } = storeToRefs(datasourceConfigStore)
 const { i18n } = composables.useI18n()
 const chartData = ref<ExploreResultV4>()
 const exportState = ref<ExploreExportState>({ status: 'loading' })
@@ -411,6 +427,16 @@ const badgeData = computed<string | null>(() => {
   return null
 })
 
+const rangeUnsupported = computed(() => {
+  const query = definition.query
+  const datasource = query?.datasource
+  const supportedTimeRanges = datasource ? datasourceConfigMap.value[datasource]?.timeRangeOptions : undefined
+  const tileTimeRange = query && 'time_range' in query ? query.time_range : undefined
+  const timeRange = tileTimeRange ?? context.timeSpec
+
+  return isTimeRangeUnsupported(timeRange as TimeRangeV4 | undefined, supportedTimeRanges)
+})
+
 const hasTileHeader = computed<boolean>(() => {
   if (isSlottableTile.value) {
     return false
@@ -420,6 +446,7 @@ const hasTileHeader = computed<boolean>(() => {
     Boolean(tileTitle.value),
     hasHeaderActions.value,
     Boolean(badgeData.value),
+    rangeUnsupported.value,
     Boolean(tileDescription.value),
     showRefresh,
   ].some(Boolean)
@@ -596,6 +623,7 @@ defineExpose({ getExportData })
   .badge-container {
     display: flex;
     flex-grow: 1;
+    gap: var(--kui-space-30, $kui-space-30);
     justify-content: flex-end;
   }
 

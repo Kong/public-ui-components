@@ -229,6 +229,8 @@
   },
   "jumpToExplore": "Explore",
   "jumpToRequests": "View requests",
+  "unsupported_time_range_badge": "Limited timeframe",
+  "unsupported_time_range_warning": "The selected timeframe exceeds what this datasource supports, so this tile is limited to the maximum supported timeframe.",
   "query_aged_out_warning": "This tile was configured with {savedGranularity} granularity, which is no longer available. It now shows {currentGranularity} data, the closest available granularity.",
   "granularities": {
     "daily": "1 day",
