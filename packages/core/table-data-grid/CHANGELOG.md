@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.4.1...%40kong-ui-public%2Ftable-data-grid%400.5.0) (2026-09-04)
+
+### Features
+
+* **table-data-grid:** add single-column sorting [OLLY-1244] ([#3761](https://github.com/Kong/public-ui-components/issues/3761)) ([4c9821f](https://github.com/Kong/public-ui-components/commit/4c9821ffe2ada207bca4c712965a5f141511c853))
+
+
 ## [0.4.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Ftable-data-grid%400.4.0...%40kong-ui-public%2Ftable-data-grid%400.4.1) (2026-08-27)
 
 ### Bug Fixes
