@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.21.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.20.0...%40kong-ui-public%2Fdashboard-renderer%408.21.0) (2026-09-04)
+
+### Features
+
+* add translations for tokens/minute [MA-5407] ([#3779](https://github.com/Kong/public-ui-components/issues/3779)) ([ab1c212](https://github.com/Kong/public-ui-components/commit/ab1c212fadb17148fe31465bc9a5857bd00a7d1a))
+
+
 # [8.20.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.19.5...%40kong-ui-public%2Fdashboard-renderer%408.20.0) (2026-09-04)
 
 ### Features

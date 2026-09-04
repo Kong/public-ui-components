@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.26.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.16...%40kong-ui-public%2Fanalytics-chart%4010.26.0) (2026-09-04)
+
+### Features
+
+* add translations for tokens/minute [MA-5407] ([#3779](https://github.com/Kong/public-ui-components/issues/3779)) ([ab1c212](https://github.com/Kong/public-ui-components/commit/ab1c212fadb17148fe31465bc9a5857bd00a7d1a))
+
+
 ## [10.25.16](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.15...%40kong-ui-public%2Fanalytics-chart%4010.25.16) (2026-09-04)
 
 ### Bug Fixes
