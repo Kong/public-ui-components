@@ -32,7 +32,7 @@
 
     <AgGridVue
       v-else
-      :cache-block-size="pageSize"
+      :cache-block-size="activePageSize"
       class="table-data-grid-grid"
       :column-defs="columnDefs"
       :context="gridContext"
@@ -42,10 +42,12 @@
       :loading="isFetching"
       row-model-type="infinite"
       :suppress-cell-focus="true"
+      :suppress-multi-sort="true"
       :theme="themeQuartz"
       @cell-clicked="onCellClick"
       @grid-ready="onGridReady"
       @row-clicked="onRowClick"
+      @sort-changed="onSortChanged"
     />
   </div>
 </template>
@@ -54,12 +56,15 @@
 import type {
   TableDataGridCellClickPayload,
   TableDataGridCellSlotProps,
+  TableDataGridConfig,
   TableDataGridFetcher,
   TableDataGridHeader,
+  TableDataGridSort,
   TableDataGridStatePayload,
 } from '../types'
 import type {
   ColDef,
+  GridApi,
   GridReadyEvent,
   RowClickedEvent,
 } from 'ag-grid-community'
@@ -70,11 +75,13 @@ import {
   ModuleRegistry,
   themeQuartz,
 } from 'ag-grid-community'
-import { computed, toRef, useSlots } from 'vue'
+import { computed, shallowRef, toRef, useSlots } from 'vue'
 import { useEmitState } from '../composables/useEmitState'
 import { useFetchInfinite } from '../composables/useFetchInfinite'
 import { useTableDataGridColumnDefs } from '../composables/useTableDataGridColumnDefs'
+import { useTableDataGridConfig } from '../composables/useTableDataGridConfig'
 import { useTableDataGridInteractions } from '../composables/useTableDataGridInteractions'
+import { useTableDataGridSort } from '../composables/useTableDataGridSort'
 import useI18n from '../composables/useI18n'
 import useFetchState from '../composables/useFetchState'
 
@@ -86,12 +93,14 @@ const {
   headers,
   pageSize = 25,
   refreshKey,
+  tableConfig,
 } = defineProps<{
   headers: Array<TableDataGridHeader<Row>>
   fetcher: TableDataGridFetcher<Row>
   error?: boolean
   pageSize?: number
   refreshKey?: string | number | boolean
+  tableConfig?: TableDataGridConfig
 }>()
 
 defineSlots<{
@@ -105,15 +114,42 @@ const emit = defineEmits<{
   (e: 'state', payload: TableDataGridStatePayload): void
   (e: 'row:click', row: Row, event: RowClickedEvent<Row>): void
   (e: 'cell:click', payload: TableDataGridCellClickPayload<Row>): void
+  (e: 'sort', payload: TableDataGridSort): void
+  (e: 'update:tableConfig', payload: TableDataGridConfig): void
 }>()
 
 const { i18n: { t } } = useI18n()
 
 const slots = useSlots()
 
+const gridApi = shallowRef<GridApi<Row>>()
+
+const { activeTableConfig, activeSort, activePageSize, patchTableConfig } = useTableDataGridConfig<Row>({
+  headers: toRef(() => headers),
+  pageSize: toRef(() => pageSize),
+  tableConfig: toRef(() => tableConfig),
+  emitTableConfigUpdate: config => emit('update:tableConfig', config),
+  onExternalConfigChange: (config) => {
+    if (!gridApi.value) {
+      return
+    }
+    // Apply the external sort configuration to the grid when it changes.
+    applySortToGrid(gridApi.value, config)
+
+    // add more gridApi.value pushes here as TableDataGridConfig grows
+  },
+})
+
+const { onSortChanged, applySortToGrid } = useTableDataGridSort<Row>({
+  activeSort,
+  emitSort: sort => emit('sort', sort),
+  patchTableConfig,
+})
+
 const { columnDefs, gridContext } = useTableDataGridColumnDefs<Row>({
   headers: toRef(() => headers),
   slots,
+  initialSort: activeSort.value,
 })
 
 const { onCellClick, onRowClick } = useTableDataGridInteractions<Row>({
@@ -128,7 +164,14 @@ const defaultColDef: ColDef<Row> = {
   suppressMovable: true,
 }
 
-const resetKey = computed(() => [fetcher, pageSize, refreshKey])
+const resetKey = computed(() => [
+  fetcher,
+  activePageSize.value,
+  refreshKey,
+  activeTableConfig.value.sortColumnKey,
+  activeTableConfig.value.sortColumnOrder,
+])
+
 const {
   data,
   datasource,
@@ -137,6 +180,7 @@ const {
 } = useFetchInfinite({
   fetcher,
   resetKey,
+  sort: activeSort,
 })
 
 const {
@@ -157,6 +201,7 @@ useEmitState({
 })
 
 const onGridReady = (event: GridReadyEvent<Row>) => {
+  gridApi.value = event.api
   emit('grid:ready', event.api)
 }
 </script>

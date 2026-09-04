@@ -1,8 +1,10 @@
 import type {
   TableDataGridCellClickPayload,
   TableDataGridCellSlotProps,
+  TableDataGridConfig,
   TableDataGridFetcher,
   TableDataGridHeader,
+  TableDataGridSort,
   TableDataGridStatePayload,
 } from '../types'
 import type { GridApi } from 'ag-grid-community'
@@ -30,15 +32,23 @@ type MountTableOptions = {
   onCellClick?: (payload: TableDataGridCellClickPayload<TestRow>) => void
   onGridReady?: (api: GridApi<TestRow>) => void
   onRowClick?: (row: TestRow) => void
+  onSort?: (payload: TableDataGridSort) => void
   onState?: (payload: TableDataGridStatePayload) => void
+  onUpdateTableConfig?: (payload: TableDataGridConfig) => void
   pageSize?: number
   refreshKey?: string | number | boolean
   slots?: TestTableDataGridSlots
+  tableConfig?: TableDataGridConfig
 }
 
 const headers: Array<TableDataGridHeader<TestRow>> = [
   { key: 'name', label: 'Name' },
   { key: 'status', label: 'Status' },
+]
+
+const sortableHeaders: Array<TableDataGridHeader<TestRow>> = [
+  { key: 'name', label: 'Name', sortable: true },
+  { key: 'status', label: 'Status', sortable: true },
 ]
 
 const rows: TestRow[] = [
@@ -72,6 +82,8 @@ const mountTestTableDataGrid = ({
   onCellClick,
   onGridReady,
   onRowClick,
+  onSort,
+  onUpdateTableConfig,
   slots,
   ...props
 }: MountTableOptions) => {
@@ -80,6 +92,8 @@ const mountTestTableDataGrid = ({
     'onCell:click': onCellClick,
     'onGrid:ready': onGridReady,
     'onRow:click': onRowClick,
+    onSort,
+    'onUpdate:tableConfig': onUpdateTableConfig,
     ...props,
   })
 
@@ -287,6 +301,7 @@ describe('<TableDataGrid />', () => {
       mode: 'infinite',
       pageSize: 15,
       cursor: undefined,
+      sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
     })
   })
 
@@ -500,11 +515,13 @@ describe('<TableDataGrid />', () => {
         mode: 'infinite',
         pageSize: 15,
         cursor: undefined,
+        sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
       })
       expect(secondParams).to.deep.equal({
         mode: 'infinite',
         pageSize: 15,
         cursor: 'next-cursor',
+        sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
       })
 
       for (const params of [firstParams, secondParams]) {
@@ -532,6 +549,7 @@ describe('<TableDataGrid />', () => {
         mode: 'infinite',
         pageSize: 15,
         cursor: undefined,
+        sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
       })
     })
   })
@@ -552,6 +570,7 @@ describe('<TableDataGrid />', () => {
         mode: 'infinite',
         pageSize: 10,
         cursor: undefined,
+        sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
       })
     })
   })
@@ -941,5 +960,204 @@ describe('<TableDataGrid />', () => {
       expect(row).to.equal(rows[0])
       expect(event).to.have.property('type', 'rowClicked')
     })
+  })
+
+  it('sorts on a header click, emitting sort then update:tableConfig and re-fetching with the new sort', () => {
+    const onSort = cy.stub().as('sort')
+    const onUpdateTableConfig = cy.stub().as('updateTableConfig')
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: sortableHeaders,
+      onSort,
+      onUpdateTableConfig,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.contains('.ag-header-cell', 'Name').click()
+
+    cy.get('@sort').should('have.been.calledOnceWith', { sortColumnKey: 'name', sortColumnOrder: 'asc' })
+    cy.get('@updateTableConfig').should('have.been.calledOnceWith', {
+      sortColumnKey: 'name',
+      sortColumnOrder: 'asc',
+      pageSize: 25,
+    })
+    // AG Grid's own infinite row model purges its block cache and re-fetches
+    // block 0 as soon as the native header click updates its sort state,
+    // ahead of (and in addition to) the datasource rebuild this package
+    // triggers via resetKey — so at least one re-fetch beyond the initial
+    // block is guaranteed, but the exact count is an AG Grid implementation
+    // detail. What matters is that every re-fetch after the click carries
+    // the new sort.
+    cy.wrap(fetcher).should((stub) => {
+      expect(stub.callCount).to.be.greaterThan(1)
+      expect(stub.lastCall.args[0]).to.deep.equal({
+        mode: 'infinite',
+        pageSize: 25,
+        cursor: undefined,
+        sort: { sortColumnKey: 'name', sortColumnOrder: 'asc' },
+      })
+    })
+  })
+
+  it('clears the sort on a third click of the same header', () => {
+    const onSort = cy.stub().as('sort')
+    const onUpdateTableConfig = cy.stub().as('updateTableConfig')
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: sortableHeaders,
+      onSort,
+      onUpdateTableConfig,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    // AG Grid's default single-column cycle: asc -> desc -> unsorted.
+    cy.contains('.ag-header-cell', 'Name').click()
+    cy.contains('.ag-header-cell', 'Name').click()
+    cy.contains('.ag-header-cell', 'Name').click()
+
+    cy.then(() => {
+      expect(onSort.callCount).to.equal(3)
+      expect(onSort.lastCall.args[0]).to.deep.equal({ sortColumnKey: undefined, sortColumnOrder: undefined })
+      expect(onUpdateTableConfig.lastCall.args[0]).to.deep.equal({
+        sortColumnKey: undefined,
+        sortColumnOrder: undefined,
+        pageSize: 25,
+      })
+    })
+    cy.wrap(fetcher).should((stub) => {
+      expect(stub.lastCall.args[0]).to.deep.equal({
+        mode: 'infinite',
+        pageSize: 25,
+        cursor: undefined,
+        sort: { sortColumnKey: undefined, sortColumnOrder: undefined },
+      })
+    })
+  })
+
+  it('seeds the first fetch with a host-controlled initial tableConfig sort', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: sortableHeaders,
+      tableConfig: { sortColumnKey: 'name', sortColumnOrder: 'desc' },
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.wrap(fetcher).should('have.been.calledOnceWith', {
+      mode: 'infinite',
+      pageSize: 25,
+      cursor: undefined,
+      sort: { sortColumnKey: 'name', sortColumnOrder: 'desc' },
+    })
+  })
+
+  it('keeps rendering rows across many consecutive sort changes', () => {
+    // Regression test: AG Grid's shared row-node block loader tracks each
+    // block request by index. A discarded (superseded) request that never
+    // calls back leaves that tracking permanently "in flight" for that
+    // block, silently blocking every later request for the same index —
+    // so a second (or third, ...) sort change could leave the grid empty
+    // forever even though the fetcher keeps resolving normally.
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: sortableHeaders,
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+
+    for (let i = 0; i < 6; i++) {
+      cy.contains('.ag-header-cell', i % 2 === 0 ? 'Name' : 'Status').click()
+      cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    }
+  })
+
+  it('never leaves more than one column sorted, even when shift-clicking a second header', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+    const getGridApi = mountTableWithGridApi({ fetcher, headers: sortableHeaders })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.contains('.ag-header-cell', 'Name').click()
+    cy.contains('.ag-header-cell', 'Name').should('have.attr', 'aria-sort', 'ascending')
+    // AG Grid's persistent (but currently empty/hidden) loading-overlay
+    // wrapper node can trip Cypress's actionability check on the next
+    // click even though it isn't actually blocking interaction.
+    cy.contains('.ag-header-cell', 'Status').click({ force: true, shiftKey: true })
+
+    // suppressMultiSort makes AG Grid ignore the shift modifier outright
+    // (the second header's sort attempt is a no-op) rather than replacing
+    // the sort — either way, the invariant this test cares about is that
+    // there is never more than one sorted column.
+    cy.then(() => {
+      const sortedColumns = getGridApi()?.getColumnState().filter(column => column.sort) ?? []
+
+      expect(sortedColumns).to.have.length(1)
+      expect(sortedColumns[0].colId).to.equal('name')
+    })
+  })
+
+  it('moves the grid sort when the tableConfig prop changes, without a click', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+    let gridApi: GridApi<TestRow> | undefined
+    const tableDataGrid = mountTestTableDataGrid({
+      fetcher,
+      headers: sortableHeaders,
+      onGridReady: (api) => {
+        gridApi = api
+      },
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    tableDataGrid.setProps({ tableConfig: { sortColumnKey: 'status', sortColumnOrder: 'asc' } })
+
+    cy.then(() => {
+      const sortedColumns = gridApi?.getColumnState().filter(column => column.sort) ?? []
+
+      expect(sortedColumns).to.have.length(1)
+      expect(sortedColumns[0].colId).to.equal('status')
+    })
+  })
+
+  it('shows the unsorted sort icon on a column with showSortIcon, before any click', () => {
+    const fetcher = cy.stub().resolves({
+      data: rows,
+      total: rows.length,
+    })
+
+    mountTestTableDataGrid({
+      fetcher,
+      headers: [
+        { key: 'name', label: 'Name', sortable: true, showSortIcon: true },
+        { key: 'status', label: 'Status', sortable: true },
+      ],
+    })
+
+    cy.contains('.ag-cell', 'Gateway service').should('be.visible')
+    cy.contains('.ag-header-cell', 'Name').find('.ag-sort-none-icon').should('be.visible')
+    cy.contains('.ag-header-cell', 'Status').find('.ag-sort-none-icon').should('not.be.visible')
   })
 })
