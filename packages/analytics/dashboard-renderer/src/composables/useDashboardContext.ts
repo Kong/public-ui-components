@@ -160,7 +160,7 @@ export default function useDashboardContext({
   })
 
   const showZoomExploreAction = computed<boolean>(() => {
-    const isExploreRoute = route.path.endsWith('analytics/explorer')
+    const isExploreRoute = route?.path.endsWith('analytics/explorer') ?? false
     return !preview.value && !isExploreRoute
   })
 
