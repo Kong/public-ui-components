@@ -15,6 +15,7 @@
     "count/minute": "rpm",
     "requests": "request{plural}",
     "token count": "token{plural}",
+    "tokens/minute": "tpm",
     "%": "%",
     "ops/minute": "ops/minute"
   },
@@ -122,6 +123,7 @@
     "application": "Application",
     "status_code": "Status code",
     "status_code_grouped": "Status code (grouped)",
+    "total_tokens_per_minute": "Total tokens per minute",
     "upstream_status_code": "Upstream status code",
     "upstream_status_code_grouped": "Upstream status code group",
     "time": "Time",
@@ -334,7 +336,8 @@
     "cache_memory_utilization_max": "Cache memory utilization (max) in {unit}",
     "cached_tokens": "Cached tokens",
     "time_to_first_token_average": "Time to first token (avg)",
-    "time_per_token_average": "Time per token (avg)"
+    "time_per_token_average": "Time per token (avg)",
+    "total_tokens_per_minute": "Total tokens per minute"
   },
   "granularityAxisTitles": {
     "tenSecondly": "@timestamp per 10 seconds",

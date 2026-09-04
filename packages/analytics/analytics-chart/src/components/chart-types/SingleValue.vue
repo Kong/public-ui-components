@@ -152,10 +152,12 @@ const metricUnit = computed((): string | undefined => {
   return undefined
 })
 
-// by default, display metric units for requests per minute, latency
-const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute'
-  || !!metricName.value?.includes('_latency_')
-  || metricName.value === 'error_rate')
+// by default, display metric units for requests / tokens per minute, latency
+const displayMetricUnit = computed((): boolean => !!metricName.value && (
+  metricName.value.includes('_per_minute')
+  || metricName.value.includes('_latency_')
+  || metricName.value === 'error_rate'),
+)
 
 const previousValue = computed<number | null>(() => {
   if (props.showTrend && trendPrevious.value !== undefined) {

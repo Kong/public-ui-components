@@ -263,6 +263,12 @@ describe('<SingleValue />', () => {
     cy.get('.single-value-unit').should('have.html', ' &nbsp;rpm')
   })
 
+  it('renders expected unit for total_tokens_per_minute', () => {
+    const exploreResult = buildExploreResult({ metricName: 'total_tokens_per_minute', metricUnit: 'tokens/minute' })
+    cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
+    cy.get('.single-value-unit').should('have.html', ' &nbsp;tpm')
+  })
+
   it('renders expected unit for _latency_ measures', () => {
     const exploreResult = buildExploreResult({ metricName: 'response_latency_avg', metricUnit: 'ms' })
     cy.mount(SingleValue, { props: { data: exploreResult, showTrend: false } })
