@@ -4,7 +4,7 @@ import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import OpenidConnectForm from './OpenidConnectForm.vue'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import { REDIS_PARTIAL_INFO } from '../../shared/const'
-import { FEATURE_FLAGS } from '../../../../constants'
+import { FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../../../../constants'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from '../../shared/schema-enhancement'
 import schemaOidc from '../../../../../fixtures/schemas/oidc'
 
@@ -149,6 +149,8 @@ interface MountOptions {
   withPrincipals?: boolean
   /** Provide the Identity Principals UI feature flag */
   identityPrincipalsUi?: boolean
+  /** Opt in to SecretInput for encrypted free-form fields. */
+  useSecretInput?: boolean
 }
 
 const mountForm = (options: MountOptions = {}) => {
@@ -159,6 +161,7 @@ const mountForm = (options: MountOptions = {}) => {
     formsConfig = {},
     withPrincipals = false,
     identityPrincipalsUi = false,
+    useSecretInput = false,
   } = options
 
   cy.mount(OpenidConnectForm, {
@@ -191,6 +194,7 @@ const mountForm = (options: MountOptions = {}) => {
           ...formsConfig,
         },
         [FEATURE_FLAGS.KHCP_20393_IDENTITY_PRINCIPALS_UI]: identityPrincipalsUi,
+        [USE_SECRET_INPUT_KEY as symbol]: ref(useSecretInput),
       },
     },
   })
@@ -784,7 +788,9 @@ describe('OpenidConnectForm', () => {
       cy.getTestId('oidc-auth-mode-external').click({ force: true })
 
       cy.getTestId('external-client-id').should('have.attr', 'autocomplete', 'new-password')
-      cy.getTestId('external-client-secret').should('have.attr', 'autocomplete', 'new-password')
+      cy.getTestId('external-client-secret')
+        .should('have.attr', 'autocomplete', 'new-password')
+        .and('have.attr', 'type', 'password')
       cy.getTestId('ff-config.issuer').should('exist')
 
       lastFormChange().then((payload) => {
@@ -792,6 +798,19 @@ describe('OpenidConnectForm', () => {
         expect(payload.config.principals.enabled).to.equal(false)
         expect(payload.config.principals.directory).to.equal('default')
       })
+    })
+
+    it('uses SecretInput for client secrets when opted in', () => {
+      mountPrincipalsForm({ useSecretInput: true })
+
+      cy.getTestId('principals-client-secret')
+        .should('have.attr', 'type', 'text')
+        .and('have.css', '-webkit-text-security', 'disc')
+
+      cy.getTestId('oidc-auth-mode-external').click({ force: true })
+      cy.getTestId('external-client-secret')
+        .should('have.attr', 'type', 'text')
+        .and('have.css', '-webkit-text-security', 'disc')
     })
 
     it('adds and removes external client rows', () => {

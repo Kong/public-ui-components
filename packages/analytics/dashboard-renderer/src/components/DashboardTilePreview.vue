@@ -20,7 +20,7 @@
       ref="dashboard-tile"
       v-model:refresh-counter="refreshCounter"
       :context="{
-        ...internalContext,
+        ...enrichedContext,
         editable: false,
       }"
       :definition="definition"
@@ -84,7 +84,7 @@ const onBoundsChange = (e: TileBoundsChangeEvent) => {
 }
 
 const { i18n } = composables.useI18n()
-const { internalContext, queryReady } = composables.useDashboardInternalContext({
+const { enrichedContext, queryReady } = composables.useDashboardContext({
   globalFilters: toRef(() => globalFilters),
   context: toRef(() => context),
   preview: computed(() => preview),

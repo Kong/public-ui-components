@@ -1,7 +1,7 @@
 import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 import { generateSingleMetricTimeSeriesData, type DatasourceConfig, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
@@ -211,7 +211,7 @@ describe('<DashboardTile />', () => {
     } as unknown as TileDefinition
   }
 
-  const mockContext: DashboardRendererContextInternal = {
+  const mockContext: DashboardRendererContext = {
     filters: [],
     timeSpec: {
       type: 'relative',
@@ -244,7 +244,7 @@ describe('<DashboardTile />', () => {
     onRemoveTile?: sinon.SinonSpy
     onDuplicateTile?: sinon.SinonSpy
     definition?: TileDefinition
-    context?: DashboardRendererContextInternal
+    context?: DashboardRendererContext
     extraProps?: Record<string, any>
     isFullscreen?: boolean
   }
@@ -492,7 +492,7 @@ describe('<DashboardTile />', () => {
 
   it('jump to explore link should be reactive', () => {
     // Force a different filter so that it actually re-issues the query.
-    const context: DashboardRendererContextInternal = {
+    const context: DashboardRendererContext = {
       ...mockContext,
       filters: [{ field: 'status_code', operator: 'in', value: ['test1'] }],
     }
@@ -519,7 +519,7 @@ describe('<DashboardTile />', () => {
 
   it('excludes irrelevant context filters from the jump to explore URL', () => {
     // Passes an llm_usage filter into an api_usage tile
-    const context: DashboardRendererContextInternal = {
+    const context: DashboardRendererContext = {
       ...mockContext,
       filters: [{ field: 'ai_response_model', operator: 'in', value: ['my-model'] }],
     }
@@ -552,7 +552,7 @@ describe('<DashboardTile />', () => {
   })
 
   it('retains unknown goap context filters in zoom drilldown links', () => {
-    const context: DashboardRendererContextInternal = {
+    const context: DashboardRendererContext = {
       ...mockContext,
       filters: [{ field: 'goap_only_field', operator: 'in', value: ['value'] }],
     }
@@ -664,7 +664,7 @@ describe('<DashboardTile />', () => {
 
   it('jump to requests link should be reactive', () => {
     // Force a different filter so that it actually re-issues the query.
-    const context: DashboardRendererContextInternal = {
+    const context: DashboardRendererContext = {
       ...mockContext,
       filters: [{ field: 'status_code', operator: 'in', value: ['test1'] }],
     }

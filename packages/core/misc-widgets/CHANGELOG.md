@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmisc-widgets%402.5.10...%40kong-ui-public%2Fmisc-widgets%402.6.0) (2026-09-03)
+
+### Features
+
+* **misc-widgets:** add autofill-resistant SecretInput ([#3759](https://github.com/Kong/public-ui-components/issues/3759)) ([806fa52](https://github.com/Kong/public-ui-components/commit/806fa5276faded1ec8221d765360d23ac38847a4))
+
+
 ## [2.5.10](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmisc-widgets%402.5.9...%40kong-ui-public%2Fmisc-widgets%402.5.10) (2026-08-27)
 
 ### Bug Fixes

@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext } from '../types'
 import type { PlatformDatasourceTabularQuery, PlatformUsageDatasourceTabularQuery, PlatformTabularResponse } from '@kong-ui-public/analytics-utilities'
 import {
   tableDataGridFetcherByDatasource,
   tableDataGridHeadersByDatasource,
 } from './table-data-grid-renderer'
 
-const context: DashboardRendererContextInternal = {
+const context: DashboardRendererContext = {
   filters: [
     {
       field: 'gateway_service',

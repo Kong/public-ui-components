@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.25.16](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.15...%40kong-ui-public%2Fanalytics-chart%4010.25.16) (2026-09-04)
+
+### Bug Fixes
+
+* **analytics:** time per token translations [MA-5369] ([#3775](https://github.com/Kong/public-ui-components/issues/3775)) ([fa045af](https://github.com/Kong/public-ui-components/commit/fa045afa92dc0c7954d8f159e16d20ffe874bf28))
+
+
+## [10.25.15](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.14...%40kong-ui-public%2Fanalytics-chart%4010.25.15) (2026-09-03)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.25.14](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.13...%40kong-ui-public%2Fanalytics-chart%4010.25.14) (2026-09-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [10.25.13](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.25.12...%40kong-ui-public%2Fanalytics-chart%4010.25.13) (2026-08-27)
 
 ### Bug Fixes

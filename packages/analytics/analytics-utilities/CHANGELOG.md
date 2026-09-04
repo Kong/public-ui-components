@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.32.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.31.2...%40kong-ui-public%2Fanalytics-utilities%4012.32.0) (2026-09-03)
+
+### Features
+
+* add tokens per minute metric [MA-5407] ([#3770](https://github.com/Kong/public-ui-components/issues/3770)) ([6a9adcd](https://github.com/Kong/public-ui-components/commit/6a9adcdfe5fd8d8f23c0cdd46604e7cc63555d27))
+
+
+## [12.31.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.31.1...%40kong-ui-public%2Fanalytics-utilities%4012.31.2) (2026-09-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
 ## [12.31.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.31.0...%40kong-ui-public%2Fanalytics-utilities%4012.31.1) (2026-08-27)
 
 ### Bug Fixes

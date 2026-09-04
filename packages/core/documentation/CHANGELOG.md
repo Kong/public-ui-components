@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.31](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdocumentation%401.7.30...%40kong-ui-public%2Fdocumentation%401.7.31) (2026-09-03)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
 ## [1.7.30](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdocumentation%401.7.29...%40kong-ui-public%2Fdocumentation%401.7.30) (2026-08-27)
 
 **Note:** Version bump only for package @kong-ui-public/documentation

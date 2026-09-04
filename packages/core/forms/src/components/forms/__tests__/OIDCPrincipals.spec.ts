@@ -22,6 +22,14 @@ vi.mock('@kong-ui-public/entities-shared', () => ({
   }),
 }))
 
+vi.mock('@kong-ui-public/misc-widgets', () => ({
+  SecretInput: {
+    props: ['modelValue'],
+    emits: ['update:modelValue'],
+    template: '<input v-bind="$attrs" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)">',
+  },
+}))
+
 const formsConfig = {
   apiBaseUrl: '/us',
 }
