@@ -378,6 +378,7 @@ const componentData = computed(() => {
     queryReady: queryReady,
     height: height - PADDING_SIZE * 2,
     refreshCounter: refreshCounter.value,
+    zoomConfiguration: zoomConfiguration.value,
   }
   const chartRendererProps = {
     chartOptions: definition.chart,
