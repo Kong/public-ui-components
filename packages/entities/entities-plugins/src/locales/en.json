@@ -1052,6 +1052,7 @@
           "learn_more": "Learn more.",
           "kong_identity_label": "Kong Identity",
           "kong_identity_description": "Use Kong Identity to authenticate OpenID Connect tokens. If all data plane nodes are running version 3.15 or later, you can also map requests to Kong Identity principals for advanced policies and integrations.",
+          "kong_identity_description_ai_manager": "Use Kong Identity to authenticate OpenID Connect tokens. If all AI Gateway nodes are running version 2.0 or later, you can also map requests to Kong Identity principals for advanced policies and integrations.",
           "external_label": "External auth server",
           "external_description": "Connect to your existing identity provider to manage authentication outside of Kong.",
           "guide": {

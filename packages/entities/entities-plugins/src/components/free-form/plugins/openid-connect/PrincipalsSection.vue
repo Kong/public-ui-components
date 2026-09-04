@@ -31,7 +31,7 @@
             {{ t('plugins.free-form.openid-connect.principals.kong_identity_label') }}
           </div>
           <div class="auth-mode-card-description">
-            {{ t('plugins.free-form.openid-connect.principals.kong_identity_description') }}
+            {{ kongIdentityDescription }}
           </div>
         </div>
       </KRadio>
@@ -414,6 +414,7 @@ import { USE_SECRET_INPUT_KEY } from '../../../../constants'
 import Field from '../../shared/Field.vue'
 import { useFormShared } from '../../shared/composables'
 import { FORM_EDITING } from '../../shared/const'
+import { usePluginContext } from '../../shared/plugin-context'
 import PrincipalLookupSettings from './PrincipalLookupSettings.vue'
 import { AUTH_METHODS, KONG_IDENTITY_METHODS, isKongIdentityIssuer } from './AuthMethodsField.vue'
 
@@ -510,6 +511,14 @@ const clientsLoading = ref(false)
 const selectedServer = ref<KongIdentityServer | null>(null)
 const leavePromptType = ref<'authServer' | 'client' | 'principal' | null>(null)
 let restoringServer = false
+
+// AI Manager ships its own gateway, so the Kong Identity card cites the AI Gateway
+// version principals landed in rather than the data plane 3.15 baseline.
+const openidConnectContext = usePluginContext('openid-connect')
+
+const kongIdentityDescription = computed(() => openidConnectContext?.source === 'ai-manager'
+  ? t('plugins.free-form.openid-connect.principals.kong_identity_description_ai_manager')
+  : t('plugins.free-form.openid-connect.principals.kong_identity_description'))
 
 const clientIdInfo = computed(() => getLabelAttributes('config.client_id').info)
 const clientSecretInfo = computed(() => getLabelAttributes('config.client_secret').info)
