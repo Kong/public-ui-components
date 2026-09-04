@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.20.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.19.5...%40kong-ui-public%2Fdashboard-renderer%408.20.0) (2026-09-04)
+
+### Features
+
+* **analytics:** show warning for an unsupported timerange [MA-5356] ([#3768](https://github.com/Kong/public-ui-components/issues/3768)) ([ef001b8](https://github.com/Kong/public-ui-components/commit/ef001b83e090e2968f5afd25f91cc1d9634cd982))
+
+
 ## [8.19.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.19.4...%40kong-ui-public%2Fdashboard-renderer%408.19.5) (2026-09-04)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
