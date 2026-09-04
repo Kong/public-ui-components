@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.271.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.270.2...%40kong-ui-public%2Fentities-plugins%409.271.0) (2026-09-04)
+
+### Features
+
+* **entities-plugins:** cite the AI Gateway version in AI Manager's OIDC principals card ([#3776](https://github.com/Kong/public-ui-components/issues/3776)) ([f7e703c](https://github.com/Kong/public-ui-components/commit/f7e703c0f78901d8da15b57c5e014ebe5968bd72))
+
+
 ## [9.270.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.270.1...%40kong-ui-public%2Fentities-plugins%409.270.2) (2026-09-03)
 
 ### Bug Fixes
