@@ -1,4 +1,13 @@
 <template>
+  <!--
+    `available` again, though `Field.vue` already tested it to dispatch to
+    `ExpressionField`: this component is also placed directly by a plugin that
+    lays its value input out itself (rate-limiting-advanced's limit rows), where
+    nothing has checked. It is what turns the editor off there when the feature
+    gate shadows `expressible`, and it keeps a direct caller from binding an
+    editor to a twin path the schema never declared — which would put an
+    `expressions` entry in the payload for a field that has none.
+  -->
   <div
     v-if="expression.available.value"
     v-show="!expression.hide.value"

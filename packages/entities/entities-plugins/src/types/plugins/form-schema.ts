@@ -132,15 +132,13 @@ export interface StringFieldSchema extends FieldSchema {
  * pair with the elements of `expressions.limit`.
  *
  * It always holds the expression source as a string. `expressible_kong_type` is
- * the type the expression must evaluate to, and `source_field` mirrors the
- * schema of the field it overrides.
+ * the type the expression must evaluate to.
  *
  * Not a member of `UnionFieldSchema`: it is structurally a `string` field and is
  * rendered as one. The extra keys are read through this type where needed.
  */
 export interface ExpressionFieldSchema extends StringFieldSchema {
   expressible_kong_type: FieldSchemaType
-  source_field: UnionFieldSchema
 }
 
 export interface NumberLikeFieldSchema extends FieldSchema {

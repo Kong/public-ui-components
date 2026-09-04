@@ -235,7 +235,7 @@ The Gateway marks a config field `expressible` when its value can alternatively 
 | Rule | Detail |
 |---|---|
 | Twin path | The field path with its first segment swapped: `config.minute` ↔ `expressions.minute`, `config.limit.0` ↔ `expressions.limit.0` |
-| Marker | Both halves must agree: `expressible` on the source field, and the twin's `expressible_kong_type` (the type the expression must return) plus `source_field` mirroring the config field's schema. Clearing either turns expression mode off and leaves the plain field — which is how a plugin gates it. An expressible *array* carries `expressible` on the array while its twins are per element, so an element inherits it from its parent |
+| Marker | Both halves must agree: `expressible` on the source field, and the twin's `expressible_kong_type` — the type the expression must return. Clearing either turns expression mode off and leaves the plain field — which is how a plugin gates it. An expressible *array* carries `expressible` on the array while its twins are per element, so an element inherits it from its parent |
 | Array pairing | **By position, as submitted.** `expressions.limit[i]` drives `config.limit[i]` |
 | Empty array slot | `""` — never `null`. Kong makes every array element `required`, so a null element fails validation. A twin array is emitted at the source array's full length with `""` in every literal slot |
 | Empty scalar twin | The configured `emptyFieldValue` sentinel (absent/null); a scalar has no slot to hold |
@@ -254,10 +254,10 @@ Rendering is entirely schema-driven, so **a plugin needs no configuration to get
 
 It ships **no placeholder**: a useful example is specific to the plugin, and the field-attribute fallback would offer the field's own default value, which reads as a value rather than an expression. Plugins pass their own, and override the help text through the `help` slot, using either of the normal field-copy patterns:
 
-- **Explicit placement** — pass props/slots directly, for a field the plugin lays out itself: `rate-limiting-advanced/ConfigForm.vue`'s `custom_key`, and `RequestLimitsForm.vue`'s per-row `ExpressionEditor`.
-- **Named slot override** — for an auto-dispatched field, a `#<fieldName>` slot on the enclosing `ObjectField` replaces just that child while its siblings keep auto-rendering, along with `fields-order` and the entity-checks alert: `rate-limiting/ConfigForm.vue`'s `custom_key`.
+- **A registered renderer** — `fieldRenderers` is how a plugin customizes one field, and a registered renderer owns the whole field, expression included, so it renders `ExpressionField` itself with the wording it wants: `plugins/_shared/CustomKeyField.vue`, registered for `config.custom_key` by both rate-limiting forms. The field keeps its place among the auto-rendered siblings.
+- **Explicit placement** — for a field the plugin lays out itself, pass the props directly: `RequestLimitsForm.vue`'s per-row `ExpressionEditor`, which pairs each `limit` with its `window_size`.
 
-Note that `ExpressionField` resolves its own path and hands children the absolute form, so a relative `name` works in both patterns.
+Note that `ExpressionField` resolves its own path and hands children the absolute form, so a relative `name` works either way.
 
 #### Adopting it in a consuming app
 

@@ -105,7 +105,7 @@ describe('RequestLimitsForm (rate-limiting-advanced)', () => {
       await wrapper.get('[data-testid="ff-expression-add-config.limit.0"]').trigger('click')
 
       expect(wrapper.get('textarea').attributes('placeholder'))
-        .toBe('Define an expression for the limit. eg: ‘principal.metadata.60s_custom_rate_limit * 2’')
+        .toBe('Define an expression for the limit. eg: ‘principal.metadata.limit * 2’')
     })
 
     it('keeps the expression aligned with its row when a row above is removed', async () => {

@@ -155,6 +155,22 @@ describe('RateLimitingAdvancedForm — emitted payload', () => {
     expect(lastChange().expressions.limit).toEqual(['', 'other', ''])
   })
 
+  it('gives `custom_key` its own expression wording', async () => {
+    const { wrapper } = mountForm({ config: twoLimits })
+
+    expect(wrapper.find('[data-testid="ff-config.custom_key"]').exists()).toBe(true)
+
+    const add = wrapper.findAll('[data-testid="ff-expression-add-config.custom_key"]')
+    // Exactly one: the field is registered through `fieldRenderers`, so nothing
+    // else may add an editor beside the one it renders.
+    expect(add).toHaveLength(1)
+
+    await add[0].trigger('click')
+
+    expect(wrapper.get('[data-testid="ff-expression-config.custom_key"] textarea').attributes('placeholder'))
+      .toBe('e.g. principal.metadata.ff_id ? principal.metadata.ff_id : principal.id')
+  })
+
   it('still deletes a null namespace, which the server generates', async () => {
     const { lastChange } = mountForm({ config: twoLimits })
 

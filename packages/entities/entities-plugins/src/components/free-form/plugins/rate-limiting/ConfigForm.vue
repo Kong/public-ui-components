@@ -12,33 +12,7 @@
     name="config"
     :omit="advancedFields"
     reset-label-path="reset"
-  >
-    <!--
-      A named slot overrides one child of the record without giving up the
-      auto-rendering of its siblings, their order, or the entity-checks alert.
-      `custom_key` overrides the counter key rather than a limit, so its
-      expression copy is its own.
-    -->
-    <template #custom_key="{ name }">
-      <ExpressionField
-        :name="name"
-        :placeholder="t('sp.custom_key.expression_placeholder')"
-      >
-        <template #help>
-          <i18nT keypath="sp.custom_key.expression_help.text">
-            <template #link>
-              <KExternalLink
-                hide-icon
-                :href="externalLinks.condition"
-              >
-                {{ t('sp.custom_key.expression_help.learn') }}
-              </KExternalLink>
-            </template>
-          </i18nT>
-        </template>
-      </ExpressionField>
-    </template>
-  </ObjectField>
+  />
 
   <AdvancedFields
     class="ff-advanced-fields-container"
@@ -56,11 +30,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { KExternalLink } from '@kong/kongponents'
 import ObjectField from '../../shared/ObjectField.vue'
-import ExpressionField from '../../shared/ExpressionField.vue'
-import externalLinks from '../../../../external-links'
-import useI18n from '../../../../composables/useI18n'
 import AdvancedFields from '../../shared/AdvancedFields.vue'
 import { useFormShared } from '../../shared/composables'
 
@@ -90,7 +60,6 @@ const PRIMARY_FIELDS = [
   'sync_rate',
 ]
 
-const { i18n: { t }, i18nT } = useI18n()
 const { getSchema } = useFormShared()
 
 /**

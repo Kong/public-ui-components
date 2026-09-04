@@ -8,7 +8,6 @@ import type {
   MapFieldSchema,
   ArrayLikeFieldSchema,
   ForeignFieldSchema,
-  UnionFieldSchema,
 } from '../../src/types/plugins/form-schema'
 
 export function buildStringFieldCases(): Array<{ [name: string]: StringFieldSchema }> {
@@ -561,13 +560,11 @@ export function buildExpressibleFieldCases(): Array<{ [name: string]: RecordFiel
 export function buildExpressionTwinCases(): Array<{ [name: string]: RecordFieldSchema }> {
   const expression = (
     kongType: 'number' | 'string',
-    sourceField: UnionFieldSchema,
   ): ExpressionFieldSchema => ({
     type: 'string',
     len_min: 0,
     len_max: 1024,
     expressible_kong_type: kongType,
-    source_field: sourceField,
   })
 
   return [

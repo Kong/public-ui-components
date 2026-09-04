@@ -1694,7 +1694,7 @@
       "custom": "Custom",
       "add_limit": "Add limit",
       "remove_limit": "Remove limit {index}",
-      "expression_placeholder": "Define an expression for the limit. eg: ‘principal.metadata.60s_custom_rate_limit * 2’"
+      "expression_placeholder": "Define an expression for the limit. eg: ‘principal.metadata.limit * 2’"
     },
     "error_message": {
       "label": "Error message",
