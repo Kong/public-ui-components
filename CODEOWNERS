@@ -38,6 +38,7 @@
 /packages/core/entities-config-editor/ @Kong/team-km @Kong/team-core-ui
 /packages/core/expressions/ @Kong/team-km @Kong/team-core-ui
 /packages/core/table-data-grid @Kong/team-data @Kong/team-core-ui
+/packages/core/freeform/ @Kong/team-km @Kong/team-core-ui
 
 # Portal packages
 /packages/portal/document-viewer/ @Kong/team-devx @Kong/team-core-ui

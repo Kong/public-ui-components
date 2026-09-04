@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": []
+  },
+  "exclude": [
+    "src/**/*.cy.ts",
+    "src/**/*.spec.ts",
+    "sandbox",
+    "dist"
+  ]
+}
