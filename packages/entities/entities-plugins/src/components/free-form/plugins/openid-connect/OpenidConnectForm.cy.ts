@@ -924,6 +924,60 @@ describe('OpenidConnectForm', () => {
         expect(call, 'directory adoption call not found').not.to.equal(undefined)
       })
     })
+
+    it('resets client_id/client_secret to null (not an array) when the auth server changes', () => {
+      mountPrincipalsForm({
+        model: createPrincipalsModel({
+          client_id: ['old-client'],
+          client_secret: ['old-secret'],
+        }),
+      }, [
+        { id: 'server-1', name: 'My Auth Server', issuer: 'https://my-server.us.identity.konghq.com' },
+      ])
+
+      cy.wait('@getAuthServers')
+
+      cy.getTestId('principals-directory-select').click()
+      cy.getTestId('select-item-server-1').click()
+
+      lastFormChange().then((payload) => {
+        expect(payload.config.client_id).to.equal(null)
+        expect(payload.config.client_secret).to.equal(null)
+      })
+    })
+
+    it('caches and restores client_id, client_secret, and issuer when toggling between Kong Identity and External', () => {
+      mountPrincipalsForm({ formsConfig: { isKongIdentityAuthServersAvailable: false } })
+
+      cy.getTestId('kong-identity-issuer-input').type('https://my-issuer.example.com')
+      cy.getTestId('principals-client-id-input').type('kong-client-id')
+      cy.getTestId('principals-client-secret').type('kong-client-secret')
+
+      cy.getTestId('oidc-auth-mode-external').click({ force: true })
+
+      // Entering External mode for the first time starts blank...
+      cy.getTestId('external-client-id').should('have.value', '')
+      cy.getTestId('external-client-secret').should('have.value', '')
+      cy.getTestId('ff-config.issuer').should('have.value', '')
+
+      cy.getTestId('external-client-id').type('external-client-id')
+      cy.getTestId('external-client-secret').type('external-client-secret')
+      cy.getTestId('ff-config.issuer').type('https://external-issuer.example.com')
+
+      cy.getTestId('oidc-auth-mode-kong-identity').click({ force: true })
+
+      // ...and toggling back to Kong Identity restores what was entered there before leaving.
+      cy.getTestId('kong-identity-issuer-input').should('have.value', 'https://my-issuer.example.com')
+      cy.getTestId('principals-client-id-input').should('have.value', 'kong-client-id')
+      cy.getTestId('principals-client-secret').should('have.value', 'kong-client-secret')
+
+      cy.getTestId('oidc-auth-mode-external').click({ force: true })
+
+      // External's own entries are restored too, not cleared a second time.
+      cy.getTestId('external-client-id').should('have.value', 'external-client-id')
+      cy.getTestId('external-client-secret').should('have.value', 'external-client-secret')
+      cy.getTestId('ff-config.issuer').should('have.value', 'https://external-issuer.example.com')
+    })
   })
 
   // ── O: Principal lookup settings ───────────────────────────────────────────
