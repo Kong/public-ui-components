@@ -99,6 +99,7 @@ export interface ChartRendererProps<T> {
   headerDescription?: string
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
+  zoomConfiguration?: ZoomConfiguration
 }
 
 export interface ScatterRendererProps extends Omit<ChartRendererProps<ScatterChartOptions>, 'query'> {
