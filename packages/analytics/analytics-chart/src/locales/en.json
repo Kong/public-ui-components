@@ -241,7 +241,9 @@
     "cache_items_average": "Cache items (avg)",
     "cache_memory_utilization_max": "Cache memory utilization (max)",
     "cache_status": "Cache status",
-    "cache_hit_rate": "Cache hit rate"
+    "cache_hit_rate": "Cache hit rate",
+    "time_to_first_token_average": "Time to first token (avg)",
+    "time_per_token_average": "Time per token (avg)"
   },
   "metricAxisTitles": {
     "cache_hit_rate": "Cache hit rate {unit}",
