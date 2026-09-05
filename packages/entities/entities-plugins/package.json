@@ -92,7 +92,7 @@
     "@vueuse/core": "^14.4.0",
     "@vueuse/integrations": "^14.4.0",
     "axios": "^1.19.0",
-    "monaco-editor": "^0.55.1",
+    "monaco-editor": "^0.56.0",
     "nanoid": "^5.1.16",
     "reflect-metadata": "^0.2.2",
     "vue": "^3.5.41",

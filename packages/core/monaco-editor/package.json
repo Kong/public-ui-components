@@ -83,7 +83,7 @@
     "@kong/kongponents": "9.64.10",
     "@peculiar/x509": "^2.0.0",
     "jsonc-parser": "^3.3.1",
-    "monaco-editor": "^0.55.1",
+    "monaco-editor": "^0.56.0",
     "reflect-metadata": "^0.2.2",
     "shiki": "^4.4.3",
     "vue": "^3.5.41",

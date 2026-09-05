@@ -55,7 +55,7 @@
     "@shikijs/themes": "^4.4.3",
     "@vueuse/core": "^14.4.0",
     "axios": "^1.19.0",
-    "monaco-editor": "^0.55.1",
+    "monaco-editor": "^0.56.0",
     "shiki": "^4.4.3",
     "vue": "^3.5.41",
     "vue-router": "^5.2.0"
