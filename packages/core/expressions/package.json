@@ -74,6 +74,6 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong/icons": "^1.62.1",
-    "uuid": "^14.0.1"
+    "uuid": "^14.0.2"
   }
 }
