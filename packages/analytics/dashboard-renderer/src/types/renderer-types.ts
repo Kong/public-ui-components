@@ -13,8 +13,25 @@ export interface DashboardRendererContext {
   refreshInterval?: number
   editable?: boolean
   showTileActions?: boolean
-  zoomable?: boolean
-  showTileZoomActions?: boolean
+}
+
+export type ZoomConfiguration = {
+  /**
+   * whether or not to allow zoom on a chart (i.e. click/drag/unclick to highlight a range)
+   */
+  enabled: boolean
+  /**
+   * whether the context menu should include "Zoom in"
+   */
+  showZoomInAction: boolean
+  /**
+   * whether or not the context menu should include "Explore"
+   */
+  showExploreAction: boolean
+  /**
+   * whether or not the context menu should include "Jump to requests"
+   */
+  showRequestsAction: boolean
 }
 
 export interface PdfExportOptions {
@@ -69,6 +86,7 @@ export interface ChartRendererProps<T> {
   headerDescription?: string
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
+  zoomConfiguration?: ZoomConfiguration
 }
 
 export interface TableRendererProps {

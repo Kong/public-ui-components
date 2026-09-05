@@ -15,7 +15,7 @@
         legend-position="bottom"
         :requests-link="requestsLink"
         :synthetics-data-key="chartOptions.synthetics_data_key"
-        :timeseries-zoom="timeseriesZoom"
+        :timeseries-zoom="zoomConfiguration?.showZoomInAction"
         tooltip-title=""
         v-bind="extraProps"
         @select-chart-range="emit('select-chart-range', $event)"
@@ -60,8 +60,6 @@ const options = computed((): AnalyticsChartOptions => ({
   threshold: props.chartOptions.threshold,
   hideTruncationWarning: props.query.limit !== undefined && props.query.limit > 0,
 }))
-
-const timeseriesZoom = computed(() => props.context.zoomable)
 
 const editTile = () => {
   emit('edit-tile')

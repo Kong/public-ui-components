@@ -26,6 +26,7 @@
       :definition="definition"
       :height="height"
       hide-actions
+      :preview="preview"
       :query-ready="queryReady"
       show-refresh
       :tile-id="randomId"

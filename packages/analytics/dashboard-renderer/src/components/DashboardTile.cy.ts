@@ -7,6 +7,7 @@ import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { flushPromises } from '@vue/test-utils'
 import { defineComponent, h, nextTick, ref } from 'vue'
+import { createMockRouter } from '../test-utils'
 
 const start = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
 const end = new Date().toISOString()
@@ -153,6 +154,14 @@ const datasourceConfigMock: DatasourceConfig[] = [
 ]
 
 describe('<DashboardTile />', () => {
+  let router: any
+  beforeEach(async () => {
+    router = await createMockRouter({
+      component: DashboardTile,
+      urls: ['/'],
+    })
+  })
+
   const mockTileDefinition: TileDefinition = {
     chart: {
       type: 'timeseries_line',
@@ -220,7 +229,6 @@ describe('<DashboardTile />', () => {
     editable: true,
     tz: '',
     refreshInterval: 0,
-    zoomable: false,
   }
 
   const mockQueryProvider = {
@@ -276,6 +284,7 @@ describe('<DashboardTile />', () => {
       },
       attrs,
       global: {
+        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider,
         },
@@ -368,6 +377,7 @@ describe('<DashboardTile />', () => {
         onChartData: chartDataSpy,
       },
       global: {
+        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
         },
@@ -415,6 +425,7 @@ describe('<DashboardTile />', () => {
 
     cy.mount(Harness, {
       global: {
+        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
         },
@@ -572,6 +583,7 @@ describe('<DashboardTile />', () => {
         tileId: '1',
       },
       global: {
+        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider,
         },
@@ -759,6 +771,7 @@ describe('<DashboardTile />', () => {
         tileId: '1',
       },
       global: {
+        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProviderWithEmptyExplore,
         },
@@ -783,6 +796,7 @@ describe('<DashboardTile />', () => {
         tileId: '1',
       },
       global: {
+        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProviderWithEmptyRequests,
         },
@@ -828,6 +842,7 @@ describe('<DashboardTile />', () => {
         tileId: '1',
       },
       global: {
+        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
         },
@@ -860,6 +875,7 @@ describe('<DashboardTile />', () => {
         refreshCounter: 0,
       },
       global: {
+        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: provider,
         },
@@ -900,6 +916,7 @@ describe('<DashboardTile />', () => {
         refreshCounter: 0,
       },
       global: {
+        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
         },
@@ -935,6 +952,7 @@ describe('<DashboardTile />', () => {
         refreshCounter: 0,
       },
       global: {
+        plugins: [router],
         provide: {
           [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
         },
@@ -972,6 +990,7 @@ describe('<DashboardTile />', () => {
           refreshCounter: 0,
         },
         global: {
+          plugins: [router],
           provide: {
             [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
           },
@@ -1017,6 +1036,7 @@ describe('<DashboardTile />', () => {
           tileId: 1,
         },
         global: {
+          plugins: [router],
           provide: {
             [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn, staticConfig: { increaseCsvExportLimit: false } },
           },
@@ -1058,6 +1078,7 @@ describe('<DashboardTile />', () => {
           tileId: 1,
         },
         global: {
+          plugins: [router],
           provide: {
             [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
           },
@@ -1099,6 +1120,7 @@ describe('<DashboardTile />', () => {
           refreshCounter: 0,
         },
         global: {
+          plugins: [router],
           provide: {
             [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
           },
@@ -1136,6 +1158,7 @@ describe('<DashboardTile />', () => {
           refreshCounter: 0,
         },
         global: {
+          plugins: [router],
           provide: {
             [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn, staticConfig: { increaseCsvExportLimit: false } },
           },
@@ -1171,6 +1194,7 @@ describe('<DashboardTile />', () => {
           refreshCounter: 0,
         },
         global: {
+          plugins: [router],
           provide: {
             [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
           },
@@ -1204,6 +1228,7 @@ describe('<DashboardTile />', () => {
           refreshCounter: 0,
         },
         global: {
+          plugins: [router],
           provide: {
             [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
           },
@@ -1239,6 +1264,7 @@ describe('<DashboardTile />', () => {
           tileId: 1,
         },
         global: {
+          plugins: [router],
           provide: {
             [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn, staticConfig: { increaseCsvExportLimit: false } },
           },
