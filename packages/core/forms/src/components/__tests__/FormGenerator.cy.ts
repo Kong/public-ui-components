@@ -15,6 +15,10 @@ const baseConfigKM = {
 }
 
 describe('<VueFormGenerator />', () => {
+  beforeEach(() => {
+    cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop completed with undelivered notifications.'))
+  })
+
   it('should show shared config/grouped redis fields when toggling shared/dedicated redis configuration', () => {
     cy.intercept(
       {
