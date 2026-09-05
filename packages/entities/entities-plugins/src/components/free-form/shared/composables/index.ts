@@ -1,5 +1,7 @@
 export * from './ancestors'
 export * from './constants'
+export * from './expression'
+export * from './expression-paths'
 export * from './field-path'
 export * from './field'
 export * from './form-context'

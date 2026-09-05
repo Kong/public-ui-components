@@ -9,6 +9,7 @@ export * from './record'
 export * from './map'
 export * from './json'
 export * from './foreign'
+export * from './expression'
 
 import { fillString } from './string'
 import { fillNumber } from './number'
@@ -20,6 +21,7 @@ import { fillRecord } from './record'
 import { fillMap } from './map'
 import { fillJson } from './json'
 import { fillForeign } from './foreign'
+import { fillExpression } from './expression'
 
 export const handlers = {
   fillString,
@@ -32,6 +34,7 @@ export const handlers = {
   fillMap,
   fillJson,
   fillForeign,
+  fillExpression,
 }
 
 export type Handlers = typeof handlers

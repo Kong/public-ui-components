@@ -1201,4 +1201,72 @@ describe('Filler - Cypress', () => {
       cy.get('[data-testid="ff-map-headers"]').should('exist')
     })
   })
+
+  describe('expression fields', () => {
+    const expressibleSchema: FormSchema = {
+      type: 'record',
+      fields: [
+        {
+          config: {
+            type: 'record',
+            required: true,
+            fields: [
+              { minute: { type: 'number', expressible: true } },
+              { limit: { type: 'array', expressible: true, elements: { type: 'number' } } },
+            ],
+          },
+        },
+        {
+          expressions: {
+            type: 'record',
+            fields: [
+              {
+                minute: {
+                  type: 'string',
+                  expressible_kong_type: 'number',
+                  source_field: { type: 'number' },
+                },
+              },
+              {
+                limit: {
+                  type: 'array',
+                  elements: {
+                    type: 'string',
+                    expressible_kong_type: 'number',
+                    source_field: { type: 'number' },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      ],
+    } as FormSchema
+
+    it('should open the collapsed editor before filling an expression', () => {
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema: expressibleSchema })))
+
+      const filler = createFiller(expressibleSchema)
+      filler.fillField('expressions.minute', 'req.size * 2')
+
+      cy.getTestId('ff-expressions.minute').should('have.value', 'req.size * 2')
+    })
+
+    it('should fill array expressions per index, without adding rows', () => {
+      cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, {
+        schema: expressibleSchema,
+        // The rows come from the source array, so they must already exist.
+        data: { config: { minute: null, limit: [10, 20] } },
+      })))
+
+      const filler = createFiller(expressibleSchema)
+      filler.fill({ expressions: { limit: ['', 'req.size'] } })
+
+      cy.getTestId('ff-expressions.limit.1').should('have.value', 'req.size')
+      // Index 0 holds the empty-slot sentinel, so it is skipped and its editor
+      // stays collapsed rather than being opened on an empty value.
+      cy.getTestId('ff-expressions.limit.0').should('not.exist')
+      cy.getTestId('ff-expression-add-config.limit.0').should('be.visible')
+    })
+  })
 })
