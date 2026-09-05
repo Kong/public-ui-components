@@ -170,3 +170,80 @@ export interface RequestQuery {
   classified?: boolean
   cursor?: string
 }
+
+export const API_REQUESTS_MAX_PAGE_SIZE = 1000
+
+export interface RequestAiEntry {
+  pluginName: string
+  pluginId: string
+  providerName: string
+  requestModel: string
+  responseModel: string
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
+  cost: number
+  costCaching: number
+  cacheStatus: string
+  llmLatency: number
+  fetchLatency: number
+  embeddingsLatency: number
+  embeddingsProvider: string
+  embeddingsModel: string
+}
+
+export interface RequestRpcEntry {
+  id: string
+  method: string
+  latency: number
+  response_body_size: number
+  error?: string
+  /** MCP only */
+  tool_name?: string
+  /** A2A only */
+  context_id?: string
+  task_id?: string
+  task_state?: string
+}
+
+export interface RequestMcpInfo {
+  mcp_session_id: string
+  rpc: RequestRpcEntry[]
+}
+
+export interface RequestA2aInfo {
+  rpc: RequestRpcEntry[]
+}
+
+export interface RequestRecord {
+  request_id: string
+  request_start: string // iso timestamp, not a number
+  latencies_response_ms: number
+  latencies_kong_gateway_ms: number
+  latencies_upstream_ms: number
+  latencies_kong_internal_ms: number
+  request_body_size: number
+  response_body_size: number
+  response_header_content_length: number
+  ai?: RequestAiEntry[] | null
+  ai_count?: number | null
+  mcp_info?: RequestMcpInfo | null
+  a2a_info?: RequestA2aInfo | null
+  [field: string]: unknown
+}
+
+export interface ApiRequestsResultMeta {
+  query_id: string
+  time_range: {
+    start: string
+    end: string
+  }
+  size: number
+  offset?: number
+  cursor?: string
+}
+
+export interface ApiRequestsResult {
+  results: RequestRecord[]
+  meta: ApiRequestsResultMeta
+}
