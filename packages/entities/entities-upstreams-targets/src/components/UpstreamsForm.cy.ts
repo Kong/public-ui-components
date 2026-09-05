@@ -11,6 +11,10 @@ import type { UpstreamResponse } from '../types'
 
 describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => {
   describe('Konnect', () => {
+    beforeEach(() => {
+      cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop completed with undelivered notifications.'))
+    })
+
     const interceptFetchServices = (status = 200): void => {
       cy.intercept(
         {
@@ -428,6 +432,10 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
   })
 
   describe('Kong Manager', () => {
+    beforeEach(() => {
+      cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop completed with undelivered notifications.'))
+    })
+
     const interceptFetchServices = (status = 200): void => {
       cy.intercept(
         {
