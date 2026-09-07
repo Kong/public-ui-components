@@ -1,10 +1,11 @@
-import { h } from 'vue'
+import { computed, h } from 'vue'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import Form from '../../free-form/shared/Form.vue'
 import ConfigFormContent from './ConfigFormContent.vue'
 import { BEFORE_SAVE_KEY } from '../../const'
 import { FEATURE_FLAGS } from '../../../constants'
 import { PLUGIN_CONTEXT_KEY } from '../../free-form/shared/plugin-context'
+import { FORM_EDITING } from '../../free-form/shared/const'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 
 // Schema with both principals and identity_realms (like key-auth)
@@ -76,6 +77,51 @@ const schemaWithRealms: FormSchema = {
           {
             realm: {
               type: 'string',
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+
+// Schema where identity_realms is required (schema default resolves to `[]`, not `null`) and
+// realm has an explicit default, so a fresh create actually populates non-null values to clear.
+const schemaWithRequiredRealmsAndDefaults: FormSchema = {
+  type: 'record',
+  fields: [
+    {
+      config: {
+        type: 'record',
+        required: true,
+        fields: [
+          {
+            principals: {
+              type: 'record',
+              fields: [
+                { enabled: { type: 'boolean', default: false } },
+                { directory: { type: 'string', required: true, default: 'default' } },
+              ],
+            },
+          },
+          {
+            identity_realms: {
+              type: 'array',
+              required: true,
+              elements: {
+                type: 'record',
+                fields: [
+                  { scope: { type: 'string' } },
+                  { id: { type: 'string' } },
+                  { region: { type: 'string' } },
+                ],
+              },
+            },
+          },
+          {
+            realm: {
+              type: 'string',
+              default: 'default-realm',
             },
           },
         ],
@@ -256,6 +302,8 @@ function mountContent(
     identityRealmsEnabled?: boolean
     /** key-auth context: set to `false` to hide/disable the realm field entirely. */
     realmsEnabled?: boolean
+    /** FORM_EDITING: set to `true` to simulate an edit-load rather than a fresh create. */
+    isEditing?: boolean
   },
   data?: Record<string, any>,
 ) {
@@ -306,6 +354,9 @@ function mountContent(
         },
         ...(Object.keys(keyAuthContext).length > 0
           ? { [PLUGIN_CONTEXT_KEY]: { 'key-auth': keyAuthContext } }
+          : {}),
+        ...(options.isEditing !== undefined
+          ? { [FORM_EDITING as symbol]: computed(() => options.isEditing) }
           : {}),
       },
     },
@@ -784,6 +835,32 @@ describe('ConfigFormContent', () => {
             && val.config.identity_realms[0]?.id === 'host-managed'
         }))
       })
+
+      it('clears the schema-default identity_realms on a fresh (create) form when disabled', () => {
+        mountContent(schemaWithRequiredRealmsAndDefaults, { isKonnect: true, identityRealmsEnabled: false })
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return !!val.config && !('identity_realms' in val.config)
+        }))
+      })
+
+      it('still applies the schema-default identity_realms on a fresh form when left unset (enabled)', () => {
+        mountContent(schemaWithRequiredRealmsAndDefaults, { isKonnect: true })
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return Array.isArray(val.config?.identity_realms) && val.config.identity_realms.length === 0
+        }))
+      })
+
+      it('does not touch an edit-loaded identity_realms value even when disabled', () => {
+        mountContent(schemaWithRequiredRealmsAndDefaults, { isKonnect: true, identityRealmsEnabled: false, isEditing: true }, {
+          config: { identity_realms: [{ scope: 'realm', id: 'saved-realm', region: 'us' }] },
+        })
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return Array.isArray(val.config?.identity_realms) && val.config.identity_realms[0]?.id === 'saved-realm'
+        }))
+      })
     })
 
     describe('realmsEnabled context (key-auth)', () => {
@@ -808,6 +885,32 @@ describe('ConfigFormContent', () => {
 
         cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
           return val.config?.realm === null
+        }))
+      })
+
+      it('clears the schema-default realm on a fresh (create) form when disabled', () => {
+        mountContent(schemaWithRequiredRealmsAndDefaults, { isKonnect: true, realmsEnabled: false })
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return !!val.config && !('realm' in val.config)
+        }))
+      })
+
+      it('still applies the schema-default realm on a fresh form when left unset (enabled)', () => {
+        mountContent(schemaWithRequiredRealmsAndDefaults, { isKonnect: true })
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return val.config?.realm === 'default-realm'
+        }))
+      })
+
+      it('does not touch an edit-loaded realm value even when disabled', () => {
+        mountContent(schemaWithRequiredRealmsAndDefaults, { isKonnect: true, realmsEnabled: false, isEditing: true }, {
+          config: { identity_realms: [], realm: 'saved-realm' },
+        })
+
+        cy.get('@onChangeSpy').should('have.been.calledWithMatch', Cypress.sinon.match((val: any) => {
+          return val.config?.realm === 'saved-realm'
         }))
       })
     })

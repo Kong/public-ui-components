@@ -2,7 +2,7 @@ import { cloneDeep, isEqual, isFunction, omit } from 'lodash-es'
 import { createInjectionState } from '@vueuse/core'
 import { createRenderRuleRegistry } from './render-rules'
 import { FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
-import { provide, reactive, toRef, toValue, useSlots, watch } from 'vue'
+import { provide, reactive, ref, toRef, toValue, useSlots, watch } from 'vue'
 import { useSchemaHelpers } from './schema'
 import * as utils from '../utils'
 import { useKeyIdMap } from './key-id-map'
@@ -61,6 +61,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       Object.assign(innerData, keyIdMap.serialize(newData))
     }
 
+    // True whenever the current formData came from schema defaults rather than real given data
+    // (fresh create with no data at all) — false for edit-loads and clone-with-prefilled-data
+    // creates alike, since both hand in actual data. Lets a field-level consumer tell "nobody
+    // gave this a value" apart from "the host/backend gave it this exact value".
+    const isSchemaDefaulted = ref(false)
+
     /**
      * Initialize the inner data based on the provided props data or schema defaults
      */
@@ -68,8 +74,10 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       let dataValue: T
 
       if (!propsData || !hasValue(toValue(propsData))) {
+        isSchemaDefaulted.value = true
         dataValue = getDefaultFromSchema()
       } else {
+        isSchemaDefaulted.value = false
         dataValue = cloneDeep(toValue(propsData))
       }
 
@@ -150,6 +158,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
        * The reactive form data object
        */
       formData: innerData,
+      isSchemaDefaulted,
       schema,
       config,
       fieldRendererRegistry,
