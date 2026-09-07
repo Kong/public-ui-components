@@ -179,7 +179,7 @@ const { getMessageFromError } = useErrors()
 type ExpirationUnit = 'seconds' | 'mins'
 
 const DEFAULT_LOG_LEVEL = LogLevel.Notice
-const DEFAULT_EXPIRATION_VALUE = 10
+const DEFAULT_EXPIRATION_VALUE = 1
 const DEFAULT_EXPIRATION_UNIT: ExpirationUnit = 'mins'
 const MIN_EXPIRATION_SECONDS = 10
 const MAX_EXPIRATION_SECONDS = 3600
