@@ -90,8 +90,8 @@ importers:
         specifier: ^10.1.0
         version: 10.1.0
       cypress:
-        specifier: ^15.21.0
-        version: 15.21.0
+        specifier: ^15.21.1
+        version: 15.21.1
       cz-conventional-changelog:
         specifier: ^3.3.0
         version: 3.3.0(@types/node@24.13.3)(typescript@5.9.3)
@@ -447,7 +447,7 @@ importers:
         version: 8.20.0
       cypress-real-events:
         specifier: ^1.15.0
-        version: 1.15.0(cypress@15.21.0)
+        version: 1.15.0(cypress@15.21.1)
       pinia:
         specifier: ^3.0.4
         version: 3.0.4(typescript@5.9.3)(vue@3.5.41(typescript@5.9.3))
@@ -5344,8 +5344,8 @@ packages:
     peerDependencies:
       cypress: ^4.x || ^5.x || ^6.x || ^7.x || ^8.x || ^9.x || ^10.x || ^11.x || ^12.x || ^13.x || ^14.x || ^15.x
 
-  cypress@15.21.0:
-    resolution: {integrity: sha512-6uPy5GUjao97t/QDIwlPyJz4JUqPpFIPq5lNazN95LSA3ynJoYC1sHZ3W+aj4f+K1OFGbMfno0+OX2Gx0OmlPA==}
+  cypress@15.21.1:
+    resolution: {integrity: sha512-ogHpHMj0XNlZA5MGzjg8SWHf0eMw9lTwVQRKjpcT1GzNTxNUjwnHA8YCG6nOJ8ThU+XZaUxJgpMYZnJ//8aDaw==}
     engines: {node: ^20.1.0 || ^22.0.0 || >=24.0.0}
     hasBin: true
 
@@ -15598,11 +15598,11 @@ snapshots:
       underscore: 1.13.8
       underscore.string: 3.3.6
 
-  cypress-real-events@1.15.0(cypress@15.21.0):
+  cypress-real-events@1.15.0(cypress@15.21.1):
     dependencies:
-      cypress: 15.21.0
+      cypress: 15.21.1
 
-  cypress@15.21.0:
+  cypress@15.21.1:
     dependencies:
       '@cypress/request': 4.0.1
       '@cypress/xvfb': 1.2.4(supports-color@8.1.1)
