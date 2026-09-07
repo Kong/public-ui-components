@@ -379,8 +379,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/core
       '@zumer/snapdom':
-        specifier: ^2.24.7
-        version: 2.24.7
+        specifier: ^2.24.10
+        version: 2.24.15
       date-fns-tz:
         specifier: ^3.2.0
         version: 3.2.0(date-fns@4.4.0)
@@ -4404,8 +4404,8 @@ packages:
     resolution: {integrity: sha512-nrUSn7hzt7J6JWgWGz78ZYI8wj+gdIJdk0Ynjpp8l+trkn58Uqsf6RYrYkEK+3X18EX+TNdtJI0WxAtc+L84SQ==}
     hasBin: true
 
-  '@zumer/snapdom@2.24.7':
-    resolution: {integrity: sha512-RKWP/NoxU5zXO1O1QaIerdb8HYLDrQPSU9G9UMk9XDSevsXwIydDYFnJukrp0BqrckQT+Hbspxx2WERXIF2i9w==}
+  '@zumer/snapdom@2.24.15':
+    resolution: {integrity: sha512-4YE+3ekbBFEAxMyHr++wxOSGt/k+n721eeNT9N9Map27A+ra5sBut3qkYyheYlRj9dJ3HtZaUN1/yrh/aCiuKw==}
 
   abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -14585,7 +14585,7 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  '@zumer/snapdom@2.24.7': {}
+  '@zumer/snapdom@2.24.15': {}
 
   abbrev@1.1.1: {}
 
