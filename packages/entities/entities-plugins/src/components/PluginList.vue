@@ -592,8 +592,11 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
-// Only hit the new search endpoint once the user is actually searching
-const isSearchActive = computed((): boolean => isPluginFilterEnhanced.value && !!filterQuery.value)
+// Only hit the new search endpoint once the user is actually searching.
+// Workspace-scoped Konnect lists always use search, regardless of the `pluginTableImprovements.filtering` flag.
+const isSearchActive = computed((): boolean =>
+  (isPluginFilterEnhanced.value || (props.config.app === 'konnect' && !!props.config.workspace)) && !!filterQuery.value,
+)
 
 const activeFetcherUrl = computed<string>(() => {
   if (isSearchActive.value) {
