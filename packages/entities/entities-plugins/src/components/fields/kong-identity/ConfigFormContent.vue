@@ -136,22 +136,22 @@ const identityRealmsEnabled = computed(() => keyAuthContext?.identityRealmsEnabl
 // Host opt-out: hides the realm field entirely, regardless of whether it's required in the schema.
 const realmsEnabled = computed(() => keyAuthContext?.realmsEnabled ?? true)
 
-const { formData, getSchema } = useFormShared()
+const { formData, getSchema, isSchemaDefaulted } = useFormShared()
 
-// Host opt-out: on a fresh (create) form, drop any schema-computed default for a field the
-// host has fully disabled — the UI never shows it, so it shouldn't get submitted either.
-// Deleted rather than nulled: the key should look like it was never in the schema, not like
-// the user cleared it (a required-but-non-nullable field could reject an explicit `null`).
-// Edit-load is left alone: existing saved data isn't a schema default and isn't ours to clear.
-onMounted(() => {
-  if (isEditing?.value || !formData.config) return
-  if (!identityRealmsEnabled.value) {
-    delete formData.config.identity_realms
-  }
-  if (!realmsEnabled.value) {
-    delete formData.config.realm
-  }
-})
+// Host opt-out: strip a schema-computed default for a field the host fully disabled. Gated on
+// isSchemaDefaulted, not isEditing — a clone-to-create flow also hands in real data with
+// isEditing false, and that data must survive same as an edit-load's. A watcher, not onMounted,
+// since the data prop can re-derive defaults after mount too (e.g. an async edit-load). Deleted
+// rather than nulled to avoid tripping a required-but-non-nullable field.
+watch(() => formData.config?.identity_realms, (value) => {
+  if (value === undefined || !isSchemaDefaulted.value || identityRealmsEnabled.value) return
+  delete formData.config!.identity_realms
+}, { immediate: true })
+
+watch(() => formData.config?.realm, (value) => {
+  if (value === undefined || !isSchemaDefaulted.value || realmsEnabled.value) return
+  delete formData.config!.realm
+}, { immediate: true })
 
 const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
 
