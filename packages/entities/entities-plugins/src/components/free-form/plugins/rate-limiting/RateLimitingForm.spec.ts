@@ -62,9 +62,17 @@ describe('RateLimitingForm', () => {
       .toBe('e.g. principal.metadata.ff_id ? principal.metadata.ff_id : principal.id')
   })
 
-  it('keeps the shared editor on the limits', () => {
+  it('gives every window the limit example, which the shared editor has none of', async () => {
     const wrapper = mountForm()
 
-    expect(wrapper.find('[data-testid="ff-expression-add-config.minute"]').exists()).toBe(true)
+    for (const field of ['second', 'minute', 'hour', 'day', 'month', 'year']) {
+      const add = wrapper.findAll(`[data-testid="ff-expression-add-config.${field}"]`)
+      expect(add, field).toHaveLength(1)
+
+      await add[0].trigger('click')
+
+      expect(wrapper.get(`[data-testid="ff-expression-config.${field}"] textarea`).attributes('placeholder'), field)
+        .toBe('Define an expression for the limit. eg: ‘principal.metadata.limit * 2’')
+    }
   })
 })
