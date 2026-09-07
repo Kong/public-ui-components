@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.271.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.271.3...%40kong-ui-public%2Fentities-plugins%409.271.4) (2026-09-07)
+
+### Bug Fixes
+
+* **entities-plugins:** unset identity_realms/realm defaults on create when disabled ([#3786](https://github.com/Kong/public-ui-components/issues/3786)) ([efa536c](https://github.com/Kong/public-ui-components/commit/efa536cf73e627b68f064be2f751204e645ac235))
+
+
 ## [9.271.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.271.2...%40kong-ui-public%2Fentities-plugins%409.271.3) (2026-09-06)
 
 ### Bug Fixes
