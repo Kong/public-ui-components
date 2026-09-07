@@ -502,6 +502,12 @@ const isPluginFilterEnhanced = computed<boolean>(() =>
   props.config.app === 'konnect' && !!props.config.pluginTableImprovements?.filtering,
 )
 
+// Workspace-scoped Konnect lists should hit the search endpoint while filtering, regardless of
+// whether `pluginTableImprovements.filtering` is enabled - same as the other entity lists.
+const isKonnectWorkspaceScoped = computed<boolean>(() =>
+  props.config.app === 'konnect' && !!props.config.workspace,
+)
+
 /**
  * Table Headers
  */
@@ -595,7 +601,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 // Only hit the new search endpoint once the user is actually searching.
 // Workspace-scoped Konnect lists always use search, regardless of the `pluginTableImprovements.filtering` flag.
 const isSearchActive = computed((): boolean =>
-  (isPluginFilterEnhanced.value || (props.config.app === 'konnect' && !!props.config.workspace)) && !!filterQuery.value,
+  (isPluginFilterEnhanced.value || isKonnectWorkspaceScoped.value) && !!filterQuery.value,
 )
 
 const activeFetcherUrl = computed<string>(() => {
@@ -613,7 +619,9 @@ const {
 } = useFetcher(computed(() => ({
   ...props.config,
   cacheIdentifier: props.cacheIdentifier,
-  ...(isSearchActive.value ? { isExactMatch: false } : {}),
+  // `PluginFilter` (used when `isPluginFilterEnhanced`) emits an already wire-ready query string,
+  // which the fetcher must forward as-is rather than wrapping into an exact-match path segment.
+  ...(isPluginFilterEnhanced.value && isSearchActive.value ? { isExactMatch: false } : {}),
 })), activeFetcherUrl)
 
 const clearFilter = (): void => {
