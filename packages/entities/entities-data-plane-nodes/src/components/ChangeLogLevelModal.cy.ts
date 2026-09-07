@@ -136,7 +136,7 @@ describe('<ChangeLogLevelModal />', { viewportHeight: 700, viewportWidth: 700 },
         cy.wait('@submit').then(({ request }) => {
           expect(request.body).to.deep.equal({
             log_level: 'notice',
-            ttl: 600,
+            ttl: 60,
             targets: { node_ids: ['node-1', 'node-2'] },
           })
         })
