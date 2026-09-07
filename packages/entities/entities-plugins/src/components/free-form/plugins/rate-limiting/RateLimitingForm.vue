@@ -11,6 +11,22 @@
       >
         <CustomKeyField v-bind="slotProps" />
       </FieldRenderer>
+
+      <!--
+        The six windows are all limits, so they share the limit example. The
+        shared editor ships no placeholder — without one it would fall back to
+        the field's own default, which reads as a value rather than an
+        expression — so whoever knows the field supplies it.
+      -->
+      <FieldRenderer
+        v-slot="slotProps"
+        :match="({ path }) => LIMIT_FIELDS.has(path)"
+      >
+        <ExpressionField
+          v-bind="slotProps"
+          :placeholder="t('sp.request_limits.expression_placeholder')"
+        />
+      </FieldRenderer>
     </template>
 
     <ConfigForm />
@@ -22,6 +38,8 @@ import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
 import CustomKeyField from '../rate-limiting-advanced/CustomKeyField.vue'
+import ExpressionField from '../../shared/ExpressionField.vue'
+import useI18n from '../../../../composables/useI18n'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
 import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
 import { useExpressionMode } from '../_shared/use-expression-mode'
@@ -30,6 +48,18 @@ import type { PluginFormLayoutProps as Props } from '../../shared/layout/provide
 import type { RenderRules } from '../../shared/types'
 
 const props = defineProps<Props>()
+
+const { i18n: { t } } = useI18n()
+
+/** The expressible windows, which all take the same kind of expression. */
+const LIMIT_FIELDS = new Set([
+  'config.second',
+  'config.minute',
+  'config.hour',
+  'config.day',
+  'config.month',
+  'config.year',
+])
 
 // `second`..`year` and `custom_key` are expressible; gate them with the rest
 // of the 3.16 features.
