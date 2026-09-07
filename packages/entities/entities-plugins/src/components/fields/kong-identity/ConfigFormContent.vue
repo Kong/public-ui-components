@@ -138,6 +138,21 @@ const realmsEnabled = computed(() => keyAuthContext?.realmsEnabled ?? true)
 
 const { formData, getSchema } = useFormShared()
 
+// Host opt-out: on a fresh (create) form, drop any schema-computed default for a field the
+// host has fully disabled — the UI never shows it, so it shouldn't get submitted either.
+// Deleted rather than nulled: the key should look like it was never in the schema, not like
+// the user cleared it (a required-but-non-nullable field could reject an explicit `null`).
+// Edit-load is left alone: existing saved data isn't a schema default and isn't ours to clear.
+onMounted(() => {
+  if (isEditing?.value || !formData.config) return
+  if (!identityRealmsEnabled.value) {
+    delete formData.config.identity_realms
+  }
+  if (!realmsEnabled.value) {
+    delete formData.config.realm
+  }
+})
+
 const hasPrincipalsErrorOnMiss = computed(() => !!getSchema('$.config.principals.error_on_miss'))
 
 // Host-precomputed (see KonnectPluginFormConfig): directory access → directory resolved →
