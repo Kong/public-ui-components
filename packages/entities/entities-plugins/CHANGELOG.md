@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.272.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.1...%40kong-ui-public%2Fentities-plugins%409.272.2) (2026-09-07)
+
+### Bug Fixes
+
+* **entities-plugins:** use search endpoint for workspace filtering regardless of feature flag ([#3792](https://github.com/Kong/public-ui-components/issues/3792)) ([2a9ac4e](https://github.com/Kong/public-ui-components/commit/2a9ac4e9bd31d7465586560089a77e120b0f49b0))
+
+
 ## [9.272.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.0...%40kong-ui-public%2Fentities-plugins%409.272.1) (2026-09-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
