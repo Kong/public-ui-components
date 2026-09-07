@@ -73,10 +73,11 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     function initInnerData(propsData: T | undefined) {
       let dataValue: T
 
-      isSchemaDefaulted.value = !propsData || !hasValue(toValue(propsData))
-      if (isSchemaDefaulted.value) {
+      if (!propsData || !hasValue(toValue(propsData))) {
+        isSchemaDefaulted.value = true
         dataValue = getDefaultFromSchema()
       } else {
+        isSchemaDefaulted.value = false
         dataValue = cloneDeep(toValue(propsData))
       }
 
