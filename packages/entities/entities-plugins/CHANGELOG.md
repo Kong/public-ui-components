@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.272.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.271.4...%40kong-ui-public%2Fentities-plugins%409.272.0) (2026-09-07)
+
+### Features
+
+* **entities-plugins:** support expressible plugin config fields ([#3760](https://github.com/Kong/public-ui-components/issues/3760)) ([5a415da](https://github.com/Kong/public-ui-components/commit/5a415da5b4c850b19344c810e47b143f659c9df8))
+
+
 ## [9.271.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.271.3...%40kong-ui-public%2Fentities-plugins%409.271.4) (2026-09-07)
 
 ### Bug Fixes
