@@ -100,6 +100,7 @@ export default {
           {
             'second': {
               'description': 'The number of HTTP requests that can be made per second.',
+              'expressible': true,
               'gt': 0,
               'type': 'number',
             },
@@ -107,6 +108,7 @@ export default {
           {
             'minute': {
               'description': 'The number of HTTP requests that can be made per minute.',
+              'expressible': true,
               'gt': 0,
               'type': 'number',
             },
@@ -114,6 +116,7 @@ export default {
           {
             'hour': {
               'description': 'The number of HTTP requests that can be made per hour.',
+              'expressible': true,
               'gt': 0,
               'type': 'number',
             },
@@ -121,6 +124,7 @@ export default {
           {
             'day': {
               'description': 'The number of HTTP requests that can be made per day.',
+              'expressible': true,
               'gt': 0,
               'type': 'number',
             },
@@ -128,6 +132,7 @@ export default {
           {
             'month': {
               'description': 'The number of HTTP requests that can be made per month.',
+              'expressible': true,
               'gt': 0,
               'type': 'number',
             },
@@ -135,6 +140,7 @@ export default {
           {
             'year': {
               'description': 'The number of HTTP requests that can be made per year.',
+              'expressible': true,
               'gt': 0,
               'type': 'number',
             },
@@ -151,6 +157,7 @@ export default {
                 'header',
                 'path',
                 'consumer-group',
+                'principal',
               ],
               'type': 'string',
             },
@@ -171,6 +178,15 @@ export default {
                 },
               ],
               'starts_with': '/',
+              'type': 'string',
+            },
+          },
+          {
+            'custom_key': {
+              'description': 'Overrides the computed rate-limiting key with a literal value for this request, regardless of `limit_by`.',
+              'expressible': true,
+              'len_min': 1,
+              'required': false,
               'type': 'string',
             },
           },
@@ -279,6 +295,14 @@ export default {
                           ],
                         },
                       },
+                      {
+                        'custom_entity_check': {
+                          'field_sources': [
+                            'auth_provider',
+                            'oauth',
+                          ],
+                        },
+                      },
                     ],
                     'fields': [
                       {
@@ -288,6 +312,7 @@ export default {
                             'aws',
                             'gcp',
                             'azure',
+                            'oauth',
                           ],
                           'referenceable': true,
                           'type': 'string',
@@ -377,6 +402,155 @@ export default {
                           'encrypted': true,
                           'referenceable': true,
                           'type': 'string',
+                        },
+                      },
+                      {
+                        'oauth': {
+                          'description': 'OAuth 2.0 client configuration used to authenticate to Redis when `auth_provider` is set to `oauth`.',
+                          'fields': [
+                            {
+                              'token_endpoint': {
+                                'description': 'OAuth 2.0 token endpoint URL used to request access tokens.',
+                                'type': 'string',
+                              },
+                            },
+                            {
+                              'grant_type': {
+                                'default': 'client_credentials',
+                                'description': 'OAuth 2.0 grant type used to request access tokens.',
+                                'one_of': [
+                                  'client_credentials',
+                                  'password',
+                                ],
+                                'type': 'string',
+                              },
+                            },
+                            {
+                              'auth_method': {
+                                'default': 'client_secret_post',
+                                'description': 'Client authentication method used against the token endpoint.',
+                                'one_of': [
+                                  'client_secret_post',
+                                  'client_secret_basic',
+                                  'client_secret_jwt',
+                                ],
+                                'type': 'string',
+                              },
+                            },
+                            {
+                              'client_secret_jwt_alg': {
+                                'default': 'HS512',
+                                'description': 'Signing algorithm used for `client_secret_jwt` client authentication.',
+                                'one_of': [
+                                  'HS256',
+                                  'HS512',
+                                ],
+                                'type': 'string',
+                              },
+                            },
+                            {
+                              'client_id': {
+                                'description': 'OAuth 2.0 client ID.',
+                                'referenceable': true,
+                                'required': false,
+                                'type': 'string',
+                              },
+                            },
+                            {
+                              'client_secret': {
+                                'description': 'OAuth 2.0 client secret.',
+                                'encrypted': true,
+                                'referenceable': true,
+                                'required': false,
+                                'type': 'string',
+                              },
+                            },
+                            {
+                              'username': {
+                                'description': 'Resource owner username, used with the `password` grant type.',
+                                'referenceable': true,
+                                'required': false,
+                                'type': 'string',
+                              },
+                            },
+                            {
+                              'password': {
+                                'description': 'Resource owner password, used with the `password` grant type.',
+                                'encrypted': true,
+                                'referenceable': true,
+                                'required': false,
+                                'type': 'string',
+                              },
+                            },
+                            {
+                              'scopes': {
+                                'default': [],
+                                'description': 'OAuth 2.0 scopes to request.',
+                                'elements': {
+                                  'type': 'string',
+                                },
+                                'required': false,
+                                'type': 'array',
+                              },
+                            },
+                            {
+                              'token_headers': {
+                                'description': 'Additional HTTP headers to send with the token request.',
+                                'keys': {
+                                  'type': 'string',
+                                },
+                                'required': false,
+                                'type': 'map',
+                                'values': {
+                                  'type': 'string',
+                                },
+                              },
+                            },
+                            {
+                              'token_post_args': {
+                                'description': 'Additional POST body arguments to send with the token request.',
+                                'keys': {
+                                  'type': 'string',
+                                },
+                                'required': false,
+                                'type': 'map',
+                                'values': {
+                                  'type': 'string',
+                                },
+                              },
+                            },
+                            {
+                              'redis_username': {
+                                'description': 'Static Redis ACL username sent with `AUTH <username> <token>`.',
+                                'referenceable': true,
+                                'required': false,
+                                'type': 'string',
+                              },
+                            },
+                            {
+                              'redis_username_claim': {
+                                'description': 'JWT claim in the access token used to derive the Redis ACL username (for example, `oid` for Microsoft Entra ID).',
+                                'required': false,
+                                'type': 'string',
+                              },
+                            },
+                            {
+                              'ssl_verify': {
+                                'default': true,
+                                'description': 'Whether to verify the TLS certificate of the token endpoint.',
+                                'type': 'boolean',
+                              },
+                            },
+                            {
+                              'timeout': {
+                                'default': 10000,
+                                'description': 'Timeout, in milliseconds, for requests to the token endpoint.',
+                                'type': 'number',
+                              },
+                            },
+                          ],
+                          'required': false,
+                          'type': 'record',
                         },
                       },
                     ],
@@ -609,6 +783,113 @@ export default {
             },
           },
         ],
+        'type': 'record',
+      },
+    },
+    {
+      'expressions': {
+        'fields': [
+          {
+            'second': {
+              'expressible_kong_type': 'number',
+              'len_max': 1024,
+              'len_min': 0,
+              'source_field': {
+                'description': 'The number of HTTP requests that can be made per second.',
+                'expressible': true,
+                'gt': 0,
+                'type': 'number',
+              },
+              'type': 'string',
+            },
+          },
+          {
+            'minute': {
+              'expressible_kong_type': 'number',
+              'len_max': 1024,
+              'len_min': 0,
+              'source_field': {
+                'description': 'The number of HTTP requests that can be made per minute.',
+                'expressible': true,
+                'gt': 0,
+                'type': 'number',
+              },
+              'type': 'string',
+            },
+          },
+          {
+            'hour': {
+              'expressible_kong_type': 'number',
+              'len_max': 1024,
+              'len_min': 0,
+              'source_field': {
+                'description': 'The number of HTTP requests that can be made per hour.',
+                'expressible': true,
+                'gt': 0,
+                'type': 'number',
+              },
+              'type': 'string',
+            },
+          },
+          {
+            'day': {
+              'expressible_kong_type': 'number',
+              'len_max': 1024,
+              'len_min': 0,
+              'source_field': {
+                'description': 'The number of HTTP requests that can be made per day.',
+                'expressible': true,
+                'gt': 0,
+                'type': 'number',
+              },
+              'type': 'string',
+            },
+          },
+          {
+            'month': {
+              'expressible_kong_type': 'number',
+              'len_max': 1024,
+              'len_min': 0,
+              'source_field': {
+                'description': 'The number of HTTP requests that can be made per month.',
+                'expressible': true,
+                'gt': 0,
+                'type': 'number',
+              },
+              'type': 'string',
+            },
+          },
+          {
+            'year': {
+              'expressible_kong_type': 'number',
+              'len_max': 1024,
+              'len_min': 0,
+              'source_field': {
+                'description': 'The number of HTTP requests that can be made per year.',
+                'expressible': true,
+                'gt': 0,
+                'type': 'number',
+              },
+              'type': 'string',
+            },
+          },
+          {
+            'custom_key': {
+              'expressible_kong_type': 'string',
+              'len_max': 1024,
+              'len_min': 0,
+              'source_field': {
+                'description': 'Overrides the computed rate-limiting key with a literal value for this request, regardless of `limit_by`.',
+                'expressible': true,
+                'len_min': 1,
+                'required': false,
+                'type': 'string',
+              },
+              'type': 'string',
+            },
+          },
+        ],
+        'required': false,
         'type': 'record',
       },
     },

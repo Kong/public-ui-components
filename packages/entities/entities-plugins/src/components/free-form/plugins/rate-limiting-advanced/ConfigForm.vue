@@ -4,6 +4,14 @@
     name="config"
     reset-label-path="reset"
   >
+    <!--
+      Overrides the key `identifier` computes, so it leads. Added by a newer
+      Gateway alongside the `expressions` record, hence the guard.
+    -->
+    <Field
+      v-if="getSchema('config.custom_key')"
+      name="custom_key"
+    />
     <Field name="identifier" />
     <RequestLimitsForm />
     <ErrorMessageForm />

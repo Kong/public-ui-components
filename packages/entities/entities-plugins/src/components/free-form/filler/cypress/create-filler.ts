@@ -8,8 +8,10 @@ import type {
   SetFieldSchema,
   MapFieldSchema,
   JsonFieldSchema,
+  ExpressionFieldSchema,
   ForeignFieldSchema,
 } from '../../../../types/plugins/form-schema'
+import { EXPRESSION_ARRAY_EMPTY } from '../../shared/composables'
 import {
   createContext,
   walkFields,
@@ -75,6 +77,22 @@ export function createFiller(
         break
       case 'foreign':
         mergedHandlers.fillForeign({ fieldKey, fieldSchema: fieldSchema as ForeignFieldSchema, value })
+        break
+      case 'expression':
+        mergedHandlers.fillExpression({ fieldKey, fieldSchema: fieldSchema as ExpressionFieldSchema, value })
+        break
+      case 'expressionArray':
+        // No container and no add-button: the rows belong to the source array
+        // this one mirrors, so only fill the indices that carry an expression.
+        if (Array.isArray(value)) {
+          value.forEach((itemValue: any, index: number) => {
+            // `''` is the sentinel for a slot with no expression, so it is
+            // skipped like an absent one — filling it would open an editor for
+            // a row that has none.
+            if (itemValue === undefined || itemValue === null || itemValue === EXPRESSION_ARRAY_EMPTY) return
+            handleArrayItem(ctx, fieldKey, index, itemValue)
+          })
+        }
         break
       case 'array':
         mergedHandlers.fillArray({

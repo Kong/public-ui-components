@@ -81,13 +81,13 @@
   "onboarding": {
     "steps": {
       "consumer": {
-        "step":"Consumer",
+        "step": "Consumer",
         "title": "Create a consumer",
         "description": "Consumers represent the users or applications calling your API. Add a name or tags to help you identify and manage this consumer later.",
         "note": "A consumer can have both unique username and unique custom ID or one of them."
       },
       "credential": {
-        "step":"Credential",
+        "step": "Credential",
         "title": "Add a credential"
       }
     },
@@ -1677,6 +1677,10 @@
       "options": {
         "fixed": "Fixed",
         "sliding": "Sliding"
+      },
+      "descriptions": {
+        "fixed": "Each request counts against one static time bucket, and only that bucket's counter.",
+        "sliding": "Each request counts against a rolling window, weighted by the rate of the window before it."
       }
     },
     "request_limits": {
@@ -1687,7 +1691,11 @@
       "request_number": "Request number",
       "time_interval": "Time interval",
       "interval_determiner": "Every",
-      "seconds": "Seconds"
+      "seconds": "Seconds",
+      "custom": "Custom",
+      "add_limit": "Add limit",
+      "remove_limit": "Remove limit {index}",
+      "expression_placeholder": "Define an expression for the limit. eg: ‘principal.metadata.limit * 2’"
     },
     "error_message": {
       "label": "Error message",
@@ -1724,6 +1732,13 @@
           "label": "500 requests every hour",
           "description": "Each user is allowed 500 requests per hour. \nIf the limit is exceeded and the user receives a 429 error, each additional request within the sliding window (hour) \nwill extend the wait time by about 12 minutes, continuously adjusting as new requests are made."
         }
+      }
+    },
+    "custom_key": {
+      "expression_placeholder": "e.g. principal.metadata.ff_id ? principal.metadata.ff_id : principal.id",
+      "expression_help": {
+        "text": "Define a Kong plug-in dynamic expression to determine the counter key for each request. The expression must return a string. {link}",
+        "learn": "Learn more"
       }
     }
   },

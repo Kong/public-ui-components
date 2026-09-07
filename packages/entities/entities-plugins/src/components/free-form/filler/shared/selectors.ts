@@ -38,4 +38,11 @@ export const selectors = {
 
   // JsonField
   json: (path: string) => `[data-testid="ff-json-${path}"]`,
+
+  // ExpressionField. Keyed by the twin's own path (`expressions.minute`) rather
+  // than the source field's, since that is what the filler walks; the testids
+  // inside are keyed by the source field, which the twin path cannot recover.
+  expression: (path: string) => `[data-expression-for="${path}"]`,
+  expressionAddBtn: (path: string) => `[data-expression-for="${path}"] [data-testid^="ff-expression-add-"]`,
+  expressionInput: (path: string) => `[data-expression-for="${path}"] textarea`,
 }

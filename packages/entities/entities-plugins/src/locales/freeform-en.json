@@ -16,6 +16,23 @@
       "foreign_placeholder": "Enter a UUID of {entity}",
       "vault_picker": {
         "component_error": "The vault secret picker is not available"
+      },
+      "expression": {
+        "add": "Add expression",
+        "remove": "Remove expression",
+        "label": "Kong plug-in dynamic expression",
+        "info": "Supply this value as an expression that is evaluated on every request. When set, it takes priority over the value entered above.",
+        "help": {
+          "text": "Define a Kong plug-in dynamic expression to evaluate each request. The expression must return {type}. {link}",
+          "learn": "Learn more"
+        },
+        "returns": {
+          "string": "a string",
+          "number": "a number",
+          "integer": "an integer",
+          "boolean": "a boolean value (true or false)",
+          "unknown": "a value of the type of the field above"
+        }
       }
     }
   }

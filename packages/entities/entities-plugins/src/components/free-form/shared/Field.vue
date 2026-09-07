@@ -40,19 +40,11 @@
 
 <script setup lang="ts">
 import { computed, toRef, type Slot } from 'vue'
-import { useField, FIELD_RENDERERS } from './composables'
+import { useExpressionField, useField, FIELD_RENDERERS } from './composables'
 import * as utils from './utils'
 
-import StringField from './StringField.vue'
-import BooleanField from './BooleanField.vue'
-import ArrayField from './ArrayField.vue'
-import ObjectField from './ObjectField.vue'
-import NumberField from './NumberField.vue'
-import EnumField from './EnumField.vue'
-import StringArrayField from './StringArrayField.vue'
-import JsonField from './JsonField.vue'
-import ForeignField from './ForeignField.vue'
-import MapField from './MapField.vue'
+import ExpressionField from './ExpressionField.vue'
+import { resolveFieldComponent } from './field-dispatch'
 import type { GlobalAction, BaseFieldProps } from './types'
 
 defineOptions({ name: 'AutoField' })
@@ -72,33 +64,17 @@ defineSlots<
 
 const field = useField(toRef(props, 'name'))
 
-const fieldRenderer = computed(() => {
+const expression = useExpressionField(toRef(() => field.path?.value ?? ''))
 
-  switch (field.schema?.value?.type) {
-    case 'string':
-      return ('one_of' in field.schema.value) ? EnumField : StringField
-    case 'boolean':
-      return ('one_of' in field.schema.value) ? EnumField : BooleanField
-    case 'number':
-    case 'integer':
-      return ('one_of' in field.schema.value) ? EnumField : NumberField
-    case 'array':
-      return ArrayField
-    case 'set':
-      if (utils.isTagField(field.schema)) {
-        return StringArrayField
-      }
-      return EnumField
-    case 'record':
-      return ObjectField
-    case 'map':
-      return MapField
-    case 'json':
-      return JsonField
-    case 'foreign':
-      return ForeignField
-    default:
-      return undefined
+const fieldRenderer = computed(() => {
+  // A field the Gateway marks `expressible` renders as one unit that owns both
+  // its plain value and the expression that can override it. Checked ahead of
+  // the type mapping, but still below the slot and `FieldRenderer` overrides
+  // above — so a plugin replacing the field replaces both halves.
+  if (expression.available.value) {
+    return ExpressionField
   }
+
+  return resolveFieldComponent(field.schema?.value)
 })
 </script>

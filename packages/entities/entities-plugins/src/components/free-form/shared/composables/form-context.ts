@@ -4,6 +4,7 @@ import { createRenderRuleRegistry } from './render-rules'
 import { FIELD_RENDERER_SLOTS, FIELD_RENDERERS } from './constants'
 import { provide, reactive, ref, toRef, toValue, useSlots, watch } from 'vue'
 import { useSchemaHelpers } from './schema'
+import { findExpressionSourceRecord, toSourcePath } from './expression-paths'
 import * as utils from '../utils'
 import { useKeyIdMap } from './key-id-map'
 
@@ -88,6 +89,25 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       }
     }
 
+    /**
+     * The record `expressions` mirrors, resolved once from the schema. Only
+     * present for a schema that declares expressible fields.
+     */
+    const expressionSourceRecord = findExpressionSourceRecord(schema)
+
+    /**
+     * Render rules are declared against the source fields, so a twin under
+     * `expressions` matches no rule and `isFieldHidden` answers `false` for it.
+     * Left at that, hiding a field would reset its plain value but submit its
+     * expression, and the Gateway would still apply it. Follow the source.
+     */
+    function isPrunedAsHidden(path: string): boolean {
+      if (isFieldHidden(path)) return true
+
+      const sourcePath = expressionSourceRecord && toSourcePath(path, expressionSourceRecord)
+      return !!sourcePath && isFieldHidden(sourcePath)
+    }
+
     function hasValue(data: T | undefined): boolean {
       if (isFunction(config.value.hasValue)) {
         return config.value.hasValue(data)
@@ -113,7 +133,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       if (hasDependencies.value) {
         utils.pruneHiddenPaths(
           nextValue,
-          isFieldHidden,
+          isPrunedAsHidden,
           getEmptyOrDefaultFromSchema,
         )
       }

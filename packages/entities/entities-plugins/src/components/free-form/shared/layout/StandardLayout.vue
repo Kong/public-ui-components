@@ -238,6 +238,7 @@ import StringField from '../StringField.vue'
 import CodeEditor from '../CodeEditor.vue'
 import ConditionField from './ConditionField.vue'
 import useI18n from '../../../../composables/useI18n'
+import { EXPRESSIONS_FIELD } from '../composables'
 import type { PluginFormLayoutProps } from './provider'
 import PluginConfigurationForm from './PluginConfigurationForm.vue'
 
@@ -246,6 +247,10 @@ defineOptions({ inheritAttrs: false })
 const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   // plugin specific config
   'config',
+  // Expression overrides for `config`'s expressible fields. Required here too,
+  // not just in the schema allowlist: `prunedData` picks the model down to these
+  // keys, so leaving it out means a saved plugin's expressions never load.
+  EXPRESSIONS_FIELD,
   'partials',
   '__ui_data',
 
@@ -401,7 +406,11 @@ const scopeEntityFields = computed(() => {
 })
 
 const MORE_FIELDS = ['instance_name', 'protocols', 'tags', 'condition']
-const FREE_FORM_SCHEMA_KEYS = ['config']
+// Root fields of the plugin schema the freeform engine owns. `expressions` is
+// not rendered as a field of its own (`Form` filters it out of `childFields`),
+// but it has to reach `Form` so each expressible field can resolve its twin —
+// dropping it here silently disables every expression control.
+const FREE_FORM_SCHEMA_KEYS = ['config', EXPRESSIONS_FIELD]
 const freeFormSchema = computed(() => {
   const result: FormSchema = {
     type: 'record',

@@ -26,7 +26,7 @@ export type Props<T extends Record<string, any> = Record<string, any>> = {
 
 <script setup lang="ts" generic="T extends Record<string, any> = Record<string, any>">
 import { useSlots, type Slot, computed, toRaw, toRef } from 'vue'
-import { FIELD_RENDERERS, provideFormShared } from './composables'
+import { EXPRESSIONS_FIELD, FIELD_RENDERERS, provideFormShared } from './composables'
 import type { FormSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import Field from './Field.vue'
 import type { FormConfig, GlobalAction, RenderRules } from './types'
@@ -61,7 +61,11 @@ const { getSchema, formData, setValue, getValue, rootRenderRules, getEmptyValue 
 const childFields = computed(() => {
   const { fields } = getSchema()
 
-  let sortedFields = [...fields]
+  // The `expressions` record is a companion to its sibling top-level record,
+  // not a field in its own right: each entry is rendered inline by the
+  // expressible field it overrides (see `ExpressionField`). Rendering it here
+  // as well would duplicate every one of those inputs.
+  let sortedFields = fields.filter((field) => Object.keys(field)[0] !== EXPRESSIONS_FIELD)
 
   if (fieldsOrder) {
     return sortFieldsByFieldNames(sortedFields, fieldsOrder)

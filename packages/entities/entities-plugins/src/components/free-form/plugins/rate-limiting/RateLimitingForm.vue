@@ -1,7 +1,7 @@
 <template>
   <DynamicLayout
     v-bind="props"
-    :on-form-change="handleFormChange"
+    :render-rules="renderRules"
     :schema="gatedSchema"
   >
     <template #field-renderers>
@@ -21,35 +21,36 @@
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
-import CustomKeyField from './CustomKeyField.vue'
+import CustomKeyField from '../rate-limiting-advanced/CustomKeyField.vue'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
 import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
 import { useExpressionMode } from '../_shared/use-expression-mode'
 
 import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
-import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { RenderRules } from '../../shared/types'
 
 const props = defineProps<Props>()
 
-// `limit` and `custom_key` are expressible; gate their expression editors
-// with the rest of the 3.16 features, leaving the fields themselves.
+// `second`..`year` and `custom_key` are expressible; gate them with the rest
+// of the 3.16 features.
+// `second`..`year` and `custom_key` are expressible; gate their expression
+// editors with the rest of the 3.16 features, leaving the fields themselves.
 const { gatedSchema } = useExpressionMode(() => props.schema)
+
+// A custom component owns its own render rules, so these live here rather than
+// in the plugin config.
+const renderRules: RenderRules = {
+  bundles: [
+    ['config.policy', 'config.redis'],
+  ],
+  dependencies: {
+    'config.redis': ['config.policy', 'redis'],
+  },
+}
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any
 }>()
 
 provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
-
-function handleFormChange(value: Partial<FreeFormPluginData>, fields?: string[]) {
-  /**
-   * `namespace` can be undefined, but can't be null.
-   * If it is null, we should delete it from the config object so the server auto-generates it.
-   */
-  if (value.config?.namespace === null) {
-    delete value.config.namespace
-  }
-
-  props.onFormChange(value, fields)
-}
 </script>

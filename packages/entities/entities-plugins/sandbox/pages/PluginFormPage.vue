@@ -207,6 +207,7 @@ useProvideExperimentalFreeForms([
   'proxy-cache-advanced',
   'proxy-cache',
   'rate-limiting-advanced',
+  'rate-limiting',
   'redirect',
   'request-size-limiting',
   'request-termination',
