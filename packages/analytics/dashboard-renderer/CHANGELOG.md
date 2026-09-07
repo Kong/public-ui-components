@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.21.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.21.2...%40kong-ui-public%2Fdashboard-renderer%408.21.3) (2026-09-07)
+
+### Bug Fixes
+
+* **deps:** update dependency @zumer/snapdom to ^2.24.10 ([#3789](https://github.com/Kong/public-ui-components/issues/3789)) ([ec73cbf](https://github.com/Kong/public-ui-components/commit/ec73cbf047b1f7a77648bb658bf1a9d10332eb13))
+
+
 ## [8.21.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.21.1...%40kong-ui-public%2Fdashboard-renderer%408.21.2) (2026-09-05)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
