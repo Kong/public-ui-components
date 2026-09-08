@@ -164,7 +164,7 @@ interface UseCase {
   }
 }
 
-const { formData, getSchema, getEmptyOrDefault } = useFormShared<FormData>()
+const { formData, getSchema, getEmptyOrDefault, getEmptyValue } = useFormShared<FormData>()
 
 const requestLimits = computed<RequestLimit[]>(() => {
   const modelValue = formData.config?.limit?.map((limit, index) => {
@@ -201,10 +201,12 @@ const alignExpressionLimits = (mutate: (limits: Array<string | EmptyValue>) => v
 /**
  * Unsets the twin array once no row holds an expression.
  *
- * Clearing a row leaves an empty slot behind rather than shortening the array,
- * because the Gateway pairs the two arrays by position — so clearing every row
- * would otherwise submit a run of empty strings. Dropping the key says the same
- * thing, and matches a plugin that never carried an expression at all.
+ * `null`, not a dropped key: Kong Manager updates with PATCH, and PATCH keeps
+ * every field the payload omits, so omitting the array leaves the stored one in
+ * place — the user's clear silently does not happen, and if the same edit also
+ * removed a row the stored twins outnumber `config.limit` and the Gateway
+ * rejects the merged entity (`expressions.limit[i] is set but config.limit is
+ * not`). An explicit `null` replaces it.
  *
  * Written into the form's own data, and deliberately NOT by rewriting the value
  * the form emits. The form compares the payload it last emitted against an
@@ -214,10 +216,12 @@ const alignExpressionLimits = (mutate: (limits: Array<string | EmptyValue>) => v
  */
 watch(() => formData.expressions?.limit, (limits) => {
   if (!Array.isArray(limits)) return
-  // Every "no expression" value is falsy: `''` in a slot, null when unset.
+  // Clearing a row leaves its slot behind, so an array whose every slot is
+  // empty means no row has an expression any more. Every "no expression" value
+  // is falsy: `''` in a slot, null when unset.
   if (limits.some(Boolean)) return
 
-  delete formData.expressions!.limit
+  formData.expressions!.limit = getEmptyValue()
 }, { deep: true })
 
 const addRequestLimit = () => {
@@ -365,10 +369,11 @@ const filteredUseCases = computed<UseCase[]>(() => {
 
 const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
   // A preset replaces every limit, so the expressions attached to the rows it
-  // replaces go with them.
+  // replaces go with them. The watcher above unsets the record if this leaves
+  // nothing behind.
   const clearExpressionLimits = () => {
     if (formData.expressions) {
-      delete formData.expressions.limit
+      formData.expressions.limit = null
     }
   }
 
