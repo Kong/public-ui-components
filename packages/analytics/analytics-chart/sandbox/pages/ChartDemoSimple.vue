@@ -440,13 +440,21 @@ const metricItems = computed<SelectItem[]>(() => {
 const dimensionItems = computed<SelectItem[]>(() => {
   let out = []
 
-  for (let i = 1; i <= 3; i++) {
-    out.push({
-      label: `${i}`,
-      value: `${i}`,
-      key: `dimension_${i}`,
-      selected: i === 1,
-    })
+  for (let i = 0; i <= 3; i++) {
+    if (i === 0) {
+      out.push({
+        label: `${i}`,
+        value: `${i}`,
+        key: 'no_dimensions',
+      })
+    } else {
+      out.push({
+        label: `${i}`,
+        value: `${i}`,
+        key: `dimension_${i}`,
+        selected: i === 1,
+      })
+    }
   }
 
   return out
@@ -469,6 +477,9 @@ const randomizeData = () => {
 }
 
 const getTopNDisplay = (dimensionCount: number): DisplayBlob => {
+  if (dimensionCount < 1) {
+    return {}
+  }
   const display: DisplayBlob = {
     route: topNRouteDisplay,
   }
@@ -489,6 +500,11 @@ const getTopNDimensionEvent = (
   idx: number,
   dimensionCount: number,
 ): Record<string, string> => {
+
+  if (dimensionCount < 1) {
+    return {}
+  }
+
   const event = {
     route: routeId,
   }
@@ -540,7 +556,7 @@ const getTopNFallbackTableData = (
 
   return {
     meta: getTopNBaseMeta(display, [scenario.metricKey]),
-    data: rows,
+    data: dimensionCount === 0 ? rows.slice(0, 1) : rows,
   } as ExploreResultV4
 }
 
@@ -599,7 +615,7 @@ const getTopNMetricTableData = (
 
   return {
     meta,
-    data: rows,
+    data: dimensionCount === 0 ? rows.slice(0, 1) : rows,
   } as ExploreResultV4
 }
 
