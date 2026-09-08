@@ -12,16 +12,16 @@ export interface ResolvedPluginFormConfig {
 type PluginConfigModule = PluginFormConfig
 
 const pluginModules = import.meta.glob([
-  '../plugins/*/index.ts',
-  '../plugins/*.ts',
-  '!../plugins/_shared/**',
+  './plugins/*/index.ts',
+  './plugins/*.ts',
+  '!./plugins/_shared/**',
 ], {
   eager: true,
   import: 'default',
 }) as Record<string, PluginConfigModule>
 
 export function derivePluginName(path: string): string {
-  const match = path.match(/\.\.\/plugins\/(.+?)(?:\/index)?\.ts$/)
+  const match = path.match(/\.\/plugins\/(.+?)(?:\/index)?\.ts$/)
 
   if (!match) {
     throw new Error(`Unable to derive plugin name from path: ${path}`)
