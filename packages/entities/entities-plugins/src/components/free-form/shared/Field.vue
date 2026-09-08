@@ -40,10 +40,9 @@
 
 <script setup lang="ts">
 import { computed, toRef, type Slot } from 'vue'
-import { useExpressionField, useField, FIELD_RENDERERS } from './composables'
+import { useField, FIELD_RENDERERS } from './composables'
 import * as utils from './utils'
 
-import ExpressionField from './ExpressionField.vue'
 import { resolveFieldComponent } from './field-dispatch'
 import type { GlobalAction, BaseFieldProps } from './types'
 
@@ -64,17 +63,8 @@ defineSlots<
 
 const field = useField(toRef(props, 'name'))
 
-const expression = useExpressionField(toRef(() => field.path?.value ?? ''))
-
-const fieldRenderer = computed(() => {
-  // A field the Gateway marks `expressible` renders as one unit that owns both
-  // its plain value and the expression that can override it. Checked ahead of
-  // the type mapping, but still below the slot and `FieldRenderer` overrides
-  // above — so a plugin replacing the field replaces both halves.
-  if (expression.available.value) {
-    return ExpressionField
-  }
-
-  return resolveFieldComponent(field.schema?.value)
-})
+// `StringField`/`NumberField` render their own expression editor when their
+// schema is `expressible`, so the type mapping alone is enough here — no
+// separate dispatch for expressible fields.
+const fieldRenderer = computed(() => resolveFieldComponent(field.schema?.value))
 </script>

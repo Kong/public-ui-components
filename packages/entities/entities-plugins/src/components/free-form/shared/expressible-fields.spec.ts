@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { defineComponent, h } from 'vue'
 import PluginConfigurationForm from './layout/PluginConfigurationForm.vue'
-import ExpressionField from './ExpressionField.vue'
+import StringField from './StringField.vue'
 
 import type { FormSchema } from '../../../types/plugins/form-schema'
 
@@ -87,17 +87,18 @@ describe('expressible fields', () => {
     // `propsOverrides` reaches the renderer as usual.
     expect(wrapper.find('[data-testid="value-only"]').text()).toBe('overridden')
     // And the renderer owns the field: nothing appends an expression to it. A
-    // renderer that wants one renders `ExpressionField`/`ExpressionEditor`
-    // itself — see `CustomKeyField` below, and rate-limiting-advanced's limit
-    // rows, which pair each limit with its own editor.
+    // renderer that wants one renders `StringField`/`NumberField` (their
+    // built-in editor) or `ExpressionEditor` directly — see `CustomKeyField`
+    // below, and rate-limiting-advanced's limit rows, which pair each limit
+    // with its own editor.
     expect(wrapper.find('[data-testid="ff-expression-add-config.minute"]').exists()).toBe(false)
   })
 
   it('is usable as a `fieldRenderers` component, configured by `propsOverrides`', () => {
     const wrapper = mountForm([{
       match: 'config.custom_key',
-      component: ExpressionField as any,
-      propsOverrides: { placeholder: 'e.g. principal.id' },
+      component: StringField as any,
+      propsOverrides: { expressionEditor: { placeholder: 'e.g. principal.id' } },
     }])
 
     // The field component for an expressible field, registered for one path and

@@ -22,9 +22,9 @@
         v-slot="slotProps"
         :match="({ path }) => LIMIT_FIELDS.has(path)"
       >
-        <ExpressionField
+        <NumberField
           v-bind="slotProps"
-          :placeholder="t('sp.request_limits.expression_placeholder')"
+          :expression-editor="{ placeholder: t('sp.request_limits.expression_placeholder') }"
         />
       </FieldRenderer>
     </template>
@@ -38,7 +38,7 @@ import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
 import CustomKeyField from '../rate-limiting-advanced/CustomKeyField.vue'
-import ExpressionField from '../../shared/ExpressionField.vue'
+import NumberField from '../../shared/NumberField.vue'
 import useI18n from '../../../../composables/useI18n'
 import FieldRenderer from '../../shared/FieldRenderer.vue'
 import DynamicLayout from '../../shared/layout/DynamicLayout.vue'

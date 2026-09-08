@@ -1,7 +1,6 @@
 export { default as Form } from './components/free-form/shared/Form.vue'
 export { default as Field } from './components/free-form/shared/Field.vue'
 export { default as FieldRenderer } from './components/free-form/shared/FieldRenderer.vue'
-export { default as ExpressionField } from './components/free-form/shared/ExpressionField.vue'
 export { default as ExpressionEditor } from './components/free-form/shared/ExpressionEditor.vue'
 export { default as StringField } from './components/free-form/shared/StringField.vue'
 export { default as SwitchField } from './components/free-form/shared/SwitchField.vue'
