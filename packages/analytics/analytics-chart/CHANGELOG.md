@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.26.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.2...%40kong-ui-public%2Fanalytics-chart%4010.26.3) (2026-09-08)
+
+### Bug Fixes
+
+* **analytics-chart:** align TopN headers without dimensions [MA-5439] ([#3800](https://github.com/Kong/public-ui-components/issues/3800)) ([cab53b4](https://github.com/Kong/public-ui-components/commit/cab53b4f726fa5432cc6d879d43ed356d24bac21))
+
+
 ## [10.26.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.1...%40kong-ui-public%2Fanalytics-chart%4010.26.2) (2026-09-05)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
