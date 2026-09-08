@@ -81,7 +81,7 @@
             <StringArrayField
               v-else-if="subSchema.type === 'array' && subSchema.elements.type === 'string'"
               autofocus
-              :help="t('plugins.free-form.tag_helper')"
+              :help="t('tag_helper')"
               :name="String(index)"
             />
             <Field
