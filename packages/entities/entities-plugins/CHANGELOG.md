@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.272.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.2...%40kong-ui-public%2Fentities-plugins%409.272.3) (2026-09-08)
+
+### Bug Fixes
+
+* **entities-plugins:** fix search query shape for workspace filtering ([#3795](https://github.com/Kong/public-ui-components/issues/3795)) ([5ac0235](https://github.com/Kong/public-ui-components/commit/5ac02357fea6ebe9669313ef247e3cbe7cb8a476)), closes [#3792](https://github.com/Kong/public-ui-components/issues/3792)
+
+
 ## [9.272.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.1...%40kong-ui-public%2Fentities-plugins%409.272.2) (2026-09-07)
 
 ### Bug Fixes
