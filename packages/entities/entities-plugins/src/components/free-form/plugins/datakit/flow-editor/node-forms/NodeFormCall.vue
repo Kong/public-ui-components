@@ -59,15 +59,15 @@
 </template>
 
 <script setup lang="ts">
-import Form from '../../../../shared/Form.vue'
+import Form from '../../../../core/components/Form.vue'
 import HttpMethodField from './HttpMethodField.vue'
 import InputsField from './InputsField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'
 import useI18n from '../../../../../../composables/useI18n'
-import NumberField from '../../../../shared/NumberField.vue'
-import BooleanField from '../../../../shared/BooleanField.vue'
+import NumberField from '../../../../core/components/NumberField.vue'
+import BooleanField from '../../../../core/components/BooleanField.vue'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
-import StringField from '../../../../shared/StringField.vue'
+import StringField from '../../../../core/components/StringField.vue'
 import { useTemplateRef } from 'vue'
 import NameField from './NameField.vue'
 import type { NodeId } from '../../types'

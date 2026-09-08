@@ -1,0 +1,158 @@
+import { buildSchemaMap, generalizePath, isExpressionFieldSchema } from '../../composables'
+import { resolve } from '../../utils'
+import { isEnumField, isTagField } from './schema-utils'
+import { get } from 'lodash-es'
+import type {
+  FormSchema,
+  NamedFieldSchema,
+  UnionFieldSchema,
+  ArrayFieldSchema,
+  RecordFieldSchema,
+} from '../../form-schema'
+
+export type HandlerType =
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'enum'
+  | 'array'
+  | 'record'
+  | 'map'
+  | 'tag'
+  | 'json'
+  | 'foreign'
+  | 'expression'
+  | 'expressionArray'
+
+export interface FieldToFill {
+  handlerType: HandlerType
+  fieldKey: string
+  fieldSchema: UnionFieldSchema
+  value: any
+}
+
+export interface FillerContext {
+  schemaMap: Record<string, UnionFieldSchema>
+}
+
+/**
+ * Determine handler type from field schema
+ */
+export function getHandlerType(fieldSchema: UnionFieldSchema): HandlerType {
+  // Checked before the string and array branches: a twin is a string field, but
+  // its input is behind a trigger the handler has to open first, and an array of
+  // twins has no container or add-button of its own — its rows come from the
+  // source array it mirrors.
+  if (isExpressionFieldSchema(fieldSchema)) return 'expression'
+  if (
+    (fieldSchema.type === 'array' || fieldSchema.type === 'set')
+    && isExpressionFieldSchema(fieldSchema.elements)
+  ) {
+    return 'expressionArray'
+  }
+  if (isEnumField(fieldSchema)) return 'enum'
+
+  switch (fieldSchema.type) {
+    case 'string': return 'string'
+    case 'number':
+    case 'integer': return 'number'
+    case 'boolean': return 'boolean'
+    case 'set': return isTagField(fieldSchema) ? 'tag' : 'enum'
+    case 'array': return 'array'
+    case 'record': return 'record'
+    case 'map': return 'map'
+    case 'json': return 'json'
+    case 'foreign': return 'foreign'
+    default:
+      throw new Error(`Unknown field type: ${(fieldSchema as UnionFieldSchema).type}`)
+  }
+}
+
+/**
+ * Walk through fields and yield FieldToFill objects
+ */
+export function* walkFields(
+  fields: NamedFieldSchema[],
+  data: Record<string, any>,
+  ctx: FillerContext,
+  prefix: string = '',
+): Generator<FieldToFill> {
+  for (const field of fields) {
+    const fieldName = Object.keys(field)[0]
+    const fieldKey = prefix ? resolve(prefix, fieldName) : fieldName
+    const fieldValue = get(data, fieldName)
+
+    if (fieldValue === undefined) continue
+
+    const path = generalizePath(fieldKey, ctx.schemaMap)
+    const fieldSchema = ctx.schemaMap[path]
+
+    if (!fieldSchema) {
+      throw new Error(`Field schema for "${fieldKey}" not found in schema map`)
+    }
+
+    yield {
+      handlerType: getHandlerType(fieldSchema),
+      fieldKey,
+      fieldSchema,
+      value: fieldValue,
+    }
+  }
+}
+
+/**
+ * Get item info for array iteration
+ */
+export function getArrayItemInfo(
+  fieldKey: string,
+  index: number,
+  ctx: FillerContext,
+): { itemKey: string, itemSchema: UnionFieldSchema } {
+  const itemKey = resolve(fieldKey, String(index))
+  const itemPath = generalizePath(itemKey, ctx.schemaMap)
+  const itemSchema = ctx.schemaMap[itemPath]
+
+  if (!itemSchema) {
+    throw new Error(`Item schema for "${itemKey}" not found in schema map`)
+  }
+
+  return { itemKey, itemSchema }
+}
+
+/**
+ * Get entry info for map iteration
+ */
+export function getMapEntryInfo(
+  fieldKey: string,
+  kidId: string,
+  ctx: FillerContext,
+): { entryKey: string, entrySchema: UnionFieldSchema } {
+  const entryKey = resolve(fieldKey, kidId)
+  const entryPath = generalizePath(entryKey, ctx.schemaMap)
+  const entrySchema = ctx.schemaMap[entryPath]
+
+  if (!entrySchema) {
+    throw new Error(`Map entry schema for "${entryKey}" not found in schema map`)
+  }
+
+  return { entryKey, entrySchema }
+}
+
+/**
+ * Check if array item is a record that needs recursive filling
+ */
+export function isRecordArrayItem(itemSchema: UnionFieldSchema): itemSchema is RecordFieldSchema {
+  return itemSchema.type === 'record' && Array.isArray(itemSchema.fields)
+}
+
+/**
+ * Create a filler context from schema
+ */
+export function createContext(schema: FormSchema): FillerContext {
+  return {
+    schemaMap: buildSchemaMap(schema),
+  }
+}
+
+// Re-export types for convenience
+export type { ArrayFieldSchema, RecordFieldSchema }

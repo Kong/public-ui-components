@@ -13,7 +13,7 @@ Each free-form plugin is registered by adding one config module in this director
 ## Simple Plugin
 
 ```ts
-import { definePluginConfig } from '../shared/define-plugin-config'
+import { definePluginConfig } from '../define-plugin-config'
 
 export default definePluginConfig({
   experimental: true,
@@ -25,7 +25,7 @@ This resolves to `CommonForm` unless you provide a custom `component`.
 ## Plugin With Render Rules
 
 ```ts
-import { definePluginConfig } from '../shared/define-plugin-config'
+import { definePluginConfig } from '../define-plugin-config'
 
 export default definePluginConfig({
   experimental: true,
@@ -43,8 +43,8 @@ export default definePluginConfig({
 ## Plugin With Field Renderers
 
 ```ts
-import StringField from '../shared/StringField.vue'
-import { definePluginConfig } from '../shared/define-plugin-config'
+import StringField from '../core/components/StringField.vue'
+import { definePluginConfig } from '../define-plugin-config'
 
 export default definePluginConfig({
   experimental: true,
@@ -66,7 +66,7 @@ export default definePluginConfig({
 
 ```ts
 import KeyAuthForm from './KeyAuthForm.vue'
-import { definePluginConfig } from '../../shared/define-plugin-config'
+import { definePluginConfig } from '../../define-plugin-config'
 
 export default definePluginConfig({
   experimental: true,

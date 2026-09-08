@@ -1,7 +1,7 @@
 import { computed, inject } from 'vue'
 import { FEATURE_FLAGS } from '../../../../constants'
 
-import type { FormSchema, NamedFieldSchema, RecordFieldSchema } from '../../../../types/plugins/form-schema'
+import type { FormSchema, NamedFieldSchema, RecordFieldSchema } from '../../core/form-schema'
 
 /**
  * Gates expression mode on a plugin's expressible fields behind the 3.16

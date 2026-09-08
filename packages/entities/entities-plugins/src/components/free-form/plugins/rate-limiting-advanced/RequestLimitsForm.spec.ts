@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { defineComponent, h } from 'vue'
-import Form from '../../shared/Form.vue'
-import ObjectField from '../../shared/ObjectField.vue'
+import Form from '../../core/components/Form.vue'
+import ObjectField from '../../core/components/ObjectField.vue'
 import RequestLimitsForm from './RequestLimitsForm.vue'
 import schema from '../../../../../fixtures/schemas/rate-limiting-advanced'
 
-import type { FormSchema } from '../../../../types/plugins/form-schema'
+import type { FormSchema } from '../../core/form-schema'
 
 function mountRequestLimits(data?: Record<string, unknown>) {
   const onChangeSpy = (value: unknown) => onChangeSpy.calls.push(value)

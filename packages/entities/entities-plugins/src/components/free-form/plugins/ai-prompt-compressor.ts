@@ -1,5 +1,5 @@
-import { definePluginConfig } from '../shared/define-plugin-config'
-import ArrayField from '../shared/ArrayField.vue'
+import { definePluginConfig } from '../define-plugin-config'
+import ArrayField from '../core/components/ArrayField.vue'
 
 export default definePluginConfig({
   experimental: true,

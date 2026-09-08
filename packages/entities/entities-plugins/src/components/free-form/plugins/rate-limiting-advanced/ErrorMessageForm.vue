@@ -35,8 +35,8 @@
 
 <script setup lang="ts">
 import useI18n from '../../../../composables/useI18n'
-import StringField from '../../shared/StringField.vue'
-import NumberField from '../../shared/NumberField.vue'
+import StringField from '../../core/components/StringField.vue'
+import NumberField from '../../core/components/NumberField.vue'
 
 const { i18n: { t } } = useI18n()
 </script>

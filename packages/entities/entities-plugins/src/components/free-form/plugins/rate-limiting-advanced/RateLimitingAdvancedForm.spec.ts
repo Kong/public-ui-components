@@ -5,7 +5,7 @@ import RateLimitingAdvancedForm from './RateLimitingAdvancedForm.vue'
 import schema from '../../../../../fixtures/schemas/rate-limiting-advanced'
 import { FEATURE_FLAGS } from '../../../../constants'
 
-import type { FormSchema } from '../../../../types/plugins/form-schema'
+import type { FormSchema } from '../../core/form-schema'
 
 /**
  * Covers the payload rules the form itself owns in `handleFormChange`, which a

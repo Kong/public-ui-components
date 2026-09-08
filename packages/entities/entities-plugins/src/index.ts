@@ -12,8 +12,8 @@ import AuthPluginOnboardingCard from './components/AuthPluginOnboardingCard.vue'
 import CreateConsumerCredentialForm from './components/CreateConsumerCredentialForm.vue'
 import AddCredentialToConsumerForm from './components/AddCredentialToConsumerForm.vue'
 import CommonForm from './components/free-form/Common/CommonForm.vue'
-import DynamicLayout from './components/free-form/shared/layout/DynamicLayout.vue'
-import PluginConfigurationForm from './components/free-form/shared/layout/PluginConfigurationForm.vue'
+import DynamicLayout from './components/free-form/layout/DynamicLayout.vue'
+import PluginConfigurationForm from './components/free-form/components/PluginConfigurationForm.vue'
 import composables from './composables'
 import pluginEndpoints from './plugins-endpoints'
 
@@ -42,31 +42,31 @@ export {
 
 export {
   useProvideFreeFormPluginLayout,
-} from './components/free-form/shared/layout/provider'
+} from './components/free-form/layout/provider'
 
 export type {
   PluginConfigurationBaseProps,
   PluginFormLayoutComponent,
   PluginFormLayoutProps,
-} from './components/free-form/shared/layout/provider'
+} from './components/free-form/layout/provider'
 
 export {
   pluginConfigRegistry,
-} from './components/free-form/shared/plugin-registry'
+} from './components/free-form/plugin-registry'
 
 export type {
   ResolvedPluginFormConfig,
-} from './components/free-form/shared/plugin-registry'
+} from './components/free-form/plugin-registry'
 
 export {
   providePluginContext,
   usePluginContext,
-} from './components/free-form/shared/plugin-context'
+} from './components/free-form/plugin-context'
 
 export type {
   PluginContextRegistry,
   PluginName as PluginContextName,
-} from './components/free-form/shared/plugin-context'
+} from './components/free-form/plugin-context'
 
 export { provideEditorStore, useEditorStore } from './components/free-form/plugins/datakit/composables'
 

@@ -30,11 +30,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import ObjectField from '../../shared/ObjectField.vue'
-import AdvancedFields from '../../shared/AdvancedFields.vue'
-import { useFormShared } from '../../shared/composables'
+import ObjectField from '../../core/components/ObjectField.vue'
+import AdvancedFields from '../../components/AdvancedFields.vue'
+import { useFormShared } from '../../core/composables'
 
-import type { RecordFieldSchema } from '../../../../types/plugins/form-schema'
+import type { RecordFieldSchema } from '../../core/form-schema'
 
 /**
  * `limit_by` and the `custom_key` that overrides it first, then the limits they

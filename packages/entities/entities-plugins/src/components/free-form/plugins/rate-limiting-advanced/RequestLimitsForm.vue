@@ -127,11 +127,11 @@ import { AddIcon, CloseIcon } from '@kong/icons'
 import { get } from 'lodash-es'
 import { computed, nextTick, ref, watch } from 'vue'
 import useI18n from '../../../../composables/useI18n'
-import { EXPRESSION_ARRAY_EMPTY, useFormShared, useItemKeys } from '../../shared/composables'
-import ExpressionEditor from '../../shared/ExpressionEditor.vue'
-import RadioField from '../../shared/RadioField.vue'
-import NumberField from '../../shared/NumberField.vue'
-import type { EmptyValue } from '../../shared/types'
+import { EXPRESSION_ARRAY_EMPTY, useFormShared, useItemKeys } from '../../core/composables'
+import ExpressionEditor from '../../core/components/ExpressionEditor.vue'
+import RadioField from '../../components/RadioField.vue'
+import NumberField from '../../core/components/NumberField.vue'
+import type { EmptyValue } from '../../core/types'
 
 const { i18n: { t } } = useI18n()
 

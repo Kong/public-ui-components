@@ -222,10 +222,10 @@ import {
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
-import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
-import { EXPRESSIONS_FIELD } from './free-form/shared/composables'
+import { REDIS_PARTIAL_INFO } from '../components/free-form/const'
+import { EXPRESSIONS_FIELD } from './free-form/core/composables'
 import { BEFORE_SAVE_KEY } from './const'
-import type { GlobalAction } from './free-form/shared/types'
+import type { GlobalAction } from './free-form/core/types'
 import { PLUGIN_FORM_LAYOUT_STATE } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS as PLUGIN_FEATURE_FLAGS } from '../constants'
 

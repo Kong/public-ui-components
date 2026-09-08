@@ -74,8 +74,8 @@ import type { SegmentedControlOption } from '@kong/kongponents'
 import type { Component } from 'vue'
 import type { ZodError } from 'zod'
 
-import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
-import type { ConfigSection } from '../../shared/types'
+import type { PluginFormLayoutProps as Props } from '../../layout/provider'
+import type { ConfigSection } from '../../core/types'
 import type { EditorMode, DatakitPluginData } from './types'
 
 import { computed, inject, onMounted, ref, watch, useAttrs } from 'vue'
@@ -88,7 +88,7 @@ import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../..
 
 import english from '../../../../locales/en.json'
 import { FEATURE_FLAGS } from '../../../../constants'
-import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
+import DynamicLayout from '../../layout/DynamicLayout.vue'
 import CaCertificatesField from './CaCertificatesField.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'

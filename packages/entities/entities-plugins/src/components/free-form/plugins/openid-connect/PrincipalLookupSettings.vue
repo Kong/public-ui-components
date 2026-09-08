@@ -157,12 +157,12 @@ import { computed, inject, ref, watch } from 'vue'
 import { isEqual } from 'lodash-es'
 import { KAlert, KCheckbox, KCollapse, KInput, KInputSwitch, KLabel, KRadio, KSelect } from '@kong/kongponents'
 import useI18n from '../../../../composables/useI18n'
-import { useFormShared } from '../../shared/composables'
-import { FORM_EDITING } from '../../shared/const'
+import { useFormShared } from '../../core/composables'
+import { FORM_EDITING } from '../../const'
 
 import type { ComputedRef } from 'vue'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
-import type { EmptyValue } from '../../shared/types'
+import type { EmptyValue } from '../../core/types'
 import type { OidcConfigSubset, OidcPrincipals } from './types'
 
 const { showPrincipalsFields = true, ...props } = defineProps<{

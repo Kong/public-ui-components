@@ -73,7 +73,7 @@ import { AddIcon, CloseIcon } from '@kong/icons'
 import { isEqual, uniqueId } from 'lodash-es'
 import useI18n from '../../../../../../composables/useI18n'
 import type { FieldName } from '../../types'
-import { useField } from '../../../../shared/composables'
+import { useField } from '../../../../core/composables'
 import type { useNodeForm } from '../composables/useNodeForm'
 
 interface Props {
