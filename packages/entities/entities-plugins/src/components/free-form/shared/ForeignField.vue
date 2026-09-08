@@ -71,7 +71,7 @@ const placeholder = computed(() => {
   if (fieldAttrs.value.placeholder) {
     return fieldAttrs.value.placeholder
   }
-  return t('plugins.free-form.foreign_placeholder', { entity: field.schema.value?.reference ?? 'entity' })
+  return t('foreign_placeholder', { entity: field.schema.value?.reference ?? 'entity' })
 })
 
 const rawInputValue = ref(initialValue ?? '')

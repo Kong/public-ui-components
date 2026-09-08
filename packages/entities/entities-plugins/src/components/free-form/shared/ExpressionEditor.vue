@@ -23,7 +23,7 @@
       @click="expanded = true"
     >
       <AddIcon />
-      {{ i18n.t('plugins.free-form.expression.add') }}
+      {{ i18n.t('expression.add') }}
     </KButton>
 
     <div
@@ -32,7 +32,7 @@
     >
       <StringField
         class="ff-expression-editor-input"
-        :label="i18n.t('plugins.free-form.expression.label')"
+        :label="i18n.t('expression.label')"
         :label-attributes="labelAttributes"
         multiline
         :name="expressionName"
@@ -42,7 +42,7 @@
       >
         <template #help>
           <slot name="help">
-            <i18nT keypath="plugins.free-form.expression.help.text">
+            <i18nT keypath="expression.help.text">
               <template #type>
                 {{ i18n.t(returnsKey) }}
               </template>
@@ -51,7 +51,7 @@
                   hide-icon
                   :href="externalLinks.condition"
                 >
-                  {{ i18n.t('plugins.free-form.expression.help.learn') }}
+                  {{ i18n.t('expression.help.learn') }}
                 </KExternalLink>
               </template>
             </i18nT>
@@ -61,7 +61,7 @@
 
       <KButton
         appearance="tertiary"
-        :aria-label="i18n.t('plugins.free-form.expression.remove')"
+        :aria-label="i18n.t('expression.remove')"
         class="ff-expression-editor-remove"
         :data-testid="`ff-expression-remove-${path}`"
         icon
@@ -132,10 +132,10 @@ watch(expression.hasExpression, (hasExpression) => {
 })
 
 const RETURNS_KEYS = {
-  string: 'plugins.free-form.expression.returns.string',
-  number: 'plugins.free-form.expression.returns.number',
-  integer: 'plugins.free-form.expression.returns.integer',
-  boolean: 'plugins.free-form.expression.returns.boolean',
+  string: 'expression.returns.string',
+  number: 'expression.returns.number',
+  integer: 'expression.returns.integer',
+  boolean: 'expression.returns.boolean',
 } as const
 
 const returnsKey = computed(() => {
@@ -144,11 +144,11 @@ const returnsKey = computed(() => {
   // phrasing here yet — better a vague sentence than a raw i18n key on screen.
   return type && type in RETURNS_KEYS
     ? RETURNS_KEYS[type as keyof typeof RETURNS_KEYS]
-    : 'plugins.free-form.expression.returns.unknown'
+    : 'expression.returns.unknown'
 })
 
 const labelAttributes = computed(() => ({
-  info: i18n.t('plugins.free-form.expression.info'),
+  info: i18n.t('expression.info'),
   tooltipAttributes: { maxWidth: '300px', placement: 'top' as const },
   'data-testid': `ff-expression-label-${path.value}`,
 }))

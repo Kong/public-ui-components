@@ -61,7 +61,7 @@
           v-if="realShowVaultSecretPicker && !autofillSlot"
           appearance="warning"
           :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
-          :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+          :message="i18n.t('vault_picker.component_error')"
         />
       </template>
     </EnhancedInput>
@@ -79,7 +79,7 @@
         v-if="realShowVaultSecretPicker && !autofillSlot"
         appearance="warning"
         :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
-        :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+        :message="i18n.t('vault_picker.component_error')"
       />
     </template>
   </div>

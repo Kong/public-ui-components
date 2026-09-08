@@ -36,9 +36,9 @@ const checks = computed(() => {
   const checks: string[] = []
 
   const checkTypes = [
-    { key: 'at_least_one_of', i18nKey: 'plugins.form.field_rules.at_least_one_of' },
-    { key: 'mutually_required', i18nKey: 'plugins.form.field_rules.mutually_required' },
-    { key: 'mutually_exclusive', i18nKey: 'plugins.form.field_rules.mutually_exclusive' },
+    { key: 'at_least_one_of', i18nKey: 'field_rules.at_least_one_of' },
+    { key: 'mutually_required', i18nKey: 'field_rules.mutually_required' },
+    { key: 'mutually_exclusive', i18nKey: 'field_rules.mutually_exclusive' },
   ] as const
 
   for (const check of entityChecks) {
