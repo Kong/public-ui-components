@@ -34,6 +34,10 @@ export const agenticExploreAggregations = [
   ...exploreAggregations,
   'a2a_latency_average',
   'a2a_response_size_sum',
+  'mcp_latency_average',
+  'mcp_latency_p99',
+  'mcp_latency_p95',
+  'mcp_latency_p50',
   'mcp_response_size_sum',
 ] as const
 
