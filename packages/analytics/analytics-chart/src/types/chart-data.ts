@@ -19,11 +19,20 @@ export interface KChartData extends ChartData {
   labels?: string[]
   isLabelEmpty?: boolean[]
   isMultiDimension?: boolean
+  outlierValue?: number
 }
 
 export interface AnalyticsDataPoint {
   x: number
   y: number
+}
+
+/**
+ * A label for the chart tooltip instead of using the dataset's label.
+ * Scatter plots need this for outliers as they would show the "Outlier..." label
+ */
+export interface LabeledDataPoint extends AnalyticsDataPoint {
+  tooltipLabel?: string
 }
 
 /**
@@ -65,6 +74,57 @@ export interface Threshold {
   value: number
   label?: string
   highlightIntersections?: boolean
+}
+
+/**
+ * A horizontal reference line drawn at a percentile of the plotted y-values.
+ */
+export interface ScatterPercentileLine {
+  /**
+   * Percentile to draw, 0 to 100.
+   */
+  percentile: number
+  /**
+   * Overrides the default label.
+   */
+  label?: string
+  /**
+   * Dash pattern for the line, defaults to a dashed [5, 5].
+   */
+  borderDash?: number[]
+  /**
+   * Line color, defaults to neutral text for the median, danger for anything above it.
+   */
+  color?: string
+}
+
+export interface ScatterOptions {
+  /**
+   * Reference lines derived from the plotted y-values
+   */
+  percentileLines?: ScatterPercentileLine[]
+  /**
+   * Percentile above which points are split into a separate "outlier" dataset
+   */
+  outlierPercentile?: number
+  /**
+   * Shade the chart region above `outlierPercentile`.
+   */
+  shadeOutlierRegion?: boolean
+  /**
+   * Maximum horizontal jitter, applied to points so that records sharing a timestamp
+   * don't stack into a single column, defaults to 0 (no jitter).
+   */
+  jitterMs?: number
+  /**
+   * Radius of each plotted point, defaults to 2.
+   */
+  pointRadius?: number
+  /**
+   * Opacity of the plotted points between 0 and 1, defaults to 0.6
+   * Doesn't apply to outlier points
+   */
+  pointOpacity?: number
 }
 
 /**
@@ -116,6 +176,10 @@ export interface AnalyticsChartOptions {
    * Only applies when type is 'donut'.
    */
   showCenterMetric?: boolean
+  /**
+   * Scatter plot options, only applies when type is 'scatter'.
+   */
+  scatter?: ScatterOptions
 }
 
 /**

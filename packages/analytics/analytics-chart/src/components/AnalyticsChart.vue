@@ -97,26 +97,54 @@
         :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
       />
+      <ScatterChart
+        v-else-if="isScatterChart"
+        :chart-data="computedChartData"
+        :chart-legend-sort-fn="chartOptions.chartLegendSortFn"
+        :chart-tooltip-sort-fn="chartTooltipSortFn"
+        data-testid="scatter-chart-container"
+        :dimension-axes-title="timestampAxisTitle"
+        :granularity="scatterGranularity"
+        :legend-values="legendValues"
+        :metric-axes-title="metricAxesTitle"
+        :metric-unit="computedMetricUnit"
+        :shade-outlier-region="chartOptions.scatter?.shadeOutlierRegion"
+        :synthetics-data-key="syntheticsDataKey"
+        :time-range-ms="timeRangeMs"
+        :tooltip-metric-display="tooltipMetricDisplay"
+        :tooltip-title="tooltipTitle"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import composables from '../composables'
-import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, TooltipEntry, ZoomActionItem } from '../types'
-import { ChartLegendPosition } from '../enums'
-import StackedBarChart from './chart-types/StackedBarChart.vue'
-import DonutChart from './chart-types/DonutChart.vue'
+import type { ComputedRef } from 'vue'
+import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, ScatterChartData, SharedMeta, TooltipEntry, ZoomActionItem } from '../types'
+import type { AbsoluteTimeRangeV4, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+
 import { computed, provide, toRef } from 'vue'
 import { isPlatformDatasource, msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
-import { hasMillisecondTimestamps, defaultStatusCodeColors, isNoSuffixMetric } from '../utils'
-import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
 
+import {
+  hasMillisecondTimestamps,
+  defaultStatusCodeColors,
+  exploreResultToScatterData,
+  isNoSuffixMetric,
+} from '../utils'
+import composables from '../composables'
+import { isScatterChartData } from '../types'
+import { ChartLegendPosition } from '../enums'
+
+import StackedBarChart from './chart-types/StackedBarChart.vue'
+import DonutChart from './chart-types/DonutChart.vue'
+import ScatterChart from './chart-types/ScatterChart.vue'
+import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
+
 interface ChartProps {
-  chartData: ExploreResultV4
+  chartData: ExploreResultV4 | ScatterChartData
   chartOptions: AnalyticsChartOptions
   tooltipTitle?: string
   emptyStateTitle?: string
@@ -150,21 +178,75 @@ const props = withDefaults(defineProps<ChartProps>(), {
 
 const { i18n } = composables.useI18n()
 
+const exploreData = computed<ExploreResultV4 | undefined>(() => (
+  isScatterChartData(props.chartData) ? undefined : props.chartData
+))
+
+const scatterData = computed<ScatterChartData | undefined>(() => {
+  if (!isScatterChart.value) {
+    return undefined
+  }
+
+  return isScatterChartData(props.chartData) ? props.chartData : exploreResultToScatterData(props.chartData)
+})
+
+const chartMeta = computed<SharedMeta>(() => {
+  if (isScatterChartData(props.chartData)) {
+    const { start, end, metric, metricUnit, truncated, limit, datasource } = props.chartData
+
+    return {
+      start,
+      end,
+      metricNames: [metric],
+      metricUnits: { [metric]: metricUnit ?? '' },
+      truncated,
+      limit,
+      datasource,
+    }
+  }
+
+  const meta = props.chartData?.meta
+
+  return {
+    start: meta?.start,
+    end: meta?.end,
+    metricNames: meta?.metric_names,
+    metricUnits: meta?.metric_units,
+    truncated: meta?.truncated,
+    limit: meta?.limit,
+    datasource: meta?.datasource,
+  }
+})
+
 const computedChartData = computed(() => {
+  if (isScatterChart.value) {
+    return composables.useScatterDatasets(
+      {
+        colorPalette: props.chartOptions.chartDatasetColors,
+        scatter: props.chartOptions.scatter,
+      },
+      scatterData,
+    ).value
+  }
+
+  if (!exploreData.value) {
+    return { datasets: [] }
+  }
+
   return isTimeSeriesChart.value
     ? composables.useExploreResultToTimeDataset(
       {
         fill: props.chartOptions.stacked,
         colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
       },
-      toRef(props, 'chartData'),
+      exploreData as ComputedRef<ExploreResultV4>,
     ).value
     : composables.useExploreResultToDatasets(
       {
         fill: props.chartOptions.stacked,
         colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
       },
-      toRef(props, 'chartData'),
+      exploreData as ComputedRef<ExploreResultV4>,
     ).value
 })
 
@@ -173,44 +255,44 @@ const canBrush = computed(() => {
 })
 
 const timeRangeMs = computed<number | undefined>(() => {
-  if (!props.chartData?.meta) {
+  if (!props.chartData || (exploreData.value && !exploreData.value.meta)) {
     return 0
   }
 
-  if (props.chartData.meta.start && props.chartData.meta.end) {
-    const startMs = new Date(props.chartData.meta.start).getTime()
-    const endMs = new Date(props.chartData.meta.end).getTime()
-    return endMs - startMs
+  const { start, end } = chartMeta.value
+
+  if (start && end) {
+    return new Date(end).getTime() - new Date(start).getTime()
   }
 
   return undefined
 })
 
 const computedMetricUnit = computed<string>(() => {
-  if (!props.chartData.meta?.metric_units) {
+  if (!chartMeta.value.metricUnits) {
     return ''
   }
 
-  return Object.values(props.chartData.meta.metric_units)[0]
+  return Object.values(chartMeta.value.metricUnits)[0] ?? ''
 })
 
 const computedMetricName = computed<string>(() => {
-  if (!props.chartData.meta?.metric_units) {
+  if (!chartMeta.value.metricUnits) {
     return ''
   }
 
-  return Object.keys(props.chartData.meta.metric_units)[0] ?? ''
+  return Object.keys(chartMeta.value.metricUnits)[0] ?? ''
 })
 
 const showLegendValues = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Hidden)
 
 const { legendValues } = composables.useChartLegendValues(computedChartData, props.chartOptions.type, computedMetricUnit)
 
-const maxEntitiesShown = computed(() => props.chartData?.meta?.limit?.toString() || null)
+const maxEntitiesShown = computed(() => chartMeta.value.limit?.toString() || null)
 const resultSetTruncated = computed(() => {
   return props.chartOptions.hideTruncationWarning
     ? false
-    : props.chartData?.meta?.truncated || false
+    : chartMeta.value.truncated || false
 })
 const notAllDataShownTooltipContent = computed(() => i18n.t('limitedResultsShown', { maxReturned: maxEntitiesShown.value }))
 const isBarChart = computed<boolean>(() => [
@@ -221,18 +303,21 @@ const isTimeSeriesChart = computed<boolean>(() => {
   return ['timeseries_bar', 'timeseries_line'].some(e => e === props.chartOptions.type)
 })
 const isDonutChart = computed<boolean>(() => props.chartOptions.type === 'donut')
+const isScatterChart = computed<boolean>(() => props.chartOptions.type === 'scatter')
 
 const barChartOrientation = computed<'horizontal' | 'vertical'>(() => props.chartOptions.type.includes('vertical') ? 'vertical' : 'horizontal')
 
 const tooltipMetricDisplay = computed<string | undefined>(() => {
-  if (!props.chartData?.meta.metric_names || !props.chartData?.meta.metric_units) {
+  const { metricNames, metricUnits } = chartMeta.value
+
+  if (!metricNames || !metricUnits) {
     return undefined
   }
 
-  const metricName = props.chartData.meta.metric_names[0]
-  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations] || ''
+  const metricName = metricNames[0]
+  const metricUnit = metricUnits[metricName] || ''
 
-  if (props.chartData.meta.metric_names.length > 1) {
+  if (metricNames.length > 1) {
     if (metricName.includes('latency')) {
       // @ts-ignore - dynamic i18n key
       return i18n.t('metricAxisTitles.latency_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
@@ -262,14 +347,16 @@ const metricAxesTitle = computed<string | undefined>(() => {
     return props.chartOptions?.metricAxesTitle
   }
 
-  if (!props.chartData?.meta.metric_names || !props.chartData?.meta.metric_units) {
+  const { metricNames, metricUnits } = chartMeta.value
+
+  if (!metricNames || !metricUnits) {
     return undefined
   }
 
-  const metricName = props.chartData.meta.metric_names[0]
-  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations] || ''
+  const metricName = metricNames[0]
+  const metricUnit = metricUnits[metricName] || ''
 
-  if (props.chartData.meta.metric_names.length > 1) {
+  if (metricNames.length > 1) {
     if (metricName.includes('latency')) {
       // @ts-ignore - dynamic i18n key
       return i18n.t('metricAxisTitles.latency_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
@@ -298,7 +385,8 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
     return props.chartOptions.dimensionAxesTitle
   }
 
-  const dimension = isTimeSeriesChart.value ? 'Time' : Object.keys(props.chartData.meta.display || props.chartData.meta.metric_names as Record<string, any>)[0]
+  const meta = exploreData.value?.meta
+  const dimension = isTimeSeriesChart.value ? 'Time' : Object.keys(meta?.display || meta?.metric_names || {})[0]
 
   if (!dimension) {
     return undefined
@@ -308,12 +396,16 @@ const dimensionAxesTitle = computed<string | undefined>(() => {
   return i18n.te(`chartLabels.${dimension}`) ? i18n.t(`chartLabels.${dimension}`) : dimension
 })
 
+const axisTitleGranularity = computed<GranularityValues | null>(() => (
+  isScatterChart.value ? scatterGranularity.value : msToGranularity(Number(exploreData.value?.meta?.granularity_ms))
+))
+
 const timestampAxisTitle = computed(() => {
-  if (isPlatformDatasource(props.chartData.meta.datasource)) {
+  if (isPlatformDatasource(chartMeta.value.datasource)) {
     return i18n.t('timestampAxisTitles.platform')
   }
 
-  const granularity = msToGranularity(Number(props.chartData.meta.granularity_ms))
+  const granularity = axisTitleGranularity.value
 
   if (!granularity) {
     return undefined
@@ -325,23 +417,39 @@ const timestampAxisTitle = computed(() => {
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
 const emptyStateDescription = computed(() => props.emptyStateDescription || i18n.t('noDataAvailableDescription'))
-const hasValidChartData = computed(() => {
+const hasValidChartData = computed<boolean>(() => {
+  if (isScatterChart.value) {
+    return !!scatterData.value?.points.length
+  }
+
   if (isTimeSeriesChart.value) {
     return hasMillisecondTimestamps(computedChartData.value)
   }
 
-  return props.chartData && props.chartData.meta && props.chartData.data.length
+  return !!(exploreData.value && exploreData.value.meta && exploreData.value.data.length)
 })
 
 const timeSeriesGranularity = computed<GranularityValues>(() => {
+  const data = exploreData.value
 
-  if (!props.chartData.meta.granularity_ms) {
+  if (!data) {
+    return 'hourly'
+  }
+
+  if (!data.meta.granularity_ms) {
     return msToGranularity(
-      new Date(props.chartData.data[1].timestamp).getTime() - new Date(props.chartData.data[0].timestamp).getTime(),
+      new Date(data.data[1].timestamp).getTime() - new Date(data.data[0].timestamp).getTime(),
     ) || 'hourly'
   }
 
-  return msToGranularity(props.chartData.meta.granularity_ms) || 'hourly'
+  return msToGranularity(data.meta.granularity_ms) || 'hourly'
+})
+
+// This is to determine the how granular the scatter's x-axis should be. Maybe this could be configurable?
+const SCATTER_TICK_COUNT = 7
+
+const scatterGranularity = computed<GranularityValues>(() => {
+  return msToGranularity(Math.floor((timeRangeMs.value || 0) / SCATTER_TICK_COUNT)) || 'hourly'
 })
 
 const chartLegendSortFn = computed(() => {

@@ -1,4 +1,4 @@
-import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues, EnhancedLegendItem, TooltipInteractionMode } from '../types'
+import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LabeledDataPoint, LegendValues, EnhancedLegendItem, TooltipInteractionMode } from '../types'
 import { formatTooltipTimestampByGranularity } from '../utils'
 import { isValid } from 'date-fns'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
@@ -44,7 +44,7 @@ export const lineChartTooltipBehavior = (
       const rawValue = p.parsed[valueAxis]
       const value = formatUnit(rawValue ?? 0, tooltipData.units, { translateUnit: tooltipData.translateUnit })
 
-      const tooltipLabel = p.dataset.label
+      const tooltipLabel = (p.raw as LabeledDataPoint)?.tooltipLabel || p.dataset.label
 
       return {
         backgroundColor: colors[i].backgroundColor,
