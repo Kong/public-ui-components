@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.26.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.5...%40kong-ui-public%2Fanalytics-chart%4010.26.6) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.26.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.4...%40kong-ui-public%2Fanalytics-chart%4010.26.5) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.26.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.3...%40kong-ui-public%2Fanalytics-chart%4010.26.4) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [10.26.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.2...%40kong-ui-public%2Fanalytics-chart%4010.26.3) (2026-09-08)
 
 ### Bug Fixes

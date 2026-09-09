@@ -3,6 +3,10 @@ import type { CountryISOA2, ExploreAggregations } from '@kong-ui-public/analytic
 import AnalyticsGeoMap from './AnalyticsGeoMap.vue'
 import { defineComponent, h, ref, type Ref } from 'vue'
 import type { MetricUnits } from '../types'
+import { setWorkerUrl } from 'maplibre-gl'
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
+
+setWorkerUrl(maplibreWorkerUrl)
 
 const mountComponent = ({
   countryMetrics,
