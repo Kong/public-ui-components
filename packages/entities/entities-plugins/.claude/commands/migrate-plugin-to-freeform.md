@@ -194,8 +194,8 @@ Also analyze the backend schema (from Step 4):
 - VFG: `type: 'textarea'`
 - **Fix**: Declarative `fieldRenderers` in the plugin config:
   ```typescript
-  import StringField from '../shared/StringField.vue'
-  import { definePluginConfig } from '../shared/define-plugin-config'
+  import StringField from '../core/components/StringField.vue'
+  import { definePluginConfig } from '../define-plugin-config'
 
   export default definePluginConfig({
     experimental: true,
@@ -233,8 +233,8 @@ Then ask: **do duplicates make semantic sense, or is this "pick N from a list"?*
 
 **Fix** — declarative `fieldRenderers` with `EnumField multiple`:
 ```typescript
-import EnumField from '../shared/EnumField.vue'
-import { definePluginConfig } from '../shared/define-plugin-config'
+import EnumField from '../core/components/EnumField.vue'
+import { definePluginConfig } from '../define-plugin-config'
 
 export default definePluginConfig({
   experimental: true,
@@ -366,7 +366,7 @@ Based on the analysis above, suggest the implementation plan:
 **If plugin can use CommonForm with no changes:**
 - Create `src/components/free-form/plugins/<kebab-plugin-name>.ts`:
   ```typescript
-  import { definePluginConfig } from '../shared/define-plugin-config'
+  import { definePluginConfig } from '../define-plugin-config'
 
   export default definePluginConfig({
     experimental: true,
@@ -378,7 +378,7 @@ Based on the analysis above, suggest the implementation plan:
 
 **If plugin needs fieldRenderers only (textarea overrides, multiselect):**
 - Create `src/components/free-form/plugins/<kebab-plugin-name>.ts` with `fieldRenderers` array
-- Import the field component (e.g. `StringField`, `EnumField`) from `../shared/`
+- Import the field component (e.g. `StringField`, `EnumField`) from `../core/components/`
 
 **If plugin needs both render rules and field renderers:**
 - Combine `renderRules` and `fieldRenderers` in the same `.ts` file
@@ -388,7 +388,7 @@ Based on the analysis above, suggest the implementation plan:
 2. Create `<kebab-plugin-name>/index.ts`:
    ```typescript
    import MyPluginForm from './MyPluginForm.vue'
-   import { definePluginConfig } from '../../shared/define-plugin-config'
+   import { definePluginConfig } from '../../define-plugin-config'
 
    export default definePluginConfig({
      experimental: true,
@@ -413,10 +413,10 @@ Based on the analysis above, suggest the implementation plan:
    <script setup lang="ts">
    import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
    import { provide } from 'vue'
-   import StandardLayout from '../../shared/layout/StandardLayout.vue'
-   import FieldRenderer from '../../shared/FieldRenderer.vue'
-   import ObjectField from '../../shared/ObjectField.vue'
-   import type { Props } from '../../shared/layout/StandardLayout.vue'
+   import StandardLayout from '../../layout/StandardLayout.vue'
+   import FieldRenderer from '../../core/components/FieldRenderer.vue'
+   import ObjectField from '../../core/components/ObjectField.vue'
+   import type { Props } from '../../layout/StandardLayout.vue'
 
    const props = defineProps<Props>()
    const slots = defineSlots<{ [K in typeof AUTOFILL_SLOT_NAME]: () => any }>()

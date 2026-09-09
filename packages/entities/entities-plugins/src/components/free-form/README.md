@@ -32,7 +32,7 @@ free-form/
 │       ├── StringArrayField.vue # Tag-like comma-separated string sets
 │       ├── JsonField.vue        # JSON textarea editor
 │       ├── ForeignField.vue     # Foreign entity reference (stores {id: string})
-│       ├── ExpressionField.vue (+ .spec.ts) # An expressible field: its value input plus its expression
+│       ├── ExpressionField.vue  # An expressible field: its value input plus its expression
 │       ├── ExpressionEditor.vue # Just the collapsible expression editor
 │       ├── EnhancedInput.vue    # Base input wrapper (help text, errors, tooltips)
 │       ├── SwitchField.vue      # Boolean toggle switch (KInputSwitch)
@@ -40,40 +40,42 @@ free-form/
 │       ├── EntityChecksAlert.vue (+ .spec.ts) # Validation constraint alerts
 │       ├── test-utils.ts        # Cypress mount/assert helpers for the *.cy.ts tests below
 │       └── *.cy.ts              # Integration tests for core fields/mechanisms
-├── shared/                  # entities-plugins-specific layout, registry and plugin-only fields
-│   ├── composables/         # code-lens-providers.ts (Monaco YAML code-lens helpers; not part of core)
-│   ├── layout/              # Layout machinery only (runtime layout selection)
-│   │   ├── provider.ts               # Layout injection key and provider helper
-│   │   ├── DynamicLayout.vue (+ .cy.ts) # Runtime-selected layout wrapper
-│   │   └── StandardLayout.vue (+ .cy.ts, .expressions.spec.ts) # Default API Gateway layout with form/code modes
-│   ├── plugin-context/      # Plugin-specific injected context (key-auth, openid-connect)
-│   ├── const.ts             # Injection keys (REDIS_PARTIAL_INFO, FORM_EDITING)
-│   ├── define-plugin-config.ts # Plugin config helper with CommonForm fallback
-│   ├── plugin-registry.ts   # Auto-discovers plugins/*.ts and plugins/*/index.ts
-│   ├── schema-enhancement.ts # Transform legacy field rules to entity checks
-│   └── components/
-│       ├── RadioField.vue       # Radio button groups (plain, or `card` with descriptions)
-│       ├── AdvancedFields.vue   # Collapsible advanced fields section
-│       ├── ScopeEntityField.vue (+ .spec.ts, scope-entity-field.cy.ts) # Scope entity selector
-│       ├── CodeEditor.vue       # Code editor component
-│       ├── RedisConfigCard.vue  # Redis configuration card
-│       ├── RedisSelector.vue (+ free-form-redis-selector.cy.ts) # Redis partial instance selector
-│       ├── CredentialSecretField.vue (+ credential-secret-field.cy.ts) # Credential secret input (generate/reveal)
-│       ├── CollapsibleSection.vue # Generic collapsible section wrapper
-│       ├── PluginConfigurationForm.vue (+ .cy.ts) # Composes the core `Form` with the shared plugin chrome
-│       └── ConditionField.vue   # Optional condition editor in General Info
+├── composables/             # code-lens-providers.ts (Monaco YAML code-lens helpers; not part of core)
+├── layout/                  # Layout machinery only (runtime layout selection)
+│   ├── provider.ts               # Layout injection key and provider helper
+│   ├── DynamicLayout.vue (+ .cy.ts) # Runtime-selected layout wrapper
+│   └── StandardLayout.vue (+ .cy.ts, .expressions.spec.ts) # Default API Gateway layout with form/code modes
+├── plugin-context/          # Plugin-specific injected context (key-auth, openid-connect)
+├── const.ts                 # Injection keys (REDIS_PARTIAL_INFO, FORM_EDITING)
+├── define-plugin-config.ts  # Plugin config helper with CommonForm fallback
+├── plugin-registry.ts       # Auto-discovers plugins/*.ts and plugins/*/index.ts
+├── schema-enhancement.ts    # Transform legacy field rules to entity checks
+├── components/              # entities-plugins-specific field components
+│   ├── RadioField.vue       # Radio button groups (plain, or `card` with descriptions)
+│   ├── AdvancedFields.vue   # Collapsible advanced fields section
+│   ├── ScopeEntityField.vue (+ .spec.ts, scope-entity-field.cy.ts) # Scope entity selector
+│   ├── CodeEditor.vue       # Code editor component
+│   ├── RedisConfigCard.vue  # Redis configuration card
+│   ├── RedisSelector.vue (+ free-form-redis-selector.cy.ts) # Redis partial instance selector
+│   ├── CredentialSecretField.vue (+ credential-secret-field.cy.ts) # Credential secret input (generate/reveal)
+│   ├── CollapsibleSection.vue # Generic collapsible section wrapper
+│   ├── PluginConfigurationForm.vue (+ .cy.ts) # Composes the core `Form` with the shared plugin chrome
+│   ├── ConditionField.vue   # Optional condition editor in General Info
+│   └── ExpressionField.spec.ts # Unit test for ExpressionField; stays here (not core/) until its
+│                             #   mount harness stops depending on PluginConfigurationForm — see its own TODO
 ├── Common/                  # Generic plugin form used by default
 └── plugins/                 # Plugin registry entries and custom plugin forms
     ├── *.ts                 # Simple plugins configured with CommonForm + overrides
     └── <plugin>/index.ts    # Folder-based plugins with dedicated Vue components
 ```
 
-`core/` and `shared/` are siblings at the same nesting depth by design: `core/` holds only the generic,
+`core/` sits at the same nesting depth as everything around it by design: it holds only the generic,
 reusable rendering primitives (no plugin registry, no layout, no scope/Redis/credential UI), and is
-scoped to become the standalone `@kong-ui-public/freeform` package in a follow-up. `shared/` may depend
-on `core/`, but nothing in `core/` depends on `shared/`. Within each, `components/` holds the Vue SFCs
-(and their co-located tests); non-component primitives (`types.ts`, `utils.ts`, `composables/`, layout,
-registry, etc.) stay at the `core/`/`shared/` root.
+scoped to become the standalone `@kong-ui-public/freeform` package in a follow-up. Everything else here
+(`layout/`, `plugin-context/`, `components/`, `plugin-registry.ts`, etc.) is entities-plugins-specific
+and may depend on `core/`, but nothing in `core/` depends on it. Within `core/`, `components/` holds the
+Vue SFCs (and their co-located tests); non-component primitives (`types.ts`, `utils.ts`, `composables/`,
+etc.) stay at `core/`'s own root.
 
 ## Schema System
 
@@ -296,7 +298,7 @@ For the default `StandardLayout`, nothing — but four things are worth checking
 
 ## Layout
 
-Plugin forms use `DynamicLayout` (`shared/layout/DynamicLayout.vue`) as the layout entry point. It renders a host-provided layout from `FREE_FORM_PLUGIN_LAYOUT` when one is available, and otherwise falls back to `StandardLayout` (`shared/layout/StandardLayout.vue`). Layouts that need the common free-form `Form` wrapper can compose `PluginConfigurationForm` (`shared/components/PluginConfigurationForm.vue`) and provide their own surrounding product-specific blocks. The default StandardLayout form mode provides a 3-step structure:
+Plugin forms use `DynamicLayout` (`layout/DynamicLayout.vue`) as the layout entry point. It renders a host-provided layout from `FREE_FORM_PLUGIN_LAYOUT` when one is available, and otherwise falls back to `StandardLayout` (`layout/StandardLayout.vue`). Layouts that need the common free-form `Form` wrapper can compose `PluginConfigurationForm` (`components/PluginConfigurationForm.vue`) and provide their own surrounding product-specific blocks. The default StandardLayout form mode provides a 3-step structure:
 
 1. **Plugin Scope** — Global vs Scoped (service/route/consumer/consumer_group) via radio buttons + ScopeEntityField for entity selection
 2. **Plugin Configuration** — Free-form rendered config fields via default slot
@@ -451,10 +453,11 @@ filler.fillField('config.host', 'example.com')
 | `core/components/expression-field.cy.ts` | Expressible fields: dispatch, collapse/expand, array slots, hidden fields |
 | `core/components/*.cy.ts` (other) | Per-field-type integration tests (`array-field`, `object-field`, `map-field`, etc.) |
 | `core/components/*.spec.ts`, `core/composables/*.spec.ts`, `core/utils.spec.ts` | Unit coverage for core components and composables |
-| `shared/components/free-form-redis-selector.cy.ts` | Redis partial configuration, dependency-based visibility |
-| `shared/components/credential-secret-field.cy.ts`, `shared/components/scope-entity-field.cy.ts` | Non-core field integration tests |
-| `shared/layout/StandardLayout.cy.ts` | Shared layout behavior, scope switching, general info and code mode |
-| `shared/*.spec.ts` | Unit coverage for schema enhancement, registry and path utilities |
+| `components/free-form-redis-selector.cy.ts` | Redis partial configuration, dependency-based visibility |
+| `components/credential-secret-field.cy.ts`, `components/scope-entity-field.cy.ts` | Non-core field integration tests |
+| `components/ExpressionField.spec.ts` | Expressible-field ownership when a plugin customizes the field (mounts through `PluginConfigurationForm` — see its own TODO) |
+| `layout/StandardLayout.cy.ts` | Layout behavior, scope switching, general info and code mode |
+| `*.spec.ts` | Unit coverage for schema enhancement, registry and path utilities |
 
 ## How-To Guides
 

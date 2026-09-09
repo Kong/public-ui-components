@@ -21,7 +21,7 @@ Then import it as a type and add one entry to `PluginContextRegistry` in
 [index.ts](./index.ts):
 
 ```ts
-import type { KeyAuthContext } from '../../plugins/key-auth/context'
+import type { KeyAuthContext } from '../plugins/key-auth/context'
 
 export interface PluginContextRegistry {
   'key-auth': KeyAuthContext
