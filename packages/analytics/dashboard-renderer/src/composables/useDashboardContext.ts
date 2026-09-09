@@ -1,5 +1,6 @@
 import { computed, getCurrentInstance, ref, type Ref, type DeepReadonly } from 'vue'
-import type { DashboardRendererContext } from '../types'
+import { useRoute } from 'vue-router'
+import type { DashboardRendererContext, ZoomConfiguration } from '../types'
 import type {
   AllFilters,
   TimeRangeV4,
@@ -29,15 +30,15 @@ export default function useDashboardContext({
   queryReady: Readonly<Ref<boolean>>
   refreshInterval: Readonly<Ref<number>>
   showTileActions: Readonly<Ref<boolean>>
-  showTileZoomActions: Readonly<Ref<boolean>>
   timeSpec: Readonly<Ref<TimeRangeV4>>
   tz: Readonly<Ref<string>>
-  zoomable: Readonly<Ref<boolean>>
+  zoomConfiguration: Readonly<Ref<ZoomConfiguration>>
 } {
   const configStore = useAnalyticsConfigStore()
   const datasourceStore = useDatasourceConfigStore()
   const { loading: configLoading } = storeToRefs(configStore)
   const { loading: datasourceLoading } = storeToRefs(datasourceStore)
+  const route = useRoute()
 
   const timeSpec = computed<TimeRangeV4>(() => {
     if (context.value.timeSpec) {
@@ -84,13 +85,6 @@ export default function useDashboardContext({
     }
 
     return showTileActions
-  })
-
-  const zoomable = computed<boolean>(() => {
-    // Check if the host app has provided an event handler for zooming.
-    // If there's no handler, disable zooming -- it won't do anything.
-    // Preview mode also disables zooming.
-    return !preview.value && !!getCurrentInstance()?.vnode?.props?.onTileTimeRangeZoom
   })
 
   const filters = computed<AllFilters[]>(() => {
@@ -142,10 +136,6 @@ export default function useDashboardContext({
     return refreshInterval
   })
 
-  const showTileZoomActions = computed<boolean>(() => {
-    return !preview.value
-  })
-
   const enrichedContext = computed<DashboardRendererContext>(() => {
     return {
       filters: filters.value,
@@ -154,8 +144,6 @@ export default function useDashboardContext({
       refreshInterval: refreshInterval.value,
       editable: editable.value,
       showTileActions: showTileActions.value,
-      showTileZoomActions: showTileZoomActions.value,
-      zoomable: zoomable.value,
     }
   })
 
@@ -163,23 +151,72 @@ export default function useDashboardContext({
     return !configLoading.value && !datasourceLoading.value
   })
 
+  const zoomable = computed<boolean>(() => {
+    // Check if the host app has provided an event handler for zooming.
+    // If there's no handler, disable zooming -- it won't do anything.
+    // Preview mode also disables zooming.
+    return !preview.value && !!getCurrentInstance()?.vnode?.props?.onTileTimeRangeZoom
+  })
+
+  const showZoomExploreAction = computed<boolean>(() => {
+    const isExploreRoute = route?.path.endsWith('analytics/explorer') ?? false
+    return !preview.value && !isExploreRoute
+  })
+
+  const showZoomRequestsAction = computed<boolean>(() => {
+    return !preview.value
+  })
+
+  const zoomConfiguration = computed<ZoomConfiguration>(() => {
+    return {
+      enabled: zoomable.value,
+      showExploreAction: showZoomExploreAction.value,
+      showRequestsAction: showZoomRequestsAction.value,
+      showZoomInAction: zoomable.value,
+    }
+  })
+
   return {
+    /**
+     * Equivalent to `enrichedContext.editable`, Is the dashboard editable?
+     */
     editable,
     /**
-     * the context with all values enriched with any external circumstances that
-     * may modify how it works applied to it.
+     * The context with all values enriched by any external circumstances passed
+     * into this composable that could override values set in the original context.
      */
     enrichedContext,
+    /**
+     * Equivalent to `enrichedContext.filters`. All filters applied to this dashboard
+     */
     filters,
     /**
      * A basic check to see if all configuration has been loaded.
      */
     queryReady,
+    /**
+     * Equivalent to `enrichedContext.refreshInterval`. How frequently the dashboard
+     * automatically refreshes itself.
+     */
     refreshInterval,
+    /**
+     * Equivalent to `enrichedContext.showTileActions`. Whether or not the tile
+     * displays its context menu in the corner
+     */
     showTileActions,
-    showTileZoomActions,
+    /**
+     * Equivalent to `enrichedContext.timeSpec`. What time range the dashboard
+     * fetches.
+     */
     timeSpec,
+    /**
+     * Equivalent to `enrichedContext.tz`. What timezone the dashboard uses.
+     */
     tz,
-    zoomable,
+    /**
+     * All the configuration for how to handle zooming behavior on charts. Fully
+     * inferred from various states.
+     */
+    zoomConfiguration,
   }
 }

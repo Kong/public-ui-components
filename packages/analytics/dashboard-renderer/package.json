@@ -97,6 +97,7 @@
     "gridstack": "^11.5.1",
     "jspdf": "^4.2.1",
     "p-queue": "^9.3.3",
-    "papaparse": "^5.7.0"
+    "papaparse": "^5.7.0",
+    "vue-router": "^5.2.0"
   }
 }

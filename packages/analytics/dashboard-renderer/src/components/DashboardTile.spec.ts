@@ -1,5 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
+import { useRoute } from 'vue-router'
 import { flushPromises, mount } from '@vue/test-utils'
 import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
@@ -94,6 +95,12 @@ vi.mock('./TableDataGridRenderer.vue', () => ({
   }),
 }))
 
+vi.mock('vue-router', () => {
+  return {
+    useRoute: vi.fn(),
+  }
+})
+
 const dropdownSlotStubs = {
   // eslint-disable-next-line vue/one-component-per-file
   KDropdown: defineComponent({
@@ -151,7 +158,6 @@ const mockContext: DashboardRendererContext = {
   tz: '',
   refreshInterval: 0,
   showTileActions: true,
-  zoomable: false,
 }
 
 const baseDefinition: TileDefinition = {
@@ -172,10 +178,12 @@ const mountTile = (
   dimensions: TileDefinition['query']['dimensions'] = ['time'],
   {
     hideActions = false,
-    hideZoomActions = false,
+    isExploreUrl = false,
+    preview = false,
   }: {
     hideActions?: boolean
-    hideZoomActions?: boolean
+    isExploreUrl?: boolean
+    preview?: boolean
   } = {},
 ) => {
   const definition = {
@@ -187,15 +195,20 @@ const mountTile = (
     },
   } as TileDefinition
 
+  ;(useRoute as Mock).mockReturnValue({
+    path: isExploreUrl ? '/us/analytics/explorer' : '/us/analytics',
+  })
+
   return mount(DashboardTile, {
     props: {
       definition,
       context: mockContext,
       hideActions,
-      hideZoomActions,
+      preview,
       queryReady: true,
       refreshCounter: 0,
       tileId: '1',
+      onTileTimeRangeZoom: vi.fn(),
     },
     shallow: true,
     global: {
@@ -214,7 +227,29 @@ const mountTile = (
 
 describe('<DashboardTile /> zoom requests drilldown', () => {
   beforeEach(() => {
+    vi.restoreAllMocks()
     setupPiniaTestStore()
+  })
+
+  it('does not populate explore zoom actions if on the explorer route', async () => {
+    const wrapper = mountTile('api_usage', ['time'], { isExploreUrl: true })
+    await flushPromises()
+
+    const renderer = wrapper.findComponent(TimeseriesChartRenderer)
+    expect(renderer.exists()).toBe(true)
+    expect(renderer.props('requestsLink')).toBeDefined()
+    expect(renderer.props('exploreLink')).toBeUndefined()
+
+    renderer.vm.$emit('select-chart-range', {
+      type: 'absolute',
+      start: new Date('2024-01-01T00:00:00Z'),
+      end: new Date('2024-01-01T01:00:00Z'),
+    })
+
+    await nextTick()
+
+    expect(wrapper.findComponent(TimeseriesChartRenderer).props('requestsLink')).toBeDefined()
+    expect(wrapper.findComponent(TimeseriesChartRenderer).props('exploreLink')).toBeUndefined()
   })
 
   it('does not populate requests zoom actions for platform tiles', async () => {
@@ -256,8 +291,8 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     expect((wrapper.findComponent(TimeseriesChartRenderer).props('requestsLink') as { href?: string } | undefined)?.href).toContain('http://test.com/requests?q=')
   })
 
-  it('does not populate zoom action links when zoom actions are hidden', async () => {
-    const wrapper = mountTile('api_usage', ['time'], { hideZoomActions: true })
+  it('does not populate zoom action links when the tile is previewing', async () => {
+    const wrapper = mountTile('api_usage', ['time'], { preview: true })
     await flushPromises()
 
     const renderer = wrapper.findComponent(TimeseriesChartRenderer)
@@ -360,6 +395,7 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
 
 describe('<DashboardTile /> table tiles', () => {
   beforeEach(() => {
+    vi.restoreAllMocks()
     setupPiniaTestStore()
   })
 

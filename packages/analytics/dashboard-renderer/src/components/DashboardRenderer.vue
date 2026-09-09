@@ -47,8 +47,8 @@
             :definition="tile.meta as TileDefinition"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
             :hide-actions="!showTileActions"
-            :hide-zoom-actions="!showTileZoomActions"
             :is-fullscreen="isFullscreen"
+            :preview="preview"
             :query-ready="queryReady"
             :tile-id="tile.id"
             :tile-type="tile.type"
@@ -325,7 +325,6 @@ const {
   enrichedContext,
   queryReady,
   showTileActions,
-  showTileZoomActions,
   timeSpec,
 } = composables.useDashboardContext({
   globalFilters,
