@@ -1,5 +1,5 @@
 import type { editor } from 'monaco-editor'
-import type { Component, Ref } from 'vue'
+import type { Component, MaybeRefOrGetter, Ref } from 'vue'
 import type { useMonacoEditor } from '../composables/useMonacoEditor'
 import type { BuiltInActionIds } from '../types/actions'
 
@@ -38,6 +38,37 @@ export interface UseMonacoEditorOptions {
    * @see https://microsoft.github.io/monaco-editor/typedoc/interfaces/editor.IStandaloneEditorConstructionOptions.html
    */
   monacoOptions?: Partial<editor.IStandaloneEditorConstructionOptions>
+}
+
+/**
+ * Options for the Monaco diff editor composable
+ */
+export interface UseMonacoDiffEditorOptions {
+  /**
+   * The original content
+   */
+  original: MaybeRefOrGetter<string>
+  /**
+   * The modified content
+   */
+  modified: MaybeRefOrGetter<string>
+  /**
+   * The programming language for syntax highlighting
+   */
+  language: string
+  /**
+   * The theme of the diff editor
+   */
+  theme?: EditorThemes
+  /**
+   * Callback function triggered when the diff editor is ready
+   */
+  onReady?: (diffEditor: editor.IStandaloneDiffEditor) => void
+  /**
+   * Additional Monaco diff editor settings
+   * @see https://microsoft.github.io/monaco-editor/typedoc/interfaces/editor.IStandaloneDiffEditorConstructionOptions.html
+   */
+  monacoOptions?: Partial<editor.IStandaloneDiffEditorConstructionOptions>
 }
 
 /** The themes available for the Monaco editor */
