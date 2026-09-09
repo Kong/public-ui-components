@@ -17,7 +17,7 @@ const record = (i: number): RequestRecord => ({
 })
 
 const query: ApiRequestsDatasourceQuery = {
-  datasource: 'api_requests',
+  datasource: 'requests',
   query: {
     filters: [],
     time_range: { type: 'relative', time_range: '1H' },
