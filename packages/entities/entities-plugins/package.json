@@ -91,12 +91,12 @@
     "@vue-flow/core": "^1.48.2",
     "@vueuse/core": "^14.4.0",
     "@vueuse/integrations": "^14.4.0",
-    "axios": "^1.19.0",
+    "axios": "^1.20.0",
     "monaco-editor": "^0.55.1",
     "nanoid": "^5.1.16",
     "reflect-metadata": "^0.2.2",
     "vue": "^3.5.41",
-    "vue-router": "^5.2.0",
+    "vue-router": "^5.3.0",
     "zod": "^4.4.3"
   },
   "scripts": {
