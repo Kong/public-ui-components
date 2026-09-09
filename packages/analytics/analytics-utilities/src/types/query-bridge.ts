@@ -1,4 +1,5 @@
 import type {
+  ApiRequestsResult,
   BasicExploreQuery,
   ExploreQuery,
   AiExploreQuery,
@@ -8,6 +9,7 @@ import type {
   PlatformExploreQuery,
   PlatformTabularQuery,
   PlatformTabularResponse,
+  RequestQuery,
 } from './explore'
 import type { AnalyticsConfigV2 } from './analytics-config'
 import type { DatasourceConfig } from './datasource-config'
@@ -64,6 +66,11 @@ export interface PlatformUsageDatasourceTabularQuery {
 
 export type DatasourceAwareTabularQuery = PlatformDatasourceTabularQuery | PlatformUsageDatasourceTabularQuery
 
+export interface ApiRequestsDatasourceQuery {
+  datasource: 'api_requests'
+  query: RequestQuery
+}
+
 // All flags in this interface should be optional; defaults are as documented.
 export interface StaticConfig {
   increaseCsvExportLimit?: boolean // default: true
@@ -75,6 +82,9 @@ export interface AnalyticsBridge {
 
   // Issue tabular queries to the platform tabular explore API
   tabularQueryFn?: (query: DatasourceAwareTabularQuery, abortController: AbortController) => Promise<PlatformTabularResponse>
+
+  // Fetch one page of request records, callers page through `meta.cursor`
+  requestsQueryFn?: (query: ApiRequestsDatasourceQuery, abortController: AbortController) => Promise<ApiRequestsResult>
 
   // Determine the current org's analytics config
   configFn: () => Promise<AnalyticsConfigV2>
