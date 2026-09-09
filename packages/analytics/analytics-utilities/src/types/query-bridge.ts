@@ -67,7 +67,7 @@ export interface PlatformUsageDatasourceTabularQuery {
 export type DatasourceAwareTabularQuery = PlatformDatasourceTabularQuery | PlatformUsageDatasourceTabularQuery
 
 export interface ApiRequestsDatasourceQuery {
-  datasource: 'api_requests'
+  datasource: 'requests'
   query: RequestQuery
 }
 
