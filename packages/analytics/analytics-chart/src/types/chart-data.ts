@@ -98,17 +98,27 @@ export interface ScatterPercentileLine {
   color?: string
 }
 
+/**
+ * TODO: The percentile math for median and outliers are not perfect, these need to be updated
+ *       to actually display/inform the user of what is happening. So for now, the percentiles and
+ *       median lines will default to none.
+ *
+ *       e.g. Fix the splitting of the outliers datasets from the original datasets, labels in
+ *            the legend that explain what they are doing (or removed completely), better
+ *            styling to differentiate the median/outliers
+ */
 export interface ScatterOptions {
   /**
-   * Reference lines derived from the plotted y-values
+   * Reference lines derived from the plotted y-values, defaults to none.
    */
   percentileLines?: ScatterPercentileLine[]
   /**
-   * Percentile above which points are split into a separate "outlier" dataset
+   * Percentile above which points are split into a separate "outlier" dataset,
+   * defaults to undefined (every point stays in its own series).
    */
   outlierPercentile?: number
   /**
-   * Shade the chart region above `outlierPercentile`.
+   * Shade the chart region above `outlierPercentile`, defaults to false.
    */
   shadeOutlierRegion?: boolean
   /**

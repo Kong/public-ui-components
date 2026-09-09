@@ -83,7 +83,7 @@ const props = withDefaults(
     chartLegendSortFn: () => 0,
     chartTooltipSortFn: (a, b) => b.rawValue - a.rawValue,
     tooltipMetricDisplay: '',
-    shadeOutlierRegion: true,
+    shadeOutlierRegion: false,
   },
 )
 
