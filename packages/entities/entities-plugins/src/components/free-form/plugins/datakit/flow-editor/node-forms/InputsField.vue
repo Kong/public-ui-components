@@ -66,8 +66,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { KLabel } from '@kong/kongponents'
-import { useFormShared } from '../../../../shared/composables'
-import EnumField from '../../../../shared/EnumField.vue'
+import { useFormShared } from '../../../../core/composables'
+import EnumField from '../../../../core/components/EnumField.vue'
 import InputsRecordField from './InputsRecordField.vue'
 import InputsMapField from './InputsMapField.vue'
 import useI18n from '../../../../../../composables/useI18n'

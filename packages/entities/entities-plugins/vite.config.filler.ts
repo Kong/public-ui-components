@@ -8,8 +8,8 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: {
-        'cypress/index': resolve(dirname(fileURLToPath(import.meta.url)), './src/components/free-form/filler/cypress/index.ts'),
-        'playwright/index': resolve(dirname(fileURLToPath(import.meta.url)), './src/components/free-form/filler/playwright/index.ts'),
+        'cypress/index': resolve(dirname(fileURLToPath(import.meta.url)), './src/components/free-form/core/filler/cypress/index.ts'),
+        'playwright/index': resolve(dirname(fileURLToPath(import.meta.url)), './src/components/free-form/core/filler/playwright/index.ts'),
       },
       formats: ['es'],
       fileName: (_format, entryName) => `${entryName}.js`,

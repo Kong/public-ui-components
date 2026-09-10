@@ -1,5 +1,5 @@
-import EnumField from '../shared/EnumField.vue'
-import { definePluginConfig } from '../shared/define-plugin-config'
+import EnumField from '../core/components/EnumField.vue'
+import { definePluginConfig } from '../define-plugin-config'
 
 export default definePluginConfig({
   experimental: true,

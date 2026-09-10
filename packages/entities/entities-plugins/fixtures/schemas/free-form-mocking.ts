@@ -8,7 +8,7 @@ import type {
   MapFieldSchema,
   ArrayLikeFieldSchema,
   ForeignFieldSchema,
-} from '../../src/types/plugins/form-schema'
+} from '../../src/components/free-form/core/form-schema'
 
 export function buildStringFieldCases(): Array<{ [name: string]: StringFieldSchema }> {
   return [

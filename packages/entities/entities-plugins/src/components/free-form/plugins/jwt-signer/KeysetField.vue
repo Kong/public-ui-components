@@ -12,8 +12,8 @@ import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { computed, inject } from 'vue'
 
 import useI18n from '../../../../composables/useI18n'
-import StringField from '../../shared/StringField.vue'
-import { defaultLabelFormatter, useFormShared } from '../../shared/composables'
+import StringField from '../../core/components/StringField.vue'
+import { defaultLabelFormatter, useFormShared } from '../../core/composables'
 
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'

@@ -38,14 +38,14 @@ import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
 import CustomKeyField from '../rate-limiting-advanced/CustomKeyField.vue'
-import NumberField from '../../shared/NumberField.vue'
+import NumberField from '../../core/components/NumberField.vue'
 import useI18n from '../../../../composables/useI18n'
-import FieldRenderer from '../../shared/FieldRenderer.vue'
-import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
+import FieldRenderer from '../../core/components/FieldRenderer.vue'
+import DynamicLayout from '../../layout/DynamicLayout.vue'
 import { useExpressionMode } from '../_shared/use-expression-mode'
 
-import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
-import type { RenderRules } from '../../shared/types'
+import type { PluginFormLayoutProps as Props } from '../../layout/provider'
+import type { RenderRules } from '../../core/types'
 
 const props = defineProps<Props>()
 

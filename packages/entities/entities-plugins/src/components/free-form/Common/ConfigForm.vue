@@ -22,13 +22,13 @@
 </template>
 
 <script setup lang="ts">
-import ObjectField from '../shared/ObjectField.vue'
-import AdvancedFields from '../shared/AdvancedFields.vue'
+import ObjectField from '../core/components/ObjectField.vue'
+import AdvancedFields from '../components/AdvancedFields.vue'
 
-import type { RecordFieldSchema } from '../../../types/plugins/form-schema'
+import type { RecordFieldSchema } from '../core/form-schema'
 import { computed } from 'vue'
-import { useFormShared } from '../shared/composables'
-import { resolve } from '../shared/utils'
+import { useFormShared } from '../core/composables'
+import { resolve } from '../core/utils'
 
 const { getSchema, createComputedRenderRules } = useFormShared()
 

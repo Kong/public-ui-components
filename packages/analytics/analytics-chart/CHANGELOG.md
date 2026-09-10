@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.27.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.6...%40kong-ui-public%2Fanalytics-chart%4010.27.0) (2026-09-09)
+
+### Features
+
+* add AI percentile metrics ([#3801](https://github.com/Kong/public-ui-components/issues/3801)) ([60f1ede](https://github.com/Kong/public-ui-components/commit/60f1eded5b3fb4155caf5389cfa9c2fcbaa1e10d))
+
+
+## [10.26.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.5...%40kong-ui-public%2Fanalytics-chart%4010.26.6) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.26.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.4...%40kong-ui-public%2Fanalytics-chart%4010.26.5) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.26.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.3...%40kong-ui-public%2Fanalytics-chart%4010.26.4) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.26.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.2...%40kong-ui-public%2Fanalytics-chart%4010.26.3) (2026-09-08)
+
+### Bug Fixes
+
+* **analytics-chart:** align TopN headers without dimensions [MA-5439] ([#3800](https://github.com/Kong/public-ui-components/issues/3800)) ([cab53b4](https://github.com/Kong/public-ui-components/commit/cab53b4f726fa5432cc6d879d43ed356d24bac21))
+
+
 ## [10.26.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.1...%40kong-ui-public%2Fanalytics-chart%4010.26.2) (2026-09-05)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

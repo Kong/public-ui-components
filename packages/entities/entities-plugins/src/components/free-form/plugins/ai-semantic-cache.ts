@@ -1,4 +1,4 @@
-import { definePluginConfig } from '../shared/define-plugin-config'
+import { definePluginConfig } from '../define-plugin-config'
 import { vectordbFieldRenderers, vectordbRenderRules } from './_shared/vectordb'
 
 export default definePluginConfig({

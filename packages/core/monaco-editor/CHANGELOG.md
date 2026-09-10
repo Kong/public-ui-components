@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.25.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.24.18...%40kong-ui-public%2Fmonaco-editor%400.25.0) (2026-09-09)
+
+### Bug Fixes
+
+* **monaco-editor:** pre-bundle the plugin's deep monaco-editor/shiki imports ([#3796](https://github.com/Kong/public-ui-components/issues/3796)) ([36a76b0](https://github.com/Kong/public-ui-components/commit/36a76b0dd3b4d0f67200e6a88bfe01024b338884))
+
+### Features
+
+* **monaco-editor:** add zod-based YAML schema validation ([#3758](https://github.com/Kong/public-ui-components/issues/3758)) ([20358e0](https://github.com/Kong/public-ui-components/commit/20358e0c8daa281a79e2d40ed5db165c2e6ea284))
+
+
 ## [0.24.18](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fmonaco-editor%400.24.17...%40kong-ui-public%2Fmonaco-editor%400.24.18) (2026-09-05)
 
 **Note:** Version bump only for package @kong-ui-public/monaco-editor

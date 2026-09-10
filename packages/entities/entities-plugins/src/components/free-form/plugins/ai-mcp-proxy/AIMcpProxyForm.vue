@@ -52,15 +52,15 @@
 <script setup lang="ts">
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
-import DynamicLayout from '../../shared/layout/DynamicLayout.vue'
-import ArrayField from '../../shared/ArrayField.vue'
-import FieldRenderer from '../../shared/FieldRenderer.vue'
-import ObjectField from '../../shared/ObjectField.vue'
+import DynamicLayout from '../../layout/DynamicLayout.vue'
+import ArrayField from '../../core/components/ArrayField.vue'
+import FieldRenderer from '../../core/components/FieldRenderer.vue'
+import ObjectField from '../../core/components/ObjectField.vue'
 import composables from '../../../../composables'
 
-import type { PluginFormLayoutProps as Props } from '../../shared/layout/provider'
-import StringArrayField from '../../shared/StringArrayField.vue'
-import MapField from '../../shared/MapField.vue'
+import type { PluginFormLayoutProps as Props } from '../../layout/provider'
+import StringArrayField from '../../core/components/StringArrayField.vue'
+import MapField from '../../core/components/MapField.vue'
 
 const props = defineProps<Props>()
 

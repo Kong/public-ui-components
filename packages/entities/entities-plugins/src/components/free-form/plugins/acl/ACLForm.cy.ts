@@ -1,6 +1,6 @@
 import ACLForm from './ACLForm.vue'
 import aclSchema, { aclSchemaWithoutWhenModes } from '../../../../../fixtures/schemas/acl'
-import type { FormSchema } from '../../../../types/plugins/form-schema'
+import type { FormSchema } from '../../core/form-schema'
 
 interface MountOptions {
   schema?: FormSchema
@@ -83,18 +83,38 @@ describe('<ACLForm /> - mode switching', () => {
   it('renders group modes as inputs and expression modes as textareas with help', () => {
     mountForm()
 
-    cy.getTestId('ff-add-item-btn-config.allow').click()
     cy.getTestId('ff-array-item-config.allow.0').find('input').should('exist')
     cy.getTestId('ff-array-item-config.allow.0').find('textarea').should('not.exist')
     cy.getTestId('ff-config.allow.0').should('have.attr', 'placeholder', 'Enter group names')
     cy.getTestId('ff-array-item-config.allow.0').find('a[href]').should('not.exist')
 
     cy.getTestId('ff-acl-mode-allow_when').click()
-    cy.getTestId('ff-add-item-btn-config.allow_when').click()
     cy.getTestId('ff-array-item-config.allow_when.0').find('textarea').should('exist')
     cy.getTestId('ff-array-item-config.allow_when.0')
       .find('a[href]')
       .should('contain.text', 'Learn more')
+  })
+
+  it('seeds an empty row by default so the input shows without clicking "Add"', () => {
+    mountForm()
+
+    cy.getTestId('ff-array-item-config.allow.0').should('exist')
+
+    cy.getTestId('ff-acl-mode-deny_when').click()
+    cy.getTestId('ff-array-item-config.deny_when.0').should('exist')
+  })
+
+  it('does not let the last remaining row be removed', () => {
+    mountForm()
+
+    cy.getTestId('ff-array-remove-item-btn-config.allow.0').should('not.be.visible')
+
+    cy.getTestId('ff-add-item-btn-config.allow').click()
+    cy.getTestId('ff-array-remove-item-btn-config.allow.0').should('be.visible')
+    cy.getTestId('ff-array-remove-item-btn-config.allow.1').should('be.visible')
+
+    cy.getTestId('ff-array-remove-item-btn-config.allow.1').click()
+    cy.getTestId('ff-array-remove-item-btn-config.allow.0').should('not.be.visible')
   })
 
   it('clears the previous mode\'s data when switching', () => {
@@ -104,9 +124,10 @@ describe('<ACLForm /> - mode switching', () => {
     lastFormChange().its('config.allow').should('be.null')
     lastFormChange().its('config.allow_when').should('be.null')
     lastFormChange().its('config.deny_when').should('be.null')
-    // `deny` is the newly-active mode and was never assigned a value in this
-    // scenario, so it may come back as `null` or simply be absent — either is fine.
-    lastFormChange().its('config').should('satisfy', (config: Record<string, unknown>) => config.deny == null)
+    // `deny` is the newly-active mode; it was never assigned a value in this
+    // scenario, so switching to it seeds a single empty row instead of leaving
+    // it blank.
+    lastFormChange().its('config.deny').should('deep.equal', [null])
   })
 
   it('restores cached data when switching back to a previously-filled mode', () => {

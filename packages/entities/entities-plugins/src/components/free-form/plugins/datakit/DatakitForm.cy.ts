@@ -1,7 +1,7 @@
 import { h, ref } from 'vue'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 
-import { getPluginConfig } from '../../shared/plugin-registry'
+import { getPluginConfig } from '../../plugin-registry'
 
 const DatakitForm = getPluginConfig('datakit')!.component
 

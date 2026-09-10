@@ -1,0 +1,54 @@
+import StringField from './components/StringField.vue'
+import BooleanField from './components/BooleanField.vue'
+import ArrayField from './components/ArrayField.vue'
+import ObjectField from './components/ObjectField.vue'
+import NumberField from './components/NumberField.vue'
+import EnumField from './components/EnumField.vue'
+import StringArrayField from './components/StringArrayField.vue'
+import JsonField from './components/JsonField.vue'
+import ForeignField from './components/ForeignField.vue'
+import MapField from './components/MapField.vue'
+import * as utils from './utils'
+
+import type { Component } from 'vue'
+import type { UnionFieldSchema } from './form-schema'
+
+function pickFieldComponent(schema: UnionFieldSchema | undefined) {
+  switch (schema?.type) {
+    case 'string':
+      return ('one_of' in schema) ? EnumField : StringField
+    case 'boolean':
+      return ('one_of' in schema) ? EnumField : BooleanField
+    case 'number':
+    case 'integer':
+      return ('one_of' in schema) ? EnumField : NumberField
+    case 'array':
+      return ArrayField
+    case 'set':
+      return utils.isTagField(schema) ? StringArrayField : EnumField
+    case 'record':
+      return ObjectField
+    case 'map':
+      return MapField
+    case 'json':
+      return JsonField
+    case 'foreign':
+      return ForeignField
+    default:
+      return undefined
+  }
+}
+
+/**
+ * Resolves the component that renders a field's plain value, from its schema
+ * type alone.
+ *
+ * Returns `undefined` for a type with no renderer yet; callers surface that.
+ */
+export function resolveFieldComponent(schema: UnionFieldSchema | undefined): Component | undefined {
+  // Widened deliberately: the SFCs' own inferred types reference their private
+  // prop interfaces, which declaration emit cannot name, and some are generic
+  // enough that `Component` rejects them outright. `Component` is all any
+  // caller needs to hand the result to `<component :is>`.
+  return pickFieldComponent(schema) as Component | undefined
+}

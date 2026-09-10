@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.34.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.33.1...%40kong-ui-public%2Fanalytics-utilities%4012.34.0) (2026-09-09)
+
+### Features
+
+* add AI percentile metrics ([#3801](https://github.com/Kong/public-ui-components/issues/3801)) ([60f1ede](https://github.com/Kong/public-ui-components/commit/60f1eded5b3fb4155caf5389cfa9c2fcbaa1e10d))
+
+
+## [12.33.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.33.0...%40kong-ui-public%2Fanalytics-utilities%4012.33.1) (2026-09-09)
+
+### Bug Fixes
+
+* **analytics:** rename requests datasource [MA-5440] ([#3809](https://github.com/Kong/public-ui-components/issues/3809)) ([bc2230e](https://github.com/Kong/public-ui-components/commit/bc2230ebb0d440dda53881ef01c173e602431e6f))
+
+
+# [12.33.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.32.1...%40kong-ui-public%2Fanalytics-utilities%4012.33.0) (2026-09-09)
+
+### Features
+
+* **analytics:** add api-requests to query bridge [MA-5440] ([#3781](https://github.com/Kong/public-ui-components/issues/3781)) ([fbb1217](https://github.com/Kong/public-ui-components/commit/fbb12173fd1b3b817394f196e308c4aedbe53cf2))
+
+
 ## [12.32.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.32.0...%40kong-ui-public%2Fanalytics-utilities%4012.32.1) (2026-09-05)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities

@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.272.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.7...%40kong-ui-public%2Fentities-plugins%409.272.8) (2026-09-10)
+
+### Bug Fixes
+
+* **entities-plugins:** call out streaming plugin flag in custom plugin form ([#3813](https://github.com/Kong/public-ui-components/issues/3813)) ([2d857cc](https://github.com/Kong/public-ui-components/commit/2d857cc9a6589514d0e8602f9c1007b7751587c6))
+
+
+## [9.272.7](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.6...%40kong-ui-public%2Fentities-plugins%409.272.7) (2026-09-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.272.6](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.5...%40kong-ui-public%2Fentities-plugins%409.272.6) (2026-09-09)
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#3790](https://github.com/Kong/public-ui-components/issues/3790)) ([aecf1ae](https://github.com/Kong/public-ui-components/commit/aecf1ae1184b73032c10eb89ddc6b9505ba20e63))
+
+
+## [9.272.5](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.4...%40kong-ui-public%2Fentities-plugins%409.272.5) (2026-09-08)
+
+### Bug Fixes
+
+* **entities-plugins:** clear rate-limiting-advanced expressions explicitly ([#3798](https://github.com/Kong/public-ui-components/issues/3798)) ([7373311](https://github.com/Kong/public-ui-components/commit/7373311c7825a8449b7c163d6f7e2163026c6a2c))
+
+
+## [9.272.4](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.3...%40kong-ui-public%2Fentities-plugins%409.272.4) (2026-09-08)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.272.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.2...%40kong-ui-public%2Fentities-plugins%409.272.3) (2026-09-08)
 
 ### Bug Fixes

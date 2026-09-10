@@ -5,7 +5,7 @@ import RateLimitingAdvancedForm from './RateLimitingAdvancedForm.vue'
 import schema from '../../../../../fixtures/schemas/rate-limiting-advanced'
 import { FEATURE_FLAGS } from '../../../../constants'
 
-import type { FormSchema } from '../../../../types/plugins/form-schema'
+import type { FormSchema } from '../../core/form-schema'
 
 /**
  * Covers the payload rules the form itself owns in `handleFormChange`, which a
@@ -92,10 +92,10 @@ describe('RateLimitingAdvancedForm — emitted payload', () => {
 
     await wrapper.get('[data-testid="ff-expression-remove-config.limit.0"]').trigger('click')
 
-    // Clearing a row leaves its slot behind, so the array would otherwise be
-    // submitted as nothing but empty strings. Unset says the same thing, and
-    // matches a plugin that never carried an expression at all.
-    expect(lastChange().expressions.limit).toBeUndefined()
+    // Explicitly null, not an omitted key: Kong Manager updates with PATCH,
+    // which keeps whatever the payload leaves out — so an omitted twin leaves
+    // the stored one in place and the clear never reaches the server.
+    expect(lastChange().expressions.limit).toBeNull()
   })
 
   it('keeps a cleared expression cleared once the host echoes the payload back', async () => {
@@ -114,7 +114,7 @@ describe('RateLimitingAdvancedForm — emitted payload', () => {
     await nextTick()
     await nextTick()
 
-    expect(lastChange().expressions.limit).toBeUndefined()
+    expect(lastChange().expressions.limit).toBeNull()
     expect(lastChange().config.limit).toEqual(twoLimits.limit)
   })
 
@@ -169,6 +169,33 @@ describe('RateLimitingAdvancedForm — emitted payload', () => {
 
     expect(wrapper.get('[data-testid="ff-expression-config.custom_key"] textarea').attributes('placeholder'))
       .toBe('e.g. principal.metadata.ff_id ? principal.metadata.ff_id : principal.id')
+  })
+
+  it('unsets the twin array while a sibling twin still holds an expression', async () => {
+    const { wrapper, lastChange } = mountForm({
+      config: twoLimits,
+      expressions: { custom_key: 'principal.metadata.id', limit: ['', 'principal.metadata.limit'] },
+    })
+
+    await wrapper.get('[data-testid="ff-expression-remove-config.limit.1"]').trigger('click')
+
+    // `custom_key` keeps the record alive, so the array has to clear itself
+    // rather than be submitted as a run of empty strings.
+    expect(lastChange().expressions.limit).toBeNull()
+    expect(lastChange().expressions.custom_key).toBe('principal.metadata.id')
+  })
+
+  it('keeps the twin array the same length as the limits it pairs with', async () => {
+    const { wrapper, lastChange } = mountForm({
+      config: twoLimits,
+      expressions: { limit: ['req.size', ''] },
+    })
+
+    await wrapper.get('[data-testid="rla-form-add-limit"]').trigger('click')
+    expect(lastChange().expressions.limit).toHaveLength(lastChange().config.limit.length)
+
+    await wrapper.get('[data-testid="rla-form-remove-limit-1"]').trigger('click')
+    expect(lastChange().expressions.limit).toHaveLength(lastChange().config.limit.length)
   })
 
   it('still deletes a null namespace, which the server generates', async () => {
