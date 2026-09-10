@@ -34,9 +34,8 @@
 import { computed, inject, toRef, useAttrs } from 'vue'
 import { SensitiveInput } from '@kong-ui-public/entities-shared'
 import type { SensitiveInputLabels } from '@kong-ui-public/entities-shared'
-import { useField, useFieldAttrs } from '../core/composables'
-import { generateCredentialSecret } from '../core/utils'
-import type { BaseFieldProps, EmptyValue } from '../core/types'
+import { useField, useFieldAttrs, generateCredentialSecret } from '@kong-ui-public/freeform'
+import type { BaseFieldProps, EmptyValue } from '@kong-ui-public/freeform'
 import { USE_SECRET_INPUT_KEY } from '../../../constants'
 
 defineOptions({

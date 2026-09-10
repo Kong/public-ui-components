@@ -1,6 +1,6 @@
 import ACLForm from './ACLForm.vue'
 import aclSchema, { aclSchemaWithoutWhenModes } from '../../../../../fixtures/schemas/acl'
-import type { FormSchema } from '../../core/form-schema'
+import type { FormSchema } from '@kong-ui-public/freeform'
 
 interface MountOptions {
   schema?: FormSchema

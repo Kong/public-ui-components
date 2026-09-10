@@ -1,4 +1,4 @@
-import type { PluginFormConfig } from './core/types'
+import type { PluginFormConfig } from './types'
 
 /**
  * Type-checking helper for plugin form configs: a config provides either a custom
@@ -10,4 +10,5 @@ export function definePluginConfig(config: PluginFormConfig = {}): PluginFormCon
   return config
 }
 
-export type { FieldRenderer, PluginFormConfig } from './core/types'
+export type { FieldRendererRule } from '@kong-ui-public/freeform'
+export type { PluginFormConfig } from './types'

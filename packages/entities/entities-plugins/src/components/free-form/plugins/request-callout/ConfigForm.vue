@@ -33,5 +33,5 @@
 
 <script setup lang="ts">
 import CalloutsForm from './CalloutsForm.vue'
-import ObjectField from '../../core/components/ObjectField.vue'
+import { ObjectField } from '@kong-ui-public/freeform'
 </script>

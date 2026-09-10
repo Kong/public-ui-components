@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { KExternalLink } from '@kong/kongponents'
 import useI18n from '../../../../composables/useI18n'
-import ArrayField from '../../core/components/ArrayField.vue'
+import { ArrayField } from '@kong-ui-public/freeform'
 
 defineProps<{
   name: string

@@ -32,14 +32,11 @@
 </template>
 
 <script setup lang="ts">
-import Field from '../core/components/Field.vue'
+import { Field, useFormShared, StringArrayField, StringField } from '@kong-ui-public/freeform'
 import { ref } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KCollapse } from '@kong/kongponents'
 import english from '../../../locales/en.json'
-import { useFormShared } from '../core/composables'
-import StringArrayField from '../core/components/StringArrayField.vue'
-import StringField from '../core/components/StringField.vue'
 
 defineProps<{
   hideGeneralFields?: boolean

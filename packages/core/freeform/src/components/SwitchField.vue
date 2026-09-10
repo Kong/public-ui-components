@@ -29,7 +29,7 @@ import { KInputSwitch, type LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs } from '../composables'
 import { toRef } from 'vue'
 import type { BaseFieldProps } from '../types'
-import useFreeformI18n from '../../../../composables/useFreeformI18n'
+import useFreeformI18n from '../composables/useFreeformI18n'
 
 interface SwitchFieldProps extends BaseFieldProps {
   labelAttributes?: LabelAttributes

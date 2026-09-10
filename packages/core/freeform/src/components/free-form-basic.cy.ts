@@ -1,5 +1,5 @@
 import { assertFormRendering } from './test-utils'
-import { buildMockingSchema } from '../../../../../fixtures/schemas/free-form-mocking'
+import { buildMockingSchema } from './free-form-mocking'
 import Form from './Form.vue'
 import type { FormSchema } from '../form-schema'
 import StringField from './StringField.vue'

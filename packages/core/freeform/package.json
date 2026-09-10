@@ -14,6 +14,15 @@
       "import": "./dist/freeform.es.js",
       "require": "./dist/freeform.umd.js"
     },
+    "./style.css": "./dist/style.css",
+    "./filler/cypress": {
+      "types": "./dist/filler/packages/core/freeform/src/filler/cypress/index.d.ts",
+      "import": "./dist/filler/cypress/index.js"
+    },
+    "./filler/playwright": {
+      "types": "./dist/filler/packages/core/freeform/src/filler/playwright/index.d.ts",
+      "import": "./dist/filler/playwright/index.js"
+    },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
   },
@@ -22,10 +31,11 @@
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
-    "build": "run-s typecheck build:package build:types",
+    "build": "run-s typecheck build:package build:types build:filler",
     "build:package": "vite build -m production",
     "build:analyzer": "BUILD_VISUALIZER='core/freeform' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "build:filler": "vite build -m production -c vite.config.filler.ts && tsc -p tsconfig.filler.json --emitDeclarationOnly",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
     "preview": "cross-env USE_SANDBOX=true vite preview",
     "lint": "eslint",
@@ -38,9 +48,36 @@
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
+  "dependencies": {
+    "dompurify": "^3.4.14",
+    "lodash-es": "^4.18.1",
+    "marked": "^18.0.11"
+  },
+  "peerDependencies": {
+    "@kong-ui-public/forms": "workspace:^",
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong-ui-public/misc-widgets": "workspace:^",
+    "@kong/design-tokens": "^3.3.0",
+    "@kong/icons": "^1.58.0",
+    "@kong/kongponents": "^9.63.0",
+    "@playwright/test": ">= 1.0.0 < 2.0.0",
+    "@vueuse/core": "^14.3.0",
+    "vue": ">= 3.3.13 < 4"
+  },
+  "peerDependenciesMeta": {
+    "@playwright/test": {
+      "optional": true
+    }
+  },
   "devDependencies": {
-    "@kong/design-tokens": "3.3.0",
-    "@kong/kongponents": "9.64.10",
+    "@kong-ui-public/forms": "workspace:^",
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong-ui-public/misc-widgets": "workspace:^",
+    "@kong/design-tokens": "3.3.1",
+    "@kong/icons": "^1.62.1",
+    "@kong/kongponents": "9.64.14",
+    "@playwright/test": "^1.62.1",
+    "@vueuse/core": "^14.4.0",
     "vue": "^3.5.41"
   },
   "repository": {
@@ -58,10 +95,6 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "200KB"
-  },
-  "peerDependencies": {
-    "@kong/kongponents": "9.64.10",
-    "vue": "^3.5.41"
+    "errorLimit": "600KB"
   }
 }

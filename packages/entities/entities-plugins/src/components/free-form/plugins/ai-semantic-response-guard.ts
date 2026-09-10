@@ -1,4 +1,4 @@
-import StringField from '../core/components/StringField.vue'
+import { StringField } from '@kong-ui-public/freeform'
 import { definePluginConfig } from '../define-plugin-config'
 import { vectordbFieldRenderers, vectordbRenderRules } from './_shared/vectordb'
 

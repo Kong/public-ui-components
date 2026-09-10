@@ -1,8 +1,7 @@
 import { h } from 'vue'
-import Form from '../core/components/Form.vue'
+import { Form } from '@kong-ui-public/freeform'
+import type { FormSchema, FormConfig } from '@kong-ui-public/freeform'
 import CredentialSecretField from './CredentialSecretField.vue'
-import type { FormSchema } from '../core/form-schema'
-import type { FormConfig } from '../core/types'
 
 const FIELD_NAME = 'secret'
 

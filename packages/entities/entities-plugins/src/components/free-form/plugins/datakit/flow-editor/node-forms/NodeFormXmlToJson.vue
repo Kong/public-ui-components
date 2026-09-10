@@ -73,9 +73,7 @@
 import { useTemplateRef } from 'vue'
 import { KLabel } from '@kong/kongponents'
 
-import Form from '../../../../core/components/Form.vue'
-import BooleanField from '../../../../core/components/BooleanField.vue'
-import StringField from '../../../../core/components/StringField.vue'
+import { Form, BooleanField, StringField } from '@kong-ui-public/freeform'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'

@@ -1,12 +1,12 @@
 import type { InjectionKey } from 'vue'
 import { provide } from 'vue'
-import type { PluginFormLayoutComponent } from '../core/types'
+import type { PluginFormLayoutComponent } from '../types'
 
 export type {
   PluginConfigurationBaseProps,
   PluginFormLayoutComponent,
   PluginFormLayoutProps,
-} from '../core/types'
+} from '../types'
 
 export const FREE_FORM_PLUGIN_LAYOUT: InjectionKey<PluginFormLayoutComponent> = Symbol.for('kong-ui-public.entities-plugins.free-form-plugin-layout')
 

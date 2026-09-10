@@ -6,9 +6,9 @@ import type {
   MutuallyExclusiveEntityCheck,
   MutuallyRequiredEntityCheck,
   RecordFieldSchema,
-} from './core/form-schema'
+} from '@kong-ui-public/freeform'
 import { PLUGIN_METADATA } from '../../definitions/metadata'
-import { toArray, resolve, separator } from './core/utils'
+import { toArray, resolve, separator } from '@kong-ui-public/freeform'
 
 type SupportedEntityCheck =
   | AtLeastOneOfEntityCheck

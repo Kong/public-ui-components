@@ -1,12 +1,9 @@
-import Form from '../core/components/Form.vue'
-import type { FormSchema } from '../core/form-schema'
-import type { RenderRules } from '../core/types'
+import { Form, FieldRenderer, FIELD_RENDERERS } from '@kong-ui-public/freeform'
+import type { FormSchema, RenderRules } from '@kong-ui-public/freeform'
 import { REDIS_PARTIAL_INFO } from '../const'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { ref } from 'vue'
-import FieldRenderer from '../core/components/FieldRenderer.vue'
 import RedisSelector from './RedisSelector.vue'
-import { FIELD_RENDERERS } from '../core/composables'
 
 const createDefaultRedisConfig = () => ({
   host: '0.0.0.0',

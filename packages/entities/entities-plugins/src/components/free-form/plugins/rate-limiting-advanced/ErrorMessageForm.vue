@@ -35,8 +35,7 @@
 
 <script setup lang="ts">
 import useI18n from '../../../../composables/useI18n'
-import StringField from '../../core/components/StringField.vue'
-import NumberField from '../../core/components/NumberField.vue'
+import { StringField, NumberField } from '@kong-ui-public/freeform'
 
 const { i18n: { t } } = useI18n()
 </script>

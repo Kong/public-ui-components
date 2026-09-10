@@ -18,9 +18,9 @@ vi.mock('@kong-ui-public/monaco-editor/languages/yaml', () => ({
 }))
 
 import { buildForeignEntityLensConfig } from './code-lens-providers'
-import { buildSchemaMap } from '../core/composables/schema'
+import { buildSchemaMap } from '@kong-ui-public/freeform'
+import type { ForeignFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '@kong-ui-public/freeform'
 
-import type { ForeignFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../core/form-schema'
 
 describe('buildForeignEntityLensConfig', () => {
   it('discovers top-level foreign fields', () => {

@@ -15,7 +15,7 @@
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
-import ObjectField from '../../core/components/ObjectField.vue'
+import { ObjectField } from '@kong-ui-public/freeform'
 import ACLModeCard from './ACLModeCard.vue'
 
 import type { PluginFormLayoutProps as Props } from '../../layout/provider'

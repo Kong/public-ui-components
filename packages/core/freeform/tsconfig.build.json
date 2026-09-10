@@ -6,6 +6,8 @@
   "exclude": [
     "src/**/*.cy.ts",
     "src/**/*.spec.ts",
+    "src/components/test-utils.ts",
+    "src/filler/**",
     "sandbox",
     "dist"
   ]

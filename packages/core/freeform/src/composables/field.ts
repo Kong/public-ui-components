@@ -1,5 +1,5 @@
 import { computed, onUnmounted, toRaw, toValue, watch } from 'vue'
-import { FREE_FORM_SCHEMA_MAP_KEY } from '../../../../constants'
+import { FREE_FORM_SCHEMA_MAP_KEY } from '../constants'
 import { get, set, uniqueId } from 'lodash-es'
 import { useFieldAncestors } from './ancestors'
 import { useFieldPath, useFieldRenderer } from './field-path'

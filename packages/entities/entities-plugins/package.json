@@ -21,11 +21,11 @@
       "require": "./dist/endpoints/plugins-endpoints.js"
     },
     "./filler/cypress": {
-      "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/core/filler/cypress/index.d.ts",
+      "types": "./dist/filler/packages/entities/entities-plugins/src/filler/cypress/index.d.ts",
       "import": "./dist/filler/cypress/index.js"
     },
     "./filler/playwright": {
-      "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/core/filler/playwright/index.d.ts",
+      "types": "./dist/filler/packages/entities/entities-plugins/src/filler/playwright/index.d.ts",
       "import": "./dist/filler/playwright/index.js"
     },
     "./freeform": {
@@ -149,6 +149,7 @@
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
+    "@kong-ui-public/freeform": "workspace:^",
     "dompurify": "^3.4.14",
     "lodash-es": "^4.18.1",
     "marked": "^18.0.11"

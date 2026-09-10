@@ -8,17 +8,16 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: {
-        'cypress/index': resolve(dirname(fileURLToPath(import.meta.url)), './src/components/free-form/core/filler/cypress/index.ts'),
-        'playwright/index': resolve(dirname(fileURLToPath(import.meta.url)), './src/components/free-form/core/filler/playwright/index.ts'),
+        'cypress/index': resolve(dirname(fileURLToPath(import.meta.url)), './src/filler/cypress/index.ts'),
+        'playwright/index': resolve(dirname(fileURLToPath(import.meta.url)), './src/filler/playwright/index.ts'),
       },
       formats: ['es'],
       fileName: (_format, entryName) => `${entryName}.js`,
     },
     rollupOptions: {
       external: [
-        'cypress',
-        '@playwright/test',
-        'lodash-es',
+        '@kong-ui-public/freeform/filler/cypress',
+        '@kong-ui-public/freeform/filler/playwright',
       ],
     },
   },

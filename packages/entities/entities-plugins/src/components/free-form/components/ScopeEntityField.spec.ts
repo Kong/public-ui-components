@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { h, defineComponent } from 'vue'
 import { FORMS_API_KEY } from '@kong-ui-public/forms'
-import Form from '../core/components/Form.vue'
+import { Form } from '@kong-ui-public/freeform'
 import ScopeEntityField from './ScopeEntityField.vue'
 
 const CONSUMER_ID = 'test-consumer-uuid'

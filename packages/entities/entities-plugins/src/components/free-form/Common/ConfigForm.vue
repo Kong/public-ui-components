@@ -22,13 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import ObjectField from '../core/components/ObjectField.vue'
+import { ObjectField, useFormShared, resolve } from '@kong-ui-public/freeform'
+import type { RecordFieldSchema } from '@kong-ui-public/freeform'
 import AdvancedFields from '../components/AdvancedFields.vue'
 
-import type { RecordFieldSchema } from '../core/form-schema'
 import { computed } from 'vue'
-import { useFormShared } from '../core/composables'
-import { resolve } from '../core/utils'
 
 const { getSchema, createComputedRenderRules } = useFormShared()
 

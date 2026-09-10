@@ -8,7 +8,7 @@ import type {
   MapFieldSchema,
   ArrayLikeFieldSchema,
   ForeignFieldSchema,
-} from '../../src/components/free-form/core/form-schema'
+} from '@kong-ui-public/freeform'
 
 export function buildStringFieldCases(): Array<{ [name: string]: StringFieldSchema }> {
   return [

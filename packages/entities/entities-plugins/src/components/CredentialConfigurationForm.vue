@@ -20,12 +20,12 @@ import { useAxios } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import CredentialSecretField from './free-form/components/CredentialSecretField.vue'
 import PluginConfigurationForm from './free-form/components/PluginConfigurationForm.vue'
-import StringArrayField from './free-form/core/components/StringArrayField.vue'
+import { StringArrayField } from '@kong-ui-public/freeform'
+import type { FieldRendererRule } from '@kong-ui-public/freeform'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
 import { resolvePluginConfigUrl } from '../utils/resolve-url'
 import type { CredentialType, KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../types'
-import type { FieldRenderer } from './free-form/core/types'
 
 // Fields that are backend-generated and shouldn't be shown/edited in the credential form.
 // (`key` etc. are also auto-generated when left blank, but they remain user-editable, so we
@@ -82,7 +82,7 @@ const credentialSchema = computed(() => {
   }
 })
 
-const fieldRenderers: FieldRenderer[] = [
+const fieldRenderers: FieldRendererRule[] = [
   {
     match: 'tags',
     component: StringArrayField,

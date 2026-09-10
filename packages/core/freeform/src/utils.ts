@@ -1,9 +1,7 @@
 
-import type { FlattendRedisConfigurationFields } from './types'
-import type { Field } from './types'
 import type { NamedFieldSchema, UnionFieldSchema } from './form-schema'
 import { toValue, type MaybeRefOrGetter } from 'vue'
-import type { FieldRenderer, Match } from './types'
+import type { FieldRendererRule, Match } from './types'
 
 export function toSelectItems<T extends string | number>(
   items: T[],
@@ -85,27 +83,6 @@ export function pruneHiddenPaths(
       pruneHiddenPaths(node[key], isHidden, getEmptyOrDefault, childPath)
     }
   }
-}
-
-export function useRedisNonstandardFields(
-  partialFields: FlattendRedisConfigurationFields,
-  redisFields: Field[],
-) {
-  const redisFieldPattern = /(?<=config-redis-).*/
-  const redisLabelPattern = /Config\.Redis.*/
-  const nonStandardConfigFields = redisFields.filter((field) => {
-    const match = field.model.match(redisFieldPattern)
-    return match && !Object.keys(partialFields).includes(match[0])
-  })
-  return nonStandardConfigFields.map((field) => {
-    const labelMatch = field.label.match(redisLabelPattern)
-    return {
-      label: labelMatch ? labelMatch[0] : field.label,
-      key: field.model,
-      value: 'N/A',
-      type: 'text',
-    }
-  })
 }
 
 export function isTagField(schema: MaybeRefOrGetter<UnionFieldSchema | undefined>): boolean {
@@ -277,7 +254,7 @@ export function sortFieldsByBundles(
   return result
 }
 
-export function normalizeMatch(match: FieldRenderer['match']): Match {
+export function normalizeMatch(match: FieldRendererRule['match']): Match {
   return typeof match === 'string'
     ? ({ genericPath }) => genericPath === match
     : match

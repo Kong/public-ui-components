@@ -1,7 +1,7 @@
 import { computed, inject } from 'vue'
 import { FEATURE_FLAGS } from '../../../../constants'
 
-import type { FormSchema, NamedFieldSchema, RecordFieldSchema } from '../../core/form-schema'
+import type { FormSchema, NamedFieldSchema, RecordFieldSchema } from '@kong-ui-public/freeform'
 
 /**
  * Gates expression mode on a plugin's expressible fields behind the 3.16

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { distributeEntityChecks } from './schema-enhancement'
 import { appendEntityChecksFromMetadata } from './schema-enhancement'
 import { PLUGIN_METADATA } from '../../definitions/metadata'
-import type { EntityCheck, FormSchema, RecordFieldSchema } from './core/form-schema'
+import type { EntityCheck, FormSchema, RecordFieldSchema } from '@kong-ui-public/freeform'
 
 describe('distributeEntityChecks', () => {
   // Helper to create a minimal form schema

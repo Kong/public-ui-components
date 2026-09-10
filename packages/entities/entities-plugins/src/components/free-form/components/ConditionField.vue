@@ -45,7 +45,7 @@
 import { KTooltip } from '@kong/kongponents'
 import { InfoIcon } from '@kong/icons'
 import { useId } from 'vue'
-import StringField from '../core/components/StringField.vue'
+import { StringField } from '@kong-ui-public/freeform'
 import externalLinks from '../../../external-links'
 import useI18n from '../../../composables/useI18n'
 

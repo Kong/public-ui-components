@@ -180,7 +180,7 @@ import { useTemplateRef, nextTick, computed, ref, toValue, toRef, useAttrs } fro
 import { AddIcon, TrashIcon, CloseIcon } from '@kong/icons'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
 import { replaceByDictionaryInFieldName, useField, useFieldAttrs, useFormShared, useItemKeys } from '../composables'
-import useI18n from '../../../../composables/useFreeformI18n'
+import useI18n from '../composables/useFreeformI18n'
 import * as utils from '../utils'
 import Field from './Field.vue'
 import type { ArrayLikeFieldSchema } from '../form-schema'

@@ -1,7 +1,6 @@
 import CommonForm from './CommonForm.vue'
 import { FEATURE_FLAGS } from '../../../constants'
-import StringField from '../core/components/StringField.vue'
-import MapField from '../core/components/MapField.vue'
+import { StringField, MapField } from '@kong-ui-public/freeform'
 
 describe('<CommonForm />', () => {
   const createBaseSchema = () => ({

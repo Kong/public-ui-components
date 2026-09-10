@@ -6,7 +6,7 @@ import rawSchema from '../../../../fixtures/schemas/rate-limiting'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from '../schema-enhancement'
 import ConfigForm from '../Common/ConfigForm.vue'
 
-import type { FormSchema } from '../core/form-schema'
+import type { FormSchema } from '@kong-ui-public/freeform'
 
 /**
  * Regression guard for the layout, not the field.

@@ -5,7 +5,7 @@ import { KButton, KInput } from '@kong/kongponents'
 import Form from './Form.vue'
 import StringField from './StringField.vue'
 import type { FormSchema, StringFieldSchema } from '../form-schema'
-import { USE_SECRET_INPUT_KEY } from '../../../../constants'
+import { USE_SECRET_INPUT_KEY } from '../constants'
 
 const FIELD_NAME = 'name'
 
