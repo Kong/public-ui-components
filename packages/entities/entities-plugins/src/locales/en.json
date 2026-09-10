@@ -1825,6 +1825,10 @@
       "plugin_modules": {
         "label": "Plugin modules",
         "alert": "Upload all plugin modules to the data plane: schema.lua, handler.lua"
+      },
+      "streaming_enabled": {
+        "alert": "Each data plane node must run with KONG_CUSTOM_PLUGIN_STREAMING_ENABLED=true. Otherwise, Kong Gateway removes this plugin from the node's configuration. {link}",
+        "alert_link": "Learn more"
       }
     },
     "step2_clone": {
