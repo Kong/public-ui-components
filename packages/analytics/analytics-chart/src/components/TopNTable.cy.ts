@@ -366,6 +366,44 @@ describe('<TopNTable />', () => {
   })
 
   describe('dimensions', () => {
+    it('aligns metric headers and values when no dimensions are selected', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: {
+            meta: {
+              ...MULTI_METRIC_TABLE_DATA.meta,
+              display: {},
+            },
+            data: [{
+              event: {
+                REQUEST_COUNT: 9483,
+                '4XX': 1,
+                '5XX': 0,
+                response_latency_average: 100,
+              },
+              timestamp: '2023-08-17T17:55:53.000Z',
+            }],
+          },
+        },
+      })
+
+      const expectedHeaders = ['Request count', '4xx', '5xx', 'Response latency (avg)']
+      const expectedValues = ['9.4K', '1', '0', '100 ms']
+
+      cy.getTestId('top-n-table-header-column').should('have.length', expectedHeaders.length)
+      expectedHeaders.forEach((header, index) => {
+        cy.getTestId('top-n-table-header-column').eq(index).should('have.text', header)
+      })
+      cy.get('tbody tr').should('have.length', 1).within(() => {
+        cy.get('td').should('have.length', expectedValues.length)
+        expectedValues.forEach((value, index) => {
+          cy.get('td').eq(index).should(($cell) => {
+            expect($cell.text().trim()).to.equal(value)
+          })
+        })
+      })
+    })
+
     it('keeps the name header for single-dimension responses', () => {
       cy.mount(TopNTable, {
         props: {

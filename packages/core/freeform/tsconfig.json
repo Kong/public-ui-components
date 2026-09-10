@@ -1,0 +1,23 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "declarationDir": "dist/types",
+    "types": [
+      "node",
+      "vite/client",
+      "cypress",
+      "cypress/vue",
+      "../../../cypress/support"
+    ]
+  },
+  "include": [
+    "src/**/*",
+    "sandbox/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

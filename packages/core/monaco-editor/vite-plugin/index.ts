@@ -206,7 +206,104 @@ function generateWorkerCode(
   ]
 }
 
+// Build the source for the `monaco-editor` entry module: only the languages/features/
+// workers the user asked for, as plain static imports so Vite/esbuild can pre-bundle them
+function buildMonacoModule(options?: Options): string {
+  const languagesDict = Object.fromEntries(
+    languages.map((lang) => [lang.label, lang]),
+  )
+
+  const featuresDict = Object.fromEntries(
+    features.map((feat) => [feat.label, feat]),
+  )
+
+  const featuresIds = resolveFeatures(
+    options?.features,
+    Object.keys(featuresDict) as EditorFeature[],
+  )
+
+  const featureImports = featuresIds.flatMap((featureId) => {
+    const feature = featuresDict[featureId]
+    if (!feature?.entry) {
+      return []
+    }
+    return generateImports(feature.entry)
+  })
+
+  const languageIds =
+    options?.languages || (Object.keys(languagesDict) as EditorLanguage[])
+
+  const languageImports = languageIds.flatMap((langId) => {
+    const lang = languagesDict[langId]
+    if (!lang?.entry) {
+      return []
+    }
+    return generateImports(lang.entry)
+  })
+
+  const customLanguageImports = (options?.customLanguages || []).map(
+    ({ entry }) => `import '${entry}'`,
+  )
+
+  const workerCode = generateWorkerCode(
+    languageIds,
+    languagesDict,
+    options?.customLanguages,
+  )
+
+  return [
+    "import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'",
+    ...featureImports,
+    ...languageImports,
+    ...customLanguageImports,
+    ...workerCode,
+    "export * from 'monaco-editor/esm/vs/editor/editor.api'",
+    'export default monaco',
+  ].join('\n')
+}
+
+// Build the source for the `shiki` entry module: only the languages/themes the user asked for
+async function buildShikiModule(options?: Options): Promise<string> {
+  const languageIds =
+    options?.shiki?.langs ||
+    (options?.languages || languages.map((lang) => lang.label))
+      // Only include languages that are bundled with shiki
+      .filter((lang): lang is BundledLanguage => lang in bundledLanguages)
+
+  const { code } = await codegen({
+    themes: options?.shiki?.themes || ['catppuccin-latte', 'material-theme-darker'],
+    engine: 'javascript',
+    langs: languageIds,
+    typescript: false,
+  })
+
+  return code
+}
+
+// Pull out the plain-JS `from '...'` specifiers referenced by a generated module, so they can
+// be handed to `optimizeDeps.include` and pre-bundled even though `monaco-editor` itself stays
+// excluded. `?worker` imports and `.css` files are left out — esbuild's dependency optimizer
+// doesn't understand either, they must stay on Vite's own (non-optimized) transform pipeline.
+function extractPreBundleSpecifiers(content: string): string[] {
+  const specifiers = new Set<string>()
+  // Matches both `import '<specifier>'` (side-effect only, no bindings) and
+  // `import ... from '<specifier>'` / `export ... from '<specifier>'`
+  for (const [, specifier] of content.matchAll(/(?:import|from)\s+['"]([^'"]+)['"]/g)) {
+    if (!specifier.startsWith('.') && !specifier.includes('?') && !specifier.endsWith('.css')) {
+      specifiers.add(specifier)
+    }
+  }
+  return [...specifiers]
+}
+
 export default function plugin(options?: Options): Plugin {
+  // Only monaco-editor's content is needed eagerly (to build `optimizeDeps.include` below), and
+  // building it is just string generation — cheap enough to do unconditionally. shiki's content
+  // is left lazy/memoized: generating it calls into `shiki-codegen`, which isn't free, and
+  // shouldn't run on every build/serve/test for consumers who never actually import `shiki`.
+  const monacoContent = buildMonacoModule(options)
+  let shikiContentPromise: Promise<string> | undefined
+
   return {
     name: 'vite-plugin-monaco',
     enforce: 'pre',
@@ -214,8 +311,17 @@ export default function plugin(options?: Options): Plugin {
     config() {
       return {
         optimizeDeps: {
-          // allow vite plugin to intercept imports in DEV
+          // `monaco-editor`/`shiki` must never be pre-bundled under their own name: anything
+          // that imports them directly (including other dependencies, like a component
+          // library that itself does `import 'monaco-editor'`) needs to keep hitting
+          // `resolveId` below so it gets redirected to the trimmed, generated entry instead
+          // of esbuild inlining the full, untrimmed package.
           exclude: ['monaco-editor', 'shiki'],
+          // The generated monaco-editor entry's own deep imports are real, stable submodules
+          // though — pre-bundle those explicitly so dev doesn't pay a per-file request for
+          // each one. (The shiki entry only imports `@shikijs/*` packages, which were never
+          // excluded, so Vite already discovers and pre-bundles those on its own.)
+          include: extractPreBundleSpecifiers(monacoContent),
         },
       }
     },
@@ -230,70 +336,9 @@ export default function plugin(options?: Options): Plugin {
 
     load(id) {
       if (id === VIRTUAL_MODULE_MONACO_ID) {
-        const languagesDict = Object.fromEntries(
-          languages.map((lang) => [lang.label, lang]),
-        )
-
-        const featuresDict = Object.fromEntries(
-          features.map((feat) => [feat.label, feat]),
-        )
-
-        const featuresIds = resolveFeatures(
-          options?.features,
-          Object.keys(featuresDict) as EditorFeature[],
-        )
-
-        const featureImports = featuresIds.flatMap((featureId) => {
-          const feature = featuresDict[featureId]
-          if (!feature?.entry) {
-            return []
-          }
-          return generateImports(feature.entry)
-        })
-
-        const languageIds =
-          options?.languages || (Object.keys(languagesDict) as EditorLanguage[])
-
-        const languageImports = languageIds.flatMap((langId) => {
-          const lang = languagesDict[langId]
-          if (!lang?.entry) {
-            return []
-          }
-          return generateImports(lang.entry)
-        })
-
-        const customLanguageImports = (options?.customLanguages || []).map(
-          ({ entry }) => `import '${entry}'`,
-        )
-
-        const workerCode = generateWorkerCode(
-          languageIds,
-          languagesDict,
-          options?.customLanguages,
-        )
-
-        return [
-          "import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'",
-          ...featureImports,
-          ...languageImports,
-          ...customLanguageImports,
-          ...workerCode,
-          "export * from 'monaco-editor/esm/vs/editor/editor.api'",
-          'export default monaco',
-        ].join('\n')
+        return monacoContent
       } else if (id === VIRTUAL_MODULE_SHIKI_ID) {
-        const languageIds =
-          options?.shiki?.langs ||
-          (options?.languages || languages.map((lang) => lang.label))
-            // Only include languages that are bundled with shiki
-            .filter((lang): lang is BundledLanguage => lang in bundledLanguages)
-
-        return codegen({
-          themes: options?.shiki?.themes || ['catppuccin-latte', 'material-theme-darker'],
-          engine: 'javascript',
-          langs: languageIds,
-          typescript: false,
-        })
+        return (shikiContentPromise ??= buildShikiModule(options))
       }
     },
   }
