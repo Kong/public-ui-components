@@ -216,27 +216,30 @@ describe('<SingleValue />', () => {
       .should('have.class', 'align-center')
   })
 
-  for (const width of [240, 480]) {
-    for (const sample of [
-      { metricName: 'request_count', metricUnit: 'count', current: 8412 },
-      { metricName: 'response_latency_p95', metricUnit: 'ms', current: 35.4 },
-      { metricName: 'ai_cost', metricUnit: 'usd', current: 127.25 },
-    ]) {
-      it(`keeps ${sample.metricUnit} values and trends within a ${width}px tile`, () => {
-        cy.mount(SingleValue, {
-          props: { data: buildExploreResult(sample), showTrend: true },
-          attrs: { style: { width: `${width}px` } },
-        })
+  const tileCases = [
+    { width: 240, metricName: 'request_count', metricUnit: 'count', current: 8412 },
+    { width: 240, metricName: 'response_latency_p95', metricUnit: 'ms', current: 35.4 },
+    { width: 240, metricName: 'ai_cost', metricUnit: 'usd', current: 127.25 },
+    { width: 480, metricName: 'request_count', metricUnit: 'count', current: 8412 },
+    { width: 480, metricName: 'response_latency_p95', metricUnit: 'ms', current: 35.4 },
+    { width: 480, metricName: 'ai_cost', metricUnit: 'usd', current: 127.25 },
+  ]
 
-        cy.getTestId('single-value-parent').should(($parent) => {
-          const parent = $parent[0]
-          expect(parent.scrollWidth).to.be.at.most(parent.clientWidth)
-        })
-        cy.getTestId('single-value-chart').should('be.visible')
-        cy.getTestId('single-value-trend').should('be.visible')
+  tileCases.forEach(({ width, ...sample }) => {
+    it(`keeps ${sample.metricUnit} values and trends within a ${width}px tile`, () => {
+      cy.mount(SingleValue, {
+        props: { data: buildExploreResult(sample), showTrend: true },
+        attrs: { style: { width: `${width}px` } },
       })
-    }
-  }
+
+      cy.getTestId('single-value-parent').should(($parent) => {
+        const parent = $parent[0]
+        expect(parent.scrollWidth).to.be.at.most(parent.clientWidth)
+      })
+      cy.getTestId('single-value-chart').should('be.visible')
+      cy.getTestId('single-value-trend').should('be.visible')
+    })
+  })
 
   it('applies positive/negative classes based on increaseIsBad', () => {
     const exploreResult = buildExploreResult({ previous: 100, current: 250 })
