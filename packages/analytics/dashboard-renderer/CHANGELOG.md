@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.25.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.25.1...%40kong-ui-public%2Fdashboard-renderer%408.25.2) (2026-09-10)
+
+### Bug Fixes
+
+* **analytics:** add provided scatter query fn to enriched context [MA-5465] ([#3825](https://github.com/Kong/public-ui-components/issues/3825)) ([1d1e0a6](https://github.com/Kong/public-ui-components/commit/1d1e0a621b9bc56b5a5dd80fb9c28bf0f2a62149))
+
+
 ## [8.25.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.25.0...%40kong-ui-public%2Fdashboard-renderer%408.25.1) (2026-09-10)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
