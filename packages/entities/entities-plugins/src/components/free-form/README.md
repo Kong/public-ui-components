@@ -51,12 +51,15 @@ free-form/
 ├── schema-enhancement.ts    # Transform legacy field rules to entity checks
 ├── components/              # entities-plugins-specific field components
 │   ├── RadioField.vue       # Radio button groups (plain, or `card` with descriptions)
-
 │   ├── AdvancedFields.vue   # Collapsible advanced fields section
 │   ├── ScopeEntityField.vue (+ .spec.ts, scope-entity-field.cy.ts) # Scope entity selector
 │   ├── CodeEditor.vue       # Code editor component
 │   ├── RedisConfigCard.vue  # Redis configuration card
- @theirs
+│   ├── RedisSelector.vue (+ free-form-redis-selector.cy.ts) # Redis partial instance selector
+│   ├── CredentialSecretField.vue (+ credential-secret-field.cy.ts) # Credential secret input (generate/reveal)
+│   ├── CollapsibleSection.vue # Generic collapsible section wrapper
+│   ├── PluginConfigurationForm.vue (+ .cy.ts) # Composes the core `Form` with the shared plugin chrome
+│   └── ConditionField.vue   # Optional condition editor in General Info
 ├── Common/                  # Generic plugin form used by default
 └── plugins/                 # Plugin registry entries and custom plugin forms
     ├── *.ts                 # Simple plugins configured with CommonForm + overrides
