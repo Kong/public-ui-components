@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.272.9](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.8...%40kong-ui-public%2Fentities-plugins%409.272.9) (2026-09-10)
+
+### Bug Fixes
+
+* **entities-plugins:** seed a default row and keep it in ACL allow/deny modes ([#3805](https://github.com/Kong/public-ui-components/issues/3805)) ([657229f](https://github.com/Kong/public-ui-components/commit/657229f9fa00e0b9c0b59a494471e4a5d9e5da02))
+
+
 ## [9.272.8](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fentities-plugins%409.272.7...%40kong-ui-public%2Fentities-plugins%409.272.8) (2026-09-10)
 
 ### Bug Fixes
