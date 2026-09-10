@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.28.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.27.0...%40kong-ui-public%2Fanalytics-chart%4010.28.0) (2026-09-10)
+
+### Features
+
+* **analytics:** add scatter plot chart type [MA-5431] ([#3812](https://github.com/Kong/public-ui-components/issues/3812)) ([b6f01f1](https://github.com/Kong/public-ui-components/commit/b6f01f1f51674086ac522043986c3471cfbaf74d))
+
+
 # [10.27.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.26.6...%40kong-ui-public%2Fanalytics-chart%4010.27.0) (2026-09-09)
 
 ### Features
