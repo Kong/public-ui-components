@@ -58,6 +58,18 @@
         </KBadge>
       </div>
 
+      <div
+        v-if="showMetricSelector"
+        class="metric-selector-wrapper"
+      >
+        <KSegmentedControl
+          v-model="activeMetric"
+          class="metric-selector"
+          data-testid="metric-selector"
+          :options="metricOptions"
+        />
+      </div>
+
       <div v-if="showRefresh">
         <KButton
           appearance="secondary"
@@ -188,6 +200,7 @@ import type {
   AbsoluteTimeRangeV4,
   AiExploreQuery,
   AnalyticsBridge,
+  AllAggregations,
   ExploreExportState,
   DashboardTileType,
   ExploreQuery,
@@ -219,8 +232,11 @@ import { storeToRefs } from 'pinia'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
 
 import { MoreIcon, EditIcon, WarningIcon, ProgressIcon, RefreshIcon } from '@kong/icons'
+import { KSegmentedControl } from '@kong/kongponents'
+import type { SegmentedControlOption } from '@kong/kongponents'
 
 import DonutChartRenderer from './DonutChartRenderer.vue'
+import english from '../locales/en.json'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -378,6 +394,7 @@ const componentData = computed(() => {
   }
   const chartRendererProps = {
     chartOptions: definition.chart,
+    activeMetric: activeMetric.value,
     headerDescription: tileDescription.value,
     requestsLink: hideZoomActions ? undefined : requestsLinkZoomActions.value,
     exploreLink: hideZoomActions ? undefined : exploreLinkZoomActions.value,
@@ -451,6 +468,7 @@ const hasTileHeader = computed<boolean>(() => {
     rangeUnsupported.value,
     Boolean(tileDescription.value),
     showRefresh,
+    showMetricSelector.value,
   ].some(Boolean)
 })
 
@@ -461,6 +479,32 @@ const chartDataGranularity = computed(() => {
 const isTimeSeriesChart = computed(() => {
   return ['timeseries_line', 'timeseries_bar'].includes(chart.value.type)
 })
+
+const metricNames = computed<AllAggregations[]>(() => chartData.value?.meta.metric_names ?? [])
+
+const activeMetric = ref<AllAggregations>()
+
+watch(metricNames, metrics => {
+  if (!activeMetric.value || !metrics.includes(activeMetric.value)) {
+    activeMetric.value = metrics[0]
+  }
+}, { immediate: true })
+
+const showMetricSelector = computed(() => (
+  isTimeSeriesChart.value
+  && (chartData.value?.data.length ?? 0) > 0
+  && metricNames.value.length > 1
+  && Object.keys(chartData.value?.meta.display ?? {}).length > 0
+))
+
+const isChartLabel = (name: string): name is keyof typeof english.chartLabels => Object.hasOwn(english.chartLabels, name)
+
+const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>(() => metricNames.value.map(value => ({
+  value,
+  label: isChartLabel(value)
+    ? i18n.t(`chartLabels.${value}`)
+    : value,
+})))
 
 const isAgedOutQuery = computed(() => {
   // Check table definitions first so TypeScript narrows before reading query.granularity.
@@ -650,6 +694,21 @@ defineExpose({ getExportData })
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .metric-selector-wrapper {
+      flex-shrink: 1;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+
+      .metric-selector {
+        width: max-content;
+
+        :deep(.k-segmented-control) {
+          margin: 0;
+        }
+      }
     }
 
     .tile-actions {

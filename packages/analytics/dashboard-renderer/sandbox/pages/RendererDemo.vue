@@ -438,6 +438,28 @@ const dashboardConfig = ref<DashboardConfig>({
         },
       },
     } satisfies TileConfig,
+    {
+      id: 'grouped-multi-metric-timeseries',
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+          chart_title: 'Response latency by status code',
+          stacked: false,
+        },
+        query: {
+          datasource: 'api_usage',
+          dimensions: ['time', 'status_code'],
+          metrics: ['response_latency_average', 'response_latency_p99'],
+          time_range: { type: 'relative', time_range: '6h' },
+          granularity: 'hourly',
+        },
+      },
+      layout: {
+        position: { col: 0, row: 13 },
+        size: { cols: 6, rows: 2 },
+      },
+    } satisfies TileConfig,
   ],
 })
 

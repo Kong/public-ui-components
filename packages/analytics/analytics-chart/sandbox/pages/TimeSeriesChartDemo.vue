@@ -5,9 +5,20 @@
   >
     <div class="sandbox-container">
       <div class="chart-section">
+        <div
+          v-if="activeMetricOptions.length > 1"
+          class="active-metric-control"
+        >
+          <KLabel>Active metric</KLabel>
+          <KSegmentedControl
+            v-model="activeMetric"
+            :options="activeMetricOptions"
+          />
+        </div>
         <div style="height: 500px">
           <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
           <AnalyticsChart
+            :active-metric="activeMetric"
             :chart-data="(exploreResult)"
             :chart-options="analyticsChartOptions"
             :legend-position="legendPosition"
@@ -248,7 +259,7 @@ import {
   ChartLegendPosition,
   CsvExportModal,
 } from '../../src'
-import type { AnalyticsExploreRecord, ExploreExportState, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
+import type { AllAggregations, AnalyticsExploreRecord, ExploreExportState, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType, Threshold } from '../../src/types'
 import { getStatusCodeDatasetColor, isValidJson, rand } from '../utils/utils'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
@@ -257,6 +268,8 @@ import {
 } from '@kong-ui-public/analytics-utilities'
 import latencyGatewayPreset from '../fixtures/multiMetricDimensionTimeSeriesPreset.json'
 import CodeText from '../CodeText.vue'
+import composables from '../../src/composables'
+import { isChartLabel } from '../../src/utils'
 import { INJECT_QUERY_PROVIDER } from '../../src/constants'
 
 enum Metrics {
@@ -404,6 +417,25 @@ const exploreResult = computed<ExploreResultV4>(() => {
   })
 })
 
+// The sandbox is the host: it owns the control and passes only the selection to the chart.
+const activeMetric = ref<AllAggregations>()
+const { i18n } = composables.useI18n()
+const activeMetricOptions = computed(() => {
+  const { data, meta } = exploreResult.value
+  const metrics = meta.metric_names ?? []
+  const groupedTimeSeries = ['timeseries_line', 'timeseries_bar'].includes(chartType.value)
+    && data.length > 0 && Object.keys(meta.display ?? {}).length > 0
+
+  return groupedTimeSeries && metrics.length > 1
+    ? metrics.map(value => ({ value, label: isChartLabel(value) ? i18n.t(`chartLabels.${value}`) : value }))
+    : []
+})
+watch(activeMetricOptions, options => {
+  if (!options.some(option => option.value === activeMetric.value)) {
+    activeMetric.value = options[0]?.value
+  }
+}, { immediate: true })
+
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: getStatusCodeDatasetColor(dimension) }), {}))
 
 const updateSelectedColor = (event: Event, label: string) => {
@@ -485,6 +517,16 @@ watch(multiDimensionToggle, enabled => {
 
   .controls-section {
     flex: 1;
+  }
+
+  .active-metric-control {
+    margin-bottom: 8px;
+    overflow-x: auto;
+
+    :deep(.k-segmented-control) {
+      margin: 0 0 0 auto;
+      width: max-content;
+    }
   }
 
   .dataset-options {

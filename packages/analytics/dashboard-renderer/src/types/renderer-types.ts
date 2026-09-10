@@ -1,4 +1,5 @@
 import type {
+  AllAggregations,
   AllFilters,
   TimeRangeV4,
   ValidDashboardChartQuery,
@@ -66,6 +67,11 @@ export interface ChartRendererProps<T> {
   chartOptions: T
   height: number
   refreshCounter: number
+  /**
+   * Active metric for grouped multi-metric time series charts.
+   * This is only used when rendering a time series chart with multiple metrics and a group-by dimension.
+   */
+  activeMetric?: AllAggregations
   headerDescription?: string
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink

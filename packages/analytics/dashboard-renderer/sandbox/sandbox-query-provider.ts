@@ -1,7 +1,7 @@
 import type { Component, Plugin } from 'vue'
 import { nonTsExploreResponse, routeExploreResponse } from './mock-data'
 import { INJECT_QUERY_PROVIDER } from '../src'
-import { generateCrossSectionalData, generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
+import { generateCrossSectionalData, generateData, generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
 import type {
   AnalyticsBridge,
   AnalyticsConfigV2,
@@ -25,6 +25,17 @@ const delayedResponse = <T>(response: T): Promise<T> => {
 const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> => {
   console.log('Querying data:', query)
   if (query.query.dimensions && query.query.dimensions.includes('time')) {
+    if (query.query.metrics?.includes('response_latency_average') && query.query.metrics.includes('response_latency_p99')) {
+      return await delayedResponse(generateData({
+        metrics: [
+          { name: 'response_latency_average', unit: 'ms' },
+          { name: 'response_latency_p99', unit: 'ms' },
+        ],
+        dimensionMap: { status_code: ['200', '400', '500'] },
+        timeSeries: true,
+      }))
+    }
+
     return await delayedResponse(
       generateSingleMetricTimeSeriesData(
         { name: 'request_count', unit: 'count' },

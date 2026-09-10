@@ -1,4 +1,3 @@
-/* eslint-disable vue/one-component-per-file -- Local stubs exercise the chart wrapper without rendering Chart.js. */
 import type { ExploreAggregations, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { exploreAggregations } from '@kong-ui-public/analytics-utilities'
 
@@ -26,26 +25,6 @@ const TimeSeriesChartStub = defineComponent({
       'data-testid': 'time-series-chart-stub',
       'data-metric-unit': props.metricUnit,
     })
-  },
-})
-
-const SegmentedControlStub = defineComponent({
-  name: 'KSegmentedControl',
-  props: {
-    modelValue: String,
-    options: {
-      type: Array as PropType<Array<{ value: string, label: string }>>,
-      required: true,
-    },
-  },
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    return () => h('div', { 'data-testid': 'metric-selector' }, props.options.map((option) => h('button', {
-      key: option.value,
-      type: 'button',
-      'data-testid': `metric-option-${option.value}`,
-      onClick: () => emit('update:modelValue', option.value),
-    }, option.label)))
   },
 })
 
@@ -89,7 +68,6 @@ const mountChart = ({ chartData = groupedMetricsResult, type = 'timeseries_line'
   },
   global: {
     stubs: {
-      KSegmentedControl: SegmentedControlStub,
       TimeSeriesChart: TimeSeriesChartStub,
       StackedBarChart: true,
       KTooltip: true,
@@ -98,18 +76,16 @@ const mountChart = ({ chartData = groupedMetricsResult, type = 'timeseries_line'
   },
 })
 
-describe('<AnalyticsChart /> metric selector', () => {
-  it('shows one metric at a time for grouped multi-metric timeseries data', async () => {
+describe('<AnalyticsChart /> activeMetric', () => {
+  it('renders the host-selected metric without an internal control', async () => {
     const wrapper = mountChart()
 
-    expect(wrapper.find('[data-testid="metric-selector"]').exists()).toBe(true)
-    expect(wrapper.findAll('[data-testid^="metric-option-"]')).toHaveLength(2)
-
+    expect(wrapper.find('[data-testid="metric-selector"]').exists()).toBe(false)
     const chart = wrapper.findComponent(TimeSeriesChartStub)
     expect(chart.props('chartData').datasets).toHaveLength(2)
     expect(chart.props('chartData').datasets.every((dataset: Dataset) => dataset.rawMetric === 'response_latency_average')).toBe(true)
 
-    await wrapper.get('[data-testid="metric-option-response_latency_p99"]').trigger('click')
+    await wrapper.setProps({ activeMetric: 'response_latency_p99' })
 
     expect(chart.props('chartData').datasets).toHaveLength(2)
     expect(chart.props('chartData').datasets.every((dataset: Dataset) => dataset.rawMetric === 'response_latency_p99')).toBe(true)
@@ -122,7 +98,7 @@ describe('<AnalyticsChart /> metric selector', () => {
     expect(groupedMetricsResult.meta.metric_names).toEqual(['response_latency_average', 'response_latency_p99'])
   })
 
-  it('does not show the selector for a single metric timeseries', () => {
+  it('ignores activeMetric for a single metric timeseries', async () => {
     const singleMetricResult: ExploreResultV4 = {
       ...groupedMetricsResult,
       meta: {
@@ -132,13 +108,15 @@ describe('<AnalyticsChart /> metric selector', () => {
     }
 
     const wrapper = mountChart({ chartData: singleMetricResult })
+    await wrapper.setProps({ activeMetric: 'response_latency_p99' })
+    expect(wrapper.findComponent(TimeSeriesChartStub).props('chartData').datasets.every((dataset: Dataset) => dataset.rawMetric === 'response_latency_average')).toBe(true)
 
     expect(wrapper.find('[data-testid="metric-selector"]').exists()).toBe(false)
   })
 
   it('retains a valid selection on refresh and falls back when that metric disappears', async () => {
     const wrapper = mountChart()
-    await wrapper.get('[data-testid="metric-option-response_latency_p99"]').trigger('click')
+    await wrapper.setProps({ activeMetric: 'response_latency_p99' })
     await wrapper.setProps({ chartData: { ...groupedMetricsResult, meta: { ...groupedMetricsResult.meta } } })
     const chart = wrapper.findComponent(TimeSeriesChartStub)
     expect(chart.props('chartData').datasets.every((dataset: Dataset) => dataset.rawMetric === 'response_latency_p99')).toBe(true)
@@ -151,27 +129,35 @@ describe('<AnalyticsChart /> metric selector', () => {
     expect(chart.props('chartData').datasets.every((dataset: Dataset) => dataset.rawMetric === 'response_latency_average')).toBe(true)
   })
 
+  it('falls back when activeMetric is absent from the result', async () => {
+    const wrapper = mountChart()
+    await wrapper.setProps({ activeMetric: 'request_count' })
+    expect(wrapper.findComponent(TimeSeriesChartStub).props('chartData').datasets.every((dataset: Dataset) => dataset.rawMetric === 'response_latency_average')).toBe(true)
+  })
+
   it('preserves dimension colors when switching metrics', async () => {
     const wrapper = mountChart()
     const chart = wrapper.findComponent(TimeSeriesChartStub)
     const colors = () => Object.fromEntries(chart.props('chartData').datasets.map((dataset: Dataset) => [dataset.label, dataset.borderColor]))
     const initialColors = colors()
-    await wrapper.get('[data-testid="metric-option-response_latency_p99"]').trigger('click')
+    await wrapper.setProps({ activeMetric: 'response_latency_p99' })
     expect(colors()).toEqual(initialColors)
   })
 
-  it('keeps all metrics visible without grouping and does not affect non-timeseries charts', () => {
+  it('keeps all metrics visible without grouping and does not affect non-timeseries charts', async () => {
     const wrapper = mountChart({ chartData: { ...groupedMetricsResult, meta: { ...groupedMetricsResult.meta, display: {} } } })
     expect(wrapper.find('[data-testid="metric-selector"]').exists()).toBe(false)
+    await wrapper.setProps({ activeMetric: 'response_latency_p99' })
     expect(wrapper.findComponent(TimeSeriesChartStub).props('chartData').datasets).toHaveLength(2)
     const bar = mountChart({ type: 'vertical_bar' })
-    expect(bar.find('[data-testid="metric-selector"]').exists()).toBe(false)
+    const originalData = bar.findComponent({ name: 'StackedBarChart' }).props('chartData')
+    await bar.setProps({ activeMetric: 'response_latency_p99' })
+    expect(bar.findComponent({ name: 'StackedBarChart' }).props('chartData')).toEqual(originalData)
   })
 
   it('supports metric selection on a grouped timeseries bar chart', async () => {
     const wrapper = mountChart({ type: 'timeseries_bar' })
-    expect(wrapper.find('[data-testid="metric-selector"]').exists()).toBe(true)
-    await wrapper.get('[data-testid="metric-option-response_latency_p99"]').trigger('click')
+    await wrapper.setProps({ activeMetric: 'response_latency_p99' })
     expect(wrapper.findComponent(TimeSeriesChartStub).props('chartData').datasets).toHaveLength(2)
   })
 
@@ -186,7 +172,7 @@ describe('<AnalyticsChart /> metric selector', () => {
     expect(chart.props('threshold')).toMatchObject({
       response_latency_average: [{ type: 'error', value: 30 }], response_latency_p99: [],
     })
-    await wrapper.get('[data-testid="metric-option-response_latency_p99"]').trigger('click')
+    await wrapper.setProps({ activeMetric: 'response_latency_p99' })
     expect(chart.props('threshold')).toMatchObject({
       response_latency_average: [], response_latency_p99: [{ type: 'error', value: 300 }],
     })
