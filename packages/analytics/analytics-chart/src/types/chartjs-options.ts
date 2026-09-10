@@ -2,7 +2,7 @@ import type { Ref, ComputedRef } from 'vue'
 import type { Chart, ChartType as ChartJsChartType, TooltipModel, Color } from 'chart.js'
 import type { ChartType } from './chart-types'
 import type { ExploreAggregations, GranularityValues } from '@kong-ui-public/analytics-utilities'
-import type { Threshold } from './chart-data'
+import type { ResolvedReferenceLine, Threshold } from './chart-data'
 import type { ScatterChartColors } from '../utils/theme-colors'
 
 export interface TooltipEntry {
@@ -65,7 +65,9 @@ export interface ScatterChartOptions {
   timeRangeMs: Ref<number | undefined>
   metricAxesTitle?: Ref<string | undefined>
   dimensionAxesTitle?: Ref<string | undefined>
+  metricUnit?: Ref<string | undefined>
   outlierValue?: Ref<number | undefined>
+  referenceLines?: Ref<ResolvedReferenceLine[]>
   themeColors: Ref<ScatterChartColors>
 }
 

@@ -192,3 +192,83 @@ describe('requestsToScatterData', () => {
     })
   })
 })
+
+describe('requestsToScatterData extras', () => {
+  const result = (results: RequestRecord[]): FetchAllRequestsResult => ({
+    results,
+    meta: { query_id: '', time_range: { start: START, end: END }, size: results.length },
+    truncated: false,
+    limit: 10_000,
+  })
+
+  const records: RequestRecord[] = [{
+    request_start: START,
+    route: 'checkout',
+    ai: [{ cost: 0.1, totalTokens: 2426, providerName: 'openai' }],
+  }]
+
+  it('annotates a point with the requested fields', () => {
+    const data = requestsToScatterData(result(records), {
+      metric: 'cost',
+      unroll: 'ai',
+      extraFields: [
+        { field: 'totalTokens', label: 'Tokens', unit: 'token count' },
+        { field: 'providerName', label: 'Provider' },
+      ],
+    })!
+
+    expect(data.points[0].extras).toEqual([
+      { label: 'Tokens', value: 2426, unit: 'token count' },
+      { label: 'Provider', value: 'openai' },
+    ])
+  })
+
+  it('falls back to the parent record for a field the entry lacks', () => {
+    const data = requestsToScatterData(result(records), {
+      metric: 'cost',
+      unroll: 'ai',
+      extraFields: [{ field: 'route', label: 'Route' }],
+    })!
+
+    expect(data.points[0].extras).toEqual([{ label: 'Route', value: 'checkout' }])
+  })
+
+  it('defaults the label to the field name', () => {
+    const data = requestsToScatterData(result(records), {
+      metric: 'cost',
+      unroll: 'ai',
+      extraFields: [{ field: 'providerName' }],
+    })!
+
+    expect(data.points[0].extras).toEqual([{ label: 'providerName', value: 'openai' }])
+  })
+
+  it('skips fields the record does not carry rather than showing them blank', () => {
+    const data = requestsToScatterData(result(records), {
+      metric: 'cost',
+      unroll: 'ai',
+      extraFields: [
+        { field: 'nope', label: 'Missing' },
+        { field: 'providerName', label: 'Provider' },
+      ],
+    })!
+
+    expect(data.points[0].extras).toEqual([{ label: 'Provider', value: 'openai' }])
+  })
+
+  it('leaves extras undefined when every field is missing', () => {
+    const data = requestsToScatterData(result(records), {
+      metric: 'cost',
+      unroll: 'ai',
+      extraFields: [{ field: 'nope' }],
+    })!
+
+    expect(data.points[0].extras).toBeUndefined()
+  })
+
+  it('leaves extras undefined when none are requested', () => {
+    const data = requestsToScatterData(result(records), { metric: 'cost', unroll: 'ai' })!
+
+    expect(data.points[0].extras).toBeUndefined()
+  })
+})

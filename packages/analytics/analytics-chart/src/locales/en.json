@@ -11,8 +11,7 @@
   "scatter": {
     "median": "Median",
     "percentile": "p{value}",
-    "outlier": "Outlier (> {label})",
-    "outlierTooltip": "{series} (outlier > {label})"
+    "outlier": "Outlier (> {label})"
   },
   "chartUnits": {
     "ms": "ms",

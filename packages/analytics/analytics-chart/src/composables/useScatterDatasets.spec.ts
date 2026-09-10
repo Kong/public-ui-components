@@ -31,6 +31,13 @@ const makeResult = (data: GroupByResult[], display: DisplayBlob = {} as DisplayB
     } as unknown as QueryResponseMeta,
   } as ExploreResultV4))
 
+/**
+ * Chart.js calls a scriptable option once per point, with the point on `raw`, and once
+ * per dataset — to build the legend swatch — with nothing on it.
+ */
+const resolve = (option: unknown, raw?: unknown): unknown =>
+  typeof option === 'function' ? option({ raw }) : option
+
 describe('jitter', () => {
   it('returns 0 when jitter is disabled', () => {
     expect(jitter(0)).toBe(0)
@@ -94,42 +101,59 @@ describe('useScatterDatasets', () => {
     expect(datasets[0].label).toBe('cp:route-a')
   })
 
-  it('adds percentile line datasets spanning the query time range', () => {
-    const { datasets } = useScatterDatasets(
+  it('resolves percentile lines without plotting them', () => {
+    const { datasets, referenceLines } = useScatterDatasets(
       { scatter: { percentileLines: [{ percentile: 50 }, { percentile: 95 }] } },
       makeResult(costRecords()),
     ).value
 
-    const median = datasets.find(d => d.label === 'Median')
-    const p95 = datasets.find(d => d.label === 'p95')
-
-    expect(median).toBeDefined()
-    expect(p95).toBeDefined()
-    // rank = 0.5 * 9 = 4.5, midway between 5 and 6
-    expect(median!.data).toEqual([
-      { x: new Date(START).valueOf(), y: 5.5 },
-      { x: new Date(END).valueOf(), y: 5.5 },
+    // Lines are chart chrome: a dataset of theirs would widen the axes to the query
+    // time range and squash the plotted records into whatever width was left.
+    expect(datasets).toHaveLength(1)
+    expect(datasets[0].type).toBe('scatter')
+    expect(referenceLines).toEqual([
+      // rank = 0.5 * 9 = 4.5, midway between 5 and 6
+      { percentile: 50, label: 'Median', value: 5.5, color: expect.any(String), borderDash: [6, 4] },
+      { percentile: 95, label: 'p95', value: expect.any(Number), color: expect.any(String), borderDash: [2, 3] },
     ])
-    expect(median!.total).toBe(5.5)
   })
 
-  it('splits points above the outlier percentile into their own dataset', () => {
-    const { datasets } = useScatterDatasets(
+  it('honours a custom label and dash pattern on a line', () => {
+    const { referenceLines } = useScatterDatasets(
+      { scatter: { percentileLines: [{ percentile: 95, label: 'Ceiling', borderDash: [1, 1] }] } },
+      makeResult(costRecords()),
+    ).value
+
+    expect(referenceLines![0]).toMatchObject({ label: 'Ceiling', borderDash: [1, 1] })
+  })
+
+  it('paints points above the outlier percentile in place', () => {
+    const { datasets, outlier } = useScatterDatasets(
       { scatter: { outlierPercentile: 80 } },
       makeResult(costRecords()),
     ).value
 
-    const outliers = datasets.find(d => d.label === 'Outlier (> p80)')
+    // rank = 0.8 * 9 = 7.2, so 9 and 10 sit above the threshold
+    expect(outlier).toEqual({ value: 8.2, label: 'Outlier (> p80)', color: expect.any(String) })
 
-    expect(outliers).toBeDefined()
-    expect(outliers!.data).toEqual([
-      { x: expect.any(Number), y: 9, tooltipLabel: 'Costs (outlier > p80)' },
-      { x: expect.any(Number), y: 10, tooltipLabel: 'Costs (outlier > p80)' },
-    ])
-    expect(datasets[0].data).toHaveLength(8)
+    // Every point stays in the series it belongs to, so the series keeps its legend toggle
+    expect(datasets).toHaveLength(1)
+    expect(datasets[0].data).toHaveLength(10)
+    expect(resolve(datasets[0].backgroundColor, { y: 9 })).toBe(outlier!.color)
+    expect(resolve(datasets[0].backgroundColor, { y: 1 })).toBe('rgba(168, 108, 213, 0.6)')
   })
 
-  it('collects outliers from every series into a single dataset', () => {
+  it('draws an outlier slightly larger than the cloud around it', () => {
+    const { datasets } = useScatterDatasets(
+      { scatter: { outlierPercentile: 80, pointRadius: 3 } },
+      makeResult(costRecords()),
+    ).value
+
+    expect(resolve(datasets[0].pointRadius, { y: 10 })).toBe(4)
+    expect(resolve(datasets[0].pointRadius, { y: 1 })).toBe(3)
+  })
+
+  it('keeps every dimension in its own series when outliers span several', () => {
     const data: GroupByResult[] = [
       { timestamp: START, event: { cost: 1, route: 'a' } },
       { timestamp: START, event: { cost: 100, route: 'a' } },
@@ -137,26 +161,32 @@ describe('useScatterDatasets', () => {
       { timestamp: START, event: { cost: 200, route: 'b' } },
     ]
     const display = { route: { a: { name: 'A' }, b: { name: 'B' } } } as DisplayBlob
-    const { datasets } = useScatterDatasets(
+    const { datasets, outlier } = useScatterDatasets(
       { scatter: { outlierPercentile: 50 } },
       makeResult(data, display),
     ).value
 
-    const outliers = datasets.filter(d => d.rawDimension === 'outlier')
+    expect(datasets.map(d => d.label)).toEqual(['A', 'B'])
+    expect(datasets.every(d => d.data.length === 2)).toBe(true)
+    expect(datasets.map(d => resolve(d.backgroundColor, { y: 1000 }))).toEqual([outlier!.color, outlier!.color])
+  })
 
-    expect(outliers).toHaveLength(1)
-    expect(outliers[0].data).toHaveLength(2)
-    expect(outliers[0].data.map((point: any) => point.tooltipLabel)).toEqual([
-      'A (outlier > Median)',
-      'B (outlier > Median)',
-    ])
+  it('leaves the legend swatch in the series color', () => {
+    const { datasets } = useScatterDatasets(
+      { scatter: { outlierPercentile: 50 } },
+      makeResult(costRecords()),
+    ).value
+
+    // Chart.js resolves a scriptable option with no point on it to build the legend swatch
+    expect(resolve(datasets[0].backgroundColor)).toBe('rgba(168, 108, 213, 0.6)')
+    expect(resolve(datasets[0].borderColor)).toBe('#a86cd5')
   })
 
   it('draws points translucent so a dense cloud shows density', () => {
     const { datasets } = useScatterDatasets({}, makeResult(costRecords())).value
 
-    expect(datasets[0].backgroundColor).toBe('rgba(168, 108, 213, 0.6)')
-    expect(datasets[0].borderColor).toBe('#a86cd5')
+    expect(resolve(datasets[0].backgroundColor, { y: 1 })).toBe('rgba(168, 108, 213, 0.6)')
+    expect(resolve(datasets[0].borderColor, { y: 1 })).toBe('#a86cd5')
   })
 
   it('honours an explicit point opacity', () => {
@@ -166,7 +196,7 @@ describe('useScatterDatasets', () => {
     ).value
 
     // A fully opaque color serializes as rgb() rather than rgba(..., 1).
-    expect(datasets[0].backgroundColor).toBe('rgb(168, 108, 213)')
+    expect(resolve(datasets[0].backgroundColor, { y: 1 })).toBe('rgb(168, 108, 213)')
   })
 
   it('keeps outlier points opaque so they stay vivid over the cloud', () => {
@@ -175,16 +205,15 @@ describe('useScatterDatasets', () => {
       makeResult(costRecords()),
     ).value
 
-    const outliers = datasets.find(d => d.rawDimension === 'outlier')
-
-    expect(outliers?.backgroundColor).not.toContain('rgba')
+    expect(resolve(datasets[0].backgroundColor, { y: 10 })).not.toContain('rgba')
   })
 
-  it('omits percentile lines when none are requested', () => {
-    const { datasets } = useScatterDatasets({}, makeResult(costRecords())).value
+  it('omits percentile lines and the outlier threshold when neither is requested', () => {
+    const chartData = useScatterDatasets({}, makeResult(costRecords())).value
 
-    expect(datasets).toHaveLength(1)
-    expect(datasets[0].type).toBe('scatter')
+    expect(chartData.datasets).toHaveLength(1)
+    expect(chartData.referenceLines).toBeUndefined()
+    expect(chartData.outlier).toBeUndefined()
   })
 
   it('applies jitter to the x value only', () => {
@@ -207,12 +236,12 @@ describe('useScatterDatasets theming', () => {
     document.documentElement.style.setProperty(name, value)
 
   const medianColor = () => {
-    const { datasets } = useScatterDatasets(
+    const { referenceLines } = useScatterDatasets(
       { scatter: { percentileLines: [{ percentile: 50 }] } },
       makeResult(costRecords()),
     ).value
 
-    return datasets.find(d => d.label === 'Median')?.borderColor
+    return referenceLines?.[0].color
   }
 
   afterEach(() => {
@@ -229,23 +258,24 @@ describe('useScatterDatasets theming', () => {
   it('draws outliers in the theme\'s resolved danger color', () => {
     setToken('--kui-color-background-danger', '#d78392')
 
-    const { datasets } = useScatterDatasets(
+    const { datasets, outlier } = useScatterDatasets(
       { scatter: { outlierPercentile: 80 } },
       makeResult(costRecords()),
     ).value
 
-    expect(datasets.find(d => d.rawDimension === 'outlier')?.borderColor).toBe('#d78392')
+    expect(outlier?.color).toBe('#d78392')
+    expect(resolve(datasets[0].borderColor, { y: 10 })).toBe('#d78392')
   })
 
   it('honours an explicit color over the theme token', () => {
     setToken('--kui-color-text', '#d2d7d2')
 
-    const { datasets } = useScatterDatasets(
+    const { referenceLines } = useScatterDatasets(
       { scatter: { percentileLines: [{ percentile: 50, color: '#ff00ff' }] } },
       makeResult(costRecords()),
     ).value
 
-    expect(datasets.find(d => d.label === 'Median')?.borderColor).toBe('#ff00ff')
+    expect(referenceLines?.[0].color).toBe('#ff00ff')
   })
 
   it('repaints when the owning component re-resolves the theme colors', () => {
@@ -259,11 +289,51 @@ describe('useScatterDatasets theming', () => {
       makeResult(costRecords()),
     )
 
-    expect(chartData.value.datasets.find(d => d.label === 'Median')?.borderColor).toBe('#000000')
+    expect(chartData.value.referenceLines?.[0].color).toBe('#000000')
 
     setToken('--kui-color-text', '#ffffff')
     themeColors.value = scatterChartColors()
 
-    expect(chartData.value.datasets.find(d => d.label === 'Median')?.borderColor).toBe('#ffffff')
+    expect(chartData.value.referenceLines?.[0].color).toBe('#ffffff')
+  })
+})
+
+describe('useScatterDatasets extras', () => {
+  const withExtras = (values: number[]): ComputedRef<ScatterChartData> => computed(() => ({
+    points: values.map((value, i) => ({
+      timestamp: new Date(START).valueOf() + i * 1000,
+      value,
+      extras: [{ label: 'Tokens', value: value * 100, unit: 'token count' }],
+    })),
+    metric: 'cost',
+    start: START,
+    end: END,
+  }))
+
+  it('carries extras onto the plotted points', () => {
+    const { datasets } = useScatterDatasets({}, withExtras([1, 2, 3])).value
+
+    expect(datasets[0].data).toEqual([
+      expect.objectContaining({ y: 1, extras: [{ label: 'Tokens', value: 100, unit: 'token count' }] }),
+      expect.objectContaining({ y: 2, extras: [{ label: 'Tokens', value: 200, unit: 'token count' }] }),
+      expect.objectContaining({ y: 3, extras: [{ label: 'Tokens', value: 300, unit: 'token count' }] }),
+    ])
+  })
+
+  it('keeps extras on outlier points', () => {
+    const { datasets } = useScatterDatasets(
+      { scatter: { outlierPercentile: 50 } },
+      withExtras([1, 2, 3, 4, 100]),
+    ).value
+
+    for (const point of datasets[0].data as Array<{ extras?: unknown[] }>) {
+      expect(point.extras).toHaveLength(1)
+    }
+  })
+
+  it('omits the key entirely when a point has no extras', () => {
+    const { datasets } = useScatterDatasets({}, makeResult(costRecords())).value
+
+    expect(datasets[0].data.every(point => !('extras' in (point as object)))).toBe(true)
   })
 })

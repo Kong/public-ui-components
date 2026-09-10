@@ -29,7 +29,7 @@
       :id="legendID"
       :chart-instance="chartInstance"
       data-testid="legend"
-      :items="legendItems"
+      :items="allLegendItems"
     />
   </div>
 </template>
@@ -38,11 +38,12 @@
 import type { Chart, Plugin } from 'chart.js'
 import type { ComputedRef } from 'vue'
 import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
-import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipState } from '../../types'
+import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, TooltipState } from '../../types'
 import type { ScatterChartColors } from '../../utils'
 
 import { computed, inject, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
 import { Scatter } from 'vue-chartjs'
+import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
@@ -51,6 +52,7 @@ import composables from '../../composables'
 import { ChartLegendPosition } from '../../enums'
 import { generateLegendItems, scatterChartColors } from '../../utils'
 import { OutlierBandPlugin } from '../chart-plugins/OutlierBandPlugin'
+import { ReferenceLinePlugin } from '../chart-plugins/ReferenceLinePlugin'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 
@@ -60,7 +62,6 @@ interface ScatterChartProps {
   metricUnit?: string
   granularity: GranularityValues
   timeRangeMs?: number
-  legendValues?: LegendValues
   metricAxesTitle?: string
   dimensionAxesTitle?: string
   syntheticsDataKey?: string
@@ -76,7 +77,6 @@ const props = withDefaults(
     chartData: undefined,
     metricUnit: '',
     timeRangeMs: undefined,
-    legendValues: undefined,
     metricAxesTitle: undefined,
     dimensionAxesTitle: undefined,
     syntheticsDataKey: '',
@@ -90,17 +90,19 @@ const props = withDefaults(
 const legendPosition = inject('legendPosition', ChartLegendPosition.Bottom)
 const activeColorMode = inject<ComputedRef<'light' | 'dark'>>('app:konnectColorMode', computed(() => 'light'))
 
+const { i18n } = composables.useI18n()
+const { formatUnit } = unitFormatter({ i18n })
 const { translateUnit } = composables.useTranslatedUnits()
 
 const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 
 const outlierBandPlugin = new OutlierBandPlugin()
+const referenceLinePlugin = new ReferenceLinePlugin()
 const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
 
 const themeColors = ref<ScatterChartColors>(scatterChartColors())
 const chartInstance = ref<{ chart: Chart }>()
-const legendItems = ref<EnhancedLegendItem[]>([])
 
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
@@ -136,39 +138,61 @@ watch(activeColorMode, () => {
   themeColors.value = scatterChartColors(chartParentRef.value)
 })
 
-const referenceLineValues = computed<LegendValues | undefined>(() => {
-  const legendValues = props.legendValues
+const outlier = computed(() => props.chartData?.outlier)
+const referenceLines = computed(() => props.chartData?.referenceLines ?? [])
 
-  if (!legendValues) {
-    return undefined
-  }
-
-  const values: LegendValues = {}
-
-  for (const { label, total } of props.chartData?.datasets || []) {
-    if (total !== undefined && label && label in legendValues) {
-      values[label] = legendValues[label]
-    }
-  }
-
-  return values
-})
+const datasetLegendItems = ref<EnhancedLegendItem[]>([])
 
 const htmlLegendPlugin: Plugin = {
   id: legendID,
   afterUpdate(chart: Chart) {
-    legendItems.value = generateLegendItems(chart, referenceLineValues.value, props.chartLegendSortFn)
+    datasetLegendItems.value = generateLegendItems(chart, undefined, props.chartLegendSortFn)
   },
 }
 
-const outlierValue = computed(() => (
-  props.shadeOutlierRegion ? props.chartData?.outlierValue : undefined
-))
+/**
+ * These are not associated with a dataset and are not toggle'able, they are simply
+ * key entries for the chart, e.g. percentile lines, outliers, etc.
+ */
+const keyLegendItems = computed<EnhancedLegendItem[]>(() => {
+  const items: EnhancedLegendItem[] = []
 
+  if (outlier.value) {
+    items.push({
+      text: outlier.value.label,
+      fillStyle: outlier.value.color,
+      strokeStyle: outlier.value.color,
+      isKey: true,
+    } as EnhancedLegendItem)
+  }
+
+  for (const line of referenceLines.value) {
+    items.push({
+      text: line.label,
+      fillStyle: line.color,
+      strokeStyle: line.color,
+      lineDash: line.borderDash,
+      isKey: true,
+      value: {
+        raw: line.value,
+        formatted: formatUnit(line.value, props.metricUnit, { translateUnit }),
+      },
+    } as EnhancedLegendItem)
+  }
+
+  return items
+})
+
+const allLegendItems = computed(() => [...datasetLegendItems.value, ...keyLegendItems.value])
+
+const outlierBandValue = computed(() => (
+  props.shadeOutlierRegion ? outlier.value?.value : undefined
+))
 
 const plugins = computed(() => [
   htmlLegendPlugin,
-  ...(outlierValue.value !== undefined ? [outlierBandPlugin] : []),
+  ...(outlierBandValue.value !== undefined ? [outlierBandPlugin] : []),
+  ...(referenceLines.value.length ? [referenceLinePlugin] : []),
 ])
 
 const remountKey = computed(() => `scatter-${plugins.value.map(p => p.id).join('-')}`)
@@ -180,7 +204,9 @@ const { options } = composables.useScatterChartOptions({
   timeRangeMs: toRef(props, 'timeRangeMs'),
   metricAxesTitle: toRef(props, 'metricAxesTitle'),
   dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),
-  outlierValue,
+  metricUnit: toRef(props, 'metricUnit'),
+  outlierValue: outlierBandValue,
+  referenceLines,
   themeColors,
 })
 
