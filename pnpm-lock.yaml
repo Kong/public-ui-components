@@ -12,7 +12,7 @@ overrides:
   dompurify@<=3.4.12: ^3.4.14
   form-data@>=3.0.0 <3.0.5: ^4.0.6
   immutable@<4.3.9: ^4.3.9
-  js-yaml@>=4.0.0 <4.3.1: ^4.3.2
+  js-yaml@>=4.0.0 <4.3.1: ^5.4.1
   minimatch@>=9.0.0 <9.0.7: ^9.0.9
   pacote@>=11.2.7 <21.5.1: ^21.5.1
   prismjs@<1.30.0: ^1.30.0
@@ -7178,10 +7178,6 @@ packages:
     resolution: {integrity: sha512-6EuL879VkRA+1Cz578mKMiKvjPNEuk6+r1JaFzoSWejZmtf7xWbIyw1e3KkxlkzTIt9Taw6JBhEppG7utc1P+w==}
     hasBin: true
 
-  js-yaml@4.3.2:
-    resolution: {integrity: sha512-SFNOvSJ+Dgf/9An904Yx+CgSlIPCkIpao4qo51lpee25TIRejdH3rhR4EZMGoNx3/TP3O+wzWuiTFl4sqbltzA==}
-    hasBin: true
-
   js-yaml@5.4.1:
     resolution: {integrity: sha512-28R/k+NAjeuf7+CKlTxWZVExJGwVVLwY06DgEnOMz2gEpfNkDcD7QvyiVPT0xy0XXhU8vHsd4Ot42OOPdJG7dQ==}
     hasBin: true
@@ -10695,7 +10691,7 @@ packages:
     engines: {node: '>=20.9.0'}
     hasBin: true
     peerDependencies:
-      js-yaml: ^4.3.2
+      js-yaml: ^5.4.1
       json5: ^2.2.3
       toml: ^3.0.0 || ^4.0.0
       webpack: ^5.101.0
@@ -15567,7 +15563,7 @@ snapshots:
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
-      js-yaml: 4.3.2
+      js-yaml: 5.4.1
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.9.3
@@ -15576,7 +15572,7 @@ snapshots:
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
-      js-yaml: 4.3.2
+      js-yaml: 5.4.1
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.9.3
@@ -17792,10 +17788,6 @@ snapshots:
       argparse: 1.0.10
       esprima: 4.0.1
 
-  js-yaml@4.3.2:
-    dependencies:
-      argparse: 2.0.1
-
   js-yaml@5.4.1:
     dependencies:
       argparse: 2.0.1
@@ -17980,7 +17972,7 @@ snapshots:
       ini: 1.3.8
       init-package-json: 8.2.2
       inquirer: 12.9.6(@types/node@24.13.3)
-      js-yaml: 4.3.2
+      js-yaml: 5.4.1
       libnpmaccess: 10.0.3(supports-color@7.2.0)
       libnpmpublish: 11.1.2(supports-color@7.2.0)
       load-json-file: 6.2.0
@@ -20931,7 +20923,7 @@ snapshots:
       deepmerge: 4.3.1
       fast-json-patch: 3.1.1
       is-plain-object: 5.0.0
-      js-yaml: 4.3.2
+      js-yaml: 5.4.1
       node-abort-controller: 3.1.1
       node-fetch-commonjs: 3.3.2
       qs: 6.15.2
@@ -20952,7 +20944,7 @@ snapshots:
       ieee754: 1.2.1
       immutable: 4.3.9
       js-file-download: 0.4.12
-      js-yaml: 4.3.2
+      js-yaml: 5.4.1
       lodash: 4.18.1
       patch-package: 8.0.0
       prop-types: 15.8.1
