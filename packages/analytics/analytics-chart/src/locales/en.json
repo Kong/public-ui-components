@@ -8,6 +8,12 @@
   "jumpToExplore": "Open in explorer",
   "more_actions": "More actions",
   "emptyEntityInfo": "Requests that do not have a value for the selected group",
+  "scatter": {
+    "median": "Median",
+    "percentile": "p{value}",
+    "outlier": "Outlier (> {label})",
+    "outlierTooltip": "{series} (outlier > {label})"
+  },
   "chartUnits": {
     "ms": "ms",
     "bytes": "Byte{plural}",
@@ -60,6 +66,31 @@
   },
   "chartLabels": {
     "ai_count": "LLM request count",
+    "latencies_response_ms": "Response latency",
+    "latencies_upstream_ms": "Upstream latency",
+    "latencies_kong_gateway_ms": "Kong latency",
+    "latencies_kong_internal_ms": "Kong internal latency",
+    "request_body_size": "Request size",
+    "response_body_size": "Response size",
+    "response_header_content_length": "Content length",
+    "ai": {
+      "cost": "Cost",
+      "costCaching": "Caching cost",
+      "promptTokens": "Prompt tokens",
+      "completionTokens": "Completion tokens",
+      "totalTokens": "Total tokens",
+      "llmLatency": "LLM latency",
+      "fetchLatency": "Fetch latency",
+      "embeddingsLatency": "Embeddings latency"
+    },
+    "mcp": {
+      "latency": "MCP latency",
+      "response_body_size": "MCP response size"
+    },
+    "a2a": {
+      "latency": "A2A latency",
+      "response_body_size": "A2A response size"
+    },
     "ai_gateway": "AI gateway",
     "ai_gateway_agent": "AI gateway agent",
     "ai_gateway_consumer": "AI gateway consumer",

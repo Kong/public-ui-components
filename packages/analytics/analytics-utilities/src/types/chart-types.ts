@@ -8,6 +8,7 @@ export const reportChartTypes = [
   'single_value',
   'top_n',
   'table',
+  'scatter',
 ] as const
 
 export type ReportChartTypes = typeof reportChartTypes[number]
