@@ -206,16 +206,16 @@
               :label="showTrend ? 'Show Trend' : 'Hide Trend'"
             />
           </div>
+          <KSelect
+            v-model="alignX"
+            :items="alignXOptions"
+            label="Align X"
+            placeholder="Select alignment"
+          />
           <div v-if="showTrend">
             <KInputSwitch
               v-model="increaseIsBad"
               :label="increaseIsBad ? 'Increase Is Bad' : 'Increase Is Good'"
-            />
-            <KSelect
-              v-model="alignX"
-              :items="alignXOptions"
-              label="Align X"
-              placeholder="Select alignment"
             />
           </div>
         </div>
@@ -260,6 +260,12 @@
       class="simple-chart-sandbox"
       :class="{ 'single-value-sandbox': isSingleValue }"
     >
+      <div
+        v-if="isSingleValue"
+        class="single-value-preview-header"
+      >
+        Requests
+      </div>
       <SimpleChart
         :chart-data="exploreResult"
         :chart-options="simpleChartOptions"
@@ -321,7 +327,7 @@ import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import type { AlignX, AnalyticsChartColors, SimpleChartType, SimpleChartOptions, SimpleChartMetricDisplay } from '../../src'
 
 import { computed, ref, inject } from 'vue'
-import { generateCrossSectionalData } from '@kong-ui-public/analytics-utilities'
+import { generateCrossSectionalData, generateData } from '@kong-ui-public/analytics-utilities'
 import { SimpleChart, TopNTable } from '../../src'
 
 type TopNMetricKind = 'count' | 'ms' | 'bytes' | 'usd' | 'rpm' | 'fallback'
@@ -415,12 +421,19 @@ const reverseDataset = ref(true)
 const gaugeNumerator = ref(0)
 const showTrend = ref(false)
 const increaseIsBad = ref(false)
-const alignX = ref<AlignX>('evenly')
+const alignX = ref<AlignX>('left')
 
 const statusCodeDimensionValues = ref(new Set(['200', '300']))
 const topNMetric = ref<TopNMetricKind>('count')
 const topNMetricCount = ref(1)
 const topNDimensionCount = ref(1)
+
+const createSingleValueData = (): ExploreResultV4 => generateData({
+  metrics: [{ name: 'request_count', unit: 'count' }],
+  timeSeries: true,
+})
+
+const singleValueData = ref<ExploreResultV4>(createSingleValueData())
 
 const metricItems = computed<SelectItem[]>(() => {
   let out = []
@@ -465,6 +478,17 @@ const exploreResult = computed<ExploreResultV4>(() => {
     return { data: [] as AnalyticsExploreRecord[], meta: {} as QueryResponseMeta }
   }
 
+  if (chartType.value === 'single_value') {
+    const data = singleValueData.value.data
+
+    return {
+      ...singleValueData.value,
+      data: showTrend.value
+        ? [data[0], data[data.length - 1]]
+        : [data[data.length - 1]],
+    }
+  }
+
   return generateCrossSectionalData([{
     name: 'request_count',
     unit: 'count',
@@ -472,7 +496,11 @@ const exploreResult = computed<ExploreResultV4>(() => {
 })
 
 const randomizeData = () => {
-  // Randomize the data
+  if (chartType.value === 'single_value') {
+    singleValueData.value = createSingleValueData()
+    return
+  }
+
   statusCodeDimensionValues.value = new Set([Math.floor(Math.random() * 1000).toString(), Math.floor(Math.random() * 1000).toString()])
 }
 
@@ -656,7 +684,7 @@ const simpleChartOptions = computed<SimpleChartOptions>(() => ({
   numerator: gaugeNumerator.value,
   showTrend: showTrend.value,
   increaseIsBad: showTrend.value ? increaseIsBad.value : false,
-  alignX: showTrend.value ? alignX.value : 'evenly',
+  alignX: alignX.value,
 }))
 
 const dataCode = computed(() => {
@@ -685,9 +713,27 @@ const isSingleValue = computed<boolean>(() => {
 
 .simple-chart-sandbox {
   &.single-value-sandbox {
+    background-color: var(--kui-color-background, #fff);
+    border: 1px solid var(--kui-color-border-neutral, #d9d9d9);
+    border-radius: var(--kui-border-radius-20, 4px);
     max-width: 100%;
-    overflow-x: auto;
-    resize: horizontal;
+    min-height: 160px;
+    min-width: 240px;
+    overflow: auto;
+    resize: both;
+    width: min(100%, 320px);
+
+    .single-value-preview-header {
+      font-size: var(--kui-font-size-40, 16px);
+      font-weight: var(--kui-font-weight-bold, 700);
+      line-height: 24px;
+      padding: var(--kui-space-40, 8px) var(--kui-space-50, 12px) 0;
+    }
+
+    :deep(.simple-chart-shell) {
+      box-sizing: border-box;
+      padding: 0 var(--kui-space-50, 12px) var(--kui-space-50, 12px);
+    }
   }
 }
 

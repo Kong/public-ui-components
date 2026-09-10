@@ -14,6 +14,29 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import { EntityLink } from '@kong-ui-public/entities-shared'
 
+const singleValueTrendExploreResponse: ExploreResultV4 = {
+  data: [
+    {
+      event: { request_count: 7_812 },
+      timestamp: '2024-01-31T18:00:00.000Z',
+    },
+    {
+      event: { request_count: 8_412 },
+      timestamp: '2024-01-31T19:00:00.000Z',
+    },
+  ],
+  meta: {
+    display: {},
+    end: '2024-01-31T20:00:00.000Z',
+    granularity_ms: 60 * 60 * 1000,
+    metric_names: ['request_count'],
+    metric_units: { request_count: 'count' },
+    query_id: 'single-value-trend',
+    start: '2024-01-31T18:00:00.000Z',
+    truncated: false,
+  },
+}
+
 const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -24,6 +47,16 @@ const delayedResponse = <T>(response: T): Promise<T> => {
 
 const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> => {
   console.log('Querying data:', query)
+  if (
+    query.query.granularity === 'trend'
+    && query.query.dimensions?.length === 1
+    && query.query.dimensions[0] === 'time'
+    && query.query.metrics?.length === 1
+    && query.query.metrics[0] === 'request_count'
+  ) {
+    return await delayedResponse(singleValueTrendExploreResponse)
+  }
+
   if (query.query.dimensions && query.query.dimensions.includes('time')) {
     return await delayedResponse(
       generateSingleMetricTimeSeriesData(

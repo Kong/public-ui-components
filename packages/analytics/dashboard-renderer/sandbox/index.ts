@@ -3,6 +3,7 @@ import App from './App.vue'
 
 import Kongponents from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
+import '@kong-ui-public/analytics-chart/dist/style.css'
 
 import sandboxQueryProvider from './sandbox-query-provider'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'

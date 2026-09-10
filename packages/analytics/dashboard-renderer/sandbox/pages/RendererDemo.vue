@@ -396,20 +396,22 @@ const dashboardConfig = ref<DashboardConfig>({
       definition: {
         chart: {
           type: 'single_value',
-          chart_title: 'Single Value chart of mock data',
+          chart_title: 'Requests',
         },
         query: {
           datasource: 'basic',
-          limit: 1,
+          dimensions: ['time'],
+          granularity: 'trend',
+          metrics: ['request_count'],
         },
       },
       layout: {
         position: {
           col: 3,
-          row: 10,
+          row: 11,
         },
         size: {
-          cols: 3,
+          cols: 2,
           rows: 1,
           fit_to_content: true,
         },
