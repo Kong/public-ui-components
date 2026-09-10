@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.24.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.23.0...%40kong-ui-public%2Fdashboard-renderer%408.24.0) (2026-09-10)
+
+### Features
+
+* **analytics:** add scatter chart renderer [MA-5465] ([#3821](https://github.com/Kong/public-ui-components/issues/3821)) ([0dc7ea2](https://github.com/Kong/public-ui-components/commit/0dc7ea20801c283c06a6ac7684861cf9373e30e1))
+
+
 # [8.23.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.22.1...%40kong-ui-public%2Fdashboard-renderer%408.23.0) (2026-09-10)
 
 ### Features
