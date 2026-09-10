@@ -745,9 +745,9 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
   Object.keys(schema).sort().forEach(key => {
     // The root `expressions` record holds the expression twin of every field the
     // Gateway marks `expressible`. Freeform renders each twin inline beside the
-    // field it overrides (see `ExpressionField`); VFG has no such affordance, and
-    // the generic record walk below would flatten the record into a row of stray
-    // `expressions-*` inputs, so skip it entirely.
+    // field it overrides (see `StringField`/`NumberField`); VFG has no such
+    // affordance, and the generic record walk below would flatten the record
+    // into a row of stray `expressions-*` inputs, so skip it entirely.
     if (!parentKey && key === EXPRESSIONS_FIELD) {
       return
     }

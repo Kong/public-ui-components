@@ -43,10 +43,6 @@ function pickFieldComponent(schema: UnionFieldSchema | undefined) {
  * Resolves the component that renders a field's plain value, from its schema
  * type alone.
  *
- * Lives here rather than inside `Field.vue` because `ExpressionField` needs the
- * same mapping to render the value half of an expressible field, and importing
- * `Field.vue` for it would be circular.
- *
  * Returns `undefined` for a type with no renderer yet; callers surface that.
  */
 export function resolveFieldComponent(schema: UnionFieldSchema | undefined): Component | undefined {
