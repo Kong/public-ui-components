@@ -10,6 +10,9 @@ import {
   filterableBasicExploreDimensions,
   filterableExploreDimensions,
   filterableManagedCacheExploreDimensions,
+  filterableRequestDimensions,
+  filterableRequestMetrics,
+  filterableRequestWildcardDimensions,
   granularityValues,
   managedCacheExploreAggregations,
   queryableAgenticExploreDimensions,
@@ -32,6 +35,7 @@ export const dashboardTileTypes = [
   'donut',
   'timeseries_line',
   'timeseries_bar',
+  'scatter',
   'golden_signals',
   'top_n',
   'table',
@@ -169,6 +173,82 @@ export const timeseriesChartSchema = {
 } as const satisfies JSONSchema
 
 export type TimeseriesChartOptions = FromSchemaWithOptions<typeof timeseriesChartSchema>
+
+export const scatterPercentileLineSchema = {
+  type: 'object',
+  properties: {
+    percentile: {
+      type: 'number',
+      minimum: 0,
+      maximum: 100,
+    },
+    label: {
+      type: 'string',
+      description: 'Overrides the default label.',
+    },
+    border_dash: {
+      type: 'array',
+      description: 'Dash pattern for the line.',
+      items: {
+        type: 'number',
+      },
+    },
+    color: {
+      type: 'string',
+    },
+  },
+  required: ['percentile'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export const scatterChartSchema = {
+  type: 'object',
+  description: 'Plots one point per record, percentiles are computed from the records returned.',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['scatter'],
+    },
+    percentile_lines: {
+      type: 'array',
+      description: 'Reference lines derived from the plotted values.',
+      items: scatterPercentileLineSchema,
+    },
+    outlier_percentile: {
+      type: 'number',
+      description: 'Percentile above which points are split into a highlighted outlier series.',
+      minimum: 0,
+      maximum: 100,
+    },
+    shade_outlier_region: {
+      type: 'boolean',
+      default: false,
+    },
+    jitter_ms: {
+      type: 'number',
+      description: 'Maximum horizontal jitter so records sharing a timestamp do not stack into one column.',
+      minimum: 0,
+    },
+    point_radius: {
+      type: 'number',
+      minimum: 0,
+    },
+    point_opacity: {
+      type: 'number',
+      description: 'Opacity of plotted points.',
+      minimum: 0,
+      maximum: 1,
+    },
+    chart_dataset_colors: chartDatasetColorsSchema,
+    synthetics_data_key: syntheticsDataKey,
+    chart_title: chartTitle,
+    allow_csv_export: allowCsvExport,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type ScatterChartOptions = FromSchemaWithOptions<typeof scatterChartSchema>
 
 export const gaugeChartSchema = {
   type: 'object',
@@ -694,6 +774,42 @@ export const platformTabularQuerySchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
+export const apiRequestsQuerySchema = {
+  type: 'object',
+  description: 'A query for the api-requests endpoint.',
+  properties: {
+    datasource: {
+      type: 'string',
+      enum: [
+        'requests',
+      ],
+    },
+    metric: {
+      type: 'string',
+      description: 'Field plotted on the y axis.',
+    },
+    dimension: {
+      type: 'string',
+      description: 'Field used to split points into series.',
+    },
+    filters: filtersFn(Array.from(new Set([
+      ...filterableRequestDimensions,
+      ...filterableRequestWildcardDimensions,
+      ...filterableRequestMetrics,
+    ]))),
+    time_range: baseQueryProperties.time_range,
+    max_records: {
+      type: 'number',
+      description: 'Ceiling on records gathered across pages. The endpoint serves at most 1000 per page. Defaults to 10000.',
+      minimum: 1,
+    },
+  },
+  required: ['datasource', 'metric'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type ApiRequestsQuery = FromSchemaWithOptions<typeof apiRequestsQuerySchema>
+
 const validDashboardChartQuerySchemas = [
   apiUsageQuerySchema,
   basicQuerySchema,
@@ -734,6 +850,7 @@ const dashboardTileChartSchema = {
     gaugeChartSchema,
     donutChartSchema,
     timeseriesChartSchema,
+    scatterChartSchema,
     metricCardSchema,
     topNTableSchema,
     slottableSchema,
@@ -767,6 +884,20 @@ const tableChartTileDefinitionSchema = {
 } as const satisfies JSONSchema
 
 export type TableChartTileDefinition = FromSchemaWithOptions<typeof tableChartTileDefinitionSchema>
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const scatterTileDefinitionSchema = {
+  type: 'object',
+  properties: {
+    query: apiRequestsQuerySchema,
+    chart: scatterChartSchema,
+    header_description: tileHeaderDescription,
+  },
+  required: ['query', 'chart'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type ScatterTileDefinition = FromSchemaWithOptions<typeof scatterTileDefinitionSchema>
 
 export const tileDefinitionSchema = {
   anyOf: [

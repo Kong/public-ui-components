@@ -7,6 +7,7 @@ import {
   dashboardConfigSchema,
   llmUsageSchema,
   agenticUsageSchema,
+  apiRequestsQuerySchema,
   validDashboardChartQuery,
   validDashboardQuery,
   validDashboardTableQuery,
@@ -439,6 +440,22 @@ describe('dashboardSchema.v2', () => {
     expect(schema.properties.dimensions.items.enum).toEqual(expectedDimensions)
     expect(schema.properties.filters.items.oneOf[0].properties.field.enum).toEqual(expectedFilterableDimensions)
     expect(schema.properties.filters.items.oneOf[1].properties.field.enum).toEqual(expectedFilterableDimensions)
+  })
+
+  it('leaves the api-requests metric and dimension open', () => {
+    expect(apiRequestsQuerySchema.properties.datasource.enum).toEqual(['requests'])
+    expect(apiRequestsQuerySchema.properties.metric).toMatchObject({ type: 'string' })
+    expect(apiRequestsQuerySchema.properties.dimension).toMatchObject({ type: 'string' })
+    expect('enum' in apiRequestsQuerySchema.properties.metric).toBe(false)
+    expect('enum' in apiRequestsQuerySchema.properties.dimension).toBe(false)
+  })
+
+  it('accepts a scatter query naming a nested field the schema never listed', () => {
+    const validate = new Ajv({ strict: false }).compile(apiRequestsQuerySchema)
+
+    expect(validate({ datasource: 'requests', metric: 'ai.cost', dimension: 'ai.pluginName' })).toBe(true)
+    expect(validate({ datasource: 'requests', metric: 'ai.somethingAddedLater' })).toBe(true)
+    expect(validate({ datasource: 'explore', metric: 'ai.cost' })).toBe(false)
   })
 
   it('loosens only the platform branch', () => {
