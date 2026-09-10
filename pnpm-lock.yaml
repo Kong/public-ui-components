@@ -10,7 +10,7 @@ overrides:
   browserslist@<=4.28.6: ^4.28.8
   cookie@<0.7.0: ^2.0.1
   dompurify@<=3.4.12: ^3.4.14
-  form-data@>=3.0.0 <3.0.5: ^3.0.5
+  form-data@>=3.0.0 <3.0.5: ^4.0.6
   immutable@<4.3.9: ^4.3.9
   js-yaml@>=4.0.0 <4.3.1: ^4.3.2
   minimatch@>=9.0.0 <9.0.7: ^9.0.9
@@ -6312,10 +6312,6 @@ packages:
 
   forever-agent@0.6.1:
     resolution: {integrity: sha512-j0KLYPhm6zeac4lz3oJ3o65qvgQCcPubiyotZrXqEaG4hNagNYO8qdlUrX5vwqv9ohqeT/Z3j6+yW067yWWdUw==}
-
-  form-data@3.0.5:
-    resolution: {integrity: sha512-j23EibVLnp4zNXGW7LjryXYa2X6U/M96yoOX+ybZxwkYajdxRNEqYY3zhh7y0i6kfISKS2jr+EJq1YTUDEv5+w==}
-    engines: {node: '>= 6'}
 
   form-data@4.0.6:
     resolution: {integrity: sha512-vKatAh4SlVfgbv+YtmhiRjhEMJsYpsG1Y2rMQtR+SVSbytsSD1YGzDIcrAJmdFec88u/+VoGmxnl+80gL1tRCQ==}
@@ -16862,14 +16858,6 @@ snapshots:
 
   forever-agent@0.6.1: {}
 
-  form-data@3.0.5:
-    dependencies:
-      asynckit: 0.4.0
-      combined-stream: 1.0.8
-      es-set-tostringtag: 2.1.0
-      hasown: 2.0.4
-      mime-types: 2.1.35
-
   form-data@4.0.6:
     dependencies:
       asynckit: 0.4.0
@@ -17377,7 +17365,7 @@ snapshots:
       commander: 2.20.3
       debug: 2.6.9(supports-color@10.2.2)
       event-stream: 3.3.4
-      form-data: 3.0.5
+      form-data: 4.0.6
       fs-readfile-promise: 2.0.1
       fs-writefile-promise: 1.0.3(mkdirp@1.0.4)
       har-validator: 5.1.5
