@@ -54,6 +54,7 @@ export const aiExploreAggregations = [
   'ai_request_count',
   'error_rate',
   'cost',
+  'cost_per_request_average',
   'llm_cache_embeddings_latency_average',
   'llm_cache_fetch_latency_average',
   'llm_latency_average',
