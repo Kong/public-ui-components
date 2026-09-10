@@ -1,4 +1,4 @@
-import type { FormSchema } from '../../src/types/plugins/form-schema'
+import type { FormSchema } from '../../src/components/free-form/core/form-schema'
 
 const entitlementEnforcementSchema: FormSchema = {
   type: 'record',

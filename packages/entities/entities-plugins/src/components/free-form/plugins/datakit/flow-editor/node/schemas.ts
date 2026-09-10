@@ -1,4 +1,4 @@
-import type { FormSchema } from '../../../../../../types/plugins/form-schema'
+import type { FormSchema } from '../../../../core/form-schema'
 
 export const ServiceRequestSchema: FormSchema = {
   'fields': [

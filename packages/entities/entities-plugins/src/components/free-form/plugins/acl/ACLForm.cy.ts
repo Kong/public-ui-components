@@ -1,6 +1,6 @@
 import ACLForm from './ACLForm.vue'
 import aclSchema, { aclSchemaWithoutWhenModes } from '../../../../../fixtures/schemas/acl'
-import type { FormSchema } from '../../../../types/plugins/form-schema'
+import type { FormSchema } from '../../core/form-schema'
 
 interface MountOptions {
   schema?: FormSchema

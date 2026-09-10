@@ -1,0 +1,16 @@
+import type { BooleanFieldSchema } from '../../../form-schema'
+import type { HandlerOption } from './types'
+import { selectors } from '../../shared/selectors'
+
+export async function fillBoolean(option: HandlerOption<BooleanFieldSchema>): Promise<void> {
+  const { page, fieldKey, value } = option
+
+  const selector = selectors.field(fieldKey)
+  const element = page.locator(selector)
+
+  if (value === true) {
+    await element.check()
+  } else if (value === false) {
+    await element.uncheck()
+  }
+}

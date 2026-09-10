@@ -11,7 +11,7 @@
 <script lang="ts" setup>
 import SandboxPage from '../SandboxPage.vue'
 import { buildMockingSchema } from '../../fixtures/schemas/free-form-mocking'
-import Form from '../../src/components/free-form/shared/Form.vue'
+import Form from '../../src/components/free-form/core/components/Form.vue'
 </script>
 
 <style scoped>

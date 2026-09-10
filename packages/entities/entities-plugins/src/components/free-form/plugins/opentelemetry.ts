@@ -1,5 +1,5 @@
-import MapField from '../shared/MapField.vue'
-import { definePluginConfig } from '../shared/define-plugin-config'
+import MapField from '../core/components/MapField.vue'
+import { definePluginConfig } from '../define-plugin-config'
 
 export default definePluginConfig({
   experimental: true,

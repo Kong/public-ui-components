@@ -41,12 +41,12 @@
 </template>
 
 <script setup lang="ts">
-import Form from '../../../../shared/Form.vue'
+import Form from '../../../../core/components/Form.vue'
 import PropertiesField from './PropertiesField.vue'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import { computed, useTemplateRef } from 'vue'
-import EnumField from '../../../../shared/EnumField.vue'
-import BooleanField from '../../../../shared/BooleanField.vue'
+import EnumField from '../../../../core/components/EnumField.vue'
+import BooleanField from '../../../../core/components/BooleanField.vue'
 import InputsField from './InputsField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'
 import { extractKeyFromProperty, identifyPropertyHasKey, isReadableProperty, isWritableProperty } from '../node/property'

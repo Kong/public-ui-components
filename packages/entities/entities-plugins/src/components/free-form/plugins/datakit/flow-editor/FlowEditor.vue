@@ -29,7 +29,7 @@ import { ExpandIcon } from '@kong/icons'
 import { watch } from 'vue'
 
 import english from '../../../../../locales/en.json'
-import { useFormShared } from '../../../shared/composables'
+import { useFormShared } from '../../../core/composables'
 import { provideEditorStore, useLeaveConfirmation } from '../composables'
 import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'

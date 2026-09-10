@@ -1,12 +1,12 @@
 import { computed, h } from 'vue'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
-import Form from '../../free-form/shared/Form.vue'
+import Form from '../../free-form/core/components/Form.vue'
 import ConfigFormContent from './ConfigFormContent.vue'
 import { BEFORE_SAVE_KEY } from '../../const'
 import { FEATURE_FLAGS } from '../../../constants'
-import { PLUGIN_CONTEXT_KEY } from '../../free-form/shared/plugin-context'
-import { FORM_EDITING } from '../../free-form/shared/const'
-import type { FormSchema } from '../../../types/plugins/form-schema'
+import { PLUGIN_CONTEXT_KEY } from '../../free-form/plugin-context'
+import { FORM_EDITING } from '../../free-form/const'
+import type { FormSchema } from '../../free-form/core/form-schema'
 
 // Schema with both principals and identity_realms (like key-auth)
 const schemaWithRealms: FormSchema = {

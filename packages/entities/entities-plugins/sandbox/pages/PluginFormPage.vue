@@ -78,7 +78,7 @@ import { ToastManager } from '@kong/kongponents'
 import { provideDeckCommandEditor } from '@kong-ui-public/entities-shared/deck-editor'
 
 import type { EntityCreateEvent, KongManagerPluginFormConfig, KonnectPluginFormConfig } from '../../src'
-import type { GlobalAction } from '../../src/components/free-form/shared/types'
+import type { GlobalAction } from '../../src/components/free-form/core/types'
 
 const toaster = new ToastManager()
 

@@ -21,11 +21,11 @@
       "require": "./dist/endpoints/plugins-endpoints.js"
     },
     "./filler/cypress": {
-      "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/filler/cypress/index.d.ts",
+      "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/core/filler/cypress/index.d.ts",
       "import": "./dist/filler/cypress/index.js"
     },
     "./filler/playwright": {
-      "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/filler/playwright/index.d.ts",
+      "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/core/filler/playwright/index.d.ts",
       "import": "./dist/filler/playwright/index.js"
     },
     "./freeform": {

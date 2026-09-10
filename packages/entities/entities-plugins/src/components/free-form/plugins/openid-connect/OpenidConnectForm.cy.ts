@@ -2,10 +2,10 @@ import { ref } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import OpenidConnectForm from './OpenidConnectForm.vue'
-import type { FormSchema } from '../../../../types/plugins/form-schema'
-import { REDIS_PARTIAL_INFO } from '../../shared/const'
+import type { FormSchema } from '../../core/form-schema'
+import { REDIS_PARTIAL_INFO } from '../../const'
 import { FEATURE_FLAGS, USE_SECRET_INPUT_KEY } from '../../../../constants'
-import { appendEntityChecksFromMetadata, distributeEntityChecks } from '../../shared/schema-enhancement'
+import { appendEntityChecksFromMetadata, distributeEntityChecks } from '../../schema-enhancement'
 import schemaOidc from '../../../../../fixtures/schemas/oidc'
 
 

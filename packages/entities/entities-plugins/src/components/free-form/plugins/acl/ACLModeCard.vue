@@ -75,10 +75,10 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { KExternalLink, KRadio } from '@kong/kongponents'
-import { useFormShared } from '../../shared/composables'
-import ArrayField from '../../shared/ArrayField.vue'
-import StringField from '../../shared/StringField.vue'
-import * as utils from '../../shared/utils'
+import { useFormShared } from '../../core/composables'
+import ArrayField from '../../core/components/ArrayField.vue'
+import StringField from '../../core/components/StringField.vue'
+import * as utils from '../../core/utils'
 import externalLinks from '../../../../external-links'
 import useI18n from '../../../../composables/useI18n'
 
