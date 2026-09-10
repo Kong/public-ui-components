@@ -1,4 +1,6 @@
 import type {
+  ChartTileDefinition,
+  ScatterTileDefinition,
   TableChartTileDefinition,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
@@ -8,6 +10,18 @@ export const isTableChartDefinition = (
   definition: TileDefinition | undefined,
 ): definition is TableChartTileDefinition => {
   return definition?.chart.type === 'table'
+}
+
+export const isRequestsChartDefinition = (
+  definition: TileDefinition | undefined,
+): definition is ScatterTileDefinition => {
+  return definition?.query?.datasource === 'requests'
+}
+
+export const isExploreChartDefinition = (
+  definition: TileDefinition | undefined,
+): definition is ChartTileDefinition => {
+  return !!definition && !isTableChartDefinition(definition) && !isRequestsChartDefinition(definition)
 }
 
 export const tileDescription = (
