@@ -108,11 +108,13 @@
           </div>
           <br>
           <!-- Metric item selection -->
-          <KSelect
-            :items="metricItems"
-            label="Metric"
-            placeholder="Select Metric"
-            @selected="onMetricSelected"
+          <KMultiselect
+            v-model="selectedMetricNames"
+            :items="metricItemDefinitions"
+            label="Metrics"
+            placeholder="Select metrics"
+            width="100%"
+            @selected="onMetricsSelected"
           />
         </div>
 
@@ -121,9 +123,9 @@
         <div class="dataset-options">
           <KButton
             size="small"
-            @click="addDataset()"
+            @click="addDimension()"
           >
-            Add dataset
+            Add dimension value
           </KButton>
         </div>
 
@@ -132,12 +134,6 @@
           <KInputSwitch
             v-model="multiDimensionToggle"
             :label="multiDimensionToggle ? 'Multi Dimension' : 'Single Dimension'"
-          />
-        </div>
-        <div v-if="!multiDimensionToggle">
-          <KInputSwitch
-            v-model="multiMetricToggle"
-            :label="multiMetricToggle ? 'Multi Metric' : 'Single Metric'"
           />
         </div>
         <div>
@@ -206,6 +202,19 @@
           v-model="exploreResultText"
           :class="{ 'has-error': hasError, 'is-valid': isValid }"
         />
+        <KButton
+          size="small"
+          @click="loadLatencyGatewayPreset()"
+        >
+          Load grouped latency preset
+        </KButton>
+        <KButton
+          v-if="exploreResultText"
+          size="small"
+          @click="useGeneratedData()"
+        >
+          Use generated data
+        </KButton>
 
         <div class="config-container">
           <div
@@ -243,26 +252,24 @@ import type { AnalyticsExploreRecord, ExploreExportState, ExploreAggregations, E
 import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType, Threshold } from '../../src/types'
 import { getStatusCodeDatasetColor, isValidJson, rand } from '../utils/utils'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
-import { generateMultipleMetricTimeSeriesData, generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
+import {
+  generateData,
+} from '@kong-ui-public/analytics-utilities'
+import latencyGatewayPreset from '../fixtures/multiMetricDimensionTimeSeriesPreset.json'
 import CodeText from '../CodeText.vue'
 import { INJECT_QUERY_PROVIDER } from '../../src/constants'
 
 enum Metrics {
   TotalRequests = 'TotalRequests',
+  LatencyAverage = 'LatencyAverage',
   LatencyP99 = 'LatencyP99',
   ResponseSizeP99 = 'ResponseSizeP99',
-}
-
-interface MetricSelection {
-  name: Metrics
-  unit: string
 }
 
 // Inject the app-links from the entry file
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
 const timeSeriesZoomToggle = ref(true)
-const multiMetricToggle = ref(false)
 const stackToggle = ref(true)
 const limitToggle = ref(false)
 const multiDimensionToggle = ref(false)
@@ -272,18 +279,17 @@ const emptyState = ref(false)
 const thresholdToggle = ref(false)
 const chartType = ref<ChartType>('timeseries_line')
 const legendPosition = ref(ChartLegendPosition.Bottom)
-const secondaryMetrics = ref([{ name: 'secondaryMetric', unit: 'count' }])
-const selectedMetric = ref<MetricSelection>({
-  name: Metrics.TotalRequests,
-  unit: 'count',
-})
+const selectedMetricNames = ref<Metrics[]>([Metrics.TotalRequests])
 const thresholdValue = ref(500)
 
-const metricItems = [{
+const metricItemDefinitions = [{
   label: 'Total Requests',
   value: Metrics.TotalRequests,
   unit: 'count',
-  selected: true,
+}, {
+  label: 'Latency Average',
+  value: Metrics.LatencyAverage,
+  unit: 'ms',
 }, {
   label: 'Latency P99',
   value: Metrics.LatencyP99,
@@ -293,6 +299,15 @@ const metricItems = [{
   value: Metrics.ResponseSizeP99,
   unit: 'bytes',
 }]
+
+const selectedMetric = computed(() => {
+  const selected = metricItemDefinitions.find(item => item.value === selectedMetricNames.value[0]) ?? metricItemDefinitions[0]
+
+  return {
+    name: selected.value,
+    unit: selected.unit,
+  }
+})
 
 // Short labels
 const statusCodeLabels = [
@@ -345,6 +360,15 @@ const isValid = computed(() => exploreResultText.value !== undefined &&
   exploreResultText.value !== '' &&
   isValidJson(exploreResultText.value))
 
+const selectedMetrics = computed(() => selectedMetricNames.value.map(name => {
+  const metric = metricItemDefinitions.find(item => item.value === name) ?? metricItemDefinitions[0]
+
+  return {
+    name: metric.value,
+    unit: metric.unit,
+  }
+}))
+
 const exploreResult = computed<ExploreResultV4>(() => {
   if (emptyState.value) {
     return { data: [] as AnalyticsExploreRecord[], meta: {} as QueryResponseMeta } as ExploreResultV4
@@ -366,17 +390,18 @@ const exploreResult = computed<ExploreResultV4>(() => {
     limit: limitToggle.value ? 10 : 50,
   }
 
-  if (multiDimensionToggle.value) {
-    return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit },
-      {
-        statusCode: [...statusCodeDimensionValues.value],
-      },
-      metaOverrides,
-    )
-  } else if (multiMetricToggle.value) {
-    return generateMultipleMetricTimeSeriesData([{ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, ...secondaryMetrics.value], metaOverrides)
+  if (!selectedMetricNames.value.length) {
+    return { data: [], meta: {} as QueryResponseMeta } as ExploreResultV4
   }
-  return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, undefined, metaOverrides)
+
+  return generateData({
+    metrics: selectedMetrics.value,
+    dimensionMap: multiDimensionToggle.value
+      ? { statusCode: [...statusCodeDimensionValues.value] }
+      : undefined,
+    metaOverrides,
+    timeSeries: true,
+  })
 })
 
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: getStatusCodeDatasetColor(dimension) }), {}))
@@ -394,19 +419,17 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => {
   }
 })
 
-const addDataset = () => {
+const preserveDimensionValuesOnEnable = ref(false)
 
-  if (multiDimensionToggle.value) {
-    const statusCode = `${rand(100, 599)}`
-    statusCodeDimensionValues.value.add(statusCode)
-    colorPalette.value[statusCode] = getStatusCodeDatasetColor(statusCode)
-
-    const service = `Service${rand(1, 100)}`
-    serviceDimensionValues.value.add(service)
-  } else if (multiMetricToggle.value) {
-    const metric = `Metric${rand(1, 100)}`
-    secondaryMetrics.value.push({ name: metric, unit: 'count' })
+const addDimension = () => {
+  if (!multiDimensionToggle.value) {
+    preserveDimensionValuesOnEnable.value = true
   }
+  multiDimensionToggle.value = true
+
+  const statusCode = `${rand(100, 599)}`
+  statusCodeDimensionValues.value.add(statusCode)
+  colorPalette.value[statusCode] = getStatusCodeDatasetColor(statusCode)
 }
 
 const dataCode = computed(() => JSON.stringify(exploreResult.value, null, 2))
@@ -414,18 +437,34 @@ const optionsCode = computed(() => JSON.stringify(analyticsChartOptions.value, n
 
 const eventLog = ref('')
 
-const onMetricSelected = (item: any) => {
-  if (!item) {
+const onMetricsSelected = (items: Array<{ value: Metrics }>) => {
+  selectedMetricNames.value = items.map(item => item.value)
+}
+
+const loadLatencyGatewayPreset = () => {
+  exploreResultText.value = JSON.stringify(latencyGatewayPreset, null, 2)
+  chartType.value = 'timeseries_line'
+  stackToggle.value = false
+  multiDimensionToggle.value = true
+  emptyState.value = false
+  selectedMetricNames.value = [Metrics.LatencyAverage, Metrics.LatencyP99]
+}
+
+const useGeneratedData = () => {
+  exploreResultText.value = ''
+}
+
+watch(multiDimensionToggle, enabled => {
+  if (!enabled) {
+    preserveDimensionValuesOnEnable.value = false
     return
   }
 
-  selectedMetric.value = {
-    name: item.value,
-    unit: item.unit,
+  if (preserveDimensionValuesOnEnable.value) {
+    preserveDimensionValuesOnEnable.value = false
+    return
   }
-}
 
-watch(multiDimensionToggle, () => {
   serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))
   statusCodeDimensionValues.value = new Set(statusCodeLabels)
 
@@ -446,6 +485,12 @@ watch(multiDimensionToggle, () => {
 
   .controls-section {
     flex: 1;
+  }
+
+  .dataset-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 }
 </style>

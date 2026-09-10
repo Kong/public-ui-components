@@ -3,6 +3,7 @@
     class="analytics-chart-shell"
     :class="{
       'show-values': showLegendValues,
+      'has-metric-selector': showMetricSelector,
     }"
   >
     <div
@@ -25,6 +26,16 @@
           </div>
         </template>
       </KTooltip>
+    </div>
+    <div
+      v-if="hasValidChartData && showMetricSelector"
+      class="chart-metric-selector"
+      data-testid="metric-selector"
+    >
+      <KSegmentedControl
+        v-model="selectedMetric"
+        :options="metricOptions"
+      />
     </div>
     <KEmptyState
       v-if="!hasValidChartData"
@@ -57,7 +68,7 @@
         :metric-unit="computedMetricUnit"
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
-        :threshold="chartOptions.threshold"
+        :threshold="selectedThreshold"
         :time-range-ms="timeRangeMs"
         :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
@@ -121,9 +132,10 @@
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, ScatterChartData, SharedMeta, TooltipEntry, ZoomActionItem } from '../types'
-import type { AbsoluteTimeRangeV4, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 
-import { computed, provide, toRef } from 'vue'
+import { computed, provide, ref, toRef, watch } from 'vue'
+import { KSegmentedControl } from '@kong/kongponents'
 import { isPlatformDatasource, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
@@ -133,6 +145,7 @@ import {
   defaultStatusCodeColors,
   exploreResultToScatterData,
   isNoSuffixMetric,
+  isChartLabel,
 } from '../utils'
 import composables from '../composables'
 import { isScatterChartData } from '../types'
@@ -182,6 +195,56 @@ const exploreData = computed<ExploreResultV4 | undefined>(() => (
   isScatterChartData(props.chartData) ? undefined : props.chartData
 ))
 
+// A grouped time series shows one metric at a time; other chart modes keep the full query.
+const selectableMetrics = computed(() => {
+  const meta = exploreData.value?.meta
+  const metrics = meta?.metric_names ?? []
+  const isTimeSeries = ['timeseries_line', 'timeseries_bar'].includes(props.chartOptions.type)
+
+  return isTimeSeries && metrics.length > 1 && Object.keys(meta?.display ?? {}).length > 0 ? metrics : []
+})
+const showMetricSelector = computed(() => selectableMetrics.value.length > 1)
+const selectedMetric = ref<AllAggregations>()
+
+watch(selectableMetrics, metrics => {
+  if (!selectedMetric.value || !metrics.includes(selectedMetric.value)) {
+    selectedMetric.value = metrics[0]
+  }
+}, { immediate: true })
+
+const metricOptions = computed(() => selectableMetrics.value.map(value => ({
+  value,
+  label: isChartLabel(value) ? i18n.t(`chartLabels.${value}`) : value,
+})))
+
+const displayedExploreData = computed<ExploreResultV4 | undefined>(() => {
+  const result = exploreData.value
+
+  if (!result || !showMetricSelector.value || !selectedMetric.value) {
+    return result
+  }
+
+  return {
+    ...result,
+    meta: { ...result.meta, metric_names: [selectedMetric.value] },
+  }
+})
+
+const selectedThreshold = computed(() => {
+  const thresholds = props.chartOptions.threshold
+
+  if (!showMetricSelector.value || !thresholds) {
+    return thresholds
+  }
+
+  return {
+    ...thresholds,
+    ...Object.fromEntries(Object.keys(thresholds)
+      .filter(metric => metric !== selectedMetric.value)
+      .map(metric => [metric, []])),
+  }
+})
+
 const scatterData = computed<ScatterChartData | undefined>(() => {
   if (!isScatterChart.value) {
     return undefined
@@ -205,7 +268,7 @@ const chartMeta = computed<SharedMeta>(() => {
     }
   }
 
-  const meta = props.chartData?.meta
+  const meta = displayedExploreData.value?.meta
 
   return {
     start: meta?.start,
@@ -239,7 +302,7 @@ const computedChartData = computed(() => {
         fill: props.chartOptions.stacked,
         colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
       },
-      exploreData as ComputedRef<ExploreResultV4>,
+      displayedExploreData as ComputedRef<ExploreResultV4>,
     ).value
     : composables.useExploreResultToDatasets(
       {
@@ -273,7 +336,9 @@ const computedMetricUnit = computed<string>(() => {
     return ''
   }
 
-  return Object.values(chartMeta.value.metricUnits)[0] ?? ''
+  return showMetricSelector.value && selectedMetric.value
+    ? chartMeta.value.metricUnits[selectedMetric.value] ?? ''
+    : Object.values(chartMeta.value.metricUnits)[0] ?? ''
 })
 
 const computedMetricName = computed<string>(() => {
@@ -281,7 +346,9 @@ const computedMetricName = computed<string>(() => {
     return ''
   }
 
-  return Object.keys(chartMeta.value.metricUnits)[0] ?? ''
+  return showMetricSelector.value && selectedMetric.value
+    ? selectedMetric.value
+    : Object.keys(chartMeta.value.metricUnits)[0] ?? ''
 })
 
 const showLegendValues = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Hidden)
@@ -537,6 +604,25 @@ provide('legendPosition', toRef(props, 'legendPosition'))
   .analytics-chart-parent {
     height: inherit;
     width: inherit;
+  }
+
+  &.has-metric-selector .analytics-chart-parent {
+    flex: 1;
+    height: 0;
+    min-height: 0;
+  }
+
+  .chart-metric-selector {
+    display: flex;
+    flex-shrink: 0;
+    overflow-x: auto;
+    padding-bottom: var(--kui-space-40, $kui-space-40);
+
+    :deep(.k-segmented-control) {
+      flex-shrink: 0;
+      margin: 0 0 0 auto;
+      width: max-content;
+    }
   }
 
   .chart-empty-state {
