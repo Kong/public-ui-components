@@ -203,10 +203,10 @@ import { formatTime, isPlatformDatasource, TimePeriods, msToGranularity, TIMEFRA
 import CsvExportModal from './CsvExportModal.vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
-import BaseAnalyticsChartRenderer from './BaseAnalyticsChartRenderer.vue'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
 import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
+import ScatterChartRenderer from './ScatterChartRenderer.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
@@ -339,7 +339,7 @@ const hasHeaderActions = computed<boolean>(() => canShowHeaderActions.value && k
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
   'timeseries_bar': TimeseriesChartRenderer,
-  'scatter': BaseAnalyticsChartRenderer,
+  'scatter': ScatterChartRenderer,
   'horizontal_bar': BarChartRenderer,
   'vertical_bar': BarChartRenderer,
   'gauge': SimpleChartRenderer,

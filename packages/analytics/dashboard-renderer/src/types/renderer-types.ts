@@ -1,10 +1,12 @@
 import type {
   AllFilters,
+  ApiRequestsQuery,
+  ScatterChartOptions,
   TimeRangeV4,
   ValidDashboardChartQuery,
   ValidDashboardTableQuery,
 } from '@kong-ui-public/analytics-utilities'
-import type { ExternalLink } from '@kong-ui-public/analytics-chart'
+import type { ExternalLink, ScatterChartData } from '@kong-ui-public/analytics-chart'
 
 export interface DashboardRendererContext {
   filters: AllFilters[]
@@ -15,6 +17,11 @@ export interface DashboardRendererContext {
   showTileActions?: boolean
   zoomable?: boolean
   showTileZoomActions?: boolean
+  scatterDataFn?: (
+    query: ApiRequestsQuery,
+    context: DashboardRendererContext,
+    abortController: AbortController,
+  ) => Promise<ScatterChartData | undefined>
 }
 
 export interface PdfExportOptions {
@@ -69,6 +76,11 @@ export interface ChartRendererProps<T> {
   headerDescription?: string
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
+}
+
+export interface ScatterRendererProps extends Omit<ChartRendererProps<ScatterChartOptions>, 'query'> {
+  /** A scatter tile can show either request or explore data */
+  query: ApiRequestsQuery | ValidDashboardChartQuery
 }
 
 export interface TableRendererProps {
