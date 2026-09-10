@@ -12,6 +12,7 @@ export const queryableAgenticExploreDimensions = [
   'a2a_error',
   'a2a_method',
   'a2a_task_id',
+  'a2a_task_state',
   'ai_gateway_agent',
   'ai_gateway_mcp_server',
   'mcp_error',
