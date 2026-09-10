@@ -15,6 +15,7 @@ import {
   filterablePlatformPresetFilterDimensions,
   slottableSchema,
   slottableTileConfigSchema,
+  singleValueSchema,
   topNTableSchema,
 } from './dashboardSchema.v2'
 import {
@@ -46,6 +47,7 @@ const validateBasicQuerySchema = ajv.compile(basicQuerySchema)
 const validateLlmUsageQuerySchema = ajv.compile(llmUsageSchema)
 const validateAgenticUsageQuerySchema = ajv.compile(agenticUsageSchema)
 const validateSlottableTileSchema = ajv.compile(slottableTileConfigSchema)
+const validateSingleValueSchema = ajv.compile(singleValueSchema)
 
 describe('dashboardSchema.v2', () => {
   const sharedPresetFilterableDimensions = [
@@ -508,6 +510,18 @@ describe('dashboardSchema.v2', () => {
       ...invalidStrictQuery,
       datasource: 'agentic_usage',
     })).toBe(false)
+  })
+
+  it.each(['left', 'center', 'right'])('accepts %s single value alignment', align_x => {
+    expect(validateSingleValueSchema({ type: 'single_value', align_x })).toBe(true)
+  })
+
+  it('accepts a single value without optional alignment', () => {
+    expect(validateSingleValueSchema({ type: 'single_value' })).toBe(true)
+  })
+
+  it.each(['between', 'LEFT', 1, null])('rejects %s single value alignment', align_x => {
+    expect(validateSingleValueSchema({ type: 'single_value', align_x })).toBe(false)
   })
 })
 

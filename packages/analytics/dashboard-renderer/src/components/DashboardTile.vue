@@ -766,6 +766,10 @@ defineExpose({ getExportData })
     overflow: hidden;
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) 0 var(--kui-space-60, $kui-space-60);
 
+    &.type-chart-single_value {
+      padding: var(--kui-space-40, $kui-space-40) var(--kui-space-70, $kui-space-70) var(--kui-space-50, $kui-space-50);
+    }
+
     &.type-chart-table {
       display: flex;
       flex-direction: column;

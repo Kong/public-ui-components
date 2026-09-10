@@ -363,6 +363,10 @@ export const singleValueSchema = {
     decimal_points: {
       type: 'number',
     },
+    align_x: {
+      type: 'string',
+      enum: ['left', 'center', 'right'],
+    },
     chart_title: chartTitle,
   },
   required: ['type'],

@@ -13,7 +13,7 @@
     >
       <SimpleChart
         :chart-data="data"
-        :chart-options="chartOptions"
+        :chart-options="simpleChartOptions"
         :synthetics-data-key="isSingleValueChart ? undefined : (chartOptions as GaugeChartOptions).synthetics_data_key"
       />
     </div>
@@ -30,6 +30,14 @@ import { computed } from 'vue'
 const props = defineProps<ChartRendererProps<GaugeChartOptions | SingleValueOptions>>()
 
 const isSingleValueChart = computed((): boolean => props.chartOptions.type === 'single_value')
+
+const simpleChartOptions = computed(() => props.chartOptions.type === 'single_value'
+  ? {
+    ...props.chartOptions,
+    alignX: props.chartOptions.align_x ?? 'left',
+    showTrend: props.query.granularity === 'trend',
+  }
+  : props.chartOptions)
 </script>
 
 <style scoped lang="scss">
