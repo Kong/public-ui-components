@@ -156,6 +156,7 @@ export default function useDashboardContext({
       showTileActions: showTileActions.value,
       showTileZoomActions: showTileZoomActions.value,
       zoomable: zoomable.value,
+      ...(context.value.scatterDataFn && { scatterDataFn: context.value.scatterDataFn }),
     }
   })
 
