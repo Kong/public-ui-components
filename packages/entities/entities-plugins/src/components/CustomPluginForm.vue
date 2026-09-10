@@ -314,6 +314,21 @@
             @file-added="(files: FileList) => handleFileAdded('handler', files)"
             @file-removed="handleFileRemoved('handler')"
           />
+          <KAlert
+            appearance="warning"
+            data-testid="custom-plugin-streaming-enabled-alert"
+          >
+            <i18nT keypath="custom_plugin_form.step2_files.streaming_enabled.alert">
+              <template #link>
+                <KExternalLink
+                  hide-icon
+                  :href="externalLinks.customPluginStreamed"
+                >
+                  {{ t('custom_plugin_form.step2_files.streaming_enabled.alert_link') }}
+                </KExternalLink>
+              </template>
+            </i18nT>
+          </KAlert>
         </EntityFormBlock>
 
         <!-- Step 2: Cloned - Clone plugin -->
