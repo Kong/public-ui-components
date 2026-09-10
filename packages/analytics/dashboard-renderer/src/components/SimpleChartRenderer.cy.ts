@@ -40,6 +40,12 @@ describe('<SimpleChartRenderer />', () => {
       cy.getTestId('single-value-trend').should('contain.text', '25.00%')
       cy.getTestId('single-value-parent').should('have.css', 'justify-content', 'flex-start')
 
+      cy.then(() => wrapper.setProps({ chartOptions: { type: 'single_value', align_x: 'center' } }))
+      cy.getTestId('single-value-parent').should('have.css', 'justify-content', 'center')
+
+      cy.then(() => wrapper.setProps({ chartOptions: { type: 'single_value', align_x: 'right' } }))
+      cy.getTestId('single-value-parent').should('have.css', 'justify-content', 'flex-end')
+
       cy.then(() => wrapper.setProps({ query: { datasource: 'basic', metrics: ['request_count'] } }))
       cy.getTestId('single-value-trend').should('not.exist')
     })

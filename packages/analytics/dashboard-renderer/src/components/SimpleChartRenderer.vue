@@ -32,7 +32,11 @@ const props = defineProps<ChartRendererProps<GaugeChartOptions | SingleValueOpti
 const isSingleValueChart = computed((): boolean => props.chartOptions.type === 'single_value')
 
 const simpleChartOptions = computed(() => props.chartOptions.type === 'single_value'
-  ? { ...props.chartOptions, showTrend: props.query.granularity === 'trend' }
+  ? {
+    ...props.chartOptions,
+    alignX: props.chartOptions.align_x ?? 'left',
+    showTrend: props.query.granularity === 'trend',
+  }
   : props.chartOptions)
 </script>
 
