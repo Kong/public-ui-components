@@ -57,7 +57,7 @@
         :metric-unit="computedMetricUnit"
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
-        :threshold="chartOptions.threshold"
+        :threshold="selectedThreshold"
         :time-range-ms="timeRangeMs"
         :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
@@ -121,7 +121,7 @@
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, ScatterChartData, SharedMeta, TooltipEntry, ZoomActionItem } from '../types'
-import type { AbsoluteTimeRangeV4, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, AllAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 
 import { computed, provide, toRef } from 'vue'
 import { isPlatformDatasource, msToGranularity } from '@kong-ui-public/analytics-utilities'
@@ -146,6 +146,8 @@ import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 interface ChartProps {
   chartData: ExploreResultV4 | ScatterChartData
   chartOptions: AnalyticsChartOptions
+  /** Only used for time-series charts with multiple metrics and a group-by dimension. */
+  activeMetric?: AllAggregations
   tooltipTitle?: string
   emptyStateTitle?: string
   emptyStateDescription?: string
@@ -164,6 +166,7 @@ const emit = defineEmits<{
 }>()
 
 const props = withDefaults(defineProps<ChartProps>(), {
+  activeMetric: undefined,
   tooltipTitle: '',
   emptyStateTitle: '',
   emptyStateDescription: '',
@@ -181,6 +184,47 @@ const { i18n } = composables.useI18n()
 const exploreData = computed<ExploreResultV4 | undefined>(() => (
   isScatterChartData(props.chartData) ? undefined : props.chartData
 ))
+
+// A grouped time series shows one metric at a time; other chart modes keep the full query.
+const selectableMetrics = computed(() => {
+  const meta = exploreData.value?.meta
+  const metrics = meta?.metric_names ?? []
+  const isTimeSeries = ['timeseries_line', 'timeseries_bar'].includes(props.chartOptions.type)
+
+  return isTimeSeries && metrics.length > 1 && Object.keys(meta?.display ?? {}).length > 0 ? metrics : []
+})
+const hasGroupedMetrics = computed(() => selectableMetrics.value.length > 1)
+const selectedMetric = computed(() => props.activeMetric && selectableMetrics.value.includes(props.activeMetric)
+  ? props.activeMetric
+  : selectableMetrics.value[0])
+
+const displayedExploreData = computed<ExploreResultV4 | undefined>(() => {
+  const result = exploreData.value
+
+  if (!result || !hasGroupedMetrics.value || !selectedMetric.value) {
+    return result
+  }
+
+  return {
+    ...result,
+    meta: { ...result.meta, metric_names: [selectedMetric.value] },
+  }
+})
+
+const selectedThreshold = computed(() => {
+  const thresholds = props.chartOptions.threshold
+
+  if (!hasGroupedMetrics.value || !thresholds) {
+    return thresholds
+  }
+
+  return {
+    ...thresholds,
+    ...Object.fromEntries(Object.keys(thresholds)
+      .filter(metric => metric !== selectedMetric.value)
+      .map(metric => [metric, []])),
+  }
+})
 
 const scatterData = computed<ScatterChartData | undefined>(() => {
   if (!isScatterChart.value) {
@@ -205,7 +249,7 @@ const chartMeta = computed<SharedMeta>(() => {
     }
   }
 
-  const meta = props.chartData?.meta
+  const meta = displayedExploreData.value?.meta
 
   return {
     start: meta?.start,
@@ -239,7 +283,7 @@ const computedChartData = computed(() => {
         fill: props.chartOptions.stacked,
         colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
       },
-      exploreData as ComputedRef<ExploreResultV4>,
+      displayedExploreData as ComputedRef<ExploreResultV4>,
     ).value
     : composables.useExploreResultToDatasets(
       {
@@ -273,7 +317,9 @@ const computedMetricUnit = computed<string>(() => {
     return ''
   }
 
-  return Object.values(chartMeta.value.metricUnits)[0] ?? ''
+  return hasGroupedMetrics.value && selectedMetric.value
+    ? chartMeta.value.metricUnits[selectedMetric.value] ?? ''
+    : Object.values(chartMeta.value.metricUnits)[0] ?? ''
 })
 
 const computedMetricName = computed<string>(() => {
@@ -281,7 +327,9 @@ const computedMetricName = computed<string>(() => {
     return ''
   }
 
-  return Object.keys(chartMeta.value.metricUnits)[0] ?? ''
+  return hasGroupedMetrics.value && selectedMetric.value
+    ? selectedMetric.value
+    : Object.keys(chartMeta.value.metricUnits)[0] ?? ''
 })
 
 const showLegendValues = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Hidden)

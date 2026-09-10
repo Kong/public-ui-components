@@ -1,6 +1,7 @@
 <!-- TimeseriesChartRenderer.vue -->
 <template>
   <BaseAnalyticsChartRenderer
+    :active-metric="activeMetric"
     :chart-options="chartOptions"
     :context="context"
     :explore-link="exploreLink"

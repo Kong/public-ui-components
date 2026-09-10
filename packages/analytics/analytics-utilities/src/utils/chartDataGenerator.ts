@@ -31,7 +31,7 @@ export const generateData = ({
   if (timeSeries) {
     return metrics.length === 1
       ? generateSingleMetricTimeSeriesData(metrics[0], dimensionMap, metaOverrides, valueRange)
-      : generateMultipleMetricTimeSeriesData(metrics, metaOverrides, valueRange)
+      : generateMultipleMetricTimeSeriesDataInternal(metrics, dimensionMap, metaOverrides, valueRange)
   }
   return generateCrossSectionalData(metrics, dimensionMap, metaOverrides, valueRange)
 
@@ -116,6 +116,10 @@ export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?
 }
 
 export const generateMultipleMetricTimeSeriesData = (metrics: Metric[], metaOverrides?: Partial<QueryResponseMeta>, valueRange?: [number, number]) => {
+  return generateMultipleMetricTimeSeriesDataInternal(metrics, undefined, metaOverrides, valueRange)
+}
+
+const generateMultipleMetricTimeSeriesDataInternal = (metrics: Metric[], dimensionMap?: DimensionMap, metaOverrides?: Partial<QueryResponseMeta>, valueRange?: [number, number]) => {
   const seed = rand(10, 10000)
   const rng = new SeededRandom(seed)
   const [minValue, maxValue] = valueRange || [50, 500]
@@ -129,19 +133,52 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[], metaOver
   })
 
   for (let i = start; i <= end; i += 60 * 60 * 1000) { // 1 hour apart
-    const event: RecordEvent = {}
+    if (dimensionMap) {
+      for (const dimension in dimensionMap) {
+        dimensionMap[dimension].forEach(dimensionValue => {
+          const event: RecordEvent = { [dimension]: dimensionValue }
 
-    metrics.forEach(metric => {
-      metricValues[metric.name] += rng.next(minValue, maxValue)
-      event[metric.name] = metricValues[metric.name]
-    })
+          metrics.forEach(metric => {
+            const metricKey = `${dimension}:${dimensionValue}:${metric.name}`
+            metricValues[metricKey] = (metricValues[metricKey] || 0) + rng.next(minValue, maxValue)
+            event[metric.name] = metricValues[metricKey]
+          })
 
-    const record = {
-      version: '1.0',
-      timestamp: new Date(i).toISOString(),
-      event,
+          data.push({
+            version: '1.0',
+            timestamp: new Date(i).toISOString(),
+            event,
+          })
+        })
+      }
+    } else {
+      const event: RecordEvent = {}
+
+      metrics.forEach(metric => {
+        metricValues[metric.name] += rng.next(minValue, maxValue)
+        event[metric.name] = metricValues[metric.name]
+      })
+
+      data.push({
+        version: '1.0',
+        timestamp: new Date(i).toISOString(),
+        event,
+      })
     }
-    data.push(record)
+  }
+
+  const displayBlob: DisplayBlob = {}
+
+  if (dimensionMap) {
+    for (const dimension in dimensionMap) {
+      displayBlob[dimension] = {}
+      dimensionMap[dimension].forEach(dimensionValue => {
+        displayBlob[dimension][dimensionValue] = {
+          name: dimensionValue,
+          deleted: false,
+        }
+      })
+    }
   }
 
   const meta: QueryResponseMeta = {
@@ -154,7 +191,7 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[], metaOver
       return units
     }, {}),
     granularity_ms: 60 * 60 * 1000, // 1 hour in ms
-    display: {},
+    display: displayBlob,
     ...(metaOverrides ?? {}),
   }
 

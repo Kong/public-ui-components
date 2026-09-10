@@ -87,6 +87,28 @@ const dashboardConfig = ref <DashboardConfig>({
   tiles: [
     {
       type: 'chart',
+      id: 'editable-grouped-multi-metric-timeseries',
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+          chart_title: 'Latency by status code',
+          stacked: false,
+        },
+        query: {
+          datasource: 'api_usage',
+          dimensions: ['time', 'status_code'],
+          metrics: ['response_latency_average', 'response_latency_p99'],
+          time_range: { type: 'relative', time_range: '6h' },
+          granularity: 'hourly',
+        },
+      },
+      layout: {
+        position: { col: 0, row: 7 },
+        size: { cols: 3, rows: 2 },
+      },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
       id: crypto.randomUUID(),
       definition: {
         chart: {

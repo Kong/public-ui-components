@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineComponent, h, nextTick } from 'vue'
+import { defineComponent, h, nextTick, type PropType } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import DashboardTile from './DashboardTile.vue'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
@@ -42,6 +42,10 @@ vi.mock('./TimeseriesChartRenderer.vue', () => ({
       refreshCounter: {
         type: Number,
         required: true,
+      },
+      activeMetric: {
+        type: String,
+        default: undefined,
       },
       requestsLink: {
         type: [String, Object],
@@ -119,6 +123,28 @@ const dropdownSlotStubs = {
     },
   }),
 }
+
+// eslint-disable-next-line vue/one-component-per-file -- Local stub exercises the tile header without rendering Kongponents.
+const segmentedControlStub = defineComponent({
+  name: 'KSegmentedControl',
+  props: {
+    modelValue: {
+      type: String,
+      default: undefined,
+    },
+    options: {
+      type: Array as PropType<Array<{ value: string, label: string }>>,
+      required: true,
+    },
+  },
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
+    return () => h('div', { 'data-testid': 'metric-selector' }, props.options.map(option => h('button', {
+      'data-testid': `metric-option-${option.value}`,
+      onClick: () => emit('update:modelValue', option.value),
+    }, option.label)))
+  },
+})
 
 const mockQueryProvider = {
   configFn: () => Promise.resolve({ analytics: { percentiles: true }, requests: null }),
@@ -206,11 +232,28 @@ const mountTile = (
       stubs: {
         KBadge: false,
         KTooltip: false,
+        KSegmentedControl: segmentedControlStub,
         TimeseriesChartRenderer: false,
       },
     },
   })
 }
+
+const groupedMetricsResult = {
+  data: [{
+    timestamp: '2026-09-09T15:00:00Z',
+    event: { gateway: 'one', response_latency_average: 10, response_latency_p99: 20 },
+  }],
+  meta: {
+    start: '2026-09-09T15:00:00Z',
+    end: '2026-09-09T16:00:00Z',
+    granularity_ms: 3600000,
+    metric_names: ['response_latency_average', 'response_latency_p99'],
+    metric_units: { response_latency_average: 'ms', response_latency_p99: 'ms' },
+    query_id: 'test-query',
+    display: { gateway: { one: { name: 'Gateway one' } } },
+  },
+} as const
 
 describe('<DashboardTile /> zoom requests drilldown', () => {
   beforeEach(() => {
@@ -355,6 +398,49 @@ describe('<DashboardTile /> zoom requests drilldown', () => {
     await flushPromises()
 
     expect(wrapper.findTestId('unsupported-time-range-badge').exists()).toBe(true)
+  })
+})
+
+describe('<DashboardTile /> metric selector', () => {
+  beforeEach(() => {
+    setupPiniaTestStore()
+  })
+
+  it('shows the grouped time series selector, owns its selection, and passes it to the renderer', async () => {
+    const wrapper = mountTile('api_usage')
+    const renderer = wrapper.findComponent(TimeseriesChartRenderer)
+
+    renderer.vm.$emit('chart-data', groupedMetricsResult)
+    await nextTick()
+
+    expect(wrapper.findTestId('metric-selector').exists()).toBe(true)
+    expect(renderer.props('activeMetric')).toBe('response_latency_average')
+
+    await wrapper.getTestId('metric-option-response_latency_p99').trigger('click')
+
+    expect(renderer.props('activeMetric')).toBe('response_latency_p99')
+
+    renderer.vm.$emit('chart-data', {
+      ...groupedMetricsResult,
+      meta: { ...groupedMetricsResult.meta, metric_names: ['response_latency_average'] },
+    })
+    await nextTick()
+
+    expect(wrapper.findTestId('metric-selector').exists()).toBe(false)
+    expect(renderer.props('activeMetric')).toBe('response_latency_average')
+  })
+
+  it.each([
+    ['single metric', { ...groupedMetricsResult.meta, metric_names: ['response_latency_average'] }],
+    ['without a group-by display', { ...groupedMetricsResult.meta, display: {} }],
+  ])('hides the selector for %s data', async (_, meta) => {
+    const wrapper = mountTile('api_usage')
+    const renderer = wrapper.findComponent(TimeseriesChartRenderer)
+
+    renderer.vm.$emit('chart-data', { ...groupedMetricsResult, meta })
+    await nextTick()
+
+    expect(wrapper.findTestId('metric-selector').exists()).toBe(false)
   })
 })
 
