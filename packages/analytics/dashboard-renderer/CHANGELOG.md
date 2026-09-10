@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.26.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.26.1...%40kong-ui-public%2Fdashboard-renderer%408.26.2) (2026-09-10)
+
+### Bug Fixes
+
+* **analytics:** improve single value display [MA-5423] ([#3826](https://github.com/Kong/public-ui-components/issues/3826)) ([0d50b10](https://github.com/Kong/public-ui-components/commit/0d50b1096e824d4bdb5a74b139a3cf306bb568e6))
+
+
 ## [8.26.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fdashboard-renderer%408.26.0...%40kong-ui-public%2Fdashboard-renderer%408.26.1) (2026-09-10)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
