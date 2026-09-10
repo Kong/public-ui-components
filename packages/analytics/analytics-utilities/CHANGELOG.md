@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.38.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.37.0...%40kong-ui-public%2Fanalytics-utilities%4012.38.0) (2026-09-10)
+
+### Features
+
+* **analytics-utilities:** add ai_consumer_group for AIGW2 [MA-5390] ([#3811](https://github.com/Kong/public-ui-components/issues/3811)) ([984cd50](https://github.com/Kong/public-ui-components/commit/984cd50d3e645abf0461734b5413e46d6d5f4667))
+
+
 # [12.37.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.36.0...%40kong-ui-public%2Fanalytics-utilities%4012.37.0) (2026-09-10)
 
 ### Features
