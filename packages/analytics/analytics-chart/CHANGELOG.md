@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.30.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.29.0...%40kong-ui-public%2Fanalytics-chart%4010.30.0) (2026-09-10)
+
+### Features
+
+* add cost_per_request and active_agents ([#3823](https://github.com/Kong/public-ui-components/issues/3823)) ([fbee1fb](https://github.com/Kong/public-ui-components/commit/fbee1fb9d4c181ec0f2baec0b494f0f9eabde130))
+
+
 # [10.29.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.28.1...%40kong-ui-public%2Fanalytics-chart%4010.29.0) (2026-09-10)
 
 ### Features
