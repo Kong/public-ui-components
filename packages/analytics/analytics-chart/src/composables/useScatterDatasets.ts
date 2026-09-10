@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import type { Dataset, ExploreToDatasetDeps, KChartData, ScatterChartData, ScatterOptions } from '../types'
+import type { Dataset, ExploreToDatasetDeps, KChartData, ScatterChartData, ScatterOptions, ScatterPointExtra } from '../types'
 import type { ScatterChartColors } from '../utils'
 
 import { computed } from 'vue'
@@ -23,6 +23,7 @@ export interface ScatterDatasetDeps extends ExploreToDatasetDeps {
 interface ScatterPoint {
   x: number
   y: number
+  extras?: ScatterPointExtra[]
   // This should only be set for outliers as they all behave as one dataset, without
   // it each point in that dataset will just appear as `Outlier > 95`
   tooltipLabel?: string
@@ -84,7 +85,11 @@ export default function useScatterDatasets(
         const groupId = point.group ?? metric
         const points = grouped.get(groupId) || []
 
-        points.push({ x: point.timestamp + jitter(jitterMs), y: point.value })
+        points.push({
+          x: point.timestamp + jitter(jitterMs),
+          y: point.value,
+          ...(point.extras?.length ? { extras: point.extras } : {}),
+        })
         grouped.set(groupId, points)
         allValues.push(point.value)
       })

@@ -49,11 +49,19 @@
       </div>
       <ul class="tooltip">
         <template
-          v-for="({ backgroundColor, borderColor, label, value, isSegmentEmpty }, index) in (state.tooltipSeries as any)"
+          v-for="({ backgroundColor, borderColor, label, value, isSegmentEmpty, isExtra }, index) in (state.tooltipSeries as any)"
           :key="label + index"
         >
-          <li v-if="state.tooltipSeries.length">
+          <li
+            v-if="state.tooltipSeries.length"
+            :class="{ 'extra-row': isExtra }"
+          >
             <div
+              v-if="isExtra"
+              class="square-marker marker-placeholder"
+            />
+            <div
+              v-else
               class="square-marker"
               :style="{ background: String(backgroundColor), borderColor: String(borderColor) }"
             />
@@ -217,6 +225,16 @@ watch(tooltipEl, value => {
       height: 12px;
       margin-right: var(--kui-space-30, $kui-space-30);
       width: 12px;
+    }
+
+    .marker-placeholder {
+      background: transparent;
+      border: none;
+    }
+
+    .extra-row .display-label,
+    .extra-row .display-value {
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
     }
   }
 }

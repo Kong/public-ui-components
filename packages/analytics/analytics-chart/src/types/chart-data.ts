@@ -2,6 +2,7 @@ import type { ChartData, ChartDataset, LegendItem } from 'chart.js'
 import type { ChartTooltipSortFn } from './chartjs-options'
 import type { ChartType, SimpleChartType } from './chart-types'
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import type { ScatterPointExtra } from './scatter-data'
 
 // Chart.js extended interfaces
 export type Dataset = ChartDataset & {
@@ -33,6 +34,7 @@ export interface AnalyticsDataPoint {
  */
 export interface LabeledDataPoint extends AnalyticsDataPoint {
   tooltipLabel?: string
+  extras?: ScatterPointExtra[]
 }
 
 /**
