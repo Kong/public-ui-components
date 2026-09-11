@@ -350,9 +350,11 @@ import {
   useDeleteUrlBuilder,
   useTableState,
   useGatewayFeatureSupported,
+  useTagsFilter,
   TableTags,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
+import type { SelectItem } from '@kong/kongponents'
 
 import type {
   BaseTableHeaders,
@@ -569,6 +571,12 @@ const fetcherBaseUrl = computed<string>(() => buildFetcherUrl(
     : endpoints.list[props.config.app].all,
 ))
 
+// Tags filter options are only relevant for Kong Manager's fuzzy-match filter; Konnect is out of scope
+// (Konnect's enhanced plugin filtering uses `PluginFilter`/KFilterGroup, which is untouched here).
+const { tagOptions } = props.config.app === 'kongManager'
+  ? useTagsFilter(props.config)
+  : { tagOptions: ref<SelectItem[]>([]) }
+
 const filterQuery = ref<string>('')
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
   const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
@@ -589,12 +597,23 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
     enabled: { ...fields.enabled, label: t('search.filter.field.enabled') },
     name: fields.name,
     instance_name: { label: t('plugins.list.table_headers.instance_name'), searchable: true },
+    ...props.config.app === 'kongManager' && { tags: { ...fields.tags, searchable: true } },
   }
 
   return {
     isExactMatch: false,
     fields: filterFields,
-    schema: props.config.filterSchema,
+    schema: {
+      ...props.config.filterSchema,
+      ...props.config.app === 'kongManager' && {
+        tags: props.config.filterSchema?.tags ?? {
+          type: 'select',
+          multiple: true,
+          enableItemCreation: true,
+          values: tagOptions.value,
+        },
+      },
+    },
   } as FuzzyMatchFilterConfig
 })
 
