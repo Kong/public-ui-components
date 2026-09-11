@@ -1,31 +1,27 @@
 # @kong-ui-public/e-charts
 
-{A description of this package}
-
-- [Features](#features)
-- [Requirements](#requirements)
-- [Usage](#usage)
-  - [Install](#install)
-  - [Props](#props)
+ECharts-based chart components for Kong UI, with theme-reactive colors resolved from `@kong/design-tokens` at runtime.
 
 ## Features
 
-- List of package features
+- `HeatmapChart` — GitHub-contribution-style intensity grid with theme-token gradient colors
+- `useChartColors` — resolves chart colors from the active theme's CSS custom properties, since canvas charts can't consume `var()`
 
 ## Requirements
 
-- List of package requirements (e.g. "`vue` and must be initialized in the host application")
+- `vue`
+- `echarts` >= 6
+- `vue-echarts` >= 8
 
 ## Usage
 
 ### Install
 
-{Installation instructions}
+```sh
+pnpm add @kong-ui-public/e-charts
+```
 
-### Props
+### Documentation
 
-#### `example`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
+- [Custom options](./docs/custom-options.md) — how to pass custom ECharts options to any chart wrapper component
+- [HeatmapChart](./docs/heatmap-chart.md) — what it does and how to use it
