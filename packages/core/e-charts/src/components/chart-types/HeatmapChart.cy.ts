@@ -49,11 +49,11 @@ describe('<HeatmapChart />', () => {
       const el = canvas.get(0) as HTMLCanvasElement
       const ctx = el.getContext('2d')
 
-      expect(ctx, 'canvas 2d context').to.not.be.null
+      expect(ctx, 'canvas 2d context').to.not.equal(null)
 
       const { data: pixels } = (ctx as CanvasRenderingContext2D).getImageData(0, 0, el.width, el.height)
 
-      expect(pixels.some((value) => value !== 0), 'canvas has painted pixels').to.be.true
+      expect(pixels.some((value) => value !== 0), 'canvas has painted pixels').to.equal(true)
     })
   })
 
