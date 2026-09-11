@@ -3,6 +3,7 @@ import type { Chart, ChartType as ChartJsChartType, TooltipModel, Color } from '
 import type { ChartType } from './chart-types'
 import type { ExploreAggregations, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import type { Threshold } from './chart-data'
+import type { ScatterChartColors } from '../utils/theme-colors'
 
 export interface TooltipEntry {
   backgroundColor: Color
@@ -54,6 +55,17 @@ export interface LineChartOptions extends BaseChartOptions {
   granularity: Ref<GranularityValues>
   pointsWithoutHover?: ComputedRef<boolean | undefined>
   threshold?: Readonly<Ref<Record<ExploreAggregations, Threshold[]> | undefined>>
+}
+
+export interface ScatterChartOptions {
+  tooltipState: TooltipState
+  legendID: string
+  granularity: Ref<GranularityValues>
+  timeRangeMs: Ref<number | undefined>
+  metricAxesTitle?: Ref<string | undefined>
+  dimensionAxesTitle?: Ref<string | undefined>
+  outlierValue?: Ref<number | undefined>
+  themeColors: Ref<ScatterChartColors>
 }
 
 export interface DonutChartOptions {

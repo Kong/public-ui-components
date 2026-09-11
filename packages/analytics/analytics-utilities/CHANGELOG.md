@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.40.1](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.40.0...%40kong-ui-public%2Fanalytics-utilities%4012.40.1) (2026-09-10)
+
+### Bug Fixes
+
+* **analytics:** improve single value display [MA-5423] ([#3826](https://github.com/Kong/public-ui-components/issues/3826)) ([0d50b10](https://github.com/Kong/public-ui-components/commit/0d50b1096e824d4bdb5a74b139a3cf306bb568e6))
+
+
+# [12.40.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.39.0...%40kong-ui-public%2Fanalytics-utilities%4012.40.0) (2026-09-10)
+
+### Features
+
+* add a2a_task_state ([#3827](https://github.com/Kong/public-ui-components/issues/3827)) ([07b4f27](https://github.com/Kong/public-ui-components/commit/07b4f274aee3c46f530cf69f3549bddacd537b85))
+
+
+# [12.39.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.38.0...%40kong-ui-public%2Fanalytics-utilities%4012.39.0) (2026-09-10)
+
+### Features
+
+* **analytics:** support grouped multi-metric time series ([#3824](https://github.com/Kong/public-ui-components/issues/3824)) ([eb0bedf](https://github.com/Kong/public-ui-components/commit/eb0bedf14b3b155507f6a557de5d3471a5ed942c))
+
+
+# [12.38.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.37.0...%40kong-ui-public%2Fanalytics-utilities%4012.38.0) (2026-09-10)
+
+### Features
+
+* **analytics-utilities:** add ai_consumer_group for AIGW2 [MA-5390] ([#3811](https://github.com/Kong/public-ui-components/issues/3811)) ([984cd50](https://github.com/Kong/public-ui-components/commit/984cd50d3e645abf0461734b5413e46d6d5f4667))
+
+
+# [12.37.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.36.0...%40kong-ui-public%2Fanalytics-utilities%4012.37.0) (2026-09-10)
+
+### Features
+
+* add cost_per_request and active_agents ([#3823](https://github.com/Kong/public-ui-components/issues/3823)) ([fbee1fb](https://github.com/Kong/public-ui-components/commit/fbee1fb9d4c181ec0f2baec0b494f0f9eabde130))
+
+
+# [12.36.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.35.0...%40kong-ui-public%2Fanalytics-utilities%4012.36.0) (2026-09-10)
+
+### Features
+
+* **analytics:** add scatter chart to dashboard schema [MA-5465] ([#3820](https://github.com/Kong/public-ui-components/issues/3820)) ([6d39b49](https://github.com/Kong/public-ui-components/commit/6d39b49fd80247f880d65b0655a8d1bb4b00afa5))
+
+
+# [12.35.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.34.0...%40kong-ui-public%2Fanalytics-utilities%4012.35.0) (2026-09-10)
+
+### Features
+
+* **analytics:** add scatter plot chart type [MA-5431] ([#3812](https://github.com/Kong/public-ui-components/issues/3812)) ([b6f01f1](https://github.com/Kong/public-ui-components/commit/b6f01f1f51674086ac522043986c3471cfbaf74d))
+
+
 # [12.34.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.33.1...%40kong-ui-public%2Fanalytics-utilities%4012.34.0) (2026-09-09)
 
 ### Features

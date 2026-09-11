@@ -7,6 +7,7 @@ import {
   dashboardConfigSchema,
   llmUsageSchema,
   agenticUsageSchema,
+  apiRequestsQuerySchema,
   validDashboardChartQuery,
   validDashboardQuery,
   validDashboardTableQuery,
@@ -14,6 +15,7 @@ import {
   filterablePlatformPresetFilterDimensions,
   slottableSchema,
   slottableTileConfigSchema,
+  singleValueSchema,
   topNTableSchema,
 } from './dashboardSchema.v2'
 import {
@@ -45,6 +47,7 @@ const validateBasicQuerySchema = ajv.compile(basicQuerySchema)
 const validateLlmUsageQuerySchema = ajv.compile(llmUsageSchema)
 const validateAgenticUsageQuerySchema = ajv.compile(agenticUsageSchema)
 const validateSlottableTileSchema = ajv.compile(slottableTileConfigSchema)
+const validateSingleValueSchema = ajv.compile(singleValueSchema)
 
 describe('dashboardSchema.v2', () => {
   const sharedPresetFilterableDimensions = [
@@ -441,6 +444,22 @@ describe('dashboardSchema.v2', () => {
     expect(schema.properties.filters.items.oneOf[1].properties.field.enum).toEqual(expectedFilterableDimensions)
   })
 
+  it('leaves the api-requests metric and dimension open', () => {
+    expect(apiRequestsQuerySchema.properties.datasource.enum).toEqual(['requests'])
+    expect(apiRequestsQuerySchema.properties.metric).toMatchObject({ type: 'string' })
+    expect(apiRequestsQuerySchema.properties.dimension).toMatchObject({ type: 'string' })
+    expect('enum' in apiRequestsQuerySchema.properties.metric).toBe(false)
+    expect('enum' in apiRequestsQuerySchema.properties.dimension).toBe(false)
+  })
+
+  it('accepts a scatter query naming a nested field the schema never listed', () => {
+    const validate = new Ajv({ strict: false }).compile(apiRequestsQuerySchema)
+
+    expect(validate({ datasource: 'requests', metric: 'ai.cost', dimension: 'ai.pluginName' })).toBe(true)
+    expect(validate({ datasource: 'requests', metric: 'ai.somethingAddedLater' })).toBe(true)
+    expect(validate({ datasource: 'explore', metric: 'ai.cost' })).toBe(false)
+  })
+
   it('loosens only the platform branch', () => {
     expect(platformQuerySchema.properties.datasource.oneOf).toHaveLength(2)
     expect(platformQuerySchema.properties.datasource.oneOf?.[0]).toMatchObject({ const: 'platform_usage' })
@@ -491,6 +510,18 @@ describe('dashboardSchema.v2', () => {
       ...invalidStrictQuery,
       datasource: 'agentic_usage',
     })).toBe(false)
+  })
+
+  it.each(['left', 'center', 'right'])('accepts %s single value alignment', align_x => {
+    expect(validateSingleValueSchema({ type: 'single_value', align_x })).toBe(true)
+  })
+
+  it('accepts a single value without optional alignment', () => {
+    expect(validateSingleValueSchema({ type: 'single_value' })).toBe(true)
+  })
+
+  it.each(['between', 'LEFT', 1, null])('rejects %s single value alignment', align_x => {
+    expect(validateSingleValueSchema({ type: 'single_value', align_x })).toBe(false)
   })
 })
 

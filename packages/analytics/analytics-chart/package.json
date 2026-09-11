@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-chart",
-  "version": "10.27.0",
+  "version": "10.31.2",
   "type": "module",
   "main": "./dist/vitals-chart.umd.js",
   "module": "./dist/vitals-chart.es.js",
@@ -29,7 +29,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "3.3.1",
-    "@kong/kongponents": "9.64.14",
+    "@kong/kongponents": "9.64.15",
     "file-saver": "^2.0.5",
     "papaparse": "^5.7.0",
     "vue": "^3.5.41"

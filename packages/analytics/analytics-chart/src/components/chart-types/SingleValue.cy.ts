@@ -40,6 +40,29 @@ const buildExploreResult = ({
 })
 
 describe('<SingleValue />', () => {
+  it('left-aligns the value and trend by default and responds to alignment changes', () => {
+    cy.mount(SingleValue, {
+      props: {
+        data: buildExploreResult(),
+        showTrend: true,
+      },
+    }).then(({ wrapper }) => {
+      cy.getTestId('single-value-parent').should('have.css', 'justify-content', 'flex-start')
+      cy.get('.single-value-metric').should('have.css', 'align-items', 'flex-start')
+      cy.get('.single-value-trend').should('have.css', 'justify-content', 'flex-start')
+
+      cy.then(() => wrapper.setProps({ alignX: 'right' }))
+      cy.getTestId('single-value-parent').should('have.css', 'justify-content', 'flex-end')
+      cy.get('.single-value-metric').should('have.css', 'align-items', 'flex-end')
+      cy.get('.single-value-trend').should('have.css', 'justify-content', 'flex-end')
+
+      cy.then(() => wrapper.setProps({ alignX: 'center', showTrend: false }))
+      cy.getTestId('single-value-parent').should('have.css', 'justify-content', 'center')
+      cy.get('.single-value-metric').should('have.css', 'align-items', 'center')
+      cy.getTestId('single-value-trend').should('not.exist')
+    })
+  })
+
   it('renders the value from the first bucket when trend is disabled', () => {
     const exploreResult = buildExploreResult({ previous: 100, current: 250 })
 
@@ -173,6 +196,7 @@ describe('<SingleValue />', () => {
       props: {
         data: exploreResult,
         leftAlign: true,
+        alignX: 'right',
       },
     })
 
@@ -190,6 +214,31 @@ describe('<SingleValue />', () => {
 
     cy.getTestId('single-value-parent')
       .should('have.class', 'align-center')
+  })
+
+  const tileCases = [
+    { width: 240, metricName: 'request_count', metricUnit: 'count', current: 8412 },
+    { width: 240, metricName: 'response_latency_p95', metricUnit: 'ms', current: 35.4 },
+    { width: 240, metricName: 'ai_cost', metricUnit: 'usd', current: 127.25 },
+    { width: 480, metricName: 'request_count', metricUnit: 'count', current: 8412 },
+    { width: 480, metricName: 'response_latency_p95', metricUnit: 'ms', current: 35.4 },
+    { width: 480, metricName: 'ai_cost', metricUnit: 'usd', current: 127.25 },
+  ]
+
+  tileCases.forEach(({ width, ...sample }) => {
+    it(`keeps ${sample.metricUnit} values and trends within a ${width}px tile`, () => {
+      cy.mount(SingleValue, {
+        props: { data: buildExploreResult(sample), showTrend: true },
+        attrs: { style: { width: `${width}px` } },
+      })
+
+      cy.getTestId('single-value-parent').should(($parent) => {
+        const parent = $parent[0]
+        expect(parent.scrollWidth).to.be.at.most(parent.clientWidth)
+      })
+      cy.getTestId('single-value-chart').should('be.visible')
+      cy.getTestId('single-value-trend').should('be.visible')
+    })
   })
 
   it('applies positive/negative classes based on increaseIsBad', () => {

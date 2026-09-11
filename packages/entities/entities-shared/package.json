@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.67.3",
+  "version": "3.67.4",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -48,7 +48,7 @@
     "@kong-ui-public/monaco-editor": "workspace:^",
     "@kong/design-tokens": "3.3.1",
     "@kong/icons": "^1.62.1",
-    "@kong/kongponents": "9.64.14",
+    "@kong/kongponents": "9.64.15",
     "@shikijs/core": "^4.4.3",
     "@shikijs/engine-javascript": "^4.4.3",
     "@shikijs/langs": "^4.4.3",

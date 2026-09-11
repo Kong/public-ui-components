@@ -5,6 +5,7 @@
       "description": "Begin by choosing at least one metric"
     },
     "noQueryBridge": "No query bridge provided.  Unable to render dashboard.",
+    "noScatterDataFn": "No scatter data provider supplied.",
     "unexpectedError": "An unexpected error has occurred.",
     "trendRange": {
       "24h": "Last 24-hour summary",
@@ -178,6 +179,7 @@
     "prompt_tokens": "Prompt token count",
     "completion_tokens": "Completion token count",
     "cost": "Costs",
+    "cost_per_request_average": "Cost per request (avg)",
     "llm_cache_embeddings_latency_average": "Embeddings latency (avg)",
     "llm_cache_fetch_latency_average": "Fetch latency (avg)",
     "llm_latency_average": "Llm latency (avg)",
@@ -200,6 +202,7 @@
     "a2a_error": "A2A error",
     "a2a_method": "A2A method",
     "a2a_task_id": "A2A task ID",
+    "active_agents": "Active agents",
     "mcp_error": "MCP error",
     "mcp_method": "MCP method",
     "mcp_latency_average": "MCP latency (avg)",
