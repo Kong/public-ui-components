@@ -3,7 +3,7 @@ import english from '../locales/freeform-en.json'
 
 type MessageSource = typeof english
 
-export default function useFreeformI18n() {
+export default function useI18n() {
   const i18n = createI18n<MessageSource>('en-us', english)
   return {
     i18n,

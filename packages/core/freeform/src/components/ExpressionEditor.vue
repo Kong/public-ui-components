@@ -77,7 +77,7 @@
 import { computed, ref, toRef, watch } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
 import { KButton, KExternalLink } from '@kong/kongponents'
-import useI18n from '../composables/useFreeformI18n'
+import useI18n from '../composables/useI18n.ts'
 import StringField from './StringField.vue'
 import externalLinks from '../external-links'
 import * as utils from '../utils'

@@ -55,6 +55,7 @@ export interface Props<T extends Record<string, any> = Record<string, any>> exte
 </script>
 
 <script setup lang="ts" generic="T extends Record<string, any>">
+import '@kong-ui-public/freeform/style.css'
 import { computed, inject, useAttrs, useId, useTemplateRef } from 'vue'
 import { pick } from 'lodash-es'
 import { Form, normalizeMatch, FieldRenderer, FIELD_RENDERERS, useSchemaExposer } from '@kong-ui-public/freeform'

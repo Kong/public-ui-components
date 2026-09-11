@@ -73,6 +73,7 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/misc-widgets": "workspace:^",
+    "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "3.3.1",
     "@kong/icons": "^1.62.1",
     "@kong/kongponents": "9.64.15",
@@ -95,6 +96,6 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "600KB"
+    "errorLimit": "1500KB"
   }
 }
