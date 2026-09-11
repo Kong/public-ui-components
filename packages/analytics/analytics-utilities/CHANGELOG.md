@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.41.0](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.40.2...%40kong-ui-public%2Fanalytics-utilities%4012.41.0) (2026-09-11)
+
+### Features
+
+* add active_agents to llm usage datasource ([#3834](https://github.com/Kong/public-ui-components/issues/3834)) ([ea579b5](https://github.com/Kong/public-ui-components/commit/ea579b5411e922738953c475eb35482fe3f1067f))
+
+
 ## [12.40.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-utilities%4012.40.1...%40kong-ui-public%2Fanalytics-utilities%4012.40.2) (2026-09-11)
 
 ### Bug Fixes
