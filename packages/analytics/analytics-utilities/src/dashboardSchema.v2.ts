@@ -216,7 +216,7 @@ export const scatterChartSchema = {
     },
     outlier_percentile: {
       type: 'number',
-      description: 'Percentile above which points are split into a highlighted outlier series.',
+      description: 'Percentile above which points are colored in the outlier color, in place.',
       minimum: 0,
       maximum: 100,
     },
@@ -778,6 +778,28 @@ export const platformTabularQuerySchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema
 
+export const apiRequestsExtraFieldSchema = {
+  type: 'object',
+  properties: {
+    field: {
+      type: 'string',
+      description: 'Field to read, dotted for a nested one.',
+    },
+    label: {
+      type: 'string',
+      description: 'Tooltip label, defaults to the field name.',
+    },
+    unit: {
+      type: 'string',
+      description: 'Unit to format the value with, e.g. `ms` or `token count`.',
+    },
+  },
+  required: ['field'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type ApiRequestsExtraField = FromSchemaWithOptions<typeof apiRequestsExtraFieldSchema>
+
 export const apiRequestsQuerySchema = {
   type: 'object',
   description: 'A query for the api-requests endpoint.',
@@ -806,6 +828,15 @@ export const apiRequestsQuerySchema = {
       type: 'number',
       description: 'Ceiling on records gathered across pages. The endpoint serves at most 1000 per page. Defaults to 10000.',
       minimum: 1,
+    },
+    unroll: {
+      type: 'string',
+      description: 'A nested collection on a request record (`ai`, `mcp_info.rpc`) to expand into one point per entry rather than one per request.',
+    },
+    extra_fields: {
+      type: 'array',
+      description: 'Values to annotate each point with in the tooltip. Read from the unrolled entry first, then the request record.',
+      items: apiRequestsExtraFieldSchema,
     },
   },
   required: ['datasource', 'metric'],
@@ -889,7 +920,11 @@ const tableChartTileDefinitionSchema = {
 
 export type TableChartTileDefinition = FromSchemaWithOptions<typeof tableChartTileDefinitionSchema>
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/**
+ * A scatter tile fed by raw request records. Kept as its own arm so the api-requests
+ * query, whose field names aren't enumerable, can only pair with the scatter chart.
+ * A scatter tile over an explore query validates through `chartTileDefinitionSchema`.
+ */
 const scatterTileDefinitionSchema = {
   type: 'object',
   properties: {
@@ -907,6 +942,7 @@ export const tileDefinitionSchema = {
   anyOf: [
     chartTileDefinitionSchema,
     tableChartTileDefinitionSchema,
+    scatterTileDefinitionSchema,
   ],
 } as const satisfies JSONSchema
 

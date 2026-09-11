@@ -225,7 +225,7 @@ import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import TableDataGridRenderer from './TableDataGridRenderer.vue'
 import composables from '../composables'
-import { isTableChartDefinition } from '../utils/tile-definition'
+import { isExploreChartDefinition, isRequestsChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
 import { isTimeRangeUnsupported } from '../utils/time-range-support'
 import { useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
@@ -299,7 +299,7 @@ const tileTitle = computed<string | undefined>(() => {
 const tileDescription = computed<string | undefined>(() => definition.header_description)
 const isSlottableTile = computed<boolean>(() => chart.value.type === 'slottable')
 const canExportCsv = computed<boolean>(() => {
-  if (isTableChartDefinition(definition)) {
+  if (isTableChartDefinition(definition) || isRequestsChartDefinition(definition)) {
     return false
   }
 
@@ -507,8 +507,8 @@ const metricOptions = computed<Array<SegmentedControlOption<AllAggregations>>>((
 })))
 
 const isAgedOutQuery = computed(() => {
-  // Check table definitions first so TypeScript narrows before reading query.granularity.
-  if (isTableChartDefinition(definition) || !isTimeSeriesChart.value || !queryReady || loadingChartData.value) {
+  // Check explore type tiles first so TypeScript narrows before reading query.granularity.
+  if (!isExploreChartDefinition(definition) || !isTimeSeriesChart.value || !queryReady || loadingChartData.value) {
     return false
   }
 
@@ -523,8 +523,8 @@ const isAgedOutQuery = computed(() => {
 
 const agedOutWarning = computed(() => {
   const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
-  // Check table definitions first so TypeScript narrows before reading query.granularity.
-  const savedGranularity = isTableChartDefinition(definition) ? 'unknown' : definition.query.granularity ?? 'unknown'
+  // Check explore type tiles first so TypeScript narrows before reading query.granularity.
+  const savedGranularity = isExploreChartDefinition(definition) ? definition.query.granularity ?? 'unknown' : 'unknown'
 
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
@@ -589,6 +589,10 @@ const hideExportModal = () => {
 }
 
 const getExportData = (): Promise<ExploreResultV4> => {
+  if (isRequestsChartDefinition(definition)) {
+    throw new Error('Cannot export data for a tile backed by the api-requests endpoint')
+  }
+
   // goap datasources don't allow limit increases
   const isGoapDatasource = definition.query.datasource?.startsWith('goap')
 

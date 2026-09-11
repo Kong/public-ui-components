@@ -460,6 +460,69 @@ describe('dashboardSchema.v2', () => {
     expect(validate({ datasource: 'explore', metric: 'ai.cost' })).toBe(false)
   })
 
+  it('accepts an unrolled query annotating its points', () => {
+    const validate = new Ajv({ strict: false }).compile(apiRequestsQuerySchema)
+
+    expect(validate({
+      datasource: 'requests',
+      metric: 'cost',
+      unroll: 'ai',
+      extra_fields: [
+        { field: 'totalTokens', label: 'Tokens', unit: 'token count' },
+        { field: 'responseModel' },
+      ],
+    })).toBe(true)
+
+    // `field` is the one thing an annotation can't do without
+    expect(validate({ datasource: 'requests', metric: 'cost', extra_fields: [{ label: 'Tokens' }] })).toBe(false)
+    expect(validate({ datasource: 'requests', metric: 'cost', unroll: ['ai'] })).toBe(false)
+  })
+
+  describe('scatter tiles', () => {
+    const scatterTile = (query: Record<string, unknown>) => ({
+      tiles: [{
+        type: 'chart',
+        id: 'request-cost-distribution',
+        layout: { position: { col: 0, row: 0 }, size: { cols: 2, rows: 2 } },
+        definition: {
+          query,
+          chart: {
+            type: 'scatter',
+            percentile_lines: [{ percentile: 50 }, { percentile: 95 }],
+            outlier_percentile: 95,
+          },
+        },
+      }],
+      tile_height: 400,
+      columns: 2,
+    })
+
+    it('persists a scatter tile backed by raw request records', () => {
+      expect(validateDashboardConfigSchema(scatterTile({
+        datasource: 'requests',
+        metric: 'cost',
+        dimension: 'providerName',
+        max_records: 5000,
+      }))).toBe(true)
+    })
+
+    it('persists an unrolled scatter tile with annotated points', () => {
+      expect(validateDashboardConfigSchema(scatterTile({
+        datasource: 'requests',
+        metric: 'cost',
+        unroll: 'ai',
+        extra_fields: [{ field: 'totalTokens', label: 'Tokens', unit: 'token count' }],
+      }))).toBe(true)
+    })
+
+    it('keeps the api-requests query away from other chart types', () => {
+      const tile = scatterTile({ datasource: 'requests', metric: 'cost' })
+      tile.tiles[0].definition.chart = { type: 'donut' } as never
+
+      expect(validateDashboardConfigSchema(tile)).toBe(false)
+    })
+  })
+
   it('loosens only the platform branch', () => {
     expect(platformQuerySchema.properties.datasource.oneOf).toHaveLength(2)
     expect(platformQuerySchema.properties.datasource.oneOf?.[0]).toMatchObject({ const: 'platform_usage' })

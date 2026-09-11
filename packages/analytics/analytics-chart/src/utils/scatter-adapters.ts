@@ -5,7 +5,7 @@ import type {
   FetchAllRequestsResult,
   RequestRecord,
 } from '@kong-ui-public/analytics-utilities'
-import type { ScatterChartData, ScatterDataPoint } from '../types'
+import type { ScatterChartData, ScatterDataPoint, ScatterPointExtra } from '../types'
 
 const EMPTY_GROUP = 'empty'
 
@@ -70,7 +70,12 @@ export const exploreResultToScatterData = (result: ExploreResultV4 | undefined):
  * Since `null` would read as 0, this would cause a `0` point on the axis bringing
  * down the percentile with it, so these are just dropped entirely.
  */
-const toPoint = (rawTimestamp: unknown, rawValue: unknown, rawGroup: unknown): ScatterDataPoint | undefined => {
+const toPoint = (
+  rawTimestamp: unknown,
+  rawValue: unknown,
+  rawGroup: unknown,
+  extras?: ScatterPointExtra[],
+): ScatterDataPoint | undefined => {
   if (rawValue === null || rawValue === undefined || rawValue === '') {
     return undefined
   }
@@ -82,8 +87,10 @@ const toPoint = (rawTimestamp: unknown, rawValue: unknown, rawGroup: unknown): S
     return undefined
   }
 
+  const withExtras = extras?.length ? { extras } : {}
+
   if (rawGroup === undefined) {
-    return { timestamp, value }
+    return { timestamp, value, ...withExtras }
   }
 
   // A dimension that has no value is part of the "empty" group
@@ -93,7 +100,42 @@ const toPoint = (rawTimestamp: unknown, rawValue: unknown, rawGroup: unknown): S
     timestamp,
     value,
     group: hasGroupValue ? String(rawGroup) : EMPTY_GROUP,
+    ...withExtras,
   }
+}
+
+const readExtras = (
+  source: unknown,
+  record: RequestRecord,
+  extraFields?: ScatterExtraField[],
+): ScatterPointExtra[] | undefined => {
+  if (!extraFields?.length) {
+    return undefined
+  }
+
+  const extras: ScatterPointExtra[] = []
+
+  for (const { field, label, unit } of extraFields) {
+    const value = readPath(source, field) ?? readPath(record, field)
+
+    if (value === null || value === undefined || value === '') {
+      continue
+    }
+
+    extras.push({
+      label: label ?? field,
+      value: value as string | number,
+      ...(unit ? { unit } : {}),
+    })
+  }
+
+  return extras.length ? extras : undefined
+}
+
+export interface ScatterExtraField {
+  field: string
+  label?: string
+  unit?: string
 }
 
 export interface RequestsToScatterDataOptions {
@@ -103,6 +145,7 @@ export interface RequestsToScatterDataOptions {
   unroll?: string
   timestamp?: string
   display?: Display
+  extraFields?: ScatterExtraField[]
   metricUnit?: string
 }
 
@@ -114,7 +157,7 @@ export const requestsToScatterData = (
     return undefined
   }
 
-  const { metric, dimension, unroll, display, metricUnit } = options
+  const { metric, dimension, unroll, display, extraFields, metricUnit } = options
   const timestampField = options.timestamp ?? 'request_start'
 
   if (!metric) {
@@ -132,7 +175,12 @@ export const requestsToScatterData = (
       const rawValue = readPath(source, metric) ?? readPath(record, metric)
       const rawGroup = dimension ? readPath(source, dimension) ?? readPath(record, dimension) : undefined
 
-      const point = toPoint(timestamp, rawValue, dimension ? rawGroup ?? null : undefined)
+      const point = toPoint(
+        timestamp,
+        rawValue,
+        dimension ? rawGroup ?? null : undefined,
+        readExtras(source, record, extraFields),
+      )
 
       if (point) {
         points.push(point)

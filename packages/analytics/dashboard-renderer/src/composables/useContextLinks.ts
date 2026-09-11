@@ -3,10 +3,10 @@ import { isPlatformDatasource, msToGranularity } from '@kong-ui-public/analytics
 import { useAnalyticsConfigStore, useDatasourceConfigStore } from '@kong-ui-public/analytics-config-store'
 import { storeToRefs } from 'pinia'
 import type { DeepReadonly, Ref } from 'vue'
-import type { AiExploreAggregations, AiExploreQuery, AllFilters, AnalyticsBridge, ChartTileDefinition, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TableChartTileDefinition, TimeRangeV4, ValidDashboardTableQuery } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AllFilters, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TileDefinition, TimeRangeV4, ValidDashboardTableQuery } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContext } from '../types'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
-import { isTableChartDefinition } from '../utils/tile-definition'
+import { isExploreChartDefinition, isTableChartDefinition } from '../utils/tile-definition'
 
 const EXPLORE_DATASOURCES = [
   'basic',
@@ -34,7 +34,7 @@ export default function useContextLinks(
   }: {
     queryBridge: AnalyticsBridge | undefined
     context: Readonly<Ref<DeepReadonly<DashboardRendererContext>>>
-    definition: Readonly<Ref<ChartTileDefinition | TableChartTileDefinition>>
+    definition: Readonly<Ref<TileDefinition>>
     chartData: Readonly<Ref<DeepReadonly<ExploreResultV4 | undefined>>>
   },
 ) {
@@ -163,8 +163,8 @@ export default function useContextLinks(
 
   const buildExploreQuery = (timeRange: TimeRangeV4, filters: AllFilters[]): ExploreQuery | AiExploreQuery => {
     const currentDefinition = definition.value
-    if (isTableChartDefinition(currentDefinition)) {
-      throw new Error('Cannot build a chart explore query for table chart definitions')
+    if (!isExploreChartDefinition(currentDefinition)) {
+      throw new Error('Cannot build a chart explore query for table or api-requests definitions')
     }
 
     const dimensions = [...(currentDefinition.query.dimensions ?? [])] as QueryableExploreDimensions[] | QueryableAiExploreDimensions[]
