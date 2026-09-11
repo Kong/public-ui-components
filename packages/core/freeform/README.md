@@ -25,7 +25,7 @@ src/
 ├── constants.ts         # USE_SECRET_INPUT_KEY, FREE_FORM_SCHEMA_MAP_KEY injection keys
 ├── external-links.ts    # Doc links referenced by field help text
 ├── composables/         # Vue composables (core logic, including map entry tracking)
-│   └── useFreeformI18n.ts # i18n wrapper backed by locales/freeform-en.json
+│   └── useI18n.ts         # i18n wrapper backed by locales/en.json
 ├── filler/               # Test utilities for auto-filling forms (Cypress + Playwright);
 │                         # schema-shape-driven, no plugin/layout knowledge
 └── components/
