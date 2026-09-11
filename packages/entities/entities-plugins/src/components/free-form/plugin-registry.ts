@@ -1,4 +1,4 @@
-import CommonForm from './Common/CommonForm.vue'
+import CommonForm from './components/CommonForm.vue'
 
 import type { FieldRendererRule, RenderRules } from '@kong-ui-public/freeform'
 import type { PluginFormConfig, PluginFormLayoutComponent } from './types'

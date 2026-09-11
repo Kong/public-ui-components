@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { ObjectField, useFormShared, resolve } from '@kong-ui-public/freeform'
 import type { RecordFieldSchema } from '@kong-ui-public/freeform'
-import AdvancedFields from '../components/AdvancedFields.vue'
+import AdvancedFields from './AdvancedFields.vue'
 
 import { computed } from 'vue'
 

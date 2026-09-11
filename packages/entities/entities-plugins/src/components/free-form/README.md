@@ -37,9 +37,10 @@ free-form/
 │   ├── CollapsibleSection.vue # Generic collapsible section wrapper
 │   ├── PluginConfigurationForm.vue (+ .cy.ts) # Composes the framework's `Form` with the shared plugin chrome
 │   ├── ConditionField.vue   # Optional condition editor in General Info
+│   ├── CommonForm.vue (+ .cy.ts) # Generic plugin form used by default
+│   ├── ConfigForm.vue       # CommonForm's schema-driven config step (required/advanced grouping)
 │   └── ExpressionField.spec.ts # Unit test for ExpressionField; stays here until its mount harness
 │                             #   stops depending on PluginConfigurationForm — see its own TODO
-├── Common/                  # Generic plugin form used by default
 └── plugins/                 # Plugin registry entries and custom plugin forms
     ├── *.ts                 # Simple plugins configured with CommonForm + overrides
     └── <plugin>/index.ts    # Folder-based plugins with dedicated Vue components

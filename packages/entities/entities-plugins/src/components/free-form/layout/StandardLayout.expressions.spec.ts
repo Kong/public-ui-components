@@ -4,7 +4,7 @@ import { defineComponent, h } from 'vue'
 import StandardLayout from './StandardLayout.vue'
 import rawSchema from '../../../../fixtures/schemas/rate-limiting'
 import { appendEntityChecksFromMetadata, distributeEntityChecks } from '../schema-enhancement'
-import ConfigForm from '../Common/ConfigForm.vue'
+import ConfigForm from '../components/ConfigForm.vue'
 
 import type { FormSchema } from '@kong-ui-public/freeform'
 

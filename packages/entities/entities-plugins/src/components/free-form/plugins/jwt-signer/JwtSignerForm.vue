@@ -32,7 +32,7 @@
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 
-import ConfigForm from '../../Common/ConfigForm.vue'
+import ConfigForm from '../../components/ConfigForm.vue'
 import { FieldRenderer } from '@kong-ui-public/freeform'
 import type { RenderRules } from '@kong-ui-public/freeform'
 import DynamicLayout from '../../layout/DynamicLayout.vue'
