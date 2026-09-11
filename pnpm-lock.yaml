@@ -5,7 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  sass-embedded@<1.104.0: ^1.104.0
   axios@>=1.0.0 <1.18.0: ^1.20.0
   brace-expansion@>=4.0.0 <5.0.9: ^5.0.9
   browserslist@<=4.28.6: ^4.28.8
@@ -10344,7 +10343,7 @@ packages:
       less: ^4.0.0
       lightningcss: ^1.21.0
       sass: ^1.70.0
-      sass-embedded: ^1.104.0
+      sass-embedded: ^1.70.0
       stylus: '>=0.54.8'
       sugarss: ^5.0.0
       terser: ^5.16.0
@@ -10385,7 +10384,7 @@ packages:
       jiti: '>=1.21.0'
       less: ^4.0.0
       sass: ^1.70.0
-      sass-embedded: ^1.104.0
+      sass-embedded: ^1.70.0
       stylus: '>=0.54.8'
       sugarss: ^5.0.0
       terser: ^5.16.0
