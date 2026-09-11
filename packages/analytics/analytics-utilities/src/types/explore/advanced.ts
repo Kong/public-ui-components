@@ -42,6 +42,7 @@ export interface ExploreEmptyFilterV2 extends Omit<BasicExploreEmptyFilterV2, 'f
 
 export const exploreAggregations = [
   ...basicExploreAggregations,
+  'share_of_requests',
   'cache_hit_rate',
   'response_latency_p99',
   'response_latency_p95',
