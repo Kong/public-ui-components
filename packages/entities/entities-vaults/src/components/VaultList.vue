@@ -194,6 +194,7 @@ import {
   useFetcher,
   useDeleteUrlBuilder,
   useTableState,
+  useTagsFilter,
   TableTags,
 } from '@kong-ui-public/entities-shared'
 
@@ -205,6 +206,7 @@ import type {
   FuzzyMatchFilterConfig,
   TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
+import type { SelectItem } from '@kong/kongponents'
 
 import composables from '../composables'
 import endpoints from '../vaults-endpoints'
@@ -331,6 +333,11 @@ const fetcherBaseUrl = computed<string>(() => {
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 })
 
+// Tags filter options are only relevant for Kong Manager's fuzzy-match filter; Konnect is out of scope.
+const { tagOptions } = props.config.app === 'kongManager'
+  ? useTagsFilter(props.config)
+  : { tagOptions: ref<SelectItem[]>([]) }
+
 const filterQuery = ref<string>('')
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
   const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
@@ -342,13 +349,26 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
     } as ExactMatchFilterConfig
   }
 
-  const { prefix, name } = fields
-  const filterFields: FilterFields = { name, prefix }
+  // AI Gateway uses labels instead of tags, so the tags filter is not applicable there.
+  const showTagsFilter = props.config.app === 'kongManager' && !isAiGateway.value
+
+  const { prefix, name, tags } = fields
+  const filterFields: FilterFields = { name, prefix, ...showTagsFilter && { tags: { ...tags, searchable: true } } }
 
   return {
     isExactMatch: false,
     fields: filterFields,
-    schema: props.config.filterSchema,
+    schema: {
+      ...props.config.filterSchema,
+      ...showTagsFilter && {
+        tags: props.config.filterSchema?.tags ?? {
+          type: 'select',
+          multiple: true,
+          enableItemCreation: true,
+          values: tagOptions.value,
+        },
+      },
+    },
   } as FuzzyMatchFilterConfig
 })
 

@@ -255,6 +255,7 @@ import {
   EntityTypes,
   useAxios,
   useDeleteUrlBuilder,
+  useTagsFilter,
   EntityDeleteModal,
   FetcherStatus,
   TableTags,
@@ -263,6 +264,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { AddIcon, RefreshIcon, DeployIcon, ClipboardIcon, DatabaseIcon } from '@kong/icons'
 import { KAlert, KExternalLink } from '@kong/kongponents'
+import type { SelectItem } from '@kong/kongponents'
 
 import { getCpgRedisAlertMessageKey, shouldShowCpgRedisAlert } from '../cpgRedisAlert'
 import { MANAGED_CACHE_FOR_REDIS_DOC_URL } from '../constants'
@@ -919,6 +921,11 @@ const emptyStateFeatures = computed(() => {
   return features
 })
 
+// Tags filter options are only relevant for Kong Manager's fuzzy-match filter; Konnect is out of scope.
+const { tagOptions } = props.config.app === 'kongManager'
+  ? useTagsFilter(props.config)
+  : { tagOptions: ref<SelectItem[]>([]) }
+
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
   const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
 
@@ -929,15 +936,29 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
     } as ExactMatchFilterConfig
   }
 
-  const { name } = tableHeaders.value
+  // Konnect-managed Redis configurations don't support tags.
+  const showTagsFilter = props.config.app === 'kongManager' && !isKonnectManagedRedisEnabled.value
+
+  const { name, tags } = tableHeaders.value
   const filterFields: FilterFields = {
     name,
+    ...showTagsFilter && { tags: { ...tags, searchable: true } },
   }
 
   return {
     isExactMatch,
     fields: filterFields,
-    schema: props.config.filterSchema,
+    schema: {
+      ...props.config.filterSchema,
+      ...showTagsFilter && {
+        tags: props.config.filterSchema?.tags ?? {
+          type: 'select',
+          multiple: true,
+          enableItemCreation: true,
+          values: tagOptions.value,
+        },
+      },
+    },
   } as FuzzyMatchFilterConfig
 })
 

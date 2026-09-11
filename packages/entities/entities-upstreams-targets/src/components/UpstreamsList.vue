@@ -182,8 +182,10 @@ import {
   EntityDeleteModal,
   useAxios,
   EntityTypes,
+  useTagsFilter,
   TableTags,
 } from '@kong-ui-public/entities-shared'
+import type { SelectItem } from '@kong/kongponents'
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
@@ -300,6 +302,11 @@ const fetcherBaseUrl = computed((): string => {
     .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
 })
 
+// Tags filter options are only relevant for Kong Manager's fuzzy-match filter; Konnect is out of scope.
+const { tagOptions } = props.config.app === 'kongManager'
+  ? useTagsFilter(props.config)
+  : { tagOptions: ref<SelectItem[]>([]) }
+
 const filterQuery = ref<string>('')
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
   const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
@@ -311,13 +318,25 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
     } as ExactMatchFilterConfig
   }
 
-  const { name, slots } = fields
-  const filterFields: FilterFields = { name, slots }
+  const { name, slots, tags } = fields
+  const filterFields: FilterFields = {
+    name, slots, ...props.config.app === 'kongManager' && { tags: { ...tags, searchable: true } },
+  }
 
   return {
     isExactMatch,
     fields: filterFields,
-    schema: props.config.filterSchema,
+    schema: {
+      ...props.config.filterSchema,
+      ...props.config.app === 'kongManager' && {
+        tags: props.config.filterSchema?.tags ?? {
+          type: 'select',
+          multiple: true,
+          enableItemCreation: true,
+          values: tagOptions.value,
+        },
+      },
+    },
   } as FuzzyMatchFilterConfig
 })
 

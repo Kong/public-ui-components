@@ -76,24 +76,34 @@
             >
               {{ t('filter.fieldLabel') }}
             </label>
+            <KMultiselect
+              v-if="config.schema?.[field.value]?.type === 'select' && config.schema?.[field.value]?.multiple"
+              :id="getFieldId(field.value)"
+              :enable-item-creation="config.schema?.[field.value]?.enableItemCreation"
+              :items="getMultiselectOptions(field.value)"
+              :model-value="getMultiselectValue(field.value)"
+              :placeholder="t('filter.selectPlaceholder')"
+              @update:model-value="(items) => handleMultiselectChange(field.value, items)"
+            />
             <KSelect
-              v-if="config.schema?.[field.value]?.type === 'select'"
+              v-else-if="config.schema?.[field.value]?.type === 'select'"
               :id="getFieldId(field.value)"
               :enable-filtering="enableFiltering(field.value)"
               :enable-item-creation="config.schema?.[field.value]?.enableItemCreation"
               :filter-function="(params: SelectFilterFunctionParams<string | number>) => handleFilter(field.value, params)"
               :items="getFieldOptions(field.value)"
-              :model-value="searchParams[field.value]"
+              :model-value="getSingleSelectValue(field.value)"
               :placeholder="t('filter.selectPlaceholder')"
               @change="(item) => handleSelectChange(field.value, item)"
             />
             <KInput
               v-else
               :id="getFieldId(field.value)"
-              v-model="searchParams[field.value]"
               autocomplete="off"
+              :model-value="getSingleSelectValue(field.value)"
               :placeholder="t('filter.inputPlaceholder')"
               :type="getFieldInputType(field.value)"
+              @update:model-value="(value) => { searchParams[field.value] = String(value ?? '') }"
             />
           </div>
           <div
@@ -166,8 +176,11 @@ const emit = defineEmits<{
 }>()
 
 const showMenu = ref(false)
-const searchParams = ref<{ [key: string]: string }>({})
+const searchParams = ref<{ [key: string]: string | string[] }>({})
 const expandedFields = ref<Set<string>>(new Set())
+
+const isMultiField = (field: string): boolean =>
+  !!(props.config as FuzzyMatchFilterConfig).schema?.[field]?.multiple
 
 const filteredFields = computed<string[]>(() => {
   const fields: string[] = []
@@ -194,9 +207,9 @@ const searchableFields = computed<Array<{ label: string, value: string, expanded
 watch(() => props.modelValue, (val) => {
   searchParams.value = {}
   new URLSearchParams(val).forEach((value, key) => {
-    searchParams.value[key] = value
+    searchParams.value[key] = isMultiField(key) ? value.split(',').filter(Boolean) : value
   })
-})
+}, { immediate: true })
 
 const toggleMenu = () => {
   showMenu.value = !showMenu.value
@@ -226,6 +239,14 @@ const getFieldOptions = (field: string) =>
   ((props.config as FuzzyMatchFilterConfig).schema?.[field]?.values ?? [])
     .map(o => typeof o === 'string' ? { value: o, label: o } : o)
 
+const getMultiselectOptions = (field: string) =>
+  getFieldOptions(field).map(o => ({ ...o, value: String(o.value) }))
+
+const getSingleSelectValue = (field: string): string | undefined => {
+  const value = searchParams.value[field]
+  return Array.isArray(value) ? undefined : value
+}
+
 const getFieldInputType = (field: string) => {
   return (props.config as FuzzyMatchFilterConfig).schema?.[field]?.type ?? 'text'
 }
@@ -233,7 +254,7 @@ const getFieldInputType = (field: string) => {
 const clearField = (field: string) => {
   searchParams.value = {
     ...searchParams.value,
-    [field]: '',
+    [field]: isMultiField(field) ? [] : '',
   }
   applyFields()
 }
@@ -247,8 +268,13 @@ const applyFields = (hideMenu = false) => {
   const filteredParams = Object
     .keys(searchParams.value)
     .reduce((acc, key) => {
-      if (searchParams.value[key]) {
-        acc[key] = `${searchParams.value[key]}`
+      const value = searchParams.value[key]
+      if (Array.isArray(value)) {
+        if (value.length) {
+          acc[key] = value.join(',')
+        }
+      } else if (value) {
+        acc[key] = `${value}`
       }
       return acc
     }, {} as { [key: string]: string })
@@ -279,6 +305,15 @@ const handleSelectChange = (field: string, item: (SelectItem & { custom?: boolea
   searchParams.value[field] = item
     ? item.custom ? String(item.label) : String(item.value)
     : ''
+}
+
+const getMultiselectValue = (field: string): string[] => {
+  const value = searchParams.value[field]
+  return Array.isArray(value) ? value : []
+}
+
+const handleMultiselectChange = (field: string, items: string[]) => {
+  searchParams.value[field] = items
 }
 </script>
 

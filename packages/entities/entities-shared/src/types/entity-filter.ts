@@ -34,6 +34,8 @@ export interface FilterSchema {
     values?: string[] | SelectItem[]
     /** Allow users to create custom items in the select input, only used if type is 'select' */
     enableItemCreation?: boolean
+    /** Render the select input as a multiselect and join selected values with ',' when applied, only used if type is 'select' */
+    multiple?: boolean
   }
 }
 

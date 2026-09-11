@@ -77,10 +77,9 @@ export const mockFuzzyMatchFilterConfig = {
       label: 'Paths',
       searchable: true,
     },
-    // To hide certain fields in the filter, set their `searchable` to `false
     tags: {
       label: 'Tags',
-      searchable: false,
+      searchable: true,
     },
   },
   schema: {
@@ -90,6 +89,12 @@ export const mockFuzzyMatchFilterConfig = {
     },
     port: {
       type: 'number',
+    },
+    tags: {
+      type: 'select',
+      multiple: true,
+      enableItemCreation: true,
+      values: ['tag1', 'tag2', 'tag3'],
     },
   },
 } satisfies FuzzyMatchFilterConfig
