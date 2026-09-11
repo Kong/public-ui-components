@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.31.3](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.31.2...%40kong-ui-public%2Fanalytics-chart%4010.31.3) (2026-09-11)
+
+### Bug Fixes
+
+* **analytics:** remove splitting of outliers and add percentile plugin [MA-5465] ([#3822](https://github.com/Kong/public-ui-components/issues/3822)) ([9179182](https://github.com/Kong/public-ui-components/commit/91791828bc623dacedc120157815566fa3b510fa))
+
+
 ## [10.31.2](https://github.com/Kong/public-ui-components/compare/%40kong-ui-public%2Fanalytics-chart%4010.31.1...%40kong-ui-public%2Fanalytics-chart%4010.31.2) (2026-09-10)
 
 ### Bug Fixes
