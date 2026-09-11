@@ -47,6 +47,8 @@ export interface AiExploreEmptyFilterV2 extends Omit<BasicExploreEmptyFilterV2, 
 
 export const aiExploreAggregations = [
   'ai_request_count',
+  'share_of_requests',
+  'share_of_cost',
   'active_agents',
   'cached_tokens',
   'completion_tokens',
