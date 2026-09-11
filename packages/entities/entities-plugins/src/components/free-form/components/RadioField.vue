@@ -44,8 +44,8 @@
 <script setup lang="ts">
 import { computed, toRef } from 'vue'
 import { KRadio, type LabelAttributes, type SelectItem } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared } from '../core/composables'
-import type { BaseFieldProps } from '../core/types'
+import { useField, useFieldAttrs, useFormShared } from '@kong-ui-public/freeform'
+import type { BaseFieldProps } from '@kong-ui-public/freeform'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.

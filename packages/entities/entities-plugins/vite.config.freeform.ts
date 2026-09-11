@@ -14,12 +14,7 @@ export default mergeConfig(sharedViteConfig, defineConfig({
     },
     rollupOptions: {
       external: [
-        'lodash-es',
-        'marked',
-        'dompurify',
-        '@kong-ui-public/forms',
-        '@vueuse/core',
-        '@kong/design-tokens',
+        '@kong-ui-public/freeform',
       ],
     },
   },

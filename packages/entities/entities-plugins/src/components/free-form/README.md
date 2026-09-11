@@ -4,43 +4,19 @@ A schema-driven dynamic form rendering system for Kong plugin configuration. It 
 
 **Core idea**: Given a `FormSchema` (JSON-like descriptor of fields), the module auto-renders the appropriate Vue form components with correct types, labels, validation, and layout.
 
+The generic, reusable rendering primitives (schema types, field components, composables, filler test
+utilities) live in the standalone [`@kong-ui-public/freeform`](../../../../../core/freeform/README.md)
+package. This directory holds only the entities-plugins-specific layer built on top of it: the plugin
+registry, layout machinery, Redis/credential/scope UI, and the per-plugin config modules under `plugins/`.
+
 ## Directory Structure
 
 ```
 free-form/
 ├── README.md
-├── core/                    # Generic schema-driven rendering framework (no plugin/layout knowledge;
-│   │                        # pre-staged to become the standalone @kong-ui-public/freeform package)
-│   ├── types.ts             # Core type definitions
-│   ├── form-schema.ts       # FormSchema/UnionFieldSchema/etc. — the schema type contract
-│   ├── field-dispatch.ts    # Schema-type -> component mapping (shared by Field/ExpressionField)
-│   ├── utils.ts (+ .spec.ts) # Path utilities, field sorting
-│   ├── composables/         # Vue composables (core logic, including map entry tracking)
-│   ├── filler/              # Test utilities for auto-filling forms (Cypress + Playwright);
-│   │                        # schema-shape-driven, no plugin/layout knowledge
-│   └── components/
-│       ├── Form.vue             # Root form component (provides context)
-│       ├── Field.vue            # Auto-dispatches to correct field component by schema type
-│       ├── FieldRenderer.vue    # Register custom field renderers via match function
-│       ├── ObjectField.vue      # Nested record rendering (collapsible)
-│       ├── ArrayField.vue       # Array rendering (default/card/tabs appearances)
-│       ├── StringField.vue (+ .spec.ts) # Text/textarea/password inputs
-│       ├── NumberField.vue      # Number/integer inputs
-│       ├── BooleanField.vue     # Checkbox inputs
-│       ├── EnumField.vue        # Select/multiselect dropdowns (for one_of fields)
-│       ├── MapField.vue         # Map/dictionary fields with KeyId-backed entry tracking
-│       ├── StringArrayField.vue # Tag-like comma-separated string sets
-│       ├── JsonField.vue        # JSON textarea editor
-│       ├── ForeignField.vue     # Foreign entity reference (stores {id: string})
-│       ├── ExpressionField.vue  # An expressible field: its value input plus its expression
-│       ├── ExpressionEditor.vue # Just the collapsible expression editor
-│       ├── EnhancedInput.vue    # Base input wrapper (help text, errors, tooltips)
-│       ├── SwitchField.vue      # Boolean toggle switch (KInputSwitch)
-│       ├── SlideTransition.vue  # Height-animated collapse transition
-│       ├── EntityChecksAlert.vue (+ .spec.ts) # Validation constraint alerts
-│       ├── test-utils.ts        # Cypress mount/assert helpers for the *.cy.ts tests below
-│       └── *.cy.ts              # Integration tests for core fields/mechanisms
-├── composables/             # code-lens-providers.ts (Monaco YAML code-lens helpers; not part of core)
+├── types.ts                 # entities-plugins-specific types (Redis config, PluginFormConfig/
+│                             # PluginFormLayoutProps and friends) — depends on @kong-ui-public/freeform
+├── composables/             # code-lens-providers.ts (Monaco YAML code-lens helpers)
 ├── layout/                  # Layout machinery only (runtime layout selection)
 │   ├── provider.ts               # Layout injection key and provider helper
 │   ├── DynamicLayout.vue (+ .cy.ts) # Runtime-selected layout wrapper
@@ -59,219 +35,40 @@ free-form/
 │   ├── RedisSelector.vue (+ free-form-redis-selector.cy.ts) # Redis partial instance selector
 │   ├── CredentialSecretField.vue (+ credential-secret-field.cy.ts) # Credential secret input (generate/reveal)
 │   ├── CollapsibleSection.vue # Generic collapsible section wrapper
-│   ├── PluginConfigurationForm.vue (+ .cy.ts) # Composes the core `Form` with the shared plugin chrome
+│   ├── PluginConfigurationForm.vue (+ .cy.ts) # Composes the framework's `Form` with the shared plugin chrome
 │   ├── ConditionField.vue   # Optional condition editor in General Info
-│   └── ExpressionField.spec.ts # Unit test for ExpressionField; stays here (not core/) until its
-│                             #   mount harness stops depending on PluginConfigurationForm — see its own TODO
-├── Common/                  # Generic plugin form used by default
+│   ├── CommonForm.vue (+ .cy.ts) # Generic plugin form used by default
+│   ├── ConfigForm.vue       # CommonForm's schema-driven config step (required/advanced grouping)
+│   └── ExpressionField.spec.ts # Unit test for ExpressionField; stays here until its mount harness
+│                             #   stops depending on PluginConfigurationForm — see its own TODO
 └── plugins/                 # Plugin registry entries and custom plugin forms
     ├── *.ts                 # Simple plugins configured with CommonForm + overrides
     └── <plugin>/index.ts    # Folder-based plugins with dedicated Vue components
 ```
 
-`core/` sits at the same nesting depth as everything around it by design: it holds only the generic,
-reusable rendering primitives (no plugin registry, no layout, no scope/Redis/credential UI), and is
-scoped to become the standalone `@kong-ui-public/freeform` package in a follow-up. Everything else here
-(`layout/`, `plugin-context/`, `components/`, `plugin-registry.ts`, etc.) is entities-plugins-specific
-and may depend on `core/`, but nothing in `core/` depends on it. Within `core/`, `components/` holds the
-Vue SFCs (and their co-located tests); non-component primitives (`types.ts`, `utils.ts`, `composables/`,
-etc.) stay at `core/`'s own root.
+Everything in this directory is entities-plugins-specific and depends on `@kong-ui-public/freeform`, but
+nothing in that package depends back on entities-plugins.
 
-## Schema System
+## Schema, rendering, render rules, empty values
 
-### FormSchema Structure
-
-The schema mirrors Kong Admin API field definitions. Defined in `core/form-schema.ts`.
-
-```typescript
-interface FormSchema {
-  type: 'record'
-  fields: NamedFieldSchema[]        // Array of { fieldName: UnionFieldSchema }
-  supported_partials?: Record<string, string[]>  // Redis partial support
-}
-
-type NamedFieldSchema = { [name: string]: UnionFieldSchema }
-
-// Field types: string | number | integer | boolean | foreign | array | set | map | record | json | function
-type UnionFieldSchema = StringFieldSchema | NumberLikeFieldSchema | BooleanFieldSchema
-  | ArrayFieldSchema | SetFieldSchema | MapFieldSchema | RecordFieldSchema
-  | JsonFieldSchema | ForeignFieldSchema
-```
-
-### Schema to Component Mapping
-
-Defined in `Field.vue`. The mapping logic:
-
-| Schema Type | `one_of` present? | Component |
-|---|---|---|
-| any type, with an `expressions` twin | - | `ExpressionField` (the value input below, plus its expression) |
-| `string` | No | `StringField` |
-| `string` | Yes | `EnumField` |
-| `number` | `integer` | No | `NumberField` |
-| `number` | `integer` | Yes | `EnumField` |
-| `boolean` | No | `BooleanField` |
-| `boolean` | Yes | `EnumField` |
-| `record` | - | `ObjectField` |
-| `array` | - | `ArrayField` |
-| `set` (tag-like) | - | `StringArrayField` |
-| `set` (enum-like) | - | `EnumField` |
-| `map` | - | `MapField` |
-| `json` | - | `JsonField` |
-| `foreign` | - | `ForeignField` |
-
-### Entity Checks
-
-Validation constraints at the schema level:
-
-- `at_least_one_of` — at least one field must have a value
-- `mutually_exclusive` — only one field can have a value
-- `mutually_required` — all or none must have values
-- `conditional` — if field X matches, then field Y must match
-- `conditional_at_least_one_of` — conditional at-least-one rule
-
-## Core Architecture
-
-### Data Flow
-
-```
-FormSchema + data props
-       |
-   Form.vue (provideFormShared -> creates reactive innerData, schemaHelpers)
-       |
-   Field.vue (useField -> reads schema + value by path, dispatches to renderer)
-       |
-   *Field.vue (reads/writes field value via composables)
-       |
-   onChange callback -> emits transformed data upward
-```
-
-### Composables (`core/composables/`)
-
-All exports below are re-exported from `@kong-ui-public/entities-plugins/freeform` (`render-rules.ts` only exports `renderRuleExactMatch` publicly; `createRenderRuleRegistry` stays internal) — see the "Standalone Usage" section below.
-
-| File | Exports | Purpose |
-|---|---|---|
-| `form-context.ts` | `provideFormShared()`, `useFormShared()` | Central form state: reactive data, schema, config, render rules, getValue/setValue, getEmptyOrDefault/getEmptyValue |
-| `field.ts` | `useField(name)` | Individual field state: value, schema, path, renderer, error, ancestors, emptyOrDefaultValue, emptyValue |
-| `field-path.ts` | `useFieldPath()` | Calculates absolute dot-notation path from parent context via provide/inject |
-| `schema.ts` | `useSchemaHelpers()` | Schema introspection: getSchema, getDefault, getEmptyOrDefault, getEmptyValue, getSelectItems, getLabelAttributes |
-| `useMapField.ts` | `useMapField()` | KeyId-backed map field state: keys, add/remove/rename, display labels |
-| `labels.ts` | `useLabelPath()`, `useFieldAttrs()` | Label generation with dictionary lookup (IP, SSL, TTL, JWT, etc.) |
-| `render-rules.ts` | `createRenderRuleRegistry()`, `renderRuleExactMatch()` | Bundles (field grouping/ordering) and dependencies (conditional visibility) |
-| `expression.ts` | `useExpressionField()` | One expressible field's twin: value, empty sentinel, array-slot writes, clear |
-| `expression-paths.ts` | `toExpressionPath()`, `toSourcePath()`, `isExpressionFieldSchema()`, `EXPRESSIONS_FIELD`, `EXPRESSION_ARRAY_EMPTY` | Pure path/schema helpers for the `expressions` convention. Separate from `expression.ts` so `form-context` can use them without an import cycle |
-| `ancestors.ts` | `useFieldAncestors()` | Access parent field context for nested components |
-| `constants.ts` | `FIELD_RENDERERS`, `FIELD_RENDERER_SLOTS` | Injection key symbols |
-
-### Path System
-
-Fields are addressed by dot-notation paths:
-
-- `$` — root symbol
-- `.` — separator
-- `*` — array wildcard (for schema lookup)
-
-```typescript
-resolve('config', 'redis', 'host')     // -> 'config.redis.host'
-resolveRoot('config', 'redis')          // -> '$.config.redis'
-generalizePath('config.servers.0.host') // -> 'config.servers.*.host'
-```
-
-### Render Rules
-
-Control field ordering and conditional visibility. Accepted by `Form` and `ObjectField`.
-
-```typescript
-interface RenderRules {
-  // Group fields together and control ordering.
-  // Each bundle is an array of field paths at the same nesting level.
-  bundles?: string[][]
-
-  // Show a field only when its dependency matches the expected value.
-  // Field and dependency must be at the same nesting level.
-  dependencies?: {
-    [fieldPath: string]: [dependencyPath: string, expectedValue: any]
-  }
-}
-```
-
-Example:
-
-```typescript
-const renderRules: RenderRules = {
-  bundles: [
-    ['config.strategy', 'config.redis'],   // strategy and redis rendered together
-  ],
-  dependencies: {
-    'config.redis': ['config.strategy', 'redis'],  // show redis only when strategy === 'redis'
-  },
-}
-```
-
-Constraints:
-- Fields in the same bundle or dependency must be at the same nesting level.
-- Circular references are not allowed (validated at runtime with helpful error messages).
-
-### Empty Field Values
-
-Fields resolve their "no value" representation through `FormConfig.emptyFieldValue`, not a hardcoded `null`:
-
-```typescript
-interface FormConfig<T = Record<string, any>> {
-  /** Sentinel written for an empty/unset field. Defaults to `'null'`. */
-  emptyFieldValue?: 'null' | 'undefined'
-  prepareFormData?: (data: any) => any
-  transformLabel?: (label: string, fieldPath: string) => string
-  hasValue?: (data: T | undefined) => boolean
-  updateOnChange?: boolean
-}
-```
-
-Passed as `<Form :config="{ emptyFieldValue: 'undefined' }">` (or via `PluginConfigurationBaseProps.formConfig` for plugin forms).
-
-Two composables surface the resolved sentinel, for two different scenarios — **picking the wrong one is a common bug**:
-
-| Composable | Backed by | Use for | Required-field behavior |
-|---|---|---|---|
-| `field.emptyOrDefaultValue` | `getEmptyOrDefault(path)` | **Initialization**: new map entry (`useMapField.addKey`), hidden-field reset | Forces schema structure back in: `[]` / `{}` / an explicit `schema.default` |
-| `field.emptyValue` | `getEmptyValue()` | **User actively clears a value** (`handleUpdate`, mode switches that blank sibling fields) | Always the plain configured sentinel — never re-injects a default or forces structure |
-
-Using `emptyOrDefaultValue` for a clear action is the bug to avoid: it would make a required field with an explicit `schema.default` impossible to empty, since every clear snaps it back to the default. See `StringField.vue`/`NumberField.vue`/`ArrayField.vue`'s `removeItem` for clear-action examples (`emptyValue`) versus `useMapField.ts`'s `addKey` (`emptyOrDefaultValue`). Note `ArrayField.vue`'s `addItem` calls `getDefault(path)` directly rather than `getEmptyOrDefault` — the two differ for a non-required field with an explicit `schema.default`, so it isn't an equivalent example.
-
-**Exception**: some fields have external merge-semantics that require a literal `null` regardless of this config — e.g. the `partials` reset in `service-protection/RedisField.vue` and `datakit/flow-editor/FlowEditor.vue`, where the plugin entity form *merges* free-form data with VFG data and `undefined` wouldn't clear an existing value. These are commented inline where they occur; don't blindly convert every hardcoded `null` to `getEmptyValue()` without checking whether it's one of these.
-
-**Caveat for the props-data resync guard**: with `emptyFieldValue: 'undefined'`, `getValue()` can return an object with keys whose value is `undefined` (the key is present, per JS semantics, even though the value is omitted from `JSON.stringify`). `form-context.ts`'s resync guard compares `getValue()` against the incoming `data` prop with `isEqual`, which treats `{ a: undefined }` and `{}` as different. If a host round-trips the form's output through something that strips `undefined` keys (a JSON serialize/parse, a store write) before feeding it back in as `data`, the guard will misfire and rebuild the form mid-edit. No consumer in this repo does that today; confirm your round trip preserves `undefined` keys before enabling the flag.
+The schema contract (`FormSchema`), the schema-to-component dispatch table, entity checks, composables,
+path system, render rules, and empty-field-value semantics are all documented in
+[`@kong-ui-public/freeform`'s README](../../../../../core/freeform/README.md) — this app only consumes
+them, it doesn't own them.
 
 ### Expressible Fields (`expressions`)
 
-The Gateway marks a config field `expressible` when its value can alternatively be supplied as a CEL expression evaluated on every request, which takes priority over the plain value. The expression lives in a **twin field under a root-level `expressions` record — a sibling of `config`, not part of it**:
-
-```jsonc
-{
-  "config":      { "limit": [10, 20, 30], "minute": null },
-  "expressions": { "limit": ["", "", "some_expression"] }
-}
-```
+See the framework README for the full semantics of the `expressions` twin-field convention
+(`ExpressionField`/`ExpressionEditor`, array pairing, empty-slot rules). The rest of this section covers
+what's specific to **this app's** integration.
 
 | Rule | Detail |
 |---|---|
-| Twin path | The field path with its first segment swapped: `config.minute` ↔ `expressions.minute`, `config.limit.0` ↔ `expressions.limit.0` |
-| Marker | Both halves must agree: `expressible` on the source field, and the twin's `expressible_kong_type` — the type the expression must return. Clearing either turns expression mode off and leaves the plain field — which is how a plugin gates it. An expressible *array* carries `expressible` on the array while its twins are per element, so an element inherits it from its parent |
-| Array pairing | **By position, as submitted.** `expressions.limit[i]` drives `config.limit[i]` |
-| Empty array slot | `""` — never `null`. Kong makes every array element `required`, so a null element fails validation. A twin array is emitted at the source array's full length with `""` in every literal slot |
-| Empty scalar twin | The configured `emptyFieldValue` sentinel (absent/null); a scalar has no slot to hold |
 | Twin array with nothing in it | Unset, not a run of `""`. rate-limiting-advanced drops `expressions.limit` once no row holds an expression, so a plugin whose expressions were added and then cleared matches one that never carried any. **Done in the form's own data, never by rewriting the value the form emits** — see the warning below |
 | Gateway re-sorts | rate-limiting-advanced sorts `config.limit` ascending on save and carries each expression with its pair, so the stored index is not necessarily the submitted one. The form does not mirror this — it renders whatever comes back |
 
 > [!WARNING]
-> **Shape the payload in `formData`, never in `onFormChange`.** `form-context.ts` decides whether an incoming `model` is a real change by comparing it against the payload it last emitted (`isEqual(getValue(), newData)`). A payload that disagrees with the form's own state fails that comparison for good, so the next `model` looks like a change and the form re-initializes from it — reverting what the user just did. rate-limiting-advanced unset an all-empty `expressions` record in its `handleFormChange` and clearing an expression silently came back. Mutating `formData` keeps the two in step.
-
-Rendering is entirely schema-driven, so **a plugin needs no configuration to get it**: `Field.vue` dispatches to `ExpressionField` (the plain input plus its expression) for any field whose twin resolves in the schema, and to the normal type mapping otherwise. Schemas without an `expressions` record are unaffected.
-
-| Component | Use |
-|---|---|
-| `ExpressionField` | The pair. What the dispatch resolves to; a plugin overriding the field replaces both halves |
-| `ExpressionEditor` | Just the collapsible editor. For a plugin that lays out the value input itself — see `rate-limiting-advanced/RequestLimitsForm.vue`, which pairs `limit` with `window_size` |
+> **Shape the payload in `formData`, never in `onFormChange`.** The framework's `form-context.ts` decides whether an incoming `model` is a real change by comparing it against the payload it last emitted (`isEqual(getValue(), newData)`). A payload that disagrees with the form's own state fails that comparison for good, so the next `model` looks like a change and the form re-initializes from it — reverting what the user just did. rate-limiting-advanced unset an all-empty `expressions` record in its `handleFormChange` and clearing an expression silently came back. Mutating `formData` keeps the two in step.
 
 It ships **no placeholder**: a useful example is specific to the plugin, and the field-attribute fallback would offer the field's own default value, which reads as a value rather than an expression. Plugins pass their own, and override the help text through the `help` slot, using either of the normal field-copy patterns:
 
@@ -384,7 +181,7 @@ Key props passed to free-form components:
 | `isEditing` | `boolean` | New vs edit mode |
 | `pluginName` | `string` | Current plugin name |
 | `renderRules` | `RenderRules` | From `pluginConfig.renderRules` |
-| `fieldRenderers` | `FieldRenderer[]` | From `pluginConfig.fieldRenderers` |
+| `fieldRenderers` | `FieldRendererRule[]` | From `pluginConfig.fieldRenderers` |
 | `onFormChange` | `(value) => void` | Callback when free-form data changes |
 | `onValidityChange` | `(event) => void` | Callback for free-form validity updates |
 
@@ -398,7 +195,9 @@ rawSchema -> appendEntityChecksFromMetadata(pluginName, schema)
 
 ## Custom Field Rendering
 
-Plugins can override how specific fields render using `FieldRenderer`:
+Plugins can override how specific fields render using `FieldRenderer` (the component — see
+`@kong-ui-public/freeform`'s README for `Custom Field Rendering` and the `FieldRendererRule` type used by
+`pluginConfig.fieldRenderers`):
 
 ```vue
 <Form :schema="schema">
@@ -410,31 +209,11 @@ Plugins can override how specific fields render using `FieldRenderer`:
 </Form>
 ```
 
-The `match` function receives `{ path, genericPath, schema }` and returns `boolean`.
-
-Rendering priority in `Field.vue` (highest to lowest):
-
-1. Named slot override (by field name)
-2. Custom renderer (from slot-based registration)
-3. `FieldRenderer` match
-4. Auto-dispatch by schema type
-
 ## Testing Infrastructure
 
-### Filler (`core/filler/`)
-
-Auto-fill utilities for Cypress and Playwright tests. A framework-agnostic core with framework-specific adapters. Lives under `core/` because it has no plugin/layout knowledge — it depends only on `form-schema.ts` and other generic core primitives.
-
-```
-core/filler/
-├── shared/       # field-walker (generator traversal), selectors (data-testid patterns), schema-utils
-├── cypress/      # Cypress handlers for 11 field types
-└── playwright/   # Playwright handlers (mirror structure)
-```
-
-Supported field types: string, number, boolean, enum, array, record, map, tag, json, foreign.
-
-Usage:
+The filler test utilities (auto-fill for Cypress/Playwright) live in `@kong-ui-public/freeform` and are
+re-exported from `@kong-ui-public/entities-plugins/filler/cypress` and `/filler/playwright` for backward
+compatibility:
 
 ```typescript
 import { createFiller } from '@kong-ui-public/entities-plugins/filler/cypress'
@@ -448,16 +227,13 @@ filler.fillField('config.host', 'example.com')
 
 | Test File | What it Covers |
 |---|---|
-| `core/components/free-form-basic.cy.ts` | Schema rendering, slot overrides, reactivity, lifecycle hooks |
-| `core/components/free-form-render-rules.cy.ts` | Bundles, dependencies, circular detection, chained cascades |
-| `core/components/expression-field.cy.ts` | Expressible fields: dispatch, collapse/expand, array slots, hidden fields |
-| `core/components/*.cy.ts` (other) | Per-field-type integration tests (`array-field`, `object-field`, `map-field`, etc.) |
-| `core/components/*.spec.ts`, `core/composables/*.spec.ts`, `core/utils.spec.ts` | Unit coverage for core components and composables |
 | `components/free-form-redis-selector.cy.ts` | Redis partial configuration, dependency-based visibility |
-| `components/credential-secret-field.cy.ts`, `components/scope-entity-field.cy.ts` | Non-core field integration tests |
+| `components/credential-secret-field.cy.ts`, `components/scope-entity-field.cy.ts` | Entities-plugins-specific field integration tests |
 | `components/ExpressionField.spec.ts` | Expressible-field ownership when a plugin customizes the field (mounts through `PluginConfigurationForm` — see its own TODO) |
 | `layout/StandardLayout.cy.ts` | Layout behavior, scope switching, general info and code mode |
 | `*.spec.ts` | Unit coverage for schema enhancement, registry and path utilities |
+
+Field-component and framework-composable tests (`free-form-basic.cy.ts`, `expression-field.cy.ts`, per-field-type `.cy.ts`/`.spec.ts`, filler tests) now live in `@kong-ui-public/freeform`.
 
 ## How-To Guides
 
@@ -469,95 +245,7 @@ filler.fillField('config.host', 'example.com')
 4. Add `fieldRenderers` for flat renderer overrides
 5. Add `renderRules` in the plugin config when free-form layout rules are needed
 
-### Adding a New Field Type
-
-1. Create `core/components/[Type]Field.vue` component
-2. Add a case in `field-dispatch.ts`'s `resolveFieldComponent` (moved out of `Field.vue` so `ExpressionField` can share it)
-3. Add handler type in `core/filler/shared/field-walker.ts` (`HandlerType` enum)
-4. Add Cypress handler in `core/filler/cypress/handlers/`
-5. Add Playwright handler in `core/filler/playwright/handlers/`
-6. Add selector support in `core/filler/shared/selectors.ts`
-7. Add or update filler tests in `core/filler/cypress/fill-form.cy.ts` and `core/filler/playwright/fill-form.pw.ts`
-
-### Modifying Core Components — Impact Guide
-
-| File | Impact |
-|---|---|
-| `Form.vue` | Root provider; changes affect ALL plugins |
-| `Field.vue` | Auto-dispatch logic; add new types here |
-| `ObjectField.vue` | Handles record nesting, collapse, entity checks |
-| `composables/form-context.ts` | Central state; changes affect data flow everywhere |
-| `composables/render-rules.ts` | Bundle/dependency logic; changes affect field visibility |
-| `composables/schema.ts` | Default/empty-value resolution (`getDefault`, `getEmptyOrDefault`, `getEmptyValue`); changes affect every field's init and clear behavior |
-| `field-dispatch.ts` | Schema-type → component mapping, shared by `Field` and `ExpressionField`; add new types here |
-
-## Standalone Usage (`@kong-ui-public/entities-plugins/freeform`)
-
-The freeform rendering engine is published as a dedicated subpath export. It contains only the schema-driven field rendering primitives — no plugin registry, no layout, no scope selectors. This makes it suitable for building custom plugin form UIs (e.g. in a different MFE) without pulling in the full entities-plugins bundle.
-
-### Installation
-
-```ts
-import { Form, FieldRenderer, FIELD_RENDERERS } from '@kong-ui-public/entities-plugins/freeform'
-import type { FormSchema, RenderRules } from '@kong-ui-public/entities-plugins/freeform'
-
-import '@kong-ui-public/entities-plugins/freeform/style.css'
-```
-
-### Basic Usage
-
-```vue
-<template>
-  <form @submit.prevent="handleSubmit">
-    <!-- freeform config fields -->
-    <Form
-      ref="formRef"
-      :schema="pluginSchema"
-      :data="formData"
-      @change="formData = $event"
-    />
-
-    <button type="submit">Save</button>
-  </form>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { Form } from '@kong-ui-public/entities-plugins/freeform'
-import type { FormSchema } from '@kong-ui-public/entities-plugins/freeform'
-
-const props = defineProps<{ pluginSchema: FormSchema }>()
-const formData = ref({})
-const formRef = ref<InstanceType<typeof Form>>()
-
-function handleSubmit() {
-  const value = formRef.value?.getValue()
-  // submit value
-}
-</script>
-```
-
-### Writing a Custom Field Component
-
-The `core/composables/` primitives listed above are re-exported from the `freeform` subpath, so a host app can author its own field component that reads and writes a named field's value the same way `SwitchField`/`RadioField` do internally — no `getValue`/`setValue` round-trip needed:
-
-```vue
-<script setup lang="ts">
-import { toRef } from 'vue'
-import { useField } from '@kong-ui-public/entities-plugins/freeform'
-
-const props = defineProps<{ name: string }>()
-const { value } = useField<boolean>(toRef(() => props.name))
-</script>
-
-<template>
-  <input
-    type="checkbox"
-    :checked="value"
-    @change="value = ($event.target as HTMLInputElement).checked"
-  >
-</template>
-```
+Adding a new generic field type (not plugin-specific) is now done in `@kong-ui-public/freeform` — see its README.
 
 Register it against a field path with `FieldRenderer`, or place it directly inside a `Form`/layout slot with `name` set to the field's path — both wire into the same reactive form state as the built-in field components.
 

@@ -75,7 +75,7 @@ import type { Component } from 'vue'
 import type { ZodError } from 'zod'
 
 import type { PluginFormLayoutProps as Props } from '../../layout/provider'
-import type { ConfigSection } from '../../core/types'
+import type { ConfigSection } from '../../types'
 import type { EditorMode, DatakitPluginData } from './types'
 
 import { computed, inject, onMounted, ref, watch, useAttrs } from 'vue'

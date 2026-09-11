@@ -1,21 +1,30 @@
-export { default as Form } from './components/free-form/core/components/Form.vue'
-export { default as Field } from './components/free-form/core/components/Field.vue'
-export { default as FieldRenderer } from './components/free-form/core/components/FieldRenderer.vue'
-export { default as ExpressionField } from './components/free-form/core/components/ExpressionField.vue'
-export { default as ExpressionEditor } from './components/free-form/core/components/ExpressionEditor.vue'
-export { default as StringField } from './components/free-form/core/components/StringField.vue'
-export { default as SwitchField } from './components/free-form/core/components/SwitchField.vue'
-export { default as BooleanField } from './components/free-form/core/components/BooleanField.vue'
-export { default as ArrayField } from './components/free-form/core/components/ArrayField.vue'
-export { default as ObjectField } from './components/free-form/core/components/ObjectField.vue'
-export { default as NumberField } from './components/free-form/core/components/NumberField.vue'
-export { default as EnumField } from './components/free-form/core/components/EnumField.vue'
-export { default as StringArrayField } from './components/free-form/core/components/StringArrayField.vue'
-export { default as JsonField } from './components/free-form/core/components/JsonField.vue'
-export { default as ForeignField } from './components/free-form/core/components/ForeignField.vue'
-export { default as MapField } from './components/free-form/core/components/MapField.vue'
-export * from './components/free-form/core/composables'
-export { renderRuleExactMatch } from './components/free-form/core/composables/render-rules'
-export type { FormSchema, UnionFieldSchema, NamedFieldSchema, ExpressionFieldSchema } from './components/free-form/core/form-schema'
-export type { RenderRules, FormConfig } from './components/free-form/core/types'
-export { USE_SECRET_INPUT_KEY } from './constants'
+import '@kong-ui-public/freeform/style.css'
+
+export {
+  Form,
+  Field,
+  FieldRenderer,
+  ExpressionField,
+  ExpressionEditor,
+  StringField,
+  SwitchField,
+  BooleanField,
+  ArrayField,
+  ObjectField,
+  NumberField,
+  EnumField,
+  StringArrayField,
+  JsonField,
+  ForeignField,
+  MapField,
+  renderRuleExactMatch,
+  USE_SECRET_INPUT_KEY,
+} from '@kong-ui-public/freeform'
+export type {
+  FormSchema,
+  UnionFieldSchema,
+  NamedFieldSchema,
+  ExpressionFieldSchema,
+  RenderRules,
+  FormConfig,
+} from '@kong-ui-public/freeform'

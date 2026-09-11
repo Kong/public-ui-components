@@ -22,7 +22,7 @@
 import { computed } from 'vue'
 import { KLabel, KRadio } from '@kong/kongponents'
 import { get, set } from 'lodash-es'
-import { useFormShared } from '../../core/composables'
+import { useFormShared } from '@kong-ui-public/freeform'
 
 interface CardRadioOption {
   label: string

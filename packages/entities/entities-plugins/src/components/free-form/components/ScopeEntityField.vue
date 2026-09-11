@@ -42,8 +42,8 @@ import {
   FieldScopedEntitySelect,
   FORMS_API_KEY,
 } from '@kong-ui-public/forms'
-import { useField, useFieldAttrs } from '../core/composables'
-import type { BaseFieldProps, EmptyValue } from '../core/types'
+import { useField, useFieldAttrs } from '@kong-ui-public/freeform'
+import type { BaseFieldProps, EmptyValue } from '@kong-ui-public/freeform'
 import type { SelectItem } from '@kong/kongponents'
 import type { EntityData } from '@kong-ui-public/forms'
 import useI18n from '../../../composables/useI18n'

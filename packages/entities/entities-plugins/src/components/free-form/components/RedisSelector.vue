@@ -105,7 +105,8 @@
 </template>
 
 <script setup lang="ts">
-import ObjectField from '../core/components/ObjectField.vue'
+import { ObjectField, useField, useFormData } from '@kong-ui-public/freeform'
+import type { RenderRules } from '@kong-ui-public/freeform'
 import RedisConfigCard from './RedisConfigCard.vue'
 import { onBeforeMount, inject, computed, ref, watch } from 'vue'
 import english from '../../../locales/en.json'
@@ -113,9 +114,8 @@ import { createI18n } from '@kong-ui-public/i18n'
 import { FORMS_CONFIG, hideNewRedis } from '@kong-ui-public/forms'
 import { KCard } from '@kong/kongponents'
 import { useAxios, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { RedisPartialType, Redis, RenderRules } from '../core/types'
+import type { RedisPartialType, Redis } from '../types'
 import { partialEndpoints, REDIS_PARTIAL_INFO } from '../const'
-import { useField, useFormData } from '../core/composables'
 import { RedisConfigurationSelector } from '@kong-ui-public/entities-redis-configurations'
 import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import { useToaster } from '../../../composables/useToaster'

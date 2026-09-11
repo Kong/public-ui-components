@@ -1,6 +1,5 @@
 import { definePluginConfig } from '../define-plugin-config'
-import MapField from '../core/components/MapField.vue'
-import ArrayField from '../core/components/ArrayField.vue'
+import { MapField, ArrayField } from '@kong-ui-public/freeform'
 
 export default definePluginConfig({
   experimental: true,

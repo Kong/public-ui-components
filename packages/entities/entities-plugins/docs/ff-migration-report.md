@@ -1,7 +1,6 @@
 # Free-form Plugin Migration Report
 
 > ⚠️ **Auto-generated — do not edit manually.**
-> To regenerate: `pnpm --filter @kong-ui-public/entities-plugins report:ff-migration`
 >
 > Generated: 2026-08-07T06:55:53.401Z
 

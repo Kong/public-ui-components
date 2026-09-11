@@ -1,12 +1,3 @@
 <template>
-  <div class="sandbox-container">
-    <main>
-      <p>This is the component sandbox.</p>
-      <Freeform />
-    </main>
-  </div>
+  <router-view />
 </template>
-
-<script setup lang="ts">
-import { Freeform } from '../src'
-</script>

@@ -1,17 +1,26 @@
-// import type { App } from 'vue'
-import Freeform from './components/FreeformContainer.vue'
+export { default as Form } from './components/Form.vue'
+export { default as Field } from './components/Field.vue'
+export { default as FieldRenderer } from './components/FieldRenderer.vue'
+export { default as ExpressionField } from './components/ExpressionField.vue'
+export { default as ExpressionEditor } from './components/ExpressionEditor.vue'
+export { default as StringField } from './components/StringField.vue'
+export { default as SwitchField } from './components/SwitchField.vue'
+export { default as BooleanField } from './components/BooleanField.vue'
+export { default as ArrayField } from './components/ArrayField.vue'
+export { default as ObjectField } from './components/ObjectField.vue'
+export { default as NumberField } from './components/NumberField.vue'
+export { default as EnumField } from './components/EnumField.vue'
+export { default as StringArrayField } from './components/StringArrayField.vue'
+export { default as JsonField } from './components/JsonField.vue'
+export { default as ForeignField } from './components/ForeignField.vue'
+export { default as MapField } from './components/MapField.vue'
+export { default as EnhancedInput } from './components/EnhancedInput.vue'
+export { default as EntityChecksAlert } from './components/EntityChecksAlert.vue'
+export { default as SlideTransition } from './components/SlideTransition.vue'
 
-// Export Vue plugin
-// We rarely want to export components as a plugin as we prefer to support proper tree-shaking in the host application. Only enable if you're packing a Vue plugin.
-// export default {
-//   // Customize Vue plugin options as desired
-//   // Providing a `name` property allows for customizing the registered
-//   // name of your component (useful if exporting a single component).
-//   install: (app: App, options: { name?: string, [key: string]: any } = {}): void => {
-//     app.component(options.name || 'Freeform', Freeform)
-//   },
-// }
-
-export { Freeform }
-
+export * from './composables'
+export * from './form-schema'
 export * from './types'
+export * from './field-dispatch'
+export * from './utils'
+export * from './constants'

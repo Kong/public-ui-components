@@ -44,11 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Field } from '../core/types'
+import type { Field } from '../types'
 import { useStringHelpers } from '@kong-ui-public/entities-shared'
 import { computed } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
-import { useRedisNonstandardFields } from '../core/utils'
 import english from '../../../locales/en.json'
 import type { FlattendRedisConfigurationFields } from '../plugins/request-callout/types'
 
@@ -111,7 +110,24 @@ const configDetails = computed(() => {
   }).sort((a, b) => a.order - b.order).filter((item) => item.type !== 'hidden')
 })
 
-const nonStandardConfigDetails = useRedisNonstandardFields(props.configFields, props.pluginRedisFields || [])
+const nonStandardConfigDetails = (() => {
+  const redisFieldPattern = /(?<=config-redis-).*/
+  const redisLabelPattern = /Config\.Redis.*/
+  return (props.pluginRedisFields || [])
+    .filter((field) => {
+      const match = field.model.match(redisFieldPattern)
+      return match && !Object.keys(props.configFields).includes(match[0])
+    })
+    .map((field) => {
+      const labelMatch = field.label.match(redisLabelPattern)
+      return {
+        label: labelMatch ? labelMatch[0] : field.label,
+        key: field.model,
+        value: 'N/A',
+        type: 'text',
+      }
+    })
+})()
 
 const allConfigDetails = computed(() => configDetails.value.concat(nonStandardConfigDetails as any[]))
 

@@ -41,12 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import Form from '../../../../core/components/Form.vue'
+import { Form, EnumField, BooleanField } from '@kong-ui-public/freeform'
 import PropertiesField from './PropertiesField.vue'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import { computed, useTemplateRef } from 'vue'
-import EnumField from '../../../../core/components/EnumField.vue'
-import BooleanField from '../../../../core/components/BooleanField.vue'
 import InputsField from './InputsField.vue'
 import NodeFormDivider from './NodeFormDivider.vue'
 import { extractKeyFromProperty, identifyPropertyHasKey, isReadableProperty, isWritableProperty } from '../node/property'

@@ -1,4 +1,4 @@
-import type { FormSchema } from '../../src/components/free-form/core/form-schema'
+import type { FormSchema } from '@kong-ui-public/freeform'
 
 const entitlementEnforcementSchema: FormSchema = {
   type: 'record',
