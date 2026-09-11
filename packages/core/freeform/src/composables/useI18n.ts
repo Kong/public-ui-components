@@ -1,5 +1,5 @@
 import { createI18n, i18nTComponent } from '@kong-ui-public/i18n'
-import english from '../locales/freeform-en.json'
+import english from '../locales/en.json'
 
 type MessageSource = typeof english
 

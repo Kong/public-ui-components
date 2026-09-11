@@ -1,8 +1,8 @@
 import type { useSchemaHelpers } from './schema'
 import { resolve, mapSymbol } from '../utils'
 import { reactive } from 'vue'
+import type { KeyId } from '../types'
 
-export type KeyId = `kid:${number}`
 type Data = Record<string, any>
 
 let idCounter = 0

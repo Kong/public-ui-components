@@ -80,7 +80,6 @@
     "@kong/icons": "^1.62.1",
     "@kong/kongponents": "9.64.15",
     "@peculiar/x509": "^2.0.0",
-    "@playwright/experimental-ct-vue": "^1.62.1",
     "@playwright/test": "^1.62.1",
     "@shikijs/core": "^4.4.3",
     "@shikijs/engine-javascript": "^4.4.3",
@@ -120,10 +119,7 @@
     "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui",
-    "install:pw": "playwright install chromium",
-    "test:pw": "cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts",
-    "test:pw:open": "cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts --ui",
-    "report:ff-migration": "node scripts/ff-migration-report.mjs"
+    "install:pw": "playwright install chromium"
   },
   "repository": {
     "type": "git",

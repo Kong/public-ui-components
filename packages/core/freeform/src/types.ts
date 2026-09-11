@@ -133,3 +133,5 @@ export interface FieldRendererRule {
   component: Component
   propsOverrides?: Record<string, unknown> | PropsOverridesFn
 }
+
+export type KeyId = `kid:${number}`
