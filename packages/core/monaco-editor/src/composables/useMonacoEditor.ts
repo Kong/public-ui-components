@@ -1,54 +1,15 @@
-import { onActivated, onBeforeUnmount, onMounted, onWatcherCleanup, reactive, ref, shallowRef, toValue, watch } from 'vue'
+import { onActivated, onBeforeUnmount, onMounted, onWatcherCleanup, reactive, shallowRef, toValue, watch } from 'vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import { parseKeybinding } from '../utils/commands'
 import { registerMarkdownShortcuts } from '../actions/markdownShortcuts'
 import { useDebounceFn } from '@vueuse/core'
+import { isMonacoLoaded, loadMonaco } from '../singletons/monaco-loader'
 
 import * as monaco from 'monaco-editor'
-import { shikiToMonaco } from '@shikijs/monaco'
-import { getSingletonHighlighter, bundledLanguages, bundledThemes } from 'shiki'
 
 import type { MaybeRefOrGetter } from 'vue'
 import type { editor as Editor } from 'monaco-editor'
 import type { MonacoEditorStates, UseMonacoEditorOptions, MonacoEditorActionConfig } from '../types'
-
-// Flag if monaco loaded
-const isMonacoLoaded = ref(false)
-let initPromise: Promise<void> | null = null
-
-async function loadMonaco() {
-  if (initPromise) {
-    return initPromise
-  }
-
-  initPromise = (async () => {
-    try {
-      // @ts-ignore jsonDefaults location varies across Monaco Editor versions
-      // v0.55.0 introduced breaking changes and issues; Konnect still uses v0.52.x.
-      const jsonDefaults = monaco.json?.jsonDefaults || monaco.languages.json?.jsonDefaults
-      // Disable JSON token provider to prevent conflicts with @shikijs/monaco
-      // https://github.com/shikijs/shiki/issues/865#issuecomment-3689158990
-      jsonDefaults?.setModeConfiguration({ tokens: false })
-
-      const highlighter = await getSingletonHighlighter(
-        {
-          themes: Object.values(bundledThemes),
-          langs: Object.values(bundledLanguages),
-        },
-      )
-      highlighter.getLoadedLanguages().forEach(lang => {
-        monaco.languages.register({ id: lang })
-      })
-      shikiToMonaco(highlighter, monaco)
-      isMonacoLoaded.value = true
-    } catch (error) {
-      initPromise = null
-      throw error
-    }
-  })()
-
-  return initPromise
-}
 
 /**
  * Composable for integrating the Monaco Editor into Vue components.

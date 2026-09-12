@@ -1,8 +1,10 @@
 import MonacoEditor from './components/MonacoEditor.vue'
+import MonacoDiffEditor from './components/MonacoDiffEditor.vue'
 import MonacoEditorStatusOverlay from './components/MonacoEditorStatusOverlay.vue'
 
 export {
   MonacoEditor,
+  MonacoDiffEditor,
   MonacoEditorStatusOverlay,
 }
 
@@ -15,6 +17,7 @@ export * from './singletons/model-contexts'
 export * from './types'
 
 export { useMonacoEditor } from './composables/useMonacoEditor'
+export { useMonacoDiffEditor } from './composables/useMonacoDiffEditor'
 
 // Export action helpers for creating custom toolbar actions
 export { createWrapAction } from './actions'
