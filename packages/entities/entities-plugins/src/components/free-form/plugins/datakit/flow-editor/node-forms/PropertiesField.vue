@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import type { SelectItem } from '@kong/kongponents'
 import useI18n from '../../../../../../composables/useI18n'
-import { useFormShared } from '../../../../core/composables'
+import { useFormShared } from '@kong-ui-public/freeform'
 import { computed, inject, ref, watch } from 'vue'
 import { FEATURE_FLAGS } from '../../../../../../constants'
 import {

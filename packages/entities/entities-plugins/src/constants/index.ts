@@ -1,8 +1,6 @@
-import type { InjectionKey, Ref } from 'vue'
+export { USE_SECRET_INPUT_KEY, FREE_FORM_SCHEMA_MAP_KEY } from '@kong-ui-public/freeform'
 
 export const EXPERIMENTAL_FREE_FORM_PROVIDER = Symbol('EXPERIMENTAL_FREE_FORM_PROVIDER')
-
-export const USE_SECRET_INPUT_KEY = Symbol.for('kong-ui-public:entities-plugins:use-secret-input') as InjectionKey<Ref<boolean>>
 
 export const FEATURE_FLAGS = {
   KM_2262_CODE_MODE: 'KM-2262-code-mode',
@@ -15,5 +13,3 @@ export const FEATURE_FLAGS = {
 }
 
 export const TOASTER_PROVIDER = Symbol('TOASTER_PROVIDER')
-
-export const FREE_FORM_SCHEMA_MAP_KEY = '__FREEFORM_SCHEMA_MAP__'

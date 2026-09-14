@@ -1,4 +1,4 @@
-import type { FormSchema } from '../../src/components/free-form/core/form-schema'
+import type { FormSchema } from '@kong-ui-public/freeform'
 
 // Mirrors the real Kong Gateway ACL plugin schema (`kong.plugins.acl.schema`).
 const aclSchema: FormSchema = {

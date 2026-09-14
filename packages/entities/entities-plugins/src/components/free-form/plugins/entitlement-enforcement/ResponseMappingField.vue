@@ -35,10 +35,8 @@
 
 <script setup lang="ts">
 import { KInput } from '@kong/kongponents'
-import NumberField from '../../core/components/NumberField.vue'
-import StringField from '../../core/components/StringField.vue'
+import { NumberField, StringField, useFormShared } from '@kong-ui-public/freeform'
 import { get, set } from 'lodash-es'
-import { useFormShared } from '../../core/composables'
 import useI18n from '../../../../composables/useI18n'
 
 const { i18n: { t } } = useI18n()

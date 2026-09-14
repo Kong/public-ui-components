@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
 
-import Form from '../../../../core/components/Form.vue'
+import { Form } from '@kong-ui-public/freeform'
 import type { NodeId } from '../../types'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'

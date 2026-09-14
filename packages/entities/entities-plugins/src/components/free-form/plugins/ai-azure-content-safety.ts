@@ -1,5 +1,5 @@
 import { definePluginConfig } from '../define-plugin-config'
-import ArrayField from '../core/components/ArrayField.vue'
+import { ArrayField } from '@kong-ui-public/freeform'
 
 export default definePluginConfig({
   experimental: true,

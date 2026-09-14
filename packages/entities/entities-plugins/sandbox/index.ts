@@ -115,11 +115,6 @@ const init = async () => {
         name: 'configure-dynamic-ordering',
         component: () => import('./pages/FallbackPage.vue'),
       },
-      {
-        path: '/free-form/mocking',
-        name: 'free-form',
-        component: () => import('./pages/FreeFormPage.vue'),
-      },
     ],
   })
 

@@ -40,7 +40,7 @@
 import { KLabel } from '@kong/kongponents'
 import { ChevronRightIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
-import SlideTransition from '../core/components/SlideTransition.vue'
+import { SlideTransition } from '@kong-ui-public/freeform'
 
 defineProps<{
   label: string

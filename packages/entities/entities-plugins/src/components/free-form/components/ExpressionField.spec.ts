@@ -1,15 +1,15 @@
-// TODO: this test depends on PluginConfigurationForm (not part of core) purely as a
+// TODO: this test depends on PluginConfigurationForm (entities-plugins-specific) purely as a
 // mounting harness. Once ExpressionField's test setup is decoupled from
-// PluginConfigurationForm — mounting through Form.vue/ObjectField.vue like the other
-// core field tests do — this file can move back to core/components/ alongside
+// PluginConfigurationForm — mounting through Form/ObjectField like the other field tests
+// in @kong-ui-public/freeform do — this test can move into that package alongside
 // ExpressionField.vue itself.
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { defineComponent, h } from 'vue'
 import PluginConfigurationForm from './PluginConfigurationForm.vue'
-import ExpressionField from '../core/components/ExpressionField.vue'
+import { ExpressionField } from '@kong-ui-public/freeform'
+import type { FormSchema } from '@kong-ui-public/freeform'
 
-import type { FormSchema } from '../core/form-schema'
 
 /**
  * An `expressible` field renders as a pair: the plain value, and the expression
