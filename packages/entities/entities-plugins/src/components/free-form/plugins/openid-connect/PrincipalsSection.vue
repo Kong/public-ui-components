@@ -23,7 +23,6 @@
         card-orientation="horizontal"
         data-testid="oidc-auth-mode-kong-identity"
         :selected-value="MODE_KONG_IDENTITY"
-        @change="handleModeChange"
       >
         <div class="auth-mode-card-content">
           <KeyIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
@@ -41,7 +40,6 @@
         card-orientation="horizontal"
         data-testid="oidc-auth-mode-external"
         :selected-value="MODE_EXTERNAL"
-        @change="handleModeChange"
       >
         <div class="auth-mode-card-content">
           <WorldIcon :size="`var(--kui-icon-size-40, ${KUI_ICON_SIZE_40})`" />
@@ -544,7 +542,6 @@ interface ExternalModeCache {
 // throw their entries away.
 const kongIdentityCache = ref<KongIdentityModeCache | null>(null)
 const externalCache = ref<ExternalModeCache | null>(null)
-let previousMode: PrincipalsMode = selectedMode.value
 // AI Manager ships its own gateway, so the Kong Identity card cites the AI Gateway
 // version principals landed in rather than the data plane 3.15 baseline.
 const openidConnectContext = usePluginContext('openid-connect')
@@ -598,7 +595,7 @@ const hasIncompatibleDataPlane = computed(() =>
 
 // Immediate so it runs on mount when the host resolves principalsDirectoryName late.
 // Guards on isEditing so saved edit-load values are never overwritten on mount;
-// explicit mode switches are handled by handleModeChange directly.
+// explicit mode switches are handled by the selectedMode watcher directly.
 watch(() => formsConfig?.principalsDirectoryName, (name) => {
   if (isEditing.value || selectedMode.value !== MODE_KONG_IDENTITY || name == null) return
   if (formData.config?.principals) {
@@ -758,52 +755,50 @@ function applyAuthMethodsForMode(mode: PrincipalsMode) {
   }
 }
 
-function handleModeChange(newMode: PrincipalsMode) {
-  const oldMode = previousMode
-  previousMode = newMode
-
-  if (oldMode !== newMode) {
-    // Stash what the user entered in the mode being left, so it can be restored if they
-    // toggle back instead of being lost.
-    if (oldMode === MODE_KONG_IDENTITY) {
-      kongIdentityCache.value = {
-        issuer: issuer.value,
-        clientId: clientIds.value,
-        clientSecret: clientSecrets.value,
-        selectedServer: selectedServer.value,
-        clients: clients.value,
-      }
-    } else {
-      externalCache.value = {
-        issuer: issuer.value,
-        clientId: clientIds.value,
-        clientSecret: clientSecrets.value,
-      }
+// React to mode switches (both radio cards write the same `selectedMode` ref via
+// v-model). `oldMode` is the mode being left; the watcher only fires on actual
+// changes, so re-selecting the same mode is a no-op.
+watch(selectedMode, (newMode, oldMode) => {
+  // Stash what the user entered in the mode being left, so it can be restored if they
+  // toggle back instead of being lost.
+  if (oldMode === MODE_KONG_IDENTITY) {
+    kongIdentityCache.value = {
+      issuer: issuer.value,
+      clientId: clientIds.value,
+      clientSecret: clientSecrets.value,
+      selectedServer: selectedServer.value,
+      clients: clients.value,
     }
-
-    // Restore the mode being entered from its cache, or clear if it's never been visited.
-    if (newMode === MODE_KONG_IDENTITY) {
-      const cached = kongIdentityCache.value
-      if (formData.config) {
-        formData.config.issuer = cached?.issuer ?? getEmptyValue()
-        formData.config.client_id = cached?.clientId ?? getEmptyValue()
-        formData.config.client_secret = cached?.clientSecret ?? getEmptyValue()
-      }
-      if (cached?.selectedServer) {
-        restoringServer = true
-      }
-      selectedServer.value = cached?.selectedServer ?? null
-      clients.value = cached?.clients ?? []
-    } else {
-      const cached = externalCache.value
-      if (formData.config) {
-        formData.config.issuer = cached?.issuer ?? getEmptyValue()
-        formData.config.client_id = cached?.clientId ?? getEmptyValue()
-        formData.config.client_secret = cached?.clientSecret ?? getEmptyValue()
-      }
-      selectedServer.value = null
-      clients.value = []
+  } else {
+    externalCache.value = {
+      issuer: issuer.value,
+      clientId: clientIds.value,
+      clientSecret: clientSecrets.value,
     }
+  }
+
+  // Restore the mode being entered from its cache, or clear if it's never been visited.
+  if (newMode === MODE_KONG_IDENTITY) {
+    const cached = kongIdentityCache.value
+    if (formData.config) {
+      formData.config.issuer = cached?.issuer ?? getEmptyValue()
+      formData.config.client_id = cached?.clientId ?? getEmptyValue()
+      formData.config.client_secret = cached?.clientSecret ?? getEmptyValue()
+    }
+    if (cached?.selectedServer) {
+      restoringServer = true
+    }
+    selectedServer.value = cached?.selectedServer ?? null
+    clients.value = cached?.clients ?? []
+  } else {
+    const cached = externalCache.value
+    if (formData.config) {
+      formData.config.issuer = cached?.issuer ?? getEmptyValue()
+      formData.config.client_id = cached?.clientId ?? getEmptyValue()
+      formData.config.client_secret = cached?.clientSecret ?? getEmptyValue()
+    }
+    selectedServer.value = null
+    clients.value = []
   }
 
   // Principal lookup is opt-in (the "Use principal lookup" toggle) in both modes, so it
@@ -828,7 +823,7 @@ function handleModeChange(newMode: PrincipalsMode) {
 
   applyAuthMethodsForMode(newMode)
   emit('mode-change', newMode)
-}
+})
 </script>
 
 <style lang="scss" scoped>
