@@ -1,5 +1,4 @@
-import type { AnalyticsBridge, ApiRequestsQuery, ExploreResultV4, ValidDashboardChartQuery } from '@kong-ui-public/analytics-utilities'
-import type { ScatterChartData } from '@kong-ui-public/analytics-chart'
+import type { AnalyticsBridge, ApiRequestsQuery, ApiRequestsResult, ExploreResultV4, ValidDashboardChartQuery } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContext } from '../types'
 
 import { createPinia, setActivePinia } from 'pinia'
@@ -9,14 +8,12 @@ import { INJECT_QUERY_PROVIDER } from '../constants'
 const START = '2024-06-16T00:00:00.000Z'
 const END = '2024-06-16T01:00:00.000Z'
 
-const scatterData = (points = 3): ScatterChartData => ({
-  points: Array.from({ length: points }, (_, i) => ({
-    timestamp: new Date(START).valueOf() + i * 1000,
-    value: i + 1,
+const requestsResult = (records = 3): ApiRequestsResult => ({
+  results: Array.from({ length: records }, (_, i) => ({
+    request_start: new Date(new Date(START).valueOf() + i * 1000).toISOString(),
+    latencies_response_ms: i + 1,
   })),
-  metric: 'latencies_response_ms',
-  start: START,
-  end: END,
+  meta: { query_id: '', time_range: { start: START, end: END }, size: records },
 })
 
 const exploreResult = (): ExploreResultV4 => ({
@@ -46,12 +43,12 @@ describe('<ScatterChartRenderer />', () => {
   let refreshCounter = 0
 
   const render = ({
-    scatterDataFn,
+    requestsQueryFn,
     queryReady = true,
     tileQuery = query,
     queryFn,
   }: {
-    scatterDataFn?: DashboardRendererContext['scatterDataFn']
+    requestsQueryFn?: AnalyticsBridge['requestsQueryFn']
     queryReady?: boolean
     tileQuery?: ApiRequestsQuery | ValidDashboardChartQuery
     queryFn?: () => Promise<ExploreResultV4>
@@ -61,10 +58,7 @@ describe('<ScatterChartRenderer />', () => {
     cy.mount(ScatterChartRenderer, {
       props: {
         query: tileQuery,
-        context: {
-          filters: [],
-          ...(scatterDataFn && { scatterDataFn: cy.spy(scatterDataFn).as('fetcher') }),
-        } as DashboardRendererContext,
+        context: { filters: [] } as DashboardRendererContext,
         queryReady,
         chartOptions: { type: 'scatter' },
         height: 400,
@@ -74,6 +68,7 @@ describe('<ScatterChartRenderer />', () => {
         provide: {
           [INJECT_QUERY_PROVIDER]: {
             queryFn: cy.spy(queryFn ?? (() => Promise.resolve(exploreResult()))).as('queryFn'),
+            ...(requestsQueryFn && { requestsQueryFn: cy.spy(requestsQueryFn).as('requestsQueryFn') }),
             datasourceConfigFn: () => Promise.resolve([]),
           } as unknown as AnalyticsBridge,
         },
@@ -81,42 +76,42 @@ describe('<ScatterChartRenderer />', () => {
     })
   }
 
-  it('renders the chart from the data the consumer supplies', () => {
-    render({ scatterDataFn: () => Promise.resolve(scatterData()) })
+  it('renders the chart from the fetched request records', () => {
+    render({ requestsQueryFn: () => Promise.resolve(requestsResult()) })
 
-    cy.get('@fetcher').should('have.been.calledOnce')
+    cy.get('@requestsQueryFn').should('have.been.calledOnce')
     cy.get('[data-testid="scatter-chart-container"]').should('be.visible')
     cy.get('[data-testid="scatter-chart-empty-state"]').should('not.exist')
   })
 
-  it('passes the tile query and an abort controller to the consumer', () => {
-    render({ scatterDataFn: () => Promise.resolve(scatterData()) })
+  it('queries the requests datasource with an abort controller', () => {
+    render({ requestsQueryFn: () => Promise.resolve(requestsResult()) })
 
-    cy.get('@fetcher').then((spy: any) => {
+    cy.get('@requestsQueryFn').then((spy: any) => {
       const call = spy.getCall(0)
-      expect(call.args[0]).to.deep.equal(query)
-      expect(call.args[2]).to.be.instanceOf(AbortController)
+      expect(call.args[0].datasource).to.equal('requests')
+      expect(call.args[1]).to.be.instanceOf(AbortController)
     })
   })
 
-  it('shows an empty state when the consumer supplies no scatterDataFn', () => {
+  it('shows an empty state when the bridge cannot fetch request records', () => {
     render()
 
     cy.get('[data-testid="scatter-chart-empty-state"]').should('be.visible')
-      .and('contain.text', 'No scatter data provider supplied')
+    cy.get('[data-testid="scatter-chart-container"]').should('not.exist')
   })
 
   it('shows an empty state when the fetch rejects', () => {
-    render({ scatterDataFn: () => Promise.reject(new Error('nope')) })
+    render({ requestsQueryFn: () => Promise.reject(new Error('nope')) })
 
     cy.get('[data-testid="scatter-chart-empty-state"]').should('be.visible')
     cy.get('[data-testid="scatter-chart-container"]').should('not.exist')
   })
 
   it('surfaces a forbidden query error', () => {
-    const forbidden = Object.assign(new Error('forbidden'), { response: { status: 403 } })
+    const forbidden = Object.assign(new Error('forbidden'), { status: 403 })
 
-    render({ scatterDataFn: () => Promise.reject(forbidden) })
+    render({ requestsQueryFn: () => Promise.reject(forbidden) })
 
     cy.get('[data-testid="scatter-chart-empty-state"]').should('be.visible')
   })
@@ -129,26 +124,18 @@ describe('<ScatterChartRenderer />', () => {
       granularity: 'hourly',
     } as ValidDashboardChartQuery
 
-    it('goes through the query bridge, not the consumer fetch', () => {
-      render({ tileQuery: exploreQuery, scatterDataFn: () => Promise.resolve(scatterData()) })
+    it('goes through the explore query, not the requests endpoint', () => {
+      render({ tileQuery: exploreQuery, requestsQueryFn: () => Promise.resolve(requestsResult()) })
 
       cy.get('@queryFn').should('have.been.calledOnce')
-      cy.get('@fetcher').should('not.have.been.called')
+      cy.get('@requestsQueryFn').should('not.have.been.called')
       cy.get('[data-testid="scatter-chart-container"]').should('be.visible')
-    })
-
-    it('renders without a scatterDataFn at all', () => {
-      render({ tileQuery: exploreQuery })
-
-      cy.get('@queryFn').should('have.been.calledOnce')
-      cy.get('[data-testid="scatter-chart-container"]').should('be.visible')
-      cy.get('[data-testid="scatter-chart-empty-state"]').should('not.exist')
     })
   })
 
   it('does not fetch until the query is ready', () => {
-    render({ scatterDataFn: () => Promise.resolve(scatterData()), queryReady: false })
+    render({ requestsQueryFn: () => Promise.resolve(requestsResult()), queryReady: false })
 
-    cy.get('@fetcher').should('not.have.been.called')
+    cy.get('@requestsQueryFn').should('not.have.been.called')
   })
 })

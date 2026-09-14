@@ -36,7 +36,7 @@
       <WarningOutlineIcon v-else />
     </template>
     <template #title>
-      <p>{{ errorMessage }}</p>
+      <p>{{ queryError?.message || i18n.t('renderer.unexpectedError') }}</p>
     </template>
     <template
       v-if="queryError?.details"
@@ -65,13 +65,14 @@ import type { AnalyticsChartOptions, QueryError, ScatterChartData } from '@kong-
 import type { ApiRequestsQuery, ExploreResultV4, ValidDashboardChartQuery } from '@kong-ui-public/analytics-utilities'
 import type { ScatterRendererProps } from '../types'
 
-import { computed, onUnmounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
-import { AnalyticsChart, handleQueryError } from '@kong-ui-public/analytics-chart'
+import { AnalyticsChart, handleQueryError, requestsToScatterData } from '@kong-ui-public/analytics-chart'
 import { VisibilityOffIcon, WarningOutlineIcon } from '@kong/icons'
 
 import composables from '../composables'
+import { toRequestsScatterOptions } from '../utils/requests-query'
 import QueryDataProvider from './QueryDataProvider.vue'
 
 const props = defineProps<ScatterRendererProps>()
@@ -82,18 +83,12 @@ const emit = defineEmits<{
 }>()
 
 const { i18n } = composables.useI18n()
+const { issueRequestsQuery } = composables.useIssueRequestsQuery()
 
 const isRequestsQuery = computed(() => props.query.datasource === 'requests')
-const scatterDataFn = computed(() => props.context.scatterDataFn)
-
-let abortController: AbortController | null = null
-
-onUnmounted(() => {
-  abortController?.abort()
-})
 
 const queryKey = () => {
-  if (isRequestsQuery.value && props.queryReady && scatterDataFn.value) {
+  if (isRequestsQuery.value && props.queryReady) {
     return JSON.stringify([props.query, props.context, props.refreshCounter])
   }
 
@@ -104,13 +99,10 @@ const queryError = ref<QueryError | null>(null)
 
 const { data, error, isValidating } = useSWRV(queryKey, async () => {
   const startKey = queryKey()
-
-  abortController?.abort()
-  const controller = new AbortController()
-  abortController = controller
+  const query = props.query as ApiRequestsQuery
 
   try {
-    const result = await scatterDataFn.value!(props.query as ApiRequestsQuery, props.context, controller)
+    const result = await issueRequestsQuery(query, props.context)
 
     if (queryKey() !== startKey) {
       // The original fetch has been superseded by a newer query
@@ -119,7 +111,7 @@ const { data, error, isValidating } = useSWRV(queryKey, async () => {
 
     queryError.value = null
 
-    return result
+    return requestsToScatterData(result, toRequestsScatterOptions(query))
   } catch (e: any) {
     if (queryKey() !== startKey) {
       // This avoids an empty error state when a fetch has been aborted
@@ -151,14 +143,7 @@ watch(data, newData => {
   }
 })
 
-const hasError = computed(() => !scatterDataFn.value || state.value === STATE.ERROR || !!queryError.value)
-const errorMessage = computed(() => {
-  if (!scatterDataFn.value) {
-    return i18n.t('renderer.noScatterDataFn')
-  }
-
-  return queryError.value?.message || i18n.t('renderer.unexpectedError')
-})
+const hasError = computed(() => state.value === STATE.ERROR || !!queryError.value)
 
 const isLoading = computed(() => !hasError.value && (!props.queryReady || state.value === STATE.PENDING) && !displayData.value)
 
